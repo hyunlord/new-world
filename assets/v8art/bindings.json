@@ -4,127 +4,502 @@
   "terrain": {
     "fallback": "dark_grass",
     "codes": [
-      {"code": 0, "sim": "Plain", "ground": "dark_grass", "clearing_ok": true},
-      {"code": 1, "sim": "Forest", "ground": "forest_floor"},
-      {"code": 2, "sim": "Mountain", "ground": "hill_rock", "standing_face": true, "blocks": true},
-      {"code": 3, "sim": "Hill", "ground": "hill_rock", "standing_face": true, "blocks": true},
-      {"code": 4, "sim": "River", "water": true}
+      {
+        "code": 0,
+        "sim": "Plain",
+        "ground": "dark_grass",
+        "clearing_ok": true
+      },
+      {
+        "code": 1,
+        "sim": "Forest",
+        "ground": "forest_floor"
+      },
+      {
+        "code": 2,
+        "sim": "Mountain",
+        "ground": "hill_rock",
+        "standing_face": true,
+        "blocks": true
+      },
+      {
+        "code": 3,
+        "sim": "Hill",
+        "ground": "hill_rock",
+        "standing_face": true,
+        "blocks": true
+      },
+      {
+        "code": 4,
+        "sim": "River",
+        "water": true
+      }
     ],
-    "clearing": {"ground": "packed_earth_ground", "core_tiles": 4, "reach_tiles": 8},
+    "clearing": {
+      "ground": "packed_earth_ground",
+      "core_tiles": 4,
+      "reach_tiles": 8
+    },
     "dug_ground": "packed_earth_ground",
     "face": "rock_face",
     "water": "river_water",
     "snow": "snow_overlay",
-    "ford_stones": ["ford_stone_1", "ford_stone_2", "ford_stone_3", "ford_stone_4"]
+    "ford_stones": [
+      "ford_stone_1",
+      "ford_stone_2",
+      "ford_stone_3",
+      "ford_stone_4"
+    ]
   },
   "space": {
     "about": "get_space wall_styles / floor_styles carry blueprint names; the material resolver maps them through construction_styles.json sim_blueprints. A floor style the material data does not know but listed here draws this ground instead.",
-    "floor_grounds": [{"style": "DugFloor", "ground": "packed_earth_ground"}],
-    "door_styles": ["Door"],
-    "wall_kind_styles": ["LogWall", "StoneWall", "Door"],
-    "floor_kind_styles": ["PackedFloor", "DugFloor"],
-    "bed": {"structure": "bedroll", "footprint": [2, 1]}
+    "floor_grounds": [
+      {
+        "style": "DugFloor",
+        "ground": "packed_earth_ground"
+      }
+    ],
+    "door_styles": [
+      "Door"
+    ],
+    "wall_kind_styles": [
+      "LogWall",
+      "StoneWall",
+      "Door"
+    ],
+    "floor_kind_styles": [
+      "PackedFloor",
+      "DugFloor"
+    ],
+    "bed": {
+      "structure": "bedroll",
+      "footprint": [
+        2,
+        1
+      ]
+    }
   },
   "tones": {
     "about": "Which ground tone a season code (get_time_snapshot `season`) or an active pressure (get_story `names`) selects; anything else is day.",
-    "seasons": {"3": "winter"},
-    "pressures": {"drought": "drought"}
+    "seasons": {
+      "3": "winter"
+    },
+    "pressures": {
+      "drought": "drought"
+    }
   },
   "buildings": {
     "fallback": null,
     "codes": [
-      {"code": 0, "sim": "Hearth", "structure": "hearth_1", "unlit": "hearth_unlit", "firing": "hearth_pots", "light": true},
-      {"code": 1, "sim": "Shelter", "structure": "lean_to"},
-      {"code": 2, "sim": "StockpileMarker", "structure": null},
-      {"code": 3, "sim": "Hut", "ring": {"size": [3, 3], "wall_style": "LogWall", "floor_style": "PackedFloor", "door": [1, 2], "door_style": "Door"}}
+      {
+        "code": 0,
+        "sim": "Hearth",
+        "structure": "hearth_1",
+        "unlit": "hearth_unlit",
+        "firing": "hearth_pots",
+        "light": true
+      },
+      {
+        "code": 1,
+        "sim": "Shelter",
+        "structure": "lean_to"
+      },
+      {
+        "code": 2,
+        "sim": "StockpileMarker",
+        "structure": null
+      },
+      {
+        "code": 3,
+        "sim": "Hut",
+        "ring": {
+          "size": [
+            3,
+            3
+          ],
+          "wall_style": "LogWall",
+          "floor_style": "PackedFloor",
+          "door": [
+            1,
+            2
+          ],
+          "door_style": "Door"
+        }
+      }
     ]
   },
   "workshops": {
     "fallback": "knapping_spot",
     "codes": [
-      {"code": 1, "sim": "KnappingSpot", "structure": "knapping_spot"},
-      {"code": 2, "sim": "WoodBench", "structure": "woodworking_bench"},
-      {"code": 3, "sim": "DryingRack", "structure": "drying_rack_empty", "working": "drying_rack_hide"},
-      {"code": 9, "sim": "GrindingStone", "structure": "grinding_stone"},
-      {"code": 10, "sim": "PotteryBench", "structure": "pottery_bench"},
-      {"code": 11, "sim": "HearthFire", "structure": null, "marks_hearth_firing": true}
+      {
+        "code": 1,
+        "sim": "KnappingSpot",
+        "structure": "knapping_spot"
+      },
+      {
+        "code": 2,
+        "sim": "WoodBench",
+        "structure": "woodworking_bench"
+      },
+      {
+        "code": 3,
+        "sim": "DryingRack",
+        "structure": "drying_rack_empty",
+        "working": "drying_rack_hide"
+      },
+      {
+        "code": 9,
+        "sim": "GrindingStone",
+        "structure": "grinding_stone"
+      },
+      {
+        "code": 10,
+        "sim": "PotteryBench",
+        "structure": "pottery_bench"
+      },
+      {
+        "code": 11,
+        "sim": "HearthFire",
+        "structure": null,
+        "marks_hearth_firing": true
+      }
     ]
   },
   "nodes": {
     "fallback": "boulder_small",
     "codes": [
-      {"code": 0, "sim": "Boulder", "structure": "boulder_large", "depleted": "boulder_small", "depleted_below_permille": 500, "name_key": "NODE_BOULDER", "yields": 2},
-      {"code": 1, "sim": "FlintOutcrop", "structure": "flint_outcrop", "name_key": "NODE_FLINT_OUTCROP", "yields": 3},
-      {"code": 2, "sim": "ClayBank", "structure": "claybank_full", "depleted": "claybank_depleted", "depleted_below_permille": 500, "name_key": "NODE_CLAY_BANK", "yields": 7}
+      {
+        "code": 0,
+        "sim": "Boulder",
+        "structure": "boulder_large",
+        "depleted": "boulder_small",
+        "depleted_below_permille": 500,
+        "name_key": "NODE_BOULDER",
+        "yields": 2
+      },
+      {
+        "code": 1,
+        "sim": "FlintOutcrop",
+        "structure": "flint_outcrop",
+        "name_key": "NODE_FLINT_OUTCROP",
+        "yields": 3
+      },
+      {
+        "code": 2,
+        "sim": "ClayBank",
+        "structure": "claybank_full",
+        "depleted": "claybank_depleted",
+        "depleted_below_permille": 500,
+        "name_key": "NODE_CLAY_BANK",
+        "yields": 7
+      }
     ]
   },
   "resources": {
     "codes": [
-      {"code": 0, "sim": "Bush", "structure": "berry_bush_full", "depleted": "berry_bush_bare", "depleted_below_permille": 1, "flora_species": "berry"},
-      {"code": 3, "sim": "Deadwood", "item": "firewood"}
+      {
+        "code": 0,
+        "sim": "Bush",
+        "structure": "berry_bush_full",
+        "depleted": "berry_bush_bare",
+        "depleted_below_permille": 1,
+        "flora_species": "berry"
+      },
+      {
+        "code": 3,
+        "sim": "Deadwood",
+        "item": "firewood"
+      }
     ]
   },
   "trees": {
     "about": "Trees resolve through the flora catalogue (assets/v8art/flora/species.json, ADR 0033; M-ART2.1 §2.2). The sim has no species yet: the renderer picks one per tile by a keyed hash on the world seed, weighted, and the size (large below large_permille) and variant by further hashes. M-EXT replaces the hash with the snapshot's species column (MART21_DECISIONS D4). `habit` is the habit an unknown species falls back to.",
     "species": [
-      {"weight": 5, "species": "oak"},
-      {"weight": 3, "species": "birch"},
-      {"weight": 2, "species": "pine"}
+      {
+        "weight": 5,
+        "species": "oak"
+      },
+      {
+        "weight": 3,
+        "species": "birch"
+      },
+      {
+        "weight": 2,
+        "species": "pine"
+      }
     ],
     "habit": "deciduous",
-    "season_by_code": ["spring", "summer", "autumn", "winter"],
+    "season_by_code": [
+      "spring",
+      "summer",
+      "autumn",
+      "winter"
+    ],
     "large_permille": 600,
     "stump_ticks": 1440
   },
   "items": {
     "about": "count buckets: 1, 2-8, 9+ (ENV1 stack_note); `copies` duplicates one sprite by the stack layout, `assets` names one sprite per bucket.",
-    "bucket_limits": [1, 8],
+    "bucket_limits": [
+      1,
+      8
+    ],
     "fallback": "stone_pile",
     "codes": [
-      {"code": 0, "sim": "Log", "assets": ["log_pile_small", "log_pile_medium", "log_pile_large"]},
-      {"code": 1, "sim": "Firewood", "asset": "firewood"},
-      {"code": 2, "sim": "Stone", "asset": "stone_pile"},
-      {"code": 3, "sim": "Flint", "asset": "flint_nodule", "many": "flint_pile"},
-      {"code": 4, "sim": "FlintBlade", "asset": "flint_blade"},
-      {"code": 5, "sim": "StoneAxe", "asset": "stone_axe"},
-      {"code": 6, "sim": "Hide", "asset": "hide", "carcass_of": "deer"},
-      {"code": 7, "sim": "Clay", "asset": "clay"},
-      {"code": 8, "sim": "RawPot", "asset": "raw_pot"},
-      {"code": 9, "sim": "ClayPot", "asset": "clay_pot_empty"},
-      {"code": 10, "sim": "GroundAxe", "asset": "ground_axe"},
-      {"code": 11, "sim": "Meat", "asset": "meat", "carcass_of": "deer", "spoiled": "meat_spoiled"},
-      {"code": 12, "sim": "CuredHide", "asset": "cured_hide"},
-      {"code": 13, "sim": "HideWrap", "asset": "hide_wrap"},
-      {"code": 14, "sim": "FurCloak", "asset": "fur_cloak"},
-      {"code": 15, "sim": "Spear", "asset": "spear"},
-      {"code": 16, "sim": "WolfHide", "asset": "wolf_hide", "carcass_of": "wolf"}
+      {
+        "code": 0,
+        "sim": "Log",
+        "assets": [
+          "log_pile_small",
+          "log_pile_medium",
+          "log_pile_large"
+        ]
+      },
+      {
+        "code": 1,
+        "sim": "Firewood",
+        "asset": "firewood"
+      },
+      {
+        "code": 2,
+        "sim": "Stone",
+        "asset": "stone_pile"
+      },
+      {
+        "code": 3,
+        "sim": "Flint",
+        "asset": "flint_nodule",
+        "many": "flint_pile"
+      },
+      {
+        "code": 4,
+        "sim": "FlintBlade",
+        "asset": "flint_blade"
+      },
+      {
+        "code": 5,
+        "sim": "StoneAxe",
+        "asset": "stone_axe"
+      },
+      {
+        "code": 6,
+        "sim": "Hide",
+        "asset": "hide",
+        "carcass_of": "deer"
+      },
+      {
+        "code": 7,
+        "sim": "Clay",
+        "asset": "clay"
+      },
+      {
+        "code": 8,
+        "sim": "RawPot",
+        "asset": "raw_pot"
+      },
+      {
+        "code": 9,
+        "sim": "ClayPot",
+        "asset": "clay_pot_empty"
+      },
+      {
+        "code": 10,
+        "sim": "GroundAxe",
+        "asset": "ground_axe"
+      },
+      {
+        "code": 11,
+        "sim": "Meat",
+        "asset": "meat",
+        "carcass_of": "deer",
+        "spoiled": "meat_spoiled"
+      },
+      {
+        "code": 12,
+        "sim": "CuredHide",
+        "asset": "cured_hide"
+      },
+      {
+        "code": 13,
+        "sim": "HideWrap",
+        "asset": "hide_wrap"
+      },
+      {
+        "code": 14,
+        "sim": "FurCloak",
+        "asset": "fur_cloak"
+      },
+      {
+        "code": 15,
+        "sim": "Spear",
+        "asset": "spear"
+      },
+      {
+        "code": 16,
+        "sim": "WolfHide",
+        "asset": "wolf_hide",
+        "carcass_of": "wolf"
+      }
     ],
-    "stack_layout": [[0, 0], [-9, -4], [9, -3], [-4, 5], [6, 6], [-13, 3], [13, 4], [0, -8], [2, 10]]
+    "stack_layout": [
+      [
+        0,
+        0
+      ],
+      [
+        -9,
+        -4
+      ],
+      [
+        9,
+        -3
+      ],
+      [
+        -4,
+        5
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        -13,
+        3
+      ],
+      [
+        13,
+        4
+      ],
+      [
+        0,
+        -8
+      ],
+      [
+        2,
+        10
+      ]
+    ]
   },
   "animals": {
     "fallback_code": 1,
     "codes": [
-      {"code": 0, "sim": "Wolf", "species": "wolf", "lod_colour": [184, 67, 54],
-       "poses": {"0": "walk", "1": "run", "2": "stand", "3": "run", "4": "attack", "5": "run"}, "still": "stand", "dead": "dead", "moving": ["walk", "run"]},
-      {"code": 1, "sim": "Deer", "species": "deer", "lod_colour": [194, 157, 97],
-       "poses": {"0": "graze", "1": "run", "2": "stand", "3": "walk", "4": "stand", "5": "run"}, "still": "stand", "dead": "dead", "moving": ["walk", "run"]}
+      {
+        "code": 0,
+        "sim": "Wolf",
+        "species": "wolf",
+        "lod_colour": [
+          184,
+          67,
+          54
+        ],
+        "poses": {
+          "0": "walk",
+          "1": "run",
+          "2": "stand",
+          "3": "run",
+          "4": "attack",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      },
+      {
+        "code": 1,
+        "sim": "Deer",
+        "species": "deer",
+        "lod_colour": [
+          194,
+          157,
+          97
+        ],
+        "poses": {
+          "0": "graze",
+          "1": "run",
+          "2": "stand",
+          "3": "walk",
+          "4": "stand",
+          "5": "run"
+        },
+        "still": "stand",
+        "dead": "dead",
+        "moving": [
+          "walk",
+          "run"
+        ]
+      }
     ]
   },
   "blueprints": {
     "about": "BlueprintKind codes (get_colony_overlay site_kinds, get_workshops kinds, the order tool's build kinds) → what the finished thing is, for site ghosts, placement previews and build-menu icons (scripts/world/art/site_ghost.gd). `workshop` names a workshops code, `building` a buildings code (a hut's ring), `style` + `kind` a material-system blueprint, `bed` the space.bed structure.",
     "codes": [
-      {"code": 0, "sim": "Hut", "building": 3},
-      {"code": 1, "sim": "KnappingSpot", "workshop": 1},
-      {"code": 2, "sim": "WoodBench", "workshop": 2},
-      {"code": 3, "sim": "DryingRack", "workshop": 3},
-      {"code": 4, "sim": "LogWall", "style": "LogWall", "kind": "wall"},
-      {"code": 5, "sim": "StoneWall", "style": "StoneWall", "kind": "wall"},
-      {"code": 6, "sim": "Door", "style": "Door", "kind": "door"},
-      {"code": 7, "sim": "PackedFloor", "style": "PackedFloor", "kind": "floor"},
-      {"code": 8, "sim": "Bedroll", "bed": true},
-      {"code": 9, "sim": "GrindingStone", "workshop": 9},
-      {"code": 10, "sim": "PotteryBench", "workshop": 10},
-      {"code": 11, "sim": "HearthFire", "building": 0}
+      {
+        "code": 0,
+        "sim": "Hut",
+        "building": 3
+      },
+      {
+        "code": 1,
+        "sim": "KnappingSpot",
+        "workshop": 1
+      },
+      {
+        "code": 2,
+        "sim": "WoodBench",
+        "workshop": 2
+      },
+      {
+        "code": 3,
+        "sim": "DryingRack",
+        "workshop": 3
+      },
+      {
+        "code": 4,
+        "sim": "LogWall",
+        "style": "LogWall",
+        "kind": "wall"
+      },
+      {
+        "code": 5,
+        "sim": "StoneWall",
+        "style": "StoneWall",
+        "kind": "wall"
+      },
+      {
+        "code": 6,
+        "sim": "Door",
+        "style": "Door",
+        "kind": "door"
+      },
+      {
+        "code": 7,
+        "sim": "PackedFloor",
+        "style": "PackedFloor",
+        "kind": "floor"
+      },
+      {
+        "code": 8,
+        "sim": "Bedroll",
+        "bed": true
+      },
+      {
+        "code": 9,
+        "sim": "GrindingStone",
+        "workshop": 9
+      },
+      {
+        "code": 10,
+        "sim": "PotteryBench",
+        "workshop": 10
+      },
+      {
+        "code": 11,
+        "sim": "HearthFire",
+        "building": 0
+      }
     ]
   },
   "order_icons": {
@@ -141,14 +516,167 @@
   },
   "visitors": {
     "about": "Migrant waves and caravans (get_neighbours) are drawn as route I people: a look per person by a keyed hash of the group number among the looks whose age is listed; traders carry; the pack is an item sprite.",
-    "look_ages": ["adult"],
+    "look_ages": [
+      "adult"
+    ],
     "pack": "hide",
-    "lod_colour": [196, 182, 150]
+    "lod_colour": [
+      196,
+      182,
+      150
+    ]
   },
   "people": {
     "about": "Look ids and variant pools come from manifest.json and people/face_variants.json; the bridge sends look_ids (index into manifest.looks) and variants (0-5).",
-    "pose_for_state": {"sleep": "sleep", "carry": "carry", "work": "work_a", "walk": "walk_a", "idle": "idle"},
+    "pose_for_state": {
+      "sleep": "sleep",
+      "carry": "carry",
+      "work": "work_a",
+      "walk": "walk_a",
+      "idle": "idle"
+    },
     "older_age_band": "older",
-    "grey_hair_rgb": [160, 155, 140]
+    "grey_hair_rgb": [
+      160,
+      155,
+      140
+    ]
+  },
+  "ui_icons": {
+    "people": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        764,
+        44,
+        18,
+        18
+      ]
+    },
+    "settlements": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        784,
+        44,
+        16,
+        16
+      ]
+    },
+    "shelters": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        802,
+        44,
+        18,
+        18
+      ]
+    },
+    "construction": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        822,
+        44,
+        18,
+        18
+      ]
+    },
+    "food": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        842,
+        44,
+        18,
+        18
+      ]
+    },
+    "berries": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        862,
+        44,
+        18,
+        18
+      ]
+    },
+    "births": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        882,
+        44,
+        16,
+        16
+      ]
+    },
+    "deaths": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        900,
+        44,
+        18,
+        18
+      ]
+    },
+    "day": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        920,
+        44,
+        16,
+        16
+      ]
+    },
+    "night": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        938,
+        44,
+        18,
+        18
+      ]
+    },
+    "thirst": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        958,
+        44,
+        16,
+        16
+      ]
+    },
+    "hunger": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        976,
+        44,
+        18,
+        18
+      ]
+    },
+    "sleep": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        996,
+        44,
+        16,
+        16
+      ]
+    },
+    "pause": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1014,
+        44,
+        18,
+        18
+      ]
+    },
+    "speed": {
+      "path": "res://assets/art/atlas/world_0.png",
+      "rect": [
+        1034,
+        44,
+        18,
+        18
+      ]
+    }
   }
 }

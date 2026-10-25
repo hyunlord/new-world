@@ -9,6 +9,7 @@ extends RefCounted
 
 const ROOT: String = "res://assets/v8art/"
 
+static var _selected_bindings: Dictionary = {}
 static var _manifest: Dictionary = {}
 static var _bindings: Dictionary = {}
 static var _params: Dictionary = {}
@@ -36,6 +37,7 @@ static func _load() -> void:
 		return
 	_manifest = _read_json(ROOT + "manifest.json")
 	_bindings = _read_json(ROOT + "bindings.json")
+	_apply_selected_bindings()
 	if _params.is_empty():
 		_params = _read_json(ROOT + "render_params.json")
 	_by_id.clear()
@@ -240,3 +242,62 @@ static func clear() -> void:
 	_textures.clear()
 	_images.clear()
 	_codes.clear()
+
+
+## Selected bindings add aliases of validated existing visual rows; content IDs remain independent.
+static func validate_extension(document: Dictionary, dto: Dictionary) -> String:
+	_load()
+	if document.get("schema_version") != 1:
+		return "bindings: unsupported schema_version"
+	var families: Dictionary = {"items": "items", "buildings": "blueprints", "workshops": "blueprints", "animals": "animals"}
+	for family: Variant in document:
+		if family == "schema_version":
+			continue
+		if not families.has(family) or not document[family] is Dictionary or document[family].size() != 1 or not document[family].get("codes") is Array:
+			return "bindings: unsupported family/schema " + str(family)
+		var allowed: Dictionary = {}
+		for definition: Dictionary in dto.get(families[family], []):
+			allowed[int(definition["code"])] = true
+		var used: Dictionary = {}
+		for existing: Dictionary in _bindings.get(family, {}).get("codes", []):
+			used[int(existing["code"])] = true
+		for value: Variant in document[family]["codes"]:
+			if not value is Dictionary or value.size() != 2 or not value.has("code") or not value.has("alias_code"):
+				return "bindings: expected code and alias_code"
+			for field: String in ["code", "alias_code"]:
+				var number: Variant = value[field]
+				if not (number is int or number is float) or not is_finite(float(number)) or float(number) != floor(float(number)) or float(number) < 0 or float(number) > 4294967295:
+					return "bindings: invalid u32 " + field
+			var code: int = int(value["code"])
+			if not allowed.has(code) or used.has(code):
+				return "bindings: unknown or duplicate content code " + str(code)
+			var source_found: bool = false
+			for existing: Dictionary in _bindings.get(family, {}).get("codes", []):
+				if int(existing["code"]) == int(value["alias_code"]):
+					source_found = true
+			if not source_found:
+				return "bindings: unknown bundled visual alias"
+			used[code] = true
+	return ""
+
+
+static func install_extension(document: Dictionary) -> void:
+	_selected_bindings = document.duplicate(true)
+	_bindings = {}
+	_manifest = {}
+	_load()
+
+
+static func _apply_selected_bindings() -> void:
+	for family: Variant in _selected_bindings:
+		if family == "schema_version":
+			continue
+		for addition: Dictionary in _selected_bindings[family]["codes"]:
+			var source: Dictionary = {}
+			for existing: Dictionary in _bindings[family]["codes"]:
+				if int(existing["code"]) == int(addition["alias_code"]):
+					source = existing.duplicate(true)
+					break
+			if not source.is_empty():
+				source["code"] = int(addition["code"])
+				_bindings[family]["codes"].append(source)

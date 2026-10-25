@@ -17,6 +17,7 @@
 //! bill removed, suspended or done) are put down at the work tile (merge and
 //! spill), so nothing stays stranded on a shelf.
 use hecs::World;
+use sim_core::colony::workshop::Recipe;
 use sim_core::colony::{BillMode, Carry, ItemKind, ItemSpec, Job, JobKind, ReserveKey, Workshop};
 use sim_engine::{RuntimeSystem, SimResources};
 
@@ -115,6 +116,31 @@ pub fn available(res: &SimResources, kind: ItemKind) -> u32 {
         .sum()
 }
 
+/// Reuse a shelved tool first, then the first unreserved compatible ground stack.
+/// Missing supply retains the declared preferred tool as its outstanding demand.
+pub fn selected_tool(res: &SimResources, shop: &Workshop, recipe: &Recipe) -> Option<ItemKind> {
+    let tool = recipe.tool.as_ref()?;
+    recipe
+        .shelf_tool(shop)
+        .or_else(|| {
+            res.colony
+                .ground_items
+                .iter()
+                .find(|(tile, stack)| {
+                    stack.count > 0
+                        && recipe.tool_matches(stack.kind)
+                        && (!res.nav.is_built()
+                            || res.nav.reaches(res.nav.region_of(shop.work_tile()), **tile))
+                        && !res
+                            .colony
+                            .reservations
+                            .contains_key(&ReserveKey::Stack(**tile))
+                })
+                .map(|(_, stack)| stack.kind)
+        })
+        .or(Some(tool.preferred_item))
+}
+
 /// Whether the bill at `index` of `shop` is runnable now (see the module header).
 pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize) -> bool {
     let Some(bill) = shop.bills.get(index) else {
@@ -123,7 +149,7 @@ pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize
     let Some(recipe) = bill.recipe.recipe() else {
         return false;
     };
-    if bill.suspended || recipe.workshop != shop.kind {
+    if bill.suspended || !recipe.supports_workshop(shop.kind) {
         return false;
     }
     // M4 (ADR 0024): a bill no living adult can craft waits (`NoPractitioner`).
@@ -140,7 +166,7 @@ pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize
         BillMode::Maintain(n) => bill_count(world, res, recipe.output.0) < u32::from(n),
     };
     more && recipe
-        .needs()
+        .needs_with_tool(selected_tool(res, shop, recipe))
         .iter()
         .all(|&(kind, n)| u32::from(shop.shelved(kind)) + available(res, kind) >= u32::from(n))
 }
@@ -161,7 +187,16 @@ pub fn schedule(world: &World, res: &mut SimResources) {
             .iter()
             .filter(|b| !b.suspended && b.remaining() != Some(0))
             .filter_map(|b| b.recipe.recipe())
-            .flat_map(|r| r.needs().into_iter().map(|(k, _)| k))
+            .flat_map(|r| {
+                let mut needs = r.needs();
+                needs.extend(
+                    shop.shelf
+                        .iter()
+                        .filter(|s| r.tool_matches(s.kind))
+                        .map(|s| (s.kind, 1)),
+                );
+                needs.into_iter().map(|(kind, _)| kind)
+            })
             .collect();
         let work_tile = shop.work_tile();
         let mut spill: Vec<(ItemSpec, u16)> = Vec::new();
@@ -199,14 +234,22 @@ impl RuntimeSystem for BillSystem {
             return;
         }
         schedule(world, resources);
-        // M5 (code review m5): a knife's wear belongs to the blade on the shelf; once no blade is
-        // shelved there (spilled, or the workshop gone) the next blade starts unworn.
+        // Wear follows the selected cutter, and is discarded when that cutter leaves.
+        let default_cutter =
+            sim_core::colony::content::installed_or_bundled().item_role("preferred_cutter");
         let colony = &mut resources.colony;
         let workshops = &colony.workshops;
+        let cutters = &resources.content_state.workshop_cutters;
         colony.knife_wear.retain(|id, _| {
+            let cutter = cutters.get(id).copied().or(default_cutter);
             workshops
                 .get(id)
-                .is_some_and(|w| w.shelved(sim_core::colony::ItemKind::FlintBlade) > 0)
+                .is_some_and(|shop| cutter.is_some_and(|kind| shop.shelved(kind) > 0))
+        });
+        resources.content_state.workshop_cutters.retain(|id, kind| {
+            workshops
+                .get(id)
+                .is_some_and(|shop| shop.shelved(*kind) > 0)
         });
     }
 }

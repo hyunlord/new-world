@@ -144,8 +144,8 @@ func _refresh() -> void:
 		close()
 		return
 	var bills: Array[Dictionary] = bills_of(shops, row)
-	var shelf: Array[Vector2i] = _shelf_of(shops, row)
-	var kinds: PackedInt32Array = shops.get("kinds", PackedInt32Array())
+	var shelf: Array[Dictionary] = _shelf_of(shops, row)
+	var kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
 	var kind: int = kinds[row] if row < kinds.size() else -1
 	_waits = SimReads.read(_world_sim, "get_knowledge_waits")
 	var key: int = hash([bills, shelf, kind, Chronicle.language(_locale), _waits])
@@ -156,8 +156,8 @@ func _refresh() -> void:
 	_close.text = _loc("UI_CLOSE")
 	_add.text = _loc("BILL_ADD")
 	var shelf_parts: Array[String] = []
-	for entry: Vector2i in shelf:
-		shelf_parts.append("%s ×%d" % [EconomyText.item(_locale, entry.x), entry.y])
+	for entry: Dictionary in shelf:
+		shelf_parts.append("%s ×%d" % [EconomyText.item(_locale, int(entry["kind"])), int(entry["count"])])
 	_shelf.text = "%s: %s" % [_loc("UI_WORKSHOP_SHELF"), ", ".join(shelf_parts)]
 	_shelf.visible = not shelf_parts.is_empty()
 	for child: Node in _bills.get_children():
@@ -181,10 +181,11 @@ func _refresh() -> void:
 static func bills_of(shops: Dictionary, row: int) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var owner: PackedInt32Array = shops.get("bill_shops", PackedInt32Array())
-	var columns: Array[String] = ["bill_ids", "bill_recipes", "bill_modes", "bill_counts", "bill_done", "bill_suspended", "bill_auto", "bill_active"]
-	var fields: Array[String] = ["id", "recipe", "mode", "count", "done", "suspended", "auto", "active"]
+	var columns: Array[String] = ["bill_ids", "bill_modes", "bill_counts", "bill_done", "bill_suspended", "bill_auto", "bill_active"]
+	var fields: Array[String] = ["id", "mode", "count", "done", "suspended", "auto", "active"]
 	var data: Array[PackedInt32Array] = []
-	var n: int = owner.size()
+	var recipes: PackedInt64Array = shops.get("bill_recipes", PackedInt64Array())
+	var n: int = mini(owner.size(), recipes.size())
 	for column: String in columns:
 		var values: PackedInt32Array = shops.get(column, PackedInt32Array())
 		data.append(values)
@@ -192,21 +193,21 @@ static func bills_of(shops: Dictionary, row: int) -> Array[Dictionary]:
 	for i: int in n:
 		if owner[i] != row:
 			continue
-		var bill: Dictionary = {}
+		var bill: Dictionary = {"recipe": recipes[i]}
 		for f: int in fields.size():
 			bill[fields[f]] = data[f][i]
 		out.append(bill)
 	return out
 
 
-static func _shelf_of(shops: Dictionary, row: int) -> Array[Vector2i]:
-	var out: Array[Vector2i] = []
+static func _shelf_of(shops: Dictionary, row: int) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
 	var owner: PackedInt32Array = shops.get("shelf_shops", PackedInt32Array())
-	var kinds: PackedInt32Array = shops.get("shelf_kinds", PackedInt32Array())
+	var kinds: PackedInt64Array = shops.get("shelf_kinds", PackedInt64Array())
 	var counts: PackedInt32Array = shops.get("shelf_counts", PackedInt32Array())
 	for i: int in mini(owner.size(), mini(kinds.size(), counts.size())):
 		if owner[i] == row:
-			out.append(Vector2i(kinds[i], counts[i]))
+			out.append({"kind": kinds[i], "count": counts[i]})
 	return out
 
 
@@ -276,17 +277,17 @@ func _fill_recipes(kind: int) -> void:
 		_recipes.remove_child(child)
 		child.queue_free()
 	var table: Dictionary = SimReads.read(_world_sim, "get_recipes")
-	var codes: PackedInt32Array = table.get("codes", PackedInt32Array())
+	var codes: PackedInt64Array = table.get("codes", PackedInt64Array())
 	var names: PackedStringArray = table.get("names", PackedStringArray())
-	var shops: PackedInt32Array = table.get("workshop_kinds", PackedInt32Array())
-	var outputs: PackedInt32Array = table.get("output_kinds", PackedInt32Array())
+	var shops: PackedInt64Array = table.get("workshop_kinds", PackedInt64Array())
+	var outputs: PackedInt64Array = table.get("output_kinds", PackedInt64Array())
 	var amounts: PackedInt32Array = table.get("output_counts", PackedInt32Array())
 	var prompt: Label = Label.new()
 	prompt.add_theme_color_override("font_color", MUTED)
 	_recipes.add_child(prompt)
 	var any: bool = false
 	for i: int in mini(mini(codes.size(), names.size()), mini(shops.size(), mini(outputs.size(), amounts.size()))):
-		if shops[i] != kind:
+		if not EconomyText.Content.row("recipes", codes[i]).get("compatible_workshops", PackedInt64Array()).has(kind):
 			continue
 		any = true
 		var text: String = "%s → %s ×%d" % [EconomyText.recipe(_locale, codes[i]), EconomyText.item(_locale, outputs[i]), amounts[i]]

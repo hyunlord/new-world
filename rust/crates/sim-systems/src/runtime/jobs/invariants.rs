@@ -95,7 +95,7 @@ pub fn ledger_of(world: &World, res: &SimResources, kind: ItemKind) -> LedgerTer
 
 /// The ledger's terms for logs: `(created, on the ground, carried, delivered, consumed)` (M1's form).
 pub fn log_ledger(world: &World, res: &SimResources) -> (u64, u64, u64, u64, u64) {
-    let t = ledger_of(world, res, ItemKind::Log);
+    let t = ledger_of(world, res, ItemKind::role("tree_output"));
     (
         t.created,
         t.ground,
@@ -108,10 +108,10 @@ pub fn log_ledger(world: &World, res: &SimResources) -> (u64, u64, u64, u64, u64
 /// Check every 7.6 invariant; the first broken one is returned as text.
 /// The ledger message starts with `item ledger` (`log ledger` for logs, M1's form).
 pub fn check(world: &World, res: &SimResources) -> Result<(), String> {
-    for kind in ItemKind::ALL {
+    for kind in ItemKind::all() {
         let t = ledger_of(world, res, kind);
         if !t.balanced() {
-            let label = if kind == ItemKind::Log {
+            let label = if kind == ItemKind::role("tree_output") {
                 "log ledger".to_string()
             } else {
                 format!("item ledger ({})", kind.name())

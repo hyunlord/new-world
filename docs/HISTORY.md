@@ -190,3 +190,5 @@
 - 2026-10-25 — M-UX Stage A gate1 실패(`6b0f572e4`,08:03:24 KST,status1):35단계 중32단계 exit0. debug/release 각각2059통과·1실패·1제외로 Chronicle 안정성 시험의 기대45/실제46이 같게 실패했고, inventory는2221경로·1943행 중 DESIGN.md만 미포함. 나머지 단계와35번 steward2시드×24일 결정론·원장은 통과했다. ISS031/032는 최소 수정 후 새 전체 게이트 대기 OPEN; A8FAILED와 게시 대기는 유지한다(원시 로그 `/Users/rexxa/work/mux-data/gate-stage-a-1/`, [이슈](ISSUES.md)).
 
 - 2026-10-25 — M-UX Stage A gate2 기술 통과(p12 `f38d488f43156145a44898671e77b26b3ee6c496`, clean,09:07:08 KST,exit0):35/35단계 exit0, debug/release 각각2060통과·0실패·1제외. gate1 실패는 보존하고 ISS031/032를 p12 수정·gate2로 닫았다. 공개28건은 구현 결함 범위에서 fixed,003/006/009/030은 open; 물리NOT_VERIFIED·A8FAILED·잔여지연은 유지한다. 문서 준비 시점 p13 보고 HEAD gate3·게시 대기이며 미래 통과를 주장하지 않는다(영수증 `/Users/rexxa/work/mux-data/gate-stage-a-2/gate.txt`, [이슈](ISSUES.md)).
+
+- 2026-10-25 — M-UX Stage A p13 `ca9f531ca6ef700ca223d99dba14d834b94b94b45da` clean gate3가10:29:24 KST35/35 exit0으로 종료했고10:30:05 KST v8/wip·v8/main fast-forward 게시를 확인했다. 이전 실패·A8FAILED·물리입력 미검증은 유지한다. Stage B는 데이터 레지스트리와 명시적 저장 마이그레이션 통합 중이며 core372·save15·역사적 저장연속실행3 시험 통과는 부분 증거다. 전체 안전망·B3·Stage B 게이트/게시 대기([D36](v8/mux/MUX_DECISIONS.md)).

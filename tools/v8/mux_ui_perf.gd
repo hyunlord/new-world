@@ -39,8 +39,12 @@ func _run() -> void:
 	_hud = _main.get_node("UI/MuxHud") as Hud
 	_hud.store = Store.new(_out.path_join("settings-%d.cfg" % OS.get_process_id()))
 	_camera = _main.get_node("Camera2D") as Camera2D
-	_world = _main.get_node("WorldSim")
 	root.add_child(_main)
+	if not bool(_main.get("boot_ok")):
+		push_error(str(_main.get("boot_error")))
+		quit(1)
+		return
+	_world = _main.get_node("WorldSim")
 	_camera.call("set_paused", true)
 	SimReads.mutate(_world, "advance_ticks", [1])
 	for _frame: int in 20: await process_frame

@@ -8,6 +8,9 @@
 //! shapes which entry is written). It uses no draws, never touches the causal
 //! log or event ids, and is recorded in every scene. Probes and the bridge
 //! read it.
+/// Readers for the frozen format6/7 Chronicle wire layout.
+pub mod legacy_v7;
+
 use std::collections::BTreeMap;
 
 use crate::components::{AgentId, SettlementId};
@@ -326,7 +329,7 @@ pub struct ChronicleEntry {
     /// A second settlement (the parent of a daughter).
     pub settlement2: Option<SettlementId>,
     /// Kind-specific reason code.
-    pub cause: u8,
+    pub cause: u32,
     /// Kind-specific value.
     pub value: i64,
 }
@@ -378,7 +381,7 @@ impl ChronicleEntry {
     }
 
     /// With `cause`.
-    pub const fn cause(mut self, cause: u8) -> Self {
+    pub const fn cause(mut self, cause: u32) -> Self {
         self.cause = cause;
         self
     }

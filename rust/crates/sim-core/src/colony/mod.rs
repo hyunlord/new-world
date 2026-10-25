@@ -10,6 +10,8 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 mod command;
+pub mod content;
+pub mod content_state;
 mod items;
 mod job;
 pub mod knowledge;
@@ -83,8 +85,8 @@ pub struct ColonyTallies {
     #[serde(default)]
     pub axes_worn_out: u64,
     /// Crafted items' `(count, quality sum)` by `(agent, RecipeKind::code)` (M2; measurement only).
-    #[serde(default)]
-    pub craft_quality: BTreeMap<(AgentId, u8), (u64, u64)>,
+    #[serde(default, deserialize_with = "content_state::deserialize_craft_quality")]
+    pub craft_quality: BTreeMap<(AgentId, u32), (u64, u64)>,
     /// Space sites finished (walls, doors, floors, bedrolls; M3).
     #[serde(default)]
     pub space_built: u64,

@@ -91,14 +91,7 @@ pub fn resolve_fights(world: &mut World, res: &mut SimResources) {
                     // M5.5: a fleeing person defends at `flee_defence_permille` (a drafted one at full damage).
                     damage = crate::runtime::jobs::hunt::defence_damage(world, &rule, e);
                 }
-                crate::runtime::jobs::hunt::wear_tool(
-                    world,
-                    res,
-                    id,
-                    e,
-                    ItemKind::Spear,
-                    rule.spear_uses,
-                );
+                crate::runtime::jobs::hunt::wear_weapon(world, res, &rule, id, e);
             }
         }
         match defender {
@@ -182,11 +175,13 @@ fn hit_animal(
         AnimalKind::Wolf => {
             res.colony.wildlife.tallies.wolves_killed += 1;
             if rule.wolf_hides {
-                res.colony.item_ledger.create(ItemKind::WolfHide, 1);
+                res.colony
+                    .item_ledger
+                    .create(ItemKind::role("predator_hide"), 1);
                 let tiles = crate::runtime::jobs::items::put_items(
                     res,
                     pos,
-                    sim_core::colony::ItemSpec::raw(ItemKind::WolfHide, None),
+                    sim_core::colony::ItemSpec::raw(ItemKind::role("predator_hide"), None),
                     1,
                 );
                 if rule.hunter_hauls {
@@ -209,7 +204,7 @@ fn hit_animal(
                 res,
                 pos,
                 rule.meat_without_knife,
-                ItemKind::Hide,
+                ItemKind::role("grazer_hide"),
             );
             res.colony.wildlife.tallies.deer_killed += 1;
         }

@@ -17,6 +17,8 @@ extends Node
 
 signal language_changed(language: String)
 
+static var _selected_additions: Dictionary = {}
+
 var _strings: Dictionary = {}
 var _current_lang: String = "ko"
 
@@ -31,9 +33,9 @@ func _ready() -> void:
 func _load_lang(lang: String) -> void:
 	_strings.clear()
 	var compiled_path := "res://localization/compiled/%s.json" % lang
-	if _load_compiled(compiled_path):
-		return
-	_load_category_dir(lang)
+	if not _load_compiled(compiled_path):
+		_load_category_dir(lang)
+	_merge_dict(_selected_additions.get(lang, {}))
 
 func _load_compiled(path: String) -> bool:
 	var file := FileAccess.open(path, FileAccess.READ)
@@ -102,3 +104,11 @@ func set_language(lang: String) -> void:
 
 func key_count() -> int:
 	return _strings.size()
+
+
+static func install_additions(tables: Dictionary) -> void:
+	_selected_additions = tables.duplicate(true)
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	var locale: Node = tree.root.get_node_or_null("Locale") if tree != null else null
+	if locale != null:
+		locale.call("_merge_dict", _selected_additions.get(str(locale.get("_current_lang")), {}))

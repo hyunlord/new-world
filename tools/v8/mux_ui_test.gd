@@ -9,6 +9,7 @@ const OrderBar = preload("res://scripts/ui/hud/order_bar.gd")
 const Economy = preload("res://scripts/ui/economy_text.gd")
 const Hud = preload("res://scripts/ui/mux/mux_hud.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
+const FactsAdapter = preload("res://scripts/ui/mux/ui_facts_adapter.gd")
 const AlertCases = preload("res://tools/v8/mux_alerts_test.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Neighbours = preload("res://scripts/ui/neighbour_text.gd")
@@ -64,6 +65,13 @@ func _key(code: Key) -> void:
 
 func _capture(name: String) -> void:
 	await _frames(3)
+	if name.begins_with("steward-completed-house-"):
+		var provenance: Dictionary = _restore_live_alert_facts("before " + name)
+		var evidence: FileAccess = FileAccess.open(_out.path_join(name + "-alerts.json"), FileAccess.WRITE)
+		_check("completed house alert provenance opened", evidence != null)
+		if evidence != null:
+			evidence.store_string(JSON.stringify(provenance, "\t"))
+			evidence.close()
 	if DisplayServer.get_name() == "headless": return
 	await RenderingServer.frame_post_draw
 	var screenshot: Image = root.get_texture().get_image()
@@ -82,8 +90,12 @@ func _run() -> void:
 	_hud = _main.get_node("UI/MuxHud") as Hud
 	_hud.store = Store.new(_out.path_join("settings-%d.cfg" % OS.get_process_id()))
 	_camera = _main.get_node("Camera2D") as Camera2D
-	_world = _main.get_node("WorldSim")
 	root.add_child(_main)
+	if not bool(_main.get("boot_ok")):
+		push_error(str(_main.get("boot_error")))
+		quit(1)
+		return
+	_world = _main.get_node("WorldSim")
 	_camera.call("set_paused", true)
 	_check("attach establishes notification baseline before first tick", _hud._chronicle_cursor >= 0 and _hud._sequence == 0)
 	SimReads.mutate(_world, "advance_ticks", [1]) # Buildings register on their first simulation tick.
@@ -226,7 +238,7 @@ func _minimap_checks() -> void:
 	_mouse(point, MOUSE_BUTTON_LEFT, false)
 	await _frames()
 	var dimensions: Vector2i = _hud.minimap.map_image().get_size() if _hud.minimap.map_image() != null else Vector2i.ZERO
-	var tile: Vector2i = dimensions / 2
+	var tile: Vector2i = Vector2i(Vector2(dimensions) / 2.0)
 	_check("minimap dispatched click centers real camera", _camera.position.distance_to(View.tile_centre(tile)) < 2.0)
 	_mouse(point, MOUSE_BUTTON_LEFT, true)
 	var destination: Vector2 = canvas.get_global_transform_with_canvas() * (rect.position + rect.size * Vector2(0.6, 0.55))
@@ -507,7 +519,7 @@ func _aligned_columns(table: Dictionary, columns: Array[String]) -> bool:
 
 func _housing_evidence() -> Dictionary:
 	var overlay: Dictionary = SimReads.read(_world, "get_colony_overlay")
-	var kinds: PackedInt32Array = overlay.get("site_kinds", PackedInt32Array())
+	var kinds: PackedInt64Array = overlay.get("site_kinds", PackedInt64Array())
 	var sites: Array[Dictionary] = []
 	var walls: int = 0
 	var beds: int = 0
@@ -612,7 +624,9 @@ func _live_alert_route(alert_id: String, identity: int, tile: Vector2i) -> void:
 		_hud.alerts.refresh_from_facts(facts)
 		var button: Button = _hud.alerts.find_child(alert_id, true, false) as Button
 		_check("live " + kind + " alert exists", button != null)
-		if button == null: return
+		if button == null:
+			_restore_live_alert_facts("missing live " + kind + " button")
+			return
 		button.pressed.emit()
 		if kind == "animal":
 			var causal: Control = _main.get_node("UI/CausalPanel") as Control
@@ -623,6 +637,7 @@ func _live_alert_route(alert_id: String, identity: int, tile: Vector2i) -> void:
 			_check("live animal alert brings tile into camera view", Rect2(_camera.position - half_view, half_view * 2.0).has_point(View.tile_centre(tile)))
 			_live_routes[kind] = identity
 			causal.hide()
+			_restore_live_alert_facts("after live " + kind + " route")
 			return
 		var panel_name: String = {"room": "RoomPanel", "migrant": "MigrantPanel", "trader": "TradePanel"}[kind]
 		var getter: String = {"room": "current_room", "migrant": "shown_wave", "trader": "shown_caravan"}[kind]
@@ -631,6 +646,27 @@ func _live_alert_route(alert_id: String, identity: int, tile: Vector2i) -> void:
 		_check("live " + kind + " alert reaches camera tile", _camera.position.distance_to(View.tile_centre(tile)) < 2.0)
 		_live_routes[kind] = identity
 		panel.hide()
+		_restore_live_alert_facts("after live " + kind + " route")
+
+func _restore_live_alert_facts(context: String) -> Dictionary:
+	var before: Array[Dictionary] = _hud.alerts.evaluator.active_alerts()
+	var elapsed: float = _hud.alerts.evaluator._elapsed
+	var raw: Dictionary = SimReads.read(_world, "get_ui_facts")
+	var facts: Dictionary = FactsAdapter.adapt(raw)
+	_check(context + " accepts current production facts", _hud.alerts.refresh_from_facts(facts))
+	var after: Array[Dictionary] = _hud.alerts.evaluator.active_alerts()
+	var actual_full: bool = false
+	for room: Dictionary in facts.get("storehouses", []):
+		if int(room.get("role", -1)) == 2 and int(room.get("capacity", 0)) > 0 and int(room.get("used", 0)) >= int(room["capacity"]):
+			actual_full = true
+	var displayed_full: bool = false
+	for alert: Dictionary in after:
+		if str(alert["id"]) == "storehouse_full": displayed_full = true
+	_check(context + " full alert requires real capacity evidence, not synthetic 8/8", not displayed_full or actual_full)
+	_check(context + " preserves production poll phase", _hud.alerts.evaluator._elapsed == elapsed)
+	var provenance: Dictionary = {"context": context, "source": "SimReads.get_ui_facts -> production FactsAdapter -> alerts.refresh_from_facts", "tick": raw.get("tick", -1), "process_frame": Engine.get_process_frames(), "poll_elapsed": elapsed, "before": before, "after": after, "raw": raw, "storehouses": facts.get("storehouses", []), "synthetic_fixture": {"role": 2, "used": 8, "capacity": 8}, "synthetic_fixture_is_not_evidence": true}
+	print("MUX_ALERT_PROVENANCE " + JSON.stringify(provenance))
+	return provenance
 
 func _finish_live_routes() -> void:
 	var info: Dictionary = SimReads.read(_world, "get_world_info")
@@ -706,7 +742,7 @@ func _orderbar_locale_assertions(language: String, selected_kind: String) -> voi
 		var entry: Dictionary = OrderBar.MODES[i]
 		main_ok = main_ok and (main_buttons[i] as Button).text == "%s %s" % [OS.get_keycode_string(int(entry["hotkey"])), locale.call("ltr", str(entry["key"]))]
 	for i: int in build_buttons.size():
-		var kind: Dictionary = Economy.BUILD_KINDS[Economy.MENU_ORDER[i]]
+		var kind: Dictionary = Economy.build_kind(Economy.menu_order()[i])
 		build_ok = build_ok and (build_buttons[i] as Button).text == "%s %s" % [OrderBar.MENU_LABELS[i], locale.call("ltr", str(kind["key"]))]
 	for i: int in gather_buttons.size():
 		gather_ok = gather_ok and (gather_buttons[i] as Button).text == "%d %s" % [i + 1, locale.call("ltr", str(OrderBar.DIG_MENU[i]["key"]))]

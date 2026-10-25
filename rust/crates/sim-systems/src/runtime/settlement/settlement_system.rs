@@ -860,7 +860,7 @@ impl SettlementSystem {
                     ChronicleEntry::new(tick, ChronicleKind::Joined)
                         .subject(id)
                         .settlement(Some(*new))
-                        .cause(u8::from(had_roster)),
+                        .cause(u32::from(u8::from(had_roster))),
                 );
             }
         }
@@ -1228,7 +1228,7 @@ impl SettlementSystem {
                 .other(parent_ids.first().copied())
                 .third(parent_ids.get(1).copied())
                 .settlement(Some(sid))
-                .cause(u8::from(family_parents.is_none())),
+                .cause(u32::from(u8::from(family_parents.is_none()))),
             );
 
             let parent = self.formation_event_ids.get(&sid).copied();

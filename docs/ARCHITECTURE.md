@@ -222,11 +222,12 @@ Reads/writes come from each file's `//!` header.
 
 All methods live on the one Godot class `WorldSimNode` (signal `world_reset`
 after a reset or a load). The exact exported list is checked by gate step 13, currently
-`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m5_5.txt` (M5.5, 97 items; M5 checked `docs/v8/bridge_api_m5.txt` (91), M4 `docs/v8/bridge_api_m4.txt`, M3 `docs/v8/bridge_api_m3.txt`, M2 `docs/v8/bridge_api_m2.txt`, M1.5 `docs/v8/bridge_api_m1_5.txt`, M1 `docs/v8/bridge_api_m1.txt`, V8-0 `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
+`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_mux.txt` (M-UX/M-EXT core, 103 items; the existing M5.5-named list has100 exports after Stage A; M5 checked `docs/v8/bridge_api_m5.txt` (91), M4 `docs/v8/bridge_api_m4.txt`, M3 `docs/v8/bridge_api_m3.txt`, M2 `docs/v8/bridge_api_m2.txt`, M1.5 `docs/v8/bridge_api_m1_5.txt`, M1 `docs/v8/bridge_api_m1.txt`, V8-0 `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
 (a pass that changes the API updates this command; section 6).
 
 | concern | methods |
 |---|---|
+| immutable content boot | static `bootstrap_catalog()` (preflight receipt), static `create()` (validated node or null), `get_content_catalog()` (selected registry metadata) |
 | lifecycle and speed | `reset_world`, `reset_world_stress` (benchmark world), `set_sim_speed`, `advance_ticks` (tooling) |
 | save files (M1.5) | `save_world(path) -> bool`, `load_world(path) -> bool` (absolute path; GDScript globalizes `user://saves/<seed>-<tick>.wsave`; a load replaces the engine and emits `world_reset`; bytes from `sim_systems::save`) |
 | per-frame snapshots | `get_agent_snapshot`, `get_building_snapshot`, `get_construction_snapshot`, `get_resource_snapshot`, `get_terrain_snapshot`, `get_time_snapshot`, `get_tallies`, `get_world_info`, `get_recent_deaths`, `get_activity_snapshot`, `get_porter_snapshot` |
@@ -300,9 +301,9 @@ The full procedure with code skeletons is `.claude/skills/worldsim-architecture/
 
 | folder | contents |
 |---|---|
-| `scripts/core/` | `locale.gd` (autoload `Locale`), `sim_reads.gd` (`SimReads`: every bridge read), `settlement_selection.gd` (selected village) |
+| `scripts/core/` | `locale.gd` (autoload `Locale`), `sim_reads.gd` (`SimReads`: every bridge read), `settlement_selection.gd` (selected village), `main_bootstrap.gd` and `presentation_bootstrap.gd` (catalog/presentation validation before main children) |
 | `scripts/world/colony/` | the colony view (node `ColonyView` in `scenes/main.tscn`; M-ART2, section 14): `view.gd` (TILE 64, the base point (tile_left + 32, tile_top + 43), tile/keyed hashes, value noise), `ground_layer.gd` (ground chunks, wall/door/hill-face strips, ford stones, water shader; the LRU chunk cache and incremental space rebake), `tree_layer.gd` (trees through the flora catalogue with the season shader, stumps, bushes, deadwood by 16×16-tile chunk near the view; hidden where the ¼× chunk carries the canopy), `building_layer.gd` (structures, huts by the bindings ring, workshops, hearth states, bedrolls), `overlay_layer.gd` (zones, item stacks by count bucket, carcasses, designation marks, site ghosts, labels), `room_layer.gd` (R: room tints and labels), `animal_layer.gd`, `visitor_layer.gd`, `agent_layer.gd` (route I people as feet-anchored nodes with the variant shader, selection/drafted outline and night halo, hit test) + `lod_markers.gd` (MultiMesh discs and activity glyphs below 1×), `order_tool.gd` (F1–F10 modes, drag lines and rectangles with the `get_place_preview` ghost at 64 px, the `cmd_*` calls). Everything that stands sorts by base y in the y-sorted child `ColonyView/World`; the ground chunks sit below it; marks and labels above |
-| `scripts/world/` | `art/` (M-ART2: `art_data.gd` manifest/bindings/params lookups and F12 reload, `material_resolver.gd`, `flora_resolver.gd` (M-ART2.1), `ground_baker.gd`, `wall_baker.gd`, `tone.gd`, `site_ghost.gd`), `camera_controller.gd` (zoom ladder ¼×–2× from the params, pan, speed keys 1–4, pause, F12), `daylight_controller.gd` (night CanvasModulate, hearth lights, `dark_at`; + `wood_visuals.gd`), helpers the panels still use (`art_hash.gd`, `art_sprite_library.gd` for the HUD's 32-px icons, `porter_presentation.gd`) |
+| `scripts/world/` | `art/` (M-ART2: `art_data.gd` manifest/bindings/params lookups and F12 reload, `material_resolver.gd`, `flora_resolver.gd` (M-ART2.1), `ground_baker.gd`, `wall_baker.gd`, `tone.gd`, `site_ghost.gd`), `camera_controller.gd` (zoom ladder ¼×–2× from the params, pan, speed keys 1–4, pause, F12), `daylight_controller.gd` (night CanvasModulate, hearth lights, `dark_at`; + `wood_visuals.gd`), shared helpers (`art_hash.gd`, `porter_presentation.gd`); `art_sprite_library.gd` remains referenced only by the legacy helper cluster in `wood_visuals.gd`. HUD icons now use `ArtUI` → `ArtData` → `bindings.ui_icons`, whose existing atlas texture remains live |
 | `scripts/ui/hud/` | `hud_topbar.gd`, `order_bar.gd` (F1–F5 buttons and the order toast) |
 | `scripts/ui/panels/` | `chronicle_panel.gd`, `agent_inspector_panel.gd`, `causal_panel.gd`, `priority_panel.gd` (M2 work priorities, 7 work types since M3), `workshop_panel.gd` (M2 bills of the selected workshop), `room_panel.gd` (M3: a room's role dropdown → `cmd_set_room_role`, tiles, beds, doors, covered items; made by `order_bar.gd`), `art_ui.gd` (shared panel style) |
 | `scripts/ui/` | text helpers shared by panels (`chronicle_text.gd`, `person_names.gd`, `person_read_cache.gd`) |
@@ -334,9 +335,7 @@ The simulation contract binds every pass; each clause has its gate step.
 - **Benchmark** (`worldsim_perf bench`): five scenes on `WorldGenConfig::colony_stress(15100, N, side)` under
   `WorldRules::colony`, each in its own process for a clean resident size, 1,440 warm-up and 2,880 profiled
   ticks, 3 repeats, medians; fed like `quick`. `bench-summarise` merges interleaved sessions of two binaries.
-- **Save files** (`rust/crates/sim-systems/src/save/`): magic `WORLDSIM`, `FORMAT_VERSION`, bincode of the tick,
-  all of `SimResources` (hash collections in key order), the hecs world (archetypes in creation order, entity ids
-  and generations, the allocator's free list) and each system's `save_state`.
+- **Save files** (`rust/crates/sim-systems/src/save/`): magic `WORLDSIM`, `FORMAT_VERSION`, then a catalog-revision envelope before typed body decoding (format8, ADR0038). The body includes the tick, all persisted `SimResources` (hash collections in key order), the hecs world (archetypes in creation order, entity ids and generations, allocator free list), each system's `save_state`, Steward state and sparse content identity. Explicit format6/7 readers retain historical field widths and indexes.
 
 ## 9. Items and jobs (M2, ADR 0019, ADR 0020)
 
@@ -619,3 +618,13 @@ value × 0.55 with the blue shift, additive hearth PointLight2D within 5 tiles)
   (gate step 32), `mart2_ui_test.gd` (windowed, run by hand: 42 checks), `capture.gd --mart2-set` (the owner set),
   `mart2_fps.sh` (FPS budgets).
 
+
+## 15. Immutable content catalog (M-EXT core, ADR 0038)
+
+`rust/crates/sim-core/src/colony/content/` owns pure catalog construction, versioned RON parsing, stable u32 item/blueprint/recipe IDs, ordered indexes, cross-reference validation and one sticky process installation. `items.ron`, `blueprints.ron`, `recipes.ron` and selected knowledge sources are resolved together. Categories/capabilities select mechanics; display names and construction styles remain data. Pressure and animal migration plus the complete seven-family extension proof are still pending in this core checkpoint.
+
+The CLI's `sim-test/src/content_boot.rs` and bridge's `ffi/content_boot.rs` acquire selected source bytes before typed rules or engine construction. `scripts/core/main_bootstrap.gd` invokes the controlled factory and presentation preflight before main children attach. `scripts/ui/content_context.gd` exposes registry metadata to UI consumers. Full-width content columns use PackedInt64Array; mechanical state codes remain separate. Door classification is an explicit `get_space` flag, independent of its style name.
+
+`colony/content_state.rs` retains sparse novel completed blueprint/style identities per physical layer and selected non-default cutters. Historical worlds retain their prior physical/material projections and empty sparse state. `save/content_validation.rs` rejects mismatched layers, styles, bounds and capabilities rather than repairing them silently. Frozen resource and Chronicle readers live in `sim-engine/src/legacy_v7.rs` and `sim-core/src/chronicle/legacy_v7.rs`; they preserve historical field order and indexes directly.
+
+Selected source revision includes exact logical source names and bytes, including supplied presentation files. It is an identity checksum, not authentication. Replacing a selected pack requires a fresh process; unknown or mismatched saves fail before typed decoding. Bundled render-parameter F12 reload remains independent of the frozen selected extension sources. See `docs/decisions/0038-immutable-content-catalog.md` for compatibility limits and the required per-commit safety net.

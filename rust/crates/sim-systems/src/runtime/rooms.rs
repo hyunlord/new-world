@@ -220,7 +220,7 @@ fn announce(world: &World, res: &mut SimResources) {
         });
         let mut entry = ChronicleEntry::new(res.current_tick, ChronicleKind::RoomFormed);
         entry.settlement = owner;
-        entry.cause = role.code();
+        entry.cause = u32::from(role.code());
         entry.value = i64::from(id);
         crate::runtime::chronicle_log::record(world, res, entry);
     }

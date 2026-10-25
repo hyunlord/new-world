@@ -36,11 +36,11 @@ pub(super) fn inputs(
                 .colony
                 .workshops
                 .values()
-                .any(|s| s.kind == recipe.workshop)
+                .any(|s| recipe.supports_workshop(s.kind))
             && !world
                 .query::<&ColonySite>()
                 .iter()
-                .any(|(_, s)| s.kind == recipe.workshop)
+                .any(|(_, s)| recipe.supports_workshop(s.kind))
         {
             let (_, materials, _) = recipe.workshop.plan(&colony_rule);
             for line in materials.used() {

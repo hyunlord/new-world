@@ -36,7 +36,7 @@ use sim_core::spatial::ChunkIndex;
 use sim_engine::{RuntimeSystem, SimResources};
 use std::collections::BTreeMap;
 
-use super::bills::{bill_count, maintain_count};
+use super::bills::{bill_count, maintain_count, selected_tool};
 use super::cancel::reserve;
 use super::items::{chebyshev, colony_sites, room_on, SiteView};
 use sim_core::colony::knowledge::{gates, Knowledge};
@@ -78,16 +78,15 @@ pub fn gather_shortfall(world: &World, res: &SimResources) -> u32 {
             let firewood = bill
                 .recipe
                 .recipe()
-                .is_some_and(|r| r.output.0 == ItemKind::Firewood);
+                .is_some_and(|r| r.output.0.definition().fuel_units == Some(1));
             if let (BillMode::Maintain(n), true, false) = (bill.mode, firewood, bill.suspended) {
                 want = want.max(u32::from(n));
             }
         }
     }
-    let carry = res
-        .rules
-        .colony
-        .map_or(10, |r| u32::from(r.carry(ItemKind::Firewood)));
+    let carry = res.rules.colony.map_or(10, |r| {
+        u32::from(r.carry(ItemKind::role("deadwood_output")))
+    });
     let gathering = world
         .query::<&Job>()
         .iter()
@@ -95,9 +94,15 @@ pub fn gather_shortfall(world: &World, res: &SimResources) -> u32 {
         .count() as u32;
     // Only firewood a hearth can use counts (DECISIONS D19): stacks lying
     // elsewhere (a released gatherer's load) are not fed and must not stop gathering.
-    let ground = res.colony.ground_total(ItemKind::Firewood) as u32;
-    let usable = maintain_count(world, res, ItemKind::Firewood)
-        .saturating_sub(ground.saturating_sub(super::hearth::feedable_firewood(res)));
+    let (ground, total) = ItemKind::all()
+        .filter(|kind| kind.definition().fuel_units == Some(1))
+        .fold((0u32, 0u32), |(ground, total), kind| {
+            (
+                ground + res.colony.ground_total(kind) as u32,
+                total + maintain_count(world, res, kind),
+            )
+        });
+    let usable = total.saturating_sub(ground.saturating_sub(super::hearth::feedable_firewood(res)));
     let held = super::hearth::settlement_wood(res) + usable + gathering * carry;
     want.saturating_sub(held)
 }
@@ -145,7 +150,7 @@ enum Search {
 /// `JobAssignSystem` tick the candidates only shrink (each assignment adds
 /// reservations and items in transit), so an empty search stays empty for
 /// every later agent of the tick and is skipped (M1.5 DECISIONS D15). Fixed
-/// fields and per-kind arrays: the memo is looked up for every agent.
+/// fields and sparse per-kind maps: the memo is looked up for every agent.
 #[derive(Debug, Default, Clone)]
 struct Exhausted {
     short_site: Memo,
@@ -159,8 +164,8 @@ struct Exhausted {
     decon: Memo,
     restock: Memo,
     clay: Memo,
-    stocked: [Memo; ItemKind::ALL.len()],
-    any_stack: [Memo; ItemKind::ALL.len()],
+    stocked: BTreeMap<ItemKind, Memo>,
+    any_stack: BTreeMap<ItemKind, Memo>,
     open_cell: BTreeMap<ItemSpec, Memo>,
 }
 
@@ -178,8 +183,8 @@ impl Exhausted {
             Search::DeconMark => &mut self.decon,
             Search::Restock => &mut self.restock,
             Search::ClayMark => &mut self.clay,
-            Search::Stocked(kind) => &mut self.stocked[kind.code() as usize],
-            Search::AnyStack(kind) => &mut self.any_stack[kind.code() as usize],
+            Search::Stocked(kind) => self.stocked.entry(kind).or_default(),
+            Search::AnyStack(kind) => self.any_stack.entry(kind).or_default(),
             Search::OpenCell(spec) => self.open_cell.entry(spec).or_default(),
         }
     }
@@ -340,9 +345,12 @@ fn pick_work(
                 } else {
                     1
                 };
-                for (kind, n) in recipe.needs() {
+                let selected = selected_tool(res, shop, recipe);
+                let needs = recipe.needs_with_tool(selected);
+                for &(kind, n) in &needs {
                     // M5: the knife is one blade, whatever the trip's crafts.
-                    let knife = recipe.knife && kind == ItemKind::FlintBlade;
+                    let knife =
+                        recipe.tool.as_ref().is_some_and(|t| t.reusable) && Some(kind) == selected;
                     let coming = ctx.supply.get(&(id, kind)).copied().unwrap_or(0);
                     let have = shop.shelved(kind) + coming;
                     if have >= n {
@@ -365,8 +373,39 @@ fn pick_work(
                             |t, _| stack_of(t, Some(kind), None),
                         )
                     });
+                    let mut source_kind = kind;
+                    let source = source.or_else(|| {
+                        if !knife {
+                            return None;
+                        }
+                        for alternative in ItemKind::all()
+                            .filter(|other| *other != kind && recipe.tool_matches(*other))
+                        {
+                            let stocked = search(
+                                &index.ground,
+                                pos,
+                                radius,
+                                ex.memo(Search::Stocked(alternative)),
+                                |t, _| stack_of(t, Some(alternative), Some(true)),
+                            );
+                            let found = stocked.or_else(|| {
+                                search(
+                                    &index.ground,
+                                    pos,
+                                    radius,
+                                    ex.memo(Search::AnyStack(alternative)),
+                                    |t, _| stack_of(t, Some(alternative), None),
+                                )
+                            });
+                            if found.is_some() {
+                                source_kind = alternative;
+                                return found;
+                            }
+                        }
+                        None
+                    });
                     if let Some((from, ())) = source {
-                        let amount = rule.carry(kind).min(count(from)).min(n - have);
+                        let amount = rule.carry(source_kind).min(count(from)).min(n - have);
                         return Some((
                             JobKind::Supply {
                                 from,
@@ -374,15 +413,12 @@ fn pick_work(
                                 to,
                             },
                             amount,
-                            kind,
+                            source_kind,
                         ));
                     }
                 }
                 // Craft: every input on the shelf and the bench free.
-                let ready = recipe
-                    .needs()
-                    .iter()
-                    .all(|&(kind, n)| shop.shelved(kind) >= n);
+                let ready = needs.iter().all(|&(kind, n)| shop.shelved(kind) >= n);
                 // M4: only a practitioner of the recipe's gate crafts it.
                 let allowed = gates().recipe(recipe.id) & !ctx.practice == 0;
                 if ready && allowed && !colony.reservations.contains_key(&ReserveKey::Bench(to)) {
@@ -501,13 +537,21 @@ fn pick_work(
                 |c, _| reach(c) && ready(c),
             ) {
                 if allowed(site) {
-                    return Some((JobKind::Build { site }, 0, ItemKind::Log));
+                    return Some((
+                        JobKind::Build { site },
+                        0,
+                        ItemKind::role("default_placeholder"),
+                    ));
                 }
                 if let Some((site, ())) = ctx
                     .site_index
                     .nearest_where(pos, radius, |c, _| reach(c) && ready(c) && allowed(c))
                 {
-                    return Some((JobKind::Build { site }, 0, ItemKind::Log));
+                    return Some((
+                        JobKind::Build { site },
+                        0,
+                        ItemKind::role("default_placeholder"),
+                    ));
                 }
             }
             // M3: take apart what is marked for deconstruction.
@@ -524,7 +568,13 @@ fn pick_work(
                 ex.memo(Search::DeconMark),
                 |t, _| open(t),
             )
-            .map(|(tile, ())| (JobKind::Deconstruct { tile }, 0, ItemKind::Log))
+            .map(|(tile, ())| {
+                (
+                    JobKind::Deconstruct { tile },
+                    0,
+                    ItemKind::role("default_placeholder"),
+                )
+            })
         }
         WorkType::Mine => {
             // M3: the nearest marked hill tile someone can stand beside.
@@ -540,7 +590,7 @@ fn pick_work(
                 search(&index.dig, pos, radius, ex.memo(Search::DigMark), |t, _| {
                     open(t)
                 })
-                .map(|(tile, ())| (JobKind::Dig { tile }, 0, ItemKind::Stone))
+                .map(|(tile, ())| (JobKind::Dig { tile }, 0, ItemKind::role("excavated_stone")))
             } else {
                 None
             };
@@ -561,7 +611,7 @@ fn pick_work(
                 ex.memo(Search::ClayMark),
                 |t, _| clay(t),
             )
-            .map(|(node, ())| (JobKind::DigClay { node }, 0, ItemKind::Clay))
+            .map(|(node, ())| (JobKind::DigClay { node }, 0, ItemKind::role("clay_output")))
         }
         WorkType::Quarry
             if gates().designation(sim_core::colony::Designation::Quarry) & !ctx.practice != 0 =>
@@ -581,11 +631,17 @@ fn pick_work(
                 ex.memo(Search::QuarryNode),
                 |t, _| quarriable(t),
             )
-            .map(|(node, ())| (JobKind::Quarry { node }, 0, ItemKind::Log))
+            .map(|(node, ())| {
+                (
+                    JobKind::Quarry { node },
+                    0,
+                    ItemKind::role("default_placeholder"),
+                )
+            })
         }
         // M5 (ADR 0028): the nearest huntable deer (a tracking practitioner only).
         WorkType::Hunt => super::hunt::pick(res, ctx.practice, ctx.region, pos, radius)
-            .map(|(animal, _)| (JobKind::Hunt { animal }, 0, ItemKind::Meat)),
+            .map(|(animal, _)| (JobKind::Hunt { animal }, 0, ItemKind::role("grazer_meat"))),
         WorkType::Chop => {
             // The nearest marked tree no one has taken.
             let choppable = |tile: (u32, u32)| {
@@ -600,7 +656,13 @@ fn pick_work(
                 ex.memo(Search::MarkedTree),
                 |t, _| choppable(t),
             )
-            .map(|(tree, ())| (JobKind::Chop { tree }, 0, ItemKind::Log))
+            .map(|(tree, ())| {
+                (
+                    JobKind::Chop { tree },
+                    0,
+                    ItemKind::role("default_placeholder"),
+                )
+            })
         }
         WorkType::Haul => {
             // M5.5 (ADR 0032): items owed to a trading caravan first, carried to its spot.
@@ -749,7 +811,10 @@ fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhauste
         ex.memo(Search::Deadwood),
         |t, _| free(t),
     )?;
-    let spec = ItemSpec::raw(ItemKind::Firewood, Some(sim_core::colony::materials::OAK));
+    let spec = ItemSpec::raw(
+        ItemKind::role("deadwood_output"),
+        Some(sim_core::colony::materials::OAK),
+    );
     let open = |cell: (u32, u32)| {
         room_on(res, cell, spec) > 0
             && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
@@ -769,7 +834,11 @@ fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhauste
         .copied()
         .min_by_key(|t| (chebyshev(spot, *t), t.1, t.0));
     let to = cell.or(near)?;
-    Some((JobKind::Gather { spot, to }, 0, ItemKind::Firewood))
+    Some((
+        JobKind::Gather { spot, to },
+        0,
+        ItemKind::role("deadwood_output"),
+    ))
 }
 
 /// The best unreserved axe stack on a stockpile cell within `reach` of `pos`
@@ -1214,7 +1283,7 @@ impl RuntimeSystem for JobAssignSystem {
                         *supply.entry((workshop, item)).or_insert(0) += amount;
                     }
                     JobKind::Gather { .. } => {
-                        let carry = u32::from(rule.carry(ItemKind::Firewood));
+                        let carry = u32::from(rule.carry(ItemKind::role("deadwood_output")));
                         gather_short.set(gather_short.get().map(|v| v.saturating_sub(carry)));
                     }
                     JobKind::Craft { bill, workshop, .. } => {
@@ -1272,4 +1341,21 @@ pub(super) fn needy(world: &World, res: &SimResources, e: Entity) -> bool {
             || world
                 .get::<&sim_core::components::Thirst>(e)
                 .is_ok_and(|t| t.value >= n::THIRST_THRESHOLD))
+}
+
+#[cfg(test)]
+mod item_memo_tests {
+    use super::*;
+
+    #[test]
+    fn item_search_memos_are_sparse_and_independent() {
+        let mut memo = Exhausted::default();
+        assert!(memo.stocked.is_empty() && memo.any_stack.is_empty());
+        memo.memo(Search::Stocked(ItemKind::Log)).empty = true;
+        assert!(!memo.memo(Search::Stocked(ItemKind::Spear)).empty);
+        assert!(!memo.memo(Search::AnyStack(ItemKind::Log)).empty);
+        assert!(memo.memo(Search::Stocked(ItemKind::Log)).empty);
+        assert_eq!(memo.stocked.len(), 2);
+        assert_eq!(memo.any_stack.len(), 1);
+    }
 }

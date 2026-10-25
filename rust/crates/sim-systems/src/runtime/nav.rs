@@ -11,7 +11,7 @@
 //! the only writers are the commands and the job layer, never a renderer.
 //! Every function returns at once without `rules.colony`, so the baseline
 //! world never has a map.
-use sim_core::colony::BlueprintKind;
+use sim_core::colony::content::PlannedNav;
 use sim_core::nav::{CostMap, Tile, COST_BANK, COST_DOOR, COST_PLAIN, IMPASSABLE};
 use sim_core::TerrainType;
 use sim_engine::SimResources;
@@ -36,10 +36,15 @@ pub fn tile_cost(res: &SimResources, tile: Tile) -> u8 {
             IMPASSABLE
         };
     }
-    match res.colony.space_sites.get(&tile) {
-        Some(BlueprintKind::LogWall | BlueprintKind::StoneWall) => IMPASSABLE,
-        Some(BlueprintKind::Door) => COST_DOOR,
-        _ => COST_PLAIN,
+    match res
+        .colony
+        .space_sites
+        .get(&tile)
+        .map(|kind| kind.definition().planned_nav)
+    {
+        Some(PlannedNav::Blocked) => IMPASSABLE,
+        Some(PlannedNav::Door) => COST_DOOR,
+        Some(PlannedNav::Unchanged) | None => COST_PLAIN,
     }
 }
 
@@ -89,6 +94,7 @@ pub fn passable(res: &SimResources, tile: Tile) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use sim_core::colony::BlueprintKind;
     use sim_core::material::MaterialId;
     use sim_core::rules::{ColonyRule, WorldRules};
     use sim_core::MaterialRegistry;

@@ -18,6 +18,7 @@
 #   winter_severity, year_index), get_resource_snapshot, get_tallies, get_colony_overlay, get_tech.
 extends Control
 
+const Content = preload("res://scripts/ui/content_context.gd")
 const ControlsCatalog = preload("res://scripts/ui/mux/controls_catalog.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
@@ -73,16 +74,16 @@ func _ready() -> void:
 	var hbox: HBoxContainer = HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 8)
 	column.add_child(hbox)
-	_clock_label = ArtUI.pair(hbox, 9)
+	_clock_label = ArtUI.pair(hbox, "day")
 	_clock_icon = hbox.get_child(0).get_child(0) as Sprite2D
-	_agents_label = ArtUI.pair(hbox, 1)
+	_agents_label = ArtUI.pair(hbox, "people")
 	_settlements_row = HBoxContainer.new()
 	_settlements_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_settlements_row.add_theme_constant_override("separation", 8)
 	hbox.add_child(_settlements_row)
-	_settlements_label = ArtUI.pair(_settlements_row, 2)
-	_shelters_label = ArtUI.pair(hbox, 3)
-	_sites_label = ArtUI.pair(hbox, 4)
+	_settlements_label = ArtUI.pair(_settlements_row, "settlements")
+	_shelters_label = ArtUI.pair(hbox, "shelters")
+	_sites_label = ArtUI.pair(hbox, "construction")
 	_era_label = Label.new()
 	_era_label.name = "EraLabel"
 	_era_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -106,9 +107,9 @@ func _ready() -> void:
 	var lower: HBoxContainer = HBoxContainer.new()
 	lower.add_theme_constant_override("separation", 8)
 	column.add_child(lower)
-	for index: int in [5, 6, 7, 8]:
-		_resource_labels.append(ArtUI.pair(lower, index))
-		if index == 5:
+	for role: String in ["food", "berries", "births", "deaths"]:
+		_resource_labels.append(ArtUI.pair(lower, role))
+		if role == "food":
 			_wood_row = HBoxContainer.new()
 			_wood_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			_wood_row.add_theme_constant_override("separation", 8)
@@ -154,9 +155,9 @@ func _ready() -> void:
 	_zoom_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	lower.add_child(_zoom_label)
 	_zoom_label.hide() # Kept for existing zoom_text() consumers; MapControls owns the visible level.
-	_pause_icon = ArtUI.icon(14)
+	_pause_icon = ArtUI.icon("pause")
 	lower.add_child(_pause_icon)
-	_speed_label = ArtUI.pair(lower, 15)
+	_speed_label = ArtUI.pair(lower, "speed")
 
 
 	for entry: Array in [["TechPanel", TechPanel], ["TeachPanel", TeachPanel], ["StoryBanner", StoryBanner], ["NeighboursPanel", NeighboursPanel],
@@ -314,9 +315,9 @@ func _refresh() -> void:
 	var item_kinds: Variant = overlay.get("item_kinds", null)
 	var item_counts: Variant = overlay.get("item_counts", null)
 	_logs_label.visible = item_counts is PackedInt32Array
-	if item_kinds is PackedInt32Array and item_counts is PackedInt32Array:
+	if item_kinds is PackedInt64Array and item_counts is PackedInt32Array:
 		for index: int in mini(item_kinds.size(), item_counts.size()):
-			if item_kinds[index] == 0:
+			if item_kinds[index] == Content.item_role("tree_output"):
 				logs += item_counts[index]
 	_logs_label.text = _loc("HUD_LOGS") + " %d" % logs
 	var cold_count: int = 0
@@ -361,7 +362,7 @@ func _refresh() -> void:
 		_zoom_label.text = _loc("UI_ZOOM").replace("{zoom}", zoom_word(cam.zoom.x))
 	_pause_icon.modulate.a = 1.0 if paused else 0.35
 	_refresh_knowledge()
-	ArtUI.Library.apply(_clock_icon, "U1_10" if hour >= 21 or hour < 5 else "U1_09")
+	ArtUI.apply_icon(_clock_icon, "night" if hour >= 21 or hour < 5 else "day")
 	_clock_icon.offset = Vector2.ZERO
 	_clock_icon.scale = Vector2(2, 2)
 

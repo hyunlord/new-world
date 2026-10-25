@@ -78,9 +78,8 @@ use std::collections::HashMap;
 use hecs::{Entity, World};
 use sim_core::causal::CausalEvent;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
-use sim_core::colony::{
-    Bill, BillMode, BlueprintKind, ColonySite, MaterialNeeds, Occupant, RecipeKind, Workshop,
-};
+use sim_core::colony::content::CompletionCategory;
+use sim_core::colony::{Bill, BillMode, ColonySite, MaterialNeeds, Occupant, Workshop};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, BuildingKind, ConstructionSite, Position,
     SettlementId, TargetKind,
@@ -308,10 +307,15 @@ impl RuntimeSystem for ConstructionSystem {
                     .map(|(_, (agent, _, _))| agent.id)
                     .collect();
                 builders.sort_unstable();
-                if site.kind.is_workshop() {
-                    complete_workshop(resources, site, needs);
-                } else {
-                    complete_hut(world, resources, site, needs, &builders, tick);
+                match site.kind.definition().completion {
+                    CompletionCategory::Workshop => complete_workshop(resources, site, needs),
+                    CompletionCategory::Dwelling => {
+                        complete_hut(world, resources, site, needs, &builders, tick)
+                    }
+                    CompletionCategory::Wall
+                    | CompletionCategory::Door
+                    | CompletionCategory::Floor
+                    | CompletionCategory::Bed => {}
                 }
             }
             let tile_idx = position.1 * width + position.0;
@@ -437,17 +441,29 @@ fn complete_workshop(resources: &mut SimResources, site: ColonySite, needs: Mate
     }
     // M2 goal 3.8: a wood bench starts with the hearth's standing firewood bill.
     let mut bills = Vec::new();
-    if site.kind == BlueprintKind::WoodBench && resources.rules.society.firewood.is_some() {
-        let bill = resources.colony.next_bill_id.max(1);
-        resources.colony.next_bill_id = bill + 1;
-        bills.push(Bill {
-            id: bill,
-            recipe: RecipeKind::SplitFirewood,
-            mode: BillMode::Maintain(crate::runtime::jobs::hearth::auto_bill_count(resources)),
-            done: 0,
-            suspended: false,
-            auto: true,
-        });
+    if let Some(initial) = &site.kind.definition().initial_bill {
+        let enabled = match initial.enabled_rule.as_str() {
+            "society.firewood" => resources.rules.society.firewood.is_some(),
+            selector => panic!("unvalidated initial-bill enable selector {selector}"),
+        };
+        if enabled {
+            let target = match initial.target_rule.as_str() {
+                "hearth.auto_bill_count" => {
+                    crate::runtime::jobs::hearth::auto_bill_count(resources)
+                }
+                selector => panic!("unvalidated initial-bill target selector {selector}"),
+            };
+            let bill = resources.colony.next_bill_id.max(1);
+            resources.colony.next_bill_id = bill + 1;
+            bills.push(Bill {
+                id: bill,
+                recipe: initial.recipe,
+                mode: BillMode::Maintain(target),
+                done: 0,
+                suspended: false,
+                auto: true,
+            });
+        }
     }
     resources.colony.workshops.insert(
         id,
@@ -461,6 +477,7 @@ fn complete_workshop(resources: &mut SimResources, site: ColonySite, needs: Mate
             active: None,
         },
     );
+    crate::runtime::jobs::space::record_completion(resources, site.top_left, site.kind);
     resources.colony.tallies.workshops_built += 1;
     resources.colony.touch(false);
 }
@@ -490,6 +507,7 @@ fn complete_hut(
             .item_ledger
             .consume(line.kind, u64::from(line.delivered));
     }
+    crate::runtime::jobs::space::record_completion(resources, centre, site.kind);
     resources.colony.tallies.huts_built += 1;
     resources.colony.touch(false);
     let mut entry = ChronicleEntry::new(tick, ChronicleKind::HutBuilt);

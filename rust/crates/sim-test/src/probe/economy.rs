@@ -56,10 +56,8 @@ fn craft_crafts(c: &sim_core::colony::ColonyState, agent: Option<u64>) -> u64 {
         .iter()
         .filter(|((a, r), _)| {
             agent.is_none_or(|x| x == *a)
-                && RecipeKind::ALL
-                    .into_iter()
-                    .find(|k| k.code() == *r)
-                    .and_then(|k| k.recipe())
+                && sim_core::colony::content::installed_or_bundled()
+                    .recipe_by_code(*r)
                     .is_some_and(|recipe| recipe.work == WorkType::Craft)
         })
         .map(|(_, (n, _))| n)

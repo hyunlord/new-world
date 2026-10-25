@@ -66,7 +66,7 @@ pub fn held(res: &SimResources, kind: ItemKind) -> u64 {
 pub fn clues(world: &World, res: &SimResources) -> BTreeMap<u8, ItemKind> {
     let practice = colony_practice(world);
     let mut out = BTreeMap::new();
-    for kind in ItemKind::ALL {
+    for kind in ItemKind::all() {
         if held(res, kind) == 0 {
             continue;
         }
@@ -383,7 +383,7 @@ pub fn trade(
     res.colony.touch(false);
     res.chronicle.push(
         ChronicleEntry::new(res.current_tick, ChronicleKind::Traded)
-            .cause(c.neighbour)
+            .cause(u32::from(c.neighbour))
             .value((give_value.min(65_535) << 16 | take_value.min(65_535)) as i64),
     );
     let items: u32 = give.iter().map(|g| u32::from(g.1)).sum::<u32>()

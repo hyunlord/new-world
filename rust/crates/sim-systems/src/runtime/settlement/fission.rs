@@ -1059,7 +1059,7 @@ impl FissionSystem {
                         .subject(*member)
                         .other(Some(leader))
                         .settlement(Some(sid))
-                        .cause(cause.as_u8())
+                        .cause(u32::from(cause.as_u8()))
                         .value(i64::from(fission_id)),
                 );
             }

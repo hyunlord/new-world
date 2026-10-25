@@ -115,6 +115,101 @@ pub fn nearest_stack(
     })
 }
 
+/// Candidate weapons ordered by authored preference, ties by stable item code.
+pub fn draft_weapons() -> Vec<ItemKind> {
+    let mut kinds: Vec<_> = ItemKind::all()
+        .filter_map(|kind| {
+            Some((
+                std::cmp::Reverse(kind.definition().weapon.as_ref()?.draft_rank?),
+                kind,
+            ))
+        })
+        .collect();
+    kinds.sort_unstable();
+    kinds.into_iter().map(|(_, kind)| kind).collect()
+}
+
+fn hunting_tools(include_cutters: bool) -> Vec<ItemKind> {
+    let mut ranked: Vec<_> = ItemKind::all()
+        .filter_map(|kind| {
+            kind.definition()
+                .weapon
+                .as_ref()
+                .and_then(|w| w.hunt_rank)
+                .map(|rank| (std::cmp::Reverse(rank), kind))
+        })
+        .collect();
+    ranked.sort_unstable();
+    let mut kinds: Vec<_> = ranked.into_iter().map(|(_, kind)| kind).collect();
+    if include_cutters {
+        for kind in ItemKind::all().filter(|kind| kind.definition().cutter.is_some()) {
+            if !kinds.contains(&kind) {
+                kinds.push(kind);
+            }
+        }
+    }
+    kinds
+}
+
+fn wildlife_wear(rule: &WildlifeRule, selector: Option<&str>, default: u32) -> u32 {
+    match selector {
+        Some("spear_uses") => rule.spear_uses,
+        Some("knife_uses") => rule.knife_uses,
+        _ => default,
+    }
+}
+
+/// Wear the actual held weapon when its capability declares combat wear.
+pub fn wear_weapon(
+    world: &mut World,
+    res: &mut SimResources,
+    rule: &WildlifeRule,
+    id: AgentId,
+    entity: Entity,
+) -> bool {
+    let Ok(kind) = world.get::<&Tool>(entity).map(|t| t.item.kind) else {
+        return false;
+    };
+    let Some(w) = kind.definition().weapon.as_ref() else {
+        return false;
+    };
+    // Axes wear on chopping; only weapon-declared wear is applied to blows.
+    if w.wear_rule.is_none() && w.wear_default == 0 {
+        return false;
+    }
+    wear_tool(
+        world,
+        res,
+        id,
+        entity,
+        kind,
+        wildlife_wear(rule, w.wear_rule.as_deref(), w.wear_default),
+    )
+}
+
+fn wear_cutter(
+    world: &mut World,
+    res: &mut SimResources,
+    rule: &WildlifeRule,
+    id: AgentId,
+    entity: Entity,
+) -> bool {
+    let Ok(kind) = world.get::<&Tool>(entity).map(|t| t.item.kind) else {
+        return false;
+    };
+    let Some(c) = kind.definition().cutter.as_ref() else {
+        return false;
+    };
+    wear_tool(
+        world,
+        res,
+        id,
+        entity,
+        kind,
+        wildlife_wear(rule, c.wear_rule.as_deref(), c.wear_default),
+    )
+}
+
 /// The tool a hunter fetches (`held` = the kind it holds): a stocked spear unless it
 /// holds one (swapping any other tool); with no tool and no spear, a knife.
 pub fn hunting_fetch(
@@ -123,17 +218,15 @@ pub fn hunting_fetch(
     reach: u32,
     held: Option<ItemKind>,
 ) -> Option<(u32, u32)> {
-    match held {
-        Some(ItemKind::Spear) => None,
-        Some(_) => nearest_stack(res, pos, reach, &[ItemKind::Spear], true),
-        None => nearest_stack(
-            res,
-            pos,
-            reach,
-            &[ItemKind::Spear, ItemKind::FlintBlade],
-            true,
-        ),
+    if held.is_some_and(|kind| {
+        kind.definition()
+            .weapon
+            .as_ref()
+            .is_some_and(|w| w.hunt_rank.is_some())
+    }) {
+        return None;
     }
+    nearest_stack(res, pos, reach, &hunting_tools(held.is_none()), true)
 }
 
 /// Take one item of the stack at `tile` as `entity`'s held tool when it is one of
@@ -184,11 +277,17 @@ pub fn pick_up_tool(
 
 /// The damage of `entity`'s held weapon (goal 3.2: hands 4, stone axe 8, ground axe 10, spear 12).
 pub fn weapon_damage(world: &World, rule: &WildlifeRule, entity: Entity) -> u16 {
-    match world.get::<&Tool>(entity).map(|t| t.item.kind) {
-        Ok(ItemKind::Spear) => rule.spear_damage,
-        Ok(ItemKind::GroundAxe) => rule.ground_axe_damage,
-        Ok(ItemKind::StoneAxe) => rule.axe_damage,
-        _ => rule.hand_damage,
+    let Ok(tool) = world.get::<&Tool>(entity) else {
+        return rule.hand_damage;
+    };
+    let Some(weapon) = tool.item.kind.definition().weapon.as_ref() else {
+        return rule.hand_damage;
+    };
+    match weapon.damage_rule.as_deref() {
+        Some("spear_damage") => rule.spear_damage,
+        Some("ground_axe_damage") => rule.ground_axe_damage,
+        Some("axe_damage") => rule.axe_damage,
+        _ => weapon.damage,
     }
 }
 
@@ -228,9 +327,15 @@ pub fn wear_tool(
         let _ = world.remove_one::<Tool>(entity);
         res.colony.item_ledger.consume(kind, 1);
         res.colony.tallies.tools_broken += 1;
-        match kind {
-            ItemKind::Spear => res.colony.wildlife.tallies.spears_broken += 1,
-            ItemKind::FlintBlade => res.colony.wildlife.tallies.knives_broken += 1,
+        let def = kind.definition();
+        let tally = def
+            .weapon
+            .as_ref()
+            .and_then(|w| w.break_tally.as_deref())
+            .or_else(|| def.cutter.as_ref().and_then(|c| c.break_tally.as_deref()));
+        match tally {
+            Some("spears_broken") => res.colony.wildlife.tallies.spears_broken += 1,
+            Some("knives_broken") => res.colony.wildlife.tallies.knives_broken += 1,
             _ => {}
         }
         res.chronicle.push(
@@ -282,15 +387,7 @@ pub fn step(
             super::execute::walk_job(world, res, id, entity, &mut job, pos, at);
             return;
         }
-        pick_up_tool(
-            world,
-            res,
-            entity,
-            at,
-            pos,
-            Some(id),
-            &[ItemKind::Spear, ItemKind::FlintBlade],
-        );
+        pick_up_tool(world, res, entity, at, pos, Some(id), &hunting_tools(true));
         job.fetch = None;
         job.best_distance = chebyshev(pos, deer);
         job.progress_tick = res.current_tick;
@@ -363,9 +460,14 @@ fn attack(
     animal: u32,
 ) -> bool {
     let level = craft::level_of(world, entity, SkillKind::Hunting);
-    let spear = world
-        .get::<&Tool>(entity)
-        .is_ok_and(|t| t.item.kind == ItemKind::Spear);
+    let spear = world.get::<&Tool>(entity).is_ok_and(|t| {
+        t.item
+            .kind
+            .definition()
+            .weapon
+            .as_ref()
+            .is_some_and(|w| w.hunt_hit_bonus)
+    });
     let chance = hit_permille(rule, level, spear);
     let key = world.get::<&Lineage>(entity).map_or(id, |l| l.key);
     res.colony.wildlife.tallies.hunt_attacks += 1;
@@ -385,9 +487,7 @@ fn attack(
     }
     res.colony.wildlife.tallies.hunt_hits += 1;
     let damage = weapon_damage(world, rule, entity);
-    if spear {
-        wear_tool(world, res, id, entity, ItemKind::Spear, rule.spear_uses);
-    }
+    wear_weapon(world, res, rule, id, entity);
     let Some(deer) = res.colony.wildlife.animals.get_mut(&animal) else {
         return false;
     };
@@ -409,14 +509,7 @@ fn kill(
         return Vec::new();
     };
     res.colony.wildlife.marks.remove(&animal);
-    let knife = wear_tool(
-        world,
-        res,
-        id,
-        entity,
-        ItemKind::FlintBlade,
-        rule.knife_uses,
-    );
+    let knife = wear_cutter(world, res, rule, id, entity);
     if knife {
         res.colony.wildlife.tallies.knife_uses += 1;
     }
@@ -425,14 +518,14 @@ fn kill(
     } else {
         rule.meat_without_knife
     };
-    let meat_tiles = drop_carcass(res, deer.pos, meat, ItemKind::Hide);
+    let meat_tiles = drop_carcass(res, deer.pos, meat, ItemKind::role("grazer_hide"));
     let w = &mut res.colony.wildlife;
     w.tallies.deer_killed += 1;
     w.version += 1;
     res.chronicle.push(
         ChronicleEntry::new(res.current_tick, ChronicleKind::Hunted)
             .subject(id)
-            .cause(AnimalKind::Deer.code())
+            .cause(u32::from(AnimalKind::Deer.code()))
             .value(i64::from(meat)),
     );
     crate::runtime::knowledge::used(world, res, entity, gates().designation(Designation::Hunt));
@@ -452,8 +545,13 @@ pub fn drop_carcass(
     if meat > 0 {
         res.colony
             .item_ledger
-            .create(ItemKind::Meat, u64::from(meat));
-        meat_tiles = put_items(res, tile, ItemSpec::raw(ItemKind::Meat, None), meat);
+            .create(ItemKind::role("grazer_meat"), u64::from(meat));
+        meat_tiles = put_items(
+            res,
+            tile,
+            ItemSpec::raw(ItemKind::role("grazer_meat"), None),
+            meat,
+        );
         let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
         let lots = &mut res.colony.wildlife.meat_lots;
         match lots.last_mut() {
@@ -582,12 +680,8 @@ pub fn equip_step(
 }
 
 /// How warm a top is (0 = the loincloth).
-const fn warmth(top: Option<Top>) -> u8 {
-    match top {
-        None => 0,
-        Some(Top::HideWrap) => 1,
-        Some(Top::FurCloak) => 2,
-    }
+fn warmth(top: Option<Top>) -> u16 {
+    top.map_or(0, Top::warmth_rank)
 }
 
 /// The dressing pass (ADR 0029; `JobAssignSystem`, every 60 ticks while the
@@ -605,7 +699,7 @@ pub fn dress(
 ) {
     use sim_core::components::{Agent, Child, Hardiness};
     let tick = res.current_tick;
-    let mut tops: Vec<(std::cmp::Reverse<u8>, u32, u32, Top)> = res
+    let mut tops: Vec<(std::cmp::Reverse<u16>, u32, u32, Top)> = res
         .colony
         .ground_items
         .iter()
@@ -625,7 +719,7 @@ pub fn dress(
         return;
     }
     tops.sort();
-    let mut wearers: Vec<(std::cmp::Reverse<u16>, AgentId, u8)> = world
+    let mut wearers: Vec<(std::cmp::Reverse<u16>, AgentId, u16)> = world
         .query::<(&Agent, Option<&Hardiness>, Option<&Apparel>)>()
         .without::<&Child>()
         .iter()
@@ -686,5 +780,43 @@ mod tests {
         assert_eq!(hit_permille(&rule, 25, false), 800);
         assert_eq!(hit_permille(&rule, 0, true), 800);
         assert_eq!(hit_permille(&rule, 10, true), 950, "capped");
+    }
+}
+
+#[cfg(test)]
+mod item_capability_tests {
+    use super::*;
+
+    #[test]
+    fn historical_weapon_preferences_and_rule_damage_are_preserved() {
+        assert_eq!(
+            draft_weapons(),
+            vec![ItemKind::Spear, ItemKind::GroundAxe, ItemKind::StoneAxe]
+        );
+        assert_eq!(hunting_tools(false), vec![ItemKind::Spear]);
+        assert_eq!(
+            hunting_tools(true),
+            vec![ItemKind::Spear, ItemKind::FlintBlade]
+        );
+        let mut world = World::new();
+        let mut rule = WildlifeRule::M5;
+        rule.spear_damage = 71;
+        rule.ground_axe_damage = 53;
+        rule.axe_damage = 29;
+        rule.hand_damage = 7;
+        for (kind, damage) in [
+            (ItemKind::Spear, 71),
+            (ItemKind::GroundAxe, 53),
+            (ItemKind::StoneAxe, 29),
+            (ItemKind::FlintBlade, 7),
+        ] {
+            let entity = world.spawn((Tool {
+                item: ItemSpec::raw(kind, None),
+                uses: 0,
+            },));
+            assert_eq!(weapon_damage(&world, &rule, entity), damage);
+        }
+        let empty = world.spawn(());
+        assert_eq!(weapon_damage(&world, &rule, empty), 7);
     }
 }

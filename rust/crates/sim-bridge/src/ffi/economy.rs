@@ -155,7 +155,7 @@ pub struct BillRow {
     /// Bill id.
     pub id: u32,
     /// `RecipeKind::code`.
-    pub recipe: u8,
+    pub recipe: u32,
     /// `BillMode::code` (0 make, 1 maintain).
     pub mode: u8,
     /// The mode's count.
@@ -176,7 +176,7 @@ pub struct WorkshopRow {
     /// Workshop id.
     pub id: u32,
     /// `BlueprintKind::code`.
-    pub kind: u8,
+    pub kind: u32,
     /// Footprint top-left and size.
     pub rect: (u32, u32, u32, u32),
     /// Work tile.
@@ -184,7 +184,7 @@ pub struct WorkshopRow {
     /// Bills in work order.
     pub bills: Vec<BillRow>,
     /// Shelf: `(ItemKind::code, count)` per stack.
-    pub shelf: Vec<(u8, u16)>,
+    pub shelf: Vec<(u32, u16)>,
 }
 
 /// Every finished workshop, in id order.
@@ -221,6 +221,10 @@ pub fn collect_workshops(resources: &SimResources) -> Vec<WorkshopRow> {
         .collect()
 }
 
+fn i64s(values: impl Iterator<Item = i64>) -> PackedInt64Array {
+    PackedInt64Array::from(values.collect::<Vec<_>>().as_slice())
+}
+
 fn i32s(values: impl Iterator<Item = i64>) -> PackedInt32Array {
     let v: Vec<i32> = values.map(|x| x as i32).collect();
     PackedInt32Array::from(v.as_slice())
@@ -229,7 +233,7 @@ fn i32s(values: impl Iterator<Item = i64>) -> PackedInt32Array {
 pub(super) fn workshops_to_dict(rows: &[WorkshopRow]) -> VarDictionary {
     let mut dict = VarDictionary::new();
     dict.set("ids", i32s(rows.iter().map(|r| i64::from(r.id))));
-    dict.set("kinds", i32s(rows.iter().map(|r| i64::from(r.kind))));
+    dict.set("kinds", i64s(rows.iter().map(|r| i64::from(r.kind))));
     dict.set("xs", i32s(rows.iter().map(|r| i64::from(r.rect.0))));
     dict.set("ys", i32s(rows.iter().map(|r| i64::from(r.rect.1))));
     dict.set("ws", i32s(rows.iter().map(|r| i64::from(r.rect.2))));
@@ -246,7 +250,7 @@ pub(super) fn workshops_to_dict(rows: &[WorkshopRow]) -> VarDictionary {
     dict.set("bill_ids", i32s(bills.iter().map(|(_, b)| i64::from(b.id))));
     dict.set(
         "bill_recipes",
-        i32s(bills.iter().map(|(_, b)| i64::from(b.recipe))),
+        i64s(bills.iter().map(|(_, b)| i64::from(b.recipe))),
     );
     dict.set(
         "bill_modes",
@@ -272,7 +276,7 @@ pub(super) fn workshops_to_dict(rows: &[WorkshopRow]) -> VarDictionary {
         "bill_active",
         i32s(bills.iter().map(|(_, b)| i64::from(b.active))),
     );
-    let shelf: Vec<(usize, (u8, u16))> = rows
+    let shelf: Vec<(usize, (u32, u16))> = rows
         .iter()
         .enumerate()
         .flat_map(|(i, r)| r.shelf.iter().map(move |s| (i, *s)))
@@ -280,7 +284,7 @@ pub(super) fn workshops_to_dict(rows: &[WorkshopRow]) -> VarDictionary {
     dict.set("shelf_shops", i32s(shelf.iter().map(|(i, _)| *i as i64)));
     dict.set(
         "shelf_kinds",
-        i32s(shelf.iter().map(|(_, s)| i64::from(s.0))),
+        i64s(shelf.iter().map(|(_, s)| i64::from(s.0))),
     );
     dict.set(
         "shelf_counts",
@@ -342,7 +346,7 @@ pub(super) fn priorities_to_dict(rows: &[PriorityRow]) -> VarDictionary {
 }
 
 /// Every recipe in code order: `(code, name, workshop kind code, output kind code, output count, work ticks, skill code)`.
-pub fn collect_recipes() -> Vec<(u8, &'static str, u8, u8, u16, u32, u8)> {
+pub fn collect_recipes() -> Vec<(u32, &'static str, u32, u32, u16, u32, u8)> {
     recipes()
         .iter()
         .map(|r| {
@@ -359,15 +363,17 @@ pub fn collect_recipes() -> Vec<(u8, &'static str, u8, u8, u16, u32, u8)> {
         .collect()
 }
 
-pub(super) fn recipes_to_dict(rows: &[(u8, &'static str, u8, u8, u16, u32, u8)]) -> VarDictionary {
+pub(super) fn recipes_to_dict(
+    rows: &[(u32, &'static str, u32, u32, u16, u32, u8)],
+) -> VarDictionary {
     let mut dict = VarDictionary::new();
-    dict.set("codes", i32s(rows.iter().map(|r| i64::from(r.0))));
+    dict.set("codes", i64s(rows.iter().map(|r| i64::from(r.0))));
     let names: Vec<GString> = rows.iter().map(|r| GString::from(r.1)).collect();
     dict.set("names", PackedStringArray::from(names.as_slice()));
-    dict.set("workshop_kinds", i32s(rows.iter().map(|r| i64::from(r.2))));
-    dict.set("output_kinds", i32s(rows.iter().map(|r| i64::from(r.3))));
+    dict.set("workshop_kinds", i64s(rows.iter().map(|r| i64::from(r.2))));
+    dict.set("output_kinds", i64s(rows.iter().map(|r| i64::from(r.3))));
     dict.set("output_counts", i32s(rows.iter().map(|r| i64::from(r.4))));
-    dict.set("work_ticks", i32s(rows.iter().map(|r| i64::from(r.5))));
+    dict.set("work_ticks", i64s(rows.iter().map(|r| i64::from(r.5))));
     dict.set("skills", i32s(rows.iter().map(|r| i64::from(r.6))));
     dict
 }
@@ -380,9 +386,9 @@ pub struct AgentEconomyRow {
     /// XP by `SkillKind::code`.
     pub xp: [u32; SkillKind::ALL.len()],
     /// Held tool: `(ItemKind::code, quality, material name)`.
-    pub tool: Option<(u8, u8, String)>,
+    pub tool: Option<(u32, u8, String)>,
     /// Carried load: `(ItemKind::code, count, quality, material name)`.
-    pub carry: Option<(u8, u16, u8, String)>,
+    pub carry: Option<(u32, u16, u8, String)>,
     /// M3: the assigned bed tile, if any.
     pub bed: Option<(u32, u32)>,
     /// M3: the bed's room: `(RoomId, RoomRole::code, roofed)`.

@@ -129,7 +129,7 @@ func _loc(key: String) -> String:
 
 ## Open the dialog on node `id` (the tech map's 가르치기; also used by tools).
 func open_for(id: int) -> void:
-	_node = clampi(id, 0, KnowledgeText.NODE_KEYS.size() - 1)
+	_node = clampi(id, 0, KnowledgeText.node_count() - 1)
 	visible = true
 	_node_key = []
 	_orders_key = 0
@@ -201,7 +201,7 @@ func _refresh() -> void:
 
 func _fill_knowledge(tech: Dictionary) -> void:
 	_knowledge.clear()
-	var count: int = maxi(KnowledgeText.NODE_KEYS.size(), (tech.get("ids", PackedInt64Array()) as PackedInt64Array).size())
+	var count: int = maxi(KnowledgeText.node_count(), (tech.get("ids", PackedInt64Array()) as PackedInt64Array).size())
 	for id: int in count:
 		_knowledge.add_item(KnowledgeText.node_name(_locale, id, tech), id)
 	_knowledge.select(_knowledge.get_item_index(_node))

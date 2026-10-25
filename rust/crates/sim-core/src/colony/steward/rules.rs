@@ -112,6 +112,9 @@ pub struct RuleFile {
 }
 /// Parse and validate rule data at the boundary.
 pub fn parse_rules(text: &str) -> Result<RuleFile, String> {
+    crate::colony::content::installed().map_err(|error| {
+        format!("steward rules require an installed content catalogue: {error}")
+    })?;
     let file: RuleFile = ron::from_str(text).map_err(|e| e.to_string())?;
     if file.schema_version != 1 {
         return Err("unsupported steward schema".into());
@@ -185,6 +188,10 @@ pub fn parse_rules(text: &str) -> Result<RuleFile, String> {
 }
 /// Embedded validated rules; invalid data is exposed as an error, never silently ignored.
 pub fn rules() -> Result<&'static RuleFile, &'static str> {
+    // Do not cache a pre-bootstrap failure, or let typed ID parsing choose a catalogue.
+    if crate::colony::content::installed().is_err() {
+        return Err("steward rules require an installed content catalogue");
+    }
     static RULES: OnceLock<Result<RuleFile, String>> = OnceLock::new();
     RULES
         .get_or_init(|| parse_rules(include_str!("../../../data/colony/steward.ron")))

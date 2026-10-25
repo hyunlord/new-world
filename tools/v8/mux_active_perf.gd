@@ -84,9 +84,12 @@ func _phase(enabled: bool) -> void:
 	var hud: Hud = _main.get_node("UI/MuxHud") as Hud
 	var label: String = "on" if enabled else "off"
 	hud.store = Store.new(_out.path_join("active-settings-%d-%s.cfg" % [OS.get_process_id(), label]))
-	_world = _main.get_node("WorldSim")
 	_camera = _main.get_node("Camera2D") as Camera2D
 	root.add_child(_main)
+	if not bool(_main.get("boot_ok")):
+		_errors.append("content bootstrap failed")
+		return
+	_world = _main.get_node("WorldSim")
 	_camera.call("set_paused", true)
 	_world.process_mode = Node.PROCESS_MODE_DISABLED
 	if not bool(SimReads.mutate(_world, "reset_world", [_seed])):

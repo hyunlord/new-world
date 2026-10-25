@@ -169,7 +169,7 @@ pub struct OverlaySite {
     /// Footprint height.
     pub h: u32,
     /// `BlueprintKind::code` (0 = hut).
-    pub kind: u8,
+    pub kind: u32,
     /// Logs needed.
     pub needed: u16,
     /// Logs delivered.
@@ -196,7 +196,7 @@ pub struct ColonyOverlay {
     /// Zoned tiles with their zone id.
     pub zones: Vec<(u32, (u32, u32))>,
     /// Ground stacks: tile, `ItemKind::code`, count.
-    pub items: Vec<((u32, u32), u8, u16)>,
+    pub items: Vec<((u32, u32), u32, u16)>,
     /// Blueprint sites, by centre tile.
     pub sites: Vec<OverlaySite>,
     /// M3: whether each ground stack (same order as `items`) lies under a
@@ -250,6 +250,10 @@ pub fn collect_colony_overlay(world: &hecs::World, resources: &SimResources) -> 
     }
 }
 
+fn ids<T: Copy>(rows: &[T], f: impl Fn(T) -> i64) -> PackedInt64Array {
+    PackedInt64Array::from(rows.iter().map(|r| f(*r)).collect::<Vec<_>>().as_slice())
+}
+
 fn ints<T: Copy>(rows: &[T], f: impl Fn(T) -> i64) -> PackedInt32Array {
     let values: Vec<i32> = rows.iter().map(|r| f(*r) as i32).collect();
     PackedInt32Array::from(values.as_slice())
@@ -271,13 +275,13 @@ pub(super) fn overlay_to_dict(o: &ColonyOverlay) -> VarDictionary {
     dict.set("zone_ys", ints(&o.zones, |z| i64::from(z.1 .1)));
     dict.set("item_xs", ints(&o.items, |i| i64::from(i.0 .0)));
     dict.set("item_ys", ints(&o.items, |i| i64::from(i.0 .1)));
-    dict.set("item_kinds", ints(&o.items, |i| i64::from(i.1)));
+    dict.set("item_kinds", ids(&o.items, |i| i64::from(i.1)));
     dict.set("item_counts", ints(&o.items, |i| i64::from(i.2)));
     dict.set("site_xs", ints(&o.sites, |s| i64::from(s.x)));
     dict.set("site_ys", ints(&o.sites, |s| i64::from(s.y)));
     dict.set("site_ws", ints(&o.sites, |s| i64::from(s.w)));
     dict.set("site_hs", ints(&o.sites, |s| i64::from(s.h)));
-    dict.set("site_kinds", ints(&o.sites, |s| i64::from(s.kind)));
+    dict.set("site_kinds", ids(&o.sites, |s| i64::from(s.kind)));
     dict.set("site_needed", ints(&o.sites, |s| i64::from(s.needed)));
     dict.set("site_delivered", ints(&o.sites, |s| i64::from(s.delivered)));
     dict.set("site_progress", ints(&o.sites, |s| i64::from(s.progress)));
@@ -289,14 +293,14 @@ pub(super) fn overlay_to_dict(o: &ColonyOverlay) -> VarDictionary {
 /// Per agent snapshot row (same `(Agent, Position)` query order as
 /// `collect_agent_snapshot`): `(job code (0 none, JobKind::code), carry kind
 /// (-1 none, ItemKind::code), carry count)`.
-pub fn collect_agent_jobs(world: &hecs::World) -> Vec<(u8, i32, u16)> {
+pub fn collect_agent_jobs(world: &hecs::World) -> Vec<(u8, i64, u16)> {
     world
         .query::<(&Agent, &Position, Option<&Job>, Option<&Carry>)>()
         .iter()
         .map(|(_, (_, _, job, carry))| {
             (
                 job.map_or(0, |job| job.kind.code()),
-                carry.map_or(-1, |c| i32::from(c.kind.code())),
+                carry.map_or(-1, |c| i64::from(c.kind.code())),
                 carry.map_or(0, |c| c.count),
             )
         })

@@ -315,7 +315,7 @@ fn step(
                 }
                 JobKind::Deconstruct { tile } => {
                     let ticks = super::space::built_at(res, tile)
-                        .map_or(1, |b| (b.kind().plan(rule).2 / 2).max(1));
+                        .map_or(1, |b| (b.plan(rule).2 / 2).max(1));
                     job.stage = JobStage::Working { ticks_left: ticks };
                     set_state(world, entity, WORK_JOB);
                 }
@@ -514,7 +514,7 @@ fn pick_up_axe(
         .colony
         .ground_items
         .get(&axe)
-        .map_or(ItemKind::StoneAxe, |s| s.kind);
+        .map_or(ItemKind::role("legacy_axe"), |s| s.kind);
     let (taken, spec) = take_items(res, axe, kind, 1);
     res.colony.reservations.remove(&ReserveKey::Stack(axe));
     if taken == 1 && world.get::<&Tool>(entity).is_err() {
@@ -552,17 +552,15 @@ fn use_axe(
     let Ok(mut tool) = world.get::<&mut Tool>(entity).map(|t| *t) else {
         return;
     };
-    if !matches!(tool.item.kind, ItemKind::StoneAxe | ItemKind::GroundAxe) {
+    let Some(chop) = tool.item.kind.definition().chop.as_ref() else {
         return;
-    }
+    };
     tool.uses += 1;
     res.colony.tallies.chops_with_axe += 1;
-    let limit = rule.economy.map_or(0, |e| {
-        if tool.item.kind == ItemKind::GroundAxe {
-            e.ground_axe_uses
-        } else {
-            e.axe_uses
-        }
+    let limit = rule.economy.map_or(0, |e| match chop.wear_rule.as_deref() {
+        Some("ground_axe_uses") => e.ground_axe_uses,
+        Some("axe_uses") => e.axe_uses,
+        _ => chop.wear_default,
     });
     if limit > 0 && tool.uses >= limit && rule.economy.is_some_and(|e| e.tools_break) {
         let _ = world.remove_one::<Tool>(entity);
@@ -580,13 +578,14 @@ fn use_axe(
     } else if limit > 0 && tool.uses >= limit {
         let _ = world.remove_one::<Tool>(entity);
         res.colony.item_ledger.consume(tool.item.kind, 1);
-        res.colony.item_ledger.create(ItemKind::Stone, 1);
-        put_items(
-            res,
-            pos,
-            ItemSpec::raw(ItemKind::Stone, tool.item.material),
-            1,
-        );
+        if let Some((kind, count)) = chop.break_return {
+            res.colony.item_ledger.create(kind, u64::from(count));
+            let material = chop
+                .preserve_return_material
+                .then_some(tool.item.material)
+                .flatten();
+            put_items(res, pos, ItemSpec::raw(kind, material), count);
+        }
         res.colony.tallies.axes_worn_out += 1;
     } else if let Ok(mut held) = world.get::<&mut Tool>(entity) {
         *held = tool;
@@ -651,8 +650,13 @@ fn fell(res: &mut SimResources, tree: (u32, u32)) {
     let logs = u16::from(felled.logs);
     res.colony
         .item_ledger
-        .create(ItemKind::Log, u64::from(logs));
-    put_items(res, tree, ItemSpec::raw(ItemKind::Log, Some(OAK)), logs);
+        .create(ItemKind::role("tree_output"), u64::from(logs));
+    put_items(
+        res,
+        tree,
+        ItemSpec::raw(ItemKind::role("tree_output"), Some(OAK)),
+        logs,
+    );
 }
 
 /// Work ticks of one deadwood batch (M2 goal 3.8).
@@ -685,20 +689,20 @@ fn gather_batch(
             res.wood_tiles.insert(spot, left);
         }
     }
-    let spec = ItemSpec::raw(ItemKind::Firewood, Some(OAK));
+    let spec = ItemSpec::raw(ItemKind::role("deadwood_output"), Some(OAK));
     let held = world.get::<&Carry>(entity).map_or(0, |c| c.count);
     let total = held + u16::from(take);
     if take > 0 {
         res.colony
             .item_ledger
-            .create(ItemKind::Firewood, u64::from(take));
+            .create(ItemKind::role("deadwood_output"), u64::from(take));
         let _ = world.insert_one(entity, Carry::of(spec, total));
     }
     if total == 0 {
         return false;
     }
     let more = res.wood_tiles.get(&spot).is_some_and(|u| *u > 0);
-    if more && total < rule.carry(ItemKind::Firewood) {
+    if more && total < rule.carry(ItemKind::role("deadwood_output")) {
         job.stage = JobStage::Working {
             ticks_left: GATHER_BATCH_TICKS,
         };
@@ -762,7 +766,7 @@ fn clay_batch(res: &mut SimResources, node: (u32, u32), at: (u32, u32)) {
     let n = found.left.min(CLAY_BATCH);
     found.left -= n;
     let (spec, left) = (
-        ItemSpec::raw(ItemKind::Clay, Some(found.material)),
+        ItemSpec::raw(ItemKind::role("clay_output"), Some(found.material)),
         found.left,
     );
     if left == 0 {
@@ -773,7 +777,9 @@ fn clay_batch(res: &mut SimResources, node: (u32, u32), at: (u32, u32)) {
     res.colony.tallies.clay_batches += 1;
     res.colony.touch(false);
     if n > 0 {
-        res.colony.item_ledger.create(ItemKind::Clay, u64::from(n));
+        res.colony
+            .item_ledger
+            .create(ItemKind::role("clay_output"), u64::from(n));
         let drop = if super::items::can_hold_items(res, node) {
             node
         } else {

@@ -85,7 +85,11 @@ mod living_people {
                     .person(entry.subject.expect("died subject"))
                     .expect("record");
                 assert_eq!(person.died_tick, Some(entry.tick), "{name}: {entry:?}");
-                assert_eq!(person.death_reason, Some(entry.cause), "{name}: {entry:?}");
+                assert_eq!(
+                    person.death_reason.map(u32::from),
+                    Some(entry.cause),
+                    "{name}: {entry:?}"
+                );
             }
         }
     }
@@ -306,8 +310,12 @@ mod write_paths {
         // selection took them (V8-0 re-measure, seed 11: 4 `Seed` adults — the
         // rule's `min_adults` — and 7 `Household`); never `Ranked`, which only the
         // no-family path writes.
-        let cause_count =
-            |cause: DepartCause| departed.iter().filter(|e| e.cause == cause.as_u8()).count();
+        let cause_count = |cause: DepartCause| {
+            departed
+                .iter()
+                .filter(|e| e.cause == u32::from(cause.as_u8()))
+                .count()
+        };
         assert_eq!(cause_count(DepartCause::Ranked), 0);
         assert_eq!(cause_count(DepartCause::Seed), 4);
         assert_eq!(
@@ -367,7 +375,11 @@ mod write_paths {
         assert_eq!(died.len(), 1);
         assert_eq!(
             (died[0].subject, died[0].settlement, died[0].cause),
-            (Some(dead), Some(1), DeathReason::Starvation.as_u8())
+            (
+                Some(dead),
+                Some(1),
+                u32::from(DeathReason::Starvation.as_u8())
+            )
         );
         let record = engine
             .resources
@@ -419,7 +431,7 @@ mod write_paths {
         // ~1 - 2^-32 (review round 2, finding 1).
         for repeat in 0..32 {
             let engine = remnant_scenario(3);
-            let tail: Vec<(ChronicleKind, Option<AgentId>, Option<u32>, u8)> = engine
+            let tail: Vec<(ChronicleKind, Option<AgentId>, Option<u32>, u32)> = engine
                 .resources
                 .chronicle
                 .entries()

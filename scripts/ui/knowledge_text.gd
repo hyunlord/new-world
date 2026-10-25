@@ -1,6 +1,6 @@
 # knowledge_text.gd: the M4 knowledge codes as player text (static helpers shared by the HUD, the tech map (T), the
 #   teach dialog (K), the inspector's 지식 tab, the chronicle, the workshop panel and the "why?" panel).
-# Maps node ids to their names (NODE_KEYS mirrors the `name_key`s of rust/crates/sim-core/data/colony/knowledge.ron in
+# Maps node ids to their registry name keys (the selected knowledge catalog from
 #   file order; a get_tech read's `name_keys` wins when the caller has one), lanes (0 survival … 5 social), eras
 #   (columns 0 paleolithic / 1 neolithic; labels 0 구석기, 1 신석기 전환기, 2 신석기 시대), tech statuses (0 unknown,
 #   1 at risk, 2 known, 3 stable, 4 lost) with their card colours, sources (0 seeded 전승, 1 discovered 발견, 2 oral 구전,
@@ -14,22 +14,8 @@ extends RefCounted
 
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 
-## Locale keys of the 24 nodes in KnowledgeId order (knowledge.ron file order).
-const NODE_KEYS: Array[String] = [
-	"KNOWLEDGE_FIRE_KEEPING", "KNOWLEDGE_FORAGING", "KNOWLEDGE_WATER_FINDING", "KNOWLEDGE_FLINT_KNAPPING",
-	"KNOWLEDGE_HAFTING", "KNOWLEDGE_FIREWOOD_SPLITTING", "KNOWLEDGE_PRESSURE_FLAKING", "KNOWLEDGE_STONE_GRINDING",
-	"KNOWLEDGE_HUT_BUILDING", "KNOWLEDGE_TIMBER_WALL", "KNOWLEDGE_DOORWAY", "KNOWLEDGE_PACKED_FLOOR",
-	"KNOWLEDGE_BEDDING", "KNOWLEDGE_STONE_WALLING", "KNOWLEDGE_STONE_QUARRYING", "KNOWLEDGE_DIGGING",
-	"KNOWLEDGE_CLAY_DIGGING", "KNOWLEDGE_CLAY_PREP", "KNOWLEDGE_POT_FORMING", "KNOWLEDGE_POT_FIRING",
-	"KNOWLEDGE_INSTRUCTION", "KNOWLEDGE_STORYTELLING", "KNOWLEDGE_TRACKING", "KNOWLEDGE_HIDE_SCRAPING",
-]
-## Stable node names (knowledge.ron ids) in the same order (discovery conditions name nodes by them).
-const NODE_NAMES: Array[String] = [
-	"fire_keeping", "foraging", "water_finding", "flint_knapping", "hafting", "firewood_splitting", "pressure_flaking",
-	"stone_grinding", "hut_building", "timber_wall", "doorway", "packed_floor", "bedding", "stone_walling",
-	"stone_quarrying", "digging", "clay_digging", "clay_prep", "pot_forming", "pot_firing", "instruction",
-	"storytelling", "tracking", "hide_scraping",
-]
+const Content = preload("res://scripts/ui/content_context.gd")
+
 const LANE_KEYS: Array[String] = ["M4_LANE_SURVIVAL", "M4_LANE_CRAFT", "M4_LANE_BUILD", "M4_LANE_MINE", "M4_LANE_POTTERY", "M4_LANE_SOCIAL"]
 const ERA_COLUMN_KEYS: Array[String] = ["M4_ERA_COL_PALEOLITHIC", "M4_ERA_COL_NEOLITHIC"]
 const ERA_LABEL_KEYS: Array[String] = ["M4_ERA_PALEOLITHIC", "M4_ERA_TRANSITION", "M4_ERA_NEOLITHIC"]
@@ -67,7 +53,7 @@ static func node_key(id: int, tech: Dictionary = {}) -> String:
 	var keys: PackedStringArray = tech.get("name_keys", PackedStringArray())
 	if id >= 0 and id < keys.size():
 		return keys[id]
-	return NODE_KEYS[id] if id >= 0 and id < NODE_KEYS.size() else "UI_UNKNOWN"
+	return str(Content.row("knowledge", id).get("name_key", "UI_UNKNOWN"))
 
 
 ## The player name of node `id`.
@@ -77,7 +63,7 @@ static func node_name(locale: Node, id: int, tech: Dictionary = {}) -> String:
 
 ## The node id of stable name `node_id_name` (a knowledge.ron id), -1 when unknown.
 static func node_id(node_id_name: String) -> int:
-	return NODE_NAMES.find(node_id_name)
+	return Content.code("knowledge", node_id_name)
 
 
 static func lane(locale: Node, code: int) -> String:
@@ -149,7 +135,7 @@ static func days_ago(locale: Node, days: int) -> String:
 
 ## The item kind code of a bridge item name ("flint_blade" -> 4), -1 when unknown.
 static func item_code(item_name: String) -> int:
-	return EconomyText.ITEM_NAMES.find(item_name)
+	return EconomyText.item_code(item_name)
 
 
 ## One discovery condition of a get_tech_node read (row `i`) as player text, without the met mark.
@@ -183,7 +169,7 @@ static func gate(locale: Node, node: Dictionary, i: int) -> String:
 	var name: String = names[i]
 	var what: String = ltr(locale, "UI_UNKNOWN")
 	match kind:
-		0: what = EconomyText.recipe(locale, EconomyText.RECIPE_NAMES.find(name))
+		0: what = EconomyText.recipe(locale, EconomyText.recipe_code(name))
 		1, 2: what = EconomyText.building(locale, EconomyText.build_code(name))
 		3: what = ltr(locale, str(DESIGNATION_KEYS.get(name, "UI_UNKNOWN")))
 		4: what = ltr(locale, str(CHANNEL_KEYS.get(name, "UI_UNKNOWN")))
@@ -267,3 +253,7 @@ static func first_at_risk(tech: Dictionary) -> Dictionary:
 			return {"id": int(row["id"]), "holder": int(row["first"])}
 	return {}
 
+
+
+static func node_count() -> int:
+	return Content.rows("knowledge").size()

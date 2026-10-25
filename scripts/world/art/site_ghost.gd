@@ -11,6 +11,7 @@
 # Bridge methods called: none.
 extends RefCounted
 
+const Content = preload("res://scripts/ui/content_context.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const MaterialResolver = preload("res://scripts/world/art/material_resolver.gd")
 const WallBaker = preload("res://scripts/world/art/wall_baker.gd")
@@ -98,7 +99,20 @@ static func ghost(key: String, src: Image) -> Texture2D:
 
 ## The bindings row of blueprint `code` (empty when unknown).
 static func blueprint(code: int) -> Dictionary:
-	return ArtData.binding("blueprints", code)
+	var bound: Dictionary = ArtData.binding("blueprints", code)
+	if not bound.is_empty():
+		return bound
+	var definition: Dictionary = Content.row("blueprints", code)
+	match str(definition.get("completion_category", "")):
+		"wall", "door", "floor":
+			return {"code": code, "style": definition["construction_style"], "kind": definition["completion_category"]}
+		"bed":
+			return {"code": code, "bed": true}
+		"workshop":
+			return {"code": code, "workshop": code}
+		"dwelling":
+			return {"code": code, "building": code}
+	return {}
 
 
 ## The finished look of blueprint `code`: {image, base (Vector2i in the image), footprint (Vector2i), flat (bool)};
@@ -135,9 +149,12 @@ static func finished(code: int) -> Dictionary:
 				if fl != null:
 					out = {"image": fl, "base": Vector2i(TILE >> 1, BASE_Y), "footprint": Vector2i.ONE, "flat": true}
 	elif row.has("building"):
-		var ring: Dictionary = ArtData.binding("buildings", int(row["building"])).get("ring", {})
+		var building: Dictionary = ArtData.binding("buildings", int(row["building"]))
+		var ring: Dictionary = building.get("ring", {})
 		if not ring.is_empty():
 			out = ring_image(ring)
+		else:
+			out = _structure(str(building.get("structure", "")))
 	_finished[code] = out
 	return out
 

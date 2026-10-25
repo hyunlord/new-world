@@ -98,7 +98,7 @@ pub fn feedable_firewood(res: &SimResources) -> u32 {
     c.ground_items
         .iter()
         .filter(|(tile, stack)| {
-            stack.kind == ItemKind::Firewood
+            stack.kind.definition().fuel_units == Some(1)
                 && (c.zone_of_tile.contains_key(tile)
                     || hearths
                         .iter()
@@ -129,33 +129,41 @@ pub fn feed(res: &mut SimResources) {
             continue;
         }
         let c = &res.colony;
-        let mut stacks: Vec<(u32, u32, u32, u16)> = c
+        let mut stacks: Vec<(u32, u32, u32, u16, ItemKind)> = c
             .ground_items
             .iter()
             .filter(|(tile, stack)| {
-                stack.kind == ItemKind::Firewood
+                stack.kind.definition().fuel_units == Some(1)
                     && (c.zone_of_tile.contains_key(tile)
                         || chebyshev(**tile, hearth) <= HEARTH_PILE_REACH)
                     && !c.reservations.contains_key(&ReserveKey::Stack(**tile))
             })
-            .map(|(tile, stack)| (chebyshev(*tile, hearth), tile.1, tile.0, stack.count))
+            .map(|(tile, stack)| {
+                (
+                    chebyshev(*tile, hearth),
+                    tile.1,
+                    tile.0,
+                    stack.count,
+                    stack.kind,
+                )
+            })
             .collect();
         stacks.sort_unstable();
         let mut need = tonight - have;
         let mut fed = 0u32;
-        for (_, y, x, count) in stacks {
+        for (_, y, x, count, kind) in stacks {
             if need == 0 {
                 break;
             }
             let take = u32::from(count).min(need) as u16;
-            let (taken, _) = super::items::take_items(res, (x, y), ItemKind::Firewood, take);
+            let (taken, _) = super::items::take_items(res, (x, y), kind, take);
             need -= u32::from(taken);
             fed += u32::from(taken);
+            if taken > 0 {
+                res.colony.item_ledger.burn(kind, u64::from(taken));
+            }
         }
         if fed > 0 {
-            res.colony
-                .item_ledger
-                .burn(ItemKind::Firewood, u64::from(fed));
             if let Some(s) = res.settlements.get_mut(&sid) {
                 *s.stockpile.entry(ResourceKind::Wood).or_insert(0) += fed;
             }

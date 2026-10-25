@@ -24,6 +24,7 @@ signal world_replaced
 signal new_game_started
 
 const GETTERS: Array[String] = [
+	"get_content_catalog",
 	"get_agent_snapshot", "get_settlement_snapshot", "get_construction_snapshot",
 	"get_building_snapshot", "get_resource_snapshot", "get_time_snapshot",
 	"get_tallies", "get_recent_deaths", "get_society_snapshot",
@@ -69,6 +70,7 @@ var _world: Node
 var _cache: Dictionary = {}
 var _tick_cache: Dictionary = {}
 var _tick: int = -1
+var _catalog: Dictionary = {}
 var _terrain: Dictionary = {}
 var _terrain_valid: bool = false
 var _frame: int = -1
@@ -172,6 +174,8 @@ func read_raw(raw_getter: String) -> Dictionary:
 			_tick_cache.clear()
 		if _tick_cache.has(raw_getter):
 			return _tick_cache[raw_getter]
+	if raw_getter == "get_content_catalog" and not _catalog.is_empty():
+		return _catalog
 	if raw_getter == "get_terrain_snapshot" and _terrain_valid:
 		return _terrain
 	if _cache.has(raw_getter):
@@ -183,7 +187,9 @@ func read_raw(raw_getter: String) -> Dictionary:
 	_usec[raw_getter] = int(_usec.get(raw_getter, 0)) + elapsed
 	var snapshot: Dictionary = result if result is Dictionary else {}
 	_freeze(snapshot)
-	if raw_getter == "get_terrain_snapshot":
+	if raw_getter == "get_content_catalog":
+		_catalog = snapshot
+	elif raw_getter == "get_terrain_snapshot":
 		_terrain = snapshot
 		_terrain_valid = true
 	elif raw_getter in TICK_GETTERS:

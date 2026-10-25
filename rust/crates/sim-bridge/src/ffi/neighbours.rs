@@ -29,9 +29,9 @@ pub type CaravanRow = (u32, u8, u8, u32, u32, i64, u32);
 /// `(node, ‰, practitioner)`, the worn top's `Top::code` (0 none; the data's `migrant_top`)).
 pub type MigrantRow = (u64, bool, u16, bool, [(i32, i32, bool); 3], u8);
 /// One goods row: (item code, count, quality, unit value at 100 %, unknown to the colony).
-pub type GoodsRow = (u8, u16, u8, u32, bool);
+pub type GoodsRow = (u32, u16, u8, u32, bool);
 /// One stock row: (x, y, item code, count, quality, unit value at 100 %).
-pub type StockRow = (u32, u32, u8, u16, u8, u32);
+pub type StockRow = (u32, u32, u32, u16, u8, u32);
 
 /// The neighbours and their visitors (`get_neighbours`).
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -47,7 +47,7 @@ pub struct NeighboursView {
     /// Caravans by number.
     pub caravans: Vec<CaravanRow>,
     /// Clues by node id: (node, the artifact's item code).
-    pub clues: Vec<(u8, u8)>,
+    pub clues: Vec<(u8, u32)>,
     /// Tallies: migrants joined, trades, gifts, eurekas.
     pub tallies: (u64, u64, u64, u64),
 }
@@ -191,7 +191,8 @@ pub(super) fn neighbours_to_dict(v: &NeighboursView) -> VarDictionary {
     d.set("caravan_trades", i32s(&|i| v.caravans[i].6 as i32, c));
     let k = v.clues.len();
     d.set("clue_nodes", i32s(&|i| i32::from(v.clues[i].0), k));
-    d.set("clue_items", i32s(&|i| i32::from(v.clues[i].1), k));
+    let clue_items: Vec<i64> = v.clues.iter().map(|row| i64::from(row.1)).collect();
+    d.set("clue_items", PackedInt64Array::from(clue_items.as_slice()));
     d.set(
         "migrants_joined",
         i64::try_from(v.tallies.0).unwrap_or(i64::MAX),
@@ -393,7 +394,16 @@ pub(super) fn caravan_to_dict(v: &CaravanView) -> VarDictionary {
     let g = |f: &dyn Fn(&GoodsRow) -> i32| {
         PackedInt32Array::from(v.goods.iter().map(f).collect::<Vec<_>>().as_slice())
     };
-    d.set("goods_kind", g(&|r| i32::from(r.0)));
+    d.set(
+        "goods_kind",
+        PackedInt64Array::from(
+            v.goods
+                .iter()
+                .map(|r| i64::from(r.0))
+                .collect::<Vec<_>>()
+                .as_slice(),
+        ),
+    );
     d.set("goods_count", g(&|r| i32::from(r.1)));
     d.set("goods_quality", g(&|r| i32::from(r.2)));
     d.set("goods_value", g(&|r| r.3 as i32));
@@ -403,7 +413,16 @@ pub(super) fn caravan_to_dict(v: &CaravanView) -> VarDictionary {
     };
     d.set("stock_x", s(&|r| r.0 as i32));
     d.set("stock_y", s(&|r| r.1 as i32));
-    d.set("stock_kind", s(&|r| i32::from(r.2)));
+    d.set(
+        "stock_kind",
+        PackedInt64Array::from(
+            v.stock
+                .iter()
+                .map(|r| i64::from(r.2))
+                .collect::<Vec<_>>()
+                .as_slice(),
+        ),
+    );
     d.set("stock_count", s(&|r| i32::from(r.3)));
     d.set("stock_quality", s(&|r| i32::from(r.4)));
     d.set("stock_value", s(&|r| r.5 as i32));

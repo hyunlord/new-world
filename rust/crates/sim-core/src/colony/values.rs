@@ -2,10 +2,10 @@
 //! from `data/colony/values.ron` (owner directive 2026-10-24: content lives in data files, not in code).
 use serde::Deserialize;
 use std::collections::BTreeMap;
-use std::sync::OnceLock;
 
 use super::ItemKind;
 
+#[cfg(test)]
 const VALUES_RON: &str = include_str!("../../data/colony/values.ron");
 
 #[derive(Deserialize)]
@@ -50,38 +50,32 @@ pub fn parse_values(text: &str) -> Option<BTreeMap<ItemKind, ItemData>> {
     }
     let mut out = BTreeMap::new();
     for e in file.items {
-        out.insert(
-            ItemKind::from_name(&e.name)?,
-            ItemData {
-                value: e.value,
-                made_by: e.made_by,
-                clue_nodes: e.clue_nodes,
-                tags: e.tags,
-            },
-        );
+        if out
+            .insert(
+                ItemKind::from_name(&e.name)?,
+                ItemData {
+                    value: e.value,
+                    made_by: e.made_by,
+                    clue_nodes: e.clue_nodes,
+                    tags: e.tags,
+                },
+            )
+            .is_some()
+        {
+            return None;
+        }
     }
-    (out.len() == ItemKind::ALL.len()).then_some(out)
+    (out.len() == ItemKind::all().len()).then_some(out)
 }
 
-fn parsed() -> &'static Option<BTreeMap<ItemKind, ItemData>> {
-    static TABLE: OnceLock<Option<BTreeMap<ItemKind, ItemData>>> = OnceLock::new();
-    TABLE.get_or_init(|| parse_values(VALUES_RON))
-}
-
-fn table() -> &'static BTreeMap<ItemKind, ItemData> {
-    static EMPTY: BTreeMap<ItemKind, ItemData> = BTreeMap::new();
-    parsed().as_ref().unwrap_or(&EMPTY)
-}
-
-/// Whether the item table loaded. The neighbours need it (values, goods, clues): `ColonyRule::m5_5` leaves them
-/// off when it did not.
+/// Whether the selected immutable item catalog loaded.
 pub fn loaded() -> bool {
-    parsed().is_some()
+    super::content::installed_or_bundled().items().len() > 0
 }
 
-/// The data of `kind` (`None` when the table lacks it; the unit test requires every kind).
-pub fn item_data(kind: ItemKind) -> Option<&'static ItemData> {
-    table().get(&kind)
+/// Installed item metadata; values and capabilities share one authoritative catalog.
+pub fn item_data(kind: ItemKind) -> Option<&'static super::content::ItemDef> {
+    super::content::installed_or_bundled().item(kind)
 }
 
 /// Whether `kind` carries category `tag` in `values.ron`.
@@ -105,8 +99,14 @@ mod tests {
     use super::*;
 
     #[test]
+    fn duplicate_value_rows_are_not_silently_overwritten() {
+        let duplicate = VALUES_RON.replacen("items: [", "items: [(name: \"log\", value: 2),", 1);
+        assert!(parse_values(&duplicate).is_none());
+    }
+
+    #[test]
     fn every_item_has_a_value_and_quality_scales_it() {
-        for kind in ItemKind::ALL {
+        for kind in ItemKind::all() {
             assert!(base_value(kind) > 0, "{kind:?} has no value");
         }
         // A flint blade (6) at quality 50: 6 × 750 / 1,000 = 4.5 → 5; at 100: 6; at 0: 3.
@@ -135,10 +135,7 @@ mod tests {
         let log = item_data(ItemKind::Log).expect("log");
         assert!(log.made_by.is_none() && log.clue_nodes.is_empty());
         // What a kill leaves is tagged "carcass": meat, hide and a wolf's hide, nothing else.
-        let carcass: Vec<ItemKind> = ItemKind::ALL
-            .into_iter()
-            .filter(|k| has_tag(*k, "carcass"))
-            .collect();
+        let carcass: Vec<ItemKind> = ItemKind::all().filter(|k| has_tag(*k, "carcass")).collect();
         assert_eq!(
             carcass,
             [ItemKind::Hide, ItemKind::Meat, ItemKind::WolfHide]

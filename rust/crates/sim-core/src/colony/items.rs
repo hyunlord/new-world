@@ -4,154 +4,47 @@ use std::collections::BTreeMap;
 
 use crate::material::MaterialId;
 
-/// What an item is (M2 goal 3.1).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub enum ItemKind {
-    /// A felled tree's trunk section; the hut's and the bench's material.
-    Log,
-    /// Split wood for the hearth.
-    Firewood,
-    /// A quarried stone (granite on hills, limestone elsewhere).
-    Stone,
-    /// A flint nodule from a river-bank outcrop.
-    Flint,
-    /// A knapped flint blade.
-    FlintBlade,
-    /// A hafted stone axe (a blade on a log haft): a tool.
-    StoneAxe,
-    /// A hide (no source in M2; the drying rack accepts no bill yet).
-    Hide,
-    /// Clay dug from a river-bank clay pit (M4).
-    Clay,
-    /// A formed, unfired pot (M4).
-    RawPot,
-    /// A fired clay pot (M4).
-    ClayPot,
-    /// A ground-stone axe: a stone axe ground on a grinding stone (M4): a tool.
-    GroundAxe,
-    /// Meat from a hunted deer (M5): food, spoils 6 days after the kill.
-    Meat,
-    /// A scraped, cured hide (M5).
-    CuredHide,
-    /// A hide wrap (M5): worn as a top.
-    HideWrap,
-    /// A fur cloak (M5): worn as a top.
-    FurCloak,
-    /// A hafted flint spear (M5): a weapon and a hunting tool.
-    Spear,
-    /// A wolf's hide (M5).
-    WolfHide,
-}
+/// Validated item identity from the installed content catalog.
+pub use super::content::ids::ItemKind;
 
 impl ItemKind {
-    /// Every kind, in code order.
-    pub const ALL: [Self; 17] = [
-        Self::Log,
-        Self::Firewood,
-        Self::Stone,
-        Self::Flint,
-        Self::FlintBlade,
-        Self::StoneAxe,
-        Self::Hide,
-        Self::Clay,
-        Self::RawPot,
-        Self::ClayPot,
-        Self::GroundAxe,
-        Self::Meat,
-        Self::CuredHide,
-        Self::HideWrap,
-        Self::FurCloak,
-        Self::Spear,
-        Self::WolfHide,
-    ];
-
-    /// Stable code for the bridge's packed columns (0 = log … 6 = hide; M4: 7
-    /// clay, 8 raw pot, 9 clay pot, 10 ground axe; M5: 11 meat, 12 cured hide, 13 hide
-    /// wrap, 14 fur cloak, 15 spear, 16 wolf hide).
-    pub const fn code(self) -> u8 {
-        match self {
-            Self::Log => 0,
-            Self::Firewood => 1,
-            Self::Stone => 2,
-            Self::Flint => 3,
-            Self::FlintBlade => 4,
-            Self::StoneAxe => 5,
-            Self::Hide => 6,
-            Self::Clay => 7,
-            Self::RawPot => 8,
-            Self::ClayPot => 9,
-            Self::GroundAxe => 10,
-            Self::Meat => 11,
-            Self::CuredHide => 12,
-            Self::HideWrap => 13,
-            Self::FurCloak => 14,
-            Self::Spear => 15,
-            Self::WolfHide => 16,
-        }
+    /// Every installed item, in ascending stable code order.
+    pub fn all() -> impl ExactSizeIterator<Item = Self> {
+        super::content::installed_or_bundled().item_ids()
     }
 
-    /// Stable lowercase name for logs, scripts and summaries.
-    pub const fn name(self) -> &'static str {
-        match self {
-            Self::Log => "log",
-            Self::Firewood => "firewood",
-            Self::Stone => "stone",
-            Self::Flint => "flint",
-            Self::FlintBlade => "flint_blade",
-            Self::StoneAxe => "stone_axe",
-            Self::Hide => "hide",
-            Self::Clay => "clay",
-            Self::RawPot => "raw_pot",
-            Self::ClayPot => "clay_pot",
-            Self::GroundAxe => "ground_axe",
-            Self::Meat => "meat",
-            Self::CuredHide => "cured_hide",
-            Self::HideWrap => "hide_wrap",
-            Self::FurCloak => "fur_cloak",
-            Self::Spear => "spear",
-            Self::WolfHide => "wolf_hide",
-        }
+    /// Definition belonging to this installed identity.
+    pub fn definition(self) -> &'static super::content::ItemDef {
+        super::content::installed_or_bundled()
+            .item(self)
+            .unwrap_or_else(|| panic!("installed item definition missing for code {}", self.code()))
     }
 
-    /// Parse [`Self::name`].
+    /// Required, validated content role (not a content-name dispatch).
+    pub fn role(role: &str) -> Self {
+        super::content::installed_or_bundled()
+            .item_role(role)
+            .unwrap_or_else(|| panic!("required installed item role missing: {role}"))
+    }
+
+    /// Stable canonical name for logs, scripts and summaries.
+    pub fn name(self) -> &'static str {
+        &self.definition().identity.id
+    }
+
+    /// Resolve a canonical name or declared resolver alias.
     pub fn from_name(name: &str) -> Option<Self> {
-        Self::ALL.into_iter().find(|kind| kind.name() == name)
+        super::content::installed_or_bundled().item_by_name(name)
     }
 
-    /// Items of this kind one tile holds (goal 3.1; logs: `ColonyRule::stack_max_logs`).
-    pub const fn default_stack_max(self) -> u16 {
-        match self {
-            Self::Log => 25,
-            Self::Firewood => 50,
-            Self::Stone | Self::Flint => 30,
-            Self::FlintBlade => 20,
-            Self::StoneAxe | Self::GroundAxe => 5,
-            Self::Hide | Self::RawPot | Self::ClayPot => 10,
-            Self::Clay => 30,
-            Self::Meat => 20,
-            Self::CuredHide | Self::WolfHide => 10,
-            Self::HideWrap | Self::FurCloak => 5,
-            Self::Spear => 5,
-        }
+    /// Default items per stack; world rule overrides are applied by ColonyRule.
+    pub fn default_stack_max(self) -> u16 {
+        self.definition().stack_max
     }
 
-    /// Items of this kind one person carries (goal 3.1; logs: `ColonyRule::carry_logs`).
-    pub const fn default_carry(self) -> u16 {
-        match self {
-            Self::Log => 5,
-            Self::Firewood => 10,
-            Self::Stone => 6,
-            Self::Flint => 8,
-            Self::FlintBlade => 10,
-            Self::StoneAxe | Self::GroundAxe => 2,
-            Self::Hide => 5,
-            Self::Clay => 8,
-            Self::RawPot | Self::ClayPot => 2,
-            Self::Meat => 6,
-            Self::CuredHide | Self::WolfHide => 5,
-            Self::HideWrap | Self::FurCloak => 1,
-            Self::Spear => 2,
-        }
+    /// Default items per carried load; world rule overrides are applied by ColonyRule.
+    pub fn default_carry(self) -> u16 {
+        self.definition().carry
     }
 }
 
@@ -405,6 +298,48 @@ mod tests {
     use super::*;
 
     #[test]
+    fn catalog_capacities_keep_world_overrides_and_nonlog_limits() {
+        let mut rule = crate::rules::ColonyRule::M1;
+        rule.stack_max_logs = 73;
+        rule.carry_logs = 19;
+        assert_eq!(
+            (rule.stack_max(ItemKind::Log), rule.carry(ItemKind::Log)),
+            (73, 19)
+        );
+        assert_eq!(
+            (
+                rule.stack_max(ItemKind::Firewood),
+                rule.carry(ItemKind::Firewood)
+            ),
+            (50, 10)
+        );
+        assert_eq!(
+            (
+                rule.stack_max(ItemKind::GroundAxe),
+                rule.carry(ItemKind::GroundAxe)
+            ),
+            (5, 2)
+        );
+        assert!(ItemKind::from_name("unknown_item").is_none());
+    }
+
+    #[test]
+    fn supported_saved_apparel_maps_both_directions_and_rejects_tools() {
+        use super::super::people::Top;
+        for (top, item, cold, rank, immune) in [
+            (Top::HideWrap, ItemKind::HideWrap, 700, 1, false),
+            (Top::FurCloak, ItemKind::FurCloak, 500, 2, true),
+        ] {
+            assert_eq!(top.item(), item);
+            assert_eq!(Top::of_item(item), Some(top));
+            assert_eq!(top.cold_permille(), cold);
+            assert_eq!(top.warmth_rank(), rank);
+            assert_eq!(top.cold_snap_work_immune(), immune);
+        }
+        assert_eq!(Top::of_item(ItemKind::StoneAxe), None);
+    }
+
+    #[test]
     fn ledger_counts_per_kind_and_codes_are_stable() {
         let mut ledger = ItemLedger::default();
         assert_eq!(ledger.created_of(ItemKind::Log), 0);
@@ -426,13 +361,13 @@ mod tests {
             ),
             (3, 3)
         );
-        let codes: Vec<u8> = ItemKind::ALL.iter().map(|k| k.code()).collect();
+        let codes: Vec<u32> = ItemKind::all().map(|k| k.code()).collect();
         assert_eq!(
             codes,
             vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
         );
         assert_eq!((ItemKind::Log.code(), ItemKind::Log.name()), (0, "log"));
-        for kind in ItemKind::ALL {
+        for kind in ItemKind::all() {
             assert_eq!(ItemKind::from_name(kind.name()), Some(kind));
         }
     }

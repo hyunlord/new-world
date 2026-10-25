@@ -447,7 +447,7 @@ pub fn check_cause(
             (Expect::Any, _) => true,
             (Expect::Died, ChronicleKind::Died) => true,
             (Expect::Pressure(kind), ChronicleKind::PressureBegan) => {
-                kind.is_none_or(|k| rec.cause == k)
+                kind.is_none_or(|k| rec.cause == u32::from(k))
             }
             (Expect::PairQuarrel, ChronicleKind::Quarrel) => {
                 let p = if rec.subject <= rec.other {
@@ -728,7 +728,7 @@ impl RuntimeSystem for MoodSystem {
             res.chronicle.push_caused(
                 ChronicleEntry::new(tick, ChronicleKind::Breakdown)
                     .subject(id)
-                    .cause(mods.len() as u8)
+                    .cause(u32::from(mods.len() as u8))
                     .value(code),
                 cause,
             );

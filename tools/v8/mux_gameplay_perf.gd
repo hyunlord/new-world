@@ -107,9 +107,12 @@ func _phase(enabled: bool, speed: int, settings_dir: String) -> void:
 	_main = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	var hud: Hud = _main.get_node("UI/MuxHud") as Hud
 	hud.store = Store.new(settings_path)
-	_world = _main.get_node("WorldSim")
 	_camera = _main.get_node("Camera2D") as Camera2D
 	root.add_child(_main)
+	if not bool(_main.get("boot_ok")):
+		_errors.append("content bootstrap failed")
+		return
+	_world = _main.get_node("WorldSim")
 	_camera.call("set_paused", true)
 	if not bool(SimReads.mutate(_world, "reset_world", [0])):
 		_errors.append("reset_world failed")

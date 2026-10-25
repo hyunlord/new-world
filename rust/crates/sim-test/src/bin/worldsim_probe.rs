@@ -7,6 +7,10 @@ fn main() -> std::process::ExitCode {
         println!("usage: worldsim_probe --scene baseline --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,...] [--agent-trace] [--chronicle-out DIR]");
         return std::process::ExitCode::SUCCESS;
     }
+    if let Err(error) = sim_test::content_boot::from_environment() {
+        eprintln!("{error}");
+        return std::process::ExitCode::FAILURE;
+    }
     let colony = args
         .windows(2)
         .any(|w| w[0] == "--scene" && w[1] == "colony");

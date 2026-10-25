@@ -6,8 +6,7 @@
 //!   → 700 at 20 (linear on each side of 5).
 //! - [`QUALITY_BONUS_TABLE`]: weights of the craft quality bonus −10 … +15,
 //!   triangular around +2.5 (`27 − |2v − 5|`).
-//! - [`AXE_PERMILLE`]: chop work-tick multiplier by an axe's quality bucket,
-//!   600 at bucket 0 → 450 at bucket 10.
+//! - Item catalog chop capability: work-tick multiplier by quality bucket.
 //!
 //! Where each number comes from is in M2 DECISIONS D9–D11.
 use serde::{Deserialize, Serialize};
@@ -58,22 +57,14 @@ pub const QUALITY_BONUS_TABLE: [u32; 26] = {
     t
 };
 
-/// Chop work-tick multiplier (‰) with an axe of quality bucket 0–10: 600 − 15·bucket.
-pub const AXE_PERMILLE: [u32; 11] = [600, 585, 570, 555, 540, 525, 510, 495, 480, 465, 450];
-
-/// Chop work-tick multiplier (‰) with a ground-stone axe of quality bucket 0–10
-/// (M4 goal 3.5): 450 − 10·bucket, at least 350.
-pub const GROUND_AXE_PERMILLE: [u32; 11] = [450, 440, 430, 420, 410, 400, 390, 380, 370, 360, 350];
-
 /// The chop multiplier (‰) of an axe of `kind` and quality bucket `bucket`
 /// (`None` for an item that is not an axe).
 pub fn axe_permille(kind: super::ItemKind, bucket: u8) -> Option<u32> {
     let b = usize::from(bucket.min(10));
-    match kind {
-        super::ItemKind::StoneAxe => Some(AXE_PERMILLE[b]),
-        super::ItemKind::GroundAxe => Some(GROUND_AXE_PERMILLE[b]),
-        _ => None,
-    }
+    kind.definition()
+        .chop
+        .as_ref()
+        .map(|chop| chop.quality_permille[b])
 }
 
 /// Base craft quality (goal 3.7).
@@ -146,8 +137,9 @@ pub fn quality_bonus(seed: u64, agent: u64, bill: u32, tick: u64) -> i32 {
 /// The material term of a blade: `(hardness − 50) / 5` on the 0–100 hardness
 /// scale (Mohs × 10; flint 70 → +4). Other recipes have none.
 pub fn material_term(recipe: RecipeKind, hardness_percent: Option<i32>) -> i32 {
-    match (recipe, hardness_percent) {
-        (RecipeKind::KnapBlade, Some(h)) => (h - 50) / 5,
+    use super::content::MaterialTerm;
+    match (recipe.recipe().map(|r| &r.material_term), hardness_percent) {
+        (Some(MaterialTerm::Hardness { offset, divisor }), Some(h)) => (h - offset) / divisor,
         _ => 0,
     }
 }
@@ -249,8 +241,17 @@ mod tests {
         );
         assert!(XP_TABLE.windows(2).all(|w| w[0] < w[1]));
         assert!(SPEED_PERMILLE.windows(2).all(|w| w[0] > w[1]));
-        assert!(AXE_PERMILLE.windows(2).all(|w| w[0] > w[1]));
-        assert!(GROUND_AXE_PERMILLE.windows(2).all(|w| w[0] > w[1]));
+        let axe: Vec<_> = (0..=10)
+            .map(|b| axe_permille(super::super::ItemKind::StoneAxe, b).unwrap())
+            .collect();
+        let ground: Vec<_> = (0..=10)
+            .map(|b| axe_permille(super::super::ItemKind::GroundAxe, b).unwrap())
+            .collect();
+        assert_eq!(axe, [600, 585, 570, 555, 540, 525, 510, 495, 480, 465, 450]);
+        assert_eq!(
+            ground,
+            [450, 440, 430, 420, 410, 400, 390, 380, 370, 360, 350]
+        );
         assert_eq!(
             (
                 axe_permille(super::super::ItemKind::GroundAxe, 0),
@@ -292,6 +293,12 @@ mod tests {
         assert_eq!(craft_quality(0, -10, -40, 0), 0);
         assert_eq!(material_term(RecipeKind::KnapBlade, Some(70)), 4);
         assert_eq!(material_term(RecipeKind::HaftAxe, Some(70)), 0);
+        assert_eq!(material_term(RecipeKind::KnapFineBlade, Some(70)), 0);
+        assert_eq!(material_term(RecipeKind::KnapBlade, None), 0);
+        assert_eq!(
+            axe_permille(super::super::ItemKind::GroundAxe, u8::MAX),
+            Some(350)
+        );
         assert_eq!((tier(4), tier(5), tier(14), tier(15)), (0, 1, 2, 3));
     }
 

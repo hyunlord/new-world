@@ -204,7 +204,7 @@ pub fn accept(world: &mut World, res: &mut SimResources, wave: u32) -> Option<u3
     nb.version += 1;
     res.colony.wildlife.version += 1;
     let mut entry = ChronicleEntry::new(res.current_tick, ChronicleKind::MigrantsJoined)
-        .cause(w.neighbour)
+        .cause(u32::from(w.neighbour))
         .value((i64::from(w.id) << 8) | i64::from(count));
     if let Some(first) = ids.first() {
         entry = entry.subject(*first);

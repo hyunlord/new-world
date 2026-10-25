@@ -15,6 +15,10 @@ fn main() -> std::process::ExitCode {
         println!("{}", sim_test::perf::USAGE);
         return std::process::ExitCode::SUCCESS;
     }
+    if let Err(error) = sim_test::content_boot::from_environment() {
+        eprintln!("{error}");
+        return std::process::ExitCode::FAILURE;
+    }
     // M3: the pathfinding benchmark (`sim_test::nav_bench`).
     if args[0] == "nav-bench" {
         return match sim_test::nav_bench::main(&args) {

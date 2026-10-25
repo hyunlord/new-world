@@ -17,13 +17,15 @@
 //! (`ffi::material_category`), so the renderer resolves `(style, material)` and falls back by category.
 use super::material_category::category_label;
 use godot::prelude::*;
+use sim_core::colony::content::CompletionCategory;
+use sim_core::colony::content_state::CompletedLayer;
 use sim_core::colony::{BlueprintKind, Command, CommandResult, RejectReason};
 use sim_core::components::Position;
 use sim_core::material::MaterialId;
 use sim_core::rooms::RoomRole;
 use sim_engine::{SimEngine, SimResources};
 use sim_systems::commands::{check_blueprint, check_space, line_tiles, submit};
-use sim_systems::runtime::jobs::space::{built_at, Built};
+use sim_systems::runtime::jobs::space::completed_at;
 use std::collections::BTreeSet;
 
 /// One M3 order as the bridge receives it.
@@ -208,6 +210,8 @@ pub struct SpaceView {
     pub version: u64,
     /// Walls and doors: tile and kind (0 log wall, 1 stone wall, 2 door).
     pub walls: Vec<((u32, u32), u8)>,
+    /// Mechanical door flags, independent of style names, in `walls` order.
+    pub wall_is_door: Vec<u8>,
     /// Floors: tile and kind (0 packed earth, 1 dug rock).
     pub floors: Vec<((u32, u32), u8)>,
     /// Bedrolls.
@@ -239,15 +243,19 @@ pub struct TileLook {
 /// A blueprint's style name for the renderer: its stable name in PascalCase (`log_wall` → `LogWall`), so a
 /// new blueprint kind is named by its own data without a table here.
 pub fn style_name(kind: BlueprintKind) -> String {
-    kind.name()
-        .split('_')
-        .map(|word| {
-            let mut chars = word.chars();
-            chars.next().map_or_else(String::new, |first| {
-                first.to_ascii_uppercase().to_string() + chars.as_str()
-            })
-        })
-        .collect()
+    kind.definition().style_id.clone()
+}
+
+fn completed_style(
+    res: &SimResources,
+    tile: (u32, u32),
+    layer: CompletedLayer,
+    kind: BlueprintKind,
+) -> String {
+    res.content_state
+        .completed
+        .get(&(tile, layer))
+        .map_or_else(|| style_name(kind), |identity| identity.style_id.clone())
 }
 
 /// The material column value: the `MaterialId`'s u32 bit pattern as i32, `-1` for none (no registry
@@ -271,15 +279,19 @@ pub fn collect_space(res: &SimResources) -> SpaceView {
             let i = g.idx(x, y);
             let t = (x, y);
             if let Some(material) = g.wall_material[i] {
-                let (code, kind) = match built_at(res, t) {
-                    Some(Built::Door) => (2, BlueprintKind::Door),
-                    Some(Built::StoneWall) => (1, BlueprintKind::StoneWall),
-                    _ => (0, BlueprintKind::LogWall),
+                let Some(kind) = completed_at(res, t, CompletedLayer::Wall) else {
+                    continue;
+                };
+                let Some(code) = kind.definition().render_wall_code else {
+                    continue;
                 };
                 view.walls.push((t, code));
+                view.wall_is_door.push(u8::from(
+                    kind.definition().completion == CompletionCategory::Door,
+                ));
                 view.wall_looks.push(TileLook {
                     material: Some(material),
-                    style: style_name(kind),
+                    style: completed_style(res, t, CompletedLayer::Wall, kind),
                     category: category_label(res, Some(material)),
                 });
             }
@@ -299,7 +311,9 @@ pub fn collect_space(res: &SimResources) -> SpaceView {
                 view.floors.push((t, 0));
                 view.floor_looks.push(TileLook {
                     material: floor,
-                    style: style_name(BlueprintKind::PackedFloor),
+                    style: completed_at(res, t, CompletedLayer::Floor)
+                        .map(|kind| completed_style(res, t, CompletedLayer::Floor, kind))
+                        .unwrap_or_default(),
                     category: category_label(res, floor),
                 });
             }
@@ -320,6 +334,10 @@ pub(super) fn space_to_dict(v: &SpaceView) -> VarDictionary {
     dict.set("version", v.version as i64);
     dict.set("wall_xs", int_col(v.walls.iter().map(|w| w.0 .0)));
     dict.set("wall_ys", int_col(v.walls.iter().map(|w| w.0 .1)));
+    dict.set(
+        "wall_is_door",
+        PackedByteArray::from(v.wall_is_door.as_slice()),
+    );
     dict.set(
         "wall_kinds",
         int_col(v.walls.iter().map(|w| u32::from(w.1))),

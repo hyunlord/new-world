@@ -493,7 +493,7 @@ fn harness_relations_exchange_is_both_trips_or_none() {
         (20, 6 * burn - wood_sent),
         "both stores debited"
     );
-    let causes: Vec<u8> = of_kind(&engine, ChronicleKind::PorterDeparted)
+    let causes: Vec<u32> = of_kind(&engine, ChronicleKind::PorterDeparted)
         .iter()
         .map(|e| e.cause)
         .collect();

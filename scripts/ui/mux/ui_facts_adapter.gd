@@ -2,6 +2,8 @@
 # Bridge methods: none; caller supplies one SimReads get_ui_facts snapshot.
 extends RefCounted
 
+const Content = preload("res://scripts/ui/content_context.gd")
+
 const TABLES: Dictionary = {
 	"people": ["ids", "xs", "ys", "hps", "children", "infants", "idle", "sleeping", "roofed", "bed_xs", "bed_ys", "has_job", "drafted", "sick", "breakdown", "mothers", "fathers", "partners", "household_ids"],
 	"settlements": ["ids", "xs", "ys", "food", "food_need", "winter_wood_need"],
@@ -146,7 +148,9 @@ static func _spoilage(raw: Dictionary) -> Array[Dictionary]:
 	if int(raw["meat_spoil_days"]) < 0:
 		return rows
 	if _policy.is_empty():
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/alerts.json"))
+		var parsed: Variant = Content.document("alerts")
+		if parsed.is_empty():
+			parsed = JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/alerts.json"))
 		if not parsed is Dictionary:
 			return rows
 		_policy = parsed

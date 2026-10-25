@@ -21,7 +21,7 @@ use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::people::{DraftOrder, Drafted};
 use sim_core::colony::story::PressureKind;
 use sim_core::colony::wildlife::{Fight, Fighter};
-use sim_core::colony::{CancelReason, ItemKind, Tool};
+use sim_core::colony::{CancelReason, Tool};
 use sim_core::components::{
     Agent, AgentId, AgentState, Hunger, Position, SeekTarget, TargetKind, Thirst,
 };
@@ -63,10 +63,12 @@ fn hold(world: &mut World, entity: Entity) {
 /// Whether `entity` holds a weapon (a spear or an axe).
 pub fn armed(world: &World, entity: Entity) -> bool {
     world.get::<&Tool>(entity).is_ok_and(|t| {
-        matches!(
-            t.item.kind,
-            ItemKind::Spear | ItemKind::StoneAxe | ItemKind::GroundAxe
-        )
+        t.item
+            .kind
+            .definition()
+            .weapon
+            .as_ref()
+            .is_some_and(|w| w.draft_rank.is_some())
     })
 }
 
@@ -95,7 +97,7 @@ pub fn draft(world: &mut World, res: &mut SimResources, entity: Entity, id: Agen
                 res,
                 pos,
                 rule.arm_reach,
-                &[ItemKind::Spear, ItemKind::GroundAxe, ItemKind::StoneAxe],
+                &crate::runtime::jobs::hunt::draft_weapons(),
                 false,
             )
         })
@@ -133,7 +135,7 @@ pub fn undraft(world: &mut World, res: &mut SimResources, entity: Entity, id: Ag
     res.chronicle.push(
         ChronicleEntry::new(res.current_tick, ChronicleKind::Drafted)
             .subject(id)
-            .cause(cause),
+            .cause(u32::from(cause)),
     );
 }
 
@@ -225,16 +227,17 @@ impl RuntimeSystem for DraftSystem {
                         tile,
                         pos,
                         None,
-                        &[ItemKind::Spear, ItemKind::GroundAxe, ItemKind::StoneAxe],
+                        &crate::runtime::jobs::hunt::draft_weapons(),
                     );
                     if let Ok(mut held) = world.get::<&mut Drafted>(entity) {
                         held.arming = None;
                     }
                 } else if res.colony.ground_items.get(&tile).is_some_and(|s| {
-                    matches!(
-                        s.kind,
-                        ItemKind::Spear | ItemKind::StoneAxe | ItemKind::GroundAxe
-                    )
+                    s.kind
+                        .definition()
+                        .weapon
+                        .as_ref()
+                        .is_some_and(|w| w.draft_rank.is_some())
                 }) {
                     seek(world, entity, tile);
                     continue;

@@ -91,7 +91,7 @@ pub fn send_away(res: &mut SimResources, index: usize, reason: u8) {
     nb.version += 1;
     res.chronicle.push(
         ChronicleEntry::new(res.current_tick, ChronicleKind::MigrantsDeclined)
-            .cause(from)
+            .cause(u32::from(from))
             .value((i64::from(reason) << 24) | (i64::from(id) << 8) | count),
     );
 }
@@ -173,7 +173,7 @@ impl RuntimeSystem for VisitorSystem {
                         }
                         res.chronicle.push(
                             ChronicleEntry::new(now, ChronicleKind::MigrantsArrived)
-                                .cause(w.neighbour)
+                                .cause(u32::from(w.neighbour))
                                 .value((i64::from(w.id) << 8) | count),
                         );
                         // Accepted on the way (review F3): they join now, at the hearth.
@@ -239,7 +239,7 @@ impl RuntimeSystem for VisitorSystem {
                         }
                         res.chronicle.push(
                             ChronicleEntry::new(now, ChronicleKind::TraderArrived)
-                                .cause(c.neighbour)
+                                .cause(u32::from(c.neighbour))
                                 .value(i64::from(c.id)),
                         );
                     }
@@ -253,7 +253,7 @@ impl RuntimeSystem for VisitorSystem {
                         res.colony.neighbours.version += 1;
                         res.chronicle.push(
                             ChronicleEntry::new(now, ChronicleKind::TraderLeft)
-                                .cause(c.neighbour)
+                                .cause(u32::from(c.neighbour))
                                 .value(i64::from(c.id)),
                         );
                     }

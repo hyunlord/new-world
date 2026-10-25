@@ -44,7 +44,10 @@ pub enum Target {
     /// A tile occupied or designated by an order.
     Tile(u32, u32),
     /// A workshop recipe (survives the removal of its bill id).
-    Bill(u32, u8),
+    Bill(
+        u32,
+        #[serde(deserialize_with = "crate::colony::content_state::deserialize_recipe_code")] u32,
+    ),
     /// An apprenticeship pair and knowledge node.
     Teach(u64, u8),
 }

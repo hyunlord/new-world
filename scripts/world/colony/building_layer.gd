@@ -104,7 +104,7 @@ func _rebuild(snap: Dictionary, shops: Dictionary, settlements: Dictionary, spac
 	_shops.clear()
 	var firing_tiles: Dictionary = {}
 	var footprints: Array[Rect2i] = []
-	var kinds: PackedInt32Array = shops.get("kinds", PackedInt32Array())
+	var kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
 	var sxs: PackedInt32Array = shops.get("xs", PackedInt32Array())
 	var sys: PackedInt32Array = shops.get("ys", PackedInt32Array())
 	var sws: PackedInt32Array = shops.get("ws", PackedInt32Array())

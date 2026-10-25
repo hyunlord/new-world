@@ -161,7 +161,7 @@ pub fn accepted(res: &mut SimResources, rule: u16, command: Command, targets: Ve
         targets,
     });
     let mut entry = ChronicleEntry::new(res.current_tick, ChronicleKind::StewardAction);
-    entry.cause = rule as u8;
+    entry.cause = u32::from(rule);
     entry.value = res.steward.sequence.min(i64::MAX as u64) as i64;
     res.chronicle.push(entry);
 }

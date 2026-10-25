@@ -175,7 +175,7 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                     .colony
                     .workshops
                     .iter()
-                    .find(|(_, s)| s.kind == def.workshop)
+                    .find(|(_, s)| def.supports_workshop(s.kind))
                 {
                     if shop.bills.iter().any(|b| {
                         b.recipe == recipe
@@ -194,7 +194,7 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                 } else if !world
                     .query::<&ColonySite>()
                     .iter()
-                    .any(|(_, s)| s.kind == def.workshop)
+                    .any(|(_, s)| def.supports_workshop(s.kind))
                     && pending.insert(def.workshop)
                 {
                     let mut locations = candidates(res, hearth);
@@ -789,6 +789,8 @@ mod tests {
     use super::*;
     #[test]
     fn data_only_stockpile_variant_changes_the_actual_ordinary_order() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled content");
         let engine = crate::worldgen::build_world_with(
             &crate::worldgen::WorldGenConfig::colony(29),
             sim_core::rules::WorldRules::colony(29),
@@ -819,6 +821,8 @@ mod rule_coverage {
     use sim_core::components::{Inventory, ResourceKind};
     #[test]
     fn all_six_rules_have_a_positive_and_negative_fixture() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled content");
         for rule in &sim_core::colony::steward::rules().expect("rules").rules {
             let mut engine = crate::worldgen::build_world_with(
                 &crate::worldgen::WorldGenConfig::colony(29),
@@ -944,6 +948,8 @@ mod shared_home_tests {
     use super::*;
     #[test]
     fn compact_shared_geometry_waits_for_people_then_issues_ordinary_orders() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled content");
         for seed in [1, 6, 7] {
             let mut e = crate::worldgen::build_world_with(
                 &crate::worldgen::WorldGenConfig::colony(seed),
@@ -1038,6 +1044,8 @@ mod shared_home_tests {
     }
     #[test]
     fn tree_preparation_waits_for_ordinary_harvest() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled content");
         let mut engine = crate::worldgen::build_world_with(
             &crate::worldgen::WorldGenConfig::colony(29),
             sim_core::rules::WorldRules::colony(29),
@@ -1136,6 +1144,8 @@ mod shared_home_tests {
     }
     #[test]
     fn shared_first_home_preserves_storage_and_workshop_outputs_are_usable() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled content");
         let mut engine = crate::worldgen::build_world_with(
             &crate::worldgen::WorldGenConfig::colony(29),
             sim_core::rules::WorldRules::colony(29),

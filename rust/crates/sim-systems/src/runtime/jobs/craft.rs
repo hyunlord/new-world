@@ -63,11 +63,15 @@ pub fn start(
     let shop = res.colony.workshops.get_mut(&workshop)?;
     let found = *shop.bill(bill)?;
     let recipe = found.recipe.recipe()?;
-    if found.remaining() == Some(0) {
+    if found.remaining() == Some(0) || !recipe.supports_workshop(shop.kind) {
+        return None;
+    }
+    let cutter = recipe.shelf_tool(shop);
+    if recipe.tool.is_some() && cutter.is_none() {
         return None;
     }
     if !recipe
-        .needs()
+        .needs_with_tool(cutter)
         .iter()
         .all(|&(kind, n)| shop.shelved(kind) >= n)
     {
@@ -91,8 +95,8 @@ pub fn start(
     }
     res.colony.item_ledger.craft_start(&recipe.inputs);
     res.colony.touch(false);
-    if recipe.knife {
-        wear_knife(world, res, entity, workshop);
+    if let Some(cutter) = cutter {
+        wear_knife(world, res, entity, (workshop, cutter));
     }
     job.material = material;
     let level = level_of(world, entity, recipe.skill);
@@ -131,7 +135,7 @@ pub fn next_ready(world: &World, res: &SimResources, workshop: WorkshopId, bill:
     let Some(recipe) = found.recipe.recipe() else {
         return false;
     };
-    if found.remaining() == Some(0) {
+    if found.remaining() == Some(0) || !recipe.supports_workshop(shop.kind) {
         return false;
     }
     if let sim_core::colony::BillMode::Maintain(n) = found.mode {
@@ -139,22 +143,52 @@ pub fn next_ready(world: &World, res: &SimResources, workshop: WorkshopId, bill:
             return false;
         }
     }
+    let cutter = recipe.shelf_tool(shop);
+    if recipe.tool.is_some() && cutter.is_none() {
+        return false;
+    }
     recipe
-        .needs()
+        .needs_with_tool(cutter)
         .iter()
         .all(|&(kind, n)| shop.shelved(kind) >= n)
 }
 
-/// One use of `workshop`'s knife (the flint blade kept on its shelf; M5 ADR 0029):
-/// at `knife_uses` the blade breaks — taken off the shelf and used up (ledger
-/// consumed), chronicle `ToolBroke` naming the crafter.
-fn wear_knife(world: &World, res: &mut SimResources, entity: Entity, workshop: WorkshopId) {
-    let limit = res
-        .rules
-        .colony
-        .and_then(|c| c.wildlife)
-        .map_or(8, |w| w.knife_uses)
-        .max(1);
+/// Wear the selected reusable cutter, consuming and reporting its actual identity.
+fn wear_knife(
+    world: &World,
+    res: &mut SimResources,
+    entity: Entity,
+    selected: (WorkshopId, ItemKind),
+) {
+    let (workshop, cutter) = selected;
+    let catalog = sim_core::colony::content::installed_or_bundled();
+    let Some(definition) = catalog.item(cutter).and_then(|item| item.cutter.as_ref()) else {
+        return;
+    };
+    let default_cutter = catalog.item_role("preferred_cutter");
+    let previous = res
+        .content_state
+        .workshop_cutters
+        .get(&workshop)
+        .copied()
+        .or(default_cutter);
+    if previous != Some(cutter) {
+        res.colony.knife_wear.remove(&workshop);
+    }
+    if Some(cutter) == default_cutter {
+        res.content_state.workshop_cutters.remove(&workshop);
+    } else {
+        res.content_state.workshop_cutters.insert(workshop, cutter);
+    }
+    let limit = match definition.wear_rule.as_deref() {
+        Some("knife_uses") => res
+            .rules
+            .colony
+            .and_then(|c| c.wildlife)
+            .map_or(definition.wear_default, |wildlife| wildlife.knife_uses),
+        _ => definition.wear_default,
+    }
+    .max(1);
     let uses = {
         let wear = res.colony.knife_wear.entry(workshop).or_insert(0);
         *wear += 1;
@@ -171,20 +205,22 @@ fn wear_knife(world: &World, res: &mut SimResources, entity: Entity, workshop: W
     let Some(stack) = shop
         .shelf
         .iter_mut()
-        .find(|s| s.kind == ItemKind::FlintBlade)
+        .find(|s| s.kind == cutter && s.count > 0)
     else {
         return;
     };
     stack.count -= 1;
     shop.shelf.retain(|s| s.count > 0);
-    res.colony.item_ledger.consume(ItemKind::FlintBlade, 1);
+    res.colony.item_ledger.consume(cutter, 1);
     res.colony.tallies.tools_broken += 1;
-    res.colony.wildlife.tallies.knives_broken += 1;
+    if definition.break_tally.as_deref() == Some("knives_broken") {
+        res.colony.wildlife.tallies.knives_broken += 1;
+    }
     let mut entry = sim_core::chronicle::ChronicleEntry::new(
         res.current_tick,
         sim_core::chronicle::ChronicleKind::ToolBroke,
     )
-    .cause(ItemKind::FlintBlade.code())
+    .cause(cutter.code())
     .value(i64::from(uses));
     if let Ok(agent) = world.get::<&sim_core::components::Agent>(entity) {
         entry = entry.subject(agent.id);

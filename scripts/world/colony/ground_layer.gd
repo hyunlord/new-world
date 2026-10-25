@@ -680,6 +680,7 @@ func _wall_cells(space: Dictionary) -> Dictionary:
 	var cfg: Dictionary = ArtData.bindings().get("space", {})
 	var fallback_styles: Array = cfg.get("wall_kind_styles", [])
 	var door_styles: Array = cfg.get("door_styles", [])
+	var door_flags: PackedByteArray = space.get("wall_is_door", PackedByteArray())
 	var occupancy: Dictionary = {}
 	var openings: Dictionary = {}
 	var cell_set: Dictionary = {}
@@ -690,7 +691,7 @@ func _wall_cells(space: Dictionary) -> Dictionary:
 		var mat: Variant = (mats[i] & 0xFFFFFFFF) if i < mats.size() and mats[i] != -1 else ""
 		var cat: String = cats[i] if i < cats.size() else ""
 		occupancy[t] = true
-		if door_styles.has(style):
+		if (door_flags[i] != 0 if i < door_flags.size() else door_styles.has(style)):
 			openings[t] = {"style": style, "material": mat, "category": cat}
 			continue
 		var r: Dictionary = _resolver.resolve(style, mat, cat, "wall")

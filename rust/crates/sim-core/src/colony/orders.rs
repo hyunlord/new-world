@@ -34,11 +34,15 @@ impl NodeKind {
     }
 
     /// The item it yields.
-    pub const fn yields(self) -> ItemKind {
-        match self {
-            Self::Boulder => ItemKind::Stone,
-            Self::FlintOutcrop => ItemKind::Flint,
-            Self::ClayBank => ItemKind::Clay,
+    pub fn yields(self) -> ItemKind {
+        let role = match self {
+            Self::Boulder => "boulder_output",
+            Self::FlintOutcrop => "outcrop_output",
+            Self::ClayBank => "clay_output",
+        };
+        match super::content::installed_or_bundled().item_role(role) {
+            Some(item) => item,
+            None => panic!("missing validated item role {role}"),
         }
     }
 }
@@ -107,157 +111,89 @@ pub struct Zone {
     pub tiles: BTreeSet<(u32, u32)>,
 }
 
-/// A building the player can place as a blueprint.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub enum BlueprintKind {
-    /// A 3×3 log hut that sleeps four (M1).
-    Hut,
-    /// A 1×1 knapping spot (M2): makes flint blades.
-    KnappingSpot,
-    /// A 2×1 wood bench (M2): hafts axes, splits firewood.
-    WoodBench,
-    /// A 2×1 drying rack (M2): placed and built, accepts no bill yet.
-    DryingRack,
-    /// A 1×1 log wall (M3, ADR 0022).
-    LogWall,
-    /// A 1×1 stone wall (M3).
-    StoneWall,
-    /// A 1×1 door: a wall tile people walk through (M3).
-    Door,
-    /// A 1×1 packed-earth floor (M3).
-    PackedFloor,
-    /// A 1×1 bedroll: one bed (M3, ADR 0023).
-    Bedroll,
-    /// A 1×1 grinding stone (M4): grinds stone axes.
-    GrindingStone,
-    /// A 1×1 pottery bench (M4): forms pots.
-    PotteryBench,
-    /// The camp hearth as a workshop for firing pots (M4): made by the colony
-    /// worldgen at the hearth, never placed by the player.
-    HearthFire,
-}
+/// Open construction identity; records are provided by the immutable content catalogue.
+pub use super::content::BlueprintKind;
 
 impl BlueprintKind {
-    /// Every kind, in code order.
-    pub const ALL: [Self; 12] = [
-        Self::Hut,
-        Self::KnappingSpot,
-        Self::WoodBench,
-        Self::DryingRack,
-        Self::LogWall,
-        Self::StoneWall,
-        Self::Door,
-        Self::PackedFloor,
-        Self::Bedroll,
-        Self::GrindingStone,
-        Self::PotteryBench,
-        Self::HearthFire,
-    ];
-
-    /// Stable code for the bridge (0 = hut, 1 knapping spot, 2 wood bench, 3 drying
-    /// rack, 4 log wall, 5 stone wall, 6 door, 7 packed floor, 8 bedroll; M4: 9
-    /// grinding stone, 10 pottery bench, 11 hearth fire).
-    pub const fn code(self) -> u8 {
-        match self {
-            Self::Hut => 0,
-            Self::KnappingSpot => 1,
-            Self::WoodBench => 2,
-            Self::DryingRack => 3,
-            Self::LogWall => 4,
-            Self::StoneWall => 5,
-            Self::Door => 6,
-            Self::PackedFloor => 7,
-            Self::Bedroll => 8,
-            Self::GrindingStone => 9,
-            Self::PotteryBench => 10,
-            Self::HearthFire => 11,
+    /// The installed definition; IDs cannot cross catalogue installations.
+    pub fn definition(self) -> &'static super::content::BlueprintDef {
+        match super::content::installed_or_bundled().blueprint(self) {
+            Some(definition) => definition,
+            None => panic!(
+                "blueprint code {} is absent from installed catalogue",
+                self.code()
+            ),
         }
     }
 
-    /// Parse the bridge's / script's name (`"hut"`, `"knapping_spot"`, …).
+    /// Resolve a canonical name or registered legacy alias.
     pub fn from_name(name: &str) -> Option<Self> {
-        match name {
-            "Hut" => Some(Self::Hut),
-            _ => Self::ALL.into_iter().find(|kind| kind.name() == name),
-        }
+        super::content::installed_or_bundled().blueprint_by_name(name)
     }
 
-    /// Stable lowercase name.
-    pub const fn name(self) -> &'static str {
-        match self {
-            Self::Hut => "hut",
-            Self::KnappingSpot => "knapping_spot",
-            Self::WoodBench => "wood_bench",
-            Self::DryingRack => "drying_rack",
-            Self::LogWall => "log_wall",
-            Self::StoneWall => "stone_wall",
-            Self::Door => "door",
-            Self::PackedFloor => "packed_floor",
-            Self::Bedroll => "bedroll",
-            Self::GrindingStone => "grinding_stone",
-            Self::PotteryBench => "pottery_bench",
-            Self::HearthFire => "hearth_fire",
-        }
+    /// Canonical stable content name from the installed catalogue.
+    pub fn name(self) -> &'static str {
+        &self.definition().identity.id
     }
 
-    /// Whether the finished building is a workshop (knapping spot, wood bench,
-    /// drying rack; M4 grinding stone, pottery bench, the hearth fire).
-    pub const fn is_workshop(self) -> bool {
+    /// Whether completion creates a workshop and its work tile.
+    pub fn is_workshop(self) -> bool {
+        self.definition().completion == super::content::CompletionCategory::Workshop
+    }
+
+    /// Whether ordinary player placement is supported.
+    pub fn placeable(self) -> bool {
+        self.definition().placeable
+    }
+
+    /// Whether completion occupies one wall, floor or furnishing tile.
+    pub fn is_space(self) -> bool {
+        use super::content::CompletionCategory;
         matches!(
-            self,
-            Self::KnappingSpot
-                | Self::WoodBench
-                | Self::DryingRack
-                | Self::GrindingStone
-                | Self::PotteryBench
-                | Self::HearthFire
+            self.definition().completion,
+            CompletionCategory::Wall
+                | CompletionCategory::Door
+                | CompletionCategory::Floor
+                | CompletionCategory::Bed
         )
     }
 
-    /// Whether the player may place it (M4: the hearth fire is made by the worldgen).
-    pub const fn placeable(self) -> bool {
-        !matches!(self, Self::HearthFire)
+    /// Whether this is an impassable wall rather than a traversable door.
+    pub fn is_wall(self) -> bool {
+        self.definition().completion == super::content::CompletionCategory::Wall
     }
 
-    /// Whether it is a 1×1 piece of built space (M3: wall, door, floor,
-    /// bedroll), built by the job layer from any 8-neighbour.
-    pub const fn is_space(self) -> bool {
-        matches!(
-            self,
-            Self::LogWall | Self::StoneWall | Self::Door | Self::PackedFloor | Self::Bedroll
-        )
-    }
-
-    /// Whether it is a wall without a door (impassable once placed).
-    pub const fn is_wall(self) -> bool {
-        matches!(self, Self::LogWall | Self::StoneWall)
-    }
-
-    /// Footprint `(w, h)`, materials and work progress (M2 goal 3.3; the
-    /// hut's from the colony rule).
-    pub const fn plan(self, rule: &crate::rules::ColonyRule) -> ((u32, u32), MaterialNeeds, u32) {
-        match self {
-            Self::Hut => (
-                rule.hut_footprint,
-                MaterialNeeds::single(ItemKind::Log, rule.hut_logs),
-                rule.hut_progress,
-            ),
-            Self::KnappingSpot => ((1, 1), MaterialNeeds::single(ItemKind::Stone, 4), 60),
-            Self::WoodBench => (
-                (2, 1),
-                MaterialNeeds::pair((ItemKind::Log, 6), (ItemKind::Stone, 2)),
-                120,
-            ),
-            Self::DryingRack => ((2, 1), MaterialNeeds::single(ItemKind::Log, 4), 80),
-            Self::LogWall => ((1, 1), MaterialNeeds::single(ItemKind::Log, 2), 40),
-            Self::StoneWall => ((1, 1), MaterialNeeds::single(ItemKind::Stone, 3), 60),
-            Self::Door => ((1, 1), MaterialNeeds::single(ItemKind::Log, 1), 30),
-            Self::PackedFloor => ((1, 1), MaterialNeeds::none(), 15),
-            Self::Bedroll => ((1, 1), MaterialNeeds::single(ItemKind::Log, 1), 10),
-            Self::GrindingStone => ((1, 1), MaterialNeeds::single(ItemKind::Stone, 2), 30),
-            Self::PotteryBench => ((1, 1), MaterialNeeds::single(ItemKind::Log, 1), 20),
-            Self::HearthFire => ((1, 1), MaterialNeeds::none(), 0),
-        }
+    /// Resolve rule-dependent values separately for each world, retaining ordered two-slot needs.
+    pub fn plan(self, rule: &crate::rules::ColonyRule) -> ((u32, u32), MaterialNeeds, u32) {
+        let definition = self.definition();
+        let footprint = match definition.footprint_rule.as_deref() {
+            Some("hut_footprint") => rule.hut_footprint,
+            None => definition.footprint,
+            Some(selector) => panic!("unvalidated footprint selector {selector}"),
+        };
+        let work = match definition.work_rule.as_deref() {
+            Some("hut_progress") => rule.hut_progress,
+            None => definition.work,
+            Some(selector) => panic!("unvalidated work selector {selector}"),
+        };
+        let line = |need: &super::content::BlueprintNeed| {
+            let count = match need.count_rule.as_deref() {
+                Some("hut_logs") => rule.hut_logs,
+                None => need.count,
+                Some(selector) => panic!("unvalidated count selector {selector}"),
+            };
+            (need.item, count)
+        };
+        let needs = match definition.needs.as_slice() {
+            [] => MaterialNeeds::none(),
+            [first] => {
+                let (item, count) = line(first);
+                MaterialNeeds::single(item, count)
+            }
+            [first, second] => MaterialNeeds::pair(line(first), line(second)),
+            _ => panic!("blueprint exceeds validated material-slot capacity"),
+        };
+        (footprint, needs, work)
     }
 }
 
@@ -287,8 +223,13 @@ pub struct MaterialNeeds {
 
 impl MaterialNeeds {
     /// No material at all (M3: a packed floor is work only).
-    pub const fn none() -> Self {
-        Self::single(ItemKind::Log, 0)
+    pub fn none() -> Self {
+        let placeholder =
+            match super::content::installed_or_bundled().item_role("default_placeholder") {
+                Some(item) => item,
+                None => panic!("missing validated default_placeholder item role"),
+            };
+        Self::single(placeholder, 0)
     }
 
     /// One material line.
@@ -492,12 +433,23 @@ mod tests {
         assert_eq!(tiles[8], (12, 22));
         assert_eq!(BlueprintKind::from_name("hut"), Some(BlueprintKind::Hut));
         assert_eq!(BlueprintKind::from_name("wall"), None);
-        for kind in BlueprintKind::ALL {
+        for definition in super::super::content::installed_or_bundled().blueprints() {
+            let kind = BlueprintKind::checked(definition.identity.code).expect("validated code");
             assert_eq!(BlueprintKind::from_name(kind.name()), Some(kind));
         }
-        let codes: Vec<u8> = BlueprintKind::ALL.iter().map(|k| k.code()).collect();
+        let codes: Vec<u32> = super::super::content::installed_or_bundled()
+            .blueprints()
+            .map(|d| d.identity.code)
+            .collect();
         assert_eq!(codes, vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
-        let space: Vec<bool> = BlueprintKind::ALL.iter().map(|k| k.is_space()).collect();
+        let space: Vec<bool> = super::super::content::installed_or_bundled()
+            .blueprints()
+            .map(|d| {
+                BlueprintKind::checked(d.identity.code)
+                    .expect("validated code")
+                    .is_space()
+            })
+            .collect();
         assert_eq!(
             space,
             vec![false, false, false, false, true, true, true, true, true, false, false, false]

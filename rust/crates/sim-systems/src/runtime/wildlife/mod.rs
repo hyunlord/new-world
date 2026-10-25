@@ -608,6 +608,28 @@ fn leave(res: &mut SimResources, id: u32) {
     }
 }
 
+fn food_units(rule: &WildlifeRule) -> u32 {
+    ItemKind::role("grazer_meat")
+        .definition()
+        .food
+        .as_ref()
+        .map_or(0, |food| match food.units_rule.as_deref() {
+            Some("meat_food_units") => rule.meat_food_units,
+            _ => food.units,
+        })
+}
+
+fn food_spoil_days(rule: &WildlifeRule) -> u32 {
+    ItemKind::role("grazer_meat")
+        .definition()
+        .food
+        .as_ref()
+        .map_or(0, |food| match food.spoil_rule.as_deref() {
+            Some("meat_spoil_days") => rule.meat_spoil_days,
+            _ => food.spoil_days,
+        })
+}
+
 /// Meat on a stockpile cell or by a hearth goes into the first settlement's food.
 fn feed_larder(res: &mut SimResources, rule: &WildlifeRule) {
     let hearths = crate::runtime::jobs::hearth::hearth_tiles(res);
@@ -617,7 +639,7 @@ fn feed_larder(res: &mut SimResources, rule: &WildlifeRule) {
         .ground_items
         .iter()
         .filter(|(t, s)| {
-            s.kind == ItemKind::Meat
+            s.kind == ItemKind::role("grazer_meat")
                 && !res
                     .colony
                     .reservations
@@ -633,17 +655,18 @@ fn feed_larder(res: &mut SimResources, rule: &WildlifeRule) {
         return;
     };
     for (tile, n) in tiles {
-        let (taken, _) = crate::runtime::jobs::items::take_items(res, tile, ItemKind::Meat, n);
+        let (taken, _) =
+            crate::runtime::jobs::items::take_items(res, tile, ItemKind::role("grazer_meat"), n);
         if taken == 0 {
             continue;
         }
         res.colony
             .item_ledger
-            .consume(ItemKind::Meat, u64::from(taken));
+            .consume(ItemKind::role("grazer_meat"), u64::from(taken));
         take_from_lots(res, u32::from(taken));
         res.colony.wildlife.tallies.meat_eaten += u64::from(taken);
         if let Some(s) = res.settlements.get_mut(&sid) {
-            s.store(ResourceKind::Food, u32::from(taken) * rule.meat_food_units);
+            s.store(ResourceKind::Food, u32::from(taken) * food_units(rule));
         }
         res.colony.touch(false);
     }
@@ -670,7 +693,7 @@ fn spoil(res: &mut SimResources, rule: &WildlifeRule) {
         .wildlife
         .meat_lots
         .iter()
-        .filter(|(d, _)| d + rule.meat_spoil_days <= day)
+        .filter(|(d, _)| d + food_spoil_days(rule) <= day)
         .map(|(_, n)| *n)
         .sum();
     if due == 0 {
@@ -681,7 +704,7 @@ fn spoil(res: &mut SimResources, rule: &WildlifeRule) {
         .ground_items
         .iter()
         .filter(|(t, s)| {
-            s.kind == ItemKind::Meat
+            s.kind == ItemKind::role("grazer_meat")
                 && !res
                     .colony
                     .reservations
@@ -695,7 +718,8 @@ fn spoil(res: &mut SimResources, rule: &WildlifeRule) {
             break;
         }
         let want = (u32::from(n)).min(due) as u16;
-        let (taken, _) = crate::runtime::jobs::items::take_items(res, tile, ItemKind::Meat, want);
+        let (taken, _) =
+            crate::runtime::jobs::items::take_items(res, tile, ItemKind::role("grazer_meat"), want);
         due -= u32::from(taken);
         spoiled += u32::from(taken);
         if !res.colony.zone_of_tile.contains_key(&tile) {
@@ -705,7 +729,7 @@ fn spoil(res: &mut SimResources, rule: &WildlifeRule) {
     if spoiled > 0 {
         res.colony
             .item_ledger
-            .consume(ItemKind::Meat, u64::from(spoiled));
+            .consume(ItemKind::role("grazer_meat"), u64::from(spoiled));
         take_from_lots(res, spoiled);
         res.colony.wildlife.tallies.meat_spoiled += u64::from(spoiled);
         res.colony.touch(false);

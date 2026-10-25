@@ -153,7 +153,7 @@ static func order_text(locale: Node, order: int, x: int, y: int, animals: Dictio
 ## The kind of animal `id` in a get_animals read, -1 when it is not there.
 static func animal_kind(animals: Dictionary, id: int) -> int:
 	var ids: PackedInt64Array = animals.get("ids", PackedInt64Array())
-	var kinds: PackedInt32Array = animals.get("kinds", PackedInt32Array())
+	var kinds: PackedInt64Array = animals.get("kinds", PackedInt64Array())
 	var i: int = ids.find(id)
 	return kinds[i] if i >= 0 and i < kinds.size() else -1
 
@@ -194,7 +194,7 @@ static func banners(locale: Node, story: Dictionary) -> Array[Dictionary]:
 	var wolves: int = int(story.get("wolves", 0))
 	if wolves > 0:
 		out.append({"text": trf(locale, "M5_BANNER_WOLVES_FMT", {"count": wolves}), "kind": BEASTS, "color": Color("f07060")})
-	var kinds: PackedInt32Array = story.get("kinds", PackedInt32Array())
+	var kinds: PackedInt64Array = story.get("kinds", PackedInt64Array())
 	var days: PackedInt64Array = story.get("days_of", PackedInt64Array())
 	for i: int in kinds.size():
 		var day: int = int(days[i]) if i < days.size() else 1

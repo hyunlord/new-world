@@ -262,7 +262,7 @@ func stock_rows() -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var xs: PackedInt32Array = _read.get("stock_x", PackedInt32Array())
 	var ys: PackedInt32Array = _read.get("stock_y", PackedInt32Array())
-	var kinds: PackedInt32Array = _read.get("stock_kind", PackedInt32Array())
+	var kinds: PackedInt64Array = _read.get("stock_kind", PackedInt64Array())
 	var counts: PackedInt32Array = _read.get("stock_count", PackedInt32Array())
 	var qualities: PackedInt32Array = _read.get("stock_quality", PackedInt32Array())
 	var values: PackedInt32Array = _read.get("stock_value", PackedInt32Array())
@@ -276,7 +276,7 @@ func stock_rows() -> Array[Dictionary]:
 ## Goods rows of the read: [{index, kind, count, quality, value, unknown}].
 func goods_rows() -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
-	var kinds: PackedInt32Array = _read.get("goods_kind", PackedInt32Array())
+	var kinds: PackedInt64Array = _read.get("goods_kind", PackedInt64Array())
 	var counts: PackedInt32Array = _read.get("goods_count", PackedInt32Array())
 	var qualities: PackedInt32Array = _read.get("goods_quality", PackedInt32Array())
 	var values: PackedInt32Array = _read.get("goods_value", PackedInt32Array())

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "materials": [
+    {
+      "id": "oak",
+      "name_key": "MATERIAL_OAK",
+      "category": "wood",
+      "raw_id": 193501184
+    },
+    {
+      "id": "granite",
+      "name_key": "MATERIAL_GRANITE",
+      "category": "stone",
+      "raw_id": 225677135
+    },
+    {
+      "id": "chert",
+      "name_key": "MATERIAL_CHERT",
+      "category": "stone",
+      "raw_id": 255409723
+    },
+    {
+      "id": "flint",
+      "name_key": "MATERIAL_FLINT",
+      "category": "stone",
+      "raw_id": 259115458
+    },
+    {
+      "id": "clay",
+      "name_key": "MATERIAL_CLAY",
+      "category": "earth",
+      "raw_id": 2090152302
+    },
+    {
+      "id": "limestone",
+      "name_key": "MATERIAL_LIMESTONE",
+      "category": "stone",
+      "raw_id": -1205603915
+    }
+  ]
+}

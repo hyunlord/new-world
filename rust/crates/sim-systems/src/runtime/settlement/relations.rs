@@ -389,7 +389,7 @@ fn progress(world: &mut World, resources: &mut SimResources, rule: &RelationsRul
                             .subject(id)
                             .settlement(Some(trip.to))
                             .settlement2(Some(trip.from))
-                            .cause(record.cause)
+                            .cause(u32::from(record.cause))
                             .value(i64::from(load)),
                     );
                 } else if receiver.is_none() || tick.saturating_sub(trip.depart_tick) >= deadline {
@@ -403,7 +403,7 @@ fn progress(world: &mut World, resources: &mut SimResources, rule: &RelationsRul
                             .subject(id)
                             .settlement(Some(trip.to))
                             .settlement2(Some(trip.from))
-                            .cause(CAUSE_FAILED_OFFSET + record.cause)
+                            .cause(u32::from(CAUSE_FAILED_OFFSET + record.cause))
                             .value(0),
                     );
                 }
@@ -920,7 +920,7 @@ fn depart(
                 .subject(id)
                 .settlement(Some(departure.from))
                 .settlement2(Some(departure.to))
-                .cause(departure.cause)
+                .cause(u32::from(departure.cause))
                 .value(i64::from(carried)),
         );
     }

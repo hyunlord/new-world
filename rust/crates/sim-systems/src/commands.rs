@@ -11,12 +11,13 @@
 //! rectangle wholly outside the map is `OutOfMap`, and a valid one that
 //! changes nothing is `Nothing`.
 use hecs::{Entity, World};
+use sim_core::colony::content::CompletionCategory;
 use sim_core::colony::skills::LOWEST_PRIORITY;
 use sim_core::colony::workshop::work_tile_of;
 use sim_core::colony::{
     Bill, BillId, BlueprintKind, CancelReason, ColonySite, Command, CommandRecord, CommandResult,
-    Designation, ItemSpec, Job, JobKind, MaterialNeeds, Occupant, RecipeKind, RejectReason,
-    WorkPriorities, WorkType, Workshop, WorkshopId, Zone, ZoneKind,
+    Designation, ItemSpec, Job, JobKind, MaterialNeeds, Occupant, RejectReason, WorkPriorities,
+    WorkType, Workshop, WorkshopId, Zone, ZoneKind,
 };
 use sim_core::components::{
     Agent, AgentId, BuildingBlueprint, Child, ConstructionSite, Elder, Position, HUT_BLUEPRINT_ID,
@@ -250,18 +251,27 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
                 .colony
                 .workshops
                 .get(&workshop)
-                .filter(|_| recipe == RecipeKind::SplitFirewood)
+                .filter(|_| {
+                    recipe
+                        .recipe()
+                        .is_some_and(|r| r.auto_bill_role.as_deref() == Some("firewood"))
+                })
                 .map_or(Vec::new(), |shop| {
                     shop.bills.iter().filter(|b| b.auto).map(|b| b.id).collect()
                 });
             let result = bill_command(world, res, workshop, |shop, next| {
-                let fits = recipe.recipe().is_some_and(|r| r.workshop == shop.kind);
+                let fits = recipe
+                    .recipe()
+                    .is_some_and(|r| r.supports_workshop(shop.kind));
                 if !fits {
                     return Err(RejectReason::WrongWorkshop);
                 }
                 // A player's firewood bill replaces the hearth's auto-bill; player
                 // bills go before any auto-bill (M2 goal 3.8, DECISIONS D16).
-                if recipe == RecipeKind::SplitFirewood {
+                if recipe
+                    .recipe()
+                    .is_some_and(|r| r.auto_bill_role.as_deref() == Some("firewood"))
+                {
                     shop.bills.retain(|b| !b.auto);
                 }
                 let at = shop
@@ -962,17 +972,11 @@ pub fn check_blueprint(
     let Some(rule) = res.rules.colony else {
         return Err(RejectReason::NoColony);
     };
-    // Workshops exist only with the economy (M2 review m4).
-    if kind.is_workshop() && rule.economy.is_none() {
-        return Err(RejectReason::NotYet);
-    }
-    // M4: the hearth fire is made by the worldgen; the pottery bench and the
-    // grinding stone only exist under the knowledge rule.
-    if !kind.placeable()
-        || (matches!(
-            kind,
-            BlueprintKind::PotteryBench | BlueprintKind::GrindingStone
-        ) && rule.knowledge.is_none())
+    let definition = kind.definition();
+    if !definition.placeable
+        || (definition.requires_economy && rule.economy.is_none())
+        || (definition.requires_knowledge && rule.knowledge.is_none())
+        || (definition.requires_space && rule.space.is_none())
     {
         return Err(RejectReason::NotYet);
     }
@@ -1140,11 +1144,13 @@ pub(crate) fn check_space_after_tree_clear(
         _ => {}
     }
     let walled = grid.wall_material[i].is_some();
-    let built = match kind {
-        BlueprintKind::PackedFloor => walled || grid.floor_material[i].is_some(),
-        BlueprintKind::Bedroll => walled || res.colony.beds.contains_key(&tile),
-        _ => walled || res.colony.beds.contains_key(&tile),
-    };
+    let floor = kind.definition().completion == CompletionCategory::Floor;
+    let built = walled
+        || if floor {
+            grid.floor_material[i].is_some()
+        } else {
+            res.colony.beds.contains_key(&tile)
+        };
     if built {
         return Err(RejectReason::Built);
     }
@@ -1165,7 +1171,7 @@ pub(crate) fn check_space_after_tree_clear(
         || under_building(res, tile)
         || work_tile
         || reserved
-        || (kind != BlueprintKind::PackedFloor && res.colony.zone_of_tile.contains_key(&tile))
+        || (!floor && res.colony.zone_of_tile.contains_key(&tile))
     {
         return Err(RejectReason::Blocked);
     }
@@ -1194,7 +1200,12 @@ fn place_space(
     kind: BlueprintKind,
     tiles: Vec<Tile>,
 ) -> CommandResult {
-    if rule.space.is_none() || rule.economy.is_none() {
+    let definition = kind.definition();
+    if rule.space.is_none()
+        || rule.economy.is_none()
+        || !definition.placeable
+        || (definition.requires_knowledge && rule.knowledge.is_none())
+    {
         return CommandResult::rejected(RejectReason::NotYet);
     }
     let people = people_tiles(world);

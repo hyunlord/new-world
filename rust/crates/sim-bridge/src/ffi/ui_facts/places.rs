@@ -10,7 +10,7 @@ pub struct StackFact {
     /// Ground tile.
     pub tile: (u32, u32),
     /// Raw item code; UI data selects content categories.
-    pub kind: u8,
+    pub kind: u32,
     /// Number of items.
     pub count: u16,
     /// Authoritative maximum for this kind under the active rule.

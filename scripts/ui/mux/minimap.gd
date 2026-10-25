@@ -159,7 +159,7 @@ func _paint_layer() -> void:
 			if key < 0: key = ids[_index]
 			colour = People._ring_colour(key, ArtData.param("lod.household_ring_rgb", []))
 	elif _phase == 4:
-		var kinds: PackedInt32Array = row.get("kinds", PackedInt32Array())
+		var kinds: PackedInt64Array = row.get("kinds", PackedInt64Array())
 		if _index < kinds.size():
 			var rgb: Array = ArtData.binding("animals", kinds[_index]).get("lod_colour", [])
 			if rgb.size() == 3: colour = Color8(int(rgb[0]), int(rgb[1]), int(rgb[2]))

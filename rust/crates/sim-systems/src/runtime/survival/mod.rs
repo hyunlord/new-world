@@ -171,7 +171,7 @@ pub fn despawn_agent(
             .subject(agent_id)
             .other(partner)
             .settlement(last_roster)
-            .cause(reason.as_u8())
+            .cause(u32::from(reason.as_u8()))
             .value(age),
     );
     crate::runtime::mood::kin_died(world, resources, agent_id, kin, died_entry);

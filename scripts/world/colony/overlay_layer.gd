@@ -162,7 +162,7 @@ func _index_stacks() -> void:
 	var ixs: PackedInt32Array = _overlay.get("item_xs", PackedInt32Array())
 	var iys: PackedInt32Array = _overlay.get("item_ys", PackedInt32Array())
 	var counts: PackedInt32Array = _overlay.get("item_counts", PackedInt32Array())
-	var kinds: PackedInt32Array = _overlay.get("item_kinds", PackedInt32Array())
+	var kinds: PackedInt64Array = _overlay.get("item_kinds", PackedInt64Array())
 	var qualities: PackedInt32Array = _overlay.get("item_qualities", PackedInt32Array())
 	var covered: PackedInt32Array = _overlay.get("item_covered", PackedInt32Array())
 	for i: int in mini(ixs.size(), mini(iys.size(), counts.size())):
@@ -391,7 +391,7 @@ func _sites() -> Array[Dictionary]:
 	var delivered: PackedInt32Array = _overlay.get("site_delivered", PackedInt32Array())
 	var progress: PackedInt32Array = _overlay.get("site_progress", PackedInt32Array())
 	var required: PackedInt32Array = _overlay.get("site_required", PackedInt32Array())
-	var kinds: PackedInt32Array = _overlay.get("site_kinds", PackedInt32Array())
+	var kinds: PackedInt64Array = _overlay.get("site_kinds", PackedInt64Array())
 	var n: int = mini(mini(mini(sxs.size(), sys.size()), mini(sws.size(), shs.size())),
 		mini(mini(needed.size(), delivered.size()), mini(progress.size(), required.size())))
 	for i: int in n:

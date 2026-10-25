@@ -7,8 +7,9 @@
 //! Every tile change ends with `runtime::nav::refresh` (the nav version) and
 //! `ColonyState::rooms_dirty` (room detection runs at once, ADR 0023).
 use hecs::{Entity, World};
-use sim_core::colony::materials::{GRANITE, LIMESTONE, OAK};
-use sim_core::colony::{BlueprintKind, ColonySite, Designation, ItemKind, ItemSpec, MaterialNeeds};
+use sim_core::colony::content::{CompletionCategory, CompletionMaterial, CompletionPolicy};
+use sim_core::colony::content_state::{CompletedIdentity, CompletedLayer};
+use sim_core::colony::{BlueprintKind, ColonySite, Designation, ItemSpec, MaterialNeeds};
 use sim_core::material::MaterialId;
 use sim_core::TerrainType;
 use sim_engine::{SimResources, RESOURCE_SOURCE_INFINITE};
@@ -18,56 +19,111 @@ use super::items::put_items;
 /// The material of a packed-earth floor.
 pub const PACKED_EARTH: MaterialId = MaterialId::from_str_hash("packed_earth");
 
-/// What a built tile is (the deconstruction and the renderer read it).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Built {
-    /// A bedroll (a bed on the tile).
-    Bedroll,
-    /// A wall of logs.
-    LogWall,
-    /// A wall of stone.
-    StoneWall,
-    /// A door.
-    Door,
-    /// A packed-earth floor.
-    PackedFloor,
-}
-
-impl Built {
-    /// The blueprint that builds it.
-    pub const fn kind(self) -> BlueprintKind {
-        match self {
-            Self::Bedroll => BlueprintKind::Bedroll,
-            Self::LogWall => BlueprintKind::LogWall,
-            Self::StoneWall => BlueprintKind::StoneWall,
-            Self::Door => BlueprintKind::Door,
-            Self::PackedFloor => BlueprintKind::PackedFloor,
-        }
+/// Resolve a material mechanics role from the validated installed catalogue.
+fn material_role(role: &str) -> MaterialId {
+    match sim_core::colony::content::installed_or_bundled().material_role(role) {
+        Some(material) => material,
+        None => panic!("missing validated material role {role}"),
     }
 }
 
-/// The piece of built space a deconstruction of `tile` would take first:
-/// a bedroll, then a wall or door, then a packed floor (a dug floor is not
-/// taken apart).
-pub fn built_at(res: &SimResources, tile: (u32, u32)) -> Option<Built> {
+fn blueprint_role(role: &str) -> Option<BlueprintKind> {
+    sim_core::colony::content::installed_or_bundled().blueprint_role(role)
+}
+
+/// Physical completion slot, independent of content identity.
+pub fn completion_layer(kind: BlueprintKind) -> CompletedLayer {
+    match kind.definition().completion {
+        CompletionCategory::Wall | CompletionCategory::Door => CompletedLayer::Wall,
+        CompletionCategory::Floor => CompletedLayer::Floor,
+        CompletionCategory::Bed => CompletedLayer::Bed,
+        CompletionCategory::Dwelling | CompletionCategory::Workshop => CompletedLayer::Structure,
+    }
+}
+
+/// A requested layer's identity. Historical definitions retain their old physical projection.
+pub fn completed_at(
+    res: &SimResources,
+    tile: (u32, u32),
+    layer: CompletedLayer,
+) -> Option<BlueprintKind> {
     let grid = &res.tile_grid;
     if tile.0 >= grid.width || tile.1 >= grid.height {
         return None;
     }
-    if res.colony.beds.contains_key(&tile) {
-        return Some(Built::Bedroll);
-    }
     let i = grid.idx(tile.0, tile.1);
-    if let Some(material) = grid.wall_material[i] {
-        return Some(if grid.is_door(i) {
-            Built::Door
-        } else if material == GRANITE || material == LIMESTONE {
-            Built::StoneWall
-        } else {
-            Built::LogWall
-        });
+    let exists = match layer {
+        CompletedLayer::Bed => res.colony.beds.contains_key(&tile),
+        CompletedLayer::Wall => grid.wall_material[i].is_some(),
+        CompletedLayer::Floor => grid.floor_material[i].is_some() && !grid.is_dug(i),
+        CompletedLayer::Structure => res.content_state.completed.contains_key(&(tile, layer)),
+    };
+    if !exists {
+        return None;
     }
-    (grid.floor_material[i] == Some(PACKED_EARTH)).then_some(Built::PackedFloor)
+    if let Some(identity) = res.content_state.completed.get(&(tile, layer)) {
+        return Some(identity.blueprint);
+    }
+    match layer {
+        CompletedLayer::Bed => blueprint_role("legacy_bed"),
+        CompletedLayer::Wall => {
+            if grid.is_door(i) {
+                blueprint_role("legacy_door")
+            } else if grid.wall_material[i].is_some_and(|material| {
+                sim_core::colony::content::installed_or_bundled()
+                    .historical_stone_wall_material(material)
+            }) {
+                blueprint_role("legacy_stone_wall")
+            } else {
+                blueprint_role("legacy_wall")
+            }
+        }
+        CompletedLayer::Floor => (grid.floor_material[i] == Some(material_role("legacy_floor")))
+            .then(|| blueprint_role("legacy_floor"))
+            .flatten(),
+        CompletedLayer::Structure => None,
+    }
+}
+
+/// Deconstruction priority remains bed, wall/door, floor; dug floors are excluded.
+pub fn built_at(res: &SimResources, tile: (u32, u32)) -> Option<BlueprintKind> {
+    [
+        CompletedLayer::Bed,
+        CompletedLayer::Wall,
+        CompletedLayer::Floor,
+    ]
+    .into_iter()
+    .find_map(|layer| completed_at(res, tile, layer))
+}
+
+/// Record novel semantic identity even when its artwork matches a historical style.
+/// Historical definitions deliberately keep the old lossy material projection and empty map.
+pub fn record_completion(res: &mut SimResources, tile: (u32, u32), kind: BlueprintKind) {
+    let definition = kind.definition();
+    let key = (tile, completion_layer(kind));
+    match definition.completion_policy {
+        CompletionPolicy::HistoricalProjection => {
+            res.content_state.completed.remove(&key);
+        }
+        CompletionPolicy::Authoritative => {
+            res.content_state.completed.insert(
+                key,
+                CompletedIdentity {
+                    blueprint: kind,
+                    style_id: definition.style_id.clone(),
+                },
+            );
+        }
+    }
+}
+
+fn completion_material(kind: BlueprintKind, delivered: Option<MaterialId>) -> MaterialId {
+    match &kind.definition().material {
+        CompletionMaterial::FirstDelivered { fallback } => {
+            delivered.unwrap_or_else(|| MaterialId::from_str_hash(fallback))
+        }
+        CompletionMaterial::Fixed { material } => MaterialId::from_str_hash(material),
+    }
 }
 
 /// Finish the space site `entity` (its materials delivered, its work done):
@@ -81,8 +137,11 @@ pub fn complete_site(world: &mut World, res: &mut SimResources, entity: Entity) 
     else {
         return;
     };
+    if !site.kind.is_space() {
+        return;
+    }
     let tile = site.top_left;
-    let material = needs.lines[0].material;
+    let material = completion_material(site.kind, needs.lines[0].material);
     for line in needs.used() {
         res.colony
             .item_ledger
@@ -92,20 +151,20 @@ pub fn complete_site(world: &mut World, res: &mut SimResources, entity: Entity) 
     res.colony.occupied.remove(&tile);
     let grid = &mut res.tile_grid;
     let i = grid.idx(tile.0, tile.1);
-    match site.kind {
-        BlueprintKind::LogWall => grid.wall_material[i] = Some(material.unwrap_or(OAK)),
-        BlueprintKind::StoneWall => grid.wall_material[i] = Some(material.unwrap_or(GRANITE)),
-        BlueprintKind::Door => {
-            grid.wall_material[i] = Some(material.unwrap_or(OAK));
+    match site.kind.definition().completion {
+        CompletionCategory::Wall => grid.wall_material[i] = Some(material),
+        CompletionCategory::Door => {
+            grid.wall_material[i] = Some(material);
             grid.set_door(i, true);
         }
-        BlueprintKind::PackedFloor => grid.floor_material[i] = Some(PACKED_EARTH),
-        BlueprintKind::Bedroll => {
-            res.colony.beds.insert(tile, material.unwrap_or(OAK));
+        CompletionCategory::Floor => grid.floor_material[i] = Some(material),
+        CompletionCategory::Bed => {
+            res.colony.beds.insert(tile, material);
             res.set_sleep_tile(tile.0, tile.1, RESOURCE_SOURCE_INFINITE);
         }
-        _ => {}
+        CompletionCategory::Dwelling | CompletionCategory::Workshop => return,
     }
+    record_completion(res, tile, site.kind);
     res.colony.tallies.space_built += 1;
     let _ = world.despawn(entity);
     changed(res, tile);
@@ -120,24 +179,27 @@ pub fn changed(res: &mut SimResources, tile: (u32, u32)) {
 
 /// Take the built piece on `tile` apart: half its materials (rounded down)
 /// come back as items on the tile (ledger: created). Returns what was taken.
-pub fn deconstruct(res: &mut SimResources, tile: (u32, u32)) -> Option<Built> {
+pub fn deconstruct(res: &mut SimResources, tile: (u32, u32)) -> Option<BlueprintKind> {
     let built = built_at(res, tile)?;
     let rule = res.rules.colony?;
-    let (_, needs, _) = built.kind().plan(&rule);
+    let (_, needs, _) = built.plan(&rule);
     let grid = &mut res.tile_grid;
     let i = grid.idx(tile.0, tile.1);
-    let material = match built {
-        Built::Bedroll => res.colony.beds.remove(&tile),
-        Built::LogWall | Built::StoneWall | Built::Door => {
-            let m = grid.wall_material[i].take();
+    let layer = completion_layer(built);
+    let material = match layer {
+        CompletedLayer::Bed => res.colony.beds.remove(&tile),
+        CompletedLayer::Wall => {
+            let material = grid.wall_material[i].take();
             grid.set_door(i, false);
-            m
+            material
         }
-        Built::PackedFloor => grid.floor_material[i].take(),
+        CompletedLayer::Floor => grid.floor_material[i].take(),
+        CompletedLayer::Structure => return None,
     };
-    if built == Built::Bedroll {
+    if layer == CompletedLayer::Bed {
         res.set_sleep_tile(tile.0, tile.1, 0);
     }
+    res.content_state.completed.remove(&(tile, layer));
     res.colony.designations.remove(&tile);
     res.colony.tallies.space_removed += 1;
     changed(res, tile);
@@ -153,7 +215,7 @@ pub fn deconstruct(res: &mut SimResources, tile: (u32, u32)) -> Option<Built> {
 
 /// The rock a hill tile yields when dug (M2 D5: hills are granite).
 pub fn rock_of(_res: &SimResources, _tile: (u32, u32)) -> MaterialId {
-    GRANITE
+    material_role("excavated_rock")
 }
 
 /// Dig `tile` out: it stays a hill but becomes passable with a rock floor and
@@ -177,6 +239,9 @@ pub fn dig(res: &mut SimResources, tile: (u32, u32)) -> bool {
     let grid = &mut res.tile_grid;
     grid.set_dug(i, true);
     grid.floor_material[i] = Some(rock);
+    res.content_state
+        .completed
+        .remove(&(tile, CompletedLayer::Floor));
     res.colony.designations.remove(&tile);
     res.colony.tallies.tiles_dug += 1;
     // The tile is open from now on: refresh the map before anything is put
@@ -194,13 +259,16 @@ pub fn dig(res: &mut SimResources, tile: (u32, u32)) -> bool {
         }
     }
     if stone > 0 {
-        res.colony
-            .item_ledger
-            .create(ItemKind::Stone, u64::from(stone));
+        let output =
+            match sim_core::colony::content::installed_or_bundled().item_role("excavated_stone") {
+                Some(item) => item,
+                None => panic!("missing validated excavated_stone role"),
+            };
+        res.colony.item_ledger.create(output, u64::from(stone));
         put_items(
             res,
             tile,
-            ItemSpec::raw(ItemKind::Stone, Some(rock)),
+            ItemSpec::raw(output, Some(rock)),
             u16::from(stone),
         );
     }

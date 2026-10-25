@@ -257,7 +257,7 @@ static func why_lines(read: Dictionary, locale: Node, info: Dictionary) -> Array
 	var kinds: PackedInt32Array = read.get("kinds", PackedInt32Array())
 	var subjects: PackedInt64Array = read.get("subjects", PackedInt64Array())
 	var others: PackedInt64Array = read.get("others", PackedInt64Array())
-	var causes: PackedInt32Array = read.get("causes", PackedInt32Array())
+	var causes: PackedInt64Array = read.get("causes", PackedInt64Array())
 	var values: PackedInt64Array = read.get("values", PackedInt64Array())
 	for i: int in links.size():
 		var text: String = ""

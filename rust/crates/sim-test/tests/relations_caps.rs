@@ -630,7 +630,7 @@ fn harness_p21_exchange_first_takes_the_exchange_over_the_aid() {
             .filter(|r| r.1.kind == PorterKind::Wood || r.1.from == 1)
             .count()
     );
-    let causes: Vec<u8> = of_kind(&engine, ChronicleKind::PorterDeparted)
+    let causes: Vec<u32> = of_kind(&engine, ChronicleKind::PorterDeparted)
         .iter()
         .map(|e| e.cause)
         .collect();
@@ -662,7 +662,7 @@ fn harness_p21_exchange_first_when_the_higher_id_sends_food() {
         PorterKind::Food => (r.1.from, r.1.to) == (2, 1),
         PorterKind::Wood => (r.1.from, r.1.to) == (1, 2),
     }));
-    let mut causes: Vec<u8> = of_kind(&engine, ChronicleKind::PorterDeparted)
+    let mut causes: Vec<u32> = of_kind(&engine, ChronicleKind::PorterDeparted)
         .iter()
         .map(|e| e.cause)
         .collect();

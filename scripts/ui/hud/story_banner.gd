@@ -234,7 +234,7 @@ func _fill_drafted(drafted: Dictionary) -> void:
 	_draft_texts.clear()
 	var ids: PackedInt64Array = drafted.get("ids", PackedInt64Array())
 	var hps: PackedInt32Array = drafted.get("hps", PackedInt32Array())
-	var weapons: PackedInt32Array = drafted.get("weapons", PackedInt32Array())
+	var weapons: PackedInt64Array = drafted.get("weapons", PackedInt64Array())
 	_draft_panel.visible = not ids.is_empty()
 	if ids.is_empty():
 		return

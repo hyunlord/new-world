@@ -244,18 +244,18 @@ impl ColonyRule {
     }
 
     /// Items of `kind` one tile holds (logs: `stack_max_logs`; goal 3.1 for the rest).
-    pub const fn stack_max(&self, kind: crate::colony::ItemKind) -> u16 {
-        match kind {
-            crate::colony::ItemKind::Log => self.stack_max_logs,
-            other => other.default_stack_max(),
+    pub fn stack_max(&self, kind: crate::colony::ItemKind) -> u16 {
+        match kind.definition().stack_rule.as_deref() {
+            Some("stack_max_logs") => self.stack_max_logs,
+            _ => kind.default_stack_max(),
         }
     }
 
     /// Items of `kind` one person carries (logs: `carry_logs`; goal 3.1 for the rest).
-    pub const fn carry(&self, kind: crate::colony::ItemKind) -> u16 {
-        match kind {
-            crate::colony::ItemKind::Log => self.carry_logs,
-            other => other.default_carry(),
+    pub fn carry(&self, kind: crate::colony::ItemKind) -> u16 {
+        match kind.definition().carry_rule.as_deref() {
+            Some("carry_logs") => self.carry_logs,
+            _ => kind.default_carry(),
         }
     }
 }

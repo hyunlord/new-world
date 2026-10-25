@@ -1,6 +1,8 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
+Schema version: 9 — M-UX Stage B adds the immutable core content catalogue, factory preflight, full-width content columns, and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
+
+History: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
 Every `#[func] fn get_*` that `WorldSimNode` (`rust/crates/sim-bridge/src/ffi/node.rs`) exposes to GDScript, with the
 keys it returns, their types, id spaces, units and row order, and the pure collector that backs it. A `#[func]` body
@@ -11,7 +13,7 @@ two views built on the same collectors must agree (ADR 0016, clause C2). The sec
 Checked by `python3 tools/v8/check_docs_helpers.py schema` (`tools/v8/check_docs.sh` check 10): every `get_*`
 method found by `tools/v8/bridge_api.py` has a `### get_x` section here, and the first table column of that section
 names exactly the keys the getter sets (its own `dict.set("k", …)` calls plus those of the `*_to_dict` /
-`*_to_variant_array` builders it calls). An absent or extra getter or key fails.
+`*_to_variant_array` builders it calls). An absent or extra getter or key fails. The extractor unions literal keys from followed builders, including nested dictionaries; it does not prove nesting, runtime presence, value types, or keys loaded from JSON. Tables below distinguish their actual scopes; nested coverage requires separate validation.
 
 ## Conventions
 
@@ -19,6 +21,7 @@ names exactly the keys the getter sets (its own `dict.set("k", …)` calls plus 
   `bool`, `String`, `Vector2i`, `Vector4i`, and packed columns `PackedInt32Array`, `PackedInt64Array`,
   `PackedByteArray` (0–255), `PackedFloat32Array`. Feature-detect every key (`snap.has(k)`) and never write to a
   returned array (`duplicate()` first; packed arrays are shared with the `SimReads` cache).
+- **Content codes (schema 9)**: item, recipe and blueprint codes span u32 and use Godot int / PackedInt64Array. Existing numeric examples below describe bundled historical content, not closed enumerations. Mixed Chronicle cause/link codes also use PackedInt64Array. Material bit-pattern columns retain PackedInt32Array. Nested `get_ui_facts` tables inherit their referenced getter column types.
 - **Columns**: a getter returning parallel packed columns has one row per index; every column has the same length.
 - **Id spaces** (never mix them): **AgentId** (`Agent.id`, a monotonically minted `u64` sent as `int`; stable for
   the life of a world), **entity bits** (`hecs::Entity::to_bits()` as a signed `int`; stable within one engine
@@ -34,6 +37,62 @@ names exactly the keys the getter sets (its own `dict.set("k", …)` calls plus 
 - **Caching**: argument-less getters are read through `SimReads.read(world, "get_x")` (`scripts/core/sim_reads.gd`
   `GETTERS`), frozen once per frame; getters with arguments are called directly and never per node per frame.
 - **Colony getters in a baseline world** return their empty form (version 0, empty columns).
+
+## Immutable content and construction preflight (M-UX Stage B)
+
+`WorldSimNode.bootstrap_catalog() -> Dictionary` is a static, engine-free preflight returning `ok: bool`,
+`error: String`, and on success `registry_revision: String`. `WorldSimNode.create() -> WorldSimNode | null`
+is the static construction route: preflight failure returns null without constructing a fallback world.
+The host freezes `WORLDSIM_CONTENT_PACK` once, validates selected presentation and core data, and installs
+that selection before engine construction. Empty/invalid explicit selection fails; absent selection uses bundled data.
+
+### `get_content_catalog`
+`WorldSimNode.get_content_catalog() -> Dictionary`, backed by `content::catalog_to_dict(&Catalog)`.
+Each call returns a fresh projection of installed definitions; an unavailable catalogue yields an empty dictionary.
+Identity codes are unsigned u32 represented losslessly as Godot int, not array positions. Items, blueprints and
+recipes use resolved registry definitions; knowledge metadata comes from the selected knowledge definitions.
+Material metadata comes from the bundled `assets/ui/content_presentation.json` materials array, retaining its
+separate historical raw-id namespace. Pressure/animal definition metadata is not projected by this getter.
+
+Top-level fields:
+
+| key | type | meaning |
+|---|---|---|
+| `schema_version` | int | catalogue DTO version 1 |
+| `registry_revision` | String | selected catalogue revision fingerprint, independent of staging path |
+| `items` | Array[Dictionary] | item definitions |
+| `item_roles` | Dictionary | exported semantic item role mapping |
+| `blueprints` | Array[Dictionary] | blueprint definitions |
+| `recipes` | Array[Dictionary] | recipe definitions |
+| `knowledge` | Array[Dictionary] | knowledge node metadata |
+| `materials` | Array[Dictionary] | bundled material presentation metadata; JSON rows contain id, name_key, category, raw_id |
+
+Nested fields (the literal-key checker flattens these into the same union; they are **not** top-level fields):
+
+| key | type | scope and meaning |
+|---|---|---|
+| `code` | int | item/blueprint/recipe identity code; knowledge numeric node id |
+| `id` | String | canonical identity name in item/blueprint/recipe/knowledge rows |
+| `name_key` | String | localization key in those rows |
+| `category` | String | item category |
+| `material_format_key` | String | item material-aware localization format key |
+| `tags` | PackedStringArray | item behavior tags |
+| `tree_output` | int | item_roles entry, when resolved; item code |
+| `width` | int | blueprint footprint width |
+| `height` | int | blueprint footprint height |
+| `placeable` | bool | blueprint placement availability |
+| `menu_order` | int | blueprint menu order; -1 absent |
+| `shortcut_slot` | int | blueprint shortcut slot; -1 absent |
+| `construction_style` | String | blueprint construction style id |
+| `placement_category` | String | blueprint: structure, wall, floor, furnishing |
+| `completion_category` | String | blueprint: dwelling, workshop, wall, door, floor, bed |
+| `workshop_code` | int | recipe's primary workshop blueprint code |
+| `compatible_workshops` | PackedInt64Array | recipe's accepted workshop blueprint codes |
+| `output_code` | int | recipe output item code |
+| `output_count` | int | recipe output units |
+| `work_ticks` | int | recipe authored work ticks |
+| `skill_code` | int | recipe mechanical skill code |
+| `lane` | String | knowledge node lane name |
 
 ## Clock and world
 
@@ -159,7 +218,7 @@ between two reads of an unchanged world, **not** sorted by id and not stable acr
 | `pregnant_days` | PackedInt32Array | M1.5: whole days left of a pregnancy (`Pregnant::days_left`); -1 when not pregnant |
 | `colds` | PackedByteArray | 1 with the `Cold` marker |
 | `jobs` | PackedByteArray | `JobKind::code`: 0 none, 1 chop, 2 haul, 3 deliver, 4 build, 5 quarry, 6 supply, 7 craft, 8 gather (M2) |
-| `carry_kinds` | PackedInt32Array | carried item kind, -1 none, else `ItemKind::code`: 0 log, 1 firewood, 2 stone, 3 flint, 4 flint blade, 5 stone axe, 6 hide (M2); 7 clay, 8 raw pot, 9 clay pot, 10 ground axe (M4); 11 meat, 12 cured hide, 13 hide wrap, 14 fur cloak, 15 spear, 16 wolf hide (M5) |
+| `carry_kinds` | PackedInt64Array | carried item kind, -1 none, else `ItemKind::code`: 0 log, 1 firewood, 2 stone, 3 flint, 4 flint blade, 5 stone axe, 6 hide (M2); 7 clay, 8 raw pot, 9 clay pot, 10 ground axe (M4); 11 meat, 12 cured hide, 13 hide wrap, 14 fur cloak, 15 spear, 16 wolf hide (M5) |
 | `carry_counts` | PackedInt32Array | M1: carried item count |
 | `tops` | PackedByteArray | M5: the worn top, `Top::code`: 0 loincloth (no `Apparel`), 1 hide wrap, 2 fur cloak |
 | `mood_bands` | PackedByteArray | M5: 0 no mood (a child under 10), 1 우울 (below 250), 2 보통, 3 흡족 (750 or more), 4 in a breakdown |
@@ -297,12 +356,12 @@ iteration order (a hash map: sort before relying on order).
 | `third` | PackedInt64Array | third AgentId, -1 none |
 | `settlement` | PackedInt64Array | SettlementId, -1 none |
 | `settlement2` | PackedInt64Array | second SettlementId, -1 none |
-| `cause` | PackedInt32Array | kind-specific cause code |
+| `cause` | PackedInt64Array | kind-specific cause code |
 | `value` | PackedInt64Array | kind-specific value |
 | `index` | PackedInt64Array | M5: the entry's chronicle index (the key of `get_chronicle_why`) |
 | `link` | PackedInt32Array | M5: the entry's "→" link: -1 none, 0 another entry, 1 a mood modifier, 2 a pressure |
 | `link_entry` | PackedInt64Array | M5: the chronicle index the link points at, -1 none |
-| `link_code` | PackedInt32Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
+| `link_code` | PackedInt64Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
 
 ### `get_settlement_chronicle`
 `get_settlement_chronicle(settlement_id)`: `collect_settlement_chronicle` → `rows_to_dict(rows, false)`
@@ -318,12 +377,12 @@ iteration order (a hash map: sort before relying on order).
 | `third` | PackedInt64Array | third AgentId, -1 none |
 | `settlement` | PackedInt64Array | SettlementId, -1 none |
 | `settlement2` | PackedInt64Array | second SettlementId, -1 none |
-| `cause` | PackedInt32Array | kind-specific cause code |
+| `cause` | PackedInt64Array | kind-specific cause code |
 | `value` | PackedInt64Array | kind-specific value |
 | `index` | PackedInt64Array | M5: the entry's chronicle index (the key of `get_chronicle_why`) |
 | `link` | PackedInt32Array | M5: the entry's "→" link: -1 none, 0 another entry, 1 a mood modifier, 2 a pressure |
 | `link_entry` | PackedInt64Array | M5: the chronicle index the link points at, -1 none |
-| `link_code` | PackedInt32Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
+| `link_code` | PackedInt64Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
 
 ### `get_chronicle_since`
 `get_chronicle_since(start, max)`: `collect_chronicle_since(&Chronicle, start, max)` → `rows_to_dict(rows, true)`
@@ -339,12 +398,12 @@ iteration order (a hash map: sort before relying on order).
 | `third` | PackedInt64Array | third AgentId, -1 none |
 | `settlement` | PackedInt64Array | SettlementId, -1 none |
 | `settlement2` | PackedInt64Array | second SettlementId, -1 none |
-| `cause` | PackedInt32Array | kind-specific cause code |
+| `cause` | PackedInt64Array | kind-specific cause code |
 | `value` | PackedInt64Array | kind-specific value |
 | `index` | PackedInt64Array | M5: the entry's chronicle index (the key of `get_chronicle_why`) |
 | `link` | PackedInt32Array | M5: the entry's "→" link: -1 none, 0 another entry, 1 a mood modifier, 2 a pressure |
 | `link_entry` | PackedInt64Array | M5: the chronicle index the link points at, -1 none |
-| `link_code` | PackedInt32Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
+| `link_code` | PackedInt64Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
 | `next` | int | the index after the last returned entry (the next `start`) |
 | `total` | int | entries in the chronicle |
 
@@ -581,13 +640,13 @@ tile; M2 adds resource nodes by tile.
 | `zone_ys` | PackedInt32Array | zone cell tile y |
 | `item_xs` | PackedInt32Array | ground stack tile x |
 | `item_ys` | PackedInt32Array | ground stack tile y |
-| `item_kinds` | PackedInt32Array | `ItemKind::code` (0 log … 16 wolf hide, as `carry_kinds`) |
+| `item_kinds` | PackedInt64Array | `ItemKind::code` (0 log … 16 wolf hide, as `carry_kinds`) |
 | `item_counts` | PackedInt32Array | items in the stack |
 | `site_xs` | PackedInt32Array | blueprint site footprint top-left x |
 | `site_ys` | PackedInt32Array | footprint top-left y |
 | `site_ws` | PackedInt32Array | footprint width |
 | `site_hs` | PackedInt32Array | footprint height |
-| `site_kinds` | PackedInt32Array | `BlueprintKind::code`: 0 hut, 1 knapping spot, 2 wood bench, 3 drying rack; M3: 4 log wall, 5 stone wall, 6 door, 7 packed floor, 8 bedroll |
+| `site_kinds` | PackedInt64Array | `BlueprintKind::code`: 0 hut, 1 knapping spot, 2 wood bench, 3 drying rack; M3: 4 log wall, 5 stone wall, 6 door, 7 packed floor, 8 bedroll |
 | `site_needed` | PackedInt32Array | materials needed (all lines summed; M2: a wood bench needs logs and stone) |
 | `site_delivered` | PackedInt32Array | materials delivered (all lines summed) |
 | `site_progress` | PackedInt32Array | work done |
@@ -606,15 +665,16 @@ layer when `version` moves.
 | `version` | int | `overlay_version` of this read (every built change bumps it) |
 | `wall_xs` | PackedInt32Array | wall or door tile x |
 | `wall_ys` | PackedInt32Array | wall or door tile y |
-| `wall_kinds` | PackedInt32Array | 0 log wall, 1 stone wall, 2 door |
+| `wall_kinds` | PackedInt32Array | legacy projection: 0 log wall, 1 stone wall, 2 door; not the authoritative content identity |
+| `wall_is_door` | PackedByteArray | mechanical opening flag, 1 iff the completed blueprint has Door completion category; aligned with wall rows, independent of style name |
 | `wall_materials` | PackedInt32Array | M-ART2: the tile's `MaterialId` (`TileGrid::wall_material`, a djb2 hash, not an index) as its u32 bit pattern in an i32 (read `v & 0xFFFFFFFF`); `-1` none (no known material hashes to `0xFFFFFFFF`) |
-| `wall_styles` | PackedStringArray | M-ART2: the blueprint that built it, its name in PascalCase: `LogWall`, `StoneWall`, `Door` (the art data's `sim_blueprints`); agrees with `wall_kinds` |
+| `wall_styles` | PackedStringArray | M-UX Stage B: authoritative saved construction style id, falling back to the completed blueprint definition; bundled examples `log`, `stone`, `slab_door`. M-ART2 historically used PascalCase blueprint names |
 | `wall_categories` | PackedStringArray | M-ART2: the material's registry category: `Stone`, `Wood`, `Animal`, `Mineral`, `Plant`, `Mod` (any `Mod(u8)`); `""` when unknown (live `material_registry`, else the sim-core material files embedded in the bridge, `ffi/material_category.rs`) |
 | `floor_xs` | PackedInt32Array | floor tile x |
 | `floor_ys` | PackedInt32Array | floor tile y |
 | `floor_kinds` | PackedInt32Array | 0 packed earth, 1 dug rock |
 | `floor_materials` | PackedInt32Array | M-ART2: `TileGrid::floor_material` as in `wall_materials` (`packed_earth` for a packed floor, the rock for a dug tile); `-1` none |
-| `floor_styles` | PackedStringArray | M-ART2: `PackedFloor` (`floor_kinds` 0) or `DugFloor` (`floor_kinds` 1: a dug hill tile, no blueprint) |
+| `floor_styles` | PackedStringArray | M-UX Stage B: authoritative saved floor construction style id, falling back to the completed blueprint definition; dug tiles retain `DugFloor` (no blueprint). M-ART2 historically used `PackedFloor` |
 | `floor_categories` | PackedStringArray | M-ART2: as `wall_categories` (`""` for `packed_earth`, which has no material file) |
 | `bed_xs` | PackedInt32Array | bedroll tile x |
 | `bed_ys` | PackedInt32Array | bedroll tile y |
@@ -686,7 +746,7 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 | key | type | meaning |
 |---|---|---|
 | `ids` | PackedInt32Array | workshop id |
-| `kinds` | PackedInt32Array | `BlueprintKind::code` (1 knapping spot, 2 wood bench, 3 drying rack) |
+| `kinds` | PackedInt64Array | `BlueprintKind::code` (1 knapping spot, 2 wood bench, 3 drying rack) |
 | `xs` | PackedInt32Array | footprint top-left x |
 | `ys` | PackedInt32Array | footprint top-left y |
 | `ws` | PackedInt32Array | footprint width |
@@ -695,7 +755,7 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 | `work_ys` | PackedInt32Array | work tile y |
 | `bill_shops` | PackedInt32Array | row index (in `ids`) of the bill's workshop |
 | `bill_ids` | PackedInt32Array | bill id |
-| `bill_recipes` | PackedInt32Array | `RecipeKind::code`: 0 knap blade, 1 haft axe, 2 split firewood |
+| `bill_recipes` | PackedInt64Array | `RecipeKind::code`: 0 knap blade, 1 haft axe, 2 split firewood |
 | `bill_modes` | PackedInt32Array | 0 make n, 1 maintain n |
 | `bill_counts` | PackedInt32Array | n |
 | `bill_done` | PackedInt32Array | crafts done under the bill |
@@ -703,7 +763,7 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 | `bill_auto` | PackedInt32Array | 1 = the hearth's auto-bill |
 | `bill_active` | PackedInt32Array | 1 = the bill the workshop works now |
 | `shelf_shops` | PackedInt32Array | row index of the shelf stack's workshop |
-| `shelf_kinds` | PackedInt32Array | `ItemKind::code` |
+| `shelf_kinds` | PackedInt64Array | `ItemKind::code` |
 | `shelf_counts` | PackedInt32Array | items on the shelf |
 
 ### `get_work_priorities`
@@ -722,12 +782,12 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 
 | key | type | meaning |
 |---|---|---|
-| `codes` | PackedInt32Array | `RecipeKind::code` |
+| `codes` | PackedInt64Array | `RecipeKind::code` |
 | `names` | PackedStringArray | `knap_blade`, `haft_axe`, `split_firewood` |
-| `workshop_kinds` | PackedInt32Array | `BlueprintKind::code` of the workshop that makes it |
-| `output_kinds` | PackedInt32Array | `ItemKind::code` of the output |
+| `workshop_kinds` | PackedInt64Array | `BlueprintKind::code` of the workshop that makes it |
+| `output_kinds` | PackedInt64Array | `ItemKind::code` of the output |
 | `output_counts` | PackedInt32Array | items per craft |
-| `work_ticks` | PackedInt32Array | work ticks at skill level 5 |
+| `work_ticks` | PackedInt64Array | work ticks at skill level 5 |
 | `skills` | PackedInt32Array | `SkillKind::code` (0 knap, 1 woodwork, 2 chop, 3 quarry, 4 build, 5 mining) |
 
 ### `get_agent_economy`
@@ -875,7 +935,7 @@ columns) and the banner's numbers.
 | key | type | meaning |
 |---|---|---|
 | `on` | bool | the world has a storyteller |
-| `kinds` | PackedInt32Array | `PressureKind::code`: 0 cold snap, 1 drought, 2 beasts, 3 illness |
+| `kinds` | PackedInt64Array | `PressureKind::code`: 0 cold snap, 1 drought, 2 beasts, 3 illness |
 | `names` | PackedStringArray | `PressureKind::name` (`cold_snap`, `drought`, `beasts`, `illness`) |
 | `start_days` | PackedInt64Array | display day it began |
 | `end_days` | PackedInt64Array | display day it ends (exclusive; beasts end earlier when the pack is gone) |
@@ -901,7 +961,7 @@ wolves) and the hunt zones.
 | key | type | meaning |
 |---|---|---|
 | `ids` | PackedInt64Array | `AnimalId`, ascending |
-| `kinds` | PackedInt32Array | `AnimalKind::code`: 0 wolf, 1 deer |
+| `kinds` | PackedInt64Array | `AnimalKind::code`: 0 wolf, 1 deer |
 | `xs` | PackedInt32Array | tile x |
 | `ys` | PackedInt32Array | tile y |
 | `hps` | PackedInt32Array | hit points (deer 30, wolf 40 at full) |
@@ -949,7 +1009,7 @@ list).
 | `ys` | PackedInt32Array | tile y |
 | `hps` | PackedInt32Array | hit points 0–100 |
 | `orders` | PackedInt32Array | 0 hold, 1 move, 2 attack an animal, 3 attack a person |
-| `weapons` | PackedInt32Array | the held tool's `ItemKind::code` (4 flint blade, 5 stone axe, 10 ground axe, 15 spear), -1 bare hands |
+| `weapons` | PackedInt64Array | the held tool's `ItemKind::code` (4 flint blade, 5 stone axe, 10 ground axe, 15 spear), -1 bare hands |
 | `ticks` | PackedInt64Array | ticks since drafted |
 
 ### `get_chronicle_why`
@@ -965,7 +1025,7 @@ of the entry: one row per link, from the entry itself to its first cause (`mood:
 | `kinds` | PackedInt32Array | an entry's `ChronicleKind::as_u8`, -1 otherwise |
 | `subjects` | PackedInt64Array | an entry's subject `AgentId`, -1 otherwise |
 | `others` | PackedInt64Array | an entry's other `AgentId`, -1 otherwise |
-| `causes` | PackedInt32Array | an entry's cause code, -1 otherwise |
+| `causes` | PackedInt64Array | an entry's cause code, -1 otherwise |
 | `values` | PackedInt64Array | an entry's value, 0 otherwise |
 
 ### `get_year_summary`
@@ -1036,7 +1096,7 @@ caravans by number (the gone ones stay), clues by node id. In `SimReads.GETTERS`
 | `caravan_leaves` | PackedInt64Array | the tick a trading caravan leaves, -1 unless trading |
 | `caravan_trades` | PackedInt32Array | trades made with it |
 | `clue_nodes` | PackedInt32Array | nodes hinted by an artifact the colony holds that no colonist practises (eureka) |
-| `clue_items` | PackedInt32Array | the hinting artifact's `ItemKind::code`, one per `clue_nodes` row |
+| `clue_items` | PackedInt64Array | the hinting artifact's `ItemKind::code`, one per `clue_nodes` row |
 | `migrants_joined` | int | people who joined so far |
 | `trades` | int | trades so far |
 | `gifts` | int | gifts so far |
@@ -1075,14 +1135,14 @@ goods in its order (the `take` index of `cmd_trade`) and the colony's stockpiled
 | `leaves` | int | as `caravan_leaves` |
 | `buy_permille` | int | the traders buy at this ‰ of value (800) |
 | `sell_permille` | int | and sell at this ‰ (1,200) |
-| `goods_kind` | PackedInt32Array | `ItemKind::code` |
+| `goods_kind` | PackedInt64Array | `ItemKind::code` |
 | `goods_count` | PackedInt32Array | items left |
 | `goods_quality` | PackedInt32Array | quality 0–100 |
 | `goods_value` | PackedInt32Array | one item's value at 100 % (`values.ron`) |
 | `goods_unknown` | PackedInt32Array | 1 when no colonist practises a node that makes it (처음 보는 물건 — 단서) |
 | `stock_x` | PackedInt32Array | a stockpiled stack's tile x |
 | `stock_y` | PackedInt32Array | its tile y |
-| `stock_kind` | PackedInt32Array | `ItemKind::code` |
+| `stock_kind` | PackedInt64Array | `ItemKind::code` |
 | `stock_count` | PackedInt32Array | items |
 | `stock_quality` | PackedInt32Array | quality 0–100 |
 | `stock_value` | PackedInt32Array | one item's value at 100 % |

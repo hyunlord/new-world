@@ -6,7 +6,10 @@ WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record i
 tags `v7-final-sim` and `v7-final-art`.
 
 ## M-UX + REVIEW — 2026-10-25 (in progress)
+
+- Added (Stage B, uncommitted): open item/blueprint/recipe catalogs, explicit boot boundary, format8 catalog envelope and format6/7 migration mirrors. Core372, save15 and historical continuation3 tests pass; full safety net, seven-family data-only gate and Stage B publication remain pending. Stage A p13 gate3 completed35/35 and was published to both targets; its held-out failures remain unchanged.
 ### Added
+- M-EXT core bridge exports `bootstrap_catalog`, `create` and `get_content_catalog`; snapshot schema9 documents full-width content columns and `wall_is_door`. The gate uses the pass-specific103-export `docs/v8/bridge_api_mux.txt`; historical API lists are retained.
 - Frozen staged owner contract (`docs/v8/mux/MUX_GOAL.md`, `ee10a4ea2`), execution decisions and initial issue registry. No stage is accepted or published yet.
 - Stage A implementation under verification: shared controls/alerts/lessons registries, visible camera dock, bulk read-only UI facts, and recorded steward commands with v6-save migration. Latest component checks:67 strict scripts/57 FFI calls,254 alert checks and128 learning checks. These are component results, not stage acceptance.
 - Exact baseline and nine-fixture capture/comparison tool, plus separate opt-in steward evaluation and gate fixture.

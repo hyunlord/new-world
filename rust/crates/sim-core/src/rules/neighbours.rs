@@ -212,7 +212,7 @@ mod tests {
         for n in &d.one_neighbour_knows {
             assert!(id(n).is_some(), "one_neighbour_knows {n}");
         }
-        for kind in ItemKind::ALL {
+        for kind in ItemKind::all() {
             let item = crate::colony::values::item_data(kind).expect("every item has data");
             for n in item.made_by.iter().chain(item.clue_nodes.iter()) {
                 assert!(id(n).is_some(), "{kind:?} names node {n}");

@@ -124,7 +124,7 @@ func _process(delta: float) -> void:
 	_frame += 1
 	_read = SimReads.read(_world_sim, "get_animals")
 	var ids: PackedInt64Array = _read.get("ids", PackedInt64Array())
-	var kinds: PackedInt32Array = _read.get("kinds", PackedInt32Array())
+	var kinds: PackedInt64Array = _read.get("kinds", PackedInt64Array())
 	var xs: PackedInt32Array = _read.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = _read.get("ys", PackedInt32Array())
 	var states: PackedInt32Array = _read.get("states", PackedInt32Array())

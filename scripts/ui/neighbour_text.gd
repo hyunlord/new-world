@@ -186,7 +186,7 @@ static func caravans(read: Dictionary) -> Array[Dictionary]:
 ## The clue (eureka) item of node `node` in a get_neighbours read, -1 when the node has no clue.
 static func clue_item(read: Dictionary, node: int) -> int:
 	var nodes: PackedInt32Array = read.get("clue_nodes", PackedInt32Array())
-	var items: PackedInt32Array = read.get("clue_items", PackedInt32Array())
+	var items: PackedInt64Array = read.get("clue_items", PackedInt64Array())
 	var i: int = nodes.find(node)
 	return int(items[i]) if i >= 0 and i < items.size() else -1
 

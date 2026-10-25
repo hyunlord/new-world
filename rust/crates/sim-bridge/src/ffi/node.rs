@@ -115,7 +115,7 @@ use sim_systems::worldgen::DEFAULT_GAME_SEED;
 /// - [`WorldSimNode::get_event_chain`] (γ-1)
 /// - [`WorldSimNode::get_agent_snapshot`] (P4-γ)
 #[derive(GodotClass)]
-#[class(base=Node)]
+#[class(base=Node, no_init)]
 pub struct WorldSimNode {
     engine: SimEngine,
     /// Seed retained for repeatable tooling resets.
@@ -162,17 +162,6 @@ pub fn clamp_sim_speed(speed: f64) -> f64 {
 
 #[godot_api]
 impl INode for WorldSimNode {
-    fn init(base: Base<Node>) -> Self {
-        Self {
-            // Revitalize Pass 21: the live game runs `game_v26` (village relations).
-            engine: build_game_engine(DEFAULT_GAME_SEED),
-            world_seed: DEFAULT_GAME_SEED,
-            accumulator: 0.0,
-            sim_speed: 1.0,
-            base,
-        }
-    }
-
     /// Per-frame Godot hook — drives the simulation at a fixed 30 TPS using
     /// the Gaffer accumulator pattern (Phase 0 design #9). Render runs at
     /// Godot's native frame rate; simulation pacing is deterministic.
@@ -201,6 +190,38 @@ impl INode for WorldSimNode {
 
 #[godot_api]
 impl WorldSimNode {
+    /// Validate the selected immutable catalog and UI before world construction.
+    #[func]
+    pub fn bootstrap_catalog() -> VarDictionary {
+        super::content_boot::receipt()
+    }
+
+    /// The only Godot construction route; invalid selected data returns null.
+    #[func]
+    pub fn create() -> Option<Gd<Self>> {
+        if let Err(error) = super::content_boot::ensure_boot() {
+            godot_error!("WorldSim content boot: {error}");
+            return None;
+        }
+        let engine = build_game_engine(DEFAULT_GAME_SEED);
+        Some(Gd::from_init_fn(move |base| Self {
+            engine,
+            world_seed: DEFAULT_GAME_SEED,
+            accumulator: 0.0,
+            sim_speed: 1.0,
+            base,
+        }))
+    }
+
+    /// Immutable definitions; each call creates a defensive projection.
+    #[func]
+    pub fn get_content_catalog(&self) -> VarDictionary {
+        match sim_core::colony::content::installed() {
+            Ok(catalog) => super::content::catalog_to_dict(catalog),
+            Err(_) => VarDictionary::new(),
+        }
+    }
+
     /// Emitted after a complete engine replacement so renderers refresh snapshots.
     #[signal]
     fn world_reset();
@@ -472,10 +493,10 @@ impl WorldSimNode {
         // 0 log) and `carry_counts`.
         let jobs = collect_agent_jobs(&self.engine.world);
         let codes: Vec<u8> = jobs.iter().map(|j| j.0).collect();
-        let kinds: Vec<i32> = jobs.iter().map(|j| j.1).collect();
+        let kinds: Vec<i64> = jobs.iter().map(|j| j.1).collect();
         let counts: Vec<i32> = jobs.iter().map(|j| i32::from(j.2)).collect();
         dict.set("jobs", PackedByteArray::from(codes.as_slice()));
-        dict.set("carry_kinds", PackedInt32Array::from(kinds.as_slice()));
+        dict.set("carry_kinds", PackedInt64Array::from(kinds.as_slice()));
         dict.set("carry_counts", PackedInt32Array::from(counts.as_slice()));
         // M5 — additive apparel, mood band, draft and illness columns in the same
         // row order: `tops` (0 loincloth, 1 hide wrap, 2 fur cloak), `mood_bands`

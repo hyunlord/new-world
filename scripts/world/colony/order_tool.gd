@@ -137,7 +137,7 @@ func set_mode(new_mode: int) -> void:
 	mode_changed.emit(mode)
 
 
-## Enter the build mode for blueprint kind `kind_name` (an EconomyText.BUILD_KINDS name).
+## Enter the build mode for blueprint kind `kind_name` (a registered blueprint name).
 func set_build(kind_name: String) -> void:
 	if EconomyText.build_code(kind_name) >= 0:
 		build_kind = kind_name
@@ -148,7 +148,7 @@ func set_build(kind_name: String) -> void:
 ## The footprint of the current build kind.
 func build_size() -> Vector2i:
 	var code: int = EconomyText.build_code(build_kind)
-	return EconomyText.BUILD_KINDS[code]["size"] if code >= 0 else Vector2i.ONE
+	return EconomyText.build_kind(code)["size"] if code >= 0 else Vector2i.ONE
 
 
 ## The footprint's top-left when the cursor is on `tile` (the cursor sits on the footprint's centre, left of it

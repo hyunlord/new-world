@@ -482,7 +482,13 @@ fn cuts_off(engine: &SimEngine, hc: (u32, u32), at: (u32, u32), w: u32, h: u32) 
         .colony
         .space_sites
         .iter()
-        .filter(|(_, k)| matches!(k, BlueprintKind::Door | BlueprintKind::Bedroll))
+        .filter(|(_, k)| {
+            matches!(
+                k.definition().completion,
+                sim_core::colony::content::CompletionCategory::Door
+                    | sim_core::colony::content::CompletionCategory::Bed
+            )
+        })
         .map(|(t, _)| *t);
     let kept: Vec<(u32, u32)> = doors
         .chain(sites)
@@ -1609,13 +1615,16 @@ pub fn colony_fingerprint(engine: &SimEngine) -> String {
         state.pending.clear();
         text.push_str(&format!("|{state:?}"));
     }
+    if !engine.resources.content_state.is_empty() {
+        text.push_str(&format!("|{:?}", engine.resources.content_state));
+    }
     format!("{}-{:016x}", super::fingerprint(engine), fnv(&text))
 }
 
 /// The per-kind ledger at the end of a run (M2 goal 3.1), kinds with any item only.
 fn items_json(engine: &SimEngine) -> Value {
     let mut out = serde_json::Map::new();
-    for kind in ItemKind::ALL {
+    for kind in ItemKind::all() {
         let t = invariants::ledger_of(&engine.world, &engine.resources, kind);
         if t.created == 0 {
             continue;

@@ -28,28 +28,51 @@ impl Top {
 
     /// Chance ‰ that a cold hour (the hearth out on a winter night) bites the wearer (goal 3.3: hide wrap ×700,
     /// fur cloak ×500; DECISIONS D15).
-    pub const fn cold_permille(self) -> u32 {
-        match self {
-            Self::HideWrap => 700,
-            Self::FurCloak => 500,
-        }
+    pub fn cold_permille(self) -> u32 {
+        self.item()
+            .definition()
+            .apparel
+            .as_ref()
+            .map_or(1000, |a| a.cold_permille)
     }
 
-    /// The item it is made of.
-    pub const fn item(self) -> super::ItemKind {
-        match self {
-            Self::HideWrap => super::ItemKind::HideWrap,
-            Self::FurCloak => super::ItemKind::FurCloak,
-        }
+    /// The unique item represented by this legacy saved apparel slot.
+    pub fn item(self) -> super::ItemKind {
+        super::ItemKind::all()
+            .find(|kind| {
+                kind.definition()
+                    .apparel
+                    .as_ref()
+                    .is_some_and(|a| a.legacy_top_code == self.code())
+            })
+            .unwrap_or_else(|| panic!("installed apparel mapping missing for Top {}", self.code()))
     }
 
-    /// The top an item makes, if it is one.
-    pub const fn of_item(kind: super::ItemKind) -> Option<Self> {
-        match kind {
-            super::ItemKind::HideWrap => Some(Self::HideWrap),
-            super::ItemKind::FurCloak => Some(Self::FurCloak),
+    /// The saved apparel slot of a supported item.
+    pub fn of_item(kind: super::ItemKind) -> Option<Self> {
+        match kind.definition().apparel.as_ref()?.legacy_top_code {
+            1 => Some(Self::HideWrap),
+            2 => Some(Self::FurCloak),
             _ => None,
         }
+    }
+
+    /// Clothing preference from the installed definition.
+    pub fn warmth_rank(self) -> u16 {
+        self.item()
+            .definition()
+            .apparel
+            .as_ref()
+            .map_or(0, |a| a.warmth_rank)
+    }
+
+    /// Whether this supported top shields work from a cold snap.
+    pub fn cold_snap_work_immune(self) -> bool {
+        self.item()
+            .definition()
+            .apparel
+            .as_ref()
+            .is_some_and(|a| a.cold_snap_work_immune)
     }
 }
 

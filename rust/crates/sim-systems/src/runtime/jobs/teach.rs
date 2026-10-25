@@ -25,8 +25,7 @@ use sim_core::colony::knowledge::{
     bit, defs, gates, Gate, Knowledge, KnowledgeId, Source, TeachOrder,
 };
 use sim_core::colony::{
-    BlueprintKind, CancelReason, CommandResult, Job, JobKind, JobStage, RejectReason,
-    WorkPriorities, WorkType,
+    CancelReason, CommandResult, Job, JobKind, JobStage, RejectReason, WorkPriorities, WorkType,
 };
 use sim_core::components::{
     Agent, AgentId, AgentState, Child, Elder, Life, PorterTrip, Position, TargetKind,
@@ -60,24 +59,23 @@ pub fn meeting_tile(res: &SimResources, node: KnowledgeId) -> Option<(u32, u32)>
     let hearth = crate::runtime::jobs::hearth::hearth_tiles(res)
         .first()
         .copied();
-    let kinds: Vec<BlueprintKind> = defs()
+    let node_gates = defs()
         .get(node)
-        .map(|n| {
-            n.gates
-                .iter()
-                .filter_map(|g| match g {
-                    Gate::Workshop(k) => Some(*k),
-                    Gate::Recipe(r) => r.recipe().map(|r| r.workshop),
-                    _ => None,
-                })
-                .collect()
-        })
-        .unwrap_or_default();
+        .map(|definition| definition.gates.as_slice())
+        .unwrap_or(&[]);
     let from = hearth.unwrap_or((0, 0));
     res.colony
         .workshops
         .values()
-        .filter(|s| kinds.contains(&s.kind))
+        .filter(|shop| {
+            node_gates.iter().any(|gate| match gate {
+                Gate::Workshop(kind) => *kind == shop.kind,
+                Gate::Recipe(recipe) => recipe
+                    .recipe()
+                    .is_some_and(|r| r.supports_workshop(shop.kind)),
+                _ => false,
+            })
+        })
         .map(|s| s.work_tile())
         .min_by_key(|t| (chebyshev(from, *t), t.1, t.0))
         .or(hearth)
@@ -301,7 +299,7 @@ pub fn assign(
                     stage: JobStage::ToSource,
                     taken_at: tick,
                     amount: 0,
-                    item: sim_core::colony::ItemKind::Log,
+                    item: sim_core::colony::ItemKind::role("default_placeholder"),
                     material: None,
                     fetch: None,
                     best_distance: chebyshev(p, at),
@@ -381,7 +379,7 @@ fn session_done(
             ChronicleEntry::new(tick, ChronicleKind::KnowledgeLearned)
                 .subject(o.learner)
                 .other(Some(o.teacher))
-                .cause(Source::Apprenticed.code())
+                .cause(u32::from(Source::Apprenticed.code()))
                 .value(i64::from(o.knowledge)),
         );
         close(world, res, o.id, true);

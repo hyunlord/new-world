@@ -164,6 +164,8 @@ mod tests {
     }
     #[test]
     fn completion_requires_owned_beds_boundary_and_no_foreign_override() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled content");
         let (mut e, rule) = fixture();
         assert!(plan(&e.resources, &rule).is_some());
         e.resources
@@ -193,6 +195,8 @@ mod tests {
     }
     #[test]
     fn mixed_player_boundary_is_not_an_exclusively_owned_enclosure() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled content");
         let (mut e, rule) = fixture();
         let i = e.resources.tile_grid.idx(11, 10);
         e.resources.tile_grid.wall_material[i] = Some(sim_core::colony::materials::OAK);
@@ -203,6 +207,8 @@ mod tests {
     }
     #[test]
     fn later_player_bed_replacement_does_not_inherit_historical_ownership() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled content");
         let (mut e, rule) = fixture();
         let Action::House { bed, .. } = rule.action else {
             panic!("house")
@@ -220,6 +226,8 @@ mod tests {
     }
     #[test]
     fn data_role_and_absent_optional_field_are_respected() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled content");
         let (e, _) = fixture();
         let text = include_str!("../../../../sim-core/data/colony/steward.ron");
         let changed =
@@ -240,6 +248,8 @@ mod tests {
     }
     #[test]
     fn valid_manual_auto_survives_room_id_change_but_unknown_does_not_block() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled content");
         let (mut e, rule) = fixture();
         e.resources.colony.command_log.push(CommandRecord {
             tick: 0,

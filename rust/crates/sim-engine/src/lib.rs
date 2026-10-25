@@ -27,6 +27,9 @@
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
 
+/// Frozen resource layout used by historical save readers.
+pub mod legacy_v7;
+
 use hecs::{Entity, World};
 use sim_core::causal::event::DeathReason;
 use sim_core::causal::{CausalLogStorage, EventId};
@@ -357,6 +360,10 @@ pub struct SimResources {
     /// Saved separately in the v7 body so the v6 resource layout stays readable.
     #[serde(skip)]
     pub steward: sim_core::colony::steward::StewardState,
+
+    /// Persisted separately in the v8 body; empty for historical bundled worlds.
+    #[serde(skip)]
+    pub content_state: sim_core::colony::content_state::ContentState,
 
     /// FFI-originated building placement events, drained each tick by
     /// `BuildingStampSystem`. Pushed by `sim_bridge::WorldSimNode::on_building_placed`
@@ -729,6 +736,7 @@ impl SimResources {
     /// Tests can also call this directly to verify P7β-13's empty-default
     /// invariant without spinning up a full engine.
     pub fn new(width: u32, height: u32, registry: MaterialRegistry) -> Self {
+        let _catalog = sim_core::colony::content::installed_or_bundled();
         let blocking_cache = MaterialBlockingCache::build(&registry);
         Self {
             rules: WorldRules::default(),
@@ -754,6 +762,7 @@ impl SimResources {
             material_blocking_cache: blocking_cache,
             current_tick: 0,
             steward: Default::default(),
+            content_state: Default::default(),
             building_event_queue: VecDeque::new(),
             causal_log: CausalLogStorage::new(),
             next_event_id: AtomicU64::new(0),

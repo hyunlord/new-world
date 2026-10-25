@@ -327,7 +327,7 @@ fn quarrel(
         ChronicleEntry::new(res.current_tick, ChronicleKind::Quarrel)
             .subject(init.0)
             .other(Some(other.0))
-            .cause(1 + code)
+            .cause(u32::from(1 + code))
             .value(i64::from(after)),
         cause_ref,
     );
@@ -353,7 +353,7 @@ fn quarrel(
             ChronicleEntry::new(res.current_tick, ChronicleKind::Fight)
                 .subject(init.0)
                 .other(Some(other.0))
-                .cause(1 + code)
+                .cause(u32::from(1 + code))
                 .value(i64::from(rule.fight_damage)),
             Some(CauseRef::Entry(index)),
         );

@@ -103,7 +103,7 @@ pub fn work_permille(world: &World, res: &SimResources, entity: Entity, tile: (u
         && !crate::runtime::rooms::roofed(res, tile)
         && !world
             .get::<&sim_core::colony::people::Apparel>(entity)
-            .is_ok_and(|a| a.top == sim_core::colony::people::Top::FurCloak)
+            .is_ok_and(|a| a.top.cold_snap_work_immune())
     {
         factor = factor * u64::from(rule.snap_outdoor_work_permille) / 1000;
     }
@@ -194,7 +194,7 @@ pub fn end_pressure(res: &mut SimResources, kind: PressureKind) {
         u32::try_from(deaths_so_far(res).saturating_sub(done.deaths_at_start)).unwrap_or(u32::MAX);
     res.chronicle.push_caused(
         ChronicleEntry::new(res.current_tick, ChronicleKind::PressureEnded)
-            .cause(kind.code())
+            .cause(u32::from(kind.code()))
             .value(i64::from(done.cost.deaths)),
         done.began_entry.map(CauseRef::Entry),
     );
@@ -527,7 +527,7 @@ fn begin(world: &mut World, res: &mut SimResources, rule: &StoryRule, mut p: Pre
     p.deaths_at_start = deaths_so_far(res);
     let index = res.chronicle.push_caused(
         ChronicleEntry::new(res.current_tick, ChronicleKind::PressureBegan)
-            .cause(p.kind.code())
+            .cause(u32::from(p.kind.code()))
             .value(i64::from(p.intensity)),
         None,
     );

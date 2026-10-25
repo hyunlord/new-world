@@ -43,7 +43,7 @@ pub mod band {
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct PressureRow {
     /// `PressureKind::code` (0 cold snap, 1 drought, 2 beasts, 3 illness).
-    pub kind: u8,
+    pub kind: u32,
     /// `PressureKind::name`.
     pub name: String,
     /// Display day it began.
@@ -107,7 +107,7 @@ pub fn collect_story(world: &hecs::World, res: &SimResources) -> StoryView {
         .active
         .iter()
         .map(|p| PressureRow {
-            kind: p.kind.code(),
+            kind: u32::from(p.kind.code()),
             name: p.kind.name().into(),
             start_day: p.start_day,
             end_day: p.end_day,
@@ -150,7 +150,7 @@ pub fn collect_story(world: &hecs::World, res: &SimResources) -> StoryView {
 pub(super) fn story_to_dict(v: &StoryView) -> VarDictionary {
     let mut d = VarDictionary::new();
     d.set("on", v.on);
-    let kinds: Vec<i32> = v.active.iter().map(|p| i32::from(p.kind)).collect();
+    let kinds: Vec<i64> = v.active.iter().map(|p| i64::from(p.kind)).collect();
     let names: Vec<GString> = v
         .active
         .iter()
@@ -164,7 +164,7 @@ pub(super) fn story_to_dict(v: &StoryView) -> VarDictionary {
             .as_slice()
             .into()
     };
-    d.set("kinds", PackedInt32Array::from(kinds.as_slice()));
+    d.set("kinds", PackedInt64Array::from(kinds.as_slice()));
     d.set("names", PackedStringArray::from(names.as_slice()));
     d.set("start_days", col(&|p| i64::from(p.start_day)));
     d.set("end_days", col(&|p| i64::from(p.end_day)));
@@ -197,7 +197,7 @@ pub struct AnimalRows {
     /// `AnimalId`s, ascending.
     pub id: Vec<i64>,
     /// `AnimalKind::code` (0 wolf, 1 deer).
-    pub kind: Vec<i32>,
+    pub kind: Vec<i64>,
     /// Tile x.
     pub x: Vec<i32>,
     /// Tile y.
@@ -225,7 +225,7 @@ pub fn collect_animals(res: &SimResources) -> AnimalRows {
     };
     for a in w.animals.values() {
         out.id.push(i64::from(a.id));
-        out.kind.push(i32::from(a.kind.code()));
+        out.kind.push(i64::from(a.kind.code()));
         out.x.push(i32::try_from(a.pos.0).unwrap_or(-1));
         out.y.push(i32::try_from(a.pos.1).unwrap_or(-1));
         out.hp.push(i32::from(a.hp));
@@ -245,7 +245,7 @@ pub fn collect_animals(res: &SimResources) -> AnimalRows {
 pub(super) fn animals_to_dict(r: &AnimalRows) -> VarDictionary {
     let mut d = VarDictionary::new();
     d.set("ids", PackedInt64Array::from(r.id.as_slice()));
-    d.set("kinds", PackedInt32Array::from(r.kind.as_slice()));
+    d.set("kinds", PackedInt64Array::from(r.kind.as_slice()));
     d.set("xs", PackedInt32Array::from(r.x.as_slice()));
     d.set("ys", PackedInt32Array::from(r.y.as_slice()));
     d.set("hps", PackedInt32Array::from(r.hp.as_slice()));
@@ -452,13 +452,13 @@ pub struct DraftedRows {
     /// The order: 0 hold, 1 move, 2 attack an animal, 3 attack a person.
     pub order: Vec<i32>,
     /// The held tool's `ItemKind::code` (−1 bare hands).
-    pub weapon: Vec<i32>,
+    pub weapon: Vec<i64>,
     /// Ticks since drafted.
     pub ticks: Vec<i64>,
 }
 
 /// One drafted person: id, tile, hp, order code, weapon code, ticks drafted.
-type DraftedRow = (AgentId, (i32, i32), i32, i32, i32, i64);
+type DraftedRow = (AgentId, (i32, i32), i32, i32, i64, i64);
 
 /// Every drafted person, by `AgentId`.
 pub fn collect_drafted(world: &hecs::World, res: &SimResources) -> DraftedRows {
@@ -486,7 +486,7 @@ pub fn collect_drafted(world: &hecs::World, res: &SimResources) -> DraftedRows {
                 ),
                 h.map_or(0, |h| h.hp.clamp(0.0, 100.0) as i32),
                 order,
-                t.map_or(-1, |t| i32::from(t.item.kind.code())),
+                t.map_or(-1, |t| i64::from(t.item.kind.code())),
                 i64::try_from(res.current_tick.saturating_sub(d.since)).unwrap_or(i64::MAX),
             )
         })
@@ -513,7 +513,7 @@ pub(super) fn drafted_to_dict(r: &DraftedRows) -> VarDictionary {
     d.set("ys", PackedInt32Array::from(r.y.as_slice()));
     d.set("hps", PackedInt32Array::from(r.hp.as_slice()));
     d.set("orders", PackedInt32Array::from(r.order.as_slice()));
-    d.set("weapons", PackedInt32Array::from(r.weapon.as_slice()));
+    d.set("weapons", PackedInt64Array::from(r.weapon.as_slice()));
     d.set("ticks", PackedInt64Array::from(r.ticks.as_slice()));
     d
 }
@@ -537,7 +537,7 @@ pub struct WhyRows {
     /// For an entry link: other `AgentId`, else −1.
     pub other: Vec<i64>,
     /// For an entry link: its cause code, else −1.
-    pub cause: Vec<i32>,
+    pub cause: Vec<i64>,
     /// For an entry link: its value, else 0.
     pub value: Vec<i64>,
 }
@@ -576,7 +576,7 @@ pub fn collect_chronicle_why(chronicle: &Chronicle, index: i64) -> WhyRows {
                 .and_then(|e| e.other)
                 .map_or(-1, |a| i64::try_from(a).unwrap_or(-1)),
         );
-        out.cause.push(entry.map_or(-1, |e| i32::from(e.cause)));
+        out.cause.push(entry.map_or(-1, |e| i64::from(e.cause)));
         out.value.push(entry.map_or(0, |e| e.value));
     }
     out
@@ -592,7 +592,7 @@ pub(super) fn why_to_dict(r: &WhyRows) -> VarDictionary {
     d.set("kinds", PackedInt32Array::from(r.kind.as_slice()));
     d.set("subjects", PackedInt64Array::from(r.subject.as_slice()));
     d.set("others", PackedInt64Array::from(r.other.as_slice()));
-    d.set("causes", PackedInt32Array::from(r.cause.as_slice()));
+    d.set("causes", PackedInt64Array::from(r.cause.as_slice()));
     d.set("values", PackedInt64Array::from(r.value.as_slice()));
     d
 }
@@ -600,15 +600,15 @@ pub(super) fn why_to_dict(r: &WhyRows) -> VarDictionary {
 /// The link of entry `index` for the chronicle panel's "→" line: (link kind −1
 /// none / 0 entry / 1 modifier / 2 pressure, the linked entry index or −1, the
 /// modifier or pressure code or −1).
-pub fn cause_link(chronicle: &Chronicle, index: u32) -> (i32, i64, i32) {
+pub fn cause_link(chronicle: &Chronicle, index: u32) -> (i32, i64, i64) {
     match chronicle.cause_of(index) {
         None => (-1, -1, -1),
         Some(CauseRef::Entry(e)) => (0, i64::from(e), -1),
         Some(CauseRef::Modifier { code, entry }) => {
-            (1, entry.map_or(-1, i64::from), i32::from(code))
+            (1, entry.map_or(-1, i64::from), i64::from(code))
         }
         Some(CauseRef::Pressure { kind, entry }) => {
-            (2, entry.map_or(-1, i64::from), i32::from(kind))
+            (2, entry.map_or(-1, i64::from), i64::from(kind))
         }
         // M5.5: a sampled need reads as its modifier, linked to the pressure behind it.
         Some(CauseRef::Sample { code, sample }) => (
@@ -617,7 +617,7 @@ pub fn cause_link(chronicle: &Chronicle, index: u32) -> (i32, i64, i32) {
                 .sample(sample)
                 .and_then(|s| s.entry)
                 .map_or(-1, i64::from),
-            i32::from(code),
+            i64::from(code),
         ),
     }
 }
@@ -687,12 +687,12 @@ pub fn collect_year_summary(res: &SimResources, year: i64) -> YearSummary {
         match e.kind {
             ChronicleKind::Born => bump(&mut out.births),
             ChronicleKind::Died => {
-                if let Some(n) = out.deaths.get_mut(usize::from(e.cause)) {
+                if let Some(n) = out.deaths.get_mut(e.cause as usize) {
                     bump(n);
                 }
             }
             ChronicleKind::PressureBegan => {
-                if let Some(n) = out.pressures.get_mut(usize::from(e.cause)) {
+                if let Some(n) = out.pressures.get_mut(e.cause as usize) {
                     bump(n);
                 }
             }
@@ -701,7 +701,9 @@ pub fn collect_year_summary(res: &SimResources, year: i64) -> YearSummary {
             ChronicleKind::Quarrel => bump(&mut out.quarrels),
             ChronicleKind::Fight => bump(&mut out.fights),
             ChronicleKind::Breakdown => bump(&mut out.breakdowns),
-            ChronicleKind::Hunted if e.cause == AnimalKind::Deer.code() => bump(&mut out.hunted),
+            ChronicleKind::Hunted if e.cause == u32::from(AnimalKind::Deer.code()) => {
+                bump(&mut out.hunted)
+            }
             ChronicleKind::WolfKilled => bump(&mut out.wolves_killed),
             ChronicleKind::MigrantsJoined => {
                 out.migrants_joined = out.migrants_joined.saturating_add((e.value & 0xFF) as u32)

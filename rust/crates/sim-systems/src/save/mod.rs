@@ -3,8 +3,10 @@
 //! one would have.
 //!
 //! Format: the 8-byte magic `WORLDSIM`, [`FORMAT_VERSION`] as a little-endian
-//! `u32`, then a `bincode` 1.x body (varint integers, little endian) of
-//! `{ current_tick, resources, world, systems }`:
+//! `u32`, then a `bincode` 1.x envelope (varint integers, little endian)
+//! containing the catalog revision and opaque body bytes. Revision validation
+//! precedes typed body decoding. The body contains current tick, resources,
+//! world, systems, Steward state and sparse content identity:
 //! - `resources`: every [`SimResources`] field (rules, seed, command log,
 //!   colony, chronicle, grids, …) by serde; hash maps and sets are written in
 //!   sorted key order (`sim_core::save_serde`). The material blocking cache
@@ -26,7 +28,14 @@
 //! wrote (the same code path as [`load`]). The engine after a save is
 //! therefore the loaded engine; the round-trip tests prove it ticks the same.
 
+mod content_validation;
 pub mod world;
+
+#[cfg(test)]
+mod legacy_codec_tests;
+
+#[cfg(test)]
+mod legacy_id_codec_tests;
 
 use std::fmt;
 
@@ -39,7 +48,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; a file of any other version is rejected. Bump it
+/// Save format version; historical versions 6 and 7 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -47,8 +56,10 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// the technology aggregate, new item, recipe, blueprint and job kinds);
 /// 5 = M5 (the storyteller, `Sick`, `Apparel`, new item and chronicle kinds,
 /// the chronicle's cause table, animals, fights, drafting, mood, bonds); 6 = M5.5 (`Fleeing`, neighbours,
-/// migrants, caravans, the trade ledger, need samples, new chronicle kinds and the knowledge source `Migrant`).
-pub const FORMAT_VERSION: u32 = 7;
+/// migrants, caravans, the trade ledger, need samples, new chronicle kinds and the knowledge source `Migrant`);
+/// 7 = optional Steward state; 8 = catalog-bound envelope, full-width content
+/// codes and Chronicle causes, sparse completed-construction/tool identity.
+pub const FORMAT_VERSION: u32 = 8;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;
@@ -119,18 +130,36 @@ struct BodyRef<'a> {
     world: &'a world::WorldSave,
     systems: &'a [(String, Vec<u8>)],
     steward: &'a sim_core::colony::steward::StewardState,
+    content_state: &'a sim_core::colony::content_state::ContentState,
 }
 
 /// The body after the header, as read (same fields, same order).
 #[derive(Deserialize)]
 struct LegacyBody {
     current_tick: u64,
-    resources: SimResources,
+    resources: sim_engine::legacy_v7::LegacySimResources,
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
 }
 
-/// V7 appends optional assistant state after the frozen v6 body fields.
+/// The published v7 body has the v6 resource wire layout plus Steward history.
+#[derive(Deserialize)]
+struct LegacyBodyV7 {
+    current_tick: u64,
+    resources: sim_engine::legacy_v7::LegacySimResources,
+    world: world::WorldSave,
+    systems: Vec<(String, Vec<u8>)>,
+    steward: sim_core::colony::steward::StewardState,
+}
+
+/// The identity is decoded before any selected-pack typed IDs in the body.
+#[derive(Serialize, Deserialize)]
+struct Envelope {
+    revision: String,
+    payload: Vec<u8>,
+}
+
+/// V8 body decoded only after the envelope's catalog revision matches.
 #[derive(Deserialize)]
 struct Body {
     current_tick: u64,
@@ -138,6 +167,7 @@ struct Body {
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
     steward: sim_core::colony::steward::StewardState,
+    content_state: sim_core::colony::content_state::ContentState,
 }
 
 /// Save `engine` to bytes. Two saves of one state are byte-identical.
@@ -155,11 +185,18 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         world: &world,
         systems: &systems,
         steward: &engine.resources.steward,
+        content_state: &engine.resources.content_state,
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
     out.extend_from_slice(&FORMAT_VERSION.to_le_bytes());
-    out.extend_from_slice(&encode(&body).map_err(SaveError::Encode)?);
+    let catalog = sim_core::colony::content::installed()
+        .map_err(|error| SaveError::Encode(error.to_string()))?;
+    let envelope = Envelope {
+        revision: catalog.revision().to_owned(),
+        payload: encode(&body).map_err(SaveError::Encode)?,
+    };
+    out.extend_from_slice(&encode(&envelope).map_err(SaveError::Encode)?);
     engine.world = world::build(&world).map_err(SaveError::World)?;
     Ok(out)
 }
@@ -177,21 +214,50 @@ pub fn load_with(
     register: impl FnOnce(&mut SimEngine),
 ) -> Result<SimEngine, SaveError> {
     let encoded = read_header(bytes)?;
-    let legacy = bytes.get(MAGIC.len()..MAGIC.len() + 4) == Some(6u32.to_le_bytes().as_slice());
+    let version = bytes.get(MAGIC.len()..MAGIC.len() + 4);
+    let legacy = version == Some(6u32.to_le_bytes().as_slice());
+    let legacy_v7 = version == Some(7u32.to_le_bytes().as_slice());
+    if legacy || legacy_v7 {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .map_err(|error| SaveError::Decode(error.to_string()))?;
+    }
     let mut body: Body = if legacy {
         let old: LegacyBody = decode(encoded).map_err(SaveError::Decode)?;
         Body {
             current_tick: old.current_tick,
-            resources: old.resources,
+            resources: old.resources.into(),
             world: old.world,
             systems: old.systems,
             steward: Default::default(),
+            content_state: Default::default(),
+        }
+    } else if legacy_v7 {
+        let old: LegacyBodyV7 = decode(encoded).map_err(SaveError::Decode)?;
+        Body {
+            current_tick: old.current_tick,
+            resources: old.resources.into(),
+            world: old.world,
+            systems: old.systems,
+            steward: old.steward,
+            content_state: Default::default(),
         }
     } else {
-        decode(encoded).map_err(SaveError::Decode)?
+        let envelope: Envelope = decode(encoded).map_err(SaveError::Decode)?;
+        let catalog = sim_core::colony::content::installed()
+            .map_err(|error| SaveError::Decode(error.to_string()))?;
+        if envelope.revision != catalog.revision() {
+            return Err(SaveError::Decode(format!(
+                "save content revision {} does not match installed {}",
+                envelope.revision,
+                catalog.revision()
+            )));
+        }
+        decode(&envelope.payload).map_err(SaveError::Decode)?
     };
     let mut resources = body.resources;
     resources.steward = body.steward;
+    resources.content_state = body.content_state;
+    content_validation::validate(&resources).map_err(SaveError::Decode)?;
     resources.material_blocking_cache = MaterialBlockingCache::build(&resources.material_registry);
     // M3: the colony's cost map is derived (not saved); build it now so a
     // command applied before the first tick sees the same regions as an
@@ -233,7 +299,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
     let mut word = [0u8; 4];
     word.copy_from_slice(version);
     let found = u32::from_le_bytes(word);
-    if found != FORMAT_VERSION && found != 6 {
+    if found != FORMAT_VERSION && found != 6 && found != 7 {
         return Err(SaveError::Version {
             found,
             expected: FORMAT_VERSION,
@@ -245,6 +311,57 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn envelope_revision_is_checked_before_invalid_payload() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled catalog");
+        let envelope = Envelope {
+            revision: "foreign-catalog".into(),
+            payload: vec![255],
+        };
+        let mut bytes = MAGIC.to_vec();
+        bytes.extend_from_slice(&FORMAT_VERSION.to_le_bytes());
+        bytes.extend(encode(&envelope).expect("encode envelope"));
+        let error = load(&bytes).err().expect("wrong catalog must fail");
+        assert!(matches!(error, SaveError::Decode(ref message)
+            if message.contains("does not match installed")));
+    }
+
+    #[test]
+    fn numeric_recipe_slots_reject_unregistered_codes() {
+        use sim_core::colony::content_state::{deserialize_craft_quality, deserialize_recipe_code};
+        use std::collections::BTreeMap;
+
+        #[derive(Deserialize)]
+        struct RecipeSlot(#[serde(deserialize_with = "deserialize_recipe_code")] u32);
+        #[derive(Deserialize)]
+        struct Quality(
+            #[serde(deserialize_with = "deserialize_craft_quality")]
+            BTreeMap<(u64, u32), (u64, u64)>,
+        );
+
+        let catalog =
+            sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+                .expect("bundled catalog");
+        let known = catalog.recipes().next().expect("bundled recipe").id.code();
+        assert_eq!(
+            decode::<RecipeSlot>(&encode(&known).expect("encode"))
+                .expect("known code")
+                .0,
+            known
+        );
+        assert!(decode::<RecipeSlot>(&encode(&u32::MAX).expect("encode")).is_err());
+        let quality = BTreeMap::from([((7u64, known), (9u64, 11u64))]);
+        assert_eq!(
+            decode::<Quality>(&encode(&quality).expect("encode"))
+                .expect("known quality")
+                .0,
+            quality
+        );
+        let unknown = BTreeMap::from([((7u64, u32::MAX), (9u64, 11u64))]);
+        assert!(decode::<Quality>(&encode(&unknown).expect("encode")).is_err());
+    }
 
     #[test]
     fn header_checks_magic_and_version() {

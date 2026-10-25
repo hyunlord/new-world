@@ -370,7 +370,7 @@ func _make_bar(bar_name: String) -> ProgressBar:
 	hdr.text = bar_name
 	_bar_headers.append(hdr)
 	var row: HBoxContainer = HBoxContainer.new()
-	row.add_child(ArtUI.icon([12, 11, 13][_bar_headers.size() - 1]))
+	row.add_child(ArtUI.icon(["hunger", "thirst", "sleep"][_bar_headers.size() - 1]))
 	row.add_child(hdr)
 	_vbox.add_child(row)
 	var bar: ProgressBar = ProgressBar.new()

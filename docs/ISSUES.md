@@ -36,3 +36,16 @@ M-UX 작업 중인 누적 기록. Stage C에서 V8-0 이후 모든 보고서·�
 | ISS-030 | 집사 주기별 집 배치 계획이 실제 debug 플레이를 멈추게 함 | M-UX active-perf-1, D29/D34, `D29_VERIFICATION.md` | perf | open | 원래 최대틱1.05초, D29 후0.50초, D34 후0.21초. D34 정상1x/4x 최대 프레임650/646ms(시작 포함), 반복73–99ms 지연 잔존; 두 debug 저장 동일·새 OFF 안전망 통과. 최종 게이트 대기이며 FPS 불변·해결로 판정하지 않음 | — |
 | ISS-031 | Chronicle 열거형 추가 뒤 안정성 시험의 전체 개수 기대값이 오래됨 | Stage A gate1 `6b0f572e4`, `chronicle::tests::discriminants_are_stable` | process | fixed | 이전 기록: debug/release 각각2059통과·1실패·1제외: 기대45/실제46. 최소 수정은46개와 StewardAction 코드45·이름 명시; 새 전체 게이트 확인 전 미해결; p12에서 ALL46 및 StewardAction 코드45·이름 명시; gate2 debug/release 각각2060통과·0실패·1제외; p12 f38d488f4 gate2 확인(2026-10-25 09:07:08 KST), p13 보고 HEAD gate3·게시 대기는 문서 준비 시점 상태 | — |
 | ISS-032 | 최상위 DESIGN.md가 인벤토리 폐쇄 규칙과 표에서 빠짐 | Stage A gate1 inventory_closure:2221경로·1943행·유일한 미포함 DESIGN.md | process | fixed | 이전 기록: KEEP 규칙1개와 표1행 최소 추가, 과거 행 보존; 새 전체 게이트 확인 전 미해결; p12에서 DESIGN.md KEEP 규칙1개·표1행 추가, 역사 행 보존; gate2 inventory_closure 통과; p12 f38d488f4 gate2 확인(2026-10-25 09:07:08 KST), p13 보고 HEAD gate3·게시 대기는 문서 준비 시점 상태 | — |
+
+
+## Stage B 통합 중 발견 (ISS-033–268은 전체 이력 통합 초안에서 예약)
+
+| ID | 제목 | 발견 | 분류 | 상태 | 해결·검증 | 링크 |
+|---|---|---|---|---|---|---|
+| ISS-269 | 새 RON 항목의 고정 길이 배열 표현이 역직렬화 형식과 다름 | M-EXT core-first, D36 | bug | fixed | 미커밋 통합 중 tuple 표현으로 수정; sim-core372 통과. 기존 실패 로그 보존; 전체 게이트 대기 | — |
+| ISS-270 | 칼 내구도 소비자의 설정 키가 데이터 정의와 달라 기본8회로 대체됨 | M-EXT base-data audit, D36 | bug | fixed | 일반 ScrapeHide 경로에서 설정2회 부정대조 실패 재현; selector 수정 뒤 실제 파손·다음 제작 차단 포함3시험 통과. 기존 설정4회 보존; 전체 안전망 실행 중 | — |
+| ISS-271 | 데이터 스타일 slab_door가 문 대신 벽으로 렌더링됨 | M-EXT UI-second 시각 REVISE, D36 | bug | fixed | 이름 분기 대신 기계적 wall_is_door 전달; 렌더러 회귀 통과, UI-third 문 복원 확인. 별도 경고 차이는 미해결 | — |
+| ISS-272 | UI 시험의 site_kinds 배열 폭 불일치가 일부 검사를 중단함 | M-EXT UI-first, D36 | process | fixed | exit0·261검사에도 SCRIPT ERROR2개로 실패 보존; PackedInt64로 수정 뒤268검사·스크립트 오류0. 전체 게이트 대기 | — |
+| ISS-273 | 경고 이동 시험의 합성 창고 사실이 다음 화면 캡처까지 남을 수 있음 | M-EXT UI-second/third 경고 차이 조사 | process | fixed | 합성 경고 후 실제 bridge 사실 복원; UI-fourth284검사·오류0, tick2880 실제 경고4개·방 role1/used0/capacity16과 폴링 위상 유지 확인. 독립 시각 검토·전체 게이트 대기. 과거 폴링 위상 원인은 추정 유지 | — |
+| ISS-274 | 한국어 학습·도움말·인물창의 줄바꿈이 단어 또는 짧은 어미를 분리함 | M-EXT UI-fourth 독립 시각 검토 PRE-01; Stage A UI14에도 존재 | bug | open | 요. 단독 행, 선택·얼굴 단어 분리 관찰. 이번 리팩터링의 새 회귀는 아니나 절대 시각 품질 REVISE로 유지 | — |
+| ISS-275 | 한국어 신생아 침상 경고의 전체 문구와 수량이 잘림 | M-EXT UI-fourth 독립 시각 검토 PRE-02; Stage A와 해당 화면 동일 | bug | open | 영어 제목 ISS-029 수정과 별개인 한국어 표시 결함. 원래 화면과 현재 화면의 픽셀 동일성은 해결 증거가 아님 | — |

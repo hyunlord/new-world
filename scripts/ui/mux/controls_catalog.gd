@@ -2,6 +2,8 @@
 # Bridge methods: none; conditions consume facts supplied by the read-only UI coordinator.
 extends RefCounted
 
+const Content = preload("res://scripts/ui/content_context.gd")
+
 const PATH: String = "res://assets/ui/controls.json"
 var entries: Array[Dictionary] = []
 var error: String = ""
@@ -36,6 +38,9 @@ static func _text(key: String, translator: Callable) -> String:
 	return str(locale.call("ltr", key)) if locale != null else key
 
 static func read_registry(path: String, family: String, fields: Array) -> Dictionary:
+	var frozen: Dictionary = Content.document(family)
+	if path == "res://assets/ui/%s.json" % family and not frozen.is_empty():
+		return parse_registry(frozen, family, fields)
 	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return {"rows": [], "error": "Cannot open %s" % path}

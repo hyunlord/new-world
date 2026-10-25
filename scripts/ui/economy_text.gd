@@ -1,44 +1,11 @@
-# economy_text.gd: the M2 economy's codes and names as player text (static helpers shared by the order bar, the
-#   workshop panel, the priority table, the inspector and the overlay).
-# Maps the bridge's codes to localization keys: item kinds (0 log, 1 firewood, 2 stone, 3 flint, 4 flint_blade,
-#   5 stone_axe, 6 hide), materials by name ("flint", "chert", "granite", "limestone", "oak"), recipes by code
-#   (0 knap_blade, 1 haft_axe, 2 split_firewood) or name, work types by name (craft, build, quarry, chop, split,
-#   haul), skills by name (knap, woodwork, chop, quarry, build) and tiers 0–3, workshop/blueprint kinds (0 hut,
-#   1 knapping_spot, 2 wood_bench, 3 drying_rack) and command reject reasons. Unknown codes fall back to UI_UNKNOWN.
-# M3 (goal 3.4): quality as a word and a number ("좋음 (62)"), five bands of 20 (0–19 조악 … 80–100 걸작).
-# M3 (goal 9): the space blueprint kinds (4 log_wall, 5 stone_wall, 6 door, 7 packed_floor, 8 bedroll; one tile,
-#   walls and floors placed by drag), the build menu's order (5 통나무 벽, 6 문, 7 바닥, 8 침상, 9 돌담), work type
-#   `mine`, skill `mining`, reasons person/hill/edge/built, and room roles by code (0 unassigned, 1 bedroom,
-#   2 storehouse, 3 workshop, 4 hall).
-# M4 (goal 9.5): item kinds 7 clay, 8 raw pot, 9 clay pot, 10 ground axe (bridge names in ITEM_NAMES); recipes 3
-#   knap_fine_blade, 4 grind_axe, 5 form_pot, 6 fire_pot; skill `pottery`; material `clay`; blueprint kinds 9
-#   grinding_stone, 10 pottery_bench (build menu 0 and -) and 11 hearth_fire (the camp hearth as the fire_pot workshop:
-#   named, never placed, not in the menu); reasons no_practitioner and too_young.
-# M5 (goal 3.2–3.3): item kinds 11 meat, 12 cured hide, 13 hide wrap, 14 fur cloak, 15 spear, 16 wolf hide (ground
-#   sprites: meat lies as the `carcass`, the others as their item_* sprite); recipes 7 haft_spear, 8 scrape_hide,
-#   9 make_hide_wrap, 10 make_fur_cloak; work type `hunt`, skill `hunting`; reason not_drafted.
-# M5.5 (goal §9): reasons no_visitor (the wave or caravan is gone) and unbalanced (the traders refuse the values).
-# Bridge methods called: none (callers pass the dictionaries they read).
+# economy_text.gd — registry-backed player labels and placement metadata.
+# Bridge methods: none; ContentContext is installed before gameplay ready.
 extends RefCounted
+
+const Content = preload("res://scripts/ui/content_context.gd")
 
 const LocaleScript = preload("res://scripts/core/locale.gd")
 
-const ITEM_KEYS: Array[String] = ["ITEM_LOG", "ITEM_FIREWOOD", "ITEM_STONE", "ITEM_FLINT", "ITEM_FLINT_BLADE", "ITEM_STONE_AXE", "ITEM_HIDE",
-	"ITEM_CLAY", "ITEM_RAW_POT", "ITEM_CLAY_POT", "ITEM_GROUND_AXE",
-	"M5_ITEM_MEAT", "M5_ITEM_CURED_HIDE", "M5_ITEM_HIDE_WRAP", "M5_ITEM_FUR_CLOAK", "M5_ITEM_SPEAR", "M5_ITEM_WOLF_HIDE"]
-const ITEM_FMT_KEYS: Array[String] = ["ITEM_LOG_FMT", "ITEM_FIREWOOD_FMT", "ITEM_STONE_FMT", "ITEM_FLINT_FMT", "ITEM_FLINT_BLADE_FMT", "ITEM_STONE_AXE_FMT", "ITEM_HIDE_FMT",
-	"ITEM_CLAY_FMT", "ITEM_RAW_POT_FMT", "ITEM_CLAY_POT_FMT", "ITEM_GROUND_AXE_FMT"]
-## Bridge item names by `ItemKind::code` (discovery conditions name items by them).
-const ITEM_NAMES: Array[String] = ["log", "firewood", "stone", "flint", "flint_blade", "stone_axe", "hide", "clay", "raw_pot", "clay_pot", "ground_axe",
-	"meat", "cured_hide", "hide_wrap", "fur_cloak", "spear", "wolf_hide"]
-const MATERIAL_KEYS: Dictionary = {
-	"flint": "MATERIAL_FLINT", "chert": "MATERIAL_CHERT", "granite": "MATERIAL_GRANITE",
-	"limestone": "MATERIAL_LIMESTONE", "oak": "MATERIAL_OAK", "clay": "MATERIAL_CLAY",
-}
-const RECIPE_NAMES: Array[String] = ["knap_blade", "haft_axe", "split_firewood", "knap_fine_blade", "grind_axe", "form_pot", "fire_pot",
-	"haft_spear", "scrape_hide", "make_hide_wrap", "make_fur_cloak"]
-const RECIPE_KEYS: Array[String] = ["RECIPE_KNAP_BLADE", "RECIPE_HAFT_AXE", "RECIPE_SPLIT_FIREWOOD", "RECIPE_KNAP_FINE_BLADE", "RECIPE_GRIND_AXE",
-	"RECIPE_FORM_POT", "RECIPE_FIRE_POT", "M5_RECIPE_HAFT_SPEAR", "M5_RECIPE_SCRAPE_HIDE", "M5_RECIPE_MAKE_HIDE_WRAP", "M5_RECIPE_MAKE_FUR_CLOAK"]
 const WORK_KEYS: Dictionary = {
 	"craft": "WORK_CRAFT", "build": "WORK_BUILD", "quarry": "WORK_QUARRY",
 	"chop": "WORK_CHOP", "split": "WORK_SPLIT", "haul": "WORK_HAUL", "mine": "WORK_MINE", "hunt": "M5_WORK_HUNT",
@@ -50,27 +17,6 @@ const SKILL_KEYS: Dictionary = {
 }
 const TIER_KEYS: Array[String] = ["SKILL_TIER_0", "SKILL_TIER_1", "SKILL_TIER_2", "SKILL_TIER_3"]
 const QUALITY_KEYS: Array[String] = ["QUALITY_BAND_0", "QUALITY_BAND_1", "QUALITY_BAND_2", "QUALITY_BAND_3", "QUALITY_BAND_4"]
-## Blueprint / workshop kinds by code (`BlueprintKind::code`): bridge name, footprint, localization key, sheet
-## sprite; M3 space kinds add `drag` ("wall": line or hollow rectangle, "floor": line or filled rectangle, "": one
-## click) and `ghost` (the blueprint sprite of a site or a placement preview).
-const BUILD_KINDS: Array[Dictionary] = [
-	{"name": "hut", "size": Vector2i(3, 3), "key": "BUILDING_HUT", "sprite": "hut"},
-	{"name": "knapping_spot", "size": Vector2i(1, 1), "key": "BUILDING_KNAPPING_SPOT", "sprite": "knapping_spot"},
-	{"name": "wood_bench", "size": Vector2i(2, 1), "key": "BUILDING_WOOD_BENCH", "sprite": "wood_bench"},
-	{"name": "drying_rack", "size": Vector2i(2, 1), "key": "BUILDING_DRYING_RACK", "sprite": "drying_rack"},
-	{"name": "log_wall", "size": Vector2i(1, 1), "key": "BUILDING_LOG_WALL", "sprite": "log_wall_10", "drag": "wall", "ghost": "ghost_wall"},
-	{"name": "stone_wall", "size": Vector2i(1, 1), "key": "BUILDING_STONE_WALL", "sprite": "stone_wall_10", "drag": "wall", "ghost": "ghost_wall"},
-	{"name": "door", "size": Vector2i(1, 1), "key": "BUILDING_DOOR", "sprite": "door_h", "drag": "", "ghost": "ghost_door"},
-	{"name": "packed_floor", "size": Vector2i(1, 1), "key": "BUILDING_PACKED_FLOOR", "sprite": "floor_packed", "drag": "floor", "ghost": "ghost_floor"},
-	{"name": "bedroll", "size": Vector2i(1, 1), "key": "BUILDING_BEDROLL", "sprite": "bedroll", "drag": "", "ghost": "ghost_bedroll"},
-	{"name": "grinding_stone", "size": Vector2i(1, 1), "key": "BUILDING_GRINDING_STONE", "sprite": "grinding_stone"},
-	{"name": "pottery_bench", "size": Vector2i(1, 1), "key": "BUILDING_POTTERY_BENCH", "sprite": "pottery_bench"},
-	{"name": "hearth_fire", "size": Vector2i(1, 1), "key": "BUILDING_HEARTH_FIRE", "sprite": "hearth_0", "placeable": false},
-]
-## The F3 build menu: BUILD_KINDS codes in menu order (keys 1–9, then M4's 0 토기대 and - 갈돌).
-const MENU_ORDER: Array[int] = [0, 1, 2, 3, 4, 6, 7, 8, 5, 10, 9]
-## The blueprint kind of the camp hearth's fire_pot workshop (M4; drawn as the hearth, never placed).
-const HEARTH_FIRE: int = 11
 ## Room roles by `RoomRole::code` (0 unassigned, 1 bedroom, 2 storehouse, 3 workshop, 4 hall): bridge name, key.
 const ROLE_NAMES: Array[String] = ["unassigned", "bedroom", "storehouse", "workshop", "hall"]
 const ROLE_KEYS: Array[String] = ["ROOM_ROLE_UNASSIGNED", "ROOM_ROLE_BEDROOM", "ROOM_ROLE_STOREHOUSE", "ROOM_ROLE_WORKSHOP", "ROOM_ROLE_HALL"]
@@ -107,14 +53,16 @@ static func trf(locale: Node, key: String, params: Dictionary) -> String:
 
 ## The plain name of item kind `kind`.
 static func item(locale: Node, kind: int) -> String:
-	return ltr(locale, ITEM_KEYS[kind]) if kind >= 0 and kind < ITEM_KEYS.size() else ltr(locale, "UI_UNKNOWN")
+	return ltr(locale, str(Content.row("items", kind).get("name_key", "UI_UNKNOWN")))
 
 
 ## The name of item kind `kind` made of `material` (a bridge material name; "" or unknown = the plain name).
 static func item_of(locale: Node, kind: int, material: String) -> String:
-	if kind < 0 or kind >= ITEM_FMT_KEYS.size() or not MATERIAL_KEYS.has(material):
+	var key: String = str(Content.row("items", kind).get("material_format_key", ""))
+	var material_row: Dictionary = Content.row("materials", Content.code("materials", material))
+	if key.is_empty() or material_row.is_empty():
 		return item(locale, kind)
-	return trf(locale, ITEM_FMT_KEYS[kind], {"material": ltr(locale, str(MATERIAL_KEYS[material]))})
+	return trf(locale, key, {"material": ltr(locale, str(material_row["name_key"]))})
 
 
 ## The quality band 0–4 of quality 0–100 (0–19, 20–39, 40–59, 60–79, 80–100).
@@ -134,7 +82,7 @@ static func stack(locale: Node, kind: int, material: String, count: int, value: 
 
 ## The recipe name for recipe code `code`.
 static func recipe(locale: Node, code: int) -> String:
-	return ltr(locale, RECIPE_KEYS[code]) if code >= 0 and code < RECIPE_KEYS.size() else ltr(locale, "UI_UNKNOWN")
+	return ltr(locale, str(Content.row("recipes", code).get("name_key", "UI_UNKNOWN")))
 
 
 ## The column title of work type `work` (bridge name).
@@ -154,15 +102,12 @@ static func tier(locale: Node, code: int) -> String:
 
 ## The building name of blueprint/workshop kind `code`.
 static func building(locale: Node, code: int) -> String:
-	return ltr(locale, str(BUILD_KINDS[code]["key"])) if code >= 0 and code < BUILD_KINDS.size() else ltr(locale, "UI_UNKNOWN")
+	return ltr(locale, str(Content.row("blueprints", code).get("name_key", "UI_UNKNOWN")))
 
 
 ## The blueprint kind code of bridge name `name` (-1 when unknown).
 static func build_code(build_name: String) -> int:
-	for i: int in BUILD_KINDS.size():
-		if str(BUILD_KINDS[i]["name"]) == build_name:
-			return i
-	return -1
+	return Content.code("blueprints", build_name)
 
 
 ## The player text for a command result's reject reason.
@@ -172,14 +117,37 @@ static func reason(locale: Node, reason_name: String) -> String:
 
 ## Whether blueprint kind `code` is an M3 space kind (one tile; walls, doors, floors, bedrolls).
 static func is_space(code: int) -> bool:
-	return code >= 0 and code < BUILD_KINDS.size() and BUILD_KINDS[code].has("drag")
+	return str(Content.row("blueprints", code).get("completion_category", "")) in ["wall", "door", "floor", "bed"]
 
 
 ## How blueprint kind `code` is placed: "wall" / "floor" (drag a line, Shift for a rectangle) or "" (one click).
 static func drag_of(code: int) -> String:
-	return str(BUILD_KINDS[code].get("drag", "")) if code >= 0 and code < BUILD_KINDS.size() else ""
+	var category: String = str(Content.row("blueprints", code).get("placement_category", ""))
+	return category if category in ["wall", "floor"] else ""
 
 
 ## The room role text of role code `code` (unknown codes = 미정).
 static func role(locale: Node, code: int) -> String:
 	return ltr(locale, ROLE_KEYS[code] if code >= 0 and code < ROLE_KEYS.size() else ROLE_KEYS[0])
+
+
+static func build_kind(code: int) -> Dictionary:
+	var row: Dictionary = Content.row("blueprints", code)
+	if row.is_empty():
+		return {}
+	return {"name": row["id"], "key": row["name_key"], "size": Vector2i(int(row["width"]), int(row["height"])), "placeable": row["placeable"]}
+
+
+static func menu_order() -> Array[int]:
+	var out: Array[int] = []
+	for row: Dictionary in Content.menu():
+		out.append(int(row["code"]))
+	return out
+
+
+static func item_code(id: String) -> int:
+	return Content.code("items", id)
+
+
+static func recipe_code(id: String) -> int:
+	return Content.code("recipes", id)

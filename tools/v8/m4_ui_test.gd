@@ -125,7 +125,7 @@ func _run() -> void:
 	_check("map_fits", map_panel != null and map_panel.get_combined_minimum_size().x <= 1896.0 and map_panel.get_combined_minimum_size().y <= 830.0,
 		"tech map min size %s" % (map_panel.get_combined_minimum_size() if map_panel != null else Vector2.ZERO))
 	var cards: int = 0
-	for id: int in KnowledgeText.NODE_KEYS.size():
+	for id: int in KnowledgeText.node_count():
 		if tech_panel.call("card", id) != null:
 			cards += 1
 	var door_card: Button = tech_panel.call("card", DOORWAY)

@@ -38,7 +38,7 @@ fn workshops_list_bills_in_order_and_commands_parse_names() {
     );
     // The bench's auto-bill was replaced by the player's firewood bill; haft first.
     let bench_row = &rows[0];
-    let recipes: Vec<(u8, u8, u16, bool)> = bench_row
+    let recipes: Vec<(u32, u8, u16, bool)> = bench_row
         .bills
         .iter()
         .map(|b| (b.recipe, b.mode, b.count, b.auto))
@@ -59,7 +59,7 @@ fn workshops_list_bills_in_order_and_commands_parse_names() {
         .collect();
     assert_eq!(after, vec![bills[1], bills[0]]);
     // The recipe table in code order.
-    let table: Vec<(u8, &str, u8)> = collect_recipes().iter().map(|r| (r.0, r.1, r.2)).collect();
+    let table: Vec<(u32, &str, u32)> = collect_recipes().iter().map(|r| (r.0, r.1, r.2)).collect();
     assert_eq!(
         table,
         vec![

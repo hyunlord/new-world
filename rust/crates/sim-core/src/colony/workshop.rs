@@ -12,9 +12,10 @@
 //! [`recipes`]): which workshop, inputs, output, work ticks, skill and the
 //! work type the craft counts as.
 use serde::{Deserialize, Serialize};
-use std::sync::OnceLock;
 
-use super::{BlueprintKind, ItemKind, ItemStack, WorkType};
+use super::content::installed_or_bundled;
+pub use super::content::{RecipeDef as Recipe, RecipeKind};
+use super::{BlueprintKind, ItemKind, ItemStack};
 
 /// A workshop's id (`ColonyState::next_workshop_id`, from 1).
 pub type WorkshopId = u32;
@@ -89,185 +90,69 @@ impl SkillKind {
     }
 }
 
-/// A recipe's id.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub enum RecipeKind {
-    /// Knap a flint blade from one flint.
-    KnapBlade,
-    /// Haft a stone axe from a blade and a log.
-    HaftAxe,
-    /// Split one log into four firewood.
-    SplitFirewood,
-    /// Knap a fine blade by pressure flaking (M4).
-    KnapFineBlade,
-    /// Grind a stone axe into a ground axe (M4).
-    GrindAxe,
-    /// Form a raw pot from clay (M4).
-    FormPot,
-    /// Fire a raw pot at the hearth (M4).
-    FirePot,
-    /// Haft a flint spear (M5).
-    HaftSpear,
-    /// Scrape a hide with a knife (M5).
-    ScrapeHide,
-    /// Make a hide wrap from cured hides (M5).
-    MakeHideWrap,
-    /// Make a fur cloak from wolf hides (M5).
-    MakeFurCloak,
-}
-
 impl Recipe {
-    /// What one craft needs on the shelf: its inputs, and for a knife recipe one
-    /// flint blade (the knife: kept on the shelf, worn one use a craft, M5 ADR 0029).
+    /// Preferred inputs and reusable tool, in authored input order.
     pub fn needs(&self) -> Vec<(ItemKind, u16)> {
+        self.needs_with_tool(self.tool.as_ref().map(|tool| tool.preferred_item))
+    }
+
+    /// Inputs with the selected reusable tool appended only when absent.
+    pub fn needs_with_tool(&self, selected: Option<ItemKind>) -> Vec<(ItemKind, u16)> {
         let mut out = self.inputs.clone();
-        if self.knife && !out.iter().any(|(k, _)| *k == ItemKind::FlintBlade) {
-            out.push((ItemKind::FlintBlade, 1));
+        if let Some(tool) = &self.tool {
+            let item = selected.unwrap_or(tool.preferred_item);
+            if !out.iter().any(|(kind, _)| *kind == item) {
+                out.push((item, tool.count));
+            }
         }
         out
+    }
+
+    /// Whether a validated workshop offers this recipe's required capabilities.
+    pub fn supports_workshop(&self, kind: BlueprintKind) -> bool {
+        self.compatible_workshops.contains(&kind)
+    }
+
+    /// Whether this item supplies the recipe's reusable tool capability.
+    pub fn tool_matches(&self, kind: ItemKind) -> bool {
+        self.tool.as_ref().is_some_and(|tool| {
+            tool.capability == "cutter"
+                && installed_or_bundled()
+                    .item(kind)
+                    .is_some_and(|item| item.cutter.is_some())
+        })
+    }
+
+    /// First matching tool on the shelf, preserving shelf order.
+    pub fn shelf_tool(&self, shop: &Workshop) -> Option<ItemKind> {
+        shop.shelf
+            .iter()
+            .find(|stack| stack.count > 0 && self.tool_matches(stack.kind))
+            .map(|stack| stack.kind)
     }
 }
 
 impl RecipeKind {
-    /// Every recipe, in code order.
-    pub const ALL: [Self; 11] = [
-        Self::KnapBlade,
-        Self::HaftAxe,
-        Self::SplitFirewood,
-        Self::KnapFineBlade,
-        Self::GrindAxe,
-        Self::FormPot,
-        Self::FirePot,
-        Self::HaftSpear,
-        Self::ScrapeHide,
-        Self::MakeHideWrap,
-        Self::MakeFurCloak,
-    ];
-
-    /// Stable code (0 = knap blade).
-    pub const fn code(self) -> u8 {
-        match self {
-            Self::KnapBlade => 0,
-            Self::HaftAxe => 1,
-            Self::SplitFirewood => 2,
-            Self::KnapFineBlade => 3,
-            Self::GrindAxe => 4,
-            Self::FormPot => 5,
-            Self::FirePot => 6,
-            Self::HaftSpear => 7,
-            Self::ScrapeHide => 8,
-            Self::MakeHideWrap => 9,
-            Self::MakeFurCloak => 10,
-        }
+    /// Stable canonical name from the installed catalogue.
+    pub fn name(self) -> &'static str {
+        self.recipe()
+            .map_or("unknown", |recipe| recipe.identity.id.as_str())
     }
 
-    /// Stable name (`recipes.ron` ids).
-    pub const fn name(self) -> &'static str {
-        match self {
-            Self::KnapBlade => "knap_blade",
-            Self::HaftAxe => "haft_axe",
-            Self::SplitFirewood => "split_firewood",
-            Self::KnapFineBlade => "knap_fine_blade",
-            Self::GrindAxe => "grind_axe",
-            Self::FormPot => "form_pot",
-            Self::FirePot => "fire_pot",
-            Self::HaftSpear => "haft_spear",
-            Self::ScrapeHide => "scrape_hide",
-            Self::MakeHideWrap => "make_hide_wrap",
-            Self::MakeFurCloak => "make_fur_cloak",
-        }
-    }
-
-    /// Parse [`Self::name`].
+    /// Resolve a canonical recipe name or declared resolver alias.
     pub fn from_name(name: &str) -> Option<Self> {
-        Self::ALL.into_iter().find(|r| r.name() == name)
+        installed_or_bundled().recipe_by_name(name)
     }
 
-    /// The recipe's data (`None` only if `recipes.ron` failed to parse; a unit test rules it out).
+    /// The immutable recipe definition for this registered identity.
     pub fn recipe(self) -> Option<&'static Recipe> {
-        recipes().iter().find(|r| r.id == self)
+        installed_or_bundled().recipe(self)
     }
 }
 
-/// One recipe (M2 goal 3.4).
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Recipe {
-    /// Its id.
-    pub id: RecipeKind,
-    /// The workshop that makes it.
-    pub workshop: BlueprintKind,
-    /// Inputs per craft.
-    pub inputs: Vec<(ItemKind, u16)>,
-    /// Output per craft.
-    pub output: (ItemKind, u16),
-    /// Work ticks at speed 1000 ‰ (skill level 5).
-    pub work_ticks: u32,
-    /// The skill it trains and uses.
-    pub skill: SkillKind,
-    /// The work type a craft counts as (priorities).
-    pub work: WorkType,
-    /// Quality added to every craft of it (M4: pressure flaking's +15).
-    pub quality_add: i32,
-    /// Whether a craft needs a knife: the workshop's flint blade tool, worn one use a craft (M5, ADR 0029).
-    pub knife: bool,
-}
-
-#[derive(Deserialize)]
-struct RecipeFile {
-    schema_version: u32,
-    recipes: Vec<RecipeRaw>,
-}
-
-#[derive(Deserialize)]
-struct RecipeRaw {
-    id: String,
-    workshop: String,
-    inputs: Vec<(String, u16)>,
-    output: (String, u16),
-    work_ticks: u32,
-    skill: String,
-    work: String,
-    #[serde(default)]
-    quality_add: i32,
-    #[serde(default)]
-    knife: bool,
-}
-
-impl RecipeRaw {
-    fn parse(self) -> Option<Recipe> {
-        let mut inputs = Vec::new();
-        for (name, n) in &self.inputs {
-            inputs.push((ItemKind::from_name(name)?, *n));
-        }
-        Some(Recipe {
-            id: RecipeKind::from_name(&self.id)?,
-            workshop: BlueprintKind::from_name(&self.workshop)?,
-            inputs,
-            output: (ItemKind::from_name(&self.output.0)?, self.output.1),
-            work_ticks: self.work_ticks,
-            skill: SkillKind::from_name(&self.skill)?,
-            work: WorkType::from_name(&self.work)?,
-            quality_add: self.quality_add,
-            knife: self.knife,
-        })
-    }
-}
-
-const RECIPES_RON: &str = include_str!("../../data/colony/recipes.ron");
-
-/// Parse a recipe file (schema 1); `None` on any error or unknown name.
-pub fn parse_recipes(text: &str) -> Option<Vec<Recipe>> {
-    let file: RecipeFile = ron::from_str(text).ok()?;
-    if file.schema_version != 1 {
-        return None;
-    }
-    file.recipes.into_iter().map(RecipeRaw::parse).collect()
-}
-
-/// Every recipe, parsed once from the embedded `data/colony/recipes.ron`.
+/// Every installed recipe in explicit numeric code order, with no separate cache.
 pub fn recipes() -> &'static [Recipe] {
-    static TABLE: OnceLock<Vec<Recipe>> = OnceLock::new();
-    TABLE.get_or_init(|| parse_recipes(RECIPES_RON).unwrap_or_default())
+    installed_or_bundled().recipe_definitions()
 }
 
 /// How a bill decides it still has work (M2 goal 3.5).
@@ -384,6 +269,7 @@ pub const fn work_tile_of(top_left: (u32, u32), size: (u32, u32)) -> (u32, u32) 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::colony::WorkType;
 
     #[test]
     fn the_recipe_file_parses_to_the_goal_table() {
@@ -391,20 +277,16 @@ mod tests {
         // M2's three, M4's four, M5's four.
         assert_eq!(table.len(), 11);
         let knap = RecipeKind::KnapBlade.recipe().cloned();
+        let knap = knap.expect("registered blade");
+        assert_eq!(knap.id, RecipeKind::KnapBlade);
+        assert_eq!(knap.workshop, BlueprintKind::KnappingSpot);
+        assert_eq!(knap.inputs, vec![(ItemKind::Flint, 1)]);
+        assert_eq!(knap.output, (ItemKind::FlintBlade, 1));
         assert_eq!(
-            knap,
-            Some(Recipe {
-                id: RecipeKind::KnapBlade,
-                workshop: BlueprintKind::KnappingSpot,
-                inputs: vec![(ItemKind::Flint, 1)],
-                output: (ItemKind::FlintBlade, 1),
-                work_ticks: 45,
-                skill: SkillKind::Knap,
-                work: WorkType::Craft,
-                quality_add: 0,
-                knife: false,
-            })
+            (knap.work_ticks, knap.skill, knap.work, knap.quality_add),
+            (45, SkillKind::Knap, WorkType::Craft, 0)
         );
+        assert!(knap.tool.is_none());
         // M5 (goal 3.2, 3.3): spears and hide work; only scraping needs a knife.
         let m5: Vec<_> = [
             RecipeKind::HaftSpear,
@@ -420,7 +302,7 @@ mod tests {
                 r.inputs.clone(),
                 r.output,
                 r.work_ticks,
-                r.knife,
+                r.tool.is_some(),
             )
         })
         .collect();
@@ -525,9 +407,6 @@ mod tests {
             .recipe()
             .map(|r| (r.output, r.work_ticks, r.work));
         assert_eq!(split, Some(((ItemKind::Firewood, 4), 30, WorkType::Split)));
-        assert!(parse_recipes("(schema_version: 2, recipes: [])").is_none());
-        let bad = RECIPES_RON.replace("\"flint_blade\"", "\"bronze\"");
-        assert!(parse_recipes(&bad).is_none());
     }
 
     #[test]

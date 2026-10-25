@@ -3,7 +3,7 @@
 # Bridge methods: none.
 extends RefCounted
 
-const Library = preload("res://scripts/world/art_sprite_library.gd")
+const ArtData = preload("res://scripts/world/art/art_data.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 
 static func panel(owner: Control, rect: Rect2) -> PanelContainer:
@@ -17,19 +17,19 @@ static func panel(owner: Control, rect: Rect2) -> PanelContainer:
 	owner.add_child(box)
 	return box
 
-static func icon(index: int) -> Control:
+static func icon(role: String) -> Control:
 	var holder: Control = Control.new()
 	holder.custom_minimum_size = Vector2(32, 32)
 	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var sprite: Sprite2D = Sprite2D.new()
 	holder.add_child(sprite)
-	if Library.apply(sprite, "U1_%02d" % index):
+	if apply_icon(sprite, role):
 		sprite.offset = Vector2.ZERO
 		sprite.scale = Vector2(2, 2)
 	return holder
 
-static func pair(row: HBoxContainer, index: int) -> Label:
-	row.add_child(icon(index))
+static func pair(row: HBoxContainer, role: String) -> Label:
+	row.add_child(icon(role))
 	var label: Label = Label.new()
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(label)
@@ -70,3 +70,21 @@ static func proficiency_bar(value: int, threshold: int, width: int) -> ProgressB
 	mark.offset_bottom = 2.0
 	bar.add_child(mark)
 	return bar
+
+
+static func apply_icon(sprite: Sprite2D, role: String) -> bool:
+	var definition: Dictionary = ArtData.bindings().get("ui_icons", {}).get(role, {})
+	if definition.is_empty():
+		return false
+	var texture: Texture2D = ArtData.texture_at(str(definition["path"]))
+	if texture == null:
+		return false
+	var region: Array = definition["rect"]
+	sprite.texture = texture
+	sprite.region_enabled = true
+	sprite.region_rect = Rect2(float(region[0]), float(region[1]), float(region[2]), float(region[3]))
+	sprite.centered = false
+	sprite.offset = Vector2.ZERO
+	sprite.scale = Vector2(2, 2)
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	return true

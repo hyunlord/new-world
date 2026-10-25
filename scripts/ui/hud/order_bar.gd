@@ -13,13 +13,13 @@
 # M1.5 save/load: F5 saves the world to user://saves/<seed>-<tick>.wsave, F9 loads the last save of this session
 #   (else the newest file in user://saves); each shows a toast (UI_SAVE_DONE / UI_LOAD_DONE / UI_SAVE_FAILED /
 #   UI_LOAD_FAILED). The cancel order moved from F5 to F6 for this.
-# M3 (goal 9.1–9.3): the build menu grows to nine — 5 통나무 벽, 6 문, 7 바닥, 8 침상, 9 돌담 (EconomyText.MENU_ORDER;
+# M3 (goal 9.1–9.3): the build menu grows to nine — 5 통나무 벽, 6 문, 7 바닥, 8 침상, 9 돌담 (EconomyText.menu_order();
 #   1–9 pick while it is open); walls and floors show the drag hint "통나무 벽 · 드래그: 줄 · Shift+드래그: 네모(속 빔)";
 #   F8 파기 and F10 철거 are area modes; a "방 보기 R" button toggles the room overlay (ColonyView/OverlayLayer/Rooms;
 #   R does the same) and stays pressed while it is shown. The bar holds the buttons on one line and the hint on a
 #   second; it sits 12 px above the screen's bottom once laid out, the toast and the build menu above it. This node
 #   also creates the room panel (UI/RoomPanel, room_panel.gd) beside itself.
-# M4 (goal 9.5): the build menu grows to eleven — 0 토기대 and - 갈돌 after 1–9 (EconomyText.MENU_ORDER); F7 enters
+# M4 (goal 9.5): the build menu grows to eleven — 0 토기대 and - 갈돌 after 1–9 (EconomyText.menu_order()); F7 enters
 #   채석 as before and opens a small submenu above its button — "1 채석" / "2 점토 캐기" — where 1 keeps quarrying and 2
 #   switches to the clay-pit area mode (OrderTool CLAY; while the submenu is open, 1 and 2 choose, not the speed; Esc,
 #   a pick, an order or another mode closes it); the F7 button stays pressed in either mode.
@@ -46,7 +46,7 @@ const MODES: Array[Dictionary] = [
 	{"mode": 7, "key": "UI_ORDER_DIG", "control": "dig", "hotkey": KEY_F8, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_dig"},
 	{"mode": 8, "key": "UI_ORDER_DECONSTRUCT", "control": "deconstruct", "hotkey": KEY_F10, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_deconstruct"},
 ]
-## The build menu's keys, in EconomyText.MENU_ORDER order (M4: 0 and - after 1–9).
+## The build menu's keys, in EconomyText.menu_order() order (M4: 0 and - after 1–9).
 const MENU_KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_MINUS]
 const MENU_LABELS: Array[String] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-"]
 ## M4: the F7 submenu's modes (1 quarry, 2 clay pit) and the order tool's codes for them.
@@ -169,8 +169,8 @@ func _on_language_changed(_language: String) -> void:
 		var entry: Dictionary = MODES[i]
 		_buttons[i].text = "%s %s" % [OS.get_keycode_string(int(entry["hotkey"])), _loc(str(entry["key"]))]
 	for i: int in _menu_buttons.size():
-		var kind: Dictionary = EconomyText.BUILD_KINDS[EconomyText.MENU_ORDER[i]]
-		_menu_buttons[i].text = "%s %s" % [MENU_LABELS[i], _loc(str(kind["key"]))]
+		var kind: Dictionary = EconomyText.build_kind(EconomyText.menu_order()[i])
+		_menu_buttons[i].text = "%s %s" % [_menu_shortcut(i), _loc(str(kind["key"]))]
 	for i: int in _dig_buttons.size():
 		_dig_buttons[i].text = "%d %s" % [i + 1, _loc(str(DIG_MENU[i]["key"]))]
 	_rooms_button.text = _loc("UI_ROOMS_TOGGLE")
@@ -186,7 +186,7 @@ func _refresh_tooltips() -> void:
 		_buttons[i].tooltip_text = _controls.tooltip(str(MODES[i]["control"]))
 	_rooms_button.tooltip_text = _controls.tooltip("rooms")
 	for i: int in _menu_buttons.size():
-		_menu_buttons[i].tooltip_text = "%s\n%s" % [build_hint(_locale, EconomyText.MENU_ORDER[i]), _controls.tooltip("menu_build")]
+		_menu_buttons[i].tooltip_text = "%s\n%s" % [build_hint(_locale, EconomyText.menu_order()[i]), _controls.tooltip("menu_build")]
 	for i: int in _dig_buttons.size():
 		_dig_buttons[i].tooltip_text = "%s\n%s" % [_loc(str(DIG_MENU[i]["key"])), _controls.tooltip("menu_gather")]
 	_hint.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -221,20 +221,29 @@ func rooms_shown() -> bool:
 
 ## The F3 build menu: one button per blueprint kind ("1 오두막" with the building's sprite), above the bar.
 func _build_menu() -> void:
-	_menu = ArtUI.panel(self, Rect2(12, 1080 - 112 - 8 - EconomyText.MENU_ORDER.size() * 56 - 24, 0, 0))
+	_menu = ArtUI.panel(self, Rect2(12, 1080 - 112 - 8 - mini(EconomyText.menu_order().size(), MENU_KEYS.size()) * 56 - 24, 0, 0))
 	_menu.mouse_filter = Control.MOUSE_FILTER_STOP
 	_menu.name = "BuildMenu"
 	var column: VBoxContainer = VBoxContainer.new()
 	column.add_theme_constant_override("separation", 6)
-	_menu.add_child(column)
-	for i: int in EconomyText.MENU_ORDER.size():
-		var kind: Dictionary = EconomyText.BUILD_KINDS[EconomyText.MENU_ORDER[i]]
+	if EconomyText.menu_order().size() > MENU_KEYS.size():
+		var scroll: ScrollContainer = ScrollContainer.new()
+		scroll.custom_minimum_size = Vector2(360, 640)
+		scroll.follow_focus = true
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		_menu.add_child(scroll)
+		column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		scroll.add_child(column)
+	else:
+		_menu.add_child(column)
+	for i: int in EconomyText.menu_order().size():
+		var kind: Dictionary = EconomyText.build_kind(EconomyText.menu_order()[i])
 		var button: Button = Button.new()
 		button.name = "Build_%s" % str(kind["name"])
-		button.focus_mode = Control.FOCUS_NONE
+		button.focus_mode = Control.FOCUS_ALL
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		button.text = "%s %s" % [MENU_LABELS[i], _loc(str(kind["key"]))]
-		button.icon = _build_icon(EconomyText.MENU_ORDER[i], 32)
+		button.text = "%s %s" % [_menu_shortcut(i), _loc(str(kind["key"]))]
+		button.icon = _build_icon(EconomyText.menu_order()[i], 32)
 		button.pressed.connect(choose_build.bind(i))
 		column.add_child(button)
 		_menu_buttons.append(button)
@@ -253,7 +262,7 @@ func _build_dig_menu() -> void:
 		var entry: Dictionary = DIG_MENU[i]
 		var button: Button = Button.new()
 		button.name = "Dig_%d" % int(entry["mode"])
-		button.focus_mode = Control.FOCUS_NONE
+		button.focus_mode = Control.FOCUS_ALL
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.text = "%d %s" % [i + 1, _loc(str(entry["key"]))]
 		button.icon = _icon(str(entry["icon"]))
@@ -329,14 +338,14 @@ func close_build_menu() -> void:
 	_on_mode_changed(current_mode())
 
 
-## Choose menu entry `index` (EconomyText.MENU_ORDER order: 0–3 as M2, 4 log wall, 5 door, 6 packed floor,
+## Choose menu entry `index` (EconomyText.menu_order() order: 0–3 as M2, 4 log wall, 5 door, 6 packed floor,
 ## 7 bedroll, 8 stone wall; M4 9 pottery bench, 10 grinding stone): close the menu and enter the build mode.
 func choose_build(index: int) -> void:
-	if index < 0 or index >= EconomyText.MENU_ORDER.size():
+	if index < 0 or index >= EconomyText.menu_order().size():
 		return
 	_menu.visible = false
 	if _tool != null:
-		_tool.call("set_build", str(EconomyText.BUILD_KINDS[EconomyText.MENU_ORDER[index]]["name"]))
+		_tool.call("set_build", str(EconomyText.build_kind(EconomyText.menu_order()[index])["name"]))
 
 
 ## The idle hint key: macOS keyboards need fn for the F-keys.
@@ -535,8 +544,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	var key: InputEventKey = event
 	if build_menu_open():
-		var index: int = MENU_KEYS.find(key.keycode)
-		if index >= 0 and index < EconomyText.MENU_ORDER.size():
+		var slot: int = MENU_KEYS.find(key.keycode)
+		var index: int = -1
+		var entries: Array[Dictionary] = EconomyText.Content.menu()
+		for row_index: int in entries.size():
+			if slot >= 0 and int(entries[row_index].get("shortcut_slot", -1)) == slot:
+				index = row_index
+				break
+		if index >= 0 and index < EconomyText.menu_order().size():
 			choose_build(index)
 			get_viewport().set_input_as_handled()
 			return
@@ -573,3 +588,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				select_mode(int(entry["mode"]))
 			get_viewport().set_input_as_handled()
 			return
+
+
+func _menu_shortcut(index: int) -> String:
+	var rows: Array[Dictionary] = EconomyText.Content.menu()
+	var slot: int = int(rows[index].get("shortcut_slot", -1)) if index >= 0 and index < rows.size() else -1
+	return MENU_LABELS[slot] if slot >= 0 and slot < MENU_LABELS.size() else ""

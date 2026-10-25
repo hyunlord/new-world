@@ -73,6 +73,12 @@ func _run() -> void:
 		var drift_low: float = lerpf(0.28, snow.get_luminance(), 0.45)
 		var drift_high: float = lerpf(0.38, snow.get_luminance(), 0.45)
 		_check("snow drift is brighter while preserving signed water separation", drift_low >= 0.52 and drift_high <= 0.58 and (drift_low - water.get_luminance()) * float(layer.call("night_weakest")) >= 0.10)
+	# Door classification follows simulation mechanics, never a selected style's spelling.
+	var door_fixture: Dictionary = {"wall_xs": PackedInt32Array([2, 3]), "wall_ys": PackedInt32Array([2, 2]), "wall_is_door": PackedByteArray([1, 1]), "wall_styles": PackedStringArray(["slab_door", "test_extension_door"])}
+	layer.call("_wall_cells", door_fixture)
+	var openings: Dictionary = walls.get("openings")
+	_check("canonical and novel door styles retain mechanical openings", openings.has(Vector2i(2, 2)) and openings.has(Vector2i(3, 2)))
+	_check("door resolver receives selected style unchanged", openings.get(Vector2i(3, 2), {}).get("style", "") == "test_extension_door")
 	layer.free()
 	var args: PackedStringArray = OS.get_cmdline_user_args()
 	var output_index: int = args.find("--capture-out")

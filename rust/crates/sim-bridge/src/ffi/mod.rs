@@ -19,6 +19,8 @@ pub mod appearance;
 pub mod causal;
 pub mod chronicle;
 pub mod colony;
+pub mod content;
+pub mod content_boot;
 pub mod economy;
 pub mod engine_build;
 pub mod family;

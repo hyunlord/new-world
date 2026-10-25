@@ -101,7 +101,7 @@ pub struct ChronicleRows {
     /// Second settlement ids (-1 none).
     pub settlement2: Vec<i64>,
     /// Kind-specific cause codes.
-    pub cause: Vec<i32>,
+    pub cause: Vec<i64>,
     /// Kind-specific values.
     pub value: Vec<i64>,
     /// M5: each entry's chronicle index (the key of `get_chronicle_why`).
@@ -111,7 +111,7 @@ pub struct ChronicleRows {
     /// M5: the entry the link points at (−1 none).
     pub link_entry: Vec<i64>,
     /// M5: the link's modifier code (100 = the relation) or pressure code (−1 none).
-    pub link_code: Vec<i32>,
+    pub link_code: Vec<i64>,
     /// `get_chronicle_since` only: the index after the last returned entry.
     pub next: i64,
     /// `get_chronicle_since` only: total entries.
@@ -133,7 +133,7 @@ impl ChronicleRows {
         self.settlement.push(entry.settlement.map_or(-1, i64::from));
         self.settlement2
             .push(entry.settlement2.map_or(-1, i64::from));
-        self.cause.push(i32::from(entry.cause));
+        self.cause.push(i64::from(entry.cause));
         self.value.push(entry.value);
     }
 
@@ -232,7 +232,7 @@ pub(super) fn rows_to_dict(rows: ChronicleRows, with_page: bool) -> VarDictionar
         "settlement2",
         PackedInt64Array::from(rows.settlement2.as_slice()),
     );
-    dict.set("cause", PackedInt32Array::from(rows.cause.as_slice()));
+    dict.set("cause", PackedInt64Array::from(rows.cause.as_slice()));
     dict.set("value", PackedInt64Array::from(rows.value.as_slice()));
     dict.set("index", PackedInt64Array::from(rows.index.as_slice()));
     dict.set("link", PackedInt32Array::from(rows.link.as_slice()));
@@ -242,7 +242,7 @@ pub(super) fn rows_to_dict(rows: ChronicleRows, with_page: bool) -> VarDictionar
     );
     dict.set(
         "link_code",
-        PackedInt32Array::from(rows.link_code.as_slice()),
+        PackedInt64Array::from(rows.link_code.as_slice()),
     );
     if with_page {
         dict.set("next", rows.next);

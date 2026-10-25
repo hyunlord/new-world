@@ -2,6 +2,8 @@
 # Bridge methods: none directly; the panel supplies get_ui_facts through SimReads.
 extends RefCounted
 
+const Content = preload("res://scripts/ui/content_context.gd")
+
 const INTERVAL: float = 0.5
 const OPERATORS: Array[String] = ["eq", "ne", "lt", "lte", "gt", "gte"]
 const TARGETS: Array[String] = ["tile", "person", "room", "technique", "animal", "migrant", "trader"]
@@ -16,6 +18,9 @@ var _elapsed: float = INTERVAL
 
 
 func load_registry(path: String = "res://assets/ui/alerts.json") -> bool:
+	var frozen: Dictionary = Content.document("alerts")
+	if path == "res://assets/ui/alerts.json" and not frozen.is_empty():
+		return configure(frozen)
 	if not FileAccess.file_exists(path):
 		last_error = "missing alert registry: " + path
 		return false
