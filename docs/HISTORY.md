@@ -209,3 +209,5 @@
 - 2026-10-25 — M-EXT B4 H(ADR0043/D42): 비축 우선 뒤 실제 화덕 주변 고기 운반, 기존 pickup/walk/drop/feed·취소 보존 재사용. 변경 전4통과/3예상실패→최종23통과와 기존 회귀33통과. 원본 identity228748/0·OFF2동일/7차이·불변식0, 보정8×48 VALID이나 자연 운반 종료107개 UNRESOLVED를 성공 배달로 세지 않는다. 전체 B gate·홀드아웃·게시 대기([검증](v8/mux/B4_H_VERIFICATION.md)).
 
 - 2026-10-25 — M-EXT B4 고정4빌드×32시드×48일 종료16:41 KST: 관측 VALID·F4/F9 모두 PASS(F4a 전부31/32, F9a30/30/29/30), ledger/reservation 위반0. P 자연 상한 개입0, H 화덕 운반 시작99개이나 자연 종료는 UNRESOLVED이므로 일률적 개선·성공 배달을 주장하지 않는다. 전체 B gate·게시 전([홀드아웃 보고](v8/mux/B4_HELDOUT_VERIFICATION.md)).
+
+- 2026-10-25 — M-EXT B5 나무 재료를 worldgen부터 벌목·벽·표현까지 저장된 identity로 연결 (`3c39dcbe0039c98479c6294c09b599ed009650b0`, ADR0044). 실제 H9 이행·통제 창54검사와 원본228748/0·9 OFF 재캡처/ON 누적 차이를 확인하고 최초 실패를 보존. 전체 B gate·게시 대기([검증](v8/mux/B5_VERIFICATION.md)).

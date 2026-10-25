@@ -1,6 +1,6 @@
 # Stage B 구현 보고 — 콘텐츠 확장·정책 검증·구조 경계
 
-**통합 초안 / 개별 검증 완료, Stage B 전체 gate·최종 성능·게시 대기.** 기준은 현재 커밋 `7577f8af08b233ab436d4301f88543d150b72295`와 작성 중인 B5 변경이다. B4 고정 홀드아웃은 VALID/PASS지만, 이것이 Stage B 전체 완료·모든 자연 결과 개선·오너 시각 승인이라는 뜻은 아니다. B5의 집중 Rust·저장·renderer·실제 창 후속 근거는 확보됐고 최종 안전망과 짧은 paired baseline 성능 비교까지 확보했으며 전체 gate와 별도 커밋을 이어서 확정한다. 이 초안은 저장소를 읽어 외부에 작성했으며 추가 실행이나 원격 조회를 하지 않았다.
+**전체 gate 전 후보 보고 / 개별 검증·짧은 paired 성능 확보, Stage B 전체 gate·게시 대기.** 제품 검증 커밋은 `3c39dcbe0039c98479c6294c09b599ed009650b0`이며, 아래 단위별 실행 근거와 결합했다. B4 고정 홀드아웃은 VALID/PASS지만, 이것이 Stage B 전체 완료·모든 자연 결과 개선·오너 시각 승인이라는 뜻은 아니다. B5의 집중 Rust·저장·renderer·실제 창 후속 근거는 확보됐고 최종 안전망과 짧은 paired baseline 성능 비교까지 확보했으며 전체 gate와 별도 커밋을 이어서 확정한다. 최종 gate의 정확한 HEAD·상태·원격 SHA는 외부 게시 receipt와 Stage C 최종 보고에 연결한다.
 
 최종 통합 때 정확한 source commit·binary hash·gate 종료 상태·성능 receipt·원격 SHA를 묶어 기록한다. 기존 게시 기준 Stage A 기록과 미해결 제한은 새 부분 PASS로 덮지 않는다.
 
@@ -16,7 +16,7 @@
 | B p6 trader T | `54a55a421361d9c24268e1b3a6a5d2c2d1c6c211` | 신선한 성인·최근 수행자와 authored30/10/1 정책. 경계15·observer8·기존 이웃16·저장7·역사4. 원본 동일, OFF3동일/6차이 보존 |
 | B p7 hunter haul H | `bdbd4fb2ea9c5b446648778ea7b0b2da14635049` | 비축 우선 뒤 실제 화덕/anchor 조건의 고기 운반. 변경 전4양성/3예상 실패, 최종23통과·기존 회귀33. 원본 동일, OFF2동일/7차이 보존 |
 | B p8 등록/고정 | `7577f8af08b233ab436d4301f88543d150b72295` | 평가와 나무 재료 의미를 실행 전에 고정. B4 네 archive와 D44/ADR0044의 B5 경계 등록. B5 구현 완료 커밋이 아님 |
-| B5 후속 | 미커밋 변경, 별도 최종 판정 대기 | flora·저장 재료·벌목·bridge/renderer 연결. 아래 집중 근거와 남은 gate를 구분 |
+| B p9 B5 | `3c39dcbe0039c98479c6294c09b599ed009650b0` | flora·저장 재료·벌목·bridge/renderer 연결. 아래 집중 근거와 남은 gate를 구분 |
 
 세부 실패·수정·조건은 `B_CORE_VERIFICATION.md`, `B_ECOLOGY_VERIFICATION.md`, `B6_VERIFICATION.md`, `B4_O/P/T/H_VERIFICATION.md`, `B4_HELDOUT_VERIFICATION.md`, `B5_VERIFICATION.md`와 외부 원문에 남긴다. 각 문서의 당시 “홀드아웃 대기” 문장은 해당 단위의 역사적 시점이며, 최종 B4 상태는 홀드아웃 검증 문서를 따른다.
 
@@ -63,11 +63,11 @@ H는 BPT의 stockpile372시작에서 BPTH stockpile373/hearth99시작으로 바�
 
 get_trees의 authoritative species가 standing tree·그루터기·¼× canopy에 전달되며 독립 renderer 종 lottery는 제거했다. size/variant/jitter/season은 유지한다. 옛 물리 oak와 visual hash가 달랐던 저장은 화면이 바뀔 수 있다. 실제 창 최종 visual-haul-clearance는54검사/0실패·오류0이다. 초기 카메라/수관/원목 가림 실패를 보존하고 사전 기록된 추가 일반 벌목·stockpile 운반으로 원래 그루터기를 노출했다. PNG6개 재검토는 그루터기와 pine/oak벽 대비에 bounded PASS이며 담당 구현자의 재검토라 독립 오너 승인으로 부르지 않는다. 밀집 standing 장면은 단독 종 실루엣 판독 PASS가 아니다. MART21 rendered SKIP도 창 검증으로 소급 전환하지 않는다.
 
-이 근거는 현재 B5 변경 전체의 최종 gate/성능/게시를 대신하지 않는다. B5_VERIFICATION의 첫 머리·이전 절에 남은 대기 문구는 후속 receipt와 시간순으로 읽고 최종 통합 시 root가 갱신한다.
+이 근거는 현재 B5 변경 전체의 최종 gate/성능/게시를 대신하지 않는다. 최종 source freeze와 같은 제품 bytes임은 외부 `b5/source-commit-binding.json`에 연결했다.
 
 ## 동일 방법 전후 구조 수치
 
-아래는 B1 최종 metrics **초안의2026-10-25 17:06:50 KST dirty snapshot**이다. 최종 commit 수치가 아니므로 root가 마지막 source-freeze와 다시 묶는다. 셀은 파일 수 / 물리 LOC / raw enum 선언 수다.
+아래는 B1 최종 metrics **초안의2026-10-25 17:06:50 KST dirty snapshot**이다. 같은 제품 bytes의 커밋 `3c39dcbe0039c98479c6294c09b599ed009650b0`와 source-commit-binding으로 연결했다. 셀은 파일 수 / 물리 LOC / raw enum 선언 수다.
 
 | 범위 | GOAL 원본67a6232 | 게시 A ca9f531 | H/pre-B5 bdbd4fb | B5 dirty snapshot |
 |---|---:|---:|---:|---:|

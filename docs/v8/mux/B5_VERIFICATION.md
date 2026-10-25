@@ -1,6 +1,6 @@
 # B5 나무 종 — 구현 및 검증 기록
 
-**집중 Rust·기존 회귀·headless renderer·통제된 실제 창54검사 PASS / 원본/OFF/ON 안전망 확인, 전체 B gate 대기.** D44/ADR0044를 먼저 등록하고 H `bdbd4fb2ea9c5b446648778ea7b0b2da14635049` 다음 별도 동작 변경으로 진행한다. B4 네 빌드·평가기·기준은 외부에 고정했고, B5 코드가 그 평가에 들어가지 않는다. 원시 근거는 `/Users/rexxa/work/mux-data/stage-b/`에 둔다.
+**집중 Rust·기존 회귀·headless renderer·통제된 실제 창54검사 PASS / 원본/OFF/ON 안전망 확인, 전체 B gate 대기.** 제품 커밋 `3c39dcbe0039c98479c6294c09b599ed009650b0`다. D44/ADR0044를 먼저 등록하고 H `bdbd4fb2ea9c5b446648778ea7b0b2da14635049` 다음 별도 동작 변경으로 진행한다. B4 네 빌드·평가기·기준은 외부에 고정했고, B5 코드가 그 평가에 들어가지 않는다. 원시 근거는 `/Users/rexxa/work/mux-data/stage-b/`에 둔다.
 
 ## 데이터와 저장 경계
 
