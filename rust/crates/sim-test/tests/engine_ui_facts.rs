@@ -258,9 +258,10 @@ fn steward_scope_boundary_rejects_without_mutation_and_valid_changes_are_logged(
     assert_eq!(engine.resources.colony.command_log.len(), before + 1);
     assert_eq!(state.sequence, 0);
     assert!(state.accepted_rules.is_empty());
-    assert_eq!(state.labels.len(), 6);
+    assert_eq!(state.labels.len(), 7);
     assert_eq!(state.labels[0], (1, "MUX_STEWARD_RULE_1".to_string()));
     assert_eq!(state.labels[5], (6, "MUX_STEWARD_RULE_6".to_string()));
+    assert_eq!(state.labels[6], (7, "MUX_STEWARD_RULE_7".to_string()));
 }
 
 #[test]
