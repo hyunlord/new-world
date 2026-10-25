@@ -213,3 +213,6 @@
 - 2026-10-25 — M-EXT B5 나무 재료를 worldgen부터 벌목·벽·표현까지 저장된 identity로 연결 (`3c39dcbe0039c98479c6294c09b599ed009650b0`, ADR0044). 실제 H9 이행·통제 창54검사와 원본228748/0·9 OFF 재캡처/ON 누적 차이를 확인하고 최초 실패를 보존. 전체 B gate·게시 대기([검증](v8/mux/B5_VERIFICATION.md)).
 
 - 2026-10-25 — MUX B 첫 전체 gate `60f3371691b398e16a9d3675ea3e36b058559616`는17:31:59–18:39:00 KST,36중31단계 통과·status1. 실패5단계의 원인은 기존 시험5곳의 카탈로그/정체성/현재 API 초기화·기대값이다. 제품 동작을 바꾸지 않은 수정 후 Rust3·Python133·Locale 실행/strict·clippy 통과. 최초 실패는 보존하며 전체 재게이트·B 게시 대기 ([검증](v8/mux/B_GATE_REPAIR_VERIFICATION.md), D45).
+
+- 2026-10-25 — MUX B gate2 `5e20c65a1d52ba2a96a6e524614d3a7679f31a44`,18:49:48–19:54:54 KST,36/36 status0; debug2228/0/5·release2227/0/5(로그 집계). wip/main fast-forward 및 원격 SHA 일치를 확인했다. 첫 gate31/36 FAIL과 A8 실패는 보존한다 ([Stage B 보고](v8/mux/STAGE_B_REPORT.md)).
+- 2026-10-25 — MUX C 후보 삭제: 사용하지 않는 wood frame helper8개와 ArtSpriteLibrary127줄·UID. 원본은 게시 B `5e20c65a1d52ba2a96a6e524614d3a7679f31a44`에 남는다. 실제 daylight·UI15atlas연결·자산·V7은 보존하며 C 안전망/전체 gate 대기 ([검증](v8/mux/C_CLEANUP_VERIFICATION.md)).

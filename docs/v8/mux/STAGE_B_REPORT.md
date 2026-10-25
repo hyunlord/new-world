@@ -1,6 +1,6 @@
 # Stage B 구현 보고 — 콘텐츠 확장·정책 검증·구조 경계
 
-**첫 전체 gate FAIL(31/36), 시험5곳 수정의 집중 검증 PASS / 전체 재게이트·게시 대기.** 제품 검증 커밋은 `3c39dcbe0039c98479c6294c09b599ed009650b0`이며, 아래 단위별 실행 근거와 결합했다. B4 고정 홀드아웃은 VALID/PASS지만, 이것이 Stage B 전체 완료·모든 자연 결과 개선·오너 시각 승인이라는 뜻은 아니다. B5의 집중 Rust·저장·renderer·실제 창 후속 근거는 확보됐고 최종 안전망과 짧은 paired baseline 성능 비교까지 확보했으며 전체 gate와 별도 커밋을 이어서 확정한다. 최종 gate의 정확한 HEAD·상태·원격 SHA는 외부 게시 receipt와 Stage C 최종 보고에 연결한다.
+**Stage B gate2 PASS(36/36, status0), wip/main 게시 확인.** 최종 게시 커밋은 `5e20c65a1d52ba2a96a6e524614d3a7679f31a44`다. 아래 후보 시점의 대기 문구와 첫 gate 실패는 당시 기록이며 최종 상태는 이 문단과 마지막 게시 절을 따른다. 제품 검증 커밋은 `3c39dcbe0039c98479c6294c09b599ed009650b0`이며, 아래 단위별 실행 근거와 결합했다. B4 고정 홀드아웃은 VALID/PASS지만, 이것이 Stage B 전체 완료·모든 자연 결과 개선·오너 시각 승인이라는 뜻은 아니다. B5의 집중 Rust·저장·renderer·실제 창 후속 근거는 확보됐고 최종 안전망과 짧은 paired baseline 성능 비교까지 확보했으며 전체 gate와 별도 커밋을 이어서 확정한다. 최종 gate의 정확한 HEAD·상태·원격 SHA는 외부 게시 receipt와 Stage C 최종 보고에 연결한다.
 
 최종 통합 때 정확한 source commit·binary hash·gate 종료 상태·성능 receipt·원격 SHA를 묶어 기록한다. 기존 게시 기준 Stage A 기록과 미해결 제한은 새 부분 PASS로 덮지 않는다.
 
@@ -99,3 +99,11 @@ B5 원본 공유228748값/0차이·Chronicle64/19683 및 정규화 raw 동일, O
 ## 첫 전체 게이트와 시험 수정
 
 `60f3371691b398e16a9d3675ea3e36b058559616`의 gate1은36단계 중31통과, status1이다. debug/release·Python·M1·knowledge 단계가 실패했으며 중복 원인을 합치면 시험5곳이다. 원래 로그·기대값을 보존하고 제품 코드는 유지했다. 수정 후 Rust3·Python133·Locale 실행/엄격 검사·clippy가 통과했다. 원본 identity·성능·renderer·확장 단계의 첫 PASS를 전체 PASS로 해석하지 않는다. 새 clean commit의 전체 gate가 게시 조건이다. [수정 검증](B_GATE_REPAIR_VERIFICATION.md).
+
+## 최종 게이트와 게시
+
+Gate2는 clean `5e20c65a1d52ba2a96a6e524614d3a7679f31a44`에서2026-10-25 18:49:48–19:54:54 KST,36/36 status0으로 종료했다. debug2228/0/5, release2227/0/5는 로그 집계이며 unique test census가 아니다. Python133, M1 Rust101와 TRF_TEST_PASS, play check6/6, renderer·save·F10(8/8)·story·neighbours·steward·data_only_ext가 통과했다. 원본228748값/0차이, Chronicle64/19683 및 기존 정규화 raw64 동일성도 통과했다.
+
+Natural mean0.2617ms(기준0.2538,×1.031), quick mean0.3703ms(0.3699,×1.001); fingerprint 동일. Standing benchmark는 부하6.52<8에서 시작해 여섯 상한 모두 통과했다. UI 지연과 A8 수용 실패는 그대로다. 게시 전에 tracked2365경로를 commit blob과 대조했고 ignored Cargo.lock의 기존 SHA도 일치했다.
+
+`git push origin v8/mux:v8/wip`, 이어서 `v8/mux:v8/main`이 각각 fast-forward로 성공했고 `git ls-remote`의 두 SHA가 게시 커밋과 일치했다. 외부 원문은 `/Users/rexxa/work/mux-data/gate-stage-b-2/receipt.json`(SHA48ed3e95ae3a4b13536b4e6831101a5771a4db6f26417521c5972b05fc532a59), `stage-b-publication.json`이다. 첫 gate1의 status1/31of36은 삭제하지 않는다. Stage C 정리·최종 보고는 별도 단계다.

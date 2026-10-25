@@ -7,6 +7,9 @@ tags `v7-final-sim` and `v7-final-art`.
 
 ## M-UX + REVIEW — 2026-10-25 (in progress)
 
+- Removed (C candidate, verification ongoing): eight unused wood-frame helpers and the127-line legacy ArtSpriteLibrary plus UID. Live daylight lookup, all15 world_0 UI bindings, assets and V7/baseline remain. See D46/C_CLEANUP_VERIFICATION.md.
+- Stage B gate2 passed36/36 at5e20c65a1d52ba2a96a6e524614d3a7679f31a44 and both wip/main were verified after fast-forward publication; gate1 failure remains recorded.
+
 - Changed (B gate repair, test-only): preserve the first full gate failure (31/36, status1 at60f337169), align five stale fixtures with the current catalog/API and explicit bootstrap. Three focused Rust tests, Python133, rebuilt Locale runtime/strict and workspace clippy pass; product behavior sources remain unchanged. A clean full rerun is required before publication (D45, ISS305/306/308–310).
 
 - Changed (B5, focused Rust, windowed path and recapture verified; full stage gate pending): versioned flora selects and persists actual tree wood material; felling and aligned bridge/tree/stump/canopy reads share it. Format10 freezes explicit format9 migration and retains historical tree oak. D44/ADR0044 define intentional material and old-save visual differences; ordinary chop/haul exposes the original stump and actual pine/oak walls in six windowed captures; no blind species or owner approval claim.
