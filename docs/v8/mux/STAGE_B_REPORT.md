@@ -1,6 +1,6 @@
 # Stage B 구현 보고 — 콘텐츠 확장·정책 검증·구조 경계
 
-**전체 gate 전 후보 보고 / 개별 검증·짧은 paired 성능 확보, Stage B 전체 gate·게시 대기.** 제품 검증 커밋은 `3c39dcbe0039c98479c6294c09b599ed009650b0`이며, 아래 단위별 실행 근거와 결합했다. B4 고정 홀드아웃은 VALID/PASS지만, 이것이 Stage B 전체 완료·모든 자연 결과 개선·오너 시각 승인이라는 뜻은 아니다. B5의 집중 Rust·저장·renderer·실제 창 후속 근거는 확보됐고 최종 안전망과 짧은 paired baseline 성능 비교까지 확보했으며 전체 gate와 별도 커밋을 이어서 확정한다. 최종 gate의 정확한 HEAD·상태·원격 SHA는 외부 게시 receipt와 Stage C 최종 보고에 연결한다.
+**첫 전체 gate FAIL(31/36), 시험5곳 수정의 집중 검증 PASS / 전체 재게이트·게시 대기.** 제품 검증 커밋은 `3c39dcbe0039c98479c6294c09b599ed009650b0`이며, 아래 단위별 실행 근거와 결합했다. B4 고정 홀드아웃은 VALID/PASS지만, 이것이 Stage B 전체 완료·모든 자연 결과 개선·오너 시각 승인이라는 뜻은 아니다. B5의 집중 Rust·저장·renderer·실제 창 후속 근거는 확보됐고 최종 안전망과 짧은 paired baseline 성능 비교까지 확보했으며 전체 gate와 별도 커밋을 이어서 확정한다. 최종 gate의 정확한 HEAD·상태·원격 SHA는 외부 게시 receipt와 Stage C 최종 보고에 연결한다.
 
 최종 통합 때 정확한 source commit·binary hash·gate 종료 상태·성능 receipt·원격 SHA를 묶어 기록한다. 기존 게시 기준 Stage A 기록과 미해결 제한은 새 부분 PASS로 덮지 않는다.
 
@@ -95,3 +95,7 @@ ISS283은 일부 M5 실행의 settings 격리 누락이다. 이전 사본이 없
 ## 최종 B5 안전망과 paired 성능
 B5 원본 공유228748값/0차이·Chronicle64/19683 및 정규화 raw 동일, OFF9 정확한 seed집합·불변식0을 확인했다. H→B5의9요약 모두 변하며 전체107126차이 행을 보존·재계산했다. A와 같은 입력의 ON8세계×48일은 누적 P/T/H/B5 변경으로 요약20053경로와8명령 기록이 달랐다. B5만의 자연 개선이나 A8 재수용은 아니다. 세부 `B5_VERIFICATION.md`를 따른다.
 동일 세션 N1000·side64·fed·baseline·seed15100·1일을 A/B, B/A, A/B 세 쌍으로 측정했다. 60warmup+1380steady·alive1000·fingerprint가 전부 같다. load1은5.34–5.47로 등록 기준8 미만이다. tick mean은 A0.799614/0.804600/0.796570ms, B0.794064/0.777605/0.792465ms였다. B/A 중앙값은 mean=0.99306, p99=0.95778, p99.9=0.99307, max=0.97182다. B의 decision share는69.26/69.34/69.37%였다. 짧은 baseline 범위에서 관측한 값이며 인과적 속도 향상, 실제 colony 정책 성능, 전체 UI/FPS 동일성을 주장하지 않는다. 원시6profile·호스트 부하·provenance는 `/Users/rexxa/work/mux-data/stage-b/final-performance-1/`에 보존한다. 필수 standing benchmark는 최종 gate에서 별도 측정한다.
+
+## 첫 전체 게이트와 시험 수정
+
+`60f3371691b398e16a9d3675ea3e36b058559616`의 gate1은36단계 중31통과, status1이다. debug/release·Python·M1·knowledge 단계가 실패했으며 중복 원인을 합치면 시험5곳이다. 원래 로그·기대값을 보존하고 제품 코드는 유지했다. 수정 후 Rust3·Python133·Locale 실행/엄격 검사·clippy가 통과했다. 원본 identity·성능·renderer·확장 단계의 첫 PASS를 전체 PASS로 해석하지 않는다. 새 clean commit의 전체 gate가 게시 조건이다. [수정 검증](B_GATE_REPAIR_VERIFICATION.md).

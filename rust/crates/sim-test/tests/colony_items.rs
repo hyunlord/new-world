@@ -3,7 +3,7 @@
 mod colony_support;
 
 use colony_support::tick_checked;
-use sim_core::colony::materials::{FLINT, GRANITE, LIMESTONE};
+use sim_core::colony::materials::{embedded_definitions, MaterialStats, FLINT, GRANITE, LIMESTONE};
 use sim_core::colony::{Command, ItemKind, NodeKind};
 use sim_core::TerrainType;
 use sim_engine::SimEngine;
@@ -42,6 +42,14 @@ fn bank_tiles(engine: &SimEngine) -> usize {
 
 #[test]
 fn resource_nodes_follow_the_placement_rule() {
+    let expected_materials: std::collections::BTreeMap<_, _> = embedded_definitions()
+        .expect("embedded colony material definitions")
+        .into_iter()
+        .map(|definition| {
+            let stats = MaterialStats::from_def(&definition);
+            (definition.id, (definition.name.to_lowercase(), stats))
+        })
+        .collect();
     for seed in [0u64, 3] {
         let engine = sim_test::colony_engine(seed);
         let r = &engine.resources;
@@ -95,7 +103,7 @@ fn resource_nodes_follow_the_placement_rule() {
             bank / 40,
             "seed {seed}: outcrops on {bank} bank tiles"
         );
-        assert_eq!(r.colony.materials.by_id.len(), 5);
+        assert_eq!(r.colony.materials.by_id, expected_materials);
     }
 }
 

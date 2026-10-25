@@ -244,3 +244,6 @@ A controlled capture must settle deferred camp centering, apply requested zoom b
 Source: `tools/v8/b5_tree_visual.gd`; D44 visual evidence addenda and ISS302 in `docs/ISSUES.md`.
 
 | 2026-10-25 | A product freeze missed ignored Cargo.lock | git tracked/untracked --exclude-standard excludes dependency resolution input | Hash the lock separately before and after a --locked build; bind binary hashes and preserve any earlier missing pre-build evidence | `docs/v8/mux/B5_VERIFICATION.md`; ISS304 |
+
+### Registry migration fixture audit
+After migrating a registry, run tests outside the edited subsystem too. Positive fixtures must establish the same material identity and catalog bootstrap as real gameplay; use existing helpers and real bootstrap, preserve explicit unbooted negative controls. Compare authored complete tables rather than stale counts, and bind live API checks to the current gate list while preserving historical lists. Retain durability, localization, raw-column and category assertions. A fixture-only repair does not erase a failed full gate or replace its clean-commit rerun. Source: MUX D45, ISS305/306/308–310.

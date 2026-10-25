@@ -211,3 +211,5 @@
 - 2026-10-25 — M-EXT B4 고정4빌드×32시드×48일 종료16:41 KST: 관측 VALID·F4/F9 모두 PASS(F4a 전부31/32, F9a30/30/29/30), ledger/reservation 위반0. P 자연 상한 개입0, H 화덕 운반 시작99개이나 자연 종료는 UNRESOLVED이므로 일률적 개선·성공 배달을 주장하지 않는다. 전체 B gate·게시 전([홀드아웃 보고](v8/mux/B4_HELDOUT_VERIFICATION.md)).
 
 - 2026-10-25 — M-EXT B5 나무 재료를 worldgen부터 벌목·벽·표현까지 저장된 identity로 연결 (`3c39dcbe0039c98479c6294c09b599ed009650b0`, ADR0044). 실제 H9 이행·통제 창54검사와 원본228748/0·9 OFF 재캡처/ON 누적 차이를 확인하고 최초 실패를 보존. 전체 B gate·게시 대기([검증](v8/mux/B5_VERIFICATION.md)).
+
+- 2026-10-25 — MUX B 첫 전체 gate `60f3371691b398e16a9d3675ea3e36b058559616`는17:31:59–18:39:00 KST,36중31단계 통과·status1. 실패5단계의 원인은 기존 시험5곳의 카탈로그/정체성/현재 API 초기화·기대값이다. 제품 동작을 바꾸지 않은 수정 후 Rust3·Python133·Locale 실행/strict·clippy 통과. 최초 실패는 보존하며 전체 재게이트·B 게시 대기 ([검증](v8/mux/B_GATE_REPAIR_VERIFICATION.md), D45).

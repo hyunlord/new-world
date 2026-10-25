@@ -3,7 +3,7 @@
 #   including the M1.5 year key UI_TIME_YEAR_FMT as the top bar formats it (String.format), and the M3 quality
 #   words (EconomyText.quality, band edges), and the M4 knowledge formats (KnowledgeText: era line, badge, warning,
 #   wait line with 을/를, subject 이/가, discovery condition, gate, inspector entry, days ago, lesson, teach row, loss).
-# Bridge methods called: none.
+# Bridge methods called: bootstrap_catalog.
 # usage: Godot --headless --path . --script res://tools/v8/test_locale_trf.gd
 #   prints TRF_TEST_PASS and exits 0, or prints each failure and exits 1.
 extends SceneTree
@@ -11,6 +11,7 @@ extends SceneTree
 const LocaleScript = preload("res://scripts/core/locale.gd")
 const EconomyTextScript = preload("res://scripts/ui/economy_text.gd")
 const KnowledgeTextScript = preload("res://scripts/ui/knowledge_text.gd")
+const Content = preload("res://scripts/ui/content_context.gd")
 
 var _failures: int = 0
 
@@ -26,6 +27,17 @@ func _check(label: String, got: String, want: String) -> void:
 
 
 func _run() -> void:
+	var boot: Dictionary = WorldSimNode.bootstrap_catalog()
+	var boot_ok: Variant = boot.get("ok", false)
+	if not boot_ok is bool or boot_ok != true:
+		print("TRF_TEST_FAIL content bootstrap: %s" % str(boot.get("error", "missing affirmative bootstrap receipt")))
+		quit(1)
+		return
+	var registry_revision: String = str(boot.get("registry_revision", ""))
+	if registry_revision.is_empty() or Content.revision() != registry_revision:
+		print("TRF_TEST_FAIL content bootstrap: UI catalog revision missing or mismatched")
+		quit(1)
+		return
 	_check("one", LocaleScript.format_text("{count}개", {"count": 12}), "12개")
 	_check("two", LocaleScript.format_text("통나무 {delivered}/{needed}", {"delivered": 3, "needed": 12}), "통나무 3/12")
 	_check("repeat", LocaleScript.format_text("{a}-{a}", {"a": "x"}), "x-x")

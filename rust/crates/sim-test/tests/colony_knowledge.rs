@@ -1064,11 +1064,7 @@ fn a_ground_axe_breaks_after_120_chops() {
         },
         1,
     );
-    engine
-        .resources
-        .colony
-        .trees
-        .insert((30, 30), sim_core::colony::Tree { logs: 4 });
+    colony_support::plant(&mut engine, (30, 30), 4);
     assert!(
         submit(
             &mut engine,

@@ -52,3 +52,7 @@ H 대비9 OFF 요약은 모두 달라졌다: soak1548, story4313, neighbours4800
 ## 독립 차이 검토와 최종 준비 검사
 `final-off-independent-review.md/.json`은 OFF27파일 해시와 전체107126차이 행, ON18개 before/after 해시와 전체9차이 목록을 별도 재계산했다. MaterialId가 다른 ItemSpec은 별도 stack이 되고 제작 입력 재료·경도가 달라져 운반/제작/후속 정착지 결과로 이어지는 경로가 소스와 일치한다. 실제 예는 soak seed0 도끼 벌목100→101, story seed0 alive10→11·birth0→1, quiet seed0 제작200→180이다. 변경 경로 수는 배열 이동도 포함하므로 독립 사건 수나 심각도 점수가 아니다. ContentState 자체가 fingerprint에 들어가 초기부터 달라질 수 있으며 최초 벌목 시점이나 모든 결과의 정확한 인과를 증명하지 않는다. 이웃 OFF에서 달라진 neighbours 하위 값은 discovery뿐이고 caravan/wave는 유지됐다. 검토 범위에서 별도 정책 수정이나 원시 근거 불일치는 발견하지 못했다.
 최종 준비 검사는 fmt·bridge API·schema(57getter/838key)·docs·inventory·GDScript strict70/FFI57·art manifest·확장성/마스크/import29시험 모두 종료0이다(`precommit-checks/receipt.json`). 이후2123 source freeze도 불변이다. 전체36단계 B gate와 clean HEAD 게시는 별도다.
+
+## Full-stage gate follow-up
+
+First B full gate at60f3371691b398e16a9d3675ea3e36b058559616 finished31/36, status1. Its five stale test/setup defects and focused corrections are recorded in [B_GATE_REPAIR_VERIFICATION.md](B_GATE_REPAIR_VERIFICATION.md). The original2123-path freeze stays unchanged:2118paths match and five test paths differ. No new product behavior or recapture is claimed by the test repair. New clean full-stage gate remains required.

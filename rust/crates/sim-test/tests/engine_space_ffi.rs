@@ -322,16 +322,16 @@ fn wall_and_floor_looks_match_the_tile_grid() {
         let raw = g.wall_material[i].expect("a wall row has a material").raw();
         assert_eq!(sim_bridge::ffi::material_column(look.material), raw as i32);
         let expected_style = if g.is_door(i) {
-            "Door"
+            "slab_door"
         } else if g.wall_material[i] == Some(GRANITE) || g.wall_material[i] == Some(LIMESTONE) {
-            "StoneWall"
+            "drystone"
         } else {
-            "LogWall"
+            "log"
         };
         assert_eq!(look.style, expected_style, "wall {tile:?}");
         let expected_code = match expected_style {
-            "Door" => 2,
-            "StoneWall" => 1,
+            "slab_door" => 2,
+            "drystone" => 1,
             _ => 0,
         };
         assert_eq!(
@@ -359,7 +359,7 @@ fn wall_and_floor_looks_match_the_tile_grid() {
         let (style, kind) = if g.is_dug(i) {
             ("DugFloor", 1)
         } else {
-            ("PackedFloor", 0)
+            ("packed_earth", 0)
         };
         assert_eq!(
             (look.style.as_str(), *code),
@@ -371,10 +371,10 @@ fn wall_and_floor_looks_match_the_tile_grid() {
         assert_eq!(look.category, expected, "floor {tile:?}");
         styles.insert(look.style.clone());
     }
-    // Each built kind is listed with its art-data style name and the expected material.
+    // Bundled HistoricalProjection sites use authored role styles; DugFloor is procedural.
     assert_eq!(
         styles.into_iter().collect::<Vec<_>>(),
-        vec!["Door", "DugFloor", "LogWall", "PackedFloor", "StoneWall"]
+        vec!["DugFloor", "drystone", "log", "packed_earth", "slab_door"]
     );
     let looks_at = |t: (u32, u32)| {
         space
@@ -388,10 +388,10 @@ fn wall_and_floor_looks_match_the_tile_grid() {
     let lime_look = looks_at(lime).expect("limestone wall row");
     assert_eq!(
         (lime_look.style.as_str(), lime_look.category),
-        ("StoneWall", "Stone")
+        ("drystone", "Stone")
     );
     let log = looks_at((x, y)).expect("log wall row");
-    assert_eq!((log.style.as_str(), log.category), ("LogWall", "Wood"));
+    assert_eq!((log.style.as_str(), log.category), ("log", "Wood"));
     let packed = space
         .floors
         .iter()
