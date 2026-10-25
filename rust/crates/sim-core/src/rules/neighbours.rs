@@ -1,5 +1,7 @@
 //! M5.5 (ADR 0031, 0032): the neighbours, their migrant waves and their caravans. `None` outside the M5.5 colony.
 //! The values, the names, the goods table and the guaranteed knowledge live in `data/colony/neighbours.ron`.
+use crate::colony::content::Catalog;
+use crate::colony::knowledge::Era;
 use serde::{Deserialize, Serialize};
 use std::sync::OnceLock;
 
@@ -77,6 +79,27 @@ pub struct NeighbourRule {
     pub eureka_permille: u32,
 }
 
+/// Installed goods-generation policy; separate from the saved neighbour rule.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub enum GoodsPolicy {
+    /// Prefer scarce local skills, with a lower-weight authored era category.
+    Scarce {
+        /// Largest current adult practitioner count considered scarce.
+        maximum_practitioners: u32,
+        /// Draw weight for scarce goods outside the rare category.
+        scarce_weight: u32,
+        /// Draw weight for staples.
+        staple_weight: u32,
+        /// Draw weight for rare goods.
+        rare_weight: u32,
+        /// Rare classification applies strictly below this progress permille.
+        next_era_cutoff: u16,
+        /// Producing-node era eligible for rare classification.
+        rare_era: Era,
+    },
+}
+
 /// The neighbours' data file (`data/colony/neighbours.ron`; owner directive 2026-10-24: content lives in data).
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -93,6 +116,9 @@ pub struct NeighbourData {
     /// The caravans' draw table, in draw order.
     #[serde(default)]
     pub goods: Vec<GoodsEntry>,
+    /// Optional installed policy; absence preserves legacy saved-rule weights.
+    #[serde(default)]
+    pub goods_policy: Option<GoodsPolicy>,
     /// The item a migrant may arrive wearing (`rule.wrap_permille`; an apparel item name in values.ron).
     #[serde(default)]
     pub migrant_top: Option<String>,
@@ -114,14 +140,68 @@ const NEIGHBOURS_RON: &str = include_str!("../../data/colony/neighbours.ron");
 
 /// Parse a neighbours data file; `None` when malformed, of another schema or naming an unknown field.
 pub fn parse_data(text: &str) -> Option<NeighbourData> {
-    let d: NeighbourData = ron::from_str(text).ok()?;
-    (d.schema_version == 1 && super::data::rule_fields_known(text, &d.rule)).then_some(d)
+    parse_data_with_catalog(text, crate::colony::content::installed_or_bundled())
 }
 
-/// The embedded neighbours data (`None` only if the file were malformed; a unit test parses it).
+/// Strict local parsing and reference validation without global catalog access.
+pub fn parse_data_with_catalog(text: &str, catalog: &Catalog) -> Option<NeighbourData> {
+    let d: NeighbourData = ron::from_str(text).ok()?;
+    if d.schema_version != 1 || !super::data::rule_fields_known(text, &d.rule) {
+        return None;
+    }
+    if let Some(GoodsPolicy::Scarce {
+        scarce_weight,
+        staple_weight,
+        rare_weight,
+        next_era_cutoff,
+        ..
+    }) = d.goods_policy
+    {
+        if scarce_weight == 0 || staple_weight == 0 || rare_weight == 0 || next_era_cutoff > 1000 {
+            return None;
+        }
+    }
+    if d.rule.goods_stacks.0 == 0
+        || d.rule.goods_stacks.0 > d.rule.goods_stacks.1
+        || d.rule.goods_quality.0 > d.rule.goods_quality.1
+        || d.rule.goods_quality.1 > 100
+    {
+        return None;
+    }
+    for row in &d.goods {
+        if !matches!(row.tag.as_str(), "lacked" | "staple")
+            || row.count.0 == 0
+            || row.count.0 > row.count.1
+        {
+            return None;
+        }
+        let item = catalog.item(catalog.item_by_name(&row.item)?)?;
+        for node in item.made_by.iter().chain(&item.clue_nodes) {
+            catalog.knowledge_defs().id_of(node)?;
+        }
+    }
+    for name in &d.one_neighbour_knows {
+        catalog.knowledge_defs().id_of(name)?;
+    }
+    if let Some(name) = &d.migrant_top {
+        let apparel = catalog
+            .item(catalog.item_by_name(name)?)?
+            .apparel
+            .as_ref()?;
+        // Migrants still wear the two saved Top slots; this does not add new apparel slots.
+        if !matches!(apparel.legacy_top_code, 1 | 2) {
+            return None;
+        }
+    }
+    Some(d)
+}
+
+/// Embedded data, validated only after the selected catalog has completed initialization.
 pub fn data() -> Option<&'static NeighbourData> {
+    let catalog = crate::colony::content::installed_or_bundled();
     static DATA: OnceLock<Option<NeighbourData>> = OnceLock::new();
-    DATA.get_or_init(|| parse_data(NEIGHBOURS_RON)).as_ref()
+    DATA.get_or_init(|| parse_data_with_catalog(NEIGHBOURS_RON, catalog))
+        .as_ref()
 }
 
 impl NeighbourRule {

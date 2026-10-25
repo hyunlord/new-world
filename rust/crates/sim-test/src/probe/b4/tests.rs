@@ -375,3 +375,58 @@ fn actual_paid_crafts_cross_xp_continue_and_survive_post_finish_decay_and_death(
     watch.check_primary(&engine);
     assert!(watch.report.invalid_reasons.is_empty());
 }
+
+#[test]
+fn trader_policy_metadata_requires_exact_authored_policy() {
+    use sim_core::{colony::knowledge::Era, rules::GoodsPolicy};
+    let registered = GoodsPolicy::Scarce {
+        maximum_practitioners: 2,
+        scarce_weight: 30,
+        staple_weight: 10,
+        rare_weight: 1,
+        next_era_cutoff: 750,
+        rare_era: Era::Neolithic,
+    };
+    assert_eq!(
+        trade::policy_weights(manifest::Policy::Old3_1, None, (3, 1)),
+        Ok((3, 1))
+    );
+    assert!(trade::policy_weights(manifest::Policy::Old3_1, Some(&registered), (3, 1)).is_err());
+    assert!(trade::policy_weights(manifest::Policy::Scarce30_10_1, None, (30, 10)).is_err());
+    for legacy in [(30, 10), (3, 2), (2, 1)] {
+        assert!(trade::policy_weights(manifest::Policy::Old3_1, None, legacy).is_err());
+    }
+    // Old-save rule fields do not override installed policy for future caravans.
+    assert_eq!(
+        trade::policy_weights(manifest::Policy::Scarce30_10_1, Some(&registered), (3, 1)),
+        Ok((30, 10))
+    );
+    for (
+        maximum_practitioners,
+        scarce_weight,
+        staple_weight,
+        rare_weight,
+        next_era_cutoff,
+        rare_era,
+    ) in [
+        (3, 30, 10, 1, 750, Era::Neolithic),
+        (2, 31, 10, 1, 750, Era::Neolithic),
+        (2, 30, 11, 1, 750, Era::Neolithic),
+        (2, 30, 10, 2, 750, Era::Neolithic),
+        (2, 30, 10, 1, 751, Era::Neolithic),
+        (2, 30, 10, 1, 750, Era::Paleolithic),
+    ] {
+        let changed = GoodsPolicy::Scarce {
+            maximum_practitioners,
+            scarce_weight,
+            staple_weight,
+            rare_weight,
+            next_era_cutoff,
+            rare_era,
+        };
+        assert!(
+            trade::policy_weights(manifest::Policy::Scarce30_10_1, Some(&changed), (3, 1)).is_err(),
+            "{changed:?}"
+        );
+    }
+}

@@ -9,11 +9,20 @@
 // - goods: the caravans' draw table, in draw order (the order is part of the keyed draw: reordering changes which
 //   goods a world's caravans bring). `item` is an item name (values.ron); `tag` its category: "lacked" — drawn with
 //   rule.lack_weight when the neighbour knows the item's `made_by` node (values.ron) and no colonist practises it;
-//   "staple" — always drawn with rule.staple_weight; unknown tags are ignored. `count`: items in one drawn stack.
+//   "staple" — always eligible. goods_policy overrides legacy draw weights; invalid tags reject the file.
+//   `count`: items in one drawn stack.
 // - names order: a world draws its two names by index into this list, so reordering or inserting renames worlds.
 // The file is read strictly: another schema_version or a misspelt field refuses the file (the neighbours stay off).
 (
     schema_version: 1,
+    goods_policy: Some(Scarce(
+        maximum_practitioners: 2,
+        scarce_weight: 30,
+        staple_weight: 10,
+        rare_weight: 1,
+        next_era_cutoff: 750,
+        rare_era: Neolithic,
+    )),
     rule: (
         distance_days: (2, 5),
         population: (20, 60),

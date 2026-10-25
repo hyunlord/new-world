@@ -201,3 +201,7 @@
 - 2026-10-25 — M-EXT B4 정책 변경 전 관측·산술 사전등록([ADR0040](decisions/0040-measure-policy-changes-with-read-only-observers.md), D39). 보정8시드×48일의 제작1773건과 제어 cold2304행·craft32건 독립 재계산 일치; tick100/4000 저장·명령 동일성 확인. 최초 fixture ID가정·lint 실패 보존. 최종 identity228748차이0·OFF9·ON요약/명령8개·48일 관측OFF/ON·저장4000 동일. 최초 ON 입력 오류와 정확한 재실행 기록 보존; 홀드아웃 미실행·B 게시 대기([검증](v8/mux/B4_O_VERIFICATION.md)).
 
 - 2026-10-25 — M-EXT B4 P 이주 수락·도착 때 전체 인구 상한 재확인 단위 검증([ADR0041](decisions/0041-admit-whole-migrant-waves-at-current-capacity.md), D40). 변경 전 경계3통과/7예상실패→변경 후10통과, 기존 이웃16·FFI2·저장7·시스템5 및 scorer36/정적검사 통과. 최초 fixture 전제 오류 ISS290·거절 문구 ISS291 보존; 고정 BP 보정8×48 VALID(정원 거절0·일별 인구 최대30), 기준선228748차이0·OFF9요약 literal 동일·2105제품해시 불변; 전체 B gate·게시 대기([검증](v8/mux/B4_P_VERIFICATION.md)).
+
+- 2026-10-25 — M-EXT B4 P를 `bbae211b3ee8cf8651cbe43d1014831b8a606001`로 커밋하고 BP 바이너리·입력31파일을 고정했다. 이어 T 사전등록 후 기존 P에서1양성/6예상실패를 확인했고, 새 정책 구현 뒤 경계15·관측8·기존 이웃16 시험이 통과했다. 저장/고정재측정·T 커밋과 전체 B gate·게시 대기([T 검증](v8/mux/B4_T_VERIFICATION.md), ADR0042/D41).
+
+- 2026-10-25 — M-UX Stage B T(ADR0042/D41): 성인·최근 수행자와 데이터 희귀 정책으로 교역 가중치30/10/1 적용. 경계15·기존 이웃16·저장7·과거 이행4 및 선택 팩 시험 통과. 원본 identity228748/0, OFF9개 중3동일·6교역/경제 차이 기록, 불변식0. BPT commit-linked 보정·전체 B gate·게시 대기.

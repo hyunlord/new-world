@@ -9,6 +9,7 @@ use sim_core::colony::{
     ItemKind,
 };
 use sim_core::components::{Agent, Child};
+use sim_core::rules::GoodsPolicy;
 use sim_engine::{RuntimeSystem, SimEngine};
 
 #[derive(Debug, Serialize)]
@@ -54,6 +55,45 @@ pub struct CaravanGeneration {
     pub initial_goods: Vec<GoodsRow>,
 }
 
+/// Pin authored policy independently of the runtime goods classifier.
+pub(super) fn policy_weights(
+    policy: Policy,
+    authored: Option<&GoodsPolicy>,
+    legacy: (u32, u32),
+) -> Result<(u32, u32), String> {
+    let matches = match (policy, authored) {
+        (Policy::Old3_1, None) => legacy == (3, 1),
+        (Policy::Old3_1, Some(_)) | (Policy::Scarce30_10_1, None) => false,
+        (
+            Policy::Scarce30_10_1,
+            Some(GoodsPolicy::Scarce {
+                maximum_practitioners,
+                scarce_weight,
+                staple_weight,
+                rare_weight,
+                next_era_cutoff,
+                rare_era,
+            }),
+        ) => {
+            (
+                *maximum_practitioners,
+                *scarce_weight,
+                *staple_weight,
+                *rare_weight,
+                *next_era_cutoff,
+                *rare_era,
+            ) == (2, 30, 10, 1, 750, knowledge::Era::Neolithic)
+        }
+    };
+    if !matches {
+        return Err("manifest policy does not match authored goods policy and legacy rule".into());
+    }
+    Ok(match policy {
+        Policy::Old3_1 => (3, 1),
+        Policy::Scarce30_10_1 => (30, 10),
+    })
+}
+
 pub fn capture(e: &SimEngine, id: u32, config: &Config) -> Result<CaravanGeneration, String> {
     let r = &e.resources;
     let generation = sim_systems::runtime::neighbours::NeighbourSystem;
@@ -81,7 +121,11 @@ pub fn capture(e: &SimEngine, id: u32, config: &Config) -> Result<CaravanGenerat
     }
     let rule = sim_systems::runtime::neighbours::rule(r).ok_or("missing neighbour rule")?;
     let known = nb.neighbour(c.neighbour).ok_or("missing neighbour")?.known;
-    let practice = sim_systems::runtime::neighbours::trade::colony_practice(&e.world);
+    let practice = e
+        .world
+        .query::<&Knowledge>()
+        .iter()
+        .fold(0, |mask, (_, k)| mask | k.practice());
     let window = sim_systems::runtime::knowledge::rule(r).map_or(0, |k| k.practice_days);
     let today = knowledge::day_of(r.current_tick);
     let mut inputs: Vec<_> = e
@@ -123,25 +167,23 @@ pub fn capture(e: &SimEngine, id: u32, config: &Config) -> Result<CaravanGenerat
         .collect();
     let mut eligible = Vec::new();
     let entries = sim_core::rules::neighbour_data().ok_or("missing authored goods")?;
-    let expected = match config.manifest.policy {
-        Policy::Old3_1 => (3, 1),
-        Policy::Scarce30_10_1 => (30, 10),
-    };
-    if (rule.lack_weight, rule.staple_weight) != expected {
-        return Err("manifest policy does not match actual trader rule weights".into());
-    }
+    let (artifact_weight, staple_weight) = policy_weights(
+        config.manifest.policy,
+        entries.goods_policy.as_ref(),
+        (rule.lack_weight, rule.staple_weight),
+    )?;
     for (index, entry) in entries.goods.iter().enumerate() {
         let kind = ItemKind::from_name(&entry.item).ok_or("unresolved authored goods item")?;
         let made_by = sim_core::colony::values::item_data(kind)
             .and_then(|d| d.made_by.as_deref())
             .and_then(knowledge::id);
         let weight = match entry.tag.as_str() {
-            "staple" => Some((rule.staple_weight, "staple")),
+            "staple" => Some((staple_weight, "staple")),
             "lacked" => made_by
                 .filter(|&n| known & knowledge::bit(n) != 0)
                 .and_then(|node| match config.manifest.policy {
                     Policy::Old3_1 => (practice & knowledge::bit(node) == 0)
-                        .then_some((rule.lack_weight, "lacked")),
+                        .then_some((artifact_weight, "lacked")),
                     Policy::Scarce30_10_1 => {
                         let count = counts
                             .iter()
@@ -155,7 +197,7 @@ pub fn capture(e: &SimEngine, id: u32, config: &Config) -> Result<CaravanGenerat
                         if rare {
                             Some((1, "rare"))
                         } else {
-                            (count <= 2).then_some((rule.lack_weight, "scarce"))
+                            (count <= 2).then_some((artifact_weight, "scarce"))
                         }
                     }
                 }),

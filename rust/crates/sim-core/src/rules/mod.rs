@@ -15,7 +15,11 @@ pub use calendar::CalendarRule;
 pub use colony::{ColonyRule, EconomyRule, SpaceRule};
 pub use knowledge::KnowledgeRule;
 pub use mood::MoodRule;
-pub use neighbours::{data as neighbour_data, GoodsEntry, NeighbourData, NeighbourRule};
+pub use neighbours::{
+    data as neighbour_data, parse_data as parse_neighbour_data,
+    parse_data_with_catalog as parse_neighbour_data_with_catalog, GoodsEntry, GoodsPolicy,
+    NeighbourData, NeighbourRule,
+};
 pub use routine::{EndStagger, FamilyRule, RelationsRule, RoutineRule};
 pub use story::StoryRule;
 pub use wildlife::WildlifeRule;

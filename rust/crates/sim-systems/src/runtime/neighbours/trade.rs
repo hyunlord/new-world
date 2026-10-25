@@ -3,7 +3,8 @@
 //! - A caravan sets out from a neighbour with attitude ≥ `caravan_attitude` (the higher one; when both qualify they
 //!   alternate) with 6–10 stacks of goods drawn from the weighted table of `data/colony/neighbours.ron`
 //!   (`STREAM_TRADE`): an item tagged `lacked` whose `made_by` node (`values.ron`) the neighbour knows and no colonist
-//!   practises weighs `lack_weight` (3), an item tagged `staple` `staple_weight` (1); an artifact stack holds 1–2
+//!   practises uses legacy weights when no goods policy is installed. An installed scarcity policy instead uses
+//!   current adult/recent practitioner counts and its authored rare-era/weight rules. An artifact stack holds 1–2
 //!   items, a staple stack 2–6, at quality 30–70.
 //! - Values come from `data/colony/values.ron` (`colony::values::value`). A `Trade` is accepted iff
 //!   value(give) × `buy_permille` ≥ value(take) × `sell_permille`. Taken goods are put at the caravan's spot by the
@@ -18,10 +19,11 @@
 use hecs::World;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::knowledge::{bit, Knowledge};
-use sim_core::colony::neighbours::{Caravan, Goods, VisitState};
+use sim_core::colony::neighbours::{Caravan, VisitState};
 use sim_core::colony::values::value;
 use sim_core::colony::ItemKind;
-use sim_core::rng::{keyed_below, STREAM_TRADE};
+mod goods;
+pub use goods::{draw_goods, eligible_goods, generation_inputs, goods, GoodsInputs, WeightedGoods};
 use sim_core::rules::NeighbourRule;
 use sim_engine::SimResources;
 use std::collections::BTreeMap;
@@ -37,13 +39,6 @@ pub fn producing_nodes(kind: ItemKind) -> Vec<u8> {
             .filter_map(|n| sim_core::colony::knowledge::id(n))
             .collect()
     })
-}
-
-/// The node whose practice makes `kind` (`made_by` in `values.ron`), if any.
-fn made_by(kind: ItemKind) -> Option<u8> {
-    sim_core::colony::values::item_data(kind)
-        .and_then(|d| d.made_by.as_deref())
-        .and_then(sim_core::colony::knowledge::id)
 }
 
 /// The nodes some living colonist practises (bit `i` = node `i`).
@@ -118,58 +113,6 @@ pub fn trade_spot(res: &SimResources, meet: (u32, u32)) -> Option<(u32, u32)> {
     Some(meet)
 }
 
-/// The goods of caravan `id` from a neighbour knowing `known`, the colony practising `practice` (pure in its inputs;
-/// see the module header).
-pub fn goods(seed: u64, rule: &NeighbourRule, id: u32, known: u32, practice: u32) -> Vec<Goods> {
-    let draw =
-        |slot: u32, n: u64| keyed_below(seed, STREAM_TRADE, u64::from(id), 0, slot, 0, n.max(1));
-    // The weighted table from `data/colony/neighbours.ron`, in its order: a "lacked" item when the neighbour knows the
-    // node that makes it and no colonist practises that node, a "staple" always (other tags are ignored).
-    let mut table: Vec<(ItemKind, u32, (u16, u16))> = Vec::new();
-    let entries = sim_core::rules::neighbour_data().map_or(&[][..], |d| d.goods.as_slice());
-    for entry in entries {
-        let Some(kind) = ItemKind::from_name(&entry.item) else {
-            continue;
-        };
-        match entry.tag.as_str() {
-            "lacked" => {
-                if made_by(kind).is_some_and(|n| known & bit(n) != 0 && practice & bit(n) == 0) {
-                    table.push((kind, rule.lack_weight, entry.count));
-                }
-            }
-            "staple" => table.push((kind, rule.staple_weight, entry.count)),
-            _ => {}
-        }
-    }
-    let total: u64 = table.iter().map(|t| u64::from(t.1)).sum();
-    let (lo, hi) = rule.goods_stacks;
-    let stacks = u32::from(lo) + draw(0, u64::from(hi.saturating_sub(lo)) + 1) as u32;
-    let (qlo, qhi) = rule.goods_quality;
-    let mut out: Vec<Goods> = Vec::new();
-    for i in 0..stacks {
-        let mut pick = draw(0x10 + i, total);
-        let Some(&(kind, _, (clo, chi))) = table.iter().find(|t| {
-            if pick < u64::from(t.1) {
-                true
-            } else {
-                pick -= u64::from(t.1);
-                false
-            }
-        }) else {
-            continue;
-        };
-        // The stack's size from the goods row (`count`, lo..=hi).
-        let count = clo + draw(0x40 + i, u64::from(chi.saturating_sub(clo)) + 1) as u16;
-        let quality = qlo + draw(0x80 + i, u64::from(qhi.saturating_sub(qlo)) + 1) as u8;
-        out.push(Goods {
-            kind,
-            count,
-            quality,
-        });
-    }
-    out
-}
-
 /// The neighbour a caravan comes from: attitude ≥ `caravan_attitude`, the higher one (ties the lower id); when both
 /// qualify, not the one that sent the last caravan.
 fn caravan_source(res: &SimResources, rule: &NeighbourRule) -> Option<u8> {
@@ -204,7 +147,18 @@ pub fn send_caravan(world: &World, res: &mut SimResources, rule: &NeighbourRule)
         return;
     };
     let id = res.colony.neighbours.caravans.len() as u32 + 1;
-    let goods = goods(res.world_seed, rule, id, n.known, colony_practice(world));
+    let inputs = generation_inputs(world, res, n.known);
+    let Some(data) = sim_core::rules::neighbour_data() else {
+        return;
+    };
+    let table = eligible_goods(
+        sim_core::colony::content::installed_or_bundled(),
+        &data.goods,
+        rule,
+        data.goods_policy,
+        &inputs,
+    );
+    let goods = draw_goods(res.world_seed, rule, id, &table);
     let day = super::today(res);
     let nb = &mut res.colony.neighbours;
     nb.caravans.push(Caravan {
