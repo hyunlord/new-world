@@ -47,6 +47,9 @@ var bake_counts: Dictionary = {}
 ## Microseconds of the last chunk bake (ground + strips + upload), and the slowest bake's breakdown.
 var last_bake_usec: int = 0
 var worst_bake: Dictionary = {}
+var _mux2_profile: bool = OS.get_environment("WORLDSIM_MUX2_PROFILE") == "1"
+var _mux2_frame: int = -1
+var _mux2_usec: Dictionary = {}
 ## Microseconds spent precomputing the dither masks at the last configure (a world load or a params reload).
 var warm_usec: int = 0
 ## Ground ids by ground index.
@@ -224,7 +227,35 @@ func tone_report() -> Array[Dictionary]:
 	return _tone_report
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if not _mux2_profile:
+		_process_ground(delta)
+		return
+	var started: int = Time.get_ticks_usec()
+	_process_ground(delta)
+	_mux2_record("process", Time.get_ticks_usec() - started)
+
+
+## Read-only frame-local timings; nested bake phases are already included in process.
+func mux2_frame_timings() -> Dictionary:
+	if not _mux2_profile: return {"status": "DISABLED"}
+	_mux2_sync_frame()
+	return {"status": "MEASURED", "frame": _mux2_frame, "usec": _mux2_usec.duplicate()}
+
+
+func _mux2_sync_frame() -> void:
+	var frame: int = Engine.get_process_frames()
+	if frame != _mux2_frame:
+		_mux2_frame = frame
+		_mux2_usec = {"process": 0, "chunk_bakes": 0, "compose": 0, "upload": 0, "strips": 0}
+
+
+func _mux2_record(metric: String, elapsed: int) -> void:
+	_mux2_sync_frame()
+	_mux2_usec[metric] = int(_mux2_usec.get(metric, 0)) + elapsed
+
+
+func _process_ground(_delta: float) -> void:
 	if _world_sim == null:
 		return
 	if _map == null and not _build_map():
@@ -840,6 +871,11 @@ func _bake_chunk(c: Vector2i) -> void:
 	bake_counts[c] = int(bake_counts.get(c, 0)) + 1
 	var t_end: int = Time.get_ticks_usec()
 	last_bake_usec = t_end - t0
+	if _mux2_profile:
+		_mux2_record("chunk_bakes", last_bake_usec)
+		_mux2_record("compose", t_compose - t0)
+		_mux2_record("upload", t_upload - t_compose)
+		_mux2_record("strips", t_end - t_upload)
 	if last_bake_usec >= worst_bake.get("total", 0):
 		worst_bake = {"total": last_bake_usec, "compose": t_compose - t0, "upload": t_upload - t_compose, "strips": t_end - t_upload, "chunk": c, "rows": strips.size(), "factor": f}
 

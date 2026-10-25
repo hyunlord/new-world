@@ -41,6 +41,9 @@ var _help_button: Button
 var _goals_button: Button
 var _settings_button: Button
 var _legacy: LegacyLayout
+var _mux2_profile: bool = OS.get_environment("WORLDSIM_MUX2_PROFILE") == "1"
+var _mux2_frame: int = -1
+var _mux2_usec: Dictionary = {}
 
 func _ready() -> void:
 	theme = THEME
@@ -157,6 +160,14 @@ func _locale_changed(_language: String) -> void:
 	_layout.call_deferred()
 
 func _layout() -> void:
+	if not _mux2_profile:
+		_layout_widgets()
+		return
+	var started: int = Time.get_ticks_usec()
+	_layout_widgets()
+	_mux2_record("layout", Time.get_ticks_usec() - started)
+
+func _layout_widgets() -> void:
 	if _right == null:
 		return
 	var area: Vector2 = get_viewport_rect().size
@@ -226,20 +237,52 @@ func _new_game_preferences() -> void:
 		SimReads.mutate(_world, "cmd_set_steward", [false, 0])
 
 func _process(delta: float) -> void:
+	if not _mux2_profile:
+		_process_hud(delta)
+		return
+	var started: int = Time.get_ticks_usec()
+	_process_hud(delta)
+	_mux2_record("process", Time.get_ticks_usec() - started)
+
+## Read-only frame-local inclusive spans; facts/layout/steward overlap whole process.
+func mux2_frame_timings() -> Dictionary:
+	if not _mux2_profile: return {"status": "DISABLED"}
+	_mux2_sync_frame()
+	return {"status": "MEASURED", "frame": _mux2_frame, "usec": _mux2_usec.duplicate()}
+
+func _mux2_sync_frame() -> void:
+	var frame: int = Engine.get_process_frames()
+	if frame != _mux2_frame:
+		_mux2_frame = frame
+		_mux2_usec = {"process": 0, "steward": 0, "facts": 0, "learning": 0, "layout": 0}
+
+func _mux2_record(metric: String, elapsed: int) -> void:
+	_mux2_sync_frame()
+	_mux2_usec[metric] = int(_mux2_usec.get(metric, 0)) + elapsed
+
+func _process_hud(delta: float) -> void:
 	_sync_foreground()
 	_poll_left -= delta
 	if _poll_left > 0.0:
 		return
 	_poll_left = 0.5
+	var started: int = Time.get_ticks_usec() if _mux2_profile else 0
 	var state: Dictionary = {}
 	if _world.has_method("get_steward"):
 		state = SimReads.read(_world, "get_steward")
 		ChronicleText.steward_labels = state.get("rules", {})
 		_steward.select(int(state.get("scope", 0)) if bool(state.get("enabled", false)) else 3)
 		_poll_steward_notifications(state)
+	if _mux2_profile:
+		_mux2_record("steward", Time.get_ticks_usec() - started)
+		started = Time.get_ticks_usec()
 	var facts: Dictionary = LearningFacts.collect(_world, state)
+	if _mux2_profile:
+		_mux2_record("facts", Time.get_ticks_usec() - started)
+		started = Time.get_ticks_usec()
 	helper.update_facts(facts)
 	goals.update_facts(facts)
+	if _mux2_profile: _mux2_record("learning", Time.get_ticks_usec() - started)
 	var drafted: Dictionary = SimReads.read(_world, "get_drafted")
 	if not drafted.get("ids", PackedInt64Array()).is_empty():
 		helper.observe("drafted")

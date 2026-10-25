@@ -5,6 +5,11 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M-UX2 — 2026-10-26 (in progress)
+
+- Added: owner playtest contract preserved first at `f2103ad47`, isolated `v8/mux2` worktree, strict visibility/stall and defence/flee regression preparation. Initial defence regression fails 3/3 and flee regression fails 5/5 against the unchanged implementation, confirming missing behavior. No acceptance or publication claim yet.
+- Records: scope, frozen dependency input and unchanged acceptance bars are in `docs/v8/mux2/MUX2_DECISIONS.md`. Prior M-UX failures remain historical evidence.
+
 ## M-UX + REVIEW — 2026-10-25 (in progress)
 
 - Removed (C candidate, verification ongoing): eight unused wood-frame helpers and the127-line legacy ArtSpriteLibrary plus UID. Live daylight lookup, all15 world_0 UI bindings, assets and V7/baseline remain. See D46/C_CLEANUP_VERIFICATION.md.

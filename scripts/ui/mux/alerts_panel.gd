@@ -19,6 +19,9 @@ var _scroll: ScrollContainer
 var _last_rows: Array[Dictionary] = []
 var _last_error: String = ""
 var _available_height: float = 400.0
+var _mux2_profile: bool = OS.get_environment("WORLDSIM_MUX2_PROFILE") == "1"
+var _mux2_frame: int = -1
+var _mux2_usec: Dictionary = {}
 
 
 func set_available_height(height: float) -> void:
@@ -83,7 +86,39 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if is_instance_valid(_world) and evaluator.poll(delta, _read_facts):
+	if not _mux2_profile:
+		_process_alerts(delta)
+		return
+	var started: int = Time.get_ticks_usec()
+	_process_alerts(delta)
+	_mux2_record("process", Time.get_ticks_usec() - started)
+
+
+## Read-only frame-local inclusive timings; poll includes fact adaptation and evaluation.
+func mux2_frame_timings() -> Dictionary:
+	if not _mux2_profile: return {"status": "DISABLED"}
+	_mux2_sync_frame()
+	return {"status": "MEASURED", "frame": _mux2_frame, "usec": _mux2_usec.duplicate()}
+
+
+func _mux2_sync_frame() -> void:
+	var frame: int = Engine.get_process_frames()
+	if frame != _mux2_frame:
+		_mux2_frame = frame
+		_mux2_usec = {"process": 0, "poll": 0, "rebuild": 0}
+
+
+func _mux2_record(metric: String, elapsed: int) -> void:
+	_mux2_sync_frame()
+	_mux2_usec[metric] = int(_mux2_usec.get(metric, 0)) + elapsed
+
+
+func _process_alerts(delta: float) -> void:
+	if not is_instance_valid(_world): return
+	var started: int = Time.get_ticks_usec() if _mux2_profile else 0
+	var refreshed: bool = evaluator.poll(delta, _read_facts)
+	if _mux2_profile: _mux2_record("poll", Time.get_ticks_usec() - started)
+	if refreshed:
 		var rows: Array[Dictionary] = evaluator.active_alerts()
 		if rows != _last_rows or evaluator.data_error != _last_error:
 			_rebuild()
@@ -113,6 +148,15 @@ func refresh_from_facts(facts: Dictionary) -> bool:
 
 
 func _rebuild() -> void:
+	if not _mux2_profile:
+		_rebuild_rows()
+		return
+	var started: int = Time.get_ticks_usec()
+	_rebuild_rows()
+	_mux2_record("rebuild", Time.get_ticks_usec() - started)
+
+
+func _rebuild_rows() -> void:
 	if not is_instance_valid(_list):
 		return
 	for child: Node in _list.get_children():
