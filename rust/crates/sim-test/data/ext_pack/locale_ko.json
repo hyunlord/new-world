@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "strings": {
+    "EXT_HIDE": "시험 가죽",
+    "EXT_RECIPE": "시험 가죽 가공",
+    "EXT_KNOWLEDGE": "시험 가죽 기술",
+    "EXT_WALL": "시험 흙벽돌 벽",
+    "EXT_COLD": "시험 한파",
+    "EXT_ANIMAL": "시험 초식동물",
+    "EXT_ALERT": "확장 보급",
+    "EXT_ALERT_WHY": "선택한 확장 자료가 추가한 보급 알림입니다.",
+    "EXT_ALERT_FIX": "이 정착지의 보급 상태를 확인하세요.",
+    "EXT_LESSON": "확장 안내",
+    "EXT_LESSON_BODY": "카메라를 움직여 새 안내를 완료하세요.",
+    "EXT_LESSON_STEWARD": "카메라 직접 이동"
+  }
+}

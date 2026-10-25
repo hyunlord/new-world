@@ -85,6 +85,7 @@ fn the_schedule_is_deterministic_and_keeps_its_mercy_and_gaps() {
                         "seed {seed}: {p:?}"
                     );
                 }
+                _ => panic!("bundled schedule contained an unexpected fixture identity: {p:?}"),
             }
         }
     }

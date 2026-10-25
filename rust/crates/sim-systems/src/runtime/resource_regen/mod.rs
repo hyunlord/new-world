@@ -418,22 +418,18 @@ impl RuntimeSystem for ResourceRegenSystem {
             (Some(rule), Some((season, _))) => {
                 // M5 (ADR 0027): a drought slows forage regrowth.
                 let permille = u32::from(rule.regen_permille[season]);
-                let drought = crate::runtime::story::active(
+                let drought = crate::runtime::story::active_mechanic(
                     resources,
-                    sim_core::colony::story::PressureKind::Drought,
+                    sim_core::colony::content::PressureMechanic::Drought,
                 );
-                let slowed =
-                    drought.map_or(permille, |d| permille * d.drought_regen_permille / 1000);
-                if drought.is_some() {
+                let slowed = drought.map_or(permille, |d| {
+                    permille * d.rule.drought_regen_permille / 1000
+                });
+                if let Some(drought) = drought {
                     // The cost: units a pulse would have regrown on every source.
                     let lost =
                         (permille - slowed) as usize * resources.food_source_max.len() / 1000;
-                    crate::runtime::story::add_cost(
-                        resources,
-                        sim_core::colony::story::PressureKind::Drought,
-                        lost as u32,
-                        0,
-                    );
+                    crate::runtime::story::add_cost(resources, drought.kind, lost as u32, 0);
                 }
                 resources.food_regen_acc += slowed;
                 let units = resources.food_regen_acc / 1000;

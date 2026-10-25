@@ -1,0 +1,6 @@
+(schema_version:1,roles:{},animals:[(
+identity:(code:4294967293,id:"test_grazer",name_key:"EXT_ANIMAL",serde_name:"TestGrazer",serde_aliases:[],resolver_aliases:[]),
+category:"grazer",mechanic:Grazer,huntable:true,hp:(value:1,rule:None),
+grazer:Some((flee:(value:false,rule:None),flee_tiles:(value:6,rule:None),flee_speed:(value:1,rule:None),
+flee_steps:(value:1,rule:None),rest_steps:(value:40,rule:None),home_tiles:(value:1,rule:None),min_hearth_distance:(value:0,rule:None))),
+predator:None,loot:(meat:None,hide:Some((item:"test_hide",count:2,enabled:(value:true,rule:None)))))])

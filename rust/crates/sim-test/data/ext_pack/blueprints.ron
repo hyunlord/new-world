@@ -1,0 +1,6 @@
+(schema_version:1,roles:{},material_roles:{},historical_stone_wall_materials:[],blueprints:[(
+identity:(code:65539,id:"test_mudbrick_wall",name_key:"EXT_WALL",serde_name:"TestMudbrickWall",serde_aliases:[],resolver_aliases:[]),
+placeable:true,menu_order:12,shortcut_slot:-1,footprint:(1,1),footprint_rule:None,
+needs:[(item:"clay",count:2,count_rule:None)],work:5,work_rule:None,placement:Wall,completion:Wall,
+workshop_tags:[],requires_economy:false,requires_knowledge:false,requires_space:true,planned_nav:Blocked,
+material:Fixed(material:"clay"),style_id:"test_mudbrick",render_wall_code:Some(1),completion_policy:Authoritative,initial_bill:None)])

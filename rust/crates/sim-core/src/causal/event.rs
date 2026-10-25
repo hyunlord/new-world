@@ -614,7 +614,7 @@ pub enum CausalEvent {
         /// The person's tile.
         position: (u32, u32),
         /// The pressure's `PressureKind::code` (0 cold snap, 1 drought, 2 beasts, 3 illness).
-        kind: u8,
+        kind: u32,
         /// What it did: 0 cold, 1 a wound, 2 sickness, 3 thirst or empty forage.
         effect: u8,
         /// Simulation tick.
@@ -1106,3 +1106,6 @@ mod tests {
         assert_eq!(root.parent(), None);
     }
 }
+
+/// Frozen format6/7/8 event decoding.
+pub mod legacy_v7;

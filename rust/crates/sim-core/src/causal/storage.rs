@@ -338,3 +338,6 @@ mod tests {
         assert!(s.trace_parents(42, 0).is_empty());
     }
 }
+
+/// Frozen format6/7/8 log decoding.
+pub mod legacy_v7;

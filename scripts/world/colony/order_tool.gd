@@ -259,7 +259,7 @@ static func merge_results(first: Dictionary, second: Dictionary) -> Dictionary:
 func hunt_at(world_pos: Vector2) -> Dictionary:
 	var animals: Node = get_node_or_null("../AnimalLayer")
 	var id: int = int(animals.call("animal_at", world_pos)) if animals != null else -1
-	if id < 0 or int(animals.call("kind_of", id)) != StoryText.DEER:
+	if id < 0 or not StoryText.animal_huntable(int(animals.call("kind_of", id))):
 		_last_result = {"accepted": false, "count": 0, "reason": "nothing"}
 		_toast(StoryText.ltr(get_node_or_null("/root/Locale"), "M5_TOAST_NO_DEER"))
 		return _last_result

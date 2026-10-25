@@ -49,3 +49,13 @@ M-UX 작업 중인 누적 기록. Stage C에서 V8-0 이후 모든 보고서·�
 | ISS-273 | 경고 이동 시험의 합성 창고 사실이 다음 화면 캡처까지 남을 수 있음 | M-EXT UI-second/third 경고 차이 조사 | process | fixed | 합성 경고 후 실제 bridge 사실 복원; UI-fourth284검사·오류0, tick2880 실제 경고4개·방 role1/used0/capacity16과 폴링 위상 유지 확인. 독립 시각 검토·전체 게이트 대기. 과거 폴링 위상 원인은 추정 유지 | — |
 | ISS-274 | 한국어 학습·도움말·인물창의 줄바꿈이 단어 또는 짧은 어미를 분리함 | M-EXT UI-fourth 독립 시각 검토 PRE-01; Stage A UI14에도 존재 | bug | open | 요. 단독 행, 선택·얼굴 단어 분리 관찰. 이번 리팩터링의 새 회귀는 아니나 절대 시각 품질 REVISE로 유지 | — |
 | ISS-275 | 한국어 신생아 침상 경고의 전체 문구와 수량이 잘림 | M-EXT UI-fourth 독립 시각 검토 PRE-02; Stage A와 해당 화면 동일 | bug | open | 영어 제목 ISS-029 수정과 별개인 한국어 표시 결함. 원래 화면과 현재 화면의 픽셀 동일성은 해결 증거가 아님 | — |
+
+| ISS-276 | 새 가뭄 데이터가 재성장 배율1000 초과를 허용해 unsigned 손실 계산을 넘침 | M-EXT ecology runtime 정적 검토, D37 | bug | fixed | 새 데이터 검증 상한·경계 시험 통과(core378); 0·1000 허용,1001 거부. 기존 직접 WorldRule 값1000 초과 경로는 별도 ISS-277 | — |
+| ISS-277 | 직접 지정한 StoryRule 재성장 배율1000 초과가 손실 계산에서 underflow 가능 | M-EXT ecology runtime 정적 검토, 기존 resource_regen 경로 | bug | open | 코드상 확인, 실행 재현 미수행. 기존 규칙 동작 변경은 이번 내용 식별자 리팩터링과 분리해야 함 | — |
+| ISS-278 | 과거 인과 이벤트를 새 폭으로 직접 읽으면 오류 대신 어긋난 값으로 성공할 수 있음 | M-EXT ecology-systems-first, legacy_pressure_codec_tests | process | fixed | 205통과·1실패 보존. frozen reader 완전 동등성은 유지하고 잘못된 decoder 성공 시 비동등성도 검증하도록 수정; ecology-save-second에서19시험 통과 | — |
+| ISS-279 | 선택 팩 표시 검증에서 Array[String] 런타임 예외 뒤 bootstrap이 성공으로 보임 | M-EXT data-only-gate-first/ui.log, presentation_bootstrap.gd:203 | bug | fixed | 첫 실행 SCRIPT ERROR로 gate 실패 보존. 명시적 ok:true receipt만 승인; 잘못된 locale/category 부정대조 포함 headless35/0, 후속창40/0 및 오류0 확인 | — |
+| ISS-280 | 새 확장 시험의 실제 API·유효 데이터 계약 불일치 | M-EXT ecology-check-second/data-only-rust-first | process | fixed | 없는 nav/Command API·Result 오류형 및 extra_days0을 수정. data-only-rust-second에서2부모시험과7격리 사례 통과; 첫 실패 로그 보존 | — |
+| ISS-281 | 기존 M5 UI 시험이 이전 콘텐츠 열 폭·합성 story 형식을 사용함 | M-EXT ecology-m5-ui-first:24검사·4실패·SCRIPT ERROR5 | process | fixed | PackedInt64 시험 열 수정·실제 창 재검증: 격리 실행 43검사/0실패, SCRIPT ERROR0. 기존 headless 실패 기록 보존 | — |
+| ISS-282 | 새 데이터 팩의 긴 시험 경고 제목이 수량을 가리고 첫 캡처의 미니맵이 비어 있음 | M-EXT data-only-window-first visual EXT-V1/V2 | process | fixed | 첫 기능36/0·시각 REVISE 보존. 둘째 창40/0, EN/KO 제목·수량폭 통과, 실제 미니맵 캡처와 scoped시각 PASS; 기존 ISS274 줄바꿈 별도 유지 | — |
+
+| ISS-283 | 보조 M5 UI 두 실행에서 시험 설정 격리 환경 변수를 누락함 | M-EXT ecology-m5-ui-first/second, 2026-10-25 12:07 KST | process | open | 공유 settings.cfg 갱신시각이 실행과 겹침; 실행 전 사본 없음으로 변경범위·복원 불명. 사후 사본·SHA 보존, 임의 복원 안 함. 명시적 외부 경로 없으면 시험 시작 거부 guard 음성 검사 통과; 격리 재실행43/0 및 공유 파일 SHA·mtime 불변 확인. 앞선 변경범위는 여전히 불명 | — |

@@ -37,6 +37,9 @@ mod legacy_codec_tests;
 #[cfg(test)]
 mod legacy_id_codec_tests;
 
+#[cfg(test)]
+mod legacy_pressure_codec_tests;
+
 use std::fmt;
 
 use bincode::Options;
@@ -48,7 +51,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6 and 7 are migrated. Bump it
+/// Save format version; historical versions 6, 7 and 8 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -58,8 +61,9 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// the chronicle's cause table, animals, fights, drafting, mood, bonds); 6 = M5.5 (`Fleeing`, neighbours,
 /// migrants, caravans, the trade ledger, need samples, new chronicle kinds and the knowledge source `Migrant`);
 /// 7 = optional Steward state; 8 = catalog-bound envelope, full-width content
-/// codes and Chronicle causes, sparse completed-construction/tool identity.
-pub const FORMAT_VERSION: u32 = 8;
+/// codes and Chronicle causes, sparse completed-construction/tool identity;
+/// 9 = full-width pressure provenance and persistent novel illness origins.
+pub const FORMAT_VERSION: u32 = 9;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;
@@ -152,6 +156,35 @@ struct LegacyBodyV7 {
     steward: sim_core::colony::steward::StewardState,
 }
 
+/// Format8 stores the original two sparse content maps, with no illness origins.
+#[derive(Deserialize)]
+struct LegacyContentStateV8 {
+    completed: std::collections::BTreeMap<
+        ((u32, u32), sim_core::colony::content_state::CompletedLayer),
+        sim_core::colony::content_state::CompletedIdentity,
+    >,
+    workshop_cutters: std::collections::BTreeMap<u32, sim_core::colony::ItemKind>,
+}
+impl From<LegacyContentStateV8> for sim_core::colony::content_state::ContentState {
+    fn from(old: LegacyContentStateV8) -> Self {
+        Self {
+            completed: old.completed,
+            workshop_cutters: old.workshop_cutters,
+            illness_origins: Default::default(),
+        }
+    }
+}
+#[derive(Deserialize)]
+struct LegacyBodyV8 {
+    current_tick: u64,
+    resources: sim_engine::legacy_v7::LegacySimResourcesV8,
+    world: world::WorldSave,
+    systems: Vec<(String, Vec<u8>)>,
+    steward: sim_core::colony::steward::StewardState,
+    content_state: LegacyContentStateV8,
+}
+const LEGACY_V8_BUNDLED_REVISION: &str = "catalog-v1-fnv1a64:12e812cb24fbd015:38733";
+
 /// The identity is decoded before any selected-pack typed IDs in the body.
 #[derive(Serialize, Deserialize)]
 struct Envelope {
@@ -159,7 +192,7 @@ struct Envelope {
     payload: Vec<u8>,
 }
 
-/// V8 body decoded only after the envelope's catalog revision matches.
+/// Current body decoded only after the envelope's catalog revision matches.
 #[derive(Deserialize)]
 struct Body {
     current_tick: u64,
@@ -217,7 +250,8 @@ pub fn load_with(
     let version = bytes.get(MAGIC.len()..MAGIC.len() + 4);
     let legacy = version == Some(6u32.to_le_bytes().as_slice());
     let legacy_v7 = version == Some(7u32.to_le_bytes().as_slice());
-    if legacy || legacy_v7 {
+    let legacy_v8 = version == Some(8u32.to_le_bytes().as_slice());
+    if legacy || legacy_v7 || legacy_v8 {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
             .map_err(|error| SaveError::Decode(error.to_string()))?;
     }
@@ -245,14 +279,32 @@ pub fn load_with(
         let envelope: Envelope = decode(encoded).map_err(SaveError::Decode)?;
         let catalog = sim_core::colony::content::installed()
             .map_err(|error| SaveError::Decode(error.to_string()))?;
-        if envelope.revision != catalog.revision() {
-            return Err(SaveError::Decode(format!(
-                "save content revision {} does not match installed {}",
-                envelope.revision,
-                catalog.revision()
-            )));
+        if legacy_v8 {
+            if envelope.revision != LEGACY_V8_BUNDLED_REVISION {
+                return Err(SaveError::Decode(format!(
+                    "unsupported format8 content revision {}",
+                    envelope.revision
+                )));
+            }
+            let old: LegacyBodyV8 = decode(&envelope.payload).map_err(SaveError::Decode)?;
+            Body {
+                current_tick: old.current_tick,
+                resources: old.resources.into(),
+                world: old.world,
+                systems: old.systems,
+                steward: old.steward,
+                content_state: old.content_state.into(),
+            }
+        } else {
+            if envelope.revision != catalog.revision() {
+                return Err(SaveError::Decode(format!(
+                    "save content revision {} does not match installed {}",
+                    envelope.revision,
+                    catalog.revision()
+                )));
+            }
+            decode(&envelope.payload).map_err(SaveError::Decode)?
         }
-        decode(&envelope.payload).map_err(SaveError::Decode)?
     };
     let mut resources = body.resources;
     resources.steward = body.steward;
@@ -264,6 +316,7 @@ pub fn load_with(
     // uninterrupted run (code review M-1).
     crate::runtime::nav::ensure(&mut resources);
     let world = world::build(&body.world).map_err(SaveError::World)?;
+    content_validation::validate_illness(&resources, &world).map_err(SaveError::Decode)?;
     let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
     register(&mut engine);
     if legacy {
@@ -299,7 +352,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
     let mut word = [0u8; 4];
     word.copy_from_slice(version);
     let found = u32::from_le_bytes(word);
-    if found != FORMAT_VERSION && found != 6 && found != 7 {
+    if found != FORMAT_VERSION && found != 6 && found != 7 && found != 8 {
         return Err(SaveError::Version {
             found,
             expected: FORMAT_VERSION,
@@ -326,6 +379,26 @@ mod tests {
         let error = load(&bytes).err().expect("wrong catalog must fail");
         assert!(matches!(error, SaveError::Decode(ref message)
             if message.contains("does not match installed")));
+    }
+
+    #[test]
+    fn legacy_v8_revision_allowlist_precedes_payload_decoding() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("bundled catalog");
+        for revision in ["unknown-v8-pack", LEGACY_V8_BUNDLED_REVISION] {
+            let envelope = Envelope {
+                revision: revision.into(),
+                payload: vec![255],
+            };
+            let mut bytes = MAGIC.to_vec();
+            bytes.extend_from_slice(&8u32.to_le_bytes());
+            bytes.extend(encode(&envelope).expect("envelope"));
+            let error = load(&bytes).err().expect("invalid save").to_string();
+            assert_eq!(
+                error.contains("unsupported format8 content revision"),
+                revision != "catalog-v1-fnv1a64:12e812cb24fbd015:38733"
+            );
+        }
     }
 
     #[test]

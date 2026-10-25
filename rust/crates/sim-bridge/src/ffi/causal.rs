@@ -525,7 +525,7 @@ impl CausalEventView {
                 new_value: None,
                 agent_id: Some(*agent),
                 reason: Some(
-                    sim_core::colony::story::PressureKind::from_code(*kind)
+                    sim_core::colony::story::PressureKind::checked(*kind)
                         .map_or("unknown", |k| k.name()),
                 ),
                 triggered_by: Some(match effect {

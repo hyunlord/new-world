@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "lessons": [
+    {
+      "id": "test_pack_lesson",
+      "title_key": "EXT_LESSON",
+      "body_key": "EXT_LESSON_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "event": "camera_moved"
+      },
+      "highlight": "minimap",
+      "steward_key": "EXT_LESSON_STEWARD",
+      "steward_rule": "none"
+    }
+  ]
+}

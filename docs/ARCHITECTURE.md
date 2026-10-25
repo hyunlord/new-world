@@ -335,7 +335,7 @@ The simulation contract binds every pass; each clause has its gate step.
 - **Benchmark** (`worldsim_perf bench`): five scenes on `WorldGenConfig::colony_stress(15100, N, side)` under
   `WorldRules::colony`, each in its own process for a clean resident size, 1,440 warm-up and 2,880 profiled
   ticks, 3 repeats, medians; fed like `quick`. `bench-summarise` merges interleaved sessions of two binaries.
-- **Save files** (`rust/crates/sim-systems/src/save/`): magic `WORLDSIM`, `FORMAT_VERSION`, then a catalog-revision envelope before typed body decoding (format8, ADR0038). The body includes the tick, all persisted `SimResources` (hash collections in key order), the hecs world (archetypes in creation order, entity ids and generations, allocator free list), each system's `save_state`, Steward state and sparse content identity. Explicit format6/7 readers retain historical field widths and indexes.
+- **Save files** (`rust/crates/sim-systems/src/save/`): magic `WORLDSIM`, `FORMAT_VERSION`, then a catalog-revision envelope before typed body decoding (format9, ADR0038). The body includes the tick, all persisted `SimResources` (hash collections in key order), the hecs world (archetypes in creation order, entity ids and generations, allocator free list), each system's `save_state`, Steward state and sparse content identity. Explicit format6/7 readers retain historical field widths and indexes; format8 accepts only the frozen bundled core checkpoint revision. Novel illness provenance is sparse agent-keyed state, validated against live Sick components before load returns and removed on recovery or death.
 
 ## 9. Items and jobs (M2, ADR 0019, ADR 0020)
 

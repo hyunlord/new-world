@@ -37,5 +37,128 @@
       "category": "stone",
       "raw_id": -1205603915
     }
-  ]
+  ],
+  "story": {
+    "pressure_categories": {
+      "cold": {
+        "color": "a8c8f0",
+        "banner": {
+          "en": "{name}, day {day} · firewood {wood} ({need} a day needed)",
+          "ko": "{name} {day}일째 · 장작 {wood} (하루 {need} 필요)"
+        },
+        "began": {
+          "en": "{name} began",
+          "ko": "{name} 시작"
+        },
+        "began_person": {
+          "en": "{name} began with {person}",
+          "ko": "{person} · {name} 시작"
+        }
+      },
+      "drought": {
+        "color": "e8b060",
+        "banner": {
+          "en": "{name}, day {day}",
+          "ko": "{name} {day}일째"
+        },
+        "began": {
+          "en": "{name} began",
+          "ko": "{name} 시작"
+        },
+        "began_person": {
+          "en": "{name} began with {person}",
+          "ko": "{person} · {name} 시작"
+        }
+      },
+      "pack": {
+        "color": "f07060",
+        "banner": {
+          "en": "{name} is coming ({count})",
+          "ko": "{name} 접근 ({count})"
+        },
+        "began": {
+          "en": "{name} began",
+          "ko": "{name} 시작"
+        },
+        "began_person": {
+          "en": "{name} began with {person}",
+          "ko": "{person} · {name} 시작"
+        }
+      },
+      "illness": {
+        "color": "a8d888",
+        "banner": {
+          "en": "{name}, day {day} · {count} sick",
+          "ko": "{name} {day}일째 · 아픈 사람 {count}"
+        },
+        "began": {
+          "en": "{name} began",
+          "ko": "{name} 시작"
+        },
+        "began_person": {
+          "en": "{name} began with {person}",
+          "ko": "{person} · {name} 시작"
+        }
+      }
+    },
+    "animal_categories": {
+      "grazer": {
+        "hunted": {
+          "en": "{person} killed {name} ({meat} meat)",
+          "ko": "{person} · {name} 사냥 (고기 {meat})"
+        },
+        "killed": {
+          "en": "{person} brought down {name} ({left} left)",
+          "ko": "{person} · {name} 처치 (남은 수 {left})"
+        },
+        "died": {
+          "en": "{name} fell ({left} left)",
+          "ko": "{name} 쓰러짐 (남은 수 {left})"
+        }
+      },
+      "predator": {
+        "hunted": {
+          "en": "{person} killed {name} ({meat} meat)",
+          "ko": "{person} · {name} 사냥 (고기 {meat})"
+        },
+        "killed": {
+          "en": "{person} brought down {name} ({left} left)",
+          "ko": "{person} · {name} 처치 (남은 수 {left})"
+        },
+        "died": {
+          "en": "{name} fell ({left} left)",
+          "ko": "{name} 쓰러짐 (남은 수 {left})"
+        }
+      }
+    },
+    "pressure_overrides": {
+      "0": {
+        "banner": "M5_BANNER_COLD_FMT",
+        "began": "M5_CHRON_BEGAN_COLD"
+      },
+      "1": {
+        "banner": "M5_BANNER_DROUGHT_FMT",
+        "began": "M5_CHRON_BEGAN_DROUGHT"
+      },
+      "2": {
+        "banner": "M5_BANNER_WOLVES_FMT",
+        "began": "M5_CHRON_BEGAN_BEASTS_FMT"
+      },
+      "3": {
+        "banner": "M5_BANNER_ILLNESS_FMT",
+        "began": "M5_CHRON_BEGAN_ILLNESS",
+        "began_person": "M5_CHRON_BEGAN_ILLNESS_FMT"
+      }
+    },
+    "animal_overrides": {
+      "0": {
+        "hunted": "M5_CHRON_HUNTED_WOLF_FMT",
+        "killed": "M5_CHRON_WOLF_KILLED_FMT",
+        "died": "M5_CHRON_WOLF_DIED_FMT"
+      },
+      "1": {
+        "hunted": "M5_CHRON_HUNTED_DEER_FMT"
+      }
+    }
+  }
 }

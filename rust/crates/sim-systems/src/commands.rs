@@ -439,7 +439,7 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
         Command::DesignateHunt { animal } => {
             let w = &mut res.colony.wildlife;
             match w.animals.get(&animal) {
-                Some(a) if a.kind == sim_core::colony::wildlife::AnimalKind::Deer => {
+                Some(a) if a.kind.definition().huntable => {
                     if w.marks.insert(animal) {
                         w.version += 1;
                         CommandResult::ok(1)

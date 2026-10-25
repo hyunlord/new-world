@@ -171,3 +171,6 @@ mod tests {
         assert_eq!(log.len(), TILE_CAUSAL_RING_SIZE);
     }
 }
+
+/// Frozen format6/7/8 log decoding.
+pub mod legacy_v7;

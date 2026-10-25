@@ -12,6 +12,7 @@ var _error: String = ""
 
 
 func prepare(dto: Dictionary, selected: Dictionary) -> Dictionary:
+	_error = ""
 	var error: String = Content.validate(dto)
 	if not error.is_empty():
 		return {"ok": false, "error": error}
@@ -83,6 +84,19 @@ func prepare(dto: Dictionary, selected: Dictionary) -> Dictionary:
 				return {"ok": false, "error": "Unsupported lesson fact/event"}
 	var material_data: Dictionary = _parse(FileAccess.get_file_as_string("res://assets/ui/content_presentation.json"), "content presentation")
 	dto["materials"] = material_data.get("materials", [])
+	var story_receipt: Dictionary = _validate_story_presentation(material_data.get("story", {}), dto, locale_tables)
+	if story_receipt.get("ok", false) != true:
+		return {"ok": false, "error": str(story_receipt.get("error", "Story presentation validation did not complete"))}
+	presentation["story"] = material_data["story"]
+	var animal_bindings: Dictionary = ArtData.bindings().get("animals", {})
+	for animal: Dictionary in dto["animals"]:
+		var fallback: Variant = animal_bindings.get("category_fallbacks", {}).get(animal["category"])
+		var found: bool = false
+		for row: Dictionary in animal_bindings.get("codes", []):
+			if row["code"] == fallback:
+				found = true
+		if not found:
+			return {"ok": false, "error": "Missing animal category fallback: " + str(animal["category"])}
 	var labels: Array[String] = []
 	for family: String in ["items", "materials", "blueprints", "recipes", "knowledge", "pressures", "animals"]:
 		for row: Dictionary in dto.get(family, []):
@@ -99,7 +113,14 @@ func prepare(dto: Dictionary, selected: Dictionary) -> Dictionary:
 		for key: String in labels:
 			if not locale_tables[lang].has(key):
 				return {"ok": false, "error": "Missing " + lang + " label: " + key}
+	var bindings: Dictionary = {}
+	if selected.has("bindings"):
+		bindings = _parse(selected["bindings"], "bindings")
+		var binding_error: String = ArtData.validate_extension(bindings, dto)
+		if not binding_error.is_empty():
+			return {"ok": false, "error": binding_error}
 	var styles: Dictionary = _parse(FileAccess.get_file_as_string("res://assets/v8art/materials/construction_styles.json"), "construction styles")
+	styles = ArtData.construction_styles(styles, bindings)
 	for blueprint: Dictionary in dto["blueprints"]:
 		var kind: String = str(blueprint["completion_category"])
 		if kind not in ["wall", "door", "floor"]:
@@ -111,12 +132,6 @@ func prepare(dto: Dictionary, selected: Dictionary) -> Dictionary:
 				found = true
 		if not found:
 			return {"ok": false, "error": "Unknown or incompatible construction style: " + style_id}
-	var bindings: Dictionary = {}
-	if selected.has("bindings"):
-		bindings = _parse(selected["bindings"], "bindings")
-		var binding_error: String = ArtData.validate_extension(bindings, dto)
-		if not binding_error.is_empty():
-			return {"ok": false, "error": binding_error}
 	if not _error.is_empty():
 		return {"ok": false, "error": _error}
 	error = Content.install(dto, presentation)
@@ -176,3 +191,41 @@ func _known_condition(condition: Dictionary, vocabulary: Dictionary) -> bool:
 		if condition.has(field) and not vocabulary[field].has(condition[field]):
 			return false
 	return true
+
+
+func _validate_story_presentation(value: Variant, dto: Dictionary, locales: Dictionary) -> Dictionary:
+	if not value is Dictionary:
+		return {"ok": false, "error": "Invalid story presentation"}
+	for family: String in ["pressure", "animal"]:
+		var categories: Variant = value.get(family + "_categories")
+		var overrides: Variant = value.get(family + "_overrides")
+		if not categories is Dictionary or not overrides is Dictionary:
+			return {"ok": false, "error": "Missing story category templates: " + family}
+		var events: Array[String] = []
+		events.assign(["banner", "began", "began_person"] if family == "pressure" else ["hunted", "killed", "died"])
+		var registered: Dictionary = {}
+		for definition: Dictionary in dto[family + "s"]:
+			registered[str(definition["code"])] = true
+			var templates: Variant = categories.get(definition["category"])
+			if not templates is Dictionary:
+				return {"ok": false, "error": "Missing story category: " + str(definition["category"])}
+			if family == "pressure" and (not templates.get("color") is String or not Color.html_is_valid(templates["color"])):
+				return {"ok": false, "error": "Invalid pressure color"}
+			for event: String in events:
+				if not templates.get(event) is Dictionary:
+					return {"ok": false, "error": "Missing story event template: " + event}
+				for lang: String in ["en", "ko"]:
+					var text: Variant = templates[event].get(lang)
+					if not text is String or text.is_empty() or not text.contains("{name}"):
+						return {"ok": false, "error": "Story category template must show actual name: " + event}
+		for code: Variant in overrides:
+			if not registered.has(code) or not overrides[code] is Dictionary:
+				return {"ok": false, "error": "Unknown story override identity: " + str(code)}
+			for event: Variant in overrides[code]:
+				var key: Variant = overrides[code][event]
+				if event not in events or not key is String:
+					return {"ok": false, "error": "Invalid story override event"}
+				for lang: String in ["en", "ko"]:
+					if not locales[lang].has(key):
+						return {"ok": false, "error": "Missing story override locale: " + str(key)}
+	return {"ok": true, "error": ""}

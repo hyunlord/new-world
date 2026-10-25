@@ -1,6 +1,6 @@
 # 코드 검토 2026-10 — B1 조사와 Stage B 구현 중간 검증
 
-**B1 검토 문서 통합 / Stage B IN_PROGRESS / 전체 gate·게시 미완료.** 갱신: **2026-10-25 11:33 KST**. 기준 HEAD는 게시된 Stage A `ca9f531ca6ef700ca223d99dba14d834b94b94b45da`이며 아래 현재 집계는 그 위의 **미커밋 작업 트리**다. 이 문서는 구현 완료나 삭제 승인이 아니다.
+**B1 검토 문서 통합 / Stage B IN_PROGRESS / 전체 gate·게시 미완료.** 갱신: **2026-10-25 12:23 KST**. 기준 HEAD는 안전망을 통과한 첫 핵심 리팩터링 `e90b7bb86339d1c83b9fb061f6ae36ba2b448f1e`이며 아래 현재 집계는 그 위의 **미커밋 작업 트리**다. 이 문서는 구현 완료나 삭제 승인이 아니다.
 
 ## 현재 판정과 읽는 방법
 
@@ -22,29 +22,33 @@ B1의 아키텍처·콘텐츠 enum·하드코딩·baseline·dead code·중복·�
 | core ON1 | seeds0–7 ×48일, story/neighbours/steward ON, summary와 command log8개 literal 동일 | [ON receipt](/Users/rexxa/work/mux-data/stage-b/core-on1-receipt.json). OFF9개와 같은 의미의 ON9개 실행으로 확대하지 않음 |
 | 최종 lint 반영 source safety2 | **PASS**: 기준선228,748값 차이0, Chronicle64파일, OFF9요약 literal 동일 | [비교 로그](/Users/rexxa/work/mux-data/stage-b/core-safety2-compare.log). 최종 binary `bb9a10a82970bafc0f0d564ae8c88e98c7f4d0f95ac3ad08403ef54da1238845`; 이전 binary의 결과로 대체하지 않음. 최종 ON2도 요약과 명령 기록8개 literal 동일: `core-on2-receipt.json` |
 
-기능 시험·save migration·부분 safety가 함께 성공해도 B7 전체 gate 또는 B3 data-only의 미실행 범위를 대신하지 않는다. Stage A의 A8 실패·물리 트랙패드 미검증·ISS030 OPEN 역시 그대로 남는다.
+압력·동물 후속 단위는 core378, save19, 기존 story/wildlife/bridge28, novel illness u32::MAX lifecycle1, 실제 과거 저장6/7/8 continuation4가 통과했다. 최신 `ecology-clippy-final.log`의 strict clippy도 통과했다. B3는 별도 프로세스의 실제 제작·건설·학습·한파 효과·사냥과 bundled-before/after, 실제 Godot 경고 클릭·학습 Next를 실행했다(headless39/0, window40/0). collector 실제 full-width code·이름·종류·burn_need·HP·사냥 가능성 assertion도 재실행 통과했다(`ecology-pack-final.log`). 새 포식자 팩은 실제 생성·이동·공격·처치·전리품·압력 종료·저장 계속 실행까지 통과했다(`predator-runtime-first.log`). 새 팩 첫 화면은 제목 잘림/미니맵 준비 부족으로 REVISE였고 둘째는 scoped PASS, 기존 ISS274 줄바꿈은 남는다. 기본 HUD284/0와 독립 회귀 시각 PASS는 [새 검토](/Users/rexxa/work/mux-data/stage-b/ecology-ui-first-visual.json)에 있다.
+
+[런타임 정적 검토](/Users/rexxa/work/mux-data/stage-b/ecology-runtime-audit.md)는 authored 가뭄 배율 상한 결함을 찾았고 검증을 추가했다. 직접 WorldRule의 기존 과도한 배율 문제는 ISS277로 분리했다. [저장 검토](/Users/rexxa/work/mux-data/stage-b/ecology-save-audit.md)는 frozen layout/직접 이행/검증 순서에서 확정 결함을 찾지 못했지만 조작된 동시 mechanic 상태의 별도 검증 공백을 명시한다. M5 보조 UI 시험의 격리 설정 누락 사고 ISS283은 성공한 기능 검사와 별도로 보존하며, 실행 전 설정 사본이 없어 복원은 미확인이다. 외부 설정 경로 guard의 음성 검사와 격리한 실제 창43검사/0실패를 확인했고, 그 재실행 전후 공유 설정 SHA와 수정시각은 동일했다. 재질39·수종352 일치 및 배율220검사도 통과했으며 배율 화면 시각 검토는 별도다.
+
+압력·동물 최종 단위도 원본 identity228748값 차이0·OFF9요약·ON8시드 요약/명령8개 literal 동일을 확인했다([검증](../mux/B_ECOLOGY_VERIFICATION.md)). 기능 시험·save migration·단위 safety가 함께 성공해도 B7 전체 gate를 대신하지 않는다. Stage A의 A8 실패·물리 트랙패드 미검증·ISS030 OPEN 역시 그대로 남는다.
 
 ## 현재 규모: 같은 단위로 해석할 것
 
-2026-10-25 11:33:20 KST에 해당 폴더 아래 `.rs`/`.gd` 텍스트를 열어 물리 줄 수를 집계했다. 주석·빈 줄·inline test를 포함하며 generated macro expansion과 비텍스트 asset은 제외한다. enum은 줄 시작의 선택적 `pub(...)` + `enum Name` 정규식 선언 수다. **cfg(test) 분리/매크로 확장/타입 해석을 하지 않은 raw lexical count**이며 과거 production92와 같은 통계가 아니다.
+2026-10-25 12:25 KST에 해당 폴더 아래 `.rs`/`.gd` 텍스트를 열어 물리 줄 수를 집계했다. 주석·빈 줄·inline test를 포함하며 generated macro expansion과 비텍스트 asset은 제외한다. enum은 줄 시작의 선택적 `pub(...)` + `enum Name` 정규식 선언 수다. **cfg(test) 분리/매크로 확장/타입 해석을 하지 않은 raw lexical count**이며 과거 production92와 같은 통계가 아니다.
 
 | 범위 | 파일 | 물리 LOC | raw enum 선언 |
 |---|---:|---:|---:|
-| sim-core/src | 120 | 24,712 | 83 |
-| sim-engine/src | 2 | 1,840 | 0 |
-| sim-systems/src | 102 | 38,656 | 13 |
-| sim-bridge/src | 29 | 11,251 | 6 |
-| sim-test 전체 Rust | 156 | 89,893 | 4 |
-| scripts 전체 GDScript | 70 | 19,255 | 1 |
+| sim-core/src | 133 | 26,965 | 86 |
+| sim-engine/src | 2 | 1,844 | 0 |
+| sim-systems/src | 103 | 39,678 | 17 |
+| sim-bridge/src | 29 | 11,383 | 6 |
+| sim-test 전체 Rust | 159 | 91,013 | 4 |
+| scripts 전체 GDScript | 70 | 19,388 | 1 |
 
-현재 위 Rust 범위 raw 선언은106개다. 과거 appendix의 production92/raw95 census는 과거 조사와 범위 분류를 보존한 기록이며 106−92를 새 콘텐츠 enum 수로 해석하면 안 된다. 현재 콘텐츠 `ItemKind`, `BlueprintKind`, `RecipeKind`는 `rust/crates/sim-core/src/colony/content/ids.rs:91,115,134`의 open-ID 선언으로 이동했다. `content/defs/blueprint.rs:8–59`의 placement/completion/nav/policy/material enum과 `defs/recipe.rs:10`의 material term은 동작 분류다. `colony/wildlife.rs:13` AnimalKind와 `colony/story.rs:7` PressureKind는 아직 닫힌 enum이다. 과거 family별 match/files 표는 이행 전 영향 지도이며 현재 match 수로 재표시하지 않는다.
+현재 위 Rust 범위 raw 선언은113개다. frozen legacy codec 선언도 포함하며, 이번 증가를 새 콘텐츠 enum으로 해석하면 안 된다. 과거 appendix의 production92/raw95 census는 과거 조사와 범위 분류를 보존한 기록이며 113−92를 새 콘텐츠 enum 수로 해석하면 안 된다. 현재 콘텐츠 `ItemKind`, `BlueprintKind`, `RecipeKind`는 `rust/crates/sim-core/src/colony/content/ids.rs:91,115,134`의 open-ID 선언으로 이동했다. `content/defs/blueprint.rs:8–59`의 placement/completion/nav/policy/material enum과 `defs/recipe.rs:10`의 material term은 동작 분류다. `AnimalKind`와 `PressureKind`도 같은 ids.rs의 open u32 ID로 옮겼다. `PressureMechanic`/`AnimalMechanic` 등은 동작 분류이며 과거 저장 독자를 위한 frozen enum은 역사적 binary schema다. 과거 family별 match/files 표는 이행 전 영향 지도이며 현재 match 수로 재표시하지 않는다.
 
 ## 구현 갱신과 우선순위
 
 | 우선 | 현재 문제 / 진척 | 근거 | 다음 조치·위험·행동 경계 |
 |---|---|---|---|
-| P1 | item/recipe/blueprint registry와 legacy save 이행 진행; 세 family가 전체 B3를 완성하지 않음 | `content/ids.rs`, `data/colony/items.ron`, `blueprints.ron`, `recipes.ron`; core/save receipt | 최종 source safety2와 gate 확인. 순서·코드·material·tool wear 보존 필요 |
-| P1 | pressure/animal 및 B3 **일곱 family 전체** 실행 미완료 | MUX_GOAL B3: item, recipe, blueprint/style, pressure, animal, knowledge, alert/lesson | 새 데이터가 실제 world/UI에서 소비되는 증거 필요. resolver 등록만으로 PASS 금지. B2 시간 여유 조항으로 B3 요구를 면제하지 않음 |
+| P1 | item/recipe/blueprint registry와 legacy save 첫 단위 커밋 완료; 후속 family 별도 검증 | `content/ids.rs`, `data/colony/items.ron`, `blueprints.ron`, `recipes.ron`; core/save receipt | core safety2/ON2 확인. 후속 단위는 새 안전망·gate 필요; 순서·코드·material·tool wear 보존 |
+| P1 | pressure/animal open-ID 및 B3 일곱 family 실제 실행 통과, 최종 source 안전망·gate 미완료 | MUX_GOAL B3: item, recipe, blueprint/style, pressure, animal, knowledge, alert/lesson | 실제 world/UI 증거 확보, 최종 binary 안전망은 대기. resolver 등록만으로 PASS 금지. B2 시간 여유 조항으로 B3 요구를 면제하지 않음 |
 | P1 | shelf cutter selector 불일치 발견 후 현재 source 수정 | [base audit](/Users/rexxa/work/mux-data/stage-b/base-data-audit.md), `runtime/jobs/craft.rs:184`는 현재 `knife_uses` | 기존 잘못된 `wildlife.knife_uses`는 bundled4 대신8회 사용. 현재 소스 수정과 해당 실행 binary의 증거를 구분; 과거 진단을 삭제하지 않음 |
 | P2 | HUD는 semantic binding으로 이행했으나 원본 raster는 살아 있음 | `scripts/ui/panels/art_ui.gd:76–96`, `assets/v8art/bindings.json:547–673` | 15개 UI binding이 `assets/art/atlas/world_0.png` 사용. atlas 전체 삭제 금지 |
 | P2 | 무호출 frame helper와 마지막 legacy library dependency | [current dead-code audit](/Users/rexxa/work/mux-data/stage-b/dead-code-current.md), `wood_visuals.gd:6,30–59` | 8개 helper+ART preload 제거 뒤 library/UID 후보. `daylight_controller.gd:94`의 settlement는 보존. 이 문서는 삭제 실행 아님 |

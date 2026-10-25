@@ -7,6 +7,8 @@
 # Bridge methods called: none.
 extends RefCounted
 
+const Content = preload("res://scripts/ui/content_context.gd")
+
 const ROOT: String = "res://assets/v8art/"
 
 static var _selected_bindings: Dictionary = {}
@@ -202,7 +204,15 @@ static func binding(family: String, code: int) -> Dictionary:
 			if int(d.get("code", -999)) == fallback_code:
 				fallback_row = d
 	if found.is_empty():
-		if not fallback_row.is_empty():
+		if family == "animals":
+			var category: String = str(Content.row("animals", code).get("category", ""))
+			var category_code: int = int(fam.get("category_fallbacks", {}).get(category, -1))
+			for candidate: Dictionary in fam.get("codes", []):
+				if int(candidate["code"]) == category_code:
+					found = candidate
+		if not found.is_empty():
+			pass
+		elif not fallback_row.is_empty():
 			found = fallback_row
 		elif fam.get("fallback", null) is String:
 			found = {"code": code, "structure": fam["fallback"], "asset": fam["fallback"], "ground": fam["fallback"], "fallback": true}
@@ -253,6 +263,10 @@ static func validate_extension(document: Dictionary, dto: Dictionary) -> String:
 	for family: Variant in document:
 		if family == "schema_version":
 			continue
+		if family == "construction_styles":
+			var style_error: String = _validate_style_aliases(document[family], dto)
+			if not style_error.is_empty(): return style_error
+			continue
 		if not families.has(family) or not document[family] is Dictionary or document[family].size() != 1 or not document[family].get("codes") is Array:
 			return "bindings: unsupported family/schema " + str(family)
 		var allowed: Dictionary = {}
@@ -290,7 +304,7 @@ static func install_extension(document: Dictionary) -> void:
 
 static func _apply_selected_bindings() -> void:
 	for family: Variant in _selected_bindings:
-		if family == "schema_version":
+		if family in ["schema_version", "construction_styles"]:
 			continue
 		for addition: Dictionary in _selected_bindings[family]["codes"]:
 			var source: Dictionary = {}
@@ -301,3 +315,51 @@ static func _apply_selected_bindings() -> void:
 			if not source.is_empty():
 				source["code"] = int(addition["code"])
 				_bindings[family]["codes"].append(source)
+
+
+static func _validate_style_aliases(value: Variant, dto: Dictionary) -> String:
+	if not value is Dictionary or value.size() != 1 or not value.get("aliases") is Array:
+		return "bindings: expected construction_styles.aliases"
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "materials/construction_styles.json"))
+	if not parsed is Dictionary or not parsed.get("styles") is Array:
+		return "bindings: invalid bundled construction styles"
+	var sources: Dictionary = {}
+	var used: Dictionary = {}
+	for style: Dictionary in parsed["styles"]:
+		sources[str(style["id"])] = style
+		used[str(style["id"])] = true
+		for legacy: String in style.get("sim_blueprints", []): used[legacy] = true
+	for alias: Variant in value["aliases"]:
+		if not alias is Dictionary or alias.size() != 3 or not alias.has_all(["id", "alias_id", "kind"]):
+			return "bindings: style alias requires id, alias_id, kind"
+		for field: String in ["id", "alias_id", "kind"]:
+			if not alias[field] is String or alias[field].is_empty():
+				return "bindings: invalid style alias " + field
+		if used.has(alias["id"]) or not sources.has(alias["alias_id"]):
+			return "bindings: duplicate style id or unknown bundled style alias"
+		if alias["kind"] not in ["wall", "door", "floor"] or sources[alias["alias_id"]]["kind"] != alias["kind"]:
+			return "bindings: incompatible style alias kind"
+		var referenced: bool = false
+		for blueprint: Dictionary in dto.get("blueprints", []):
+			if blueprint.get("construction_style") == alias["id"]:
+				if blueprint.get("completion_category") != alias["kind"]:
+					return "bindings: style alias disagrees with blueprint kind"
+				referenced = true
+		if not referenced: return "bindings: style alias has no registered blueprint"
+		used[alias["id"]] = true
+	return ""
+
+
+## Expand only preflight-validated aliases; original rows stay byte-for-byte equivalent as dictionaries.
+static func construction_styles(document: Dictionary, extension: Variant = null) -> Dictionary:
+	var selected: Dictionary = _selected_bindings if extension == null else extension
+	var result: Dictionary = document.duplicate(true)
+	for alias: Dictionary in selected.get("construction_styles", {}).get("aliases", []):
+		for source: Dictionary in document.get("styles", []):
+			if source["id"] == alias["alias_id"]:
+				var row: Dictionary = source.duplicate(true)
+				row["id"] = alias["id"]
+				row["sim_blueprints"] = []
+				result["styles"].append(row)
+				break
+	return result

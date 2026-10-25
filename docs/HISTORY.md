@@ -192,3 +192,6 @@
 - 2026-10-25 — M-UX Stage A gate2 기술 통과(p12 `f38d488f43156145a44898671e77b26b3ee6c496`, clean,09:07:08 KST,exit0):35/35단계 exit0, debug/release 각각2060통과·0실패·1제외. gate1 실패는 보존하고 ISS031/032를 p12 수정·gate2로 닫았다. 공개28건은 구현 결함 범위에서 fixed,003/006/009/030은 open; 물리NOT_VERIFIED·A8FAILED·잔여지연은 유지한다. 문서 준비 시점 p13 보고 HEAD gate3·게시 대기이며 미래 통과를 주장하지 않는다(영수증 `/Users/rexxa/work/mux-data/gate-stage-a-2/gate.txt`, [이슈](ISSUES.md)).
 
 - 2026-10-25 — M-UX Stage A p13 `ca9f531ca6ef700ca223d99dba14d834b94b94b45da` clean gate3가10:29:24 KST35/35 exit0으로 종료했고10:30:05 KST v8/wip·v8/main fast-forward 게시를 확인했다. 이전 실패·A8FAILED·물리입력 미검증은 유지한다. Stage B는 데이터 레지스트리와 명시적 저장 마이그레이션 통합 중이며 core372·save15·역사적 저장연속실행3 시험 통과는 부분 증거다. 전체 안전망·B3·Stage B 게이트/게시 대기([D36](v8/mux/MUX_DECISIONS.md)).
+
+- 2026-10-25 — M-UX Stage B core `e90b7bb86` 커밋: items/blueprints/recipes와 명시적 카탈로그·format8 이행. 최종 safety2 기준선228748값 차이0·OFF9요약·ON8시드 요약/명령8개 literal 동일. 미게시이며 후속 압력·동물/format9/B3 검증 중: 과거 저장4·novel illness1·windowed pack40/0 통과와 시각 실패 수정 기록은 전체 Stage B gate를 대신하지 않는다. 공유 시험 설정 누락 ISS283도 별도 보존([검토](v8/review/CODE_REVIEW_2026-10.md)).
+- 2026-10-25 — M-EXT 압력·동물 데이터와 일곱 계열 실제 확장 시험 단위 검증: 기준선228748값 차이0·OFF9요약·ON8시드 요약/명령8개 동일, 과거 저장4·core378·새 질병/포식자 실제 경로 통과. 창 UI284·팩40·격리M543·배율220 검사 통과; 전체 B 게시와 기존 시각·설정 사고 해결은 별개([검증](v8/mux/B_ECOLOGY_VERIFICATION.md), D37).

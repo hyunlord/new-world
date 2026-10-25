@@ -1,6 +1,8 @@
 //! Immutable selected content metadata projected without narrowing identity codes.
 use godot::prelude::*;
-use sim_core::colony::content::{Catalog, CompletionCategory, PlacementCategory};
+use sim_core::colony::content::{
+    AnimalMechanic, Catalog, CompletionCategory, PlacementCategory, PressureMechanic,
+};
 
 /// Engine-free catalogue projection used by preflight and the ordinary getter.
 pub fn catalog_to_dict(catalog: &Catalog) -> VarDictionary {
@@ -74,6 +76,24 @@ pub fn catalog_to_dict(catalog: &Catalog) -> VarDictionary {
         recipes.push(&row);
     }
     out.set("recipes", recipes);
+    let mut pressures: Array<VarDictionary> = Array::new();
+    for def in catalog.pressures() {
+        let mut row = identity(&def.identity);
+        row.set("category", def.category.as_str());
+        row.set("mechanic", pressure_mechanic(def.mechanic));
+        pressures.push(&row);
+    }
+    out.set("pressures", pressures);
+    let mut animals: Array<VarDictionary> = Array::new();
+    for def in catalog.animals() {
+        let mut row = identity(&def.identity);
+        row.set("category", def.category.as_str());
+        row.set("mechanic", animal_mechanic(def.mechanic));
+        row.set("huntable", def.huntable);
+        row.set("hp", i64::from(def.hp.value));
+        animals.push(&row);
+    }
+    out.set("animals", animals);
     let mut knowledge: Array<VarDictionary> = Array::new();
     for def in &catalog.knowledge_defs().nodes {
         let mut row = VarDictionary::new();
@@ -102,4 +122,22 @@ fn identity(def: &sim_core::colony::content::IdentityDef) -> VarDictionary {
     row.set("id", def.id.as_str());
     row.set("name_key", def.name_key.as_str());
     row
+}
+
+/// Stable mechanical labels, independent of registered content identities.
+pub(super) fn pressure_mechanic(mechanic: PressureMechanic) -> &'static str {
+    match mechanic {
+        PressureMechanic::Cold => "cold",
+        PressureMechanic::Drought => "drought",
+        PressureMechanic::Pack => "pack",
+        PressureMechanic::Illness => "illness",
+    }
+}
+
+/// Renderer fallback class; never a species identity.
+pub(super) fn animal_mechanic(mechanic: AnimalMechanic) -> &'static str {
+    match mechanic {
+        AnimalMechanic::Grazer => "grazer",
+        AnimalMechanic::Predator => "predator",
+    }
 }

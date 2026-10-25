@@ -431,7 +431,11 @@
           "run"
         ]
       }
-    ]
+    ],
+    "category_fallbacks": {
+      "grazer": 1,
+      "predator": 0
+    }
   },
   "blueprints": {
     "about": "BlueprintKind codes (get_colony_overlay site_kinds, get_workshops kinds, the order tool's build kinds) → what the finished thing is, for site ghosts, placement previews and build-menu icons (scripts/world/art/site_ghost.gd). `workshop` names a workshops code, `building` a buildings code (a hut's ring), `style` + `kind` a material-system blueprint, `bed` the space.bed structure.",
@@ -588,7 +592,7 @@
         18
       ]
     },
-    "berries": {
+    "foraged_food": {
       "path": "res://assets/art/atlas/world_0.png",
       "rect": [
         862,

@@ -15,6 +15,7 @@
 //! baseline world and under rules without M5.
 use godot::prelude::*;
 use sim_core::chronicle::{CauseRef, Chronicle, ChronicleKind};
+use sim_core::colony::content::{AnimalMechanic, PressureMechanic};
 use sim_core::colony::people::{Apparel, DraftOrder, Drafted, Modifier, Mood, Sick};
 use sim_core::colony::story::PressureKind;
 use sim_core::colony::wildlife::{AnimalKind, Fighter};
@@ -46,6 +47,12 @@ pub struct PressureRow {
     pub kind: u32,
     /// `PressureKind::name`.
     pub name: String,
+    /// Registered localization key.
+    pub name_key: String,
+    /// Registered presentation category.
+    pub category: String,
+    /// Behavior category, independent of content identity.
+    pub mechanic: String,
     /// Display day it began.
     pub start_day: u32,
     /// Display day it ends (exclusive).
@@ -77,6 +84,8 @@ pub struct StoryView {
     pub wolves: u32,
     /// The present pack's size (0 when no pack came).
     pub pack_size: u32,
+    /// Actual pressure identity associated with the pack banner, -1 when unavailable.
+    pub pack_kind: i64,
     /// The mean tile of the wolves on the map (−1 without wolves): the banner's pulse.
     pub wolves_x: i32,
     /// See `wolves_x`.
@@ -107,8 +116,11 @@ pub fn collect_story(world: &hecs::World, res: &SimResources) -> StoryView {
         .active
         .iter()
         .map(|p| PressureRow {
-            kind: u32::from(p.kind.code()),
+            kind: p.kind.code(),
             name: p.kind.name().into(),
+            name_key: p.kind.definition().identity.name_key.clone(),
+            category: p.kind.definition().category.clone(),
+            mechanic: super::content::pressure_mechanic(p.kind.definition().mechanic).into(),
             start_day: p.start_day,
             end_day: p.end_day,
             day_of: today.saturating_sub(p.start_day) + 1,
@@ -138,6 +150,21 @@ pub fn collect_story(world: &hecs::World, res: &SimResources) -> StoryView {
         firewood_day_need: story::firewood_day_need(res),
         wolves: n as u32,
         pack_size: if w.pack_day.is_some() { w.pack_size } else { 0 },
+        pack_kind: s
+            .active
+            .iter()
+            .chain(s.history.iter().rev())
+            .find(|p| {
+                p.kind.definition().mechanic == PressureMechanic::Pack
+                    && w.pack_day == Some(p.start_day)
+            })
+            .map(|p| p.kind)
+            .or_else(|| {
+                sim_core::colony::content::installed()
+                    .ok()
+                    .and_then(|c| c.pressure_role("pack_default"))
+            })
+            .map_or(-1, |kind| i64::from(kind.code())),
         wolves_x: wx,
         wolves_y: wy,
         sick: world.query::<&Sick>().iter().count() as u32,
@@ -166,6 +193,31 @@ pub(super) fn story_to_dict(v: &StoryView) -> VarDictionary {
     };
     d.set("kinds", PackedInt64Array::from(kinds.as_slice()));
     d.set("names", PackedStringArray::from(names.as_slice()));
+    for (key, values) in [
+        (
+            "name_keys",
+            v.active
+                .iter()
+                .map(|p| GString::from(&p.name_key))
+                .collect::<Vec<_>>(),
+        ),
+        (
+            "categories",
+            v.active
+                .iter()
+                .map(|p| GString::from(&p.category))
+                .collect(),
+        ),
+        (
+            "mechanics",
+            v.active
+                .iter()
+                .map(|p| GString::from(&p.mechanic))
+                .collect(),
+        ),
+    ] {
+        d.set(key, PackedStringArray::from(values.as_slice()));
+    }
     d.set("start_days", col(&|p| i64::from(p.start_day)));
     d.set("end_days", col(&|p| i64::from(p.end_day)));
     d.set("days_of", col(&|p| i64::from(p.day_of)));
@@ -183,6 +235,7 @@ pub(super) fn story_to_dict(v: &StoryView) -> VarDictionary {
     );
     d.set("wolves", i64::from(v.wolves));
     d.set("pack_size", i64::from(v.pack_size));
+    d.set("pack_kind", v.pack_kind);
     d.set("wolves_x", v.wolves_x);
     d.set("wolves_y", v.wolves_y);
     d.set("sick", i64::from(v.sick));
@@ -198,6 +251,16 @@ pub struct AnimalRows {
     pub id: Vec<i64>,
     /// `AnimalKind::code` (0 wolf, 1 deer).
     pub kind: Vec<i64>,
+    /// Canonical registered names.
+    pub names: Vec<String>,
+    /// Registered localization keys.
+    pub name_keys: Vec<String>,
+    /// Presentation categories.
+    pub categories: Vec<String>,
+    /// Mechanical categories.
+    pub mechanics: Vec<String>,
+    /// Per-world resolved maximum hit points.
+    pub max_hp: Vec<i32>,
     /// Tile x.
     pub x: Vec<i32>,
     /// Tile y.
@@ -226,6 +289,18 @@ pub fn collect_animals(res: &SimResources) -> AnimalRows {
     for a in w.animals.values() {
         out.id.push(i64::from(a.id));
         out.kind.push(i64::from(a.kind.code()));
+        let def = a.kind.definition();
+        out.names.push(def.identity.id.clone());
+        out.name_keys.push(def.identity.name_key.clone());
+        out.categories.push(def.category.clone());
+        out.mechanics
+            .push(super::content::animal_mechanic(def.mechanic).into());
+        out.max_hp.push(i32::from(
+            res.rules
+                .colony
+                .and_then(|c| c.wildlife)
+                .map_or(def.hp.value, |rule| def.hp.wildlife(&rule)),
+        ));
         out.x.push(i32::try_from(a.pos.0).unwrap_or(-1));
         out.y.push(i32::try_from(a.pos.1).unwrap_or(-1));
         out.hp.push(i32::from(a.hp));
@@ -246,6 +321,16 @@ pub(super) fn animals_to_dict(r: &AnimalRows) -> VarDictionary {
     let mut d = VarDictionary::new();
     d.set("ids", PackedInt64Array::from(r.id.as_slice()));
     d.set("kinds", PackedInt64Array::from(r.kind.as_slice()));
+    for (key, values) in [
+        ("names", &r.names),
+        ("name_keys", &r.name_keys),
+        ("categories", &r.categories),
+        ("mechanics", &r.mechanics),
+    ] {
+        let strings: Vec<GString> = values.iter().map(GString::from).collect();
+        d.set(key, PackedStringArray::from(strings.as_slice()));
+    }
+    d.set("max_hps", PackedInt32Array::from(r.max_hp.as_slice()));
     d.set("xs", PackedInt32Array::from(r.x.as_slice()));
     d.set("ys", PackedInt32Array::from(r.y.as_slice()));
     d.set("hps", PackedInt32Array::from(r.hp.as_slice()));
@@ -635,7 +720,7 @@ pub struct YearSummary {
     pub births: u32,
     /// Deaths by `DeathReason::as_u8` (0 starvation, 1 dehydration, 2 combat, 3 old age, 4 exposure).
     pub deaths: [u32; 5],
-    /// Pressures begun by `PressureKind::code` (0 cold snap, 1 drought, 2 beasts, 3 illness).
+    /// Pressures begun by mechanical bucket (cold, drought, pack, illness), retaining historical column order.
     pub pressures: [u32; 4],
     /// Knowledge discovered.
     pub discoveries: u32,
@@ -692,8 +777,14 @@ pub fn collect_year_summary(res: &SimResources, year: i64) -> YearSummary {
                 }
             }
             ChronicleKind::PressureBegan => {
-                if let Some(n) = out.pressures.get_mut(e.cause as usize) {
-                    bump(n);
+                if let Ok(kind) = PressureKind::checked(e.cause) {
+                    let bucket = match kind.definition().mechanic {
+                        PressureMechanic::Cold => 0,
+                        PressureMechanic::Drought => 1,
+                        PressureMechanic::Pack => 2,
+                        PressureMechanic::Illness => 3,
+                    };
+                    bump(&mut out.pressures[bucket]);
                 }
             }
             ChronicleKind::KnowledgeDiscovered => bump(&mut out.discoveries),
@@ -701,7 +792,10 @@ pub fn collect_year_summary(res: &SimResources, year: i64) -> YearSummary {
             ChronicleKind::Quarrel => bump(&mut out.quarrels),
             ChronicleKind::Fight => bump(&mut out.fights),
             ChronicleKind::Breakdown => bump(&mut out.breakdowns),
-            ChronicleKind::Hunted if e.cause == u32::from(AnimalKind::Deer.code()) => {
+            ChronicleKind::Hunted
+                if AnimalKind::checked(e.cause)
+                    .is_ok_and(|kind| kind.definition().mechanic == AnimalMechanic::Grazer) =>
+            {
                 bump(&mut out.hunted)
             }
             ChronicleKind::WolfKilled => bump(&mut out.wolves_killed),

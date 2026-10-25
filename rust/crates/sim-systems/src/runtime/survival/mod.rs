@@ -94,6 +94,7 @@ pub fn despawn_agent(
     resources.social_retry_after.remove(&agent_id);
     resources.bed_of.remove(&agent_id);
     resources.haulers.remove(&agent_id);
+    resources.content_state.illness_origins.remove(&agent_id);
 
     // Purge the four agent-keyed resource maps (drop any key referencing the
     // dead agent) — mirrors the pre-feature combat cleanup block.
@@ -291,12 +292,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn death_removes_the_assigned_bed() {
+    fn death_removes_assigned_bed_and_illness_origin() {
         let mut world = World::new();
         let entity = world.spawn((Agent { id: 7 },));
         let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
         resources.bed_of.insert(7, (2, 2));
         resources.bed_of.insert(8, (2, 2));
+        let illness = sim_core::colony::story::PressureKind::Illness;
+        resources.content_state.illness_origins.insert(7, illness);
+        resources.content_state.illness_origins.insert(8, illness);
         despawn_agent(
             &mut world,
             &mut resources,
@@ -308,6 +312,11 @@ mod tests {
         );
         assert!(!resources.bed_of.contains_key(&7));
         assert_eq!(resources.bed_of.get(&8), Some(&(2, 2)));
+        assert!(!resources.content_state.illness_origins.contains_key(&7));
+        assert_eq!(
+            resources.content_state.illness_origins.get(&8),
+            Some(&illness)
+        );
     }
 
     #[test]

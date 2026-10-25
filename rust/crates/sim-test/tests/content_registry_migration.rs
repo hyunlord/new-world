@@ -149,8 +149,8 @@ fn new_bytes(engine: &mut SimEngine) -> Vec<u8> {
     let encoded = save::save(engine).expect("new-format save");
     assert_eq!(
         encoded.get(8..12),
-        Some(8u32.to_le_bytes().as_slice()),
-        "writer must emit format8"
+        Some(save::FORMAT_VERSION.to_le_bytes().as_slice()),
+        "writer must emit the current format"
     );
     encoded
 }
@@ -230,12 +230,32 @@ fn genuine_mart2_v6_continuation_and_new_format_roundtrip() {
 #[test]
 #[ignore = "requires external historical source fixtures"]
 fn published_stage_a_v7_steward_continues_without_resubmitting_auto_commands() {
+    automatic_continuation("base", 7);
+}
+
+#[test]
+#[ignore = "requires external core format8 fixtures"]
+fn frozen_core_v8_steward_continuation_and_new_format_roundtrip() {
+    automatic_continuation("core8", 8);
+}
+
+fn automatic_continuation(label: &str, version: u32) {
     let root = fixtures();
-    let directory = root.join("base");
-    assert_eq!(
-        json_file(&directory.join("provenance.json"))["head"],
-        STAGE_A
-    );
+    let directory = root.join(label);
+    if version == 7 {
+        assert_eq!(
+            json_file(&directory.join("provenance.json"))["head"],
+            STAGE_A
+        );
+    } else {
+        let receipt = json_file(&directory.join("acquisition-receipt.json"));
+        assert_eq!(
+            receipt["fixtures"][0]["revision"],
+            "catalog-v1-fnv1a64:12e812cb24fbd015:38733"
+        );
+        assert_eq!(receipt["fixtures"][0]["format"], 8);
+        assert_eq!(receipt["fixtures"][1]["format"], 8);
+    }
     let captured = json_file(&directory.join("on-commands-6000/colony_s5_commands.json"));
     let captured = captured.as_array().expect("captured command array");
     let interval: Vec<_> = captured
@@ -260,10 +280,10 @@ fn published_stage_a_v7_steward_continues_without_resubmitting_auto_commands() {
             .cloned()
             .collect(),
     );
-    let mut future = old_save(&directory.join("on-tick-6000.save"), 7, 6000, true);
+    let mut future = old_save(&directory.join("on-tick-6000.save"), version, 6000, true);
     let expected = new_bytes(&mut future);
     for resave_before_continuation in [false, true] {
-        let mut engine = old_save(&directory.join("on-tick-5000.save"), 7, 5000, true);
+        let mut engine = old_save(&directory.join("on-tick-5000.save"), version, 5000, true);
         assert_eq!(
             records_json(&engine.resources.colony.command_log),
             prefix,

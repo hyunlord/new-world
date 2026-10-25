@@ -2,8 +2,9 @@
 
 use super::*;
 
+/// Historical entry with a one-byte mixed cause.
 #[derive(serde::Deserialize)]
-struct LegacyEntry {
+pub struct LegacyEntry {
     /// Simulation tick of the event.
     pub tick: u64,
     /// What happened.
@@ -26,15 +27,15 @@ struct LegacyEntry {
 
 /// Chronicle encoded with the historical one-byte mixed reason code.
 #[derive(serde::Deserialize)]
-pub struct LegacyChronicle {
-    entries: Vec<LegacyEntry>,
+pub struct LegacyChronicle<E = LegacyEntry> {
+    entries: Vec<E>,
     by_agent: BTreeMap<AgentId, Vec<u32>>,
     by_settlement: BTreeMap<SettlementId, Vec<u32>>,
     people: BTreeMap<AgentId, PersonRecord>,
     /// M5: the cause of an entry, by entry index (a side table: entries keep
     /// their V7 layout, so the baseline's chronicle files are unchanged).
     #[serde(default)]
-    causes: BTreeMap<u32, CauseRef>,
+    causes: BTreeMap<u32, LegacyCauseRef>,
     /// M5.5: need-state samples behind `CauseRef::Sample` causes, in append order (empty in the baseline).
     #[serde(default)]
     samples: Vec<NeedSample>,
@@ -56,14 +57,18 @@ impl From<LegacyEntry> for ChronicleEntry {
     }
 }
 
-impl From<LegacyChronicle> for Chronicle {
-    fn from(old: LegacyChronicle) -> Self {
+impl<E: Into<ChronicleEntry>> From<LegacyChronicle<E>> for Chronicle {
+    fn from(old: LegacyChronicle<E>) -> Self {
         Self {
             entries: old.entries.into_iter().map(Into::into).collect(),
             by_agent: old.by_agent,
             by_settlement: old.by_settlement,
             people: old.people,
-            causes: old.causes,
+            causes: old
+                .causes
+                .into_iter()
+                .map(|(index, cause)| (index, cause.into()))
+                .collect(),
             samples: old.samples,
         }
     }
@@ -100,3 +105,46 @@ mod tests {
         assert_eq!(migrated.by_settlement.get(&2), Some(&vec![0]));
     }
 }
+
+/// Frozen mixed-cause layout for formats6/7/8.
+#[derive(serde::Deserialize)]
+pub enum LegacyCauseRef {
+    /// Chronicle entry index.
+    Entry(u32),
+    /// Historical pressure byte and optional entry.
+    Pressure {
+        /// Historical pressure code.
+        kind: u8,
+        /// Chronicle entry index.
+        entry: Option<u32>,
+    },
+    /// Mechanic modifier byte and optional entry.
+    Modifier {
+        /// Mechanic modifier code.
+        code: u8,
+        /// Chronicle entry index.
+        entry: Option<u32>,
+    },
+    /// Mechanic modifier byte and sample index.
+    Sample {
+        /// Mechanic modifier code.
+        code: u8,
+        /// Need sample index.
+        sample: u32,
+    },
+}
+impl From<LegacyCauseRef> for CauseRef {
+    fn from(old: LegacyCauseRef) -> Self {
+        match old {
+            LegacyCauseRef::Entry(index) => Self::Entry(index),
+            LegacyCauseRef::Pressure { kind, entry } => Self::Pressure {
+                kind: u32::from(kind),
+                entry,
+            },
+            LegacyCauseRef::Modifier { code, entry } => Self::Modifier { code, entry },
+            LegacyCauseRef::Sample { code, sample } => Self::Sample { code, sample },
+        }
+    }
+}
+/// Format8 already widened the main entry cause, but not the side table.
+pub type LegacyChronicleV8 = LegacyChronicle<ChronicleEntry>;

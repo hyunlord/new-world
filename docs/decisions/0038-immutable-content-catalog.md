@@ -10,11 +10,11 @@ Use private typed u32 identities resolved by one immutable catalog. Versioned RO
 
 The host acquires an optional descriptor and freezes its source bytes before typed rules or world creation. Pure catalog construction validates definitions without installing process state. One sticky bootstrap installs either the validated catalog or its failure. Ordinary getters never read environment variables; typed deserialization requires prior installation. A failed explicit selection never falls back to bundled data. Legacy Rust constructors may initialize bundled content only when no selection has occurred. The Godot factory validates presentation before adding the main scene's children.
 
-Bind saves to the selected source revision. Format 8 has an outer revision and opaque body, allowing rejection before typed decoding. The revision uses length-framed logical names and exact base/extension bytes; it is an identity checksum, not an authentication mechanism. Presentation sources participate in selected-pack identity. Preserve explicit format 6 and 7 readers with frozen resource and Chronicle representations. Convert their fields directly, including saved indexes, rather than synthesizing history. Historical saves are accepted only with the bundled catalog.
+Bind saves to the selected source revision. Format 9 has an outer revision and opaque body, allowing rejection before typed decoding. The revision uses length-framed logical names and exact base/extension bytes; it is an identity checksum, not an authentication mechanism. Presentation sources participate in selected-pack identity. Preserve explicit format 6 and 7 readers with frozen resource and Chronicle representations. Convert their fields directly, including saved indexes, rather than synthesizing history. Historical saves are accepted only with the bundled catalog.
 
 Store novel completed blueprint/style identity in sparse layer-specific state, separate from the historical physical projection. Base worlds keep that state empty and retain their old material behavior. Persist actual non-default workshop cutters. Validate loaded identity against registered definitions, physical slots, layers, bounds and capabilities before navigation reconstruction. Digging clears replaced floor identity.
 
-The first implementation covers items, blueprints/construction styles and recipes plus their consumers, knowledge dependencies and host bootstrap. Pressure and animal migration and the complete seven-family pack proof remain required Stage B work; this ADR does not claim them complete. Unpublished format 8 work is one stage draft; a subsequently published layout change requires a new version and reader.
+The first committed core unit covered items, blueprints/construction styles and recipes. The next unit extends the same catalogue to pressure and animal identities. Format 9 freezes the previous nested causal, Storyteller and colony layouts explicitly; its format 8 reader accepts only the acquired bundled core checkpoint revision. Sick retains its historical component layout. Novel illness provenance lives in a sparse agent map, follows spread, and is removed on recovery/death. Load validates both the registered illness mechanic and live Sick membership before returning. The complete seven-family simulation and UI proof remains required; implementation alone is not acceptance.
 
 ## Alternatives considered
 
@@ -38,7 +38,7 @@ Each coherent refactor commit must retain original baseline identity, all nine l
 ## Source
 
 - `docs/v8/mux/MUX_GOAL.md`, B2–B3 and behavior safety net.
-- `docs/v8/mux/MUX_DECISIONS.md`, D36.
+- `docs/v8/mux/MUX_DECISIONS.md`, D36–D37.
 - `rust/crates/sim-core/src/colony/content/`.
 - `rust/crates/sim-engine/src/legacy_v7.rs`.
 - `rust/crates/sim-systems/src/save/`.

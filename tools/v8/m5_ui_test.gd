@@ -17,7 +17,8 @@
 # Bridge methods called: via SimReads get_story, get_animals, get_drafted, get_agent_snapshot, get_world_info,
 #   get_time_snapshot, get_colony_overlay, advance_ticks; get_agent_m5, get_agent_detail, get_chronicle_since,
 #   get_chronicle_why, get_teach_suggestion, get_tech_node, get_year_summary (direct); and the UI's own calls.
-# Run: bash tools/v8/run_bounded.sh 900 "$GODOT_BIN" --headless --path . --script res://tools/v8/m5_ui_test.gd
+# Run with WORLDSIM_TEST_SETTINGS_DIR set to an existing external absolute directory.
+# bash tools/v8/run_bounded.sh 900 "$GODOT_BIN" --path . --script res://tools/v8/m5_ui_test.gd
 # Output: one "M5_UI <PASS|FAIL|INFO> <step> <detail>" line per check, then "M5_UI_DONE failures=N"; quits 0 / 1.
 extends SceneTree
 
@@ -185,7 +186,7 @@ func _adults() -> Array[Dictionary]:
 func _deer_near(from: Vector2i) -> Dictionary:
 	var read: Dictionary = SimReads.read(_world, "get_animals")
 	var ids: PackedInt64Array = read.get("ids", PackedInt64Array())
-	var kinds: PackedInt32Array = read.get("kinds", PackedInt32Array())
+	var kinds: PackedInt64Array = read.get("kinds", PackedInt64Array())
 	var xs: PackedInt32Array = read.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = read.get("ys", PackedInt32Array())
 	var best: Dictionary = {}
@@ -226,6 +227,13 @@ func _empty_tile(from: Vector2i) -> Vector2i:
 
 
 func _run() -> void:
+	var settings_dir: String = OS.get_environment("WORLDSIM_TEST_SETTINGS_DIR")
+	var isolated: bool = settings_dir.is_absolute_path() and not settings_dir.begins_with(ProjectSettings.globalize_path("res://")) and DirAccess.dir_exists_absolute(settings_dir)
+	_check("isolated_settings", isolated, settings_dir)
+	if not isolated:
+		print("M5_UI_DONE failures=1 checks=1 isolated_settings")
+		quit(1)
+		return
 	_raw = RegEx.new()
 	_raw.compile(KEY_RE)
 	_main = (load("res://scenes/main.tscn") as PackedScene).instantiate()
@@ -515,7 +523,7 @@ func _chronicle_texts() -> void:
 		ok = ok and _readable(toast)
 		var why: Array[String] = Chronicle.why_lines({"links": PackedInt32Array([0, 1, 2, 1]), "codes": PackedInt64Array([0, 3, 0, 100]),
 			"ticks": PackedInt64Array([100, -1, -1, -1]), "kinds": PackedInt32Array([19, -1, -1, -1]), "subjects": PackedInt64Array([p, -1, -1, -1]),
-			"others": PackedInt64Array([q, -1, -1, -1]), "causes": PackedInt32Array([1, -1, -1, -1]), "values": PackedInt64Array([-60, 0, 0, 0])}, _locale, info)
+			"others": PackedInt64Array([q, -1, -1, -1]), "causes": PackedInt64Array([1, -1, -1, -1]), "values": PackedInt64Array([-60, 0, 0, 0])}, _locale, info)
 		for line: String in why:
 			ok = ok and _readable(_plain(line))
 		_check("chronicle_m5_kinds_%s" % language, ok and rows.size() == 23 and why.size() == 4, " || ".join(texts) + " || " + toast + " || " + " ".join(why))
@@ -542,7 +550,7 @@ func _advance_and_story(chronicle: Node, why: Node) -> void:
 		SimReads.mutate(_world, "advance_ticks", [per_day])
 		await _frames(2)
 		var story: Dictionary = SimReads.read(_world, "get_story")
-		var kinds: PackedInt32Array = story.get("kinds", PackedInt32Array())
+		var kinds: PackedInt64Array = story.get("kinds", PackedInt64Array())
 		if not seen_wolves and int(story.get("wolves", 0)) > 0:
 			seen_wolves = true
 			await _check_wolves(story)
@@ -577,7 +585,7 @@ func _check_wolves(story: Dictionary) -> void:
 	_check("wolves_pulse", bool(pulse.get("shown", false)), str(pulse))
 	var animals: Dictionary = SimReads.read(_world, "get_animals")
 	var wolves: int = 0
-	for k: int in animals.get("kinds", PackedInt32Array()):
+	for k: int in animals.get("kinds", PackedInt64Array()):
 		if k == StoryText.WOLF:
 			wolves += 1
 	_check("wolves_drawn", wolves == int(story.get("wolves", -1)) and int((_animals.call("counts") as Dictionary)["animals"]) == (animals.get("ids", PackedInt64Array()) as PackedInt64Array).size(),
@@ -585,7 +593,7 @@ func _check_wolves(story: Dictionary) -> void:
 
 
 func _check_cold(story: Dictionary) -> void:
-	var kinds: PackedInt32Array = story.get("kinds", PackedInt32Array())
+	var kinds: PackedInt64Array = story.get("kinds", PackedInt64Array())
 	var days: PackedInt64Array = story.get("days_of", PackedInt64Array())
 	var i: int = kinds.find(StoryText.COLD_SNAP)
 	var want: String = StoryText.trf(_locale, "M5_BANNER_COLD_FMT", {"day": int(days[i]) if i < days.size() else -1, "wood": int(story.get("firewood", -1)),

@@ -21,6 +21,7 @@
 //! (`quarrel`), and a kin's death (`survival::despawn_agent` → [`kin_died`]).
 use hecs::{Entity, World};
 use sim_core::chronicle::{CauseRef, ChronicleEntry, ChronicleKind};
+use sim_core::colony::content::PressureMechanic;
 use sim_core::colony::people::{Drafted, Modifier, Mood, Sick, NO_DAY};
 use sim_core::colony::story::PressureKind;
 use sim_core::colony::CancelReason;
@@ -321,17 +322,19 @@ pub fn facts_of(world: &World, res: &SimResources, entity: Entity) -> Facts {
 /// with the entry behind it when there is one (a grief's death, a cold night's
 /// or a hunger's pressure).
 pub fn cause_of(res: &SimResources, m: Modifier, mood: Option<Mood>) -> CauseRef {
-    let pressure = |kind| {
-        crate::runtime::story::cause_ref(res, kind).and_then(|c| match c {
-            CauseRef::Pressure { entry, .. } => entry,
-            _ => None,
-        })
+    let pressure = |mechanic| {
+        crate::runtime::story::active_mechanic(res, mechanic)
+            .and_then(|active| crate::runtime::story::cause_ref(res, active.kind))
+            .and_then(|c| match c {
+                CauseRef::Pressure { entry, .. } => entry,
+                _ => None,
+            })
     };
     let entry = match m {
         Modifier::Grief => mood.map(|m| m.grief_entry).filter(|e| *e != u32::MAX),
-        Modifier::Cold | Modifier::SleptOutside => pressure(PressureKind::ColdSnap),
-        Modifier::Hungry | Modifier::Thirsty => pressure(PressureKind::Drought),
-        Modifier::Sick => pressure(PressureKind::Illness),
+        Modifier::Cold | Modifier::SleptOutside => pressure(PressureMechanic::Cold),
+        Modifier::Hungry | Modifier::Thirsty => pressure(PressureMechanic::Drought),
+        Modifier::Sick => pressure(PressureMechanic::Illness),
         Modifier::Pressure | Modifier::Drafted => {
             res.colony.story.active.first().and_then(|p| p.began_entry)
         }
@@ -341,6 +344,27 @@ pub fn cause_of(res: &SimResources, m: Modifier, mood: Option<Mood>) -> CauseRef
         code: m.code(),
         entry,
     }
+}
+
+/// Resolve a person's modifier cause, retaining a lingering novel illness's origin.
+pub fn cause_for_person(
+    res: &SimResources,
+    id: AgentId,
+    m: Modifier,
+    mood: Option<Mood>,
+) -> CauseRef {
+    if m == Modifier::Sick && res.content_state.illness_origins.contains_key(&id) {
+        return CauseRef::Modifier {
+            code: m.code(),
+            entry: crate::runtime::story::illness_origin(res, id)
+                .and_then(|kind| crate::runtime::story::illness_cause(res, kind))
+                .and_then(|cause| match cause {
+                    CauseRef::Pressure { entry, .. } => entry,
+                    _ => None,
+                }),
+        };
+    }
+    cause_of(res, m, mood)
 }
 
 /// M5.5 (ADR 0030 amendment): the concrete record behind modifier `m` as a quarrel's cause for the person `id`
@@ -377,7 +401,7 @@ pub fn cause_record(
                 sample: res.chronicle.push_sample(sample),
             }
         }
-        _ => cause_of(res, m, f.mood),
+        _ => cause_for_person(res, id, m, f.mood),
     }
 }
 
@@ -389,7 +413,9 @@ enum Expect {
     /// A death (grief).
     Died,
     /// A `PressureBegan`, of this `PressureKind` code when given.
-    Pressure(Option<u8>),
+    Pressure(Option<u32>),
+    /// A pressure with the expected registered mechanic.
+    Mechanic(PressureMechanic),
     /// An earlier quarrel of the same pair (the relation).
     PairQuarrel,
 }
@@ -401,13 +427,9 @@ fn expect_of(code: u8) -> Expect {
     }
     match Modifier::from_code(code) {
         Some(Modifier::Grief) => Expect::Died,
-        Some(Modifier::Sick) => Expect::Pressure(Some(PressureKind::Illness.code())),
-        Some(Modifier::Cold | Modifier::SleptOutside) => {
-            Expect::Pressure(Some(PressureKind::ColdSnap.code()))
-        }
-        Some(Modifier::Hungry | Modifier::Thirsty) => {
-            Expect::Pressure(Some(PressureKind::Drought.code()))
-        }
+        Some(Modifier::Sick) => Expect::Mechanic(PressureMechanic::Illness),
+        Some(Modifier::Cold | Modifier::SleptOutside) => Expect::Mechanic(PressureMechanic::Cold),
+        Some(Modifier::Hungry | Modifier::Thirsty) => Expect::Mechanic(PressureMechanic::Drought),
         Some(Modifier::Pressure | Modifier::Drafted) => Expect::Pressure(None),
         _ => Expect::Any,
     }
@@ -447,7 +469,11 @@ pub fn check_cause(
             (Expect::Any, _) => true,
             (Expect::Died, ChronicleKind::Died) => true,
             (Expect::Pressure(kind), ChronicleKind::PressureBegan) => {
-                kind.is_none_or(|k| rec.cause == u32::from(k))
+                kind.is_none_or(|k| rec.cause == k)
+            }
+            (Expect::Mechanic(mechanic), ChronicleKind::PressureBegan) => {
+                PressureKind::from_code(rec.cause)
+                    .is_some_and(|kind| kind.definition().mechanic == mechanic)
             }
             (Expect::PairQuarrel, ChronicleKind::Quarrel) => {
                 let p = if rec.subject <= rec.other {
@@ -551,7 +577,7 @@ pub enum Link {
     /// A mood modifier (`Modifier::code`).
     Modifier(u8),
     /// A pressure (`PressureKind::code`).
-    Pressure(u8),
+    Pressure(u32),
 }
 
 /// The "why?" chain of chronicle entry `index`: the entry, then its cause, the
@@ -723,7 +749,9 @@ impl RuntimeSystem for MoodSystem {
                 acc | (i64::from(m.code()) << (8 * i))
             });
             let mood = world.get::<&Mood>(e).ok().map(|m| *m);
-            let cause = mods.first().map(|(m, _)| cause_of(res, *m, mood));
+            let cause = mods
+                .first()
+                .map(|(m, _)| cause_for_person(res, id, *m, mood));
             res.colony.mood_tallies.breakdowns += 1;
             res.chronicle.push_caused(
                 ChronicleEntry::new(tick, ChronicleKind::Breakdown)

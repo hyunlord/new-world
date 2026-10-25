@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "conditions": {
+    "test_supply": {
+      "collection": "settlements",
+      "predicates": [
+        {
+          "field": "food",
+          "op": "gte",
+          "value": 0
+        }
+      ]
+    }
+  },
+  "alerts": [
+    {
+      "id": "test_supply",
+      "condition_id": "test_supply",
+      "severity": "notice",
+      "text_key": "EXT_ALERT",
+      "explanation_key": "EXT_ALERT_WHY",
+      "fix_key": "EXT_ALERT_FIX",
+      "jump_target": "tile"
+    }
+  ]
+}

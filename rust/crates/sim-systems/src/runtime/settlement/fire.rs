@@ -90,10 +90,13 @@ impl FireSystem {
 
 /// Apply the authoritative active-pressure fuel multiplier with the fire's rounding.
 pub fn effective_burn_per_hour(resources: &SimResources, per_hour: u32) -> u32 {
-    crate::runtime::story::active(resources, sim_core::colony::story::PressureKind::ColdSnap)
-        .map_or(per_hour, |s| {
-            (u64::from(per_hour) * u64::from(s.snap_burn_permille)).div_ceil(1000) as u32
-        })
+    crate::runtime::story::active_mechanic(
+        resources,
+        sim_core::colony::content::PressureMechanic::Cold,
+    )
+    .map_or(per_hour, |s| {
+        (u64::from(per_hour) * u64::from(s.rule.snap_burn_permille)).div_ceil(1000) as u32
+    })
 }
 
 impl RuntimeSystem for FireSystem {
@@ -120,9 +123,9 @@ impl RuntimeSystem for FireSystem {
         // Pass 8: the night's drawn change too (`night_rate`).
         let per_hour = night_rate(resources, &rule, resources.current_tick);
         // M5 (ADR 0027): a cold snap doubles the night's burn.
-        let snap = crate::runtime::story::active(
+        let snap = crate::runtime::story::active_mechanic(
             resources,
-            sim_core::colony::story::PressureKind::ColdSnap,
+            sim_core::colony::content::PressureMechanic::Cold,
         );
         let normal = per_hour;
         let per_hour = effective_burn_per_hour(resources, per_hour);
@@ -139,10 +142,10 @@ impl RuntimeSystem for FireSystem {
                         settlement.withdraw(ResourceKind::Wood, per_hour) == per_hour
                     });
             fires.insert(*sid, FireState { lit });
-            if lit && snap.is_some() {
+            if let Some(snap) = snap.filter(|_| lit) {
                 crate::runtime::story::add_cost(
                     resources,
-                    sim_core::colony::story::PressureKind::ColdSnap,
+                    snap.kind,
                     per_hour.saturating_sub(normal),
                     0,
                 );
@@ -267,7 +270,7 @@ fn expose(
     rule: &ExposureRule,
     exposed: &[(AgentId, hecs::Entity)],
     now: u64,
-    snap: Option<sim_core::rules::StoryRule>,
+    snap: Option<crate::runtime::story::ActivePressure>,
 ) {
     let mut deaths: Vec<(hecs::Entity, AgentId, (u32, u32))> = Vec::new();
     for &(id, entity) in exposed {
@@ -305,15 +308,9 @@ fn expose(
             .map_or((0, 0), |p| (p.x, p.y));
         if let Some(snap) = snap {
             if !crate::runtime::rooms::roofed(resources, pos) {
-                damage = damage * f64::from(snap.snap_exposure_permille) / 1000.0;
+                damage = damage * f64::from(snap.rule.snap_exposure_permille) / 1000.0;
             }
-            crate::runtime::story::note_cause(
-                resources,
-                id,
-                pos,
-                sim_core::colony::story::PressureKind::ColdSnap,
-                0,
-            );
+            crate::runtime::story::note_cause(resources, id, pos, snap.kind, 0);
         }
         let dead = match world.get::<&mut BodyHealth>(entity) {
             Ok(mut health) => {

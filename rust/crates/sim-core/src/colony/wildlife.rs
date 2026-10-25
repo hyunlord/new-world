@@ -8,30 +8,47 @@ use crate::components::AgentId;
 /// An animal's id (`Wildlife::next_id`, from 1).
 pub type AnimalId = u32;
 
-/// What an animal is.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub enum AnimalKind {
-    /// A wolf: comes in packs with the Beasts pressure.
-    Wolf,
-    /// A deer: grazes in the forest, hunted for meat and hide.
-    Deer,
-}
+/// Validated full-width species identity from the installed catalog.
+pub use super::content::ids::AnimalKind;
 
 impl AnimalKind {
-    /// Stable code (0 wolf, 1 deer).
-    pub const fn code(self) -> u8 {
-        match self {
-            Self::Wolf => 0,
-            Self::Deer => 1,
-        }
+    /// Every installed species in stable code order.
+    pub fn all() -> impl ExactSizeIterator<Item = Self> {
+        super::content::installed_or_bundled().animal_ids()
     }
 
-    /// Stable lowercase name.
-    pub const fn name(self) -> &'static str {
-        match self {
-            Self::Wolf => "wolf",
-            Self::Deer => "deer",
-        }
+    /// Definition belonging to this installed identity.
+    pub fn definition(self) -> &'static super::content::AnimalDef {
+        super::content::installed_or_bundled()
+            .animal(self)
+            .unwrap_or_else(|| {
+                panic!(
+                    "installed animal definition missing for code {}",
+                    self.code()
+                )
+            })
+    }
+
+    /// Required validated mechanical role.
+    pub fn role(role: &str) -> Self {
+        super::content::installed_or_bundled()
+            .animal_role(role)
+            .unwrap_or_else(|| panic!("required installed animal role missing: {role}"))
+    }
+
+    /// Stable canonical name.
+    pub fn name(self) -> &'static str {
+        &self.definition().identity.id
+    }
+
+    /// Resolve a canonical name or declared alias.
+    pub fn from_name(name: &str) -> Option<Self> {
+        super::content::installed_or_bundled().animal_by_name(name)
+    }
+
+    /// The movement and combat mechanism selected by this species.
+    pub fn mechanic(self) -> super::content::AnimalMechanic {
+        self.definition().mechanic
     }
 }
 
@@ -165,19 +182,23 @@ pub struct Wildlife {
 }
 
 impl Wildlife {
-    /// The living wolves.
+    /// Living predators, including all species sharing the pack mechanism.
     pub fn wolves(&self) -> impl Iterator<Item = &Animal> + '_ {
-        self.animals.values().filter(|a| a.kind == AnimalKind::Wolf)
+        self.animals
+            .values()
+            .filter(|a| a.kind.mechanic() == super::content::AnimalMechanic::Predator)
     }
 
-    /// The living deer.
+    /// Living grazers in the shared population pool.
     pub fn deer(&self) -> impl Iterator<Item = &Animal> + '_ {
-        self.animals.values().filter(|a| a.kind == AnimalKind::Deer)
+        self.animals
+            .values()
+            .filter(|a| a.kind.mechanic() == super::content::AnimalMechanic::Grazer)
     }
 
-    /// Whether deer `id` may be hunted: marked, or inside a hunt zone.
+    /// Whether a huntable species is marked or inside a hunt zone.
     pub fn huntable(&self, a: &Animal) -> bool {
-        a.kind == AnimalKind::Deer
+        a.kind.definition().huntable
             && (self.marks.contains(&a.id)
                 || self.zones.iter().any(|&(x0, y0, x1, y1)| {
                     (x0..=x1).contains(&a.pos.0) && (y0..=y1).contains(&a.pos.1)

@@ -1,0 +1,5 @@
+(schema_version:1,roles:{},items:[(
+identity:(code:65537,id:"test_hide",name_key:"EXT_HIDE",serde_name:"TestHide",serde_aliases:[],resolver_aliases:[]),
+category:"material",material_format_key:"",tags:["carcass"],stack_max:10,carry:5,
+stack_rule:None,carry_rule:None,value:11,made_by:Some("test_hide_craft"),clue_nodes:["test_hide_craft"],
+chop:None,weapon:None,cutter:None,food:None,fuel_units:None,apparel:None)])

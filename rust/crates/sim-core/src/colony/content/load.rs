@@ -154,6 +154,13 @@ pub(super) fn build(
         }
     }
     let mut catalog = Catalog {
+        animals: Vec::new(),
+        pressures: Vec::new(),
+        animal_index: Index::default(),
+        pressure_index: Index::default(),
+        animal_roles: BTreeMap::new(),
+        pressure_roles: BTreeMap::new(),
+        pressure_schedule: PressureSchedule::default(),
         items: Vec::new(),
         blueprints: Vec::new(),
         recipes: Vec::new(),
@@ -213,6 +220,7 @@ pub(super) fn build(
             .historical_stone_materials
             .insert(validate::material(&catalog, &name)?);
     }
+    load_ecology::load(&mut catalog, &base, &extension)?;
     validate::roles(&catalog)?;
     catalog.knowledge_defs = super::super::knowledge::parse_with_catalog(
         catalog.source_text("knowledge.ron")?,

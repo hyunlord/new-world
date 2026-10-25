@@ -73,7 +73,8 @@ pub fn pick(
         return None;
     }
     let w = &res.colony.wildlife;
-    w.deer()
+    w.animals
+        .values()
         .filter(|a| w.huntable(a))
         .filter(|a| {
             !res.colony
@@ -377,7 +378,14 @@ pub fn step(
     let JobKind::Hunt { animal } = job.kind else {
         return;
     };
-    let Some(deer) = res.colony.wildlife.animals.get(&animal).map(|a| a.pos) else {
+    let Some(deer) = res
+        .colony
+        .wildlife
+        .animals
+        .get(&animal)
+        .filter(|a| a.kind.definition().huntable)
+        .map(|a| a.pos)
+    else {
         cancel(world, res, entity, CancelReason::TargetGone);
         return;
     };
@@ -513,45 +521,75 @@ fn kill(
     if knife {
         res.colony.wildlife.tallies.knife_uses += 1;
     }
-    let meat = if knife {
-        rule.meat_with_knife
-    } else {
-        rule.meat_without_knife
-    };
-    let meat_tiles = drop_carcass(res, deer.pos, meat, ItemKind::role("grazer_hide"));
+    let (meat, meat_tiles) = drop_animal_loot(res, deer.pos, deer.kind, rule, knife);
     let w = &mut res.colony.wildlife;
-    w.tallies.deer_killed += 1;
+    match deer.kind.mechanic() {
+        sim_core::colony::content::AnimalMechanic::Grazer => w.tallies.deer_killed += 1,
+        sim_core::colony::content::AnimalMechanic::Predator => w.tallies.wolves_killed += 1,
+    }
     w.version += 1;
     res.chronicle.push(
         ChronicleEntry::new(res.current_tick, ChronicleKind::Hunted)
             .subject(id)
-            .cause(u32::from(AnimalKind::Deer.code()))
+            .cause(deer.kind.code())
             .value(i64::from(meat)),
     );
     crate::runtime::knowledge::used(world, res, entity, gates().designation(Designation::Hunt));
     meat_tiles
 }
 
-/// Put a carcass's meat and hide on `tile` (ledger created; the meat joins today's lot). Returns the tiles the meat
-/// went to (first the tile itself when it had room). M5.5: every tile the carcass filled is noted in
-/// `Wildlife::carcasses` so its leftovers are hauled before other loose stacks.
+/// Drop the killed species' declared loot, resolving selectors against this world.
+/// Meat identity is restricted by catalog validation to the existing spoilage role.
+pub fn drop_animal_loot(
+    res: &mut SimResources,
+    tile: (u32, u32),
+    kind: AnimalKind,
+    rule: &WildlifeRule,
+    cutter: bool,
+) -> (u16, Vec<(u32, u32)>) {
+    let loot = &kind.definition().loot;
+    let meat = loot.meat.as_ref().map(|m| {
+        let amount = if cutter {
+            m.with_cutter.wildlife(rule)
+        } else {
+            m.without_cutter.wildlife(rule)
+        };
+        (m.item, amount)
+    });
+    let hide = loot
+        .hide
+        .as_ref()
+        .filter(|h| h.enabled.wildlife(rule))
+        .map(|h| (h.item, h.count));
+    let amount = meat.map_or(0, |(_, amount)| amount);
+    (amount, drop_loot(res, tile, meat, hide))
+}
+
+/// Compatibility entry for fixtures using the bundled meat lifecycle and one hide.
 pub fn drop_carcass(
     res: &mut SimResources,
     tile: (u32, u32),
     meat: u16,
     hide: ItemKind,
 ) -> Vec<(u32, u32)> {
+    drop_loot(
+        res,
+        tile,
+        Some((ItemKind::role("grazer_meat"), meat)),
+        Some((hide, 1)),
+    )
+}
+
+fn drop_loot(
+    res: &mut SimResources,
+    tile: (u32, u32),
+    meat: Option<(ItemKind, u16)>,
+    hide: Option<(ItemKind, u16)>,
+) -> Vec<(u32, u32)> {
     let mut meat_tiles = Vec::new();
-    if meat > 0 {
-        res.colony
-            .item_ledger
-            .create(ItemKind::role("grazer_meat"), u64::from(meat));
-        meat_tiles = put_items(
-            res,
-            tile,
-            ItemSpec::raw(ItemKind::role("grazer_meat"), None),
-            meat,
-        );
+    if let Some((kind, meat)) = meat.filter(|(_, count)| *count > 0) {
+        res.colony.item_ledger.create(kind, u64::from(meat));
+        meat_tiles = put_items(res, tile, ItemSpec::raw(kind, None), meat);
         let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
         let lots = &mut res.colony.wildlife.meat_lots;
         match lots.last_mut() {
@@ -560,9 +598,12 @@ pub fn drop_carcass(
         }
         res.colony.wildlife.tallies.meat_dropped += u64::from(meat);
     }
-    res.colony.item_ledger.create(hide, 1);
-    let hide_tiles = put_items(res, tile, ItemSpec::raw(hide, None), 1);
-    res.colony.wildlife.tallies.hides_dropped += 1;
+    let mut hide_tiles = Vec::new();
+    if let Some((kind, count)) = hide.filter(|(_, count)| *count > 0) {
+        res.colony.item_ledger.create(kind, u64::from(count));
+        hide_tiles = put_items(res, tile, ItemSpec::raw(kind, None), count);
+        res.colony.wildlife.tallies.hides_dropped += u64::from(count);
+    }
     if rule(res).is_some_and(|r| r.hunter_hauls) {
         let carcasses = &mut res.colony.wildlife.carcasses;
         carcasses.extend(meat_tiles.iter().copied());

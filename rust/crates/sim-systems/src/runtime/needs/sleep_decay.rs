@@ -66,14 +66,24 @@ impl RuntimeSystem for SleepDecaySystem {
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         // M5 (ADR 0027): a sick person's sleep need grows faster.
-        let sick = crate::runtime::story::rule(resources)
-            .filter(|r| r.illness)
-            .map(|r| f64::from(r.sick_sleep_permille) / 1000.0);
-        if let Some(factor) = sick {
-            for (_entity, (sleep, _)) in world
-                .query::<(&mut Sleep, &sim_core::colony::people::Sick)>()
-                .iter()
-            {
+        for (_entity, (sleep, _, agent)) in world
+            .query::<(
+                &mut Sleep,
+                &sim_core::colony::people::Sick,
+                Option<&sim_core::components::Agent>,
+            )>()
+            .iter()
+        {
+            let illness = agent
+                .and_then(|a| crate::runtime::story::illness_rule(resources, a.id))
+                .or_else(|| crate::runtime::story::rule(resources));
+            if let Some(rule) = illness.filter(|r| {
+                r.illness
+                    || agent.is_some_and(|a| {
+                        resources.content_state.illness_origins.contains_key(&a.id)
+                    })
+            }) {
+                let factor = f64::from(rule.sick_sleep_permille) / 1000.0;
                 sleep.fatigue = (sleep.fatigue + sleep.growth_rate * (factor - 1.0))
                     .clamp(0.0, Sleep::SATURATION);
             }

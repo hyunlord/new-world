@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 9 — M-UX Stage B adds the immutable core content catalogue, factory preflight, full-width content columns, and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
+Schema version: 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
 
 History: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
@@ -21,7 +21,7 @@ names exactly the keys the getter sets (its own `dict.set("k", …)` calls plus 
   `bool`, `String`, `Vector2i`, `Vector4i`, and packed columns `PackedInt32Array`, `PackedInt64Array`,
   `PackedByteArray` (0–255), `PackedFloat32Array`. Feature-detect every key (`snap.has(k)`) and never write to a
   returned array (`duplicate()` first; packed arrays are shared with the `SimReads` cache).
-- **Content codes (schema 9)**: item, recipe and blueprint codes span u32 and use Godot int / PackedInt64Array. Existing numeric examples below describe bundled historical content, not closed enumerations. Mixed Chronicle cause/link codes also use PackedInt64Array. Material bit-pattern columns retain PackedInt32Array. Nested `get_ui_facts` tables inherit their referenced getter column types.
+- **Content codes (schema 10)**: item, recipe, blueprint, pressure and animal codes span u32 and use Godot int / PackedInt64Array. Existing numeric examples below describe bundled historical content, not closed enumerations. Mixed Chronicle cause/link codes also use PackedInt64Array. Material bit-pattern columns retain PackedInt32Array. Nested `get_ui_facts` tables inherit their referenced getter column types.
 - **Columns**: a getter returning parallel packed columns has one row per index; every column has the same length.
 - **Id spaces** (never mix them): **AgentId** (`Agent.id`, a monotonically minted `u64` sent as `int`; stable for
   the life of a world), **entity bits** (`hecs::Entity::to_bits()` as a signed `int`; stable within one engine
@@ -52,7 +52,7 @@ Each call returns a fresh projection of installed definitions; an unavailable ca
 Identity codes are unsigned u32 represented losslessly as Godot int, not array positions. Items, blueprints and
 recipes use resolved registry definitions; knowledge metadata comes from the selected knowledge definitions.
 Material metadata comes from the bundled `assets/ui/content_presentation.json` materials array, retaining its
-separate historical raw-id namespace. Pressure/animal definition metadata is not projected by this getter.
+separate historical raw-id namespace. Pressure and animal definitions are projected from the same selected catalogue.
 
 Top-level fields:
 
@@ -64,6 +64,8 @@ Top-level fields:
 | `item_roles` | Dictionary | exported semantic item role mapping |
 | `blueprints` | Array[Dictionary] | blueprint definitions |
 | `recipes` | Array[Dictionary] | recipe definitions |
+| `pressures` | Array[Dictionary] | pressure definitions |
+| `animals` | Array[Dictionary] | animal definitions |
 | `knowledge` | Array[Dictionary] | knowledge node metadata |
 | `materials` | Array[Dictionary] | bundled material presentation metadata; JSON rows contain id, name_key, category, raw_id |
 
@@ -74,7 +76,10 @@ Nested fields (the literal-key checker flattens these into the same union; they 
 | `code` | int | item/blueprint/recipe identity code; knowledge numeric node id |
 | `id` | String | canonical identity name in item/blueprint/recipe/knowledge rows |
 | `name_key` | String | localization key in those rows |
-| `category` | String | item category |
+| `category` | String | registered presentation category |
+| `mechanic` | String | pressure cold/drought/pack/illness or animal grazer/predator behavior |
+| `huntable` | bool | animal definition permits hunting |
+| `hp` | int | animal definition default HP; get_animals.max_hps resolves per-world overrides |
 | `material_format_key` | String | item material-aware localization format key |
 | `tags` | PackedStringArray | item behavior tags |
 | `tree_output` | int | item_roles entry, when resolved; item code |
@@ -936,7 +941,10 @@ columns) and the banner's numbers.
 |---|---|---|
 | `on` | bool | the world has a storyteller |
 | `kinds` | PackedInt64Array | `PressureKind::code`: 0 cold snap, 1 drought, 2 beasts, 3 illness |
-| `names` | PackedStringArray | `PressureKind::name` (`cold_snap`, `drought`, `beasts`, `illness`) |
+| `names` | PackedStringArray | registered pressure names; bundled examples cold_snap/drought/beasts/illness |
+| `name_keys` | PackedStringArray | registered localization keys |
+| `categories` | PackedStringArray | registered presentation categories |
+| `mechanics` | PackedStringArray | cold/drought/pack/illness behavior categories |
 | `start_days` | PackedInt64Array | display day it began |
 | `end_days` | PackedInt64Array | display day it ends (exclusive; beasts end earlier when the pack is gone) |
 | `days_of` | PackedInt64Array | which day of it today is (1 = its first day: "한파 2일째") |
@@ -948,6 +956,7 @@ columns) and the banner's numbers.
 | `firewood_day_need` | int | one night's burn at a cold snap's rate: burn hours × the night's rate × hearths × `snap_burn_permille` ("하루 18 필요") |
 | `wolves` | int | wolves on the map |
 | `pack_size` | int | the present pack's size, 0 when no pack came |
+| `pack_kind` | int | actual pack pressure identity, default role for independent packs, -1 unavailable |
 | `wolves_x` | int | the wolves' mean tile x, -1 without wolves (the banner's edge pulse) |
 | `wolves_y` | int | the wolves' mean tile y, -1 without wolves |
 | `sick` | int | people sick now |
@@ -961,13 +970,18 @@ wolves) and the hunt zones.
 | key | type | meaning |
 |---|---|---|
 | `ids` | PackedInt64Array | `AnimalId`, ascending |
-| `kinds` | PackedInt64Array | `AnimalKind::code`: 0 wolf, 1 deer |
+| `kinds` | PackedInt64Array | registered animal code; bundled 0 wolf, 1 deer |
+| `names` | PackedStringArray | registered canonical names |
+| `name_keys` | PackedStringArray | registered localization keys |
+| `categories` | PackedStringArray | registered presentation categories |
+| `mechanics` | PackedStringArray | grazer/predator behavior categories |
+| `max_hps` | PackedInt32Array | resolved per-world maximum hit points |
 | `xs` | PackedInt32Array | tile x |
 | `ys` | PackedInt32Array | tile y |
 | `hps` | PackedInt32Array | hit points (deer 30, wolf 40 at full) |
 | `states` | PackedInt32Array | `AnimalState::code`: 0 wander, 1 flee, 2 rest, 3 hunt, 4 attack, 5 retreat |
-| `huntable` | PackedByteArray | 1 when a deer may be hunted (its own mark or inside a hunt zone) |
-| `marked` | PackedByteArray | 1 when a deer carries a hunt mark of its own |
+| `huntable` | PackedByteArray | 1 when a hunt-capable animal is marked or inside a hunt zone |
+| `marked` | PackedByteArray | 1 when an animal carries a hunt mark of its own |
 | `zones` | PackedInt32Array | hunt zones as `x0, y0, x1, y1` quadruples, in the order they were added |
 | `version` | int | `Wildlife::version` |
 
@@ -1039,7 +1053,7 @@ of the entry: one row per link, from the entry itself to its first cause (`mood:
 | `complete` | bool | the year is over |
 | `births` | int | births |
 | `deaths` | PackedInt32Array | deaths by `DeathReason::as_u8`: starvation, dehydration, combat, old age, exposure |
-| `pressures` | PackedInt32Array | pressures begun by `PressureKind::code` |
+| `pressures` | PackedInt32Array | pressures begun in fixed mechanical buckets cold/drought/pack/illness; includes novel identities |
 | `discoveries` | int | knowledge discovered |
 | `lost` | int | knowledge lost |
 | `quarrels` | int | quarrels |
@@ -1358,13 +1372,16 @@ The static checker compares the union of literal keys, including nested builders
 | `marked` | `animals.marked` |
 | `marker_weights` | `tech.marker_weights` |
 | `migrants_joined` | `neighbours.migrants_joined` |
-| `name_keys` | `tech.name_keys`, `neighbours.name_keys` |
-| `names` | `tech.names`, `story.names` |
+| `name_keys` | `tech.name_keys`, `neighbours.name_keys`, `story.name_keys`, `animals.name_keys` |
+| `names` | `tech.names`, `story.names`, `animals.names` |
 | `nodes` | `waits.nodes` |
 | `now` | `neighbours.now` |
 | `on` | `story.on` |
 | `overridden` | `rooms.overridden` |
 | `pack_size` | `story.pack_size` |
+| `pack_kind` | `story.pack_kind` |
+| `categories` | `story.categories`, `animals.categories` |
+| `mechanics` | `story.mechanics`, `animals.mechanics` |
 | `populations` | `neighbours.populations` |
 | `practitioners` | `tech.practitioners` |
 | `prereq_from` | `tech.prereq_from` |

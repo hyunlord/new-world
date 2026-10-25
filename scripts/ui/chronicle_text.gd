@@ -166,20 +166,12 @@ static func story_sentence(row: Dictionary, locale: Node) -> String:
 		19:
 			return LocaleScript.format_text(loc(locale, "M5_CHRON_QUARREL_FMT"), {"a": who, "b": person(other, locale), "cause": StoryText.quarrel_cause(locale, cause)})
 		29:
-			match cause:
-				StoryText.COLD_SNAP: return loc(locale, "M5_CHRON_BEGAN_COLD")
-				StoryText.DROUGHT: return loc(locale, "M5_CHRON_BEGAN_DROUGHT")
-				StoryText.BEASTS: return LocaleScript.format_text(loc(locale, "M5_CHRON_BEGAN_BEASTS_FMT"), {"count": value})
-				StoryText.ILLNESS:
-					if subject >= 0:
-						return LocaleScript.format_text(loc(locale, "M5_CHRON_BEGAN_ILLNESS_FMT"), {"person": who})
-					return loc(locale, "M5_CHRON_BEGAN_ILLNESS")
-			return loc(locale, "UI_UNKNOWN")
+			var event: String = "began_person" if subject >= 0 else "began"
+			return StoryText.content_phrase(locale, "pressure", cause, event, {"person": who, "count": value})
 		30:
 			return LocaleScript.format_text(loc(locale, "M5_CHRON_ENDED_FMT"), {"pressure": KnowledgeText.with_subject(locale, StoryText.pressure(locale, cause)), "deaths": maxi(0, value)})
 		31:
-			var key: String = "M5_CHRON_HUNTED_WOLF_FMT" if cause == StoryText.WOLF else "M5_CHRON_HUNTED_DEER_FMT"
-			return LocaleScript.format_text(loc(locale, key), {"person": who, "meat": maxi(0, value)})
+			return StoryText.content_phrase(locale, "animal", cause, "hunted", {"person": who, "meat": maxi(0, value)})
 		32:
 			return LocaleScript.format_text(loc(locale, "M5_CHRON_FIGHT_FMT"), {"a": who, "b": person(other, locale), "cause": StoryText.quarrel_cause(locale, cause)})
 		33:
@@ -193,9 +185,7 @@ static func story_sentence(row: Dictionary, locale: Node) -> String:
 			var keys: Array[String] = ["M5_CHRON_DRAFTED_FMT", "M5_CHRON_UNDRAFTED_FMT", "M5_CHRON_SELF_UNDRAFTED_FMT"]
 			return LocaleScript.format_text(loc(locale, keys[clampi(cause, 0, 2)]), {"person": who})
 		35:
-			if subject >= 0:
-				return LocaleScript.format_text(loc(locale, "M5_CHRON_WOLF_KILLED_FMT"), {"person": who, "left": maxi(0, value)})
-			return LocaleScript.format_text(loc(locale, "M5_CHRON_WOLF_DIED_FMT"), {"left": maxi(0, value)})
+			return StoryText.content_phrase(locale, "animal", cause, "killed" if subject >= 0 else "died", {"person": who, "left": maxi(0, value)})
 		36:
 			if other >= 0:
 				return LocaleScript.format_text(loc(locale, "M5_CHRON_SICK_FROM_FMT"), {"person": who, "other": person(other, locale)})

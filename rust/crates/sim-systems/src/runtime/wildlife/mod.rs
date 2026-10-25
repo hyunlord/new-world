@@ -33,7 +33,7 @@
 //!   is); once a day, the meat lots older than `meat_spoil_days` spoil (ground
 //!   stacks in tile order; ledger consumed).
 use hecs::World;
-use sim_core::colony::story::PressureKind;
+use sim_core::colony::content::{AnimalMechanic, PressureMechanic};
 use sim_core::colony::wildlife::{Animal, AnimalKind, AnimalState, Fight, Fighter};
 use sim_core::colony::ItemKind;
 use sim_core::components::{Agent, AgentId, Position, ResourceKind};
@@ -109,7 +109,7 @@ fn new_animal(
             id,
             kind,
             hp,
-            state: if kind == AnimalKind::Wolf {
+            state: if kind.mechanic() == AnimalMechanic::Predator {
                 AnimalState::Hunt
             } else {
                 AnimalState::Wander
@@ -119,7 +119,7 @@ fn new_animal(
             born_tick: res.current_tick,
             path: Vec::new(),
             goal: None,
-            home: (kind == AnimalKind::Deer).then_some(pos),
+            home: (kind.mechanic() == AnimalMechanic::Grazer).then_some(pos),
         },
     );
     w.version += 1;
@@ -129,23 +129,135 @@ fn new_animal(
 /// Bring a pack of `n` wolves to `at` as the pack of day `day` (tests, the probe's
 /// fixtures; the AnimalSystem's own packs come with a Beasts pressure).
 pub fn spawn_pack(res: &mut SimResources, at: (u32, u32), n: u32, day: u32) -> Vec<u32> {
-    let Some(rule) = rule(res) else {
+    let Some(base) = rule(res) else {
         return Vec::new();
     };
+    let rule = AnimalKind::role("default_predator")
+        .definition()
+        .resolve_rule(&base);
     res.colony.wildlife.pack_day = Some(day);
     res.colony.wildlife.pack_size = n.max(1);
     (0..n)
         .map(|_| {
             res.colony.wildlife.tallies.wolves_spawned += 1;
-            new_animal(res, AnimalKind::Wolf, rule.wolf_hp, at, Some(day))
+            new_animal(
+                res,
+                AnimalKind::role("default_predator"),
+                rule.wolf_hp,
+                at,
+                Some(day),
+            )
         })
         .collect()
 }
 
 /// Put one deer on `at` (tests).
 pub fn spawn_deer(res: &mut SimResources, at: (u32, u32)) -> Option<u32> {
-    let rule = rule(res)?;
-    Some(new_animal(res, AnimalKind::Deer, rule.deer_hp, at, None))
+    let base = rule(res)?;
+    let rule = AnimalKind::role("default_grazer")
+        .definition()
+        .resolve_rule(&base);
+    Some(new_animal(
+        res,
+        AnimalKind::role("default_grazer"),
+        rule.deer_hp,
+        at,
+        None,
+    ))
+}
+
+/// Rejection before a generic species spawn changes wildlife state.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SpawnError {
+    /// Wildlife is disabled in this world.
+    Disabled,
+    /// The identity is not a member of the installed catalog.
+    UnknownSpecies,
+    /// Grazer species cannot belong to a predator pack.
+    InvalidPack,
+    /// The tile is outside the supported ground or navigation region.
+    InvalidGround,
+    /// There are not enough unused animal identifiers.
+    IdExhausted,
+}
+
+fn validate_spawn(
+    res: &SimResources,
+    kind: AnimalKind,
+    at: (u32, u32),
+    pack: Option<u32>,
+    count: u32,
+) -> Result<u16, SpawnError> {
+    let base = rule(res).ok_or(SpawnError::Disabled)?;
+    let def = sim_core::colony::content::installed_or_bundled()
+        .animal(kind)
+        .ok_or(SpawnError::UnknownSpecies)?;
+    if pack.is_some() && def.mechanic != AnimalMechanic::Predator {
+        return Err(SpawnError::InvalidPack);
+    }
+    if !res.nav.passable(at) || res.nav.region_of(at) == 0 {
+        return Err(SpawnError::InvalidGround);
+    }
+    if def.mechanic == AnimalMechanic::Grazer
+        && !matches!(
+            terrain(res, at),
+            Some(TerrainType::Forest | TerrainType::Plain)
+        )
+    {
+        return Err(SpawnError::InvalidGround);
+    }
+    if let Some(hearth) = crate::worldgen::colony::hearth(res) {
+        if !res.nav.reaches(res.nav.region_of(hearth), at)
+            || (def.mechanic == AnimalMechanic::Grazer
+                && !deer_ground(res, &def.resolve_rule(&base), hearth, at))
+        {
+            return Err(SpawnError::InvalidGround);
+        }
+    }
+    if res
+        .colony
+        .wildlife
+        .next_id
+        .max(1)
+        .checked_add(count)
+        .is_none()
+    {
+        return Err(SpawnError::IdExhausted);
+    }
+    Ok(def.hp.wildlife(&base))
+}
+
+/// Spawn a registered species on reachable ground with explicit pack membership.
+/// Population caps remain shared; this explicit entry does not seed a new population policy.
+pub fn spawn_animal(
+    res: &mut SimResources,
+    kind: AnimalKind,
+    at: (u32, u32),
+    pack: Option<u32>,
+) -> Result<u32, SpawnError> {
+    crate::runtime::nav::ensure(res);
+    let hp = validate_spawn(res, kind, at, pack, 1)?;
+    Ok(new_animal(res, kind, hp, at, pack))
+}
+
+/// Spawn a registered predator pack, retaining the existing shared pack bookkeeping.
+pub fn spawn_pack_kind(
+    res: &mut SimResources,
+    kind: AnimalKind,
+    at: (u32, u32),
+    n: u32,
+    day: u32,
+) -> Result<Vec<u32>, SpawnError> {
+    crate::runtime::nav::ensure(res);
+    let hp = validate_spawn(res, kind, at, Some(day), n)?;
+    res.colony.wildlife.pack_day = Some(day);
+    res.colony.wildlife.pack_size = n.max(1);
+    Ok((0..n)
+        .map(|_| {
+            res.colony.wildlife.tallies.wolves_spawned += 1;
+            new_animal(res, kind, hp, at, Some(day))
+        })
+        .collect())
 }
 
 /// The deer's places near `centre`: those within `deer_home_tiles` of it, else all (a herd keeps its forest).
@@ -170,6 +282,10 @@ fn near_herd(places: &[(u32, u32)], centre: Option<(u32, u32)>, reach: u32) -> V
 /// Place the first deer (once) as a herd around a keyed centre, and a new one every
 /// `deer_respawn_days` below the cap, near the home of a living deer (DECISIONS D8).
 fn deer_births(res: &mut SimResources, rule: &WildlifeRule, hearth: (u32, u32)) {
+    let projected = AnimalKind::role("default_grazer")
+        .definition()
+        .resolve_rule(rule);
+    let rule = &projected;
     let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
     let seed = res.world_seed;
     let reach = rule.deer_home_tiles;
@@ -196,7 +312,13 @@ fn deer_births(res: &mut SimResources, rule: &WildlifeRule, hearth: (u32, u32)) 
         for i in 0..n {
             let at = places
                 [keyed_below(seed, STREAM_WILDLIFE, 0, 0, 1 + i, 0, places.len() as u64) as usize];
-            new_animal(res, AnimalKind::Deer, rule.deer_hp, at, None);
+            new_animal(
+                res,
+                AnimalKind::role("default_grazer"),
+                rule.deer_hp,
+                at,
+                None,
+            );
         }
         return;
     }
@@ -229,7 +351,13 @@ fn deer_births(res: &mut SimResources, rule: &WildlifeRule, hearth: (u32, u32)) 
                 0,
                 places.len() as u64,
             ) as usize];
-            new_animal(res, AnimalKind::Deer, rule.deer_hp, at, None);
+            new_animal(
+                res,
+                AnimalKind::role("default_grazer"),
+                rule.deer_hp,
+                at,
+                None,
+            );
             res.colony.wildlife.tallies.deer_born += 1;
         }
     }
@@ -301,6 +429,8 @@ fn deer_steps(
         let Some(a) = res.colony.wildlife.animals.get(&id).cloned() else {
             continue;
         };
+        let projected = a.kind.definition().resolve_rule(rule);
+        let rule = &projected;
         let near = folk
             .iter()
             .filter(|(_, p, _)| chebyshev(*p, a.pos) <= rule.deer_flee_tiles)
@@ -444,7 +574,8 @@ fn wolf_steps(
     hearth: (u32, u32),
     folk: &[(AgentId, (u32, u32), bool)],
 ) {
-    let beasts = res.colony.story.active_of(PressureKind::Beasts).copied();
+    let active = crate::runtime::story::active_mechanic(res, PressureMechanic::Pack);
+    let beasts = active.and_then(|active| res.colony.story.active_of(active.kind).copied());
     // The pack arrives with its pressure.
     if let Some(p) = beasts {
         if res.colony.wildlife.pack_day != Some(p.start_day) {
@@ -456,7 +587,10 @@ fn wolf_steps(
                     let at = step_rel(res, edge, hearth, true, |_| true)
                         .filter(|_| i % 2 == 1)
                         .unwrap_or(edge);
-                    new_animal(res, AnimalKind::Wolf, rule.wolf_hp, at, Some(p.start_day));
+                    if let Some(pack) = p.kind.definition().pack.as_ref() {
+                        let hp = pack.animal.definition().hp.wildlife(rule);
+                        new_animal(res, pack.animal, hp, at, Some(p.start_day));
+                    }
                     res.colony.wildlife.tallies.wolves_spawned += 1;
                 }
             }
@@ -464,8 +598,8 @@ fn wolf_steps(
     }
     let wolves: Vec<u32> = res.colony.wildlife.wolves().map(|a| a.id).collect();
     if wolves.is_empty() {
-        if beasts.is_some() && res.colony.wildlife.pack_day == beasts.map(|p| p.start_day) {
-            crate::runtime::story::end_pressure(res, PressureKind::Beasts);
+        if let Some(p) = beasts.filter(|p| res.colony.wildlife.pack_day == Some(p.start_day)) {
+            crate::runtime::story::end_pressure(res, p.kind);
         }
         return;
     }
@@ -484,13 +618,18 @@ fn wolf_steps(
             e
         }
     };
-    let story_days = crate::runtime::story::rule(res).map_or(2, |s| s.beasts_max_days);
+    let story_days = active.map_or_else(
+        || crate::runtime::story::rule(res).map_or(2, |s| s.beasts_max_days),
+        |active| active.rule.beasts_max_days,
+    );
     // The pack spreads over its prey: a wolf takes the nearest person no other wolf has this step.
     let mut taken: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
     for id in wolves {
         let Some(a) = res.colony.wildlife.animals.get(&id).cloned() else {
             continue;
         };
+        let projected = a.kind.definition().resolve_rule(rule);
+        let rule = &projected;
         let overstayed = tick.saturating_sub(a.born_tick) >= u64::from(story_days) * day_ticks;
         if overstayed
             || (a.state == AnimalState::Retreat && edge.is_some_and(|e| chebyshev(e, a.pos) <= 1))
@@ -770,8 +909,7 @@ impl RuntimeSystem for AnimalSystem {
         wolf_steps(world, res, &rule, hearth, &folk);
         if tick.is_multiple_of(60) {
             feed_larder(res, &rule);
-            // M5.5: a carcass tile leaves the list once nothing of the kill (items tagged `carcass` in values.ron) lies
-            // there off the stockpiles.
+            // Keep declared species loot eligible for carcass hauling until it is removed or stocked.
             if !res.colony.wildlife.carcasses.is_empty() {
                 let colony = &res.colony;
                 let keep: std::collections::BTreeSet<(u32, u32)> = colony
@@ -783,6 +921,11 @@ impl RuntimeSystem for AnimalSystem {
                         !colony.zone_of_tile.contains_key(t)
                             && colony.ground_items.get(t).is_some_and(|s| {
                                 sim_core::colony::values::has_tag(s.kind, "carcass")
+                                    || AnimalKind::all().any(|kind| {
+                                        let loot = &kind.definition().loot;
+                                        loot.hide.as_ref().is_some_and(|h| h.item == s.kind)
+                                            || loot.meat.as_ref().is_some_and(|m| m.item == s.kind)
+                                    })
                             })
                     })
                     .collect();

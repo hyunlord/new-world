@@ -18,8 +18,8 @@
 //! active every drafted person-tick is part of its cost (work lost).
 use hecs::{Entity, World};
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+use sim_core::colony::content::PressureMechanic;
 use sim_core::colony::people::{DraftOrder, Drafted};
-use sim_core::colony::story::PressureKind;
 use sim_core::colony::wildlife::{Fight, Fighter};
 use sim_core::colony::{CancelReason, Tool};
 use sim_core::components::{
@@ -209,14 +209,14 @@ impl RuntimeSystem for DraftSystem {
             .agent
             .critical_preemption
             .unwrap_or(crate::runtime::decision::needs::CRITICAL_NEED);
-        let beasts = res.colony.story.is_active(PressureKind::Beasts);
+        let beasts = crate::runtime::story::active_mechanic(res, PressureMechanic::Pack);
         for (id, entity, d, pos, need) in rows {
             if need >= critical {
                 undraft(world, res, entity, id, 2);
                 continue;
             }
-            if beasts {
-                crate::runtime::story::add_cost(res, PressureKind::Beasts, 0, 1);
+            if let Some(active) = beasts {
+                crate::runtime::story::add_cost(res, active.kind, 0, 1);
             }
             if let Some(tile) = d.arming {
                 if res.nav.arrived(pos, tile) || pos == tile {

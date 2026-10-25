@@ -72,6 +72,35 @@ pub(super) fn validate(resources: &SimResources) -> Result<(), String> {
     Ok(())
 }
 
+/// Validate novel illness origins after reconstructing the actual ECS world.
+pub(super) fn validate_illness(res: &SimResources, world: &hecs::World) -> Result<(), String> {
+    use sim_core::colony::content::{installed, PressureMechanic};
+    use sim_core::colony::people::Sick;
+    use sim_core::components::Agent;
+    let catalog = installed().map_err(|error| error.to_string())?;
+    let sick_agents: std::collections::BTreeSet<_> = world
+        .query::<(&Agent, &Sick)>()
+        .iter()
+        .map(|(_, (agent, _))| agent.id)
+        .collect();
+    for (agent, kind) in &res.content_state.illness_origins {
+        let definition = catalog
+            .require_pressure(*kind)
+            .map_err(|error| error.to_string())?;
+        if definition.mechanic != PressureMechanic::Illness {
+            return Err(format!(
+                "illness origin for agent {agent} is not an illness pressure"
+            ));
+        }
+        if !sick_agents.contains(agent) {
+            return Err(format!(
+                "illness origin for agent {agent} has no live Sick component"
+            ));
+        }
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -97,6 +126,34 @@ mod tests {
                 style_id: kind.definition().style_id.clone(),
             },
         );
+    }
+
+    #[test]
+    fn illness_origin_requires_an_illness_and_a_live_sick_person() {
+        use sim_core::colony::{people::Sick, story::PressureKind};
+        use sim_core::components::Agent;
+        let mut res = resources();
+        let mut world = hecs::World::new();
+        assert_eq!(validate_illness(&res, &world), Ok(()));
+        res.content_state
+            .illness_origins
+            .insert(71, PressureKind::Illness);
+        assert!(validate_illness(&res, &world)
+            .expect_err("missing person")
+            .contains("live Sick"));
+        let entity = world.spawn((Agent { id: 71 }, Sick { until: 999 }));
+        assert_eq!(validate_illness(&res, &world), Ok(()));
+        res.content_state
+            .illness_origins
+            .insert(71, PressureKind::Drought);
+        assert!(validate_illness(&res, &world)
+            .expect_err("wrong mechanism")
+            .contains("not an illness"));
+        res.content_state
+            .illness_origins
+            .insert(71, PressureKind::Illness);
+        world.remove_one::<Sick>(entity).expect("recovery");
+        assert!(validate_illness(&res, &world).is_err());
     }
 
     #[test]

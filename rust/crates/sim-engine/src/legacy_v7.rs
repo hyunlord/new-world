@@ -4,7 +4,7 @@ use super::*;
 
 /// Resources decoded using the exact published format6/7 field order.
 #[derive(serde::Deserialize)]
-pub struct LegacySimResources {
+pub struct LegacySimResources<C = sim_core::chronicle::legacy_v7::LegacyChronicle> {
     /// Construction-time policy; default preserves every legacy behavior.
     pub rules: WorldRules,
     /// Generation seed; legacy fixtures use zero.
@@ -75,7 +75,7 @@ pub struct LegacySimResources {
     /// `InfluenceChanged` records once per drained dirty region per
     /// channel. Consumed by the "왜?" UI (Week 6) to attribute
     /// influence-grid state to the events that produced it.
-    pub causal_log: CausalLogStorage,
+    pub causal_log: sim_core::causal::storage::legacy_v7::LegacyCausalLogStorage,
 
     /// Monotonic source of [`EventId`]s for the causal log
     /// (V7 Phase 3-β / P3β-1). Allocated once per recorded event via
@@ -279,7 +279,7 @@ pub struct LegacySimResources {
     /// village and a person table that outlives death. Write-only for the
     /// simulation (no system decides anything from it); read by probes and
     /// the bridge. Recorded in every scene.
-    pub chronicle: sim_core::chronicle::legacy_v7::LegacyChronicle,
+    pub chronicle: C,
 
     /// Pass 20 (`game_v25`): every village pair's relation, the porter
     /// trips in flight and the measurement-only trip and decision logs.
@@ -289,7 +289,7 @@ pub struct LegacySimResources {
     /// M1 colony: trees, ground items, zones, designations, footprints,
     /// reservations, the command log and the item ledger. Empty without
     /// `rules.colony` (the baseline world never fills it).
-    pub colony: sim_core::colony::ColonyState,
+    pub colony: sim_core::colony::legacy_v7::LegacyColonyState,
 
     /// M1.5 births that are due (`BirthRule::Fertility`): `FertilitySystem`
     /// queues them, `SettlementSystem` spawns them on the next tick. Always
@@ -313,8 +313,8 @@ pub struct LegacySimResources {
     pub nav: sim_core::nav::NavState,
 }
 
-impl From<LegacySimResources> for SimResources {
-    fn from(old: LegacySimResources) -> Self {
+impl<C: Into<sim_core::chronicle::Chronicle>> From<LegacySimResources<C>> for SimResources {
+    fn from(old: LegacySimResources<C>) -> Self {
         Self {
             rules: old.rules,
             world_seed: old.world_seed,
@@ -340,7 +340,7 @@ impl From<LegacySimResources> for SimResources {
             current_tick: old.current_tick,
             steward: old.steward,
             building_event_queue: old.building_event_queue,
-            causal_log: old.causal_log,
+            causal_log: old.causal_log.into(),
             next_event_id: old.next_event_id,
             next_agent_id: old.next_agent_id,
             food_tiles: old.food_tiles,
@@ -375,7 +375,7 @@ impl From<LegacySimResources> for SimResources {
             fission_checks: old.fission_checks,
             chronicle: old.chronicle.into(),
             settlement_relations: old.settlement_relations,
-            colony: old.colony,
+            colony: old.colony.into(),
             due_births: old.due_births,
             spatial: old.spatial,
             nav: old.nav,
@@ -383,3 +383,7 @@ impl From<LegacySimResources> for SimResources {
         }
     }
 }
+
+/// Format8 resource layout differs only in Chronicle entry cause width.
+pub type LegacySimResourcesV8 =
+    LegacySimResources<sim_core::chronicle::legacy_v7::LegacyChronicleV8>;

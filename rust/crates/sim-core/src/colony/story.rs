@@ -2,51 +2,60 @@
 //! `sim_systems::runtime::story`.
 use serde::{Deserialize, Serialize};
 
-/// A kind of pressure (goal 3.1).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub enum PressureKind {
-    /// A cold snap: winter nights burn twice the wood, the cold bites harder.
-    ColdSnap,
-    /// A drought: forage regrows slowly, thirst grows faster.
-    Drought,
-    /// A wolf pack comes to the camp.
-    Beasts,
-    /// One adult falls ill (droppable 6.4).
-    Illness,
-}
+/// Frozen historical storyteller decoding.
+pub mod legacy_v7;
+
+/// Installed pressure identity.
+pub use super::content::ids::PressureKind;
 
 impl PressureKind {
-    /// Every kind in code order.
+    /// Historical bundled identities, retained for compatibility fixtures only.
     pub const ALL: [Self; 4] = [Self::ColdSnap, Self::Drought, Self::Beasts, Self::Illness];
 
-    /// Stable code (chronicle cause, bridge).
-    pub const fn code(self) -> u8 {
-        match self {
-            Self::ColdSnap => 0,
-            Self::Drought => 1,
-            Self::Beasts => 2,
-            Self::Illness => 3,
-        }
+    /// Resolve an explicit registered code without narrowing its width.
+    pub fn from_code(code: u32) -> Option<Self> {
+        super::content::installed_or_bundled()
+            .pressure_ids()
+            .find(|kind| kind.code() == code)
     }
 
-    /// Stable lowercase name.
-    pub const fn name(self) -> &'static str {
-        match self {
-            Self::ColdSnap => "cold_snap",
-            Self::Drought => "drought",
-            Self::Beasts => "beasts",
-            Self::Illness => "illness",
-        }
+    /// Every installed pressure in stable code order.
+    pub fn all() -> impl ExactSizeIterator<Item = Self> {
+        super::content::installed_or_bundled().pressure_ids()
     }
 
-    /// The kind of [`Self::code`].
-    pub fn from_code(code: u8) -> Option<Self> {
-        Self::ALL.into_iter().find(|k| k.code() == code)
+    /// The installed definition for this validated identity.
+    pub fn definition(self) -> &'static super::content::PressureDef {
+        super::content::installed_or_bundled()
+            .pressure(self)
+            .unwrap_or_else(|| {
+                panic!(
+                    "installed pressure definition missing for code {}",
+                    self.code()
+                )
+            })
     }
 
-    /// Whether the kind is a season's major (all but illness).
-    pub const fn is_major(self) -> bool {
-        !matches!(self, Self::Illness)
+    /// Resolve a required validated role.
+    pub fn role(role: &str) -> Self {
+        super::content::installed_or_bundled()
+            .pressure_role(role)
+            .unwrap_or_else(|| panic!("required installed pressure role missing: {role}"))
+    }
+
+    /// Canonical name used by logs and presentation.
+    pub fn name(self) -> &'static str {
+        &self.definition().identity.id
+    }
+
+    /// Resolve a registered name or alias.
+    pub fn from_name(name: &str) -> Option<Self> {
+        super::content::installed_or_bundled().pressure_by_name(name)
+    }
+
+    /// Whether this definition participates in major pressure spacing.
+    pub fn is_major(self) -> bool {
+        self.definition().major
     }
 }
 
@@ -114,7 +123,7 @@ pub struct Storyteller {
     pub version: u64,
     /// `(pressure kind code, person, effect)` already given a `PressureCause`
     /// event while that pressure is active (cleared when it ends).
-    pub touched: std::collections::BTreeSet<(u8, crate::components::AgentId, u8)>,
+    pub touched: std::collections::BTreeSet<(u32, crate::components::AgentId, u8)>,
 }
 
 impl Storyteller {
@@ -150,7 +159,7 @@ mod tests {
 
     #[test]
     fn codes_are_stable_and_round_trip() {
-        let codes: Vec<u8> = PressureKind::ALL.iter().map(|k| k.code()).collect();
+        let codes: Vec<u32> = PressureKind::ALL.iter().map(|k| k.code()).collect();
         assert_eq!(codes, vec![0, 1, 2, 3]);
         for kind in PressureKind::ALL {
             assert_eq!(PressureKind::from_code(kind.code()), Some(kind));

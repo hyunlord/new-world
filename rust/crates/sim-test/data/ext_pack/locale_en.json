@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "strings": {
+    "EXT_HIDE": "Test hide",
+    "EXT_RECIPE": "Test hide craft",
+    "EXT_KNOWLEDGE": "Test hide knowledge",
+    "EXT_WALL": "Test mudbrick wall",
+    "EXT_COLD": "Test cold",
+    "EXT_ANIMAL": "Test grazer",
+    "EXT_ALERT": "Pack supply",
+    "EXT_ALERT_WHY": "The selected pack added this alert.",
+    "EXT_ALERT_FIX": "Inspect this settlement.",
+    "EXT_LESSON": "Selected pack lesson",
+    "EXT_LESSON_BODY": "Move the camera to complete this added lesson.",
+    "EXT_LESSON_STEWARD": "Manual camera action"
+  }
+}

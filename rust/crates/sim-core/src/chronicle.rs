@@ -440,7 +440,7 @@ pub enum CauseRef {
     /// `PressureBegan` entry when known.
     Pressure {
         /// The pressure kind code.
-        kind: u8,
+        kind: u32,
         /// Its `PressureBegan` entry.
         entry: Option<u32>,
     },

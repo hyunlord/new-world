@@ -13,7 +13,7 @@ static var _presentation: Dictionary = {}
 static func validate(dto: Dictionary) -> String:
 	if dto.get("schema_version") != 1 or not dto.get("registry_revision") is String or str(dto.get("registry_revision", "")).is_empty():
 		return "content catalog: invalid schema/revision"
-	for family: String in ["items", "blueprints", "recipes"]:
+	for family: String in ["items", "blueprints", "recipes", "pressures", "animals"]:
 		if not dto.get(family) is Array:
 			return "content catalog: missing " + family
 		var codes: Dictionary = {}
@@ -28,6 +28,12 @@ static func validate(dto: Dictionary) -> String:
 				return "content catalog: missing identity in " + family
 			if codes.has(row["code"]) or names.has(row["id"]):
 				return "content catalog: duplicate identity in " + family
+			if family in ["pressures", "animals"]:
+				var categories: Array = ["cold", "drought", "pack", "illness"] if family == "pressures" else ["grazer", "predator"]
+				if row.get("category") not in categories or row.get("mechanic") not in categories:
+					return "content catalog: invalid mechanical category in " + family
+				if family == "animals" and (not row.get("huntable") is bool or not row.get("hp") is int or int(row["hp"]) <= 0):
+					return "content catalog: invalid animal capability/hp"
 			codes[row["code"]] = true
 			names[row["id"]] = true
 	return ""

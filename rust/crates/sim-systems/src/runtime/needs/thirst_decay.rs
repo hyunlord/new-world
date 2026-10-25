@@ -61,10 +61,11 @@ impl RuntimeSystem for ThirstDecaySystem {
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         // M5 (ADR 0027): a drought makes thirst grow faster.
-        if let Some(drought) =
-            crate::runtime::story::active(resources, sim_core::colony::story::PressureKind::Drought)
-        {
-            let factor = f64::from(drought.drought_thirst_permille) / 1000.0;
+        if let Some(drought) = crate::runtime::story::active_mechanic(
+            resources,
+            sim_core::colony::content::PressureMechanic::Drought,
+        ) {
+            let factor = f64::from(drought.rule.drought_thirst_permille) / 1000.0;
             for (_entity, thirst) in world.query::<&mut Thirst>().iter() {
                 thirst.value =
                     (thirst.value + thirst.growth_rate * factor).clamp(0.0, Thirst::SATURATION);

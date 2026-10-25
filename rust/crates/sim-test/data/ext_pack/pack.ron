@@ -1,0 +1,5 @@
+(schema_version:1,id:"seven_family_fixture",revision:"1",sources:{
+"items":"items.ron","recipes":"recipes.ron","blueprints":"blueprints.ron",
+"knowledge":"knowledge.ron","pressures":"pressures.ron","animals":"animals.ron",
+"alerts":"alerts.json","lessons":"lessons.json","locale_en":"locale_en.json",
+"locale_ko":"locale_ko.json","bindings":"bindings.json"})

@@ -288,7 +288,7 @@ fn quarrel(
         ),
         Some((m, _)) => (
             m.quarrel_cause(),
-            Some(super::cause_of(res, *m, facts.mood)),
+            Some(super::cause_for_person(res, init.0, *m, facts.mood)),
         ),
         // Bad blood: the relation itself, pointing at the pair's previous quarrel.
         None => (

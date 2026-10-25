@@ -35,12 +35,16 @@ pub struct ContentState {
     pub completed: BTreeMap<((u32, u32), CompletedLayer), CompletedIdentity>,
     /// Non-default reusable cutter selected at each workshop.
     pub workshop_cutters: BTreeMap<u32, ItemKind>,
+    /// Novel illness origin retained until recovery or death; default illness stays implicit.
+    pub illness_origins: BTreeMap<crate::components::AgentId, super::story::PressureKind>,
 }
 
 impl ContentState {
     /// Whether the world still has the historical implicit content representation.
     pub fn is_empty(&self) -> bool {
-        self.completed.is_empty() && self.workshop_cutters.is_empty()
+        self.completed.is_empty()
+            && self.workshop_cutters.is_empty()
+            && self.illness_origins.is_empty()
     }
 }
 

@@ -149,3 +149,49 @@ fn workshop_historical_discriminants_match_nested_bytes() {
         assert_eq!(decoded, after);
     }
 }
+
+#[derive(Clone, Copy, Serialize)]
+enum OldPressureKind {
+    ColdSnap,
+    Drought,
+    Beasts,
+    Illness,
+}
+#[derive(Clone, Copy, Serialize)]
+enum OldAnimalKind {
+    Wolf,
+    Deer,
+}
+
+#[test]
+fn pressure_and_animal_historical_unit_enum_bytes() {
+    use sim_core::colony::{story::PressureKind, wildlife::AnimalKind};
+    bootstrap(BootSelection::Bundled).expect("bundled catalog");
+    for (old, new) in [
+        (OldPressureKind::ColdSnap, PressureKind::ColdSnap),
+        (OldPressureKind::Drought, PressureKind::Drought),
+        (OldPressureKind::Beasts, PressureKind::Beasts),
+        (OldPressureKind::Illness, PressureKind::Illness),
+    ] {
+        let bytes = encode(&(251u32, old, -123i64)).expect("old pressure");
+        assert_eq!(
+            bytes,
+            encode(&(251u32, new, -123i64)).expect("new pressure")
+        );
+        assert_eq!(
+            decode::<(u32, PressureKind, i64)>(&bytes).expect("decode pressure"),
+            (251, new, -123)
+        );
+    }
+    for (old, new) in [
+        (OldAnimalKind::Wolf, AnimalKind::Wolf),
+        (OldAnimalKind::Deer, AnimalKind::Deer),
+    ] {
+        let bytes = encode(&(251u32, old, -123i64)).expect("old animal");
+        assert_eq!(bytes, encode(&(251u32, new, -123i64)).expect("new animal"));
+        assert_eq!(
+            decode::<(u32, AnimalKind, i64)>(&bytes).expect("decode animal"),
+            (251, new, -123)
+        );
+    }
+}

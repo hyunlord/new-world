@@ -15,10 +15,11 @@
 #   get_animals, get_year_summary).
 extends RefCounted
 
+const Content = preload("res://scripts/ui/content_context.gd")
+
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 
-const PRESSURE_KEYS: Array[String] = ["M5_PRESSURE_COLD_SNAP", "M5_PRESSURE_DROUGHT", "M5_PRESSURE_BEASTS", "M5_PRESSURE_ILLNESS"]
 const MODIFIER_KEYS: Array[String] = ["M5_MOD_SLEPT_ROOFED", "M5_MOD_SLEPT_OUTSIDE", "M5_MOD_FED", "M5_MOD_HUNGRY", "M5_MOD_THIRSTY",
 	"M5_MOD_COLD", "M5_MOD_QUARRELLED", "M5_MOD_LEARNED", "M5_MOD_DISCOVERED", "M5_MOD_GRIEF", "M5_MOD_SICK", "M5_MOD_CRAFTED",
 	"M5_MOD_DRAFTED", "M5_MOD_PRESSURE"]
@@ -36,12 +37,12 @@ const BAND_TINTS: Array[Color] = [Color.WHITE, Color(0.55, 0.72, 1.3), Color.WHI
 ## The band colours for text (the inspector's mood line, the legend).
 const BAND_COLORS: Array[Color] = [Color("c8b89a"), Color("8cb4f0"), Color("f2e6c8"), Color("f0d860"), Color("f07060")]
 const TOP_KEYS: Array[String] = ["M5_TOP_LOINCLOTH", "M5_TOP_HIDE_WRAP", "M5_TOP_FUR_CLOAK"]
-const ANIMAL_KEYS: Array[String] = ["M5_ANIMAL_WOLF", "M5_ANIMAL_DEER"]
 const ANIMAL_STATE_KEYS: Array[String] = ["M5_ANIMAL_WANDER", "M5_ANIMAL_FLEE", "M5_ANIMAL_REST", "M5_ANIMAL_HUNT", "M5_ANIMAL_ATTACK",
 	"M5_ANIMAL_RETREAT"]
+## Historical fixture aliases only; live consumers read registered capabilities.
 const WOLF: int = 0
 const DEER: int = 1
-## Pressure codes.
+## Historical fixture aliases only; live consumers resolve definitions by category.
 const COLD_SNAP: int = 0
 const DROUGHT: int = 1
 const BEASTS: int = 2
@@ -66,7 +67,7 @@ static func _pick(locale: Node, keys: Array[String], code: int) -> String:
 
 ## The name of pressure `code` (한파, 가뭄, 늑대 무리, 병).
 static func pressure(locale: Node, code: int) -> String:
-	return _pick(locale, PRESSURE_KEYS, code)
+	return ltr(locale, str(Content.row("pressures", code).get("name_key", "UI_UNKNOWN")))
 
 
 ## The word of mood modifier `code` (100 = the relation: "사이가 나빠서").
@@ -105,7 +106,28 @@ static func top(locale: Node, code: int) -> String:
 
 
 static func animal(locale: Node, kind: int) -> String:
-	return _pick(locale, ANIMAL_KEYS, kind)
+	return ltr(locale, str(Content.row("animals", kind).get("name_key", "UI_UNKNOWN")))
+
+
+static func animal_huntable(kind: int) -> bool:
+	return bool(Content.row("animals", kind).get("huntable", false))
+
+
+## Bundled wording is an optional data override; new identities use category templates and their own name.
+static func content_phrase(locale: Node, family: String, code: int, event: String, params: Dictionary) -> String:
+	var definition: Dictionary = Content.row(family + "s", code)
+	var presentation: Dictionary = Content.document("story")
+	var overrides: Dictionary = presentation.get(family + "_overrides", {}).get(str(code), {})
+	if overrides.has(event):
+		return trf(locale, str(overrides[event]), params)
+	var category: String = str(definition.get("category", ""))
+	var templates: Dictionary = presentation.get(family + "_categories", {}).get(category, {})
+	var template: String = str(templates.get(event, {}).get(language(locale), ""))
+	var values: Dictionary = params.duplicate()
+	values["name"] = ltr(locale, str(definition.get("name_key", "UI_UNKNOWN")))
+	for key: Variant in values:
+		template = template.replace("{" + str(key) + "}", str(values[key]))
+	return template if not template.is_empty() else str(values["name"])
 
 
 static func animal_state(locale: Node, state: int) -> String:
@@ -192,21 +214,21 @@ static func banners(locale: Node, story: Dictionary) -> Array[Dictionary]:
 	if not bool(story.get("on", false)):
 		return out
 	var wolves: int = int(story.get("wolves", 0))
-	if wolves > 0:
-		out.append({"text": trf(locale, "M5_BANNER_WOLVES_FMT", {"count": wolves}), "kind": BEASTS, "color": Color("f07060")})
+	var pack_kind: int = int(story.get("pack_kind", -1))
+	if wolves > 0 and pack_kind >= 0:
+		out.append({"text": content_phrase(locale, "pressure", pack_kind, "banner", {"count": wolves, "day": 1}), "kind": pack_kind, "color": Color("f07060")})
 	var kinds: PackedInt64Array = story.get("kinds", PackedInt64Array())
 	var days: PackedInt64Array = story.get("days_of", PackedInt64Array())
 	for i: int in kinds.size():
-		var day: int = int(days[i]) if i < days.size() else 1
-		match int(kinds[i]):
-			COLD_SNAP:
-				out.append({"text": trf(locale, "M5_BANNER_COLD_FMT", {"day": day, "wood": int(story.get("firewood", 0)),
-					"need": int(story.get("firewood_day_need", 0))}), "kind": COLD_SNAP, "color": Color("a8c8f0")})
-			DROUGHT:
-				out.append({"text": trf(locale, "M5_BANNER_DROUGHT_FMT", {"day": day}), "kind": DROUGHT, "color": Color("e8b060")})
-			ILLNESS:
-				out.append({"text": trf(locale, "M5_BANNER_ILLNESS_FMT", {"day": day, "count": int(story.get("sick", 0))}), "kind": ILLNESS,
-					"color": Color("a8d888")})
+		var kind: int = kinds[i]
+		var definition: Dictionary = Content.row("pressures", kind)
+		var category: String = str(definition.get("category", ""))
+		if category == "pack":
+			continue
+		var params: Dictionary = {"day": int(days[i]) if i < days.size() else 1, "wood": int(story.get("firewood", 0)), "need": int(story.get("firewood_day_need", 0)), "count": int(story.get("sick", 0))}
+		var style: Dictionary = Content.document("story").get("pressure_categories", {}).get(category, {})
+		var row: Dictionary = {"text": content_phrase(locale, "pressure", kind, "banner", params), "kind": kind, "color": Color(str(style.get("color", "ffffff")))}
+		out.append(row)
 	return out
 
 

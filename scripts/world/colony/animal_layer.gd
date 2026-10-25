@@ -99,7 +99,7 @@ func _on_world_reset() -> void:
 	_zones.queue_redraw()
 
 
-## The bindings `animals` row of kind `kind` (its family fallback when unknown).
+## Exact selected binding, then registered mechanical category fallback, then family fallback.
 static func row_of(kind: int) -> Dictionary:
 	return ArtData.binding("animals", kind)
 
@@ -319,7 +319,7 @@ func animal_at(p: Vector2) -> int:
 	return best
 
 
-## The kind of drawn animal `id` (0 wolf, 1 deer), -1 when not drawn.
+## The full-width registered kind of drawn animal `id`, -1 when not drawn.
 func kind_of(id: int) -> int:
 	var animal: Animal = _animals.get(id)
 	return animal.kind if animal != null else -1

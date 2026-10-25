@@ -1,28 +1,33 @@
 //! Immutable content catalogue: local validation precedes one explicit process installation.
 mod boot;
 pub mod defs;
+#[cfg(test)]
+mod ecology_tests;
 mod error;
 pub mod host;
 pub mod ids;
 mod index;
 mod load;
+mod load_ecology;
 mod raw_blueprint;
 mod raw_item;
 mod raw_recipe;
 mod resolve_blueprints;
+mod resolve_ecology;
 mod resolve_items;
 mod resolve_recipes;
 mod sources;
 #[cfg(test)]
 mod tests;
 mod validate;
+mod validate_ecology;
 
 use super::knowledge::{Gates, KnowledgeDefs};
 use crate::material::MaterialId;
 pub use boot::{bootstrap, installed, installed_or_bundled, BootSelection};
 pub use defs::*;
 pub use error::{BootError, CatalogAccessError, CatalogError};
-pub use ids::{BlueprintKind, ItemKind, RecipeKind};
+pub use ids::{AnimalKind, BlueprintKind, ItemKind, PressureKind, RecipeKind};
 use index::Index;
 pub use sources::{NamedSource, RawSources};
 use std::collections::{BTreeMap, BTreeSet};
@@ -30,6 +35,13 @@ use std::collections::{BTreeMap, BTreeSet};
 /// Fully validated, immutable selected definitions and derived knowledge data.
 #[derive(Debug)]
 pub struct Catalog {
+    animals: Vec<AnimalDef>,
+    pressures: Vec<PressureDef>,
+    animal_index: Index,
+    pressure_index: Index,
+    animal_roles: BTreeMap<String, AnimalKind>,
+    pressure_roles: BTreeMap<String, PressureKind>,
+    pressure_schedule: PressureSchedule,
     items: Vec<ItemDef>,
     blueprints: Vec<BlueprintDef>,
     recipes: Vec<RecipeDef>,
@@ -139,6 +151,44 @@ impl Catalog {
         recipes,
         recipe_ids
     );
+    family_access!(
+        AnimalKind,
+        AnimalDef,
+        animals,
+        animal_index,
+        animal,
+        animal_by_code,
+        animal_by_name,
+        animal_by_serde_name,
+        require_animal,
+        animals,
+        animal_ids
+    );
+    family_access!(
+        PressureKind,
+        PressureDef,
+        pressures,
+        pressure_index,
+        pressure,
+        pressure_by_code,
+        pressure_by_name,
+        pressure_by_serde_name,
+        require_pressure,
+        pressures,
+        pressure_ids
+    );
+    /// Default animal selected by a validated data role.
+    pub fn animal_role(&self, role: &str) -> Option<AnimalKind> {
+        self.animal_roles.get(role).copied()
+    }
+    /// Default pressure selected by a validated data role.
+    pub fn pressure_role(&self, role: &str) -> Option<PressureKind> {
+        self.pressure_roles.get(role).copied()
+    }
+    /// Immutable seasonal scheduling policy.
+    pub fn pressure_schedule(&self) -> &PressureSchedule {
+        &self.pressure_schedule
+    }
     /// Existing recipe slice API backed by the selected catalogue, not a second cache.
     pub fn recipe_definitions(&self) -> &[RecipeDef] {
         &self.recipes

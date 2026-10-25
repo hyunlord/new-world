@@ -21,6 +21,14 @@ impl RawSources {
     pub fn bundled() -> Self {
         Self {
             sources: [
+                (
+                    "animals.ron",
+                    include_str!("../../../data/colony/animals.ron"),
+                ),
+                (
+                    "pressures.ron",
+                    include_str!("../../../data/colony/pressures.ron"),
+                ),
                 ("items.ron", include_str!("../../../data/colony/items.ron")),
                 (
                     "blueprints.ron",

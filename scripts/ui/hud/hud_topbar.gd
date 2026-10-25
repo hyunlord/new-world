@@ -107,7 +107,7 @@ func _ready() -> void:
 	var lower: HBoxContainer = HBoxContainer.new()
 	lower.add_theme_constant_override("separation", 8)
 	column.add_child(lower)
-	for role: String in ["food", "berries", "births", "deaths"]:
+	for role: String in ["food", "foraged_food", "births", "deaths"]:
 		_resource_labels.append(ArtUI.pair(lower, role))
 		if role == "food":
 			_wood_row = HBoxContainer.new()

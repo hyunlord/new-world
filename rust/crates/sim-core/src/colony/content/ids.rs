@@ -148,3 +148,16 @@ content_id!(
         MakeFurCloak = 10,
     ]
 );
+
+content_id!(
+    PressureKind,
+    pressure_by_code,
+    pressure_by_serde_name,
+    [ColdSnap = 0, Drought = 1, Beasts = 2, Illness = 3]
+);
+content_id!(
+    AnimalKind,
+    animal_by_code,
+    animal_by_serde_name,
+    [Wolf = 0, Deer = 1]
+);

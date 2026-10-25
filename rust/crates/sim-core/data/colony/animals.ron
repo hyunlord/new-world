@@ -1,0 +1,54 @@
+// Species share existing mechanics; numeric identities remain stable.
+(schema_version: 1, roles: {"default_grazer":"deer", "default_predator":"wolf"}, animals: [
+(
+    identity: (code: 0, id: "wolf", name_key: "M5_ANIMAL_WOLF", serde_name: "Wolf", serde_aliases: [], resolver_aliases: []),
+    category: "predator",
+    mechanic: Predator,
+    huntable: false,
+    hp: (value: 40, rule: Some("wolf_hp")),
+    grazer: None,
+    predator: Some((
+    sight: (value: 24, rule: Some("wolf_sight")),
+    damage: (value: 6, rule: Some("wolf_damage")),
+    chase_tiles: (value: 1, rule: Some("wolf_chase_tiles")),
+    hit_ticks: (value: 20, rule: Some("hit_ticks")),
+)),
+    loot: (
+    meat: None,
+    hide: Some((
+    item: "wolf_hide",
+    count: 1,
+    enabled: (value: true, rule: Some("wolf_hides")),
+)),
+),
+),
+(
+    identity: (code: 1, id: "deer", name_key: "M5_ANIMAL_DEER", serde_name: "Deer", serde_aliases: [], resolver_aliases: []),
+    category: "grazer",
+    mechanic: Grazer,
+    huntable: true,
+    hp: (value: 30, rule: Some("deer_hp")),
+    grazer: Some((
+    flee: (value: true, rule: Some("deer_flee")),
+    flee_tiles: (value: 6, rule: Some("deer_flee_tiles")),
+    flee_speed: (value: 2, rule: Some("deer_flee_speed")),
+    flee_steps: (value: 4, rule: Some("deer_flee_steps")),
+    rest_steps: (value: 40, rule: Some("deer_rest_steps")),
+    home_tiles: (value: 16, rule: Some("deer_home_tiles")),
+    min_hearth_distance: (value: 20, rule: Some("deer_min_hearth_distance")),
+)),
+    predator: None,
+    loot: (
+    meat: Some((
+    item: "meat",
+    with_cutter: (value: 3, rule: Some("meat_with_knife")),
+    without_cutter: (value: 2, rule: Some("meat_without_knife")),
+)),
+    hide: Some((
+    item: "hide",
+    count: 1,
+    enabled: (value: true, rule: None),
+)),
+),
+)
+])

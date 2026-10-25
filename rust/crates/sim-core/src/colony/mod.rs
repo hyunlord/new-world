@@ -15,6 +15,7 @@ pub mod content_state;
 mod items;
 mod job;
 pub mod knowledge;
+pub mod legacy_v7;
 pub mod materials;
 pub mod neighbours;
 mod orders;

@@ -79,7 +79,7 @@ func load_documents(construction: Dictionary, looks: Dictionary, defaults: Dicti
 func load_imported() -> void:
 	var base: String = ArtData.ROOT + "materials/"
 	load_schema_defaults(_json(base + "construction_styles.schema.json"))
-	load_documents(_json(base + "construction_styles.json"), _json(base + "material_looks.json"), _json(base + "category_defaults.json"))
+	load_documents(ArtData.construction_styles(_json(base + "construction_styles.json")), _json(base + "material_looks.json"), _json(base + "category_defaults.json"))
 
 
 func _json(path: String) -> Dictionary:

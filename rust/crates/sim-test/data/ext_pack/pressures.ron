@@ -1,0 +1,8 @@
+(schema_version:1,roles:{},schedule:None,pressures:[(
+identity:(code:4294967294,id:"test_cold",name_key:"EXT_COLD",serde_name:"TestCold",serde_aliases:[],resolver_aliases:[]),
+category:"cold",mechanic:Cold,major:true,enabled_rule:None,
+duration:(value:(2,2),rule:None),duration_draw_slot:Some(2),
+mercy:(first_day:None,first_winter_days:None,repeat_gap_days:None,winter_end_days:None),
+due_days:None,due_seasons:[],intensity:ExtendForAdults(threshold:(value:1000,rule:None),extra_days:1),
+cold:Some((burn:(value:1700,rule:None),exposure:(value:1800,rule:None),outdoor_work:(value:1750,rule:None))),
+drought:None,illness:None,pack:None)])

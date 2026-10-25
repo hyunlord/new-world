@@ -12,9 +12,9 @@
 use hecs::{Entity, World};
 use sim_core::causal::event::DeathReason;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+use sim_core::colony::content::{AnimalMechanic, PressureMechanic};
 use sim_core::colony::story::PressureKind;
-use sim_core::colony::wildlife::{AnimalKind, Fighter};
-use sim_core::colony::ItemKind;
+use sim_core::colony::wildlife::Fighter;
 use sim_core::components::{Agent, AgentId, BodyHealth, Position};
 use sim_engine::SimResources;
 
@@ -113,18 +113,15 @@ fn hit_person(
         return;
     };
     if let Fighter::Animal(_) = attacker {
+        let pressure = crate::runtime::story::active_mechanic(res, PressureMechanic::Pack)
+            .map_or_else(|| PressureKind::role("pack_default"), |active| active.kind);
         let t = &mut res.colony.wildlife.tallies;
         t.bites += 1;
         t.bite_damage += u64::from(damage);
-        if !res
-            .colony
-            .story
-            .touched
-            .contains(&(PressureKind::Beasts.code(), id, 1))
-        {
+        if !res.colony.story.touched.contains(&(pressure.code(), id, 1)) {
             res.colony.wildlife.tallies.bitten += 1;
         }
-        crate::runtime::story::note_cause(res, id, pos, PressureKind::Beasts, 1);
+        crate::runtime::story::note_cause(res, id, pos, pressure, 1);
     }
     let dead = match world.get::<&mut BodyHealth>(e) {
         Ok(mut h) => {
@@ -171,41 +168,23 @@ fn hit_animal(
         Fighter::Person(p) => Some(p),
         Fighter::Animal(_) => None,
     };
-    match kind {
-        AnimalKind::Wolf => {
+    crate::runtime::jobs::hunt::drop_animal_loot(res, pos, kind, rule, false);
+    match kind.mechanic() {
+        AnimalMechanic::Predator => {
             res.colony.wildlife.tallies.wolves_killed += 1;
-            if rule.wolf_hides {
-                res.colony
-                    .item_ledger
-                    .create(ItemKind::role("predator_hide"), 1);
-                let tiles = crate::runtime::jobs::items::put_items(
-                    res,
-                    pos,
-                    sim_core::colony::ItemSpec::raw(ItemKind::role("predator_hide"), None),
-                    1,
-                );
-                if rule.hunter_hauls {
-                    res.colony.wildlife.carcasses.extend(tiles);
-                }
-                res.colony.wildlife.tallies.hides_dropped += 1;
-            }
             let left = res.colony.wildlife.wolves().count() as i64;
-            let mut entry =
-                ChronicleEntry::new(res.current_tick, ChronicleKind::WolfKilled).value(left);
+            let mut entry = ChronicleEntry::new(res.current_tick, ChronicleKind::WolfKilled)
+                .cause(kind.code())
+                .value(left);
             if let Some(p) = killer {
                 entry = entry.subject(p);
             }
-            let cause = crate::runtime::story::cause_ref(res, PressureKind::Beasts);
+            let pressure = crate::runtime::story::active_mechanic(res, PressureMechanic::Pack)
+                .map_or_else(|| PressureKind::role("pack_default"), |active| active.kind);
+            let cause = crate::runtime::story::cause_ref(res, pressure);
             res.chronicle.push_caused(entry, cause);
         }
-        AnimalKind::Deer => {
-            // A deer killed in a fight (drafted): its meat and hide as a hunt's, without a knife.
-            crate::runtime::jobs::hunt::drop_carcass(
-                res,
-                pos,
-                rule.meat_without_knife,
-                ItemKind::role("grazer_hide"),
-            );
+        AnimalMechanic::Grazer => {
             res.colony.wildlife.tallies.deer_killed += 1;
         }
     }

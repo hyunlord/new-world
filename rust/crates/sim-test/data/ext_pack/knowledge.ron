@@ -1,0 +1,3 @@
+(schema_version:1,absent_markers:[],knowledge:[(
+id:"test_hide_craft",lane:"craft",era:"paleolithic",threshold:100,prereqs:[],difficulty:1,
+discover:[],gates:[Recipe("test_hide_recipe")],marker_weight:0,seed:None,name_key:"EXT_KNOWLEDGE")])
