@@ -27,3 +27,9 @@ m55_pressure 시드0의 첫 caravan은 양쪽 모두 id1·이웃0·day9·도착1
 ## 한계
 
 raw ron deserialization과 의미 검증 parser는 다르며 runtime은 후자를 사용한다. 이번 검증은 상품 관련 범위·참조를 엄격히 확인하며 모든 과거 규칙 필드를 일반화하지 않는다. 이주 의복의 기존 저장 Top 두 슬롯과32노드 지식 영역은 그대로다. 기존 저장을 읽은 뒤 미래 거래가 바뀌는 것은 명시적 정책 효과다. LSP 불가 ISS284와 기존 UI·A8 제한은 해결된 것으로 표시하지 않는다.
+
+## 커밋 후 보정
+
+T `54a55a421361d9c24268e1b3a6a5d2c2d1c6c211`의 실제 원문23개를 연결한 BPT 보정8×48일은 VALID/NOT_CLAIMED다. 제작1644건 산술과 통제 Cold2304행·제작32건이 검증됐다. 자연 Cold는 의복0/9487·무의복0/6329로 비율 NOT_MEASURED이며 인과 보호 효과를 주장하지 않는다. 첫 비교기는 각 제작 행의 출처 manifest hash까지 빌드 간 같아야 한다고 잘못 검사했다(ISS293). 각 hash를 자체 명세와 대조하고 나머지 모든 값이 같음을 확인했으며 원시 결과·정책·scorer는 수정하지 않았다. BPT32파일 hash와2111제품 원문 hash가 검증됐고 빌드가 고정됐다. 홀드아웃은 아직 실행하지 않았다.
+
+독립 보정 감사(`t-calibration-independent-review.md`)는 archive32파일·참조10개·T commit의2111 blob·산술23원문을 재검증했다. BP/BPT caravan108개와 자연 제작3417건 및 통제 제작32건·Cold2304건을 독립 재계산해 불일치0이다. BPT scarce 제안73스택, rare 후보는14caravan/15행이었으나 선택0으로, 희귀품 불가능이나 개선 실패로 해석하지 않는다. 자연 제작은1773→1644이며 일률적 생산 개선도 주장하지 않는다. 양쪽 운반 종료80개는 명시적 UNRESOLVED로 남아 성공 배달로 간주하지 않는다. 별도 artifact의 비교이며 단일 BPT scorer index의 formal paired NOT_RUN 상태를 바꾸지 않는다.

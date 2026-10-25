@@ -96,7 +96,13 @@ fn site_needs(world: &World, site: (u32, u32)) -> Option<(Entity, MaterialNeeds)
 }
 
 /// Whether the job's target still exists.
-fn target_exists(world: &World, res: &SimResources, job: &Job) -> bool {
+fn target_exists(
+    world: &World,
+    res: &SimResources,
+    id: AgentId,
+    entity: Entity,
+    job: &Job,
+) -> bool {
     let colony = &res.colony;
     let stack = |tile: (u32, u32)| {
         colony
@@ -104,14 +110,31 @@ fn target_exists(world: &World, res: &SimResources, job: &Job) -> bool {
             .get(&tile)
             .is_some_and(|stack| stack.kind == job.item && stack.count > 0)
     };
+    let hearth_destination = |from, to, spec| {
+        world.get::<&Position>(entity).ok().is_some_and(|pos| {
+            super::hunt::hearth_haul_destination(res, id, from, to, (pos.x, pos.y), spec)
+        })
+    };
     match (job.kind, job.stage) {
         (JobKind::Chop { tree }, _) => {
             colony.trees.contains_key(&tree) && colony.designations.contains_key(&tree)
         }
         (JobKind::Haul { from, to }, JobStage::ToSource) => {
-            stack(from) && colony.zone_of_tile.contains_key(&to)
+            stack(from)
+                && (colony.zone_of_tile.contains_key(&to)
+                    || colony
+                        .ground_items
+                        .get(&from)
+                        .is_some_and(|source| hearth_destination(from, to, source.spec())))
         }
-        (JobKind::Haul { to, .. }, _) => colony.zone_of_tile.contains_key(&to),
+        (JobKind::Haul { from, to }, _) => {
+            colony.zone_of_tile.contains_key(&to)
+                || world.get::<&Carry>(entity).ok().is_some_and(|carry| {
+                    carry.count > 0
+                        && carry.kind == job.item
+                        && hearth_destination(from, to, carry.spec())
+                })
+        }
         (JobKind::Deliver { from, site }, JobStage::ToSource) => {
             stack(from) && site_needs(world, site).is_some()
         }
@@ -196,7 +219,7 @@ fn step(
         }
         return;
     }
-    if !target_exists(world, res, &job) {
+    if !target_exists(world, res, id, entity, &job) {
         cancel(world, res, entity, CancelReason::TargetGone);
         return;
     }

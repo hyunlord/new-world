@@ -14,7 +14,7 @@
 //! its tile; the meat joins the spoilage lots; chronicle `Hunted`.
 //! M5.5 (`WildlifeRule::hunter_hauls`, ADR 0028 amendment): the kill turns the
 //! hunt into a `Haul` of up to `hunter_meat` meat by the hunter to the nearest
-//! stockpile cell with room ([`haul_home`]); the hide and any meat left are
+//! stockpile cell with room, else a legal hearth pile ([`haul_home`]); the hide and any meat left are
 //! noted in `Wildlife::carcasses` and hauled before other loose stacks.
 use hecs::{Entity, World};
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
@@ -612,10 +612,62 @@ fn drop_loot(
     meat_tiles
 }
 
+/// Whether an ordinary meat haul can still use a nonstockpile hearth cell.
+pub(super) fn hearth_haul_destination(
+    res: &SimResources,
+    id: AgentId,
+    from: (u32, u32),
+    to: (u32, u32),
+    pos: (u32, u32),
+    spec: ItemSpec,
+) -> bool {
+    spec.kind == ItemKind::role("grazer_meat")
+        && crate::worldgen::colony::hearth(res).is_some()
+        && from != to
+        && super::items::room_on(res, to, spec) > 0
+        && res.nav.reaches(res.nav.region_of(pos), to)
+        && res
+            .colony
+            .reservations
+            .get(&ReserveKey::Cell(to))
+            .is_none_or(|owner| *owner == id)
+        && super::hearth::hearth_tiles(res)
+            .into_iter()
+            .any(|anchor| chebyshev(anchor, to) <= super::hearth::HEARTH_PILE_REACH)
+}
+
+fn hearth_haul_cell(
+    res: &SimResources,
+    id: AgentId,
+    from: (u32, u32),
+    pos: (u32, u32),
+    spec: ItemSpec,
+) -> Option<(u32, u32)> {
+    if spec.kind != ItemKind::role("grazer_meat") || crate::worldgen::colony::hearth(res).is_none()
+    {
+        return None;
+    }
+    let reach = super::hearth::HEARTH_PILE_REACH;
+    let mut candidates = std::collections::BTreeSet::new();
+    for (x, y) in super::hearth::hearth_tiles(res) {
+        for cy in y.saturating_sub(reach)..=y.saturating_add(reach) {
+            for cx in x.saturating_sub(reach)..=x.saturating_add(reach) {
+                if cx < res.tile_grid.width && cy < res.tile_grid.height {
+                    candidates.insert((cx, cy));
+                }
+            }
+        }
+    }
+    candidates
+        .into_iter()
+        .filter(|to| hearth_haul_destination(res, id, from, *to, pos, spec))
+        .min_by_key(|to| (chebyshev(from, *to), to.1, to.0))
+}
+
 /// M5.5 (ADR 0028 amendment): right after the kill the hunter carries the meat home — the hunt becomes a `Haul` of
 /// up to `hunter_meat` meat from `from` to the nearest stockpile cell with room for it (`(distance, y, x)` from the
-/// meat, not reserved, reachable from the hunter). Returns `false` (the hunt just finishes) when there is no meat
-/// there or no such cell. The hunt counts as done and the haul as taken.
+/// meat, not reserved, reachable from the hunter), falling back to a legal hearth cell only when no stockpile
+/// accepts it. Returns `false` when neither destination exists. The hunt counts as done and the haul as taken.
 fn haul_home(
     world: &mut World,
     res: &mut SimResources,
@@ -642,6 +694,7 @@ fn haul_home(
                 && res.nav.reaches(region, *c)
         })
         .min_by_key(|c| (chebyshev(from, *c), c.1, c.0))
+        .or_else(|| hearth_haul_cell(res, id, from, pos, spec))
     else {
         return false;
     };
