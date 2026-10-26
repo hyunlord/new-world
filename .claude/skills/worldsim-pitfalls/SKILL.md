@@ -143,6 +143,8 @@ every agent must know even when it is not working in that area. Sources are comm
 
 
 ### Evidence identity and terminal states
+- M-UX2.1 historical archives sharing one Cargo target reused an identical bridge for different sources. Use isolated targets, bind source revisions and copied-library hashes, and reject unexplained identical artifacts before measurement (`docs/v8/mux2_1/MUX21_DECISIONS.md`, D4).
+- Reading SimReads immediately after `process_frame` can populate its frame cache before WorldSim processing. Add observational census sampling after `frame_post_draw`, and report initial founders separately from the live population range (`docs/v8/mux2_1/MUX21_DECISIONS.md`, D8).
 - A copied Stage A pin gained a repeated substring (43 characters): obtain and re-resolve the full commit from Git objects, then check each cited historical path. Preserve the typo as historical evidence with an explicit correction; local object checks do not prove remote publication. Follow worldsim-testing “Commit pin resolution” (MUX ISS303).
 - Natural haul starts had UNRESOLVED terminals: report them as starts with unresolved outcomes, never delivered items. Keep confirmed terminal categories and N/A separate; controlled success does not prove natural completion. Follow worldsim-testing “Terminal observation evidence” (MUX ISS300).
 - An unrun wrapper could write PASS in finally after KeyboardInterrupt/SystemExit because its failures list was empty: require explicit completion, exact coverage and success, propagate interrupts, and treat absent final receipts as incomplete. Pure guard checks are not capture execution. Follow worldsim-testing “Completion receipts survive interruption” (MUX ISS307).

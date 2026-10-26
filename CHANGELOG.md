@@ -5,6 +5,16 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M-UX2.1 — 2026-10-26 (blocked, not published)
+
+### Added
+- Common historical FPS instrumentation and quarter-zoom diagnostic attribution in `tools/v8/mux21_fps.gd` and `mux21_profile.gd`; independent historical builds, explicit census ranges and provenance checks. Strict parser/FFI and short windowed execution checks pass; these are not acceptance FPS evidence.
+- Regression issue ISS-343 / GitHub #638 and the Korean incomplete report at `docs/v8/mux2_1/MUX21_REPORT.md`. First full capture is invalid at load6.80→13.05; valid comparisons0/12. Contended BASE marker refresh averages25.053ms, a diagnostic candidate only.
+
+### Changed
+- No production renderer/UI or simulation changes. Repeated shared-host load blocks required comparisons and bisection; full gate and publication remain unperformed. Preserve all original thresholds, failed attempts and unchanged remote BASE.
+
+
 ## P7 최종 게시 확인 — cb162f3c
 
 - **M-CORE P7 수용·게시 완료:** [cb162f3c638ab9569dd7127e5dee7d38c5d3927f](https://github.com/hyunlord/new-world/commit/cb162f3c638ab9569dd7127e5dee7d38c5d3927f)에 전체45/45 exit0 및 terminal0이 귀속된다. v8/wip·v8/main·v8/core-review 원격 SHA를 journal에서 확인했다. 측정 런타임은 `826a7ecd9e38ca3fc1fff253baa0933aee593022`이며 문서/검증 도구 HEAD를 새 런타임으로 표시하지 않는다. side64 평균/p99 raw FAIL만 P7 JUSTIFIED, 다른 standing/C3 PASS다. 이 문서는 게시 후 docs-only 후속이며 자체 전체 게이트·새 런타임 빌드·후속 문서 SHA의 게시를 주장하지 않는다. 다음 단계는 M6 신석기다.

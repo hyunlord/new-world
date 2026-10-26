@@ -7,12 +7,12 @@ Raw evidence /Users/rexxa/work/mux21-data. Six-hour limit starts at start-utc.tx
 Owner explicitly authorizes implementation, commits, issue management and gated publication without additional approval.
 
 ## Plan / acceptance ledger
-1. IN_PROGRESS: Prepare isolated release builds and identical measurement harness; compare 3a51636d, 0207b497 and BASE at quarter zoom N10/40/200/1000, interleaved, 30s warmup + 60s rendered frames; endpoint load <8 and source/binary hashes.
-2. PENDING: Bisect guilty range at quarter N200 and profile BASE top five costs; retain all invalid/failed evidence.
-3. PENDING: Minimal renderer/UI fix, preserve 14px markers, rings and baseline/fixture identity.
-4. PENDING: Full FPS table, GPU day/night visibility and selection/draft checks, natural rebake timing.
-5. PENDING: Issue/registry, Korean report, history/changelog and full current gate.
-6. PENDING: Fast-forward publication with remote SHA proof; conflict-free rebase and full re-gate if needed; non-forced worktree removal.
+1. BLOCKED: Isolated release builds and common harness prepared; valid interleaved comparisons 0/12 because shared-host endpoint load repeatedly violates <8.
+2. BLOCKED: Contended BASE profile recorded; measured bisection depends on valid comparisons. Static p6 candidate is not a confirmed culprit.
+3. BLOCKED: Renderer/UI fix depends on measured causality; no production change made.
+4. BLOCKED: FPS bars, GPU visibility and natural rebake acceptance depend on the missing fix and valid measurement environment.
+5. PARTIAL / BLOCKED: Issue, registry, Korean report and history/changelog recorded; full gate not run because required acceptance remains unavailable.
+6. BLOCKED: No publication without full gate; no worktree removal before publication.
 
 ## D1: Measurement admission
 Initial load was 39.75 / 48.26 / 43.08. No valid FPS claim can be made at this load.
@@ -72,3 +72,9 @@ The reviewer confirms founders semantics but warns that population cost need not
 Source provenance now compares working files against a private Git index read from the claimed revision and rejects unexpected runtime inputs (only the two named MUX21 instrumentation scripts are allowed additions). The mapped bridge must equal the separately built historical artifact. This prevents stable-but-wrong source/binary captures and prevents calling a future modified candidate BASE.
 The generic Art13 calibration protocol is superseded by the explicit owner-specific method. Its30-minute cooldown/6-attempt/3-hour limits are therefore removed together; endpoint load<8, duration and all FPS thresholds remain. Own supervisor51167/session69368 was confirmed and terminated with exit143 solely to apply this protocol correction while waiting; no foreign process was signaled. Every prior invalid attempt remains.
 Natural rebake acceptance must aggregate measured rebake events by rendered frame; the inherited per-chunk summary is insufficient for the4ms/frame goal. This remains pending and is not relabeled PASS.
+
+## D9: Terminal blocked audit
+The same external load blocker recurred across at least three consecutive goal turns. The first complete historical capture was invalid (6.80 before, 13.05 after); subsequent admission waits repeatedly failed, including 232.77 at09:21UTC and 57.73 at09:25UTC. Final recorded load was39.25 (`load-blocked.txt`). Valid mandatory comparisons remain0/12. No safe independent task can establish the missing causal comparison or acceptance while that condition persists.
+Own waiting supervisor PID7953/session69103 was verified and stopped with exit143 during blocked finalization; no active GPU capture was interrupted and no foreign process was signaled. Earlier checkpoints describing active supervisors are historical, superseded by this entry. No measurement supervisor remains active.
+This is BLOCKED and incomplete, not a successful performance pass or exhaustion of the original six-hour limit (08:32:12–14:32:12UTC). Preserve the original goal, all invalid receipts, archives and branch for explicit resumption. Reacquire remote/source/process/load state and original time constraints before resuming. Full gate NOT_RUN; no push; both published refs still BASE in `remote-blocked.txt`. The report and documentation record partial work without closing ISS333/#638.
+Final documentation check initially failed with incompatible stale release crate artifacts from historical preparation. Cleaning only owned local release packages and rebuilding BASE resolved it: `blocked-docs-check-rebuilt.log` ends `docs: PASS`, exit0. Preserve the initial failed check and direct compiler log. Goal byte comparison, diff whitespace check and unchanged production/protected-source diff also pass; none substitutes for the unrun full gate.
