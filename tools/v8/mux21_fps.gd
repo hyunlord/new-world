@@ -13,6 +13,12 @@ extends SceneTree
 
 var _drawn_frames: int = 0
 var _has_bake_events: bool = false
+var _population_world: Node = null
+var _capture_setup_population: bool = false
+var _sample_population: bool = false
+var _setup_people: int = -1
+var _people_min: int = -1
+var _people_max: int = 0
 
 
 func _bake_context(ground: Node, context: String) -> void:
@@ -21,6 +27,14 @@ func _bake_context(ground: Node, context: String) -> void:
 
 func _on_frame_post_draw() -> void:
 	_drawn_frames += 1
+	if _population_world != null and (_sample_population or _capture_setup_population):
+		var people: int = (SimReads.read(_population_world, "get_agent_snapshot").get("ids", PackedInt64Array()) as PackedInt64Array).size()
+		if _capture_setup_population:
+			_setup_people = people
+			_capture_setup_population = false
+		if _sample_population:
+			_people_min = people if _people_min < 0 else mini(_people_min, people)
+			_people_max = maxi(_people_max, people)
 
 func _window_state() -> Dictionary:
 	return {"mode": root.mode, "always_on_top": root.always_on_top, "visible": root.visible, "focus": root.has_focus(), "size": [root.size.x, root.size.y]}
@@ -66,6 +80,7 @@ func _run() -> void:
 	_bake_context(ground, "bootstrap")
 	root.add_child(main)
 	var world: Node = main.get_node("WorldSim")
+	_population_world = world
 	var camera: Camera2D = main.get_node("Camera2D")
 	for _i: int in 5:
 		await process_frame
@@ -76,6 +91,7 @@ func _run() -> void:
 		world.call("load_world", save)
 	elif stress > 0:
 		world.call("reset_world_stress", 0, stress)
+	_capture_setup_population = true
 	for _i: int in 30:
 		await process_frame
 	_bake_context(ground, "camera_setup")
@@ -108,12 +124,14 @@ func _run() -> void:
 	var process_ms: float = 0.0
 	var draw_calls: float = 0.0
 	var samples: int = 0
+	_sample_population = true
 	while Time.get_ticks_usec() - s0 < int(seconds * 1e6):
 		await process_frame
 		worst_bake = maxi(worst_bake, int(ground.get("last_bake_usec")))
 		process_ms += Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0
 		draw_calls += Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 		samples += 1
+	_sample_population = false
 	var frames: int = _drawn_frames - f0
 	var engine_frames: int = Engine.get_frames_drawn() - engine_f0
 	var window_end: Dictionary = _window_state()
@@ -128,6 +146,7 @@ func _run() -> void:
 		"window_start": window_start, "window_end": window_end,
 		"scene": "stress %d" % stress if stress > 0 else save.get_file(),
 		"zoom": zoom, "fps": float(frames) / elapsed, "frames": frames, "seconds": elapsed, "people": people,
+		"requested_founders": stress, "setup_people": _setup_people, "measured_people_min": _people_min, "measured_people_max": _people_max,
 		"lod": bool(agents.call("lod_active")), "worst_chunk_bake_usec": worst_bake,
 		"texture_mem_bytes": Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED),
 		"video_mem_bytes": Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED),

@@ -57,3 +57,18 @@ Prepare p9,p4,p6,p5 midpoint/adjacent snapshots inside the owned worktree. p5→
 
 ## Instrumentation validation
 Both mux21_fps.gd and mux21_profile.gd pass the repository strict parser/warnings check; all59 detected FFI calls match exports (`instrumentation-strict.log`). Profile harness completed the real N200 quarter-zoom diagnostic window with no script errors. This validates instrumentation execution only, not final FPS bars.
+
+## D6: Preserve live stress-world population semantics
+The first full historical N10 attempt was INVALID: load6.80→13.05. It also ended with11 people, despite `--stress 10`. Its original receipt remains unchanged. `reset_world_stress` and `build_stress_engine` define N as the number of initial founders, not a fixed census; the baseline simulation continues to evolve during the prescribed window. Do not freeze births, change rules, alter fixtures, or silently label11 observed people as exactly10.
+The common harness now records setup population and measured minimum/maximum in addition to the original ending census. Future receipts require setup=N and measured minimum>=N (no under-populated shortcut), and separately record `population_exact`; the report must show actual ranges. This preserves the same running-world procedure and all FPS/load thresholds. An exact-population claim is forbidden when that flag is false. All historical copies receive the identical revised harness before any valid comparison. Additional reads use the existing per-frame SimReads cache.
+The first invalid capture is preserved at `comparison/mart21-n10-z0.25-a1`; no retrospective reclassification.
+
+## D7: Provenance validation before first valid capture
+External measurement runner hashes shaders, Rust source/data, tools and Cargo.lock as well as renderer/assets/scene inputs and the mapped bridge. It checks the raw bake-file hash/path, FPS ratio, frame-counter agreement and sample-window agreement. No thresholds were lowered. Capture supervisor69368 remains in the30-minute invalid-session cooldown before retrying the first row.
+
+## D8: Independent measurement review and corrections
+Read-only review found that sampling population immediately after process_frame could populate SimReads before WorldSim node processing. Corrected to use the existing frame_post_draw callback; no extra pre-process agent-snapshot reads remain. The earlier short population smoke is retained as superseded instrumentation evidence, not acceptance.
+The reviewer confirms founders semantics but warns that population cost need not be monotonic: an observed10–11 capture does not prove exact10 performance. Keep this limitation and exactness flag in the final table, rather than presenting it as an exact-N pass.
+Source provenance now compares working files against a private Git index read from the claimed revision and rejects unexpected runtime inputs (only the two named MUX21 instrumentation scripts are allowed additions). The mapped bridge must equal the separately built historical artifact. This prevents stable-but-wrong source/binary captures and prevents calling a future modified candidate BASE.
+The generic Art13 calibration protocol is superseded by the explicit owner-specific method. Its30-minute cooldown/6-attempt/3-hour limits are therefore removed together; endpoint load<8, duration and all FPS thresholds remain. Own supervisor51167/session69368 was confirmed and terminated with exit143 solely to apply this protocol correction while waiting; no foreign process was signaled. Every prior invalid attempt remains.
+Natural rebake acceptance must aggregate measured rebake events by rendered frame; the inherited per-chunk summary is insufficient for the4ms/frame goal. This remains pending and is not relabeled PASS.
