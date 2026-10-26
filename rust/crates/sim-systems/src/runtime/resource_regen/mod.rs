@@ -36,7 +36,7 @@ use hecs::World;
 use sim_core::components::{AgentState, Position, SeekTarget, TargetKind};
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
-use crate::runtime::decision::nearest_resource_tile;
+use crate::runtime::agent_actions::targets::nearest_resource_tile;
 
 /// Winter index of `SeasonRule` seasons.
 const WINTER: usize = 3;

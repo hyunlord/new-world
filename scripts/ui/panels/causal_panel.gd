@@ -96,6 +96,64 @@ func open_tile(tile: Vector2i) -> void:
 	if world != null:
 		display_history(world.get_tile_causal_history(tile.x, tile.y), tile.x, tile.y)
 
+# The inspector supplies its cached read; opening this panel never evaluates policy.
+func open_mind(mind: Dictionary, tile: Vector2i) -> void:
+	_anchor_tile = tile
+	for child: Node in _history_container.get_children():
+		_history_container.remove_child(child)
+		child.queue_free()
+	_title_label.text = _ltr("MUX_WHY")
+	_add_line(mind_summary(mind))
+	_add_line(_ltr("MIND_CANDIDATES"))
+	var candidates: Array = mind.get("top3", [])
+	for index: int in range(mini(3, candidates.size())):
+		var candidate: Dictionary = candidates[index]
+		_add_line(_ltr("MIND_CANDIDATE_FMT").format({"rank": index + 1, "choice": _mind_name(str(candidate.get("name_key", ""))), "score": int(candidate.get("score", 0))}))
+	get_parent().move_child(self, get_parent().get_child_count() - 1)
+	show()
+	_fit()
+	_fit.call_deferred()
+
+func _mind_name(key: String) -> String:
+	var label: String = _ltr(key) if not key.is_empty() else ""
+	return _ltr("UI_UNKNOWN") if label.is_empty() or label == key else label
+
+func _mind_fact_reason(fact: Dictionary) -> String:
+	var label: String = _mind_name(str(fact.get("name_key", "")))
+	if str(fact.get("reason_kind", "")) == "score":
+		var contribution: int = int(fact.get("score_contribution", 0))
+		var key: String = "MIND_REASON_SCORE_POSITIVE" if contribution > 0 else ("MIND_REASON_SCORE_NEGATIVE" if contribution < 0 else "MIND_REASON_SCORE_NEUTRAL")
+		return _ltr(key).format({"fact": label})
+	var predicates: Array = fact.get("predicates", [])
+	var conditions: PackedStringArray = []
+	for predicate: Dictionary in predicates:
+		var key: String = ""
+		match str(predicate.get("op", "")):
+			"has": key = "MIND_REASON_PRESENT"
+			"not": key = "MIND_REASON_ABSENT"
+			"<": key = "MIND_REASON_BELOW"
+			"<=": key = "MIND_REASON_AT_MOST"
+			">": key = "MIND_REASON_ABOVE"
+			">=": key = "MIND_REASON_AT_LEAST"
+			"==": key = "MIND_REASON_EQUAL"
+		if not key.is_empty():
+			conditions.append(_ltr(key).format({"fact": label}))
+	return " · ".join(conditions)
+
+func mind_summary(mind: Dictionary) -> String:
+	var reasons: PackedStringArray = []
+	var facts: Array = mind.get("facts", [])
+	# The bridge ranks selected-node inputs using saved policy metadata.
+	for item: Dictionary in facts:
+		var reason: String = _mind_fact_reason(item)
+		if not reason.is_empty():
+			reasons.append(reason)
+		if reasons.size() == 2:
+			break
+	if reasons.is_empty():
+		reasons.append(_ltr("MIND_REASON_UNAVAILABLE"))
+	return _ltr("MIND_NOW_WHY_FMT").format({"choice": _mind_name(str(mind.get("name_key", ""))), "reason": " · ".join(reasons)})
+
 func display_history(history: Array, tile_x: int, tile_y: int) -> void:
 	if _history_container == null:
 		return

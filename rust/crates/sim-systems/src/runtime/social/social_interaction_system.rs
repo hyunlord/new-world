@@ -69,7 +69,7 @@ use sim_core::components::{
 };
 use sim_engine::{RuntimeSystem, SimResources};
 
-use crate::runtime::decision::{
+use crate::runtime::agent_actions::needs::{
     FAMILIARITY_BUMP, REQUIRED_INTERACTION_PROGRESS, SOCIAL_CONSUME_AMOUNT,
 };
 

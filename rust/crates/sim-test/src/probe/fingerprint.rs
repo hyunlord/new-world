@@ -8,7 +8,7 @@ use sim_engine::SimEngine;
 const OFFSET: u64 = 0xcbf29ce484222325;
 const PRIME: u64 = 0x100000001b3;
 
-fn feed(hash: &mut u64, bytes: &[u8]) {
+pub(super) fn feed(hash: &mut u64, bytes: &[u8]) {
     for byte in bytes {
         *hash = (*hash ^ u64::from(*byte)).wrapping_mul(PRIME);
     }
@@ -96,6 +96,7 @@ pub fn fingerprint(engine: &SimEngine) -> String {
                 .to_le_bytes(),
         );
     }
+    super::mind_fingerprint::append(&mut hash, &engine.resources);
     format!("{hash:016x}")
 }
 

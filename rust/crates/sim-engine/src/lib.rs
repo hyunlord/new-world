@@ -30,6 +30,9 @@
 /// Frozen resource layout used by historical save readers.
 pub mod legacy_v7;
 
+/// World membership of production runtime systems.
+pub mod registration;
+
 use hecs::{Entity, World};
 use sim_core::causal::event::DeathReason;
 use sim_core::causal::{CausalLogStorage, EventId};
@@ -377,6 +380,9 @@ pub struct SimResources {
     /// Persisted separately in the v8 body; empty for historical bundled worlds.
     #[serde(skip)]
     pub content_state: sim_core::colony::content_state::ContentState,
+    /// Mind policy and history, persisted in the explicit versioned save body.
+    #[serde(skip)]
+    pub mind: sim_core::colony::mind_state::MindState,
 
     /// Fatal animal hits this tick; cleared before every normal/profiled tick.
     #[serde(skip)]
@@ -780,6 +786,7 @@ impl SimResources {
             current_tick: 0,
             steward: Default::default(),
             content_state: Default::default(),
+            mind: Default::default(),
             fatal_animal_attacks: Vec::new(),
             building_event_queue: VecDeque::new(),
             causal_log: CausalLogStorage::new(),

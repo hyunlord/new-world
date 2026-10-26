@@ -1,3 +1,4 @@
+//! Cached routine places and deterministic candidate admission.
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
 use sim_core::components::{ActivityKind, BuildingId, BuildingKind, SettlementId};
@@ -194,7 +195,7 @@ impl Inputs {
 
 /// Pass 18: [`collect`]'s result kept across ticks while its inputs are equal.
 #[derive(Debug, Default)]
-pub(in crate::runtime::decision) struct PlacesCache {
+pub(in crate::runtime) struct PlacesCache {
     inputs: Option<Inputs>,
     places: Places,
 }
@@ -225,7 +226,6 @@ impl PlacesCache {
 /// person and tick but not the tile, so the rank never decides; candidates
 /// are generated in `(y, x)` order, so the result is the first tile with no
 /// occupant, else the first with one (a tile with two is full).
-#[cfg(test)]
 pub(super) fn choose(candidates: &[Tile], occupancy: &Occupancy) -> Option<Tile> {
     let mut single = None;
     for tile in candidates {

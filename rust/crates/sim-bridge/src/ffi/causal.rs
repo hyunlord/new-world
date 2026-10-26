@@ -66,7 +66,7 @@ pub(super) fn channel_key(ch: InfluenceChannel) -> &'static str {
 /// - `agent_id` — `Some` only for `AgentDecision` (the deciding agent).
 /// - `reason` — `Some` only for `AgentDecision` (e.g.
 ///   `"hunger_threshold_breach"`).
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Default, PartialEq)]
 pub struct CausalEventView {
     /// String discriminator: `"building_placed"` | `"stamp_dirty"` |
     /// `"influence_changed"` | `"agent_decision"`.
@@ -504,6 +504,19 @@ impl CausalEventView {
             },
             // M5 (ADR 0027): a pressure touched a person. `reason` is the pressure's
             // name, `triggered_by` what it did.
+            CausalEvent::MindChoice { choice } => Self {
+                kind: "mind_choice",
+                id: choice.id(),
+                parent: choice.parent(),
+                tick: choice.tick(),
+                ..Self::default()
+            },
+            CausalEvent::MindFactOrigin { id, tick, .. } => Self {
+                kind: "mind_fact_origin",
+                id: *id,
+                tick: *tick,
+                ..Self::default()
+            },
             CausalEvent::PressureCause {
                 id,
                 parent,

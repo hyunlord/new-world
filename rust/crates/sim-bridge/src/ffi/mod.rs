@@ -26,6 +26,7 @@ pub mod engine_build;
 pub mod family;
 pub mod knowledge;
 pub mod material_category;
+pub mod mind;
 pub mod neighbours;
 pub mod node;
 pub mod reads_agent;
@@ -60,6 +61,7 @@ pub use knowledge::{
     TeachRow, TechNodeView, TechRow, TechView, WaitRow,
 };
 pub use material_category::{category_label, category_name, category_of};
+pub use mind::{collect_agent_mind, AgentMindView, MindCandidateView, MindFactView};
 pub use neighbours::{
     collect_caravan, collect_fleeing_column, collect_neighbours, collect_wave, submit_neighbours,
     CaravanView, NeighbourCommand, NeighboursView, WaveView,

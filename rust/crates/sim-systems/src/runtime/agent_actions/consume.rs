@@ -9,7 +9,7 @@ use super::needs::{
 };
 
 /// Resolve a ground meal, preserving strict admission and the tick-local food version.
-pub(super) fn consume_food(
+pub(in crate::runtime) fn consume_food(
     resources: &mut SimResources,
     key: (u32, u32),
     state: &mut AgentState,
@@ -49,7 +49,7 @@ pub(super) fn consume_food(
 }
 
 /// Resolve drinking with the legacy missing-source relief rule.
-pub(super) fn consume_water(
+pub(in crate::runtime) fn consume_water(
     resources: &mut SimResources,
     key: (u32, u32),
     state: &mut AgentState,
@@ -72,7 +72,7 @@ pub(super) fn consume_water(
 
 /// Resolve nighttime recovery or a legacy one-shot rest using the caller's night window.
 #[allow(clippy::too_many_arguments)] // Explicit borrowed inputs preserve the existing decision boundary.
-pub(super) fn consume_sleep(
+pub(in crate::runtime) fn consume_sleep(
     resources: &mut SimResources,
     key: (u32, u32),
     state: &mut AgentState,

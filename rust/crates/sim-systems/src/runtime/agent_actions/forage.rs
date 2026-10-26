@@ -10,17 +10,17 @@ use sim_core::rules::ForageRule;
 
 /// Pass 20: a forager at (or heading to) a bush in the start-of-tick snapshot:
 /// agent id, village, lineage key, NS and HA.
-pub(super) type ForageRival = (AgentId, SettlementId, u64, u16, u16);
+pub(in crate::runtime) type ForageRival = (AgentId, SettlementId, u64, u16, u16);
 
 /// Per-settlement forage inputs computed once per decision tick (Pass 4).
 #[derive(Debug, Clone)]
-pub(super) struct ForagePlan {
+pub(in crate::runtime) struct ForagePlan {
     /// Settlement formation tile; bushes are measured from here.
-    pub(super) home: (u32, u32),
+    pub(in crate::runtime) home: (u32, u32),
     /// Store target in food units.
-    pub(super) target: f64,
+    pub(in crate::runtime) target: f64,
     /// Stockpile plus food carried by members.
-    pub(super) in_hand: u64,
+    pub(in crate::runtime) in_hand: u64,
 }
 
 /// Deterministic forage bush choice: among tiles holding food within
@@ -28,7 +28,7 @@ pub(super) struct ForagePlan {
 /// `(claims, chebyshev(agent, bush), y, x)`. `None` when no bush qualifies.
 /// Pass 20: `avoid` holds the hearths of villages estranged from the
 /// forager's (empty in every other scene); see [`bush_eligible`].
-pub(super) fn choose_bush(
+pub(in crate::runtime) fn choose_bush(
     rule: &ForageRule,
     home: (u32, u32),
     agent: (u32, u32),
@@ -58,7 +58,7 @@ pub(super) fn choose_bush(
 /// Pass 20: a bush nearer (Chebyshev) to an `avoid` hearth than to `home` is
 /// skipped — a village estranged from another leaves it the bushes on its
 /// side.
-pub(super) fn bush_eligible(
+pub(in crate::runtime) fn bush_eligible(
     rule: &ForageRule,
     home: (u32, u32),
     claims: &BTreeMap<(u32, u32), u32>,
@@ -79,7 +79,7 @@ pub(super) fn bush_eligible(
 
 /// Pass 18: whether [`choose_bush`] (without `exclude`) returns `Some` for
 /// this `home` and `claims`, whoever asks.
-pub(super) fn bush_exists(
+pub(in crate::runtime) fn bush_exists(
     rule: &ForageRule,
     home: (u32, u32),
     food_tiles: &HashMap<(u32, u32), u8>,

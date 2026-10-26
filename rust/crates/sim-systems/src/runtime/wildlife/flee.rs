@@ -268,7 +268,7 @@ impl RuntimeSystem for FleeSystem {
             .rules
             .agent
             .critical_preemption
-            .unwrap_or(crate::runtime::decision::needs::CRITICAL_NEED);
+            .unwrap_or(crate::runtime::agent_actions::needs::CRITICAL_NEED);
         for (_, entity, pos, (wid, wpos)) in near {
             if world.get::<&Drafted>(entity).is_ok() {
                 continue;

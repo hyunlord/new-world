@@ -380,6 +380,7 @@ impl<C: Into<sim_core::chronicle::Chronicle>> From<LegacySimResources<C>> for Si
             spatial: old.spatial,
             nav: old.nav,
             content_state: Default::default(),
+            mind: Default::default(),
             fatal_animal_attacks: Vec::new(),
         }
     }

@@ -6,7 +6,7 @@ use sim_core::components::{
 };
 use sim_engine::SimEngine;
 use sim_systems::runtime::agent::hauls_home;
-use sim_systems::runtime::decision::clock_in_window;
+use sim_systems::runtime::agent_actions::clock_in_window;
 use sim_systems::runtime::settlement::firewood::{in_gather_window, wood_in_hand, wood_target};
 use std::collections::BTreeMap;
 

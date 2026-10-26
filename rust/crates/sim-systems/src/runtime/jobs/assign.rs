@@ -1347,7 +1347,12 @@ impl RuntimeSystem for JobAssignSystem {
             }
         }
         for (entity, job, goal) in taken {
-            let _ = world.insert(entity, (job, SeekTarget::new(goal)));
+            if world.insert(entity, (job, SeekTarget::new(goal))).is_ok() {
+                let agent = world.get::<&Agent>(entity).ok().map(|agent| agent.id);
+                if let Some(agent) = agent {
+                    crate::runtime::mind::job_origins::assigned(world, resources, agent, job);
+                }
+            }
             if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
                 *state = AgentState::Seeking {
                     target: TargetKind::Job,
@@ -1365,7 +1370,7 @@ pub(super) fn in_combat(res: &SimResources, id: AgentId) -> bool {
 /// M3: needs already due to interrupt work must not claim a new reservation.
 /// Sleep uses the decision's personal night window and requires a real bed.
 pub(super) fn needy(world: &World, res: &SimResources, e: Entity) -> bool {
-    use crate::runtime::decision::needs as n;
+    use crate::runtime::agent_actions::needs as n;
     res.rules.colony.is_some_and(|c| c.space.is_some())
         && (world
             .get::<&sim_core::components::Hunger>(e)
@@ -1379,7 +1384,7 @@ pub(super) fn needy(world: &World, res: &SimResources, e: Entity) -> bool {
 /// Match the sleep decision before reserving work, without withholding jobs
 /// when there is nowhere to sleep.
 fn sleep_due(world: &World, res: &SimResources, entity: Entity) -> bool {
-    use crate::runtime::decision::needs as n;
+    use crate::runtime::agent_actions::needs as n;
     if !res.sleep_tiles.values().any(|amount| *amount > 0) {
         return false;
     }

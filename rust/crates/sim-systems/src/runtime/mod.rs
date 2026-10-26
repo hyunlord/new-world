@@ -11,6 +11,7 @@
 //! - Phase 17~20 (Wildlife/Disasters): 추가
 
 pub mod agent;
+pub mod agent_actions;
 pub(crate) mod chronicle_log;
 pub mod combat;
 pub mod construction;
@@ -19,6 +20,7 @@ pub mod influence;
 pub mod jobs;
 pub mod knowledge;
 pub mod memory;
+pub mod mind;
 pub mod mood;
 pub mod nav;
 pub mod needs;

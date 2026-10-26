@@ -21,6 +21,7 @@ serde_json = "1"
 # `worldsim_perf`'s JSON. Never on by default and never a required feature.
 subprofile = ["sim-systems/subprofile"]
 perf_arms = ["sim-systems/perf_arms"]
+mind_shadow = ["sim-systems/mind_shadow"]
 
 [[bin]]
 name = "worldsim_probe"

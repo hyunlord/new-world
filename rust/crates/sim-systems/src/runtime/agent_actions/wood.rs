@@ -10,24 +10,24 @@ use sim_core::rules::FirewoodRule;
 
 /// A wood gatherer to re-target (Pass 5): agent id, entity, position and its
 /// emptied spot (`None` when it had no target).
-pub(super) type WoodRetarget = (AgentId, hecs::Entity, (u32, u32), Option<(u32, u32)>);
+pub(in crate::runtime) type WoodRetarget = (AgentId, hecs::Entity, (u32, u32), Option<(u32, u32)>);
 
 /// Per-settlement firewood inputs computed once per decision tick (Pass 5).
 #[derive(Debug, Clone)]
-pub(super) struct WoodPlan {
+pub(in crate::runtime) struct WoodPlan {
     /// Settlement formation tile; deadwood is measured from here.
-    pub(super) home: (u32, u32),
+    pub(in crate::runtime) home: (u32, u32),
     /// Wood target in units.
-    pub(super) target: f64,
+    pub(in crate::runtime) target: f64,
     /// Stockpile plus wood carried by members.
-    pub(super) in_hand: u64,
+    pub(in crate::runtime) in_hand: u64,
     /// Urgent mode (Pass 6): tonight's burn is not in hand.
-    pub(super) urgent: bool,
+    pub(in crate::runtime) urgent: bool,
 }
 
 /// The firewood rule a member acts under (Pass 6): in urgent mode the
 /// per-spot claim cap doubles; otherwise the rule unchanged.
-pub(super) fn urgent_rule(rule: FirewoodRule, urgent: bool) -> FirewoodRule {
+pub(in crate::runtime) fn urgent_rule(rule: FirewoodRule, urgent: bool) -> FirewoodRule {
     if urgent {
         FirewoodRule {
             max_gatherers_per_spot: rule.max_gatherers_per_spot.saturating_mul(2),
@@ -42,7 +42,7 @@ pub(super) fn urgent_rule(rule: FirewoodRule, urgent: bool) -> FirewoodRule {
 /// `wood_radius` of `home` whose claim count is below the cap, minimise
 /// `(claims, chebyshev(agent, spot), y, x)`. `None` when no spot qualifies.
 /// Pass 7: under `claims_bounded_by_amount` the cap is `min(cap, amount)`.
-pub(super) fn choose_spot(
+pub(in crate::runtime) fn choose_spot(
     rule: &FirewoodRule,
     home: (u32, u32),
     agent: (u32, u32),
@@ -87,7 +87,7 @@ fn spot_eligible(
 
 /// Pass 18: whether [`choose_spot`] (without `exclude`) returns `Some` for
 /// this `home` and `claims`, whoever asks.
-pub(super) fn spot_exists(
+pub(in crate::runtime) fn spot_exists(
     rule: &FirewoodRule,
     home: (u32, u32),
     wood_tiles: &BTreeMap<(u32, u32), u8>,

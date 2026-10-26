@@ -1775,6 +1775,7 @@ fn probe_world(seed: u64, story: &str, neighbours: &str) -> SimEngine {
 
 fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<SeedRun, String> {
     let mut engine = probe_world(seed, &args.story, &args.neighbours);
+    let mut mind_coverage = crate::mind_coverage::MindCoverage::default();
     let mut twin = args
         .check_determinism
         .then(|| probe_world(seed, &args.story, &args.neighbours));
@@ -1916,9 +1917,11 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         if let Some(watch) = b4.as_mut() {
             watch.before_tick(&engine);
         }
+        mind_coverage.before_tick(&engine.resources);
         let started = Instant::now();
         engine.tick();
         tick_ns.push(started.elapsed().as_nanos() as u64);
+        mind_coverage.after_tick(&engine.resources);
         #[cfg(feature = "perf_arms")]
         arms.after_tick();
         demography.after_tick(&engine);
@@ -2057,6 +2060,9 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         "m2": economy.report(&engine),
         "m3": space.report(&engine),
     });
+    if mind_coverage.active() {
+        summary["mind_coverage"] = mind_coverage.report();
+    }
     summary["m4"] = knowledge.report(&engine);
     summary["m5"] = m5.report(&engine);
     summary["m55"] = m55.report(&engine);

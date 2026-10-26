@@ -41,6 +41,7 @@ use std::collections::HashMap;
 
 use hecs::{Entity, World};
 use sim_core::causal::{CausalEvent, CausalLogStorage, DecisionReason, EventId};
+use sim_core::colony::mind_records::{MindChoiceDisplay, MindRecordDictionary};
 use sim_core::components::{Agent, AgentId, Memory, MemoryArm, MemoryEntry};
 use sim_engine::{RuntimeSystem, SimResources};
 
@@ -86,6 +87,11 @@ impl RuntimeSystem for MemorySystem {
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         let current_tick = resources.current_tick;
+        let dictionary = resources
+            .mind
+            .history
+            .as_ref()
+            .map(|history| history.dictionary());
 
         // Phase 0: Collect (AgentId, EventId) pairs for MemoryRecalled
         // events emitted in this tick by AgentDecisionSystem (priority 125).
@@ -104,6 +110,14 @@ impl RuntimeSystem for MemorySystem {
                 } = event
                 {
                     recalled.push((*agent, *recalled_event));
+                } else if let CausalEvent::MindChoice { choice } = event {
+                    if let Some(decoded) =
+                        dictionary.and_then(|dictionary| choice.decode_display(dictionary).ok())
+                    {
+                        if let Some(id) = recalled_mind_event(&decoded) {
+                            recalled.push((decoded.agent, id));
+                        }
+                    }
                 }
             }
         }
@@ -139,7 +153,7 @@ impl RuntimeSystem for MemorySystem {
                     continue;
                 }
                 if let Some((arm, salience, valence, agents)) =
-                    classify_event(event, &resources.causal_log)
+                    classify_event(event, &resources.causal_log, dictionary)
                 {
                     for agent_id in agents {
                         if let Some(entity) = id_to_entity.get(&agent_id).copied() {
@@ -196,8 +210,19 @@ impl RuntimeSystem for MemorySystem {
 fn classify_event(
     event: &CausalEvent,
     causal_log: &CausalLogStorage,
+    dictionary: Option<&MindRecordDictionary>,
 ) -> Option<(MemoryArm, f64, f64, Vec<AgentId>)> {
     match event {
+        CausalEvent::MindChoice { choice } => {
+            let decoded = choice.decode_display(dictionary?).ok()?;
+            if decoded.selected.labels.finish.is_some()
+                || !decoded.selected.labels.tags.iter().any(|tag| tag == "natural")
+                || decoded.selected.labels.tags.iter().any(|tag| tag == "memory") {
+                return None;
+            }
+            let (arm, salience, valence) = mind_memory_mapping(decoded.selected.labels.behaviour)?;
+            Some((arm, salience, valence, vec![decoded.agent]))
+        }
         CausalEvent::AgentDecision { agent, reason, .. } => match reason {
             DecisionReason::HungerThresholdBreach => Some((MemoryArm::Hunger, 0.4, -0.3, vec![*agent])),
             DecisionReason::ThirstThresholdBreach => Some((MemoryArm::Thirst, 0.4, -0.3, vec![*agent])),
@@ -213,11 +238,8 @@ fn classify_event(
             // carries the actor.
             let parent_id = (*parent)?;
             let parent_event = causal_log.lookup(parent_id)?;
-            if let CausalEvent::AgentDecision { agent, .. } = parent_event {
-                Some((MemoryArm::Construction, 0.6, 0.3, vec![*agent]))
-            } else {
-                None
-            }
+            let agent = decision_actor(parent_event, dictionary)?;
+            Some((MemoryArm::Construction, 0.6, 0.3, vec![agent]))
         }
         CausalEvent::ConstructionCompleted { parent, .. } => {
             // Strict two-hop walk only: ConstructionCompleted → ConstructionStarted
@@ -229,11 +251,8 @@ fn classify_event(
                 CausalEvent::ConstructionStarted { parent: gp, .. } => {
                     let grandparent_id = (*gp)?;
                     let grandparent_event = causal_log.lookup(grandparent_id)?;
-                    if let CausalEvent::AgentDecision { agent, .. } = grandparent_event {
-                        Some((MemoryArm::Construction, 0.8, 0.6, vec![*agent]))
-                    } else {
-                        None
-                    }
+                    let agent = decision_actor(grandparent_event, dictionary)?;
+                    Some((MemoryArm::Construction, 0.8, 0.6, vec![agent]))
                 }
                 _ => None,
             }
@@ -263,13 +282,153 @@ fn classify_event(
         // add-starvation-death: AgentDied is a causal leaf — the dead agent has
         // no Memory to encode into, so it is a non-actor event here.
         | CausalEvent::AgentDied { .. }
-        | CausalEvent::PressureCause { .. } => None,
+        | CausalEvent::PressureCause { .. }
+        | CausalEvent::MindFactOrigin { .. } => None,
     }
+}
+
+fn decision_actor(
+    event: &CausalEvent,
+    dictionary: Option<&MindRecordDictionary>,
+) -> Option<AgentId> {
+    match event {
+        CausalEvent::AgentDecision { agent, .. } => Some(*agent),
+        CausalEvent::MindChoice { choice } => Some(choice.decode_display(dictionary?).ok()?.agent),
+        _ => None,
+    }
+}
+
+fn mind_memory_mapping(behaviour: &str) -> Option<(MemoryArm, f64, f64)> {
+    match behaviour {
+        "eat" => Some((MemoryArm::Hunger, 0.4, -0.3)),
+        "drink" => Some((MemoryArm::Thirst, 0.4, -0.3)),
+        "sleep" => Some((MemoryArm::Fatigue, 0.3, -0.2)),
+        "socialise" => Some((MemoryArm::Social, 0.5, 0.2)),
+        _ => None,
+    }
+}
+
+fn recalled_mind_event(choice: &MindChoiceDisplay<'_>) -> Option<EventId> {
+    if !choice
+        .selected
+        .labels
+        .tags
+        .iter()
+        .any(|tag| tag == "memory")
+    {
+        return None;
+    }
+    let fact = match choice.selected.labels.behaviour {
+        "eat" => "memory_hunger",
+        "drink" => "memory_thirst",
+        "sleep" => "memory_fatigue",
+        "socialise" => "memory_social",
+        _ => return None,
+    };
+    choice
+        .facts
+        .iter()
+        .find(|witness| witness.name == fact)?
+        .cause
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn mind_fixture(tag: &str) -> (CausalEvent, MindRecordDictionary) {
+        use sim_core::colony::mind::{
+            compile, BehaviourSpec, FactKind, FactSpec, MindRegistrySchema,
+        };
+        use sim_core::colony::mind_records::{
+            ChoiceCandidate, ChoiceFact, MindChoiceRecord, PackedMindChoice,
+        };
+        let schema = MindRegistrySchema {
+            facts: vec![FactSpec {
+                name: "memory_hunger".into(),
+                kind: FactKind::Signed,
+            }],
+            behaviours: vec![BehaviourSpec {
+                name: "eat".into(),
+                target_bindings: vec![],
+            }],
+        };
+        let source =
+            r#"(schema_version:1,bands:["critical","duty","need","work","leisure","idle"],nodes:[
+            (id:"idle",band:"idle",behaviour:"eat",when:[],
+             score:(constant:0,terms:[(fact:"memory_hunger",weight_permille:1)]),
+             hysteresis:0,life_stages:["adult","child","elder"],tags:["TAG"],name_key:"IDLE")])"#
+                .replace("TAG", tag);
+        let policy = compile(&source, &schema).expect("policy");
+        let node = policy.node_id("idle").expect("node");
+        let record = MindChoiceRecord {
+            revision: policy.revision(),
+            id: 10,
+            parent: Some(3),
+            agent: 7,
+            tick: 5,
+            node,
+            band: policy.node(node).expect("node").band,
+            score: 2,
+            top3: vec![ChoiceCandidate { node, score: 2 }],
+            facts: vec![ChoiceFact {
+                fact: policy.fact_id("memory_hunger").expect("fact"),
+                value: 2,
+                cause: Some(3),
+            }],
+        };
+        (
+            CausalEvent::MindChoice {
+                choice: PackedMindChoice::new(&policy, &record).expect("choice"),
+            },
+            MindRecordDictionary::from_policy(&policy).expect("dictionary"),
+        )
+    }
+
+    #[test]
+    fn mind_natural_choices_encode_and_memory_choices_only_recall_real_origin() {
+        let log = CausalLogStorage::new();
+        let (natural, dictionary) = mind_fixture("natural");
+        assert_eq!(
+            classify_event(&natural, &log, Some(&dictionary)),
+            Some((MemoryArm::Hunger, 0.4, -0.3, vec![7]))
+        );
+        assert!(classify_event(&natural, &log, None).is_none());
+        let (memory, dictionary) = mind_fixture("memory");
+        assert!(classify_event(&memory, &log, Some(&dictionary)).is_none());
+        if let CausalEvent::MindChoice { choice } = memory {
+            let decoded = choice.decode_display(&dictionary).expect("decode");
+            assert_eq!(recalled_mind_event(&decoded), Some(3));
+        } else {
+            panic!("choice fixture");
+        }
+        let (continuation, dictionary) = mind_fixture("continuation");
+        assert!(classify_event(&continuation, &log, Some(&dictionary)).is_none());
+        let bridge = CausalEvent::MindFactOrigin {
+            id: 11,
+            tick: 5,
+            source: sim_core::colony::mind_records::MindFactSource::Command(0),
+        };
+        assert!(classify_event(&bridge, &log, Some(&dictionary)).is_none());
+    }
+
+    #[test]
+    fn construction_attributes_actual_mind_parent_without_reclassifying_its_behaviour() {
+        let (choice, dictionary) = mind_fixture("natural");
+        let mut log = CausalLogStorage::new();
+        log.push(0, choice);
+        let started = CausalEvent::ConstructionStarted {
+            id: 11,
+            parent: Some(10),
+            blueprint: sim_core::components::BuildingBlueprint::new(1, 1, 1, 1),
+            position: (0, 0),
+            tick: 5,
+        };
+        assert_eq!(
+            classify_event(&started, &log, Some(&dictionary)),
+            Some((MemoryArm::Construction, 0.6, 0.3, vec![7]))
+        );
+    }
 
     #[test]
     fn priority_is_136_interval_is_1() {
@@ -292,7 +451,7 @@ mod tests {
             tick: 0,
         };
         assert_eq!(
-            classify_event(&hunger, &log),
+            classify_event(&hunger, &log, None),
             Some((MemoryArm::Hunger, 0.4, -0.3, vec![7]))
         );
 
@@ -305,7 +464,7 @@ mod tests {
             tick: 0,
         };
         assert_eq!(
-            classify_event(&thirst, &log),
+            classify_event(&thirst, &log, None),
             Some((MemoryArm::Thirst, 0.4, -0.3, vec![7]))
         );
 
@@ -318,7 +477,7 @@ mod tests {
             tick: 0,
         };
         assert_eq!(
-            classify_event(&fatigue, &log),
+            classify_event(&fatigue, &log, None),
             Some((MemoryArm::Fatigue, 0.3, -0.2, vec![7]))
         );
 
@@ -331,7 +490,7 @@ mod tests {
             tick: 0,
         };
         assert_eq!(
-            classify_event(&con, &log),
+            classify_event(&con, &log, None),
             Some((MemoryArm::Construction, 0.5, 0.1, vec![7]))
         );
 
@@ -344,7 +503,7 @@ mod tests {
             tick: 0,
         };
         assert_eq!(
-            classify_event(&social, &log),
+            classify_event(&social, &log, None),
             Some((MemoryArm::Social, 0.5, 0.2, vec![7]))
         );
 
@@ -357,7 +516,7 @@ mod tests {
             tick: 0,
         };
         assert_eq!(
-            classify_event(&started, &log),
+            classify_event(&started, &log, None),
             Some((MemoryArm::Social, 0.6, 0.4, vec![3, 5]))
         );
 
@@ -370,7 +529,7 @@ mod tests {
             tick: 0,
         };
         assert_eq!(
-            classify_event(&completed, &log),
+            classify_event(&completed, &log, None),
             Some((MemoryArm::Social, 0.8, 0.7, vec![3, 5]))
         );
     }
@@ -388,7 +547,7 @@ mod tests {
             radius: 1,
             tick: 0,
         };
-        assert!(classify_event(&bp, &log).is_none());
+        assert!(classify_event(&bp, &log, None).is_none());
 
         let sd = CausalEvent::StampDirty {
             id: 1,
@@ -397,7 +556,7 @@ mod tests {
             region: DirtyRegion::new(0, 0, 1, 1),
             tick: 0,
         };
-        assert!(classify_event(&sd, &log).is_none());
+        assert!(classify_event(&sd, &log, None).is_none());
 
         let ic = CausalEvent::InfluenceChanged {
             id: 1,
@@ -408,7 +567,7 @@ mod tests {
             new: 0.0,
             tick: 0,
         };
-        assert!(classify_event(&ic, &log).is_none());
+        assert!(classify_event(&ic, &log, None).is_none());
 
         let mem_reason = CausalEvent::AgentDecision {
             id: 1,
@@ -418,7 +577,7 @@ mod tests {
             reason: DecisionReason::MemoryReason,
             tick: 0,
         };
-        assert!(classify_event(&mem_reason, &log).is_none());
+        assert!(classify_event(&mem_reason, &log, None).is_none());
 
         let mr = CausalEvent::MemoryRecalled {
             id: 1,
@@ -428,7 +587,7 @@ mod tests {
             triggered_by: MemoryRecallTrigger::CascadeBias,
             tick: 0,
         };
-        assert!(classify_event(&mr, &log).is_none());
+        assert!(classify_event(&mr, &log, None).is_none());
     }
 
     #[test]
@@ -452,7 +611,7 @@ mod tests {
             tick: 0,
         };
         assert_eq!(
-            classify_event(&started, &log),
+            classify_event(&started, &log, None),
             Some((MemoryArm::Construction, 0.6, 0.3, vec![42]))
         );
     }
@@ -485,7 +644,7 @@ mod tests {
             tick: 0,
         };
         assert_eq!(
-            classify_event(&completed, &log),
+            classify_event(&completed, &log, None),
             Some((MemoryArm::Construction, 0.8, 0.6, vec![42]))
         );
     }
@@ -501,6 +660,6 @@ mod tests {
             position: (0, 0),
             tick: 0,
         };
-        assert!(classify_event(&started, &log).is_none());
+        assert!(classify_event(&started, &log, None).is_none());
     }
 }

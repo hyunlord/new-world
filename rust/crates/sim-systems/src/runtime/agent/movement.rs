@@ -68,7 +68,7 @@ use sim_core::rng::{
 };
 use std::collections::BTreeMap;
 
-use crate::runtime::decision::clock_in_window;
+use crate::runtime::agent_actions::needs::clock_in_window;
 use hecs::World;
 use sim_core::components::{
     Activity, ActivityKind, Agent, AgentId, AgentState, Child, Elder, Founding, Inventory,

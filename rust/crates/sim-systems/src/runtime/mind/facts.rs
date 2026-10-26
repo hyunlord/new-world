@@ -1,0 +1,1841 @@
+//! Registered factual readers. No provider chooses a behaviour or mutates ECS.
+//! Numeric needs are millipoints (round to nearest); breach booleans use the
+//! original floating comparison, so rounding cannot move a threshold edge.
+
+use super::context::{ContextError, Domain, PersonSnapshot, TargetCandidate, TickContext};
+use crate::runtime::agent_actions::{needs, targets};
+use sim_core::colony::mind::{
+    CompiledMind, FactId, FactKind, FactSpec, LifeStage, MindEvalError, PersonFacts,
+};
+use sim_core::colony::{JobKind, JobStage};
+use sim_core::components::{ActivityKind, AgentId, AgentState, TargetKind, INVENTORY_CAPACITY};
+use sim_engine::SimResources;
+use std::collections::BTreeMap;
+use std::fmt;
+
+/// Failure to bind or populate factual evidence; missing values never become zero.
+#[derive(Debug)]
+pub enum FactError {
+    /// Required snapshot evidence was absent or invalidated.
+    Context(ContextError),
+    /// The typed fact table rejected a row, column, or value.
+    Table(MindEvalError),
+    /// A compiled fact has no registered reader.
+    UnknownProvider(String),
+    /// Two readers attempted to register the same fact name.
+    DuplicateProvider(String),
+    /// Compiled and registered fact kinds disagree.
+    KindMismatch(String),
+    /// Resources, snapshot, and table do not represent the same tick.
+    ContextTickMismatch,
+    /// This bound provider plan belongs to another policy revision.
+    PolicyMismatch,
+    /// A node-keyed random fact must belong to exactly one authored node.
+    RandomFactNodeCount {
+        /// Registered random-input fact name.
+        fact: String,
+        /// Number of distinct authored nodes referencing it.
+        users: usize,
+    },
+    /// A required optional component or prepared observation is absent.
+    MissingValue {
+        /// Person whose factual input is absent.
+        agent: AgentId,
+        /// Registered input that could not be populated.
+        fact: String,
+    },
+    /// A numeric value is non-finite or cannot fit the declared integer unit.
+    InvalidNumber {
+        /// Person whose numeric input was rejected.
+        agent: AgentId,
+        /// Registered input with an invalid numeric representation.
+        fact: String,
+    },
+}
+
+impl fmt::Display for FactError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{self:?}")
+    }
+}
+impl std::error::Error for FactError {}
+impl From<ContextError> for FactError {
+    fn from(value: ContextError) -> Self {
+        Self::Context(value)
+    }
+}
+impl From<MindEvalError> for FactError {
+    fn from(value: MindEvalError) -> Self {
+        Self::Table(value)
+    }
+}
+
+/// Pure factual reader; the final argument identifies the registered input in errors.
+pub type FactReader =
+    fn(&PersonSnapshot, &TickContext, &SimResources, &str) -> Result<i64, FactError>;
+/// Registered factual implementation and its declared scalar kind.
+#[derive(Clone, Copy)]
+pub struct FactProvider {
+    /// Stable name resolved against policy facts during binding.
+    pub name: &'static str,
+    /// Boolean or signed scalar type enforced by the fact table.
+    pub kind: FactKind,
+    /// Read-only implementation; never selects a policy node or mutates ECS.
+    pub read: FactReader,
+    /// Node-bound random input, not a global or content-name random stream.
+    pub node_random: bool,
+}
+
+fn missing(agent: AgentId, name: &str) -> FactError {
+    FactError::MissingValue {
+        agent,
+        fact: name.to_owned(),
+    }
+}
+fn milli(value: Option<f64>, agent: AgentId, name: &str) -> Result<i64, FactError> {
+    let value = value.ok_or_else(|| missing(agent, name))? * 1000.0;
+    if !value.is_finite() || value < i64::MIN as f64 || value >= i64::MAX as f64 {
+        return Err(FactError::InvalidNumber {
+            agent,
+            fact: name.to_owned(),
+        });
+    }
+    Ok(value.round() as i64)
+}
+fn tenths(value: Option<f64>, agent: AgentId, name: &str) -> Result<i64, FactError> {
+    let value = value.ok_or_else(|| missing(agent, name))? * 10.0;
+    if !value.is_finite() || value < i64::MIN as f64 || value >= i64::MAX as f64 {
+        return Err(FactError::InvalidNumber {
+            agent,
+            fact: name.to_owned(),
+        });
+    }
+    Ok(value as i64)
+}
+fn fatigue_threshold(p: &PersonSnapshot, r: &SimResources) -> f64 {
+    let day_tick = (r.ticks_per_day != 0)
+        .then(|| r.current_tick.saturating_add(r.rules.clock_offset_ticks) % r.ticks_per_day);
+    needs::person_night_rest(
+        r.rules.agent.night_rest,
+        r.rules.agent.temperament,
+        p.temperament.as_ref(),
+        day_tick,
+    )
+    .map_or(needs::FATIGUE_THRESHOLD, |rule| rule.fatigue_threshold)
+}
+fn derived(
+    p: &PersonSnapshot,
+    c: &TickContext,
+    _: &SimResources,
+    name: &str,
+) -> Result<i64, FactError> {
+    Ok(c.derived(p.agent, name)?)
+}
+
+fn unbound_draw(
+    p: &PersonSnapshot,
+    _: &TickContext,
+    _: &SimResources,
+    name: &str,
+) -> Result<i64, FactError> {
+    Err(missing(p.agent, name))
+}
+/// Exact ordering against the configured threshold, retaining sub-millipoint edges.
+fn critical_order(
+    value: Option<f64>,
+    p: &PersonSnapshot,
+    r: &SimResources,
+    name: &str,
+) -> Result<i64, FactError> {
+    let value = value.ok_or_else(|| missing(p.agent, name))?;
+    let limit = r
+        .rules
+        .agent
+        .critical_preemption
+        .unwrap_or(needs::CRITICAL_NEED);
+    if !value.is_finite() || !limit.is_finite() {
+        return Err(FactError::InvalidNumber {
+            agent: p.agent,
+            fact: name.to_owned(),
+        });
+    }
+    Ok(if value < limit {
+        -1
+    } else if value > limit {
+        1
+    } else {
+        0
+    })
+}
+
+fn routine_preference(
+    p: &PersonSnapshot,
+    r: &SimResources,
+    kind: usize,
+    name: &str,
+) -> Result<i64, FactError> {
+    let Some(rule) = r.rules.agent.routine else {
+        return Ok(0);
+    };
+    let temperament = p.temperament.ok_or_else(|| missing(p.agent, name))?;
+    let weights = rule.adjusted_weights(
+        p.life_stage == LifeStage::Child,
+        p.life_stage == LifeStage::Elder,
+        &temperament,
+    );
+    let total: u64 = weights.iter().map(|v| u64::from(*v)).sum();
+    Ok(if total == 0 {
+        0
+    } else {
+        (u64::from(weights[kind]) * 1000 / total) as i64
+    })
+}
+macro_rules! fact {
+    ($name:literal,$kind:ident,|$p:ident,$c:ident,$r:ident,$n:ident| $body:expr) => {
+        FactProvider {
+            name: $name,
+            kind: FactKind::$kind,
+            read: |$p, $c, $r, $n| $body,
+            node_random: false,
+        }
+    };
+}
+macro_rules! overlay {
+    ($name:literal,$kind:ident) => {
+        FactProvider {
+            name: $name,
+            kind: FactKind::$kind,
+            read: derived,
+            node_random: false,
+        }
+    };
+}
+
+/// Names are registration data, not a selector's content-name dispatch.
+pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
+    FactProvider {
+        name: "routine_tend_fire_draw",
+        kind: FactKind::Signed,
+        read: unbound_draw,
+        node_random: true,
+    },
+    fact!("routine_tend_fire_preference", Signed, |p, _c, r, n| {
+        routine_preference(p, r, 0, n)
+    }),
+    FactProvider {
+        name: "routine_craft_draw",
+        kind: FactKind::Signed,
+        read: unbound_draw,
+        node_random: true,
+    },
+    fact!("routine_craft_preference", Signed, |p, _c, r, n| {
+        routine_preference(p, r, 1, n)
+    }),
+    FactProvider {
+        name: "routine_repair_draw",
+        kind: FactKind::Signed,
+        read: unbound_draw,
+        node_random: true,
+    },
+    fact!("routine_repair_preference", Signed, |p, _c, r, n| {
+        routine_preference(p, r, 2, n)
+    }),
+    FactProvider {
+        name: "routine_hearth_circle_draw",
+        kind: FactKind::Signed,
+        read: unbound_draw,
+        node_random: true,
+    },
+    fact!("routine_hearth_circle_preference", Signed, |p, _c, r, n| {
+        routine_preference(p, r, 3, n)
+    }),
+    FactProvider {
+        name: "routine_explore_draw",
+        kind: FactKind::Signed,
+        read: unbound_draw,
+        node_random: true,
+    },
+    fact!("routine_explore_preference", Signed, |p, _c, r, n| {
+        routine_preference(p, r, 4, n)
+    }),
+    FactProvider {
+        name: "routine_play_draw",
+        kind: FactKind::Signed,
+        read: unbound_draw,
+        node_random: true,
+    },
+    fact!("routine_play_preference", Signed, |p, _c, r, n| {
+        routine_preference(p, r, 5, n)
+    }),
+    FactProvider {
+        name: "routine_sit_by_fire_draw",
+        kind: FactKind::Signed,
+        read: unbound_draw,
+        node_random: true,
+    },
+    fact!("routine_sit_by_fire_preference", Signed, |p, _c, r, n| {
+        routine_preference(p, r, 6, n)
+    }),
+    fact!("hunger_tenths", Signed, |p, _c, _r, n| tenths(
+        p.hunger, p.agent, n
+    )),
+    fact!("thirst_tenths", Signed, |p, _c, _r, n| tenths(
+        p.thirst, p.agent, n
+    )),
+    fact!("fatigue_tenths", Signed, |p, _c, _r, n| tenths(
+        p.fatigue, p.agent, n
+    )),
+    fact!("hunger_threshold_tenths", Signed, |p, _c, _r, n| tenths(
+        Some(f64::from(needs::HUNGER_THRESHOLD)),
+        p.agent,
+        n
+    )),
+    fact!("thirst_threshold_tenths", Signed, |p, _c, _r, n| tenths(
+        Some(needs::THIRST_THRESHOLD),
+        p.agent,
+        n
+    )),
+    fact!("fatigue_threshold_tenths", Signed, |p, _c, r, n| tenths(
+        Some(fatigue_threshold(p, r)),
+        p.agent,
+        n
+    )),
+    fact!("critical_threshold_tenths", Signed, |p, _c, r, n| tenths(
+        Some(
+            r.rules
+                .agent
+                .critical_preemption
+                .unwrap_or(needs::CRITICAL_NEED)
+        ),
+        p.agent,
+        n
+    )),
+    fact!("yield_margin_tenths", Signed, |p, _c, r, n| Ok(i64::from(
+        r.rules
+            .colony
+            .and_then(|rule| rule.yield_margin_permille)
+            .ok_or_else(|| missing(p.agent, n))?
+    ))),
+    fact!("finish_leg_tiles", Signed, |p, _c, r, n| Ok(i64::from(
+        r.rules
+            .colony
+            .and_then(|rule| rule.finish_leg_tiles)
+            .ok_or_else(|| missing(p.agent, n))?
+    ))),
+    fact!("craft_working", Bool, |p, _c, r, _n| Ok(i64::from(
+        r.rules.colony.is_some_and(|rule| rule.economy.is_some())
+            && p.job
+                .is_some_and(|job| matches!(job.kind, JobKind::Craft { .. })
+                    && matches!(job.stage, JobStage::Working { .. }))
+    ))),
+    // MAX is a documented no-destination distance, not an unknown measurement.
+    fact!("job_destination_distance", Signed, |p, _c, _r, _n| Ok(p
+        .job
+        .and_then(|job| job.kind.dest())
+        .map_or(i64::MAX, |to| i64::from(
+            p.position.x.abs_diff(to.0).max(p.position.y.abs_diff(to.1))
+        )))),
+    fact!("hunger_excess_tenths", Signed, |p, _c, _r, n| Ok(tenths(
+        p.hunger, p.agent, n
+    )? - 500)),
+    fact!("thirst_excess_tenths", Signed, |p, _c, _r, n| Ok(tenths(
+        p.thirst, p.agent, n
+    )? - 500)),
+    fact!("fatigue_excess_tenths", Signed, |p, _c, r, n| Ok(tenths(
+        p.fatigue, p.agent, n
+    )?
+        - tenths(Some(fatigue_threshold(p, r)), p.agent, n)?)),
+    fact!("worker", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.life_stage == LifeStage::Adult
+    ))),
+    fact!("hunger_actionable", Bool, |p, c, _r, _n| Ok(i64::from(
+        p.hunger
+            .is_some_and(|v| v > f64::from(needs::HUNGER_THRESHOLD))
+            && c.target_scope(p.agent)?.food_available
+    ))),
+    fact!("thirst_actionable", Bool, |p, c, _r, _n| Ok(i64::from(
+        p.thirst.is_some_and(|v| v > needs::THIRST_THRESHOLD) && c.availability.water
+    ))),
+    fact!("fatigue_actionable", Bool, |p, c, r, _n| Ok(i64::from(
+        p.fatigue.is_some_and(|v| v > fatigue_threshold(p, r)) && c.availability.sleep
+    ))),
+    fact!("stocked_camp_in_radius", Bool, |p, c, r, _n| {
+        let scope = c.target_scope(p.agent)?;
+        Ok(i64::from(
+            scope.camp_stocked
+                && r.rules
+                    .society
+                    .meals
+                    .zip(scope.home)
+                    .is_some_and(|(rule, home)| {
+                        p.position
+                            .x
+                            .abs_diff(home.0)
+                            .max(p.position.y.abs_diff(home.1))
+                            <= rule.camp_radius
+                    }),
+        ))
+    }),
+    fact!("camp_stocked", Bool, |p, c, _r, _n| Ok(i64::from(
+        c.target_scope(p.agent)?.camp_stocked
+    ))),
+    fact!("within_camp_radius", Bool, |p, c, r, _n| Ok(i64::from(
+        r.rules
+            .society
+            .meals
+            .zip(c.target_scope(p.agent)?.home)
+            .is_some_and(|(rule, home)| p
+                .position
+                .x
+                .abs_diff(home.0)
+                .max(p.position.y.abs_diff(home.1))
+                <= rule.camp_radius)
+    ))),
+    fact!("stock_in_hand", Signed, |p, c, _r, n| i64::try_from(
+        c.target_scope(p.agent)?.stock_in_hand
+    )
+    .map_err(|_| FactError::InvalidNumber {
+        agent: p.agent,
+        fact: n.into()
+    })),
+    // An absent plan has no cap: -1 denotes below an unbounded limit.
+    fact!("stock_hoard_order", Signed, |p, c, _r, n| {
+        let scope = c.target_scope(p.agent)?;
+        let Some(limit) = scope.stock_hoard_limit else {
+            return Ok(-1);
+        };
+        if !limit.is_finite() {
+            return Err(FactError::InvalidNumber {
+                agent: p.agent,
+                fact: n.into(),
+            });
+        }
+        let amount = scope.stock_in_hand as f64;
+        Ok(if amount < limit {
+            -1
+        } else if amount > limit {
+            1
+        } else {
+            0
+        })
+    }),
+    fact!("social_seek_enabled", Bool, |_p, _c, r, _n| Ok(i64::from(
+        r.rules.agent.social_seek.is_some()
+    ))),
+    fact!("stock_shortfall", Bool, |p, c, _r, _n| Ok(i64::from(
+        c.target_scope(p.agent)?.stock_shortfall
+    ))),
+    fact!("forage_window", Bool, |_p, _c, r, _n| Ok(i64::from(
+        r.rules
+            .agent
+            .forage
+            .filter(|_| r.rules.society.stock_target.is_some())
+            .is_some_and(|rule| needs::clock_in_window(r, rule.start_minute, rule.end_minute))
+    ))),
+    fact!("food_carry_loaded", Bool, |p, _c, r, n| {
+        let Some(rule) = r
+            .rules
+            .agent
+            .forage
+            .filter(|_| r.rules.society.stock_target.is_some())
+        else {
+            return Ok(0);
+        };
+        let load = if p.life_stage == LifeStage::Adult {
+            r.rules
+                .agent
+                .temperament
+                .zip(p.temperament)
+                .map_or(rule.haul_threshold, |(lean, t)| {
+                    lean.food_haul(rule.haul_threshold, &t)
+                })
+        } else {
+            rule.haul_threshold
+        };
+        Ok(i64::from(
+            p.inventory_food.ok_or_else(|| missing(p.agent, n))? >= load,
+        ))
+    }),
+    fact!("hearth_available", Bool, |p, c, r, _n| Ok(i64::from(
+        c.target_scope(p.agent)?
+            .home
+            .is_some_and(|home| r.nav.reachable((p.position.x, p.position.y), home))
+    ))),
+    fact!("target_social", Bool, |p, _c, _r, _n| Ok(i64::from(
+        matches!(p.state.target(), Some(TargetKind::Agent(_)))
+    ))),
+    fact!("social_partner_present", Bool, |p, c, _r, _n| Ok(
+        i64::from(match p.state.target() {
+            Some(TargetKind::Agent(peer)) => c.row(peer).is_ok(),
+            _ => false,
+        })
+    )),
+    fact!("social_chase_expired", Bool, |p, _c, r, _n| Ok(i64::from(
+        r.rules.agent.social_seek.is_some_and(|rule| r
+            .social_chase_since
+            .get(&p.agent)
+            .is_some_and(|since| r.current_tick.saturating_sub(*since) >= rule.max_chase_ticks))
+    ))),
+    fact!("social_retry_ready", Bool, |p, _c, r, _n| Ok(i64::from(
+        r.rules.agent.social_seek.is_none()
+            || r.social_retry_after
+                .get(&p.agent)
+                .is_none_or(|after| r.current_tick >= *after)
+    ))),
+    fact!("activity_kind", Signed, |p, _c, _r, _n| Ok(p
+        .activity
+        .map_or(-1, |a| a.kind.index() as i64))),
+    fact!("own_site", Bool, |p, _c, r, _n| Ok(i64::from(
+        p.state.target() == Some(TargetKind::ConstructionSite)
+            && r.colony
+                .occupied
+                .contains_key(&(p.position.x, p.position.y))
+    ))),
+    fact!("hunger", Signed, |p, _c, _r, n| milli(p.hunger, p.agent, n)),
+    fact!("thirst", Signed, |p, _c, _r, n| milli(p.thirst, p.agent, n)),
+    fact!("fatigue", Signed, |p, _c, _r, n| milli(
+        p.fatigue, p.agent, n
+    )),
+    fact!("social", Signed, |p, _c, _r, n| milli(p.social, p.agent, n)),
+    fact!("hunger_threshold", Signed, |p, _c, _r, n| milli(
+        Some(f64::from(needs::HUNGER_THRESHOLD)),
+        p.agent,
+        n
+    )),
+    fact!("thirst_threshold", Signed, |p, _c, _r, n| milli(
+        Some(needs::THIRST_THRESHOLD),
+        p.agent,
+        n
+    )),
+    fact!("fatigue_threshold", Signed, |p, _c, r, n| milli(
+        Some(fatigue_threshold(p, r)),
+        p.agent,
+        n
+    )),
+    fact!("social_threshold", Signed, |p, _c, _r, n| milli(
+        Some(needs::SOCIAL_THRESHOLD),
+        p.agent,
+        n
+    )),
+    fact!("critical_preemption_enabled", Bool, |_p, _c, r, _n| Ok(
+        i64::from(r.rules.agent.critical_preemption.is_some())
+    )),
+    fact!("preempt_gathering_enabled", Bool, |_p, _c, r, _n| Ok(
+        i64::from(r.rules.agent.preempt_gathering)
+    )),
+    fact!("hunger_critical_order", Signed, |p, _c, r, n| {
+        critical_order(p.hunger, p, r, n)
+    }),
+    fact!("thirst_critical_order", Signed, |p, _c, r, n| {
+        critical_order(p.thirst, p, r, n)
+    }),
+    fact!("fatigue_critical_order", Signed, |p, _c, r, n| {
+        critical_order(p.fatigue, p, r, n)
+    }),
+    fact!("critical_threshold", Signed, |p, _c, r, n| milli(
+        Some(
+            r.rules
+                .agent
+                .critical_preemption
+                .unwrap_or(needs::CRITICAL_NEED)
+        ),
+        p.agent,
+        n
+    )),
+    fact!("hungry", Bool, |p, _c, _r, n| Ok(i64::from(
+        p.hunger.ok_or_else(|| missing(p.agent, n))? > f64::from(needs::HUNGER_THRESHOLD)
+    ))),
+    fact!("thirsty", Bool, |p, _c, _r, n| Ok(i64::from(
+        p.thirst.ok_or_else(|| missing(p.agent, n))? > needs::THIRST_THRESHOLD
+    ))),
+    fact!("tired", Bool, |p, _c, r, n| Ok(i64::from(
+        p.fatigue.ok_or_else(|| missing(p.agent, n))? > fatigue_threshold(p, r)
+    ))),
+    fact!("lonely", Bool, |p, _c, _r, n| Ok(i64::from(
+        p.social.ok_or_else(|| missing(p.agent, n))? > needs::SOCIAL_THRESHOLD
+    ))),
+    fact!("night_window", Bool, |p, _c, r, _n| {
+        let day = (r.ticks_per_day != 0)
+            .then(|| r.current_tick.saturating_add(r.rules.clock_offset_ticks) % r.ticks_per_day);
+        Ok(i64::from(
+            needs::person_night_rest(
+                r.rules.agent.night_rest,
+                r.rules.agent.temperament,
+                p.temperament.as_ref(),
+                day,
+            )
+            .is_some(),
+        ))
+    }),
+    fact!("temperament_ns", Signed, |p, _c, _r, n| Ok(i64::from(
+        p.temperament.ok_or_else(|| missing(p.agent, n))?.ns
+    ))),
+    fact!("temperament_ha", Signed, |p, _c, _r, n| Ok(i64::from(
+        p.temperament.ok_or_else(|| missing(p.agent, n))?.ha
+    ))),
+    fact!("temperament_rd", Signed, |p, _c, _r, n| Ok(i64::from(
+        p.temperament.ok_or_else(|| missing(p.agent, n))?.rd
+    ))),
+    fact!("temperament_p", Signed, |p, _c, _r, n| Ok(i64::from(
+        p.temperament.ok_or_else(|| missing(p.agent, n))?.p
+    ))),
+    fact!("idle", Bool, |p, _c, _r, _n| Ok(i64::from(matches!(
+        p.state,
+        AgentState::Idle
+    )))),
+    fact!("seeking", Bool, |p, _c, _r, _n| Ok(i64::from(matches!(
+        p.state,
+        AgentState::Seeking { .. }
+    )))),
+    fact!("consuming", Bool, |p, _c, _r, _n| Ok(i64::from(matches!(
+        p.state,
+        AgentState::Consuming { .. }
+    )))),
+    fact!("drafted", Bool, |p, _c, _r, _n| Ok(i64::from(p.drafted))),
+    fact!("fleeing", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.fleeing.is_some()
+    ))),
+    fact!("cold", Bool, |p, _c, _r, _n| Ok(i64::from(p.cold))),
+    fact!("sick", Bool, |p, _c, _r, _n| Ok(i64::from(p.sick))),
+    fact!("hp", Signed, |p, _c, _r, n| milli(p.hp, p.agent, n)),
+    fact!("mood", Signed, |p, _c, _r, n| Ok(i64::from(
+        p.mood.ok_or_else(|| missing(p.agent, n))?.value
+    ))),
+    fact!("job_owned_state", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.job.is_some()
+            && match p.state {
+                AgentState::Seeking {
+                    target: TargetKind::Job,
+                }
+                | AgentState::Consuming {
+                    target: TargetKind::Job,
+                } => true,
+                AgentState::Consuming {
+                    target: TargetKind::ConstructionSite,
+                } => true,
+                AgentState::Idle | AgentState::Seeking { .. } | AgentState::Consuming { .. } =>
+                    false,
+            }
+    ))),
+    fact!("has_job", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.job.is_some()
+    ))),
+    fact!("job_working", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.job
+            .is_some_and(|j| matches!(j.stage, JobStage::Working { .. }))
+    ))),
+    fact!("job_to_source", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.job.is_some_and(|j| matches!(j.stage, JobStage::ToSource))
+    ))),
+    fact!("job_to_dest", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.job.is_some_and(|j| matches!(j.stage, JobStage::ToDest))
+    ))),
+    fact!("job_distance", Signed, |p, _c, _r, n| {
+        let Some(job) = p.job else {
+            return Ok(i64::MAX);
+        };
+        let goal = match job.stage {
+            JobStage::ToSource => job.fetch.unwrap_or_else(|| job.kind.source()),
+            JobStage::Working { .. } => job.kind.source(),
+            JobStage::ToDest => job.kind.dest().ok_or_else(|| missing(p.agent, n))?,
+        };
+        Ok(i64::from(
+            p.position
+                .x
+                .abs_diff(goal.0)
+                .max(p.position.y.abs_diff(goal.1)),
+        ))
+    }),
+    fact!("carrying", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.carry.is_some()
+    ))),
+    fact!("carry_count", Signed, |p, _c, _r, _n| Ok(p
+        .carry
+        .map_or(0, |v| i64::from(v.count)))),
+    fact!("inventory_total", Signed, |p, _c, _r, n| Ok(i64::from(
+        p.inventory_total.ok_or_else(|| missing(p.agent, n))?
+    ))),
+    fact!("inventory_food", Signed, |p, _c, _r, n| Ok(i64::from(
+        p.inventory_food.ok_or_else(|| missing(p.agent, n))?
+    ))),
+    fact!("inventory_room", Signed, |p, _c, _r, n| Ok(i64::from(
+        INVENTORY_CAPACITY.saturating_sub(p.inventory_total.ok_or_else(|| missing(p.agent, n))?)
+    ))),
+    fact!("activity_active", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.activity.is_some()
+    ))),
+    fact!("activity_arrived", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.activity.is_some_and(|v| v.arrived_tick.is_some())
+    ))),
+    fact!("activity_resting", Bool, |p, c, _r, _n| Ok(i64::from(
+        p.activity_rest.is_some_and(|v| v.until_tick > c.tick)
+    ))),
+    fact!("has_memory", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.memory_entries.is_some()
+    ))),
+    fact!("memory_entries", Signed, |p, _c, _r, n| i64::try_from(
+        p.memory_entries.ok_or_else(|| missing(p.agent, n))?
+    )
+    .map_err(|_| FactError::InvalidNumber {
+        agent: p.agent,
+        fact: n.to_owned()
+    })),
+    fact!("has_home", Bool, |p, c, _r, _n| Ok(i64::from(
+        c.target_scope(p.agent)?.home.is_some()
+    ))),
+    // Availability is independent of priority; target helpers retain their own tie order.
+    fact!("food_available", Bool, |p, c, _r, _n| Ok(i64::from(
+        c.target_scope(p.agent)?.food_available
+    ))),
+    fact!("water_available", Bool, |_p, c, _r, _n| Ok(i64::from(
+        c.availability.water
+    ))),
+    fact!("sleep_available", Bool, |_p, c, _r, _n| Ok(i64::from(
+        c.availability.sleep
+    ))),
+    fact!("gather_available", Bool, |p, c, r, _n| Ok(i64::from(
+        c.gather_available(p.agent, r)?
+    ))),
+    fact!("at_food", Bool, |p, _c, r, _n| Ok(i64::from(
+        r.food_tiles.contains_key(&(p.position.x, p.position.y))
+    ))),
+    fact!("at_water", Bool, |p, _c, r, _n| Ok(i64::from(
+        r.water_tiles.contains_key(&(p.position.x, p.position.y))
+    ))),
+    fact!("at_sleep", Bool, |p, _c, r, _n| Ok(i64::from(
+        r.sleep_tiles.contains_key(&(p.position.x, p.position.y))
+    ))),
+    fact!("target_food", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.state.target() == Some(TargetKind::Food)
+    ))),
+    fact!("target_water", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.state.target() == Some(TargetKind::Water)
+    ))),
+    fact!("target_sleep", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.state.target() == Some(TargetKind::Sleep)
+    ))),
+    fact!("target_gather", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.state.target() == Some(TargetKind::GatherFood)
+    ))),
+    // These require the coordinator's factual lifecycle/claim view, not an old chooser.
+    fact!("hearth_lit", Bool, |p, c, r, _n| Ok(i64::from(
+        c.target_scope(p.agent)?
+            .settlement
+            .and_then(|id| r.fires.get(&id))
+            .is_some_and(|fire| fire.lit)
+    ))),
+    fact!("reachable_shelter", Bool, |p, _c, r, _n| Ok(i64::from(
+        r.colony
+            .rooms
+            .values()
+            .filter(|room| room.roofed)
+            .any(|room| room
+                .tiles
+                .iter()
+                .any(|tile| r.nav.reachable((p.position.x, p.position.y), *tile)))
+    ))),
+    fact!("threat_distance", Signed, |p, c, _r, _n| Ok(c
+        .threats
+        .iter()
+        .map(|(_, tile)| i64::from(
+            p.position
+                .x
+                .abs_diff(tile.0)
+                .max(p.position.y.abs_diff(tile.1))
+        ))
+        .min()
+        .unwrap_or(i64::MAX))),
+    overlay!("social_candidate", Bool),
+    overlay!("social_memory_candidate", Bool),
+    overlay!("social_handshake", Bool),
+    fact!("running_foraging", Bool, |p, c, _r, _n| Ok(i64::from(
+        c.running(p.agent)?
+            .is_some_and(|running| !running.finished && running.behaviour == "forage")
+    ))),
+    overlay!("routine_admission", Bool),
+    overlay!("routine_weighted_place_available", Bool),
+    overlay!("routine_available", Bool),
+    overlay!("routine_deadline", Bool),
+    overlay!("activity_deadline_reached", Bool),
+    overlay!("routine_tend_fire_available", Bool),
+    overlay!("routine_craft_available", Bool),
+    overlay!("routine_repair_available", Bool),
+    overlay!("routine_hearth_circle_available", Bool),
+    overlay!("routine_explore_available", Bool),
+    overlay!("routine_play_available", Bool),
+    overlay!("routine_sit_by_fire_available", Bool),
+    overlay!("invited", Bool),
+    fact!("forage_available", Bool, |p, c, r, _n| Ok(i64::from(
+        forage_candidate(p, c, r)?.is_some()
+    ))),
+    fact!("social_memory_salient", Bool, |p, _c, _r, _n| Ok(
+        i64::from(p.memory_causes[4].is_some())
+    )),
+    overlay!("construction_available", Bool),
+    fact!("memory_hunger", Signed, |p, _c, _r, n| milli(
+        Some(p.memory_weights[0]),
+        p.agent,
+        n
+    )),
+    fact!("recallable_hunger", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.memory_causes[0].is_some()
+    ))),
+    fact!("memory_thirst", Signed, |p, _c, _r, n| milli(
+        Some(p.memory_weights[1]),
+        p.agent,
+        n
+    )),
+    fact!("recallable_thirst", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.memory_causes[1].is_some()
+    ))),
+    fact!("memory_fatigue", Signed, |p, _c, _r, n| milli(
+        Some(p.memory_weights[2]),
+        p.agent,
+        n
+    )),
+    fact!("recallable_fatigue", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.memory_causes[2].is_some()
+    ))),
+    fact!("memory_social", Signed, |p, _c, _r, n| milli(
+        Some(p.memory_weights[4]),
+        p.agent,
+        n
+    )),
+    fact!("recallable_social", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.memory_causes[4].is_some()
+    ))),
+    fact!("memory_construction", Signed, |p, _c, _r, n| milli(
+        Some(p.memory_weights[3]),
+        p.agent,
+        n
+    )),
+    fact!("recallable_construction", Bool, |p, _c, _r, _n| Ok(
+        i64::from(p.memory_causes[3].is_some())
+    )),
+    fact!("memory_combat", Signed, |p, _c, _r, n| milli(
+        Some(p.memory_weights[5]),
+        p.agent,
+        n
+    )),
+    fact!("recallable_combat", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.memory_causes[5].is_some()
+    ))),
+];
+
+/// Validated function registry; binding resolves names once, outside the tick loop.
+pub struct ProviderRegistry {
+    providers: BTreeMap<&'static str, FactProvider>,
+}
+impl ProviderRegistry {
+    /// Create a registry, rejecting duplicate names before any policy is bound.
+    pub fn new(providers: &[FactProvider]) -> Result<Self, FactError> {
+        let mut registry = Self {
+            providers: BTreeMap::new(),
+        };
+        for provider in providers {
+            registry.register(*provider)?;
+        }
+        Ok(registry)
+    }
+    /// Add one named factual reader; existing registrations cannot be overwritten.
+    pub fn register(&mut self, provider: FactProvider) -> Result<(), FactError> {
+        if self.providers.contains_key(provider.name) {
+            return Err(FactError::DuplicateProvider(provider.name.to_owned()));
+        }
+        self.providers.insert(provider.name, provider);
+        Ok(())
+    }
+    /// Export the complete fact schema in stable name order for policy compilation.
+    pub fn schema(&self) -> Vec<FactSpec> {
+        self.providers
+            .values()
+            .map(|p| FactSpec {
+                name: p.name.to_owned(),
+                kind: p.kind,
+            })
+            .collect()
+    }
+    /// Resolve every compiled fact to its reader and validate unique node ownership for random facts.
+    pub fn bind(&self, policy: &CompiledMind) -> Result<ProviderPlan, FactError> {
+        let mut columns = Vec::with_capacity(policy.facts().len());
+        for spec in policy.facts() {
+            let provider = self
+                .providers
+                .get(spec.name.as_str())
+                .ok_or_else(|| FactError::UnknownProvider(spec.name.clone()))?;
+            if provider.kind != spec.kind {
+                return Err(FactError::KindMismatch(spec.name.clone()));
+            }
+            let id = policy
+                .fact_id(&spec.name)
+                .ok_or_else(|| FactError::UnknownProvider(spec.name.clone()))?;
+            let random_key = if provider.node_random {
+                let users: Vec<_> = policy.fact_node_users(id).collect();
+                if users.len() != 1 {
+                    return Err(FactError::RandomFactNodeCount {
+                        fact: spec.name.clone(),
+                        users: users.len(),
+                    });
+                }
+                Some(
+                    policy
+                        .node(users[0])
+                        .ok_or_else(|| FactError::UnknownProvider(spec.name.clone()))?
+                        .random_key,
+                )
+            } else {
+                None
+            };
+            columns.push((id, *provider, random_key));
+        }
+        Ok(ProviderPlan {
+            columns,
+            revision: policy.revision(),
+        })
+    }
+}
+/// Policy-bound column readers and unique node keys, resolved outside evaluation.
+pub struct ProviderPlan {
+    revision: sim_core::colony::mind::MindRevision,
+    columns: Vec<(FactId, FactProvider, Option<u64>)>,
+}
+impl ProviderPlan {
+    /// Populate all sorted rows after their required overlays are prepared, rejecting revision or tick mismatch.
+    pub fn build(
+        &self,
+        policy: &CompiledMind,
+        context: &TickContext,
+        resources: &SimResources,
+    ) -> Result<PersonFacts, FactError> {
+        if self.revision != policy.revision() {
+            return Err(FactError::PolicyMismatch);
+        }
+        if context.tick != resources.current_tick {
+            return Err(FactError::ContextTickMismatch);
+        }
+        let ids = context.rows().iter().map(|p| p.agent).collect();
+        let mut table = PersonFacts::new(policy, ids, context.tick)?;
+        for person in context.rows() {
+            self.refresh_row(&mut table, context, resources, person.agent)?;
+        }
+        Ok(table)
+    }
+    /// Refresh immediately before selection after earlier effects/replay dirty facts.
+    pub fn refresh_row(
+        &self,
+        table: &mut PersonFacts,
+        context: &TickContext,
+        resources: &SimResources,
+        agent: AgentId,
+    ) -> Result<(), FactError> {
+        if context.tick != resources.current_tick || table.tick() != context.tick {
+            return Err(FactError::ContextTickMismatch);
+        }
+        let person = context.row(agent)?;
+        let index = table
+            .row_index(agent)
+            .ok_or(ContextError::UnknownAgent(agent))?;
+        table.set_life_stage(index, person.life_stage)?;
+        for (id, provider, random_key) in &self.columns {
+            let value = match random_key {
+                Some(key) => sim_core::rng::keyed_below(
+                    resources.world_seed,
+                    sim_core::rng::STREAM_ROUTINE ^ key,
+                    agent,
+                    context.tick,
+                    0,
+                    resources.noise_replicate_for(context.tick),
+                    1000,
+                ) as i64,
+                None => (provider.read)(person, context, resources, provider.name)?,
+            };
+            table.set(*id, index, value)?;
+        }
+        Ok(())
+    }
+}
+
+/// Resolve only the selected capability, after the data evaluator chooses.
+/// Other registered providers can populate context targets without core changes.
+pub fn resolve_target(
+    context: &mut TickContext,
+    resources: &SimResources,
+    agent: AgentId,
+    name: &str,
+) -> Result<Option<TargetCandidate>, FactError> {
+    if name == "social_current_peer" {
+        let person = context.row(agent)?;
+        return Ok(match person.state.target() {
+            Some(TargetKind::Agent(peer)) => context.row(peer).ok().map(|other| TargetCandidate {
+                tile: (other.position.x, other.position.y),
+                agent: Some(peer),
+            }),
+            _ => None,
+        });
+    }
+    if let Ok(value) = context.target(agent, name) {
+        return Ok(value);
+    }
+    let person = context.row(agent)?;
+    let scope = context.target_scope(agent)?;
+    let (tile, domains): (Option<(u32, u32)>, &[Domain]) = match name {
+        "food" => (
+            match scope.local_food {
+                Some((home, radius)) => targets::nearest_local_food(
+                    &person.position,
+                    &resources.food_tiles,
+                    home,
+                    radius,
+                ),
+                None => targets::nearest_resource_tile(&person.position, &resources.food_tiles),
+            },
+            &[Domain::Person, Domain::FoodSources],
+        ),
+        "water" => (
+            targets::nearest_resource_tile(&person.position, &resources.water_tiles),
+            &[Domain::Person, Domain::WaterSources],
+        ),
+        "sleep" => (
+            targets::nearest_resource_tile(&person.position, &resources.sleep_tiles),
+            &[Domain::Person, Domain::SleepSources],
+        ),
+        "gather_food" => (
+            targets::nearest_gather_tile(
+                &person.position,
+                &resources.food_tiles,
+                targets::GATHER_SCAN_RADIUS,
+                scope.local_food,
+                &scope.avoid_hearths,
+            ),
+            &[Domain::Person, Domain::FoodSources],
+        ),
+        "forage_bush" => (
+            forage_candidate(person, context, resources)?,
+            &[Domain::Person, Domain::FoodSources, Domain::Claims],
+        ),
+        "refuge" => (
+            person.fleeing.map(|flight| flight.to),
+            &[Domain::Person, Domain::Threats],
+        ),
+        "job" => (
+            person.job.and_then(|job| match job.stage {
+                JobStage::ToSource => Some(job.fetch.unwrap_or_else(|| job.kind.source())),
+                JobStage::Working { .. } => Some(job.kind.source()),
+                JobStage::ToDest => job.kind.dest(),
+            }),
+            &[Domain::Person, Domain::Jobs],
+        ),
+        "hearth" => (
+            scope.home.filter(|home| {
+                resources
+                    .nav
+                    .reachable((person.position.x, person.position.y), *home)
+            }),
+            &[Domain::Person],
+        ),
+        _ => return Ok(context.target(agent, name)?),
+    };
+    let target = tile.map(|tile| TargetCandidate { tile, agent: None });
+    context.set_target(agent, name, target, domains)?;
+    Ok(target)
+}
+fn forage_candidate(
+    p: &PersonSnapshot,
+    c: &TickContext,
+    r: &SimResources,
+) -> Result<Option<(u32, u32)>, FactError> {
+    let scope = c.target_scope(p.agent)?;
+    Ok(r.rules
+        .agent
+        .forage
+        .filter(|_| r.rules.society.stock_target.is_some())
+        .zip(scope.home)
+        .and_then(|(rule, home)| {
+            crate::runtime::agent_actions::forage::choose_bush(
+                &rule,
+                home,
+                (p.position.x, p.position.y),
+                &r.food_tiles,
+                c.claims(),
+                None,
+                &scope.avoid_hearths,
+            )
+        }))
+}
+
+/// Pure observations of the one real lifecycle transaction. Parent prepares its
+/// places cache once before this call; shadow never constructs or mutates it.
+pub(in crate::runtime) fn refresh_routine(
+    context: &mut TickContext,
+    routine: Option<&crate::runtime::agent_actions::routine::RoutineTick>,
+    agent: AgentId,
+) -> Result<(), FactError> {
+    if routine.is_some_and(|r| !r.preview_ready()) {
+        return Err(missing(agent, "routine_preview_prepared"));
+    }
+    context.set_activity_snapshot(agent, routine.and_then(|r| r.activity(agent)))?;
+    let p = context.row(agent)?;
+    let member = context.target_scope(agent)?.settlement;
+    let kinds = [
+        ("routine_tend_fire", ActivityKind::TendFire),
+        ("routine_craft", ActivityKind::Craft),
+        ("routine_repair", ActivityKind::Repair),
+        ("routine_hearth_circle", ActivityKind::HearthCircle),
+        ("routine_explore", ActivityKind::Explore),
+        ("routine_play", ActivityKind::Play),
+        ("routine_sit_by_fire", ActivityKind::SitByFire),
+    ];
+    let candidates = kinds.map(|(name, kind)| {
+        (
+            name,
+            routine.and_then(|r| {
+                r.preview_kind(agent, p.lineage, member, p.temperament.as_ref(), kind)
+            }),
+        )
+    });
+    let deadline = routine
+        .and_then(|r| {
+            r.deadline(
+                agent,
+                member,
+                matches!(p.state, AgentState::Seeking { .. })
+                    && p.activity
+                        .is_some_and(|activity| (p.position.x, p.position.y) != activity.place),
+                p.lineage,
+                p.temperament.as_ref(),
+            )
+        })
+        .is_some();
+    let admission =
+        routine.is_some_and(|r| r.can_enter(agent, p.lineage, member, p.temperament.as_ref()));
+    let weighted_place = routine.is_some_and(|r| {
+        r.weighted_place_available(
+            agent,
+            p.lineage,
+            member,
+            p.life_stage == LifeStage::Child,
+            p.life_stage == LifeStage::Elder,
+            p.temperament.as_ref(),
+        )
+    });
+    let invited = routine.is_some_and(|r| r.invitation_pending(agent));
+    let domains = &[
+        Domain::Person,
+        Domain::RoutineOccupancy,
+        Domain::Invitations,
+    ];
+    context.set_derived(agent, "routine_admission", i64::from(admission), domains)?;
+    context.set_derived(
+        agent,
+        "routine_weighted_place_available",
+        i64::from(weighted_place),
+        domains,
+    )?;
+    context.set_derived(agent, "invited", i64::from(invited), domains)?;
+    context.set_derived(agent, "routine_deadline", i64::from(deadline), domains)?;
+    context.set_derived(
+        agent,
+        "activity_deadline_reached",
+        i64::from(deadline),
+        domains,
+    )?;
+    context.set_derived(
+        agent,
+        "routine_available",
+        i64::from(candidates.iter().any(|(_, tile)| tile.is_some())),
+        domains,
+    )?;
+    for (name, tile) in candidates {
+        context.set_derived(
+            agent,
+            &format!("{name}_available"),
+            i64::from(tile.is_some()),
+            domains,
+        )?;
+        context.set_target(
+            agent,
+            name,
+            tile.map(|tile| TargetCandidate { tile, agent: None }),
+            domains,
+        )?;
+    }
+    Ok(())
+}
+
+/// Freeze social compatibility and mutual-seeking observations at the same
+/// pre-effect boundary as the old handshake. Later state changes must not
+/// recompute these maps: both sides of a mutual pair must see the same start.
+pub fn prepare_social_snapshot(
+    context: &mut TickContext,
+    world: &hecs::World,
+    resources: &SimResources,
+) -> Result<(), FactError> {
+    use sim_core::components::ConstructionSite;
+    use std::collections::BTreeSet;
+    let sites: BTreeSet<_> = world
+        .query::<&ConstructionSite>()
+        .iter()
+        .filter(|(entity, site)| {
+            !site.is_complete()
+                && crate::runtime::knowledge::open_to_any_builder(world, resources, *entity)
+        })
+        .map(|(_, site)| (site.position.x, site.position.y))
+        .collect();
+    let mut natural: BTreeMap<(u32, u32), Vec<AgentId>> = BTreeMap::new();
+    let mut relaxed: BTreeMap<(u32, u32), Vec<AgentId>> = BTreeMap::new();
+    let mut idle: BTreeMap<(u32, u32), Vec<AgentId>> = BTreeMap::new();
+    let routine = resources.rules.agent.routine.is_some();
+    for person in context.rows() {
+        let available = person.life_stage != LifeStage::Child
+            && crate::runtime::agent_actions::routine::idle_equivalent(person.state, routine)
+            && (resources.rules.agent.social_seek.is_none()
+                || resources
+                    .social_retry_after
+                    .get(&person.agent)
+                    .is_none_or(|until| *until <= resources.current_tick));
+        if !available {
+            continue;
+        }
+        let tile = (person.position.x, person.position.y);
+        let threshold = fatigue_threshold(person, resources);
+        let lonely = person.social.is_some_and(|v| v > needs::SOCIAL_THRESHOLD);
+        let hungry = person
+            .hunger
+            .is_some_and(|v| v > f64::from(needs::HUNGER_THRESHOLD));
+        let thirsty = person.thirst.is_some_and(|v| v > needs::THIRST_THRESHOLD);
+        let tired = person.fatigue.is_some_and(|v| v > threshold);
+        if lonely && !hungry && !thirsty && !tired && !sites.contains(&tile) {
+            natural.entry(tile).or_default().push(person.agent);
+        }
+        let day = (resources.ticks_per_day != 0).then(|| {
+            resources
+                .current_tick
+                .saturating_add(resources.rules.clock_offset_ticks)
+                % resources.ticks_per_day
+        });
+        let night = needs::person_night_rest(
+            resources.rules.agent.night_rest,
+            resources.rules.agent.temperament,
+            person.temperament.as_ref(),
+            day,
+        )
+        .is_some();
+        if !night || !tired {
+            idle.entry(tile).or_default().push(person.agent);
+            if lonely {
+                relaxed.entry(tile).or_default().push(person.agent);
+            }
+        }
+    }
+    let rows: Vec<_> = context
+        .rows()
+        .iter()
+        .map(|person| {
+            let tile = (person.position.x, person.position.y);
+            let peer = |map: &BTreeMap<(u32, u32), Vec<AgentId>>| {
+                map.get(&tile)
+                    .and_then(|ids| ids.iter().find(|id| **id != person.agent))
+                    .copied()
+            };
+            let natural_peer = peer(&natural);
+            let memory_peer = if person.social.is_some_and(|v| v > needs::SOCIAL_THRESHOLD) {
+                peer(&relaxed)
+            } else {
+                None
+            }
+            .or_else(|| person.memory_causes[4].and_then(|_| peer(&idle)));
+            let handshake = match person.state {
+                AgentState::Seeking {
+                    target: TargetKind::Agent(partner),
+                } => context.row(partner).is_ok_and(|other| {
+                    other.position == person.position
+                        && other.state
+                            == AgentState::Seeking {
+                                target: TargetKind::Agent(person.agent),
+                            }
+                }),
+                AgentState::Idle | AgentState::Consuming { .. } | AgentState::Seeking { .. } => {
+                    false
+                }
+            };
+            (person.agent, tile, natural_peer, memory_peer, handshake)
+        })
+        .collect();
+    for (agent, tile, natural, memory, handshake) in rows {
+        // Empty dependency set intentionally means immutable start-of-tick evidence.
+        context.set_derived(agent, "social_candidate", i64::from(natural.is_some()), &[])?;
+        context.set_derived(
+            agent,
+            "social_memory_candidate",
+            i64::from(memory.is_some()),
+            &[],
+        )?;
+        context.set_derived(agent, "social_handshake", i64::from(handshake), &[])?;
+        context.set_target(
+            agent,
+            "social_peer",
+            natural.map(|peer| TargetCandidate {
+                tile,
+                agent: Some(peer),
+            }),
+            &[],
+        )?;
+        context.set_target(
+            agent,
+            "social_memory_peer",
+            memory.map(|peer| TargetCandidate {
+                tile,
+                agent: Some(peer),
+            }),
+            &[],
+        )?;
+    }
+    Ok(())
+}
+
+/// Full read-only preparation, excluding the real owner's routine transaction.
+pub fn prepare_context(
+    world: &hecs::World,
+    resources: &SimResources,
+) -> Result<TickContext, FactError> {
+    let mut context = TickContext::capture(world, resources)?;
+    prepare_social_snapshot(&mut context, world, resources)?;
+    Ok(context)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sim_core::components::{Agent, Hunger, Position};
+
+    #[test]
+    fn fixed_point_units_preserve_seam_truncation_and_reject_missing_values() {
+        assert_eq!(tenths(Some(64.999), 7, "hunger").expect("tenths"), 649);
+        assert_eq!(tenths(Some(65.0), 7, "hunger").expect("tenths"), 650);
+        assert_eq!(
+            milli(Some(64.999), 7, "hunger").expect("millipoints"),
+            64999
+        );
+        assert!(matches!(
+            milli(None, 7, "hunger"),
+            Err(FactError::MissingValue { .. })
+        ));
+        assert!(matches!(
+            milli(Some(f64::NAN), 7, "hunger"),
+            Err(FactError::InvalidNumber { .. })
+        ));
+    }
+
+    #[test]
+    fn factual_hunger_is_independent_of_other_needs_and_resource_target_resolution() {
+        let mut world = hecs::World::new();
+        let entity = world.spawn((
+            Agent { id: 7 },
+            Position::new(1, 1),
+            AgentState::Idle,
+            Hunger::new(50.0001, 0.0),
+        ));
+        let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        resources.rules.agent.need_fallthrough = true;
+        resources.food_tiles.insert((2, 1), 1);
+        let mut context = prepare_context(&world, &resources).expect("facts");
+        let provider = BUILTIN_PROVIDERS
+            .iter()
+            .find(|p| p.name == "hunger_actionable")
+            .expect("provider");
+        assert_eq!(
+            (provider.read)(
+                context.row(7).expect("row"),
+                &context,
+                &resources,
+                provider.name
+            )
+            .expect("read"),
+            1
+        );
+        assert_eq!(
+            resolve_target(&mut context, &resources, 7, "food")
+                .expect("target")
+                .expect("food")
+                .tile,
+            (2, 1)
+        );
+        resources.food_tiles.clear();
+        context.invalidate(Domain::FoodSources).expect("invalidate");
+        assert!(resolve_target(&mut context, &resources, 7, "food")
+            .expect("refresh")
+            .is_none());
+        assert_eq!(
+            *world.get::<&AgentState>(entity).expect("state"),
+            AgentState::Idle
+        );
+        // Eligibility is the start-of-tick snapshot; target resolution reads live sources.
+        assert_eq!(
+            (provider.read)(
+                context.row(7).expect("row"),
+                &context,
+                &resources,
+                provider.name
+            )
+            .expect("read"),
+            1
+        );
+    }
+    fn selected_node(stage: LifeStage, values: &[(&str, i64)]) -> String {
+        use sim_core::colony::mind::{choose, EvalKey, EvalScratch};
+        let program = crate::runtime::mind::MindProgram::load(include_str!(
+            "../../../../sim-core/data/colony/mind.ron"
+        ))
+        .expect("shipped policy");
+        let policy = &program.policy;
+        let mut table = PersonFacts::new(policy, vec![7], 0).expect("table");
+        table.set_life_stage(0, stage).expect("stage");
+        for spec in policy.facts() {
+            table
+                .set(policy.fact_id(&spec.name).expect("id"), 0, 0)
+                .expect("initial value");
+        }
+        for (name, value) in values {
+            table
+                .set(policy.fact_id(name).expect("referenced fact"), 0, *value)
+                .expect("fixture value");
+        }
+        let selected = choose(
+            policy,
+            table.row(7).expect("row"),
+            None,
+            EvalKey {
+                world_seed: 0,
+                agent: 7,
+                tick: 0,
+                replicate: 0,
+            },
+            &mut EvalScratch::default(),
+        )
+        .expect("selection");
+        policy
+            .node(selected.selected.node)
+            .expect("node")
+            .name
+            .clone()
+    }
+
+    #[test]
+    fn social_continuation_keeps_current_peer_instead_of_new_candidate() {
+        use sim_core::components::Social;
+        let mut world = hecs::World::new();
+        world.spawn((
+            Agent { id: 1 },
+            Position::new(1, 1),
+            AgentState::Seeking {
+                target: TargetKind::Agent(2),
+            },
+        ));
+        world.spawn((
+            Agent { id: 2 },
+            Position::new(3, 1),
+            AgentState::Seeking {
+                target: TargetKind::Agent(1),
+            },
+        ));
+        world.spawn((
+            Agent { id: 3 },
+            Position::new(1, 1),
+            AgentState::Idle,
+            Social::new(90.0, 0.0),
+        ));
+        let resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        let mut context = prepare_context(&world, &resources).expect("context");
+        assert_eq!(
+            context
+                .target(1, "social_peer")
+                .expect("candidate")
+                .expect("fresh peer")
+                .agent,
+            Some(3)
+        );
+        let continued = resolve_target(&mut context, &resources, 1, "social_current_peer")
+            .expect("current target")
+            .expect("current peer");
+        assert_eq!(continued.agent, Some(2));
+        assert_eq!(continued.tile, (3, 1));
+    }
+
+    #[test]
+    fn social_entry_rejects_child_and_retry_cooldown_even_with_a_peer() {
+        for (stage, ready, expected) in [
+            (LifeStage::Adult, 1, true),
+            (LifeStage::Elder, 1, true),
+            (LifeStage::Child, 1, false),
+            (LifeStage::Adult, 0, false),
+        ] {
+            let selected = selected_node(
+                stage,
+                &[
+                    ("idle", 1),
+                    ("lonely", 1),
+                    ("social_candidate", 1),
+                    ("social_retry_ready", ready),
+                ],
+            );
+            assert_eq!(
+                selected == "need_idle_social",
+                expected,
+                "{stage:?}, retry={ready}: {selected}"
+            );
+        }
+    }
+
+    #[test]
+    fn gather_stops_at_hoard_cap_but_unbounded_nonmember_can_gather() {
+        let mut world = hecs::World::new();
+        world.spawn((Agent { id: 7 }, Position::new(1, 1), AgentState::Idle));
+        let resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        let mut context = prepare_context(&world, &resources).expect("context");
+        let reader = BUILTIN_PROVIDERS
+            .iter()
+            .find(|p| p.name == "stock_hoard_order")
+            .expect("reader");
+        for (amount, limit, expected) in [
+            (9, Some(10.0), -1),
+            (10, Some(10.0), 0),
+            (11, Some(10.0), 1),
+            (11, None, -1),
+        ] {
+            let mut scope = context.target_scope(7).expect("scope").clone();
+            scope.stock_in_hand = amount;
+            scope.stock_hoard_limit = limit;
+            context.set_target_scope(7, scope).expect("scope update");
+            let order = (reader.read)(
+                context.row(7).expect("person"),
+                &context,
+                &resources,
+                reader.name,
+            )
+            .expect("order");
+            assert_eq!(order, expected);
+            let selected = selected_node(
+                LifeStage::Adult,
+                &[
+                    ("idle", 1),
+                    ("worker", 1),
+                    ("inventory_room", 10),
+                    ("gather_available", 1),
+                    ("stock_hoard_order", order),
+                ],
+            );
+            assert_eq!(
+                selected == "gather_idle",
+                order < 0,
+                "stock {amount}, limit {limit:?}: {selected}"
+            );
+        }
+    }
+
+    #[test]
+    fn exact_meal_water_boundary_and_social_preemption_are_data_driven() {
+        let mut world = hecs::World::new();
+        world.spawn((Agent { id: 7 }, Position::new(1, 1), AgentState::Idle));
+        let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        resources.rules.agent.critical_preemption = Some(75.0);
+        let context = prepare_context(&world, &resources).expect("context");
+        for (value, expected) in [
+            (75.0, "meal_idle_water_not_critical"),
+            (75.0001, "camp_critical_water_idle"),
+        ] {
+            let order = critical_order(
+                Some(value),
+                context.row(7).expect("person"),
+                &resources,
+                "thirst",
+            )
+            .expect("raw order");
+            let selected = selected_node(
+                LifeStage::Adult,
+                &[
+                    ("idle", 1),
+                    ("hungry", 1),
+                    ("hunger_actionable", 1),
+                    ("thirst_actionable", 1),
+                    ("stocked_camp_in_radius", 1),
+                    ("water_available", 1),
+                    ("thirst_critical_order", order),
+                    ("thirst_tenths", 750),
+                ],
+            );
+            if value == 75.0 {
+                assert_eq!(selected, expected);
+            } else {
+                assert!(selected.starts_with("camp_critical_water"), "{selected}");
+            }
+        }
+        for drive in ["hunger", "thirst", "fatigue"] {
+            let fact = format!("{drive}_actionable");
+            let selected = selected_node(
+                LifeStage::Adult,
+                &[
+                    ("seeking", 1),
+                    ("target_social", 1),
+                    ("social_seek_enabled", 1),
+                    ("social_partner_present", 1),
+                    (&fact, 1),
+                ],
+            );
+            assert_eq!(selected, format!("finish_social_need_{drive}"));
+        }
+    }
+    #[test]
+    fn idle_with_retained_job_can_choose_needs_and_survival_work() {
+        use sim_core::colony::{ItemKind, Job};
+        let mut world = hecs::World::new();
+        world.spawn((
+            Agent { id: 7 },
+            Position::new(1, 1),
+            AgentState::Idle,
+            Job {
+                kind: JobKind::Chop { tree: (3, 3) },
+                stage: JobStage::ToSource,
+                taken_at: 0,
+                amount: 0,
+                item: ItemKind::Log,
+                material: None,
+                fetch: None,
+                best_distance: 2,
+                progress_tick: 0,
+            },
+        ));
+        let resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        let context = prepare_context(&world, &resources).expect("actual retained job");
+        let mut ownership = Vec::new();
+        for name in ["idle", "has_job", "job_owned_state"] {
+            let provider = BUILTIN_PROVIDERS
+                .iter()
+                .find(|p| p.name == name)
+                .expect("provider");
+            let value =
+                (provider.read)(context.row(7).expect("person"), &context, &resources, name)
+                    .expect("actual ownership fact");
+            ownership.push((name, value));
+        }
+        assert_eq!(
+            ownership,
+            [("idle", 1), ("has_job", 1), ("job_owned_state", 0)]
+        );
+        let cases: &[(&str, &[(&str, i64)])] = &[
+            (
+                "need_idle_hunger",
+                &[("hunger_actionable", 1), ("hunger_tenths", 600)],
+            ),
+            (
+                "need_idle_thirst",
+                &[("thirst_actionable", 1), ("thirst_tenths", 600)],
+            ),
+            (
+                "critical_thirst_idle_hunger",
+                &[
+                    ("hunger_actionable", 1),
+                    ("hunger_tenths", 600),
+                    ("thirst_tenths", 770),
+                ],
+            ),
+            (
+                "meal_idle_no_water",
+                &[("hungry", 1), ("stocked_camp_in_radius", 1)],
+            ),
+            (
+                "camp_critical_water_idle",
+                &[
+                    ("hungry", 1),
+                    ("stocked_camp_in_radius", 1),
+                    ("water_available", 1),
+                    ("thirst_critical_order", 1),
+                ],
+            ),
+            (
+                "forage_idle",
+                &[
+                    ("worker", 1),
+                    ("inventory_room", 1),
+                    ("forage_window", 1),
+                    ("stock_shortfall", 1),
+                    ("forage_available", 1),
+                ],
+            ),
+            (
+                "gather_idle",
+                &[
+                    ("worker", 1),
+                    ("inventory_room", 1),
+                    ("stock_hoard_order", -1),
+                    ("gather_available", 1),
+                ],
+            ),
+        ];
+        for (expected, extra) in cases {
+            let mut values = ownership.clone();
+            values.extend_from_slice(extra);
+            assert_eq!(selected_node(LifeStage::Adult, &values), *expected);
+        }
+    }
+    #[test]
+    fn ordinary_social_need_exit_keeps_need_band_and_owner_priorities() {
+        use sim_core::colony::mind::FinishMode;
+        let program = crate::runtime::mind::MindProgram::load(include_str!(
+            "../../../../sim-core/data/colony/mind.ron"
+        ))
+        .expect("shipped policy");
+        for drive in ["hunger", "thirst", "fatigue"] {
+            let actionable = format!("{drive}_actionable");
+            let expected = format!("finish_social_need_{drive}");
+            let mut facts = vec![
+                ("seeking", 1),
+                ("target_social", 1),
+                ("social_seek_enabled", 1),
+                ("social_partner_present", 1),
+                ("has_job", 1),
+                ("job_owned_state", 0),
+                ("hunger_critical_order", -1),
+                ("thirst_critical_order", -1),
+                ("fatigue_critical_order", -1),
+                (actionable.as_str(), 1),
+            ];
+            assert_eq!(selected_node(LifeStage::Adult, &facts), expected);
+            let node = program
+                .policy
+                .node(program.policy.node_id(&expected).expect("id"))
+                .expect("node");
+            assert_eq!(node.finish, Some(FinishMode::Interrupted));
+            assert_eq!(program.policy.band_name(node.band), Some("need"), "{drive}");
+            facts.push(("drafted", 1));
+            assert_eq!(selected_node(LifeStage::Adult, &facts), "draft_owned");
+            facts.push(("fleeing", 1));
+            assert_eq!(selected_node(LifeStage::Adult, &facts), "flee_owned");
+        }
+        // A retained job while socialising is not job-owned execution. Actual job
+        // execution still holds below the seam and admits critical need at 75.
+        for (hunger, expected) in [
+            (749, "job_finish_craft"),
+            (750, "critical_hunger_job_hunger"),
+        ] {
+            assert_eq!(
+                selected_node(
+                    LifeStage::Adult,
+                    &[
+                        ("job_owned_state", 1),
+                        ("has_job", 1),
+                        ("craft_working", 1),
+                        ("hunger_actionable", 1),
+                        ("hunger_tenths", hunger),
+                    ]
+                ),
+                expected
+            );
+        }
+    }
+    #[test]
+    fn drafted_policy_acknowledges_owner_without_an_unresolved_target() {
+        let program = crate::runtime::mind::MindProgram::load(include_str!(
+            "../../../../sim-core/data/colony/mind.ron"
+        ))
+        .expect("shipped policy");
+        let node = program
+            .policy
+            .node(program.policy.node_id("draft_owned").expect("draft node"))
+            .expect("node");
+        assert!(node.target.is_none());
+        assert_eq!(
+            selected_node(LifeStage::Adult, &[("drafted", 1)]),
+            "draft_owned"
+        );
+    }
+    #[test]
+    fn routine_cooldown_keeps_the_legacy_wander_action() {
+        let program = crate::runtime::mind::MindProgram::load(include_str!(
+            "../../../../sim-core/data/colony/mind.ron"
+        ))
+        .expect("shipped policy");
+        // The cooldown fact may cease to be referenced when the redundant node is removed.
+        let mut values = vec![("idle", 1)];
+        if program.policy.fact_id("activity_resting").is_some() {
+            values.push(("activity_resting", 1));
+        }
+        let selected = selected_node(LifeStage::Adult, &values);
+        let node = program
+            .policy
+            .node(program.policy.node_id(&selected).expect("node id"))
+            .expect("selected node");
+        let behaviour = program.policy.behaviour(node.behaviour).expect("behaviour");
+        assert_eq!(
+            behaviour.name, "wander",
+            "routine cooldown blocks routine admission, not idle wandering"
+        );
+        assert!(node.target.is_none());
+    }
+    #[test]
+    fn construction_job_ownership_matches_legacy_hold_independent_of_occupancy() {
+        use sim_core::colony::{ItemKind, Job, JobKind, JobStage, Occupant};
+        let provider = BUILTIN_PROVIDERS
+            .iter()
+            .find(|p| p.name == "job_owned_state")
+            .expect("provider");
+        for has_job in [false, true] {
+            for occupied in [false, true] {
+                for state in [
+                    AgentState::Idle,
+                    AgentState::Seeking {
+                        target: TargetKind::ConstructionSite,
+                    },
+                    AgentState::Consuming {
+                        target: TargetKind::ConstructionSite,
+                    },
+                    AgentState::Seeking {
+                        target: TargetKind::Food,
+                    },
+                ] {
+                    let mut world = hecs::World::new();
+                    let entity = world.spawn((Agent { id: 7 }, Position::new(1, 1), state));
+                    if has_job {
+                        world
+                            .insert_one(
+                                entity,
+                                Job {
+                                    kind: JobKind::Chop { tree: (3, 3) },
+                                    stage: JobStage::ToSource,
+                                    taken_at: 0,
+                                    amount: 0,
+                                    item: ItemKind::Log,
+                                    material: None,
+                                    fetch: None,
+                                    best_distance: 0,
+                                    progress_tick: 0,
+                                },
+                            )
+                            .expect("job");
+                    }
+                    let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+                    if occupied {
+                        resources
+                            .colony
+                            .occupied
+                            .insert((1, 1), Occupant::Site((1, 1)));
+                    }
+                    let holders = crate::runtime::jobs::holders(&world, &resources);
+                    let expected = crate::runtime::jobs::hold_for_decision(entity, state, &holders);
+                    let context = prepare_context(&world, &resources).expect("facts");
+                    let actual = (provider.read)(
+                        context.row(7).expect("row"),
+                        &context,
+                        &resources,
+                        provider.name,
+                    )
+                    .expect("fact");
+                    assert_eq!(
+                        actual != 0,
+                        expected,
+                        "state={state:?}, job={has_job}, occupied={occupied}"
+                    );
+                }
+            }
+        }
+    }
+}

@@ -11,7 +11,7 @@ use sim_core::components::{Position, SettlementId};
 /// the food-tiles version they were computed from. Pass 21: the key also
 /// names whose avoid list was applied (the member's settlement id under a
 /// `RelationsRule`, else `None` for the empty list).
-pub(super) type GatherMemo = BTreeMap<GatherKey, (u64, bool)>;
+pub(in crate::runtime) type GatherMemo = BTreeMap<GatherKey, (u64, bool)>;
 
 /// Pass 21: a [`GatherMemo`] key — (tile, catchment, avoid-list owner).
 type GatherKey = ((u32, u32), Option<((u32, u32), u32)>, Option<SettlementId>);
@@ -163,7 +163,7 @@ pub fn nearest_gather_tile(
 
 /// Pass 18: whether [`nearest_gather_tile`] returns `Some` (the same filters,
 /// without choosing the nearest). Pass 21: with the same `avoid` filter.
-pub(super) fn gather_tile_exists(
+pub(in crate::runtime) fn gather_tile_exists(
     pos: &Position,
     tiles: &std::collections::HashMap<(u32, u32), u8>,
     radius: u32,
@@ -186,7 +186,7 @@ pub(super) fn gather_tile_exists(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::runtime::decision::forage::bush_eligible;
+    use crate::runtime::agent_actions::forage::bush_eligible;
     use sim_core::rules::ForageRule;
     use std::collections::HashMap;
 

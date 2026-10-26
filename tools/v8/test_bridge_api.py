@@ -1,7 +1,7 @@
 """Tests for tools/v8/bridge_api.py and the bridge API invariant (goal 4.2, 12).
 
 The live check: the exports of rust/crates/sim-bridge equal the current pass's
-list (M-UX2: docs/v8/bridge_api_mux2.txt, gate step 13). Prior pass lists stay
+list (M-CORE: docs/v8/bridge_api_core.txt, gate step 13). Prior pass lists stay
 as historical records. V8-0's record stays: its
 removed names are not exported again.
 """
@@ -70,7 +70,7 @@ class BridgeApiTest(unittest.TestCase):
 
     def test_live_bridge_equals_the_current_list(self):
         # The current list checked by gate step 13; historical lists remain unchanged.
-        expected = set(bridge_api.read_list(ROOT / "docs/v8/bridge_api_mux2.txt"))
+        expected = set(bridge_api.read_list(ROOT / "docs/v8/bridge_api_core.txt"))
         self.assertEqual(set(bridge_api.scan_repo(ROOT)), expected)
 
     def test_v8_0_removed_names_stay_removed(self):

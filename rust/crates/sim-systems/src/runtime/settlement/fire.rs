@@ -70,7 +70,7 @@ use sim_core::rng::{keyed_below, STREAM_APPAREL};
 use sim_core::rules::ExposureRule;
 use sim_engine::{FireState, RuntimeSystem, SimResources};
 
-use crate::runtime::decision::clock_in_window;
+use crate::runtime::agent_actions::needs::clock_in_window;
 use crate::runtime::settlement::firewood::{night_rate, night_season};
 use crate::runtime::survival::despawn_agent;
 

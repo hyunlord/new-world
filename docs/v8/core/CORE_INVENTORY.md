@@ -75,7 +75,7 @@ WorldRules::colony inherits base.agent and most base.society; disables shelter_p
 |1809-1894|Migration fallback|Nonmember/capacity/live roster -> nearest member, event, seek, tag|drop — migration initiation only: selected.migration_started=0; preserve no-choice/Idle fallback and nonmember eligibility (251 entries).| selected.migration_fallback; selected.migration_nonmember; selected.migration_started |`selected.migration_fallback` 3,480,412/143,028,062; `selected.migration_nonmember` 251/5,713; `selected.migration_started` 0/0|
 |1897-1914|Founder continue|Founder proxy + need -> resource seek and clear|drop — founder continuation=0.| selected.founder_continuation; eval.actionable_need_with_fatigue_threshold.L1904 |`selected.founder_continuation` 0/0; `eval.actionable_need_with_fatigue_threshold.L1904` 0/0|
 |1915-1931|Porter continue|Porter proxy + need -> resource seek and clear|drop — porter continuation=0.| selected.porter_continuation; eval.actionable_need_with_fatigue_threshold.L1921 |`selected.porter_continuation` 0/0; `eval.actionable_need_with_fatigue_threshold.L1921` 0/0|
-|1933-1958|Seeking activity|Routine/activity/deadline/place -> end or Idle|port — preserve the listed reads, writes, gates and ordering; shared scope costs do not isolate each subcondition.| selected.activity_seeking; selected.activity_seek_end |`selected.activity_seeking` 1,687,410/48,526,213; `selected.activity_seek_end` 2,885/959,860|
+|1933-1958|Seeking activity|Routine/activity/deadline/place -> end or Idle|port lifecycle/choice; replace only post-deadline rest RNG key with (AgentId,tick,node), same inclusive bounds; D12; no port-denominator exemption| selected.activity_seeking; selected.activity_seek_end |`selected.activity_seeking` 1,687,410/48,526,213; `selected.activity_seek_end` 2,885/959,860|
 |1962-1974|Gather critical preempt|Gather; hunger/thirst >= critical -> Idle/tally|port — preserve the listed reads, writes, gates and ordering; shared scope costs do not isolate each subcondition.| selected.gather_critical_preempt |`selected.gather_critical_preempt` 1/42|
 |1975-2022|Food/water crossover|Competing actionable need > critical; current not > critical -> Idle|port — preserve the listed reads, writes, gates and ordering; shared scope costs do not isolate each subcondition.| selected.need_crossover_check; eval.actionable_need_with_fatigue_threshold.L1977; selected.need_crossover |`selected.need_crossover_check` 4,188,389/279,448,455; `eval.actionable_need_with_fatigue_threshold.L1977` 4,188,389/66,458,869; `selected.need_crossover` 3/209|
 |2030-2065|Social chase abort|Missing partner/need/max chase -> Idle/chase removal/optional cooldown|port — preserve the listed reads, writes, gates and ordering; shared scope costs do not isolate each subcondition.| eval.social_partner_exists; selected.social_partner_missing; selected.social_need_preempt; eval.actionable_need_with_fatigue_threshold.L2043; eval.social_chase_timeout; selected.social_timeout |`eval.social_partner_exists` 623,200/21,153,174; `selected.social_partner_missing` 0/0; `selected.social_need_preempt` 8,626/760,810; `eval.actionable_need_with_fatigue_threshold.L2043` 623,200/10,389,062; `eval.social_chase_timeout` 614,574/9,318,767; `selected.social_timeout` 1,218/239,199|
@@ -83,9 +83,9 @@ WorldRules::colony inherits base.agent and most base.society; disables shelter_p
 |2129-2138|Builder continuation|Planning + assigned site -> continue or Idle|drop — builder continuation=0; job-owned construction remains.| selected.builder_continuation |`selected.builder_continuation` 0/0|
 |2139-2198|Arrival by target|Job false; activity place; positive food/gather/wood/water; sleep positive and own bed; active site; mutual Agent snapshot|port — preserve the listed reads, writes, gates and ordering; shared scope costs do not isolate each subcondition.| phase.arrival_predicate; eval.arrival; eval.arrival.{job,activity,food,gather_food,gather_wood,water,sleep,construction,agent} |`phase.arrival_predicate` 9,573,151/453,735,690; `eval.arrival` 9,573,151/144,041,850; `eval.arrival.job` 0/0; `eval.arrival.activity` 1,684,525/85,293,452; `eval.arrival.food` 1,136,783/80,772,449; `eval.arrival.gather_food` 740,809/50,091,699; `eval.arrival.gather_wood` 0/0; `eval.arrival.water` 3,051,603/223,680,629; `eval.arrival.sleep` 2,346,075/150,277,920; `eval.arrival.construction` 0/0; `eval.arrival.agent` 613,356/45,886,131|
 |2199-2278|Arrival commit|Arrival -> routine.arrive, construction/social event, chase clear, Consuming|port — preserve the listed reads, writes, gates and ordering; shared scope costs do not isolate each subcondition.| selected.arrival; selected.activity_arrival; selected.construction_arrival; selected.social_arrival |`selected.arrival` 320,848/25,893,945; `selected.activity_arrival` 65,688/7,919,163; `selected.construction_arrival` 0/0; `selected.social_arrival` 32,054/2,920,121|
-|2296-2320|Consuming activity|Routine/activity/deadline -> end or Idle|port — preserve the listed reads, writes, gates and ordering; shared scope costs do not isolate each subcondition.| selected.consume_activity; selected.consume_activity_end |`selected.consume_activity` 3,846,125/107,732,113; `selected.consume_activity_end` 35,822/13,454,779|
+|2296-2320|Consuming activity|Routine/activity/deadline -> end or Idle|port lifecycle/choice; replace only post-deadline rest RNG key with (AgentId,tick,node), same inclusive bounds; D12; no port-denominator exemption| selected.consume_activity; selected.consume_activity_end |`selected.consume_activity` 3,846,125/107,732,113; `selected.consume_activity_end` 35,822/13,454,779|
 |2321-2330|Food consume|consume::consume_food|port — preserve the listed reads, writes, gates and ordering; shared scope costs do not isolate each subcondition.| selected.consume_food |`selected.consume_food` 21,117/3,949,528|
-|2340-2512|Gather food pickup|Inventory/load/source; rival/dispute/caps/keyed quarrel -> inventory/source/version/tallies/relations/quarrel, Idle|port — preserve the listed reads, writes, gates and ordering; shared scope costs do not isolate each subcondition.| selected.consume_gather_food; selected.gather_{room,source,infinite,finite,depleted,relations,rival,already_quarrelled,dispute}; selected.dispute_{uncosted,daily_cap}; selected.quarrel; selected.quarrel_capped; selected.relation_{dispute,quarrel}_loss |`selected.consume_gather_food` 23,831/18,155,843; `selected.gather_room` 23,831/11,055,932; `selected.gather_source` 21,285/8,086,814; `selected.gather_infinite` 0/0; `selected.gather_finite` 21,285/5,898,008; `selected.gather_depleted` 21,285/1,033,482; `selected.gather_relations` 23,831/2,976,439; `selected.gather_rival` 0/0; `selected.gather_already_quarrelled` 0/0; `selected.gather_dispute` 0/0; `selected.dispute_uncosted` 0/0; `selected.dispute_daily_cap` 0/0; `selected.quarrel` 0/0; `selected.quarrel_capped` 0/0; `selected.relation_dispute_loss` 0/0; `selected.relation_quarrel_loss` 0/0|
+|2340-2512|Gather food pickup|Inventory/load/source; rival/dispute/caps/keyed quarrel -> inventory/source/version/tallies/relations/quarrel, Idle|port effects; D18 replaces only mind quarrel RNG provenance with (AgentId,tick,node), GREEN and round-4 shadow/calibration verified; legacy draw unchanged; no shadow-denominator exemption. Shared scope costs do not isolate subconditions.| selected.consume_gather_food; selected.gather_{room,source,infinite,finite,depleted,relations,rival,already_quarrelled,dispute}; selected.dispute_{uncosted,daily_cap}; selected.quarrel; selected.quarrel_capped; selected.relation_{dispute,quarrel}_loss |`selected.consume_gather_food` 23,831/18,155,843; `selected.gather_room` 23,831/11,055,932; `selected.gather_source` 21,285/8,086,814; `selected.gather_infinite` 0/0; `selected.gather_finite` 21,285/5,898,008; `selected.gather_depleted` 21,285/1,033,482; `selected.gather_relations` 23,831/2,976,439; `selected.gather_rival` 0/0; `selected.gather_already_quarrelled` 0/0; `selected.gather_dispute` 0/0; `selected.dispute_uncosted` 0/0; `selected.dispute_daily_cap` 0/0; `selected.quarrel` 0/0; `selected.quarrel_capped` 0/0; `selected.relation_dispute_loss` 0/0; `selected.relation_quarrel_loss` 0/0|
 |2517-2545|Wood pickup|Inventory/load/source -> inventory/source/version/tally, Idle|drop — consuming legacy GatherWood and wood pickup both0; job-owned wood remains.| selected.consume_gather_wood; selected.wood_pickup |`selected.consume_gather_wood` 0/0; `selected.wood_pickup` 0/0|
 |2546-2549|Water consume|consume_water|port — preserve the listed reads, writes, gates and ordering; shared scope costs do not isolate each subcondition.| selected.consume_water |`selected.consume_water` 128,092/10,283,048|
 |2550-2562|Sleep consume|consume_sleep with night/availability|port — preserve the listed reads, writes, gates and ordering; shared scope costs do not isolate each subcondition.| selected.consume_sleep |`selected.consume_sleep` 14,713,165/241,274,570|
@@ -481,3 +481,40 @@ Other zero rows in the full247-key table remain explicit; they are not blanket d
 - Purposeful forage4,929, opportunistic gather19,963, routine starts128,830, meal waits1,990, and critical-water meal exceptions11 are live ports.
 - Job skip16,013,310, drafted entity observations132,115 and fleeing101,556 require ownership-aware facts. Seam critical2, craft lock849,955, finish-leg lock2,620,422, terminal urgent24,694/nonurgent12,309,516, restore21 and release24,668 remain distinct.
 - The job adapter representation changes to do_job with the same measured predicates/lifecycle; the choice behaviour remains port-equivalent. Natural decision cause links alone are replaced by MindChoice fact/event cause provenance. Neither representation change grants a blanket exemption from the97% port-arm shadow bar. New band ordering, numeric memory scoring or hysteresis that changes outcomes needs an explicit narrow replacement decision before shadow acceptance; this inventory does not pre-authorize it.
+
+
+## Routine random replacements and retained port denominator
+
+The seven authored routine entry nodes replace the categorical legacy lottery
+with the documented additive keyed draw plus temperament-preference score;
+only actual routine entry is classified as that choice replacement. The
+128,830 measured legacy starts describe the inventory fixture scope, not a
+shadow person-tick denominator.
+
+[D12](CORE_DECISIONS.md#d12--routine-rest-draw-follows-the-required-personticknode-key)
+adds the narrowly required rest-RNG key replacement: lineage/no-node keys become
+AgentId/tick/selected-node keys, with identical configured inclusive bounds.
+The 2,885 seeking deadline exits and 35,822 consuming deadline exits retain
+ported band/behaviour, reservation release and one-tick Idle boundaries. The
+38,707 entries identify affected rest draws; they are not removed from the
+≥97% port denominator. All seven `continue_routine_*` nodes remain port nodes.
+Interruptions, invitation replay, arrival, deterministic activity duration,
+and ordinary continuation remain ports. Exact rest samples can differ in the
+new rollout; they grant no blanket exemption for downstream choices. No
+accepted cost, count, zero-arm disposition, or held-out bar changes here.
+
+
+D18 narrowly replaces the mind gather quarrel draw's inherited
+lineage/pair-derived random subject with the acting AgentId and selected node
+domain at the same tick. The actual rare-branch regression is **RED then
+GREEN verified** (`systems-tests-12.log`, 310 passed); **round-4 shadow and
+calibration PASS**, with unchanged policy bytes and no observed colony change.
+Formatting and workspace/all-target Clippy checks also passed. This is training
+evidence, not held-out or timing acceptance; identity run 4 remains pending.
+The measured `selected.gather_rival`, `selected.gather_dispute`,
+`selected.quarrel` and associated cap/relation subarm counts remain **0** in
+the recorded colony fixtures. Preserve their ported effects and original zero
+rows; neither their absence nor this RNG change creates a drop authorization
+or shadow-denominator exclusion. See [D18](CORE_DECISIONS.md#d18--replace-only-the-mind-gather-quarrel-random-key)
+for the exact boundary and verification status. No historical measurement
+counts or inclusive costs are changed by this annotation.

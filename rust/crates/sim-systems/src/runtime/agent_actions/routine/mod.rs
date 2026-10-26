@@ -1,7 +1,10 @@
+//! Shared routine execution and factual previews for both decision systems.
 mod lifecycle;
 mod places;
+mod preview;
+mod selected;
 
-pub(in crate::runtime::decision) use places::PlacesCache;
+pub(in crate::runtime) use places::PlacesCache;
 
 use hecs::{Entity, World};
 use places::{Cursor, Occupancy, Tile, KINDS};
@@ -14,7 +17,7 @@ use sim_core::rules::RoutineRule;
 use sim_engine::SimResources;
 use std::collections::{BTreeMap, BTreeSet};
 
-pub(super) const fn is_activity(state: AgentState) -> bool {
+pub(in crate::runtime) const fn is_activity(state: AgentState) -> bool {
     matches!(
         state,
         AgentState::Seeking {
@@ -25,7 +28,7 @@ pub(super) const fn is_activity(state: AgentState) -> bool {
     )
 }
 
-pub(super) const fn idle_equivalent(state: AgentState, enabled: bool) -> bool {
+pub(in crate::runtime) const fn idle_equivalent(state: AgentState, enabled: bool) -> bool {
     matches!(state, AgentState::Idle) || (enabled && is_activity(state))
 }
 
@@ -36,7 +39,7 @@ enum Change {
     Observation(RoutineObservation),
 }
 
-pub(super) struct RoutineTick {
+pub(in crate::runtime) struct RoutineTick {
     rule: RoutineRule,
     tick: u64,
     seed: u64,
@@ -64,7 +67,7 @@ pub(super) struct RoutineTick {
 /// Each settlement member's settlement (settlement id order; the first
 /// settlement listing a person wins). The decision system's `member_of` is
 /// this same map whenever the firewood or forage rule built it.
-pub(super) fn members_of(resources: &SimResources) -> BTreeMap<AgentId, SettlementId> {
+pub(in crate::runtime) fn members_of(resources: &SimResources) -> BTreeMap<AgentId, SettlementId> {
     let mut members = BTreeMap::new();
     let mut settlements: Vec<_> = resources.settlements.iter().collect();
     settlements.sort_by_key(|(id, _)| **id);
@@ -77,7 +80,7 @@ pub(super) fn members_of(resources: &SimResources) -> BTreeMap<AgentId, Settleme
 }
 
 impl RoutineTick {
-    pub(super) fn new(
+    pub(in crate::runtime) fn new(
         world: &mut World,
         resources: &SimResources,
         rule: RoutineRule,
@@ -166,7 +169,7 @@ impl RoutineTick {
         }
     }
 
-    pub(super) fn activity(&self, id: AgentId) -> Option<Activity> {
+    pub(in crate::runtime) fn activity(&self, id: AgentId) -> Option<Activity> {
         self.active.get(&id).copied()
     }
 
@@ -174,7 +177,7 @@ impl RoutineTick {
     /// [`members_of`]). Pass 19: the window ends at the person's own
     /// `RoutineRule::end_minute(key, temperament)` (`day_end_minute` without
     /// an end stagger).
-    pub(super) fn can_enter(
+    pub(in crate::runtime) fn can_enter(
         &self,
         id: AgentId,
         key: Option<u64>,
@@ -195,7 +198,7 @@ impl RoutineTick {
         clippy::too_many_arguments,
         reason = "the caller's row fields, passed instead of per-tick maps"
     )]
-    pub(super) fn start(
+    pub(in crate::runtime) fn start(
         &mut self,
         id: AgentId,
         entity: Entity,

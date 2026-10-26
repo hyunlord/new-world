@@ -42,8 +42,8 @@ use sim_engine::{RuntimeSystem, SimResources};
 
 // The relief amount mirrors the ground-tile eat amount; imported (not
 // redefined) from the decision module per the slice-2-4 zero-sim-core rule.
-use crate::runtime::decision::clock_in_window;
-use crate::runtime::decision::{HUNGER_CONSUME_AMOUNT, HUNGER_THRESHOLD};
+use crate::runtime::agent_actions::needs::clock_in_window;
+use crate::runtime::agent_actions::needs::{HUNGER_CONSUME_AMOUNT, HUNGER_THRESHOLD};
 
 /// Famine level at/above which a settlement member draws on the communal
 /// reserve. Set to [`HUNGER_THRESHOLD`] (50.0) so reserve consumption is a

@@ -9,7 +9,7 @@ tags `v7-final-sim` and `v7-final-art`.
 
 ### Added
 - Owner contract at `docs/v8/core/CORE_GOAL.md`; isolated branch from published M-UX2 `9855bd082ad88a4c49296410f206f148d98c4df9`.
-- Static decision/seam inventory and explicit pending runtime counts in `docs/v8/core/CORE_INVENTORY.md`; evidence and sequencing decisions in `CORE_DECISIONS.md`.
+- Measured decision/seam inventory: 91 semantic rows, 247 observer keys, 11 complete groups / 66 worlds, explicit zero counts and admitted inclusive costs in `docs/v8/core/CORE_INVENTORY.md`; evidence and sequencing decisions in `CORE_DECISIONS.md`.
 - Approved depth roadmap preserved verbatim from Appendix A in `docs/v8/DEPTH_ROADMAP.md`.
 - Off-by-default `perf_arms` observations with 247 runtime keys, primary/twin isolation, zero-hit rows and strict complete-fixture aggregation. Inclusive costs remain diagnostic, not quiet performance evidence.
 - `worldsim_probe story-yield` schema 2 measures verified cause edges and distinct observed kind paths per calendar year, retaining missing-ancestor diagnostics and partial-year exposure. Twelve focused tests and a two-world 25-day ordinary-probe fingerprint control pass.
@@ -18,7 +18,11 @@ tags `v7-final-sim` and `v7-final-art`.
 ### Changed
 - Planner correction (2026-10-26 22:00 KST), recorded in CORE_DECISIONS D10: timing admission is 1-minute load <8 before every repeat with all three load averages recorded; comparison binaries must be interleaved in one session. Earlier contended arm timings remain INVALID. Three high-load windows 15 minutes apart permit non-timing work before final measurement.
 - ROADMAP schedules M-CORE and M6–M11; superseded M6-finalization/M-PERF rows remain as history. VISION carries the approved v1.0 definition and retains the previous definition.
-- The initial default and feature measurement-tool binaries match BASE on 228,748 baseline values, 64 chronicle files, raw samples and all nine OFF fixtures; both ON two-seed 24-day controls match, as does the feature eight-seed 48-day control. The corrected final-tool binary also passes the full baseline/OFF and ON 24-day comparisons. Mind implementation, shadow, held-out evaluation, quiet performance and final gate remain pending. No current decision-share or acceptance claim.
+- The initial default and feature measurement-tool binaries match BASE on 228,748 baseline values, 64 chronicle files, raw samples and all nine OFF fixtures; both ON two-seed 24-day controls match, as does the feature eight-seed 48-day control. The corrected final-tool binary also passes the full baseline/OFF and ON 24-day comparisons. Mind modules and authoring records are implemented; round-3 shadow-stage acceptance is 99.913210% OFF / 99.805452% ON, zero unexplained categories and zero residual port defects. Earlier round-1 FAIL and round-2 not-accepted results remain in CORE_SHADOW. The admitted BASE design share is s=0.699002982 at N1000; the total-tick ratio bar is 0.700498509 and mind/old-decision bar is 0.5, neither an achieved improvement. Final paired performance, held-outs, production switch/isolation, native UI and full gate remain pending.
+
+### Fixed (working tree, not published)
+- Routine cooldown fallback and invitation-preview boundaries (ISS-333), and Idle+Job presence versus ownership/release predicates (ISS-334), with preserved RED/GREEN evidence and round-3 shadow audit. Broader ISS-048/#524 debt and historical ISS-132 are unchanged; GitHub registration for the new rows is pending.
+- Completed full-runtime calibration candidate on seeds 0–7 ×48 days: six outcome bars 8/8, cold-snap fuel 5/5 exposed (3 unexposed), determinism PASS, reason coverage 135,368/135,368 and critical choices 2,984/2,984 with zero failures. Policy frozen before held-outs; these are calibration results, not final acceptance or publication.
 
 ## M-UX2 — 2026-10-26 (p18 published under owner decisions)
 

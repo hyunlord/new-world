@@ -620,6 +620,21 @@ pub enum CausalEvent {
         /// Simulation tick.
         tick: u64,
     },
+    /// Colony mind choice, appended after all frozen legacy discriminants.
+    /// The compact shared payload exposes every logical field through checked decoding.
+    MindChoice {
+        /// Complete immutable choice and its causal header; shared with the person's ring.
+        choice: crate::colony::mind_records::PackedMindChoice,
+    },
+    /// Typed bridge to an actual command or chronicle cause, allocated only when referenced.
+    MindFactOrigin {
+        /// Actual causal event identity, separate from the source namespace.
+        id: EventId,
+        /// Existing durable source, validated before emission.
+        source: crate::colony::mind_records::MindFactSource,
+        /// Tick at first reference by a mind choice.
+        tick: u64,
+    },
 }
 
 impl CausalEvent {
@@ -642,6 +657,8 @@ impl CausalEvent {
             | CausalEvent::SettlementDissolved { id, .. }
             | CausalEvent::AgentDied { id, .. }
             | CausalEvent::PressureCause { id, .. } => *id,
+            CausalEvent::MindChoice { choice } => choice.id(),
+            CausalEvent::MindFactOrigin { id, .. } => *id,
         }
     }
 
@@ -674,6 +691,8 @@ impl CausalEvent {
             | CausalEvent::SettlementDissolved { parent, .. }
             | CausalEvent::AgentDied { parent, .. }
             | CausalEvent::PressureCause { parent, .. } => *parent,
+            CausalEvent::MindChoice { choice } => choice.parent(),
+            CausalEvent::MindFactOrigin { .. } => None,
         }
     }
 
@@ -696,6 +715,8 @@ impl CausalEvent {
             | CausalEvent::SettlementDissolved { tick, .. }
             | CausalEvent::AgentDied { tick, .. }
             | CausalEvent::PressureCause { tick, .. } => *tick,
+            CausalEvent::MindChoice { choice } => choice.tick(),
+            CausalEvent::MindFactOrigin { tick, .. } => *tick,
         }
     }
 
@@ -719,7 +740,9 @@ impl CausalEvent {
             | CausalEvent::SettlementFormed { .. }
             | CausalEvent::SettlementDissolved { .. }
             | CausalEvent::AgentDied { .. }
-            | CausalEvent::PressureCause { .. } => None,
+            | CausalEvent::PressureCause { .. }
+            | CausalEvent::MindChoice { .. }
+            | CausalEvent::MindFactOrigin { .. } => None,
             CausalEvent::StampDirty { channel, .. }
             | CausalEvent::InfluenceChanged { channel, .. } => Some(*channel),
         }

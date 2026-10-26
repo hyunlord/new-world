@@ -56,3 +56,13 @@ mod tests {
         );
     }
 }
+
+/// Explicit legacy-world shadow comparison; never enabled by default.
+#[cfg(feature = "mind_shadow")]
+pub mod mind_shadow;
+
+/// Independent runtime mind reason coverage for colony probes.
+pub mod mind_coverage;
+
+/// Explicit post-timing synthetic mind history capacity companion.
+pub mod mind_memory;

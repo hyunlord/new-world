@@ -292,7 +292,7 @@ pub fn step(value: i16, target: i16, divisor: i16) -> i16 {
 
 /// The facts of `entity` now (the bridge's mood line reads the same).
 pub fn facts_of(world: &World, res: &SimResources, entity: Entity) -> Facts {
-    use crate::runtime::decision::needs as n;
+    use crate::runtime::agent_actions::needs as n;
     let day = today(res);
     let day_ticks = res.rules.calendar.days_to_ticks(1);
     let mood = world.get::<&Mood>(entity).ok().map(|m| *m);
@@ -447,7 +447,7 @@ pub fn check_cause(
     index: u32,
     window: u64,
 ) -> Result<(), &'static str> {
-    use crate::runtime::decision::needs as n;
+    use crate::runtime::agent_actions::needs as n;
     let q = chronicle.entry(index).ok_or("no such entry")?;
     if q.kind != ChronicleKind::Quarrel {
         return Err("not a quarrel");

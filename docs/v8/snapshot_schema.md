@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
+Schema version: 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
 
 History: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
@@ -260,6 +260,50 @@ everyone, `sexes` stays right). The text renderer's `--people-json` prints the s
 | `thirst` | float | thirst 0–100 |
 | `sleep` | float | fatigue 0–100 |
 | `target_kind` | int | as `target_kinds` in `get_agent_snapshot` |
+
+### `get_agent_mind`
+`get_agent_mind(entity_bits)`: `collect_agent_mind(&SimEngine, entity_bits)` →
+`agent_mind_to_dict` (`ffi/mind.rs`). Reads the latest retained choice without evaluating
+policy or mutating simulation state. Missing people and worlds without mind history return
+`found=false`; a corrupt dictionary binding also sets `invalid=true`. Other keys exist only
+when found. Unsigned IDs use their exact 64-bit signed wire representation; absent causal
+references use -1. The history retains at most 16 records per person.
+
+| Key | Type | Meaning |
+|---|---|---|
+| `found` | bool | a retained choice is available |
+| `invalid` | bool | dictionary decoding failed |
+| `agent_id` | int | stable AgentId, not entity bits |
+| `event_id` | int | causal event identity |
+| `parent` | int | actual cause event identity, or -1 |
+| `tick` | int | choice simulation tick |
+| `node` | String | authored node identity |
+| `name_key` | String | node localization key |
+| `behaviour` | String | registered lifecycle identity |
+| `band` | String | authored priority band |
+| `score` | int | exact signed integer score |
+| `history_count` | int | retained records for this person, 1–16 |
+| `top3` | Array[Dictionary] | descending candidates, data order breaks ties; each has node/name_key/behaviour/score |
+| `facts` | Array[Dictionary] | all selected-node inputs ranked by positive score contribution descending, then positive has/>/>= conditions, then remaining conditions; ties use authored order. Rejected-only witnesses remain in the retained causal record |
+| `name` | String | registered fact identity in a facts row |
+| `value` | int | exact factual value in provider units |
+| `cause` | int | fact's actual causal event, or -1 |
+| `reason_kind` | String | facts row: score/present/absent/high/low/equal; derived from selected-node metadata, never provider-name heuristics |
+| `score_contribution` | int | facts row: checked sum of its signed term contributions |
+| `predicates` | Array[Dictionary] | facts row: all authored conditions, preserving order and duplicates |
+| `op` | String | predicate row: <, <=, >, >=, ==, has, not |
+| `threshold` | int or null | predicate row: exact provider-unit comparison value; null for has/not |
+| `score_terms` | Array[Dictionary] | facts row: all authored score terms for this input, retaining duplicates |
+| `weight_permille` | int | score-term row: exact signed authored weight |
+| `contribution` | int | score-term row: i128 value*weight/1000 truncated toward zero, checked into i64 |
+
+The immutable per-world dictionary retains predicate operators/thresholds, score terms and
+constant, and validates their exact equality against the compiled policy on load. The getter
+never recompiles policy. Positive score contributions rank above positive conditions; a low
+hunger guard therefore does not outrank a positive job condition. Negative conditions retain
+their direction. All inputs remain visible; ranking changes presentation only. Overflow or
+missing selected-input metadata returns `invalid=true` instead of inventing an explanation.
+
 
 ### `get_agent_temperament`
 `get_agent_temperament(entity_bits)`: `collect_agent_temperament` → `agent_temperament_to_dict` (`ffi/reads_agent.rs`).

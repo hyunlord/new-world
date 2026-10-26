@@ -31,6 +31,9 @@
 mod content_validation;
 mod legacy_steward;
 mod legacy_v9;
+#[cfg(test)]
+mod mind_tests;
+mod mind_validation;
 pub mod world;
 
 #[cfg(test)]
@@ -53,7 +56,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6 through 10 are migrated. Bump it
+/// Save format version; historical versions 6 through 11 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -65,8 +68,9 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 7 = optional Steward state; 8 = catalog-bound envelope, full-width content
 /// codes and Chronicle causes, sparse completed-construction/tool identity;
 /// 9 = full-width pressure provenance and persistent novel illness origins;
-/// 10 = tree material identity; 11 = independent steward defence and ownership.
-pub const FORMAT_VERSION: u32 = 11;
+/// 10 = tree material identity; 11 = independent steward defence and ownership;
+/// 12 = authored mind policy, running choices and independent decision history.
+pub const FORMAT_VERSION: u32 = 12;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;
@@ -138,6 +142,7 @@ struct BodyRef<'a> {
     systems: &'a [(String, Vec<u8>)],
     steward: &'a sim_core::colony::steward::StewardState,
     content_state: &'a sim_core::colony::content_state::ContentState,
+    mind: &'a sim_core::colony::mind_state::MindState,
 }
 
 /// The body after the header, as read (same fields, same order).
@@ -206,6 +211,18 @@ struct Body {
     systems: Vec<(String, Vec<u8>)>,
     steward: sim_core::colony::steward::StewardState,
     content_state: sim_core::colony::content_state::ContentState,
+    mind: sim_core::colony::mind_state::MindState,
+}
+
+/// Exact published format11 body, before the explicit mind field.
+#[derive(Serialize, Deserialize)]
+struct LegacyBodyV11 {
+    current_tick: u64,
+    resources: SimResources,
+    world: world::WorldSave,
+    systems: Vec<(String, Vec<u8>)>,
+    steward: sim_core::colony::steward::StewardState,
+    content_state: sim_core::colony::content_state::ContentState,
 }
 
 /// Published format10 body, before independent defence state.
@@ -226,6 +243,7 @@ struct LegacyBodyV10 {
 /// module docs). On error the engine may hold reserved ids and must be
 /// discarded or reloaded.
 pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
+    mind_validation::validate(&mut engine.resources).map_err(SaveError::Encode)?;
     let world = world::capture(&engine.world).map_err(SaveError::World)?;
     let systems = engine.system_states().map_err(SaveError::Systems)?;
     let body = BodyRef {
@@ -235,6 +253,7 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         systems: &systems,
         steward: &engine.resources.steward,
         content_state: &engine.resources.content_state,
+        mind: &engine.resources.mind,
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
@@ -269,6 +288,7 @@ pub fn load_with(
     let legacy_v8 = version == Some(8u32.to_le_bytes().as_slice());
     let legacy_v9 = version == Some(9u32.to_le_bytes().as_slice());
     let legacy_v10 = version == Some(10u32.to_le_bytes().as_slice());
+    let legacy_v11 = version == Some(11u32.to_le_bytes().as_slice());
     if legacy || legacy_v7 || legacy_v8 || legacy_v9 {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
             .map_err(|error| SaveError::Decode(error.to_string()))?;
@@ -282,6 +302,7 @@ pub fn load_with(
             systems: old.systems,
             steward: Default::default(),
             content_state: Default::default(),
+            mind: Default::default(),
         }
     } else if legacy_v7 {
         let old: LegacyBodyV7 = decode(encoded).map_err(SaveError::Decode)?;
@@ -292,6 +313,7 @@ pub fn load_with(
             systems: old.systems,
             steward: old.steward.into(),
             content_state: Default::default(),
+            mind: Default::default(),
         }
     } else {
         let envelope: Envelope = decode(encoded).map_err(SaveError::Decode)?;
@@ -312,6 +334,7 @@ pub fn load_with(
                 systems: old.systems,
                 steward: old.steward.into(),
                 content_state: old.content_state.into(),
+                mind: Default::default(),
             }
         } else if legacy_v9 {
             if envelope.revision != legacy_v9::REVISION {
@@ -329,6 +352,7 @@ pub fn load_with(
                 systems: old.systems,
                 steward: old.steward.into(),
                 content_state: old.content_state.into(),
+                mind: Default::default(),
             }
         } else {
             if envelope.revision != catalog.revision() {
@@ -347,6 +371,18 @@ pub fn load_with(
                     systems: old.systems,
                     steward: old.steward.into(),
                     content_state: old.content_state,
+                    mind: Default::default(),
+                }
+            } else if legacy_v11 {
+                let old: LegacyBodyV11 = decode(&envelope.payload).map_err(SaveError::Decode)?;
+                Body {
+                    current_tick: old.current_tick,
+                    resources: old.resources,
+                    world: old.world,
+                    systems: old.systems,
+                    steward: old.steward,
+                    content_state: old.content_state,
+                    mind: Default::default(),
                 }
             } else {
                 decode(&envelope.payload).map_err(SaveError::Decode)?
@@ -356,6 +392,8 @@ pub fn load_with(
     let mut resources = body.resources;
     resources.steward = body.steward;
     resources.content_state = body.content_state;
+    resources.mind = body.mind;
+    mind_validation::validate(&mut resources).map_err(SaveError::Decode)?;
     if legacy || legacy_v7 || legacy_v8 || legacy_v9 {
         legacy_v9::migrate_trees(&mut resources).map_err(SaveError::Decode)?;
     }
@@ -368,6 +406,7 @@ pub fn load_with(
     let world = world::build(&body.world).map_err(SaveError::World)?;
     content_validation::validate_illness(&resources, &world).map_err(SaveError::Decode)?;
     let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+    engine.resources.rules = resources.rules;
     register(&mut engine);
     if legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10 {
         let registered = engine.system_states().map_err(SaveError::Systems)?;
@@ -407,6 +446,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 8
         && found != 9
         && found != 10
+        && found != 11
     {
         return Err(SaveError::Version {
             found,

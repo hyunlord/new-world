@@ -389,6 +389,20 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
         report["perf_arms"] = arms.report().map_err(|e| format!("arm profile: {e}"))?;
         report
     };
+    // Optional terminal capacity companion runs after all standing timing, fingerprint,
+    // load and allocator checkpoints have already been captured. Never tick afterward.
+    let report = if let Some(memory) = crate::mind_memory::companion(
+        &mut engine,
+        std::env::var("WORLDSIM_MIND_HISTORY_SATURATE")
+            .ok()
+            .as_deref(),
+    )? {
+        let mut report = report;
+        report["mind_history_memory"] = memory;
+        report
+    } else {
+        report
+    };
     Ok(report)
 }
 

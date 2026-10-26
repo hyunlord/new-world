@@ -208,7 +208,7 @@ impl RuntimeSystem for DraftSystem {
             .rules
             .agent
             .critical_preemption
-            .unwrap_or(crate::runtime::decision::needs::CRITICAL_NEED);
+            .unwrap_or(crate::runtime::agent_actions::needs::CRITICAL_NEED);
         let beasts = crate::runtime::story::active_mechanic(res, PressureMechanic::Pack);
         for (id, entity, d, pos, need) in rows {
             if need >= critical {

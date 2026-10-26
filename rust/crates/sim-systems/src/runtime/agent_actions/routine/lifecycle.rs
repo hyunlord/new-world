@@ -1,3 +1,4 @@
+//! Shared routine reservations, invitations and deferred lifecycle cleanup.
 use super::{is_activity, Change, PlacesCache, RoutineTick};
 use hecs::{Entity, World};
 use sim_core::components::{
@@ -120,21 +121,21 @@ fn note_insert<T: hecs::Component>(world: &World, entity: Entity) {
 
 impl RoutineTick {
     /// Apply the tick's component changes; hand back the place cache.
-    pub(in crate::runtime::decision) fn finish(self, world: &mut World) -> PlacesCache {
+    pub(in crate::runtime) fn finish(self, world: &mut World) -> PlacesCache {
         scope!("routine_finish", { apply(world, self.pending) });
         #[cfg(feature = "subprofile")]
         crate::subprofile::flush_moves("routine_finish_moves");
         self.places
     }
 
-    pub(in crate::runtime::decision) fn interrupt(&mut self, id: AgentId, entity: Entity) {
+    pub(in crate::runtime) fn interrupt(&mut self, id: AgentId, entity: Entity) {
         self.end(id, entity, false, None);
         self.interrupted.insert(id);
     }
 
     /// Interrupt `id`'s activity for a social or combat invitation; the
     /// entity map is built from `world` on the tick's first invitation.
-    pub(in crate::runtime::decision) fn invite(&mut self, id: AgentId, world: &World) {
+    pub(in crate::runtime) fn invite(&mut self, id: AgentId, world: &World) {
         if !self.active.contains_key(&id) {
             return;
         }
@@ -151,14 +152,11 @@ impl RoutineTick {
         }
     }
 
-    pub(in crate::runtime::decision) fn take_invitation(&mut self, id: AgentId) -> bool {
+    pub(in crate::runtime) fn take_invitation(&mut self, id: AgentId) -> bool {
         self.invitations.remove(&id)
     }
 
-    pub(in crate::runtime::decision) fn replay(
-        &mut self,
-        world: &mut World,
-    ) -> Vec<(AgentId, Entity)> {
+    pub(in crate::runtime) fn replay(&mut self, world: &mut World) -> Vec<(AgentId, Entity)> {
         let mut replay = Vec::new();
         for id in std::mem::take(&mut self.invitations) {
             let Some(entity) = self
@@ -183,7 +181,7 @@ impl RoutineTick {
     /// Pass 19: the day ends at the person's own `RoutineRule::end_minute`
     /// (`key` = the lineage key, the id standing in without one, as for the
     /// rest draw; `day_end_minute` for everyone without an end stagger).
-    pub(in crate::runtime::decision) fn deadline(
+    pub(in crate::runtime) fn deadline(
         &self,
         id: AgentId,
         member: Option<SettlementId>,
@@ -213,7 +211,7 @@ impl RoutineTick {
 
     /// End `id`'s activity; `rest` = `Some(lineage key)` starts the rest
     /// pause (`None` inside means no key: the id stands in, as in Pass 17).
-    pub(in crate::runtime::decision) fn end(
+    pub(in crate::runtime) fn end(
         &mut self,
         id: AgentId,
         entity: Entity,
@@ -243,7 +241,7 @@ impl RoutineTick {
         }
     }
 
-    pub(in crate::runtime::decision) fn arrive(
+    pub(in crate::runtime) fn arrive(
         &mut self,
         id: AgentId,
         entity: Entity,

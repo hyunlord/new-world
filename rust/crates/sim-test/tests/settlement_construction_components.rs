@@ -396,6 +396,8 @@ fn harness_p6_alpha_a21_causal_event_no_construction_variant() {
             CausalEvent::SettlementDissolved { .. } => "settlement_dissolved",
             CausalEvent::AgentDied { .. } => "agent_died",
             CausalEvent::PressureCause { .. } => "pressure_cause",
+            CausalEvent::MindChoice { .. } => "mind_choice",
+            CausalEvent::MindFactOrigin { .. } => "mind_fact_origin",
         }
     }
     // Touch classify so it's not dead code under any toolchain.

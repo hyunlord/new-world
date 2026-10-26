@@ -181,6 +181,28 @@ impl WorldGenConfig {
 /// Coverage fractions share the non-river tile count denominator and round to
 /// the nearest whole tile. Requires dimensions at least 32 and valid fractions.
 pub fn build_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
+    build_world_with_registrar(cfg, rules, |engine| {
+        #[cfg(feature = "mind_candidate")]
+        if engine.resources.rules.colony.is_some() {
+            crate::register_colony_mind_runtime_systems(engine);
+            return;
+        }
+        crate::register_default_runtime_systems(engine);
+    })
+}
+
+/// Production generation with an explicitly legacy decision stack for shadow comparison.
+/// Ordinary world selection may change; this observer-only factory keeps the old brain.
+#[cfg(feature = "mind_shadow")]
+pub fn build_shadow_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
+    build_world_with_registrar(cfg, rules, crate::register_shadow_runtime_systems)
+}
+
+fn build_world_with_registrar(
+    cfg: &WorldGenConfig,
+    rules: WorldRules,
+    register: fn(&mut SimEngine),
+) -> SimEngine {
     assert!(
         cfg.width >= 32 && cfg.height >= 32,
         "world must have room for the camp and food rings"
@@ -199,9 +221,9 @@ pub fn build_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
         "berries require a finite positive capacity"
     );
     let mut engine = SimEngine::new(cfg.width, cfg.height, MaterialRegistry::new());
-    crate::register_default_runtime_systems(&mut engine);
     engine.resources.world_seed = cfg.seed;
     engine.resources.rules = rules;
+    register(&mut engine);
     engine.resources.time_of_day = (engine.resources.rules.clock_offset_ticks
         % engine.resources.ticks_per_day) as f64
         / engine.resources.ticks_per_day as f64
@@ -232,6 +254,64 @@ pub fn build_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn fresh_colony_registration_matches_candidate_feature_before_first_tick() {
+        let engine = build_world_with(&WorldGenConfig::colony(7), WorldRules::colony(7));
+        let names = engine.system_names();
+        let candidate = cfg!(feature = "mind_candidate");
+        assert_eq!(
+            names
+                .iter()
+                .filter(|name| **name == "ColonyMindSystem")
+                .count(),
+            usize::from(candidate)
+        );
+        assert_eq!(
+            names
+                .iter()
+                .filter(|name| **name == "AgentDecisionSystem")
+                .count(),
+            usize::from(!candidate)
+        );
+        assert_eq!(engine.current_tick(), 0);
+        assert_eq!(engine.resources.world_seed, 7);
+        assert_eq!(engine.resources.mind.policy_source.is_some(), candidate);
+        assert_eq!(engine.resources.mind.history.is_some(), candidate);
+        assert!(engine.resources.mind.running.is_empty());
+        if candidate {
+            let source = include_str!("../../../sim-core/data/colony/mind.ron");
+            assert_eq!(engine.resources.mind.policy_source.as_deref(), Some(source));
+            let program = crate::runtime::mind::MindProgram::load(source).unwrap();
+            engine
+                .resources
+                .mind
+                .history
+                .as_ref()
+                .unwrap()
+                .check_policy(&program.policy)
+                .unwrap();
+        }
+    }
+
+    #[test]
+    fn candidate_feature_does_not_install_mind_in_baseline() {
+        let engine = build_world_with(&WorldGenConfig::baseline(7), WorldRules::baseline(7));
+        assert!(engine.system_names().contains(&"AgentDecisionSystem"));
+        assert!(!engine.system_names().contains(&"ColonyMindSystem"));
+        assert!(engine.resources.mind.policy_source.is_none());
+        assert!(engine.resources.mind.history.is_none());
+    }
+
+    #[test]
+    fn registrar_observes_requested_rules_and_seed() {
+        let rules = WorldRules::colony(7);
+        let engine = build_world_with_registrar(&WorldGenConfig::colony(7), rules, |engine| {
+            assert_eq!(engine.resources.rules, WorldRules::colony(7));
+            assert_eq!(engine.resources.world_seed, 7);
+        });
+        assert_eq!(engine.resources.rules, rules);
+    }
+
     #[test]
     fn explicit_world_rules_are_retained_without_enabling_future_state() {
         let config = WorldGenConfig::baseline(7);

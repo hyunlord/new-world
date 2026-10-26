@@ -90,7 +90,11 @@ pub fn cascade_arm_memory_tag(arm: CascadeArm) -> Option<MemoryArm> {
 /// function of `(arm, valence, salience, encoded_tick)`, independent of
 /// `event_id` allocation order and ring-buffer eviction. A `Settlement`
 /// arm (no memory tag) yields `0.0`.
-pub(super) fn memory_weight_delta(memory: &Memory, arm: CascadeArm, current_tick: u64) -> f64 {
+pub(in crate::runtime) fn memory_weight_delta(
+    memory: &Memory,
+    arm: CascadeArm,
+    current_tick: u64,
+) -> f64 {
     let Some(tag) = cascade_arm_memory_tag(arm) else {
         return 0.0;
     };
@@ -109,7 +113,7 @@ pub(super) fn memory_weight_delta(memory: &Memory, arm: CascadeArm, current_tick
 /// Find the highest-magnitude contributing entry for `arm` — used as the
 /// `recalled_event` field on `MemoryRecalled` emissions. Matches on the
 /// stored [`MemoryArm`] tag (Fix D); `None` for a non-memory arm.
-pub(super) fn top_contributor_entry(
+pub(in crate::runtime) fn top_contributor_entry(
     memory: &Memory,
     arm: CascadeArm,
     current_tick: u64,

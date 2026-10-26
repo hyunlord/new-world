@@ -1,6 +1,6 @@
 //! Deterministic renewable food accounting shared by gates and probe reports.
 
-use crate::runtime::decision::HUNGER_CONSUME_AMOUNT;
+use crate::runtime::agent_actions::needs::HUNGER_CONSUME_AMOUNT;
 use crate::runtime::resource_regen::{season_at, FOOD_REGEN_AMOUNT, REGEN_INTERVAL};
 use hecs::World;
 use sim_core::components::{Agent, Hunger, Inventory, ResourceKind, SettlementId};

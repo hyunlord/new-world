@@ -134,6 +134,10 @@ var _label_id: Label
 var _porter_status: Label
 var _label_age: Label
 var _label_pos: Label
+var _mind_label: Label
+var _mind_snapshot: Dictionary = {}
+var _mind_tick: int = -1
+var _mind_entity: int = -1
 var _label_state: Label
 var _label_target: Label
 var _hunger_bar: ProgressBar
@@ -234,6 +238,9 @@ func _ready() -> void:
 	why_button.text = _loc("MUX_WHY")
 	why_button.pressed.connect(_open_tile_why)
 	_vbox.add_child(why_button)
+	_mind_label = _make_label("")
+	_mind_label.name = "MindReason"
+	_mind_label.hide()
 	_label_state = _make_label("")
 	_label_target = _make_label("")
 	_hunger_bar = _make_bar(_loc("UI_HUNGER"))
@@ -431,6 +438,7 @@ func display_agent(detail: Dictionary) -> void:
 	var home: int = SettlementSelection.home_for_agent(agent_id)
 	_village_label.visible = home >= 0
 	_village_label.text = Names.unbroken(SettlementSelection.name_for(home, _locale)) if home >= 0 else ""
+	_refresh_mind()
 	_label_pos.text = _loc("INSPECTOR_POS_FMT") % [x, y]
 	var activity: Dictionary = _selected_activity() if state_tag == 4 or target_kind == 8 else {}
 	_label_state.text = _loc("INSPECTOR_STATE_FMT") % _state_text(state_tag, activity)
@@ -1221,6 +1229,9 @@ func _follow_link(meta: Variant) -> void:
 
 
 func _world_reset() -> void:
+	_mind_tick = -1
+	_mind_entity = -1
+	_mind_snapshot = {}
 	close()
 	_person_cache.reset()
 	_formatted_person = -1
@@ -1252,9 +1263,26 @@ func _target_text(target_kind: int, activity: Dictionary) -> String:
 		return (_loc("INSPECTOR_TARGET_ACTIVITY_PLACE_FMT") % [activity["x"], activity["y"]]) if not activity.is_empty() else _loc("UI_UNKNOWN")
 	return _loc(TARGET_LABELS[target_kind]) if target_kind >= 0 and target_kind < TARGET_LABELS.size() else _loc("UI_UNKNOWN")
 
+# Bridge: get_agent_mind(entity_bits), once per visible selection and simulation tick.
+func _refresh_mind() -> void:
+	if not visible or _world_sim == null or _selected_entity_bits < 0:
+		return
+	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
+	if tick != _mind_tick or _selected_entity_bits != _mind_entity:
+		_mind_tick = tick
+		_mind_entity = _selected_entity_bits
+		_mind_snapshot = _world_sim.get_agent_mind(_selected_entity_bits)
+	_mind_label.visible = bool(_mind_snapshot.get("found", false))
+	if _mind_label.visible:
+		_mind_label.text = get_node("../CausalPanel").mind_summary(_mind_snapshot)
+
 func _open_tile_why() -> void:
 	if _world_sim == null or _selected_entity_bits < 0:
 		return
+	_refresh_mind()
 	var detail: Dictionary = _world_sim.get_agent_detail(_selected_entity_bits)
+	if bool(_mind_snapshot.get("found", false)):
+		get_node("../CausalPanel").open_mind(_mind_snapshot, Vector2i(int(detail.get("x", 0)), int(detail.get("y", 0))))
+		return
 	if bool(detail.get("found", false)):
 		get_node("../CausalPanel").call("open_tile", Vector2i(int(detail.get("x",0)), int(detail.get("y",0))))

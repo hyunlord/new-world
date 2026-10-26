@@ -25,6 +25,7 @@ pub mod m5;
 pub mod m55;
 pub(crate) mod meals_firewood;
 pub(crate) mod metrics;
+mod mind_fingerprint;
 mod mux2;
 pub(crate) mod night_burn;
 mod relation_caps;

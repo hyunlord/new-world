@@ -110,7 +110,7 @@ fn may_yield(world: &World, res: &SimResources, entity: Entity) -> bool {
         let _perf_arm_3 = crate::perf_arms::Scope::start("seam.no_margin");
         return true;
     };
-    use crate::runtime::decision::needs as n;
+    use crate::runtime::agent_actions::needs as n;
     let margin = i64::from(margin);
     let hunger = world
         .get::<&Hunger>(entity)
@@ -282,6 +282,10 @@ pub fn settle_after_decision(
         if arm_eval!("eval.seam.stale", world.get::<&Job>(entity).is_err()) {
             #[cfg(feature = "perf_arms")]
             let _perf_arm_14 = crate::perf_arms::Scope::start("seam.stale_job");
+            #[cfg(feature = "mind_shadow")]
+            if let Ok(agent) = world.get::<&sim_core::components::Agent>(entity) {
+                crate::mind_observer::settle(res.current_tick, agent.id, "stale_job", false);
+            }
             // A stale job state without a job: the decision's choice stands.
             continue;
         }
@@ -302,12 +306,20 @@ pub fn settle_after_decision(
         if arm_eval!("eval.seam.restore", now == AgentState::Idle || own_site) {
             #[cfg(feature = "perf_arms")]
             let _perf_arm_15 = crate::perf_arms::Scope::start("seam.restore");
+            #[cfg(feature = "mind_shadow")]
+            if let Ok(agent) = world.get::<&sim_core::components::Agent>(entity) {
+                crate::mind_observer::settle(res.current_tick, agent.id, "restore", true);
+            }
             if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
                 *state = previous;
             }
         } else {
             #[cfg(feature = "perf_arms")]
             let _perf_arm_16 = crate::perf_arms::Scope::start("seam.release");
+            #[cfg(feature = "mind_shadow")]
+            if let Ok(agent) = world.get::<&sim_core::components::Agent>(entity) {
+                crate::mind_observer::settle(res.current_tick, agent.id, "release", false);
+            }
             clear_seek.push(entity);
             let key = release_key(world, entity, now);
             *res.colony.release_counts.entry(key).or_insert(0) += 1;

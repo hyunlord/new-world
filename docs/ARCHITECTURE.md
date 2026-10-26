@@ -633,9 +633,27 @@ The CLI's `sim-test/src/content_boot.rs` and bridge's `ffi/content_boot.rs` acqu
 
 Selected source revision includes exact logical source names and bytes, including supplied presentation files. It is an identity checksum, not authentication. Replacing a selected pack requires a fresh process; unknown or mismatched saves fail before typed decoding. Bundled render-parameter F12 reload remains independent of the frozen selected extension sources. See `docs/decisions/0038-immutable-content-catalog.md` for compatibility limits and the required per-commit safety net.
 
-## M-UX bounded domain extraction (ADR 0039)
+## Colony decision architecture (M-CORE, ADR 0046–0047)
 
-`runtime/decision/consume.rs` holds only the existing Food/Water/Sleep consumption actions; `decision/system.rs` retains orchestration, targeting, GatherFood/GatherWood, routine replay and structural mutation order. `ffi/snapshot/resources.rs` owns resource collection/marshalling and its depletion tests, re-exported through the existing facade. No new runtime system or public API was introduced.
+**Current staging:** `AgentDecisionSystem` still serves both worlds in `sim-engine/src/registration.rs`. `ColonyMindSystem` is implemented in the working tree at priority 125, but the production switch and final baseline-only move remain pending. The historical M1–M5.5 seam descriptions above document the path still used before that switch. A source module's existence is not evidence of accepted runtime behavior or performance.
+
+```text
+mind.ron + fact/behaviour registry
+  -> MindProgram::load (strict compiler; dictionary-local IDs)
+  -> TickContext / ProviderPlan (AgentId-sorted observations; versioned dependencies)
+  -> pure band selector (first eligible band; integer score; authored tie order; hysteresis)
+  -> registered start / continue / finish effects
+  -> routine invitation replay + deferred jobs/targets/claims postpass
+  -> MindChoice history -> read-only get_agent_mind -> inspector / Why
+```
+
+`sim-core/src/colony/mind/` owns schema, compilation, columnar facts and pure selection. `sim-systems/src/runtime/mind/` owns factual readers, resolved target capabilities, coordination, lifecycle effects and records. A provider may observe eligibility and availability but cannot invoke the old chooser or reserve a target. Effects invalidate shared domains; the coordinator refreshes facts before later same-tick choices. Lifecycle callbacks preserve consumption/arrival boundaries, social snapshots, claim order and existing job/flight/draft ownership. No node-name switch belongs in the coordinator.
+
+Neutral mechanics now live under `runtime/agent_actions/` (`consume`, `needs`, `forage`, `wood`, `targets`, `memory_bias`, `routine`), with direct legacy API reexports. ADR 0039's original consumption extraction is preserved and extended; the legacy cascade still owns its original mutation order. The new routine API accepts an already selected kind/place and uses a node-keyed new-path duration without changing the legacy draw.
+
+Choice records retain dictionary identity, exact witnesses and up to three raw candidates from the winning band. Hysteresis may retain a choice outside the raw top three. Witnesses can include rejected alternatives; UI must distinguish evaluated inputs from the chosen action's causal explanation. History is bounded per person, while critical band changes can enter the chronicle. `ffi/mind.rs` collects records without re-evaluating policy; the inspector caches its argument getter by visible selection and simulation tick.
+
+After the authorized switch, the intended boundary is colony -> `runtime/mind`, baseline -> `runtime/baseline/decision`, both -> neutral `agent_actions`. The pure baseline move, dead colony-gate/seam removal, world registration update and import gate are still required. A separate baseline crate is optional, not claimed here. See [ADR 0046](decisions/0046-colony-mind.md), [ADR 0047](decisions/0047-baseline-isolation.md), [authoring guide](v8/core/MIND_AUTHORING.md) and [goal](v8/core/CORE_GOAL.md) for the acceptance sequence. This section reports structure; measured outcomes belong to the M-CORE evidence records.
 
 ## 16. Opt-in policy evaluation observations (B4, ADR 0040)
 

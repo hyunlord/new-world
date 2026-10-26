@@ -13,6 +13,8 @@ content name; no new content enum (an unavoidable one is listed as M-EXT debt in
 gets a "data only" test; every review checks for new hard-coded content names (`scripts/world/**` is grepped for
 manifest ids in the gate).
 
+**Colony mind authoring:** follow [MIND_AUTHORING](docs/v8/core/MIND_AUTHORING.md) for facts, registered lifecycle effects and `mind.ron` nodes. Keep policy out of providers and baseline imports out of colony code; [ADR 0046](docs/decisions/0046-colony-mind.md) and [ADR 0047](docs/decisions/0047-baseline-isolation.md) distinguish implemented modules from the pending production switch.
+
 ## Branches and pushing
 
 - Work and commit on **`v8/wip`**. Push with an explicit target: `git push origin v8/wip`, then check `git ls-remote origin v8/wip` equals local HEAD.

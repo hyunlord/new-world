@@ -74,21 +74,25 @@ use sim_core::rng::{keyed_below, STREAM_RELATIONS};
 use sim_core::rules::{NightRestRule, TemperamentRule};
 use sim_engine::{RuntimeSystem, SimResources, RESOURCE_SOURCE_INFINITE};
 
-use super::forage::{bush_exists, choose_bush, ForagePlan, ForageRival};
-use super::memory_bias::{
+use crate::runtime::agent_actions::forage::{bush_exists, choose_bush, ForagePlan, ForageRival};
+use crate::runtime::agent_actions::memory_bias::{
     arm_priority_index, memory_weight_delta, top_contributor_entry, CascadeArm, BIAS_FLIP_THRESHOLD,
 };
-use super::needs::{
+use crate::runtime::agent_actions::needs::{
     actionable_need_with_fatigue_threshold, clock_in_window, fatigue_threshold_at,
     person_night_rest, NeedAvailability, CRITICAL_NEED, FATIGUE_THRESHOLD, HUNGER_THRESHOLD,
     SOCIAL_THRESHOLD, THIRST_THRESHOLD,
 };
-use super::routine::{idle_equivalent, is_activity, PlacesCache, RoutineTick};
-use super::targets::{
+use crate::runtime::agent_actions::routine::{
+    idle_equivalent, is_activity, PlacesCache, RoutineTick,
+};
+use crate::runtime::agent_actions::targets::{
     gather_tile_exists, nearest_gather_tile, nearest_local_food, nearest_resource_tile, GatherMemo,
     GATHER_SCAN_RADIUS,
 };
-use super::wood::{choose_spot, spot_exists, urgent_rule, WoodPlan, WoodRetarget};
+use crate::runtime::agent_actions::wood::{
+    choose_spot, spot_exists, urgent_rule, WoodPlan, WoodRetarget,
+};
 use crate::runtime::settlement::firewood::{urgent_with, wood_in_hand, wood_target};
 use crate::runtime::settlement::food_economy::{stock_in_hand, stock_target};
 
@@ -144,6 +148,12 @@ impl RuntimeSystem for AgentDecisionSystem {
             resources.rules.agent.routine.map(|rule| {
                 RoutineTick::new(world, resources, rule, std::mem::take(&mut self.places))
             });
+        #[cfg(feature = "mind_shadow")]
+        if crate::runtime::mind::shadow::active() {
+            if let Some(owner) = routine.as_mut() {
+                owner.prepare_preview_places(resources);
+            }
+        }
         #[cfg(feature = "perf_arms")]
         drop(_perf_prepare_1);
         #[cfg(feature = "subprofile")]
@@ -869,7 +879,7 @@ impl RuntimeSystem for AgentDecisionSystem {
         // settlement id order, first wins), else built here as Pass 17 did.
         let routine_members_own =
             (routine.is_some() && firewood_rule.is_none() && forage_rule.is_none())
-                .then(|| super::routine::members_of(resources));
+                .then(|| crate::runtime::agent_actions::routine::members_of(resources));
         let routine_members = routine_members_own.as_ref().unwrap_or(&member_of);
         // Pass 18: the exit test's "does a bush / deadwood spot exist" answers
         // depend on the home tile (and urgency) plus the claims and tiles
@@ -884,6 +894,19 @@ impl RuntimeSystem for AgentDecisionSystem {
         // The gather predicate also depends on the person's tile and catchment.
         let mut gather_memo: GatherMemo = BTreeMap::new();
         let mut routine_replay: Option<Vec<AgentId>> = None;
+        #[cfg(feature = "mind_shadow")]
+        let shadow_drafted: BTreeSet<_> = world
+            .query::<(&Agent, &sim_core::colony::people::Drafted)>()
+            .iter()
+            .map(|(_, (a, _))| a.id)
+            .collect();
+        #[cfg(feature = "mind_shadow")]
+        let shadow_fleeing: BTreeSet<_> = world
+            .query::<(&Agent, &sim_core::colony::people::Fleeing)>()
+            .iter()
+            .map(|(_, (a, _))| a.id)
+            .collect();
+
         // M1 seam (`runtime::jobs::seam`): job holders run the Idle cascade, settled after the loop.
         #[cfg(feature = "perf_arms")]
         let _perf_arm_17 = crate::perf_arms::Scope::start("phase.job_holders");
@@ -893,6 +916,9 @@ impl RuntimeSystem for AgentDecisionSystem {
         drop(_perf_arm_17);
         #[cfg(feature = "perf_arms")]
         drop(_perf_prepare_2);
+        #[cfg(feature = "mind_shadow")]
+        let mut shadow_tick =
+            crate::runtime::mind::shadow::prepare(world, resources, routine.as_ref());
         loop {
             #[cfg(feature = "perf_arms")]
             let _perf_arm_18 = crate::perf_arms::Scope::start("phase.round");
@@ -944,6 +970,33 @@ impl RuntimeSystem for AgentDecisionSystem {
             {
                 #[cfg(feature = "perf_arms")]
                 let _perf_arm_19 = crate::perf_arms::Scope::start("phase.person_evaluation");
+                #[cfg(feature = "mind_shadow")]
+                let mut observation =
+                    crate::mind_observer::start_person(tick, agent.id, routine_replay.is_some());
+                #[cfg(feature = "mind_shadow")]
+                if let Some(shadow) = shadow_tick.as_mut() {
+                    crate::runtime::mind::shadow::evaluate(
+                        shadow,
+                        resources,
+                        routine.as_ref(),
+                        agent.id,
+                        crate::runtime::mind::context::PersonUpdate {
+                            position: *pos,
+                            state: *state,
+                            hunger: hunger_opt.as_ref().map(|v| f64::from(v.value)),
+                            thirst: thirst_opt.as_ref().map(|v| v.value),
+                            fatigue: sleep_opt.as_ref().map(|v| v.fatigue),
+                            social: social_opt.as_ref().map(|v| v.loneliness),
+                            inventory_total: inventory_opt.as_ref().map(|v| v.total()),
+                            inventory_food: inventory_opt
+                                .as_ref()
+                                .map(|v| v.get(ResourceKind::Food)),
+                        },
+                        &claims,
+                        (claims_version, food_version),
+                    );
+                }
+
                 #[cfg(feature = "perf_arms")]
                 crate::perf_arms::count(
                     if routine_replay.is_some() {
@@ -1233,8 +1286,45 @@ impl RuntimeSystem for AgentDecisionSystem {
                     ) {
                         #[cfg(feature = "perf_arms")]
                         let _perf_arm_25 = crate::perf_arms::Scope::start("selected.job_skip");
+                        #[cfg(feature = "mind_shadow")]
+                        {
+                            let choice = if shadow_fleeing.contains(&agent.id)
+                                && shadow_drafted.contains(&agent.id)
+                            {
+                                crate::mind_observer::Choice::new(
+                                    "job_skip",
+                                    "ambiguous_draft_flee_owner",
+                                    None,
+                                    crate::mind_observer::Verdict::Uncovered,
+                                )
+                            } else if shadow_fleeing.contains(&agent.id) {
+                                crate::mind_observer::Choice::new(
+                                    "flee_hold",
+                                    "flee",
+                                    Some(crate::mind_observer::Band::Critical),
+                                    crate::mind_observer::Verdict::Port,
+                                )
+                            } else if shadow_drafted.contains(&agent.id) {
+                                crate::mind_observer::Choice::new(
+                                    "draft_hold",
+                                    "fight_drafted",
+                                    Some(crate::mind_observer::Band::Duty),
+                                    crate::mind_observer::Verdict::Port,
+                                )
+                            } else {
+                                crate::mind_observer::Choice::new(
+                                    "job_skip",
+                                    "do_job",
+                                    Some(crate::mind_observer::Band::Duty),
+                                    crate::mind_observer::Verdict::Replace,
+                                )
+                            };
+                            observation.set(choice);
+                        }
                         continue;
                     }
+                    #[cfg(feature = "mind_shadow")]
+                    observation.held();
                     job_hold.push((entity, *state));
                     *state = AgentState::Idle;
                 }
@@ -1244,6 +1334,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                     {
                         #[cfg(feature = "perf_arms")]
                         let _perf_arm_26 = crate::perf_arms::Scope::start("selected.idle_founder");
+                        #[cfg(feature = "mind_shadow")]
+                        observation.set(crate::mind_observer::Choice::new(
+                            "idle_founder",
+                            "founder",
+                            Some(crate::mind_observer::Band::Work),
+                            crate::mind_observer::Verdict::Drop,
+                        ));
                         // Pass 11 — a founder: an actionable need pre-empts the walk
                         // (the marker stays); otherwise it walks to the site,
                         // before any work, forage, firewood, meal, social, building
@@ -1260,7 +1357,11 @@ impl RuntimeSystem for AgentDecisionSystem {
                             )
                         );
                         *state = match (need, founding.get(&agent.id)) {
-                            (Some((target, _)), _) => AgentState::Seeking { target },
+                            (Some((target, _)), _) => {
+                                #[cfg(feature = "mind_shadow")]
+                                observation.target("founder_need", target);
+                                AgentState::Seeking { target }
+                            }
                             (None, Some(f)) => AgentState::Seeking {
                                 target: TargetKind::Agent(f.leader),
                             },
@@ -1272,6 +1373,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                     {
                         #[cfg(feature = "perf_arms")]
                         let _perf_arm_27 = crate::perf_arms::Scope::start("selected.idle_porter");
+                        #[cfg(feature = "mind_shadow")]
+                        observation.set(crate::mind_observer::Choice::new(
+                            "idle_porter",
+                            "porter",
+                            Some(crate::mind_observer::Band::Work),
+                            crate::mind_observer::Verdict::Drop,
+                        ));
                         // Pass 20 — a porter (the founding leader's pattern): an
                         // actionable need pre-empts the walk (the marker stays);
                         // otherwise it walks on, before any routine, forage,
@@ -1289,7 +1397,11 @@ impl RuntimeSystem for AgentDecisionSystem {
                             )
                         );
                         *state = match need {
-                            Some((target, _)) => AgentState::Seeking { target },
+                            Some((target, _)) => {
+                                #[cfg(feature = "mind_shadow")]
+                                observation.target("porter_need", target);
+                                AgentState::Seeking { target }
+                            }
                             None => AgentState::Seeking {
                                 target: TargetKind::Agent(agent.id),
                             },
@@ -1298,6 +1410,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                     AgentState::Idle => {
                         #[cfg(feature = "perf_arms")]
                         let _perf_arm_28 = crate::perf_arms::Scope::start("selected.idle_cascade");
+                        #[cfg(feature = "mind_shadow")]
+                        observation.set(crate::mind_observer::Choice::new(
+                            "idle_cascade",
+                            "no_choice",
+                            None,
+                            crate::mind_observer::Verdict::Port,
+                        ));
                         // Deterministic FSM ordering (V7 Phase 7-β / P7β-6):
                         // Hunger > Thirst > Fatigue > Construction > Social.
                         // Social is the lowest-priority drive — Needs and
@@ -1341,6 +1460,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 #[cfg(feature = "perf_arms")]
                                 let _perf_arm_30 =
                                     crate::perf_arms::Scope::start("selected.meal_wait");
+                                #[cfg(feature = "mind_shadow")]
+                                observation.set(crate::mind_observer::Choice::new(
+                                    "meal_wait",
+                                    "hearth_meal",
+                                    Some(crate::mind_observer::Band::Need),
+                                    crate::mind_observer::Verdict::Port,
+                                ));
                                 continue;
                             }
                             need = Some((TargetKind::Water, DecisionReason::ThirstThresholdBreach));
@@ -1515,6 +1641,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     }
                                     // Direct Idle → Consuming{Agent} transition
                                     // (no Seeking step). Insert canonical pair.
+                                    #[cfg(feature = "mind_shadow")]
+                                    observation.set(crate::mind_observer::Choice::new(
+                                        "memory_combat_commit",
+                                        "combat",
+                                        Some(crate::mind_observer::Band::Duty),
+                                        crate::mind_observer::Verdict::Drop,
+                                    ));
                                     *state = AgentState::Consuming {
                                         target: TargetKind::Agent(enemy_id),
                                     };
@@ -1874,6 +2007,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     },
                                     1,
                                 );
+                                #[cfg(feature = "mind_shadow")]
+                                observation.target("memory_commit", bias_target);
                                 *state = AgentState::Seeking {
                                     target: bias_target,
                                 };
@@ -2006,6 +2141,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     },
                                     1,
                                 );
+                                #[cfg(feature = "mind_shadow")]
+                                observation.target("natural_commit", natural_target);
                                 *state = AgentState::Seeking {
                                     target: natural_target,
                                 };
@@ -2070,6 +2207,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                         ) {
                             #[cfg(feature = "perf_arms")]
                             let _perf_arm_50 = crate::perf_arms::Scope::start("selected.forage");
+                            #[cfg(feature = "mind_shadow")]
+                            observation.set(crate::mind_observer::Choice::new(
+                                "forage",
+                                "forage",
+                                Some(crate::mind_observer::Band::Work),
+                                crate::mind_observer::Verdict::Port,
+                            ));
                             *claims.entry(bush).or_default() += 1;
                             claims_version += 1;
                             forage_targets.insert(entity, bush);
@@ -2120,6 +2264,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                         ) {
                             #[cfg(feature = "perf_arms")]
                             let _perf_arm_51 = crate::perf_arms::Scope::start("selected.firewood");
+                            #[cfg(feature = "mind_shadow")]
+                            observation.set(crate::mind_observer::Choice::new(
+                                "firewood",
+                                "firewood",
+                                Some(crate::mind_observer::Band::Work),
+                                crate::mind_observer::Verdict::Drop,
+                            ));
                             *wood_claims.entry(spot).or_default() += 1;
                             wood_claims_version += 1;
                             wood_targets.insert(entity, spot);
@@ -2176,6 +2327,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                         } {
                             #[cfg(feature = "perf_arms")]
                             let _perf_arm_52 = crate::perf_arms::Scope::start("selected.gather");
+                            #[cfg(feature = "mind_shadow")]
+                            observation.set(crate::mind_observer::Choice::new(
+                                "gather",
+                                "gather",
+                                Some(crate::mind_observer::Band::Work),
+                                crate::mind_observer::Verdict::Port,
+                            ));
                             // Pure positional/opportunistic arm: no memory bias and
                             // no causal event (mirrors the deliberately-untagged
                             // Settlement proxy). The post-decision pass attaches a
@@ -2198,6 +2356,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                             #[cfg(feature = "perf_arms")]
                             let _perf_arm_53 =
                                 crate::perf_arms::Scope::start("selected.routine_entry");
+                            #[cfg(feature = "mind_shadow")]
+                            observation.set(crate::mind_observer::Choice::new(
+                                "routine_entry",
+                                "no_choice",
+                                None,
+                                crate::mind_observer::Verdict::Port,
+                            ));
                             if routine.as_mut().is_some_and(|routine| {
                                 scope!("routine_start", {
                                     routine.start(
@@ -2215,6 +2380,14 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 #[cfg(feature = "perf_arms")]
                                 let _perf_arm_54 =
                                     crate::perf_arms::Scope::start("selected.routine_started");
+                                #[cfg(feature = "mind_shadow")]
+                                observation.routine(
+                                    "routine_started",
+                                    routine
+                                        .as_ref()
+                                        .and_then(|r| r.activity(agent.id))
+                                        .map(|a| a.kind),
+                                );
                                 *state = AgentState::Seeking {
                                     target: TargetKind::Activity,
                                 };
@@ -2223,6 +2396,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                             #[cfg(feature = "perf_arms")]
                             let _perf_arm_55 =
                                 crate::perf_arms::Scope::start("selected.migration_fallback");
+                            #[cfg(feature = "mind_shadow")]
+                            observation.set(crate::mind_observer::Choice::new(
+                                "migration_fallback",
+                                "wander",
+                                Some(crate::mind_observer::Band::Idle),
+                                crate::mind_observer::Verdict::Port,
+                            ));
                             // V7 Phase 10-β / P10β-8 — 8th cascade arm:
                             // settlement migration pull. Fires when no
                             // higher-priority drive (Hunger/Thirst/Fatigue/
@@ -2297,6 +2477,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     let _perf_arm_57 = crate::perf_arms::Scope::start(
                                         "selected.migration_started",
                                     );
+                                    #[cfg(feature = "mind_shadow")]
+                                    observation.set(crate::mind_observer::Choice::new(
+                                        "migration_started",
+                                        "migration",
+                                        Some(crate::mind_observer::Band::Work),
+                                        crate::mind_observer::Verdict::Drop,
+                                    ));
                                     let id = resources.issue_event_id();
                                     resources.causal_log.push(
                                         tile_idx,
@@ -2323,6 +2510,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                         #[cfg(feature = "perf_arms")]
                         let _perf_arm_58 =
                             crate::perf_arms::Scope::start("selected.founder_continuation");
+                        #[cfg(feature = "mind_shadow")]
+                        observation.set(crate::mind_observer::Choice::new(
+                            "founder_continuation",
+                            "founder",
+                            Some(crate::mind_observer::Band::Work),
+                            crate::mind_observer::Verdict::Drop,
+                        ));
                         // Pass 11 — a walking founder: no social gate, no chase
                         // timeout, no handshake (the leader's self-target is allowed
                         // only here). An actionable need pre-empts the walk and the
@@ -2337,6 +2531,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 fatigue_threshold,
                             )
                         ) {
+                            #[cfg(feature = "mind_shadow")]
+                            observation.target("need_preempt", need);
                             *state = AgentState::Seeking { target: need };
                             preempt_clear_seek.push(entity);
                         }
@@ -2347,6 +2543,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                         #[cfg(feature = "perf_arms")]
                         let _perf_arm_59 =
                             crate::perf_arms::Scope::start("selected.porter_continuation");
+                        #[cfg(feature = "mind_shadow")]
+                        observation.set(crate::mind_observer::Choice::new(
+                            "porter_continuation",
+                            "porter",
+                            Some(crate::mind_observer::Band::Work),
+                            crate::mind_observer::Verdict::Drop,
+                        ));
                         // Pass 20 — a walking porter: no social gate, no chase
                         // timeout, no handshake. An actionable need pre-empts the
                         // walk and the stale hearth target is dropped; the marker stays.
@@ -2360,6 +2563,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 fatigue_threshold,
                             )
                         ) {
+                            #[cfg(feature = "mind_shadow")]
+                            observation.target("need_preempt", need);
                             *state = AgentState::Seeking { target: need };
                             preempt_clear_seek.push(entity);
                         }
@@ -2367,15 +2572,69 @@ impl RuntimeSystem for AgentDecisionSystem {
                     AgentState::Seeking { target } => {
                         #[cfg(feature = "perf_arms")]
                         let _perf_arm_60 = crate::perf_arms::Scope::start("selected.seeking");
+                        #[cfg(feature = "mind_shadow")]
+                        {
+                            match target {
+                                TargetKind::GatherFood => {
+                                    observation.gather_continuation("seeking_gather")
+                                }
+                                TargetKind::Agent(_) if migrant_marker.is_some() => observation
+                                    .set(crate::mind_observer::Choice::new(
+                                        "seeking_migration",
+                                        "migration",
+                                        Some(crate::mind_observer::Band::Work),
+                                        crate::mind_observer::Verdict::Drop,
+                                    )),
+                                TargetKind::Agent(_) => {
+                                    if resources
+                                        .combat_pairs
+                                        .iter()
+                                        .any(|(a, b)| *a == agent.id || *b == agent.id)
+                                    {
+                                        observation.set(crate::mind_observer::Choice::new(
+                                            "seeking_combat",
+                                            "combat",
+                                            Some(crate::mind_observer::Band::Duty),
+                                            crate::mind_observer::Verdict::Drop,
+                                        ));
+                                    } else {
+                                        observation.target("seeking_social", target);
+                                    }
+                                }
+                                _ => observation.target("seeking", target),
+                            }
+                        }
                         if matches!(target, TargetKind::Activity) {
                             #[cfg(feature = "perf_arms")]
                             let _perf_arm_61 =
                                 crate::perf_arms::Scope::start("selected.activity_seeking");
+                            #[cfg(feature = "mind_shadow")]
+                            observation.routine(
+                                "activity_seeking",
+                                routine
+                                    .as_ref()
+                                    .and_then(|r| r.activity(agent.id))
+                                    .map(|a| a.kind),
+                            );
                             let Some(routine) = routine.as_mut() else {
+                                #[cfg(feature = "mind_shadow")]
+                                observation.set(crate::mind_observer::Choice::new(
+                                    "missing_activity",
+                                    "no_choice",
+                                    None,
+                                    crate::mind_observer::Verdict::Port,
+                                ));
                                 *state = AgentState::Idle;
                                 continue;
                             };
                             let Some(activity) = routine.activity(agent.id) else {
+                                #[cfg(feature = "mind_shadow")]
+                                observation.set(crate::mind_observer::Choice::new(
+                                    "missing_activity",
+                                    "no_choice",
+                                    None,
+                                    crate::mind_observer::Verdict::Port,
+                                ));
                                 *state = AgentState::Idle;
                                 continue;
                             };
@@ -2389,6 +2648,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 #[cfg(feature = "perf_arms")]
                                 let _perf_arm_62 =
                                     crate::perf_arms::Scope::start("selected.activity_seek_end");
+                                #[cfg(feature = "mind_shadow")]
+                                observation.exit("activity_seek_end");
                                 routine.end(
                                     agent.id,
                                     entity,
@@ -2414,6 +2675,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                             #[cfg(feature = "perf_arms")]
                             let _perf_arm_63 =
                                 crate::perf_arms::Scope::start("selected.gather_critical_preempt");
+                            #[cfg(feature = "mind_shadow")]
+                            observation.exit("gather_critical_preempt");
                             *state = AgentState::Idle;
                             resources.tallies.gather_preempted += 1;
                             continue;
@@ -2470,6 +2733,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         let _perf_arm_65 = crate::perf_arms::Scope::start(
                                             "selected.need_crossover",
                                         );
+                                        #[cfg(feature = "mind_shadow")]
+                                        observation.exit("need_crossover");
                                         *state = AgentState::Idle;
                                         continue;
                                     }
@@ -2498,6 +2763,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     let _perf_arm_67 = crate::perf_arms::Scope::start(
                                         "selected.social_partner_missing",
                                     );
+                                    #[cfg(feature = "mind_shadow")]
+                                    observation.exit("social_partner_missing");
                                     *state = AgentState::Idle;
                                     resources.social_chase_since.remove(&agent.id);
                                     resources.social_retry_after.insert(
@@ -2522,6 +2789,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     let _perf_arm_68 = crate::perf_arms::Scope::start(
                                         "selected.social_need_preempt",
                                     );
+                                    #[cfg(feature = "mind_shadow")]
+                                    observation.exit("social_need_preempt");
                                     *state = AgentState::Idle;
                                     resources.social_chase_since.remove(&agent.id);
                                     continue;
@@ -2533,6 +2802,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     #[cfg(feature = "perf_arms")]
                                     let _perf_arm_69 =
                                         crate::perf_arms::Scope::start("selected.social_timeout");
+                                    #[cfg(feature = "mind_shadow")]
+                                    observation.exit("social_timeout");
                                     *state = AgentState::Idle;
                                     resources.social_chase_since.remove(&agent.id);
                                     resources.social_retry_after.insert(
@@ -2579,6 +2850,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     #[cfg(feature = "perf_arms")]
                                     let _perf_arm_71 =
                                         crate::perf_arms::Scope::start("selected.migration_exit");
+                                    #[cfg(feature = "mind_shadow")]
+                                    observation.set(crate::mind_observer::Choice::new(
+                                        "migration_exit",
+                                        "no_choice",
+                                        None,
+                                        crate::mind_observer::Verdict::Port,
+                                    ));
                                     // Joined, or the target vanished → abort to Idle.
                                     // The post-pass clears the (now stale) SeekTarget;
                                     // the marker is removed in the deferred lifecycle
@@ -2606,6 +2884,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     } else {
                                         TargetKind::Sleep
                                     };
+                                    #[cfg(feature = "mind_shadow")]
+                                    observation.target("need_preempt", resource);
                                     *state = AgentState::Seeking { target: resource };
                                     migrant_clear.push(entity);
                                     preempt_clear_seek.push(entity);
@@ -2626,6 +2906,13 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 Some(tile) if *tile != key => continue,
                                 Some(_) => {}
                                 None => {
+                                    #[cfg(feature = "mind_shadow")]
+                                    observation.set(crate::mind_observer::Choice::new(
+                                        "builder_target_missing",
+                                        "no_choice",
+                                        None,
+                                        crate::mind_observer::Verdict::Drop,
+                                    ));
                                     *state = AgentState::Idle;
                                     continue;
                                 }
@@ -2805,6 +3092,38 @@ impl RuntimeSystem for AgentDecisionSystem {
                     AgentState::Consuming { target } => {
                         #[cfg(feature = "perf_arms")]
                         let _perf_arm_79 = crate::perf_arms::Scope::start("selected.consuming");
+                        #[cfg(feature = "mind_shadow")]
+                        {
+                            match target {
+                                TargetKind::GatherFood => {
+                                    observation.gather_continuation("consuming_gather")
+                                }
+                                TargetKind::Agent(_) if migrant_marker.is_some() => observation
+                                    .set(crate::mind_observer::Choice::new(
+                                        "consuming_migration",
+                                        "migration",
+                                        Some(crate::mind_observer::Band::Work),
+                                        crate::mind_observer::Verdict::Drop,
+                                    )),
+                                TargetKind::Agent(_) => {
+                                    if resources
+                                        .combat_pairs
+                                        .iter()
+                                        .any(|(a, b)| *a == agent.id || *b == agent.id)
+                                    {
+                                        observation.set(crate::mind_observer::Choice::new(
+                                            "consuming_combat",
+                                            "combat",
+                                            Some(crate::mind_observer::Band::Duty),
+                                            crate::mind_observer::Verdict::Drop,
+                                        ));
+                                    } else {
+                                        observation.target("consuming_social", target);
+                                    }
+                                }
+                                _ => observation.target("consuming", target),
+                            }
+                        }
                         let key = (pos.x, pos.y);
                         // Section-3.10 conditional mutation rule (plan attempt 3):
                         //   - tile map mutation is conditional on Some
@@ -2824,11 +3143,33 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 #[cfg(feature = "perf_arms")]
                                 let _perf_arm_80 =
                                     crate::perf_arms::Scope::start("selected.consume_activity");
+                                #[cfg(feature = "mind_shadow")]
+                                observation.routine(
+                                    "consume_activity",
+                                    routine
+                                        .as_ref()
+                                        .and_then(|r| r.activity(agent.id))
+                                        .map(|a| a.kind),
+                                );
                                 let Some(routine) = routine.as_mut() else {
+                                    #[cfg(feature = "mind_shadow")]
+                                    observation.set(crate::mind_observer::Choice::new(
+                                        "missing_activity",
+                                        "no_choice",
+                                        None,
+                                        crate::mind_observer::Verdict::Port,
+                                    ));
                                     *state = AgentState::Idle;
                                     continue;
                                 };
                                 if routine.activity(agent.id).is_none() {
+                                    #[cfg(feature = "mind_shadow")]
+                                    observation.set(crate::mind_observer::Choice::new(
+                                        "missing_activity",
+                                        "no_choice",
+                                        None,
+                                        crate::mind_observer::Verdict::Port,
+                                    ));
                                     *state = AgentState::Idle;
                                     continue;
                                 }
@@ -2843,6 +3184,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     let _perf_arm_81 = crate::perf_arms::Scope::start(
                                         "selected.consume_activity_end",
                                     );
+                                    #[cfg(feature = "mind_shadow")]
+                                    observation.exit("consume_activity_end");
                                     routine.end(
                                         agent.id,
                                         entity,
@@ -2856,13 +3199,15 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 #[cfg(feature = "perf_arms")]
                                 let _perf_arm_82 =
                                     crate::perf_arms::Scope::start("selected.consume_food");
-                                super::consume::consume_food(
+                                crate::runtime::agent_actions::consume::consume_food(
                                     resources,
                                     key,
                                     state,
                                     hunger_opt,
                                     &mut food_version,
                                 );
+                                #[cfg(feature = "mind_shadow")]
+                                observation.exit("consume_food_complete");
                                 continue;
                             }
                             // Direction-2 slice 2-2 — Gather PICKUP (carry, NOT eat):
@@ -2896,6 +3241,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         let _perf_arm_85 = crate::perf_arms::Scope::start(
                                             "selected.gather_already_quarrelled",
                                         );
+                                        #[cfg(feature = "mind_shadow")]
+                                        observation.exit("gather_already_quarrelled");
                                         *state = AgentState::Idle;
                                         continue;
                                     }
@@ -3040,6 +3387,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                                 let _perf_arm_93 = crate::perf_arms::Scope::start(
                                                     "selected.quarrel",
                                                 );
+                                                #[cfg(feature = "mind_shadow")]
+                                                observation.exit("quarrel");
                                                 resources.tallies.quarrels += 1;
                                                 resources.tallies.quarrels_while_estranged +=
                                                     u64::from(estranged);
@@ -3108,6 +3457,8 @@ impl RuntimeSystem for AgentDecisionSystem {
                                         }
                                     }
                                 }
+                                #[cfg(feature = "mind_shadow")]
+                                observation.exit("gather_pickup_complete");
                                 *state = AgentState::Idle;
                             }
                             // Pass 5 — firewood PICKUP (carry, NOT eat): take
@@ -3153,14 +3504,18 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 #[cfg(feature = "perf_arms")]
                                 let _perf_arm_101 =
                                     crate::perf_arms::Scope::start("selected.consume_water");
-                                super::consume::consume_water(resources, key, state, thirst_opt);
+                                crate::runtime::agent_actions::consume::consume_water(
+                                    resources, key, state, thirst_opt,
+                                );
+                                #[cfg(feature = "mind_shadow")]
+                                observation.exit("consume_water_complete");
                                 continue;
                             }
                             TargetKind::Sleep => {
                                 #[cfg(feature = "perf_arms")]
                                 let _perf_arm_102 =
                                     crate::perf_arms::Scope::start("selected.consume_sleep");
-                                super::consume::consume_sleep(
+                                crate::runtime::agent_actions::consume::consume_sleep(
                                     resources,
                                     key,
                                     state,
@@ -3170,6 +3525,10 @@ impl RuntimeSystem for AgentDecisionSystem {
                                     night_rest,
                                     availability,
                                 );
+                                #[cfg(feature = "mind_shadow")]
+                                if matches!(*state, AgentState::Idle) {
+                                    observation.exit("consume_sleep_complete");
+                                }
                                 continue;
                             }
                             // V7 Phase 6-α: ConstructionSite consume is β scope.
@@ -3782,13 +4141,15 @@ impl RuntimeSystem for AgentDecisionSystem {
             let _perf_arm_133 = crate::perf_arms::Scope::start("selected.routine_finish");
             self.places = routine.finish(world);
         }
+        #[cfg(feature = "mind_shadow")]
+        crate::runtime::mind::shadow::complete_tick();
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::super::needs::{FATIGUE_CONSUME_AMOUNT, HUNGER_CONSUME_AMOUNT};
     use super::*;
+    use crate::runtime::agent_actions::needs::{FATIGUE_CONSUME_AMOUNT, HUNGER_CONSUME_AMOUNT};
     use sim_core::material::MaterialRegistry;
     use sim_engine::SimEngine;
 

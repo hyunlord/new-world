@@ -12,17 +12,16 @@
 //! `social_decision`, etc. — all priority 12x slots share the
 //! "decision tier" of the schedule.
 
-mod consume;
-mod forage;
-mod memory_bias;
-pub(crate) mod needs;
-mod routine;
 mod system;
-mod targets;
-mod wood;
 
-pub use memory_bias::{
+pub(crate) use crate::runtime::agent_actions::needs;
+
+pub use crate::runtime::agent_actions::memory_bias::{
     arm_priority_index, cascade_arm_memory_tag, CascadeArm, BIAS_FLIP_THRESHOLD,
+};
+pub use crate::runtime::agent_actions::targets::{
+    nearest_food_tile_in_radius, nearest_gather_tile, nearest_local_food, nearest_resource_tile,
+    GATHER_SCAN_RADIUS,
 };
 pub use needs::{
     actionable_need, actionable_need_with_fatigue_threshold, clock_in_window, fatigue_threshold_at,
@@ -32,7 +31,3 @@ pub use needs::{
     THIRST_THRESHOLD,
 };
 pub use system::AgentDecisionSystem;
-pub use targets::{
-    nearest_food_tile_in_radius, nearest_gather_tile, nearest_local_food, nearest_resource_tile,
-    GATHER_SCAN_RADIUS,
-};

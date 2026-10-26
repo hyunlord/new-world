@@ -1297,6 +1297,16 @@ impl WorldSimNode {
         agent_detail_to_dict(row)
     }
 
+    /// Latest recorded mind choice for the selected entity, including all facts and top three.
+    /// This argument-taking getter reads retained records without advancing the simulation.
+    #[func]
+    fn get_agent_mind(&self, entity_bits: i64) -> VarDictionary {
+        super::mind::agent_mind_to_dict(super::mind::collect_agent_mind(
+            &self.engine,
+            u64::from_ne_bytes(entity_bits.to_ne_bytes()),
+        ))
+    }
+
     /// Revitalize Pass 16 FFI — one agent's temperament as
     /// `{found: bool, ns, ha, rd, p}` (permille ints, 0–1,000; `found: false`
     /// and zeros when the agent or the component is missing). A separate

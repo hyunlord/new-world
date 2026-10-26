@@ -4,7 +4,7 @@
 //! Without `SocietyRules::firewood` every helper reports nothing (`None` / 0).
 
 use crate::runtime::agent::MovementRng;
-use crate::runtime::decision::clock_in_window;
+use crate::runtime::agent_actions::needs::clock_in_window;
 use crate::runtime::resource_regen::{day_index_at, season_at, season_at_tick};
 use hecs::World;
 use sim_core::components::{Agent, Inventory, ResourceKind, SettlementId};
@@ -210,7 +210,7 @@ pub fn night_rate(resources: &SimResources, rule: &FirewoodRule, tick: u64) -> u
         return 0;
     }
     let minute = tick.saturating_add(resources.rules.clock_offset_ticks) % resources.ticks_per_day;
-    if !crate::runtime::decision::minute_in_window(
+    if !crate::runtime::agent_actions::needs::minute_in_window(
         minute,
         rule.burn_start_minute,
         rule.burn_end_minute,

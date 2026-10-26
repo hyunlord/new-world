@@ -81,6 +81,10 @@ macro_rules! arm_outcome {
 pub mod perf_arms;
 
 pub mod commands;
+/// Read-only old-arm observations for the separately enabled shadow harness.
+#[cfg(feature = "mind_shadow")]
+pub mod mind_observer;
+
 pub mod runtime;
 pub mod save;
 #[cfg(feature = "subprofile")]
@@ -328,9 +332,44 @@ pub fn register_resource_systems(engine: &mut SimEngine) {
 /// Harness A1b inspects this registry to verify
 /// `SocialInteractionSystem` appears exactly once.
 pub fn register_default_runtime_systems(engine: &mut SimEngine) {
+    register_runtime_systems_with_decision(engine, register_decision_systems);
+}
+
+/// Full runtime stack with an initialized colony mind before initial commands.
+/// Saved worlds must expose their complete decoded resources before calling this registrar.
+pub fn register_colony_mind_runtime_systems(engine: &mut SimEngine) {
+    register_runtime_systems_with_decision(engine, |engine| {
+        let source = engine
+            .resources
+            .mind
+            .policy_source
+            .as_deref()
+            .unwrap_or(include_str!("../../sim-core/data/colony/mind.ron"));
+        let program = runtime::mind::MindProgram::load(source)
+            .unwrap_or_else(|error| panic!("colony mind registration: invalid policy: {error}"));
+        let mut mind = runtime::mind::ColonyMindSystem::new(program);
+        mind.initialize(&mut engine.resources)
+            .unwrap_or_else(|error| {
+                panic!("colony mind registration: initialization failed: {error}")
+            });
+        engine.register_system(Box::new(mind));
+    });
+}
+
+/// Full production stack with the legacy brain pinned for read-only shadow worlds.
+/// Keep this explicit old constructor when the ordinary colony registration switches.
+/// This top-level seam is the only shadow factory dependency on the legacy brain.
+#[cfg(feature = "mind_shadow")]
+pub fn register_shadow_runtime_systems(engine: &mut SimEngine) {
+    register_runtime_systems_with_decision(engine, |engine| {
+        engine.register_system(Box::new(runtime::decision::AgentDecisionSystem::new()));
+    });
+}
+
+fn register_runtime_systems_with_decision(engine: &mut SimEngine, decision: fn(&mut SimEngine)) {
     register_phase2_systems(engine);
     register_agent_systems(engine);
-    register_decision_systems(engine);
+    decision(engine);
     register_needs_systems(engine);
     register_construction_systems(engine);
     register_social_systems(engine);
@@ -420,4 +459,161 @@ pub fn register_rhythm_systems(engine: &mut SimEngine) {
     // M1.5: per-woman fertility (priority 150, daily at 12:00; no-op unless
     // the birth rule is `Fertility`, the colony's).
     engine.register_system(Box::new(runtime::agent::FertilitySystem));
+}
+
+/// Explicit world-selection seam. Before the mind switch both worlds retain
+/// the existing complete registration sequence, including rules-gated no-ops.
+/// Callers must pass decoded/requested world kind rather than fresh-engine
+/// defaults; worldgen and save routing will be integrated at the switch.
+pub fn register_world_runtime_systems(
+    engine: &mut SimEngine,
+    world: sim_engine::registration::WorldKind,
+) {
+    use sim_engine::registration::WorldKind;
+    match world {
+        WorldKind::Baseline | WorldKind::Colony => register_default_runtime_systems(engine),
+    }
+}
+
+#[cfg(test)]
+mod registration_tests {
+    use super::*;
+    use sim_engine::registration::{SystemWorlds, WorldKind, SYSTEM_REGISTRATIONS};
+
+    const BASELINE_ORDER: &[&str] = &[
+        "BuildingStampSystem",
+        "InfluenceUpdateSystem",
+        "AgentInfluenceSampleSystem",
+        "AgentMovementSystem",
+        "DraftSystem",
+        "StewardDefenceSystem",
+        "BillSystem",
+        "FleeSystem",
+        "JobAssignSystem",
+        "AgentDecisionSystem",
+        "StewardSystem",
+        "StaleSeekTargetSystem",
+        "JobExecuteSystem",
+        "HungerDecaySystem",
+        "ThirstDecaySystem",
+        "SleepDecaySystem",
+        "ConstructionSystem",
+        "SocialInteractionSystem",
+        "SocialDecaySystem",
+        "MemorySystem",
+        "CombatSystem",
+        "SettlementSystem",
+        "StarvationSystem",
+        "ResourceRegenSystem",
+        "StockpileDepositSystem",
+        "StockpileConsumeSystem",
+        "ShelterPlanningSystem",
+        "MaturationSystem",
+        "PairingSystem",
+        "BedAssignmentSystem",
+        "AgingSystem",
+        "HearthFeedSystem",
+        "FireSystem",
+        "FissionSystem",
+        "RelationsSystem",
+        "FertilitySystem",
+        "RoomSystem",
+        "OralTransmissionSystem",
+        "ObservationSystem",
+        "KnowledgeDecaySystem",
+        "DiscoverySystem",
+        "TechAggregateSystem",
+        "StorytellerSystem",
+        "AnimalSystem",
+        "MoodSystem",
+        "QuarrelSystem",
+        "NeighbourSystem",
+        "VisitorSystem",
+        "InfluenceVisualizationSystem",
+    ];
+
+    fn registered(world: WorldKind) -> SimEngine {
+        let mut engine = SimEngine::new(1, 1, sim_core::MaterialRegistry::new());
+        engine.resources.rules = match world {
+            WorldKind::Baseline => sim_core::rules::WorldRules::baseline(0),
+            WorldKind::Colony => sim_core::rules::WorldRules::colony(0),
+        };
+        register_world_runtime_systems(&mut engine, world);
+        engine
+    }
+
+    #[test]
+    fn world_registration_preserves_baseline_order_and_matches_membership() {
+        // Given: a pinned pre-switch baseline and the declared membership table.
+        let unique: std::collections::BTreeSet<_> =
+            SYSTEM_REGISTRATIONS.iter().map(|row| row.name).collect();
+        assert_eq!(unique.len(), SYSTEM_REGISTRATIONS.len());
+        // When: constructing both real system lists without ticking.
+        for world in [WorldKind::Baseline, WorldKind::Colony] {
+            let engine = registered(world);
+            let expected: Vec<_> = SYSTEM_REGISTRATIONS
+                .iter()
+                .filter(|row| row.worlds.includes(world))
+                .map(|row| row.name)
+                .collect();
+            // Then: names and order match; baseline cannot lose its gated no-ops.
+            assert_eq!(engine.system_names(), expected);
+            if world == WorldKind::Baseline {
+                assert_eq!(engine.system_names(), BASELINE_ORDER);
+            }
+        }
+        let mut default = SimEngine::new(1, 1, sim_core::MaterialRegistry::new());
+        register_default_runtime_systems(&mut default);
+        assert_eq!(default.system_names(), BASELINE_ORDER);
+    }
+
+    #[test]
+    fn world_membership_distinguishes_exclusive_systems() {
+        // Given/When/Then: exclusive declarations must not leak into the other world.
+        assert!(SystemWorlds::Baseline.includes(WorldKind::Baseline));
+        assert!(!SystemWorlds::Baseline.includes(WorldKind::Colony));
+        assert!(SystemWorlds::Colony.includes(WorldKind::Colony));
+        assert!(!SystemWorlds::Colony.includes(WorldKind::Baseline));
+        assert!(SystemWorlds::Both.includes(WorldKind::Baseline));
+        assert!(SystemWorlds::Both.includes(WorldKind::Colony));
+    }
+
+    #[test]
+    fn system_worlds_document_matches_real_registration() {
+        // Given: metadata membership and actual runtime priority/cadence.
+        let baseline = registered(WorldKind::Baseline).new_tick_profile();
+        let colony = registered(WorldKind::Colony).new_tick_profile();
+        let mut table = String::from(
+            "| System | Priority | Interval ticks | Baseline | Colony |\n|---|---:|---:|---|---|\n",
+        );
+        // When: rendering in declared execution order from real system metadata.
+        for row in SYSTEM_REGISTRATIONS {
+            let b = baseline.systems.iter().find(|s| s.name == row.name);
+            let c = colony.systems.iter().find(|s| s.name == row.name);
+            assert_eq!(b.is_some(), row.worlds.includes(WorldKind::Baseline));
+            assert_eq!(c.is_some(), row.worlds.includes(WorldKind::Colony));
+            let actual = b.or(c).expect("registered in at least one world");
+            if let (Some(b), Some(c)) = (b, c) {
+                assert_eq!((b.priority, b.interval), (c.priority, c.interval));
+            }
+            table.push_str(&format!(
+                "| {} | {} | {} | {} | {} |\n",
+                row.name,
+                actual.priority,
+                actual.interval,
+                if b.is_some() { "yes" } else { "no" },
+                if c.is_some() { "yes" } else { "no" }
+            ));
+        }
+        // Then: the checked-in table is an exact snapshot, and --nocapture prints it.
+        let document = include_str!("../../../../docs/v8/core/SYSTEM_WORLDS.md");
+        let (_, rest) = document
+            .split_once("<!-- SYSTEM_WORLDS:START -->\n")
+            .expect("start marker");
+        let (expected, _) = rest
+            .split_once("<!-- SYSTEM_WORLDS:END -->")
+            .expect("end marker");
+        assert_eq!(table, expected);
+        println!("{table}");
+    }
 }

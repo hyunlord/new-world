@@ -88,7 +88,12 @@ fn counted(count: usize) -> CommandResult {
 /// Apply `cmd` to the world and return what it did (goal 6.3). Does not log;
 /// see [`submit`].
 pub fn apply_command(world: &mut World, res: &mut SimResources, cmd: Command) -> CommandResult {
-    apply_at(world, res, cmd, res.current_tick)
+    let before = crate::runtime::mind::job_origins::snapshot(world, res);
+    let result = apply_at(world, res, cmd, res.current_tick);
+    if result.accepted {
+        crate::runtime::mind::job_origins::applied(world, res, before, None);
+    }
+    result
 }
 
 fn apply_at(world: &mut World, res: &mut SimResources, cmd: Command, tick: u64) -> CommandResult {
@@ -738,12 +743,34 @@ fn set_work_priority(
 /// Apply `cmd` before the engine's next tick and append it to the command log.
 pub fn submit(engine: &mut SimEngine, cmd: Command) -> CommandResult {
     let tick = engine.current_tick();
-    let result = apply_at(&mut engine.world, &mut engine.resources, cmd.clone(), tick);
-    engine.resources.colony.command_log.push(CommandRecord {
+    apply_and_log(&mut engine.world, &mut engine.resources, cmd, tick)
+}
+
+/// Shared accepted-command boundary for player and steward commands.
+pub(crate) fn apply_and_log(
+    world: &mut World,
+    res: &mut SimResources,
+    cmd: Command,
+    tick: u64,
+) -> CommandResult {
+    let before = crate::runtime::mind::job_origins::snapshot(world, res);
+    let result = apply_at(world, res, cmd.clone(), tick);
+    let index = res.colony.command_log.len() as u64;
+    res.colony.command_log.push(CommandRecord {
         tick,
         command: cmd,
         result,
     });
+    if result.accepted {
+        crate::runtime::mind::job_origins::applied(
+            world,
+            res,
+            before,
+            Some(sim_core::colony::mind_records::MindFactSource::Command(
+                index,
+            )),
+        );
+    }
     result
 }
 

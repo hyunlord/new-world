@@ -155,11 +155,14 @@ pub enum ChronicleKind {
     StewardAction = 45,
     /// Automatic defence batch; cause is rule id, value is actual recruited count.
     StewardDefence = 46,
+    /// Colony mind entered the critical band; subject is the person, cause the node slot, value its score.
+    /// The cause side table retains the actual underlying chronicle origin when available.
+    MindChoice = 47,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 47] = [
+    pub const ALL: [ChronicleKind; 48] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -207,6 +210,7 @@ impl ChronicleKind {
         Self::Eureka,
         Self::StewardAction,
         Self::StewardDefence,
+        Self::MindChoice,
     ];
 
     /// Stable numeric discriminant.
@@ -264,6 +268,7 @@ impl ChronicleKind {
             Self::Eureka => "eureka",
             Self::StewardAction => "steward_action",
             Self::StewardDefence => "steward_defence",
+            Self::MindChoice => "mind_choice",
         }
     }
 }
@@ -715,10 +720,13 @@ mod tests {
         // M-UX: kind 45 appended; 0–44 unchanged.
         assert_eq!(ChronicleKind::StewardAction.as_u8(), 45);
         assert_eq!(ChronicleKind::StewardAction.as_str(), "steward_action");
-        assert_eq!(ChronicleKind::ALL.len(), 47);
+        assert_eq!(ChronicleKind::StewardDefence.as_u8(), 46);
+        assert_eq!(ChronicleKind::MindChoice.as_u8(), 47);
+        assert_eq!(ChronicleKind::MindChoice.as_str(), "mind_choice");
+        assert_eq!(ChronicleKind::ALL.len(), 48);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 47);
+        assert_eq!(names.len(), 48);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

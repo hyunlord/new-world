@@ -11,7 +11,7 @@ pub mod lifecycle;
 mod planning;
 mod production;
 use hecs::World;
-use sim_core::colony::{steward::rules, Command, CommandRecord};
+use sim_core::colony::{steward::rules, Command};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Deterministic optional colony assistant; default state is disabled.
@@ -89,14 +89,7 @@ impl RuntimeSystem for StewardSystem {
     }
 }
 fn issue(world: &mut World, res: &mut SimResources, command: Command) -> bool {
-    let result = crate::commands::apply_command(world, res, command.clone());
-    let accepted = result.accepted;
-    res.colony.command_log.push(CommandRecord {
-        tick: res.current_tick,
-        command,
-        result,
-    });
-    accepted
+    crate::commands::apply_and_log(world, res, command, res.current_tick).accepted
 }
 
 // Optional call-local telemetry: elapsed time and counters never enter simulation decisions.

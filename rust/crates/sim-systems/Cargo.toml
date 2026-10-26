@@ -18,3 +18,9 @@ subprofile = []
 
 # M-CORE arm instrumentation; never enabled by default.
 perf_arms = []
+
+# Read-only old-arm shadow observation; independent of timing instrumentation.
+mind_shadow = []
+
+# Explicit pre-switch colony calibration; retained as a build marker after the switch.
+mind_candidate = []
