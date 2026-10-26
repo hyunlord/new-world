@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1138,
+    "active_key_count": 1139,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1138,
+    "key_count": 1139,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -93,6 +93,7 @@
     "CHRON_LEFT_FMT": "떠남 — %s",
     "CHRON_LOAD_FOOD": "식량",
     "CHRON_LOAD_WOOD": "장작",
+    "CHRON_MIND_CRITICAL": "긴급한 필요에 대응함",
     "CHRON_PAIRED_FMT": "짝이 됨 — %s",
     "CHRON_PORTER_AID": "원조",
     "CHRON_PORTER_DELIVERED_FMT": "짐을 전함 — %s %d, %s → %s (%s)",

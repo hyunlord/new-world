@@ -1,6 +1,6 @@
 # ADR 0047 — Isolate the frozen baseline after the colony switch
 
-Status: production switch committed as `fbc9a9babc9bb5df1d06ca1e655901e480521f66` (p6). Baseline isolation is the uncommitted p7 work: pure move verified; live old-shadow retirement and dead colony-gate/seam removal implemented. Systems/feature/formatting/strict-Clippy and source/registration isolation checks pass. Post-isolation identity capture PASS (D20); p7 remains uncommitted. The optional standalone crate is not adopted.
+Status: production switch committed as `fbc9a9babc9bb5df1d06ca1e655901e480521f66` (p6). Baseline isolation is committed as p7 `be12050c951dfb025f3440d34b657eec0663b817`: pure move verified; live old-shadow retirement and dead colony-gate/seam removal implemented. Systems/feature/formatting/strict-Clippy and source/registration isolation checks pass. Post-isolation identity capture PASS (D20); final evaluation is RUNNING; full-goal acceptance and publication remain pending. The optional standalone crate is not adopted.
 
 ## Context
 

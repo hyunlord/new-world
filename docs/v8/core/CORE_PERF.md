@@ -1,6 +1,6 @@
-# M-CORE initial per-system measurement
+# M-CORE performance measurements
 
-Status: Part1 BASE design share measured; arm remeasurement and final paired comparison pending.
+Status: Part1 BASE design share and D11 admitted arm remeasurement complete. Final paired BASE/M-CORE timing is valid **FAIL**; standing C3 blocks publication without a waiver (none applied). The complete 45-step gate is still pending. Final held-out outcome/why checks and the complete seven-step capture/check chain pass; story is MEASURED reference-only with no numerical bar. Those completed functional results do not establish timing acceptance.
 
 Admission follows [DECISIONS D10](CORE_DECISIONS.md): each repeat starts at one-minute load <8, with 1/5/15-minute loads recorded. Both external admission and benchmark JSON start samples pass for all nine repeats. Post-run loads are diagnostic only. Three scene rounds ran in one session; this is BASE-only and cannot substitute for the later interleaved BASE/M-CORE comparison.
 
@@ -14,7 +14,7 @@ BASE: `9855bd082ad88a4c49296410f206f148d98c4df9`. Frozen binary and raw evidence
 
 At N1000, **s = 0.6990029820337981** (ratio of the three decision means to the three total-tick means). The final total-tick ratio bar is `1 - s/2 + 0.05 = 0.7004985089831011`. The final mind/old-decision ratio bar is `0.5`. These are thresholds, not achieved improvements.
 
-All per-system rows remain in each raw JSON. `audit.json` SHA-256: `928d1fde99b32158ab8c667d444a9d7855e20ed402c662a06f1c03d835af0392`. Initial arm elapsed values remain INVALID; functional counts are unaffected. No final performance or milestone acceptance is claimed.
+All per-system rows remain in each raw JSON. `audit.json` SHA-256: `928d1fde99b32158ab8c667d444a9d7855e20ed402c662a06f1c03d835af0392`. Initial arm elapsed values remain INVALID; functional counts are unaffected. D11 replacement arm captures are complete: 11 groups/247 keys with accepted inclusive costs in [CORE_INVENTORY](CORE_INVENTORY.md), aggregate SHA-256 `7eaf23ff385a0c5bb84d3b089282850a391547165f39618409d46876dce7d82e`. Those observer costs do not replace the final paired timing. No final performance or milestone acceptance is claimed.
 
 ## Per-system means (us per simulation tick)
 
@@ -71,3 +71,34 @@ Costs use measured world ticks as denominator, including systems with cadence >1
 | StorytellerSystem | 0.002754 | 0.003260 | 0.003414 |
 | StewardSystem | 0.000593 | 0.000574 | 0.000680 |
 | NeighbourSystem | 0.000468 | 0.000448 | 0.000521 |
+
+## Final paired measurement — valid FAIL (D23)
+
+`/Users/rexxa/work/core-data/final-perf-session-1/receipt.json`, SHA-256 `966c6cd06e7fd7c78da4d9bdb6090fb5113e69b80b084163ef3c3452a4e81cf3`. All 33 interleaved pairs (18 timed, 15 build-only RSS), 66 members, were accepted; invalid members 0. All 66 admission one-minute loads were strictly below 8, range **4.1201171875–7.06201171875**; 1/5/15-minute samples remain in `admission.jsonl`. Binary order alternates by repeat. An independent checker exited 1 and reproduced the receipt byte-for-byte (comparison exit 0), confirming the failure rather than invalidating the samples.
+
+Measured candidate: p7 `be12050c951dfb025f3440d34b657eec0663b817`, source SHA-256 `9a6cdde2052d909b816dcd0e5a0a5674dfdce75eed873b5ab6412b6bfe55fb21`. BASE binary SHA-256 `6fa81cac67899a778c0e6037f1229b14c236abf58050066b908d281a6ed19deb`; candidate binary `91a75c3397eba02b2d19632bde3fc6bc965cd762cc67304e7c4a6a4566b9a56e`. This measures that source/binary, not a later documentation HEAD. Historical ledger timings are not the comparison BASE.
+
+| N | Same-session BASE tick µs | Mind tick µs | BASE decision µs | Mind system µs | Tick ratio | Mind/decision ratio |
+|---|---:|---:|---:|---:|---:|---:|
+| n200 | 425.854167 | 3326.025694 | 280.487101 | 3148.053828 | 7.810246 | 11.223524 |
+| n1000 | 2082.978819 | 19927.196181 | 1455.127483 | 19136.358476 | 9.566682 | 13.150984 |
+| n2000 | 4588.075694 | 38421.873495 | 3413.456873 | 37026.040096 | 8.374289 | 10.847080 |
+
+These are ratios of three-repeat means. The fixed design share remains `0.6990029820337981`: do not recompute its accepted arithmetic bar from this new BASE. N1000 tick ratio **9.566682097070183** misses `0.700498508983101`; mind/decision **13.150984160978739** misses `0.5`. These two CORE bars are report-only under the goal; they do not waive standing acceptance.
+
+Standing reducer ratios are separately retained below; they are not the preceding ratio-of-means calculation. Every mean and p99 ratio misses the 1.1 ceiling.
+
+| Standing scene | Mean ratio | p99 ratio |
+|---|---:|---:|
+| n200 | 7.891692274 | 6.038812785 |
+| n1000 | 9.545759090 | 6.585304382 |
+| n2000 | 8.357217429 | 5.521695533 |
+| n200_script | 7.031108262 | 5.246376812 |
+| n200_side64 | 7.880085303 | 7.061420345 |
+| n1000_wolves | 8.703667762 | 6.015796571 |
+
+The receipt contains **16 failure strings**: twelve standing mean/p99 regressions, two mandatory C3 time ceilings (N1000 >5 ms; N2000 >10 ms), and the two report-only CORE bars. Three-repeat N1000/N2000 tick means are 19.927196/38.421873 ms; the standing reducer independently reports 19.914737/38.423619 ms and also fails both ceilings. No justification or waiver is applied. [ISS339 / #645](https://github.com/hyunlord/new-world/issues/645) remains OPEN; publication is **BLOCKED**, while the complete 45-step gate has not yet produced a result.
+
+After-build standing memory ceilings all PASS: allocator ≤4096 B/agent and ≤96 B/tile, RSS ≤5120 B/agent and ≤128 B/tile. Allocation-per-agent new/BASE ratio is **1.0**. The separate full-ring capacity companion measures **9060.066666666668 B/agent** (MISS 4096) and **80.076416015625 B/tile** (PASS 96). It synthetically fills each live person's ring with sixteen copies of their largest retained complete record, assigning fresh IDs/final-tick headers and retaining values/causes and shared payloads, then runs no further ticks. This is report-only synthetic capacity, not natural occupancy and not a replacement for standing after-build C3.
+
+`/Users/rexxa/work/core-data/final-perf-source-review.md` identifies eager fact/routine preparation, global Person-version gather-cache invalidation, owned-map allocation and repeated dictionary validation on emitted records as source-based hypotheses. There is no internal sampled profile establishing their individual time shares. No runtime/policy tuning, acceptance relaxation or inferred performance success follows from that review.

@@ -1,6 +1,6 @@
 # ADR 0046 — Give the colony a data-defined mind
 
-Status: design accepted for M-CORE; compiler, providers, lifecycle effects and recorder implemented in the working tree. Round-4 shadow/calibration checks passed; the working-tree production registrar now selects the mind for colony and the legacy selector for baseline (D19). Switch commit/captures, final baseline isolation, held-out evaluation and performance acceptance remain pending. This ADR records architecture, not a passing gate.
+Status: design implemented and locally committed through p7 `be12050c951dfb025f3440d34b657eec0663b817`. Round-4 shadow/calibration, p6 production-switch captures and p7 supported-baseline isolation checks pass. Final evaluation `heldout-final-1` is RUNNING; held-out acceptance, paired performance, native UI, story comparison, full gate and publication remain pending. This ADR does not claim whole-goal acceptance.
 
 ## Context
 

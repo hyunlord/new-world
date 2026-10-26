@@ -6,6 +6,8 @@
 
 ## M-CORE 진행 기록 (2026-10-26–27)
 
+- 2026-10-27 — 최종 성능33쌍/66회 전부 유효·무효0, 입장부하4.1201171875–7.06201171875에서 FAIL을 확인했다(D23). N1000 tick2.082979→19.927196ms·비9.566682, mind/결정비13.150984, N2000 tick38.421873ms. standing12회귀·C3 시간상한2건 실패로 게시 BLOCKED, 면제 없음. 메모리 after-build C3 PASS와 합성 포화9060.066667B/인물 참고용 미달은 구분한다. ISS339/#645 OPEN이며 전체45단계 gate 결과는 아직 없다.
+
 - 2026-10-26 — 승인된 깊이 로드맵과 v1.0 정의를 보존하고 M-CORE를 시작했다([목표](v8/core/CORE_GOAL.md), 첫 커밋 `001f236c3`, [깊이 로드맵](v8/DEPTH_ROADMAP.md)). 기준은 게시된 M-UX2 `9855bd082`; 구현·평가·게시 완료를 뜻하지 않는다.
 
 - 2026-10-27 — M-CORE 사전 측정 N1000 결정 점유율 s=0.699002982와 91개 의미 갈래·247계기·66세계 목록을 기록했다. 그림자 비교 1회차 FAIL·2회차 12개 결함으로 미수용을 보존하고, 3회차 OFF99.913210%·ON99.805452%, 미설명0·잔여 포트결함0으로 그림자 단계만 수용했다([기록](v8/core/CORE_SHADOW.md)).
@@ -20,6 +22,11 @@
 - 2026-10-27 — p7 기준선 분리의 systems309·default/feature 각각19+2+6·perf observer4·source isolation/registration4·fmt/strict Clippy 통과를 로그로 확인했다. 독립 리뷰는 최종 identity 조건부로 범위 승인했다. 외부 BASE lock/manifest 독립 pin 검증 수정15회귀 통과와 최초 RED·경로 alias 실패를 보존한다(D20, `core-data/final-perf-plan.md`). 분리 후 identity는 RUNNING이며 p7 미커밋, 성능 측정·게시 성공을 뜻하지 않는다.
 
 - 2026-10-27 — p7 분리 후 캡처가 exit0으로 완료됐다(D20). baseline228,748값 차이0, git_sha만 제외한 chronicle64파일/19,683항목 동일, OFF9개와 ON summary 모두 p6 전환 캡처와 같고 ON 결정성 PASS다. 비교 로그 SHA256 `39b246855ca52c88359390b8b1b561aae4447e8867c72f18e6981834e7e92155`, 캡처 Rust tree `c3a0e98c30e1758bf785f9a6936056d87b58b370`. 앞선 RUNNING은 당시 상태이며 현재 해당 동일성 검증은 PASS, p7은 미커밋이다. held-out·성능·native·전체 gate·게시 수용은 별도다.
+
+- 2026-10-27 — p7 `be12050c951dfb025f3440d34b657eec0663b817`를 로컬 커밋하고 final-bin-1 features[] 빌드와 heldout-final-1 일곱 실행 exit0을 확인했다. 모든 outcome 막대 통과지만 seed1238 늑대 사망0→3과 노출분모17/19를 보존한다. 이유469721/469721·엄격critical12159/12159·전체805730/805730, 실패0. story64world-year씩의 깊은 사슬은 양쪽0으로 참고 측정이며 품질 성공이 아니다(D22).
+- 2026-10-27 — native-final-02에서 Why 버튼 언어가 갱신되지 않는 결함과 causal 처리의 MindChoice47 누락을 확인했다. UI 수정 진행 중이며 시각 판정은 REVISE, 수정 후 PASS는 아직 없다. 성능·전체 gate·게시는 별도 대기다(D22).
+
+- 2026-10-27 — native03 실제14PNG의 독립 pixel/integrity 리뷰 PASS, exit0·입력해시불변1로 Why locale과 MindChoice47 표시 수정을 확인했다. Agent8 do_job→eat, Agent4 do_job→flee 실제 기록을 대조했다. 회귀 RED10·중간fixture1실패 보존 후GREEN12, strict5파일·FFI60 PASS. 후보1개·단일필드2–3줄 wrap의 한계는 유지한다. ISS337/338 로컬fixed·원격643/644 OPEN이며 p7+UIpatch 근거이지 p8빌드·성능·전체gate·게시 주장이 아니다(D22).
 
 ## M-UX2 기록 — 오너 수정 조건 수용·게시 완료 (2026-10-26)
 

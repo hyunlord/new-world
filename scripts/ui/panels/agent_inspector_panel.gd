@@ -135,6 +135,7 @@ var _porter_status: Label
 var _label_age: Label
 var _label_pos: Label
 var _mind_label: Label
+var _why_button: Button
 var _mind_snapshot: Dictionary = {}
 var _mind_tick: int = -1
 var _mind_entity: int = -1
@@ -233,11 +234,11 @@ func _ready() -> void:
 	_label_age.visible = false
 	_village_label = _make_label("")
 	_label_pos = _make_label("")
-	var why_button := Button.new()
-	why_button.name = "Why"
-	why_button.text = _loc("MUX_WHY")
-	why_button.pressed.connect(_open_tile_why)
-	_vbox.add_child(why_button)
+	_why_button = Button.new()
+	_why_button.name = "Why"
+	_why_button.text = _loc("MUX_WHY")
+	_why_button.pressed.connect(_open_tile_why)
+	_vbox.add_child(_why_button)
 	_mind_label = _make_label("")
 	_mind_label.name = "MindReason"
 	_mind_label.hide()
@@ -1265,6 +1266,7 @@ func _target_text(target_kind: int, activity: Dictionary) -> String:
 
 # Bridge: get_agent_mind(entity_bits), once per visible selection and simulation tick.
 func _refresh_mind() -> void:
+	_why_button.text = _loc("MUX_WHY")
 	if not visible or _world_sim == null or _selected_entity_bits < 0:
 		return
 	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))

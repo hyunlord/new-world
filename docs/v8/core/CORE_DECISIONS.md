@@ -612,7 +612,7 @@ separate obligations; no whole-current-closure byte identity is claimed.
 ## D20 — Isolate supported baseline execution without a new crate
 
 P6 `fbc9a9babc9bb5df1d06ca1e655901e480521f66` commits the approved production
-switch with frozen policy unchanged. P7 isolation remains uncommitted.
+switch with frozen policy unchanged. P7 isolation is committed as `be12050c951dfb025f3440d34b657eec0663b817`.
 Systems/feature/formatting/strict-Clippy and source/registration isolation
 checks pass; post-isolation identity capture now passes as recorded below.
 
@@ -656,7 +656,7 @@ recorded in `isolation-registration.log`. Formatting and strict Clippy pass
 implementation without blocking findings, conditional on final identity/capture
 verification. Its supported-constructor/save qualification remains in force;
 no arbitrary Job-target state guarantee is added. Identity capture subsequently completed successfully (receipt below); p7
-remains uncommitted.
+is committed as `be12050c951dfb025f3440d34b657eec0663b817`.
 
 The final performance preparation also corrects only external BASE lock
 provenance validation. The immutable `base-bin/Cargo.lock` SHA-256 is
@@ -692,7 +692,7 @@ violations pass. `isolation-steward-1.log` reports DETERMINISM PASS; its
 `cad9811728445bba5d8aa9027d6450ceb9aec3b40635258572577b711c387958`.
 The captured Rust tree is `c3a0e98c30e1758bf785f9a6936056d87b58b370`.
 This completes the stated supported-corpus post-isolation identity check;
-p7 commit remains pending. It does not extend the supported-world contract,
+p7 is committed as `be12050c951dfb025f3440d34b657eec0663b817`. It does not extend the supported-world contract,
 resolve ISS336, or claim held-out/performance/native/full-gate/publication
 acceptance.
 
@@ -723,3 +723,95 @@ Track this as local **deferred** ISS336 and remote **OPEN**
 verified by the parent. Evidence: `/Users/rexxa/work/core-data/final-code-review.md`
 and `issue336-created.json`. No runtime/policy change, repair claim, issue
 closure or final-goal approval follows from this disposition.
+
+
+## D22 — Retain native UI failures and separate completed evaluation evidence
+
+Native capture `mind-ui/native-final-02` exposes two actual UI defects requiring
+repair: the inspector Why button keeps its previous locale after switching to
+English, and MindChoice kind 47 is skipped by the relevant causal UI handling.
+The locale defect is visible in `mind-ui/visual-review-02.md` (REVISE). Fixes
+are in progress; no corrected native PASS is claimed. The completed capture
+records same-agent hunger and threat transitions, but an automated empty
+failure list did not detect the stale button language. Retain the failing
+captures and add focused assertions/recapture for the repaired paths. Multirow
+candidate layout and already-open-popup locale refresh need their own evidence;
+readable observed samples do not prove every UI state.
+
+Separately, final features[] build at p7 passed: `final-bin-1/build-receipt.json`
+binds unchanged pre/post Rust hash, policy, lock and binaries. The completed
+`heldout-final-1/session-terminal.json` reports CAPTURE_AND_CHECKS_PASS and all
+seven subprocess exits 0 (UTC 2026-10-26T18:18:37.050714). Authoritative
+outcomes/why equal their prechecks byte-for-byte. All outcome bars pass: new
+mind32/32 except wolf31/32 (required29), with cold-snap firewood19/19 exposed
+versus BASE17/17; unexposed13 versus15 remains explicit. Seed1238 wolf deaths
+worsen BASE0→mind3 and its individual ≤1 criterion fails; do not hide it behind
+the aggregate PASS. Why coverage is469721/469721 behaviour,12159/12159 strict
+critical and805730/805730 total expected records, zero failures. No policy tuning.
+
+Story is MEASURED reference evidence with no numerical bar. Each side has64
+complete world-years: BASE entries7676 (119.9375/year), mind19722
+(308.15625/year); people with ≥3 yearly entries556 (8.6875/year) versus651
+(10.171875/year). Both deep entries and distinct deep chains are0. Missing
+ancestry121 versus125 is retained, cycles0. The BASE story instrument is p2
+runtime plus frozen observational tooling, not an exact BASE-source binary.
+Zero deep chains does not demonstrate deep-story success, and more entries
+does not by itself establish greater story quality.
+
+Evidence root is `/Users/rexxa/work/core-data/`. Authoritative SHA-256:
+`heldout-final-1/outcomes.json` =
+`42e9de5b1649ced049ca37a9741f15f9b900baaa61ce128eb7f84d8d5781ebed`;
+`why.json` = `552ccf8b9932e23d1243b185c6fb4a35759df21a10d364f6e633430ce618a6a8`;
+`story.json` = `7fb7a6ceb55ac1d08cd5667e679e7e3064e19c8aa21761e8c8bede594970d9ce`.
+These completed captures do not grant native UI, final performance, whole gate
+or publication acceptance. The UI repairs do not authorize changes to frozen
+simulation policy or measurement tools.
+
+
+D22 tracking update: ISS337 is registered as
+[#643](https://github.com/hyunlord/new-world/issues/643), and ISS338 as
+[#644](https://github.com/hyunlord/new-world/issues/644); both remain local and
+remote OPEN pending QA/publication. Parent is performing remote read-back.
+The Why-label source repair is applied, but native03 locale recapture is still
+pending. The kind47 formatter repair is being applied; preserve its actual
+Godot RED `mind-ui/chronicle-red.log` (exit1, CORE_CHRONICLE_DONE failures=10).
+The formatter previously stopped at LAST_KIND46 and skipped the critical-choice
+chronicle, including the person's story sentence. Repair must preserve person
+and causal links and localize the recorded urgent choice without inferring a
+policy node from its numeric slot. No GREEN/native03 PASS is claimed here.
+Canonical issue bodies are `mind-ui/issues-body-337.md` and
+`mind-ui/issues-body-338.md` under the external evidence root.
+
+
+D22 final native03 result: `mind-ui/visual-review-03.md` and
+`integrity-review-03.md` both PASS within their stated scope, covering14 actual
+PNGs. Godot/wrapper/provenance exits0, inputs-unchanged=1; before/after hashes
+match. Hunger Agent8 changes do_job/event82/tick1 → eat/event90/tick154;
+threat Agent4 changes do_job/event4129/tick18787 → flee/event4187/tick18906,
+with fleeing0→1 and cause4186. The hunger record proves a behaviour change,
+not an observed hunger_actionable0→1 edge absent from its prior record.
+Locale-correct Why buttons and actual kind47 critical feed now render in EN/KO.
+
+Retain chronicle RED10 failures, the initial GREEN's one joiner-normalization
+fixture failure, and final GREEN12 checks/0 failures. Strict checks of five UI
+files and60 FFI checks pass. ISS337/338 are now locally fixed; GitHub643/644
+remain OPEN until verified publication. This capture is p7 plus the UI patch,
+not a claim of a p8-built binary. Each captured popup has one eligible candidate;
+no real three-row ordering/layout proof exists. The summary is a single field
+that wraps2–3 lines, not a literal one-rendered-line fit. The separate chronicle
+Why link was visible but not clicked. Exact copied originals are
+`docs/images/core_mind_hunger_en.png` and `core_mind_threat_ko.png`.
+Native acceptance covers this demonstrated presentation/provenance only;
+performance, full gate and publication remain pending.
+
+## D23 — Preserve valid final performance failure and block publication
+
+Status: measurement complete, **FAIL**; no waiver. The complete 45-step gate is still pending. [ISS339/#645](https://github.com/hyunlord/new-world/issues/645) is registered/readback-verified and OPEN.
+
+The final interleaved session accepted 33 pairs/66 members (18 timed pairs, 15 build-only RSS pairs), invalid0. Admission one-minute loads span4.1201171875–7.06201171875, all<8; all1/5/15-minute samples and alternating order remain in the raw evidence. Receipt `/Users/rexxa/work/core-data/final-perf-session-1/receipt.json` SHA-256 `966c6cd06e7fd7c78da4d9bdb6090fb5113e69b80b084163ef3c3452a4e81cf3` belongs to p7 `be12050c951dfb025f3440d34b657eec0663b817` and source SHA-256 `9a6cdde2052d909b816dcd0e5a0a5674dfdce75eed873b5ab6412b6bfe55fb21`. Independent check exit1 and byte comparison exit0 reproduce the same failure. [CORE_PERF](CORE_PERF.md) retains the full comparison and standing tables.
+
+N1000 three-repeat mean tick rises2082.978819→19927.196181µs (ratio9.566682097070183); mind/old decision is13.150984160978739. N2000 mean is38421.873495µs. The receipt has16 failures: twelve standing1.1 mean/p99 regressions, mandatory C3 N1000≤5ms/N2000≤10ms misses, and two report-only CORE ratios (mind≤0.5; tick≤0.700498508983101 from accepted s=0.6990029820337981). Report-only treatment of the latter does not waive standing C3. Publication is **BLOCKED**; do not label the not-yet-run full gate failed.
+
+All four standing after-build allocator/RSS ceilings PASS; allocation per agent ratio1.0. Synthetic full-ring capacity is9060.066666666668B/agent (MISS4096),80.076416015625B/tile (PASS96), report-only. Sixteen copies of each person's largest retained complete record, fresh IDs/final-tick headers and no further ticks model capacity, not natural occupancy. Keep this separate from after-build C3.
+
+The frozen policy, exhausted four calibration rounds and completed held-out results are unchanged. `final-perf-source-review.md` proposes eager provider/preview work, global Person-version cache invalidation and repeated policy validation/allocation as source hypotheses, not measured internal attribution. No production tuning or acceptance relaxation was authorized by this result. Any later optimization requires a separately authorized verification boundary and fresh evidence, preserving this failure and the earlier functional successes.

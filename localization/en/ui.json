@@ -1123,5 +1123,6 @@
 	"MIND_REASON_SCORE_NEUTRAL": "{fact} leaves priority unchanged",
 	"MIND_BEHAVIOUR_ROUTINE_NO_PLACE": "No suitable activity place",
 	"MIND_FACT_ROUTINE_ADMISSION": "Ready for an activity",
-	"MIND_FACT_ROUTINE_WEIGHTED_PLACE_AVAILABLE": "A suitable activity place is available"
+	"MIND_FACT_ROUTINE_WEIGHTED_PLACE_AVAILABLE": "A suitable activity place is available",
+	"CHRON_MIND_CRITICAL": "Responded to an urgent need"
 }

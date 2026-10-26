@@ -31,8 +31,8 @@ const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
-## The last chronicle kind this text knows (M5.5: 44 Eureka).
-const LAST_KIND: int = 46
+## MindChoice (47) records only entry into the critical band; its node slot is not a display name.
+const LAST_KIND: int = 47
 static var steward_labels: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
 const COLUMNS: Array[String] = ["tick", "kind", "subject", "other", "third", "settlement", "settlement2", "cause", "value",
@@ -154,6 +154,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		38, 39, 40, 41, 42, 43, 44: return neighbour_sentence(row, locale)
 		46: return loc(locale, "MUX_STEWARD_DEFENCE_ACTION").format({"count": value})
 		45: return loc(locale, "MUX_STEWARD_ACTION") + " " + loc(locale, str(steward_labels.get(cause, "UI_UNKNOWN")))
+		47: return loc(locale, "CHRON_MIND_CRITICAL")
 	return ""
 
 

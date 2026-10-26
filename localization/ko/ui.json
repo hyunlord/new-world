@@ -1123,5 +1123,6 @@
 	"MIND_REASON_SCORE_NEUTRAL": "{fact}으로 인한 우선도 변화 없음",
 	"MIND_BEHAVIOUR_ROUTINE_NO_PLACE": "활동할 자리를 찾지 못함",
 	"MIND_FACT_ROUTINE_ADMISSION": "활동을 시작할 준비가 됨",
-	"MIND_FACT_ROUTINE_WEIGHTED_PLACE_AVAILABLE": "활동에 알맞은 자리가 있음"
+	"MIND_FACT_ROUTINE_WEIGHTED_PLACE_AVAILABLE": "활동에 알맞은 자리가 있음",
+	"CHRON_MIND_CRITICAL": "긴급한 필요에 대응함"
 }
