@@ -815,3 +815,21 @@ N1000 three-repeat mean tick rises2082.978819→19927.196181µs (ratio9.56668209
 All four standing after-build allocator/RSS ceilings PASS; allocation per agent ratio1.0. Synthetic full-ring capacity is9060.066666666668B/agent (MISS4096),80.076416015625B/tile (PASS96), report-only. Sixteen copies of each person's largest retained complete record, fresh IDs/final-tick headers and no further ticks model capacity, not natural occupancy. Keep this separate from after-build C3.
 
 The frozen policy, exhausted four calibration rounds and completed held-out results are unchanged. `final-perf-source-review.md` proposes eager provider/preview work, global Person-version cache invalidation and repeated policy validation/allocation as source hypotheses, not measured internal attribution. No production tuning or acceptance relaxation was authorized by this result. Any later optimization requires a separately authorized verification boundary and fresh evidence, preserving this failure and the earlier functional successes.
+
+## D24 — Stop after the completed p8 gate fails
+
+Final status: **FAIL / not published**. D23's pending full gate was its then-current state; it is now complete at p8 `44e0a0266c085d409c16c77f4a2a0181b8a2a750`, clean start (`dirty0`),42/45 steps PASS, status1. Exact gate time2026-10-27 04:02:02–05:58:54 KST,7012seconds. This is gate duration, not an inferred exact goal duration. `core-data/full-gate-p8-1/gate.txt` SHA-256 `f437bd3e64a96af0382f5806d8c314fbe8ad70e60bc50fc8c1fc8af76237a394`.
+
+| Failed step | Actual result |
+|---|---|
+|25 bench|Standing six-scene mean/p99 regressions; N1000 mean19045.5µs>N1000 5ms and N2000 mean36432.2µs>10ms; after-build memory ceilings PASS. Separate gate measurement, not replacement of D23's paired evidence.|
+|41 mux2_stall_receipt|Both runtime arms complete, but1× stall bar fails; wrapper receipt rejects capture exit1.|
+|45 core_evaluation|Rejects pinned final performance receipt for standing/C3 failure. Prior held-out outcome/why PASS and reference-only story remain recorded.|
+
+Source isolation42, real data-only target/arrival/record test43 (one test), and seed0 shadow44 each exit0. Other42 passing steps are retained in gate.txt; they do not override the three failures.
+
+Stall raw report: `core-data/full-gate-p8-1/mux2-stall/capture/run/stall-report.json`, SHA-256 `419bc23b95e104380b9447e086057e30a2127bca9317dde3ec74581773f72883`. At1×, post-warmup300.000826seconds/35755frames, max91.652ms, >33ms2 and >50ms2, FAIL. At½×,300.006963seconds/34902frames, max49.522ms, >33ms2 and >50ms0, PASS. Startup maxima3775.521/4378.179ms remain visible. Top-level complete=true/bar_pass=false and both arm capture_complete=true establish finished capture; wrapper receipt complete=false/exit1 records failure to accept, not runtime incompleteness. diagnostic_complete=false prevents claiming complete internal attribution.
+
+The goal requires stopping and reporting after this failure. No tuning, waiver, retry or push follows; preserve the worktree and raw evidence. All locally fixed issues remain remotely OPEN because publication has not occurred. No later documentation HEAD inherits a newly executed passing gate. Parent verified both remote refs remain BASE `9855bd082ad88a4c49296410f206f148d98c4df9`; no remote update occurred. Stall is tracked as [ISS340/#646](https://github.com/hyunlord/new-world/issues/646), OPEN.
+
+D24 bounded audit: all45 step IDs are unique. Fresh step44 seed0 matches are OFF251664/251676 and ON210955/211127,23 categories each, PASS. Step45 regenerated outputs are byte-identical to original receipts; fourteen standing failures block acceptance, while the exception includes all sixteen strings including the two nonblocking CORE bars. Stall1× >50ms events occur at34.466878s (50.194ms) and218.325537s (91.652ms). The latter advances zero simulation ticks and has85.418ms pre/post draw duration; no claim attributes this stall to mind. Raw profile completeness is true and errors[]; diagnostic_complete=false is a distinct field, not missing capture. Both runtime measurements cover the full300seconds.

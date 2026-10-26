@@ -336,7 +336,7 @@ M	tools/v8/test_core_perf_check.py
 
 ## p8 delivery commit containing this inventory
 
-The commit containing this section preserves the p7 Rust tree; its exact staged paths are below. Its SHA is supplied by Git history after commit creation.
+The commit containing this section preserves the p7 Rust tree; its exact staged paths are below. Exact commit: `44e0a0266c085d409c16c77f4a2a0181b8a2a750`. The full gate at this commit failed; this is not a publication claim.
 
 ```text
 M	CHANGELOG.md
@@ -363,4 +363,19 @@ M	scripts/ui/panels/agent_inspector_panel.gd
 M	scripts/ui/panels/chronicle_panel.gd
 A	tools/v8/test_core_chronicle.gd
 M	tools/v8/test_core_mind_ui.gd
+```
+
+## p9 failed-gate report commit
+
+Documentation only. The p8 full gate remains FAIL (42/45); no runtime, policy, threshold, fixture or evidence file is changed. Exact p9 SHA is available from Git history after commit creation.
+
+```text
+M	CHANGELOG.md
+M	docs/HISTORY.md
+M	docs/ISSUES.md
+M	docs/ROADMAP.md
+M	docs/v8/core/CORE_CHANGED_FILES.md
+M	docs/v8/core/CORE_DECISIONS.md
+M	docs/v8/core/CORE_PERF.md
+M	docs/v8/core/CORE_REPORT.md
 ```

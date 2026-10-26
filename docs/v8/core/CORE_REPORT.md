@@ -1,6 +1,6 @@
 ## 구현 완료 보고 — M-CORE
 
-**상태: 진행 중인 보고서 초안 — 전체 구현 완료·최종 수용·게시를 주장하지 않는다.** §9의 최종 보고 형식을 먼저 마련했다. p5 구현은 로컬 커밋 [0ef68a1d2b6eb946e150963071b2e623fa58d4b0](https://github.com/hyunlord/new-world/commit/0ef68a1d2b6eb946e150963071b2e623fa58d4b0)에 있으며 아직 게시하지 않았다. p6 생산 등록 전환은 로컬 커밋 [fbc9a9babc9bb5df1d06ca1e655901e480521f66](https://github.com/hyunlord/new-world/commit/fbc9a9babc9bb5df1d06ca1e655901e480521f66)에 있고 전환 캡처가 완료됐다. p7 기준선 분리는 로컬 `be12050c951dfb025f3440d34b657eec0663b817`로 커밋했고 해당 최종 빌드가 통과했다. `heldout-final-1`의 outcome·why는 PASS이며 story를 포함한 전체 캡처/검사 chain이 일곱 exit0으로 완료됐다. 전체 목표 수용은 아직 주장하지 않는다. 최종 성능은 유효 FAIL이며 필수 C3 위반으로 게시 BLOCKED다. 아래 PENDING은 결과가 확인되지 않은 단계다.
+**최종 판정: FAIL — 미게시, 전체 목표 미수용.** p8 `44e0a0266c085d409c16c77f4a2a0181b8a2a750`에서 최종 게이트42/45·exit1이다. 실패는25 bench,41 mux2_stall_receipt,45 core_evaluation이며 목표의 중단·보고 조건에 따라 튜닝·면제·재시도를 하지 않는다. §9의15개 항목으로 결과와 한계를 보존한다. p5 구현은 로컬 커밋 [0ef68a1d2b6eb946e150963071b2e623fa58d4b0](https://github.com/hyunlord/new-world/commit/0ef68a1d2b6eb946e150963071b2e623fa58d4b0)에 있으며 아직 게시하지 않았다. p6 생산 등록 전환은 로컬 커밋 [fbc9a9babc9bb5df1d06ca1e655901e480521f66](https://github.com/hyunlord/new-world/commit/fbc9a9babc9bb5df1d06ca1e655901e480521f66)에 있고 전환 캡처가 완료됐다. p7 기준선 분리는 로컬 `be12050c951dfb025f3440d34b657eec0663b817`로 커밋했고 해당 최종 빌드가 통과했다. `heldout-final-1`의 outcome·why는 PASS이며 story를 포함한 전체 캡처/검사 chain이 일곱 exit0으로 완료됐다. 전체 목표 수용은 아직 주장하지 않는다. 최종 성능은 유효 FAIL이며 필수 C3 위반으로 게시 BLOCKED다. 실패한 게이트와 완료된 한정 검증을 구분해 기록한다.
 
 ### 측정 (결정 시스템 점유율 s, 갈래별 비용)
 
@@ -32,7 +32,7 @@ N1000의 정확한 `s = 0.6990029820337981`. [CORE_PERF](CORE_PERF.md)의 BASE �
 
 작성된 정책은 6개 띠(critical/duty/need/work/leisure/idle), 157개 노드, 참조 사실 80개, 참조 행동 19개다. 등록 행동에는 데이터 전용 시험용 targeted rest도 있다. 컴파일러/선택기는 sim-core, 읽기 전용 사실과 대상 해석·효과·기록은 sim-systems의 mind 모듈에 둔다. 사실 공급자는 정책을 고르거나 자원을 예약하지 않고, 효과는 변경된 공유 도메인을 무효화한다. 선택기는 정수 점수·작성 순서 동점·히스테리시스·노드 주기를 처리한다.
 
-[작성 안내](MIND_AUTHORING.md)의 따뜻한 화덕 rest 예시는 실제 대상/도착/선택 기록을 요구한다. 데이터만 바꾸는 노드 추가 시험의 최종 gate 영수증은 **PENDING**이며 문서 예시 자체를 통과로 간주하지 않는다. 생산 등록은 p6에서 콜로니 mind/기준선 legacy로 전환했고, 저장 로드는 해독한 규칙을 사용한다. 기존 콜로니 저장의 빈 legacy 결정 슬롯 하나만 같은 위치의 빈 mind 슬롯으로 바꾸는 엄격한 이행을 둔다(D19).
+[작성 안내](MIND_AUTHORING.md)의 따뜻한 화덕 rest 예시는 실제 대상/도착/선택 기록을 요구한다. 최종 gate43에서 `data_only_warm_at_hearth_reaches_real_target_and_retains_deciding_record` 실제 시험1개가 PASS다. 문서 예시만으로 통과를 주장하지 않는다. 생산 등록은 p6에서 콜로니 mind/기준선 legacy로 전환했고, 저장 로드는 해독한 규칙을 사용한다. 기존 콜로니 저장의 빈 legacy 결정 슬롯 하나만 같은 위치의 빈 mind 슬롯으로 바꾸는 엄격한 이행을 둔다(D19).
 
 ### 그림자 비교 (일치율, 불일치 범주와 판정)
 
@@ -85,7 +85,7 @@ N1000의 정확한 `s = 0.6990029820337981`. [CORE_PERF](CORE_PERF.md)의 BASE �
 
 **불리한 OFF 결과도 보존한다.** `m55_nodraft` seed1/4/6의 combat 사망은 각각0→2, seed7은1→2다. `m55_noneighbours` seed6의 exposure 사망은0→2다. seed6의 U3는 pressure/nodraft/storyoff/noneighbours/quiet 다섯 fixture에서 true→false다. craft-loss 증감까지 포함한 경고21행을 감사 JSON과 D19에 모두 보존한다. 예를 들어 pressure seed5 craft-loss2→5, noneighbours seed3은0→2다. 전체 jobs/crafts·재고·지식·사회/인구 궤적도 달라지며 이를 단순 mind metadata 변화로 숨기지 않는다.
 
-승인된 전환은 legacy cascade 대신 데이터의 띠/노드 순서와 node-keyed 추첨을 사용하므로 후속 궤적이 달라질 수 있다. 이것은 가능한 기제의 설명이며 각 changed leaf의 원인이 입증됐다는 뜻이 아니다. 같은 command script도 실제 수락 명령 수까지 같음을 보장하지 않는다. 정책을 다시 튜닝하지 않으며, 정식 ON held-out outcome precheck는 아래 고정 입력으로 PASS이며, 캡처/검사 chain은 완료했으나 전체 M-CORE 수용은 **PENDING**이다.
+승인된 전환은 legacy cascade 대신 데이터의 띠/노드 순서와 node-keyed 추첨을 사용하므로 후속 궤적이 달라질 수 있다. 이것은 가능한 기제의 설명이며 각 changed leaf의 원인이 입증됐다는 뜻이 아니다. 같은 command script도 실제 수락 명령 수까지 같음을 보장하지 않는다. 정책을 다시 튜닝하지 않으며, 정식 ON held-out outcome precheck는 아래 고정 입력으로 PASS이며, 캡처/검사 chain은 완료했으나 전체 M-CORE 수용은 최종 gate 실패로 **FAIL**이다.
 
 정책은 `7a6c90ac89db9cfb08acac6a8e14c91d1a1690d9fa40c3798c52323ead43eae8`로 동결했다. `policy-freeze-round-4.json` SHA-256 `8306d91c24ee200f2fb308c332ecbbb93f6a90c14c18b5ca2a9e89b22a97675d`, 동결 시각 `2026-10-26T16:35:29Z`. 동결 후 held-out을 실행했으며 위의 완료된 precheck 결과만 주장한다. 원래 동결 시점과 네 보정 회차 한도는 유지한다.
 
@@ -99,7 +99,7 @@ N1000의 정확한 `s = 0.6990029820337981`. [CORE_PERF](CORE_PERF.md)의 BASE �
 
 ### 성능 (전후 표, 막대 산수)
 
-최종 교차 측정은 **유효 FAIL**, C3 시간 상한 위반으로 **게시 BLOCKED**다([D23](CORE_DECISIONS.md), [전체 표](CORE_PERF.md), [ISS339/#645 OPEN](https://github.com/hyunlord/new-world/issues/645)). 33쌍/66회 모두 유효, 무효0이며 입장 1분 부하는 4.1201171875–7.06201171875로 모두8 미만이다. 전체45단계 gate 결과는 아직 PENDING이다.
+최종 교차 측정은 **유효 FAIL**, C3 시간 상한 위반으로 **게시 BLOCKED**다([D23](CORE_DECISIONS.md), [전체 표](CORE_PERF.md), [ISS339/#645 OPEN](https://github.com/hyunlord/new-world/issues/645)). 33쌍/66회 모두 유효, 무효0이며 입장 1분 부하는 4.1201171875–7.06201171875로 모두8 미만이다. p8 전체45단계 gate는42/45·exit1로 완료됐다(D24).
 
 | N1000 비교 | 동일 세션 BASE | M-CORE |
 |---|---:|---:|
@@ -118,7 +118,7 @@ After-build allocator/RSS의 네 C3 메모리 상한은 PASS, 할당/인물 new/
 
 전환 전 identity4는 baseline 차이0, chronicle64파일/19,683항목 동일, raw sample digest 동일, colony OFF9개 summary와 ON summary의 BASE byte identity를 확인했다(D18). 이것은 전환 후 증거가 아니다.
 
-현재 등록표는 baseline `AgentDecisionSystem`, colony `ColonyMindSystem`이고 다른 시스템 순서는 유지한다. 실제 생성자/저장 경로와 표의 집중 검사는 통과했다. p6 전환 후 baseline은228,748값 차이0·chronicle/relations64파일/19,683항목 동일·raw digest 동일이다. 비교 로그 `/Users/rexxa/work/core-data/switch-dev/baseline-compare.log` SHA-256은 `8f5601d2424a458af813d5c42c1ac819b295ec1d7c1bff64b23b7772b7c2beae`다. p7의 `runtime/baseline/decision` 이동·죽은 gate/seam 삭제 후 동일성 캡처는 **PASS**다. baseline228,748값 차이0, git_sha만 제외한 chronicle64파일/19,683항목 동일, OFF9개와 ON summary 모두 전환 캡처와 같고 ON 결정성 PASS다. `isolation-safety-1-compare.log` SHA-256은 `39b246855ca52c88359390b8b1b561aae4447e8867c72f18e6981834e7e92155`, ON summary는 `cad9811728445bba5d8aa9027d6450ceb9aec3b40635258572577b711c387958`, 캡처 Rust tree는 `c3a0e98c30e1758bf785f9a6936056d87b58b370`이다. 완료 로그는 `/Users/rexxa/work/core-data/isolation-capture-1.log`이며 p7 커밋은 `be12050c951dfb025f3440d34b657eec0663b817`이며 전체 gate는 **PENDING**이다. 별도 baseline crate는 D20에 따라 이번 범위에서 제외했다. 공유 crate-private mechanics와 등록자의 추가 분리를 피하는 선택이며 module/import 경계 검증 의무는 남는다.
+현재 등록표는 baseline `AgentDecisionSystem`, colony `ColonyMindSystem`이고 다른 시스템 순서는 유지한다. 실제 생성자/저장 경로와 표의 집중 검사는 통과했다. p6 전환 후 baseline은228,748값 차이0·chronicle/relations64파일/19,683항목 동일·raw digest 동일이다. 비교 로그 `/Users/rexxa/work/core-data/switch-dev/baseline-compare.log` SHA-256은 `8f5601d2424a458af813d5c42c1ac819b295ec1d7c1bff64b23b7772b7c2beae`다. p7의 `runtime/baseline/decision` 이동·죽은 gate/seam 삭제 후 동일성 캡처는 **PASS**다. baseline228,748값 차이0, git_sha만 제외한 chronicle64파일/19,683항목 동일, OFF9개와 ON summary 모두 전환 캡처와 같고 ON 결정성 PASS다. `isolation-safety-1-compare.log` SHA-256은 `39b246855ca52c88359390b8b1b561aae4447e8867c72f18e6981834e7e92155`, ON summary는 `cad9811728445bba5d8aa9027d6450ceb9aec3b40635258572577b711c387958`, 캡처 Rust tree는 `c3a0e98c30e1758bf785f9a6936056d87b58b370`이다. 완료 로그는 `/Users/rexxa/work/core-data/isolation-capture-1.log`이며 p7 커밋은 `be12050c951dfb025f3440d34b657eec0663b817`이며 p8 전체 gate는42/45·exit1이다. 별도 baseline crate는 D20에 따라 이번 범위에서 제외했다. 공유 crate-private mechanics와 등록자의 추가 분리를 피하는 선택이며 module/import 경계 검증 의무는 남는다.
 
 ### 이야기 수확량 (BASE / M-CORE)
 
@@ -170,7 +170,7 @@ After-build allocator/RSS의 네 C3 메모리 상한은 PASS, 할당/인물 new/
 
 최신 p7 동결 amendment는 `/Users/rexxa/work/core-data/baseline-dev/shadow-test-migration.json`(SHA-256 `47899e4aacd73008f885a2e0d4fb62f630021d64c30e42c7cf471e3d9e2891a3`)이다. 동결 검사 대상419파일은 정확히 두 test-only import 변경을 제외하고 일치한다. 이전 switch amendment `b15b4b7b1b0b2bbee788a604131b728fbe6f3c7e924c871d110e4ea2745f3e50`는 역사 근거로 보존한다. 최신 amendment는 old-shadow factory 폐기 후 worldgen helper 전체 파일 바인딩을 갱신했으며 helper 본문과 두 import 치환은 그대로다. 원본 manifest/checker/binary는 보존하고 wrapper는 임시 디렉터리에 원래 시험 바이트를 투영해 검사한다. 현재 전체 closure가 동결 당시와 byte-identical하다는 주장은 아니다.
 
-희귀 다툼0회, 훈련 추위 비노출3세계, held-out 비노출 BASE15/새 두뇌13, fingerprint 계약 한계를 유지한다. Held-out outcome·why와 story 측정은 완료했고, native03 시각 검증은 명시한14PNG 범위 PASS이고 성능은 유효 FAIL, 게시는 C3로 BLOCKED이며 전체 gate는 PENDING이다.
+희귀 다툼0회, 훈련 추위 비노출3세계, held-out 비노출 BASE15/새 두뇌13, fingerprint 계약 한계를 유지한다. Held-out outcome·why와 story 측정은 완료했고, native03 시각 검증은 명시한14PNG 범위 PASS이고 성능은 유효 FAIL, 게시는 C3로 BLOCKED이며 p8 전체 gate는42/45·exit1이다.
 
 ISS336/[#642](https://github.com/hyunlord/new-world/issues/642)는 **로컬 deferred / GitHub OPEN**이다(D21). 잘못된 persisted mind chronology에서 retained/tile 선택의 ID·tick 또는 비공개 history high-water가 엔진 allocator/시계를 앞서는 경우 로드가 완전히 거부하지 못하고 다음 선택에서 늦게 실패할 수 있다. 정상 생산 기록은 ID를 할당하고 현재 tick을 사용하며, 이를 깨는 유효 생산 저장 경로는 발견하지 못했다. 이번 리뷰는 malformed-save 실행 재현을 수행하지 않았다. 완전한 검증에는 동결 sim-core의 명시적 chronology API가 필요해 이월한다. 보존 record만 검사하는 것으로 빈 history의 private high-water까지 검증했다고 주장하지 않으며, 직렬화 내부/가짜 삽입 우회도 하지 않는다. 이는 일반 gameplay 실패나 수정 완료 주장이 아니다.
 
@@ -187,19 +187,24 @@ ISS336/[#642](https://github.com/hyunlord/new-world/issues/642)는 **로컬 defe
 | 전환 집중 검사 | switch10/save41/registration4/worldgen6/shadow3 PASS |
 | fixture 수정 후 검사 | systems310/commands11/full-save7/jobs9/flee12/engine_mind_ffi3 및 두 번째 fmt/Clippy PASS |
 | p6 전환 후 캡처 | 58세계 안전성/coverage 및 baseline 동일성 PASS, 경고21행 보존 |
-| p7 기준선 최종 분리 | 지원 corpus identity 및 집중 isolation 검사 PASS; 현재 전체 gate는 PENDING |
+| p7 기준선 최종 분리 | 지원 corpus identity 및 집중 isolation 검사 PASS; p8 전체 gate42/45·exit1 |
 | held-out outcome·why | PASS, authoritative byte equality 및 전체 캡처/검사 chain exit0 |
 | 이야기 수확량 | MEASURED 참고용, 수치 막대 없음 |
 | native03 UI | 14PNG pixel/integrity PASS, 실제 후보1개·2–3줄 wrap 범위 |
-| data-only 최종 gate | PENDING |
+| data-only 최종 gate43 | 실제 대상 도착·결정 기록 시험1 PASS |
 | 최종 성능 | 유효 FAIL, 필수 C3 시간 상한 위반; ISS339/#645 OPEN |
-| 현재 전체 gate + baseline_isolation + seed0 shadow fixture | PENDING |
-| 최종 커밋·작업트리 제거 | PENDING |
-| 게시 | C3 성능 실패로 BLOCKED, 면제 없음 |
+| p8 전체 gate | 42/45·exit1; 실패25 bench,41 stall,45 core_evaluation |
+| baseline_isolation42 / seed0 shadow44 | 각각 exit0 PASS; 새 seed0 OFF251664/251676·ON210955/211127, 각23범주 |
+| 검증 커밋·작업트리 | p8 `44e0a0266c085d409c16c77f4a2a0181b8a2a750`; 작업트리·증거 보존 |
+| 게시 | C3·stall 실패로 BLOCKED; push 없음, fixed 이슈도 원격 OPEN 유지 |
+
+게이트는2026-10-27 04:02:02–05:58:54 KST, **7012초** 실행했다. 전체 목표의 정확한 시작 영수증은 확인하지 않았으므로 이 시간을 총 작업 시간으로 쓰지 않는다. 원본 `full-gate-p8-1/gate.txt` SHA-256 `f437bd3e64a96af0382f5806d8c314fbe8ad70e60bc50fc8c1fc8af76237a394`.
+
+stall은 양 배율 모두 캡처를 완료했다. 1×는 준비 뒤300.000826초·35,755프레임 중>50ms2회·최대91.652ms로 FAIL, ½×는300.006963초·34,902프레임·>50ms0회·최대49.522ms로 PASS다. 시작 지연3775.521/4378.179ms도 보존한다. report `complete=true/bar_pass=false`, wrapper receipt `complete=false/exit1`은 수용 실패를 반영하며 실행 미완료를 뜻하지 않는다. `diagnostic_complete=false`이므로 원인 귀속 완료도 주장하지 않는다. [ISS340/#646](https://github.com/hyunlord/new-world/issues/646)은 OPEN이다. 두 지연은34.466878초의50.194ms와218.325537초의91.652ms이며 후자는 실행 tick0·pre/post draw85.418ms여서 mind가 원인이라고 단정하지 않는다. 근거와 SHA는 D24에 있다. p8 gate의 실패를 후속 문서 커밋 PASS로 바꾸어 쓰지 않는다.
 
 ### 오너가 할 일 (실행 한 줄: /Users/rexxa/work/new-world-play2-dev/tools/play.sh main)
 
-최종 게시와 검증 완료 뒤 사용할 실행 명령이다. 현재 해당 play 작업트리에 이번 변경이 게시되었다는 주장은 아니다.
+기존 main 실행 명령이다. 이번 M-CORE는 게시하지 않았으며 이 명령으로 새 두뇌가 실행된다고 주장하지 않는다. 작업트리와 실패 증거는 보존한다. 양 원격 ref는 `git ls-remote` 재조회로 BASE `9855bd082ad88a4c49296410f206f148d98c4df9` 그대로임을 확인했다.
 
 ```sh
 /Users/rexxa/work/new-world-play2-dev/tools/play.sh main
@@ -208,3 +213,10 @@ ISS336/[#642](https://github.com/hyunlord/new-world/issues/642)는 **로컬 defe
 완료 authoritative 결과: `heldout-final-1/outcomes.json` SHA-256 `42e9de5b1649ced049ca37a9741f15f9b900baaa61ce128eb7f84d8d5781ebed`, `why.json` SHA-256 `552ccf8b9932e23d1243b185c6fb4a35759df21a10d364f6e633430ce618a6a8`. `session-terminal.json`의 전체 완료는 최종 gate/publication 승인을 대신하지 않는다.
 
 측정/캡처 HEAD는 각 영수증의 p7 또는 명시된 p5+patch에 그대로 귀속한다. 이후 문서 descendant에서 결과를 재사용할 때도 해당 Rust source identity와 고정 binary/controller 입력을 확인해야 하며, 나중 HEAD를 실제 측정 HEAD로 바꾸어 쓰지 않는다.
+
+최종 원격 조회(미게시):
+
+```text
+9855bd082ad88a4c49296410f206f148d98c4df9 refs/heads/v8/main
+9855bd082ad88a4c49296410f206f148d98c4df9 refs/heads/v8/wip
+```

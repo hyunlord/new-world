@@ -5,7 +5,9 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
-## M-CORE — 2026-10-26 (in progress, not published)
+## M-CORE — 2026-10-26–27 (final FAIL, not published)
+
+- Final p8 gate `44e0a0266c085d409c16c77f4a2a0181b8a2a750` completes42/45,exit1 in7012s (Oct27 04:02:02–05:58:54 KST). Failures:25 bench,41 native stall,45 core evaluation. Both stall arms complete;1×max91.652ms/two>50ms fails,½×max49.522ms/zero>50ms passes. Isolation42/data-only43/shadow44 pass. Goal-directed stop/report: no tuning, waiver, retry or push; worktree/evidence retained and locally fixed issues remain remotely OPEN (D24).
 
 - Final performance is valid FAIL:33 accepted pairs/66 members, invalid0, admitted load4.1201171875–7.06201171875. N1000 tick2.082979→19.927196ms (×9.566682), mind/decision×13.150984; N2000 tick38.421873ms. Twelve standing1.1 regressions and both C3 time ceilings fail; the two CORE report-only bars also miss. After-build memory C3 passes; synthetic full-ring9060.066667B/person is a separate report-only miss, not natural occupancy. No waiver: publication BLOCKED, ISS339/#645 OPEN, full45-step gate pending (D23, CORE_PERF).
 
