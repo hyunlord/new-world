@@ -68,7 +68,7 @@
 #   38 mux2_oracles      visibility negative controls, marker/overlap/wall-cache and stall scorer
 #   39 mux2_visibility   fresh current-policy saves and actual eight-scene GPU acceptance
 #   40 mux2_why          actual windowed 30-check input and screenshot acceptance
-#   41 mux2_stall_receipt full two-arm windowed timing receipt bound to current content/binary
+#   41 mux2_stall_receipt fresh two-arm windowed timing after builds, or strict explicit receipt verification
 #   Since M-ART2 step 23 (renderer_agreement) also checks appearance: every person's look and face variant.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -172,7 +172,7 @@ step 37 mux2_defence bash tools/v8/mux2_gate_checks.sh defence "$LOG/mux2-defenc
 step 38 mux2_oracles bash tools/v8/mux2_gate_checks.sh oracles "$LOG/mux2-oracles"
 step 39 mux2_visibility python3 tools/v8/mux2_gate_receipts.py capture --kind visibility --out "$LOG/mux2-visibility" --godot "$GODOT_BIN"
 step 40 mux2_why python3 tools/v8/mux2_gate_receipts.py capture --kind why --out "$LOG/mux2-why" --godot "$GODOT_BIN"
-step 41 mux2_stall_receipt python3 tools/v8/mux2_gate_receipts.py verify --kind stall --receipt "${MUX2_STALL_RECEIPT:-/missing/mux2-stall-receipt.json}"
+step 41 mux2_stall_receipt bash tools/v8/mux2_gate_checks.sh stall "$LOG/mux2-stall"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

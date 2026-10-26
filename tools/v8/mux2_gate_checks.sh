@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# M-UX2 mandatory source tests and headless oracle checks; actual GPU acceptance is separate.
+# M-UX2 source tests, headless oracles and serialized runtime evidence checks.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -8,11 +8,19 @@ if [[ -z "${WORLDSIM_MUX2_LANE_FD:-}" ]]; then
     exec python3 tools/v8/mux2_gate_lock.py -- bash "$ROOT/tools/v8/mux2_gate_checks.sh" "$@"
 fi
 python3 tools/v8/mux2_gate_lock.py --check || exit 1
-mode="${1:?expected defence or oracles}"
+mode="${1:?expected defence, oracles or stall}"
 LOG="${2:?expected external log directory}"
 mkdir -p "$LOG"
 source tools/v8/godot_bin.sh
 case "$mode" in
+  stall)
+    receipt="${MUX2_STALL_RECEIPT:-}"
+    if [[ -z "$receipt" ]]; then
+      receipt="$LOG/capture/receipt.json"
+      python3 tools/v8/mux2_gate_receipts.py capture --kind stall --out "$LOG/capture" --godot "$GODOT_BIN"
+    fi
+    python3 tools/v8/mux2_gate_receipts.py verify --kind stall --receipt "$receipt"
+    ;;
   defence)
     : "${WORLDSIM_MUX_FIXTURES:?required external genuine format6-9 nine-file fixture root}"
     : "${WORLDSIM_B5_LEGACY9:?required external genuine H format9 fixture file}"

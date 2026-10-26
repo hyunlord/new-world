@@ -333,3 +333,23 @@ tools/v8/mux2_tree_conversion_test.gd
 tools/v8/test_mux2_gate_receipts.py
 tools/v8/test_mux2_tree_conversion_probe_check.py
 ```
+
+## p15 — c688a990314fcd26ea854aa2505b8680b5084df8
+
+```text
+.claude/skills/worldsim-godot/SKILL.md
+CHANGELOG.md
+docs/ARCHITECTURE.md
+docs/HISTORY.md
+docs/ISSUES.md
+docs/ROADMAP.md
+docs/v8/mux2/MUX2_COMMIT_FILES.md
+docs/v8/mux2/MUX2_DECISIONS.md
+docs/v8/mux2/MUX2_REPORT.md
+rust/crates/sim-bridge/src/ffi/colony.rs
+rust/crates/sim-bridge/src/ffi/colony/tree_conversion.rs
+tools/v8/mux2_gate_checks.sh
+tools/v8/mux2_tree_conversion_probe_check.py
+tools/v8/mux2_tree_conversion_test.gd
+tools/v8/test_mux2_tree_conversion_probe_check.py
+```
