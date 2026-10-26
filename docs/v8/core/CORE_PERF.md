@@ -110,3 +110,53 @@ At `44e0a0266c085d409c16c77f4a2a0181b8a2a750`, the gate completed42/45, exit1, 2
 Step41's native stall capture completes both arms, but1× fails:300.000826 post-warmup seconds,35755 frames, maximum91.652ms, two>50ms. Half zoom passes:300.006963 seconds,34902 frames, maximum49.522ms, zero>50ms. Startup maxima3775.521/4378.179ms remain separate. Report complete=true/bar_pass=false; receipt complete=false/exit1 is acceptance failure, not an unfinished runtime. Diagnostic completeness is false; no causal attribution is established. Evidence `full-gate-p8-1/{bench.log,core_evaluation.log,mux2-stall/capture/run/stall-report.json}` under core-data. Publication stays blocked; no tuning, waiver or red-gate retry.
 
 Stall follow-up [ISS340/#646](https://github.com/hyunlord/new-world/issues/646) is OPEN. The91.652ms frame advances zero simulation ticks, with85.418ms pre/post draw; do not attribute this native delay to mind from the separate simulation benchmark. Step45 blocks fourteen standing failures; its exception prints all sixteen strings including two report-only CORE misses.
+
+## P3a pre-change native sample (2026-10-27 08:46 KST)
+
+This is attribution evidence before production optimization, not an acceptance timing receipt. The retained benchmark is `n1000`, seed15100, side192, 1000 agents, 1440 warmup ticks and 2880 measured ticks; the 30-second sample covers a window of that invocation, not every tick. Both retained `bench.exit` and `sample.exit` are **0**. `/usr/bin/sample` sampled PID58464 (`worldsim_perf`) for 30 seconds at 1 ms requested intervals; the native main-thread denominator is **23,939 samples**. Profiling began 08:46:03.509 KST after process launch 08:45:28.437 KST.
+
+Evidence directory: `/Users/rexxa/work/core-data/repair-profile-before-1`. Profile `sample.txt` SHA-256 `d5bd53eb3740622d536fd970d35daeb163df10802c3f4bc152b93a2856bcd4d6`. Executed binary SHA-256 `91a75c3397eba02b2d19632bde3fc6bc965cd762cc67304e7c4a6a4566b9a56e`; its build receipt binds source commit `be12050c951dfb025f3440d34b657eec0663b817`, Rust source SHA-256 `9a6cdde2052d909b816dcd0e5a0a5674dfdce75eed873b5ab6412b6bfe55fb21`, policy SHA-256 `7a6c90ac89db9cfb08acac6a8e14c91d1a1690d9fa40c3798c52323ead43eae8`, features `[]`. The contemporaneous checkout HEAD recorded by provenance is `61260ec8c245d88c6d12ef015de815dae6849017`; it is **not** the sampled binary's build commit. Pre/post recorded load1/5/15 are 4.93/5.04/5.09 and 6.66/5.63/5.32. These do not turn the sampled invocation into a paired comparison.
+
+Self counts below come directly from the native “Sort by top of stack, same collapsed (when >= 5)” summary. Inclusive counts aggregate every call-graph occurrence by exact symbol plus image, merging instruction offsets; thread pseudoframes alone are excluded. An occurrence whose identical symbol/image already appears among its ancestors is skipped, so recursive nested occurrences are not counted twice. Ancestor and descendant symbols still overlap: inclusive percentages must not be summed. Runtime/startup wrappers and unresolved `<deduplicated_symbol>` names are retained honestly. Symbol hashes are preserved; percentage = count / 23939 × 100, rounded to 3 decimals.
+
+Aggregation parsed 3497 non-thread call-graph rows and skipped 257 nested same-symbol occurrences.
+
+### Self top 15
+
+| Rank | Exact symbol (image) | Samples | % of 23939 |
+|---:|---|---:|---:|
+| 1 | `sim_systems::runtime::agent_actions::targets::nearest_gather_tile::h760faf0eb3e9cdd1 (in worldsim_perf)` | 2595 | 10.840% |
+| 2 | `sim_core::colony::mind::select::choose::h81938474c5b666ff (in worldsim_perf)` | 2042 | 8.530% |
+| 3 | `sim_systems::runtime::agent_actions::forage::choose_bush::h6584c640456318a9 (in worldsim_perf)` | 2027 | 8.467% |
+| 4 | `sim_systems::runtime::agent_actions::routine::places::choose::he6776127fdf3009b (in worldsim_perf)` | 1844 | 7.703% |
+| 5 | `_$LT$hashbrown..map..Iter$LT$K$C$V$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::fold::h6d12e3f1e248830c (in worldsim_perf)` | 1695 | 7.080% |
+| 6 | `_platform_memcmp (in libsystem_platform.dylib)` | 1486 | 6.207% |
+| 7 | `sim_core::colony::mind_records::dictionary::MindRecordDictionary::check::h24aeeb3c826c98f1 (in worldsim_perf)` | 1195 | 4.992% |
+| 8 | `core::iter::traits::iterator::Iterator::eq_by::hace29a02dd1c2473 (in worldsim_perf)` | 701 | 2.928% |
+| 9 | `_platform_memmove (in libsystem_platform.dylib)` | 637 | 2.661% |
+| 10 | `core::ops::function::impls::_$LT$impl$u20$core..ops..function..FnMut$LT$A$GT$$u20$for$u20$$RF$mut$u20$F$GT$::call_mut::h3e70acde466c27eb (in worldsim_perf)` | 541 | 2.260% |
+| 11 | `_xzm_free_main (in libsystem_malloc.dylib)` | 526 | 2.197% |
+| 12 | `_xzm_xzone_malloc_tiny (in libsystem_malloc.dylib)` | 511 | 2.135% |
+| 13 | `_$LT$core..iter..adapters..chain..Chain$LT$A$C$B$GT$$u20$as$u20$core..iter..traits..iterator..Iterator$GT$::try_fold::h547ac2f323ab83eb (in worldsim_perf)` | 452 | 1.888% |
+| 14 | `sim_systems::runtime::mind::context::TickContext::set_derived::h51375ef93adae1de (in worldsim_perf)` | 450 | 1.880% |
+| 15 | `sim_systems::runtime::mind::context::TickContext::derived::h64977e7f713dcaa1 (in worldsim_perf)` | 301 | 1.257% |
+
+### Inclusive top 15
+
+| Rank | Exact symbol (image) | Samples | % of 23939 |
+|---:|---|---:|---:|
+| 1 | `start (in dyld)` | 23859 | 99.666% |
+| 2 | `main (in worldsim_perf)` | 23859 | 99.666% |
+| 3 | `std::rt::lang_start_internal::h48672da3ca81ba76 (in worldsim_perf)` | 23859 | 99.666% |
+| 4 | `std::rt::lang_start::_$u7b$$u7b$closure$u7d$$u7d$::h2315e1b1f5fbba38 (in worldsim_perf)` | 23859 | 99.666% |
+| 5 | `std::sys::backtrace::__rust_begin_short_backtrace::h2f62bad4b70cdadb (in worldsim_perf)` | 23859 | 99.666% |
+| 6 | `worldsim_perf::main::h0688ab45deb3c473 (in worldsim_perf)` | 23859 | 99.666% |
+| 7 | `sim_test::bench::main::hb9c6825a4974ae7f (in worldsim_perf)` | 23859 | 99.666% |
+| 8 | `sim_test::bench::run_one::h9ef9632f0fee17f7 (in worldsim_perf)` | 23859 | 99.666% |
+| 9 | `sim_engine::SimEngine::tick_inner::h21e4c7d4d808f1ea (in worldsim_perf)` | 23858 | 99.662% |
+| 10 | `_$LT$sim_systems..runtime..mind..system..ColonyMindSystem$u20$as$u20$sim_engine..RuntimeSystem$GT$::tick::h55c20569c196f82b (in worldsim_perf)` | 22876 | 95.560% |
+| 11 | `sim_systems::runtime::mind::system::ColonyMindSystem::try_tick::hdb754b612ac7c41c (in worldsim_perf)` | 22862 | 95.501% |
+| 12 | `sim_systems::runtime::mind::facts::ProviderPlan::refresh_row::h90d3494ba8cfc4a9 (in worldsim_perf)` | 7609 | 31.785% |
+| 13 | `sim_systems::runtime::mind::facts::refresh_routine::h0b98ce23bb4f3ae1 (in worldsim_perf)` | 4523 | 18.894% |
+| 14 | `sim_systems::runtime::mind::record::record_selection::h649880447bac5493 (in worldsim_perf)` | 3883 | 16.220% |
+| 15 | `sim_systems::runtime::mind::facts::forage_candidate::h4266cd68590f0bd8 (in worldsim_perf)` | 3743 | 15.636% |

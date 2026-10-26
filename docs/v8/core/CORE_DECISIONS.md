@@ -833,3 +833,37 @@ Stall raw report: `core-data/full-gate-p8-1/mux2-stall/capture/run/stall-report.
 The goal requires stopping and reporting after this failure. No tuning, waiver, retry or push follows; preserve the worktree and raw evidence. All locally fixed issues remain remotely OPEN because publication has not occurred. No later documentation HEAD inherits a newly executed passing gate. Parent verified both remote refs remain BASE `9855bd082ad88a4c49296410f206f148d98c4df9`; no remote update occurred. Stall is tracked as [ISS340/#646](https://github.com/hyunlord/new-world/issues/646), OPEN.
 
 D24 bounded audit: all45 step IDs are unique. Fresh step44 seed0 matches are OFF251664/251676 and ON210955/211127,23 categories each, PASS. Step45 regenerated outputs are byte-identical to original receipts; fourteen standing failures block acceptance, while the exception includes all sixteen strings including the two nonblocking CORE bars. Stall1× >50ms events occur at34.466878s (50.194ms) and218.325537s (91.652ms). The latter advances zero simulation ticks and has85.418ms pre/post draw duration; no claim attributes this stall to mind. Raw profile completeness is true and errors[]; diagnostic_complete=false is a distinct field, not missing capture. Both runtime measurements cover the full300seconds.
+
+## D25 — Planner-authorized performance repair (2026-10-27, P-1 through P-6)
+
+Authority: the user's **“Planner decisions for M-CORE (2026-10-27), after reading CORE_REPORT/CORE_PERF/D24 on v8/core-review (61260ec8c)”** note in this thread. This entry supersedes D24's stop interpretation without erasing the failed gate. Work resumes on `v8/core` in `/Users/rexxa/work/new-world-core-dev` at `61260ec8c245d88c6d12ef015de815dae6849017`. Repair budget starts 2026-10-27 08:43 KST: target10h (18:43), hard stop14h (22:43).
+
+### P-1 — Red gate repair authority
+
+“On a conflict or a red gate, stop and report” applies only to rebase after refused push. Otherwise diagnose, fix and rerun the full gate. Stop only for a rebase conflict, an unfixable identity/determinism failure, or the hard stop. The previous 42/45 failure remains evidence, not a waiver or a successful gate.
+
+### P-2 — Accepted functional evidence and frozen policy
+
+Keep shadow round4, held-out1232–1263 outcomes/why, baseline identity and isolation. All157 policy nodes stay frozen, including scores; no policy tuning. Held-out seed1238 wolf deaths BASE0→mind3 stays recorded. Original policy SHA256 remains `7a6c90ac89db9cfb08acac6a8e14c91d1a1690d9fa40c3798c52323ead43eae8`.
+
+### P-3 — Profile, preserve behaviour, then prove the performance bar
+
+Before code changes, sample release `worldsim_perf` N1000 with samply or macOS sample/xctrace and record the top15 functions by self and inclusive time in CORE_PERF. Source hypotheses alone do not justify optimization. Start with behaviour-preserving changes: lazy per-person-tick memoized facts; load-time indexed predicates/bitsets; band-order early exit; life-stage/tag filtering before predicates; debug-only record validation; reusable hot-loop buffers; shared spatial/claim snapshots with correct invalidation. These are candidates, not permission to alter outcomes or skip required evidence.
+
+For every implementation commit, prove the10 colony summary SHA256s in CORE_REPORT's switch table right column, steward-ON summary `cad9811728445bba5d8aa9027d6450ceb9aec3b40635258572577b711c387958`, held-out outcomes `42e9de5b1649ced049ca37a9741f15f9b900baaa61ce128eb7f84d8d5781ebed` and why `552ccf8b9932e23d1243b185c6fb4a35759df21a10d364f6e633430ce618a6a8` byte-equal, plus baseline identity byte-identical. Preserve the original evidence and bind each new build/capture to its actual source.
+
+Required: step25 bench passes with no `--justified`, including C3 N1000≤5ms and N2000≤10ms. The planner's approximate arithmetic is1.10×2083µs≈2291µs total, leaving mind≈1663µs≈1.14×old decision, requiring≈11.5× improvement over19136µs. The actual standing checker remains authoritative for every scene/mean/p99/memory constraint. Report mind/old ratio; ≤0.5 remains a target, not required. Step45 must validate a fresh same-session interleaved BASE/M-CORE receipt, every repeat starting load1<8 with1/5/15 samples (D10).
+
+Only if preserving behaviour cannot reach the required bar may a separate behaviour-changing optimization commit alter rethink scheduling without changing nodes/scores. It requires shadow seeds0–7 under the same≥97% rule and fresh held-out1264–1295 under the same outcome/why/table rules. Do not use these fresh seeds before that conditional path is justified.
+
+### P-4 — Narrow, conditional renderer stall waiver
+
+Planner identifies the prior91.652ms zero-sim-tick frame with85.4ms pre/post draw as the known renderer issue ISS030/#515. For this pass only, if fresh step41 fails and **every** frame>50ms advanced0 simulation ticks, publication may proceed with that single red step. Any>50ms frame advancing≥1 tick must be fixed. Preserve failed raw captures and inspect every qualifying frame; an unverified/partial receipt cannot establish the condition. Record actual waiver use in DECISIONS, CHANGELOG and comments on #515/#646. The historical first50.194ms frame advanced a tick, so the old failure is not automatically waived.
+
+### P-5 — Story findings, report-only
+
+Break chronicle growth≈120→308 entries/world-year down by kind. Determine whether zero depth≥3 chains and121/125 missing-ancestry chains arise from the instrument or broken cause links, and open an issue either way. No fix is required in this pass; retain original measured totals and provide evidence for the diagnosis.
+
+### P-6 — Publication and issue closure
+
+After acceptance, fast-forward `v8/core:v8/wip`, then `v8/core:v8/main` from BASE9855bd082ad88a4c49296410f206f148d98c4df9. If main advanced, use the original conflict-free rebase-and-full-regate rule. Close fixed registry #639–#641/#643/#644, and #645 if the bar passes, with public commit links. Leave `v8/core-review`; no branch deletion is authorized. Final Korean addendum includes profiletop15, optimizations/preservation, before/after performance and arithmetic, gate/step41 detail, P5 findings, published SHA and `git ls-remote`.
