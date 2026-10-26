@@ -6,8 +6,11 @@ confirmed concurrent M-UX2.1 builds/Godot FPS work on this Mac during
 retained as invalid contended-run evidence, not an accepted arm cost.
 Execution counts, exact fixture coverage and byte-identity comparisons
 remain separate functional evidence. No current decision share `s` was
-measured in that window. A fresh load-≤4 arm capture must supply the cost
-column before Part 1 is complete; do not promote these timings to valid.
+measured in that window. A fresh arm capture with every repeat starting at
+1-minute load <8 and recorded 1/5/15-minute loads must supply the cost column
+before Part 1 is complete; do not promote these timings to valid. The
+[planner correction](CORE_PLANNER_CORRECTION_2026-10-26.md) and DECISIONS D10
+supersede the original ≤4 requirement, including its sequencing fallback.
 
 Semantic source ranges below remain pinned to BASE 9855bd082ad88a4c49296410f206f148d98c4df9. The measurement column maps those rows to the implemented, off-by-default `perf_arms` observer (247 registered keys). Measured counts and diagnostic inclusive costs below cover 11 complete colony groups (9 OFF, 2×24-day ON, 8×48-day ON), 66 worlds and 3,824,640 world-ticks. Source wiring is not a unique-person denominator. The completed feature identity comparison passed; timings remain observer-instrumented and are not quiet performance acceptance. Source prefix: rust/crates/sim-systems/src/runtime/decision/system.rs unless stated otherwise.
 

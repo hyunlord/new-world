@@ -2,6 +2,9 @@
 
 Status: implementation in progress; no acceptance or publication claim.
 
+**Current performance rule: D10 supersedes the original ≤4 rule and D2's
+historical admission requirement.**
+
 ## D1 — Published base and isolated ownership
 
 Fetched origin on 2026-10-26. `origin/v8/main` resolved to
@@ -149,3 +152,29 @@ the exposed count, the required count is `max(0, exposed - 1)`, and zero
 exposure is labelled `NOT_EXPOSED`. Ten scorer tests and synthetic CLI
 controls pass. Outcome-row success does not claim shadow, why coverage,
 performance, UI or full CORE acceptance.
+
+## D10 — Planner corrects admission to the standing ledger rule
+
+Authority: [planner correction, 2026-10-26 22:00 KST](CORE_PLANNER_CORRECTION_2026-10-26.md).
+The original goal is retained verbatim in commit `001f236c3`; the working goal now incorporates this correction. The operative rule for §1.1 and §5
+is now the [performance ledger](../../perf/PERF_LEDGER.md), with its M4
+[§3.6 provenance](../m4/M4_GOAL.md): every repeat must start at one-minute
+load **strictly below 8**; record all 1/5/15-minute values before each repeat.
+A repeat starting at ≥8 is contended/INVALID, retained and never used as a
+comparison base. A post-run load is diagnostic, not an added acceptance
+condition. No extra ≤4 or sustained-minute gate applies.
+
+Every old/new comparison interleaves both frozen binaries in the same
+session. Use the within-session ratios for the mind and total-tick bars;
+the initial old-brain-only share establishes the design baseline but cannot
+replace that later matched comparison. Keep previous failed admission logs
+and invalid arm timings; they lack the required per-repeat admission proof
+and are not retroactively promoted by this correction.
+
+If three recorded windows 15 minutes apart remain at ≥8, proceed with
+inventory, mind, shadow and held-out evaluation without timing, and complete
+timing before the gate. This explicit fallback supersedes the former
+measure-first impasse only after its three-window evidence exists. The
+remaining scope, calibration ceiling, held-out freeze, identity, publication
+and isolation requirements are unchanged. The planner states M-UX2.1 is
+paused until CORE publishes; actual host admission is still measured.

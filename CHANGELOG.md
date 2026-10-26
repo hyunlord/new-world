@@ -16,6 +16,7 @@ tags `v7-final-sim` and `v7-final-art`.
 - Separate CORE outcome scorer for matched BASE/new-brain worlds and exposed-only cold-snap arithmetic; ten tests and synthetic CLI controls pass. Receipts bind both scorer and validator files. Held-out seeds have not been run.
 
 ### Changed
+- Planner correction (2026-10-26 22:00 KST), recorded in CORE_DECISIONS D10: timing admission is 1-minute load <8 before every repeat with all three load averages recorded; comparison binaries must be interleaved in one session. Earlier contended arm timings remain INVALID. Three high-load windows 15 minutes apart permit non-timing work before final measurement.
 - ROADMAP schedules M-CORE and M6–M11; superseded M6-finalization/M-PERF rows remain as history. VISION carries the approved v1.0 definition and retains the previous definition.
 - The initial default and feature measurement-tool binaries match BASE on 228,748 baseline values, 64 chronicle files, raw samples and all nine OFF fixtures; both ON two-seed 24-day controls match, as does the feature eight-seed 48-day control. The corrected final-tool binary also passes the full baseline/OFF and ON 24-day comparisons. Mind implementation, shadow, held-out evaluation, quiet performance and final gate remain pending. No current decision-share or acceptance claim.
 
