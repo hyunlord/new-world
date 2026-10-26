@@ -20,7 +20,7 @@ INPUT_FILES: Final = ('rust/Cargo.toml', 'rust/Cargo.lock', 'rust/rust-toolchain
 BRIDGE: Final = 'rust/target/debug/libsim_bridge.dylib'
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(slots=True)
 class EvidenceError(ValueError):
     reason: str
 

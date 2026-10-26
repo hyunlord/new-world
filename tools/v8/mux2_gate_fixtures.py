@@ -14,12 +14,33 @@ def validate_fixtures(directory: Path, manifest: Path) -> None:
     root = Path(__file__).resolve().parents[2]
     external(directory, root)
     external(manifest, root)
+    directory = directory.resolve()
     files = sorted(p for p in directory.iterdir() if p.suffix in ('.save', '.wsave'))
+    require(all(p.is_file() and not p.is_symlink() for p in files),
+            'fixtures must be regular files within the fixture directory')
     require(len(files) == 4, 'require four genuine old-binary fixtures')
-    hashes = read_json(manifest).mapping()
+    document = read_json(manifest)
+    values = document.mapping()
+    hashes: dict[str, str] = {}
+    if 'scenes' in values:
+        document.field('schema').equals(1)
+        scenes = document.field('scenes').array()
+        require(len(scenes) == 4, 'require four original capture scenes')
+        ids: set[str] = set()
+        for scene in scenes:
+            identifier = scene.field('id').text()
+            require(bool(identifier) and identifier not in ids, 'duplicate or empty scene id')
+            ids.add(identifier)
+            path = Path(scene.field('save').text())
+            require(path.is_absolute() and path.parent == directory
+                    and path == path.resolve(), 'scene save path escapes fixture directory')
+            require(path.name not in hashes, 'duplicate scene save path')
+            hashes[path.name] = scene.field('sha256').text()
+    else:
+        hashes = {key: Node(value).text() for key, value in values.items()}
     require(set(hashes) == {p.name for p in files}, 'fixture inventory mismatch')
     for path in files:
-        check_hash(path, Node(hashes[path.name]).text())
+        check_hash(path, hashes[path.name])
         with path.open('rb') as stream:
             require(stream.read(12) == b'WORLDSIM' + (10).to_bytes(4, 'little'),
                     'fixture is not format10')
