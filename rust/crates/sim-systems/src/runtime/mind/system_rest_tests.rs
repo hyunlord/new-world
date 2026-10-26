@@ -1,6 +1,6 @@
 //! Coordinator regressions for real routine-to-rest handoff and finite hearth seats.
 use super::{ColonyMindSystem, MindProgram, SOURCE};
-use crate::worldgen::{build_world_with, WorldGenConfig};
+use crate::worldgen::{build_world_without_runtime_for_tests as build_world_with, WorldGenConfig};
 use sim_core::components::{Activity, ActivityKind, Agent, AgentState, Cold, Hunger, SeekTarget};
 use sim_core::rules::WorldRules;
 use sim_engine::{FireState, RuntimeSystem, SimEngine};

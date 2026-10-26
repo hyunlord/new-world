@@ -41,9 +41,8 @@ pub struct SystemRegistration {
     pub worlds: SystemWorlds,
 }
 
-/// Pre-switch production membership in execution order. All current systems
-/// remain registered in both worlds, preserving baseline no-op registrations.
-/// The colony mind switch must update this table and the real constructors.
+/// Production membership in execution order. The decision slot is world-specific;
+/// all other registrations retain their existing baseline no-op membership.
 pub const SYSTEM_REGISTRATIONS: &[SystemRegistration] = &[
     SystemRegistration {
         name: "BuildingStampSystem",
@@ -83,7 +82,11 @@ pub const SYSTEM_REGISTRATIONS: &[SystemRegistration] = &[
     },
     SystemRegistration {
         name: "AgentDecisionSystem",
-        worlds: SystemWorlds::Both,
+        worlds: SystemWorlds::Baseline,
+    },
+    SystemRegistration {
+        name: "ColonyMindSystem",
+        worlds: SystemWorlds::Colony,
     },
     SystemRegistration {
         name: "StewardSystem",

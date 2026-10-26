@@ -270,9 +270,16 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
 }
 
 /// Load an engine saved by [`save`], with the production system list
-/// ([`crate::register_default_runtime_systems`]).
+/// selected from the decoded world rules.
 pub fn load(bytes: &[u8]) -> Result<SimEngine, SaveError> {
-    load_with(bytes, crate::register_default_runtime_systems)
+    load_with(bytes, |engine| {
+        let world = if engine.resources.rules.colony.is_some() {
+            sim_engine::registration::WorldKind::Colony
+        } else {
+            sim_engine::registration::WorldKind::Baseline
+        };
+        crate::register_world_runtime_systems(engine, world);
+    })
 }
 
 /// [`load`] with a caller-chosen system registration; the registered
@@ -406,8 +413,12 @@ pub fn load_with(
     let world = world::build(&body.world).map_err(SaveError::World)?;
     content_validation::validate_illness(&resources, &world).map_err(SaveError::Decode)?;
     let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
-    engine.resources.rules = resources.rules;
+    let legacy_colony_brain =
+        resources.rules.colony.is_some() && resources.mind.policy_source.is_none();
+    // Registration must see saved policy/history and retain any legacy initialization.
+    std::mem::swap(&mut engine.resources, &mut resources);
     register(&mut engine);
+    std::mem::swap(&mut engine.resources, &mut resources);
     if legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10 {
         let registered = engine.system_states().map_err(SaveError::Systems)?;
         // Walk registration order so both v6 additions get their final positions.
@@ -422,10 +433,51 @@ pub fn load_with(
             }
         }
     }
+    if legacy_colony_brain {
+        let registered = engine.system_states().map_err(SaveError::Systems)?;
+        migrate_colony_decision_slot(&mut body.systems, &registered)?;
+    }
     engine
         .install_saved(world, resources, body.current_tick, &body.systems)
         .map_err(SaveError::Systems)?;
     Ok(engine)
+}
+
+/// Only the known empty legacy lifecycle slot may change; all other slots stay exact.
+fn migrate_colony_decision_slot(
+    saved: &mut [(String, Vec<u8>)],
+    registered: &[(String, Vec<u8>)],
+) -> Result<(), SaveError> {
+    if !registered.iter().any(|entry| entry.0 == "ColonyMindSystem") {
+        return Ok(());
+    }
+    if saved.len() != registered.len() {
+        return Err(SaveError::Systems(
+            "legacy colony system count mismatch".into(),
+        ));
+    }
+    let mut replacement = None;
+    for (index, (old, new)) in saved.iter().zip(registered).enumerate() {
+        if old.0 == new.0 {
+            continue;
+        }
+        if old.0 != "AgentDecisionSystem"
+            || new.0 != "ColonyMindSystem"
+            || !old.1.is_empty()
+            || !new.1.is_empty()
+            || replacement.is_some()
+        {
+            return Err(SaveError::Systems(
+                "legacy colony decision slot mismatch".into(),
+            ));
+        }
+        replacement = Some(index);
+    }
+    let index = replacement.ok_or_else(|| {
+        SaveError::Systems("colony mind system has no saved policy or legacy decision slot".into())
+    })?;
+    saved[index].0.clone_from(&registered[index].0);
+    Ok(())
 }
 
 /// Check the magic and the version; the body follows.

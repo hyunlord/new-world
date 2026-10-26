@@ -182,12 +182,12 @@ impl WorldGenConfig {
 /// the nearest whole tile. Requires dimensions at least 32 and valid fractions.
 pub fn build_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
     build_world_with_registrar(cfg, rules, |engine| {
-        #[cfg(feature = "mind_candidate")]
-        if engine.resources.rules.colony.is_some() {
-            crate::register_colony_mind_runtime_systems(engine);
-            return;
-        }
-        crate::register_default_runtime_systems(engine);
+        let world = if engine.resources.rules.colony.is_some() {
+            sim_engine::registration::WorldKind::Colony
+        } else {
+            sim_engine::registration::WorldKind::Baseline
+        };
+        crate::register_world_runtime_systems(engine, world);
     })
 }
 
@@ -196,6 +196,15 @@ pub fn build_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
 #[cfg(feature = "mind_shadow")]
 pub fn build_shadow_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
     build_world_with_registrar(cfg, rules, crate::register_shadow_runtime_systems)
+}
+
+/// Isolated generated world for tests that manually execute their own runtime systems.
+#[cfg(test)]
+pub(crate) fn build_world_without_runtime_for_tests(
+    cfg: &WorldGenConfig,
+    rules: WorldRules,
+) -> SimEngine {
+    build_world_with_registrar(cfg, rules, |_| {})
 }
 
 fn build_world_with_registrar(
@@ -255,42 +264,39 @@ fn build_world_with_registrar(
 mod tests {
     use super::*;
     #[test]
-    fn fresh_colony_registration_matches_candidate_feature_before_first_tick() {
+    fn fresh_colony_registration_is_initialized_before_first_tick() {
         let engine = build_world_with(&WorldGenConfig::colony(7), WorldRules::colony(7));
         let names = engine.system_names();
-        let candidate = cfg!(feature = "mind_candidate");
         assert_eq!(
             names
                 .iter()
                 .filter(|name| **name == "ColonyMindSystem")
                 .count(),
-            usize::from(candidate)
+            1
         );
         assert_eq!(
             names
                 .iter()
                 .filter(|name| **name == "AgentDecisionSystem")
                 .count(),
-            usize::from(!candidate)
+            0
         );
         assert_eq!(engine.current_tick(), 0);
         assert_eq!(engine.resources.world_seed, 7);
-        assert_eq!(engine.resources.mind.policy_source.is_some(), candidate);
-        assert_eq!(engine.resources.mind.history.is_some(), candidate);
+        assert!(engine.resources.mind.policy_source.is_some());
+        assert!(engine.resources.mind.history.is_some());
         assert!(engine.resources.mind.running.is_empty());
-        if candidate {
-            let source = include_str!("../../../sim-core/data/colony/mind.ron");
-            assert_eq!(engine.resources.mind.policy_source.as_deref(), Some(source));
-            let program = crate::runtime::mind::MindProgram::load(source).unwrap();
-            engine
-                .resources
-                .mind
-                .history
-                .as_ref()
-                .unwrap()
-                .check_policy(&program.policy)
-                .unwrap();
-        }
+        let source = include_str!("../../../sim-core/data/colony/mind.ron");
+        assert_eq!(engine.resources.mind.policy_source.as_deref(), Some(source));
+        let program = crate::runtime::mind::MindProgram::load(source).unwrap();
+        engine
+            .resources
+            .mind
+            .history
+            .as_ref()
+            .unwrap()
+            .check_policy(&program.policy)
+            .unwrap();
     }
 
     #[test]
@@ -344,5 +350,26 @@ mod tests {
                 .count(),
             500
         );
+    }
+
+    #[test]
+    fn switch_default_colony_returns_initialized_policy_before_commands() {
+        let engine = build_world_with(&WorldGenConfig::colony(7), WorldRules::colony(7));
+        assert_eq!(engine.current_tick(), 0);
+        assert_eq!(
+            engine.resources.mind.policy_source.as_deref(),
+            Some(include_str!("../../../sim-core/data/colony/mind.ron"))
+        );
+        assert!(engine.resources.mind.history.is_some());
+        assert!(engine.resources.mind.running.is_empty());
+        assert_eq!(
+            engine
+                .system_names()
+                .iter()
+                .filter(|name| **name == "ColonyMindSystem")
+                .count(),
+            1
+        );
+        assert!(!engine.system_names().contains(&"AgentDecisionSystem"));
     }
 }

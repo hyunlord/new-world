@@ -1,8 +1,8 @@
 # System world registration
 
-Pre-switch metadata: baseline and colony retain the same 49 registrations, including systems that self-gate and do no work in baseline. Membership means registered, not that every arm fires. `AgentDecisionSystem` remains in both worlds until the mind switch.
+Baseline and colony each retain 49 registrations. The priority125 slot is `AgentDecisionSystem` for baseline and `ColonyMindSystem` for colony. Other registrations retain their prior membership, including baseline no-ops. Membership means registered, not that every arm fires.
 
-Validation status: **NOT_RUN** for this change while frozen timing captures hold the Cargo slot. The table below was prepared from current source; the test must confirm it against real constructor metadata before acceptance.
+Validation status: **NOT_RUN** for the production switch; parent-owned focused verification is pending. The table below was prepared from current source; the test must confirm it against real constructor metadata before acceptance.
 
 `sim-engine::registration::SYSTEM_REGISTRATIONS` owns world membership. Concrete constructors stay in `sim-systems`. The `registration_tests::system_worlds_document_matches_real_registration` test renders this table from actual registered instances, checks this snapshot, and prints the table with `--nocapture`. Tests do not overwrite documentation.
 
@@ -18,7 +18,8 @@ Validation status: **NOT_RUN** for this change while frozen timing captures hold
 | BillSystem | 123 | 60 | yes | yes |
 | FleeSystem | 123 | 3 | yes | yes |
 | JobAssignSystem | 124 | 1 | yes | yes |
-| AgentDecisionSystem | 125 | 1 | yes | yes |
+| AgentDecisionSystem | 125 | 1 | yes | no |
+| ColonyMindSystem | 125 | 1 | no | yes |
 | StewardSystem | 125 | 360 | yes | yes |
 | StaleSeekTargetSystem | 126 | 1 | yes | yes |
 | JobExecuteSystem | 127 | 1 | yes | yes |

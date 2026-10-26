@@ -458,3 +458,152 @@ DETERMINISM PASS, and its summary is byte-identical to `base-steward/probe/summa
 The complete parent capture/compare/ON chain exited 0 before the pre-switch
 implementation commit. No timing claim follows from these training or identity
 results. Preserve rounds 1–3 and their source-bound results.
+
+
+## D19 — Switch production colony registration while retaining baseline routing
+
+Status: switch implemented in the working tree; focused tests and post-switch
+captures are complete. Switch commit remains pending; the full gate is not
+claimed here. The
+round-4 frozen policy remains unchanged at SHA-256
+`7a6c90ac89db9cfb08acac6a8e14c91d1a1690d9fa40c3798c52323ead43eae8`.
+
+Production registration now assigns `AgentDecisionSystem` only to baseline
+and `ColonyMindSystem` only to colony, at the existing decision priority and
+cadence. Other system ordering remains intact. Fresh world generation routes
+through the requested world rules and initializes colony policy/history before
+the first tick or player command. `mind_candidate` no longer selects a different
+production route; its declaration remains a historical build marker. Explicit
+shadow factories retain the old selector for comparison.
+
+Save loading chooses registration from decoded rules and presents saved
+resources to registration, preserving saved mind policy/history or the
+initializer for a legacy colony. A colony save without mind policy may migrate
+exactly one empty `AgentDecisionSystem` slot to an empty `ColonyMindSystem`
+slot in the same position. System count, all other names/order and state
+payload checks remain strict; mismatched or nonempty replacement slots fail.
+Existing baseline saves keep the legacy registrar. This is a bounded lifecycle
+slot migration, not permission to accept arbitrary system-list mismatches.
+
+Parent-confirmed focused checks passed: switch 10, save 41, registration 4,
+world generation 6 and shadow 3 tests. These checks do not substitute for
+post-switch baseline identity, old/new colony digests, frozen held-outs,
+native UI, story yield, admitted paired timing or the full gate. Final baseline
+isolation is still pending: retain a separately reviewable pure move into
+`runtime/baseline/decision`, then remove proven-dead colony gates/seam and
+verify the import boundary without changing baseline behavior.
+
+
+### Post-switch fixture maintenance and bounded freeze amendment
+
+Retain the initial failures under `/Users/rexxa/work/core-data/switch-dev/`:
+`systems.log` has five failures and `integration-1.log` has two. Custom-policy
+fixtures now change exactly two test imports to the `cfg(test)` unscheduled
+world factory; the strict production policy guard is unchanged. The repaired
+systems run passes all 310 tests in `systems-2.log`.
+
+The colony-command fixture expected natural V7 construction already classified
+as dropped in the inventory. Its replacement tests the explicit legacy seeker
+boundary at tick 132 while retaining real job construction, cleanup and
+survival coverage. All eleven command tests pass in `commands-2.log`. Further
+parent-confirmed checks pass: seven full-save tests including pregnancy/birth
+and baseline, nine jobs tests, twelve flee tests and three `engine_mind_ffi`
+tests; the second formatting and Clippy runs also pass. This is fixture
+maintenance, not policy tuning or a newly claimed gameplay fix.
+
+Freeze 4 remains intact. The additive pinned test-only amendment
+`/Users/rexxa/work/core-data/shadow-test-migration.json` has SHA-256
+`b15b4b7b1b0b2bbee788a604131b728fbe6f3c7e924c871d110e4ea2745f3e50`.
+It permits exactly the two import changes; the original manifest, checker and
+binaries are unchanged, and all other included files match exactly. Seven
+controls pass. The live wrapper passes in `switch-dev/test-migration-live.log`:
+it projects the two original test byte sequences into a temporary directory
+and invokes the unchanged checker, without mutating the repository. This is
+not a claim that the entire current source closure is byte-identical to the
+original freeze. The world-generation helper remains bound by its strict full
+hash; retiring the shadow factory will require a fresh explicit amendment.
+
+At the fixture-maintenance checkpoint captures were still running; the completed
+results are recorded below. No held-out worlds have been accessed and policy
+bytes remain frozen.
+
+
+### Completed switch capture and bounded review
+
+The full capture chain exited 0. Independent `switch-dev/fixture-audit.json`
+(SHA-256 `b6bcc6231c7640c6548eb03eefa950188da1023d1dba6d4eee44dbb8d65e77e6`)
+audits all nine OFF fixtures plus two-seed ×24-day ON: **58 worlds,
+3,271,680 ticks**, exact seed/day coverage, zero ledger/reservation violation
+ticks and null first violation. Behaviour coverage is **468,387/468,387** and
+strict critical-choice coverage **22,080/22,080**. Soak and ON determinism pass.
+Baseline compares 228,748 values with zero differences, 64 chronicle/relations
+files and 19,683 entries equal, and equal raw digests. The baseline comparison
+log SHA-256 is `8f5601d2424a458af813d5c42c1ac819b295ec1d7c1bff64b23b7772b7c2beae`.
+
+The actual probe binary is
+`629ea00c191e8df2e5f2a826fcf3e1a30615071be245311566316629e4f442dc`, built from
+p5 `0ef68a1d2b6eb946e150963071b2e623fa58d4b0` plus the captured source patch
+`9411d508336f0fd6c125463d0431ffe5734f23de1780b0b06259cdfbd956dfc6`.
+It is not described as a binary compiled at a future p6 commit. The audit
+checks the captured Rust diff against current source. Bounded switch review
+approves this scope, and 55 focused Python checks pass; neither is a full-gate
+or publication claim.
+
+| Fixture | BASE summary SHA-256 | Switch summary SHA-256 |
+|---|---|---|
+| soak | `c07dab3200fc3be1cfa87dd5abee629964ba8c17ac62469ae86c29bd73d78b69` | `203d098630d061261c76e83f6b1d3951d662884846758004ccd0c52bc4ca2b5f` |
+| story | `d6952313fe88f1caab37b18c85d42a352689a56467d5af8109927c21dc227feb` | `94f177b3ef924a1ab59357ded06a5e0a7fed22ac02b5646eaabed6040e149d28` |
+| neighbours | `eab12f6964891d9b2675b538ec1e3d6141ad4d3637eb4a9198e33d773e6f677c` | `0281170659f77c905ff7b9a10b63550587c9881e688521d70e45020f66493267` |
+| knowledge_f10 | `f39c21ae1d9bf6a819714be84510ad1f6d9d12664236f37d0f1942efec4b6d46` | `fc48d580d159a03d83d00125d2f2d2d9e41bbbb606930c071a185c9f280ea985` |
+| m55_pressure | `74ec901346b50a7ba6dad2a34993101c16b57fbaeaf3153deb321044a7d2cd96` | `4a0cda9ea85041210834e8124e04005b2cad3b5c1cd5e636ae897b638f674a36` |
+| m55_nodraft | `32ab17b017a6311fea0556071c01d8d0ed594ae2002aaf0dcf70895e9051d5ee` | `1f319da7c4b76ad59861c810862667e02e0afa0fbdee6d87345f917b83b9adb2` |
+| m55_storyoff | `9065d5679657056c0f407564a381843fa5a6cdc4204473c10fbd9b81d33bb97c` | `139682522580c142f1d5f715efdf33b5a9ed724ee4d099c1642ab257c7cb4f93` |
+| m55_noneighbours | `fef5b45dd8eae35533c5d6738f1c430ef525fecc13b41816ead26449823deecb` | `bc651e11dda612aa54f3e349ccc56c26e35980ba36adbedbdd183f28710b3f41` |
+| m55_quiet | `b62668f754ed0b1e1d251b9b81a63ecbfde64e8e3040bc03587de8e4814978fa` | `a08bbb39f93a889c4a1cbece1879220cddddf2809b056eaa44910e8fdffacb33` |
+| steward_on | `7de55ce7ff34aebc978769de8fc63037ecda67c0929b1b783ea6939799087196` | `cad9811728445bba5d8aa9027d6450ceb9aec3b40635258572577b711c387958` |
+
+These changed summaries contain real gameplay drift as well as new mind
+metadata. Work/craft throughput, stocks, knowledge, demographic and social
+trajectories differ; fingerprints alone would not prove those differences.
+The authorized switch replaces the legacy cascade with authored band/node
+ordering and node-keyed lotteries, which can change downstream trajectories.
+This explains a mechanism for divergence, not proven causal attribution for
+every changed leaf. Identical command scripts also need not yield identical
+accepted command totals. No policy tuning follows from this audit.
+
+Retain all 21 selected outcome-warning rows below (BASE → switch); improvements
+and regressions are both evidence. In particular four no-draft seeds have
+increased combat deaths; noneighbours seed 6 has two exposure deaths; five
+fixtures lose seed-6 U3; craft-loss changes are not hidden.
+
+| Fixture / seed | Changed outcome |
+|---|---|
+| story / 1 | crafts_lost: 2 → 0 |
+| knowledge_f10 / 7 | crafts_lost: 0 → 1 |
+| m55_pressure / 2 | crafts_lost: 0 → 1 |
+| m55_pressure / 3 | crafts_lost: 1 → 0 |
+| m55_pressure / 4 | crafts_lost: 1 → 0 |
+| m55_pressure / 5 | crafts_lost: 2 → 5 |
+| m55_pressure / 6 | u3_no_loose_logs_day5: true → false |
+| m55_pressure / 7 | crafts_lost: 0 → 1 |
+| m55_nodraft / 0 | crafts_lost: 1 → 3 |
+| m55_nodraft / 1 | combat deaths 0 → 2 |
+| m55_nodraft / 4 | combat deaths 0 → 2 |
+| m55_nodraft / 5 | crafts_lost: 3 → 0 |
+| m55_nodraft / 6 | combat deaths 0 → 2; u3_no_loose_logs_day5: true → false |
+| m55_nodraft / 7 | combat deaths 1 → 2 |
+| m55_storyoff / 6 | u3_no_loose_logs_day5: true → false |
+| m55_noneighbours / 3 | crafts_lost: 0 → 2 |
+| m55_noneighbours / 5 | crafts_lost: 2 → 3 |
+| m55_noneighbours / 6 | crafts_lost: 0 → 1; exposure deaths 0 → 2; u3_no_loose_logs_day5: true → false |
+| m55_noneighbours / 7 | crafts_lost: 2 → 1 |
+| m55_quiet / 6 | u3_no_loose_logs_day5: true → false |
+| steward_on / 0 | crafts_lost: 2 → 1 |
+
+The complete audit retains per-seed values and structural differences; leaf
+counts are not independent events. The earlier partial audit remains archived.
+These OFF/short-ON captures establish the stated safety and coverage checks,
+not OFF performance PASS or full outcome acceptance. The full guarded ON
+held-out comparison has not yet been measured. Baseline isolation, paired
+performance, native UI, story comparison, full gate and publication remain
+separate obligations; no whole-current-closure byte identity is claimed.

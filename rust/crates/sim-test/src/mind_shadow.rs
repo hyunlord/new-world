@@ -201,7 +201,7 @@ mod tests {
     #[test]
     fn shadow_factory_pins_old_brain_and_preserves_production_world_generation() {
         let args = parse(&["--out", "/tmp/unused"].map(String::from)).expect("args");
-        let mut shadow_world = world(&args, 0).expect("explicit legacy factory");
+        let shadow_world = world(&args, 0).expect("explicit legacy factory");
         let mut production = crate::scenes::colony_scene(0);
         let names = shadow_world.system_names();
         assert_eq!(
@@ -212,6 +212,15 @@ mod tests {
             1
         );
         assert!(!names.contains(&"ColonyMindSystem"));
+        assert!(shadow_world.resources.mind.policy_source.is_none());
+        assert!(shadow_world.resources.mind.history.is_none());
+        assert!(production.system_names().contains(&"ColonyMindSystem"));
+        assert!(!production.system_names().contains(&"AgentDecisionSystem"));
+        assert!(production.resources.mind.policy_source.is_some());
+        assert!(production.resources.mind.history.is_some());
+        // Compare generation only: initialized mind is an intentional D14 difference.
+        // Temporarily setting it aside in this test is not a trajectory identity claim.
+        let initialized_mind = std::mem::take(&mut production.resources.mind);
         assert_eq!(shadow_world.resources.rules, production.resources.rules);
         assert_eq!(
             crate::probe::fingerprint(&shadow_world),
@@ -221,23 +230,8 @@ mod tests {
             crate::probe::colony::colony_fingerprint(&shadow_world),
             crate::probe::colony::colony_fingerprint(&production)
         );
-        // Before the switch both constructors must also preserve the full tick trajectory.
-        // Afterwards production intentionally uses the new brain; generation parity remains.
-        if production.system_names().contains(&"AgentDecisionSystem") {
-            assert_eq!(shadow_world.system_names(), production.system_names());
-            for _ in 0..120 {
-                shadow_world.tick();
-                production.tick();
-            }
-            assert_eq!(
-                crate::probe::fingerprint(&shadow_world),
-                crate::probe::fingerprint(&production)
-            );
-            assert_eq!(
-                crate::probe::colony::colony_fingerprint(&shadow_world),
-                crate::probe::colony::colony_fingerprint(&production)
-            );
-        }
+        production.resources.mind = initialized_mind;
+        assert!(production.resources.mind.policy_source.is_some());
     }
     #[test]
     fn observation_preserves_real_legacy_world_fingerprints() {

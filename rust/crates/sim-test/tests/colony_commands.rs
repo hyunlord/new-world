@@ -443,23 +443,80 @@ fn replay_of_the_command_log_reproduces_the_run() {
     assert_ne!(digest(&idle), digest(&original));
 }
 
-/// The colony world under the M3 colony rule (no knowledge). Since M4 the V7
-/// construction arm never sends anyone to a knowledge-gated colony site (M4
-/// DECISIONS D22) and every placeable blueprint is gated, so the V7 seeker the
-/// two tests below free can only arise without the knowledge rule.
+/// Use M3 to make the fixture hut available to ordinary job builders.
+/// The production mind intentionally dropped natural V7 construction entry
+/// (CORE_INVENTORY); legacy seeker cleanup is staged explicitly below.
 fn colony_engine_without_knowledge(seed: u64) -> sim_engine::SimEngine {
     let mut engine = sim_test::colony_engine(seed);
     engine.resources.rules.colony = Some(sim_core::rules::ColonyRule::M3);
+    assert!(engine.system_names().contains(&"ColonyMindSystem"));
+    assert!(!engine.system_names().contains(&"AgentDecisionSystem"));
     engine
 }
 
-/// Review H1 (M1 Part 6): an idle adult on a waiting hut's centre enters the
-/// V7 `Seeking { ConstructionSite }`; cancelling the site in that window used
-/// to leave it frozen there until it died of thirst (about 27 game hours). The
-/// colony's `ConstructionSystem` now resets a seeker whose site is gone.
+/// Inject a legacy state after the real mind/jobs and before construction.
+/// The witness ensures the cleanup assertion cannot pass because no seeker
+/// reached the construction pass. This is fixture setup, not a second selector.
+fn stage_legacy_seeker(
+    engine: &mut SimEngine,
+    entity: hecs::Entity,
+    centre: (u32, u32),
+) -> std::sync::Arc<std::sync::atomic::AtomicBool> {
+    use sim_core::components::{AgentState, Position, SeekTarget, TargetKind};
+    use std::sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    };
+    struct LegacySeekerBoundary {
+        entity: Option<hecs::Entity>,
+        centre: (u32, u32),
+        observed: Arc<AtomicBool>,
+    }
+    impl sim_engine::RuntimeSystem for LegacySeekerBoundary {
+        fn name(&self) -> &str {
+            "LegacySeekerFixtureBoundary"
+        }
+        fn priority(&self) -> u32 {
+            132
+        }
+        fn tick_interval(&self) -> u64 {
+            1
+        }
+        fn tick(&mut self, world: &mut hecs::World, _: &mut sim_engine::SimResources) {
+            let Some(entity) = self.entity.take() else {
+                return;
+            };
+            let seeking = AgentState::Seeking {
+                target: TargetKind::ConstructionSite,
+            };
+            *world
+                .get::<&mut AgentState>(entity)
+                .expect("live fixture adult") = seeking;
+            {
+                let mut position = world.get::<&mut Position>(entity).unwrap();
+                position.x = self.centre.0;
+                position.y = self.centre.1;
+            }
+            let _ = world.remove_one::<SeekTarget>(entity);
+            assert_eq!(*world.get::<&AgentState>(entity).unwrap(), seeking);
+            self.observed.store(true, Ordering::SeqCst);
+        }
+    }
+    let observed = Arc::new(AtomicBool::new(false));
+    engine.register_system(Box::new(LegacySeekerBoundary {
+        entity: Some(entity),
+        centre,
+        observed: observed.clone(),
+    }));
+    observed
+}
+
+/// A legacy seeker at a waiting hut remains there while the site exists,
+/// then must be freed when cancellation removes it. Exercise the real colony
+/// runtime, without requiring the dropped V7 natural-construction selector.
 #[test]
-fn a_cancelled_site_frees_its_v7_seeker() {
-    use sim_core::components::{Agent, AgentState, Child, Elder, Position, TargetKind};
+fn a_cancelled_site_frees_its_legacy_seeker() {
+    use sim_core::components::{Agent, AgentState, Child, Elder, TargetKind};
     let seeking = AgentState::Seeking {
         target: TargetKind::ConstructionSite,
     };
@@ -487,29 +544,15 @@ fn a_cancelled_site_frees_its_v7_seeker() {
         .collect();
     adults.sort();
     let adult = adults[0].1;
-    // Hold the adult on the centre, idle, until the cascade sends it to the
-    // site (M3: paths moved its day, so it may be on its way to forage).
-    let mut entered = false;
-    for _ in 0..200 {
-        if let Ok(mut p) = engine.world.get::<&mut Position>(adult) {
-            p.x = centre.0;
-            p.y = centre.1;
-        }
-        if state_of(&engine, adult) != seeking {
-            if let Ok(mut s) = engine.world.get::<&mut AgentState>(adult) {
-                *s = AgentState::Idle;
-            }
-        }
-        engine.tick();
-        if state_of(&engine, adult) == seeking && tile_of(&engine, adult) == centre {
-            entered = true;
-            break;
-        }
-    }
-    assert!(
-        entered,
-        "the adult never entered Seeking {{ ConstructionSite }} on the centre"
+    let entered = stage_legacy_seeker(&mut engine, adult, centre);
+    engine.tick();
+    assert!(entered.load(std::sync::atomic::Ordering::SeqCst));
+    assert_eq!(
+        state_of(&engine, adult),
+        seeking,
+        "a waiting site keeps its seeker"
     );
+    assert_eq!(tile_of(&engine, adult), centre);
     let cancel = Command::CancelArea {
         x0: spot.0,
         y0: spot.1,
@@ -517,7 +560,9 @@ fn a_cancelled_site_frees_its_v7_seeker() {
         y1: spot.1 + 2,
     };
     assert!(submit(&mut engine, cancel).accepted);
+    let observed = stage_legacy_seeker(&mut engine, adult, centre);
     engine.tick();
+    assert!(observed.load(std::sync::atomic::Ordering::SeqCst));
     assert_ne!(
         state_of(&engine, adult),
         seeking,
@@ -533,13 +578,11 @@ fn a_cancelled_site_frees_its_v7_seeker() {
     );
 }
 
-/// Review round 2 (M-A): the completion entrance of the same trap. Adult B
-/// enters `Seeking { ConstructionSite }` at 125 in the tick in which builder A
-/// completes the hut at 133; the next tick must free B. A reaching
-/// `Consuming` on the ready site pins the guard that keeps a seeker of a
-/// standing site.
+/// A real job builder completes the hut while a staged legacy seeker reaches
+/// construction at the same tick boundary. The following construction pass
+/// must free the seeker of the now-absent site.
 #[test]
-fn a_completed_site_frees_its_v7_seeker() {
+fn a_completed_site_frees_its_legacy_seeker() {
     use hecs::Entity;
     use sim_core::colony::Job;
     use sim_core::components::{
@@ -613,7 +656,7 @@ fn a_completed_site_frees_its_v7_seeker() {
             .collect();
         adults.sort();
         let (a, b) = (adults[0].1, adults[1].1);
-        // A becomes a non-job builder on the ready site (Seeking, then Consuming).
+        // The production job systems assign A and start work on the ready site.
         let mut building = false;
         for _ in 0..200 {
             put(&mut engine, a, centre);
@@ -628,7 +671,11 @@ fn a_completed_site_frees_its_v7_seeker() {
             building,
             "seed {seed}: A never started building the ready site"
         );
-        // The completion tick: the site is one step short, B idle on the centre.
+        assert!(matches!(
+            engine.world.get::<&Job>(a).unwrap().kind,
+            sim_core::colony::JobKind::Build { site } if site == centre
+        ));
+        // Complete the real job-owned build with B staged at the old race boundary.
         {
             let mut s = engine.world.get::<&mut ConstructionSite>(site).unwrap();
             s.progress = s.blueprint.required_progress - 1;
@@ -639,7 +686,9 @@ fn a_completed_site_frees_its_v7_seeker() {
         *engine.world.get::<&mut AgentState>(b).unwrap() = AgentState::Idle;
         let _ = engine.world.remove_one::<SeekTarget>(b);
         let huts = engine.resources.colony.tallies.huts_built;
+        let entered = stage_legacy_seeker(&mut engine, b, centre);
         engine.tick();
+        assert!(entered.load(std::sync::atomic::Ordering::SeqCst));
         assert_eq!(
             engine.resources.colony.tallies.huts_built,
             huts + 1,
@@ -648,9 +697,11 @@ fn a_completed_site_frees_its_v7_seeker() {
         assert_eq!(
             state_of(&engine, b),
             seek,
-            "seed {seed}: B must enter Seeking in the completion tick (the entrance)"
+            "seed {seed}: completion must leave the staged seeker for next-tick cleanup"
         );
+        let observed = stage_legacy_seeker(&mut engine, b, centre);
         engine.tick();
+        assert!(observed.load(std::sync::atomic::Ordering::SeqCst));
         assert_ne!(
             state_of(&engine, b),
             seek,

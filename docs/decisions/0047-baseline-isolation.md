@@ -1,6 +1,6 @@
 # ADR 0047 — Isolate the frozen baseline after the colony switch
 
-Status: accepted staging boundary; neutral helper extraction and world-registration inventory exist. The production switch, final baseline directory move and deletion of the obsolete colony seam are pending. No standalone `sim-baseline` crate or completed isolation gate is claimed.
+Status: accepted staging boundary; neutral helper extraction and world-registration inventory exist. Production routing is switched in the working tree (D19); its commit/captures, final baseline directory move and deletion of the obsolete colony seam remain pending. No standalone `sim-baseline` crate or completed isolation gate is claimed.
 
 ## Context
 
@@ -8,9 +8,9 @@ ADR 0014 requires historical baseline identity. M-CORE authorizes a new colony d
 
 ## Decision
 
-Maintain an explicit world registration table in `sim-engine/src/registration.rs`, checked against real constructors. At this ADR's preparation, `AgentDecisionSystem` is still registered for Both; `ColonyMindSystem` is implemented but not the production replacement. The table is a current-state artifact, not a declaration that the switch happened.
+Maintain an explicit world registration table in `sim-engine/src/registration.rs`, checked against real constructors. The working-tree table now assigns `AgentDecisionSystem` to Baseline and `ColonyMindSystem` to Colony. Fresh generation and production save loading use requested/decoded rules; the explicit shadow factory retains legacy registration. This records source routing, not completed switch verification.
 
-After shadow acceptance and the authorized switch, register `ColonyMindSystem` for colony and the legacy selector for baseline at the existing priority/cadence. Move the legacy selector and baseline-only helpers to `sim-systems/src/runtime/baseline/decision/` by a separately reviewable pure move. Then remove only colony gates proven dead under baseline-only registration and the unused `jobs/seam.rs`, retaining baseline identity. The move, dead-gate removal and their evidence must remain distinguishable; source simplification is not proof of identity.
+The working-tree switch registers `ColonyMindSystem` for colony and the legacy selector for baseline at the existing priority/cadence. Next, move the legacy selector and baseline-only helpers to `sim-systems/src/runtime/baseline/decision/` by a separately reviewable pure move. Then remove only colony gates proven dead under baseline-only registration and the unused `jobs/seam.rs`, retaining baseline identity. The move, dead-gate removal and their evidence must remain distinguishable; source simplification is not proof of identity.
 
 Shared mechanical helpers live in `runtime/agent_actions/`: consumption, needs/arrival, forage and wood targeting, memory bias and routine lifecycle. Existing legacy API paths re-export these neutral implementations. Sharing a helper does not authorize a colony import of the baseline selector, a call to legacy policy from facts, or changes to legacy random draws. The `baseline_isolation` gate must reject colony imports of `runtime::baseline::*` and verify world registration. Save/reload must preserve each world's actual system set and baseline fixtures.
 

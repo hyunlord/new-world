@@ -1,6 +1,6 @@
 # Authoring the colony mind
 
-Status: implementation guide for the M-CORE working tree. Production registration still uses the legacy selector pending the explicit switch. Examples below are authoring/test instructions, not claims of passing runtime, shadow, held-out or performance gates. Architectural contracts: [ADR 0046](../../decisions/0046-colony-mind.md), [ADR 0047](../../decisions/0047-baseline-isolation.md), [CORE_GOAL](CORE_GOAL.md).
+Status: implementation guide for the M-CORE working tree. The working-tree production registrar now uses the mind for colony and the legacy selector for baseline; switch commit/captures and final baseline isolation remain pending (CORE_DECISIONS D19). Examples below are authoring/test instructions, not claims of passing runtime, shadow, held-out or performance gates. Architectural contracts: [ADR 0046](../../decisions/0046-colony-mind.md), [ADR 0047](../../decisions/0047-baseline-isolation.md), [CORE_GOAL](CORE_GOAL.md).
 
 The source audit at this documentation revision finds 157 authored nodes and 80 distinct referenced fact names. The policy references 19 behaviours; the registry also retains target-bound `rest` for data-added nodes. These are static policy counts, not runtime coverage or acceptance results; the registry can expose additional unreferenced capabilities.
 

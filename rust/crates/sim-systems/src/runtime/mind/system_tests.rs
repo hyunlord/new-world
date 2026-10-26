@@ -1,6 +1,6 @@
 //! Data-only extension through the real registry, coordinator, target and record path.
 use super::{ColonyMindSystem, MindProgram};
-use crate::worldgen::{build_world_with, WorldGenConfig};
+use crate::worldgen::{build_world_without_runtime_for_tests as build_world_with, WorldGenConfig};
 use sim_core::causal::CausalEvent;
 use sim_core::components::{Activity, Agent, AgentState, Cold, Position, SeekTarget, TargetKind};
 use sim_core::rules::WorldRules;

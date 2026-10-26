@@ -364,3 +364,211 @@ fn site_origin_entity_bits_survive_save_restore() {
         MindFactSource::Command(0)
     );
 }
+
+// Production-switch regressions. These use the real registrars, not mocked lists.
+fn switch_fixture(register: fn(&mut SimEngine)) -> SimEngine {
+    let generated = crate::worldgen::build_world_with(
+        &crate::worldgen::WorldGenConfig::colony(7),
+        sim_core::rules::WorldRules::colony(7),
+    );
+    let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
+    engine.world = generated.world;
+    engine.resources = generated.resources;
+    engine.resources.mind = Default::default();
+    register(&mut engine);
+    engine
+}
+
+fn switch_v11_bytes(engine: &mut SimEngine) -> Vec<u8> {
+    let resources = std::mem::replace(
+        &mut engine.resources,
+        SimEngine::new(1, 1, MaterialRegistry::new()).resources,
+    );
+    let mut old = LegacyBodyV11 {
+        current_tick: engine.current_tick(),
+        world: world::capture(&engine.world).unwrap(),
+        systems: engine.system_states().unwrap(),
+        steward: Default::default(),
+        content_state: Default::default(),
+        resources,
+    };
+    old.steward = std::mem::take(&mut old.resources.steward);
+    old.content_state = std::mem::take(&mut old.resources.content_state);
+    let envelope = Envelope {
+        revision: sim_core::colony::content::installed()
+            .unwrap()
+            .revision()
+            .to_owned(),
+        payload: encode(&old).unwrap(),
+    };
+    let mut bytes = MAGIC.to_vec();
+    bytes.extend_from_slice(&11u32.to_le_bytes());
+    bytes.extend(encode(&envelope).unwrap());
+    bytes
+}
+
+#[test]
+fn switch_load_callback_sees_complete_saved_mind_resources() {
+    let mut engine = engine_with_history();
+    engine.resources.world_seed = 314;
+    let bytes = save(&mut engine).unwrap();
+    let loaded = load_with(&bytes, |candidate| {
+        assert_eq!(candidate.resources.world_seed, 314);
+        assert_eq!(
+            candidate.resources.mind.policy_source.as_deref(),
+            Some(SOURCE)
+        );
+        assert_eq!(
+            candidate
+                .resources
+                .mind
+                .history
+                .as_ref()
+                .unwrap()
+                .records(7)
+                .unwrap()
+                .len(),
+            16
+        );
+        assert!(candidate.resources.mind.running.contains_key(&7));
+    })
+    .unwrap();
+    assert_eq!(loaded.resources.world_seed, 314);
+}
+
+#[test]
+fn switch_v11_colony_migrates_only_the_legacy_decision_slot() {
+    let mut engine = switch_fixture(crate::register_default_runtime_systems);
+    for _ in 0..3 {
+        engine.tick();
+    }
+    let tick = engine.current_tick();
+    let bytes = switch_v11_bytes(&mut engine);
+    let mut loaded = load(&bytes).unwrap();
+    assert_eq!(loaded.current_tick(), tick);
+    assert!(loaded.system_names().contains(&"ColonyMindSystem"));
+    assert!(!loaded.system_names().contains(&"AgentDecisionSystem"));
+    assert!(loaded.resources.mind.policy_source.is_some());
+    assert!(loaded.resources.mind.history.is_some());
+    loaded.tick();
+    assert_eq!(loaded.current_tick(), tick + 1);
+}
+
+#[test]
+fn switch_v11_rejects_nonempty_or_misnamed_legacy_decision_state() {
+    let mut engine = switch_fixture(crate::register_default_runtime_systems);
+    let bytes = switch_v11_bytes(&mut engine);
+    for wrong_name in [false, true] {
+        let mut envelope: Envelope = decode(read_header(&bytes).unwrap()).unwrap();
+        let mut body: LegacyBodyV11 = decode(&envelope.payload).unwrap();
+        let entry = body
+            .systems
+            .iter_mut()
+            .find(|entry| entry.0 == "AgentDecisionSystem")
+            .unwrap();
+        if wrong_name {
+            entry.0 = "UnknownDecisionSystem".into();
+        } else {
+            entry.1.push(1);
+        }
+        envelope.payload = encode(&body).unwrap();
+        let mut malformed = MAGIC.to_vec();
+        malformed.extend_from_slice(&11u32.to_le_bytes());
+        malformed.extend(encode(&envelope).unwrap());
+        assert!(matches!(load(&malformed), Err(SaveError::Systems(_))));
+    }
+}
+
+#[test]
+fn switch_v12_public_reload_keeps_custom_policy_and_nonzero_tick_continuation() {
+    let mut engine = switch_fixture(|engine| {
+        let source = SOURCE.replace("id:\"idle\"", "id:\"custom_idle\"");
+        let program = MindProgram::load(&source).unwrap();
+        engine.resources.mind.history = Some(MindHistory::new(&program.policy).unwrap());
+        engine.resources.mind.policy_source = Some(source);
+        crate::register_colony_mind_runtime_systems(engine);
+    });
+    for _ in 0..4 {
+        engine.tick();
+    }
+    let bytes = save(&mut engine).unwrap();
+    let mut loaded = load(&bytes).unwrap();
+    assert_eq!(loaded.current_tick(), 4);
+    assert_eq!(
+        loaded.resources.mind.policy_source,
+        engine.resources.mind.policy_source
+    );
+    for _ in 0..3 {
+        engine.tick();
+        loaded.tick();
+    }
+    let policy = MindProgram::load(loaded.resources.mind.policy_source.as_deref().unwrap())
+        .unwrap()
+        .policy;
+    let custom = policy.node_id("custom_idle").unwrap();
+    assert!(!loaded.resources.mind.running.is_empty());
+    assert!(loaded
+        .resources
+        .mind
+        .running
+        .values()
+        .all(|choice| choice.node == custom));
+    assert_eq!(save(&mut loaded).unwrap(), save(&mut engine).unwrap());
+}
+
+#[test]
+fn switch_v12_public_reload_preserves_saturated_ring_and_shared_payload() {
+    let mut engine = engine_with_history();
+    engine.resources.rules = sim_core::rules::WorldRules::colony(7);
+    crate::register_colony_mind_runtime_systems(&mut engine);
+    let bytes = save(&mut engine).unwrap();
+    let mut loaded = load(&bytes).unwrap();
+    assert_eq!(save(&mut loaded).unwrap(), bytes);
+    let history = loaded.resources.mind.history.as_ref().unwrap();
+    assert_eq!(history.records(7).unwrap().len(), 16);
+    let latest = history.latest(7).unwrap();
+    let CausalEvent::MindChoice { choice } =
+        loaded.resources.causal_log.lookup(latest.id()).unwrap()
+    else {
+        panic!("choice")
+    };
+    assert!(choice.shares_payload(latest));
+}
+
+#[test]
+fn switch_baseline_public_reload_keeps_old_registration_and_future_bytes() {
+    let mut engine = crate::worldgen::build_world_with(
+        &crate::worldgen::WorldGenConfig::baseline(7),
+        sim_core::rules::WorldRules::baseline(7),
+    );
+    for _ in 0..3 {
+        engine.tick();
+    }
+    let bytes = save(&mut engine).unwrap();
+    let mut loaded = load(&bytes).unwrap();
+    assert!(loaded.system_names().contains(&"AgentDecisionSystem"));
+    assert!(!loaded.system_names().contains(&"ColonyMindSystem"));
+    assert!(loaded.resources.mind.policy_source.is_none());
+    for _ in 0..3 {
+        engine.tick();
+        loaded.tick();
+    }
+    assert_eq!(save(&mut loaded).unwrap(), save(&mut engine).unwrap());
+}
+
+#[test]
+fn switch_preswitch_v12_colony_with_empty_mind_migrates_legacy_slot() {
+    let mut engine = switch_fixture(crate::register_default_runtime_systems);
+    for _ in 0..3 {
+        engine.tick();
+    }
+    assert!(engine.resources.mind.policy_source.is_none());
+    let bytes = save(&mut engine).unwrap();
+    let mut loaded = load(&bytes).unwrap();
+    assert_eq!(loaded.current_tick(), 3);
+    assert!(loaded.system_names().contains(&"ColonyMindSystem"));
+    assert!(!loaded.system_names().contains(&"AgentDecisionSystem"));
+    assert!(loaded.resources.mind.history.is_some());
+    loaded.tick();
+    assert_eq!(loaded.current_tick(), 4);
+}

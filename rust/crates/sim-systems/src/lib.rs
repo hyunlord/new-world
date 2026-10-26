@@ -461,17 +461,17 @@ pub fn register_rhythm_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::agent::FertilitySystem));
 }
 
-/// Explicit world-selection seam. Before the mind switch both worlds retain
-/// the existing complete registration sequence, including rules-gated no-ops.
+/// Select the world's decision system within the shared registration sequence.
 /// Callers must pass decoded/requested world kind rather than fresh-engine
-/// defaults; worldgen and save routing will be integrated at the switch.
+/// defaults; worldgen and save supply the actual requested or decoded rules.
 pub fn register_world_runtime_systems(
     engine: &mut SimEngine,
     world: sim_engine::registration::WorldKind,
 ) {
     use sim_engine::registration::WorldKind;
     match world {
-        WorldKind::Baseline | WorldKind::Colony => register_default_runtime_systems(engine),
+        WorldKind::Baseline => register_default_runtime_systems(engine),
+        WorldKind::Colony => register_colony_mind_runtime_systems(engine),
     }
 }
 
@@ -615,5 +615,23 @@ mod registration_tests {
             .expect("end marker");
         assert_eq!(table, expected);
         println!("{table}");
+    }
+
+    #[test]
+    fn switch_production_membership_has_exactly_one_world_specific_brain() {
+        let baseline = registered(WorldKind::Baseline);
+        let colony = registered(WorldKind::Colony);
+        assert_eq!(baseline.system_names(), BASELINE_ORDER);
+        assert_eq!(
+            colony
+                .system_names()
+                .iter()
+                .filter(|name| **name == "ColonyMindSystem")
+                .count(),
+            1
+        );
+        assert!(!colony.system_names().contains(&"AgentDecisionSystem"));
+        assert!(!baseline.system_names().contains(&"ColonyMindSystem"));
+        assert!(colony.resources.mind.history.is_some());
     }
 }

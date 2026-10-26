@@ -178,10 +178,24 @@ freeze.external(root, config_path)
 freeze.pin(config_path, sys.argv[4])
 config = freeze.load(config_path)
 freeze.version(config)
-if set(config) != {'schema_version', 'manifest', 'manifest_sha256', 'calibration'}:
+required = {'schema_version', 'manifest', 'manifest_sha256', 'calibration'}
+migration_fields = {'test_migration', 'test_migration_checker_sha256'}
+if set(config) not in (required, required | migration_fields):
     raise SystemExit('invalid fixture config fields')
 manifest_path = Path(config['manifest'])
-freeze.check(root, manifest_path, config['manifest_sha256'])
+
+def check_frozen():
+    freeze.pin(config_path, sys.argv[4])
+    if 'test_migration' not in config:
+        freeze.check(root, manifest_path, config['manifest_sha256'])
+        return
+    freeze.pin(root / 'tools/v8/core_shadow_test_migration.py', config['test_migration_checker_sha256'])
+    amendment = freeze.read_reference(root, config['test_migration'])
+    import core_shadow_test_migration as migration
+    migration.check(root, manifest_path, config['manifest_sha256'],
+                    amendment, config['test_migration']['sha256'])
+
+check_frozen()
 manifest = freeze.load(manifest_path)
 shadow = freeze.read_reference(root, manifest['shadow'])
 control = freeze.read_reference(root, manifest['control'])
@@ -225,9 +239,9 @@ for steward in ('off', 'on'):
     for name, binary, prefix in [('observed', shadow, ['mind-shadow', '--observe', 'on']),
                                   ('control', shadow, ['mind-shadow', '--observe', 'off']),
                                   ('feature-off', control, [])]:
-        freeze.check(root, manifest_path, config['manifest_sha256'])
+        check_frozen()
         run([binary, *prefix, *flags, '--out', mode_dir / name], mode_dir / f'{name}.log')
-    freeze.check(root, manifest_path, config['manifest_sha256'])
+    check_frozen()
     observed_path = mode_dir / 'observed/mind_shadow.json'
     twin_path = mode_dir / 'control/mind_shadow.json'
     off_path = mode_dir / 'feature-off/summary.json'
@@ -252,7 +266,7 @@ for steward in ('off', 'on'):
         json.dump(fixture_review, stream, indent=2, sort_keys=True)
     run(['bash', helper, 'fixture', observed_path, twin_path, off_path, review_path], mode_dir / 'validation.log')
 freeze.pin(config_path, sys.argv[4])
-freeze.check(root, manifest_path, config['manifest_sha256'])
+check_frozen()
 print('CORE_SHADOW_FIXTURE PASS fresh seed=0 days=20 steward=off,on frozen observed/control/feature-OFF')
 PYRUN
     ;;
