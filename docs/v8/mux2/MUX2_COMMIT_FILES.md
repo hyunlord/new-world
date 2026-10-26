@@ -311,3 +311,25 @@ docs/ISSUES.md
 docs/v8/mux2/MUX2_DECISIONS.md
 tools/v8/test_bridge_api.py
 ```
+
+## p14 — a19d2f2c92b8502e80429021d6da6060b867956c
+
+```text
+.claude/skills/worldsim-godot/SKILL.md
+CHANGELOG.md
+docs/ARCHITECTURE.md
+docs/HISTORY.md
+docs/ISSUES.md
+docs/v8/mux2/MUX2_COMMIT_FILES.md
+docs/v8/mux2/MUX2_DECISIONS.md
+docs/v8/mux2/MUX2_REPORT.md
+rust/crates/sim-bridge/src/ffi/colony.rs
+rust/crates/sim-bridge/src/ffi/colony/tree_conversion.rs
+tools/v8/mart2_fps.gd
+tools/v8/mux2_gate_checks.sh
+tools/v8/mux2_gate_receipts.py
+tools/v8/mux2_tree_conversion_probe_check.py
+tools/v8/mux2_tree_conversion_test.gd
+tools/v8/test_mux2_gate_receipts.py
+tools/v8/test_mux2_tree_conversion_probe_check.py
+```

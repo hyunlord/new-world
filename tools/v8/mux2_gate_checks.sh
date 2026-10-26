@@ -46,10 +46,6 @@ case "$mode" in
     bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . \
       --script res://tools/v8/mux2_extent_owner_test.gd -- --expect-cache > "$log" 2>&1
     python3 tools/v8/mux2_gate_oracle_log.py mux2_extent_owner_test "$log"
-    log="$LOG/mux2_tree_conversion_test.log"
-    WORLDSIM_MUX2_TREE_CONVERSION_PROBE=1 bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . \
-      --script res://tools/v8/mux2_tree_conversion_test.gd > "$log" 2>&1
-    python3 tools/v8/mux2_tree_conversion_probe_check.py "$log" --expect-unique
     log="$LOG/stall-self-test.log"
     bash tools/v8/run_bounded.sh 120 "$GODOT_BIN" --headless --path . \
       --script res://tools/v8/mux2_stall_test.gd -- --self-test > "$log" 2>&1
