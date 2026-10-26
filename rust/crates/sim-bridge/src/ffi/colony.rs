@@ -7,6 +7,8 @@
 //! (each column in its map's key order) and [`collect_agent_jobs`] (the agent
 //! snapshot's row order). Versions ([`collect_colony_versions`]) let GDScript
 //! rebuild a layer only when its data changed.
+mod tree_conversion;
+
 use godot::prelude::*;
 use sim_core::colony::{BlueprintKind, Carry, Command, CommandResult, Job, RejectReason};
 use sim_core::components::{Agent, Position};
@@ -179,15 +181,7 @@ pub fn collect_tree_snapshot(resources: &SimResources) -> TreeSnapshot {
 }
 
 pub(super) fn trees_to_dict(trees: TreeSnapshot) -> VarDictionary {
-    let mut dict = VarDictionary::new();
-    dict.set("version", trees.version as i64);
-    let xs: Vec<i32> = trees.tiles.iter().map(|t| t.0 as i32).collect();
-    let ys: Vec<i32> = trees.tiles.iter().map(|t| t.1 as i32).collect();
-    let species: Vec<GString> = trees.species.iter().map(GString::from).collect();
-    dict.set("xs", PackedInt32Array::from(xs.as_slice()));
-    dict.set("ys", PackedInt32Array::from(ys.as_slice()));
-    dict.set("species", PackedStringArray::from(species.as_slice()));
-    dict
+    tree_conversion::tree_snapshot_to_dict(trees)
 }
 
 /// One colony site as the overlay shows it.

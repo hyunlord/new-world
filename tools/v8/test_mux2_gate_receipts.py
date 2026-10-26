@@ -44,6 +44,39 @@ def adjust_intervals(report, indexes, interval):
                         all_over33_frames=slow)
 
 
+class CaptureCommandTests(unittest.TestCase):
+    def test_stall_keeps_normal_windowed_rendering_and_full_duration(self) -> None:
+        root = Path('/fixture/project')
+        output = Path('/fixture/evidence')
+        godot = Path('/fixture/Godot')
+        command = receipts.commands(root, output, 'stall', godot)
+        self.assertEqual(command, [[
+            'bash', str(root / 'tools/v8/run_bounded.sh'), '960', str(godot),
+            '--path', str(root), '--resolution', '1920x1080',
+            '--always-on-top', '--windowed', '--script',
+            'res://tools/v8/mux2_stall_test.gd', '--', str(output / 'run'),
+        ]])
+        self.assertNotIn('--headless', command[0])
+        self.assertFalse(any('force_draw' in argument for argument in command[0]))
+
+    def test_foreground_stall_change_preserves_visibility_and_why_commands(self) -> None:
+        root = Path('/fixture/project')
+        output = Path('/fixture/evidence')
+        godot = Path('/fixture/Godot')
+        base = ['bash', str(root / 'tools/v8/run_bounded.sh')]
+        engine = [str(godot), '--path', str(root), '--resolution', '1920x1080']
+        self.assertEqual(receipts.commands(root, output, 'visibility', godot), [
+            base + ['1800'] + engine + ['--headless', '--script',
+                'res://tools/v8/mux2_visibility_saves.gd', '--', str(output / 'saves')],
+            base + ['1200'] + engine + ['--script', 'res://tools/v8/mux2_visibility_test.gd',
+                '--', '--manifest', str(output / 'saves/manifest.json'),
+                '--out', str(output / 'run')],
+        ])
+        self.assertEqual(receipts.commands(root, output, 'why', godot), [
+            base + ['180'] + engine + ['--script', 'res://tools/v8/mux2_why_input_test.gd'],
+        ])
+
+
 class StallReceiptTests(unittest.TestCase):
     def test_accepts_complete_two_arm_samples(self):
         # Given complete synthetic measurements; when parsed; then both arms pass.

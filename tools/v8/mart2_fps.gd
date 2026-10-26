@@ -2,7 +2,7 @@
 # Purpose: one measured run of the real game scene: `--load <abs .wsave>` (the seed 0 colony at day 20) or
 #   `--stress N` (reset_world_stress(0, N), the 1,000-person world), camera at `--zoom Z` on the hearth (the stress
 #   world: its centre), vsync off and no frame cap, the simulation running at 1×; `--warmup S` seconds are discarded,
-#   then frames are counted for `--seconds S` (Engine.get_frames_drawn). Prints one MART2_FPS JSON line: fps, frames,
+#   then frames are counted for `--seconds S` (RenderingServer.frame_post_draw). Prints one MART2_FPS JSON line: fps, frames,
 #   seconds, people, zoom, LOD state, the largest chunk bake seen (µs), texture and video memory (Performance
 #   monitors, bytes), the load average is recorded by the caller. Exits 0.
 #   `Godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/v8/mart2_fps.gd -- --load F --zoom 1`
@@ -10,11 +10,21 @@
 #   get_building_snapshot, get_world_info.
 extends SceneTree
 
+var _drawn_frames: int = 0
+
+func _on_frame_post_draw() -> void:
+	_drawn_frames += 1
+
+func _window_state() -> Dictionary:
+	return {"mode": root.mode, "always_on_top": root.always_on_top, "visible": root.visible, "focus": root.has_focus(), "size": [root.size.x, root.size.y]}
+
+
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 
 
 func _init() -> void:
+	RenderingServer.frame_post_draw.connect(_on_frame_post_draw)
 	call_deferred("_run")
 
 
@@ -79,7 +89,9 @@ func _run() -> void:
 		await process_frame
 	ground.set("bake_capture_context", "measurement")
 	var worst_bake: int = 0
-	var f0: int = Engine.get_frames_drawn()
+	var window_start: Dictionary = _window_state()
+	var f0: int = _drawn_frames
+	var engine_f0: int = Engine.get_frames_drawn()
 	var s0: int = Time.get_ticks_usec()
 	var process_ms: float = 0.0
 	var draw_calls: float = 0.0
@@ -90,13 +102,17 @@ func _run() -> void:
 		process_ms += Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0
 		draw_calls += Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 		samples += 1
-	var frames: int = Engine.get_frames_drawn() - f0
+	var frames: int = _drawn_frames - f0
+	var engine_frames: int = Engine.get_frames_drawn() - engine_f0
+	var window_end: Dictionary = _window_state()
 	var s1: int = Time.get_ticks_usec()
 	var elapsed: float = float(s1 - s0) / 1e6
 	ground.set("capture_bake_events", false)
 	var people: int = (SimReads.read(world, "get_agent_snapshot").get("ids", PackedInt64Array()) as PackedInt64Array).size()
 	var agents: Node = main.get_node("ColonyView/AgentLayer")
 	var result: Dictionary = {
+		"frame_counter": "RenderingServer.frame_post_draw", "engine_frames": engine_frames,
+		"window_start": window_start, "window_end": window_end,
 		"scene": "stress %d" % stress if stress > 0 else save.get_file(),
 		"zoom": zoom, "fps": float(frames) / elapsed, "frames": frames, "seconds": elapsed, "people": people,
 		"lod": bool(agents.call("lod_active")), "worst_chunk_bake_usec": worst_bake,

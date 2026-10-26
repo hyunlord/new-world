@@ -291,3 +291,23 @@ tools/v8/mux2_gate_inputs.py
 tools/v8/test_mux2_evidence_error.py
 tools/v8/test_mux2_gate_fixtures.py
 ```
+
+## p12 — bbf44c9fbcda48e6b2b29206f821a36f19432405
+
+```text
+CHANGELOG.md
+README.md
+docs/images/mux_contact_sheet.png
+docs/v8/mux2/MUX2_COMMIT_FILES.md
+docs/v8/mux2/MUX2_REPORT.md
+```
+
+## p13 — 674c7bdc048db73243542b9a43bcf3c2c8d7513c
+
+```text
+CHANGELOG.md
+docs/HISTORY.md
+docs/ISSUES.md
+docs/v8/mux2/MUX2_DECISIONS.md
+tools/v8/test_bridge_api.py
+```
