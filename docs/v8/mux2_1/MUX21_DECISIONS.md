@@ -43,3 +43,17 @@ The first shared-target preparation produced byte-identical mart21/mux bridges d
 - Admission attempt base/N200/quarter rejected at load98.67, recorded at `comparison/base-n200-z0.25-a1/admission.json`.
 - No renderer/UI product changes, no simulation changes, no valid FPS comparisons, no bisect result, no fix/gate/publication claim.
 - Next: install isolated historical dylibs by replacing destination inode; double import again; historical short smoke; interleaved valid comparisons when load<8. Preserve invalid initial outputs.
+
+## Isolated build verification
+Both historical isolated builds completed. SHA256: M-ART2.1 `72fc3e05aeffb3982eedaa1cafe03e70bfded690bd3feb0e2c3de34458f1848d`; M-UX `7c23d171771a730549f62229cd88fe0bfe5b0dfeed5983d46d029803bb36f0ba`; BASE `593a4572e87ed6f023d7bf23ba44102e05546ad44d254efc27fd3cfbc09ea149`.
+Each historical build passed its second import with no script/errors and completed short windowed N10 quarter-zoom common-harness smoke. Historical bake telemetry correctly reports unavailable. All three common harness files have SHA256 `9c7ff2f1fd40b767edd99d5e1bbf332775557be917f172356255e3b4733e07ba`.
+Remote v8/main and v8/wip still resolve to BASE (remote-before.txt); no push performed.
+
+## BASE diagnostic attribution (contended, not acceptance)
+`base-profile-contended/profile.json`: 2054 rendered samples over60.009742s at N200 quarter zoom. Load48.19 before /28.77 after. Marker refresh25.053ms/frame; person reconciliation0.333ms; ground process0.203ms; agent cleanup/placement0.142ms; parameter/snapshot0.109ms. Nested marker/agent-total spans overlap and must not be summed. Ground chunk bakes0 in this window; draw calls335.73, objects1384.15, Performance process32.55ms (monitor sampled mean). Buildings0.040ms, HUD0.037ms, minimap0.032ms, alerts0.009ms. This supports inspecting marker layout; it does not establish an uncontended budget or a guilty commit.
+
+## Bisection preparation
+Prepare p9,p4,p6,p5 midpoint/adjacent snapshots inside the owned worktree. p5→p6 Rust trees are byte-identical; p9→BASE runtime Rust/Cargo trees are identical (only sim-test test differs), so p6 uses p5 bridge and p9 uses BASE bridge with recorded tree proof. No causal conclusion until actual measurements.
+
+## Instrumentation validation
+Both mux21_fps.gd and mux21_profile.gd pass the repository strict parser/warnings check; all59 detected FFI calls match exports (`instrumentation-strict.log`). Profile harness completed the real N200 quarter-zoom diagnostic window with no script errors. This validates instrumentation execution only, not final FPS bars.
