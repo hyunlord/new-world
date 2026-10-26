@@ -51,8 +51,8 @@ use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
 use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
-use sim_systems::runtime::decision::GATHER_SCAN_RADIUS;
 use sim_systems::runtime::influence::BuildingStampSystem;
+use sim_systems::runtime::GATHER_SCAN_RADIUS;
 
 // ── Stage-1 bulk engine ─────────────────────────────────────────────────────
 

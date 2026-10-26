@@ -25,7 +25,8 @@ use sim_core::components::{
 };
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
-use sim_systems::runtime::decision::{nearest_resource_tile, AgentDecisionSystem};
+use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
+use sim_systems::runtime::nearest_resource_tile;
 
 // ── helpers ─────────────────────────────────────────────────────────────────
 

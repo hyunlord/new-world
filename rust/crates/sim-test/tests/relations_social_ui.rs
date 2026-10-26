@@ -373,7 +373,7 @@ fn harness_relationship_snapshot_one_row_per_pair_after_two_inserts_same_pair() 
 // ────────────────────────────────────────────────────────────────────────
 #[test]
 fn harness_end_to_end_socializing_pair_produces_snapshot_state_tag_2() {
-    use sim_systems::runtime::decision::REQUIRED_INTERACTION_PROGRESS;
+    use sim_systems::runtime::REQUIRED_INTERACTION_PROGRESS;
 
     let (mut engine, entity_1, entity_2, _id_1, _id_2, rel_key) = build_phase7_gamma_scenario();
 

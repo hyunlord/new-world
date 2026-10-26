@@ -26,7 +26,7 @@ use sim_core::rng::{keyed_below, STREAM_RELATIONS};
 use sim_core::rules::{RelationsRule, WorldRules};
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::MovementRng;
-use sim_systems::runtime::decision::AgentDecisionSystem;
+use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
 use sim_systems::runtime::settlement::food_economy::stock_target;
 use sim_systems::runtime::settlement::relations::{burn_night, RelationsSystem};
 

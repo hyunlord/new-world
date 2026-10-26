@@ -311,8 +311,7 @@ impl RuntimeSystem for AgentDecisionSystem {
             .agent
             .forage
             .filter(|_| resources.rules.society.stock_target.is_some());
-        // M2: the colony's firewood goes through jobs (`jobs::hearth`); its arms here are off.
-        let firewood_rule = crate::runtime::jobs::hearth::decision_firewood(resources);
+        let firewood_rule = resources.rules.society.firewood;
         #[cfg(feature = "perf_arms")]
         let _perf_prepare_7 = crate::perf_arms::Scope::start("phase.social_retry");
         if social_rule.is_some() {
@@ -344,10 +343,7 @@ impl RuntimeSystem for AgentDecisionSystem {
             let mut sites = HashMap::new();
             let mut q = world.query::<&ConstructionSite>();
             for (e, site) in q.iter() {
-                // M4: a knowledge-gated colony site is left to its practitioners' jobs.
-                if site.is_complete()
-                    || !crate::runtime::knowledge::open_to_any_builder(world, resources, e)
-                {
+                if site.is_complete() {
                     continue;
                 }
                 sites.insert((site.position.x, site.position.y), (e, site.blueprint));
@@ -894,26 +890,6 @@ impl RuntimeSystem for AgentDecisionSystem {
         // The gather predicate also depends on the person's tile and catchment.
         let mut gather_memo: GatherMemo = BTreeMap::new();
         let mut routine_replay: Option<Vec<AgentId>> = None;
-        #[cfg(feature = "mind_shadow")]
-        let shadow_drafted: BTreeSet<_> = world
-            .query::<(&Agent, &sim_core::colony::people::Drafted)>()
-            .iter()
-            .map(|(_, (a, _))| a.id)
-            .collect();
-        #[cfg(feature = "mind_shadow")]
-        let shadow_fleeing: BTreeSet<_> = world
-            .query::<(&Agent, &sim_core::colony::people::Fleeing)>()
-            .iter()
-            .map(|(_, (a, _))| a.id)
-            .collect();
-
-        // M1 seam (`runtime::jobs::seam`): job holders run the Idle cascade, settled after the loop.
-        #[cfg(feature = "perf_arms")]
-        let _perf_arm_17 = crate::perf_arms::Scope::start("phase.job_holders");
-        let job_holders = crate::runtime::jobs::holders(world, resources);
-        let mut job_hold: Vec<(hecs::Entity, AgentState)> = Vec::new();
-        #[cfg(feature = "perf_arms")]
-        drop(_perf_arm_17);
         #[cfg(feature = "perf_arms")]
         drop(_perf_prepare_2);
         #[cfg(feature = "mind_shadow")]
@@ -1273,60 +1249,6 @@ impl RuntimeSystem for AgentDecisionSystem {
                             }
                         })
                     }
-                }
-                if arm_eval!(
-                    "eval.job_hold",
-                    crate::runtime::jobs::hold_for_decision(entity, *state, &job_holders)
-                ) {
-                    #[cfg(feature = "perf_arms")]
-                    let _perf_arm_24 = crate::perf_arms::Scope::start("selected.job_hold");
-                    if arm_eval!(
-                        "eval.job_skip",
-                        crate::runtime::jobs::skips_decision(entity, &job_holders)
-                    ) {
-                        #[cfg(feature = "perf_arms")]
-                        let _perf_arm_25 = crate::perf_arms::Scope::start("selected.job_skip");
-                        #[cfg(feature = "mind_shadow")]
-                        {
-                            let choice = if shadow_fleeing.contains(&agent.id)
-                                && shadow_drafted.contains(&agent.id)
-                            {
-                                crate::mind_observer::Choice::new(
-                                    "job_skip",
-                                    "ambiguous_draft_flee_owner",
-                                    None,
-                                    crate::mind_observer::Verdict::Uncovered,
-                                )
-                            } else if shadow_fleeing.contains(&agent.id) {
-                                crate::mind_observer::Choice::new(
-                                    "flee_hold",
-                                    "flee",
-                                    Some(crate::mind_observer::Band::Critical),
-                                    crate::mind_observer::Verdict::Port,
-                                )
-                            } else if shadow_drafted.contains(&agent.id) {
-                                crate::mind_observer::Choice::new(
-                                    "draft_hold",
-                                    "fight_drafted",
-                                    Some(crate::mind_observer::Band::Duty),
-                                    crate::mind_observer::Verdict::Port,
-                                )
-                            } else {
-                                crate::mind_observer::Choice::new(
-                                    "job_skip",
-                                    "do_job",
-                                    Some(crate::mind_observer::Band::Duty),
-                                    crate::mind_observer::Verdict::Replace,
-                                )
-                            };
-                            observation.set(choice);
-                        }
-                        continue;
-                    }
-                    #[cfg(feature = "mind_shadow")]
-                    observation.held();
-                    job_hold.push((entity, *state));
-                    *state = AgentState::Idle;
                 }
                 match *state {
                     AgentState::Idle
@@ -1789,7 +1711,6 @@ impl RuntimeSystem for AgentDecisionSystem {
                             // Construction flip via memory bias).
                             if worker
                                 && planning.is_none()
-                                && resources.rules.colony.is_none() // M1: no V7 sites to seek
                                 && !eligible.iter().any(|(a, _)| *a == CascadeArm::Construction)
                                 && memory_opt.is_some_and(|m| {
                                     m.entries.iter().any(|e| {
@@ -2343,7 +2264,6 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 target: TargetKind::GatherFood,
                             };
                         } else if !no_trips
-                            && !job_holders.contains(&entity)
                             && routine.as_ref().is_some_and(|routine| {
                                 routine.can_enter(
                                     agent.id,
@@ -3597,16 +3517,6 @@ impl RuntimeSystem for AgentDecisionSystem {
             drop(_perf_arm_105);
         }
 
-        #[cfg(feature = "perf_arms")]
-        let _perf_arm_106 = crate::perf_arms::Scope::start("phase.job_settle");
-        crate::runtime::jobs::settle_after_decision(
-            world,
-            resources,
-            &job_hold,
-            &mut preempt_clear_seek,
-        );
-        #[cfg(feature = "perf_arms")]
-        drop(_perf_arm_106);
         // Pass 20: the tick's quarrels, chronicled after the decision loop.
         #[cfg(feature = "perf_arms")]
         let _perf_arm_107 = crate::perf_arms::Scope::start("phase.quarrel_chronicle");

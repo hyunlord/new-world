@@ -1,6 +1,6 @@
 //! `worldsim_systems`: print the live engine's registered systems.
 //!
-//! Builds the baseline world exactly as the game's bridge does
+//! Builds the live colony world exactly as the game's bridge does
 //! (`sim_bridge::ffi::build_game_engine`) and prints one JSON object per
 //! registered system, in execution order: `name`, `priority`, `interval`.
 //! `tools/v8/system_table.py` turns this into the system table of

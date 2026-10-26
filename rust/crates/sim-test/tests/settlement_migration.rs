@@ -52,9 +52,10 @@ mod pathing {
     use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
     use sim_systems::register_default_runtime_systems;
     use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
-    use sim_systems::runtime::decision::{AgentDecisionSystem, SOCIAL_THRESHOLD};
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
     use sim_systems::runtime::influence::BuildingStampSystem;
     use sim_systems::runtime::settlement::BIRTH_COOLDOWN_TICKS;
+    use sim_systems::runtime::SOCIAL_THRESHOLD;
 
     const W: u32 = 64;
     const H: u32 = 64;
@@ -1897,8 +1898,9 @@ mod unfreeze {
     use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
     use sim_systems::register_default_runtime_systems;
     use sim_systems::runtime::agent::MovementRng;
-    use sim_systems::runtime::decision::{AgentDecisionSystem, SOCIAL_THRESHOLD};
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
     use sim_systems::runtime::influence::BuildingStampSystem;
+    use sim_systems::runtime::SOCIAL_THRESHOLD;
 
     const W: u32 = 64;
     const H: u32 = 64;

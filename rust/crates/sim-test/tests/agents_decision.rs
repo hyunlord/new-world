@@ -21,10 +21,10 @@ use sim_core::influence::InfluenceChannel;
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
-use sim_systems::runtime::decision::{
-    AgentDecisionSystem, HUNGER_CONSUME_AMOUNT, THIRST_CONSUME_AMOUNT,
-};
+use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
 use sim_systems::runtime::needs::{HungerDecaySystem, ThirstDecaySystem};
+use sim_systems::runtime::HUNGER_CONSUME_AMOUNT;
+use sim_systems::runtime::THIRST_CONSUME_AMOUNT;
 use sim_systems::{
     register_agent_systems, register_decision_systems, register_needs_systems,
     register_phase2_systems,

@@ -13,7 +13,7 @@ content name; no new content enum (an unavoidable one is listed as M-EXT debt in
 gets a "data only" test; every review checks for new hard-coded content names (`scripts/world/**` is grepped for
 manifest ids in the gate).
 
-**Colony mind authoring:** follow [MIND_AUTHORING](docs/v8/core/MIND_AUTHORING.md) for facts, registered lifecycle effects and `mind.ron` nodes. Keep policy out of providers and baseline imports out of colony code; [ADR 0046](docs/decisions/0046-colony-mind.md) and [ADR 0047](docs/decisions/0047-baseline-isolation.md) distinguish the working-tree colony registration switch from pending switch verification and final baseline isolation.
+**Colony mind authoring:** follow [MIND_AUTHORING](docs/v8/core/MIND_AUTHORING.md) for facts, registered lifecycle effects and `mind.ron` nodes. Keep policy out of providers and baseline imports out of colony code; [ADR 0046](docs/decisions/0046-colony-mind.md) and [ADR 0047](docs/decisions/0047-baseline-isolation.md) record the committed colony switch and the separate baseline module isolation; preserve supported baseline constructors/save fixtures and keep final identity checks distinct from source moves.
 
 ## Branches and pushing
 

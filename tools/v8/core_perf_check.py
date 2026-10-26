@@ -32,6 +32,7 @@ ROOT: Final = Path(__file__).resolve().parents[2]
 SCENES: Final = ('n200', 'n1000', 'n2000', 'n200_script', 'n200_side64', 'n1000_wolves')
 RSS_SCENES: Final = ('n200', 'n2000', 'n200_side64')
 AUDIT_SHA: Final = '928d1fde99b32158ab8c667d444a9d7855e20ed402c662a06f1c03d835af0392'
+BASE_MANIFEST_SHA: Final = '90983feb84c8c7d1ee97c9860a0ceafba79909fd0629b1cea71e47276430ef92'
 EXPECTED_BASE: Final = '9855bd082ad88a4c49296410f206f148d98c4df9'
 SHARE: Final = 0.6990029820337981
 TICK_BAR: Final = 0.700498508983101
@@ -177,6 +178,17 @@ def validate_candidate(measured_head: str, current_head: str, expected_source: s
     require(expected_source == current_source, 'candidate source changed')
 
 
+def validate_frozen_lock(lock: Path, manifest: Path, expected_manifest_sha: str) -> None:
+    """Bind the untracked BASE lock to its preserved build manifest, not a git blob."""
+    require(lock.is_file() and manifest.is_file(), 'missing frozen BASE lock proof')
+    require(sha(manifest) == expected_manifest_sha, 'changed frozen BASE build manifest')
+    entries = [line.split(maxsplit=1) for line in manifest.read_text().splitlines()]
+    matches = [entry[0] for entry in entries
+               if len(entry) == 2 and Path(entry[1].strip()).is_absolute()
+               and Path(entry[1].strip()).resolve() == lock.resolve()]
+    require(len(matches) == 1 and matches[0] == sha(lock), 'BASE lock/manifest mismatch')
+
+
 def freeze(base: Path, candidate: Path, audit: Path, output: Path) -> None:
     """Bind the existing BASE build proof and current candidate without rebuilding."""
     require(not output.exists(), 'freeze output already exists')
@@ -189,8 +201,7 @@ def freeze(base: Path, candidate: Path, audit: Path, output: Path) -> None:
     for name in ('worldsim_perf', 'Cargo.lock'):
         path = (base / name).resolve()
         require(listed.get(str(path)) == sha(path), f'BASE manifest mismatch: {name}')
-    lock = subprocess.check_output(['git', '-C', str(ROOT), 'show', f'{head}:rust/Cargo.lock'])
-    require(hashlib.sha256(lock).hexdigest() == sha(base / 'Cargo.lock'), 'BASE lock/tree mismatch')
+    validate_frozen_lock(base / 'Cargo.lock', base / 'SHA256SUMS', BASE_MANIFEST_SHA)
     config: dict[str, Json] = {
         'schema': 1, 'repo': str(ROOT), 'candidate_head': git('rev-parse', 'HEAD'),
         'candidate_source_sha256': source_hash(), 'base_head': head, 'expected_base': EXPECTED_BASE,
@@ -216,6 +227,8 @@ def verify_config(config: Document) -> None:
         verify_file(config.child(key))
     for proof in config.rows('base_proof'):
         verify_file(proof)
+    base_dir = verify_file(config.child('base')).parent
+    validate_frozen_lock(base_dir / 'Cargo.lock', base_dir / 'SHA256SUMS', BASE_MANIFEST_SHA)
     audit_check(verify_file(config.child('audit')))
 
 

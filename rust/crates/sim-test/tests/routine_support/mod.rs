@@ -7,7 +7,7 @@ use sim_core::material::MaterialRegistry;
 use sim_core::rules::WorldRules;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::MovementRng;
-use sim_systems::runtime::decision::AgentDecisionSystem;
+use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
 
 pub fn fixture() -> SimEngine {
     let mut engine = SimEngine::new(48, 48, MaterialRegistry::new());

@@ -174,6 +174,28 @@ def test_report_descendant_requires_ancestry_and_identical_source() -> None:
     rejects(lambda: perf.validate_candidate(perf.EXPECTED_BASE, current, 'before', 'after'))
 
 
+def test_frozen_untracked_lock_requires_unchanged_external_manifest() -> None:
+    with TemporaryDirectory() as directory:
+        lock = Path(directory) / 'Cargo.lock'
+        manifest = Path(directory) / 'SHA256SUMS'
+        lock.write_text('version = 4\n')
+        manifest.write_text(f'{perf.sha(lock)}  {lock}\n')
+        retained_pin = perf.sha(manifest)
+        perf.validate_frozen_lock(lock, manifest, retained_pin)
+        lock.write_text('version = 3\n')
+        rejects(lambda: perf.validate_frozen_lock(lock, manifest, retained_pin))
+        manifest.write_text(f'{perf.sha(lock)}  {lock}\n')
+        rejects(lambda: perf.validate_frozen_lock(lock, manifest, retained_pin))
+        manifest.unlink()
+        rejects(lambda: perf.validate_frozen_lock(lock, manifest, retained_pin))
+        manifest.write_text('')
+        rejects(lambda: perf.validate_frozen_lock(lock, manifest, perf.sha(manifest)))
+        manifest.write_text(f'{perf.sha(lock)}  {lock}\n')
+        retained_pin = perf.sha(manifest)
+        lock.unlink()
+        rejects(lambda: perf.validate_frozen_lock(lock, manifest, retained_pin))
+
+
 if __name__ == '__main__':
     test_three_load_samples_required_and_finite()
     test_full_standing_scene_matrix()
@@ -189,4 +211,5 @@ if __name__ == '__main__':
     test_real_dimensions_cannot_be_relabelled()
     test_wrong_valid_base_commit_rejected_before_proof_can_authorize_it()
     test_report_descendant_requires_ancestry_and_identical_source()
-    print('14 evidence fixtures passed; no measurements performed')
+    test_frozen_untracked_lock_requires_unchanged_external_manifest()
+    print('15 evidence fixtures passed; no measurements performed')

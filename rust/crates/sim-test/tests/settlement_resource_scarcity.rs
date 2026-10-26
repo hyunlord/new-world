@@ -68,12 +68,13 @@ use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
 use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
-use sim_systems::runtime::decision::{
-    nearest_resource_tile, AgentDecisionSystem, HUNGER_THRESHOLD, THIRST_THRESHOLD,
-};
+use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
+use sim_systems::runtime::nearest_resource_tile;
 use sim_systems::runtime::resource_regen::{
     ResourceRegenSystem, FOOD_REGEN_AMOUNT, REGEN_INTERVAL, SLEEP_REGEN_AMOUNT, WATER_REGEN_AMOUNT,
 };
+use sim_systems::runtime::HUNGER_THRESHOLD;
+use sim_systems::runtime::THIRST_THRESHOLD;
 
 const W: u32 = 64;
 const H: u32 = 64;

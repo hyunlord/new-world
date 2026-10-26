@@ -2,7 +2,7 @@
 """Generate the live system table of docs/ARCHITECTURE.md (goal 9.5).
 
 The registration code is the source of truth: `worldsim_systems` (a sim-test
-binary) builds the live engine (`build_game_engine`'s baseline world) and
+binary) builds the live engine (`build_game_engine`'s colony world) and
 prints one JSON object per registered system in execution order
 (`name`, `priority`, `interval`). Each name is mapped to its file by the
 `fn name(&self) -> &str { "<Name>" }` literal under

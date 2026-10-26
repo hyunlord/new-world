@@ -528,7 +528,7 @@ mod severity {
     use sim_core::rules::{FirewoodRule, WorldRules};
     use sim_engine::{RuntimeSystem, SimEngine, SimResources};
     use sim_systems::runtime::agent::MovementRng;
-    use sim_systems::runtime::decision::AgentDecisionSystem;
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
     use sim_systems::runtime::resource_regen::{ResourceRegenSystem, REGEN_INTERVAL};
     use sim_systems::runtime::settlement::firewood::{
         burn_hours, night_burn_delta, severity_hash, urgent_with, winter_burn_per_hour,

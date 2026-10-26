@@ -607,3 +607,119 @@ not OFF performance PASS or full outcome acceptance. The full guarded ON
 held-out comparison has not yet been measured. Baseline isolation, paired
 performance, native UI, story comparison, full gate and publication remain
 separate obligations; no whole-current-closure byte identity is claimed.
+
+
+## D20 — Isolate supported baseline execution without a new crate
+
+P6 `fbc9a9babc9bb5df1d06ca1e655901e480521f66` commits the approved production
+switch with frozen policy unchanged. P7 isolation remains uncommitted.
+Systems/feature/formatting/strict-Clippy and source/registration isolation
+checks pass; post-isolation identity capture now passes as recorded below.
+
+Keep the work distinguishable: A moves `decision/{system,mod}.rs` into
+`runtime/baseline/decision`; the exact two-file move is verified in
+`/Users/rexxa/work/core-data/baseline-dev/pure-move-proof.txt` (system SHA-256
+`2e65dfef4083b1de4f7cbf8d518ff1e2e4eafcae08f96ff7c1fe875af6f8605a`,
+module `867c44e08f622dd228566bf7ba1e58fd706bc75d1df9bc270d7aa460e11d8d15`).
+B separately removes dead colony gates and the job seam. C retires live old
+colony shadow execution; baseline read-only feature observer hooks remain,
+without a live old-colony factory enabling them. The import boundary forbids
+colony/shared code importing baseline, not baseline importing a neutral observer.
+Frozen old-runner source/binaries remain externally bound
+by freeze-4/p5 manifests. Shared neutral `agent_actions` stays in place.
+These source changes do not themselves prove final baseline identity.
+
+D preserves the original bodies of six fuel regressions while exercising the
+real mind; all six pass. The move-test evidence includes agent-decision tests
+and refusal of the retired CLI path. Preservation applies to supported baseline
+constructors and the saved baseline corpus; it is not a guarantee for arbitrary
+injected Job/draft/flee components that baseline constructors never produce.
+
+Drop the optional standalone `sim-baseline` crate for this milestone. Actual
+imports require crate-private `agent_actions` and settlement food/firewood plus
+chronicle helpers; `sim-systems` owns registration. A selector crate depending
+back on `sim-systems` while its registrar depends on that selector would be
+circular. Avoiding it needs another shared-helper/registrar extraction and
+visibility expansion; module separation plus the import gate is the narrower
+boundary. No new crate or measured speed benefit is claimed. Final isolation,
+identity, held-out/performance/UI/story and full-gate evidence remain required.
+
+
+### Verified p7 checks and external BASE lock provenance
+
+Persisted `/Users/rexxa/work/core-data/baseline-dev/` evidence now confirms:
+`systems-tests.log` 309 passed; `move-tests.log` and `feature-tests.log` each
+19 baseline decision +2 retired-CLI +6 fuel/sleep passed; `perf-arms-tests.log`
+4 passed; `isolation-check.log` source PASS and registration 4 passed, also
+recorded in `isolation-registration.log`. Formatting and strict Clippy pass
+(`fmt.log`, `clippy-2.log`). `independent-review.md` approves the bounded staged
+implementation without blocking findings, conditional on final identity/capture
+verification. Its supported-constructor/save qualification remains in force;
+no arbitrary Job-target state guarantee is added. Identity capture subsequently completed successfully (receipt below); p7
+remains uncommitted.
+
+The final performance preparation also corrects only external BASE lock
+provenance validation. The immutable `base-bin/Cargo.lock` SHA-256 is
+`ddc99ac9fc161d9b610c0f5d8dbf5e279c8908c10717647ba50ab2fef70c36d1`, bound to
+the preserved external manifest and an independent manifest pin. Retain the
+original BASE ancestor/equal-Rust-tree rule: build head
+`001f236c308a88615a650fca9af83d80041aa7a8` descends from nominated BASE
+`9855bd082ad88a4c49296410f206f148d98c4df9`, with preserved empty source diff.
+No BASE checkout/rebuild or relaxed source identity is substituted.
+
+`/Users/rexxa/work/core-data/final-perf-plan.md` records the initial missing
+validator RED and the first GREEN attempt's macOS `/var` versus `/private`
+path-alias failure. Canonical absolute-path comparison resolves that boundary.
+All 15 validator fixtures pass (`final-perf-lock-fixtures.log`), including
+changed/absent lock, absent/empty manifest and rewritten lock+manifest against
+an unchanged independent pin; syntax compilation and diff checks also pass.
+These are evidence-validator tests, not a performance freeze/run or speedup
+claim. The successful build receipt must still establish compilation provenance
+for the actual final binary before timing.
+
+
+### Completed post-isolation identity capture
+
+`/Users/rexxa/work/core-data/isolation-capture-1.log` terminates with
+`ISOLATION_CAPTURE COMPLETE baseline and 9OFF and ON equal to switch`; the
+parent capture session exits 0. `isolation-safety-1-compare.log` SHA-256 is
+`39b246855ca52c88359390b8b1b561aae4447e8867c72f18e6981834e7e92155`:
+228,748 shared baseline values, zero differences, 64 chronicle files and
+19,683 entries equal excluding only `git_sha`, and all nine OFF summaries
+identical to the switch capture. Exact fixture coverage and zero invariant
+violations pass. `isolation-steward-1.log` reports DETERMINISM PASS; its
+`summary.json` equals the switch ON summary with SHA-256
+`cad9811728445bba5d8aa9027d6450ceb9aec3b40635258572577b711c387958`.
+The captured Rust tree is `c3a0e98c30e1758bf785f9a6936056d87b58b370`.
+This completes the stated supported-corpus post-isolation identity check;
+p7 commit remains pending. It does not extend the supported-world contract,
+resolve ISS336, or claim held-out/performance/native/full-gate/publication
+acceptance.
+
+
+## D21 — Defer complete malformed-save chronology validation explicitly
+
+The final bounded source review found a P2 fail-fast gap for inconsistent
+persisted mind state. Retained/tile choice IDs or ticks and the private
+`MindHistory::last_event_id` can exceed `next_event_id`/`current_tick` without
+being rejected during load, then cause a later normal choice insertion to fail.
+No reachable valid-production save path violating this ordering was found:
+ordinary recording allocates its ID and uses the current simulation tick.
+The synthetic `engine_with_history` fixture demonstrates the acceptance gap in
+source, but this review did not execute a malformed-save reproduction. Do not
+report this as a demonstrated ordinary gameplay/save failure.
+
+Complete validation requires an explicit read-only history chronology API in
+the frozen sim-core closure. Defer that work rather than silently altering the
+freeze or bypassing private state through serialization layout or synthetic
+insertion. Retained-record bounds alone do not cover an empty history's private
+high-water mark and must not be called complete chronology validation. A future
+repair must reject future/unallocated chronology, preserve valid references to
+evicted causal events, correct fixture allocation/clock handling, and test both
+malformed-save rejection and valid next-choice continuation.
+
+Track this as local **deferred** ISS336 and remote **OPEN**
+[#642](https://github.com/hyunlord/new-world/issues/642), created and read-back
+verified by the parent. Evidence: `/Users/rexxa/work/core-data/final-code-review.md`
+and `issue336-created.json`. No runtime/policy change, repair claim, issue
+closure or final-goal approval follows from this disposition.

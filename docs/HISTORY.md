@@ -15,6 +15,12 @@
 - 2026-10-27 — 최종 그림자 4회차는 OFF99.913210%·ON99.805452%, 미설명0·잔여 포트 결함0으로 통과했다. 정책은 그대로이며 희귀 다툼 난수 키만 D18에 따라 교정했고 3·4회차 gameplay summary는 같다. 1회차 FAIL·2회차 미수용 및 각 원시 자료는 보존한다. 보정4회 한도를 소진했다. 로컬 p5 `0ef68a1d2b6eb946e150963071b2e623fa58d4b0` 수정 ISS333–335는 GitHub #639–641에 등록했으며 게시 전 OPEN이다.
 - 2026-10-27 — 콜로니 생산 등록·저장 로드를 새 두뇌로 전환한 작업트리에서 systems310·commands11·full-save7·fmt/Clippy 통과, 전환 캡처 체인 exit0을 확인했다([D19](v8/core/CORE_DECISIONS.md)). baseline228,748값 차이0·chronicle64파일/19,683항목 동일·raw digest 동일, OFF9fixture 정확한 coverage/위반0, ON2시드×24일 결정론 PASS다. 근거는 `/Users/rexxa/work/core-data/switch-capture-1.log`, `switch-safety-1/`, `switch-safety-1.log`, `switch-steward-1/`, `switch-steward-1.log`, `switch-dev/`다. 전환 후 콜로니의 BASE 동일성을 주장하지 않는다. p6 커밋은 아직 대기이며 held-out·성능·native UI·기준선 분리·이야기 비교·전체 gate·게시는 PENDING이다.
 
+- 2026-10-27 — p6 `fbc9a9babc9bb5df1d06ca1e655901e480521f66`로 동결 정책의 콜로니 전환을 로컬 커밋했다. p7 미커밋 작업에서 기준선 결정 모듈 순수 이동2파일 해시를 확인하고 죽은 colony gate/seam과 live old-shadow 실행을 별도로 제거한다. 원래 본문을 유지한 연료 회귀6개는 실제 mind에서 통과했다. 외부 freeze4/p5 원본을 보존하며 최종 systems/feature/Clippy·동일성은 대기다. 별도 baseline crate는 공유 내부 helper/registrar 추가 분리를 피하기 위해 선택 범위에서 제외했다([D20](v8/core/CORE_DECISIONS.md)); 전체 수용·게시 주장이 아니다.
+
+- 2026-10-27 — p7 기준선 분리의 systems309·default/feature 각각19+2+6·perf observer4·source isolation/registration4·fmt/strict Clippy 통과를 로그로 확인했다. 독립 리뷰는 최종 identity 조건부로 범위 승인했다. 외부 BASE lock/manifest 독립 pin 검증 수정15회귀 통과와 최초 RED·경로 alias 실패를 보존한다(D20, `core-data/final-perf-plan.md`). 분리 후 identity는 RUNNING이며 p7 미커밋, 성능 측정·게시 성공을 뜻하지 않는다.
+
+- 2026-10-27 — p7 분리 후 캡처가 exit0으로 완료됐다(D20). baseline228,748값 차이0, git_sha만 제외한 chronicle64파일/19,683항목 동일, OFF9개와 ON summary 모두 p6 전환 캡처와 같고 ON 결정성 PASS다. 비교 로그 SHA256 `39b246855ca52c88359390b8b1b561aae4447e8867c72f18e6981834e7e92155`, 캡처 Rust tree `c3a0e98c30e1758bf785f9a6936056d87b58b370`. 앞선 RUNNING은 당시 상태이며 현재 해당 동일성 검증은 PASS, p7은 미커밋이다. held-out·성능·native·전체 gate·게시 수용은 별도다.
+
 ## M-UX2 기록 — 오너 수정 조건 수용·게시 완료 (2026-10-26)
 
 - 2026-10-26 — 오너 D-A..D-C에 따른 p18 [b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd](https://github.com/hyunlord/new-world/commit/b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd)를 v8/wip와 v8/main에 게시했다. 노출 장작20/20 PASS와 N100½×164.882764487796FPS가 새 수용 조건을 충족했다. 원래20/32 FAIL, 1000명35.98FPS의 M11 이월, 재굽기7.239ms와 이전 stall 실패는 보존한다. 전체 게이트41/41은 p16에 귀속되며 p19 문서 후속에 새 전체 게이트를 주장하지 않는다. 작업트리 제거는 --force 없이 시도했으나 exit128이었다. 추적 파일은 깨끗했고 미추적 `.omo/`, `graft/`만 남아 작업트리를 보존했다. 강제 삭제하지 않았다. 이 상태는 p18 게시 후 제거 시점의 기록이며 이후 p19 문서 편집과 구분한다.

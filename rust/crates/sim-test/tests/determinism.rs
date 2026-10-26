@@ -1214,7 +1214,7 @@ mod memory_arm {
     use sim_core::material::MaterialRegistry;
     use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine};
     use sim_systems::register_default_runtime_systems;
-    use sim_systems::runtime::decision::AgentDecisionSystem;
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
     use sim_systems::runtime::memory::{MemorySystem, MAX_RECENCY_TICKS};
 
     const W: u32 = 64;

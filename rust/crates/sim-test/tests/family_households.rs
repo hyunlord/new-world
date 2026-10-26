@@ -269,7 +269,7 @@ mod beds {
     use sim_core::rules::WorldRules;
     use sim_engine::{RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
     use sim_systems::runtime::agent::BedAssignmentSystem;
-    use sim_systems::runtime::decision::AgentDecisionSystem;
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
     use sim_systems::runtime::settlement::housing_capacity;
 
     fn shelters(e: &mut SimEngine, count: u32, capacity: u32) {

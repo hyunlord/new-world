@@ -1,15 +1,12 @@
 //! Headless WorldSim probe command.
 fn main() -> std::process::ExitCode {
     let args: Vec<_> = std::env::args().skip(1).collect();
-    #[cfg(feature = "mind_shadow")]
     if args.first().is_some_and(|arg| arg == "mind-shadow") {
         if args.iter().any(|arg| arg == "--help" || arg == "-h") {
-            println!("usage: worldsim_probe mind-shadow --seeds a..b --days N --out NEW_EXTERNAL_DIR [--workers 1..8] [--steward on|off] [--defence on|off] [--story on|off|no-beasts] [--neighbours on|off] [--observe on|off]");
+            println!("{}", sim_test::mind_shadow::RETIREMENT_NOTICE);
             return std::process::ExitCode::SUCCESS;
         }
-        return match sim_test::content_boot::from_environment()
-            .and_then(|()| sim_test::mind_shadow::run(&args[1..]))
-        {
+        return match sim_test::mind_shadow::run(&args[1..]) {
             Ok(()) => std::process::ExitCode::SUCCESS,
             Err(error) => {
                 eprintln!("{error}");

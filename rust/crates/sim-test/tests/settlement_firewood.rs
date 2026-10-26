@@ -16,7 +16,7 @@ mod trips {
     use sim_core::TerrainType;
     use sim_engine::{RuntimeSystem, SimEngine};
     use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
-    use sim_systems::runtime::decision::AgentDecisionSystem;
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
     use sim_systems::runtime::needs::HungerDecaySystem;
     use sim_systems::runtime::resource_regen::ResourceRegenSystem;
     use sim_systems::runtime::settlement::firewood::{tonight_burn, wood_in_hand, wood_target};
@@ -557,7 +557,7 @@ mod urgent_mornings {
     use sim_core::rules::{FirewoodRule, WorldRules};
     use sim_engine::{RuntimeSystem, SimEngine};
     use sim_systems::runtime::agent::MovementRng;
-    use sim_systems::runtime::decision::AgentDecisionSystem;
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
     use sim_systems::runtime::settlement::firewood::{
         is_urgent, night_season, tonight_burn, wood_target,
     };

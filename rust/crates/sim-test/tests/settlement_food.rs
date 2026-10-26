@@ -10,7 +10,7 @@ mod store {
     use sim_core::material::MaterialRegistry;
     use sim_core::rules::WorldRules;
     use sim_engine::{RuntimeSystem, SimEngine};
-    use sim_systems::runtime::decision::AgentDecisionSystem;
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
     use sim_systems::runtime::settlement::{
         food_economy::{members_need_per_day, supply_per_day, sustainable_adults},
         SettlementSystem, StockpileConsumeSystem,
@@ -210,7 +210,7 @@ mod forage {
     use sim_core::rules::WorldRules;
     use sim_engine::{RuntimeSystem, SimEngine};
     use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
-    use sim_systems::runtime::decision::AgentDecisionSystem;
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
     use sim_systems::runtime::settlement::food_economy::{stock_in_hand, stock_target};
     use sim_test::baseline_engine;
 
@@ -664,7 +664,7 @@ mod meals {
     use sim_core::rules::WorldRules;
     use sim_engine::{RuntimeSystem, SimEngine};
     use sim_systems::runtime::agent::MovementRng;
-    use sim_systems::runtime::decision::AgentDecisionSystem;
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
     use sim_systems::runtime::settlement::StockpileConsumeSystem;
 
     const HOME: (u32, u32) = (20, 20);

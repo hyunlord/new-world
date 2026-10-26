@@ -2,7 +2,8 @@ use sim_core::components::{Agent, AgentState, Child, Hunger, Position, Sleep, Ta
 use sim_core::{material::MaterialRegistry, rules::WorldRules};
 use sim_engine::{RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
-use sim_systems::runtime::decision::{minute_in_window, AgentDecisionSystem};
+use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
+use sim_systems::runtime::minute_in_window;
 use sim_test::baseline_engine;
 
 fn advance_to(engine: &mut SimEngine, tick: u64) {

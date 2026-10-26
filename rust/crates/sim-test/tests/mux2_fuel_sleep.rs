@@ -1,13 +1,13 @@
 //! M-UX2: an adult already due to sleep must not steal the sole fuel job.
 mod colony_support;
 
-use colony_support::{bedroll, job_world_m2, tick_checked, worker};
+use colony_support::{bedroll, job_world_m2, tick_checked as tick_jobs_checked, worker};
 use sim_core::colony::{CancelReason, Command, Job, JobKind, ReserveKey};
-use sim_core::components::{Agent, BuildingKind, Sleep};
+use sim_core::components::{Agent, BuildingKind, Hunger, Inventory, Sleep, Social, Thirst};
 use sim_core::rules::{ColonyRule, WorldRules};
 use sim_engine::SimEngine;
 use sim_systems::commands::submit;
-use sim_systems::runtime::decision::AgentDecisionSystem;
+use sim_systems::runtime::mind::{ColonyMindSystem, MindProgram};
 
 fn fixture(fatigue: f64) -> (SimEngine, hecs::Entity, hecs::Entity) {
     let mut engine = job_world_m2(32, 32);
@@ -30,6 +30,22 @@ fn fixture(fatigue: f64) -> (SimEngine, hecs::Entity, hecs::Entity) {
         .world
         .insert_one(rested, Sleep::new(0.0, 0.0))
         .expect("sleep");
+    // Ordinary need/inventory components complete the shipped factual inputs.
+    // Only sleep varies in this fixture; no need-decay systems are registered.
+    for entity in [exhausted, rested] {
+        engine
+            .world
+            .insert(
+                entity,
+                (
+                    Hunger::new(0.0, 0.05),
+                    Thirst::new(0.0, 0.08),
+                    Social::new(0.0, 0.04),
+                    Inventory::default(),
+                ),
+            )
+            .expect("ordinary factual components");
+    }
     bedroll(&mut engine, (9, 10));
     assert!(
         submit(
@@ -43,8 +59,61 @@ fn fixture(fatigue: f64) -> (SimEngine, hecs::Entity, hecs::Entity) {
         )
         .accepted
     );
-    engine.register_system(Box::new(AgentDecisionSystem::new()));
+    let existing_systems = engine
+        .system_names()
+        .into_iter()
+        .map(str::to_owned)
+        .collect::<Vec<_>>();
+    let program = MindProgram::load(include_str!("../../sim-core/data/colony/mind.ron"))
+        .expect("shipped colony policy");
+    // Public constructor initializes on the first normal scheduled tick. The
+    // full-stack registrar would duplicate this fixture's existing job systems.
+    engine.register_system(Box::new(ColonyMindSystem::new(program)));
+    assert_eq!(engine.system_count(), existing_systems.len() + 1);
+    for name in existing_systems {
+        assert_eq!(
+            engine
+                .system_names()
+                .iter()
+                .filter(|actual| **actual == name)
+                .count(),
+            1
+        );
+    }
+    assert_eq!(
+        engine
+            .system_names()
+            .iter()
+            .filter(|name| **name == "ColonyMindSystem")
+            .count(),
+        1,
+        "fuel/sleep fixture must exercise the production colony mind"
+    );
+    assert!(!engine.system_names().contains(&"AgentDecisionSystem"));
     (engine, exhausted, rested)
+}
+
+// Keep every original behavior assertion and invariant check, and verify that
+// real policy selection actually ran (registration alone is insufficient).
+fn tick_checked(engine: &mut SimEngine) {
+    tick_jobs_checked(engine);
+    assert_eq!(
+        engine.resources.mind.policy_source.as_deref(),
+        Some(include_str!("../../sim-core/data/colony/mind.ron"))
+    );
+    let history = engine
+        .resources
+        .mind
+        .history
+        .as_ref()
+        .expect("initialized mind history");
+    for (_, agent) in engine.world.query::<&Agent>().iter() {
+        assert!(
+            history.latest(agent.id).is_some(),
+            "agent {} lacks a real mind choice",
+            agent.id
+        );
+    }
 }
 
 #[test]

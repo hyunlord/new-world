@@ -54,7 +54,8 @@ PY
     run_test mind_ffi cargo test --manifest-path rust/Cargo.toml -p sim-test --test engine_mind_ffi
     run_test mind_runtime cargo test --manifest-path rust/Cargo.toml -p sim-systems --features mind_shadow --lib runtime::mind::
     run_test old_observer cargo test --manifest-path rust/Cargo.toml -p sim-systems --features mind_shadow --lib mind_observer::tests
-    run_test shadow_identity cargo test --manifest-path rust/Cargo.toml -p sim-test --features mind_shadow --lib mind_shadow::tests
+    run_test shadow_retired_stub cargo test --manifest-path rust/Cargo.toml -p sim-test --features mind_shadow --lib mind_shadow::tests
+    run_test shadow_retired_cli cargo test --manifest-path rust/Cargo.toml -p sim-test --features mind_shadow --test mind_shadow_retired
     run_test story_yield cargo test --manifest-path rust/Cargo.toml -p sim-test --lib story_yield::
     python3 -m unittest discover -s tools/v8 -p 'test_core_*.py' 2>&1 | tee "$LOG/python.log"
     echo 'CORE_SOURCE PASS (runtime fixture/calibration/performance gates remain separate)'

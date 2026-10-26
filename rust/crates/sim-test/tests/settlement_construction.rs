@@ -19,8 +19,9 @@ use sim_core::components::{
 };
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
+use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
 use sim_systems::runtime::construction::ConstructionSystem;
-use sim_systems::runtime::decision::{AgentDecisionSystem, HUNGER_THRESHOLD};
+use sim_systems::runtime::HUNGER_THRESHOLD;
 use sim_systems::{
     register_agent_systems, register_construction_systems, register_decision_systems,
     register_needs_systems, register_phase2_systems,

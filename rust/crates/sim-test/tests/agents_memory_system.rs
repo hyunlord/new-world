@@ -26,8 +26,8 @@ use sim_core::material::MaterialRegistry;
 use sim_engine::{BuildingPlacedEvent, RuntimeSystem, SimEngine};
 use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
-use sim_systems::runtime::decision::SOCIAL_THRESHOLD;
 use sim_systems::runtime::memory::{MemorySystem, DECAY_RATE, REINFORCEMENT_BOOST};
+use sim_systems::runtime::SOCIAL_THRESHOLD;
 
 const W: u32 = 128;
 const H: u32 = 128;

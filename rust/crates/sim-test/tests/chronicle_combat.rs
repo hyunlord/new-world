@@ -85,10 +85,11 @@ use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::combat::REQUIRED_COMBAT_PROGRESS;
-use sim_systems::runtime::decision::{
-    BIAS_FLIP_THRESHOLD, REQUIRED_INTERACTION_PROGRESS, SOCIAL_CONSUME_AMOUNT, SOCIAL_THRESHOLD,
-};
 use sim_systems::runtime::memory::MemorySystem;
+use sim_systems::runtime::BIAS_FLIP_THRESHOLD;
+use sim_systems::runtime::REQUIRED_INTERACTION_PROGRESS;
+use sim_systems::runtime::SOCIAL_CONSUME_AMOUNT;
+use sim_systems::runtime::SOCIAL_THRESHOLD;
 
 // ─── Plan-locked constants ───────────────────────────────────────────────
 const W: u32 = 128;

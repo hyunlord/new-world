@@ -37,11 +37,12 @@ use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::register_default_runtime_systems;
 use sim_systems::runtime::agent::MovementRng;
+use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
 use sim_systems::runtime::combat::{
     CombatSystem, DAMAGE_PER_COMBAT_TICK, REQUIRED_COMBAT_PROGRESS,
 };
-use sim_systems::runtime::decision::{AgentDecisionSystem, BIAS_FLIP_THRESHOLD};
 use sim_systems::runtime::memory::MemorySystem;
+use sim_systems::runtime::BIAS_FLIP_THRESHOLD;
 
 const W: u32 = 32;
 const H: u32 = 32;

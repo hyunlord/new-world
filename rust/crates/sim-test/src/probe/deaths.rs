@@ -436,7 +436,7 @@ mod tests {
         let (mut engine, entity) = fixture(0.0, 70.0);
         engine.resources.water_tiles.insert((3, 3), 2);
         engine.register_system(Box::new(
-            sim_systems::runtime::decision::AgentDecisionSystem::new(),
+            sim_systems::runtime::baseline::decision::AgentDecisionSystem::new(),
         ));
         let mut tracker = DeathTracker::install(&mut engine);
         for _ in 0..3 {

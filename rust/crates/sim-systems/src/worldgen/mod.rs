@@ -191,13 +191,6 @@ pub fn build_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
     })
 }
 
-/// Production generation with an explicitly legacy decision stack for shadow comparison.
-/// Ordinary world selection may change; this observer-only factory keeps the old brain.
-#[cfg(feature = "mind_shadow")]
-pub fn build_shadow_world_with(cfg: &WorldGenConfig, rules: WorldRules) -> SimEngine {
-    build_world_with_registrar(cfg, rules, crate::register_shadow_runtime_systems)
-}
-
 /// Isolated generated world for tests that manually execute their own runtime systems.
 #[cfg(test)]
 pub(crate) fn build_world_without_runtime_for_tests(

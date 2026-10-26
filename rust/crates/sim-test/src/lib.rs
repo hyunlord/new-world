@@ -57,8 +57,7 @@ mod tests {
     }
 }
 
-/// Explicit legacy-world shadow comparison; never enabled by default.
-#[cfg(feature = "mind_shadow")]
+/// Immediate refusal for the retired live old-colony shadow runner.
 pub mod mind_shadow;
 
 /// Independent runtime mind reason coverage for colony probes.

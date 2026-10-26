@@ -159,7 +159,7 @@ order tool (scripts/world/colony/order_tool.gd) ──► WorldSimNode.cmd_*(…
 ## 3. Live systems
 
 The live engine is `build_game_engine(seed)` = `build_world_with(&WorldGenConfig::colony(seed), WorldRules::colony(seed))` since M1 (ADR 0014; the frozen identity world is the same call with `baseline`),
-which registers every system below (`register_default_runtime_systems`). Lower
+which registers the colony systems below (`register_world_runtime_systems`). Lower
 priority runs first; a system runs on ticks where `tick % interval == 0`.
 Reads/writes come from each file's `//!` header.
 
@@ -635,7 +635,7 @@ Selected source revision includes exact logical source names and bytes, includin
 
 ## Colony decision architecture (M-CORE, ADR 0046–0047)
 
-**Current staging:** working-tree production registration assigns `AgentDecisionSystem` to baseline and `ColonyMindSystem` to colony at priority 125. Fresh generation and save loading route from requested/decoded world rules, with a strict empty-slot migration for legacy colony saves (CORE_DECISIONS D19). Switch commit/captures and the final baseline-only move remain pending. The historical M1–M5.5 seam descriptions above describe the pre-switch path, not the new colony selector. Source routing does not establish accepted runtime behavior or performance.
+**Current staging:** p6 `fbc9a9babc9bb5df1d06ca1e655901e480521f66` commits colony `ColonyMindSystem` and baseline `AgentDecisionSystem` registration at priority 125, with decoded-rule save migration. P7 moves the legacy selector to `runtime/baseline/decision` and separately removes dead colony gates/seam and the live old-shadow factory. This isolation is uncommitted; final checks and post-isolation identity remain pending. Historical M1–M5.5 descriptions above retain the pre-switch design, not current colony policy. The generated live system table above describes the baseline constructor.
 
 ```text
 mind.ron + fact/behaviour registry
@@ -653,7 +653,7 @@ Neutral mechanics now live under `runtime/agent_actions/` (`consume`, `needs`, `
 
 Choice records retain dictionary identity, exact witnesses and up to three raw candidates from the winning band. Hysteresis may retain a choice outside the raw top three. Witnesses can include rejected alternatives; UI must distinguish evaluated inputs from the chosen action's causal explanation. History is bounded per person, while critical band changes can enter the chronicle. `ffi/mind.rs` collects records without re-evaluating policy; the inspector caches its argument getter by visible selection and simulation tick.
 
-The working-tree routing is colony -> `runtime/mind`, baseline -> legacy `runtime/decision`, both -> neutral `agent_actions`. The intended final baseline location is `runtime/baseline/decision`; the pure move, dead colony-gate/seam removal and import gate are still required. World registration is updated, with post-switch capture verification pending. A separate baseline crate is optional, not claimed here. See [ADR 0046](decisions/0046-colony-mind.md), [ADR 0047](decisions/0047-baseline-isolation.md), [authoring guide](v8/core/MIND_AUTHORING.md) and [goal](v8/core/CORE_GOAL.md) for the acceptance sequence. This section reports structure; measured outcomes belong to the M-CORE evidence records.
+The current module boundary is colony -> `runtime/mind`, baseline -> `runtime/baseline/decision`, both -> neutral `agent_actions`. The pure move has separate hash proof from dead-gate/seam removal. Final import checks and identity are still pending. No `sim-baseline` crate is introduced: the legacy selector shares crate-private mechanics and settlement/chronicle helpers with the crate that owns registration; a standalone split would need additional helper/registrar extraction to avoid a circular dependency. Supported baseline constructors/save fixtures define the preservation scope, not arbitrary injected colony components. See [ADR 0047](decisions/0047-baseline-isolation.md) and [D20](v8/core/CORE_DECISIONS.md).
 
 ## 16. Opt-in policy evaluation observations (B4, ADR 0040)
 

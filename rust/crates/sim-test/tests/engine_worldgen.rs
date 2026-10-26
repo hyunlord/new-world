@@ -551,7 +551,7 @@ mod regions {
     use sim_core::rules::WorldRules;
     use sim_engine::{RuntimeSystem, SimEngine};
     use sim_systems::runtime::agent::MovementRng;
-    use sim_systems::runtime::decision::AgentDecisionSystem;
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
     use sim_systems::worldgen::{build_world_with, WorldGenConfig};
     use sim_test::baseline_engine;
 
@@ -761,7 +761,8 @@ mod regions {
 
     #[test]
     fn harness_local_gather_stays_in_the_catchment() {
-        use sim_systems::runtime::decision::{nearest_food_tile_in_radius, nearest_gather_tile};
+        use sim_systems::runtime::nearest_food_tile_in_radius;
+        use sim_systems::runtime::nearest_gather_tile;
         let mut tiles = std::collections::HashMap::new();
         tiles.insert((37u32, 20u32), 4u8); // 17 from the hearth (20, 20): outside the catchment of 16
         tiles.insert((30, 24), 2); // inside

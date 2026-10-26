@@ -19,7 +19,7 @@
 //!
 //! Phase 5-β land: 1 decision system via [`register_decision_systems`].
 //!
-//! - [`runtime::decision::AgentDecisionSystem`]         priority 125, every tick
+//! - [`runtime::baseline::decision::AgentDecisionSystem`]         priority 125, every tick
 //!
 //! Phase 0 v0.1.3 patch Section 4.3 base.
 //!
@@ -62,6 +62,7 @@ macro_rules! arm_eval {
 }
 
 /// Count the result of a boolean expression without evaluating it twice.
+#[cfg(all(test, feature = "perf_arms"))]
 macro_rules! arm_outcome {
     ($yes:literal, $no:literal, $expression:expr) => {{
         #[cfg(feature = "perf_arms")]
@@ -145,13 +146,15 @@ pub fn register_needs_systems(engine: &mut SimEngine) {
 /// Register the Phase 5-β decision stack on `engine`.
 ///
 /// Registers (in priority order after sorting):
-/// - 125 : [`runtime::decision::AgentDecisionSystem`]
+/// - 125 : [`runtime::baseline::decision::AgentDecisionSystem`]
 ///
 /// Slots between `AgentMovementSystem` (priority 120) and
 /// `HungerDecaySystem` (priority 130) so it observes the post-move
 /// position and the pre-decay need values for the current tick.
 pub fn register_decision_systems(engine: &mut SimEngine) {
-    engine.register_system(Box::new(runtime::decision::AgentDecisionSystem::new()));
+    engine.register_system(Box::new(
+        runtime::baseline::decision::AgentDecisionSystem::new(),
+    ));
 }
 
 /// Register the Phase 6-β construction stack on `engine`.
@@ -353,16 +356,6 @@ pub fn register_colony_mind_runtime_systems(engine: &mut SimEngine) {
                 panic!("colony mind registration: initialization failed: {error}")
             });
         engine.register_system(Box::new(mind));
-    });
-}
-
-/// Full production stack with the legacy brain pinned for read-only shadow worlds.
-/// Keep this explicit old constructor when the ordinary colony registration switches.
-/// This top-level seam is the only shadow factory dependency on the legacy brain.
-#[cfg(feature = "mind_shadow")]
-pub fn register_shadow_runtime_systems(engine: &mut SimEngine) {
-    register_runtime_systems_with_decision(engine, |engine| {
-        engine.register_system(Box::new(runtime::decision::AgentDecisionSystem::new()));
     });
 }
 

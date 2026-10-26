@@ -53,13 +53,14 @@ use sim_core::components::{
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine, SimResources};
 use sim_systems::runtime::agent::MovementRng;
+use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
 use sim_systems::runtime::construction::ConstructionSystem;
-use sim_systems::runtime::decision::{
-    AgentDecisionSystem, FAMILIARITY_BUMP, REQUIRED_INTERACTION_PROGRESS, SOCIAL_CONSUME_AMOUNT,
-    SOCIAL_THRESHOLD,
-};
 use sim_systems::runtime::influence::InfluenceVisualizationSystem;
 use sim_systems::runtime::social::SocialInteractionSystem;
+use sim_systems::runtime::FAMILIARITY_BUMP;
+use sim_systems::runtime::REQUIRED_INTERACTION_PROGRESS;
+use sim_systems::runtime::SOCIAL_CONSUME_AMOUNT;
+use sim_systems::runtime::SOCIAL_THRESHOLD;
 use sim_systems::{
     register_construction_systems, register_decision_systems, register_default_runtime_systems,
     register_needs_systems, register_phase2_systems,

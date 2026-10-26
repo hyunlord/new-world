@@ -384,7 +384,7 @@ mod living_loop {
             building_kind::shelter_blueprint, ConstructionSite, SeekTarget, Settlement, TargetKind,
         };
         use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
-        use sim_systems::runtime::decision::AgentDecisionSystem;
+        use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
         let mut engine = SimEngine::new(32, 32, MaterialRegistry::new());
         engine.resources.rules = WorldRules::baseline(7);
         engine.resources.rules.agent.move_interval_ticks = 1;

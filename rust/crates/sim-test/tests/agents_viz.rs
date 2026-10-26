@@ -859,7 +859,7 @@ mod resource_markers {
     use sim_core::components::{AgentState, Hunger, TargetKind};
     use sim_core::material::MaterialRegistry;
     use sim_engine::{RuntimeSystem, SimEngine};
-    use sim_systems::runtime::decision::AgentDecisionSystem;
+    use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
 
     // ── constants mirrored from the production bootstrap (read-only) ────────────
     const DEFAULT_W: u32 = 64;

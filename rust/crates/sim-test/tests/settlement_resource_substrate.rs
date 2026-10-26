@@ -19,7 +19,8 @@ use sim_bridge::ffi::{collect_resource_snapshot, resource_rows_split, ResourceSn
 use sim_core::components::{Agent, AgentState, Hunger, TargetKind};
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine, SimResources, RESOURCE_SOURCE_INFINITE};
-use sim_systems::runtime::decision::{AgentDecisionSystem, HUNGER_CONSUME_AMOUNT};
+use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
+use sim_systems::runtime::HUNGER_CONSUME_AMOUNT;
 
 // ── constants mirrored from the production bootstrap (read-only) ────────────
 

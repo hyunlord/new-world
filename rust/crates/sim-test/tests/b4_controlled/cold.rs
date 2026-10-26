@@ -6,7 +6,7 @@ use sim_core::rng::{keyed_below, STREAM_APPAREL};
 use sim_core::rules::WorldRules;
 use sim_core::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
-use sim_systems::runtime::decision::clock_in_window;
+use sim_systems::runtime::agent_actions::clock_in_window;
 use sim_systems::runtime::settlement::{firewood, FireSystem};
 
 pub fn sample(seed: u64, tick: u64, top: Option<Top>, rows: &mut Vec<ColdRow>) {

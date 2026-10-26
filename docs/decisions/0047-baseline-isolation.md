@@ -1,6 +1,6 @@
 # ADR 0047 — Isolate the frozen baseline after the colony switch
 
-Status: accepted staging boundary; neutral helper extraction and world-registration inventory exist. Production routing is switched in the working tree (D19); its commit/captures, final baseline directory move and deletion of the obsolete colony seam remain pending. No standalone `sim-baseline` crate or completed isolation gate is claimed.
+Status: production switch committed as `fbc9a9babc9bb5df1d06ca1e655901e480521f66` (p6). Baseline isolation is the uncommitted p7 work: pure move verified; live old-shadow retirement and dead colony-gate/seam removal implemented. Systems/feature/formatting/strict-Clippy and source/registration isolation checks pass. Post-isolation identity capture PASS (D20); p7 remains uncommitted. The optional standalone crate is not adopted.
 
 ## Context
 
@@ -8,13 +8,13 @@ ADR 0014 requires historical baseline identity. M-CORE authorizes a new colony d
 
 ## Decision
 
-Maintain an explicit world registration table in `sim-engine/src/registration.rs`, checked against real constructors. The working-tree table now assigns `AgentDecisionSystem` to Baseline and `ColonyMindSystem` to Colony. Fresh generation and production save loading use requested/decoded rules; the explicit shadow factory retains legacy registration. This records source routing, not completed switch verification.
+Maintain an explicit world registration table in `sim-engine/src/registration.rs`, checked against real constructors. The working-tree table now assigns `AgentDecisionSystem` to Baseline and `ColonyMindSystem` to Colony. Fresh generation and production save loading use requested/decoded rules; the live old-shadow factory is retired in p7. Frozen old-runner source and binary manifests remain external for reproducibility. Post-isolation identity remains a separate check.
 
-The working-tree switch registers `ColonyMindSystem` for colony and the legacy selector for baseline at the existing priority/cadence. Next, move the legacy selector and baseline-only helpers to `sim-systems/src/runtime/baseline/decision/` by a separately reviewable pure move. Then remove only colony gates proven dead under baseline-only registration and the unused `jobs/seam.rs`, retaining baseline identity. The move, dead-gate removal and their evidence must remain distinguishable; source simplification is not proof of identity.
+The p6 switch registers `ColonyMindSystem` for colony and the legacy selector for baseline at the existing priority/cadence. P7 moves the legacy selector to `sim-systems/src/runtime/baseline/decision/`, then separately removes dead colony gates and `jobs/seam.rs`. The initial two-file pure move has exact hash proof in `/Users/rexxa/work/core-data/baseline-dev/pure-move-proof.txt`; that proof does not cover subsequent cleanup. Source import-boundary and registration checks pass; post-isolation identity capture passes for the supported corpus (D20). Preservation covers supported baseline constructors and the saved baseline corpus, not arbitrary injected colony Job/draft/flee states.
 
-Shared mechanical helpers live in `runtime/agent_actions/`: consumption, needs/arrival, forage and wood targeting, memory bias and routine lifecycle. Existing legacy API paths re-export these neutral implementations. Sharing a helper does not authorize a colony import of the baseline selector, a call to legacy policy from facts, or changes to legacy random draws. The `baseline_isolation` gate must reject colony imports of `runtime::baseline::*` and verify world registration. Save/reload must preserve each world's actual system set and baseline fixtures.
+Shared mechanical helpers live in `runtime/agent_actions/`: consumption, needs/arrival, forage and wood targeting, memory bias and routine lifecycle. Public mechanical API reexports continue to refer to neutral implementations. Sharing a helper does not authorize a colony import of the baseline selector, a call to legacy policy from facts, or changes to legacy random draws. The `baseline_isolation` gate must reject colony imports of `runtime::baseline::*` and verify world registration. Save/reload must preserve each world's actual system set and baseline fixtures.
 
-A separate `sim-baseline` crate is optional under the goal's drop order. Do not force a crate split through dependency cycles merely to claim separation. If deferred, record that limitation while retaining module-level isolation and its gate.
+A separate `sim-baseline` crate is dropped from this milestone under the goal's optional drop order. The moved selector imports `pub(crate)` neutral `agent_actions` modules plus settlement food/firewood and chronicle helpers; `sim-systems` also owns world registration. Moving only the selector into a crate that depends back on these helpers while `sim-systems` registers it would introduce a circular package dependency. Avoiding that would require another helper/registrar split and visibility changes beyond this isolation boundary. Keep module isolation and its gate instead; no runtime or compile-time speed benefit is claimed.
 
 ## Consequences
 
@@ -26,7 +26,7 @@ Rejected alternatives: deleting the baseline to avoid maintenance (violates iden
 
 ## Source
 
-[CORE_GOAL §§2–5](../v8/core/CORE_GOAL.md), [colony mind](0046-colony-mind.md), [authoring](../v8/core/MIND_AUTHORING.md), `sim-engine/src/registration.rs`, `sim-systems/src/runtime/{decision,agent_actions,mind}/`.
+[CORE_GOAL §§2–5](../v8/core/CORE_GOAL.md), [colony mind](0046-colony-mind.md), [authoring](../v8/core/MIND_AUTHORING.md), `sim-engine/src/registration.rs`, `sim-systems/src/runtime/{baseline/decision,agent_actions,mind}/` (the original `runtime/decision` path is historical).
 
 ## Date
 

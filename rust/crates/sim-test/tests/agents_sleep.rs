@@ -16,8 +16,9 @@ use sim_core::components::{Agent, AgentState, Hunger, Position, Sleep, TargetKin
 use sim_core::material::MaterialRegistry;
 use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::runtime::agent::{AgentMovementSystem, MovementRng};
-use sim_systems::runtime::decision::{AgentDecisionSystem, FATIGUE_CONSUME_AMOUNT};
+use sim_systems::runtime::baseline::decision::AgentDecisionSystem;
 use sim_systems::runtime::needs::{HungerDecaySystem, SleepDecaySystem, ThirstDecaySystem};
+use sim_systems::runtime::FATIGUE_CONSUME_AMOUNT;
 
 fn fresh_engine() -> SimEngine {
     SimEngine::new(32, 32, MaterialRegistry::new())
