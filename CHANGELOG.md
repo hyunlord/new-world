@@ -5,7 +5,7 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
-## M-UX2 — 2026-10-26 (blocked; not published)
+## M-UX2 — 2026-10-26 (owner decisions recorded; new FPS condition passed; not published)
 
 - Added: owner playtest contract preserved first at `f2103ad47`, isolated `v8/mux2` worktree, strict visibility/stall and defence/flee regressions. Initial defence regression fails3/3; after repairing one missing-health fixture, all5 flee cases fail on actual behavior. Original failed runs remain recorded. No acceptance or publication claim yet.
 - Records: scope, frozen dependency input and unchanged acceptance bars are in `docs/v8/mux2/MUX2_DECISIONS.md`. Prior M-UX failures remain historical evidence.
@@ -17,6 +17,7 @@ tags `v7-final-sim` and `v7-final-art`.
 - Optional native/script frame profiling, including system/prune/snapshot-freeze timing; simulation never reads it. The original debug baseline fails the stall bar at both zooms; no improvement claim yet.
 
 ### Changed
+- Owner D-A..D-C corrects cold-snap acceptance to exposed worlds: frozen ON20/20 PASS alongside original20/32 FAIL, without rerun or policy change. The1000-person half-scale35.98FPS target moves to M11 (ISS332 open); all four fresh measurements are valid (N100/half164.882764487796; N200/half119.291035278699,full225.75111993954,quarter35.1016343917384), and publication requires N100/half≥60FPS. Retain rebake7.239ms, prior stall failures and ISS030 OPEN. Technical gate remains p16 41/41; no new gate/publication claim. Earlier blocked entries retain their historical contract context.
 - Final technical gate on p16 `b530eb26d43ef99bb426ad3e454b294875dc230b` passes41/41,status0 at15:53:08KST, with fresh final-step stall capture and5,891 unchanged input hashes (D24). Both zooms pass the original bar; ISS331 is scoped process/fixed. Previous gate/capture failures remain. Held-out fuel20/32<24/32 and valid FPS10=35.982133928869<60 keep final acceptance BLOCKED/NOT_PUBLISHED. Subsequent p17 records are documentation-only and are not a new full-gate run.
 - p15 gate ends40/41,exit1: step23 rebuilds the debug bridge after stall3 capture, and step41 correctly rejects its changed hash (D23,ISS331 OPEN). Default stall capture now occurs after all builds before strict verification; explicit receipts remain verify-only. Four order/failure regressions move RED4→GREEN4; full rerun is pending. Stall3 PASS remains limited to its captured binary; FPS10 and held-out failures still block publication.
 - On p15, independently audited stall3 passes both arms:1×max45.363ms/bins1,2,2,2,1 and half49.829ms/bins1,0,2,0,1, with zero>50ms. Startup3.828/4.329s and all earlier failures remain retained; half has0.171ms headroom, with no causal cache-removal claim (D22). Valid FPS10 still FAILS at35.982133928869; natural rebake NOT_MEASURED. p15 full gate fails40/41 on binary binding, p14 remains40/41 exit1, and FPS/held-out failures block publication.
@@ -631,3 +632,5 @@ are gone from the bridge.
 - Recorded C gate2 FAIL35/36 atbcea734a (standing n200/side64 p99), fixed-schedule six-run diagnosis, ISS314 OPEN and lesson27. No product/threshold/ledger change; final clean documentation head requires a new full gate. Registry314:175fixed/107open/30deferred/2won't fix.
 
 - Added GitHub#619 for ISS314; all107 OPEN mappings and unchanged original106/#59 verified after preserving the initial list delay. Final gate3 remains a separate publication prerequisite.
+
+Owner-decision measurement checkpoint: valid N100/half164.882764487796 and N200/half119.291035278699; valid N200/full225.75111993954 and quarter35.1016343917384 complete the four measurements; quarter is report-only. Thirteen scoped registry rows are approved fixed;332total197fixed103open30deferred2wontfix. No GitHub closure or publication yet.

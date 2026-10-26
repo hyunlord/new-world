@@ -383,3 +383,18 @@ docs/v8/mux2/MUX2_COMMIT_FILES.md
 docs/v8/mux2/MUX2_DECISIONS.md
 docs/v8/mux2/MUX2_REPORT.md
 ```
+
+## p18 — 오너 D-A..D-C와 측정 기록 (이 커밋)
+
+p17은 `fab923dad64bb832a68bd58f6a8ed2e279ba34a5`다. p18은 문서와 측정 요약만 변경한다. 제품·도구 및 전체 게이트 소스는 p16과 같으며 원시 측정은 외부에 보존한다.
+
+```text
+CHANGELOG.md
+docs/HISTORY.md
+docs/ISSUES.md
+docs/ROADMAP.md
+docs/v8/mux2/MUX2_COMMIT_FILES.md
+docs/v8/mux2/MUX2_DECISIONS.md
+docs/v8/mux2/MUX2_OWNER_MEASUREMENTS.json
+docs/v8/mux2/MUX2_REPORT.md
+```

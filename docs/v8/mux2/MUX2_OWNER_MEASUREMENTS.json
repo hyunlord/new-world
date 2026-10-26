@@ -1,0 +1,344 @@
+{
+  "schema": 1,
+  "authority": "Owner D-A/D-B/D-C 2026-10-26",
+  "source_head": "fab923dad64bb832a68bd58f6a8ed2e279ba34a5",
+  "full_gate_head": "b530eb26d43ef99bb426ad3e454b294875dc230b",
+  "method": "Unchanged mart2_fps.gd; release bridge; 30s warmup + >=60s rendered measurement; 1920x1080 windowed/always-on-top; vsync/max_fps0; source/binary hashes at both endpoints; load<8 before/after",
+  "publication_bar": "Only valid N100 zoom0.5 >=60 FPS; other three conditions report-only",
+  "publication_bar_pass": true,
+  "attempts": [
+    {
+      "path": "/Users/rexxa/work/mux2-data/owner-fps/n100-z0.5",
+      "n": 100,
+      "zoom": 0.5,
+      "valid": true,
+      "fps": 164.882764487796,
+      "frames": 9893,
+      "engine_frames": 9893,
+      "seconds": 60.000207,
+      "lod": false,
+      "load_before": [
+        5.81005859375,
+        6.15966796875,
+        5.67626953125
+      ],
+      "load_after": [
+        5.95361328125,
+        6.23486328125,
+        5.76318359375
+      ],
+      "natural_rebake_status": "NOT_MEASURED",
+      "source_head": "fab923dad64bb832a68bd58f6a8ed2e279ba34a5",
+      "release_sha256": "09baeb09122bc0f125a6427cfc99e4974d81d5f20e644216d9f4862d5ef7e36b",
+      "original_debug_sha256": "52388693aaf4e4ad2fc7bc706c76d9ed086a41a99de6faa93a387ca82a6b59b9",
+      "hashes": {
+        "before.json": "51d6531c62303d45def2e0f820d195c90cde26386e308ea69f23658d9d5db1b8",
+        "receipt.json": "8b9d186f94ad0aa3aa53e029cc8e51961d26ca7f3bd08300f77118db5ce57f54",
+        "godot.log": "7f6697de719434d2ff69b17a9d4b89e5780f886e4a7606bf997282452d771b0d",
+        "bake-events.jsonl": "55cbe7832109d8384a1d12bf2a83e8a30e48b71e9770259bcc1c1966ec0eaa97",
+        "debug-restored.sha256": "150ed0f4c99fa89e034442e954b2fc2cf44bf7d1368c679a92eec93d825e9f39"
+      }
+    },
+    {
+      "path": "/Users/rexxa/work/mux2-data/owner-fps/n200-z0.5",
+      "n": 200,
+      "zoom": 0.5,
+      "valid": false,
+      "fps": 117.976225265761,
+      "frames": 7079,
+      "engine_frames": 7079,
+      "seconds": 60.003615,
+      "lod": false,
+      "load_before": [
+        5.95361328125,
+        6.23486328125,
+        5.76318359375
+      ],
+      "load_after": [
+        11.8984375,
+        8.0693359375,
+        6.509765625
+      ],
+      "natural_rebake_status": "NOT_MEASURED",
+      "source_head": "fab923dad64bb832a68bd58f6a8ed2e279ba34a5",
+      "release_sha256": "09baeb09122bc0f125a6427cfc99e4974d81d5f20e644216d9f4862d5ef7e36b",
+      "original_debug_sha256": "52388693aaf4e4ad2fc7bc706c76d9ed086a41a99de6faa93a387ca82a6b59b9",
+      "hashes": {
+        "before.json": "3a3bd10f865504a4a39d0d29c817801965d4fc54d6bef804d8985c53f58157c2",
+        "receipt.json": "e59133441ef577f3fe109af076eaf6ee726454c1a1e8306dd5a38388701761e6",
+        "godot.log": "e19a22f1b365ea351f4c5fde7056a1a7256638c177982416ca1900af5de4c67e",
+        "bake-events.jsonl": "4534624d84c61fc61f1de9dfaa0ba26f6baff4a15c2eaa49078ea56668edca60",
+        "debug-restored.sha256": "150ed0f4c99fa89e034442e954b2fc2cf44bf7d1368c679a92eec93d825e9f39"
+      }
+    },
+    {
+      "path": "/Users/rexxa/work/mux2-data/owner-fps-resume1/n200-z0.5",
+      "n": 200,
+      "zoom": 0.5,
+      "valid": true,
+      "fps": 119.291035278699,
+      "frames": 7158,
+      "engine_frames": 7158,
+      "seconds": 60.004509,
+      "lod": false,
+      "load_before": [
+        7.56298828125,
+        8.03076171875,
+        6.7763671875
+      ],
+      "load_after": [
+        7.740234375,
+        8.02783203125,
+        6.91064453125
+      ],
+      "natural_rebake_status": "NOT_MEASURED",
+      "source_head": "fab923dad64bb832a68bd58f6a8ed2e279ba34a5",
+      "release_sha256": "09baeb09122bc0f125a6427cfc99e4974d81d5f20e644216d9f4862d5ef7e36b",
+      "original_debug_sha256": "52388693aaf4e4ad2fc7bc706c76d9ed086a41a99de6faa93a387ca82a6b59b9",
+      "hashes": {
+        "before.json": "1ace78db74953c2d0e2b6271ae79fd61f38286894a1e5a08ff9856973573eed4",
+        "receipt.json": "13834e5e3a969d0dcdadab0866ca1bcfdefe58bc09fa71a4f933e23e631d482f",
+        "godot.log": "9c6f886a4007b0d6913b8ff3dfd417bfd6d82f9aabc42d8e3932467f1aa3b204",
+        "bake-events.jsonl": "9e51787639a1823d3fc0afa487bca4af51b88e27a950e562c305775b73106b9d",
+        "debug-restored.sha256": "ff370d1f1002dd9a38ab321dad51e315ed73eb38f6603597f76930d4b579b29f"
+      }
+    },
+    {
+      "path": "/Users/rexxa/work/mux2-data/owner-fps-resume1/n200-z1.0",
+      "n": 200,
+      "zoom": 1.0,
+      "valid": false,
+      "fps": 210.496554873052,
+      "frames": 12630,
+      "engine_frames": 12630,
+      "seconds": 60.000982,
+      "lod": false,
+      "load_before": [
+        7.6005859375,
+        7.994140625,
+        6.9052734375
+      ],
+      "load_after": [
+        8.3076171875,
+        8.20458984375,
+        7.10205078125
+      ],
+      "natural_rebake_status": "NOT_MEASURED",
+      "source_head": "fab923dad64bb832a68bd58f6a8ed2e279ba34a5",
+      "release_sha256": "09baeb09122bc0f125a6427cfc99e4974d81d5f20e644216d9f4862d5ef7e36b",
+      "original_debug_sha256": "52388693aaf4e4ad2fc7bc706c76d9ed086a41a99de6faa93a387ca82a6b59b9",
+      "hashes": {
+        "before.json": "17f76744e56fe3a5d255d269c608b1548ffc20d96f3ef2ac80f5887a0cd7fa5c",
+        "receipt.json": "488b3fcabe72a35b3a448e11374acda469c6465c398d1fc8cd95ca44c5ccd85a",
+        "godot.log": "af95e69ddf56f92c14876d3b85fe1ff3777db221ef5e1d8dc569a9014b7466eb",
+        "bake-events.jsonl": "55437886e0a9f39f9b1a1655c5c5ab461df65b6a629236ca9521ba12af6f3f9e",
+        "debug-restored.sha256": "ff370d1f1002dd9a38ab321dad51e315ed73eb38f6603597f76930d4b579b29f"
+      }
+    },
+    {
+      "path": "/Users/rexxa/work/mux2-data/owner-fps-quarter/n200-z0.25",
+      "n": 200,
+      "zoom": 0.25,
+      "valid": false,
+      "fps": 33.4657849912101,
+      "frames": 2009,
+      "engine_frames": 2009,
+      "seconds": 60.031462,
+      "lod": true,
+      "load_before": [
+        7.2744140625,
+        7.96826171875,
+        7.09521484375
+      ],
+      "load_after": [
+        9.6220703125,
+        8.59326171875,
+        7.42626953125
+      ],
+      "natural_rebake_status": "NOT_MEASURED",
+      "source_head": "fab923dad64bb832a68bd58f6a8ed2e279ba34a5",
+      "release_sha256": "09baeb09122bc0f125a6427cfc99e4974d81d5f20e644216d9f4862d5ef7e36b",
+      "original_debug_sha256": "52388693aaf4e4ad2fc7bc706c76d9ed086a41a99de6faa93a387ca82a6b59b9",
+      "hashes": {
+        "before.json": "76f44657c00d2624fde835891ced18309d7785de675f295bdca1da9179d7a167",
+        "receipt.json": "43086e58c867679e49e573a417d476b823d23c5ab942d061af13dbbecd0812f7",
+        "godot.log": "f4bb244b642961fc8a48ace8abcbd8b8408255214de80612bf77fcd989fbc973",
+        "bake-events.jsonl": "94596dce657d093c838695f2c7d2c48d4a569fe8973ad112301ca2c19c345710",
+        "debug-restored.sha256": "16dd78c6e9c072455efe0523bb4484e6a2d749610894b291d33efad8fde20dae"
+      }
+    },
+    {
+      "path": "/Users/rexxa/work/mux2-data/owner-fps-final-recovery/n200-z1.0",
+      "n": 200,
+      "zoom": 1.0,
+      "valid": true,
+      "fps": 225.75111993954,
+      "frames": 13546,
+      "engine_frames": 13546,
+      "seconds": 60.004132,
+      "lod": false,
+      "load_before": [
+        5.6337890625,
+        7.75732421875,
+        7.39892578125
+      ],
+      "load_after": [
+        6.26904296875,
+        7.44140625,
+        7.3193359375
+      ],
+      "natural_rebake_status": "NOT_MEASURED",
+      "source_head": "fab923dad64bb832a68bd58f6a8ed2e279ba34a5",
+      "release_sha256": "09baeb09122bc0f125a6427cfc99e4974d81d5f20e644216d9f4862d5ef7e36b",
+      "original_debug_sha256": "52388693aaf4e4ad2fc7bc706c76d9ed086a41a99de6faa93a387ca82a6b59b9",
+      "hashes": {
+        "before.json": "fb1f3c34d138a7992272d880e4b429ad7a067a2477de912f4084d19e4bf02108",
+        "receipt.json": "aaf52cf9a831e23eb0a292f9a6e271f27460fa9010ae959bc8c5322f49697c0b",
+        "godot.log": "c58d474ae9083e67d5adeedafd89731d8fe1eda42f3e73dba79c6c2215648bc6",
+        "bake-events.jsonl": "32b6232c618219150e1c66b06f0ab0a1776f75cdd4014daa84fb92c01837d6ad",
+        "debug-restored.sha256": "b74ae8f5242ef98c6c462bc9bbcf1b451215238d6485878d882f20b47c78dabb"
+      }
+    },
+    {
+      "path": "/Users/rexxa/work/mux2-data/owner-fps-final-recovery/n200-z0.25",
+      "n": 200,
+      "zoom": 0.25,
+      "valid": true,
+      "fps": 35.1016343917384,
+      "frames": 2107,
+      "engine_frames": 2107,
+      "seconds": 60.025695,
+      "lod": true,
+      "load_before": [
+        6.26904296875,
+        7.44140625,
+        7.3193359375
+      ],
+      "load_after": [
+        4.787109375,
+        6.580078125,
+        6.9921875
+      ],
+      "natural_rebake_status": "NOT_MEASURED",
+      "source_head": "fab923dad64bb832a68bd58f6a8ed2e279ba34a5",
+      "release_sha256": "09baeb09122bc0f125a6427cfc99e4974d81d5f20e644216d9f4862d5ef7e36b",
+      "original_debug_sha256": "52388693aaf4e4ad2fc7bc706c76d9ed086a41a99de6faa93a387ca82a6b59b9",
+      "hashes": {
+        "before.json": "693105b36c81820d3399d69fd87337edd5593ac5b80450bcc29a138ce947e30b",
+        "receipt.json": "af18a87870d60b97f044b7c30f5f1cf408f050807a71f05186f0ab54d4d85ee1",
+        "godot.log": "edb27a1b6c01a6fee6d061042d7e520e40c6260871301eb84fd0afe12ec53b30",
+        "bake-events.jsonl": "0b7bf1b343cd6e117d098d27f67eba37ae05bd5511dee97b3cb12c74b370b033",
+        "debug-restored.sha256": "b74ae8f5242ef98c6c462bc9bbcf1b451215238d6485878d882f20b47c78dabb"
+      }
+    }
+  ],
+  "admission_failures": [
+    "owner-fps/n200-z1.0: load>=8 before Godot; no capture",
+    "owner-fps-resume1/n200-z0.25: load>=8 before Godot; no capture"
+  ],
+  "da": {
+    "authority": "Owner D-A 2026-10-26; unexposed neither pass nor fail",
+    "source": "/Users/rexxa/work/mux2-data/heldout/paired-score.json",
+    "source_sha256": "863ca5785e77d6f603a272068f2ce0a2a1f700516edde6cb386ca7c0b25006aa",
+    "original_passed": false,
+    "policy_sha256": "db33578a888eb451113725fe994de87a362bfb060608a1d84944970dfe4c57a4",
+    "arms": {
+      "on": {
+        "exposed": 20,
+        "protected": 20,
+        "unexposed": 12,
+        "original": {
+          "passed": 20,
+          "required": 24,
+          "total": 32
+        },
+        "exposed_seeds": [
+          1202,
+          1206,
+          1208,
+          1209,
+          1210,
+          1211,
+          1213,
+          1215,
+          1216,
+          1217,
+          1218,
+          1220,
+          1221,
+          1222,
+          1223,
+          1225,
+          1227,
+          1229,
+          1230,
+          1231
+        ]
+      },
+      "off": {
+        "exposed": 29,
+        "protected": 28,
+        "unexposed": 3,
+        "original": {
+          "passed": 28,
+          "required": 24,
+          "total": 32
+        },
+        "exposed_seeds": [
+          1200,
+          1202,
+          1203,
+          1204,
+          1206,
+          1207,
+          1208,
+          1209,
+          1210,
+          1211,
+          1213,
+          1214,
+          1215,
+          1216,
+          1217,
+          1218,
+          1219,
+          1220,
+          1221,
+          1222,
+          1223,
+          1224,
+          1225,
+          1226,
+          1227,
+          1228,
+          1229,
+          1230,
+          1231
+        ]
+      }
+    },
+    "on_new_rule_pass": true,
+    "rerun": false,
+    "policy_change": false
+  },
+  "preserved_failures": {
+    "n1000_half_fps": 35.982133928869,
+    "controlled_rebake_ms": 7.239,
+    "earlier_half_stall_max_ms": [
+      1007.709,
+      108.817
+    ]
+  },
+  "scripts": {
+    "owner-fps-measure.sh": "8a7fa3c8d4174f58edd8a37326354963c3aa4d63b4de352fabbb5a2448f35adb",
+    "owner-fps-resume1.sh": "93c436778879e37254c925588deaccf44ebf970f3c79e12e724ac4576b951de2",
+    "owner-fps-quarter.sh": "ff20815f1a213a6f9c92ac334514400a1fdc0f8676ea00c8827bc3da1b6bfdca",
+    "owner-fps-final-recovery.sh": "cffaa905238a1b83dc7284a370dc4d3291ddc24b980961227caa9adf68fcbc53"
+  },
+  "independent_audit": {
+    "path": "/Users/rexxa/work/mux2-data/reviews/owner-decisions-measurement-audit.md",
+    "sha256": "9ff765a8b9d8f40854623c13d2f99cb9fdae48740209086906af5535b5f450a3",
+    "result": "No blocking discrepancy; four selected FPS captures and DA interpretation verified",
+    "source_scope": "Runtime/FPS protocol matches FPS10; gate-only tooling changed before p16 and was covered by p16 full gate"
+  }
+}
