@@ -5,6 +5,17 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M-CORE — 2026-10-26 (in progress, not published)
+
+### Added
+- Owner contract at `docs/v8/core/CORE_GOAL.md`; isolated branch from published M-UX2 `9855bd082ad88a4c49296410f206f148d98c4df9`.
+- Static decision/seam inventory and explicit pending runtime counts in `docs/v8/core/CORE_INVENTORY.md`; evidence and sequencing decisions in `CORE_DECISIONS.md`.
+- Approved depth roadmap preserved verbatim from Appendix A in `docs/v8/DEPTH_ROADMAP.md`.
+
+### Changed
+- ROADMAP schedules M-CORE and M6–M11; superseded M6-finalization/M-PERF rows remain as history. VISION carries the approved v1.0 definition and retains the previous definition.
+- Implementation, full identity comparisons, shadow, held-out evaluation, quiet performance and final gate remain pending. No current decision-share or acceptance claim.
+
 ## M-UX2 — 2026-10-26 (p18 published under owner decisions)
 
 - Added: owner playtest contract preserved first at `f2103ad47`, isolated `v8/mux2` worktree, strict visibility/stall and defence/flee regressions. Initial defence regression fails3/3; after repairing one missing-health fixture, all5 flee cases fail on actual behavior. Original failed runs remain recorded. No acceptance or publication claim yet.

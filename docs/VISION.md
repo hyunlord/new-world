@@ -1,6 +1,6 @@
 # WorldSim 비전 (V8)
 
-> 이 문서는 `docs/v8/V8_DIRECTION.md`(2026-10-20 오너 결정 원본)의 §0–§7과 §10을 문구 그대로 옮긴 저장소판이다. 바꾼 것은 경로 표기뿐이다. 단계(§8)는 [ROADMAP.md](ROADMAP.md), 운영 원칙(§9)과 코드·문서·스킬 운영(§11)은 [AGENTS.md](../AGENTS.md)와 `.claude/skills/`에 있다. 방향이 바뀌면 이 문서를 고친다.
+> 이 문서는 `docs/v8/V8_DIRECTION.md`(2026-10-20 오너 결정 원본)의 저장소판이다. v1.0 정의는 2026-10-26 승인된 [깊이 로드맵](v8/DEPTH_ROADMAP.md)으로 개정했으며 이전 정의도 보존한다. 단계는 [ROADMAP.md](ROADMAP.md), 운영 원칙과 코드·문서·스킬 운영은 [AGENTS.md](../AGENTS.md)와 `.claude/skills/`에 있다.
 >
 > §3·§4가 가리키는 `WorldSim_지하자원_4자합성.md`, `WorldSim_개인지식_4자합성.md`, `WorldSim_TechTree_4Way_Synthesis.md`, `Individual knowledge systems for a 10,000-agent civilization sim.md`는 오너의 설계 문서로, 저장소 밖에 있다.
 
@@ -170,6 +170,12 @@
 ---
 
 ## 7. 새 v1.0 정의
+
+10명으로 시작해 몇 년 안에 약 100명이 되고, 신석기 시대로 넘어간다. 사람마다 성격·기억·관계가 있고, 그 일생과 마을의 역사를 읽을 수 있다. 1만 명, 청동기 이후, LLM 해설은 v1.0 밖이다.
+
+2026-10-26 오너 승인. 구현 순서는 M-CORE → M6 신석기 → M7 마음 → M8 사회 → M9 몸 → M10 이야기 → M11 규모이며, 원칙과 다섯 기둥은 [깊이 로드맵](v8/DEPTH_ROADMAP.md)을 따른다.
+
+### 이전 정의
 
 > 10명 안팎으로 시작해 몇 년 안에 100명 안팎의 정착지가 되고, 그 과정에서 기술이 사람 사이로 퍼져 신석기로 넘어가는 것을 플레이어가 지시하고 지켜볼 수 있다.
 
