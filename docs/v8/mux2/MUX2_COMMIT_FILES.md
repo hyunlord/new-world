@@ -353,3 +353,33 @@ tools/v8/mux2_tree_conversion_probe_check.py
 tools/v8/mux2_tree_conversion_test.gd
 tools/v8/test_mux2_tree_conversion_probe_check.py
 ```
+
+## p16 — b530eb26d43ef99bb426ad3e454b294875dc230b
+
+```text
+.claude/skills/worldsim-godot/SKILL.md
+CHANGELOG.md
+docs/HISTORY.md
+docs/ISSUES.md
+docs/ROADMAP.md
+docs/v8/mux2/MUX2_COMMIT_FILES.md
+docs/v8/mux2/MUX2_DECISIONS.md
+docs/v8/mux2/MUX2_REPORT.md
+tools/v8/gate.sh
+tools/v8/mux2_gate_checks.sh
+tools/v8/test_mux2_gate_stall_command.py
+```
+
+## p17 — 최종 문서 기록 (이 커밋)
+
+다음은 이 문서 전용 커밋의 명시적 경로 목록이다. 자기 자신의 해시를 본문에 넣지 않으며 `git log --grep="v8-mux2(p17):"`로 식별한다. 전체 게이트는 p16에 귀속되며 p17의 전체 재실행을 뜻하지 않는다.
+
+```text
+CHANGELOG.md
+docs/HISTORY.md
+docs/ISSUES.md
+docs/ROADMAP.md
+docs/v8/mux2/MUX2_COMMIT_FILES.md
+docs/v8/mux2/MUX2_DECISIONS.md
+docs/v8/mux2/MUX2_REPORT.md
+```

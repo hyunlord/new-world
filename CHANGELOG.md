@@ -5,7 +5,7 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
-## M-UX2 — 2026-10-26 (in progress)
+## M-UX2 — 2026-10-26 (blocked; not published)
 
 - Added: owner playtest contract preserved first at `f2103ad47`, isolated `v8/mux2` worktree, strict visibility/stall and defence/flee regressions. Initial defence regression fails3/3; after repairing one missing-health fixture, all5 flee cases fail on actual behavior. Original failed runs remain recorded. No acceptance or publication claim yet.
 - Records: scope, frozen dependency input and unchanged acceptance bars are in `docs/v8/mux2/MUX2_DECISIONS.md`. Prior M-UX failures remain historical evidence.
@@ -17,6 +17,7 @@ tags `v7-final-sim` and `v7-final-art`.
 - Optional native/script frame profiling, including system/prune/snapshot-freeze timing; simulation never reads it. The original debug baseline fails the stall bar at both zooms; no improvement claim yet.
 
 ### Changed
+- Final technical gate on p16 `b530eb26d43ef99bb426ad3e454b294875dc230b` passes41/41,status0 at15:53:08KST, with fresh final-step stall capture and5,891 unchanged input hashes (D24). Both zooms pass the original bar; ISS331 is scoped process/fixed. Previous gate/capture failures remain. Held-out fuel20/32<24/32 and valid FPS10=35.982133928869<60 keep final acceptance BLOCKED/NOT_PUBLISHED. Subsequent p17 records are documentation-only and are not a new full-gate run.
 - p15 gate ends40/41,exit1: step23 rebuilds the debug bridge after stall3 capture, and step41 correctly rejects its changed hash (D23,ISS331 OPEN). Default stall capture now occurs after all builds before strict verification; explicit receipts remain verify-only. Four order/failure regressions move RED4→GREEN4; full rerun is pending. Stall3 PASS remains limited to its captured binary; FPS10 and held-out failures still block publication.
 - On p15, independently audited stall3 passes both arms:1×max45.363ms/bins1,2,2,2,1 and half49.829ms/bins1,0,2,0,1, with zero>50ms. Startup3.828/4.329s and all earlier failures remain retained; half has0.171ms headroom, with no causal cache-removal claim (D22). Valid FPS10 still FAILS at35.982133928869; natural rebake NOT_MEASURED. p15 full gate fails40/41 on binary binding, p14 remains40/41 exit1, and FPS/held-out failures block publication.
 - Stall2 completes on p14 but remains FAIL:1×45.759ms/>50=0/bins1,1,0,0,2; half108.817ms/>50=5/bins5,0,3,2,0. Reject tree caching for no demonstrated getter benefit, not a proved causal regression (D21). After the p14 full gate (40/41 steps, exit1 solely failed stall receipt), restore all six candidate paths exactly to p13; retain capture fixes and original oracles. Candidate-specific probes are removed with the candidate, not to turn a failed test green. Post-removal Python191, fmt/clippy/debug bridge and docs/schema pass; full gate and fresh normal-debug stalls remain pending. No acceptance is claimed.
