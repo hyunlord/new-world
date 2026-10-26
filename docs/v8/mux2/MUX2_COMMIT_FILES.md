@@ -398,3 +398,16 @@ docs/v8/mux2/MUX2_DECISIONS.md
 docs/v8/mux2/MUX2_OWNER_MEASUREMENTS.json
 docs/v8/mux2/MUX2_REPORT.md
 ```
+
+## p19 — 게시 영수증 문서 후속 (이 커밋)
+
+다음 여섯 경로의 문서만 정리한다. 자기 해시는 넣지 않으며 `git log --grep="v8-mux2(p19):"`로 확인한다. 전체 게이트는 p16에 귀속되고 p19 문서 검사는 루트의 별도 검증 결과로 기록한다.
+
+```text
+CHANGELOG.md
+docs/HISTORY.md
+docs/ROADMAP.md
+docs/ISSUES.md
+docs/v8/mux2/MUX2_REPORT.md
+docs/v8/mux2/MUX2_COMMIT_FILES.md
+```

@@ -1,6 +1,6 @@
 ## 구현 완료 보고 — M-UX2
 
-**현재 판정(오너 D-A..D-C): N=100·½× 유효 PASS / 게시 전 검사 PASS · 게시 절차 대기 / NOT_PUBLISHED.** 오너는 한파 노출 세계만 분모로 삼도록 정정하여 기존 동결 결과를 **20/20 PASS**로 수용했다. 원래 **20/32 FAIL**도 그대로 보존한다. 재실행이나 정책 변경은 없다. 1,000명·½×의 유효 35.9821 FPS 실패는 M11로 이월하며 ISS332를 OPEN으로 기록한다. 새 게시 조건은 같은 방법으로 측정한 **N=100·½× ≥60 FPS**다. 이 조건이 실패하면 게시하지 않는다. 새 N100½×164.882764487796FPS와 N200½×119.291035278699FPS는 유효 PASS다. N2001×225.75111993954FPS도 유효 PASS이며 ¼×35.1016343917384FPS도 유효한 기록용 결과다. 네 측정과 독립 감사, docs/schema/diff 및 p16 끊김 영수증 재검증은 통과했다. 게시 결과는 아직 없다.
+**현재 판정: 오너 수정 조건 수용 · p18 PUBLISHED.** 오너 D-A..D-C에 따른 p18 [b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd](https://github.com/hyunlord/new-world/commit/b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd)를 v8/wip와 v8/main에 게시했다. 노출 장작20/20 PASS와 N100½×164.882764487796FPS가 새 수용 조건을 충족했다. 원래20/32 FAIL, 1000명35.98FPS의 M11 이월, 재굽기7.239ms와 이전 stall 실패는 보존한다. 전체 게이트41/41은 p16에 귀속되며 p19 문서 후속에 새 전체 게이트를 주장하지 않는다.
 
 측정 원자료 2,218입력과 요약 산출물 35해시는 독립 감사에서 일치했다. 자연 재굽기는 NOT_MEASURED이며 전체 게이트는 p16에만 귀속된다.
 
@@ -147,11 +147,7 @@ ISS330 수정은 `frame_post_draw`를 주 계수로 쓰고 Engine 계수와 비�
 
 ### 닫은 GitHub 이슈 / 새로 연 이슈
 
-현재 로컬 원장에는 ISS332 “1,000명 ½× FPS 35.98 — M11로 이월”을 perf/open으로 추가한다. 합계는 332행, fixed 197 / open 103 / deferred 30 / won't fix 2다. GitHub 번호는 생성 전이므로 비워 둔다. #515는 OPEN 유지하며 게시 뒤 최종 캡처 PASS·반복성 미입증을 설명하는 공개 근거 댓글이 필요하다. #611/#612를 포함해 ISS009/033/034/070/274/275/315–321의13행은 최종 범위 검토로 fixed 승인됐다. GitHub 실제 폐쇄는 게시 후 공개 근거 댓글과 별도 확인이 필요하며 아직 실행했다고 주장하지 않는다. 아래 이슈 기록은 p17 시점이다.
-
-이번 작업에서 GitHub 이슈를 닫거나 새로 열지 않았다. 로컬 원장은 331행이며 fixed 184 / open 115 / deferred 30 / won't fix 2다. ISS326은 왜? 배치 수정, p10의 ISS324는 시험 기대값 정합 수정이다. ISS327/328은 원본 저장 manifest 검증과 실패 예외 전달 수정이다. ISS329는 이전 API 기대 목록 참조, ISS330은 실제 렌더 계수와 캡처 창 지속성의 수정이며 제품 성능 해결을 뜻하지 않는다. ISS331은 캡처 순서 수정 뒤 p16 전체 게이트로 검증한 process/fixed다. 제품의 필수 결과 실패 이슈는 OPEN을 유지한다. 로컬 상태 기록이 GitHub 변경을 뜻하지 않는다.
-
-ISS030 #515, ISS274 #611, ISS275 #612는 원래 범위와 최종 근거를 대조해야 한다. ISS009 #514는 새 held-out의 필수 장작 기준 실패와 기존 실패를 보존하며 OPEN을 유지한다. ISS070 #542의 ¼× 가독성과 ISS254 #598의 일반 운반 범위는 부분 개선과 구분한다. 공개 커밋·원장 연결과 원래 이슈 범위를 확인하기 전 폐쇄를 주장하지 않는다. 이전 외부 초안의 315–321 제안 번호는 신규 번호로 재사용하지 않는다.
+ISS315–332를 순서대로 GitHub #620–637에 등록했다. ISS322/#627과 ISS332/#637은 OPEN이다. 신규 fixed 16건(#620, #621, #622, #623, #624, #625, #626, #628, #629, #630, #631, #632, #633, #634, #635, #636)과 기존 6건(#514, #516, #517, #542, #611, #612)의 폐쇄 상태·근거 댓글: **검증 완료**. #515는 OPEN이며 [댓글6410769926](https://github.com/hyunlord/new-world/issues/515#issuecomment-6410769926)에 최종 p16 캡처 PASS와 반복성 미입증을 기록했다. ISS062/#534와 ISS254/#598도 OPEN을 유지한다. 원장 합계는332 / fixed197 / open103 / deferred30 / won't fix2로 변하지 않는다. 실제 본문·ID·상태·각 폐쇄댓글1개는 owner-github-final-readback.json과 owner-github-verification.txt로 확인했다. 기존 #59의 제목·본문·OPEN 상태도 불변이다.
 
 ### 변경된 파일 목록 (커밋별)
 
@@ -197,7 +193,12 @@ ISS030 #515, ISS274 #611, ISS275 #612는 원래 범위와 최종 근거를 대�
 
 ### Gate 결과
 
-현재: p16 기술 게이트 **41/41 PASS**, p18 문서/schema/diff·영수증 재검증 **PENDING**, 새 N=100·½× 수용 **VALID / PASS (164.882764487796 FPS)**, 게시 **NOT_PUBLISHED**. 아래 표의 장작·1,000명 FPS에 의한 BLOCKED는 이전 계약의 판정이며 D-A/D-B로 변경됐다. rebake와 과거 stall 실패는 D-C에 따라 그대로 남는다.
+<!-- P19_PUBLICATION_RECEIPT -->
+오너 D-A..D-C에 따른 p18 [b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd](https://github.com/hyunlord/new-world/commit/b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd)를 v8/wip와 v8/main에 게시했다. 노출 장작20/20 PASS와 N100½×164.882764487796FPS가 새 수용 조건을 충족했다. 원래20/32 FAIL, 1000명35.98FPS의 M11 이월, 재굽기7.239ms와 이전 stall 실패는 보존한다. 전체 게이트41/41은 p16에 귀속되며 p19 문서 후속에 새 전체 게이트를 주장하지 않는다.
+
+p18의 docs/schema/diff·영수증 재검증은 게시 전에 통과했다. p19 문서 후속의 docs/schema/diff 및 엄격 영수증 재검증도 PASS다 (`p19-docs-check.log`, `p19-stall-reverify.log`). 전체 게이트 재실행은 아니다. 아래 오래된 게시 대기·BLOCKED 표시는 명시한 시점의 역사 기록이다.
+
+현재: p16 기술 게이트 **41/41 PASS**, p18 문서/schema/diff·영수증 재검증 **PASS**, 새 N=100·½× 수용 **VALID / PASS (164.882764487796 FPS)**, 게시 **p18 PUBLISHED (b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd)**. 아래 표의 장작·1,000명 FPS에 의한 BLOCKED는 이전 계약의 판정이며 D-A/D-B로 변경됐다. rebake와 과거 stall 실패는 D-C에 따라 그대로 남는다.
 
 | 항목 | 현재 상태 |
 |---|---|
@@ -216,7 +217,7 @@ ISS030 #515, ISS274 #611, ISS275 #612는 원래 범위와 최종 근거를 대�
 | p14의 전체 게이트 | **FAIL, exit 1**. 40/41단계 통과, 41번 stall receipt 실패. 이후 후보 제거 소스와 구분 |
 | p15의 전체 게이트 | **FAIL, exit 1**, 40/41단계. 14:25:19 KST 종료; 41번은 debug 라이브러리 해시 불일치 |
 | p16의 전체 게이트 | **41/41 PASS, status 0**, `b530eb26d43ef99bb426ad3e454b294875dc230b`, dirty 0. 14:32:11–15:53:08 KST, `full-gate-p16` |
-| 게시 / 워크트리 제거 | **BLOCKED·NOT_PUBLISHED / NOT_REMOVED** |
+| 게시 / 워크트리 제거 | **p18 PUBLISHED / 제거 실패로 보존**; .omo/, graft/ 미추적 |
 
 p14 `a19d2f2c92b8502e80429021d6da6060b867956c`, dirty 0에서 11:38:56–12:54:31 KST 전체 게이트를 실행했다. `full-gate-p14/gate.txt`와 41개 단계 로그를 보존했다. debug/release 각각 2,301통과·0실패·8무시, identity·결정성·bench·가시성·왜? 등 1–40번은 exit 0이다. 41번은 실패한 stall2 영수증의 `complete: expected True`로 exit 1이다. 실패한 성능을 면제하지 않는다. 트리 제거 후 Python191·fmt/clippy/debug build·docs/schema와 기존 전체 oracle은 통과했으며, 정상 debug stall3는 두 배율 모두 PASS다. p15 전체 게이트 `full-gate-p15`는 40/41·exit 1이다. 23번 renderer_agreement가 14:16:36에 bridge를 재빌드했고 41번이 stall3의 이전 바이너리 해시를 거부했다. 차이는 debug dylib 한 파일뿐이다. 캡처 당시 stall3 PASS는 유지하지만 현재 게이트 바이너리를 검증한 결과로 전용하지 않는다.
 
@@ -235,21 +236,21 @@ p16의 최종 끊김 영수증은 `full-gate-p16/mux2-stall/capture`에 있다. 
 
 ### 오너가 할 일 (실행 한 줄: /Users/rexxa/work/new-world-play2-dev/tools/play.sh main)
 
-현재 게시가 막혀 있으므로 아래 명령이 M-UX2의 최신 검증 빌드를 실행한다고 보장하지 않는다. 적법한 게시와 play checkout 반영이 확인된 뒤 안내할 실행줄이다.
+아래 실행줄은 플레이 진입점이다. 이 문서 후속 작업만으로 play checkout의 최신 빌드 반영을 새로 검증했다고 주장하지 않는다.
 
 ```bash
 /Users/rexxa/work/new-world-play2-dev/tools/play.sh main
 ```
 
+작업트리 제거는 --force 없이 시도했으나 exit128이었다. 추적 파일은 깨끗했고 미추적 `.omo/`, `graft/`만 남아 작업트리를 보존했다. 강제 삭제하지 않았다. 이 상태는 p18 게시 후 제거 시점의 기록이며 이후 p19 문서 편집과 구분한다.
+
 git ls-remote 결과
 
-새 게시와 원격 검증은 아직 하지 않았다. 아래는 p17의 이전 확인 기록이며 p18 게시 성공으로 재사용하지 않는다.
-
-**BLOCKED / NOT_PUBLISHED.** 아래는 2026-10-26 15:53 KST에 게시하지 않은 상태에서 다시 확인한 원격 값이다. 전체 게이트가 검증한 p16 HEAD는 `b530eb26d43ef99bb426ad3e454b294875dc230b`이며 아래 게시 전 원격 기록과 다르다. p15 전체 게이트는 40/41·exit 1이며 순서 수정 후 p16 전체 게이트는 41/41·status 0으로 완료했다.
+p18 게시 후 양 원격은 다음 SHA로 확인됐다. 이 값은 p19 문서 커밋의 게시를 뜻하지 않는다.
 
 ```text
-0207b49760a31a71968b441298fb52b073791cb4	refs/heads/v8/main
-0207b49760a31a71968b441298fb52b073791cb4	refs/heads/v8/wip
+b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd	refs/heads/v8/main
+b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd	refs/heads/v8/wip
 ```
 
-원격은 이전 값에 그대로 있다. 이 값은 게시 성공 근거가 아니다.
+이전 원격0207b49760a31a71968b441298fb52b073791cb4와 p17의 NOT_PUBLISHED 판정은 게시 전 역사 기록으로 보존한다. p19 검사·커밋·게시 결과는 실제 확인 후 별도로 기록한다.

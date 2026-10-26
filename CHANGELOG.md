@@ -5,7 +5,7 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
-## M-UX2 — 2026-10-26 (owner decisions recorded; new FPS condition passed; not published)
+## M-UX2 — 2026-10-26 (p18 published under owner decisions)
 
 - Added: owner playtest contract preserved first at `f2103ad47`, isolated `v8/mux2` worktree, strict visibility/stall and defence/flee regressions. Initial defence regression fails3/3; after repairing one missing-health fixture, all5 flee cases fail on actual behavior. Original failed runs remain recorded. No acceptance or publication claim yet.
 - Records: scope, frozen dependency input and unchanged acceptance bars are in `docs/v8/mux2/MUX2_DECISIONS.md`. Prior M-UX failures remain historical evidence.
@@ -17,6 +17,7 @@ tags `v7-final-sim` and `v7-final-art`.
 - Optional native/script frame profiling, including system/prune/snapshot-freeze timing; simulation never reads it. The original debug baseline fails the stall bar at both zooms; no improvement claim yet.
 
 ### Changed
+- Published p18 [`b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd`](https://github.com/hyunlord/new-world/commit/b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd) to both v8/wip and v8/main under owner D-A..D-C. Original failures remain historical; p16 owns the41/41 full gate. p19 records publication/registry receipts only; its documentation checks are attributed separately to the root verification run. Non-forced worktree removal failed because only untracked .omo/ and graft/ remained.
 - Owner D-A..D-C corrects cold-snap acceptance to exposed worlds: frozen ON20/20 PASS alongside original20/32 FAIL, without rerun or policy change. The1000-person half-scale35.98FPS target moves to M11 (ISS332 open); all four fresh measurements are valid (N100/half164.882764487796; N200/half119.291035278699,full225.75111993954,quarter35.1016343917384), and publication requires N100/half≥60FPS. Retain rebake7.239ms, prior stall failures and ISS030 OPEN. Technical gate remains p16 41/41; no new gate/publication claim. Earlier blocked entries retain their historical contract context.
 - Final technical gate on p16 `b530eb26d43ef99bb426ad3e454b294875dc230b` passes41/41,status0 at15:53:08KST, with fresh final-step stall capture and5,891 unchanged input hashes (D24). Both zooms pass the original bar; ISS331 is scoped process/fixed. Previous gate/capture failures remain. Held-out fuel20/32<24/32 and valid FPS10=35.982133928869<60 keep final acceptance BLOCKED/NOT_PUBLISHED. Subsequent p17 records are documentation-only and are not a new full-gate run.
 - p15 gate ends40/41,exit1: step23 rebuilds the debug bridge after stall3 capture, and step41 correctly rejects its changed hash (D23,ISS331 OPEN). Default stall capture now occurs after all builds before strict verification; explicit receipts remain verify-only. Four order/failure regressions move RED4→GREEN4; full rerun is pending. Stall3 PASS remains limited to its captured binary; FPS10 and held-out failures still block publication.
