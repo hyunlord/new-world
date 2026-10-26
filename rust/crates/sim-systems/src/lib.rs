@@ -52,6 +52,34 @@ macro_rules! scope {
     };
 }
 
+/// Observe an expression without changing control flow or evaluating it twice.
+macro_rules! arm_eval {
+    ($name:literal, $expression:expr) => {{
+        #[cfg(feature = "perf_arms")]
+        let _arm_scope = $crate::perf_arms::Scope::start($name);
+        $expression
+    }};
+}
+
+/// Count the result of a boolean expression without evaluating it twice.
+macro_rules! arm_outcome {
+    ($yes:literal, $no:literal, $expression:expr) => {{
+        #[cfg(feature = "perf_arms")]
+        {
+            let value = $expression;
+            $crate::perf_arms::count(if value { $yes } else { $no }, 1);
+            value
+        }
+        #[cfg(not(feature = "perf_arms"))]
+        {
+            $expression
+        }
+    }};
+}
+
+#[cfg(feature = "perf_arms")]
+pub mod perf_arms;
+
 pub mod commands;
 pub mod runtime;
 pub mod save;

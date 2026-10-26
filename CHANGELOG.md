@@ -11,10 +11,13 @@ tags `v7-final-sim` and `v7-final-art`.
 - Owner contract at `docs/v8/core/CORE_GOAL.md`; isolated branch from published M-UX2 `9855bd082ad88a4c49296410f206f148d98c4df9`.
 - Static decision/seam inventory and explicit pending runtime counts in `docs/v8/core/CORE_INVENTORY.md`; evidence and sequencing decisions in `CORE_DECISIONS.md`.
 - Approved depth roadmap preserved verbatim from Appendix A in `docs/v8/DEPTH_ROADMAP.md`.
+- Off-by-default `perf_arms` observations with 247 runtime keys, primary/twin isolation, zero-hit rows and strict complete-fixture aggregation. Inclusive costs remain diagnostic, not quiet performance evidence.
+- `worldsim_probe story-yield` schema 2 measures verified cause edges and distinct observed kind paths per calendar year, retaining missing-ancestor diagnostics and partial-year exposure. Twelve focused tests and a two-world 25-day ordinary-probe fingerprint control pass.
+- Separate CORE outcome scorer for matched BASE/new-brain worlds and exposed-only cold-snap arithmetic; ten tests and synthetic CLI controls pass. Receipts bind both scorer and validator files. Held-out seeds have not been run.
 
 ### Changed
 - ROADMAP schedules M-CORE and M6–M11; superseded M6-finalization/M-PERF rows remain as history. VISION carries the approved v1.0 definition and retains the previous definition.
-- Implementation, full identity comparisons, shadow, held-out evaluation, quiet performance and final gate remain pending. No current decision-share or acceptance claim.
+- The initial default and feature measurement-tool binaries match BASE on 228,748 baseline values, 64 chronicle files, raw samples and all nine OFF fixtures; both ON two-seed 24-day controls match, as does the feature eight-seed 48-day control. The corrected final-tool binary also passes the full baseline/OFF and ON 24-day comparisons. Mind implementation, shadow, held-out evaluation, quiet performance and final gate remain pending. No current decision-share or acceptance claim.
 
 ## M-UX2 — 2026-10-26 (p18 published under owner decisions)
 

@@ -38,6 +38,8 @@ use super::cancel::release_job;
 
 /// The measurement key of a release to `choice` (see `JobReleaseKey`).
 fn release_key(world: &World, entity: Entity, choice: AgentState) -> JobReleaseKey {
+    #[cfg(feature = "perf_arms")]
+    let _perf_arm_0 = crate::perf_arms::Scope::start("seam.release_key");
     let job = world.get::<&Job>(entity).ok().map(|job| *job);
     // `JobKind::code` − 1: 0 chop, 1 haul, 2 deliver, 3 build (and no job), 4 quarry, …
     let kind = job.map_or(3, |j| j.kind.code().saturating_sub(1));
@@ -88,7 +90,11 @@ fn tenths(value: f64) -> i64 {
 
 /// Whether the worker `entity` may yield its job this tick (see the module header).
 fn may_yield(world: &World, res: &SimResources, entity: Entity) -> bool {
+    #[cfg(feature = "perf_arms")]
+    let _perf_arm_1 = crate::perf_arms::Scope::start("seam.may_yield");
     let Some(rule) = res.rules.colony else {
+        #[cfg(feature = "perf_arms")]
+        let _perf_arm_2 = crate::perf_arms::Scope::start("seam.no_colony");
         return true;
     };
     // M2 (DECISIONS D13): a craft at work finishes before yielding to an
@@ -100,6 +106,8 @@ fn may_yield(world: &World, res: &SimResources, entity: Entity) -> bool {
                 && matches!(j.stage, JobStage::Working { .. })
         });
     let Some(margin) = rule.yield_margin_permille.or(crafting.then_some(0)) else {
+        #[cfg(feature = "perf_arms")]
+        let _perf_arm_3 = crate::perf_arms::Scope::start("seam.no_margin");
         return true;
     };
     use crate::runtime::decision::needs as n;
@@ -114,10 +122,17 @@ fn may_yield(world: &World, res: &SimResources, entity: Entity) -> bool {
             .critical_preemption
             .unwrap_or(n::CRITICAL_NEED),
     );
-    if hunger >= critical || thirst >= critical {
+    if arm_eval!(
+        "eval.seam.critical",
+        hunger >= critical || thirst >= critical
+    ) {
+        #[cfg(feature = "perf_arms")]
+        let _perf_arm_4 = crate::perf_arms::Scope::start("seam.critical");
         return true;
     }
-    if crafting {
+    if arm_eval!("eval.seam.crafting", crafting) {
+        #[cfg(feature = "perf_arms")]
+        let _perf_arm_5 = crate::perf_arms::Scope::start("seam.craft_locked");
         return false;
     }
     let job = world.get::<&Job>(entity).ok().map(|job| *job);
@@ -128,7 +143,12 @@ fn may_yield(world: &World, res: &SimResources, entity: Entity) -> bool {
             .kind
             .dest()
             .is_some_and(|to| super::items::chebyshev((pos.x, pos.y), to) <= limit);
-        if job.stage == JobStage::ToDest && near {
+        if arm_eval!(
+            "eval.seam.finish_leg",
+            job.stage == JobStage::ToDest && near
+        ) {
+            #[cfg(feature = "perf_arms")]
+            let _perf_arm_6 = crate::perf_arms::Scope::start("seam.finish_leg_locked");
             return false;
         }
     }
@@ -149,13 +169,19 @@ fn may_yield(world: &World, res: &SimResources, entity: Entity) -> bool {
         _ => n::fatigue_threshold_at(res),
     };
     let fatigue = world.get::<&Sleep>(entity).map_or(0, |s| tenths(s.fatigue));
-    hunger >= tenths(f64::from(n::HUNGER_THRESHOLD)) + margin
-        || thirst >= tenths(n::THIRST_THRESHOLD) + margin
-        || fatigue >= tenths(fatigue_threshold) + margin
+    arm_outcome!(
+        "count.seam.urgent",
+        "count.seam.nonurgent",
+        hunger >= tenths(f64::from(n::HUNGER_THRESHOLD)) + margin
+            || thirst >= tenths(n::THIRST_THRESHOLD) + margin
+            || fatigue >= tenths(fatigue_threshold) + margin
+    )
 }
 
 /// Every entity that holds a `Job`, and which of them may not yield this tick.
 pub fn holders(world: &World, res: &SimResources) -> JobHolders {
+    #[cfg(feature = "perf_arms")]
+    let _perf_arm_7 = crate::perf_arms::Scope::start("seam.holders");
     let all: BTreeSet<Entity> = world
         .query::<&Job>()
         .iter()
@@ -167,24 +193,56 @@ pub fn holders(world: &World, res: &SimResources) -> JobHolders {
         .filter(|&entity| !may_yield(world, res, entity))
         .collect();
     // M5 (ADR 0028): a drafted person takes only direct orders; the decision skips them.
+    #[cfg(feature = "perf_arms")]
+    let _perf_arm_8 = crate::perf_arms::Scope::start("seam.drafted_snapshot");
+    #[cfg(feature = "perf_arms")]
+    crate::perf_arms::count(
+        "count.people.drafted",
+        u64::try_from(
+            world
+                .query::<&sim_core::colony::people::Drafted>()
+                .iter()
+                .count(),
+        )
+        .unwrap_or(u64::MAX),
+    );
     inert.extend(
         world
             .query::<&sim_core::colony::people::Drafted>()
             .iter()
             .map(|(entity, _)| entity),
     );
+    #[cfg(feature = "perf_arms")]
+    drop(_perf_arm_8);
     // M5.5 (ADR 0028 amendment): a fleeing person runs; the decision skips them as it skips the drafted.
+    #[cfg(feature = "perf_arms")]
+    let _perf_arm_9 = crate::perf_arms::Scope::start("seam.fleeing_snapshot");
+    #[cfg(feature = "perf_arms")]
+    crate::perf_arms::count(
+        "count.people.fleeing",
+        u64::try_from(
+            world
+                .query::<&sim_core::colony::people::Fleeing>()
+                .iter()
+                .count(),
+        )
+        .unwrap_or(u64::MAX),
+    );
     inert.extend(
         world
             .query::<&sim_core::colony::people::Fleeing>()
             .iter()
             .map(|(entity, _)| entity),
     );
+    #[cfg(feature = "perf_arms")]
+    drop(_perf_arm_9);
     JobHolders { all, inert }
 }
 
 /// Whether the decision should run `entity` (in `state`) as a temporary Idle.
 pub fn hold_for_decision(entity: Entity, state: AgentState, holders: &JobHolders) -> bool {
+    #[cfg(feature = "perf_arms")]
+    let _perf_arm_10 = crate::perf_arms::Scope::start("seam.hold_for_decision");
     match state {
         AgentState::Seeking {
             target: TargetKind::Job,
@@ -203,6 +261,8 @@ pub fn hold_for_decision(entity: Entity, state: AgentState, holders: &JobHolders
 /// keeps its job and state and no arm runs for it (M1.5, review MAJOR-1); M5:
 /// a drafted person (walking or holding as `Seeking`/`Consuming { Job }`) too.
 pub fn skips_decision(entity: Entity, holders: &JobHolders) -> bool {
+    #[cfg(feature = "perf_arms")]
+    let _perf_arm_11 = crate::perf_arms::Scope::start("seam.skips_decision");
     holders.inert.contains(&entity)
 }
 
@@ -214,8 +274,14 @@ pub fn settle_after_decision(
     held: &[(Entity, AgentState)],
     clear_seek: &mut Vec<Entity>,
 ) {
+    #[cfg(feature = "perf_arms")]
+    let _perf_arm_12 = crate::perf_arms::Scope::start("seam.settle");
     for &(entity, previous) in held {
-        if world.get::<&Job>(entity).is_err() {
+        #[cfg(feature = "perf_arms")]
+        let _perf_arm_13 = crate::perf_arms::Scope::start("seam.settle_person");
+        if arm_eval!("eval.seam.stale", world.get::<&Job>(entity).is_err()) {
+            #[cfg(feature = "perf_arms")]
+            let _perf_arm_14 = crate::perf_arms::Scope::start("seam.stale_job");
             // A stale job state without a job: the decision's choice stands.
             continue;
         }
@@ -233,11 +299,15 @@ pub fn settle_after_decision(
         ) && world
             .get::<&Position>(entity)
             .is_ok_and(|pos| res.colony.occupied.contains_key(&(pos.x, pos.y)));
-        if now == AgentState::Idle || own_site {
+        if arm_eval!("eval.seam.restore", now == AgentState::Idle || own_site) {
+            #[cfg(feature = "perf_arms")]
+            let _perf_arm_15 = crate::perf_arms::Scope::start("seam.restore");
             if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
                 *state = previous;
             }
         } else {
+            #[cfg(feature = "perf_arms")]
+            let _perf_arm_16 = crate::perf_arms::Scope::start("seam.release");
             clear_seek.push(entity);
             let key = release_key(world, entity, now);
             *res.colony.release_counts.entry(key).or_insert(0) += 1;

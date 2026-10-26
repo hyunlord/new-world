@@ -7,6 +7,9 @@
 
 /// M5: the allocator byte counter of `worldsim_perf` (measurement only).
 pub mod alloc;
+/// Feature-only decision-arm profiling, exported separately from simulation outputs.
+#[cfg(feature = "perf_arms")]
+pub mod arm_profile;
 /// M1.5: the standing colony benchmark (`worldsim_perf bench`, ADR 0016 C3).
 pub mod bench;
 /// Explicit immutable content selection for headless CLI entry points.
@@ -19,6 +22,8 @@ pub mod perf;
 pub mod probe;
 /// Shared production-scene fixtures.
 pub mod scenes;
+/// Read-only annual story metrics over durable chronicle causes.
+pub mod story_yield;
 
 /// The live game's engine for world `seed` (`scenes::baseline_scene`): the
 /// starting point of every test that runs the game's rules.

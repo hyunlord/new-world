@@ -20,6 +20,7 @@ serde_json = "1"
 # Pass 18: forwards sim-systems' `subprofile` timing scopes into
 # `worldsim_perf`'s JSON. Never on by default and never a required feature.
 subprofile = ["sim-systems/subprofile"]
+perf_arms = ["sim-systems/perf_arms"]
 
 [[bin]]
 name = "worldsim_probe"

@@ -15,3 +15,6 @@ sim-engine = { path = "../sim-engine" }
 # Pass 18: per-scope timing of the decision system (`subprofile` module and
 # `scope!`). Never on by default; built only in a separate target directory.
 subprofile = []
+
+# M-CORE arm instrumentation; never enabled by default.
+perf_arms = []

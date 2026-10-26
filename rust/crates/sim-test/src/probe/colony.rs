@@ -1738,6 +1738,8 @@ struct SeedRun {
     summary: Value,
     timing: Value,
     churn: Value,
+    #[cfg(feature = "perf_arms")]
+    arms: Value,
 }
 
 fn deaths(engine: &SimEngine) -> Value {
@@ -1838,6 +1840,8 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut waiting: Vec<usize> = Vec::new();
     // `"every_days"` entries: (tick of the next application, entry), M3.
     let mut repeats: Vec<(u64, usize)> = Vec::new();
+    #[cfg(feature = "perf_arms")]
+    let mut arms = crate::arm_profile::ArmProfile::start();
     for tick in 0..total {
         let mut avoid = Vec::new();
         while next < script.len() && script[next].tick <= tick {
@@ -1915,6 +1919,8 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         let started = Instant::now();
         engine.tick();
         tick_ns.push(started.elapsed().as_nanos() as u64);
+        #[cfg(feature = "perf_arms")]
+        arms.after_tick();
         demography.after_tick(&engine);
         economy.after_tick(&engine);
         space.after_tick(&engine);
@@ -1929,6 +1935,8 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         }
         if let Some(t) = twin.as_mut() {
             t.tick();
+            #[cfg(feature = "perf_arms")]
+            crate::arm_profile::ArmProfile::discard();
         }
         if let Err(problem) = invariants::check(&engine.world, &engine.resources) {
             if problem.contains("ledger") {
@@ -2076,6 +2084,8 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         summary,
         timing: json!({"seed": seed, "mean_ms": mean, "p99_ms": p99, "ticks": tick_ns.len()}),
         churn: json!({"seed": seed, "churn": super::churn::report(&engine)}),
+        #[cfg(feature = "perf_arms")]
+        arms: arms.report().map_err(|e| format!("arm profile: {e}"))?,
     })
 }
 
@@ -2112,6 +2122,20 @@ pub fn run(args: &ColonyArgs) -> Result<(), String> {
         Ok::<_, String>(all)
     })?;
     runs.sort_by_key(|r| r.seed);
+    #[cfg(feature = "perf_arms")]
+    std::fs::write(
+        args.out.join("perf_arms.json"),
+        serde_json::to_vec_pretty(&json!({
+            "scene": "colony", "days": args.days,
+            "inputs": {
+                "steward": args.steward, "defence": args.defence,
+                "story": args.story, "neighbours": args.neighbours,
+                "commands": args.commands.as_ref().and_then(|path| path.file_name()).and_then(|name| name.to_str()),
+                "check_determinism": args.check_determinism
+            },
+            "seeds": runs.iter().map(|r| json!({"seed":r.seed,"profile":r.arms})).collect::<Vec<_>>()
+        })).map_err(|e| e.to_string())?,
+    ).map_err(|e| e.to_string())?;
     let summary = json!({
         "scene": "colony",
         "days": args.days,

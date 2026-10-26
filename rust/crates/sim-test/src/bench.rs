@@ -289,12 +289,16 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
         }
     }
     let mut profile = engine.new_tick_profile();
+    #[cfg(feature = "perf_arms")]
+    let mut arms = crate::arm_profile::ArmProfile::start();
     // Each measured tick's per-system ns (M5 D18: the p99 tick's breakdown).
     let mut tick_ns: Vec<Vec<u64>> = Vec::with_capacity(MEASURED_TICKS as usize);
     let run_started = Instant::now();
     for _ in 0..MEASURED_TICKS {
         apply(&mut engine);
         engine.tick_profiled(&mut profile);
+        #[cfg(feature = "perf_arms")]
+        arms.after_tick();
         tick_ns.push(profile.last_tick_ns.clone());
         gift(&mut engine);
     }
@@ -354,7 +358,7 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
     // M5.5 (goal §4, F11): flight, the neighbours and their visitors together; flight alone.
     let m55_us = per_tick(&["FleeSystem", "NeighbourSystem", "VisitorSystem"]);
     let flee_us = per_tick(&["FleeSystem"]);
-    Ok(json!({
+    let report = json!({
         "knowledge_us_per_tick": knowledge_us,
         "m5_us_per_tick": m5_us,
         "m55_us_per_tick": m55_us,
@@ -378,7 +382,14 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
         "build_seconds": build_seconds, "run_seconds": run_seconds,
         "load_before": load_before, "load_after": load_average(),
         "build_profile": if cfg!(debug_assertions) { "debug" } else { "release" },
-    }))
+    });
+    #[cfg(feature = "perf_arms")]
+    let report = {
+        let mut report = report;
+        report["perf_arms"] = arms.report().map_err(|e| format!("arm profile: {e}"))?;
+        report
+    };
+    Ok(report)
 }
 
 fn median(mut values: Vec<f64>) -> f64 {
