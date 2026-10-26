@@ -178,3 +178,20 @@ measure-first impasse only after its three-window evidence exists. The
 remaining scope, calibration ceiling, held-out freeze, identity, publication
 and isolation requirements are unchanged. The planner states M-UX2.1 is
 paused until CORE publishes; actual host admission is still measured.
+
+## D11 — Accepted share and replacement arm timings
+
+All nine BASE repeats in `core-data/base-perf-ledger-1` satisfy D10 at both
+controller admission and the benchmark's own start sample. At N=1,000,
+the old decision mean is 1,462.832342 µs and total tick mean is
+2,092.741204 µs, giving **s=0.6990029820337981**. The final paired total-tick
+ratio bar is therefore **0.700498508983101**. These are design inputs,
+not a completed old/new performance comparison; see [CORE_PERF](CORE_PERF.md).
+
+The eleven separately admitted replacement arm groups retain identical
+simulation summaries and all 247 aggregate/per-group invocation counts.
+The accepted aggregate SHA256 is
+`7eaf23ff385a0c5bb84d3b089282850a391547165f39618409d46876dce7d82e`.
+The inventory now uses these costs and links the load log and hash-bound
+validity receipt. The original arm captures and INVALID receipt remain
+preserved; no historical timing was retroactively accepted.
