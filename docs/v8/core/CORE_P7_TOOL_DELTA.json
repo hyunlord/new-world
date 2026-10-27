@@ -67,6 +67,14 @@
     "before_sha256": null,
     "after_sha256": "28912ffc07e09f557a86668b829ce0193650b9445ea24fe873a9d67a8e36fe3e"
   },
+  "tools/v8/test_core_shadow_freeze.py": {
+    "before_sha256": "4c1caa8bdad44f83763365ee2469753a178ba83485b0adb23e9bc606b9962cef",
+    "after_sha256": "18fed72388782f0273585c92dc23351e70721073a0d2c0157e64fd8b1ea26a47"
+  },
+  "tools/v8/test_mux2_gate_receipts.py": {
+    "before_sha256": "255d9934b0f50593330eb727c16a785d578ea4501bf9b784a6215209022231e8",
+    "after_sha256": "f924ef5e1d201230409b8fef5be635e9d6d48530145400fbd9f9febb7286d00c"
+  },
   "tools/v8/test_mux2_gate_stall_command.py": {
     "before_sha256": "4ee7bf44fa09d0e0036ace1ab8f351441b17647358b1e3aacd211ccfe4a715f4",
     "after_sha256": "bd3e04ae381178f668e221f329b6d310bc912127c239c1eae7e4c217b5b62851"

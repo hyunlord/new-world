@@ -172,6 +172,7 @@ class FreezeTests(unittest.TestCase):
         self.assertIn('SHA-256 mismatch', result.stderr)
         self.assertFalse(output.exists())
 
+    @patch.dict(os.environ, {'CORE_P7_RUN': ''})
     def test_gate_reports_only_core_ratio_misses_and_rejects_other_failures(self) -> None:
         source = Path(__file__).with_name('core_gate_checks.sh').read_text()
         code = source.split("<<'PYEVAL'\n", 1)[1].split('\nPYEVAL', 1)[0]

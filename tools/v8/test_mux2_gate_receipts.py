@@ -8,11 +8,13 @@
 import copy
 import json
 import math
+import os
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import mux2_gate_receipts as receipts
 from mux2_gate_visual import validate_why, validate_visibility
 from mux2_gate_oracle_log import validate_log
@@ -45,6 +47,7 @@ def adjust_intervals(report, indexes, interval):
 
 
 class CaptureCommandTests(unittest.TestCase):
+    @patch.dict(os.environ, {}, clear=True)
     def test_stall_keeps_normal_windowed_rendering_and_full_duration(self) -> None:
         root = Path('/fixture/project')
         output = Path('/fixture/evidence')
