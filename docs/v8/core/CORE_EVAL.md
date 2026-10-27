@@ -39,3 +39,25 @@ Authoritative 파일 SHA-256:
 - `heldout-final-1/why.json`: `552ccf8b9932e23d1243b185c6fb4a35759df21a10d364f6e633430ce618a6a8`.
 
 이야기 측정은 [STORY_YIELD](STORY_YIELD.md)에 별도 기록하며 수치 합격 막대가 없는 참고 결과다.
+
+## P-3d 새 코호트1264–1295: 최종826a7ecd (2026-10-27)
+
+위1232–1263 결과는 원본 그대로 보존한다. 아래는 별도 행동 변경에 대해 동결 후 처음 실행한32세계×48일 평가다. phase8·157노드/점수는 동결됐고 이후 정책 튜닝은 없다. source-freeze18:08:42KST 뒤 baseline/safety 검사를 거쳐18:33KST부터 BASE, 이어 mind를 실행했다. 전체 capture/check18명령 exit0, 마지막18:43:42KST 종료. 이 코호트는 이제 노출됐으므로 이후 실행은 보존 replay이며 새 held-out이라고 부르지 않는다.
+
+| 기준 | BASE | Mind | 요구 BASE / Mind | Mind 판정 |
+|---|---:|---:|---:|---|
+| stockpile_day1 | 32/32 | 32/32 | 31 / 31 | PASS |
+| walled_beds_day10 | 32/32 | 32/32 | 31 / 31 | PASS |
+| zero_cold_deaths | 32/32 | 32/32 | 31 / 31 | PASS |
+| alive_day48 | 30/32 | 31/32 | 31 / 31 | PASS |
+| wolf_deaths_at_most_one | 32/32 | 32/32 | 29 / 29 | PASS |
+| exact_ledger | 32/32 | 32/32 | 32 / 32 | PASS |
+| firewood_during_snap | 17/18 | 18/18 | 17 / 17 | PASS |
+
+한파 비노출은 양쪽14세계다. BASE의 생존30/32는 요구31에 미달하며 숨기지 않는다. 개별 실패는 BASE1269 장작/생존, BASE1279 생존, Mind1279 생존이다. 집계 candidate outcomes PASS는 모든 seed 성공이나 성능/전체 게이트 수용을 뜻하지 않는다.
+
+why 관측2,211,840mind-tick에서 예상/기록769,213/769,213이다. 첫선택+행동변경430,799/430,799, 노드만변경/restart338,414/338,414, strict critical choices15,854/15,854, 실패0이며 critical 노출을 확인했다.
+
+최종 probe84aa654793e5d3bb6050c247fdd571cce436bbc9c608e199c8560ccbaf713b31; source826a7ecd9e38ca3fc1fff253baa0933aee593022; outcomes e78e6dc15f44c90041d1be1f2f58922bab2377db11ed03444bf75937df3f0c34; why c4246f3084fe9338f24a07bdf5b1cc31f21a511f5aa8fb6d32cb821dd5116188. 정확한 provenance 제외 목록과 normalized reference SHA는 CORE_DECISIONS D35에 기록한다. 원본1232–1263와 동일하다는 비교는 하지 않는다.
+
+근거: `/Users/rexxa/work/core-data/p3d-final-execution-1/final-capture/{session-terminal.json,successor-input.json,heldout/}`. 성능은 side64 필수 실패이며 full gate는 hard stop으로 미완료다(1–24 exit0,25중단,26–45미실행;12시간INVALID).

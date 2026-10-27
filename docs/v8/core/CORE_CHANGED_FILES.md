@@ -379,3 +379,88 @@ M	docs/v8/core/CORE_DECISIONS.md
 M	docs/v8/core/CORE_PERF.md
 M	docs/v8/core/CORE_REPORT.md
 ```
+
+## P-3d: preserve real effects while reducing repeated decision preparation
+
+Commit: `826a7ecd9e38ca3fc1fff253baa0933aee593022` (local, unpublished). Default-feature build and committed shadow/fresh evaluation pass; final paired side64 performance FAIL remains blocking.
+
+```text
+M	CHANGELOG.md
+M	docs/ARCHITECTURE.md
+M	docs/HISTORY.md
+M	docs/ROADMAP.md
+M	docs/decisions/0046-colony-mind.md
+M	docs/v8/core/CORE_DECISIONS.md
+M	docs/v8/core/CORE_PERF.md
+M	docs/v8/core/CORE_REPORT.md
+M	docs/v8/core/MIND_AUTHORING.md
+M	rust/Cargo.toml
+M	rust/crates/sim-core/src/colony/mind/compile.rs
+A	rust/crates/sim-core/src/colony/mind/continuation.rs
+A	rust/crates/sim-core/src/colony/mind/continuation_cache.rs
+A	rust/crates/sim-core/src/colony/mind/continuation_cache_lifecycle_tests.rs
+A	rust/crates/sim-core/src/colony/mind/continuation_cache_scratch_tests.rs
+A	rust/crates/sim-core/src/colony/mind/continuation_cache_tests.rs
+A	rust/crates/sim-core/src/colony/mind/continuation_cadence_tests.rs
+A	rust/crates/sim-core/src/colony/mind/continuation_carry_tests.rs
+A	rust/crates/sim-core/src/colony/mind/continuation_jump_tests.rs
+A	rust/crates/sim-core/src/colony/mind/continuation_prefix_tests.rs
+A	rust/crates/sim-core/src/colony/mind/continuation_reference.rs
+A	rust/crates/sim-core/src/colony/mind/continuation_tests.rs
+M	rust/crates/sim-core/src/colony/mind/mod.rs
+M	rust/crates/sim-core/src/colony/mind/model.rs
+M	rust/crates/sim-core/src/colony/mind/select.rs
+A	rust/crates/sim-core/src/colony/mind/selector_jump_reference.rs
+A	rust/crates/sim-core/src/colony/mind/selector_jump_tests.rs
+M	rust/crates/sim-core/src/colony/mind_records.rs
+M	rust/crates/sim-core/src/colony/mind_records/codec.rs
+M	rust/crates/sim-core/src/colony/mind_records/tests.rs
+M	rust/crates/sim-systems/src/runtime/mind/behaviours/mod.rs
+M	rust/crates/sim-systems/src/runtime/mind/behaviours/tests.rs
+M	rust/crates/sim-systems/src/runtime/mind/context.rs
+M	rust/crates/sim-systems/src/runtime/mind/context/food_index_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/context_full_refresh_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/context_index_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/context_lazy_food_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/context_optimization_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/context_primary_snapshot_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/context_refresh_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/context_rich_upgrade_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/context_row_order_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/context_running_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/context_scope_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/continuation_cache_runtime_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/continuation_runtime.rs
+A	rust/crates/sim-systems/src/runtime/mind/continuation_runtime_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/continuation_save_tests.rs
+M	rust/crates/sim-systems/src/runtime/mind/facts.rs
+M	rust/crates/sim-systems/src/runtime/mind/mod.rs
+A	rust/crates/sim-systems/src/runtime/mind/primary_refresh_system_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/primary_snapshot_system_tests.rs
+M	rust/crates/sim-systems/src/runtime/mind/program.rs
+A	rust/crates/sim-systems/src/runtime/mind/scheduling.rs
+A	rust/crates/sim-systems/src/runtime/mind/scheduling_counts.rs
+A	rust/crates/sim-systems/src/runtime/mind/scheduling_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/social_bucket_reference.rs
+A	rust/crates/sim-systems/src/runtime/mind/social_bucket_tests.rs
+M	rust/crates/sim-systems/src/runtime/mind/system.rs
+M	tools/v8/core_gate_checks.sh
+A	tools/v8/core_p3d_fixture_schema.json
+A	tools/v8/core_p3d_fixtures.py
+A	tools/v8/core_p3d_host_check.py
+A	tools/v8/core_p3d_successor.py
+M	tools/v8/core_score.py
+M	tools/v8/core_story_check.py
+M	tools/v8/core_why_check.py
+A	tools/v8/test_core_p3d_fixtures.py
+A	tools/v8/test_core_p3d_host_check.py
+A	tools/v8/test_core_p3d_successor.py
+M	tools/v8/test_core_score.py
+A	tools/v8/test_core_seed_protocol.py
+M	tools/v8/test_core_story_check.py
+M	tools/v8/test_core_why_check.py
+```
+
+### Hard-stop documentation follow-up
+
+Documentation only: CHANGELOG.md; docs/HISTORY.md; docs/ROADMAP.md; docs/v8/core/CORE_CHANGED_FILES.md, CORE_DECISIONS.md, CORE_EVAL.md, CORE_PERF.md, CORE_REPORT.md, CORE_SHADOW.md. Runtime/tools remain byte-identical to826a7ecd. Full gate incomplete, required paired performance FAIL; no publication.

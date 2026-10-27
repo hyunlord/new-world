@@ -1,8 +1,8 @@
-## 구현 완료 보고 — M-CORE
+## 구현 및 검증 보고 — M-CORE
 
-**2026-10-27 후속 작업 진행 중:** planner P-1~P-6/D25에 따라 성능 실패를 진단·수정하고 전체 게이트를 다시 실행한다. 아래 p8 실패 기록은 당시 결과로 보존하며, 중단 문구는 P-1로 정정됐다. 현재 게시·최종 수용은 아직 하지 않았다. D26의 provenance 규칙과 추가 성능 기록은 CORE_DECISIONS/CORE_PERF를 따른다.
+**2026-10-27 hard stop: 미완료·미게시:** planner P-1~P-6/D25에 따라 성능 실패를 진단·수정하고 전체 게이트를 다시 실행한다. 아래 p8 실패 기록은 당시 결과로 보존하며, 중단 문구는 P-1로 정정됐다. 현재 게시·최종 수용은 아직 하지 않았다. D26의 provenance 규칙과 추가 성능 기록은 CORE_DECISIONS/CORE_PERF를 따른다.
 
-현재 후보14의 유효 탐색 측정은 N1000 2.149800ms(BASE 대비1.039122배), N2000 4.032952ms이며 mind/old는1.071966배다. 평균 시간 기준은 진단상 충족했지만 최종 커밋의 shadow·fresh held-out·전체 gate·게시가 남아 있다.
+현재 구현 `826a7ecd9e38ca3fc1fff253baa0933aee593022`의 최종 shadow·baseline/safety·fresh held-out1264–1295는 통과했다. 최종33쌍 교차 성능은 N1000/N2000 및 C3를 충족하지만 작은 맵 n200_side64 평균1.3481배·p991.3150배로 **필수 성능 FAIL**이다. 전체 게이트는 hard stop 종료 기록을 위해22:41:15KST에 중단했다(INCOMPLETE, wrapper143). 1–24단계 명령exit0이나 step12 시간은 INVALID다. step25는 반복 도중 중단되어 NOT_COMPLETE,26–45는 NOT_RUN이다. step41 새 frame/waiver 근거는 없다. 게시하지 않았다. 아래 과거 결과는 각 시점의 기록이다.
 
 p12 `1ca297b82`에 동작 보존 최적화를 고정했다. 후보8의 열 개 summary, baseline identity, held-out canonical outcomes/why는 모두 일치했지만 유효 교차 측정은 tick2072.718→4079.104µs, old/mind1447.824→3351.900µs로 성능 막대를 통과하지 못했다. D30에 따라 P-3d의 별도 스케줄링 최적화 및 새 shadow/held-out 검증으로 진행한다. 기존157개 노드·점수와 원본 실패 기록은 유지한다.
 
@@ -282,3 +282,28 @@ Candidate13 is integrated but uncommitted: source c576841c54c6dc7cd4e52af8200e5b
 Candidate14 source766 efbd661b5f1fe4dad998129f4c41961702973b2077cbc047315d4bdedf6cc224 is integrated after core83/runtime-save168, strict clippy, default release and literal OFF/ON48-day calibration PASS. Exact cache hits avoid unused scratch writes; verified untouched first-primary snapshots avoid repeated ECS queries, with alias/invitation/replay fallbacks intact. Policy157nodes and phase8 remain unchanged. Paired timing14 is running; no performance PASS, final committed shadow, fresh heldout, full gate or publication is claimed.
 
 17:41 KST: Paired14 completes8/8 valid, zero sleep/wake. N1000tick2149.800us vs standing2220.46, tick/BASE1.039122, mind/old1.071966; N2000tick4032.952us. Proceed to committed-source final captures; exploratory timing is not step25/45 acceptance.
+
+
+### 2026-10-27 최종 커밋 검증 추가 보고 (hard stop·미완료)
+
+`826a7ecd`는 p12 다음의 별도 P-3d 행동 변경 커밋이다. 고정 phase8과157개 노드·점수를 유지하며, exact guard cache, 지연 factual row, indexed predicate/prefix, 공유 snapshot과 검증된 최초 방문 조회 생략을 적용했다. 원본 보존 p12 증명과 이후 동작 변경 검증은 구분한다. 최종 production은 새 격리 target에서 빌드했으며 Rust766입력 SHA는 `efbd661b5f1fe4dad998129f4c41961702973b2077cbc047315d4bdedf6cc224`다.
+
+최종 shadow round2 OFF99.474271%, ON99.505779%와 host parity3,734,894person-tick/불일치0을 확인했다. 독립 검토는69/58범주·1218/1136사례를 모두 다뤘으며 미설명0이다. baseline228,748값 차이0,64개 chronicle/relations 파일19,683항목은 기존 git_sha 제외 규칙 아래 일치한다. 열 개 colony summary는 원본 전환과 다르며 이 P-3d 커밋의 행동 변경으로 명시한다. 원본과 동일하다고 주장하지 않는다.
+
+새1264–1295 outcomes는 stock/wall/cold/wolf/ledger32, alive31, firewood18/18노출(요구17)로 통과했다. BASE alive30/32는 요구31에 미달하며 그대로 기록한다. why769,213/769,213설명과 critical choices15,854/15,854가 통과했다. 결과 SHA는 outcomes `e78e6dc15f44c90041d1be1f2f58922bab2377db11ed03444bf75937df3f0c34`, why `c4246f3084fe9338f24a07bdf5b1cc31f21a511f5aa8fb6d32cb821dd5116188`다. 이 코호트는 이제 노출됐으므로 후속 실행은 보존 replay로만 분류한다. 원래 seed1238 늑대 사망0→3 기록은 유지한다.
+
+| 최종 교차 측정 | BASE tick µs | 새 tick µs | old/mind µs | mind/old | 판정 |
+|---|---:|---:|---:|---:|---|
+| N1000, 산술평균 |2077.808449|2208.505093|1448.595483 / 1588.293909|1.096437|paired standing 중앙값 및 C3 통과|
+| N2000, 산술평균 |4573.585417|4086.183449|3410.875711 / 2981.089832|0.873995|paired standing 및 C3 통과|
+| N200 side64, standing 중앙값 |261.862500|353.018056|별도 비교 대상|해당 없음|평균1.348105배, p991.314991배 FAIL|
+
+초기 N1000 mind19,136µs에서 현재1,588.294µs로 절대값은 줄었지만 서로 다른 세션의 단독 속도 개선율로 해석하지 않는다. 현재 paired N1000 한계는 BASE중앙값2066.4375×1.10=2273.08125µs이며 새 중앙값2162.904861µs다. standing ledger의2018.6×1.10=2220.46µs도 별도로 남는다. side64는 paired261.8625×1.10=288.04875µs보다64.96931µs 느려 필수 기준 실패다. ≤0.5 mind/old 목표 미달은 report-only지만 side64 실패는 면제하지 않는다.
+
+전체 self/inclusive top15와 정확한 sample/source/binary SHA는 [CORE_PERF](CORE_PERF.md)에 있다. 최종 side64 샘플1107개 중 mind inclusive733, person432, selector112, context90이다. 샘플링 시간은 INVALID이며 성능 수치에 포함하지 않는다. 최종33쌍/66실행은 모두 시작load<8, invalid0이다. 일반 메모리 slope는 BASE와 같고6개 C3검사는 통과했다. 합성 full-ring 포화9646.19B/person은4096목표에 못 미친 별도 관측으로 남기며 자연 실행 메모리 합격으로 덮지 않는다.
+
+P-5 원본120→308분해와 #647 원인 조사는 위 역사 기록을 따른다. 최종 story는119.9375→306.546875항목/세계년, missing121/123, 깊이≥3및cycle0이다. 최종 집계에는 종류별/unknown대dangling sidecar가 없어 역사48종 분해나 누락 없음 결론을 새 커밋에 복사하지 않는다. Chronicle 계기는 전체 Mind EventId 그래프를 포함하지 않는다. #647은 미해결로 유지한다.
+
+전체 게이트는 hard stop 종료 기록을 위해22:41:15KST에 중단했다(INCOMPLETE, wrapper143). 1–24단계 명령exit0이나 step12 시간은 INVALID다. step25는 반복 도중 중단되어 NOT_COMPLETE,26–45는 NOT_RUN이다. step41 새 frame/waiver 근거는 없다. 게시 SHA는 없으며 v8/wip·v8/main fast-forward와 fixed issue 종료를 아직 수행하지 않았다. v8/core-review는 유지한다.
+
+최종 git ls-remote (22:41 KST): v8/main 및 v8/wip `9855bd082ad88a4c49296410f206f148d98c4df9`, v8/core-review `61260ec8c245d88c6d12ef015de815dae6849017`. 게시 SHA 없음. 이번 후속 문서 커밋은826구현의 부분 검증 기록이며 새 전체 gate 합격이 아니다. 작업트리와 미해결 이슈는 유지한다.

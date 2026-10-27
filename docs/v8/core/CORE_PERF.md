@@ -1057,3 +1057,74 @@ Method matches profile-after-7: native collapsed top-of-stack summary supplies s
 These shares nominate source investigations only. This profiled run cannot establish elapsed performance or a speedup relative to another candidate. Parent owns all acceptance timing.
 
 Candidate14 admitted paired session (8/8 valid, zero sleep/wake): N1000 BASE tick2068.862326/old1444.794260us; candidate tick2149.799653/mind1548.769798us. Tick ratio1.039121659, mind/old1.071965636. N2000 BASE tick4591.946875/old3423.419344us; candidate tick4032.952083/mind2946.250254us, ratios0.878266276/0.860616231. Standing N1000 mean2018.6*1.10=2220.46us leaves1619.430145us mind at observed other601.029855us: diagnostic mean margin70.660347us. Both C3 mean time ceilings and same-session1.10 ratios are met diagnostically; full step25 mean/p99/memory and final step45 receipt remain mandatory. Report-only0.5/half-share targets remain missed. Receipt 099539afcfae6e990cb975da7064573a202f3d2e5149b4199592059ed4d85049; empty power-window SHA e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 means no events in the covered interval, not missing log coverage. No final acceptance.
+
+
+## Final committed session: required side64 regression (2026-10-27)
+
+Production commit826a7ecd9e38ca3fc1fff253baa0933aee593022; source efbd661b5f1fe4dad998129f4c41961702973b2077cbc047315d4bdedf6cc224. `p3d-final-execution-1/perf-session/receipt.json` retains33accepted pairs/66members, zero invalid members. Every accepted repeat starts at load1<8; admission waits at >=8 are retained. Required result **FAIL**: n200_side64 median mean353.01805556us versus paired BASE261.8625us (1.348104656), p99693 versus527us (1.314990512). Other five standing paired scenes, allocation ratios and all six C3 checks pass. The two named CORE speed/share targets remain missed and report-only. These distinctions do not waive the required side64 failures. Final power/raw audit verifies all66 raw SHA/admission rows and complete18:45:33–18:50:20KST coverage: Sleep/Wake/DarkWake0, Assertions20. Power-window SHA6338314639aa3cf59dd585619dce885c57e8b0978afb941b4756b3a4691a4b1d; power-and-raw-audit.json retains checks. This does not override the performance FAIL.
+
+N1000 arithmetic mean BASE2077.808449/old1448.595483us versus new2208.505093/mind1588.293909us: tick ratio1.062901199, mind/old1.096437154. N2000 BASE4573.585417/old3410.875711 versus new4086.183449/mind2981.089832us: ratios0.8934311/0.8739954. N1000 standing paired medians2066.4375/2162.904861us pass1.10; first new mean2362.8167us and its190734us maximum remain included. No outlier was discarded. Paired side64 ceiling261.8625*1.10=288.04875us leaves64.96930556us excess; latest quiet M-ART2.1 ledger258.9*1.10=284.79us is stricter (257.5 belongs to the older M5.5 row). Full45 diagnostic gate started20:54:39KST and was stopped22:41:15KST to finish closure by the22:43 hard stop: INCOMPLETE/wrapper143, steps1–24 exit0; step12 timings INVALID. Step25 began22:38:22, admitted at6.28 after60s, and was interrupted during repeats; no completed bench verdict. Steps26–45 NOT_RUN. No publication.
+
+The following side64 attribution is recorded before any further implementation change. Sampling timings are INVALID and cannot establish a speedup.
+
+# Committed final side64 sampled attribution — timing INVALID
+
+Attribution only: sampling profiler invalidates timing. No acceptance timing, BASE comparison or speedup claim. Preloads 1/5/15 minutes: [7.20703125, 8.05517578125, 10.3447265625]. Benchmark and sample exits both 0. No build or checkout edit was performed.
+
+Sample SHA-256 `16a062ffc46698831b1ceef108e7e2381de991df1270d349573570c48f7cbdd1`. Archived Rust SHA-256 `efbd661b5f1fe4dad998129f4c41961702973b2077cbc047315d4bdedf6cc224`; binary SHA-256 `cb0a77c4d60ac3a685cf0669ec1bdd9c25837451b8884add67d88329e307e145`; source commit `826a7ecd9e38ca3fc1fff253baa0933aee593022`; committed source, features `[]`. Binary and archive hashes checked against retained build receipt; pre/post-build source hashes agree. Exact source/build/artifact bindings are retained in aggregation.json.
+
+Commands (cwd /Users/rexxa/work/new-world-core-dev):
+```
+/Users/rexxa/work/core-data/p3d-final-execution-1/production/worldsim_perf bench-one --scene-label n200_side64 --out /Users/rexxa/work/core-data/p3d-profile-final-side64/bench.json
+/usr/bin/sample 79970 20 1 -file /Users/rexxa/work/core-data/p3d-profile-final-side64/sample.txt
+```
+
+Denominator **1107** includes all main-thread roots for one thread ID; startup retained: 1107 `Thread_261088780 DispatchQueue_1: com.apple.main-thread (serial)`.
+
+Method matches profile-after-7: native collapsed top-of-stack summary supplies self ranking. Inclusive aggregation uses exact symbol/image across instruction offsets, retaining wrappers and excluding only thread pseudoframes. Nested identical-symbol ancestors collapse (67 rows). Independent exclusive weights accumulated once per distinct ancestor exactly reproduce all inclusive totals. Nonnegative exclusive weights sum to 1107; every native self count >=5 matches independently derived exclusive counts. Percentages are count/1107×100 rounded to three decimals. Inclusive percentages overlap; inlined work can appear under caller self counts.
+
+## Self top15
+
+| Rank | Exact symbol (image) | Samples | % of 1107 |
+|---:|---|---:|---:|
+| 1 | `sim_core::colony::mind::select::choose_with_reader::h20c76aa21f96c901 (in worldsim_perf)` | 73 | 6.594% |
+| 2 | `sim_systems::runtime::mind::system::ColonyMindSystem::person::h2331f0bc754c2ee4 (in worldsim_perf)` | 55 | 4.968% |
+| 3 | `_platform_memmove (in libsystem_platform.dylib)` | 41 | 3.704% |
+| 4 | `sim_systems::runtime::mind::system::ColonyMindSystem::try_tick::h9e40621140761713 (in worldsim_perf)` | 39 | 3.523% |
+| 5 | `_$LT$sim_systems..runtime..memory..memory_system..MemorySystem$u20$as$u20$sim_engine..RuntimeSystem$GT$::tick::h821438b11e5a99f7 (in worldsim_perf)` | 37 | 3.342% |
+| 6 | `_$LT$sim_systems..runtime..settlement..settlement_system..SettlementSystem$u20$as$u20$sim_engine..RuntimeSystem$GT$::tick::h2795b880d4a03cb5 (in worldsim_perf)` | 33 | 2.981% |
+| 7 | `sim_systems::runtime::mind::context::TickContext::capture_with_memory::hde1191c15cd86145 (in worldsim_perf)` | 32 | 2.891% |
+| 8 | `sim_systems::runtime::mind::facts::refresh_routine_lifecycle::h23a8aaf2612a3266 (in worldsim_perf)` | 29 | 2.620% |
+| 9 | `sim_core::colony::mind::continuation::eligible::hb6a34874505047e4 (in worldsim_perf)` | 28 | 2.529% |
+| 10 | `sim_systems::runtime::mind::facts::prepare_social_snapshot::hecbb51eace6353e7 (in worldsim_perf)` | 21 | 1.897% |
+| 11 | `core::hash::BuildHasher::hash_one::h6f2033b8031de546 (in worldsim_perf)` | 18 | 1.626% |
+| 12 | `_xzm_free_main (in libsystem_malloc.dylib)` | 16 | 1.445% |
+| 13 | `_$LT$$LP$A$C$B$C$C$C$D$C$E$C$F$C$G$C$H$C$I$C$J$C$K$C$L$RP$$u20$as$u20$hecs..query..Fetch$GT$::prepare::h07e79d8be7f15208 (in worldsim_perf)` | 15 | 1.355% |
+| 14 | `_$LT$std..hash..random..DefaultHasher$u20$as$u20$core..hash..Hasher$GT$::write::h9c49115b4f07fcf5 (in worldsim_perf)` | 15 | 1.355% |
+| 15 | `alloc::collections::btree::map::BTreeMap$LT$K$C$V$C$A$GT$::insert::hb4e033d52dec90b0 (in worldsim_perf)` | 14 | 1.265% |
+
+## Inclusive top15
+
+| Rank | Exact symbol (image) | Samples | % of 1107 |
+|---:|---|---:|---:|
+| 1 | `start (in dyld)` | 1107 | 100.000% |
+| 2 | `main (in worldsim_perf)` | 1107 | 100.000% |
+| 3 | `std::rt::lang_start_internal::h48672da3ca81ba76 (in worldsim_perf)` | 1107 | 100.000% |
+| 4 | `std::rt::lang_start::_$u7b$$u7b$closure$u7d$$u7d$::h0a4197fc4ae54a3a (in worldsim_perf)` | 1107 | 100.000% |
+| 5 | `std::sys::backtrace::__rust_begin_short_backtrace::h6f0693125875e1bd (in worldsim_perf)` | 1107 | 100.000% |
+| 6 | `worldsim_perf::main::hdbfddd71acfbd059 (in worldsim_perf)` | 1107 | 100.000% |
+| 7 | `sim_test::bench::main::h2378fa20f2d977a8 (in worldsim_perf)` | 1107 | 100.000% |
+| 8 | `sim_test::bench::run_one::h65bc253a0480dde6 (in worldsim_perf)` | 1107 | 100.000% |
+| 9 | `sim_engine::SimEngine::tick_inner::h88a9e377720310ca (in worldsim_perf)` | 1099 | 99.277% |
+| 10 | `_$LT$sim_systems..runtime..mind..system..ColonyMindSystem$u20$as$u20$sim_engine..RuntimeSystem$GT$::tick::ha9b31252eee1dfdc (in worldsim_perf)` | 733 | 66.215% |
+| 11 | `sim_systems::runtime::mind::system::ColonyMindSystem::try_tick::h9e40621140761713 (in worldsim_perf)` | 733 | 66.215% |
+| 12 | `sim_systems::runtime::mind::system::ColonyMindSystem::person::h2331f0bc754c2ee4 (in worldsim_perf)` | 432 | 39.024% |
+| 13 | `sim_core::colony::mind::select::choose_with_reader::h20c76aa21f96c901 (in worldsim_perf)` | 112 | 10.117% |
+| 14 | `sim_systems::runtime::mind::context::TickContext::capture_with_memory::hde1191c15cd86145 (in worldsim_perf)` | 90 | 8.130% |
+| 15 | `_$LT$sim_systems..runtime..jobs..assign..JobAssignSystem$u20$as$u20$sim_engine..RuntimeSystem$GT$::tick::h5075ebe6ce3a69a4 (in worldsim_perf)` | 87 | 7.859% |
+
+## Interpretation boundary
+
+These shares nominate source investigations only. This profiled run cannot establish elapsed performance or a speedup relative to another candidate. Parent owns all acceptance timing.
+
+Full-gate step12 uses the unchanged legacy perf.sh report-only harness: it records session/repeat-end loads and compares historical BASE outputs, rather than admitting every repeat and interleaving both binaries in one session. Its session began22:19:25KST at load1/5/15=9.86/7.77/9.30, and its timings are INVALID for M-CORE acceptance regardless of command exit status; keep its raw report but never use it as a new base or replace the final33-pair receipt with it. Required step25/45 bars remain unchanged.

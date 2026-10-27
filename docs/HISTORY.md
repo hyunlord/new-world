@@ -6,6 +6,8 @@
 
 ## M-CORE 진행 기록 (2026-10-26–27)
 
+- 2026-10-27 — 별도 P-3d 커밋 `826a7ecd9e38ca3fc1fff253baa0933aee593022`의 최종 shadow OFF99.474271%·ON99.505779%, baseline/safety와 fresh1264–1295 outcomes/why를 통과했다. 최종33쌍 교차 측정은 N1000 2.208505ms·N2000 4.086183ms 및 C3 통과지만 n200_side64 평균1.348105배·p991.314991배로 필수 성능 FAIL이다. 전체 게이트는 hard stop 종료 기록을 위해22:41:15KST에 중단했다(INCOMPLETE, wrapper143). 1–24단계 명령exit0이나 step12 시간은 INVALID다. step25는 반복 도중 중단되어 NOT_COMPLETE,26–45는 NOT_RUN이다. step41 새 frame/waiver 근거는 없다. 미게시다. 이전 기록과 seed1238 늑대 사망0→3은 보존한다.
+
 - 2026-10-27 — 플래너 P-1–P-6으로 성능 수리를 재개했다. 보존 커밋 p12 `1ca297b82`는10개 요약·D26 canonical outcome/why·baseline 동일성을 통과했지만 유효 성능은 미달이다. D30의 별도 스케줄링 후보는 정책157노드를 고정한 채 exploratory shadow OFF99.4743%·ON99.5058%,16guard replay·13primitive fixture를 통과했다. fresh1264–1295·최종 성능·전체 gate·게시는 대기이며 원래 p8 FAIL을 유지한다.
 
 
