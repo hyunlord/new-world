@@ -238,3 +238,17 @@ pub(super) fn resolve(
         facts,
     })
 }
+
+/// Previous prefix reader retained as an independent cache-equivalence test oracle.
+#[cfg(test)]
+pub(super) fn identity(bytes: &[u8]) -> Result<(u64, u64, usize), MindRecordError> {
+    let mut reader = Reader { bytes, at: 0 };
+    if reader.byte()? != 1 {
+        return Err(MindRecordError::Invalid("unsupported schema"));
+    }
+    let revision = reader.unsigned()?;
+    let _id = reader.unsigned()?;
+    let _tick = reader.unsigned()?;
+    let _parent = reader.optional()?;
+    Ok((revision, reader.unsigned()?, reader.slot()?))
+}

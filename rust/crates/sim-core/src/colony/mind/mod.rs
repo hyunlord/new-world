@@ -2,6 +2,7 @@
 //! No ECS access, effects, global catalogue bootstrap or causal-ID allocation.
 
 mod compile;
+mod continuation;
 mod error;
 mod facts;
 mod model;
@@ -10,6 +11,10 @@ mod select;
 mod selection;
 
 pub use compile::compile;
+pub use continuation::{
+    guard_continuation, guard_continuation_cached, ContinuationPlan, ContinuationReader,
+    GuardCache, GuardOutcome, GuardRead, GuardScratch, GuardWake,
+};
 pub use error::*;
 pub use facts::{FactReader, FactRow, PersonFacts};
 pub use model::*;

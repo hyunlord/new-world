@@ -11,7 +11,10 @@ fn fixture() -> (TickContext, SimResources) {
     resources
         .food_tiles
         .insert((17, 17), sim_engine::RESOURCE_SOURCE_INFINITE);
-    (TickContext::capture(&world, &resources).unwrap(), resources)
+    let context = TickContext::capture(&world, &resources).unwrap();
+    // These tests exercise the already materialized incremental index.
+    context.visit_food_in_square(&resources, (1, 1), 0, |_, _| {});
+    (context, resources)
 }
 
 fn indexed(context: &TickContext) -> Vec<((u32, u32), u8)> {

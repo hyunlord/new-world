@@ -248,3 +248,16 @@ fn postpass_social_target_follows_the_partners_current_position() {
     finish_tick(&mut world, &mut resources, &mut effects, None);
     assert_eq!(world.get::<&SeekTarget>(entity).unwrap().tile, (4, 2));
 }
+
+#[test]
+fn scheduled_idle_excludes_targeted_hearth_meal_but_includes_wander() {
+    assert!(super::lookup("wander")
+        .expect("wander")
+        .scheduled_continuation());
+    assert!(!super::lookup("hearth_meal")
+        .expect("hearth meal")
+        .scheduled_continuation());
+    assert!(!super::lookup("rest")
+        .expect("rest")
+        .scheduled_continuation());
+}

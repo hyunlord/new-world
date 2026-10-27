@@ -30,3 +30,7 @@ bincode = "1.3"
 
 [profile.dev.package.sim-systems]
 opt-level = 1
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

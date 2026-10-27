@@ -2,6 +2,11 @@
 
 **2026-10-27 후속 작업 진행 중:** planner P-1~P-6/D25에 따라 성능 실패를 진단·수정하고 전체 게이트를 다시 실행한다. 아래 p8 실패 기록은 당시 결과로 보존하며, 중단 문구는 P-1로 정정됐다. 현재 게시·최종 수용은 아직 하지 않았다. D26의 provenance 규칙과 추가 성능 기록은 CORE_DECISIONS/CORE_PERF를 따른다.
 
+현재 후보14의 유효 탐색 측정은 N1000 2.149800ms(BASE 대비1.039122배), N2000 4.032952ms이며 mind/old는1.071966배다. 평균 시간 기준은 진단상 충족했지만 최종 커밋의 shadow·fresh held-out·전체 gate·게시가 남아 있다.
+
+p12 `1ca297b82`에 동작 보존 최적화를 고정했다. 후보8의 열 개 summary, baseline identity, held-out canonical outcomes/why는 모두 일치했지만 유효 교차 측정은 tick2072.718→4079.104µs, old/mind1447.824→3351.900µs로 성능 막대를 통과하지 못했다. D30에 따라 P-3d의 별도 스케줄링 최적화 및 새 shadow/held-out 검증으로 진행한다. 기존157개 노드·점수와 원본 실패 기록은 유지한다.
+
+
 
 **최종 판정: FAIL — 미게시, 전체 목표 미수용.** p8 `44e0a0266c085d409c16c77f4a2a0181b8a2a750`에서 최종 게이트42/45·exit1이다. 실패는25 bench,41 mux2_stall_receipt,45 core_evaluation이며 목표의 중단·보고 조건에 따라 튜닝·면제·재시도를 하지 않는다. §9의15개 항목으로 결과와 한계를 보존한다. p5 구현은 로컬 커밋 [0ef68a1d2b6eb946e150963071b2e623fa58d4b0](https://github.com/hyunlord/new-world/commit/0ef68a1d2b6eb946e150963071b2e623fa58d4b0)에 있으며 아직 게시하지 않았다. p6 생산 등록 전환은 로컬 커밋 [fbc9a9babc9bb5df1d06ca1e655901e480521f66](https://github.com/hyunlord/new-world/commit/fbc9a9babc9bb5df1d06ca1e655901e480521f66)에 있고 전환 캡처가 완료됐다. p7 기준선 분리는 로컬 `be12050c951dfb025f3440d34b657eec0663b817`로 커밋했고 해당 최종 빌드가 통과했다. `heldout-final-1`의 outcome·why는 PASS이며 story를 포함한 전체 캡처/검사 chain이 일곱 exit0으로 완료됐다. 전체 목표 수용은 아직 주장하지 않는다. 최종 성능은 유효 FAIL이며 필수 C3 위반으로 게시 BLOCKED다. 실패한 게이트와 완료된 한정 검증을 구분해 기록한다.
 
@@ -229,3 +234,51 @@ stall은 양 배율 모두 캡처를 완료했다. 1×는 준비 뒤300.000826�
 9855bd082ad88a4c49296410f206f148d98c4df9 refs/heads/v8/main
 9855bd082ad88a4c49296410f206f148d98c4df9 refs/heads/v8/wip
 ```
+
+
+### 2026-10-27 p12 보존 경계 확정
+
+보존 최적화 커밋 `1ca297b82f738cdcd881a344bc863bde669abe1a`의 새 빌드로12:38KST 재수집을 완료했다. 10개 colony 요약은 원본 SHA와 그대로 일치하고, outcomes/why는 D26의 정확한 provenance 키만 제외한 canonical JSON이 동일하다. baseline228748개 값의 차이는0이며64개 chronicle 파일19683개 항목도 기존 identity 기준으로 일치한다. 원본·새 raw SHA와 양쪽 normalized SHA는 D30에 기록했다. 고정한 p12 검증기 환경에서도 원본 successor 체인을 다시 실행해 통과했다.
+
+성능은 아직 FAIL이다. 후보8의 유효한 교차 실행 tick2072.718→4079.104µs, old/mind1447.824→3351.900µs를 보존한다. 현재 standing ledger의 N1000 평균 상한은2018.6×1.10=2220.46µs다. 따라서 P-3d의 별도 행동 변경 경로를 진행한다. 관측 전용 진단에서 active resource/routine 재사용 가능 방문은56.39%였으며, 이는 시간 절감률이나 shadow 통과율이 아니다. social과 wander의 안전한 계속 실행 및 공통 문맥 계산 지연을 구현 중이다. 완료된 routine_no_place는 제외한다.157개 정책 노드·점수는 동결 상태이고 새 held-out1264–1295는 아직 실행하지 않았다.
+
+
+### 2026-10-27 P-3d 후보 검증 중
+
+새 후보의 Rust742개 입력 digest는 `11be938525756c6060d0ca8e84a95aa71f77d4fe55ab3a2132318157b75464de`다. 유효한 기존 행동은 고정된 agent phase8 사이에서 계속 실행하되, critical/finish/현재 노드 자격과 실제 소유권을 매 틱 확인한다. 효과·완료 처리는 매 틱 유지하고 기존 원인 ID를 사용하며, 새 점수나 witness를 꾸며 기록하지 않는다. 일반 비긴급 기회는 최대7틱 지연될 수 있는 명시적 행동 변경이다. 정책157노드·점수는 변경하지 않았다.
+
+샘플링 후 guard cache, lifecycle4개 slot 갱신, running metadata 할당, history 조회를 줄였다. core53/runtime118 집중 시험과 strict clippy가 통과했다. 샘플의 시간은 고부하 INVALID이며 top15는 CORE_PERF에 보존했다. 후보 release 빌드는 완료됐지만 유효 성능 결과는 아직 없다.
+
+| exploratory shadow round1 | 행동 일치 | 비율 | 독립 검토 |
+|---|---:|---:|---|
+| steward OFF |2031192/2041927|99.4743%|69범주·1218사례, strict PASS|
+| steward ON |1684600/1692967|99.5058%|58범주·1136사례, strict PASS|
+
+16개 실제 guard replay에서 유지3171241회·전체평가563653회를 대조했고,13개 primitive fixture는 production/host 및 replay가 일치했다. source digest는 전후 동일하다. 증거는 `p3d-exploratory-calibration-1`, 독립 검토와 strict 결과는 `p3d-calibration-review-1`에 있다. 이는 미커밋 후보의 탐색 검증이며, 최종 커밋의 새 캡처·동결·fresh held-out·전체 gate를 대신하지 않는다. 원본 결과와 실패 로그는 유지한다.
+
+후속 유효 교차 측정(13:50–13:54 KST)은 N1000 tick2269.376→3410.741µs, old/mind1575.388→2704.208µs로 여전히 FAIL이다. standing 상한2220.46µs에서 관측된 기타 비용706.533µs를 빼면 mind 예산은1513.927µs이며, 후보2 대비44.016% 추가 절감이 필요하다. N2000 평균6560.099µs는 시간 상한 안이지만 전체 성능 gate 통과를 뜻하지 않는다.8회 모두 시작1분 load<8이고 실제 Sleep/Wake/DarkWake 사건은0이다. 증거는 p3d-diagnostic-pairs-2에 보존했다.
+
+
+### 2026-10-27 14:42 최적화 검증 상태
+
+후보3–7은 실제 seeds0–7 ×48일 steward OFF/ON 결정성 검사와 후보2 요약 파일의 완전한 바이트 동일성 검사를 통과했다. 정책157개 노드와 점수는 그대로다. 작은 행 인덱스·공유 metadata·exclusive ECS 조회·연속된 거짓 조건 건너뛰기·행별 scope/running 열·검증된 레코드 identity 캐시를 적용했다. 현재 작업트리는 후보7 Rust750개 입력 SHA `e1b38164deba864fe21a2e5ff5a576587940a67352328df3fda4d95c1df333b3`와 일치한다. 레코드 캐시는 고유 payload당24바이트를 추가하므로 최종 메모리 검사를 통과하기 전에는 채택 완료가 아니다.
+
+프로파일의 self/inclusive 상위15개 전체와 원시 샘플의 출처는 CORE_PERF에 보존했다. 고부하·샘플링 실행의 시간은 모두 INVALID이며, 후보2 뒤의 새 유효 성능 수치는 아직 없다. 후보8/9의 작은 인덱스 정렬과 참 조건 prefix 재사용은 외부 트리에서 core69/runtime128 시험을 통과했고, 최종 빌드·실제 요약 비교·교차 측정은 진행 중이다. 아직 구현 커밋, 최종 shadow, fresh held-out1264–1295, 전체 gate와 게시를 완료하지 않았다.
+
+
+### 2026-10-27 15:30 KST repair checkpoint (not final acceptance)
+
+Candidate11 retains phase8 and the frozen157-node policy, adds the custom-cadence conservative fallback and tracked thin-LTO/codegen-units1 release profile. Core73/runtime-save137, strict clippy and actual OFF/ON48-day calibration pass; literal summaries equal candidate2 without exclusions. The full sampled top15 is in CORE_PERF; profile timing remains INVALID. Admitted same-session ABBA gives N1000 tick2986.977→3664.286µs (1.226754×) and old/mind2083.586→2796.072µs (1.341952×). N2000 tick6471.868→6928.530µs (1.070561×). C3 mean time ceilings are met diagnostically, but standing N1000 mean2220.46µs fails. Neither this diagnostic nor the earlier shadow is final-source acceptance.
+
+Four separate preserving slices are composed externally as candidate12: full person ECS query, lazy food index, bounded social peer buckets, and shared initial stock snapshot. Their integration/tests/build/calibration/performance remain pending. Fresh held-out1264–1295 has not been opened; final45-step gate and publication have not run. Candidate11 raw allocation already includes the +24-byte packed-record header cache; the required N200-based memory slopes still need final measurement.
+
+
+### Repair checkpoint — 2026-10-27 16:52 KST
+
+Candidate13 is integrated but uncommitted: source c576841c54c6dc7cd4e52af8200e5b2084b17c6881e23d425947db8a316336a6. Core79/runtime160, strict clippy, default release and literal OFF/ON calibration pass. Current admitted paired N1000 tick2427.484µs still exceeds standing2220.46µs; mind/old1.172705 and tick/BASE1.118261. N2000 tick4851.080µs, ratio1.009903. Performance remains the blocker; fresh heldout/final gate/publication are not run. Current timing is on observed AC power; prior admitted battery sessions remain preserved.
+
+### Repair checkpoint — 2026-10-27 17:38 KST
+
+Candidate14 source766 efbd661b5f1fe4dad998129f4c41961702973b2077cbc047315d4bdedf6cc224 is integrated after core83/runtime-save168, strict clippy, default release and literal OFF/ON48-day calibration PASS. Exact cache hits avoid unused scratch writes; verified untouched first-primary snapshots avoid repeated ECS queries, with alias/invitation/replay fallbacks intact. Policy157nodes and phase8 remain unchanged. Paired timing14 is running; no performance PASS, final committed shadow, fresh heldout, full gate or publication is claimed.
+
+17:41 KST: Paired14 completes8/8 valid, zero sleep/wake. N1000tick2149.800us vs standing2220.46, tick/BASE1.039122, mind/old1.071966; N2000tick4032.952us. Proceed to committed-source final captures; exploratory timing is not step25/45 acceptance.

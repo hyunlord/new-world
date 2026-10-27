@@ -82,13 +82,29 @@ required = {'schema_version', 'final_head', 'final_rust_source_sha256', 'mind_bi
             'story_base_report', 'story_base_receipt', 'story_base_binary', 'story_base_provenance',
             'story_mind_report', 'story_mind_receipt'}
 successor_fields = {'runtime_successor', 'runtime_successor_checker_sha256'}
-if set(config) not in (required, required | successor_fields):
+p3d_fields = {'p3d_successor', 'p3d_successor_checker_sha256'}
+if set(config) not in (required, required | successor_fields, required | p3d_fields):
     raise SystemExit('invalid evaluation config fields')
 if config['final_head'] != perf.git('rev-parse', 'HEAD') or config['final_rust_source_sha256'] != perf.source_hash():
     raise SystemExit('evaluation source no longer matches current final source')
 paths = {key: freeze.read_reference(root, config[key]) for key in required -
          {'schema_version', 'final_head', 'final_rust_source_sha256'}}
 def check_successor():
+    if 'p3d_successor' in config:
+        freeze.pin(root / 'tools/v8/core_p3d_successor.py', config['p3d_successor_checker_sha256'])
+        import core_p3d_successor as p3d
+        receipt = freeze.read_reference(root, config['p3d_successor'])
+        endpoint = p3d.check(root, receipt, config['p3d_successor']['sha256'])
+        chain = freeze.load(receipt)
+        heldout = p3d.prior.pinned_tree(root, chain['heldout'])
+        for arm in ('mind', 'base'):
+            if paths[arm + '_summary'] != heldout / (arm + '-probe/summary.json') or paths[arm + '_receipt'] != heldout / (arm + '-receipt.json'):
+                raise SystemExit('evaluation uses different P3d raw evidence')
+        if endpoint['binary_sha256'] != freeze.digest(paths['mind_binary']) or endpoint['rust_source_sha256'] != config['final_rust_source_sha256']:
+            raise SystemExit('P3d evaluation endpoint differs')
+        if endpoint['source_commit'] != freeze.load(paths['perf_config'])['candidate_head'] or endpoint['source_commit'] != freeze.load(paths['mind_receipt'])['source_sha']:
+            raise SystemExit('P3d evaluation committed source differs')
+        return
     if 'runtime_successor' not in config:
         return
     freeze.pin(root / 'tools/v8/core_shadow_successor.py', config['runtime_successor_checker_sha256'])
@@ -148,10 +164,11 @@ def performance_gate(receipt, exit_code):
         raise ValueError('standing performance/C3 failure: ' + ', '.join(failures))
     return failures
 
-run([sys.executable, 'tools/v8/core_score.py', paths['mind_summary'], '--receipt', paths['mind_receipt'],
+protocol_args = ['--seed-protocol', 'p3d_rethink_v1'] if 'p3d_successor' in config else []
+run([sys.executable, 'tools/v8/core_score.py', *protocol_args, paths['mind_summary'], '--receipt', paths['mind_receipt'],
      '--phase', 'heldout', '--base-summary', paths['base_summary'], '--base-receipt', paths['base_receipt'],
      '--output', output / 'outcomes.json'], 'outcomes')
-run([sys.executable, 'tools/v8/core_why_check.py', '--summary', paths['mind_summary'],
+run([sys.executable, 'tools/v8/core_why_check.py', *protocol_args, '--summary', paths['mind_summary'],
      '--receipt', paths['mind_receipt'], '--output', output / 'why.json'], 'why')
 story_binding(freeze.load(paths['story_mind_receipt']), freeze.load(paths['story_base_receipt']),
               freeze.digest(paths['mind_binary']), freeze.digest(paths['story_base_binary']),
@@ -197,12 +214,22 @@ freeze.version(config)
 required = {'schema_version', 'manifest', 'manifest_sha256', 'calibration'}
 migration_fields = {'test_migration', 'test_migration_checker_sha256'}
 successor_fields = {'runtime_successor', 'runtime_successor_checker_sha256'}
-if set(config) not in (required, required | migration_fields, required | migration_fields | successor_fields):
+p3d_fields = {'p3d_successor', 'p3d_successor_checker_sha256'}
+if set(config) not in (required, required | migration_fields, required | migration_fields | successor_fields, required | p3d_fields):
     raise SystemExit('invalid fixture config fields')
 manifest_path = Path(config['manifest'])
 
 def check_frozen():
     freeze.pin(config_path, sys.argv[4])
+    if 'p3d_successor' in config:
+        freeze.pin(root / 'tools/v8/core_p3d_successor.py', config['p3d_successor_checker_sha256'])
+        import core_p3d_successor as p3d
+        receipt = freeze.read_reference(root, config['p3d_successor'])
+        data = freeze.load(receipt)
+        p3d.check(root, receipt, config['p3d_successor']['sha256'])
+        if manifest_path != freeze.read_reference(root, data['host_manifest']) or config['manifest_sha256'] != data['host_manifest']['sha256'] or config['calibration'] != data['calibration']:
+            raise SystemExit('fixture config differs from fresh P3d host/calibration')
+        return
     if 'runtime_successor' in config:
         freeze.pin(root / 'tools/v8/core_shadow_successor.py', config['runtime_successor_checker_sha256'])
         import core_shadow_successor as successor
@@ -293,7 +320,7 @@ for steward in ('off', 'on'):
     run(['bash', helper, 'fixture', observed_path, twin_path, off_path, review_path], mode_dir / 'validation.log')
 freeze.pin(config_path, sys.argv[4])
 check_frozen()
-print('ORIGINAL_SHADOW_REPLAY PASS; CURRENT_SUCCESSOR_EQUIVALENCE verified separately' if 'runtime_successor' in config
+print('P3D_SHADOW_FIXTURE PASS; behavioral successor verified, no historical outcome equivalence claimed' if 'p3d_successor' in config else 'ORIGINAL_SHADOW_REPLAY PASS; CURRENT_SUCCESSOR_EQUIVALENCE verified separately' if 'runtime_successor' in config
       else 'CORE_SHADOW_FIXTURE PASS fresh seed=0 days=20 steward=off,on frozen observed/control/feature-OFF')
 PYRUN
     ;;

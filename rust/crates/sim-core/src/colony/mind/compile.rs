@@ -180,8 +180,11 @@ pub fn compile(text: &str, schema: &MindRegistrySchema) -> Result<CompiledMind, 
         }
     }
     let mut result = CompiledMind {
+        instance: std::sync::Arc::new(()),
         revision: MindRevision(revision),
         predicate_count: 0,
+        node_predicate_offsets: Vec::new(),
+        false_prefix_end: Vec::new(),
         nodes: Vec::new(),
         bands: std::array::from_fn(|_| Vec::new()),
         facts,
@@ -338,5 +341,36 @@ pub fn compile(text: &str, schema: &MindRegistrySchema) -> Result<CompiledMind, 
         "every life stage requires an idle node with every_ticks 1",
     )?;
     result.predicate_count = shared_predicates.len();
+    result.node_predicate_offsets.push(0);
+    for node in &result.nodes {
+        result
+            .node_predicate_offsets
+            .push(result.false_prefix_end.len() + node.predicates.len());
+        result
+            .false_prefix_end
+            .resize(result.false_prefix_end.len() + node.predicates.len(), 0);
+    }
+    for band in &result.bands {
+        for position in (0..band.len()).rev() {
+            let id = band[position];
+            let predicates = &result.nodes[id.index()].predicates;
+            let shared = band.get(position + 1).map_or(0, |next| {
+                predicates
+                    .iter()
+                    .zip(&result.nodes[next.index()].predicates)
+                    .take_while(|(a, b)| a.cache_index == b.cache_index)
+                    .count()
+            });
+            for depth in 0..predicates.len() {
+                let end = if depth < shared {
+                    result.false_prefix_end
+                        [result.node_predicate_offsets[band[position + 1].index()] + depth]
+                } else {
+                    position + 1
+                };
+                result.false_prefix_end[result.node_predicate_offsets[id.index()] + depth] = end;
+            }
+        }
+    }
     Ok(result)
 }

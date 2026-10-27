@@ -70,6 +70,9 @@ struct Payload {
     tick: u64,
     parent: Option<EventId>,
     bytes: Box<[u8]>,
+    revision: u64,
+    agent: AgentId,
+    node: usize,
 }
 /// Validated compact record. Clones share immutable bytes, including across tile/person logs.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -82,6 +85,9 @@ impl PackedMindChoice {
             id: record.id,
             tick: record.tick,
             parent: record.parent,
+            revision: record.revision.code(),
+            agent: record.agent,
+            node: record.node.index(),
             bytes: bytes.into_boxed_slice(),
         })))
     }
@@ -92,6 +98,9 @@ impl PackedMindChoice {
             id: raw.id,
             tick: raw.tick,
             parent: raw.parent,
+            revision: raw.revision,
+            agent: raw.agent,
+            node: raw.node,
             bytes: bytes.into(),
         })))
     }
@@ -103,6 +112,17 @@ impl PackedMindChoice {
     ) -> Result<MindChoiceRecord, MindRecordError> {
         dictionary.check(policy)?;
         codec::resolve(codec::parse(self.bytes())?, policy)
+    }
+    /// Compare immutable identity cached by the checked constructors.
+    /// History must still pass its ordinary policy validation before runtime use.
+    pub fn matches_running(
+        &self,
+        agent: crate::components::AgentId,
+        running: crate::colony::mind::RunningChoice,
+    ) -> Result<bool, MindRecordError> {
+        Ok(self.0.revision == running.revision.code()
+            && self.0.agent == agent
+            && self.0.node == running.node.index())
     }
     /// Causal identity, cached after checked parsing.
     pub fn id(&self) -> EventId {

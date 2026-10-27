@@ -384,3 +384,146 @@ fn cached_validation_failure_does_not_mark_a_corrupt_history_valid() {
         );
     }
 }
+
+#[test]
+fn immutable_identity_matches_only_the_actual_choice_after_round_trip() {
+    let policy = policy();
+    let record = record(&policy);
+    let packed = PackedMindChoice::new(&policy, &record).expect("packed");
+    let restored: PackedMindChoice =
+        serde_json::from_slice(&serde_json::to_vec(&packed).expect("serialize")).expect("restore");
+    let running = crate::colony::mind::RunningChoice {
+        revision: policy.revision(),
+        node: record.node,
+        finished: false,
+    };
+    for value in [&packed, &restored] {
+        assert!(value
+            .matches_running(record.agent, running)
+            .expect("identity"));
+        assert!(!value
+            .matches_running(record.agent - 1, running)
+            .expect("wrong agent"));
+        assert!(!value
+            .matches_running(
+                record.agent,
+                crate::colony::mind::RunningChoice {
+                    node: policy.node_id("second").expect("second"),
+                    ..running
+                }
+            )
+            .expect("wrong node"));
+    }
+    assert_eq!(packed.bytes(), restored.bytes());
+}
+
+fn assert_cached_identity_matches_prefix(packed: &PackedMindChoice, policy: &CompiledMind) {
+    let (revision, agent, node) = codec::identity(packed.bytes()).expect("validated prefix");
+    for query_revision in [0, u64::MAX, policy.revision().code()] {
+        for query_agent in [0, u64::MAX, agent] {
+            for query_node in ["first", "second", "fallback"] {
+                for finished in [false, true] {
+                    let running = crate::colony::mind::RunningChoice {
+                        revision: serde_json::from_value(serde_json::json!(query_revision))
+                            .expect("revision"),
+                        node: policy.node_id(query_node).expect("node"),
+                        finished,
+                    };
+                    assert_eq!(
+                        packed.matches_running(query_agent, running),
+                        Ok(revision == query_revision
+                            && agent == query_agent
+                            && node == running.node.index()),
+                    );
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn cached_identity_preserves_checked_construction_wire_and_shared_ownership() {
+    let policy = policy();
+    for extreme in [0, u64::MAX] {
+        for name in ["first", "second", "fallback"] {
+            let mut input = record(&policy);
+            input.id = extreme;
+            input.tick = extreme;
+            input.agent = extreme;
+            input.parent = None;
+            input.facts.clear();
+            input.node = policy.node_id(name).expect("node");
+            input.band = policy.node(input.node).expect("node definition").band;
+            input.top3 = vec![ChoiceCandidate {
+                node: input.node,
+                score: input.score,
+            }];
+            let expected = codec::encode(&policy, &input).expect("old wire");
+            let packed = PackedMindChoice::new(&policy, &input).expect("checked record");
+            let clone = packed.clone();
+            let parsed = PackedMindChoice::from_bytes(&expected).expect("checked wire");
+            let restored: PackedMindChoice =
+                serde_json::from_slice(&serde_json::to_vec(&packed).expect("serialize"))
+                    .expect("restore");
+            assert!(packed.shares_payload(&clone));
+            assert!(!packed.shares_payload(&parsed));
+            for value in [&packed, &clone, &parsed, &restored] {
+                assert_eq!(value, &packed);
+                assert_eq!(value.bytes(), expected);
+                assert_cached_identity_matches_prefix(value, &policy);
+            }
+        }
+    }
+}
+
+#[test]
+fn cached_standalone_identity_preserves_extreme_unresolved_slots_and_revisions() {
+    fn unsigned(bytes: &mut Vec<u8>, mut value: u64) {
+        while value >= 128 {
+            bytes.push((value as u8 & 127) | 128);
+            value >>= 7;
+        }
+        bytes.push(value as u8);
+    }
+    let policy = policy();
+    for revision in [0, u64::MAX, policy.revision().code()] {
+        for node in [0, usize::MAX] {
+            let mut bytes = vec![1];
+            for value in [revision, u64::MAX, u64::MAX] {
+                unsigned(&mut bytes, value);
+            }
+            bytes.push(0); // No parent.
+            unsigned(&mut bytes, u64::MAX);
+            unsigned(&mut bytes, u64::try_from(node).expect("wire slot"));
+            bytes.extend_from_slice(&[0, 0, 1, 0, 0, 0]); // Band, score, one candidate, no facts.
+            let packed = PackedMindChoice::from_bytes(&bytes).expect("structurally valid");
+            assert_eq!(packed.bytes(), bytes);
+            assert_cached_identity_matches_prefix(&packed, &policy);
+            for end in 0..bytes.len() {
+                assert!(PackedMindChoice::from_bytes(&bytes[..end]).is_err());
+            }
+            bytes.push(0);
+            assert!(PackedMindChoice::from_bytes(&bytes).is_err());
+        }
+    }
+    for malformed in [vec![1, 128, 0], vec![1; 1], vec![255; 11]] {
+        assert!(PackedMindChoice::from_bytes(&malformed).is_err());
+    }
+}
+
+#[test]
+fn cached_identity_memory_cost_is_explicit() {
+    // Existing header/bytes total 48 bytes on 64-bit hosts; the cache adds 24.
+    let original_fields = 2 * std::mem::size_of::<u64>()
+        + std::mem::size_of::<Option<EventId>>()
+        + std::mem::size_of::<Box<[u8]>>();
+    let cache_fields = 2 * std::mem::size_of::<u64>() + std::mem::size_of::<usize>();
+    assert_eq!(
+        std::mem::size_of::<Payload>(),
+        original_fields + cache_fields
+    );
+    assert_eq!(
+        std::mem::size_of::<PackedMindChoice>(),
+        std::mem::size_of::<usize>()
+    );
+}

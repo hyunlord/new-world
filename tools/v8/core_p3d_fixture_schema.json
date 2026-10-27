@@ -1,0 +1,2341 @@
+{
+  "dynamic_maps": [
+    "/cancels",
+    "/demography/births_by_year",
+    "/demography/population_by_year",
+    "/fingerprints",
+    "/items",
+    "/m2/craft1_taken_by_kind",
+    "/m4/discovered",
+    "/m55/neighbours/traded_in",
+    "/m55/neighbours/traded_out",
+    "/mux/accepted_actions_by_rule"
+  ],
+  "knowledge_nodes": [
+    "fire_keeping",
+    "foraging",
+    "water_finding",
+    "flint_knapping",
+    "hafting",
+    "firewood_splitting",
+    "pressure_flaking",
+    "stone_grinding",
+    "hut_building",
+    "timber_wall",
+    "doorway",
+    "packed_floor",
+    "bedding",
+    "stone_walling",
+    "stone_quarrying",
+    "digging",
+    "clay_digging",
+    "clay_prep",
+    "pot_forming",
+    "pot_firing",
+    "instruction",
+    "storytelling",
+    "tracking",
+    "hide_scraping"
+  ],
+  "objects": {
+    "": [
+      "alive_end",
+      "all_trees_felled_tick",
+      "axes_worn_out",
+      "births",
+      "camp_pass_tiles",
+      "cancels",
+      "chops_with_axe",
+      "commands",
+      "commands_accepted",
+      "crafts_done",
+      "crafts_lost",
+      "days",
+      "deaths",
+      "demography",
+      "fingerprints",
+      "first_violation",
+      "founder_fixes",
+      "hut_done_tick",
+      "hut_placed_tick",
+      "huts_built",
+      "items",
+      "jobs_done",
+      "jobs_taken",
+      "ledger_violation_ticks",
+      "logs",
+      "loose_logs_day5",
+      "m2",
+      "m3",
+      "m4",
+      "m5",
+      "m55",
+      "mind_coverage",
+      "mux",
+      "nodes_exhausted",
+      "nodes_left",
+      "quarry_batches",
+      "reservation_violation_ticks",
+      "seed",
+      "stuck_cancels",
+      "trees_designated",
+      "trees_designated_tick",
+      "trees_felled",
+      "u1_hut_within_3_days",
+      "u2_trees_within_4_days",
+      "u3_no_loose_logs_day5",
+      "workshops_built"
+    ],
+    "/deaths": [
+      "combat",
+      "dehydration",
+      "exposure",
+      "old_age",
+      "starvation"
+    ],
+    "/demography": [
+      "ages_years_end",
+      "alive_end",
+      "at_risk_days",
+      "births",
+      "births_by_year",
+      "births_per_woman_year",
+      "child_marker_past_child_age",
+      "conceptions",
+      "conceptions_per_at_risk_day",
+      "extinct",
+      "old_age_deaths",
+      "population_by_year",
+      "pregnant_end",
+      "woman_days",
+      "woman_years",
+      "year_one_children"
+    ],
+    "/demography/old_age_deaths/*": [
+      "age_ticks",
+      "age_years",
+      "agent",
+      "founder",
+      "tick"
+    ],
+    "/demography/year_one_children/*": [
+      "age_ticks_at_coming_of_age",
+      "age_years_at_coming_of_age",
+      "agent",
+      "born_tick",
+      "came_of_age_tick",
+      "reached_child_age_in_run"
+    ],
+    "/items/*": [
+      "burned",
+      "carried",
+      "consumed",
+      "crafted",
+      "created",
+      "delivered",
+      "ground",
+      "held",
+      "shelved"
+    ],
+    "/logs": [
+      "carried",
+      "consumed",
+      "created",
+      "delivered",
+      "ground"
+    ],
+    "/m2": [
+      "axes2_tick",
+      "blades6_tick",
+      "burned_firewood",
+      "chop0_agent",
+      "chop0_chop_jobs",
+      "chops_with_axe",
+      "craft1_agent",
+      "craft1_craft_crafts",
+      "craft1_craft_jobs",
+      "craft1_taken_by_kind",
+      "craft_crafts_all",
+      "craft_jobs_all",
+      "crafted",
+      "firewood_ground_by_day",
+      "firewood_stock_by_day",
+      "gather_wood_agent_ticks",
+      "settlement_wood_by_day",
+      "snapshots",
+      "supply_jobs_all"
+    ],
+    "/m2/crafted": [
+      "firewood",
+      "flint_blade",
+      "stone_axe"
+    ],
+    "/m2/snapshots/*": [
+      "craft1_blade_quality_sum",
+      "craft1_blades",
+      "craft1_knap_level",
+      "craft1_woodwork_level",
+      "day"
+    ],
+    "/m3": [
+      "axe_chops_after_day3",
+      "bedroom4_tick",
+      "bedroom_sleepers",
+      "blade_quality_early",
+      "blade_quality_late",
+      "blades_by_agent",
+      "blades_early",
+      "blades_late",
+      "dig_ordered",
+      "dig_tiles",
+      "door_steps",
+      "dug_all_tick",
+      "dug_room_tick",
+      "knap_top_level",
+      "knap_top_level_by_day",
+      "rooms_end",
+      "space_built",
+      "space_removed",
+      "stock_covered_end",
+      "stock_share_end",
+      "stock_total_end",
+      "storehouse_tick",
+      "tiles_dug",
+      "unreachable",
+      "unreachable_room_door"
+    ],
+    "/m3/rooms_end/*": [
+      "beds",
+      "doors",
+      "dug",
+      "id",
+      "role",
+      "roofed",
+      "tiles"
+    ],
+    "/m4": [
+      "at_risk_events",
+      "bytes_per_person",
+      "daily",
+      "discovered",
+      "discoveries",
+      "ford_tiles",
+      "forgotten",
+      "forgotten_seeded",
+      "learned",
+      "lost",
+      "max_stall_days",
+      "node_names",
+      "observed",
+      "oral",
+      "start",
+      "status_end",
+      "teach",
+      "teach_done_ticks",
+      "tools_broken",
+      "waits_end"
+    ],
+    "/m4/daily/*": [
+      "adults",
+      "blades",
+      "clay",
+      "clay_pots",
+      "conditions",
+      "day",
+      "forgotten_seeded",
+      "ground_axes",
+      "knappers",
+      "nodes",
+      "progress",
+      "raw_pots",
+      "stall",
+      "top_knap"
+    ],
+    "/m4/oral": [
+      "gathered",
+      "learned",
+      "rehearsed",
+      "tellings"
+    ],
+    "/m4/start": [
+      "adults",
+      "at_risk",
+      "badge",
+      "progress"
+    ],
+    "/m4/teach": [
+      "cancelled",
+      "done",
+      "orders_open",
+      "sessions"
+    ],
+    "/m5": [
+      "apparel",
+      "beasts",
+      "cold_deaths",
+      "daily",
+      "deaths",
+      "ledger_meat",
+      "mood",
+      "pressures",
+      "skipped",
+      "snaps",
+      "wildlife"
+    ],
+    "/m5/apparel": [
+      "cold_hours",
+      "exposure_hours",
+      "wraps_day30",
+      "wraps_end"
+    ],
+    "/m5/beasts/*": [
+      "alive",
+      "bitten",
+      "day",
+      "deaths",
+      "drafted",
+      "killed",
+      "left",
+      "wolves"
+    ],
+    "/m5/daily/*": [
+      "blades",
+      "day",
+      "deer",
+      "deer_killed",
+      "knife_uses",
+      "knives_broken",
+      "low",
+      "meat_eaten",
+      "mood_mean",
+      "mood_min",
+      "top_knap",
+      "wraps"
+    ],
+    "/m5/deaths": [
+      "combat",
+      "dehydration",
+      "exposure",
+      "old_age",
+      "starvation"
+    ],
+    "/m5/ledger_meat": [
+      "consumed",
+      "created"
+    ],
+    "/m5/mood": [
+      "breakdowns",
+      "fights",
+      "quarrel_list",
+      "quarrels"
+    ],
+    "/m5/mood/quarrel_list/*": [
+      "a",
+      "b",
+      "cause",
+      "chain",
+      "relation",
+      "resolvable",
+      "tick"
+    ],
+    "/m5/pressures/*": [
+      "deaths",
+      "end_day",
+      "ended",
+      "intensity",
+      "items_lost",
+      "kind",
+      "start_day",
+      "work_ticks_lost"
+    ],
+    "/m5/snaps/*": [
+      "day",
+      "day_need",
+      "min_firewood"
+    ],
+    "/m5/wildlife": [
+      "auto_undrafts",
+      "bite_damage",
+      "bites",
+      "bitten",
+      "deer_born",
+      "deer_killed",
+      "drafts",
+      "flights",
+      "hides_dropped",
+      "hunt_attacks",
+      "hunt_hits",
+      "knife_uses",
+      "knives_broken",
+      "meat_dropped",
+      "meat_eaten",
+      "meat_hauls",
+      "meat_spoiled",
+      "meat_spoiled_afield",
+      "spears_broken",
+      "wolves_killed",
+      "wolves_left",
+      "wolves_spawned"
+    ],
+    "/m55": [
+      "apparel",
+      "flight",
+      "min_hp",
+      "neighbours",
+      "overlap",
+      "population",
+      "quarrels",
+      "quarrels_resolved",
+      "wolf_deaths"
+    ],
+    "/m55/apparel": [
+      "wearers_day30",
+      "wearers_end"
+    ],
+    "/m55/flight": [
+      "episodes",
+      "moved_away",
+      "open_at_end"
+    ],
+    "/m55/neighbours": [
+      "caravans",
+      "discoveries",
+      "eurekas",
+      "list",
+      "tallies",
+      "traded_in",
+      "traded_out",
+      "waves"
+    ],
+    "/m55/neighbours/caravans/*": [
+      "arrived",
+      "day",
+      "goods",
+      "goods_left",
+      "id",
+      "neighbour",
+      "offered",
+      "trades"
+    ],
+    "/m55/neighbours/discoveries/*": [
+      "node",
+      "tick"
+    ],
+    "/m55/neighbours/eurekas/*": [
+      "artifact",
+      "node",
+      "tick"
+    ],
+    "/m55/neighbours/list/*": [
+      "attitude",
+      "distance_days",
+      "edge",
+      "id",
+      "known",
+      "last_contact_day",
+      "population"
+    ],
+    "/m55/neighbours/tallies": [
+      "accepted",
+      "capped",
+      "caravans",
+      "caravans_skipped",
+      "declined",
+      "eurekas",
+      "gifts",
+      "migrants_joined",
+      "roll_wins",
+      "rolls",
+      "trades",
+      "trades_refused",
+      "unanswered",
+      "unknown_bought",
+      "value_given",
+      "value_taken",
+      "waves"
+    ],
+    "/m55/neighbours/waves/*": [
+      "answer",
+      "arrived",
+      "day",
+      "id",
+      "joined",
+      "neighbour",
+      "neolithic_practitioners",
+      "size"
+    ],
+    "/m55/overlap/*": [
+      "kind",
+      "start_day"
+    ],
+    "/m55/population": [
+      "end",
+      "fewest_after_day1",
+      "most",
+      "start"
+    ],
+    "/m55/quarrels/*": [
+      "a",
+      "b",
+      "cause",
+      "reason",
+      "resolved",
+      "tick"
+    ],
+    "/mind_coverage": [
+      "behaviour_covered",
+      "behaviour_expected",
+      "behaviour_switches",
+      "coverage",
+      "covered_records",
+      "critical_choice_coverage",
+      "critical_choice_covered",
+      "critical_choice_expected",
+      "critical_coverage",
+      "critical_covered",
+      "critical_expected",
+      "definition",
+      "examples",
+      "expected_records",
+      "failures",
+      "first_choices",
+      "node_coverage",
+      "node_covered",
+      "node_expected",
+      "node_only_choices",
+      "observed_mind_ticks",
+      "same_behaviour_restarts",
+      "status"
+    ],
+    "/mind_coverage/examples/*": [
+      "agent",
+      "node",
+      "problem",
+      "tick"
+    ],
+    "/mux": [
+      "accepted_actions_by_rule",
+      "alive_at_day48",
+      "alive_end",
+      "cold_snap_firewood_zero_ticks",
+      "cold_snap_observed_ticks",
+      "diagnostics",
+      "first_winter_cold_deaths",
+      "first_winter_complete",
+      "first_winter_observed",
+      "stockpile_first_tick",
+      "ticks_per_day",
+      "walled_beds_for_all_first_tick"
+    ],
+    "/mux/diagnostics": [
+      "final_layout",
+      "first_roof_layout",
+      "losses_during_threat"
+    ],
+    "/mux/diagnostics/final_layout": [
+      "hearths",
+      "house_orders",
+      "rooms",
+      "stock_tiles",
+      "tick",
+      "workshops"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*": [
+      "command",
+      "result",
+      "tick"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command": [
+      "Steward"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward": [
+      "command",
+      "rule"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/command": [
+      "PlaceBlueprint",
+      "SetRoomRole"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/command/PlaceBlueprint": [
+      "kind",
+      "x",
+      "y"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/command/SetRoomRole": [
+      "role",
+      "room"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/result": [
+      "accepted",
+      "count",
+      "reason"
+    ],
+    "/mux/diagnostics/final_layout/rooms": [
+      "1"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1": [
+      "doors",
+      "dug",
+      "id",
+      "role",
+      "roofed",
+      "tiles"
+    ],
+    "/mux/diagnostics/final_layout/workshops/*": [
+      "id",
+      "kind",
+      "work_roofed",
+      "work_tile",
+      "work_usable_for_fire"
+    ],
+    "/mux/diagnostics/first_roof_layout": [
+      "hearths",
+      "house_orders",
+      "rooms",
+      "stock_tiles",
+      "tick",
+      "workshops"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*": [
+      "command",
+      "result",
+      "tick"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command": [
+      "Steward"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command/Steward": [
+      "command",
+      "rule"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command/Steward/command": [
+      "PlaceBlueprint"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command/Steward/command/PlaceBlueprint": [
+      "kind",
+      "x",
+      "y"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/result": [
+      "accepted",
+      "count",
+      "reason"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms": [
+      "1"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1": [
+      "doors",
+      "dug",
+      "id",
+      "role",
+      "roofed",
+      "tiles"
+    ],
+    "/mux/diagnostics/first_roof_layout/workshops/*": [
+      "id",
+      "kind",
+      "work_roofed",
+      "work_tile",
+      "work_usable_for_fire"
+    ]
+  },
+  "types": {
+    "": [
+      "dict"
+    ],
+    "/alive_end": [
+      "int"
+    ],
+    "/all_trees_felled_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/axes_worn_out": [
+      "int"
+    ],
+    "/births": [
+      "int"
+    ],
+    "/camp_pass_tiles": [
+      "int"
+    ],
+    "/cancels": [
+      "dict"
+    ],
+    "/cancels/*": [
+      "int"
+    ],
+    "/chops_with_axe": [
+      "int"
+    ],
+    "/commands": [
+      "int"
+    ],
+    "/commands_accepted": [
+      "int"
+    ],
+    "/crafts_done": [
+      "int"
+    ],
+    "/crafts_lost": [
+      "int"
+    ],
+    "/days": [
+      "int"
+    ],
+    "/deaths": [
+      "dict"
+    ],
+    "/deaths/combat": [
+      "int"
+    ],
+    "/deaths/dehydration": [
+      "int"
+    ],
+    "/deaths/exposure": [
+      "int"
+    ],
+    "/deaths/old_age": [
+      "int"
+    ],
+    "/deaths/starvation": [
+      "int"
+    ],
+    "/demography": [
+      "dict"
+    ],
+    "/demography/ages_years_end": [
+      "list"
+    ],
+    "/demography/ages_years_end/*": [
+      "int"
+    ],
+    "/demography/alive_end": [
+      "int"
+    ],
+    "/demography/at_risk_days": [
+      "int"
+    ],
+    "/demography/births": [
+      "int"
+    ],
+    "/demography/births_by_year": [
+      "dict"
+    ],
+    "/demography/births_by_year/*": [
+      "int"
+    ],
+    "/demography/births_per_woman_year": [
+      "float"
+    ],
+    "/demography/child_marker_past_child_age": [
+      "int"
+    ],
+    "/demography/conceptions": [
+      "int"
+    ],
+    "/demography/conceptions_per_at_risk_day": [
+      "float"
+    ],
+    "/demography/extinct": [
+      "bool"
+    ],
+    "/demography/old_age_deaths": [
+      "list"
+    ],
+    "/demography/old_age_deaths/*": [
+      "dict"
+    ],
+    "/demography/old_age_deaths/*/age_ticks": [
+      "int"
+    ],
+    "/demography/old_age_deaths/*/age_years": [
+      "int"
+    ],
+    "/demography/old_age_deaths/*/agent": [
+      "int"
+    ],
+    "/demography/old_age_deaths/*/founder": [
+      "bool"
+    ],
+    "/demography/old_age_deaths/*/tick": [
+      "int"
+    ],
+    "/demography/population_by_year": [
+      "dict"
+    ],
+    "/demography/population_by_year/*": [
+      "int"
+    ],
+    "/demography/pregnant_end": [
+      "int"
+    ],
+    "/demography/woman_days": [
+      "int"
+    ],
+    "/demography/woman_years": [
+      "float"
+    ],
+    "/demography/year_one_children": [
+      "list"
+    ],
+    "/demography/year_one_children/*": [
+      "dict"
+    ],
+    "/demography/year_one_children/*/age_ticks_at_coming_of_age": [
+      "NoneType",
+      "int"
+    ],
+    "/demography/year_one_children/*/age_years_at_coming_of_age": [
+      "NoneType",
+      "int"
+    ],
+    "/demography/year_one_children/*/agent": [
+      "int"
+    ],
+    "/demography/year_one_children/*/born_tick": [
+      "int"
+    ],
+    "/demography/year_one_children/*/came_of_age_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/demography/year_one_children/*/reached_child_age_in_run": [
+      "bool"
+    ],
+    "/fingerprints": [
+      "dict"
+    ],
+    "/fingerprints/*": [
+      "str"
+    ],
+    "/first_violation": [
+      "NoneType"
+    ],
+    "/founder_fixes": [
+      "int"
+    ],
+    "/hut_done_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/hut_placed_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/huts_built": [
+      "int"
+    ],
+    "/items": [
+      "dict"
+    ],
+    "/items/*": [
+      "dict"
+    ],
+    "/items/*/burned": [
+      "int"
+    ],
+    "/items/*/carried": [
+      "int"
+    ],
+    "/items/*/consumed": [
+      "int"
+    ],
+    "/items/*/crafted": [
+      "int"
+    ],
+    "/items/*/created": [
+      "int"
+    ],
+    "/items/*/delivered": [
+      "int"
+    ],
+    "/items/*/ground": [
+      "int"
+    ],
+    "/items/*/held": [
+      "int"
+    ],
+    "/items/*/shelved": [
+      "int"
+    ],
+    "/jobs_done": [
+      "int"
+    ],
+    "/jobs_taken": [
+      "int"
+    ],
+    "/ledger_violation_ticks": [
+      "int"
+    ],
+    "/logs": [
+      "dict"
+    ],
+    "/logs/carried": [
+      "int"
+    ],
+    "/logs/consumed": [
+      "int"
+    ],
+    "/logs/created": [
+      "int"
+    ],
+    "/logs/delivered": [
+      "int"
+    ],
+    "/logs/ground": [
+      "int"
+    ],
+    "/loose_logs_day5": [
+      "NoneType",
+      "int"
+    ],
+    "/m2": [
+      "dict"
+    ],
+    "/m2/axes2_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/m2/blades6_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/m2/burned_firewood": [
+      "int"
+    ],
+    "/m2/chop0_agent": [
+      "NoneType",
+      "int"
+    ],
+    "/m2/chop0_chop_jobs": [
+      "int"
+    ],
+    "/m2/chops_with_axe": [
+      "int"
+    ],
+    "/m2/craft1_agent": [
+      "NoneType",
+      "int"
+    ],
+    "/m2/craft1_craft_crafts": [
+      "int"
+    ],
+    "/m2/craft1_craft_jobs": [
+      "int"
+    ],
+    "/m2/craft1_taken_by_kind": [
+      "NoneType",
+      "dict"
+    ],
+    "/m2/craft1_taken_by_kind/*": [
+      "int"
+    ],
+    "/m2/craft_crafts_all": [
+      "int"
+    ],
+    "/m2/craft_jobs_all": [
+      "int"
+    ],
+    "/m2/crafted": [
+      "dict"
+    ],
+    "/m2/crafted/firewood": [
+      "int"
+    ],
+    "/m2/crafted/flint_blade": [
+      "int"
+    ],
+    "/m2/crafted/stone_axe": [
+      "int"
+    ],
+    "/m2/firewood_ground_by_day": [
+      "list"
+    ],
+    "/m2/firewood_ground_by_day/*": [
+      "int"
+    ],
+    "/m2/firewood_stock_by_day": [
+      "list"
+    ],
+    "/m2/firewood_stock_by_day/*": [
+      "int"
+    ],
+    "/m2/gather_wood_agent_ticks": [
+      "int"
+    ],
+    "/m2/settlement_wood_by_day": [
+      "list"
+    ],
+    "/m2/settlement_wood_by_day/*": [
+      "int"
+    ],
+    "/m2/snapshots": [
+      "list"
+    ],
+    "/m2/snapshots/*": [
+      "dict"
+    ],
+    "/m2/snapshots/*/craft1_blade_quality_sum": [
+      "int"
+    ],
+    "/m2/snapshots/*/craft1_blades": [
+      "int"
+    ],
+    "/m2/snapshots/*/craft1_knap_level": [
+      "NoneType",
+      "int"
+    ],
+    "/m2/snapshots/*/craft1_woodwork_level": [
+      "NoneType",
+      "int"
+    ],
+    "/m2/snapshots/*/day": [
+      "int"
+    ],
+    "/m2/supply_jobs_all": [
+      "int"
+    ],
+    "/m3": [
+      "dict"
+    ],
+    "/m3/axe_chops_after_day3": [
+      "int"
+    ],
+    "/m3/bedroom4_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/m3/bedroom_sleepers": [
+      "list"
+    ],
+    "/m3/bedroom_sleepers/*": [
+      "int"
+    ],
+    "/m3/blade_quality_early": [
+      "NoneType",
+      "float"
+    ],
+    "/m3/blade_quality_late": [
+      "NoneType",
+      "float"
+    ],
+    "/m3/blades_by_agent": [
+      "list"
+    ],
+    "/m3/blades_by_agent/*": [
+      "list"
+    ],
+    "/m3/blades_by_agent/*/*": [
+      "int"
+    ],
+    "/m3/blades_early": [
+      "int"
+    ],
+    "/m3/blades_late": [
+      "int"
+    ],
+    "/m3/dig_ordered": [
+      "bool"
+    ],
+    "/m3/dig_tiles": [
+      "int"
+    ],
+    "/m3/door_steps": [
+      "int"
+    ],
+    "/m3/dug_all_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/m3/dug_room_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/m3/knap_top_level": [
+      "int"
+    ],
+    "/m3/knap_top_level_by_day": [
+      "list"
+    ],
+    "/m3/knap_top_level_by_day/*": [
+      "int"
+    ],
+    "/m3/rooms_end": [
+      "list"
+    ],
+    "/m3/rooms_end/*": [
+      "dict"
+    ],
+    "/m3/rooms_end/*/beds": [
+      "int"
+    ],
+    "/m3/rooms_end/*/doors": [
+      "int"
+    ],
+    "/m3/rooms_end/*/dug": [
+      "bool"
+    ],
+    "/m3/rooms_end/*/id": [
+      "int"
+    ],
+    "/m3/rooms_end/*/role": [
+      "str"
+    ],
+    "/m3/rooms_end/*/roofed": [
+      "bool"
+    ],
+    "/m3/rooms_end/*/tiles": [
+      "int"
+    ],
+    "/m3/space_built": [
+      "int"
+    ],
+    "/m3/space_removed": [
+      "int"
+    ],
+    "/m3/stock_covered_end": [
+      "int"
+    ],
+    "/m3/stock_share_end": [
+      "float"
+    ],
+    "/m3/stock_total_end": [
+      "int"
+    ],
+    "/m3/storehouse_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/m3/tiles_dug": [
+      "int"
+    ],
+    "/m3/unreachable": [
+      "int"
+    ],
+    "/m3/unreachable_room_door": [
+      "int"
+    ],
+    "/m4": [
+      "dict"
+    ],
+    "/m4/at_risk_events": [
+      "list"
+    ],
+    "/m4/at_risk_events/*": [
+      "list"
+    ],
+    "/m4/at_risk_events/*/*": [
+      "int",
+      "str"
+    ],
+    "/m4/bytes_per_person": [
+      "int"
+    ],
+    "/m4/daily": [
+      "list"
+    ],
+    "/m4/daily/*": [
+      "dict"
+    ],
+    "/m4/daily/*/adults": [
+      "int"
+    ],
+    "/m4/daily/*/blades": [
+      "list"
+    ],
+    "/m4/daily/*/blades/*": [
+      "int"
+    ],
+    "/m4/daily/*/clay": [
+      "int"
+    ],
+    "/m4/daily/*/clay_pots": [
+      "int"
+    ],
+    "/m4/daily/*/conditions": [
+      "int"
+    ],
+    "/m4/daily/*/day": [
+      "int"
+    ],
+    "/m4/daily/*/forgotten_seeded": [
+      "int"
+    ],
+    "/m4/daily/*/ground_axes": [
+      "int"
+    ],
+    "/m4/daily/*/knappers": [
+      "int"
+    ],
+    "/m4/daily/*/nodes": [
+      "list"
+    ],
+    "/m4/daily/*/nodes/*": [
+      "list"
+    ],
+    "/m4/daily/*/nodes/*/*": [
+      "int"
+    ],
+    "/m4/daily/*/progress": [
+      "int"
+    ],
+    "/m4/daily/*/raw_pots": [
+      "int"
+    ],
+    "/m4/daily/*/stall": [
+      "bool"
+    ],
+    "/m4/daily/*/top_knap": [
+      "int"
+    ],
+    "/m4/discovered": [
+      "dict"
+    ],
+    "/m4/discovered/*": [
+      "int"
+    ],
+    "/m4/discoveries": [
+      "int"
+    ],
+    "/m4/ford_tiles": [
+      "int"
+    ],
+    "/m4/forgotten": [
+      "int"
+    ],
+    "/m4/forgotten_seeded": [
+      "int"
+    ],
+    "/m4/learned": [
+      "list"
+    ],
+    "/m4/learned/*": [
+      "list"
+    ],
+    "/m4/learned/*/*": [
+      "int",
+      "str"
+    ],
+    "/m4/lost": [
+      "list"
+    ],
+    "/m4/lost/*": [
+      "list"
+    ],
+    "/m4/lost/*/*": [
+      "int",
+      "str"
+    ],
+    "/m4/max_stall_days": [
+      "int"
+    ],
+    "/m4/node_names": [
+      "list"
+    ],
+    "/m4/node_names/*": [
+      "str"
+    ],
+    "/m4/observed": [
+      "int"
+    ],
+    "/m4/oral": [
+      "dict"
+    ],
+    "/m4/oral/gathered": [
+      "int"
+    ],
+    "/m4/oral/learned": [
+      "int"
+    ],
+    "/m4/oral/rehearsed": [
+      "int"
+    ],
+    "/m4/oral/tellings": [
+      "int"
+    ],
+    "/m4/start": [
+      "dict"
+    ],
+    "/m4/start/adults": [
+      "int"
+    ],
+    "/m4/start/at_risk": [
+      "list"
+    ],
+    "/m4/start/at_risk/*": [
+      "list"
+    ],
+    "/m4/start/at_risk/*/*": [
+      "int",
+      "str"
+    ],
+    "/m4/start/badge": [
+      "int"
+    ],
+    "/m4/start/progress": [
+      "int"
+    ],
+    "/m4/status_end": [
+      "list"
+    ],
+    "/m4/status_end/*": [
+      "int"
+    ],
+    "/m4/teach": [
+      "dict"
+    ],
+    "/m4/teach/cancelled": [
+      "int"
+    ],
+    "/m4/teach/done": [
+      "int"
+    ],
+    "/m4/teach/orders_open": [
+      "int"
+    ],
+    "/m4/teach/sessions": [
+      "int"
+    ],
+    "/m4/teach_done_ticks": [
+      "list"
+    ],
+    "/m4/teach_done_ticks/*": [
+      "int"
+    ],
+    "/m4/tools_broken": [
+      "int"
+    ],
+    "/m4/waits_end": [
+      "list"
+    ],
+    "/m4/waits_end/*": [
+      "list"
+    ],
+    "/m4/waits_end/*/*": [
+      "int",
+      "str"
+    ],
+    "/m5": [
+      "dict"
+    ],
+    "/m5/apparel": [
+      "dict"
+    ],
+    "/m5/apparel/cold_hours": [
+      "list"
+    ],
+    "/m5/apparel/cold_hours/*": [
+      "int"
+    ],
+    "/m5/apparel/exposure_hours": [
+      "list"
+    ],
+    "/m5/apparel/exposure_hours/*": [
+      "int"
+    ],
+    "/m5/apparel/wraps_day30": [
+      "NoneType",
+      "int"
+    ],
+    "/m5/apparel/wraps_end": [
+      "int"
+    ],
+    "/m5/beasts": [
+      "list"
+    ],
+    "/m5/beasts/*": [
+      "dict"
+    ],
+    "/m5/beasts/*/alive": [
+      "int"
+    ],
+    "/m5/beasts/*/bitten": [
+      "int"
+    ],
+    "/m5/beasts/*/day": [
+      "int"
+    ],
+    "/m5/beasts/*/deaths": [
+      "int"
+    ],
+    "/m5/beasts/*/drafted": [
+      "int"
+    ],
+    "/m5/beasts/*/killed": [
+      "int"
+    ],
+    "/m5/beasts/*/left": [
+      "int"
+    ],
+    "/m5/beasts/*/wolves": [
+      "int"
+    ],
+    "/m5/cold_deaths": [
+      "int"
+    ],
+    "/m5/daily": [
+      "list"
+    ],
+    "/m5/daily/*": [
+      "dict"
+    ],
+    "/m5/daily/*/blades": [
+      "list"
+    ],
+    "/m5/daily/*/blades/*": [
+      "int"
+    ],
+    "/m5/daily/*/day": [
+      "int"
+    ],
+    "/m5/daily/*/deer": [
+      "int"
+    ],
+    "/m5/daily/*/deer_killed": [
+      "int"
+    ],
+    "/m5/daily/*/knife_uses": [
+      "int"
+    ],
+    "/m5/daily/*/knives_broken": [
+      "int"
+    ],
+    "/m5/daily/*/low": [
+      "int"
+    ],
+    "/m5/daily/*/meat_eaten": [
+      "int"
+    ],
+    "/m5/daily/*/mood_mean": [
+      "int"
+    ],
+    "/m5/daily/*/mood_min": [
+      "int"
+    ],
+    "/m5/daily/*/top_knap": [
+      "int"
+    ],
+    "/m5/daily/*/wraps": [
+      "int"
+    ],
+    "/m5/deaths": [
+      "dict"
+    ],
+    "/m5/deaths/combat": [
+      "int"
+    ],
+    "/m5/deaths/dehydration": [
+      "int"
+    ],
+    "/m5/deaths/exposure": [
+      "int"
+    ],
+    "/m5/deaths/old_age": [
+      "int"
+    ],
+    "/m5/deaths/starvation": [
+      "int"
+    ],
+    "/m5/ledger_meat": [
+      "dict"
+    ],
+    "/m5/ledger_meat/consumed": [
+      "int"
+    ],
+    "/m5/ledger_meat/created": [
+      "int"
+    ],
+    "/m5/mood": [
+      "dict"
+    ],
+    "/m5/mood/breakdowns": [
+      "int"
+    ],
+    "/m5/mood/fights": [
+      "int"
+    ],
+    "/m5/mood/quarrel_list": [
+      "list"
+    ],
+    "/m5/mood/quarrel_list/*": [
+      "dict"
+    ],
+    "/m5/mood/quarrel_list/*/a": [
+      "int"
+    ],
+    "/m5/mood/quarrel_list/*/b": [
+      "int"
+    ],
+    "/m5/mood/quarrel_list/*/cause": [
+      "int"
+    ],
+    "/m5/mood/quarrel_list/*/chain": [
+      "int"
+    ],
+    "/m5/mood/quarrel_list/*/relation": [
+      "int"
+    ],
+    "/m5/mood/quarrel_list/*/resolvable": [
+      "bool"
+    ],
+    "/m5/mood/quarrel_list/*/tick": [
+      "int"
+    ],
+    "/m5/mood/quarrels": [
+      "int"
+    ],
+    "/m5/pressures": [
+      "list"
+    ],
+    "/m5/pressures/*": [
+      "dict"
+    ],
+    "/m5/pressures/*/deaths": [
+      "int"
+    ],
+    "/m5/pressures/*/end_day": [
+      "int"
+    ],
+    "/m5/pressures/*/ended": [
+      "bool"
+    ],
+    "/m5/pressures/*/intensity": [
+      "int"
+    ],
+    "/m5/pressures/*/items_lost": [
+      "int"
+    ],
+    "/m5/pressures/*/kind": [
+      "str"
+    ],
+    "/m5/pressures/*/start_day": [
+      "int"
+    ],
+    "/m5/pressures/*/work_ticks_lost": [
+      "int"
+    ],
+    "/m5/skipped": [
+      "int"
+    ],
+    "/m5/snaps": [
+      "list"
+    ],
+    "/m5/snaps/*": [
+      "dict"
+    ],
+    "/m5/snaps/*/day": [
+      "int"
+    ],
+    "/m5/snaps/*/day_need": [
+      "int"
+    ],
+    "/m5/snaps/*/min_firewood": [
+      "int"
+    ],
+    "/m5/wildlife": [
+      "dict"
+    ],
+    "/m5/wildlife/auto_undrafts": [
+      "int"
+    ],
+    "/m5/wildlife/bite_damage": [
+      "int"
+    ],
+    "/m5/wildlife/bites": [
+      "int"
+    ],
+    "/m5/wildlife/bitten": [
+      "int"
+    ],
+    "/m5/wildlife/deer_born": [
+      "int"
+    ],
+    "/m5/wildlife/deer_killed": [
+      "int"
+    ],
+    "/m5/wildlife/drafts": [
+      "int"
+    ],
+    "/m5/wildlife/flights": [
+      "int"
+    ],
+    "/m5/wildlife/hides_dropped": [
+      "int"
+    ],
+    "/m5/wildlife/hunt_attacks": [
+      "int"
+    ],
+    "/m5/wildlife/hunt_hits": [
+      "int"
+    ],
+    "/m5/wildlife/knife_uses": [
+      "int"
+    ],
+    "/m5/wildlife/knives_broken": [
+      "int"
+    ],
+    "/m5/wildlife/meat_dropped": [
+      "int"
+    ],
+    "/m5/wildlife/meat_eaten": [
+      "int"
+    ],
+    "/m5/wildlife/meat_hauls": [
+      "int"
+    ],
+    "/m5/wildlife/meat_spoiled": [
+      "int"
+    ],
+    "/m5/wildlife/meat_spoiled_afield": [
+      "int"
+    ],
+    "/m5/wildlife/spears_broken": [
+      "int"
+    ],
+    "/m5/wildlife/wolves_killed": [
+      "int"
+    ],
+    "/m5/wildlife/wolves_left": [
+      "int"
+    ],
+    "/m5/wildlife/wolves_spawned": [
+      "int"
+    ],
+    "/m55": [
+      "dict"
+    ],
+    "/m55/apparel": [
+      "dict"
+    ],
+    "/m55/apparel/wearers_day30": [
+      "NoneType",
+      "int"
+    ],
+    "/m55/apparel/wearers_end": [
+      "int"
+    ],
+    "/m55/flight": [
+      "dict"
+    ],
+    "/m55/flight/episodes": [
+      "int"
+    ],
+    "/m55/flight/moved_away": [
+      "int"
+    ],
+    "/m55/flight/open_at_end": [
+      "int"
+    ],
+    "/m55/min_hp": [
+      "NoneType",
+      "float"
+    ],
+    "/m55/neighbours": [
+      "dict"
+    ],
+    "/m55/neighbours/caravans": [
+      "list"
+    ],
+    "/m55/neighbours/caravans/*": [
+      "dict"
+    ],
+    "/m55/neighbours/caravans/*/arrived": [
+      "NoneType",
+      "int"
+    ],
+    "/m55/neighbours/caravans/*/day": [
+      "int"
+    ],
+    "/m55/neighbours/caravans/*/goods": [
+      "list"
+    ],
+    "/m55/neighbours/caravans/*/goods/*": [
+      "list"
+    ],
+    "/m55/neighbours/caravans/*/goods/*/*": [
+      "int",
+      "str"
+    ],
+    "/m55/neighbours/caravans/*/goods_left": [
+      "int"
+    ],
+    "/m55/neighbours/caravans/*/id": [
+      "int"
+    ],
+    "/m55/neighbours/caravans/*/neighbour": [
+      "int"
+    ],
+    "/m55/neighbours/caravans/*/offered": [
+      "NoneType",
+      "list"
+    ],
+    "/m55/neighbours/caravans/*/offered/*": [
+      "list"
+    ],
+    "/m55/neighbours/caravans/*/offered/*/*": [
+      "int",
+      "str"
+    ],
+    "/m55/neighbours/caravans/*/trades": [
+      "int"
+    ],
+    "/m55/neighbours/discoveries": [
+      "list"
+    ],
+    "/m55/neighbours/discoveries/*": [
+      "dict"
+    ],
+    "/m55/neighbours/discoveries/*/node": [
+      "int"
+    ],
+    "/m55/neighbours/discoveries/*/tick": [
+      "int"
+    ],
+    "/m55/neighbours/eurekas": [
+      "list"
+    ],
+    "/m55/neighbours/eurekas/*": [
+      "dict"
+    ],
+    "/m55/neighbours/eurekas/*/artifact": [
+      "int"
+    ],
+    "/m55/neighbours/eurekas/*/node": [
+      "int"
+    ],
+    "/m55/neighbours/eurekas/*/tick": [
+      "int"
+    ],
+    "/m55/neighbours/list": [
+      "list"
+    ],
+    "/m55/neighbours/list/*": [
+      "dict"
+    ],
+    "/m55/neighbours/list/*/attitude": [
+      "int"
+    ],
+    "/m55/neighbours/list/*/distance_days": [
+      "int"
+    ],
+    "/m55/neighbours/list/*/edge": [
+      "str"
+    ],
+    "/m55/neighbours/list/*/id": [
+      "int"
+    ],
+    "/m55/neighbours/list/*/known": [
+      "int"
+    ],
+    "/m55/neighbours/list/*/last_contact_day": [
+      "NoneType",
+      "int"
+    ],
+    "/m55/neighbours/list/*/population": [
+      "int"
+    ],
+    "/m55/neighbours/tallies": [
+      "dict"
+    ],
+    "/m55/neighbours/tallies/accepted": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/capped": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/caravans": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/caravans_skipped": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/declined": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/eurekas": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/gifts": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/migrants_joined": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/roll_wins": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/rolls": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/trades": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/trades_refused": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/unanswered": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/unknown_bought": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/value_given": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/value_taken": [
+      "int"
+    ],
+    "/m55/neighbours/tallies/waves": [
+      "int"
+    ],
+    "/m55/neighbours/traded_in": [
+      "dict"
+    ],
+    "/m55/neighbours/traded_in/*": [
+      "int"
+    ],
+    "/m55/neighbours/traded_out": [
+      "dict"
+    ],
+    "/m55/neighbours/traded_out/*": [
+      "int"
+    ],
+    "/m55/neighbours/waves": [
+      "list"
+    ],
+    "/m55/neighbours/waves/*": [
+      "dict"
+    ],
+    "/m55/neighbours/waves/*/answer": [
+      "str"
+    ],
+    "/m55/neighbours/waves/*/arrived": [
+      "NoneType",
+      "int"
+    ],
+    "/m55/neighbours/waves/*/day": [
+      "int"
+    ],
+    "/m55/neighbours/waves/*/id": [
+      "int"
+    ],
+    "/m55/neighbours/waves/*/joined": [
+      "int"
+    ],
+    "/m55/neighbours/waves/*/neighbour": [
+      "int"
+    ],
+    "/m55/neighbours/waves/*/neolithic_practitioners": [
+      "int"
+    ],
+    "/m55/neighbours/waves/*/size": [
+      "int"
+    ],
+    "/m55/overlap": [
+      "list"
+    ],
+    "/m55/overlap/*": [
+      "dict"
+    ],
+    "/m55/overlap/*/kind": [
+      "str"
+    ],
+    "/m55/overlap/*/start_day": [
+      "int"
+    ],
+    "/m55/population": [
+      "dict"
+    ],
+    "/m55/population/end": [
+      "int"
+    ],
+    "/m55/population/fewest_after_day1": [
+      "int"
+    ],
+    "/m55/population/most": [
+      "int"
+    ],
+    "/m55/population/start": [
+      "int"
+    ],
+    "/m55/quarrels": [
+      "list"
+    ],
+    "/m55/quarrels/*": [
+      "dict"
+    ],
+    "/m55/quarrels/*/a": [
+      "int"
+    ],
+    "/m55/quarrels/*/b": [
+      "int"
+    ],
+    "/m55/quarrels/*/cause": [
+      "int"
+    ],
+    "/m55/quarrels/*/reason": [
+      "NoneType",
+      "str"
+    ],
+    "/m55/quarrels/*/resolved": [
+      "bool"
+    ],
+    "/m55/quarrels/*/tick": [
+      "int"
+    ],
+    "/m55/quarrels_resolved": [
+      "int"
+    ],
+    "/m55/wolf_deaths": [
+      "int"
+    ],
+    "/mind_coverage": [
+      "dict"
+    ],
+    "/mind_coverage/behaviour_covered": [
+      "int"
+    ],
+    "/mind_coverage/behaviour_expected": [
+      "int"
+    ],
+    "/mind_coverage/behaviour_switches": [
+      "int"
+    ],
+    "/mind_coverage/coverage": [
+      "NoneType",
+      "float"
+    ],
+    "/mind_coverage/covered_records": [
+      "int"
+    ],
+    "/mind_coverage/critical_choice_coverage": [
+      "NoneType",
+      "float"
+    ],
+    "/mind_coverage/critical_choice_covered": [
+      "int"
+    ],
+    "/mind_coverage/critical_choice_expected": [
+      "int"
+    ],
+    "/mind_coverage/critical_coverage": [
+      "NoneType",
+      "float"
+    ],
+    "/mind_coverage/critical_covered": [
+      "int"
+    ],
+    "/mind_coverage/critical_expected": [
+      "int"
+    ],
+    "/mind_coverage/definition": [
+      "str"
+    ],
+    "/mind_coverage/examples": [
+      "list"
+    ],
+    "/mind_coverage/examples/*": [
+      "dict"
+    ],
+    "/mind_coverage/examples/*/agent": [
+      "int"
+    ],
+    "/mind_coverage/examples/*/node": [
+      "int"
+    ],
+    "/mind_coverage/examples/*/problem": [
+      "str"
+    ],
+    "/mind_coverage/examples/*/tick": [
+      "int"
+    ],
+    "/mind_coverage/expected_records": [
+      "int"
+    ],
+    "/mind_coverage/failures": [
+      "int"
+    ],
+    "/mind_coverage/first_choices": [
+      "int"
+    ],
+    "/mind_coverage/node_coverage": [
+      "NoneType",
+      "float"
+    ],
+    "/mind_coverage/node_covered": [
+      "int"
+    ],
+    "/mind_coverage/node_expected": [
+      "int"
+    ],
+    "/mind_coverage/node_only_choices": [
+      "int"
+    ],
+    "/mind_coverage/observed_mind_ticks": [
+      "int"
+    ],
+    "/mind_coverage/same_behaviour_restarts": [
+      "int"
+    ],
+    "/mind_coverage/status": [
+      "str"
+    ],
+    "/mux": [
+      "dict"
+    ],
+    "/mux/accepted_actions_by_rule": [
+      "dict"
+    ],
+    "/mux/accepted_actions_by_rule/*": [
+      "int"
+    ],
+    "/mux/alive_at_day48": [
+      "NoneType",
+      "int"
+    ],
+    "/mux/alive_end": [
+      "int"
+    ],
+    "/mux/cold_snap_firewood_zero_ticks": [
+      "int"
+    ],
+    "/mux/cold_snap_observed_ticks": [
+      "int"
+    ],
+    "/mux/diagnostics": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout/hearths": [
+      "list"
+    ],
+    "/mux/diagnostics/final_layout/hearths/*": [
+      "list"
+    ],
+    "/mux/diagnostics/final_layout/hearths/*/*": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/house_orders": [
+      "list"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/command": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/command/PlaceBlueprint": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/command/PlaceBlueprint/kind": [
+      "str"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/command/PlaceBlueprint/x": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/command/PlaceBlueprint/y": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/command/SetRoomRole": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/command/SetRoomRole/role": [
+      "str"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/command/SetRoomRole/room": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/command/Steward/rule": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/result": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/result/accepted": [
+      "bool"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/result/count": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/result/reason": [
+      "NoneType"
+    ],
+    "/mux/diagnostics/final_layout/house_orders/*/tick": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/rooms": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1/doors": [
+      "list"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1/doors/*": [
+      "list"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1/doors/*/*": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1/dug": [
+      "bool"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1/id": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1/role": [
+      "str"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1/roofed": [
+      "bool"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1/tiles": [
+      "list"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1/tiles/*": [
+      "list"
+    ],
+    "/mux/diagnostics/final_layout/rooms/1/tiles/*/*": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/stock_tiles": [
+      "list"
+    ],
+    "/mux/diagnostics/final_layout/stock_tiles/*": [
+      "list"
+    ],
+    "/mux/diagnostics/final_layout/stock_tiles/*/*": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/tick": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/workshops": [
+      "list"
+    ],
+    "/mux/diagnostics/final_layout/workshops/*": [
+      "dict"
+    ],
+    "/mux/diagnostics/final_layout/workshops/*/id": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/workshops/*/kind": [
+      "str"
+    ],
+    "/mux/diagnostics/final_layout/workshops/*/work_roofed": [
+      "bool"
+    ],
+    "/mux/diagnostics/final_layout/workshops/*/work_tile": [
+      "list"
+    ],
+    "/mux/diagnostics/final_layout/workshops/*/work_tile/*": [
+      "int"
+    ],
+    "/mux/diagnostics/final_layout/workshops/*/work_usable_for_fire": [
+      "bool"
+    ],
+    "/mux/diagnostics/first_roof_layout": [
+      "dict"
+    ],
+    "/mux/diagnostics/first_roof_layout/hearths": [
+      "list"
+    ],
+    "/mux/diagnostics/first_roof_layout/hearths/*": [
+      "list"
+    ],
+    "/mux/diagnostics/first_roof_layout/hearths/*/*": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders": [
+      "list"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*": [
+      "dict"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command": [
+      "dict"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command/Steward": [
+      "dict"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command/Steward/command": [
+      "dict"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command/Steward/command/PlaceBlueprint": [
+      "dict"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command/Steward/command/PlaceBlueprint/kind": [
+      "str"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command/Steward/command/PlaceBlueprint/x": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command/Steward/command/PlaceBlueprint/y": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/command/Steward/rule": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/result": [
+      "dict"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/result/accepted": [
+      "bool"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/result/count": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/result/reason": [
+      "NoneType"
+    ],
+    "/mux/diagnostics/first_roof_layout/house_orders/*/tick": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms": [
+      "dict"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1": [
+      "dict"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1/doors": [
+      "list"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1/doors/*": [
+      "list"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1/doors/*/*": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1/dug": [
+      "bool"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1/id": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1/role": [
+      "str"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1/roofed": [
+      "bool"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1/tiles": [
+      "list"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1/tiles/*": [
+      "list"
+    ],
+    "/mux/diagnostics/first_roof_layout/rooms/1/tiles/*/*": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/stock_tiles": [
+      "list"
+    ],
+    "/mux/diagnostics/first_roof_layout/stock_tiles/*": [
+      "list"
+    ],
+    "/mux/diagnostics/first_roof_layout/stock_tiles/*/*": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/tick": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/workshops": [
+      "list"
+    ],
+    "/mux/diagnostics/first_roof_layout/workshops/*": [
+      "dict"
+    ],
+    "/mux/diagnostics/first_roof_layout/workshops/*/id": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/workshops/*/kind": [
+      "str"
+    ],
+    "/mux/diagnostics/first_roof_layout/workshops/*/work_roofed": [
+      "bool"
+    ],
+    "/mux/diagnostics/first_roof_layout/workshops/*/work_tile": [
+      "list"
+    ],
+    "/mux/diagnostics/first_roof_layout/workshops/*/work_tile/*": [
+      "int"
+    ],
+    "/mux/diagnostics/first_roof_layout/workshops/*/work_usable_for_fire": [
+      "bool"
+    ],
+    "/mux/diagnostics/losses_during_threat": [
+      "list"
+    ],
+    "/mux/first_winter_cold_deaths": [
+      "int"
+    ],
+    "/mux/first_winter_complete": [
+      "bool"
+    ],
+    "/mux/first_winter_observed": [
+      "bool"
+    ],
+    "/mux/stockpile_first_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/mux/ticks_per_day": [
+      "int"
+    ],
+    "/mux/walled_beds_for_all_first_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/nodes_exhausted": [
+      "int"
+    ],
+    "/nodes_left": [
+      "int"
+    ],
+    "/quarry_batches": [
+      "int"
+    ],
+    "/reservation_violation_ticks": [
+      "int"
+    ],
+    "/seed": [
+      "int"
+    ],
+    "/stuck_cancels": [
+      "int"
+    ],
+    "/trees_designated": [
+      "int"
+    ],
+    "/trees_designated_tick": [
+      "NoneType",
+      "int"
+    ],
+    "/trees_felled": [
+      "int"
+    ],
+    "/u1_hut_within_3_days": [
+      "bool"
+    ],
+    "/u2_trees_within_4_days": [
+      "bool"
+    ],
+    "/u3_no_loose_logs_day5": [
+      "bool"
+    ],
+    "/workshops_built": [
+      "int"
+    ]
+  }
+}

@@ -3,12 +3,14 @@
 //! original floating comparison, so rounding cannot move a threshold edge.
 
 use super::context::{ContextError, Domain, PersonSnapshot, TargetCandidate, TickContext};
-use crate::runtime::agent_actions::{needs, targets};
+use crate::runtime::agent_actions::{forage::ForagePlan, needs, targets};
 use sim_core::colony::mind::{
     CompiledMind, FactId, FactKind, FactSpec, LifeStage, MindEvalError, PersonFacts,
 };
 use sim_core::colony::{JobKind, JobStage};
-use sim_core::components::{ActivityKind, AgentId, AgentState, TargetKind, INVENTORY_CAPACITY};
+use sim_core::components::{
+    ActivityKind, AgentId, AgentState, SettlementId, TargetKind, INVENTORY_CAPACITY,
+};
 use sim_engine::SimResources;
 use std::collections::BTreeMap;
 use std::fmt;
@@ -910,7 +912,12 @@ impl ProviderRegistry {
                 _ => FactPreparation::Direct,
             })
             .collect();
+        let continuation = columns
+            .iter()
+            .map(|(_, provider, _)| continuation_supported(provider.name))
+            .collect();
         Ok(ProviderPlan {
+            continuation,
             preparations,
             columns,
             revision: policy.revision(),
@@ -930,8 +937,29 @@ pub struct ProviderPlan {
     revision: sim_core::colony::mind::MindRevision,
     columns: Vec<(FactId, FactProvider, Option<u64>)>,
     preparations: Vec<FactPreparation>,
+    continuation: Vec<bool>,
 }
 impl ProviderPlan {
+    pub(super) fn continuation_read(
+        &self,
+        fact: FactId,
+        person: &PersonSnapshot,
+        context: &TickContext,
+        resources: &SimResources,
+    ) -> Result<sim_core::colony::mind::GuardRead, FactError> {
+        let (id, provider, _) = self
+            .columns
+            .get(fact.index())
+            .ok_or(MindEvalError::InvalidIndex("continuation fact"))?;
+        if *id != fact {
+            return Err(FactError::PolicyMismatch);
+        }
+        if !self.continuation[fact.index()] {
+            return Ok(sim_core::colony::mind::GuardRead::Unsupported);
+        }
+        (provider.read)(person, context, resources, provider.name)
+            .map(sim_core::colony::mind::GuardRead::Value)
+    }
     /// Populate all sorted rows after their required overlays are prepared, rejecting revision or tick mismatch.
     pub fn build(
         &self,
@@ -963,6 +991,7 @@ impl ProviderPlan {
         if context.tick != resources.current_tick || table.tick() != context.tick {
             return Err(FactError::ContextTickMismatch);
         }
+        context.require_rich_row(agent)?;
         let person = context.row(agent)?;
         let index = table
             .row_index(agent)
@@ -1011,6 +1040,7 @@ impl ProviderPlan {
         if context.tick != resources.current_tick {
             return Err(FactError::ContextTickMismatch);
         }
+        context.require_rich_row(agent)?;
         let person_index = context.row_index(agent)?;
         let stage = context.row_at(person_index, agent)?.life_stage;
         values.resize(self.columns.len(), None);
@@ -1249,20 +1279,7 @@ pub(in crate::runtime) fn refresh_routine_lifecycle(
     let admission =
         routine.is_some_and(|r| r.can_enter(agent, p.lineage, member, p.temperament.as_ref()));
     let invited = routine.is_some_and(|r| r.invitation_pending(agent));
-    let domains = &[
-        Domain::Person,
-        Domain::RoutineOccupancy,
-        Domain::Invitations,
-    ];
-    context.set_derived(agent, "routine_admission", i64::from(admission), domains)?;
-    context.set_derived(agent, "invited", i64::from(invited), domains)?;
-    context.set_derived(agent, "routine_deadline", i64::from(deadline), domains)?;
-    context.set_derived(
-        agent,
-        "activity_deadline_reached",
-        i64::from(deadline),
-        domains,
-    )?;
+    context.set_routine_lifecycle(agent, admission, invited, deadline)?;
     Ok(())
 }
 
@@ -1417,6 +1434,22 @@ pub(in crate::runtime) fn refresh_routine(
     prepare_routine_fact(context, routine, agent, "routine_weighted_place_available")
 }
 
+// Captured rows are unique and ascending: first peer other than self needs only two IDs.
+#[derive(Clone, Copy, Default)]
+struct SocialPeers([Option<AgentId>; 2]);
+impl SocialPeers {
+    fn push(&mut self, agent: AgentId) {
+        if self.0[0].is_none() {
+            self.0[0] = Some(agent);
+        } else if self.0[1].is_none() {
+            self.0[1] = Some(agent);
+        }
+    }
+    fn other(self, agent: AgentId) -> Option<AgentId> {
+        self.0.into_iter().flatten().find(|id| *id != agent)
+    }
+}
+
 /// Freeze social compatibility and mutual-seeking observations at the same
 /// pre-effect boundary as the old handshake. Later state changes must not
 /// recompute these maps: both sides of a mutual pair must see the same start.
@@ -1436,9 +1469,7 @@ pub fn prepare_social_snapshot(
         })
         .map(|(_, site)| (site.position.x, site.position.y))
         .collect();
-    let mut natural: BTreeMap<(u32, u32), Vec<AgentId>> = BTreeMap::new();
-    let mut relaxed: BTreeMap<(u32, u32), Vec<AgentId>> = BTreeMap::new();
-    let mut idle: BTreeMap<(u32, u32), Vec<AgentId>> = BTreeMap::new();
+    let mut peers: BTreeMap<(u32, u32), [SocialPeers; 3]> = BTreeMap::new();
     let routine = resources.rules.agent.routine.is_some();
     for person in context.rows() {
         let available = person.life_stage != LifeStage::Child
@@ -1460,7 +1491,7 @@ pub fn prepare_social_snapshot(
         let thirsty = person.thirst.is_some_and(|v| v > needs::THIRST_THRESHOLD);
         let tired = person.fatigue.is_some_and(|v| v > threshold);
         if lonely && !hungry && !thirsty && !tired && !sites.contains(&tile) {
-            natural.entry(tile).or_default().push(person.agent);
+            peers.entry(tile).or_default()[0].push(person.agent);
         }
         let day = (resources.ticks_per_day != 0).then(|| {
             resources
@@ -1476,9 +1507,9 @@ pub fn prepare_social_snapshot(
         )
         .is_some();
         if !night || !tired {
-            idle.entry(tile).or_default().push(person.agent);
+            peers.entry(tile).or_default()[2].push(person.agent);
             if lonely {
-                relaxed.entry(tile).or_default().push(person.agent);
+                peers.entry(tile).or_default()[1].push(person.agent);
             }
         }
     }
@@ -1487,18 +1518,15 @@ pub fn prepare_social_snapshot(
         .iter()
         .map(|person| {
             let tile = (person.position.x, person.position.y);
-            let peer = |map: &BTreeMap<(u32, u32), Vec<AgentId>>| {
-                map.get(&tile)
-                    .and_then(|ids| ids.iter().find(|id| **id != person.agent))
-                    .copied()
-            };
-            let natural_peer = peer(&natural);
+            let buckets = peers.get(&tile);
+            let peer = |kind: usize| buckets.and_then(|ids| ids[kind].other(person.agent));
+            let natural_peer = peer(0);
             let memory_peer = if person.social.is_some_and(|v| v > needs::SOCIAL_THRESHOLD) {
-                peer(&relaxed)
+                peer(1)
             } else {
                 None
             }
-            .or_else(|| person.memory_causes[4].and_then(|_| peer(&idle)));
+            .or_else(|| person.memory_causes[4].and_then(|_| peer(2)));
             let handshake = match person.state {
                 AgentState::Seeking {
                     target: TargetKind::Agent(partner),
@@ -1516,35 +1544,7 @@ pub fn prepare_social_snapshot(
             (person.agent, tile, natural_peer, memory_peer, handshake)
         })
         .collect();
-    for (agent, tile, natural, memory, handshake) in rows {
-        // Empty dependency set intentionally means immutable start-of-tick evidence.
-        context.set_derived(agent, "social_candidate", i64::from(natural.is_some()), &[])?;
-        context.set_derived(
-            agent,
-            "social_memory_candidate",
-            i64::from(memory.is_some()),
-            &[],
-        )?;
-        context.set_derived(agent, "social_handshake", i64::from(handshake), &[])?;
-        context.set_target(
-            agent,
-            "social_peer",
-            natural.map(|peer| TargetCandidate {
-                tile,
-                agent: Some(peer),
-            }),
-            &[],
-        )?;
-        context.set_target(
-            agent,
-            "social_memory_peer",
-            memory.map(|peer| TargetCandidate {
-                tile,
-                agent: Some(peer),
-            }),
-            &[],
-        )?;
-    }
+    context.install_social_snapshot(rows)?;
     Ok(())
 }
 
@@ -1555,6 +1555,108 @@ pub fn prepare_context(
 ) -> Result<TickContext, FactError> {
     let mut context = TickContext::capture(world, resources)?;
     prepare_social_snapshot(&mut context, world, resources)?;
+    Ok(context)
+}
+
+// Only cheap, read-only observations; unlisted/custom preparations force full evaluation.
+pub(super) fn continuation_supported(name: &str) -> bool {
+    matches!(
+        name,
+        "stock_hoard_order"
+            | "social_partner_present"
+            | "social_chase_expired"
+            | "idle"
+            | "seeking"
+            | "consuming"
+            | "drafted"
+            | "fleeing"
+            | "target_food"
+            | "target_water"
+            | "target_sleep"
+            | "target_gather"
+            | "target_social"
+            | "activity_active"
+            | "activity_kind"
+            | "activity_arrived"
+            | "activity_resting"
+            | "activity_deadline_reached"
+            | "running_foraging"
+            | "has_job"
+            | "job_owned_state"
+            | "job_working"
+            | "job_to_source"
+            | "job_to_dest"
+            | "job_distance"
+            | "job_destination_distance"
+            | "craft_working"
+            | "worker"
+            | "hunger"
+            | "thirst"
+            | "fatigue"
+            | "hunger_tenths"
+            | "thirst_tenths"
+            | "fatigue_tenths"
+            | "hunger_threshold"
+            | "thirst_threshold"
+            | "fatigue_threshold"
+            | "hunger_threshold_tenths"
+            | "thirst_threshold_tenths"
+            | "fatigue_threshold_tenths"
+            | "critical_threshold"
+            | "critical_threshold_tenths"
+            | "hunger_excess_tenths"
+            | "thirst_excess_tenths"
+            | "fatigue_excess_tenths"
+            | "hunger_actionable"
+            | "thirst_actionable"
+            | "fatigue_actionable"
+            | "hungry"
+            | "thirsty"
+            | "tired"
+            | "critical_preemption_enabled"
+            | "preempt_gathering_enabled"
+            | "hunger_critical_order"
+            | "thirst_critical_order"
+            | "fatigue_critical_order"
+            | "food_available"
+            | "water_available"
+            | "sleep_available"
+            | "camp_stocked"
+            | "within_camp_radius"
+            | "stocked_camp_in_radius"
+            | "social_retry_ready"
+            | "social_seek_enabled"
+            | "food_carry_loaded"
+            | "carry_count"
+            | "carrying"
+            | "inventory_total"
+            | "inventory_food"
+            | "inventory_room"
+            | "night_window"
+    )
+}
+
+/// Prepare the original lightweight snapshot for independent host adapters.
+pub fn prepare_continuation_context(
+    world: &hecs::World,
+    resources: &SimResources,
+) -> Result<TickContext, FactError> {
+    let mut context = TickContext::capture_continuation(world, resources)?;
+    prepare_social_snapshot(&mut context, world, resources)?;
+    Ok(context)
+}
+
+pub(super) fn prepare_continuation_context_with_claims(
+    world: &hecs::World,
+    resources: &SimResources,
+    claims: BTreeMap<(u32, u32), u32>,
+    initial_stock: Option<&BTreeMap<SettlementId, ForagePlan>>,
+) -> Result<TickContext, FactError> {
+    let mut context =
+        TickContext::capture_continuation_with_claims(world, resources, claims, initial_stock)?;
+    prepare_social_snapshot(&mut context, world, resources)?;
+    // Match the original capture -> social snapshot -> replace_claims boundary.
+    context.invalidate(Domain::Claims)?;
     Ok(context)
 }
 
@@ -2168,3 +2270,7 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "social_bucket_tests.rs"]
+mod social_bucket_tests;

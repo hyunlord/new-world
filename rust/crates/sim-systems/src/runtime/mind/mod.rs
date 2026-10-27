@@ -7,6 +7,7 @@ pub mod facts;
 pub(crate) mod job_origins;
 mod program;
 pub(crate) mod record;
+pub(in crate::runtime) mod scheduling;
 #[cfg(feature = "mind_shadow")]
 pub mod shadow;
 mod system;

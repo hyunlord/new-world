@@ -187,8 +187,11 @@ impl MindNode {
 /// Compiled immutable policy. It can be created without process-global content state.
 #[derive(Debug, Clone)]
 pub struct CompiledMind {
+    pub(super) instance: std::sync::Arc<()>,
     pub(super) revision: MindRevision,
     pub(super) predicate_count: usize,
+    pub(super) node_predicate_offsets: Vec<usize>,
+    pub(super) false_prefix_end: Vec<usize>,
     pub(super) nodes: Vec<MindNode>,
     pub(super) bands: [Vec<NodeId>; 6],
     pub(super) facts: Vec<FactSpec>,

@@ -1,8 +1,13 @@
 //! Resolve authored policy against actual provider and lifecycle registrations once.
 
 use std::fmt;
+use std::sync::Arc;
 
 use sim_core::colony::mind::{self, CompiledMind, MindRegistrySchema, NodeId};
+
+use super::context::{ContextError, RunningMetadata};
+use sim_core::colony::mind::{MindRevision, RunningChoice};
+use sim_core::components::AgentId;
 
 use super::behaviours::{self, BehaviourEntry};
 use super::facts::{ProviderPlan, ProviderRegistry, BUILTIN_PROVIDERS};
@@ -27,6 +32,8 @@ pub struct MindProgram {
     /// Bound factual readers for this exact policy revision.
     pub providers: ProviderPlan,
     effects: Vec<&'static BehaviourEntry>,
+    running_revision: MindRevision,
+    running_metadata: Vec<[Arc<RunningMetadata>; 2]>,
 }
 
 impl MindProgram {
@@ -58,12 +65,47 @@ impl MindProgram {
                 })
             })
             .collect::<Result<Vec<_>, _>>()?;
+        let running_metadata = policy
+            .nodes()
+            .iter()
+            .map(|node| {
+                let behaviour = policy.behaviour(node.behaviour).ok_or_else(|| {
+                    MindProgramError(format!("mind node {} has no resolved behaviour", node.name))
+                })?;
+                Ok(std::array::from_fn(|finished| {
+                    Arc::new(RunningMetadata {
+                        behaviour: behaviour.name.clone(),
+                        target: node.target.clone(),
+                        finished: finished != 0,
+                    })
+                }))
+            })
+            .collect::<Result<Vec<_>, MindProgramError>>()?;
+        let running_revision = policy.revision();
         Ok(Self {
             source: source.to_owned(),
             policy,
             providers,
             effects,
+            running_revision,
+            running_metadata,
         })
+    }
+
+    pub(super) fn running_metadata(
+        &self,
+        agent: AgentId,
+        choice: RunningChoice,
+    ) -> Result<Arc<RunningMetadata>, ContextError> {
+        if choice.revision != self.policy.revision()
+            || self.running_revision != self.policy.revision()
+        {
+            return Err(ContextError::InvalidRunningChoice(agent));
+        }
+        self.running_metadata
+            .get(choice.node.index())
+            .map(|variants| Arc::clone(&variants[usize::from(choice.finished)]))
+            .ok_or(ContextError::InvalidRunningChoice(agent))
     }
 
     /// Exact authored bytes retained for save/reload policy identity.

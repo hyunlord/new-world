@@ -12,9 +12,9 @@ import core_why_check as checker
 import test_core_score as fixtures
 
 
-def fixture() -> tuple[dict, dict]:
+def fixture(protocol: checker.core.SeedProtocol = checker.core.SeedProtocol.ORIGINAL) -> tuple[dict, dict]:
     """Create a complete synthetic 32-world receipt and internally consistent counters."""
-    report, receipt = fixtures.fixture()
+    report, receipt = fixtures.fixture(protocol=protocol)
     receipt["why_checker_sha256"] = hashlib.sha256(Path(checker.__file__).read_bytes()).hexdigest()
     for row in report["seeds"]:
         row["mind_coverage"] = {

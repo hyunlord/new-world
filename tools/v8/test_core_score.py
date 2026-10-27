@@ -18,9 +18,10 @@ import unittest
 import core_score as scorer
 
 
-def fixture(brain: str = "mind", phase: str = "heldout") -> tuple[dict, dict]:
+def fixture(brain: str = "mind", phase: str = "heldout",
+            protocol: scorer.SeedProtocol = scorer.SeedProtocol.ORIGINAL) -> tuple[dict, dict]:
     """Construct synthetic observations directly in the CORE seed domain."""
-    seeds = list(range(1232, 1264)) if phase == "heldout" else list(range(8))
+    seeds = protocol.seeds if phase == "heldout" else list(range(8))
     source = scorer.BASE_SHA if brain == "base" else "a" * 40
     receipt = {"brain": brain, "phase": phase, "defence": True, "seeds": seeds,
                "days": 48, "round": None if phase == "heldout" else 1,
@@ -28,6 +29,8 @@ def fixture(brain: str = "mind", phase: str = "heldout") -> tuple[dict, dict]:
                "policy_sha256": "b" * 64, "binary_sha256": "c" * 64,
                "scorer_sha256": hashlib.sha256(Path(scorer.__file__).read_bytes()).hexdigest(),
                "validator_sha256": hashlib.sha256(Path(scorer.__file__).with_name("mux_safety_validate.py").read_bytes()).hexdigest()}
+    if protocol is scorer.SeedProtocol.P3D:
+        receipt.update(schema_version=2, seed_protocol=protocol.value)
     inputs = {"steward": True, "defence": True, "defence_enabled_end": True,
               "player_script": False, "story": "on", "neighbours": "on",
               "source_sha": source, "policy_sha256": "b" * 64}

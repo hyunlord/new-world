@@ -105,24 +105,25 @@ def world(row: Data, source: str, policy: str) -> Data:
             "critical_status": "N/A" if c["critical_choice_expected"] == 0 else ("PASS" if choice_missing == 0 else "FAIL")}
 
 
-def check(report: Data, receipt: Data) -> Data:
+def check(report: Data, receipt: Data, *, protocol: core.SeedProtocol = core.SeedProtocol.ORIGINAL) -> Data:
     """Require all 32 frozen worlds and calculate integer-exact aggregate bars."""
     try:
+        core.check_protocol(receipt, protocol)
         require(receipt["phase"] == "heldout" and receipt["brain"] == "mind" and receipt["round"] is None, "Wrong phase/brain/round")
         require(receipt["defence"] is True and receipt["policy_frozen_before_run"] is True, "Missing held-out attestation")
         require(number(receipt["days"], "receipt days") == 48
-                and [number(seed, "receipt seed") for seed in sequence(receipt["seeds"])] == SEEDS, "Receipt coverage mismatch")
+                and [number(seed, "receipt seed") for seed in sequence(receipt["seeds"])] == protocol.seeds, "Receipt coverage mismatch")
         source, policy = digest(receipt["source_sha"], 40), digest(receipt["policy_sha256"], 64)
         binary = digest(receipt["binary_sha256"], 64)
         require(report["scene"] == "colony" and number(report["days"], "days") == 48, "Wrong scene/days")
         rows = [mapping(value) for value in sequence(report["seeds"])]
-        require(sorted(number(row["seed"], "seed") for row in rows) == SEEDS, "Missing/duplicate/wrong seed set")
+        require(sorted(number(row["seed"], "seed") for row in rows) == protocol.seeds, "Missing/duplicate/wrong seed set")
         worlds = [world(row, source, policy) for row in sorted(rows, key=lambda row: number(row["seed"], "seed"))]
         total = {name: sum(number(row[name], name) for row in worlds) for name in COUNTERS}
         behaviour_pass = total["behaviour_covered"] * 100 >= total["behaviour_expected"] * 99
         critical_exposed = total["critical_choice_expected"] > 0
         critical_pass = critical_exposed and total["critical_choice_covered"] == total["critical_choice_expected"]
-        return {"schema_version": 1, "status": "PASS" if behaviour_pass and critical_pass else "FAIL",
+        return {**protocol.metadata(), "status": "PASS" if behaviour_pass and critical_pass else "FAIL",
                 "acceptance_claim": False, "phase": "heldout", "source_sha": source,
                 "policy_sha256": policy, "binary_sha256": binary, "worlds": worlds,
                 "aggregate": {**total, "behaviour_coverage": ratio(total["behaviour_covered"], total["behaviour_expected"]),
@@ -148,12 +149,14 @@ def main() -> int:
     parser.add_argument("--summary", type=Path, required=True)
     parser.add_argument("--receipt", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--seed-protocol", choices=[p.value for p in core.SeedProtocol],
+                        default=core.SeedProtocol.ORIGINAL.value)
     args = parser.parse_args()
     try:
         require(not args.output.exists() and not args.output.is_symlink(), "Output must be new")
         require(not args.output.resolve().is_relative_to(Path(__file__).resolve().parents[2]), "Output must be external")
         report, receipt, hashes = read_bound(args.summary, args.receipt)
-        result = check(report, receipt)
+        result = check(report, receipt, protocol=core.SeedProtocol(args.seed_protocol))
         result["input_hashes"] = hashes
         with args.output.open("x", encoding="utf-8") as stream:
             stream.write(json.dumps(result, indent=2, allow_nan=False) + "\n")

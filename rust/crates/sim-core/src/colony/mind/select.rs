@@ -101,15 +101,21 @@ const fn predicate_roles(matches: bool, incumbent: bool) -> u8 {
         0
     }
 }
-fn eligible<R: FactReader>(
+#[derive(Clone, Copy)]
+enum Eligibility {
+    Eligible,
+    Structural,
+    Rejected(usize),
+}
+fn eligibility<R: FactReader>(
     node: &MindNode,
     row: &mut R,
     key: EvalKey,
     incumbent: bool,
     scratch: &mut EvalScratch,
-) -> Result<bool, R::Error> {
+) -> Result<Eligibility, R::Error> {
     if node.stages & row.life_stage().bit() == 0 {
-        return Ok(false);
+        return Ok(Eligibility::Structural);
     }
     let period = u64::from(node.every_ticks);
     // A fixed arithmetic phase is scheduling, not a random choice. It is stable
@@ -117,10 +123,10 @@ fn eligible<R: FactReader>(
     if period != 1 {
         let phase = (node.random_key % period + key.agent % period) % period;
         if !incumbent && key.tick % period != phase {
-            return Ok(false);
+            return Ok(Eligibility::Structural);
         }
     }
-    for predicate in &node.predicates {
+    for (depth, predicate) in node.predicates.iter().enumerate() {
         let cached = if R::STABLE_READS {
             scratch.predicates[predicate.cache_index]
         } else {
@@ -150,10 +156,23 @@ fn eligible<R: FactReader>(
             matches
         };
         if !matches {
-            return Ok(false);
+            return Ok(Eligibility::Rejected(depth));
         }
     }
-    Ok(true)
+    Ok(Eligibility::Eligible)
+}
+#[cfg(test)]
+fn eligible<R: FactReader>(
+    node: &MindNode,
+    row: &mut R,
+    key: EvalKey,
+    incumbent: bool,
+    scratch: &mut EvalScratch,
+) -> Result<bool, R::Error> {
+    Ok(matches!(
+        eligibility(node, row, key, incumbent, scratch)?,
+        Eligibility::Eligible
+    ))
 }
 fn score<R: FactReader>(
     node: &MindNode,
@@ -232,13 +251,36 @@ pub fn choose_with_reader<R: FactReader>(
     for band in &policy.bands {
         let mut top3: ArrayVec<Candidate, 3> = ArrayVec::new();
         let mut current = None;
-        for id in band {
+        let incumbent_position = running
+            .filter(|old| !old.finished)
+            .and_then(|old| band.binary_search(&old.node).ok());
+        let mut position_in_band = 0;
+        while position_in_band < band.len() {
+            let id = band[position_in_band];
             let node = &policy.nodes[id.index()];
-            let incumbent = running.is_some_and(|old| old.node == *id && !old.finished);
-            if eligible(node, row, key, incumbent, scratch)? {
+            let incumbent = incumbent_position == Some(position_in_band);
+            let eligibility = eligibility(node, row, key, incumbent, scratch)?;
+            let mut next = position_in_band + 1;
+            if R::STABLE_READS {
+                if let Eligibility::Rejected(depth) = eligibility {
+                    next =
+                        policy.false_prefix_end[policy.node_predicate_offsets[id.index()] + depth];
+                    if let Some(current) =
+                        incumbent_position.filter(|current| *current > position_in_band)
+                    {
+                        next = next.min(current);
+                    }
+                    // STABLE_READS permits omitted get calls, not omitted structural observations.
+                    for _ in position_in_band + 1..next {
+                        let _ = row.life_stage();
+                    }
+                }
+            }
+            position_in_band = next;
+            if matches!(eligibility, Eligibility::Eligible) {
                 let score = score(node, row, incumbent, scratch)?;
                 let candidate = Candidate {
-                    node: *id,
+                    node: id,
                     band: node.band,
                     behaviour: node.behaviour,
                     score,
@@ -289,3 +331,7 @@ pub fn choose_with_reader<R: FactReader>(
 #[cfg(test)]
 #[path = "stream_tests.rs"]
 mod stream_tests;
+
+#[cfg(test)]
+#[path = "selector_jump_tests.rs"]
+mod jump_tests;

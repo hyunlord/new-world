@@ -5,6 +5,15 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M-CORE performance repair — 2026-10-27 (in progress, not published)
+
+- Planner P-1–P-6 resume repair after the original p8 failure: ordinary red gates require diagnosis, correction and full re-run. The original failures below remain historical evidence. Required performance is standing step25 without justification plus C3 time ceilings; the mind/old0.5 ratio remains a target. Timing requires each interleaved repeat to start at1-minute load<8, with all three loads retained.
+- Preserving commit p12 `1ca297b82` passes ten literal colony summary hashes, the exact D26 canonical outcome/why comparison and baseline identity. Valid candidate8 timing still fails the standing bar, invoking the separately validated planner P-3d fallback (D30).
+- The scheduled candidate retains validated active ownership between agent-phased eight-tick full evaluations, with immediate incumbent/critical/finish guards and real effects every tick. It preserves initiating causal IDs without fabricated scores/witnesses; policy157nodes and scores stay frozen. Compact guard caching, batched lifecycle writes and metadata/history reuse reduce redundant work.
+- Candidate14 preserves the scheduled calibration summaries while caching exact guard paths, leaving scratch untouched on exact hits, and acknowledging verified untouched primary snapshots. Core83/runtime-save168 tests, strict clippy and default release pass; final paired performance and publication acceptance remain pending. Alias/invited/replay refresh fallbacks remain; the cache is derived and cold after load.
+- Exploratory candidate2 shadow passes OFF2031192/2041927 and ON1684600/1692967, with independently reviewed categories, control identity,16live guard replays and13primitive adapter cases. Core53/runtime118 tests and strict clippy pass. Final committed captures, fresh held-out1264–1295, required performance and full gate are still pending; no publication or stall waiver is claimed.
+- P-5 report-only diagnosis records all48chronicle kinds and explicit unknown ancestry; story-depth instrumentation follow-up ISS341/#647 remains OPEN. See CORE_STORY_DIAGNOSTICS and CORE_DECISIONS.
+
 ## M-CORE — 2026-10-26–27 (final FAIL, not published)
 
 - Final p8 gate `44e0a0266c085d409c16c77f4a2a0181b8a2a750` completes42/45,exit1 in7012s (Oct27 04:02:02–05:58:54 KST). Failures:25 bench,41 native stall,45 core evaluation. Both stall arms complete;1×max91.652ms/two>50ms fails,½×max49.522ms/zero>50ms passes. Isolation42/data-only43/shadow44 pass. Goal-directed stop/report: no tuning, waiver, retry or push; worktree/evidence retained and locally fixed issues remain remotely OPEN (D24).

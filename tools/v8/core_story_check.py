@@ -56,12 +56,14 @@ def inputs(value: Data) -> None:
             and value["story"] == value["neighbours"] == "on", "Wrong story inputs")
 
 
-def arm(report: Data, receipt: Data, role: str) -> Data:
+def arm(report: Data, receipt: Data, role: str,
+        *, protocol: core.SeedProtocol = core.SeedProtocol.ORIGINAL) -> Data:
     """Validate 32 worlds, each with exactly two complete 24-day years."""
-    require(number(receipt["schema_version"], "receipt schema") == 1 and receipt["role"] == role, "Wrong receipt schema/role")
+    core.check_protocol(receipt, protocol)
+    require(number(receipt["schema_version"], "receipt schema") == protocol.metadata()["schema_version"] and receipt["role"] == role, "Wrong receipt schema/role")
     source = digest(receipt["source_sha"], 40)
     require(number(receipt["days"], "receipt days") == 48
-            and [number(seed, "receipt seed") for seed in sequence(receipt["seeds"])] == SEEDS, "Wrong receipt coverage")
+            and [number(seed, "receipt seed") for seed in sequence(receipt["seeds"])] == protocol.seeds, "Wrong receipt coverage")
     inputs(mapping(receipt["inputs"]))
     require(number(report["schema_version"], "report schema") == 2 and report["scene"] == "colony"
             and number(report["days"], "report days") == 48 and report["source_sha"] == source, "Wrong report source/schema/duration")
@@ -69,7 +71,7 @@ def arm(report: Data, receipt: Data, role: str) -> Data:
     definition = mapping(report["definition"])
     require(definition == DEFINITION and type(definition["minimum_depth"]) is int, "Story definition mismatch")
     rows = [mapping(value) for value in sequence(report["worlds"])]
-    require(sorted(number(row["seed"], "seed") for row in rows) == SEEDS, "Missing/duplicate/wrong story worlds")
+    require(sorted(number(row["seed"], "seed") for row in rows) == protocol.seeds, "Missing/duplicate/wrong story worlds")
     result = []
     totals = dict.fromkeys(COUNTS, 0)
     for row in sorted(rows, key=lambda row: number(row["seed"], "seed")):
@@ -95,7 +97,8 @@ def arm(report: Data, receipt: Data, role: str) -> Data:
             "per_world_year": {name: value / 64 for name, value in totals.items()}, "rows": result}
 
 
-def check_pair(base_report: Data, base_receipt: Data, mind_report: Data, mind_receipt: Data, provenance: Data) -> Data:
+def check_pair(base_report: Data, base_receipt: Data, mind_report: Data, mind_receipt: Data, provenance: Data,
+               *, protocol: core.SeedProtocol = core.SeedProtocol.ORIGINAL) -> Data:
     """Compare measurements without treating larger counts as a pass requirement."""
     try:
         require(base_receipt["runtime_base_sha"] == BASE and mind_receipt["runtime_base_sha"] is None, "Wrong runtime reference")
@@ -116,19 +119,24 @@ def check_pair(base_report: Data, base_receipt: Data, mind_report: Data, mind_re
         require(on["summary_byte_identical"] is True and on["determinism_log_pass"] is True
                 and number(on["days"], "ON days") == 24
                 and [number(seed, "ON seed") for seed in sequence(on["seeds"])] == [0, 1], "Missing final2 ON identity")
-        base, mind = arm(base_report, base_receipt, "base_instrument"), arm(mind_report, mind_receipt, "mind")
+        base, mind = arm(base_report, base_receipt, "base_instrument", protocol=protocol), arm(mind_report, mind_receipt, "mind", protocol=protocol)
         require(base_receipt["metric_sha256"] == mind_receipt["metric_sha256"]
                 and base_receipt["cli_sha256"] == mind_receipt["cli_sha256"], "Different story instruments")
-        return {"schema_version": 1, "status": "MEASURED", "acceptance_claim": False,
+        return {**protocol.metadata(), "status": "MEASURED", "acceptance_claim": False,
                 "numerical_bar": None, "base_designation": "BASE runtime with frozen final2 observational instrument; not exact BASE source build",
                 "definition": DEFINITION, "base": base, "mind": mind}
     except KeyError as error:
         raise ScoreError(f"Missing required story field: {error}") from error
 
 
-def bound(report_path: Path, receipt_path: Path) -> tuple[Data, Data, Data]:
+def bound(report_path: Path, receipt_path: Path,
+          *, protocol: core.SeedProtocol = core.SeedProtocol.ORIGINAL) -> tuple[Data, Data, Data]:
     """Bind reports and both shared instrument sources to current checker bytes."""
     report, receipt = read(report_path), read(receipt_path)
+    core.check_protocol(receipt, protocol)
+    if protocol is core.SeedProtocol.P3D:
+        require(receipt.get("scorer_sha256") == sha(Path(core.__file__)), "Story protocol source hash mismatch")
+        require(receipt.get("validator_sha256") == sha(Path(validator.__file__)), "Story validator hash mismatch")
     require(receipt.get("report_sha256") == sha(report_path), "Story report hash mismatch")
     require(receipt.get("checker_sha256") == sha(Path(__file__)), "Story checker hash mismatch")
     for name in ("metric", "cli"):
@@ -142,12 +150,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     for flag in ("base-report", "base-receipt", "mind-report", "mind-receipt", "base-provenance", "output"):
         parser.add_argument("--" + flag, type=Path, required=True)
+    parser.add_argument("--seed-protocol", choices=[p.value for p in core.SeedProtocol],
+                        default=core.SeedProtocol.ORIGINAL.value)
     args = parser.parse_args()
     try:
         require(not args.output.exists() and not args.output.is_symlink(), "Output must be new")
         require(not args.output.resolve().is_relative_to(ROOT), "Output must be external")
-        base, base_receipt, base_hashes = bound(args.base_report, args.base_receipt)
-        mind, mind_receipt, mind_hashes = bound(args.mind_report, args.mind_receipt)
+        base, base_receipt, base_hashes = bound(args.base_report, args.base_receipt, protocol=core.SeedProtocol(args.seed_protocol))
+        mind, mind_receipt, mind_hashes = bound(args.mind_report, args.mind_receipt, protocol=core.SeedProtocol(args.seed_protocol))
         provenance = read(args.base_provenance)
         require(base_receipt.get("base_instrument_provenance_sha256") == sha(args.base_provenance), "BASE provenance hash mismatch")
         require(mapping(provenance["artifacts"]).keys() == ARTIFACTS, "Incomplete BASE provenance artifacts")
@@ -163,7 +173,8 @@ def main() -> int:
         for path, value in mapping(provenance["instrument"]).items():
             require(path.startswith("rust/crates/sim-test/src/story_yield/")
                     and sha(ROOT / path) == mapping(value)["sha256"], "Frozen/current instrument source differs")
-        result = check_pair(base, base_receipt, mind, mind_receipt, provenance)
+        result = check_pair(base, base_receipt, mind, mind_receipt, provenance,
+                            protocol=core.SeedProtocol(args.seed_protocol))
         result["input_hashes"] = {"base": base_hashes, "mind": mind_hashes,
                                   "base_provenance_sha256": sha(args.base_provenance), "checker_sha256": sha(Path(__file__))}
         with args.output.open("x", encoding="utf-8") as stream:

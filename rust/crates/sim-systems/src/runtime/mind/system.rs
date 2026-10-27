@@ -39,16 +39,36 @@ pub struct ColonyMindSystem {
     scratch: EvalScratch,
     fact_values: Vec<Option<i64>>,
     initialized: bool,
+    #[cfg(test)]
+    reference_full_refresh: bool,
+    #[cfg(test)]
+    refresh_visits: [usize; 3],
+    #[cfg(test)]
+    snapshot_refresh_visits: [usize; 2],
+    diagnostics: Option<super::scheduling::Diagnostics>,
+    continuation: super::scheduling::ContinuationGate,
 }
 impl ColonyMindSystem {
     /// Construct from a policy already resolved against the actual registries.
     pub fn new(program: MindProgram) -> Self {
+        let diagnostics = (std::env::var_os("WORLDSIM_MIND_CONTINUATION_DIAGNOSTICS").as_deref()
+            == Some(std::ffi::OsStr::new("1")))
+        .then(|| super::scheduling::Diagnostics::new(&program.policy));
+        let continuation = super::scheduling::ContinuationGate::new(&program.policy);
         Self {
+            continuation,
+            diagnostics,
             program,
             places: PlacesCache::default(),
             scratch: EvalScratch::default(),
             fact_values: Vec::new(),
             initialized: false,
+            #[cfg(test)]
+            reference_full_refresh: false,
+            #[cfg(test)]
+            refresh_visits: [0; 3],
+            #[cfg(test)]
+            snapshot_refresh_visits: [0; 2],
         }
     }
 
@@ -122,12 +142,16 @@ impl ColonyMindSystem {
             transaction.prepare_preview_places(resources);
         }
         let mut effects = EffectState::prepare(world, resources);
-        let mut context = facts::prepare_context(world, resources).map_err(failure)?;
-        context
-            .replace_claims(effects.claims.clone())
-            .map_err(failure)?;
+        let mut context = facts::prepare_continuation_context_with_claims(
+            world,
+            resources,
+            effects.claims.clone(),
+            Some(&effects.forage_plans),
+        )
+        .map_err(failure)?;
         let mut pending: Vec<_> = context.rows().iter().map(|row| row.agent).collect();
         let mut completed = BTreeSet::new();
+        let mut replay_visit = false;
         loop {
             for agent in pending {
                 // A completed consumption/activity keeps the historical one-tick Idle boundary.
@@ -142,6 +166,7 @@ impl ColonyMindSystem {
                     &mut routine,
                     agent,
                     &mut completed,
+                    replay_visit,
                 )?;
             }
             let Some(transaction) = routine.as_mut() else {
@@ -155,6 +180,7 @@ impl ColonyMindSystem {
             context
                 .invalidate(Domain::RoutineOccupancy)
                 .map_err(failure)?;
+            replay_visit = true;
             pending = replay
                 .into_iter()
                 .map(|(agent, entity)| {
@@ -185,71 +211,177 @@ impl ColonyMindSystem {
         routine: &mut Option<RoutineTick>,
         agent: AgentId,
         completed: &mut BTreeSet<AgentId>,
+        replay_visit: bool,
     ) -> Result<(), MindTickError> {
         // Match the legacy per-person invitation boundary: the reservation has
         // already ended, but its deferred Activity/FSM cleanup is not yet applied.
-        if routine
+        let invited = routine
             .as_mut()
-            .is_some_and(|transaction| transaction.take_invitation(agent))
-        {
+            .is_some_and(|transaction| transaction.take_invitation(agent));
+        context.begin_visit(agent).map_err(failure)?;
+        if invited {
             let entity = context.row(agent).map_err(failure)?.entity;
             *world.get::<&mut AgentState>(entity).map_err(failure)? = AgentState::Idle;
             effects.seek_clear.push(entity);
         }
-        context.refresh_person(world, agent).map_err(failure)?;
+        let primary_refresh = !replay_visit && !invited;
+        #[cfg(test)]
+        {
+            self.refresh_visits[if replay_visit {
+                2
+            } else if invited {
+                1
+            } else {
+                0
+            }] += 1;
+        }
+        #[cfg(test)]
+        let primary_refresh = primary_refresh && !self.reference_full_refresh;
+        if primary_refresh {
+            let acknowledged = context
+                .acknowledge_primary_capture(agent)
+                .map_err(failure)?;
+            #[cfg(test)]
+            {
+                self.snapshot_refresh_visits[usize::from(!acknowledged)] += 1;
+            }
+            if acknowledged {
+                Ok(())
+            } else {
+                context.refresh_primary_continuation_exclusive(world, agent)
+            }
+        } else {
+            context.refresh_continuation_exclusive(world, agent)
+        }
+        .map_err(failure)?;
         let prior = resources.mind.running.get(&agent).copied();
         context
-            .set_running(agent, prior, &self.program.policy)
+            .set_program_running(agent, prior, &self.program)
             .map_err(failure)?;
         facts::refresh_routine_lifecycle(context, routine.as_ref(), agent).map_err(failure)?;
-        let mut row = self
-            .program
-            .providers
-            .lazy_row(
+        let proposed = self.diagnostics.as_mut().and_then(|diagnostics| {
+            diagnostics.observe(
+                &self.program,
+                world,
+                resources,
+                context,
+                agent,
+                prior,
+                replay_visit || invited,
+            )
+        });
+        let person = context.row(agent).map_err(failure)?;
+        let seek = world
+            .get::<&SeekTarget>(person.entity)
+            .ok()
+            .map(|value| *value);
+        let latest = resources
+            .mind
+            .history
+            .as_ref()
+            .and_then(|history| history.latest(agent));
+        let prior_cause = latest.map(|choice| choice.id());
+        let history_matches = prior.is_some_and(|running| {
+            latest.is_some_and(|choice| choice.matches_running(agent, running).unwrap_or(false))
+        });
+        let evidence = super::scheduling::ContinuationEvidence {
+            state: person.state,
+            activity: person.activity,
+            seek,
+            history_matches,
+            replay_or_invitation: replay_visit || invited,
+        };
+        // Unsupported or extra guard-read errors fall back to the unchanged selector.
+        let retained = if resources.rules.colony.is_some() {
+            match self.continuation.evaluate(
+                &self.program,
                 context,
                 resources,
-                routine.as_ref(),
                 agent,
-                &mut self.fact_values,
+                prior,
+                evidence,
+            ) {
+                Ok(sim_core::colony::mind::GuardOutcome::ContinueOwned { node }) => Some(node),
+                Ok(sim_core::colony::mind::GuardOutcome::FullEvaluation { .. }) | Err(_) => None,
+            }
+        } else {
+            None
+        };
+        let selected = if retained.is_none() {
+            context
+                .upgrade_continuation_exclusive(world, agent)
+                .map_err(failure)?;
+            facts::refresh_routine_lifecycle(context, routine.as_ref(), agent).map_err(failure)?;
+            let mut row = self
+                .program
+                .providers
+                .lazy_row(
+                    context,
+                    resources,
+                    routine.as_ref(),
+                    agent,
+                    &mut self.fact_values,
+                )
+                .map_err(failure)?;
+            let selected = choose_with_reader(
+                &self.program.policy,
+                &mut row,
+                prior,
+                EvalKey {
+                    world_seed: resources.world_seed,
+                    agent,
+                    tick: resources.current_tick,
+                    replicate: resources.noise_replicate_for(resources.current_tick),
+                },
+                &mut self.scratch,
             )
             .map_err(failure)?;
-        let selected = choose_with_reader(
-            &self.program.policy,
-            &mut row,
-            prior,
-            EvalKey {
-                world_seed: resources.world_seed,
-                agent,
-                tick: resources.current_tick,
-                replicate: resources.noise_replicate_for(resources.current_tick),
-            },
-            &mut self.scratch,
-        )
-        .map_err(failure)?;
+            Some(selected)
+        } else {
+            None
+        };
+        if let (Some(diagnostics), Some(selected)) = (self.diagnostics.as_mut(), selected.as_ref())
+        {
+            diagnostics.compare(&self.program.policy, proposed, selected.selected.node);
+        }
+        let node_id = retained
+            .or_else(|| selected.as_ref().map(|value| value.selected.node))
+            .ok_or_else(|| failure("missing continuation or selection"))?;
         let node = self
             .program
             .policy
-            .node(selected.selected.node)
+            .node(node_id)
             .ok_or_else(|| failure("selected node missing"))?;
         let effect = self.program.effect(node.id).map_err(failure)?;
-        let candidate = match node.target.as_deref() {
-            Some(name) => {
-                if name.starts_with("routine_") && context.target(agent, name).is_err() {
-                    facts::prepare_routine_fact(
-                        context,
-                        routine.as_ref(),
-                        agent,
-                        &format!("{name}_available"),
-                    )
-                    .map_err(failure)?;
+        let target = if retained.is_some() {
+            super::scheduling::owned_target(
+                effect.lifecycle,
+                context.row(agent).map_err(failure)?,
+                context,
+                seek,
+            )
+            .ok_or_else(|| failure("retained lifecycle target missing"))?
+        } else {
+            let candidate = match node.target.as_deref() {
+                Some(name) => {
+                    if name.starts_with("routine_") && context.target(agent, name).is_err() {
+                        facts::prepare_routine_fact(
+                            context,
+                            routine.as_ref(),
+                            agent,
+                            &format!("{name}_available"),
+                        )
+                        .map_err(failure)?;
+                    }
+                    facts::resolve_target(context, resources, agent, name).map_err(failure)?
                 }
-                facts::resolve_target(context, resources, agent, name).map_err(failure)?
-            }
-            None => None,
+                None => None,
+            };
+            let target = effect
+                .action_target(candidate)
+                .map_err(|error| failure(format!("target: {error:?}")))?;
+            target
         };
-        let target = effect
-            .action_target(candidate)
-            .map_err(|error| failure(format!("target: {error:?}")))?;
         let person = context.row(agent).map_err(failure)?;
         let scope = context.target_scope(agent).map_err(failure)?;
         let external = effect.externally_owned && node.finish.is_none();
@@ -290,64 +422,73 @@ impl ColonyMindSystem {
         {
             return Err(failure("finish action does not match running lifecycle"));
         }
-        let origins = if record::is_unfinished_continuation(&self.program.policy, prior, &selected)
-        {
-            Vec::new()
+        let cause = if let Some(selected) = selected.as_ref() {
+            let origins =
+                if record::is_unfinished_continuation(&self.program.policy, prior, selected) {
+                    Vec::new()
+                } else {
+                    let mut origins = record::automatic_origins(
+                        resources,
+                        &self.program.policy,
+                        agent,
+                        person.fleeing,
+                        self.scratch.witnesses(),
+                    );
+                    origins.extend(record::memory_origins(
+                        &self.program.policy,
+                        selected,
+                        &person.memory_causes,
+                        self.scratch.witnesses(),
+                    ));
+                    let drafted = world
+                        .get::<&sim_core::colony::people::Drafted>(person.entity)
+                        .ok()
+                        .map(|value| *value);
+                    origins.extend(record::draft_origins(
+                        resources,
+                        &self.program.policy,
+                        agent,
+                        drafted,
+                        self.scratch.witnesses(),
+                    ));
+                    origins.extend(record::assigned_job_origins(
+                        resources,
+                        &self.program.policy,
+                        agent,
+                        person.job,
+                        self.scratch.witnesses(),
+                    ));
+                    origins
+                };
+            let cause = record::record_selection(
+                resources,
+                &self.program.policy,
+                record::RecordPerson {
+                    agent,
+                    position: (person.position.x, person.position.y),
+                    settlement: scope.settlement,
+                },
+                selected,
+                self.scratch.witnesses(),
+                &origins,
+            )
+            .map_err(failure)?;
+            cause
         } else {
-            let mut origins = record::automatic_origins(
-                resources,
-                &self.program.policy,
-                agent,
-                person.fleeing,
-                self.scratch.witnesses(),
-            );
-            origins.extend(record::memory_origins(
-                &self.program.policy,
-                &selected,
-                &person.memory_causes,
-                self.scratch.witnesses(),
-            ));
-            let drafted = world
-                .get::<&sim_core::colony::people::Drafted>(person.entity)
-                .ok()
-                .map(|value| *value);
-            origins.extend(record::draft_origins(
-                resources,
-                &self.program.policy,
-                agent,
-                drafted,
-                self.scratch.witnesses(),
-            ));
-            origins.extend(record::assigned_job_origins(
-                resources,
-                &self.program.policy,
-                agent,
-                person.job,
-                self.scratch.witnesses(),
-            ));
-            origins
+            None
         };
-        let cause = record::record_selection(
-            resources,
-            &self.program.policy,
-            record::RecordPerson {
-                agent,
-                position: (person.position.x, person.position.y),
-                settlement: scope.settlement,
-            },
-            &selected,
-            self.scratch.witnesses(),
-            &origins,
-        )
-        .map_err(failure)?;
-        let cause = cause.or_else(|| {
-            resources
-                .mind
-                .history
-                .as_ref()
-                .and_then(|history| history.latest(agent))
-                .map(|choice| choice.id())
-        });
+        let cause = if retained.is_some() {
+            prior_cause
+        } else {
+            cause.or_else(|| {
+                resources
+                    .mind
+                    .history
+                    .as_ref()
+                    .and_then(|history| history.latest(agent))
+                    .map(|choice| choice.id())
+            })
+        };
         let previous = prior
             .filter(|choice| !choice.finished)
             .map(|choice| self.program.effect(choice.node))
@@ -615,3 +756,11 @@ mod owner_tests;
 
 #[cfg(test)]
 mod food_invalidation_tests;
+
+#[cfg(test)]
+#[path = "primary_refresh_system_tests.rs"]
+mod primary_refresh_tests;
+
+#[cfg(test)]
+#[path = "primary_snapshot_system_tests.rs"]
+mod primary_snapshot_tests;

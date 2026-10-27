@@ -12,7 +12,7 @@ import unittest
 import core_story_check as checker
 
 
-def fixture() -> tuple[dict, dict, dict, dict, dict]:
+def fixture(protocol: checker.core.SeedProtocol = checker.core.SeedProtocol.ORIGINAL) -> tuple[dict, dict, dict, dict, dict]:
     """Supply synthetic valid reports and independently labeled arm receipts."""
     source = "a" * 40
     inputs = copy.deepcopy(checker.INPUTS)
@@ -22,7 +22,7 @@ def fixture() -> tuple[dict, dict, dict, dict, dict]:
                "years": [{"year": year, "observed_ticks": 34560, "complete_year": True,
                           "entries": 10, "deep_entries": 3, "distinct_deep_chains": 2,
                           "people_with_three_entries": 2, "missing_chains": 1, "cyclic_chains": 0}
-                         for year in [0, 1]]} for seed in checker.SEEDS]
+                         for year in [0, 1]]} for seed in protocol.seeds]
     base = {"schema_version": 2, "scene": "colony", "days": 48, "source_sha": source,
             "inputs": inputs, "definition": definition, "worlds": worlds}
     mind = copy.deepcopy(base)
@@ -34,7 +34,11 @@ def fixture() -> tuple[dict, dict, dict, dict, dict]:
                "cli_sha256": checker.sha(checker.ROOT / "rust/crates/sim-test/src/story_yield/cli.rs"),
                "checker_sha256": checker.sha(Path(checker.__file__)),
                "base_instrument_provenance_sha256": "e" * 64,
-               "seeds": checker.SEEDS, "days": 48, "inputs": copy.deepcopy(inputs)}
+               "seeds": protocol.seeds, "days": 48, "inputs": copy.deepcopy(inputs)}
+    if protocol is checker.core.SeedProtocol.P3D:
+        receipt.update(schema_version=2, seed_protocol=protocol.value,
+                       scorer_sha256=checker.sha(Path(checker.core.__file__)),
+                       validator_sha256=checker.sha(Path(checker.validator.__file__)))
     mind_receipt = copy.deepcopy(receipt)
     mind_receipt.update(role="mind", source_sha=mind["source_sha"], runtime_base_sha=None,
                         policy_sha256="f" * 64, base_instrument_provenance_sha256=None)
@@ -130,35 +134,36 @@ class StoryTests(unittest.TestCase):
                     checker.bound(output, binding)
 
     def test_cli_checks_complete_provenance_and_rejects_changed_artifact(self) -> None:
-        base, br, mind, mr, provenance = fixture()
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            artifact = root / "synthetic-artifact"
-            artifact.write_text("synthetic fixture, never a real binary")
-            artifact_hash = checker.sha(artifact)
-            provenance["binary_sha256"] = br["binary_sha256"] = artifact_hash
-            provenance["artifacts"] = {name: {"path": str(artifact), "sha256": artifact_hash}
-                                       for name in checker.ARTIFACTS}
-            provenance["instrument"] = {name: {"sha256": checker.sha(checker.ROOT / name)}
-                                        for name in checker.INSTRUMENT}
-            proof = root / "provenance.json"
-            proof.write_text(json.dumps(provenance))
-            br["base_instrument_provenance_sha256"] = checker.sha(proof)
-            paths = []
-            for name, report, receipt in [("base", base, br), ("mind", mind, mr)]:
-                raw, binding = root / (name + ".json"), root / (name + "-receipt.json")
-                raw.write_text(json.dumps(report))
-                receipt["report_sha256"] = checker.sha(raw)
-                binding.write_text(json.dumps(receipt))
-                paths.extend(["--" + name + "-report", str(raw), "--" + name + "-receipt", str(binding)])
-            command = [sys.executable, checker.__file__, *paths, "--base-provenance", str(proof), "--output"]
-            passed = subprocess.run([*command, str(root / "success.json")], capture_output=True, text=True, check=False)
-            self.assertEqual(passed.returncode, 0, passed.stderr)
-            artifact.write_text("changed")
-            failed = subprocess.run([*command, str(root / "failure.json")], capture_output=True, text=True, check=False)
-            self.assertEqual(failed.returncode, 2)
-            self.assertIn("Changed BASE provenance artifact", failed.stderr)
-            self.assertFalse((root / "failure.json").exists())
+        for protocol in checker.core.SeedProtocol:
+            base, br, mind, mr, provenance = fixture(protocol)
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                artifact = root / "synthetic-artifact"
+                artifact.write_text("synthetic fixture, never a real binary")
+                artifact_hash = checker.sha(artifact)
+                provenance["binary_sha256"] = br["binary_sha256"] = artifact_hash
+                provenance["artifacts"] = {name: {"path": str(artifact), "sha256": artifact_hash}
+                                           for name in checker.ARTIFACTS}
+                provenance["instrument"] = {name: {"sha256": checker.sha(checker.ROOT / name)}
+                                            for name in checker.INSTRUMENT}
+                proof = root / "provenance.json"
+                proof.write_text(json.dumps(provenance))
+                br["base_instrument_provenance_sha256"] = checker.sha(proof)
+                paths = []
+                for name, report, receipt in [("base", base, br), ("mind", mind, mr)]:
+                    raw, binding = root / (name + ".json"), root / (name + "-receipt.json")
+                    raw.write_text(json.dumps(report))
+                    receipt["report_sha256"] = checker.sha(raw)
+                    binding.write_text(json.dumps(receipt))
+                    paths.extend(["--" + name + "-report", str(raw), "--" + name + "-receipt", str(binding)])
+                command = [sys.executable, checker.__file__, "--seed-protocol", protocol.value, *paths, "--base-provenance", str(proof), "--output"]
+                passed = subprocess.run([*command, str(root / "success.json")], capture_output=True, text=True, check=False)
+                self.assertEqual(passed.returncode, 0, passed.stderr)
+                artifact.write_text("changed")
+                failed = subprocess.run([*command, str(root / "failure.json")], capture_output=True, text=True, check=False)
+                self.assertEqual(failed.returncode, 2)
+                self.assertIn("Changed BASE provenance artifact", failed.stderr)
+                self.assertFalse((root / "failure.json").exists())
 
     def test_duplicate_keys_and_nonfinite_json_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

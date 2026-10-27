@@ -89,6 +89,21 @@ pub(in crate::runtime) struct BehaviourEntry {
     pub finish: Effect,
 }
 impl BehaviourEntry {
+    pub(in crate::runtime) fn scheduled_continuation(&self) -> bool {
+        self.diagnostic_continuation()
+            || matches!(self.lifecycle, LifecycleBinding::Social)
+            || (matches!(self.lifecycle, LifecycleBinding::Idle) && self.targets.is_empty())
+    }
+
+    pub(in crate::runtime) fn diagnostic_continuation(&self) -> bool {
+        matches!(
+            self.lifecycle,
+            LifecycleBinding::Resource(
+                TargetKind::Food | TargetKind::Water | TargetKind::Sleep | TargetKind::GatherFood
+            ) | LifecycleBinding::Routine(_)
+        )
+    }
+
     pub(in crate::runtime) fn adopts(
         &self,
         state: AgentState,
