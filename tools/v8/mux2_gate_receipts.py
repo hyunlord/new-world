@@ -8,10 +8,12 @@
 import argparse
 from datetime import datetime, timezone
 import json
+import math
 import os
 from pathlib import Path
 import subprocess
 import sys
+import time
 from typing import Final, Literal, TypeAlias, assert_never
 from mux2_gate_inputs import (BRIDGE, EvidenceError, Json, Node, check_hash, clean_sources,
                              digest, external, git, read_json, require, same_inputs, snapshot,
@@ -34,12 +36,49 @@ def write(path: Path, value: Json) -> None:
     temporary.replace(path)
 
 
+def stall_timeout() -> int:
+    if 'CORE_P7_RUN' not in os.environ:
+        return 960
+    deadline = float(os.environ.get('CORE_P7_DEADLINE_EPOCH', 'nan'))
+    require(math.isfinite(deadline), 'NOT_RUN: P7 requires finite CORE_P7_DEADLINE_EPOCH')
+    remaining = math.floor(deadline - time.time())
+    require(remaining >= 650, 'NOT_RUN: P7 deadline cannot fit both stall arms')
+    return min(960 + 2 * 8 * 900, remaining)
+
+
+def validate_p7_admission(report: Node) -> None:
+    policy = report.field('p7_admission')
+    deadline = policy.field('deadline_epoch').number()
+    require(policy.field('wait_seconds').number() == 900, 'P7 wait policy must be 900 seconds')
+    policy.field('max_waits').equals(8)
+    require(policy.field('load1_limit_exclusive').number() == 8, 'P7 load policy must be below 8')
+    for arm in report.field('arms').array():
+        admission = arm.field('admission')
+        admission.field('status').equals('ADMITTED')
+        samples = admission.field('samples').array()
+        require(1 <= len(samples) <= 9, 'P7 admission sample count')
+        for index, sample in enumerate(samples):
+            loads = [value.number() for value in sample.field('loads_1_5_15').array()]
+            require(len(loads) == 3 and all(value >= 0 for value in loads), 'P7 load triplet')
+            sample.field('waits').equals(index)
+            sample.field('sysctl_exit').equals(0)
+            final = index == len(samples) - 1
+            sample.field('action').equals('ADMITTED' if final else 'WAIT')
+            require(loads[0] < 8 if final else loads[0] >= 8, 'P7 admission load threshold')
+            if index:
+                require(sample.field('epoch').number() - samples[index - 1].field('epoch').number() >= 900,
+                        'P7 admission windows shorter than 900 seconds')
+        admitted = samples[-1].field('epoch').number()
+        started = arm.field('sampling_started_epoch').number()
+        require(admitted <= started < deadline, 'P7 admission/start ordering')
+
+
 def commands(root: Path, output: Path, kind: Kind, godot: Path) -> list[list[str]]:
     base = ['bash', str(root / 'tools/v8/run_bounded.sh')]
     engine = [str(godot), '--path', str(root), '--resolution', '1920x1080']
     match kind:
         case 'stall':
-            return [base + ['960'] + engine + ['--always-on-top', '--windowed', '--script', 'res://tools/v8/mux2_stall_test.gd',
+            return [base + [str(stall_timeout())] + engine + ['--always-on-top', '--windowed', '--script', 'res://tools/v8/mux2_stall_test.gd',
                                               '--', str(output / 'run')]]
         case 'visibility':
             return [base + ['1800'] + engine + ['--headless', '--script',
@@ -60,6 +99,8 @@ def validate_output(root: Path, out: Path, kind: Kind) -> list[Path]:
         case 'stall':
             report = read_json(out / 'run/stall-report.json')
             validate_stall(report.value)
+            if 'CORE_P7_RUN' in os.environ or 'p7_admission' in report.mapping():
+                validate_p7_admission(report)
             report.field('bridge').field('sha256').equals(digest(root / BRIDGE))
             for name, value in report.field('source_sha256').mapping().items():
                 check_hash(root / name, Node(value).text())

@@ -105,6 +105,13 @@ step() {
     end=$(date +%s)
     printf '%2s %-18s exit %3s  %5ss  started %s\n' "$n" "$name" "$code" "$((end - start))" "$(date -r "$start" '+%H:%M:%S')" >> "$SUMMARY"
     if [[ "$name" != perf && "$name" != nav_bench ]] && (( code != 0 )); then status=1; fi
+    # P7 stops on any non-exempt standing/C3 failure; no optimization or partial resume.
+    if [[ -n "${CORE_P7_RUN:-}" ]]; then
+        if (( code == 75 )) || { [[ "$name" == bench ]] && (( code != 0 )); }; then
+            echo "P7 STOP: step$n $name exit$code; remaining steps NOT_RUN" >> "$SUMMARY"
+            exit "$code"
+        fi
+    fi
     return "$code"
 }
 step 1 fmt bash -c 'cd rust && cargo fmt --all -- --check'
@@ -121,7 +128,11 @@ step 9 smoke bash tools/v8/smoke.sh "$LOG/smoke"
 step 10 identity bash tools/v8/identity.sh "$BASE_DATA" "$LOG/identity"
 step 11 determinism bash -c 'cd rust && cargo build --release -p sim-test --bin worldsim_probe && ./target/release/worldsim_probe --scene baseline --seeds 0..4 --days 120 --workers 4 --check-determinism --out "$0/determinism_probe" && echo "determinism checked on seeds 0..4"' "$LOG"
 grep -q 'DETERMINISM PASS' "$LOG/determinism.log" || { echo "   determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
-step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
+if [[ -n "${CORE_P7_RUN:-}" ]]; then
+    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && echo "P7 report-only natural timings; no unpaired historical comparison; paired acceptance is step25/45"' "$LOG"
+else
+    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
+fi
 grep -E 'WARN|OK \(' "$LOG/perf.log" | sed 's/^/   /' >> "$SUMMARY"
 step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_core.txt
 step 14 docs bash tools/v8/check_docs.sh
@@ -143,12 +154,21 @@ step 23 renderer_agreement bash tools/v8/renderer_agreement.sh "$LOG/renderer_ag
 grep -q '^RENDERER_AGREEMENT PASS' "$LOG/renderer_agreement.log" || { echo "   renderer_agreement: no PASS line" >> "$SUMMARY"; status=1; }
 step 24 save_roundtrip bash tools/v8/save_roundtrip.sh
 grep -q '^SAVE_ROUNDTRIP PASS' "$LOG/save_roundtrip.log" || { echo "   save_roundtrip: no PASS line" >> "$SUMMARY"; status=1; }
-step 25 bench bash tools/v8/bench.sh "$LOG/bench"
+if [[ -n "${CORE_P7_RUN:-}" ]]; then
+    step 25 bench python3 tools/v8/core_p7_bench.py "$LOG/bench"
+    export CORE_EVAL_CONFIG_SHA256="$(shasum -a 256 "$CORE_EVAL_CONFIG" | cut -d' ' -f1)"
+else
+    step 25 bench bash tools/v8/bench.sh "$LOG/bench"
+fi
 grep -E 'admission|ceiling|rss outer|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^/   /' >> "$SUMMARY"
 # M3 (goal 3.4): the economy soak fixture, every pass from now on.
 step 26 soak bash tools/v8/soak.sh "$LOG/soak" rust/target/release/worldsim_probe
 grep -E '^SOAK' "$LOG/soak.log" | sed 's/^/   /' >> "$SUMMARY"
-step 27 nav_bench rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
+if [[ -n "${CORE_P7_RUN:-}" ]]; then
+    step 27 nav_bench python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
+else
+    step 27 nav_bench rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
+fi
 grep -E '^nav_bench' "$LOG/nav_bench.log" | sed 's/^/   /' >> "$SUMMARY"
 # M4 (goal §11): the knowledge tests and the loss fixture (F10: the doorway's only holder killed at tick 1800 on
 # seeds 0..8 -> KnowledgeLost within 240 ticks, the doorway Lost, door orders waiting on it).

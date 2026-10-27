@@ -464,3 +464,7 @@ M	tools/v8/test_core_why_check.py
 ### Hard-stop documentation follow-up
 
 Documentation only: CHANGELOG.md; docs/HISTORY.md; docs/ROADMAP.md; docs/v8/core/CORE_CHANGED_FILES.md, CORE_DECISIONS.md, CORE_EVAL.md, CORE_PERF.md, CORE_REPORT.md, CORE_SHADOW.md. Runtime/tools remain byte-identical to826a7ecd. Full gate incomplete, required paired performance FAIL; no publication.
+
+### P7 conditional acceptance harness
+
+No Rust or policy changes. New tools: core_p7_admission.py, core_p7_perf.py, core_p7_bench.py, core_p7_acceptance.py, core_p7_publication.py and five focused test modules. Updated gate.sh, perf.sh, core_gate_checks.sh, mux2_gate_receipts.py, mux2_stall_test.gd and its command tests enforce scoped admission/justification. CORE_P7_TOOL_DELTA.json records exact before/after hashes for every tools/v8 delta. CHANGELOG, ISSUES, CORE_DECISIONS, CORE_PERF and CORE_REPORT record the owner decision, open debt and pending full gate. This checkpoint is not a gate pass.

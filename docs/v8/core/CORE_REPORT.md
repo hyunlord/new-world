@@ -1,5 +1,7 @@
 ## 구현 및 검증 보고 — M-CORE
 
+**P-7 재개 (2026-10-28):** D37에 따라 side64만 조건부 justification 후보이며 다른 standing/C3 실패 시 추가 최적화 없이 중단한다. 새 전체 게이트는 준비 중이다. ISS-342/#648 OPEN 등록과 top10 프로파일을 완료했으며 아직 새 게이트 합격·게시를 주장하지 않는다. 아래 D36 hard-stop과 이전 실패는 역사 기록이다.
+
 **2026-10-27 hard stop: 미완료·미게시:** planner P-1~P-6/D25에 따라 성능 실패를 진단·수정하고 전체 게이트를 다시 실행한다. 아래 p8 실패 기록은 당시 결과로 보존하며, 중단 문구는 P-1로 정정됐다. 현재 게시·최종 수용은 아직 하지 않았다. D26의 provenance 규칙과 추가 성능 기록은 CORE_DECISIONS/CORE_PERF를 따른다.
 
 현재 구현 `826a7ecd9e38ca3fc1fff253baa0933aee593022`의 최종 shadow·baseline/safety·fresh held-out1264–1295는 통과했다. 최종33쌍 교차 성능은 N1000/N2000 및 C3를 충족하지만 작은 맵 n200_side64 평균1.3481배·p991.3150배로 **필수 성능 FAIL**이다. 전체 게이트는 hard stop 종료 기록을 위해22:41:15KST에 중단했다(INCOMPLETE, wrapper143). 1–24단계 명령exit0이나 step12 시간은 INVALID다. step25는 반복 도중 중단되어 NOT_COMPLETE,26–45는 NOT_RUN이다. step41 새 frame/waiver 근거는 없다. 게시하지 않았다. 아래 과거 결과는 각 시점의 기록이다.

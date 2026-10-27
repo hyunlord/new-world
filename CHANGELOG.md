@@ -676,3 +676,9 @@ are gone from the bridge.
 - Added GitHub#619 for ISS314; all107 OPEN mappings and unchanged original106/#59 verified after preserving the initial list delay. Final gate3 remains a separate publication prerequisite.
 
 Owner-decision measurement checkpoint: valid N100/half164.882764487796 and N200/half119.291035278699; valid N200/full225.75111993954 and quarter35.1016343917384 complete the four measurements; quarter is report-only. Thirteen scoped registry rows are approved fixed;332total197fixed103open30deferred2wontfix. No GitHub closure or publication yet.
+
+## M-CORE P-7 conditional performance acceptance — 2026-10-28
+
+### Changed
+- P-7 side64 justification: n200_side64 tick mean and p99 regression is accepted for this M-CORE pass only when every other standing scene remains within 1.10, all C3 ceilings pass, and the fresh full gate satisfies the owner rules; track the unresolved density cost in ISS-342/#648 for M7 node consolidation.
+- This is a conditional exception, not a raw performance bar pass. Original side64 FAIL, prior interrupted gate and all contended timings remain preserved. Runtime/policy stay frozen; any other standing or C3 failure stops this pass without optimization. The renderer-only P-4 waiver remains conditional and has not been applied.

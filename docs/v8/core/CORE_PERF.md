@@ -1128,3 +1128,46 @@ Method matches profile-after-7: native collapsed top-of-stack summary supplies s
 These shares nominate source investigations only. This profiled run cannot establish elapsed performance or a speedup relative to another candidate. Parent owns all acceptance timing.
 
 Full-gate step12 uses the unchanged legacy perf.sh report-only harness: it records session/repeat-end loads and compares historical BASE outputs, rather than admitting every repeat and interleaving both binaries in one session. Its session began22:19:25KST at load1/5/15=9.86/7.77/9.30, and its timings are INVALID for M-CORE acceptance regardless of command exit status; keep its raw report but never use it as a new base or replace the final33-pair receipt with it. Required step25/45 bars remain unchanged.
+
+
+## P7 — side64 attribution and M7 follow-up (2026-10-28)
+
+The following explicit top ten tables reproduce the existing attribution-only profile, not a new run. Source commit `826a7ecd9e38ca3fc1fff253baa0933aee593022`; sample SHA-256 `16a062ffc46698831b1ceef108e7e2381de991df1270d349573570c48f7cbdd1`. Exact symbols, counts and rounded percentages were checked against `p3d-profile-final-side64/aggregation.json`. Denominator is 1,107 main-thread samples, with startup retained. Inclusive shares overlap. Sampling timings remain **INVALID** for performance acceptance.
+
+### Self top ten
+
+| Rank | Exact symbol (image) | Samples | % of 1107 |
+|---:|---|---:|---:|
+| 1 | `sim_core::colony::mind::select::choose_with_reader::h20c76aa21f96c901 (in worldsim_perf)` | 73 | 6.594% |
+| 2 | `sim_systems::runtime::mind::system::ColonyMindSystem::person::h2331f0bc754c2ee4 (in worldsim_perf)` | 55 | 4.968% |
+| 3 | `_platform_memmove (in libsystem_platform.dylib)` | 41 | 3.704% |
+| 4 | `sim_systems::runtime::mind::system::ColonyMindSystem::try_tick::h9e40621140761713 (in worldsim_perf)` | 39 | 3.523% |
+| 5 | `_$LT$sim_systems..runtime..memory..memory_system..MemorySystem$u20$as$u20$sim_engine..RuntimeSystem$GT$::tick::h821438b11e5a99f7 (in worldsim_perf)` | 37 | 3.342% |
+| 6 | `_$LT$sim_systems..runtime..settlement..settlement_system..SettlementSystem$u20$as$u20$sim_engine..RuntimeSystem$GT$::tick::h2795b880d4a03cb5 (in worldsim_perf)` | 33 | 2.981% |
+| 7 | `sim_systems::runtime::mind::context::TickContext::capture_with_memory::hde1191c15cd86145 (in worldsim_perf)` | 32 | 2.891% |
+| 8 | `sim_systems::runtime::mind::facts::refresh_routine_lifecycle::h23a8aaf2612a3266 (in worldsim_perf)` | 29 | 2.620% |
+| 9 | `sim_core::colony::mind::continuation::eligible::hb6a34874505047e4 (in worldsim_perf)` | 28 | 2.529% |
+| 10 | `sim_systems::runtime::mind::facts::prepare_social_snapshot::hecbb51eace6353e7 (in worldsim_perf)` | 21 | 1.897% |
+
+### Inclusive top ten
+
+| Rank | Exact symbol (image) | Samples | % of 1107 |
+|---:|---|---:|---:|
+| 1 | `start (in dyld)` | 1107 | 100.000% |
+| 2 | `main (in worldsim_perf)` | 1107 | 100.000% |
+| 3 | `std::rt::lang_start_internal::h48672da3ca81ba76 (in worldsim_perf)` | 1107 | 100.000% |
+| 4 | `std::rt::lang_start::_$u7b$$u7b$closure$u7d$$u7d$::h0a4197fc4ae54a3a (in worldsim_perf)` | 1107 | 100.000% |
+| 5 | `std::sys::backtrace::__rust_begin_short_backtrace::h6f0693125875e1bd (in worldsim_perf)` | 1107 | 100.000% |
+| 6 | `worldsim_perf::main::hdbfddd71acfbd059 (in worldsim_perf)` | 1107 | 100.000% |
+| 7 | `sim_test::bench::main::h2378fa20f2d977a8 (in worldsim_perf)` | 1107 | 100.000% |
+| 8 | `sim_test::bench::run_one::h65bc253a0480dde6 (in worldsim_perf)` | 1107 | 100.000% |
+| 9 | `sim_engine::SimEngine::tick_inner::h88a9e377720310ca (in worldsim_perf)` | 1099 | 99.277% |
+| 10 | `_$LT$sim_systems..runtime..mind..system..ColonyMindSystem$u20$as$u20$sim_engine..RuntimeSystem$GT$::tick::ha9b31252eee1dfdc (in worldsim_perf)` | 733 | 66.215% |
+
+The standing comparison is 200 agents on side64 versus side192, not side128 (`rust/crates/sim-test/src/bench.rs:85–120`). Nominal map-wide agent density is nine times higher on side64; actual local occupancy and candidate counts were not measured. `WorldGenConfig::colony_stress` requests 1,920 outer bushes and 3,200 deadwood for 200 agents on either map, capped by available placement candidates (`rust/crates/sim-systems/src/worldgen/mod.rs:148–160`). Fixed-radius indexed food queries visit local tiles (`runtime/mind/context.rs:1630–1678`); forage selection checks claims and hearth exclusions and orders eligible bushes by claims/distance/coordinates (`runtime/mind/facts.rs:1216–1250`, `runtime/agent_actions/forage.rs:61–78`, paths relative to `rust/crates/sim-systems/src`). Claim effects clone the reservation map and invalidate claim-dependent observations (`runtime/mind/system.rs:659`, `runtime/mind/context.rs:1593`). Greater local resource density, reservation competition or claim churn could increase candidate work or repeated evaluation, but neither their counts nor their differences between scenes have been measured. Social snapshot buckets retain only two agent IDs (`runtime/mind/facts.rs:1439–1452`), so this is not evidence of quadratic peer scanning.
+
+Observed attribution places 733 samples inclusive in mind, 432 in person processing, 112 in selection and 90 in context capture. These observations nominate the source paths above; they do not establish density as the cause of the regression.
+
+The original paired side64 result remains **REQUIRED FAIL**: median tick mean 353.0180555555556 µs versus BASE 261.8625 µs (ratio 1.3481046562816577), p99 693 versus 527 µs (ratio 1.3149905123339658). The paired ceiling remains 288.04875 µs. The latest quiet M-ART2.1 ledger reference is 258.9 µs, yielding 284.79 µs at 1.10; the older M5.5 reference 257.5 µs is historical. The requested issue title’s “mind ×1.35” refers to the total-tick regression, not a measured isolated mind/old-decision ratio. **No P7 conditional justification has been granted yet.** Neither this attribution nor the proposed M7 work changes the required failure or grants publication approval.
+
+M7 should measure visited candidates, reservation-map size and updates, claim-dependent invalidations, and selector evaluations per person-tick before selecting node-consolidation work. Preserve deterministic ordering and behavioral proofs; evaluate any change with interleaved BASE/new binaries in one session, recording 1/5/15-minute loads before every repeat and admitting only starts below load1=8.

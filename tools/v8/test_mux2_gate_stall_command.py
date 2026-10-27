@@ -6,10 +6,86 @@
 # How to run: python3 -m unittest discover -s tools/v8 -p test_mux2_gate_stall_command.py
 """Exercise shell sequencing with synthetic commands, never performance acceptance."""
 import os
+import copy
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
+import mux2_gate_receipts as receipts
+from mux2_gate_inputs import Node
+
+
+class P7StallAdmissionTests(unittest.TestCase):
+    def fixture(self) -> dict:
+        return {'p7_admission': {'deadline_epoch': 5000, 'wait_seconds': 900.0,
+                                 'max_waits': 8, 'load1_limit_exclusive': 8.0}, 'arms': [{
+            'sampling_started_epoch': 1901,
+            'admission': {'status': 'ADMITTED', 'samples': [
+                {'epoch': 1000, 'loads_1_5_15': [8.0, 3.0, 2.0],
+                 'waits': 0, 'sysctl_exit': 0, 'action': 'WAIT'},
+                {'epoch': 1900, 'loads_1_5_15': [7.99, 10.0, 12.0],
+                 'waits': 1, 'sysctl_exit': 0, 'action': 'ADMITTED'},
+            ]}}]}
+
+    def test_wait_then_admit_records_all_three_loads(self) -> None:
+        receipts.validate_p7_admission(Node(self.fixture()))
+
+    def test_rejects_contended_missing_invalid_or_reordered_admission(self) -> None:
+        mutations = [
+            ('loads_1_5_15', [8.0, 1.0, 1.0]),
+            ('loads_1_5_15', [7.0, float('nan'), 1.0]),
+            ('loads_1_5_15', [7.0, -1.0, 1.0]),
+            ('loads_1_5_15', [7.0, 1.0]),
+            ('epoch', 1899), ('epoch', 1902), ('waits', 8),
+            ('action', 'NOT_RUN'), ('sysctl_exit', 1),
+        ]
+        for field, value in mutations:
+            report = copy.deepcopy(self.fixture())
+            report['arms'][0]['admission']['samples'][-1][field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                receipts.validate_p7_admission(Node(report))
+        report = self.fixture()
+        del report['arms'][0]['admission']
+        with self.assertRaises(ValueError):
+            receipts.validate_p7_admission(Node(report))
+
+    def test_rejects_changed_missing_or_nonfinite_admission_policy(self) -> None:
+        for field, value in [('wait_seconds', 899), ('max_waits', 9),
+                             ('load1_limit_exclusive', 8.1), ('deadline_epoch', float('inf'))]:
+            report = self.fixture()
+            report['p7_admission'][field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                receipts.validate_p7_admission(Node(report))
+        report = self.fixture()
+        del report['p7_admission']['wait_seconds']
+        with self.assertRaises(ValueError):
+            receipts.validate_p7_admission(Node(report))
+
+    def test_allows_eighth_wait_but_rejects_ninth(self) -> None:
+        report = self.fixture()
+        report['p7_admission']['deadline_epoch'] = 20000
+        report['arms'][0]['sampling_started_epoch'] = 8201
+        samples = [{'epoch': 1000 + index * 900, 'loads_1_5_15': [8.0, 1.0, 1.0],
+                    'waits': index, 'sysctl_exit': 0, 'action': 'WAIT'} for index in range(9)]
+        samples[-1].update(loads_1_5_15=[7.0, 1.0, 1.0], action='ADMITTED')
+        report['arms'][0]['admission']['samples'] = samples
+        receipts.validate_p7_admission(Node(report))
+        samples.append(dict(samples[-1], epoch=9100, waits=9))
+        with self.assertRaises(ValueError):
+            receipts.validate_p7_admission(Node(report))
+
+    def test_timeout_preserves_non_p7_and_bounds_p7_waits_by_deadline(self) -> None:
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(receipts.stall_timeout(), 960)
+        with patch.dict(os.environ, {'CORE_P7_RUN': '1', 'CORE_P7_DEADLINE_EPOCH': '20000'}, clear=True), patch.object(receipts.time, 'time', return_value=1000):
+            self.assertEqual(receipts.stall_timeout(), 15360)
+        with patch.dict(os.environ, {'CORE_P7_RUN': '1', 'CORE_P7_DEADLINE_EPOCH': '3000.9'}, clear=True), patch.object(receipts.time, 'time', return_value=1000):
+            self.assertEqual(receipts.stall_timeout(), 2000)
+        for deadline in ('', 'nan', 'inf', '1600'):
+            with patch.dict(os.environ, {'CORE_P7_RUN': '1', 'CORE_P7_DEADLINE_EPOCH': deadline}, clear=True), patch.object(receipts.time, 'time', return_value=1000):
+                with self.assertRaises(ValueError):
+                    receipts.stall_timeout()
 
 
 class StallGateCommandTests(unittest.TestCase):

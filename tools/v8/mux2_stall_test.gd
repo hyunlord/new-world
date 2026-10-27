@@ -6,6 +6,8 @@ extends SceneTree
 const Monitor = preload("res://tools/v8/mux2_perf_monitor.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
 const MAX_SECONDS: float = 900.0
+const P7_WAIT_SECONDS: float = 900.0
+const P7_MAX_WAITS: int = 8
 const SOURCE_PATHS: Array[String] = [
 	"tools/v8/mux2_stall_test.gd", "tools/v8/mux2_perf_monitor.gd", "project.godot", "sim_bridge.gdextension", "rust/Cargo.toml", "rust/Cargo.lock",
 	"scripts/core/sim_reads.gd", "scripts/world/camera_controller.gd", "scripts/world/colony/ground_layer.gd", "scripts/world/art/ground_baker.gd", "scripts/world/art/wall_baker.gd", "scripts/world/colony/building_layer.gd",
@@ -21,6 +23,8 @@ var _errors: Array[String] = []
 var _report: Dictionary = {}
 var _finished: bool = false
 var _diagnostic: bool = false
+var _p7: bool = OS.has_environment("CORE_P7_RUN")
+var _p7_deadline: float = 0.0
 
 func _init() -> void:
 	call_deferred("_run")
@@ -29,6 +33,7 @@ func _run() -> void:
 	var args: PackedStringArray = OS.get_cmdline_user_args()
 	if args.size() == 1 and args[0] == "--self-test":
 		_errors = Monitor.self_test()
+		_errors.append_array(_admission_self_test())
 		print("MUX2_STALL_SELF_TEST failures=%s" % [_errors])
 		quit(0 if _errors.is_empty() else 1)
 		return
@@ -65,7 +70,21 @@ func _run() -> void:
 		return
 	auto_accept_quit = false
 	root.close_requested.connect(_closed)
-	create_timer(MAX_SECONDS).timeout.connect(_timed_out)
+	var timeout: float = MAX_SECONDS
+	if _p7:
+		var deadline_text: String = OS.get_environment("CORE_P7_DEADLINE_EPOCH")
+		if not deadline_text.is_valid_float() or not is_finite(float(deadline_text)):
+			_errors.append("NOT_RUN: P7 requires finite CORE_P7_DEADLINE_EPOCH")
+			_finish()
+			return
+		_p7_deadline = float(deadline_text)
+		timeout = minf(MAX_SECONDS + 2.0 * P7_MAX_WAITS * P7_WAIT_SECONDS, _p7_deadline - Time.get_unix_time_from_system())
+		if timeout <= 0.0:
+			_errors.append("NOT_RUN: P7 deadline expired")
+			_finish()
+			return
+		_report["p7_admission"] = {"deadline_epoch": _p7_deadline, "load1_limit_exclusive": 8.0, "wait_seconds": P7_WAIT_SECONDS, "max_waits": P7_MAX_WAITS}
+	create_timer(timeout).timeout.connect(_timed_out)
 	var zoom_levels: Array[float] = [1.0, 0.5]
 	if _diagnostic:
 		zoom_levels = [1.0]
@@ -114,11 +133,19 @@ func _phase(zoom_level: float) -> void:
 		_errors.append("paused preparation advanced the fresh world")
 		return
 	var monitor: Monitor = Monitor.new()
-	monitor.setup(_main)
+	if not _p7: monitor.setup(_main)
 	var samples: Array[Dictionary] = []
 	# Paused preparation disables WorldSim processing; native frame coverage starts with the first measured frame.
 	var arm: Dictionary = {"zoom": zoom_level, "samples": samples, "instrumentation": {"complete": false, "status": "NOT_SAMPLED"}, "start_tick": _tick(), "population_start": _population(), "view": _view(), "complete": false}
 	(_report["arms"] as Array).append(arm)
+	if _p7:
+		if not await _admit_arm(arm):
+			return
+		if _tick() != 0 or not bool(_camera.call("is_paused")) or _view() != arm["view"]:
+			_errors.append("NOT_RUN: P7 paused preparation changed during admission")
+			return
+		monitor.setup(_main)
+		arm["sampling_started_epoch"] = Time.get_unix_time_from_system()
 	var previous: int = Time.get_ticks_usec()
 	monitor.begin_sampling(previous)
 	var started: int = previous
@@ -155,6 +182,72 @@ func _phase(zoom_level: float) -> void:
 	arm["complete"] = bool(arm["score"]["complete"]) and bool(arm["capture_complete"])
 	_write_report()
 	print("MUX2_STALL_ARM zoom=%s complete=%s pass=%s >50=%s >33/min=%s" % [zoom_level, arm["complete"], arm["score"]["pass"], arm["score"]["post_warmup_over50"], arm["score"]["over33_per_minute"]])
+
+# Pure decision helper: fake samples exercise boundaries without timing or load probes.
+static func _admission_action(loads: Array, waits: int, remaining: float, required: float) -> String:
+	if loads.size() != 3 or not is_finite(remaining) or remaining < required:
+		return "NOT_RUN"
+	for value: Variant in loads:
+		if not (value is float or value is int) or not is_finite(float(value)) or float(value) < 0.0:
+			return "NOT_RUN"
+	if float(loads[0]) < 8.0:
+		return "ADMITTED"
+	if waits >= P7_MAX_WAITS or remaining < P7_WAIT_SECONDS + required:
+		return "NOT_RUN"
+	return "WAIT"
+
+static func _admission_self_test() -> Array[String]:
+	var errors: Array[String] = []
+	var cases: Array = [
+		[[7.99, 12.0, 15.0], 0, 2000.0, "ADMITTED"],
+		[[8.0, 1.0, 1.0], 0, 2000.0, "WAIT"],
+		[[9.0, 1.0, 1.0], 8, 2000.0, "NOT_RUN"],
+		[[7.0, 1.0, 1.0], 8, 2000.0, "ADMITTED"],
+		[[7.0, 1.0, 1.0], 0, 309.0, "NOT_RUN"],
+		[[8.0, 1.0, 1.0], 0, 1209.0, "NOT_RUN"],
+		[[NAN, 1.0, 1.0], 0, 2000.0, "NOT_RUN"],
+		[[1.0, INF, 1.0], 0, 2000.0, "NOT_RUN"],
+		[[1.0, -1.0, 1.0], 0, 2000.0, "NOT_RUN"],
+		[[1.0], 0, 2000.0, "NOT_RUN"],
+	]
+	for row: Array in cases:
+		if _admission_action(row[0], row[1], row[2], 310.0) != row[3]:
+			errors.append("P7 admission boundary: " + str(row))
+	return errors
+
+func _admit_arm(arm: Dictionary) -> bool:
+	var history: Array[Dictionary] = []
+	arm["admission"] = {"status": "NOT_RUN", "samples": history}
+	# Reserve both complete arms on the first zoom, plus report/shutdown time.
+	var arms_left: int = 1 if _diagnostic or float(arm["zoom"]) < 1.0 else 2
+	var required: float = (120.0 if _diagnostic else Monitor.TOTAL_SECONDS) * arms_left + 30.0
+	for waits: int in P7_MAX_WAITS + 1:
+		if _finished: return false
+		# Timer resumption can be mid-frame; admit only at a fresh post-draw boundary.
+		await RenderingServer.frame_post_draw
+		if _finished: return false
+		var output: Array = []
+		var code: int = OS.execute("/usr/sbin/sysctl", PackedStringArray(["-n", "vm.loadavg"]), output)
+		var loads: Array = []
+		if code == 0 and output.size() == 1:
+			var parts: PackedStringArray = str(output[0]).replace("{", "").replace("}", "").strip_edges().split(" ", false)
+			for part: String in parts:
+				if not part.is_valid_float():
+					loads.clear()
+					break
+				loads.append(float(part))
+		var epoch: float = Time.get_unix_time_from_system()
+		var action: String = _admission_action(loads, waits, _p7_deadline - epoch, required)
+		history.append({"epoch": epoch, "utc": Time.get_datetime_string_from_system(true), "loads_1_5_15": loads, "waits": waits, "action": action, "sysctl_exit": code, "raw": output})
+		arm["admission"]["status"] = action
+		if not _write_report(): return false
+		if action == "ADMITTED": return true
+		if action == "NOT_RUN":
+			_errors.append("NOT_RUN: P7 zoom %s admission unavailable, contended or deadline exhausted" % arm["zoom"])
+			return false
+		# World remains paused; admission waiting precedes monitor.begin_sampling.
+		await create_timer(P7_WAIT_SECONDS, true, false, true).timeout
+	return false
 
 func _tick() -> int:
 	var value: Dictionary = _world.get_time_snapshot()
@@ -232,5 +325,5 @@ func _closed() -> void:
 	_finish()
 
 func _timed_out() -> void:
-	_errors.append("900 second self-watchdog expired")
+	_errors.append("NOT_RUN: P7 bounded capture watchdog expired" if _p7 else "900 second self-watchdog expired")
 	_finish()

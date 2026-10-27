@@ -85,6 +85,8 @@ successor_fields = {'runtime_successor', 'runtime_successor_checker_sha256'}
 p3d_fields = {'p3d_successor', 'p3d_successor_checker_sha256'}
 if set(config) not in (required, required | successor_fields, required | p3d_fields):
     raise SystemExit('invalid evaluation config fields')
+if __import__('os').environ.get('CORE_P7_RUN') and 'p3d_successor' not in config:
+    raise SystemExit('P7 requires the original P3d endpoint')
 if config['final_head'] != perf.git('rev-parse', 'HEAD') or config['final_rust_source_sha256'] != perf.source_hash():
     raise SystemExit('evaluation source no longer matches current final source')
 paths = {key: freeze.read_reference(root, config[key]) for key in required -
@@ -94,7 +96,11 @@ def check_successor():
         freeze.pin(root / 'tools/v8/core_p3d_successor.py', config['p3d_successor_checker_sha256'])
         import core_p3d_successor as p3d
         receipt = freeze.read_reference(root, config['p3d_successor'])
-        endpoint = p3d.check(root, receipt, config['p3d_successor']['sha256'])
+        if __import__('os').environ.get('CORE_P7_RUN'):
+            import core_p7_publication
+            endpoint = core_p7_publication.check(root, receipt, config['p3d_successor']['sha256'])
+        else:
+            endpoint = p3d.check(root, receipt, config['p3d_successor']['sha256'])
         chain = freeze.load(receipt)
         heldout = p3d.prior.pinned_tree(root, chain['heldout'])
         for arm in ('mind', 'base'):
@@ -126,8 +132,15 @@ for arm in ('mind', 'base'):
     if arm == 'mind' and (receipt['source_sha'] != perf_inputs['candidate_head'] or receipt['policy_sha256'] != policy_sha):
         raise SystemExit('held-out mind source/policy is not current final source')
 perf_config, perf_receipt = paths['perf_config'], paths['perf_receipt']
+p7_adjudication_sha256 = None
 if perf_config.name != 'config.json' or perf_receipt != perf_config.parent / 'receipt.json':
     raise SystemExit('performance references must identify one complete session')
+if __import__('os').environ.get('CORE_P7_RUN'):
+    expected_session = freeze.canonical(Path(__import__('os').environ['CORE_P7_RUN'])) / 'full-gate/bench/perf-session'
+    if perf_config != expected_session / 'config.json' or perf_receipt != expected_session / 'receipt.json':
+        raise SystemExit('P7 requires this final run paired performance session')
+    import core_p7_publication
+    p7_adjudication_sha256 = core_p7_publication.adjudication(root, perf_config, perf_receipt)
 if freeze.load(paths['base_receipt'])['source_sha'] not in (perf_inputs['base_head'], perf_inputs['expected_base']):
     raise SystemExit('held-out BASE source differs from measured performance BASE')
 freeze.external(root, output)
@@ -160,6 +173,10 @@ def performance_gate(receipt, exit_code):
     expected_status, expected_exit = ('FAIL', 1) if failures else ('PASS', 0)
     if receipt['status'] != expected_status or exit_code != expected_exit:
         raise ValueError('performance status/exit mismatch or invalid evidence')
+    if __import__('os').environ.get('CORE_P7_RUN'):
+        import core_p7_acceptance
+        core_p7_acceptance.check_paired(receipt)
+        return failures
     if any(item not in report_only for item in failures):
         raise ValueError('standing performance/C3 failure: ' + ', '.join(failures))
     return failures
@@ -183,7 +200,14 @@ perf_exit = run([sys.executable, 'tools/v8/core_perf_check.py', 'check', perf_co
 if freeze.digest(output / 'performance.json') != freeze.digest(perf_receipt):
     raise SystemExit('fresh performance verification differs from pinned receipt')
 misses = performance_gate(freeze.load(output / 'performance.json'), perf_exit)
-print('CORE_PERF BAR_MISS report-only: ' + ', '.join(misses) if misses else 'CORE_PERF BARS_PASS')
+justified = [item for item in misses if __import__('os').environ.get('CORE_P7_RUN') and item.startswith('n200_side64/')]
+reported = [item for item in misses if item not in justified]
+if justified:
+    print('CORE_PERF P7_JUSTIFIED: ' + ', '.join(justified))
+if reported:
+    print('CORE_PERF BAR_MISS report-only: ' + ', '.join(reported))
+if not misses:
+    print('CORE_PERF BARS_PASS')
 # Frozen inputs remain unchanged; only new gate outputs are written.
 for key, path in paths.items():
     freeze.read_reference(root, config[key])
@@ -191,6 +215,8 @@ freeze.pin(config_path, sys.argv[4])
 if config['final_head'] != perf.git('rev-parse', 'HEAD') or config['final_rust_source_sha256'] != perf.source_hash():
     raise SystemExit('source changed while validating evaluation evidence')
 check_successor()
+if p7_adjudication_sha256 is not None:
+    core_p7_publication.adjudication(root, perf_config, perf_receipt, p7_adjudication_sha256)
 print('CORE_EVALUATION PASS held-out outcomes + why + story completeness + raw performance revalidation; no simulations launched')
 PYEVAL
     ;;
@@ -217,6 +243,8 @@ successor_fields = {'runtime_successor', 'runtime_successor_checker_sha256'}
 p3d_fields = {'p3d_successor', 'p3d_successor_checker_sha256'}
 if set(config) not in (required, required | migration_fields, required | migration_fields | successor_fields, required | p3d_fields):
     raise SystemExit('invalid fixture config fields')
+if __import__('os').environ.get('CORE_P7_RUN') and 'p3d_successor' not in config:
+    raise SystemExit('P7 requires the original P3d endpoint')
 manifest_path = Path(config['manifest'])
 
 def check_frozen():
@@ -226,7 +254,11 @@ def check_frozen():
         import core_p3d_successor as p3d
         receipt = freeze.read_reference(root, config['p3d_successor'])
         data = freeze.load(receipt)
-        p3d.check(root, receipt, config['p3d_successor']['sha256'])
+        if __import__('os').environ.get('CORE_P7_RUN'):
+            import core_p7_publication
+            core_p7_publication.check(root, receipt, config['p3d_successor']['sha256'])
+        else:
+            p3d.check(root, receipt, config['p3d_successor']['sha256'])
         if manifest_path != freeze.read_reference(root, data['host_manifest']) or config['manifest_sha256'] != data['host_manifest']['sha256'] or config['calibration'] != data['calibration']:
             raise SystemExit('fixture config differs from fresh P3d host/calibration')
         return
