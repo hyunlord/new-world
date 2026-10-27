@@ -12,9 +12,7 @@ use crate::runtime::agent_actions::{
     routine::{PlacesCache, RoutineTick},
 };
 use hecs::World;
-use sim_core::colony::mind::{
-    choose, EvalKey, EvalScratch, FinishMode, PersonFacts, RunningChoice,
-};
+use sim_core::colony::mind::{choose_with_reader, EvalKey, EvalScratch, FinishMode, RunningChoice};
 use sim_core::colony::mind_records::MindHistory;
 use sim_core::components::{AgentId, AgentState, SeekTarget};
 use sim_engine::{RuntimeSystem, SimResources};
@@ -39,6 +37,7 @@ pub struct ColonyMindSystem {
     program: MindProgram,
     places: PlacesCache,
     scratch: EvalScratch,
+    fact_values: Vec<Option<i64>>,
     initialized: bool,
 }
 impl ColonyMindSystem {
@@ -48,6 +47,7 @@ impl ColonyMindSystem {
             program,
             places: PlacesCache::default(),
             scratch: EvalScratch::default(),
+            fact_values: Vec::new(),
             initialized: false,
         }
     }
@@ -55,7 +55,13 @@ impl ColonyMindSystem {
     /// Install or validate persistent policy state before commands are admitted.
     pub(crate) fn initialize(&mut self, resources: &mut SimResources) -> Result<(), MindTickError> {
         if self.initialized {
-            return Ok(());
+            return resources
+                .mind
+                .history
+                .as_mut()
+                .ok_or_else(|| failure("initialized mind lacks history"))?
+                .check_initialized_policy(&self.program.policy)
+                .map_err(failure);
         }
         let state = &mut resources.mind;
         match state.policy_source.as_deref() {
@@ -65,9 +71,9 @@ impl ColonyMindSystem {
             Some(_) => {
                 state
                     .history
-                    .as_ref()
+                    .as_mut()
                     .ok_or_else(|| failure("saved mind lacks history"))?
-                    .check_policy(&self.program.policy)
+                    .check_initialized_policy(&self.program.policy)
                     .map_err(failure)?;
             }
             None => {
@@ -121,12 +127,6 @@ impl ColonyMindSystem {
             .replace_claims(effects.claims.clone())
             .map_err(failure)?;
         let mut pending: Vec<_> = context.rows().iter().map(|row| row.agent).collect();
-        let mut table = PersonFacts::new(
-            &self.program.policy,
-            pending.clone(),
-            resources.current_tick,
-        )
-        .map_err(failure)?;
         let mut completed = BTreeSet::new();
         loop {
             for agent in pending {
@@ -138,7 +138,6 @@ impl ColonyMindSystem {
                     world,
                     resources,
                     &mut context,
-                    &mut table,
                     &mut effects,
                     &mut routine,
                     agent,
@@ -182,7 +181,6 @@ impl ColonyMindSystem {
         world: &mut World,
         resources: &mut SimResources,
         context: &mut TickContext,
-        table: &mut PersonFacts,
         effects: &mut EffectState,
         routine: &mut Option<RoutineTick>,
         agent: AgentId,
@@ -203,14 +201,21 @@ impl ColonyMindSystem {
         context
             .set_running(agent, prior, &self.program.policy)
             .map_err(failure)?;
-        facts::refresh_routine(context, routine.as_ref(), agent).map_err(failure)?;
-        self.program
+        facts::refresh_routine_lifecycle(context, routine.as_ref(), agent).map_err(failure)?;
+        let mut row = self
+            .program
             .providers
-            .refresh_row(table, context, resources, agent)
+            .lazy_row(
+                context,
+                resources,
+                routine.as_ref(),
+                agent,
+                &mut self.fact_values,
+            )
             .map_err(failure)?;
-        let selected = choose(
+        let selected = choose_with_reader(
             &self.program.policy,
-            table.row(agent).map_err(failure)?,
+            &mut row,
             prior,
             EvalKey {
                 world_seed: resources.world_seed,
@@ -229,6 +234,15 @@ impl ColonyMindSystem {
         let effect = self.program.effect(node.id).map_err(failure)?;
         let candidate = match node.target.as_deref() {
             Some(name) => {
+                if name.starts_with("routine_") && context.target(agent, name).is_err() {
+                    facts::prepare_routine_fact(
+                        context,
+                        routine.as_ref(),
+                        agent,
+                        &format!("{name}_available"),
+                    )
+                    .map_err(failure)?;
+                }
                 facts::resolve_target(context, resources, agent, name).map_err(failure)?
             }
             None => None,
@@ -276,37 +290,43 @@ impl ColonyMindSystem {
         {
             return Err(failure("finish action does not match running lifecycle"));
         }
-        let mut origins = record::automatic_origins(
-            resources,
-            &self.program.policy,
-            agent,
-            person.fleeing,
-            self.scratch.witnesses(),
-        );
-        origins.extend(record::memory_origins(
-            &self.program.policy,
-            &selected,
-            &person.memory_causes,
-            self.scratch.witnesses(),
-        ));
-        let drafted = world
-            .get::<&sim_core::colony::people::Drafted>(person.entity)
-            .ok()
-            .map(|value| *value);
-        origins.extend(record::draft_origins(
-            resources,
-            &self.program.policy,
-            agent,
-            drafted,
-            self.scratch.witnesses(),
-        ));
-        origins.extend(record::assigned_job_origins(
-            resources,
-            &self.program.policy,
-            agent,
-            person.job,
-            self.scratch.witnesses(),
-        ));
+        let origins = if record::is_unfinished_continuation(&self.program.policy, prior, &selected)
+        {
+            Vec::new()
+        } else {
+            let mut origins = record::automatic_origins(
+                resources,
+                &self.program.policy,
+                agent,
+                person.fleeing,
+                self.scratch.witnesses(),
+            );
+            origins.extend(record::memory_origins(
+                &self.program.policy,
+                &selected,
+                &person.memory_causes,
+                self.scratch.witnesses(),
+            ));
+            let drafted = world
+                .get::<&sim_core::colony::people::Drafted>(person.entity)
+                .ok()
+                .map(|value| *value);
+            origins.extend(record::draft_origins(
+                resources,
+                &self.program.policy,
+                agent,
+                drafted,
+                self.scratch.witnesses(),
+            ));
+            origins.extend(record::assigned_job_origins(
+                resources,
+                &self.program.policy,
+                agent,
+                person.job,
+                self.scratch.witnesses(),
+            ));
+            origins
+        };
         let cause = record::record_selection(
             resources,
             &self.program.policy,
@@ -445,7 +465,7 @@ impl ColonyMindSystem {
         if finished {
             completed.insert(agent);
         }
-        invalidate(context, call.effects)?;
+        invalidate(context, call.effects, call.resources)?;
         Ok(())
     }
 }
@@ -466,13 +486,35 @@ fn restore_external(
     Ok(())
 }
 
-fn invalidate(context: &mut TickContext, effects: &mut EffectState) -> Result<(), MindTickError> {
-    for domain in std::mem::take(&mut effects.dirty) {
+fn invalidate(
+    context: &mut TickContext,
+    effects: &mut EffectState,
+    resources: &SimResources,
+) -> Result<(), MindTickError> {
+    let dirty = std::mem::take(&mut effects.dirty);
+    let mut food_invalidated = false;
+    for domain in dirty.iter().copied() {
         match domain {
             EffectDomain::Needs | EffectDomain::Targets | EffectDomain::Relations => {
                 context.invalidate(Domain::Person)
             }
-            EffectDomain::FoodSources => context.invalidate(Domain::FoodSources),
+            EffectDomain::FoodSources | EffectDomain::FoodTile(_) => {
+                if food_invalidated {
+                    continue;
+                }
+                food_invalidated = true;
+                if dirty.contains(&EffectDomain::FoodSources) {
+                    context.invalidate(Domain::FoodSources)
+                } else {
+                    context.invalidate_food_tiles(
+                        resources,
+                        dirty.iter().filter_map(|domain| match domain {
+                            EffectDomain::FoodTile(tile) => Some(*tile),
+                            _ => None,
+                        }),
+                    )
+                }
+            }
             EffectDomain::Claims => context.replace_claims(effects.claims.clone()),
             EffectDomain::RoutineOccupancy => context.invalidate(Domain::RoutineOccupancy),
             EffectDomain::Invitations => context.invalidate(Domain::Invitations),
@@ -570,3 +612,6 @@ mod tests {
 #[cfg(test)]
 #[path = "system_owner_tests.rs"]
 mod owner_tests;
+
+#[cfg(test)]
+mod food_invalidation_tests;

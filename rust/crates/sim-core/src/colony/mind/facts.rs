@@ -157,3 +157,43 @@ impl FactRow<'_> {
         self.table.get(fact, self.index)
     }
 }
+
+/// Evaluation-local fact source; implementations may memoize reads without changing values.
+pub trait FactReader {
+    /// Opt in only when, within one selection, every successful fact read remains
+    /// the same value and cannot later fail, and omitting repeat reads has no
+    /// observable side effects. The selector may reuse successful comparisons.
+    /// Errors on the first requested read are never cached or bypassed.
+    const STABLE_READS: bool = false;
+    /// Provider failures retain their runtime-specific detail.
+    type Error: From<MindEvalError>;
+    /// Person identity at this evaluation boundary.
+    fn agent(&self) -> AgentId;
+    /// Observation tick.
+    fn tick(&self) -> u64;
+    /// Structural life stage.
+    fn life_stage(&self) -> LifeStage;
+    /// Compiled policy owning these facts.
+    fn revision(&self) -> MindRevision;
+    /// Read a requested value; absence must never fabricate zero.
+    fn get(&mut self, fact: FactId) -> Result<i64, Self::Error>;
+}
+impl FactReader for FactRow<'_> {
+    const STABLE_READS: bool = true;
+    type Error = MindEvalError;
+    fn agent(&self) -> AgentId {
+        (*self).agent()
+    }
+    fn tick(&self) -> u64 {
+        (*self).tick()
+    }
+    fn life_stage(&self) -> LifeStage {
+        (*self).life_stage()
+    }
+    fn revision(&self) -> MindRevision {
+        (*self).revision()
+    }
+    fn get(&mut self, fact: FactId) -> Result<i64, Self::Error> {
+        (*self).get(fact)
+    }
+}

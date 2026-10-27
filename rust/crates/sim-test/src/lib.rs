@@ -22,6 +22,8 @@ pub mod perf;
 pub mod probe;
 /// Shared production-scene fixtures.
 pub mod scenes;
+/// Separate read-only chronicle kind and cause diagnostic export.
+pub mod story_diagnostics;
 /// Read-only annual story metrics over durable chronicle causes.
 pub mod story_yield;
 

@@ -550,6 +550,82 @@ pub fn summarise(all_runs: &std::collections::BTreeMap<String, Vec<Value>>, comm
     })
 }
 
+// Parent-only admission: no timing window or simulation work is changed.
+fn parse_admission_load(raw: &str) -> Result<[f64; 3], String> {
+    let values: Vec<f64> = raw
+        .split_whitespace()
+        .map(|part| part.trim_end_matches(',').parse::<f64>())
+        .collect::<Result<_, _>>()
+        .map_err(|_| "invalid admission load".to_string())?;
+    let loads: [f64; 3] = values
+        .try_into()
+        .map_err(|_| "expected three load averages".to_string())?;
+    if loads.iter().any(|value| !value.is_finite() || *value < 0.0) {
+        return Err("nonfinite or negative admission load".into());
+    }
+    Ok(loads)
+}
+
+fn admission_decision(loads: &Result<[f64; 3], String>, timed_out: bool) -> &'static str {
+    match loads {
+        Ok(load) if load[0] < 8.0 => "ADMIT",
+        Ok(_) if timed_out => "TIMEOUT",
+        Ok(_) => "WAIT",
+        Err(_) => "INVALID",
+    }
+}
+
+fn validate_timed_start(run: &Value) -> Result<[f64; 3], String> {
+    let raw = run["load_before"]
+        .as_str()
+        .ok_or_else(|| "missing timed child starting load".to_string())?;
+    let loads = parse_admission_load(raw)?;
+    if loads[0] >= 8.0 {
+        return Err(format!("contended timed child starting load: {raw}"));
+    }
+    Ok(loads)
+}
+
+fn admit_child(
+    journal: &mut std::fs::File,
+    output: &Path,
+    kind: &str,
+    scene: &str,
+    repeat: u32,
+) -> Result<(), String> {
+    use std::io::Write;
+    let start = Instant::now();
+    loop {
+        let raw = load_average();
+        let loads = parse_admission_load(&raw);
+        let timed_out = start.elapsed() >= std::time::Duration::from_secs(2700);
+        let decision = admission_decision(&loads, timed_out);
+        let timestamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_err(|e| e.to_string())?
+            .as_secs_f64();
+        let row = json!({"schema_version": 1, "unix_seconds": timestamp,
+            "output": output, "kind": kind, "scene": scene, "repeat": repeat,
+            "load_raw": raw, "load_1_5_15": loads.as_ref().ok(),
+            "decision": decision, "waited_seconds": start.elapsed().as_secs_f64()});
+        writeln!(journal, "{row}").map_err(|e| e.to_string())?;
+        journal.flush().map_err(|e| e.to_string())?;
+        match decision {
+            "ADMIT" => return Ok(()),
+            "WAIT" => std::thread::sleep(std::time::Duration::from_secs(30)),
+            _ => {
+                return Err(format!(
+                    "benchmark admission {decision}: {scene} repeat {repeat}"
+                ))
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+#[path = "bench_admission_tests.rs"]
+mod admission_tests;
+
 /// `bench`: every scene `repeats` times in child processes of `exe`, then
 /// the summary in `out/bench.json` (per-run files in `out/runs/`).
 pub fn run_all(
@@ -561,6 +637,11 @@ pub fn run_all(
 ) -> Result<Value, String> {
     let runs_dir = out.join("runs");
     std::fs::create_dir_all(&runs_dir).map_err(|e| e.to_string())?;
+    let mut admission = std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(out.join("admission.jsonl"))
+        .map_err(|e| e.to_string())?;
     let mut runs: std::collections::BTreeMap<String, Vec<Value>> = Default::default();
     for repeat in 1..=repeats {
         for scene in &SCENES {
@@ -576,6 +657,7 @@ pub fn run_all(
             if scene.script {
                 cmd.args(["--commands", &script.display().to_string()]);
             }
+            admit_child(&mut admission, &file, "timed", scene.label, repeat)?;
             let status = cmd
                 .status()
                 .map_err(|e| format!("{}: {e}", exe.display()))?;
@@ -584,6 +666,16 @@ pub fn run_all(
             }
             let text = std::fs::read_to_string(&file).map_err(|e| e.to_string())?;
             let run: Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
+            if let Err(reason) = validate_timed_start(&run) {
+                use std::io::Write;
+                let row = json!({"schema_version": 1, "decision": "INVALID",
+                    "output": file, "kind": "timed", "scene": scene.label,
+                    "repeat": repeat, "child_load_before": run["load_before"],
+                    "reason": reason});
+                writeln!(admission, "{row}").map_err(|e| e.to_string())?;
+                admission.flush().map_err(|e| e.to_string())?;
+                return Err(reason);
+            }
             eprintln!(
                 "bench r{repeat} {}: mean {:.1} µs p99 {} µs max {} µs alive {} rss {} KiB alloc {} B",
                 scene.label,
@@ -601,16 +693,18 @@ pub fn run_all(
     for repeat in 1..=RSS_REPEATS {
         for label in RSS_SCENES {
             let file = runs_dir.join(format!("rss_{label}_r{repeat}.json"));
-            let status = std::process::Command::new(exe)
-                .args([
-                    "bench-one",
-                    "--build-only",
-                    &repeat.to_string(),
-                    "--scene-label",
-                    label,
-                    "--out",
-                    &file.display().to_string(),
-                ])
+            let mut cmd = std::process::Command::new(exe);
+            cmd.args([
+                "bench-one",
+                "--build-only",
+                &repeat.to_string(),
+                "--scene-label",
+                label,
+                "--out",
+                &file.display().to_string(),
+            ]);
+            admit_child(&mut admission, &file, "rss", label, repeat)?;
+            let status = cmd
                 .status()
                 .map_err(|e| format!("{}: {e}", exe.display()))?;
             if !status.success() {

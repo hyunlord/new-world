@@ -261,3 +261,163 @@ fn losing_node_fact_retains_provenance_without_becoming_selected_parent() {
         Some(0)
     );
 }
+
+#[test]
+fn origin_skip_matches_exact_continuation_and_preserves_record_state() {
+    let (mut resources, policy) = fixture();
+    let (selection, scratch) = select(&resources, &policy, 1, 0);
+    assert!(!is_unfinished_continuation(&policy, None, &selection));
+    let id = record_selection(
+        &mut resources,
+        &policy,
+        person(),
+        &selection,
+        scratch.witnesses(),
+        &[],
+    )
+    .unwrap()
+    .unwrap();
+    let prior = resources.mind.running.get(&7).copied();
+    assert!(is_unfinished_continuation(&policy, prior, &selection));
+    let before = bincode::serialize(&resources.mind).unwrap();
+    let events = bincode::serialize(&resources.causal_log).unwrap();
+    let chronicle = bincode::serialize(&resources.chronicle).unwrap();
+    let next = resources.next_event_id.load(Ordering::Relaxed);
+    // The old path ignores origins on this exact continuation, including invalid ones.
+    let ignored = [FactOrigin {
+        fact: policy.fact_id("trigger").unwrap(),
+        source: FactCause::Source(MindFactSource::Command(999)),
+        priority: CausePriority::Job,
+    }];
+    for origins in [&ignored[..], &[][..]] {
+        assert_eq!(
+            record_selection(
+                &mut resources,
+                &policy,
+                person(),
+                &selection,
+                scratch.witnesses(),
+                origins
+            )
+            .unwrap(),
+            None
+        );
+        assert_eq!(bincode::serialize(&resources.mind).unwrap(), before);
+        assert_eq!(bincode::serialize(&resources.causal_log).unwrap(), events);
+        assert_eq!(bincode::serialize(&resources.chronicle).unwrap(), chronicle);
+        assert_eq!(resources.next_event_id.load(Ordering::Relaxed), next);
+        assert_eq!(
+            resources
+                .mind
+                .history
+                .as_ref()
+                .unwrap()
+                .latest(7)
+                .unwrap()
+                .id(),
+            id
+        );
+    }
+    let mut finished = prior.unwrap();
+    finished.finished = true;
+    assert!(!is_unfinished_continuation(
+        &policy,
+        Some(finished),
+        &selection
+    ));
+    let (changed, _) = select(&resources, &policy, 0, 1);
+    assert!(!is_unfinished_continuation(&policy, prior, &changed));
+    let mut wrong_revision = prior.unwrap();
+    wrong_revision.revision = bincode::deserialize(
+        &bincode::serialize(&policy.revision().code().wrapping_add(1)).unwrap(),
+    )
+    .unwrap();
+    assert!(!is_unfinished_continuation(
+        &policy,
+        Some(wrong_revision),
+        &selection
+    ));
+    resources.mind.running.insert(7, wrong_revision);
+    assert!(record_selection(
+        &mut resources,
+        &policy,
+        person(),
+        &selection,
+        scratch.witnesses(),
+        &[]
+    )
+    .is_err());
+    resources.mind.running.insert(7, prior.unwrap());
+    resources.rules.colony = None;
+    assert!(record_selection(
+        &mut resources,
+        &policy,
+        person(),
+        &selection,
+        scratch.witnesses(),
+        &[]
+    )
+    .is_err());
+    assert_eq!(resources.next_event_id.load(Ordering::Relaxed), next);
+}
+
+#[test]
+fn replaced_history_is_rejected_before_recording_or_continuation() {
+    for continuation in [false, true] {
+        let (mut resources, policy) = fixture();
+        let (selection, scratch) = select(&resources, &policy, 1, 0);
+        record_selection(
+            &mut resources,
+            &policy,
+            person(),
+            &selection,
+            scratch.witnesses(),
+            &[],
+        )
+        .unwrap();
+        if !continuation {
+            resources.mind.running.clear();
+        }
+        let history = resources.mind.history.as_ref().unwrap();
+        let name = history.dictionary().node_label(0).unwrap().name.as_bytes();
+        let mut wire = bincode::serialize(history).unwrap();
+        // Fixed-width bincode prefix: revision, node count, then first name length.
+        assert_eq!(&wire[24..24 + name.len()], name);
+        wire[24] ^= 1; // Same-length valid ASCII name corruption; revision stays intact.
+        resources.mind.history = Some(bincode::deserialize(&wire).unwrap());
+        let before = bincode::serialize(&resources.mind).unwrap();
+        let events = bincode::serialize(&resources.causal_log).unwrap();
+        let chronicle = bincode::serialize(&resources.chronicle).unwrap();
+        let next = resources.next_event_id.load(Ordering::Relaxed);
+        let result = record_selection(
+            &mut resources,
+            &policy,
+            person(),
+            &selection,
+            scratch.witnesses(),
+            &[],
+        );
+        assert!(matches!(
+            result,
+            Err(RecordError::Payload(
+                sim_core::colony::mind_records::MindRecordError::PolicyMismatch
+            ))
+        ));
+        assert_eq!(bincode::serialize(&resources.mind).unwrap(), before);
+        assert_eq!(bincode::serialize(&resources.causal_log).unwrap(), events);
+        assert_eq!(bincode::serialize(&resources.chronicle).unwrap(), chronicle);
+        assert_eq!(resources.next_event_id.load(Ordering::Relaxed), next);
+    }
+}
+
+#[test]
+fn initialized_history_validation_preserves_bincode_roundtrip() {
+    let (resources, policy) = fixture();
+    let history = resources.mind.history.as_ref().unwrap();
+    let bytes = bincode::serialize(history).unwrap();
+    let mut restored: MindHistory = bincode::deserialize(&bytes).unwrap();
+    assert_eq!(&restored, history);
+    restored.check_initialized_policy(&policy).unwrap();
+    assert_eq!(&restored, history);
+    assert_eq!(bincode::serialize(&restored).unwrap(), bytes);
+}

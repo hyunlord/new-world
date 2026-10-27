@@ -181,12 +181,14 @@ pub fn compile(text: &str, schema: &MindRegistrySchema) -> Result<CompiledMind, 
     }
     let mut result = CompiledMind {
         revision: MindRevision(revision),
+        predicate_count: 0,
         nodes: Vec::new(),
         bands: std::array::from_fn(|_| Vec::new()),
         facts,
         fact_names,
         behaviours: schema.behaviours.clone(),
     };
+    let mut shared_predicates = Vec::new();
     let mut names = BTreeSet::new();
     let mut keys = BTreeSet::new();
     let mut fallback_stages = 0;
@@ -277,7 +279,21 @@ pub fn compile(text: &str, schema: &MindRegistrySchema) -> Result<CompiledMind, 
                 .get(&raw.fact)
                 .ok_or_else(|| MindLoadError::new(&node.id, "unknown fact"))?;
             let (op, value) = operation(&raw, result.facts[fact.0].kind, &node.id)?;
-            predicates.push(Predicate { fact, op, value });
+            let identity = (fact, op, value);
+            let cache_index = match shared_predicates.iter().position(|key| *key == identity) {
+                Some(index) => index,
+                None => {
+                    let index = shared_predicates.len();
+                    shared_predicates.push(identity);
+                    index
+                }
+            };
+            predicates.push(Predicate {
+                cache_index,
+                fact,
+                op,
+                value,
+            });
         }
         let mut terms = Vec::new();
         let mut term_facts = BTreeSet::new();
@@ -321,5 +337,6 @@ pub fn compile(text: &str, schema: &MindRegistrySchema) -> Result<CompiledMind, 
         "idle",
         "every life stage requires an idle node with every_ticks 1",
     )?;
+    result.predicate_count = shared_predicates.len();
     Ok(result)
 }

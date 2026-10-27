@@ -31,7 +31,11 @@ impl RoutineTick {
         }
         let sid = member?;
         let lists = self.places.places().get(&sid)?;
-        places::choose(&lists[kind.index()], &self.occupancy)
+        self.cursors
+            .borrow_mut()
+            .entry((sid, kind.index()))
+            .or_default()
+            .choose(&lists[kind.index()], &self.occupancy)
     }
 
     pub(in crate::runtime) fn invitation_pending(&self, id: AgentId) -> bool {

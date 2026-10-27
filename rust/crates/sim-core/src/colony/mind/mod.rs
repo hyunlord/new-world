@@ -11,9 +11,9 @@ mod selection;
 
 pub use compile::compile;
 pub use error::*;
-pub use facts::{FactRow, PersonFacts};
+pub use facts::{FactReader, FactRow, PersonFacts};
 pub use model::*;
-pub use select::{choose, EvalScratch, FactWitness, WitnessRole};
+pub use select::{choose, choose_with_reader, EvalScratch, FactWitness, WitnessRole};
 pub use selection::*;
 
 #[cfg(test)]

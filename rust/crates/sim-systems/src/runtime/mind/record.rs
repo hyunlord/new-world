@@ -21,6 +21,19 @@ use sim_core::colony::mind_records::{
 };
 use sim_engine::SimResources;
 
+/// Exact continuation needs no provenance work; the recorder still checks world/revision validity.
+pub(super) fn is_unfinished_continuation(
+    policy: &CompiledMind,
+    prior: Option<RunningChoice>,
+    selection: &Selection,
+) -> bool {
+    prior.is_some_and(|running| {
+        running.revision == policy.revision()
+            && !running.finished
+            && running.node == selection.selected.node
+    })
+}
+
 /// Record before effects and before replacing running state; continuing one unfinished node is a no-op.
 pub fn record_selection(
     resources: &mut SimResources,
@@ -37,15 +50,15 @@ pub fn record_selection(
     if prior.is_some_and(|running| running.revision != policy.revision()) {
         return Err(RecordError::Invalid("running mind policy mismatch"));
     }
-    if prior.is_some_and(|running| !running.finished && running.node == selection.selected.node) {
-        return Ok(None);
-    }
-    let history = resources
+    resources
         .mind
         .history
-        .as_ref()
-        .ok_or(RecordError::Invalid("mind history not initialized"))?;
-    history.dictionary().check(policy)?;
+        .as_mut()
+        .ok_or(RecordError::Invalid("mind history not initialized"))?
+        .check_initialized_policy(policy)?;
+    if is_unfinished_continuation(policy, prior, selection) {
+        return Ok(None);
+    }
     let old_band = prior
         .and_then(|running| policy.node(running.node))
         .map(|node| node.band.index());
@@ -134,7 +147,7 @@ pub fn record_selection(
         .history
         .as_mut()
         .ok_or(RecordError::Invalid("mind history missing"))?
-        .push_record(policy, &record)?;
+        .push_record_for_initialized_policy(policy, &record)?;
     resources
         .causal_log
         .push(tile, CausalEvent::MindChoice { choice: packed });

@@ -18,6 +18,7 @@ use sim_core::components::{
     Hunger, Inventory, PorterTrip, Position, ResourceKind, SettlementId, Sleep, Social,
     Temperament, Thirst,
 };
+use sim_core::spatial::{chebyshev, ChunkIndex};
 use sim_engine::SimResources;
 
 /// Structural dependency domains, independent of node or behaviour names.
@@ -44,6 +45,7 @@ pub enum Domain {
     Threats,
 }
 const DOMAIN_COUNT: usize = 9;
+const _: () = assert!(DOMAIN_COUNT <= u16::BITS as usize);
 
 /// A failure is explicit; absent or stale evidence must never become false/zero.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -151,26 +153,36 @@ impl PersonSnapshot {
         agent: AgentId,
         tick: u64,
     ) -> Result<Self, ContextError> {
-        let position = world.get::<&Position>(entity).map(|v| *v).map_err(|_| {
-            ContextError::MissingComponent {
+        let entity_ref = world
+            .entity(entity)
+            .map_err(|_| ContextError::MissingComponent {
                 agent,
                 component: "Position",
-            }
-        })?;
-        let state = world.get::<&AgentState>(entity).map(|v| *v).map_err(|_| {
-            ContextError::MissingComponent {
-                agent,
-                component: "AgentState",
-            }
-        })?;
-        let life_stage = if world.get::<&Child>(entity).is_ok() {
+            })?;
+        let position =
+            entity_ref
+                .get::<&Position>()
+                .map(|v| *v)
+                .ok_or(ContextError::MissingComponent {
+                    agent,
+                    component: "Position",
+                })?;
+        let state =
+            entity_ref
+                .get::<&AgentState>()
+                .map(|v| *v)
+                .ok_or(ContextError::MissingComponent {
+                    agent,
+                    component: "AgentState",
+                })?;
+        let life_stage = if entity_ref.get::<&Child>().is_some() {
             LifeStage::Child
-        } else if world.get::<&Elder>(entity).is_ok() {
+        } else if entity_ref.get::<&Elder>().is_some() {
             LifeStage::Elder
         } else {
             LifeStage::Adult
         };
-        let memory = world.get::<&sim_core::components::Memory>(entity).ok();
+        let memory = entity_ref.get::<&sim_core::components::Memory>();
         let (memory_weights, memory_causes) = memory
             .as_ref()
             .map_or(([0.0; 6], [None; 6]), |memory| memory_values(memory, tick));
@@ -181,32 +193,27 @@ impl PersonSnapshot {
             position,
             state,
             life_stage,
-            hunger: world
-                .get::<&Hunger>(entity)
-                .ok()
-                .map(|v| f64::from(v.value)),
-            thirst: world.get::<&Thirst>(entity).ok().map(|v| v.value),
-            fatigue: world.get::<&Sleep>(entity).ok().map(|v| v.fatigue),
-            social: world.get::<&Social>(entity).ok().map(|v| v.loneliness),
-            temperament: world.get::<&Temperament>(entity).ok().map(|v| *v),
-            inventory_total: world.get::<&Inventory>(entity).ok().map(|v| v.total()),
-            inventory_food: world
-                .get::<&Inventory>(entity)
-                .ok()
+            hunger: entity_ref.get::<&Hunger>().map(|v| f64::from(v.value)),
+            thirst: entity_ref.get::<&Thirst>().map(|v| v.value),
+            fatigue: entity_ref.get::<&Sleep>().map(|v| v.fatigue),
+            social: entity_ref.get::<&Social>().map(|v| v.loneliness),
+            temperament: entity_ref.get::<&Temperament>().map(|v| *v),
+            inventory_total: entity_ref.get::<&Inventory>().map(|v| v.total()),
+            inventory_food: entity_ref
+                .get::<&Inventory>()
                 .map(|v| v.get(ResourceKind::Food)),
-            carry: world.get::<&Carry>(entity).ok().map(|v| *v),
-            job: world.get::<&Job>(entity).ok().map(|v| *v),
-            drafted: world.get::<&Drafted>(entity).is_ok(),
-            fleeing: world.get::<&Fleeing>(entity).ok().map(|v| *v),
-            cold: world.get::<&Cold>(entity).is_ok(),
-            sick: world.get::<&Sick>(entity).is_ok(),
-            mood: world.get::<&Mood>(entity).ok().map(|v| *v),
-            hp: world.get::<&BodyHealth>(entity).ok().map(|v| v.hp),
-            activity: world.get::<&Activity>(entity).ok().map(|v| *v),
-            activity_rest: world.get::<&ActivityRest>(entity).ok().map(|v| *v),
-            lineage: world
-                .get::<&sim_core::components::Lineage>(entity)
-                .ok()
+            carry: entity_ref.get::<&Carry>().map(|v| *v),
+            job: entity_ref.get::<&Job>().map(|v| *v),
+            drafted: entity_ref.get::<&Drafted>().is_some(),
+            fleeing: entity_ref.get::<&Fleeing>().map(|v| *v),
+            cold: entity_ref.get::<&Cold>().is_some(),
+            sick: entity_ref.get::<&Sick>().is_some(),
+            mood: entity_ref.get::<&Mood>().map(|v| *v),
+            hp: entity_ref.get::<&BodyHealth>().map(|v| v.hp),
+            activity: entity_ref.get::<&Activity>().map(|v| *v),
+            activity_rest: entity_ref.get::<&ActivityRest>().map(|v| *v),
+            lineage: entity_ref
+                .get::<&sim_core::components::Lineage>()
                 .map(|v| v.key),
             memory_weights,
             memory_causes,
@@ -249,13 +256,27 @@ pub struct TargetCandidate {
 #[derive(Clone, Debug)]
 struct Versioned<T> {
     value: T,
-    dependencies: Vec<(Domain, u64)>,
+    dependencies: u16,
+    version_sum: u128,
 }
+
+fn selected_version_sum(mut dependencies: u16, versions: &[u64; DOMAIN_COUNT]) -> u128 {
+    let mut sum = 0;
+    while dependencies != 0 {
+        let index = dependencies.trailing_zeros() as usize;
+        sum += u128::from(versions[index]);
+        dependencies &= dependencies - 1;
+    }
+    sum
+}
+
 impl<T> Versioned<T> {
     fn fresh(&self, versions: &[u64; DOMAIN_COUNT]) -> bool {
-        self.dependencies
-            .iter()
-            .all(|(domain, version)| versions[*domain as usize] == *version)
+        // Stamps stay within one TickContext, whose private counters only increase
+        // by checked increments. Equal selected sums therefore mean every selected
+        // counter is unchanged: nonnegative deltas cannot cancel. At most 16 u64
+        // counters (the mask width) fit in u128 without overflow.
+        self.version_sum == selected_version_sum(self.dependencies, versions)
     }
 }
 
@@ -297,6 +318,73 @@ pub struct RunningMetadata {
 type GatherCacheKey = ((u32, u32), Option<((u32, u32), u32)>, Option<SettlementId>);
 type GatherCacheValue = ([u64; 2], bool);
 
+#[derive(Debug)]
+struct FoodIndex {
+    version: u64,
+    tiles: ChunkIndex<u8>,
+}
+
+impl FoodIndex {
+    fn capture(resources: &SimResources, version: u64) -> Self {
+        let tiles = ChunkIndex::from_entries(
+            resources
+                .food_tiles
+                .iter()
+                .map(|(&tile, &amount)| (tile, amount)),
+        );
+        Self { version, tiles }
+    }
+}
+
+const DERIVED_SLOT_COUNT: usize = 16;
+
+fn derived_slot(name: &str) -> Option<usize> {
+    match name {
+        "social_candidate" => Some(0),
+        "social_memory_candidate" => Some(1),
+        "social_handshake" => Some(2),
+        "routine_admission" => Some(3),
+        "invited" => Some(4),
+        "routine_deadline" => Some(5),
+        "activity_deadline_reached" => Some(6),
+        "routine_weighted_place_available" => Some(7),
+        "routine_available" => Some(8),
+        "routine_tend_fire_available" => Some(9),
+        "routine_craft_available" => Some(10),
+        "routine_repair_available" => Some(11),
+        "routine_hearth_circle_available" => Some(12),
+        "routine_explore_available" => Some(13),
+        "routine_play_available" => Some(14),
+        "routine_sit_by_fire_available" => Some(15),
+        _ => None,
+    }
+}
+
+const TARGET_SLOT_COUNT: usize = 17;
+
+fn target_slot(name: &str) -> Option<usize> {
+    match name {
+        "food" => Some(0),
+        "water" => Some(1),
+        "sleep" => Some(2),
+        "gather_food" => Some(3),
+        "forage_bush" => Some(4),
+        "refuge" => Some(5),
+        "job" => Some(6),
+        "hearth" => Some(7),
+        "social_peer" => Some(8),
+        "social_memory_peer" => Some(9),
+        "routine_tend_fire" => Some(10),
+        "routine_craft" => Some(11),
+        "routine_repair" => Some(12),
+        "routine_hearth_circle" => Some(13),
+        "routine_explore" => Some(14),
+        "routine_play" => Some(15),
+        "routine_sit_by_fire" => Some(16),
+        _ => None,
+    }
+}
+
 /// Sorted read-only tick snapshot with explicitly versioned derived observations.
 #[derive(Debug)]
 pub struct TickContext {
@@ -306,6 +394,8 @@ pub struct TickContext {
     versions: [u64; DOMAIN_COUNT],
     derived: BTreeMap<AgentId, BTreeMap<String, Versioned<i64>>>,
     targets: BTreeMap<AgentId, BTreeMap<String, Versioned<Option<TargetCandidate>>>>,
+    derived_slots: [Vec<Option<Versioned<i64>>>; DERIVED_SLOT_COUNT],
+    target_slots: [Vec<Option<Versioned<Option<TargetCandidate>>>>; TARGET_SLOT_COUNT],
     scopes: BTreeMap<AgentId, TargetScope>,
     running: BTreeMap<AgentId, Option<RunningMetadata>>,
     /// Shared tick-start need-source availability.
@@ -314,6 +404,7 @@ pub struct TickContext {
     pub threats: Vec<(u32, (u32, u32))>,
     claims: BTreeMap<(u32, u32), u32>,
     gather_cache: RefCell<BTreeMap<GatherCacheKey, GatherCacheValue>>,
+    food_index: RefCell<FoodIndex>,
 }
 impl TickContext {
     /// All persons with decision state/position, in stable AgentId order.
@@ -449,6 +540,8 @@ impl TickContext {
             tick: resources.current_tick,
             rows,
             versions: [0; DOMAIN_COUNT],
+            derived_slots: std::array::from_fn(|_| Vec::new()),
+            target_slots: std::array::from_fn(|_| Vec::new()),
             derived: BTreeMap::new(),
             targets: BTreeMap::new(),
             scopes: BTreeMap::new(),
@@ -456,6 +549,7 @@ impl TickContext {
             threats: crate::runtime::wildlife::flee::threats(resources),
             claims: BTreeMap::new(),
             gather_cache: RefCell::new(BTreeMap::new()),
+            food_index: RefCell::new(FoodIndex::capture(resources, 0)),
             running: BTreeMap::new(),
         };
         context.capture_target_scopes(world, resources);
@@ -576,10 +670,23 @@ impl TickContext {
 
     /// Look up a captured person; unknown IDs are errors, never fabricated rows.
     pub fn row(&self, agent: AgentId) -> Result<&PersonSnapshot, ContextError> {
+        self.row_at(self.row_index(agent)?, agent)
+    }
+    pub(super) fn row_index(&self, agent: AgentId) -> Result<usize, ContextError> {
         self.rows
             .binary_search_by_key(&agent, |row| row.agent)
-            .map(|index| &self.rows[index])
             .map_err(|_| ContextError::UnknownAgent(agent))
+    }
+    // Rows never move after capture; read current contents, including lifecycle updates.
+    pub(super) fn row_at(
+        &self,
+        index: usize,
+        agent: AgentId,
+    ) -> Result<&PersonSnapshot, ContextError> {
+        self.rows
+            .get(index)
+            .filter(|row| row.agent == agent)
+            .ok_or(ContextError::UnknownAgent(agent))
     }
     /// Advance one dependency version, invalidating observations stamped against it.
     pub fn invalidate(&mut self, domain: Domain) -> Result<(), ContextError> {
@@ -587,6 +694,39 @@ impl TickContext {
         *version = version
             .checked_add(1)
             .ok_or(ContextError::VersionOverflow(domain))?;
+        Ok(())
+    }
+    /// Preserve one logical invalidation while updating only known affected food tiles.
+    /// An already stale index stays stale: partial notifications cannot repair unknown edits.
+    pub(in crate::runtime) fn invalidate_food_tiles(
+        &mut self,
+        resources: &SimResources,
+        tiles: impl IntoIterator<Item = (u32, u32)>,
+    ) -> Result<(), ContextError> {
+        let previous = self.versions[Domain::FoodSources as usize];
+        self.invalidate(Domain::FoodSources)?;
+        let index = self.food_index.get_mut();
+        if index.version != previous {
+            return Ok(());
+        }
+        for tile in tiles {
+            let before = index
+                .tiles
+                .within_square(tile, 0)
+                .next()
+                .map(|(_, amount)| *amount);
+            let after = resources.food_tiles.get(&tile).copied();
+            if before == after {
+                continue;
+            }
+            if let Some(amount) = before {
+                index.tiles.remove(tile, amount);
+            }
+            if let Some(amount) = after {
+                index.tiles.insert(tile, amount);
+            }
+        }
+        index.version = self.versions[Domain::FoodSources as usize];
         Ok(())
     }
     /// None explicitly denotes a fresh/no-running lifecycle; absent means unknown.
@@ -715,12 +855,13 @@ impl TickContext {
         Ok(())
     }
     fn stamp<T>(&self, value: T, domains: &[Domain]) -> Versioned<T> {
+        let dependencies = domains
+            .iter()
+            .fold(0, |mask, domain| mask | (1 << *domain as usize));
         Versioned {
             value,
-            dependencies: domains
-                .iter()
-                .map(|domain| (*domain, self.versions[*domain as usize]))
-                .collect(),
+            dependencies,
+            version_sum: selected_version_sum(dependencies, &self.versions),
         }
     }
     /// Store a factual observation with its current dependency versions; no domains freezes it for this tick.
@@ -731,24 +872,39 @@ impl TickContext {
         value: i64,
         domains: &[Domain],
     ) -> Result<(), ContextError> {
-        self.row(agent)?;
+        let row = self.row_index(agent)?;
         let value = self.stamp(value, domains);
-        self.derived
-            .entry(agent)
-            .or_default()
-            .insert(name.to_owned(), value);
+        if let Some(slot) = derived_slot(name) {
+            let column = &mut self.derived_slots[slot];
+            if column.is_empty() {
+                column.resize_with(self.rows.len(), || None);
+            }
+            column[row] = Some(value);
+            return Ok(());
+        }
+        let values = self.derived.entry(agent).or_default();
+        match values.get_mut(name) {
+            Some(stored) => *stored = value,
+            None => {
+                values.insert(name.to_owned(), value);
+            }
+        }
         Ok(())
     }
     /// Read a factual observation, rejecting missing or invalidated evidence.
     pub fn derived(&self, agent: AgentId, name: &str) -> Result<i64, ContextError> {
-        let value = self
-            .derived
-            .get(&agent)
-            .and_then(|values| values.get(name))
-            .ok_or_else(|| ContextError::MissingDerived {
-                agent,
-                name: name.to_owned(),
-            })?;
+        let value = match derived_slot(name) {
+            Some(slot) => self
+                .row_index(agent)
+                .ok()
+                .and_then(|row| self.derived_slots[slot].get(row))
+                .and_then(Option::as_ref),
+            None => self.derived.get(&agent).and_then(|values| values.get(name)),
+        }
+        .ok_or_else(|| ContextError::MissingDerived {
+            agent,
+            name: name.to_owned(),
+        })?;
         if !value.fresh(&self.versions) {
             return Err(ContextError::StaleDerived {
                 agent,
@@ -765,12 +921,23 @@ impl TickContext {
         target: Option<TargetCandidate>,
         domains: &[Domain],
     ) -> Result<(), ContextError> {
-        self.row(agent)?;
+        let row = self.row_index(agent)?;
         let value = self.stamp(target, domains);
-        self.targets
-            .entry(agent)
-            .or_default()
-            .insert(name.to_owned(), value);
+        if let Some(slot) = target_slot(name) {
+            let column = &mut self.target_slots[slot];
+            if column.is_empty() {
+                column.resize_with(self.rows.len(), || None);
+            }
+            column[row] = Some(value);
+            return Ok(());
+        }
+        let values = self.targets.entry(agent).or_default();
+        match values.get_mut(name) {
+            Some(stored) => *stored = value,
+            None => {
+                values.insert(name.to_owned(), value);
+            }
+        }
         Ok(())
     }
     /// Read a resolved target; missing/stale evidence differs from a valid absent target.
@@ -779,14 +946,18 @@ impl TickContext {
         agent: AgentId,
         name: &str,
     ) -> Result<Option<TargetCandidate>, ContextError> {
-        let value = self
-            .targets
-            .get(&agent)
-            .and_then(|values| values.get(name))
-            .ok_or_else(|| ContextError::MissingDerived {
-                agent,
-                name: name.to_owned(),
-            })?;
+        let value = match target_slot(name) {
+            Some(slot) => self
+                .row_index(agent)
+                .ok()
+                .and_then(|row| self.target_slots[slot].get(row))
+                .and_then(Option::as_ref),
+            None => self.targets.get(&agent).and_then(|values| values.get(name)),
+        }
+        .ok_or_else(|| ContextError::MissingDerived {
+            agent,
+            name: name.to_owned(),
+        })?;
         if !value.fresh(&self.versions) {
             return Err(ContextError::StaleDerived {
                 agent,
@@ -858,16 +1029,60 @@ impl TickContext {
                 return Ok(*value);
             }
         }
-        let value = targets::nearest_gather_tile(
-            &person.position,
-            &resources.food_tiles,
-            targets::GATHER_SCAN_RADIUS,
-            scope.local_food,
-            &scope.avoid_hearths,
-        )
-        .is_some();
+        let value = self.gather_candidate(agent, resources)?.is_some();
         self.gather_cache.borrow_mut().insert(key, (version, value));
         Ok(value)
+    }
+
+    /// Visit positive food amounts at the current FoodSources version. Callers
+    /// must invalidate that domain after changing amounts or key membership.
+    pub(in crate::runtime) fn visit_food_in_square(
+        &self,
+        resources: &SimResources,
+        centre: (u32, u32),
+        radius: u32,
+        mut visit: impl FnMut((u32, u32), u8),
+    ) {
+        let version = self.versions[Domain::FoodSources as usize];
+        let mut index = self.food_index.borrow_mut();
+        if index.version != version {
+            *index = FoodIndex::capture(resources, version);
+        }
+        for &(tile, amount) in index.tiles.within_square(centre, radius) {
+            if amount > 0 {
+                visit(tile, amount);
+            }
+        }
+    }
+
+    /// The exact live gather minimum, including catchment and estranged hearths.
+    pub(in crate::runtime) fn gather_candidate(
+        &self,
+        agent: AgentId,
+        resources: &SimResources,
+    ) -> Result<Option<(u32, u32)>, ContextError> {
+        let person = self.row(agent)?;
+        let scope = self.target_scope(agent)?;
+        let centre = (person.position.x, person.position.y);
+        let mut best = None;
+        self.visit_food_in_square(resources, centre, targets::GATHER_SCAN_RADIUS, |tile, _| {
+            if scope.local_food.is_some_and(|(home, radius)| {
+                chebyshev(tile, home) > radius
+                    || scope
+                        .avoid_hearths
+                        .iter()
+                        .any(|hearth| chebyshev(tile, *hearth) < chebyshev(tile, home))
+            }) {
+                return;
+            }
+            let distance =
+                u64::from(tile.0.abs_diff(centre.0)) + u64::from(tile.1.abs_diff(centre.1));
+            let key = (distance, tile.0, tile.1);
+            if best.is_none_or(|old| key < old) {
+                best = Some(key);
+            }
+        });
+        Ok(best.map(|(_, x, y)| (x, y)))
     }
     /// Read the required per-person targeting scope, rejecting an unprepared scope.
     pub fn target_scope(&self, agent: AgentId) -> Result<&TargetScope, ContextError> {
@@ -884,21 +1099,49 @@ fn memory_values(
     memory: &sim_core::components::Memory,
     tick: u64,
 ) -> ([f64; 6], [Option<sim_core::causal::EventId>; 6]) {
-    use crate::runtime::agent_actions::memory_bias::{
-        memory_weight_delta, top_contributor_entry, CascadeArm,
-    };
-    let arms = [
-        CascadeArm::Hunger,
-        CascadeArm::Thirst,
-        CascadeArm::Fatigue,
-        CascadeArm::Construction,
-        CascadeArm::Social,
-        CascadeArm::Combat,
-    ];
-    (
-        arms.map(|arm| memory_weight_delta(memory, arm, tick)),
-        arms.map(|arm| top_contributor_entry(memory, arm, tick)),
-    )
+    use crate::runtime::memory::MAX_RECENCY_TICKS;
+    use sim_core::components::{MemoryArm, SALIENCE_FLOOR};
+    use std::cmp::Ordering;
+
+    // Match Sum<f64>'s ordered fold, including negative zero for empty arms.
+    let mut values = [-0.0; 6];
+    let mut causes = [None; 6];
+    let mut magnitudes = [0.0_f64; 6];
+    for entry in memory
+        .entries
+        .iter()
+        .filter(|entry| entry.salience > SALIENCE_FLOOR)
+    {
+        let index = match entry.arm {
+            MemoryArm::Hunger => 0,
+            MemoryArm::Thirst => 1,
+            MemoryArm::Fatigue => 2,
+            MemoryArm::Construction => 3,
+            MemoryArm::Social => 4,
+            MemoryArm::Combat => 5,
+            MemoryArm::None => continue,
+        };
+        let elapsed = tick.saturating_sub(entry.encoded_tick);
+        let recency = if elapsed >= MAX_RECENCY_TICKS {
+            0.0
+        } else {
+            1.0 - (elapsed as f64 / MAX_RECENCY_TICKS as f64)
+        };
+        let weight = entry.valence * entry.salience * recency;
+        values[index] += weight;
+        let magnitude = weight.abs();
+        // max_by replaces the incumbent on Equal, including unordered NaN comparisons.
+        if causes[index].is_none()
+            || magnitudes[index]
+                .partial_cmp(&magnitude)
+                .unwrap_or(Ordering::Equal)
+                != Ordering::Greater
+        {
+            magnitudes[index] = magnitude;
+            causes[index] = Some(entry.event_id);
+        }
+    }
+    (values, causes)
 }
 
 #[cfg(test)]
@@ -946,3 +1189,113 @@ mod tests {
         assert!(context.claims().is_empty());
     }
 }
+
+#[cfg(test)]
+mod stamp_tests {
+    use super::*;
+
+    const DOMAINS: [Domain; DOMAIN_COUNT] = [
+        Domain::Person,
+        Domain::Claims,
+        Domain::FoodSources,
+        Domain::WaterSources,
+        Domain::SleepSources,
+        Domain::RoutineOccupancy,
+        Domain::Invitations,
+        Domain::Jobs,
+        Domain::Threats,
+    ];
+
+    fn context() -> TickContext {
+        let mut world = World::new();
+        world.spawn((Agent { id: 7 }, Position::new(1, 1), AgentState::Idle));
+        let resources = SimResources::new(4, 4, sim_core::MaterialRegistry::new());
+        TickContext::capture(&world, &resources).expect("context")
+    }
+
+    #[test]
+    fn dependency_stamps_match_domain_membership_including_empty_and_duplicates() {
+        for dependency in DOMAINS {
+            for changed in DOMAINS {
+                let mut context = context();
+                let stamped = context.stamp(4, &[dependency, dependency]);
+                let frozen = context.stamp(5, &[]);
+                let all = context.stamp(6, &DOMAINS);
+                assert!(stamped.fresh(&context.versions));
+                context.invalidate(changed).unwrap();
+                assert_eq!(stamped.fresh(&context.versions), dependency != changed);
+                assert!(frozen.fresh(&context.versions));
+                assert!(!all.fresh(&context.versions));
+            }
+        }
+    }
+
+    #[test]
+    fn replacement_reuses_keys_and_restamps_stale_values_and_absent_targets() {
+        let mut context = context();
+        context
+            .set_derived(7, "derived", 1, &[Domain::Claims])
+            .unwrap();
+        context
+            .set_target(
+                7,
+                "target",
+                Some(TargetCandidate {
+                    tile: (2, 2),
+                    agent: None,
+                }),
+                &[Domain::Claims],
+            )
+            .unwrap();
+        let derived_key = context.derived[&7].keys().next().unwrap().as_ptr();
+        let target_key = context.targets[&7].keys().next().unwrap().as_ptr();
+        context.invalidate(Domain::Claims).unwrap();
+        assert!(matches!(
+            context.derived(7, "derived"),
+            Err(ContextError::StaleDerived { .. })
+        ));
+        assert!(matches!(
+            context.target(7, "target"),
+            Err(ContextError::StaleDerived { .. })
+        ));
+        context
+            .set_derived(7, "derived", 2, &[Domain::Claims])
+            .unwrap();
+        context.set_target(7, "target", None, &[]).unwrap();
+        assert_eq!(context.derived(7, "derived"), Ok(2));
+        assert_eq!(context.target(7, "target"), Ok(None));
+        assert_eq!(
+            context.derived[&7].keys().next().unwrap().as_ptr(),
+            derived_key
+        );
+        assert_eq!(
+            context.targets[&7].keys().next().unwrap().as_ptr(),
+            target_key
+        );
+        context.invalidate(Domain::Claims).unwrap();
+        assert!(matches!(
+            context.derived(7, "derived"),
+            Err(ContextError::StaleDerived { .. })
+        ));
+        assert_eq!(context.target(7, "target"), Ok(None));
+        assert!(matches!(
+            context.target(7, "missing"),
+            Err(ContextError::MissingDerived { .. })
+        ));
+    }
+}
+
+#[cfg(test)]
+mod food_index_tests;
+
+#[cfg(test)]
+mod overlay_slot_tests;
+
+#[cfg(test)]
+mod snapshot_entity_tests;
+
+#[cfg(test)]
+mod dependency_sum_tests;
+
+#[cfg(test)]
+mod memory_values_tests;

@@ -293,3 +293,39 @@ fn authored_finish_dispatches_effect_once_and_keeps_idle_tick_boundary() {
 
 #[path = "system_rest_tests.rs"]
 mod rest_regressions;
+
+#[test]
+fn initialized_system_rejects_replaced_history_before_tick_effects() {
+    let program = MindProgram::load(SOURCE).unwrap();
+    let mut system = ColonyMindSystem::new(program);
+    let mut resources = sim_engine::SimResources::new(4, 4, sim_core::MaterialRegistry::new());
+    resources.rules = WorldRules::colony(0);
+    system.initialize(&mut resources).unwrap();
+    let history = resources.mind.history.as_ref().unwrap();
+    let name = history.dictionary().node_label(0).unwrap().name.as_bytes();
+    let mut wire = bincode::serialize(history).unwrap();
+    // Fixed-width bincode prefix: revision, node count, then first name length.
+    assert_eq!(&wire[24..24 + name.len()], name);
+    wire[24] ^= 1; // Same-length valid ASCII name corruption; revision stays intact.
+    resources.mind.history = Some(bincode::deserialize(&wire).unwrap());
+    let mut world = hecs::World::new();
+    let entity = world.spawn((Agent { id: 7 }, Position::new(1, 1), AgentState::Idle));
+    let before = bincode::serialize(&resources.mind).unwrap();
+    let events = bincode::serialize(&resources.causal_log).unwrap();
+    let chronicle = bincode::serialize(&resources.chronicle).unwrap();
+    let next = resources
+        .next_event_id
+        .load(std::sync::atomic::Ordering::Relaxed);
+    let error = system.try_tick(&mut world, &mut resources).unwrap_err();
+    assert!(error.to_string().contains("policy"), "{error}");
+    assert_eq!(*world.get::<&AgentState>(entity).unwrap(), AgentState::Idle);
+    assert_eq!(bincode::serialize(&resources.mind).unwrap(), before);
+    assert_eq!(bincode::serialize(&resources.causal_log).unwrap(), events);
+    assert_eq!(bincode::serialize(&resources.chronicle).unwrap(), chronicle);
+    assert_eq!(
+        resources
+            .next_event_id
+            .load(std::sync::atomic::Ordering::Relaxed),
+        next
+    );
+}

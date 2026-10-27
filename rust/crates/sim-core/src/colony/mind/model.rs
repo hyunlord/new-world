@@ -94,6 +94,7 @@ pub(super) enum Op {
 }
 #[derive(Debug, Clone)]
 pub(super) struct Predicate {
+    pub cache_index: usize,
     pub fact: FactId,
     pub op: Op,
     pub value: i64,
@@ -187,6 +188,7 @@ impl MindNode {
 #[derive(Debug, Clone)]
 pub struct CompiledMind {
     pub(super) revision: MindRevision,
+    pub(super) predicate_count: usize,
     pub(super) nodes: Vec<MindNode>,
     pub(super) bands: [Vec<NodeId>; 6],
     pub(super) facts: Vec<FactSpec>,

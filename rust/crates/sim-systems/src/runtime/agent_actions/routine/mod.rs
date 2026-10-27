@@ -15,6 +15,7 @@ use sim_core::components::{
 use sim_core::rng::{keyed_below, STREAM_ROUTINE};
 use sim_core::rules::RoutineRule;
 use sim_engine::SimResources;
+use std::cell::RefCell;
 use std::collections::{BTreeMap, BTreeSet};
 
 pub(in crate::runtime) const fn is_activity(state: AgentState) -> bool {
@@ -59,7 +60,8 @@ pub(in crate::runtime) struct RoutineTick {
     checked: bool,
     /// Pass 18: this tick's scan positions by (settlement, kind index); a
     /// place depends only on the candidates and `occupancy` (see [`Cursor`]).
-    cursors: BTreeMap<(SettlementId, usize), Cursor>,
+    /// Previews may advance this cache through a shared borrow; they never reserve.
+    cursors: RefCell<BTreeMap<(SettlementId, usize), Cursor>>,
     occupancy: Occupancy,
     pending: Vec<(AgentId, Entity, Change)>,
 }
@@ -163,7 +165,7 @@ impl RoutineTick {
             invitations: BTreeSet::new(),
             places,
             checked: false,
-            cursors: BTreeMap::new(),
+            cursors: RefCell::new(BTreeMap::new()),
             occupancy,
             pending: Vec::new(),
         }
@@ -307,6 +309,7 @@ impl RoutineTick {
         }
         let lists = self.places.places().get(&sid)?;
         self.cursors
+            .get_mut()
             .entry((sid, kind.index()))
             .or_default()
             .choose(&lists[kind.index()], &self.occupancy)
@@ -315,7 +318,7 @@ impl RoutineTick {
     /// `tile`'s occupancy fell: every cursor whose list holds it rescans from it.
     fn rewind(&mut self, tile: Tile) {
         let places = self.places.places();
-        for ((sid, index), cursor) in &mut self.cursors {
+        for ((sid, index), cursor) in self.cursors.get_mut() {
             if let Some(lists) = places.get(sid) {
                 cursor.rewind(&lists[*index], tile);
             }

@@ -77,7 +77,7 @@ fn advance(c: &mut EffectContext<'_>, kind: TargetKind) -> EffectResult {
                     {
                         c.effects.completed_meals.push(c.agent);
                     }
-                    c.effects.dirty.insert(EffectDomain::FoodSources);
+                    c.effects.dirty.insert(EffectDomain::FoodTile(key));
                 }
                 TargetKind::Water => {
                     let mut need = c.world.get::<&mut Thirst>(c.entity).ok();

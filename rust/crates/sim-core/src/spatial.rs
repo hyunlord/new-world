@@ -71,6 +71,26 @@ impl<T: Copy + Ord> ChunkIndex<T> {
         Self::default()
     }
 
+    /// Build the same index as repeated insertion, sorting each chunk once.
+    pub fn from_entries(entries: impl IntoIterator<Item = (Tile, T)>) -> Self {
+        let mut index = Self::new();
+        for (tile, value) in entries {
+            index
+                .chunks
+                .entry(chunk_of(tile))
+                .or_default()
+                .push((tile, value));
+            index.len += 1;
+        }
+        for entries in index.chunks.values_mut() {
+            // Insertion places a new equal key before existing ones. Reverse then
+            // stable-sort preserves that order even when Ord ignores payload fields.
+            entries.reverse();
+            entries.sort_by_key(|(tile, value)| (tile.1, tile.0, *value));
+        }
+        index
+    }
+
     /// Number of entries.
     pub fn len(&self) -> usize {
         self.len
@@ -163,9 +183,27 @@ impl<T: Copy + Ord> ChunkIndex<T> {
         self.chunks.values().flatten()
     }
 
+    /// Entries within an inclusive Chebyshev square, without allocating.
+    /// Traversal retains chunk order and each chunk's `(y, x, value)` order.
+    pub fn within_square(&self, centre: Tile, radius: u32) -> impl Iterator<Item = &(Tile, T)> {
+        let min = chunk_of((
+            centre.0.saturating_sub(radius),
+            centre.1.saturating_sub(radius),
+        ));
+        let max = chunk_of((
+            centre.0.saturating_add(radius),
+            centre.1.saturating_add(radius),
+        ));
+        self.chunks
+            .range((min.0, 0)..=(max.0, u32::MAX))
+            .filter(move |((_, cx), _)| *cx >= min.1 && *cx <= max.1)
+            .flat_map(|(_, entries)| entries)
+            .filter(move |(tile, _)| chebyshev(centre, *tile) <= radius)
+    }
+
     /// The Chebyshev distance from `centre` to the nearest tile of chunk `id`.
     fn chunk_distance(centre: Tile, id: ChunkId) -> u32 {
-        let axis = |c: u32, lo: u32| lo.saturating_sub(c).max(c.saturating_sub(lo + CHUNK - 1));
+        let axis = |c: u32, lo: u32| lo.saturating_sub(c).max(c.saturating_sub(lo + (CHUNK - 1)));
         axis(centre.0, id.1 * CHUNK).max(axis(centre.1, id.0 * CHUNK))
     }
 
@@ -304,6 +342,10 @@ impl SpatialIndex {
         &self.agents
     }
 }
+
+#[cfg(test)]
+#[path = "spatial_square_tests.rs"]
+mod square_tests;
 
 #[cfg(test)]
 mod tests {

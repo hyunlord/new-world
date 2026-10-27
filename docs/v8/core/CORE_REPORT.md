@@ -1,6 +1,15 @@
 ## 구현 완료 보고 — M-CORE
 
+**2026-10-27 후속 작업 진행 중:** planner P-1~P-6/D25에 따라 성능 실패를 진단·수정하고 전체 게이트를 다시 실행한다. 아래 p8 실패 기록은 당시 결과로 보존하며, 중단 문구는 P-1로 정정됐다. 현재 게시·최종 수용은 아직 하지 않았다. D26의 provenance 규칙과 추가 성능 기록은 CORE_DECISIONS/CORE_PERF를 따른다.
+
+
 **최종 판정: FAIL — 미게시, 전체 목표 미수용.** p8 `44e0a0266c085d409c16c77f4a2a0181b8a2a750`에서 최종 게이트42/45·exit1이다. 실패는25 bench,41 mux2_stall_receipt,45 core_evaluation이며 목표의 중단·보고 조건에 따라 튜닝·면제·재시도를 하지 않는다. §9의15개 항목으로 결과와 한계를 보존한다. p5 구현은 로컬 커밋 [0ef68a1d2b6eb946e150963071b2e623fa58d4b0](https://github.com/hyunlord/new-world/commit/0ef68a1d2b6eb946e150963071b2e623fa58d4b0)에 있으며 아직 게시하지 않았다. p6 생산 등록 전환은 로컬 커밋 [fbc9a9babc9bb5df1d06ca1e655901e480521f66](https://github.com/hyunlord/new-world/commit/fbc9a9babc9bb5df1d06ca1e655901e480521f66)에 있고 전환 캡처가 완료됐다. p7 기준선 분리는 로컬 `be12050c951dfb025f3440d34b657eec0663b817`로 커밋했고 해당 최종 빌드가 통과했다. `heldout-final-1`의 outcome·why는 PASS이며 story를 포함한 전체 캡처/검사 chain이 일곱 exit0으로 완료됐다. 전체 목표 수용은 아직 주장하지 않는다. 최종 성능은 유효 FAIL이며 필수 C3 위반으로 게시 BLOCKED다. 실패한 게이트와 완료된 한정 검증을 구분해 기록한다.
+
+### P-5 추가 진단 (2026-10-27, report-only)
+
+추가 관측은 원래 held-out의 각 arm32개 최종 fingerprint와64개 연도 지표를 그대로 재현했다. 연대기7,676→19,722항목(119.9375→308.15625/년)의 증가12,046은 `mind_choice`12,142개와 기타 종류 순변화−96개로 설명된다. [전체48종 표와 원인 경로](CORE_STORY_DIAGNOSTICS.md)를 별도로 보존했다.
+
+missing121/125는 직접 explicit-unknown108/107개와 그 후손13/18개다. 실제 지정된 entry/sample 대상의 누락과 cycle은 모두0이며, 직접 unknown은 전부 이전 quarrel을 기록하지 못한 Modifier100/None이다. 깊이≥3은 관측한 Chronicle 그래프에서 실제0이나, 전체 Mind EventId 인과 그래프는 이 계기가 내보내지 않아 전체 이야기 깊이를 판정할 수 없다. [ISS341/#647](https://github.com/hyunlord/new-world/issues/647#issuecomment-6431336839)에 원인과 범위를 공개했고 미해결로 유지한다. 이번 추가 진단은 런타임 성능 합격이나 전체 인과 완전성 주장이 아니다.
 
 ### 측정 (결정 시스템 점유율 s, 갈래별 비용)
 

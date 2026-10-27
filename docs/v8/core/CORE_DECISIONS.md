@@ -877,3 +877,113 @@ Authority: planner's same-thread Option1 reply on2026-10-27: list excluded prove
 Canonical JSON sorts object keys and represents every number using exact decimal coefficient/exponent formatting on both sides, without binary-float rounding. Duplicate keys and nonfinite numbers are rejected. The comparison refuses to run as production evidence unless script and key-file bytes match committed HEAD. Receipts retain both raw hashes, both canonical payload hashes, exact excluded pointers and checker/contract hashes. Original outcomes SHA256 remains `42e9de5b1649ced049ca37a9741f15f9b900baaa61ce128eb7f84d8d5781ebed`; original why remains `552ccf8b9932e23d1243b185c6fb4a35759df21a10d364f6e633430ce618a6a8`. Normalized reference and candidate hashes will be recorded below after the prerequisite tooling commit and actual captures; this entry makes no equivalence claim yet.
 
 The original frozen shadow checker/archive/binaries remain unchanged. A separate measured-successor verifier authenticates their original replay, exact source transitions and per-commit preservation evidence. Explicit documentation/tooling-only links require unchanged Rust trees and enumerated allowed paths; they do not claim new runtime evidence. Fresh optimized captures and paired timing remain required before publication.
+
+After prerequisite commit `3c5c93f444a9020573238b4f6d5a36e9f327e9c8`, the committed comparator produced these original reference payloads:
+
+| Artifact | Original raw SHA256 | Original canonical payload SHA256 |
+|---|---|---|
+| outcomes | `42e9de5b1649ced049ca37a9741f15f9b900baaa61ce128eb7f84d8d5781ebed` | `13fe08fd870a2f90b1a5b6fa3a89bebb9936e6956c545992228d2a3b4c97d257` |
+| why | `552ccf8b9932e23d1243b185c6fb4a35759df21a10d364f6e633430ce618a6a8` | `08f179819d9d72e06141fa56a23ed061b14fb13cdc5cb1439d935bc325614207` |
+
+Checker SHA256 `72b7f957e86b0b601dad75bd809da304886cd56751dce57e85522acfdf6f129d`; key-file SHA256 `ff6a24f77389907f97af2c22ce460af64a34dad89d48547420356ba56e2339c6`. External `repair-tests-1/original-{outcomes,why}-normalization.json` receipts are self-comparisons of original evidence, **not candidate equivalence**. Candidate payload hashes remain pending actual capture/comparison.
+
+### Candidate1 actual preservation capture (2026-10-27)
+
+The exploratory candidate1 binary `fa623d9174d8fd4bdf81ae4dc1f16352ea888752824f62fc9ea77f65d7e9af51` was built from archived Rust inventory `f114f7815af48baa3ca8cf6edaddd904e6c6c4f65b26b2f71df251110c834df5` (uncommitted source, parent48f4b2fa2; not a final-source acceptance claim). `repair-preservation-1/safety-compare.log` proves all nine OFF summary bytes and baseline summary/raw/chronicle identity; ON summary remains literal `cad9811728445bba5d8aa9027d6450ceb9aec3b40635258572577b711c387958` with determinism PASS. No colony-summary exclusions were used.
+
+| Artifact | Original raw SHA256 | Candidate1 raw SHA256 | Original normalized payload SHA256 | Candidate1 normalized payload SHA256 |
+|---|---|---|---|---|
+| outcomes | `42e9de5b1649ced049ca37a9741f15f9b900baaa61ce128eb7f84d8d5781ebed` | `62a898eae7f9e806bf121c2124e9dfa303aa58a0fa7e79c892fc5d0951c311dc` | `13fe08fd870a2f90b1a5b6fa3a89bebb9936e6956c545992228d2a3b4c97d257` | `13fe08fd870a2f90b1a5b6fa3a89bebb9936e6956c545992228d2a3b4c97d257` |
+| why | `552ccf8b9932e23d1243b185c6fb4a35759df21a10d364f6e633430ce618a6a8` | `1c0583f922c4f37fd6dc0e249b8e9bea669137733a25f84b1f3b0fb682a4aaf9` | `08f179819d9d72e06141fa56a23ed061b14fb13cdc5cb1439d935bc325614207` | `08f179819d9d72e06141fa56a23ed061b14fb13cdc5cb1439d935bc325614207` |
+
+Both comparisons ran the committed D26 script and exact key contract. Raw receipts and terminal completion are retained in `repair-heldout-1`; frozen seeds1232–1263 and all outcome/why fields are unchanged. Further optimization is a new candidate requiring fresh preservation proof before the implementation commit. Candidate1 timing remains exploratory; it does not satisfy the required performance bar.
+
+### Load-window follow-up
+
+The retained15-minute samples at09:11:30/09:26:30/09:41:30 KST were respectively1/5/15 loads `19.1553/16.7246/11.9209`, `7.7690/16.3403/17.6074`, and `9.6279/10.6021/13.1069` (`repair-load-windows-1.jsonl`). None launched a timing run. They are not three consecutive contended windows because the middle sample was below8. Untimed captures/builds contributed load; these samples do not attribute all contention to another job. Every new timing repeat still checks load immediately before launch.
+
+## D27 — P-5 observer-only diagnosis (2026-10-27)
+
+Authority: planner P-5 in the 2026-10-27 note recorded by D25. Additive observer captures reproduce all original annual metrics and 32 final fingerprints per arm. Full kind/ancestry evidence is in CORE_STORY_DIAGNOSTICS.md. Counts7676→19722 comprise mind_choice +12142 and other kinds −96 across64 complete world-years per arm. Missing121/125 comprises explicit unknown108/107 plus descendants13/18; no missing concrete entry/sample and no cycles were observed. The Chronicle-only instrument omits the complete Mind EventId ancestry graph; depth≥3=0 cannot establish full causal-story depth. No policy or cause links were changed to improve these figures.
+
+Opened ISS341/#647 and posted the bounded evidence follow-up https://github.com/hyunlord/new-world/issues/647#issuecomment-6431336839; create and comment bodies/IDs were read back and verified in p5-github-journal.jsonl. Keep the issue OPEN. Observer candidate1 is honestly pinned to its uncommitted Rust inventory, not represented as the eventual publication binary. Original raw evidence remains unchanged.
+
+## D28 — Preserve evaluation semantics while removing repeated work (2026-10-27, in progress)
+
+Authority: planner P-3b in D25. Before-change sampling was committed in p10; subsequent attribution-only profiles retain their INVALID timing status. No policy node, score, cadence, held-out seed set or causal-outcome rule is tuned. Candidate6 is a single uncommitted implementation candidate; proof and final acceptance remain pending.
+
+The current design uses lazy per-selection fact memoization; load-time routine metadata; current person-row indices; existing routine reservation cursors; fixed dependency stamps; static overlay columns with arbitrary-name fallback; a food spatial index with known-tile incremental updates and generic stale-index fallback; and bulk index construction. Record dictionary validation remains strict at initialization/load/public checked APIs, with a trusted initialized insertion path and debug assertions. Pure origin construction is skipped only for the exact unfinished-node continuation already skipped by the recorder.
+
+Compiled predicate identities reuse successful comparisons only for readers explicitly promising stable, side-effect-free repeat reads. The default FactReader contract remains uncached, including changed values and later errors. Authored node/predicate traversal, first-fact witness order, role unions, top3, incumbent hysteresis and first reached errors remain unchanged. Unit score weights use the exact identity `(value * 1000) / 1000 = value`; all checked accumulation and nonunit arithmetic remain in place. Policy revision/dictionary metadata excludes ephemeral cache IDs.
+
+Candidate6 archive Rust SHA256 `b914056b9066ad88b9a6b3b69724f74dc9015cfed1e03a03d5b653978f63cdd6`; probe `36e613f2456703d59216a8c6f4bb62f9133e29d187dba288c8391dc828990320`; perf `c16a4a510a68a342b7095517be429e00ea33f325370318a140ebf5d969dd1b5e`. Parent is p11 `3c5c93f444a9020573238b4f6d5a36e9f327e9c8`; these are honestly uncommitted-source build pins, not publication evidence. Build/source inventory and archive are under repair-candidate-bin-6. Focused selector24, runtime-mind69 and spatial7 tests pass, as does strict clippy for all targets with mind_shadow. Independent read-only semantic audit found no concrete defect within its scope; it does not replace golden captures.
+
+The overlay layout is measured with size_of: optional derived cell96B, optional target cell104B,33 column headers792B, all columns populated3304B/person and TickContext1128B. Columns allocate lazily; these figures are a storage tradeoff, not a measured peak-memory improvement. Final standing memory and timing gates remain required. Bulk-boundary testing exposed the existing debug-only intermediate overflow in `lo + CHUNK - 1`; reassociation to `lo + (CHUNK - 1)` preserves the release result while covering the final u32 chunk in debug. The failing test logs remain retained.
+
+### Candidate6 held-out preservation result
+
+Capture finished at2026-10-27 10:41:15 KST with determinism PASS and committed D26 comparisons PASS. This is exploratory source preservation, not final gate/performance acceptance. All non-provenance outcome/why fields and original seed1238 adverse result remain equal. Baseline/ten-summary safety capture is still pending.
+
+| Artifact | Original raw SHA256 | Candidate6 raw SHA256 | Original normalized SHA256 | Candidate6 normalized SHA256 |
+|---|---|---|---|---|
+| outcomes | `42e9de5b1649ced049ca37a9741f15f9b900baaa61ce128eb7f84d8d5781ebed` | `ea06f889f5f209477bbc8636fc850d088daf59266622b790766a1c68f9744af1` | `13fe08fd870a2f90b1a5b6fa3a89bebb9936e6956c545992228d2a3b4c97d257` | `13fe08fd870a2f90b1a5b6fa3a89bebb9936e6956c545992228d2a3b4c97d257` |
+| why | `552ccf8b9932e23d1243b185c6fb4a35759df21a10d364f6e633430ce618a6a8` | `3d0840a8f0373427d7cf38741805bf50443e0d97ec7fe3d8d0ae05ec1180525d` | `08f179819d9d72e06141fa56a23ed061b14fb13cdc5cb1439d935bc325614207` | `08f179819d9d72e06141fa56a23ed061b14fb13cdc5cb1439d935bc325614207` |
+
+### Three contended windows: defer timing to after untimed work
+
+At10:13:51,10:28:51 and10:43:51 KST on2026-10-27, the15-minute samples were respectively `18.1382/25.4297/19.7192`, `42.1709/50.2847/40.6108`, and `28.2959/75.1196/75.0122` (1/5/15-minute loads). All three meet the planner's contention condition. No timing run was launched by this monitor; raw samples remain in repair-load-windows-2.jsonl. Continue untimed inventory/implementation/preservation/report work and perform timing at the end before the gate. Owned builds and preservation probes were also active during parts of this window, so this is not an attribution of all load to external jobs. Any attribution-only profiler output is explicitly INVALID timing.
+
+Candidate6 safety completed at10:50:51 KST: all nine OFF summaries and the ON summary are literally byte-identical to the ten frozen hashes in CORE_REPORT, and all ten committed D26 canonical comparisons pass with zero excluded keys. Existing baseline identity comparison passes summary/raw/chronicle checks. Observed pre/post Rust hashes both equal the candidate6 source hash above; terminal and per-command exit/hash receipts are retained in repair-preservation-6. This completes candidate6 exploratory behavior preservation; no implementation commit or valid performance acceptance is claimed yet.
+
+### Candidate7 compact storage and snapshot lookup
+
+Candidate7 retains evaluation cadence and all policy bytes. Predicate cache entries pack validity, match and role bits into one byte; a valid entry is published only after its witness slot exists. Snapshot capture resolves the ECS entity once while retaining ordered component reads and borrow/error semantics. Dependency stamps store the exact u128 sum of selected counters: private counters only increase by checked increments within one TickContext, so nonnegative differences cannot cancel; at most nine u64 counters sum below2^68. Stamps must never migrate across contexts or survive counter resets.
+
+Core mind37 and runtime mind76 tests PASS; strict clippy all targets with mind_shadow PASS. Differential tests cover all512 dependency subsets, duplicate/empty domains, maximum counters and overflow, snapshot missing components/borrow guards, and predicate partial errors/reset. Read-only semantic review found no actionable defect (`candidate7-policy-preservation-review.md`). Overlay fully populated storage is1584B/person versus3304B in candidate6; this is layout evidence, not peak-memory or timing acceptance.
+
+Rust source `ca3c884968c0e3a8d08310850a69ddfe8cf147140a4ea9394ee0f644716b4860`, probe `60874074968368874920c68c7eb8db7eff73baa01948af5d015c253c9042823d`, perf `ddb689072d6387a46a420e9a1735c25e225807033fac7d544b20a8ad99f9c6b0`; archive/build receipts retained in repair-candidate-bin-7. This is an uncommitted-source exploratory build. Full preservation captures are running; no final acceptance is claimed. Candidate6 diagnostic waited without launching any repeat and was closed NOT_RUN with all load samples retained.
+
+Candidate7 held-out preservation completed at11:13:48 KST with determinism and both committed canonical comparisons PASS. Safety/ten summaries remain running. Original raw receipts are unchanged; all non-excluded fields and seed1238 outcome remain equal.
+
+| Artifact | Original raw SHA256 | Candidate7 raw SHA256 | Original normalized SHA256 | Candidate7 normalized SHA256 |
+|---|---|---|---|---|
+| outcomes | `42e9de5b1649ced049ca37a9741f15f9b900baaa61ce128eb7f84d8d5781ebed` | `c564b0209124c106ebdc24ade9ef10ed6056c6ef28ffad62f88964980cf6ed13` | `13fe08fd870a2f90b1a5b6fa3a89bebb9936e6956c545992228d2a3b4c97d257` | `13fe08fd870a2f90b1a5b6fa3a89bebb9936e6956c545992228d2a3b4c97d257` |
+| why | `552ccf8b9932e23d1243b185c6fb4a35759df21a10d364f6e633430ce618a6a8` | `8b47cf16db831c519403f27904bc1e4fb31dc42c60d136b3eb7f4ac8da2545e6` | `08f179819d9d72e06141fa56a23ed061b14fb13cdc5cb1439d935bc325614207` | `08f179819d9d72e06141fa56a23ed061b14fb13cdc5cb1439d935bc325614207` |
+
+Candidate7 safety finished at11:23:20 KST: all nine OFF summaries and ON summary literal SHA matches, baseline228748 shared values/zero differences and64 chronicle files19683 entries match. All ten D26 canonical comparisons pass with no excluded summary keys. Pre/post Rust hashes both ca3c884968c0e3a8d08310850a69ddfe8cf147140a4ea9394ee0f644716b4860. This completes exploratory preservation; no performance acceptance or implementation commit yet.
+
+## D29 — Candidate8 preservation and measurement boundaries (2026-10-27, in progress)
+
+Authority: planner P-3b and repeated load<8 rule, as recorded in D25/D26. Policy and scheduling remain frozen. The selector keeps only ordered top3 and the incumbent instead of storing/rescanning every eligible candidate; it still evaluates every node in the chosen band and preserves all later errors and witness reads. Memory observations use one ordered pass instead of twelve, retaining separate negative-zero accumulators, per-arm addition order, exact recency/product expressions and last-on-equal/unordered contributor selection. Differential tests compare the original algorithms.
+
+Read-only review found a trust-boundary gap in the uncommitted initialized-history optimization: replacing public MindState.history could inherit the system boolean's trust despite a corrupt same-revision dictionary. Validation is now cached privately on the immutable history object, cleared on deserialize, checked before tick effects/continuation/insertion. The cache is excluded from serialization and semantic equality; public strict APIs remain strict. This fixes the introduced gap without repeated full dictionary scans in the valid hot path. No failing evidence was removed. Initial test compilation exposed undeclared test-only serializer dependencies; tests were adapted to the crates' existing JSON/bincode dependencies, with no new dependency. Failed logs remain in repair-tests-8.
+
+Step25 previously admitted the whole bench once, and its numerical ledger checker did not reject high-load repeats. The parent bench now admits each timed and RSS child independently at fixed load1<8, records all1/5/15 values in a create-new admission.jsonl, retains rejected samples, and stops before launch on missing/invalid load or timeout. Timed child load_before is independently checked after completion; >=8/malformed is journaled INVALID and excluded from aggregation. RSS retains the existing instrument and its historically after-build load_before field, explicitly distinguished from the new true prelaunch sidecar. Child workload, memory measurements, summary schema and numerical bars are unchanged. Original BASE binaries remain immutable.
+
+Candidate7 exploratory diagnostic was closed NOT_RUN with zero launched repeats at11:25 KST after load rebounded to38 despite owned captures ending. The binary and all wait samples remain retained. Candidate8 tests/build/preservation and admitted timing remain required; this entry makes no performance acceptance claim.
+
+Candidate8 focused verification: debug core43/runtime83/bench8 PASS; release core43/runtime83 PASS, including exact memory-value bits and same-revision malformed-history rejection without panic. Strict clippy all targets with mind_shadow PASS. Original failed compilation logs remain retained; tests use existing dependencies only. Final-source build, full preservation and performance acceptance remain pending.
+
+Candidate8 exploratory build: Rust `b3f9061f3bd1505ddef08f94780e19726c2653f504a403567ffc8e4280cd19c5`, probe `7e3ecf00746be11c46c59df4384b1b3d47a79217f2634f6257ff5003a175d541`, perf `04a1487617d12581cbe29e8ab459500207751f666953b1712e7a52f9bbd648a3`; parent p11, default features[], pre/post build source hashes equal. Build/archive/inventory receipts retained in repair-candidate-bin-8. Full source-pinned preservation is running; these pins are not a committed-source publication claim.
+
+### Candidate8 held-out preservation
+
+Completed at 2026-10-27T02:41:04.084171+00:00 with determinism and committed D26 canonical comparisons PASS. Safety/ten-summary capture remains running; no timing acceptance is claimed.
+
+| Artifact | Original raw SHA256 | Candidate8 raw SHA256 | Original normalized SHA256 | Candidate8 normalized SHA256 |
+|---|---|---|---|---|
+| outcomes | `42e9de5b1649ced049ca37a9741f15f9b900baaa61ce128eb7f84d8d5781ebed` | `1655bdefdbe6fecbb3c97af1e8add5c200d738ed3d5711db4330357e354cd215` | `13fe08fd870a2f90b1a5b6fa3a89bebb9936e6956c545992228d2a3b4c97d257` | `13fe08fd870a2f90b1a5b6fa3a89bebb9936e6956c545992228d2a3b4c97d257` |
+| why | `552ccf8b9932e23d1243b185c6fb4a35759df21a10d364f6e633430ce618a6a8` | `0c32c086b033f159ffbf4955ca8581108a1508fa7c02dfdc8305844b48d1eb45` | `08f179819d9d72e06141fa56a23ed061b14fb13cdc5cb1439d935bc325614207` | `08f179819d9d72e06141fa56a23ed061b14fb13cdc5cb1439d935bc325614207` |
+
+Candidate8 full exploratory preservation completed at11:49:54 KST. All nine OFF summaries and the ON summary are literal matches to the ten frozen CORE_REPORT hashes; all ten canonical comparisons pass with zero excluded keys. Baseline228748 shared values/zero differences and64 chronicle files19683 entries pass the standing identity comparison. Pre/post Rust source hashes both b3f9061f3bd1505ddef08f94780e19726c2653f504a403567ffc8e4280cd19c5. Proof tree repair-preservation-8 and heldout8 remain immutable. This completes source preservation, not performance/gate acceptance.
+
+Candidate8 admitted N1000 diagnostic completes all four interleaved members with no sleep: tick2072.718→4079.104µs (1.967998×), old/mind1447.824→3351.900µs (2.315129×), p99 average5181→7117µs. This remains an exploratory FAIL of the standing bar, not a final gate. Full preservation is retained while additional preserving feasibility is assessed; P-3d has not been invoked and fresh1264–1295 seeds remain untouched.
+
+
+## D30 — Invoke the separately validated scheduling fallback (2026-10-27)
+
+Authority: planner note 2026-10-27 P-3d, conditional on preserving optimization failing P-3c. Candidate8 completes all preservation proofs in D29, but admitted interleaved N1000 tick mean is4079.104µs against BASE2072.718µs; mind3351.900µs against old1447.824µs. The paired +10% tick budget is2280.0µs, leaving approximately1552.8µs for mind after727.2µs other work, requiring another53.7% reduction. These exploratory numbers do not replace the standing ledger or final paired gate.
+
+Read-only feasibility review found no evidence-backed preserving design delivering that remaining reduction with margin. Prefix-sharing and snapshot opportunities remain hypotheses, not proven impossibility or accepted performance. Preserve this completed behavior-preserving implementation in its own commit, then apply the planner-authorized continuing-behavior rethink scheduling as a separate implementation commit. The157 policy nodes and scores remain frozen. Re-run shadow seeds0–7 under the same97% rule; only after design/shadow freeze use fresh held-out1264–1295 under the original table rules. Original1232–1263 results, canonical proof and seed1238 adverse outcome remain retained. No fresh held-out seeds have been accessed at this decision.
+
+The predecessor projection tool was also repaired: the historical measured Rust inventory excludes ignored Cargo.lock, while the original migration checker requires the lock to build its projection. Authenticate Cargo.lock independently using the original frozen manifest and require the archive to contain exactly measured inventory plus that support file; never insert it into the measured source digest. Seven archive controls plus13 existing successor tests pass. The actual p8 projection passes the unchanged migration checker with TEST_ONLY_AMENDMENT_VERIFIED. Evidence: repair-successor-inventory-proof-v2.json and p8-projection-v2-verification-1. No original receipt, archive, manifest or checker was rewritten.

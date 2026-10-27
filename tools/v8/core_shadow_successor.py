@@ -63,6 +63,30 @@ def source_digest(inventory: dict[str, str]) -> str:
     return digest.hexdigest()
 
 
+def project_predecessor(archive: Path, projection: Path, inventory: dict[str, str], lock_sha: str) -> None:
+    """Materialize exact measured inputs plus separately authenticated checker support."""
+    source_digest(inventory)
+    require(re.fullmatch('[0-9a-f]{64}', lock_sha) is not None, 'invalid frozen lock hash')
+    require('rust/Cargo.lock' not in inventory or inventory['rust/Cargo.lock'] == lock_sha,
+            'measured and support lock hashes differ')
+    expected = {**inventory, 'rust/Cargo.lock': lock_sha}
+    with tarfile.open(archive, 'r:gz') as tar:
+        members = tar.getmembers()
+        require(len({item.name for item in members}) == len(members), 'duplicate archive members')
+        require({item.name for item in members} == set(expected), 'unexpected/missing archive members')
+        require(all(item.isfile() for item in members), 'nonregular archived source')
+        for name, sha in expected.items():
+            stream = tar.extractfile(tar.getmember(name))
+            require(stream is not None, 'missing archived source')
+            with stream:
+                raw = stream.read()
+            require(hashlib.sha256(raw).hexdigest() == sha, 'predecessor archive differs')
+            path = projection / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open('xb') as output:
+                output.write(raw)
+
+
 def check_delta(before: dict[str, str], after: dict[str, str], changes: frozen.Document) -> None:
     """Reject even explicitly listed policy mutations and unlisted source deltas."""
     require(after.get(POLICY) == before.get(POLICY) == POLICY_SHA, 'frozen policy changed')
@@ -229,20 +253,10 @@ def check(repo: Path, receipt_path: Path, receipt_sha: str) -> frozen.Document:
     archive = frozen.read_reference(repo, data['predecessor_archive'])
     with tempfile.TemporaryDirectory(prefix='core-successor-predecessor-') as temporary:
         projection = Path(temporary).resolve()
-        with tarfile.open(archive, 'r:gz') as tar:
-            members = tar.getmembers()
-            require(len({item.name for item in members}) == len(members), 'duplicate archive members')
-            for name, sha in before.items():
-                member = tar.getmember(name)
-                require(member.isfile(), 'nonregular archived source')
-                stream = tar.extractfile(member)
-                require(stream is not None, 'missing archived source')
-                with stream:
-                    raw = stream.read()
-                require(hashlib.sha256(raw).hexdigest() == sha, 'predecessor archive differs')
-                path = projection / name
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_bytes(raw)
+        frozen.pin(Path(config['manifest']), FROZEN_SHA)
+        original_manifest = frozen.load(Path(config['manifest']))
+        project_predecessor(archive, projection, before,
+                            original_manifest['current_files']['rust/Cargo.lock'])
         migration.check(projection, Path(config['manifest']), FROZEN_SHA,
                         frozen.read_reference(repo, config['test_migration']), config['test_migration']['sha256'])
     reference_safety = pinned_tree(repo, data['reference_safety'])

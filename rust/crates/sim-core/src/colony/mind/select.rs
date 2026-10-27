@@ -1,7 +1,8 @@
 //! Pure ordered-band selection; checked integer scores and incumbent hysteresis.
 
 use super::{
-    model::*, Candidate, EvalKey, FactRow, MindEvalError, RunningChoice, Selection, Transition,
+    model::*, Candidate, EvalKey, FactReader, FactRow, MindEvalError, RunningChoice, Selection,
+    Transition,
 };
 use arrayvec::ArrayVec;
 
@@ -50,29 +51,30 @@ impl FactWitness {
 pub struct EvalScratch {
     witnesses: Vec<FactWitness>,
     slots: Vec<Option<usize>>,
-    eligible: Vec<Candidate>,
+    predicates: Vec<u8>,
 }
+// Low five bits retain WitnessRole flags; the upper bits describe cache state.
+const PREDICATE_VALID: u8 = 1 << 7;
+const PREDICATE_MATCH: u8 = 1 << 6;
 impl EvalScratch {
     /// All actual predicate and score inputs read by the last completed evaluation.
     pub fn witnesses(&self) -> &[FactWitness] {
         &self.witnesses
     }
-    fn clear(&mut self, columns: usize) {
+    fn clear(&mut self, columns: usize, predicates: usize) {
         self.witnesses.clear();
-        self.eligible.clear();
         self.slots.resize(columns, None);
         self.slots.fill(None);
+        self.predicates.resize(predicates, 0);
+        self.predicates.fill(0);
     }
-    fn record(&mut self, fact: FactId, value: i64, role: WitnessRole) {
+    #[inline]
+    fn record(&mut self, fact: FactId, value: i64, roles: u8) {
         if let Some(index) = self.slots[fact.index()] {
-            self.witnesses[index].roles |= role.bit();
+            self.witnesses[index].roles |= roles;
         } else {
             self.slots[fact.index()] = Some(self.witnesses.len());
-            self.witnesses.push(FactWitness {
-                fact,
-                value,
-                roles: role.bit(),
-            });
+            self.witnesses.push(FactWitness { fact, value, roles });
         }
     }
 }
@@ -87,63 +89,98 @@ fn predicate_matches(value: i64, predicate: &Predicate) -> bool {
         Op::Not => value == 0,
     }
 }
-fn eligible(
+#[inline]
+const fn predicate_roles(matches: bool, incumbent: bool) -> u8 {
+    (if matches {
+        WitnessRole::Predicate.bit()
+    } else {
+        WitnessRole::RejectedPredicate.bit()
+    }) | if incumbent {
+        WitnessRole::IncumbentPredicate.bit()
+    } else {
+        0
+    }
+}
+fn eligible<R: FactReader>(
     node: &MindNode,
-    row: FactRow<'_>,
+    row: &mut R,
     key: EvalKey,
     incumbent: bool,
     scratch: &mut EvalScratch,
-) -> Result<bool, MindEvalError> {
+) -> Result<bool, R::Error> {
     if node.stages & row.life_stage().bit() == 0 {
         return Ok(false);
     }
     let period = u64::from(node.every_ticks);
     // A fixed arithmetic phase is scheduling, not a random choice. It is stable
     // under unrelated node insertion; running nodes always revalidate now.
-    let phase = (node.random_key % period + key.agent % period) % period;
-    if !incumbent && key.tick % period != phase {
-        return Ok(false);
+    if period != 1 {
+        let phase = (node.random_key % period + key.agent % period) % period;
+        if !incumbent && key.tick % period != phase {
+            return Ok(false);
+        }
     }
     for predicate in &node.predicates {
-        let value = row.get(predicate.fact)?;
-        let matches = predicate_matches(value, predicate);
-        scratch.record(
-            predicate.fact,
-            value,
-            if matches {
-                WitnessRole::Predicate
-            } else {
-                WitnessRole::RejectedPredicate
-            },
-        );
-        if incumbent {
-            scratch.record(predicate.fact, value, WitnessRole::IncumbentPredicate);
-        }
+        let cached = if R::STABLE_READS {
+            scratch.predicates[predicate.cache_index]
+        } else {
+            0
+        };
+        let matches = if cached & PREDICATE_VALID != 0 {
+            let matches = cached & PREDICATE_MATCH != 0;
+            let roles = predicate_roles(matches, incumbent);
+            if cached & roles != roles {
+                // VALID is published only after record() installs the witness slot.
+                // Neither slots nor witness order change until clear() resets both.
+                let index = scratch.slots[predicate.fact.index()]
+                    .ok_or(MindEvalError::InvalidIndex("cached predicate witness"))?;
+                scratch.witnesses[index].roles |= roles;
+                scratch.predicates[predicate.cache_index] = cached | roles;
+            }
+            matches
+        } else {
+            let value = row.get(predicate.fact)?;
+            let matches = predicate_matches(value, predicate);
+            let roles = predicate_roles(matches, incumbent);
+            scratch.record(predicate.fact, value, roles);
+            if R::STABLE_READS {
+                scratch.predicates[predicate.cache_index] =
+                    PREDICATE_VALID | if matches { PREDICATE_MATCH } else { 0 } | roles;
+            }
+            matches
+        };
         if !matches {
             return Ok(false);
         }
     }
     Ok(true)
 }
-fn score(
+fn score<R: FactReader>(
     node: &MindNode,
-    row: FactRow<'_>,
+    row: &mut R,
     incumbent: bool,
     scratch: &mut EvalScratch,
-) -> Result<i64, MindEvalError> {
+) -> Result<i64, R::Error> {
     let mut total = node.constant;
     for term in &node.terms {
         let value = row.get(term.fact)?;
-        scratch.record(term.fact, value, WitnessRole::Score);
-        if incumbent {
-            scratch.record(term.fact, value, WitnessRole::IncumbentScore);
-        }
-        let product = i128::from(value) * i128::from(term.weight) / 1000;
+        let roles = WitnessRole::Score.bit()
+            | if incumbent {
+                WitnessRole::IncumbentScore.bit()
+            } else {
+                0
+            };
+        scratch.record(term.fact, value, roles);
         let overflow = || MindEvalError::ScoreOverflow {
             node: node.id,
             fact: term.fact,
         };
-        let contribution = i64::try_from(product).map_err(|_| overflow())?;
+        let contribution = if term.weight == 1000 {
+            value
+        } else {
+            let product = i128::from(value) * i128::from(term.weight) / 1000;
+            i64::try_from(product).map_err(|_| overflow())?
+        };
         total = total.checked_add(contribution).ok_or_else(overflow)?;
     }
     Ok(total)
@@ -157,67 +194,80 @@ fn outranks(left: &Candidate, right: &Candidate) -> bool {
 /// a same-band challenger strictly exceeds its margin. Scratch is the only write.
 pub fn choose(
     policy: &CompiledMind,
-    row: FactRow<'_>,
+    mut row: FactRow<'_>,
     running: Option<RunningChoice>,
     key: EvalKey,
     scratch: &mut EvalScratch,
 ) -> Result<Selection, MindEvalError> {
-    scratch.clear(policy.facts().len());
+    choose_with_reader(policy, &mut row, running, key, scratch)
+}
+
+/// Choose with on-demand provider reads in exactly the eager selector's witness order.
+pub fn choose_with_reader<R: FactReader>(
+    policy: &CompiledMind,
+    row: &mut R,
+    running: Option<RunningChoice>,
+    key: EvalKey,
+    scratch: &mut EvalScratch,
+) -> Result<Selection, R::Error> {
+    scratch.clear(
+        policy.facts().len(),
+        if R::STABLE_READS {
+            policy.predicate_count
+        } else {
+            0
+        },
+    );
     if row.revision() != policy.revision()
         || running.is_some_and(|old| old.revision != policy.revision())
     {
-        return Err(MindEvalError::PolicyMismatch);
+        return Err(MindEvalError::PolicyMismatch.into());
     }
     if row.agent() != key.agent || row.tick() != key.tick {
-        return Err(MindEvalError::KeyMismatch);
+        return Err(MindEvalError::KeyMismatch.into());
     }
     if running.is_some_and(|old| policy.node(old.node).is_none()) {
-        return Err(MindEvalError::InvalidIndex("running node"));
+        return Err(MindEvalError::InvalidIndex("running node").into());
     }
     for band in &policy.bands {
+        let mut top3: ArrayVec<Candidate, 3> = ArrayVec::new();
+        let mut current = None;
         for id in band {
             let node = &policy.nodes[id.index()];
             let incumbent = running.is_some_and(|old| old.node == *id && !old.finished);
             if eligible(node, row, key, incumbent, scratch)? {
                 let score = score(node, row, incumbent, scratch)?;
-                scratch.eligible.push(Candidate {
+                let candidate = Candidate {
                     node: *id,
                     band: node.band,
                     behaviour: node.behaviour,
                     score,
-                });
-            }
-        }
-        if scratch.eligible.is_empty() {
-            continue;
-        }
-        let mut top3: ArrayVec<Candidate, 3> = ArrayVec::new();
-        for candidate in &scratch.eligible {
-            let position = top3
-                .iter()
-                .position(|other| outranks(candidate, other))
-                .unwrap_or(top3.len());
-            if position < 3 {
-                if top3.is_full() {
-                    top3.pop();
+                };
+                if incumbent {
+                    current = Some(candidate);
                 }
-                top3.insert(position, *candidate);
+                let position = top3
+                    .iter()
+                    .position(|other| outranks(&candidate, other))
+                    .unwrap_or(top3.len());
+                if position < 3 {
+                    if top3.is_full() {
+                        top3.pop();
+                    }
+                    top3.insert(position, candidate);
+                }
             }
         }
-        let best = *top3.first().ok_or(MindEvalError::NoEligibleNode)?;
+        let Some(best) = top3.first().copied() else {
+            continue;
+        };
         let mut selected = best;
         let mut retained = false;
-        if let Some(old) = running.filter(|old| !old.finished) {
-            if let Some(current) = scratch
-                .eligible
-                .iter()
-                .find(|candidate| candidate.node == old.node)
-            {
-                let margin = policy.nodes[old.node.index()].hysteresis;
-                if i128::from(best.score) - i128::from(current.score) <= i128::from(margin) {
-                    selected = *current;
-                    retained = best.node != current.node;
-                }
+        if let Some(current) = current {
+            let margin = policy.nodes[current.node.index()].hysteresis;
+            if i128::from(best.score) - i128::from(current.score) <= i128::from(margin) {
+                selected = current;
+                retained = best.node != current.node;
             }
         }
         let transition = match running {
@@ -233,5 +283,9 @@ pub fn choose(
             retained_by_hysteresis: retained,
         });
     }
-    Err(MindEvalError::NoEligibleNode)
+    Err(MindEvalError::NoEligibleNode.into())
 }
+
+#[cfg(test)]
+#[path = "stream_tests.rs"]
+mod stream_tests;

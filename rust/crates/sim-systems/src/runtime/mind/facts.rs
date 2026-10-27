@@ -13,6 +13,14 @@ use sim_engine::SimResources;
 use std::collections::BTreeMap;
 use std::fmt;
 
+#[cfg(test)]
+#[path = "fact_binding_tests.rs"]
+mod fact_binding_tests;
+
+#[cfg(test)]
+#[path = "food_index_tests.rs"]
+mod food_index_tests;
+
 /// Failure to bind or populate factual evidence; missing values never become zero.
 #[derive(Debug)]
 pub enum FactError {
@@ -888,16 +896,40 @@ impl ProviderRegistry {
             };
             columns.push((id, *provider, random_key));
         }
+        let preparations = columns
+            .iter()
+            .map(|(_, provider, _)| match provider.name {
+                "forage_available" => FactPreparation::Forage,
+                "gather_available" => FactPreparation::Gather,
+                name if name == "routine_available"
+                    || name == "routine_weighted_place_available"
+                    || (name.starts_with("routine_") && name.ends_with("_available")) =>
+                {
+                    FactPreparation::Routine(RoutinePreparation::bind(name))
+                }
+                _ => FactPreparation::Direct,
+            })
+            .collect();
         Ok(ProviderPlan {
+            preparations,
             columns,
             revision: policy.revision(),
         })
     }
 }
+#[derive(Clone, Copy)]
+enum FactPreparation {
+    Direct,
+    Routine(RoutinePreparation),
+    Forage,
+    Gather,
+}
+
 /// Policy-bound column readers and unique node keys, resolved outside evaluation.
 pub struct ProviderPlan {
     revision: sim_core::colony::mind::MindRevision,
     columns: Vec<(FactId, FactProvider, Option<u64>)>,
+    preparations: Vec<FactPreparation>,
 }
 impl ProviderPlan {
     /// Populate all sorted rows after their required overlays are prepared, rejecting revision or tick mismatch.
@@ -955,6 +987,122 @@ impl ProviderPlan {
     }
 }
 
+/// Per-evaluation memo: never reused across effects or routine replay.
+pub(in crate::runtime) struct LazyRow<'a> {
+    plan: &'a ProviderPlan,
+    context: &'a mut TickContext,
+    resources: &'a SimResources,
+    routine: Option<&'a crate::runtime::agent_actions::routine::RoutineTick>,
+    agent: AgentId,
+    person_index: usize,
+    stage: LifeStage,
+    values: &'a mut Vec<Option<i64>>,
+}
+impl ProviderPlan {
+    /// Bind a fresh lazy row after lifecycle overlays have been synchronized.
+    pub(in crate::runtime) fn lazy_row<'a>(
+        &'a self,
+        context: &'a mut TickContext,
+        resources: &'a SimResources,
+        routine: Option<&'a crate::runtime::agent_actions::routine::RoutineTick>,
+        agent: AgentId,
+        values: &'a mut Vec<Option<i64>>,
+    ) -> Result<LazyRow<'a>, FactError> {
+        if context.tick != resources.current_tick {
+            return Err(FactError::ContextTickMismatch);
+        }
+        let person_index = context.row_index(agent)?;
+        let stage = context.row_at(person_index, agent)?.life_stage;
+        values.resize(self.columns.len(), None);
+        values.fill(None);
+        Ok(LazyRow {
+            plan: self,
+            context,
+            resources,
+            routine,
+            agent,
+            person_index,
+            stage,
+            values,
+        })
+    }
+}
+impl sim_core::colony::mind::FactReader for LazyRow<'_> {
+    const STABLE_READS: bool = true;
+    type Error = FactError;
+    fn agent(&self) -> AgentId {
+        self.agent
+    }
+    fn tick(&self) -> u64 {
+        self.context.tick
+    }
+    fn life_stage(&self) -> LifeStage {
+        self.stage
+    }
+    fn revision(&self) -> sim_core::colony::mind::MindRevision {
+        self.plan.revision
+    }
+    #[inline]
+    fn get(&mut self, fact: FactId) -> Result<i64, FactError> {
+        let slot = self
+            .values
+            .get(fact.index())
+            .ok_or(MindEvalError::InvalidIndex("fact"))?;
+        if let Some(value) = slot {
+            return Ok(*value);
+        }
+        self.read_uncached(fact)
+    }
+}
+impl LazyRow<'_> {
+    #[inline(never)]
+    fn read_uncached(&mut self, fact: FactId) -> Result<i64, FactError> {
+        let (id, provider, random_key) = self
+            .plan
+            .columns
+            .get(fact.index())
+            .ok_or(MindEvalError::InvalidIndex("fact"))?;
+        if *id != fact {
+            return Err(FactError::PolicyMismatch);
+        }
+        let name = provider.name;
+        let preparation = self.plan.preparations[fact.index()];
+        if let FactPreparation::Routine(binding) = preparation {
+            prepare_bound_routine_fact(self.context, self.routine, self.agent, name, binding)?;
+        }
+        let target_binding = match preparation {
+            FactPreparation::Forage => Some("forage_bush"),
+            FactPreparation::Gather => Some("gather_food"),
+            FactPreparation::Direct | FactPreparation::Routine(_) => None,
+        };
+        let value = if let Some(binding) = target_binding {
+            i64::from(resolve_target(self.context, self.resources, self.agent, binding)?.is_some())
+        } else if let Some(key) = random_key {
+            sim_core::rng::keyed_below(
+                self.resources.world_seed,
+                sim_core::rng::STREAM_ROUTINE ^ key,
+                self.agent,
+                self.context.tick,
+                0,
+                self.resources.noise_replicate_for(self.context.tick),
+                1000,
+            ) as i64
+        } else {
+            (provider.read)(
+                self.context.row_at(self.person_index, self.agent)?,
+                self.context,
+                self.resources,
+                name,
+            )?
+        };
+        if provider.kind == FactKind::Bool && !matches!(value, 0 | 1) {
+            return Err(MindEvalError::InvalidBoolean(fact).into());
+        }
+        self.values[fact.index()] = Some(value);
+        Ok(value)
+    }
+}
+
 /// Resolve only the selected capability, after the data evaluator chooses.
 /// Other registered providers can populate context targets without core changes.
 pub fn resolve_target(
@@ -1000,13 +1148,7 @@ pub fn resolve_target(
             &[Domain::Person, Domain::SleepSources],
         ),
         "gather_food" => (
-            targets::nearest_gather_tile(
-                &person.position,
-                &resources.food_tiles,
-                targets::GATHER_SCAN_RADIUS,
-                scope.local_food,
-                &scope.avoid_hearths,
-            ),
+            context.gather_candidate(agent, resources)?,
             &[Domain::Person, Domain::FoodSources],
         ),
         "forage_bush" => (
@@ -1051,21 +1193,36 @@ fn forage_candidate(
         .filter(|_| r.rules.society.stock_target.is_some())
         .zip(scope.home)
         .and_then(|(rule, home)| {
-            crate::runtime::agent_actions::forage::choose_bush(
-                &rule,
-                home,
-                (p.position.x, p.position.y),
-                &r.food_tiles,
-                c.claims(),
-                None,
-                &scope.avoid_hearths,
-            )
+            let mut best = None;
+            c.visit_food_in_square(r, home, rule.forage_radius, |tile, amount| {
+                if !crate::runtime::agent_actions::forage::bush_eligible(
+                    &rule,
+                    home,
+                    c.claims(),
+                    None,
+                    &scope.avoid_hearths,
+                    tile,
+                    amount,
+                ) {
+                    return;
+                }
+                let key = (
+                    c.claims().get(&tile).copied().unwrap_or(0),
+                    sim_core::spatial::chebyshev((p.position.x, p.position.y), tile),
+                    tile.1,
+                    tile.0,
+                );
+                if best.is_none_or(|old| key < old) {
+                    best = Some(key);
+                }
+            });
+            best.map(|(_, _, y, x)| (x, y))
         }))
 }
 
 /// Pure observations of the one real lifecycle transaction. Parent prepares its
 /// places cache once before this call; shadow never constructs or mutates it.
-pub(in crate::runtime) fn refresh_routine(
+pub(in crate::runtime) fn refresh_routine_lifecycle(
     context: &mut TickContext,
     routine: Option<&crate::runtime::agent_actions::routine::RoutineTick>,
     agent: AgentId,
@@ -1076,23 +1233,6 @@ pub(in crate::runtime) fn refresh_routine(
     context.set_activity_snapshot(agent, routine.and_then(|r| r.activity(agent)))?;
     let p = context.row(agent)?;
     let member = context.target_scope(agent)?.settlement;
-    let kinds = [
-        ("routine_tend_fire", ActivityKind::TendFire),
-        ("routine_craft", ActivityKind::Craft),
-        ("routine_repair", ActivityKind::Repair),
-        ("routine_hearth_circle", ActivityKind::HearthCircle),
-        ("routine_explore", ActivityKind::Explore),
-        ("routine_play", ActivityKind::Play),
-        ("routine_sit_by_fire", ActivityKind::SitByFire),
-    ];
-    let candidates = kinds.map(|(name, kind)| {
-        (
-            name,
-            routine.and_then(|r| {
-                r.preview_kind(agent, p.lineage, member, p.temperament.as_ref(), kind)
-            }),
-        )
-    });
     let deadline = routine
         .and_then(|r| {
             r.deadline(
@@ -1108,16 +1248,6 @@ pub(in crate::runtime) fn refresh_routine(
         .is_some();
     let admission =
         routine.is_some_and(|r| r.can_enter(agent, p.lineage, member, p.temperament.as_ref()));
-    let weighted_place = routine.is_some_and(|r| {
-        r.weighted_place_available(
-            agent,
-            p.lineage,
-            member,
-            p.life_stage == LifeStage::Child,
-            p.life_stage == LifeStage::Elder,
-            p.temperament.as_ref(),
-        )
-    });
     let invited = routine.is_some_and(|r| r.invitation_pending(agent));
     let domains = &[
         Domain::Person,
@@ -1125,12 +1255,6 @@ pub(in crate::runtime) fn refresh_routine(
         Domain::Invitations,
     ];
     context.set_derived(agent, "routine_admission", i64::from(admission), domains)?;
-    context.set_derived(
-        agent,
-        "routine_weighted_place_available",
-        i64::from(weighted_place),
-        domains,
-    )?;
     context.set_derived(agent, "invited", i64::from(invited), domains)?;
     context.set_derived(agent, "routine_deadline", i64::from(deadline), domains)?;
     context.set_derived(
@@ -1139,27 +1263,158 @@ pub(in crate::runtime) fn refresh_routine(
         i64::from(deadline),
         domains,
     )?;
-    context.set_derived(
+    Ok(())
+}
+
+#[derive(Clone, Copy)]
+struct RoutineBinding {
+    target: &'static str,
+    fact: &'static str,
+    kind: ActivityKind,
+}
+
+static ROUTINE_BINDINGS: [RoutineBinding; 7] = [
+    RoutineBinding {
+        target: "routine_tend_fire",
+        fact: "routine_tend_fire_available",
+        kind: ActivityKind::TendFire,
+    },
+    RoutineBinding {
+        target: "routine_craft",
+        fact: "routine_craft_available",
+        kind: ActivityKind::Craft,
+    },
+    RoutineBinding {
+        target: "routine_repair",
+        fact: "routine_repair_available",
+        kind: ActivityKind::Repair,
+    },
+    RoutineBinding {
+        target: "routine_hearth_circle",
+        fact: "routine_hearth_circle_available",
+        kind: ActivityKind::HearthCircle,
+    },
+    RoutineBinding {
+        target: "routine_explore",
+        fact: "routine_explore_available",
+        kind: ActivityKind::Explore,
+    },
+    RoutineBinding {
+        target: "routine_play",
+        fact: "routine_play_available",
+        kind: ActivityKind::Play,
+    },
+    RoutineBinding {
+        target: "routine_sit_by_fire",
+        fact: "routine_sit_by_fire_available",
+        kind: ActivityKind::SitByFire,
+    },
+];
+
+#[derive(Clone, Copy)]
+enum RoutinePreparation {
+    All,
+    Weighted,
+    Kind(&'static RoutineBinding),
+    Unrecognized,
+}
+
+impl RoutinePreparation {
+    fn bind(name: &str) -> Self {
+        match name {
+            "routine_available" => Self::All,
+            "routine_weighted_place_available" => Self::Weighted,
+            _ => ROUTINE_BINDINGS
+                .iter()
+                .find(|binding| binding.fact == name)
+                .map_or(Self::Unrecognized, Self::Kind),
+        }
+    }
+}
+
+pub(in crate::runtime) fn prepare_routine_fact(
+    context: &mut TickContext,
+    routine: Option<&crate::runtime::agent_actions::routine::RoutineTick>,
+    agent: AgentId,
+    name: &str,
+) -> Result<(), FactError> {
+    prepare_bound_routine_fact(
+        context,
+        routine,
         agent,
-        "routine_available",
-        i64::from(candidates.iter().any(|(_, tile)| tile.is_some())),
-        domains,
-    )?;
-    for (name, tile) in candidates {
-        context.set_derived(
-            agent,
-            &format!("{name}_available"),
-            i64::from(tile.is_some()),
-            domains,
-        )?;
+        name,
+        RoutinePreparation::bind(name),
+    )
+}
+
+fn prepare_bound_routine_fact(
+    context: &mut TickContext,
+    routine: Option<&crate::runtime::agent_actions::routine::RoutineTick>,
+    agent: AgentId,
+    name: &str,
+    preparation: RoutinePreparation,
+) -> Result<(), FactError> {
+    let p = context.row(agent)?;
+    let member = context.target_scope(agent)?.settlement;
+    let domains = &[
+        Domain::Person,
+        Domain::RoutineOccupancy,
+        Domain::Invitations,
+    ];
+    if matches!(preparation, RoutinePreparation::Weighted) {
+        let value = routine.is_some_and(|r| {
+            r.weighted_place_available(
+                agent,
+                p.lineage,
+                member,
+                p.life_stage == LifeStage::Child,
+                p.life_stage == LifeStage::Elder,
+                p.temperament.as_ref(),
+            )
+        });
+        return Ok(context.set_derived(agent, name, i64::from(value), domains)?);
+    }
+    let bindings: &[RoutineBinding] = match preparation {
+        RoutinePreparation::All => &ROUTINE_BINDINGS,
+        RoutinePreparation::Kind(binding) => std::slice::from_ref(binding),
+        RoutinePreparation::Weighted | RoutinePreparation::Unrecognized => &[],
+    };
+    let mut available = false;
+    for binding in bindings {
+        let p = context.row(agent)?;
+        let tile = routine.and_then(|r| {
+            r.preview_kind(
+                agent,
+                p.lineage,
+                member,
+                p.temperament.as_ref(),
+                binding.kind,
+            )
+        });
+        available |= tile.is_some();
+        context.set_derived(agent, binding.fact, i64::from(tile.is_some()), domains)?;
         context.set_target(
             agent,
-            name,
+            binding.target,
             tile.map(|tile| TargetCandidate { tile, agent: None }),
             domains,
         )?;
     }
+    if matches!(preparation, RoutinePreparation::All) {
+        context.set_derived(agent, name, i64::from(available), domains)?;
+    }
     Ok(())
+}
+
+#[cfg(any(test, feature = "mind_shadow"))]
+pub(in crate::runtime) fn refresh_routine(
+    context: &mut TickContext,
+    routine: Option<&crate::runtime::agent_actions::routine::RoutineTick>,
+    agent: AgentId,
+) -> Result<(), FactError> {
+    refresh_routine_lifecycle(context, routine, agent)?;
+    prepare_routine_fact(context, routine, agent, "routine_available")?;
+    prepare_routine_fact(context, routine, agent, "routine_weighted_place_available")
 }
 
 /// Freeze social compatibility and mutual-seeking observations at the same
@@ -1307,6 +1562,80 @@ pub fn prepare_context(
 mod tests {
     use super::*;
     use sim_core::components::{Agent, Hunger, Position};
+
+    #[test]
+    fn lazy_runtime_matches_eager_witnesses_and_skips_unrequested_missing_need() {
+        use sim_core::colony::mind::{choose, choose_with_reader, EvalKey, EvalScratch};
+        use sim_core::components::Sleep;
+        let program = crate::runtime::mind::MindProgram::load(r#"(
+            schema_version: 1, bands: ["critical", "duty", "need", "work", "leisure", "idle"],
+            nodes: [
+                (id: "need", band: "need", behaviour: "rest", when: [(fact: "idle", op: "has")],
+                 score: (constant: 1, terms: [(fact: "hunger", weight_permille: 1000)]),
+                 hysteresis: 0, life_stages: ["adult", "child", "elder"], tags: [], name_key: "NEED"),
+                (id: "idle", band: "idle", behaviour: "wander", when: [(fact: "fatigue", op: ">=", value: Some(0))],
+                 score: (constant: 0, terms: []), hysteresis: 0,
+                 life_stages: ["adult", "child", "elder"], tags: [], name_key: "IDLE")
+            ])"#).expect("policy");
+        let mut world = hecs::World::new();
+        let entity = world.spawn((
+            Agent { id: 7 },
+            Position::new(1, 1),
+            AgentState::Idle,
+            Hunger::new(60.0, 0.0),
+            Sleep::new(10.0, 0.0),
+        ));
+        let resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        let mut context = prepare_context(&world, &resources).expect("context");
+        let table = program
+            .providers
+            .build(&program.policy, &context, &resources)
+            .expect("eager facts");
+        let key = EvalKey {
+            world_seed: 0,
+            agent: 7,
+            tick: resources.current_tick,
+            replicate: 0,
+        };
+        let mut eager = EvalScratch::default();
+        let expected = choose(
+            &program.policy,
+            table.row(7).expect("row"),
+            None,
+            key,
+            &mut eager,
+        )
+        .expect("eager");
+        let mut lazy = EvalScratch::default();
+        let mut memo = Vec::new();
+        let mut row = program
+            .providers
+            .lazy_row(&mut context, &resources, None, 7, &mut memo)
+            .expect("lazy row");
+        let actual =
+            choose_with_reader(&program.policy, &mut row, None, key, &mut lazy).expect("lazy");
+        assert_eq!(actual, expected);
+        assert_eq!(lazy.witnesses(), eager.witnesses());
+        assert!(row.values[program.policy.fact_id("fatigue").expect("fact").index()].is_none());
+        world
+            .remove_one::<Sleep>(entity)
+            .expect("remove unused need");
+        let mut context = prepare_context(&world, &resources).expect("context");
+        let mut row = program
+            .providers
+            .lazy_row(&mut context, &resources, None, 7, &mut memo)
+            .expect("row");
+        assert_eq!(
+            choose_with_reader(&program.policy, &mut row, None, key, &mut lazy)
+                .expect("unused missing fact is not read"),
+            expected
+        );
+        assert!(sim_core::colony::mind::FactReader::get(
+            &mut row,
+            program.policy.fact_id("fatigue").expect("fact")
+        )
+        .is_err());
+    }
 
     #[test]
     fn fixed_point_units_preserve_seam_truncation_and_reject_missing_values() {

@@ -9,12 +9,25 @@ use std::collections::{BTreeMap, BTreeSet, VecDeque};
 /// Exact maximum retained choice count per person.
 pub const MIND_HISTORY_LIMIT: usize = 16;
 /// Serialized dictionary and compact per-person histories, in deterministic ID order.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Serialize)]
 pub struct MindHistory {
     dictionary: MindRecordDictionary,
     last_event_id: Option<EventId>,
     people: BTreeMap<AgentId, VecDeque<PackedMindChoice>>,
+    // The dictionary is private and immutable; replacement/deserialization must
+    // carry its own validation state rather than inheriting a system's trust.
+    #[serde(skip)]
+    initialized_policy_checked: bool,
 }
+impl PartialEq for MindHistory {
+    fn eq(&self, other: &Self) -> bool {
+        self.dictionary == other.dictionary
+            && self.last_event_id == other.last_event_id
+            && self.people == other.people
+    }
+}
+impl Eq for MindHistory {}
+
 impl MindHistory {
     /// Bind an empty history to one immutable policy dictionary.
     pub fn new(policy: &CompiledMind) -> Result<Self, MindRecordError> {
@@ -22,6 +35,7 @@ impl MindHistory {
             dictionary: MindRecordDictionary::from_policy(policy)?,
             last_event_id: None,
             people: BTreeMap::new(),
+            initialized_policy_checked: true,
         })
     }
     /// Exact dictionary used by record decoding and save compatibility checks.
@@ -35,6 +49,23 @@ impl MindHistory {
             for record in records {
                 record.decode(policy, &self.dictionary)?;
             }
+        }
+        Ok(())
+    }
+    /// Validate a restored/replaced history once before runtime use.
+    ///
+    /// The immutable dictionary belongs to this object; cloning preserves trust,
+    /// while deserialization clears it. Public `check_policy` remains strict.
+    pub fn check_initialized_policy(
+        &mut self,
+        policy: &CompiledMind,
+    ) -> Result<(), MindRecordError> {
+        if self.dictionary.revision() != policy.revision().code() {
+            return Err(MindRecordError::PolicyMismatch);
+        }
+        if !self.initialized_policy_checked {
+            self.check_policy(policy)?;
+            self.initialized_policy_checked = true;
         }
         Ok(())
     }
@@ -54,6 +85,22 @@ impl MindHistory {
         record: &MindChoiceRecord,
     ) -> Result<PackedMindChoice, MindRecordError> {
         self.dictionary.check(policy)?;
+        let packed = PackedMindChoice::new(policy, record)?;
+        self.insert(record.agent, packed.clone())?;
+        Ok(packed)
+    }
+    /// Encode a runtime choice after initialization validated this immutable dictionary.
+    ///
+    /// Restored histories undergo strict validation before the first insertion.
+    /// Later calls retain revision, record-content and event-order checks; the
+    /// private immutable dictionary keeps its object-local validation cache.
+    pub fn push_record_for_initialized_policy(
+        &mut self,
+        policy: &CompiledMind,
+        record: &MindChoiceRecord,
+    ) -> Result<PackedMindChoice, MindRecordError> {
+        self.check_initialized_policy(policy)?;
+        debug_assert!(self.dictionary.check(policy).is_ok());
         let packed = PackedMindChoice::new(policy, record)?;
         self.insert(record.agent, packed.clone())?;
         Ok(packed)
@@ -143,6 +190,7 @@ impl<'de> Deserialize<'de> for MindHistory {
             last_event_id: wire.last_event_id,
             dictionary: wire.dictionary,
             people: wire.people,
+            initialized_policy_checked: false,
         })
     }
 }

@@ -323,3 +323,99 @@ fn explicit_finish_is_typed_and_cannot_hide_target_or_replace_idle_fallback() {
         policy(&[]).replace("id: \"idle\"", "id: \"idle\", finish: Some(\"completed\")");
     assert!(compile(&only_finish, &schema()).is_err());
 }
+
+#[test]
+fn lazy_reader_matches_eager_selection_witnesses_and_short_circuits_lower_bands() {
+    struct Memo<'a> {
+        row: FactRow<'a>,
+        cells: Vec<Option<i64>>,
+        reads: Vec<usize>,
+    }
+    impl FactReader for Memo<'_> {
+        type Error = MindEvalError;
+        fn agent(&self) -> u64 {
+            self.row.agent()
+        }
+        fn tick(&self) -> u64 {
+            self.row.tick()
+        }
+        fn life_stage(&self) -> LifeStage {
+            self.row.life_stage()
+        }
+        fn revision(&self) -> MindRevision {
+            self.row.revision()
+        }
+        fn get(&mut self, id: FactId) -> Result<i64, MindEvalError> {
+            if let Some(value) = self.cells[id.index()] {
+                return Ok(value);
+            }
+            let value = self.row.get(id)?;
+            self.cells[id.index()] = Some(value);
+            self.reads[id.index()] += 1;
+            Ok(value)
+        }
+    }
+    let authored = policy(&[
+        node("urgent", "critical", 0, "", 0).replace(
+            "fact: \"available\", op: \"has\"",
+            "fact: \"need\", op: \">\", value: Some(90)",
+        ),
+        node(
+            "a",
+            "need",
+            10,
+            "(fact: \"need\", weight_permille: 1000)",
+            5,
+        ),
+        node(
+            "b",
+            "need",
+            12,
+            "(fact: \"need\", weight_permille: 1000)",
+            0,
+        ),
+        node(
+            "unused",
+            "work",
+            0,
+            "(fact: \"other\", weight_permille: 1000)",
+            0,
+        ),
+    ]);
+    let compiled = compile(&authored, &schema()).expect("policy");
+    for need in [10, 100] {
+        for finished in [false, true] {
+            let table = facts(&compiled, 4, need, 123);
+            let running = Some(RunningChoice {
+                revision: compiled.revision(),
+                node: compiled.node_id("a").expect("incumbent"),
+                finished,
+            });
+            let mut eager_scratch = EvalScratch::default();
+            let eager = choose(
+                &compiled,
+                table.row(7).expect("row"),
+                running,
+                key(4),
+                &mut eager_scratch,
+            )
+            .expect("eager");
+            let mut lazy = Memo {
+                row: table.row(7).expect("row"),
+                cells: vec![None; compiled.facts().len()],
+                reads: vec![0; compiled.facts().len()],
+            };
+            let mut lazy_scratch = EvalScratch::default();
+            let selected =
+                choose_with_reader(&compiled, &mut lazy, running, key(4), &mut lazy_scratch)
+                    .expect("lazy");
+            assert_eq!(selected, eager);
+            assert_eq!(lazy_scratch.witnesses(), eager_scratch.witnesses());
+            assert_eq!(
+                lazy.reads[compiled.fact_id("other").expect("lower band fact").index()],
+                0
+            );
+            assert!(lazy.reads.iter().all(|count| *count <= 1));
+        }
+    }
+}

@@ -26,7 +26,10 @@ pub(in crate::runtime) enum ActionTarget {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub(in crate::runtime) enum EffectDomain {
     Needs,
+    /// Unknown food mutation: rebuild the index lazily.
     FoodSources,
+    /// Food effect confined to this tile, including a logically dirty no-op.
+    FoodTile((u32, u32)),
     Claims,
     RoutineOccupancy,
     Invitations,

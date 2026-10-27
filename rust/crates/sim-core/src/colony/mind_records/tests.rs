@@ -245,3 +245,142 @@ fn dictionary_rejects_changed_score_metadata_even_with_same_revision() {
     let altered: MindRecordDictionary = serde_json::from_value(value).unwrap();
     assert_eq!(altered.check(&policy), Err(MindRecordError::PolicyMismatch));
 }
+
+#[test]
+fn initialized_insertion_preserves_bytes_history_and_shared_payload() {
+    let policy = policy();
+    let mut strict = MindHistory::new(&policy).expect("strict history");
+    let mut initialized = MindHistory::new(&policy).expect("initialized history");
+    let mut input = record(&policy);
+    input.parent = None;
+    input.facts[0].cause = None;
+    for id in 1..=20 {
+        input.id = id;
+        input.tick = id;
+        let expected = strict.push_record(&policy, &input).expect("strict push");
+        let actual = initialized
+            .push_record_for_initialized_policy(&policy, &input)
+            .expect("initialized push");
+        assert_eq!(actual.bytes(), expected.bytes());
+        assert!(initialized
+            .latest(input.agent)
+            .expect("latest")
+            .shares_payload(&actual));
+    }
+    assert_eq!(initialized, strict);
+    assert_eq!(
+        serde_json::to_vec(&initialized).unwrap(),
+        serde_json::to_vec(&strict).unwrap()
+    );
+    initialized
+        .check_policy(&policy)
+        .expect("strict validation");
+}
+
+#[test]
+fn initialized_insertion_retains_record_and_order_checks() {
+    let policy = policy();
+    let mut history = MindHistory::new(&policy).expect("history");
+    let input = record(&policy);
+    let mut malformed = input.clone();
+    malformed.facts.push(malformed.facts[0]);
+    assert!(history
+        .push_record_for_initialized_policy(&policy, &malformed)
+        .is_err());
+    assert!(history.latest(input.agent).is_none());
+    history
+        .push_record_for_initialized_policy(&policy, &input)
+        .expect("valid record");
+    assert!(history
+        .push_record_for_initialized_policy(&policy, &input)
+        .is_err());
+    assert_eq!(history.records(input.agent).unwrap().len(), 1);
+}
+
+#[test]
+fn strict_history_boundaries_reject_same_revision_dictionary_corruption() {
+    let policy = policy();
+    let history = MindHistory::new(&policy).expect("history");
+    let mut wire = serde_json::to_value(&history).unwrap();
+    wire["dictionary"]["nodes"][0]["score_terms"][0][1] = serde_json::json!(999);
+    let mut corrupt: MindHistory = serde_json::from_value(wire).unwrap();
+    let input = record(&policy);
+    assert_eq!(
+        corrupt.check_policy(&policy),
+        Err(MindRecordError::PolicyMismatch)
+    );
+    assert_eq!(
+        corrupt.push_record(&policy, &input),
+        Err(MindRecordError::PolicyMismatch)
+    );
+    let packed = PackedMindChoice::new(&policy, &input).unwrap();
+    assert_eq!(
+        corrupt.push(&policy, packed),
+        Err(MindRecordError::PolicyMismatch)
+    );
+    assert!(corrupt.latest(input.agent).is_none());
+}
+
+#[test]
+fn initialized_insertion_rejects_revision_mismatch_before_mutation() {
+    let policy = policy();
+    let history = MindHistory::new(&policy).expect("history");
+    let mut wire = serde_json::to_value(&history).unwrap();
+    wire["dictionary"]["revision"] = serde_json::json!(policy.revision().code().wrapping_add(1));
+    let mut mismatched: MindHistory = serde_json::from_value(wire).unwrap();
+    let input = record(&policy);
+    assert_eq!(
+        mismatched.push_record_for_initialized_policy(&policy, &input),
+        Err(MindRecordError::PolicyMismatch)
+    );
+    assert!(mismatched.latest(input.agent).is_none());
+}
+
+#[test]
+fn initialized_insertion_rejects_same_revision_corruption_without_panicking() {
+    let policy = policy();
+    let history = MindHistory::new(&policy).expect("history");
+    let mut wire = serde_json::to_value(&history).unwrap();
+    wire["dictionary"]["nodes"][0]["score_terms"][0][1] = serde_json::json!(999);
+    let mut corrupt: MindHistory = serde_json::from_value(wire).unwrap();
+    let before = serde_json::to_vec(&corrupt).unwrap();
+    assert_eq!(
+        corrupt.push_record_for_initialized_policy(&policy, &record(&policy)),
+        Err(MindRecordError::PolicyMismatch)
+    );
+    assert_eq!(serde_json::to_vec(&corrupt).unwrap(), before);
+}
+
+#[test]
+fn validation_cache_preserves_roundtrip_equality_and_wire_bytes() {
+    let policy = policy();
+    let mut history = MindHistory::new(&policy).unwrap();
+    history.push_record(&policy, &record(&policy)).unwrap();
+    let bytes = serde_json::to_vec(&history).unwrap();
+    let mut restored: MindHistory = serde_json::from_slice(&bytes).unwrap();
+    assert_eq!(restored, history);
+    restored.check_initialized_policy(&policy).unwrap();
+    restored.check_initialized_policy(&policy).unwrap();
+    assert_eq!(restored, history);
+    assert_eq!(restored.clone(), history);
+    assert_eq!(serde_json::to_vec(&restored).unwrap(), bytes);
+    restored.check_policy(&policy).unwrap();
+}
+
+#[test]
+fn cached_validation_failure_does_not_mark_a_corrupt_history_valid() {
+    let policy = policy();
+    let mut wire = serde_json::to_value(MindHistory::new(&policy).unwrap()).unwrap();
+    wire["dictionary"]["nodes"][0]["score_terms"][0][1] = serde_json::json!(999);
+    let mut corrupt: MindHistory = serde_json::from_value(wire).unwrap();
+    for _ in 0..2 {
+        assert_eq!(
+            corrupt.check_initialized_policy(&policy),
+            Err(MindRecordError::PolicyMismatch)
+        );
+        assert_eq!(
+            corrupt.push_record_for_initialized_policy(&policy, &record(&policy)),
+            Err(MindRecordError::PolicyMismatch)
+        );
+    }
+}

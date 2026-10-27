@@ -67,11 +67,11 @@ pub(super) fn continue_running(c: &mut EffectContext<'_>) -> EffectResult {
 }
 
 fn consume(c: &mut EffectContext<'_>) -> EffectResult {
-    c.effects.dirty.insert(EffectDomain::FoodSources);
+    let key = (c.position.x, c.position.y);
+    c.effects.dirty.insert(EffectDomain::FoodTile(key));
     c.effects.dirty.insert(EffectDomain::Needs);
     let resources = &mut *c.resources;
     let tick = resources.current_tick;
-    let key = (c.position.x, c.position.y);
     let agent = c
         .world
         .get::<&Agent>(c.entity)

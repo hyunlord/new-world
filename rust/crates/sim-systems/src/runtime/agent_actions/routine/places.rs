@@ -226,6 +226,7 @@ impl PlacesCache {
 /// person and tick but not the tile, so the rank never decides; candidates
 /// are generated in `(y, x)` order, so the result is the first tile with no
 /// occupant, else the first with one (a tile with two is full).
+#[cfg(test)]
 pub(super) fn choose(candidates: &[Tile], occupancy: &Occupancy) -> Option<Tile> {
     let mut single = None;
     for tile in candidates {
@@ -239,7 +240,7 @@ pub(super) fn choose(candidates: &[Tile], occupancy: &Occupancy) -> Option<Tile>
 }
 
 /// Pass 18: a per-tick scan position over one candidate list, giving
-/// [`choose`]'s answer without rescanning the occupied front of the list.
+/// the reference scan's answer without rescanning the occupied front of the list.
 ///
 /// Invariants: every tile before `zero` has an occupant; every tile before
 /// `one` has two (`one` advances only when no tile is free). Occupancy only
@@ -251,7 +252,7 @@ pub(super) struct Cursor {
 }
 
 impl Cursor {
-    /// The same tile as [`choose`]`(candidates, occupancy)`.
+    /// The same tile as a full scan for the first free, then first singly occupied tile.
     pub(super) fn choose(&mut self, candidates: &[Tile], occupancy: &Occupancy) -> Option<Tile> {
         let count = |tile: &Tile| occupancy.get(tile).copied().unwrap_or(0);
         while candidates
@@ -280,6 +281,10 @@ impl Cursor {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "preview_tests.rs"]
+mod preview_tests;
 
 #[cfg(test)]
 mod tests {

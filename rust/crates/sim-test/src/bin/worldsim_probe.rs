@@ -14,6 +14,21 @@ fn main() -> std::process::ExitCode {
             }
         };
     }
+    if args.first().is_some_and(|arg| arg == "story-diagnostics") {
+        if args.iter().any(|arg| arg == "--help" || arg == "-h") {
+            println!("usage: worldsim_probe story-diagnostics --seeds a..b --days N --out NEW_EXTERNAL_DIR [--workers 1..8] [--steward on|off] [--defence on|off] [--story on|off|no-beasts] [--neighbours on|off]");
+            return std::process::ExitCode::SUCCESS;
+        }
+        return match sim_test::content_boot::from_environment()
+            .and_then(|()| sim_test::story_diagnostics::run(&args[1..]))
+        {
+            Ok(()) => std::process::ExitCode::SUCCESS,
+            Err(error) => {
+                eprintln!("{error}");
+                std::process::ExitCode::FAILURE
+            }
+        };
+    }
     if args.first().is_some_and(|arg| arg == "story-yield") {
         if args.iter().any(|arg| arg == "--help" || arg == "-h") {
             println!("usage: worldsim_probe story-yield --seeds a..b --days N --out NEW_EXTERNAL_DIR [--workers 1..8] [--steward on|off] [--defence on|off] [--story on|off|no-beasts] [--neighbours on|off]");
