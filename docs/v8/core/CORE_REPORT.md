@@ -309,3 +309,7 @@ P-5 원본120→308분해와 #647 원인 조사는 위 역사 기록을 따른�
 전체 게이트는 hard stop 종료 기록을 위해22:41:15KST에 중단했다(INCOMPLETE, wrapper143). 1–24단계 명령exit0이나 step12 시간은 INVALID다. step25는 반복 도중 중단되어 NOT_COMPLETE,26–45는 NOT_RUN이다. step41 새 frame/waiver 근거는 없다. 게시 SHA는 없으며 v8/wip·v8/main fast-forward와 fixed issue 종료를 아직 수행하지 않았다. v8/core-review는 유지한다.
 
 최종 git ls-remote (22:41 KST): v8/main 및 v8/wip `9855bd082ad88a4c49296410f206f148d98c4df9`, v8/core-review `61260ec8c245d88c6d12ef015de815dae6849017`. 게시 SHA 없음. 이번 후속 문서 커밋은826구현의 부분 검증 기록이며 새 전체 gate 합격이 아니다. 작업트리와 미해결 이슈는 유지한다.
+
+### P-7 측정 전 하네스 정정 (D38)
+
+첫 P7 전체 게이트(36278ff7)는01:31:54KST에 측정 전에 중단했다. 1–3단계PASS,4단계중단,5–45미실행이며 wrapper143 기록을 보존한다. 동일 세션 비율에 과거 원장의 절대 분모까지 추가한 하네스 오류를 정정하고 새 커밋에서1번부터 다시 실행한다. 기존 bench 규칙에는 같은 세션 BASE만 담은 전체 정밀도의 외부 임시 원장을 제공한다. C3 절대 상한과 다른 장면1.10비율은 유지하며 런타임 최적화는 없다. 원래06:57:28KST hard stop은 변경하지 않는다.

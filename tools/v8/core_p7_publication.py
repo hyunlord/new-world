@@ -143,7 +143,7 @@ def adjudication(repo: Path, config: Path, receipt: Path,
 
     The gate log is append-only during execution, so its head line is checked
     rather than hashing its changing tail. The completed adjudication and all
-    four paired inputs must remain byte-identical.
+    four paired inputs and their reconstructed comparison ledger must remain byte-identical.
     """
     scope = freeze.external(repo, Path(os.environ['CORE_P7_RUN']))
     bench = scope / 'full-gate/bench'
@@ -182,6 +182,16 @@ def adjudication(repo: Path, config: Path, receipt: Path,
     for name, expected_path in expected.items():
         need(freeze.read_reference(repo, data[name]) == expected_path,
              'P7 adjudication reference differs: ' + name)
+    need(data.get('comparison_basis') == 'same-session-interleaved-base',
+         'P7 comparison basis differs')
+    comparison = bench / 'comparison-ledger.md'
+    need(freeze.read_reference(repo, data['comparison_ledger']) == comparison,
+         'P7 comparison ledger path differs')
+    from core_p7_ledger import ledger_text
+    need(comparison.read_bytes() == ledger_text(expected['base_summary']).encode('utf-8'),
+         'P7 comparison ledger differs from pinned same-session BASE')
+    freeze.read_reference(repo, data['base_summary'])
+    freeze.read_reference(repo, data['comparison_ledger'])
     need(data.get('raw_failure_labels') == freeze.load(receipt).get('failures'),
          'P7 adjudication raw failures differ')
     freeze.pin(path, checksum)

@@ -468,3 +468,5 @@ Documentation only: CHANGELOG.md; docs/HISTORY.md; docs/ROADMAP.md; docs/v8/core
 ### P7 conditional acceptance harness
 
 No Rust or policy changes. New tools: core_p7_admission.py, core_p7_perf.py, core_p7_bench.py, core_p7_acceptance.py, core_p7_publication.py and five focused test modules. Updated gate.sh, perf.sh, core_gate_checks.sh, mux2_gate_receipts.py, mux2_stall_test.gd and its command tests enforce scoped admission/justification. CORE_P7_TOOL_DELTA.json records exact before/after hashes for every tools/v8 delta. CHANGELOG, ISSUES, CORE_DECISIONS, CORE_PERF and CORE_REPORT record the owner decision, open debt and pending full gate. This checkpoint is not a gate pass.
+
+P7 denominator correction adds core_p7_ledger.py and focused precision/validation tests; core_p7_bench.py and core_p7_publication.py bind the unchanged bench rules to the exact fresh BASE ledger. Historical ledger and runtime remain unchanged. D38 preserves the pre-timing interrupted run; the next run starts from step1.

@@ -11,6 +11,8 @@ from unittest.mock import Mock, patch
 import core_p7_bench as bench
 from core_perf_check import EvidenceError, Json
 from test_core_p7_acceptance import fixture
+from test_core_p7_ledger import summary_fixture
+from core_p7_ledger import ledger_text
 
 
 class P7BenchTests(unittest.TestCase):
@@ -53,7 +55,7 @@ class P7BenchTests(unittest.TestCase):
         session.mkdir()
         for name, value in [('receipt.json', self.receipt), ('config.json', {'fresh': True}),
                             ('new-summary.json', {'role': 'new'}),
-                            ('base-summary.json', {'role': 'base'})]:
+                            ('base-summary.json', summary_fixture())]:
             (session / name).write_text(json.dumps(value))
         return 1
 
@@ -88,7 +90,13 @@ class P7BenchTests(unittest.TestCase):
         verdict = self.read_adjudication()
         self.assertEqual(verdict['status'], 'JUSTIFIED')
         self.assertEqual(verdict['raw_failure_labels'], self.receipt['failures'])
+        comparison = self.out / 'comparison-ledger.md'
+        self.assertEqual(verdict['comparison_basis'], 'same-session-interleaved-base')
+        self.assertEqual(comparison.read_text(), ledger_text(self.out / 'perf-session/base-summary.json'))
+        self.assertEqual(verdict['comparison_ledger'], bench.reference(comparison))
         command = self.ledger.call_args.args[0]
+        self.assertNotIn('--base', command)
+        self.assertEqual(command[4], str(comparison))
         self.assertEqual(command[command.index('--justified-scenes') + 1], 'n200_side64')
         self.assertEqual(command[2:4], ['check', str(self.out / 'perf-session/new-summary.json')])
         self.measure.assert_called_once_with(self.config, self.out / 'perf-session')

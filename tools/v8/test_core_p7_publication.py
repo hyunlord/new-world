@@ -132,7 +132,8 @@ class PublicationTests(unittest.TestCase):
         flaws = (None, 'status', 'publication_head', 'gate', 'gate_head', 'ledger_exit_code',
                  'paired_error', 'justified_scenes', 'justification', 'raw_failure_labels',
                  'paired_config', 'paired_receipt', 'candidate_summary', 'base_summary',
-                 'changed_adjudication', 'changed_summary')
+                 'changed_adjudication', 'changed_summary', 'comparison_basis', 'comparison_ledger',
+                 'wrong_ledger_bytes', 'repinned_base')
         for flaw in flaws:
             with self.subTest(flaw=flaw), tempfile.TemporaryDirectory() as directory:
                 scope = Path(directory).resolve()
@@ -149,6 +150,8 @@ class PublicationTests(unittest.TestCase):
                 receipt.write_text('{"failures": ["n200_side64/tick_mean_us>1.1"]}')
                 (session / 'new-summary.json').write_text('{}')
                 (session / 'base-summary.json').write_text('{}')
+                comparison = session.parent / 'comparison-ledger.md'
+                comparison.write_text('ledger {}\n')
                 def ref(path):
                     return {'path': str(path), 'sha256': p.freeze.digest(path), 'size': path.stat().st_size}
                 data = {'schema_version': 1, 'status': 'JUSTIFIED',
@@ -158,22 +161,35 @@ class PublicationTests(unittest.TestCase):
                         'raw_failure_labels': ['n200_side64/tick_mean_us>1.1'],
                         'paired_config': ref(config), 'paired_receipt': ref(receipt),
                         'candidate_summary': ref(session / 'new-summary.json'),
-                        'base_summary': ref(session / 'base-summary.json')}
+                        'base_summary': ref(session / 'base-summary.json'),
+                        'comparison_basis': 'same-session-interleaved-base',
+                        'comparison_ledger': ref(comparison)}
                 adjudication = session.parent / 'p7-adjudication.json'
                 adjudication.write_text(json.dumps(data))
                 def git(repo, *args):
                     return b'final-head' if args[0] == 'rev-parse' else quote.encode()
-                with patch.object(p, 'git', side_effect=git), \
+                helper = types.ModuleType('core_p7_ledger')
+                helper.ledger_text = Mock(side_effect=lambda path: 'ledger ' + path.read_text() + '\n')
+                with patch.dict('sys.modules', {'core_p7_ledger': helper}), \
+                     patch.object(p, 'git', side_effect=git), \
                      patch.dict('os.environ', {'CORE_P7_RUN': str(run),
                                               'BENCH_JUSTIFIED': p.P7_JUSTIFICATION}):
                     original = p.adjudication(repo, config, receipt)
+                    helper.ledger_text.assert_called_once_with(session / 'base-summary.json')
                     if flaw is None:
                         self.assertEqual(p.adjudication(repo, config, receipt, original), original)
                         continue
-                    if flaw in ('paired_config', 'paired_receipt', 'candidate_summary', 'base_summary'):
+                    if flaw in ('paired_config', 'paired_receipt', 'candidate_summary', 'base_summary', 'comparison_ledger'):
                         other = run / 'fake.json'
                         other.write_bytes(Path(data[flaw]['path']).read_bytes())
                         data[flaw] = ref(other)
+                    elif flaw == 'wrong_ledger_bytes':
+                        comparison.write_text('historical denominator\n')
+                        data['comparison_ledger'] = ref(comparison)
+                    elif flaw == 'repinned_base':
+                        base = session / 'base-summary.json'
+                        base.write_text('{"changed": true}')
+                        data['base_summary'] = ref(base)
                     elif flaw == 'gate_head':
                         gate.write_text('head stale-head\n')
                     elif flaw == 'changed_summary':

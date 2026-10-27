@@ -14,6 +14,7 @@ import time
 
 from core_p7_acceptance import check_paired
 from core_p7_perf import run
+from core_p7_ledger import ledger_text
 from core_perf_check import Document, EvidenceError, ROOT, git, require, sha, write
 
 
@@ -46,9 +47,12 @@ def main(out: Path) -> int:
         waived = check_paired(receipt)
     except EvidenceError as error:
         paired_error = str(error)
+    comparison_ledger = out / 'comparison-ledger.md'
+    with comparison_ledger.open('x') as stream:
+        stream.write(ledger_text(out / 'perf-session/base-summary.json'))
     command = [sys.executable, str(ROOT / 'tools/v8/bench_ledger.py'), 'check',
-               str(out / 'perf-session/new-summary.json'), str(ROOT / 'docs/perf/PERF_LEDGER.md'),
-               '--pass', 'M-CORE', '--base', os.environ['BENCH_BASE'],
+               str(out / 'perf-session/new-summary.json'), str(comparison_ledger),
+               '--pass', 'M-CORE',
                '--justified', quote, '--justified-scenes', 'n200_side64']
     ledger = subprocess.run(command, cwd=ROOT, check=False)
     accepted = paired_error is None and ledger.returncode == 0
@@ -60,6 +64,8 @@ def main(out: Path) -> int:
         'paired_config': reference(out / 'perf-session/config.json'),
         'candidate_summary': reference(out / 'perf-session/new-summary.json'),
         'base_summary': reference(out / 'perf-session/base-summary.json'),
+        'comparison_basis': 'same-session-interleaved-base',
+        'comparison_ledger': reference(comparison_ledger),
         'justification': quote, 'justified_scenes': ['n200_side64'],
         'paired_error': paired_error, 'raw_failure_labels': waived,
         'ledger_exit_code': ledger.returncode,
