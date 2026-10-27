@@ -1191,3 +1191,12 @@ Authority: P-1 requires diagnosis, correction and full regate for ordinary red s
 Preserve the failed Python log and test-isolation-stop.json/terminal.json. The owned gate was stopped before step25 comparisons; this is not a P7(a)/(b) performance failure. Re-run the complete Python suite with the actual P7 environment, commit the test isolation, then start the full gate from1 in p7-execution-3. The original06:57:28KST hard stop remains in force.
 
 The first isolation recheck retained one failure: stall timeout selects P7 by environment-key presence, so an empty value did not select legacy mode. Its test now uses a scoped empty environment; no command assertion changes. Both failed logs remain retained. The final full-suite recheck uses the actual P7 gate environment, including deadline and configuration paths.
+
+
+## D40 — P7 최종 게시 확인 — cb162f3c
+
+**M-CORE P7 수용·게시 완료:** [cb162f3c638ab9569dd7127e5dee7d38c5d3927f](https://github.com/hyunlord/new-world/commit/cb162f3c638ab9569dd7127e5dee7d38c5d3927f)에 전체45/45 exit0 및 terminal0이 귀속된다. v8/wip·v8/main·v8/core-review 원격 SHA를 journal에서 확인했다. 측정 런타임은 `826a7ecd9e38ca3fc1fff253baa0933aee593022`이며 문서/검증 도구 HEAD를 새 런타임으로 표시하지 않는다. side64 평균/p99 raw FAIL만 P7 JUSTIFIED, 다른 standing/C3 PASS다. 이 문서는 게시 후 docs-only 후속이며 자체 전체 게이트·새 런타임 빌드·후속 문서 SHA의 게시를 주장하지 않는다. 다음 단계는 M6 신석기다.
+
+P7은 frozen826 런타임의 side64 mean/p99만 조건부 수용한다. P3d의 phase8 행동 변경은 원본 포트 동작 보존 주장과 구별하며 157개 노드·점수는 유지됐다. 현재 step41 runtime bar PASS이므로 renderer-only waiver를 사용하지 않았다; warmup의 >50ms 및 tick진전 프레임은 보존한다. 기존 p8 FAIL, hard-stop 중단, report-only0.5 및 half-share 미달은 삭제하지 않는다. 후속 문서 커밋은 별도로 fast-forward 게시해야 하며 이 글 작성만으로 그 게시를 주장하지 않는다.
+
+Worktree cleanup exception: pre-existing user .gitignore/.ignore/.omo changes remain intact. Retain this checkout rather than force-removing unrelated user work; no source or evidence cleanup is claimed.

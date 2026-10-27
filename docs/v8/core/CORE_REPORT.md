@@ -1,6 +1,138 @@
 ## 구현 및 검증 보고 — M-CORE
 
-**P-7 재개 (2026-10-28):** D37에 따라 side64만 조건부 justification 후보이며 다른 standing/C3 실패 시 추가 최적화 없이 중단한다. 새 전체 게이트는 준비 중이다. ISS-342/#648 OPEN 등록과 top10 프로파일을 완료했으며 아직 새 게이트 합격·게시를 주장하지 않는다. 아래 D36 hard-stop과 이전 실패는 역사 기록이다.
+## P7 최종 게시 확인 — cb162f3c
+
+**M-CORE P7 수용·게시 완료:** [cb162f3c638ab9569dd7127e5dee7d38c5d3927f](https://github.com/hyunlord/new-world/commit/cb162f3c638ab9569dd7127e5dee7d38c5d3927f)에 전체45/45 exit0 및 terminal0이 귀속된다. v8/wip·v8/main·v8/core-review 원격 SHA를 journal에서 확인했다. 측정 런타임은 `826a7ecd9e38ca3fc1fff253baa0933aee593022`이며 문서/검증 도구 HEAD를 새 런타임으로 표시하지 않는다. side64 평균/p99 raw FAIL만 P7 JUSTIFIED, 다른 standing/C3 PASS다. 이 문서는 게시 후 docs-only 후속이며 자체 전체 게이트·새 런타임 빌드·후속 문서 SHA의 게시를 주장하지 않는다. 다음 단계는 M6 신석기다.
+
+| 단계 | 이름 | 상태 | exit | 초 | 시작 | 비고 |
+|---:|---|---|---:|---:|---|---|
+| 1 | fmt | PASS | 0 | 1 | 03:05:59 |  |
+| 2 | bridge_build | PASS | 0 | 1 | 03:06:00 |  |
+| 3 | godot_import | PASS | 0 | 6 | 03:06:01 |  |
+| 4 | test_debug | PASS | 0 | 2136 | 03:06:07 |  |
+| 5 | test_release | PASS | 0 | 1561 | 03:41:43 |  |
+| 6 | clippy | PASS | 0 | 0 | 04:07:44 |  |
+| 7 | forbidden_math | PASS | 0 | 1 | 04:07:44 |  |
+| 8 | gdscript_strict | PASS | 0 | 17 | 04:07:45 |  |
+| 9 | smoke | PASS | 0 | 26 | 04:08:02 |  |
+| 10 | identity | PASS | 0 | 534 | 04:08:28 |  |
+| 11 | determinism | PASS | 0 | 126 | 04:17:22 |  |
+| 12 | perf | PASS | 0 | 568 | 04:19:28 | report-only |
+| 13 | bridge_api | PASS | 0 | 0 | 04:28:56 |  |
+| 14 | docs | PASS | 0 | 2 | 04:28:56 |  |
+| 15 | inventory_closure | PASS | 0 | 0 | 04:28:58 |  |
+| 16 | python_unittest | PASS | 0 | 31 | 04:28:58 |  |
+| 17 | m1_tests | PASS | 0 | 162 | 04:29:29 |  |
+| 18 | colony_determinism | PASS | 0 | 4 | 04:32:11 |  |
+| 19 | replay | PASS | 0 | 1 | 04:32:15 |  |
+| 20 | uid_check | PASS | 0 | 0 | 04:32:16 |  |
+| 21 | play_check | PASS | 0 | 147 | 04:32:16 |  |
+| 22 | schema_docs | PASS | 0 | 0 | 04:34:43 |  |
+| 23 | renderer_agreement | PASS | 0 | 8 | 04:34:43 |  |
+| 24 | save_roundtrip | PASS | 0 | 60 | 04:34:51 |  |
+| 25 | bench | PASS | 0 | 1182 | 04:35:51 | side64만 P7 JUSTIFIED |
+| 26 | soak | PASS | 0 | 9 | 04:55:33 |  |
+| 27 | nav_bench | PASS | 0 | 11 | 04:55:42 | report-only |
+| 28 | knowledge | PASS | 0 | 53 | 04:55:53 |  |
+| 29 | story | PASS | 0 | 17 | 04:56:46 |  |
+| 30 | neighbours | PASS | 0 | 24 | 04:57:03 |  |
+| 31 | art_manifest | PASS | 0 | 0 | 04:57:27 |  |
+| 32 | resolver_parity | PASS | 0 | 0 | 04:57:27 |  |
+| 33 | extensibility_grep | PASS | 0 | 10 | 04:57:27 |  |
+| 34 | mart2_render | PASS | 0 | 76 | 04:57:37 |  |
+| 35 | steward | PASS | 0 | 9 | 04:58:53 |  |
+| 36 | data_only_ext | PASS | 0 | 12 | 04:59:02 |  |
+| 37 | mux2_defence | PASS | 0 | 214 | 04:59:46 |  |
+| 38 | mux2_oracles | PASS | 0 | 8 | 05:03:20 |  |
+| 39 | mux2_visibility | PASS | 0 | 144 | 05:03:28 |  |
+| 40 | mux2_why | PASS | 0 | 13 | 05:05:52 |  |
+| 41 | mux2_stall_receipt | PASS | 0 | 664 | 05:06:05 | waiver 미사용; warmup 별도 보존 |
+| 42 | baseline_isolation | PASS | 0 | 31 | 04:59:14 |  |
+| 43 | mind_data_only | PASS | 0 | 1 | 04:59:45 |  |
+| 44 | core_shadow | PASS | 0 | 4399 | 05:17:09 |  |
+| 45 | core_evaluation | PASS | 0 | 875 | 06:30:28 | 동일 세션 P7 영수증 재검증 |
+
+### P7 동일 실행 검증 세부사항 — 2026-10-28
+
+전체45단계와 terminal이 모두 exit0으로 완료됐고 게시·이슈 폐쇄는 아래 별도 journal로 확인했다. side64 raw FAIL은 P7 JUSTIFIED이며 step41은 runtime bar PASS다.
+
+게이트 HEAD는 `cb162f3c638ab9569dd7127e5dee7d38c5d3927f`이고 측정 런타임은 `826a7ecd9e38ca3fc1fff253baa0933aee593022`다. Rust 입력 SHA `efbd661b5f1fe4dad998129f4c41961702973b2077cbc047315d4bdedf6cc224`를 유지한다. BASE summary의 실제 commit은 `001f236c308a88615a650fca9af83d80041aa7a8`이며, 기준 `9855bd082`와의 관계는 기존 BASE 검증 증거를 따른다. 문서/검증 도구 HEAD를 새 런타임 빌드 SHA로 바꿔 적지 않는다.
+
+## 동일 세션 성능
+
+아래 mean과 p99는 각 장면의 세 반복 중앙값이다. BASE와 새 바이너리는 같은 세션에서 교차 실행했다. 이전 역사 ledger를 분모로 사용하지 않는다.
+
+| 장면 | mean BASE→새 µs | mean 비율 | p99 BASE→새 µs | p99 비율 | 판정 |
+|---|---:|---:|---:|---:|---|
+| n200 | 415.727431→419.910069 | 1.010061013 | 899→845 | 0.939933259 | ≤1.10 PASS |
+| n1000 | 2061.693056→2141.522222 | 1.038720200 | 5195→4745 | 0.913378248 | ≤1.10 PASS |
+| n2000 | 4557.452083→4032.521875 | 0.884819369 | 10917→8112 | 0.743061281 | ≤1.10 PASS |
+| n200_script | 465.025000→468.510417 | 1.007495117 | 975→922 | 0.945641026 | ≤1.10 PASS |
+| n200_side64 | 257.576736→353.256250 | 1.371460231 | 562→699 | 1.243772242 | raw FAIL / P7 조건부 JUSTIFIED |
+| n1000_wolves | 2033.315278→2123.958333 | 1.044578948 | 5068→4692 | 0.925808998 | ≤1.10 PASS |
+
+C3 여섯 항목은 모두 PASS다. 시간은 위 standing 중앙값, allocator는 after-build slope, RSS는 별도 다섯 반복 outer median을 사용한다.
+
+| C3 | 실제 새 값 | 상한 |
+|---|---:|---:|
+| N1000 mean | 2.1415222222222224 ms | 5 ms |
+| N2000 mean | 4.032521875 ms | 10 ms |
+| allocator/person | 1870.3044444444445 B | 4096 B |
+| allocator/tile | 64.7945556640625 B | 96 B |
+| RSS outer/person | 2175.431111111111 B | 5120 B |
+| RSS outer/tile | 125.0 B | 128 B |
+
+allocator/person의 새/BASE 비율은1.0이다. 합성 full-ring 포화는 별도로9646.191666666668 B/person으로4096 목표 MISS이며, 자연 실행 C3 PASS로 이 관측을 지우지 않는다.
+
+시스템 비용 비교는 위 중앙값 표와 다른 **세 반복 산술평균**이다. N1000 old decision1427.337665162037 µs 대 mind1541.1402712962963 µs로 **1.079730682453013배**, tick2042.6288194444444→2140.930324074074 µs로1.048124996423171배다. N2000 old3382.784596875→mind2940.0292564814813 µs, mind/old0.8691151246217291배다. ≤0.5 목표와 half-share tick 목표는 report-only 미달로 남는다.
+
+초기 세션의 N1000 old1455.127483 / mind19136.358476 µs와 현재 old1427.337665162037 / mind1541.1402712962963 µs를 구분한다. 절대값은 줄었지만 서로 다른 세션이므로 두 세션의 절대값 나눗셈을 검증된 속도 개선율로 주장하지 않는다. 현재 N1000 standing mean 상한은2061.6930555555555×1.10=2267.862361111111 µs이며 새2141.5222222222224 µs다. side64 상한257.57673611111113×1.10=283.3344097222223 µs보다 새353.25625 µs가 느리므로 원래 실패는 유효하다.
+
+## 입장과 증거
+
+33쌍/66실행이 수용됐고 invalid attempt member는0이다. 입장 부하1/5/15분 범위는 각각2.95703125–5.685546875 / 3.626953125–4.39794921875 / 4.9453125–5.259765625다. 첫 BASE 입장 샘플10.8154296875/9.7666015625/7.8701171875는 `NOT_RUN`으로 남겼고,900.0078449249268초 후 다시 입장했다. 따라서67개 입장 기록 중66 ADMITTED,1 NOT_RUN이며, 그 거절 샘플은 실행된 무효 반복이 아니다.
+
+- paired receipt: `/Users/rexxa/work/core-data/p7-execution-3/full-gate/bench/perf-session/receipt.json`
+  SHA-256 `8dc710d3ed61d8eab988dfbeccb9e5e725269905ad83d74791c127bf2ec8ae62`
+- adjudication: `/Users/rexxa/work/core-data/p7-execution-3/full-gate/bench/p7-adjudication.json`
+  SHA-256 `e67c5abaefc0e4091bc1de6af26b106f891f4cd536e235124680e1667ec76965`
+- comparison ledger: `/Users/rexxa/work/core-data/p7-execution-3/full-gate/bench/comparison-ledger.md`
+  SHA-256 `db75f28c7de4ab2f4579fc89ab62adfbc6d5e7f94798a5d57b5030935d7e81aa`
+
+비교 ledger는 같은 세션 BASE summary에서 반올림 없이 생성했으며 `comparison_basis=same-session-interleaved-base`다. 원본 FAIL 항목을 삭제하지 않고 정확히 side64 mean/p99만 조건부 정당화했다. CHANGELOG의 인용문은 다음과 같다.
+
+> P-7 side64 justification: n200_side64 tick mean and p99 regression is accepted for this M-CORE pass only when every other standing scene remains within 1.10, all C3 ceilings pass, and the fresh full gate satisfies the owner rules; track the unresolved density cost in ISS-342/#648 for M7 node consolidation.
+
+이 조건은 다른 다섯 장면과 C3 통과만으로 게시를 허용하지 않으며, 새 전체 게이트의 오너 규칙 충족까지 요구한다. side64 비용은 [ISS-342/#648](https://github.com/hyunlord/new-world/issues/648) M7 후속 과제로 남는다.
+
+## 프로파일·보존·남은 사항
+
+CORE_PERF에 초기/후속 self·inclusive top15 및 side64 exact top10 표를 보존했다. side64 attribution sample SHA는 `16a062ffc46698831b1ceef108e7e2381de991df1270d349573570c48f7cbdd1`이다.1107개 중 mind inclusive733(66.215%), person432, selector112, context90이며 self 상위는 selector73/person55/memmove41/try_tick39다. 프로파일 시간은 INVALID이며 이 새 paired 세션의 시간으로 사용하지 않는다. side64와side192의 명목 밀도 차이는9배지만 실제 local 후보 수·claim churn은 미측정이다. 고정 반경 후보 조회와 claim 무효화가 비용에 영향을 줄 수 있다는 소스 기반 가설이며 인과 증명은 아니다.
+
+보존 경계: p12 `1ca297b82f738cdcd881a344bc863bde669abe1a`는 원본10개 colony summary의 literal SHA, baseline identity, 정확히 허용된 provenance만 제외한 outcomes/why canonical payload를 보존했다. 성능 실패 후 별도 P-3d `826a7ecd`에서 phase8 스케줄링 행동을 변경했고157개 노드·점수는 동결했다. 이후 exact guard cache·lazy facts/food index·indexed predicates·공유 snapshot·최초 방문 조회 생략 등은 채택한 P-3d 동작과의 보존 검증을 거쳤다.826의10개 summary를 최초 전환 결과와 동일하다고 주장하지 않는다.
+
+826의 별도 검증은 shadow round2 OFF99.474271%/ON99.505779%, host parity3,734,894 person-tick 불일치0, baseline228,748값 차이0,64개 chronicle/relations 파일19,683항목 일치다. 새1264–1295 outcomes/why는 통과했으며 이제 노출된 코호트이므로 후속 실행은 preservation replay다. 원래1238 늑대 사망0→3과 BASE alive30/32 실패를 유지한다. P7은 런타임을 더 수정하지 않으며 원본826 검증기 체인을 사용한다. 이번 step44·45 재검증도 exit0으로 완료됐다.
+
+P-5: 원본 연대기119.9375→308.15625항목/세계년의 증가12,046은 mind_choice12,142와 기타 종류 순변화−96으로 분해했다. 원본 missing121/125는 explicit-unknown108/107 및 후손13/18이며 지정 대상의 실제 누락/cycle은0이었다. 전체 Mind EventId 그래프를 내보내지 않는 계기의 한계가 있어 전체 인과 깊이의 완전성은 판단하지 않는다.826 별도 story는119.9375→306.546875, missing121/123, depth≥3와cycle0이며 원본 종류별 분해를 이 결과에 복사하지 않는다. [ISS-341/#647](https://github.com/hyunlord/new-world/issues/647)은 미해결이다.
+
+이번 step41은1× scored300.004105초/최대49.558ms,½× scored300.003186초/최대46.101ms이며 warmup 후50ms 초과는 양쪽0이다. warmup에는50ms 초과5프레임(시뮬레이션 진행4프레임)을 보존했다. 독립 raw audit는1×/½× 양쪽 runtime bar PASS다(각36,499/36,496 samples, 분당>33ms 횟수[1,0,0,0,0]). warmup에는50ms 초과 및 sim tick 진전 프레임이 남아 있으므로 “전체 raw 프레임에서50ms 초과0”이라고 표현하지 않는다. runtime bar 통과와 P-4 waiver는 구분하며 이번 step41의 renderer waiver를 사용했다고 주장하지 않는다. 전체45단계·게시 SHA·원격 readback은 이번 journal로 확인했다. 이 문서 후속 자체의 새 전체 게이트는 주장하지 않는다.
+
+
+작업트리의 기존 사용자 변경 `.gitignore`, `.ignore`, `.omo/`를 보존하기 위해 작업트리는 유지했다. 강제 삭제나 사용자 변경 되돌리기는 하지 않았다.
+
+### 게시 및 원시 근거
+
+- `/Users/rexxa/work/core-data/p7-execution-3/publication-journal.json` SHA256 `e83c68550e597a05d34ea124fd65170cb34c68fd92a6f8007888b63f781b059f`
+- `/Users/rexxa/work/core-data/p7-execution-3/full-gate/gate.txt` SHA256 `9f8c07d6ef1f4a5e8367d7d473cbf5a117730788398e57a44ea8d439c14001a5`
+- `/Users/rexxa/work/core-data/p7-execution-3/full-gate-launch/terminal.json` SHA256 `9c0b464b0971110b287347373d23c8ba8845e1c2994e2a935763b1a9df3b4b0b`
+- `/Users/rexxa/work/core-data/p7-execution-3/full-gate/bench/p7-adjudication.json` SHA256 `e67c5abaefc0e4091bc1de6af26b106f891f4cd536e235124680e1667ec76965`
+- `/Users/rexxa/work/core-data/p7-execution-3/full-gate/bench/perf-session/receipt.json` SHA256 `8dc710d3ed61d8eab988dfbeccb9e5e725269905ad83d74791c127bf2ec8ae62`
+- `/Users/rexxa/work/core-data/p7-execution-3/stall-independent-audit.json` SHA256 `e5fb544134a031a4e2bfd18ecbe5db17a42f54743212b37f087272b7aa99945e`
+- `/Users/rexxa/work/core-data/p7-execution-3/final-addendum-details.md` SHA256 `9238c62ceff812144428bfa5a070632ed9ccd47faf820f9d9a525b174fbc2e5a`
+- `/Users/rexxa/work/core-data/p7-execution-3/report_gate.py` SHA256 `962ae3b81ae532ad626612b01e5bfabc551f09eb6299bc8e0cbd7559ed9bd8b7`
+
+## 이전 실행 이력 — 당시 판정 보존
+
 
 **2026-10-27 hard stop: 미완료·미게시:** planner P-1~P-6/D25에 따라 성능 실패를 진단·수정하고 전체 게이트를 다시 실행한다. 아래 p8 실패 기록은 당시 결과로 보존하며, 중단 문구는 P-1로 정정됐다. 현재 게시·최종 수용은 아직 하지 않았다. D26의 provenance 규칙과 추가 성능 기록은 CORE_DECISIONS/CORE_PERF를 따른다.
 

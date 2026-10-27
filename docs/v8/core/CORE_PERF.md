@@ -1171,3 +1171,42 @@ Observed attribution places 733 samples inclusive in mind, 432 in person process
 The original paired side64 result remains **REQUIRED FAIL**: median tick mean 353.0180555555556 µs versus BASE 261.8625 µs (ratio 1.3481046562816577), p99 693 versus 527 µs (ratio 1.3149905123339658). The paired ceiling remains 288.04875 µs. The latest quiet M-ART2.1 ledger reference is 258.9 µs, yielding 284.79 µs at 1.10; the older M5.5 reference 257.5 µs is historical. The requested issue title’s “mind ×1.35” refers to the total-tick regression, not a measured isolated mind/old-decision ratio. **No P7 conditional justification has been granted yet.** Neither this attribution nor the proposed M7 work changes the required failure or grants publication approval.
 
 M7 should measure visited candidates, reservation-map size and updates, claim-dependent invalidations, and selector evaluations per person-tick before selecting node-consolidation work. Preserve deterministic ordering and behavioral proofs; evaluate any change with interleaved BASE/new binaries in one session, recording 1/5/15-minute loads before every repeat and admitting only starts below load1=8.
+
+
+## P7 최종 게시 확인 — cb162f3c — same-run 성능
+
+**M-CORE P7 수용·게시 완료:** [cb162f3c638ab9569dd7127e5dee7d38c5d3927f](https://github.com/hyunlord/new-world/commit/cb162f3c638ab9569dd7127e5dee7d38c5d3927f)에 전체45/45 exit0 및 terminal0이 귀속된다. v8/wip·v8/main·v8/core-review 원격 SHA를 journal에서 확인했다. 측정 런타임은 `826a7ecd9e38ca3fc1fff253baa0933aee593022`이며 문서/검증 도구 HEAD를 새 런타임으로 표시하지 않는다. side64 평균/p99 raw FAIL만 P7 JUSTIFIED, 다른 standing/C3 PASS다. 이 문서는 게시 후 docs-only 후속이며 자체 전체 게이트·새 런타임 빌드·후속 문서 SHA의 게시를 주장하지 않는다. 다음 단계는 M6 신석기다.
+
+### 동일 세션 교차 성능
+
+| scene | BASE mean µs | 새 mean µs | mean 비 | BASE p99 µs | 새 p99 µs | p99 비 |
+|---|---:|---:|---:|---:|---:|---:|
+| n200 | 415.727431 | 419.910069 | 1.010061 | 899.000000 | 845.000000 | 0.939933 |
+| n1000 | 2061.693056 | 2141.522222 | 1.038720 | 5195.000000 | 4745.000000 | 0.913378 |
+| n2000 | 4557.452083 | 4032.521875 | 0.884819 | 10917.000000 | 8112.000000 | 0.743061 |
+| n200_script | 465.025000 | 468.510417 | 1.007495 | 975.000000 | 922.000000 | 0.945641 |
+| n200_side64 | 257.576736 | 353.256250 | 1.371460 | 562.000000 | 699.000000 | 1.243772 |
+| n1000_wolves | 2033.315278 | 2123.958333 | 1.044579 | 5068.000000 | 4692.000000 | 0.925809 |
+
+원시 receipt 상태: `FAIL`; accepted pairs: `33`; invalid attempt members: `0`.
+할당량/인물 비: 1.000000. 원시 실패: `['n200_side64/tick_mean_us>1.1', 'n200_side64/tick_p99_us>1.1', 'N1000 mind/old decision>0.5', 'N1000 tick ratio exceeds accepted arithmetic bar']`.
+
+| C3 | 원시 판정 |
+|---|---|
+| n1000_mean_le_5ms | PASS |
+| n2000_mean_le_10ms | PASS |
+| bytes_per_agent_le_4096 | PASS |
+| bytes_per_tile_le_96 | PASS |
+| rss_per_agent_le_5120 | PASS |
+| rss_per_tile_le_128 | PASS |
+
+측정 summary source826과 게이트 HEADcb의 차이를 지우지 않는다. PERF_LEDGER append의 source guard를 우회하지 않았고 새 ledger 행을 추가하지 않는다. 과거 FAIL·INVALID·full-ring 참고 미달은 그대로 남긴다.
+
+- `/Users/rexxa/work/core-data/p7-execution-3/publication-journal.json` SHA256 `e83c68550e597a05d34ea124fd65170cb34c68fd92a6f8007888b63f781b059f`
+- `/Users/rexxa/work/core-data/p7-execution-3/full-gate/gate.txt` SHA256 `9f8c07d6ef1f4a5e8367d7d473cbf5a117730788398e57a44ea8d439c14001a5`
+- `/Users/rexxa/work/core-data/p7-execution-3/full-gate-launch/terminal.json` SHA256 `9c0b464b0971110b287347373d23c8ba8845e1c2994e2a935763b1a9df3b4b0b`
+- `/Users/rexxa/work/core-data/p7-execution-3/full-gate/bench/p7-adjudication.json` SHA256 `e67c5abaefc0e4091bc1de6af26b106f891f4cd536e235124680e1667ec76965`
+- `/Users/rexxa/work/core-data/p7-execution-3/full-gate/bench/perf-session/receipt.json` SHA256 `8dc710d3ed61d8eab988dfbeccb9e5e725269905ad83d74791c127bf2ec8ae62`
+- `/Users/rexxa/work/core-data/p7-execution-3/stall-independent-audit.json` SHA256 `e5fb544134a031a4e2bfd18ecbe5db17a42f54743212b37f087272b7aa99945e`
+- `/Users/rexxa/work/core-data/p7-execution-3/final-addendum-details.md` SHA256 `9238c62ceff812144428bfa5a070632ed9ccd47faf820f9d9a525b174fbc2e5a`
+- `/Users/rexxa/work/core-data/p7-execution-3/report_gate.py` SHA256 `962ae3b81ae532ad626612b01e5bfabc551f09eb6299bc8e0cbd7559ed9bd8b7`

@@ -472,3 +472,17 @@ No Rust or policy changes. New tools: core_p7_admission.py, core_p7_perf.py, cor
 P7 denominator correction adds core_p7_ledger.py and focused precision/validation tests; core_p7_bench.py and core_p7_publication.py bind the unchanged bench rules to the exact fresh BASE ledger. Historical ledger and runtime remain unchanged. D38 preserves the pre-timing interrupted run; the next run starts from step1.
 
 P7 legacy-test isolation: test_core_shadow_freeze.py and test_mux2_gate_receipts.py explicitly select non-P7 mode for their existing legacy assertions. Dedicated P7 tests and all production sources are unchanged. D39 retains the failed full-suite run and requires another complete gate.
+
+
+## P7 최종 게시 확인 — cb162f3c — 문서 전용 후속
+
+전체45/45 게이트와 게시 근거는 `cb162f3c638ab9569dd7127e5dee7d38c5d3927f`에만 귀속한다. 이 후속 문서 커밋은 별도 SHA로 커밋·fast-forward 게시하며 자체 전체 게이트를 주장하지 않는다. 런타임·정책·검증 도구 변경은 없고, 측정 런타임826과 게이트cb의 구분을 유지한다. PERF_LEDGER는 수정하지 않는다.
+
+- `docs/v8/core/CORE_REPORT.md`
+- `docs/v8/core/CORE_PERF.md`
+- `docs/v8/core/CORE_DECISIONS.md`
+- `CHANGELOG.md`
+- `docs/HISTORY.md`
+- `docs/ROADMAP.md`
+- `docs/ISSUES.md`
+- `docs/v8/core/CORE_CHANGED_FILES.md`

@@ -5,6 +5,11 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## P7 최종 게시 확인 — cb162f3c
+
+- **M-CORE P7 수용·게시 완료:** [cb162f3c638ab9569dd7127e5dee7d38c5d3927f](https://github.com/hyunlord/new-world/commit/cb162f3c638ab9569dd7127e5dee7d38c5d3927f)에 전체45/45 exit0 및 terminal0이 귀속된다. v8/wip·v8/main·v8/core-review 원격 SHA를 journal에서 확인했다. 측정 런타임은 `826a7ecd9e38ca3fc1fff253baa0933aee593022`이며 문서/검증 도구 HEAD를 새 런타임으로 표시하지 않는다. side64 평균/p99 raw FAIL만 P7 JUSTIFIED, 다른 standing/C3 PASS다. 이 문서는 게시 후 docs-only 후속이며 자체 전체 게이트·새 런타임 빌드·후속 문서 SHA의 게시를 주장하지 않는다. 다음 단계는 M6 신석기다.
+- 이슈 #639/#640/#641/#643/#644/#645의 실제 CLOSED readback을 확인했다. #642/#646/#647/#648 및 잔여 범위는 이 승인으로 닫지 않는다.
+
 ## M-CORE performance repair — 2026-10-27 (in progress, not published)
 
 - Planner P-1–P-6 resume repair after the original p8 failure: ordinary red gates require diagnosis, correction and full re-run. The original failures below remain historical evidence. Required performance is standing step25 without justification plus C3 time ceilings; the mind/old0.5 ratio remains a target. Timing requires each interleaved repeat to start at1-minute load<8, with all three loads retained.
