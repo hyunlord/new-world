@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "canonicalization": "sorted-keys-exact-decimal-v1",
+  "artifacts": {
+    "outcomes": [
+      "/arms/mind/source_sha",
+      "/arms/mind/binary_sha256",
+      "/input_hashes/mind/summary_sha256",
+      "/input_hashes/mind/receipt_sha256",
+      "/input_hashes/base/summary_sha256",
+      "/input_hashes/base/receipt_sha256"
+    ],
+    "why": [
+      "/source_sha",
+      "/binary_sha256",
+      "/input_hashes/summary_sha256",
+      "/input_hashes/receipt_sha256"
+    ],
+    "colony_summary": []
+  }
+}

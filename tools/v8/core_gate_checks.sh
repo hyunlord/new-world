@@ -81,12 +81,26 @@ required = {'schema_version', 'final_head', 'final_rust_source_sha256', 'mind_bi
             'mind_summary', 'mind_receipt', 'base_summary', 'base_receipt', 'perf_config', 'perf_receipt',
             'story_base_report', 'story_base_receipt', 'story_base_binary', 'story_base_provenance',
             'story_mind_report', 'story_mind_receipt'}
-if set(config) != required:
+successor_fields = {'runtime_successor', 'runtime_successor_checker_sha256'}
+if set(config) not in (required, required | successor_fields):
     raise SystemExit('invalid evaluation config fields')
 if config['final_head'] != perf.git('rev-parse', 'HEAD') or config['final_rust_source_sha256'] != perf.source_hash():
     raise SystemExit('evaluation source no longer matches current final source')
 paths = {key: freeze.read_reference(root, config[key]) for key in required -
          {'schema_version', 'final_head', 'final_rust_source_sha256'}}
+def check_successor():
+    if 'runtime_successor' not in config:
+        return
+    freeze.pin(root / 'tools/v8/core_shadow_successor.py', config['runtime_successor_checker_sha256'])
+    import core_shadow_successor as successor
+    receipt = freeze.read_reference(root, config['runtime_successor'])
+    endpoint = successor.check(root, receipt, config['runtime_successor']['sha256'])
+    if endpoint['binary_sha256'] != freeze.digest(paths['mind_binary']) or endpoint['rust_source_sha256'] != config['final_rust_source_sha256']:
+        raise SystemExit('evaluation/successor endpoint differs')
+    if endpoint['source_commit'] != freeze.load(paths['perf_config'])['candidate_head'] or endpoint['source_commit'] != freeze.load(paths['mind_receipt'])['source_sha']:
+        raise SystemExit('evaluation committed build source differs from successor endpoint')
+
+check_successor()
 perf_inputs = freeze.load(paths['perf_config'])
 policy_sha = freeze.digest(root / 'rust/crates/sim-core/data/colony/mind.ron')
 for arm in ('mind', 'base'):
@@ -159,6 +173,7 @@ for key, path in paths.items():
 freeze.pin(config_path, sys.argv[4])
 if config['final_head'] != perf.git('rev-parse', 'HEAD') or config['final_rust_source_sha256'] != perf.source_hash():
     raise SystemExit('source changed while validating evaluation evidence')
+check_successor()
 print('CORE_EVALUATION PASS held-out outcomes + why + story completeness + raw performance revalidation; no simulations launched')
 PYEVAL
     ;;
@@ -181,12 +196,22 @@ config = freeze.load(config_path)
 freeze.version(config)
 required = {'schema_version', 'manifest', 'manifest_sha256', 'calibration'}
 migration_fields = {'test_migration', 'test_migration_checker_sha256'}
-if set(config) not in (required, required | migration_fields):
+successor_fields = {'runtime_successor', 'runtime_successor_checker_sha256'}
+if set(config) not in (required, required | migration_fields, required | migration_fields | successor_fields):
     raise SystemExit('invalid fixture config fields')
 manifest_path = Path(config['manifest'])
 
 def check_frozen():
     freeze.pin(config_path, sys.argv[4])
+    if 'runtime_successor' in config:
+        freeze.pin(root / 'tools/v8/core_shadow_successor.py', config['runtime_successor_checker_sha256'])
+        import core_shadow_successor as successor
+        receipt = freeze.read_reference(root, config['runtime_successor'])
+        original = freeze.read_reference(root, freeze.load(receipt)['original_config'])
+        if freeze.load(original) != {key: value for key, value in config.items() if key not in successor_fields}:
+            raise SystemExit('successor does not preserve original shadow config')
+        successor.check(root, receipt, config['runtime_successor']['sha256'])
+        return
     if 'test_migration' not in config:
         freeze.check(root, manifest_path, config['manifest_sha256'])
         return
@@ -268,7 +293,8 @@ for steward in ('off', 'on'):
     run(['bash', helper, 'fixture', observed_path, twin_path, off_path, review_path], mode_dir / 'validation.log')
 freeze.pin(config_path, sys.argv[4])
 check_frozen()
-print('CORE_SHADOW_FIXTURE PASS fresh seed=0 days=20 steward=off,on frozen observed/control/feature-OFF')
+print('ORIGINAL_SHADOW_REPLAY PASS; CURRENT_SUCCESSOR_EQUIVALENCE verified separately' if 'runtime_successor' in config
+      else 'CORE_SHADOW_FIXTURE PASS fresh seed=0 days=20 steward=off,on frozen observed/control/feature-OFF')
 PYRUN
     ;;
 shadow|fixture)
