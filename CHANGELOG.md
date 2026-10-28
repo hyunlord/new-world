@@ -5,7 +5,7 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
-## M-UX2.1 resume — 2026-10-28 (acceptance in progress)
+## M-UX2.1 resume — 2026-10-28 (red gate, blocked, not published)
 
 ### Added
 - Exact marker geometry/cache/presentation regressions and real seed0 Korean inspector, chronicle and defence capture tooling.
@@ -19,7 +19,7 @@ tags `v7-final-sim` and `v7-final-art`.
 ### Removed
 - Unused production marker occupancy helpers; the original implementation remains frozen in the regression oracle.
 
-All seven required release FPS bars pass on b0401ca2e. Natural quarter rebake is now measured at10.493ms maximum per frame, missing the4ms aim; full gate and publication remain pending.
+All seven required release FPS bars pass on b0401ca2e; final runtime audit confirms equality with gate source6ed4e1996. Natural quarter rebake is10.493ms maximum per frame, missing the4ms aim. Final gate steps1–15 exit0, but step16 fails with one NameError(root) in405Python tests. Step17 was interrupted;18–46 and final GPU recheck are NOT_RUN. Legacy step12 perf exit0 lacks per-repeat admission evidence and is not fresh acceptance. Stop-on-red terminated only the owned process group; terminal actual/wrapper-15, deadlinefalse. No repair, retest, regate or publication followed. All owned issues343–347 remain OPEN; remotes main/wip remain3814828c. This closeout is report-only, NOT_FULL_GATED.
 
 The original blocked record below remains historical. Current acceptance and publication evidence is recorded in `docs/v8/mux2_1/MUX21_REPORT.md`.
 

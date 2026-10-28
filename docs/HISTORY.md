@@ -6,9 +6,9 @@
 >
 > 규칙: 마일스톤이 끝나거나 무언가를 지울 때 이 문서에 줄을 더한다.
 
-## M-UX2.1 재개 — 검증 진행·미게시 (2026-10-28)
+## M-UX2.1 재개 — RED GATE·BLOCKED·미게시 (2026-10-28)
 
-- 2026-10-28 — 게시 M-CORE381 위 `v8/mux2-1b`에서 조용한3빌드 비교12/12를 완료했다. BASE N200¼×34.948FPS·표식24.570ms로 매 프레임 배치 병목을 확인하고 p7–p9에서 기존 MultiMesh·링을 보존한 배치 캐시/안정 타일 목표를 적용했다. p10 `b0401ca2e`의 유효¼× N10/200/1000은377.513/246.246/115.303FPS(초기N10 실제10–11), N40은 무효 반복 뒤 대기. KO1.0/1.25의 일/배고픔/도망 정보창·왜?·연대기·방어 a5 캡처 자동 검사를 완료했으나 픽셀 검토·나머지 FPS·GPU·자연 재굽기·전체46단계 gate·게시는 대기다. 시뮬레이션 Rust tree 불변, 오너 승인 어댑터는 역사 실패를 보존하고 새 성능 예외를 허용하지 않는다. ISS343/344/345(#638/#655/#656) OPEN; [현재 보고](v8/mux2_1/MUX21_REPORT.md).
+- 2026-10-28 — 게시381 기준 조용한3빌드12/12와 표식24.570ms 진단 후 배치 캐시/타일 목표를 수정했다. b040의 필수 FPS7/7 VALID/PASS와 KO 정보창/왜?·연대기·방어 화면 검증을 완료했지만 자연 재굽기10.493ms는4ms 목표 미달이다. clean6ed4e1996 전체 gate는1–15 exit0(debug2595/release2594·각8ignored, identity228748값·64chronicles19683항목 동일),16 Python405시험/errors1 NameError(root)로 FAIL. 소유 PGID만 중단해17 INTERRUPTED,18–46 NOT_RUN·최종GPU NOT_RUN; actual/wrapper-15·deadlinefalse다. step12 legacy perf는 반복 입장 근거가 없어 새 수용값으로 쓰지 않는다. stop-on-red에 따라 수정·재시험·재게이트·게시 없음, 원격 main/wip는381 유지. ISS343–347 OPEN, 종료 문서 후속은 NOT_FULL_GATED; [보고](v8/mux2_1/MUX21_REPORT.md).
 
 ## M-UX2.1 차단 기록 — 미완료·미게시 (2026-10-26)
 

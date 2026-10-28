@@ -1,6 +1,8 @@
 ## 구현 완료 보고 — M-UX2.1
 
-**검증 진행 중 · IN_PROGRESS · NOT_PUBLISHED.** 오너 지정 제목이며 전체 완료 선언이 아니다. 이 초안은 로컬 `b0401ca2e40de0ee972d451b3c4c1ecf0c1fa816`의 완료된 영수증만 반영한다. 2026-10-28 재개 기준은 게시 M-CORE `3814828c06d1a7a211b13b54368e4e0a488cc0e3`, 브랜치는 `v8/mux2-1b`다. 원래 브랜치와 [2026-10-26 차단 보고](MUX21_BLOCKED_20261026.md)는 보존했다.
+**BLOCKED · RED GATE · NOT_PUBLISHED.** 오너 지정 제목이며 전체 완료 선언이 아니다. 필수 FPS7/7과 요청 화면 검증은 완료했지만, 전체 gate의16번 Python 시험이 실패해 stop-on-red 규칙으로 중단했다. 수정·재시험·재게이트·게시를 하지 않았다. 측정 소스는 `b0401ca2e40de0ee972d451b3c4c1ecf0c1fa816`, 실패 gate 소스는 `6ed4e19966ec368812441c4f12a74fca22ae251b`다. 외부 최종 측정 감사는 두 HEAD의 런타임 동일성을 확인한다. 이 실패 종료 문서 후속 HEAD는 전체 gate를 거치지 않았다.
+
+2026-10-28 재개 기준은 게시 M-CORE `3814828c06d1a7a211b13b54368e4e0a488cc0e3`, 브랜치는 `v8/mux2-1b`다. 원래 브랜치와 [2026-10-26 차단 보고](MUX21_BLOCKED_20261026.md)는 보존했다. [최종 측정 감사](/Users/rexxa/work/mux21-data/resume-20261028/final-measurement-audit.json).
 
 ### 원인 (빌드 3개 비교, 이분 탐색으로 찾은 커밋, 프로파일 상위 5개)
 
@@ -52,7 +54,7 @@ draw calls335.731, objects drawn1384.066, process32.592ms. 계측 진단은 FPS 
 
 ### 가시성 재확인
 
-최종 HEAD의 GPU 낮/밤140px 대비·선택/징집 링 수용 재검사는 **PENDING**. 표식 회귀 도구의 실제 창 검사와 개별 방어 캡처는 전체 GPU 수용 검사를 대체하지 않는다. 자연 ¼× 재굽기는 seed0/day3 저장에서30초 준비+60초 관측, 시작/종료1분 부하2.81→2.70의 유효 실행이다. 측정 구간의17재굽기/16프레임을 `(reset_epoch, frame)`별로 합산한 최대는 **10.493ms/프레임**, 새 굽기는0건이다. **4ms 목표 미달**을 그대로 남기며 FPS 통과로 덮지 않는다. 준비 구간은 합계에서 제외했다. [프레임별 원시 집계](/Users/rexxa/work/mux21-data/resume-20261028/acceptance-summary.json).
+최종 HEAD의 GPU 낮/밤140px 대비·선택/징집 링 수용 재검사는 **NOT_RUN**이다. red gate 중단으로 도달하지 못했다. 표식 회귀 도구의 실제 창 검사와 개별 방어 캡처는 전체 GPU 수용 검사를 대체하지 않는다. 자연 ¼× 재굽기는 seed0/day3 저장에서30초 준비+60초 관측, 시작/종료1분 부하2.81→2.70의 유효 실행이다. 측정 구간의17재굽기/16프레임을 `(reset_epoch, frame)`별로 합산한 최대는 **10.493ms/프레임**, 새 굽기는0건이다. **4ms 목표 미달**을 그대로 남기며 FPS 통과로 덮지 않는다. 준비 구간은 합계에서 제외했다. [프레임별 원시 집계](/Users/rexxa/work/mux21-data/resume-20261028/acceptance-summary.json).
 
 ### 플레이 대신 확인한 화면 (정보창 이유, 연대기, 방어)
 
@@ -78,7 +80,7 @@ Chronicle은 seed0/tick4320, 경과3일의 원시111행을 세었다. kind별1:1
 
 ### 닫은 GitHub 이슈 / 새로 연 이슈
 
-닫은 이슈 없음. ISS-343 [#638](https://github.com/hyunlord/new-world/issues/638) OPEN 유지. 새 ISS-344 방어 토스트 [#655](https://github.com/hyunlord/new-world/issues/655), ISS-345 후속 UI gate 어댑터 [#656](https://github.com/hyunlord/new-world/issues/656)는 수정 커밋이 로컬 미게시이며 전체 검증·게시 대기로 **OPEN**이다.
+닫은 이슈 없음. ISS-343 [#638](https://github.com/hyunlord/new-world/issues/638) OPEN 유지. 새 ISS-344 방어 토스트 [#655](https://github.com/hyunlord/new-world/issues/655), ISS-345 후속 UI gate 어댑터 [#656](https://github.com/hyunlord/new-world/issues/656)는 수정 커밋이 로컬 미게시이며 red gate 실패·미게시로 **OPEN**이다. 어댑터 시험 실패는 기존 ISS-345/#656 범위에 기록하며 같은 결함의 새 이슈를 만들지 않는다.
 
 잔여 ISS-346 [#657](https://github.com/hyunlord/new-world/issues/657)은 KO UI1.25 늑대 경고와 정보창 이름·제목의 겹침을 기록한 **OPEN·미수정** 이슈다. 이유 본문과 왜?는 가리지 않는다.
 
@@ -96,18 +98,34 @@ Chronicle은 seed0/tick4320, 경과3일의 원시111행을 세었다. kind별1:1
 | p10 `b0401ca2e` | `tools/v8/mux21_play_capture.gd` |
 | p11 `e0f257869` | 보고서·과거 차단 보고 보존·HISTORY/ROADMAP/CHANGELOG·ISSUES·연락 그림·Godot 교훈 |
 | p12 `c5ef23bd8` | 후속 어댑터 전체 Git 모드/링크 객체 증명·봉인·회귀시험·결정 기록 |
+| p13 `6ed4e1996` | 자연 재굽기 미달 ISS-347 등록·보고·결정 기록; 실패 전체 gate 소스 |
+| p14 (이 보고서를 마감하는 로컬 문서 커밋) | 본 보고·결정 기록·HISTORY/ROADMAP/CHANGELOG/README·이슈 기록; 코드 수정·재시험·재게이트 없음 |
 
 ### 확인된 제한사항
 
-전체 `rust/` tree는 게시 BASE381 및 기존 측정826과 동일하다(`c942d93fcd52bea5d7bfed2fb7e9c82de87b7a99`). 소스 동일성은 새 전체 identity/fixture gate 통과를 뜻하지 않는다. debug/release bridge 재빌드 완료 근거와 실제 캡처의 bridge 해시는 외부 증거에 보존한다.
+전체 `rust/` tree는 게시 BASE381 및 기존 측정826과 동일하다(`c942d93fcd52bea5d7bfed2fb7e9c82de87b7a99`). 이번 gate의 identity 단계는228,748값과64 chronicle/19,683항목 동일성을 통과했지만, 소스 동일성과 이 단계의 통과를 미실행 후속 colony fixture 전체의 통과로 확대하지 않는다. debug/release bridge 재빌드 완료 근거와 실제 캡처의 bridge 해시는 외부 증거에 보존한다.
 
 도주1.25의 늑대 경고가 인물 이름을 덮지만 이유와 왜?는 가리지 않는다(ISS-346/#657 OPEN·미수정). 일부1.0 캡처의 작은 지도는 빈 화면이다. UI 설정1.25는 기존 화면 맞춤 상한으로 실제 약1.2233이 될 수 있다. 물리 트랙패드/오너 플레이 수용은 이 캡처가 대신하지 않는다.
 
-필수 FPS7막대는 통과했으며 GPU 가시성, 전체46단계 gate, 원격 fast-forward 게시·이슈 폐쇄가 남았다. 이전 혼잡 실행과 잘못된 캡처·보간 후보 실패는 보존한다. 역사 M-CORE side64 FAIL은 어댑터가 지우지 않으며 새 비교는 예외 없이 통과해야 한다. 원래 워크트리와 외부 도구 `.gitignore`/`.ignore` 변경은 보존하고 임의 제거하지 않는다.
+필수 FPS7막대는 통과했지만 전체 gate는16번에서 실패했다. 최종 GPU 재검사와18–46단계는 NOT_RUN,17번은 중단됐다. 자연 재굽기10.493ms는4ms 목표 미달이며 원격 게시·이슈 폐쇄를 수행하지 않았다. 이전 혼잡 실행과 잘못된 캡처·보간 후보 실패는 보존한다. 역사 M-CORE side64 FAIL은 어댑터가 지우지 않으며 새 비교는 예외 없이 통과해야 한다. 원래 워크트리와 외부 도구 `.gitignore`/`.ignore` 변경은 보존하고 임의 제거하지 않는다.
 
 ### Gate 결과
 
-**현재 HEAD 전체 gate: NOT_RUN. 게시: NOT_PUBLISHED.** 집중 검사 근거는 p7 알림22검사, p8 어댑터22단위시험·shell syntax, 실제 MultiMesh 배치244검사, a5 UI 캡처와 추가 mind UI 자동 검사다. 이 결과는 전체 gate를 대신하지 않는다. p11 전 문서 검사 PASS, 시스템 표 재생성 diff0. 봉인 사전검증의 기존 skill symlink 처리 오류를 p12에서 고쳤으며23시험·실제 Git inventory·역사 pin 검증 및 독립 검토 PASS다. 실패한 사전 봉인은 보존했다. 최종 HEAD의 전체 gate는 후속 기록이 필요하다. 원격이 앞서면 충돌 없는 rebase 뒤 전체 재게이트 규칙을 적용한다.
+**전체 gate: FAIL / STOPPED_ON_RED. 게시: NOT_PUBLISHED.** clean 소스 `6ed4e19966ec368812441c4f12a74fca22ae251b`에서2026-10-28 12:57:29KST 시작했다. [gate 원문](/Users/rexxa/work/mux21-data/resume-20261028/full-gate-1/gate.txt), [terminal](/Users/rexxa/work/mux21-data/resume-20261028/full-gate-terminal.json), [중단 근거](/Users/rexxa/work/mux21-data/resume-20261028/red-gate-stop.json).
+
+| 단계 | 결과 |
+|---|---|
+| 1–15 | 명령 exit0. debug2,595통과/release2,594통과·각8 ignored, 실패0. identity228,748값·64 chronicle/19,683항목 동일. docs·inventory도 이 gate 소스에서 통과 |
+| 12 legacy perf | 명령 exit0이나 반복별 입장 부하/독점 실행 근거가 없어 이번 성능 수용 결과로 사용하지 않음 |
+| 16 python_unittest | **exit1 / ERROR1**,405시험. `test_core_shadow_freeze.FreezeTests.test_gate_reports_only_core_ratio_misses_and_rejects_other_failures`가 추출한 `performance_gate` line105에서 `NameError: name 'root' is not defined` |
+| 17 | runner가 시작했으나 red 확인 후 중단. 완료·통과 주장 없음 |
+| 18–46 | **NOT_RUN**. 새 step25 BASE 성능 비교와 마지막 GPU 재확인도 실행되지 않음 |
+
+원인은 이번 패스가 추가한 어댑터 통합 경로다. 기존 동결 시험은 순수 `performance_gate` 함수만 AST로 추출해 빈 namespace에서 실행하고 `CORE_P7_RUN`만 지운다. 상속된 `CORE_UI_CONFIG`가 새 분기를 켜면서 실제 PYEVAL 문맥에만 있는 `root`/`output`을 참조했다. 기존 시험 자체의 선행 결함으로 돌리지 않는다. [ISS-345/#656 실패 댓글](https://github.com/hyunlord/new-world/issues/656#issuecomment-6462768982)에 기록했다. 이후 별도 승인된 수정에서는 UI dispatch를 실제 호출부로 옮기고 동결 함수/시험을 유지하는 방안을 검토할 수 있으나 이번 종료에서 수정하지 않았다.
+
+오너의 red gate 중단 규칙에 따라 소유 process group27094만 SIGTERM했다. terminal actual/wrapper exit는 모두-15, hard_deadline_reached=false이며 소유 프로세스 잔존 없음이 확인됐다. deadline 초과나 성공 종료로 바꾸지 않는다. 실패 뒤 코드 수정·시험 재실행·게이트 재시작·push는 하지 않았다.
+
+집중 검사(p7 알림22, p8 어댑터22, p12 어댑터23, 실제 MultiMesh244, a5·추가 mind UI)는 각 이전 범위의 근거로 보존한다. 집중 검사 통과가 전체 시험의 이번 오류를 해소하지 않는다. 봉인 최초 실패·이전 무효 측정도 유지한다. 이 종료 문서 커밋은 **report-only / NOT_FULL_GATED**이며 게이트 소스6ed와 구분한다.
 
 ### 오너가 할 일 (실행 한 줄: /Users/rexxa/work/new-world-play2-dev/tools/play.sh main)
 
@@ -117,4 +135,11 @@ Chronicle은 seed0/tick4320, 경과3일의 원시111행을 세었다. kind별1:1
 /Users/rexxa/work/new-world-play2-dev/tools/play.sh main
 ```
 
-`git ls-remote` 최종 게시 후 확인: **PENDING**. 재개 때 확인한 BASE381을 현재 후보 게시 증거로 대신하지 않는다.
+`git ls-remote` 중단 후 확인: 두 원격 모두 기존 게시 BASE에 머문다. 후보 push는 없었다.
+
+```text
+3814828c06d1a7a211b13b54368e4e0a488cc0e3 refs/heads/v8/main
+3814828c06d1a7a211b13b54368e4e0a488cc0e3 refs/heads/v8/wip
+```
+
+미게시 후보·원본 증거·외부 도구 변경을 보존하기 위해 작업트리를 남겼다. 게시 후 제거 조건에 도달하지 않았으며 force 제거하지 않았다.
