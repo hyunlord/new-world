@@ -293,62 +293,88 @@ static func place(points: PackedVector2Array, ids: PackedInt64Array, extent: flo
 	for i: int in points.size():
 		order.append(i)
 	order.sort_custom(func(a: int, b: int) -> bool: return ids[a] < ids[b])
-	var occupied: Dictionary = {}
 	var radius: float = extent * 0.5 + gap
 	var glyph: float = 14.0 if glyphs else 0.0
+	var offset: Vector2 = Vector2(radius, radius + glyph)
 	var size: Vector2 = Vector2(radius * 2.0 + glyph, radius * 2.0 + glyph)
 	var cell_size: float = maxf(size.x, size.y)
+	var limit: int = ceili(maxf(viewport.size.x, viewport.size.y) / cell_size)
+	var regions: Array[Rect2] = []
+	if viewport.size.x >= size.x and viewport.size.y >= size.y:
+		regions.append(viewport)
+	for obstacle: Rect2 in blocked:
+		regions = _marker_subtract(regions, obstacle, size)
 	for index: int in order:
 		var anchor: Vector2 = points[index].round()
 		if not Rect2(anchor - Vector2.ONE * extent * 0.5, Vector2.ONE * extent).intersects(viewport):
 			continue
-		var chosen: Vector2 = anchor
-		var found: bool = false
-		var limit: int = ceili(maxf(viewport.size.x, viewport.size.y) / cell_size)
-		for ring: int in range(limit + 1):
-			for y: int in range(-ring, ring + 1):
-				for x: int in range(-ring, ring + 1):
-					if maxi(absi(x), absi(y)) != ring:
-						continue
-					var candidate: Vector2 = anchor + Vector2(x, y) * cell_size
-					var rectangle: Rect2 = Rect2(candidate - Vector2(radius, radius + glyph), size)
-					if viewport.encloses(rectangle) and _free(rectangle, blocked, occupied, cell_size):
-						chosen = candidate
-						_reserve(rectangle, occupied, cell_size)
-						found = true
-						break
-				if found:
-					break
-			if found:
-				break
-		# Exhaustion keeps the original visible marker; the visibility oracle still records any overlap.
-		result[index] = chosen
+		var best_ring: int = limit + 1
+		var best: Vector2i = Vector2i.ZERO
+		for region: Rect2 in regions:
+			# Expand by one cell, then trim with the same Vector2 arithmetic used to draw the rectangle.
+			var first: Vector2i = Vector2i(((region.position + offset - anchor) / cell_size).ceil()) - Vector2i.ONE
+			var last: Vector2i = Vector2i(((region.end - size + offset - anchor) / cell_size).floor()) + Vector2i.ONE
+			while first.x <= last.x and (anchor + Vector2(first) * cell_size - offset).x < region.position.x:
+				first.x += 1
+			while first.y <= last.y and (anchor + Vector2(first) * cell_size - offset).y < region.position.y:
+				first.y += 1
+			while last.x >= first.x and (anchor + Vector2(last) * cell_size - offset + size).x > region.end.x:
+				last.x -= 1
+			while last.y >= first.y and (anchor + Vector2(last) * cell_size - offset + size).y > region.end.y:
+				last.y -= 1
+			if first.x > last.x or first.y > last.y:
+				continue
+			var ring: int = maxi(absi(clampi(0, first.x, last.x)), absi(clampi(0, first.y, last.y)))
+			if ring > limit or ring > best_ring:
+				continue
+			# The original search orders candidates by Chebyshev ring, then row, then column.
+			var candidate: Vector2i = Vector2i(maxi(first.x, -ring), maxi(first.y, -ring))
+			if ring == best_ring and (candidate.y > best.y or (candidate.y == best.y and candidate.x >= best.x)):
+				continue
+			var rectangle: Rect2 = Rect2(anchor + Vector2(candidate) * cell_size - offset, size)
+			if viewport.encloses(rectangle) and region.encloses(rectangle):
+				best_ring = ring
+				best = candidate
+		if best_ring <= limit:
+			result[index] = anchor + Vector2(best) * cell_size
+			regions = _marker_subtract(regions, Rect2(result[index] - offset, size), size)
+		else:
+			# Exhausted visible markers retain their anchor and do not reserve space.
+			result[index] = anchor
 	return result
 
 
-static func _free(rectangle: Rect2, blocked: Array[Rect2], occupied: Dictionary, cell_size: float) -> bool:
-	for obstacle: Rect2 in blocked:
-		if rectangle.intersects(obstacle):
-			return false
-	var first: Vector2i = Vector2i((rectangle.position / cell_size).floor())
-	var last: Vector2i = Vector2i((rectangle.end / cell_size).floor())
-	for y: int in range(first.y, last.y + 1):
-		for x: int in range(first.x, last.x + 1):
-			for other: Rect2 in occupied.get(Vector2i(x, y), []):
-				if rectangle.intersects(other):
-					return false
-	return true
-
-
-static func _reserve(rectangle: Rect2, occupied: Dictionary, cell_size: float) -> void:
-	var first: Vector2i = Vector2i((rectangle.position / cell_size).floor())
-	var last: Vector2i = Vector2i((rectangle.end / cell_size).floor())
-	for y: int in range(first.y, last.y + 1):
-		for x: int in range(first.x, last.x + 1):
-			var cell: Vector2i = Vector2i(x, y)
-			if not occupied.has(cell):
-				occupied[cell] = []
-			occupied[cell].append(rectangle)
+## Overlapping maximal free rectangles retain every feasible marker placement, including edge contact.
+static func _marker_subtract(regions: Array[Rect2], obstacle: Rect2, size: Vector2) -> Array[Rect2]:
+	var kept: Array[Rect2] = []
+	var split: Array[Rect2] = []
+	for region: Rect2 in regions:
+		if not region.intersects(obstacle):
+			kept.append(region)
+			continue
+		if obstacle.position.x > region.position.x:
+			split.append(Rect2(region.position, Vector2(obstacle.position.x - region.position.x, region.size.y)))
+		if obstacle.end.x < region.end.x:
+			split.append(Rect2(Vector2(obstacle.end.x, region.position.y), Vector2(region.end.x - obstacle.end.x, region.size.y)))
+		if obstacle.position.y > region.position.y:
+			split.append(Rect2(region.position, Vector2(region.size.x, obstacle.position.y - region.position.y)))
+		if obstacle.end.y < region.end.y:
+			split.append(Rect2(Vector2(region.position.x, obstacle.end.y), Vector2(region.size.x, region.end.y - obstacle.end.y)))
+	for rectangle: Rect2 in split:
+		if rectangle.size.x < size.x or rectangle.size.y < size.y:
+			continue
+		var contained: bool = false
+		for other: Rect2 in kept:
+			if other.encloses(rectangle):
+				contained = true
+				break
+		if contained:
+			continue
+		for i: int in range(kept.size() - 1, -1, -1):
+			if rectangle.encloses(kept[i]):
+				kept.remove_at(i)
+		kept.append(rectangle)
+	return kept
 
 
 ## Conservative free label slots; a fallback examines at most two columns per viewport row.

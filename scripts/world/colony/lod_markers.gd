@@ -62,6 +62,10 @@ var _total_px: int = 0
 var _anchors: PackedVector2Array = PackedVector2Array()
 var _points: PackedVector2Array = PackedVector2Array()
 var _leader_width: float = 1.0
+var _layout_key: Array = []
+var _layout_points: PackedVector2Array = PackedVector2Array()
+var layout_calls: int = 0
+var layout_cache_hits: int = 0
 
 
 func _ready() -> void:
@@ -171,7 +175,7 @@ func show_markers(points: PackedVector2Array, colours: PackedColorArray, glyph_i
 	var ui: Node = get_node_or_null("/root/Main/UI")
 	if ui != null:
 		Layout.ui_rects(ui, blocked)
-	var placed: PackedVector2Array = Layout.place(screen, stable_ids, float(_total_px), glyphs, get_viewport_rect(), blocked, float(style.get("marker_gap_px", 4)))
+	var placed: PackedVector2Array = _place_markers(screen, stable_ids, float(_total_px), glyphs, get_viewport_rect(), blocked, float(style.get("marker_gap_px", 4)))
 	_anchors = points.duplicate()
 	_points.resize(points.size())
 	var inverse: Transform2D = canvas.affine_inverse()
@@ -226,6 +230,31 @@ func show_markers(points: PackedVector2Array, colours: PackedColorArray, glyph_i
 		gm.instance_count = count
 	if count > 0:
 		gm.buffer = gbuf
+
+
+## Cache only placement inputs; colours, glyphs, leaders and hit positions still refresh each frame.
+func _place_markers(screen: PackedVector2Array, stable_ids: PackedInt64Array, extent: float, glyphs: bool, viewport: Rect2, blocked: Array[Rect2], gap: float) -> PackedVector2Array:
+	var normalized: PackedVector2Array = PackedVector2Array()
+	var onscreen: PackedByteArray = PackedByteArray()
+	normalized.resize(screen.size())
+	onscreen.resize(screen.size())
+	for i: int in screen.size():
+		var anchor: Vector2 = screen[i].round()
+		if Rect2(anchor - Vector2.ONE * extent * 0.5, Vector2.ONE * extent).intersects(viewport):
+			normalized[i] = anchor
+			onscreen[i] = 1
+	var key: Array = [normalized, onscreen, stable_ids, extent, glyphs, viewport, blocked, gap]
+	if key != _layout_key:
+		_layout_points = Layout.place(screen, stable_ids, extent, glyphs, viewport, blocked, gap)
+		_layout_key = [normalized, onscreen, stable_ids.duplicate(), extent, glyphs, viewport, blocked.duplicate(), gap]
+		layout_calls += 1
+	else:
+		layout_cache_hits += 1
+	var placed: PackedVector2Array = _layout_points.duplicate()
+	for i: int in screen.size():
+		if onscreen[i] == 0:
+			placed[i] = screen[i]
+	return placed
 
 
 ## Hide both.

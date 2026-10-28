@@ -94,3 +94,26 @@ Added UI-only scope: Korean inspector mind reason for working adult/hungry/fleei
 4. WAITING: reproduce and capture added UI scope before fixes; apply only necessary UI/data changes with regression checks, then capture after at both scales.
 5. WAITING: full FPS bars, original GPU visibility/ring checks, natural per-frame rebake evidence; preserve every invalid/failing attempt.
 6. WAITING: committed-head full gate, documentation/current captures, fast-forward explicit branch publication and issue closure with public commit; non-force worktree removal only after publication.
+
+## D12: Quiet baseline confirms the marker path
+All12 interleaved comparisons are valid; one initial MART21 N40 capture failed load and is preserved separately. Source/binary/harness hashes, frame/window/duration checks, census ranges and1-second process-overlap observations are retained in resume-20261028/comparison-summary.json.
+| Founders | M-ART2.1 FPS | M-UX FPS | M-CORE BASE FPS |
+|---:|---:|---:|---:|
+| 10 | 453.120 | 338.924 | 317.107 |
+| 40 | 490.763 | 374.202 | 267.864 |
+| 200 | 339.207 | 286.806 | 34.948 |
+| 1000 | 153.656 | 139.582 | 0.350 |
+N10 live census reached11; these are initial-founder scenes, not fixed-census claims. Quiet N200 profile load5.72/5.07/6.28→6.11/5.51/6.33,60.004403s/2106samples: markers24.570ms, reconciliation0.316ms, ground0.181ms, cleanup0.139ms, snapshot/params0.101ms. Other measured UI costs <0.04ms. Product marker sources are unchanged from9855bd082 to3814828c; p6 1c8d2979e introduced Layout.place per frame. Under the owner's updated criterion, no further bisection is needed before fixing this measured path.
+Baseline geometry reference test35cases/177assertions passes before optimization. Initial candidate used perimeter-only search, conservative viewport bounds and monotone within-pass reuse; cache only placement inputs, not colors/glyphs/selection state. No simulation changes. Existing MultiMesh and ring textures remain. The initial search candidate was superseded by D13.
+
+## D13: Exact free-space search and UI capture findings
+The first perimeter/cache diagnostic remained far below the N1000 bar. It is retained as an unsuccessful candidate, not acceptance. Replace occupied-cell scanning with maximal free rectangles and solve the original ring/row/column priority over each feasible lattice interval (ADR0048). The frozen35-case geometry oracle passes; real macOS rendering passes238 geometry/cache/presentation assertions. Dummy rendering cannot validate MultiMesh per-instance getters, so the integration arm explicitly requires a real window. Remove only the now-unused production occupancy helpers; the frozen oracle keeps the original code.
+
+Inspector work/hunger/flee reason text fits at both requested Korean scales in the first complete capture set. A composed tool-quality word split was corrected with the existing KoreanText helper. Seed0 at4320ticks has raw kinds1:10,12:1,23:1,26:1,45:60,47:38; mind choices occupy38 of the default last60 rows. Filter their owner-feed visibility through assets/ui/chronicle_feed.json before retention, leaving personal records and Why untouched (ADR0049).
+
+The natural defence capture exposed a UI notification bug: the defence chronicle row advances without the ordinary steward action sequence, so the HUD's sequence-equality shortcut suppressed its toast. Remove that shortcut while retaining cursor deduplication and load/rollback baselines. A focused22-check test passes; natural screenshot acceptance remains separate. JSON preparation manifests also need exact integral-field normalization before comparing live chronicle dictionaries.
+
+At02:45UTC the next performance diagnostic was rejected with load11.32/9.36/8.23; its owned process was stopped before measurement. Begin a15-minute contention window; no result may be reported from that attempt.
+
+## D14: Owner-authorized UI successor gate adapter
+The published M-CORE gate pins an earlier tool inventory/BASE and has a pass-specific side64 adjudication. Configuration alone cannot validate this UI successor. The owner explicitly approved adapting the gate in this thread. Preserve the accepted historical failures and provenance, require unchanged simulation source, and perform a fresh published381-to-candidate comparison without extending M-CORE's exception. ADR0050 and the adapter record the exact contract. This approval does not waive any M-UX2.1 FPS, capture, visibility or publication bar.

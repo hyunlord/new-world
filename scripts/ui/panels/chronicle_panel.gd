@@ -1,6 +1,7 @@
 # chronicle_panel.gd (UI/ChroniclePanel in scenes/main.tscn): C-toggled world chronicle feed; pages new entries once
-#   per tick (even while hidden), merges porter groups, keeps the last 60 notable rows; links go to the inspector.
-#   NOTABLE lists every kind the feed keeps (M3 adds 23 RoomFormed; M4 adds 24 ToolBroke, 25 KnowledgeLearned,
+#   per tick (even while hidden), merges porter groups, keeps the last 60 visible notable rows; links go to the inspector.
+#   assets/ui/chronicle_feed.json controls kind visibility before retention; personal records and Why remain unfiltered.
+#   NOTABLE lists every kind the feed supports (M3 adds 23 RoomFormed; M4 adds 24 ToolBroke, 25 KnowledgeLearned,
 #   26 KnowledgeDiscovered, 27 KnowledgeAtRisk, 28 KnowledgeLost). M4: a KnowledgeLost row from the last day shows the
 #   toast "기술 소실: 문 만들기 (마지막: 카토)" on the order bar (UI/OrderBar show_toast).
 # M5 (goal 3.4–3.5): NOTABLE adds 29–37 (pressures, hunts, fights, breakdowns, drafts, wolves, illness); an entry
@@ -23,6 +24,7 @@ const Names = preload("res://scripts/ui/person_names.gd")
 const WhyPanel = preload("res://scripts/ui/panels/why_panel.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
+const FEED_PATH: String = "res://assets/ui/chronicle_feed.json"
 const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
 	38, 39, 40, 41, 42, 43, 44, 45, 46, 47]
 ## M5: the kind groups of the filter (0 = all): 압력, 사냥·늑대, 다툼·기분, 지식, 삶 (every other notable kind).
@@ -45,6 +47,7 @@ var _language: String = ""
 var _entries: Array[Dictionary] = []
 var _pending_porter: Dictionary = {}
 var _unknown_kinds: int = 0
+var _feed_visibility: Dictionary = {}
 ## M5: the filter (kind group index, the inspector's person only) and the year-summary header.
 var _filter: int = 0
 var _person_only: bool = false
@@ -55,6 +58,8 @@ var _year_shown: int = -1
 var _year_key: int = -2
 
 func _ready() -> void:
+	if not configure_feed_visibility(JSON.parse_string(FileAccess.get_file_as_string(FEED_PATH))):
+		push_error("Invalid chronicle feed configuration: " + FEED_PATH)
 	_world = get_node_or_null("/root/Main/WorldSim")
 	_locale = get_node_or_null("/root/Locale")
 	if _world != null:
@@ -131,6 +136,24 @@ func _process(_delta: float) -> void:
 	if visible and (changed or Chronicle.language(_locale) != _language):
 		_refresh()
 
+## Initialize the presentation policy before ingestion. Unspecified kinds stay visible.
+## Invalid documents leave the previous policy intact; no simulation records are changed.
+func configure_feed_visibility(raw: Variant) -> bool:
+	if not raw is Dictionary:
+		return false
+	var document: Dictionary = raw
+	if document.size() != 2 or document.get("schema_version", 0) != 1 or not document.get("kind_visibility") is Dictionary:
+		return false
+	var rules: Dictionary = document["kind_visibility"]
+	for key: Variant in rules:
+		if not key is String or not str(key).is_valid_int() or int(key) < 0 or str(int(key)) != str(key) or not rules[key] is bool:
+			return false
+	_feed_visibility = rules.duplicate()
+	return true
+
+func keeps_kind(kind: int) -> bool:
+	return kind in NOTABLE and bool(_feed_visibility.get(str(kind), true))
+
 func _ingest_row(row: Dictionary) -> void:
 	var kind: int = int(row["kind"])
 	if kind != 18:
@@ -138,11 +161,16 @@ func _ingest_row(row: Dictionary) -> void:
 		if kind > Chronicle.LAST_KIND:
 			_unknown_kinds += 1
 		elif kind in NOTABLE:
-			_entries.append(row)
+			if keeps_kind(kind):
+				_entries.append(row)
+			# Notification delivery is independent of feed presentation.
 			if kind == 28 and int(row.get("tick", 0)) >= _tick - LOSS_TOAST_TICKS:
 				_toast_loss(row)
 			elif kind == DRAFTED_KIND and int(row.get("cause", -1)) == SELF_UNDRAFT and int(row.get("tick", 0)) >= _tick - LOSS_TOAST_TICKS:
 				_toast_text(Chronicle.self_undraft_plain(row, _locale))
+		return
+	if not keeps_kind(kind):
+		_pending_porter = {}
 		return
 	var same_trip: bool = not _pending_porter.is_empty()
 	for key: String in ["tick", "settlement", "settlement2", "cause"]:

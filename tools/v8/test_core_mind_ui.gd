@@ -1,12 +1,15 @@
 # Native M-CORE QA: real scene, real selected person, current records and rendered frames.
-# Bridge: get_agent_mind/get_agent_detail directly; get_agent_snapshot/get_time_snapshot/
+# Bridge: get_agent_mind/get_agent_detail/get_person_chronicle directly; get_agent_snapshot/get_time_snapshot/
 # get_world_info through SimReads; advance_ticks, reset_world and optional load_world through SimReads.
 # No synthetic facts, injected state, renderer substitutes or policy evaluation in the UI.
+# Detached presentation-only checks exercise data-defined feed retention; runtime scenarios remain real.
 # Run windowed after the production mind switch and bridge/locale rebuild. User args: OUT [SAVE].
 # CORE_MIND_UI_TICKS bounds natural transition observation (default 1440; maximum 28800).
 extends SceneTree
 
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
+const ChroniclePanel = preload("res://scripts/ui/panels/chronicle_panel.gd")
+const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 var _main: Node
 var _world: Node
 var _inspector: Control
@@ -131,6 +134,28 @@ func _people_records() -> Dictionary:
 			records[entity] = mind
 	return records
 
+func _check_feed_configuration() -> void:
+	var panel: Control = ChroniclePanel.new()
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(ChroniclePanel.FEED_PATH))
+	_check("default feed configuration valid", panel.configure_feed_visibility(raw))
+	_check("default feed suppresses mind choice only by data", not panel.keeps_kind(47) and panel.keeps_kind(0))
+	var mind_row: Dictionary = {"kind": 47, "tick": 1}
+	var life_row: Dictionary = {"kind": 0, "tick": 1}
+	panel._ingest_row(mind_row)
+	panel._ingest_row(life_row)
+	_check("hidden kind does not consume retained feed slots", panel.get("_entries") == [life_row])
+	_check("presentation leaves input record intact", mind_row == {"kind": 47, "tick": 1})
+	panel.free()
+	panel = ChroniclePanel.new()
+	_check("data alone can reverse kind visibility", panel.configure_feed_visibility({"schema_version": 1, "kind_visibility": {"0": false, "47": true}}))
+	panel._ingest_row(mind_row)
+	panel._ingest_row(life_row)
+	_check("alternate data controls actual retention", panel.get("_entries") == [mind_row])
+	_check("invalid visibility type rejected", not panel.configure_feed_visibility({"schema_version": 1, "kind_visibility": {"47": "false"}}))
+	_check("invalid kind key rejected", not panel.configure_feed_visibility({"schema_version": 1, "kind_visibility": {"mind_choice": false}}))
+	_check("invalid data preserves prior policy", panel.keeps_kind(47) and not panel.keeps_kind(0))
+	panel.free()
+
 func _present(name: String, mind: Dictionary) -> void:
 	_check_record_names(mind)
 	_check_reason_metadata(mind)
@@ -178,6 +203,7 @@ func _finish() -> void:
 	quit(0 if _failures.is_empty() else 1)
 
 func _run() -> void:
+	_check_feed_configuration()
 	var arguments: PackedStringArray = OS.get_cmdline_user_args()
 	_out = arguments[0] if not arguments.is_empty() else "/tmp/core-mind-ui-%d" % OS.get_process_id()
 	if not _out.is_absolute_path() or _out.begins_with(ProjectSettings.globalize_path("res://")):
@@ -266,9 +292,25 @@ func _run() -> void:
 					await _frames()
 					_check(language + " chronicle recognizes current kinds", int(chronicle.get("_unknown_kinds")) == 0)
 					var phrase: String = str(root.get_node("Locale").call("ltr", "CHRON_MIND_CRITICAL"))
-					_check(language + " actual critical choice in feed", str(chronicle.call("plain_text")).replace("\u2060", "").contains(phrase))
+					_check(language + " default feed hides critical choice text", not str(chronicle.call("plain_text")).replace("\u2060", "").contains(phrase))
+					var retained: Array = chronicle.get("_entries")
+					var hidden_retained: bool = false
+					for row: Dictionary in retained:
+						hidden_retained = hidden_retained or int(row.get("kind", -1)) == 47
+					_check(language + " hidden choices do not occupy feed history", not hidden_retained)
+					var personal: Dictionary = _world.get_person_chronicle(int(current["agent_id"]))
+					var preserved: bool = false
+					for row: Dictionary in ChronicleText.rows(personal):
+						preserved = preserved or int(row.get("kind", -1)) == 47
+					_check(language + " actual personal critical record preserved", preserved)
 					await _capture(category + "-transition-" + language + "-chronicle", current)
 					chronicle.hide()
+					_inspector.call("select_tab", 2)
+					await _frames()
+					_check(language + " personal story still renders critical record", str(_inspector.call("story_text")).replace("\u2060", "").contains(phrase))
+					_inspector.call("select_tab", 0)
+					# Reopen through real input after filtering: retain record/candidate assertions.
+					await _present(category + "-filtered-feed-person-" + language, current)
 		previous = current_people
 		if bool(_observed["hunger"]) and bool(_observed["threat"]):
 			break

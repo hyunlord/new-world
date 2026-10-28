@@ -373,8 +373,8 @@ func _loc(key: String) -> String:
 
 func _poll_steward_notifications(state: Dictionary) -> void:
 	var sequence: int = int(state.get("sequence", 0))
-	if _chronicle_cursor >= 0 and sequence == _sequence:
-		return
+	# Defence appends chronicle rows independently of the basic-order sequence.
+	# The paged cursor, not sequence equality, determines which notifications are new.
 	var page: Dictionary = _world.get_chronicle_since(maxi(0, _chronicle_cursor), 1 if _chronicle_cursor < 0 else 512)
 	if _chronicle_cursor < 0 or sequence < _sequence:
 		# Attach/load baseline: old save history is already available in ChroniclePanel.

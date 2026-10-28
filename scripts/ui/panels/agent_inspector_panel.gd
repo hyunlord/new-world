@@ -763,7 +763,7 @@ func _refresh_economy(agent_id: int) -> void:
 		tool_text = EconomyText.trf(_locale, "UI_INSPECT_TOOL_FMT", {
 			"item": EconomyText.item_of(_locale, tool_kind, str(_economy.get("tool_material", ""))),
 			"quality": EconomyText.quality(_locale, int(_economy.get("tool_quality", 0)))})
-	_tool_label.text = "%s: %s" % [_loc("UI_INSPECT_TOOL"), tool_text]
+	_tool_label.text = KoreanText.words("%s: %s" % [_loc("UI_INSPECT_TOOL"), tool_text])
 	_tool_label.show()
 	_bed_label.visible = _economy.has("bed_x")
 	if _bed_label.visible:
