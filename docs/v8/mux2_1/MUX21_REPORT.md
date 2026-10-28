@@ -1,5 +1,11 @@
 ## 구현 완료 보고 — M-UX2.1
 
+### D22 00:50KST 후속 — 제품 수정 후 전체 gate 대기
+
+왜? 제목이 영어1.25배에서 최소 폭427.5px를 강제하던 문제를 줄바꿈으로 수정했다. 실제 제목·테마 높이를 반영해 본문 스크롤 영역을 제한하며420px 폭·화면 절반 높이 기준을 유지한다. 이 폭 문제는 e47 topbar 복원 상태에서도 재현됐다. 세 열기 실패는 수정 전 재현에서 이미 통과했으므로 입력 원인을 확정하거나 카메라를 임의 수정하지 않았다. 기존42검사는 그대로이며 단독42/42, 추가 EN/KO 각53/53이 통과했다.
+
+효과가 입증되지 않은 topbar 테마 최적화와 전용 검사를 오너 지시로 되돌렸다. #657 비겹침·마커·Rust는 유지한다. 최종 커밋 전체 gate와 새 stall 영수증으로 판정하며, 아래 D21 실패는 당시 이력으로 보존한다. 작성 시점 게시·이슈 폐쇄는 PENDING이다.
+
 ### D21 최종 중단 — 21:55KST 오너 조건 미충족
 
 **BLOCKED / RED / NOT_PUBLISHED — 최종 전체 gate 44/46 PASS, 40·41단계 FAIL.** 전체 gate 소스는 `99a35a8c2a28b20858f40833a04355399d4f83a6`이며 2026-10-28 21:55:49–23:44:48 KST 실행의 최종 exit는1이다. 이후 로컬 문서 전용 후속은 **NOT_FULL_GATED / NOT_PUBLISHED**다.
@@ -244,3 +250,6 @@ Chronicle은 seed0/tick4320, 경과3일의 원시111행을 세었다. kind별1:1
 
 
 D21 공개 상태 코멘트: [#515](https://github.com/hyunlord/new-world/issues/515#issuecomment-6472172832) · [#658](https://github.com/hyunlord/new-world/issues/658#issuecomment-6472176210) · [#638](https://github.com/hyunlord/new-world/issues/638#issuecomment-6472176796). [이슈 재조회](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/issue-readback.json) · [git ls-remote](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/remote-final.txt). 두 원격은 모두 `3814828c06d1a7a211b13b54368e4e0a488cc0e3`이며 새 게시 SHA는 없다.
+
+
+D22 focused verification: [원시 검증](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/why-product-verification.json), [독립 검토](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/why-code-visual-review.json). [새 방어/정보창1.25](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/capture-defence-a1/defence-inspector-1.25.png). 최신 컨택트시트는 D22 새 왜?/방어4장과 D20 보존 정보창/연대기4장을 캡션으로 구분한다.

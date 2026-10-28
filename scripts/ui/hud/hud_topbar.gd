@@ -328,7 +328,10 @@ func _refresh() -> void:
 				cold_count += 1
 	_cold_label.visible = colds is PackedByteArray
 	_cold_label.text = _loc("HUD_COLD") + " %d" % cold_count
-	_refresh_cold_color(cold_count)
+	if cold_count > 0:
+		_cold_label.add_theme_color_override("font_color", Color("a8c0d0"))
+	else:
+		_cold_label.remove_theme_color_override("font_color")
 	_cold_icon.visible = cold_count > 0
 	var berries: int = 0
 	var resources: Dictionary = _snapshot("get_resource_snapshot")
@@ -376,27 +379,13 @@ func _refresh_knowledge() -> void:
 	_era_label.text = KnowledgeText.era_line(_locale, tech)
 	var at_risk: int = int(tech.get("at_risk", 0))
 	_risk_button.text = KnowledgeText.trf(_locale, "M4_HUD_AT_RISK_FMT", {"count": at_risk})
-	_refresh_risk_color(at_risk)
+	var colour: Color = RISK_COLOR if at_risk > 0 else QUIET_COLOR
+	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		_risk_button.add_theme_color_override(state, colour)
 	var first: Dictionary = KnowledgeText.first_at_risk(tech)
 	if at_risk > 0 and not first.is_empty():
 		_warn_label.text = warning_line(_locale, tech, int(first["id"]), int(first["holder"]))
 		_warn_label.visible = true
-
-
-func _refresh_cold_color(cold_count: int) -> void:
-	if cold_count > 0:
-		var colour: Color = Color("a8c0d0")
-		if not _cold_label.has_theme_color_override("font_color") or _cold_label.get_theme_color("font_color") != colour:
-			_cold_label.add_theme_color_override("font_color", colour)
-	elif _cold_label.has_theme_color_override("font_color"):
-		_cold_label.remove_theme_color_override("font_color")
-
-
-func _refresh_risk_color(at_risk: int) -> void:
-	var colour: Color = RISK_COLOR if at_risk > 0 else QUIET_COLOR
-	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
-		if not _risk_button.has_theme_color_override(state) or _risk_button.get_theme_color(state) != colour:
-			_risk_button.add_theme_color_override(state, colour)
 
 
 ## "⚠ 문 만들기: 카토만 앎" (`M4_WARN_AT_RISK`) for node `id` and its one holder `holder` (an AgentId).

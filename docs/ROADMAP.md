@@ -1,5 +1,7 @@
 # 로드맵 (V8)
 
+> D22 최신: 00:50KST 지시로 제품 수정·topbar 복원, #657 비겹침 재확인. 최종 전체 gate·게시 대기. 아래 D21은 당시 중단 기록이다.
+
 > D21 최신: **BLOCKED / RED / NOT_PUBLISHED — 최종 전체 gate 44/46 PASS, 40·41단계 FAIL.** 전체 gate 소스는 `99a35a8c2a28b20858f40833a04355399d4f83a6`이며 2026-10-28 21:55:49–23:44:48 KST 실행의 최종 exit는1이다. 이후 로컬 문서 전용 후속은 **NOT_FULL_GATED / NOT_PUBLISHED**다.
 
 닫은 이슈 없음. ISS030/#515, ISS343/#638, ISS344/#655, ISS345/#656, ISS346/#657, ISS347/#658 모두 OPEN이다. 원장347행/fixed203/open111/deferred31/won't fix2 유지; 게시·폐쇄 링크를 만들지 않는다.

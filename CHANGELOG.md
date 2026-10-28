@@ -1,5 +1,14 @@
 # Changelog
 
+## M-UX2.1 D22 repair — 2026-10-29
+
+### Changed
+- Bound the causal popup title by wrapping; budget body height from actual header/theme dimensions. Preserve420px screen width, half-screen height and existing explicit-input/drag rules. Preserve #657 inspector separation.
+### Added
+- Explicit EN/KO coverage inherits the unchanged42 Why checks and checks supported1/1.25/1.5 scales, title and close-button fit.
+### Removed
+- Unmeasured HudTopbar color-invalidation optimization and its61-line optimization-only test, per00:50 owner direction. Historical code/tests remain in99a35a8c2; no marker/Rust changes. Full gate pending on the final repair commit; D21 raw failures remain below.
+
 ## M-UX2.1 D21 — 전체 게이트 실패로 미게시
 
 **BLOCKED / RED / NOT_PUBLISHED — 최종 전체 gate 44/46 PASS, 40·41단계 FAIL.** 전체 gate 소스는 `99a35a8c2a28b20858f40833a04355399d4f83a6`이며 2026-10-28 21:55:49–23:44:48 KST 실행의 최종 exit는1이다. 이후 로컬 문서 전용 후속은 **NOT_FULL_GATED / NOT_PUBLISHED**다.

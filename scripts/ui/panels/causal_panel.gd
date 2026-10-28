@@ -72,6 +72,7 @@ func _ready() -> void:
 	_column.add_child(heading)
 	_title_label = Label.new()
 	_title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	heading.add_child(_title_label)
 	var close_button := Button.new()
 	close_button.name = "Close"
@@ -200,7 +201,9 @@ func _fit() -> void:
 	_scroll.size.x = width - 24.0
 	_history_container.size.x = width - 48.0
 	var body_height: float = _history_container.get_combined_minimum_size().y
-	_scroll.custom_minimum_size.y = minf(body_height, maxf(40.0, area.y * 0.5 / factor - 80.0))
+	var heading: Control = _title_label.get_parent() as Control
+	var chrome_height: float = _panel.get_theme_stylebox("panel").get_minimum_size().y + heading.get_combined_minimum_size().y + _column.get_theme_constant("separation")
+	_scroll.custom_minimum_size.y = minf(body_height, maxf(40.0, area.y * 0.5 / factor - maxf(80.0, chrome_height)))
 	_panel.size = Vector2(width, 0)
 	size = _panel.size
 	var point: Vector2 = get_viewport().get_canvas_transform() * View.tile_centre(_anchor_tile)

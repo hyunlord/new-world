@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-10-29 — M-UX2.1 D22: 왜? 제목 폭·헤더 높이 수정, 미측정 topbar 최적화 복원. 기존42 및 EN/KO53검사 통과; 최종 전체 gate 대기 (`docs/v8/mux2_1/MUX21_DECISIONS.md` D22).
+
 ## M-UX2.1 D21 최종 중단
 
 **BLOCKED / RED / NOT_PUBLISHED — 최종 전체 gate 44/46 PASS, 40·41단계 FAIL.** 전체 gate 소스는 `99a35a8c2a28b20858f40833a04355399d4f83a6`이며 2026-10-28 21:55:49–23:44:48 KST 실행의 최종 exit는1이다. 이후 로컬 문서 전용 후속은 **NOT_FULL_GATED / NOT_PUBLISHED**다.
