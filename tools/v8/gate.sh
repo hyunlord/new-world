@@ -212,15 +212,18 @@ step 45 core_evaluation bash tools/v8/core_gate_checks.sh evaluation "$LOG/core-
 grep -E '^CORE_PERF ' "$LOG/core_evaluation.log" | sed 's/^/   /' >> "$SUMMARY"
 step 46 mux21_regressions bash -c '
     set -euo pipefail
-    bash tools/v8/gdscript_strict_check.sh tools/v8/mux21_layout_test.gd tools/v8/mux21_toast_test.gd tools/v8/mux21_play_capture.gd
+    bash tools/v8/gdscript_strict_check.sh tools/v8/mux21_layout_test.gd tools/v8/mux21_toast_test.gd tools/v8/mux21_play_capture.gd tools/v8/mux21_topbar_theme_test.gd
     bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --headless --path . --script res://tools/v8/mux21_toast_test.gd > "$0/mux21-toast.log" 2>&1
     grep -q "^MUX21_TOAST_DONE " "$0/mux21-toast.log"
     ! grep -q "SCRIPT ERROR" "$0/mux21-toast.log"
+    bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --headless --path . --script res://tools/v8/mux21_topbar_theme_test.gd > "$0/mux21-topbar-theme.log" 2>&1
+    grep -q "^MUX21_TOPBAR_THEME_DONE " "$0/mux21-topbar-theme.log"
+    ! grep -q "SCRIPT ERROR" "$0/mux21-topbar-theme.log"
     bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --path . --rendering-method gl_compatibility --script res://tools/v8/mux21_layout_test.gd -- --cache > "$0/mux21-layout.log" 2>&1
     grep -q "^MUX21_LAYOUT_DONE " "$0/mux21-layout.log"
     ! grep -q "SCRIPT ERROR" "$0/mux21-layout.log"
     python3 -c '\''import json,sys; from pathlib import Path
-for filename,prefix in [("mux21-toast.log","MUX21_TOAST_DONE "),("mux21-layout.log","MUX21_LAYOUT_DONE ")]:
+for filename,prefix in [("mux21-toast.log","MUX21_TOAST_DONE "),("mux21-layout.log","MUX21_LAYOUT_DONE "),("mux21-topbar-theme.log","MUX21_TOPBAR_THEME_DONE ")]:
  rows=[json.loads(line[len(prefix):]) for line in (Path(sys.argv[1])/filename).read_text().splitlines() if line.startswith(prefix)]
  assert len(rows)==1 and rows[0]["failures"]==0 and rows[0]["checks"]>0,filename
  if filename=="mux21-layout.log": assert rows[0]["display"]!="headless",filename

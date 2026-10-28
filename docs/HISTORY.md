@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-10-28 — M-UX2.1 D20: e47 전체45/46, 유효한 step41 50.018ms 실패 보존. 동일 topbar 테마 무효화 제거20/20 및 재캡처 후 새 전체 게이트 대기; 미게시, #515/#658 OPEN.
+
 - 2026-10-28 — P7 최종 게시 확인 — cb162f3c: **M-CORE P7 수용·게시 완료:** [cb162f3c638ab9569dd7127e5dee7d38c5d3927f](https://github.com/hyunlord/new-world/commit/cb162f3c638ab9569dd7127e5dee7d38c5d3927f)에 전체45/45 exit0 및 terminal0이 귀속된다. v8/wip·v8/main·v8/core-review 원격 SHA를 journal에서 확인했다. 측정 런타임은 `826a7ecd9e38ca3fc1fff253baa0933aee593022`이며 문서/검증 도구 HEAD를 새 런타임으로 표시하지 않는다. side64 평균/p99 raw FAIL만 P7 JUSTIFIED, 다른 standing/C3 PASS다. 이 문서는 게시 후 docs-only 후속이며 자체 전체 게이트·새 런타임 빌드·후속 문서 SHA의 게시를 주장하지 않는다. 다음 단계는 M6 신석기다.
 
 > 날짜순 기록. 한 줄에 한 항목, 측정 결과는 그 패스 보고서의 숫자를 옮긴 것이다(다시 재지 않음). 자세한 내용은 태그에 있다: 시뮬레이션 줄기 `v7-final-sim` (= `354e4a13`), 아트 줄기 `v7-final-art` (= `b1ca032f`, 시뮬레이션 줄기 전체를 포함). 지운 문서는 `git show v7-final-art:<경로>`로 읽는다. 지운 것의 목록은 [archive/INDEX.md](archive/INDEX.md).

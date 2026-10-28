@@ -8,6 +8,7 @@ tags `v7-final-sim` and `v7-final-art`.
 ## M-UX2.1 continuation — 2026-10-28 16:15 KST (final gate pending)
 
 ### Changed
+- Preserve the valid 45/46 gate result (step41: one 50.018ms frame); guard redundant topbar theme invalidations with a 20-check regression, recapture UI, and require another full gate. Timing benefit remains unverified.
 - Restore standalone legacy performance mapping and dispatch UI validation from its bound caller; add extraction/delegation/failure regressions.
 - Admit UI successor report-only perf/nav repetitions without leaking P7 acceptance mode.
 - Reserve inspector space in warning/draft roster layout; recapture Korean1.0/1.25 inspector/chronicle/defence with actual nonoverlap assertions.

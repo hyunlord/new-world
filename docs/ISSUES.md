@@ -1,5 +1,7 @@
 # 이슈 기록 — V8-0부터 M-CORE까지 (M-CORE P7 수용·게시; 이전 실패 보존)
 
+> M-UX2.1 D20 최신: e47 전체45/46(step41 유효50.018ms FAIL). Topbar 테마 중복 무효화 수정·20/20회귀·재캡처 후 전체 재검증 대기. 미게시이며 이슈 폐쇄 없음.
+
 ## M-UX2.1 재개 원장 — 2026-10-28
 
 M-CORE 게시 원장을 보존하고 M-UX2.1 회귀 [#638](https://github.com/hyunlord/new-world/issues/638)을 **ISS-343**으로 옮겼다. 현재 원장347행: deferred31 / fixed203 / open111 / won't fix2. ISS-344/#655·ISS-345/#656은 로컬 수정 후 전체 검증·게시 대기로 OPEN이며 ISS-343/#638도 OPEN을 유지한다. 아래 M-CORE와 M-UX2 합계는 각 시점의 역사 기록이다.

@@ -1,5 +1,11 @@
 ## 구현 완료 보고 — M-UX2.1
 
+### 20시 후속: 45/46 결과 보존, UI 테마 수정 후 전체 재검증
+
+`e47ee10d8` 전체46단계 중45통과. 41단계1×의 tick361 프레임50.018ms가 엄격한50ms 기준을 넘었다(½×47.588ms PASS). 부하·프로세스 조건은 유효하며 실패를 무효 실행으로 버리지 않는다. GPU8장면/76인물, Python409시험, 새BASE 성능33쌍, shadow/evaluation/회귀는 통과했다. [전체 게이트](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/full-gate/gate.txt), [지연 유효성 및 실패](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/step41-validity.json).
+
+후속 후보는 HudTopbar의 동일 색상 테마 재지정만 막는다. 실제 theme_changed 시험이 변경 전5실패/20개에서 변경 후20/20통과했다. native StewardSystem33.06ms가 실패 프레임의 주된 비용이므로 이 UI 수정이 지연 기준을 해결했다고 아직 주장하지 않는다. 마커·Rust 불변, 기존 FPS7/7 유지. 요청 정보창·왜?·연대기·방어를 `continuation-1615/topbar-retry/`에 재캡처했다. 이 커밋에서 전체 게이트를 다시 실행하며 작성 시점 결과·게시·이슈폐쇄는 PENDING이다. 이전 실패와 최초 캡처는 보존한다.
+
 ### 2026-10-28 16:15 KST 지시 후속 — 전체 게이트 재검증 대기
 
 이하 RED GATE 본문은 이전 시도 기록으로 보존한다. 새 지시는 일반 red gate를 수정·전체 재실행하도록 정정했다(D19). `9934ef0f2`에서 독립 추출되는 performance_gate를 원래 순수 함수로 복원하고 UI 검증을 실제 호출부로 옮겼다. 봉인 환경에서 새 successor27시험과 기존 실패 시험1개가 통과했다. step12/27 측정 입장 설정은 자식에만 적용하며 P7 수용 예외를 켜지 않는다.
