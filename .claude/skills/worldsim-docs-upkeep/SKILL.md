@@ -21,6 +21,13 @@ agent-facing docs are English (`docs/ARCHITECTURE.md`, `docs/decisions/*`,
 - **Don't** edit `docs/v8/V8_DIRECTION.md` or a pass's goal file after it is committed. *Reason:* they are the dated originals; `docs/VISION.md` is the living copy.
 - **Don't** rewrite an ADR to change a decision; add a new ADR that supersedes it. *Reason:* the record of why must survive.
 
+## Pass coordination (depth roadmap v2 §7)
+
+- Only one performance measurement job may run on this Mac at a time; overlapping measurements are both invalid. Admit each repetition at 1-minute load < 8 and interleave old/new binaries in the same session.
+- Use pass-local temporary issue IDs (for example M6A-1) before publication; at publication assign the next free ISS numbers after checking the current ledger.
+- Preserve both sides of documentation conflicts; stop and report code/data conflicts. A red gate means diagnose, fix and re-run; stop for code/data conflicts, an unfixable identity failure or the pass time limit.
+- Held-out seed register: 1200–1231 M-UX2; 1232–1263 M-CORE; 1264–1295 M-CORE P-3d; 1296–1327 M6a. Allocate subsequent passes 32 seeds at a time from 1328 and record the allocation before evaluation. Calibrate on seeds 0–7 for at most four logged rounds; freeze before held-out and never tune on its results.
+
 ## Procedures
 
 ### End-of-pass checklist (also in AGENTS.md)

@@ -17,11 +17,19 @@ manifest ids in the gate).
 
 ## Branches and pushing
 
-- Work and commit on **`v8/wip`**. Push with an explicit target: `git push origin v8/wip`, then check `git ls-remote origin v8/wip` equals local HEAD.
+- M6a owner-approved exception: work and commit only in `/Users/rexxa/work/new-world-m6a-dev` on **`v8/m6a`**; follow `docs/v8/m6a/M6A_GOAL.md` for its publication procedure.
+- Otherwise work and commit on **`v8/wip`**. Push with an explicit target: `git push origin v8/wip`, then check `git ls-remote origin v8/wip` equals local HEAD.
 - **`v8/main`** moves only by fast-forward to a commit whose full gate is green.
 - Never push `lead/main`, `main` or any `codex/*` branch. Never force-push, rewrite pushed history, or delete or move a remote branch or tag.
 - Never discard work with a hard reset; inspect with `git status` / `git diff` and fix forward.
 - The V7 lines and research are pinned: tags `v7-final-sim`, `v7-final-art`; world-model work lives on `codex/worldmodel-2026-10`.
+
+## Pass coordination (depth roadmap v2 §7)
+
+- Only one performance measurement job may run on this Mac at a time; overlapping measurements are both invalid. Admit each repetition at 1-minute load < 8 and interleave old/new binaries in the same session.
+- Use pass-local temporary issue IDs (for example M6A-1) before publication; at publication assign the next free ISS numbers after checking the current ledger.
+- Preserve both sides of documentation conflicts; stop and report code/data conflicts. A red gate means diagnose, fix and re-run; stop for code/data conflicts, an unfixable identity failure or the pass time limit.
+- Held-out seed register: 1200–1231 M-UX2; 1232–1263 M-CORE; 1264–1295 M-CORE P-3d; 1296–1327 M6a. Allocate subsequent passes 32 seeds at a time from 1328 and record the allocation before evaluation. Calibrate on seeds 0–7 for at most four logged rounds; freeze before held-out and never tune on its results.
 
 ## Staging and the working tree
 
