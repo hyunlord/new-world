@@ -6,6 +6,10 @@
 >
 > 규칙: 마일스톤이 끝나거나 무언가를 지울 때 이 문서에 줄을 더한다.
 
+## M-UX2.1 재검증 지시 (2026-10-28 16:15KST)
+
+- 플래너가 일반 red gate의 수정·전체 재실행을 승인했다. p15에서 독립 performance mapping과 실제 UI dispatch를 분리하고 정보창과 경고/소집 겹침을 수정했다. 봉인환경 집중28시험과 새 UI24장 캡처 자동검사 통과; 기존 FPS7막대 유지, 최종 전체 gate/게시는 대기다. 아래 실패 기록은 지우지 않는다.
+
 ## M-UX2.1 재개 — RED GATE·BLOCKED·미게시 (2026-10-28)
 
 - 2026-10-28 — 게시381 기준 조용한3빌드12/12와 표식24.570ms 진단 후 배치 캐시/타일 목표를 수정했다. b040의 필수 FPS7/7 VALID/PASS와 KO 정보창/왜?·연대기·방어 화면 검증을 완료했지만 자연 재굽기10.493ms는4ms 목표 미달이다. clean6ed4e1996 전체 gate는1–15 exit0(debug2595/release2594·각8ignored, identity228748값·64chronicles19683항목 동일),16 Python405시험/errors1 NameError(root)로 FAIL. 소유 PGID만 중단해17 INTERRUPTED,18–46 NOT_RUN·최종GPU NOT_RUN; actual/wrapper-15·deadlinefalse다. step12 legacy perf는 반복 입장 근거가 없어 새 수용값으로 쓰지 않는다. stop-on-red에 따라 수정·재시험·재게이트·게시 없음, 원격 main/wip는381 유지. ISS343–347 OPEN, 종료 문서 후속은 NOT_FULL_GATED; [보고](v8/mux2_1/MUX21_REPORT.md).

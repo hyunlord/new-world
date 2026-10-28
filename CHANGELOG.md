@@ -5,6 +5,15 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M-UX2.1 continuation — 2026-10-28 16:15 KST (final gate pending)
+
+### Changed
+- Restore standalone legacy performance mapping and dispatch UI validation from its bound caller; add extraction/delegation/failure regressions.
+- Admit UI successor report-only perf/nav repetitions without leaking P7 acceptance mode.
+- Reserve inspector space in warning/draft roster layout; recapture Korean1.0/1.25 inspector/chronicle/defence with actual nonoverlap assertions.
+
+Marker and simulation paths unchanged; owner retains seven FPS bars. Full gate/publication pending; original failed attempt below remains preserved. Natural rebake10.493ms remains open.
+
 ## M-UX2.1 resume — 2026-10-28 (red gate, blocked, not published)
 
 ### Added

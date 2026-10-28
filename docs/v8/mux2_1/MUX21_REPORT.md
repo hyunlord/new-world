@@ -1,5 +1,23 @@
 ## 구현 완료 보고 — M-UX2.1
 
+### 2026-10-28 16:15 KST 지시 후속 — 전체 게이트 재검증 대기
+
+이하 RED GATE 본문은 이전 시도 기록으로 보존한다. 새 지시는 일반 red gate를 수정·전체 재실행하도록 정정했다(D19). `9934ef0f2`에서 독립 추출되는 performance_gate를 원래 순수 함수로 복원하고 UI 검증을 실제 호출부로 옮겼다. 봉인 환경에서 새 successor27시험과 기존 실패 시험1개가 통과했다. step12/27 측정 입장 설정은 자식에만 적용하며 P7 수용 예외를 켜지 않는다.
+
+ISS-346은 실제 정보창 경계를 경고/소집 영역이 침범하지 않도록 UI 배치만 수정했다. 마커 경로·Rust는 바뀌지 않았으며 오너 지시에 따라 기존 FPS7/7을 유지한다. 일/배고픔/도주 정보창6장·왜?6장, 연대기2장, 방어4장을 재캡처했고 오류0이다. ¼× 방어·선택 이동6장도 오류0이며 토스트와 소집 링을 유지한다. 독립 시각 검토24/24 PASS로 두 배율의 경고/소집과 정보창 제목·초상 비겹침, 이유 가독성과 링을 확인했다. [시각 검토](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/visual-review.json). [재캡처 실행](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-runs.json), [¼× 근거](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-quarter-defence-a1/evidence.json).
+
+| 재캡처 | KO1.0 | KO1.25 |
+|---|---|---|
+| 일 | [정보창](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-work-a1/work-1.0-person.png) | [정보창](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-work-a1/work-1.25-person.png) |
+| 배고픔 | [정보창](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-hunger-a1/hunger-1.0-person.png) | [정보창](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-hunger-a1/hunger-1.25-person.png) |
+| 도주 | [정보창](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-flee-a1/flee-1.0-person.png) | [정보창](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-flee-a1/flee-1.25-person.png) |
+| 연대기 | [화면](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-chronicle-a1/chronicle-day3-1.0.png) | [화면](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-chronicle-a1/chronicle-day3-1.25.png) |
+| 방어·선택·정보창 | [화면](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-quarter-defence-a1/defence-quarter-selected-1.0.png) | [화면](/Users/rexxa/work/mux21-data/resume-20261028/continuation-1615/capture-quarter-defence-a1/defence-quarter-selected-1.25.png) |
+
+이 문서를 포함한 최종 커밋을 새로 봉인해 step1부터 전체 게이트를 실행한다. 작성 시점 전체 게이트·GPU 수용·게시는 PENDING이며 성공을 미리 선언하지 않는다. 최신 실행 결과는 외부 `continuation-1615/full-gate/`와 최종 Korean addendum에 귀속한다. ISS343–346은 게시 전 OPEN, 자연 재굽기10.493ms의 ISS347/#658과 ISS030/#515는 계속 OPEN이다.
+
+### 이전 시도: 6ed4e1996의 실패 기록
+
 **BLOCKED · RED GATE · NOT_PUBLISHED.** 오너 지정 제목이며 전체 완료 선언이 아니다. 필수 FPS7/7과 요청 화면 검증은 완료했지만, 전체 gate의16번 Python 시험이 실패해 stop-on-red 규칙으로 중단했다. 수정·재시험·재게이트·게시를 하지 않았다. 측정 소스는 `b0401ca2e40de0ee972d451b3c4c1ecf0c1fa816`, 실패 gate 소스는 `6ed4e19966ec368812441c4f12a74fca22ae251b`다. 외부 최종 측정 감사는 두 HEAD의 런타임 동일성을 확인한다. 이 실패 종료 문서 후속 HEAD는 전체 gate를 거치지 않았다.
 
 2026-10-28 재개 기준은 게시 M-CORE `3814828c06d1a7a211b13b54368e4e0a488cc0e3`, 브랜치는 `v8/mux2-1b`다. 원래 브랜치와 [2026-10-26 차단 보고](MUX21_BLOCKED_20261026.md)는 보존했다. [최종 측정 감사](/Users/rexxa/work/mux21-data/resume-20261028/final-measurement-audit.json).
