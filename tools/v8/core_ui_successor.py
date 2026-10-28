@@ -50,6 +50,22 @@ def read_ref(root: Path, value: freeze.JSON) -> Path:
     return freeze.read_reference(root, value)
 
 
+def committed_tree(root: Path, revision: str) -> dict[str, str]:
+    """Bind Git blob identity and mode, including symlink text without following it."""
+    result: dict[str, str] = {}
+    for record in inventory.git(root, 'ls-tree', '-rz', revision).split(b'\0'):
+        if not record:
+            continue
+        header, name = record.split(b'\t', 1)
+        mode, kind, object_id = header.split()
+        need(kind == b'blob' and mode in (b'100644', b'100755', b'120000'),
+             'unsupported committed tree entry')
+        path = os.fsdecode(name)
+        need(path not in result, 'duplicate committed tree entry')
+        result[path] = mode.decode('ascii') + ':' + object_id.decode('ascii')
+    return result
+
+
 def exact_delta(before: dict[str, str], after: dict[str, str]) -> freeze.Document:
     """Inventory the complete committed change; reject simulation/config edits."""
     result: freeze.Document = {}
@@ -60,7 +76,7 @@ def exact_delta(before: dict[str, str], after: dict[str, str]) -> freeze.Documen
              or path in MUTABLE_EXISTING_TOOLS, 'frozen historical tool changed: ' + path)
         need(path.startswith(ALLOWED) or path in ('CHANGELOG.md', 'README.md'),
              'UI successor changed forbidden path: ' + path)
-        result[path] = {'before_sha256': before.get(path), 'after_sha256': after.get(path)}
+        result[path] = {'before_entry': before.get(path), 'after_entry': after.get(path)}
     return result
 
 
@@ -125,8 +141,8 @@ def source(root: Path, data: freeze.Document) -> str:
          == inventory.committed(root, head, 'rust'), 'UI successor changed committed Rust')
     need(perf.source_hash() == data['rust_sha256'] == prior.source_digest(rust), 'live Rust differs')
     need(freeze.digest(root / 'rust/Cargo.lock') == data['lock_sha256'] == inventory.LOCK, 'lock differs')
-    before = inventory.committed(root, BASE, '.')
-    after = inventory.committed(root, head, '.')
+    before = committed_tree(root, BASE)
+    after = committed_tree(root, head)
     need(exact_delta(before, after) == data['delta'], 'undeclared committed delta')
     verify_live(root, head)
     return head

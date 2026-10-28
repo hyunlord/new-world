@@ -26,8 +26,8 @@ def prepare(output: Path, fresh_session: Path) -> None:
     data: ui.freeze.Document = {
         'schema_version': 1, 'kind': 'published_ui_successor', 'head': head, 'base': ui.BASE,
         'rust_sha256': ui.perf.source_hash(), 'lock_sha256': ui.freeze.digest(root / 'rust/Cargo.lock'),
-        'delta': ui.exact_delta(ui.inventory.committed(root, ui.BASE, '.'),
-                               ui.inventory.committed(root, head, '.')),
+        'delta': ui.exact_delta(ui.committed_tree(root, ui.BASE),
+                               ui.committed_tree(root, head)),
         'history': {key: ui.reference(path) for key, path in paths.items()},
         'fresh_session': str(fresh_session),
     }

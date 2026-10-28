@@ -10,6 +10,35 @@ import core_perf_check as perf
 
 
 class UISuccessorTests(unittest.TestCase):
+    def test_git_tree_binds_symlink_blob_and_mode_without_following(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            ui.inventory.git(root, 'init', '-q')
+            (root / 'scripts').mkdir()
+            script = root / 'scripts/tool.gd'
+            script.write_text('same content')
+            (root / '.agents').mkdir()
+            link = root / '.agents/skills'
+            link.symlink_to('/missing-target-never-followed')
+            ui.inventory.git(root, 'add', 'scripts/tool.gd', '.agents/skills')
+            tree = ui.inventory.git(root, 'write-tree').decode().strip()
+            before = ui.committed_tree(root, tree)
+            self.assertTrue(before['.agents/skills'].startswith('120000:'))
+            self.assertEqual(ui.exact_delta(before, ui.committed_tree(root, tree)), {})
+            ui.inventory.git(root, 'update-index', '--chmod=+x', 'scripts/tool.gd')
+            mode_tree = ui.inventory.git(root, 'write-tree').decode().strip()
+            after = ui.committed_tree(root, mode_tree)
+            self.assertEqual(before['scripts/tool.gd'].split(':')[1],
+                             after['scripts/tool.gd'].split(':')[1])
+            self.assertNotEqual(before['scripts/tool.gd'], after['scripts/tool.gd'])
+            self.assertEqual(set(ui.exact_delta(before, after)), {'scripts/tool.gd'})
+            link.unlink()
+            link.symlink_to('/different-missing-target')
+            ui.inventory.git(root, 'add', '.agents/skills')
+            changed_tree = ui.inventory.git(root, 'write-tree').decode().strip()
+            with self.assertRaises(ui.freeze.FreezeError):
+                ui.exact_delta(after, ui.committed_tree(root, changed_tree))
+
     def test_only_exact_historical_config_can_map_repository(self) -> None:
         original = perf.Document.parse({'repo': '/historical', 'source': 'fixed'})
         mapped = history.mapped_config(original, original, Path('/owned'))
@@ -21,8 +50,8 @@ class UISuccessorTests(unittest.TestCase):
 
     def test_committed_addition_and_deletion_are_both_declared(self) -> None:
         self.assertEqual(ui.exact_delta({'scripts/removed.gd': 'old'}, {'assets/ui/new.json': 'new'}),
-                         {'scripts/removed.gd': {'before_sha256': 'old', 'after_sha256': None},
-                          'assets/ui/new.json': {'before_sha256': None, 'after_sha256': 'new'}})
+                         {'scripts/removed.gd': {'before_entry': 'old', 'after_entry': None},
+                          'assets/ui/new.json': {'before_entry': None, 'after_entry': 'new'}})
 
     def test_historical_validation_dependencies_are_frozen(self) -> None:
         for path in ('tools/v8/core_perf_check.py', 'tools/v8/core_eval_check.py',
@@ -62,7 +91,7 @@ class UISuccessorTests(unittest.TestCase):
     def test_exact_delta_and_no_rust_mutation(self) -> None:
         before = {'scripts/a.gd': 'a', 'rust/a.rs': 'r'}
         after = {'scripts/a.gd': 'b', 'rust/a.rs': 'r'}
-        expected = {'scripts/a.gd': {'before_sha256': 'a', 'after_sha256': 'b'}}
+        expected = {'scripts/a.gd': {'before_entry': 'a', 'after_entry': 'b'}}
         self.assertEqual(ui.exact_delta(before, after), expected)
         with self.assertRaises(ui.freeze.FreezeError):
             ui.exact_delta(before, {**after, 'rust/a.rs': 'changed'})
