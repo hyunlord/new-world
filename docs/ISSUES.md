@@ -2,7 +2,7 @@
 
 ## M-UX2.1 재개 원장 — 2026-10-28
 
-M-CORE 게시 원장을 보존하고 M-UX2.1 회귀 [#638](https://github.com/hyunlord/new-world/issues/638)을 **ISS-343**으로 옮겼다. 현재 원장346행: deferred31 / fixed203 / open110 / won't fix2. ISS-344/#655·ISS-345/#656은 로컬 수정 후 전체 검증·게시 대기로 OPEN이며 ISS-343/#638도 OPEN을 유지한다. 아래 M-CORE와 M-UX2 합계는 각 시점의 역사 기록이다.
+M-CORE 게시 원장을 보존하고 M-UX2.1 회귀 [#638](https://github.com/hyunlord/new-world/issues/638)을 **ISS-343**으로 옮겼다. 현재 원장347행: deferred31 / fixed203 / open111 / won't fix2. ISS-344/#655·ISS-345/#656은 로컬 수정 후 전체 검증·게시 대기로 OPEN이며 ISS-343/#638도 OPEN을 유지한다. 아래 M-CORE와 M-UX2 합계는 각 시점의 역사 기록이다.
 
 ## P7 최종 게시 확인 — cb162f3c
 
@@ -376,3 +376,5 @@ M-UX2 게시 시점의 332개 고유 이슈: fixed197 / open103 / deferred30 / w
 | ISS-345 | 게시 M-CORE gate가 UI 후속 패스를 패스 전용 예외 없이 검증하지 못함 | M-UX2.1 gate 준비; P3d 도구 동결·옛 성능 BASE·P7 side64 예외 범위 | tooling | open | Rust가 같아도 새 UI 도구가 역사 P3d tool guard에 걸리며 P7 예외는 M-CORE 전용이다. 오너 승인 로컬 미게시 `57f6e7881` 어댑터로 Rust/루트 설정·선언 delta·동결 검증기 의존성을 검증하고 수용된 역사 chain 상속을 명시한다(원래 외부 checkout 검증기 NOT_RERUN). 원래 실패를 보존하고 raw/fixture 재검증 및 새381 BASE 비교를 일반 standing/C3 기준·경쟁 프로세스 감시·deadline으로 요구한다. 어댑터22시험·shell syntax 통과; 새 성능·전체 gate·게시 대기, OPEN 유지 | [#656](https://github.com/hyunlord/new-world/issues/656); ADR0050 |
 
 | ISS-346 | KO UI1.25의 늑대 경고가 인물 정보창 이름·제목을 가림 | final-a5 독립 시각 검토2건; flee-1.25-person/why 캡처 | bug | open | 로컬 후보 `b0401ca2e`의 늑대 경고가 정보창 이름·제목과 겹친다. 이유 본문과 왜? 팝업은 가리지 않아 요청된 이유 표시 검사와 분리한다. 미수정·부수 발견 UI 잔여이며 후속 배치 수정·두 배율 재검증 필요. 최초 미니맵 공백은 역사 ISS-282/캡처 준비 시점 가능성과 별개이며 이 이슈에 포함하지 않는다 | [#657](https://github.com/hyunlord/new-world/issues/657); `/Users/rexxa/work/mux21-data/resume-20261028/final-a5-visual-review-1.json` · `final-a5-visual-review-2.json` |
+
+| ISS-347 | 자연 ¼× 재굽기 프레임 합계10.493ms로4ms 목표 초과 | M-UX2.1 candidate-n0-z0.25-a1; 로컬 미게시 b0401ca2e | perf | open | seed0 day3 자연1×·¼× 유효60.002156초, load1 2.81→2.70. 측정17재굽기/16프레임 모두4ms 초과; epoch1/frame12090의 event166 4.824ms+167 5.669ms=10.493ms. 측정 fresh0이며 재굽기 프레임 전체 bake 합계 최대도10.493ms. 원인 미확정·미수정; ISS201/#576 계절 전환 및 ISS030/#515 일반 stall과 구분하고 공통 원인을 단정하지 않는다. FPS 통과로 이 목표 실패를 지우지 않으며 프로파일·수정·동일 조건 재검증 필요 | [#658](https://github.com/hyunlord/new-world/issues/658); `/Users/rexxa/work/mux21-data/resume-20261028/comparison/candidate-n0-z0.25-a1/receipt.json` · `acceptance-summary.json` |

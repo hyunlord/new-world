@@ -72,7 +72,7 @@ Chronicle은 seed0/tick4320, 경과3일의 원시111행을 세었다. kind별1:1
 - 배율1.25: [필터 전](/Users/rexxa/work/mux21-data/resume-20261028/chronicle-before-a1/chronicle-day3-1.25.png) → [필터 후](/Users/rexxa/work/mux21-data/resume-20261028/chronicle-final-a5/chronicle-day3-1.25.png).
 - 방어 [1.0](/Users/rexxa/work/mux21-data/resume-20261028/play-final-defence-a5/defence-1.0.png) · [1.25](/Users/rexxa/work/mux21-data/resume-20261028/play-final-defence-a5/defence-1.25.png): tick18722, 징집2명·drafted_mark=true와 “마을이 스스로: 늑대를 막으려고 2명을 불렀어요” 토스트를 기록했다. 원래 방어 event의 모든 필드가 같고 두 사람의 붉은 스프라이트 윤곽을 시각 확인했다. 이1× 장면에서 별도 원형 지면 링을 확인했다고 주장하지 않는다.
 
-¼× 추가 방어 캡처 [1.0](/Users/rexxa/work/mux21-data/resume-20261028/quarter-defence-a1/defence-quarter-1.0.png) · [1.25](/Users/rexxa/work/mux21-data/resume-20261028/quarter-defence-a1/defence-quarter-1.25.png)는 같은 실제 event를 재현해 토스트와 두 붉은 원형 소집 링을 함께 보인다. [선택+소집](/Users/rexxa/work/mux21-data/resume-20261028/quarter-defence-a1/defence-quarter-selected-1.25.png) · [선택 이동](/Users/rexxa/work/mux21-data/resume-20261028/quarter-defence-a1/defence-quarter-selection-moved-1.25.png)에서 실제 클릭에 따른 선택 이동·소집 유지12검사가 통과했다. 외부 캡처 어댑터는 원래 방어 절차의 카메라 배율과 추가 입력 관측만 바꿨다.
+¼× 추가 방어 캡처 [1.0](/Users/rexxa/work/mux21-data/resume-20261028/quarter-defence-a1/defence-quarter-1.0.png) · [1.25](/Users/rexxa/work/mux21-data/resume-20261028/quarter-defence-a1/defence-quarter-1.25.png)는 같은 실제 event를 재현해 토스트와 두 붉은 원형 소집 링을 함께 보인다. [선택+소집](/Users/rexxa/work/mux21-data/resume-20261028/quarter-defence-a1/defence-quarter-selected-1.25.png) · [선택 이동](/Users/rexxa/work/mux21-data/resume-20261028/quarter-defence-a1/defence-quarter-selection-moved-1.25.png)에서 실제 클릭에 따른 선택 이동·소집 유지12검사가 통과했다. 외부 캡처 어댑터는 원래 방어 절차의 카메라 배율과 추가 입력 관측만 바꿨다. [6장 시각 검토](/Users/rexxa/work/mux21-data/resume-20261028/quarter-defence-visual.json)도 링·토스트를 확인했고,1.25의 경고/소집 명단과 정보창 제목/초상 겹침은 남았다.
 
 추가 `test_core_mind_ui.gd` 실제 창 검사도 실패0: 배고픔·위협 전환 OBSERVED, 데이터만으로 필터 반전, 기본 목록 숨김, 실제 개인 critical 기록·이야기·왜? 후보 보존을 확인했다. [로그](/Users/rexxa/work/mux21-data/resume-20261028/core-mind-ui-a1.log). 이 추가 도구의 자체 screenshot visual_verdict는 PENDING_REVIEW이며 요청된 시각 수락은 위의 a5/¼× 별도 검토에 귀속한다.
 
@@ -81,6 +81,8 @@ Chronicle은 seed0/tick4320, 경과3일의 원시111행을 세었다. kind별1:1
 닫은 이슈 없음. ISS-343 [#638](https://github.com/hyunlord/new-world/issues/638) OPEN 유지. 새 ISS-344 방어 토스트 [#655](https://github.com/hyunlord/new-world/issues/655), ISS-345 후속 UI gate 어댑터 [#656](https://github.com/hyunlord/new-world/issues/656)는 수정 커밋이 로컬 미게시이며 전체 검증·게시 대기로 **OPEN**이다.
 
 잔여 ISS-346 [#657](https://github.com/hyunlord/new-world/issues/657)은 KO UI1.25 늑대 경고와 정보창 이름·제목의 겹침을 기록한 **OPEN·미수정** 이슈다. 이유 본문과 왜?는 가리지 않는다.
+
+자연 재굽기 목표 미달은 신규 ISS-347 [#658](https://github.com/hyunlord/new-world/issues/658) OPEN으로 남겼다. 기존 계절 전환 ISS-201/#576과 광범위 지연 ISS-030/#515에 원인을 단정해 합치지 않았다.
 
 ### 변경된 파일 목록 (커밋별)
 
@@ -92,6 +94,8 @@ Chronicle은 seed0/tick4320, 경과3일의 원시111행을 세었다. kind별1:1
 | p8 `57f6e7881` | `tools/v8/core_ui_successor*.py`, 어댑터 시험2개, `core_gate_checks.sh`, `gate.sh`; ADR0050 |
 | p9 `cf2bbafd7` | `agent_layer.gd`, `lod_markers.gd`, `marker_layout.gd`; layout/play 캡처 도구; ADR0051·결정 기록 |
 | p10 `b0401ca2e` | `tools/v8/mux21_play_capture.gd` |
+| p11 `e0f257869` | 보고서·과거 차단 보고 보존·HISTORY/ROADMAP/CHANGELOG·ISSUES·연락 그림·Godot 교훈 |
+| p12 `c5ef23bd8` | 후속 어댑터 전체 Git 모드/링크 객체 증명·봉인·회귀시험·결정 기록 |
 
 ### 확인된 제한사항
 
@@ -103,7 +107,7 @@ Chronicle은 seed0/tick4320, 경과3일의 원시111행을 세었다. kind별1:1
 
 ### Gate 결과
 
-**현재 HEAD 전체 gate: NOT_RUN. 게시: NOT_PUBLISHED.** 집중 검사 근거는 p7 알림22검사, p8 어댑터22단위시험·shell syntax, 실제 MultiMesh 배치244검사, a5 UI 캡처와 추가 mind UI 자동 검사다. 이 결과는 전체 gate를 대신하지 않는다. 문서 갱신 후 문서 검사와 최종 HEAD의 전체 gate는 후속 기록이 필요하다. 원격이 앞서면 충돌 없는 rebase 뒤 전체 재게이트 규칙을 적용한다.
+**현재 HEAD 전체 gate: NOT_RUN. 게시: NOT_PUBLISHED.** 집중 검사 근거는 p7 알림22검사, p8 어댑터22단위시험·shell syntax, 실제 MultiMesh 배치244검사, a5 UI 캡처와 추가 mind UI 자동 검사다. 이 결과는 전체 gate를 대신하지 않는다. p11 전 문서 검사 PASS, 시스템 표 재생성 diff0. 봉인 사전검증의 기존 skill symlink 처리 오류를 p12에서 고쳤으며23시험·실제 Git inventory·역사 pin 검증 및 독립 검토 PASS다. 실패한 사전 봉인은 보존했다. 최종 HEAD의 전체 gate는 후속 기록이 필요하다. 원격이 앞서면 충돌 없는 rebase 뒤 전체 재게이트 규칙을 적용한다.
 
 ### 오너가 할 일 (실행 한 줄: /Users/rexxa/work/new-world-play2-dev/tools/play.sh main)
 
