@@ -5,11 +5,29 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M-UX2.1 resume — 2026-10-28 (acceptance in progress)
+
+### Added
+- Exact marker geometry/cache/presentation regressions and real seed0 Korean inspector, chronicle and defence capture tooling.
+- Owner-approved published-UI successor gate adapter: exact runtime identity, retained historical failures, fresh paired standing comparison and deadline/overlap evidence. It does not extend M-CORE's performance exception.
+
+### Changed
+- Quarter markers cache placement at stable tile targets and solve maximal free-space intervals; current leaders, colors, glyphs and picking remain active.
+- Owner chronicle kind visibility comes from `assets/ui/chronicle_feed.json`; personal records and Why remain available.
+- Defence toast polling follows the chronicle cursor independently of the ordinary action sequence. Composed Korean tool-quality text preserves word boundaries.
+
+### Removed
+- Unused production marker occupancy helpers; the original implementation remains frozen in the regression oracle.
+
+All seven required release FPS bars pass on b0401ca2e. Natural quarter rebake is now measured at10.493ms maximum per frame, missing the4ms aim; full gate and publication remain pending.
+
+The original blocked record below remains historical. Current acceptance and publication evidence is recorded in `docs/v8/mux2_1/MUX21_REPORT.md`.
+
 ## M-UX2.1 — 2026-10-26 (blocked, not published)
 
 ### Added
 - Common historical FPS instrumentation and quarter-zoom diagnostic attribution in `tools/v8/mux21_fps.gd` and `mux21_profile.gd`; independent historical builds, explicit census ranges and provenance checks. Strict parser/FFI and short windowed execution checks pass; these are not acceptance FPS evidence.
-- Regression issue ISS-343 / GitHub #638 and the Korean incomplete report at `docs/v8/mux2_1/MUX21_REPORT.md`. First full capture is invalid at load6.80→13.05; valid comparisons0/12. Contended BASE marker refresh averages25.053ms, a diagnostic candidate only.
+- Regression issue ISS-343 / GitHub #638 and the Korean incomplete report now preserved at `docs/v8/mux2_1/MUX21_BLOCKED_20261026.md`. First full capture is invalid at load6.80→13.05; valid comparisons0/12. Contended BASE marker refresh averages25.053ms, a diagnostic candidate only.
 
 ### Changed
 - No production renderer/UI or simulation changes. Repeated shared-host load blocks required comparisons and bisection; full gate and publication remain unperformed. Preserve all original thresholds, failed attempts and unchanged remote BASE.

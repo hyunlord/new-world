@@ -2,7 +2,7 @@
 
 ## M-UX2.1 재개 원장 — 2026-10-28
 
-M-CORE 게시 원장을 보존하고 M-UX2.1 회귀 [#638](https://github.com/hyunlord/new-world/issues/638)을 **ISS-343**으로 옮겼다. 현재 원장343행: deferred31 / fixed203 / open107 / won't fix2. 아래 M-CORE와 M-UX2 합계는 각 시점의 역사 기록이다.
+M-CORE 게시 원장을 보존하고 M-UX2.1 회귀 [#638](https://github.com/hyunlord/new-world/issues/638)을 **ISS-343**으로 옮겼다. 현재 원장346행: deferred31 / fixed203 / open110 / won't fix2. ISS-344/#655·ISS-345/#656은 로컬 수정 후 전체 검증·게시 대기로 OPEN이며 ISS-343/#638도 OPEN을 유지한다. 아래 M-CORE와 M-UX2 합계는 각 시점의 역사 기록이다.
 
 ## P7 최종 게시 확인 — cb162f3c
 
@@ -370,3 +370,9 @@ M-UX2 게시 시점의 332개 고유 이슈: fixed197 / open103 / deferred30 / w
 | ISS-342 | side64 mind ×1.35 — revisit in M7 node consolidation | P-7; final826 paired side64 mean353.018056/261.862500us, p99693/527us | perf | open | ×1.348105/×1.314991은 전체 tick 비이며 개별 mind 비가 아니다. top10 프로파일과 밀도·후보/claim 비용 가설은 CORE_PERF에 기록했으나 후보 수·claim churn은 미계측이다. M7에서 노드 통합 전 방문 후보/예약/재평가를 계측하고 결정성과 교차 성능을 다시 검증한다. P-7 조건부 side64 justification은 다른 scene·C3 및 새 전체 gate 충족 시에만 적용하며 현재 합격을 뜻하지 않는다. | [#648](https://github.com/hyunlord/new-world/issues/648) (OPEN); `docs/v8/core/CORE_DECISIONS.md` D37; `docs/v8/core/CORE_PERF.md` P7 |
 
 | ISS-343 | ¼× 200명 FPS가35.1로 회귀 | M-UX2 owner-fps-final-recovery, M-UX2.1 계약 | bug | open | 3개 빌드 비교·이분 탐색·프로파일 및 수정 검증 진행; 유효 FPS 측정은 부하<8 조건 대기 | [#638](https://github.com/hyunlord/new-world/issues/638) |
+
+| ISS-344 | 일반 steward sequence가 바뀌지 않으면 방어 토스트를 놓침 | M-UX2.1 늑대 UI 캡처; mux_hud.gd의 sequence 조기 반환 | bug | open | 방어 chronicle 행은 일반 행동 sequence와 독립적으로 추가되므로 새 알림 조회가 생략됐다. 로컬 미게시 `f7c91a6e4`에서 chronicle cursor로 조회하고 load/rollback·중복 방지를 유지했다. 알림22검사 통과; 전체 gate·최종 토스트/징집 링 캡처 검토·게시 대기. 시뮬레이션 기록은 변경하지 않았으며 게시 전 OPEN 유지 | [#655](https://github.com/hyunlord/new-world/issues/655); ADR0049 |
+
+| ISS-345 | 게시 M-CORE gate가 UI 후속 패스를 패스 전용 예외 없이 검증하지 못함 | M-UX2.1 gate 준비; P3d 도구 동결·옛 성능 BASE·P7 side64 예외 범위 | tooling | open | Rust가 같아도 새 UI 도구가 역사 P3d tool guard에 걸리며 P7 예외는 M-CORE 전용이다. 오너 승인 로컬 미게시 `57f6e7881` 어댑터로 Rust/루트 설정·선언 delta·동결 검증기 의존성을 검증하고 수용된 역사 chain 상속을 명시한다(원래 외부 checkout 검증기 NOT_RERUN). 원래 실패를 보존하고 raw/fixture 재검증 및 새381 BASE 비교를 일반 standing/C3 기준·경쟁 프로세스 감시·deadline으로 요구한다. 어댑터22시험·shell syntax 통과; 새 성능·전체 gate·게시 대기, OPEN 유지 | [#656](https://github.com/hyunlord/new-world/issues/656); ADR0050 |
+
+| ISS-346 | KO UI1.25의 늑대 경고가 인물 정보창 이름·제목을 가림 | final-a5 독립 시각 검토2건; flee-1.25-person/why 캡처 | bug | open | 로컬 후보 `b0401ca2e`의 늑대 경고가 정보창 이름·제목과 겹친다. 이유 본문과 왜? 팝업은 가리지 않아 요청된 이유 표시 검사와 분리한다. 미수정·부수 발견 UI 잔여이며 후속 배치 수정·두 배율 재검증 필요. 최초 미니맵 공백은 역사 ISS-282/캡처 준비 시점 가능성과 별개이며 이 이슈에 포함하지 않는다 | [#657](https://github.com/hyunlord/new-world/issues/657); `/Users/rexxa/work/mux21-data/resume-20261028/final-a5-visual-review-1.json` · `final-a5-visual-review-2.json` |

@@ -89,10 +89,10 @@ Added UI-only scope: Korean inspector mind reason for working adult/hungry/fleei
 
 ## Resumed execution plan (supersedes the blocked ledger above)
 1. COMPLETE: preserve old branch; docs-only migration to v8/mux2-1b; ISS-343 registry and GitHub reconciliation.
-2. IN_PROGRESS: full docs check, rebuild debug/release bridge, provenance checks and imports; quiet interleaved three-build comparison and BASE profile before product edits.
-3. WAITING: lock marker placement behavior with reference/output and cache invalidation tests; remove repeated unchanged layout and interior candidate traversal while retaining batched rendering and all ring appearance.
-4. WAITING: reproduce and capture added UI scope before fixes; apply only necessary UI/data changes with regression checks, then capture after at both scales.
-5. WAITING: full FPS bars, original GPU visibility/ring checks, natural per-frame rebake evidence; preserve every invalid/failing attempt.
+2. COMPLETE: docs check, debug/release bridges and imports;12valid interleaved comparisons and quiet BASE profile.
+3. COMPLETE implementation: exact free-space placement and tile-target cache;244windowed assertions. Performance acceptance remains step5.
+4. COMPLETE feature captures: work/hunger/flee atbothscales, filtered chronicle and real defence toast/rings. Additional final-source capture automation is being hardened; failed input/load attempts remain evidence, not passes.
+5. IN_PROGRESS: full FPS bars, original GPU visibility/ring checks, natural per-frame rebake evidence; preserve every invalid/failing attempt.
 6. WAITING: committed-head full gate, documentation/current captures, fast-forward explicit branch publication and issue closure with public commit; non-force worktree removal only after publication.
 
 ## D12: Quiet baseline confirms the marker path
@@ -122,3 +122,10 @@ The published M-CORE gate pins an earlier tool inventory/BASE and has a pass-spe
 The MaxRects moving-crowd diagnostic ended at load10.38 and is invalid as an acceptance result. It still motivated eliminating interpolation-driven cache misses. ADR0051 uses simulation tile targets only for placement; actual interpolated person positions remain leader anchors, and current canvas transforms remain authoritative for picking. Integer lattice bounds avoid unnecessary vector boundary trimming. The windowed oracle now passes244 assertions, including fixed-target interpolation and target-change invalidation.
 
 Native pointer motion caused a capture-only Why click to receive down/up without pressed and lose hover. Preserve those failed attempts, add signal/hover/focus evidence, and warp the actual pointer to the injected click location before dispatching input. This does not invoke the button signal or bypass the real UI input path. A headless profiling experiment awaited frame_post_draw, which dummy rendering does not emit; it was stopped without a timing result.
+
+## D16: Complete FPS bars, measured natural rebake miss
+At runtime/tool HEAD b0401ca2e all seven required release FPS bars pass with the common windowed30s+60s procedure. Quarter N10/40/200/1000:377.513/381.968/246.246/115.303; half N100/200:179.936/123.757; full N200:244.102. N10 observed10–11 people, not an invariant census. N40 attempt1 is INVALID at endpoint load9.81; preserve it, wait15minutes, and use only admitted attempt2. Every result retains1/5/15 loads and source/binary/window/process evidence.
+
+Natural quarter gameplay from seed0/day3 records17 rebakes in16 measured frames, zero fresh bakes, at load2.81→2.70. Sum complete total_usec by(reset_epoch,frame): maximum10.493ms, so the4ms aim is NOT_MET. This is a measured limitation, not a reason to erase events or substitute warmup maxima. Evidence: external resume-20261028/acceptance-summary.json and comparison/candidate-n0-z0.25-a1.
+
+Final a5 captures pass reason/Why fit at both requested settings; independent16-image reviews retain the wolf-warning/header overlap as ISS-346/#657. Quarter real-defence replay additionally passes12 actual-click/selected+drafted/moved-selection checks and captures the toast with two red circular marks. The original core mind UI test completes with0failures and both real hunger/threat transitions observed. These checks are not a substitute for the pending full46-step gate or owner playtest.
