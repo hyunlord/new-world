@@ -1,6 +1,6 @@
 # Real seed0 play evidence; preparation is not performance measurement.
 # Bridge reads: get_agent_mind/detail/m5, get_chronicle_since; SimReads snapshots,
-# clock, story, steward, drafted. Mutations: reset_world, advance_ticks, save/load_world.
+# clock (including direct diagnostic read), world_info, story, steward, drafted. Mutations: reset_world, advance_ticks, save/load_world.
 # No injected simulation state. Parent must serialize bridge builds and windowed captures.
 # Args: prepare OUT [MAX_DAYS=45] | scenario OUT MANIFEST work|hunger|flee|defence
 #       chronicle OUT (fresh seed0, exactly three elapsed days).
@@ -17,6 +17,8 @@ var mode: String
 var evidence: Dictionary = {"complete": false, "visual_verdict": "PENDING_REVIEW", "scenarios": {}, "shots": []}
 var inputs: Dictionary = {}
 var ended: bool = false
+var load_trace: Array[Dictionary] = []
+var tracing_load: bool = false
 
 func click_point(point: Vector2) -> void:
 	# Keep native pointer motion consistent with the injected press/release pair.
@@ -96,8 +98,8 @@ func run() -> void:
 	camera = main.get_node("Camera2D") as Camera2D
 	inspector = main.get_node("UI/AgentInspectorPanel") as Control
 	causal = main.get_node("UI/CausalPanel") as Control
-	camera.call("set_paused", true)
-	world.process_mode = Node.PROCESS_MODE_DISABLED
+	world.connect("world_reset", _fixture_world_reset)
+	_pause_fixture()
 	root.get_node("Locale").call("set_language", "ko")
 	await frames(10)
 	if mode == "prepare":
@@ -211,9 +213,41 @@ func _load(row: Dictionary) -> void:
 	var path: String = str(row.get("save", ""))
 	check("save checksum", not path.is_empty() and FileAccess.get_sha256(path) == str(row.get("sha256", "")))
 	if failures > 0: return
+	load_trace = []
+	tracing_load = true
+	_load_observation("before_load")
+	_pause_fixture()
 	check("load real save", bool(SimReads.mutate(world, "load_world", [path])))
-	await frames(10)
-	check("loaded exact tick seed0", _tick() == int(row.get("tick", -2)) and int(SimReads.read(world, "get_world_info").get("seed", -1)) == 0)
+	_load_observation("immediate_after_load")
+	for frame: int in 10:
+		await frames(1)
+		_load_observation("settle_frame_%d" % frame)
+	tracing_load = false
+	var observed: Dictionary = _load_observation("settled")
+	if not evidence.has("loads"): evidence["loads"] = []
+	evidence["loads"].append({"save": path, "expected_tick": int(row.get("tick", -2)), "expected_seed": 0, "trace": load_trace.duplicate(true)})
+	var direct_clock: Dictionary = observed["direct_clock"]
+	var direct_info: Dictionary = observed["direct_world_info"]
+	check("fixture processing disabled", not world.is_processing() and world.process_mode == Node.PROCESS_MODE_DISABLED)
+	check("loaded clock cache matches direct", int(direct_clock.get("tick", -1)) == _tick())
+	check("loaded exact tick seed0", int(direct_clock.get("tick", -1)) == int(row.get("tick", -2)) and int(direct_info.get("seed", -1)) == 0)
+
+func _pause_fixture() -> void:
+	camera.call("set_paused", true)
+	world.process_mode = Node.PROCESS_MODE_DISABLED
+	world.set_process(false)
+
+func _fixture_world_reset() -> void:
+	if tracing_load: _load_observation("deferred_reset_before_pause")
+	_pause_fixture()
+	if tracing_load: _load_observation("deferred_reset_after_pause")
+
+func _load_observation(phase: String) -> Dictionary:
+	# Deliberate uncached reads distinguish bridge state from frame-cache state.
+	var sample: Dictionary = {"phase": phase, "process_frame": Engine.get_process_frames(), "cached_clock": SimReads.read(world, "get_time_snapshot"), "direct_clock": world.get_time_snapshot(), "cached_world_info": SimReads.read(world, "get_world_info"), "direct_world_info": world.get_world_info(), "process_mode": world.process_mode, "is_processing": world.is_processing(), "can_process": world.can_process(), "camera_paused": camera.get("_paused"), "tree_paused": paused}
+	load_trace.append(sample)
+	print("MUX21_LOAD " + JSON.stringify(sample))
+	return sample
 
 func _fit_control(control: Control, label: String) -> void:
 	check(label + " exists and visible", control != null and control.is_visible_in_tree())
