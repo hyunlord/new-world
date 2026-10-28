@@ -2,7 +2,7 @@
 # usage: gate.sh <log_dir> [--base-data DIR]
 #
 # V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21; M1.5 10.4 added steps
-# 22-25; M3 added steps 26-27; M4 added step 28; M5 added step 29; M5.5 added step 30; M-ART2 added steps 31-34; M-UX added step 35). Forty-five steps, each logged to <log_dir>/<step>.log
+# 22-25; M3 added steps 26-27; M4 added step 28; M5 added step 29; M5.5 added step 30; M-ART2 added steps 31-34; M-UX added step 35). Forty-six steps, each logged to <log_dir>/<step>.log
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
 # gate passes only when every step except `perf` and `nav_bench` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
@@ -73,6 +73,7 @@
 #   43 mind_data_only     shipped policy warm-at-hearth real target/record regression
 #   44 core_shadow        fresh frozen seed0 x20d fixtures, steward OFF and ON
 #   45 core_evaluation    source/binary-bound held-out outcome/why and raw performance checks
+#   46 mux21_regressions  strict tools, headless HUD cursor tests and real-renderer marker cache tests
 #   Since M-ART2 step 23 (renderer_agreement) also checks appearance: every person's look and face variant.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -154,7 +155,9 @@ step 23 renderer_agreement bash tools/v8/renderer_agreement.sh "$LOG/renderer_ag
 grep -q '^RENDERER_AGREEMENT PASS' "$LOG/renderer_agreement.log" || { echo "   renderer_agreement: no PASS line" >> "$SUMMARY"; status=1; }
 step 24 save_roundtrip bash tools/v8/save_roundtrip.sh
 grep -q '^SAVE_ROUNDTRIP PASS' "$LOG/save_roundtrip.log" || { echo "   save_roundtrip: no PASS line" >> "$SUMMARY"; status=1; }
-if [[ -n "${CORE_P7_RUN:-}" ]]; then
+if [[ -n "${CORE_UI_CONFIG:-}" ]]; then
+    step 25 bench python3 tools/v8/core_ui_successor_perf.py run "${CORE_UI_PERF_CONFIG:?fresh UI performance config required}" "$LOG/bench/perf-session"
+elif [[ -n "${CORE_P7_RUN:-}" ]]; then
     step 25 bench python3 tools/v8/core_p7_bench.py "$LOG/bench"
     export CORE_EVAL_CONFIG_SHA256="$(shasum -a 256 "$CORE_EVAL_CONFIG" | cut -d' ' -f1)"
 else
@@ -203,6 +206,22 @@ step 41 mux2_stall_receipt bash tools/v8/mux2_gate_checks.sh stall "$LOG/mux2-st
 step 44 core_shadow bash tools/v8/core_gate_checks.sh fixture_run "$LOG/core-shadow-fixture"
 step 45 core_evaluation bash tools/v8/core_gate_checks.sh evaluation "$LOG/core-evaluation"
 grep -E '^CORE_PERF ' "$LOG/core_evaluation.log" | sed 's/^/   /' >> "$SUMMARY"
+step 46 mux21_regressions bash -c '
+    set -euo pipefail
+    bash tools/v8/gdscript_strict_check.sh tools/v8/mux21_layout_test.gd tools/v8/mux21_toast_test.gd tools/v8/mux21_play_capture.gd
+    bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --headless --path . --script res://tools/v8/mux21_toast_test.gd > "$0/mux21-toast.log" 2>&1
+    grep -q "^MUX21_TOAST_DONE " "$0/mux21-toast.log"
+    ! grep -q "SCRIPT ERROR" "$0/mux21-toast.log"
+    bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --path . --rendering-method gl_compatibility --script res://tools/v8/mux21_layout_test.gd -- --cache > "$0/mux21-layout.log" 2>&1
+    grep -q "^MUX21_LAYOUT_DONE " "$0/mux21-layout.log"
+    ! grep -q "SCRIPT ERROR" "$0/mux21-layout.log"
+    python3 -c '\''import json,sys; from pathlib import Path
+for filename,prefix in [("mux21-toast.log","MUX21_TOAST_DONE "),("mux21-layout.log","MUX21_LAYOUT_DONE ")]:
+ rows=[json.loads(line[len(prefix):]) for line in (Path(sys.argv[1])/filename).read_text().splitlines() if line.startswith(prefix)]
+ assert len(rows)==1 and rows[0]["failures"]==0 and rows[0]["checks"]>0,filename
+ if filename=="mux21-layout.log": assert rows[0]["display"]!="headless",filename
+'\'' "$0"
+' "$LOG"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

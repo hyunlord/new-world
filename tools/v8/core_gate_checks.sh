@@ -92,6 +92,10 @@ if config['final_head'] != perf.git('rev-parse', 'HEAD') or config['final_rust_s
 paths = {key: freeze.read_reference(root, config[key]) for key in required -
          {'schema_version', 'final_head', 'final_rust_source_sha256'}}
 def check_successor():
+    if __import__('os').environ.get('CORE_UI_CONFIG'):
+        import core_ui_successor
+        core_ui_successor.check(root, config, evaluation=True)
+        return
     if 'p3d_successor' in config:
         freeze.pin(root / 'tools/v8/core_p3d_successor.py', config['p3d_successor_checker_sha256'])
         import core_p3d_successor as p3d
@@ -163,6 +167,10 @@ def story_binding(mind, base, mind_binary_sha, base_binary_sha, measured_head, p
         raise ValueError('story BASE instrument does not represent nominated BASE')
 
 def performance_gate(receipt, exit_code):
+    if __import__('os').environ.get('CORE_UI_CONFIG'):
+        import core_ui_successor
+        core_ui_successor.performance(root, receipt, exit_code, output.parent)
+        return []
     # CORE §0 retains measurement and reporting even when its two ratio bars miss.
     report_only = {'N1000 mind/old decision>0.5', 'N1000 tick ratio exceeds accepted arithmetic bar'}
     failures = receipt['failures']
@@ -195,8 +203,12 @@ run([sys.executable, 'tools/v8/core_story_check.py', '--base-report', paths['sto
      '--base-receipt', paths['story_base_receipt'], '--mind-report', paths['story_mind_report'],
      '--mind-receipt', paths['story_mind_receipt'], '--base-provenance', paths['story_base_provenance'],
      '--output', output / 'story.json'], 'story')
-perf_exit = run([sys.executable, 'tools/v8/core_perf_check.py', 'check', perf_config.parent,
-     '--output', output / 'performance.json'], 'performance', accepted=(0, 1))
+if __import__('os').environ.get('CORE_UI_CONFIG'):
+    perf_exit = run([sys.executable, 'tools/v8/core_ui_successor_history.py', perf_config.parent,
+                    output / 'performance.json'], 'performance', accepted=(0, 1))
+else:
+    perf_exit = run([sys.executable, 'tools/v8/core_perf_check.py', 'check', perf_config.parent,
+         '--output', output / 'performance.json'], 'performance', accepted=(0, 1))
 if freeze.digest(output / 'performance.json') != freeze.digest(perf_receipt):
     raise SystemExit('fresh performance verification differs from pinned receipt')
 misses = performance_gate(freeze.load(output / 'performance.json'), perf_exit)
@@ -206,7 +218,7 @@ if justified:
     print('CORE_PERF P7_JUSTIFIED: ' + ', '.join(justified))
 if reported:
     print('CORE_PERF BAR_MISS report-only: ' + ', '.join(reported))
-if not misses:
+if not misses and not __import__('os').environ.get('CORE_UI_CONFIG'):
     print('CORE_PERF BARS_PASS')
 # Frozen inputs remain unchanged; only new gate outputs are written.
 for key, path in paths.items():
@@ -249,6 +261,10 @@ manifest_path = Path(config['manifest'])
 
 def check_frozen():
     freeze.pin(config_path, sys.argv[4])
+    if __import__('os').environ.get('CORE_UI_CONFIG'):
+        import core_ui_successor
+        core_ui_successor.check(root, config, evaluation=False)
+        return
     if 'p3d_successor' in config:
         freeze.pin(root / 'tools/v8/core_p3d_successor.py', config['p3d_successor_checker_sha256'])
         import core_p3d_successor as p3d
@@ -352,7 +368,7 @@ for steward in ('off', 'on'):
     run(['bash', helper, 'fixture', observed_path, twin_path, off_path, review_path], mode_dir / 'validation.log')
 freeze.pin(config_path, sys.argv[4])
 check_frozen()
-print('P3D_SHADOW_FIXTURE PASS; behavioral successor verified, no historical outcome equivalence claimed' if 'p3d_successor' in config else 'ORIGINAL_SHADOW_REPLAY PASS; CURRENT_SUCCESSOR_EQUIVALENCE verified separately' if 'runtime_successor' in config
+print('CORE_UI_SHADOW_FIXTURE PASS; fresh fixtures verified, published P3d chain inherited (original verifier NOT_RERUN)' if __import__('os').environ.get('CORE_UI_CONFIG') else 'P3D_SHADOW_FIXTURE PASS; behavioral successor verified, no historical outcome equivalence claimed' if 'p3d_successor' in config else 'ORIGINAL_SHADOW_REPLAY PASS; CURRENT_SUCCESSOR_EQUIVALENCE verified separately' if 'runtime_successor' in config
       else 'CORE_SHADOW_FIXTURE PASS fresh seed=0 days=20 steward=off,on frozen observed/control/feature-OFF')
 PYRUN
     ;;
