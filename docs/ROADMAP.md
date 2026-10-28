@@ -1,5 +1,7 @@
 # 로드맵 (V8)
 
+> D22 최신: **M-UX2.1 수용·게시: STRICT_PASS.** 전체 gate 소스와 먼저 게시한 제품 소스는 [ff6af820a](https://github.com/hyunlord/new-world/commit/ff6af820aa1fb4e2d894fa7e4e814bdf897a7868)다. 이 뒤의 문서 전용 후속은 **NOT_FULL_GATED**이며 새 전체 gate 실행을 주장하지 않는다. 원래 strict stall 결과와 모든 실패 영수증은 보존했다. ISS030/#515와 자연 재굽기10.493ms/4ms 목표 미달 ISS347/#658은 OPEN이다. 이번 stall 예외를 자연 재굽기나 M-CORE side64에 확대하지 않는다.
+
 > D22 최신: 00:50KST 지시로 제품 수정·topbar 복원, #657 비겹침 재확인. 최종 전체 gate·게시 대기. 아래 D21은 당시 중단 기록이다.
 
 > D21 최신: **BLOCKED / RED / NOT_PUBLISHED — 최종 전체 gate 44/46 PASS, 40·41단계 FAIL.** 전체 gate 소스는 `99a35a8c2a28b20858f40833a04355399d4f83a6`이며 2026-10-28 21:55:49–23:44:48 KST 실행의 최종 exit는1이다. 이후 로컬 문서 전용 후속은 **NOT_FULL_GATED / NOT_PUBLISHED**다.
@@ -40,7 +42,7 @@
 | M-ART2.1 마무리 | M-EXT 전에 게임 화면 마무리: 05 물결 물과 둥근 물가(거리장), 밤에도 지키는 물–땅 대비, ART-TREES 여름 초록 수종과 계절(가을 단풍·겨울 앙상함·소나무 눈, 첫날 서서히), ¼×에서 숲을 바닥에 굽는 수관 덩어리, 가구 색 표지 테두리, D19 게이트 | 강이 물결 그림에 둥근 물가로 땅과 구분되고, 나무가 계절 따라 바뀌며, ¼×가 지도처럼 보인다 | 끝 (2026-10-24, `3a51636d` 게이트 34단계 통과, [보고서](v8/m_art2_1/MART21_REPORT.md)): 물가 반지름 22 px·곧은 물가 0 px, 밤 최소 휘도 차 0.108, 수종 해석기 352경우 일치, 여름 수관 채도 0.58–0.62, ¼× 다섯 지형 최소 ΔE 14.1; FPS 1× 290.2·½× 190.2·¼× 242.8, 1,000명 ½× 149.1·¼× 137.5 — 오너 플레이 대기(덤불 크기·가을 ¼× 색 등 결정 6건) |
 | M-UX 맥 조작·안내·마을 스스로 | 트랙패드·화면 버튼·미니맵·데이터 기반 도움말/경고/학습, 기본 자동 지시와 읽기 쉬운 물·눈 | 조작을 찾을 수 있고 기본 정착 작업이 자동으로 진행된다 | Stage A 기술 gate3 PASS 및 게시 (2026-10-25, `ca9f531ca6ef700ca223d99dba14d834b94b45da`, clean 35/35, 10:30 KST wip/main 확인). A8 수용 FAILED·물리 트랙패드 미검증·ISS030 지연 미해결; 범위와 수치는 [Stage A 보고](v8/mux/STAGE_A_REPORT.md). M-EXT B 게시 완료; C gate1 36/36; gate2 35/36 FAIL(bench), 원장314·OPEN107 모두GitHub등록, 최종 문서 HEAD 재검증 후 게시 |
 | M-UX2 두 번째 플레이 피드백 | ½× 인물·¼× 표식, 왜? 패널, 방어·도망·장작, 끊김·한국어 | 오너 D-A..D-C: 노출 장작20/20 PASS, 새 N100·½×≥60FPS 게시 조건 | **오너 수정 조건 수용 · p18 게시**: 오너 D-A..D-C에 따른 p18 [b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd](https://github.com/hyunlord/new-world/commit/b19f91b15f8ad1b4f6b140b17d0d7960e895a4cd)를 v8/wip와 v8/main에 게시했다. 노출 장작20/20 PASS와 N100½×164.882764487796FPS가 새 수용 조건을 충족했다. 원래20/32 FAIL, 1000명35.98FPS의 M11 이월, 재굽기7.239ms와 이전 stall 실패는 보존한다. 전체 게이트41/41은 p16에 귀속되며 p19 문서 후속에 새 전체 게이트를 주장하지 않는다. ISS030 OPEN·반복성 미입증. |
-| M-UX2.1 ¼× 성능 회귀 | 세 빌드 비교·표식 배치 캐시·M-CORE UI 확인 | ¼× FPS 막대와 기존 표식 가시성·전체 gate 통과 | **재검증 중·미게시 (2026-10-28 16:15KST 후속)**: p15 어댑터·UI겹침 수정과 재캡처 완료, 최종전체gate 대기. 이전 시도 기록: FPS7/7 VALID/PASS·KO 이유/왜?·연대기·방어 화면 확인, 자연 재굽기10.493ms로4ms 목표 미달. clean `6ed4e1996` gate1–15 exit0,16 Python NameError(root) FAIL,17 중단·18–46 및 최종GPU NOT_RUN. stop-on-red로 수정/재시험/push 없음; 원격 main/wip381 유지. ISS343–347 OPEN; [보고](v8/mux2_1/MUX21_REPORT.md), [이전 차단](v8/mux2_1/MUX21_BLOCKED_20261026.md). |
+| M-UX2.1 ¼× 성능 회귀 | 배치 캐시·UI 이유/연대기/방어 확인 | FPS·가시성·전체 gate와 오너 수용 | 수용·게시: STRICT_PASS; gate/제품ff6af820, 문서 후속 NOT_FULL_GATED. FPS7/7·요청 화면 유지. ISS030/347 OPEN; [보고](v8/mux2_1/MUX21_REPORT.md). |
 | M-EXT 확장성 | ADR 0033의 빚 갚기: 아이템·레시피·압력·동물을 데이터와 태그로, 각각 "데이터만으로 추가" 시험; M5.5 오너 결정(수용 시 인구 상한, 교역 물건 규칙, 고기를 화덕 옆에, F4·F9 막대 산수, 이주민 거절 −5 유지) | 새 아이템·레시피·동물이 코드 수정 없이 들어간다 | 진행 중: core e90b7bb86·압력/동물/B3 76f572fff·B6 c9ed292d7 검증, B4 P/T/H 개별 검증·커밋 후 고정 홀드아웃 VALID/PASS ([결과](v8/mux/B4_HELDOUT_VERIFICATION.md)); B5 Rust·저장·창54검사 통과, 원본/OFF/ON 안전망 확인, 제품 커밋 `3c39dcbe0`. B gate2 36/36 및 게시 완료 (`5e20c65a1`); Top/Designation 등 잔여 부채는 [이슈 원장](ISSUES.md); C gate1 36/36, 문서 마감 gate 후 게시 |
 | M2 물건과 제작 | 재료 연결(돌·부싯돌 노드와 물건), 작업장, 제작 주문, 작업 우선순위 표, 기술과 품질, 장작을 일감으로 | 부싯돌을 주문하면 돌깎이가 만들고, 숙련도에 따라 품질이 다르다 | 완료 (2026-10-22, 게이트 통과 커밋 `c0af2eb7`, `docs/v8/m2/M2_REPORT.md`; 평가 E1·E3·E5·E6·E9·E10 통과, E2·E4·E7·E8 실패 — 시나리오가 하루에 끝나 도끼 사용·제작 몫·기술 성장을 못 보였고, 결정 틱 점유율은 −2.7포인트) — 오너 플레이 대기 |
 | M-PERF 성능 (이전) | 욕구의 f32 → 정수 전환, 결정 틱 해체, 틱 점유율 상위 시스템 | 이전 성능 목표 | 대체됨: [깊이 로드맵](v8/DEPTH_ROADMAP.md)의 M-CORE 성능 막대와 M11 |
@@ -60,3 +62,11 @@
 
 **다음:** M-CORE P7 수용·게시를 마쳤으며 M6 신석기로 진행한다. 잔여 콘텐츠·성능·인과 계기 부채와 역사 실패는 이슈 원장에 유지한다.
 | V8-PLAY2 실행 확인 | 실행기 안전성·M-ART2.1 조작 안내 | 창 입력·전체 gate | 검증 기록: `docs/v8/play2/PLAY2_REPORT.md`; 바탕화면 연결은 오너 작업 |
+
+<details><summary>D22 이전 M-UX2.1 행 (당시 기록 보존)</summary>
+
+```text
+| M-UX2.1 ¼× 성능 회귀 | 세 빌드 비교·표식 배치 캐시·M-CORE UI 확인 | ¼× FPS 막대와 기존 표식 가시성·전체 gate 통과 | **재검증 중·미게시 (2026-10-28 16:15KST 후속)**: p15 어댑터·UI겹침 수정과 재캡처 완료, 최종전체gate 대기. 이전 시도 기록: FPS7/7 VALID/PASS·KO 이유/왜?·연대기·방어 화면 확인, 자연 재굽기10.493ms로4ms 목표 미달. clean `6ed4e1996` gate1–15 exit0,16 Python NameError(root) FAIL,17 중단·18–46 및 최종GPU NOT_RUN. stop-on-red로 수정/재시험/push 없음; 원격 main/wip381 유지. ISS343–347 OPEN; [보고](v8/mux2_1/MUX21_REPORT.md), [이전 차단](v8/mux2_1/MUX21_BLOCKED_20261026.md). |
+```
+
+</details>

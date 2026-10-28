@@ -1,5 +1,97 @@
 ## 구현 완료 보고 — M-UX2.1
 
+### D22 최종 수용·게시 기록 — 00:50KST 오너 지시
+
+**M-UX2.1 수용·게시: STRICT_PASS.** 전체 gate 소스와 먼저 게시한 제품 소스는 [ff6af820a](https://github.com/hyunlord/new-world/commit/ff6af820aa1fb4e2d894fa7e4e814bdf897a7868)다. 이 뒤의 문서 전용 후속은 **NOT_FULL_GATED**이며 새 전체 gate 실행을 주장하지 않는다.
+
+근거: [gate](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/full-gate/gate.txt) · [terminal](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/full-gate-terminal.json) · [수용 판정](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/candidate-waiver-audit.json) · [런타임 동일성](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/docs-runtime-equality.json) · [원격 확인](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/source-publication.json). raw gate exit=0; raw 결과를 수용 판정으로 덮어쓰지 않았다.
+
+원래40단계 네 실패 중 폭 초과는 EN 제목의 최소 폭 때문에342local×1.25=427.5screen px가 되어 재현됐다. 제목 줄바꿈과 실제 헤더 높이 반영으로420px·반 화면 높이 상한을 유지했다. 나머지 세 열기 실패(top why tool/scale1.0/scale1.25)는 수정 전 EN 재현에서도 통과했으므로 원인 해결을 주장하지 않는다. 실패 당시 EN·열린 연대기·빈 기록 토스트는 보존하며 외부 입력/카메라 상태 가설은 미확정이다. 원래42검사는 byte-identical, 추가 EN/KO53검사씩과 원래 독립42검사 통과 근거를 별도로 기록한다. 성능 개선이 입증되지 않은 Topbar 변경을 되돌렸고 #657 배치 수정은 유지했다.
+
+집중 검증: [입력/제목/닫기/폭/높이](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/why-product-verification.json) · [#657 정보창 비겹침](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/why-code-visual-review.json). 이전 FPS7/7을 보존하며 이 문서 추가가 새로운 FPS 측정이라는 뜻은 아니다.
+
+00:50KST 오너 예산은 목표3시간/하드4시간, 03:50/04:50KST(18:50/19:50UTC)다.
+
+00:50KST 오너 조건: 이번 패스에 한해 zoom별 완전·유효한 평가 창에서 50ms 초과 프레임은 최대 2개, 최대 프레임 시간은 60ms 이하이고 캡처 오류는 0이어야 하며, 다른 45단계는 모두 통과해야 한다. 기간·순서·틱 진행·원시 해시·캡처 및 호스트 유효성 검사는 유지한다. 원래 strict FAIL과 raw exit는 보존한다.
+
+이번 실행 waiver 사용 여부: **미사용 — STRICT_PASS**. raw 결과와 별도 수용 판정이다.
+
+| 최종 zoom | 평가 시간 | 최대 ms | >50ms 프레임 목록 (elapsed / interval / tick / ticks_advanced) | strict 결과 |
+|---|---:|---:|---|---|
+| 1× | 300.000148s | 49.313 | 없음 (0개) | PASS |
+| ½× | 300.007146s | 46.243 | 없음 (0개) | PASS |
+
+각 zoom의 >33ms/분은 `[1,0,0,0,0]`. 캡처 오류0, raw complete=true, wrapper exit0. 시작 가능 구간과 전체 캡처 관측 모두 PASS; 최대 load1=4.572754, 다른 Godot/빌드 없음. 관측 간격 최대1.104s이며 정확한 arm 시작 시각이나 subsecond 활동 부재를 주장하지 않는다.
+
+| 소스 / topbar 상태 | 1× >50ms 수 / 최대 | ½× >50ms 수 / 최대 |
+|---|---|---|
+| e47ee10d8 / 원래 topbar | 1 / 50.018ms | 0 / 47.588ms |
+| 99a35a8c2 / theme 변경 | 1 / 50.768ms | 0 / 47.121ms |
+| ff6af820 / theme 변경 되돌림 | 0 / 49.313ms | 0 / 46.243ms |
+
+이전 e47 초과 프레임: elapsed34.534225s,50.018ms,tick361,ticks_advanced=1. 이전99 초과 프레임: elapsed34.537230s,50.768ms,tick361,ticks_advanced=1(실제 sim tick 1개 진행). 99에서는40단계 실패 때문에 waiver를 적용하지 못했다. theme 변경은 초과 프레임 수를 줄이지 못해 도움이 입증되지 않았고 #657에 필요하지 않아 되돌렸다. 이번0개 결과는 단일 관측이며 되돌림의 인과적 개선이나 stall 해결·재현성을 입증하지 않는다.
+
+위 초과 프레임 수와 최대 시간은 각 실행의 관측값이다. 중복 무효화 제거가 원래 stall의 원인이나 시간 개선을 증명했다고 주장하지 않는다.
+
+필수 FPS7/7과 기존24개 요청 화면 근거는 유지하며 D22 새 화면은 위 집중 검증에 연결했다. 원래 strict stall 결과와 모든 실패 영수증은 보존했다. ISS030/#515와 자연 재굽기10.493ms/4ms 목표 미달 ISS347/#658은 OPEN이다. 이번 stall 예외를 자연 재굽기나 M-CORE side64에 확대하지 않는다.
+
+[ISS-343/#638 폐쇄](https://github.com/hyunlord/new-world/issues/638#issuecomment-6476850413) · [ISS-344/#655 폐쇄](https://github.com/hyunlord/new-world/issues/655#issuecomment-6476851601) · [ISS-345/#656 폐쇄](https://github.com/hyunlord/new-world/issues/656#issuecomment-6476852746) · [ISS-346/#657 폐쇄](https://github.com/hyunlord/new-world/issues/657#issuecomment-6476854052). 폐쇄 후 재조회로 확인했다. 원격 wip/main에 먼저 게시한 SHA는 모두 `ff6af820aa1fb4e2d894fa7e4e814bdf897a7868`다. 이후 문서 전용 게시 SHA는 부모 실행의 최종 원격 재조회/최종 답변에 따로 기록하며, 이 문서는 자기 커밋 SHA나 자기 전체 gate 통과를 주장하지 않는다.
+
+아래 D18/D20/D21의 미게시·실패·대기 문구와 이전 결과는 당시 기록이며 위 판정과 구분해 보존한다.
+
+### 최종 전체 gate — 46단계 각각의 원시 결과와 수용 판정
+
+| 단계 | 검사 | raw exit | 결과 / 수용 |
+|---:|---|---:|---|
+| 1 | fmt | 0 | PASS / strict |
+| 2 | bridge_build | 0 | PASS / strict |
+| 3 | godot_import | 0 | PASS / strict |
+| 4 | test_debug | 0 | PASS / strict |
+| 5 | test_release | 0 | PASS / strict |
+| 6 | clippy | 0 | PASS / strict |
+| 7 | forbidden_math | 0 | PASS / strict |
+| 8 | gdscript_strict | 0 | PASS / strict |
+| 9 | smoke | 0 | PASS / strict |
+| 10 | identity | 0 | PASS / strict |
+| 11 | determinism | 0 | PASS / strict |
+| 12 | perf | 0 | PASS / strict |
+| 13 | bridge_api | 0 | PASS / strict |
+| 14 | docs | 0 | PASS / strict |
+| 15 | inventory_closure | 0 | PASS / strict |
+| 16 | python_unittest | 0 | PASS / strict |
+| 17 | m1_tests | 0 | PASS / strict |
+| 18 | colony_determinism | 0 | PASS / strict |
+| 19 | replay | 0 | PASS / strict |
+| 20 | uid_check | 0 | PASS / strict |
+| 21 | play_check | 0 | PASS / strict |
+| 22 | schema_docs | 0 | PASS / strict |
+| 23 | renderer_agreement | 0 | PASS / strict |
+| 24 | save_roundtrip | 0 | PASS / strict |
+| 25 | bench | 0 | PASS / strict |
+| 26 | soak | 0 | PASS / strict |
+| 27 | nav_bench | 0 | PASS / strict |
+| 28 | knowledge | 0 | PASS / strict |
+| 29 | story | 0 | PASS / strict |
+| 30 | neighbours | 0 | PASS / strict |
+| 31 | art_manifest | 0 | PASS / strict |
+| 32 | resolver_parity | 0 | PASS / strict |
+| 33 | extensibility_grep | 0 | PASS / strict |
+| 34 | mart2_render | 0 | PASS / strict |
+| 35 | steward | 0 | PASS / strict |
+| 36 | data_only_ext | 0 | PASS / strict |
+| 37 | mux2_defence | 0 | PASS / strict |
+| 38 | mux2_oracles | 0 | PASS / strict |
+| 39 | mux2_visibility | 0 | PASS / strict |
+| 40 | mux2_why | 0 | PASS / strict |
+| 41 | mux2_stall_receipt | 0 | PASS / strict |
+| 42 | baseline_isolation | 0 | PASS / strict |
+| 43 | mind_data_only | 0 | PASS / strict |
+| 44 | core_shadow | 0 | PASS / strict |
+| 45 | core_evaluation | 0 | PASS / strict |
+| 46 | mux21_regressions | 0 | PASS / strict |
+
+이하 이전 gate 기록은 당시 이력이며 위 최종 실행과 구분한다.
+
 ### D22 00:50KST 후속 — 제품 수정 후 전체 gate 대기
 
 왜? 제목이 영어1.25배에서 최소 폭427.5px를 강제하던 문제를 줄바꿈으로 수정했다. 실제 제목·테마 높이를 반영해 본문 스크롤 영역을 제한하며420px 폭·화면 절반 높이 기준을 유지한다. 이 폭 문제는 e47 topbar 복원 상태에서도 재현됐다. 세 열기 실패는 수정 전 재현에서 이미 통과했으므로 입력 원인을 확정하거나 카메라를 임의 수정하지 않았다. 기존42검사는 그대로이며 단독42/42, 추가 EN/KO 각53/53이 통과했다.

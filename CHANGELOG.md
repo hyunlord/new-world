@@ -1,5 +1,40 @@
 # Changelog
 
+## M-UX2.1 최종 게시 — 오너 수용 조건 기록
+
+**M-UX2.1 수용·게시: STRICT_PASS.** 전체 gate 소스와 먼저 게시한 제품 소스는 [ff6af820a](https://github.com/hyunlord/new-world/commit/ff6af820aa1fb4e2d894fa7e4e814bdf897a7868)다. 이 뒤의 문서 전용 후속은 **NOT_FULL_GATED**이며 새 전체 gate 실행을 주장하지 않는다.
+
+원래 strict stall 결과와 모든 실패 영수증은 보존했다. ISS030/#515와 자연 재굽기10.493ms/4ms 목표 미달 ISS347/#658은 OPEN이다. 이번 stall 예외를 자연 재굽기나 M-CORE side64에 확대하지 않는다.
+
+근거: [gate](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/full-gate/gate.txt) · [terminal](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/full-gate-terminal.json) · [수용 판정](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/candidate-waiver-audit.json) · [런타임 동일성](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/docs-runtime-equality.json) · [원격 확인](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/source-publication.json). raw gate exit=0; raw 결과를 수용 판정으로 덮어쓰지 않았다.
+
+원래40단계 네 실패 중 폭 초과는 EN 제목의 최소 폭 때문에342local×1.25=427.5screen px가 되어 재현됐다. 제목 줄바꿈과 실제 헤더 높이 반영으로420px·반 화면 높이 상한을 유지했다. 나머지 세 열기 실패(top why tool/scale1.0/scale1.25)는 수정 전 EN 재현에서도 통과했으므로 원인 해결을 주장하지 않는다. 실패 당시 EN·열린 연대기·빈 기록 토스트는 보존하며 외부 입력/카메라 상태 가설은 미확정이다. 원래42검사는 byte-identical, 추가 EN/KO53검사씩과 원래 독립42검사 통과 근거를 별도로 기록한다. 성능 개선이 입증되지 않은 Topbar 변경을 되돌렸고 #657 배치 수정은 유지했다.
+
+집중 검증: [입력/제목/닫기/폭/높이](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/why-product-verification.json) · [#657 정보창 비겹침](/Users/rexxa/work/mux21-data/resume-20261029/continuation-0050/why-code-visual-review.json). 이전 FPS7/7을 보존하며 이 문서 추가가 새로운 FPS 측정이라는 뜻은 아니다.
+
+00:50KST 오너 조건: 이번 패스에 한해 zoom별 완전·유효한 평가 창에서 50ms 초과 프레임은 최대 2개, 최대 프레임 시간은 60ms 이하이고 캡처 오류는 0이어야 하며, 다른 45단계는 모두 통과해야 한다. 기간·순서·틱 진행·원시 해시·캡처 및 호스트 유효성 검사는 유지한다. 원래 strict FAIL과 raw exit는 보존한다.
+
+이번 실행 waiver 사용 여부: **미사용 — STRICT_PASS**. raw 결과와 별도 수용 판정이다.
+
+| 최종 zoom | 평가 시간 | 최대 ms | >50ms 프레임 목록 (elapsed / interval / tick / ticks_advanced) | strict 결과 |
+|---|---:|---:|---|---|
+| 1× | 300.000148s | 49.313 | 없음 (0개) | PASS |
+| ½× | 300.007146s | 46.243 | 없음 (0개) | PASS |
+
+각 zoom의 >33ms/분은 `[1,0,0,0,0]`. 캡처 오류0, raw complete=true, wrapper exit0. 시작 가능 구간과 전체 캡처 관측 모두 PASS; 최대 load1=4.572754, 다른 Godot/빌드 없음. 관측 간격 최대1.104s이며 정확한 arm 시작 시각이나 subsecond 활동 부재를 주장하지 않는다.
+
+| 소스 / topbar 상태 | 1× >50ms 수 / 최대 | ½× >50ms 수 / 최대 |
+|---|---|---|
+| e47ee10d8 / 원래 topbar | 1 / 50.018ms | 0 / 47.588ms |
+| 99a35a8c2 / theme 변경 | 1 / 50.768ms | 0 / 47.121ms |
+| ff6af820 / theme 변경 되돌림 | 0 / 49.313ms | 0 / 46.243ms |
+
+이전 e47 초과 프레임: elapsed34.534225s,50.018ms,tick361,ticks_advanced=1. 이전99 초과 프레임: elapsed34.537230s,50.768ms,tick361,ticks_advanced=1(실제 sim tick 1개 진행). 99에서는40단계 실패 때문에 waiver를 적용하지 못했다. theme 변경은 초과 프레임 수를 줄이지 못해 도움이 입증되지 않았고 #657에 필요하지 않아 되돌렸다. 이번0개 결과는 단일 관측이며 되돌림의 인과적 개선이나 stall 해결·재현성을 입증하지 않는다.
+
+프레임 표에는 elapsed, interval, tick, ticks_advanced를 보존한다. 이 단일 실행 비교만으로 stall 원인이나 개선을 입증했다고 주장하지 않는다.
+
+이하 실패·진행 기록은 당시 이력이다.
+
 ## M-UX2.1 D22 repair — 2026-10-29
 
 ### Changed
