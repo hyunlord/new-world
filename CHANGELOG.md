@@ -1,5 +1,28 @@
 # Changelog
 
+## M-UX2.1 D21 — 전체 게이트 실패로 미게시
+
+**BLOCKED / RED / NOT_PUBLISHED — 최종 전체 gate 44/46 PASS, 40·41단계 FAIL.** 전체 gate 소스는 `99a35a8c2a28b20858f40833a04355399d4f83a6`이며 2026-10-28 21:55:49–23:44:48 KST 실행의 최종 exit는1이다. 이후 로컬 문서 전용 후속은 **NOT_FULL_GATED / NOT_PUBLISHED**다.
+
+21:55KST 오너 지시의 예외는 (a) 다른45단계 전부 PASS, (b) 각 zoom의 평가 창에서50ms 초과 최대2프레임 및 최대60ms 이하, (c) 완전·유효한 영수증과 캡처 오류0을 모두 만족해야 한다. 이번40단계 실패로 (a)가 성립하지 않아 **NO WAIVER**다. 수정·재실행·게시·이슈 폐쇄 없이 중단했다. 목표4시간/하드5시간, 보수적 마감2026-10-29 02:52:54KST(17:52:54UTC)를 사용했으며 deadline 강제 종료가 아니다. [오너 지시 초안](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/D21-owner-note-draft.md) · [실행 예산](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/plan.json).
+
+40단계 `mux2_why`:42검사 중4실패(raw exit1). 현재 캡처의 EN·열린 연대기 상태와1.25배 폭427.5px를 관측했으나 외부 입력 인과는 미확정 가설이며 실패를 무효화하지 않는다. [실패 진단](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/why-failure-diagnosis.json). 41단계는1×50.768ms로 원래 strict 기준 FAIL, ½×47.121ms PASS; 원본 raw FAIL과 wrapper exit1을 보존한다.
+
+| zoom | 이전 e47 >50ms 개수 / 최대ms | 이번99 >50ms 개수 / 최대ms | 이번 초과 프레임 elapsed초 / intervalms / tick / ticks_advanced |
+|---|---|---|---|
+| 1× | 1 / 50.018 | 1 / 50.768 | 34.53723 / 50.768 / 361 / 1 |
+| ½× | 0 / 47.588 | 0 / 47.121 | 없음 |
+
+HudTopbar 중복 테마 무효화 방지 후1× 초과 개수는1→1, 최대는50.018→50.768ms다. ½×는0→0, 47.588→47.121ms다. 이 관측으로 stall 개선이나 원인 해결을 입증하지 못했다. [전후 비교](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/e47-vs99-stall-comparison.json).
+
+**입장 부하 감사 PASS(보수적 시작 구간 관측).** 두 순차 arm의 가능한 시작 구간 전체를315회 관측으로 둘러싸 확인했으며1분 최대 부하4.4741<8, 다른 Godot·cargo/rustc 없음이다. 정확한 arm별 UTC를 추정하지 않았다. 후반14:41:57UTC의1분 부하11.6421도 보존한다. 완전한 캡처·오류0과 시작 조건은 확인되지만 실행 내내 저부하였다는 뜻은 아니다. 실행 전체가 조용했다고 주장하지 않는다. 후반 부하 상승 원본을 보존하며 시작 시점 조건과 실행 중 안정성을 구분한다. [시작 구간 감사](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/step41-start-validity.json) · [실행 중 관측](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/step41-validity.json).
+
+[46단계 원본](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/full-gate/gate.txt) · [종료 영수증](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/full-gate-terminal.json) · [예외 불가 판정](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/99-waiver-audit.json). 필수 FPS7/7, 최신24개 요청 화면과 이전 실패 근거는 유지한다. 자연 재굽기10.493ms/4ms 목표 미달도 유지한다.
+
+닫은 이슈 없음. ISS030/#515, ISS343/#638, ISS344/#655, ISS345/#656, ISS346/#657, ISS347/#658 모두 OPEN이다. 원장347행/fixed203/open111/deferred31/won't fix2 유지; 게시·폐쇄 링크를 만들지 않는다.
+
+이하 이전 기록은 당시 이력이다.
+
 All notable changes per pass. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-model
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at

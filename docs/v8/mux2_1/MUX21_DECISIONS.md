@@ -154,3 +154,82 @@ This continuation fixes ISS-345 standalone extracted performance_gate, adds the 
 The e47ee10d8 full gate completed all46 steps:45 passed, step41 failed. The 1x frame at tick361/34.534225s was50.018ms against the strict50ms limit; half was47.588ms and passed. All611 external observations bracket the capture, maximum load1=6.3613 with no competing Godot/builds. This is a valid failure, not a discarded contended run. Native StewardSystem accounts for33.061667ms and total native34.746833ms; instrumented HUD/alerts/minimap total0.017ms. Do not claim a proven UI root cause or waive the0.018ms excess. ISS030/#515 remains open.
 
 A bounded UI-only candidate guards unchanged cold/risk theme color overrides in HudTopbar. The real Control theme_changed regression fails5/20 before and passes20/20 after, proving redundant invalidations were removed without delaying state updates. No marker or Rust path changes; seven FPS bars stand under the planner note. Timing benefit remains unmeasured until the new full gate's stall step. Re-capture the requested UI after this candidate, seal the new final commit and rerun fromstep1. Preserve the complete red gate under continuation-1615/full-gate. Hard stop remains21:15KST; no publication without a green exact-HEAD gate.
+
+
+## D21 최종 중단 — 21:55KST 오너 조건 미충족
+
+**BLOCKED / RED / NOT_PUBLISHED — 최종 전체 gate 44/46 PASS, 40·41단계 FAIL.** 전체 gate 소스는 `99a35a8c2a28b20858f40833a04355399d4f83a6`이며 2026-10-28 21:55:49–23:44:48 KST 실행의 최종 exit는1이다. 이후 로컬 문서 전용 후속은 **NOT_FULL_GATED / NOT_PUBLISHED**다.
+
+21:55KST 오너 지시의 예외는 (a) 다른45단계 전부 PASS, (b) 각 zoom의 평가 창에서50ms 초과 최대2프레임 및 최대60ms 이하, (c) 완전·유효한 영수증과 캡처 오류0을 모두 만족해야 한다. 이번40단계 실패로 (a)가 성립하지 않아 **NO WAIVER**다. 수정·재실행·게시·이슈 폐쇄 없이 중단했다. 목표4시간/하드5시간, 보수적 마감2026-10-29 02:52:54KST(17:52:54UTC)를 사용했으며 deadline 강제 종료가 아니다. [오너 지시 초안](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/D21-owner-note-draft.md) · [실행 예산](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/plan.json).
+
+40단계 `mux2_why`:42검사 중4실패(raw exit1). 현재 캡처의 EN·열린 연대기 상태와1.25배 폭427.5px를 관측했으나 외부 입력 인과는 미확정 가설이며 실패를 무효화하지 않는다. [실패 진단](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/why-failure-diagnosis.json). 41단계는1×50.768ms로 원래 strict 기준 FAIL, ½×47.121ms PASS; 원본 raw FAIL과 wrapper exit1을 보존한다.
+
+| zoom | 이전 e47 >50ms 개수 / 최대ms | 이번99 >50ms 개수 / 최대ms | 이번 초과 프레임 elapsed초 / intervalms / tick / ticks_advanced |
+|---|---|---|---|
+| 1× | 1 / 50.018 | 1 / 50.768 | 34.53723 / 50.768 / 361 / 1 |
+| ½× | 0 / 47.588 | 0 / 47.121 | 없음 |
+
+HudTopbar 중복 테마 무효화 방지 후1× 초과 개수는1→1, 최대는50.018→50.768ms다. ½×는0→0, 47.588→47.121ms다. 이 관측으로 stall 개선이나 원인 해결을 입증하지 못했다. [전후 비교](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/e47-vs99-stall-comparison.json).
+
+**입장 부하 감사 PASS(보수적 시작 구간 관측).** 두 순차 arm의 가능한 시작 구간 전체를315회 관측으로 둘러싸 확인했으며1분 최대 부하4.4741<8, 다른 Godot·cargo/rustc 없음이다. 정확한 arm별 UTC를 추정하지 않았다. 후반14:41:57UTC의1분 부하11.6421도 보존한다. 완전한 캡처·오류0과 시작 조건은 확인되지만 실행 내내 저부하였다는 뜻은 아니다. 실행 전체가 조용했다고 주장하지 않는다. 후반 부하 상승 원본을 보존하며 시작 시점 조건과 실행 중 안정성을 구분한다. [시작 구간 감사](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/step41-start-validity.json) · [실행 중 관측](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/step41-validity.json).
+
+[46단계 원본](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/full-gate/gate.txt) · [종료 영수증](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/full-gate-terminal.json) · [예외 불가 판정](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/99-waiver-audit.json). 필수 FPS7/7, 최신24개 요청 화면과 이전 실패 근거는 유지한다. 자연 재굽기10.493ms/4ms 목표 미달도 유지한다.
+
+닫은 이슈 없음. ISS030/#515, ISS343/#638, ISS344/#655, ISS345/#656, ISS346/#657, ISS347/#658 모두 OPEN이다. 원장347행/fixed203/open111/deferred31/won't fix2 유지; 게시·폐쇄 링크를 만들지 않는다.
+
+### 최종 전체 gate — 46단계 원시 결과
+
+| 단계 | 검사 | raw exit | 결과 | 소요 초 | 시작 KST |
+|---:|---|---:|---|---:|---|
+| 1 | fmt | 0 | PASS | 1 | 21:55:49 |
+| 2 | bridge_build | 0 | PASS | 2 | 21:55:50 |
+| 3 | godot_import | 0 | PASS | 7 | 21:55:52 |
+| 4 | test_debug | 0 | PASS | 2178 | 21:55:59 |
+| 5 | test_release | 0 | PASS | 121 | 22:32:17 |
+| 6 | clippy | 0 | PASS | 1 | 22:34:18 |
+| 7 | forbidden_math | 0 | PASS | 0 | 22:34:19 |
+| 8 | gdscript_strict | 0 | PASS | 17 | 22:34:19 |
+| 9 | smoke | 0 | PASS | 27 | 22:34:36 |
+| 10 | identity | 0 | PASS | 545 | 22:35:03 |
+| 11 | determinism | 0 | PASS | 129 | 22:44:08 |
+| 12 | perf | 0 | PASS | 576 | 22:46:17 |
+| 13 | bridge_api | 0 | PASS | 0 | 22:55:53 |
+| 14 | docs | 0 | PASS | 2 | 22:55:53 |
+| 15 | inventory_closure | 0 | PASS | 0 | 22:55:55 |
+| 16 | python_unittest | 0 | PASS | 33 | 22:55:55 |
+| 17 | m1_tests | 0 | PASS | 164 | 22:56:28 |
+| 18 | colony_determinism | 0 | PASS | 4 | 22:59:12 |
+| 19 | replay | 0 | PASS | 2 | 22:59:16 |
+| 20 | uid_check | 0 | PASS | 0 | 22:59:18 |
+| 21 | play_check | 0 | PASS | 185 | 22:59:18 |
+| 22 | schema_docs | 0 | PASS | 0 | 23:02:24 |
+| 23 | renderer_agreement | 0 | PASS | 8 | 23:02:24 |
+| 24 | save_roundtrip | 0 | PASS | 64 | 23:02:32 |
+| 25 | bench | 0 | PASS | 1245 | 23:03:36 |
+| 26 | soak | 0 | PASS | 9 | 23:24:21 |
+| 27 | nav_bench | 0 | PASS | 11 | 23:24:30 |
+| 28 | knowledge | 0 | PASS | 55 | 23:24:41 |
+| 29 | story | 0 | PASS | 17 | 23:25:36 |
+| 30 | neighbours | 0 | PASS | 25 | 23:25:53 |
+| 31 | art_manifest | 0 | PASS | 0 | 23:26:18 |
+| 32 | resolver_parity | 0 | PASS | 0 | 23:26:18 |
+| 33 | extensibility_grep | 0 | PASS | 10 | 23:26:18 |
+| 34 | mart2_render | 0 | PASS | 20 | 23:26:28 |
+| 35 | steward | 0 | PASS | 10 | 23:26:48 |
+| 36 | data_only_ext | 0 | PASS | 7 | 23:26:58 |
+| 37 | mux2_defence | 0 | PASS | 216 | 23:27:06 |
+| 38 | mux2_oracles | 0 | PASS | 8 | 23:30:42 |
+| 39 | mux2_visibility | 0 | PASS | 146 | 23:30:50 |
+| 40 | mux2_why | 1 | FAIL | 13 | 23:33:16 |
+| 41 | mux2_stall_receipt | 1 | FAIL | 638 | 23:33:29 |
+| 42 | baseline_isolation | 0 | PASS | 0 | 23:27:05 |
+| 43 | mind_data_only | 0 | PASS | 1 | 23:27:05 |
+| 44 | core_shadow | 0 | PASS | 30 | 23:44:07 |
+| 45 | core_evaluation | 0 | PASS | 6 | 23:44:37 |
+| 46 | mux21_regressions | 0 | PASS | 5 | 23:44:43 |
+
+**이하 이전 통과·실패·대기·미게시 문구는 당시 이력이며 위 최종 결과와 구분해 보존한다.**
+
+
+
+D21 공개 상태 코멘트: [#515](https://github.com/hyunlord/new-world/issues/515#issuecomment-6472172832) · [#658](https://github.com/hyunlord/new-world/issues/658#issuecomment-6472176210) · [#638](https://github.com/hyunlord/new-world/issues/638#issuecomment-6472176796). [이슈 재조회](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/issue-readback.json) · [git ls-remote](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/remote-final.txt). 두 원격은 모두 `3814828c06d1a7a211b13b54368e4e0a488cc0e3`이며 새 게시 SHA는 없다.

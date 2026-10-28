@@ -1,5 +1,15 @@
 # WorldSim 역사
 
+## M-UX2.1 D21 최종 중단
+
+**BLOCKED / RED / NOT_PUBLISHED — 최종 전체 gate 44/46 PASS, 40·41단계 FAIL.** 전체 gate 소스는 `99a35a8c2a28b20858f40833a04355399d4f83a6`이며 2026-10-28 21:55:49–23:44:48 KST 실행의 최종 exit는1이다. 이후 로컬 문서 전용 후속은 **NOT_FULL_GATED / NOT_PUBLISHED**다.
+
+21:55KST 오너 지시의 예외는 (a) 다른45단계 전부 PASS, (b) 각 zoom의 평가 창에서50ms 초과 최대2프레임 및 최대60ms 이하, (c) 완전·유효한 영수증과 캡처 오류0을 모두 만족해야 한다. 이번40단계 실패로 (a)가 성립하지 않아 **NO WAIVER**다. 수정·재실행·게시·이슈 폐쇄 없이 중단했다. 목표4시간/하드5시간, 보수적 마감2026-10-29 02:52:54KST(17:52:54UTC)를 사용했으며 deadline 강제 종료가 아니다. [오너 지시 초안](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/D21-owner-note-draft.md) · [실행 예산](/Users/rexxa/work/mux21-data/resume-20261028/continuation-2155/plan.json).
+
+닫은 이슈 없음. ISS030/#515, ISS343/#638, ISS344/#655, ISS345/#656, ISS346/#657, ISS347/#658 모두 OPEN이다. 원장347행/fixed203/open111/deferred31/won't fix2 유지; 게시·폐쇄 링크를 만들지 않는다.
+
+이하 이전 기록은 당시 이력이다.
+
 - 2026-10-28 — M-UX2.1 D20: e47 전체45/46, 유효한 step41 50.018ms 실패 보존. 동일 topbar 테마 무효화 제거20/20 및 재캡처 후 새 전체 게이트 대기; 미게시, #515/#658 OPEN.
 
 - 2026-10-28 — P7 최종 게시 확인 — cb162f3c: **M-CORE P7 수용·게시 완료:** [cb162f3c638ab9569dd7127e5dee7d38c5d3927f](https://github.com/hyunlord/new-world/commit/cb162f3c638ab9569dd7127e5dee7d38c5d3927f)에 전체45/45 exit0 및 terminal0이 귀속된다. v8/wip·v8/main·v8/core-review 원격 SHA를 journal에서 확인했다. 측정 런타임은 `826a7ecd9e38ca3fc1fff253baa0933aee593022`이며 문서/검증 도구 HEAD를 새 런타임으로 표시하지 않는다. side64 평균/p99 raw FAIL만 P7 JUSTIFIED, 다른 standing/C3 PASS다. 이 문서는 게시 후 docs-only 후속이며 자체 전체 게이트·새 런타임 빌드·후속 문서 SHA의 게시를 주장하지 않는다. 다음 단계는 M6 신석기다.
