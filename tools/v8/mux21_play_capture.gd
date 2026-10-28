@@ -31,6 +31,7 @@ func _hashes() -> Dictionary:
 	var result: Dictionary = {}
 	result["res://assets/ui/chronicle_feed.json"] = FileAccess.get_sha256("res://assets/ui/chronicle_feed.json")
 	result["res://scripts/ui/mux/mux_hud.gd"] = FileAccess.get_sha256("res://scripts/ui/mux/mux_hud.gd")
+	result["res://scripts/ui/mux/legacy_layout.gd"] = FileAccess.get_sha256("res://scripts/ui/mux/legacy_layout.gd")
 	for path: String in [get_script().resource_path, "res://tools/v8/mux2_text_capture.gd", "res://scripts/ui/panels/agent_inspector_panel.gd", "res://scripts/ui/panels/causal_panel.gd", "res://scripts/ui/panels/chronicle_panel.gd", "res://sim_bridge.gdextension", "res://rust/target/debug/libsim_bridge.dylib", "res://rust/target/release/libsim_bridge.dylib"]:
 		result[path] = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "ABSENT"
 	return result
@@ -263,12 +264,30 @@ func _fit_control(control: Control, label: String) -> void:
 func _shot(name: String, extra: Dictionary) -> void:
 	var start: int = inventory.size()
 	await capture(name)
+	_check_story_inspector_separation(name)
 	for index: int in range(start, inventory.size()):
 		var text: String = str(inventory[index].get("raw", ""))
 		check("localized " + str(inventory[index].get("path", "")), not text.contains("MIND_") and not text.contains("UI_UNKNOWN"))
 	var row: Dictionary = extra.duplicate(true)
 	row.merge({"name": name, "png": out.path_join(name + ".png"), "sha256": FileAccess.get_sha256(out.path_join(name + ".png")), "tick": _tick(), "viewport": str(root.size)})
 	evidence["shots"].append(row)
+
+func _check_story_inspector_separation(shot: String) -> void:
+	if not inspector.is_visible_in_tree():
+		return
+	var column: Control = main.get_node("UI/StoryBanner/Column") as Control
+	var inspector_rect: Rect2 = inspector.get_global_rect()
+	for child: Node in column.get_children():
+		if not child is Control or not (child as Control).is_visible_in_tree():
+			continue
+		var control: Control = child as Control
+		var rect: Rect2 = control.get_global_rect()
+		if not rect.has_area():
+			continue
+		var separated: bool = not rect.intersects(inspector_rect)
+		check(shot + " story clear of inspector " + str(control.name), separated)
+		check(shot + " story inside viewport " + str(control.name), root.get_visible_rect().encloses(rect))
+		evidence.get_or_add("story_inspector_separation", []).append({"shot": shot, "control": str(control.get_path()), "rect": str(rect), "inspector_rect": str(inspector_rect), "separated": separated})
 
 func _scenario(name: String, row: Dictionary) -> void:
 	for factor: float in [1.0, 1.25]:
@@ -424,3 +443,7 @@ func _defence(row: Dictionary, factor: float) -> void:
 	_fit_control(label, "defence toast")
 	await _shot("defence-%s" % factor, {"scale": factor, "event": actual, "drafted": drafted, "selected_bits": selected, "marks": marks, "drawn_rect": str(layer.call("drawn_rect", selected)), "steward": SimReads.read(world, "get_steward"), "toast": label.text, "ring_pixel_verdict": "PENDING_REVIEW"})
 	check("toast survived capture settling", toast.visible and label.text.replace("\u2060", "") == text)
+	inspector.call("display_agent", detail)
+	await frames(5)
+	await _shot("defence-inspector-%s" % factor, {"scale": factor, "selected_bits": selected, "drafted": drafted})
+	inspector.call("close")

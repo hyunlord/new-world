@@ -153,9 +153,15 @@ func _layout_story(available: Rect2) -> void:
 		return
 	var natural: Vector2 = column.get_combined_minimum_size()
 	column.size = natural
-	var effective: float = fit_scale(natural, available.size, _factor)
+	var region: Rect2 = available
+	var inspector: Dictionary = _report.get("AgentInspectorPanel", {})
+	if bool(inspector.get("visible", false)):
+		var inspector_rect: Rect2 = inspector["rect"]
+		# Keep warnings and the drafted roster clear of the visible inspector at every UI scale.
+		region.size.x = maxf(1.0, minf(region.end.x, inspector_rect.position.x - GAP) - region.position.x)
+	var effective: float = fit_scale(natural, region.size, _factor)
 	var desired: Vector2 = Vector2(available.get_center().x - natural.x * effective * 0.5, available.position.y)
-	_place(column, Rect2(Vector2.ZERO, natural), desired, available, effective, "StoryBanner")
+	_place(column, Rect2(Vector2.ZERO, natural), desired, region, effective, "StoryBanner")
 
 
 func _place(control: Control, bounds: Rect2, desired: Vector2, available: Rect2, effective: float, key: String) -> void:

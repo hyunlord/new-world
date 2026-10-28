@@ -167,10 +167,6 @@ def story_binding(mind, base, mind_binary_sha, base_binary_sha, measured_head, p
         raise ValueError('story BASE instrument does not represent nominated BASE')
 
 def performance_gate(receipt, exit_code):
-    if __import__('os').environ.get('CORE_UI_CONFIG'):
-        import core_ui_successor
-        core_ui_successor.performance(root, receipt, exit_code, output.parent)
-        return []
     # CORE §0 retains measurement and reporting even when its two ratio bars miss.
     report_only = {'N1000 mind/old decision>0.5', 'N1000 tick ratio exceeds accepted arithmetic bar'}
     failures = receipt['failures']
@@ -211,7 +207,12 @@ else:
          '--output', output / 'performance.json'], 'performance', accepted=(0, 1))
 if freeze.digest(output / 'performance.json') != freeze.digest(perf_receipt):
     raise SystemExit('fresh performance verification differs from pinned receipt')
-misses = performance_gate(freeze.load(output / 'performance.json'), perf_exit)
+if __import__('os').environ.get('CORE_UI_CONFIG'):
+    import core_ui_successor
+    core_ui_successor.performance(root, freeze.load(output / 'performance.json'), perf_exit, output.parent)
+    misses = []
+else:
+    misses = performance_gate(freeze.load(output / 'performance.json'), perf_exit)
 justified = [item for item in misses if __import__('os').environ.get('CORE_P7_RUN') and item.startswith('n200_side64/')]
 reported = [item for item in misses if item not in justified]
 if justified:

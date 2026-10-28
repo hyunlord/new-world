@@ -129,7 +129,9 @@ step 9 smoke bash tools/v8/smoke.sh "$LOG/smoke"
 step 10 identity bash tools/v8/identity.sh "$BASE_DATA" "$LOG/identity"
 step 11 determinism bash -c 'cd rust && cargo build --release -p sim-test --bin worldsim_probe && ./target/release/worldsim_probe --scene baseline --seeds 0..4 --days 120 --workers 4 --check-determinism --out "$0/determinism_probe" && echo "determinism checked on seeds 0..4"' "$LOG"
 grep -q 'DETERMINISM PASS' "$LOG/determinism.log" || { echo "   determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
-if [[ -n "${CORE_P7_RUN:-}" ]]; then
+if [[ -n "${CORE_UI_CONFIG:-}" ]]; then
+    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && CORE_P7_RUN=1 CORE_P7_DEADLINE_EPOCH="${CORE_UI_DEADLINE_EPOCH:?}" bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
+elif [[ -n "${CORE_P7_RUN:-}" ]]; then
     step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && echo "P7 report-only natural timings; no unpaired historical comparison; paired acceptance is step25/45"' "$LOG"
 else
     step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
@@ -167,7 +169,9 @@ grep -E 'admission|ceiling|rss outer|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^
 # M3 (goal 3.4): the economy soak fixture, every pass from now on.
 step 26 soak bash tools/v8/soak.sh "$LOG/soak" rust/target/release/worldsim_probe
 grep -E '^SOAK' "$LOG/soak.log" | sed 's/^/   /' >> "$SUMMARY"
-if [[ -n "${CORE_P7_RUN:-}" ]]; then
+if [[ -n "${CORE_UI_CONFIG:-}" ]]; then
+    step 27 nav_bench env CORE_P7_DEADLINE_EPOCH="${CORE_UI_DEADLINE_EPOCH:?}" python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
+elif [[ -n "${CORE_P7_RUN:-}" ]]; then
     step 27 nav_bench python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
 else
     step 27 nav_bench rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
