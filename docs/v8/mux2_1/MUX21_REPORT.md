@@ -51,7 +51,7 @@ M-UX2 GPU 낮/밤140px 대비, 선택·소집 테두리 검사는 **미실행**�
 ### 닫은 GitHub 이슈 / 새로 연 이슈
 
 - 닫은 이슈: 없음.
-- 신규 [#638](https://github.com/hyunlord/new-world/issues/638), 원장ISS333: **OPEN**. 수정·게시되지 않았으므로 닫지 않았다.
+- 신규 [#638](https://github.com/hyunlord/new-world/issues/638), 원장ISS-343: **OPEN**. 수정·게시되지 않았으므로 닫지 않았다.
 
 ### 변경된 파일 목록 (커밋별)
 
