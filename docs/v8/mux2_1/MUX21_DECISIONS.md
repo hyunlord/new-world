@@ -117,3 +117,8 @@ At02:45UTC the next performance diagnostic was rejected with load11.32/9.36/8.23
 
 ## D14: Owner-authorized UI successor gate adapter
 The published M-CORE gate pins an earlier tool inventory/BASE and has a pass-specific side64 adjudication. Configuration alone cannot validate this UI successor. The owner explicitly approved adapting the gate in this thread. Preserve the accepted historical failures and provenance, require unchanged simulation source, and perform a fresh published381-to-candidate comparison without extending M-CORE's exception. ADR0050 and the adapter record the exact contract. This approval does not waive any M-UX2.1 FPS, capture, visibility or publication bar.
+
+## D15: Stable placement anchors, current presentation
+The MaxRects moving-crowd diagnostic ended at load10.38 and is invalid as an acceptance result. It still motivated eliminating interpolation-driven cache misses. ADR0051 uses simulation tile targets only for placement; actual interpolated person positions remain leader anchors, and current canvas transforms remain authoritative for picking. Integer lattice bounds avoid unnecessary vector boundary trimming. The windowed oracle now passes244 assertions, including fixed-target interpolation and target-change invalidation.
+
+Native pointer motion caused a capture-only Why click to receive down/up without pressed and lose hover. Preserve those failed attempts, add signal/hover/focus evidence, and warp the actual pointer to the injected click location before dispatching input. This does not invoke the button signal or bypass the real UI input path. A headless profiling experiment awaited frame_post_draw, which dummy rendering does not emit; it was stopped without a timing result.

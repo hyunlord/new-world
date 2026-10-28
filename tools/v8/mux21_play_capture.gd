@@ -18,6 +18,13 @@ var evidence: Dictionary = {"complete": false, "visual_verdict": "PENDING_REVIEW
 var inputs: Dictionary = {}
 var ended: bool = false
 
+func click_point(point: Vector2) -> void:
+	# Keep native pointer motion consistent with the injected press/release pair.
+	# Otherwise an OS motion event can move hover away between those two frames.
+	root.warp_mouse(point)
+	await frames(3)
+	await super.click_point(point)
+
 func _hashes() -> Dictionary:
 	var result: Dictionary = {}
 	result["res://assets/ui/chronicle_feed.json"] = FileAccess.get_sha256("res://assets/ui/chronicle_feed.json")
@@ -262,7 +269,19 @@ func _scenario(name: String, row: Dictionary) -> void:
 		scroll.ensure_control_visible(why)
 		await frames(5)
 		_fit_control(why, "Why button")
+		var signals: Array[String] = []
+		var on_down: Callable = func() -> void: signals.append("down")
+		var on_up: Callable = func() -> void: signals.append("up")
+		var on_pressed: Callable = func() -> void: signals.append("pressed")
+		why.button_down.connect(on_down)
+		why.button_up.connect(on_up)
+		why.pressed.connect(on_pressed)
 		await click(why)
+		var hovered: Control = root.gui_get_hovered_control()
+		evidence.get_or_add("why_input", []).append({"scenario": suffix, "signals": signals, "button_rect": str(why.get_global_rect()), "hovered": str(hovered.get_path()) if hovered != null else "none", "window_focus": root.has_focus(), "popup_visible": causal.is_visible_in_tree(), "selected_bits": inspector.get("_selected_entity_bits")})
+		why.button_down.disconnect(on_down)
+		why.button_up.disconnect(on_up)
+		why.pressed.disconnect(on_pressed)
 		check("Why opened by real input", causal.is_visible_in_tree())
 		_fit_control(causal, "Why popup")
 		var candidates: Array = person["mind"].get("top3", [])

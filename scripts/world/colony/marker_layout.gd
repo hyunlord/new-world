@@ -299,6 +299,7 @@ static func place(points: PackedVector2Array, ids: PackedInt64Array, extent: flo
 	var size: Vector2 = Vector2(radius * 2.0 + glyph, radius * 2.0 + glyph)
 	var cell_size: float = maxf(size.x, size.y)
 	var limit: int = ceili(maxf(viewport.size.x, viewport.size.y) / cell_size)
+	var integral_lattice: bool = cell_size == floorf(cell_size) and offset == offset.round()
 	var regions: Array[Rect2] = []
 	if viewport.size.x >= size.x and viewport.size.y >= size.y:
 		regions.append(viewport)
@@ -310,18 +311,26 @@ static func place(points: PackedVector2Array, ids: PackedInt64Array, extent: flo
 			continue
 		var best_ring: int = limit + 1
 		var best: Vector2i = Vector2i.ZERO
+		var fast_lattice: bool = integral_lattice and anchor.abs().x < 1048576 and anchor.abs().y < 1048576 and viewport.size.x < 1048576 and viewport.size.y < 1048576
 		for region: Rect2 in regions:
-			# Expand by one cell, then trim with the same Vector2 arithmetic used to draw the rectangle.
-			var first: Vector2i = Vector2i(((region.position + offset - anchor) / cell_size).ceil()) - Vector2i.ONE
-			var last: Vector2i = Vector2i(((region.end - size + offset - anchor) / cell_size).floor()) + Vector2i.ONE
-			while first.x <= last.x and (anchor + Vector2(first) * cell_size - offset).x < region.position.x:
-				first.x += 1
-			while first.y <= last.y and (anchor + Vector2(first) * cell_size - offset).y < region.position.y:
-				first.y += 1
-			while last.x >= first.x and (anchor + Vector2(last) * cell_size - offset + size).x > region.end.x:
-				last.x -= 1
-			while last.y >= first.y and (anchor + Vector2(last) * cell_size - offset + size).y > region.end.y:
-				last.y -= 1
+			var first: Vector2i
+			var last: Vector2i
+			if fast_lattice:
+				# Integer marker coordinates are exact in float32 at ordinary viewport sizes.
+				first = Vector2i(ceili((region.position.x + offset.x - anchor.x) / cell_size), ceili((region.position.y + offset.y - anchor.y) / cell_size))
+				last = Vector2i(floori((region.end.x - size.x + offset.x - anchor.x) / cell_size), floori((region.end.y - size.y + offset.y - anchor.y) / cell_size))
+			else:
+				# Expand by one cell, then trim with the same Vector2 arithmetic used to draw the rectangle.
+				first = Vector2i(((region.position + offset - anchor) / cell_size).ceil()) - Vector2i.ONE
+				last = Vector2i(((region.end - size + offset - anchor) / cell_size).floor()) + Vector2i.ONE
+				while first.x <= last.x and (anchor + Vector2(first) * cell_size - offset).x < region.position.x:
+					first.x += 1
+				while first.y <= last.y and (anchor + Vector2(first) * cell_size - offset).y < region.position.y:
+					first.y += 1
+				while last.x >= first.x and (anchor + Vector2(last) * cell_size - offset + size).x > region.end.x:
+					last.x -= 1
+				while last.y >= first.y and (anchor + Vector2(last) * cell_size - offset + size).y > region.end.y:
+					last.y -= 1
 			if first.x > last.x or first.y > last.y:
 				continue
 			var ring: int = maxi(absi(clampi(0, first.x, last.x)), absi(clampi(0, first.y, last.y)))

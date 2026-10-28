@@ -795,12 +795,14 @@ func _refresh_markers() -> void:
 	var px: int = int(ArtData.param("lod.marker_fill_px", 14))
 	var glyphs: bool = absf(_zoom - float(ArtData.param("lod.glyph_zoom", 0.25))) < 0.01
 	var points: PackedVector2Array = PackedVector2Array()
+	var placement_points: PackedVector2Array = PackedVector2Array()
 	var colours: PackedColorArray = PackedColorArray()
 	var rings: PackedColorArray = PackedColorArray()
 	var ids: PackedInt32Array = PackedInt32Array()
 	var stable_ids: PackedInt64Array = PackedInt64Array()
 	var palette: Array = ArtData.param("lod.household_ring_rgb", [])
 	points.resize(_persons.size())
+	placement_points.resize(_persons.size())
 	colours.resize(_persons.size())
 	rings.resize(_persons.size())
 	ids.resize(_persons.size())
@@ -809,6 +811,7 @@ func _refresh_markers() -> void:
 	_ringed.clear()
 	for person: Person in _persons.values():
 		points[k] = person.position
+		placement_points[k] = person.to_pos + person.bed if person.activity == "sleep" else person.to_pos
 		colours[k] = person.top_colour
 		rings[k] = _ring_colour(int(_household_of.get(person.agent_id, -1)), palette)
 		ids[k] = GLYPH_OF.get(person.activity, -1)
@@ -816,7 +819,7 @@ func _refresh_markers() -> void:
 		if person.selected or person.drafted:
 			_ringed.append(person)
 		k += 1
-	_markers.show_markers(points, colours, ids, px, _zoom, glyphs, _rgba("lod.ring_rgba", INK), rings, ArtData.param("lod", {}), stable_ids)
+	_markers.show_markers(points, colours, ids, px, _zoom, glyphs, _rgba("lod.ring_rgba", INK), rings, ArtData.param("lod", {}), stable_ids, placement_points)
 	k = 0
 	for person: Person in _persons.values():
 		person.marker_position = _markers.point_at(k)

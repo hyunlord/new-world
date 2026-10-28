@@ -212,6 +212,34 @@ func _marker_integration() -> void:
 	_check("integration_glyph_identity_updates_on_hit", glyphs.instance_count == 1 and glyphs.get_instance_custom_data(0).r == 3.0)
 	var glyph_offset: Vector2 = Vector2(76, -64.8)
 	_check("integration_glyph_follows_current_person", glyphs.get_instance_transform_2d(0).origin.is_equal_approx(markers.point_at(0) + glyph_offset))
+	var targets: PackedVector2Array = points.duplicate()
+	for i: int in targets.size():
+		targets[i] += Vector2(64, 0)
+	markers.show_markers(points, colours, glyph_ids, 14, 0.25, true, Color.BLACK, rings, {}, ids, targets)
+	await RenderingServer.frame_post_draw
+	var target_position: Vector2 = markers.point_at(0)
+	var old_anchor: Vector2 = points[0]
+	calls = markers.layout_calls
+	hits = markers.layout_cache_hits
+	points[0] += Vector2(32, 0)
+	markers.show_markers(points, colours, glyph_ids, 14, 0.25, true, Color.BLACK, rings, {}, ids, targets)
+	await RenderingServer.frame_post_draw
+	_check("integration_target_cache_ignores_interpolation", markers.layout_calls == calls and markers.layout_cache_hits == hits + 1)
+	_check("integration_target_pick_position_stable", markers.point_at(0) == target_position and discs.get_instance_transform_2d(0).origin == target_position)
+	var anchors: PackedVector2Array = markers.get("_anchors")
+	_check("integration_target_leader_tracks_interpolation", anchors[0] == points[0] and anchors[0] != old_anchor and anchors[0] != target_position)
+	screen.clear()
+	for target: Vector2 in targets:
+		screen.append(canvas * target)
+	expected = place(screen, ids, 24, true, markers.get_viewport_rect(), blocked, 4)
+	_check("integration_target_placement_matches_oracle", markers.point_at(0) == canvas.affine_inverse() * expected[0])
+	targets[0] += Vector2(64, 0)
+	markers.show_markers(points, colours, glyph_ids, 14, 0.25, true, Color.BLACK, rings, {}, ids, targets)
+	await RenderingServer.frame_post_draw
+	_check("integration_target_change_invalidates", markers.layout_calls == calls + 1)
+	screen[0] = canvas * targets[0]
+	expected = place(screen, ids, 24, true, markers.get_viewport_rect(), blocked, 4)
+	_check("integration_target_change_updates_picking", markers.point_at(0) == canvas.affine_inverse() * expected[0] and discs.get_instance_transform_2d(0).origin == markers.point_at(0))
 	viewport.free()
 
 # The following three functions are verbatim from the pinned reference, with no optimization.

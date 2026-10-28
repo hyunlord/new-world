@@ -146,7 +146,8 @@ func _glyph_atlas() -> Texture2D:
 
 ## Show one disc per point with `marker_px` filled screen pixels plus the configured ring bands.
 ## Household alpha0 uses neutral light ink. Optional glyph IDs refer to GLYPHS; −1 means none.
-func show_markers(points: PackedVector2Array, colours: PackedColorArray, glyph_ids: PackedInt32Array, marker_px: int, zoom: float, glyphs: bool, ink: Color, rings: PackedColorArray = PackedColorArray(), style: Dictionary = {}, stable_ids: PackedInt64Array = PackedInt64Array()) -> void:
+## Optional tile-target placement keeps discs stable between target changes; leaders follow current interpolated points.
+func show_markers(points: PackedVector2Array, colours: PackedColorArray, glyph_ids: PackedInt32Array, marker_px: int, zoom: float, glyphs: bool, ink: Color, rings: PackedColorArray = PackedColorArray(), style: Dictionary = {}, stable_ids: PackedInt64Array = PackedInt64Array(), placement_points: PackedVector2Array = PackedVector2Array()) -> void:
 	visible = true
 	var fill_px: int = clampi(marker_px, 2, 64)
 	var bright_px: int = clampi(int(style.get("marker_light_ring_px", 2)), 1, 8)
@@ -165,7 +166,8 @@ func show_markers(points: PackedVector2Array, colours: PackedColorArray, glyph_i
 	var n: int = mini(points.size(), colours.size())
 	var screen: PackedVector2Array = PackedVector2Array()
 	var canvas: Transform2D = get_global_transform_with_canvas()
-	for point: Vector2 in points:
+	var layout_points: PackedVector2Array = placement_points if placement_points.size() == points.size() else points
+	for point: Vector2 in layout_points:
 		screen.append(canvas * point)
 	if stable_ids.size() != points.size():
 		stable_ids.resize(points.size())
