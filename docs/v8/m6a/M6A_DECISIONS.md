@@ -740,3 +740,53 @@ Two additional current-writer integration tests expected format13 despite callin
 ### P8 pre-commit identity (2026-10-29)
 
 The supervised identity8 run completed with exit 0: 228,748 shared summary values, zero differences or one-sided paths; 64 Chronicle files/19,683 entries equal apart from git_sha; 64 raw files equal under the existing documented normalization; determinism seeds 0–3 PASS. Source was the staged P8 tree atop P7, not a clean-head final gate. Evidence: `/Users/rexxa/work/m6a-data/20261029/p8-identity8-launch/child.log` and its original terminal receipt. P8 runtime performance, actual UI capture, calibration4, held-out and the complete final gate remain pending.
+
+
+### P9 capture wording and evidence boundaries (2026-10-30)
+
+P8 was committed as `e2ba280f345202b7f334b213ea2c13e2de828c46`.
+`candidate-p8-binaries/build-receipt.json` binds its authentic release build
+(exit0,49.22s). Identity8 and full documentation checks passed; identity8 remains
+explicitly a pre-commit staged-source run, not a clean final-head full gate.
+
+The ordinary-command hunger fixture reaches tick10031/day7. P8's focused hunger
+receipt completed with zero metadata failures, but direct inspection of32 PNGs
+was REVISE: an unconditional historical-unknown statement contradicted the actual
+personal hauling-disabled receipt. Preserve `p8-ui-hunger-qa-b.md` and its images.
+P9 qualifies the limitation of the death-time observation itself, without erasing
+the actual historical reason or merging personal history with colony-wide flow.
+Direct review of all32 recaptured KO/EN images at scales1.0/1.25 is PASS for this
+focused panel (`p9-ui-hunger-qa-b.md`); metadata alone is not visual acceptance.
+
+Keep the full-capture failures separate: P8 failed four obsolete expectations that
+kind53 should appear in the owner feed, plus six cases missing at its early stop.
+P9 full1 ran30days and captured13/15 cases, still missing hunger Why and pot. Its dried
+image obscured by a modal is rejected as visual evidence even if a screenshot
+file exists. The original rejection remains historical evidence; the completed full2 follow-up below supersedes the pending recapture action, not that failure classification.
+
+These are wording/capture follow-ups, not changes to authored policy or acceptance
+bars. P7's33/33 valid performance pairs remain PASS and calibration3/4 remains
+consumed. P9 performance, calibration4, frozen held-out and full gate are NOT_RUN.
+There is no P9 pre-commit SHA or publication claim. Earlier failures and UNKNOWN
+captures retain their original historical classification.
+
+### P9 native mind-label regression
+
+The first genuine native run observed both hunger and threat transitions and failed exactly two KO/EN checks for `food_novel_available`. Its emitted `MIND_FACT_FOOD_NOVEL_AVAILABLE` key was absent. Auditing all six new providers also found the cooked and cooked-novel availability labels missing in both locales. Add all three labels; novelty explicitly means a food group not eaten in the last three calendar days, not first-ever item discovery. Preserve `p9-core-ui-native-1.log` and its captures. The identical native input procedure is rerun; do not replace it with the passing headless locale check. No provider, fact value, target policy or authored decision changed.
+
+Native UI rerun2 completed exit0 with both hunger and threat transitions observed and zero failed checks. Read-only review of its actual18 PNGs passed the scoped person/Why/visible-Chronicle review, with no fact-key leak. Existing transient toasts can retain their old language after a locale switch; that incidental limitation is not presented as fixed. The focused hunger review independently inspected32 PNGs; its KO1.25 before/after image diff has equal1920×1080 dimensions, intact alpha and11,690 changed pixels, used only to locate the wording change rather than as a pass threshold.
+
+For food captures the harness now presses the real migrant Later button before observation/each screenshot, asserts the panel disappears, and records unchanged tick and actual wave state. It never accepts or declines migrants, hides the panel directly, or injects a decision. The full2 dismissals at tick16140/wave1 and tick31980/wave2 preserve both tick and wave. Terminal evidence and independent QA-A/QA-B now confirm the dried-chain images are unobscured; full2 still has the two missing natural cases recorded below.
+
+Full capture2 completed30days with exactly the two missing natural cases (hunger Why and pot), retaining exit1/complete=false. All13 observed cases and every migrant Later no-simulation-change guard passed; never relabel that run as a full-suite PASS. Separate final-source hunger2 completed with zero failures using the disclosed ordinary-command P8 save; focused pot1 completed with zero failures using the authenticated earlier physical format13 save through the current decoder. Pot UI/migration evidence is not a new natural cohort or evidence of a new pot trade in P9. The current12-shot contact sheet comes only from these final-source captures and labels plant art as placeholders. Independent final image review and the final acceptance gates remain distinct.
+
+
+### P9 final capture review closure and identity9 (2026-10-30)
+
+`p9-ui-full-2/evidence.json` is terminal exit1, `complete=false`, failures2: natural hunger Why and pot-food were not observed in30days. All46 PNGs were reviewed; `p9-ui-full-2-qa-a.md` and `p9-ui-full-2-qa-b.md` pass only the13 observed cases. Do not rename this receipt a natural full-suite PASS. Placeholder plant art remains placeholder art.
+
+`p9-ui-hunger-2/evidence.json` has32 PNGs, focused complete=true and zero failures; direct QA-B is `p9-ui-hunger-2-qa-b.md`. `p9-ui-pot-1/evidence.json` has3 PNGs, focused complete=true and zero failures. The pot fixture is an authenticated historical format13 physical save: current UI/decoder evidence only, not a new natural P9 cohort or pot-trade result. `p9-core-ui-native-2/evidence.json` has18 PNGs and zero failures; its independent visual review remains scoped to the actual person/Why/Chronicle surfaces.
+
+Product `res://` input hashes agree across the composite captures. Fixture absolute paths legitimately differ and must remain explicit provenance rather than being normalized into identical fixtures. The completed [composite receipt](</Users/rexxa/work/m6a-data/20261029/p9-ui-composite-coverage.json>) verifies exactly27 matching product `res://` hashes against live source,81 PNG hashes and the15-case union. The first external whole-input-map comparison failed because fixture absolute paths differ; raw receipts remain unchanged. This scoped composite does not clear full2's two missing-case failures.
+
+`/Users/rexxa/work/m6a-data/20261029/p9-identity9-launch/child.log` completed all four checks:228,748 shared summary values with zero differing/one-sided paths;64 Chronicle files/19,683 entries equal apart from git_sha;64 raw sample files equal under the existing declared normalization; determinism seeds0–3 PASS. This tested the uncommitted candidate and is not a clean final-commit gate. Owner play, P9 performance, calibration4, held-out and the final full gate remain NOT_RUN. No acceptance or publication is declared.

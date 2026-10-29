@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1240,
+    "active_key_count": 1243,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1240,
+    "key_count": 1243,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -562,7 +562,7 @@
     "M6A_HUNGER_STAGE_3": "No food-yield plants existed at that time",
     "M6A_HUNGER_STAGE_4": "Food plants existed, but none were ripe at that time",
     "M6A_HUNGER_STAGE_5": "Ripe plants existed, but none were reachable from the death position",
-    "M6A_HUNGER_STAGE_6": "Reachable ripe plants existed; the historical reason they were not harvested is unknown",
+    "M6A_HUNGER_STAGE_6": "Ripe plants were reachable at death; this observation alone cannot explain earlier missed harvests",
     "M6A_JOB_HARVEST": "Harvesting",
     "M6A_MEALS": "Recent meals: {meals}\nFood groups in 3 days: {groups}",
     "M6A_MOD_MONOTONOUS": "Ate the same food",
@@ -638,6 +638,9 @@
     "MIND_FACT_FLEEING": "In danger",
     "MIND_FACT_FOOD_AVAILABLE": "Food is available",
     "MIND_FACT_FOOD_CARRY_LOADED": "Carrying food",
+    "MIND_FACT_FOOD_COOKED_AVAILABLE": "Cooked food is available",
+    "MIND_FACT_FOOD_COOKED_NOVEL_AVAILABLE": "Cooked food from a group not eaten in the last 3 days is available",
+    "MIND_FACT_FOOD_NOVEL_AVAILABLE": "Food from a group not eaten in the last 3 days is available",
     "MIND_FACT_FORAGE_AVAILABLE": "Food can be found nearby",
     "MIND_FACT_FORAGE_WINDOW": "Time to forage",
     "MIND_FACT_GATHER_AVAILABLE": "Food is ready to gather",

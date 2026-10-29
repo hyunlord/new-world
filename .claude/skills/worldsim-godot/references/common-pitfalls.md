@@ -121,3 +121,14 @@ strip arbitrary Unicode/whitespace, or weaken required reason/scope/UNKNOWN cont
 Text normalization is not visual proof: real scaled captures still verify wrapping,
 scroll reachability and clipping. Sources: `tools/v8/test_locale_trf.gd`,
 `tools/v8/test_core_mind_ui.gd`, M6A_DECISIONS P8 verification.
+
+## Capture visibility and recorded fact labels
+
+A visible node with fitting text can still be obscured by an unrelated modal.
+Use the real dismiss button, assert its disappearance and unchanged simulation
+state, and inspect the resulting pixels. Preserve obscured images as rejected.
+Choose owner-feed capture events through the panel's data-driven visibility rule;
+hidden causal detail still belongs in Why. New mind facts emit uppercase
+`MIND_FACT_` keys even when their node labels already exist: audit both locales
+and exercise actual recorded choices. Sources: M6A_DECISIONS P9 native/capture
+regressions; `tools/v8/m6a_ui_capture.gd`, `tools/v8/test_core_mind_ui.gd`.

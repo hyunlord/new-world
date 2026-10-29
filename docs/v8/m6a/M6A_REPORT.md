@@ -1,6 +1,6 @@
 # 미완료 / 검증 중 — M6a 보고서 초안
 
-이 문서는 목표 §4의 보고서 양식을 미리 채운 **진행 중 초안**이다. 아래 양식의 “구현 완료 보고” 제목은 완료 선언이 아니다. 보정 **3/4회 완료**, P7 유효 성능 **33/33쌍 PASS**, P8 구현 집중 검증 완료, 최종 수용 검증 대기이며 P8 성능·보정4·held-out·전체 게이트·게시 **NOT_RUN**. 초기 제품은 `dba478e54ea2b6b21aace3c32ae2ab64de10235b`, 2회차 제품 커밋은 `de25dd74ed894365b4a59318fa4318056cb71b6d`, 측정된 p5는 `9936a8fd26be15d171afccf4000c3ebf113326dc`, 성능과 보정3을 마친 P7은 `5857cdc4f89c24d4a4d5f2ad2f55703c937572c3`다. P4·P5·P6 성능 FAIL은 그대로 보존한다. 최종 후보 커밋 및 게시 SHA는 미확정이다. BASE는 `5b0c88812374b87e7854cc9203f144ad0ccd9009`이다. 오너 플레이테스트는 수행되지 않았다.
+이 문서는 목표 §4의 보고서 양식을 미리 채운 **진행 중 초안**이다. 아래 양식의 “구현 완료 보고” 제목은 완료 선언이 아니다. 보정 **3/4회 완료**, P7 유효 성능 **33/33쌍 PASS**, P8 커밋·집중 검증 완료, P9 관측 화면 13개와 별도 기아·항아리 집중 화면 검토 완료, 자연 전체 촬영은 13/15 미완료이며 최종 수용 검증 대기이며 P9 성능·보정4·held-out·전체 게이트·게시 **NOT_RUN**. 초기 제품은 `dba478e54ea2b6b21aace3c32ae2ab64de10235b`, 2회차 제품 커밋은 `de25dd74ed894365b4a59318fa4318056cb71b6d`, 측정된 p5는 `9936a8fd26be15d171afccf4000c3ebf113326dc`, 성능과 보정3을 마친 P7은 `5857cdc4f89c24d4a4d5f2ad2f55703c937572c3`다. P4·P5·P6 성능 FAIL은 그대로 보존한다. 최종 후보 커밋 및 게시 SHA는 미확정이다. BASE는 `5b0c88812374b87e7854cc9203f144ad0ccd9009`이다. 오너 플레이테스트는 수행되지 않았다.
 
 ## 구현 완료 보고 — M6a
 
@@ -123,6 +123,30 @@ P7 [성능 receipt](</Users/rexxa/work/m6a-data/20261029/perf-p7-session-1/recei
 |n200_side64|1.051704 PASS|0.968085 PASS|
 |n1000_wolves|1.062197 PASS|1.037320 PASS|
 
+### P9 실제 화면 후속 기록 (2026-10-30)
+
+P8 `e2ba280f345202b7f334b213ea2c13e2de828c46`의 [실제 빌드 receipt](</Users/rexxa/work/m6a-data/20261029/candidate-p8-binaries/build-receipt.json>)는 exit0·49.22초다. 기준선 동일성8차와 전체 문서 검증도 PASS다. 동일성8차는 커밋 전 staged 소스 검증이며 최종 clean-head 전체 게이트로 바꾸어 표현하지 않는다.
+
+일반 명령으로 만든 실제 기아 fixture는 tick10031/day7에 도달했다. P8 기아 촬영 metadata는 PASS였으나 KO/EN ×1.0/1.25의 32개 PNG 직접 검토는 [REVISE](</Users/rexxa/work/m6a-data/20261029/p8-ui-hunger-qa-b.md>)였다. 당시 “과거 이유를 알 수 없다”는 문구가 실제 운반 비활성 개인 기록과 충돌했다. P9는 사망 당시 관측만으로 과거 이유를 판단할 수 없다고 한정했다. [32개 재촬영 직접 검토](</Users/rexxa/work/m6a-data/20261029/p9-ui-hunger-qa-b.md>)는 **PASS**이며 한글·영문 줄바꿈, 개인 기록과 마을 전체 흐름 구분을 확인했다. 이 집중 검토는 전체 UI 수용이 아니다.
+
+|전체 촬영|보존할 결과|
+|---|---|
+|P8 full|FAIL: owner feed에서 숨겨야 할 kind53에 대한 이전 기대4개와 조기 종료 시 미확보 사례6개|
+|P9 full1,30일 (과거)|FAIL:13/15사례 확보, 기아 왜?·항아리 미확보|
+|P9 full1 건조 음식 이미지 (과거)|모달에 가려져 수용 거부; 원래 실패 판정 보존|
+
+후속 촬영·직접 검토 결과는 다음과 같다. 서로 다른 실행의 합성 증거이며 자연 전체 촬영 PASS로 바꾸지 않는다.
+
+|후속 증거|결과와 범위|
+|---|---|
+|[full2 receipt](</Users/rexxa/work/m6a-data/20261029/p9-ui-full-2/evidence.json>)|30일, 46장, 관측 13/15; `complete=false`, `failures=2` (기아 왜?·항아리 미관측). 관측 항목은 [QA-A](</Users/rexxa/work/m6a-data/20261029/p9-ui-full-2-qa-a.md>)·[QA-B](</Users/rexxa/work/m6a-data/20261029/p9-ui-full-2-qa-b.md>) 범위 한정 PASS|
+|[hunger2 receipt](</Users/rexxa/work/m6a-data/20261029/p9-ui-hunger-2/evidence.json>)|32장, 집중 범위 `complete=true`, 실패0; [QA-B](</Users/rexxa/work/m6a-data/20261029/p9-ui-hunger-2-qa-b.md>) PASS. 공개된 일반 명령으로 만든 실제 저장 사용|
+|[pot1 receipt](</Users/rexxa/work/m6a-data/20261029/p9-ui-pot-1/evidence.json>)|3장, 집중 범위 `complete=true`, 실패0. 기존 실제 format13 fixture의 현재 디코더·UI 증거이며 P9 자연 항아리 획득이나 보정 증거 아님|
+|[native2 receipt](</Users/rexxa/work/m6a-data/20261029/p9-core-ui-native-2/evidence.json>)|18장, 실패0; [직접 검토](</Users/rexxa/work/m6a-data/20261029/p9-core-ui-native-2-visual-review.md>)에서 사람·왜?·연대기 가독성과 fact key 미노출 확인|
+|[기준선 동일성9 로그](</Users/rexxa/work/m6a-data/20261029/p9-identity9-launch/child.log>)|summary·chronicle·raw samples·determinism 4개 PASS. 미커밋 후보 검증이며 clean final-commit 전체 게이트 아님|
+
+full2는 실제 ‘나중에’ 버튼 입력으로 모달을 닫았다. tick16140/wave1 및 tick31980/wave2가 유지됐고, 건조 음식 설명은 두 배율에서 가림 없이 읽힌다. 이전 full1 가림 실패는 소급 변경하지 않는다. 합성 대상의 제품 `res://` 입력 해시는 동일하며 실제 fixture의 절대 경로 차이는 정당한 입력 출처 차이로 기록한다. [합성 receipt](</Users/rexxa/work/m6a-data/20261029/p9-ui-composite-coverage.json>)는 제품 `res://` 27개 해시의 실행 간 일치와 현재 소스 일치, PNG 81개 해시, 15개 사례의 합집합을 확인한다. 최초 전체 입력 맵 비교는 fixture 절대 경로 차이로 실패했으며 원본 receipt는 그대로 보존한다. 이는 full2 자체의 실패2를 해제하지 않는다. 미래 P9 커밋 SHA를 추정하지 않는다. P7 유효 성능33쌍 PASS와 보정3/4회 사용 기록은 유지한다. P9 성능·보정4·held-out·전체 게이트는 **NOT_RUN**이며 정책·수용 기준을 바꾸지 않았다.
+
 ### 이야기 수확량
 
 BASE/M6a `story-yield` 비교 NOT_RUN. 첫 조리·건조·겨울 준비·겨울 생존·기아 원인 연쇄의 기록 경로 구현과 실제 이야기 수확량 비교는 별개다.
@@ -143,18 +167,18 @@ BASE/M6a `story-yield` 비교 NOT_RUN. 첫 조리·건조·겨울 준비·겨울
 |`9936a8fd2` p5 최적화|음식 존재 조회·작업 필터 순서·정적 mind 정책 원문 차용; 유효 성능 측정 FAIL|
 |p6 e156ae29|운반 탐색의 오래된 후보 관측 초기화; 유효 성능33쌍 중 side64 평균 FAIL|
 |`5857cdc4f` P7|조건식 판정이 같은 수치 변화의 continuation 재사용; 유효 성능 33쌍 PASS·보정3 정확 비교 PASS|
-|P8 (이 커밋)|실제 음식 획득 실패·흐름·최초 섭취/저장 부모 사건, 형식14·정확13 이관, 왜? 표시; 최종 검증 대기|
+|`e2ba280f3` P8|실제 음식 획득 실패·흐름·최초 섭취/저장 부모 사건, 형식14·정확13 이관, 왜? 표시; 최종 검증 대기|
 
 게시 보고에서는 최종 커밋별 명시적 파일 목록으로 교체해야 한다. 초기 제품 커밋은 게시 또는 수용 완료를 뜻하지 않는다.
 
 ### 확인된 제한사항
 
-이전 촬영의 과거 미수확 이유 UNKNOWN은 당시 기록 부재를 정확히 표시한 증거로 보존한다. P8은 실제 판단·작업 시점의 획득 실패와 시각, 명시적인 콜로니 전체 흐름 구간, 실제 최초 조리 음식 섭취·보존 음식 저장의 부모 사건을 기록하도록 구현했다. 현재 우선순위로 과거 원인을 추정하지 않으며 작성된 정책은 바꾸지 않았다. [일반 명령 기아 검증](</Users/rexxa/work/m6a-data/20261029/p8-hunger-admission.log>)은 1/1 PASS로 실제 WorkDisabled 조상 사건을 확인했다. [시스템 검증](</Users/rexxa/work/m6a-data/20261029/p8-integration-green-1.log>)은 497 PASS·0 FAIL·1 ignored, [원본 형식13 저장 검증](</Users/rexxa/work/m6a-data/20261029/p8-original13-save-test-3.log>)은 1/1 PASS다. 이는 미커밋 소스 집중 검증이며 새 P8 실제 화면 촬영은 아직 대기 중이다.
+이전 촬영의 과거 미수확 이유 UNKNOWN은 당시 기록 부재를 정확히 표시한 증거로 보존한다. P8은 실제 판단·작업 시점의 획득 실패와 시각, 명시적인 콜로니 전체 흐름 구간, 실제 최초 조리 음식 섭취·보존 음식 저장의 부모 사건을 기록하도록 구현했다. 현재 우선순위로 과거 원인을 추정하지 않으며 작성된 정책은 바꾸지 않았다. [일반 명령 기아 검증](</Users/rexxa/work/m6a-data/20261029/p8-hunger-admission.log>)은 1/1 PASS로 실제 WorkDisabled 조상 사건을 확인했다. [시스템 검증](</Users/rexxa/work/m6a-data/20261029/p8-integration-green-1.log>)은 497 PASS·0 FAIL·1 ignored, [원본 형식13 저장 검증](</Users/rexxa/work/m6a-data/20261029/p8-original13-save-test-3.log>)은 1/1 PASS다. 이는 당시 미커밋 소스 집중 검증이다. 이후 P8은 `e2ba280f345202b7f334b213ea2c13e2de828c46`로 커밋했으며 실제 촬영의 후속 결과는 아래에 별도로 기록한다.
 
 P8의 FoodOperation(53) 추가는 연대기 번호·인과 참조·이야기 수확량, 저장 근거와 전체 FoodState fingerprint를 의도적으로 바꾼다. P7의 바이트 동일성을 P8에 주장하거나 이 차이를 조용히 정규화하지 않는다. 물리적 결과·흐름·식사는 별도로 비교하고 이전 사건 참조는 명시적 번호 대응으로 검증해야 한다. 관측 파일만으로 모든 내부 행동의 동일성을 입증하지 않는다.
 
 
-보정 3/4회 후 P8 실제 촬영·새 성능·보정4·정책 동결·held-out·최종 기준선 동일성·전체 게이트·게시가 남았다. 2026-10-29의 실제 화면 receipt 1–6차 실패는 보존하며, 세 번째 촬영의 crop 무효 판정은 재검토 후 철회했다. 식물 전용 완성 아트가 없으며 임시 표현을 완성 아트로 수용하지 않는다. 원래 실패 로그와 당시 원인 분류를 보존한다.
+보정 3/4회 후 P9 관측 화면·집중 화면 검토를 마쳤으며 새 성능·보정4·정책 동결·held-out·최종 기준선 동일성·전체 게이트·게시가 남았다. 2026-10-29의 실제 화면 receipt 1–6차 실패는 보존하며, 세 번째 촬영의 crop 무효 판정은 재검토 후 철회했다. 식물 전용 완성 아트가 없으며 임시 표현을 완성 아트로 수용하지 않는다. 원래 실패 로그와 당시 원인 분류를 보존한다.
 
 주택 실패는 조건을 완화하지 않고 실제 음식 획득·목적지 인계 경로를 수정한 뒤 [동일한 두 주택 검증](</Users/rexxa/work/m6a-data/20261029/housing-repair-test-1.log>)에서 통과했다. 이 2/2 결과를 모든 세계의 장기 생존으로 확대하지 않는다.
 
@@ -222,7 +246,7 @@ P8의 FoodOperation(53) 추가는 연대기 번호·인과 참조·이야기 수
 |P7 성능|유효33/33쌍 PASS|[receipt](</Users/rexxa/work/m6a-data/20261029/perf-p7-session-1/receipt.json>); 시간12개·할당량·C3 PASS|
 |보정3 / 보정2 정확 비교|완료 3/4회 / 24파일·8 fingerprint 일치|[비교](</Users/rexxa/work/m6a-data/20261029/calibration-2-to-3-exact.json>); 정규화 없음, held-out 수용 아님|
 |P8 시스템 / 원본13 저장 / 일반 명령 기아 근거|497 PASS·1 ignored / 1 PASS / 1 PASS|미커밋 소스 집중 검증; 위 로그 링크 참조|
-|P8 실제 촬영·성능·보정4 / held-out|PENDING / NOT_RUN|P7 성공이나 이전 UNKNOWN 촬영을 P8 수용 증거로 대체하지 않음|
+|P9 실제 화면 / 성능·보정4·held-out|관측·집중 범위 검토 완료 / NOT_RUN|full2는 13/15·실패2 유지; hunger2·pot1 별도 집중 증거. P7 성능을 P9 검증으로 대체하지 않음|
 |전체 게이트 / 게시|NOT_RUN / NOT_RUN|부분 성공을 전체 게이트로 대체하지 않음|
 
 ### 오너가 할 일 (실행 한 줄: /Users/rexxa/work/new-world-play2-dev/tools/play.sh main)
@@ -232,3 +256,5 @@ P8의 FoodOperation(53) 추가는 연대기 번호·인과 참조·이야기 수
 `git ls-remote` 결과: 이 초안 작성 단계에서는 **NOT_RUN**. 원격 게시 SHA 확인은 게시 절차에서 실제 결과로 채운다.
 
 P8 커밋 전 기준선 동일성8차는 exit 0이다. [원본 로그](</Users/rexxa/work/m6a-data/20261029/p8-identity8-launch/child.log>): 공유228,748값 차이·단측0, 연대기64파일19,683항목 동일, 원시64파일 동일, 결정성0–3 PASS. 로그의 SHA는 부모 P7이며 당시 미커밋 P8 소스 검증이다. 최종 clean-head gate와 구분한다. M6a 통합16개 바이너리70 PASS·1 ignored, 집중 회귀11 PASS 및 workspace/all-targets Clippy PASS. 이전 전체 workspace 실행은 오래된 음식 선택/현재 저장형식 기대값에서 실패했으므로 전체 PASS로 재분류하지 않는다.
+
+P9의 [범위 한정 합성 검증](</Users/rexxa/work/m6a-data/20261029/p9-ui-composite-coverage.json>)은 공통 제품 입력27개·PNG81장 해시와15개 항목의 합집합을 확인했다. 일반 실행 실패2건은 그대로이며, 집중 저장 파일 증거를 자연 실행 성공으로 바꾸지 않는다. 최종 문서 검사 `p9-docs-full.log`는 PASS다.

@@ -18,6 +18,27 @@
   Internal operation records remain hidden from the owner feed through UI data.
 
 ### Changed
+- P8 source `e2ba280f345202b7f334b213ea2c13e2de828c46` has an authentic
+  49.22-second release build, pre-commit identity8 and full documentation checks.
+  Actual ordinary-command hunger evidence reaches tick10031/day7. P8 hunger
+  metadata passed, but direct review of32 PNGs required revised wording. P9
+  qualifies the death-time snapshot; all32 recaptured KO/EN images at1.0/1.25
+  pass focused readability review. This is not full UI acceptance.
+- Preserve P8 full-capture FAIL (four stale hidden-kind53 expectations and six
+  early missing cases), and P9 full-capture FAIL after30days (13/15 cases;
+  hunger Why and pot missing). The modal-obscured first capture stays rejected.
+  The repaired harness clicks the actual migrant Later button and verifies no
+  tick or wave change; full2 recaptured46 PNGs without the obstruction. Focused
+  hunger2 (32 PNGs) and pot1 (3 PNGs) complete the scoped15-case composite;
+  pot1 is disclosed format13-fixture UI/migration evidence, not a natural run.
+  All81 PNG hashes and27 common product inputs were verified. Independent
+  visual reviews retain the full2 missing cases and placeholder-art limitation.
+- Add KO/EN labels for cooked, novel-group and cooked-novel food facts exposed
+  by native Why input. The native rerun passes with18 screenshots. Identity9
+  passes summary, Chronicle content, raw samples and determinism before P9.
+- P7 performance remains33/33 valid pairs PASS and calibration remains3/4 used.
+  P9 performance, calibration4, held-out and full gate are NOT_RUN; thresholds
+  and authored policy are unchanged. No P9 commit or publication SHA is claimed.
 - Mind continuation replays changed numeric facts only when every authored
   predicate keeps the same truth value; reads, errors, cadence and per-person
   cache capacity remain unchanged. P7 passed fresh paired performance;

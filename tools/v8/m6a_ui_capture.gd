@@ -123,6 +123,37 @@ func run() -> void:
 	evidence["coverage_note"] = ("Focused completion covers only " + focus + "; never full-suite acceptance. " if not focus.is_empty() else "") + "Missing cases are missing evidence, never synthesized; use a disclosed real simulation save for focused follow-up."
 	_finish()
 
+func _dismiss_migrant_later(context: String) -> bool:
+	var migrant: Control = main.get_node_or_null("UI/MigrantPanel") as Control
+	if migrant == null or not migrant.is_visible_in_tree():
+		return true
+	var later: Button = migrant.get("_later") as Button
+	var ready: bool = later != null and later.is_visible_in_tree() and not later.disabled
+	check(context + " migrant Later available", ready)
+	if not ready:
+		return false
+	var before_tick: int = _tick()
+	var wave: int = int(migrant.call("shown_wave"))
+	var before_wave: Variant = world.get_wave(wave)
+	var point: Vector2 = later.get_global_rect().get_center()
+	var record: Dictionary = {"context": context, "tick": before_tick, "wave": wave, "button_path": str(later.get_path()), "button_text": later.text, "point": [point.x, point.y], "input": "mouse_left_press_release"}
+	await click(later)
+	await frames(3)
+	var dismissed: bool = not migrant.is_visible_in_tree()
+	var unchanged: bool = _tick() == before_tick and world.get_wave(wave) == before_wave
+	record.merge({"dismissed": dismissed, "simulation_wave_unchanged": unchanged, "tick_after": _tick()})
+	evidence.get_or_add("migrant_later_inputs", []).append(record)
+	check(context + " migrant Later dismissed panel", dismissed)
+	check(context + " migrant Later preserves tick and wave", unchanged)
+	return dismissed and unchanged
+
+func _shot(name: String, extra: Dictionary) -> void:
+	if not await _dismiss_migrant_later("shot " + name):
+		return
+	await super._shot(name, extra)
+	var migrant: Control = main.get_node_or_null("UI/MigrantPanel") as Control
+	check(name + " migrant panel absent at capture", migrant == null or not migrant.is_visible_in_tree())
+
 func _food_shots(name: String, tile: Vector2i, facts: Dictionary, panel: Control = null) -> void:
 	camera.position = View.tile_centre(tile)
 	camera.zoom = Vector2.ONE
@@ -138,6 +169,8 @@ func _food_shots(name: String, tile: Vector2i, facts: Dictionary, panel: Control
 	if panel != null: panel.hide()
 
 func _observe_food() -> void:
+	if not await _dismiss_migrant_later("observe food"):
+		return
 	var plants: Dictionary = world.get_plants(0, 0, 65535, 65535)
 	for phase: int in 4:
 		if _wanted("phase%d" % phase) and not observed.has("phase%d" % phase):
@@ -215,7 +248,7 @@ func _observe_food() -> void:
 			await _chronicle_shots("cooking", row)
 		if int(row.get("kind", -1)) == 49 and focus.is_empty() and not observed.has("dried-why"):
 			await _operation_why_shots(chronicle, row, why_read, "stored", "dried-why")
-		if _wanted("chronicle") and not observed.has("chronicle"):
+		if _wanted("chronicle") and not observed.has("chronicle") and bool(chronicle.call("keeps_kind", int(row["kind"]))):
 			await _chronicle_shots("chronicle", row)
 		if int(row.get("kind", -1)) == 11 and int(row.get("cause", -1)) == 0 and _wanted("why") and not observed.has("why"):
 			await _operation_why_shots(chronicle, row, why_read, "acquisition", "why")

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1240,
+    "active_key_count": 1243,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1240,
+    "key_count": 1243,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -562,7 +562,7 @@
     "M6A_HUNGER_STAGE_3": "당시 식량을 내는 식물이 없었다",
     "M6A_HUNGER_STAGE_4": "당시 식량 식물은 있었지만 익지 않았다",
     "M6A_HUNGER_STAGE_5": "당시 익은 식물은 있었지만 사망 위치에서 닿지 못했다",
-    "M6A_HUNGER_STAGE_6": "당시 닿는 곳에 익은 식물이 있었다 · 이전에 수확하지 못한 이유는 알 수 없다",
+    "M6A_HUNGER_STAGE_6": "사망 당시 닿는 곳에 익은 식물이 있었다 · 이 관측만으로 과거 미수확 이유를 판단할 수 없다",
     "M6A_JOB_HARVEST": "수확 중",
     "M6A_MEALS": "최근 식사: {meals}\n최근 3일 식품군: {groups}",
     "M6A_MOD_MONOTONOUS": "같은 것만 먹었다",
@@ -638,6 +638,9 @@
     "MIND_FACT_FLEEING": "위험에 처함",
     "MIND_FACT_FOOD_AVAILABLE": "먹을 것이 있음",
     "MIND_FACT_FOOD_CARRY_LOADED": "먹거리 운반 중",
+    "MIND_FACT_FOOD_COOKED_AVAILABLE": "조리된 먹을 것이 있음",
+    "MIND_FACT_FOOD_COOKED_NOVEL_AVAILABLE": "최근 3일간 먹지 않은 음식군의 조리된 먹을 것이 있음",
+    "MIND_FACT_FOOD_NOVEL_AVAILABLE": "최근 3일간 먹지 않은 음식군의 먹을 것이 있음",
     "MIND_FACT_FORAGE_AVAILABLE": "주변에서 채집 가능",
     "MIND_FACT_FORAGE_WINDOW": "채집할 시간",
     "MIND_FACT_GATHER_AVAILABLE": "모을 먹거리가 있음",
