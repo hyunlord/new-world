@@ -1,6 +1,6 @@
 # 미완료 / 검증 중 — M6a 보고서 초안
 
-이 문서는 목표 §4의 보고서 양식을 미리 채운 **진행 중 초안**이다. 아래 양식의 “구현 완료 보고” 제목은 완료 선언이 아니다. 보정 **3/4회 완료**, P7 유효 성능 **33/33쌍 PASS**, P8 커밋·집중 검증 완료, P9 관측 화면 13개와 별도 기아·항아리 집중 화면 검토 완료, 자연 전체 촬영은 13/15 미완료이며 최종 수용 검증 대기이며 P9 성능·보정4·held-out·전체 게이트·게시 **NOT_RUN**. 초기 제품은 `dba478e54ea2b6b21aace3c32ae2ab64de10235b`, 2회차 제품 커밋은 `de25dd74ed894365b4a59318fa4318056cb71b6d`, 측정된 p5는 `9936a8fd26be15d171afccf4000c3ebf113326dc`, 성능과 보정3을 마친 P7은 `5857cdc4f89c24d4a4d5f2ad2f55703c937572c3`다. P4·P5·P6 성능 FAIL은 그대로 보존한다. 최종 후보 커밋 및 게시 SHA는 미확정이다. BASE는 `5b0c88812374b87e7854cc9203f144ad0ccd9009`이다. 오너 플레이테스트는 수행되지 않았다.
+이 문서는 목표 §4의 보고서 양식을 채운 **진행 중 초안**이다. “구현 완료 보고” 제목은 수용 완료 선언이 아니다. P9 `5c7e05e677cebda16fea5825f88d83561acd9d2d`의 새 성능 **유효 33/33쌍 PASS**, 마지막 보정 **4/4회 완료·정책 동결**, 후보 held-out **32세계 ×72일 실행 완료**다. BASE 원본 observer의 72일 시작 실패는 보존했고, 별도 BASE 어댑터의 seed 0 자격 검증 48/72일만 PASS다. BASE held-out 비교·이야기 비교·최종 48단계 게이트·게시 결과는 아직 없다. P10 도구 수정 커밋 SHA는 미확정이다. BASE는 `5b0c88812374b87e7854cc9203f144ad0ccd9009`이다. P4·P5·P6 성능 FAIL과 자연 전체 UI 촬영 13/15·실패2는 유지한다. 집중 화면을 합친 15사례 검토는 자연 전체 실행이나 오너 플레이테스트를 대신하지 않는다.
 
 ## 구현 완료 보고 — M6a
 
@@ -32,11 +32,11 @@
 
 실제 재료와 지식·불·도구 조건을 사용하는 조리 및 건조 경로, 저장 종류별 수명, 배치 연령 이전과 일별 만료를 구현했다. 냄비는 실제 물건을 배치하고 물리적 용량 안에서 저장한다. 음식군은 최근 3일의 실제 식사 이력에서 계산하며, 화면의 최근 8개 식사 목록과 별도로 유지한다.
 
-기존 압력 효과를 실제 식물 재생에 연결하고 가뭄의 완료된 성장 구간을 계산한다. 손실·부패·조리 입력과 출력은 별도 회계 항목이며 시뮬레이션 기록을 숨기거나 합격 수치로 대체하지 않는다. 보정 1회차에서는 부패율 기준 2/8, 조리 비율 기준 0/8을 관측했다. held-out 장기 수용 검증은 NOT_RUN이다.
+기존 압력 효과를 실제 식물 재생에 연결하고 가뭄의 완료된 성장 구간을 계산한다. 손실·부패·조리 입력과 출력은 별도 회계 항목이며 시뮬레이션 기록을 숨기거나 합격 수치로 대체하지 않는다. 보정 1회차에서는 부패율 기준 2/8, 조리 비율 기준 0/8을 관측했다. 후보 held-out 실행은 완료했으며 BASE 비교를 포함한 수용 판정은 대기 중이다.
 
 ### 겨울 준비 (집사, 경고, 연대기)
 
-집사는 현재 사용 가능한 물리적 저장량과 성인·어린이·추위 수요로 수확·조리·건조·냄비 저장을 계획한다. 여름의 비축 시작일과 목표량은 데이터에 둔다. 재료·지식 발견·실제 냄비 공급 조건을 연결하고 플레이어의 취소·우선순위를 보존한다. 겨울 준비와 실제 음식 사건을 경고·연대기·정보창에 연결했다. 보정 2회차 8개 세계에서 72일 생존과 겨울 기아사 없음은 각각 8/8이었다. held-out 장기 수용 검증은 아직 수행하지 않았다.
+집사는 현재 사용 가능한 물리적 저장량과 성인·어린이·추위 수요로 수확·조리·건조·냄비 저장을 계획한다. 여름의 비축 시작일과 목표량은 데이터에 둔다. 재료·지식 발견·실제 냄비 공급 조건을 연결하고 플레이어의 취소·우선순위를 보존한다. 겨울 준비와 실제 음식 사건을 경고·연대기·정보창에 연결했다. 보정 2회차 8개 세계에서 72일 생존과 겨울 기아사 없음은 각각 8/8이었다. 후보 held-out 실행은 완료했으며 BASE 비교를 포함한 수용 판정은 아직 없다.
 
 화면 확인은 일부만 확보했다. [capture 1 receipt](</Users/rexxa/work/m6a-data/20261029/ui-capture-1/evidence.json>)는 `complete=false`, 실패 9개이며 [capture 2 receipt](</Users/rexxa/work/m6a-data/20261029/ui-capture-2/evidence.json>)도 `complete=false`, 실패 6개다. 예시 [식사 1.0](</Users/rexxa/work/m6a-data/20261029/ui-capture-2/meal-1.0.png>), [음식 이유 1.25](</Users/rexxa/work/m6a-data/20261029/ui-capture-2/food-why-1.25.png>), [연대기 1.25](</Users/rexxa/work/m6a-data/20261029/ui-capture-2/chronicle-1.25.png>)는 부분 증거이며 전체 UI 수용이나 오너 플레이를 대신하지 않는다.
 
@@ -51,21 +51,38 @@
 
 ### held-out 1296–1327 (M6a / BASE 표)
 
-보정 3/4회를 마쳤으며 최종 정책 동결 전이다. 첫 회차 seed 0–7의 72일 실행은 exit 0이나 생존 0/8, 겨울 저장·조리·다양성 0/8, 부패율 기준 2/8이다. 식량 회계는 8/8 일치했다. [1회차 점수](</Users/rexxa/work/m6a-data/20261029/calibration-1-score.json>)의 상태는 `OBSERVED`, 수용 판정은 `NOT_EVALUATED`다. [2회차 점수](</Users/rexxa/work/m6a-data/20261029/calibration-2-score.json>)는 생존·겨울 기아사 없음·다양성·부패율·회계·day 1 저장소·day 10 침대·늑대 피해 기준 각각 8/8, 조리 비율 7/8(seed 3 미달), 겨울 저장 7/8(seed 5의 day 66 미달)이다. 겨울 시작 저장은 day 42에 8/8, day 66에 7/8이다. 2회차 역시 `OBSERVED`이며 수용 판정은 아니다. 이는 보정 관측이며 held-out 수용 결과가 아니다. held-out을 열거나 결과에 맞춰 조정하지 않았다.
+보정 4/4회를 마치고 P9 정책을 동결했다. 아래 1–3회차 기록은 과거 관측으로 보존한다. 첫 회차 seed 0–7의 72일 실행은 exit 0이나 생존 0/8, 겨울 저장·조리·다양성 0/8, 부패율 기준 2/8이다. 식량 회계는 8/8 일치했다. [1회차 점수](</Users/rexxa/work/m6a-data/20261029/calibration-1-score.json>)의 상태는 `OBSERVED`, 수용 판정은 `NOT_EVALUATED`다. [2회차 점수](</Users/rexxa/work/m6a-data/20261029/calibration-2-score.json>)는 생존·겨울 기아사 없음·다양성·부패율·회계·day 1 저장소·day 10 침대·늑대 피해 기준 각각 8/8, 조리 비율 7/8(seed 3 미달), 겨울 저장 7/8(seed 5의 day 66 미달)이다. 겨울 시작 저장은 day 42에 8/8, day 66에 7/8이다. 2회차 역시 `OBSERVED`이며 수용 판정은 아니다. 이는 보정 관측이며 held-out 수용 결과가 아니다. 이 당시에는 held-out을 열지 않았다. 이후 마지막 보정과 동결을 거쳐 후보 held-out을 실행했으며 결과에 맞춘 조정은 하지 않는다.
 
 |항목|기준|M6a|BASE|
 |---|---|---|---|
-|72일 생존|30/32 이상|NOT_RUN|NOT_RUN|
-|2·3년 겨울 기아사 없음|28/32 이상|NOT_RUN|NOT_RUN|
-|2·3년 겨울 시작 저장량|겨울 필요량 충족 26/32 이상; 해당 시점 생존 세계 분모 기록|NOT_RUN|NOT_RUN|
-|2년차 이후 조리 식사|비율 50% 이상인 세계 26/32 이상|NOT_RUN|음식망 지표 없음|
-|2년차 여름 성인 음식군 중앙값|3일간 3군 이상인 세계 26/32 이상|NOT_RUN|음식망 지표 없음|
-|72일 부패 단위/수확 단위|30% 이하인 세계 26/32 이상|NOT_RUN|음식망 지표 없음|
-|기존 생존·저장·침대·늑대·회계 행|같은 종자 BASE 대비 한 세계 초과 악화 없음|NOT_RUN|NOT_RUN|
+|72일 생존|30/32 이상|실행 완료·비교 판정 대기|미완료|
+|2·3년 겨울 기아사 없음|28/32 이상|실행 완료·비교 판정 대기|미완료|
+|2·3년 겨울 시작 저장량|겨울 필요량 충족 26/32 이상; 해당 시점 생존 세계 분모 기록|실행 완료·비교 판정 대기|미완료|
+|2년차 이후 조리 식사|비율 50% 이상인 세계 26/32 이상|실행 완료·비교 판정 대기|음식망 지표 없음|
+|2년차 여름 성인 음식군 중앙값|3일간 3군 이상인 세계 26/32 이상|실행 완료·비교 판정 대기|음식망 지표 없음|
+|72일 부패 단위/수확 단위|30% 이하인 세계 26/32 이상|실행 완료·비교 판정 대기|음식망 지표 없음|
+|기존 생존·저장·침대·늑대·회계 행|같은 종자 BASE 대비 한 세계 초과 악화 없음|실행 완료·비교 판정 대기|미완료|
 
 보정3은 P7 소스로 원래 기한 안에 exit 0으로 끝났다. [정확 비교](</Users/rexxa/work/m6a-data/20261029/calibration-2-to-3-exact.json>)에서 8개 세계의 24개 파일 모두 보정2와 바이트가 같고 8개 fingerprint도 일치했다. 정규화는 없었다. [보정3 점수](</Users/rexxa/work/m6a-data/20261029/calibration-3-score.json>)는 조리·두 겨울 저장 7/8, 나머지 음식·공통 기준 8/8로 동일하며 held-out 수용 판정이 아니다. 의도적으로 기록과 저장을 확장한 P8에는 이 바이트 동일성 결과를 전용하지 않는다.
 
+[보정4 receipt](</Users/rexxa/work/m6a-data/20261029/calibration-4/receipt.json>)와 [점수](</Users/rexxa/work/m6a-data/20261029/calibration-4-score.json>)는 8세계 완료, 생존·기아 없는 겨울·다양성·부패·회계·저장소·침대·늑대 기준 8/8, 조리와 겨울 저장 7/8을 기록한다. `OBSERVED / NOT_EVALUATED`이며 추가 보정은 없다. [보정3→4 독립 비교 v2](</Users/rexxa/work/m6a-data/20261029/p9-calibration3-to4-v2-receipt.json>)는 `PASS_OBSERVED_ONLY`다. 관측된 물리 결과·식사 근거의 일치를 확인했지만 fingerprint 차이를 보존하며 전체 상태와 모든 내부 행동 동일성은 `NOT_PROVEN`이다.
+
+[원래 P9 동결](</Users/rexxa/work/m6a-data/20261029/p9-policy-freeze.json>) 뒤 [후보 held-out receipt](</Users/rexxa/work/m6a-data/20261029/p9-heldout-candidate/receipt.json>)는 종자1296–1327의 32세계 ×72일, exit0, `source_unchanged=true`로 완료했다. 이는 후보 실행 완료이며 BASE 비교 수용 PASS가 아니다. 원래 BASE `--mux2-observe --days 72`는 48일 전용 CLI 검사에서 시뮬레이션 시작 전에 실패했다. 이 도구 결함을 세계 생존 실패로 세지 않는다.
+
 ### 성능 (장면별 비율)
+
+P9의 [새 성능 receipt](</Users/rexxa/work/m6a-data/20261029/perf-p9-session-1/receipt.json>)와 [원시 요약](</Users/rexxa/work/m6a-data/20261029/p9-perf-summary.md>)은 **33/33 유효쌍 PASS, 무효0, 예외0**이다. 시간18쌍과 RSS15쌍, 실행66회 모두 첫 admission에서 부하·경쟁 프로세스 조건을 통과했다. 시작 부하1/5/15분 범위는 각각 2.0303–5.3013 / 3.0645–4.2041 / 3.5835–4.0884였다. 아래 비율은 P9/같은 세션 BASE다.
+
+|P9 장면|평균|p99|할당량|
+|---|---|---|---|
+|n200|0.992266|0.985969|1.050077|
+|n1000|0.947098|0.825787|1.032241|
+|n2000|0.746988|0.867965|1.024471|
+|n200_script|1.011114|0.956570|1.050017|
+|n200_side64|1.054325|0.970674|1.034398|
+|n1000_wolves|1.066629|1.013389|1.032241|
+
+할당량 기울기 비율 agent 0.996305 / tile 1.061745, C3 6/6 PASS다. allocator/agent 1863.393333, allocator/tile 68.795288바이트이며 외부 RSS 기울기와 구분한다. 후보 빌드 HEAD는 P9, BASE 빌드 HEAD는 `cb3f79cc69df10ee05b10d5a5330e0226f67fc68`이며 비교 기준 BASE `5b0c88812374b87e7854cc9203f144ad0ccd9009`의 소스 동일성 근거를 유지한다. P10 최종 게이트의 HEAD 바인딩 검증은 아직 수행하지 않았다.
 
 2회차 후보의 [유효 성능 receipt](</Users/rexxa/work/m6a-data/20261029/perf-round2-session-1/receipt.json>)와 [측정 로그](</Users/rexxa/work/m6a-data/20261029/perf-round2-session-1.log>)는 **FAIL**이다. BASE/후보 독립 빌드와 부하·실행 독점·교차 반복 검증을 통과한 측정 실패로 보존한다. 이전 P7/UI 예외를 계승하지 않는다.
 
@@ -145,7 +162,13 @@ P8 `e2ba280f345202b7f334b213ea2c13e2de828c46`의 [실제 빌드 receipt](</Users
 |[native2 receipt](</Users/rexxa/work/m6a-data/20261029/p9-core-ui-native-2/evidence.json>)|18장, 실패0; [직접 검토](</Users/rexxa/work/m6a-data/20261029/p9-core-ui-native-2-visual-review.md>)에서 사람·왜?·연대기 가독성과 fact key 미노출 확인|
 |[기준선 동일성9 로그](</Users/rexxa/work/m6a-data/20261029/p9-identity9-launch/child.log>)|summary·chronicle·raw samples·determinism 4개 PASS. 미커밋 후보 검증이며 clean final-commit 전체 게이트 아님|
 
-full2는 실제 ‘나중에’ 버튼 입력으로 모달을 닫았다. tick16140/wave1 및 tick31980/wave2가 유지됐고, 건조 음식 설명은 두 배율에서 가림 없이 읽힌다. 이전 full1 가림 실패는 소급 변경하지 않는다. 합성 대상의 제품 `res://` 입력 해시는 동일하며 실제 fixture의 절대 경로 차이는 정당한 입력 출처 차이로 기록한다. [합성 receipt](</Users/rexxa/work/m6a-data/20261029/p9-ui-composite-coverage.json>)는 제품 `res://` 27개 해시의 실행 간 일치와 현재 소스 일치, PNG 81개 해시, 15개 사례의 합집합을 확인한다. 최초 전체 입력 맵 비교는 fixture 절대 경로 차이로 실패했으며 원본 receipt는 그대로 보존한다. 이는 full2 자체의 실패2를 해제하지 않는다. 미래 P9 커밋 SHA를 추정하지 않는다. P7 유효 성능33쌍 PASS와 보정3/4회 사용 기록은 유지한다. P9 성능·보정4·held-out·전체 게이트는 **NOT_RUN**이며 정책·수용 기준을 바꾸지 않았다.
+full2는 실제 ‘나중에’ 버튼 입력으로 모달을 닫았다. tick16140/wave1 및 tick31980/wave2가 유지됐고, 건조 음식 설명은 두 배율에서 가림 없이 읽힌다. 이전 full1 가림 실패는 소급 변경하지 않는다. 합성 대상의 제품 `res://` 입력 해시는 동일하며 실제 fixture의 절대 경로 차이는 정당한 입력 출처 차이로 기록한다. [합성 receipt](</Users/rexxa/work/m6a-data/20261029/p9-ui-composite-coverage.json>)는 제품 `res://` 27개 해시의 실행 간 일치와 현재 소스 일치, PNG 81개 해시, 15개 사례의 합집합을 확인한다. 최초 전체 입력 맵 비교는 fixture 절대 경로 차이로 실패했으며 원본 receipt는 그대로 보존한다. 이는 full2 자체의 실패2를 해제하지 않는다. 이 화면 기록의 제품은 P9 `5c7e05e677cebda16fea5825f88d83561acd9d2d`로 커밋됐다. P9 새 성능·보정4·후보 held-out 실행 완료는 위 별도 receipt에 근거하며 전체 게이트와 게시로 확대하지 않는다. 정책·수용 기준은 유지한다.
+
+### P10 관측 도구 후속 수정 (SHA 미확정)
+
+수정 범위는 `tools/v8/`의 `m6a_base72_entry.rs`, `m6a_base72.py`, `test_m6a_base72.py`, `m6a_observer_successor.py`, `test_m6a_observer_successor.py`, `m6a_gate_source.py`, `m6a_gate_evidence.py` 7개다. BASE 라이브러리·데이터의 정확한 소스와 컴파일 입력을 바인딩한 별도 실행 파일로 72일 observer를 제공한다. 기존 BASE 바이너리가 그대로라고 주장하지 않는다. 원래 P9 동결·후보 receipt·runner·scorer를 유지하고, 정확히 지정한 도구 변경 외 제품 입력 동일성을 successor 증명으로 검사한다. 다섯 번째 보정·재동결·수용 막대 완화는 없다.
+
+[48일 자격 receipt](</Users/rexxa/work/m6a-data/20261029/base72-adapter/qualification48.json>)는 seed0 원본/어댑터 exit0 및 summary SHA 동일성을 기록한다. [72일 자격 receipt](</Users/rexxa/work/m6a-data/20261029/base72-adapter/qualification72.json>)는 seed0 양쪽 exit0이며 원본의 observer 없는 72일 결과와 어댑터 결과를 비교한다. 새 `mux2` 관측 필드 외 동일성 검증을 적용하며 48일의 바이트 동일성 주장과 구분한다. 이는 어댑터 자격 PASS만 의미한다. BASE 32세계·이야기·최종48단계 게이트 및 게시 PASS는 아직 없다. 원래 기한 `1793335103`을 유지한다.
 
 ### 이야기 수확량
 
@@ -167,6 +190,8 @@ BASE/M6a `story-yield` 비교 NOT_RUN. 첫 조리·건조·겨울 준비·겨울
 |`9936a8fd2` p5 최적화|음식 존재 조회·작업 필터 순서·정적 mind 정책 원문 차용; 유효 성능 측정 FAIL|
 |p6 e156ae29|운반 탐색의 오래된 후보 관측 초기화; 유효 성능33쌍 중 side64 평균 FAIL|
 |`5857cdc4f` P7|조건식 판정이 같은 수치 변화의 continuation 재사용; 유효 성능 33쌍 PASS·보정3 정확 비교 PASS|
+|`5c7e05e67` P9 (11개 파일)|사망 시점 문구 한정·숨겨진 사건 촬영 선택 수정·네이티브 음식 사실 번역; 새 성능·보정4·후보 held-out 완료|
+|P10 SHA 미확정 (도구 7개)|BASE72 관측 어댑터·원본 동결 보존 successor 증명·게이트 연결; 제품·정책 변경 없음|
 |`e2ba280f3` P8|실제 음식 획득 실패·흐름·최초 섭취/저장 부모 사건, 형식14·정확13 이관, 왜? 표시; 최종 검증 대기|
 
 게시 보고에서는 최종 커밋별 명시적 파일 목록으로 교체해야 한다. 초기 제품 커밋은 게시 또는 수용 완료를 뜻하지 않는다.
@@ -178,7 +203,7 @@ BASE/M6a `story-yield` 비교 NOT_RUN. 첫 조리·건조·겨울 준비·겨울
 P8의 FoodOperation(53) 추가는 연대기 번호·인과 참조·이야기 수확량, 저장 근거와 전체 FoodState fingerprint를 의도적으로 바꾼다. P7의 바이트 동일성을 P8에 주장하거나 이 차이를 조용히 정규화하지 않는다. 물리적 결과·흐름·식사는 별도로 비교하고 이전 사건 참조는 명시적 번호 대응으로 검증해야 한다. 관측 파일만으로 모든 내부 행동의 동일성을 입증하지 않는다.
 
 
-보정 3/4회 후 P9 관측 화면·집중 화면 검토를 마쳤으며 새 성능·보정4·정책 동결·held-out·최종 기준선 동일성·전체 게이트·게시가 남았다. 2026-10-29의 실제 화면 receipt 1–6차 실패는 보존하며, 세 번째 촬영의 crop 무효 판정은 재검토 후 철회했다. 식물 전용 완성 아트가 없으며 임시 표현을 완성 아트로 수용하지 않는다. 원래 실패 로그와 당시 원인 분류를 보존한다.
+P9 새 성능·보정4/4·정책 동결·후보 held-out 실행을 마쳤다. BASE held-out·이야기 비교·최종 기준선 동일성·전체 게이트·게시가 남았다. 2026-10-29의 실제 화면 receipt 1–6차 실패는 보존하며, 세 번째 촬영의 crop 무효 판정은 재검토 후 철회했다. 식물 전용 완성 아트가 없으며 임시 표현을 완성 아트로 수용하지 않는다. 원래 실패 로그와 당시 원인 분류를 보존한다.
 
 주택 실패는 조건을 완화하지 않고 실제 음식 획득·목적지 인계 경로를 수정한 뒤 [동일한 두 주택 검증](</Users/rexxa/work/m6a-data/20261029/housing-repair-test-1.log>)에서 통과했다. 이 2/2 결과를 모든 세계의 장기 생존으로 확대하지 않는다.
 
@@ -233,7 +258,7 @@ P8의 FoodOperation(53) 추가는 연대기 번호·인과 참조·이야기 수
 |기아 왜? 집중 촬영 2차|범위 한정 PASS; 1차는 말단만 표시한 부분 증거|[receipt](</Users/rexxa/work/m6a-data/20261029/ui-hunger-round2-2/evidence.json>); 실제 3단계 연결·가독성 확인, UI 전용|
 |보정 1회차|완료 1/4회, 수용 판정 아님|종자 0–7: 생존 0/8·회계 8/8; [점수](</Users/rexxa/work/m6a-data/20261029/calibration-1-score.json>)|
 |보정 2회차|완료 2/4회, 수용 판정 아님|[점수](</Users/rexxa/work/m6a-data/20261029/calibration-2-score.json>); 생존 등 8/8, 조리·겨울 저장 7/8|
-|held-out|NOT_RUN|1296–1327, BASE 비교 포함|
+|held-out 후보 / BASE|32세계 실행 완료 / 미완료|후보 exit0; BASE 비교 수용 판정 대기|
 |p4 성능·C3 (과거 유효 실행)|유효 측정 FAIL / C3 6개 PASS|[receipt](</Users/rexxa/work/m6a-data/20261029/perf-round2-session-1/receipt.json>); 시간 비율 10개와 side64 할당량 실패|
 |후속 최적화 수정 전 회귀|정적 원문 1 FAIL·동적 원문 1 PASS 보존|[policy-source-before-1.log](</Users/rexxa/work/m6a-data/20261029/policy-source-before-1.log>)|
 |후속 최적화 sim-systems / Clippy|PASS 474/474 / PASS|[단위 검증](</Users/rexxa/work/m6a-data/20261029/systems-perf-opt-2.log>) · [전체 대상 Clippy](</Users/rexxa/work/m6a-data/20261029/clippy-perf-opt-2.log>)|
@@ -246,7 +271,11 @@ P8의 FoodOperation(53) 추가는 연대기 번호·인과 참조·이야기 수
 |P7 성능|유효33/33쌍 PASS|[receipt](</Users/rexxa/work/m6a-data/20261029/perf-p7-session-1/receipt.json>); 시간12개·할당량·C3 PASS|
 |보정3 / 보정2 정확 비교|완료 3/4회 / 24파일·8 fingerprint 일치|[비교](</Users/rexxa/work/m6a-data/20261029/calibration-2-to-3-exact.json>); 정규화 없음, held-out 수용 아님|
 |P8 시스템 / 원본13 저장 / 일반 명령 기아 근거|497 PASS·1 ignored / 1 PASS / 1 PASS|미커밋 소스 집중 검증; 위 로그 링크 참조|
-|P9 실제 화면 / 성능·보정4·held-out|관측·집중 범위 검토 완료 / NOT_RUN|full2는 13/15·실패2 유지; hunger2·pot1 별도 집중 증거. P7 성능을 P9 검증으로 대체하지 않음|
+|P9 실제 화면|집중 합성15사례·81PNG|full2 13/15·실패2 유지; hunger2·pot1 별도 증거|
+|P9 성능|유효33/33쌍 PASS|새 receipt; 할당량·C3 6/6 PASS|
+|보정4 / 정책 동결|완료4/4 / 동결 완료|보정 점수 NOT_EVALUATED; 원래 동결 유지|
+|BASE 원본 observer72|시작 FAIL|48일 전용 CLI 검사; 시뮬레이션 미시작|
+|BASE 어댑터 자격48/72|seed0 PASS|후보/BASE held-out 수용이나 전체 게이트 아님|
 |전체 게이트 / 게시|NOT_RUN / NOT_RUN|부분 성공을 전체 게이트로 대체하지 않음|
 
 ### 오너가 할 일 (실행 한 줄: /Users/rexxa/work/new-world-play2-dev/tools/play.sh main)

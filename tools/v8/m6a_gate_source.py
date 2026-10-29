@@ -32,6 +32,17 @@ def keys(node: Node, expected: set[str] | frozenset[str]) -> None:
     need({name for name, _ in node.fields()} == expected, 'unexpected/missing fields')
 
 
+def validate_schema(data: Node) -> None:
+    match (data.get('schema_version').integer(), data.get('kind').text()):
+        case (1, 'm6a_simulation_successor_v1'):
+            keys(data, FIELDS)
+        case (2, 'm6a_observer_successor_v2'):
+            keys(data, FIELDS | {'observer_successor', 'base_observer'})
+        case _:
+            raise EvidenceError('wrong M6a gate protocol version')
+    need(data.get('base_head').text() == BASE, 'wrong M6a BASE')
+
+
 def ref(root: Path, node: Node) -> Path:
     result = Reference.parse(node)
     return freeze.external(root, Path(result.path))
@@ -74,16 +85,14 @@ class Gate:
         checksum = os.environ['M6A_GATE_CONFIG_SHA256']
         freeze.pin(path, checksum)
         data = Node.load(path)
-        keys(data, FIELDS)
-        need(data.get('schema_version').integer() == 1
-             and data.get('kind').text() == 'm6a_simulation_successor_v1'
-             and data.get('base_head').text() == BASE, 'wrong M6a protocol/base')
+        validate_schema(data)
         gate = cls(root, path, checksum, data, data.get('final_head').text(),
                    freeze.external(root, Path(data.get('gate_dir').text())))
         gate.verify()
         return gate
 
     def verify(self) -> None:
+        validate_schema(self.data)
         freeze.pin(self.path, self.checksum)
         need(inventory.git(self.root, 'rev-parse', 'HEAD').decode().strip() == self.head,
              'gate HEAD changed')
@@ -108,6 +117,10 @@ class Gate:
              'performance dispatch differs from sealed config')
         self.build('candidate_build', self.head)
         self.build('base_build', BASE)
+        if self.observer_successor():
+            self.frozen_source_hash()
+            from m6a_base72 import validate_manifest
+            validate_manifest(self.root, ref(self.root, self.data.get('base_observer')))
         protocol = self.data.get('protocol')
         keys(protocol, {'goal', 'design'})
         for name, filename in [('goal', 'M6A_GOAL.md'), ('design', 'M6A_DESIGN.md')]:
@@ -116,6 +129,17 @@ class Gate:
             expected = inventory.committed(self.root, self.head, relative)[relative]
             need(freeze.digest(frozen) == expected == freeze.digest(self.root / relative),
                  'protocol differs from committed input')
+
+    def observer_successor(self) -> bool:
+        return self.data.get('kind').text() == 'm6a_observer_successor_v2'
+
+    def frozen_source_hash(self) -> str:
+        if self.observer_successor():
+            from m6a_observer_successor import validate
+            return validate(self.root, ref(self.root, self.data.get('observer_successor')),
+                            self.head, self.data)
+        from m6a_evidence import source_hash
+        return source_hash(self.root, self.head)
 
     def build(self, name: str, expected_head: str) -> Node:
         row = Node.load(ref(self.root, self.data.get(name)))

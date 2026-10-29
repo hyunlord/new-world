@@ -36,9 +36,17 @@
 - Add KO/EN labels for cooked, novel-group and cooked-novel food facts exposed
   by native Why input. The native rerun passes with18 screenshots. Identity9
   passes summary, Chronicle content, raw samples and determinism before P9.
-- P7 performance remains33/33 valid pairs PASS and calibration remains3/4 used.
-  P9 performance, calibration4, held-out and full gate are NOT_RUN; thresholds
-  and authored policy are unchanged. No P9 commit or publication SHA is claimed.
+- P9 `5c7e05e677cebda16fea5825f88d83561acd9d2d` passes fresh33/33
+  performance pairs (zero invalid; allocation/C3 pass). Calibration4/4 is complete
+  and frozen; candidate held-out1296–1327 completes32 worlds at72 days.
+  Calibration3→4 is PASS_OBSERVED_ONLY, not full-state/internal-action identity.
+  BASE comparison, story, final48-step gate and publication remain pending.
+- P10 observer correction (SHA pending) is restricted to seven tools: the BASE72
+  entrypoint, runner and tests, successor proof and tests, and gate source/evidence
+  adapters. Preserve the original BASE observer72 startup failure before simulation.
+  A distinct authenticated BASE-library adapter passes seed0 qualifications at48
+  and72 days; this is not BASE held-out or gate acceptance. Preserve original P9
+  freeze/candidate receipts, runner/scorer, policy and bars; no fifth calibration.
 - Mind continuation replays changed numeric facts only when every authored
   predicate keeps the same truth value; reads, errors, cadence and per-person
   cache capacity remain unchanged. P7 passed fresh paired performance;
@@ -69,7 +77,10 @@ calibration1 survival failure and earlier valid performance failures. P7 passed
 with cooked share and winter stores still7/8. P8 intentionally changes historical
 evidence, Chronicle identities and full-state fingerprints without policy tuning.
 Its uncommitted source passed497 system tests and authentic old13 migration checks;
-fresh performance, calibration4, held-out and the full gate remain pending.
+P9 subsequently passes fresh performance and completes final calibration/freeze
+and candidate held-out. The original BASE observer CLI rejects72 days before
+simulation; qualified adapter evidence does not yet complete BASE held-out,
+story or full-gate acceptance. No publication SHA is claimed.
 See [M6A_DECISIONS](docs/v8/m6a/M6A_DECISIONS.md) and
 [M6A_REPORT](docs/v8/m6a/M6A_REPORT.md) for retained evidence and limitations.
 

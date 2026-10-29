@@ -286,3 +286,18 @@ retain that distinction. Verify full old-food bytes plus the new evidence tail,
 original system slots and byte-stable save14 roundtrip. Sources:
 `rust/crates/sim-systems/src/save/evidence_tests.rs`;
 `docs/v8/m6a/M6A_DECISIONS.md` P8 compatibility verification.
+
+### A historical observation horizon is part of the executable contract
+
+Check a frozen BASE CLI's admitted horizon before starting a cohort. If the
+required comparison outlives that admission, do not relabel48-day output or
+silently patch the historical binary. Preserve the startup failure and original
+executable. A separately identified adapter must bind the unchanged BASE library,
+all embedded data, authentic lock, actual compiler/link inputs, entrypoint and
+qualifications; Rust-only source inventories can miss bridge include_str data.
+Retain frozen candidate policy/cohort receipts and prove exact product equivalence
+across an explicit tooling-only successor. Qualification at the old horizon and
+physical equality against an ordinary longer run do not replace full-horizon
+observer coverage or the final complete gate. Source:
+`tools/v8/m6a_base72.py`; `tools/v8/m6a_observer_successor.py`;
+`docs/v8/m6a/M6A_DECISIONS.md` P10.

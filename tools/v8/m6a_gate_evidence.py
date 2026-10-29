@@ -88,7 +88,6 @@ def final(gate: Gate) -> None:
 
 def calibration(gate: Gate) -> None:
     """Audit every started round, retaining failed attempts within the four-round cap."""
-    from m6a_evidence import source_hash
     binding = gate.data.get('calibration')
     keys(binding, {'register', 'freeze'})
     register = ref(gate.root, binding.get('register'))
@@ -97,7 +96,7 @@ def calibration(gate: Gate) -> None:
     need(frozen.get('schema_version').integer() == 1 and frozen.get('kind').text() == 'm6a_freeze_v1',
          'wrong calibration freeze protocol')
     need(ref(gate.root, frozen.get('calibration_register')) == register, 'register differs from freeze')
-    need(frozen.get('source_hash').text() == source_hash(gate.root, gate.head)
+    need(frozen.get('source_hash').text() == gate.frozen_source_hash()
          and frozen.get('binary_sha256').text() == freeze.digest(gate.binary())
          and frozen.get('scorer_sha256').text() == freeze.digest(gate.root / 'tools/v8/m6a_score.py'),
          'candidate/instrument changed after freeze')
@@ -134,6 +133,12 @@ def calibration(gate: Gate) -> None:
              and row.get('exit_code').integer() == 0 and row.get('source_unchanged').boolean(),
              'incomplete heldout process')
         need(ref(gate.root, row.get('freeze')) == frozen_path, 'heldout did not use this freeze')
-        need(ref(gate.root, row.get('binary')) == gate.binary(arm + '_build'), 'stale/swapped heldout binary')
+        if arm == 'base' and gate.observer_successor():
+            from m6a_base72 import validate_cohort
+            validate_cohort(gate.root, ref(gate.root, gate.data.get('base_observer')),
+                            ref(gate.root, heldout.get('base')))
+        else:
+            need(ref(gate.root, row.get('binary')) == gate.binary(arm + '_build'),
+                 'stale/swapped heldout binary')
         if arm == 'candidate':
             need(row.get('source_hash').text() == frozen.get('source_hash').text(), 'heldout source changed')

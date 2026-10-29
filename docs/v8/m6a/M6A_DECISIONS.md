@@ -790,3 +790,74 @@ Full capture2 completed30days with exactly the two missing natural cases (hunger
 Product `res://` input hashes agree across the composite captures. Fixture absolute paths legitimately differ and must remain explicit provenance rather than being normalized into identical fixtures. The completed [composite receipt](</Users/rexxa/work/m6a-data/20261029/p9-ui-composite-coverage.json>) verifies exactly27 matching product `res://` hashes against live source,81 PNG hashes and the15-case union. The first external whole-input-map comparison failed because fixture absolute paths differ; raw receipts remain unchanged. This scoped composite does not clear full2's two missing-case failures.
 
 `/Users/rexxa/work/m6a-data/20261029/p9-identity9-launch/child.log` completed all four checks:228,748 shared summary values with zero differing/one-sided paths;64 Chronicle files/19,683 entries equal apart from git_sha;64 raw sample files equal under the existing declared normalization; determinism seeds0–3 PASS. This tested the uncommitted candidate and is not a clean final-commit gate. Owner play, P9 performance, calibration4, held-out and the final full gate remain NOT_RUN. No acceptance or publication is declared.
+
+### P10 BASE72 observation adapter; frozen product and failed evidence preserved
+
+P9 is `5c7e05e677cebda16fea5825f88d83561acd9d2d`. Its authentic release/debug
+builds passed; early performance completed33/33 admitted pairs, zero invalid,
+all ratios and C3 PASS. Calibration4 completed all8 seeds with exit0 and closed
+round4 in the original register. No fifth round is permitted. The first external
+calibration3→4 comparator failed on existing Pressure/Modifier cause variants;
+its failure remains intact. The separate v2 comparator passed26 negative/positive
+checks, all14 previous checks and8/8 observed comparisons. Event bytes and
+physical summaries match; new FoodOperation parents and raw fingerprints remain
+explicit differences. This is not proof of all internal state/actions identity.
+
+The original P9 freeze precedes held-out evaluation. Candidate1296–1327 completed
+32/32 worlds×72days with unchanged source. BASE's original observer invocation
+was rejected before simulation in all32 attempts because its CLI requires48days.
+`p9-heldout-base/receipt.json` and the failed wrapper remain unchanged; no BASE
+comparison, complete held-out acceptance or full-gate PASS is claimed from them.
+
+The goal requires a72-day BASE comparison and permits diagnosed tool corrections;
+this correction changes no product, policy, calibration budget or acceptance bar.
+Keep the authentic original BASE probe/perf for existing performance/story uses.
+A distinct BASE-library observer adapter validates the original48-day argument
+contract and extends only the requested horizon to72. Its own source/compiler/link
+inputs and qualifications must be authenticated explicitly; it is never described
+as an unchanged BASE executable. The BASE library/observer sources are unchanged.
+Static review found no48-day truncation of stockpile/beds/wolf counters, but the
+legacy `alive_at_day48` field actually describes final survival and must not be
+used as day48 evidence from a72-day run. Runtime acceptance additionally requires
+start_tick0, end_tick/observed_ticks103680 and clean contiguous-observer checks.
+
+The narrow tool-successor proof pins P9's original committed input inventory,
+calibration4, freeze and candidate held-out receipts. Only the seven explicitly
+reviewed adapter/validator/gate paths may differ inside product/input scopes;
+all existing observers/scorers and their dependencies remain unchanged. Both old
+and new source hashes are recorded, never equated or overwritten. Candidate
+held-out is not repeated or relabelled, and no tuning follows its evaluation.
+Qualification, completed BASE72, fresh final-head performance and the complete
+48-step gate remain required before publication. Original deadline1793335103
+and the prohibition on inherited M-UX2 stall waivers remain in force.
+
+The first isolated BASE library build failed because the bridge embeds
+`assets/ui/content_presentation.json`; archiving Rust alone omitted a real compile
+input. Preserve `base72-library-launch` and the original compiler error. The
+second build includes every BASE INPUT_ROOTS blob plus the authentic untracked
+Cargo.lock and passed. All source bytes before/after, compiler invocations,
+Cargo artifacts, link-search inputs and the distinct entry build are retained in
+`base72-adapter/manifest.json`; the manifest verifier passed against the actual
+artifacts. Its runtime metadata identifies BASE-library provenance, while the
+outer receipt identifies the adapter and actual execution HEAD.
+
+The three parser regression tests passed. Seed0 qualification48 is byte-exact
+against the original BASE observer; qualification72 matches every deterministic
+field of the original ordinary72 run after excluding only the adapter's added
+`seeds[*].mux2` observation subtree. Neither result is a candidate calibration.
+The unchanged observer's tests plus five explicit horizon tests passed, including
+contiguous ticks69120/103679, late predator receipt, duplicate and missing ticks.
+The synthetic observer tests are unit evidence, not simulated survival outcomes.
+All58 M6a Python tests passed, including the new source-equivalence and malformed
+coverage tests. These checks do not substitute for the required BASE held-out,
+fresh final-head performance or full gate.
+
+Independent review required binding each recorded Cargo invocation's compiler,
+source, extern libraries, native/dependency search directories and generated
+outputs to the authenticated inventory, not merely accepting its exit0. The
+strengthened validator initially rejected Rust's legitimate implicit `proc_macro`
+extern; preserve `manifest-check-2.log`. Resolve only that builtin through the
+pinned target sysroot library, require its hash in the frozen inventory and keep
+all unknown bare externs rejected. The actual manifest then passed
+`manifest-check-3.log`; all62 M6a Python tests passed. No library, executable,
+qualification, frozen policy or original cohort changed during this repair.
