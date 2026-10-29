@@ -840,6 +840,10 @@ fn loose_haul(
         }
         // A full-map miss remains valid as this tick only adds reservations.
         ex.memo(Search::OpenCell(spec)).empty = true;
+        // Both source predicates now exclude this spec; their earlier sightings
+        // cannot prevent a new global absence proof. Existing empty flags hold.
+        ex.loose.seen = false;
+        ex.loose_fuel.seen = false;
     }
 }
 
@@ -1520,3 +1524,7 @@ mod item_memo_tests {
         assert_eq!(memo.any_stack.len(), 1);
     }
 }
+
+#[cfg(test)]
+#[path = "loose_haul_tests.rs"]
+mod loose_haul_tests;

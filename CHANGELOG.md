@@ -22,6 +22,9 @@
 - Boolean food availability avoids destination sorting, and job eligibility
   rejects incompatible states before checking food needs. Bundled mind policy
   text is borrowed by the compiled program while saved/dynamic text stays owned.
+- Loose-haul searches discard stale positive sightings when a whole item spec
+  has no storage destination, allowing the existing global absence proof to
+  suppress repeated searches without changing job selection.
 - Actual pot-scroll and hunger-cause-chain captures supplement the phase and
   food UI evidence; the current contact sheet contains twelve disclosed shots.
 
