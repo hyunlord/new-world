@@ -8,5 +8,34 @@
     "4": "M6A_HUNGER_STAGE_4",
     "5": "M6A_HUNGER_STAGE_5",
     "6": "M6A_HUNGER_STAGE_6"
+  },
+  "operations": {
+    "acquisition": "M6A_OPERATION_ACQUISITION",
+    "intake": "M6A_OPERATION_INTAKE",
+    "stored": "M6A_OPERATION_STORED"
+  },
+  "reasons": {
+    "target_unavailable": "M6A_REASON_TARGET_UNAVAILABLE",
+    "output_placement_full": "M6A_REASON_OUTPUT_PLACEMENT_FULL",
+    "output_rejected": "M6A_REASON_OUTPUT_REJECTED",
+    "cancelled": "M6A_REASON_CANCELLED",
+    "unfinished": "M6A_REASON_UNFINISHED",
+    "work_disabled": "M6A_REASON_WORK_DISABLED",
+    "no_ripe_in_region": "M6A_REASON_NO_RIPE_IN_REGION"
+  },
+  "cancellations": {
+    "needs": "M6A_CANCEL_NEEDS",
+    "target_gone": "M6A_CANCEL_TARGET_GONE",
+    "command": "M6A_CANCEL_COMMAND",
+    "stuck": "M6A_CANCEL_STUCK",
+    "interrupted": "M6A_CANCEL_INTERRUPTED",
+    "died": "M6A_CANCEL_DIED",
+    "unreachable": "M6A_CANCEL_UNREACHABLE"
+  },
+  "owners": {
+    "ground": "M6A_OWNER_GROUND",
+    "carried": "M6A_OWNER_CARRIED",
+    "shelf": "M6A_OWNER_SHELF",
+    "pot": "M6A_OWNER_POT"
   }
 }

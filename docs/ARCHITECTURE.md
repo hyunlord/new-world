@@ -742,3 +742,23 @@ and >20% expiry warnings use `assets/ui/alerts.json` predicates against the same
 winter-survival and hunger-chain kinds. Meal diversity modifier names and item/plant/recipe labels
 are localized. This describes implementation boundaries, not a claim that visual, performance or
 full-gate acceptance has passed.
+
+
+### M6a historical operation evidence and format14
+
+`colony/food_evidence.rs` holds the explicit FoodState tail: one active acquisition
+episode per affected actor, at most four daily colony-flow intervals, and immutable
+operation payloads keyed by append-only Chronicle indices. Runtime admission and
+job boundaries record actual observations; successful harvest/intake retires stale
+episodes. First cooked intake and first preserved placement point at their completed
+physical operation. Hunger chains distinguish the historical attempt from the
+separate death-time snapshot and label flow totals as colony-wide.
+
+Format14 preserves format13 through `save/legacy_food_v13.rs`, without rerunning
+abstract-food migration or changing registered system slots. Validation uses the
+shared Agent set and checks historical event-day ages/identity/chronology; removed
+historical owners are allowed. Kind53 is hidden through chronicle-feed data and
+projected by entry identity into Why. These evidence additions intentionally change
+Chronicle ordinals, causal links, story counts and full-state fingerprints; they
+are not a policy change or a claim of P7 byte identity. See ADR0054 for the contract
+and pending acceptance boundary.

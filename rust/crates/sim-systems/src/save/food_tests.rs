@@ -27,21 +27,21 @@ fn legacy12_baseline() -> Vec<u8> {
 }
 
 #[test]
-fn pre_food_baseline_has_empty_sidecar_and_format13_roundtrip() {
+fn pre_food_baseline_has_empty_sidecar_and_format14_roundtrip() {
     let bytes = legacy12_baseline();
     let mut loaded = load_with(&bytes, |_| {}).expect("known old catalog and body");
     assert_eq!(loaded.resources.food, FoodState::default());
     assert!(loaded.system_names().is_empty());
-    let current = save(&mut loaded).expect("format13");
-    assert_eq!(&current[8..12], &13u32.to_le_bytes());
-    let mut again = load_with(&current, |_| {}).expect("format13 reload");
+    let current = save(&mut loaded).expect("format14");
+    assert_eq!(&current[8..12], &14u32.to_le_bytes());
+    let mut again = load_with(&current, |_| {}).expect("format14 reload");
     assert_eq!(save(&mut again).expect("stable bytes"), current);
 }
 
 #[test]
 fn current_format_cannot_claim_an_old_catalog_to_bypass_admission() {
     let mut bytes = legacy12_baseline();
-    bytes[8..12].copy_from_slice(&13u32.to_le_bytes());
+    bytes[8..12].copy_from_slice(&14u32.to_le_bytes());
     // Whether catalog definitions have changed yet or not, the old body lacks
     // the final FoodState and must never be accepted as a current save.
     assert!(load_with(&bytes, |_| {}).is_err());

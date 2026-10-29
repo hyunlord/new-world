@@ -130,9 +130,15 @@ fn raw_grain_cannot_create_food_availability_or_an_actual_meal() {
     );
 }
 
-#[test]
-fn unseen_groups_use_three_day_history_then_nearest_eligible_food() {
-    let (mut engine, entity, id, mut system) = fixture();
+fn with_nut_history() -> (
+    sim_engine::SimEngine,
+    hecs::Entity,
+    u64,
+    ColonyMindSystem,
+    (u32, u32),
+    (u32, u32),
+) {
+    let (mut engine, entity, id, system) = fixture();
     let position = *engine.world.get::<&Position>(entity).expect("position");
     let origin = (position.x, position.y);
     let hazelnuts = place(&mut engine, origin, "hazelnuts", 0);
@@ -151,9 +157,69 @@ fn unseen_groups_use_three_day_history_then_nearest_eligible_food() {
         },
         &["nut".to_owned()],
     );
+    (engine, entity, id, system, hazelnuts, roots)
+}
+
+#[test]
+fn unseen_groups_use_three_day_history_then_nearest_eligible_food() {
+    // Each case starts a new decision: an admitted fresh owner remains pinned
+    // during movement, independently of this novelty-window boundary.
+    for at_boundary in [0, 1, 2] {
+        let (mut engine, entity, id, mut system, hazelnuts, roots) = with_nut_history();
+        let window = engine.resources.rules.calendar.days_to_ticks(3);
+        engine.resources.current_tick += match at_boundary {
+            0 => 0,
+            1 => window - 1,
+            _ => window,
+        };
+        let (selected, other, item) = if at_boundary == 2 {
+            (hazelnuts, roots, "hazelnuts")
+        } else {
+            (roots, hazelnuts, "roots")
+        };
+        system
+            .try_tick(&mut engine.world, &mut engine.resources)
+            .expect("new food decision");
+        assert_eq!(
+            engine
+                .world
+                .get::<&SeekTarget>(entity)
+                .expect("target")
+                .tile,
+            selected
+        );
+        assert_eq!(engine.resources.food.tallies.meals, 0);
+        *engine.world.get::<&mut Position>(entity).expect("arrival") =
+            Position::new(selected.0, selected.1);
+        engine.resources.current_tick += 1;
+        system
+            .try_tick(&mut engine.world, &mut engine.resources)
+            .expect("arrive");
+        assert_eq!(engine.resources.food.tallies.meals, 0);
+        engine.resources.current_tick += 1;
+        system
+            .try_tick(&mut engine.world, &mut engine.resources)
+            .expect("consume");
+        assert_eq!(engine.resources.food.tallies.meals, 1);
+        assert_eq!(
+            engine.resources.food.meals[&id]
+                .last_meals
+                .last()
+                .expect("actual meal")
+                .item,
+            ItemKind::from_name(item).expect("item")
+        );
+        assert_eq!(engine.resources.colony.ground_items[&selected].count, 2);
+        assert_eq!(engine.resources.colony.ground_items[&other].count, 3);
+    }
+}
+
+#[test]
+fn active_food_destination_survives_group_expiry_until_arrival() {
+    let (mut engine, entity, id, mut system, hazelnuts, roots) = with_nut_history();
     system
         .try_tick(&mut engine.world, &mut engine.resources)
-        .expect("novel group selection");
+        .expect("select roots");
     assert_eq!(
         engine
             .world
@@ -162,25 +228,39 @@ fn unseen_groups_use_three_day_history_then_nearest_eligible_food() {
             .tile,
         roots
     );
-    // Exactly three days later the nut group is outside the half-open window.
     engine.resources.current_tick += engine.resources.rules.calendar.days_to_ticks(3);
     system
         .try_tick(&mut engine.world, &mut engine.resources)
-        .expect("expired group history");
-    // The nearest newly eligible stack is underfoot: arrival clears SeekTarget.
-    assert_eq!(hazelnuts, origin);
+        .expect("retain admitted owner");
+    assert_eq!(
+        engine
+            .world
+            .get::<&SeekTarget>(entity)
+            .expect("target")
+            .tile,
+        roots
+    );
     assert_eq!(engine.resources.food.tallies.meals, 0);
+    *engine.world.get::<&mut Position>(entity).expect("arrival") = Position::new(roots.0, roots.1);
     engine.resources.current_tick += 1;
     system
         .try_tick(&mut engine.world, &mut engine.resources)
-        .expect("eat the newly eligible nearest food");
+        .expect("arrive");
+    engine.resources.current_tick += 1;
+    system
+        .try_tick(&mut engine.world, &mut engine.resources)
+        .expect("consume retained owner");
     assert_eq!(engine.resources.food.tallies.meals, 1);
     assert_eq!(
-        engine.resources.food.meals[&id].last_meals[0].item,
-        ItemKind::from_name("hazelnuts").expect("hazelnuts")
+        engine.resources.food.meals[&id]
+            .last_meals
+            .last()
+            .expect("actual meal")
+            .item,
+        ItemKind::from_name("roots").expect("roots")
     );
-    assert_eq!(engine.resources.colony.ground_items[&hazelnuts].count, 2);
-    assert_eq!(engine.resources.colony.ground_items[&roots].count, 3);
+    assert_eq!(engine.resources.colony.ground_items[&roots].count, 2);
+    assert_eq!(engine.resources.colony.ground_items[&hazelnuts].count, 3);
 }
 
 #[test]

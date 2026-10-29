@@ -265,6 +265,8 @@ pub struct FoodState {
     pub pending_drying: Vec<DryingBatch>,
     /// Plan observations keyed by their actual chronicle entry index.
     pub winter_plans: BTreeMap<u32, WinterPlanEvidence>,
+    /// Timestamped observations, empty in baseline and legacy migrations.
+    pub evidence: super::food_evidence::FoodEvidence,
 }
 impl FoodState {
     /// Notify derived food readers of a physical or ownership change.

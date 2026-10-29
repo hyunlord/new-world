@@ -6,7 +6,7 @@
 # Reuses rendered text inventory, line-fit checks and PNG metadata; visual verdict remains pending.
 extends "res://tools/v8/mux21_play_capture.gd"
 
-const ALL_CASES: Array[String] = ["phase0", "phase1", "phase2", "phase3", "meal", "food", "cooking", "winter", "winter-chronicle", "chronicle", "why", "pot-food", "workshop-food"]
+const ALL_CASES: Array[String] = ["phase0", "phase1", "phase2", "phase3", "meal", "food", "cooking", "winter", "winter-chronicle", "chronicle", "why", "pot-food", "workshop-food", "cooking-why", "dried-why"]
 var focus: String = ""
 var provenance: String = ""
 var source_save: String = ""
@@ -199,7 +199,7 @@ func _observe_food() -> void:
 	var chronicle: Control = main.get_node("UI/ChroniclePanel") as Control
 	for row: Dictionary in _rows(food_cursor):
 		food_cursor = maxi(food_cursor, int(row.get("index", -1)) + 1)
-		if int(row.get("kind", -1)) < 48: continue
+		if int(row.get("kind", -1)) < 48 and not (int(row.get("kind", -1)) == 11 and int(row.get("cause", -1)) == 0): continue
 		var why_read: Dictionary = world.get_chronicle_why(int(row["index"]))
 		if not evidence.has("food_why_reads"): evidence["food_why_reads"] = []
 		evidence["food_why_reads"].append({"index": row["index"], "tick": _tick(), "read": why_read.duplicate(true)})
@@ -211,57 +211,128 @@ func _observe_food() -> void:
 				check("winter quantities rendered", sentence.contains(str(row.get("value", -1))) and sentence.contains(str(row.get("cause", -1))))
 				await _chronicle_shots("winter-chronicle", row)
 		if int(row.get("kind", -1)) == 48 and _wanted("cooking") and not observed.has("cooking"):
+			await _operation_why_shots(chronicle, row, why_read, "intake", "cooking-why")
 			await _chronicle_shots("cooking", row)
+		if int(row.get("kind", -1)) == 49 and focus.is_empty() and not observed.has("dried-why"):
+			await _operation_why_shots(chronicle, row, why_read, "stored", "dried-why")
 		if _wanted("chronicle") and not observed.has("chronicle"):
 			await _chronicle_shots("chronicle", row)
-		if int(row.get("kind", -1)) == 52 and int(row.get("cause", -1)) == 1 and _wanted("why") and not observed.has("why"):
-			await _hunger_why_shots(chronicle, row, why_read)
+		if int(row.get("kind", -1)) == 11 and int(row.get("cause", -1)) == 0 and _wanted("why") and not observed.has("why"):
+			await _operation_why_shots(chronicle, row, why_read, "acquisition", "why")
 
 
-func _hunger_why_shots(chronicle: Control, row: Dictionary, why: Dictionary) -> void:
-	# Stored supply links to reachable harvest, then the observed harvest condition.
-	# Selecting the oldest stage instead would show only the terminal explanation.
-	var kinds: Array = Array(why.get("kinds", []))
-	var causes: Array = Array(why.get("causes", []))
-	var links: Array = Array(why.get("links", []))
-	var values: Array = Array(why.get("values", []))
-	var connected: bool = bool(why.get("found", false)) and links.size() >= 3 and kinds.size() == links.size() and causes.size() == links.size() and values.size() == links.size()
-	if connected:
-		connected = kinds[0] == 52 and kinds[1] == 52 and kinds[2] == 52 and causes[0] == 1 and causes[1] == 2 and int(causes[2]) in [3, 4, 5, 6] and links[0] == 0 and links[1] == 0 and links[2] == 0
-	check("hunger why actual stored-harvest-reason links", connected)
+func _operation_why_shots(chronicle: Control, row: Dictionary, why: Dictionary, expected_type: String, name: String) -> void:
+	var metadata: Array = why.get("food_evidence", [])
+	var connected: bool = _operation_chain_valid(row, why, expected_type)
+	var operation: Dictionary = metadata.back() if connected else {}
+	check(name + " links actual immutable " + expected_type + " evidence", connected)
 	if not connected: return
-	var opened: bool = bool(chronicle.call("open_why", row["index"]))
-	check("hunger why opens selected stores entry", opened)
-	if not opened: return
 	var panel: Control = main.get_node("UI/WhyPanel") as Control
 	var body: RichTextLabel = panel.get("_body") as RichTextLabel
 	var valid: bool = true
-	for factor: float in [1.0, 1.25]:
-		hud.get("store").set_value("ui_scale", factor)
-		await create_timer(0.6).timeout
-		await frames(5)
-		var actual: String = panel.call("plain_text")
-		var expected: Array[String] = []
-		for i: int in 3:
-			expected.append(ChronicleText.food_hunger_sentence(int(causes[i]), int(values[i]), root.get_node("Locale")))
-		var present: bool = panel.visible and body.is_visible_in_tree() and int(panel.call("current_index")) == int(row["index"]) and panel.call("lines").size() >= 3
-		for sentence: String in expected:
-			present = present and not sentence.is_empty() and actual.contains(sentence)
-		check("hunger why all three meaningful sentences rendered %s" % factor, present)
-		var fits: bool = body.get_visible_line_count() > 0 and body.get_content_height() <= body.size.y
-		check("hunger why entire chain fits body %s" % factor, fits)
-		_fit_control(panel, "hunger why panel")
-		valid = valid and present and fits
-		await _shot("why-%s" % factor, {"scale": factor, "event": row, "why": why, "expected_sentences": expected, "rendered_text": actual, "body_rect": str(body.get_global_rect()), "content_height": body.get_content_height(), "visible_lines": body.get_visible_line_count(), "selected_index": panel.call("current_index")})
+	for language: String in ["ko", "en"]:
+		root.get_node("Locale").call("set_language", language)
+		for factor: float in [1.0, 1.25]:
+			hud.get("store").set_value("ui_scale", factor)
+			var opened: bool = bool(chronicle.call("open_why", row["index"]))
+			await create_timer(0.6).timeout
+			await frames(5)
+			var actual: String = panel.call("plain_text")
+			var expected: String = ChronicleText.food_operation_sentence(operation, root.get_node("Locale"))
+			var present: bool = opened and panel.visible and body.is_visible_in_tree() and int(panel.call("current_index")) == int(row["index"]) and not expected.is_empty() and actual.contains(expected) and not expected.contains("M6A_") and not expected.contains("{")
+			check("historical hunger text rendered %s %s" % [language, factor], present)
+			_fit_control(panel, "historical hunger panel")
+			var bar: VScrollBar = body.get_v_scroll_bar()
+			for _wheel: int in 40:
+				if bar.value <= 0.5: break
+				await _why_wheel(body, MOUSE_BUTTON_WHEEL_UP)
+			var at_top: bool = bar.value <= 0.5
+			check("causal chain starts at top %s %s" % [language, factor], at_top)
+			var segment: int = 0
+			var overlaps: bool = true
+			await _shot("%s-%s-%s-top" % [name, language, factor], {"language": language, "scale": factor, "event": row, "why": why, "rendered_text": actual, "expected": expected, "scroll": bar.value, "page": bar.page, "max": bar.max_value, "segment": segment})
+			for _wheel: int in 80:
+				if bar.value + bar.page >= bar.max_value - 1.0: break
+				var before: float = bar.value
+				var previous_page: float = bar.page
+				await _why_wheel(body, MOUSE_BUTTON_WHEEL_DOWN)
+				var overlap: bool = bar.value > before and bar.value < before + previous_page
+				check("causal wheel segment advances with viewport overlap", overlap)
+				overlaps = overlaps and overlap
+				segment += 1
+				await _shot("%s-%s-%s-segment-%02d" % [name, language, factor, segment], {"language": language, "scale": factor, "segment": segment, "previous_scroll": before, "previous_page": previous_page, "scroll": bar.value, "page": bar.page, "max": bar.max_value, "body_rect": str(body.get_global_rect()), "visible_lines": body.get_visible_line_count(), "rendered_text": actual, "why": why})
+				if not overlap: break
+			var reached: bool = bar.value + bar.page >= bar.max_value - 1.0 and body.get_visible_line_count() > 0
+			check("historical hunger end reachable by wheel %s %s" % [language, factor], reached)
+			await _shot("%s-%s-%s-bottom" % [name, language, factor], {"language": language, "scale": factor, "scroll": bar.value, "page": bar.page, "max": bar.max_value, "body_rect": str(body.get_global_rect()), "rendered_text": actual, "why": why})
+			valid = valid and present and at_top and overlaps and reached
+
 	panel.hide()
-	if valid: observed["why"] = {"tick": _tick(), "event": row, "why": why}
+	root.get_node("Locale").call("set_language", "ko")
+	if valid: observed[name] = {"tick": _tick(), "event": row, "why": why, "coverage": "actual historical receipt; KO/EN at1.0/1.25 with wheel reachability"}
+
+
+func _why_wheel(body: RichTextLabel, button: MouseButton) -> void:
+	for down: bool in [true, false]:
+		var event := InputEventMouseButton.new()
+		event.position = body.get_global_rect().get_center()
+		event.button_index = button
+		event.pressed = down
+		Input.parse_input_event(event)
+	await frames(3)
+
+
+func _operation_chain_valid(row: Dictionary, why: Dictionary, expected_type: String) -> bool:
+	# Rust mood::why_chain expands NeedSample into modifier3, then its stored entry.
+	# Modifier codes are not Chronicle indices and have no entry metadata.
+	var count: int = 7 if expected_type == "acquisition" else 2
+	if not bool(why.get("found", false)): return false
+	for key: String in ["links", "codes", "kinds", "causes", "subjects", "ticks", "values", "food_daily_milli", "food_evidence"]:
+		if why.get(key, []).size() != count: return false
+	var links: Array = Array(why["links"])
+	var codes: Array = Array(why["codes"])
+	var kinds: Array = Array(why["kinds"])
+	var causes: Array = Array(why["causes"])
+	var subjects: Array = Array(why["subjects"])
+	var ticks: Array = Array(why["ticks"])
+	var metadata: Array = why["food_evidence"]
+	var expected_links: Array = [0, 0, 1, 0, 0, 0, 0] if count == 7 else [0, 0]
+	var expected_kinds: Array = [11, 52, -1, 52, 52, 52, 53] if count == 7 else [48 if expected_type == "intake" else 49, 53]
+	if links != expected_links or kinds != expected_kinds or int(codes[0]) != int(row.get("index", -1)): return false
+	if int(causes[0]) != int(row.get("cause", -1)): return false
+	var last_entry: int = int(codes[0]) + 1
+	for i: int in count:
+		if links[i] == 0:
+			if int(codes[i]) < 0 or int(codes[i]) >= last_entry or int(subjects[i]) != int(row.get("subject", -1)) or int(ticks[i]) != int(row.get("tick", -1)): return false
+			last_entry = int(codes[i])
+		elif codes[i] != 3 or causes[i] != -1 or subjects[i] != -1 or ticks[i] != -1: return false
+		if i < count - 1 and (not metadata[i] is Dictionary or not metadata[i].is_empty()): return false
+	if count == 7:
+		if causes[0] != 0 or causes[1] != 0 or causes[3] != 1 or causes[4] != 2 or int(causes[5]) not in [3, 4, 5, 6] or causes[6] != 0: return false
+	elif causes[1] != (1 if expected_type == "intake" else 2): return false
+	if not metadata.back() is Dictionary: return false
+	var operation: Dictionary = metadata.back()
+	if int(operation.get("schema_version", -1)) != 1 or operation.get("type", "") != expected_type or int(operation.get("entry_index", -1)) != int(codes.back()) or int(operation.get("subject", -1)) != int(subjects.back()) or int(operation.get("recorded_tick", -1)) != int(ticks.back()): return false
+	if count == 7:
+		var receipt: Dictionary = operation.get("receipt", {})
+		var flow: Dictionary = operation.get("flow", {})
+		var data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/food_chronicle.json"))
+		if not data is Dictionary or not data.get("reasons", {}).has(str(receipt.get("reason", ""))): return false
+		if receipt.get("reason", "") == "cancelled" and not data.get("cancellations", {}).has(str(receipt.get("cancel_reason", ""))): return false
+		var from_tick: int = int(flow.get("from_tick", -1))
+		var to_tick: int = int(flow.get("to_tick", -1))
+		var observed_tick: int = int(receipt.get("tick", -1))
+		if from_tick < 0 or observed_tick < from_tick or observed_tick > to_tick or to_tick != int(row.get("tick", -1)) or flow.get("scope", "") != "colony": return false
+		for key: String in ["harvested_units", "craft_input_units", "craft_output_units", "eaten_units", "spoiled_units", "lost_units", "imported_units", "exported_units"]:
+			if not flow.has(key) or int(flow[key]) < 0: return false
+	return true
 
 
 func _hashes() -> Dictionary:
 	var hashes: Dictionary = super._hashes()
 	for external: String in [source_save, provenance]:
 		if not external.is_empty(): hashes[external] = FileAccess.get_sha256(external)
-	for path: String in ["res://tools/v8/m6a_ui_capture.gd", "res://assets/ui/food_chronicle.json", "res://assets/ui/alerts.json", "res://assets/v8art/render_params.json", "res://scripts/world/colony/plant_layer.gd", "res://scripts/ui/food_text.gd"]:
+	for path: String in ["res://tools/v8/m6a_ui_capture.gd", "res://scripts/ui/chronicle_text.gd", "res://scripts/ui/panels/why_panel.gd", "res://scripts/core/locale.gd", "res://localization/manifest.json", "res://localization/key_registry.json", "res://localization/ko/ui.json", "res://localization/en/ui.json", "res://localization/ko/buildings.json", "res://localization/en/buildings.json", "res://localization/compiled/ko.json", "res://localization/compiled/en.json", "res://assets/ui/food_chronicle.json", "res://assets/ui/alerts.json", "res://assets/v8art/render_params.json", "res://scripts/world/colony/plant_layer.gd", "res://scripts/ui/food_text.gd"]:
 		hashes[path] = FileAccess.get_sha256(path)
 	return hashes
 

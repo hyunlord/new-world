@@ -6,7 +6,13 @@ use sim_core::colony::ItemKind;
 use sim_engine::SimResources;
 
 /// Record the first completed cooked meal, never a bill or interrupted intent.
-pub fn cooked_meal(res: &mut SimResources, agent: u64, item: ItemKind, units: u32) {
+pub fn cooked_meal(
+    res: &mut SimResources,
+    agent: u64,
+    item: ItemKind,
+    units: u32,
+    source: (FoodOwner, u32, u32),
+) {
     if res.food.firsts.cooked_meal.is_some() {
         return;
     }
@@ -14,7 +20,19 @@ pub fn cooked_meal(res: &mut SimResources, agent: u64, item: ItemKind, units: u3
         .subject(agent)
         .cause(item.code())
         .value(i64::from(units));
-    let index = res.chronicle.push_caused(entry, None);
+    let parent = super::evidence::operation(
+        res,
+        Some(agent),
+        sim_core::colony::food_evidence::OperationEvidence::Intake {
+            owner: source.0,
+            item,
+            born_day: source.1,
+            lifetime_days: source.2,
+        },
+    );
+    let index = res
+        .chronicle
+        .push_caused(entry, Some(sim_core::chronicle::CauseRef::Entry(parent)));
     res.food.firsts.cooked_meal = Some(u64::from(index));
 }
 
@@ -31,7 +49,22 @@ pub fn stored(res: &mut SimResources, owner: FoodOwner, kind: ItemKind, count: u
     let entry = ChronicleEntry::new(res.current_tick, ChronicleKind::FirstDriedStore)
         .cause(kind.code())
         .value(i64::from(count));
-    let index = res.chronicle.push_caused(entry, None);
+    let Some(age) = res.food.ages.get(&owner).copied() else {
+        return;
+    };
+    let parent = super::evidence::operation(
+        res,
+        None,
+        sim_core::colony::food_evidence::OperationEvidence::Stored {
+            owner,
+            item: kind,
+            pieces: count,
+            born_day: age.born_day,
+        },
+    );
+    let index = res
+        .chronicle
+        .push_caused(entry, Some(sim_core::chronicle::CauseRef::Entry(parent)));
     res.food.firsts.dried_store = Some(u64::from(index));
 }
 
@@ -120,9 +153,26 @@ pub fn hunger_death(
             .cause(stage)
             .value(value)
     };
+    if let Ok(job) = world.get::<&sim_core::colony::Job>(entity) {
+        if let sim_core::colony::JobKind::Harvest { plant } = job.kind {
+            if job.item.definition().food.is_some() {
+                super::evidence::record_failure(
+                    res,
+                    agent,
+                    sim_core::colony::food_evidence::AcquisitionReceipt {
+                        tick,
+                        target: Some(plant),
+                        job_started: Some(job.taken_at),
+                        reason: sim_core::colony::food_evidence::AcquisitionReason::Unfinished,
+                    },
+                );
+            }
+        }
+    }
+    let historical = super::evidence::death_parent(res, agent);
     let reason_entry = res.chronicle.push_caused(
         observation(reason, i64::try_from(ripe_units).unwrap_or(i64::MAX)),
-        None,
+        historical.map(CauseRef::Entry),
     );
     let harvest_entry = res.chronicle.push_caused(
         observation(2, i64::try_from(reachable_units).unwrap_or(i64::MAX)),

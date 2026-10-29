@@ -161,6 +161,7 @@ impl ColonyMindSystem {
                 if completed.contains(&agent) {
                     continue;
                 }
+                *context.plant_query_observation.borrow_mut() = None;
                 self.person(
                     world,
                     resources,
@@ -171,6 +172,28 @@ impl ColonyMindSystem {
                     &mut completed,
                     replay_visit,
                 )?;
+                let observed = context.plant_query_observation.borrow_mut().take();
+                let ate_now = observed == Some((agent, true))
+                    && resources
+                        .food
+                        .meals
+                        .get(&agent)
+                        .and_then(|history| history.last_meals.last())
+                        .is_some_and(|meal| meal.tick == resources.current_tick);
+                if observed == Some((agent, true)) && !ate_now {
+                    let tick = resources.current_tick;
+                    crate::runtime::food::evidence::record_failure(
+                        resources,
+                        agent,
+                        sim_core::colony::food_evidence::AcquisitionReceipt {
+                            tick,
+                            target: None,
+                            job_started: None,
+                            reason:
+                                sim_core::colony::food_evidence::AcquisitionReason::NoRipeInRegion,
+                        },
+                    );
+                }
             }
             let Some(transaction) = routine.as_mut() else {
                 break;

@@ -138,6 +138,7 @@ func _check_feed_configuration() -> void:
 	var panel: Control = ChroniclePanel.new()
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(ChroniclePanel.FEED_PATH))
 	_check("default feed configuration valid", panel.configure_feed_visibility(raw))
+	_check("food operations hidden from owner feed", not panel.keeps_kind(53))
 	_check("default feed suppresses mind choice only by data", not panel.keeps_kind(47) and panel.keeps_kind(0))
 	var mind_row: Dictionary = {"kind": 47, "tick": 1}
 	var life_row: Dictionary = {"kind": 0, "tick": 1}

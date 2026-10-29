@@ -13,6 +13,7 @@ mod command;
 pub mod content;
 pub mod content_state;
 pub mod food;
+pub mod food_evidence;
 mod items;
 mod job;
 pub mod knowledge;

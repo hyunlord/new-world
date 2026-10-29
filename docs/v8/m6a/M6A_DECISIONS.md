@@ -689,3 +689,54 @@ The admitted existing counters show similar corecall counts851145(BASE)/845240(p
 The new regression failed1/3 on the old exact-value hit rule, with other2 tests passing. Post-change sim-core484 unit tests plus integrations PASS. First sim-systems run476PASS/1FAIL was an obsolete numeric-miss hit expectation; its stateless result and full read/value trace still agreed. Only that cost expectation changed; second run477/477 and workspace/all-targetClippy PASS. Independent review found no material defect. Baseline identity7, full calibration trajectory equality and fresh paired performance remain separate obligations. Evidence: p7-equivalence-red.log, p7-core-green.log, p7-systems-green.log, p7-systems-green-2.log, p7-clippy.log, p7-cache-code-review.md.
 
 P7 baseline identity7 completed exit0:228,748 shared values, zero differences/one-sided paths;64 chronicle files/19,683 entries,64 normalized raw sample files and determinism seeds0–3 PASS. The logged e156ae29 parent SHA includes uncommitted P7 source; this is not final clean-head gate evidence. Fresh paired performance and exact calibration2→3 colony outputs remain required. Original identity logs are preserved externally at candidate-identity-7.log.
+
+### P7 acceptance and P8 historical evidence boundary
+P7 source5857cdc4f89c24d4a4d5f2ad2f55703c937572c3 completed fresh same-session BASE performance:33/33 valid pairs, all six mean/p99 ratios <=1.10, allocator ratios and C3 PASS; independent raw recheck PASS. Mean/p99: n200 .972124/.960710; n1000 .947506/.827639; n2000 .741673/.861640; script1.044607/1.037530; side64 1.051704/.968085; wolves1.062197/1.037320. Preserve earlier p5/p6 failures. Authentic build/perf receipts remain under candidate-p7-binaries and perf-p7-session-1.
+Calibration3 completed exit0 under original deadline: all24 files across8 worlds byte-identical to calibration2, all8 fingerprints equal, no normalizations. Register now3/4 used. These are calibration observations, not heldout acceptance. Cooked and both-winter stores remain7/8; other food/common bars8/8. The exact comparison proves the measured preserving changes did not change these full recorded trajectories.
+
+P8 is a separate intended evidence/schema change required by goal2.7. Record real failed harvest admission/query/completion/cancellation, actual first cooked intake and first preserved placement; retain timestamped personal receipts and explicitly colony-wide flow intervals. Successful meals/harvests retire stale acquisition episodes. No inferred historical reason from current priorities, no per-tick plant scan, no authored-policy change. Append FoodEvidence after the twelve existing FoodState fields; format14 uses an exact legacy13 adapter. Preserve original13 fixtures and old UNKNOWN captures.
+New FoodOperation53 entries intentionally change Chronicle ordinals/causal links, serialized evidence, full-state fingerprints and story-yield counts. Fingerprint includes the complete FoodState through food_fingerprint::append, and MindState separately; do not claim it excludes evidence or silently normalize P7. Compare P8 observed physical outcomes/flows/meals separately and audit old-event referents through explicit ordinal mapping. Cohort outputs do not prove every internal action unchanged. New history must be validated through real operation tests, malformed-save tests and actual ordinary-command starvation/milestone captures before scope completion. Final calibration4, freeze, heldout and full gate remain pending; no extra owner approval is required for this authorized correction.
+
+
+### P8 integrated evidence and compatibility verification
+
+The integrated uncommitted P8 source records actual historical acquisition failures
+and colony-flow intervals, plus completed intake/storage parents; it keeps authored
+policy and food decisions unchanged. FoodEvidence is appended after winter_plans;
+format14 has an exact format13 decoder and no <=12 remigration for physical saves.
+ADR0054 records the evidence and compatibility contract. Kind53 remains reachable
+through Why but hidden from the owner feed by data. Missing historical reasons are
+not filled from present-day snapshots, and old UNKNOWN captures remain preserved.
+
+`p8-integration-green-1.log` reports497 passed,0 failed,1 ignored. The separately
+required authentic old13 fixture test passed1/1 in
+`p8-original13-save-test-3.log`, preserving complete old food encoding plus the new
+empty tail, original system slots, and format14 evidence roundtrip. These are
+uncommitted-source checks, not final-head acceptance. Earlier standalone attempts
+failed first for missing catalog bootstrap and then for a fabricated cursor using
+the engine clock rather than the observer's resource clock. The final test uses
+explicit bundled bootstrap and the real observe_day boundary; preserve all failures.
+
+The initial locale assertions failed because Korean layout inserts U+2060 word
+joiners. Compare visible semantic text with only that known layout character
+removed; preserve production text and all required content/unknown checks. This
+normalization does not prove wrapping or replace captures. Source examples are
+`tools/v8/test_locale_trf.gd` and `tools/v8/test_core_mind_ui.gd`.
+
+P8 deliberately changes serialized evidence, complete FoodState fingerprints,
+Chronicle ordinals/causal links and story counts. P7 calibration2/3 byte equality
+remains valid only for its own source. Physical-outcome/flow/meal comparisons and
+explicit old-event ordinal mapping are separate obligations; cohort output alone
+does not prove every internal action unchanged. Fresh P8 performance, calibration4,
+freeze, held-out and the full gate remain pending; no publication or acceptance is
+claimed by these focused checks.
+
+### P8 broad regression findings and test-contract correction
+
+The broad workspace run passed2,197 tests in121 completed binaries before a food-mind test failed; this is not a complete workspace PASS. Its stale fixture advanced three days without movement, then expected reranking away from an admitted fresh root stack. Runtime trace confirmed position(90,100), retained roots(87,97), SeekingFood and zero meals. The provider/lifecycle match P7 and implement P4's documented destination retention; this custom policy never reads the new plant-query observer. Preserve the failure and diagnostic compile error. The corrected test makes independent new selections at0,window−1,window, retaining exact item/count assertions and actual arrival/consumption. A separate regression asserts an in-flight owner survives history expiry until arrival. Product policy and retention code remain unchanged. Both tests pass.
+
+Two additional current-writer integration tests expected format13 despite calling save::save. Their actual14-vs13 failures were captured with no-fail-fast; only current-write expectations/names now use14. Authentic13 fixture assertions remain13. Focused three-target rerun passed11/11. Core kind-count assertions now independently pin FoodOperation53/name and54 total while preserving all earlier ordinal checks. Full final-head gate remains required.
+
+### P8 pre-commit identity (2026-10-29)
+
+The supervised identity8 run completed with exit 0: 228,748 shared summary values, zero differences or one-sided paths; 64 Chronicle files/19,683 entries equal apart from git_sha; 64 raw files equal under the existing documented normalization; determinism seeds 0–3 PASS. Source was the staged P8 tree atop P7, not a clean-head final gate. Evidence: `/Users/rexxa/work/m6a-data/20261029/p8-identity8-launch/child.log` and its original terminal receipt. P8 runtime performance, actual UI capture, calibration4, held-out and the complete final gate remain pending.

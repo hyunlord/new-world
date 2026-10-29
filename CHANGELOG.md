@@ -4,17 +4,24 @@
 
 ### Added
 - Data-defined seasonal plants, physical harvest jobs, food ownership and daily
-  spoilage, cooking, dietary records, drying and pot storage. Format 13 retains
-  explicit old-save migration boundaries; see [ADR 0052](docs/decisions/0052-item-food-chain.md).
+  spoilage, cooking, dietary records, drying and pot storage. Format 14 adds
+  historical evidence with an exact format-13 decoder; earlier migration
+  boundaries remain explicit. See [ADR 0052](docs/decisions/0052-item-food-chain.md)
+  and [ADR 0054](docs/decisions/0054-food-operation-evidence.md).
 - Food planning, physical storage-capacity expansion, food inspector/why reads,
   food chronicle entries and batched plant-phase placeholders.
 - Bounded calibration, held-out and fresh performance evidence tooling with an
   explicit simulation-successor gate; no inherited M-CORE or M-UX2 waiver.
 
+- Historical acquisition receipts and explicitly colony-wide flow intervals;
+  actual first cooked intake and preserved-placement operation parents in Why.
+  Internal operation records remain hidden from the owner feed through UI data.
+
 ### Changed
 - Mind continuation replays changed numeric facts only when every authored
   predicate keeps the same truth value; reads, errors, cadence and per-person
-  cache capacity remain unchanged. Fresh performance acceptance is pending.
+  cache capacity remain unchanged. P7 passed fresh paired performance;
+  the subsequent P8 evidence source requires its own fresh verification.
 - Colony eating and food alerts read actual items. Steward cooking reconciles
   accepted order ownership while preserving player edits. Chronicle visibility
   admits supported kinds through explicit data entries.
@@ -35,14 +42,15 @@
 - Colony authority of the V7 abstract food counter; the baseline path remains
   separate and requires fresh identity verification.
 
-This entry records implementation, not acceptance or publication. Winter
-survival failed in calibration round 1 (0/8 alive); round 2 observes 8/8 alive,
-with cooked share and winter stores at 7/8. Its valid early performance comparison
-fails ten timing ratios and side64 allocation; all six C3 ceilings pass. The
-optimization's fresh performance, held-out evaluation and full gate are pending.
-Preserve failed runs and their corrections in
-[M6A_DECISIONS](docs/v8/m6a/M6A_DECISIONS.md) and
-[M6A_REPORT](docs/v8/m6a/M6A_REPORT.md).
+This entry records implementation, not acceptance or publication. Preserve the
+calibration1 survival failure and earlier valid performance failures. P7 passed
+33 fresh performance pairs; calibration3's24 files were byte-identical to round2,
+with cooked share and winter stores still7/8. P8 intentionally changes historical
+evidence, Chronicle identities and full-state fingerprints without policy tuning.
+Its uncommitted source passed497 system tests and authentic old13 migration checks;
+fresh performance, calibration4, held-out and the full gate remain pending.
+See [M6A_DECISIONS](docs/v8/m6a/M6A_DECISIONS.md) and
+[M6A_REPORT](docs/v8/m6a/M6A_REPORT.md) for retained evidence and limitations.
 
 ## M-UX2.1 최종 게시 — 오너 수용 조건 기록
 

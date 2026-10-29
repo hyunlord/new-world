@@ -272,3 +272,17 @@ Quiet admission below the existing load ceiling is not proof of stable execution
 
 ### Keep extracted gate mappings independent of caller context
 A frozen test may AST-extract a mapping function into an empty namespace. Adding an environment-selected branch that references caller globals can pass focused tests yet fail under the sealed gate environment. Keep the pure historical mapping standalone, dispatch context-dependent validation at its actual caller, and test standalone extraction with the new environment variable present plus both dispatch paths and failure propagation. Do not clear the feature flag globally or weaken the frozen test. Source: M-UX2.1 D18–D19; `test_core_ui_successor_dispatch.py`.
+
+
+### Historical food fixtures: bootstrap and the observed clock
+
+Standalone format13 decoding requires explicit bundled content bootstrap before
+reading typed item/plant values; a preceding test's global initialization is not a
+fixture dependency. Preserve the failed unbootstrapped run. To create a nonempty
+observation cursor after load, call the real food observe_day boundary, which uses
+SimResources.current_tick. Do not synthesize that cursor from SimEngine.current_tick:
+the resource clock can describe the last processed boundary and validation must
+retain that distinction. Verify full old-food bytes plus the new evidence tail,
+original system slots and byte-stable save14 roundtrip. Sources:
+`rust/crates/sim-systems/src/save/evidence_tests.rs`;
+`docs/v8/m6a/M6A_DECISIONS.md` P8 compatibility verification.

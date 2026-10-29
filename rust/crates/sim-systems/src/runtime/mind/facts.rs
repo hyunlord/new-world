@@ -1183,11 +1183,13 @@ impl LazyRow<'_> {
 fn edible_plant(p: &PersonSnapshot, c: &TickContext, r: &SimResources) -> Option<TargetCandidate> {
     r.rules.colony?;
     let mut index = c.harvest_food.borrow_mut();
-    index
+    let (candidate, no_ripe) = index
         .get_or_insert_with(|| {
             std::sync::Arc::new(super::harvest_food::PlantCandidates::capture(r))
         })
-        .nearest(p, r)
+        .nearest_observed(p, r);
+    *c.plant_query_observation.borrow_mut() = Some((p.agent, no_ripe));
+    candidate
 }
 
 fn inventory_total(p: &PersonSnapshot, r: &SimResources, name: &str) -> Result<u32, FactError> {

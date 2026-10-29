@@ -32,7 +32,7 @@ const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 ## MindChoice (47) records only entry into the critical band; its node slot is not a display name.
-const LAST_KIND: int = 52
+const LAST_KIND: int = 53
 static var steward_labels: Dictionary = {}
 static var food_chronicle: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
@@ -61,6 +61,8 @@ static func rows(packed: Dictionary) -> Array[Dictionary]:
 		for key: String in COLUMNS:
 			var column: Variant = packed.get(key, [])
 			row[key] = int(column[index]) if index < column.size() else -1
+		var metadata: Array = packed.get("food_evidence", [])
+		row["food_evidence"] = metadata[index] if index < metadata.size() and metadata[index] is Dictionary else {}
 		result.append(row)
 	return result
 
@@ -161,6 +163,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		50: return winter_food_sentence(row, locale)
 		51: return loc(locale, "M6A_CHRON_WINTER_SURVIVED")
 		52: return food_hunger_sentence(cause, value, locale)
+		53: return food_operation_sentence(row.get("food_evidence", {}), locale)
 	return ""
 
 
@@ -267,6 +270,8 @@ static func why_lines(read: Dictionary, locale: Node, info: Dictionary) -> Array
 				var row: Dictionary = {"tick": ticks[i] if i < ticks.size() else 0, "kind": kinds[i] if i < kinds.size() else -1,
 					"subject": subjects[i] if i < subjects.size() else -1, "other": others[i] if i < others.size() else -1, "third": -1,
 					"settlement": -1, "settlement2": -1, "cause": causes[i] if i < causes.size() else -1, "value": values[i] if i < values.size() else 0, "food_daily_milli": food_daily[i] if i < food_daily.size() else -1}
+				var metadata: Array = read.get("food_evidence", [])
+				row["food_evidence"] = metadata[i] if i < metadata.size() and metadata[i] is Dictionary else {}
 				text = line(row, -1, locale, info, true)
 				if text.is_empty():
 					text = loc(locale, "UI_UNKNOWN")
@@ -370,3 +375,28 @@ static func winter_food_sentence(row: Dictionary, locale: Node) -> String:
 	quantities["stored_days"] = "%.1f" % (float(stored) * 1000.0 / float(daily))
 	quantities["needed_days"] = "%.1f" % (float(needed) * 1000.0 / float(daily))
 	return loc(locale, "M6A_WINTER_DAYS").format(quantities)
+
+
+static func food_operation_sentence(evidence: Dictionary, locale: Node) -> String:
+	if food_chronicle.is_empty():
+		food_hunger_sentence(0, 0, locale)
+	if int(evidence.get("schema_version", -1)) != 1:
+		return loc(locale, "M6A_EVIDENCE_MISSING")
+	var kind: String = str(evidence.get("type", ""))
+	var key: String = str(food_chronicle.get("operations", {}).get(kind, "M6A_EVIDENCE_MISSING"))
+	if kind == "acquisition":
+		var receipt: Dictionary = evidence.get("receipt", {})
+		var flow: Dictionary = evidence.get("flow", {})
+		var reason: String = loc(locale, str(food_chronicle.get("reasons", {}).get(str(receipt.get("reason", "")), "M6A_EVIDENCE_MISSING")))
+		if receipt.get("reason", "") == "cancelled":
+			reason += " · " + loc(locale, str(food_chronicle.get("cancellations", {}).get(str(receipt.get("cancel_reason", "")), "M6A_EVIDENCE_MISSING")))
+		var values: Dictionary = flow.duplicate()
+		values["reason"] = reason
+		values["tick"] = receipt.get("tick", -1)
+		values["scope"] = loc(locale, "M6A_SCOPE_COLONY")
+		return loc(locale, key).format(values)
+	var values: Dictionary = evidence.duplicate()
+	values["item"] = EconomyText.item(locale, int(evidence.get("item", -1)))
+	var owner: Dictionary = evidence.get("owner", {})
+	values["owner"] = loc(locale, str(food_chronicle.get("owners", {}).get(str(owner.get("kind", "")), "M6A_EVIDENCE_MISSING")))
+	return loc(locale, key).format(values)

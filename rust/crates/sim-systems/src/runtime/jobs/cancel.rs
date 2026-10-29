@@ -51,6 +51,25 @@ pub fn release_job(
     entity: Entity,
     reason: CancelReason,
 ) {
+    if let (Some(id), Ok(job)) = (agent_id(world, entity), world.get::<&Job>(entity)) {
+        if let JobKind::Harvest { plant } = job.kind {
+            if job.item.definition().food.is_some() {
+                let tick = res.current_tick;
+                crate::runtime::food::evidence::record_failure(
+                    res,
+                    id,
+                    sim_core::colony::food_evidence::AcquisitionReceipt {
+                        tick,
+                        target: Some(plant),
+                        job_started: Some(job.taken_at),
+                        reason: sim_core::colony::food_evidence::AcquisitionReason::Cancelled(
+                            reason,
+                        ),
+                    },
+                );
+            }
+        }
+    }
     drop_carry(world, res, entity);
     if let Some(id) = agent_id(world, entity) {
         release_all(res, id);
@@ -112,6 +131,9 @@ pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
     }
     drop_carry(world, res, entity);
     crate::runtime::food::loss::lose_carried(world, res, entity);
+    if let Some(id) = agent_id(world, entity) {
+        crate::runtime::food::evidence::clear_person(res, id);
+    }
     let tool = world
         .get::<&Tool>(entity)
         .ok()

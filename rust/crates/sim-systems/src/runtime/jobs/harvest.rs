@@ -113,17 +113,64 @@ pub fn target_exists(res: &SimResources, tile: (u32, u32)) -> bool {
 
 /// Commit a harvest only after every yielded item has a physical ground owner.
 pub fn complete(res: &mut SimResources, tile: (u32, u32)) -> bool {
+    complete_result(res, tile).is_ok()
+}
+
+/// Same transaction with an exact observational failure for its executing worker.
+pub fn complete_observed(
+    res: &mut SimResources,
+    tile: (u32, u32),
+    agent: u64,
+    started: u64,
+) -> bool {
+    let food = res
+        .food
+        .plants
+        .get(&tile)
+        .and_then(|plant| installed_or_bundled().plant(plant.species))
+        .is_some_and(|def| def.yield_item.definition().food.is_some());
+    if !food {
+        return complete_result(res, tile).is_ok();
+    }
+    match complete_result(res, tile) {
+        Ok(()) => {
+            crate::runtime::food::evidence::clear_person(res, agent);
+            true
+        }
+        Err(reason) => {
+            let tick = res.current_tick;
+            crate::runtime::food::evidence::record_failure(
+                res,
+                agent,
+                sim_core::colony::food_evidence::AcquisitionReceipt {
+                    tick,
+                    target: Some(tile),
+                    job_started: Some(started),
+                    reason,
+                },
+            );
+            false
+        }
+    }
+}
+
+fn complete_result(
+    res: &mut SimResources,
+    tile: (u32, u32),
+) -> Result<(), sim_core::colony::food_evidence::AcquisitionReason> {
+    use sim_core::colony::food_evidence::AcquisitionReason;
+
     if !target_exists(res, tile) {
-        return false;
+        return Err(AcquisitionReason::TargetUnavailable);
     }
     let Some(state) = res.food.plants.get(&tile).copied() else {
-        return false;
+        return Err(AcquisitionReason::TargetUnavailable);
     };
     let Some(def) = installed_or_bundled().plant(state.species) else {
-        return false;
+        return Err(AcquisitionReason::TargetUnavailable);
     };
     let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
-    if items::create_ground(
+    items::create_ground(
         res,
         tile,
         ItemSpec::raw(def.yield_item, None),
@@ -131,10 +178,10 @@ pub fn complete(res: &mut SimResources, tile: (u32, u32)) -> bool {
         day,
         items::FoodSource::Harvest,
     )
-    .is_err()
-    {
-        return false;
-    }
+    .map_err(|error| match error {
+        items::FoodError::NoCapacity => AcquisitionReason::OutputPlacementFull,
+        _ => AcquisitionReason::OutputRejected,
+    })?;
     if let Some(plant) = res.food.plants.get_mut(&tile) {
         plant.units_left = 0;
         plant.next_regrow_day = if def.regrow_days == 0 {
@@ -146,5 +193,5 @@ pub fn complete(res: &mut SimResources, tile: (u32, u32)) -> bool {
     res.colony.designations.remove(&tile);
     res.colony.touch(false);
     res.food.touch();
-    true
+    Ok(())
 }

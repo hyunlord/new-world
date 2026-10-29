@@ -16,6 +16,7 @@ pub fn validate(world: &World, res: &SimResources) -> Result<(), String> {
         };
     }
     let agents: BTreeSet<_> = world.query::<&Agent>().iter().map(|(_, a)| a.id).collect();
+    super::evidence_validation::validate(&agents, res)?;
     for (&agent, &owner) in &res.food.active_targets {
         if !agents.contains(&agent) {
             return Err(format!("active food target has missing agent {agent}"));

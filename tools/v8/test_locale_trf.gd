@@ -51,6 +51,7 @@ func _run() -> void:
 		print("TRF_TEST_FAIL no Locale autoload")
 	else:
 		locale.call("set_language", "ko")
+		_test_food_evidence(locale)
 		_check("ko table", str(locale.call("trf", "UI_BLUEPRINT_LOGS", {"delivered": 5, "needed": 12})), "통나무 5/12")
 		_check("ko count", str(locale.call("trf", "UI_ORDER_RESULT_COUNT", {"count": 15})), "15개")
 		_check("ko year", str(locale.call("ltr", "UI_TIME_YEAR_FMT")).format({"year": 1}), "1년 차")
@@ -88,6 +89,7 @@ func _run() -> void:
 		_check_food_chronicle(locale, 27, "구운 뿌리를")
 		_check_food_chronicle(locale, 23, "죽을")
 		locale.call("set_language", "en")
+		_test_food_evidence(locale)
 		_check_food_chronicle(locale, 27, EconomyTextScript.item(locale, 27))
 		_check("m4 en era", KnowledgeTextScript.era_line(locale, {"era": 1, "progress": 318}), "Neolithic transition 31 %")
 		_check("m4 en wait", KnowledgeTextScript.wait_line(locale, 19), "Waiting: nobody knows Pot firing")
@@ -111,3 +113,26 @@ func _check_food_chronicle(locale: Node, item_code: int, expected_item: String) 
 	var line: String = ChronicleText.line(row, -1, locale, {"ticks_per_day": 1440}, true)
 	_check("cooked meal names eater once %s" % ChronicleText.language(locale), str(line.count("[url=person:1]")), "1")
 	_check("cooked meal why sentence names eater once", str(sentence.count("[url=person:1]")), "1")
+
+
+func _test_food_evidence(locale: Node) -> void:
+	var receipt: Dictionary = {"schema_version": 1, "type": "acquisition", "receipt": {"tick": 90, "reason": "work_disabled"}, "flow": {"scope": "colony", "from_tick": 80, "to_tick": 100, "harvested_units": 2, "craft_input_units": 3, "craft_output_units": 4, "eaten_units": 5, "spoiled_units": 6, "lost_units": 7, "imported_units": 8, "exported_units": 9}}
+	var rows: Array[Dictionary] = ChronicleText.rows({"tick": PackedInt64Array([100, 101]), "food_evidence": [receipt, {}]})
+	_check("food evidence dictionary retained", str(rows[0].get("food_evidence", {}) == receipt), "true")
+	_check("legacy evidence remains absent", str(rows[1].get("food_evidence", {}).is_empty()), "true")
+	var sentence: String = ChronicleText.sentence({"kind": 53, "food_evidence": receipt}, -1, locale, {}).replace("\u2060", "")
+	_check("food evidence reason localized", str(sentence.contains(str(locale.call("ltr", "M6A_REASON_WORK_DISABLED")))), "true")
+	_check("food evidence colony scope explicit", str(sentence.contains(str(locale.call("ltr", "M6A_SCOPE_COLONY")))), "true")
+	_check("food evidence no raw placeholders", str(sentence.contains("{") or sentence.contains("M6A_")), "false")
+	_check("missing operation honest", ChronicleText.sentence({"kind": 53}, -1, locale, {}).replace("\u2060", ""), str(locale.call("ltr", "M6A_EVIDENCE_MISSING")))
+
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/food_chronicle.json"))
+	for reason: String in config.get("reasons", {}):
+		receipt["receipt"]["reason"] = reason
+		if reason == "cancelled": receipt["receipt"]["cancel_reason"] = "command"
+		var rendered: String = ChronicleText.sentence({"kind": 53, "food_evidence": receipt}, -1, locale, {}).replace("\u2060", "")
+		_check("typed acquisition reason " + reason, str(rendered.contains(str(locale.call("ltr", config["reasons"][reason])))), "true")
+	for operation: String in ["intake", "stored"]:
+		var detail: Dictionary = {"schema_version": 1, "type": operation, "owner": {"kind": "pot"}, "item": 0, "born_day": 2, "lifetime_days": 8, "pieces": 3}
+		var rendered: String = ChronicleText.sentence({"kind": 53, "food_evidence": detail}, -1, locale, {})
+		_check("operation rendered " + operation, str(not rendered.is_empty() and not rendered.contains("{") and not rendered.contains("M6A_")), "true")

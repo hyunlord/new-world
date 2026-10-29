@@ -446,7 +446,7 @@ fn step(
                     let practiced = world
                         .get::<&sim_core::colony::knowledge::Knowledge>(entity)
                         .map_or(0, |knowledge| knowledge.practice() & mask);
-                    if !super::harvest::complete(res, plant) {
+                    if !super::harvest::complete_observed(res, plant, id, job.taken_at) {
                         cancel(world, res, entity, CancelReason::TargetGone);
                         return;
                     }

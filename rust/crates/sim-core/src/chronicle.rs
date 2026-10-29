@@ -168,11 +168,13 @@ pub enum ChronicleKind {
     WinterStoredSurvived = 51,
     /// Hunger death's food evidence; subject = person, cause = shortage reason, value = stores.
     HungerFoodChain = 52,
+    /// Actual food operation; immutable typed evidence lives in the food sidecar.
+    FoodOperation = 53,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 53] = [
+    pub const ALL: [ChronicleKind; 54] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -226,6 +228,7 @@ impl ChronicleKind {
         Self::WinterFoodPlan,
         Self::WinterStoredSurvived,
         Self::HungerFoodChain,
+        Self::FoodOperation,
     ];
 
     /// Stable numeric discriminant.
@@ -289,6 +292,7 @@ impl ChronicleKind {
             Self::WinterFoodPlan => "winter_food_plan",
             Self::WinterStoredSurvived => "winter_stored_survived",
             Self::HungerFoodChain => "hunger_food_chain",
+            Self::FoodOperation => "food_operation",
         }
     }
 }
@@ -743,10 +747,12 @@ mod tests {
         assert_eq!(ChronicleKind::StewardDefence.as_u8(), 46);
         assert_eq!(ChronicleKind::MindChoice.as_u8(), 47);
         assert_eq!(ChronicleKind::MindChoice.as_str(), "mind_choice");
-        assert_eq!(ChronicleKind::ALL.len(), 53);
+        assert_eq!(ChronicleKind::FoodOperation.as_u8(), 53);
+        assert_eq!(ChronicleKind::FoodOperation.as_str(), "food_operation");
+        assert_eq!(ChronicleKind::ALL.len(), 54);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 53);
+        assert_eq!(names.len(), 54);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

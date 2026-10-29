@@ -375,3 +375,65 @@ fn autonomous_harvest_walks_to_remote_plant_before_yielding_food() {
     assert_eq!(res.food.tallies.harvested_units, 5);
     crate::runtime::jobs::invariants::check(&world, &res).expect("conserved after movement/work");
 }
+
+#[test]
+fn disabled_harvest_admission_keeps_timestamped_observation_from_player_setting() {
+    use sim_core::colony::food_evidence::AcquisitionReason;
+    let (mut world, mut res, entity) = fixture();
+    let command = crate::commands::apply_command(
+        &mut world,
+        &mut res,
+        Command::SetWorkPriority {
+            agent: 7,
+            work: sim_core::colony::WorkType::Haul,
+            level: 0,
+        },
+    );
+    assert!(command.accepted);
+    let mut mind = ColonyMindSystem::new(MindProgram::load(POLICY).unwrap());
+    mind.try_tick(&mut world, &mut res).unwrap();
+    assert!(world.get::<&Job>(entity).is_err());
+    assert_eq!(res.food.plants[&(2, 2)].units_left, 5);
+    let observed = res
+        .food
+        .evidence
+        .active
+        .get(&7)
+        .expect("actual denied admission receipt");
+    assert_eq!(observed.last.tick, res.current_tick);
+    assert_eq!(observed.last.target, Some((2, 2)));
+    assert_eq!(observed.last.job_started, None);
+    assert_eq!(observed.last.reason, AcquisitionReason::WorkDisabled);
+}
+
+#[test]
+fn actual_empty_region_query_records_absence_without_creating_food() {
+    use sim_core::colony::food_evidence::AcquisitionReason;
+    let (mut world, mut res, entity) = fixture();
+    res.food.plants.clear();
+    let mut mind = ColonyMindSystem::new(MindProgram::load(POLICY).unwrap());
+    mind.try_tick(&mut world, &mut res).unwrap();
+    assert!(world.get::<&Job>(entity).is_err());
+    assert_eq!(res.food.tallies.harvested_units, 0);
+    let receipt = &res
+        .food
+        .evidence
+        .active
+        .get(&7)
+        .expect("observed regional absence")
+        .last;
+    assert_eq!(receipt.reason, AcquisitionReason::NoRipeInRegion);
+    assert_eq!(receipt.target, None);
+}
+
+#[test]
+fn reserved_ripe_candidate_is_not_mislabeled_as_no_ripe_in_region() {
+    let (mut world, mut res, _) = fixture();
+    res.colony
+        .reservations
+        .insert(ReserveKey::Plant((2, 2)), 99);
+    let mut mind = ColonyMindSystem::new(MindProgram::load(POLICY).unwrap());
+    mind.try_tick(&mut world, &mut res).unwrap();
+    assert!(!res.food.evidence.active.contains_key(&7));
+    assert_eq!(res.food.plants[&(2, 2)].units_left, 5);
+}

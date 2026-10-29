@@ -573,6 +573,8 @@ pub struct TickContext {
     gather_cache: RefCell<BTreeMap<GatherCacheKey, GatherCacheValue>>,
     food_index: RefCell<FoodIndex>,
     pub(super) harvest_food: RefCell<Option<Arc<super::harvest_food::PlantCandidates>>>,
+    /// Last actual plant query in the current decision visit; no retained per-person cache.
+    pub(super) plant_query_observation: RefCell<Option<(AgentId, bool)>>,
     pub(super) physical_food: RefCell<crate::runtime::food::choice::FoodChoiceIndex>,
 }
 impl TickContext {
@@ -763,6 +765,7 @@ impl TickContext {
             gather_cache: RefCell::new(BTreeMap::new()),
             physical_food: RefCell::default(),
             harvest_food: RefCell::default(),
+            plant_query_observation: RefCell::default(),
             food_index: RefCell::new(FoodIndex {
                 version: 0,
                 materialized: false,

@@ -7,6 +7,8 @@
 pub mod choice;
 pub mod drying;
 pub mod events;
+pub mod evidence;
+mod evidence_validation;
 mod ground;
 pub mod items;
 pub mod loss;
@@ -70,6 +72,7 @@ impl RuntimeSystem for FoodDailySystem {
         let previous_day = res.food.last_daily_day;
         plants::advance_day(res, day, previous_day);
         crate::runtime::steward::food::observe(world, res);
+        evidence::observe_day(res);
         let window = res.rules.calendar.days_to_ticks(3);
         for meals in res.food.meals.values_mut() {
             meals.prune(res.current_tick, window);
@@ -78,3 +81,6 @@ impl RuntimeSystem for FoodDailySystem {
         res.food.touch();
     }
 }
+
+#[cfg(test)]
+mod operation_tests;

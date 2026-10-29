@@ -419,6 +419,7 @@ M6a historical food metadata (same number of rows as the corresponding index/lin
 | key | type | meaning |
 |---|---|---|
 | `food_daily_milli` | PackedInt64Array | historical winter-plan daily demand in thousandths; -1 absent, 0 zero demand; aligned with `index` |
+| `food_evidence` | Array[Dictionary] | immutable food operation receipt aligned with `index`; empty dictionary when absent or on non-entry Why links; see M6a immutable food operation evidence below |
 
 
 ### `get_settlement_chronicle`
@@ -447,6 +448,7 @@ M6a historical food metadata (same number of rows as the corresponding index/lin
 | key | type | meaning |
 |---|---|---|
 | `food_daily_milli` | PackedInt64Array | historical winter-plan daily demand in thousandths; -1 absent, 0 zero demand; aligned with `index` |
+| `food_evidence` | Array[Dictionary] | immutable food operation receipt aligned with `index`; empty dictionary when absent or on non-entry Why links; see M6a immutable food operation evidence below |
 
 
 ### `get_chronicle_since`
@@ -472,6 +474,7 @@ M6a historical food metadata (same number of rows as the corresponding index/lin
 | `next` | int | the index after the last returned entry (the next `start`) |
 | `total` | int | entries in the chronicle |
 | `food_daily_milli` | PackedInt64Array | historical winter-plan daily demand in thousandths; -1 absent, 0 zero demand; aligned with `index` |
+| `food_evidence` | Array[Dictionary] | immutable food operation receipt aligned with `index`; empty dictionary when absent or on non-entry Why links; see M6a immutable food operation evidence below |
 
 ## Causal "why?"
 
@@ -1111,6 +1114,7 @@ M6a historical food metadata (same number of rows as the corresponding index/lin
 | key | type | meaning |
 |---|---|---|
 | `food_daily_milli` | PackedInt64Array | historical winter-plan daily demand in thousandths; -1 absent, 0 zero demand; aligned with `links`; only link0 uses its actual `codes` Chronicle index |
+| `food_evidence` | Array[Dictionary] | immutable food operation receipt aligned with `links`; empty dictionary when absent or on non-entry Why links; see M6a immutable food operation evidence below |
 
 
 ### `get_year_summary`
@@ -1689,3 +1693,23 @@ resolved by runtime storage APIs; missing/invalid age data remains unknown, neve
 through the ordinary replay-recorded command path. The result uses the existing accepted/count/reason
 command contract. The F7 → 5 tool dispatches through `SimReads.mutate`, invalidating cached reads.
 It designates real plants; the simulation determines readiness, reservations, travel and yield.
+
+
+### M6a immutable food operation evidence (kind53)
+
+`get_person_chronicle`, `get_settlement_chronicle`, `get_chronicle_since` append
+`food_evidence: Array[Dictionary]` aligned with `index`; `get_chronicle_why`
+appends the same field aligned with `links`. Non-entry links and absent legacy
+records are `{}`. Existing fields remain unchanged. Evidence is keyed by actual
+Chronicle entry identity, never reconstructed from current world state.
+
+Present rows have schema_version1, entry_index, recorded_tick, subject and type.
+`acquisition` contains receipt(tick, reason, optional target/job_started and
+cancel_reason) plus colony-scoped flow(from_tick,to_tick,harvested_units,
+craft_input_units,craft_output_units,eaten_units,spoiled_units,lost_units,
+imported_units,exported_units). These flows are food units for the whole colony,
+not causal attribution to one person. `intake` contains owner,item,born_day,
+lifetime_days; `stored` contains owner,item,pieces,born_day. Owner carries its
+kind and recorded tile/agent/workshop/pot identity. No source ancestry, recipe,
+command provenance, or opening/closing stock is inferred. Kind53 is hidden in
+the owner feed by data but reachable through actual causal parents in Why.

@@ -110,3 +110,14 @@ low frame rates (WorldSim lesson, `SKILL.md`).
 - [ ] `global_position` error? → set it after `add_child`.
 - [ ] Animation stuck? → was the tween killed while something awaited it?
 - [ ] Injected input ignored? → read the event's position, not the OS cursor.
+
+
+## Korean semantic assertions and word joiners
+
+Locale layout may insert U+2060 WORD JOINER into Korean text. Exact visible-text
+assertions should remove only that known layout character before comparing expected
+localized words or checking forbidden feed phrases. Do not remove production joiners,
+strip arbitrary Unicode/whitespace, or weaken required reason/scope/UNKNOWN content.
+Text normalization is not visual proof: real scaled captures still verify wrapping,
+scroll reachability and clipping. Sources: `tools/v8/test_locale_trf.gd`,
+`tools/v8/test_core_mind_ui.gd`, M6A_DECISIONS P8 verification.

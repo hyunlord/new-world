@@ -39,18 +39,31 @@ impl PlantCandidates {
             visits: std::sync::atomic::AtomicUsize::new(0),
         }
     }
+    #[cfg(test)]
     pub(super) fn nearest(
         &self,
         person: &PersonSnapshot,
         res: &SimResources,
     ) -> Option<TargetCandidate> {
+        self.nearest_observed(person, res).0
+    }
+
+    /// Factual absence from the existing complete regional query, not another scan.
+    pub(super) fn nearest_observed(
+        &self,
+        person: &PersonSnapshot,
+        res: &SimResources,
+    ) -> (Option<TargetCandidate>, bool) {
         let origin = (person.position.x, person.position.y);
         let region = res.nav.region_of(origin);
         if region == 0 {
-            return None;
+            return (None, false); // Invalid origin does not prove no ripe plants.
         }
         let mut regions = self.regions.lock().expect("plant candidate cache");
-        let index = regions.get_mut(&region)?;
+        let Some(index) = regions.get_mut(&region) else {
+            return (None, true);
+        };
+        let mut observed_ripe = false;
         let mut depleted = Vec::new();
         let found = index.nearest_where(origin, u32::MAX, |tile, _| {
             #[cfg(test)]
@@ -60,6 +73,7 @@ impl PlantCandidates {
                 depleted.push(tile);
                 return false;
             }
+            observed_ripe = true;
             eligible(res, tile)
         });
         // Reservations, designations and vetoes stay live; a region whose ripe
@@ -67,11 +81,15 @@ impl PlantCandidates {
         for tile in depleted {
             index.remove(tile, ());
         }
-        found.map(|(tile, ())| TargetCandidate {
-            tile,
-            agent: None,
-            food: None,
-        })
+        let no_ripe = found.is_none() && !observed_ripe;
+        (
+            found.map(|(tile, ())| TargetCandidate {
+                tile,
+                agent: None,
+                food: None,
+            }),
+            no_ripe,
+        )
     }
 
     #[cfg(test)]

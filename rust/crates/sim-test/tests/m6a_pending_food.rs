@@ -1,4 +1,4 @@
-//! Pending output promises retain due-day freshness across retries and format13 saves.
+//! Pending output promises retain due-day freshness across retries and format14 saves.
 use sim_core::colony::food::{DryingBatch, FoodOwner};
 use sim_core::colony::{BlueprintKind, ItemKind, ItemSpec, Workshop};
 use sim_core::rules::WorldRules;
@@ -36,7 +36,7 @@ fn scene(item: &str, due_day: u64) -> SimEngine {
 }
 
 #[test]
-fn blocked_cooked_output_keeps_due_age_after_format13_roundtrip() {
+fn blocked_cooked_output_keeps_due_age_after_format14_roundtrip() {
     let mut engine = scene("roasted_roots", 0);
     engine
         .resources
@@ -46,7 +46,7 @@ fn blocked_cooked_output_keeps_due_age_after_format13_roundtrip() {
     food::drying::advance(&mut engine.resources).unwrap();
     assert_eq!(engine.resources.food.pending_drying.len(), 1);
     let bytes = save::save(&mut engine).unwrap();
-    assert_eq!(&bytes[8..12], &13_u32.to_le_bytes());
+    assert_eq!(&bytes[8..12], &14_u32.to_le_bytes());
     let mut loaded = save::load_with(&bytes, |_| {}).unwrap();
     assert_eq!(engine.resources.food, loaded.resources.food);
     for state in [&mut engine, &mut loaded] {

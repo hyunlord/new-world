@@ -144,8 +144,15 @@ pub fn consume(
         }
     }
     if food.cooked {
-        super::events::cooked_meal(res, agent, stack.kind, food.units);
+        super::events::cooked_meal(
+            res,
+            agent,
+            stack.kind,
+            food.units,
+            (owner, born_day, storage_lifetime_days),
+        );
     }
+    super::evidence::clear_person(res, agent);
     res.food.touch();
     Ok(MealOutcome {
         item: stack.kind,

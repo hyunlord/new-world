@@ -47,10 +47,27 @@ pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
             .combat_pairs
             .iter()
             .any(|&(a, b)| a == c.agent || b == c.agent)
-        || c.world
-            .get::<&sim_core::colony::WorkPriorities>(c.entity)
-            .is_ok_and(|priorities| priorities.level(sim_core::colony::WorkType::Haul) == 0)
-        || !super::super::harvest_food::eligible(c.resources, tile)
+    {
+        return Ok(EffectStatus::Finished);
+    }
+    if c.world
+        .get::<&sim_core::colony::WorkPriorities>(c.entity)
+        .is_ok_and(|priorities| priorities.level(sim_core::colony::WorkType::Haul) == 0)
+    {
+        let tick = c.resources.current_tick;
+        crate::runtime::food::evidence::record_failure(
+            c.resources,
+            c.agent,
+            sim_core::colony::food_evidence::AcquisitionReceipt {
+                tick,
+                target: Some(tile),
+                job_started: None,
+                reason: sim_core::colony::food_evidence::AcquisitionReason::WorkDisabled,
+            },
+        );
+        return Ok(EffectStatus::Finished);
+    }
+    if !super::super::harvest_food::eligible(c.resources, tile)
         || !c
             .resources
             .nav
