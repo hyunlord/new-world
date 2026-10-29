@@ -127,14 +127,29 @@ impl RuntimeSystem for FireSystem {
             resources,
             sim_core::colony::content::PressureMechanic::Cold,
         );
-        let normal = per_hour;
-        let per_hour = effective_burn_per_hour(resources, per_hour);
+        let night_normal = per_hour;
+        let night_cost = effective_burn_per_hour(resources, per_hour);
         let now = resources.current_tick;
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
         let mut fires = BTreeMap::new();
         for sid in &ids {
-            let lit = burning
+            let cooking = !burning
+                && resources.rules.colony.is_some()
+                && crate::runtime::jobs::cooking_heat_needed(world, resources, *sid);
+            let normal = if cooking {
+                u32::from(crate::runtime::settlement::firewood::winter_burn_per_hour(
+                    resources, &rule, now,
+                ))
+            } else {
+                night_normal
+            };
+            let per_hour = if cooking {
+                effective_burn_per_hour(resources, normal)
+            } else {
+                night_cost
+            };
+            let lit = (burning || cooking && per_hour > 0)
                 && resources
                     .settlements
                     .get_mut(sid)

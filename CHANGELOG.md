@@ -15,14 +15,19 @@
 - Colony eating and food alerts read actual items. Steward cooking reconciles
   accepted order ownership while preserving player edits. Chronicle visibility
   admits supported kinds through explicit data entries.
+- Active food actions retain their physical owner through movement; winter
+  reserves require food that lasts through winter. Preservation gets its own
+  deficit budget and keeps the selected eligible workshop. Prepared cooking
+  can request daytime heat backed by actual fuel; see ADR 0053.
 
 ### Removed
 - Colony authority of the V7 abstract food counter; the baseline path remains
   separate and requires fresh identity verification.
 
 This entry records implementation, not acceptance or publication. Winter
-survival remains failing; calibration, held-out evaluation, final performance
-and the full gate are pending. Preserve failed runs and their corrections in
+survival failed in calibration round 1 (0/8 alive); round-2 mechanism tests pass
+but its cohort, held-out evaluation, final performance and full gate are pending.
+Preserve failed runs and their corrections in
 [M6A_DECISIONS](docs/v8/m6a/M6A_DECISIONS.md) and
 [M6A_REPORT](docs/v8/m6a/M6A_REPORT.md).
 

@@ -15,6 +15,22 @@ pub fn validate(world: &World, res: &SimResources) -> Result<(), String> {
             Err("baseline contains colony food state".into())
         };
     }
+    let agents: BTreeSet<_> = world.query::<&Agent>().iter().map(|(_, a)| a.id).collect();
+    for (&agent, &owner) in &res.food.active_targets {
+        if !agents.contains(&agent) {
+            return Err(format!("active food target has missing agent {agent}"));
+        }
+        let valid = match owner {
+            FoodOwner::Ground((x, y)) => x < res.tile_grid.width && y < res.tile_grid.height,
+            FoodOwner::Carried(id) => id == agent,
+            FoodOwner::Pot { id, .. } => id > 0 && id < res.food.next_pot_id,
+            FoodOwner::Shelf { .. } => false,
+        };
+        // Another actor may have consumed the source since this person's last turn.
+        if !valid {
+            return Err(format!("invalid active food owner for agent {agent}"));
+        }
+    }
     for (&index, evidence) in &res.food.winter_plans {
         let entry = res
             .chronicle

@@ -17,7 +17,7 @@ pub struct FoodSummary {
     pub usable_units: u64,
     /// Cooked units available now.
     pub cooked_units: u64,
-    /// Stored edible units predicted fresh at the winter boundary.
+    /// Stored edible units lasting through the authored winter keep horizon.
     pub winter_units: u64,
     /// Stored units expiring within two days.
     pub expiring_units: u64,
@@ -113,7 +113,7 @@ pub fn summary(world: &World, res: &SimResources, policy: &FoodPlan) -> FoodSumm
         if remaining <= 2 {
             facts.expiring_units += units;
         }
-        if remaining > facts.winter_in {
+        if covers_winter(remaining, facts.winter_in, policy.winter_keep_days) {
             facts.winter_units += units;
         }
     }
@@ -132,4 +132,9 @@ fn reachable(positions: &BTreeMap<u64, (u32, u32)>, res: &SimResources, owner: F
         FoodOwner::Carried(id) => positions.get(&id).copied(),
     };
     tile.is_some_and(|tile| crate::commands::camp_reaches(res, tile))
+}
+
+/// Expiry on the exclusive winter end is sufficient; expired food never qualifies.
+pub(super) const fn covers_winter(remaining: u32, winter_in: u32, keep_days: u32) -> bool {
+    remaining > 0 && remaining >= winter_in.saturating_add(keep_days)
 }

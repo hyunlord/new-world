@@ -1,17 +1,43 @@
 # Windowed real-scene food observations; root serializes execution.
-# Args: NEW_EXTERNAL_OUT [MAX_DAYS=30] [OPTIONAL_REAL_SAVE]
+# Args: NEW_EXTERNAL_OUT [MAX_DAYS=30] [OPTIONAL_REAL_SAVE] [--focus why|pot-food] [--provenance FILE]
+# Focus mode omits harvest and proves only the named case; save provenance file is recorded when supplied.
 # Inputs: reset seed0 or explicitly supplied save, ordinary full-map harvest designation,
 # explicit tick advances, Korean/UI scales. Never inject physical food, meals or chronicle rows.
 # Reuses rendered text inventory, line-fit checks and PNG metadata; visual verdict remains pending.
 extends "res://tools/v8/mux21_play_capture.gd"
 
+const ALL_CASES: Array[String] = ["phase0", "phase1", "phase2", "phase3", "meal", "food", "cooking", "winter", "winter-chronicle", "chronicle", "why", "pot-food", "workshop-food"]
+var focus: String = ""
+var provenance: String = ""
+var source_save: String = ""
+var required_cases: Array[String] = ALL_CASES.duplicate()
 var observed: Dictionary = {}
 var food_cursor: int = 0
 var pot_scan_cursor: int = 0
 var pot_scan_tick: int = -60
 
 func run() -> void:
-	var args: PackedStringArray = OS.get_cmdline_user_args()
+	var args := PackedStringArray()
+	var raw_args: PackedStringArray = OS.get_cmdline_user_args()
+	var cursor: int = 0
+	while cursor < raw_args.size():
+		var argument: String = raw_args[cursor]
+		if argument in ["--focus", "--provenance"]:
+			if cursor + 1 >= raw_args.size():
+				quit(1)
+				return
+			cursor += 1
+			if argument == "--focus": focus = raw_args[cursor]
+			else: provenance = raw_args[cursor]
+		elif argument.begins_with("--"):
+			quit(1)
+			return
+		else: args.append(argument)
+		cursor += 1
+	if focus not in ["", "why", "pot-food"] or args.size() > 3 or (not provenance.is_empty() and not FileAccess.file_exists(provenance)):
+		quit(1)
+		return
+	if not focus.is_empty(): required_cases = [focus]
 	if args.is_empty():
 		push_error("M6a capture requires new external output directory")
 		quit(1)
@@ -26,8 +52,17 @@ func run() -> void:
 		return
 	started = Time.get_ticks_msec()
 	create_timer(1800.0).timeout.connect(_watchdog)
-	mode = "m6a"
+	mode = "m6a" if focus.is_empty() else "m6a-focused-" + focus
+	evidence["coverage_scope"] = "full" if focus.is_empty() else "focused_only"
+	evidence["required_cases"] = required_cases
+	evidence["full_suite_complete"] = false
+	evidence["commands"] = []
+	source_save = args[2] if args.size() > 2 else ""
 	inputs = _hashes()
+	if not provenance.is_empty():
+		evidence["save_provenance"] = {"path": provenance, "sha256": FileAccess.get_sha256(provenance), "content": FileAccess.get_file_as_string(provenance)}
+	else:
+		evidence["save_provenance"] = {"status": "not_supplied", "note": "A save hash identifies bytes, not its generation history"}
 	evidence["fixture_inputs"] = {"seed": 0, "state_injection": false, "advance_step": 60}
 	check("windowed capture required", DisplayServer.get_name() != "headless")
 	if failures > 0:
@@ -49,27 +84,43 @@ func run() -> void:
 		evidence["fixture_inputs"]["save_sha256"] = FileAccess.get_sha256(args[2])
 		var loaded: Variant = SimReads.mutate(world, "load_world", [args[2]])
 		evidence["fixture_inputs"]["load_result"] = loaded
+		evidence["commands"].append({"method": "load_world", "args": [args[2]], "result": loaded})
 		check("load real save", bool(loaded))
 	else:
 		SimReads.mutate(world, "reset_world", [0])
+		evidence["commands"].append({"method": "reset_world", "args": [0]})
+	if failures > 0:
+		_finish()
+		return
 	await frames(8)
 	_pause_fixture()
 	root.get_node("Locale").call("set_language", "ko")
 	hud.get("store").set_value("helper_on", false)
 	var info: Dictionary = SimReads.read(world, "get_world_info")
 	evidence["fixture_inputs"]["world_info"] = info
-	evidence["fixture_inputs"]["harvest_result"] = SimReads.mutate(world, "cmd_designate_harvest", [0, 0, int(info["width"]) - 1, int(info["height"]) - 1])
+	evidence["fixture_inputs"]["seed"] = int(info.get("seed", 0))
+	evidence["fixture_inputs"]["initial_tick"] = _tick()
+	evidence["fixture_inputs"]["harvest_policy"] = "full_map" if focus.is_empty() else "none_focused_observation"
+	if focus.is_empty():
+		var harvest_args: Array = [0, 0, int(info["width"]) - 1, int(info["height"]) - 1]
+		var harvest_result: Variant = SimReads.mutate(world, "cmd_designate_harvest", harvest_args)
+		evidence["fixture_inputs"]["harvest_result"] = harvest_result
+		evidence["commands"].append({"tick": _tick(), "method": "cmd_designate_harvest", "args": harvest_args, "result": harvest_result})
 	var per_day: int = int(SimReads.read(world, "get_time_snapshot").get("ticks_per_day", 1440))
 	var end_tick: int = _tick() + per_day * clampi(args[1].to_int() if args.size() > 1 else 30, 1, 48)
 	while _tick() <= end_tick and failures == 0:
 		await _observe_food()
-		if _tick() == end_tick: break
-		SimReads.mutate(world, "advance_ticks", [mini(60, end_tick - _tick())])
+		if _tick() == end_tick or (not focus.is_empty() and observed.has(focus)): break
+		var advance: int = mini(60, end_tick - _tick())
+		evidence["commands"].append({"tick": _tick(), "method": "advance_ticks", "args": [advance]})
+		SimReads.mutate(world, "advance_ticks", [advance])
 		await frames(1)
 	evidence["observed"] = observed
-	for required: String in ["phase0", "phase1", "phase2", "phase3", "meal", "food", "cooking", "winter", "winter-chronicle", "chronicle", "why", "pot-food", "workshop-food"]:
+	for required: String in required_cases:
 		check("observed natural " + required, observed.has(required))
-	evidence["coverage_note"] = "Missing cases are missing evidence, never synthesized; use a disclosed real simulation save for focused follow-up."
+	evidence["fixture_inputs"]["final_tick"] = _tick()
+	evidence["full_suite_complete"] = focus.is_empty() and failures == 0 and inputs == _hashes()
+	evidence["coverage_note"] = ("Focused completion covers only " + focus + "; never full-suite acceptance. " if not focus.is_empty() else "") + "Missing cases are missing evidence, never synthesized; use a disclosed real simulation save for focused follow-up."
 	_finish()
 
 func _food_shots(name: String, tile: Vector2i, facts: Dictionary, panel: Control = null) -> void:
@@ -89,10 +140,10 @@ func _food_shots(name: String, tile: Vector2i, facts: Dictionary, panel: Control
 func _observe_food() -> void:
 	var plants: Dictionary = world.get_plants(0, 0, 65535, 65535)
 	for phase: int in 4:
-		if not observed.has("phase%d" % phase):
+		if _wanted("phase%d" % phase) and not observed.has("phase%d" % phase):
 			await _plant_shots(plants, phase)
 	var agents: Dictionary = SimReads.read(world, "get_agent_snapshot")
-	if not observed.has("meal"):
+	if _wanted("meal") and not observed.has("meal"):
 		for bits: int in agents.get("ids", []):
 			var food: Dictionary = world.get_agent_food(bits)
 			if not food.get("meal_kinds", []).is_empty():
@@ -106,14 +157,14 @@ func _observe_food() -> void:
 				await _food_shots("meal", Vector2i(detail["x"], detail["y"]), food, inspector)
 				break
 	var overlay: Dictionary = SimReads.read(world, "get_colony_overlay")
-	if not observed.has("food"):
+	if _wanted("food") and not observed.has("food"):
 		for i: int in overlay.get("item_xs", []).size():
 			var tile := Vector2i(overlay["item_xs"][i], overlay["item_ys"][i])
 			var food: Dictionary = world.get_tile_food(tile.x, tile.y)
 			if food.get("kinds", []).is_empty(): continue
 			await _inspect_food_route(tile, "food")
 			break
-	if not observed.has("pot-food") and _tick() - pot_scan_tick >= 60:
+	if _wanted("pot-food") and not observed.has("pot-food") and _tick() - pot_scan_tick >= 60:
 		pot_scan_tick = _tick()
 		# A deployed vessel has no ground-item row. Inspect actual storage cells,
 		# at most32 getters per60ticks, rotating through larger stockpiles.
@@ -134,7 +185,7 @@ func _observe_food() -> void:
 				await _inspect_food_route(tile, "pot-food")
 				break
 		evidence["pot_scan"] = {"tick": _tick(), "stockpile_cells": count, "last_reads": reads, "next_cell": pot_scan_cursor, "max_reads": 32, "interval_ticks": 60}
-	if not observed.has("workshop-food"):
+	if _wanted("workshop-food") and not observed.has("workshop-food"):
 		var shops: Dictionary = SimReads.read(world, "get_workshops")
 		for i: int in shops.get("ids", []).size():
 			var work := Vector2i(shops["work_xs"][i], shops["work_ys"][i])
@@ -143,7 +194,7 @@ func _observe_food() -> void:
 				await _inspect_food_route(Vector2i(shops["xs"][i], shops["ys"][i]), "workshop-food", Vector2i(shops["ws"][i], shops["hs"][i]))
 				break
 	var facts: Dictionary = SimReads.read(world, "get_ui_facts").get("food_chain", {})
-	if bool(facts.get("preparing", false)) and int(facts.get("stored_units", 0)) < int(facts.get("winter_need", 0)) and not observed.has("winter"):
+	if bool(facts.get("preparing", false)) and int(facts.get("stored_units", 0)) < int(facts.get("winter_need", 0)) and _wanted("winter") and not observed.has("winter"):
 		await _food_shots("winter", Vector2i(facts.get("x", 0), facts.get("y", 0)), facts)
 	var chronicle: Control = main.get_node("UI/ChroniclePanel") as Control
 	for row: Dictionary in _rows(food_cursor):
@@ -155,22 +206,24 @@ func _observe_food() -> void:
 		check("food why metadata aligns with links", why_read.has("food_daily_milli") and why_read.has("links") and why_read["food_daily_milli"].size() == why_read["links"].size())
 		if int(row.get("kind", -1)) == 50:
 			check("winter recorded historical denominator present", int(row.get("food_daily_milli", -1)) >= 0)
-			if not observed.has("winter-chronicle"):
+			if _wanted("winter-chronicle") and not observed.has("winter-chronicle"):
 				var sentence: String = ChronicleText.winter_food_sentence(row, root.get_node("Locale"))
 				check("winter quantities rendered", sentence.contains(str(row.get("value", -1))) and sentence.contains(str(row.get("cause", -1))))
 				await _chronicle_shots("winter-chronicle", row)
-		if int(row.get("kind", -1)) == 48 and not observed.has("cooking"):
+		if int(row.get("kind", -1)) == 48 and _wanted("cooking") and not observed.has("cooking"):
 			await _chronicle_shots("cooking", row)
-		if not observed.has("chronicle"):
+		if _wanted("chronicle") and not observed.has("chronicle"):
 			await _chronicle_shots("chronicle", row)
-		if int(row.get("kind", -1)) == 52 and not observed.has("why"):
+		if int(row.get("kind", -1)) == 52 and _wanted("why") and not observed.has("why"):
 			if bool(chronicle.call("open_why", row["index"])):
 				await _food_shots("why", View.world_to_tile(camera.position), row, main.get_node("UI/WhyPanel") as Control)
 
 
 func _hashes() -> Dictionary:
 	var hashes: Dictionary = super._hashes()
-	for path: String in ["res://assets/ui/food_chronicle.json", "res://assets/ui/alerts.json", "res://assets/v8art/render_params.json", "res://scripts/world/colony/plant_layer.gd", "res://scripts/ui/food_text.gd"]:
+	for external: String in [source_save, provenance]:
+		if not external.is_empty(): hashes[external] = FileAccess.get_sha256(external)
+	for path: String in ["res://tools/v8/m6a_ui_capture.gd", "res://assets/ui/food_chronicle.json", "res://assets/ui/alerts.json", "res://assets/v8art/render_params.json", "res://scripts/world/colony/plant_layer.gd", "res://scripts/ui/food_text.gd"]:
 		hashes[path] = FileAccess.get_sha256(path)
 	return hashes
 
@@ -247,6 +300,26 @@ func _inspect_food_route(tile: Vector2i, name: String, footprint: Vector2i = Vec
 		var bounds: Rect2 = Rect2(owner.global_position, owner.size * owner.scale)
 		check(name + " explanation avoids inspector", not bounds.intersects(Rect2(causal.global_position, causal.size * causal.scale)))
 		await _shot("%s-why-%s" % [name, factor], {"scale": factor, "food": snapshot, "inspection_path": str(owner.get_path())})
+		if name == "pot-food":
+			var scroll: ScrollContainer = causal.get("_scroll") as ScrollContainer
+			var history: VBoxContainer = causal.get("_history_container") as VBoxContainer
+			var last: Label = history.get_child(history.get_child_count() - 1) as Label if history.get_child_count() > 0 else null
+			check("pot-food last explanation label exists", last != null)
+			if last == null: return
+			var before: int = scroll.scroll_vertical
+			var needed: bool = not scroll.get_global_rect().encloses(last.get_global_rect())
+			if needed:
+				await wheel_into_view(scroll, last, "pot-food final explanation scale%s" % factor)
+			var visible_last: bool = scroll.get_global_rect().encloses(last.get_global_rect())
+			check("pot-food final explanation fully enclosed scale%s" % factor, visible_last)
+			var scroll_proof: Dictionary = {"scale": factor, "wheel_required": needed, "scroll_before": before,
+				"scroll_after": scroll.scroll_vertical, "viewport_rect": str(scroll.get_global_rect()),
+				"last_label_rect": str(last.get_global_rect()), "last_label_text": last.text,
+				"fully_enclosed": visible_last, "input": "mouse_wheel" if needed else "already_visible"}
+			if not evidence.has("pot_explanation_scroll"): evidence["pot_explanation_scroll"] = []
+			evidence["pot_explanation_scroll"].append(scroll_proof)
+			if needed:
+				await _shot("pot-food-why-bottom-%s" % factor, {"scale": factor, "food": snapshot, "scroll": scroll_proof})
 	observed[name] = {"tick": _tick(), "food": snapshot}
 	causal.hide()
 	owner.hide()
@@ -431,3 +504,7 @@ func _plant_lighting() -> Dictionary:
 	return {"canvas_modulate": [tint.r, tint.g, tint.b, tint.a], "lights": lights,
 		"full_daylight": tint == Color.WHITE and not active_energy,
 		"requirement": "Natural full daylight: white CanvasModulate and no enabled light with positive energy"}
+
+
+func _wanted(case_name: String) -> bool:
+	return case_name in required_cases

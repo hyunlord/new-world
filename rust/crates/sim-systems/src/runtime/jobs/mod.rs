@@ -39,7 +39,9 @@ mod food_job_tests;
 pub use assign::{JobAssignSystem, JOB_ASSIGN_PRIORITY};
 pub use bills::{BillSystem, BILL_PRIORITY};
 pub use cancel::{cancel, finish, on_death, release_job};
-pub(crate) use craft_food::supplyable as food_recipe_supplyable;
+pub(crate) use craft_food::{
+    heat_needed as cooking_heat_needed, supplyable as food_recipe_supplyable,
+};
 pub use execute::{JobExecuteSystem, JOB_EXECUTE_PRIORITY};
 pub use hearth::{HearthFeedSystem, HEARTH_FEED_PRIORITY};
 
@@ -96,3 +98,6 @@ mod pot_supply_tests;
 
 #[cfg(test)]
 mod pot_ingredient_tests;
+
+#[cfg(test)]
+mod cooking_heat_tests;

@@ -55,8 +55,11 @@ pub(super) fn plan(
         }
         let units = u64::from(plant.units_left) * u64::from(food.units);
         let durable = food.raw_edible
-            && food.lifetime_days(FoodStorageClass::Stockpile)
-                > facts.winter_in.saturating_add(policy.winter_keep_days);
+            && super::summary::covers_winter(
+                food.lifetime_days(FoodStorageClass::Stockpile),
+                facts.winter_in,
+                policy.winter_keep_days,
+            );
         if res.colony.designations.get(&tile) == Some(&Designation::Harvest) {
             if let Some(missing) = ingredients.get_mut(&def.yield_item) {
                 *missing = missing.saturating_sub(u64::from(plant.units_left));

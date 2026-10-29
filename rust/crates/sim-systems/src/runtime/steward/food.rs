@@ -3,6 +3,7 @@ mod cooking;
 mod dependencies;
 mod harvest;
 mod observe;
+mod preservation;
 mod storage;
 mod summary;
 use hecs::World;
@@ -39,3 +40,8 @@ mod storage_tests;
 
 #[cfg(test)]
 mod cooking_bill_tests;
+
+#[cfg(test)]
+mod horizon_tests;
+#[cfg(test)]
+mod preservation_tests;

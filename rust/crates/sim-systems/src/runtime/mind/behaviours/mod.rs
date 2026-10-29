@@ -194,7 +194,7 @@ pub(in crate::runtime) static REGISTRY: &[BehaviourEntry] = &[
         &["food", "food_cooked", "food_novel", "food_cooked_novel"],
         needs::eat_start,
         needs::eat_continue,
-        needs::finish
+        food::finish
     ),
     entry!(LifecycleBinding::Resource(TargetKind::Water);
         "drink",
@@ -239,7 +239,7 @@ pub(in crate::runtime) static REGISTRY: &[BehaviourEntry] = &[
         &["hearth", "food", "food_cooked", "food_novel", "food_cooked_novel"],
         needs::eat_start,
         needs::eat_continue,
-        needs::finish
+        food::finish
     ),
     entry!(LifecycleBinding::Social;
         "socialise",

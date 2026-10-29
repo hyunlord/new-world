@@ -73,6 +73,7 @@ pub(crate) fn supplyable(
         recipe,
         practice,
         local_pot(res, shop) || pot_need(res, shop, recipe, practice).is_some(),
+        false,
     )
 }
 
@@ -83,7 +84,7 @@ pub(crate) fn permitted(
     recipe: &Recipe,
     practice: u32,
 ) -> bool {
-    requirements(res, shop, recipe, practice, local_pot(res, shop))
+    requirements(res, shop, recipe, practice, local_pot(res, shop), true)
 }
 
 fn requirements(
@@ -92,6 +93,7 @@ fn requirements(
     recipe: &Recipe,
     practice: u32,
     pot: bool,
+    require_heat: bool,
 ) -> bool {
     let requirements = &recipe.food_requirements;
     let inside = |tile: (u32, u32)| {
@@ -102,7 +104,8 @@ fn requirements(
     };
     if requirements.requires_lit_hearth
         && !res.settlements.iter().any(|(id, settlement)| {
-            inside(settlement.formation_tile) && res.fires.get(id).is_some_and(|fire| fire.lit)
+            inside(settlement.formation_tile)
+                && (!require_heat || res.fires.get(id).is_some_and(|fire| fire.lit))
         })
     {
         return false;
@@ -161,4 +164,54 @@ pub(super) fn consume(
         items::book_craft_input(res, batch);
     }
     Some(material)
+}
+
+/// Prepared colony cooking requests real heat; a future supply order alone does not.
+pub(crate) fn heat_needed(
+    world: &World,
+    res: &SimResources,
+    settlement: sim_core::components::SettlementId,
+) -> bool {
+    use sim_core::colony::{BillMode, Job, JobKind, JobStage};
+    let Some(home) = res.settlements.get(&settlement) else {
+        return false;
+    };
+    res.colony.workshops.values().any(|shop| {
+        let tile = home.formation_tile;
+        if tile.0 < shop.top_left.0 || tile.1 < shop.top_left.1
+            || tile.0 >= shop.top_left.0.saturating_add(shop.size.0)
+            || tile.1 >= shop.top_left.1.saturating_add(shop.size.1) { return false; }
+        shop.bills.iter().any(|bill| {
+            let Some(recipe) = bill.recipe.recipe() else { return false; };
+            if bill.suspended || !recipe.food_requirements.requires_lit_hearth
+                || !recipe.supports_workshop(shop.kind) { return false; }
+            let working = world.query::<&Job>().iter().any(|(_, job)| {
+                matches!(job.kind, JobKind::Craft { workshop, bill: id, .. } if workshop == shop.id && id == bill.id)
+                    && matches!(job.stage, JobStage::Working { .. })
+            });
+            if working { return true; }
+            let more = match bill.mode {
+                BillMode::Make(n) => bill.done < u32::from(n),
+                BillMode::Maintain(n) => super::bills::bill_count(world, res, recipe.output.0) < u32::from(n),
+            };
+            if !more { return false; }
+            let ready = |practice| requirements(res, shop, recipe, practice, local_pot(res, shop), false);
+            let knows = if crate::runtime::knowledge::rule(res).is_some() {
+                world.query::<&sim_core::colony::knowledge::Knowledge>()
+                    .without::<&sim_core::components::Child>().iter().any(|(_, k)| ready(k.practice()))
+                    && crate::runtime::knowledge::anyone_practises(world, sim_core::colony::knowledge::gates().recipe(recipe.id))
+            } else { ready(u32::MAX) };
+            if !knows { return false; }
+            let tool = recipe.shelf_tool(shop);
+            if recipe.tool.is_some() && tool.is_none() { return false; }
+            recipe.needs_with_tool(tool).iter().all(|&(kind, count)| {
+                let fresh: u32 = shop.shelf.iter().filter(|stack| stack.kind == kind)
+                    .filter(|stack| kind.definition().food.is_none() || storage::remaining_days(world, res,
+                        FoodOwner::Shelf { workshop: shop.id, key: FoodStackKey::from(stack.spec()) },
+                        crate::runtime::food::day(res)).is_ok_and(|days| days > 0))
+                    .map(|stack| u32::from(stack.count)).sum();
+                fresh >= u32::from(count)
+            })
+        })
+    })
 }

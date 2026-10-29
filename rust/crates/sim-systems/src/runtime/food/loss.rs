@@ -7,6 +7,9 @@ use sim_engine::SimResources;
 
 /// Record only food still carried after the ordinary death-drop attempt failed.
 pub fn lose_carried(world: &mut World, res: &mut SimResources, entity: Entity) {
+    if let Ok(agent) = world.get::<&Agent>(entity) {
+        res.food.active_targets.remove(&agent.id);
+    }
     let Some((id, carry)) = world
         .get::<&Agent>(entity)
         .ok()

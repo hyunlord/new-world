@@ -241,6 +241,8 @@ pub struct WinterPlanEvidence {
 /// Explicit format13 sidecar; empty and inert in baseline worlds.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct FoodState {
+    /// Exact admitted food owner retained until its action ends or becomes invalid.
+    pub active_targets: BTreeMap<crate::components::AgentId, FoodOwner>,
     /// Tile-indexed plant state.
     pub plants: BTreeMap<FoodTile, PlantState>,
     /// Exactly one age for every physical food owner.

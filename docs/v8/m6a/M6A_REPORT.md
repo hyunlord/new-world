@@ -1,6 +1,6 @@
 # 미완료 / 검증 중 — M6a 보고서 초안
 
-이 문서는 목표 §4의 보고서 양식을 미리 채운 **진행 중 초안**이다. 아래 양식의 “구현 완료 보고” 제목은 완료 선언이 아니다. 보정 **0/4회**, held-out·성능·전체 게이트·게시 **NOT_RUN**. 최종 후보 커밋 및 게시 SHA는 미확정이다. BASE는 `5b0c88812374b87e7854cc9203f144ad0ccd9009`이다. 오너 플레이테스트는 수행되지 않았다.
+이 문서는 목표 §4의 보고서 양식을 미리 채운 **진행 중 초안**이다. 아래 양식의 “구현 완료 보고” 제목은 완료 선언이 아니다. 보정 **1/4회 완료**, held-out·성능·전체 게이트·게시 **NOT_RUN**. 초기 제품 HEAD는 `dba478e54ea2b6b21aace3c32ae2ab64de10235b`이며, 2회차 준비 변경은 미커밋이다. 최종 후보 커밋 및 게시 SHA는 미확정이다. BASE는 `5b0c88812374b87e7854cc9203f144ad0ccd9009`이다. 오너 플레이테스트는 수행되지 않았다.
 
 ## 구현 완료 보고 — M6a
 
@@ -12,7 +12,7 @@
 
 ### 바뀐 것과 남긴 것 (V7 먹이 층: 콜로니에서 대체, 기준선 유지)
 
-콜로니의 음식 생산·저장·운반·섭취를 실제 물건과 소유자·연령으로 연결했다. 기준선의 V7 먹이 층과 기존 계산 분기는 유지한다. 최종 소스 기준선 동일성은 재검증 대상이며, 소스 검토나 Clippy 성공으로 대신하지 않는다.
+콜로니의 음식 생산·저장·운반·섭취를 실제 물건과 소유자·연령으로 연결했다. 기준선의 V7 먹이 층과 기존 계산 분기는 유지한다. [기준선 동일성 3차](</Users/rexxa/work/m6a-data/20261029/candidate-identity-3.log>)는 PASS다. 공유 값 228,748개 차이·단측 경로 0, 연대기 64개 파일·19,683개 항목 동일, 원시 표본 64개 파일 동일, 종자 0–3 결정성을 확인했다. 연대기는 `git_sha`, 원시 표본은 `git_sha`와 제거된 0값 키 5개를 제외한 비교다. 당시 미커밋 후속 변경을 포함한 실행 증거이며, 이후 변경이 있는 최종 후보의 검증을 대신하지 않는다.
 
 이전 콜로니 저장의 유한 음식 잔고와 운반분은 중립 `legacy_food` 물건으로 이관한다. 확인할 수 없는 나이는 보수적으로 만료하고 손실을 회계에 남기며, 존재하지 않은 식사·음식군 이력은 만들지 않는다. 저장 형식 13의 음식 상태 추가를 이전 형식과 원시 바이트가 같다는 주장으로 표현하지 않는다.
 
@@ -32,7 +32,7 @@
 
 실제 재료와 지식·불·도구 조건을 사용하는 조리 및 건조 경로, 저장 종류별 수명, 배치 연령 이전과 일별 만료를 구현했다. 냄비는 실제 물건을 배치하고 물리적 용량 안에서 저장한다. 음식군은 최근 3일의 실제 식사 이력에서 계산하며, 화면의 최근 8개 식사 목록과 별도로 유지한다.
 
-기존 압력 효과를 실제 식물 재생에 연결하고 가뭄의 완료된 성장 구간을 계산한다. 손실·부패·조리 입력과 출력은 별도 회계 항목이며 시뮬레이션 기록을 숨기거나 합격 수치로 대체하지 않는다. 장기 손실률·조리 비율은 NOT_RUN이다.
+기존 압력 효과를 실제 식물 재생에 연결하고 가뭄의 완료된 성장 구간을 계산한다. 손실·부패·조리 입력과 출력은 별도 회계 항목이며 시뮬레이션 기록을 숨기거나 합격 수치로 대체하지 않는다. 보정 1회차에서는 부패율 기준 2/8, 조리 비율 기준 0/8을 관측했다. held-out 장기 수용 검증은 NOT_RUN이다.
 
 ### 겨울 준비 (집사, 경고, 연대기)
 
@@ -42,11 +42,13 @@
 
 세 번째 [실제 화면 receipt](</Users/rexxa/work/m6a-data/20261029/ui-capture-3/evidence.json>)도 `complete=false`, 실패 15개다. 새 음식 사건 종류가 기존 `NOTABLE` 목록에서 제거되는 실제 연대기 필터 결함을 확인했다. 데이터 기반 종류 허용과 표시 라벨을 수정한 뒤 [분리 회귀](</Users/rexxa/work/m6a-data/20261029/chronicle-feed-regression-after.log>)는 exit 0·실패 0으로 통과했지만 전체 화면 재촬영 capture 4는 실패 4개로 미완료다. 야간 색상 곱셈을 빠뜨린 식물 픽셀 검사 오류를 수정했으며, 누락된 왜?·항아리 화면을 포함한 재촬영은 아직 필요하다. UI 1.25 식물 crop을 빈 땅으로 판단했던 초기 검토는 철회했다. 개별 이미지와 capture 3/4의 동일 해시를 확인해 식물 표시를 재확인했으며, 추가 픽셀 검사는 검증 강화로 분류한다. [화면 검토 기록](</Users/rexxa/work/m6a-data/20261029/ui-capture-3-visual-review-content.md>)의 이 구분을 유지한다.
 
-capture 5도 실패 9개로 미완료다. 화덕의 국소 조명을 반영하지 않은 식물 색상 검사 오류와 그 뒤 미실행된 8개 장면을 보존한다. 자연적인 낮의 조명 조건을 기록해 식물 검사를 다시 수행하며, 제품 조명이나 시뮬레이션 시간을 바꾸지 않는다.
+2026-10-29의 capture 5도 실패 9개로 미완료다. 화덕의 국소 조명을 반영하지 않은 식물 색상 검사 오류와 그 뒤 미실행된 8개 장면을 보존한다. 자연적인 낮의 조명 조건을 기록해 식물 검사를 다시 수행하며, 제품 조명이나 시뮬레이션 시간을 바꾸지 않는다.
+
+최신 [capture 6 receipt](</Users/rexxa/work/m6a-data/20261029/ui-capture-6/evidence.json>)는 `complete=false`, 실패 2개다. 자연적인 왜?·음식 저장 항아리 장면이 누락되어 전체 화면 확인은 미완료다. 나머지 식물 단계·텍스트 검사 통과와 실제 화면 부분 확인을 자연 장면 전체 확보로 확대하지 않는다. 후속 [실제 저장 항아리 집중 촬영 1차](</Users/rexxa/work/m6a-data/20261029/ui-pot-round2-1/evidence.json>)는 해당 범위에서 `complete=true`, 실패 0이다. 상태 주입 없이 생성한 실제 저장 파일을 로드해 [1.0배](</Users/rexxa/work/m6a-data/20261029/ui-pot-round2-1/pot-food-why-1.0.png>)와 [1.25배](</Users/rexxa/work/m6a-data/20261029/ui-pot-round2-1/pot-food-why-1.25.png>)의 음식 저장 항아리·이유 패널을 확보했다. 후속 [항아리 집중 촬영 2차 receipt](</Users/rexxa/work/m6a-data/20261029/ui-pot-round2-2/evidence.json>)는 `complete=true`, 실패 0이며 `full_suite_complete=false`다. 1.25배에서 실제 마우스 휠로 스크롤 0→37 이동 후 `fully_enclosed=true`를 기록했다. 루트가 [1.25배 하단 설명 문단](</Users/rexxa/work/m6a-data/20261029/ui-pot-round2-2/pot-food-why-bottom-1.25.png>)을 직접 확인해 전체 문단이 읽히고 겹침이 없음을 확인했다. 집중 receipt 완료는 전체 UI 수용 완료가 아니다. 별도의 굶주림 UI fixture 1차는 집사 전체를 끄고 일반 명령으로 진행했으나 day 12까지 실제 `HungerFoodChain`을 확보하지 못해 실패했다. [로그](</Users/rexxa/work/m6a-data/20261029/hunger-fixture-1.log>)와 [receipt](</Users/rexxa/work/m6a-data/20261029/hunger-fixture-1/receipt.json>)를 보존하며 원인 진단 중이다. 이는 UI 증거 준비이며 보정 회차나 완료된 촬영 증거로 세지 않는다.
 
 ### held-out 1296–1327 (M6a / BASE 표)
 
-보정은 0/4회이며 최종 정책 동결 전이다. held-out을 열거나 결과에 맞춰 조정하지 않았다.
+보정 1/4회를 마쳤으며 최종 정책 동결 전이다. 첫 회차 seed 0–7의 72일 실행은 exit 0이나 생존 0/8, 겨울 저장·조리·다양성 0/8, 부패율 기준 2/8이다. 식량 회계는 8/8 일치했다. [1회차 점수](</Users/rexxa/work/m6a-data/20261029/calibration-1-score.json>)의 상태는 `OBSERVED`, 수용 판정은 `NOT_EVALUATED`다. 2회차 실행은 NOT_RUN이다. 이는 보정 관측이며 held-out 수용 결과가 아니다. held-out을 열거나 결과에 맞춰 조정하지 않았다.
 
 |항목|기준|M6a|BASE|
 |---|---|---|---|
@@ -88,13 +90,14 @@ BASE/M6a `story-yield` 비교 NOT_RUN. 첫 조리·건조·겨울 준비·겨울
 |`a3106c9d7`|목표와 실행 경계 기록|
 |`cb3f79cc6`|승인된 로드맵·패스 순서 문서|
 |`31221e26e`|음식망 설계·산수 선행 기록|
-|제품 변경 미커밋 / 최종 목록 미확정|음식·식물 데이터, runtime/food, 작업·mind·집사·공유 음식 관측, 저장·마이그레이션, 브리지·UI·현지화, 회귀 테스트와 게이트 도구|
+|`dba478e54` 초기 제품 구현 (293개 파일)|음식·식물 데이터, runtime/food, 작업·mind·집사·공유 음식 관측, 저장·마이그레이션, 브리지·UI·현지화, 회귀 테스트와 게이트 도구|
+|2회차 준비 변경 미커밋|음식 목적지 유지, 수확·보존 계획과 연료 조건의 후속 수정; 최종 목록 미확정|
 
-게시 보고에서는 최종 커밋별 명시적 파일 목록으로 교체해야 한다. 이 행은 미커밋 작업을 공개 완료 커밋으로 제시하지 않는다.
+게시 보고에서는 최종 커밋별 명시적 파일 목록으로 교체해야 한다. 초기 제품 커밋은 게시 또는 수용 완료를 뜻하지 않는다.
 
 ### 확인된 제한사항
 
-보정·정책 동결·held-out·성능·최종 기준선 동일성·전체 게이트·게시가 남았다. 실제 화면 receipt 세 건의 실패는 보존하며, 세 번째 촬영의 crop 무효 판정은 재검토 후 철회했다. 식물 전용 완성 아트가 없으며 임시 표현을 완성 아트로 수용하지 않는다. 원래 실패 로그와 당시 원인 분류를 보존한다.
+보정 1/4회 후 남은 보정·정책 동결·held-out·성능·최종 기준선 동일성·전체 게이트·게시가 남았다. 2026-10-29의 실제 화면 receipt 1–6차 실패는 보존하며, 세 번째 촬영의 crop 무효 판정은 재검토 후 철회했다. 식물 전용 완성 아트가 없으며 임시 표현을 완성 아트로 수용하지 않는다. 원래 실패 로그와 당시 원인 분류를 보존한다.
 
 주택 실패는 조건을 완화하지 않고 실제 음식 획득·목적지 인계 경로를 수정한 뒤 [동일한 두 주택 검증](</Users/rexxa/work/m6a-data/20261029/housing-repair-test-1.log>)에서 통과했다. 이 2/2 결과를 모든 세계의 장기 생존으로 확대하지 않는다.
 
@@ -106,7 +109,9 @@ BASE/M6a `story-yield` 비교 NOT_RUN. 첫 조리·건조·겨울 준비·겨울
 
 [정확한 저장 로드 관측](</Users/rexxa/work/m6a-data/20261029/seed1-expiry-load-only-2.json>)은 day 18 저장 음식 **156단위(선반 1 포함)**, expiry ≥24인 분량 **22단위**다. 지면 소계는 155/21, 전체 소유자 합계는 164/30이다. 앞선 “저장 155”는 지면만 센 수치였으므로 저장 전체로 사용하지 않는다. load-only 1차는 테스트의 카탈로그 부트 누락으로 실패했고, 2차는 성공했으며 추가 시뮬레이션 진행은 0틱이다. 따라서 겨울 생존 결과가 아니다.
 
-일반 `Steward(AddBill)`로 생성된 주문의 엔진 `auto:false`를 플레이어 소유로 오인해 조리 목표를 갱신하지 못하는 결함을 수정했다. 소유권은 수락된 `OwnedOrder`와 실제 플레이어 편집·취소 보호 기록으로 판단한다. [수정 전 회귀](</Users/rexxa/work/m6a-data/20261029/cooking-bill-regression-before.log>)는 2 FAIL·2 PASS였으며, 수정 후 [음식 계획 검증 9/9](</Users/rexxa/work/m6a-data/20261029/food-planning-regression-after-1.log>)가 통과했다. 정책값 추가 조정이나 보정 회차 사용은 없으며 장기 재검증은 남았다.
+일반 `Steward(AddBill)`로 생성된 주문의 엔진 `auto:false`를 플레이어 소유로 오인해 조리 목표를 갱신하지 못하는 결함을 수정했다. 소유권은 수락된 `OwnedOrder`와 실제 플레이어 편집·취소 보호 기록으로 판단한다. [수정 전 회귀](</Users/rexxa/work/m6a-data/20261029/cooking-bill-regression-before.log>)는 2 FAIL·2 PASS였으며, 수정 후 [음식 계획 검증 9/9](</Users/rexxa/work/m6a-data/20261029/food-planning-regression-after-1.log>)가 통과했다. 이 수정은 보정 1회차 전의 정확성 수리였으며, 당시에는 보정 회차를 사용하지 않았다. 이후 1회차 결과와 후속 변경의 장기 재검증을 구분한다.
+
+2026-10-29 후속 음식 목적지 유지 수정의 자연 seed 7 진단은 6일(tick 8,640) 사망이 [수정 전 10명](</Users/rexxa/work/m6a-data/20261029/water-diagnostic-1.jsonl>)에서 [수정 후 0명](</Users/rexxa/work/m6a-data/20261029/water-diagnostic-2.jsonl>)으로 바뀌었다. 이는 이동·음식·물 진행을 확인한 진단이며 72일 생존 막대, 추가 보정 회차 또는 held-out 수용 결과가 아니다.
 
 ### 오너 결정 필요
 
@@ -118,8 +123,10 @@ BASE/M6a `story-yield` 비교 NOT_RUN. 첫 조리·건조·겨울 준비·겨울
 |---|---|---|
 |자율 수확·캐시 집중 검증|PASS 12/12|[autonomous-harvest-test-6.log](</Users/rexxa/work/m6a-data/20261029/autonomous-harvest-test-6.log>)|
 |평지·지형 장애 주택|PASS 2/2|[housing-repair-test-1.log](</Users/rexxa/work/m6a-data/20261029/housing-repair-test-1.log>)|
-|전체 대상 Clippy 11차|PASS|[clippy-11.log](</Users/rexxa/work/m6a-data/20261029/clippy-11.log>)|
-|워크스페이스 테스트 5차|FAIL: 2,723 통과·1 실패·8 제외, Criterion 별도 호출 오류|[workspace-test-5.log](</Users/rexxa/work/m6a-data/20261029/workspace-test-5.log>)|
+|초기 제품 이전 전체 대상 Clippy 11차|PASS (과거 증거)|[clippy-11.log](</Users/rexxa/work/m6a-data/20261029/clippy-11.log>)|
+|2회차 준비 sim-systems 전체 단위 검증|PASS 470/470|[systems-round2-test-1.log](</Users/rexxa/work/m6a-data/20261029/systems-round2-test-1.log>)|
+|2회차 준비 전체 대상 Clippy 3차|PASS|[clippy-round2-3.log](</Users/rexxa/work/m6a-data/20261029/clippy-round2-3.log>)|
+|워크스페이스 테스트 5차 (2026-10-29 과거 실행)|FAIL: 2,723 통과·1 실패·8 제외, Criterion 별도 호출 오류|[workspace-test-5.log](</Users/rexxa/work/m6a-data/20261029/workspace-test-5.log>)|
 |all-targets Criterion 호출|실행 인자 오류 보존|동일 로그의 `unexpected argument`; 루트 호출 실수이며 제품 결함으로 분류하지 않음. 올바른 명령으로 재검증 필요|
 |항아리 재료 공급|PASS 3/3, 관련 작업 24/24|[수정 후 회귀](</Users/rexxa/work/m6a-data/20261029/pot-supply-regression-after-1.log>); 실제 운반·요리와 원자적 실패 보존|
 |임신 저장 복원 재검증|FAIL: 토기 공급 수정 후에도 같은 겨울 사망으로 출산 대기열 미도달|[release 재검증](</Users/rexxa/work/m6a-data/20261029/pregnancy-post-pot-release-1.log>)|
@@ -128,15 +135,21 @@ BASE/M6a `story-yield` 비교 NOT_RUN. 첫 조리·건조·겨울 준비·겨울
 |현지화 컴파일 6차|PASS: KO/EN 각각 1,217개, 중복 0|[localization-compile-6.log](</Users/rexxa/work/m6a-data/20261029/localization-compile-6.log>)|
 |창 렌더러 식물 구조 검사 2차|PASS 55개; 시각 수용 아님|[plant-art-windowed-2.log](</Users/rexxa/work/m6a-data/20261029/plant-art-windowed-2.log>)|
 |화면 capture 1 / 2 / 3|PARTIAL / FAIL|실패 9개 / 6개 / 15개; crop 무효 초기 판정은 철회|
-|연대기 데이터 종류 필터 수정 후 분리 회귀|PASS: exit 0·실패 0; 전체 재촬영 대기|[chronicle-feed-regression-after.log](</Users/rexxa/work/m6a-data/20261029/chronicle-feed-regression-after.log>)|
+|연대기 데이터 종류 필터 수정 후 분리 회귀|PASS: exit 0·실패 0; capture 6도 별도 장면 누락으로 미완료|[chronicle-feed-regression-after.log](</Users/rexxa/work/m6a-data/20261029/chronicle-feed-regression-after.log>)|
 |저장 공간 수정 전 회귀|FAIL 보존: 2 PASS·1 FAIL|[storage-capacity-regression-before.log](</Users/rexxa/work/m6a-data/20261029/storage-capacity-regression-before.log>)|
 |저장 공간 수정 후 회귀|PASS 5/5; 원료 전용 공간 실패도 수정|[storage-capacity-regression-after-2.log](</Users/rexxa/work/m6a-data/20261029/storage-capacity-regression-after-2.log>)|
 |조리 주문 소유권·음식 계획|수정 전 2 FAIL·2 PASS → 수정 후 PASS 9/9|[food-planning-regression-after-1.log](</Users/rexxa/work/m6a-data/20261029/food-planning-regression-after-1.log>)|
 |저장 공간 수정 후 release 저장 검증|6 PASS·1 FAIL; 조리 소유권 수정 이전, 전원 기아사|[storage-save-release-after-1.log](</Users/rexxa/work/m6a-data/20261029/storage-save-release-after-1.log>)|
 |정확한 저장 load-only|1차 카탈로그 설정 실패, 2차 PASS·진행 0틱|[seed1-expiry-load-only-2.log](</Users/rexxa/work/m6a-data/20261029/seed1-expiry-load-only-2.log>)|
-|화면 capture 4|RUNNING; PASS 미확정|[ui-capture-4.log](</Users/rexxa/work/m6a-data/20261029/ui-capture-4.log>)|
-|최종 기준선 런타임 동일성|NOT_RUN|최종 커밋에서 재실행 필요|
-|보정|NOT_RUN, 0/4회|종자 0–7|
+|화면 capture 4 (2026-10-29)|FAIL 4개, 미완료|[ui-capture-4.log](</Users/rexxa/work/m6a-data/20261029/ui-capture-4.log>)|
+|화면 capture 5 (2026-10-29)|FAIL 9개, 미완료|[receipt](</Users/rexxa/work/m6a-data/20261029/ui-capture-5/evidence.json>)|
+|최신 화면 capture 6|FAIL 2개, 미완료|[receipt](</Users/rexxa/work/m6a-data/20261029/ui-capture-6/evidence.json>); 자연 왜?·음식 저장 항아리 누락|
+|자연 seed 7의 6일 진단|사망 10 → 0; 수용 판정 아님|water-diagnostic 1/2, tick 8,640|
+|기준선 런타임 동일성 3차|PASS|[로그](</Users/rexxa/work/m6a-data/20261029/candidate-identity-3.log>); 228,748개 값·연대기 64파일/19,683항목·원시 64파일·결정성 0–3. 당시 미커밋 변경 포함; 이후 변경 시 최종 후보 재검증 필요|
+|실제 항아리 집중 촬영 2차|범위 한정 PASS, 전체 화면 완료 아님|[receipt](</Users/rexxa/work/m6a-data/20261029/ui-pot-round2-2/evidence.json>); 1.25배 실제 휠 0→37, 하단 문단 전체 표시·가독성·겹침 없음 확인|
+|굶주림 UI fixture 1차|FAIL: day 12까지 실제 HungerFoodChain 미확보|[receipt](</Users/rexxa/work/m6a-data/20261029/hunger-fixture-1/receipt.json>); 집사 전체 OFF·일반 명령, UI 전용이며 보정 아님|
+|보정 1회차|완료 1/4회, 수용 판정 아님|종자 0–7: 생존 0/8·회계 8/8; [점수](</Users/rexxa/work/m6a-data/20261029/calibration-1-score.json>)|
+|보정 2회차|NOT_RUN|후속 변경 미커밋; 정책 동결 전|
 |held-out|NOT_RUN|1296–1327, BASE 비교 포함|
 |성능·C3|NOT_RUN|새 독립 빌드 증명과 유효 교차 반복 필요|
 |전체 게이트 / 게시|NOT_RUN / NOT_RUN|부분 성공을 전체 게이트로 대체하지 않음|

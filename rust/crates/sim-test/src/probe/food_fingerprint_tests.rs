@@ -65,6 +65,17 @@ fn changed(edit: impl FnOnce(&mut SimEngine)) {
 }
 
 #[test]
+fn admitted_food_owner_changes_both_colony_fingerprints() {
+    changed(|engine| {
+        engine
+            .resources
+            .food
+            .active_targets
+            .insert(1, FoodOwner::Ground((1, 1)));
+    });
+}
+
+#[test]
 fn baseline_stream_is_untouched_even_with_accidentally_populated_sidecar() {
     let mut engine = fixture();
     engine.resources.rules.colony = None;

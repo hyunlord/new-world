@@ -261,3 +261,9 @@ fn physical_hearth_meal_and_wander_have_owned_scheduled_lifecycles() {
         .expect("rest")
         .scheduled_continuation());
 }
+
+#[path = "food_retention_tests.rs"]
+mod food_retention_tests;
+
+#[path = "food_invalidation_tests.rs"]
+mod food_invalidation_tests;

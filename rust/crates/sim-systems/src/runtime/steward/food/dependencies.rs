@@ -103,8 +103,7 @@ pub(super) fn reserved_cooking_pots(res: &SimResources, policy: &FoodPlan) -> BT
     held
 }
 
-/// One missing recipe batch is enough to request an ingredient harvest. This
-/// bounds pre-cooking stock without treating inedible grain as satiety reserves.
+/// Immediate meals request one batch; preservation requests its shared reserve deficit.
 pub(super) fn ingredient_deficits(
     world: &World,
     res: &SimResources,
@@ -115,12 +114,12 @@ pub(super) fn ingredient_deficits(
         .query::<&Knowledge>()
         .iter()
         .fold(0, |mask, (_, knowledge)| mask | knowledge.practice());
-    let mut deficits: BTreeMap<ItemKind, u64> = BTreeMap::new();
+    let mut immediate: BTreeMap<ItemKind, u64> = BTreeMap::new();
     for &kind in &policy.recipes {
         let Some(recipe) = kind.recipe() else {
             continue;
         };
-        if recipe.food_requirements.duration_days > 0 && !facts.preparing {
+        if recipe.food_requirements.duration_days > 0 {
             continue;
         }
         if !crate::runtime::knowledge::anyone_practises(world, knowledge::gates().recipe(kind))
@@ -132,13 +131,23 @@ pub(super) fn ingredient_deficits(
             continue;
         }
         for &(item, count) in &recipe.inputs {
-            let missing =
-                u64::from(count).saturating_sub(facts.pieces.get(&item).copied().unwrap_or(0));
-            deficits
+            immediate
                 .entry(item)
-                .and_modify(|n| *n = (*n).max(missing))
-                .or_insert(missing);
+                .and_modify(|n| *n = (*n).max(u64::from(count)))
+                .or_insert(u64::from(count));
         }
     }
-    deficits
+    for (item, amount) in super::preservation::budget(world, res, policy, facts).inputs {
+        let need = immediate.entry(item).or_default();
+        *need = need.saturating_add(amount);
+    }
+    immediate
+        .into_iter()
+        .map(|(item, amount)| {
+            (
+                item,
+                amount.saturating_sub(facts.pieces.get(&item).copied().unwrap_or(0)),
+            )
+        })
+        .collect()
 }

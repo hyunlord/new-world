@@ -56,6 +56,59 @@ pub(super) fn candidate(
     // Capture fixes public owners for this decision phase; live eligibility below
     // rejects depletion. Job-release drops occur after all decisions and replays.
     let origin = (person.position.x, person.position.y);
+    if matches!(
+        person.state,
+        sim_core::components::AgentState::Seeking {
+            target: sim_core::components::TargetKind::Food
+        } | sim_core::components::AgentState::Consuming {
+            target: sim_core::components::TargetKind::Food
+        }
+    ) {
+        if let Some(&owner) = res.food.active_targets.get(&person.agent) {
+            let physical = match owner {
+                FoodOwner::Ground(tile) => res
+                    .colony
+                    .ground_items
+                    .get(&tile)
+                    .copied()
+                    .map(|s| (tile, s)),
+                FoodOwner::Pot { id, key } => res.food.pots.get(&id).and_then(|pot| {
+                    pot.contents
+                        .iter()
+                        .find(|s| sim_core::colony::food::FoodStackKey::from(s.spec()) == key)
+                        .copied()
+                        .map(|s| (pot.tile, s))
+                }),
+                FoodOwner::Carried(id) if id == person.agent => person
+                    .carry
+                    .map(|c| (origin, sim_core::colony::ItemStack::of(c.spec(), c.count))),
+                _ => None,
+            };
+            if let Some((tile, stack)) = physical {
+                if let Some(def) = &stack.kind.definition().food {
+                    let fresh = res.food.ages.get(&owner).is_some_and(|age| {
+                        age.born_day <= food::day(res)
+                            && age.remaining(
+                                food::day(res),
+                                def.lifetime_days(food::storage::class(res, owner)),
+                            ) > 0
+                    });
+                    if stack.count > 0
+                        && def.raw_edible
+                        && fresh
+                        && res.nav.passable(tile)
+                        && res.nav.reachable(origin, tile)
+                    {
+                        return filter.accepts(def, person, res).then_some(TargetCandidate {
+                            tile,
+                            agent: None,
+                            food: Some(owner),
+                        });
+                    }
+                }
+            }
+        }
+    }
     let mut best = None;
     let mut consider = |kind: sim_core::colony::ItemKind, tile: (u32, u32), owner: FoodOwner| {
         let Some(food) = &kind.definition().food else {
@@ -180,6 +233,34 @@ mod tests {
         let next = TickContext::capture(&world, &res).unwrap();
         assert_eq!(
             target(&next, &res).unwrap().food,
+            Some(FoodOwner::Ground((2, 2)))
+        );
+    }
+
+    #[test]
+    fn active_provider_keeps_admitted_owner_then_reselects_after_depletion() {
+        let (mut world, mut res) = scene();
+        create(&mut res, "roots");
+        let admitted = FoodOwner::Ground((5, 2));
+        items::create_ground(
+            &mut res,
+            (5, 2),
+            ItemSpec::raw(ItemKind::from_name("roots").unwrap(), None),
+            1,
+            0,
+            FoodSource::Harvest,
+        )
+        .unwrap();
+        let entity = world.query::<&Agent>().iter().next().unwrap().0;
+        *world.get::<&mut AgentState>(entity).unwrap() = AgentState::Seeking {
+            target: sim_core::components::TargetKind::Food,
+        };
+        res.food.active_targets.insert(1, admitted);
+        let context = TickContext::capture(&world, &res).unwrap();
+        assert_eq!(target(&context, &res).unwrap().food, Some(admitted));
+        items::take(&mut world, &mut res, admitted, 1, 0).unwrap();
+        assert_eq!(
+            target(&context, &res).unwrap().food,
             Some(FoodOwner::Ground((2, 2)))
         );
     }

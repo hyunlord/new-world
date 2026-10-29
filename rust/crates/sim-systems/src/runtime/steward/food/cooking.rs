@@ -12,6 +12,7 @@ pub(super) fn plan(
     policy: &FoodPlan,
     facts: &FoodSummary,
 ) -> Vec<Command> {
+    let preservation = super::preservation::budget(world, res, policy, facts);
     let mut available = Vec::new();
     let practice = world
         .query::<&Knowledge>()
@@ -28,7 +29,7 @@ pub(super) fn plan(
         {
             continue;
         }
-        if recipe.food_requirements.duration_days > 0 && !facts.preparing {
+        if recipe.food_requirements.duration_days > 0 {
             continue;
         }
         if !crate::runtime::knowledge::anyone_practises(world, knowledge::gates().recipe(kind)) {
@@ -59,7 +60,9 @@ pub(super) fn plan(
             .food
             .as_ref()
             .map_or(1, |food| food.units.max(1));
-        let target = if available.contains(&kind) {
+        let target = if recipe.food_requirements.duration_days > 0 {
+            preservation.targets.get(&kind).copied().unwrap_or(0)
+        } else if available.contains(&kind) {
             u16::try_from(share.div_ceil(u64::from(units))).unwrap_or(u16::MAX)
         } else {
             0
@@ -93,12 +96,12 @@ pub(super) fn plan(
                 .count();
             target = target.saturating_sub(u16::try_from(deployed).unwrap_or(u16::MAX));
         }
-        if let Some((&id, shop)) = res
-            .colony
-            .workshops
-            .iter()
-            .find(|(_, shop)| recipe.supports_workshop(shop.kind))
-        {
+        if let Some((&id, shop)) = res.colony.workshops.iter().find(|(id, shop)| {
+            preservation.workshops.get(&kind).map_or_else(
+                || recipe.supports_workshop(shop.kind),
+                |selected| *id == selected,
+            )
+        }) {
             if res
                 .steward
                 .vetoed(&Target::Bill(id, kind.code()), res.current_tick)
@@ -205,7 +208,7 @@ fn workshop(world: &World, res: &SimResources, kind: RecipeKind) -> Option<Comma
 
 /// `Bill.auto` belongs to legacy engine bills; ordinary steward AddBill uses
 /// the same false value as player commands. Accepted ownership is separate.
-fn steward_owns_recipe(res: &SimResources, workshop: u32, recipe: RecipeKind) -> bool {
+pub(super) fn steward_owns_recipe(res: &SimResources, workshop: u32, recipe: RecipeKind) -> bool {
     res.steward.owned.iter().any(|owned| {
         matches!(&owned.command,
         Command::AddBill { workshop: owned_workshop, recipe: owned_recipe, .. }

@@ -556,3 +556,82 @@ lights, recording that admission and retaining every original pixel threshold.
 Do not alter the simulation clock or product lighting. Missing cases remain
 missing; a subsequent capture is required. Strict scripts/harness checks and
 `test_locale_trf.gd` passed before capture 5, as did full docs check 7.
+
+
+### Formal calibration round 1, source dba478e54
+
+All eight seed 0–7 worlds completed the prescribed 72 days with runner exit 0;
+the append-only register records one of four rounds consumed. The source and
+frozen release probe remained unchanged. `calibration-1-score.json` is OBSERVED,
+NOT_EVALUATED for acceptance: alive 0/8, winter stores/cooked share/diversity
+0/8, spoilage 2/8, ledger 8/8, day-1 storage/day-10 beds 8/8, wolf-death bar
+6/8. No held-out worlds were evaluated. Seed 7's ten deaths are dehydration;
+seed 6 has one starvation death followed by nine dehydration deaths. These
+must not be attributed to food storage without mechanism evidence.
+
+The next-round investigation retains three separate hypotheses: winter
+eligibility ignores the intended keep horizon; one-day cooking targets also
+cap long-life preservation; daytime fire is unavailable to recipes requiring
+a lit hearth. Existing fire only burns in the night window, while planning
+suspends unavailable recipes. Any correction must retain actual fuel withdrawal,
+actual craft requirements, physical haul and original food ages, with baseline
+identity and focused regressions before a separate logged second round.
+
+### Round-2 mechanism verification before freeze
+
+ADR 0053 records the separate behavior-changing candidate. The ten focused
+test groups in `round2-focused-after1-terminal.json` all returned zero, including
+food owner retention/invalidation, horizon and preservation, real fuel-backed
+heat, bills/storage, save round trips and food fingerprints. Initial failing
+tests and corrected fixture preconditions remain in the external evidence.
+
+The observation-only natural seed-7 six-day run (`water-diagnostic-2.jsonl`,
+terminal 0) ends at tick 8640 with ten living people and zero deaths. The prior
+same-scenario diagnostic had ten deaths; doorway food-target oscillation is no
+longer observed. Other round-2 mechanisms are present in this run, so this is
+not an isolated attribution of every changed trajectory to retention. No food,
+water, knowledge or navigation state was injected. The temporary observer was
+moved outside the repository after execution. Formal calibration remains 1/4;
+held-out, performance and full gate are still not evaluated.
+
+Independent review also found preservation budgeting accepting a second rack
+while bill application selected only the first, player-paused rack. A focused
+ordinary-command regression must prove selection of the eligible second rack
+without editing the first player's bill before freezing round 2.
+
+That regression failed with an empty command list, then passed after the budget
+retained the eligible workshop ID for application. A separate all-paused test
+keeps the player veto from being bypassed by constructing another rack. Full
+systems unit tests pass 470/470 (`systems-round2-test-1.log`); all-target Clippy
+passes (`clippy-round2-3.log`). The first two Clippy attempts failed in the
+temporary capture fixture and remain recorded. Retained carried-food eligibility
+also uses the known entity and one physical stack read instead of two actor
+scans; existing retention and invalidation regressions remain green.
+
+### Authentic pot capture fixture and focused evidence
+
+`pot-fixture-1` is a separate seed-0 ordinary-player scenario, never a calibration
+world: stockpile, quarry, workshop, blade bill, an actual caravan trade and pot
+deployment are recorded commands. At tick 31980 the actual trade exchanged
+17 units of value for a quality-45 pot valued at 9. At tick 47700, pot 1 at
+(88,99) held six grain and five roots; food validation passed and the save was
+written. Root checked every captured source hash unchanged. The temporary
+observer was moved outside the repository after terminal exit 0.
+
+`ui-pot-round2-1` completes only focused pot coverage with zero failures and
+both scales, not the whole capture suite. Root and an independent reviewer see
+the items and remaining pot-storage days; at 1.25 the final paragraph needs
+scrolling. The harness now requires actual wheel input and a fully enclosed
+final label before a supplementary bottom capture. A brief capture delay ended
+after bringing the owned Godot window to the foreground; the process sample and
+original logs are retained, without claiming a product stall repair.
+
+### Round2 focused UI follow-through and baseline identity
+
+The third baseline identity run completed with exit0:228,748 shared values,0 differences/one-sided paths;64 chronicle files/19,683 entries and64 raw sample files equal under the identity tool's declared normalization; determinism seeds0–3 PASS. This binds the uncommitted round2 runtime used by that run, not a future full gate or colony survival acceptance. Evidence: `/Users/rexxa/work/m6a-data/20261029/candidate-identity-3.log`.
+
+The actual pot follow-up `ui-pot-round2-2` completed with0 failures. At1.0 the explanation was already visible; at1.25 real mouse-wheel input moved scroll0→37 and enclosed the entire final paragraph. Root inspected `pot-food-why-bottom-1.25.png`: storage class/remaining days and the age-preservation explanation are readable, and the source inspector remains separate. Focused completion is not full-suite completion; the receipt explicitly retains `full_suite_complete=false`.
+
+The first hunger capture fixture failed honestly: seed0 with one ordinary `SetSteward { on:false, scope:All }` command produced no HungerFoodChain through display day12. The entire steward was disabled; this is UI-only evidence, not a calibration world, not a steward-ON survival result, and not evidence that defence stayed active. Preserve `hunger-fixture-1/receipt.json` and its failed log; no event/state injection or successful coverage is claimed.
+
+The previously failing natural pregnancy/due-birth save fixture now passes on round2 runtime: release test `save_load_roundtrip_through_a_pregnancy_and_a_due_birth`,1 passed/0 failed,26.46s after compilation. Its ordinary steward command,40/60-day bounds and save-continuity assertions are unchanged from p3. Preserve prior failures. This is evidence for that fixture, not72-day calibration acceptance (`pregnancy-round2-1.log`).
