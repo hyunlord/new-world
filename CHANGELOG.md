@@ -1,6 +1,17 @@
 # Changelog
 
-## M6a food chain — 2026-10-29 (implementation in progress)
+## M6a food chain — 2026-10-30 (acceptance FAIL, not published)
+
+Frozen held-out acceptance **FAILS**: survival29/32 (required30), cooked-share
+24/32 (required26); all other scored bars pass. Independent raw audit confirms
+both failures without finding a scorer defect. P9 freeze and candidate receipts
+remain unchanged: no tuning, fifth calibration, reseeding or waiver. BASE32
+completes on P10 `bd799460c25a7019dd5d3f30296587c96674615b`.
+Story comparison completes32 worlds x3years per arm; the final48-step gate remains pending (`final-gate-1`); step45 must retain
+the known failure. No publication or issue closure; main/wip remain BASE5b0c8881.
+Temporary M6A-1 [#670](https://github.com/hyunlord/new-world/issues/670) art and
+M6A-2 [#671](https://github.com/hyunlord/new-world/issues/671) held-out failure
+remain OPEN. See the report for the score and independent raw audit.
 
 ### Added
 - Data-defined seasonal plants, physical harvest jobs, food ownership and daily
@@ -40,8 +51,9 @@
   performance pairs (zero invalid; allocation/C3 pass). Calibration4/4 is complete
   and frozen; candidate held-out1296–1327 completes32 worlds at72 days.
   Calibration3→4 is PASS_OBSERVED_ONLY, not full-state/internal-action identity.
-  BASE comparison, story, final48-step gate and publication remain pending.
-- P10 observer correction (SHA pending) is restricted to seven tools: the BASE72
+  BASE comparison now fails survival/cooked share; story and final48-step gate
+  remain pending. Publication is blocked.
+- P10 observer correction (`bd799460c`) is restricted to seven tools: the BASE72
   entrypoint, runner and tests, successor proof and tests, and gate source/evidence
   adapters. Preserve the original BASE observer72 startup failure before simulation.
   A distinct authenticated BASE-library adapter passes seed0 qualifications at48
@@ -79,8 +91,8 @@ evidence, Chronicle identities and full-state fingerprints without policy tuning
 Its uncommitted source passed497 system tests and authentic old13 migration checks;
 P9 subsequently passes fresh performance and completes final calibration/freeze
 and candidate held-out. The original BASE observer CLI rejects72 days before
-simulation; qualified adapter evidence does not yet complete BASE held-out,
-story or full-gate acceptance. No publication SHA is claimed.
+simulation; qualified adapter subsequently completes BASE held-out with acceptance FAIL.
+Story comparison is now complete; full-gate results remain pending. No publication SHA is claimed.
 See [M6A_DECISIONS](docs/v8/m6a/M6A_DECISIONS.md) and
 [M6A_REPORT](docs/v8/m6a/M6A_REPORT.md) for retained evidence and limitations.
 

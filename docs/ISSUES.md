@@ -392,8 +392,9 @@ M-UX2 게시 시점의 332개 고유 이슈: fixed197 / open103 / deferred30 / w
 
 ## M6a 임시 원장 — 게시 전
 
-공식 ISS 원장 347행은 그대로 유지한다. 임시 M6A 행 1개(open 1)를 포함한 전체 348행: fixed207 / open108 / deferred31 / won't fix2. 게시 시 최신 공식 최댓값을 확인해 정식 번호로 치환한다. 아래 항목은 GitHub 미등록이며 게이트·화면 수용 완료를 뜻하지 않는다.
+공식 ISS 원장 347행은 그대로 유지한다. 임시 M6A 행 2개(open 2)를 포함한 전체 349행: fixed207 / open109 / deferred31 / won't fix2. 게시 시 최신 공식 최댓값을 확인해 정식 번호로 치환한다. 현재 동결 held-out은 생존·조리 비율 막대 FAIL이므로 게시하지 않으며 임시 번호를 유지한다. GitHub #670·#671의 제목·본문·OPEN 상태를 생성 후 재조회했다.
 
 | ID | 증상 | 발견·재현 | 분류 | 상태 | 조치·잔여 작업 | 근거 |
 |---|---|---|---|---|---|---|
-| M6A-1 | 식물 종·계절 단계의 전용 아트가 없어 임시 도형과 단계 색을 표시함 | M6a 목표 §2.1의 ART manifest fallback 요구; 현재 bundled plant bindings는 전용 자산 미지정 | art | open | 종·카테고리·단계별 아트 등록 및 실제 화면 가독성 확인이 남아 있다. 현재 코드 도형은 임시 표현이며 완성 아트로 수용하지 않는다. 이 패스에서 아트 생성하지 않음. 선택 manifest의 species→category fallback과 임시 도형 경로를 유지 | `assets/v8art/bindings.json`; `assets/v8art/render_params.json`; `scripts/world/art/art_data.gd`; `scripts/world/colony/plant_layer.gd`; `docs/v8/m6a/M6A_GOAL.md` §2.1 |
+| M6A-1 | 식물 종·계절 단계의 전용 아트가 없어 임시 도형과 단계 색을 표시함 | M6a 목표 §2.1의 ART manifest fallback 요구; 현재 bundled plant bindings는 전용 자산 미지정 | art | open | 종·카테고리·단계별 아트 등록 및 실제 화면 가독성 확인이 남아 있다. 현재 코드 도형은 임시 표현이며 완성 아트로 수용하지 않는다. 이 패스에서 아트 생성하지 않음. 선택 manifest의 species→category fallback과 임시 도형 경로를 유지 | [#670](https://github.com/hyunlord/new-world/issues/670); `assets/v8art/bindings.json`; `assets/v8art/render_params.json`; `scripts/world/art/art_data.gd`; `scripts/world/colony/plant_layer.gd`; `docs/v8/m6a/M6A_GOAL.md` §2.1 |
+| M6A-2 | 동결 held-out 생존29/32·조리 비율24/32로 각각30·26 기준 미달 | 후보P9 5c7e05e67, BASE72 관측P10 bd799460c; 종자1296–1327×72일; 원시 자료 독립 재계산도 FAIL | simulation | open | 보정4회·정책 동결·held-out 이후 조정 금지 유지. 채점 오류 없음. 같은 결과에 맞춘 재보정·막대 완화 없이 실패 보존; 별도 후속 제품/평가 범위 결정 필요. 게시하지 않음 | [#671](https://github.com/hyunlord/new-world/issues/671); `/Users/rexxa/work/m6a-data/20261029/p10-heldout-score.json`; `p10-heldout-failure-audit.md`; `docs/v8/m6a/M6A_DECISIONS.md` |

@@ -861,3 +861,33 @@ pinned target sysroot library, require its hash in the frozen inventory and keep
 all unknown bare externs rejected. The actual manifest then passed
 `manifest-check-3.log`; all62 M6a Python tests passed. No library, executable,
 qualification, frozen policy or original cohort changed during this repair.
+
+### Frozen held-out evaluation fails two unchanged bars (2026-10-30 KST)
+
+P10 `bd799460c25a7019dd5d3f30296587c96674615b` completed the distinct BASE
+adapter cohort1296–1327×72days with32/32 valid worlds, zero execution/observer
+errors and unchanged source. Full artifact validation passed. The original P9
+candidate cohort remains byte-for-byte retained; it was not rerun.
+
+The unchanged scorer produced `p10-heldout-score.json`, exit1/statusFAIL:
+alive29/32 against30 required; cooked-share24/32 against26 required. Hunger-free
+winters29/28 required, stores28/26, diversity30/26, spoilage31/26 and ledger32/32
+pass. Common rows are candidate/BASE: stockpile32/32, beds31/31, wolves31/29,
+ledger32/32. At winter starts day42/day66, living denominators are31/31 and
+stores pass31/28 respectively. These observations cannot be promoted to a gate
+or publication PASS.
+
+The no-tuning-after-heldout rule and four-round limit remain binding. Do not
+change policy, data, product behavior, scorer thresholds or seed registration
+to clear these failures. Independently audit the failing arithmetic against raw
+observations; only a demonstrated instrumentation error could justify a tool
+correction. Continue the required reference story and remaining validation on
+frozen product bytes, retain any red gate, and do not publish while either bar
+fails. An outcome-driven product follow-up requires a separately authorized
+future evaluation protocol; it is not a fifth round in this pass.
+
+Independent raw audit `p10-heldout-failure-audit.md/json` verified all96 candidate files and recomputed the two failing bars without invoking the scorer. Extinct seeds are1300,1305,1307. Cooked-share failures are1300,1305,1306,1307,1312,1315,1318,1319; seed1306 is651/1304, strictly below50%, and1305 has no qualifying meals. No scorer defect was found. Other bars retain the original scorer results, not a claim of independent full rescoring. Registry-created #670 (plant art) and #671 (frozen acceptance failure) were read back with exact title/body and OPEN state; retain temporary M6A-1/M6A-2 because publication is blocked.
+
+### Reference story comparison completed on frozen product
+
+`p10-story-launch/terminal.json` completed exit0 without interruption or signals. Candidate and original BASE each cover32worlds×72days,96 complete world-years. Candidate/BASE totals: entries57155/32173, deep entries86/7, distinct deep paths19/7, people with3 entries991/990, missing chains115/176, cycles0/0. Path/person totals sum per-world/year counts, not globally unique identities. Original arm executables and source inventories were checked before/after; no BASE72 adapter was used here. Reference only, no numeric acceptance bar, no change to held-out FAIL.
