@@ -47,7 +47,7 @@ const DRAFT_KEY: Key = KEY_D
 
 ## BUILD places the blueprint kind `build_kind` (M1's HUT mode, same code 3); M3 adds DIG (7) and DECONSTRUCT (8);
 ## M4 adds CLAY (9, clay pits); M5 HUNT (10, click a deer) and HUNT_ZONE (11, a hunt zone rectangle).
-enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT, CLAY, HUNT, HUNT_ZONE }
+enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT, CLAY, HUNT, HUNT_ZONE, HARVEST }
 ## `get_place_preview` shapes: one tile, line, hollow rectangle, filled rectangle.
 const SHAPE_TILE: int = 0
 const SHAPE_LINE: int = 1
@@ -55,6 +55,7 @@ const SHAPE_HOLLOW: int = 2
 const SHAPE_FILLED: int = 3
 
 const AREA_COMMANDS: Dictionary = {
+	Mode.HARVEST: "cmd_designate_harvest",
 	Mode.CHOP: "cmd_designate_chop",
 	Mode.STOCKPILE: "cmd_add_stockpile",
 	Mode.REMOVE_ZONE: "cmd_remove_zone_area",
@@ -66,6 +67,7 @@ const AREA_COMMANDS: Dictionary = {
 	Mode.HUNT_ZONE: "cmd_add_hunt_zone",
 }
 const RECT_COLORS: Dictionary = {
+	Mode.HARVEST: Color(0.65, 0.82, 0.40, 0.9),
 	Mode.CHOP: Color(0.98, 0.81, 0.24, 0.9),
 	Mode.STOCKPILE: Color(0.85, 0.72, 0.38, 0.9),
 	Mode.REMOVE_ZONE: Color(0.9, 0.5, 0.35, 0.9),
@@ -78,6 +80,7 @@ const RECT_COLORS: Dictionary = {
 }
 # The accepted-order toast per command ({count} = trees, tiles, blueprints or cancelled orders).
 const TOAST_KEYS: Dictionary = {
+	"cmd_designate_harvest": "M6A_TOAST_HARVEST",
 	"cmd_designate_chop": "UI_ORDER_TOAST_CHOP",
 	"cmd_add_stockpile": "UI_ORDER_TOAST_STOCKPILE",
 	"cmd_place_blueprint": "UI_ORDER_TOAST_HUT",
@@ -609,6 +612,7 @@ func click_world(world_pos: Vector2, tile: Vector2i) -> void:
 		var room: int = int(rooms.call("room_at", tile))
 		if room >= 0 and room_panel.has_method("display_room"):
 			room_panel.call("display_room", room)
+			room_panel.call("set_food_tile", tile)
 			var causal_panel: CanvasItem = get_node_or_null("/root/Main/UI/CausalPanel") as CanvasItem
 			if causal_panel != null:
 				causal_panel.visible = false
@@ -621,17 +625,16 @@ func click_world(world_pos: Vector2, tile: Vector2i) -> void:
 		if causal != null:
 			causal.visible = false
 		return
+	var tile_food: Dictionary = _world_sim.call("get_tile_food", tile.x, tile.y)
+	if not tile_food.get("kinds", []).is_empty():
+		_show_item_tile(tile)
+		return
 	var overlay: Dictionary = SimReads.read(_world_sim, "get_colony_overlay")
 	var xs: PackedInt32Array = overlay.get("item_xs", PackedInt32Array())
 	var ys: PackedInt32Array = overlay.get("item_ys", PackedInt32Array())
 	for i: int in mini(xs.size(), ys.size()):
 		if Vector2i(xs[i], ys[i]) == tile:
-			var item_panel: Node = get_node_or_null("/root/Main/UI/ItemPanel")
-			if item_panel == null:
-				item_panel = load("res://scripts/ui/panels/item_panel.gd").new()
-				item_panel.name = "ItemPanel"
-				get_node("/root/Main/UI").add_child(item_panel)
-			item_panel.call("display_tile", tile)
+			_show_item_tile(tile)
 			return
 
 
@@ -723,3 +726,12 @@ func _build_preview_draw() -> void:
 				var fp: Vector2i = look.get("footprint", Vector2i.ONE) if bool(row.get("bed", false)) else Vector2i.ONE
 				top_left = SiteGhost.footprint_base(t, fp) - Vector2(look["base"] as Vector2i)
 		_preview_draw.append([top_left, tex, ok[i] != 0, t])
+
+
+func _show_item_tile(tile: Vector2i) -> void:
+	var panel: Node = get_node_or_null("/root/Main/UI/ItemPanel")
+	if panel == null:
+		panel = load("res://scripts/ui/panels/item_panel.gd").new()
+		panel.name = "ItemPanel"
+		get_node("/root/Main/UI").add_child(panel)
+	panel.call("display_tile", tile)

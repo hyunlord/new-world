@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "hunger_stages": {
+    "0": "M6A_HUNGER_STAGE_0",
+    "1": "M6A_HUNGER_STAGE_1",
+    "2": "M6A_HUNGER_STAGE_2",
+    "3": "M6A_HUNGER_STAGE_3",
+    "4": "M6A_HUNGER_STAGE_4",
+    "5": "M6A_HUNGER_STAGE_5",
+    "6": "M6A_HUNGER_STAGE_6"
+  }
+}

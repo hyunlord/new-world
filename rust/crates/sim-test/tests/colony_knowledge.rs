@@ -67,6 +67,9 @@ fn founders_are_seeded_by_the_goal_table_on_seeds_0_to_7() {
         ("instruction", 2),
         ("tracking", 2),
         ("hide_scraping", 1),
+        ("cooking", 2),
+        ("grain_parching", 2),
+        ("food_drying", 2),
     ]
     .into_iter()
     .collect();

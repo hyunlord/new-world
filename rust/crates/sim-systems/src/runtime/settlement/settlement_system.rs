@@ -952,13 +952,25 @@ impl SettlementSystem {
                     .map_or(SETTLEMENT_MAX_POP, |rule| {
                         super::housing_capacity(resources, sid, &rule)
                     });
+                // Colony births carry real child hunger, not a synthetic food tax.
+                let effective_cost = if resources.rules.colony.is_some() {
+                    0
+                } else {
+                    food_cost
+                };
+                let stored = if resources.rules.colony.is_some() {
+                    crate::runtime::food::reserves::units(world, resources, sid, false)
+                } else {
+                    u64::from(
+                        settlement
+                            .stockpile
+                            .get(&ResourceKind::Food)
+                            .copied()
+                            .unwrap_or(0),
+                    )
+                };
                 if settlement.member_agents.len() as u32 >= capacity
-                    || settlement
-                        .stockpile
-                        .get(&ResourceKind::Food)
-                        .copied()
-                        .unwrap_or(0)
-                        < food_cost
+                    || stored < u64::from(effective_cost)
                 {
                     continue;
                 }
@@ -991,13 +1003,8 @@ impl SettlementSystem {
                     let future_need = (settlement.member_agents.len() as f64 + 1.0) * adult_need;
                     let reserve = sustain.reserve_days
                         * super::food_economy::members_need_per_day(world, resources, sid);
-                    let stock = settlement
-                        .stockpile
-                        .get(&ResourceKind::Food)
-                        .copied()
-                        .unwrap_or(0);
                     if future_need > sustain.utilization * supply
-                        || f64::from(stock) < f64::from(food_cost) + reserve
+                        || (stored as f64) < f64::from(effective_cost) + reserve
                     {
                         continue;
                     }
@@ -1251,7 +1258,9 @@ impl SettlementSystem {
                 match resources.rules.society.birth {
                     BirthRule::Provisioned { food_cost, .. }
                     | BirthRule::Fertility { food_cost, .. } => {
-                        settlement.withdraw(ResourceKind::Food, food_cost);
+                        if resources.rules.colony.is_none() {
+                            settlement.withdraw(ResourceKind::Food, food_cost);
+                        }
                     }
                     BirthRule::Legacy => {}
                 }

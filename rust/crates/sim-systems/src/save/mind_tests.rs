@@ -147,6 +147,7 @@ fn invalid_saved_policy_is_rejected_before_registration() {
         steward: &body.steward,
         content_state: &body.content_state,
         mind: &body.mind,
+        food: &body.food,
     })
     .expect("malformed fixture");
     let mut corrupt = MAGIC.to_vec();
@@ -387,7 +388,12 @@ fn switch_v11_bytes(engine: &mut SimEngine) -> Vec<u8> {
     let mut old = LegacyBodyV11 {
         current_tick: engine.current_tick(),
         world: world::capture(&engine.world).unwrap(),
-        systems: engine.system_states().unwrap(),
+        systems: engine
+            .system_states()
+            .unwrap()
+            .into_iter()
+            .filter(|entry| entry.0 != "FoodDailySystem")
+            .collect(),
         steward: Default::default(),
         content_state: Default::default(),
         resources,

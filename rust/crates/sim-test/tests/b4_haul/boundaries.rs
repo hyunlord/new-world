@@ -1,6 +1,21 @@
 //! Controlled destination geometry, capacity and live reservation boundaries.
 use super::*;
-use colony_support::drop_items;
+fn drop_items(engine: &mut SimEngine, tile: (u32, u32), spec: ItemSpec, count: u16) {
+    if spec.kind.definition().food.is_some() {
+        let day = sim_systems::runtime::food::day(&engine.resources);
+        sim_systems::runtime::food::items::create_ground(
+            &mut engine.resources,
+            tile,
+            spec,
+            count,
+            day,
+            sim_systems::runtime::food::items::FoodSource::Debug,
+        )
+        .expect("tracked food fixture");
+    } else {
+        colony_support::drop_items(engine, tile, spec, count);
+    }
+}
 use sim_core::colony::ItemSpec;
 use sim_core::TerrainType;
 use sim_systems::runtime::jobs::items::{chebyshev, room_on, stack_max};
@@ -145,14 +160,6 @@ fn full_and_incompatible_stockpiles_select_hearth_without_changing_the_stacks() 
             1
         };
         drop_items(&mut f.engine, STOCKPILE, ItemSpec::raw(kind, None), count);
-        if kind == meat() {
-            f.engine
-                .resources
-                .colony
-                .wildlife
-                .meat_lots
-                .push((0, u32::from(count)));
-        }
         let original = f.engine.resources.colony.ground_items[&STOCKPILE];
         assert_eq!(original.count, count);
         assert_eq!(
@@ -266,12 +273,6 @@ fn fallback_merges_only_free_capacity_and_preserves_source_remainder() {
         ItemSpec::raw(meat(), None),
         maximum - 1,
     );
-    f.engine
-        .resources
-        .colony
-        .wildlife
-        .meat_lots
-        .push((0, u32::from(maximum - 1)));
     let hunter = f.hunter;
     next_kill(&mut f, hunter);
     assert_eq!(destination(&f, hunter), chosen);
@@ -294,17 +295,7 @@ fn fallback_merges_only_free_capacity_and_preserves_source_remainder() {
     );
     assert_eq!(ground(&f, meat()), u64::from(maximum) + 1);
     assert_eq!(ground(&f, ItemKind::Hide), 1);
-    assert_eq!(
-        f.engine
-            .resources
-            .colony
-            .wildlife
-            .meat_lots
-            .iter()
-            .map(|(_, n)| *n)
-            .sum::<u32>(),
-        u32::from(maximum) + 1
-    );
+    assert_tracked_meat(&f, u64::from(maximum) + 1);
 }
 
 #[test]
@@ -320,7 +311,6 @@ fn incompatible_meat_quality_bucket_is_not_a_fallback_merge_target() {
     };
     assert!(!spec.merges_with(&ItemSpec::raw(meat(), None)));
     drop_items(&mut f.engine, blocked, spec, 1);
-    f.engine.resources.colony.wildlife.meat_lots.push((0, 1));
     let hunter = f.hunter;
     next_kill(&mut f, hunter);
     assert_eq!(destination(&f, hunter), chosen);
@@ -480,7 +470,13 @@ fn losing_anchor_coverage_cancels_both_haul_stages_with_building_hearth_retained
             );
         }
         let source_before = f.engine.resources.colony.ground_items.get(&from).copied();
-        let lots_before = f.engine.resources.colony.wildlife.meat_lots.clone();
+        let owner_before = if carrying {
+            sim_core::colony::food::FoodOwner::Carried(f.id)
+        } else {
+            sim_core::colony::food::FoodOwner::Ground(from)
+        };
+        let age_before = f.engine.resources.food.ages[&owner_before];
+        let tallies_before = f.engine.resources.food.tallies.clone();
         let food_before = food(&f);
         // Controlled predicate mutation, not a player command or normal anchor movement.
         f.engine
@@ -511,7 +507,22 @@ fn losing_anchor_coverage_cancels_both_haul_stages_with_building_hearth_retained
         );
         assert_eq!(ground(&f, meat()), 2);
         assert_eq!(ground(&f, ItemKind::Hide), 1);
-        assert_eq!(f.engine.resources.colony.wildlife.meat_lots, lots_before);
+        assert!(!f
+            .engine
+            .resources
+            .food
+            .ages
+            .contains_key(&sim_core::colony::food::FoodOwner::Carried(f.id)));
+        for (&tile, stack) in &f.engine.resources.colony.ground_items {
+            if stack.kind == meat() {
+                assert_eq!(
+                    f.engine.resources.food.ages[&sim_core::colony::food::FoodOwner::Ground(tile)],
+                    age_before
+                );
+            }
+        }
+        assert_eq!(f.engine.resources.food.tallies, tallies_before);
+        assert_tracked_meat(&f, 2);
         assert_eq!(food_before, 0);
         assert_eq!(food(&f), food_before);
         assert_eq!(f.engine.resources.colony.wildlife.tallies.meat_eaten, 0);

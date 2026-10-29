@@ -22,15 +22,47 @@ fn extension(count: usize) -> String {
 fn appended_nodes_keep_base_indices_and_use_the_last_bit() {
     let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("catalog");
     let base = parse_with_catalog(BUNDLED, &catalog).expect("base");
-    let merged = merge_sources(BUNDLED, &extension(8)).expect("merge");
+    let historical = [
+        "fire_keeping",
+        "foraging",
+        "water_finding",
+        "flint_knapping",
+        "hafting",
+        "firewood_splitting",
+        "pressure_flaking",
+        "stone_grinding",
+        "hut_building",
+        "timber_wall",
+        "doorway",
+        "packed_floor",
+        "bedding",
+        "stone_walling",
+        "stone_quarrying",
+        "digging",
+        "clay_digging",
+        "clay_prep",
+        "pot_forming",
+        "pot_firing",
+        "instruction",
+        "storytelling",
+        "tracking",
+        "hide_scraping",
+    ];
+    for (index, name) in historical.into_iter().enumerate() {
+        assert_eq!(base.id_of(name), Some(index as KnowledgeId));
+    }
+    assert_eq!(base.id_of("cooking"), Some(24));
+    assert_eq!(base.id_of("grain_parching"), Some(25));
+    assert_eq!(base.id_of("food_drying"), Some(26));
+    let merged = merge_sources(BUNDLED, &extension(5)).expect("merge");
     let defs = parse_with_catalog(&merged, &catalog).expect("32 nodes");
-    assert_eq!(&defs.nodes[..24], base.nodes.as_slice());
+    assert_eq!(&defs.nodes[..27], base.nodes.as_slice());
     assert_eq!(defs.nodes.len(), MAX_NODES);
-    assert_eq!(defs.id_of("extension_7"), Some(31));
+    assert_eq!(defs.id_of("extension_4"), Some(31));
     let masks = gates_with_catalog(&defs, &catalog).expect("masks");
     let recipe = catalog.recipe_by_name("knap_blade").expect("recipe");
-    assert_eq!(masks.recipe(recipe), bit(3) | 0xff00_0000);
-    assert!(merge_sources(BUNDLED, &extension(9)).is_err());
+    assert_eq!(masks.recipe(recipe), bit(3) | 0xf800_0000);
+    assert!(merge_sources(BUNDLED, &extension(6)).is_err());
 }
 
 #[test]
@@ -56,7 +88,7 @@ fn unknown_references_duplicate_nodes_and_cycles_reject() {
         assert!(parse_with_catalog(&malformed, &catalog).is_err());
     }
     let duplicate = merge_sources(BUNDLED, BUNDLED);
-    assert!(duplicate.is_err(), "48 nodes cannot alias the 32-bit map");
+    assert!(duplicate.is_err(), "54 nodes cannot alias the 32-bit map");
 }
 
 #[test]
@@ -106,7 +138,7 @@ fn uninstalled_child() {
     }
     assert!(crate::colony::content::installed().is_err());
     let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("pure catalog");
-    assert_eq!(catalog.knowledge_defs().nodes.len(), 24);
+    assert_eq!(catalog.knowledge_defs().nodes.len(), 27);
     assert!(crate::colony::content::installed().is_err());
     assert!(ron::from_str::<Knowledge>("(entries: [], practice: 0)").is_err());
     assert!(

@@ -103,6 +103,22 @@ fn ground(f: &Fixture, kind: ItemKind) -> u64 {
         .sum()
 }
 
+fn assert_tracked_meat(f: &Fixture, count: u64) {
+    assert_eq!(ground(f, meat()), count);
+    for (&tile, stack) in &f.engine.resources.colony.ground_items {
+        if stack.kind == meat() {
+            assert!(f
+                .engine
+                .resources
+                .food
+                .ages
+                .contains_key(&sim_core::colony::food::FoodOwner::Ground(tile)));
+        }
+    }
+    sim_systems::runtime::food::validate(&f.engine.world, &f.engine.resources)
+        .expect("physical food conservation");
+}
+
 fn kill(f: &mut Fixture) {
     let mut observed_hunt = false;
     for _ in 0..240 {
@@ -195,7 +211,7 @@ fn remove_hearth(f: &mut Fixture) {
 }
 
 #[test]
-fn hunter_without_stockpile_walks_meat_to_hearth_before_hourly_feed() {
+fn hunter_without_stockpile_walks_meat_to_hearth_without_automatic_meals() {
     let mut f = fixture();
     assert!(f.engine.resources.colony.zone_of_tile.is_empty());
     kill(&mut f);
@@ -227,39 +243,23 @@ fn hunter_without_stockpile_walks_meat_to_hearth_before_hourly_feed() {
         "delivery is ground storage, not immediate feed"
     );
     assert_eq!(f.engine.resources.colony.wildlife.tallies.meat_eaten, 0);
-    assert_eq!(
-        f.engine
-            .resources
-            .colony
-            .wildlife
-            .meat_lots
-            .iter()
-            .map(|(_, n)| *n)
-            .sum::<u32>(),
-        2
-    );
+    assert_tracked_meat(&f, 2);
     f.engine.register_system(Box::new(AnimalSystem));
     for _ in 0..61 {
         tick_checked(&mut f.engine);
-        if f.engine.resources.colony.wildlife.tallies.meat_eaten > 0 {
-            break;
-        }
     }
-    assert_eq!(f.engine.resources.colony.wildlife.tallies.meat_eaten, 2);
-    let units = f
-        .engine
-        .resources
-        .rules
-        .colony
-        .expect("colony")
-        .wildlife
-        .expect("wildlife")
-        .meat_food_units;
-    assert_eq!(food(&f), 2 * units);
-    assert_eq!(ground(&f, meat()), 0);
+    assert_eq!(f.engine.resources.colony.wildlife.tallies.meat_eaten, 0);
+    assert_eq!(f.engine.resources.food.tallies.eaten_units, 0);
+    assert!(f.engine.resources.food.meals.is_empty());
+    assert_eq!(
+        food(&f),
+        0,
+        "animal maintenance cannot invent a meal or abstract reserve"
+    );
+    assert_tracked_meat(&f, 2);
     assert_eq!(ground(&f, ItemKind::Hide), 1);
     assert!(f.engine.resources.colony.wildlife.meat_lots.is_empty());
-    invariants::check(&f.engine.world, &f.engine.resources).expect("fed conservation");
+    invariants::check(&f.engine.world, &f.engine.resources).expect("stored conservation");
 }
 
 #[test]
@@ -370,17 +370,7 @@ fn removing_last_hearth_midcarry_drops_load_and_releases_reservations() {
     );
     assert_eq!(food(&f), 0);
     assert_eq!(f.engine.resources.colony.wildlife.tallies.meat_eaten, 0);
-    assert_eq!(
-        f.engine
-            .resources
-            .colony
-            .wildlife
-            .meat_lots
-            .iter()
-            .map(|(_, n)| *n)
-            .sum::<u32>(),
-        2
-    );
+    assert_tracked_meat(&f, 2);
 }
 
 #[test]

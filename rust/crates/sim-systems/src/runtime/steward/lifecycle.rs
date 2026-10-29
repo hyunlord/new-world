@@ -9,6 +9,7 @@ use sim_engine::SimResources;
 /// Targets of ordinary commands, captured before mutation.
 pub fn targets(res: &SimResources, cmd: &Command) -> Vec<Target> {
     match cmd {
+        Command::DeployFoodPot { tile: (x, y) } => vec![Target::Tile(*x, *y)],
         Command::DesignateChopTiles { tiles } => {
             tiles.iter().map(|&(x, y)| Target::Tile(x, y)).collect()
         }
@@ -32,6 +33,7 @@ pub fn targets(res: &SimResources, cmd: &Command) -> Vec<Target> {
             .collect()
         }),
         Command::AddStockpile { x0, y0, x1, y1 }
+        | Command::DesignateHarvest { x0, y0, x1, y1 }
         | Command::AddHuntZone { x0, y0, x1, y1 }
         | Command::DesignateQuarry { x0, y0, x1, y1 } => {
             crate::commands::rect_tiles(res, *x0, *y0, *x1, *y1)
@@ -75,10 +77,28 @@ pub struct PlayerProtection {
 }
 /// Capture intent without mutating state; rejected commands discard the proposal.
 pub fn prepare_player(res: &SimResources, cmd: &Command, tick: u64) -> Option<PlayerProtection> {
-    if !res.steward.enabled && res.steward.owned.is_empty() {
+    // An individual's food harvest remains cancellable even with the steward off.
+    let harvest_targets: Vec<_> = match cmd {
+        Command::CancelArea { x0, y0, x1, y1 } if res.rules.colony.is_some() => res
+            .colony
+            .designations
+            .iter()
+            .filter(|(tile, kind)| {
+                **kind == sim_core::colony::Designation::Harvest
+                    && tile.0 >= (*x0).min(*x1)
+                    && tile.0 <= (*x0).max(*x1)
+                    && tile.1 >= (*y0).min(*y1)
+                    && tile.1 <= (*y0).max(*y1)
+            })
+            .map(|(&(x, y), _)| Target::Tile(x, y))
+            .collect(),
+        _ => Vec::new(),
+    };
+    if !res.steward.enabled && res.steward.owned.is_empty() && harvest_targets.is_empty() {
         return None;
     }
     let mut affected = targets(res, cmd);
+    affected.extend(harvest_targets);
     match cmd {
         Command::CancelArea { x0, y0, x1, y1 }
         | Command::RemoveZoneArea { x0, y0, x1, y1 }

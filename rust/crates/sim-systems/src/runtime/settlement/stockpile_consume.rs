@@ -93,6 +93,9 @@ impl RuntimeSystem for StockpileConsumeSystem {
     }
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
+        if resources.rules.colony.is_some() {
+            return;
+        }
         // AgentId → Entity map for resolving roster member ids to live entities.
         // A member id with no live entity (dead/despawned/stale) is absent here
         // and is skipped below — no panic, no unwrap.

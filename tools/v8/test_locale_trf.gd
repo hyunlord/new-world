@@ -11,6 +11,7 @@ extends SceneTree
 const LocaleScript = preload("res://scripts/core/locale.gd")
 const EconomyTextScript = preload("res://scripts/ui/economy_text.gd")
 const KnowledgeTextScript = preload("res://scripts/ui/knowledge_text.gd")
+const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const Content = preload("res://scripts/ui/content_context.gd")
 
 var _failures: int = 0
@@ -84,7 +85,10 @@ func _run() -> void:
 		_check("m4 lesson", str(locale.call("trf", "M4_LESSON_LEARNING_FMT", {"partner": "카토", "node": "문 만들기"})), "배우는 중: 카토에게서 문 만들기")
 		_check("m4 teach row", str(locale.call("trf", "M4_TEACH_ROW_FMT", {"teacher": "카토", "learner": "미나", "node": "문 만들기"})), "카토 → 미나 · 문 만들기")
 		_check("m4 lost", str(locale.call("trf", "CHRONICLE_KNOWLEDGE_LOST_FMT", {"node": "문 만들기", "person": "카토"})), "기술 소실: 문 만들기 (마지막: 카토)")
+		_check_food_chronicle(locale, 27, "구운 뿌리를")
+		_check_food_chronicle(locale, 23, "죽을")
 		locale.call("set_language", "en")
+		_check_food_chronicle(locale, 27, EconomyTextScript.item(locale, 27))
 		_check("m4 en era", KnowledgeTextScript.era_line(locale, {"era": 1, "progress": 318}), "Neolithic transition 31 %")
 		_check("m4 en wait", KnowledgeTextScript.wait_line(locale, 19), "Waiting: nobody knows Pot firing")
 		_check("m4 en warning", str(locale.call("trf", "M4_WARN_AT_RISK", {"node": "Doorways", "name": "Kato"})), "⚠ Doorways: only Kato knows")
@@ -97,3 +101,13 @@ func _run() -> void:
 		quit(0)
 	else:
 		quit(1)
+
+
+func _check_food_chronicle(locale: Node, item_code: int, expected_item: String) -> void:
+	var row: Dictionary = {"kind": 48, "subject": 1, "cause": item_code, "tick": 0}
+	var sentence: String = ChronicleText.sentence(row, -1, locale, {})
+	var expected: String = str(locale.call("ltr", "M6A_CHRON_COOKED")).format({"person": ChronicleText.person(1, locale), "item": expected_item})
+	_check("cooked meal particle %s %d" % [ChronicleText.language(locale), item_code], sentence.replace("\u2060", ""), expected.replace("\u2060", ""))
+	var line: String = ChronicleText.line(row, -1, locale, {"ticks_per_day": 1440}, true)
+	_check("cooked meal names eater once %s" % ChronicleText.language(locale), str(line.count("[url=person:1]")), "1")
+	_check("cooked meal why sentence names eater once", str(sentence.count("[url=person:1]")), "1")

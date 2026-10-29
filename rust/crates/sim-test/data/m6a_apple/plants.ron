@@ -1,0 +1,8 @@
+(schema_version:1,plants:[(
+identity:(code:65550,id:"wild_apple",name_key:"PLANT_FIXTURE_APPLE",serde_name:"FixtureWildApple",serde_aliases:[],resolver_aliases:[]),
+category:"bush",tags:["bush"],
+placement:(terrains:[plain,forest],elevation:(0,255),weight:13,density_permille:200),
+phases:[Ripe,Growing,Spent,Dormant],ripe_start_day:1,ripe_end_day:Some(5),
+yield:(item:"apple",units:20,regrow_days:0),
+harvest_ticks:60,knowledge:Some("foraging"),knowledge_speed_permille:1500
+)])

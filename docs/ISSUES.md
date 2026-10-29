@@ -388,3 +388,12 @@ M-UX2 게시 시점의 332개 고유 이슈: fixed197 / open103 / deferred30 / w
 | ISS-346 | KO UI1.25의 늑대 경고가 인물 정보창 이름·제목을 가림 | final-a5 독립 시각 검토2건; flee-1.25-person/why 캡처 | bug | fixed | 로컬 후보 `b0401ca2e`의 늑대 경고가 정보창 이름·제목과 겹친다. 이유 본문과 왜? 팝업은 가리지 않아 요청된 이유 표시 검사와 분리한다. 16:15KST 후속 p15에서 실제 정보창 경계 왼쪽에 경고/소집 영역을 제한하는 UI-only 수정을 했고 두 배율 재캡처의 비겹침 검사를 통과했다. 전체 gate·게시 전 OPEN 유지. 최초 미니맵 공백은 역사 ISS-282/캡처 준비 시점 가능성과 별개이며 이 이슈에 포함하지 않는다  D22 최종: exactff6af820 전체 gate 및 STRICT_PASS 수용 뒤 제품 게시·GitHub 폐쇄 재조회 완료. 앞선 실패/미게시 문구는 당시 이력이다. | [#657](https://github.com/hyunlord/new-world/issues/657); `/Users/rexxa/work/mux21-data/resume-20261028/final-a5-visual-review-1.json` · `final-a5-visual-review-2.json`  · [게시 소스](https://github.com/hyunlord/new-world/commit/ff6af820aa1fb4e2d894fa7e4e814bdf897a7868) · [폐쇄 근거](https://github.com/hyunlord/new-world/issues/657#issuecomment-6476854052) |
 
 | ISS-347 | 자연 ¼× 재굽기 프레임 합계10.493ms로4ms 목표 초과 | M-UX2.1 candidate-n0-z0.25-a1; 로컬 미게시 b0401ca2e | perf | open | seed0 day3 자연1×·¼× 유효60.002156초, load1 2.81→2.70. 측정17재굽기/16프레임 모두4ms 초과; epoch1/frame12090의 event166 4.824ms+167 5.669ms=10.493ms. 측정 fresh0이며 재굽기 프레임 전체 bake 합계 최대도10.493ms. 원인 미확정·미수정; ISS201/#576 계절 전환 및 ISS030/#515 일반 stall과 구분하고 공통 원인을 단정하지 않는다. FPS 통과로 이 목표 실패를 지우지 않으며 프로파일·수정·동일 조건 재검증 필요 | [#658](https://github.com/hyunlord/new-world/issues/658); `/Users/rexxa/work/mux21-data/resume-20261028/comparison/candidate-n0-z0.25-a1/receipt.json` · `acceptance-summary.json` |
+
+
+## M6a 임시 원장 — 게시 전
+
+공식 ISS 원장 347행은 그대로 유지한다. 임시 M6A 행 1개(open 1)를 포함한 전체 348행: fixed207 / open108 / deferred31 / won't fix2. 게시 시 최신 공식 최댓값을 확인해 정식 번호로 치환한다. 아래 항목은 GitHub 미등록이며 게이트·화면 수용 완료를 뜻하지 않는다.
+
+| ID | 증상 | 발견·재현 | 분류 | 상태 | 조치·잔여 작업 | 근거 |
+|---|---|---|---|---|---|---|
+| M6A-1 | 식물 종·계절 단계의 전용 아트가 없어 임시 도형과 단계 색을 표시함 | M6a 목표 §2.1의 ART manifest fallback 요구; 현재 bundled plant bindings는 전용 자산 미지정 | art | open | 종·카테고리·단계별 아트 등록 및 실제 화면 가독성 확인이 남아 있다. 현재 코드 도형은 임시 표현이며 완성 아트로 수용하지 않는다. 이 패스에서 아트 생성하지 않음. 선택 manifest의 species→category fallback과 임시 도형 경로를 유지 | `assets/v8art/bindings.json`; `assets/v8art/render_params.json`; `scripts/world/art/art_data.gd`; `scripts/world/colony/plant_layer.gd`; `docs/v8/m6a/M6A_GOAL.md` §2.1 |

@@ -57,7 +57,7 @@ const MUTATORS: Array[String] = [
 	# M3 orders (walls/doors/floors/bedrolls by line or rectangle, dig, deconstruct, room roles).
 	"cmd_place_line", "cmd_place_rect", "cmd_designate_dig", "cmd_designate_deconstruct", "cmd_set_room_role",
 	# M4 orders (clay pits, apprenticeship).
-	"cmd_designate_clay", "cmd_order_teach", "cmd_cancel_teach",
+	"cmd_designate_harvest", "cmd_designate_clay", "cmd_order_teach", "cmd_cancel_teach",
 	# M5 orders (draft, hunt, the standing dress order).
 	"cmd_draft", "cmd_undraft_all", "cmd_draft_move", "cmd_draft_attack", "cmd_draft_attack_person",
 	"cmd_designate_hunt", "cmd_add_hunt_zone", "cmd_cancel_hunt", "cmd_set_dress_order",

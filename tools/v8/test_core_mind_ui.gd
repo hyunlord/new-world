@@ -145,6 +145,18 @@ func _check_feed_configuration() -> void:
 	panel._ingest_row(life_row)
 	_check("hidden kind does not consume retained feed slots", panel.get("_entries") == [life_row])
 	_check("presentation leaves input record intact", mind_row == {"kind": 47, "tick": 1})
+	var expected_entries: Array = [life_row]
+	var added: int = 0
+	for key: String in (raw as Dictionary)["kind_visibility"]:
+		var kind: int = int(key)
+		if not bool(raw["kind_visibility"][key]) or kind in ChroniclePanel.NOTABLE: continue
+		var event: Dictionary = {"kind": kind, "tick": 1, "index": 100 + kind}
+		panel._ingest_row(event)
+		expected_entries.append(event)
+		added += 1
+		_check("data-added supported kind retained %d" % kind, panel.keeps_kind(kind) and panel.get("_entries") == expected_entries)
+	_check("fixture exercises additions beyond legacy notable list", added > 0)
+	_check("new admissions do not expose default mind choice", not panel.keeps_kind(47))
 	panel.free()
 	panel = ChroniclePanel.new()
 	_check("data alone can reverse kind visibility", panel.configure_feed_visibility({"schema_version": 1, "kind_visibility": {"0": false, "47": true}}))

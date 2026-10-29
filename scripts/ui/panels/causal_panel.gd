@@ -2,6 +2,11 @@
 # Bridge: get_tile_causal_history directly; get_knowledge_waits/get_colony_overlay through SimReads.
 extends Control
 
+const FoodText = preload("res://scripts/ui/food_text.gd")
+var _food_tiles: Array[Vector2i] = []
+var _food_tick: int = -1
+var _food_rows: Array[Dictionary] = []
+
 const PopupObstacles = preload("res://scripts/world/colony/marker_layout.gd")
 
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
@@ -90,15 +95,19 @@ func _ready() -> void:
 	get_node("/root/Main/WorldSim").connect("world_reset", _reset)
 
 func _reset() -> void:
+	_food_tiles.clear()
+	_food_rows.clear()
 	hide()
 
 func open_tile(tile: Vector2i) -> void:
+	_food_tiles.clear()
 	var world: Node = get_node_or_null("/root/Main/WorldSim")
 	if world != null:
 		display_history(world.get_tile_causal_history(tile.x, tile.y), tile.x, tile.y)
 
 # The inspector supplies its cached read; opening this panel never evaluates policy.
 func open_mind(mind: Dictionary, tile: Vector2i) -> void:
+	_food_tiles.clear()
 	_anchor_tile = tile
 	for child: Node in _history_container.get_children():
 		_history_container.remove_child(child)
@@ -260,6 +269,8 @@ func _place_popup(preferred: Vector2, extent: Vector2, area: Vector2, obstacles:
 	return best
 
 func _process(_delta: float) -> void:
+	if visible and not _food_tiles.is_empty():
+		_refresh_food()
 	if visible:
 		_fit()
 
@@ -409,3 +420,44 @@ func _ltr(key: String) -> String:
 	if locale != null and locale.has_method("ltr"):
 		return KoreanText.words(str(locale.call("ltr", key)))
 	return key
+
+
+func open_food(tile: Vector2i) -> void:
+	var tiles: Array[Vector2i] = [tile]
+	open_food_tiles(tiles)
+
+func open_food_tiles(tiles: Array[Vector2i]) -> void:
+	if tiles.is_empty(): return
+	_food_tiles.assign(tiles)
+	_anchor_tile = tiles[0]
+	_food_tick = -1
+	_refresh_food()
+	get_parent().move_child(self, get_parent().get_child_count() - 1)
+	show()
+	_fit()
+	_fit.call_deferred()
+
+func food_snapshot() -> Array[Dictionary]:
+	return _food_rows.duplicate(true)
+
+func _refresh_food() -> void:
+	var world: Node = get_node("/root/Main/WorldSim")
+	var tick: int = int(SimReads.read(world, "get_time_snapshot").get("tick", -1))
+	if tick == _food_tick: return
+	_food_tick = tick
+	_food_rows.clear()
+	for child: Node in _history_container.get_children():
+		_history_container.remove_child(child)
+		child.queue_free()
+	_title_label.text = _ltr("M6A_FOOD_WHY")
+	for tile: Vector2i in _food_tiles:
+		var data: Dictionary = world.call("get_tile_food", tile.x, tile.y)
+		if data.get("kinds", []).is_empty(): continue
+		_food_rows.append({"x": tile.x, "y": tile.y, "food": data})
+		_add_line(_ltr("UI_CAUSAL_TILE_HEADER").format({"x": tile.x, "y": tile.y}))
+		for text: String in FoodText.stacks(get_node("/root/Locale"), data):
+			_add_line(text)
+	if _food_rows.is_empty():
+		_add_line(_ltr("M6A_FOOD_ABSENT"))
+	else:
+		_add_line(_ltr("M6A_FOOD_AGE_REASON"))

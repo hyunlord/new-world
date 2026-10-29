@@ -40,7 +40,8 @@ use std::collections::BTreeMap;
 
 use super::bills::{bill_count, maintain_count, selected_tool};
 use super::cancel::reserve;
-use super::items::{chebyshev, colony_sites, room_on, SiteView};
+use super::food_transfers::haul_room as room_on;
+use super::items::{chebyshev, colony_sites, SiteView};
 use sim_core::colony::knowledge::{gates, Knowledge};
 
 /// Priority of [`JobAssignSystem`].
@@ -48,12 +49,15 @@ pub const JOB_ASSIGN_PRIORITY: u32 = 124;
 
 /// See the module header.
 #[derive(Debug, Default)]
-pub struct JobAssignSystem;
+pub struct JobAssignSystem {
+    harvest: super::harvest::HarvestIndex,
+    food: crate::runtime::food::choice::FoodChoiceIndex,
+}
 
 impl JobAssignSystem {
     /// A fresh system.
     pub fn new() -> Self {
-        Self
+        Self::default()
     }
 }
 
@@ -135,6 +139,7 @@ enum Search {
     ShortSite,
     Stocked(ItemKind),
     AnyStack(ItemKind),
+    PotStock(ItemKind),
     ReadySite,
     MarkedTree,
     QuarryNode,
@@ -170,6 +175,7 @@ struct Exhausted {
     clay: Memo,
     stocked: BTreeMap<ItemKind, Memo>,
     any_stack: BTreeMap<ItemKind, Memo>,
+    pot_stock: BTreeMap<ItemKind, Memo>,
     open_cell: BTreeMap<ItemSpec, Memo>,
 }
 
@@ -190,6 +196,7 @@ impl Exhausted {
             Search::ClayMark => &mut self.clay,
             Search::Stocked(kind) => self.stocked.entry(kind).or_default(),
             Search::AnyStack(kind) => self.any_stack.entry(kind).or_default(),
+            Search::PotStock(kind) => self.pot_stock.entry(kind).or_default(),
             Search::OpenCell(spec) => self.open_cell.entry(spec).or_default(),
         }
     }
@@ -242,6 +249,8 @@ struct Ctx<'a> {
     /// Deadwood spots with wood (M2), built on first use in a tick: most ticks
     /// need none (the colony is rarely short of firewood).
     deadwood: &'a std::cell::OnceCell<ChunkIndex<()>>,
+    /// Pot positions are indexed once on first ingredient lookup in this pass.
+    pot_sources: &'a std::cell::OnceCell<ChunkIndex<u32>>,
     /// The world (for the lazily computed firewood shortfall).
     world: &'a World,
     /// Whether firewood goes through jobs (M2 goal 3.8).
@@ -272,6 +281,7 @@ fn pick_work(
     work: WorkType,
     pos: (u32, u32),
     ex: &mut Exhausted,
+    harvest: &mut super::harvest::HarvestIndex,
 ) -> Option<Pick> {
     let colony = &res.colony;
     let index = &res.spatial.colony;
@@ -351,11 +361,16 @@ fn pick_work(
                     1
                 };
                 let selected = selected_tool(res, shop, recipe);
-                let needs = recipe.needs_with_tool(selected);
+                let mut needs = recipe.needs_with_tool(selected);
+                let pot = super::craft_food::pot_need(res, shop, recipe, ctx.practice);
+                if let Some(pot) = pot {
+                    needs.push((pot, 1));
+                }
                 for &(kind, n) in &needs {
                     // M5: the knife is one blade, whatever the trip's crafts.
-                    let knife =
-                        recipe.tool.as_ref().is_some_and(|t| t.reusable) && Some(kind) == selected;
+                    let knife = (recipe.tool.as_ref().is_some_and(|t| t.reusable)
+                        && Some(kind) == selected)
+                        || Some(kind) == pot;
                     let coming = ctx.supply.get(&(id, kind)).copied().unwrap_or(0);
                     let have = shop.shelved(kind) + coming;
                     if have >= n {
@@ -377,6 +392,26 @@ fn pick_work(
                             ex.memo(Search::AnyStack(kind)),
                             |t, _| stack_of(t, Some(kind), None),
                         )
+                    });
+                    let source = source.or_else(|| {
+                        kind.definition().food.as_ref()?;
+                        let pots = ctx.pot_sources.get_or_init(|| {
+                            ChunkIndex::from_entries(
+                                res.food.pots.iter().map(|(&id, pot)| (pot.tile, id)),
+                            )
+                        });
+                        search(
+                            pots,
+                            pos,
+                            radius,
+                            ex.memo(Search::PotStock(kind)),
+                            |tile, &id| {
+                                !colony.reservations.contains_key(&ReserveKey::Stack(tile))
+                                    && res.nav.reaches(ctx.region, tile)
+                                    && super::pot_supply::in_pot(res, id, kind).is_some()
+                            },
+                        )
+                        .map(|(tile, _)| (tile, ()))
                     });
                     let mut source_kind = kind;
                     let source = source.or_else(|| {
@@ -410,7 +445,9 @@ fn pick_work(
                         None
                     });
                     if let Some((from, ())) = source {
-                        let amount = rule.carry(source_kind).min(count(from)).min(n - have);
+                        let available = super::pot_supply::source(res, from, source_kind)
+                            .map_or(0, |(_, stack)| stack.count);
+                        let amount = rule.carry(source_kind).min(available).min(n - have);
                         return Some((
                             JobKind::Supply {
                                 from,
@@ -425,7 +462,8 @@ fn pick_work(
                 // Craft: every input on the shelf and the bench free.
                 let ready = needs.iter().all(|&(kind, n)| shop.shelved(kind) >= n);
                 // M4: only a practitioner of the recipe's gate crafts it.
-                let allowed = gates().recipe(recipe.id) & !ctx.practice == 0;
+                let allowed = gates().recipe(recipe.id) & !ctx.practice == 0
+                    && super::craft_food::permitted(res, shop, recipe, ctx.practice);
                 if ready && allowed && !colony.reservations.contains_key(&ReserveKey::Bench(to)) {
                     return Some((
                         JobKind::Craft {
@@ -720,6 +758,18 @@ fn pick_work(
                         }
                     }
                 }
+            }
+            if let Some(job) = super::harvest::pick(
+                res,
+                harvest,
+                super::harvest::HarvestQuery {
+                    practice: ctx.practice,
+                    region: ctx.region,
+                    pos,
+                    radius,
+                },
+            ) {
+                return Some((job.kind, job.amount, job.item));
             }
             loose_haul(res, ctx, pos, ex, false).or_else(|| restock(res, ctx, pos, ex))
         }
@@ -1041,11 +1091,12 @@ fn pick(
     pass: u8,
     pos: (u32, u32),
     ex: &mut Exhausted,
+    harvest: &mut super::harvest::HarvestIndex,
 ) -> Option<Pick> {
     WorkType::ALL
         .into_iter()
         .filter(|w| pass == 0 || priorities.level(*w) == pass)
-        .find_map(|work| pick_work(res, ctx, work, pos, ex))
+        .find_map(|work| pick_work(res, ctx, work, pos, ex, harvest))
 }
 
 impl RuntimeSystem for JobAssignSystem {
@@ -1066,10 +1117,14 @@ impl RuntimeSystem for JobAssignSystem {
             return;
         };
         let tick = resources.current_tick;
+        if tick.is_multiple_of(60) {
+            super::food_transfers::retry_stranded(world, resources);
+        }
         // M4: open apprenticeship orders whose people are gone or done are closed first.
         if rule.knowledge.is_some() && !resources.colony.teach_orders.is_empty() {
             super::teach::tidy(world, resources);
         }
+        crate::runtime::nav::ensure(resources);
         let in_combat = |id: AgentId| in_combat(resources, id);
         // (id, entity, tile, work priorities, holds a tool, skills, practitioner bits)
         type Row = (
@@ -1085,7 +1140,8 @@ impl RuntimeSystem for JobAssignSystem {
         let gating = knowledge_rule.is_some();
         // A person already due for food, water or an available bed must not
         // claim a reservation that the decision pass will immediately release.
-        let needy = |e: Entity| needy(world, resources, e);
+        self.food.refresh(resources);
+        let needy = |e: Entity| needy(world, resources, e, &self.food);
         let mut available: Vec<Row> = world
             .query::<(
                 &Agent,
@@ -1098,6 +1154,7 @@ impl RuntimeSystem for JobAssignSystem {
                 Option<&Knowledge>,
             )>()
             .without::<&Job>()
+            .without::<&sim_core::colony::Carry>()
             .without::<&Child>()
             .without::<&PorterTrip>()
             .iter()
@@ -1144,7 +1201,6 @@ impl RuntimeSystem for JobAssignSystem {
         }
         available.sort_by_key(|row| row.0);
         resources.spatial.colony.refresh(&resources.colony);
-        crate::runtime::nav::ensure(resources);
         resources
             .colony
             .unreachable
@@ -1170,6 +1226,7 @@ impl RuntimeSystem for JobAssignSystem {
         // M2 goal 3.8: the gather fallback's inputs.
         let by_jobs = super::hearth::firewood_by_jobs(resources);
         let deadwood = std::cell::OnceCell::new();
+        let pot_sources = std::cell::OnceCell::new();
         let gather_short = std::cell::Cell::new(None);
         let hearth = std::cell::OnceCell::new();
         let mut taken: Vec<(Entity, Job, (u32, u32))> = Vec::new();
@@ -1199,7 +1256,7 @@ impl RuntimeSystem for JobAssignSystem {
         let mut assigned: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
         // M4: today's apprenticeship sessions first (both partners must be free).
         if let Some(k) = knowledge_rule {
-            super::teach::assign(world, resources, &k, &mut assigned, &mut taken);
+            super::teach::assign(world, resources, &k, &mut assigned, &mut taken, &self.food);
         }
         // M5 (ADR 0029): the dressing pass, hourly while "everyone in hides" is on.
         if rule.wildlife.is_some() && !resources.colony.dress_off && tick.is_multiple_of(60) {
@@ -1243,6 +1300,7 @@ impl RuntimeSystem for JobAssignSystem {
                     crafting: &crafting,
                     made: &made,
                     deadwood: &deadwood,
+                    pot_sources: &pot_sources,
                     world,
                     by_jobs,
                     gather_short: &gather_short,
@@ -1255,8 +1313,16 @@ impl RuntimeSystem for JobAssignSystem {
                     loose_haul(resources, &ctx, pos, ex, true)
                 } else {
                     match work {
-                        Some(w) => pick_work(resources, &ctx, w, pos, ex),
-                        None => pick(resources, &ctx, &priorities, pass, pos, ex),
+                        Some(w) => pick_work(resources, &ctx, w, pos, ex, &mut self.harvest),
+                        None => pick(
+                            resources,
+                            &ctx,
+                            &priorities,
+                            pass,
+                            pos,
+                            ex,
+                            &mut self.harvest,
+                        ),
                     }
                 };
                 let Some((kind, amount, item)) = found else {
@@ -1369,12 +1435,34 @@ pub(super) fn in_combat(res: &SimResources, id: AgentId) -> bool {
 
 /// M3: needs already due to interrupt work must not claim a new reservation.
 /// Sleep uses the decision's personal night window and requires a real bed.
-pub(super) fn needy(world: &World, res: &SimResources, e: Entity) -> bool {
+pub(super) fn needy(
+    world: &World,
+    res: &SimResources,
+    e: Entity,
+    food: &crate::runtime::food::choice::FoodChoiceIndex,
+) -> bool {
     use crate::runtime::agent_actions::needs as n;
     res.rules.colony.is_some_and(|c| c.space.is_some())
         && (world
             .get::<&sim_core::components::Hunger>(e)
-            .is_ok_and(|h| h.value >= n::HUNGER_THRESHOLD)
+            .is_ok_and(|h| {
+                h.value >= n::HUNGER_THRESHOLD
+                    && world
+                        .get::<&Agent>(e)
+                        .ok()
+                        .zip(world.get::<&Position>(e).ok())
+                        .is_some_and(|(agent, pos)| {
+                            food.available_to(
+                                res,
+                                (pos.x, pos.y),
+                                agent.id,
+                                world
+                                    .get::<&sim_core::colony::Carry>(e)
+                                    .ok()
+                                    .map(|carry| *carry),
+                            )
+                        })
+            })
             || world
                 .get::<&sim_core::components::Thirst>(e)
                 .is_ok_and(|t| t.value >= n::THIRST_THRESHOLD)

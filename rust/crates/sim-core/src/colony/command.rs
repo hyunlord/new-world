@@ -335,6 +335,22 @@ pub enum Command {
         /// Enable defence when the overall steward is on.
         on: bool,
     },
+    /// Mark plants inside an inclusive rectangle for harvest.
+    DesignateHarvest {
+        /// First corner x.
+        x0: u32,
+        /// First corner y.
+        y0: u32,
+        /// Opposite corner x.
+        x1: u32,
+        /// Opposite corner y.
+        y1: u32,
+    },
+    /// Deploy one vessel already lying on this tile as a food container.
+    DeployFoodPot {
+        /// Tile holding the real vessel; deployment never moves it.
+        tile: (u32, u32),
+    },
 }
 
 impl Command {
@@ -378,6 +394,8 @@ impl Command {
             Self::SetSteward { .. } => "set_steward",
             Self::Steward { .. } => "steward",
             Self::SetStewardDefence { .. } => "set_steward_defence",
+            Self::DesignateHarvest { .. } => "designate_harvest",
+            Self::DeployFoodPot { .. } => "deploy_food_pot",
         }
     }
 }

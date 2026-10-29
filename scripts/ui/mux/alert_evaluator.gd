@@ -109,6 +109,7 @@ func active_alerts() -> Array[Dictionary]:
 		var severity: Dictionary = _registry["severities"].get(row["severity"], _registry["severities"][_registry["fallback_severity"]])
 		row.merge(severity, true)
 		row["count"] = causes.size()
+		row["facts"] = causes[0]
 		result.append(row)
 	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return a["rank"] < b["rank"] if a["rank"] != b["rank"] else a["id"] < b["id"])

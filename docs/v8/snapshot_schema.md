@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
+Schema version: 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
 
 History: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
@@ -66,6 +66,7 @@ Top-level fields:
 | `recipes` | Array[Dictionary] | recipe definitions |
 | `pressures` | Array[Dictionary] | pressure definitions |
 | `animals` | Array[Dictionary] | animal definitions |
+| `plants` | Array[Dictionary] | plant identity and harvest-output metadata |
 | `knowledge` | Array[Dictionary] | knowledge node metadata |
 | `materials` | Array[Dictionary] | bundled material presentation metadata; JSON rows contain id, name_key, category, raw_id |
 
@@ -78,6 +79,7 @@ Nested fields (the literal-key checker flattens these into the same union; they 
 | `name_key` | String | localization key in those rows |
 | `category` | String | registered presentation category |
 | `mechanic` | String | pressure cold/drought/pack/illness or animal grazer/predator behavior |
+| `yield_item` | int | plant harvest output item code |
 | `huntable` | bool | animal definition permits hunting |
 | `hp` | int | animal definition default HP; get_animals.max_hps resolves per-world overrides |
 | `material_format_key` | String | item material-aware localization format key |
@@ -214,7 +216,7 @@ between two reads of an unchanged world, **not** sorted by id and not stable acr
 | `hungers` | PackedFloat32Array | hunger 0–100 (100 = sated); 0 without the component |
 | `thirsts` | PackedFloat32Array | thirst 0–100 |
 | `sleeps` | PackedFloat32Array | fatigue 0–100 (`Sleep.fatigue`) |
-| `carried_foods` | PackedInt32Array | `Inventory` food units |
+| `carried_foods` | PackedInt32Array | baseline: `Inventory` food units; colony: fresh raw-edible physical carried stack units (pieces × food units) |
 | `carried_woods` | PackedInt32Array | `Inventory` wood units |
 | `life_stages` | PackedByteArray | 0 adult, 1 child, 2 elder |
 | `ages_days` | PackedInt32Array | whole days of age; -1 without `Life` |
@@ -393,7 +395,7 @@ iteration order (a hash map: sort before relying on order).
 
 ### `get_person_chronicle`
 `get_person_chronicle(agent_id)`: `collect_person_chronicle(&Chronicle, agent_id) -> ChronicleRows` →
-`rows_to_dict(rows, false)` (`ffi/chronicle.rs`). Every entry naming the person, in chronicle order (append order).
+`food_chronicle_rows_to_dict(rows, false, res)` (`ffi/food/chronicle.rs`). Every entry naming the person, in chronicle order (append order).
 
 | key | type | meaning |
 |---|---|---|
@@ -412,9 +414,16 @@ iteration order (a hash map: sort before relying on order).
 | `link_entry` | PackedInt64Array | M5: the chronicle index the link points at, -1 none |
 | `link_code` | PackedInt64Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
 
+M6a historical food metadata (same number of rows as the corresponding index/link column):
+
+| key | type | meaning |
+|---|---|---|
+| `food_daily_milli` | PackedInt64Array | historical winter-plan daily demand in thousandths; -1 absent, 0 zero demand; aligned with `index` |
+
+
 ### `get_settlement_chronicle`
-`get_settlement_chronicle(settlement_id)`: `collect_settlement_chronicle` → `rows_to_dict(rows, false)`
-(`ffi/chronicle.rs`). Every entry naming the settlement; the same columns as `get_person_chronicle`.
+`get_settlement_chronicle(settlement_id)`: `collect_settlement_chronicle` → `food_chronicle_rows_to_dict(rows, false, res)`
+(`ffi/food/chronicle.rs`). Every entry naming the settlement; the same columns as `get_person_chronicle`.
 
 | key | type | meaning |
 |---|---|---|
@@ -433,9 +442,16 @@ iteration order (a hash map: sort before relying on order).
 | `link_entry` | PackedInt64Array | M5: the chronicle index the link points at, -1 none |
 | `link_code` | PackedInt64Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
 
+M6a historical food metadata (same number of rows as the corresponding index/link column):
+
+| key | type | meaning |
+|---|---|---|
+| `food_daily_milli` | PackedInt64Array | historical winter-plan daily demand in thousandths; -1 absent, 0 zero demand; aligned with `index` |
+
+
 ### `get_chronicle_since`
-`get_chronicle_since(start, max)`: `collect_chronicle_since(&Chronicle, start, max)` → `rows_to_dict(rows, true)`
-(`ffi/chronicle.rs`). Entries from index `start`, at most `max` (clamped to 1–512), the same columns plus paging.
+`get_chronicle_since(start, max)`: `collect_chronicle_since(&Chronicle, start, max)` → `food_chronicle_rows_to_dict(rows, true, res)`
+(`ffi/food/chronicle.rs`). Entries from index `start`, at most `max` (clamped to 1–512), the same columns plus paging.
 
 | key | type | meaning |
 |---|---|---|
@@ -455,12 +471,15 @@ iteration order (a hash map: sort before relying on order).
 | `link_code` | PackedInt64Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
 | `next` | int | the index after the last returned entry (the next `start`) |
 | `total` | int | entries in the chronicle |
+| `food_daily_milli` | PackedInt64Array | historical winter-plan daily demand in thousandths; -1 absent, 0 zero demand; aligned with `index` |
 
 ## Causal "why?"
 
 The three causal getters return an `Array` of dictionaries built by `event_views_to_variant_array` →
 `event_view_to_dict` → `event_view_to_owned_dict` (`ffi/causal.rs`), one per `CausalEventView`. `kind`, `id`, `parent`
 and `tick` are always present; the other keys only for the event kinds that carry them.
+
+
 
 ### `get_tile_causal_history`
 `get_tile_causal_history(x, y)`: `try_collect_tile_causal_history` (`ffi/causal.rs`); the tile's causal ring, oldest
@@ -593,7 +612,7 @@ with a resolvable member, sorted by SettlementId.
 | `member_counts` | PackedInt32Array | resolvable members |
 | `formation_xs` | PackedInt32Array | fixed formation tile x |
 | `formation_ys` | PackedInt32Array | fixed formation tile y |
-| `food_stocks` | PackedInt32Array | stockpile food units |
+| `food_stocks` | PackedInt32Array | baseline: stockpile food units; colony: fresh physically stored edible units assigned to the nearest reachable settlement, excluding carried and loose ground food |
 | `wood_stocks` | PackedInt32Array | stockpile wood units |
 | `fire_lit` | PackedByteArray | 1 while the settlement's fire burns |
 | `wood_targets` | PackedInt32Array | floor of the firewood target (0 without the firewood rule) |
@@ -1087,6 +1106,13 @@ of the entry: one row per link, from the entry itself to its first cause (`mood:
 | `causes` | PackedInt64Array | an entry's cause code, -1 otherwise |
 | `values` | PackedInt64Array | an entry's value, 0 otherwise |
 
+M6a historical food metadata (same number of rows as the corresponding index/link column):
+
+| key | type | meaning |
+|---|---|---|
+| `food_daily_milli` | PackedInt64Array | historical winter-plan daily demand in thousandths; -1 absent, 0 zero demand; aligned with `links`; only link0 uses its actual `codes` Chronicle index |
+
+
 ### `get_year_summary`
 `get_year_summary(year)`: `collect_year_summary(&SimResources, i64) -> YearSummary` → `year_summary_to_dict`. Year
 `year` (0-based, `CalendarRule::ticks_per_year` long) counted from the chronicle by entry tick.
@@ -1469,6 +1495,24 @@ The static checker compares the union of literal keys, including nested builders
 | `ys` | `animals.ys`, `workshops.ys` |
 | `zones` | `animals.zones` |
 
+**M6a `food_chain` dictionary.** Read from the same physical-food summary used by the steward;
+no simulation transitions, RNG, freshening or policy decisions occur in this getter. The UI's
+winter-shortage and expiry-fraction predicates remain in `assets/ui/alerts.json`.
+
+| key | type | meaning |
+|---|---|---|
+| `food_chain` | Dictionary | colony-wide food observation; `found=false` when absent |
+| `found` | bool | colony food policy and settlement exist |
+| `stored_units` | int | reachable fresh edible satiety units, excluding uncooked grain |
+| `daily_milli` | int | all-member daily demand in thousandths of units |
+| `winter_need` | int | authoritative warm-adult reserve bar, ceil(72 × adults / 5) |
+| `winter_in` | int | display days until winter; zero in winter |
+| `preparing` | bool | authored preparation window is active |
+| `expiring_units` | int | stored edible units with at most two days remaining |
+| `x` | int | real settlement formation tile x for alert navigation |
+| `y` | int | real settlement formation tile y for alert navigation |
+
+
 ### `get_steward`
 `collect_steward(&SimResources) -> StewardView` (`ffi/steward.rs`). Persisted mode and accepted-order
 provenance, never inferred task completion. Rules are loaded from data; missing rule data yields empty labels.
@@ -1591,3 +1635,57 @@ Rules:
 - **Agreement with the Godot view** (gate step `renderer_agreement`, `tools/v8/renderer_agreement.sh`): the
   multiset of person tiles of `people_tiles` equals the tiles of the people `scripts/world/colony/agent_layer.gd`
   draws, converted from its person nodes' drawn positions minus the sleeper spread.
+
+
+## M6a physical food and seasonal plants
+
+These reads are projections of `SimResources.food` and the immutable content catalog. They do
+not advance plants, consume food, repair missing age records or mutate caches. Baseline worlds
+return empty columns or `found=false`. All content codes remain open u32 identities transported
+in Godot int/PackedInt64Array. Parameterized reads are direct calls; they are not added to the
+zero-argument `SimReads.GETTERS` cache.
+
+### `get_plants`
+`get_plants(x0: int, y0: int, x1: int, y1: int) -> Dictionary` returns actual plants in an
+inclusive viewport tile rectangle, ordered by tile. Negative lower bounds are clipped to zero;
+reversed rectangles or negative upper bounds return no rows. No ECS entities are synthesized.
+
+| key | type | meaning |
+|---|---|---|
+| `xs` | PackedInt64Array | tile x |
+| `ys` | PackedInt64Array | tile y |
+| `kinds` | PackedInt64Array | registered plant code |
+| `phases` | PackedInt64Array | 0 dormant, 1 growing, 2 ripe, 3 spent; depleted ripe plants are spent |
+| `units` | PackedInt64Array | remaining harvest pieces |
+
+### `get_agent_food`
+`get_agent_food(entity_bits: int) -> Dictionary` accepts signed hecs entity bits, like
+`get_agent_detail`, not AgentId. Missing/dead entities return only `found=false`. Existing
+`get_agent_detail` fields remain unchanged; this is a separate selected-person read.
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | living colony Agent with Hunger exists |
+| `agent_id` | int | stable AgentId |
+| `hunger` | float | authoritative current Hunger points |
+| `meal_kinds` | PackedInt64Array | completed meal item codes, newest first, at most eight |
+| `meal_ticks` | PackedInt64Array | corresponding completion ticks |
+| `groups` | PackedStringArray | actual ingredient groups eaten within the trailing three calendar days |
+
+### `get_tile_food`
+`get_tile_food(x: int, y: int) -> Dictionary` returns real ground food, pot contents and workshop
+shelf food at the tile. Coordinates below zero are clipped to zero. Stack age and storage are
+resolved by runtime storage APIs; missing/invalid age data remains unknown, never refreshed.
+
+| key | type | meaning |
+|---|---|---|
+| `kinds` | PackedInt64Array | food item codes |
+| `counts` | PackedInt64Array | physical pieces |
+| `remaining_days` | PackedInt64Array | authoritative whole days left; 0 expired, -1 unknown |
+| `storage` | PackedStringArray | ground, stockpile, roofed_store or pot |
+
+### `cmd_designate_harvest`
+`cmd_designate_harvest(x0, y0, x1, y1) -> Dictionary` submits `Command::DesignateHarvest`
+through the ordinary replay-recorded command path. The result uses the existing accepted/count/reason
+command contract. The F7 → 5 tool dispatches through `SimReads.mutate`, invalidating cached reads.
+It designates real plants; the simulation determines readiness, reservations, travel and yield.

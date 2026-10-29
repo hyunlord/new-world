@@ -15,6 +15,9 @@ fn start(context: &mut EffectContext<'_>, kind: TargetKind) -> EffectResult {
     Ok(EffectStatus::Running)
 }
 pub(super) fn eat_start(c: &mut EffectContext<'_>) -> EffectResult {
+    if c.resources.rules.colony.is_some() {
+        return super::food::start(c);
+    }
     start(c, TargetKind::Food)
 }
 pub(super) fn drink_start(c: &mut EffectContext<'_>) -> EffectResult {
@@ -119,6 +122,9 @@ fn advance(c: &mut EffectContext<'_>, kind: TargetKind) -> EffectResult {
     }
 }
 pub(super) fn eat_continue(c: &mut EffectContext<'_>) -> EffectResult {
+    if c.resources.rules.colony.is_some() {
+        return super::food::advance(c);
+    }
     advance(c, TargetKind::Food)
 }
 pub(super) fn drink_continue(c: &mut EffectContext<'_>) -> EffectResult {

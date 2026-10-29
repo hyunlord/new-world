@@ -243,17 +243,18 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
     let founders = crate::perf::alive(&engine);
     let mut next = 0usize;
     let mut gifts = 0u64;
-    let mut gift = |engine: &mut SimEngine| {
+    let mut gift = |engine: &mut SimEngine| -> Result<(), String> {
         let now = engine.current_tick();
         let offset = engine.resources.rules.clock_offset_ticks;
         let at_six = (now + offset) % engine.resources.ticks_per_day.max(1) == 360;
         if gifts == 0 || at_six {
             if let Some(home) = engine.resources.settlements.keys().copied().min() {
                 let amount = crate::perf::GIFT_PER_ALIVE * crate::perf::alive(engine);
-                crate::perf::gift_food(engine, home, u32::try_from(amount).unwrap_or(u32::MAX));
+                crate::perf::gift_food(engine, home, u32::try_from(amount).unwrap_or(u32::MAX))?;
                 gifts += 1;
             }
         }
+        Ok(())
     };
     let mut apply = |engine: &mut SimEngine| {
         let tick = engine.current_tick();
@@ -270,7 +271,7 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
     for _ in 0..WARMUP {
         apply(&mut engine);
         engine.tick();
-        gift(&mut engine);
+        gift(&mut engine)?;
     }
     let alive_after_warmup = crate::perf::alive(&engine);
     // M5.5: the wolves line — a pack at the map edge nearest the camp's forest, hunting through the measured ticks.
@@ -300,7 +301,7 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
         #[cfg(feature = "perf_arms")]
         arms.after_tick();
         tick_ns.push(profile.last_tick_ns.clone());
-        gift(&mut engine);
+        gift(&mut engine)?;
     }
     let run_seconds = run_started.elapsed().as_secs_f64();
     let rss_after = rss_kib();

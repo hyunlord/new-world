@@ -186,24 +186,69 @@ fn baseline_world_has_no_colony_ui_facts() {
 
 #[test]
 fn economy_counts_member_carried_food_and_preserves_fractional_daily_need() {
-    use sim_core::components::{Hunger, Inventory, ResourceKind, Settlement};
+    use sim_core::colony::food::FoodOwner;
+    use sim_core::colony::{ItemKind, ItemSpec, Zone, ZoneKind};
+    use sim_core::components::{Hunger, Settlement};
+    use sim_systems::runtime::food::{self, items};
     // Given two members with exact binary hunger rates and a nonmember carrying food.
     let mut engine = sim_test::colony_engine(0);
+    let hearth = sim_systems::worldgen::colony::hearth(&engine.resources)
+        .expect("worldgen hearth exists before settlement formation");
+    let region = engine.resources.nav.region_of(hearth);
+    assert_ne!(region, 0, "hearth has a reachable nav region");
+    let home = (0..engine.resources.tile_grid.height)
+        .flat_map(|y| (0..engine.resources.tile_grid.width).map(move |x| (x, y)))
+        .filter(|&tile| {
+            engine.resources.nav.region_of(tile) == region
+                && sim_systems::runtime::jobs::items::can_hold_items(&engine.resources, tile)
+        })
+        .min_by_key(|&(x, y)| (x.abs_diff(hearth.0).max(y.abs_diff(hearth.1)), y, x))
+        .expect("reachable camp tile can hold the fixture stock");
     engine.world.clear();
     engine.resources.settlements.clear();
+    engine.resources.colony.ground_items.clear();
+    engine.resources.food.ages.clear();
+    engine.resources.colony.zones.clear();
     engine.resources.ticks_per_day = 1440;
     let mut settlement = Settlement::new_with_id(8, 0);
-    settlement.formation_tile = (4, 5);
+    settlement.formation_tile = home;
     settlement.add_member_agent(1);
     settlement.add_member_agent(2);
-    settlement.stockpile.insert(ResourceKind::Food, 11);
     engine.resources.settlements.insert(8, settlement);
-    for (id, rate, food) in [(1, 0.125, 3), (2, 0.015625, 2), (3, 0.125, 9)] {
-        let mut inventory = Inventory::default();
-        assert_eq!(inventory.add(ResourceKind::Food, food), 0);
-        engine
-            .world
-            .spawn((Agent { id }, Hunger::new(0.0, rate), inventory));
+    engine.resources.colony.zones.insert(
+        1,
+        Zone {
+            id: 1,
+            kind: ZoneKind::Stockpile,
+            tiles: std::collections::BTreeSet::from([home]),
+        },
+    );
+    engine.resources.colony.touch(false);
+    let day = food::day(&engine.resources);
+    let roots = ItemSpec::raw(ItemKind::from_name("roots").expect("roots"), None);
+    items::create_ground(
+        &mut engine.resources,
+        home,
+        roots,
+        25,
+        day,
+        items::FoodSource::Debug,
+    )
+    .expect("fresh stock");
+    for (id, rate, count) in [(1, 0.125, 3), (2, 0.015625, 2), (3, 0.125, 9)] {
+        engine.world.spawn((Agent { id }, Hunger::new(0.0, rate)));
+        assert_eq!(
+            items::transfer(
+                &mut engine.world,
+                &mut engine.resources,
+                FoodOwner::Ground(home),
+                FoodOwner::Carried(id),
+                count,
+                day
+            )
+            .expect("carry fresh food"),
+            count
+        );
     }
     // When the real accounting is exposed.
     let facts = collect_ui_facts(&engine.world, &engine.resources);
@@ -211,7 +256,7 @@ fn economy_counts_member_carried_food_and_preserves_fractional_daily_need() {
     assert_eq!(facts.settlements.len(), 1);
     assert_eq!(facts.settlements[0].food, 16);
     assert_eq!(facts.settlements[0].food_need, 6.75);
-    assert_eq!(facts.settlements[0].tile, (4, 5));
+    assert_eq!(facts.settlements[0].tile, home);
 }
 
 #[test]
@@ -258,10 +303,11 @@ fn steward_scope_boundary_rejects_without_mutation_and_valid_changes_are_logged(
     assert_eq!(engine.resources.colony.command_log.len(), before + 1);
     assert_eq!(state.sequence, 0);
     assert!(state.accepted_rules.is_empty());
-    assert_eq!(state.labels.len(), 7);
+    assert_eq!(state.labels.len(), 8);
     assert_eq!(state.labels[0], (1, "MUX_STEWARD_RULE_1".to_string()));
     assert_eq!(state.labels[5], (6, "MUX_STEWARD_RULE_6".to_string()));
     assert_eq!(state.labels[6], (7, "MUX_STEWARD_RULE_7".to_string()));
+    assert_eq!(state.labels[7], (8, "M6A_STEWARD_FOOD".to_string()));
 }
 
 #[test]

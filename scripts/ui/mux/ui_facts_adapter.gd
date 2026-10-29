@@ -16,7 +16,7 @@ const TABLES: Dictionary = {
 	"rooms": ["ids", "roles", "centre_xs", "centre_ys"],
 	"workshops": ["ids", "work_xs", "work_ys"],
 }
-const COLLECTIONS: Array[String] = ["settlements", "people", "storehouses", "unreachable_orders", "knowledge_waits", "techniques", "animals", "migrants", "traders", "stacks", "households"]
+const COLLECTIONS: Array[String] = ["settlements", "people", "storehouses", "unreachable_orders", "knowledge_waits", "techniques", "animals", "migrants", "traders", "stacks", "households", "food_supply"]
 static var _policy: Dictionary = {}
 
 
@@ -140,6 +140,12 @@ static func adapt(raw: Dictionary) -> Dictionary:
 			row["waiting" if prefix == "wave" else "present"] = neighbours[prefix + "_states"][i] == 1
 			out["migrants" if prefix == "wave" else "traders"].append(row)
 	out["stacks"] = _spoilage(raw)
+	var food: Dictionary = raw.get("food_chain", {})
+	if bool(food.get("found", false)):
+		var supply: Dictionary = food.duplicate()
+		supply["id"] = 0
+		supply["stored_days"] = "%.1f" % (float(food.get("stored_units", 0)) * 1000.0 / maxf(1.0, float(food.get("daily_milli", 0))))
+		out["food_supply"].append(supply)
 	return out
 
 

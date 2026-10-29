@@ -1300,6 +1300,13 @@ pub fn resolve(
             sell_blades(engine, keep).into_iter().collect()
         }
         (_, Some(other)) => return Err(format!("unknown resolve {other}")),
+        ("designate_harvest", None) => {
+            let (x0, y0, x1, y1) = rect(spec)?;
+            vec![Command::DesignateHarvest { x0, y0, x1, y1 }]
+        }
+        ("deploy_food_pot", None) => vec![Command::DeployFoodPot {
+            tile: (field(spec, "x")?, field(spec, "y")?),
+        }],
         ("designate_quarry", None) => {
             let (x0, y0, x1, y1) = rect(spec)?;
             vec![Command::DesignateQuarry { x0, y0, x1, y1 }]
@@ -1546,10 +1553,12 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
     let mut v = match cmd {
         Command::Steward { .. } => return Value::Null,
         Command::SetStewardDefence { on } => json!({"on":on}),
+        Command::DeployFoodPot { tile } => json!({"x": tile.0, "y": tile.1}),
         Command::SetSteward { on, scope } => {
             json!({"on": on, "scope": match scope { sim_core::colony::steward::StewardScope::All => "all", sim_core::colony::steward::StewardScope::Housing => "housing", sim_core::colony::steward::StewardScope::Food => "food" }})
         }
         Command::DesignateChop { x0, y0, x1, y1 }
+        | Command::DesignateHarvest { x0, y0, x1, y1 }
         | Command::DesignateQuarry { x0, y0, x1, y1 }
         | Command::DesignateDig { x0, y0, x1, y1 }
         | Command::DesignateDeconstruct { x0, y0, x1, y1 }
@@ -2351,6 +2360,40 @@ mod tests {
             "{names:?}"
         );
         let _ = std::fs::remove_dir_all(&base);
+    }
+
+    #[test]
+    fn physical_food_commands_round_trip_with_player_and_steward_provenance() {
+        let engine = crate::scenes::colony_scene(0);
+        for command in [
+            Command::DesignateHarvest {
+                x0: 2,
+                y0: 3,
+                x1: 5,
+                y1: 7,
+            },
+            Command::DeployFoodPot { tile: (11, 13) },
+        ] {
+            for cmd in [
+                command.clone(),
+                Command::Steward {
+                    rule: 8,
+                    command: Box::new(command),
+                },
+            ] {
+                let json = command_json(360, &cmd);
+                assert_eq!(
+                    resolve(&engine, &json, &mut Vec::new()).expect("food command"),
+                    vec![cmd]
+                );
+            }
+        }
+        for malformed in [
+            json!({"cmd": "designate_harvest", "x0": 2, "y0": 3, "x1": 5}),
+            json!({"cmd": "deploy_food_pot", "x": 11}),
+        ] {
+            assert!(resolve(&engine, &malformed, &mut Vec::new()).is_err());
+        }
     }
 
     #[test]

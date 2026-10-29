@@ -64,6 +64,12 @@ pub(super) fn resolve(r: BlueprintRaw, c: &Catalog) -> Result<BlueprintDef, Cata
             let item = c.item_by_name(&n.item).ok_or_else(|| {
                 CatalogError::new(context, format!("unknown need item {}", n.item))
             })?;
+            if c.item(item).is_some_and(|definition| definition.food.is_some()) {
+                return Err(CatalogError::new(
+                    context,
+                    format!("food item {} cannot be a construction need: delivered materials have no food-age owner", n.item),
+                ));
+            }
             Ok(BlueprintNeed {
                 item,
                 count: n.count,

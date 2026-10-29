@@ -188,9 +188,9 @@ func _add_alert(alert: Dictionary) -> void:
 	button.autowrap_mode = TextServer.AUTOWRAP_WORD
 	button.custom_minimum_size.x = 280.0
 	button.custom_minimum_size.y = 40.0
-	button.text = "%s %s" % [alert["icon"], _tr("MUX_ALERTS_COUNT").format({"title": _tr(alert["text_key"]), "count": alert["count"]})]
+	button.text = "%s %s" % [alert["icon"], _tr("MUX_ALERTS_COUNT").format({"title": _tr(alert["text_key"]).format(alert.get("facts", {})), "count": alert["count"]})]
 	button.add_theme_color_override("font_color", Color(alert["color"]))
-	button.tooltip_text = "%s\n%s\n%s" % [_tr(alert["text_key"]), _tr(alert["explanation_key"]), _tr(alert["fix_key"])]
+	button.tooltip_text = "%s\n%s\n%s" % [_tr(alert["text_key"]).format(alert.get("facts", {})), _tr(alert["explanation_key"]).format(alert.get("facts", {})), _tr(alert["fix_key"]).format(alert.get("facts", {}))]
 	button.pressed.connect(activate.bind(str(alert["id"])))
 	row.add_child(button)
 	var dismiss_button: Button = Button.new()

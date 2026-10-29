@@ -84,6 +84,40 @@ pub(super) fn roles(c: &Catalog) -> Result<(), CatalogError> {
     if c.recipe_role("firewood").is_none() {
         return Err(CatalogError::new("recipes", "missing firewood role"));
     }
+    for role in [
+        "tree_output",
+        "deadwood_output",
+        "boulder_output",
+        "outcrop_output",
+        "clay_output",
+        "excavated_stone",
+        "legacy_axe_return",
+        "default_placeholder",
+        "legacy_axe",
+        "preferred_hunt_weapon",
+        "preferred_cutter",
+        "hearth_fuel",
+        "grazer_hide",
+        "predator_hide",
+    ] {
+        if c.item_role(role)
+            .and_then(|kind| c.item(kind))
+            .is_some_and(|item| item.food.is_some())
+        {
+            return Err(CatalogError::new(role,
+                "food cannot fill a nonfood resource/equipment role: its raw ownership path has no food ages"));
+        }
+    }
+    for item in c.items() {
+        if let Some((kind, _)) = item.chop.as_ref().and_then(|chop| chop.break_return) {
+            if c.item(kind).is_some_and(|output| output.food.is_some()) {
+                return Err(CatalogError::new(
+                    &item.identity.id,
+                    "tool break return cannot produce food without food ages",
+                ));
+            }
+        }
+    }
     let mut slots = BTreeSet::new();
     for b in c.blueprints() {
         if b.shortcut_slot >= 0 && !slots.insert(b.shortcut_slot) {

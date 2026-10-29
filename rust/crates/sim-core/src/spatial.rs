@@ -303,6 +303,8 @@ impl ColonyIndex {
                 Designation::ClayPit => self.clay.insert(*tile, ()),
                 // M5: hunting is never a tile mark (deer move).
                 Designation::Hunt => {}
+                // Plant candidates use the food-version-aware harvest index.
+                Designation::Harvest => {}
             }
         }
         self.version = Some(colony.overlay_version);

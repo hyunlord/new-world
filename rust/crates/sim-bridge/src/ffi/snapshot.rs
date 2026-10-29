@@ -92,12 +92,9 @@ pub struct AgentSnapshotRow {
     /// V7 viz-B: `Sleep.fatigue` cast `f64 → f32` (`[0, 100]`). Note the
     /// source field is `fatigue`, not `value`.
     pub sleep: f32,
-    /// V7 Direction-2 slice 2-5b: the agent's `Inventory` Food count
-    /// (`ResourceKind::Food`), `0` when the agent has no `Inventory`. Carries
-    /// the carry-indicator presence flag for `seek_viz_renderer.gd` — an agent
-    /// hauling gathered Food (`carried_food > 0`) gets a visible glyph, making
-    /// the gather → CARRY → deposit → stockpile chain visible. Read-only of
-    /// `Inventory`; does not affect determinism.
+    /// Fresh edible units in physical Carry for colony resource-aware snapshots;
+    /// legacy Inventory Food count for baseline/world-only snapshots. The carry
+    /// glyph reads presence, while quantities retain item-defined food units.
     pub carried_food: i32,
     /// Revitalize Pass 5 — carried `ResourceKind::Wood` count, 0 without an
     /// `Inventory`. Read-only; drives a future stick-carry glyph.
@@ -191,6 +188,50 @@ pub fn collect_agent_colds(world: &hecs::World) -> Vec<u8> {
 /// `PackedArray` marshalling — sim-test exercises this directly without
 /// a Godot runtime.
 pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
+    collect_agent_snapshot_inner(world, None)
+}
+
+fn carried_food_units(
+    res: &SimResources,
+    agent: u64,
+    carry: Option<&sim_core::colony::Carry>,
+) -> i32 {
+    let Some(carry) = carry else {
+        return 0;
+    };
+    let Some(food) = &carry.kind.definition().food else {
+        return 0;
+    };
+    let day = sim_systems::runtime::food::day(res);
+    let fresh = res
+        .food
+        .ages
+        .get(&sim_core::colony::food::FoodOwner::Carried(agent))
+        .is_some_and(|age| {
+            age.born_day <= day
+                && age.remaining(
+                    day,
+                    food.lifetime_days(sim_core::colony::content::FoodStorageClass::Ground),
+                ) > 0
+        });
+    if !food.raw_edible || !fresh {
+        return 0;
+    }
+    i32::try_from(u64::from(carry.count) * u64::from(food.units)).unwrap_or(i32::MAX)
+}
+
+/// Product snapshot: colony food comes from fresh physical Carry, never legacy counters.
+pub fn collect_agent_snapshot_with_resources(
+    world: &hecs::World,
+    resources: &SimResources,
+) -> Vec<AgentSnapshotRow> {
+    collect_agent_snapshot_inner(world, Some(resources))
+}
+
+fn collect_agent_snapshot_inner(
+    world: &hecs::World,
+    resources: Option<&SimResources>,
+) -> Vec<AgentSnapshotRow> {
     let mut rows = Vec::new();
     for (
         entity,
@@ -203,6 +244,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             maybe_thirst,
             maybe_sleep,
             maybe_inv,
+            maybe_carry,
             maybe_child,
             maybe_elder,
         ),
@@ -216,6 +258,7 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
             Option<&Thirst>,
             Option<&Sleep>,
             Option<&Inventory>,
+            Option<&sim_core::colony::Carry>,
             Option<&Child>,
             Option<&Elder>,
         )>()
@@ -266,9 +309,11 @@ pub fn collect_agent_snapshot(world: &hecs::World) -> Vec<AgentSnapshotRow> {
         let sleep = maybe_sleep.map(|s| s.fatigue as f32).unwrap_or(0.0);
         // V7 slice 2-5b — carried Food count for the carry indicator. 0 when
         // the agent has no `Inventory`. Read-only; order-independent.
-        let carried_food = maybe_inv
-            .map(|inv| inv.get(ResourceKind::Food) as i32)
-            .unwrap_or(0);
+        let carried_food = if let Some(res) = resources.filter(|res| res.rules.colony.is_some()) {
+            carried_food_units(res, agent.id, maybe_carry)
+        } else {
+            maybe_inv.map_or(0, |inv| inv.get(ResourceKind::Food) as i32)
+        };
         let carried_wood = maybe_inv
             .map(|inv| inv.get(ResourceKind::Wood) as i32)
             .unwrap_or(0);
@@ -1236,3 +1281,7 @@ mod agent_snapshot_tests {
         assert_eq!(collect_agent_snapshot(&world)[0].life_stage, 0);
     }
 }
+
+#[cfg(test)]
+#[path = "snapshot/food_tests.rs"]
+mod physical_food_snapshot_tests;

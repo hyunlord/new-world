@@ -18,11 +18,9 @@ impl EffectState {
             catchment: catchment_radius(resources),
             ..Self::default()
         };
-        let forage = resources
-            .rules
-            .agent
-            .forage
-            .filter(|_| resources.rules.society.stock_target.is_some());
+        let forage = resources.rules.agent.forage.filter(|_| {
+            resources.rules.colony.is_none() && resources.rules.society.stock_target.is_some()
+        });
         for (&sid, settlement) in &resources.settlements {
             if forage.is_some() {
                 state.forage_plans.insert(

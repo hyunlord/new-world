@@ -98,8 +98,12 @@ impl RuntimeSystem for ShelterPlanningSystem {
                             || buildings.contains(&tile)
                             || resources.building_kinds.contains_key(&tile)
                             || sites.contains(&tile)
-                            || resources.food_tiles.contains_key(&tile)
-                            || resources.food_source_max.contains_key(&tile)
+                            || if resources.rules.colony.is_some() {
+                                resources.food.plants.contains_key(&tile)
+                            } else {
+                                resources.food_tiles.contains_key(&tile)
+                                    || resources.food_source_max.contains_key(&tile)
+                            }
                             || resources.water_tiles.contains_key(&tile)
                             || resources.sleep_tiles.contains_key(&tile)
                             || resources.wood_source_max.contains_key(&tile)

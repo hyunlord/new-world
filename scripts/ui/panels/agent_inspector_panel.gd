@@ -141,6 +141,11 @@ var _mind_tick: int = -1
 var _mind_entity: int = -1
 var _label_state: Label
 var _label_target: Label
+const FoodText = preload("res://scripts/ui/food_text.gd")
+var _food_label: Label
+var _food_tick: int = -1
+var _food_entity: int = -1
+var _food_data: Dictionary = {}
 var _hunger_bar: ProgressBar
 var _thirst_bar: ProgressBar
 var _sleep_bar: ProgressBar
@@ -156,7 +161,7 @@ var _job_label: Label
 # M3 adds 9 dig, 10 deconstruct, 11 clear (haul-away).
 # M4 adds 12 dig clay, 13 teach, 14 learn.
 const JOB_KEYS: Array[String] = ["UI_JOB_NONE", "UI_JOB_CHOP", "UI_JOB_HAUL", "UI_JOB_DELIVER", "UI_JOB_BUILD", "UI_JOB_QUARRY", "UI_JOB_SUPPLY", "UI_JOB_CRAFT", "UI_JOB_GATHER", "UI_JOB_DIG", "UI_JOB_DECONSTRUCT", "UI_JOB_CLEAR",
-	"UI_JOB_DIG_CLAY", "UI_JOB_TEACH", "UI_JOB_LEARN", "M5_JOB_HUNT", "M5_JOB_EQUIP"]
+	"UI_JOB_DIG_CLAY", "UI_JOB_TEACH", "UI_JOB_LEARN", "M5_JOB_HUNT", "M5_JOB_EQUIP", "M55_JOB_TRADE", "M6A_JOB_HARVEST"]
 const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
 ## BuildingKind code of a hut in get_building_snapshot.
 const HUT_KIND: int = 3
@@ -245,6 +250,7 @@ func _ready() -> void:
 	_label_state = _make_label("")
 	_label_target = _make_label("")
 	_hunger_bar = _make_bar(_loc("UI_HUNGER"))
+	_food_label = _make_label("")
 	_thirst_bar = _make_bar(_loc("NEED_THIRST"))
 	_sleep_bar = _make_bar(_loc("NEED_SLEEP"))
 	_job_label = _make_label("")
@@ -440,6 +446,7 @@ func display_agent(detail: Dictionary) -> void:
 	_village_label.visible = home >= 0
 	_village_label.text = Names.unbroken(SettlementSelection.name_for(home, _locale)) if home >= 0 else ""
 	_refresh_mind()
+	_refresh_food()
 	_label_pos.text = _loc("INSPECTOR_POS_FMT") % [x, y]
 	var activity: Dictionary = _selected_activity() if state_tag == 4 or target_kind == 8 else {}
 	_label_state.text = _loc("INSPECTOR_STATE_FMT") % _state_text(state_tag, activity)
@@ -1153,6 +1160,7 @@ func _world_info() -> Dictionary:
 
 
 func _refresh_record() -> void:
+	_food_label.hide()
 	_set_live_visible(false)
 	var person: Dictionary = _person_cache.read("get_person", _selected_person)
 	var entries: Array[Dictionary] = Chronicle.rows(_person_cache.read("get_person_chronicle", _selected_person))
@@ -1230,6 +1238,9 @@ func _follow_link(meta: Variant) -> void:
 
 
 func _world_reset() -> void:
+	_food_tick = -1
+	_food_entity = -1
+	_food_data = {}
 	_mind_tick = -1
 	_mind_entity = -1
 	_mind_snapshot = {}
@@ -1288,3 +1299,17 @@ func _open_tile_why() -> void:
 		return
 	if bool(detail.get("found", false)):
 		get_node("../CausalPanel").call("open_tile", Vector2i(int(detail.get("x",0)), int(detail.get("y",0))))
+
+
+func _refresh_food() -> void:
+	_food_label.hide()
+	if _world_sim == null or not _world_sim.has_method("get_agent_food"):
+		return
+	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
+	if tick != _food_tick or _food_entity != _selected_entity_bits:
+		_food_tick = tick
+		_food_entity = _selected_entity_bits
+		_food_data = _world_sim.call("get_agent_food", _selected_entity_bits)
+	if bool(_food_data.get("found", false)):
+		_food_label.text = KoreanText.words(FoodText.person(_locale, _food_data))
+		_food_label.show()

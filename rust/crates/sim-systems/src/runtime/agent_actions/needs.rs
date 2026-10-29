@@ -24,13 +24,18 @@ impl NeedAvailability {
     pub fn from_resources(resources: &SimResources) -> Self {
         if resources.rules.agent.need_fallthrough {
             Self {
-                food: resources.food_tiles.values().any(|amount| *amount > 0),
+                food: if resources.rules.colony.is_some() {
+                    crate::runtime::food::choice::available(resources)
+                } else {
+                    resources.food_tiles.values().any(|amount| *amount > 0)
+                },
                 water: resources.water_tiles.values().any(|amount| *amount > 0),
                 sleep: resources.sleep_tiles.values().any(|amount| *amount > 0),
             }
         } else {
             Self {
-                food: true,
+                food: resources.rules.colony.is_none()
+                    || crate::runtime::food::choice::available(resources),
                 water: true,
                 sleep: true,
             }

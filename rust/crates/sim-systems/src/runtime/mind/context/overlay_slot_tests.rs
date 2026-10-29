@@ -123,6 +123,7 @@ fn known_and_dynamic_names_preserve_errors_and_overwrite_semantics() {
             })
         );
         let target = TargetCandidate {
+            food: None,
             tile: (2, 3),
             agent: Some(42),
         };

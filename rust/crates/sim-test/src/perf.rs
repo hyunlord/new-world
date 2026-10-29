@@ -290,7 +290,7 @@ fn settlement_sizes(engine: &SimEngine) -> Vec<usize> {
 }
 
 /// Run `spec` on `engine` (built by [`build_engine`]) for `spec.ticks` ticks.
-pub fn run(spec: &RunSpec, engine: SimEngine) -> RunOutput {
+pub fn run(spec: &RunSpec, engine: SimEngine) -> Result<RunOutput, String> {
     run_scripted(spec, engine, &[])
 }
 
@@ -300,7 +300,7 @@ pub fn run_scripted(
     spec: &RunSpec,
     mut engine: SimEngine,
     script: &[crate::probe::colony::ScriptEntry],
-) -> RunOutput {
+) -> Result<RunOutput, String> {
     let mut next_command = 0usize;
     let started = Instant::now();
     let founders = alive(&engine);
@@ -374,7 +374,7 @@ pub fn run_scripted(
                     &mut engine,
                     home,
                     u32::try_from(requested).unwrap_or(u32::MAX),
-                );
+                )?;
                 gifts.push(json!({"tick": engine.current_tick(), "settlement": home, "requested": requested, "applied": applied}));
             }
         }
@@ -482,10 +482,10 @@ pub fn run_scripted(
         json["subprofile"] = subprofile.summary(offset, tpd);
         json
     };
-    RunOutput {
+    Ok(RunOutput {
         json,
         tick_us: profile.tick_us,
-    }
+    })
 }
 
 /// Median and p90 (nearest rank) of `SNAPSHOT_REPEATS` timed calls of `f`, µs.
@@ -739,7 +739,12 @@ pub fn run_and_write_scripted(
     let output = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(move || {
         run_scripted(&spec_copy, engine, &script)
     })) {
-        Ok(output) => output,
+        Ok(Ok(output)) => output,
+        Ok(Err(error)) => {
+            return Ok(json!({"stem": stem, "status": "run_failed", "error": error,
+                "mode": spec.mode, "seed": spec.seed, "agents_requested": spec.agents,
+                "side": spec.side, "feed": spec.feed.as_str()}));
+        }
         Err(payload) => {
             let error = panic_text(payload.as_ref());
             eprintln!("{stem}: run failed: {error}");
@@ -838,12 +843,18 @@ pub struct PerfArgs {
     pub commands: Option<PathBuf>,
 }
 
-/// Benchmark-only daily food gift of the fed stress world: store `amount`
-/// food in `settlement`'s stockpile and return what was added. This is the
-/// stockpile deposit the V7 `GiftFood` intervention made (V8-0 removed the god
-/// hand from the game; the fed stress world keeps its feeding here).
-pub(crate) fn gift_food(engine: &mut SimEngine, settlement: SettlementId, amount: u32) -> u64 {
-    engine
+/// Benchmark-only daily nominal food supply. Baseline keeps its original counter;
+/// colony receives real neutral pieces through normal placement and accounting.
+/// Physical access and expiry remain candidate behavior, not synthetic satiety.
+pub(crate) fn gift_food(
+    engine: &mut SimEngine,
+    settlement: SettlementId,
+    amount: u32,
+) -> Result<u64, String> {
+    if engine.resources.rules.colony.is_some() {
+        return gift_colony_food(engine, settlement, amount);
+    }
+    Ok(engine
         .resources
         .settlements
         .get_mut(&settlement)
@@ -862,8 +873,64 @@ pub(crate) fn gift_food(engine: &mut SimEngine, settlement: SettlementId, amount
                     .unwrap_or(0)
                     - before,
             )
-        })
+        }))
 }
+
+fn gift_colony_food(
+    engine: &mut SimEngine,
+    settlement: SettlementId,
+    amount: u32,
+) -> Result<u64, String> {
+    use sim_core::colony::{content, ItemSpec};
+    use sim_systems::runtime::food::{self, items};
+    let tile = engine
+        .resources
+        .settlements
+        .get(&settlement)
+        .ok_or("benchmark gift settlement missing")?
+        .formation_tile;
+    if amount == 0 {
+        return Ok(0);
+    }
+    let kind = content::installed_or_bundled()
+        .item_role("legacy_food")
+        .ok_or("benchmark requires neutral legacy_food role")?;
+    let definition = kind
+        .definition()
+        .food
+        .as_ref()
+        .ok_or("benchmark legacy_food lacks food definition")?;
+    if definition.units != 1
+        || !definition.raw_edible
+        || definition.cooked
+        || !definition.groups.is_empty()
+        || definition.sick_permille != 0
+    {
+        return Err("benchmark legacy_food must be one neutral edible unit".into());
+    }
+    let day = food::day(&engine.resources);
+    let spec = ItemSpec::raw(kind, None);
+    let mut batches = Vec::new();
+    let mut left = amount;
+    while left > 0 {
+        let count = left.min(u32::from(u16::MAX)) as u16;
+        batches.push(items::new_batch(spec, count, day).map_err(|e| e.to_string())?);
+        left -= u32::from(count);
+    }
+    items::create_ground_batches(
+        &mut engine.resources,
+        tile,
+        &batches,
+        day,
+        items::FoodSource::Debug,
+    )
+    .map_err(|error| format!("benchmark gift placement failed: {error}"))?;
+    Ok(u64::from(amount))
+}
+
+#[cfg(test)]
+#[path = "perf_food_tests.rs"]
+mod food_tests;
 
 /// The usage line.
 pub const USAGE: &str = "usage: worldsim_perf natural --scene baseline|colony --seeds A..B --days D --out DIR [--commands FILE]
@@ -1186,7 +1253,7 @@ mod tests {
             ticks: 1500,
         };
         let engine = build_engine(&spec).expect("worldgen");
-        let out = run(&spec, engine);
+        let out = run(&spec, engine).expect("benchmark run");
         let j = &out.json;
         assert_eq!(out.tick_us.len(), 1500);
         assert_eq!(j["founders"], 40);
@@ -1254,10 +1321,10 @@ mod tests {
             feed: Feed::Raw,
             ..spec.clone()
         };
-        let raw_out = run(&raw, build_engine(&raw).expect("worldgen"));
+        let raw_out = run(&raw, build_engine(&raw).expect("worldgen")).expect("benchmark run");
         assert!(raw_out.json["gifts"].as_array().is_some_and(Vec::is_empty));
         // Determinism: the same spec gives the same fingerprint.
-        let again = run(&spec, build_engine(&spec).expect("worldgen"));
+        let again = run(&spec, build_engine(&spec).expect("worldgen")).expect("benchmark run");
         assert_eq!(again.json["fingerprint"], j["fingerprint"]);
     }
 

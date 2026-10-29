@@ -29,6 +29,9 @@
 //! therefore the loaded engine; the round-trip tests prove it ticks the same.
 
 mod content_validation;
+mod food_catalog;
+#[cfg(test)]
+mod food_tests;
 mod legacy_steward;
 mod legacy_v9;
 #[cfg(test)]
@@ -56,7 +59,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6 through 11 are migrated. Bump it
+/// Save format version; historical versions 6 through 12 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -69,8 +72,9 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// codes and Chronicle causes, sparse completed-construction/tool identity;
 /// 9 = full-width pressure provenance and persistent novel illness origins;
 /// 10 = tree material identity; 11 = independent steward defence and ownership;
-/// 12 = authored mind policy, running choices and independent decision history.
-pub const FORMAT_VERSION: u32 = 12;
+/// 12 = authored mind policy, running choices and independent decision history;
+/// 13 = independently persisted seasonal plants and physical food ownership.
+pub const FORMAT_VERSION: u32 = 13;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;
@@ -143,6 +147,7 @@ struct BodyRef<'a> {
     steward: &'a sim_core::colony::steward::StewardState,
     content_state: &'a sim_core::colony::content_state::ContentState,
     mind: &'a sim_core::colony::mind_state::MindState,
+    food: &'a sim_core::colony::food::FoodState,
 }
 
 /// The body after the header, as read (same fields, same order).
@@ -212,6 +217,19 @@ struct Body {
     steward: sim_core::colony::steward::StewardState,
     content_state: sim_core::colony::content_state::ContentState,
     mind: sim_core::colony::mind_state::MindState,
+    food: sim_core::colony::food::FoodState,
+}
+
+/// Exact format12 body, before independently persisted food state.
+#[derive(Serialize, Deserialize)]
+struct LegacyBodyV12 {
+    current_tick: u64,
+    resources: SimResources,
+    world: world::WorldSave,
+    systems: Vec<(String, Vec<u8>)>,
+    steward: sim_core::colony::steward::StewardState,
+    content_state: sim_core::colony::content_state::ContentState,
+    mind: sim_core::colony::mind_state::MindState,
 }
 
 /// Exact published format11 body, before the explicit mind field.
@@ -244,6 +262,7 @@ struct LegacyBodyV10 {
 /// discarded or reloaded.
 pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
     mind_validation::validate(&mut engine.resources).map_err(SaveError::Encode)?;
+    crate::runtime::food::validate(&engine.world, &engine.resources).map_err(SaveError::Encode)?;
     let world = world::capture(&engine.world).map_err(SaveError::World)?;
     let systems = engine.system_states().map_err(SaveError::Systems)?;
     let body = BodyRef {
@@ -254,6 +273,7 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         steward: &engine.resources.steward,
         content_state: &engine.resources.content_state,
         mind: &engine.resources.mind,
+        food: &engine.resources.food,
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
@@ -296,6 +316,8 @@ pub fn load_with(
     let legacy_v9 = version == Some(9u32.to_le_bytes().as_slice());
     let legacy_v10 = version == Some(10u32.to_le_bytes().as_slice());
     let legacy_v11 = version == Some(11u32.to_le_bytes().as_slice());
+    let legacy_v12 = version == Some(12u32.to_le_bytes().as_slice());
+    let legacy_food = version != Some(FORMAT_VERSION.to_le_bytes().as_slice());
     if legacy || legacy_v7 || legacy_v8 || legacy_v9 {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
             .map_err(|error| SaveError::Decode(error.to_string()))?;
@@ -310,6 +332,7 @@ pub fn load_with(
             steward: Default::default(),
             content_state: Default::default(),
             mind: Default::default(),
+            food: Default::default(),
         }
     } else if legacy_v7 {
         let old: LegacyBodyV7 = decode(encoded).map_err(SaveError::Decode)?;
@@ -321,6 +344,7 @@ pub fn load_with(
             steward: old.steward.into(),
             content_state: Default::default(),
             mind: Default::default(),
+            food: Default::default(),
         }
     } else {
         let envelope: Envelope = decode(encoded).map_err(SaveError::Decode)?;
@@ -342,6 +366,7 @@ pub fn load_with(
                 steward: old.steward.into(),
                 content_state: old.content_state.into(),
                 mind: Default::default(),
+                food: Default::default(),
             }
         } else if legacy_v9 {
             if envelope.revision != legacy_v9::REVISION {
@@ -360,9 +385,12 @@ pub fn load_with(
                 steward: old.steward.into(),
                 content_state: old.content_state.into(),
                 mind: Default::default(),
+                food: Default::default(),
             }
         } else {
-            if envelope.revision != catalog.revision() {
+            if envelope.revision != catalog.revision()
+                && !(legacy_food && food_catalog::accepts(&envelope.revision, catalog)?)
+            {
                 return Err(SaveError::Decode(format!(
                     "save content revision {} does not match installed {}",
                     envelope.revision,
@@ -379,6 +407,7 @@ pub fn load_with(
                     steward: old.steward.into(),
                     content_state: old.content_state,
                     mind: Default::default(),
+                    food: Default::default(),
                 }
             } else if legacy_v11 {
                 let old: LegacyBodyV11 = decode(&envelope.payload).map_err(SaveError::Decode)?;
@@ -390,6 +419,19 @@ pub fn load_with(
                     steward: old.steward,
                     content_state: old.content_state,
                     mind: Default::default(),
+                    food: Default::default(),
+                }
+            } else if legacy_v12 {
+                let old: LegacyBodyV12 = decode(&envelope.payload).map_err(SaveError::Decode)?;
+                Body {
+                    current_tick: old.current_tick,
+                    resources: old.resources,
+                    world: old.world,
+                    systems: old.systems,
+                    steward: old.steward,
+                    content_state: old.content_state,
+                    mind: old.mind,
+                    food: Default::default(),
                 }
             } else {
                 decode(&envelope.payload).map_err(SaveError::Decode)?
@@ -400,6 +442,7 @@ pub fn load_with(
     resources.steward = body.steward;
     resources.content_state = body.content_state;
     resources.mind = body.mind;
+    resources.food = body.food;
     mind_validation::validate(&mut resources).map_err(SaveError::Decode)?;
     if legacy || legacy_v7 || legacy_v8 || legacy_v9 {
         legacy_v9::migrate_trees(&mut resources).map_err(SaveError::Decode)?;
@@ -410,7 +453,18 @@ pub fn load_with(
     // command applied before the first tick sees the same regions as an
     // uninterrupted run (code review M-1).
     crate::runtime::nav::ensure(&mut resources);
-    let world = world::build(&body.world).map_err(SaveError::World)?;
+    let mut world = world::build(&body.world).map_err(SaveError::World)?;
+    if legacy_food && resources.rules.colony.is_some() {
+        crate::runtime::food::migration::migrate_legacy(&mut world, &mut resources)
+            .map_err(SaveError::Decode)?;
+        crate::runtime::settlement::fission::migrate_pending_food(
+            &world,
+            &mut resources,
+            &mut body.systems,
+        )
+        .map_err(SaveError::Decode)?;
+    }
+    crate::runtime::food::validate(&world, &resources).map_err(SaveError::Decode)?;
     content_validation::validate_illness(&resources, &world).map_err(SaveError::Decode)?;
     let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
     let legacy_colony_brain =
@@ -419,20 +473,16 @@ pub fn load_with(
     std::mem::swap(&mut engine.resources, &mut resources);
     register(&mut engine);
     std::mem::swap(&mut engine.resources, &mut resources);
-    if legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10 {
-        let registered = engine.system_states().map_err(SaveError::Systems)?;
-        // Walk registration order so both v6 additions get their final positions.
-        for (index, (name, state)) in registered.iter().enumerate() {
-            if name == "StewardDefenceSystem" || (legacy && name == "StewardSystem") {
-                if index > body.systems.len() {
-                    return Err(SaveError::Systems(
-                        "legacy system list is shorter than its migration insertion point".into(),
-                    ));
-                }
-                body.systems.insert(index, (name.clone(), state.clone()));
-            }
-        }
-    }
+    let registered = engine.system_states().map_err(SaveError::Systems)?;
+    insert_legacy_systems(
+        &mut body.systems,
+        &registered,
+        LegacySystemAdditions {
+            steward: legacy,
+            defence: legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10,
+            food: legacy_food && resources.rules.colony.is_some(),
+        },
+    )?;
     if legacy_colony_brain {
         let registered = engine.system_states().map_err(SaveError::Systems)?;
         migrate_colony_decision_slot(&mut body.systems, &registered)?;
@@ -441,6 +491,40 @@ pub fn load_with(
         .install_saved(world, resources, body.current_tick, &body.systems)
         .map_err(SaveError::Systems)?;
     Ok(engine)
+}
+
+/// Explicit additions for the known source formats, never arbitrary reconciliation.
+struct LegacySystemAdditions {
+    steward: bool,
+    defence: bool,
+    food: bool,
+}
+
+fn insert_legacy_systems(
+    saved: &mut Vec<(String, Vec<u8>)>,
+    registered: &[(String, Vec<u8>)],
+    additions: LegacySystemAdditions,
+) -> Result<(), SaveError> {
+    // All additions share registration order: inserting a later slot first
+    // would displace it when an earlier new slot is subsequently inserted.
+    for (index, (name, state)) in registered.iter().enumerate() {
+        let insert = match name.as_str() {
+            "StewardSystem" => additions.steward,
+            "StewardDefenceSystem" => additions.defence,
+            "FoodDailySystem" => additions.food,
+            _ => false,
+        };
+        if !insert {
+            continue;
+        }
+        if saved.iter().any(|entry| entry.0 == *name) || index > saved.len() {
+            return Err(SaveError::Systems(format!(
+                "invalid legacy {name} insertion slot"
+            )));
+        }
+        saved.insert(index, (name.clone(), state.clone()));
+    }
+    Ok(())
 }
 
 /// Only the known empty legacy lifecycle slot may change; all other slots stay exact.
@@ -499,6 +583,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 9
         && found != 10
         && found != 11
+        && found != 12
     {
         return Err(SaveError::Version {
             found,

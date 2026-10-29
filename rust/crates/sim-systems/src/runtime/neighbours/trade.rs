@@ -79,7 +79,15 @@ pub fn stock_value(res: &SimResources) -> u64 {
     res.colony
         .ground_items
         .iter()
-        .filter(|(t, _)| res.colony.zone_of_tile.contains_key(*t))
+        .filter(|(t, stack)| {
+            res.colony.zone_of_tile.contains_key(*t)
+                && (stack.kind.definition().food.is_none()
+                    || crate::runtime::food::choice::fresh(
+                        res,
+                        sim_core::colony::food::FoodOwner::Ground(**t),
+                        stack.kind,
+                    ))
+        })
         .map(|(_, s)| u64::from(value(s.kind, s.quality)) * u64::from(s.count))
         .sum()
 }
@@ -229,6 +237,15 @@ pub fn values_of(
     let mut asked: BTreeMap<(u32, u32), u16> = BTreeMap::new();
     for &(tile, count) in give {
         let stack = res.colony.ground_items.get(&tile)?;
+        if stack.kind.definition().food.is_some()
+            && !crate::runtime::food::choice::fresh(
+                res,
+                sim_core::colony::food::FoodOwner::Ground(tile),
+                stack.kind,
+            )
+        {
+            return None;
+        }
         let total = asked.entry(tile).or_insert(0);
         *total = total.saturating_add(count);
         let free = stack
@@ -285,7 +302,33 @@ pub fn trade(
         return Err(TradeRefusal::Balance);
     }
     let spot = c.spot.unwrap_or(c.pos);
-    // Taken goods: handed over at the spot (they enter the colony's ledger as traded in).
+    // Admit every incoming stack before changing the caravan or promising payment.
+    let day = crate::runtime::food::day(res);
+    let incoming = take
+        .iter()
+        .map(|&(stack, count)| {
+            let goods = &c.goods[usize::from(stack)];
+            crate::runtime::food::items::new_batch(
+                sim_core::colony::ItemSpec {
+                    kind: goods.kind,
+                    material: None,
+                    quality: goods.quality,
+                },
+                count,
+                day,
+            )
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|_| TradeRefusal::BadItems)?;
+    crate::runtime::food::items::create_ground_batches(
+        res,
+        spot,
+        &incoming,
+        day,
+        crate::runtime::food::items::FoodSource::Trade,
+    )
+    .map_err(|_| TradeRefusal::BadItems)?;
+    // Physical goods and food ages now exist; consume their caravan entries once.
     for &(stack, count) in take {
         let Some(g) = res.colony.neighbours.caravans[index]
             .goods
@@ -298,13 +341,6 @@ pub fn trade(
         if !nodes.is_empty() && nodes.iter().any(|n| practice & bit(*n) == 0) {
             res.colony.neighbours.tallies.unknown_bought += u64::from(count);
         }
-        let spec = sim_core::colony::ItemSpec {
-            kind: g.kind,
-            material: None,
-            quality: g.quality,
-        };
-        res.colony.item_ledger.trade_in(g.kind, u64::from(count));
-        crate::runtime::jobs::items::put_items(res, spot, spec, count);
     }
     res.colony.neighbours.caravans[index]
         .goods

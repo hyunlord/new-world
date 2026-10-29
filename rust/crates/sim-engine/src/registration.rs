@@ -41,8 +41,8 @@ pub struct SystemRegistration {
     pub worlds: SystemWorlds,
 }
 
-/// Production membership in execution order. The decision slot is world-specific;
-/// all other registrations retain their existing baseline no-op membership.
+/// Production membership in execution order. Colony food and decision systems are
+/// exclusive; shared registrations retain their existing baseline no-op membership.
 pub const SYSTEM_REGISTRATIONS: &[SystemRegistration] = &[
     SystemRegistration {
         name: "BuildingStampSystem",
@@ -55,6 +55,10 @@ pub const SYSTEM_REGISTRATIONS: &[SystemRegistration] = &[
     SystemRegistration {
         name: "AgentInfluenceSampleSystem",
         worlds: SystemWorlds::Both,
+    },
+    SystemRegistration {
+        name: "FoodDailySystem",
+        worlds: SystemWorlds::Colony,
     },
     SystemRegistration {
         name: "AgentMovementSystem",

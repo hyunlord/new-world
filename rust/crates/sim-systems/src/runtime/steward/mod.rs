@@ -5,6 +5,7 @@
 mod arming;
 mod completion;
 pub mod defence;
+pub mod food;
 mod house_profile;
 mod housing;
 pub mod lifecycle;

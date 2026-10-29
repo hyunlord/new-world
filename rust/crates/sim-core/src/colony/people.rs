@@ -152,11 +152,15 @@ pub enum Modifier {
     Drafted,
     /// A pressure is active (−40).
     Pressure,
+    /// At least three ingredient groups eaten in the trailing three days (+60).
+    FoodVaried,
+    /// Exactly one ingredient group eaten in the trailing three days (−40).
+    FoodMonotonous,
 }
 
 impl Modifier {
     /// Every modifier in code order.
-    pub const ALL: [Self; 14] = [
+    pub const ALL: [Self; 16] = [
         Self::SleptRoofed,
         Self::SleptOutside,
         Self::Fed,
@@ -171,6 +175,8 @@ impl Modifier {
         Self::Crafted,
         Self::Drafted,
         Self::Pressure,
+        Self::FoodVaried,
+        Self::FoodMonotonous,
     ];
 
     /// Stable code (the chronicle's cause table, the bridge).
@@ -195,6 +201,8 @@ impl Modifier {
             Self::Crafted => "crafted",
             Self::Drafted => "drafted",
             Self::Pressure => "pressure",
+            Self::FoodVaried => "food_varied",
+            Self::FoodMonotonous => "food_monotonous",
         }
     }
 
@@ -220,6 +228,8 @@ impl Modifier {
             Self::Crafted => 40,
             Self::Drafted => -60,
             Self::Pressure => -40,
+            Self::FoodVaried => 60,
+            Self::FoodMonotonous => -40,
         }
     }
 

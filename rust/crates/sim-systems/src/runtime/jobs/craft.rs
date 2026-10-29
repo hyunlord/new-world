@@ -40,11 +40,36 @@ pub fn train(world: &mut World, entity: Entity, skill: SkillKind, ticks: u32) {
 /// Craft ticks in a roofed workshop room, permille (M3 goal 3.3).
 pub const WORKSHOP_ROOM_PERMILLE: u32 = 900;
 
+/// Food preparation cannot progress after its actual heat or vessel disappears.
+pub(super) fn can_continue(world: &World, res: &SimResources, entity: Entity, job: &Job) -> bool {
+    let JobKind::Craft { workshop, bill, .. } = job.kind else {
+        return true;
+    };
+    let Some(shop) = res.colony.workshops.get(&workshop) else {
+        return false;
+    };
+    let Some(recipe) = shop.bill(bill).and_then(|bill| bill.recipe.recipe()) else {
+        return false;
+    };
+    let practice = if res
+        .rules
+        .colony
+        .is_some_and(|rule| rule.knowledge.is_some())
+    {
+        world
+            .get::<&sim_core::colony::knowledge::Knowledge>(entity)
+            .map_or(0, |knowledge| knowledge.practice())
+    } else {
+        u32::MAX
+    };
+    super::craft_food::permitted(res, shop, recipe, practice)
+}
+
 /// Start a craft at the work tile: take one craft's inputs off the shelf,
 /// record them consumed and return the work ticks; `None` when the bill is
 /// gone or done or the shelf lacks an input (nothing is taken then).
 pub fn start(
-    world: &World,
+    world: &mut World,
     res: &mut SimResources,
     entity: Entity,
     job: &mut Job,
@@ -60,10 +85,24 @@ pub fn start(
                 sim_core::rooms::RoomRole::Workshop,
             )
         });
-    let shop = res.colony.workshops.get_mut(&workshop)?;
+    let shop = res.colony.workshops.get(&workshop)?;
     let found = *shop.bill(bill)?;
     let recipe = found.recipe.recipe()?;
     if found.remaining() == Some(0) || !recipe.supports_workshop(shop.kind) {
+        return None;
+    }
+    let practice = if res
+        .rules
+        .colony
+        .is_some_and(|rule| rule.knowledge.is_some())
+    {
+        world
+            .get::<&sim_core::colony::knowledge::Knowledge>(entity)
+            .map_or(0, |k| k.practice())
+    } else {
+        u32::MAX
+    };
+    if !super::craft_food::permitted(res, shop, recipe, practice) {
         return None;
     }
     let cutter = recipe.shelf_tool(shop);
@@ -77,22 +116,7 @@ pub fn start(
     {
         return None;
     }
-    let mut material = None;
-    for (i, &(kind, n)) in recipe.inputs.iter().enumerate() {
-        let mut left = n;
-        for stack in shop.shelf.iter_mut().filter(|s| s.kind == kind) {
-            if left == 0 {
-                break;
-            }
-            if i == 0 && material.is_none() {
-                material = stack.material;
-            }
-            let take = stack.count.min(left);
-            stack.count -= take;
-            left -= take;
-        }
-        shop.shelf.retain(|s| s.count > 0);
-    }
+    let material = super::craft_food::consume(world, res, workshop, recipe)?;
     res.colony.item_ledger.craft_start(&recipe.inputs);
     res.colony.touch(false);
     if let Some(cutter) = cutter {
@@ -279,8 +303,52 @@ pub fn finish_craft(
         material: job.material,
         quality,
     };
-    res.colony.item_ledger.craft_end(&[(kind, n)]);
-    put_items(res, at, spec, n);
+    if recipe.food_requirements.duration_days > 0 {
+        res.food
+            .pending_drying
+            .push(sim_core::colony::food::DryingBatch {
+                workshop,
+                bill,
+                tile: at,
+                output: spec,
+                count: n,
+                due_tick: res.current_tick.saturating_add(
+                    res.rules
+                        .calendar
+                        .days_to_ticks(u64::from(recipe.food_requirements.duration_days)),
+                ),
+            });
+        res.food.touch();
+    } else if kind.definition().food.is_some() {
+        let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
+        if crate::runtime::food::items::create_ground(
+            res,
+            at,
+            spec,
+            n,
+            day,
+            crate::runtime::food::items::FoodSource::Craft,
+        )
+        .is_err()
+        {
+            res.food
+                .pending_drying
+                .push(sim_core::colony::food::DryingBatch {
+                    workshop,
+                    bill,
+                    tile: at,
+                    output: spec,
+                    count: n,
+                    due_tick: res.current_tick,
+                });
+            res.food.touch();
+        } else {
+            res.colony.item_ledger.craft_end(&[(kind, n)]);
+        }
+    } else {
+        res.colony.item_ledger.craft_end(&[(kind, n)]);
+        put_items(res, at, spec, n);
+    }
     if let Some(found) = res
         .colony
         .workshops

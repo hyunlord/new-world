@@ -18,17 +18,28 @@ pub mod assign;
 pub mod bills;
 pub mod cancel;
 pub mod craft;
+mod craft_food;
 pub mod execute;
+mod food_transfers;
+pub mod harvest;
 pub mod hearth;
 pub mod hunt;
 pub mod invariants;
 pub mod items;
+mod pot_supply;
 pub mod space;
 pub mod teach;
+
+#[cfg(test)]
+mod harvest_encoding_tests;
+
+#[cfg(test)]
+mod food_job_tests;
 
 pub use assign::{JobAssignSystem, JOB_ASSIGN_PRIORITY};
 pub use bills::{BillSystem, BILL_PRIORITY};
 pub use cancel::{cancel, finish, on_death, release_job};
+pub(crate) use craft_food::supplyable as food_recipe_supplyable;
 pub use execute::{JobExecuteSystem, JOB_EXECUTE_PRIORITY};
 pub use hearth::{HearthFeedSystem, HEARTH_FEED_PRIORITY};
 
@@ -76,3 +87,12 @@ mod legacy_hold_oracle {
         }
     }
 }
+
+#[cfg(test)]
+mod food_admission_tests;
+
+#[cfg(test)]
+mod pot_supply_tests;
+
+#[cfg(test)]
+mod pot_ingredient_tests;

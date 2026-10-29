@@ -2,7 +2,7 @@
 //! with the drying rack's knife, the knife breaks after 8 uses (ledger
 //! consumed), hide wraps and fur cloaks are made and worn by the least
 //! cold-tolerant first, a worn top spares its wearer cold hours (cold 700 ‰ of them),
-//! and meat spoils six days after the kill.
+//! and physical meat expires according to its authored storage lifetime.
 
 mod colony_support;
 
@@ -217,30 +217,74 @@ fn a_worn_top_spares_its_wearer_cold_hours_at_its_permille() {
 }
 
 #[test]
-fn meat_spoils_six_days_after_the_kill() {
+fn meat_spoils_once_at_its_authored_owner_lifetime_after_the_kill() {
+    use sim_core::colony::food::FoodOwner;
+    use sim_systems::runtime::food::{self, FoodDailySystem};
     let mut engine = sim_test::colony_engine(4);
     engine.tick();
-    let mut animals = sim_systems::runtime::wildlife::AnimalSystem;
-    animals.tick(&mut engine.world, &mut engine.resources);
-    // A carcass far from any stockpile or hearth (no larder takes it).
     let h = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
     let far = (h.0.saturating_sub(30), h.1);
-    engine.resources.current_tick = 1_440;
+    engine.resources.current_tick = engine.resources.ticks_per_day;
+    let born_day = food::day(&engine.resources);
     sim_systems::runtime::jobs::hunt::drop_carcass(&mut engine.resources, far, 3, ItemKind::Hide);
-    for (day, left) in [(6u64, 3u64), (7, 0)] {
-        engine.resources.current_tick = day * 1_440;
-        animals.tick(&mut engine.world, &mut engine.resources);
-        let meat = ledger_of(&engine.world, &engine.resources, ItemKind::Meat);
-        assert_eq!(meat.ground, left, "day {day}");
+    let kind = ItemKind::role("grazer_meat");
+    let owners: Vec<_> = engine
+        .resources
+        .colony
+        .ground_items
+        .iter()
+        .filter(|(_, stack)| stack.kind == kind)
+        .map(|(&tile, stack)| (FoodOwner::Ground(tile), stack.count))
+        .collect();
+    assert_eq!(owners.iter().map(|(_, n)| u64::from(*n)).sum::<u64>(), 3);
+    let definition = kind.definition().food.as_ref().expect("food definition");
+    let expiry = owners
+        .iter()
+        .map(|(owner, _)| {
+            assert_eq!(engine.resources.food.ages[owner].born_day, born_day);
+            born_day + definition.lifetime_days(food::storage::class(&engine.resources, *owner))
+        })
+        .max()
+        .expect("physical meat owners");
+    let mut daily = FoodDailySystem::new(&engine.resources);
+    for day in born_day..=expiry + 1 {
+        engine.resources.current_tick = u64::from(day) * engine.resources.ticks_per_day;
+        assert_eq!(food::day(&engine.resources), day);
+        let expected = owners
+            .iter()
+            .filter(|(owner, _)| {
+                day < born_day
+                    + definition.lifetime_days(food::storage::class(&engine.resources, *owner))
+            })
+            .map(|(_, count)| u64::from(*count))
+            .sum::<u64>();
+        daily.tick(&mut engine.world, &mut engine.resources);
+        let meat = ledger_of(&engine.world, &engine.resources, kind);
+        assert_eq!(
+            (meat.ground, meat.created, meat.consumed),
+            (expected, 3, 3 - expected),
+            "day {day}"
+        );
+        assert_eq!(
+            engine
+                .resources
+                .food
+                .tallies
+                .spoiled
+                .get(&kind)
+                .copied()
+                .unwrap_or(0),
+            3 - expected
+        );
+        let tally = engine.resources.food.tallies.clone();
+        daily.tick(&mut engine.world, &mut engine.resources);
+        assert_eq!(
+            engine.resources.food.tallies, tally,
+            "same-day expiry books once"
+        );
+        food::validate(&engine.world, &engine.resources).expect("age/owner and unit conservation");
     }
-    let w = &engine.resources.colony.wildlife;
-    assert_eq!((w.tallies.meat_spoiled, w.meat_lots.len()), (3, 0));
-    let meat = ledger_of(&engine.world, &engine.resources, ItemKind::Meat);
-    assert_eq!(
-        (meat.created, meat.consumed),
-        (3, 3),
-        "spoilage is consumed"
-    );
+    assert!(engine.resources.colony.wildlife.meat_lots.is_empty());
 }
 
 /// M5.5 (ADR 0029 amendment): under the M5.5 wildlife rule a knife lasts 4 uses, and a hide wrap takes one cured hide.

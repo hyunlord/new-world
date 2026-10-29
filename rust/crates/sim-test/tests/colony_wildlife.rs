@@ -815,10 +815,29 @@ fn the_hunter_carries_the_meat_to_a_stockpile_within_the_hour_of_the_kill() {
         .filter(|(tile, s)| s.kind == ItemKind::Meat && zone.contains_key(*tile))
         .map(|(_, s)| u64::from(s.count))
         .sum();
+    let eaten = engine
+        .resources
+        .food
+        .tallies
+        .eaten
+        .get(&ItemKind::Meat)
+        .copied()
+        .unwrap_or(0);
     assert!(
-        on_stockpile + w.meat_eaten >= w.meat_dropped.min(3) && w.meat_dropped > 0,
-        "within the hour of the kill at {t} the meat is home: {on_stockpile} on the stockpile, {} eaten of {}",
-        w.meat_eaten,
-        w.meat_dropped
+        on_stockpile + eaten >= w.meat_dropped.min(3) && w.meat_dropped > 0,
+        "within the hour of the kill at {t} the meat is home: {on_stockpile} on the stockpile, {} eaten of {}; physical={:?} ground={:?} carried={:?} hunter_job={:?} hunter_state={:?}",
+        eaten,
+        w.meat_dropped,
+        engine.resources.food.tallies,
+        engine.resources.colony.ground_items.iter().filter(|(_, stack)| stack.kind == ItemKind::Meat).collect::<Vec<_>>(),
+        engine.world.query::<(&sim_core::components::Agent, &sim_core::colony::Carry)>().iter().filter(|(_, (_, carry))| carry.kind == ItemKind::Meat).map(|(_, (agent, carry))| (agent.id, *carry)).collect::<Vec<_>>(),
+        engine.world.get::<&Job>(hunter).ok().as_deref(),
+        engine.world.get::<&AgentState>(hunter).ok().as_deref()
     );
+    assert!(
+        invariants::ledger_of(&engine.world, &engine.resources, ItemKind::Meat).balanced(),
+        "physical meat remains exactly accounted for after delivery or a meal"
+    );
+    sim_systems::runtime::food::validate(&engine.world, &engine.resources)
+        .expect("food owners, ages and unit conservation after the hunt");
 }

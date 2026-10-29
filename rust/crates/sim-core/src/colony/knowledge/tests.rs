@@ -4,9 +4,9 @@ use crate::colony::{BlueprintKind, Designation, ItemKind, RecipeKind};
 const KNOWLEDGE_RON: &str = include_str!("../../../data/colony/knowledge.ron");
 
 #[test]
-fn the_map_parses_to_24_nodes_with_an_acyclic_prereq_graph() {
+fn the_map_parses_to_27_nodes_with_an_acyclic_prereq_graph() {
     let d = defs();
-    assert_eq!(d.nodes.len(), 24);
+    assert_eq!(d.nodes.len(), 27);
     assert!(d.nodes.len() <= MAX_NODES);
     // Every prereq points at another node, and the graph has no cycle
     // (a depth-first search from each node never revisits its path).

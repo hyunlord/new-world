@@ -258,11 +258,19 @@ pub fn surplus_days(world: &World, res: &SimResources, rule: &NeighbourRule) -> 
     let adults = world.query::<&Agent>().without::<&Child>().iter().count() as u32;
     let mut ids: Vec<_> = res.settlements.keys().copied().collect();
     ids.sort_unstable();
-    let food: u32 = ids
-        .iter()
-        .filter_map(|id| res.settlements.get(id))
-        .map(|s| s.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0))
-        .sum();
+    let food: u32 = if res.rules.colony.is_some() {
+        u32::try_from(
+            ids.iter()
+                .map(|id| crate::runtime::food::reserves::units(world, res, *id, false))
+                .sum::<u64>(),
+        )
+        .unwrap_or(u32::MAX)
+    } else {
+        ids.iter()
+            .filter_map(|id| res.settlements.get(id))
+            .map(|s| s.stockpile.get(&ResourceKind::Food).copied().unwrap_or(0))
+            .sum()
+    };
     food / (adults.max(1) * rule.food_per_adult_day.max(1))
 }
 

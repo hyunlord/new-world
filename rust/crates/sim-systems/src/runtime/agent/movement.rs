@@ -302,7 +302,7 @@ impl RuntimeSystem for AgentMovementSystem {
         // Same gate as the decision system: foraging needs a store target too.
         let forage = rules
             .forage
-            .filter(|_| resources.rules.society.stock_target.is_some());
+            .filter(|_| !colony && resources.rules.society.stock_target.is_some());
         let forage_window = forage
             .is_some_and(|rule| clock_in_window(resources, rule.start_minute, rule.end_minute));
         // Pass 5: wood loads are hauled home too under the firewood rule.
@@ -363,7 +363,6 @@ impl RuntimeSystem for AgentMovementSystem {
         // M3: split borrows for the colony's path walking.
         let SimResources {
             nav,
-            food_tiles,
             water_tiles,
             sleep_tiles,
             bed_of,
@@ -513,9 +512,9 @@ impl RuntimeSystem for AgentMovementSystem {
                         if !job && nav.blocked.get(&agent.id) == Some(&goal) {
                             let kind = s.target();
                             let tiles = match kind {
-                                Some(TargetKind::Food | TargetKind::GatherFood) => {
-                                    Some(&*food_tiles)
-                                }
+                                // Colony food targets are item owners selected by mind policy.
+                                // End a blocked walk so that policy can choose a fresh owner.
+                                Some(TargetKind::Food | TargetKind::GatherFood) => None,
                                 Some(TargetKind::Water) => Some(&*water_tiles),
                                 Some(TargetKind::Sleep) if !bed_of.contains_key(&agent.id) => {
                                     Some(&*sleep_tiles)
@@ -565,7 +564,11 @@ impl RuntimeSystem for AgentMovementSystem {
                 (forage.is_some() || firewood.is_some(), agent, child, walker)
             {
                 if let Some(&anchor) = home.get(&agent.id) {
-                    let carried = inventory.map_or(0, |inv| inv.get(ResourceKind::Food));
+                    let carried = if colony {
+                        0
+                    } else {
+                        inventory.map_or(0, |inv| inv.get(ResourceKind::Food))
+                    };
                     let wood = if firewood.is_some() {
                         inventory.map_or(0, |inv| inv.get(ResourceKind::Wood))
                     } else {

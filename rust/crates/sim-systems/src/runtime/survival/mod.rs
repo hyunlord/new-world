@@ -87,6 +87,13 @@ pub fn despawn_agent(
         .get::<&sim_core::components::Kin>(entity)
         .ok()
         .map(|k| *k);
+    let food_cause = if reason == DeathReason::Starvation {
+        crate::runtime::food::events::hunger_death(
+            world, resources, entity, agent_id, position, tick,
+        )
+    } else {
+        None
+    };
     // M1: a dying worker's load stays where it fell; its reservations free up.
     crate::runtime::jobs::on_death(world, resources, entity);
     let _ = world.despawn(entity);
@@ -165,15 +172,18 @@ pub fn despawn_agent(
         .chronicle
         .close_person(agent_id, tick, reason.as_u8(), || person);
     let died_entry = resources.chronicle.len() as u32;
-    crate::runtime::chronicle_log::record(
-        world,
-        resources,
+    crate::runtime::chronicle_log::ensure(world, resources, agent_id);
+    if let Some(partner) = partner {
+        crate::runtime::chronicle_log::ensure(world, resources, partner);
+    }
+    resources.chronicle.push_caused(
         sim_core::chronicle::ChronicleEntry::new(tick, sim_core::chronicle::ChronicleKind::Died)
             .subject(agent_id)
             .other(partner)
             .settlement(last_roster)
             .cause(u32::from(reason.as_u8()))
             .value(age),
+        food_cause.map(sim_core::chronicle::CauseRef::Entry),
     );
     crate::runtime::mood::kin_died(world, resources, agent_id, kin, died_entry);
     if let Some(partner) = partner {

@@ -32,11 +32,12 @@ const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 ## MindChoice (47) records only entry into the critical band; its node slot is not a display name.
-const LAST_KIND: int = 47
+const LAST_KIND: int = 52
 static var steward_labels: Dictionary = {}
+static var food_chronicle: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
 const COLUMNS: Array[String] = ["tick", "kind", "subject", "other", "third", "settlement", "settlement2", "cause", "value",
-	"index", "link", "link_entry", "link_code"]
+	"index", "link", "link_entry", "link_code", "food_daily_milli"]
 const DEPART: Array[String] = ["CHRON_CAUSE_RANKED", "CHRON_CAUSE_SEED", "CHRON_CAUSE_HOUSEHOLD", "CHRON_CAUSE_ELDER_PARTNER", "CHRON_CAUSE_TOP_UP"]
 const DEATH: Array[String] = ["CHRON_DEATH_STARVATION", "CHRON_DEATH_DEHYDRATION", "CHRON_DEATH_COMBAT", "CHRON_DEATH_OLD_AGE", "CHRON_DEATH_EXPOSURE"]
 
@@ -155,6 +156,11 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		46: return loc(locale, "MUX_STEWARD_DEFENCE_ACTION").format({"count": value})
 		45: return loc(locale, "MUX_STEWARD_ACTION") + " " + loc(locale, str(steward_labels.get(cause, "UI_UNKNOWN")))
 		47: return loc(locale, "CHRON_MIND_CRITICAL")
+		48: return loc(locale, "M6A_CHRON_COOKED").format({"person": person(subject, locale), "item": KnowledgeText.with_object(locale, EconomyText.item(locale, cause))})
+		49: return loc(locale, "M6A_CHRON_DRIED").format({"item": EconomyText.item(locale, cause), "count": value})
+		50: return winter_food_sentence(row, locale)
+		51: return loc(locale, "M6A_CHRON_WINTER_SURVIVED")
+		52: return food_hunger_sentence(cause, value, locale)
 	return ""
 
 
@@ -253,13 +259,14 @@ static func why_lines(read: Dictionary, locale: Node, info: Dictionary) -> Array
 	var others: PackedInt64Array = read.get("others", PackedInt64Array())
 	var causes: PackedInt64Array = read.get("causes", PackedInt64Array())
 	var values: PackedInt64Array = read.get("values", PackedInt64Array())
+	var food_daily: PackedInt64Array = read.get("food_daily_milli", PackedInt64Array())
 	for i: int in links.size():
 		var text: String = ""
 		match links[i]:
 			0:
 				var row: Dictionary = {"tick": ticks[i] if i < ticks.size() else 0, "kind": kinds[i] if i < kinds.size() else -1,
 					"subject": subjects[i] if i < subjects.size() else -1, "other": others[i] if i < others.size() else -1, "third": -1,
-					"settlement": -1, "settlement2": -1, "cause": causes[i] if i < causes.size() else -1, "value": values[i] if i < values.size() else 0}
+					"settlement": -1, "settlement2": -1, "cause": causes[i] if i < causes.size() else -1, "value": values[i] if i < values.size() else 0, "food_daily_milli": food_daily[i] if i < food_daily.size() else -1}
 				text = line(row, -1, locale, info, true)
 				if text.is_empty():
 					text = loc(locale, "UI_UNKNOWN")
@@ -326,7 +333,7 @@ static func line(row: Dictionary, viewed: int, locale: Node, info: Dictionary, w
 		return ""
 	var prefix: String = loc(locale, "CHRONICLE_DAY_FMT") % day(int(row.get("tick", 0)), info)
 	var kind: int = int(row.get("kind", -1))
-	var named: bool = kind in [20, 21, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44] or (kind == 19 and int(row.get("cause", 0)) >= 1)
+	var named: bool = kind in [20, 21, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 48] or (kind == 19 and int(row.get("cause", 0)) >= 1)
 	if world_feed and int(row.get("subject", -1)) >= 0 and int(row.get("porter_count", 0)) == 0 and not named:
 		text = person(int(row["subject"]), locale) + " — " + text
 	var why: String = why_link(row, locale) if with_why else ""
@@ -342,3 +349,24 @@ static func partner(entries: Array[Dictionary], viewed: int) -> int:
 		elif int(row.get("kind", -1)) == 10 and subject == viewed:
 			result = other
 	return result
+
+
+static func food_hunger_sentence(stage: int, value: int, locale: Node) -> String:
+	if food_chronicle.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/food_chronicle.json"))
+		if parsed is Dictionary:
+			food_chronicle = parsed
+	var key: String = str(food_chronicle.get("hunger_stages", {}).get(str(stage), "UI_UNKNOWN"))
+	return loc(locale, key).format({"value": value})
+
+
+static func winter_food_sentence(row: Dictionary, locale: Node) -> String:
+	var daily: int = int(row.get("food_daily_milli", -1))
+	var stored: int = int(row.get("value", 0))
+	var needed: int = int(row.get("cause", 0))
+	var quantities: Dictionary = {"stored": stored, "needed": needed}
+	if daily <= 0:
+		return loc(locale, "M6A_WINTER_UNITS").format(quantities) + " · " + loc(locale, "M6A_DEMAND_ZERO" if daily == 0 else "M6A_DEMAND_UNKNOWN")
+	quantities["stored_days"] = "%.1f" % (float(stored) * 1000.0 / float(daily))
+	quantities["needed_days"] = "%.1f" % (float(needed) * 1000.0 / float(daily))
+	return loc(locale, "M6A_WINTER_DAYS").format(quantities)

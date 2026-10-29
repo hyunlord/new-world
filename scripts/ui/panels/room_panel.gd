@@ -25,6 +25,8 @@ const MUTED: Color = Color("c8b89a")
 var _world_sim: Node = null
 var _locale: Node = null
 var _room: int = -1
+var _food_tile: Vector2i = Vector2i(-1, -1)
+var _food_button: Button
 var _detail: Dictionary = {}
 var _tick: int = -1
 var _title: Label
@@ -78,6 +80,12 @@ func _ready() -> void:
 	why_button.text = _loc("MUX_WHY")
 	why_button.pressed.connect(_open_tile_why)
 	column.add_child(why_button)
+	_food_button = Button.new()
+	_food_button.name = "FoodWhy"
+	_food_button.disabled = true
+	_food_button.text = _loc("M6A_FOOD_WHY")
+	_food_button.pressed.connect(_open_food)
+	column.add_child(_food_button)
 	_close = Button.new()
 	PanelTooltips.attach(_close, "close")
 	_close.focus_mode = Control.FOCUS_NONE
@@ -91,6 +99,8 @@ func _loc(key: String) -> String:
 
 ## Open the panel on room `id`.
 func display_room(id: int) -> void:
+	_food_tile = Vector2i(-1, -1)
+	_food_button.disabled = true
 	_room = id
 	_tick = -1
 	visible = true
@@ -203,3 +213,12 @@ func _open_tile_why() -> void:
 	var ys: PackedInt32Array = rooms.get("centre_ys", PackedInt32Array())
 	if row >= 0 and row < mini(xs.size(), ys.size()):
 		get_node("../CausalPanel").call("open_tile", Vector2i(xs[row], ys[row]))
+
+
+func set_food_tile(tile: Vector2i) -> void:
+	_food_tile = tile
+	_food_button.disabled = false
+
+func _open_food() -> void:
+	if _food_tile.x >= 0:
+		get_node("../CausalPanel").call("open_food", _food_tile)

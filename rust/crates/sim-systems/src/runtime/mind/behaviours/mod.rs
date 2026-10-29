@@ -1,6 +1,8 @@
 //! Registered effect callbacks. The coordinator resolves a winning node and target first.
 mod context;
+mod food;
 mod gather;
+mod harvest_food;
 mod needs;
 mod owned;
 mod postpass;
@@ -68,7 +70,9 @@ impl LifecycleBinding {
             Self::Rest => match target {
                 ActionTarget::None => state == AgentState::Idle,
                 ActionTarget::Tile(_) => activity_matches(ActivityKind::SitByFire),
-                ActionTarget::Agent { .. } | ActionTarget::Routine { .. } => false,
+                ActionTarget::Agent { .. }
+                | ActionTarget::Routine { .. }
+                | ActionTarget::Food { .. } => false,
             },
             Self::Routine(kind) => activity_matches(kind),
             Self::External => true,
@@ -119,6 +123,10 @@ impl BehaviourEntry {
     ) -> Result<ActionTarget, EffectError> {
         Ok(match candidate {
             None => ActionTarget::None,
+            Some(target) if target.food.is_some() => ActionTarget::Food {
+                tile: target.tile,
+                owner: target.food.ok_or(EffectError::WrongTarget)?,
+            },
             Some(target) => match (self.activity_kind, target.agent) {
                 (Some(kind), None) => ActionTarget::Routine {
                     kind,
@@ -174,9 +182,16 @@ macro_rules! entry {
     };
 }
 pub(in crate::runtime) static REGISTRY: &[BehaviourEntry] = &[
+    entry!(LifecycleBinding::Resource(TargetKind::Job);
+        "harvest_food",
+        &["edible_plant"],
+        harvest_food::start,
+        harvest_food::continue_running,
+        owned::owned_finish
+    ),
     entry!(LifecycleBinding::Resource(TargetKind::Food);
         "eat",
-        &["food"],
+        &["food", "food_cooked", "food_novel", "food_cooked_novel"],
         needs::eat_start,
         needs::eat_continue,
         needs::finish
@@ -219,11 +234,11 @@ pub(in crate::runtime) static REGISTRY: &[BehaviourEntry] = &[
         owned::job,
         owned::job_finish
     ),
-    entry!(LifecycleBinding::Idle;
+    entry!(LifecycleBinding::Resource(TargetKind::Food);
         "hearth_meal",
-        &["hearth"],
-        owned::idle_start,
-        owned::idle_continue,
+        &["hearth", "food", "food_cooked", "food_novel", "food_cooked_novel"],
+        needs::eat_start,
+        needs::eat_continue,
         needs::finish
     ),
     entry!(LifecycleBinding::Social;

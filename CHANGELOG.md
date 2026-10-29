@@ -1,5 +1,31 @@
 # Changelog
 
+## M6a food chain — 2026-10-29 (implementation in progress)
+
+### Added
+- Data-defined seasonal plants, physical harvest jobs, food ownership and daily
+  spoilage, cooking, dietary records, drying and pot storage. Format 13 retains
+  explicit old-save migration boundaries; see [ADR 0052](docs/decisions/0052-item-food-chain.md).
+- Food planning, physical storage-capacity expansion, food inspector/why reads,
+  food chronicle entries and batched plant-phase placeholders.
+- Bounded calibration, held-out and fresh performance evidence tooling with an
+  explicit simulation-successor gate; no inherited M-CORE or M-UX2 waiver.
+
+### Changed
+- Colony eating and food alerts read actual items. Steward cooking reconciles
+  accepted order ownership while preserving player edits. Chronicle visibility
+  admits supported kinds through explicit data entries.
+
+### Removed
+- Colony authority of the V7 abstract food counter; the baseline path remains
+  separate and requires fresh identity verification.
+
+This entry records implementation, not acceptance or publication. Winter
+survival remains failing; calibration, held-out evaluation, final performance
+and the full gate are pending. Preserve failed runs and their corrections in
+[M6A_DECISIONS](docs/v8/m6a/M6A_DECISIONS.md) and
+[M6A_REPORT](docs/v8/m6a/M6A_REPORT.md).
+
 ## M-UX2.1 최종 게시 — 오너 수용 조건 기록
 
 **M-UX2.1 수용·게시: STRICT_PASS.** 전체 gate 소스와 먼저 게시한 제품 소스는 [ff6af820a](https://github.com/hyunlord/new-world/commit/ff6af820aa1fb4e2d894fa7e4e814bdf897a7868)다. 이 뒤의 문서 전용 후속은 **NOT_FULL_GATED**이며 새 전체 gate 실행을 주장하지 않는다.

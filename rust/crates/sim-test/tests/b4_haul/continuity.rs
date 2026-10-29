@@ -37,10 +37,7 @@ fn equal(a: &mut Fixture, b: &mut Fixture) {
         a.engine.resources.colony.reservations,
         b.engine.resources.colony.reservations
     );
-    assert_eq!(
-        a.engine.resources.colony.wildlife.meat_lots,
-        b.engine.resources.colony.wildlife.meat_lots
-    );
+    assert_eq!(a.engine.resources.food, b.engine.resources.food);
     assert_eq!(
         a.engine.resources.colony.command_log,
         b.engine.resources.colony.command_log
@@ -71,15 +68,17 @@ fn continue_to_food(a: &mut Fixture, b: &mut Fixture) {
     for _ in 0..61 {
         tick_checked(&mut a.engine);
         tick_checked(&mut b.engine);
-        if a.engine.resources.colony.wildlife.tallies.meat_eaten == 2 {
-            break;
-        }
     }
-    assert_eq!(a.engine.resources.colony.wildlife.tallies.meat_eaten, 2);
-    assert_eq!(b.engine.resources.colony.wildlife.tallies.meat_eaten, 2);
+    assert_eq!(a.engine.resources.colony.wildlife.tallies.meat_eaten, 0);
+    assert_tracked_meat(a, 2);
+    assert_eq!(a.engine.resources.food.tallies.eaten_units, 0);
+    assert_eq!(b.engine.resources.colony.wildlife.tallies.meat_eaten, 0);
+    assert_tracked_meat(b, 2);
+    assert_eq!(b.engine.resources.food.tallies.eaten_units, 0);
     assert_eq!(ground(a, ItemKind::Hide), 1);
     assert_eq!(ground(b, ItemKind::Hide), 1);
-    assert!(food(a) > 0);
+    assert_eq!(food(a), 0);
+    assert_eq!(food(b), 0);
     equal(a, b);
 }
 
@@ -132,7 +131,7 @@ fn hearth_removal_after_restore_cancels_with_identical_conserved_drop() {
 }
 
 #[test]
-fn ordinary_hunt_command_schedule_replay_reproduces_haul_and_feed() {
+fn ordinary_hunt_command_schedule_replay_reproduces_haul_and_physical_storage() {
     let mut first = fixture_at(HEARTH, SOURCE, false);
     let mut replay = fixture_at(HEARTH, SOURCE, false);
     let animal = *first

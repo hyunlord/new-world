@@ -69,6 +69,7 @@ func _ready() -> void:
 	_shelf.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_shelf.add_theme_color_override("font_color", MUTED)
 	column.add_child(_shelf)
+	column.add_child(_button("FoodWhy", _loc("M6A_FOOD_WHY"), _open_food))
 	var scroll: ScrollContainer = ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -322,3 +323,15 @@ func _command(method: String, arguments: Array) -> Dictionary:
 	# Rebuilt on the next frame: the pressed button belongs to the rows being replaced.
 	_key = 0
 	return data
+
+
+func _open_food() -> void:
+	var shops: Dictionary = SimReads.read(_world_sim, "get_workshops")
+	var row: int = _row(shops, _shop)
+	if row < 0: return
+	var tiles: Array[Vector2i] = [Vector2i(shops["work_xs"][row], shops["work_ys"][row])]
+	for y: int in range(int(shops["ys"][row]), int(shops["ys"][row]) + int(shops["hs"][row])):
+		for x: int in range(int(shops["xs"][row]), int(shops["xs"][row]) + int(shops["ws"][row])):
+			var tile := Vector2i(x, y)
+			if not tiles.has(tile): tiles.append(tile)
+	get_node("../CausalPanel").call("open_food_tiles", tiles)

@@ -35,23 +35,24 @@ pub fn run(script: &Path, agents: u32, ticks: u64) -> Result<Value, String> {
         WorldRules::colony(BENCH_SEED),
     );
     let mut gifts = 0u64;
-    let mut gift = |engine: &mut SimEngine| {
+    let mut gift = |engine: &mut SimEngine| -> Result<(), String> {
         let now = engine.current_tick();
         let offset = engine.resources.rules.clock_offset_ticks;
         let at_six = (now + offset) % engine.resources.ticks_per_day.max(1) == 360;
         if gifts == 0 || at_six {
             if let Some(home) = engine.resources.settlements.keys().copied().min() {
                 let amount = crate::perf::GIFT_PER_ALIVE * crate::perf::alive(engine);
-                crate::perf::gift_food(engine, home, u32::try_from(amount).unwrap_or(u32::MAX));
+                crate::perf::gift_food(engine, home, u32::try_from(amount).unwrap_or(u32::MAX))?;
                 gifts += 1;
             }
         }
+        Ok(())
     };
     let mut script = Script::new(entries);
     for _ in 0..WARMUP {
         script.apply(&mut engine)?;
         engine.tick();
-        gift(&mut engine);
+        gift(&mut engine)?;
     }
     let before = *engine.resources.nav.stats.borrow();
     let mut profile = engine.new_tick_profile();
@@ -59,7 +60,7 @@ pub fn run(script: &Path, agents: u32, ticks: u64) -> Result<Value, String> {
     for _ in 0..ticks {
         script.apply(&mut engine)?;
         engine.tick_profiled(&mut profile);
-        gift(&mut engine);
+        gift(&mut engine)?;
     }
     let seconds = started.elapsed().as_secs_f64();
     let after = *engine.resources.nav.stats.borrow();

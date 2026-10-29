@@ -263,6 +263,10 @@ static func validate_extension(document: Dictionary, dto: Dictionary) -> String:
 	for family: Variant in document:
 		if family == "schema_version":
 			continue
+		if family == "plants":
+			var plant_error: String = _validate_plants(document[family], dto)
+			if not plant_error.is_empty(): return plant_error
+			continue
 		if family == "construction_styles":
 			var style_error: String = _validate_style_aliases(document[family], dto)
 			if not style_error.is_empty(): return style_error
@@ -305,6 +309,11 @@ static func install_extension(document: Dictionary) -> void:
 static func _apply_selected_bindings() -> void:
 	for family: Variant in _selected_bindings:
 		if family in ["schema_version", "construction_styles"]:
+			continue
+		if family == "plants":
+			for scope: String in ["by_id", "by_category"]:
+				for key: String in _selected_bindings[family].get(scope, {}):
+					_bindings[family][scope][key] = _selected_bindings[family][scope][key].duplicate(true)
 			continue
 		for addition: Dictionary in _selected_bindings[family]["codes"]:
 			var source: Dictionary = {}
@@ -363,3 +372,38 @@ static func construction_styles(document: Dictionary, extension: Variant = null)
 				result["styles"].append(row)
 				break
 	return result
+
+
+## Species phase overrides category phase; an absent binding retains the phase placeholder.
+static func plant_asset(definition: Dictionary, phase: int) -> String:
+	var plants: Dictionary = bindings().get("plants", {})
+	var species: Dictionary = plants.get("by_id", {}).get(str(definition.get("id", "")), {})
+	var category: Dictionary = plants.get("by_category", {}).get(str(definition.get("category", "")), {})
+	return str(species.get(str(phase), category.get(str(phase), "")))
+
+
+static func _validate_plants(value: Variant, dto: Dictionary) -> String:
+	if not value is Dictionary or value.is_empty():
+		return "bindings: expected nonempty plants phase maps"
+	var allowed: Dictionary = {"by_id": {}, "by_category": {}}
+	for definition: Dictionary in dto.get("plants", []):
+		allowed["by_id"][str(definition.get("id", ""))] = true
+		allowed["by_category"][str(definition.get("category", ""))] = true
+	for scope: Variant in value:
+		if scope not in ["by_id", "by_category"] or not value[scope] is Dictionary or value[scope].is_empty():
+			return "bindings: unsupported plants scope"
+		for key: Variant in value[scope]:
+			if not key is String or key.is_empty() or not allowed[scope].has(key):
+				return "bindings: unknown plant identity/category"
+			if _bindings.get("plants", {}).get(scope, {}).has(key):
+				return "bindings: duplicate plant identity/category"
+			var phases: Variant = value[scope][key]
+			if not phases is Dictionary or phases.is_empty():
+				return "bindings: expected plant phase map"
+			for phase: Variant in phases:
+				if phase not in ["0", "1", "2", "3"]:
+					return "bindings: unknown plant phase"
+				var asset: Variant = phases[phase]
+				if not asset is String or asset.is_empty() or not has(asset):
+					return "bindings: unknown plant phase art"
+	return ""

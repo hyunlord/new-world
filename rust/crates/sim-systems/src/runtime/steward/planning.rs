@@ -80,6 +80,7 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
     };
     let adults = world.query::<&Agent>().without::<&Child>().iter().count() as u32;
     match &rule.action {
+        Action::FoodPlan(policy) => super::food::plan(world, res, policy),
         Action::Defence { .. } => Vec::new(),
         Action::Stockpile {
             base_cells,
@@ -293,24 +294,23 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             out
         }
         Action::Hunt {
-            item,
+            item: _,
             animal,
             knowledge,
             days,
             radius,
         } => {
-            let need: u64 = res
-                .settlements
-                .keys()
-                .map(|&id| crate::runtime::settlement::relations::need_milli(world, res, id))
-                .sum();
-            let food: u64 = res
-                .settlements
-                .keys()
-                .map(|&id| crate::runtime::settlement::food_economy::stock_in_hand(world, res, id))
-                .sum();
-            if (food + u64::from(maintain_count(world, res, *item))).saturating_mul(1000)
-                >= need.saturating_mul(u64::from(*days))
+            let Some(policy) = sim_core::colony::steward::rules().ok().and_then(|data| {
+                data.rules.iter().find_map(|rule| match &rule.action {
+                    Action::FoodPlan(policy) => Some(policy),
+                    _ => None,
+                })
+            }) else {
+                return Vec::new();
+            };
+            let food = super::food::summary(world, res, policy);
+            if food.usable_units.saturating_mul(1000)
+                >= food.daily_milli.saturating_mul(u64::from(*days))
             {
                 return Vec::new();
             }
@@ -1079,8 +1079,25 @@ mod rule_coverage {
                     }
                 }
                 Action::Hunt { .. } => {
-                    for settlement in engine.resources.settlements.values_mut() {
-                        settlement.stockpile.insert(ResourceKind::Food, u32::MAX);
+                    let tile = hearth_tiles(&engine.resources)[0];
+                    let kind = sim_core::colony::ItemKind::role("legacy_food");
+                    crate::runtime::food::items::create_ground(
+                        &mut engine.resources,
+                        tile,
+                        sim_core::colony::ItemSpec::raw(kind, None),
+                        1000,
+                        0,
+                        crate::runtime::food::items::FoodSource::Migration,
+                    )
+                    .expect("physical food reserve");
+                }
+                Action::FoodPlan(_) => {
+                    engine.resources.food.plants.clear();
+                    for &(_, entity) in &people {
+                        engine
+                            .world
+                            .insert_one(entity, Knowledge::default())
+                            .expect("no food production knowledge");
                     }
                 }
                 Action::Teach => {

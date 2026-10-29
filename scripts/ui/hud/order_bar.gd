@@ -55,14 +55,16 @@ const CLAY_MODE: int = 9
 ## M5: the hunt modes (3 click a deer, 4 a hunt zone).
 const HUNT_MODE: int = 10
 const HUNT_ZONE_MODE: int = 11
+const HARVEST_MODE: int = 12
 const DIG_MENU: Array[Dictionary] = [
 	{"mode": QUARRY_MODE, "key": "UI_ORDER_QUARRY", "hotkey": KEY_1, "icon": "icon_quarry"},
 	{"mode": CLAY_MODE, "key": "UI_ORDER_CLAY", "hotkey": KEY_2, "icon": "icon_dig"},
 	{"mode": HUNT_MODE, "key": "M5_ORDER_HUNT", "hotkey": KEY_3, "icon": "icon_hunt", "hint": "M5_HINT_HUNT"},
 	{"mode": HUNT_ZONE_MODE, "key": "M5_ORDER_HUNT_ZONE", "hotkey": KEY_4, "icon": "icon_hunt", "hint": "M5_HINT_HUNT_ZONE"},
+	{"mode": HARVEST_MODE, "key": "M6A_ORDER_HARVEST", "hotkey": KEY_5, "icon": "icon_chop", "hint": "UI_ORDER_HINT_AREA"},
 ]
 ## The modes of the F7 submenu (the F7 button stays pressed in any of them).
-const DIG_MODES: Array[int] = [QUARRY_MODE, CLAY_MODE, HUNT_MODE, HUNT_ZONE_MODE]
+const DIG_MODES: Array[int] = [QUARRY_MODE, CLAY_MODE, HUNT_MODE, HUNT_ZONE_MODE, HARVEST_MODE]
 const BAR_BOTTOM: float = 1080.0 - 12.0
 const ACTIVE: Color = Color("e8c46e")
 const TOAST_SECONDS: float = 2.0

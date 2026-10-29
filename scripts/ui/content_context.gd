@@ -46,7 +46,7 @@ static func install(dto: Dictionary, presentation: Dictionary) -> String:
 	var revision: String = dto["registry_revision"]
 	if not _revision.is_empty():
 		return "" if _revision == revision else "content catalog already installed"
-	for family: String in ["items", "blueprints", "recipes", "materials", "knowledge", "pressures", "animals"]:
+	for family: String in ["items", "blueprints", "recipes", "materials", "knowledge", "pressures", "animals", "plants"]:
 		var rows: Dictionary = {}
 		var names: Dictionary = {}
 		for value: Variant in dto.get(family, []):

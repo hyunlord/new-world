@@ -908,7 +908,9 @@ impl RuntimeSystem for AnimalSystem {
         deer_steps(res, &rule, hearth, &folk);
         wolf_steps(world, res, &rule, hearth, &folk);
         if tick.is_multiple_of(60) {
-            feed_larder(res, &rule);
+            if res.rules.colony.is_none() {
+                feed_larder(res, &rule);
+            }
             // Keep declared species loot eligible for carcass hauling until it is removed or stocked.
             if !res.colony.wildlife.carcasses.is_empty() {
                 let colony = &res.colony;
@@ -932,7 +934,7 @@ impl RuntimeSystem for AnimalSystem {
                 res.colony.wildlife.carcasses = keep;
             }
         }
-        if tick.is_multiple_of(res.ticks_per_day.max(1)) {
+        if res.rules.colony.is_none() && tick.is_multiple_of(res.ticks_per_day.max(1)) {
             spoil(res, &rule);
         }
     }

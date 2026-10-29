@@ -2,7 +2,7 @@
 
 Status: implementation guide for the M-CORE working tree. Production registration uses the mind for colony and the legacy selector for baseline in p6 `fbc9a9babc9bb5df1d06ca1e655901e480521f66`. P7 baseline module isolation and old-shadow retirement are implemented but uncommitted; final checks and post-isolation identity remain pending (CORE_DECISIONS D19–D20). Examples below are authoring/test instructions, not claims of passing runtime, shadow, held-out or performance gates. Architectural contracts: [ADR 0046](../../decisions/0046-colony-mind.md), [ADR 0047](../../decisions/0047-baseline-isolation.md), [CORE_GOAL](CORE_GOAL.md).
 
-The source audit at this documentation revision finds 157 authored nodes and 80 distinct referenced fact names. The policy references 19 behaviours; the registry also retains target-bound `rest` for data-added nodes. These are static policy counts, not runtime coverage or acceptance results; the registry can expose additional unreferenced capabilities.
+The historical M-CORE source audit found 157 authored nodes and 80 distinct referenced fact names; these are not the expanded M6a policy counts. The policy references 19 behaviours; the registry also retains target-bound `rest` for data-added nodes. These are static policy counts, not runtime coverage or acceptance results; the registry can expose additional unreferenced capabilities.
 
 ## Boundaries
 
@@ -87,3 +87,53 @@ Build a real cold person with a settlement, enabled routine, reachable lit heart
 Review the policy and effect diff separately. Link every port/replacement/drop to the measured inventory; do not classify a live arm as replaced to improve the agreement denominator. Inspect decision witnesses: they include rejected alternatives and incumbent checks as well as the winning inputs. The raw top three are candidates in the winning band and may differ from the hysteresis-retained choice. UI must preserve these meanings.
 
 Before switching: baseline plus colony OFF/ON identity and shadow comparison on authorized calibration seeds. Freeze policy before the held-outs. After switching: baseline identity, stated old/new colony digests, held-out outcomes and why coverage, story yield, admitted interleaved timing and the full gate. Record failed and pending results explicitly. This guide does not authorize an early production switch or relaxing any bar.
+
+
+## M6a: physical food observations and authored preference
+
+The food capability observes fresh, reachable, raw-edible physical stacks, including supported shelves and pots. `food_cooked_available`, `food_novel_available` and `food_cooked_novel_available` are Bool facts; they are availability observations, not selection commands. Their matching targets are `food_cooked`, `food_novel` and `food_cooked_novel`. The ordinary `food` target remains the fallback. Provider registration is in `rust/crates/sim-systems/src/runtime/mind/facts.rs`; target filtering is in `food_targets.rs` beside it.
+
+Novel means at least one of the item's data-defined groups was not eaten within the previous three calendar days. It does not mean an unfamiliar item name. Cooked is the catalog food capability; raw grain cannot become edible merely by appearing in a stock count. Target reads do not consume or reserve food, and an eating effect must revalidate the physical owner and age before recording a successful meal.
+
+This node is copied from the current M6a `mind.ron` as an authoring example, not a new independent policy or a runtime acceptance result:
+
+```ron
+        (
+            id: "critical_hunger_idle_hunger_cooked_novel", band: "critical", behaviour: "eat",
+            when: [
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "idle", op: "has", value: None),
+                (fact: "job_owned_state", op: "not", value: None),
+                (fact: "activity_active", op: "not", value: None),
+                (fact: "stocked_camp_in_radius", op: "not", value: None),
+                (fact: "hunger_tenths", op: ">=", value: Some(750)),
+                (fact: "hunger_actionable", op: "has", value: None),
+                (fact: "food_cooked_novel_available", op: "has", value: None),
+            ],
+            score: (constant: 1003, terms: [(fact: "memory_hunger", weight_permille: 1000)]),
+            hysteresis: 0, life_stages: ["adult", "child", "elder"],
+            tags: ["port", "natural"], name_key: "MIND_BEHAVIOUR_EAT",
+            every_ticks: 1, target: Some("food_cooked_novel"),
+        ),
+```
+
+The eligibility and ownership guards remain in data. The authored score of 1003 gives this cooked-and-novel option its preference relative to otherwise eligible neighbouring food nodes; it cannot outrank a higher band. Do not hardcode this node's ID or a food name into the provider or executor. A new food in an existing group uses the catalog and existing targets; a new mechanic needs a registered capability.
+
+Regression references: `rust/crates/sim-test/tests/m6a_food_mind.rs` covers food preference and fallback; `m6a_food_storage.rs` covers age/storage mechanics; `m6a_food_data_only.rs` exercises an added food through the physical chain. These are test locations, not a claim that the current checkout passed them. Meal-group observations, their mood modifiers, and visible inspector text require separate runtime/UI evidence.
+
+### Autonomous physical harvest when no edible owner is reachable
+
+`edible_plant_available` is a Bool observation of a reachable, currently ripe plant whose catalog yield is raw-edible. Its `edible_plant` target uses a shared spatial index with live depletion, reservation, designation and player-veto checks. It does not treat grain or flax as ready meals. Only ripe raw-edible plants enter the daily index; dormant and nonfood plants are excluded. Live depleted entries are pruned once for all later queries that day. Production ripening runs at the daily boundary before mind evaluation, when the index is rebuilt. Reservations, designation changes, vetoes and reachability remain live checks without permanent pruning. The system-owned cache is also reconstructed after load, clock reset, world identity/shape changes, or plant-count changes; unrelated food mutations do not rebuild it.
+
+The authored `need_harvest_food` node selects registered behaviour `harvest_food` for an idle hungry adult without a held job/carry and without reachable edible physical food. The effect creates a normal harvest mark and reserves a real `JobKind::Harvest`. Job movement, work time, knowledge use, complete yield placement, age and ledger accounting use the ordinary job executor. Eating remains a later, separate physical-food action. Providers do not pick the hunger threshold or bypass work.
+
+An implicit mark is an individual's intent, not an invented player/steward command. Existing explicitly marked targets keep their provenance; a newly implicit mark clears any stale origin left by an earlier harvest at that tile. `CancelArea` cancels the job and protects the actual harvest tile using the existing two-day cancellation veto even while the steward is off. No new calories, free harvest, or permanent cancellation exception is introduced.
+
+
+`job_harvesting` observes whether the owned Job is Harvest. The authored
+`need_job_harvest_food` node uses it to interrupt ordinary work for physical
+food acquisition without restarting active harvest work. The lifecycle admits
+and drops any carried batch atomically before Needs cancellation; failure
+retains the old job and destination. Original work marks are preserved, and
+all breakdown, draft, work-priority and player-veto admission still applies.

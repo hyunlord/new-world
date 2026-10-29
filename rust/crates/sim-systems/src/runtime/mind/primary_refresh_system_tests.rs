@@ -15,7 +15,19 @@ const POLICY: &str = r#"(schema_version:1,bands:["critical","duty","need","work"
 fn fixture(invited_id: u64, meals: bool) -> (ColonyMindSystem, World, SimResources) {
     let mut resources = SimResources::new(5, 5, sim_core::MaterialRegistry::new());
     resources.rules = sim_core::rules::WorldRules::colony(1);
-    resources.food_tiles.insert((1, 1), 4);
+    resources.nav.install(sim_core::nav::CostMap::new(5, 5));
+    crate::runtime::food::items::create_ground(
+        &mut resources,
+        (1, 1),
+        sim_core::colony::ItemSpec::raw(
+            sim_core::colony::ItemKind::from_name("berries").expect("food"),
+            None,
+        ),
+        4,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("physical food fixture");
     let mut settlement = Settlement::new_with_id(1, 0);
     settlement.formation_tile = (2, 1);
     settlement.member_agents.extend([1, 2]);
@@ -114,6 +126,9 @@ fn state_bytes(world: &World, resources: &SimResources) -> Vec<u8> {
         resources.tallies.meals_without_food,
         &resources.social_chase_since,
         &resources.social_retry_after,
+        &resources.food,
+        &resources.colony.ground_items,
+        &resources.colony.item_ledger,
     ))
     .unwrap()
 }
@@ -144,6 +159,9 @@ fn authored_multi_person_effects_match_full_refresh_in_primary_invitation_and_re
         );
         if meals {
             assert_eq!(resources.tallies.meals_eaten, 2);
+            assert_eq!(resources.food.tallies.meals, 2);
+            assert_eq!(resources.colony.ground_items[&(1, 1)].count, 2);
+            crate::runtime::food::validate(&world, &resources).expect("conserved meals");
         } else {
             assert_eq!(world.query::<&Activity>().iter().count(), 0);
             assert_eq!(resources.mind.running.len(), 2);

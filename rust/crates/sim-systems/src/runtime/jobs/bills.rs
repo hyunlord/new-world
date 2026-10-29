@@ -82,7 +82,32 @@ pub fn maintain_count(world: &World, res: &SimResources, kind: ItemKind) -> u32 
             _ => {}
         }
     }
-    ground + carried + making
+    let pending: u32 = res
+        .food
+        .pending_drying
+        .iter()
+        .filter(|batch| batch.output.kind == kind)
+        .map(|batch| u32::from(batch.count))
+        .sum();
+    if kind.definition().food.is_some() {
+        let carried: u32 = world
+            .query::<&Carry>()
+            .iter()
+            .filter(|(_, carry)| carry.kind == kind)
+            .map(|(_, carry)| u32::from(carry.count))
+            .sum();
+        let stored: u32 = res
+            .colony
+            .workshops
+            .values()
+            .flat_map(|shop| shop.shelf.iter())
+            .chain(res.food.pots.values().flat_map(|pot| pot.contents.iter()))
+            .filter(|stack| stack.kind == kind)
+            .map(|stack| u32::from(stack.count))
+            .sum();
+        return ground + carried + stored + making + pending;
+    }
+    ground + carried + making + pending
 }
 
 /// The count a `Maintain` bill compares with its target (M3, ADR 0023): as
@@ -104,7 +129,7 @@ pub fn bill_count(world: &World, res: &SimResources, kind: ItemKind) -> u32 {
     all.saturating_sub(outside)
 }
 
-/// Unreserved items of `kind` lying anywhere.
+/// Unreserved ground items plus pot ingredients eligible for carrying.
 pub fn available(res: &SimResources, kind: ItemKind) -> u32 {
     let c = &res.colony;
     c.ground_items
@@ -113,7 +138,8 @@ pub fn available(res: &SimResources, kind: ItemKind) -> u32 {
             stack.kind == kind && !c.reservations.contains_key(&ReserveKey::Stack(**tile))
         })
         .map(|(_, stack)| u32::from(stack.count))
-        .sum()
+        .sum::<u32>()
+        .saturating_add(super::pot_supply::available(res, kind))
 }
 
 /// Reuse a shelved tool first, then the first unreserved compatible ground stack.
@@ -152,6 +178,20 @@ pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize
     if bill.suspended || !recipe.supports_workshop(shop.kind) {
         return false;
     }
+    let food_allowed = if crate::runtime::knowledge::rule(res).is_some() {
+        world
+            .query::<&sim_core::colony::knowledge::Knowledge>()
+            .without::<&sim_core::components::Child>()
+            .iter()
+            .any(|(_, knowledge)| {
+                super::craft_food::supplyable(res, shop, recipe, knowledge.practice())
+            })
+    } else {
+        super::craft_food::supplyable(res, shop, recipe, u32::MAX)
+    };
+    if !food_allowed {
+        return false;
+    }
     // M4 (ADR 0024): a bill no living adult can craft waits (`NoPractitioner`).
     if crate::runtime::knowledge::rule(res).is_some()
         && !crate::runtime::knowledge::anyone_practises(
@@ -172,7 +212,7 @@ pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize
 }
 
 /// Recompute every workshop's active bill and clear unused shelf items.
-pub fn schedule(world: &World, res: &mut SimResources) {
+pub fn schedule(world: &mut World, res: &mut SimResources) {
     let ids: Vec<u32> = res.colony.workshops.keys().copied().collect();
     for id in ids {
         let Some(shop) = res.colony.workshops.get(&id) else {
@@ -192,18 +232,29 @@ pub fn schedule(world: &World, res: &mut SimResources) {
                 needs.extend(
                     shop.shelf
                         .iter()
-                        .filter(|s| r.tool_matches(s.kind))
+                        .filter(|s| {
+                            r.tool_matches(s.kind)
+                                || ((r.food_requirements.requires_pot
+                                    || r.food_requirements.pot_alternative)
+                                    && s.kind.definition().pot_capacity > 0)
+                        })
                         .map(|s| (s.kind, 1)),
                 );
                 needs.into_iter().map(|(kind, _)| kind)
             })
             .collect();
         let work_tile = shop.work_tile();
+        let food_spill: Vec<_> = shop
+            .shelf
+            .iter()
+            .filter(|stack| !used.contains(&stack.kind) && stack.kind.definition().food.is_some())
+            .map(|stack| sim_core::colony::food::FoodStackKey::from(stack.spec()))
+            .collect();
         let mut spill: Vec<(ItemSpec, u16)> = Vec::new();
         if let Some(shop) = res.colony.workshops.get_mut(&id) {
             shop.active = active;
             shop.shelf.retain(|stack| {
-                let keep = used.contains(&stack.kind);
+                let keep = used.contains(&stack.kind) || stack.kind.definition().food.is_some();
                 if !keep {
                     spill.push((stack.spec(), stack.count));
                 }
@@ -212,6 +263,17 @@ pub fn schedule(world: &World, res: &mut SimResources) {
         }
         for (spec, n) in spill {
             put_items(res, work_tile, spec, n);
+        }
+        let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
+        for key in food_spill {
+            let _ = crate::runtime::food::items::drop_ground(
+                world,
+                res,
+                sim_core::colony::food::FoodOwner::Shelf { workshop: id, key },
+                work_tile,
+                u16::MAX,
+                day,
+            );
         }
     }
 }

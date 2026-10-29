@@ -221,7 +221,10 @@ fn inputs_preserve_independent_dirty_nav_cache_effects() {
                 sim_core::rules::WorldRules::colony(0),
             );
             let hearth = crate::worldgen::colony::hearth(&e.resources).expect("hearth");
-            let node = *e.resources.colony.nodes.values().next().expect("node");
+            // This fixture isolates quarry planning's lazy navigation effect.
+            // Clay discovery has its own command/knowledge integration fixture.
+            let mut node = *e.resources.colony.nodes.values().next().expect("node");
+            node.kind = sim_core::colony::NodeKind::Boulder;
             let kind = node.kind.yields();
             let tile = (hearth.0 + 1, hearth.1);
             e.resources.colony.nodes.clear();
@@ -230,6 +233,14 @@ fn inputs_preserve_independent_dirty_nav_cache_effects() {
             e.resources.steward.vetoes.clear();
             e.resources.colony.nodes.insert(tile, node);
             let mut world = World::new();
+            let mut practitioner = sim_core::colony::knowledge::Knowledge::default();
+            practitioner.set(
+                sim_core::colony::knowledge::id("stone_quarrying").expect("quarry knowledge"),
+                1000,
+                sim_core::colony::knowledge::Source::Seeded,
+                0,
+            );
+            world.spawn((practitioner,));
             if scenario != 0 {
                 world.spawn((MaterialNeeds::single(kind, 10),));
             }

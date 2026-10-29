@@ -6,6 +6,9 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
 mode="${1:?expected source, shadow or fixture}"
 shift
+if [[ -n "${M6A_GATE_CONFIG:-}" && ( "$mode" == fixture_run || "$mode" == evaluation ) ]]; then
+    exec bash tools/v8/m6a_gate_checks.sh "$mode" "$@"
+fi
 case "$mode" in
 baseline_isolation)
     [[ $# == 1 ]] || exit 2

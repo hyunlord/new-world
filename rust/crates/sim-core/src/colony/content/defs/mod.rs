@@ -37,3 +37,8 @@ mod resolve;
 
 mod flora;
 pub use flora::*;
+
+mod food;
+pub use food::*;
+mod plant;
+pub use plant::*;

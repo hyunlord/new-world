@@ -41,7 +41,7 @@ use super::causal::{
 };
 use super::chronicle::{
     collect_agent_id, collect_chronicle_since, collect_person, collect_person_chronicle,
-    collect_settlement_chronicle, person_to_dict, rows_to_dict,
+    collect_settlement_chronicle, person_to_dict,
 };
 use super::colony::{
     can_place, collect_agent_jobs, collect_colony_overlay, collect_colony_versions,
@@ -72,8 +72,8 @@ use super::reads_agent::{
     collect_agent_temperament, collect_relationship_snapshot, relationship_rows_to_variant_array,
 };
 use super::reads_settlement::{
-    collect_settlement_snapshot, collect_settlement_wood_targets, collect_society_snapshot,
-    settlement_rows_to_dict, society_snapshot_to_dict,
+    collect_settlement_snapshot_with_resources, collect_settlement_wood_targets,
+    collect_society_snapshot, settlement_rows_to_dict, society_snapshot_to_dict,
 };
 use super::relations::{
     collect_porter_snapshot, collect_settlement_relations, porter_rows_to_dict,
@@ -82,12 +82,12 @@ use super::relations::{
 use super::save::{load_engine_from_file, save_engine_to_file};
 use super::snapshot::{
     agent_rows_to_dict, building_rows_to_dict, collect_agent_ages_days, collect_agent_ages_years,
-    collect_agent_colds, collect_agent_infancy_and_pregnancy, collect_agent_snapshot,
-    collect_building_snapshot, collect_construction_snapshot, collect_recent_deaths,
-    collect_resource_snapshot, collect_tallies, collect_terrain_snapshot, collect_time_snapshot,
-    collect_world_info, construction_rows_to_dict, recent_death_rows_to_dict,
-    resource_rows_to_dict, tallies_to_dict, terrain_snapshot_to_dict, time_snapshot_to_dict,
-    world_info_to_dict,
+    collect_agent_colds, collect_agent_infancy_and_pregnancy,
+    collect_agent_snapshot_with_resources, collect_building_snapshot,
+    collect_construction_snapshot, collect_recent_deaths, collect_resource_snapshot,
+    collect_tallies, collect_terrain_snapshot, collect_time_snapshot, collect_world_info,
+    construction_rows_to_dict, recent_death_rows_to_dict, resource_rows_to_dict, tallies_to_dict,
+    terrain_snapshot_to_dict, time_snapshot_to_dict, world_info_to_dict,
 };
 use super::space::{
     collect_place_preview, collect_room_detail, collect_rooms, collect_space, preview_to_dict,
@@ -96,8 +96,7 @@ use super::space::{
 use super::story::{
     agent_m5_to_dict, animals_to_dict, collect_agent_m5, collect_agent_m5_columns, collect_animals,
     collect_chronicle_why, collect_drafted, collect_story, collect_year_summary, drafted_to_dict,
-    story_to_dict, submit_story, submit_undraft_all, why_to_dict, year_summary_to_dict,
-    StoryCommand,
+    story_to_dict, submit_story, submit_undraft_all, year_summary_to_dict, StoryCommand,
 };
 use godot::classes::INode;
 use godot::prelude::*;
@@ -574,12 +573,13 @@ impl WorldSimNode {
     ///   - `ys`:  `PackedInt32Array` — tile-y per row, as `i32`.
     ///
     /// The `#[func]` body consists solely of forwarding to
-    /// [`collect_agent_snapshot`] (Bridge Identity Contract — γ extension).
+    /// [`collect_agent_snapshot_with_resources`] (Bridge Identity Contract — γ extension).
     /// Sim-test verifies the schema by calling the pure-Rust collector
     /// directly (Godot runtime not required).
     #[func]
     fn get_agent_snapshot(&self) -> VarDictionary {
-        let rows = collect_agent_snapshot(&self.engine.world);
+        let rows =
+            collect_agent_snapshot_with_resources(&self.engine.world, &self.engine.resources);
         let mut dict = agent_rows_to_dict(&rows);
         // Pass 4 — additive whole-day ages in the same row order (-1 without Life).
         let ages = collect_agent_ages_days(
@@ -896,6 +896,47 @@ impl WorldSimNode {
         ))
     }
 
+    /// M6a order: designate the rectangle's real plants for harvesting.
+    #[func]
+    fn cmd_designate_harvest(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(super::food::submit_harvest(
+            &mut self.engine,
+            (x0, y0, x1, y1),
+        ))
+    }
+
+    /// M6a: real plants intersecting an inclusive viewport tile rectangle.
+    #[func]
+    fn get_plants(&self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        super::food::plants_to_dict(&super::food::collect_plants(
+            &self.engine.resources,
+            (x0, y0, x1, y1),
+        ))
+    }
+
+    /// M6a: successful recent meals and groups for one selected entity.
+    #[func]
+    fn get_agent_food(&self, entity_bits: i64) -> VarDictionary {
+        let bits = u64::from_ne_bytes(entity_bits.to_ne_bytes());
+        super::food::person_food_to_dict(
+            super::food::collect_person_food(&self.engine, bits).as_ref(),
+        )
+    }
+
+    /// M6a: storage class and remaining lifetime for actual food on a tile.
+    #[func]
+    fn get_tile_food(&self, x: i32, y: i32) -> VarDictionary {
+        let tile = (
+            u32::try_from(x.max(0)).unwrap_or(0),
+            u32::try_from(y.max(0)).unwrap_or(0),
+        );
+        super::food::stacks_to_dict(&super::food::collect_tile_food(
+            &self.engine.world,
+            &self.engine.resources,
+            tile,
+        ))
+    }
+
     /// M4 order: mark the rectangle's clay banks for digging clay (`{accepted, count, reason}`).
     #[func]
     fn cmd_designate_clay(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
@@ -1040,10 +1081,10 @@ impl WorldSimNode {
     /// M5: chronicle entry `index`'s "→ 왜?" chain (links from the entry to its first cause).
     #[func]
     fn get_chronicle_why(&self, index: i64) -> VarDictionary {
-        why_to_dict(&collect_chronicle_why(
-            &self.engine.resources.chronicle,
-            index,
-        ))
+        super::food::food_why_to_dict(
+            &collect_chronicle_why(&self.engine.resources.chronicle, index),
+            &self.engine.resources,
+        )
     }
 
     /// M5: year `year`'s summary (births, deaths by cause, pressures, discoveries,
@@ -1358,9 +1399,10 @@ impl WorldSimNode {
     /// cause, value}` packed columns (ids -1 when absent).
     #[func]
     fn get_person_chronicle(&self, agent_id: i64) -> VarDictionary {
-        rows_to_dict(
+        super::food::food_chronicle_rows_to_dict(
             collect_person_chronicle(&self.engine.resources.chronicle, agent_id),
             false,
+            &self.engine.resources,
         )
     }
 
@@ -1368,9 +1410,10 @@ impl WorldSimNode {
     /// `get_person_chronicle`).
     #[func]
     fn get_settlement_chronicle(&self, settlement_id: i64) -> VarDictionary {
-        rows_to_dict(
+        super::food::food_chronicle_rows_to_dict(
             collect_settlement_chronicle(&self.engine.resources.chronicle, settlement_id),
             false,
+            &self.engine.resources,
         )
     }
 
@@ -1378,9 +1421,10 @@ impl WorldSimNode {
     /// (clamped to 1..=512), same shape plus `next` and `total`.
     #[func]
     fn get_chronicle_since(&self, start: i64, max: i64) -> VarDictionary {
-        rows_to_dict(
+        super::food::food_chronicle_rows_to_dict(
             collect_chronicle_since(&self.engine.resources.chronicle, start, max),
             true,
+            &self.engine.resources,
         )
     }
 
@@ -1465,13 +1509,13 @@ impl WorldSimNode {
     /// member.
     ///
     /// The `#[func]` body consists solely of forwarding to
-    /// [`collect_settlement_snapshot`] (Bridge Identity Contract). The
+    /// [`collect_settlement_snapshot_with_resources`] (Bridge Identity Contract). The
     /// `self.engine.world` arg supplies the `(Agent, Position)` lookup; the
     /// authoritative settlement store is `self.engine.resources.settlements`.
     #[func]
     fn get_settlement_snapshot(&self) -> VarDictionary {
         let rows =
-            collect_settlement_snapshot(&self.engine.world, &self.engine.resources.settlements);
+            collect_settlement_snapshot_with_resources(&self.engine.world, &self.engine.resources);
         // Pass 6 — additive floor of each settlement's wood target.
         let wood_targets = collect_settlement_wood_targets(&rows, &self.engine.resources);
         settlement_rows_to_dict(&rows, &self.engine.resources.fires, &wood_targets)

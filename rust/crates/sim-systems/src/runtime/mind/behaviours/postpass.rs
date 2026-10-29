@@ -24,6 +24,7 @@ pub(in crate::runtime) fn finish_tick(
         crate::runtime::chronicle_log::record(world, resources, entry);
     }
     // Discard provisional attaches; resolve the final FSM after replay and job restoration.
+    let selected_targets: BTreeMap<_, _> = effects.seek_set.iter().copied().collect();
     effects.seek_set.clear();
     for entity in std::mem::take(&mut effects.seek_clear) {
         let _ = world.remove_one::<SeekTarget>(entity);
@@ -54,6 +55,15 @@ pub(in crate::runtime) fn finish_tick(
         }
         for (entity, (agent, pos, state, seek, migrant)) in rows {
             match state {
+                AgentState::Seeking {
+                    target: TargetKind::Food,
+                } if resources.rules.colony.is_some() => {
+                    if let Some(tile) = selected_targets.get(&entity) {
+                        effects.seek_set.push((entity, *tile));
+                    } else if seek.is_none() {
+                        effects.seek_idle.push(entity);
+                    }
+                }
                 AgentState::Seeking {
                     target: TargetKind::Activity,
                 } => {
@@ -118,11 +128,39 @@ pub(in crate::runtime) fn finish_tick(
                             .bed_of
                             .get(&agent.id)
                             .is_some_and(|bed| seek.is_some_and(|s| s.tile != *bed));
-                    if seek.is_none() || bed_changed {
+                    // A completed job may leave its construction target attached while
+                    // the final FSM has already switched to drinking or sleeping.
+                    let colony_resource = resources.rules.colony.is_some()
+                        && matches!(state.target(), Some(TargetKind::Water | TargetKind::Sleep));
+                    let valid = |tile: &(u32, u32)| match state.target() {
+                        Some(TargetKind::Water) => {
+                            resources.water_tiles.get(tile).is_some_and(|n| *n > 0)
+                        }
+                        Some(TargetKind::Sleep) => {
+                            resources.sleep_tiles.get(tile).is_some_and(|n| *n > 0)
+                                && (resources.rules.agent.night_rest.is_none()
+                                    || resources
+                                        .bed_of
+                                        .get(&agent.id)
+                                        .is_none_or(|bed| bed == tile))
+                        }
+                        _ => true,
+                    };
+                    let selected = colony_resource
+                        .then(|| selected_targets.get(&entity).copied())
+                        .flatten()
+                        .filter(valid);
+                    let stale = colony_resource && seek.is_some_and(|s| !valid(&s.tile));
+                    if let Some(tile) = selected {
+                        effects.seek_set.push((entity, tile));
+                    } else if seek.is_none() || bed_changed || stale {
                         if let Some(tile) =
                             resource_target(agent.id, pos, *state, resources, effects)
+                                .filter(|tile| !colony_resource || valid(tile))
                         {
                             effects.seek_set.push((entity, tile));
+                        } else if colony_resource {
+                            effects.seek_idle.push(entity);
                         }
                     }
                 }

@@ -284,11 +284,59 @@ fn compare_after_load(label: &str, mut twin: SimEngine, mut engine: SimEngine, t
     assert!(a == b, "{label}: full state differs after load");
 }
 
+fn pregnancy_diagnostics(engine: &SimEngine) -> String {
+    use sim_core::components::{Agent, BodyHealth, Pregnant};
+    let mut alive: Vec<_> = engine
+        .world
+        .query::<(&Agent, Option<&BodyHealth>)>()
+        .iter()
+        .filter(|(_, (_, health))| health.is_none_or(|h| !h.is_dead()))
+        .map(|(_, (agent, _))| agent.id)
+        .collect();
+    alive.sort_unstable();
+    let mut pregnancies: Vec<_> = engine
+        .world
+        .query::<(&Agent, &Pregnant)>()
+        .iter()
+        .map(|(_, (agent, pregnancy))| (agent.id, *pregnancy))
+        .collect();
+    pregnancies.sort_unstable_by_key(|row| row.0);
+    let deaths: Vec<_> = engine
+        .resources
+        .chronicle
+        .entries()
+        .iter()
+        .filter(|entry| entry.kind == sim_core::chronicle::ChronicleKind::Died)
+        .collect();
+    format!(
+        "tick={} alive_count={} alive_ids={alive:?} tallies={:?} pregnancies={pregnancies:?} due_births={:?} death_rows={deaths:?}",
+        engine.current_tick(),
+        alive.len(),
+        engine.resources.tallies,
+        engine.resources.due_births,
+    )
+}
+
 #[test]
 fn save_load_roundtrip_through_a_pregnancy_and_a_due_birth() {
     // Review MINOR-3: save while a woman is pregnant, and on the tick after
     // FertilitySystem queued a birth (12:00) before SettlementSystem spawns it
     // (12:01); the loaded engine must give the same births as the continuous one.
+    // Physical seasonal food needs ordinary winter planning to keep the
+    // naturally pregnant mother alive until delivery. This fixture tests save
+    // continuity, not survival without orders or stored food.
+    let engine_with_steward = || {
+        let mut engine = sim_test::colony_engine(1);
+        let result = sim_systems::commands::submit(
+            &mut engine,
+            sim_core::colony::Command::SetSteward {
+                on: true,
+                scope: sim_core::colony::steward::StewardScope::All,
+            },
+        );
+        assert!(result.accepted, "fixture steward command must be accepted");
+        engine
+    };
     let pregnant = |e: &SimEngine| {
         e.world
             .query::<&sim_core::components::Pregnant>()
@@ -297,20 +345,42 @@ fn save_load_roundtrip_through_a_pregnancy_and_a_due_birth() {
             > 0
     };
     let queued = |e: &SimEngine| !e.resources.due_births.is_empty();
-    let mut a = sim_test::colony_engine(1);
-    let mut b = sim_test::colony_engine(1);
+    let mut a = engine_with_steward();
+    let mut b = engine_with_steward();
     assert!(
         run_until(&mut a, 40 * 1_440, pregnant),
-        "no pregnancy in 40 days"
+        "no pregnancy in 40 days: {}",
+        pregnancy_diagnostics(&a)
     );
     assert!(run_until(&mut b, 40 * 1_440, pregnant));
     let births = a.resources.tallies.births;
     compare_after_load("seed 1 mid-pregnancy", a, b, 1_000);
-    let mut a = sim_test::colony_engine(1);
-    let mut b = sim_test::colony_engine(1);
+    let mut a = engine_with_steward();
+    let mut b = engine_with_steward();
+    // Observe the first natural pregnancy without changing simulation state.
+    let first_pregnancy = std::cell::RefCell::new(None);
+    let queued_with_observation = |engine: &SimEngine| {
+        if first_pregnancy.borrow().is_none() {
+            let first = engine
+                .world
+                .query::<(
+                    &sim_core::components::Agent,
+                    &sim_core::components::Pregnant,
+                )>()
+                .iter()
+                .map(|(_, (agent, pregnancy))| (agent.id, *pregnancy))
+                .min_by_key(|row| row.0);
+            if let Some(first) = first {
+                *first_pregnancy.borrow_mut() = Some((engine.current_tick(), first));
+            }
+        }
+        queued(engine)
+    };
     assert!(
-        run_until(&mut a, 60 * 1_440, queued),
-        "no queued birth in 60 days"
+        run_until(&mut a, 60 * 1_440, queued_with_observation),
+        "no queued birth in 60 days: first_observed_pregnancy={:?}; {}",
+        first_pregnancy.borrow(),
+        pregnancy_diagnostics(&a)
     );
     assert!(run_until(&mut b, 60 * 1_440, queued));
     assert_eq!(births, 0, "the first save was before any birth");

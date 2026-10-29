@@ -61,6 +61,23 @@ pub struct RecipeDef {
     pub material_term: MaterialTerm,
     /// Tool.
     pub tool: Option<RecipeToolDef>,
+    /// Food preparation constraints, already resolved to practice bits.
+    pub food_requirements: FoodRecipeRequirements,
     /// Auto bill role.
     pub auto_bill_role: Option<String>,
+}
+
+/// Additional requirements for cooking and timed preservation recipes.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct FoodRecipeRequirements {
+    /// The selected workshop must be a currently lit hearth.
+    pub requires_lit_hearth: bool,
+    /// At least one of these practice bits, unless the pot alternative applies.
+    pub knowledge_any: Vec<u8>,
+    /// A real clay pot may replace the knowledge requirement.
+    pub pot_alternative: bool,
+    /// A real pot is mandatory independently of knowledge.
+    pub requires_pot: bool,
+    /// Elapsed calendar days required after work, for passive preservation.
+    pub duration_days: u32,
 }

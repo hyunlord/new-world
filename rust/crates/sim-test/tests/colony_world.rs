@@ -47,12 +47,29 @@ fn colony_world_shape() {
             assert_eq!(r.tile_grid.terrain_type[i], TerrainType::Forest);
             assert!(!r.food_source_max.contains_key(tile) && !r.wood_source_max.contains_key(tile));
         }
-        // Area-scaled sources: 12 + 96 camp-config bushes and 18 regions' worth.
+        // M6a replaces the legacy bush counter with physical, catalog-placed plants.
+        assert!(r.food_tiles.is_empty() && r.food_source_max.is_empty());
         assert!(
-            r.food_source_max.len() >= 108,
-            "{} bushes",
-            r.food_source_max.len()
+            r.food.plants.len() >= 108,
+            "{} physical plants",
+            r.food.plants.len()
         );
+        let catalog = sim_core::colony::content::installed_or_bundled();
+        for (&tile, plant) in &r.food.plants {
+            assert!(tile.0 < r.tile_grid.width && tile.1 < r.tile_grid.height);
+            assert!(!r.colony.trees.contains_key(&tile));
+            assert!(!r.wood_source_max.contains_key(&tile));
+            let definition = catalog.plant(plant.species).expect("registered plant");
+            let index = r.tile_grid.idx(tile.0, tile.1);
+            assert!(definition
+                .placement
+                .terrains
+                .contains(&r.tile_grid.terrain_type[index]));
+            assert!(
+                (definition.placement.elevation.0..=definition.placement.elevation.1)
+                    .contains(&r.tile_grid.elevation[index])
+            );
+        }
         assert!(
             r.wood_source_max.len() >= 180,
             "{} deadwood spots",

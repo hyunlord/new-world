@@ -20,6 +20,8 @@ pub(super) struct ItemRaw {
     pub weapon: Option<WeaponDef>,
     pub cutter: Option<CutterDef>,
     pub food: Option<FoodDef>,
+    #[serde(default)]
+    pub pot_capacity: u16,
     pub fuel_units: Option<u32>,
     pub apparel: Option<ApparelDef>,
 }

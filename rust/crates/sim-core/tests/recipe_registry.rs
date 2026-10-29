@@ -187,9 +187,9 @@ fn steward_rule_boot_child() {
         "typed rule parsing must not initialize the catalog"
     );
     content::bootstrap(content::BootSelection::Bundled).expect("explicit boot");
-    assert_eq!(steward::rules().expect("rules after boot").rules.len(), 7);
+    assert_eq!(steward::rules().expect("rules after boot").rules.len(), 8);
     assert_eq!(
         steward::parse_rules(text).expect("typed rules").rules.len(),
-        7
+        8
     );
 }

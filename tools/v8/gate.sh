@@ -74,6 +74,9 @@
 #   44 core_shadow        fresh frozen seed0 x20d fixtures, steward OFF and ON
 #   45 core_evaluation    source/binary-bound held-out outcome/why and raw performance checks
 #   46 mux21_regressions  strict tools, headless HUD cursor tests and real-renderer marker cache tests
+#   47 m6a_food_fixture   two ordinary worlds x72 days, food ledger and nonvacuous chain
+#   48 m6a_food_data_only fresh selected plants/items pack end-to-end
+#   M6a explicit mode executes all 48 steps; other passes retain their 46 steps.
 #   Since M-ART2 step 23 (renderer_agreement) also checks appearance: every person's look and face variant.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -96,6 +99,9 @@ export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-8}"
 SUMMARY="$LOG/gate.txt"
 { echo "head $(git rev-parse HEAD)"; echo "dirty $(git status --porcelain --untracked-files=no | grep -v '^ M .gitignore$' | wc -l | tr -d ' ')"; echo "started $(date '+%Y-%m-%d %H:%M:%S %Z')"; } > "$SUMMARY"
 status=0
+if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+    bash tools/v8/m6a_gate_checks.sh preflight "$LOG" || exit 1
+fi
 step() {
     local n="$1" name="$2"; shift 2
     local start end code
@@ -129,7 +135,9 @@ step 9 smoke bash tools/v8/smoke.sh "$LOG/smoke"
 step 10 identity bash tools/v8/identity.sh "$BASE_DATA" "$LOG/identity"
 step 11 determinism bash -c 'cd rust && cargo build --release -p sim-test --bin worldsim_probe && ./target/release/worldsim_probe --scene baseline --seeds 0..4 --days 120 --workers 4 --check-determinism --out "$0/determinism_probe" && echo "determinism checked on seeds 0..4"' "$LOG"
 grep -q 'DETERMINISM PASS' "$LOG/determinism.log" || { echo "   determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
-if [[ -n "${CORE_UI_CONFIG:-}" ]]; then
+if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && CORE_P7_RUN=1 CORE_P7_DEADLINE_EPOCH="${M6A_DEADLINE_EPOCH:?}" bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && echo "M6A report-only historical unpaired comparison; paired acceptance step25/45" && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
+elif [[ -n "${CORE_UI_CONFIG:-}" ]]; then
     step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && CORE_P7_RUN=1 CORE_P7_DEADLINE_EPOCH="${CORE_UI_DEADLINE_EPOCH:?}" bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
 elif [[ -n "${CORE_P7_RUN:-}" ]]; then
     step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && echo "P7 report-only natural timings; no unpaired historical comparison; paired acceptance is step25/45"' "$LOG"
@@ -137,7 +145,11 @@ else
     step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
 fi
 grep -E 'WARN|OK \(' "$LOG/perf.log" | sed 's/^/   /' >> "$SUMMARY"
-step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_core.txt
+if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+    step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m6a.txt
+else
+    step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_core.txt
+fi
 step 14 docs bash tools/v8/check_docs.sh
 step 15 inventory_closure python3 tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md
 step 16 python_unittest python3 -m unittest discover -s tools/v8 -p 'test_*.py'
@@ -157,7 +169,9 @@ step 23 renderer_agreement bash tools/v8/renderer_agreement.sh "$LOG/renderer_ag
 grep -q '^RENDERER_AGREEMENT PASS' "$LOG/renderer_agreement.log" || { echo "   renderer_agreement: no PASS line" >> "$SUMMARY"; status=1; }
 step 24 save_roundtrip bash tools/v8/save_roundtrip.sh
 grep -q '^SAVE_ROUNDTRIP PASS' "$LOG/save_roundtrip.log" || { echo "   save_roundtrip: no PASS line" >> "$SUMMARY"; status=1; }
-if [[ -n "${CORE_UI_CONFIG:-}" ]]; then
+if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+    step 25 bench python3 tools/v8/m6a_perf.py run "${M6A_PERF_CONFIG:?fresh M6a perf config required}" "$LOG/bench/perf-session"
+elif [[ -n "${CORE_UI_CONFIG:-}" ]]; then
     step 25 bench python3 tools/v8/core_ui_successor_perf.py run "${CORE_UI_PERF_CONFIG:?fresh UI performance config required}" "$LOG/bench/perf-session"
 elif [[ -n "${CORE_P7_RUN:-}" ]]; then
     step 25 bench python3 tools/v8/core_p7_bench.py "$LOG/bench"
@@ -169,7 +183,9 @@ grep -E 'admission|ceiling|rss outer|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^
 # M3 (goal 3.4): the economy soak fixture, every pass from now on.
 step 26 soak bash tools/v8/soak.sh "$LOG/soak" rust/target/release/worldsim_probe
 grep -E '^SOAK' "$LOG/soak.log" | sed 's/^/   /' >> "$SUMMARY"
-if [[ -n "${CORE_UI_CONFIG:-}" ]]; then
+if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+    step 27 nav_bench env CORE_P7_DEADLINE_EPOCH="${M6A_DEADLINE_EPOCH:?}" python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
+elif [[ -n "${CORE_UI_CONFIG:-}" ]]; then
     step 27 nav_bench env CORE_P7_DEADLINE_EPOCH="${CORE_UI_DEADLINE_EPOCH:?}" python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
 elif [[ -n "${CORE_P7_RUN:-}" ]]; then
     step 27 nav_bench python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
@@ -231,6 +247,16 @@ for filename,prefix in [("mux21-toast.log","MUX21_TOAST_DONE "),("mux21-layout.l
  if filename=="mux21-layout.log": assert rows[0]["display"]!="headless",filename
 '\'' "$0"
 ' "$LOG"
+if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+    step 47 m6a_food_fixture bash tools/v8/m6a_gate_checks.sh food_fixture "$LOG/m6a-food-fixture"
+    step 48 m6a_food_data_only bash tools/v8/m6a_gate_checks.sh data_only "$LOG/m6a-food-data-only"
+fi
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
+if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+    if ! bash tools/v8/m6a_gate_checks.sh final "$LOG" > "$LOG/m6a-final.log" 2>&1; then
+        status=1
+        echo "M6A final evidence validation failed; terminal status 1" >> "$SUMMARY"
+    fi
+fi
 cat "$SUMMARY"
 exit "$status"

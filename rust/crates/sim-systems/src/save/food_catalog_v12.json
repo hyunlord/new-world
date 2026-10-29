@@ -1,0 +1,437 @@
+{
+  "schema_version": 1,
+  "source": "compiled_bundled_catalog",
+  "revision": "catalog-v1-fnv1a64:1e4d7fded25139b4:45408",
+  "items": [
+    {
+      "code": 0,
+      "id": "log",
+      "serde_name": "Log",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 1,
+      "id": "firewood",
+      "serde_name": "Firewood",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 2,
+      "id": "stone",
+      "serde_name": "Stone",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 3,
+      "id": "flint",
+      "serde_name": "Flint",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 4,
+      "id": "flint_blade",
+      "serde_name": "FlintBlade",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 5,
+      "id": "stone_axe",
+      "serde_name": "StoneAxe",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 6,
+      "id": "hide",
+      "serde_name": "Hide",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 7,
+      "id": "clay",
+      "serde_name": "Clay",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 8,
+      "id": "raw_pot",
+      "serde_name": "RawPot",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 9,
+      "id": "clay_pot",
+      "serde_name": "ClayPot",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 10,
+      "id": "ground_axe",
+      "serde_name": "GroundAxe",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 11,
+      "id": "meat",
+      "serde_name": "Meat",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 12,
+      "id": "cured_hide",
+      "serde_name": "CuredHide",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 13,
+      "id": "hide_wrap",
+      "serde_name": "HideWrap",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 14,
+      "id": "fur_cloak",
+      "serde_name": "FurCloak",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 15,
+      "id": "spear",
+      "serde_name": "Spear",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 16,
+      "id": "wolf_hide",
+      "serde_name": "WolfHide",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    }
+  ],
+  "recipes": [
+    {
+      "code": 0,
+      "id": "knap_blade",
+      "serde_name": "KnapBlade",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 1,
+      "id": "haft_axe",
+      "serde_name": "HaftAxe",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 2,
+      "id": "split_firewood",
+      "serde_name": "SplitFirewood",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 3,
+      "id": "knap_fine_blade",
+      "serde_name": "KnapFineBlade",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 4,
+      "id": "grind_axe",
+      "serde_name": "GrindAxe",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 5,
+      "id": "form_pot",
+      "serde_name": "FormPot",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 6,
+      "id": "fire_pot",
+      "serde_name": "FirePot",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 7,
+      "id": "haft_spear",
+      "serde_name": "HaftSpear",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 8,
+      "id": "scrape_hide",
+      "serde_name": "ScrapeHide",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 9,
+      "id": "make_hide_wrap",
+      "serde_name": "MakeHideWrap",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 10,
+      "id": "make_fur_cloak",
+      "serde_name": "MakeFurCloak",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    }
+  ],
+  "blueprints": [
+    {
+      "code": 0,
+      "id": "hut",
+      "serde_name": "Hut",
+      "serde_aliases": [],
+      "resolver_aliases": [
+        "Hut"
+      ]
+    },
+    {
+      "code": 1,
+      "id": "knapping_spot",
+      "serde_name": "KnappingSpot",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 2,
+      "id": "wood_bench",
+      "serde_name": "WoodBench",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 3,
+      "id": "drying_rack",
+      "serde_name": "DryingRack",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 4,
+      "id": "log_wall",
+      "serde_name": "LogWall",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 5,
+      "id": "stone_wall",
+      "serde_name": "StoneWall",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 6,
+      "id": "door",
+      "serde_name": "Door",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 7,
+      "id": "packed_floor",
+      "serde_name": "PackedFloor",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 8,
+      "id": "bedroll",
+      "serde_name": "Bedroll",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 9,
+      "id": "grinding_stone",
+      "serde_name": "GrindingStone",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 10,
+      "id": "pottery_bench",
+      "serde_name": "PotteryBench",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 11,
+      "id": "hearth_fire",
+      "serde_name": "HearthFire",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    }
+  ],
+  "animals": [
+    {
+      "code": 0,
+      "id": "wolf",
+      "serde_name": "Wolf",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 1,
+      "id": "deer",
+      "serde_name": "Deer",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    }
+  ],
+  "pressures": [
+    {
+      "code": 0,
+      "id": "cold_snap",
+      "serde_name": "ColdSnap",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 1,
+      "id": "drought",
+      "serde_name": "Drought",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 2,
+      "id": "beasts",
+      "serde_name": "Beasts",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    },
+    {
+      "code": 3,
+      "id": "illness",
+      "serde_name": "Illness",
+      "serde_aliases": [],
+      "resolver_aliases": []
+    }
+  ],
+  "knowledge": [
+    {
+      "code": 0,
+      "id": "fire_keeping"
+    },
+    {
+      "code": 1,
+      "id": "foraging"
+    },
+    {
+      "code": 2,
+      "id": "water_finding"
+    },
+    {
+      "code": 3,
+      "id": "flint_knapping"
+    },
+    {
+      "code": 4,
+      "id": "hafting"
+    },
+    {
+      "code": 5,
+      "id": "firewood_splitting"
+    },
+    {
+      "code": 6,
+      "id": "pressure_flaking"
+    },
+    {
+      "code": 7,
+      "id": "stone_grinding"
+    },
+    {
+      "code": 8,
+      "id": "hut_building"
+    },
+    {
+      "code": 9,
+      "id": "timber_wall"
+    },
+    {
+      "code": 10,
+      "id": "doorway"
+    },
+    {
+      "code": 11,
+      "id": "packed_floor"
+    },
+    {
+      "code": 12,
+      "id": "bedding"
+    },
+    {
+      "code": 13,
+      "id": "stone_walling"
+    },
+    {
+      "code": 14,
+      "id": "stone_quarrying"
+    },
+    {
+      "code": 15,
+      "id": "digging"
+    },
+    {
+      "code": 16,
+      "id": "clay_digging"
+    },
+    {
+      "code": 17,
+      "id": "clay_prep"
+    },
+    {
+      "code": 18,
+      "id": "pot_forming"
+    },
+    {
+      "code": 19,
+      "id": "pot_firing"
+    },
+    {
+      "code": 20,
+      "id": "instruction"
+    },
+    {
+      "code": 21,
+      "id": "storytelling"
+    },
+    {
+      "code": 22,
+      "id": "tracking"
+    },
+    {
+      "code": 23,
+      "id": "hide_scraping"
+    }
+  ]
+}

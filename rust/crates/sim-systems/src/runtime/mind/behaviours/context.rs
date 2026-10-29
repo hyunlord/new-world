@@ -14,6 +14,10 @@ use std::collections::{BTreeMap, BTreeSet, HashMap};
 pub(in crate::runtime) enum ActionTarget {
     None,
     Tile((u32, u32)),
+    Food {
+        tile: (u32, u32),
+        owner: sim_core::colony::food::FoodOwner,
+    },
     Agent {
         agent: AgentId,
         tile: (u32, u32),
@@ -129,7 +133,7 @@ impl EffectContext<'_> {
     }
     pub fn tile_target(&self) -> Result<(u32, u32), EffectError> {
         match self.target {
-            ActionTarget::Tile(tile) => Ok(tile),
+            ActionTarget::Tile(tile) | ActionTarget::Food { tile, .. } => Ok(tile),
             ActionTarget::None => Err(EffectError::MissingTarget),
             ActionTarget::Agent { .. } | ActionTarget::Routine { .. } => {
                 Err(EffectError::WrongTarget)

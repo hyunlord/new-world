@@ -136,7 +136,7 @@ func _process(_delta: float) -> void:
 	if visible and (changed or Chronicle.language(_locale) != _language):
 		_refresh()
 
-## Initialize the presentation policy before ingestion. Unspecified kinds stay visible.
+## Initialize presentation policy before ingestion. Unspecified kinds retain the notable-kind default.
 ## Invalid documents leave the previous policy intact; no simulation records are changed.
 func configure_feed_visibility(raw: Variant) -> bool:
 	if not raw is Dictionary:
@@ -152,7 +152,7 @@ func configure_feed_visibility(raw: Variant) -> bool:
 	return true
 
 func keeps_kind(kind: int) -> bool:
-	return kind in NOTABLE and bool(_feed_visibility.get(str(kind), true))
+	return kind >= 0 and kind <= Chronicle.LAST_KIND and bool(_feed_visibility.get(str(kind), kind in NOTABLE))
 
 func _ingest_row(row: Dictionary) -> void:
 	var kind: int = int(row["kind"])
@@ -160,7 +160,7 @@ func _ingest_row(row: Dictionary) -> void:
 		_pending_porter = {}
 		if kind > Chronicle.LAST_KIND:
 			_unknown_kinds += 1
-		elif kind in NOTABLE:
+		elif kind in NOTABLE or _feed_visibility.has(str(kind)):
 			if keeps_kind(kind):
 				_entries.append(row)
 			# Notification delivery is independent of feed presentation.

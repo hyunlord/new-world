@@ -145,6 +145,7 @@ fn overwrites_restamp_slots_and_dynamic_names_with_new_dependency_sets() {
     }
     for name in ["food", "custom-target"] {
         let target = TargetCandidate {
+            food: None,
             tile: (2, 3),
             agent: Some(7),
         };

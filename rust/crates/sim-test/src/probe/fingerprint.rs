@@ -97,6 +97,9 @@ pub fn fingerprint(engine: &SimEngine) -> String {
         );
     }
     super::mind_fingerprint::append(&mut hash, &engine.resources);
+    if let Err(error) = super::food_fingerprint::append(&mut hash, engine) {
+        panic!("{error}");
+    }
     format!("{hash:016x}")
 }
 

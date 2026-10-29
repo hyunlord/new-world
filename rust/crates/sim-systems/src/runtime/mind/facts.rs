@@ -332,6 +332,10 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
             .and_then(|rule| rule.finish_leg_tiles)
             .ok_or_else(|| missing(p.agent, n))?
     ))),
+    fact!("job_harvesting", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.job
+            .is_some_and(|job| matches!(job.kind, JobKind::Harvest { .. }))
+    ))),
     fact!("craft_working", Bool, |p, _c, r, _n| Ok(i64::from(
         r.rules.colony.is_some_and(|rule| rule.economy.is_some())
             && p.job
@@ -358,10 +362,18 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
     fact!("worker", Bool, |p, _c, _r, _n| Ok(i64::from(
         p.life_stage == LifeStage::Adult
     ))),
-    fact!("hunger_actionable", Bool, |p, c, _r, _n| Ok(i64::from(
+    fact!("breakdown", Bool, |p, _c, r, _n| Ok(i64::from(
+        crate::runtime::mood::rule(r).is_some()
+            && p.mood
+                .is_some_and(|mood| mood.broken(crate::runtime::mood::today(r)))
+    ))),
+    fact!("edible_plant_available", Bool, |p, c, r, _n| Ok(i64::from(
+        edible_plant(p, c, r).is_some()
+    ))),
+    fact!("hunger_actionable", Bool, |p, c, r, _n| Ok(i64::from(
         p.hunger
             .is_some_and(|v| v > f64::from(needs::HUNGER_THRESHOLD))
-            && c.target_scope(p.agent)?.food_available
+            && physical_food_available(p, c, r, "food")?
     ))),
     fact!("thirst_actionable", Bool, |p, c, _r, _n| Ok(i64::from(
         p.thirst.is_some_and(|v| v > needs::THIRST_THRESHOLD) && c.availability.water
@@ -436,13 +448,17 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
         c.target_scope(p.agent)?.stock_shortfall
     ))),
     fact!("forage_window", Bool, |_p, _c, r, _n| Ok(i64::from(
-        r.rules
-            .agent
-            .forage
-            .filter(|_| r.rules.society.stock_target.is_some())
-            .is_some_and(|rule| needs::clock_in_window(r, rule.start_minute, rule.end_minute))
+        r.rules.colony.is_none()
+            && r.rules
+                .agent
+                .forage
+                .filter(|_| r.rules.society.stock_target.is_some())
+                .is_some_and(|rule| needs::clock_in_window(r, rule.start_minute, rule.end_minute))
     ))),
     fact!("food_carry_loaded", Bool, |p, _c, r, n| {
+        if r.rules.colony.is_some() {
+            return Ok(i64::from(p.physical_food_units(r) > 0));
+        }
         let Some(rule) = r
             .rules
             .agent
@@ -662,14 +678,22 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
     fact!("carry_count", Signed, |p, _c, _r, _n| Ok(p
         .carry
         .map_or(0, |v| i64::from(v.count)))),
-    fact!("inventory_total", Signed, |p, _c, _r, n| Ok(i64::from(
-        p.inventory_total.ok_or_else(|| missing(p.agent, n))?
+    fact!("inventory_total", Signed, |p, _c, r, n| Ok(i64::from(
+        inventory_total(p, r, n)?
     ))),
-    fact!("inventory_food", Signed, |p, _c, _r, n| Ok(i64::from(
-        p.inventory_food.ok_or_else(|| missing(p.agent, n))?
-    ))),
-    fact!("inventory_room", Signed, |p, _c, _r, n| Ok(i64::from(
-        INVENTORY_CAPACITY.saturating_sub(p.inventory_total.ok_or_else(|| missing(p.agent, n))?)
+    fact!("inventory_food", Signed, |p, _c, r, n| {
+        if r.rules.colony.is_some() {
+            return i64::try_from(p.physical_food_units(r)).map_err(|_| FactError::InvalidNumber {
+                agent: p.agent,
+                fact: n.into(),
+            });
+        }
+        Ok(i64::from(
+            p.inventory_food.ok_or_else(|| missing(p.agent, n))?,
+        ))
+    }),
+    fact!("inventory_room", Signed, |p, _c, r, n| Ok(i64::from(
+        INVENTORY_CAPACITY.saturating_sub(inventory_total(p, r, n)?)
     ))),
     fact!("activity_active", Bool, |p, _c, _r, _n| Ok(i64::from(
         p.activity.is_some()
@@ -694,9 +718,18 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
         c.target_scope(p.agent)?.home.is_some()
     ))),
     // Availability is independent of priority; target helpers retain their own tie order.
-    fact!("food_available", Bool, |p, c, _r, _n| Ok(i64::from(
-        c.target_scope(p.agent)?.food_available
+    fact!("food_available", Bool, |p, c, r, _n| Ok(i64::from(
+        physical_food_available(p, c, r, "food")?
     ))),
+    fact!("food_cooked_available", Bool, |p, c, r, _n| Ok(i64::from(
+        physical_food_available(p, c, r, "food_cooked")?
+    ))),
+    fact!("food_novel_available", Bool, |p, c, r, _n| Ok(i64::from(
+        physical_food_available(p, c, r, "food_novel")?
+    ))),
+    fact!("food_cooked_novel_available", Bool, |p, c, r, _n| Ok(
+        i64::from(physical_food_available(p, c, r, "food_cooked_novel")?)
+    )),
     fact!("water_available", Bool, |_p, c, _r, _n| Ok(i64::from(
         c.availability.water
     ))),
@@ -706,9 +739,23 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
     fact!("gather_available", Bool, |p, c, r, _n| Ok(i64::from(
         c.gather_available(p.agent, r)?
     ))),
-    fact!("at_food", Bool, |p, _c, r, _n| Ok(i64::from(
-        r.food_tiles.contains_key(&(p.position.x, p.position.y))
-    ))),
+    fact!("at_food", Bool, |p, c, r, _n| {
+        if r.rules.colony.is_some() {
+            Ok(i64::from(
+                super::food_targets::candidate(
+                    &c.physical_food.borrow(),
+                    p,
+                    r,
+                    super::food_targets::FoodFilter::Any,
+                )
+                .is_some_and(|target| target.tile == (p.position.x, p.position.y)),
+            ))
+        } else {
+            Ok(i64::from(
+                r.food_tiles.contains_key(&(p.position.x, p.position.y)),
+            ))
+        }
+    }),
     fact!("at_water", Bool, |p, _c, r, _n| Ok(i64::from(
         r.water_tiles.contains_key(&(p.position.x, p.position.y))
     ))),
@@ -1133,6 +1180,50 @@ impl LazyRow<'_> {
     }
 }
 
+fn edible_plant(p: &PersonSnapshot, c: &TickContext, r: &SimResources) -> Option<TargetCandidate> {
+    r.rules.colony?;
+    let mut index = c.harvest_food.borrow_mut();
+    index
+        .get_or_insert_with(|| {
+            std::sync::Arc::new(super::harvest_food::PlantCandidates::capture(r))
+        })
+        .nearest(p, r)
+}
+
+fn inventory_total(p: &PersonSnapshot, r: &SimResources, name: &str) -> Result<u32, FactError> {
+    if r.rules.colony.is_some() {
+        // Preserve other shared Inventory resources, retire only its abstract Food.
+        return Ok(p
+            .inventory_total
+            .unwrap_or(0)
+            .saturating_sub(p.inventory_food.unwrap_or(0))
+            .saturating_add(p.carry.map_or(0, |carry| u32::from(carry.count))));
+    }
+    p.inventory_total.ok_or_else(|| missing(p.agent, name))
+}
+
+fn physical_food_available(
+    p: &PersonSnapshot,
+    c: &TickContext,
+    r: &SimResources,
+    binding: &str,
+) -> Result<bool, FactError> {
+    if r.rules.colony.is_none() {
+        return Ok(c.target_scope(p.agent)?.food_available);
+    }
+    if binding == "food" {
+        return Ok(c.physical_food.borrow().available_to(
+            r,
+            (p.position.x, p.position.y),
+            p.agent,
+            p.carry,
+        ));
+    }
+    let filter = super::food_targets::FoodFilter::binding(binding)
+        .ok_or_else(|| FactError::UnknownProvider(binding.to_owned()))?;
+    Ok(super::food_targets::candidate(&c.physical_food.borrow(), p, r, filter).is_some())
+}
+
 /// Resolve only the selected capability, after the data evaluator chooses.
 /// Other registered providers can populate context targets without core changes.
 pub fn resolve_target(
@@ -1141,10 +1232,24 @@ pub fn resolve_target(
     agent: AgentId,
     name: &str,
 ) -> Result<Option<TargetCandidate>, FactError> {
+    if resources.rules.colony.is_some() {
+        if let Some(filter) = super::food_targets::FoodFilter::binding(name) {
+            return Ok(super::food_targets::candidate(
+                &context.physical_food.borrow(),
+                context.row(agent)?,
+                resources,
+                filter,
+            ));
+        }
+    }
+    if name == "edible_plant" {
+        return Ok(edible_plant(context.row(agent)?, context, resources));
+    }
     if name == "social_current_peer" {
         let person = context.row(agent)?;
         return Ok(match person.state.target() {
             Some(TargetKind::Agent(peer)) => context.row(peer).ok().map(|other| TargetCandidate {
+                food: None,
                 tile: (other.position.x, other.position.y),
                 agent: Some(peer),
             }),
@@ -1207,7 +1312,11 @@ pub fn resolve_target(
         ),
         _ => return Ok(context.target(agent, name)?),
     };
-    let target = tile.map(|tile| TargetCandidate { tile, agent: None });
+    let target = tile.map(|tile| TargetCandidate {
+        tile,
+        agent: None,
+        food: None,
+    });
     context.set_target(agent, name, target, domains)?;
     Ok(target)
 }
@@ -1216,6 +1325,9 @@ fn forage_candidate(
     c: &TickContext,
     r: &SimResources,
 ) -> Result<Option<(u32, u32)>, FactError> {
+    if r.rules.colony.is_some() {
+        return Ok(None);
+    }
     let scope = c.target_scope(p.agent)?;
     Ok(r.rules
         .agent
@@ -1413,7 +1525,11 @@ fn prepare_bound_routine_fact(
         context.set_target(
             agent,
             binding.target,
-            tile.map(|tile| TargetCandidate { tile, agent: None }),
+            tile.map(|tile| TargetCandidate {
+                tile,
+                agent: None,
+                food: None,
+            }),
             domains,
         )?;
     }
@@ -1589,6 +1705,7 @@ pub(super) fn continuation_supported(name: &str) -> bool {
             | "job_distance"
             | "job_destination_distance"
             | "craft_working"
+            | "job_harvesting"
             | "worker"
             | "hunger"
             | "thirst"
@@ -1813,11 +1930,16 @@ mod tests {
         );
     }
     fn selected_node(stage: LifeStage, values: &[(&str, i64)]) -> String {
+        selected_node_from(
+            include_str!("../../../../sim-core/data/colony/mind.ron"),
+            stage,
+            values,
+        )
+    }
+
+    fn selected_node_from(source: &str, stage: LifeStage, values: &[(&str, i64)]) -> String {
         use sim_core::colony::mind::{choose, EvalKey, EvalScratch};
-        let program = crate::runtime::mind::MindProgram::load(include_str!(
-            "../../../../sim-core/data/colony/mind.ron"
-        ))
-        .expect("shipped policy");
+        let program = crate::runtime::mind::MindProgram::load(source).expect("policy");
         let policy = &program.policy;
         let mut table = PersonFacts::new(policy, vec![7], 0).expect("table");
         table.set_life_stage(0, stage).expect("stage");
@@ -1918,7 +2040,28 @@ mod tests {
     }
 
     #[test]
-    fn gather_stops_at_hoard_cap_but_unbounded_nonmember_can_gather() {
+    fn shipped_colony_policy_has_no_abstract_food_production_nodes() {
+        let program = crate::runtime::mind::MindProgram::load(include_str!(
+            "../../../../sim-core/data/colony/mind.ron"
+        ))
+        .expect("shipped policy");
+        for name in ["gather", "forage"] {
+            let behaviour = program.policy.behaviour_id(name).expect("legacy binding");
+            assert!(program
+                .policy
+                .nodes()
+                .iter()
+                .all(|node| node.behaviour != behaviour));
+        }
+    }
+
+    #[test]
+    fn legacy_gather_stops_at_hoard_cap_but_unbounded_nonmember_can_gather() {
+        // Baseline/legacy providers retain their contract; colony food production
+        // now uses physical harvest jobs instead of these abstract work nodes.
+        const LEGACY_GATHER: &str = r#"(schema_version:1,bands:["critical","duty","need","work","leisure","idle"],nodes:[
+          (id:"gather_idle",band:"work",behaviour:"gather",target:Some("gather_food"),when:[(fact:"idle",op:"has"),(fact:"worker",op:"has"),(fact:"inventory_room",op:">",value:Some(0)),(fact:"gather_available",op:"has"),(fact:"stock_hoard_order",op:"<",value:Some(0))],score:(constant:0,terms:[]),hysteresis:0,life_stages:["adult","child","elder"],tags:[],name_key:"GATHER"),
+          (id:"idle",band:"idle",behaviour:"wander",when:[(fact:"idle",op:"has")],score:(constant:0,terms:[]),hysteresis:0,life_stages:["adult","child","elder"],tags:[],name_key:"IDLE")])"#;
         let mut world = hecs::World::new();
         world.spawn((Agent { id: 7 }, Position::new(1, 1), AgentState::Idle));
         let resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
@@ -1945,7 +2088,8 @@ mod tests {
             )
             .expect("order");
             assert_eq!(order, expected);
-            let selected = selected_node(
+            let selected = selected_node_from(
+                LEGACY_GATHER,
                 LifeStage::Adult,
                 &[
                     ("idle", 1),
@@ -2016,7 +2160,7 @@ mod tests {
         }
     }
     #[test]
-    fn idle_with_retained_job_can_choose_needs_and_survival_work() {
+    fn idle_with_retained_job_can_choose_needs_and_physical_food() {
         use sim_core::colony::{ItemKind, Job};
         let mut world = hecs::World::new();
         world.spawn((
@@ -2083,22 +2227,30 @@ mod tests {
                 ],
             ),
             (
-                "forage_idle",
+                "need_idle_hunger_cooked_novel",
                 &[
-                    ("worker", 1),
-                    ("inventory_room", 1),
-                    ("forage_window", 1),
-                    ("stock_shortfall", 1),
-                    ("forage_available", 1),
+                    ("hunger_actionable", 1),
+                    ("hunger_tenths", 600),
+                    ("food_cooked_novel_available", 1),
+                    ("food_cooked_available", 1),
+                    ("food_novel_available", 1),
                 ],
             ),
             (
-                "gather_idle",
+                "need_idle_hunger_cooked",
                 &[
-                    ("worker", 1),
-                    ("inventory_room", 1),
-                    ("stock_hoard_order", -1),
-                    ("gather_available", 1),
+                    ("hunger_actionable", 1),
+                    ("hunger_tenths", 600),
+                    ("food_cooked_available", 1),
+                    ("food_novel_available", 1),
+                ],
+            ),
+            (
+                "need_idle_hunger_novel",
+                &[
+                    ("hunger_actionable", 1),
+                    ("hunger_tenths", 600),
+                    ("food_novel_available", 1),
                 ],
             ),
         ];
@@ -2274,3 +2426,7 @@ mod tests {
 #[cfg(test)]
 #[path = "social_bucket_tests.rs"]
 mod social_bucket_tests;
+
+#[cfg(test)]
+#[path = "physical_food_fact_tests.rs"]
+mod physical_food_fact_tests;

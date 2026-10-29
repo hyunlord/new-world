@@ -16,6 +16,7 @@ pub mod baseline;
 pub(crate) mod chronicle_log;
 pub mod combat;
 pub mod construction;
+pub mod food;
 pub mod influence;
 pub mod jobs;
 pub mod knowledge;

@@ -85,7 +85,9 @@ pub(super) fn rest_start(c: &mut EffectContext<'_>) -> EffectResult {
             c.attach(tile);
             Ok(EffectStatus::Running)
         }
-        ActionTarget::Agent { .. } | ActionTarget::Routine { .. } => Err(EffectError::WrongTarget),
+        ActionTarget::Food { .. } | ActionTarget::Agent { .. } | ActionTarget::Routine { .. } => {
+            Err(EffectError::WrongTarget)
+        }
     }
 }
 pub(super) fn rest_continue(c: &mut EffectContext<'_>) -> EffectResult {

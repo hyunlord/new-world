@@ -23,6 +23,9 @@ pub(super) fn finish(c: &mut EffectContext<'_>) -> EffectResult {
 }
 
 pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
+    if c.resources.rules.colony.is_some() {
+        return super::needs::finish(c);
+    }
     let tile = c.tile_target()?;
     c.set_state(AgentState::Seeking {
         target: TargetKind::GatherFood,
@@ -31,6 +34,9 @@ pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
     Ok(EffectStatus::Running)
 }
 pub(super) fn forage_start(c: &mut EffectContext<'_>) -> EffectResult {
+    if c.resources.rules.colony.is_some() {
+        return super::needs::finish(c);
+    }
     let tile = c.tile_target()?;
     let result = start(c)?;
     *c.effects.claims.entry(tile).or_default() += 1;
@@ -41,6 +47,9 @@ pub(super) fn forage_start(c: &mut EffectContext<'_>) -> EffectResult {
     Ok(result)
 }
 pub(super) fn continue_running(c: &mut EffectContext<'_>) -> EffectResult {
+    if c.resources.rules.colony.is_some() {
+        return super::needs::finish(c);
+    }
     if c.interrupted {
         return super::needs::finish(c);
     }

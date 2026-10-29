@@ -16,6 +16,11 @@ pub(in crate::runtime) fn consume_food(
     hunger: Option<&mut Hunger>,
     food_version: &mut u64,
 ) {
+    // This scalar-source action belongs to baseline; colony intake requires an item owner.
+    if resources.rules.colony.is_some() {
+        *state = AgentState::Idle;
+        return;
+    }
     // V7 Section 16-α0 — source guard: a tile at the
     // RESOURCE_SOURCE_INFINITE sentinel never depletes.
     // Finite tiles keep decrement-and-remove (Assertions
@@ -111,4 +116,39 @@ pub(in crate::runtime) fn consume_sleep(
         s.fatigue = (s.fatigue - FATIGUE_CONSUME_AMOUNT).max(0.0);
     }
     *state = AgentState::Idle;
+}
+
+#[cfg(test)]
+mod m6a_tests {
+    use super::*;
+    use sim_core::{rules::WorldRules, MaterialRegistry};
+
+    #[test]
+    fn colony_scalar_food_cannot_produce_a_meal_but_baseline_still_can() {
+        for colony in [false, true] {
+            let mut res = SimResources::new(8, 8, MaterialRegistry::new());
+            res.rules = if colony {
+                WorldRules::colony(0)
+            } else {
+                WorldRules::baseline(0)
+            };
+            res.food_tiles.insert((2, 2), 3);
+            let mut state = AgentState::Consuming {
+                target: sim_core::components::TargetKind::Food,
+            };
+            let mut hunger = Hunger::new(70.0, 0.05);
+            let mut version = 0;
+            consume_food(
+                &mut res,
+                (2, 2),
+                &mut state,
+                Some(&mut hunger),
+                &mut version,
+            );
+            assert_eq!(hunger.value, if colony { 70.0 } else { 40.0 });
+            assert_eq!(res.food_tiles[&(2, 2)], if colony { 3 } else { 2 });
+            assert_eq!(res.tallies.meals_eaten, u64::from(!colony));
+            assert_eq!(version, u64::from(!colony));
+        }
+    }
 }

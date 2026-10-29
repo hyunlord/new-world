@@ -83,14 +83,10 @@ pub(super) fn build(
     if extension.contains_key("items.ron") {
         let extra: ItemFile = parse(&extension, "items.ron")?;
         schema(extra.schema_version, "items")?;
-        if extra
-            .items
-            .iter()
-            .any(|d| d.food.is_some() || d.apparel.is_some())
-        {
+        if extra.items.iter().any(|d| d.apparel.is_some()) {
             return Err(CatalogError::new(
                 "items",
-                "novel perishable/apparel identity is not supported by saved legacy mechanics",
+                "novel apparel identity is not supported by saved legacy mechanics",
             ));
         }
         append_roles(&mut items.roles, extra.roles)?;
@@ -157,6 +153,8 @@ pub(super) fn build(
     let flora = load_flora::build(&base, &extension, &base_materials, &materials)?;
     let mut catalog = Catalog {
         flora,
+        plants: Vec::new(),
+        plant_index: Index::default(),
         animals: Vec::new(),
         pressures: Vec::new(),
         animal_index: Index::default(),
@@ -191,6 +189,11 @@ pub(super) fn build(
         .into_iter()
         .map(|r| resolve_blueprints::resolve(r, &catalog))
         .collect::<Result<_, _>>()?;
+    let recipe_food_knowledge: Vec<_> = recipes
+        .recipes
+        .iter()
+        .map(|r| r.food_requirements.knowledge_any.clone())
+        .collect();
     catalog.recipes = recipes
         .recipes
         .into_iter()
@@ -233,6 +236,25 @@ pub(super) fn build(
     catalog.knowledge_gates =
         super::super::knowledge::gates_with_catalog(&catalog.knowledge_defs, &catalog)
             .map_err(|e| CatalogError::new("knowledge gates", e))?;
+    for (recipe, names) in catalog.recipes.iter_mut().zip(recipe_food_knowledge) {
+        let mut resolved = BTreeSet::new();
+        for name in names {
+            let id = catalog.knowledge_defs.id_of(&name).ok_or_else(|| {
+                CatalogError::new(
+                    &recipe.identity.id,
+                    format!("unknown food knowledge {name}"),
+                )
+            })?;
+            if !resolved.insert(id) {
+                return Err(CatalogError::new(
+                    &recipe.identity.id,
+                    "duplicate food knowledge",
+                ));
+            }
+        }
+        recipe.food_requirements.knowledge_any = resolved.into_iter().collect();
+    }
     validate::knowledge_refs(&catalog)?;
+    load_plants::load(&mut catalog, &base, &extension)?;
     Ok(catalog)
 }

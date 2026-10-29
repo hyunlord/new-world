@@ -49,9 +49,9 @@ pub struct SettlementSnapshotRow {
     pub formation_x: i32,
     /// `Settlement::formation_tile.1` — the FIXED formation-anchor tile-y.
     pub formation_y: i32,
-    /// Settlement `stockpile` Food count (`ResourceKind::Food`), 0 when none
-    /// stocked. Additive Direction-2 slice 2-5a field — surfaces the reserve
-    /// the gather→deposit→consume chain (2-2/2-3a/2-4) fills and drains.
+    /// Fresh stored edible units assigned to this nearest reachable settlement
+    /// in colony resource-aware reads, excluding hands and loose ground food.
+    /// Baseline/world-only collectors retain the legacy stockpile Food count.
     pub food_stock: i32,
     /// Revitalize Pass 5 — settlement `stockpile` Wood count, 0 when none.
     pub wood_stock: i32,
@@ -377,6 +377,26 @@ pub fn collect_settlement_wood_targets(
             target.max(0.0).floor().min(f64::from(i32::MAX)) as i32
         });
     vec![target; rows.len()]
+}
+
+/// Product settlement snapshot with physical colony reserves and unchanged baseline counters.
+pub fn collect_settlement_snapshot_with_resources(
+    world: &hecs::World,
+    resources: &SimResources,
+) -> Vec<SettlementSnapshotRow> {
+    let mut rows = collect_settlement_snapshot(world, &resources.settlements);
+    if resources.rules.colony.is_some() {
+        for row in &mut rows {
+            row.food_stock = i32::try_from(sim_systems::runtime::food::reserves::units(
+                world,
+                resources,
+                row.settlement_id,
+                false,
+            ))
+            .unwrap_or(i32::MAX);
+        }
+    }
+    rows
 }
 
 #[cfg(test)]

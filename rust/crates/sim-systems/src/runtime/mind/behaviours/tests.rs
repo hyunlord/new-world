@@ -250,11 +250,11 @@ fn postpass_social_target_follows_the_partners_current_position() {
 }
 
 #[test]
-fn scheduled_idle_excludes_targeted_hearth_meal_but_includes_wander() {
+fn physical_hearth_meal_and_wander_have_owned_scheduled_lifecycles() {
     assert!(super::lookup("wander")
         .expect("wander")
         .scheduled_continuation());
-    assert!(!super::lookup("hearth_meal")
+    assert!(super::lookup("hearth_meal")
         .expect("hearth meal")
         .scheduled_continuation());
     assert!(!super::lookup("rest")

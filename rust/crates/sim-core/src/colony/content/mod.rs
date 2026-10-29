@@ -12,6 +12,7 @@ mod index;
 mod load;
 mod load_ecology;
 mod load_flora;
+mod load_plants;
 mod raw_blueprint;
 mod raw_item;
 mod raw_recipe;
@@ -30,7 +31,7 @@ use crate::material::MaterialId;
 pub use boot::{bootstrap, installed, installed_or_bundled, BootSelection};
 pub use defs::*;
 pub use error::{BootError, CatalogAccessError, CatalogError};
-pub use ids::{AnimalKind, BlueprintKind, ItemKind, PressureKind, RecipeKind};
+pub use ids::{AnimalKind, BlueprintKind, ItemKind, PlantKind, PressureKind, RecipeKind};
 use index::Index;
 pub use sources::{NamedSource, RawSources};
 use std::collections::{BTreeMap, BTreeSet};
@@ -39,6 +40,8 @@ use std::collections::{BTreeMap, BTreeSet};
 #[derive(Debug)]
 pub struct Catalog {
     flora: FloraCatalog,
+    plants: Vec<PlantDef>,
+    plant_index: Index,
     animals: Vec<AnimalDef>,
     pressures: Vec<PressureDef>,
     animal_index: Index,
@@ -119,6 +122,28 @@ impl Catalog {
         extension: Option<RawSources>,
     ) -> Result<Self, CatalogError> {
         load::build(base, extension)
+    }
+    family_access!(
+        PlantKind,
+        PlantDef,
+        plants,
+        plant_index,
+        plant,
+        plant_by_code,
+        plant_by_name,
+        plant_by_serde_name,
+        require_plant,
+        plants,
+        plant_ids
+    );
+    /// Resolve a species, falling back to the first stable-code member of its category.
+    pub fn resolve_plant(&self, name: &str, category: &str) -> Option<PlantKind> {
+        self.plant_by_name(name).or_else(|| {
+            self.plants
+                .iter()
+                .find(|d| d.category == category)
+                .map(|d| PlantKind::from_validated(d.identity.code))
+        })
     }
     family_access!(
         ItemKind,

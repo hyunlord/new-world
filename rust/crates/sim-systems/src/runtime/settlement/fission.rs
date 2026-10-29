@@ -93,6 +93,9 @@
 //! parent's fission records (`fission_threshold`, a world draw: never the
 //! replicate). θ is drawn when the settlement forms (`SettlementSystem`).
 
+mod migration;
+pub(crate) use migration::migrate_pending_food;
+
 use std::collections::{BTreeMap, BTreeSet};
 
 use hecs::World;
@@ -268,7 +271,11 @@ fn stamp_camp(resources: &mut SimResources, target: (u32, u32)) -> Option<(u32, 
                 walkable(resources, p)
                     && !resources.building_kinds.contains_key(&p)
                     && !resources.water_tiles.contains_key(&p)
-                    && !resources.food_source_max.contains_key(&p)
+                    && if resources.rules.colony.is_some() {
+                        !resources.food.plants.contains_key(&p)
+                    } else {
+                        !resources.food_source_max.contains_key(&p)
+                    }
                     && !resources.wood_source_max.contains_key(&p)
             })
             .min_by_key(|&p| (chebyshev(p, goal), p.1, p.0))?;
@@ -330,7 +337,11 @@ impl FissionSystem {
             }
         }
         if let Some(parent) = resources.settlements.get_mut(&group.parent) {
-            parent.store(ResourceKind::Food, group.food);
+            if resources.rules.colony.is_none() {
+                parent.store(ResourceKind::Food, group.food);
+            } else {
+                assert_eq!(group.food, 0, "unmigrated colony fission food");
+            }
             parent.store(ResourceKind::Wood, group.wood);
         }
         if let Some((hearth, _)) = group.placed {
@@ -417,7 +428,11 @@ impl FissionSystem {
             settlement.population_stats.current = settlement.member_agents.len() as u32;
         }
         if let Some(settlement) = resources.settlements.get_mut(&daughter) {
-            settlement.store(ResourceKind::Food, group.food);
+            if resources.rules.colony.is_none() {
+                settlement.store(ResourceKind::Food, group.food);
+            } else {
+                assert_eq!(group.food, 0, "unmigrated colony fission food");
+            }
             settlement.store(ResourceKind::Wood, group.wood);
             settlement.parent = Some(group.parent);
         }
@@ -701,11 +716,18 @@ impl FissionSystem {
                     }
                 }
                 Some(hazard) => {
-                    let food = settlement
-                        .stockpile
-                        .get(&ResourceKind::Food)
-                        .copied()
-                        .unwrap_or(0);
+                    let food = if resources.rules.colony.is_some() {
+                        u32::try_from(crate::runtime::food::reserves::units(
+                            world, resources, sid, false,
+                        ))
+                        .unwrap_or(u32::MAX)
+                    } else {
+                        settlement
+                            .stockpile
+                            .get(&ResourceKind::Food)
+                            .copied()
+                            .unwrap_or(0)
+                    };
                     let (g, q, s, h) =
                         hazard_terms(&hazard, members, capacity, food, adult_need_per_day(tpd));
                     let (draw, split, pressure, threshold) = match rule.pressure {
@@ -988,7 +1010,11 @@ impl FissionSystem {
                         .unwrap_or(0),
                 );
                 (
-                    parent.withdraw(ResourceKind::Food, food),
+                    if resources.rules.colony.is_none() {
+                        parent.withdraw(ResourceKind::Food, food)
+                    } else {
+                        0
+                    },
                     parent.withdraw(ResourceKind::Wood, wood),
                 )
             } else {

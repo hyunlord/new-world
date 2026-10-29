@@ -148,6 +148,32 @@ pub struct PersonSnapshot {
 }
 
 impl PersonSnapshot {
+    /// Fresh edible physical Carry units; colony food facts never use Inventory Food.
+    pub(super) fn physical_food_units(&self, resources: &SimResources) -> u64 {
+        let Some(carry) = self.carry else {
+            return 0;
+        };
+        let Some(food) = &carry.kind.definition().food else {
+            return 0;
+        };
+        let day = crate::runtime::food::day(resources);
+        let fresh = resources
+            .food
+            .ages
+            .get(&sim_core::colony::food::FoodOwner::Carried(self.agent))
+            .is_some_and(|age| {
+                age.born_day <= day
+                    && age.remaining(
+                        day,
+                        food.lifetime_days(sim_core::colony::content::FoodStorageClass::Ground),
+                    ) > 0
+            });
+        if food.raw_edible && fresh {
+            u64::from(carry.count) * u64::from(food.units)
+        } else {
+            0
+        }
+    }
     fn capture(
         world: &World,
         entity: Entity,
@@ -340,6 +366,8 @@ pub struct PersonUpdate {
 /// Tile candidate only; selecting a behaviour belongs to the data evaluator.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct TargetCandidate {
+    /// Physical food owner, absent for nonfood target capabilities.
+    pub food: Option<sim_core::colony::food::FoodOwner>,
     /// Resolved world tile in x/y order.
     pub tile: (u32, u32),
     /// Optional peer identity for an agent target; None denotes a tile target.
@@ -544,6 +572,8 @@ pub struct TickContext {
     claims: BTreeMap<(u32, u32), u32>,
     gather_cache: RefCell<BTreeMap<GatherCacheKey, GatherCacheValue>>,
     food_index: RefCell<FoodIndex>,
+    pub(super) harvest_food: RefCell<Option<Arc<super::harvest_food::PlantCandidates>>>,
+    pub(super) physical_food: RefCell<crate::runtime::food::choice::FoodChoiceIndex>,
 }
 impl TickContext {
     /// All persons with decision state/position, in stable AgentId order.
@@ -731,6 +761,8 @@ impl TickContext {
             threats: crate::runtime::wildlife::flee::threats(resources),
             claims: BTreeMap::new(),
             gather_cache: RefCell::new(BTreeMap::new()),
+            physical_food: RefCell::default(),
+            harvest_food: RefCell::default(),
             food_index: RefCell::new(FoodIndex {
                 version: 0,
                 materialized: false,
@@ -767,6 +799,64 @@ impl TickContext {
         resources: &SimResources,
         initial_stock: Option<&BTreeMap<SettlementId, ForagePlan>>,
     ) {
+        if resources.rules.colony.is_some() {
+            self.physical_food.borrow_mut().refresh(resources);
+            let public_food = self.physical_food.borrow().kinds().next().is_some();
+            let stock: BTreeMap<_, _> = resources
+                .settlements
+                .iter()
+                .map(|(&sid, settlement)| {
+                    let stored =
+                        crate::runtime::food::reserves::units(world, resources, sid, false);
+                    let carried: u64 = self
+                        .rows
+                        .iter()
+                        .filter(|row| settlement.member_agents.contains(&row.agent))
+                        .map(|row| row.physical_food_units(resources))
+                        .sum();
+                    let in_hand = stored.saturating_add(carried);
+                    let target = crate::runtime::settlement::food_economy::stock_target(
+                        world, resources, sid,
+                    )
+                    .unwrap_or(0.0);
+                    let cap = resources
+                        .rules
+                        .agent
+                        .forage
+                        .and(resources.rules.society.stock_target)
+                        .map(|rule| rule.hoard_cap_factor * target);
+                    (sid, (stored > 0, in_hand, (in_hand as f64) < target, cap))
+                })
+                .collect();
+            for (index, row) in self.rows.iter().enumerate() {
+                let member = resources
+                    .settlements
+                    .iter()
+                    .filter(|(_, settlement)| settlement.member_agents.contains(&row.agent))
+                    .min_by_key(|(id, _)| **id);
+                let available = public_food || row.physical_food_units(resources) > 0;
+                let (stocked, in_hand, shortfall, cap) = member
+                    .and_then(|(sid, _)| stock.get(sid))
+                    .copied()
+                    .unwrap_or((false, 0, false, None));
+                self.scopes[index] = Some(TargetScope {
+                    settlement: member.map(|(id, _)| *id),
+                    home: member.map(|(_, settlement)| settlement.formation_tile),
+                    food_available: available,
+                    camp_stocked: stocked,
+                    stock_in_hand: in_hand,
+                    stock_shortfall: shortfall,
+                    stock_hoard_limit: cap,
+                    ..TargetScope::default()
+                });
+            }
+            self.availability.food = self
+                .scopes
+                .iter()
+                .flatten()
+                .any(|scope| scope.food_available);
+            return;
+        }
         let initial_stock = initial_stock.filter(|_| {
             resources.rules.agent.forage.is_some() && resources.rules.society.stock_target.is_some()
         });
@@ -1412,6 +1502,7 @@ impl TickContext {
             for (slot, peer) in targets.into_iter().zip([natural, memory]) {
                 self.target_slots[slot][index] = Some(Versioned {
                     value: peer.map(|peer| TargetCandidate {
+                        food: None,
                         tile,
                         agent: Some(peer),
                     }),
@@ -1652,6 +1743,9 @@ impl TickContext {
         agent: AgentId,
         resources: &SimResources,
     ) -> Result<Option<(u32, u32)>, ContextError> {
+        if resources.rules.colony.is_some() {
+            return Ok(None);
+        }
         let person = self.row(agent)?;
         let scope = self.target_scope(agent)?;
         let centre = (person.position.x, person.position.y);
@@ -1834,6 +1928,7 @@ mod stamp_tests {
                 7,
                 "target",
                 Some(TargetCandidate {
+                    food: None,
                     tile: (2, 2),
                     agent: None,
                 }),

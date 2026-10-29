@@ -7,9 +7,10 @@ fn partner(c: &EffectContext<'_>) -> Result<(u64, (u32, u32)), EffectError> {
     match c.target {
         ActionTarget::Agent { agent, tile } if agent != c.agent => Ok((agent, tile)),
         ActionTarget::None => Err(EffectError::MissingTarget),
-        ActionTarget::Tile(_) | ActionTarget::Routine { .. } | ActionTarget::Agent { .. } => {
-            Err(EffectError::WrongTarget)
-        }
+        ActionTarget::Food { .. }
+        | ActionTarget::Tile(_)
+        | ActionTarget::Routine { .. }
+        | ActionTarget::Agent { .. } => Err(EffectError::WrongTarget),
     }
 }
 pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {

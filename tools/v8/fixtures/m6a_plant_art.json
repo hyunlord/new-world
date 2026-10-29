@@ -1,0 +1,13 @@
+{
+  "plants": [
+    {"code": 65550, "id": "fixture_orchard", "name_key": "FIXTURE_ORCHARD", "category": "fixture_fruit"},
+    {"code": 65551, "id": "fixture_category_only", "name_key": "FIXTURE_CATEGORY", "category": "fixture_fruit"}
+  ],
+  "bindings": {
+    "schema_version": 1,
+    "plants": {
+      "by_id": {"fixture_orchard": {"2": "berry_bush_full"}},
+      "by_category": {"fixture_fruit": {"0": "berry_bush_bare", "1": "berry_bush_bare", "2": "berry_bush_bare", "3": "berry_bush_bare"}}
+    }
+  }
+}

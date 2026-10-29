@@ -102,6 +102,7 @@ fn target_exists(
     id: AgentId,
     entity: Entity,
     job: &Job,
+    pot_sources: &super::pot_supply::SourceIndex,
 ) -> bool {
     let colony = &res.colony;
     let stack = |tile: (u32, u32)| {
@@ -145,8 +146,9 @@ fn target_exists(
             colony.nodes.contains_key(&node)
                 && colony.designations.get(&node) == Some(&Designation::Quarry)
         }
+        (JobKind::Harvest { plant }, _) => super::harvest::target_exists(res, plant),
         (JobKind::Supply { from, workshop, .. }, JobStage::ToSource) => {
-            stack(from) && colony.workshops.contains_key(&workshop)
+            pot_sources.exists(res, from, job.item) && colony.workshops.contains_key(&workshop)
         }
         (JobKind::Supply { workshop, .. }, _) => colony.workshops.contains_key(&workshop),
         // Gathering: the spot holds wood (or the gatherer already carries some);
@@ -200,6 +202,7 @@ fn step(
     id: AgentId,
     entity: Entity,
     mut job: Job,
+    pot_sources: &super::pot_supply::SourceIndex,
 ) {
     let tick = res.current_tick;
     // A partner's step this tick may already have ended this job (M4 apprenticeship).
@@ -219,7 +222,7 @@ fn step(
         }
         return;
     }
-    if !target_exists(world, res, id, entity, &job) {
+    if !target_exists(world, res, id, entity, &job, pot_sources) {
         cancel(world, res, entity, CancelReason::TargetGone);
         return;
     }
@@ -280,6 +283,7 @@ fn step(
             let source = job.kind.source();
             let reached = match job.kind {
                 JobKind::Chop { tree: near }
+                | JobKind::Harvest { plant: near }
                 | JobKind::Quarry { node: near }
                 | JobKind::Gather { spot: near, .. }
                 | JobKind::Dig { tile: near }
@@ -297,6 +301,20 @@ fn step(
                     let ticks =
                         crate::runtime::story::scale_work(world, res, entity, source, ticks);
                     job.amount = ticks.min(u32::from(u16::MAX)) as u16;
+                    job.stage = JobStage::Working { ticks_left: ticks };
+                    set_state(world, entity, WORK_JOB);
+                }
+                JobKind::Harvest { plant } => {
+                    let practice = if rule.knowledge.is_some() {
+                        world
+                            .get::<&sim_core::colony::knowledge::Knowledge>(entity)
+                            .map_or(0, |k| k.practice())
+                    } else {
+                        u32::MAX
+                    };
+                    let ticks = super::harvest::work_ticks(res, plant, practice);
+                    let ticks =
+                        crate::runtime::story::scale_work(world, res, entity, source, ticks);
                     job.stage = JobStage::Working { ticks_left: ticks };
                     set_state(world, entity, WORK_JOB);
                 }
@@ -367,7 +385,9 @@ fn step(
                 | JobKind::Supply { from, .. }
                 | JobKind::Clear { from, .. }
                 | JobKind::Trade { from, .. } => {
-                    let (taken, spec) = take_items(res, from, job.item, job.amount);
+                    let (taken, spec) = super::food_transfers::pickup(
+                        world, res, entity, from, job.item, job.amount,
+                    );
                     res.colony.reservations.remove(&ReserveKey::Stack(from));
                     if taken == 0 {
                         cancel(world, res, entity, CancelReason::TargetGone);
@@ -382,7 +402,12 @@ fn step(
                     let dest = job.kind.dest().unwrap_or(pos);
                     job.best_distance = chebyshev(pos, dest);
                     job.progress_tick = tick;
-                    let _ = world.insert(entity, (Carry::of(spec, taken), SeekTarget::new(dest)));
+                    if spec.kind.definition().food.is_some() {
+                        let _ = world.insert_one(entity, SeekTarget::new(dest));
+                    } else {
+                        let _ =
+                            world.insert(entity, (Carry::of(spec, taken), SeekTarget::new(dest)));
+                    }
                 }
             }
             put_job(world, entity, job);
@@ -394,6 +419,9 @@ fn step(
             }
         }
         JobStage::Working { ticks_left } => {
+            if !craft::can_continue(world, res, entity, &job) {
+                return;
+            }
             if let JobKind::Build { site } = job.kind {
                 // A builder: ConstructionSystem does the work; it trains Build (M2).
                 if rule.economy.is_some() {
@@ -413,6 +441,17 @@ fn step(
                 return;
             }
             match job.kind {
+                JobKind::Harvest { plant } => {
+                    let mask = super::harvest::knowledge_mask(res, plant);
+                    let practiced = world
+                        .get::<&sim_core::colony::knowledge::Knowledge>(entity)
+                        .map_or(0, |knowledge| knowledge.practice() & mask);
+                    if !super::harvest::complete(res, plant) {
+                        cancel(world, res, entity, CancelReason::TargetGone);
+                        return;
+                    }
+                    crate::runtime::knowledge::used(world, res, entity, practiced);
+                }
                 JobKind::Chop { tree } => {
                     if !fell(res, tree) {
                         cancel(world, res, entity, CancelReason::TargetGone);
@@ -836,6 +875,11 @@ fn arrive(
     pos: (u32, u32),
 ) {
     let carry = world.get::<&Carry>(entity).ok().map(|c| *c);
+    if let Some(carry) = carry.filter(|carry| carry.kind.definition().food.is_some()) {
+        super::food_transfers::arrive(world, res, entity, job.kind, pos, carry);
+        finish(world, res, entity);
+        return;
+    }
     let _ = world.remove_one::<Carry>(entity);
     if let Some(carry) = carry {
         match job.kind {
@@ -902,8 +946,9 @@ impl RuntimeSystem for JobExecuteSystem {
             .map(|(entity, (agent, job))| (agent.id, entity, *job))
             .collect();
         rows.sort_by_key(|row| row.0);
+        let pot_sources = super::pot_supply::SourceIndex::default();
         for (id, entity, job) in rows {
-            step(world, resources, &rule, id, entity, job);
+            step(world, resources, &rule, id, entity, job, &pot_sources);
         }
         #[cfg(debug_assertions)]
         if let Err(problem) = super::invariants::check(world, resources) {

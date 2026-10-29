@@ -1,6 +1,6 @@
 //! Item capabilities; values select existing integer mechanics.
 use super::super::ids::ItemKind;
-use super::IdentityDef;
+use super::{FoodDef, IdentityDef};
 use serde::Deserialize;
 
 /// Validated ItemDef metadata.
@@ -36,6 +36,8 @@ pub struct ItemDef {
     pub cutter: Option<CutterDef>,
     /// Food.
     pub food: Option<FoodDef>,
+    /// Number of food pieces held by one physical vessel.
+    pub pot_capacity: u16,
     /// Fuel units.
     pub fuel_units: Option<u32>,
     /// Apparel.
@@ -89,20 +91,6 @@ pub struct CutterDef {
     pub wear_default: u32,
     /// Break tally.
     pub break_tally: Option<String>,
-}
-
-/// Validated FoodDef metadata.
-#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub struct FoodDef {
-    /// Units.
-    pub units: u32,
-    /// Units rule.
-    pub units_rule: Option<String>,
-    /// Spoil days.
-    pub spoil_days: u32,
-    /// Spoil rule.
-    pub spoil_rule: Option<String>,
 }
 
 /// Validated ApparelDef metadata.

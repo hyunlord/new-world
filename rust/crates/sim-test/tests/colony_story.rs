@@ -326,37 +326,55 @@ fn in_a_cold_snap_only_a_roof_with_the_hearth_lit_keeps_sleepers_warm() {
 fn a_drought_slows_forage_regrowth_for_its_days() {
     let regrown = |drought: bool| {
         let mut engine = sim_test::colony_engine(4);
-        // Summer of the first year (day 6) at 08:00, every bush emptied.
+        let catalog = sim_core::colony::content::installed_or_bundled();
+        let species = catalog.plant_by_name("wild_root").expect("roots");
+        let tile = (0, 0);
+        engine.resources.food.plants.clear();
+        engine.resources.food.plants.insert(
+            tile,
+            sim_core::colony::food::PlantState {
+                species,
+                units_left: 0,
+                next_regrow_day: 8,
+            },
+        );
         engine.resources.current_tick = 6 * 1_440;
         if drought {
-            story::force(
+            story::try_force(
                 &mut engine.world,
                 &mut engine.resources,
                 PressureKind::Drought,
                 5,
+            )
+            .expect("forced drought");
+        }
+        let mut available = Vec::new();
+        for day in 6..=11 {
+            sim_systems::runtime::food::plants::advance_day(
+                &mut engine.resources,
+                day,
+                Some(day - 1),
             );
+            available.push(engine.resources.food.plants[&tile].units_left);
         }
-        engine.resources.food_tiles.clear();
-        // Caps high enough that no bush fills up in the run.
-        for cap in engine.resources.food_source_max.values_mut() {
-            *cap = 200;
-        }
-        let mut regen = sim_systems::runtime::resource_regen::ResourceRegenSystem::new();
-        for k in 0..10u64 {
-            engine.resources.current_tick = 6 * 1_440 + k * 120;
-            regen.tick(&mut engine.world, &mut engine.resources);
-        }
-        engine
-            .resources
-            .food_tiles
-            .values()
-            .map(|v| u64::from(*v))
-            .sum::<u64>()
+        assert!(engine.resources.colony.ground_items.is_empty());
+        assert_eq!(engine.resources.food.tallies.harvested_units, 0);
+        available
     };
-    let (normal, dry) = (regrown(false), regrown(true));
-    // Expected from the rules alone: ten pulses at the summer rate p ‰ give
-    // floor(10 p / 1000) units a bush; in a drought floor(10 p · 400 / 1000 / 1000).
-    let engine = sim_test::colony_engine(4);
+    assert_eq!(regrown(false), vec![0, 0, 5, 5, 5, 5]);
+    // Five completed daily intervals at 400 permille earn exactly two growth days.
+    assert_eq!(regrown(true), vec![0, 0, 0, 0, 0, 5]);
+}
+
+#[test]
+fn baseline_forage_retains_integer_seasonal_regrowth() {
+    let mut engine = sim_test::baseline_engine(4);
+    engine.resources.food_tiles.clear();
+    engine.resources.food_source_max.clear();
+    engine.resources.food_source_max.insert((0, 0), 200);
+    engine.resources.food_regen_acc = 0;
+    let season_days = engine.resources.rules.calendar.days_per_season;
+    let first = u64::from(season_days) * engine.resources.ticks_per_day;
     let p = u64::from(
         engine
             .resources
@@ -365,15 +383,20 @@ fn a_drought_slows_forage_regrowth_for_its_days() {
             .expect("seasons")
             .regen_permille[1],
     );
-    let bushes = engine.resources.food_source_max.len() as u64;
-    assert!(bushes > 0 && p > 0);
-    assert_eq!(normal, bushes * (10 * p / 1000), "normal regrowth");
+    let mut regen = sim_systems::runtime::resource_regen::ResourceRegenSystem::new();
+    for pulse in 0..10 {
+        engine.resources.current_tick = first + pulse * 120;
+        regen.tick(&mut engine.world, &mut engine.resources);
+    }
     assert_eq!(
-        dry,
-        bushes * (10 * p * 400 / 1000 / 1000),
-        "drought regrowth"
+        engine
+            .resources
+            .food_tiles
+            .get(&(0, 0))
+            .copied()
+            .unwrap_or(0) as u64,
+        10 * p / 1000
     );
-    assert!(dry < normal);
 }
 
 #[test]

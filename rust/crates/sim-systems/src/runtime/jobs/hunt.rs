@@ -539,7 +539,8 @@ fn kill(
 }
 
 /// Drop the killed species' declared loot, resolving selectors against this world.
-/// Meat identity is restricted by catalog validation to the existing spoilage role.
+/// Food loot enters the same dated ownership path as plant harvests.
+/// Returns retained meat, not a nominal yield lost to failed ground placement.
 pub fn drop_animal_loot(
     res: &mut SimResources,
     tile: (u32, u32),
@@ -561,8 +562,7 @@ pub fn drop_animal_loot(
         .as_ref()
         .filter(|h| h.enabled.wildlife(rule))
         .map(|h| (h.item, h.count));
-    let amount = meat.map_or(0, |(_, amount)| amount);
-    (amount, drop_loot(res, tile, meat, hide))
+    drop_loot(res, tile, meat, hide)
 }
 
 /// Compatibility entry for fixtures using the bundled meat lifecycle and one hide.
@@ -578,6 +578,7 @@ pub fn drop_carcass(
         Some((ItemKind::role("grazer_meat"), meat)),
         Some((hide, 1)),
     )
+    .1
 }
 
 fn drop_loot(
@@ -585,18 +586,48 @@ fn drop_loot(
     tile: (u32, u32),
     meat: Option<(ItemKind, u16)>,
     hide: Option<(ItemKind, u16)>,
-) -> Vec<(u32, u32)> {
+) -> (u16, Vec<(u32, u32)>) {
     let mut meat_tiles = Vec::new();
+    let mut placed_meat = 0;
     if let Some((kind, meat)) = meat.filter(|(_, count)| *count > 0) {
-        res.colony.item_ledger.create(kind, u64::from(meat));
-        meat_tiles = put_items(res, tile, ItemSpec::raw(kind, None), meat);
-        let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
-        let lots = &mut res.colony.wildlife.meat_lots;
-        match lots.last_mut() {
-            Some((d, n)) if *d == day => *n += u32::from(meat),
-            _ => lots.push((day, u32::from(meat))),
+        if res.rules.colony.is_some() {
+            use crate::runtime::food::items::{book_creation, new_batch, put_ground, FoodSource};
+            let day = crate::runtime::food::day(res);
+            if let Ok(batch) = new_batch(ItemSpec::raw(kind, None), meat, day) {
+                match put_ground(res, tile, batch, day) {
+                    Ok(placed) => {
+                        book_creation(res, batch, FoodSource::Harvest);
+                        meat_tiles.extend(placed.into_iter().map(|(tile, _)| tile));
+                        res.colony.wildlife.tallies.meat_dropped += u64::from(meat);
+                        placed_meat = meat;
+                    }
+                    Err((_, unplaced)) => {
+                        // The animal is already dead. Account for its real yield
+                        // and failed placement instead of reporting retained meat.
+                        book_creation(res, unplaced, FoodSource::Harvest);
+                        let count = u64::from(unplaced.count);
+                        res.colony.item_ledger.consume(kind, count);
+                        if let Some(food) = &kind.definition().food {
+                            *res.food.tallies.lost.entry(kind).or_default() += count;
+                            res.food.tallies.lost_units += count * u64::from(food.units);
+                        }
+                        res.food.touch();
+                    }
+                }
+            }
+        } else {
+            res.colony.item_ledger.create(kind, u64::from(meat));
+            meat_tiles = put_items(res, tile, ItemSpec::raw(kind, None), meat);
+            let day =
+                u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
+            let lots = &mut res.colony.wildlife.meat_lots;
+            match lots.last_mut() {
+                Some((d, n)) if *d == day => *n += u32::from(meat),
+                _ => lots.push((day, u32::from(meat))),
+            }
+            res.colony.wildlife.tallies.meat_dropped += u64::from(meat);
+            placed_meat = meat;
         }
-        res.colony.wildlife.tallies.meat_dropped += u64::from(meat);
     }
     let mut hide_tiles = Vec::new();
     if let Some((kind, count)) = hide.filter(|(_, count)| *count > 0) {
@@ -609,7 +640,7 @@ fn drop_loot(
         carcasses.extend(meat_tiles.iter().copied());
         carcasses.extend(hide_tiles);
     }
-    meat_tiles
+    (placed_meat, meat_tiles)
 }
 
 /// Whether an ordinary meat haul can still use a nonstockpile hearth cell.
@@ -914,3 +945,7 @@ mod item_capability_tests {
         assert_eq!(weapon_damage(&world, &rule, empty), 7);
     }
 }
+
+#[cfg(test)]
+#[path = "hunt_food_loss_tests.rs"]
+mod hunt_food_loss_tests;

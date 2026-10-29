@@ -12,6 +12,7 @@ Validation status: **NOT_RUN** for the production switch; parent-owned focused v
 | BuildingStampSystem | 90 | 1 | yes | yes |
 | InfluenceUpdateSystem | 100 | 1 | yes | yes |
 | AgentInfluenceSampleSystem | 110 | 1 | yes | yes |
+| FoodDailySystem | 119 | 1440 | no | yes |
 | AgentMovementSystem | 120 | 1 | yes | yes |
 | DraftSystem | 121 | 1 | yes | yes |
 | StewardDefenceSystem | 122 | 1 | yes | yes |

@@ -30,7 +30,23 @@ pub(super) fn resolve(r: RecipeRaw, c: &Catalog) -> Result<RecipeDef, CatalogErr
         .iter()
         .map(|(name, count)| Ok((item(name)?, *count)))
         .collect::<Result<Vec<_>, CatalogError>>()?;
+    let mut input_kinds = std::collections::BTreeSet::new();
+    if inputs.iter().any(|(kind, _)| !input_kinds.insert(*kind)) {
+        return Err(CatalogError::new(
+            context,
+            "duplicate resolved recipe input item: combine its quantity into one row",
+        ));
+    }
     let output = (item(&r.output.0)?, r.output.1);
+    if r.food_requirements.duration_days > 0
+        && c.item(output.0)
+            .is_none_or(|definition| definition.food.is_none())
+    {
+        return Err(CatalogError::new(
+            context,
+            "positive recipe duration requires a food output for aged drying ownership",
+        ));
+    }
     let workshop = c
         .blueprint_by_name(&r.workshop)
         .ok_or_else(|| CatalogError::new(context, "unknown preferred workshop"))?;
@@ -94,6 +110,13 @@ pub(super) fn resolve(r: RecipeRaw, c: &Catalog) -> Result<RecipeDef, CatalogErr
         quality_add: r.quality_add,
         material_term: r.material_term,
         tool,
+        food_requirements: FoodRecipeRequirements {
+            requires_lit_hearth: r.food_requirements.requires_lit_hearth,
+            knowledge_any: Vec::new(),
+            pot_alternative: r.food_requirements.pot_alternative,
+            requires_pot: r.food_requirements.requires_pot,
+            duration_days: r.food_requirements.duration_days,
+        },
         auto_bill_role: r.auto_bill_role,
     })
 }

@@ -6,7 +6,9 @@ pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
     let (kind, tile) = match c.target {
         ActionTarget::Routine { kind, tile } => (kind, tile),
         ActionTarget::None => return Err(EffectError::MissingTarget),
-        ActionTarget::Tile(_) | ActionTarget::Agent { .. } => return Err(EffectError::WrongTarget),
+        ActionTarget::Food { .. } | ActionTarget::Tile(_) | ActionTarget::Agent { .. } => {
+            return Err(EffectError::WrongTarget)
+        }
     };
     let routine = c
         .routine

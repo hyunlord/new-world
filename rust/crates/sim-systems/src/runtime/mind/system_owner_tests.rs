@@ -1,6 +1,6 @@
 //! External runtime ownership must survive a change of mind node.
 use super::*;
-use sim_core::colony::{ItemKind, Job, JobKind, JobStage};
+use sim_core::colony::{ItemKind, ItemSpec, Job, JobKind, JobStage};
 use sim_core::components::{Agent, Hunger, Position, TargetKind};
 use sim_core::MaterialRegistry;
 
@@ -25,7 +25,16 @@ fn job() -> Job {
 fn fixture(hunger: f32) -> (ColonyMindSystem, World, SimResources, hecs::Entity) {
     let mut resources = SimResources::new(5, 5, MaterialRegistry::new());
     resources.rules.colony = sim_core::rules::WorldRules::colony(1).colony;
-    resources.food_tiles.insert((2, 1), 5);
+    resources.nav.install(sim_core::nav::CostMap::new(5, 5));
+    crate::runtime::food::items::create_ground(
+        &mut resources,
+        (2, 1),
+        ItemSpec::raw(ItemKind::from_name("berries").expect("food"), None),
+        5,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("physical food fixture");
     let mut world = World::new();
     let person = world.spawn((
         Agent { id: 7 },
@@ -102,7 +111,15 @@ fn startup_job_yielding_to_critical_food_is_released_without_prior_job_choice() 
 fn legacy_consuming_food_without_mind_history_consumes_instead_of_restarting_seek() {
     let (mut system, mut world, mut resources, person) = fixture(90.0);
     resources.rules.agent.strict_consume = true;
-    resources.food_tiles.insert((1, 1), 2);
+    crate::runtime::food::items::create_ground(
+        &mut resources,
+        (1, 1),
+        ItemSpec::raw(ItemKind::from_name("berries").expect("food"), None),
+        2,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("food underfoot");
     world
         .insert_one(
             person,
@@ -116,6 +133,9 @@ fn legacy_consuming_food_without_mind_history_consumes_instead_of_restarting_see
         .try_tick(&mut world, &mut resources)
         .expect("adopt consumption");
     assert_eq!(resources.tallies.meals_eaten, 1);
+    assert_eq!(resources.food.tallies.meals, 1);
+    assert_eq!(resources.colony.ground_items[&(1, 1)].count, 1);
+    assert_eq!(resources.colony.ground_items[&(2, 1)].count, 5);
     assert!(world.get::<&Hunger>(person).expect("hunger").value < 90.0);
     assert_eq!(
         *world.get::<&AgentState>(person).expect("state"),

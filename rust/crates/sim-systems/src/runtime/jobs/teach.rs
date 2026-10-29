@@ -237,6 +237,7 @@ pub fn assign(
     rule: &KnowledgeRule,
     assigned: &mut BTreeSet<AgentId>,
     taken: &mut Vec<(Entity, Job, (u32, u32))>,
+    food: &crate::runtime::food::choice::FoodChoiceIndex,
 ) {
     let tick = res.current_tick;
     let day = tick / res.ticks_per_day.max(1);
@@ -279,7 +280,7 @@ pub fn assign(
             if assigned.contains(&id)
                 || lesson(e, o.id)
                 || !free(world, e)
-                || super::assign::needy(world, res, e)
+                || super::assign::needy(world, res, e, food)
                 || super::assign::in_combat(res, id)
                 || res
                     .colony

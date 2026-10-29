@@ -14,6 +14,8 @@ pub mod arm_profile;
 pub mod bench;
 /// Explicit immutable content selection for headless CLI entry points.
 pub mod content_boot;
+/// M6a food observations and isolated data-only fixture commands.
+pub mod m6a;
 /// M3 pathfinding benchmark (`worldsim_perf nav-bench`).
 pub mod nav_bench;
 /// Revitalize Pass 15: tick timings, the stress world and snapshot costs (`worldsim_perf`).

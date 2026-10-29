@@ -331,6 +331,22 @@ fn progress(world: &mut World, resources: &mut SimResources, rule: &RelationsRul
             release(world, entity, id);
             continue;
         };
+        if resources.rules.colony.is_some() && trip.kind == PorterKind::Food {
+            // Old cargo was converted to real items during save migration. Retire its
+            // transport booking without delivering or crediting those items a second time.
+            assert_eq!(
+                world
+                    .get::<&Inventory>(entity)
+                    .map_or(0, |inv| inv.get(trip.kind.resource())),
+                0,
+                "colony contains unmigrated abstract porter food"
+            );
+            record.failed = true;
+            book_lost(resources, &mut record);
+            release(world, entity, id);
+            close(resources, id, record, tick);
+            continue;
+        }
         let home = resources
             .settlements
             .get(&trip.from)
@@ -499,11 +515,18 @@ fn decide(world: &mut World, resources: &mut SimResources, rule: &RelationsRule,
             continue;
         };
         let need = need_milli(world, resources, *sid);
-        let food = settlement
-            .stockpile
-            .get(&sim_core::components::ResourceKind::Food)
-            .copied()
-            .unwrap_or(0);
+        let food = if resources.rules.colony.is_some() {
+            u32::try_from(crate::runtime::food::reserves::units(
+                world, resources, *sid, false,
+            ))
+            .unwrap_or(u32::MAX)
+        } else {
+            settlement
+                .stockpile
+                .get(&sim_core::components::ResourceKind::Food)
+                .copied()
+                .unwrap_or(0)
+        };
         let wood = settlement
             .stockpile
             .get(&sim_core::components::ResourceKind::Wood)
@@ -819,6 +842,9 @@ fn trip_amount(
     g: SettlementId,
     kind: PorterKind,
 ) -> u32 {
+    if resources.rules.colony.is_some() && kind == PorterKind::Food {
+        return 0;
+    }
     let (Some(measure), Some(settlement)) = (measures.get(&g), resources.settlements.get(&g))
     else {
         return 0;
@@ -855,6 +881,9 @@ fn depart(
     porters_used: &mut BTreeMap<SettlementId, u32>,
     entries: &mut Vec<ChronicleEntry>,
 ) -> u32 {
+    if resources.rules.colony.is_some() && departure.kind == PorterKind::Food {
+        return 0;
+    }
     let cap = INVENTORY_CAPACITY;
     let count = departure.amount.div_ceil(cap) as usize;
     let Some(pool) = candidates.get_mut(&departure.from) else {

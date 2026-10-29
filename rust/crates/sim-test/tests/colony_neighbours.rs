@@ -510,7 +510,11 @@ fn barter_follows_the_balance_rule_and_the_ledger_holds_through_the_hand_over() 
             break;
         }
     }
-    assert!(handed, "the blades reached the traders");
+    assert!(
+        handed,
+        "the blades reached the traders: {}",
+        trade_diagnostic(&engine, at)
+    );
     let blades = ledger_of(&engine.world, &engine.resources, ItemKind::FlintBlade);
     assert_eq!(blades.traded_out, u64::from(need));
     assert!(blades.balanced());
@@ -654,6 +658,33 @@ fn trade_job(engine: &SimEngine) -> Option<sim_core::colony::Job> {
         .find(|j| matches!(j.kind, sim_core::colony::JobKind::Trade { .. }))
 }
 
+/// Failure evidence for the live-world trade tests; does not alter simulation state.
+fn trade_diagnostic(engine: &SimEngine, tile: (u32, u32)) -> String {
+    use sim_core::components::{AgentState, Hunger, Position, Sleep, Thirst};
+    let workers: Vec<_> =
+        adults(engine)
+            .into_iter()
+            .map(|(id, entity)| {
+                format!(
+                "id={id} pos={:?} state={:?} hunger={:?} thirst={:?} sleep={:?} job={:?} broken={}",
+                engine.world.get::<&Position>(entity).ok().as_deref(),
+                engine.world.get::<&AgentState>(entity).ok().as_deref(),
+                engine.world.get::<&Hunger>(entity).ok().as_deref(),
+                engine.world.get::<&Thirst>(entity).ok().as_deref(),
+                engine.world.get::<&Sleep>(entity).ok().as_deref(),
+                engine.world.get::<&sim_core::colony::Job>(entity).ok().as_deref(),
+                sim_systems::runtime::mood::broken(&engine.world, &engine.resources, entity),
+            )
+            })
+            .collect();
+    format!(
+        "tick={} tile={tile:?} stack={:?} caravan={:?} workers={workers:?}",
+        engine.current_tick(),
+        engine.resources.colony.ground_items.get(&tile),
+        engine.resources.colony.neighbours.trading_caravan(),
+    )
+}
+
 fn owed_total(engine: &SimEngine) -> u32 {
     engine
         .resources
@@ -688,7 +719,11 @@ fn given_items_stay_owed_until_picked_up_and_cannot_be_given_twice() {
             break;
         }
     }
-    assert!(assigned, "a trade haul was assigned");
+    assert!(
+        assigned,
+        "a trade haul was assigned: {}",
+        trade_diagnostic(&engine, tile)
+    );
     let on_stack = engine
         .resources
         .colony
@@ -751,7 +786,8 @@ fn an_owed_entry_of_another_kind_does_not_block_the_tile() {
             break;
         }
     }
-    let job = job.expect("the blades are hauled");
+    let job =
+        job.unwrap_or_else(|| panic!("the blades are hauled: {}", trade_diagnostic(&engine, tile)));
     assert_eq!(job.item, ItemKind::FlintBlade);
     assert_eq!(job.amount, 4, "the owed four, not the stack's six");
     // The pickup takes only the blade entry down.

@@ -14,6 +14,17 @@ pub(super) fn resolve(raw: ItemRaw, c: &Catalog) -> Result<ItemDef, CatalogError
     if raw.fuel_units.is_some_and(|units| units != 1) {
         return Err(CatalogError::new(context, "fuel conversion must be1:1"));
     }
+    if raw.food.is_some()
+        && (raw.fuel_units.is_some()
+            || raw.apparel.is_some()
+            || raw.chop.is_some()
+            || raw.weapon.is_some()
+            || raw.cutter.is_some()
+            || raw.pot_capacity > 0)
+    {
+        return Err(CatalogError::new(context,
+            "food cannot also provide fuel, apparel, tool, weapon or pot capabilities: those ownership paths do not preserve food ages"));
+    }
     let chop = raw
         .chop
         .map(|r| {
@@ -79,7 +90,19 @@ pub(super) fn resolve(raw: ItemRaw, c: &Catalog) -> Result<ItemDef, CatalogError
     if let Some(r) = &raw.food {
         validate::selector(r.units_rule.as_deref(), &["meat_food_units"], context)?;
         validate::selector(r.spoil_rule.as_deref(), &["meat_spoil_days"], context)?;
-        if r.units == 0 || r.spoil_days == 0 {
+        if r.units == 0
+            || r.spoil_days == 0
+            || r.sick_permille > 1000
+            || r.groups.iter().any(String::is_empty)
+            || r.groups
+                .iter()
+                .collect::<std::collections::BTreeSet<_>>()
+                .len()
+                != r.groups.len()
+            || r.storage_spoil_days
+                .as_ref()
+                .is_some_and(|d| [d.ground, d.stockpile, d.roofed_store, d.pot].contains(&0))
+        {
             return Err(CatalogError::new(
                 context,
                 "food units/spoil days must be positive",
@@ -110,6 +133,7 @@ pub(super) fn resolve(raw: ItemRaw, c: &Catalog) -> Result<ItemDef, CatalogError
         weapon: raw.weapon,
         cutter: raw.cutter,
         food: raw.food,
+        pot_capacity: raw.pot_capacity,
         fuel_units: raw.fuel_units,
         apparel: raw.apparel,
     })

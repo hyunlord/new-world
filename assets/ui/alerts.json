@@ -256,6 +256,37 @@
           "value": 0
         }
       ]
+    },
+    "food_winter": {
+      "collection": "food_supply",
+      "predicates": [
+        {
+          "field": "preparing",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "stored_units",
+          "op": "lt",
+          "rhs_field": "winter_need"
+        }
+      ]
+    },
+    "food_spoil": {
+      "collection": "food_supply",
+      "predicates": [
+        {
+          "field": "stored_units",
+          "op": "gt",
+          "value": 0
+        },
+        {
+          "field": "expiring_units",
+          "op": "gt",
+          "rhs_field": "stored_units",
+          "multiplier": 0.2
+        }
+      ]
     }
   },
   "alerts": [
@@ -411,6 +442,24 @@
       "explanation_key": "MUX_ALERT_NEWBORN_WITHOUT_BED_WHY",
       "fix_key": "MUX_ALERT_NEWBORN_WITHOUT_BED_FIX",
       "jump_target": "person"
+    },
+    {
+      "id": "food_winter",
+      "condition_id": "food_winter",
+      "severity": "warning",
+      "text_key": "M6A_ALERT_WINTER",
+      "explanation_key": "M6A_ALERT_WINTER_WHY",
+      "fix_key": "M6A_ALERT_WINTER_FIX",
+      "jump_target": "tile"
+    },
+    {
+      "id": "food_spoil",
+      "condition_id": "food_spoil",
+      "severity": "warning",
+      "text_key": "M6A_ALERT_SPOIL",
+      "explanation_key": "M6A_ALERT_SPOIL_WHY",
+      "fix_key": "M6A_ALERT_SPOIL_FIX",
+      "jump_target": "tile"
     }
   ],
   "fact_selectors": {

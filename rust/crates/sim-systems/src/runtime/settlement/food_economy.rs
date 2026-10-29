@@ -1,9 +1,12 @@
 //! Deterministic renewable food accounting shared by gates and probe reports.
 
+#[path = "food_supply.rs"]
+mod food_supply;
+
 use crate::runtime::agent_actions::needs::HUNGER_CONSUME_AMOUNT;
 use crate::runtime::resource_regen::{season_at, FOOD_REGEN_AMOUNT, REGEN_INTERVAL};
 use hecs::World;
-use sim_core::components::{Agent, Hunger, Inventory, ResourceKind, SettlementId};
+use sim_core::components::{Agent, Cold, Hunger, Inventory, ResourceKind, SettlementId};
 use sim_core::rules::BirthRule;
 use sim_engine::SimResources;
 
@@ -30,6 +33,12 @@ pub fn season_supply_per_day(
     forage_radius: u32,
     season: usize,
 ) -> f64 {
+    if resources.rules.colony.is_some() {
+        return food_supply::seasonal(resources, sid, forage_radius)
+            .get(season)
+            .copied()
+            .unwrap_or(0.0);
+    }
     let base = supply_per_day(resources, sid, forage_radius);
     match resources.rules.seasons {
         Some(rule) => base * f64::from(rule.regen_permille[season.min(WINTER)]) / 1000.0,
@@ -39,6 +48,17 @@ pub fn season_supply_per_day(
 
 /// Mean daily supply over a year; equals the fixed supply without seasons.
 pub fn annual_mean_supply(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> f64 {
+    if resources.rules.colony.is_some() {
+        let seasons = resources.rules.calendar.seasons_per_year;
+        return if seasons == 0 {
+            0.0
+        } else {
+            food_supply::seasonal(resources, sid, forage_radius)
+                .iter()
+                .sum::<f64>()
+                / f64::from(seasons)
+        };
+    }
     let base = supply_per_day(resources, sid, forage_radius);
     match resources.rules.seasons {
         Some(rule) => {
@@ -75,6 +95,9 @@ pub fn catchment_radius(resources: &SimResources) -> u32 {
 
 /// Stockpile food plus food carried by live members, summed in AgentId order.
 pub fn stock_in_hand(world: &World, resources: &SimResources, sid: SettlementId) -> u64 {
+    if resources.rules.colony.is_some() {
+        return crate::runtime::food::reserves::units(world, resources, sid, true);
+    }
     let Some(settlement) = resources.settlements.get(&sid) else {
         return 0;
     };
@@ -181,6 +204,14 @@ fn weighted_source_count(resources: &SimResources, sid: SettlementId, forage_rad
 
 /// Renewable daily food supply inside the formation tile's forage radius.
 pub fn supply_per_day(resources: &SimResources, sid: SettlementId, forage_radius: u32) -> f64 {
+    if resources.rules.colony.is_some() {
+        let day = crate::runtime::food::day(resources);
+        let (_, season, _, _) = resources.rules.calendar.date_of_day(u64::from(day));
+        return food_supply::seasonal(resources, sid, forage_radius)
+            .get(season as usize)
+            .copied()
+            .unwrap_or(0.0);
+    }
     // M1.5: the colony's `Fertility` rule keeps the weighted count its
     // provisioned rule used, so its store target is unchanged by the switch.
     let weighted = matches!(
@@ -203,12 +234,36 @@ pub fn members_need_per_day(world: &World, resources: &SimResources, sid: Settle
     let Some(settlement) = resources.settlements.get(&sid) else {
         return 0.0;
     };
-    let mut members: Vec<_> = world
-        .query::<(&Agent, &Hunger)>()
-        .iter()
-        .filter(|(_, (agent, _))| settlement.member_agents.contains(&agent.id))
-        .map(|(_, (agent, hunger))| (agent.id, need_per_day(hunger, resources.ticks_per_day)))
-        .collect();
+    let mut members: Vec<_> = if resources.rules.colony.is_some() {
+        let cold_multiplier = resources
+            .rules
+            .society
+            .firewood
+            .map(|rule| rule.cold_hunger_permille);
+        world
+            .query::<(&Agent, &Hunger, Option<&Cold>)>()
+            .iter()
+            .filter(|(_, (agent, _, _))| settlement.member_agents.contains(&agent.id))
+            .map(|(_, (agent, hunger, cold))| {
+                // Match HungerDecaySystem's f32 growth before projecting to days.
+                let growth = match (cold, cold_multiplier) {
+                    (Some(_), Some(permille)) => hunger.growth_rate * permille as f32 / 1000.0,
+                    _ => hunger.growth_rate,
+                };
+                (
+                    agent.id,
+                    need_per_day(&Hunger::new(0.0, growth), resources.ticks_per_day),
+                )
+            })
+            .collect()
+    } else {
+        world
+            .query::<(&Agent, &Hunger)>()
+            .iter()
+            .filter(|(_, (agent, _))| settlement.member_agents.contains(&agent.id))
+            .map(|(_, (agent, hunger))| (agent.id, need_per_day(hunger, resources.ticks_per_day)))
+            .collect()
+    };
     members.sort_by_key(|(id, _)| *id);
     members.iter().map(|(_, need)| *need).sum()
 }

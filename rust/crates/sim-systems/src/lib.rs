@@ -362,6 +362,11 @@ pub fn register_colony_mind_runtime_systems(engine: &mut SimEngine) {
 fn register_runtime_systems_with_decision(engine: &mut SimEngine, decision: fn(&mut SimEngine)) {
     register_phase2_systems(engine);
     register_agent_systems(engine);
+    if engine.resources.rules.colony.is_some() {
+        engine.register_system(Box::new(runtime::food::FoodDailySystem::new(
+            &engine.resources,
+        )));
+    }
     decision(engine);
     register_needs_systems(engine);
     register_construction_systems(engine);

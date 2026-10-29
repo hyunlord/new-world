@@ -21,6 +21,10 @@ impl RawSources {
     pub fn bundled() -> Self {
         Self {
             sources: [
+                (
+                    "plants.ron",
+                    include_str!("../../../data/colony/plants.ron"),
+                ),
                 ("flora.ron", include_str!("../../../data/colony/flora.ron")),
                 (
                     "animals.ron",
@@ -65,6 +69,7 @@ impl RawSources {
                     | "pressures.ron"
                     | "animals.ron"
                     | "flora.ron"
+                    | "plants.ron"
                     | "pack.ron"
                     | "alerts"
                     | "lessons"
@@ -89,6 +94,7 @@ pub(super) fn normalize(name: &str) -> &str {
         "knowledge" => "knowledge.ron",
         "pressures" => "pressures.ron",
         "animals" => "animals.ron",
+        "plants" => "plants.ron",
         "flora" => "flora.ron",
         other => other,
     }

@@ -96,6 +96,8 @@ pub enum Action {
         /// Consecutive quiet ticks before release.
         release_ticks: u64,
     },
+    /// Demand-limited food gathering, cooking and winter preservation.
+    FoodPlan(super::FoodPlan),
 }
 /// One fixed-order rule.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -191,6 +193,7 @@ pub fn parse_rules(text: &str) -> Result<RuleFile, String> {
                 },
             ) => crate::colony::knowledge::id(knowledge).is_some() && *days > 0,
             (Condition::KnowledgeRisk, Action::Teach) => true,
+            (Condition::FoodDeficit, Action::FoodPlan(plan)) => plan.valid(),
             (
                 Condition::ThreatApproaching,
                 Action::Defence {

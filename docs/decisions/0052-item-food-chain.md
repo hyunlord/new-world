@@ -81,7 +81,16 @@ same physical quantities. Plant phases use category-based drawn placeholders
 until an art pass supplies bindings. No art generation is part of M6a.
 The two requested variety mood variants are explicit M7 data-table debt.
 
-## Consequences and verification
+## Alternatives considered
+
+Keep a second abstract colony food reserve alongside physical stacks: rejected
+because births, trading and meals could spend units no item owner held. Move
+food age into every legacy stack wire layout: rejected in favor of the explicit
+format-13 sidecar and pinned format-12 decoder, preserving old save boundaries.
+Generate new plant art during this pass: rejected because the goal reserves art
+production for the art line; category placeholders retain visible phases.
+
+## Consequences
 
 The sidecar minimizes old-wire changes but requires an exhaustive transfer
 closure audit. Missing metadata is an invariant failure, not a fresh batch.
@@ -101,3 +110,14 @@ capacity, missing knowledge, day/season save boundaries and untouched baseline
 continuation. Freeze bars before calibration; freeze policy/data before the
 32 held-outs. The complete gate and clean-load performance are independent
 requirements. No inherited UI-pass waiver certifies this simulation change.
+
+## Date
+
+2026-10-29.
+
+## Source
+
+[M6A_GOAL](../v8/m6a/M6A_GOAL.md),
+[M6A_DESIGN](../v8/m6a/M6A_DESIGN.md),
+[ADR 0016](0016-simulation-contract.md) and
+[ADR 0033](0033-extensibility-contract.md).

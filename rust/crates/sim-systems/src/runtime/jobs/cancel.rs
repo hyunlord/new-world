@@ -30,6 +30,10 @@ pub fn drop_carry(world: &mut World, res: &mut SimResources, entity: Entity) {
         .map(|carry| *carry)
         .zip(world.get::<&Position>(entity).ok().map(|p| (p.x, p.y)));
     if let Some((carry, tile)) = load {
+        if carry.kind.definition().food.is_some() {
+            super::food_transfers::drop(world, res, entity, tile);
+            return;
+        }
         put_items(res, tile, carry.spec(), carry.count);
         let _ = world.remove_one::<Carry>(entity);
     }
@@ -107,6 +111,7 @@ pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
         return;
     }
     drop_carry(world, res, entity);
+    crate::runtime::food::loss::lose_carried(world, res, entity);
     let tool = world
         .get::<&Tool>(entity)
         .ok()

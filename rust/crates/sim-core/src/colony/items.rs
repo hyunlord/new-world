@@ -362,10 +362,29 @@ mod tests {
             (3, 3)
         );
         let codes: Vec<u32> = ItemKind::all().map(|k| k.code()).collect();
-        assert_eq!(
-            codes,
-            vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-        );
+        assert_eq!(codes, (0..30).collect::<Vec<_>>());
+        let historical = [
+            ItemKind::Log,
+            ItemKind::Firewood,
+            ItemKind::Stone,
+            ItemKind::Flint,
+            ItemKind::FlintBlade,
+            ItemKind::StoneAxe,
+            ItemKind::Hide,
+            ItemKind::Clay,
+            ItemKind::RawPot,
+            ItemKind::ClayPot,
+            ItemKind::GroundAxe,
+            ItemKind::Meat,
+            ItemKind::CuredHide,
+            ItemKind::HideWrap,
+            ItemKind::FurCloak,
+            ItemKind::Spear,
+            ItemKind::WolfHide,
+        ];
+        for (code, kind) in historical.into_iter().enumerate() {
+            assert_eq!(kind.code(), code as u32);
+        }
         assert_eq!((ItemKind::Log.code(), ItemKind::Log.name()), (0, "log"));
         for kind in ItemKind::all() {
             assert_eq!(ItemKind::from_name(kind.name()), Some(kind));

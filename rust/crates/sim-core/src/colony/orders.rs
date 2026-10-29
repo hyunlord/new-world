@@ -74,6 +74,8 @@ pub enum Designation {
     /// Hunt (M5): never on a tile — deer move; the hunt marks live in
     /// `ColonyState::wildlife`. The variant names hunting's knowledge gate.
     Hunt,
+    /// Harvest a ripe data-defined plant on this tile.
+    Harvest,
 }
 
 impl Designation {
@@ -86,6 +88,7 @@ impl Designation {
             Self::Deconstruct => 3,
             Self::ClayPit => 4,
             Self::Hunt => 5,
+            Self::Harvest => 6,
         }
     }
 }
@@ -394,6 +397,8 @@ pub enum ReserveKey {
     Work((u32, u32)),
     /// An animal being hunted, by `AnimalId` (M5).
     Animal(u32),
+    /// A plant being harvested, by tile.
+    Plant((u32, u32)),
 }
 
 impl ReserveKey {
@@ -407,7 +412,8 @@ impl ReserveKey {
             | Self::Node(t)
             | Self::Bench(t)
             | Self::Wood(t)
-            | Self::Work(t) => t,
+            | Self::Work(t)
+            | Self::Plant(t) => t,
             // Not a tile: an animal moves (off the map, so it blocks no placement).
             Self::Animal(id) => (u32::MAX, id),
         }
@@ -441,7 +447,7 @@ mod tests {
             .blueprints()
             .map(|d| d.identity.code)
             .collect();
-        assert_eq!(codes, vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        assert_eq!(codes, vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
         let space: Vec<bool> = super::super::content::installed_or_bundled()
             .blueprints()
             .map(|d| {
@@ -452,7 +458,10 @@ mod tests {
             .collect();
         assert_eq!(
             space,
-            vec![false, false, false, false, true, true, true, true, true, false, false, false]
+            vec![
+                false, false, false, false, true, true, true, true, true, false, false, false,
+                false
+            ]
         );
         assert!(MaterialNeeds::none().complete());
         assert_eq!(MaterialNeeds::none().needed_total(), 0);

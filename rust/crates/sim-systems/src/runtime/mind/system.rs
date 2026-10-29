@@ -34,6 +34,7 @@ fn failure(error: impl fmt::Display) -> MindTickError {
 
 /// Unregistered until the explicit switch; all persistent choices live in resources.
 pub struct ColonyMindSystem {
+    harvest_food: super::harvest_food::PlantCache,
     program: MindProgram,
     places: PlacesCache,
     scratch: EvalScratch,
@@ -56,6 +57,7 @@ impl ColonyMindSystem {
         .then(|| super::scheduling::Diagnostics::new(&program.policy));
         let continuation = super::scheduling::ContinuationGate::new(&program.policy);
         Self {
+            harvest_food: super::harvest_food::PlantCache::default(),
             continuation,
             diagnostics,
             program,
@@ -149,6 +151,7 @@ impl ColonyMindSystem {
             Some(&effects.forage_plans),
         )
         .map_err(failure)?;
+        *context.harvest_food.borrow_mut() = Some(self.harvest_food.snapshot(resources));
         let mut pending: Vec<_> = context.rows().iter().map(|row| row.agent).collect();
         let mut completed = BTreeSet::new();
         let mut replay_visit = false;
@@ -353,7 +356,12 @@ impl ColonyMindSystem {
             .node(node_id)
             .ok_or_else(|| failure("selected node missing"))?;
         let effect = self.program.effect(node.id).map_err(failure)?;
-        let target = if retained.is_some() {
+        let target = if retained.is_some()
+            && !(resources.rules.colony.is_some()
+                && matches!(
+                    effect.lifecycle,
+                    behaviours::LifecycleBinding::Resource(sim_core::components::TargetKind::Food)
+                )) {
             super::scheduling::owned_target(
                 effect.lifecycle,
                 context.row(agent).map_err(failure)?,

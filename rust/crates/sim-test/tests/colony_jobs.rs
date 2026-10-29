@@ -262,6 +262,37 @@ fn jobs_cancel_on_hunger() {
         .expect("id");
     let load = carry_of(&engine, carrier).expect("load").count;
     let ground_before = ground_logs(&engine);
+    // Hunger interrupts for a reachable physical meal; an empty colony cannot
+    // satisfy hunger by cancelling the very jobs that produce its food.
+    let position = tile_of(&engine, carrier);
+    let meal_tile = (0..engine.resources.tile_grid.height)
+        .flat_map(|y| (0..engine.resources.tile_grid.width).map(move |x| (x, y)))
+        .filter(|tile| position.0.abs_diff(tile.0).max(position.1.abs_diff(tile.1)) >= 3)
+        .filter(|tile| {
+            open(&engine, *tile)
+                && engine.resources.nav.reachable(position, *tile)
+                && !engine.resources.colony.ground_items.contains_key(tile)
+        })
+        .min_by_key(|tile| {
+            (
+                position.0.abs_diff(tile.0).max(position.1.abs_diff(tile.1)),
+                tile.1,
+                tile.0,
+            )
+        })
+        .expect("reachable empty meal tile");
+    let day = sim_systems::runtime::food::day(&engine.resources);
+    sim_systems::runtime::food::items::create_ground(
+        &mut engine.resources,
+        meal_tile,
+        sim_core::colony::ItemSpec::raw(ItemKind::from_name("porridge").expect("meal"), None),
+        10,
+        day,
+        sim_systems::runtime::food::items::FoodSource::Debug,
+    )
+    .expect("tracked edible food");
+    sim_systems::runtime::food::validate(&engine.world, &engine.resources)
+        .expect("physical fixture accounting");
     if let Ok(mut hunger) = engine.world.get::<&mut Hunger>(carrier) {
         hunger.value = 80.0;
     }

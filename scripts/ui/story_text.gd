@@ -22,10 +22,10 @@ const Names = preload("res://scripts/ui/person_names.gd")
 
 const MODIFIER_KEYS: Array[String] = ["M5_MOD_SLEPT_ROOFED", "M5_MOD_SLEPT_OUTSIDE", "M5_MOD_FED", "M5_MOD_HUNGRY", "M5_MOD_THIRSTY",
 	"M5_MOD_COLD", "M5_MOD_QUARRELLED", "M5_MOD_LEARNED", "M5_MOD_DISCOVERED", "M5_MOD_GRIEF", "M5_MOD_SICK", "M5_MOD_CRAFTED",
-	"M5_MOD_DRAFTED", "M5_MOD_PRESSURE"]
+	"M5_MOD_DRAFTED", "M5_MOD_PRESSURE", "M6A_MOD_VARIED", "M6A_MOD_MONOTONOUS"]
 ## Modifier names as the bridge gives them (`modifier_names`), in code order.
 const MODIFIER_NAMES: Array[String] = ["slept_roofed", "slept_outside", "fed", "hungry", "thirsty", "cold", "quarrelled", "learned",
-	"discovered", "grief", "sick", "crafted", "drafted", "pressure"]
+	"discovered", "grief", "sick", "crafted", "drafted", "pressure", "food_varied", "food_monotonous"]
 ## `Modifier::code` of the relation cause (no mood modifier: the pair's bad blood).
 const RELATION_CODE: int = 100
 const RELATION_KEY: String = "M5_MOD_RELATION"

@@ -34,7 +34,19 @@ fn retained_tick_still_consumes_and_phase_tick_reconsiders_without_fabricated_re
         resources.rules.agent.night_rest = None;
         resources.rules.agent.routine = None;
         resources.current_tick = tick;
-        resources.food_tiles.insert((2, 2), 10);
+        resources.nav.install(sim_core::nav::CostMap::new(8, 8));
+        crate::runtime::food::items::create_ground(
+            &mut resources,
+            (2, 2),
+            sim_core::colony::ItemSpec::raw(
+                sim_core::colony::ItemKind::from_name("berries").expect("food"),
+                None,
+            ),
+            10,
+            0,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("physical food fixture");
         resources.sleep_tiles.insert((1, 1), 10);
         let mut history = MindHistory::new(&policy).expect("history");
         history
@@ -95,6 +107,10 @@ fn retained_tick_still_consumes_and_phase_tick_reconsiders_without_fabricated_re
             );
         } else {
             assert_eq!(running.node, policy.node_id("eat_now").expect("eat"));
+            assert_eq!(
+                world.get::<&SeekTarget>(entity).expect("food target").tile,
+                (2, 2)
+            );
             assert_eq!(
                 *world.get::<&AgentState>(entity).expect("state"),
                 AgentState::Seeking {

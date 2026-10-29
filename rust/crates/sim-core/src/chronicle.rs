@@ -158,11 +158,21 @@ pub enum ChronicleKind {
     /// Colony mind entered the critical band; subject is the person, cause the node slot, value its score.
     /// The cause side table retains the actual underlying chronicle origin when available.
     MindChoice = 47,
+    /// First actual cooked item eaten; subject = eater, cause = item code, value = food units.
+    FirstCookedMeal = 48,
+    /// First preserved item actually stored; cause = item code, value = stored pieces.
+    FirstDriedStore = 49,
+    /// Winter preparation observation; value = stored units, cause = required units.
+    WinterFoodPlan = 50,
+    /// A winter ended with qualifying start stores; cause = winter year, value = remaining units.
+    WinterStoredSurvived = 51,
+    /// Hunger death's food evidence; subject = person, cause = shortage reason, value = stores.
+    HungerFoodChain = 52,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 48] = [
+    pub const ALL: [ChronicleKind; 53] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -211,6 +221,11 @@ impl ChronicleKind {
         Self::StewardAction,
         Self::StewardDefence,
         Self::MindChoice,
+        Self::FirstCookedMeal,
+        Self::FirstDriedStore,
+        Self::WinterFoodPlan,
+        Self::WinterStoredSurvived,
+        Self::HungerFoodChain,
     ];
 
     /// Stable numeric discriminant.
@@ -269,6 +284,11 @@ impl ChronicleKind {
             Self::StewardAction => "steward_action",
             Self::StewardDefence => "steward_defence",
             Self::MindChoice => "mind_choice",
+            Self::FirstCookedMeal => "first_cooked_meal",
+            Self::FirstDriedStore => "first_dried_store",
+            Self::WinterFoodPlan => "winter_food_plan",
+            Self::WinterStoredSurvived => "winter_stored_survived",
+            Self::HungerFoodChain => "hunger_food_chain",
         }
     }
 }
@@ -723,10 +743,10 @@ mod tests {
         assert_eq!(ChronicleKind::StewardDefence.as_u8(), 46);
         assert_eq!(ChronicleKind::MindChoice.as_u8(), 47);
         assert_eq!(ChronicleKind::MindChoice.as_str(), "mind_choice");
-        assert_eq!(ChronicleKind::ALL.len(), 48);
+        assert_eq!(ChronicleKind::ALL.len(), 53);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 48);
+        assert_eq!(names.len(), 53);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

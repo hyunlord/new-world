@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://v7init"]
+[gd_scene load_steps=23 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/core/sim_reads.gd" id="1_sim_reads"]
 [ext_resource type="Script" path="res://scripts/world/colony/ground_layer.gd" id="2_ground"]
@@ -21,6 +21,8 @@
 
 [ext_resource type="Script" path="res://scripts/core/main_bootstrap.gd" id="19_boot"]
 
+[ext_resource type="Script" path="res://scripts/world/colony/plant_layer.gd" id="22_plants"]
+
 [node name="Main" type="Node2D"]
 script = ExtResource("19_boot")
 
@@ -32,6 +34,9 @@ script = ExtResource("1_sim_reads")
 
 [node name="GroundLayer" type="Node2D" parent="ColonyView"]
 script = ExtResource("2_ground")
+
+[node name="PlantLayer" type="Node2D" parent="ColonyView"]
+script = ExtResource("22_plants")
 
 [node name="World" type="Node2D" parent="ColonyView"]
 y_sort_enabled = true

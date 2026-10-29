@@ -6,7 +6,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt;
 
 macro_rules! content_id {
-    ($name:ident, $by_code:ident, $by_name:ident, [$($variant:ident = $code:literal),+ $(,)?]) => {
+    ($name:ident, $by_code:ident, $by_name:ident, [$($variant:ident = $code:literal),* $(,)?]) => {
         /// An explicitly assigned, family-specific content code.
         #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
         pub struct $name(u32);
@@ -23,9 +23,10 @@ macro_rules! content_id {
             // These spellings preserve historical test/codec APIs, not behavior dispatch.
             $(#[allow(non_upper_case_globals)]
               #[doc = concat!("Historical codec/test identity `", stringify!($variant), "`.")]
-              pub const $variant: Self = Self($code);)+
+              pub const $variant: Self = Self($code);)*
             fn legacy_debug(self) -> Option<&'static str> {
-                match self.0 { $($code => Some(stringify!($variant)),)+ _ => None }
+                let names: &[(u32, &str)] = &[$(($code, stringify!($variant)),)*];
+                names.iter().find_map(|(code, name)| (*code == self.0).then_some(*name))
             }
         }
         impl fmt::Debug for $name {
@@ -161,3 +162,5 @@ content_id!(
     animal_by_serde_name,
     [Wolf = 0, Deer = 1]
 );
+
+content_id!(PlantKind, plant_by_code, plant_by_serde_name, []);

@@ -91,8 +91,30 @@ fn construction(terrain: bool) {
         .accepted
     );
     let mut housed = false;
+    let mut first_hungry = None;
+    let mut first_death = None;
     for _ in 0..10 * engine.resources.ticks_per_day {
         engine.tick();
+        if first_hungry.is_none()
+            && engine
+                .world
+                .query::<(&sim_core::components::Agent, &sim_core::components::Hunger)>()
+                .iter()
+                .any(|(_, (_, hunger))| hunger.value > 80.0)
+        {
+            first_hungry = Some(failure_state(&engine));
+        }
+        let tallies = &engine.resources.tallies;
+        if first_death.is_none()
+            && tallies.deaths_starvation
+                + tallies.deaths_dehydration
+                + tallies.deaths_exposure
+                + tallies.deaths_combat
+                + tallies.deaths_old_age
+                > 0
+        {
+            first_death = Some(failure_state(&engine));
+        }
         let beds = engine
             .resources
             .colony
@@ -114,7 +136,10 @@ fn construction(terrain: bool) {
     }
     assert!(
         housed,
-        "physical beds for every living person by day10 terrain={terrain}"
+        "physical beds for every living person by day10 terrain={terrain}\nFIRST_HUNGER_GT80:\n{}\nFIRST_DEATH:\n{}\nFINAL:\n{}",
+        first_hungry.as_deref().unwrap_or("not observed"),
+        first_death.as_deref().unwrap_or("not observed"),
+        failure_state(&engine)
     );
     if !terrain {
         assert!(
@@ -141,4 +166,138 @@ fn construction(terrain: bool) {
         sim_systems::runtime::jobs::invariants::check(&engine.world, &engine.resources).is_ok()
     );
     assert_completed_bed_assignment(&mut engine);
+}
+
+fn failure_state(engine: &sim_engine::SimEngine) -> String {
+    use sim_core::colony::{knowledge, BlueprintKind, ColonySite, Job};
+    use sim_core::components::{Agent, AgentState, Hunger, Position};
+    let res = &engine.resources;
+    let ripe: Vec<_> = res
+        .food
+        .plants
+        .iter()
+        .filter_map(|(&tile, plant)| {
+            let definition =
+                sim_core::colony::content::installed_or_bundled().plant(plant.species)?;
+            (sim_systems::runtime::food::plants::harvestable(res, tile)
+                && definition
+                    .yield_item
+                    .definition()
+                    .food
+                    .as_ref()
+                    .is_some_and(|food| food.raw_edible))
+            .then_some(tile)
+        })
+        .collect();
+    let designated = res
+        .colony
+        .designations
+        .values()
+        .filter(|mark| **mark == sim_core::colony::Designation::Harvest)
+        .count();
+    let eligible = |tile: (u32, u32)| {
+        res.colony
+            .designations
+            .get(&tile)
+            .is_none_or(|mark| *mark == sim_core::colony::Designation::Harvest)
+            && !res
+                .colony
+                .reservations
+                .contains_key(&sim_core::colony::ReserveKey::Plant(tile))
+            && !res.steward.vetoed(
+                &sim_core::colony::steward::Target::Tile(tile.0, tile.1),
+                res.current_tick,
+            )
+    };
+    let mut food_index = sim_systems::runtime::food::choice::FoodChoiceIndex::default();
+    food_index.refresh(res);
+    let mut people: Vec<_> = engine
+        .world
+        .query::<(
+            &Agent,
+            Option<&Hunger>,
+            Option<&Position>,
+            Option<&AgentState>,
+            Option<&Job>,
+        )>()
+        .iter()
+        .map(|(entity, (agent, hunger, position, state, job))| {
+            (
+                agent.id,
+                hunger.map(|h| h.value),
+                position.map(|p| (p.x, p.y)),
+                format!("{state:?}"),
+                format!("{job:?}"),
+                sim_systems::runtime::knowledge::practice_of(&engine.world, entity),
+                {
+                    let carry = engine.world.get::<&sim_core::colony::Carry>(entity).ok().map(|carry| *carry);
+                    let priority = engine.world.get::<&sim_core::colony::WorkPriorities>(entity).ok()
+                        .map(|p| p.level(sim_core::colony::WorkType::Haul));
+                    let nearest = |filtered: bool| position.and_then(|pos| ripe.iter().copied()
+                        .filter(|&tile| res.nav.reachable((pos.x, pos.y), tile) && (!filtered || eligible(tile)))
+                        .min_by_key(|tile| (tile.0.abs_diff(pos.x).max(tile.1.abs_diff(pos.y)), tile.1, tile.0)));
+                    let edible = position.is_some_and(|pos| food_index.available_to(res, (pos.x, pos.y), agent.id, carry));
+                    format!("carry={carry:?} haul_override={priority:?} edible={edible} nearest_reachable_ripe={:?} nearest_eligible_ripe={:?}", nearest(false), nearest(true))
+                },
+            )
+        })
+        .collect();
+    people.sort_by_key(|row| row.0);
+    let rooms: Vec<_> = res
+        .colony
+        .rooms
+        .values()
+        .map(|room| {
+            (
+                physically_built(engine, room),
+                room.roofed,
+                room.tiles.len(),
+                room.tiles
+                    .iter()
+                    .filter(|tile| res.colony.beds.contains_key(tile))
+                    .count(),
+            )
+        })
+        .collect();
+    let build_knowledge: Vec<_> = [
+        BlueprintKind::LogWall,
+        BlueprintKind::Door,
+        BlueprintKind::Bedroll,
+    ]
+    .into_iter()
+    .map(|kind| {
+        (
+            kind,
+            sim_systems::runtime::knowledge::anyone_practises(
+                &engine.world,
+                knowledge::gates().build(kind),
+            ),
+        )
+    })
+    .collect();
+    let mut commands = std::collections::BTreeMap::<u16, (usize, usize)>::new();
+    for record in &res.colony.command_log {
+        if let Command::Steward { rule, .. } = record.command {
+            let counts = commands.entry(rule).or_default();
+            if record.result.accepted {
+                counts.0 += 1;
+            } else {
+                counts.1 += 1;
+            }
+        }
+    }
+    let mut ground = std::collections::BTreeMap::new();
+    for stack in res.colony.ground_items.values() {
+        *ground.entry(stack.kind).or_insert(0u64) += u64::from(stack.count);
+    }
+    format!(
+        "tick={} people={} actors(id,hunger,tile,state,job,practice,food_opportunity)={people:?}\nripe_raw_edible_plants={} designated_harvest={}\nrooms(physical,roofed,cells,beds)={rooms:?} total_beds={} sites={} space_sites={} pending_site_sample={:?}\ndeaths(starvation,dehydration,exposure,combat)=({},{},{},{}) food_ledger={:?} ground={ground:?}\nbuild_knowledge={build_knowledge:?} steward(scope,last_rule,last_tick)=({:?},{:?},{}) cooldowns={:?} vetoes={:?} commands_by_rule(accepted,rejected)={commands:?}",
+        engine.current_tick(), people.len(), ripe.len(), designated, res.colony.beds.len(),
+        engine.world.query::<&ColonySite>().iter().count(), res.colony.space_sites.len(),
+        res.colony.space_sites.iter().take(8).collect::<Vec<_>>(),
+        res.tallies.deaths_starvation, res.tallies.deaths_dehydration,
+        res.tallies.deaths_exposure, res.tallies.deaths_combat, res.food.tallies,
+        res.steward.scope, res.steward.last_rule, res.steward.last_tick,
+        res.steward.cooldowns, res.steward.vetoes,
+    )
 }

@@ -199,6 +199,11 @@ pub enum JobKind {
         /// Its work tile.
         at: (u32, u32),
     },
+    /// Harvest the ripe plant at `plant` into ground items.
+    Harvest {
+        /// The plant tile.
+        plant: (u32, u32),
+    },
 }
 
 impl JobKind {
@@ -222,6 +227,7 @@ impl JobKind {
             Self::Hunt { .. } => 15,
             Self::Equip { .. } => 16,
             Self::Trade { .. } => 17,
+            Self::Harvest { .. } => 18,
         }
     }
 
@@ -245,6 +251,7 @@ impl JobKind {
             Self::Hunt { .. } => "hunt",
             Self::Equip { .. } => "equip",
             Self::Trade { .. } => "trade",
+            Self::Harvest { .. } => "harvest",
         }
     }
 
@@ -264,6 +271,7 @@ impl JobKind {
             Self::Hunt { .. } => WorkType::Hunt,
             Self::Equip { .. } => WorkType::Haul,
             Self::Trade { .. } => WorkType::Haul,
+            Self::Harvest { .. } => WorkType::Haul,
         }
     }
 
@@ -285,6 +293,7 @@ impl JobKind {
             Self::Hunt { .. } => (u32::MAX, u32::MAX),
             Self::Equip { from } => from,
             Self::Trade { from, .. } => from,
+            Self::Harvest { plant } => plant,
         }
     }
 
@@ -307,6 +316,7 @@ impl JobKind {
             | Self::Teach { .. }
             | Self::Learn { .. }
             | Self::Hunt { .. }
+            | Self::Harvest { .. }
             | Self::Equip { .. } => None,
         }
     }
@@ -395,6 +405,7 @@ impl Job {
             (JobKind::Equip { .. }, _) => Vec::new(),
             (JobKind::Trade { from, .. }, JobStage::ToSource) => vec![ReserveKey::Stack(from)],
             (JobKind::Trade { .. }, _) => Vec::new(),
+            (JobKind::Harvest { plant }, _) => vec![ReserveKey::Plant(plant)],
         }
     }
 }
@@ -460,5 +471,10 @@ mod tests {
             ],
             [1, 3, 4]
         );
+        job.kind = JobKind::Harvest { plant: (2, 3) };
+        for stage in [JobStage::ToSource, JobStage::Working { ticks_left: 4 }] {
+            job.stage = stage;
+            assert_eq!(job.keys(), vec![ReserveKey::Plant((2, 3))]);
+        }
     }
 }

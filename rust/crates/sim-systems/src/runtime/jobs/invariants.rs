@@ -20,11 +20,11 @@ pub struct LedgerTerms {
     pub ground: u64,
     /// In agents' hands (`Carry`).
     pub carried: u64,
-    /// Held as tools (`Tool`).
+    /// Held as tools/apparel or deployed real pot vessels.
     pub held: u64,
     /// Delivered to construction sites (`MaterialNeeds`).
     pub delivered: u64,
-    /// On workshop input shelves.
+    /// In workshop input shelves or deployed pot contents.
     pub shelved: u64,
     /// Used up (`ItemLedger::consumed`).
     pub consumed: u64,
@@ -67,7 +67,13 @@ pub fn ledger_of(world: &World, res: &SimResources, kind: ItemKind) -> LedgerTer
         .iter()
         .filter(|(_, tool)| tool.item.kind == kind)
         .count() as u64
-        + worn;
+        + worn
+        + res
+            .food
+            .pots
+            .values()
+            .filter(|pot| pot.vessel.kind == kind)
+            .count() as u64;
     let delivered = colony_sites(world)
         .values()
         .map(|view| u64::from(view.needs.delivered_of(kind)))
@@ -79,7 +85,15 @@ pub fn ledger_of(world: &World, res: &SimResources, kind: ItemKind) -> LedgerTer
         .flat_map(|w| w.shelf.iter())
         .filter(|stack| stack.kind == kind)
         .map(|stack| u64::from(stack.count))
-        .sum();
+        .sum::<u64>()
+        + res
+            .food
+            .pots
+            .values()
+            .flat_map(|pot| &pot.contents)
+            .filter(|stack| stack.kind == kind)
+            .map(|stack| u64::from(stack.count))
+            .sum::<u64>();
     LedgerTerms {
         created: res.colony.item_ledger.created_of(kind),
         ground: res.colony.ground_total(kind),
@@ -108,6 +122,9 @@ pub fn log_ledger(world: &World, res: &SimResources) -> (u64, u64, u64, u64, u64
 /// Check every 7.6 invariant; the first broken one is returned as text.
 /// The ledger message starts with `item ledger` (`log ledger` for logs, M1's form).
 pub fn check(world: &World, res: &SimResources) -> Result<(), String> {
+    if res.rules.colony.is_some() {
+        crate::runtime::food::validate(world, res)?;
+    }
     for kind in ItemKind::all() {
         let t = ledger_of(world, res, kind);
         if !t.balanced() {

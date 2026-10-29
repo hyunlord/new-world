@@ -33,6 +33,9 @@ pub mod legacy_v7;
 /// World membership of production runtime systems.
 pub mod registration;
 
+/// Transient catchment capacity derived from planted species and navigation.
+pub mod food_supply_cache;
+
 use hecs::{Entity, World};
 use sim_core::causal::event::DeathReason;
 use sim_core::causal::{CausalLogStorage, EventId};
@@ -383,6 +386,12 @@ pub struct SimResources {
     /// Mind policy and history, persisted in the explicit versioned save body.
     #[serde(skip)]
     pub mind: sim_core::colony::mind_state::MindState,
+    /// Colony food state, persisted in the explicit format13 save body.
+    #[serde(skip)]
+    pub food: sim_core::colony::food::FoodState,
+    /// Pure seasonal supply cache; rebuilt after load and navigation changes.
+    #[serde(skip, default)]
+    pub food_supply_cache: std::cell::RefCell<food_supply_cache::FoodSupplyCache>,
 
     /// Fatal animal hits this tick; cleared before every normal/profiled tick.
     #[serde(skip)]
@@ -787,6 +796,8 @@ impl SimResources {
             steward: Default::default(),
             content_state: Default::default(),
             mind: Default::default(),
+            food: Default::default(),
+            food_supply_cache: Default::default(),
             fatal_animal_attacks: Vec::new(),
             building_event_queue: VecDeque::new(),
             causal_log: CausalLogStorage::new(),

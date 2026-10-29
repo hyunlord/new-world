@@ -1,4 +1,5 @@
 {
+  "plants": {"by_id": {}, "by_category": {}},
   "schema_version": 1,
   "about": "Sim codes → art ids (ADR 0033). The renderer reads every content name from here and from manifest.json; scripts/world/** names none. Codes are the bridge contracts documented in docs/v8/snapshot_schema.md. An unknown code draws its family's `fallback`.",
   "terrain": {

@@ -154,8 +154,13 @@ pub const STREAM_NEIGHBOURS: u64 = 0x4E45_4947_4842_4F52;
 /// M5.5 (ADR 0032): caravan dates and their goods.
 pub const STREAM_TRADE: u64 = 0x5452_4144_4552_5321;
 
+/// M6a: data-driven plant placement, keyed by tile and placement draw slot.
+pub const STREAM_PLANTS: u64 = 0x504C_414E_5453_5631;
+/// M6a: raw-food sickness, keyed by lineage and completed meal.
+pub const STREAM_FOOD_SICK: u64 = 0x464F_4F44_5349_434B;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 39] = [
+pub const STREAMS: [u64; 41] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -195,6 +200,8 @@ pub const STREAMS: [u64; 39] = [
     STREAM_APPAREL,
     STREAM_NEIGHBOURS,
     STREAM_TRADE,
+    STREAM_PLANTS,
+    STREAM_FOOD_SICK,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).

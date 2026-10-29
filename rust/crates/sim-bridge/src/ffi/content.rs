@@ -94,6 +94,14 @@ pub fn catalog_to_dict(catalog: &Catalog) -> VarDictionary {
         animals.push(&row);
     }
     out.set("animals", animals);
+    let mut plants: Array<VarDictionary> = Array::new();
+    for def in catalog.plants() {
+        let mut row = identity(&def.identity);
+        row.set("category", def.category.as_str());
+        row.set("yield_item", i64::from(def.yield_item.code()));
+        plants.push(&row);
+    }
+    out.set("plants", plants);
     let mut knowledge: Array<VarDictionary> = Array::new();
     for def in &catalog.knowledge_defs().nodes {
         let mut row = VarDictionary::new();

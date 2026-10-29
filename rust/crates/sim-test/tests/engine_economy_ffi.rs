@@ -76,6 +76,14 @@ fn workshops_list_bills_in_order_and_commands_parse_names() {
             (8, "scrape_hide", 3),
             (9, "make_hide_wrap", 3),
             (10, "make_fur_cloak", 3),
+            // M6a: cooking uses the hearth (11); food drying has its own rack (12).
+            (11, "roast_meat", 11),
+            (12, "porridge", 11),
+            (13, "stew", 11),
+            (14, "roasted_roots", 11),
+            (15, "fruit_porridge", 11),
+            (16, "dry_meat", 12),
+            (17, "dry_berries", 12),
         ]
     );
     // A workshop and its site appear in the overlay as nothing else.

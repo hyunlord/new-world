@@ -24,7 +24,7 @@ use sim_core::components::{
 };
 use sim_core::TerrainType;
 use sim_engine::{SimEngine, SimResources};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 
 use crate::runtime::jobs::cancel;
 use crate::runtime::jobs::items::{can_hold_items, has_wall, put_items, terrain, under_building};
@@ -166,6 +166,24 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             None => CommandResult::rejected(RejectReason::OutOfMap),
             Some(tiles) => marked(designate(res, &tiles)),
         },
+        Command::DesignateHarvest { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
+            None => CommandResult::rejected(RejectReason::OutOfMap),
+            Some(tiles) => marked(designate_harvest(res, &tiles)),
+        },
+        Command::DeployFoodPot { tile } => {
+            let day =
+                u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
+            match crate::runtime::food::storage::deploy_pot(
+                world,
+                res,
+                sim_core::colony::food::FoodOwner::Ground(tile),
+                tile,
+                day,
+            ) {
+                Ok(_) => CommandResult::ok(1),
+                Err(_) => CommandResult::rejected(RejectReason::Nothing),
+            }
+        }
         Command::DesignateChopTiles { tiles } => {
             let (w, h) = (res.tile_grid.width, res.tile_grid.height);
             let inside: Vec<Tile> = tiles.into_iter().filter(|t| t.0 < w && t.1 < h).collect();
@@ -261,10 +279,10 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
         }
         Command::PlaceBlueprint { kind, x, y } => match check_blueprint(res, kind, x, y) {
             Err(reason) => CommandResult::rejected(reason),
-            Ok(()) => {
-                place_blueprint(world, res, &rule, kind, x, y);
-                CommandResult::ok(1)
-            }
+            Ok(()) => match place_blueprint(world, res, &rule, kind, x, y) {
+                Ok(()) => CommandResult::ok(1),
+                Err(reason) => CommandResult::rejected(reason),
+            },
         },
         Command::DesignateQuarry { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
             None => CommandResult::rejected(RejectReason::OutOfMap),
@@ -592,6 +610,21 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             if count == 0 {
                 return CommandResult::rejected(RejectReason::Nothing);
             }
+            if kind.definition().food.is_some() {
+                let day = u32::try_from(crate::runtime::resource_regen::day_index(res))
+                    .unwrap_or(u32::MAX);
+                return match crate::runtime::food::items::create_ground(
+                    res,
+                    (x, y),
+                    ItemSpec::raw(kind, None),
+                    count,
+                    day,
+                    crate::runtime::food::items::FoodSource::Debug,
+                ) {
+                    Ok(()) => CommandResult::ok(u32::from(count)),
+                    Err(_) => CommandResult::rejected(RejectReason::Blocked),
+                };
+            }
             res.colony.item_ledger.create(kind, u64::from(count));
             crate::runtime::jobs::items::put_items(
                 res,
@@ -684,7 +717,7 @@ fn debug_kill(world: &mut World, res: &mut SimResources, agent: AgentId) -> Comm
 /// Apply `edit` to `workshop` (`Unknown` when there is none) and reschedule
 /// its bills. `edit` gets the next bill id and returns whether it used it.
 fn bill_command(
-    world: &World,
+    world: &mut World,
     res: &mut SimResources,
     workshop: WorkshopId,
     edit: impl FnOnce(&mut Workshop, BillId) -> Result<bool, RejectReason>,
@@ -792,6 +825,24 @@ fn designate(res: &mut SimResources, tiles: &[Tile]) -> (usize, usize) {
     (count, far)
 }
 
+fn designate_harvest(res: &mut SimResources, tiles: &[Tile]) -> (usize, usize) {
+    let (mut count, mut far) = (0, 0);
+    for tile in tiles {
+        if res.food.plants.contains_key(tile) && !res.colony.designations.contains_key(tile) {
+            if !camp_reaches(res, *tile) {
+                far += 1;
+                continue;
+            }
+            res.colony.designations.insert(*tile, Designation::Harvest);
+            count += 1;
+        }
+    }
+    if count > 0 {
+        res.colony.touch(false);
+    }
+    (count, far)
+}
+
 /// Mark every unmarked resource node among `tiles` for quarrying (M2).
 fn designate_quarry(res: &mut SimResources, tiles: &[Tile]) -> (usize, usize) {
     let (mut count, mut far) = (0, 0);
@@ -870,6 +921,7 @@ fn cancel_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usi
     let marked: BTreeSet<Tile> = marks.iter().copied().collect();
     cancel_jobs_where(world, res, |job| match job.kind {
         JobKind::Chop { tree } => marked.contains(&tree),
+        JobKind::Harvest { plant } => marked.contains(&plant),
         JobKind::Quarry { node } => marked.contains(&node),
         JobKind::Dig { tile } | JobKind::Deconstruct { tile } => marked.contains(&tile),
         _ => false,
@@ -1054,6 +1106,7 @@ pub fn check_blueprint(
             || res.colony.beds.contains_key(t)
             || under_building(res, *t)
             || res.colony.zone_of_tile.contains_key(t)
+            || res.food.pots.values().any(|pot| pot.tile == *t)
             || reserved.contains(t)
     });
     // M2: no footprint tile may cover a workshop's work tile, and a
@@ -1095,35 +1148,30 @@ fn place_blueprint(
     kind: BlueprintKind,
     x: u32,
     y: u32,
-) {
-    let Ok(site) = footprint(res, kind, x, y) else {
-        return;
-    };
+) -> Result<(), RejectReason> {
+    let site = footprint(res, kind, x, y)?;
     let centre = site.centre();
     let (_, needs, progress) = kind.plan(rule);
-    for tile in site.tiles() {
+    let tiles = site.tiles();
+    for &tile in &tiles {
         res.colony.occupied.insert(tile, Occupant::Site(centre));
+    }
+    let under: Vec<Tile> = tiles
+        .iter()
+        .copied()
+        .filter(|tile| res.colony.ground_items.contains_key(tile))
+        .collect();
+    let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
+    if crate::runtime::food::items::relocate_ground(world, res, &under, centre, day).is_err() {
+        for tile in tiles {
+            res.colony.occupied.remove(&tile);
+        }
+        return Err(RejectReason::Blocked);
     }
     if kind.is_workshop() {
         res.colony
             .site_work_tiles
             .insert(centre, work_tile_of(site.top_left, site.size));
-    }
-    // Loose logs under the new footprint move out (merge and spill, 7.4); none
-    // of them is reserved (a reserved tile blocks the placement).
-    let under: BTreeMap<Tile, (ItemSpec, u16)> = site
-        .tiles()
-        .into_iter()
-        .filter_map(|t| {
-            res.colony
-                .ground_items
-                .get(&t)
-                .map(|s| (t, (s.spec(), s.count)))
-        })
-        .collect();
-    for (tile, (item, count)) in under {
-        res.colony.ground_items.remove(&tile);
-        put_items(res, tile, item, count);
     }
     world.spawn((
         ConstructionSite::new(
@@ -1134,6 +1182,7 @@ fn place_blueprint(
         site,
     ));
     res.colony.touch(false);
+    Ok(())
 }
 
 /// The tiles of the Bresenham line from `a` to `b`, `a` first (M3 `PlaceLine`).

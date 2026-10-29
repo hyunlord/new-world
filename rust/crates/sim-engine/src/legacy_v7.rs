@@ -381,6 +381,8 @@ impl<C: Into<sim_core::chronicle::Chronicle>> From<LegacySimResources<C>> for Si
             nav: old.nav,
             content_state: Default::default(),
             mind: Default::default(),
+            food: Default::default(),
+            food_supply_cache: Default::default(),
             fatal_animal_attacks: Vec::new(),
         }
     }

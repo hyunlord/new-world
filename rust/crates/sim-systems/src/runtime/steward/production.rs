@@ -15,12 +15,23 @@ pub(super) fn inputs(
     hearth: (u32, u32),
     recipes: &[(RecipeKind, u16)],
 ) -> Vec<Command> {
+    inputs_with_discovery(world, res, hearth, recipes, BTreeMap::new())
+}
+
+/// Food production may request authored discovery materials before a recipe is known.
+pub(super) fn inputs_with_discovery(
+    world: &World,
+    res: &SimResources,
+    hearth: (u32, u32),
+    recipes: &[(RecipeKind, u16)],
+    discovery: BTreeMap<ItemKind, u32>,
+) -> Vec<Command> {
     let mut profile = InputProfile::new(res.current_tick, recipes.len(), res.colony.nodes.len());
     let profiling = profile.enabled();
     let Some(colony_rule) = res.rules.colony else {
         return Vec::new();
     };
-    let mut need: BTreeMap<ItemKind, u32> = BTreeMap::new();
+    let mut need: BTreeMap<ItemKind, u32> = discovery;
     let mut workshops = std::collections::BTreeSet::new();
     profile.phase(Phase::Recipes);
     for &(recipe, target) in recipes {
@@ -145,11 +156,32 @@ pub(super) fn inputs(
             if deficit == 0 {
                 break;
             }
-            commands.push(Command::DesignateQuarry {
-                x0: x,
-                y0: y,
-                x1: x,
-                y1: y,
+            let clay = node.kind == sim_core::colony::NodeKind::ClayBank;
+            let designation = if clay {
+                sim_core::colony::Designation::ClayPit
+            } else {
+                sim_core::colony::Designation::Quarry
+            };
+            if !crate::runtime::knowledge::anyone_practises(
+                world,
+                sim_core::colony::knowledge::gates().designation(designation),
+            ) {
+                continue;
+            }
+            commands.push(if clay {
+                Command::DesignateClay {
+                    x0: x,
+                    y0: y,
+                    x1: x,
+                    y1: y,
+                }
+            } else {
+                Command::DesignateQuarry {
+                    x0: x,
+                    y0: y,
+                    x1: x,
+                    y1: y,
+                }
             });
             deficit = deficit.saturating_sub(u32::from(node.left));
         }

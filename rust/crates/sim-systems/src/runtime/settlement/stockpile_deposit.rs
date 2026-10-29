@@ -131,7 +131,11 @@ impl RuntimeSystem for StockpileDepositSystem {
                 // the amount actually removed; `store` adds exactly that.
                 let (taken, wood) = match world.get::<&mut Inventory>(entity) {
                     Ok(mut inv) => {
-                        let n = inv.get(ResourceKind::Food);
+                        let n = if resources.rules.colony.is_none() {
+                            inv.get(ResourceKind::Food)
+                        } else {
+                            0
+                        };
                         let w = if firewood {
                             inv.get(ResourceKind::Wood)
                         } else {
@@ -157,7 +161,9 @@ impl RuntimeSystem for StockpileDepositSystem {
 
                 if taken > 0 || wood > 0 {
                     if let Some(settlement) = resources.settlements.get_mut(&sid) {
-                        settlement.store(ResourceKind::Food, taken);
+                        if taken > 0 {
+                            settlement.store(ResourceKind::Food, taken);
+                        }
                         settlement.store(ResourceKind::Wood, wood);
                     }
                     // Pass 4: a member who walked home to haul has delivered.

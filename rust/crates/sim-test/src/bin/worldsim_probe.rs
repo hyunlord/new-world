@@ -1,6 +1,24 @@
 //! Headless WorldSim probe command.
 fn main() -> std::process::ExitCode {
     let args: Vec<_> = std::env::args().skip(1).collect();
+    if args
+        .first()
+        .is_some_and(|arg| arg == "m6a" || arg == "m6a-data-only")
+    {
+        return match sim_test::content_boot::from_environment().and_then(|()| {
+            if args[0] == "m6a" {
+                sim_test::m6a::run(&args[1..])
+            } else {
+                sim_test::m6a::run_data_only(&args[1..])
+            }
+        }) {
+            Ok(()) => std::process::ExitCode::SUCCESS,
+            Err(error) => {
+                eprintln!("{error}");
+                std::process::ExitCode::FAILURE
+            }
+        };
+    }
     if args.first().is_some_and(|arg| arg == "mind-shadow") {
         if args.iter().any(|arg| arg == "--help" || arg == "-h") {
             println!("{}", sim_test::mind_shadow::RETIREMENT_NOTICE);

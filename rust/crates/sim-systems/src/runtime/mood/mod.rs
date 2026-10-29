@@ -154,6 +154,8 @@ pub struct Facts {
     pub drafted_long: bool,
     /// A pressure is active.
     pub pressure: bool,
+    /// Actual ingredient groups eaten in the last three days; zero gives no diet thought.
+    pub food_groups: usize,
     /// The day fields of the mood.
     pub mood: Option<Mood>,
     /// Today.
@@ -269,6 +271,11 @@ pub fn modifiers(f: &Facts) -> Vec<(Modifier, i32)> {
     if f.pressure {
         push(Modifier::Pressure);
     }
+    match f.food_groups {
+        1 => push(Modifier::FoodMonotonous),
+        3.. => push(Modifier::FoodVaried),
+        _ => {}
+    }
     out
 }
 
@@ -310,6 +317,13 @@ pub fn facts_of(world: &World, res: &SimResources, entity: Entity) -> Facts {
             .get::<&Drafted>(entity)
             .is_ok_and(|d| res.current_tick.saturating_sub(d.since) >= day_ticks),
         pressure: crate::runtime::story::any_active(res),
+        food_groups: world
+            .get::<&Agent>(entity)
+            .ok()
+            .and_then(|a| res.food.meals.get(&a.id))
+            .map_or(0, |history| {
+                history.groups_in(res.current_tick, res.rules.calendar.days_to_ticks(3))
+            }),
         mood,
         day,
         ha: t.map_or(500, |t| t.ha),
