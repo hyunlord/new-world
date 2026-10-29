@@ -11,7 +11,7 @@
 
 > 현재 정착지는 방과 창고, 제작·작업 우선순위, 기술 전승, 징집, 이주민·교역을 갖춘 정착지다. 기본 확대는 1×이고 64px 타일과 채택된 사람·자연 아트를 쓴다. 아래의 첫 플레이 순서와 전체 조작표로 시작한다.
 
-**M-UX2.1 재검증 중·미게시:** 16:15KST 플래너 지시에 따라 어댑터 오류와 UI1.25 정보창 겹침을 수정하고 화면을 다시 확인했다. 최종 전체 게이트·GPU 검증은 진행 전이며 이전 실패를 보존한다. [후속 보고](docs/v8/mux2_1/MUX21_REPORT.md). **추가 확인 화면:** [정보창 이유·연대기·방어 8장](docs/images/mux_contact_sheet.png) (FPS7/7 유지·정보창 겹침 수정 재캡처; 최종 gate·게시 대기, 자연 재굽기10.493ms 목표 미달)과 [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png). [Stage A 보고](docs/v8/mux/STAGE_A_REPORT.md)의 기술 gate3는 `ca9f531ca6ef700ca223d99dba14d834b94b45da`에서 clean35/35 통과하고 2026-10-25 10:30 KST에 게시됐다. 이후 Stage B는 [나무 검증](docs/v8/mux/B5_VERIFICATION.md)과 [고정 B4 평가](docs/v8/mux/B4_HELDOUT_VERIFICATION.md)를 확보했으며 전체 gate·게시는 대기다. A8 수용은 **FAILED**, 물리 트랙패드 검증은 미완료이며, ISS030의 반복73–99ms·시작 포함 최대 약650/646ms 지연은 남아 있다(미니맵345µs 상한은 정지 tick1 장면만의 결과이며 전체 UI/FPS 판정이 아니다).
+**M6a 검증 중·미게시:** [음식 사슬 화면 12장](docs/images/m6a_contact_sheet.png)은 일반 수확 명령 관측, 실제 토기 저장, 음식 작업을 끈 별도 사례의 굶주림 원인 화면이다. 보정 2회차는 생존 8/8, 겨울 저장·조리식 비율 각각 7/8이며 성능 비교는 미달해 최적화 중이다. 전체 게이트·held-out 수용 완료를 뜻하지 않는다. [진행 보고](docs/v8/m6a/M6A_REPORT.md). M-UX2.1은 `5b0c8881`로 게시됐으며 [이전 보고](docs/v8/mux2_1/MUX21_REPORT.md)의 실패 이력과 남은 stall·자연 재굽기 문제를 보존한다. [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).
 
 ## 빌드와 실행
 

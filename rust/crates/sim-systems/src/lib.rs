@@ -342,14 +342,13 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
 /// Saved worlds must expose their complete decoded resources before calling this registrar.
 pub fn register_colony_mind_runtime_systems(engine: &mut SimEngine) {
     register_runtime_systems_with_decision(engine, |engine| {
-        let source = engine
-            .resources
-            .mind
-            .policy_source
-            .as_deref()
-            .unwrap_or(include_str!("../../sim-core/data/colony/mind.ron"));
-        let program = runtime::mind::MindProgram::load(source)
-            .unwrap_or_else(|error| panic!("colony mind registration: invalid policy: {error}"));
+        let program = match engine.resources.mind.policy_source.as_deref() {
+            Some(source) => runtime::mind::MindProgram::load(source),
+            None => runtime::mind::MindProgram::load_static(include_str!(
+                "../../sim-core/data/colony/mind.ron"
+            )),
+        }
+        .unwrap_or_else(|error| panic!("colony mind registration: invalid policy: {error}"));
         let mut mind = runtime::mind::ColonyMindSystem::new(program);
         mind.initialize(&mut engine.resources)
             .unwrap_or_else(|error| {

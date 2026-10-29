@@ -19,14 +19,21 @@
   reserves require food that lasts through winter. Preservation gets its own
   deficit budget and keeps the selected eligible workshop. Prepared cooking
   can request daytime heat backed by actual fuel; see ADR 0053.
+- Boolean food availability avoids destination sorting, and job eligibility
+  rejects incompatible states before checking food needs. Bundled mind policy
+  text is borrowed by the compiled program while saved/dynamic text stays owned.
+- Actual pot-scroll and hunger-cause-chain captures supplement the phase and
+  food UI evidence; the current contact sheet contains twelve disclosed shots.
 
 ### Removed
 - Colony authority of the V7 abstract food counter; the baseline path remains
   separate and requires fresh identity verification.
 
 This entry records implementation, not acceptance or publication. Winter
-survival failed in calibration round 1 (0/8 alive); round-2 mechanism tests pass
-but its cohort, held-out evaluation, final performance and full gate are pending.
+survival failed in calibration round 1 (0/8 alive); round 2 observes 8/8 alive,
+with cooked share and winter stores at 7/8. Its valid early performance comparison
+fails ten timing ratios and side64 allocation; all six C3 ceilings pass. The
+optimization's fresh performance, held-out evaluation and full gate are pending.
 Preserve failed runs and their corrections in
 [M6A_DECISIONS](docs/v8/m6a/M6A_DECISIONS.md) and
 [M6A_REPORT](docs/v8/m6a/M6A_REPORT.md).

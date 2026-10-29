@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-10-29 — M6a 검증 중: 현재 화면 모음을 실제 음식 사슬 12장으로 교체했다. 이전 `mux_contact_sheet.png`는 BASE `5b0c8881`과 아카이브 색인에 보존한다. 보정2회차와 유효 성능 실패는 M6A_REPORT에 기록하며, 이 교체는 게이트 통과·게시·오너 수용 선언이 아니다.
+
 - M-UX2.1 D22: **M-UX2.1 수용·게시: STRICT_PASS.** 전체 gate 소스와 먼저 게시한 제품 소스는 [ff6af820a](https://github.com/hyunlord/new-world/commit/ff6af820aa1fb4e2d894fa7e4e814bdf897a7868)다. 이 뒤의 문서 전용 후속은 **NOT_FULL_GATED**이며 새 전체 gate 실행을 주장하지 않는다. 원래 strict stall 결과와 모든 실패 영수증은 보존했다. ISS030/#515와 자연 재굽기10.493ms/4ms 목표 미달 ISS347/#658은 OPEN이다. 이번 stall 예외를 자연 재굽기나 M-CORE side64에 확대하지 않는다. [ISS-343/#638 폐쇄](https://github.com/hyunlord/new-world/issues/638#issuecomment-6476850413) · [ISS-344/#655 폐쇄](https://github.com/hyunlord/new-world/issues/655#issuecomment-6476851601) · [ISS-345/#656 폐쇄](https://github.com/hyunlord/new-world/issues/656#issuecomment-6476852746) · [ISS-346/#657 폐쇄](https://github.com/hyunlord/new-world/issues/657#issuecomment-6476854052)
 
 - 2026-10-29 — M-UX2.1 D22: 왜? 제목 폭·헤더 높이 수정, 미측정 topbar 최적화 복원. 기존42 및 EN/KO53검사 통과; 최종 전체 gate 대기 (`docs/v8/mux2_1/MUX21_DECISIONS.md` D22).

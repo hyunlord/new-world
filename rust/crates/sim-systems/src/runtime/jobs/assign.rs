@@ -1158,9 +1158,6 @@ impl RuntimeSystem for JobAssignSystem {
             .without::<&Child>()
             .without::<&PorterTrip>()
             .iter()
-            .filter(|(entity, _)| !needy(*entity))
-            // M5 (ADR 0030): a person in a breakdown refuses jobs.
-            .filter(|(entity, _)| !crate::runtime::mood::broken(world, resources, *entity))
             .filter(|(_, (agent, _, state, _, _, _, _, _))| {
                 matches!(
                     state,
@@ -1173,6 +1170,9 @@ impl RuntimeSystem for JobAssignSystem {
                         }
                 ) && !in_combat(agent.id)
             })
+            .filter(|(entity, _)| !needy(*entity))
+            // M5 (ADR 0030): a person in a breakdown refuses jobs.
+            .filter(|(entity, _)| !crate::runtime::mood::broken(world, resources, *entity))
             .map(
                 |(entity, (agent, pos, _, priorities, elder, tool, skills, knowledge))| {
                     let p = priorities

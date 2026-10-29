@@ -1,5 +1,6 @@
 //! Resolve authored policy against actual provider and lifecycle registrations once.
 
+use std::borrow::Cow;
 use std::fmt;
 use std::sync::Arc;
 
@@ -26,7 +27,7 @@ impl std::error::Error for MindProgramError {}
 
 /// Immutable resolved policy and its bound fact/effect callbacks.
 pub struct MindProgram {
-    source: String,
+    source: Cow<'static, str>,
     /// Resolved immutable bands, nodes and registry identities.
     pub policy: CompiledMind,
     /// Bound factual readers for this exact policy revision.
@@ -37,8 +38,17 @@ pub struct MindProgram {
 }
 
 impl MindProgram {
+    /// Compile policy supplied from static program data.
+    pub fn load_static(source: &'static str) -> Result<Self, MindProgramError> {
+        Self::compile(Cow::Borrowed(source))
+    }
+
     /// Compile a local policy without mutating a world or installing global data.
     pub fn load(source: &str) -> Result<Self, MindProgramError> {
+        Self::compile(Cow::Owned(source.to_owned()))
+    }
+
+    fn compile(source: Cow<'static, str>) -> Result<Self, MindProgramError> {
         let registry = ProviderRegistry::new(BUILTIN_PROVIDERS)
             .map_err(|error| MindProgramError(error.to_string()))?;
         let schema = MindRegistrySchema {
@@ -46,7 +56,7 @@ impl MindProgram {
             behaviours: behaviours::registry_schema(),
         };
         let policy =
-            mind::compile(source, &schema).map_err(|error| MindProgramError(error.to_string()))?;
+            mind::compile(&source, &schema).map_err(|error| MindProgramError(error.to_string()))?;
         let providers = registry
             .bind(&policy)
             .map_err(|error| MindProgramError(error.to_string()))?;
@@ -83,7 +93,7 @@ impl MindProgram {
             .collect::<Result<Vec<_>, MindProgramError>>()?;
         let running_revision = policy.revision();
         Ok(Self {
-            source: source.to_owned(),
+            source,
             policy,
             providers,
             effects,
@@ -120,3 +130,7 @@ impl MindProgram {
         })
     }
 }
+
+#[cfg(test)]
+#[path = "program_source_tests.rs"]
+mod source_tests;

@@ -39,7 +39,7 @@ Godot import·변경5파일 strict 및 FFI57 일치, headless renderer10, 기존
 
 실제 창 최종 `visual-haul-clearance`는 54검사0실패, 종료0, SCRIPT ERROR/Parse Error/ERROR 없음이다. 추가 일반 벌목만 한 `visual-clearance`는 원목 더미가 그루터기를 가렸다. 동쪽 일반 stockpile을 더한900tick 후속에서 실제 운반으로 원목이 이동했고 원래(0,48)그루터기(화면288,540)가 드러났다. 소나무 벽은 같은 원래 게임플레이가 완성한(5,47), 참나무 대조는(0,27)이다. 초기 수관 가림, 원목 가림, 카메라 실패 캡처는 삭제하지 않았다. 수관이 밀집한 원래 standing 장면을 단독 종 실루엣 판독 PASS로 주장하지 않으며 saved species와 실제 sprite 경로의 일치 증거를 구분한다. 원시 PNG6개·receipt·log 해시는 `b5/window-final-receipt.json`에 연결한다.
 
-최종 창 재검토 `b5/b5-window-review-final.md/.json`은 PNG6개 SHA 일치를 재확인하고 노출된 원래 그루터기·pine/oak벽 대비에 bounded PASS를 기록했다. 담당 구현자의 재검토이므로 독립 소유자 승인으로 부르지 않는다. 현재 [화면 모음6장](../../images/mux_contact_sheet.png)은 장면별 가림·통제 조건을 표기하며 원본1920×1080은 외부에 유지한다.
+최종 창 재검토 `b5/b5-window-review-final.md/.json`은 PNG6개 SHA 일치를 재확인하고 노출된 원래 그루터기·pine/oak벽 대비에 bounded PASS를 기록했다. 담당 구현자의 재검토이므로 독립 소유자 승인으로 부르지 않는다. 현재 [화면 모음6장](https://github.com/hyunlord/new-world/blob/3c39dcbe0039c98479c6294c09b599ed009650b0/docs/images/mux_contact_sheet.png)은 장면별 가림·통제 조건을 표기하며 원본1920×1080은 외부에 유지한다.
 
 ## 최종 OFF 안전망 재캡처
 릴리스 probe `e402d51b809680f52b377dffe59af5b15f811d8a2d3b7f2d71009d9beb723951`, 제품2123경로 freeze `e0bb069c051ef1164c37f4e15527cb7189ab2c5a8da296fe903110096c86e7d9`로 재캡처했다. `b5/final-safety1-evidence/receipt.json`은 CAPTURE_VALID_ORIGINAL_BASELINE_IDENTICAL, 실패0·소스 drift0이다. 원본 공유228748값 차이0, Chronicle64파일19683항목 동일(기존 git_sha 제외), 정규화 raw digest 및 결정성이 통과했다.

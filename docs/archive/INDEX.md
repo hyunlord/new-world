@@ -85,3 +85,5 @@ These are locally verified immutable report/decision objects, not a new remote p
 Follow-up selective adoption: [M-ART2 D2](../v8/m_art2/MART2_DECISIONS.md) and [M-ART2.1 D1/D4](../v8/m_art2_1/MART21_DECISIONS.md). These decisions do not waive every original asset or numerical failure. Commit date and later integration/owner-decision date are distinct; existing HISTORY dates are not rewritten from commit timestamps.
 
 M-UX replaces `docs/images/mart21_contact_sheet.png` with `mux_contact_sheet.png`; the former sheet remains at commit `67a6232ab41a4bf5051b11303bcac97543b111f0` (`git show <sha>:docs/images/mart21_contact_sheet.png`). Its original manifest and pass report remain in `docs/v8/m_art2_1/`. Historical comparison/season sheets remain because their reports still use them.
+
+M6a replaces the current `docs/images/mux_contact_sheet.png` with `m6a_contact_sheet.png` (12 actual UI captures, not owner acceptance). The last M-UX2.1 sheet remains at BASE `5b0c88812374b87e7854cc9203f144ad0ccd9009`; the B5 report links its own historical sheet commit.

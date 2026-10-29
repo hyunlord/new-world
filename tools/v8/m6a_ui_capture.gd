@@ -214,9 +214,47 @@ func _observe_food() -> void:
 			await _chronicle_shots("cooking", row)
 		if _wanted("chronicle") and not observed.has("chronicle"):
 			await _chronicle_shots("chronicle", row)
-		if int(row.get("kind", -1)) == 52 and _wanted("why") and not observed.has("why"):
-			if bool(chronicle.call("open_why", row["index"])):
-				await _food_shots("why", View.world_to_tile(camera.position), row, main.get_node("UI/WhyPanel") as Control)
+		if int(row.get("kind", -1)) == 52 and int(row.get("cause", -1)) == 1 and _wanted("why") and not observed.has("why"):
+			await _hunger_why_shots(chronicle, row, why_read)
+
+
+func _hunger_why_shots(chronicle: Control, row: Dictionary, why: Dictionary) -> void:
+	# Stored supply links to reachable harvest, then the observed harvest condition.
+	# Selecting the oldest stage instead would show only the terminal explanation.
+	var kinds: Array = Array(why.get("kinds", []))
+	var causes: Array = Array(why.get("causes", []))
+	var links: Array = Array(why.get("links", []))
+	var values: Array = Array(why.get("values", []))
+	var connected: bool = bool(why.get("found", false)) and links.size() >= 3 and kinds.size() == links.size() and causes.size() == links.size() and values.size() == links.size()
+	if connected:
+		connected = kinds[0] == 52 and kinds[1] == 52 and kinds[2] == 52 and causes[0] == 1 and causes[1] == 2 and int(causes[2]) in [3, 4, 5, 6] and links[0] == 0 and links[1] == 0 and links[2] == 0
+	check("hunger why actual stored-harvest-reason links", connected)
+	if not connected: return
+	var opened: bool = bool(chronicle.call("open_why", row["index"]))
+	check("hunger why opens selected stores entry", opened)
+	if not opened: return
+	var panel: Control = main.get_node("UI/WhyPanel") as Control
+	var body: RichTextLabel = panel.get("_body") as RichTextLabel
+	var valid: bool = true
+	for factor: float in [1.0, 1.25]:
+		hud.get("store").set_value("ui_scale", factor)
+		await create_timer(0.6).timeout
+		await frames(5)
+		var actual: String = panel.call("plain_text")
+		var expected: Array[String] = []
+		for i: int in 3:
+			expected.append(ChronicleText.food_hunger_sentence(int(causes[i]), int(values[i]), root.get_node("Locale")))
+		var present: bool = panel.visible and body.is_visible_in_tree() and int(panel.call("current_index")) == int(row["index"]) and panel.call("lines").size() >= 3
+		for sentence: String in expected:
+			present = present and not sentence.is_empty() and actual.contains(sentence)
+		check("hunger why all three meaningful sentences rendered %s" % factor, present)
+		var fits: bool = body.get_visible_line_count() > 0 and body.get_content_height() <= body.size.y
+		check("hunger why entire chain fits body %s" % factor, fits)
+		_fit_control(panel, "hunger why panel")
+		valid = valid and present and fits
+		await _shot("why-%s" % factor, {"scale": factor, "event": row, "why": why, "expected_sentences": expected, "rendered_text": actual, "body_rect": str(body.get_global_rect()), "content_height": body.get_content_height(), "visible_lines": body.get_visible_line_count(), "selected_index": panel.call("current_index")})
+	panel.hide()
+	if valid: observed["why"] = {"tick": _tick(), "event": row, "why": why}
 
 
 func _hashes() -> Dictionary:
