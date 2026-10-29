@@ -301,3 +301,9 @@ physical equality against an ordinary longer run do not replace full-horizon
 observer coverage or the final complete gate. Source:
 `tools/v8/m6a_base72.py`; `tools/v8/m6a_observer_successor.py`;
 `docs/v8/m6a/M6A_DECISIONS.md` P10.
+
+### Historical dispatch fixture environments and successor provenance
+
+Remove foreign gate selectors only from the historical fixture's subprocess environment copy; retain explicit deadlines, diagnostic/event assertions and no-output checks. Verify under a polluted parent and assert parent values unchanged. Never clear the real gate configuration globally or change production dispatch precedence to make a legacy test pass. Exact-source proof/cohort contracts still change when tools change: version an enumerated amendment, pin before/after bytes, preserve old proof/receipts and obtain fresh BASE-only execution where current-source identity is required. Do not relabel old source hashes or count this as candidate calibration. Sources: `tools/v8/test_core_shadow_freeze.py`; `tools/v8/test_core_ui_successor_dispatch.py`; `tools/v8/m6a_observer_successor.py`; `docs/v8/m6a/M6A_DECISIONS.md` P12.
+
+A valid standing soak or uncensored on-screen visibility failure remains an acceptance failure even if a fixture predates the feature or a HUD overlaps the actor. Steward-OFF does not imply absent autonomous harvest; unchanged layout does not establish a new layout regression or invalid capture. Record measured deaths, knowledge losses and owned/qualifying pixels without inventing causality or a waiver. Sources: `tools/v8/soak.sh`; `tools/v8/mux2_visibility_test.gd`; `docs/v8/m6a/M6A_DECISIONS.md` P12.

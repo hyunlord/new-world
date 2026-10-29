@@ -1,6 +1,6 @@
 # 수용 FAIL / 미게시 — M6a 보고서
 
-이 문서는 목표 §4의 보고서 양식을 채운 **수용 FAIL·미게시 보고서**다. 동결 held-out에서 생존 29/32(필요30), 조리 식사 기준 충족 24/32(필요26)로 실패했다. 독립 원시 감사도 두 실패를 확인했으며 면제는 없다. “구현 완료 보고” 제목은 수용 완료 선언이 아니다. P9 `5c7e05e677cebda16fea5825f88d83561acd9d2d`의 새 성능 **유효 33/33쌍 PASS**, 마지막 보정 **4/4회 완료·정책 동결**, 후보 held-out **32세계 ×72일 실행 완료**다. BASE 원본 observer의 72일 시작 실패는 보존했고, 별도 BASE 어댑터의 seed 0 자격 검증 48/72일과 BASE 32세계 실행은 완료했다. 비교 수용은 FAIL이며 이야기 비교는 양쪽32세계×3년 완료했으며 최종48단계 게이트는 대기 중이다. 게시하지 않았고 원격 main/wip는 BASE에 남는다. P10 도구 수정 커밋은 `bd799460c25a7019dd5d3f30296587c96674615b`다. BASE는 `5b0c88812374b87e7854cc9203f144ad0ccd9009`이다. P4·P5·P6 성능 FAIL과 자연 전체 UI 촬영 13/15·실패2는 유지한다. 집중 화면을 합친 15사례 검토는 자연 전체 실행이나 오너 플레이테스트를 대신하지 않는다.
+이 문서는 목표 §4의 보고서 양식을 채운 **수용 FAIL·미게시 보고서**다. 동결 held-out에서 생존 29/32(필요30), 조리 식사 기준 충족 24/32(필요26)로 실패했다. 독립 원시 감사도 두 실패를 확인했으며 면제는 없다. “구현 완료 보고” 제목은 수용 완료 선언이 아니다. P9 `5c7e05e677cebda16fea5825f88d83561acd9d2d`의 새 성능 **유효 33/33쌍 PASS**, 마지막 보정 **4/4회 완료·정책 동결**, 후보 held-out **32세계 ×72일 실행 완료**다. BASE 원본 observer의 72일 시작 실패는 보존했고, 별도 BASE 어댑터의 seed 0 자격 검증 48/72일과 BASE 32세계 실행은 완료했다. 비교 수용은 FAIL이며 이야기 비교는 양쪽32세계×3년 완료했으며 P11 전체 게이트1은43/48 PASS(16·26·39·41·45 FAIL)로 끝났다. 게시하지 않았고 원격 main/wip는 BASE에 남는다. P10 도구 수정 커밋은 `bd799460c25a7019dd5d3f30296587c96674615b`다. BASE는 `5b0c88812374b87e7854cc9203f144ad0ccd9009`이다. P4·P5·P6 성능 FAIL과 자연 전체 UI 촬영 13/15·실패2는 유지한다. 집중 화면을 합친 15사례 검토는 자연 전체 실행이나 오너 플레이테스트를 대신하지 않는다.
 
 ## 구현 완료 보고 — M6a
 
@@ -173,7 +173,7 @@ full2는 실제 ‘나중에’ 버튼 입력으로 모달을 닫았다. tick161
 
 수정 범위는 `tools/v8/`의 `m6a_base72_entry.rs`, `m6a_base72.py`, `test_m6a_base72.py`, `m6a_observer_successor.py`, `test_m6a_observer_successor.py`, `m6a_gate_source.py`, `m6a_gate_evidence.py` 7개다. BASE 라이브러리·데이터의 정확한 소스와 컴파일 입력을 바인딩한 별도 실행 파일로 72일 observer를 제공한다. 기존 BASE 바이너리가 그대로라고 주장하지 않는다. 원래 P9 동결·후보 receipt·runner·scorer를 유지하고, 정확히 지정한 도구 변경 외 제품 입력 동일성을 successor 증명으로 검사한다. 다섯 번째 보정·재동결·수용 막대 완화는 없다.
 
-[48일 자격 receipt](</Users/rexxa/work/m6a-data/20261029/base72-adapter/qualification48.json>)는 seed0 원본/어댑터 exit0 및 summary SHA 동일성을 기록한다. [72일 자격 receipt](</Users/rexxa/work/m6a-data/20261029/base72-adapter/qualification72.json>)는 seed0 양쪽 exit0이며 원본의 observer 없는 72일 결과와 어댑터 결과를 비교한다. 새 `mux2` 관측 필드 외 동일성 검증을 적용하며 48일의 바이트 동일성 주장과 구분한다. 자격 검증 자체는 어댑터 범위에 한정된다. 이후 BASE 32세계 실행을 완료했으나 held-out 수용은 FAIL이다. 이야기 비교는 완료했고 최종48단계 게이트는 대기 중이며 게시 PASS는 없다. 원래 기한 `1793335103`을 유지한다.
+[48일 자격 receipt](</Users/rexxa/work/m6a-data/20261029/base72-adapter/qualification48.json>)는 seed0 원본/어댑터 exit0 및 summary SHA 동일성을 기록한다. [72일 자격 receipt](</Users/rexxa/work/m6a-data/20261029/base72-adapter/qualification72.json>)는 seed0 양쪽 exit0이며 원본의 observer 없는 72일 결과와 어댑터 결과를 비교한다. 새 `mux2` 관측 필드 외 동일성 검증을 적용하며 48일의 바이트 동일성 주장과 구분한다. 자격 검증 자체는 어댑터 범위에 한정된다. 이후 BASE 32세계 실행을 완료했으나 held-out 수용은 FAIL이다. 이야기 비교는 완료했고 P11 전체 게이트1은43/48 PASS·5 FAIL이며 게시 PASS는 없다. 원래 기한 `1793335103`을 유지한다.
 
 ### 이야기 수확량
 
@@ -192,7 +192,7 @@ full2는 실제 ‘나중에’ 버튼 입력으로 모달을 닫았다. tick161
 
 ### 닫은 GitHub 이슈 / 새로 연 이슈
 
-[임시 원장](../../ISSUES.md)의 M6A-1 [#670 식물 전용 아트 부재](https://github.com/hyunlord/new-world/issues/670), M6A-2 [#671 held-out 생존·조리 수용 실패](https://github.com/hyunlord/new-world/issues/671)는 **OPEN**이다. 이번 패스에서 닫은 이슈와 게시 커밋은 없다. 임시 식별자를 ISS 번호로 바꾸지 않는다.
+[임시 원장](../../ISSUES.md)의 M6A-1 [#670 식물 전용 아트 부재](https://github.com/hyunlord/new-world/issues/670), M6A-2 [#671 held-out 생존·조리 수용 실패](https://github.com/hyunlord/new-world/issues/671), M6A-3 [#672 soak](https://github.com/hyunlord/new-world/issues/672), M6A-4 [#673 가시성](https://github.com/hyunlord/new-world/issues/673)는 **OPEN**이다. 이번 패스에서 닫은 이슈와 게시 커밋은 없다. 임시 식별자를 ISS 번호로 바꾸지 않는다.
 
 ### 변경된 파일 목록 (커밋별)
 
@@ -219,7 +219,7 @@ full2는 실제 ‘나중에’ 버튼 입력으로 모달을 닫았다. tick161
 P8의 FoodOperation(53) 추가는 연대기 번호·인과 참조·이야기 수확량, 저장 근거와 전체 FoodState fingerprint를 의도적으로 바꾼다. P7의 바이트 동일성을 P8에 주장하거나 이 차이를 조용히 정규화하지 않는다. 물리적 결과·흐름·식사는 별도로 비교하고 이전 사건 참조는 명시적 번호 대응으로 검증해야 한다. 관측 파일만으로 모든 내부 행동의 동일성을 입증하지 않는다.
 
 
-P9 새 성능·보정4/4·정책 동결·후보 held-out 실행을 마쳤다. BASE held-out 비교는 수용 FAIL이다. 이야기 비교는 완료했고 최종 기준선 동일성·전체 게이트 결과는 대기 중이며 게시하지 않는다. 2026-10-29의 실제 화면 receipt 1–6차 실패는 보존하며, 세 번째 촬영의 crop 무효 판정은 재검토 후 철회했다. 식물 전용 완성 아트가 없으며 임시 표현을 완성 아트로 수용하지 않는다. 원래 실패 로그와 당시 원인 분류를 보존한다.
+P9 새 성능·보정4/4·정책 동결·후보 held-out 실행을 마쳤다. BASE held-out 비교는 수용 FAIL이다. 이야기 비교는 완료했고 P11 전체 게이트1은43/48 PASS·5 FAIL이며 게시하지 않는다. 2026-10-29의 실제 화면 receipt 1–6차 실패는 보존하며, 세 번째 촬영의 crop 무효 판정은 재검토 후 철회했다. 식물 전용 완성 아트가 없으며 임시 표현을 완성 아트로 수용하지 않는다. 원래 실패 로그와 당시 원인 분류를 보존한다.
 
 주택 실패는 조건을 완화하지 않고 실제 음식 획득·목적지 인계 경로를 수정한 뒤 [동일한 두 주택 검증](</Users/rexxa/work/m6a-data/20261029/housing-repair-test-1.log>)에서 통과했다. 이 2/2 결과를 모든 세계의 장기 생존으로 확대하지 않는다.
 
@@ -292,7 +292,73 @@ P9 새 성능·보정4/4·정책 동결·후보 held-out 실행을 마쳤다. BA
 |보정4 / 정책 동결|완료4/4 / 동결 완료|보정 점수 NOT_EVALUATED; 원래 동결 유지|
 |BASE 원본 observer72|시작 FAIL|48일 전용 CLI 검사; 시뮬레이션 미시작|
 |BASE 어댑터 자격48/72|seed0 PASS|후보/BASE held-out 수용이나 전체 게이트 아님|
-|최종48단계 게이트 / 게시|PENDING / NOT_PUBLISHED|[final-gate-1](</Users/rexxa/work/m6a-data/20261029/final-gate-1>); 45단계는 known held-out FAIL을 유지해야 하며 실제 실행 결과 대기|
+|전체 게이트1 / 게시|43/48 PASS·5 FAIL / NOT_PUBLISHED|P11 3191890c;16·26·39·41·45 FAIL. 아래48단계 실제 표 참조|
+
+
+### P11 전체 게이트1 결과와 P12 후속
+
+[실제48단계 결과](</Users/rexxa/work/m6a-data/20261029/p11-full-gate-summary.json>)의 HEAD는 `3191890c1b5d829b126d27cd5fd885c82d83c246`, gate SHA256은 `c69ee77925705b1915790e23f4848a56a7def51824e7540202f3c47c27fea70f`다. **43/48 PASS, 실패16·26·39·41·45, 미게시**다.
+
+|단계|검사|결과(exit)|
+|---:|---|---|
+|1|fmt|PASS (0)|
+|2|bridge_build|PASS (0)|
+|3|godot_import|PASS (0)|
+|4|test_debug|PASS (0)|
+|5|test_release|PASS (0)|
+|6|clippy|PASS (0)|
+|7|forbidden_math|PASS (0)|
+|8|gdscript_strict|PASS (0)|
+|9|smoke|PASS (0)|
+|10|identity|PASS (0)|
+|11|determinism|PASS (0)|
+|12|perf|PASS (0)|
+|13|bridge_api|PASS (0)|
+|14|docs|PASS (0)|
+|15|inventory_closure|PASS (0)|
+|16|python_unittest|FAIL (1)|
+|17|m1_tests|PASS (0)|
+|18|colony_determinism|PASS (0)|
+|19|replay|PASS (0)|
+|20|uid_check|PASS (0)|
+|21|play_check|PASS (0)|
+|22|schema_docs|PASS (0)|
+|23|renderer_agreement|PASS (0)|
+|24|save_roundtrip|PASS (0)|
+|25|bench|PASS (0)|
+|26|soak|FAIL (1)|
+|27|nav_bench|PASS (0)|
+|28|knowledge|PASS (0)|
+|29|story|PASS (0)|
+|30|neighbours|PASS (0)|
+|31|art_manifest|PASS (0)|
+|32|resolver_parity|PASS (0)|
+|33|extensibility_grep|PASS (0)|
+|34|mart2_render|PASS (0)|
+|35|steward|PASS (0)|
+|36|data_only_ext|PASS (0)|
+|37|mux2_defence|PASS (0)|
+|38|mux2_oracles|PASS (0)|
+|39|mux2_visibility|FAIL (1)|
+|40|mux2_why|PASS (0)|
+|41|mux2_stall_receipt|FAIL (1)|
+|42|baseline_isolation|PASS (0)|
+|43|mind_data_only|PASS (0)|
+|44|core_shadow|PASS (0)|
+|45|core_evaluation|FAIL (1)|
+|46|mux21_regressions|PASS (0)|
+|47|m6a_food_fixture|PASS (0)|
+|48|m6a_food_data_only|PASS (0)|
+
+16단계는 부모 M6A 설정이 legacy/UI 자식 fixture 분기를 선택해471개 중3개 assertion이 실패했다. P12는 test_core_shadow_freeze.py·test_core_ui_successor_dispatch.py·m6a_observer_successor.py·test_m6a_observer_successor.py의 **도구4개만** 수정했다. 자식 환경만 격리하고 실제 dispatch·부모 환경·기존 assertion은 유지한다. [집중40 PASS/부모 불변](</Users/rexxa/work/m6a-data/20261029/p12-focused.log>) 및 [전체 Python473 PASS](</Users/rexxa/work/m6a-data/20261029/p12-python-all.log>)는 후속 검증이며 과거 step16 FAIL을 지우지 않는다. [적용본 검토](</Users/rexxa/work/m6a-data/20261029/p12-applied-review.md>)는 작성자 검토로 독립 검토가 아니다. 별도 [비작성자 독립 검토](</Users/rexxa/work/m6a-data/20261029/p12-independent-review.md>)도 blocking defect를 찾지 못했다. [AST/compile4 PASS](</Users/rexxa/work/m6a-data/20261029/p12-static.json>)와 달리 LSP는 UNAVAILABLE이다.
+
+25단계 성능은33유효쌍·66 ADMITTED·무효0·C3 6개 PASS다. 사전 NOT_RUN1회와15분 대기는 보존한다. 26단계는 유효 soak FAIL: 종자0–3 기아사9/9/9/10·KnowledgeLost0/2/1/0, 회계/예약 위반0·활동 기준 통과. 집사 OFF여도 자율 수확은 존재하며 구체적 원인은 미입증이다. 기존 fixture를 무효화하거나 동결 후 튜닝하지 않는다. [감사](</Users/rexxa/work/m6a-data/20261029/p11-soak-failure-review.md>), M6A-3 [#672 OPEN](https://github.com/hyunlord/new-world/issues/672).
+
+39단계는 day1_noon_half agent9의45/60픽셀, owned235·unstable0·unclipped인 유효 가시성 FAIL이며 다른7장면 PASS다. 기존 상단 집사 HUD의 부분 겹침을 확인했지만 신규 UI 배치 회귀나 캡처 결함으로 단정하지 않는다. [감사](</Users/rexxa/work/m6a-data/20261029/p11-visibility-failure-review.md>), M6A-4 [#673 OPEN](https://github.com/hyunlord/new-world/issues/673).
+
+41단계 [stall receipt 요약](</Users/rexxa/work/m6a-data/20261029/p11-stall-summary.json>)은 complete=true·capture errors0이나 strict FAIL이다. 1×에서34.469124초의 **52.771ms, tick361, ticks_advanced=1** 프레임1개가50ms를 넘었다. 0.5×는50ms 초과0·최대49.539ms다. **NO M6a waiver**이며 M-UX2.1 예외를 상속하지 않는다. 45단계 held-out 생존29/30필요·조리24/26필요 FAIL도 유지한다.
+
+새 명시적 proof v2는 P10 부모와 P9→후속9개/P10→후속4개 경로 및 정확한 test before/after 해시를 묶는다. 기존v1·제품·정책·scorer·runner·후보·보정4/4회 제한은 유지한다. 현재 소스 일치를 요구하는 BASE validator 때문에 새 커밋의 동일 BASE 입력·1296–1327×72일 **BASE-only** 코호트가 필요하며 후보 재실행/보정5회가 아니다. 원본 proof/config/cohort는 고치지 않는다. **새 proof·새 BASE 코호트·gate2는 NOT_RUN**이다. 전체 게이트2는 정확한 최종 커밋에서1단계부터 수행해야 하며 현재 후속 Python PASS만으로 게시할 수 없다.
 
 ### 오너가 할 일 (실행 한 줄: /Users/rexxa/work/new-world-play2-dev/tools/play.sh main)
 

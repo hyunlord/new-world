@@ -127,7 +127,10 @@ class FreezeTests(unittest.TestCase):
     def test_fixture_gate_requires_pinned_config_before_any_execution(self) -> None:
         helper = Path(__file__).with_name('core_gate_checks.sh').resolve()
         environment = {key: value for key, value in os.environ.items()
-                       if key not in ('CORE_SHADOW_CONFIG', 'CORE_SHADOW_CONFIG_SHA256')}
+                       if key not in ('CORE_SHADOW_CONFIG', 'CORE_SHADOW_CONFIG_SHA256',
+                                      'M6A_GATE_CONFIG', 'M6A_GATE_CONFIG_SHA256',
+                                      'M6A_DEADLINE_EPOCH', 'CORE_UI_CONFIG',
+                                      'CORE_UI_CONFIG_SHA256')}
         output = self.root / 'not-created'
         command = ['bash', str(helper), 'fixture_run', str(output)]
         result = subprocess.run(command, env=environment, capture_output=True, text=True)
@@ -157,7 +160,10 @@ class FreezeTests(unittest.TestCase):
     def test_evaluation_gate_requires_pin_before_reading_results(self) -> None:
         helper = Path(__file__).with_name('core_gate_checks.sh').resolve()
         environment = {key: value for key, value in os.environ.items()
-                       if key not in ('CORE_EVAL_CONFIG', 'CORE_EVAL_CONFIG_SHA256')}
+                       if key not in ('CORE_EVAL_CONFIG', 'CORE_EVAL_CONFIG_SHA256',
+                                      'M6A_GATE_CONFIG', 'M6A_GATE_CONFIG_SHA256',
+                                      'M6A_DEADLINE_EPOCH', 'CORE_UI_CONFIG',
+                                      'CORE_UI_CONFIG_SHA256')}
         output = self.root / 'evaluation-not-created'
         command = ['bash', str(helper), 'evaluation', str(output)]
         result = subprocess.run(command, env=environment, capture_output=True, text=True)

@@ -1,4 +1,4 @@
-"""Exact P9 frozen-evidence reuse across the seven reviewed observer-tool paths."""
+"""Versioned P9 evidence reuse with a pinned test-environment amendment."""
 from __future__ import annotations
 
 import hashlib
@@ -17,6 +17,19 @@ ALLOWED: Final = frozenset('tools/v8/' + name for name in (
     'm6a_base72_entry.rs', 'm6a_base72.py', 'test_m6a_base72.py',
     'm6a_observer_successor.py', 'test_m6a_observer_successor.py',
     'm6a_gate_source.py', 'm6a_gate_evidence.py'))
+
+P10: Final = 'bd799460c25a7019dd5d3f30296587c96674615b'
+TEST_KIND: Final = 'm6a_observer_test_successor_v2'
+TEST_PINS: Final = {
+    'tools/v8/test_core_shadow_freeze.py': (
+        '18fed72388782f0273585c92dc23351e70721073a0d2c0157e64fd8b1ea26a47',
+        '0880e8e840ddf0136a2b65dffcc2126301a3622fd6fac786b17477ff33b0cc5e'),
+    'tools/v8/test_core_ui_successor_dispatch.py': (
+        '06c318b965112ea62fd090b15e5e0c68c60732d9a986047179da6fad5e7d9292',
+        '45d6e04d3fb40def78a5e024e1a09926581d8c8dd75f758432b74fed341a80f8'),
+}
+AMENDMENT: Final = frozenset((*TEST_PINS, 'tools/v8/m6a_observer_successor.py',
+                             'tools/v8/test_m6a_observer_successor.py'))
 PINS: Final = {
     'freeze': ('p9-policy-freeze.json', 'baf1d707f83bdfe44ff08bf453a5e63199de93d56281395498172007e9f9368b'),
     'register': ('calibration-register.jsonl', 'cf276dc39744f81ac184ebb41d14059b123a5e7e9259c6dcf4718bc0095d621e'),
@@ -48,9 +61,10 @@ def inventory_hash(files: dict[str, str]) -> str:
     return seal.hexdigest()
 
 
-def changes(old: dict[str, str], new: dict[str, str]) -> list[dict[str, Json]]:
+def changes(old: dict[str, str], new: dict[str, str],
+            allowed: frozenset[str] = ALLOWED) -> list[dict[str, Json]]:
     changed = {name for name in old.keys() | new.keys() if old.get(name) != new.get(name)}
-    need(changed == ALLOWED, 'observer successor differs outside exact seven reviewed tool changes')
+    need(changed == allowed, 'observer successor differs outside exact reviewed tool changes')
     need(all(name in new for name in changed), 'observer successor deletes an allowed tool')
     return [{'path': name, 'before': old.get(name), 'after': new[name]} for name in sorted(changed)]
 
@@ -112,20 +126,46 @@ def pinned_evidence(root: Path, proof: Node, original_hash: str) -> None:
          'frozen scorer changed')
 
 
+def proof_contract(proof: Node) -> frozenset[str]:
+    version = proof.get('schema_version').integer()
+    need((version, proof.get('kind').text()) in ((1, KIND), (2, TEST_KIND)),
+         'wrong observer successor proof schema')
+    fields = FIELDS if version == 1 else FIELDS | {'predecessor_head', 'amendment'}
+    need({name for name, _ in proof.fields()} == fields, 'unexpected successor proof fields')
+    return ALLOWED if version == 1 else ALLOWED | frozenset(TEST_PINS)
+
+
+def test_amendment(root: Path, head: str, new: dict[str, str]) -> list[dict[str, Json]]:
+    inventory.git(root, 'merge-base', '--is-ancestor', P10, head)
+    before = committed_inputs(root, P10)
+    delta = changes(before, new, AMENDMENT)
+    paths = set(git(root, 'diff', '--name-only', '--no-renames', P10, head,
+                    '--', *INPUT_ROOTS).splitlines())
+    need(paths == AMENDMENT, 'unreviewed amendment mode/path change')
+    need(not git(root, 'diff', '--summary', '--no-renames', P10, head,
+                 '--', *INPUT_ROOTS), 'amendment changes file modes or creates/deletes files')
+    for name, (old_hash, new_hash) in TEST_PINS.items():
+        need(before.get(name) == old_hash and new.get(name) == new_hash,
+             'test amendment differs from reviewed environment-only edit: ' + name)
+    return delta
+
+
 def validate(root: Path, path: Path, head: str, binding: Node) -> str:
     proof = Node.load(path)
-    need({name for name, _ in proof.fields()} == FIELDS, 'unexpected successor proof fields')
-    need(proof.get('schema_version').integer() == 1 and proof.get('kind').text() == KIND,
-         'wrong observer successor proof schema')
+    allowed = proof_contract(proof)
     need(proof.get('original_head').text() == P9
          and proof.get('successor_head').text() == head, 'wrong observer successor heads')
     inventory.git(root, 'merge-base', '--is-ancestor', P9, head)
     old, new = committed_inputs(root, P9), committed_inputs(root, head)
     verify_live(root, head, new)
-    delta = changes(old, new)
+    delta = changes(old, new, allowed)
+    if proof.get('schema_version').integer() == 2:
+        need(proof.get('predecessor_head').text() == P10, 'wrong test amendment predecessor')
+        need(proof.get('amendment').value == test_amendment(root, head, new),
+             'test amendment proof differs')
     changed_paths = set(git(root, 'diff', '--name-only', '--no-renames', P9, head,
                             '--', *INPUT_ROOTS).splitlines())
-    need(changed_paths == ALLOWED, 'unreviewed file mode/path change in successor')
+    need(changed_paths == allowed, 'unreviewed file mode/path change in successor')
     need(proof.get('changes').value == delta, 'reviewed tool delta differs')
     original_hash = inventory_hash(old)
     need(proof.get('original_source_hash').text() == original_hash
@@ -145,14 +185,19 @@ def validate(root: Path, path: Path, head: str, binding: Node) -> str:
     return original_hash
 
 
-def prepare(root: Path, evidence: Path, output: Path) -> None:
+def prepare(root: Path, evidence: Path, output: Path, *, version: int = 1) -> None:
     """Create a new proof only after the exact tooling successor is committed."""
     head = git(root, 'rev-parse', 'HEAD')
     old, new = committed_inputs(root, P9), committed_inputs(root, head)
     verify_live(root, head, new)
-    data: dict[str, Json] = {'schema_version': 1, 'kind': KIND, 'original_head': P9,
+    need(version in (1, 2), 'unsupported successor proof version')
+    allowed = ALLOWED if version == 1 else ALLOWED | frozenset(TEST_PINS)
+    data: dict[str, Json] = {'schema_version': version,
+        'kind': KIND if version == 1 else TEST_KIND, 'original_head': P9,
         'successor_head': head, 'original_source_hash': inventory_hash(old),
-        'successor_source_hash': inventory_hash(new), 'changes': changes(old, new)}
+        'successor_source_hash': inventory_hash(new), 'changes': changes(old, new, allowed)}
+    if version == 2:
+        data.update(predecessor_head=P10, amendment=test_amendment(root, head, new))
     data.update({key: reference_json(evidence/name) for key, (name, _) in PINS.items()})
     pinned_evidence(root, Node(data), inventory_hash(old))
     write_json(output, data)

@@ -31,6 +31,46 @@ class ObserverSuccessorTests(unittest.TestCase):
             with self.subTest(data=broken), self.assertRaises(EvidenceError):
                 validate_schema(Node(broken))
 
+    def test_version_two_requires_exact_schema_and_nine_paths(self) -> None:
+        proof = dict.fromkeys(successor.FIELDS, None)
+        proof.update(schema_version=2, kind=successor.TEST_KIND,
+                     predecessor_head=successor.P10, amendment=[])
+        self.assertEqual(successor.proof_contract(Node(proof)), ALLOWED | frozenset(successor.TEST_PINS))
+        for bad in ({**proof, 'schema_version': 1}, {**proof, 'kind': successor.KIND},
+                    {key: value for key, value in proof.items() if key != 'amendment'},
+                    {**proof, 'ignored_paths': []}):
+            with self.subTest(proof=bad), self.assertRaises(EvidenceError):
+                successor.proof_contract(Node(bad))
+        old, new = self.fixture()
+        new.update({name: hashes[1] for name, hashes in successor.TEST_PINS.items()})
+        self.assertEqual(len(changes(old, new, ALLOWED | frozenset(successor.TEST_PINS))), 9)
+        with self.assertRaises(EvidenceError):
+            changes(old, new)  # Version one cannot silently admit version two.
+
+    def test_amendment_pins_test_assertions_and_rejects_other_input_changes(self) -> None:
+        before = {name: 'a' * 64 for name in successor.AMENDMENT}
+        before.update({name: pair[0] for name, pair in successor.TEST_PINS.items()})
+        after = {name: 'b' * 64 for name in successor.AMENDMENT}
+        after.update({name: pair[1] for name, pair in successor.TEST_PINS.items()})
+        paths = '\n'.join(sorted(successor.AMENDMENT))
+        def git_result(root: Path, *args: str) -> str:
+            return '' if '--summary' in args else paths
+        with patch.object(successor.inventory, 'git'), \
+             patch.object(successor, 'committed_inputs', return_value=before), \
+             patch.object(successor, 'git', side_effect=git_result):
+            self.assertEqual(len(successor.test_amendment(Path('/fixture'), 'head', after)), 4)
+            for name in (*successor.TEST_PINS, 'rust/product.rs', 'tools/v8/m6a_score.py',
+                         'tools/v8/m6a_base72.py', 'tools/v8/arbitrary_test.py'):
+                with self.subTest(path=name), self.assertRaises(EvidenceError):
+                    successor.test_amendment(Path('/fixture'), 'head', {**after, name: 'f' * 64})
+            with patch.object(successor, 'git', return_value=paths + '\nextra'):
+                with self.assertRaises(EvidenceError):
+                    successor.test_amendment(Path('/fixture'), 'head', after)
+            with patch.object(successor, 'git', side_effect=lambda root, *args:
+                              ' mode change 100644 => 100755' if '--summary' in args else paths):
+                with self.assertRaises(EvidenceError):
+                    successor.test_amendment(Path('/fixture'), 'head', after)
+
     def fixture(self) -> tuple[dict[str, str], dict[str, str]]:
         old = {'rust/product.rs': 'a' * 64, 'tools/v8/m6a_score.py': 'b' * 64,
                'tools/v8/m6a_gate_source.py': 'c' * 64,
@@ -140,6 +180,39 @@ class ObserverSuccessorTests(unittest.TestCase):
                 with self.assertRaises(EvidenceError):
                     successor.validate(root, proof_path, head,
                                        Node({**binding.value, 'deadline_epoch': successor.DEADLINE + 1}))
+                # A separate fixture predecessor and exact four-file amendment.
+                for name in successor.TEST_PINS:
+                    (root/name).write_text('original test assertions')
+                git('add', '.')
+                git('commit', '-qm', 'fixture predecessor')
+                predecessor = git('rev-parse', 'HEAD')
+                test_pins = {name: (successor.digest(root/name), '') for name in successor.TEST_PINS}
+                for name in successor.AMENDMENT:
+                    (root/name).write_text('reviewed fixture amendment: '+name)
+                test_pins = {name: (pair[0], successor.digest(root/name))
+                             for name, pair in test_pins.items()}
+                git('add', '.')
+                git('commit', '-qm', 'fixture test amendment')
+                amended_head = git('rev-parse', 'HEAD')
+                amended_path = evidence/'amended-proof.json'
+                with patch.object(successor, 'P10', predecessor), \
+                     patch.object(successor, 'TEST_PINS', test_pins):
+                    successor.prepare(root, evidence, amended_path, version=2)
+                    amended = Node.load(amended_path).value
+                    self.assertEqual(successor.validate(root, amended_path, amended_head, binding), original_hash)
+                    for field, bad in [('predecessor_head', original), ('amendment', []),
+                                       ('changes', []), ('successor_source_hash', '0'*64)]:
+                        with self.subTest(amendment=field):
+                            amended_path.write_text(json.dumps({**amended, field: bad}))
+                            with self.assertRaises(EvidenceError):
+                                successor.validate(root, amended_path, amended_head, binding)
+                    amended_path.write_text(json.dumps(amended))
+                    (root/next(iter(successor.TEST_PINS))).write_text('assertion removed')
+                    git('add', '.')
+                    git('commit', '-qm', 'unreviewed assertion deletion')
+                    with self.assertRaises(EvidenceError):
+                        successor.prepare(root, evidence, evidence/'rejected.json', version=2)
+                git('checkout', '-q', head)
                 (evidence/'freeze.json').write_text('{}')
                 with self.assertRaises(EvidenceError):
                     successor.validate(root, proof_path, head, binding)

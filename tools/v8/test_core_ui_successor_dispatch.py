@@ -113,6 +113,8 @@ class UIAdmissionScopeTests(unittest.TestCase):
             environment = {**os.environ, 'CORE_UI_CONFIG': '/sealed/successor.json',
                            'CORE_UI_DEADLINE_EPOCH': '123456789', 'EVENTS': str(log),
                            'PATH': str(root / 'bin') + os.pathsep + os.environ['PATH']}
+            for key in ('M6A_GATE_CONFIG', 'M6A_GATE_CONFIG_SHA256', 'M6A_DEADLINE_EPOCH'):
+                environment.pop(key, None)
             environment.pop('CORE_P7_RUN', None)
             environment.pop('CORE_P7_DEADLINE_EPOCH', None)
             script = 'set -euo pipefail\nLOG=/out\nBASE_DATA=/base\nstep() { shift 2; "$@"; }\n'
