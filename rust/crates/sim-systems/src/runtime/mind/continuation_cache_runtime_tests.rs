@@ -113,8 +113,9 @@ fn actual_shared_gate_warms_across_agents_and_cold_reload_preserves_trace() {
     let before = gate.hits;
     compare(&mut gate, &program, &world, &resources, 7);
     assert_eq!(
-        gate.hits, before,
-        "changed current value misses while ordinary result stays equal"
+        gate.hits,
+        before + 1,
+        "changed value with identical predicate truth replays the ordinary result and trace"
     );
     world.remove_one::<Hunger>(first).unwrap();
     resources.current_tick = 11;

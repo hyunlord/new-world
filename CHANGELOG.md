@@ -12,6 +12,9 @@
   explicit simulation-successor gate; no inherited M-CORE or M-UX2 waiver.
 
 ### Changed
+- Mind continuation replays changed numeric facts only when every authored
+  predicate keeps the same truth value; reads, errors, cadence and per-person
+  cache capacity remain unchanged. Fresh performance acceptance is pending.
 - Colony eating and food alerts read actual items. Steward cooking reconciles
   accepted order ownership while preserving player edits. Chronicle visibility
   admits supported kinds through explicit data entries.

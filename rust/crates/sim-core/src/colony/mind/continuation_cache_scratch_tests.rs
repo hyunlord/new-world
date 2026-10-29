@@ -159,7 +159,12 @@ fn exact_hits_preserve_scratch_across_interleaved_agents_and_policy_slot_counts(
     assert_eq!(snapshot(&scratch), stale);
     let mut changed = Reader::new(&large, 15, 1);
     changed.set(&large, "need", Ok(GuardRead::Value(1)));
-    assert!(!run(&large, changed, &mut second, &mut scratch).1);
+    assert!(run(&large, changed, &mut second, &mut scratch).1);
+    assert_eq!(
+        snapshot(&scratch),
+        stale,
+        "predicate-equivalent replay preserves scratch"
+    );
     let stale = snapshot(&scratch);
     assert!(run(&small, Reader::new(&small, 7, 2), &mut first, &mut scratch).1);
     assert_eq!(snapshot(&scratch), stale);

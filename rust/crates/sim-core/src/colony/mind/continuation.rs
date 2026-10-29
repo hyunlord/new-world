@@ -43,6 +43,7 @@ pub struct ContinuationPlan {
     prefix_after_failure: Vec<Vec<usize>>,
     adjacent_prefix: Vec<usize>,
     has_authored_cadence: bool,
+    predicate_partitions: partitions::PredicatePartitions,
 }
 impl ContinuationPlan {
     /// Whether this plan belongs to this immutable compiled instance (or its clone).
@@ -113,6 +114,7 @@ impl ContinuationPlan {
             prefix_after_failure,
             adjacent_prefix,
             has_authored_cadence: policy.nodes.iter().any(|node| node.every_ticks != 1),
+            predicate_partitions: partitions::PredicatePartitions::new(policy),
         }
     }
 }
@@ -395,3 +397,6 @@ mod cadence_tests;
 #[path = "continuation_cache.rs"]
 mod cache;
 pub use cache::{guard_continuation_cached, GuardCache};
+
+#[path = "continuation_partitions.rs"]
+mod partitions;

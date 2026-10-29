@@ -1,4 +1,4 @@
-//! Exact current-read replay of a previously successful guard path.
+//! Current-read replay of a predicate-equivalent successful guard path.
 use super::*;
 use std::sync::Arc;
 
@@ -32,9 +32,9 @@ impl GuardCache {
     }
 }
 
-/// Re-read an exact successful path, or resume the ordinary guard from fresh facts.
+/// Re-read a successful predicate path, or resume the ordinary guard from fresh facts.
 ///
-/// The boolean reports an actual exact-value hit, never a selection or witness.
+/// The boolean reports a predicate-equivalent replay hit, never a selection or witness.
 /// Callers must separately admit current lifecycle ownership and entity identity.
 /// Public custom readers can continue using the stateless `guard_continuation`.
 #[allow(clippy::too_many_arguments)]
@@ -80,7 +80,8 @@ fn evaluate<R: ContinuationReader>(
     });
     let mut changed = None;
     if reusable {
-        for (index, &(fact, previous)) in cache.facts.iter().enumerate() {
+        for (index, (fact, previous)) in cache.facts.iter_mut().enumerate() {
+            let fact = *fact;
             let value = match reader.get(fact)? {
                 GuardRead::Value(value) => value,
                 GuardRead::Unsupported => {
@@ -95,10 +96,15 @@ fn evaluate<R: ContinuationReader>(
             if policy.facts[fact.index()].kind == FactKind::Bool && !matches!(value, 0 | 1) {
                 return Err(MindEvalError::InvalidBoolean(fact).into());
             }
-            if value != previous {
+            if value != *previous
+                && (policy.facts[fact.index()].kind == FactKind::Bool
+                    || !plan.predicate_partitions.equivalent(fact, *previous, value))
+            {
                 changed = Some((index, fact, value));
                 break;
             }
+            // A later mismatch must seed the scanner with current observations.
+            *previous = value;
         }
         if changed.is_none() {
             if let Some(success) = cache.success.as_mut() {
@@ -109,7 +115,7 @@ fn evaluate<R: ContinuationReader>(
     }
     scratch.reset(policy);
     if let Some((index, changed_fact, changed_value)) = changed {
-        // Each stored prefix value has just been re-read and proved exactly equal.
+        // Each prefix value is current and preserves every predicate outcome.
         for &(fact, value) in &cache.facts[..index] {
             scratch.facts[fact.index()] = Some(value);
             scratch.read_facts.push(fact.index());
@@ -152,3 +158,7 @@ mod tests;
 #[cfg(test)]
 #[path = "continuation_cache_scratch_tests.rs"]
 mod scratch_tests;
+
+#[cfg(test)]
+#[path = "continuation_cache_equivalence_tests.rs"]
+mod equivalence_tests;

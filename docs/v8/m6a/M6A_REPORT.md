@@ -80,7 +80,7 @@
 
 p5 최적화는 음식 존재 여부 조회의 불필요한 정렬 제거, 작업 후보 필터 순서 조정, 정적 mind 정책 원문의 `Cow` 차용을 포함한다. 동작 보존을 목표로 한다. [release 메모리 계수 재측정](</Users/rexxa/work/m6a-data/20261029/food-build-memory-after-1.log>)은 PASS이며 side 64의 live_after 1,798,188→1,601,984바이트, side 192의 4,052,564→3,856,360바이트로 각각 정확히 196,204바이트 감소했다. 식물 수·단위·항목 수는 동일했다. 이는 메모리 진단이며 정식 성능 막대 통과가 아니다. [수정 전 정적 포인터 회귀](</Users/rexxa/work/m6a-data/20261029/policy-source-before-1.log>)는 정적 원문 1 FAIL·동적 원문 1 PASS였고, 수정 후 [sim-systems 474/474](</Users/rexxa/work/m6a-data/20261029/systems-perf-opt-2.log>) 및 [전체 workspace/all-targets Clippy](</Users/rexxa/work/m6a-data/20261029/clippy-perf-opt-2.log>)가 통과했다. 기준선 동일성 4차도 PASS다(공유 값228,748개 차이0, 연대기64파일19,683항목 및 원시64파일 일치, 결정성0–3 통과). 이는 p5까지의 소스 검증이다. 이후 p5 성능 측정은 아래와 같이 실패했으며 보정3·전체 게이트는 아직 진행 전이다.
 
-최신 p5 [receipt](</Users/rexxa/work/m6a-data/20261029/perf-p5-session-1/receipt.json>)는 **유효 33쌍 완료, 시간 비율 9개 FAIL**이다. [BASE 요약](</Users/rexxa/work/m6a-data/20261029/perf-p5-session-1/base-summary.json>)·[후보 요약](</Users/rexxa/work/m6a-data/20261029/perf-p5-session-1/new-summary.json>)·[교차 비교 기록](</Users/rexxa/work/m6a-data/20261029/perf-p5-session-1/comparison-ledger.md>) 및 [원시 자료 재검증](</Users/rexxa/work/m6a-data/20261029/perf-p5-raw-recheck.json>)을 보존한다. 아래 비율은 소수점 여섯 자리 표시이며 판정은 원래 정밀도로 수행했다.
+이전 p5 [receipt](</Users/rexxa/work/m6a-data/20261029/perf-p5-session-1/receipt.json>)는 **유효 33쌍 완료, 시간 비율 9개 FAIL**이다. [BASE 요약](</Users/rexxa/work/m6a-data/20261029/perf-p5-session-1/base-summary.json>)·[후보 요약](</Users/rexxa/work/m6a-data/20261029/perf-p5-session-1/new-summary.json>)·[교차 비교 기록](</Users/rexxa/work/m6a-data/20261029/perf-p5-session-1/comparison-ledger.md>) 및 [원시 자료 재검증](</Users/rexxa/work/m6a-data/20261029/perf-p5-raw-recheck.json>)을 보존한다. 아래 비율은 소수점 여섯 자리 표시이며 판정은 원래 정밀도로 수행했다.
 
 |p5 장면|평균 후보/BASE|p99 후보/BASE|빌드 후 할당량 후보/BASE|
 |---|---|---|---|
@@ -93,7 +93,22 @@ p5 최적화는 음식 존재 여부 조회의 불필요한 정렬 제거, 작�
 
 할당량 인원 기울기는 1,870.304444→1,863.393333 B/명(비율 0.996305), 타일 기울기는 64.794556→68.795288 B/타일(1.061745)로 모두 PASS다. 장면별 빌드 후 할당량과 C3 6개 상한도 모두 PASS다. 앞서 관측한 196,204바이트 감소는 메모리 진단으로 유지하며, p5의 시간 실패를 상쇄하지 않는다.
 
-별도의 [단발 CPU 샘플](</Users/rexxa/work/m6a-data/20261029/p5-cpu-sample-1/stacks.txt>)은 심볼화된 7,435개 샘플 중 `loose_haul` 포함 스택 2,059개를 관측했다. 이는 병목 조사용이며 독립 성능 수용 결과나 시간 비율이 아니다. p6는 저장할 곳이 없는 물건 종류를 제외한 뒤 두 운반 탐색의 이전 후보 관측만 초기화한다. 수정 전 회귀는 예상한 1 FAIL·비교 시험 2 PASS였고, 수정 후 sim-systems 477/477, Clippy 및 기존 연료 운반·수면 통합 17/17이 통과했다. 기준선 동일성·전체 궤적·새 성능 측정은 별도 검증이며 아직 완료를 주장하지 않는다. 보정은 2/4회 사용 상태로, 3회차·held-out·전체 게이트·게시가 남았다.
+별도의 [단발 CPU 샘플](</Users/rexxa/work/m6a-data/20261029/p5-cpu-sample-1/stacks.txt>)은 심볼화된 7,435개 샘플 중 `loose_haul` 포함 스택 2,059개를 관측했다. 이는 병목 조사용이며 독립 성능 수용 결과나 시간 비율이 아니다. p6는 저장할 곳이 없는 물건 종류를 제외한 뒤 두 운반 탐색의 이전 후보 관측만 초기화한다. 수정 전 회귀는 예상한 1 FAIL·비교 시험 2 PASS였고, 수정 후 sim-systems 477/477, Clippy 및 기존 연료 운반·수면 통합 17/17이 통과했다. 기준선 동일성6차는 공유 값228,748개 차이0, 연대기64파일19,683항목 및 원시64파일 일치, 결정성0–3 PASS다. 중단된 동일성5차는 INTERRUPTED로 보존한다. 전체 콜로니 궤적 비교는 아직 실행 전이다. 보정은 2/4회 사용 상태로, 3회차·held-out·전체 게이트·게시가 남았다.
+
+최신 p6 `e156ae29b804038224ff8928895025f64742f478`의 [성능 영수증](</Users/rexxa/work/m6a-data/20261029/perf-p6-session-1/receipt.json>)은 **유효33쌍 완료, side64 평균만 FAIL**이다. [원시 재검증](</Users/rexxa/work/m6a-data/20261029/perf-p6-raw-recheck.json>)도 같은 실패를 확인했다. 모든 할당량 비율과 C3 6개 상한은 PASS다. 이전 실패를 덮어쓰지 않는다.
+
+|p6 장면|평균 후보/BASE|p99 후보/BASE|
+|---|---|---|
+|n200|1.022818 PASS|0.997449 PASS|
+|n1000|0.995217 PASS|0.880104 PASS|
+|n2000|0.757130 PASS|0.881627 PASS|
+|n200_script|1.048019 PASS|0.989691 PASS|
+|n200_side64|1.119897 FAIL|1.021180 PASS|
+|n1000_wolves|1.084432 PASS|1.022252 PASS|
+
+side64 평균은 BASE345.179861→후보386.565972µs/tick이다. 이번 BASE의1.10배 상한까지6.868125µs/tick 감소가 필요하다. [시스템별 분석](</Users/rexxa/work/m6a-data/20261029/p6-side64-attribution.md>)에서 Mind 증가40.3273µs가 전체 증가41.3861µs의 대부분이다. 짧은 CPU 샘플은 continuation guard 비중 증가를 보여주지만, 호출 수·캐시 실패·호출당 비용을 구분하지 못한다. 진단은 정식 성능 수용이나 정책 변경 근거로 대체하지 않는다.
+
+P7 준비 중인 후속은 수치가 달라져도 모든 조건식의 판정이 같은 경우 continuation 경로를 재사용한다. 첫 불일치 계수는 배고픔147,795·갈증118,286회였고 캐시 길이는8–15개였다. 기존32개 한도·판단 주기·사실 읽기 순서·오류 처리는 유지한다. 회귀1FAIL을 보존했고, 수정 후 코어484개 및 관련 통합, 시스템477개와 Clippy가 통과했다. 기준선 동일성7차는 exit0: 공유228,748값 차이0, 연대기64파일19,683항목·원시64파일 및 결정성0–3 PASS다. 로그의 SHA는 미커밋 P7 변경을 시험한 부모 p6이며 최종 clean-head gate가 아니다. 새 성능·전체 콜로니 궤적 검증은 아직 대기 중이다. [독립 검토](</Users/rexxa/work/m6a-data/20261029/p7-cache-code-review.md>).
 
 ### 이야기 수확량
 
@@ -113,11 +128,15 @@ BASE/M6a `story-yield` 비교 NOT_RUN. 첫 조리·건조·겨울 준비·겨울
 |`dba478e54` 초기 제품 구현 (293개 파일)|음식·식물 데이터, runtime/food, 작업·mind·집사·공유 음식 관측, 저장·마이그레이션, 브리지·UI·현지화, 회귀 테스트와 게이트 도구|
 |`de25dd74e` 2회차 제품 변경|음식 목적지 유지, 수확·보존 계획과 연료 조건의 후속 수정; 최종 목록 미확정|
 |`9936a8fd2` p5 최적화|음식 존재 조회·작업 필터 순서·정적 mind 정책 원문 차용; 유효 성능 측정 FAIL|
-|p6 수정 진행 중|작은 운반 후보 메모; 검증 완료 주장 없음|
+|p6 e156ae29|운반 탐색의 오래된 후보 관측 초기화; 유효 성능33쌍 중 side64 평균 FAIL|
+|p7 미커밋|조건식 판정이 같은 수치 변화의 continuation 재사용; 전체 성능 수용 대기|
 
 게시 보고에서는 최종 커밋별 명시적 파일 목록으로 교체해야 한다. 초기 제품 커밋은 게시 또는 수용 완료를 뜻하지 않는다.
 
 ### 확인된 제한사항
+
+필수 미완료: 현재 기아 원인 연쇄는 사망 시점의 저장·수확 가능량을 보여주지만, 과거 채집 실패 이유는 UNKNOWN이다. 실제 판단/작업 시점의 근거 기록과 연결이 필요하며, 기존 화면 검증을 이 요구의 완료로 보지 않는다.
+
 
 보정 2/4회 후 남은 보정·정책 동결·held-out·성능·최종 기준선 동일성·전체 게이트·게시가 남았다. 2026-10-29의 실제 화면 receipt 1–6차 실패는 보존하며, 세 번째 촬영의 crop 무효 판정은 재검토 후 철회했다. 식물 전용 완성 아트가 없으며 임시 표현을 완성 아트로 수용하지 않는다. 원래 실패 로그와 당시 원인 분류를 보존한다.
 
@@ -183,7 +202,7 @@ BASE/M6a `story-yield` 비교 NOT_RUN. 첫 조리·건조·겨울 준비·겨울
 |p5 성능|유효 33쌍 FAIL: 시간 비율 9개|[receipt](</Users/rexxa/work/m6a-data/20261029/perf-p5-session-1/receipt.json>); 할당량·C3 6개 PASS|
 |p5 단발 CPU 샘플|진단만 완료, 수용 증거 아님|7,435개 샘플; loose_haul 포함 2,059개|
 |p6 운반 메모 회귀·단위·통합|수정 전 1 FAIL 보존; 수정 후 477/477·17/17·Clippy PASS|[수정 전](</Users/rexxa/work/m6a-data/20261029/p6-haul-before.log>) · [단위](</Users/rexxa/work/m6a-data/20261029/p6-systems-after.log>) · [통합](</Users/rexxa/work/m6a-data/20261029/p6-haul-integration.log>) · [Clippy](</Users/rexxa/work/m6a-data/20261029/p6-clippy-after.log>)|
-|p6 수정 / 보정 3회차|수정 진행 중·검증 미확정 / NOT_RUN|보정 2/4회 사용, held-out·전체 게이트·게시 대기|
+|p6 성능 / 보정 3회차|유효33쌍 완료·side64 평균 FAIL / NOT_RUN|보정 2/4회 사용, held-out·전체 게이트·게시 대기|
 |전체 게이트 / 게시|NOT_RUN / NOT_RUN|부분 성공을 전체 게이트로 대체하지 않음|
 
 ### 오너가 할 일 (실행 한 줄: /Users/rexxa/work/new-world-play2-dev/tools/play.sh main)
