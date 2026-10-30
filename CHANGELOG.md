@@ -1,6 +1,6 @@
 # Changelog
 
-## M6a repair R2 — 2026-10-31 (Claude Code; evaluation and gate results in the R2 report)
+## M6a repair R2 — 2026-10-31 (Claude Code; gate2 47/48 PASS, held-out FAIL on no_hungry_spoilage 1/32, not published)
 
 R2 brief 2026-10-30 ([M6A_R2_GOAL](docs/v8/m6a/M6A_R2_GOAL.md)); decisions in [M6A_DECISIONS](docs/v8/m6a/M6A_DECISIONS.md#repair-round-r2--r2-brief-2026-10-30-claude-code).
 
@@ -14,6 +14,7 @@ R2 brief 2026-10-30 ([M6A_R2_GOAL](docs/v8/m6a/M6A_R2_GOAL.md)); decisions in [M
 - M6a R2 bench justification: the remaining timing over BASE is the food chain's own work (selection over the M6a food nodes, physical food targeting, harvest assignment, storage admission); R2 diagnostic interleaved pairs at load < 8 measured n200_script mean ×1.110 / p99 ×1.141, n1000_wolves ×1.096 / ×1.082, n200_side64 ×1.085 / ×1.014, n200 ×1.046 / ×1.014, n1000 ×0.971 / ×0.851, n2000 ×0.748 / ×0.870 (R1 gate: n200_script ×1.257 / ×1.364); allowed only up to ×1.15 on mean and p99 in every scene, allocator and C3 bars unchanged (r2-10).
 
 ### Fixed
+- R1 stall-capture fixtures no longer inherit the gate deadline; the oracle log counts the 24 visibility controls (r2-16).
 - Gate step 41: the nested stall capture kept the inherited GPU lane descriptor (EBADF before capture; r2-4).
 - Gate step 39: only people whose body bounds are fully on screen are judged; partly clipped people are recorded (r2-5). Step 40 records which part of the empty-tile toast check failed (r2-6).
 

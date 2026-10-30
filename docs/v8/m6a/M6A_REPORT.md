@@ -1,6 +1,6 @@
 # 수용 FAIL / 미게시 — M6a 보고서
 
-**최신 R1 결과(P27): 전체42/48 PASS,25·30·39·40·41·45 FAIL·미게시.** 최종 soak4세계는 사망0·KnowledgeLost0이나 신선 부패3/32(필요26), 유효 성능4항목, 이웃 거래, 새 화면·입력 및 stall 캡처 실패가 남았다. [최종48단계와 원인](#r1-p27-최종-부록--4248-pass-수용-fail미게시), [신선 BASE 비교·사망/조리 표](#r1-p26-부록--신선-수용-fail미게시-최종-게이트-대기). 아래 초기 본문은 이전 P0–P13 시점의 실패 기록이며 R1 결과와 구분한다.
+**최신 결과는 R2(문서 끝): gate2 `d67b42fff` 47/48 PASS, 45 held-out만 FAIL(`no_hungry_spoilage` 1/32) → 미게시.** **최신 R1 결과(P27): 전체42/48 PASS,25·30·39·40·41·45 FAIL·미게시.** 최종 soak4세계는 사망0·KnowledgeLost0이나 신선 부패3/32(필요26), 유효 성능4항목, 이웃 거래, 새 화면·입력 및 stall 캡처 실패가 남았다. [최종48단계와 원인](#r1-p27-최종-부록--4248-pass-수용-fail미게시), [신선 BASE 비교·사망/조리 표](#r1-p26-부록--신선-수용-fail미게시-최종-게이트-대기). 아래 초기 본문은 이전 P0–P13 시점의 실패 기록이며 R1 결과와 구분한다.
 
 이 문서는 목표 §4의 보고서 양식을 채운 **수용 FAIL·미게시 보고서**다. 동결 held-out에서 생존 29/32(필요30), 조리 식사 기준 충족 24/32(필요26)로 실패했다. 독립 원시 감사도 두 실패를 확인했으며 면제는 없다. “구현 완료 보고” 제목은 수용 완료 선언이 아니다. P9 `5c7e05e677cebda16fea5825f88d83561acd9d2d`의 새 성능 **유효 33/33쌍 PASS**, 마지막 보정 **4/4회 완료·정책 동결**, 후보 held-out **32세계 ×72일 실행 완료**다. BASE 원본 observer의 72일 시작 실패는 보존했고, 별도 BASE 어댑터의 seed 0 자격 검증 48/72일과 BASE 32세계 실행은 완료했다. 비교 수용은 FAIL이며 이야기 비교는 양쪽32세계×3년 완료했으며 P11 전체 게이트1은43/48 PASS(16·26·39·41·45 FAIL)로 끝났다. 게시하지 않았고 원격 main/wip는 BASE에 남는다. P10 도구 수정 커밋은 `bd799460c25a7019dd5d3f30296587c96674615b`다. BASE는 `5b0c88812374b87e7854cc9203f144ad0ccd9009`이다. P4·P5·P6 성능 FAIL과 자연 전체 UI 촬영 13/15·실패2는 유지한다. 집중 화면을 합친 15사례 검토는 자연 전체 실행이나 오너 플레이테스트를 대신하지 않는다.
 
@@ -637,3 +637,158 @@ R1 calibration은 허용된 **2/2회 소진 후 동결**했고 fresh held-out까
 10단계 벽시계9240초는16:36:09→19:10:09KST의 차이다. 공유값228748 차이0·chronicle64/raw64 동일·결정성은 PASS지만, 빌드2m03와 세계별 timing만으로 긴 시간 공백의 원인은 확정되지 않는다. sleep/시계 변경/경합으로 단정하지 않고 시간 예산에 그대로 포함했다. 12단계 참고 측정은 NOT_RUN3회(1분 부하9.1851·10.6177·13.9126)를 별도로 보존한다. 25단계의 NOT_RUN1회와 섞지 않는다.
 
 최종 문서 변경은 이 보고서·결정·CHANGELOG·이력·원장·커밋별 파일 목록뿐이며 제품/도구 동결을 유지한다. [원격 재조회](</Users/rexxa/work/m6a-data/20261030-r1/p27-ls-remote-after.txt>)와 [이슈 기록](</Users/rexxa/work/m6a-data/20261030-r1/p27-github-journal.json>)은 실제 후속 readback이다. 공개main/wip는5b0c88812374b87e7854cc9203f144ad0ccd9009에 남고, 리뷰 브랜치만 문서 후속으로 갱신한다.
+
+## R2 (Claude Code, 2026-10-30 21:38 – 2026-10-31 KST)
+
+근거: [R2 brief](M6A_R2_GOAL.md), 결정은 [M6A_DECISIONS R2](M6A_DECISIONS.md#repair-round-r2--r2-brief-2026-10-30-claude-code). 원시 자료 `/Users/rexxa/work/m6a-data/20261030-r2/`. 시작 확인: `origin/v8/m6a-review`=`ae340c11a`, `origin/v8/main`=`5b0c8881`, m6a-dev를 cwd로 쓰는 프로세스 없음.
+
+### 판정 요약
+
+**최종 게이트(gate2, `d67b42fff`): 47/48 PASS, 45 `core_evaluation`만 FAIL → 미게시.** held-out 1360–1391은 R2 교체 막대 `no_hungry_spoilage` 1/32(필요 28)로 FAIL이며, 나머지 11개 막대는 모두 통과했다(생존 30/32, BASE 31). 이웃 fixture 두 마을은 모두 산다(18·22명, 사망 0, KnowledgeLost 0). 성능은 CHANGELOG 정당화 한도(×1.15) 안에서 통과, 계기 39·40·41은 모두 정상 측정. `v8/wip`·`v8/main`은 BASE `5b0c8881` 그대로, 리뷰 브랜치만 갱신. #670–673 OPEN 유지.
+
+### 이웃 세계 사망 (R2-1)
+
+R1 fixture는 생존을 묻지 않았다. 판독 재현(기아 16/17·KnowledgeLost 54/52 동일)으로 35명 전원을 분류했다.
+
+|분류|사망|증거|
+|---|---:|---|
+|A 겨울, 비축 0|33|저장 음식 0·익은 식물 0·`stock_shortfall`=1. 가을 내내 손닿는 익은 조각 11,000–16,800, 저장 공간·비축 사실 모두 참인데 수확자 0–3명|
+|A′ 봄 재생 전|1|seed0 agent17 day24 수면 중, 식물은 다시 익음|
+|B 고기 2단위, 섭취 실패|1|seed1 agent9 `critical_hunger_job_hunger_novel`|
+
+원인: 일감을 가진 배부른 성인은 duty 보유 노드 `job_below_yield_margin`(10)에 묶이고 유휴자는 일감판이 바로 채운다. P20의 work 대역 비축 노드가 top-3에도 오르지 못했다. BASE는 겨울에도 야생 음식 타일 ~950이 남아 겨울 비축이 필요 없었다(읽기 전용 BASE 관측기). 이주민 2·6명 수용, 교역으로 내보낸 음식 0, 집사 OFF.
+
+수리: r2-2 겨울 비축 duty(점수 15, 부족분 비율만큼의 성인을 AgentId 순으로 해제), r2-3 겨울 몫은 겨울 끝까지 남는 음식만 계산, r2-14 집사 식량 계획이 있을 때는 R1 동작 유지(보정 1회차에서 집사 세계가 여름 뿌리로 넘쳐 다양성 0/8·조리 5/8이 되었기 때문). 각 수리에 실패-우선 회귀 시험.
+
+|이웃 fixture (48일)|seed0 생존/창립|seed1 생존/창립|기아|KnowledgeLost|거래|
+|---|---:|---:|---:|---:|---:|
+|BASE 5b0c8881|18/10|24/10|0/0|0/0|7/7|
+|R1 후보|0/10|0/10|16/17|54/52|7/0|
+|R2 후보|18/10|22/10|0/0|0/0|7/2|
+
+seed1 거래가 다시 일어난다. 시도한 변형 6개(가을만, 창고 내 FIFO 섭취, 개인별 보관 수명 등)의 수치는 DECISIONS R2-1c 표에 남겼다.
+
+### 썩음 진단 (R2-2)
+
+보정 seed 0–7×72일, 상한 직전 시점 판독. 부패 단위의 99.3 %(후보 r2-3), 95.6 %(R1 소스)가 저장량이 목표(기본일수×수요+여름·가을 겨울몫)를 넘을 때 발생 → **≥80 % 가지 적용**: 30 % 막대를 `no_hungry_spoilage`(≥28/32)와 `covered_storage`(≥90 % pooled)로 교체. 부패의 91 %가 노천 비축구역에서 일어났고 지붕 창고·항아리에 빈 공간이 있었던 경우는 0이었다.
+
+새 막대 1은 보정에서 이미 8/8 실패했다(세계당 27–47일). 음식 만료가 하루 한 번 표시 자정에 일어나고, 그때 잠든 주민 누군가의 배고픔이 찾기 기준을 넘는다. 정의는 보정 결과 전에(r2-8) 등록했고 결과를 보고 바꾸지 않았다. held-out에서도 1/32로 실패했다.
+
+### 성능 (R2-3)
+
+macOS `sample`로 n200_script를 BASE/후보 각 4회 프로파일. 상위 10(자기 시간) 표는 DECISIONS R2-3. 행동 불변 수리 6개(r2-9): 보관 공간 존재 memo, 개인별 최근접 식물 답 공유, 목표 1회 계산, 수확 일감 탐색 memo와 tick별 준비 색인, `nearest_where` 힙 순서(정렬과 같은 방문 순서), 식사 기록 노드 캐시. 각 수리 뒤 보정 8세계 tally/fingerprint와 이웃 fixture 일별 fingerprint가 r2-3와 동일.
+
+|장면|R1 gate 평균 · p99|R2 gate1 step25 (33쌍 기록 측정) 평균 · p99|
+|---|---|---|
+|n200|R1 p99 ×1.128|418.7/406.9 ×1.029 · p99 ×1.003|
+|n1000|—|×0.944 · ×0.819|
+|n2000|—|×0.748 · ×0.884|
+|n200_script|×1.257 · ×1.364|×1.125 · **×1.155 (한도 ×1.15 초과)**|
+|n200_side64|—|×1.090 · ×1.041|
+|n1000_wolves|×1.101 · —|×1.067 · ×1.066|
+
+남은 몫은 식량 노드 선택·물리 음식 대상·수확 배정·저장 판정으로 식량 사슬 자체 작업이며, CHANGELOG에 수치와 함께 정당화했다(장면별 ≤×1.15만 허용, 할당·C3 기준 불변). 기록 측정은 gate step25.
+
+### 계기 수리 (39·40·41)
+
+- 39: 몸 bounds가 화면 안에 완전히 들어온 사람만 판정, 잘린 사람은 `partial`로 기록. 낮은 대비의 완전 노출 인물은 여전히 FAIL(검증기 24/24). BASE(분리 worktree, 새 계기): 8/8 장면 PASS, partial 0, 반배율 최소 78px. 후보(gate2): 8/8 장면 PASS, day20_noon_half의 화면 위쪽에 잘린 1명은 `partial`로 기록(R1에서 실패했던 경우), 반배율 최소 79px.
+- 40: 토스트 검사가 존재·표시·문자열·기대값·프레임·hover 컨트롤을 기록. 단독 창 실행 5회(부하 9–16) 모두 42/42, 빈 칸 토스트는 frame47에 정확히 표시·hover 없음. R1 실패는 게이트 밖에서 재현되지 않았다. gate1·gate2 모두 42/42 PASS, 기록: present·visible·문구 일치·frame47·hover 없음; 2초 뒤에는 플레이어 토스트가 끝나고 집사 배경 토스트가 보임(설계대로). R1의 2건 실패는 원인을 확정하지 못한 채 재현되지 않았다.
+- 41: 원인은 m6a_gate.py가 중첩 stall CLI를 close_fds 기본값으로 실행해 상속 lane FD가 닫힌 것(EBADF). pass_fds 수리와 재현 시험. gate1·gate2 모두 캡처 완료. strict FAIL: 확대1.0에서 50ms 초과 1프레임(gate2 54.0ms, gate1 53.4ms, 모두 tick 361 계획 경계, 1틱 진행), 0.5배는 0프레임. waiver 조건(줌별 ≤2프레임·60ms 이하·완전 캡처)은 충족하지만 다른 단계(45)가 실패해 **waiver NOT_USED**.
+
+### held-out 1360–1391 (후보 / BASE)
+
+72일·집사 ON·명령 없음, 동결 `r2-freeze.json`(소스 `6c1047c20`, probe `8a1473a7…`) 뒤 1회 평가. 첫 실행은 동결 뒤 문서 커밋이 HEAD를 옮겨 세 runner가 끝에서 "source HEAD changed"로 멈췄다. 같은 바이너리로 새 디렉터리에 다시 실행했고 후보 96파일·BASE 32파일이 첫 시도와 바이트 단위로 같다.
+
+|막대|후보|필요|BASE|BASE 상태|판정|
+|---|---:|---:|---:|---|---|
+|72일 생존|30|30|31|MEASURED|PASS|
+|10일차 침상|31|31|32|MEASURED|PASS|
+|조리 비율|29|26|—|NOT_SUPPORTED|PASS|
+|지붕/항아리 보관(R2-2)|1.000|≥0.90 pooled|—|NOT_SUPPORTED|PASS (지붕/항아리 3336단위, 방 있는데 노천 0, 방 없어 노천 115166)|
+|식단 다양성|29|26|—|NOT_SUPPORTED|PASS|
+|겨울 기아 없음|30|28|—|NOT_OBSERVED|PASS|
+|회계 정확|32|32|32|MEASURED|PASS|
+|배고픈 중 부패 없는 날(R2-2)|1|28|—|NOT_SUPPORTED|FAIL|
+|1일차 비축구역|32|31|32|MEASURED|PASS|
+|겨울 비축|30|26|—|NOT_OBSERVED|PASS|
+|늑대 사망 ≤1|30|29|30|MEASURED|PASS|
+
+
+정보: 옛 30 % 막대 기준으로는 2/32 세계, pooled 부패/수확 0.443(35,992/81,209). 사망 세계 1379·1387.
+
+### Gate 결과 (48단계)
+
+gate1(`7e3e7f3a5`, 02:12–04:46)은 44/48: 16 python_unittest(내 r2-7 변경 뒤 R1 stall fixture가 게이트의 `M6A_DEADLINE_EPOCH`를 상속), 25 bench(n200_script p99 ×1.155 > ×1.15), 38 oracles(r2-5에서 늘린 검증 4개를 고정 개수 20이 거부), 45 evaluation. 16·38을 r2-16에서 고친 뒤 도구 범위가 바뀌어 재동결(보정 3회차, probe 바이너리 동일)·held-out 재실행(후보 96·BASE 32파일 바이트 동일)·gate2를 처음부터 다시 실행했다.
+
+|단계|검사|gate1 `7e3e7f3a5`|gate2 `d67b42fff` (기록)|
+|---:|---|---|---|
+|1|`fmt`|PASS|PASS|
+|2|`bridge_build`|PASS|PASS|
+|3|`godot_import`|PASS|PASS|
+|4|`test_debug`|PASS|PASS|
+|5|`test_release`|PASS|PASS|
+|6|`clippy`|PASS|PASS|
+|7|`forbidden_math`|PASS|PASS|
+|8|`gdscript_strict`|PASS|PASS|
+|9|`smoke`|PASS|PASS|
+|10|`identity`|PASS|PASS|
+|11|`determinism`|PASS|PASS|
+|12|`perf`|PASS|PASS|
+|13|`bridge_api`|PASS|PASS|
+|14|`docs`|PASS|PASS|
+|15|`inventory_closure`|PASS|PASS|
+|16|`python_unittest`|FAIL|PASS|
+|17|`m1_tests`|PASS|PASS|
+|18|`colony_determinism`|PASS|PASS|
+|19|`replay`|PASS|PASS|
+|20|`uid_check`|PASS|PASS|
+|21|`play_check`|PASS|PASS|
+|22|`schema_docs`|PASS|PASS|
+|23|`renderer_agreement`|PASS|PASS|
+|24|`save_roundtrip`|PASS|PASS|
+|25|`bench`|FAIL|PASS|
+|26|`soak`|PASS|PASS|
+|27|`nav_bench`|PASS|PASS|
+|28|`knowledge`|PASS|PASS|
+|29|`story`|PASS|PASS|
+|30|`neighbours`|PASS|PASS|
+|31|`art_manifest`|PASS|PASS|
+|32|`resolver_parity`|PASS|PASS|
+|33|`extensibility_grep`|PASS|PASS|
+|34|`mart2_render`|PASS|PASS|
+|35|`steward`|PASS|PASS|
+|36|`data_only_ext`|PASS|PASS|
+|37|`mux2_defence`|PASS|PASS|
+|38|`mux2_oracles`|FAIL|PASS|
+|39|`mux2_visibility`|PASS|PASS|
+|40|`mux2_why`|PASS|PASS|
+|41|`mux2_stall_receipt`|PASS|PASS|
+|42|`baseline_isolation`|PASS|PASS|
+|43|`mind_data_only`|PASS|PASS|
+|44|`core_shadow`|PASS|PASS|
+|45|`core_evaluation`|FAIL|**FAIL**|
+|46|`mux21_regressions`|PASS|PASS|
+|47|`m6a_food_fixture`|PASS|PASS|
+|48|`m6a_food_data_only`|PASS|PASS|
+
+
+gate2 step25(33쌍, 기록 측정): n200 ×1.046/×1.019, n1000 ×0.954/×0.844, n2000 ×0.752/×0.885, n200_script ×1.110/×1.148, n200_side64 ×1.081/×1.029, n1000_wolves ×1.073/×1.073 (평균/p99); C3 6개·할당 기울기 PASS; CHANGELOG 정당화 사용. 10 identity PASS(228,748값·64/64), 4·5 test 2,824 통과·0 실패, 26 soak 4×20일 사망0·KnowledgeLost0, 30 neighbours PASS(새 생존 조건 포함).
+
+### 닫은 GitHub 이슈 / 새로 연 이슈
+
+없음. 게시하지 않았으므로 #670·#671·#672·#673을 닫지 않고 #649 문서 링크도 바꾸지 않았다. 새 문제는 임시 ID M6A-R2-1…4로 `docs/ISSUES.md`에만 기록(게시 시 ISS 번호·GitHub 이슈 생성).
+
+### 확인된 제한사항
+
+- **R2 교체 막대 1(`no_hungry_spoilage`)은 이 세계에서 달성 불가능에 가깝다.** 음식 만료가 하루 한 번 표시 자정에 일어나고 그때 잠든 주민 중 누군가는 대개 배고픔이 찾기 기준(50)을 넘는다. held-out 세계당 0–47일, 통과 1/32. 정의는 보정 전에 등록했고 결과를 보고 바꾸지 않았다.
+- 집사 세계의 과잉 수확·부패(옛 막대 기준 2/32, pooled 0.443)는 그대로다. 저장량이 목표를 넘은 뒤에도 수확이 계속된다. 지붕 창고·항아리 빈 공간이 생긴 적이 거의 없어 `covered_storage`는 덮인 배치 3,336단위만으로 측정됐다(빈 공간이 있는데 노천에 둔 단위 0, 공간이 없어 노천에 둔 단위 115,166).
+- n200_script p99는 한도 경계(×1.148–×1.155, 세션 차). 남은 비용의 가장 큰 증가는 길찾기(이동 최대 801→1,266µs) — 식물·저장소 왕복이 늘어난 식량 사슬 자체 비용.
+- 이웃 fixture의 seed1 거래는 R1 0회 → R2 2회로 BASE 7회보다 적다.
+- 개인별 보관 수명 변형(B3)의 2년차 실패(저장량 420 고정 중 6일간 ~900 부패)는 조사하지 못했다.
+- 동결 뒤 문서 커밋이 HEAD를 옮겨 첫 held-out·BASE·story 실행이 끝에서 멈췄다. 재실행 결과가 첫 실행과 바이트 단위로 같음을 확인했다.
+- 별도로 만든 BASE worktree `/Users/rexxa/work/m6a-r2-base`(읽기 전용 관측·가시성 증명용)는 정리 결과를 아래 git 기록에 남긴다.
+
+### 오너에게 묻는 것
+
+1. `no_hungry_spoilage`를 "깨어서 음식을 찾는데 먹을 것이 없는 사람"처럼 실제 낭비를 재는 정의로 바꿀지, 아니면 하루 경계의 부패 자체를 줄이는 제품 작업(목표 초과 수확 중단, 지붕 창고 자동 건설)을 다음 패스로 할지.
+2. 집사 세계의 목표 초과 수확(부패 0.44)을 M6a 범위로 볼지 M6b로 넘길지.

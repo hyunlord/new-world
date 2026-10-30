@@ -1157,7 +1157,19 @@ Calibration round 1 (r2-13 binaries, `calibration-round-1/`) showed the R2-1 rul
 
 | round | source | binaries | alive | winters | stores | cooked | diversity | ledger | no_hungry_spoilage | covered_storage | soak |
 |---:|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|
-| 1 | `25ac90995` (r2-13) | `candidate-r2-binaries/` | 8 | 8 | 8 | 5 | 0 | 8 | 0 | unmeasurable (0 units placed open while covered room existed) | PASS |
-| 2 | `6c1047c20` (r2-14) | `candidate-r2c-binaries/` | 8 | 8 | 8 | 8 | 8 | 8 | 0 | unmeasurable | PASS |
+| 1 | `25ac90995` (r2-13) | `candidate-r2-binaries/` | 8 | 8 | 8 | 5 | 0 | 8 | 0 | 1.000 (see correction below) | PASS |
+| 2 | `6c1047c20` (r2-14) | `candidate-r2c-binaries/` | 8 | 8 | 8 | 8 | 8 | 8 | 0 | 1.000 | PASS |
+| 3 | `d67b42fff` (r2-16, tools only; probe byte-identical to round 2) | `candidate-r2d-binaries/` | 8 | 8 | 8 | 8 | 8 | 8 | 0 | 1.000 | PASS |
 
 Every spoil moment falls on the daily expiry boundary (display midnight), when some sleeping member is usually above the seek threshold: round 2 seeds 0–7 had 27–47 days (per world) on which food spoiled while a member was above the threshold (equivalent run `var-c/`: 29–49 spoil moments per world, all but 0–2 with such a member). The definition was registered in r2-8 before any calibration result and is not changed after seeing it. Freeze `r2-freeze.json` after round 2: source `6c1047c20`, probe sha256 `8a1473a7…`, scorer, register (2 rounds), held-out 1360–1391 × 72 days. No product, data, scorer or bar change after this point.
+
+
+Correction (2026-10-31, after gate 2): the round-1/2 rows first said `covered_storage` "unmeasurable". By the registered definition (units that entered storage while covered room existed) covered placements count — they had room — so the bar was measured: 24–189 units per world went into pots, 0 went into the open while covered room existed, share 1.000. The scorer always computed it this way; only the table text was wrong.
+
+### R2 held-out, reruns and the two gates
+
+- Held-out 1360–1391, frozen `r2-freeze.json` (source `6c1047c20`), scored once (`heldout-score.json`): FAIL on `no_hungry_spoilage` 1/32 (needs 28); alive 30/32 (BASE 31), winters 30, stores 30, cooked 29, diversity 29, ledger 32/32, stockpile 32 (BASE 32), beds 31 (BASE 32), wolves 30 (BASE 30), covered_storage 1.000 (3,336 covered, 0 open with room, 115,166 open without room). Old 30 % bar for information: 2/32, pooled 0.443.
+- The first candidate, BASE72 and story runs ended "source HEAD changed": r2-15 (docs) was committed while they ran and the runners pin HEAD. Reruns into new directories at the unchanged runtime source were byte-identical (candidate 96/96 files, BASE 32/32 summaries; identical score).
+- Gate 1 on `7e3e7f3a5`: 44/48; FAIL 16 (R1 stall fixtures inherited the gate's `M6A_DEADLINE_EPOCH` after r2-7), 25 (n200_script p99 ×1.155 > ×1.15 justified limit; mean ×1.125), 38 (oracle log pinned the visibility validator at 20 checks; r2-5 made it 24), 45. r2-16 fixed 16 and 38. Because `tools` is in the frozen input scope, the candidate was re-frozen (`r2-freeze-2.json`, calibration round 3 identical) and held-out/BASE/story re-run (`*-3/`, byte-identical again).
+- Gate 2 on `d67b42fff` (05:20–07:46 KST): **47/48 PASS, only 45 FAIL.** Bench PASS under the CHANGELOG justification (n200_script ×1.110 / ×1.148). Step 39 8/8 (one partly clipped person recorded as partial), 40 42/42, 41 complete capture with one 54.0 ms frame at zoom 1.0 (tick 361), waiver-eligible but NOT_USED because step 45 fails.
+- Not published: `v8/wip` and `v8/main` stay at BASE `5b0c8881`; #670–673 stay OPEN; #649 unchanged. The brief's stop list does not cover an evaluation that fails on an owner-fixed bar; changing that bar after seeing calibration and held-out would be tuning the measure, so the failure is reported, not repaired.
