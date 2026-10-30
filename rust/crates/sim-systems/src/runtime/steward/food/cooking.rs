@@ -6,6 +6,26 @@ use sim_core::colony::steward::{FoodPlan, Target};
 use sim_core::colony::{BillMode, ColonySite, Command, RecipeKind};
 use sim_engine::SimResources;
 
+/// Share the existing daily cooked budget as whole output items per recipe.
+pub(super) fn daily_target(
+    policy: &FoodPlan,
+    facts: &FoodSummary,
+    recipe_count: usize,
+    output: sim_core::colony::ItemKind,
+) -> u16 {
+    let total = facts
+        .daily_milli
+        .saturating_mul(u64::from(policy.cooked_days_milli))
+        .div_ceil(1_000_000);
+    let share = total.div_ceil(u64::try_from(recipe_count).unwrap_or(u64::MAX).max(1));
+    let units = output
+        .definition()
+        .food
+        .as_ref()
+        .map_or(1, |food| food.units.max(1));
+    u16::try_from(share.div_ceil(u64::from(units))).unwrap_or(u16::MAX)
+}
+
 pub(super) fn plan(
     world: &World,
     res: &SimResources,
@@ -43,27 +63,15 @@ pub(super) fn plan(
             available.push(kind);
         }
     }
-    let total = facts
-        .daily_milli
-        .saturating_mul(u64::from(policy.cooked_days_milli))
-        .div_ceil(1_000_000);
-    let share = total.div_ceil(u64::try_from(available.len()).unwrap_or(u64::MAX).max(1));
     let mut wanted = policy.vessel_recipes.clone();
     for &kind in &policy.recipes {
         let Some(recipe) = kind.recipe() else {
             continue;
         };
-        let units = recipe
-            .output
-            .0
-            .definition()
-            .food
-            .as_ref()
-            .map_or(1, |food| food.units.max(1));
         let target = if recipe.food_requirements.duration_days > 0 {
             preservation.targets.get(&kind).copied().unwrap_or(0)
         } else if available.contains(&kind) {
-            u16::try_from(share.div_ceil(u64::from(units))).unwrap_or(u16::MAX)
+            daily_target(policy, facts, available.len(), recipe.output.0)
         } else {
             0
         };

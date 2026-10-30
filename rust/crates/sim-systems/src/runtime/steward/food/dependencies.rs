@@ -2,7 +2,7 @@
 use hecs::World;
 use sim_core::colony::knowledge::{self, Cond, Knowledge};
 use sim_core::colony::steward::FoodPlan;
-use sim_core::colony::ItemKind;
+use sim_core::colony::{ItemKind, Job, JobKind, JobStage};
 use sim_engine::SimResources;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -103,7 +103,7 @@ pub(super) fn reserved_cooking_pots(res: &SimResources, policy: &FoodPlan) -> BT
     held
 }
 
-/// Immediate meals request one batch; preservation requests its shared reserve deficit.
+/// Project the daily cooked targets through whole batches; preservation keeps its own budget.
 pub(super) fn ingredient_deficits(
     world: &World,
     res: &SimResources,
@@ -114,7 +114,9 @@ pub(super) fn ingredient_deficits(
         .query::<&Knowledge>()
         .iter()
         .fold(0, |mask, (_, knowledge)| mask | knowledge.practice());
-    let mut immediate: BTreeMap<ItemKind, u64> = BTreeMap::new();
+    // Procurement must admit capable recipes before their inputs exist. Actual
+    // bills keep using the presently supplied subset of these recipes.
+    let mut eligible = Vec::new();
     for &kind in &policy.recipes {
         let Some(recipe) = kind.recipe() else {
             continue;
@@ -130,24 +132,65 @@ pub(super) fn ingredient_deficits(
         {
             continue;
         }
+        eligible.push(recipe);
+    }
+    let mut immediate: BTreeMap<ItemKind, u64> = BTreeMap::new();
+    for recipe in &eligible {
+        let target = super::cooking::daily_target(policy, facts, eligible.len(), recipe.output.0);
+        // Use the bill's own count, including assigned crafts and pending output.
+        let made = crate::runtime::jobs::bills::bill_count(world, res, recipe.output.0);
+        let batches = u64::from(u32::from(target).saturating_sub(made))
+            .div_ceil(u64::from(recipe.output.1).max(1));
         for &(item, count) in &recipe.inputs {
-            immediate
-                .entry(item)
-                .and_modify(|n| *n = (*n).max(u64::from(count)))
-                .or_insert(u64::from(count));
+            let amount = immediate.entry(item).or_default();
+            *amount = amount.saturating_add(batches.saturating_mul(u64::from(count)));
         }
     }
     for (item, amount) in super::preservation::budget(world, res, policy, facts).inputs {
         let need = immediate.entry(item).or_default();
         *need = need.saturating_add(amount);
     }
+    let committed = unconsumed_craft_inputs(world, res);
     immediate
         .into_iter()
         .map(|(item, amount)| {
             (
                 item,
-                amount.saturating_sub(facts.pieces.get(&item).copied().unwrap_or(0)),
+                amount.saturating_sub(
+                    facts
+                        .pieces
+                        .get(&item)
+                        .copied()
+                        .unwrap_or(0)
+                        .saturating_sub(committed.get(&item).copied().unwrap_or(0)),
+                ),
             )
         })
         .collect()
+}
+
+/// Assigned output already counts toward bills; its still-shelved input cannot count twice.
+fn unconsumed_craft_inputs(world: &World, res: &SimResources) -> BTreeMap<ItemKind, u64> {
+    let mut inputs: BTreeMap<ItemKind, u64> = BTreeMap::new();
+    for (_, job) in world.query::<&Job>().iter() {
+        let JobKind::Craft { workshop, bill, .. } = job.kind else {
+            continue;
+        };
+        if !matches!(job.stage, JobStage::ToSource) {
+            continue;
+        }
+        let Some(recipe) = res
+            .colony
+            .workshops
+            .get(&workshop)
+            .and_then(|shop| shop.bill(bill))
+            .and_then(|bill| bill.recipe.recipe())
+        else {
+            continue;
+        };
+        for &(kind, amount) in &recipe.inputs {
+            *inputs.entry(kind).or_default() += u64::from(amount);
+        }
+    }
+    inputs
 }

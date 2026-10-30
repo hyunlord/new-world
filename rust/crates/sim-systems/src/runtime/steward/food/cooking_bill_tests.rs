@@ -143,3 +143,6 @@ fn steward_created_food_bill_updates_its_initial_target_from_current_demand() {
         "one adult needs ceil(2.4)=3 units, not the initial24; commands={commands:?}"
     );
 }
+
+#[path = "cooking_procurement_tests.rs"]
+mod procurement_tests;
