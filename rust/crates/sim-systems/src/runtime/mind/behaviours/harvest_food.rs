@@ -1,4 +1,4 @@
-//! Start a real harvest job after the authored hunger node wins; jobs own all work and yield.
+//! Start a real harvest job after an authored food node wins; jobs own work and yield.
 use super::context::*;
 use sim_core::colony::{Designation, Job, JobKind, JobStage, ReserveKey};
 use sim_core::components::{AgentState, SeekTarget, TargetKind};
@@ -32,6 +32,17 @@ pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
             .is_ok()
         || !c.world.get::<&AgentState>(c.entity).is_ok_and(|state| {
             matches!(*state, AgentState::Idle)
+                || (matches!(
+                    *state,
+                    AgentState::Seeking {
+                        target: TargetKind::Activity
+                    } | AgentState::Consuming {
+                        target: TargetKind::Activity
+                    }
+                ) && c
+                    .routine
+                    .as_deref()
+                    .is_some_and(|routine| routine.activity(c.agent).is_none()))
                 || (previous.is_some()
                     && matches!(
                         *state,

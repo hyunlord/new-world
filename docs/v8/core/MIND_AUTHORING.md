@@ -91,7 +91,7 @@ Before switching: baseline plus colony OFF/ON identity and shadow comparison on 
 
 ## M6a: physical food observations and authored preference
 
-The food capability observes fresh, reachable, raw-edible physical stacks, including supported shelves and pots. `food_cooked_available`, `food_novel_available` and `food_cooked_novel_available` are Bool facts; they are availability observations, not selection commands. Their matching targets are `food_cooked`, `food_novel` and `food_cooked_novel`. The ordinary `food` target remains the fallback. Provider registration is in `rust/crates/sim-systems/src/runtime/mind/facts.rs`; target filtering is in `food_targets.rs` beside it.
+The food capability observes fresh, reachable, raw-edible physical stacks, including its own carried food, ground stacks and supported pots. Workshop shelves remain planning reserves but are not directly edible; meal nodes must also require an actual food-availability fact. `food_cooked_available`, `food_novel_available` and `food_cooked_novel_available` are Bool facts; they are availability observations, not selection commands. Their matching targets are `food_cooked`, `food_novel` and `food_cooked_novel`. The ordinary `food` target remains the fallback. Provider registration is in `rust/crates/sim-systems/src/runtime/mind/facts.rs`; target filtering is in `food_targets.rs` beside it.
 
 Novel means at least one of the item's data-defined groups was not eaten within the previous three calendar days. It does not mean an unfamiliar item name. Cooked is the catalog food capability; raw grain cannot become edible merely by appearing in a stock count. Target reads do not consume or reserve food, and an eating effect must revalidate the physical owner and age before recording a successful meal.
 
@@ -137,3 +137,7 @@ food acquisition without restarting active harvest work. The lifecycle admits
 and drops any carried batch atomically before Needs cancellation; failure
 retains the old job and destination. Original work marks are preserved, and
 all breakdown, draft, work-priority and player-veto admission still applies.
+
+### R1 physical stock work
+
+Proactive harvest entries retain the inherited stock target, hoard cap and forage clock window. `harvest_window` observes that clock for physical colony work; legacy abstract `forage_window` stays disabled. `job_food_transport` identifies physical-food Haul/Supply ownership so work-level stock entries do not abandon its storage leg. Higher need/critical actions retain interruption authority. Completed food harvests hand actual placement receipts to ordinary reserved hauling when storage is reachable and permitted; without storage, output stays conserved on the ground.

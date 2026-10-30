@@ -27,3 +27,9 @@ mod harvest_food_cache_tests;
 
 #[cfg(test)]
 mod meal_admission_tests;
+
+#[cfg(test)]
+mod harvest_stock_tests;
+
+#[cfg(test)]
+mod harvest_stock_boundary_tests;

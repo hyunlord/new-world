@@ -22,6 +22,7 @@ mod craft_food;
 pub mod execute;
 mod food_transfers;
 pub mod harvest;
+mod harvest_haul;
 pub mod hearth;
 pub mod hunt;
 pub mod invariants;

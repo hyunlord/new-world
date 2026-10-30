@@ -446,11 +446,16 @@ fn step(
                     let practiced = world
                         .get::<&sim_core::colony::knowledge::Knowledge>(entity)
                         .map_or(0, |knowledge| knowledge.practice() & mask);
-                    if !super::harvest::complete_observed(res, plant, id, job.taken_at) {
+                    let Some(placements) =
+                        super::harvest::complete_observed_placements(res, plant, id, job.taken_at)
+                    else {
                         cancel(world, res, entity, CancelReason::TargetGone);
                         return;
-                    }
+                    };
                     crate::runtime::knowledge::used(world, res, entity, practiced);
+                    if super::harvest_haul::start(world, res, entity, &placements) {
+                        return;
+                    }
                 }
                 JobKind::Chop { tree } => {
                     if !fell(res, tree) {

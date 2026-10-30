@@ -123,6 +123,16 @@ pub fn complete_observed(
     agent: u64,
     started: u64,
 ) -> bool {
+    complete_observed_placements(res, tile, agent, started).is_some()
+}
+
+/// Actual placement receipt for the executing worker's subsequent food haul.
+pub(super) fn complete_observed_placements(
+    res: &mut SimResources,
+    tile: (u32, u32),
+    agent: u64,
+    started: u64,
+) -> Option<items::GroundPlacements> {
     let food = res
         .food
         .plants
@@ -130,12 +140,12 @@ pub fn complete_observed(
         .and_then(|plant| installed_or_bundled().plant(plant.species))
         .is_some_and(|def| def.yield_item.definition().food.is_some());
     if !food {
-        return complete_result(res, tile).is_ok();
+        return complete_result(res, tile).ok();
     }
     match complete_result(res, tile) {
-        Ok(()) => {
+        Ok(placements) => {
             crate::runtime::food::evidence::clear_person(res, agent);
-            true
+            Some(placements)
         }
         Err(reason) => {
             let tick = res.current_tick;
@@ -149,7 +159,7 @@ pub fn complete_observed(
                     reason,
                 },
             );
-            false
+            None
         }
     }
 }
@@ -157,7 +167,7 @@ pub fn complete_observed(
 fn complete_result(
     res: &mut SimResources,
     tile: (u32, u32),
-) -> Result<(), sim_core::colony::food_evidence::AcquisitionReason> {
+) -> Result<items::GroundPlacements, sim_core::colony::food_evidence::AcquisitionReason> {
     use sim_core::colony::food_evidence::AcquisitionReason;
 
     if !target_exists(res, tile) {
@@ -170,18 +180,14 @@ fn complete_result(
         return Err(AcquisitionReason::TargetUnavailable);
     };
     let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
-    items::create_ground(
-        res,
-        tile,
-        ItemSpec::raw(def.yield_item, None),
-        state.units_left,
-        day,
-        items::FoodSource::Harvest,
-    )
-    .map_err(|error| match error {
-        items::FoodError::NoCapacity => AcquisitionReason::OutputPlacementFull,
-        _ => AcquisitionReason::OutputRejected,
-    })?;
+    let batch = items::new_batch(ItemSpec::raw(def.yield_item, None), state.units_left, day)
+        .map_err(|_| AcquisitionReason::OutputRejected)?;
+    let placements =
+        items::put_ground(res, tile, batch, day).map_err(|(error, _)| match error {
+            items::FoodError::NoCapacity => AcquisitionReason::OutputPlacementFull,
+            _ => AcquisitionReason::OutputRejected,
+        })?;
+    items::book_creation(res, batch, items::FoodSource::Harvest);
     if let Some(plant) = res.food.plants.get_mut(&tile) {
         plant.units_left = 0;
         plant.next_regrow_day = if def.regrow_days == 0 {
@@ -193,5 +199,5 @@ fn complete_result(
     res.colony.designations.remove(&tile);
     res.colony.touch(false);
     res.food.touch();
-    Ok(())
+    Ok(placements)
 }

@@ -332,6 +332,20 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
             .and_then(|rule| rule.finish_leg_tiles)
             .ok_or_else(|| missing(p.agent, n))?
     ))),
+    fact!("job_food_transport", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.job.is_some_and(|job| {
+            matches!(job.kind, JobKind::Haul { .. } | JobKind::Supply { .. })
+                && job.item.definition().food.is_some()
+        })
+    ))),
+    fact!("harvest_window", Bool, |_p, _c, r, _n| Ok(i64::from(
+        r.rules.colony.is_some()
+            && r.rules
+                .agent
+                .forage
+                .filter(|_| r.rules.society.stock_target.is_some())
+                .is_some_and(|rule| needs::clock_in_window(r, rule.start_minute, rule.end_minute))
+    ))),
     fact!("job_harvesting", Bool, |p, _c, _r, _n| Ok(i64::from(
         p.job
             .is_some_and(|job| matches!(job.kind, JobKind::Harvest { .. }))
