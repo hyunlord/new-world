@@ -1,5 +1,7 @@
 # 수용 FAIL / 미게시 — M6a 보고서
 
+**최신 R1 결과(P27): 전체42/48 PASS,25·30·39·40·41·45 FAIL·미게시.** 최종 soak4세계는 사망0·KnowledgeLost0이나 신선 부패3/32(필요26), 유효 성능4항목, 이웃 거래, 새 화면·입력 및 stall 캡처 실패가 남았다. [최종48단계와 원인](#r1-p27-최종-부록--4248-pass-수용-fail미게시), [신선 BASE 비교·사망/조리 표](#r1-p26-부록--신선-수용-fail미게시-최종-게이트-대기). 아래 초기 본문은 이전 P0–P13 시점의 실패 기록이며 R1 결과와 구분한다.
+
 이 문서는 목표 §4의 보고서 양식을 채운 **수용 FAIL·미게시 보고서**다. 동결 held-out에서 생존 29/32(필요30), 조리 식사 기준 충족 24/32(필요26)로 실패했다. 독립 원시 감사도 두 실패를 확인했으며 면제는 없다. “구현 완료 보고” 제목은 수용 완료 선언이 아니다. P9 `5c7e05e677cebda16fea5825f88d83561acd9d2d`의 새 성능 **유효 33/33쌍 PASS**, 마지막 보정 **4/4회 완료·정책 동결**, 후보 held-out **32세계 ×72일 실행 완료**다. BASE 원본 observer의 72일 시작 실패는 보존했고, 별도 BASE 어댑터의 seed 0 자격 검증 48/72일과 BASE 32세계 실행은 완료했다. 비교 수용은 FAIL이며 이야기 비교는 양쪽32세계×3년 완료했으며 P11 전체 게이트1은43/48 PASS(16·26·39·41·45 FAIL)로 끝났다. 게시하지 않았고 원격 main/wip는 BASE에 남는다. P10 도구 수정 커밋은 `bd799460c25a7019dd5d3f30296587c96674615b`다. BASE는 `5b0c88812374b87e7854cc9203f144ad0ccd9009`이다. P4·P5·P6 성능 FAIL과 자연 전체 UI 촬영 13/15·실패2는 유지한다. 집중 화면을 합친 15사례 검토는 자연 전체 실행이나 오너 플레이테스트를 대신하지 않는다.
 
 최종 실행은 **P12 전체 게이트2 44/48 PASS·4 FAIL(26·39·41·45), exit1, timeout/signal 없음**이다. 검증 HEAD는 `a9ae9c87cfc322ff9ef06db7c3de470f799a7be3`, 동결 제품은 P9다. P13은 문서 전용 후속이며 **NOT_FULL_GATED**다. 목표는 완료되지 않았고 제품 개선에는 별도 미래 평가 프로토콜이 필요하다. 게시/이슈 폐쇄 없이 #670–673 OPEN, 원격 main/wip는 모두 `5b0c88812374b87e7854cc9203f144ad0ccd9009`로 재확인됐다.
@@ -543,3 +545,95 @@ BASE의 NOT_OBSERVED는 동결 observer의 해당 계절 관측 부재, NOT_SUPP
 원래 P12 44/48·stall52.056ms 당시 NO waiver와 과거 실패를 변경하지 않는다. 현재main/wip는BASE `5b0c88812374b87e7854cc9203f144ad0ccd9009`이며 최종 원격 재조회 원문은 root의 실제 기록으로 덧붙인다. 목표 완료 선언은 하지 않는다. main/wip 게시SHA 없음; 수리 커밋은 review ref에 공개됨. gate의 미래 PASS를 추정하지 않는다.
 
 이야기의 people-with-three와 distinct chains 합계는 세계/연도별 값의 합이며 전체 기간 고유 사람/연쇄 수가 아니다. [완료 실행 영수증](</Users/rexxa/work/m6a-data/20261030-r1/story-comparison.launch/terminal.json>)은 exit0·timeout없음·source unchanged다. 이전 [M6a 화면 모음](</Users/rexxa/work/m6a-data/20261030-r1/m6a-contact-sheet-before-r1.png>)은 별도 보존했다. 최종48단계는 `20261030-r1/final-gate/`에 새로 실행하며 현재 NOT_RUN이다.
+
+### R1 P27 최종 부록 — 42/48 PASS, 수용 FAIL·미게시
+
+[최종 게이트 원문](/Users/rexxa/work/m6a-data/20261030-r1/final-gate/gate.txt)은 2026-10-30 14:23:12–20:56:53 KST에 clean HEAD `9b664457933a2ef2a1dc091dec5849f01cbd4adf`를 검증했고 exit1로 종료했다. **42/48 PASS, 실패25·30·39·40·41·45**다. P27은 이 결과를 기록하는 문서 전용 후속이며 **NOT_FULL_GATED**다. review ref의 공개 수리 커밋과 main/wip 게시를 구분한다. 목표 완료·게시를 선언하지 않는다.
+
+#### 전체 48단계
+
+|단계|검사|결과|
+|---:|---|---|
+|1|`fmt`|PASS|
+|2|`bridge_build`|PASS|
+|3|`godot_import`|PASS|
+|4|`test_debug`|PASS|
+|5|`test_release`|PASS|
+|6|`clippy`|PASS|
+|7|`forbidden_math`|PASS|
+|8|`gdscript_strict`|PASS|
+|9|`smoke`|PASS|
+|10|`identity`|PASS|
+|11|`determinism`|PASS|
+|12|`perf`|PASS|
+|13|`bridge_api`|PASS|
+|14|`docs`|PASS|
+|15|`inventory_closure`|PASS|
+|16|`python_unittest`|PASS|
+|17|`m1_tests`|PASS|
+|18|`colony_determinism`|PASS|
+|19|`replay`|PASS|
+|20|`uid_check`|PASS|
+|21|`play_check`|PASS|
+|22|`schema_docs`|PASS|
+|23|`renderer_agreement`|PASS|
+|24|`save_roundtrip`|PASS|
+|25|`bench`|FAIL|
+|26|`soak`|PASS|
+|27|`nav_bench`|PASS|
+|28|`knowledge`|PASS|
+|29|`story`|PASS|
+|30|`neighbours`|FAIL|
+|31|`art_manifest`|PASS|
+|32|`resolver_parity`|PASS|
+|33|`extensibility_grep`|PASS|
+|34|`mart2_render`|PASS|
+|35|`steward`|PASS|
+|36|`data_only_ext`|PASS|
+|37|`mux2_defence`|PASS|
+|38|`mux2_oracles`|PASS|
+|39|`mux2_visibility`|FAIL|
+|40|`mux2_why`|FAIL|
+|41|`mux2_stall_receipt`|FAIL|
+|42|`baseline_isolation`|PASS|
+|43|`mind_data_only`|PASS|
+|44|`core_shadow`|PASS|
+|45|`core_evaluation`|FAIL|
+|46|`mux21_regressions`|PASS|
+|47|`m6a_food_fixture`|PASS|
+|48|`m6a_food_data_only`|PASS|
+
+step4 debug 2819 PASS/10 ignored, step5 release 2818 PASS/10 ignored다. **step26 soak는 4 seeds×20일, 사망0·KnowledgeLost0·회계/예약 정확·결정성 PASS**다. step29 story는 2 seeds의 F1 schedule·회계/예약 PASS이며, 이것만으로 별도 이야기 품질·오너 플레이 수용을 대신하지 않는다.
+
+#### 여섯 실패와 진단 한계
+
+|단계|실제 실패|판정·남은 한계|
+|---:|---|---|
+|25 bench|N200 p99 755→852µs(×1.128477); N200 script mean456.95→574.336458µs(×1.256891), p99 841→1147µs(×1.363853); N1000 wolves mean2086.091667→2296.509375µs(×1.100867)|새 동일 세션 BASE의 유효한 +10% 막대 FAIL. 33쌍/66 ADMITTED·유효66회, 부하 NOT_RUN1회 후 대기·재입장; invalid0. C3 상한6개는 모두 PASS. step12 perf PASS와 이 별도 막대를 합치지 않는다.|
+|30 neighbours|seed1 trades0(필요≥1), seed0 trades7|이웃·서로 다른 방향·두 이주민 수용·회계/예약은 PASS. 7 caravan이 있었지만 거래 성공0. 일별 시도 순간 저장소 잉여 blade·명령 거절·입고 가능 상태 기록이 없어 상위 원인은 UNKNOWN.|
+|39 visibility|day20_noon_half agent7:16/60px; 80명 중1명, 8장면 중1장면 FAIL|몸 bounds[408,-28,16,32], 화면 내4행만 남는 위쪽 clipping. visible owned16은 모두 contrast 통과·unstable0·valid=true. 다른7장면 PASS; wrapper는 complete=false/exit1이며 PASS receipt가 아니다.|
+|40 why input|42검사 중2 FAIL: empty tile toast 관측과 그에 의존하는2초 만료 검사|첫 검사의 toast 존재·표시·문자열 중 어느 항목이 실패했는지 기록 부족. 두 번째는 같은 false값을 포함해 독립 timer 결함 증거가 아니다. 실제 원인은 UNRESOLVED. 양 scale 폭420px·배치/교차 없음은 PASS.|
+|41 stall receipt|`[Errno 9] Bad file descriptor`, capture 시작 전 실패|gate→nested CLI 경계의 lane FD 전달 누락 진단. receipt·raw frame 없음. 측정된 stall 막대 실패가 아니며 프레임 수/최대 ms/ticks advanced는 **없음**, 0으로 채우지 않는다.|
+|45 evaluation|동결 신선1328–1359 paired score 부패3/32, 필요26/32|공식10막대 중 유일한 held-out FAIL. 나머지9막대 PASS와 별개로 수용 FAIL을 유지한다.|
+
+근거: [성능 감사](/Users/rexxa/work/m6a-data/20261030-r1/r1-final-perf-audit.md), [거래 실패 진단](/Users/rexxa/work/m6a-data/20261030-r1/r1-neighbours-failure-diagnosis.md), [가시성 감사](/Users/rexxa/work/m6a-data/20261030-r1/r1-final-visibility-audit.md), [입력·stall 진단](/Users/rexxa/work/m6a-data/20261030-r1/r1-final-input-stall-diagnosis.md), [공식 paired score](/Users/rexxa/work/m6a-data/20261030-r1/heldout-final-score.json).
+
+neighbours fixture는 현재 두 세계 모두 최종 생존0, 기아16/17·KnowledgeLost 기록54/52다. 이전 P12 PASS도 최종 생존0·기아18/20이었으므로 그 PASS를 생존 증거로 바꾸지 않는다. 이번 trade0의 원인을 식량·운반 수리에 귀속하지 않으며, 별도 standing soak의 사망0과 혼합하지 않는다.
+
+#### 실제 화면·waiver·게시 상태
+
+- [최종 가시성 실패 원화](/Users/rexxa/work/m6a-data/20261030-r1/final-gate/mux2-visibility/run/day20_noon_half/person-4294967303.png), [상단 잘림 원배율 crop](/Users/rexxa/work/m6a-data/20261030-r1/final-edge-person-4294967303.png). 최종 day1 actor9는 같은 bounds에서90px로 PASS지만, 새 day20 actor7 실패를 대신하지 않는다.
+- [why 1.0](/Users/rexxa/work/mux2-data/ui-why/run-36834/why-1.0.png), [why 1.25](/Users/rexxa/work/mux2-data/ui-why/run-36834/why-1.25.png)는 이후 기록된 사건 popup 화면이다. 실패한 empty-toast 순간의 화면 증거로 사용하지 않는다.
+- [R1 contact sheet](/Users/rexxa/work/m6a-data/20261030-r1/m6a-r1-contact-sheet.png)는 보존 fixture/P17 bridge의 scoped 증거다. 이전52/45→89/98·80/80 통과를 이번 fresh-world 전체 PASS로 확대하지 않는다.
+
+**Stall waiver NOT_USED·NOT_ELIGIBLE**: 다른 단계들이 실패했고, step41 자체도 완전한 유효 capture 조건을 만족하지 않는다. 이전 P12의52.056ms나 다른 실행의 프레임을 이번 receipt에 이식하지 않는다.
+
+R1 calibration은 허용된 **2/2회 소진 후 동결**했고 fresh held-out까지 열었다. 세 번째 보정·post-freeze 제품 튜닝·막대 완화·좋은 결과 선택 재실행은 승인된 프로토콜에 없으므로 수행하지 않았다. 진단은 실패를 보존하는 읽기 전용 감사이며, 이 부록은 후속 제품 수리 승인이나 미래 PASS를 뜻하지 않는다.
+
+**main/wip 게시SHA 없음; 수리 커밋은 review ref에 공개됨.** #670·#671·#672·#673 모두 OPEN 유지, 폐쇄 없음; #649 게시 링크 갱신은 게시되지 않아 보류한다. 오너 플레이 NOT_RUN. 최종 review/docs SHA, issue comment 링크와 `git ls-remote` 원문은 root가 실제 readback으로 덧붙인다.
+
+[독립 최종 증거 감사](</Users/rexxa/work/m6a-data/20261030-r1/r1-final-evidence-audit.md>)는48개 고유 종료 행과 P26 소스 불변을 확인했다. supervisor의 `complete:false`는 이 구현에서 child exit1을 뜻한다. finished timestamp·timeout없음·signal없음과 함께 **종료된 실패 실행**으로 기록하며 성공한 complete=true로 바꾸지 않는다.
+
+10단계 벽시계9240초는16:36:09→19:10:09KST의 차이다. 공유값228748 차이0·chronicle64/raw64 동일·결정성은 PASS지만, 빌드2m03와 세계별 timing만으로 긴 시간 공백의 원인은 확정되지 않는다. sleep/시계 변경/경합으로 단정하지 않고 시간 예산에 그대로 포함했다. 12단계 참고 측정은 NOT_RUN3회(1분 부하9.1851·10.6177·13.9126)를 별도로 보존한다. 25단계의 NOT_RUN1회와 섞지 않는다.
+
+최종 문서 변경은 이 보고서·결정·CHANGELOG·이력·원장·커밋별 파일 목록뿐이며 제품/도구 동결을 유지한다. [원격 재조회](</Users/rexxa/work/m6a-data/20261030-r1/p27-ls-remote-after.txt>)와 [이슈 기록](</Users/rexxa/work/m6a-data/20261030-r1/p27-github-journal.json>)은 실제 후속 readback이다. 공개main/wip는5b0c88812374b87e7854cc9203f144ad0ccd9009에 남고, 리뷰 브랜치만 문서 후속으로 갱신한다.

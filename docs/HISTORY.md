@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-10-30 — M6a R1: owner11:20KST의2회 수리 보정 후 동결. P26 `9b6644579` 전체42/48 PASS·25/30/39/40/41/45FAIL; soak기아·KnowledgeLost0이나 신선부패3/32·성능4항목·거래0·가시성16/60·빈토스트·stall캡처오류가 남음. waiver미사용·미게시·#670–673OPEN, P27문서전용NOT_FULL_GATED. [보고서](v8/m6a/M6A_REPORT.md).
+
 - 2026-10-30 — M6a 최종 P12 `a9ae9c87`: 전체 게이트2 44/48 PASS·26/39/41/45 FAIL, timeout/signal 없이 exit1. BASE 결정적64파일 동일·새 성능33쌍 PASS이나 수용2개 막대·soak·가시성52/60·stall52.056ms FAIL 유지, NO waiver·미게시·#670–673 OPEN. 후속 P13은 문서 전용 NOT_FULL_GATED; 목표 미완료. [보고서](v8/m6a/M6A_REPORT.md).
 
 - 2026-10-30 — M6a P12: P11 `3191890c` 전체 게이트1 43/48 PASS·5 FAIL을 보존한다. 자식 환경 격리·새 successor proof의 도구4개 수정 후 집중40·전체 Python473 PASS; 제품·정책·보정4/4 동결 유지. 유효 soak #672·가시성 #673 OPEN, 52.771ms stall은 NO M6a waiver. 새 proof·BASE-only 코호트·게이트2 NOT_RUN·미게시. [결정](v8/m6a/M6A_DECISIONS.md).

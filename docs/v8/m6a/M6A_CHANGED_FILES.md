@@ -550,3 +550,195 @@ M	tools/v8/test_core_shadow_freeze.py
 M	tools/v8/test_core_ui_successor_dispatch.py
 M	tools/v8/test_m6a_observer_successor.py
 ```
+
+## R1 및 문서 후속 P13–P26 추가 이력
+
+위 P0–P12 고정 목록은 보존한다. 아래는 공개 리뷰 커밋의 실제 name-status다. P27은 이번 문서 전용 마감으로 CHANGELOG, HISTORY, ISSUES, M6A_CHANGED_FILES, M6A_DECISIONS, M6A_REPORT만 수정하며 전체 게이트를 다시 수행한 커밋이 아니다.
+
+### v8-m6a(p13): preserve failed acceptance before any publication
+
+커밋: `e8d5c1668c0649d21a75f463759043e0af627e53`
+
+```text
+M	CHANGELOG.md
+M	docs/HISTORY.md
+M	docs/ISSUES.md
+M	docs/ROADMAP.md
+M	docs/v8/m6a/M6A_CHANGED_FILES.md
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	docs/v8/m6a/M6A_REPORT.md
+```
+
+### v8-m6a(p14): separate authorized defect repair from retired evaluation
+
+커밋: `c2d8193bf1e33aa8cc5bde759c3638270cfdaa1a`
+
+```text
+M	docs/v8/m6a/M6A_DECISIONS.md
+```
+
+### v8-m6a(p15): ground repairs in complete starvation and cooking traces
+
+커밋: `d60ac7c9ac6f9546c92d79e7c573bca87377d1f7`
+
+```text
+A	docs/v8/m6a/M6A_R1_DIAGNOSIS.md
+```
+
+### v8-m6a(p16): prevent shelf-only meals from starving food acquisition
+
+커밋: `759abe7e0735d4ff1e2a527db6f6f370b2567eac`
+
+```text
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	rust/crates/sim-core/data/colony/mind.ron
+A	rust/crates/sim-systems/src/runtime/mind/meal_admission_tests.rs
+M	rust/crates/sim-systems/src/runtime/mind/mod.rs
+```
+
+### v8-m6a(p17): supply ingredients for the cooking target already promised
+
+커밋: `1a3ac6680d7bf1f6a0a746e5dc362cec5bbd2a92`
+
+```text
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	rust/crates/sim-systems/src/runtime/steward/food/cooking.rs
+M	rust/crates/sim-systems/src/runtime/steward/food/cooking_bill_tests.rs
+A	rust/crates/sim-systems/src/runtime/steward/food/cooking_procurement_tests.rs
+M	rust/crates/sim-systems/src/runtime/steward/food/dependencies.rs
+```
+
+### v8-m6a(p18): keep repair evaluation distinct from retired evidence
+
+커밋: `42552ec7fd3d80df9fe6e5817c81e519364427f9`
+
+```text
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	tools/v8/gate.sh
+M	tools/v8/m6a_base72.py
+M	tools/v8/m6a_gate.py
+M	tools/v8/m6a_gate_checks.sh
+M	tools/v8/m6a_gate_evidence.py
+M	tools/v8/m6a_gate_source.py
+M	tools/v8/m6a_gate_story.py
+A	tools/v8/m6a_protocol.py
+A	tools/v8/m6a_r1_stall.py
+A	tools/v8/m6a_r1_stall_capture.py
+M	tools/v8/m6a_run.py
+M	tools/v8/m6a_score.py
+M	tools/v8/mux2_gate_stall.py
+A	tools/v8/test_m6a_protocol.py
+A	tools/v8/test_m6a_r1_stall.py
+A	tools/v8/test_m6a_r1_stall_capture.py
+```
+
+### v8-m6a(p19): make repair receipts type-safe without relaxing evidence
+
+커밋: `2e9a8912f9e142992b7882e356b33cbfa5ace51d`
+
+```text
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	tools/v8/m6a_base72.py
+M	tools/v8/m6a_gate.py
+M	tools/v8/m6a_gate_evidence.py
+M	tools/v8/m6a_run.py
+M	tools/v8/m6a_score.py
+M	tools/v8/test_m6a_protocol.py
+```
+
+### v8-m6a(p20): keep autonomous food work supplied through real storage
+
+커밋: `0364e19953ea440cd0cbe38209065f6b14f7ce7b`
+
+```text
+M	docs/v8/core/MIND_AUTHORING.md
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	rust/crates/sim-core/data/colony/mind.ron
+M	rust/crates/sim-systems/src/runtime/jobs/execute.rs
+M	rust/crates/sim-systems/src/runtime/jobs/harvest.rs
+A	rust/crates/sim-systems/src/runtime/jobs/harvest_haul.rs
+M	rust/crates/sim-systems/src/runtime/jobs/mod.rs
+M	rust/crates/sim-systems/src/runtime/mind/behaviours/harvest_food.rs
+M	rust/crates/sim-systems/src/runtime/mind/facts.rs
+A	rust/crates/sim-systems/src/runtime/mind/harvest_stock_boundary_tests.rs
+A	rust/crates/sim-systems/src/runtime/mind/harvest_stock_tests.rs
+M	rust/crates/sim-systems/src/runtime/mind/mod.rs
+```
+
+### v8-m6a(p21): keep residents legible beneath floating actions
+
+커밋: `b6c491ac68c1b2adb7bbe878011e122bd3c9fd95`
+
+```text
+M	CHANGELOG.md
+M	assets/ui/worldsim_theme.tres
+M	docs/HISTORY.md
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	scripts/ui/mux/mux_hud.gd
+A	tools/v8/m6a_actions_visibility_test.gd
+A	tools/v8/m6a_actions_visibility_test.gd.uid
+```
+
+### v8-m6a(p22): explain the remaining losses before spending the final repair round
+
+커밋: `4d037a0fc71150e4a5e9b41643b400826c9ec9b8`
+
+```text
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	docs/v8/m6a/M6A_R1_DIAGNOSIS.md
+```
+
+### v8-m6a(p23): Preserve fresh food when separate storage already exists
+
+커밋: `d813237b99e79edbc4c09f70b59e12f7cdd016eb`
+
+```text
+M	CHANGELOG.md
+M	docs/v8/m6a/M6A_DECISIONS.md
+A	rust/crates/sim-systems/src/runtime/jobs/age_arrival_tests.rs
+A	rust/crates/sim-systems/src/runtime/jobs/age_haul_tests.rs
+M	rust/crates/sim-systems/src/runtime/jobs/assign.rs
+A	rust/crates/sim-systems/src/runtime/jobs/food_storage.rs
+M	rust/crates/sim-systems/src/runtime/jobs/food_transfers.rs
+M	rust/crates/sim-systems/src/runtime/jobs/harvest_haul.rs
+M	rust/crates/sim-systems/src/runtime/jobs/mod.rs
+```
+
+### v8-m6a(p24): Prevent stock harvesting without a usable delivery path
+
+커밋: `b2fab234210a0ca301ee6b655aed816562501c98`
+
+```text
+M	docs/v8/core/MIND_AUTHORING.md
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	docs/v8/m6a/M6A_R1_DIAGNOSIS.md
+M	rust/crates/sim-core/data/colony/mind.ron
+M	rust/crates/sim-systems/src/runtime/jobs/mod.rs
+M	rust/crates/sim-systems/src/runtime/mind/context.rs
+M	rust/crates/sim-systems/src/runtime/mind/context/snapshot_entity_tests.rs
+M	rust/crates/sim-systems/src/runtime/mind/facts.rs
+A	rust/crates/sim-systems/src/runtime/mind/harvest_admission_tests.rs
+M	rust/crates/sim-systems/src/runtime/mind/mod.rs
+M	rust/crates/sim-systems/src/runtime/mind/system.rs
+```
+
+### v8-m6a(p25): Preserve final repair calibration results before fresh evaluation
+
+커밋: `3712cf00b53bace099f622157eca8eda5cddb8b3`
+
+```text
+M	CHANGELOG.md
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	docs/v8/m6a/M6A_REPORT.md
+```
+
+### v8-m6a(p26): preserve the failed frozen evaluation before final verification
+
+커밋: `9b664457933a2ef2a1dc091dec5849f01cbd4adf`
+
+```text
+M	CHANGELOG.md
+M	docs/images/m6a_contact_sheet.png
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	docs/v8/m6a/M6A_REPORT.md
+```
