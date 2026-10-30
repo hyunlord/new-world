@@ -133,18 +133,24 @@ pub fn stock_target(world: &World, resources: &SimResources, sid: SettlementId) 
     Some(target)
 }
 
-/// The winter-preparation part of [`stock_target`] (summer and autumn only):
-/// `days_per_season x max(0, need - winter supply)`; `None` in other seasons or
-/// without a stock-target rule.
-pub fn winter_stock_target(
+/// [`stock_target`] and its winter part from one member-need pass (R2-3).
+pub fn stock_target_parts(
     world: &World,
     resources: &SimResources,
     sid: SettlementId,
-) -> Option<f64> {
-    resources.rules.society.stock_target?;
-    winter_part(resources, sid, members_need_per_day(world, resources, sid))
+) -> Option<(f64, Option<f64>)> {
+    let rule = resources.rules.society.stock_target?;
+    let need = members_need_per_day(world, resources, sid);
+    let winter = winter_part(resources, sid, need);
+    let mut target = rule.base_days * need;
+    if let Some(part) = winter {
+        target += part;
+    }
+    Some((target, winter))
 }
 
+/// The winter-preparation part of [`stock_target`] (summer and autumn only):
+/// `days_per_season x max(0, need - winter supply)`; `None` in other seasons.
 fn winter_part(resources: &SimResources, sid: SettlementId, need: f64) -> Option<f64> {
     if let (Some(_), Some((season, _))) = (resources.rules.seasons, season_at(resources)) {
         if season == 1 || season == 2 {

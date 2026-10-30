@@ -197,12 +197,13 @@ pub fn remember_completed_meal(
         .history
         .as_ref()
         .ok_or(RecordError::Invalid("meal history missing"))?;
-    let choice = history
+    // The record's cached revision is checked by `node_in`; no full dictionary or record decode.
+    let node = history
         .find(agent, choice_id)
         .ok_or(RecordError::Invalid("meal choice missing"))?
-        .decode(policy, history.dictionary())?;
+        .node_in(policy)?;
     let node = policy
-        .node(choice.node)
+        .node(node)
         .ok_or(RecordError::Invalid("meal node missing"))?;
     if policy.behaviour(node.behaviour).map(|b| b.name.as_str()) != Some("eat") {
         return Err(RecordError::Invalid("meal origin is not an eat choice"));

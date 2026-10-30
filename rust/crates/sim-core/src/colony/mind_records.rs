@@ -124,6 +124,19 @@ impl PackedMindChoice {
             && self.0.agent == agent
             && self.0.node == running.node.index())
     }
+    /// The selected node in `policy`, from the identity cached by the checked constructors; a
+    /// record of another policy revision is a mismatch (R2-3: no full decode for one field).
+    pub fn node_in(
+        &self,
+        policy: &CompiledMind,
+    ) -> Result<crate::colony::mind::NodeId, MindRecordError> {
+        if self.0.revision != policy.revision().code() {
+            return Err(MindRecordError::PolicyMismatch);
+        }
+        policy
+            .node_id_at(self.0.node)
+            .ok_or(MindRecordError::UnknownSlot("node"))
+    }
     /// Causal identity, cached after checked parsing.
     pub fn id(&self) -> EventId {
         self.0.id

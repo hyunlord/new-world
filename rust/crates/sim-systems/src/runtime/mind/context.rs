@@ -618,6 +618,17 @@ pub struct TickContext {
     pub(super) harvest_food: RefCell<Option<Arc<super::harvest_food::PlantCandidates>>>,
     /// Last actual plant query in the current decision visit; no retained per-person cache.
     pub(super) plant_query_observation: RefCell<Option<(AgentId, bool)>>,
+    /// R2-3: whether any reachable storage in a nav region has room for a food kind today, keyed
+    /// by (region, kind) and stamped with the FoodSources and Jobs versions it was read under, so
+    /// a same-tick meal or job start forces a fresh read. Existence does not depend on the source
+    /// tile (`food_storage::destination` searches the whole region).
+    pub(super) storage_room:
+        RefCell<BTreeMap<(u32, sim_core::colony::ItemKind), ((u64, u64), bool)>>,
+    /// R2-3: the last nearest-plant answer (agent, every domain version, candidate, no-ripe), so
+    /// the `edible_plant` fact, `harvest_storage_available` and the target binding share one
+    /// query per person until any domain changes.
+    pub(super) plant_answer:
+        RefCell<Option<(AgentId, [u64; DOMAIN_COUNT], Option<TargetCandidate>, bool)>>,
     pub(super) physical_food: RefCell<crate::runtime::food::choice::FoodChoiceIndex>,
 }
 impl TickContext {
@@ -812,6 +823,8 @@ impl TickContext {
             physical_food: RefCell::default(),
             harvest_food: RefCell::default(),
             plant_query_observation: RefCell::default(),
+            storage_room: RefCell::default(),
+            plant_answer: RefCell::default(),
             food_index: RefCell::new(FoodIndex {
                 version: 0,
                 materialized: false,
@@ -864,10 +877,11 @@ impl TickContext {
                         .map(|row| row.physical_food_units(resources))
                         .sum();
                     let in_hand = stored.saturating_add(carried);
-                    let target = crate::runtime::settlement::food_economy::stock_target(
-                        world, resources, sid,
-                    )
-                    .unwrap_or(0.0);
+                    let (target, winter_part) =
+                        crate::runtime::settlement::food_economy::stock_target_parts(
+                            world, resources, sid,
+                        )
+                        .unwrap_or((0.0, None));
                     let cap = resources
                         .rules
                         .agent
@@ -875,18 +889,18 @@ impl TickContext {
                         .and(resources.rules.society.stock_target)
                         .map(|rule| rule.hoard_cap_factor * target);
                     // R2-1B: the winter part counts only food that lasts through winter.
-                    let winter = crate::runtime::settlement::food_economy::winter_stock_target(
-                        world, resources, sid,
-                    )
-                    .zip(crate::runtime::settlement::food_economy::days_to_winter_end(resources))
-                    .filter(|(part, _)| *part > 0.0)
-                    .map(|(part, days)| {
-                        let lasting = crate::runtime::food::reserves::lasting_units(
-                            world, resources, sid, false, days,
-                        );
-                        (part - lasting as f64).max(0.0) / part
-                    })
-                    .unwrap_or(0.0);
+                    let winter = winter_part
+                        .zip(
+                            crate::runtime::settlement::food_economy::days_to_winter_end(resources),
+                        )
+                        .filter(|(part, _)| *part > 0.0)
+                        .map(|(part, days)| {
+                            let lasting = crate::runtime::food::reserves::lasting_units(
+                                world, resources, sid, false, days,
+                            );
+                            (part - lasting as f64).max(0.0) / part
+                        })
+                        .unwrap_or(0.0);
                     let base = if target > 0.0 {
                         (target - in_hand as f64).max(0.0) / target
                     } else {
@@ -1838,6 +1852,17 @@ impl TickContext {
             }
         });
         Ok(best.map(|(_, x, y)| (x, y)))
+    }
+    /// Every domain version, stamping derived per-person answers (R2-3).
+    pub(super) fn all_versions(&self) -> [u64; DOMAIN_COUNT] {
+        self.versions
+    }
+    /// Versions of the domains a storage-room observation depends on (R2-3).
+    pub(super) fn storage_versions(&self) -> (u64, u64) {
+        (
+            self.versions[Domain::FoodSources as usize],
+            self.versions[Domain::Jobs as usize],
+        )
     }
     /// Read the required per-person targeting scope, rejecting an unprepared scope.
     pub fn target_scope(&self, agent: AgentId) -> Result<&TargetScope, ContextError> {

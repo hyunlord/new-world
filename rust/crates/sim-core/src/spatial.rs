@@ -222,15 +222,18 @@ impl<T: Copy + Ord> ChunkIndex<T> {
         if self.len == 0 {
             return None;
         }
-        let mut order: Vec<(u32, ChunkId)> = self
+        // R2-3: a min-heap pops chunks in exactly the ascending `(lower bound, ChunkId)` order the
+        // former full sort produced (keys are unique), but the search usually stops after a few
+        // chunks, so most of the order is never needed.
+        let mut order: std::collections::BinaryHeap<std::cmp::Reverse<(u32, ChunkId)>> = self
             .chunks
             .keys()
             .map(|id| (Self::chunk_distance(centre, *id), *id))
             .filter(|(d, _)| *d <= max_radius)
+            .map(std::cmp::Reverse)
             .collect();
-        order.sort_unstable();
         let mut best: Option<(u32, u32, u32, T)> = None;
-        for (lower, id) in order {
+        while let Some(std::cmp::Reverse((lower, id))) = order.pop() {
             if best.is_some_and(|b| lower > b.0) {
                 break;
             }

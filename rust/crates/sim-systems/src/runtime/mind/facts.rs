@@ -1203,6 +1203,13 @@ impl LazyRow<'_> {
 
 fn edible_plant(p: &PersonSnapshot, c: &TickContext, r: &SimResources) -> Option<TargetCandidate> {
     r.rules.colony?;
+    let versions = c.all_versions();
+    if let Some((agent, stamp, candidate, no_ripe)) = *c.plant_answer.borrow() {
+        if agent == p.agent && stamp == versions {
+            *c.plant_query_observation.borrow_mut() = Some((p.agent, no_ripe));
+            return candidate;
+        }
+    }
     let mut index = c.harvest_food.borrow_mut();
     let (candidate, no_ripe) = index
         .get_or_insert_with(|| {
@@ -1210,6 +1217,7 @@ fn edible_plant(p: &PersonSnapshot, c: &TickContext, r: &SimResources) -> Option
         })
         .nearest_observed(p, r);
     *c.plant_query_observation.borrow_mut() = Some((p.agent, no_ripe));
+    *c.plant_answer.borrow_mut() = Some((p.agent, versions, candidate, no_ripe));
     candidate
 }
 
@@ -1231,15 +1239,25 @@ fn harvest_storage_available(p: &PersonSnapshot, c: &TickContext, r: &SimResourc
     if r.rules.colony.is_none_or(|rule| rule.carry(spec.kind) == 0) {
         return false;
     }
-    crate::runtime::jobs::food_storage::destination(
+    let region = r.nav.region_of((p.position.x, p.position.y));
+    let versions = c.storage_versions();
+    let key = (region, spec.kind);
+    if let Some(&(stamp, room)) = c.storage_room.borrow().get(&key) {
+        if stamp == versions {
+            return room;
+        }
+    }
+    let room = crate::runtime::jobs::food_storage::destination(
         r,
-        r.nav.region_of((p.position.x, p.position.y)),
+        region,
         target.tile,
         spec,
         crate::runtime::food::day(r),
         false,
     )
-    .is_some()
+    .is_some();
+    c.storage_room.borrow_mut().insert(key, (versions, room));
+    room
 }
 
 fn inventory_total(p: &PersonSnapshot, r: &SimResources, name: &str) -> Result<u32, FactError> {

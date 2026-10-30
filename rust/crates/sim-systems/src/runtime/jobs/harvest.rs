@@ -14,17 +14,40 @@ use crate::runtime::food::{items, plants};
 pub struct HarvestIndex {
     version: Option<u64>,
     marked: ChunkIndex<()>,
+    /// The indexed harvest designations in key order (R2-3).
+    tiles: Vec<(u32, u32)>,
+    /// R2-3: per (tick, overlay version, nav region), the designated plants that are harvestable,
+    /// reachable and unreserved. Within one tick and overlay version neither designations,
+    /// ripeness nor reachability change and reservations only grow, so only the live reservation
+    /// test remains per worker.
+    ready: Option<((u64, u64), std::collections::BTreeMap<u32, ChunkIndex<()>>)>,
 }
 
 impl HarvestIndex {
+    /// The overlay version moves on every ground-item change; rebuild only when the harvest
+    /// designations themselves differ from the indexed set (R2-3: same index, fewer rebuilds).
     fn refresh(&mut self, res: &SimResources) {
         if self.version == Some(res.colony.overlay_version) {
             return;
         }
-        self.marked = ChunkIndex::from_entries(res.colony.designations.iter().filter_map(
-            |(&tile, &designation)| (designation == Designation::Harvest).then_some((tile, ())),
-        ));
         self.version = Some(res.colony.overlay_version);
+        let mut current = res
+            .colony
+            .designations
+            .iter()
+            .filter(|(_, designation)| **designation == Designation::Harvest)
+            .map(|(&tile, _)| tile);
+        if self.tiles.iter().copied().eq(current.by_ref()) {
+            return;
+        }
+        self.tiles = res
+            .colony
+            .designations
+            .iter()
+            .filter(|(_, designation)| **designation == Designation::Harvest)
+            .map(|(&tile, _)| tile)
+            .collect();
+        self.marked = ChunkIndex::from_entries(self.tiles.iter().map(|&tile| (tile, ())));
     }
 }
 
@@ -48,16 +71,34 @@ pub fn pick(res: &SimResources, index: &mut HarvestIndex, query: HarvestQuery) -
         return None;
     }
     index.refresh(res);
-    let (plant, ()) = index
-        .marked
-        .nearest_where(query.pos, query.radius, |tile, _| {
-            target_exists(res, tile)
-                && !res
-                    .colony
-                    .reservations
-                    .contains_key(&ReserveKey::Plant(tile))
-                && res.nav.reaches(query.region, tile)
-        })?;
+    let stamp = (res.current_tick, res.colony.overlay_version);
+    if index.ready.as_ref().is_none_or(|(at, _)| *at != stamp) {
+        index.ready = Some((stamp, std::collections::BTreeMap::new()));
+    }
+    let marked = &index.marked;
+    let ready = index.ready.as_mut().map(|(_, regions)| {
+        regions.entry(query.region).or_insert_with(|| {
+            ChunkIndex::from_entries(
+                marked
+                    .within_square((0, 0), u32::MAX)
+                    .filter(|(tile, ())| {
+                        // A plant reserved now stays reserved for the rest of this JobAssign
+                        // tick (assignment only adds reservations; `pick` has no other caller).
+                        !res.colony
+                            .reservations
+                            .contains_key(&ReserveKey::Plant(*tile))
+                            && res.nav.reaches(query.region, *tile)
+                            && target_exists(res, *tile)
+                    })
+                    .map(|(tile, ())| (*tile, ())),
+            )
+        })
+    })?;
+    let (plant, ()) = ready.nearest_where(query.pos, query.radius, |tile, _| {
+        !res.colony
+            .reservations
+            .contains_key(&ReserveKey::Plant(tile))
+    })?;
     let state = res.food.plants.get(&plant)?;
     let def = installed_or_bundled().plant(state.species)?;
     Some(Job {

@@ -177,6 +177,9 @@ struct Exhausted {
     any_stack: BTreeMap<ItemKind, Memo>,
     pot_stock: BTreeMap<ItemKind, Memo>,
     open_cell: BTreeMap<ItemSpec, Memo>,
+    /// M6a harvest designations, per (nav region, practitioner bits): both change what passes
+    /// `harvest::pick`'s predicate, so neither may share another key's "empty" (R2-3).
+    harvest: BTreeMap<(u32, u32), Memo>,
 }
 
 impl Exhausted {
@@ -762,17 +765,30 @@ fn pick_work(
                     }
                 }
             }
-            if let Some(job) = super::harvest::pick(
-                res,
-                harvest,
-                super::harvest::HarvestQuery {
-                    practice: ctx.practice,
-                    region: ctx.region,
-                    pos,
-                    radius,
-                },
-            ) {
-                return Some((job.kind, job.amount, job.item));
+            let query = super::harvest::HarvestQuery {
+                practice: ctx.practice,
+                region: ctx.region,
+                pos,
+                radius,
+            };
+            let memo = ex.harvest.entry((ctx.region, ctx.practice)).or_default();
+            if !memo.empty {
+                // R2-3: same contract as `search` — a map-wide miss is memoised for the tick.
+                if let Some(job) = super::harvest::pick(res, harvest, query) {
+                    memo.seen = true;
+                    return Some((job.kind, job.amount, job.item));
+                }
+                if !memo.seen {
+                    let wide = super::harvest::HarvestQuery {
+                        radius: u32::MAX,
+                        ..query
+                    };
+                    if radius == u32::MAX || super::harvest::pick(res, harvest, wide).is_none() {
+                        memo.empty = true;
+                    } else {
+                        memo.seen = true;
+                    }
+                }
             }
             loose_haul(res, ctx, pos, ex, false).or_else(|| restock(res, ctx, pos, ex))
         }
