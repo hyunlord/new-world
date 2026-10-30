@@ -97,7 +97,7 @@ def validate_output(root: Path, output: Path) -> StallVerdict:
     verdict = evaluate(report.value)
     report.field('environment').field('settings_dir').equals(str(output / 'settings'))
     validate_p7_admission(report)
-    require(report.field('p7_admission').field('deadline_epoch').number() == R1_DEADLINE,
+    require(report.field('p7_admission').field('deadline_epoch').number() == deadline(),
             'stall admission uses another protocol deadline')
     report.field('bridge').field('sha256').equals(digest(root / BRIDGE))
     sources = report.field('source_sha256').mapping()
@@ -109,13 +109,18 @@ def validate_output(root: Path, output: Path) -> StallVerdict:
     return verdict
 
 
+def deadline() -> int:
+    """The active repair round's hard stop: the gate exports M6A_DEADLINE_EPOCH (R2: 2026-10-31T02:38Z)."""
+    return int(os.environ.get('M6A_DEADLINE_EPOCH', str(R1_DEADLINE)))
+
+
 def check_exit(code: float, verdict: StallVerdict) -> None:
     require(code == (0 if verdict.strict_pass else 1), 'capture exit differs from strict verdict')
 
 
 def command(root: Path, output: Path, godot: Path) -> list[str]:
     """Keep the ordinary windowed producer and bound all load waits by the R1 deadline."""
-    remaining = math.floor(R1_DEADLINE - time.time())
+    remaining = math.floor(deadline() - time.time())
     require(remaining >= 650, 'NOT_RUN: R1 deadline cannot fit both stall arms')
     return ['bash', str(root / 'tools/v8/run_bounded.sh'), str(min(960 + 2 * 8 * 900, remaining)),
             str(godot), '--path', str(root), '--resolution', '1920x1080', '--always-on-top',
@@ -139,7 +144,7 @@ def capture(root: Path, output: Path, godot: Path) -> StallVerdict:
         write(receipt_path, receipt)
         env = dict(os.environ, WORLDSIM_TEST_SETTINGS_DIR=str(out / 'settings'),
                    WORLDSIM_MUX2_PROFILE='1', CORE_P7_RUN='1',
-                   CORE_P7_DEADLINE_EPOCH=str(R1_DEADLINE), **{FD_ENV: str(descriptor)})
+                   CORE_P7_DEADLINE_EPOCH=str(deadline()), **{FD_ENV: str(descriptor)})
         (out / 'settings').mkdir()
         code = -1
         try:

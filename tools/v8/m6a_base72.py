@@ -432,7 +432,7 @@ def main() -> int:
     parser.add_argument('--manifest', type=Path, required=True)
     parser.add_argument('--freeze', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
-    _ = parser.add_argument('--protocol', choices=('legacy', 'repair_r1'), default='legacy')
+    _ = parser.add_argument('--protocol', choices=('legacy', 'repair_r1', 'repair_r2'), default='legacy')
     parser.add_argument('--deadline', type=int)
     args = parser.parse_args(namespace=Arguments())
     return run(Path(__file__).resolve().parents[2], args.manifest, args.freeze, args.out, args.deadline if args.deadline is not None else protocol(args.protocol).deadline, args.protocol)

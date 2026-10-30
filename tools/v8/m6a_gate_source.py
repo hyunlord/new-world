@@ -39,7 +39,7 @@ def validate_schema(data: Node) -> None:
             keys(data, FIELDS)
         case (2, 'm6a_observer_successor_v2'):
             keys(data, FIELDS | {'observer_successor', 'base_observer'})
-        case (3, 'm6a_repair_r1_v1'):
+        case (3, 'm6a_repair_r1_v1') | (4, 'm6a_repair_r2_v1'):
             keys(data, FIELDS | {'base_observer'})
         case _:
             raise EvidenceError('wrong M6a gate protocol version')
@@ -115,7 +115,7 @@ class Gate:
              'committed input digest differs')
         need(0 < self.data.get('deadline_epoch').integer(), 'missing hard deadline')
         if self.repair_r1():
-            need(self.data.get('deadline_epoch').integer() <= self.protocol().deadline, 'R1 deadline extended')
+            need(self.data.get('deadline_epoch').integer() <= self.protocol().deadline, 'repair deadline extended')
         for name in ('candidate_build', 'base_build', 'perf'):
             ref(self.root, self.data.get(name))
         need(os.environ.get('M6A_PERF_CONFIG') == str(ref(self.root, self.data.get('perf'))),
@@ -136,10 +136,12 @@ class Gate:
                  'protocol differs from committed input')
 
     def repair_r1(self) -> bool:
-        return self.data.get('kind').text() == 'm6a_repair_r1_v1'
+        # A repair-round gate (R1 or R2); both use fresh paired cohorts and the deadline-bound stall lane.
+        return self.data.get('kind').text() in ('m6a_repair_r1_v1', 'm6a_repair_r2_v1')
 
     def protocol(self) -> Protocol:
-        return protocol('repair_r1' if self.repair_r1() else 'legacy')
+        kind = self.data.get('kind').text()
+        return protocol({'m6a_repair_r1_v1': 'repair_r1', 'm6a_repair_r2_v1': 'repair_r2'}.get(kind, 'legacy'))
 
     def observer_successor(self) -> bool:
         return self.data.get('kind').text() == 'm6a_observer_successor_v2'

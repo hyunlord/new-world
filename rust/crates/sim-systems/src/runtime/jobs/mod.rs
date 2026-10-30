@@ -20,7 +20,7 @@ pub mod cancel;
 pub mod craft;
 mod craft_food;
 pub mod execute;
-pub(crate) mod food_storage;
+pub mod food_storage;
 mod food_transfers;
 pub mod harvest;
 mod harvest_haul;

@@ -10,7 +10,7 @@ import time
 from collections.abc import Mapping
 from pathlib import Path
 
-from m6a_protocol import protocol, recorded, check_freeze
+from m6a_protocol import REPAIRS, protocol, recorded, check_freeze
 from m6a_evidence import Json, EvidenceError, Node, Reference, digest, git, reference_json, source_hash, write_json
 
 
@@ -73,7 +73,7 @@ def round_start(path: Path, out: Path, selected_protocol: str = 'legacy') -> int
 def cohort(args: argparse.Namespace) -> int:
     environment = probe_environment(os.environ)
     spec = protocol(getattr(args, 'protocol', 'legacy'))
-    if spec.name == 'repair_r1' and time.time() >= spec.deadline:
+    if spec.name in REPAIRS and time.time() >= spec.deadline:
         raise EvidenceError('repair deadline expired')
     root = args.source_root.resolve(strict=True)
     binary = args.binary.resolve(strict=True)
@@ -127,7 +127,7 @@ def cohort(args: argparse.Namespace) -> int:
     rows: list[Json] = []
     failed = False
     for seed in selected:
-        if spec.name == 'repair_r1' and time.time() >= spec.deadline:
+        if spec.name in REPAIRS and time.time() >= spec.deadline:
             failed = True
             break
         target = out / f"seed-{seed}"
@@ -140,7 +140,7 @@ def cohort(args: argparse.Namespace) -> int:
         with (out / f"seed-{seed}.log").open("xb") as log:
             try:
                 completed = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, check=False, env=environment,
-                    timeout=max(0.01, spec.deadline-time.time()) if spec.name == 'repair_r1' else None)
+                    timeout=max(0.01, spec.deadline-time.time()) if spec.name in REPAIRS else None)
             except subprocess.TimeoutExpired:
                 completed = subprocess.CompletedProcess[bytes](command, 124)
         files: list[Json] = [reference_json(path) for path in sorted(target.rglob("*")) if path.is_file()] if target.exists() else []
@@ -167,7 +167,7 @@ def cohort(args: argparse.Namespace) -> int:
 
 def freeze(args: argparse.Namespace) -> int:
     spec = protocol(getattr(args, 'protocol', 'legacy'))
-    if spec.name == 'repair_r1' and time.time() >= spec.deadline:
+    if spec.name in REPAIRS and time.time() >= spec.deadline:
         raise EvidenceError('repair deadline expired')
     rows = register_rows(args.calibration_register)
     starts = [row for row in rows if row.get("event").text() == "started"]
@@ -209,7 +209,7 @@ def main() -> int:
     sub = parser.add_subparsers(dest="operation", required=True)
     for operation in ("cohort", "freeze"):
         command = sub.add_parser(operation)
-        _ = command.add_argument("--protocol", choices=("legacy", "repair_r1"), default="legacy")
+        _ = command.add_argument("--protocol", choices=("legacy", "repair_r1", "repair_r2"), default="legacy")
         command.add_argument("--source-root", type=Path, required=True)
         command.add_argument("--source-head", required=True)
         command.add_argument("--binary", type=Path, required=True)

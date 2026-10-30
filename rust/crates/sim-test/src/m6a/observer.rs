@@ -81,6 +81,23 @@ pub(super) enum Record<'a> {
         tick: u64,
         tallies: &'a FoodTallies,
     },
+    /// R2-2: food spoiled this tick and how many settlement members were hungry (above the seek
+    /// threshold) at that moment.
+    SpoilMoment {
+        tick: u64,
+        day: u64,
+        spoiled_units: u64,
+        hungry_members: u64,
+    },
+    /// R2-2: food units that entered storage this tick, split by covered (roofed store or pot)
+    /// placement and, for open placement, whether covered room for the stack existed.
+    Placement {
+        tick: u64,
+        day: u64,
+        covered: u64,
+        open_with_covered_room: u64,
+        open_without_covered_room: u64,
+    },
     Violation {
         tick: u64,
         kind: &'a str,
@@ -101,8 +118,83 @@ pub(super) struct Watch {
     pub observed_meals: u64,
     pub previous: FoodTallies,
     pub starvation: u64,
+    /// Stored count per storage owner after the previous tick (R2-2 placement).
+    pub stored: std::collections::BTreeMap<sim_core::colony::food::FoodOwner, u16>,
+    pub placed_covered: u64,
+    pub placed_open_with_room: u64,
+    pub placed_open_without_room: u64,
+    pub spoil_moments: u64,
+    pub spoil_moments_hungry: u64,
 }
 impl Watch {
+    /// R2-2: count units that entered stockpile, roofed-store or pot owners this tick.
+    fn placement(
+        &mut self,
+        engine: &SimEngine,
+        day: u64,
+        out: &mut impl Write,
+    ) -> Result<(), String> {
+        use sim_core::colony::content::FoodStorageClass as Class;
+        let (world, r) = (&engine.world, &engine.resources);
+        let mut now = std::collections::BTreeMap::new();
+        let (mut covered, mut open_room, mut open_none) = (0u64, 0u64, 0u64);
+        for (&owner, age) in &r.food.ages {
+            let class = sim_systems::runtime::food::storage::class(r, owner);
+            if !matches!(class, Class::Stockpile | Class::RoofedStore | Class::Pot) {
+                continue;
+            }
+            let Some(stack) = sim_systems::runtime::food::items::stack(world, r, owner) else {
+                continue;
+            };
+            now.insert(owner, stack.count);
+            let added = stack
+                .count
+                .saturating_sub(self.stored.get(&owner).copied().unwrap_or(0));
+            if added == 0 {
+                continue;
+            }
+            let units = u64::from(added)
+                * u64::from(stack.kind.definition().food.as_ref().map_or(1, |f| f.units));
+            if matches!(class, Class::RoofedStore | Class::Pot) {
+                covered += units;
+                continue;
+            }
+            let sim_core::colony::food::FoodOwner::Ground(tile) = owner else {
+                continue;
+            };
+            let room = sim_systems::runtime::jobs::food_storage::destination(
+                r,
+                r.nav.region_of(tile),
+                tile,
+                sim_core::colony::ItemSpec::raw(stack.kind, None),
+                age.born_day,
+                true,
+            );
+            if room.is_some() {
+                open_room += units;
+            } else {
+                open_none += units;
+            }
+        }
+        self.stored = now;
+        if covered + open_room + open_none > 0 {
+            self.placed_covered += covered;
+            self.placed_open_with_room += open_room;
+            self.placed_open_without_room += open_none;
+            write(
+                out,
+                &Record::Placement {
+                    tick: r.current_tick,
+                    day,
+                    covered,
+                    open_with_covered_room: open_room,
+                    open_without_covered_room: open_none,
+                },
+            )?;
+        }
+        Ok(())
+    }
+
     pub fn after_tick(&mut self, engine: &SimEngine, out: &mut impl Write) -> Result<(), String> {
         let r = &engine.resources;
         if r.current_tick != self.observed_ticks || engine.current_tick() != self.observed_ticks + 1
@@ -180,6 +272,39 @@ impl Watch {
             )?;
         }
         self.starvation = r.tallies.deaths_starvation;
+        let spoiled = r
+            .food
+            .tallies
+            .spoiled_units
+            .saturating_sub(self.previous.spoiled_units);
+        if spoiled > 0 {
+            let members: std::collections::BTreeSet<u64> = r
+                .settlements
+                .values()
+                .flat_map(|s| s.member_agents.iter().copied())
+                .collect();
+            let hungry = engine
+                .world
+                .query::<(&sim_core::components::Agent, &sim_core::components::Hunger)>()
+                .iter()
+                .filter(|(_, (a, h))| {
+                    members.contains(&a.id)
+                        && h.value > sim_systems::runtime::agent_actions::HUNGER_THRESHOLD
+                })
+                .count() as u64;
+            self.spoil_moments += 1;
+            self.spoil_moments_hungry += u64::from(hungry > 0);
+            write(
+                out,
+                &Record::SpoilMoment {
+                    tick: r.current_tick,
+                    day,
+                    spoiled_units: spoiled,
+                    hungry_members: hungry,
+                },
+            )?;
+        }
+        self.placement(engine, day, out)?;
         if self.previous != r.food.tallies {
             write(
                 out,

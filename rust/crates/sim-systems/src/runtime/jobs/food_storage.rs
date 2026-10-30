@@ -158,7 +158,7 @@ pub(super) fn clean_destination(
 
 /// Actual reachable, unreserved storage capacity; caller refreshes the colony spatial index.
 /// Prefer age-preserving room, retaining ordinary mixed-age delivery when none exists.
-pub(crate) fn destination(
+pub fn destination(
     res: &SimResources,
     region: u32,
     from: Tile,

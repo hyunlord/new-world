@@ -7,6 +7,8 @@ pub(crate) mod consume;
 pub(crate) mod forage;
 pub(crate) mod memory_bias;
 pub(crate) mod needs;
+/// The hunger level at which a person seeks food (read by the M6a evaluation observer).
+pub use needs::HUNGER_THRESHOLD;
 pub(crate) mod routine;
 pub(crate) mod targets;
 pub(crate) mod wood;
