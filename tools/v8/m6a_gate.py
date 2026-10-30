@@ -15,6 +15,7 @@ from m6a_gate_source import Gate, need, ref, source_digest
 import core_p7_publication as inventory
 from m6a_gate_story import story
 from m6a_gate_art import structural
+from mux2_gate_lock import FD_ENV
 
 ROOT: Final = Path(__file__).resolve().parents[2]
 
@@ -97,6 +98,12 @@ def prepare(template: Path, output: Path) -> None:
     print('Preparation seals inputs; preflight must pass before any gate step.')
 
 
+
+def lane_fds(environment: dict[str, str] | os._Environ[str]) -> tuple[int, ...]:
+    """The inherited GPU lane lock must survive the nested capture (R2: close_fds dropped it, EBADF)."""
+    inherited = environment.get(FD_ENV)
+    return () if inherited is None else (int(inherited),)
+
 def main() -> int:
     if len(sys.argv) == 4 and sys.argv[1] == 'prepare':
         prepare(Path(sys.argv[2]), Path(sys.argv[3]))
@@ -128,7 +135,7 @@ def main() -> int:
                            '--godot', os.environ['GODOT_BIN']]
             else:
                 command = ['bash', 'tools/v8/mux2_gate_checks.sh', 'stall', str(output)]
-            _ = subprocess.run(command, cwd=gate.root, check=True)
+            _ = subprocess.run(command, cwd=gate.root, check=True, pass_fds=lane_fds(os.environ))
         case 'final':
             need(output == gate.output, 'wrong final output')
             final(gate)
