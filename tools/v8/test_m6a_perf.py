@@ -136,6 +136,28 @@ class AcceptanceTests(unittest.TestCase):
             with self.assertRaises(EvidenceError):
                 loads(value)
 
+    def test_justified_timing_stops_at_one_fifteen_and_never_covers_allocation(self) -> None:
+        # R2 brief 2026-10-30: a CHANGELOG justification raises the timing bar to 1.15 only.
+        old = self.summaries()
+        new = self.summaries()
+        rows = [dict(row.values) for row in Document.parse(new).rows('scenes')]
+        rows[0]['tick_mean_us'] = 114.9
+        rows[1]['tick_p99_us'] = 230.1
+        new['scenes'] = rows
+        new['alloc_per_agent'] = 111
+        self.assertEqual(perf.failures(Document.parse(old), Document.parse(new), True),
+                         [f'{SCENES[1]}/tick_p99_us>1.15', 'alloc_per_agent>1.1'])
+        self.assertEqual(perf.failures(Document.parse(old), Document.parse(new)),
+                         ['n200/tick_mean_us>1.1', f'{SCENES[1]}/tick_p99_us>1.1', 'alloc_per_agent>1.1'])
+
+    def test_justification_is_read_only_from_the_marked_changelog_line(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'CHANGELOG.md').write_text('# x\n- bench is fine\n')
+            self.assertIsNone(perf.justification(root))
+            (root / 'CHANGELOG.md').write_text('# x\n- ' + perf.JUSTIFICATION_MARK + ' n200_script x1.11\n')
+            self.assertEqual(perf.justification(root), '- ' + perf.JUSTIFICATION_MARK + ' n200_script x1.11')
+
     def test_single_mean_just_above_bar_rejected(self) -> None:
         old = self.summaries()
         new = self.summaries()

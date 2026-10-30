@@ -137,7 +137,9 @@ def check(out: Path, output: Path | None = None, *, require_receipt: bool = Fals
             alloc_tile <= 96, rss_agent <= 5120, rss_tile <= 128], strict=True))
         for field, passes in expected_ceilings.items():
             require(summary.child('ceilings').text(field) == ('PASS' if passes else 'MISS'), 'C3 flag differs from raw instrument')
-    failed = failures(summaries['base'], summaries['new'])
+    from m6a_perf import justification
+    quote = justification()
+    failed = failures(summaries['base'], summaries['new'], quote is not None)
     for scene in SCENES:
         allocations = {role: statistics.median(selected[(False, scene, repeat, role)].child('alloc_bytes').number('after_build')
                        for repeat in (1, 2, 3)) for role in ('base', 'new')}
@@ -151,7 +153,8 @@ def check(out: Path, output: Path | None = None, *, require_receipt: bool = Fals
         'identical_runtime_binary': config.child('base').text('sha256') == config.child('new').text('sha256'),
         'config_sha256': sha(out / 'config.json'), 'accepted_pairs': 33,
         'files': [frozen_file(p) for p in sorted(out.rglob('*')) if p.is_file() and p.name != 'receipt.json'],
-        'waivers': [], 'comparison': 'fresh-same-session-published-BASE'}
+        'waivers': [], 'justification': quote, 'timing_limit': 1.15 if quote else 1.1,
+        'comparison': 'fresh-same-session-published-BASE'}
     destination = output if output is not None else out / 'receipt.json'
     if not require_receipt:
         write(destination, receipt, exclusive=output is not None)

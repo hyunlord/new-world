@@ -24,6 +24,21 @@ from m6a_evidence import reference_json as frozen_file
 from m6a_perf_config import (BASE, StrictDocument as Document, freeze, reference as verify_file, verify_config)
 
 
+# R2 brief 2026-10-30 (R2-3): a remainder that is the food chain's necessary work may exceed the
+# standing 1.10 timing bar only when CHANGELOG.md states it, with numbers, on a line carrying this
+# mark, and then only up to 1.15 on tick mean and p99 in every scene. Allocator and C3 bars stay.
+JUSTIFICATION_MARK = 'M6a R2 bench justification:'
+JUSTIFIED_LIMIT = 1.15
+
+
+def justification(root: Path = ROOT) -> str | None:
+    """The committed CHANGELOG line that justifies a timing remainder, if any."""
+    for line in (root / 'CHANGELOG.md').read_text().splitlines():
+        if JUSTIFICATION_MARK in line:
+            return line.strip()
+    return None
+
+
 def competing_processes(snapshot: str, owned_pid: int | None = None) -> list[str]:
     """Match executable names, never incidental text in shell arguments."""
     result: list[str] = []
@@ -44,8 +59,9 @@ def process_snapshot() -> str:
     return subprocess.check_output(['ps', '-axo', 'pid=,comm='], text=True)
 
 
-def failures(old: Document, new: Document) -> list[str]:
-    """Use all standing1.10 and C3 bars without historical exceptions."""
+def failures(old: Document, new: Document, justified: bool = False) -> list[str]:
+    """Use all standing1.10 and C3 bars; a CHANGELOG justification raises timing to 1.15 only."""
+    limit = JUSTIFIED_LIMIT if justified else 1.1
     old_rows = {row.text('label'): row for row in old.rows('scenes')}
     new_rows = {row.text('label'): row for row in new.rows('scenes')}
     require(set(old_rows) == set(new_rows) == set(SCENES), 'scene coverage')
@@ -54,8 +70,8 @@ def failures(old: Document, new: Document) -> list[str]:
         for metric in ('tick_mean_us', 'tick_p99_us'):
             before, after = old_rows[scene].number(metric), new_rows[scene].number(metric)
             require(before > 0 and after > 0, 'nonpositive timing')
-            if after / before > 1.1:
-                result.append(f'{scene}/{metric}>1.1')
+            if after / before > limit:
+                result.append(f'{scene}/{metric}>{limit}')
     for metric in ('alloc_per_agent', 'alloc_per_tile'):
         before, after = old.number(metric), new.number(metric)
         require(before > 0 and after > 0, 'nonpositive allocator slope')
@@ -173,8 +189,10 @@ def run(config_path: Path, out: Path) -> int:
                         '--out', str(out / f'{role}-summary.json'), '--commit', config.text('base_head' if role == 'base' else 'candidate_head')], cwd=ROOT, check=True)
     (out / 'comparison-ledger.md').write_text(ledger_text(out / 'base-summary.json'))
     result = check(out)
+    quote = justification()
     ledger = subprocess.run([sys.executable, str(ROOT / 'tools/v8/bench_ledger.py'), 'check',
-        str(out / 'new-summary.json'), str(out / 'comparison-ledger.md'), '--pass', 'M6a'], check=False)
+        str(out / 'new-summary.json'), str(out / 'comparison-ledger.md'), '--pass', 'M6a',
+        *(['--justified', quote, '--changelog', str(ROOT / 'CHANGELOG.md')] if quote else [])], check=False)
     return max(result, ledger.returncode)
 
 
