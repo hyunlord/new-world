@@ -29,6 +29,9 @@ func pointer(point: Vector2, pressed: bool, alt: bool = false) -> void:
 	event.alt_pressed = alt
 	Input.parse_input_event(event)
 	await frames(1)
+func _hovered_path() -> String:
+	var hovered: Control = root.gui_get_hovered_control()
+	return "" if hovered == null else str(hovered.get_path())
 func run() -> void:
 	main = load("res://scenes/main.tscn").instantiate()
 	main.get_node("UI/MuxHud").set("store", Store.new("/Users/rexxa/work/mux2-data/why-settings-%d.cfg" % OS.get_process_id()))
@@ -63,8 +66,14 @@ func run() -> void:
 		var toast_label: Label = main.get_node("UI/OrderBar").get("_toast")
 		var empty_text: String = str(root.get_node("Locale").call("ltr","MUX_WHY_EMPTY"))
 		var empty_shown: bool = toast != null and toast.visible and toast_label.text.replace("\u2060", "") == empty_text
+		# R2: record which part of the toast check failed (presence, visibility, text) instead of one Boolean.
+		print("MUX2_WHY_TOAST " + JSON.stringify({"present": toast != null and toast_label != null,
+			"visible": toast != null and toast.visible, "text": "" if toast_label == null else toast_label.text.replace("\u2060", ""),
+			"expected": empty_text, "frame": Engine.get_process_frames(), "hovered": _hovered_path()}))
 		check("empty tile uses toast", empty_shown)
 		await create_timer(2.1).timeout
+		print("MUX2_WHY_TOAST_EXPIRY " + JSON.stringify({"visible": toast != null and toast.visible,
+			"text": "" if toast_label == null else toast_label.text.replace("\u2060", ""), "frame": Engine.get_process_frames()}))
 		check("empty toast expires after two seconds",empty_shown and (not toast.visible or toast_label.text.replace("\u2060", "") != empty_text))
 	if panel.visible:
 		check("popup maximum screen width", panel.size.x * panel.scale.x <= 420.5)
