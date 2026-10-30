@@ -150,18 +150,28 @@ def neighbours_fixture(path):
               and all(waves[i]["answer"] == "Accepted" for i in (1, 2))
               and nb["tallies"]["trades"] >= 1)
         clean = s["ledger_violation_ticks"] == 0 and s["reservation_violation_ticks"] == 0
+        # M6a R2-1 (R2 brief 2026-10-30): the village must live. BASE 5b0c8881 on this fixture keeps
+        # 18 and 24 of 10 founders with 0 KnowledgeLost, so the bar is survivors >= founders - 2.
+        founders = s["m55"]["population"]["start"]
+        lost = len(s["m4"]["lost"])
+        alive = s["alive_end"]
         print(f"seed {s['seed']}: waves {[(i, day(i), waves[i]['answer']) for i in sorted(waves)]} trades "
               f"{nb['tallies']['trades']} traded out {nb['traded_out']} ledger {s['ledger_violation_ticks']} "
-              f"reservations {s['reservation_violation_ticks']}")
+              f"reservations {s['reservation_violation_ticks']} alive {alive}/{founders} founders "
+              f"deaths {s['deaths']} KnowledgeLost {lost}")
         if not ok:
             bad.append(f"seed {s['seed']}: neighbours")
+        if founders <= 0 or alive < founders - 2:
+            bad.append(f"seed {s['seed']}: survivors {alive} < founders {founders} - 2")
+        if lost != 0:
+            bad.append(f"seed {s['seed']}: KnowledgeLost {lost}")
         if not clean:
             bad.append(f"seed {s['seed']}: violations {s['first_violation']}")
     for b in bad:
         print("NEIGHBOURS FAIL", b)
     if not bad:
         print(f"NEIGHBOURS PASS ({len(seeds)} seeds: two neighbours, waves 1 and 2 in their windows and accepted, "
-              "a trade, ledger and reservations exact)")
+              "a trade, ledger and reservations exact, survivors >= founders - 2, 0 KnowledgeLost)")
     return 1 if bad else 0
 
 
