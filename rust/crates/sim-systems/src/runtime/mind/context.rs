@@ -449,20 +449,16 @@ pub struct RunningMetadata {
 
 /// Adults released from held ordinary work for winter stocking (R2-1A). In summer and autumn the
 /// stock target includes the winter shortfall; while a settlement is short, the first
-/// `ceil(adults x deficit)` member adults in AgentId order qualify, where `deficit` is the missing
-/// fraction of the target. The share falls as the store fills; no new numeric policy is introduced.
+/// `ceil(adults x deficit)` member adults in AgentId order qualify, where `deficit` is the larger
+/// missing fraction of the whole target and of its winter part (counting only food that lasts
+/// through winter, R2-1B). The share falls as the store fills; no new numeric policy is introduced.
 fn winter_stock_duty(
     resources: &SimResources,
     rows: &[PersonSnapshot],
     stock: &BTreeMap<SettlementId, (bool, u64, bool, Option<f64>, f64)>,
 ) -> BTreeSet<AgentId> {
     let mut released = BTreeSet::new();
-    if resources.rules.seasons.is_none()
-        || !matches!(
-            crate::runtime::resource_regen::season_at(resources),
-            Some((1 | 2, _))
-        )
-    {
+    if crate::runtime::settlement::food_economy::days_to_winter_end(resources).is_none() {
         return released;
     }
     for (sid, settlement) in &resources.settlements {
@@ -878,11 +874,25 @@ impl TickContext {
                         .forage
                         .and(resources.rules.society.stock_target)
                         .map(|rule| rule.hoard_cap_factor * target);
-                    let deficit = if target > 0.0 {
+                    // R2-1B: the winter part counts only food that lasts through winter.
+                    let winter = crate::runtime::settlement::food_economy::winter_stock_target(
+                        world, resources, sid,
+                    )
+                    .zip(crate::runtime::settlement::food_economy::days_to_winter_end(resources))
+                    .filter(|(part, _)| *part > 0.0)
+                    .map(|(part, days)| {
+                        let lasting = crate::runtime::food::reserves::lasting_units(
+                            world, resources, sid, false, days,
+                        );
+                        (part - lasting as f64).max(0.0) / part
+                    })
+                    .unwrap_or(0.0);
+                    let base = if target > 0.0 {
                         (target - in_hand as f64).max(0.0) / target
                     } else {
                         0.0
                     };
+                    let deficit = base.max(winter);
                     (sid, (stored > 0, in_hand, deficit > 0.0, cap, deficit))
                 })
                 .collect();

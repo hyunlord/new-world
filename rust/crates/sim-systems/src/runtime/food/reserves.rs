@@ -7,6 +7,18 @@ use sim_engine::SimResources;
 
 /// Fresh stored units reachable from this settlement, plus its carried food when requested.
 pub fn units(world: &World, res: &SimResources, sid: SettlementId, include_carried: bool) -> u64 {
+    lasting_units(world, res, sid, include_carried, 1)
+}
+
+/// Like [`units`], counting only stacks with at least `min_remaining_days` of life left
+/// (R2-1B: food that will last through the coming winter).
+pub fn lasting_units(
+    world: &World,
+    res: &SimResources,
+    sid: SettlementId,
+    include_carried: bool,
+    min_remaining_days: u32,
+) -> u64 {
     let Some(settlement) = res.settlements.get(&sid) else {
         return 0;
     };
@@ -40,7 +52,9 @@ pub fn units(world: &World, res: &SimResources, sid: SettlementId, include_carri
             }
             let stack = super::items::stack(world, res, owner)?;
             let food = stack.kind.definition().food.as_ref()?;
-            if !food.raw_edible || super::storage::remaining_days(world, res, owner, day).ok()? == 0
+            if !food.raw_edible
+                || super::storage::remaining_days(world, res, owner, day).ok()?
+                    < min_remaining_days.max(1)
             {
                 return None;
             }

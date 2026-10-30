@@ -1,4 +1,5 @@
-//! R2-1A: winter stocking displaces held ordinary work while the winter store is short.
+//! R2-1: winter stocking displaces held ordinary work while the winter store is short, and only
+//! food that lasts through winter counts toward the winter part of the store target.
 use super::harvest_stock_tests::{fixture, mind};
 use crate::runtime::food::items::{self, FoodSource};
 use sim_core::colony::{Designation, ItemKind, ItemSpec, Job, JobKind, JobStage, ReserveKey};
@@ -95,4 +96,11 @@ fn spring_short_store_keeps_held_work() {
 fn a_lasting_winter_store_keeps_held_work() {
     // 30 hazelnuts last 18 days in a stockpile: >= 18 days to the end of winter and >= 20.4.
     assert!(!chooses_harvest("hazelnuts", 10, SUMMER_NOON));
+}
+
+#[test]
+fn short_lived_food_is_not_a_winter_store() {
+    // 30 roots last 10 days in a stockpile, less than the 18 days to the end of winter:
+    // they cover today's need but not winter, so stocking continues (R2-1B).
+    assert!(chooses_harvest("roots", 10, SUMMER_NOON));
 }

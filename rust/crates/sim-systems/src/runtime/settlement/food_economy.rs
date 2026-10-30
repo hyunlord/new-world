@@ -127,13 +127,43 @@ pub fn stock_target(world: &World, resources: &SimResources, sid: SettlementId) 
     let rule = resources.rules.society.stock_target?;
     let need = members_need_per_day(world, resources, sid);
     let mut target = rule.base_days * need;
+    if let Some(winter) = winter_part(resources, sid, need) {
+        target += winter;
+    }
+    Some(target)
+}
+
+/// The winter-preparation part of [`stock_target`] (summer and autumn only):
+/// `days_per_season x max(0, need - winter supply)`; `None` in other seasons or
+/// without a stock-target rule.
+pub fn winter_stock_target(
+    world: &World,
+    resources: &SimResources,
+    sid: SettlementId,
+) -> Option<f64> {
+    resources.rules.society.stock_target?;
+    winter_part(resources, sid, members_need_per_day(world, resources, sid))
+}
+
+fn winter_part(resources: &SimResources, sid: SettlementId, need: f64) -> Option<f64> {
     if let (Some(_), Some((season, _))) = (resources.rules.seasons, season_at(resources)) {
         if season == 1 || season == 2 {
             let winter = winter_supply_per_day(resources, sid, catchment_radius(resources));
-            target += f64::from(resources.rules.season_days()) * (need - winter).max(0.0);
+            return Some(f64::from(resources.rules.season_days()) * (need - winter).max(0.0));
         }
     }
-    Some(target)
+    None
+}
+
+/// Days from today until the end of the coming winter, in summer and autumn; `None` otherwise.
+/// A stored unit is useful for winter only if its remaining life covers this span.
+pub fn days_to_winter_end(resources: &SimResources) -> Option<u32> {
+    let (season, day) = season_at(resources)?;
+    if season != 1 && season != 2 {
+        return None;
+    }
+    let per_season = resources.rules.season_days();
+    Some((4 - season as u32) * per_season - (day - 1))
 }
 
 /// Founder food requirement per standard 1,440-tick day.
