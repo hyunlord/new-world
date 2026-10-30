@@ -24,3 +24,6 @@ mod harvest_food_tests;
 
 #[cfg(test)]
 mod harvest_food_cache_tests;
+
+#[cfg(test)]
+mod meal_admission_tests;
