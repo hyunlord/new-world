@@ -128,7 +128,7 @@ def main() -> int:
                            '--godot', os.environ['GODOT_BIN']]
             else:
                 command = ['bash', 'tools/v8/mux2_gate_checks.sh', 'stall', str(output)]
-            subprocess.run(command, cwd=gate.root, check=True)
+            _ = subprocess.run(command, cwd=gate.root, check=True)
         case 'final':
             need(output == gate.output, 'wrong final output')
             final(gate)

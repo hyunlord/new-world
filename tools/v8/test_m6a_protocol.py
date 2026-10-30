@@ -167,16 +167,18 @@ class FreezeCompletionTests(unittest.TestCase):
         from unittest.mock import patch
         from m6a_evidence import reference_json
         from m6a_run import freeze
-        for mutation in ('empty', 'horizon', 'changed', 'failed_world', 'tampered_artifact'):
+        for mutation in ('valid', 'empty', 'horizon', 'changed', 'failed_world', 'tampered_artifact'):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as folder:
                 root = Path(folder).resolve()
                 binary = root / 'binary'
                 binary.write_text('synthetic binary')
                 ref = reference_json(binary)
-                artifact = root / 'summary.json'
-                artifact.write_text('{}')
-                artifact_ref = reference_json(artifact)
-                worlds = [{'seed': seed, 'exit_code': 0, 'log': ref, 'files': [artifact_ref]}
+                artifacts = []
+                for name in ('events.jsonl', 'chronicle.json', 'summary.json'):
+                    artifact = root / name
+                    artifact.write_text('{}')
+                    artifacts.append(reference_json(artifact))
+                worlds = [{'seed': seed, 'exit_code': 0, 'log': ref, 'files': artifacts}
                           for seed in range(8)]
                 data = {'schema_version': 1, 'kind': 'm6a_cohort_v1', 'evaluation_protocol': 'repair_r1',
                         'purpose': 'calibration', 'arm': 'candidate', 'days': 72,
@@ -198,9 +200,17 @@ class FreezeCompletionTests(unittest.TestCase):
                 args = argparse.Namespace(protocol='repair_r1', calibration_register=register,
                     source_root=root, source_head='head', binary=binary, out=root / 'freeze.json')
                 with patch('m6a_run.source_hash', return_value='source'), patch('m6a_run.time.time', return_value=1):
-                    with self.assertRaises(EvidenceError):
-                        freeze(args)
-                self.assertFalse(args.out.exists())
+                    if mutation == 'valid':
+                        self.assertEqual(freeze(args), 0)
+                    else:
+                        reason = {'empty': 'missing, duplicate or reordered worlds',
+                                  'horizon': 'incomplete or changed cohort',
+                                  'changed': 'incomplete or changed cohort',
+                                  'failed_world': 'failed world',
+                                  'tampered_artifact': 'reference changed'}[mutation]
+                        with self.assertRaisesRegex(EvidenceError, reason):
+                            freeze(args)
+                self.assertEqual(args.out.exists(), mutation == 'valid')
 
 
 

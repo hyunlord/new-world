@@ -7,7 +7,7 @@ from pathlib import Path
 
 from m6a_protocol import recorded, check_freeze
 from m6a_causal import audit as causal_audit
-from m6a_evidence import EvidenceError, Node, Reference, reference_json, write_json
+from m6a_evidence import Json, EvidenceError, Node, Reference, reference_json, write_json
 
 
 @dataclass(frozen=True, slots=True)
@@ -285,10 +285,10 @@ def score_world(world: Node) -> WorldScore:
                       daily[42].get("alive").integer() > 0, daily[66].get("alive").integer() > 0, w42, w66)
 
 
-def base_columns(worlds: list[Node], common_rows: list[tuple[bool, bool, bool, bool]]) -> dict:
+def base_columns(worlds: list[Node], common_rows: list[tuple[bool, bool, bool, bool]]) -> dict[str, dict[str, int | str | None]]:
     """BASE survival is observed; physical-food concepts did not exist in BASE."""
     alive = sum(world.get('alive_end').integer() > 0 for world in worlds)
-    result = {'alive': {'base': alive, 'base_status': 'MEASURED',
+    result: dict[str, dict[str, int | str | None]] = {'alive': {'base': alive, 'base_status': 'MEASURED',
                         'base_definition': 'world alive_end > 0 after 72 days'}}
     for index, name in enumerate(('stockpile_day1', 'beds_day10', 'wolf_deaths_le1', 'ledger')):
         result[name] = {'base': sum(row[index] for row in common_rows), 'base_status': 'MEASURED'}
@@ -303,8 +303,8 @@ def base_columns(worlds: list[Node], common_rows: list[tuple[bool, bool, bool, b
 
 def evaluate(candidate: Path, base: Path) -> dict:
     scores = [score_world(world) for world in receipt(candidate, "candidate", "heldout")]
-    baseline = []
-    base_worlds = []
+    baseline: list[tuple[bool, bool, bool, bool]] = []
+    base_worlds: list[Node] = []
     selected = recorded(Node.load(candidate))
     if recorded(Node.load(base)).name != selected.name:
         raise EvidenceError("candidate/BASE protocol differs")
@@ -322,13 +322,12 @@ def evaluate(candidate: Path, base: Path) -> dict:
     for index, name in enumerate(("stockpile_day1", "beds_day10", "wolf_deaths_le1")):
         base_count = sum(row[index] for row in baseline)
         bars[name] = {"passed_worlds": sum(bool(getattr(score, name)) for score in scores), "required": max(0, base_count - 1), "base": base_count}
-    if selected.name == 'repair_r1':
-        for name, column in base_columns(base_worlds, baseline).items():
-            bars[name].update(column)
     failed = [name for name, bar in bars.items() if bar["passed_worlds"] < bar["required"]]
     if not all(row[3] for row in baseline): failed.append("base_ledger")
+    columns = base_columns(base_worlds, baseline) if selected.name == "repair_r1" else {}
+    reported_bars: dict[str, Json] = {name: {**bar, **columns.get(name, {})} for name, bar in bars.items()}
     return {"schema_version": 1, "kind": "m6a_score_v1", "evaluation_protocol": selected.name, "status": "FAIL" if failed else "PASS", "failures": failed,
-            "candidate": reference_json(candidate), "base": reference_json(base), "bars": bars,
+            "candidate": reference_json(candidate), "base": reference_json(base), "bars": reported_bars,
             "winter_conditional": {str(day): {"passed": sum(getattr(s, f"winter{day}_store") for s in scores), "alive": sum(getattr(s, f"winter{day}_alive") for s in scores)} for day in (42, 66)},
             "worlds": [asdict(score) for score in scores]}
 

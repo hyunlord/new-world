@@ -414,9 +414,17 @@ def run(root: Path, manifest_path: Path, freeze_path: Path, out: Path, deadline:
         'probe_environment': {'content_selection': 'bundled', 'WORLDSIM_GIT_SHA': BASE},
         'binary': manifest.get('binary').value, 'base_build': manifest_reference,
         'observer': reference_json(Path(__file__)), 'scorer': reference_json(root/'tools/v8/m6a_score.py'),
-        'freeze': freeze_reference, 'days': 72, 'seeds': spec.heldout,
+        'freeze': freeze_reference, 'days': 72, 'seeds': [seed for seed in spec.heldout],
         'round': None, 'worlds': rows, 'source_unchanged': unchanged, 'exit_code': int(failed)})
     return int(failed)
+
+
+class Arguments(argparse.Namespace):
+    manifest: Path = Path()
+    freeze: Path = Path()
+    out: Path = Path()
+    protocol: str = 'legacy'
+    deadline: int | None = None
 
 
 def main() -> int:
@@ -424,9 +432,9 @@ def main() -> int:
     parser.add_argument('--manifest', type=Path, required=True)
     parser.add_argument('--freeze', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
-    parser.add_argument('--protocol', choices=('legacy', 'repair_r1'), default='legacy')
+    _ = parser.add_argument('--protocol', choices=('legacy', 'repair_r1'), default='legacy')
     parser.add_argument('--deadline', type=int)
-    args = parser.parse_args()
+    args = parser.parse_args(namespace=Arguments())
     return run(Path(__file__).resolve().parents[2], args.manifest, args.freeze, args.out, args.deadline if args.deadline is not None else protocol(args.protocol).deadline, args.protocol)
 
 

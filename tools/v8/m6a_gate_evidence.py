@@ -7,7 +7,7 @@ from typing import Final
 
 import core_shadow_freeze as freeze
 from m6a_protocol import recorded
-from m6a_evidence import Node, Reference, reference_json, write_json
+from m6a_evidence import Json, Node, Reference, reference_json, write_json
 from m6a_gate_source import Gate, keys, need, ref
 from m6a_gate_art import validate as validate_plant_art
 
@@ -50,12 +50,12 @@ def receipt(gate: Gate, directory: str) -> Path:
     return path
 
 
-def stall_waivers(gate: Gate, rows: tuple[tuple[int, str, int], ...]) -> list:
+def stall_waivers(gate: Gate, rows: tuple[tuple[int, str, int], ...]) -> list[Json]:
     """Authenticate stall evidence and preserve a flat, empty-on-nonuse waiver list."""
     from m6a_r1_stall import verify, authorize
     verdict = verify(gate.root, gate.output / 'mux2-stall/receipt.json')
     authorization = authorize(verdict, other_steps_pass=all(code == 0 for number, _, code in rows if number != 41))
-    return authorization['waivers']
+    return [row.value for row in Node(authorization['waivers']).rows()]
 
 
 def final(gate: Gate) -> None:
@@ -80,7 +80,7 @@ def final(gate: Gate) -> None:
             need(len(loads) == 3, 'missing load triplet')
             value = loads[0].value
             need(type(value) in (int, float) and 0 <= value < 8, 'invalid timing admission')
-    references = [reference_json(receipt(gate, name)) for name in
+    references: list[Json] = [reference_json(receipt(gate, name)) for name in
         ('core-shadow-fixture', 'core-evaluation', 'm6a-food-fixture', 'm6a-food-data-only')]
     art = Node.load(gate.output / 'm6a-food-data-only/plant-art-structural.json')
     need(art.get('kind').text() == 'm6a_plant_art_structural_v1'
@@ -136,7 +136,7 @@ def calibration(gate: Gate) -> None:
         need(round_data.get('exit_code').integer() == end.get('exit_code').integer(), 'round exit mismatch')
         if round_data.get('exit_code').integer() == 0:
             from m6a_score import receipt as validate_receipt
-            validate_receipt(path, 'candidate', 'calibration')
+            _ = validate_receipt(path, 'candidate', 'calibration')
         if offset == len(events) - 2:
             need(round_data.get('exit_code').integer() == 0
                  and round_data.get('source_hash').text() == frozen.get('source_hash').text(),

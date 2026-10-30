@@ -11,7 +11,7 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from m6a_protocol import protocol, recorded, check_freeze
-from m6a_evidence import EvidenceError, Node, Reference, digest, git, reference_json, source_hash, write_json
+from m6a_evidence import Json, EvidenceError, Node, Reference, digest, git, reference_json, source_hash, write_json
 
 
 def probe_environment(values: Mapping[str, str]) -> dict[str, str]:
@@ -124,7 +124,7 @@ def cohort(args: argparse.Namespace) -> int:
         if args.calibration_register is None or args.arm != "candidate":
             raise EvidenceError("candidate calibration requires append-only register")
         round_number = round_start(args.calibration_register, out, spec.name)
-    rows = []
+    rows: list[Json] = []
     failed = False
     for seed in selected:
         if spec.name == 'repair_r1' and time.time() >= spec.deadline:
@@ -140,22 +140,23 @@ def cohort(args: argparse.Namespace) -> int:
         with (out / f"seed-{seed}.log").open("xb") as log:
             try:
                 completed = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, check=False, env=environment,
-                    **({'timeout': max(0.01, spec.deadline-time.time())} if spec.name == 'repair_r1' else {}))
+                    timeout=max(0.01, spec.deadline-time.time()) if spec.name == 'repair_r1' else None)
             except subprocess.TimeoutExpired:
-                completed = subprocess.CompletedProcess(command, 124)
-        files = [reference_json(path) for path in sorted(target.rglob("*")) if path.is_file()] if target.exists() else []
-        rows.append({"seed": seed, "command": command, "exit_code": completed.returncode,
-                     "files": files, "log": reference_json(out / f"seed-{seed}.log")})
+                completed = subprocess.CompletedProcess[bytes](command, 124)
+        files: list[Json] = [reference_json(path) for path in sorted(target.rglob("*")) if path.is_file()] if target.exists() else []
+        row: dict[str, Json] = {"seed": seed, "command": [arg for arg in command], "exit_code": completed.returncode,
+                     "files": files, "log": reference_json(out / f"seed-{seed}.log")}
+        rows.append(row)
         failed |= completed.returncode != 0
         write_json(out / f"seed-{seed}-receipt.json", rows[-1])
     unchanged = source_hash(root, args.source_head) == source and reference_json(binary) == binary_ref
     failed |= not unchanged or len(rows) != len(selected)
-    receipt = {"schema_version": 1, "kind": "m6a_cohort_v1", "evaluation_protocol": spec.name, "arm": args.arm, "purpose": args.purpose,
+    receipt: dict[str, Json] = {"schema_version": 1, "kind": "m6a_cohort_v1", "evaluation_protocol": spec.name, "arm": args.arm, "purpose": args.purpose,
                "source_root": str(root), "source_head": args.source_head, "source_hash": source,
                "probe_environment": {"content_selection": "bundled", "WORLDSIM_GIT_SHA": environment.get("WORLDSIM_GIT_SHA")},
                "binary": binary_ref, "base_build": base_build, "observer": reference_json(Path(__file__)),
                "scorer": reference_json(Path(__file__).with_name("m6a_score.py")), "freeze": freeze_ref,
-               "days": 72, "seeds": selected, "round": round_number, "worlds": rows,
+               "days": 72, "seeds": [seed for seed in selected], "round": round_number, "worlds": rows,
                "source_unchanged": unchanged, "exit_code": int(failed)}
     write_json(out / "receipt.json", receipt)
     if round_number is not None:
@@ -184,7 +185,7 @@ def freeze(args: argparse.Namespace) -> int:
         Reference.parse(row.get("receipt"))
     last_reference = Reference.parse(ends[-1].get("receipt"))
     from m6a_score import receipt as validate_receipt
-    validate_receipt(Path(last_reference.path), "candidate", "calibration")
+    _ = validate_receipt(Path(last_reference.path), "candidate", "calibration")
     last = last_reference.read()
     if (recorded(last).name != spec.name or last.get('purpose').text() != 'calibration'
             or last.get('arm').text() != 'candidate'
@@ -199,7 +200,7 @@ def freeze(args: argparse.Namespace) -> int:
                          "source_hash": current, "binary_sha256": digest(args.binary),
                          "scorer_sha256": digest(Path(__file__).with_name("m6a_score.py")),
                          "calibration_register": reference_json(args.calibration_register),
-                         "heldout_seeds": spec.heldout, "days": 72})
+                         "heldout_seeds": [seed for seed in spec.heldout], "days": 72})
     return 0
 
 
@@ -208,7 +209,7 @@ def main() -> int:
     sub = parser.add_subparsers(dest="operation", required=True)
     for operation in ("cohort", "freeze"):
         command = sub.add_parser(operation)
-        command.add_argument("--protocol", choices=("legacy", "repair_r1"), default="legacy")
+        _ = command.add_argument("--protocol", choices=("legacy", "repair_r1"), default="legacy")
         command.add_argument("--source-root", type=Path, required=True)
         command.add_argument("--source-head", required=True)
         command.add_argument("--binary", type=Path, required=True)
