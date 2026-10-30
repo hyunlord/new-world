@@ -1029,3 +1029,13 @@ Calibration72days: alive/cooked share/hunger-free winters/diversity/stores/ledge
 |7|919/1255|3048|1550|50.85%|
 
 Raw evidence: `candidate-p24-binaries/build-receipt.json`, `calibration-register.jsonl`, `calibration-round-2/{terminal.json,calibration-score.json,soak.log,soak/summary.json}` under the R1 directory. P25 is documentation only before fresh evaluation; runtime/tool inputs remain P24-identical. Fresh held-out, full gate and actual stall waiver use are NOT_RUN at this checkpoint.
+
+### R1 frozen fresh evaluation and final-gate checkpoint (P26)
+
+Under the owner note2026-10-30 11:20KST, both calibration rounds are exhausted and the P24 product remains frozen. Fresh1328–1359×72days candidate and qualified same-seed BASE receipts complete with unchanged sources; independent authentication and scorer recomputation agree. Candidate survival30/32 versus BASE31/32. The sole failed acceptance predicate is spoilage3/32(required26); all nine other predicates pass. Keep BASE unsupported/unobserved values explicit, never fabricate zero. No third calibration, reseeding, target/yield/density/lifetime or bar change. Publication is ineligible.
+
+Fresh chronology records14 hunger deaths across1345(6) and1347(8). Exact jobs/holders, blocked candidates and individual access are not available: one death has9560 reachable ripe units; five retain4 recorded stored raw-edible units; eight have neither recorded stored units nor ripe plants. This is not proof of world-wide food absence, density insufficiency or a completed causal diagnosis. Preserve the original66-death diagnosis separately. See `r1-fresh-death-summary.md`, `heldout-final-score.json`, `r1-paired-evaluation-audit.md` in the R1 evidence directory.
+
+Story reference comparison completes32worlds×3years per arm with source unchanged, exit0 and no timeout. Candidate/BASE entries49058/32644, deep42/7, distinct-deep-chain world/year sums9/7, people-with-three world/year sums955/990, missing80/152, cyclic0/0. These are reference counts, not a numerical acceptance bar. The final seal independently validates complete years and authenticated report inputs.
+
+The contact sheet now records actual P21 UI before/after crops and KO scale/time views, explicitly limited to retained fixtures and the P17 bridge. Preserve the old sheet externally; final fresh bridge/world visibility is still NOT_RUN. P26 is documentation-only and must run the complete48-step gate from1. The R1 step41 waiver is not eligible while another required predicate fails, irrespective of frame-level eligibility; actual stall frames remain pending. Review branch only; no wip/main publication or issue closure.

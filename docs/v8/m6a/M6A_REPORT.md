@@ -472,3 +472,74 @@ P9의 [범위 한정 합성 검증](</Users/rexxa/work/m6a-data/20261029/p9-ui-c
 최종 보정의 기존 soak는 결정성·장부·예약·활동 조건까지 통과했다. 신규 수리 회귀11개, 기존 수확7개, 전체 library524개(기존1ignored), workspace clippy/fmt/docs 통과. 가시성의 보존 장면은52/45→89/98px,8장면80명 통과지만 최종 새 장면 게이트는 아직 NOT_RUN이다.
 
 2회 제한을 모두 사용했으므로 동결 후 새1328–1359와 같은 BASE 세계를 평가한다. 새 held-out/BASE 표·48단계 게이트·stall waiver 사용은 이 체크포인트에서 NOT_RUN. `v8/m6a-review`만 수리P24까지 갱신됐고, main/wip은BASE5b0c8881이다. #670–673은OPEN, 게시 SHA는없다. 단위·보정 통과 항목을 최종 수용으로 대체하지 않는다.
+
+### R1 P26 부록 — 신선 수용 FAIL·미게시, 최종 게이트 대기
+
+R1 보정 **2/2회 완료·소진 후 동결**했다. 제품 소스는 P24 `b2fab234210a0ca301ee6b655aed816562501c98`이며 P25 문서/실행 출처와 구분한다. 최종 보정8세계는 생존·조리·겨울 기아 없음·다양성·저장·회계·공통 기준 모두8/8, 부패0/8이다. 이는 보정 관측이지 수용 PASS가 아니다. 신선1328–1359 후보와 동일 BASE의72일 평가를 완료했으며 **부패3/32(필요26)로 공식 수용 FAIL**이다. 이후 추가 보정·숫자 조정·재시딩 없이 실패를 보존한다.
+
+#### 사망·조리·부패 전후
+
+|범위|수정 전|R1 최종 관측|해석|
+|---|---|---|---|
+|동일 standing soak seeds0–3|기아사9/9/9/10·KnowledgeLost0/2/1/0|기아사0/0/0/0·KnowledgeLost0/0/0/0·생존각10|보정1의기아사0/10/0/0 실패도 보존|
+|calibration seeds0–7 조리 기준|7/8|8/8|동일seed 보정 관측; 신선 수용과 별개|
+|calibration 부패 기준|8/8|0/8|원래 막대 유지; 손실 개선 완료가 아님|
+|은퇴 held-out와 신선 held-out|기아29명·생존29/32·조리24/32|기아14명·생존30/32·조리30/32|서로 다른 seed 집합으로 동일세계 반사실 효과량이 아님|
+
+[같은 calibration seed의 식사·수확·부패 전후 원표](</Users/rexxa/work/m6a-data/20261030-r1/round2-observation-review.md>)에서 식사는days[24,72), 수확/부패는[0,72) 단위다. 식사 조각과 음식 단위를 섞지 않는다. 성인10명576단위/year·144/winter 산수와 지역 이상적 수확 상한의 차이는 노동·이동·저장 등을 생략한 모델 한계로 유지하며 yield/density 변경 근거로 사용하지 않았다.
+
+확인한 수리는 선반 reserve만 있는 meal admission, 기존 조리 목표의 재료 요청 누락, 실제 저장 없이 반복되는 비긴급 stock harvest, 회피 가능한 묶음 연령 혼합이다. 조리 선호가 유효한 cooked food를 무시했다는 증거는 없었고, 겨울 메뉴·예약/섭취 실패의 남은 원인을 임의로 해결됐다고 하지 않는다. 원래66명 전수 진단은 그대로다.
+
+원래 진단의 사망 분류와 조리 부족 원인은 아래처럼 구분한다. 근거는 [원래 전수 진단](</Users/rexxa/work/new-world-m6a-dev/docs/v8/m6a/M6A_R1_DIAGNOSIS.md>)이며, 원본의 은퇴 seed 재현 결과를 새 평가의 원인 증명으로 바꾸지 않는다.
+
+|원래 사망 분류|건수·확인된 원인|수리와 관측 범위·남은 한계|
+|---|---|---|
+|A: 고갈|58명(soak37·은퇴 held-out21), 사망 시 물리 음식0·익은 식물0|soak의 자율 비축 이식 누락을 P20에서 복원하고 P24에서 실제 운반·저장 가능한 비긴급 수확 admission을 수리했다. 최종 동일 soak 기아0/0/0/0이지만, 58명 전체의 상위 원인이 하나였거나 모두 해결됐다는 뜻은 아니다.|
+|B: 선반 reserve와 식사 admission 불일치|7명, 선반 음식은 있지만 실제 먹을 대상 없이 높은 점수의 meal 선택 반복|P16에서 실제 섭취 가능 사실을 meal admission에 반영했다. 계획용 선반 reserve는 유지하며, 신선 14명에 동일 원인이 남았는지는 미확정이다.|
+|C: 긴 음식 추적|1명(1307/person6), 수확 취소 뒤 먼 음식을 추적하다 도착 전 고갈|독립 원인으로 보존한다. 세 번째 취소만 실제 critical-hunger 선택 기록이 있고 첫 두 취소 노드는 UNKNOWN이다. 전용 수리·해결 효과를 주장하지 않는다.|
+
+|조리 부족 원인|확인된 실행 근거|수리·결과와 미확정 범위|
+|---|---|---|
+|조리 목표의 재료 요청 누락|24 portion 목표에 필요한 grain16 대신 한 batch의2만 요청|P17에서 기존 목표의 output 부족분을 recipe batch와 공유 입력으로 전파했다. 목표 수치 변경 없이 최종 calibration 조리8/8·신선30/32를 관측했으나 개선 전부를 이 수리 하나에 귀속하지 않는다.|
+|열·연료 부재와 공급 지연|1305의 tick1440/2880/4320/7200/10080 불 꺼짐·연료0; runnable 조리 bill·지식은 존재. SplitFirewood 최초 공급12194·제작12269|열 부재는 직접 조리 차단이다. 식사 빈 반복과 연료 지연이 함께 있었지만 독립적인 우선순위 결함·표본 사이 연속 상태는 미확정이며 수치 조정으로 해결됐다고 하지 않는다.|
+|겨울 조리 입력·메뉴 한계|미달7세계 겨울 표본은 견과·말린 열매 위주이며 해당 생식 선택의 cooked_available0. 전체 겨울216표본 중1318의7표본에는 grain 존재|조리 선호 실패나 모든 겨울 grain 부재로 확대하지 않는다. raw_edible 비축에서 WildGrain 제외·견과만으로 칼로리 충족 가능성은 남는다. 전체 겨울 조리 배분, 입력 접근성·첫 작업장 선택의 인과는 미확정이며 새 정책을 만들지 않았다.|
+
+[신선 기아14명 기록](</Users/rexxa/work/m6a-data/20261030-r1/r1-fresh-death-summary.md>):1345의6명 중 첫1명은 저장0·도달가능 익은음식9560, 뒤5명은저장 생식4·익은식물0;1347의8명은기록된 저장 생식0·익은식물0이다. 앞의5명만 평가겨울day42–47에 속하고1347은평가겨울 밖이다. 획득·개인 접근·예약·섭취의 구체적 실패 메커니즘과 고갈의 상위 원인은 미확정이다. 저장 관측은 비지면 저장의 도달가능·미만료 생식량이며 loose/carry 전체가 아니므로0을 세계 전체 음식0으로 확대하지 않는다.
+
+#### 공식 신선 paired score — 동일 BASE 열 포함
+
+[공식 점수](</Users/rexxa/work/m6a-data/20261030-r1/heldout-final-score.json>)의10개행을 그대로 요약한다. 후보와BASE는동일1328–1359×72일이다.
+
+|항목|필요|R1 후보|BASE|판정|
+|---|---:|---:|---|---|
+|72일 생존|30/32|30/32|31/32 (MEASURED)|PASS|
+|2·3년 겨울 기아사 없음|28/32|30/32|NOT_OBSERVED|PASS|
+|겨울 저장|26/32|30/32|NOT_OBSERVED|PASS|
+|조리 식사≥50%|26/32|30/32|NOT_SUPPORTED|PASS|
+|3일 음식군≥3|26/32|30/32|NOT_SUPPORTED|PASS|
+|부패/수확≤30%|26/32|3/32|NOT_SUPPORTED|FAIL|
+|day1 저장소|31/32|32/32|32/32 (MEASURED)|PASS|
+|day10 침대|29/32|30/32|30/32 (MEASURED)|PASS|
+|늑대 사망≤1|28/32|29/32|29/32 (MEASURED)|PASS|
+|회계|32/32|32/32|32/32 (MEASURED)|PASS|
+
+BASE의 NOT_OBSERVED는 동결 observer의 해당 계절 관측 부재, NOT_SUPPORTED는 물리적 식사 종류·음식군·연령 부패 개념 부재다. 이를0/PASS로 채우지 않는다. 겨울저장은day42 생존31세계 중30,day66 생존30세계 중30이다. 생존 후보30/BASE31을 동일값으로 쓰지 않는다.
+
+#### 실제 화면과 최종 검증 범위
+
+![R1 실제 화면 모음](../../images/m6a_contact_sheet.png)
+
+위 모음은 **보존fixture·명시된 P17 debug bridge**의 UI 근거다. 같은tick/camera/pose에서 Actions 배경alpha만0.60→0.45로 바꿔idle/work52/45→89/98픽셀, 보존8장면80/80person·KO낮/밤×1.0/1.25의20화면·why42검사가 통과했다. 텍스트/입력/geometry/식물/metric/threshold는 유지했다. 이는 새 최종 bridge·신선 장면의 전체 게이트를 대신하지 않으며 placeholder #670은 OPEN이다. 원래 자연 UI13/15·실패2와 별도 집중 증거 합성15사례의 구분도 유지한다.
+
+|최종 항목|현재 상태|
+|---|---|
+|R1 보정·freeze·신선 paired 평가|완료;2/2소진·동결·부패 단독 FAIL|
+|최종 story 비교|완료: 양쪽32세계×3년, 후보/BASE entries49,058/32,644·deep42/7·distinct deep chains9/7·people-with-three955/990·missing80/152·cycles0/0; 수치 수용막대 없음|
+|최종48단계 게이트·성능·stall|PENDING — 정확한HEAD·각단계·frame/receipt 후속 기입|
+|R1 stall waiver|**NOT_ELIGIBLE·미사용**: held-out FAIL로 다른 모든 단계 PASS 조건 불충족|
+|게시·이슈|NOT_PUBLISHED; #670·#671·#672·#673 OPEN, 폐쇄 없음|
+|오너 플레이|NOT_RUN; main 실행은 현재 공개 BASE|
+
+원래 P12 44/48·stall52.056ms 당시 NO waiver와 과거 실패를 변경하지 않는다. 현재main/wip는BASE `5b0c88812374b87e7854cc9203f144ad0ccd9009`이며 최종 원격 재조회 원문은 root의 실제 기록으로 덧붙인다. 목표 완료 선언은 하지 않는다. main/wip 게시SHA 없음; 수리 커밋은 review ref에 공개됨. gate의 미래 PASS를 추정하지 않는다.
+
+이야기의 people-with-three와 distinct chains 합계는 세계/연도별 값의 합이며 전체 기간 고유 사람/연쇄 수가 아니다. [완료 실행 영수증](</Users/rexxa/work/m6a-data/20261030-r1/story-comparison.launch/terminal.json>)은 exit0·timeout없음·source unchanged다. 이전 [M6a 화면 모음](</Users/rexxa/work/m6a-data/20261030-r1/m6a-contact-sheet-before-r1.png>)은 별도 보존했다. 최종48단계는 `20261030-r1/final-gate/`에 새로 실행하며 현재 NOT_RUN이다.
