@@ -1,5 +1,24 @@
 # Changelog
 
+## M6a repair R2 — 2026-10-31 (Claude Code; evaluation and gate results in the R2 report)
+
+R2 brief 2026-10-30 ([M6A_R2_GOAL](docs/v8/m6a/M6A_R2_GOAL.md)); decisions in [M6A_DECISIONS](docs/v8/m6a/M6A_DECISIONS.md#repair-round-r2--r2-brief-2026-10-30-claude-code).
+
+### Changed
+- Winter stocking can displace held ordinary work: in summer and autumn, while the store is short, a share `ceil(adults × deficit)` of adults (by AgentId) takes the new duty node `stock_winter_duty` (score 15) over the fed-work hold (10). The neighbours fixture's villages had starved every winter with 0–3 harvesters and 14,000+ ripe pieces in reach (r2-2).
+- The winter part of the store target counts only food whose remaining life covers the days to the end of winter; summer roots that would rot in winter no longer satisfy it (r2-3). Neighbours fixture seeds 0/1: 0 → 18 and 0 → 22 alive of 10 founders, starvation 16/17 → 0/0, KnowledgeLost 54/52 → 0/0, trades 7/0 → 7/2 (BASE 18/24 alive, 0 deaths, 7/7 trades). Cost: in steward worlds the spoiled share of harvest rises 0.461 → 0.656 on calibration seeds 0–7 (stores above target), with 0 starvation.
+- Gate step 30 asks the village to live: survivors ≥ founders − 2 and 0 KnowledgeLost per world (r2-1).
+- The "spoiled ≤ 30 % of harvest" bar is replaced for the R2 evaluation by `no_hungry_spoilage` (≥ 28/32 worlds) and `covered_storage` (≥ 90 % pooled), because 99.3 % of spoiled units (R1 source 95.6 %) spoiled while stores were above target (r2-7).
+- Bench regression removed without behaviour change (exact memos, a heap-ordered `nearest_where`, cached meal provenance; r2-9).
+- M6a R2 bench justification: the remaining timing over BASE is the food chain's own work (selection over the M6a food nodes, physical food targeting, harvest assignment, storage admission); R2 diagnostic interleaved pairs at load < 8 measured n200_script mean ×1.110 / p99 ×1.141, n1000_wolves ×1.096 / ×1.082, n200_side64 ×1.085 / ×1.014, n200 ×1.046 / ×1.014, n1000 ×0.971 / ×0.851, n2000 ×0.748 / ×0.870 (R1 gate: n200_script ×1.257 / ×1.364); allowed only up to ×1.15 on mean and p99 in every scene, allocator and C3 bars unchanged (r2-10).
+
+### Fixed
+- Gate step 41: the nested stall capture kept the inherited GPU lane descriptor (EBADF before capture; r2-4).
+- Gate step 39: only people whose body bounds are fully on screen are judged; partly clipped people are recorded (r2-5). Step 40 records which part of the empty-tile toast check failed (r2-6).
+
+### Added
+- Evaluation protocol `repair_r2` (fresh held-out 1360–1391, unlimited logged calibration rounds, R2 deadline) and the observer's spoil-moment and placement records (r2-7).
+
 ## M6a repair R1 — 2026-10-30 (42/48 gate PASS, acceptance FAIL, not published)
 
 Owner decision2026-10-30 11:20KST opens a separate defect-repair protocol: at most2 calibration rounds, fresh seeds1328–1359 and unchanged bars. Retired1296–1327 and prior FAIL evidence remain below. Diagnosis covers66 hunger deaths, cooking dependencies, arithmetic and actual HUD occlusion; see [R1 diagnosis](docs/v8/m6a/M6A_R1_DIAGNOSIS.md).
