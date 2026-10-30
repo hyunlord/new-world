@@ -83,6 +83,7 @@ func _ready() -> void:
 	add_child(_actions)
 	_steward = OptionButton.new()
 	_steward.name = "Steward"
+	_steward.theme_type_variation = &"MapActionOptionButton"
 	_steward.item_selected.connect(_set_steward)
 	_actions.add_child(_steward)
 	help = Help.new()
@@ -134,6 +135,7 @@ func _ready() -> void:
 func _button(node_name: String, action: Callable) -> Button:
 	var button: Button = Button.new()
 	button.name = node_name
+	button.theme_type_variation = &"MapActionButton"
 	button.pressed.connect(action)
 	_actions.add_child(button)
 	return button

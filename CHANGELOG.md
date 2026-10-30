@@ -1,5 +1,14 @@
 # Changelog
 
+## M6a repair R1 — 2026-10-30 (verification in progress, not published)
+
+Owner decision2026-10-30 11:20KST opens a separate defect-repair protocol: at most2 calibration rounds, fresh seeds1328–1359 and unchanged bars. Retired1296–1327 and prior FAIL evidence remain below. Diagnosis covers66 hunger deaths, cooking dependencies, arithmetic and actual HUD occlusion; see [R1 diagnosis](docs/v8/m6a/M6A_R1_DIAGNOSIS.md).
+
+- Repair actual meal admission, propagate existing cooked demand into ingredient procurement, and restore autonomous physical harvest-to-storage work. No plant yield/density or bar changes. Scoped regressions, clippy and documentation checks pass; actual repaired economy evaluation is pending.
+- Actions-only background alpha preserves controls while the same half-zoom person improves52/45→89/98 qualifying pixels. Retained eight-scene visibility80/80, KO interaction20captures and why-input42/42 pass; final fresh-world visibility remains required.
+- This pass may use the owner-authorized step41 stall waiver only after all other steps pass, with at most2 evaluation frames>50ms per zoom, none>60ms and complete authenticated capture. Actual use is UNDETERMINED; prior failures are not retroactively waived. Exact frame/tick evidence belongs to the final R1 receipt and report.
+- Review branch updated after every repair; main/wip remain BASE5b0c8881. #670–673 remain OPEN until eligible publication and issue readback.
+
 ## M6a food chain — 2026-10-30 (acceptance FAIL, not published)
 
 Frozen held-out acceptance **FAILS**: survival29/32 (required30), cooked-share

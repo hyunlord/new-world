@@ -362,3 +362,5 @@
 - 2026-10-26 — 오너 결정 후 N100½×164.882764487796·N200½×119.291035278699FPS를 유효 PASS로 기록했다([D-B](v8/mux2/MUX2_DECISIONS.md)). N2001×225.75111993954·¼×35.1016343917384도 유효한 기록용 결과이며 게시 절차만 대기다.13개 범위 한정 원장행의 fixed를 승인했으며 GitHub 폐쇄 완료를 뜻하지 않는다.
 
 - 2026-10-29 — 방향·순서 v2 반영: M-UX2.1 게시 `5b0c8881` 뒤 M6a 진행, M-READ를 M6a·M6b 사이에 배치하고 작업 규칙·held-out 시드 대장을 명시했다([깊이 로드맵](v8/DEPTH_ROADMAP.md), [M6a 목표](v8/m6a/M6A_GOAL.md)); v1 원문 보존, 문서 전용이며 새 전체 gate·제품 검증 주장은 없다.
+
+- 2026-10-30: M6a R1 owner protocol and diagnosis preserved; meal admission, cooking procurement, physical harvest-to-storage and Actions visibility repaired with scoped regressions. Fresh evaluation/full gate pending, review branch only; prior failures retained.

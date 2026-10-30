@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=5 format=3]
+[gd_resource type="Theme" load_steps=11 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/galmuri/Galmuri11.ttf" id="1_body"]
 [ext_resource type="FontFile" path="res://assets/fonts/galmuri/Galmuri9.ttf" id="2_small"]
@@ -16,6 +16,78 @@ content_margin_top = 8.0
 content_margin_right = 12.0
 content_margin_bottom = 8.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionButton_normal"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.45)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionButton_hover"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.225, 0.225, 0.225, 0.45)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionButton_pressed"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.45)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionOptionButton_normal"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.45)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionOptionButton_hover"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.225, 0.225, 0.225, 0.45)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_MapActionOptionButton_pressed"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.45)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
 [resource]
 default_font = ExtResource("1_body")
 default_font_size = 24
@@ -30,3 +102,12 @@ Heading/font_sizes/font_size = 24
 Panel/styles/panel = SubResource("StyleBoxFlat_panel")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
 Heading/colors/font_color = Color(0.745, 0.549, 0.400, 1)
+
+MapActionButton/base_type = &"Button"
+MapActionButton/styles/normal = SubResource("StyleBoxFlat_MapActionButton_normal")
+MapActionButton/styles/hover = SubResource("StyleBoxFlat_MapActionButton_hover")
+MapActionButton/styles/pressed = SubResource("StyleBoxFlat_MapActionButton_pressed")
+MapActionOptionButton/base_type = &"OptionButton"
+MapActionOptionButton/styles/normal = SubResource("StyleBoxFlat_MapActionOptionButton_normal")
+MapActionOptionButton/styles/hover = SubResource("StyleBoxFlat_MapActionOptionButton_hover")
+MapActionOptionButton/styles/pressed = SubResource("StyleBoxFlat_MapActionOptionButton_pressed")
