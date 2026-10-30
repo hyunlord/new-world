@@ -33,3 +33,6 @@ mod harvest_stock_tests;
 
 #[cfg(test)]
 mod harvest_stock_boundary_tests;
+
+#[cfg(test)]
+mod harvest_admission_tests;

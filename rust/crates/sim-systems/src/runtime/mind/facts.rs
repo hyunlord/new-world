@@ -381,6 +381,9 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
             && p.mood
                 .is_some_and(|mood| mood.broken(crate::runtime::mood::today(r)))
     ))),
+    fact!("harvest_storage_available", Bool, |p, c, r, _n| Ok(
+        i64::from(harvest_storage_available(p, c, r))
+    )),
     fact!("edible_plant_available", Bool, |p, c, r, _n| Ok(i64::from(
         edible_plant(p, c, r).is_some()
     ))),
@@ -1204,6 +1207,35 @@ fn edible_plant(p: &PersonSnapshot, c: &TickContext, r: &SimResources) -> Option
         .nearest_observed(p, r);
     *c.plant_query_observation.borrow_mut() = Some((p.agent, no_ripe));
     candidate
+}
+
+fn harvest_storage_available(p: &PersonSnapshot, c: &TickContext, r: &SimResources) -> bool {
+    if !p.haul_enabled {
+        return false;
+    }
+    let Some(target) = edible_plant(p, c, r) else {
+        return false;
+    };
+    let Some(def) =
+        r.food.plants.get(&target.tile).and_then(|plant| {
+            sim_core::colony::content::installed_or_bundled().plant(plant.species)
+        })
+    else {
+        return false;
+    };
+    let spec = sim_core::colony::ItemSpec::raw(def.yield_item, None);
+    if r.rules.colony.is_none_or(|rule| rule.carry(spec.kind) == 0) {
+        return false;
+    }
+    crate::runtime::jobs::food_storage::destination(
+        r,
+        r.nav.region_of((p.position.x, p.position.y)),
+        target.tile,
+        spec,
+        crate::runtime::food::day(r),
+        false,
+    )
+    .is_some()
 }
 
 fn inventory_total(p: &PersonSnapshot, r: &SimResources, name: &str) -> Result<u32, FactError> {
@@ -2149,6 +2181,7 @@ mod tests {
                     ("hunger_actionable", 1),
                     ("thirst_actionable", 1),
                     ("stocked_camp_in_radius", 1),
+                    ("food_available", 1),
                     ("water_available", 1),
                     ("thirst_critical_order", order),
                     ("thirst_tenths", 750),
@@ -2231,7 +2264,11 @@ mod tests {
             ),
             (
                 "meal_idle_no_water",
-                &[("hungry", 1), ("stocked_camp_in_radius", 1)],
+                &[
+                    ("hungry", 1),
+                    ("stocked_camp_in_radius", 1),
+                    ("food_available", 1),
+                ],
             ),
             (
                 "camp_critical_water_idle",

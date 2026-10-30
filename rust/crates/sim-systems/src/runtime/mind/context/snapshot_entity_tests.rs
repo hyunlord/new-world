@@ -56,6 +56,10 @@ impl PersonSnapshot {
                 .map(|v| v.get(ResourceKind::Food)),
             carry: world.get::<&Carry>(entity).ok().map(|v| *v),
             job: world.get::<&Job>(entity).ok().map(|v| *v),
+            haul_enabled: world
+                .get::<&WorkPriorities>(entity)
+                .ok()
+                .is_none_or(|p| p.level(WorkType::Haul) > 0),
             drafted: world.get::<&Drafted>(entity).is_ok(),
             fleeing: world.get::<&Fleeing>(entity).ok().map(|v| *v),
             cold: world.get::<&Cold>(entity).is_ok(),
@@ -90,6 +94,7 @@ fn assert_snapshot(actual: &PersonSnapshot, expected: &PersonSnapshot) {
         inventory_food,
         carry,
         job,
+        haul_enabled,
         drafted,
         fleeing,
         cold,

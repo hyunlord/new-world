@@ -136,6 +136,7 @@ impl ColonyMindSystem {
         if resources.tile_grid.width == 0 || resources.tile_grid.height == 0 {
             return Ok(());
         }
+        resources.spatial.colony.refresh(&resources.colony);
         let mut routine =
             resources.rules.agent.routine.map(|rule| {
                 RoutineTick::new(world, resources, rule, std::mem::take(&mut self.places))

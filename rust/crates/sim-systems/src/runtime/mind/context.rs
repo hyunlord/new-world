@@ -13,7 +13,7 @@ use std::sync::Arc;
 use hecs::{Entity, World};
 use sim_core::colony::mind::{CompiledMind, LifeStage, RunningChoice};
 use sim_core::colony::people::{Drafted, Fleeing, Mood, Sick};
-use sim_core::colony::{Carry, Job};
+use sim_core::colony::{Carry, Job, WorkPriorities, WorkType};
 use sim_core::components::{
     Activity, ActivityRest, Agent, AgentId, AgentState, BodyHealth, Child, Cold, Elder, Founding,
     Hunger, Inventory, PorterTrip, Position, ResourceKind, SettlementId, Sleep, Social,
@@ -121,6 +121,8 @@ pub struct PersonSnapshot {
     pub carry: Option<Carry>,
     /// Optional externally assigned economy job.
     pub job: Option<Job>,
+    /// Whether authored work priorities allow the physical food transport leg.
+    pub haul_enabled: bool,
     /// Whether the military owner currently controls this person.
     pub drafted: bool,
     /// Optional refuge owner and destination.
@@ -231,6 +233,9 @@ impl PersonSnapshot {
                 .map(|v| v.get(ResourceKind::Food)),
             carry: entity_ref.get::<&Carry>().map(|v| *v),
             job: entity_ref.get::<&Job>().map(|v| *v),
+            haul_enabled: entity_ref
+                .get::<&WorkPriorities>()
+                .is_none_or(|p| p.level(WorkType::Haul) > 0),
             drafted: entity_ref.get::<&Drafted>().is_some(),
             fleeing: entity_ref.get::<&Fleeing>().map(|v| *v),
             cold: entity_ref.get::<&Cold>().is_some(),
@@ -257,7 +262,7 @@ impl PersonSnapshot {
         let (
             (position, state, child, elder, hunger, thirst, sleep, social),
             (temperament, inventory, carry, job, drafted, fleeing, cold, sick),
-            (mood, health, activity, rest, memory, lineage),
+            (mood, health, activity, rest, memory, lineage, priorities),
         ) = world
             .query_one_mut::<(
                 (
@@ -287,6 +292,7 @@ impl PersonSnapshot {
                     Option<&ActivityRest>,
                     Option<&sim_core::components::Memory>,
                     Option<&sim_core::components::Lineage>,
+                    Option<&WorkPriorities>,
                 ),
             )>(entity)
             .map_err(|_| ContextError::MissingComponent {
@@ -325,6 +331,7 @@ impl PersonSnapshot {
             inventory_food: inventory.map(|v| v.get(ResourceKind::Food)),
             carry: carry.copied(),
             job: job.copied(),
+            haul_enabled: priorities.is_none_or(|p| p.level(WorkType::Haul) > 0),
             drafted: drafted.is_some(),
             fleeing: fleeing.copied(),
             cold: cold.is_some(),
@@ -618,6 +625,7 @@ impl TickContext {
                 Option<&Job>,
                 Option<&Carry>,
                 Option<&BodyHealth>,
+                Option<&WorkPriorities>,
             )>()
             .iter()
             .map(
@@ -636,6 +644,7 @@ impl TickContext {
                         job,
                         carry,
                         health,
+                        priorities,
                     ),
                 )| PersonSnapshot {
                     agent: agent.id,
@@ -651,6 +660,7 @@ impl TickContext {
                     inventory_total: inventory.map(|v| v.total()),
                     inventory_food: inventory.map(|v| v.get(ResourceKind::Food)),
                     job: job.copied(),
+                    haul_enabled: priorities.is_none_or(|p| p.level(WorkType::Haul) > 0),
                     carry: carry.copied(),
                     hp: health.map(|v| v.hp),
                     drafted: false,
