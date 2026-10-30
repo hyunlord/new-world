@@ -464,6 +464,10 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
     fact!("stock_shortfall", Bool, |p, c, _r, _n| Ok(i64::from(
         c.target_scope(p.agent)?.stock_shortfall
     ))),
+    // R2-1A: colony winter stocking may displace this adult's held ordinary work.
+    fact!("winter_stock_duty", Bool, |p, c, _r, _n| Ok(i64::from(
+        c.target_scope(p.agent)?.winter_stock_duty
+    ))),
     fact!("forage_window", Bool, |_p, _c, r, _n| Ok(i64::from(
         r.rules.colony.is_none()
             && r.rules

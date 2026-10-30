@@ -1092,6 +1092,7 @@
 	"MIND_FACT_SOCIAL_CANDIDATE": "Someone is available to talk",
 	"MIND_FACT_SOCIAL_MEMORY_CANDIDATE": "A remembered companion is available",
 	"MIND_FACT_STOCK_SHORTFALL": "Food supplies are low",
+	"MIND_FACT_WINTER_STOCK_DUTY": "Winter stocking duty",
 	"MIND_FACT_STOCKED_CAMP_IN_RADIUS": "A nearby camp has food",
 	"MIND_FACT_TARGET_FOOD": "Heading for food",
 	"MIND_FACT_TARGET_GATHER": "Heading to gather",

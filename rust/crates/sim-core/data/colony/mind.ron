@@ -147,6 +147,32 @@
             every_ticks: 1, target: Some("edible_plant"),
         ),
         (
+            // R2-1A (M6A R2 brief 2026-10-30): winter stocking outranks held ordinary work
+            // (job_below_yield_margin 10) for the released share of adults, never a finishing
+            // craft (30) or a near delivery leg (20).
+            id: "stock_winter_duty", band: "duty", behaviour: "harvest_food",
+            when: [
+                (fact: "job_harvesting", op: "not", value: None),
+                (fact: "job_food_transport", op: "not", value: None),
+                (fact: "breakdown", op: "not", value: None),
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "activity_active", op: "not", value: None),
+                (fact: "worker", op: "has", value: None),
+                (fact: "food_carry_loaded", op: "not", value: None),
+                (fact: "hunger_tenths", op: "<", value: Some(750)),
+                (fact: "thirst_tenths", op: "<", value: Some(750)),
+                (fact: "inventory_room", op: ">", value: Some(0)),
+                (fact: "harvest_window", op: "has", value: None),
+                (fact: "winter_stock_duty", op: "has", value: None),
+                (fact: "harvest_storage_available", op: "has", value: None),
+            ],
+            score: (constant: 15, terms: []),
+            hysteresis: 0, life_stages: ["adult"],
+            tags: ["replace", "physical_stock"], name_key: "MIND_BEHAVIOUR_HARVEST_FOOD",
+            every_ticks: 1, target: Some("edible_plant"),
+        ),
+        (
             id: "need_job_harvest_food", band: "need", behaviour: "harvest_food",
             when: [
                 (fact: "fleeing", op: "not"),

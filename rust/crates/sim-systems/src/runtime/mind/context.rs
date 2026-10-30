@@ -430,6 +430,10 @@ pub struct TargetScope {
     pub stock_in_hand: u64,
     /// Tick-start hoard cap; None denotes no forage plan and therefore no cap.
     pub stock_hoard_limit: Option<f64>,
+    /// Colony only: in a winter-preparation season (summer, autumn) with stock below target, this
+    /// adult is among the first `ceil(adults x deficit / target)` member adults by AgentId, so
+    /// winter stocking may displace ordinary held work (R2-1, M6A_DECISIONS R2-1A).
+    pub winter_stock_duty: bool,
 }
 
 /// Prior lifecycle identity resolved against its owning compiled dictionary.
@@ -441,6 +445,42 @@ pub struct RunningMetadata {
     pub target: Option<String>,
     /// Whether the previous lifecycle has already terminated.
     pub finished: bool,
+}
+
+/// Adults released from held ordinary work for winter stocking (R2-1A). In summer and autumn the
+/// stock target includes the winter shortfall; while a settlement is short, the first
+/// `ceil(adults x deficit)` member adults in AgentId order qualify, where `deficit` is the missing
+/// fraction of the target. The share falls as the store fills; no new numeric policy is introduced.
+fn winter_stock_duty(
+    resources: &SimResources,
+    rows: &[PersonSnapshot],
+    stock: &BTreeMap<SettlementId, (bool, u64, bool, Option<f64>, f64)>,
+) -> BTreeSet<AgentId> {
+    let mut released = BTreeSet::new();
+    if resources.rules.seasons.is_none()
+        || !matches!(
+            crate::runtime::resource_regen::season_at(resources),
+            Some((1 | 2, _))
+        )
+    {
+        return released;
+    }
+    for (sid, settlement) in &resources.settlements {
+        let Some(&(_, _, true, _, deficit)) = stock.get(sid) else {
+            continue;
+        };
+        // rows are in ascending AgentId order (TickContext::rows).
+        let adults: Vec<AgentId> = rows
+            .iter()
+            .filter(|row| {
+                row.life_stage == LifeStage::Adult && settlement.member_agents.contains(&row.agent)
+            })
+            .map(|row| row.agent)
+            .collect();
+        let count = ((adults.len() as f64) * deficit).ceil() as usize;
+        released.extend(adults.into_iter().take(count));
+    }
+    released
 }
 
 type GatherCacheKey = ((u32, u32), Option<((u32, u32), u32)>, Option<SettlementId>);
@@ -838,9 +878,15 @@ impl TickContext {
                         .forage
                         .and(resources.rules.society.stock_target)
                         .map(|rule| rule.hoard_cap_factor * target);
-                    (sid, (stored > 0, in_hand, (in_hand as f64) < target, cap))
+                    let deficit = if target > 0.0 {
+                        (target - in_hand as f64).max(0.0) / target
+                    } else {
+                        0.0
+                    };
+                    (sid, (stored > 0, in_hand, deficit > 0.0, cap, deficit))
                 })
                 .collect();
+            let duty = winter_stock_duty(resources, &self.rows, &stock);
             for (index, row) in self.rows.iter().enumerate() {
                 let member = resources
                     .settlements
@@ -848,10 +894,10 @@ impl TickContext {
                     .filter(|(_, settlement)| settlement.member_agents.contains(&row.agent))
                     .min_by_key(|(id, _)| **id);
                 let available = public_food || row.physical_food_units(resources) > 0;
-                let (stocked, in_hand, shortfall, cap) = member
+                let (stocked, in_hand, shortfall, cap, _) = member
                     .and_then(|(sid, _)| stock.get(sid))
                     .copied()
-                    .unwrap_or((false, 0, false, None));
+                    .unwrap_or((false, 0, false, None, 0.0));
                 self.scopes[index] = Some(TargetScope {
                     settlement: member.map(|(id, _)| *id),
                     home: member.map(|(_, settlement)| settlement.formation_tile),
@@ -860,6 +906,7 @@ impl TickContext {
                     stock_in_hand: in_hand,
                     stock_shortfall: shortfall,
                     stock_hoard_limit: cap,
+                    winter_stock_duty: duty.contains(&row.agent),
                     ..TargetScope::default()
                 });
             }
