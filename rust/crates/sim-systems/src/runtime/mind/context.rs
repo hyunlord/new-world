@@ -479,6 +479,11 @@ fn winter_stock_duty(
     released
 }
 
+/// (nav region, item kind) → (FoodSources and Jobs versions read under, room exists) (R2-3).
+type StorageRoomMemo = BTreeMap<(u32, sim_core::colony::ItemKind), ((u64, u64), bool)>;
+/// (agent, every domain version, nearest plant, no ripe plant) (R2-3).
+type PlantAnswer = (AgentId, [u64; DOMAIN_COUNT], Option<TargetCandidate>, bool);
+
 type GatherCacheKey = ((u32, u32), Option<((u32, u32), u32)>, Option<SettlementId>);
 type GatherCacheValue = ([u64; 2], bool);
 
@@ -622,13 +627,11 @@ pub struct TickContext {
     /// by (region, kind) and stamped with the FoodSources and Jobs versions it was read under, so
     /// a same-tick meal or job start forces a fresh read. Existence does not depend on the source
     /// tile (`food_storage::destination` searches the whole region).
-    pub(super) storage_room:
-        RefCell<BTreeMap<(u32, sim_core::colony::ItemKind), ((u64, u64), bool)>>,
+    pub(super) storage_room: RefCell<StorageRoomMemo>,
     /// R2-3: the last nearest-plant answer (agent, every domain version, candidate, no-ripe), so
     /// the `edible_plant` fact, `harvest_storage_available` and the target binding share one
     /// query per person until any domain changes.
-    pub(super) plant_answer:
-        RefCell<Option<(AgentId, [u64; DOMAIN_COUNT], Option<TargetCandidate>, bool)>>,
+    pub(super) plant_answer: RefCell<Option<PlantAnswer>>,
     pub(super) physical_food: RefCell<crate::runtime::food::choice::FoodChoiceIndex>,
 }
 impl TickContext {

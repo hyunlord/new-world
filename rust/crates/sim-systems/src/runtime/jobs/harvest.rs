@@ -20,8 +20,11 @@ pub struct HarvestIndex {
     /// reachable and unreserved. Within one tick and overlay version neither designations,
     /// ripeness nor reachability change and reservations only grow, so only the live reservation
     /// test remains per worker.
-    ready: Option<((u64, u64), std::collections::BTreeMap<u32, ChunkIndex<()>>)>,
+    ready: Option<((u64, u64), ReadyPlants)>,
 }
+
+/// Ripe, reachable, unreserved designated plants per nav region (R2-3).
+type ReadyPlants = std::collections::BTreeMap<u32, ChunkIndex<()>>;
 
 impl HarvestIndex {
     /// The overlay version moves on every ground-item change; rebuild only when the harvest
