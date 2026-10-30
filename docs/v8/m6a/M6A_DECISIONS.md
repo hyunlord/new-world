@@ -1008,3 +1008,24 @@ The first full library run after these repairs reports522PASS/2FAIL/1ignored. Bo
 After the positive-fixture correction, all sim-systems library tests pass524 with1 pre-existing ignored (`age-admission-all-lib-2.log`); the focused facts suite passes13/13. Full docs including the generated system table passed before the final fixture-only correction; `p24-docs-static.log` retains the subsequent static pass. The separate harvest-output age audit identifies a possible seam without actual calibration event attribution, so it does not authorize an additional speculative repair.
 
 Final integrated workspace all-target clippy with warnings denied and cargo fmt check pass (`age-admission-clippy.log`, `age-admission-fmt-check.log`). Independent read-only P23/P24 review finds no confirmed blocker. Remaining limits: admission uses the current nearest edible target rather than searching a different food kind when its storage is full, and extra storage queries need measured gate validation. No alternate-target policy or performance claim is added.
+
+### R1 final calibration and freeze boundary (P25)
+
+Round2 completes on P24 `b2fab234210a0ca301ee6b655aed816562501c98`, probe SHA256 `a1f88fe0e49c66e0e22c1f1017dd5f122f3786e7549c77a166f78a2f41f4436c`. Source/lock/binary provenance is complete and unchanged. The original register now contains exactly2 started/finished pairs; no third calibration or numerical tuning is authorized.
+
+Unchanged soak passes4×20days with determinism, exact ledger/reservations, all40 adults alive,0deaths and0KnowledgeLost. Workshops2all; crafts75/74/76/77 and trees150all prove active economies. Prior9/9/9/10 and round1 0/10/0/0 starvation remain recorded failures. This repairs the standing soak result, not every possible world.
+
+Calibration72days: alive/cooked share/hunger-free winters/diversity/stores/ledger/stockpile/beds/wolf all8/8. **Spoilage remains0/8**, ratios30.94–51.33%, against the unchanged≤30% per-world bar. Calibration is NOT_EVALUATED for acceptance; it cannot be relabeled a passing evaluation. The owner's post-round2 starvation stop does not trigger because all soak runs pass; no supply-impossibility diagnosis has been established. Freeze now and evaluate fresh1328–1359 with identical BASE seeds, without tuning on either retired or fresh outcomes. Publication still requires every unchanged held-out bar and the full gate.
+
+|seed|cooked/all meal events|harvest units|spoiled units|spoil ratio|
+|---|---:|---:|---:|---:|
+|0|808/1105|2663|1185|44.50%|
+|1|1015/1234|2893|1485|51.33%|
+|2|799/1205|2943|1399|47.54%|
+|3|737/1233|2522|1002|39.73%|
+|4|875/1161|2768|1364|49.28%|
+|5|784/1271|2175|673|30.94%|
+|6|954/1239|2939|1472|50.09%|
+|7|919/1255|3048|1550|50.85%|
+
+Raw evidence: `candidate-p24-binaries/build-receipt.json`, `calibration-register.jsonl`, `calibration-round-2/{terminal.json,calibration-score.json,soak.log,soak/summary.json}` under the R1 directory. P25 is documentation only before fresh evaluation; runtime/tool inputs remain P24-identical. Fresh held-out, full gate and actual stall waiver use are NOT_RUN at this checkpoint.
