@@ -1053,3 +1053,67 @@ Step41 has no frame list, maximumms or ticksadvanced: gate subprocess loses the 
 Both authorized repair calibration rounds are consumed, product/tools frozen and fresh evaluation exposed. No thirdround, post-freeze product/policy change, loweredbar or replacementcohort is authorized. Report remaining defects rather than publish; a future repair/evaluation contract is needed. No wip/main push, no issueclosure; #670–673OPEN, #649published-SHA documentlink deferred because no publication. Review-only documentation push remains authorized.
 
 The154minute step10 wallclock interval is preserved; logs establish identityPASS but not the cause of the time gap. It counts against the original deadline1793377131. All evidence and failed receipts remain under20261030-r1; independent audits coverpairedscore,perf,neighbours,visibility,input/stall andall48terminalrows.
+
+## Repair round R2 — R2 brief 2026-10-30 (Claude Code)
+
+Source: [M6A_R2_GOAL.md](M6A_R2_GOAL.md) ("R2 brief 2026-10-30"), committed first as r2-0 `266b52b5b`. Start check: `origin/v8/m6a-review` = `ae340c11a`, `origin/v8/main` = `5b0c8881`, no process with `/Users/rexxa/work/new-world-m6a-dev` as its cwd. Worktree `/Users/rexxa/work/new-world-m6a-r2`, branch `v8/m6a-r2`. Raw evidence: `/Users/rexxa/work/m6a-data/20261030-r2/`. A separate detached BASE worktree `/Users/rexxa/work/m6a-r2-base` (5b0c8881) holds a read-only BASE observer build only.
+
+### R2-1a Neighbours fixture asks the village to live (r2-1)
+
+R2 brief 2026-10-30 §1 R2-1(a). `m55_score.py --neighbours` (gate step 30) adds survivors at day 48 ≥ founders − 2 per world and 0 KnowledgeLost; the trade, wave and ledger checks stay. Founders = `m55.population.start` (10 in both worlds). BASE `5b0c8881` (frozen R1 binary `20261029/base-binaries/worldsim_probe`, sha256 `685ba630…`) on the fixture: seed 0 18 alive, seed 1 24 alive, 0 deaths, 0 KnowledgeLost, trades 7/7 → PASS, so the threshold stays founders − 2 (BASE does not die). R1 candidate (rebuilt here at `266b52b5b`, identical results to the R1 gate): 0/0 alive, starvation 16/17, KnowledgeLost 54/52, seed 1 trades 0 → FAIL. Log: `scorer-extended.log`.
+
+### R2-1b Death diagnosis (read-only replay)
+
+`diag-harness/` is the R1 v3 read-only harness re-pointed at this worktree with a `neighbours` mode (M55-U script, storyteller on, steward off as in the probe). The replay matches the fixture exactly (starvation 16/17, KnowledgeLost 54/52). All 35 deaths are listed in `nb-death-summaries.json` with stores by kind, reachable ripe plants, jobs and holders, last MindChoice and top-3, facts, steward state, migrants and trades.
+
+| class | deaths | evidence |
+|---|---:|---|
+| A winter, no stock | 33 (seed 0: 12 day 20 + 3 day 43; seed 1: 14 day 19–20 + 4 day 43) | 0 stored food, 0 ripe plants, `stock_shortfall` 1 |
+| A′ spring regrowth not reached | 1 (seed 0 agent 17, day 24, asleep) | 1,295 ripe plants back, no store |
+| B shelf/meat, no eater admission | 1 (seed 1 agent 9, 2 meat stored, `critical_hunger_job_hunger_novel`) | — |
+
+Root cause of A, measured (`diag2/3/4-nb-*`): through summer and autumn 11,000–16,800 ripe pieces stood in reach; `harvest_window`, `stock_shortfall`, `harvest_storage_available` and `edible_plant_available` held for every adult; store target 204–286 against 0–60 in hand; only 0–3 adults ever held a Harvest job. Every fed job holder's winning node was the duty-band hold `job_below_yield_margin` (score 10); the six work-band stock nodes (P20) never reached top-3; the job board refilled idle workers. BASE (read-only observer `base-harness/`) keeps ~950 wild food tiles through winter (days 18–23), so BASE never needed a winter store; M6a's seasonal plants give 0 ripe in winter. Migrants: wave 1 (+2/+4) day 11 and wave 2 (+6/+6) day 22 were accepted in both worlds; 0 food was traded away (`traded_out_units` 0). The steward was off.
+
+Seed 1's 0 trades: the R1 world never had more than 4 stockpiled blades at the daily resolver while its people died; after the repairs it trades (2).
+
+### R2-1c Repairs (r2-2, r2-3)
+
+- **A — winter stocking can displace held ordinary work (r2-2 `f4edd244a`).** New fact `winter_stock_duty` and duty node `stock_winter_duty` (score 15: above the fed-work hold 10, below a finishing craft 30 and a near delivery leg 20). In summer and autumn, while the store is short, the first `ceil(adults × deficit)` member adults by AgentId are released; the share falls as the store fills. No new numeric policy, plant value or bar. Regressions `winter_stock_duty_tests.rs`: summer short store releases a Chop holder (and releases the tree reservation), spring keeps P20's duty protection, a lasting store keeps the job. Red check `r2-1a-red.log` (2 FAIL with the fact forced false).
+- **B — a winter store counts only food that lasts through winter (r2-3 `db6f52b89`).** After A the stores reached target by day 8 with roots (14 days roofed), aged, and rotted in winter (seed 0: 135 units, 7 deaths day 24). The winter part of the target counts only stacks whose remaining life ≥ days to the end of winter; the base part still counts all fresh food; shortfall and the duty share use the larger missing fraction. Regression `short_lived_food_is_not_a_winter_store`; red check `r2-1b-red.log`.
+- After A + B the fixture (seeds 0, 1 × 48 days): **18 and 22 alive of 10 founders, 0 deaths, 0 KnowledgeLost, trades 7 and 2** (BASE 18 and 24, 0, 0, 7 and 7); ledger and reservations exact. Seed 1 trades again.
+
+### R2-4 Instruments (r2-4, r2-5, r2-6)
+
+- **Step 41 (r2-4).** Cause: `m6a_gate.py` ran the nested stall CLI with `subprocess.run()` (default `close_fds=True`) while `WORLDSIM_MUX2_LANE_FD` named the inherited lock; `lane()`'s `fstat` raised EBADF before capture. Fix: `pass_fds` of the inherited descriptor. `test_m6a_gate_lane_fd.py` reproduces EBADF without it.
+- **Step 39 (r2-5).** Only people whose body bounds lie fully inside the 1920×1080 viewport are judged; partly clipped people are recorded in the scene's `partial` list with bounds. Validator controls: fully visible judged, top/right clipped not judged, a fully visible low-contrast person still fails. Proof on BASE and candidate: PENDING (gate step 39 and a BASE run).
+- **Step 40 (r2-6).** The check now records presence, visibility, text, expected text, frame and hovered GUI control. Five standalone windowed runs (load 9–16) passed 42/42 and showed the empty toast present/visible/exact at frame 47, nothing hovered; the R1 failure did not reproduce outside the gate. A background steward toast is visible 2 s later, after the player toast expired, as designed (`order_bar.gd` gives a player toast priority). Cause in the gate: PENDING the instrumented gate run.
+
+#### R2-1c variants tried before keeping r2-3 (logged, calibration seeds only)
+
+Functional runs (not performance): neighbours fixture (seeds 0, 1 × 48 days) and calibration seeds 0–7 × 72 days with steward All + defence on (`worldsim_probe m6a`). Raw: `var-*/`, `spoil/`, `diag5–7-*`.
+
+| variant | neighbours seed 0 / 1 (alive, starvation, KnowledgeLost) | steward seeds 0–7: harvested / spoiled (pooled ratio), alive range |
+|---|---|---|
+| R1 round 2 (P24 binary) | 0, 16, 54 / 0, 17, 52 | 21,951 / 10,130 (0.461), all alive |
+| A only (r2-2) | 11, 7, 0 / 0, 22, 28 | 23,396 / 11,447 (0.489), 10–13 |
+| A + B-full (r2-3, kept) | 18, 0, 0 / 22, 0, 0 | 34,772 / 22,802 (0.656), 0 starvation (read-only harness `spoil/`, same engine and commands) |
+| A + B autumn-only | 18, 0, 0 / 19, 0 (3 dehydration), 1 | 25,077 / 13,289 (0.530) |
+| A + eat oldest within the chosen store | 0, 18, 28 / 0, 22, 27 | 22,940 / 11,453 (0.499), seed 3 alive 7 |
+| A + B per-person (lasting harvest only) | 18, 0, 0 / 2, 20, 9 | 23,046 / 11,297 (0.490), 9–14 |
+
+Decision (R2 brief 2026-10-30, R2-1c): keep A + B-full. It is the only variant in which both fixture villages live (the brief's most serious defect and its stop condition). Its cost is over-harvest in steward worlds: in summer, roots and berries cannot last to the end of winter, so the winter part stays short and stocking continues; spoilage rises from 0.461 to 0.656 of harvest with 0 starvation. This is carried into R2-2 as measured, not argued away. The per-person variant's year-2 failure (store pinned at 420 units while ~900 units spoiled in six days, then the winter store spoiled) was not diagnosed further (time); recorded as an open question.
+
+### R2-2 Spoilage diagnosis and the branch that applies
+
+R2 brief 2026-10-30 §1 R2-2. Read-only harness `spoil-harness/` (steward All + defence on, no orders, as `worldsim_probe m6a`), calibration seeds 0–7 × 72 days. For every stack that expired, it records — at the expiry tick, just before expiry — kind, units, storage class, whether the owning settlement's fresh edible stored units (`reserves::units`) exceeded its store target (`food_economy::stock_target`: base days × need, plus the winter part in summer and autumn — the design's authored target, Part 1), and whether covered room (roofed store or pot, `food_storage::destination(covered_only)`) existed for it. Attribution covers 100 % of spoiled units.
+
+| source | spoiled units | spoiled while store above target | open stockpile/ground | open with covered room | in covered storage |
+|---|---:|---:|---:|---:|---:|
+| candidate r2-3 (`spoil2/`) | 22,802 | 22,636 (99.3 %) | 22,731 | 0 | 71 |
+| R1 source r2-0 (`spoil-r1/`) | 10,149 | 9,700 (95.6 %) | 10,028 | 0 | 119 |
+
+Both exceed 80 %, so by the owner rule fixed in the brief the "spoiled ≤ 30 % of harvest" bar is mis-specified (it punishes surplus) and is **replaced** for the R2 evaluation by: (1) `no_hungry_spoilage` — no day on which food of the settlement spoils while a member's hunger is above the seek threshold (`needs::HUNGER_THRESHOLD`, the `hungry` fact), measured at every tick on which food spoils, ≥ 28/32 worlds; (2) `covered_storage` — of food units that entered storage while covered room for the stack existed, ≥ 90 % went into a roofed store or pot, pooled over the 32 worlds; units placed in the open with no covered room are counted and reported separately, and the bar is UNMEASURED (not passed) if no unit was placed while covered room existed (worldsim-testing J4). The R1 source already shows the branch, so it is not an artefact of r2-3's over-harvest; that over-harvest (spoiled share 0.461 → 0.656) is reported beside the bars, not hidden by them.
+
+### R2-5 Evaluation protocol `repair_r2` (r2-7)
+
+`m6a_protocol.repair_r2`: held-out 1360–1391 (32 worlds, 72 days, steward on, no orders), calibration seeds 0–7 with no round limit (every round in the append-only register), freeze kind `m6a_freeze_r2_v1`, gate config kind `m6a_repair_r2_v1` (schema 4), hard deadline `R2_DEADLINE` = 1793414280 (2026-10-31T02:38:00Z, 14 h after the 21:38 KST start check). The R1 rules (fresh paired BASE column per row, deadline-bound runner and stall lane) are shared through `REPAIRS`; the stall capture reads the gate's `M6A_DEADLINE_EPOCH` instead of R1's fixed deadline, which would have expired at 01:18 KST before the final gate. The `m6a` observer adds `spoil_moment` and `placement` records and an `r2_spoilage` summary block; the scorer reconciles them with the summary. BASE uses R1's qualified BASE72 adapter unchanged. 1296–1327 and 1328–1359 are retired.
