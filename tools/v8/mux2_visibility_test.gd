@@ -153,6 +153,7 @@ func _measure_scene(input: Dictionary, clock: Dictionary, zoom: float) -> void:
 	var expected: Array[int] = []
 	var rows: Array[Dictionary] = []
 	var offscreen: Array[int] = []
+	var partial: Array[Dictionary] = []
 	var lod: bool = bool(_agents.call("lod_active"))
 	var markers: Node = _agents.get_node("LodMarkers")
 	var discs: MultiMeshInstance2D = markers.get("_discs") as MultiMeshInstance2D
@@ -169,6 +170,9 @@ func _measure_scene(input: Dictionary, clock: Dictionary, zoom: float) -> void:
 		var bounds: Rect2i = _bounds(person, discs, index, lod)
 		if not bounds.intersects(Rect2i(0, 0, 1920, 1080)):
 			offscreen.append(bits)
+			continue
+		if not Metrics.judged(bounds, Rect2i(0, 0, 1920, 1080)):
+			partial.append({"entity_bits": bits, "bounds": [bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y]})
 			continue
 		expected.append(bits)
 		var before: Image = await _capture(directory.path_join("person-%d.png" % bits))
@@ -201,7 +205,7 @@ func _measure_scene(input: Dictionary, clock: Dictionary, zoom: float) -> void:
 	var passed: bool = Metrics.coverage(expected, rows) and ((zoom == 0.25) == lod)
 	if not passed:
 		_failures.append("visibility/LOD failed " + id)
-	var result: Dictionary = {"id": id, "clock": clock, "zoom": zoom, "lod": lod, "camera": [_camera.position.x, _camera.position.y], "viewport": [1920, 1080], "all_ids": Array(all_bits), "on_screen_ids": expected, "off_screen_ids": offscreen, "rows": rows, "pass": passed, "full_sha256": FileAccess.get_sha256(directory.path_join("full.png")), "ground_sha256": FileAccess.get_sha256(directory.path_join("ground.png"))}
+	var result: Dictionary = {"id": id, "clock": clock, "zoom": zoom, "lod": lod, "camera": [_camera.position.x, _camera.position.y], "viewport": [1920, 1080], "all_ids": Array(all_bits), "on_screen_ids": expected, "off_screen_ids": offscreen, "partial": partial, "rows": rows, "pass": passed, "full_sha256": FileAccess.get_sha256(directory.path_join("full.png")), "ground_sha256": FileAccess.get_sha256(directory.path_join("ground.png"))}
 	_scenes.append(result)
 	_write(directory.path_join("result.json"), result)
 	print("MUX2_VISIBILITY_SCENE " + JSON.stringify(result))

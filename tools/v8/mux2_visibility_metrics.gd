@@ -41,6 +41,12 @@ static func measure(full: Image, removed: Image, ground: Image, bounds: Rect2i, 
 		"visible_bounds": [visible.position.x, visible.position.y, visible.size.x, visible.size.y], "mask": mask}
 
 
+# R2 (M6A R2 brief 2026-10-30): only a person whose whole body bounds lie on screen is judged;
+# a partly clipped person cannot show its full figure and is recorded as partial instead.
+static func judged(bounds: Rect2i, viewport: Rect2i) -> bool:
+	return viewport.encloses(bounds)
+
+
 static func coverage(expected: Array[int], rows: Array[Dictionary]) -> bool:
 	if expected.is_empty() or rows.size() != expected.size():
 		return false

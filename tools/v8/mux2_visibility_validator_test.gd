@@ -45,6 +45,12 @@ func _run() -> void:
 	_check("missing image fails", not bool(Metrics.measure(null, ground, ground, Rect2i(0, 0, 20, 20), 60).get("valid", true)))
 	_check("clipped bounds explicitly retained", bool(Metrics.measure(same, ground, ground, Rect2i(-2, 0, 22, 20), 60).get("clipped", false)))
 	_check("animated background cannot become person pixels", not bool(Metrics.measure(same, ground, ground, Rect2i(0, 0, 20, 20), 60, ground).get("pass", true)))
+	var screen: Rect2i = Rect2i(0, 0, 1920, 1080)
+	_check("fully visible person is judged", Metrics.judged(Rect2i(400, 300, 16, 32), screen))
+	_check("person clipped by the top edge is not judged", not Metrics.judged(Rect2i(408, -28, 16, 32), screen))
+	_check("person clipped by the right edge is not judged", not Metrics.judged(Rect2i(1910, 500, 16, 32), screen))
+	var inside: Rect2i = Rect2i(0, 0, 20, 20)
+	_check("fully visible low-contrast person still fails", Metrics.judged(inside, Rect2i(0, 0, 20, 20)) and not bool(Metrics.measure(_image(200, Color(0.2, 0.2, 0.2)), ground, ground, inside, 60).get("pass", true)))
 	var expected: Array[int] = [11, 22]
 	var rows: Array[Dictionary] = [{"entity_bits": 11, "valid": true, "pass": true}, {"entity_bits": 22, "valid": true, "pass": true}]
 	_check("exact complete IDs pass", Metrics.coverage(expected, rows))

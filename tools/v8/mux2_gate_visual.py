@@ -55,8 +55,11 @@ def validate_scene(scene: Node, output: Path) -> None:
     on = [n.number() for n in scene.field('on_screen_ids').array()]
     off = [n.number() for n in scene.field('off_screen_ids').array()]
     all_ids = [n.number() for n in scene.field('all_ids').array()]
-    require(bool(on) and len(set(on + off)) == len(on + off)
-            and sorted(on + off) == sorted(all_ids), 'missing/duplicate person coverage')
+    # R2: partly clipped people are recorded, not judged (scenes before R2 carry no list).
+    partial = ([int(n.field('entity_bits').number()) for n in scene.field('partial').array()]
+               if 'partial' in scene.mapping() else [])
+    require(bool(on) and len(set(on + off + partial)) == len(on + off + partial)
+            and sorted(on + off + partial) == sorted(all_ids), 'missing/duplicate person coverage')
     rows = scene.field('rows').array()
     require(len(rows) == len(on) and sorted(r.field('entity_bits').number() for r in rows) == sorted(on),
             'missing/duplicate attributed person')
