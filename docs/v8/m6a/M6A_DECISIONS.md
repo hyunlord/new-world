@@ -1148,3 +1148,16 @@ Fixes (r2-9), each behaviour-preserving — after each, the 8 calibration worlds
 6. Meal provenance reads the record's cached node and revision (`PackedMindChoice::node_in`) instead of decoding it.
 
 Interleaved diagnostic pairs (admitted at 1-min load < 8, `paired-opt8/`, 5 rounds): n200_script mean ×1.110, p99 ×1.141; n1000_wolves ×1.096 / ×1.082; n200_side64 ×1.085 / ×1.014; and (`paired-opt7/`, 3 rounds) n200 ×1.046 / ×1.014, n1000 ×0.971 / ×0.851, n2000 ×0.748 / ×0.870. The remainder is selection over the M6a policy's food nodes, physical food targeting, harvest assignment and P24's storage admission — the food chain's own work. Per the brief, `m6a_perf.py` (gate step 25) now accepts a timing remainder up to ×1.15 mean and p99 in every scene only when `CHANGELOG.md` carries a line marked `M6a R2 bench justification:` with the numbers; allocator and C3 bars stay at ×1.10/ceilings (r2-10). The gate's own 33-pair session is the measurement of record.
+
+### R2-1C Leave winter planning to a steward food plan (r2-14)
+
+Calibration round 1 (r2-13 binaries, `calibration-round-1/`) showed the R2-1 rules flooding steward worlds with summer roots: harvested 3,424–5,032 units against R1's 2,175–3,048, diversity 0/8 (R1 8/8), cooked share 5/8 (R1 8/8); alive, winters, stores, ledger 8/8; soak PASS. In those worlds the steward's food plan already plans winter stores (R1 fresh survival 30/32). Decision (R2 brief 2026-10-30, R2-1c "fix the root causes"): the winter duty and the lasting-food measure are the fallback for colonies whose winter food nobody plans; they apply only when no steward food plan runs (steward off, or scope Housing). With scope All or Food a colony behaves exactly as R1 (calibration tallies equal the R1-source harness `spoil-r1/`: e.g. seed 1 harvested 2,923, seed 3 2,532); the neighbours fixture (steward off) keeps its daily fingerprints. Regression `a_steward_food_plan_keeps_r1_behaviour` (red `r2-1c-red.log`).
+
+### R2-5 Calibration log and freeze
+
+| round | source | binaries | alive | winters | stores | cooked | diversity | ledger | no_hungry_spoilage | covered_storage | soak |
+|---:|---|---|---:|---:|---:|---:|---:|---:|---:|---|---|
+| 1 | `25ac90995` (r2-13) | `candidate-r2-binaries/` | 8 | 8 | 8 | 5 | 0 | 8 | 0 | unmeasurable (0 units placed open while covered room existed) | PASS |
+| 2 | `6c1047c20` (r2-14) | `candidate-r2c-binaries/` | 8 | 8 | 8 | 8 | 8 | 8 | 0 | unmeasurable | PASS |
+
+Every spoil moment falls on the daily expiry boundary (display midnight), when some sleeping member is usually above the seek threshold: round 2 seeds 0–7 had 27–47 days (per world) on which food spoiled while a member was above the threshold (equivalent run `var-c/`: 29–49 spoil moments per world, all but 0–2 with such a member). The definition was registered in r2-8 before any calibration result and is not changed after seeing it. Freeze `r2-freeze.json` after round 2: source `6c1047c20`, probe sha256 `8a1473a7…`, scorer, register (2 rounds), held-out 1360–1391 × 72 days. No product, data, scorer or bar change after this point.
