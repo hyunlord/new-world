@@ -104,3 +104,23 @@ fn short_lived_food_is_not_a_winter_store() {
     // they cover today's need but not winter, so stocking continues (R2-1B).
     assert!(chooses_harvest("roots", 10, SUMMER_NOON));
 }
+
+#[test]
+fn a_steward_food_plan_keeps_r1_behaviour() {
+    // R2-1C: with the steward planning food (scope All or Food) neither the winter duty nor the
+    // lasting-food measure applies; Housing scope does not plan food.
+    for (scope, harvest) in [
+        (sim_core::colony::steward::StewardScope::All, false),
+        (sim_core::colony::steward::StewardScope::Food, false),
+        (sim_core::colony::steward::StewardScope::Housing, true),
+    ] {
+        let (mut world, mut res, entity) = holding_chop("roots", 0, SUMMER_NOON);
+        res.steward.enabled = true;
+        res.steward.scope = scope;
+        mind().try_tick(&mut world, &mut res).expect("decision");
+        let harvesting = world
+            .get::<&Job>(entity)
+            .is_ok_and(|job| matches!(job.kind, JobKind::Harvest { .. }));
+        assert_eq!(harvesting, harvest, "{scope:?}");
+    }
+}

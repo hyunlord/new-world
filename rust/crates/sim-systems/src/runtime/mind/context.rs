@@ -447,6 +447,17 @@ pub struct RunningMetadata {
     pub finished: bool,
 }
 
+/// Whether the steward's food plan runs (on, scope All or Food). It already plans the colony's
+/// winter stores, so R2-1's fallback for unplanned colonies stays off (R2-1C).
+fn steward_plans_food(resources: &SimResources) -> bool {
+    resources.steward.enabled
+        && matches!(
+            resources.steward.scope,
+            sim_core::colony::steward::StewardScope::All
+                | sim_core::colony::steward::StewardScope::Food
+        )
+}
+
 /// Adults released from held ordinary work for winter stocking (R2-1A). In summer and autumn the
 /// stock target includes the winter shortfall; while a settlement is short, the first
 /// `ceil(adults x deficit)` member adults in AgentId order qualify, where `deficit` is the larger
@@ -458,7 +469,9 @@ fn winter_stock_duty(
     stock: &BTreeMap<SettlementId, (bool, u64, bool, Option<f64>, f64)>,
 ) -> BTreeSet<AgentId> {
     let mut released = BTreeSet::new();
-    if crate::runtime::settlement::food_economy::days_to_winter_end(resources).is_none() {
+    if crate::runtime::settlement::food_economy::days_to_winter_end(resources).is_none()
+        || steward_plans_food(resources)
+    {
         return released;
     }
     for (sid, settlement) in &resources.settlements {
@@ -891,8 +904,10 @@ impl TickContext {
                         .forage
                         .and(resources.rules.society.stock_target)
                         .map(|rule| rule.hoard_cap_factor * target);
-                    // R2-1B: the winter part counts only food that lasts through winter.
+                    // R2-1B: the winter part counts only food that lasts through winter. A
+                    // steward food plan already plans winter stores, so it keeps R1's measure.
                     let winter = winter_part
+                        .filter(|_| !steward_plans_food(resources))
                         .zip(
                             crate::runtime::settlement::food_economy::days_to_winter_end(resources),
                         )
