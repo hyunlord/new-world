@@ -1,8 +1,6 @@
 //! A completed food harvest hands its real output to an ordinary reserved haul.
 use hecs::{Entity, World};
-use sim_core::colony::{
-    Carry, ItemSpec, Job, JobKind, JobStage, ReserveKey, WorkPriorities, WorkType,
-};
+use sim_core::colony::{Carry, Job, JobKind, JobStage, ReserveKey, WorkPriorities, WorkType};
 use sim_core::components::{Agent, AgentState, Position, SeekTarget, TargetKind};
 use sim_core::spatial::chebyshev;
 use sim_engine::SimResources;
@@ -53,11 +51,16 @@ pub(super) fn start(
             return None;
         }
         let spec = stack.spec();
-        let to = destination(res, region, from, spec)?;
+        let born = res
+            .food
+            .ages
+            .get(&sim_core::colony::food::FoodOwner::Ground(from))?
+            .born_day;
+        let (to, room) = super::food_storage::destination(res, region, from, spec, born, false)?;
         let amount = produced
             .min(stack.count)
             .min(rule.carry(spec.kind))
-            .min(super::food_transfers::haul_room(res, to, spec));
+            .min(room);
         (amount > 0).then_some((from, to, spec, amount))
     });
     let Some((from, to, spec, amount)) = selected else {
@@ -102,49 +105,4 @@ pub(super) fn start(
         .or_insert(0) += 1;
     crate::runtime::mind::job_origins::assigned(world, res, id, job);
     true
-}
-
-fn destination(
-    res: &SimResources,
-    region: u32,
-    from: (u32, u32),
-    spec: ItemSpec,
-) -> Option<(u32, u32)> {
-    let open = |cell| {
-        super::food_transfers::haul_room(res, cell, spec) > 0
-            && !res
-                .colony
-                .reservations
-                .contains_key(&ReserveKey::Cell(cell))
-            && res.nav.reaches(region, cell)
-    };
-    let (nearest, ()) = res
-        .spatial
-        .colony
-        .cells
-        .nearest_where(from, u32::MAX, |cell, _| open(cell))?;
-    // Apply the same authored covered-store distance bonus as ordinary haul selection.
-    let Some(bonus) = res
-        .rules
-        .colony
-        .and_then(|rule| rule.space)
-        .map(|space| space.storehouse_bonus_tiles)
-    else {
-        return Some(nearest);
-    };
-    if crate::runtime::rooms::covered(res, nearest)
-        || !crate::runtime::rooms::storehouse_exists(res)
-    {
-        return Some(nearest);
-    }
-    let reach = chebyshev(from, nearest).saturating_add(bonus);
-    Some(
-        res.spatial
-            .colony
-            .cells
-            .nearest_where(from, reach, |cell, _| {
-                crate::runtime::rooms::covered(res, cell) && open(cell)
-            })
-            .map_or(nearest, |(cell, ())| cell),
-    )
 }

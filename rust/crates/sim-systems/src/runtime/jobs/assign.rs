@@ -744,15 +744,18 @@ fn pick_work(
                             && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
                             && reach(cell)
                     };
-                    let cell = index
-                        .cells
-                        .nearest_where(from, u32::MAX, |c, _| open(c))
-                        .map(|(to, ())| prefer_covered(res, ctx, from, to, &open));
+                    let clean = super::food_storage::clean_from(res, ctx.region, from, spec, false);
+                    let cell = clean.map(|(tile, _)| tile).or_else(|| {
+                        index
+                            .cells
+                            .nearest_where(from, u32::MAX, |c, _| open(c))
+                            .map(|(to, ())| prefer_covered(res, ctx, from, to, &open))
+                    });
                     if let Some(to) = cell {
                         let amount = rule
                             .carry(spec.kind)
                             .min(count(from))
-                            .min(room_on(res, to, spec));
+                            .min(clean.map_or_else(|| room_on(res, to, spec), |(_, room)| room));
                         if amount > 0 {
                             return Some((JobKind::Haul { from, to }, amount, spec.kind));
                         }
@@ -822,20 +825,23 @@ fn loose_haul(
                 && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
                 && res.nav.reaches(ctx.region, cell)
         };
-        let cell = search(
-            &index.cells,
-            from,
-            u32::MAX,
-            ex.memo(Search::OpenCell(spec)),
-            |cell, _| open(cell),
-        )
-        .map(|(to, ())| prefer_covered(res, ctx, from, to, &open));
+        let clean = super::food_storage::clean_from(res, ctx.region, from, spec, false);
+        let cell = clean.map(|(tile, _)| tile).or_else(|| {
+            search(
+                &index.cells,
+                from,
+                u32::MAX,
+                ex.memo(Search::OpenCell(spec)),
+                |cell, _| open(cell),
+            )
+            .map(|(to, ())| prefer_covered(res, ctx, from, to, &open))
+        });
         if let Some(to) = cell {
             let amount = ctx
                 .rule
                 .carry(spec.kind)
                 .min(stack.count)
-                .min(room_on(res, to, spec));
+                .min(clean.map_or_else(|| room_on(res, to, spec), |(_, room)| room));
             return Some((JobKind::Haul { from, to }, amount, spec.kind));
         }
         // A full-map miss remains valid as this tick only adds reservations.
@@ -998,21 +1004,23 @@ fn restock(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhausted) -
     )?;
     let stack = colony.ground_items.get(&from)?;
     let spec = stack.spec();
-    let (to, ()) = res
-        .spatial
-        .colony
-        .cells
-        .nearest_where(from, u32::MAX, |c, _| {
-            crate::runtime::rooms::covered(res, c)
-                && room_on(res, c, spec) > 0
-                && !colony.reservations.contains_key(&ReserveKey::Cell(c))
-                && res.nav.reaches(ctx.region, c)
-        })?;
+    let clean = super::food_storage::clean_from(res, ctx.region, from, spec, true);
+    let (to, ()) = clean.map(|(tile, _)| (tile, ())).or_else(|| {
+        res.spatial
+            .colony
+            .cells
+            .nearest_where(from, u32::MAX, |c, _| {
+                crate::runtime::rooms::covered(res, c)
+                    && room_on(res, c, spec) > 0
+                    && !colony.reservations.contains_key(&ReserveKey::Cell(c))
+                    && res.nav.reaches(ctx.region, c)
+            })
+    })?;
     let amount = ctx
         .rule
         .carry(spec.kind)
         .min(stack.count)
-        .min(room_on(res, to, spec));
+        .min(clean.map_or_else(|| room_on(res, to, spec), |(_, room)| room));
     (amount > 0).then_some((JobKind::Haul { from, to }, amount, spec.kind))
 }
 
@@ -1528,3 +1536,11 @@ mod item_memo_tests {
 #[cfg(test)]
 #[path = "loose_haul_tests.rs"]
 mod loose_haul_tests;
+
+#[cfg(test)]
+#[path = "age_haul_tests.rs"]
+mod age_haul_tests;
+
+#[cfg(test)]
+#[path = "age_arrival_tests.rs"]
+mod age_arrival_tests;

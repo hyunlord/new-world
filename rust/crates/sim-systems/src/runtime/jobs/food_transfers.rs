@@ -119,6 +119,17 @@ pub(super) fn arrive(
             }
         }
         _ => {
+            if let Some(age) = res.food.ages.get(&owner).copied() {
+                for (target, room) in
+                    super::food_storage::clean_owners(res, tile, carry.spec(), age.born_day)
+                {
+                    let Some(remaining) = items::stack(world, res, owner) else {
+                        break;
+                    };
+                    let count = remaining.count.min(room);
+                    let _ = items::transfer(world, res, owner, target, count, today);
+                }
+            }
             let pots: Vec<_> = res
                 .food
                 .pots
