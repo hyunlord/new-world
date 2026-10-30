@@ -1,8 +1,8 @@
 # M6a 커밋별 변경 파일 목록
 
-비교 BASE: `5b0c88812374b87e7854cc9203f144ad0ccd9009`. 이 목록의 마지막 구현·도구 커밋: `bd799460c25a7019dd5d3f30296587c96674615b`.
+비교 BASE: `5b0c88812374b87e7854cc9203f144ad0ccd9009`. 이 목록의 마지막 구현·도구 커밋: `a9ae9c87cfc322ff9ef06db7c3de470f799a7be3`.
 
-목표 §4의 커밋별 파일 목록이다. 각 블록은 해당 커밋의 `git show --format= --name-status --no-renames` 출력을 그대로 기록한다. A는 추가, M은 수정, D는 삭제이며, 이름 변경도 원래 경로 삭제와 새 경로 추가로 명시한다. 같은 파일이 여러 커밋에서 바뀌면 각 커밋에 반복한다. 이 문서 자체와 이후 문서 마감 커밋은 아래 고정된 범위에 포함되지 않는다. 파일 변경 목록은 검증·수용·게시 성공을 의미하지 않는다.
+목표 §4의 커밋별 파일 목록이다. 각 블록은 해당 커밋의 `git show --format= --name-status --no-renames` 출력을 그대로 기록한다. A는 추가, M은 수정, D는 삭제이며, 이름 변경도 원래 경로 삭제와 새 경로 추가로 명시한다. 같은 파일이 여러 커밋에서 바뀌면 각 커밋에 반복한다. P0–P12의 13개 커밋을 포함하며, 이번 P13 문서 마감 커밋은 아래 고정된 범위에 포함되지 않는다. 파일 변경 목록은 검증·수용·게시 성공을 의미하지 않는다.
 
 ## v8-m6a(p0): Preserve the approved food-chain contract before implementation
 
@@ -517,4 +517,36 @@ M	tools/v8/m6a_gate_source.py
 A	tools/v8/m6a_observer_successor.py
 A	tools/v8/test_m6a_base72.py
 A	tools/v8/test_m6a_observer_successor.py
+```
+
+## v8-m6a(p11): preserve frozen acceptance failures before final validation
+
+커밋: `3191890c1b5d829b126d27cd5fd885c82d83c246` · 변경 경로 7개
+
+```text
+M	CHANGELOG.md
+M	docs/HISTORY.md
+M	docs/ISSUES.md
+M	docs/ROADMAP.md
+A	docs/v8/m6a/M6A_CHANGED_FILES.md
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	docs/v8/m6a/M6A_REPORT.md
+```
+
+## v8-m6a(p12): preserve fixture intent under the active successor gate
+
+커밋: `a9ae9c87cfc322ff9ef06db7c3de470f799a7be3` · 변경 경로 11개
+
+```text
+M	.claude/skills/worldsim-testing/SKILL.md
+M	CHANGELOG.md
+M	docs/HISTORY.md
+M	docs/ISSUES.md
+M	docs/ROADMAP.md
+M	docs/v8/m6a/M6A_DECISIONS.md
+M	docs/v8/m6a/M6A_REPORT.md
+M	tools/v8/m6a_observer_successor.py
+M	tools/v8/test_core_shadow_freeze.py
+M	tools/v8/test_core_ui_successor_dispatch.py
+M	tools/v8/test_m6a_observer_successor.py
 ```

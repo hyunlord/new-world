@@ -12,9 +12,14 @@ Temporary M6A-1 [#670](https://github.com/hyunlord/new-world/issues/670) art and
 M6A-2 [#671](https://github.com/hyunlord/new-world/issues/671) held-out failure
 remain OPEN. See the report for the score and independent raw audit.
 
+### Final P12 result / P13 documentation
+- Full-gate-2 on `a9ae9c87cfc322ff9ef06db7c3de470f799a7be3` completed exit1 without timeout/signals:44/48 PASS,26/39/41/45 FAIL; gate1 remains43/48. New BASE strict validation passes with64 deterministic files identical (timing excluded); held-out still fails the same two bars.
+- Current visibility52/60 pixels (owned210, valid, unstable0) differs from gate1's45/60; other7 scenes pass. Current complete stall receipt records52.056ms at34.448181s/tick361/advanced1; half max49.157ms/no over50. NO M6a waiver. Current performance33 valid pairs/66 admitted/0 invalid/0 NOT_RUN, all6 C3 PASS does not clear acceptance.
+- No publication or issue closure; #670–673 OPEN and main/wip remain BASE5b0c8881. P13 is docs-only NOT_FULL_GATED, distinct from frozen productP9 and gateP12. Goal remains incomplete; no post-freeze tuning or fifth calibration.
+
 ### P12 verification follow-up
 - Preserve P11 `3191890c` gate1 failures: step16 three of471 assertions; step26 starvation9/9/9/10 and KnowledgeLost0/2/1/0; step39 half-zoom agent9 visibility45/60 pixels (other7 scenes PASS); step41 actual52.771ms frame at tick361 advancing1 tick, complete capture, **NO M6a waiver**; step45 frozen acceptance FAIL.
-- Four test/proof tools isolate child fixture environments and add explicit pinned successor proof v2. Focused40 tests PASS with parent unchanged; all473 Python tests PASS. Applied review is author review; separate `p12-independent-review.md` found no blockers. AST/compile4 PASS; LSP unavailable. No product/policy/scorer/candidate/calibration changes. New proof, identical-protocol fresh BASE-only cohort and gate2 are NOT_RUN.
+- Four test/proof tools isolate child fixture environments and add explicit pinned successor proof v2. Focused40 tests PASS with parent unchanged; all473 Python tests PASS. Applied review is author review; separate `p12-independent-review.md` found no blockers. AST/compile4 PASS; LSP unavailable. No product/policy/scorer/candidate/calibration changes. These were NOT_RUN at the P12 repair checkpoint; their completed results are recorded above.
 - Step25 passes33 valid pairs/66 admitted invocations/0 invalid pairs, C3 all6; retain pre-admission NOT_RUN1 and15-minute wait. #672 soak and #673 visibility are OPEN; valid failures are not waived or reclassified as invalid fixtures/newly proven layout regressions.
 
 ### Added

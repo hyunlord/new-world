@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-10-30 — M6a 최종 P12 `a9ae9c87`: 전체 게이트2 44/48 PASS·26/39/41/45 FAIL, timeout/signal 없이 exit1. BASE 결정적64파일 동일·새 성능33쌍 PASS이나 수용2개 막대·soak·가시성52/60·stall52.056ms FAIL 유지, NO waiver·미게시·#670–673 OPEN. 후속 P13은 문서 전용 NOT_FULL_GATED; 목표 미완료. [보고서](v8/m6a/M6A_REPORT.md).
+
 - 2026-10-30 — M6a P12: P11 `3191890c` 전체 게이트1 43/48 PASS·5 FAIL을 보존한다. 자식 환경 격리·새 successor proof의 도구4개 수정 후 집중40·전체 Python473 PASS; 제품·정책·보정4/4 동결 유지. 유효 soak #672·가시성 #673 OPEN, 52.771ms stall은 NO M6a waiver. 새 proof·BASE-only 코호트·게이트2 NOT_RUN·미게시. [결정](v8/m6a/M6A_DECISIONS.md).
 
 - 2026-10-30 — M6a 수용 FAIL·미게시: P9 동결 후보와 P10 `bd799460c` BASE72 각32세계 비교에서 생존29/32(필요30), 조리24/32(필요26)로 실패했다. 독립 원시 감사도 두 실패를 확인했고 scorer 결함을 찾지 못했다. 다른 막대와 새 성능33/33쌍은 PASS이나 수용 실패를 대체하지 않는다. 보정4/4·원래 동결을 유지하며 추가 튜닝·재시딩·면제는 없다. 이야기 비교는 완료·P11 전체 게이트1은43/48 PASS(16·26·39·41·45 FAIL), 원격 main/wip는 BASE `5b0c8881`, #670 아트·#671 held-out 실패 OPEN이다. [보고서](v8/m6a/M6A_REPORT.md).
