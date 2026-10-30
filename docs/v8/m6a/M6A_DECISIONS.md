@@ -1117,3 +1117,34 @@ Both exceed 80 %, so by the owner rule fixed in the brief the "spoiled ≤ 30 % 
 ### R2-5 Evaluation protocol `repair_r2` (r2-7)
 
 `m6a_protocol.repair_r2`: held-out 1360–1391 (32 worlds, 72 days, steward on, no orders), calibration seeds 0–7 with no round limit (every round in the append-only register), freeze kind `m6a_freeze_r2_v1`, gate config kind `m6a_repair_r2_v1` (schema 4), hard deadline `R2_DEADLINE` = 1793414280 (2026-10-31T02:38:00Z, 14 h after the 21:38 KST start check). The R1 rules (fresh paired BASE column per row, deadline-bound runner and stall lane) are shared through `REPAIRS`; the stall capture reads the gate's `M6A_DEADLINE_EPOCH` instead of R1's fixed deadline, which would have expired at 01:18 KST before the final gate. The `m6a` observer adds `spoil_moment` and `placement` records and an `r2_spoilage` summary block; the scorer reconciles them with the summary. BASE uses R1's qualified BASE72 adapter unchanged. 1296–1327 and 1328–1359 are retired.
+
+### R2-3 Bench: profile, fixes, justification (r2-9, r2-10)
+
+R2 brief 2026-10-30 §1 R2-3. macOS `sample` (1 ms) on `worldsim_perf bench-one --scene-label n200_script` (release), 4 runs per arm, BASE `20261029/base-binaries/worldsim_perf` vs candidate; raw `prof/`. Functional profiles, not timing evidence. Per-system totals of the first pair: Mind 892.6 → 1,172.8 ms, JobAssign 126.6 → 211.5 ms, movement 47.5 → 74.4 ms.
+
+Top 10 self time ("top of stack"), samples per 4 runs:
+
+| # | BASE (3,871) | candidate r2-8 (5,120) | candidate r2-9 (4,159) |
+|---:|---|---|---|
+| 1 | choose_with_reader 286 | choose_with_reader 363 | choose_with_reader 371 |
+| 2 | memmove 240 | memmove 244 | memmove 258 |
+| 3 | ColonyMindSystem::person 178 | ColonyMindSystem::person 201 | ColonyMindSystem::person 202 |
+| 4 | hecs 12-query prepare 160 | MemorySystem::tick 187 | MemorySystem::tick 168 |
+| 5 | FoodIndex::capture 155 | food::storage::class 140 | SettlementSystem::tick 119 |
+| 6 | MemorySystem::tick 153 | food_storage::owners 137 | Map::size_hint 113 |
+| 7 | continuation::eligible 149 | SettlementSystem::tick 136 | hecs 13-query prepare 108 |
+| 8 | ComponentRef::get_component 122 | members_need_per_day 133 | jobs::harvest::pick 107 |
+| 9 | ColonyMindSystem::try_tick 119 | Map::size_hint 133 | NavState::path 105 |
+| 10 | SettlementSystem::tick 111 | NavState::path 118 | continuation::eligible 98 |
+
+Inclusive in r2-8: `harvest_storage_available` 468 (P24's per-person storage check, with a second nearest-plant query), `jobs::harvest::pick` + `plants::phase_at` (each idle worker scanned every designated plant), `ChunkIndex::nearest_where` sorting every chunk per query, `remember_completed_meal` fully decoding a choice record per meal, `members_need_per_day` twice per tick (r2-3).
+
+Fixes (r2-9), each behaviour-preserving — after each, the 8 calibration worlds' food tallies and fingerprints and both neighbours fixtures' daily fingerprints equal the r2-3 build exactly (`var-opt1…opt8/`):
+1. `harvest_storage_available`: per-tick memo of "storage room exists" keyed by (nav region, item kind), stamped with the FoodSources and Jobs domain versions (existence does not depend on the source tile).
+2. `edible_plant`: one nearest-plant answer per person, stamped with every domain version.
+3. Store target and its winter part from one member-need pass (`stock_target_parts`).
+4. Harvest job search: an exact per-tick map-wide miss memo per (region, practitioner bits); the designation index is rebuilt only when the harvest designations change, not on every overlay touch; per (tick, overlay version, region) an index of designated, ripe, reachable, unreserved plants (within a JobAssign tick none of these can return).
+5. `ChunkIndex::nearest_where` visits chunks from a min-heap — the same `(lower bound, ChunkId)` order as the former full sort, so every predicate side effect is unchanged.
+6. Meal provenance reads the record's cached node and revision (`PackedMindChoice::node_in`) instead of decoding it.
+
+Interleaved diagnostic pairs (admitted at 1-min load < 8, `paired-opt8/`, 5 rounds): n200_script mean ×1.110, p99 ×1.141; n1000_wolves ×1.096 / ×1.082; n200_side64 ×1.085 / ×1.014; and (`paired-opt7/`, 3 rounds) n200 ×1.046 / ×1.014, n1000 ×0.971 / ×0.851, n2000 ×0.748 / ×0.870. The remainder is selection over the M6a policy's food nodes, physical food targeting, harvest assignment and P24's storage admission — the food chain's own work. Per the brief, `m6a_perf.py` (gate step 25) now accepts a timing remainder up to ×1.15 mean and p99 in every scene only when `CHANGELOG.md` carries a line marked `M6a R2 bench justification:` with the numbers; allocator and C3 bars stay at ×1.10/ceilings (r2-10). The gate's own 33-pair session is the measurement of record.
