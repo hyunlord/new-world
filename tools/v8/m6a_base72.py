@@ -10,6 +10,7 @@ import subprocess
 import time
 from pathlib import Path
 
+from m6a_protocol import protocol, recorded, check_freeze
 import core_p7_publication as inventory
 
 from m6a_evidence import (INPUT_ROOTS, EvidenceError, Node, Reference, digest, git,
@@ -366,14 +367,17 @@ def validate_cohort(root: Path, manifest_path: Path, cohort_path: Path) -> None:
         validate_world(refs['summary.json'].read(), seed, 72)
 
 
-def run(root: Path, manifest_path: Path, freeze_path: Path, out: Path, deadline: int) -> int:
+def run(root: Path, manifest_path: Path, freeze_path: Path, out: Path, deadline: int,
+        selected_protocol: str = 'legacy') -> int:
     from m6a_run import probe_environment
-    need(time.time() < deadline <= DEADLINE, 'BASE72 deadline expired/extended')
+    spec = protocol(selected_protocol)
+    need(time.time() < deadline <= spec.deadline, 'BASE72 deadline expired/extended')
     manifest_reference = reference_json(manifest_path)
     freeze_reference = reference_json(freeze_path)
     manifest = validate_manifest(root, manifest_path)
     frozen = Node.load(freeze_path)
-    need(frozen.get('kind').text() == 'm6a_freeze_v1'
+    check_freeze(frozen, spec)
+    need(frozen.get('kind').text() == spec.freeze_kind and recorded(frozen).name == spec.name
          and frozen.get('scorer_sha256').text() == digest(root / 'tools/v8/m6a_score.py'), 'frozen scorer differs')
     head = git(root, 'rev-parse', 'HEAD'); source = source_hash(root, head)
     binary = ref(root, manifest.get('binary')); out = out.resolve()
@@ -381,7 +385,7 @@ def run(root: Path, manifest_path: Path, freeze_path: Path, out: Path, deadline:
     out.mkdir(exist_ok=False)
     env = probe_environment(os.environ); env['WORLDSIM_GIT_SHA'] = BASE
     rows = []; failed = False
-    for seed in range(1296, 1328):
+    for seed in spec.heldout:
         if time.time() >= deadline:
             failed = True; break
         target = out / f'seed-{seed}'; log = out / f'seed-{seed}.log'
@@ -405,12 +409,12 @@ def run(root: Path, manifest_path: Path, freeze_path: Path, out: Path, deadline:
     Reference.parse(Node(manifest_reference)); Reference.parse(Node(freeze_reference))
     unchanged = source_hash(root, head) == source and Reference.parse(manifest.get('binary')).path == str(binary)
     failed |= not unchanged or len(rows) != 32
-    write_json(out / 'receipt.json', {'schema_version': 1, 'kind': 'm6a_cohort_v1', 'arm': 'base',
+    write_json(out / 'receipt.json', {'schema_version': 1, 'kind': 'm6a_cohort_v1', 'evaluation_protocol': spec.name, 'arm': 'base',
         'purpose': 'heldout', 'source_root': str(root), 'source_head': head, 'source_hash': source,
         'probe_environment': {'content_selection': 'bundled', 'WORLDSIM_GIT_SHA': BASE},
         'binary': manifest.get('binary').value, 'base_build': manifest_reference,
         'observer': reference_json(Path(__file__)), 'scorer': reference_json(root/'tools/v8/m6a_score.py'),
-        'freeze': freeze_reference, 'days': 72, 'seeds': list(range(1296,1328)),
+        'freeze': freeze_reference, 'days': 72, 'seeds': spec.heldout,
         'round': None, 'worlds': rows, 'source_unchanged': unchanged, 'exit_code': int(failed)})
     return int(failed)
 
@@ -420,9 +424,10 @@ def main() -> int:
     parser.add_argument('--manifest', type=Path, required=True)
     parser.add_argument('--freeze', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
-    parser.add_argument('--deadline', type=int, default=DEADLINE)
+    parser.add_argument('--protocol', choices=('legacy', 'repair_r1'), default='legacy')
+    parser.add_argument('--deadline', type=int)
     args = parser.parse_args()
-    return run(Path(__file__).resolve().parents[2], args.manifest, args.freeze, args.out, args.deadline)
+    return run(Path(__file__).resolve().parents[2], args.manifest, args.freeze, args.out, args.deadline if args.deadline is not None else protocol(args.protocol).deadline, args.protocol)
 
 
 if __name__ == '__main__':

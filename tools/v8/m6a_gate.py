@@ -43,7 +43,7 @@ def food_fixture(gate: Gate, path: Path) -> None:
     output = gate.destination(path, 'm6a-food-fixture')
     run(gate.root, [sys.executable, 'tools/v8/m6a_run.py', 'cohort', '--binary', gate.binary(),
         '--source-root', gate.root, '--source-head', gate.head, '--seeds', '0..2', '--days', '72',
-        '--purpose', 'fixture', '--out', output / 'cohort'], output / 'run.log')
+        '--purpose', 'fixture', '--protocol', gate.protocol().name, '--out', output / 'cohort'], output / 'run.log')
     run(gate.root, [sys.executable, 'tools/v8/m6a_score.py', 'fixture', '--receipt',
         output / 'cohort/receipt.json', '--out', output / 'score.json'], output / 'score.log')
     seal(gate, output)
@@ -120,6 +120,15 @@ def main() -> int:
             food_fixture(gate, output)
         case 'data_only':
             data_only(gate, output)
+        case 'stall':
+            need(output == gate.output / 'mux2-stall', 'wrong stall output')
+            if gate.repair_r1():
+                command = [sys.executable, 'tools/v8/m6a_r1_stall.py', 'capture',
+                           '--root', str(gate.root), '--out', str(output),
+                           '--godot', os.environ['GODOT_BIN']]
+            else:
+                command = ['bash', 'tools/v8/mux2_gate_checks.sh', 'stall', str(output)]
+            subprocess.run(command, cwd=gate.root, check=True)
         case 'final':
             need(output == gate.output, 'wrong final output')
             final(gate)

@@ -10,6 +10,7 @@ from typing import Final, Mapping
 import core_p7_publication as inventory
 import core_shadow_freeze as freeze
 import core_ui_successor as history
+from m6a_protocol import protocol, Protocol
 from m6a_evidence import EvidenceError, Node, Reference
 
 BASE: Final = '5b0c88812374b87e7854cc9203f144ad0ccd9009'
@@ -38,6 +39,8 @@ def validate_schema(data: Node) -> None:
             keys(data, FIELDS)
         case (2, 'm6a_observer_successor_v2'):
             keys(data, FIELDS | {'observer_successor', 'base_observer'})
+        case (3, 'm6a_repair_r1_v1'):
+            keys(data, FIELDS | {'base_observer'})
         case _:
             raise EvidenceError('wrong M6a gate protocol version')
     need(data.get('base_head').text() == BASE, 'wrong M6a BASE')
@@ -110,14 +113,16 @@ class Gate:
                  'dirty/untracked gate input: ' + scope)
         need(source_digest(self.root, self.head) == self.data.get('runtime_sha256').text(),
              'committed input digest differs')
-        need(self.data.get('deadline_epoch').integer() > 0, 'missing hard deadline')
+        need(0 < self.data.get('deadline_epoch').integer(), 'missing hard deadline')
+        if self.repair_r1():
+            need(self.data.get('deadline_epoch').integer() <= self.protocol().deadline, 'R1 deadline extended')
         for name in ('candidate_build', 'base_build', 'perf'):
             ref(self.root, self.data.get(name))
         need(os.environ.get('M6A_PERF_CONFIG') == str(ref(self.root, self.data.get('perf'))),
              'performance dispatch differs from sealed config')
         self.build('candidate_build', self.head)
         self.build('base_build', BASE)
-        if self.observer_successor():
+        if self.observer_successor() or self.repair_r1():
             self.frozen_source_hash()
             from m6a_base72 import validate_manifest
             validate_manifest(self.root, ref(self.root, self.data.get('base_observer')))
@@ -129,6 +134,12 @@ class Gate:
             expected = inventory.committed(self.root, self.head, relative)[relative]
             need(freeze.digest(frozen) == expected == freeze.digest(self.root / relative),
                  'protocol differs from committed input')
+
+    def repair_r1(self) -> bool:
+        return self.data.get('kind').text() == 'm6a_repair_r1_v1'
+
+    def protocol(self) -> Protocol:
+        return protocol('repair_r1' if self.repair_r1() else 'legacy')
 
     def observer_successor(self) -> bool:
         return self.data.get('kind').text() == 'm6a_observer_successor_v2'

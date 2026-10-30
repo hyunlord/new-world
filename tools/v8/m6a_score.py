@@ -5,6 +5,7 @@ import argparse
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from m6a_protocol import recorded, check_freeze
 from m6a_causal import audit as causal_audit
 from m6a_evidence import EvidenceError, Node, Reference, reference_json, write_json
 
@@ -56,8 +57,10 @@ def receipt(path: Path, arm: str, purpose: str) -> tuple[Node, ...]:
     for key in ("binary", "observer", "scorer"):
         Reference.parse(value.get(key))
     if purpose == "heldout":
-        Reference.parse(value.get("freeze"))
-    cohorts = {"heldout": list(range(1296, 1328)), "calibration": list(range(8)), "fixture": [0, 1]}
+        frozen = Reference.parse(value.get("freeze")).read()
+        if recorded(value).name == "repair_r1":
+            check_freeze(frozen, recorded(value))
+    cohorts = {"heldout": recorded(value).heldout, "calibration": list(range(8)), "fixture": [0, 1]}
     if purpose not in cohorts:
         raise EvidenceError("unsupported cohort purpose")
     expected = cohorts[purpose]
@@ -70,7 +73,11 @@ def receipt(path: Path, arm: str, purpose: str) -> tuple[Node, ...]:
         if world.get("exit_code").integer():
             raise EvidenceError("failed world")
         Reference.parse(world.get("log"))
-        files(world)
+        artifacts = files(world)
+        if recorded(value).name == 'repair_r1':
+            required = {'summary.json', 'events.jsonl', 'chronicle.json'} if arm == 'candidate' else {'summary.json'}
+            if not required.issubset(artifacts):
+                raise EvidenceError('required world artifacts missing')
     return worlds
 
 
@@ -278,23 +285,49 @@ def score_world(world: Node) -> WorldScore:
                       daily[42].get("alive").integer() > 0, daily[66].get("alive").integer() > 0, w42, w66)
 
 
+def base_columns(worlds: list[Node], common_rows: list[tuple[bool, bool, bool, bool]]) -> dict:
+    """BASE survival is observed; physical-food concepts did not exist in BASE."""
+    alive = sum(world.get('alive_end').integer() > 0 for world in worlds)
+    result = {'alive': {'base': alive, 'base_status': 'MEASURED',
+                        'base_definition': 'world alive_end > 0 after 72 days'}}
+    for index, name in enumerate(('stockpile_day1', 'beds_day10', 'wolf_deaths_le1', 'ledger')):
+        result[name] = {'base': sum(row[index] for row in common_rows), 'base_status': 'MEASURED'}
+    for name in ('hunger_free_winters', 'stores'):
+        result[name] = {'base': None, 'base_status': 'NOT_OBSERVED',
+                        'base_reason': 'BASE has hunger/stores, but its frozen observer lacks season-aligned death causes and physical reachable-store snapshots for this predicate'}
+    for name in ('cooked_share', 'diversity', 'spoilage'):
+        result[name] = {'base': None, 'base_status': 'NOT_SUPPORTED',
+                        'base_reason': 'Published BASE predates physical meal kinds, dietary groups and age-tracked spoilage'}
+    return result
+
+
 def evaluate(candidate: Path, base: Path) -> dict:
     scores = [score_world(world) for world in receipt(candidate, "candidate", "heldout")]
     baseline = []
+    base_worlds = []
+    selected = recorded(Node.load(candidate))
+    if recorded(Node.load(base)).name != selected.name:
+        raise EvidenceError("candidate/BASE protocol differs")
+    if selected.name == "repair_r1" and Node.load(candidate).get("freeze") != Node.load(base).get("freeze"):
+        raise EvidenceError("candidate/BASE freeze differs")
     for world in receipt(base, "base", "heldout"):
         root = files(world)["summary.json"].read()
         rows = root.get("seeds").rows()
         if len(rows) != 1 or rows[0].get("seed").integer() != world.get("seed").integer() or rows[0].get("days").integer() != 72:
             raise EvidenceError("BASE per-world summary mismatch")
         baseline.append(common(rows[0], True))
+        base_worlds.append(rows[0])
     thresholds = {"alive": 30, "hunger_free_winters": 28, "stores": 26, "cooked_share": 26, "diversity": 26, "spoilage": 26, "ledger": 32}
     bars = {name: {"passed_worlds": sum(bool(getattr(score, name)) for score in scores), "required": count} for name, count in thresholds.items()}
     for index, name in enumerate(("stockpile_day1", "beds_day10", "wolf_deaths_le1")):
         base_count = sum(row[index] for row in baseline)
         bars[name] = {"passed_worlds": sum(bool(getattr(score, name)) for score in scores), "required": max(0, base_count - 1), "base": base_count}
+    if selected.name == 'repair_r1':
+        for name, column in base_columns(base_worlds, baseline).items():
+            bars[name].update(column)
     failed = [name for name, bar in bars.items() if bar["passed_worlds"] < bar["required"]]
     if not all(row[3] for row in baseline): failed.append("base_ledger")
-    return {"schema_version": 1, "kind": "m6a_score_v1", "status": "FAIL" if failed else "PASS", "failures": failed,
+    return {"schema_version": 1, "kind": "m6a_score_v1", "evaluation_protocol": selected.name, "status": "FAIL" if failed else "PASS", "failures": failed,
             "candidate": reference_json(candidate), "base": reference_json(base), "bars": bars,
             "winter_conditional": {str(day): {"passed": sum(getattr(s, f"winter{day}_store") for s in scores), "alive": sum(getattr(s, f"winter{day}_alive") for s in scores)} for day in (42, 66)},
             "worlds": [asdict(score) for score in scores]}

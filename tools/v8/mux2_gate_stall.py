@@ -6,15 +6,44 @@
 # How to run: imported by mux2_gate_receipts.py.
 """Recompute the unchanged M-UX2 timing bars from every retained frame."""
 import math
+from dataclasses import dataclass
 from mux2_gate_inputs import Json, Node, require
 from mux2_gate_telemetry import REQUIRED, Frame, validate_frame, validate_warmup
 
 
+@dataclass(frozen=True, slots=True)
+class SlowFrame:
+    elapsed_seconds: float
+    interval_ms: float
+    tick: int
+    ticks_advanced: int
+
+
+@dataclass(frozen=True, slots=True)
+class ArmTiming:
+    zoom: float
+    over50: tuple[SlowFrame, ...]
+    over33_per_minute: tuple[int, ...]
+
+    @property
+    def strict_pass(self) -> bool:
+        return not self.over50 and all(count <= 3 for count in self.over33_per_minute)
+
+
 def validate_stall(raw: Json) -> None:
+    """Preserve ordinary strict acceptance; a complete capture alone cannot pass."""
+    _ = validate_stall_capture(raw, strict=True)
+
+
+def validate_stall_capture(raw: Json, *, strict: bool = False) -> tuple[ArmTiming, ...]:
+    """Authenticate timing and producer verdicts without rewriting a strict failure."""
     report = Node(raw)
     report.field('purpose').equals('acceptance_5_minutes_each_zoom')
-    for key in ('complete', 'pass', 'bar_pass', 'profile_complete', 'steward_enabled'):
+    for key in ('complete', 'profile_complete', 'steward_enabled'):
         report.field(key).equals(True)
+    if strict:
+        report.field('pass').equals(True)
+        report.field('bar_pass').equals(True)
     report.field('errors').equals([])
     require(report.field('seed').number() == 0 and report.field('speed').number() == 1, 'wrong world/speed')
     environment = report.field('environment')
@@ -26,11 +55,14 @@ def validate_stall(raw: Json) -> None:
     arms = report.field('arms').array()
     require(len(arms) == 2 and sorted(a.field('zoom').number() for a in arms) == [0.5, 1.0],
             'require exactly zoom1 and zoom0.5')
-    for arm in arms:
-        validate_arm(arm)
+    timings = tuple(validate_arm(arm, strict=strict) for arm in arms)
+    passed = all(arm.strict_pass for arm in timings)
+    report.field('pass').equals(passed)
+    report.field('bar_pass').equals(passed)
+    return timings
 
 
-def validate_arm(arm: Node) -> None:
+def validate_arm(arm: Node, *, strict: bool = True) -> ArmTiming:
     for key in ('complete', 'capture_complete'):
         arm.field(key).equals(True)
     instrumentation = arm.field('instrumentation')
@@ -46,15 +78,16 @@ def validate_arm(arm: Node) -> None:
     arm.field('final_steward').field('enabled').equals(True)
     require(arm.field('end_tick').number() > arm.field('start_tick').number(), 'no simulation progress')
     score = arm.field('score')
-    for key in ('complete', 'pass'):
-        score.field(key).equals(True)
+    score.field('complete').equals(True)
+    if strict:
+        score.field('pass').equals(True)
     require(score.field('warmup_seconds').number() == 10
             and score.field('required_measured_seconds').number() == 300, 'changed timing thresholds')
     samples = arm.field('samples').array()
     require(bool(samples), 'missing raw samples')
     previous = 0.0
     counts = [0] * 5
-    over50 = 0
+    over50: list[SlowFrame] = []
     slow: list[Json] = []
     prior_frame: Frame | None = None
     warmup_observed = 0.0
@@ -71,7 +104,9 @@ def validate_arm(arm: Node) -> None:
             slow.append(row.value)
         if elapsed <= 10:
             continue
-        over50 += int(interval > 50)
+        if interval > 50:
+            over50.append(SlowFrame(elapsed, interval, int(prior_frame.tick),
+                                    int(row.field('ticks_advanced').number())))
         if interval > 33:
             counts[min(4, max(0, math.ceil((elapsed - 10) / 60) - 1))] += 1
     require(prior_frame is not None and prior_frame.tick == arm.field('end_tick').number(),
@@ -81,8 +116,12 @@ def validate_arm(arm: Node) -> None:
             'incomplete duration or mismatched elapsed time')
     require(score.field('actual_post_warmup_seconds').number() == previous - 10,
             'incorrect measured duration')
-    require(over50 == 0 and all(n <= 3 for n in counts), 'stall acceptance bar failed')
-    require(score.field('post_warmup_over50').number() == over50
+    timing = ArmTiming(arm.field('zoom').number(), tuple(over50), tuple(counts))
+    if strict:
+        require(timing.strict_pass, 'stall acceptance bar failed')
+    score.field('pass').equals(timing.strict_pass)
+    require(score.field('post_warmup_over50').number() == len(over50)
             and score.field('post_warmup_over33').number() == sum(counts), 'incorrect summary counts')
-    score.field('over33_per_minute').equals(counts)
+    score.field('over33_per_minute').equals([count for count in counts])
     score.field('all_over33_frames').equals(slow)
+    return timing

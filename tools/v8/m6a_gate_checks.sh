@@ -8,7 +8,7 @@ shift
 [[ $# == 1 ]] || exit 2
 case "$mode" in
     fixture_run) mode=fixtures ;;
-    evaluation|food_fixture|data_only|preflight|final) ;;
+    evaluation|food_fixture|data_only|preflight|final|stall) ;;
     *) echo "unknown M6a check: $mode" >&2; exit 2 ;;
 esac
 exec python3 tools/v8/m6a_gate.py "$mode" "$1"

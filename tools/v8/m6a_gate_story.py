@@ -31,12 +31,12 @@ def story(gate: Gate, output: Path) -> None:
         need(report.get('definition').value == historical.DEFINITION, 'story metric definition changed')
         command = [row.text() for row in receipt.get('command').rows()]
         need(command[:2] == [str(binary), 'story-yield'], 'story command missing')
-        for flag, value in (('--seeds', '1296..1328'), ('--days', '72'),
+        for flag, value in (('--seeds', f'{gate.protocol().first_seed}..{gate.protocol().first_seed + 32}'), ('--days', '72'),
                             ('--steward', 'on'), ('--defence', 'on')):
             need(command.count(flag) == 1 and command[command.index(flag) + 1] == value,
                  'story command differs: ' + flag)
         worlds = report.get('worlds').rows()
-        need(sorted(row.get('seed').integer() for row in worlds) == list(range(1296, 1328)),
+        need(sorted(row.get('seed').integer() for row in worlds) == gate.protocol().heldout,
              'story worlds missing or duplicated')
         counts = dict.fromkeys(historical.COUNTS, 0)
         for world in worlds:

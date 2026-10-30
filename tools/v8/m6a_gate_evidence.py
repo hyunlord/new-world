@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Final
 
 import core_shadow_freeze as freeze
+from m6a_protocol import recorded
 from m6a_evidence import Node, Reference, reference_json, write_json
 from m6a_gate_source import Gate, keys, need, ref
 from m6a_gate_art import validate as validate_plant_art
@@ -49,6 +50,14 @@ def receipt(gate: Gate, directory: str) -> Path:
     return path
 
 
+def stall_waivers(gate: Gate, rows: tuple[tuple[int, str, int], ...]) -> list:
+    """Authenticate stall evidence and preserve a flat, empty-on-nonuse waiver list."""
+    from m6a_r1_stall import verify, authorize
+    verdict = verify(gate.root, gate.output / 'mux2-stall/receipt.json')
+    authorization = authorize(verdict, other_steps_pass=all(code == 0 for number, _, code in rows if number != 41))
+    return authorization['waivers']
+
+
 def final(gate: Gate) -> None:
     gate.verify()
     summary = gate.output / 'gate.txt'
@@ -81,19 +90,21 @@ def final(gate: Gate) -> None:
          'step48 plant art structural receipt absent or invalid')
     need(validate_plant_art(ref(gate.root, art.get('log')).read_text()) == art.get('checks').integer(),
          'step48 plant art structural receipt differs from process output')
+    waivers = stall_waivers(gate, rows) if gate.repair_r1() else []
     write_json(gate.output / 'm6a-final.json', {'schema_version': 1, 'head': gate.head,
         'config': reference_json(gate.path), 'gate': reference_json(summary),
-        'step_receipts': references, 'status': 'PASS', 'waivers': []})
+        'step_receipts': references, 'status': 'PASS', 'waivers': waivers})
 
 
 def calibration(gate: Gate) -> None:
     """Audit every started round, retaining failed attempts within the four-round cap."""
+    spec = gate.protocol()
     binding = gate.data.get('calibration')
     keys(binding, {'register', 'freeze'})
     register = ref(gate.root, binding.get('register'))
     frozen_path = ref(gate.root, binding.get('freeze'))
     frozen = Node.load(frozen_path)
-    need(frozen.get('schema_version').integer() == 1 and frozen.get('kind').text() == 'm6a_freeze_v1',
+    need(frozen.get('schema_version').integer() == 1 and frozen.get('kind').text() == spec.freeze_kind and recorded(frozen).name == spec.name,
          'wrong calibration freeze protocol')
     need(ref(gate.root, frozen.get('calibration_register')) == register, 'register differs from freeze')
     need(frozen.get('source_hash').text() == gate.frozen_source_hash()
@@ -101,13 +112,14 @@ def calibration(gate: Gate) -> None:
          and frozen.get('scorer_sha256').text() == freeze.digest(gate.root / 'tools/v8/m6a_score.py'),
          'candidate/instrument changed after freeze')
     need(frozen.get('days').integer() == 72
-         and [row.integer() for row in frozen.get('heldout_seeds').rows()] == list(range(1296, 1328)),
+         and [row.integer() for row in frozen.get('heldout_seeds').rows()] == spec.heldout,
          'freeze changes heldout protocol')
     events = [Node.parse(line) for line in register.read_text().splitlines()]
-    need(bool(events) and len(events) <= 8 and len(events) % 2 == 0, 'invalid calibration round count')
+    need(bool(events) and len(events) <= spec.rounds * 2 and len(events) % 2 == 0, 'invalid calibration round count')
     for offset in range(0, len(events), 2):
         start, end = events[offset:offset + 2]
         number = offset // 2 + 1
+        need(recorded(start).name == recorded(end).name == spec.name, 'calibration protocol mixed')
         need(start.get('event').text() == 'started' and end.get('event').text() == 'finished'
              and start.get('round').integer() == end.get('round').integer() == number,
              'duplicate/hidden/unfinished calibration round')
@@ -117,10 +129,14 @@ def calibration(gate: Gate) -> None:
         need(path.parent == Path(start.get('out').text())
              and round_data.get('round').integer() == number
              and round_data.get('purpose').text() == 'calibration'
+             and recorded(round_data).name == spec.name
              and round_data.get('days').integer() == 72
              and [row.integer() for row in round_data.get('seeds').rows()] == list(range(8)),
              'calibration receipt mismatch')
         need(round_data.get('exit_code').integer() == end.get('exit_code').integer(), 'round exit mismatch')
+        if round_data.get('exit_code').integer() == 0:
+            from m6a_score import receipt as validate_receipt
+            validate_receipt(path, 'candidate', 'calibration')
         if offset == len(events) - 2:
             need(round_data.get('exit_code').integer() == 0
                  and round_data.get('source_hash').text() == frozen.get('source_hash').text(),
@@ -129,11 +145,11 @@ def calibration(gate: Gate) -> None:
     keys(heldout, {'candidate', 'base'})
     for arm in ('candidate', 'base'):
         row = Node.load(ref(gate.root, heldout.get(arm)))
-        need(row.get('purpose').text() == 'heldout' and row.get('arm').text() == arm
+        need(recorded(row).name == spec.name and row.get('purpose').text() == 'heldout' and row.get('arm').text() == arm
              and row.get('exit_code').integer() == 0 and row.get('source_unchanged').boolean(),
              'incomplete heldout process')
         need(ref(gate.root, row.get('freeze')) == frozen_path, 'heldout did not use this freeze')
-        if arm == 'base' and gate.observer_successor():
+        if arm == 'base' and (gate.observer_successor() or gate.repair_r1()):
             from m6a_base72 import validate_cohort
             validate_cohort(gate.root, ref(gate.root, gate.data.get('base_observer')),
                             ref(gate.root, heldout.get('base')))

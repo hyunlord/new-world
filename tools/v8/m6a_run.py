@@ -6,9 +6,11 @@ import hashlib
 import json
 import os
 import subprocess
+import time
 from collections.abc import Mapping
 from pathlib import Path
 
+from m6a_protocol import protocol, recorded, check_freeze
 from m6a_evidence import EvidenceError, Node, Reference, digest, git, reference_json, source_hash, write_json
 
 
@@ -52,27 +54,33 @@ def register_rows(path: Path) -> list[Node]:
     return rows
 
 
-def round_start(path: Path, out: Path) -> int:
+def round_start(path: Path, out: Path, selected_protocol: str = 'legacy') -> int:
+    spec = protocol(selected_protocol)
     rows = register_rows(path)
+    if any(recorded(row).name != spec.name for row in rows):
+        raise EvidenceError('calibration register mixes protocols')
     starts = [row for row in rows if row.get("event").text() == "started"]
-    if len(starts) >= 4:
-        raise EvidenceError("four calibration rounds already started")
+    if len(starts) >= spec.rounds:
+        raise EvidenceError("calibration round limit reached")
     finished = {row.get("round").integer() for row in rows if row.get("event").text() == "finished"}
     if any(row.get("round").integer() not in finished for row in starts):
         raise EvidenceError("prior calibration round has no terminal record; inspect rather than restart")
     number = len(starts) + 1
-    register_event(path, {"event": "started", "round": number, "seeds": list(range(8)), "out": str(out)})
+    register_event(path, {"event": "started", "round": number, "evaluation_protocol": spec.name, "seeds": list(range(8)), "out": str(out)})
     return number
 
 
 def cohort(args: argparse.Namespace) -> int:
     environment = probe_environment(os.environ)
+    spec = protocol(getattr(args, 'protocol', 'legacy'))
+    if spec.name == 'repair_r1' and time.time() >= spec.deadline:
+        raise EvidenceError('repair deadline expired')
     root = args.source_root.resolve(strict=True)
     binary = args.binary.resolve(strict=True)
     selected = seeds(args.seeds)
     if args.days != 72:
         raise EvidenceError("M6a cohorts require exactly 72 days")
-    expected = {"fixture": [0, 1], "calibration": list(range(8)), "heldout": list(range(1296, 1328))}[args.purpose]
+    expected = {"fixture": [0, 1], "calibration": list(range(8)), "heldout": spec.heldout}[args.purpose]
     if selected != expected:
         raise EvidenceError("cohort seed set differs from declared purpose")
     source = source_hash(root, args.source_head)
@@ -98,8 +106,9 @@ def cohort(args: argparse.Namespace) -> int:
             raise EvidenceError("heldout requires a sealed freeze receipt")
         freeze_ref = reference_json(args.freeze)
         freeze = Node.load(args.freeze)
-        if freeze.get("kind").text() != "m6a_freeze_v1":
+        if freeze.get("kind").text() != spec.freeze_kind or recorded(freeze).name != spec.name:
             raise EvidenceError("wrong freeze protocol")
+        check_freeze(freeze, spec)
         Reference.parse(freeze.get("calibration_register"))
         if args.arm == "candidate" and (freeze.get("source_hash").text() != source
                 or freeze.get("binary_sha256").text() != digest(binary)):
@@ -114,10 +123,13 @@ def cohort(args: argparse.Namespace) -> int:
     if args.purpose == "calibration":
         if args.calibration_register is None or args.arm != "candidate":
             raise EvidenceError("candidate calibration requires append-only register")
-        round_number = round_start(args.calibration_register, out)
+        round_number = round_start(args.calibration_register, out, spec.name)
     rows = []
     failed = False
     for seed in selected:
+        if spec.name == 'repair_r1' and time.time() >= spec.deadline:
+            failed = True
+            break
         target = out / f"seed-{seed}"
         if args.arm == "candidate":
             command = [str(binary), "m6a", "--seed", str(seed), "--days", "72", "--out", str(target)]
@@ -126,15 +138,19 @@ def cohort(args: argparse.Namespace) -> int:
                        "--workers", "1", "--out", str(target), "--steward", "on", "--defence", "on",
                        "--mux2-observe", "--mux2-policy-sha256", args.base_policy_sha256]
         with (out / f"seed-{seed}.log").open("xb") as log:
-            completed = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, check=False, env=environment)
+            try:
+                completed = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, check=False, env=environment,
+                    **({'timeout': max(0.01, spec.deadline-time.time())} if spec.name == 'repair_r1' else {}))
+            except subprocess.TimeoutExpired:
+                completed = subprocess.CompletedProcess(command, 124)
         files = [reference_json(path) for path in sorted(target.rglob("*")) if path.is_file()] if target.exists() else []
         rows.append({"seed": seed, "command": command, "exit_code": completed.returncode,
                      "files": files, "log": reference_json(out / f"seed-{seed}.log")})
         failed |= completed.returncode != 0
         write_json(out / f"seed-{seed}-receipt.json", rows[-1])
     unchanged = source_hash(root, args.source_head) == source and reference_json(binary) == binary_ref
-    failed |= not unchanged
-    receipt = {"schema_version": 1, "kind": "m6a_cohort_v1", "arm": args.arm, "purpose": args.purpose,
+    failed |= not unchanged or len(rows) != len(selected)
+    receipt = {"schema_version": 1, "kind": "m6a_cohort_v1", "evaluation_protocol": spec.name, "arm": args.arm, "purpose": args.purpose,
                "source_root": str(root), "source_head": args.source_head, "source_hash": source,
                "probe_environment": {"content_selection": "bundled", "WORLDSIM_GIT_SHA": environment.get("WORLDSIM_GIT_SHA")},
                "binary": binary_ref, "base_build": base_build, "observer": reference_json(Path(__file__)),
@@ -143,17 +159,22 @@ def cohort(args: argparse.Namespace) -> int:
                "source_unchanged": unchanged, "exit_code": int(failed)}
     write_json(out / "receipt.json", receipt)
     if round_number is not None:
-        register_event(args.calibration_register, {"event": "finished", "round": round_number,
+        register_event(args.calibration_register, {"event": "finished", "round": round_number, "evaluation_protocol": spec.name,
                        "receipt": reference_json(out / "receipt.json"), "exit_code": int(failed)})
     return int(failed)
 
 
 def freeze(args: argparse.Namespace) -> int:
+    spec = protocol(getattr(args, 'protocol', 'legacy'))
+    if spec.name == 'repair_r1' and time.time() >= spec.deadline:
+        raise EvidenceError('repair deadline expired')
     rows = register_rows(args.calibration_register)
     starts = [row for row in rows if row.get("event").text() == "started"]
     ends = [row for row in rows if row.get("event").text() == "finished"]
-    if not 1 <= len(starts) <= 4 or len(starts) != len(ends):
-        raise EvidenceError("freeze requires 1..4 terminal calibration rounds")
+    if any(recorded(row).name != spec.name for row in rows):
+        raise EvidenceError("calibration register mixes protocols")
+    if not 1 <= len(starts) <= spec.rounds or len(starts) != len(ends):
+        raise EvidenceError(f"freeze requires 1..{spec.rounds} terminal calibration rounds")
     if [row.get("round").integer() for row in starts] != list(range(1, len(starts) + 1)):
         raise EvidenceError("calibration rounds not consecutive")
     for row in starts:
@@ -161,17 +182,24 @@ def freeze(args: argparse.Namespace) -> int:
             raise EvidenceError("calibration used other seeds")
     for row in ends:
         Reference.parse(row.get("receipt"))
-    last = Reference.parse(ends[-1].get("receipt")).read()
+    last_reference = Reference.parse(ends[-1].get("receipt"))
+    from m6a_score import receipt as validate_receipt
+    validate_receipt(Path(last_reference.path), "candidate", "calibration")
+    last = last_reference.read()
+    if (recorded(last).name != spec.name or last.get('purpose').text() != 'calibration'
+            or last.get('arm').text() != 'candidate'
+            or [seed.integer() for seed in last.get('seeds').rows()] != list(range(8))):
+        raise EvidenceError('latest calibration protocol differs')
     current = source_hash(args.source_root.resolve(strict=True), args.source_head)
     if last.get("exit_code").integer() or last.get("source_hash").text() != current:
         raise EvidenceError("latest complete calibration does not match final source")
     if Reference.parse(last.get("binary")).sha256 != digest(args.binary):
         raise EvidenceError("freeze binary differs from latest calibration")
-    write_json(args.out, {"schema_version": 1, "kind": "m6a_freeze_v1", "source_head": args.source_head,
+    write_json(args.out, {"schema_version": 1, "kind": spec.freeze_kind, "evaluation_protocol": spec.name, "source_head": args.source_head,
                          "source_hash": current, "binary_sha256": digest(args.binary),
                          "scorer_sha256": digest(Path(__file__).with_name("m6a_score.py")),
                          "calibration_register": reference_json(args.calibration_register),
-                         "heldout_seeds": list(range(1296, 1328)), "days": 72})
+                         "heldout_seeds": spec.heldout, "days": 72})
     return 0
 
 
@@ -180,6 +208,7 @@ def main() -> int:
     sub = parser.add_subparsers(dest="operation", required=True)
     for operation in ("cohort", "freeze"):
         command = sub.add_parser(operation)
+        command.add_argument("--protocol", choices=("legacy", "repair_r1"), default="legacy")
         command.add_argument("--source-root", type=Path, required=True)
         command.add_argument("--source-head", required=True)
         command.add_argument("--binary", type=Path, required=True)

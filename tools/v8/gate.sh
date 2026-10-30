@@ -222,7 +222,11 @@ step 37 mux2_defence bash tools/v8/mux2_gate_checks.sh defence "$LOG/mux2-defenc
 step 38 mux2_oracles bash tools/v8/mux2_gate_checks.sh oracles "$LOG/mux2-oracles"
 step 39 mux2_visibility python3 tools/v8/mux2_gate_receipts.py capture --kind visibility --out "$LOG/mux2-visibility" --godot "$GODOT_BIN"
 step 40 mux2_why python3 tools/v8/mux2_gate_receipts.py capture --kind why --out "$LOG/mux2-why" --godot "$GODOT_BIN"
-step 41 mux2_stall_receipt bash tools/v8/mux2_gate_checks.sh stall "$LOG/mux2-stall"
+if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+    step 41 mux2_stall_receipt bash tools/v8/m6a_gate_checks.sh stall "$LOG/mux2-stall"
+else
+    step 41 mux2_stall_receipt bash tools/v8/mux2_gate_checks.sh stall "$LOG/mux2-stall"
+fi
 step 44 core_shadow bash tools/v8/core_gate_checks.sh fixture_run "$LOG/core-shadow-fixture"
 step 45 core_evaluation bash tools/v8/core_gate_checks.sh evaluation "$LOG/core-evaluation"
 grep -E '^CORE_PERF ' "$LOG/core_evaluation.log" | sed 's/^/   /' >> "$SUMMARY"
