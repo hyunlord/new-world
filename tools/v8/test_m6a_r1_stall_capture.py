@@ -19,6 +19,13 @@ from mux2_gate_inputs import EvidenceError, Node
 from test_m6a_r1_stall import changed_frames
 
 
+def r1_environment():
+    """The R1 fixtures pin R1's deadline: drop a gate-exported M6A_DEADLINE_EPOCH (R2) from this
+    process's environment copy only, as P12 isolated the other historical fixtures."""
+    return patch.dict(capture.os.environ, {key: value for key, value in capture.os.environ.items()
+                                           if key != 'M6A_DEADLINE_EPOCH'}, clear=True)
+
+
 class CaptureTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -35,6 +42,7 @@ class CaptureTests(unittest.TestCase):
         self.godot.write_bytes(b'fake executable, never launched')
         self.stack = ExitStack()
         self.addCleanup(self.stack.close)
+        self.stack.enter_context(r1_environment())
         self.stack.enter_context(patch.object(capture, 'clean_sources'))
         self.stack.enter_context(patch.object(capture, 'git', return_value='a' * 40))
         self.snapshot = self.stack.enter_context(patch.object(capture, 'snapshot', return_value={'input': 'b' * 64}))
@@ -123,6 +131,11 @@ class CaptureTests(unittest.TestCase):
 
 
 class OutputTests(unittest.TestCase):
+    def setUp(self):
+        environment = r1_environment()
+        environment.start()
+        self.addCleanup(environment.stop)
+
     def test_output_rejects_bridge_and_source_hash_mismatch(self):
         raw = changed_frames({0: {2000: 51}})
         raw['p7_admission'] = {'deadline_epoch': capture.R1_DEADLINE}
@@ -188,3 +201,12 @@ class RequiredArtifactTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class RepairDeadlineTests(unittest.TestCase):
+    def test_capture_follows_the_gate_exported_repair_deadline(self):
+        # R2 brief: the stall lane is bounded by the active repair round's deadline.
+        with patch.dict(capture.os.environ, {'M6A_DEADLINE_EPOCH': '1793414280'}):
+            self.assertEqual(capture.deadline(), 1793414280)
+        with r1_environment():
+            self.assertEqual(capture.deadline(), capture.R1_DEADLINE)

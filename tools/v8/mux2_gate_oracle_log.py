@@ -26,7 +26,7 @@ PREFIXES: Final = {'mux2_visibility_validator_test': 'MUX2_VISIBILITY_ORACLE',
                   'mux2_extent_owner_test': 'MUX2_EXTENT_OWNER',
                   'mux2_wall_cache_test': 'MUX2_WALL_CACHE'}
 
-EXPECTED_COUNTS: Final = {'mux2_visibility_validator_test': 20,
+EXPECTED_COUNTS: Final = {'mux2_visibility_validator_test': 24,
                           'mux2_marker_layout_test': 21, 'mux2_coincident_test': 30,
                           'mux2_badge_index_test': 116, 'mux2_badge_packing_test': 114,
                           'mux2_overlap_test': 81, 'mux2_badge_grid_test': 514,
