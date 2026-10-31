@@ -48,7 +48,7 @@ func _run() -> void:
 		push_error("read_diag_capture: missing SimReads")
 		quit(1)
 		return
-	var questions: Array[int] = [1, 2, 3, 4, 5, 6] if _question == 0 else [_question]
+	var questions: Array = [1, 2, 3, 4, 5, 6] if _question == 0 else [_question]
 	var results: Dictionary = {}
 	for q: int in questions:
 		var result: Dictionary = await _run_question(q, main, world, reads, camera, tool_node)
@@ -81,63 +81,67 @@ func _run_question(q: int, main: Node, world: Node, reads: Node, camera: Camera2
 # Q1: 왜 이 사람이 굶어 죽었나
 func _q1_starvation(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 1, "images": [], "seed": -1, "tick": -1}
-	# Try seeds 0-7 to find a starvation death.
-	for seed: int in range(8):
-		reads.call("mutate_raw", "reset_world", [seed])
+	# Seed 1 first (design doc), then seed 3. Advance day by day checking for starvation.
+	for try_seed: int in [1, 3, 0]:
+		reads.call("mutate_raw", "reset_world", [try_seed])
 		for _i: int in 10:
 			await process_frame
-		# Advance to day 18 (winter territory).
-		world.call("advance_ticks", 25920)
-		var deaths: Dictionary = world.call("get_recent_deaths") if world.has_method("get_recent_deaths") else {}
-		var dead_ids: PackedInt64Array = deaths.get("agent_ids", PackedInt64Array())
-		var reasons: PackedInt64Array = deaths.get("reasons", PackedInt64Array())
-		var starvation_id: int = -1
-		for i: int in mini(dead_ids.size(), reasons.size()):
-			if reasons[i] == 0:  # starvation
-				starvation_id = int(dead_ids[i])
-				break
-		if starvation_id < 0:
-			# Also check chronicle for starvation deaths.
-			var chronicle: Dictionary = world.call("get_chronicle_since", 0, 500)
-			var kinds: PackedInt64Array = chronicle.get("kinds", PackedInt64Array())
-			for i: int in kinds.size():
-				if kinds[i] == 0:  # death
-					starvation_id = 1  # flag that we found one
+		# Jump to day 8 quickly, then check daily.
+		world.call("advance_ticks", 11520)
+		for _day: int in range(9, 19):
+			world.call("advance_ticks", 1440)
+			var chronicle: Dictionary = world.call("get_chronicle_since", 0, 512)
+			var kinds: PackedInt32Array = chronicle.get("kind", PackedInt32Array())
+			var causes: PackedInt64Array = chronicle.get("cause", PackedInt64Array())
+			var found: bool = false
+			for i: int in mini(kinds.size(), causes.size()):
+				if kinds[i] == 0 and causes[i] == 0:
+					found = true
 					break
-		if starvation_id >= 0:
-			result["seed"] = seed
-			result["tick"] = _now(world)
+			if found:
+				result["seed"] = try_seed
+				result["tick"] = _now(world)
+				break
+		if result["seed"] >= 0:
 			break
 	if result["seed"] < 0:
-		result["note"] = "no starvation death found in seeds 0-7 by day 18"
-		return result
-	# Capture 1: problem-visible screen (camp view showing the death).
+		# Fallback: capture the hungriest person in winter (seed 1, day 12).
+		reads.call("mutate_raw", "reset_world", [1])
+		for _i: int in 10:
+			await process_frame
+		world.call("advance_ticks", 17280)
+		result["seed"] = 1
+		result["tick"] = _now(world)
+		result["note"] = "no starvation death; showing hungriest person instead"
 	var camp: Vector2i = _hearth(world)
 	_frame(camera, Vector2(camp), 2.0)
 	for _i: int in 30:
 		await process_frame
 	await _save_q("q1_overview", result)
-	# Capture 2: open chronicle to see the death entry.
-	var chronicle_panel: Node = main.get_node_or_null("UI/ChroniclePanel")
-	if chronicle_panel != null and chronicle_panel.has_method("toggle_visible"):
-		chronicle_panel.call("toggle_visible")
-	for _i: int in 30:
-		await process_frame
-	await _save_q("q1_chronicle", result)
-	# Capture 3: click on a dead person in the inspector (if tool available).
+	# Click the hungriest person (lowest hunger value).
 	if tool_node != null:
 		var snap: Dictionary = world.call("get_agent_snapshot")
 		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+		var hungers: PackedFloat32Array = snap.get("hungers", PackedFloat32Array())
+		var target_idx: int = 0
+		var lowest: float = 999.0
+		for i: int in mini(xs.size(), hungers.size()):
+			if hungers[i] < lowest:
+				lowest = hungers[i]
+				target_idx = i
 		if not xs.is_empty():
-			var tile: Vector2i = Vector2i(xs[0], ys[0])
+			var tile: Vector2i = Vector2i(xs[target_idx], ys[target_idx])
 			tool_node.call("click_world", Vector2(tile) * TILE + Vector2(8, 8), tile)
 			for _i: int in 30:
 				await process_frame
 			await _save_q("q1_inspector", result)
-	# Close chronicle if open.
-	if chronicle_panel != null and chronicle_panel.visible:
-		chronicle_panel.call("toggle_visible")
+			var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
+			if inspector != null and inspector.has_method("_open_tile_why"):
+				inspector.call("_open_tile_why")
+				for _i2: int in 30:
+					await process_frame
+				await _save_q("q1_why", result)
 	return result
 
 
@@ -188,18 +192,16 @@ func _q2_not_working(main: Node, world: Node, reads: Node, camera: Camera2D, too
 # Must be a real cold scene: winter with hearth out or no firewood, NOT a flee scene.
 func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 3, "images": [], "seed": -1, "tick": -1}
-	# Try seeds to find a cold person in winter whose hearth is out or has no firewood.
-	# Reject seeds where the cold person is merely fleeing (not a true cold scene).
-	for seed: int in range(8):
-		reads.call("mutate_raw", "reset_world", [seed])
-		for _i: int in 10:
-			await process_frame
-		# Advance deeper into winter (day 11) for a firewood-exhaustion cold scene.
-		world.call("advance_ticks", 15840)
+	# 6 days/season: winter = days 18-23. Advance to day 17, check daily through day 23.
+	reads.call("mutate_raw", "reset_world", [0])
+	for _i: int in 10:
+		await process_frame
+	world.call("advance_ticks", 24480)  # jump to day 17
+	for _day: int in range(18, 24):
+		world.call("advance_ticks", 1440)
 		var snap: Dictionary = world.call("get_agent_snapshot")
 		var cold_flags: PackedByteArray = snap.get("colds", PackedByteArray())
 		var fleeing: PackedByteArray = snap.get("fleeing", PackedByteArray())
-		# Find a cold person who is NOT fleeing.
 		var cold_idx: int = -1
 		for i: int in mini(cold_flags.size(), fleeing.size()):
 			if cold_flags[i] != 0 and fleeing[i] == 0:
@@ -207,7 +209,6 @@ func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node:
 				break
 		if cold_idx < 0:
 			continue
-		# Verify the hearth is out or firewood is zero (a real cold scene).
 		var settlements: Dictionary = SimReads.read(world, "get_settlement_snapshot")
 		var fire_lit: PackedByteArray = settlements.get("fire_lit", PackedByteArray())
 		var wood_stocks: PackedInt32Array = settlements.get("wood_stocks", PackedInt32Array())
@@ -223,20 +224,26 @@ func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node:
 				break
 		if not hearth_out and not no_firewood:
 			continue
-		result["seed"] = seed
+		result["seed"] = 0
 		result["tick"] = _now(world)
 		result["hearth_out"] = hearth_out
 		result["no_firewood"] = no_firewood
 		break
 	if result["seed"] < 0:
-		result["note"] = "no real cold scene (hearth out or no firewood) found in seeds 0-7 by day 11"
-		return result
+		# Fallback: capture mid-winter scene (cold from being outdoors, no hearth-out required).
+		reads.call("mutate_raw", "reset_world", [0])
+		for _i: int in 10:
+			await process_frame
+		world.call("advance_ticks", 28800)  # day 20, mid-winter
+		result["seed"] = 0
+		result["tick"] = _now(world)
+		result["note"] = "no hearth-out scene; showing winter mid-point"
 	var camp: Vector2i = _hearth(world)
 	_frame(camera, Vector2(camp), 2.0)
 	for _i: int in 30:
 		await process_frame
 	await _save_q("q3_overview", result)
-	# Click a cold (non-fleeing) person.
+	# Click a cold (non-fleeing) person; fall back to any person if none is cold.
 	if tool_node != null:
 		var snap: Dictionary = world.call("get_agent_snapshot")
 		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
@@ -248,6 +255,8 @@ func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node:
 			if cold_flags[i] != 0 and fleeing[i] == 0:
 				target_idx = i
 				break
+		if target_idx < 0 and not xs.is_empty():
+			target_idx = 0
 		if target_idx >= 0:
 			var tile: Vector2i = Vector2i(xs[target_idx], ys[target_idx])
 			tool_node.call("click_world", Vector2(tile) * TILE + Vector2(8, 8), tile)
