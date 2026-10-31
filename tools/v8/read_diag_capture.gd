@@ -118,7 +118,7 @@ func _q1_starvation(main: Node, world: Node, reads: Node, camera: Camera2D, _too
 
 
 # Q2: 왜 이 어른이 일을 안 하나
-func _q2_not_working(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node: Node) -> Dictionary:
+func _q2_not_working(main: Node, world: Node, reads: Node, camera: Camera2D, _tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 2, "images": [], "seed": 0, "tick": -1}
 	reads.call("mutate_raw", "reset_world", [0])
 	for _i: int in 10:
@@ -131,32 +131,17 @@ func _q2_not_working(main: Node, world: Node, reads: Node, camera: Camera2D, too
 	for _i: int in 30:
 		await process_frame
 	await _save_q("q2_overview", result)
-	# Find a non-working adult and click them.
-	if tool_node != null:
-		var snap: Dictionary = world.call("get_agent_snapshot")
-		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
-		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
-		var jobs: PackedByteArray = snap.get("jobs", PackedByteArray())
-		var target_idx: int = -1
-		for i: int in mini(xs.size(), jobs.size()):
-			if jobs[i] == 0 or jobs[i] == 7:  # idle or eating
-				target_idx = i
-				break
-		if target_idx < 0 and not xs.is_empty():
-			target_idx = 0
-		if target_idx >= 0:
-			var tile: Vector2i = Vector2i(xs[target_idx], ys[target_idx])
-			tool_node.call("click_world", Vector2(tile) * TILE + Vector2(8, 8), tile)
-			for _i: int in 30:
-				await process_frame
-			await _save_q("q2_inspector", result)
-			# Capture 3: click "왜?" button.
-			var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
-			if inspector != null and inspector.has_method("_open_tile_why"):
-				inspector.call("_open_tile_why")
-				for _i2: int in 30:
-					await process_frame
-				await _save_q("q2_why", result)
+	# Open the inspector on the first idle or eating person (no synthetic click: clicks can miss).
+	var snap: Dictionary = world.call("get_agent_snapshot")
+	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
+	var jobs: PackedByteArray = snap.get("jobs", PackedByteArray())
+	var target_idx: int = 0 if not ids.is_empty() else -1
+	for i: int in mini(ids.size(), jobs.size()):
+		if jobs[i] == 0 or jobs[i] == 7:  # idle or eating
+			target_idx = i
+			break
+	if target_idx >= 0:
+		await _inspect_and_why(main, world, int(ids[target_idx]), "q2", result)
 	return result
 
 
