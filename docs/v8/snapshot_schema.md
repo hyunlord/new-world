@@ -1781,7 +1781,7 @@ Active villager requests per settlement, hourly. Returns:
 | `priorities` | `PackedInt32Array` | Priority (lower = more urgent) |
 | `counts` | `PackedInt32Array` | Number of blocked adults |
 | `voices` | `PackedInt64Array` | AgentId of most affected adult |
-| `voice_names` | `PackedStringArray` | Name of the voice person |
+| `voice_names` | `PackedStringArray` | Always empty; GDScript fills from voice id via PersonNames |
 | `steward_active` | `Array[bool]` | Whether the steward addresses this |
 
 ### `get_current_task` (no arguments)
@@ -1794,7 +1794,7 @@ The top active request or next unfinished goal. Returns:
 | `text_key` | `String` | Locale text key (when source != "none") |
 | `action_key` | `String` | Action locale key |
 | `voice` | `int` | AgentId of the voice |
-| `voice_name` | `String` | Name of the voice person |
+| `voice_name` | `String` | Always empty; GDScript fills from voice id via PersonNames |
 | `steward_active` | `bool` | Whether the steward handles it |
 | `has_marker` | `bool` | Whether a marker tile is provided |
 | `marker_x` | `int` | Marker tile X (when has_marker) |
