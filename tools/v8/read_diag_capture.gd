@@ -78,61 +78,42 @@ func _run_question(q: int, main: Node, world: Node, reads: Node, camera: Camera2
 	return result
 
 
-# Q1: 왜 이 사람이 굶어 죽었나 — constructed: steward OFF, seed 0, mid-winter.
-# The M6a steward prevents starvation deaths; with steward off people forage from bushes.
-# Option 4: capture the hungriest person whose why-not shows a food-related block.
-func _q1_starvation(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node: Node) -> Dictionary:
+# Q1: 왜 이 사람이 굶어 죽었나 — no starvation death is reachable at HEAD, so Q1 shows the
+# hungriest living person at the colony's hungriest moment: steward OFF, before wolves arrive.
+# Pass 1 scans day by day for the lowest hunger; pass 2 replays to that tick (deterministic).
+func _q1_starvation(main: Node, world: Node, reads: Node, camera: Camera2D, _tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 1, "images": [], "seed": 0, "tick": -1}
-	reads.call("mutate_raw", "reset_world", [0])
+	_reset_steward_off(reads, world)
+	var best_tick: int = 0
+	var lowest: float = 999.0
+	for _step: int in 180:  # 30 days in 240-tick steps
+		world.call("advance_ticks", 240)
+		if int(SimReads.read(world, "get_ui_facts").get("wolves_spawned", 0)) > 0:
+			print("Q1 scan: wolves at tick %d" % _now(world))
+			break
+		var hungers: PackedFloat32Array = (world.call("get_agent_snapshot") as Dictionary).get("hungers", PackedFloat32Array())
+		print("Q1 scan tick=%d wolves=%d min_hunger=%.1f" % [_now(world), int(SimReads.read(world, "get_ui_facts").get("wolves_spawned", 0)), hungers[_lowest_index(hungers)] if not hungers.is_empty() else -1.0])
+		for h: float in hungers:
+			if h < lowest:
+				lowest = h
+				best_tick = _now(world)
+	_reset_steward_off(reads, world)
+	world.call("advance_ticks", best_tick)
 	for _i: int in 10:
 		await process_frame
-	# Steward ON (prevents starvation but people get hungry in winter).
-	# Advance to mid-winter (day 20).
-	world.call("advance_ticks", 28800)
 	result["tick"] = _now(world)
-	result["constructed"] = "seed 0, mid-winter, steward ON, hungriest person"
-	var camp: Vector2i = _hearth(world)
-	_frame(camera, Vector2(camp), 2.0)
+	result["constructed"] = "seed 0, steward OFF, before wolves, tick of lowest hunger"
+	var snap: Dictionary = world.call("get_agent_snapshot")
+	var idx: int = _lowest_index(snap.get("hungers", PackedFloat32Array()))
+	if idx < 0:
+		return result
+	var tile: Vector2i = Vector2i(snap["xs"][idx], snap["ys"][idx])
+	result["note"] = "no starvation death reachable; hungriest living person hunger=%.0f" % snap["hungers"][idx]
+	_frame(camera, Vector2(tile), 2.0)
 	for _i: int in 30:
 		await process_frame
 	await _save_q("q1_overview", result)
-	# Open chronicle to show the death.
-	var chronicle_panel: Node = main.get_node_or_null("UI/ChroniclePanel")
-	if chronicle_panel != null and chronicle_panel.has_method("toggle_visible"):
-		chronicle_panel.call("toggle_visible")
-	for _i: int in 30:
-		await process_frame
-	await _save_q("q1_chronicle", result)
-	if chronicle_panel != null and chronicle_panel.visible:
-		chronicle_panel.call("toggle_visible")
-	# Let the renderer catch up before clicking.
-	for _i: int in 30:
-		await process_frame
-	# Click the hungriest alive person — shows inspector with why-not and diagnosis.
-	if tool_node != null:
-		var snap: Dictionary = world.call("get_agent_snapshot")
-		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
-		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
-		var hungers: PackedFloat32Array = snap.get("hungers", PackedFloat32Array())
-		var target_idx: int = 0
-		var lowest: float = 999.0
-		for i: int in mini(xs.size(), hungers.size()):
-			if hungers[i] < lowest:
-				lowest = hungers[i]
-				target_idx = i
-		if not xs.is_empty():
-			result["note"] = "no starvation death (steward prevents it); hungriest person hunger=%.0f" % lowest
-			var tile: Vector2i = Vector2i(xs[target_idx], ys[target_idx])
-			tool_node.call("click_world", Vector2(tile) * TILE + Vector2(8, 8), tile)
-			for _i: int in 30:
-				await process_frame
-			await _save_q("q1_inspector", result)
-			var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
-			if inspector != null and inspector.has_method("_open_tile_why"):
-				inspector.call("_open_tile_why")
-				for _i2: int in 30:
-					await process_frame
-				await _save_q("q1_why", result)
+	await _inspect_and_why(main, world, int(snap["ids"][idx]), "q1", result)
 	return result
 
 
@@ -179,41 +160,62 @@ func _q2_not_working(main: Node, world: Node, reads: Node, camera: Camera2D, too
 	return result
 
 
-# Q3: 왜 이 사람이 춥나 / 왜 화덕이 꺼졌나
-# Constructed: steward OFF → hearth goes out (fire_lit=[0]). Winter with hearth out answers
-# "왜 화덕이 꺼졌나". Captures: hearth overview, hearth tile click for diagnosis, person.
-func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node: Node) -> Dictionary:
+# Q3: 왜 이 사람이 춥나 / 왜 화덕이 꺼졌나 — constructed: steward OFF, mid-winter. With the
+# steward off nobody stokes the hearth (fire_lit 0 from day 6). The hearth diagnosis is opened
+# with the causal panel's own open_tile: a click on the camp tile hits the adjacent campfire workshop.
+func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, _tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 3, "images": [], "seed": 0, "tick": -1}
-	reads.call("mutate_raw", "reset_world", [0])
+	# Steward-off colonies can die out before deep winter: take the first winter tick (season 3)
+	# with the hearth out and people alive; fall back to the last tick anyone was alive.
+	_reset_steward_off(reads, world)
+	var target_tick: int = -1
+	var last_alive: int = 0
+	for _step: int in 180:  # 30 days in 240-tick steps
+		world.call("advance_ticks", 240)
+		if (world.call("get_agent_snapshot") as Dictionary).get("ids", PackedInt64Array()).is_empty():
+			break
+		last_alive = _now(world)
+		var lit: Array = Array(SimReads.read(world, "get_settlement_snapshot").get("fire_lit", []))
+		if int(SimReads.read(world, "get_ui_facts").get("season", -1)) == 3 and not lit.has(1):
+			target_tick = last_alive
+			break
+	result["winter_alive"] = target_tick >= 0
+	_reset_steward_off(reads, world)
+	world.call("advance_ticks", target_tick if target_tick >= 0 else last_alive)
 	for _i: int in 10:
 		await process_frame
-	# Steward ON (defence works). Advance to mid-winter; the hearth is examined for diagnosis.
-	world.call("advance_ticks", 28800)
 	result["tick"] = _now(world)
-	result["seed"] = 0
-	result["constructed"] = "seed 0, mid-winter, hearth diagnosis"
+	result["constructed"] = "seed 0, steward OFF, first winter tick with hearth out and people alive"
+	var settlements: Dictionary = SimReads.read(world, "get_settlement_snapshot")
+	result["fire_lit"] = str(settlements.get("fire_lit", []))
 	var camp: Vector2i = _hearth(world)
 	_frame(camera, Vector2(camp), 2.0)
 	for _i: int in 30:
 		await process_frame
 	await _save_q("q3_overview", result)
-	# Click the hearth tile to show its diagnosis (fire off → DIAG_HEARTH_*).
-	if tool_node != null:
-		tool_node.call("click_world", Vector2(camp) * TILE + Vector2(8, 8), camp)
+	var causal: Node = main.get_node_or_null("UI/CausalPanel")
+	if causal != null:
+		causal.call("open_tile", camp)
+		(causal as CanvasItem).visible = true
 		for _i: int in 30:
 			await process_frame
 		await _save_q("q3_hearth_diag", result)
-	# Click a person (cold or any) to show inspector + why.
-	if tool_node != null:
-		var snap: Dictionary = world.call("get_agent_snapshot")
-		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
-		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
-		if not xs.is_empty():
-			var tile: Vector2i = Vector2i(xs[0], ys[0])
-			tool_node.call("click_world", Vector2(tile) * TILE + Vector2(8, 8), tile)
-			for _i: int in 30:
-				await process_frame
-			await _save_q("q3_inspector", result)
+		(causal as CanvasItem).visible = false
+	# The cold person nearest the hearth, else the nearest person.
+	var snap: Dictionary = world.call("get_agent_snapshot")
+	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	var colds: PackedByteArray = snap.get("colds", PackedByteArray())
+	var target: int = -1
+	var best: int = 1 << 30
+	for i: int in xs.size():
+		var d: int = absi(xs[i] - camp.x) + absi(ys[i] - camp.y) - (100000 if i < colds.size() and colds[i] != 0 else 0)
+		if d < best:
+			best = d
+			target = i
+	if target >= 0:
+		result["person_cold"] = target < colds.size() and colds[target] != 0
+		await _inspect_and_why(main, world, int(snap["ids"][target]), "q3", result)
 	return result
 
 
@@ -324,6 +326,35 @@ func _q6_winter_prep(main: Node, world: Node, reads: Node, camera: Camera2D, too
 
 
 # --- Helpers ---
+
+func _reset_steward_off(reads: Node, world: Node) -> void:
+	reads.call("mutate_raw", "reset_world", [0])
+	SimReads.mutate(world, "cmd_set_steward", [false, 0])
+
+
+func _lowest_index(values: PackedFloat32Array) -> int:
+	var idx: int = -1
+	for i: int in values.size():
+		if idx < 0 or values[i] < values[idx]:
+			idx = i
+	return idx
+
+
+## Opens the inspector on entity `bits` (no synthetic click), then its "왜?" view.
+func _inspect_and_why(main: Node, world: Node, bits: int, prefix: String, result: Dictionary) -> void:
+	var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
+	var detail: Dictionary = world.call("get_agent_detail", bits)
+	if inspector == null or not bool(detail.get("found", false)):
+		return
+	inspector.call("display_agent", detail)
+	for _i: int in 30:
+		await process_frame
+	await _save_q(prefix + "_inspector", result)
+	inspector.call("_open_tile_why")
+	for _i: int in 30:
+		await process_frame
+	await _save_q(prefix + "_why", result)
+
 
 func _now(world: Node) -> int:
 	return int((world.call("get_time_snapshot") as Dictionary).get("tick", 0))
