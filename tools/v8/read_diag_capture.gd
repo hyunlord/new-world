@@ -150,21 +150,33 @@ func _q2_not_working(main: Node, world: Node, reads: Node, camera: Camera2D, _to
 # with the causal panel's own open_tile: a click on the camp tile hits the adjacent campfire workshop.
 func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, _tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 3, "images": [], "seed": 0, "tick": -1}
-	# Steward-off colonies can die out before deep winter: take the first winter tick (season 3)
-	# with the hearth out and people alive; fall back to the last tick anyone was alive.
+	# Steward-off colonies die out around day 20, before deep winter: take the first winter tick
+	# (season 3) with the hearth out and people alive; else the latest tick with a cold living
+	# person (hearth out preferred); else the last tick anyone was alive.
 	_reset_steward_off(reads, world)
 	var target_tick: int = -1
 	var last_alive: int = 0
+	var last_cold: int = -1
+	var last_cold_out: int = -1
 	for _step: int in 180:  # 30 days in 240-tick steps
 		world.call("advance_ticks", 240)
-		if (world.call("get_agent_snapshot") as Dictionary).get("ids", PackedInt64Array()).is_empty():
+		var agents: Dictionary = world.call("get_agent_snapshot")
+		if agents.get("ids", PackedInt64Array()).is_empty():
 			break
 		last_alive = _now(world)
 		var lit: Array = Array(SimReads.read(world, "get_settlement_snapshot").get("fire_lit", []))
-		if int(SimReads.read(world, "get_ui_facts").get("season", -1)) == 3 and not lit.has(1):
+		var hearth_out: bool = not lit.has(1)
+		if Array(agents.get("colds", PackedByteArray())).any(func(c: int) -> bool: return c != 0):
+			last_cold = last_alive
+			if hearth_out:
+				last_cold_out = last_alive
+		if int(SimReads.read(world, "get_ui_facts").get("season", -1)) == 3 and hearth_out:
 			target_tick = last_alive
 			break
 	result["winter_alive"] = target_tick >= 0
+	if target_tick < 0:
+		target_tick = last_cold_out if last_cold_out >= 0 else last_cold
+		result["fallback"] = "cold+hearth_out" if last_cold_out >= 0 else ("cold" if last_cold >= 0 else "last_alive")
 	_reset_steward_off(reads, world)
 	world.call("advance_ticks", target_tick if target_tick >= 0 else last_alive)
 	for _i: int in 10:
