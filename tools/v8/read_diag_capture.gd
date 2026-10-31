@@ -10,6 +10,7 @@
 extends SceneTree
 
 const TILE: float = 64.0
+const WORK_MIND_KEYS: Array[String] = ["MIND_BEHAVIOUR_DO_JOB", "MIND_BEHAVIOUR_SLEEP"]
 
 var _out: String = ""
 var _question: int = 0  # 0 = all
@@ -143,32 +144,58 @@ func _first_starvation(world: Node) -> Dictionary:
 	return {}
 
 
-# Q2: 왜 이 어른이 일을 안 하나
+# Q2: 왜 이 어른이 일을 안 하나 — steward OFF (with the steward on nobody is idle through day 15),
+# scan from tick 0 to the first adult the "할 일 없는 어른" alert counts (assets/ui/alerts.json
+# idle_adults predicates); overview, then their inspector and "왜?" (no synthetic click).
 func _q2_not_working(main: Node, world: Node, reads: Node, camera: Camera2D, _tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 2, "images": [], "seed": 0, "tick": -1}
-	reads.call("mutate_raw", "reset_world", [0])
+	_reset_steward_off(reads, world)
+	var bits: int = -1
+	for _step: int in 90:  # up to 15 days in 240-tick steps
+		world.call("advance_ticks", 240)
+		bits = _idle_adult(world)
+		if bits >= 0:
+			break
 	for _i: int in 10:
 		await process_frame
-	world.call("advance_ticks", 7200)  # day 5
 	result["tick"] = _now(world)
-	var camp: Vector2i = _hearth(world)
-	# Capture 1: camp overview.
-	_frame(camera, Vector2(camp), 2.0)
+	result["idle_adult_found"] = bits >= 0
+	_frame(camera, Vector2(_hearth(world)), 2.0)
 	for _i: int in 30:
 		await process_frame
 	await _save_q("q2_overview", result)
-	# Open the inspector on the first idle or eating person (no synthetic click: clicks can miss).
-	var snap: Dictionary = world.call("get_agent_snapshot")
-	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
-	var jobs: PackedByteArray = snap.get("jobs", PackedByteArray())
-	var target_idx: int = 0 if not ids.is_empty() else -1
-	for i: int in mini(ids.size(), jobs.size()):
-		if jobs[i] == 0 or jobs[i] == 7:  # idle or eating
-			target_idx = i
-			break
-	if target_idx >= 0:
-		await _inspect_and_why(main, world, int(ids[target_idx]), "q2", result)
+	if bits >= 0:
+		await _inspect_and_why(main, world, bits, "q2", result)
 	return result
+
+
+## The entity bits of the first person the idle-adults alert counts (an adult with no job who is
+## idle, not sleeping, drafted, sick or in breakdown) who also has a person diagnosis; -1 when none.
+func _idle_adult(world: Node) -> int:
+	var people: Dictionary = SimReads.read(world, "get_ui_facts").get("people", {})
+	var entities: PackedInt64Array = people.get("entity_ids", PackedInt64Array())
+	for i: int in entities.size():
+		var flags: Array = ["children", "has_job", "sleeping", "drafted", "sick", "breakdown"].map(
+			func(key: String) -> bool: return i < (people.get(key, PackedByteArray()) as PackedByteArray).size() and people[key][i] != 0)
+		var idle: bool = i < (people.get("idle", PackedByteArray()) as PackedByteArray).size() and people["idle"][i] != 0
+		if idle and not flags.has(true) and _has_diagnosis(world, int(entities[i])) and not _mind_working(world, int(entities[i])):
+			return int(entities[i])
+	return -1
+
+
+## Whether person `bits`'s mind has chosen work or sleep ("지금: 일하기" / "잠자기"), which would not read
+## as an idle adult in the screenshot.
+func _mind_working(world: Node, bits: int) -> bool:
+	var mind: Dictionary = world.call("get_agent_mind", bits)
+	return str(mind.get("name_key", "")) in WORK_MIND_KEYS
+
+
+## Whether person `bits` has a person-diagnosis line (any failing check).
+func _has_diagnosis(world: Node, bits: int) -> bool:
+	if not world.has_method("get_person_diagnosis"):
+		return true
+	var diag: Dictionary = world.call("get_person_diagnosis", bits)
+	return not (diag.get("text_keys", PackedStringArray()) as PackedStringArray).is_empty()
 
 
 # Q3: 왜 이 사람이 춥나 / 왜 화덕이 꺼졌나 — constructed: seed 0, steward OFF, winter (tick 26400,
@@ -212,41 +239,49 @@ func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, _tool_node
 	return result
 
 
-# Q4: 왜 비축 구역에 물건이 안 오나
-func _q4_stockpile(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node: Node) -> Dictionary:
+# Q4: 왜 비축 구역에 물건이 안 오나 — day 8 (tick 11520), when a stockpile zone is full; overview
+# on that zone, then the causal panel's own open_tile on it with its stockpile diagnosis line.
+func _q4_stockpile(main: Node, world: Node, reads: Node, camera: Camera2D, _tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 4, "images": [], "seed": 0, "tick": -1}
 	reads.call("mutate_raw", "reset_world", [0])
 	for _i: int in 10:
 		await process_frame
-	world.call("advance_ticks", 4320)  # day 3
+	world.call("advance_ticks", 11520)  # day 8
+	for _i: int in 10:
+		await process_frame
 	result["tick"] = _now(world)
-	var camp: Vector2i = _hearth(world)
-	_frame(camera, Vector2(camp), 2.0)
+	var tile: Vector2i = _full_stockpile_tile(world)
+	result["full_zone"] = tile.x >= 0
+	if tile.x < 0:
+		tile = _hearth(world)
+	_frame(camera, Vector2(tile), 2.0)
 	for _i: int in 30:
 		await process_frame
 	await _save_q("q4_overview", result)
-	# Click a stockpile zone tile (not a person) to show its diagnosis.
-	var overlay: Dictionary = SimReads.read(world, "get_colony_overlay")
-	var zxs: PackedInt32Array = overlay.get("zone_xs", PackedInt32Array())
-	var zys: PackedInt32Array = overlay.get("zone_ys", PackedInt32Array())
-	if not zxs.is_empty() and tool_node != null:
-		var zone_tile: Vector2i = Vector2i(zxs[0], zys[0])
-		tool_node.call("click_world", Vector2(zone_tile) * TILE + Vector2(8, 8), zone_tile)
+	var causal: Node = main.get_node_or_null("UI/CausalPanel")
+	if causal != null:
+		causal.call("open_tile", tile)
+		(causal as CanvasItem).visible = true
 		for _i: int in 30:
 			await process_frame
 		await _save_q("q4_stockpile", result)
-	elif tool_node != null:
-		# No zone yet: click a person as fallback.
-		var snap: Dictionary = world.call("get_agent_snapshot")
-		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
-		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
-		if not xs.is_empty():
-			var tile: Vector2i = Vector2i(xs[0], ys[0])
-			tool_node.call("click_world", Vector2(tile) * TILE + Vector2(8, 8), tile)
-			for _i: int in 30:
-				await process_frame
-			await _save_q("q4_inspector", result)
+		(causal as CanvasItem).visible = false
 	return result
+
+
+## A tile of the first stockpile zone whose subject diagnosis says it is full, or (-1, -1).
+func _full_stockpile_tile(world: Node) -> Vector2i:
+	if not world.has_method("get_subject_diagnosis"):
+		return Vector2i(-1, -1)
+	var overlay: Dictionary = SimReads.read(world, "get_colony_overlay")
+	var xs: PackedInt32Array = overlay.get("zone_xs", PackedInt32Array())
+	var ys: PackedInt32Array = overlay.get("zone_ys", PackedInt32Array())
+	var ids: PackedInt32Array = overlay.get("zone_ids", PackedInt32Array())
+	for i: int in mini(ids.size(), mini(xs.size(), ys.size())):
+		var diag: Dictionary = world.call("get_subject_diagnosis", "stockpile", int(ids[i]))
+		if Array(diag.get("text_keys", PackedStringArray())).has("DIAG_STOCKPILE_FULL"):
+			return Vector2i(xs[i], ys[i])
+	return Vector2i(-1, -1)
 
 
 # Q5: 지금 내가 뭘 해야 하나
@@ -269,18 +304,20 @@ func _q5_what_to_do(main: Node, world: Node, reads: Node, camera: Camera2D, _too
 		if plaque.has_method("plaque_text"):
 			result["plaque_text"] = str(plaque.call("plaque_text"))
 	await _save_q("q5_overview", result)
-	# Open the goals panel.
-	var goals: Node = main.get_node_or_null("UI/Mux/GoalsPanel")
-	if goals != null and goals.has_method("toggle_panel"):
-		goals.call("toggle_panel")
-		for _i: int in 30:
+	# Hover the plaque so its tooltip shows the request's full reason chain.
+	if plaque != null and plaque.has_method("plaque_tooltip"):
+		result["plaque_tooltip"] = str(plaque.call("plaque_tooltip"))
+		var panel: Control = plaque.get("_panel")
+		var rect: Rect2 = panel.get_global_rect()
+		var spot: Vector2 = rect.position + Vector2(16, rect.size.y - 6)  # lower-left: the tooltip opens below the plaque
+		Input.warp_mouse(spot)
+		var motion: InputEventMouseMotion = InputEventMouseMotion.new()
+		motion.position = spot
+		motion.global_position = spot
+		root.push_input(motion)
+		for _i: int in 90:
 			await process_frame
-		await _save_q("q5_goals", result)
-		goals.hide()
-	# Show alerts with plaque still visible.
-	for _i: int in 10:
-		await process_frame
-	await _save_q("q5_alerts", result)
+	await _save_q("q5_alerts", result)  # the plaque hover with the full chain
 	return result
 
 
