@@ -1778,3 +1778,16 @@ The top active request or next unfinished goal. Returns:
 | `has_marker` | `bool` | Whether a marker tile is provided |
 | `marker_x` | `int` | Marker tile X (when has_marker) |
 | `marker_y` | `int` | Marker tile Y (when has_marker) |
+
+### `get_subject_diagnosis` (kind: String, id: int)
+
+On-demand diagnosis for a stockpile, hearth or room. `kind` is `"stockpile"` (id = zone_id), `"hearth"` (id = settlement_id) or `"room"` (id = room_id). Returns the same format as `get_person_diagnosis`:
+
+| key | type | description |
+|---|---|---|
+| `check_ids` | `PackedStringArray` | Check id from diagnosis.ron |
+| `text_keys` | `PackedStringArray` | Locale text key |
+| `severities` | `PackedInt32Array` | 0=ok, 1=notice, 2=warning, 3=danger |
+| `tags` | `Array[Array[String]]` | Tags per check |
+| `params` | `Array[Dictionary]` | Resolved parameters per check |
+| `chains` | `Array[Array[Dictionary]]` | Chain entries per check |

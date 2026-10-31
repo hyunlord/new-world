@@ -1553,6 +1553,13 @@ impl WorldSimNode {
         super::diagnosis::collect_person_diagnosis(&self.engine, entity_bits as u64)
     }
 
+    /// M-READ: on-demand subject diagnosis (stockpile/hearth/room) with chains.
+    /// `kind` is "stockpile", "hearth" or "room"; `id` is zone_id, settlement_id or room_id.
+    #[func]
+    fn get_subject_diagnosis(&self, kind: GString, id: i64) -> VarDictionary {
+        super::diagnosis::collect_subject_diagnosis(&self.engine, &kind.to_string(), id as u32)
+    }
+
     /// M-READ: why-not records for one person.
     #[func]
     fn get_why_not(&self, entity_bits: i64) -> VarDictionary {

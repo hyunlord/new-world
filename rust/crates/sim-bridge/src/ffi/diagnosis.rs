@@ -142,6 +142,88 @@ pub fn collect_person_diagnosis(engine: &SimEngine, entity_bits: u64) -> VarDict
     dict
 }
 
+// ── Subject diagnosis (stockpile / hearth / room) ─────────────────────
+
+/// Evaluate diagnosis checks for a stockpile, hearth or room on demand.
+/// `kind` is one of "stockpile", "hearth", "room"; `id` is the zone_id,
+/// settlement_id or room_id respectively.
+pub fn collect_subject_diagnosis(engine: &SimEngine, kind: &str, id: u32) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    let data = match sim_core::colony::diagnosis::diagnosis_data() {
+        Some(d) => d,
+        None => return dict,
+    };
+    let entries = match kind {
+        "stockpile" => sim_systems::runtime::diagnosis::evaluate_stockpile(
+            &engine.world,
+            &engine.resources,
+            id,
+            data,
+        ),
+        "hearth" => sim_systems::runtime::diagnosis::evaluate_hearth(
+            &engine.world,
+            &engine.resources,
+            id,
+            data,
+        ),
+        "room" => sim_systems::runtime::diagnosis::evaluate_room(
+            &engine.world,
+            &engine.resources,
+            id,
+            data,
+        ),
+        _ => return dict,
+    };
+
+    let mut check_ids = PackedStringArray::new();
+    let mut text_keys = PackedStringArray::new();
+    let mut severities = PackedInt32Array::new();
+    let mut tags_arr = VarArray::new();
+    let mut chains_arr = VarArray::new();
+    let mut params_arr = VarArray::new();
+
+    for entry in &entries {
+        check_ids.push(&GString::from(&entry.check_id));
+        text_keys.push(&GString::from(&entry.text_key));
+        severities.push(i32::from(entry.severity));
+
+        let mut tag_list = VarArray::new();
+        for tag in &entry.tags {
+            tag_list.push(&Variant::from(GString::from(tag.as_str())));
+        }
+        tags_arr.push(&Variant::from(tag_list));
+
+        let mut param_dict = VarDictionary::new();
+        for (k, v) in &entry.params {
+            param_dict.set(GString::from(k.as_str()), GString::from(v.as_str()));
+        }
+        params_arr.push(&Variant::from(param_dict));
+
+        let mut chain_list = VarArray::new();
+        for link in &entry.chain {
+            let mut link_dict = VarDictionary::new();
+            link_dict.set("subject_kind", i32::from(link.subject_kind));
+            link_dict.set("check_id", GString::from(&link.check_id));
+            link_dict.set("text_key", GString::from(&link.text_key));
+            link_dict.set("severity", i32::from(link.severity));
+            let mut lp = VarDictionary::new();
+            for (k, v) in &link.params {
+                lp.set(GString::from(k.as_str()), GString::from(v.as_str()));
+            }
+            link_dict.set("params", lp);
+            chain_list.push(&Variant::from(link_dict));
+        }
+        chains_arr.push(&Variant::from(chain_list));
+    }
+    dict.set("check_ids", check_ids);
+    dict.set("text_keys", text_keys);
+    dict.set("severities", severities);
+    dict.set("tags", tags_arr);
+    dict.set("params", params_arr);
+    dict.set("chains", chains_arr);
+    dict
+}
+
 // ── Why-not records ────────────────────────────────────────────────────
 
 /// Collect the latest why-not records for a person.
@@ -279,10 +361,7 @@ fn find_marker_tile(engine: &SimEngine, action_key: &str) -> Option<(u32, u32)> 
                         for (sx, sy) in &[(1i32, 1i32), (1, -1), (-1, 1), (-1, -1)] {
                             let x = cx as i32 + dx as i32 * sx;
                             let y = cy as i32 + dy as i32 * sy;
-                            if x >= 0
-                                && y >= 0
-                                && super::colony::can_place(res, kind_name, x, y)
-                            {
+                            if x >= 0 && y >= 0 && super::colony::can_place(res, kind_name, x, y) {
                                 return Some((x as u32, y as u32));
                             }
                         }

@@ -243,6 +243,187 @@ pub fn evaluate_person(
     results
 }
 
+// ── Stockpile fact reader ──────────────────────────────────────────────
+
+/// Read a named fact for a stockpile zone by zone id.
+fn stockpile_fact(resources: &SimResources, zone_id: u32, fact_name: &str) -> Option<i64> {
+    let col = &resources.colony;
+    let zone = col.zones.get(&zone_id)?;
+    if zone.kind != ZoneKind::Stockpile {
+        return None;
+    }
+    match fact_name {
+        "food_stored" => {
+            let mut count: i64 = 0;
+            for pos in &zone.tiles {
+                if let Some(stack) = col.ground_items.get(pos) {
+                    count += i64::from(stack.count);
+                }
+            }
+            Some(count)
+        }
+        "free_cells" => {
+            let occupied = zone
+                .tiles
+                .iter()
+                .filter(|pos| col.ground_items.contains_key(pos))
+                .count();
+            Some((zone.tiles.len() - occupied) as i64)
+        }
+        "ground_items_nearby" => {
+            // Items on ground within 8 tiles of the zone but not in any stockpile.
+            let stockpile_tiles: std::collections::BTreeSet<(u32, u32)> = col
+                .zones
+                .values()
+                .filter(|z| z.kind == ZoneKind::Stockpile)
+                .flat_map(|z| z.tiles.iter().copied())
+                .collect();
+            let center = zone.tiles.iter().next().copied().unwrap_or((0, 0));
+            let count: i64 = col
+                .ground_items
+                .iter()
+                .filter(|(pos, _)| {
+                    !stockpile_tiles.contains(pos)
+                        && (pos.0 as i64 - center.0 as i64).unsigned_abs() <= 8
+                        && (pos.1 as i64 - center.1 as i64).unsigned_abs() <= 8
+                })
+                .map(|(_, s)| i64::from(s.count))
+                .sum();
+            Some(count)
+        }
+        "haulers_assigned" => Some(col.reservations.len() as i64),
+        _ => None,
+    }
+}
+
+/// Evaluate stockpile checks for a zone.
+pub fn evaluate_stockpile(
+    world: &hecs::World,
+    resources: &SimResources,
+    zone_id: u32,
+    data: &DiagnosisData,
+) -> Vec<DiagnosisResultEntry> {
+    let checks = match data.subjects.get(&SubjectKind::Stockpile) {
+        Some(c) => c,
+        None => return Vec::new(),
+    };
+    let reader = |f: &str| stockpile_fact(resources, zone_id, f);
+    let mut results = Vec::new();
+    for check in checks {
+        if let Some((params, true)) = evaluate_check(check, &reader) {
+            let chain = build_chain(world, resources, data, &check.next, 0);
+            results.push(DiagnosisResultEntry {
+                check_id: check.id.clone(),
+                text_key: check.text_key.clone(),
+                severity: check.severity.code(),
+                params,
+                tags: check.tags.clone(),
+                chain,
+            });
+        }
+    }
+    results
+}
+
+// ── Hearth fact reader ────────────────────────────────────────────────
+
+/// Read a named fact for a hearth by settlement id.
+fn hearth_fact(resources: &SimResources, settlement_id: u32, fact_name: &str) -> Option<i64> {
+    let fire = resources.fires.get(&settlement_id);
+    match fact_name {
+        "lit" => Some(if fire.is_some_and(|f| f.lit) { 1 } else { 0 }),
+        "fuel_at_hearth" => Some(fire.map_or(0, |_| 1)),
+        "fuel_stock_days" => {
+            let mut fw: i64 = 0;
+            for stack in resources.colony.ground_items.values() {
+                if is_firewood_kind(stack.kind) {
+                    fw += i64::from(stack.count);
+                }
+            }
+            Some(fw)
+        }
+        _ => None,
+    }
+}
+
+/// Evaluate hearth checks for a settlement.
+pub fn evaluate_hearth(
+    world: &hecs::World,
+    resources: &SimResources,
+    settlement_id: u32,
+    data: &DiagnosisData,
+) -> Vec<DiagnosisResultEntry> {
+    let checks = match data.subjects.get(&SubjectKind::Hearth) {
+        Some(c) => c,
+        None => return Vec::new(),
+    };
+    let reader = |f: &str| hearth_fact(resources, settlement_id, f);
+    let mut results = Vec::new();
+    for check in checks {
+        if let Some((params, true)) = evaluate_check(check, &reader) {
+            let chain = build_chain(world, resources, data, &check.next, 0);
+            results.push(DiagnosisResultEntry {
+                check_id: check.id.clone(),
+                text_key: check.text_key.clone(),
+                severity: check.severity.code(),
+                params,
+                tags: check.tags.clone(),
+                chain,
+            });
+        }
+    }
+    results
+}
+
+// ── Room fact reader ──────────────────────────────────────────────────
+
+/// Read a named fact for a room by room id.
+fn room_fact(resources: &SimResources, room_id: u32, fact_name: &str) -> Option<i64> {
+    let col = &resources.colony;
+    let room = col.rooms.get(&room_id)?;
+    match fact_name {
+        "roofed" => Some(if room.roofed { 1 } else { 0 }),
+        "bed_count" => {
+            let count = room
+                .tiles
+                .iter()
+                .filter(|tile| col.beds.contains_key(tile))
+                .count();
+            Some(count as i64)
+        }
+        _ => None,
+    }
+}
+
+/// Evaluate room checks for a room.
+pub fn evaluate_room(
+    world: &hecs::World,
+    resources: &SimResources,
+    room_id: u32,
+    data: &DiagnosisData,
+) -> Vec<DiagnosisResultEntry> {
+    let checks = match data.subjects.get(&SubjectKind::Room) {
+        Some(c) => c,
+        None => return Vec::new(),
+    };
+    let reader = |f: &str| room_fact(resources, room_id, f);
+    let mut results = Vec::new();
+    for check in checks {
+        if let Some((params, true)) = evaluate_check(check, &reader) {
+            let chain = build_chain(world, resources, data, &check.next, 0);
+            results.push(DiagnosisResultEntry {
+                check_id: check.id.clone(),
+                text_key: check.text_key.clone(),
+                severity: check.severity.code(),
+                params,
+                tags: check.tags.clone(),
+                chain,
+            });
+        }
+    }
+    results
+}
+
 // ── Check evaluation ───────────────────────────────────────────────────
 
 /// Evaluate a single check against a fact reader.

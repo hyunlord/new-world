@@ -98,7 +98,7 @@ fn why_not_bytes_per_person_within_budget() {
 
     let mut total_bytes: usize = 0;
     let mut person_count: usize = 0;
-    for (_, wn) in &engine.resources.mind.why_not {
+    for wn in engine.resources.mind.why_not.values() {
         total_bytes += wn.byte_size();
         person_count += 1;
     }

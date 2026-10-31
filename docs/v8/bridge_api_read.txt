@@ -86,6 +86,7 @@ func WorldSimNode.get_society_snapshot
 func WorldSimNode.get_space
 func WorldSimNode.get_steward
 func WorldSimNode.get_story
+func WorldSimNode.get_subject_diagnosis
 func WorldSimNode.get_tallies
 func WorldSimNode.get_teach_orders
 func WorldSimNode.get_teach_suggestion
