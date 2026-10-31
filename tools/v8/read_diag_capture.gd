@@ -185,42 +185,67 @@ func _q2_not_working(main: Node, world: Node, reads: Node, camera: Camera2D, too
 
 
 # Q3: 왜 이 사람이 춥나 / 왜 화덕이 꺼졌나
+# Must be a real cold scene: winter with hearth out or no firewood, NOT a flee scene.
 func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 3, "images": [], "seed": -1, "tick": -1}
-	# Try seeds to find a cold person in winter.
+	# Try seeds to find a cold person in winter whose hearth is out or has no firewood.
+	# Reject seeds where the cold person is merely fleeing (not a true cold scene).
 	for seed: int in range(8):
 		reads.call("mutate_raw", "reset_world", [seed])
 		for _i: int in 10:
 			await process_frame
-		world.call("advance_ticks", 14400)  # day 10
+		# Advance deeper into winter (day 11) for a firewood-exhaustion cold scene.
+		world.call("advance_ticks", 15840)
 		var snap: Dictionary = world.call("get_agent_snapshot")
-		var cold_flags: PackedByteArray = snap.get("cold", PackedByteArray())
-		var has_cold: bool = false
-		for flag: int in cold_flags:
-			if flag != 0:
-				has_cold = true
+		var cold_flags: PackedByteArray = snap.get("colds", PackedByteArray())
+		var fleeing: PackedByteArray = snap.get("fleeing", PackedByteArray())
+		# Find a cold person who is NOT fleeing.
+		var cold_idx: int = -1
+		for i: int in mini(cold_flags.size(), fleeing.size()):
+			if cold_flags[i] != 0 and fleeing[i] == 0:
+				cold_idx = i
 				break
-		if has_cold:
-			result["seed"] = seed
-			result["tick"] = _now(world)
-			break
+		if cold_idx < 0:
+			continue
+		# Verify the hearth is out or firewood is zero (a real cold scene).
+		var settlements: Dictionary = SimReads.read(world, "get_settlement_snapshot")
+		var fire_lit: PackedByteArray = settlements.get("fire_lit", PackedByteArray())
+		var wood_stocks: PackedInt32Array = settlements.get("wood_stocks", PackedInt32Array())
+		var hearth_out: bool = false
+		for fi: int in fire_lit.size():
+			if fire_lit[fi] == 0:
+				hearth_out = true
+				break
+		var no_firewood: bool = false
+		for wi: int in wood_stocks.size():
+			if wood_stocks[wi] == 0:
+				no_firewood = true
+				break
+		if not hearth_out and not no_firewood:
+			continue
+		result["seed"] = seed
+		result["tick"] = _now(world)
+		result["hearth_out"] = hearth_out
+		result["no_firewood"] = no_firewood
+		break
 	if result["seed"] < 0:
-		result["note"] = "no cold person found in seeds 0-7 by day 10"
+		result["note"] = "no real cold scene (hearth out or no firewood) found in seeds 0-7 by day 11"
 		return result
 	var camp: Vector2i = _hearth(world)
 	_frame(camera, Vector2(camp), 2.0)
 	for _i: int in 30:
 		await process_frame
 	await _save_q("q3_overview", result)
-	# Click a cold person.
+	# Click a cold (non-fleeing) person.
 	if tool_node != null:
 		var snap: Dictionary = world.call("get_agent_snapshot")
 		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
-		var cold_flags: PackedByteArray = snap.get("cold", PackedByteArray())
+		var cold_flags: PackedByteArray = snap.get("colds", PackedByteArray())
+		var fleeing: PackedByteArray = snap.get("fleeing", PackedByteArray())
 		var target_idx: int = -1
-		for i: int in mini(xs.size(), cold_flags.size()):
-			if cold_flags[i] != 0:
+		for i: int in mini(xs.size(), mini(cold_flags.size(), fleeing.size())):
+			if cold_flags[i] != 0 and fleeing[i] == 0:
 				target_idx = i
 				break
 		if target_idx >= 0:
@@ -272,6 +297,7 @@ func _q4_stockpile(main: Node, world: Node, reads: Node, camera: Camera2D, tool_
 
 
 # Q5: 지금 내가 뭘 해야 하나
+# M-READ: capture the "지금 할 일" plaque (TaskPlaque) which is the primary Q5 surface.
 func _q5_what_to_do(main: Node, world: Node, reads: Node, camera: Camera2D, _tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 5, "images": [], "seed": 0, "tick": -1}
 	reads.call("mutate_raw", "reset_world", [0])
@@ -283,6 +309,12 @@ func _q5_what_to_do(main: Node, world: Node, reads: Node, camera: Camera2D, _too
 	_frame(camera, Vector2(camp), 2.0)
 	for _i: int in 30:
 		await process_frame
+	# M-READ: the plaque should be visible now with the current task.
+	var plaque: Node = main.get_node_or_null("UI/TaskPlaque")
+	if plaque != null:
+		result["plaque_visible"] = (plaque as Control).visible
+		if plaque.has_method("plaque_text"):
+			result["plaque_text"] = str(plaque.call("plaque_text"))
 	await _save_q("q5_overview", result)
 	# Open the goals panel.
 	var goals: Node = main.get_node_or_null("UI/Mux/GoalsPanel")
@@ -292,7 +324,7 @@ func _q5_what_to_do(main: Node, world: Node, reads: Node, camera: Camera2D, _too
 			await process_frame
 		await _save_q("q5_goals", result)
 		goals.hide()
-	# Show alerts.
+	# Show alerts with plaque still visible.
 	for _i: int in 10:
 		await process_frame
 	await _save_q("q5_alerts", result)

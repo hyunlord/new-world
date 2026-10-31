@@ -211,3 +211,14 @@ func activate(id: String) -> void:
 func dismiss(id: String) -> void:
 	evaluator.dismiss(id)
 	_rebuild()
+
+
+## M-READ: the formatted text of every currently active alert (for plaque deduplication).
+func active_alert_texts() -> PackedStringArray:
+	var texts: PackedStringArray = PackedStringArray()
+	for alert: Dictionary in _last_rows:
+		var key: String = str(alert.get("text_key", ""))
+		var facts: Dictionary = alert.get("facts", {})
+		if not key.is_empty():
+			texts.append(_tr(key).format(facts))
+	return texts

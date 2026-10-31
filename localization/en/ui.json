@@ -1268,5 +1268,18 @@
 	"READ_STEWARD_DOING": "Steward is handling it",
 	"READ_STEWARD_TODO": "To do",
 	"READ_WHY_NOT_WANTED": "Wanted to",
-	"READ_WHY_NOT_BLOCKED": "Blocked"
+	"READ_WHY_NOT_BLOCKED": "Blocked",
+
+	"READ_PLAQUE_FMT": "{voice}: {text} — {status}: {action}",
+	"READ_PLAQUE_CHAIN_FMT": "{voice}: {text} ← {chain}",
+	"READ_PLAQUE_VIEW": "View",
+	"READ_WHY_NOT_FMT": "Wanted: {wanted} — Blocked: {blocked}({detail})",
+	"READ_WHY_NOT_SHORT_FMT": "Wanted: {wanted} — Blocked: {blocked}",
+	"READ_DIAG_CHAIN_SEP": " ← ",
+	"READ_NO_TASK": "No issues",
+	"READ_MARKER_LABEL": "Here",
+	"CHRON_GROUP_COLD_FMT": "{count} hurt by cold ← {cause}",
+	"CHRON_GROUP_STARVE_FMT": "{count} starving ← {cause}",
+	"CHRON_GROUP_GENERIC_FMT": "{count} events — {kind_text} ← {cause}",
+	"CHRON_GROUP_EXPAND": "Show details"
 }

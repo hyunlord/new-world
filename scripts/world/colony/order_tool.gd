@@ -625,6 +625,30 @@ func click_world(world_pos: Vector2, tile: Vector2i) -> void:
 		if causal != null:
 			causal.visible = false
 		return
+	# M-READ: clicking a stockpile zone tile or hearth tile opens the causal panel with diagnosis.
+	var panel: Node = get_node_or_null("/root/Main/UI/CausalPanel")
+	if panel != null and _world_sim.has_method("get_subject_diagnosis"):
+		var _is_zone: bool = false
+		var _is_hearth: bool = false
+		var ov: Dictionary = SimReads.read(_world_sim, "get_colony_overlay")
+		var zxs: PackedInt32Array = ov.get("zone_xs", PackedInt32Array())
+		var zys: PackedInt32Array = ov.get("zone_ys", PackedInt32Array())
+		for zi: int in mini(zxs.size(), zys.size()):
+			if zxs[zi] == tile.x and zys[zi] == tile.y:
+				_is_zone = true
+				break
+		if not _is_zone:
+			var bsnap: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
+			var bxs: PackedInt32Array = bsnap.get("xs", PackedInt32Array())
+			var bys: PackedInt32Array = bsnap.get("ys", PackedInt32Array())
+			var bkinds: PackedByteArray = bsnap.get("kinds", PackedByteArray())
+			for bi: int in mini(bkinds.size(), mini(bxs.size(), bys.size())):
+				if bkinds[bi] == 0 and absi(bxs[bi] - tile.x) <= 1 and absi(bys[bi] - tile.y) <= 1:
+					_is_hearth = true
+					break
+		if _is_zone or _is_hearth:
+			panel.call("open_tile", tile)
+			return
 	var tile_food: Dictionary = _world_sim.call("get_tile_food", tile.x, tile.y)
 	if not tile_food.get("kinds", []).is_empty():
 		_show_item_tile(tile)

@@ -106,6 +106,9 @@ var _badge_leaders: BadgeLeaders
 var _household_key: int = 0
 ## AgentId → household key from the last kin columns (looked up when markers refresh, so new people get theirs).
 var _household_of: Dictionary = {}
+## M-READ: AgentIds highlighted by chronicle group click; drawn as cyan rings.
+var _highlight_ids: PackedInt64Array = PackedInt64Array()
+const HIGHLIGHT_RGBA: Color = Color(0.4, 0.85, 0.95, 0.8)
 
 
 class BadgeLeaders:
@@ -188,11 +191,24 @@ func _ready() -> void:
 		_world_sim.connect("world_reset", _on_world_reset)
 
 
+## M-READ: highlight people by AgentId (chronicle group click); drawn as cyan rings.
+func set_highlights(ids: PackedInt64Array) -> void:
+	_highlight_ids = ids
+	queue_redraw()
+
+
+## M-READ: clear all highlights.
+func clear_highlights() -> void:
+	_highlight_ids = PackedInt64Array()
+	queue_redraw()
+
+
 func _on_world_reset() -> void:
 	for person: Person in _persons.values():
 		person.queue_free()
 	_persons.clear()
 	_clear_coincident_badges()
+	_highlight_ids = PackedInt64Array()
 	queue_redraw()
 	_household_key = 0
 	_household_of = {}
@@ -880,6 +896,18 @@ func household_of(agent_id: int) -> int:
 
 
 func _draw() -> void:
+	# M-READ: draw highlight rings (people) and tile outlines for chronicle group subjects.
+	if not _highlight_ids.is_empty():
+		var onepx: float = 1.0 / maxf(_zoom, 0.01)
+		var tile_outline: Color = Color(HIGHLIGHT_RGBA.r, HIGHLIGHT_RGBA.g, HIGHLIGHT_RGBA.b, 0.45)
+		for person: Person in _persons.values():
+			if _highlight_ids.has(person.agent_id):
+				# Ring around the person.
+				var centre: Vector2 = person.position + Vector2(0, -28)
+				draw_arc(centre, 18.0 * onepx, 0.0, TAU, 24, HIGHLIGHT_RGBA, 2.0 * onepx)
+				# Tile outline around the person's tile.
+				var tile_origin: Vector2 = Vector2(person.tile) * float(View.TILE)
+				draw_rect(Rect2(tile_origin, Vector2(View.TILE, View.TILE)), tile_outline, false, 1.5 * onepx)
 	if not _lod:
 		if _zoom < 1.0 and _font != null:
 			for badge: Dictionary in _coincident_badges:

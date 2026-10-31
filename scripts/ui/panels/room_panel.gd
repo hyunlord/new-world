@@ -16,6 +16,7 @@ const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
+const DiagnosisText = preload("res://scripts/ui/panels/diagnosis_text.gd")
 const PANEL_WIDTH: float = 520.0
 ## Dropdown entries: the bridge role names `cmd_set_room_role` takes, and their text.
 const ROLE_CHOICES: Array[String] = ["auto", "bedroom", "storehouse", "workshop", "hall", "unassigned"]
@@ -34,6 +35,7 @@ var _role_label: Label
 var _role: OptionButton
 var _lines: Label
 var _why: Label
+var _diag_label: Label
 var _close: Button
 
 
@@ -75,6 +77,13 @@ func _ready() -> void:
 	_why.custom_minimum_size.x = PANEL_WIDTH - 32
 	_why.add_theme_color_override("font_color", MUTED)
 	column.add_child(_why)
+	_diag_label = Label.new()
+	_diag_label.name = "RoomDiagnosis"
+	_diag_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	_diag_label.custom_minimum_size.x = PANEL_WIDTH - 32
+	_diag_label.add_theme_color_override("font_color", Color("a8d888"))
+	_diag_label.hide()
+	column.add_child(_diag_label)
 	var why_button := Button.new()
 	why_button.name = "Why"
 	why_button.text = _loc("MUX_WHY")
@@ -166,6 +175,14 @@ func refresh() -> void:
 	]
 	_lines.text = KoreanText.words("\n".join(lines))
 	_why.text = KoreanText.words(why_line(role_code, info, beds, _locale))
+	# M-READ: show room diagnosis from get_subject_diagnosis("room", room_id).
+	_diag_label.hide()
+	if _world_sim != null and _world_sim.has_method("get_subject_diagnosis"):
+		var diag: Dictionary = _world_sim.get_subject_diagnosis("room", _room)
+		var room_diag: String = DiagnosisText.headline_and_next(diag, _locale)
+		if not room_diag.is_empty():
+			_diag_label.text = KoreanText.words(room_diag)
+			_diag_label.show()
 	_close.text = _loc("UI_CLOSE")
 
 

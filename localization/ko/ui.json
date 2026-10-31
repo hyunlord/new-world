@@ -1268,5 +1268,18 @@
 	"READ_STEWARD_DOING": "집사가 하고 있어요",
 	"READ_STEWARD_TODO": "할 일",
 	"READ_WHY_NOT_WANTED": "하려던 것",
-	"READ_WHY_NOT_BLOCKED": "막힘"
+	"READ_WHY_NOT_BLOCKED": "막힘",
+
+	"READ_PLAQUE_FMT": "{voice}: {text} — {status}: {action}",
+	"READ_PLAQUE_CHAIN_FMT": "{voice}: {text} ← {chain}",
+	"READ_PLAQUE_VIEW": "보기",
+	"READ_WHY_NOT_FMT": "하려던 것: {wanted} — 막힘: {blocked}({detail})",
+	"READ_WHY_NOT_SHORT_FMT": "하려던 것: {wanted} — 막힘: {blocked}",
+	"READ_DIAG_CHAIN_SEP": " ← ",
+	"READ_NO_TASK": "문제 없음",
+	"READ_MARKER_LABEL": "여기",
+	"CHRON_GROUP_COLD_FMT": "{count}명이 추위로 다침 ← {cause}",
+	"CHRON_GROUP_STARVE_FMT": "{count}명이 굶주림 ← {cause}",
+	"CHRON_GROUP_GENERIC_FMT": "{count}건 — {kind_text} ← {cause}",
+	"CHRON_GROUP_EXPAND": "자세히 보기"
 }

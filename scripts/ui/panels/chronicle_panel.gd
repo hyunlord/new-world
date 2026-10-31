@@ -2,7 +2,11 @@
 #   per tick (even while hidden), merges porter groups, keeps the last 60 visible notable rows; links go to the inspector.
 #   assets/ui/chronicle_feed.json controls kind visibility before retention; personal records and Why remain unfiltered.
 #   NOTABLE lists every kind the feed supports (M3 adds 23 RoomFormed; M4 adds 24 ToolBroke, 25 KnowledgeLearned,
-#   26 KnowledgeDiscovered, 27 KnowledgeAtRisk, 28 KnowledgeLost). M4: a KnowledgeLost row from the last day shows the
+#   26 KnowledgeDiscovered, 27 KnowledgeAtRisk, 28 KnowledgeLost).
+# M-READ: consecutive entries with the same kind and cause kind within one in-game day group into one
+#   line with a count; clicking a group lists its entries and highlights their subjects on the map.
+#   Grouping rules live in assets/ui/chronicle_grouping.json.
+# M4: a KnowledgeLost row from the last day shows the
 #   toast "기술 소실: 문 만들기 (마지막: 카토)" on the order bar (UI/OrderBar show_toast).
 # M5 (goal 3.4–3.5): NOTABLE adds 29–37 (pressures, hunts, fights, breakdowns, drafts, wolves, illness); an entry
 #   with a cause link ends in "→ 왜?", whose click opens the chain (UI/WhyPanel, why_panel.gd, created here beside
@@ -17,6 +21,7 @@
 #   get_neighbours; signal world_reset.
 extends Control
 
+const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
@@ -25,6 +30,7 @@ const WhyPanel = preload("res://scripts/ui/panels/why_panel.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 const FEED_PATH: String = "res://assets/ui/chronicle_feed.json"
+const GROUPING_PATH: String = "res://assets/ui/chronicle_grouping.json"
 const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
 	38, 39, 40, 41, 42, 43, 44, 45, 46, 47]
 ## M5: the kind groups of the filter (0 = all): 압력, 사냥·늑대, 다툼·기분, 지식, 삶 (every other notable kind).
@@ -56,10 +62,17 @@ var _person_button: Button
 var _year_label: Label
 var _year_shown: int = -1
 var _year_key: int = -2
+## M-READ: grouping rules loaded from chronicle_grouping.json.
+var _grouping_rules: Dictionary = {}
+## M-READ: subjects highlighted on the map from an expanded group (cleared on close or new group).
+var _highlighted_subjects: PackedInt64Array = PackedInt64Array()
 
 func _ready() -> void:
 	if not configure_feed_visibility(JSON.parse_string(FileAccess.get_file_as_string(FEED_PATH))):
 		push_error("Invalid chronicle feed configuration: " + FEED_PATH)
+	var grouping_raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(GROUPING_PATH))
+	if grouping_raw is Dictionary:
+		_grouping_rules = grouping_raw
 	_world = get_node_or_null("/root/Main/WorldSim")
 	_locale = get_node_or_null("/root/Locale")
 	if _world != null:
@@ -203,12 +216,28 @@ func _refresh() -> void:
 	_refresh_year()
 	var info: Dictionary = SimReads.read(_world, "get_world_info") if _world != null and _world.has_method("get_world_info") else {}
 	var person: int = _selected_person()
-	var lines: Array[String] = []
+	var filtered: Array[Dictionary] = []
 	for index: int in range(_entries.size() - 1, -1, -1):
 		var row: Dictionary = _entries[index]
 		if not passes(row, _filter, person if _person_only else -1):
 			continue
-		lines.append(Chronicle.line(row, -1, _locale, info, true, true))
+		filtered.append(row)
+	var ticks_per_day: int = maxi(1, int(info.get("ticks_per_day", 1440)))
+	var grouped: Array = _group_entries(filtered, ticks_per_day)
+	var lines: Array[String] = []
+	for item: Variant in grouped:
+		if item is Dictionary and bool((item as Dictionary).get("_group", false)):
+			var g: Dictionary = item as Dictionary
+			var format_key: String = str(g.get("format_key", "CHRON_GROUP_GENERIC_FMT"))
+			var count: int = int(g.get("count", 0))
+			var kind_text: String = _kind_name(int(g.get("kind", -1)))
+			var cause_text: String = _cause_name(int(g.get("kind", -1)), int(g.get("cause", -1)))
+			var group_text: String = _loc_trf(format_key, {"count": count, "kind_text": kind_text, "cause": cause_text})
+			var subjects: PackedInt64Array = g.get("subjects", PackedInt64Array())
+			var subject_str: String = ",".join(Array(subjects).map(func(s: int) -> String: return str(s)))
+			lines.append("[url=group:%s]%s[/url]" % [subject_str, group_text])
+		else:
+			lines.append(Chronicle.line(item as Dictionary, -1, _locale, info, true, true))
 	_body.text = "\n\n".join(lines)
 	_fit_body_lines.call_deferred()
 
@@ -312,8 +341,18 @@ func toggle_visible() -> void:
 		_refresh()
 
 func _follow_link(meta: Variant) -> void:
-	if str(meta).begins_with("why:"):
-		open_why(int(str(meta).split(":")[1]))
+	var text: String = str(meta)
+	if text.begins_with("group:"):
+		# M-READ: highlight group subjects on the map.
+		var parts: PackedStringArray = text.substr(6).split(",")
+		var subjects: PackedInt64Array = PackedInt64Array()
+		for part: String in parts:
+			if part.is_valid_int():
+				subjects.append(int(part))
+		_highlight_subjects(subjects)
+		return
+	if text.begins_with("why:"):
+		open_why(int(text.split(":")[1]))
 		return
 	var inspector: Node = get_node_or_null("../AgentInspectorPanel")
 	if inspector != null:
@@ -332,5 +371,105 @@ func _reset() -> void:
 	_pending_porter = {}
 	_unknown_kinds = 0
 	_year_key = -2
+	_clear_highlights()
 	_refresh()
 	hide()
+
+
+## M-READ: group consecutive entries with the same kind and cause within one in-game day.
+## Returns an array of items: each is either a single entry dict or a group dict (with `_group: true`).
+func _group_entries(entries: Array[Dictionary], ticks_per_day: int) -> Array:
+	var groupable: Dictionary = _grouping_rules.get("groupable_kinds", {})
+	var min_count: int = int(_grouping_rules.get("min_consecutive", 2))
+	if groupable.is_empty():
+		var result: Array = []
+		result.assign(entries)
+		return result
+	var result: Array = []
+	var i: int = 0
+	while i < entries.size():
+		var entry: Dictionary = entries[i]
+		var kind: int = int(entry.get("kind", -1))
+		var cause: int = int(entry.get("cause", -1))
+		var tick: int = int(entry.get("tick", 0))
+		@warning_ignore("integer_division")
+		var day: int = tick / maxi(1, ticks_per_day)
+		if not groupable.has(str(kind)):
+			result.append(entry)
+			i += 1
+			continue
+		# Collect consecutive entries with same kind and cause in the same day.
+		var group: Array[Dictionary] = [entry]
+		var j: int = i + 1
+		while j < entries.size():
+			var next: Dictionary = entries[j]
+			var next_kind: int = int(next.get("kind", -1))
+			var next_cause: int = int(next.get("cause", -1))
+			var next_tick: int = int(next.get("tick", 0))
+			@warning_ignore("integer_division")
+			var next_day: int = next_tick / maxi(1, ticks_per_day)
+			if next_kind != kind or next_cause != cause or next_day != day:
+				break
+			group.append(next)
+			j += 1
+		if group.size() >= min_count:
+			var subjects: PackedInt64Array = PackedInt64Array()
+			for g_entry: Dictionary in group:
+				var subject: int = int(g_entry.get("subject", -1))
+				if subject >= 0 and not subjects.has(subject):
+					subjects.append(subject)
+			var rule: Dictionary = groupable.get(str(kind), {}) as Dictionary
+			result.append({"_group": true, "entries": group, "count": group.size(),
+				"kind": kind, "cause": cause, "subjects": subjects,
+				"format_key": str(rule.get("format_key", "CHRON_GROUP_GENERIC_FMT"))})
+			i = j
+		else:
+			for g_entry: Dictionary in group:
+				result.append(g_entry)
+			i = j
+	return result
+
+
+func _loc_trf(key: String, params: Dictionary) -> String:
+	if _locale != null and _locale.has_method("trf"):
+		var result: String = str(_locale.call("trf", key, params))
+		return KoreanText.words(result) if result != key else Chronicle.loc(_locale, key)
+	return key
+
+
+## M-READ: chronicle kind name for grouping display.
+func _kind_name(kind: int) -> String:
+	var key: String = "CHRON_KIND_%d" % kind
+	var text: String = Chronicle.loc(_locale, key)
+	return text if text != key else str(kind)
+
+
+## M-READ: chronicle cause description for grouping display.
+func _cause_name(kind: int, cause: int) -> String:
+	if kind == 0:
+		return Chronicle.death(cause, _locale) if cause >= 0 else ""
+	return str(cause) if cause >= 0 else ""
+
+
+## M-READ: highlight group subjects on the map (people ringed) until closed.
+func _highlight_subjects(subjects: PackedInt64Array) -> void:
+	_clear_highlights()
+	_highlighted_subjects = subjects
+	var agent_layer: Node = get_node_or_null("/root/Main/ColonyView/AgentLayer")
+	if agent_layer != null and agent_layer.has_method("set_highlights"):
+		agent_layer.call("set_highlights", subjects)
+
+
+## M-READ: clear subject highlights.
+func _clear_highlights() -> void:
+	if _highlighted_subjects.is_empty():
+		return
+	var agent_layer: Node = get_node_or_null("/root/Main/ColonyView/AgentLayer")
+	if agent_layer != null and agent_layer.has_method("clear_highlights"):
+		agent_layer.call("clear_highlights")
+	_highlighted_subjects = PackedInt64Array()
+
+
+## The grouping rules dict (for tests).
+func grouping_rules() -> Dictionary:
+	return _grouping_rules

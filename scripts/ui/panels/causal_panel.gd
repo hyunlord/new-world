@@ -1,4 +1,5 @@
 # Explicit tile explanation: bounded, anchored popup; empty requests show a two-second toast.
+# M-READ: open_mind accepts an optional why_not dictionary and shows the why-not line below candidates.
 # Bridge: get_tile_causal_history directly; get_knowledge_waits/get_colony_overlay through SimReads.
 extends Control
 
@@ -17,6 +18,7 @@ const Content = preload("res://scripts/ui/content_context.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
+const DiagnosisText = preload("res://scripts/ui/panels/diagnosis_text.gd")
 
 const PANEL_TITLE_KEY := "UI_CAUSAL_PANEL_TITLE"
 const PANEL_WIDTH := 420.0
@@ -104,9 +106,19 @@ func open_tile(tile: Vector2i) -> void:
 	var world: Node = get_node_or_null("/root/Main/WorldSim")
 	if world != null:
 		display_history(world.get_tile_causal_history(tile.x, tile.y), tile.x, tile.y)
+		# M-READ: show per-instance stockpile or hearth diagnosis.
+		if world.has_method("get_subject_diagnosis"):
+			var subject: Dictionary = _tile_subject(world, tile)
+			if not subject.is_empty():
+				var diag: Dictionary = world.get_subject_diagnosis(str(subject["kind"]), int(subject["id"]))
+				var line: String = DiagnosisText.headline_and_next(diag, get_node_or_null("/root/Locale"))
+				if not line.is_empty():
+					var diag_label: Label = _add_line(line)
+					diag_label.add_theme_color_override("font_color", Color("a8d888"))
 
 # The inspector supplies its cached read; opening this panel never evaluates policy.
-func open_mind(mind: Dictionary, tile: Vector2i) -> void:
+# M-READ: accepts an optional why_not dictionary to show the blocked-candidate line.
+func open_mind(mind: Dictionary, tile: Vector2i, why_not: Dictionary = {}) -> void:
 	_food_tiles.clear()
 	_anchor_tile = tile
 	for child: Node in _history_container.get_children():
@@ -119,6 +131,11 @@ func open_mind(mind: Dictionary, tile: Vector2i) -> void:
 	for index: int in range(mini(3, candidates.size())):
 		var candidate: Dictionary = candidates[index]
 		_add_line(_ltr("MIND_CANDIDATE_FMT").format({"rank": index + 1, "choice": _mind_name(str(candidate.get("name_key", ""))), "score": int(candidate.get("score", 0))}))
+	# M-READ: show why-not line if available.
+	var why_line: String = DiagnosisText.why_not_line(why_not, get_node_or_null("/root/Locale"))
+	if not why_line.is_empty():
+		var why_label: Label = _add_line(why_line)
+		why_label.add_theme_color_override("font_color", Color("e8a848"))
 	get_parent().move_child(self, get_parent().get_child_count() - 1)
 	show()
 	_fit()
@@ -414,6 +431,28 @@ func _channel_name(idx: int) -> String:
 	if idx >= 0 and idx < keys.size():
 		return _ltr(keys[idx])
 	return "?"
+
+## M-READ: determine if a tile is a stockpile zone or hearth; return {"kind", "id"} or {}.
+func _tile_subject(world: Node, tile: Vector2i) -> Dictionary:
+	var overlay: Dictionary = SimReads.read(world, "get_colony_overlay")
+	var zone_xs: PackedInt32Array = overlay.get("zone_xs", PackedInt32Array())
+	var zone_ys: PackedInt32Array = overlay.get("zone_ys", PackedInt32Array())
+	var zone_ids: PackedInt32Array = overlay.get("zone_ids", PackedInt32Array())
+	for i: int in mini(zone_xs.size(), mini(zone_ys.size(), zone_ids.size())):
+		if zone_xs[i] == tile.x and zone_ys[i] == tile.y:
+			return {"kind": "stockpile", "id": int(zone_ids[i])}
+	var buildings: Dictionary = SimReads.read(world, "get_building_snapshot")
+	var bxs: PackedInt32Array = buildings.get("xs", PackedInt32Array())
+	var bys: PackedInt32Array = buildings.get("ys", PackedInt32Array())
+	var bkinds: PackedByteArray = buildings.get("kinds", PackedByteArray())
+	# Hearth is building kind 0; find its settlement from the settlement snapshot.
+	for i: int in mini(bkinds.size(), mini(bxs.size(), bys.size())):
+		if bkinds[i] == 0 and absi(bxs[i] - tile.x) <= 1 and absi(bys[i] - tile.y) <= 1:
+			var settlements: Dictionary = SimReads.read(world, "get_settlement_snapshot")
+			var sid: int = int(settlements.get("settlement_ids", PackedInt32Array())[0]) if not settlements.get("settlement_ids", PackedInt32Array()).is_empty() else 0
+			return {"kind": "hearth", "id": sid}
+	return {}
+
 
 func _ltr(key: String) -> String:
 	var locale := get_node_or_null("/root/Locale")

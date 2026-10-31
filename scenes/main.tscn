@@ -23,6 +23,9 @@
 
 [ext_resource type="Script" path="res://scripts/world/colony/plant_layer.gd" id="22_plants"]
 
+[ext_resource type="Script" path="res://scripts/ui/panels/task_plaque.gd" id="23_task_plaque"]
+[ext_resource type="Script" path="res://scripts/ui/panels/world_marker.gd" id="24_world_marker"]
+
 [node name="Main" type="Node2D"]
 script = ExtResource("19_boot")
 
@@ -55,6 +58,9 @@ script = ExtResource("6_agents")
 
 [node name="AnimalLayer" type="Node2D" parent="ColonyView"]
 script = ExtResource("17_animals")
+
+[node name="WorldMarker" type="Node2D" parent="ColonyView"]
+script = ExtResource("24_world_marker")
 
 [node name="OrderTool" type="Node2D" parent="ColonyView"]
 script = ExtResource("7_order_tool")
@@ -90,6 +96,9 @@ script = ExtResource("16_priority")
 
 [node name="OrderBar" type="Control" parent="UI"]
 script = ExtResource("14_order_bar")
+
+[node name="TaskPlaque" type="Control" parent="UI"]
+script = ExtResource("23_task_plaque")
 
 [node name="MuxHud" type="Control" parent="UI"]
 script = ExtResource("18_mux")

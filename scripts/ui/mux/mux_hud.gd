@@ -48,6 +48,13 @@ var _mux2_profile: bool = OS.get_environment("WORLDSIM_MUX2_PROFILE") == "1"
 var _mux2_frame: int = -1
 var _mux2_usec: Dictionary = {}
 
+
+## M-READ: the formatted text of every currently active alert (for plaque deduplication).
+func active_alert_texts() -> PackedStringArray:
+	if alerts != null and alerts.has_method("active_alert_texts"):
+		return alerts.active_alert_texts()
+	return PackedStringArray()
+
 func _ready() -> void:
 	theme = THEME
 	mouse_filter = Control.MOUSE_FILTER_IGNORE

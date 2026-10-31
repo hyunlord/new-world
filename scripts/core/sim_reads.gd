@@ -41,10 +41,13 @@ const GETTERS: Array[String] = [
 	"get_story", "get_animals", "get_drafted",
 	# M5.5: the two neighbours, their migrant waves and caravans, the eureka clues and the tallies.
 	"get_neighbours", "get_ui_facts", "get_steward",
+	# M-READ: diagnosis, requests and current task (cached per tick).
+	"get_settlement_diagnosis", "get_requests", "get_current_task",
 ]
 ## Read once per simulation tick (M4: the knowledge reads change only when a tick runs or a command is sent).
 const TICK_GETTERS: Array[String] = ["get_porter_snapshot", "get_settlement_relations", "get_tech", "get_teach_orders", "get_knowledge_waits",
-	"get_story", "get_animals", "get_drafted", "get_ui_facts", "get_steward"]
+	"get_story", "get_animals", "get_drafted", "get_ui_facts", "get_steward",
+	"get_settlement_diagnosis", "get_requests", "get_current_task"]
 const MUTATORS: Array[String] = [
 	"advance_ticks", "reset_world", "reset_world_stress",
 	"on_building_placed",

@@ -18,6 +18,8 @@
 #   get_activity_snapshot; via person_read_cache.gd get_person, get_person_chronicle, get_agent_family,
 #   get_agent_temperament; M2 get_agent_economy (direct, once per tick for the selected person: skills with
 #   tiers, the held tool and the carried item with material and quality); signal world_reset.
+# M-READ: get_why_not (direct, per person per tick: blocked mind candidates), get_person_diagnosis
+#   (direct, per person per tick: the person's diagnosis headline and chain).
 # M3: the bed line "잠자리: 침실 3 (지붕 있음)" from get_agent_economy's bed_x/bed_y/bed_room/bed_room_role/bed_roofed
 #   (the roof word "판 굴" for a dug room from the room overlay's index, ColonyView/OverlayLayer/Rooms; a hut bed from
 #   get_building_snapshot via SimReads: "잠자리: 오두막"; no bed: "잠자리: 없음"); job codes 9 dig, 10 deconstruct,
@@ -139,8 +141,18 @@ var _why_button: Button
 var _mind_snapshot: Dictionary = {}
 var _mind_tick: int = -1
 var _mind_entity: int = -1
+## M-READ: the why-not line and person diagnosis.
+var _why_not_label: Label
+var _diag_label: Label
+var _why_not_tick: int = -1
+var _why_not_entity: int = -1
+var _why_not_data: Dictionary = {}
+var _diag_data: Dictionary = {}
+var _diag_tick: int = -1
+var _diag_entity: int = -1
 var _label_state: Label
 var _label_target: Label
+const DiagnosisText = preload("res://scripts/ui/panels/diagnosis_text.gd")
 const FoodText = preload("res://scripts/ui/food_text.gd")
 var _food_label: Label
 var _food_tick: int = -1
@@ -247,6 +259,14 @@ func _ready() -> void:
 	_mind_label = _make_label("")
 	_mind_label.name = "MindReason"
 	_mind_label.hide()
+	_why_not_label = _make_label("")
+	_why_not_label.name = "WhyNot"
+	_why_not_label.add_theme_color_override("font_color", Color("e8a848"))
+	_why_not_label.hide()
+	_diag_label = _make_label("")
+	_diag_label.name = "Diagnosis"
+	_diag_label.add_theme_color_override("font_color", Color("a8d888"))
+	_diag_label.hide()
 	_label_state = _make_label("")
 	_label_target = _make_label("")
 	_hunger_bar = _make_bar(_loc("UI_HUNGER"))
@@ -446,6 +466,8 @@ func display_agent(detail: Dictionary) -> void:
 	_village_label.visible = home >= 0
 	_village_label.text = Names.unbroken(SettlementSelection.name_for(home, _locale)) if home >= 0 else ""
 	_refresh_mind()
+	_refresh_why_not()
+	_refresh_person_diag()
 	_refresh_food()
 	_label_pos.text = _loc("INSPECTOR_POS_FMT") % [x, y]
 	var activity: Dictionary = _selected_activity() if state_tag == 4 or target_kind == 8 else {}
@@ -1244,9 +1266,49 @@ func _world_reset() -> void:
 	_mind_tick = -1
 	_mind_entity = -1
 	_mind_snapshot = {}
+	_why_not_tick = -1
+	_why_not_entity = -1
+	_why_not_data = {}
+	_diag_tick = -1
+	_diag_entity = -1
+	_diag_data = {}
 	close()
 	_person_cache.reset()
 	_formatted_person = -1
+
+
+## M-READ: the why-not line "하려던 것: X — 막힘: Y" from get_why_not(entity_bits), refreshed per tick.
+func _refresh_why_not() -> void:
+	_why_not_label.hide()
+	if _world_sim == null or _selected_entity_bits < 0 or not _world_sim.has_method("get_why_not"):
+		return
+	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
+	if tick != _why_not_tick or _selected_entity_bits != _why_not_entity:
+		_why_not_tick = tick
+		_why_not_entity = _selected_entity_bits
+		_why_not_data = _world_sim.get_why_not(_selected_entity_bits)
+	var line: String = DiagnosisText.why_not_line(_why_not_data, _locale)
+	if line.is_empty():
+		return
+	_why_not_label.text = KoreanText.words(line)
+	_why_not_label.show()
+
+
+## M-READ: the person diagnosis headline from get_person_diagnosis(entity_bits), refreshed per tick.
+func _refresh_person_diag() -> void:
+	_diag_label.hide()
+	if _world_sim == null or _selected_entity_bits < 0 or not _world_sim.has_method("get_person_diagnosis"):
+		return
+	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
+	if tick != _diag_tick or _selected_entity_bits != _diag_entity:
+		_diag_tick = tick
+		_diag_entity = _selected_entity_bits
+		_diag_data = _world_sim.get_person_diagnosis(_selected_entity_bits)
+	var text: String = DiagnosisText.headline_and_next(_diag_data, _locale)
+	if text.is_empty():
+		return
+	_diag_label.text = KoreanText.words(text)
+	_diag_label.show()
 
 
 func _selected_activity() -> Dictionary:
@@ -1295,7 +1357,7 @@ func _open_tile_why() -> void:
 	_refresh_mind()
 	var detail: Dictionary = _world_sim.get_agent_detail(_selected_entity_bits)
 	if bool(_mind_snapshot.get("found", false)):
-		get_node("../CausalPanel").open_mind(_mind_snapshot, Vector2i(int(detail.get("x", 0)), int(detail.get("y", 0))))
+		get_node("../CausalPanel").open_mind(_mind_snapshot, Vector2i(int(detail.get("x", 0)), int(detail.get("y", 0))), _why_not_data)
 		return
 	if bool(detail.get("found", false)):
 		get_node("../CausalPanel").call("open_tile", Vector2i(int(detail.get("x",0)), int(detail.get("y",0))))

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "description": "Chronicle entry grouping rules for M-READ. Consecutive entries with the same kind and cause kind within one in-game day collapse into a counted line.",
+  "groupable_kinds": {
+    "0": { "format_key": "CHRON_GROUP_STARVE_FMT", "cause_field": "cause" },
+    "29": { "format_key": "CHRON_GROUP_COLD_FMT", "cause_field": "cause" },
+    "30": { "format_key": "CHRON_GROUP_COLD_FMT", "cause_field": "cause" },
+    "31": { "format_key": "CHRON_GROUP_GENERIC_FMT", "cause_field": "cause" },
+    "32": { "format_key": "CHRON_GROUP_GENERIC_FMT", "cause_field": "cause" },
+    "33": { "format_key": "CHRON_GROUP_GENERIC_FMT", "cause_field": "cause" },
+    "34": { "format_key": "CHRON_GROUP_GENERIC_FMT", "cause_field": "cause" },
+    "36": { "format_key": "CHRON_GROUP_GENERIC_FMT", "cause_field": "cause" },
+    "37": { "format_key": "CHRON_GROUP_GENERIC_FMT", "cause_field": "cause" }
+  },
+  "max_group_day_span": 1,
+  "min_consecutive": 2
+}
