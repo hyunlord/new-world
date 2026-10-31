@@ -267,6 +267,10 @@ func _ready() -> void:
 	_diag_label.name = "Diagnosis"
 	_diag_label.add_theme_color_override("font_color", Color("a8d888"))
 	_diag_label.hide()
+	# M-READ: the diagnosis and why-not are the inspector's answer lines; under the name so they never
+	# fall below the scroll fold.
+	_vbox.move_child(_diag_label, _porter_status.get_index() + 1)
+	_vbox.move_child(_why_not_label, _diag_label.get_index() + 1)
 	_label_state = _make_label("")
 	_label_target = _make_label("")
 	_hunger_bar = _make_bar(_loc("UI_HUNGER"))

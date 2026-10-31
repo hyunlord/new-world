@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1292,
+    "active_key_count": 1297,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1292,
+    "key_count": 1297,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -652,6 +652,7 @@
     "MIND_FACT_ACTIVITY_KIND": "현재 활동",
     "MIND_FACT_ACTIVITY_RESTING": "활동 사이 휴식",
     "MIND_FACT_BREAKDOWN": "마음이 무너진 상태",
+    "MIND_FACT_CARRYING": "물건을 들고 있음",
     "MIND_FACT_CRAFT_WORKING": "제작 중",
     "MIND_FACT_CRITICAL_PREEMPTION_ENABLED": "위급한 욕구를 먼저 해결할 수 있음",
     "MIND_FACT_DRAFTED": "소집됨",
@@ -669,6 +670,8 @@
     "MIND_FACT_FORAGE_AVAILABLE": "주변에서 채집 가능",
     "MIND_FACT_FORAGE_WINDOW": "채집할 시간",
     "MIND_FACT_GATHER_AVAILABLE": "모을 먹거리가 있음",
+    "MIND_FACT_HARVEST_STORAGE_AVAILABLE": "수확물 저장 가능",
+    "MIND_FACT_HARVEST_WINDOW": "수확할 시간",
     "MIND_FACT_HAS_JOB": "맡은 일이 있음",
     "MIND_FACT_HUNGER": "배고픔",
     "MIND_FACT_HUNGER_ACTIONABLE": "배고픔을 해소할 수 있음",
@@ -679,6 +682,7 @@
     "MIND_FACT_IDLE": "새 활동 가능",
     "MIND_FACT_INVENTORY_ROOM": "운반할 여유가 있음",
     "MIND_FACT_JOB_DESTINATION_DISTANCE": "작업 목적지까지 거리",
+    "MIND_FACT_JOB_FOOD_TRANSPORT": "식량 운반 중",
     "MIND_FACT_JOB_HARVESTING": "거두는 일 진행 중",
     "MIND_FACT_JOB_OWNED_STATE": "맡은 작업 진행 중",
     "MIND_FACT_JOB_TO_DEST": "작업 목적지로 이동 중",
@@ -1073,6 +1077,7 @@
     "REQ_ACTION_BUILD_HOUSE": "집 짓기",
     "REQ_ACTION_CHOP_WOOD": "나무 베기",
     "REQ_ACTION_FIND_WATER": "물 찾기",
+    "REQ_ACTION_GATHER_FOOD": "먹을거리 모으기 (채집·수확 구역)",
     "REQ_ACTION_REST": "쉬게 하기",
     "REQ_ACTION_STORE_FOOD": "저장 늘리기",
     "REQ_NEED_FOOD": "먹을 게 없어요",

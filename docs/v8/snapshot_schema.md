@@ -1797,6 +1797,7 @@ The top active request or next unfinished goal. Returns:
 | `voice` | `int` | AgentId of the voice |
 | `voice_name` | `String` | Always empty; GDScript fills from voice id via PersonNames |
 | `steward_active` | `bool` | Whether the steward handles it |
+| `match_tags` | `PackedStringArray` | The request rule's match tags (requests.ron); the plaque picks the settlement check sharing one (request source only) |
 | `has_marker` | `bool` | Whether a marker tile is provided |
 | `marker_x` | `int` | Marker tile X (when has_marker) |
 | `marker_y` | `int` | Marker tile Y (when has_marker) |

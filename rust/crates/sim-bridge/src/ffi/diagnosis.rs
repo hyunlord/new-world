@@ -435,6 +435,16 @@ pub fn current_task_to_dict(engine: &SimEngine) -> VarDictionary {
             dict.set("voice", top.voice as i64);
             dict.set("voice_name", GString::from("")); // GDScript fills from voice id
             dict.set("steward_active", top.steward_active);
+            // The rule's match tags, so the plaque can pick the settlement check behind the request.
+            let mut match_tags = PackedStringArray::new();
+            if let Some(rule) = sim_core::colony::requests::requests_data()
+                .and_then(|data| data.rules.iter().find(|rule| rule.id == top.rule_id))
+            {
+                for tag in &rule.match_tags {
+                    match_tags.push(&GString::from(tag.as_str()));
+                }
+            }
+            dict.set("match_tags", match_tags);
             // Marker tile using the same validity check the order tool uses.
             if let Some((mx, my)) = find_marker_tile(engine, &top.action_key) {
                 dict.set("marker_x", mx as i32);

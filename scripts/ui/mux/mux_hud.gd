@@ -19,6 +19,7 @@ const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const LessonHighlight = preload("res://scripts/ui/mux/lesson_highlight.gd")
 const LegacyLayout = preload("res://scripts/ui/mux/legacy_layout.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
+const PLAQUE_MIN_WIDTH: float = 560.0
 const LEARNING_PANELS: Dictionary = {"AgentInspectorPanel": "person_selected", "PriorityPanel": "priorities_opened", "RoomPanel": "rooms_opened", "TechPanel": "tech_opened", "NeighboursPanel": "neighbours_opened"}
 var store: Store = Store.new()
 var catalog: Catalog = Catalog.new()
@@ -47,6 +48,19 @@ var _legacy: LegacyLayout
 var _mux2_profile: bool = OS.get_environment("WORLDSIM_MUX2_PROFILE") == "1"
 var _mux2_frame: int = -1
 var _mux2_usec: Dictionary = {}
+
+
+## M-READ: where the "지금 할 일" plaque sits: the strip left of the action row under the topbar, or
+## under the action row when that strip is narrower than PLAQUE_MIN_WIDTH; {position, width, factor}
+## in screen pixels (width unscaled by factor).
+func plaque_slot() -> Dictionary:
+	if _actions == null or _legacy == null:
+		return {}
+	var factor: float = float(store.value("ui_scale"))
+	var beside: float = (_actions.position.x - 36) / factor
+	if beside >= PLAQUE_MIN_WIDTH:
+		return {"position": Vector2(12, _legacy.top_bottom() + 8), "width": beside, "factor": factor}
+	return {"position": Vector2(12, alerts.position.y), "width": minf(PLAQUE_MIN_WIDTH * 1.25, (alerts.position.x - 36) / factor), "factor": factor}
 
 
 ## M-READ: the formatted text of every currently active alert (for plaque deduplication).

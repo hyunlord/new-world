@@ -1,5 +1,5 @@
-# task_plaque.gd (UI/TaskPlaque in scenes/main.tscn): the single "지금 할 일" plaque at the top of
-#   the screen; one line showing the top active request or nothing; reason chain on hover; a "보기"
+# task_plaque.gd (UI/TaskPlaque in scenes/main.tscn): the single "지금 할 일" plaque under the topbar,
+#   left of the action row (MuxHud.plaque_slot); one line showing the top active request or nothing; reason chain on hover; a "보기"
 #   button that centres the camera on the marker tile. Must not duplicate an alert line word for word.
 # Bridge methods: via SimReads get_current_task, get_requests, get_settlement_diagnosis;
 #   signal world_reset.
@@ -68,6 +68,9 @@ func _ready() -> void:
 	inner.add_child(_view_button)
 	position = Vector2(0, 8)
 	visible = false
+	# Ambient guidance: draw (and hit-test) behind every other UI panel and menu, so an opened
+	# build menu or inspector over the plaque's slot still gets its clicks.
+	get_parent().move_child.call_deferred(self, 0)
 
 
 func _process(_delta: float) -> void:
@@ -80,6 +83,19 @@ func _process(_delta: float) -> void:
 	_task_tick = tick
 	_task_data = SimReads.read(_world_sim, "get_current_task")
 	_refresh()
+	_place()
+
+
+## M-READ: sit in MuxHud's plaque slot (left of the action row, under the topbar) at the UI scale,
+## wide enough that the line wraps to at most a few rows instead of a narrow column.
+func _place() -> void:
+	var hud: Node = get_node_or_null("../MuxHud")
+	var slot: Dictionary = hud.call("plaque_slot") if hud != null and hud.has_method("plaque_slot") else {}
+	if slot.is_empty():
+		return
+	position = slot["position"]
+	scale = Vector2.ONE * float(slot["factor"])
+	_text_label.custom_minimum_size.x = float(slot["width"]) - 120.0
 
 
 func _refresh() -> void:
@@ -104,38 +120,27 @@ func _refresh() -> void:
 	var voice: String = Names.unbroken(voice_name) if not voice_name.is_empty() else ""
 	var action: String = _loc(action_key) if not action_key.is_empty() else ""
 	var status: String = _loc("READ_STEWARD_DOING") if is_steward else _loc("READ_STEWARD_TODO")
-	var line: String = _loc("READ_PLAQUE_FMT").format({"voice": voice, "text": text, "status": status, "action": action})
-	# Deduplicate against active alerts.
-	if _is_alert_duplicate(text):
-		# Use the request line with voice to differentiate.
-		line = voice + ": " + text + " — " + status + ": " + action
+	# M-READ: the request's reason inline ("headline ← first cause") from the settlement check its
+	# rule's match tags map to; the hover shows that check's full chain.
+	var diag: Dictionary = SimReads.read(_world_sim, "get_settlement_diagnosis")
+	var request_tags: PackedStringArray = _task_data.get("match_tags", PackedStringArray())
+	var reason: String = DiagnosisText.request_reason(diag, request_tags, _locale)
+	var shown: String = text + _loc("READ_DIAG_CHAIN_SEP") + reason if not reason.is_empty() else text
+	var line: String = _loc("READ_PLAQUE_FMT").format({"voice": voice, "text": shown, "status": status, "action": action})
+	if voice.is_empty():
+		# A goal has no voice: drop the empty "{voice}: " prefix instead of showing a bare colon.
+		line = line.trim_prefix(": ")
 	_current_text = line
 	_text_label.text = KoreanText.words(line)
 	_view_button.text = _loc("READ_PLAQUE_VIEW")
-	# Set the hover tooltip to the full reason chain from settlement diagnosis.
-	var diag: Dictionary = SimReads.read(_world_sim, "get_settlement_diagnosis")
-	var chain: String = DiagnosisText.headline_and_next(diag, _locale)
-	if not chain.is_empty():
-		_panel.tooltip_text = chain
-	else:
-		_panel.tooltip_text = ""
+	var check: int = DiagnosisText.request_check(diag, request_tags)
+	var chain: String = DiagnosisText.chain_text(diag, check, _locale) if check >= 0 else DiagnosisText.headline_and_next(diag, _locale)
+	_panel.tooltip_text = KoreanText.raw(chain)
 	# Track marker tile.
 	var has_marker: bool = bool(_task_data.get("has_marker", false))
 	_marker_tile = Vector2i(int(_task_data.get("marker_x", -1)), int(_task_data.get("marker_y", -1))) if has_marker else Vector2i(-1, -1)
 	_view_button.visible = has_marker
 	visible = true
-
-
-## Whether `text` duplicates an active alert line word for word.
-func _is_alert_duplicate(text: String) -> bool:
-	var alerts: Node = get_node_or_null("../MuxHud")
-	if alerts == null or not alerts.has_method("active_alert_texts"):
-		return false
-	var alert_texts: PackedStringArray = alerts.call("active_alert_texts")
-	for alert_text: String in alert_texts:
-		if alert_text == text:
-			return true
-	return false
 
 
 func _view_pressed() -> void:
@@ -166,6 +171,11 @@ func _world_reset() -> void:
 ## The plaque's current text (for tests).
 func plaque_text() -> String:
 	return _current_text
+
+
+## The plaque's hover text: the full reason chain (for tests and captures).
+func plaque_tooltip() -> String:
+	return _panel.tooltip_text
 
 
 ## The plaque's marker tile (for tests).

@@ -113,6 +113,35 @@ static func _resolve_text(locale: Node, key: String, params: Variant) -> String:
 	return _loc(locale, key)
 
 
+## The reason behind a request: the first settlement check sharing one of `request_tags`, as
+## "headline ← first cause" (at most two links); "" when no check matches.
+static func request_reason(settlement_diag: Dictionary, request_tags: PackedStringArray, locale: Node) -> String:
+	var index: int = request_check(settlement_diag, request_tags)
+	if index < 0:
+		return ""
+	var params_array: Array = settlement_diag.get("params", [])
+	var chains: Array = settlement_diag.get("chains", [])
+	var head: String = _resolve_text(locale, settlement_diag["text_keys"][index], params_array[index] if index < params_array.size() else {})
+	var chain: Array = chains[index] if index < chains.size() and chains[index] is Array else []
+	if not chain.is_empty() and chain[0] is Dictionary:
+		var first: Dictionary = chain[0] as Dictionary
+		var cause: String = _resolve_text(locale, str(first.get("text_key", "")), first.get("params", {}))
+		if not cause.is_empty() and cause != head:
+			return head + _loc(locale, "READ_DIAG_CHAIN_SEP") + cause
+	return head
+
+
+## The index of the first settlement check whose tags share one of `request_tags`, or -1.
+static func request_check(settlement_diag: Dictionary, request_tags: PackedStringArray) -> int:
+	var text_keys: PackedStringArray = settlement_diag.get("text_keys", PackedStringArray())
+	var tags: Array = settlement_diag.get("tags", [])
+	for index: int in mini(text_keys.size(), tags.size()):
+		var check_tags: Array = tags[index] if tags[index] is Array else []
+		if check_tags.any(func(tag: Variant) -> bool: return request_tags.has(str(tag))):
+			return index
+	return -1
+
+
 ## Extract diagnosis for a subject kind from settlement diagnosis chains.
 ## `subject_prefix` is e.g. "DIAG_STOCKPILE_", "DIAG_HEARTH_", "DIAG_ROOM_".
 ## Returns "headline ← next" for the first matching chain entry, or "".
@@ -140,6 +169,11 @@ static func subject_diagnosis(settlement_diag: Dictionary, subject_prefix: Strin
 						return head + _loc(locale, "READ_DIAG_CHAIN_SEP") + stl
 				return head
 	return ""
+
+
+## `text` without the display word joiners (for comparisons).
+static func raw_words(text: String) -> String:
+	return KoreanText.raw(text)
 
 
 static func _loc(locale: Node, key: String) -> String:

@@ -8,7 +8,7 @@
         match_facts: ["hunger_actionable", "food_available", "food_cooked_available",
                       "food_novel_available", "food_cooked_novel_available"],
         text_key: "REQ_NEED_FOOD",
-        action_key: "REQ_ACTION_STORE_FOOD",
+        action_key: "REQ_ACTION_GATHER_FOOD",
         priority: 1,
         steward_tags: ["FoodDeficit"],
     ),

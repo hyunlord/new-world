@@ -1259,6 +1259,7 @@
 	"REQ_NEED_SHELTER": "No shelter",
 	"REQ_NEED_REST": "Need rest",
 	"REQ_ACTION_STORE_FOOD": "Store more food",
+	"REQ_ACTION_GATHER_FOOD": "Gather food (forage and harvest zones)",
 	"REQ_ACTION_CHOP_WOOD": "Chop wood",
 	"REQ_ACTION_FIND_WATER": "Find water",
 	"REQ_ACTION_BUILD_HOUSE": "Build a house",

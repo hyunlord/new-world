@@ -58,6 +58,9 @@ func _run() -> void:
 	# --- Test 11: Plaque voice name not empty ---
 	await _test_plaque_voice(main, world, reads)
 
+	# --- Test 12: Request reason picks the tagged settlement check, at most two links ---
+	_test_request_reason()
+
 	print("READ_TEST_DONE pass=%d fail=%d" % [_pass, _fail])
 	quit(1 if _fail > 0 else 0)
 
@@ -292,3 +295,31 @@ func _test_plaque_voice(main: Node, world: Node, reads: Node) -> void:
 		return
 	_assert(not text.begins_with(":"), "plaque text does not start with ':' (voice name filled)")
 	_assert(not text.begins_with(": "), "plaque text does not start with ': ' (voice name filled)")
+
+
+## Test 12: request_reason picks the first settlement check sharing the request's tags and shows
+## "headline ← first cause" only; no shared tag gives "".
+func _test_request_reason() -> void:
+	print("Test 12: request reason chain")
+	const DiagText = preload("res://scripts/ui/panels/diagnosis_text.gd")
+	var diag: Dictionary = {
+		"text_keys": PackedStringArray(["DIAG_SETTLEMENT_NO_FIREWOOD", "DIAG_SETTLEMENT_NO_FOOD"]),
+		"tags": [["warmth"], ["food"]],
+		"params": [{}, {}],
+		"chains": [[], [
+			{"text_key": "DIAG_STOCKPILE_NO_FOOD", "params": {}},
+			{"text_key": "DIAG_SETTLEMENT_NO_RIPE_PLANTS", "params": {}},
+		]],
+	}
+	var locale: Node = root.get_node_or_null("Locale")
+	var sep: String = str(locale.call("ltr", "READ_DIAG_CHAIN_SEP")) if locale != null else " ← "
+	var food: String = DiagText.raw_words(DiagText.request_reason(diag, PackedStringArray(["food"]), locale))
+	var expected: String = _ltr_raw(locale, "DIAG_SETTLEMENT_NO_FOOD") + sep + _ltr_raw(locale, "DIAG_STOCKPILE_NO_FOOD")
+	_assert(food == expected, "food request reason is the food check's headline ← first cause (got '%s')" % food)
+	_assert(food.find(_ltr_raw(locale, "DIAG_SETTLEMENT_NO_RIPE_PLANTS")) < 0, "reason stops at two links")
+	_assert(DiagText.request_check(diag, PackedStringArray(["warmth"])) == 0, "warmth request maps to the firewood check")
+	_assert(DiagText.request_reason(diag, PackedStringArray(["water"]), locale).is_empty(), "no shared tag gives no reason")
+
+
+func _ltr_raw(locale: Node, key: String) -> String:
+	return str(locale.call("ltr", key)) if locale != null else key

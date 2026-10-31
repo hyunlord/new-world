@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1292,
+    "active_key_count": 1297,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1292,
+    "key_count": 1297,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -652,6 +652,7 @@
     "MIND_FACT_ACTIVITY_KIND": "Current activity",
     "MIND_FACT_ACTIVITY_RESTING": "Taking a break",
     "MIND_FACT_BREAKDOWN": "In a breakdown",
+    "MIND_FACT_CARRYING": "Carrying something",
     "MIND_FACT_CRAFT_WORKING": "Crafting is underway",
     "MIND_FACT_CRITICAL_PREEMPTION_ENABLED": "Urgent needs can interrupt",
     "MIND_FACT_DRAFTED": "Called to duty",
@@ -669,6 +670,8 @@
     "MIND_FACT_FORAGE_AVAILABLE": "Food can be found nearby",
     "MIND_FACT_FORAGE_WINDOW": "Time to forage",
     "MIND_FACT_GATHER_AVAILABLE": "Food is ready to gather",
+    "MIND_FACT_HARVEST_STORAGE_AVAILABLE": "Harvest storage available",
+    "MIND_FACT_HARVEST_WINDOW": "Harvest time",
     "MIND_FACT_HAS_JOB": "Assigned work",
     "MIND_FACT_HUNGER": "Hunger",
     "MIND_FACT_HUNGER_ACTIONABLE": "Can attend to hunger",
@@ -679,6 +682,7 @@
     "MIND_FACT_IDLE": "Free to act",
     "MIND_FACT_INVENTORY_ROOM": "Room to carry supplies",
     "MIND_FACT_JOB_DESTINATION_DISTANCE": "Distance to work destination",
+    "MIND_FACT_JOB_FOOD_TRANSPORT": "Transporting food",
     "MIND_FACT_JOB_HARVESTING": "Harvest job active",
     "MIND_FACT_JOB_OWNED_STATE": "Continuing assigned work",
     "MIND_FACT_JOB_TO_DEST": "Heading to work destination",
@@ -1073,6 +1077,7 @@
     "REQ_ACTION_BUILD_HOUSE": "Build a house",
     "REQ_ACTION_CHOP_WOOD": "Chop wood",
     "REQ_ACTION_FIND_WATER": "Find water",
+    "REQ_ACTION_GATHER_FOOD": "Gather food (forage and harvest zones)",
     "REQ_ACTION_REST": "Let them rest",
     "REQ_ACTION_STORE_FOOD": "Store more food",
     "REQ_NEED_FOOD": "Nothing to eat",

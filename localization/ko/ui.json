@@ -1259,6 +1259,7 @@
 	"REQ_NEED_SHELTER": "잘 곳이 없어요",
 	"REQ_NEED_REST": "쉬고 싶어요",
 	"REQ_ACTION_STORE_FOOD": "저장 늘리기",
+	"REQ_ACTION_GATHER_FOOD": "먹을거리 모으기 (채집·수확 구역)",
 	"REQ_ACTION_CHOP_WOOD": "나무 베기",
 	"REQ_ACTION_FIND_WATER": "물 찾기",
 	"REQ_ACTION_BUILD_HOUSE": "집 짓기",
