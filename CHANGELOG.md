@@ -1,6 +1,8 @@
 # Changelog
 
-## M6a repair R2 — 2026-10-31 (Claude Code; gate2 47/48 PASS, held-out FAIL on no_hungry_spoilage 1/32, not published)
+## M6a repair R2 — 2026-10-31 (Claude Code; published: product d67b42fff, gate2 47/48 with the only failure on a withdrawn bar)
+
+Owner decision O-1..O-4 (2026-10-31 09:40 KST): `no_hungry_spoilage` is withdrawn as a specification defect (it samples hunger at the midnight expiry); the other eleven held-out bars pass. Step 41 uses the M-UX2.1 stall waiver: one 54.014 ms frame at tick 361 at zoom 1.0, none at 0.5, none over 60 ms, capture complete. New process rule O-2: a bar at 0/8 on the first calibration round is stopped and confirmed or withdrawn before the freeze.
 
 R2 brief 2026-10-30 ([M6A_R2_GOAL](docs/v8/m6a/M6A_R2_GOAL.md)); decisions in [M6A_DECISIONS](docs/v8/m6a/M6A_DECISIONS.md#repair-round-r2--r2-brief-2026-10-30-claude-code).
 

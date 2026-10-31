@@ -366,3 +366,4 @@
 - 2026-10-29 — 방향·순서 v2 반영: M-UX2.1 게시 `5b0c8881` 뒤 M6a 진행, M-READ를 M6a·M6b 사이에 배치하고 작업 규칙·held-out 시드 대장을 명시했다([깊이 로드맵](v8/DEPTH_ROADMAP.md), [M6a 목표](v8/m6a/M6A_GOAL.md)); v1 원문 보존, 문서 전용이며 새 전체 gate·제품 검증 주장은 없다.
 
 - 2026-10-30: M6a R1 owner protocol and diagnosis preserved; meal admission, cooking procurement, physical harvest-to-storage and Actions visibility repaired with scoped regressions. Fresh evaluation/full gate pending, review branch only; prior failures retained.
+- 2026-10-31 — M6a 먹을 것 사슬 완료·게시(R2, 제품 `d67b42fff`): 이웃 마을 겨울 기아 수리, bench 회귀 제거, gate 계기 39·40·41 수리; 철회된 막대 하나만 실패한 gate2 47/48, 41단계 waiver 사용(오너 결정 O-1..O-4, [보고](v8/m6a/M6A_REPORT.md)).

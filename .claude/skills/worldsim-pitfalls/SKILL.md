@@ -29,6 +29,7 @@ every agent must know even when it is not working in that area. Sources are comm
 - **Do** treat absence as failure: zero selected items, a missing input file or an unknown label fails the check. *Reason:* several V7 checks reported PASS on nothing.
 - **Do** give every subagent reviewer a file to write its report to, and run it on brief + diff + outputs only. *Reason:* final messages came back empty or truncated; a fresh reviewer recomputing from raw data found real bugs.
 - **Do** label hypotheses as hypotheses and state the registered verdict first. *Reason:* reports overstated results (a passing tuning value cited, the failing evaluation omitted).
+- **Do** stop when a bar scores 0/8 on the first calibration round: report its mechanism and get it confirmed or withdrawn before the freeze (owner O-2). *Reason:* M6a R2's `no_hungry_spoilage` sampled hunger at the midnight expiry and could not pass in any world; a held-out set was spent on it.
 - **Do** run long jobs with an owned `caffeinate -i` and kill timed-out work by process group. *Reason:* the Mac slept for 1 h 43 min mid-gate; a killed `cargo` left its test binary running and loading the CPU.
 - **Do** write bash for macOS bash 3.2 (`${a[@]+"${a[@]}"}` for possibly empty arrays; no GNU-only flags). *Reason:* `set -u` with an empty array broke scripts twice.
 - **Don't** rewrite pushed history or force-push to fix a mistake; fix forward in a new commit. *Reason:* parallel worktrees and pins refer to pushed hashes.
