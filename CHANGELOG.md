@@ -1,13 +1,15 @@
 # Changelog
 
-## M-READ — 2026-10-31 (Claude Code; branch v8/read)
+## M-READ — 2026-11-01 (Claude Code; published: product 71e7ad86, gate 3 51/51 in READ mode)
+
+Owner decision D13 (2026-11-01): the M-READ gate mode is approved — step 25 compares interleaved against BASE 313ea92b (≤ ×1.10 per scene), steps 44/45 compare the M-CORE fixture worlds BASE vs candidate (normalised), step 41 uses the M-UX2.1/M6a stall waiver (one 53.382 ms frame at zoom 1.0, none over 60 ms, capture complete). BASE and M-READ bench rows appended to PERF_LEDGER (M-CORE and M6a had appended none). 30-second diagnosis test: candidate 6/6, BASE 4/6 (separates only on Q3/Q4).
 
 State diagnosis, why-not records, requests and the current-task plaque.
 Brief: [READ_GOAL](docs/v8/read/READ_GOAL.md); decisions in [READ_DECISIONS](docs/v8/read/READ_DECISIONS.md).
 
 ### Added
 - Read-only diagnosis framework (`diagnosis.ron`, ADR 0055): 5 subject kinds (person, stockpile, hearth, room, settlement), 20 checks with chains to depth ≤ 5, answering Q1/Q3/Q4/Q6.
-- Why-not records in the mind selector: up to 2 blocked candidates per MindChoice with first failing predicate (node, band, fact, op, threshold, actual). Per-person bounded ring of 4 entries (~584 B/person).
+- Why-not records in the mind selector: up to 2 blocked candidates per MindChoice with first failing predicate (node, band, fact, op, threshold, actual). Per-person bounded ring of 4 entries, recorded only when the chosen node changes, allocation-free (272 B/person; interleaved bench ≤ ×1.029 vs BASE).
 - Requests v0 (`requests.ron`): 5 rules mapping blocked-node facts to villager requests. Hourly aggregation with ≥ 2-of-4-hours threshold, at most 3 shown, steward status by tag.
 - Current-task plaque: top request or first unfinished goal, with a validated marker tile (uses the order tool's `can_place` / nearest tree).
 - Bridge getters: `get_settlement_diagnosis`, `get_person_diagnosis`, `get_subject_diagnosis`, `get_why_not`, `get_requests`, `get_current_task`.
@@ -15,6 +17,9 @@ Brief: [READ_GOAL](docs/v8/read/READ_GOAL.md); decisions in [READ_DECISIONS](doc
 - 36 locale keys (ko+en): `DIAG_*`, `REQ_*`, `READ_*`.
 - Normalising script `tools/v8/read_normalise.py` listing excluded keys: `why_not`, `diagnosis_cache`, `requests_cache`.
 - `DIAGNOSIS_AUTHORING.md`, `MIND_AUTHORING` why-not section.
+
+### Fixed
+- Legacy saves (before M-READ) loaded without DiagnosisSystem/RequestsSystem; the loader now adds them (found by gate step 37).
 
 ### Unchanged
 - `mind.ron` policy, steward rules, all gameplay systems.

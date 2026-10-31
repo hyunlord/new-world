@@ -88,6 +88,7 @@ Godot loads.
 6. Skills: add a lesson when a problem needed more than one attempt, a better method was found, or Godot/gdext surprised you — in the same pass.
 7. `tools/play.sh --headless-check main` passes; replace the current `docs/images/<pass>_contact_sheet.png` (now `mux_contact_sheet.png`, with `mux_compare_sheet.png` beside it) with the new pass's sheet when the view changed (≤ 12 images; delete the previous sheet).
 8. `bash tools/v8/check_docs.sh` green.
+9. Append the pass's bench rows to `docs/perf/PERF_LEDGER.md` after the green gate (`tools/v8/bench_ledger.py append … --gate-log`); if the base rows are stale, also append re-measured base rows (`--re-measure`). M-CORE and M6a skipped this (M-READ D13).
 
 Details: `.claude/skills/worldsim-docs-upkeep/SKILL.md`.
 

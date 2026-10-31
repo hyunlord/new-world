@@ -248,3 +248,15 @@ Needs WORLDSIM_MUX_FIXTURES and related env vars. The launcher script
 tools/v8/test_read_gate.py: 13 tests covering the bench ratio rule (pass/fail/boundary),
 stall waiver rule (pass/fail at 50/60 ms), and normalised-equivalence rule (match/mismatch/
 excluded keys). Each rule can fail.
+
+### D13a — Owner decision on the gate mode (relayed by the planner, 2026-11-01)
+Approved with three conditions:
+(a) Bench: interleaved against BASE 313ea92b (≤ ×1.10 per scene) as proposed, and BASE's quiet rows appended to `docs/perf/PERF_LEDGER.md` with `--re-measure`, noting that M-CORE (3814828c) and M6a (d67b42fff) never appended rows; the end-of-pass checklist in AGENTS.md gains "append the pass's bench rows to PERF_LEDGER after the green gate". Done: BASE rows (pass "M-READ BASE") and M-READ rows (pass "M-READ", gate 3) appended from the gate-3 interleaved session; AGENTS.md checklist item 9.
+(b) Steps 44/45: the BASE-vs-candidate comparison on the M-CORE fixture worlds is accepted for this behaviour-preserving pass; the original pinned checks stay runnable (legacy path when READ_GATE_CONFIG is unset).
+(c) Debt issue: make steps 44/45 and the bench base generic ("compare the candidate against the published v8/main it was built from"). Opened as ISS-359 / #679 with the evidence: the first M-READ gate (2a9378f7c) failed 8 steps with zero test failures.
+
+### D14 — Gate history and the published result
+- Gate 1 (2a9378f7c, plain mode): status 1, 8 steps failed (12, 25, 37, 41, 44, 45, 50, 51), 0 test failures. Causes: stale ledger base, M-CORE-pinned 44/45, missing fixture env (37), stall verdict without waiver (41), two bugs in the new steps 50/51.
+- Gate 2 (0fcea1842, READ mode): status 1, 4 steps (16 env shadowing of CORE_UI_CONFIG; 37 a real defect — legacy saves loaded without DiagnosisSystem/RequestsSystem; 41 waiver never reached; 44 compared wall-clock timing).
+- Gate 3 (71e7ad863, READ mode): **status 0, 51/51**, workspace tests 2835/2834 debug/release with 0 failures, bench interleaved quiet with all C3 ceilings PASS, step 41 waiver used (zoom 1.0: one frame 53.382 ms; zoom 0.5: none > 50 ms), log `/Users/rexxa/work/read-data/gate3/gate.txt`.
+- Published product = 71e7ad863; the docs-only follow-up after it is NOT_FULL_GATED (same practice as M-UX2.1 and M6a).

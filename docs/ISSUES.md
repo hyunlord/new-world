@@ -414,10 +414,12 @@ M-UX2 게시 시점의 332개 고유 이슈: fixed197 / open103 / deferred30 / w
 
 - 2026-10-31 M6a R2 게시(`d67b42fff`, 오너 결정 O-1..O-4): 임시 M6A-1…4→ISS-348…351, M6A-R2-1…4→ISS-352…355. ISS-348(#670 식물 아트)만 open; ISS-349…355 fixed(ISS-353은 막대 철회 O-1). 후속은 M6b 마일스톤 이슈로 연다.
 
-### M-READ Part 2 (임시 번호, 게시 시 ISS 재번호)
+### M-READ (게시 2026-11-01: 임시 READ-1…3 → ISS-356…358, 후속 ISS-359·360)
 
 | ID | 증상 | 발견·재현 | 분류 | 상태 | 조치·잔여 작업 | 근거 |
 |---|---|---|---|---|---|---|
-| READ-1 | 사람 수준 진단 사실 제공자가 마음의 기존 사실 제공자와 아직 연결되지 않음 | §2.1 "reuse the mind's fact providers for person facts" | architecture | open | 마음의 FactProvider를 진단 평가에서 PersonSnapshot 없이 호출할 수 있는 어댑터 필요. 정착지 수준 진단은 작동함 | `docs/v8/read/READ_GOAL.md` §2.1; `rust/crates/sim-systems/src/runtime/diagnosis.rs` |
-| READ-2 | 지금-할-일 표시 타일이 정착지 형성 타일을 자리표시자로 사용 | §2.4 "same validity check the order tool uses" | feature | open | 명령 유효성 검사 시스템과의 통합이 필요. 현재 형성 타일을 반환함 | `rust/crates/sim-bridge/src/ffi/diagnosis.rs` `collect_current_task` |
-| READ-3 | 진단+요청 ≤1ms 벤치 사례 미작성 | §4 "bench it" | testing | open | DiagnosisSystem + RequestsSystem 비용을 N=200에서 측정하는 벤치 사례 작성 필요 | `docs/v8/read/READ_GOAL.md` §4 |
+| ISS-356 | 사람 수준 진단 사실 제공자가 마음의 기존 사실 제공자와 아직 연결되지 않음 | §2.1 "reuse the mind's fact providers for person facts" | architecture | fixed | person_fact 읽기(배고픔·목마름·추위·피난·징집·한가함)와 get_person_diagnosis 추가(ce7f8cd97). 30초 시험 Q2·Q3 화면에 사람 진단 줄이 보임 | `rust/crates/sim-systems/src/runtime/diagnosis.rs`; `docs/v8/read/READ_DECISIONS.md` D12 |
+| ISS-357 | 지금-할-일 표시 타일이 정착지 형성 타일을 자리표시자로 사용 | §2.4 "same validity check the order tool uses" | feature | fixed | find_marker_tile이 주문 도구의 can_place(비축 구역·벽)와 가장 가까운 나무를 사용(ce7f8cd97) | `rust/crates/sim-bridge/src/ffi/diagnosis.rs` |
+| ISS-358 | 진단+요청 ≤1ms 벤치 사례 미작성 | §4 "bench it" | testing | fixed | diagnosis_bench.rs: release에서 시간당 91+87=179µs(N=200, 한도 1000µs)(3bbeb7b64) | `rust/crates/sim-test/tests/diagnosis_bench.rs`; `docs/v8/read/READ_DECISIONS.md` D10 |
+| ISS-359 | 게이트 44/45단계와 벤치 기준이 특정 패스(M-CORE 소스·M5.5 장부)에 묶여 패스마다 게이트 모드가 필요 | M-READ gate 1(2a9378f7c): 테스트 실패 0건인데 8단계 실패 | tooling | open | 기준을 "출발한 공개 v8/main"으로 일반화(오너 결정 D13 (c)), [#679](https://github.com/hyunlord/new-world/issues/679) | `docs/v8/read/READ_DECISIONS.md` D13a·D14; `tools/v8/read_gate_checks.py` |
+| ISS-360 | 비축 구역 진단에 "물건이 안 옴 ← 운반자 없음" 검사가 없음 | 30초 시험 1회차 Q4(목표 사슬을 보일 장면 없음) | feature | open | diagnosis.ron에 운반자 없음 검사·stockpile_full의 헤드라인 연결 추가, [#680](https://github.com/hyunlord/new-world/issues/680) | `docs/v8/read/READ_DECISIONS.md` D12; `rust/crates/sim-core/data/colony/diagnosis.ron` |
