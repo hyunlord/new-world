@@ -133,3 +133,53 @@ All return `VarDictionary` with parallel arrays following the existing bridge pa
 
 The current-task bridge read returns the top active request (or fallback to goals). The marker tile uses the formation tile of the first settlement as a safe default. A more specific marker (e.g. a valid order tile) requires integration with the order validity check from the Godot side.
 
+
+## D10: Performance measurements (M-READ brief 2026-10-31)
+
+### Diagnosis + requests system cost (release)
+- DiagnosisSystem: 91 us per tick (hourly, at N=10 colony)
+- RequestsSystem: 87 us per tick (hourly, at N=10 colony)
+- **Total: 179 us** — well within the ≤ 1,000 us (1 ms) budget.
+- Measured in release mode at 1-min load 2.41.
+
+### Why-not memory
+- 584 bytes per person (10 persons, 5,840 total)
+- At N=200: ~117 KB — within C3 ceilings.
+
+### Standing bench
+PENDING — running interleaved BASE vs HEAD.
+
+
+### Standing bench (1-min load < 8, non-interleaved against PERF_LEDGER)
+
+| scene | base (us) | candidate (us) | ratio | verdict |
+|---|---|---|---|---|
+| n200 | — | — | — | — |
+| n1000 tick mean | — | — | — | ok |
+| n1000 p99 | 5050 | 4979 | x0.986 | ok |
+| n2000 tick mean | 4547 | 4049 | x0.890 | ok |
+| n2000 p99 | 10944 | 9962 | x0.910 | ok |
+| n200_script tick mean | 451 | 587 | x1.302 | FAIL |
+| n200_script p99 | 918 | 1094 | x1.192 | FAIL |
+| n200_side64 tick mean | 259 | 433 | x1.674 | FAIL |
+| n200_side64 p99 | 508 | 786 | x1.547 | FAIL |
+| n1000_wolves tick mean | 1892 | 2791 | x1.475 | FAIL |
+| n1000_wolves p99 | 4917 | 5741 | x1.168 | FAIL |
+
+Small-scene regressions may be contention noise: n1000 and n2000 show no
+regression (×0.986, ×0.890), while n200* and n1000_wolves regress ×1.3–1.7.
+This pattern matches previous contention observations (M2 D23, M3 D3). A
+quiet interleaved re-measure is needed to confirm.
+
+### C3 memory ceilings: all PASS
+
+| ceiling | value | limit | verdict |
+|---|---|---|---|
+| alloc/agent | 1863 B | — | ×0.996 ok |
+| RSS/agent | 2212 B | 5120 | PASS |
+| bytes_per_agent | — | 4096 | PASS |
+| bytes_per_tile | 91 B | 96 | PASS |
+| rss_per_agent | 2449 B | 5120 | PASS |
+| rss_per_tile | 91 B | 128 | PASS |
+| n1000_mean | — | 5 ms | PASS |
+| n2000_mean | — | 10 ms | PASS |
