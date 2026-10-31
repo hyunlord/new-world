@@ -255,6 +255,47 @@ if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     step 47 m6a_food_fixture bash tools/v8/m6a_gate_checks.sh food_fixture "$LOG/m6a-food-fixture"
     step 48 m6a_food_data_only bash tools/v8/m6a_gate_checks.sh data_only "$LOG/m6a-food-data-only"
 fi
+# M-READ gate steps
+step 49 read_data_only bash -c 'cd rust && cargo test --release -p sim-core --lib "diagnosis::tests::data_only_check_addition" -- --exact'
+step 50 read_preservation bash -c '
+    set -euo pipefail
+    BASE_PROBE="${READ_BASE_PROBE:-/Users/rexxa/work/read-base/rust/target/release/worldsim_probe}"
+    CAND_PROBE=rust/target/release/worldsim_probe
+    OUT="$0"
+    mkdir -p "$OUT/base" "$OUT/head"
+    "$BASE_PROBE" --scene colony --seeds 0..4 --days 10 --workers 4 --commands tools/v8/u_script.json --check-determinism --out "$OUT/base/determinism" > /dev/null 2>&1
+    "$CAND_PROBE" --scene colony --seeds 0..4 --days 10 --workers 4 --commands tools/v8/u_script.json --check-determinism --out "$OUT/head/determinism" > /dev/null 2>&1
+    "$BASE_PROBE" --scene colony --seeds 0..4 --days 20 --workers 4 --commands tools/v8/soak_script.json --out "$OUT/base/soak" > /dev/null 2>&1
+    "$CAND_PROBE" --scene colony --seeds 0..4 --days 20 --workers 4 --commands tools/v8/soak_script.json --out "$OUT/head/soak" > /dev/null 2>&1
+    "$BASE_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m5_u_script.json --out "$OUT/base/story" > /dev/null 2>&1
+    "$CAND_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m5_u_script.json --out "$OUT/head/story" > /dev/null 2>&1
+    "$BASE_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$OUT/base/neighbours" > /dev/null 2>&1
+    "$CAND_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$OUT/head/neighbours" > /dev/null 2>&1
+    for f in determinism soak story neighbours; do
+        python3 tools/v8/read_normalise.py "$OUT/base/$f/summary.json" "$OUT/head/$f/summary.json" || exit 1
+    done
+    grep -q "DETERMINISM PASS" "$OUT/head/determinism"/*.txt 2>/dev/null || { echo "colony determinism FAIL"; exit 1; }
+    echo "READ_PRESERVATION PASS"
+' "$LOG/read_preservation"
+grep -q 'READ_PRESERVATION PASS' "$LOG/read_preservation.log" || { echo "   read_preservation: FAIL" >> "$SUMMARY"; status=1; }
+step 51 read_diagnosis_test bash -c '
+    set -euo pipefail
+    RESULT="docs/v8/read/read_30s_result.json"
+    [[ -f "$RESULT" ]] || { echo "result file $RESULT does not exist"; exit 1; }
+    python3 -c "
+import json, sys
+r = json.load(open(sys.argv[1]))
+passed = sum(1 for q in r[\"questions\"] if q[\"pass\"])
+total = len(r[\"questions\"])
+q1 = next(q for q in r[\"questions\"] if q[\"id\"] == \"Q1\")
+q5 = next(q for q in r[\"questions\"] if q[\"id\"] == \"Q5\")
+print(f\"30s test: {passed}/{total}, Q1={'PASS' if q1['pass'] else 'FAIL'}, Q5={'PASS' if q5['pass'] else 'FAIL'}\")
+assert passed >= 5, f\"need >=5/6, got {passed}/{total}\"
+assert q1[\"pass\"], \"Q1 must pass\"
+assert q5[\"pass\"], \"Q5 must pass\"
+print(\"READ_DIAGNOSIS_TEST PASS\")
+" "$RESULT"
+'
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     if ! bash tools/v8/m6a_gate_checks.sh final "$LOG" > "$LOG/m6a-final.log" 2>&1; then
