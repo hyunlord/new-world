@@ -89,6 +89,14 @@ func _refresh() -> void:
 		_current_text = ""
 		return
 	var voice_name: String = str(_task_data.get("voice_name", ""))
+	# M-READ: the bridge may not fill voice_name; look it up from the AgentId.
+	if voice_name.is_empty():
+		var voice_id: int = int(_task_data.get("voice", -1))
+		if voice_id >= 0:
+			var language: String = "ko"
+			if _locale != null and _locale.has_method("current_language"):
+				language = str(_locale.call("current_language"))
+			voice_name = Names.present(voice_id, language)
 	var text_key: String = str(_task_data.get("text_key", ""))
 	var action_key: String = str(_task_data.get("action_key", ""))
 	var is_steward: bool = bool(_task_data.get("steward_active", false))

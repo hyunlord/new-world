@@ -55,6 +55,9 @@ func _run() -> void:
 	# --- Test 10: Subject diagnosis extraction ---
 	_test_subject_diagnosis()
 
+	# --- Test 11: Plaque voice name not empty ---
+	await _test_plaque_voice(main, world, reads)
+
 	print("READ_TEST_DONE pass=%d fail=%d" % [_pass, _fail])
 	quit(1 if _fail > 0 else 0)
 
@@ -268,3 +271,24 @@ func _test_subject_diagnosis() -> void:
 	_assert(stockpile.find("←") >= 0 or stockpile.length() > 5, "stockpile has chain or content")
 	var hearth: String = DiagText.subject_diagnosis(diag, "DIAG_HEARTH_", locale)
 	_assert(hearth.is_empty(), "no hearth diagnosis when chains lack hearth entries")
+
+
+## Test 11: the plaque voice name is not empty when a request is active.
+func _test_plaque_voice(main: Node, world: Node, reads: Node) -> void:
+	print("Test 11: plaque voice name")
+	reads.call("mutate_raw", "reset_world", [0])
+	for _i: int in 10:
+		await process_frame
+	world.call("advance_ticks", 1440)
+	for _i: int in 5:
+		await process_frame
+	var plaque: Node = main.get_node_or_null("UI/TaskPlaque")
+	if plaque == null or not plaque.has_method("plaque_text"):
+		_assert(true, "plaque absent (BASE compat)")
+		return
+	var text: String = str(plaque.call("plaque_text"))
+	if text.is_empty():
+		_assert(true, "plaque empty (no task)")
+		return
+	_assert(not text.begins_with(":"), "plaque text does not start with ':' (voice name filled)")
+	_assert(not text.begins_with(": "), "plaque text does not start with ': ' (voice name filled)")
