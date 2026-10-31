@@ -1,11 +1,102 @@
 {
-  "note": "Placeholder — to be filled by the owner or the 30-second test agent after Part 3.",
-  "questions": [
-    {"id": "Q1", "pass": false, "answer": ""},
-    {"id": "Q2", "pass": false, "answer": ""},
-    {"id": "Q3", "pass": false, "answer": ""},
-    {"id": "Q4", "pass": false, "answer": ""},
-    {"id": "Q5", "pass": false, "answer": ""},
-    {"id": "Q6", "pass": false, "answer": ""}
-  ]
+ "note": "M-READ 30-second diagnosis test. Bar: >=5/6 with Q1 and Q5. Reviewer answers verbatim (CHAIN/CONFIDENCE); full reasoning in READ_DECISIONS. Images: /Users/rexxa/work/read-data/captures/{cand,base}.",
+ "questions": [
+  {
+   "id": "Q1",
+   "pass": true,
+   "round": 1,
+   "target": "굶어 죽음 ← 먹지 못함(저장 식량 0)",
+   "answer": "CHAIN: 굶주림으로 사망 (starved to death) ← 사망 시점 배고픔 수치 최대(1000/0.1단위 = 100.0, 즉 포화) ← 사망 당시 신선한 저장 식량 0 + 사망 위치에서 도달 가능한 익은 식량 0 ← 당시 식량 식물은 존재했으나 활용되지 않음(\"식량 식물은 있었지만 의지[하지] 않았다\") ← 마을에 비축 구역(식량 저장소)이 설정되어 있지 않음(\"비축 구역 없음\" 알림, 상단바 \"비축 구역이 없습니다 - 할 일: 저장 늘리기\")\nCONFIDENCE: high"
+  },
+  {
+   "id": "Q2",
+   "pass": true,
+   "round": 2,
+   "target": "일 안 함 ← 먹는 중(배고픔)",
+   "answer": "CHAIN: 할 일 없는 어른(idle adult, alert count 3) ← 지금 행동이 \"식사\"(우선도 1,000,000,000, \"위험에 처함: 아니요\") ← 배가 고픕니다 ← 비축에 음식이 없습니다 ← (상위 알림/명판) 비축 구역이 없습니다 — 할 일: 저장 늘리기\nCONFIDENCE: high"
+  },
+  {
+   "id": "Q3",
+   "pass": true,
+   "round": 1,
+   "target": "춥다 ← 화덕 꺼짐 / 장작 없음",
+   "answer": "CHAIN: 몸이 춥다(화덕 불 없음) ← \"화덕이 꺼져 있습니다\" ← \"마을에 음식이 없습니다\" ← (뒷받침 정황) 비축 구역 없음 / 먹을 것 3일 미만 / 니티소 개인 상태 \"배가 고픕니다 ← 비축에 [없음]\"\nCONFIDENCE: medium"
+  },
+  {
+   "id": "Q4",
+   "pass": true,
+   "round": 2,
+   "target": "물건이 안 옴 ← 비축 구역이 가득 참 (scene and target changed before round 2; READ_DECISIONS)",
+   "answer": "CHAIN: 비축 구역에 물건이 안 옴 ← 비축 구역이 가득 찼습니다 (stockpile zone is full)\nCONFIDENCE: medium\nREASONING (summary): q4_overview palisade packed with logs (통나무 263), alerts 먹을 것 3일 미만, 겨울까지 10일·식량 0.0일분; q4_stockpile causal panel tile (91,98) ends with green line \"비축 구역이 가득 찼습니다\", no further link."
+  },
+  {
+   "id": "Q5",
+   "pass": true,
+   "round": 2,
+   "target": "지금 할 일 ← 비축 없음",
+   "answer": "CHAIN: 먹을거리를 더 확보하도록 개입한다 (채집·수확 구역에 인력 추가 또는 우선순위(P) 상향) ← 마을 알림 \"먹을 것 3일 미만\", 좌상단 명판 \"마을 음식이 부족합니다 (8개)\" ← 비축 식량 12, 집사가 이미 \"먹을거리 모으기(채집·수확 구역)\" 수행 중이나 부족 해소 안 됨; 인력 분산(건설), 장작 0\nCONFIDENCE: medium\nNOTE: reviewer quoted the plaque chain \"보소부: 먹을 게 없어요 ← 마을 음식이 부족합니다 (8개) — 집사가 하고 있어요: 먹을거리 모으기\"."
+  },
+  {
+   "id": "Q6",
+   "pass": true,
+   "round": 1,
+   "target": "겨울 준비 부족 ← 저장량 부족",
+   "answer": "CHAIN: 겨울 대비 식량 비축 전무 (저장 0.0일분/필요 6.0일분, 식량 0/144) ← 반복된 \"먹을거리를 거두고 조리·저장을 준비했어요\" 이벤트에도 실제 식량이 전혀 쌓이지 않음 ← 해당 비축 구역이 가득 찼음(\"비축 구역이 가득 찼습니다\") ← 그 구역이 목재류 자재로 선점됨 ← 인력이 건설/벌목에 쏠려 식량 채집·저장 인력 부족(추정)\nCONFIDENCE: medium"
+  }
+ ],
+ "base": [
+  {
+   "id": "Q1",
+   "pass": true,
+   "round": 1,
+   "answer": "CHAIN: 아사(굶주림, starvation) ← 사망 순간 배고픔 수치가 최대치(1000, 0.1단위) ← 사망 당시 신선한 저장 식량 0 & 도달 가능한 익은 식량 0 ← 근처에 식량 식물은 있었지만 아직 익지 않았음 ← (마을 맥락) 비축 식량 0·야생 열매 0·\"비축 구역 없음\" 경고, 1년 차 겨울 초반\nCONFIDENCE: high"
+  },
+  {
+   "id": "Q2",
+   "pass": true,
+   "round": 2,
+   "answer": "CHAIN: Adult (보소부 #4) is not doing camp work because his top-priority current action is \"식사\" (priority 1000000000), moving toward food ← village has zero stored food (비축 식량 0) and zero wild berries ← no stockpile zone (\"비축 구역 없음 · 1\"), \"먹을 것 3일 미만 · 1\". Caveat: \"할 일 없는 어른 · 3\" alert not tied to #4 on screen.\nCONFIDENCE: medium"
+  },
+  {
+   "id": "Q3",
+   "pass": false,
+   "round": 1,
+   "answer": "CHAIN: 화덕이 꺼져 있음(불씨 없는 빈 돌무더기로 묘사) ← 아무도 화덕을 보수/점화하는 실제 작업을 하고 있지 않음, \"불가에 모이기\"만 수행 중 ← 그 행동의 우선순위 10000000000 고정값(폴백으로 보임) ← 화덕 타일 \"왜?\" 인과 기록은 8건 모두 \"기타 사건 기록\" 미해석 라벨 — 구체적 원인이 UI상 드러나지 않음\nCONFIDENCE: medium"
+  },
+  {
+   "id": "Q4",
+   "pass": false,
+   "round": 2,
+   "answer": "CHAIN: 비축 구역이 식량으로 비어 있음 (비축 식량 0, 야생 열매 0) ← 일꾼들이 건설 작업에 묶여 식량 채집 인력이 부족해 보임 ← 마을이 장작·통나무(263) 비축/건설에 자원 집중 ← 비축 구역이 방금 자동 생성됨; '왜?' 패널(91,98)은 '기타 사건 기록' 8줄만, 구체적 병목 확인 불가\nCONFIDENCE: low"
+  },
+  {
+   "id": "Q5",
+   "pass": true,
+   "round": 1,
+   "answer": "CHAIN: 식량 채집에 인력을 우선 배정한다 (작업 우선순위[P] 메뉴에서 식량 채집/수렵 비중을 올린다) ← 마을 알림에 \"먹을 것 3일 미만·1\" 경고, 비축 식량 12, 야생 열매 0 ← 인구 10명에 비해 식량 생산 부족(건설 39건에 인력 분산), 봄이라 장작 부족은 덜 급함\nCONFIDENCE: medium"
+  },
+  {
+   "id": "Q6",
+   "pass": true,
+   "round": 1,
+   "answer": "CHAIN: 겨울 대비 식량 저장 부족 (겨울까지 10일 · 필요 6.0일분=144 중 저장 0.0일분/0) ← 비축 식량이 전혀 쌓이지 않음 (\"먹을거리를 거두고 조리·저장을 준비했어요\" 반복에도 0/144) ← 채집 가능한 식량원이 바닥남 (\"야생 열매 0\") ← 노동력이 벌목·건설에 투입됨(추정)\nCONFIDENCE: medium"
+  }
+ ],
+ "round1_candidate": {
+  "Q2": {
+   "pass": false,
+   "answer": "CHAIN: Screens contradict the premise — the inspector shows 유루게(#8) IS working (지금: 일하기), not idle ← reason \"이유: 맡은 작업 진행 중 · 제작 중\" ← 왜? lists two 일하기 options, priority 30 beats 10 ← \"하려던 것: 안전한 곳으로 피하기 — 막힘: 위험에 처함\" blocked ← unmet need \"목이 마릅니다\" not acted on\nCONFIDENCE: medium",
+   "why": "wrong scene: the clicked adult was working"
+  },
+  "Q4": {
+   "pass": false,
+   "answer": "CHAIN: 비축 구역에 물건(식량)이 안 옴 ← 비축소(stockpile)에 식량이 없음 ← 마을 전체에 식량이 없음 ← (화면상 더 상위 원인은 안 보임, 다만 인구 10명 중 일부만 벌목/문 제작에 배치되어 있고 야생 열매 채집량이 0으로 식량 채집 자체가 이루어지지 않고 있는 정황)\nCONFIDENCE: medium-high",
+   "why": "target was 운반자 없음; scene showed no-food"
+  },
+  "Q5_second_reviewer": "CHAIN: 식량 채집에 인력을 우선 배정한다 ← \"먹을 것 3일 미만·1\" ← \"야생 열매 0\" and population not tasked to replenish it, while the steward is busy on \"저장 늘리기\" (not actually getting food)\nCONFIDENCE: medium\nNOTE: q5_overview.png and q5_alerts.png pixel-identical."
+ },
+ "summary": {
+  "candidate": "6/6 (Q1 PASS, Q5 PASS)",
+  "base": "4/6 (Q3, Q4 FAIL)"
+ }
 }
