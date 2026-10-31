@@ -413,3 +413,11 @@ M-UX2 게시 시점의 332개 고유 이슈: fixed197 / open103 / deferred30 / w
 - M6A-1/#670 식물placeholder아트OPEN유지. 게시없어정식ISS재번호및#649게시SHA링크변경없음.
 
 - 2026-10-31 M6a R2 게시(`d67b42fff`, 오너 결정 O-1..O-4): 임시 M6A-1…4→ISS-348…351, M6A-R2-1…4→ISS-352…355. ISS-348(#670 식물 아트)만 open; ISS-349…355 fixed(ISS-353은 막대 철회 O-1). 후속은 M6b 마일스톤 이슈로 연다.
+
+### M-READ Part 2 (임시 번호, 게시 시 ISS 재번호)
+
+| ID | 증상 | 발견·재현 | 분류 | 상태 | 조치·잔여 작업 | 근거 |
+|---|---|---|---|---|---|---|
+| READ-1 | 사람 수준 진단 사실 제공자가 마음의 기존 사실 제공자와 아직 연결되지 않음 | §2.1 "reuse the mind's fact providers for person facts" | architecture | open | 마음의 FactProvider를 진단 평가에서 PersonSnapshot 없이 호출할 수 있는 어댑터 필요. 정착지 수준 진단은 작동함 | `docs/v8/read/READ_GOAL.md` §2.1; `rust/crates/sim-systems/src/runtime/diagnosis.rs` |
+| READ-2 | 지금-할-일 표시 타일이 정착지 형성 타일을 자리표시자로 사용 | §2.4 "same validity check the order tool uses" | feature | open | 명령 유효성 검사 시스템과의 통합이 필요. 현재 형성 타일을 반환함 | `rust/crates/sim-bridge/src/ffi/diagnosis.rs` `collect_current_task` |
+| READ-3 | 진단+요청 ≤1ms 벤치 사례 미작성 | §4 "bench it" | testing | open | DiagnosisSystem + RequestsSystem 비용을 N=200에서 측정하는 벤치 사례 작성 필요 | `docs/v8/read/READ_GOAL.md` §4 |

@@ -245,6 +245,14 @@ pub const SYSTEM_REGISTRATIONS: &[SystemRegistration] = &[
         worlds: SystemWorlds::Both,
     },
     SystemRegistration {
+        name: "DiagnosisSystem",
+        worlds: SystemWorlds::Both,
+    },
+    SystemRegistration {
+        name: "RequestsSystem",
+        worlds: SystemWorlds::Both,
+    },
+    SystemRegistration {
         name: "InfluenceVisualizationSystem",
         worlds: SystemWorlds::Both,
     },

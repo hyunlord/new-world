@@ -533,6 +533,8 @@ mod registration_tests {
         "QuarrelSystem",
         "NeighbourSystem",
         "VisitorSystem",
+        "DiagnosisSystem",
+        "RequestsSystem",
         "InfluenceVisualizationSystem",
     ];
 
