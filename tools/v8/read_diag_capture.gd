@@ -171,51 +171,23 @@ func _q2_not_working(main: Node, world: Node, reads: Node, camera: Camera2D, _to
 	return result
 
 
-# Q3: 왜 이 사람이 춥나 / 왜 화덕이 꺼졌나 — constructed: steward OFF, mid-winter. With the
-# steward off nobody stokes the hearth (fire_lit 0 from day 6). The hearth diagnosis is opened
-# with the causal panel's own open_tile: a click on the camp tile hits the adjacent campfire workshop.
+# Q3: 왜 이 사람이 춥나 / 왜 화덕이 꺼졌나 — constructed: seed 0, steward OFF, winter (tick 26400,
+# day 19; winter starts day 18), before the day-19 starvation deaths. The hearth diagnosis is opened with the
+# causal panel's own open_tile (a camp-tile click hits the adjacent campfire workshop), then the
+# inspector and "왜?" of a cold person, else the hungriest.
 func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, _tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 3, "images": [], "seed": 0, "tick": -1}
-	# Steward-off colonies die out around day 20, before deep winter: take the first winter tick
-	# (season 3) with the hearth out and people alive; else the latest tick with a cold living
-	# person (hearth out preferred); else the last tick anyone was alive.
 	_reset_steward_off(reads, world)
-	var target_tick: int = -1
-	var last_alive: int = 0
-	var last_cold: int = -1
-	var last_cold_out: int = -1
-	for _step: int in 180:  # 30 days in 240-tick steps
-		world.call("advance_ticks", 240)
-		var agents: Dictionary = world.call("get_agent_snapshot")
-		if agents.get("ids", PackedInt64Array()).is_empty():
-			break
-		last_alive = _now(world)
-		var lit: Array = Array(SimReads.read(world, "get_settlement_snapshot").get("fire_lit", []))
-		var hearth_out: bool = not lit.has(1)
-		if Array(agents.get("colds", PackedByteArray())).any(func(c: int) -> bool: return c != 0):
-			last_cold = last_alive
-			if hearth_out:
-				last_cold_out = last_alive
-		if int(SimReads.read(world, "get_ui_facts").get("season", -1)) == 3 and hearth_out:
-			target_tick = last_alive
-			break
-	result["winter_alive"] = target_tick >= 0
-	if target_tick < 0:
-		target_tick = last_cold_out if last_cold_out >= 0 else last_cold
-		result["fallback"] = "cold+hearth_out" if last_cold_out >= 0 else ("cold" if last_cold >= 0 else "last_alive")
-	_reset_steward_off(reads, world)
-	world.call("advance_ticks", target_tick if target_tick >= 0 else last_alive)
+	world.call("advance_ticks", 26400)  # winter day 2 (day 19), before the first starvation at ~27550
 	for _i: int in 10:
 		await process_frame
 	result["tick"] = _now(world)
-	result["constructed"] = "seed 0, steward OFF, first winter tick with hearth out and people alive"
-	var settlements: Dictionary = SimReads.read(world, "get_settlement_snapshot")
-	result["fire_lit"] = str(settlements.get("fire_lit", []))
+	result["constructed"] = "seed 0, steward OFF, winter tick 26400, before starvation deaths"
+	result["fire_lit"] = str(SimReads.read(world, "get_settlement_snapshot").get("fire_lit", []))
 	var camp: Vector2i = _hearth(world)
 	_frame(camera, Vector2(camp), 2.0)
 	for _i: int in 30:
 		await process_frame
-	await _save_q("q3_overview", result)
 	var causal: Node = main.get_node_or_null("UI/CausalPanel")
 	if causal != null:
 		causal.call("open_tile", camp)
@@ -224,21 +196,19 @@ func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, _tool_node
 			await process_frame
 		await _save_q("q3_hearth_diag", result)
 		(causal as CanvasItem).visible = false
-	# The cold person nearest the hearth, else the nearest person.
 	var snap: Dictionary = world.call("get_agent_snapshot")
-	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
-	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	var colds: PackedByteArray = snap.get("colds", PackedByteArray())
-	var target: int = -1
-	var best: int = 1 << 30
-	for i: int in xs.size():
-		var d: int = absi(xs[i] - camp.x) + absi(ys[i] - camp.y) - (100000 if i < colds.size() and colds[i] != 0 else 0)
-		if d < best:
-			best = d
+	result["alive"] = ids.size()
+	var target: int = _lowest_index(snap.get("hungers", PackedFloat32Array()))
+	for i: int in mini(ids.size(), colds.size()):
+		if colds[i] != 0:
 			target = i
+			break
 	if target >= 0:
 		result["person_cold"] = target < colds.size() and colds[target] != 0
-		await _inspect_and_why(main, world, int(snap["ids"][target]), "q3", result)
+		result["person_hunger"] = snap["hungers"][target]
+		await _inspect_and_why(main, world, int(ids[target]), "q3", result)
 	return result
 
 
