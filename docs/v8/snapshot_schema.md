@@ -1759,7 +1759,8 @@ Per-person blocked candidates from the latest mind choice. Returns:
 
 | key | type | description |
 |---|---|---|
-| `nodes` | `PackedStringArray` | Blocked node names |
+| `nodes` | `PackedStringArray` | Blocked node authored names |
+| `name_keys` | `PackedStringArray` | Locale keys for the blocked nodes (e.g. MIND_BEHAVIOUR_EAT) |
 | `bands` | `PackedStringArray` | Band names |
 | `fact_names` | `PackedStringArray` | Failing fact name |
 | `ops` | `PackedStringArray` | Operator (has/not/</>/>=/<=/>=/==) |

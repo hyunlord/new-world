@@ -1281,5 +1281,14 @@
 	"CHRON_GROUP_COLD_FMT": "{count}명이 추위로 다침 ← {cause}",
 	"CHRON_GROUP_STARVE_FMT": "{count}명이 굶주림 ← {cause}",
 	"CHRON_GROUP_GENERIC_FMT": "{count}건 — {kind_text} ← {cause}",
-	"CHRON_GROUP_EXPAND": "자세히 보기"
+	"CHRON_GROUP_EXPAND": "자세히 보기",
+
+	"MIND_FACT_CARRYING": "물건을 들고 있음",
+	"MIND_FACT_HARVEST_STORAGE_AVAILABLE": "수확물 저장 가능",
+	"MIND_FACT_HARVEST_WINDOW": "수확할 시간",
+	"MIND_FACT_JOB_FOOD_TRANSPORT": "식량 운반 중",
+
+	"READ_WHY_NOT_FMT": "하려던 것: {wanted} — 막힘: {blocked}({detail})",
+	"READ_WHY_NOT_SHORT_FMT": "하려던 것: {wanted} — 막힘: {blocked}",
+	"READ_DIAG_CHAIN_SEP": " ← "
 }

@@ -1281,5 +1281,10 @@
 	"CHRON_GROUP_COLD_FMT": "{count} hurt by cold ← {cause}",
 	"CHRON_GROUP_STARVE_FMT": "{count} starving ← {cause}",
 	"CHRON_GROUP_GENERIC_FMT": "{count} events — {kind_text} ← {cause}",
-	"CHRON_GROUP_EXPAND": "Show details"
+	"CHRON_GROUP_EXPAND": "Show details",
+
+	"MIND_FACT_CARRYING": "Carrying something",
+	"MIND_FACT_HARVEST_STORAGE_AVAILABLE": "Harvest storage available",
+	"MIND_FACT_HARVEST_WINDOW": "Harvest time",
+	"MIND_FACT_JOB_FOOD_TRANSPORT": "Transporting food"
 }

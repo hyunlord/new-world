@@ -63,17 +63,25 @@ static func chain_text(checks: Dictionary, index: int, locale: Node) -> String:
 ## `why_not` is the dictionary from get_why_not(entity_bits).
 static func why_not_line(why_not: Dictionary, locale: Node) -> String:
 	var nodes: PackedStringArray = why_not.get("nodes", PackedStringArray())
+	var name_keys: PackedStringArray = why_not.get("name_keys", PackedStringArray())
 	var fact_names: PackedStringArray = why_not.get("fact_names", PackedStringArray())
+	var ops: PackedStringArray = why_not.get("ops", PackedStringArray())
 	var actuals: PackedInt64Array = why_not.get("actuals", PackedInt64Array())
 	if nodes.is_empty() or fact_names.is_empty():
 		return ""
-	var wanted: String = _loc(locale, nodes[0])
-	if wanted == nodes[0]:
+	# Use the locale name_key for the node (same key the causal panel uses).
+	var node_key: String = name_keys[0] if not name_keys.is_empty() else ""
+	var wanted: String = _loc(locale, node_key) if not node_key.is_empty() else nodes[0]
+	if wanted.is_empty() or wanted == node_key:
 		wanted = nodes[0]
-	var blocked: String = _loc(locale, fact_names[0])
-	if blocked == fact_names[0]:
+	# Use MIND_FACT_<UPPER> for the blocked fact.
+	var fact_key: String = "MIND_FACT_" + fact_names[0].to_upper()
+	var blocked: String = _loc(locale, fact_key)
+	if blocked == fact_key:
 		blocked = fact_names[0]
-	if not actuals.is_empty():
+	# Bool facts show plain text; numeric facts show "(value)" detail.
+	var op: String = ops[0] if not ops.is_empty() else ""
+	if not actuals.is_empty() and op != "has" and op != "not":
 		var detail: String = str(actuals[0])
 		return _loc(locale, "READ_WHY_NOT_FMT").format({"wanted": wanted, "blocked": blocked, "detail": detail})
 	return _loc(locale, "READ_WHY_NOT_SHORT_FMT").format({"wanted": wanted, "blocked": blocked})

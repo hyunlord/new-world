@@ -243,6 +243,7 @@ pub fn why_not_to_dict(engine: &SimEngine, entity_bits: u64) -> VarDictionary {
     };
 
     let mut nodes = PackedStringArray::new();
+    let mut name_keys = PackedStringArray::new();
     let mut bands = PackedStringArray::new();
     let mut fact_names = PackedStringArray::new();
     let mut ops = PackedStringArray::new();
@@ -282,7 +283,12 @@ pub fn why_not_to_dict(engine: &SimEngine, entity_bits: u64) -> VarDictionary {
             .and_then(|d| d.fact_name(entry.fact.index()))
             .unwrap_or("?");
 
+        let node_name_key = dictionary
+            .and_then(|d| d.node_label(entry.node.index()))
+            .map(|l| l.name_key.to_owned())
+            .unwrap_or_default();
         nodes.push(&GString::from(&node_name));
+        name_keys.push(&GString::from(&node_name_key));
         bands.push(&GString::from(band_name));
         fact_names.push(&GString::from(fact_name));
         ops.push(&GString::from(entry.op_str()));
@@ -292,6 +298,7 @@ pub fn why_not_to_dict(engine: &SimEngine, entity_bits: u64) -> VarDictionary {
     }
 
     dict.set("nodes", nodes);
+    dict.set("name_keys", name_keys);
     dict.set("bands", bands);
     dict.set("fact_names", fact_names);
     dict.set("ops", ops);

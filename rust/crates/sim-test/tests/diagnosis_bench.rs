@@ -124,6 +124,45 @@ fn why_not_bytes_per_person_within_budget() {
 }
 
 #[test]
+fn every_mind_predicate_fact_has_locale_key() {
+    // Every fact used in a mind.ron predicate must have a MIND_FACT_<UPPER> key
+    // in the ko locale, so the why-not line shows Korean instead of raw ids.
+    let ko: serde_json::Value =
+        serde_json::from_str(include_str!("../../../../localization/ko/ui.json"))
+            .expect("ko locale must parse");
+    let ko_map = ko.as_object().expect("locale must be an object");
+    let mind_ron = include_str!("../../sim-core/data/colony/mind.ron");
+    let mut facts = std::collections::BTreeSet::new();
+    for line in mind_ron.lines() {
+        // Match `fact: "name"` in predicates and score terms.
+        let trimmed = line.trim();
+        if let Some(start) = trimmed.find("fact: \"") {
+            let rest = &trimmed[start + 7..];
+            if let Some(end) = rest.find('"') {
+                facts.insert(rest[..end].to_owned());
+            }
+        }
+    }
+    assert!(
+        facts.len() > 50,
+        "expected >50 facts in mind.ron, got {}",
+        facts.len()
+    );
+    let mut missing = Vec::new();
+    for fact in &facts {
+        let key = format!("MIND_FACT_{}", fact.to_uppercase());
+        if !ko_map.contains_key(&key) {
+            missing.push(format!("{key} ({fact})"));
+        }
+    }
+    assert!(
+        missing.is_empty(),
+        "mind.ron facts missing locale keys:\n  {}",
+        missing.join("\n  ")
+    );
+}
+
+#[test]
 fn requests_voice_is_living_adult() {
     // Every request's voice must be a living agent id in the world.
     let mut engine = sim_test::colony_engine(0);
