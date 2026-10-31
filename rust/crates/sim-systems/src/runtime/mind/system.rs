@@ -509,6 +509,25 @@ impl ColonyMindSystem {
         } else {
             None
         };
+        // M-READ §2.2: push blocked candidates to the per-person why-not ring.
+        // Pure presentation side-effect; never affects selection or determinism.
+        if let Some(sel) = selected.as_ref() {
+            let blocked = self.scratch.blocked_candidates(sel.selected.band);
+            if !blocked.is_empty() {
+                let fact_names: Vec<String> = self
+                    .program
+                    .policy
+                    .facts()
+                    .iter()
+                    .map(|f| f.name.clone())
+                    .collect();
+                resources.mind.why_not.entry(agent).or_default().push(
+                    resources.current_tick,
+                    &blocked,
+                    &fact_names,
+                );
+            }
+        }
         let cause = if retained.is_some() {
             prior_cause
         } else {
