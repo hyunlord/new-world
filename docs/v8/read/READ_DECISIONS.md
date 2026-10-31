@@ -38,21 +38,42 @@ Output: at most 4 PNG files per question at `/Users/rexxa/work/read-data/capture
 
 Each reviewer agent received ONLY the image paths and the question text. Pass = names the target chain's first two links.
 
-### Reviewer answers
+### Verbatim reviewer answers
 
-Reviewers were independent agents receiving ONLY image paths and question text. Proxy captures from the same BASE code (M-UX2.1 and M6a evidence) were used because Godot could not render in this agent session (macOS WindowServer unavailable). Reviewer judgments based on what is visible in the screenshots.
+Reviewers were independent agents receiving ONLY image paths and question text. Proxy captures from the same BASE code (M-UX2.1 and M6a evidence) were used because Godot could not render in this agent session (macOS WindowServer unavailable).
 
-| Q | Reviewer answer | Target first two links | Verdict |
+**Q1** (agent aaa2f90d): "CHAIN: Starvation (stored fresh food 0) ← failed to harvest ripe food within reach (reason unknown). CONFIDENCE high." Basis: 왜? panel shows "사망 당시 신선한 저장 식량: 0; 도달 가능한 익은 식량: 10159; 이전에 수확하지 못한 이유는 알 수 없다." Second image shows hunger bar deep red, 비축 식량 0, 수확 중 but 이동 중.
+
+**Q2** (agent a3ebd3a6): "CHAIN: 식사 중 (Eating) ← 배고픔을 해소할 수 있음 (Can relieve hunger). CONFIDENCE high." Basis: inspector 지금: 식사, 이유: 새 활동 기능 · 배고픔을 해소할 수 있음; 왜? panel: 1. 식사 · 우선도 1000; 비축 식량 0.
+
+**Q3** (agent a728bc60): "CHAIN: Person fleeing to safety (hearth unattended) ← Wolf pack (4 wolves) approaching. CONFIDENCE high." Basis: 니티스 #0 지금: 안전한 곳으로 피하기 / 이유: 위험에 처함, flee priority 9e9, 늑대 무리가 다가온다 (4). **Scenario defect:** the captured scene shows a wolf flee, not a cold person or an unlit hearth.
+
+**Q4** (agent a83bd410): "CHAIN: The person is mining stone (돌 캐는 중) instead of hauling items to the stockpile ← Their assigned work task has priority 10 and is currently in progress (많은 작업 진행 중). CONFIDENCE high." Basis: 보소부 #4 작업 중 / 돌 캐는 중; top bar all 0; 재료 0/8 · 작업 0%; 왜? panel: 일하기 · 우선도 10.
+
+**Q5** (agent a27f5f01): "CHAIN: Secure food (set up hunting/foraging) ← Food supplies will run out in less than 3 days (먹을 것 3일 미만 · 1). CONFIDENCE high." Basis: alert panel shows 겨울 장작 부족 · 1, 먹을 것 3일 미만 · 1, 기술 전승 위험 · 3; top bar 비축 식량 0, 장작 0; chronicle shows hunting zone on Day 3.
+
+**Q6** (agent a40830e3): "CHAIN: 비축 식량 0 ← 비축 구역 없음 (food spoils on ground). CONFIDENCE high." Basis: 뿌리 x5 보관: 땅 위 → 6일 남음; alerts 비축 구역 없음, 겨울 장작 부족, 먹을 것 3일 미만; day 4 spring year 1. **Scenario note:** day 4 spring is not an autumn/winter shortfall state.
+
+### Scoring
+
+| Q | Reviewer answer (chain) | Target first two links | Verdict |
 |---|---|---|---|
-| Q1 | 굶어 죽음 ← 저장 식량 0 (왜? panel shows "사망 당시 신선한 저장 식량: 0", then "도달 가능한 익은 식량: 10159", then "수확하지 못한 이유는 알 수 없다") | 굶어 죽음 ← 먹지 못함 | **PASS** — first two links visible in the 왜? panel: death + stored food 0. Chain depth 3 present but last link admits "이유는 알 수 없다" |
-| Q2 | 일 안 함 ← 식사 중 (inspector shows "지금: 식사 · 이유: 새 활동 가능 · 배고픔을 해소할 수 있음", 목표: 식량) | 일 안 함 ← 먹는 중 | **PASS** — inspector clearly shows "지금: 식사" and hunger as the reason |
-| Q3 | 사람이 도망 중 ← 늑대 위협 (inspector shows fleeing from wolves, NOT cold) | 춥다 ← 화덕 꺼짐 or 장작 없음 | **FAIL** — proxy images show a fleeing person, not a cold person; even with a correct cold capture, the chain from cold to hearth to firewood is not shown |
-| Q4 | 사람이 일하는 중 (inspector shows working person, no stockpile diagnostic) | 물건이 안 옴 ← 운반자 없음 | **FAIL** — no stockpile-level diagnosis exists; the UI shows individual person actions, not aggregate stockpile status |
-| Q5 | 연대기에 집사 행동 목록 보임, 경고에 장작 부족·식량 부족·기술 위험 보임, but no single "지금 할 일" synthesis | 지금 할 일 ← 비축 없음 | **FAIL** — alerts and chronicle show fragments but no single plaque or recommended action |
-| Q6 | 식량 바닥에 뿌리 5개, 6일 남음 (food tooltip shows roots on ground, 6 days left). 경고: 겨울 장작 부족, 먹을 것 3일 미만, 비축 구역 없음. No cause chain for winter shortage | 겨울 준비 부족 ← 저장량 부족 | **FAIL** — alerts say "겨울 장작 부족" and "먹을 것 3일 미만" but not WHY preparation is insufficient (no harvest? wrong priorities? spoilage?) |
+| Q1 | Starvation ← stored food 0 ← failed harvest (reason unknown) | 굶어 죽음 ← 먹지 못함 | **PASS** — headline (starvation) + next cause (stored food 0) visible in 왜? panel |
+| Q2 | 식사 중 ← 배고픔을 해소할 수 있음 | 일 안 함 ← 먹는 중 | **PASS** — inspector shows "지금: 식사" and hunger as reason; priority 1000 |
+| Q3 | Fleeing ← wolves approaching | 춥다 ← 화덕 꺼짐 or 장작 없음 | **FAIL** — wrong scenario (wolf flee proxy, not cold person). Even with correct capture, no hearth-to-firewood chain in current UI |
+| Q4 | Person mining ← work priority 10 | 물건이 안 옴 ← 운반자 없음 | **FAIL** — reviewer identified person-level reason (mining not hauling) but no stockpile-level diagnosis exists. Target chain "items not arriving ← no hauler" not named |
+| Q5 | Secure food ← food < 3 days | 지금 할 일 ← 비축 없음 | **FAIL** — reviewer inferred urgency from alerts (food crisis) but no "지금 할 일" plaque exists; answer names food urgency, not the target chain's stockpile action |
+| Q6 | 비축 식량 0 ← 비축 구역 없음 | 겨울 준비 부족 ← 저장량 부족 | **FAIL** — reviewer identified food 0 ← no stockpile zone, a valid mechanism. But the scenario is spring day 4 (not winter shortfall) and the target chain "겨울 준비 부족" is not named as headline |
 
 **BASE score: 2/6 PASS (Q1, Q2). FAIL on Q3, Q4, Q5, Q6.**
 Required bar: 5/6 with Q1 and Q5 mandatory. Q1 PASS, Q5 FAIL. Bar NOT MET on BASE. This is expected per the brief ("BASE scoring mostly fail is expected and is NOT a spec defect").
+
+### Scenario defects noted by the team lead
+
+1. **Q3:** proxy capture shows wolf flee, not cold person. The capture script's Q3 scenario searches seeds 0–7 for `cold=true` by day 10; the proxy image was a flee scene from M-UX2.1. Fix: run the capture script with display access to get the correct cold scenario.
+2. **Q6:** proxy capture is spring day 1/4 (food spoilage info), not an autumn/winter shortfall. The capture script's Q6 scenario uses seed 0 day 8 (tick 11520). Fix: run the capture script with display access.
+
+These are proxy-capture mismatches, not capture-script defects. The script targets the correct scenarios but could not render in this session.
 
 ### Suspected spec defects
 
