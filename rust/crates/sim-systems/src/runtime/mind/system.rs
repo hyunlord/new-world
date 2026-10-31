@@ -510,22 +510,18 @@ impl ColonyMindSystem {
             None
         };
         // M-READ §2.2: push blocked candidates to the per-person why-not ring.
-        // Pure presentation side-effect; never affects selection or determinism.
+        // Only on node change (not continuations) to keep the cost negligible.
         if let Some(sel) = selected.as_ref() {
-            let blocked = self.scratch.blocked_candidates(sel.selected.band);
-            if !blocked.is_empty() {
-                let fact_names: Vec<String> = self
-                    .program
-                    .policy
-                    .facts()
-                    .iter()
-                    .map(|f| f.name.clone())
-                    .collect();
-                resources.mind.why_not.entry(agent).or_default().push(
-                    resources.current_tick,
-                    &blocked,
-                    &fact_names,
-                );
+            if !matches!(sel.transition, sim_core::colony::mind::Transition::Continue) {
+                let blocked = self.scratch.blocked_candidates(sel.selected.band);
+                if !blocked.is_empty() {
+                    resources
+                        .mind
+                        .why_not
+                        .entry(agent)
+                        .or_default()
+                        .push_compact(resources.current_tick, &blocked);
+                }
             }
         }
         let cause = if retained.is_some() {

@@ -14,8 +14,9 @@ use std::collections::BTreeMap;
 pub const WHY_NOT_RING_SIZE: usize = 4;
 
 /// One why-not entry: a blocked candidate from a single MindChoice with its
-/// first failing predicate. Presentation only, never affects simulation.
-#[derive(Debug, Clone)]
+/// first failing predicate. Allocation-free: stores FactId and op code, not
+/// String copies. Names are resolved at bridge-read time from the dictionary.
+#[derive(Debug, Clone, Copy)]
 pub struct WhyNotEntry {
     /// Simulation tick when this was recorded.
     pub tick: u64,
@@ -23,63 +24,91 @@ pub struct WhyNotEntry {
     pub node: NodeId,
     /// Blocked node's band.
     pub band: BandId,
-    /// Fact name of the first failing predicate.
-    pub fact_name: String,
-    /// Operator of the first failing predicate.
-    pub op: String,
+    /// Fact column of the first failing predicate (resolved to name at read time).
+    pub fact: super::mind::FactId,
+    /// Operator code: 0=Lt 1=Le 2=Gt 3=Ge 4=Eq 5=Has 6=Not.
+    pub op_code: u8,
     /// Authored threshold value.
     pub threshold: i64,
     /// Actual observed value.
     pub actual: i64,
-    /// Cause EventId of the failing fact, when available.
-    pub cause: Option<EventId>,
 }
 
-/// Per-person why-not state: a bounded ring of recent blocked candidates
-/// plus an hourly history bitmask for request aggregation.
+impl WhyNotEntry {
+    /// Operator string from the code.
+    pub fn op_str(&self) -> &'static str {
+        match self.op_code {
+            0 => "<",
+            1 => "<=",
+            2 => ">",
+            3 => ">=",
+            4 => "==",
+            5 => "has",
+            6 => "not",
+            _ => "?",
+        }
+    }
+    /// Encode an operator string to a code.
+    pub fn op_to_code(op: &str) -> u8 {
+        match op {
+            "<" => 0,
+            "<=" => 1,
+            ">" => 2,
+            ">=" => 3,
+            "==" => 4,
+            "has" => 5,
+            "not" => 6,
+            _ => 7,
+        }
+    }
+}
+
+/// Per-person why-not state: a fixed-size ring of recent blocked candidates
+/// plus an hourly history bitmask for request aggregation. Allocation-free.
 #[derive(Debug, Clone, Default)]
 pub struct WhyNotState {
-    /// Bounded ring of recent entries, newest first.
-    pub entries: Vec<WhyNotEntry>,
+    /// Fixed-size ring; `count` entries valid starting at index 0 (newest first).
+    pub entries: [Option<WhyNotEntry>; WHY_NOT_RING_SIZE],
+    /// Number of valid entries.
+    pub count: u8,
     /// Hour index of the last update (tick / 60).
     pub last_hour: u64,
     /// Bitmask: bit i set = person was blocked in (last_hour - i)th hour.
-    /// Bit 0 = current hour, bit 1 = previous hour, etc.
     pub hour_mask: u8,
 }
 
 impl WhyNotState {
-    /// Record new blocked candidates for this person at the given tick.
-    pub fn push(&mut self, tick: u64, blocked: &[BlockedCandidate], fact_names: &[String]) {
+    /// Record blocked candidates without any heap allocation.
+    /// Called only on node change (not continuations).
+    pub fn push_compact(&mut self, tick: u64, blocked: &[BlockedCandidate]) {
         if blocked.is_empty() {
             return;
         }
         let hour = tick / 60;
-        // Shift the hour mask if time advanced.
         if hour > self.last_hour {
             let shift = (hour - self.last_hour).min(8) as u32;
             self.hour_mask = self.hour_mask.checked_shl(shift).unwrap_or(0);
             self.last_hour = hour;
         }
-        // Mark current hour as blocked.
         self.hour_mask |= 1;
-        // Add entries, keeping bounded ring.
         for bc in blocked.iter().take(2) {
-            let fact_name = fact_names.get(bc.fact.index()).cloned().unwrap_or_default();
-            let entry = WhyNotEntry {
+            // Shift entries right to make room at index 0.
+            let cap = WHY_NOT_RING_SIZE;
+            for i in (1..cap).rev() {
+                self.entries[i] = self.entries[i - 1];
+            }
+            self.entries[0] = Some(WhyNotEntry {
                 tick,
                 node: bc.node,
                 band: bc.band,
-                fact_name,
-                op: bc.op.to_owned(),
+                fact: bc.fact,
+                op_code: WhyNotEntry::op_to_code(bc.op),
                 threshold: bc.threshold,
                 actual: bc.actual,
-                cause: None,
-            };
-            if self.entries.len() >= WHY_NOT_RING_SIZE {
-                self.entries.pop();
+            });
+            if (self.count as usize) < cap {
+                self.count += 1;
             }
-            self.entries.insert(0, entry);
         }
     }
 
@@ -91,16 +120,14 @@ impl WhyNotState {
         count >= threshold
     }
 
-    /// Latest blocked entries (newest first).
-    pub fn latest(&self) -> &[WhyNotEntry] {
-        &self.entries
+    /// Valid entries (newest first).
+    pub fn latest(&self) -> &[Option<WhyNotEntry>] {
+        &self.entries[..self.count as usize]
     }
 
-    /// Approximate bytes used by this state.
+    /// Approximate bytes used by this state (fixed size, no heap).
     pub fn byte_size(&self) -> usize {
         std::mem::size_of::<Self>()
-            + self.entries.capacity()
-                * (std::mem::size_of::<WhyNotEntry>() + 32/* est. string alloc */)
     }
 }
 

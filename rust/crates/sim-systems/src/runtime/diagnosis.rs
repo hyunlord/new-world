@@ -575,6 +575,24 @@ impl RuntimeSystem for RequestsSystem {
         let steward_on = resources.steward.enabled;
         let current_hour = resources.current_tick / 60;
 
+        // Build a FactId → fact name lookup from the mind dictionary.
+        let fact_names: Vec<String> = resources
+            .mind
+            .history
+            .as_ref()
+            .map(|h| {
+                let d = h.dictionary();
+                let mut names = Vec::new();
+                for i in 0.. {
+                    match d.fact_name(i) {
+                        Some(name) => names.push(name.to_owned()),
+                        None => break,
+                    }
+                }
+                names
+            })
+            .unwrap_or_default();
+
         let mut rule_counts: BTreeMap<usize, (u32, sim_core::components::AgentId)> =
             BTreeMap::new();
         for (agent_id, wn) in &resources.mind.why_not {
@@ -585,8 +603,16 @@ impl RuntimeSystem for RequestsSystem {
             ) {
                 continue;
             }
-            for entry in wn.latest().iter().take(2) {
-                if let Some(indices) = request_data.fact_index.get(&entry.fact_name) {
+            for slot in wn.latest().iter().take(2) {
+                let entry = match slot {
+                    Some(e) => e,
+                    None => continue,
+                };
+                let name = fact_names
+                    .get(entry.fact.index())
+                    .map(|s| s.as_str())
+                    .unwrap_or("");
+                if let Some(indices) = request_data.fact_index.get(name) {
                     for &idx in indices {
                         let e = rule_counts.entry(idx).or_insert((0, *agent_id));
                         e.0 += 1;

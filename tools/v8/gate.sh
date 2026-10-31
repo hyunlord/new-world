@@ -271,7 +271,11 @@ step 50 read_preservation bash -c '
     "$CAND_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m5_u_script.json --out "$OUT/head/story" > /dev/null 2>&1
     "$BASE_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$OUT/base/neighbours" > /dev/null 2>&1
     "$CAND_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$OUT/head/neighbours" > /dev/null 2>&1
-    for f in determinism soak story neighbours; do
+    "$BASE_PROBE" --scene colony --seeds 0..2 --days 24 --workers 2 --steward on --out "$OUT/base/steward" > /dev/null 2>&1
+    "$CAND_PROBE" --scene colony --seeds 0..2 --days 24 --workers 2 --steward on --out "$OUT/head/steward" > /dev/null 2>&1
+    "$BASE_PROBE" --scene colony --seeds 0..2 --days 72 --workers 2 --steward on --out "$OUT/base/m6a_steward" > /dev/null 2>&1
+    "$CAND_PROBE" --scene colony --seeds 0..2 --days 72 --workers 2 --steward on --out "$OUT/head/m6a_steward" > /dev/null 2>&1
+    for f in determinism soak story neighbours steward m6a_steward; do
         python3 tools/v8/read_normalise.py "$OUT/base/$f/summary.json" "$OUT/head/$f/summary.json" || exit 1
     done
     grep -q "DETERMINISM PASS" "$OUT/head/determinism"/*.txt 2>/dev/null || { echo "colony determinism FAIL"; exit 1; }

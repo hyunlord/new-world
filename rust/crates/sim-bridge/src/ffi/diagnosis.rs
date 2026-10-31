@@ -258,7 +258,19 @@ pub fn why_not_to_dict(engine: &SimEngine, entity_bits: u64) -> VarDictionary {
         .as_ref()
         .map(|h| h.dictionary());
 
-    for entry in wn.latest().iter().take(2) {
+    // Resolve fact names from the policy's fact list.
+    let facts = engine
+        .resources
+        .mind
+        .history
+        .as_ref()
+        .map(|h| h.dictionary());
+
+    for slot in wn.latest().iter().take(2) {
+        let entry = match slot {
+            Some(e) => e,
+            None => continue,
+        };
         let node_name = dictionary
             .and_then(|d| d.node_label(entry.node.index()))
             .map(|l| l.name.to_owned())
@@ -266,11 +278,14 @@ pub fn why_not_to_dict(engine: &SimEngine, entity_bits: u64) -> VarDictionary {
         let band_name =
             sim_core::colony::mind_records::MindRecordDictionary::band_name(entry.band.index())
                 .unwrap_or("unknown");
+        let fact_name = facts
+            .and_then(|d| d.fact_name(entry.fact.index()))
+            .unwrap_or("?");
 
         nodes.push(&GString::from(&node_name));
         bands.push(&GString::from(band_name));
-        fact_names.push(&GString::from(&entry.fact_name));
-        ops.push(&GString::from(&entry.op));
+        fact_names.push(&GString::from(fact_name));
+        ops.push(&GString::from(entry.op_str()));
         thresholds.push(entry.threshold);
         actuals.push(entry.actual);
         ticks.push(entry.tick as i64);
