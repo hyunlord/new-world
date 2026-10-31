@@ -135,14 +135,14 @@ step 9 smoke bash tools/v8/smoke.sh "$LOG/smoke"
 step 10 identity bash tools/v8/identity.sh "$BASE_DATA" "$LOG/identity"
 step 11 determinism bash -c 'cd rust && cargo build --release -p sim-test --bin worldsim_probe && ./target/release/worldsim_probe --scene baseline --seeds 0..4 --days 120 --workers 4 --check-determinism --out "$0/determinism_probe" && echo "determinism checked on seeds 0..4"' "$LOG"
 grep -q 'DETERMINISM PASS' "$LOG/determinism.log" || { echo "   determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
-if [[ -n "${READ_GATE_CONFIG:-}" ]]; then
-    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && echo "READ report-only; paired acceptance is step 25 (interleaved bench)"'
-elif [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && CORE_P7_RUN=1 CORE_P7_DEADLINE_EPOCH="${M6A_DEADLINE_EPOCH:?}" bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && echo "M6A report-only historical unpaired comparison; paired acceptance step25/45" && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
 elif [[ -n "${CORE_UI_CONFIG:-}" ]]; then
     step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && CORE_P7_RUN=1 CORE_P7_DEADLINE_EPOCH="${CORE_UI_DEADLINE_EPOCH:?}" bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
 elif [[ -n "${CORE_P7_RUN:-}" ]]; then
     step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && echo "P7 report-only natural timings; no unpaired historical comparison; paired acceptance is step25/45"' "$LOG"
+elif [[ -n "${READ_GATE_CONFIG:-}" ]]; then
+    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && echo "READ report-only; paired acceptance is step 25 (interleaved bench)"'
 else
     step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
 fi
@@ -171,15 +171,15 @@ step 23 renderer_agreement bash tools/v8/renderer_agreement.sh "$LOG/renderer_ag
 grep -q '^RENDERER_AGREEMENT PASS' "$LOG/renderer_agreement.log" || { echo "   renderer_agreement: no PASS line" >> "$SUMMARY"; status=1; }
 step 24 save_roundtrip bash tools/v8/save_roundtrip.sh
 grep -q '^SAVE_ROUNDTRIP PASS' "$LOG/save_roundtrip.log" || { echo "   save_roundtrip: no PASS line" >> "$SUMMARY"; status=1; }
-if [[ -n "${READ_GATE_CONFIG:-}" ]]; then
-    step 25 bench python3 tools/v8/read_gate_checks.py bench "$READ_GATE_CONFIG" "$LOG/bench"
-elif [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     step 25 bench python3 tools/v8/m6a_perf.py run "${M6A_PERF_CONFIG:?fresh M6a perf config required}" "$LOG/bench/perf-session"
 elif [[ -n "${CORE_UI_CONFIG:-}" ]]; then
     step 25 bench python3 tools/v8/core_ui_successor_perf.py run "${CORE_UI_PERF_CONFIG:?fresh UI performance config required}" "$LOG/bench/perf-session"
 elif [[ -n "${CORE_P7_RUN:-}" ]]; then
     step 25 bench python3 tools/v8/core_p7_bench.py "$LOG/bench"
     export CORE_EVAL_CONFIG_SHA256="$(shasum -a 256 "$CORE_EVAL_CONFIG" | cut -d' ' -f1)"
+elif [[ -n "${READ_GATE_CONFIG:-}" ]]; then
+    step 25 bench python3 tools/v8/read_gate_checks.py bench "$READ_GATE_CONFIG" "$LOG/bench"
 else
     step 25 bench bash tools/v8/bench.sh "$LOG/bench"
 fi
@@ -226,14 +226,23 @@ step 37 mux2_defence bash tools/v8/mux2_gate_checks.sh defence "$LOG/mux2-defenc
 step 38 mux2_oracles bash tools/v8/mux2_gate_checks.sh oracles "$LOG/mux2-oracles"
 step 39 mux2_visibility python3 tools/v8/mux2_gate_receipts.py capture --kind visibility --out "$LOG/mux2-visibility" --godot "$GODOT_BIN"
 step 40 mux2_why python3 tools/v8/mux2_gate_receipts.py capture --kind why --out "$LOG/mux2-why" --godot "$GODOT_BIN"
-if [[ -n "${READ_GATE_CONFIG:-}" ]]; then
-    step 41 mux2_stall_receipt bash -c 'bash tools/v8/mux2_gate_checks.sh stall "$0" && python3 tools/v8/read_gate_checks.py stall_waiver "$0/stall.log"' "$LOG/mux2-stall"
-elif [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     step 41 mux2_stall_receipt bash tools/v8/m6a_gate_checks.sh stall "$LOG/mux2-stall"
+elif [[ -n "${READ_GATE_CONFIG:-}" ]]; then
+    step 41 mux2_stall_receipt bash -c '
+        set -euo pipefail
+        # Run the capture only; the strict verify may exit 1 on frames the waiver allows.
+        python3 tools/v8/mux2_gate_receipts.py capture --kind stall --out "$0/capture" --godot "$GODOT_BIN" || true
+        # The waiver judges the stall-report.json: complete, <=2 frames >50ms per zoom, none >60.
+        python3 tools/v8/read_gate_checks.py stall_waiver "$0/capture/run/stall-report.json"
+    ' "$LOG/mux2-stall"
 else
     step 41 mux2_stall_receipt bash tools/v8/mux2_gate_checks.sh stall "$LOG/mux2-stall"
 fi
-if [[ -n "${READ_GATE_CONFIG:-}" ]]; then
+if [[ -n "${M6A_GATE_CONFIG:-}" || -n "${CORE_UI_CONFIG:-}" || -n "${CORE_P7_RUN:-}" || -n "${CORE_SHADOW_CONFIG:-}" ]]; then
+    step 44 core_shadow bash tools/v8/core_gate_checks.sh fixture_run "$LOG/core-shadow-fixture"
+    step 45 core_evaluation bash tools/v8/core_gate_checks.sh evaluation "$LOG/core-evaluation"
+elif [[ -n "${READ_GATE_CONFIG:-}" ]]; then
     step 44 core_shadow python3 tools/v8/read_gate_checks.py core_fixture "$READ_GATE_CONFIG" "$LOG/core-shadow-fixture"
     step 45 core_evaluation bash -c 'echo "READ mode: core evaluation covered by step 44 normalised comparison"; echo "READ_CORE_EVAL PASS"'
 else

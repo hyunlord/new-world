@@ -492,6 +492,7 @@ pub fn load_with(
             steward: legacy,
             defence: legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10,
             food: legacy_food && resources.rules.colony.is_some(),
+            diagnosis: true, // M-READ: always add presentation-only systems
         },
     )?;
     if legacy_colony_brain {
@@ -509,6 +510,8 @@ struct LegacySystemAdditions {
     steward: bool,
     defence: bool,
     food: bool,
+    /// M-READ: presentation-only diagnosis and requests systems (no saved state).
+    diagnosis: bool,
 }
 
 fn insert_legacy_systems(
@@ -523,12 +526,25 @@ fn insert_legacy_systems(
             "StewardSystem" => additions.steward,
             "StewardDefenceSystem" => additions.defence,
             "FoodDailySystem" => additions.food,
+            "DiagnosisSystem" | "RequestsSystem" => additions.diagnosis,
             _ => false,
         };
         if !insert {
             continue;
         }
-        if saved.iter().any(|entry| entry.0 == *name) || index > saved.len() {
+        let already_present = saved.iter().any(|entry| entry.0 == *name);
+        if already_present {
+            // Presentation-only systems may already exist in current-format saves.
+            match name.as_str() {
+                "DiagnosisSystem" | "RequestsSystem" => continue,
+                _ => {
+                    return Err(SaveError::Systems(format!(
+                        "invalid legacy {name} insertion slot"
+                    )))
+                }
+            }
+        }
+        if index > saved.len() {
             return Err(SaveError::Systems(format!(
                 "invalid legacy {name} insertion slot"
             )));

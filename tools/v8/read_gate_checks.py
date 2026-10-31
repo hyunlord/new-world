@@ -126,6 +126,18 @@ def bench(config_path, log_dir):
 
 # ── Core fixture normalised comparison ──────────────────────────────────
 
+def strip_timing_and_read_keys(obj):
+    """Remove timing keys (as identity.sh does) AND the read-only presentation keys."""
+    TIMING_KEYS = {"wall_seconds", "ms_per_agent_tick", "timing", "git_sha"}
+    READ_KEYS = {"why_not", "diagnosis_cache", "requests_cache"}
+    ALL_EXCLUDED = TIMING_KEYS | READ_KEYS
+    if isinstance(obj, dict):
+        return {k: strip_timing_and_read_keys(v) for k, v in obj.items() if k not in ALL_EXCLUDED}
+    if isinstance(obj, list):
+        return [strip_timing_and_read_keys(item) for item in obj]
+    return obj
+
+
 def core_fixture(config_path, log_dir):
     """Run baseline and colony worlds at BASE and HEAD, compare normalised."""
     config = load_config(config_path)
@@ -135,7 +147,6 @@ def core_fixture(config_path, log_dir):
     out = Path(log_dir)
     out.mkdir(parents=True, exist_ok=True)
     base_probe = config["base_probe"]
-    normalise = str(ROOT / "tools/v8/read_normalise.py")
 
     fixtures = [
         ("baseline", ["--scene", "game_v26", "--seeds", "0..4", "--days", "10", "--workers", "4"]),
@@ -156,17 +167,26 @@ def core_fixture(config_path, log_dir):
                 stderr=subprocess.STDOUT,
             )
 
-    # Compare each fixture
+    # Compare each fixture, stripping timing and read-only keys
     for name, _ in fixtures:
-        base_summary = out / f"base_{name}/summary.json"
-        head_summary = out / f"head_{name}/summary.json"
-        result = subprocess.run(
-            [sys.executable, normalise, str(base_summary), str(head_summary)],
-            capture_output=True, text=True,
-        )
-        print(result.stdout.strip())
-        if result.returncode != 0:
-            print(f"CORE_FIXTURE FAIL on {name}")
+        base_summary = json.loads((out / f"base_{name}/summary.json").read_text())
+        head_summary = json.loads((out / f"head_{name}/summary.json").read_text())
+        a_clean = strip_timing_and_read_keys(base_summary)
+        b_clean = strip_timing_and_read_keys(head_summary)
+        if a_clean == b_clean:
+            print(f"CORE_FIXTURE {name}: MATCH (timing and read keys excluded)")
+        else:
+            a_str = json.dumps(a_clean, sort_keys=True, indent=2).splitlines()
+            b_str = json.dumps(b_clean, sort_keys=True, indent=2).splitlines()
+            diffs = 0
+            for i, (la, lb) in enumerate(zip(a_str, b_str)):
+                if la != lb:
+                    diffs += 1
+                    if diffs <= 10:
+                        print(f"  line {i+1}:")
+                        print(f"    A: {la}")
+                        print(f"    B: {lb}")
+            print(f"CORE_FIXTURE FAIL on {name} ({diffs} differences)")
             sys.exit(1)
 
     # Check colony determinism
@@ -180,40 +200,43 @@ def core_fixture(config_path, log_dir):
 
 # ── Stall waiver ────────────────────────────────────────────────────────
 
-def stall_waiver(stall_log_path):
-    """Verify the M-UX2.1/M6a stall waiver conditions.
+def stall_waiver(stall_report_path):
+    """Verify the M-UX2.1/M6a stall waiver on a stall-report.json.
     - Capture complete
     - At each zoom, ≤2 post-warmup frames > 50 ms and none > 60 ms
     """
-    path = Path(stall_log_path)
-    assert path.exists(), f"stall log not found: {stall_log_path}"
-    text = path.read_text()
-
-    # Parse frame timings from the stall log
-    import re
-    frames_by_zoom = {}
-    current_zoom = None
-    for line in text.splitlines():
-        zoom_match = re.search(r"zoom[=: ]+(\d+\.?\d*)", line, re.IGNORECASE)
-        if zoom_match:
-            current_zoom = zoom_match.group(1)
-        frame_match = re.search(r"(\d+\.?\d+)\s*ms", line)
-        if frame_match and current_zoom is not None:
-            frames_by_zoom.setdefault(current_zoom, []).append(float(frame_match.group(1)))
+    path = Path(stall_report_path)
+    assert path.exists(), f"stall report not found: {stall_report_path}"
+    report = json.loads(path.read_text())
+    assert report.get("complete"), "stall capture not complete"
 
     waiver_used = False
-    for zoom, frames in frames_by_zoom.items():
-        over_50 = [f for f in frames if f > 50.0]
-        over_60 = [f for f in frames if f > 60.0]
+    for arm in report.get("arms", []):
+        zoom = arm.get("zoom", "?")
+        assert arm.get("capture_complete"), f"zoom {zoom}: capture not complete"
+        # Post-warmup frames: those after render_warmup.complete is true.
+        samples = arm.get("samples", [])
+        post_warmup = False
+        pw_frames = []
+        for s in samples:
+            warmup = s.get("telemetry", {}).get("buildings", {}).get("render_warmup", {})
+            if warmup.get("complete", False):
+                post_warmup = True
+            if post_warmup:
+                pw_frames.append(s.get("interval_ms", 0))
+        over_50 = [round(f, 3) for f in pw_frames if f > 50.0]
+        over_60 = [round(f, 3) for f in pw_frames if f > 60.0]
         if over_60:
-            print(f"STALL FAIL: zoom {zoom} has {len(over_60)} frames > 60 ms: {over_60}")
+            print(f"STALL FAIL: zoom {zoom} has {len(over_60)} post-warmup frames > 60 ms: {over_60}")
             sys.exit(1)
         if len(over_50) > 2:
-            print(f"STALL FAIL: zoom {zoom} has {len(over_50)} frames > 50 ms (max 2): {over_50}")
+            print(f"STALL FAIL: zoom {zoom} has {len(over_50)} post-warmup frames > 50 ms (max 2): {over_50}")
             sys.exit(1)
         if over_50:
             waiver_used = True
             print(f"MUX2_STALL_WAIVER_USED zoom={zoom} frames_over_50ms={over_50}")
+        else:
+            print(f"STALL zoom={zoom}: {len(pw_frames)} post-warmup frames, max {max(pw_frames):.1f} ms")
 
     if not waiver_used:
         print("STALL PASS (no waiver needed)")

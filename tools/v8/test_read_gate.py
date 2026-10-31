@@ -1,5 +1,6 @@
 """Unit tests for the M-READ gate verifiers (read_gate_checks.py).
 Each rule must be able to fail."""
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -53,6 +54,48 @@ class StallWaiverTest(unittest.TestCase):
     def test_one_over_60_fails(self):
         ok, count, mx = read_gate_checks.check_stall_frames([61.0])
         self.assertFalse(ok, "a frame over 60 must fail")
+
+    def test_stall_waiver_accepts_report_with_one_52ms(self):
+        """The stall waiver must accept a report with one 52 ms post-warmup frame."""
+        import tempfile
+        report = {
+            "complete": True,
+            "arms": [
+                {"zoom": 1.0, "capture_complete": True, "samples": [
+                    {"interval_ms": 3000.0, "telemetry": {"buildings": {"render_warmup": {"complete": False}}}},
+                    {"interval_ms": 12.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
+                    {"interval_ms": 52.8, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
+                    {"interval_ms": 30.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
+                ]},
+                {"zoom": 0.5, "capture_complete": True, "samples": [
+                    {"interval_ms": 4000.0, "telemetry": {"buildings": {"render_warmup": {"complete": False}}}},
+                    {"interval_ms": 11.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
+                    {"interval_ms": 48.9, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
+                ]},
+            ],
+        }
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            json.dump(report, f)
+            path = f.name
+        read_gate_checks.stall_waiver(path)  # must not raise
+        Path(path).unlink()
+
+    def test_stall_waiver_rejects_over_60(self):
+        """The stall waiver must reject a post-warmup frame > 60 ms."""
+        import tempfile
+        report = {
+            "complete": True,
+            "arms": [{"zoom": 1.0, "capture_complete": True, "samples": [
+                {"interval_ms": 10.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
+                {"interval_ms": 61.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
+            ]}],
+        }
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            json.dump(report, f)
+            path = f.name
+        with self.assertRaises(SystemExit):
+            read_gate_checks.stall_waiver(path)
+        Path(path).unlink()
 
     def test_empty_passes(self):
         ok, count, mx = read_gate_checks.check_stall_frames([])
