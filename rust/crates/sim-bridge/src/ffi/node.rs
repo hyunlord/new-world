@@ -1544,38 +1544,38 @@ impl WorldSimNode {
     /// M-READ: cached settlement diagnosis (hourly).
     #[func]
     fn get_settlement_diagnosis(&self) -> VarDictionary {
-        super::diagnosis::collect_settlement_diagnosis(&self.engine)
+        super::diagnosis::settlement_diagnosis_to_dict(&self.engine)
     }
 
     /// M-READ: on-demand person diagnosis with chains.
     #[func]
     fn get_person_diagnosis(&self, entity_bits: i64) -> VarDictionary {
-        super::diagnosis::collect_person_diagnosis(&self.engine, entity_bits as u64)
+        super::diagnosis::person_diagnosis_to_dict(&self.engine, entity_bits as u64)
     }
 
     /// M-READ: on-demand subject diagnosis (stockpile/hearth/room) with chains.
     /// `kind` is "stockpile", "hearth" or "room"; `id` is zone_id, settlement_id or room_id.
     #[func]
     fn get_subject_diagnosis(&self, kind: GString, id: i64) -> VarDictionary {
-        super::diagnosis::collect_subject_diagnosis(&self.engine, &kind.to_string(), id as u32)
+        super::diagnosis::subject_diagnosis_to_dict(&self.engine, &kind.to_string(), id as u32)
     }
 
     /// M-READ: why-not records for one person.
     #[func]
     fn get_why_not(&self, entity_bits: i64) -> VarDictionary {
-        super::diagnosis::collect_why_not(&self.engine, entity_bits as u64)
+        super::diagnosis::why_not_to_dict(&self.engine, entity_bits as u64)
     }
 
     /// M-READ: active villager requests for the settlement.
     #[func]
     fn get_requests(&self) -> VarDictionary {
-        super::diagnosis::collect_requests(&self.engine)
+        super::diagnosis::requests_to_dict(&self.engine)
     }
 
     /// M-READ: the current task (top request or next goal) with marker tile.
     #[func]
     fn get_current_task(&self) -> VarDictionary {
-        super::diagnosis::collect_current_task(&self.engine)
+        super::diagnosis::current_task_to_dict(&self.engine)
     }
 }
 

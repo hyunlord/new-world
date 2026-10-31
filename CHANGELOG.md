@@ -1,5 +1,26 @@
 # Changelog
 
+## M-READ — 2026-10-31 (Claude Code; branch v8/read)
+
+State diagnosis, why-not records, requests and the current-task plaque.
+Brief: [READ_GOAL](docs/v8/read/READ_GOAL.md); decisions in [READ_DECISIONS](docs/v8/read/READ_DECISIONS.md).
+
+### Added
+- Read-only diagnosis framework (`diagnosis.ron`, ADR 0055): 5 subject kinds (person, stockpile, hearth, room, settlement), 20 checks with chains to depth ≤ 5, answering Q1/Q3/Q4/Q6.
+- Why-not records in the mind selector: up to 2 blocked candidates per MindChoice with first failing predicate (node, band, fact, op, threshold, actual). Per-person bounded ring of 4 entries (~584 B/person).
+- Requests v0 (`requests.ron`): 5 rules mapping blocked-node facts to villager requests. Hourly aggregation with ≥ 2-of-4-hours threshold, at most 3 shown, steward status by tag.
+- Current-task plaque: top request or first unfinished goal, with a validated marker tile (uses the order tool's `can_place` / nearest tree).
+- Bridge getters: `get_settlement_diagnosis`, `get_person_diagnosis`, `get_subject_diagnosis`, `get_why_not`, `get_requests`, `get_current_task`.
+- DiagnosisSystem (priority 250, hourly) and RequestsSystem (priority 251, hourly). Presentation-only caches in SimResources (`#[serde(skip)]`).
+- 36 locale keys (ko+en): `DIAG_*`, `REQ_*`, `READ_*`.
+- Normalising script `tools/v8/read_normalise.py` listing excluded keys: `why_not`, `diagnosis_cache`, `requests_cache`.
+- `DIAGNOSIS_AUTHORING.md`, `MIND_AUTHORING` why-not section.
+
+### Unchanged
+- `mind.ron` policy, steward rules, all gameplay systems.
+- Identity PASS: 228,748 shared values, 0 differences, 0 one-sided paths (32 seeds × 120 days).
+- Colony preservation: determinism, soak, story, neighbours all NORMALISED MATCH.
+
 ## M6a repair R2 — 2026-10-31 (Claude Code; published: product d67b42fff, gate2 47/48 with the only failure on a withdrawn bar)
 
 Owner decision O-1..O-4 (2026-10-31 09:40 KST): `no_hungry_spoilage` is withdrawn as a specification defect (it samples hunger at the midnight expiry); the other eleven held-out bars pass. Step 41 uses the M-UX2.1 stall waiver: one 54.014 ms frame at tick 361 at zoom 1.0, none at 0.5, none over 60 ms, capture complete. New process rule O-2: a bar at 0/8 on the first calibration round is stopped and confirmed or withdrawn before the freeze.

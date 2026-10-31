@@ -9,7 +9,7 @@ use sim_engine::SimEngine;
 // ── Settlement diagnosis (cached) ──────────────────────────────────────
 
 /// Collect the cached settlement diagnosis as parallel arrays.
-pub fn collect_settlement_diagnosis(engine: &SimEngine) -> VarDictionary {
+pub fn settlement_diagnosis_to_dict(engine: &SimEngine) -> VarDictionary {
     let cache = &engine.resources.diagnosis_cache;
     let mut dict = VarDictionary::new();
     dict.set("tick", cache.tick as i64);
@@ -69,7 +69,7 @@ pub fn collect_settlement_diagnosis(engine: &SimEngine) -> VarDictionary {
 // ── Person diagnosis (on demand) ───────────────────────────────────────
 
 /// Evaluate diagnosis checks for a person, on demand.
-pub fn collect_person_diagnosis(engine: &SimEngine, entity_bits: u64) -> VarDictionary {
+pub fn person_diagnosis_to_dict(engine: &SimEngine, entity_bits: u64) -> VarDictionary {
     let mut dict = VarDictionary::new();
     let entity = match hecs::Entity::from_bits(entity_bits) {
         Some(e) => e,
@@ -147,7 +147,7 @@ pub fn collect_person_diagnosis(engine: &SimEngine, entity_bits: u64) -> VarDict
 /// Evaluate diagnosis checks for a stockpile, hearth or room on demand.
 /// `kind` is one of "stockpile", "hearth", "room"; `id` is the zone_id,
 /// settlement_id or room_id respectively.
-pub fn collect_subject_diagnosis(engine: &SimEngine, kind: &str, id: u32) -> VarDictionary {
+pub fn subject_diagnosis_to_dict(engine: &SimEngine, kind: &str, id: u32) -> VarDictionary {
     let mut dict = VarDictionary::new();
     let data = match sim_core::colony::diagnosis::diagnosis_data() {
         Some(d) => d,
@@ -227,7 +227,7 @@ pub fn collect_subject_diagnosis(engine: &SimEngine, kind: &str, id: u32) -> Var
 // ── Why-not records ────────────────────────────────────────────────────
 
 /// Collect the latest why-not records for a person.
-pub fn collect_why_not(engine: &SimEngine, entity_bits: u64) -> VarDictionary {
+pub fn why_not_to_dict(engine: &SimEngine, entity_bits: u64) -> VarDictionary {
     let mut dict = VarDictionary::new();
     let entity = match hecs::Entity::from_bits(entity_bits) {
         Some(e) => e,
@@ -290,7 +290,7 @@ pub fn collect_why_not(engine: &SimEngine, entity_bits: u64) -> VarDictionary {
 // ── Requests ───────────────────────────────────────────────────────────
 
 /// Collect active requests for the settlement.
-pub fn collect_requests(engine: &SimEngine) -> VarDictionary {
+pub fn requests_to_dict(engine: &SimEngine) -> VarDictionary {
     let cache = &engine.resources.requests_cache;
     let mut dict = VarDictionary::new();
     dict.set("tick", cache.tick as i64);
@@ -401,7 +401,7 @@ fn find_marker_tile(engine: &SimEngine, action_key: &str) -> Option<(u32, u32)> 
 
 /// Collect the current task: top request, or the next unfinished goal.
 /// Returns a dictionary with the task description and a validated marker tile.
-pub fn collect_current_task(engine: &SimEngine) -> VarDictionary {
+pub fn current_task_to_dict(engine: &SimEngine) -> VarDictionary {
     let mut dict = VarDictionary::new();
 
     // Try the top request first.

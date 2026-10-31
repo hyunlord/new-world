@@ -216,7 +216,9 @@ Reads/writes come from each file's `//!` header.
 | 47 | `QuarrelSystem` | 173 | 6 | `rust/crates/sim-systems/src/runtime/mood/quarrel.rs` | `Agent`, `Position`, `AgentState`, `Mood`, `Kin`, `Lineage`, `Temperament`, `Drafted`; `SimResources.colony` (bonds, story), `relationships` (hostility), `rules`, `world_seed` | `Mood` (value, quarrel day); `SimResources.colony` (bonds, fights), `relationships` (hostility), `chronicle` |
 | 48 | `NeighbourSystem` | 174 | 1440 | `rust/crates/sim-systems/src/runtime/neighbours/mod.rs` | `Agent`, `Knowledge`; `SimResources.colony` (neighbours, story, ground items, zones), `settlements` (food), `nav`, `tile_grid`, `building_kinds` (the hearth), `rules`, `world_seed` | `SimResources.colony.neighbours` (list, waves, caravans, plans, tallies, version) |
 | 49 | `VisitorSystem` | 175 | 3 | `rust/crates/sim-systems/src/runtime/neighbours/visitors.rs` | `SimResources.colony.neighbours`, `nav`, `building_kinds` (the hearth), `rules` | ECS people (a wave accepted on its way joins on arrival, `join::accept`); `SimResources.colony.neighbours` (waves, caravans: position, path, state, answer; neighbours' attitude and last contact; tallies, version), `chronicle` |
-| 50 | `InfluenceVisualizationSystem` | 1000 | 6 | `rust/crates/sim-systems/src/runtime/influence/visualization.rs` | `SimResources.influence_grid` (current Warmth and Danger buffers), `current_tick` | its own `VisualizationDigest` (no world or resource state) |
+| 50 | `DiagnosisSystem` | 250 | 60 | `rust/crates/sim-systems/src/runtime/diagnosis.rs` | World (Settlement), SimResources (colony, fires, current_tick, rules) | SimResources.diagnosis_cache, SimResources.requests_cache (presentation only) |
+| 51 | `RequestsSystem` | 251 | 60 | `rust/crates/sim-systems/src/runtime/diagnosis.rs` | World (Settlement), SimResources (colony, fires, current_tick, rules) | SimResources.diagnosis_cache, SimResources.requests_cache (presentation only) |
+| 52 | `InfluenceVisualizationSystem` | 1000 | 6 | `rust/crates/sim-systems/src/runtime/influence/visualization.rs` | `SimResources.influence_grid` (current Warmth and Danger buffers), `current_tick` | its own `VisualizationDigest` (no world or resource state) |
 
 <!-- system-table:end -->
 
@@ -762,3 +764,23 @@ projected by entry identity into Why. These evidence additions intentionally cha
 Chronicle ordinals, causal links, story counts and full-state fingerprints; they
 are not a policy change or a claim of P7 byte identity. See ADR0054 for the contract
 and pending acceptance boundary.
+
+## Read model: diagnosis, why-not and requests (M-READ, ADR 0055)
+
+The read model provides causal legibility without changing the simulation. All new
+state is `#[serde(skip)]` and excluded from gameplay hashes and identity comparison.
+
+| Concern | Source | Description |
+|---|---|---|
+| Diagnosis data | `sim-core/data/colony/diagnosis.ron` | Schema 1, 5 subject kinds, 20 checks with predicates and chains |
+| Diagnosis types | `sim-core/src/colony/diagnosis.rs` | Parse, resolve and expose `DiagnosisData` |
+| Request data | `sim-core/data/colony/requests.ron` | 5 rules mapping blocked-node facts to requests |
+| Request types | `sim-core/src/colony/requests.rs` | Parse and expose `RequestsData` |
+| Why-not types | `sim-core/src/colony/mind_state.rs` | `WhyNotState`, `WhyNotEntry` per person |
+| Blocked capture | `sim-core/src/colony/mind/select.rs` | `BlockedCandidate` in `EvalScratch` |
+| Fact providers | `sim-systems/src/runtime/diagnosis.rs` | Settlement, stockpile, hearth, room, person facts |
+| DiagnosisSystem | `sim-systems/src/runtime/diagnosis.rs` | Priority 250, interval 60, offset 7 |
+| RequestsSystem | `sim-systems/src/runtime/diagnosis.rs` | Priority 251, interval 60, offset 8 |
+| Bridge reads | `sim-bridge/src/ffi/diagnosis.rs` | 6 getters: settlement/person/subject diagnosis, why-not, requests, current task |
+| Normalising script | `tools/v8/read_normalise.py` | Excludes `why_not`, `diagnosis_cache`, `requests_cache` |
+| Authoring guide | `docs/v8/read/DIAGNOSIS_AUTHORING.md` | How to add a check, a fact, a subject |
