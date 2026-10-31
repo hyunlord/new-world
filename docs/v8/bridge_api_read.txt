@@ -67,6 +67,7 @@ func WorldSimNode.get_knowledge_waits
 func WorldSimNode.get_neighbours
 func WorldSimNode.get_person
 func WorldSimNode.get_person_chronicle
+func WorldSimNode.get_person_diagnosis
 func WorldSimNode.get_place_preview
 func WorldSimNode.get_plants
 func WorldSimNode.get_porter_snapshot

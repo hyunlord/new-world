@@ -20,6 +20,9 @@ use sim_engine::{
 };
 use std::collections::BTreeMap;
 
+/// Fact reader function type (clippy type_complexity).
+type FactReaderBox<'a> = Box<dyn Fn(&str) -> Option<i64> + 'a>;
+
 // ── Settlement fact reader ─────────────────────────────────────────────
 
 /// Read a named fact for a settlement from the colony state and world.
@@ -57,7 +60,7 @@ fn settlement_fact(world: &hecs::World, resources: &SimResources, fact_name: &st
         }
         "firewood_stock" => {
             let mut count: i64 = 0;
-            for (_, stack) in &col.ground_items {
+            for stack in col.ground_items.values() {
                 if is_firewood_kind(stack.kind) {
                     count += i64::from(stack.count);
                 }
@@ -152,16 +155,92 @@ fn settlement_fact(world: &hecs::World, resources: &SimResources, fact_name: &st
 
 /// Count members of the first settlement in the world.
 fn first_settlement_member_count(world: &hecs::World) -> u32 {
-    for (_, settlement) in world.query::<&Settlement>().iter() {
-        return settlement.member_agents.len() as u32;
-    }
-    0
+    world
+        .query::<&Settlement>()
+        .iter()
+        .next()
+        .map(|(_, s)| s.member_agents.len() as u32)
+        .unwrap_or(0)
 }
 
 /// Check if an item kind is firewood by name.
 fn is_firewood_kind(kind: sim_core::colony::ItemKind) -> bool {
     let name = kind.name();
     name == "Firewood" || name == "Log"
+}
+
+// ── Person fact reader ─────────────────────────────────────────────────
+
+/// Read a named fact for a person from ECS components. Reuses the same fact
+/// names as the mind's BUILTIN_PROVIDERS (hunger_tenths, thirst_tenths, cold,
+/// etc.) by reading the corresponding ECS components directly.
+fn person_fact(world: &hecs::World, entity: hecs::Entity, fact_name: &str) -> Option<i64> {
+    match fact_name {
+        "hunger_tenths" => {
+            let hunger = world.get::<&sim_core::components::Hunger>(entity).ok()?;
+            Some((f64::from(hunger.value) * 10.0).round() as i64)
+        }
+        "thirst_tenths" => {
+            let thirst = world.get::<&sim_core::components::Thirst>(entity).ok()?;
+            Some((thirst.value * 10.0).round() as i64)
+        }
+        "cold" => {
+            let has_cold = world.get::<&sim_core::components::Cold>(entity).is_ok();
+            Some(if has_cold { 1 } else { 0 })
+        }
+        "fleeing" => {
+            let has_flee = world
+                .get::<&sim_core::colony::people::Fleeing>(entity)
+                .is_ok();
+            Some(if has_flee { 1 } else { 0 })
+        }
+        "drafted" => {
+            let has_draft = world
+                .get::<&sim_core::colony::people::Drafted>(entity)
+                .is_ok();
+            Some(if has_draft { 1 } else { 0 })
+        }
+        "idle" => {
+            let state = world
+                .get::<&sim_core::components::AgentState>(entity)
+                .ok()?;
+            Some(if *state == sim_core::components::AgentState::Idle {
+                1
+            } else {
+                0
+            })
+        }
+        _ => None,
+    }
+}
+
+/// Evaluate all person checks for an entity, returning the failing ones with chains.
+pub fn evaluate_person(
+    world: &hecs::World,
+    resources: &SimResources,
+    entity: hecs::Entity,
+    data: &DiagnosisData,
+) -> Vec<DiagnosisResultEntry> {
+    let checks = match data.subjects.get(&SubjectKind::Person) {
+        Some(c) => c,
+        None => return Vec::new(),
+    };
+    let reader = |f: &str| person_fact(world, entity, f);
+    let mut results = Vec::new();
+    for check in checks {
+        if let Some((params, true)) = evaluate_check(check, &reader) {
+            let chain = build_chain(world, resources, data, &check.next, 0);
+            results.push(DiagnosisResultEntry {
+                check_id: check.id.clone(),
+                text_key: check.text_key.clone(),
+                severity: check.severity.code(),
+                params,
+                tags: check.tags.clone(),
+                chain,
+            });
+        }
+    }
+    results
 }
 
 // ── Check evaluation ───────────────────────────────────────────────────
@@ -233,8 +312,7 @@ fn build_chain(
         Some(c) => c,
         None => return Vec::new(),
     };
-    let reader: Box<dyn Fn(&str) -> Option<i64>> =
-        Box::new(|f: &str| settlement_fact(world, resources, f));
+    let reader: FactReaderBox<'_> = Box::new(|f: &str| settlement_fact(world, resources, f));
     let mut entries = Vec::new();
     for check in checks {
         if let Some((params, true)) = evaluate_check(check, reader.as_ref()) {

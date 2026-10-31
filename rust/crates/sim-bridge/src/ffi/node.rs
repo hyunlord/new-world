@@ -1547,6 +1547,12 @@ impl WorldSimNode {
         super::diagnosis::collect_settlement_diagnosis(&self.engine)
     }
 
+    /// M-READ: on-demand person diagnosis with chains.
+    #[func]
+    fn get_person_diagnosis(&self, entity_bits: i64) -> VarDictionary {
+        super::diagnosis::collect_person_diagnosis(&self.engine, entity_bits as u64)
+    }
+
     /// M-READ: why-not records for one person.
     #[func]
     fn get_why_not(&self, entity_bits: i64) -> VarDictionary {

@@ -3,6 +3,7 @@
 //! and never modify simulation state.
 
 use godot::prelude::*;
+use sim_core::colony::ZoneKind;
 use sim_engine::SimEngine;
 
 // ── Settlement diagnosis (cached) ──────────────────────────────────────
@@ -55,6 +56,82 @@ pub fn collect_settlement_diagnosis(engine: &SimEngine) -> VarDictionary {
             }
             chains_arr.push(&Variant::from(chain_list));
         }
+    }
+    dict.set("check_ids", check_ids);
+    dict.set("text_keys", text_keys);
+    dict.set("severities", severities);
+    dict.set("tags", tags_arr);
+    dict.set("params", params_arr);
+    dict.set("chains", chains_arr);
+    dict
+}
+
+// ── Person diagnosis (on demand) ───────────────────────────────────────
+
+/// Evaluate diagnosis checks for a person, on demand.
+pub fn collect_person_diagnosis(engine: &SimEngine, entity_bits: u64) -> VarDictionary {
+    let mut dict = VarDictionary::new();
+    let entity = match hecs::Entity::from_bits(entity_bits) {
+        Some(e) => e,
+        None => return dict,
+    };
+    if engine
+        .world
+        .get::<&sim_core::components::Agent>(entity)
+        .is_err()
+    {
+        return dict;
+    }
+    let data = match sim_core::colony::diagnosis::diagnosis_data() {
+        Some(d) => d,
+        None => return dict,
+    };
+    let entries = sim_systems::runtime::diagnosis::evaluate_person(
+        &engine.world,
+        &engine.resources,
+        entity,
+        data,
+    );
+
+    let mut check_ids = PackedStringArray::new();
+    let mut text_keys = PackedStringArray::new();
+    let mut severities = PackedInt32Array::new();
+    let mut tags_arr = VarArray::new();
+    let mut chains_arr = VarArray::new();
+    let mut params_arr = VarArray::new();
+
+    for entry in &entries {
+        check_ids.push(&GString::from(&entry.check_id));
+        text_keys.push(&GString::from(&entry.text_key));
+        severities.push(i32::from(entry.severity));
+
+        let mut tag_list = VarArray::new();
+        for tag in &entry.tags {
+            tag_list.push(&Variant::from(GString::from(tag.as_str())));
+        }
+        tags_arr.push(&Variant::from(tag_list));
+
+        let mut param_dict = VarDictionary::new();
+        for (k, v) in &entry.params {
+            param_dict.set(GString::from(k.as_str()), GString::from(v.as_str()));
+        }
+        params_arr.push(&Variant::from(param_dict));
+
+        let mut chain_list = VarArray::new();
+        for link in &entry.chain {
+            let mut link_dict = VarDictionary::new();
+            link_dict.set("subject_kind", i32::from(link.subject_kind));
+            link_dict.set("check_id", GString::from(&link.check_id));
+            link_dict.set("text_key", GString::from(&link.text_key));
+            link_dict.set("severity", i32::from(link.severity));
+            let mut lp = VarDictionary::new();
+            for (k, v) in &link.params {
+                lp.set(GString::from(k.as_str()), GString::from(v.as_str()));
+            }
+            link_dict.set("params", lp);
+            chain_list.push(&Variant::from(link_dict));
+        }
+        chains_arr.push(&Variant::from(chain_list));
     }
     dict.set("check_ids", check_ids);
     dict.set("text_keys", text_keys);
@@ -168,10 +245,83 @@ pub fn collect_requests(engine: &SimEngine) -> VarDictionary {
     dict
 }
 
-// ── Current task ───────────────────────────────────────────────────────
+// ── Current task with validated marker ─────────────────────────────────
+
+/// Find a valid marker tile for a request's suggested action using the same
+/// validity checks the order tools use (§2.4).
+fn find_marker_tile(engine: &SimEngine, action_key: &str) -> Option<(u32, u32)> {
+    let res = &engine.resources;
+    match action_key {
+        "REQ_ACTION_STORE_FOOD" | "REQ_ACTION_BUILD_HOUSE" => {
+            // Find a tile where a Stockpile can be placed (for food storage)
+            // or where a wall can start (for housing).
+            let kind_name = if action_key == "REQ_ACTION_BUILD_HOUSE" {
+                "LogWall"
+            } else {
+                "Stockpile"
+            };
+            // Search near the formation tile of the first settlement.
+            let formation = engine
+                .world
+                .query::<&sim_core::components::Settlement>()
+                .iter()
+                .map(|(_, s)| s.formation_tile)
+                .next()
+                .unwrap_or((0, 0));
+            let (cx, cy) = formation;
+            // Spiral outward from the formation tile to find a valid spot.
+            for r in 0..16u32 {
+                for dx in 0..=r {
+                    for dy in 0..=r {
+                        if dx + dy != r {
+                            continue;
+                        }
+                        for (sx, sy) in &[(1i32, 1i32), (1, -1), (-1, 1), (-1, -1)] {
+                            let x = cx as i32 + dx as i32 * sx;
+                            let y = cy as i32 + dy as i32 * sy;
+                            if x >= 0
+                                && y >= 0
+                                && super::colony::can_place(res, kind_name, x, y)
+                            {
+                                return Some((x as u32, y as u32));
+                            }
+                        }
+                    }
+                }
+            }
+            None
+        }
+        "REQ_ACTION_CHOP_WOOD" => {
+            // Find a tree tile that can be designated for chopping.
+            // Trees are in colony.trees; pick the nearest to the formation tile.
+            let formation = engine
+                .world
+                .query::<&sim_core::components::Settlement>()
+                .iter()
+                .map(|(_, s)| s.formation_tile)
+                .next()
+                .unwrap_or((0, 0));
+            let (cx, cy) = formation;
+            res.colony
+                .trees
+                .keys()
+                .filter(|pos| !res.colony.designations.contains_key(pos))
+                .min_by_key(|(tx, ty)| {
+                    let dx = (*tx as i64) - (cx as i64);
+                    let dy = (*ty as i64) - (cy as i64);
+                    dx * dx + dy * dy
+                })
+                .copied()
+        }
+        _ => {
+            // For other actions (water, rest), no specific marker.
+            None
+        }
+    }
+}
 
 /// Collect the current task: top request, or the next unfinished goal.
-/// Returns a dictionary with the task description and an optional marker tile.
+/// Returns a dictionary with the task description and a validated marker tile.
 pub fn collect_current_task(engine: &SimEngine) -> VarDictionary {
     let mut dict = VarDictionary::new();
 
@@ -184,25 +334,42 @@ pub fn collect_current_task(engine: &SimEngine) -> VarDictionary {
             dict.set("voice", top.voice as i64);
             dict.set("voice_name", GString::from(&top.voice_name));
             dict.set("steward_active", top.steward_active);
-            // Marker tile: find a valid tile for the suggested action.
-            // For now, return the formation tile of the first settlement.
-            for (_, settlement) in engine
-                .world
-                .query::<&sim_core::components::Settlement>()
-                .iter()
-            {
-                let (fx, fy) = settlement.formation_tile;
-                dict.set("marker_x", fx as i32);
-                dict.set("marker_y", fy as i32);
+            // Marker tile using the same validity check the order tool uses.
+            if let Some((mx, my)) = find_marker_tile(engine, &top.action_key) {
+                dict.set("marker_x", mx as i32);
+                dict.set("marker_y", my as i32);
                 dict.set("has_marker", true);
-                break;
+            } else {
+                dict.set("has_marker", false);
             }
             return dict;
         }
     }
 
-    // Fall back to the next unfinished goal (from goals.json — not in Rust).
-    dict.set("source", GString::from("none"));
-    dict.set("has_marker", false);
+    // Fall back to the next unfinished goal.
+    // Goals are evaluated on the GDScript side (goals.json); if no request
+    // exists, check whether there's a stockpile (the first goal).
+    if engine
+        .resources
+        .colony
+        .zones
+        .values()
+        .any(|z| z.kind == ZoneKind::Stockpile)
+    {
+        dict.set("source", GString::from("none"));
+        dict.set("has_marker", false);
+    } else {
+        // No stockpile — the first goal is to build one.
+        dict.set("source", GString::from("goal"));
+        dict.set("text_key", GString::from("DIAG_SETTLEMENT_NO_STOCKPILE"));
+        dict.set("action_key", GString::from("REQ_ACTION_STORE_FOOD"));
+        if let Some((mx, my)) = find_marker_tile(engine, "REQ_ACTION_STORE_FOOD") {
+            dict.set("marker_x", mx as i32);
+            dict.set("marker_y", my as i32);
+            dict.set("has_marker", true);
+        } else {
+            dict.set("has_marker", false);
+        }
+    }
     dict
 }

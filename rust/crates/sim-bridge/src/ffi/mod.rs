@@ -86,7 +86,8 @@ pub use causal::{
     CausalEventView, FfiFieldValue,
 };
 pub use diagnosis::{
-    collect_current_task, collect_requests, collect_settlement_diagnosis, collect_why_not,
+    collect_current_task, collect_person_diagnosis, collect_requests, collect_settlement_diagnosis,
+    collect_why_not,
 };
 pub use engine_build::{
     bootstrap_spawn_agents, init_production_engine, seed_finite_resource_scarcity,

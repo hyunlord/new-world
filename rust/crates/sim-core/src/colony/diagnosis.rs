@@ -356,7 +356,7 @@ mod tests {
         assert!(data.subjects.contains_key(&SubjectKind::Room));
         assert!(data.subjects.contains_key(&SubjectKind::Settlement));
         // Every check has at least one predicate.
-        for (_, checks) in &data.subjects {
+        for checks in data.subjects.values() {
             for check in checks {
                 assert!(
                     !check.when.is_empty(),
@@ -371,7 +371,7 @@ mod tests {
     fn all_check_ids_unique() {
         let data = parse_diagnosis(DIAGNOSIS_RON).unwrap();
         let mut ids = std::collections::BTreeSet::new();
-        for (_, checks) in &data.subjects {
+        for checks in data.subjects.values() {
             for check in checks {
                 assert!(ids.insert(&check.id), "duplicate check id: {}", check.id);
             }
