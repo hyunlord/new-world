@@ -1,0 +1,51 @@
+// Schema 1: map blocked-node tags and failing facts to villager requests.
+// Each rule matches a why-not record's node tag or failing fact name to a
+// request kind with a text key, suggested action, priority, and steward tags.
+(schema_version: 1, rules: [
+    (
+        id: "need_food",
+        match_tags: ["food"],
+        match_facts: ["hunger_actionable", "food_available", "food_cooked_available",
+                      "food_novel_available", "food_cooked_novel_available"],
+        text_key: "REQ_NEED_FOOD",
+        action_key: "REQ_ACTION_STORE_FOOD",
+        priority: 1,
+        steward_tags: ["FoodDeficit"],
+    ),
+    (
+        id: "need_warmth",
+        match_tags: ["warmth"],
+        match_facts: ["cold", "hearth_lit"],
+        text_key: "REQ_NEED_WARMTH",
+        action_key: "REQ_ACTION_CHOP_WOOD",
+        priority: 2,
+        steward_tags: ["WoodDeficit"],
+    ),
+    (
+        id: "need_water",
+        match_tags: ["water"],
+        match_facts: ["thirst_actionable"],
+        text_key: "REQ_NEED_WATER",
+        action_key: "REQ_ACTION_FIND_WATER",
+        priority: 3,
+        steward_tags: [],
+    ),
+    (
+        id: "need_shelter",
+        match_tags: ["shelter"],
+        match_facts: [],
+        text_key: "REQ_NEED_SHELTER",
+        action_key: "REQ_ACTION_BUILD_HOUSE",
+        priority: 4,
+        steward_tags: ["Unsheltered"],
+    ),
+    (
+        id: "need_rest",
+        match_tags: ["rest"],
+        match_facts: ["fatigue_tenths"],
+        text_key: "REQ_NEED_REST",
+        action_key: "REQ_ACTION_REST",
+        priority: 5,
+        steward_tags: [],
+    ),
+])

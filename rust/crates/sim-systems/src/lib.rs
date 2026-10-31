@@ -382,6 +382,13 @@ fn register_runtime_systems_with_decision(engine: &mut SimEngine, decision: fn(&
     register_fire_systems(engine);
     register_job_systems(engine);
     register_story_systems(engine);
+    register_diagnosis_systems(engine);
+}
+
+/// M-READ: hourly diagnosis and request aggregation (presentation only).
+pub fn register_diagnosis_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::diagnosis::DiagnosisSystem));
+    engine.register_system(Box::new(runtime::diagnosis::RequestsSystem));
 }
 
 /// Register M5's pressure and story systems (ADR 0027–0030), all no-ops outside

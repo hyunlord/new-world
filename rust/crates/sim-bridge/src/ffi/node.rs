@@ -1540,6 +1540,30 @@ impl WorldSimNode {
         let rows = collect_relationship_snapshot(&self.engine.resources);
         relationship_rows_to_variant_array(&rows)
     }
+
+    /// M-READ: cached settlement diagnosis (hourly).
+    #[func]
+    fn get_settlement_diagnosis(&self) -> VarDictionary {
+        super::diagnosis::collect_settlement_diagnosis(&self.engine)
+    }
+
+    /// M-READ: why-not records for one person.
+    #[func]
+    fn get_why_not(&self, entity_bits: i64) -> VarDictionary {
+        super::diagnosis::collect_why_not(&self.engine, entity_bits as u64)
+    }
+
+    /// M-READ: active villager requests for the settlement.
+    #[func]
+    fn get_requests(&self) -> VarDictionary {
+        super::diagnosis::collect_requests(&self.engine)
+    }
+
+    /// M-READ: the current task (top request or next goal) with marker tile.
+    #[func]
+    fn get_current_task(&self) -> VarDictionary {
+        super::diagnosis::collect_current_task(&self.engine)
+    }
 }
 
 /// Push a [`BuildingPlacedEvent`] into `resources.building_event_queue`.

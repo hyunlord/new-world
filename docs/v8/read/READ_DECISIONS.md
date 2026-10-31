@@ -84,3 +84,52 @@ These are proxy-capture mismatches, not capture-script defects. The script targe
 - Q1/Q2 pass because the mind summary and the M6a hunger "왜?" chain already provide the first two links
 
 The 0/8 calibration warning from the brief's owner rule does not apply: the BASE test scored 2/6, not 0. No specification defect is suspected.
+
+---
+
+# M-READ decisions — Part 2
+
+Brief: [READ_GOAL.md](READ_GOAL.md), 2026-10-31. Base: `313ea92ba`. Citing "M-READ brief 2026-10-31".
+
+## D5: Diagnosis framework data design
+
+The diagnosis data file `sim-core/data/colony/diagnosis.ron` uses schema version 1 with five subject kinds (person, stockpile, hearth, room, settlement). Each check has predicates using the mind's operator set (`has`, `not`, `<`, `<=`, `>`, `>=`, `==`), a locale text key with named parameters, a severity, optional chain to another subject, and tags.
+
+Fact providers for settlement subjects read from `ColonyState`, `fires`, `rooms` and `beds` in `SimResources`. They never write, reserve or draw randomness (ADR 0016 C2). Person facts will reuse the mind's existing `BUILTIN_PROVIDERS`.
+
+The evaluation is on demand for a selected subject (bridge read) and once per in-game hour for the settlement (cached in `SimResources.diagnosis_cache`, `#[serde(skip)]`).
+
+Checks answering the owner's questions:
+- Q1 (starvation): person_starving -> stockpile_no_food -> settlement_no_food / settlement_winter_food_short
+- Q3 (cold): person_cold -> hearth_no_fuel / hearth_unlit -> settlement_no_firewood
+- Q4 (items not arriving): stockpile_not_arriving -> settlement_no_idle
+- Q6 (winter prep): settlement_winter_food_short, settlement_no_ripe_plants
+
+## D6: Why-not records design
+
+Blocked candidates are captured during `choose_with_reader` in `sim-core/src/colony/mind/select.rs` as a pure side-effect on `EvalScratch`. When a node's eligibility returns `Rejected(depth)`, a `RejectedEntry` is pushed to `scratch.rejected`. After selection, `blocked_candidates(winning_band)` filters to at most 2 entries from higher bands.
+
+Per-person storage is a `WhyNotState` in `MindState.why_not` (`#[serde(skip)]`): a bounded ring of 4 entries plus an hourly bitmask. Approximate cost: 80 bytes per entry, 4 entries per person, ~64 KB at N=200.
+
+The normalising script `tools/v8/read_normalise.py` lists exactly the excluded keys: `why_not`, `diagnosis_cache`, `requests_cache`.
+
+## D7: Requests v0 design
+
+Request rules in `sim-core/data/colony/requests.ron` map blocked-node tags and failing fact names to request kinds. The hourly `RequestsSystem` counts each person's latest why-not against the rules: a request is active when >= 2 adults have been blocked for >= 2 of the last 4 hours. At most 3 requests shown, ordered by priority then count. The voice is the most affected adult.
+
+Steward status ("집사가 하고 있어요" vs "할 일") is matched by comparing request rule steward_tags against the steward's active condition types.
+
+## D8: Bridge reads
+
+Four new getters added to `WorldSimNode`:
+- `get_settlement_diagnosis()`: cached hourly diagnosis with checks, chains, params
+- `get_why_not(entity_bits)`: per-person blocked candidates with fact details
+- `get_requests()`: active requests with voice, steward status, action
+- `get_current_task()`: top request or next goal with marker tile
+
+All return `VarDictionary` with parallel arrays following the existing bridge pattern.
+
+## D9: Current task marker
+
+The current-task bridge read returns the top active request (or fallback to goals). The marker tile uses the formation tile of the first settlement as a safe default. A more specific marker (e.g. a valid order tile) requires integration with the order validity check from the Godot side.
+

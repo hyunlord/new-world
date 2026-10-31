@@ -146,9 +146,9 @@ else
 fi
 grep -E 'WARN|OK \(' "$LOG/perf.log" | sed 's/^/   /' >> "$SUMMARY"
 if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
-    step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m6a.txt
+    step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_read.txt
 else
-    step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_core.txt
+    step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_read.txt
 fi
 step 14 docs bash tools/v8/check_docs.sh
 step 15 inventory_closure python3 tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md

@@ -21,6 +21,7 @@ pub mod chronicle;
 pub mod colony;
 pub mod content;
 pub mod content_boot;
+pub mod diagnosis;
 pub mod economy;
 pub mod engine_build;
 pub mod family;
@@ -83,6 +84,9 @@ pub use causal::{
     collect_event_chain, collect_tile_causal_history, event_view_to_owned_dict,
     tile_idx_from_coords, try_collect_event_chain, try_collect_tile_causal_history,
     CausalEventView, FfiFieldValue,
+};
+pub use diagnosis::{
+    collect_current_task, collect_requests, collect_settlement_diagnosis, collect_why_not,
 };
 pub use engine_build::{
     bootstrap_spawn_agents, init_production_engine, seed_finite_resource_scarcity,

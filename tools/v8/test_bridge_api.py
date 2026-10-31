@@ -70,7 +70,7 @@ class BridgeApiTest(unittest.TestCase):
 
     def test_live_bridge_equals_the_current_list(self):
         # The current list checked by gate step 13; historical lists remain unchanged.
-        expected = set(bridge_api.read_list(ROOT / "docs/v8/bridge_api_m6a.txt"))
+        expected = set(bridge_api.read_list(ROOT / "docs/v8/bridge_api_read.txt"))
         self.assertEqual(set(bridge_api.scan_repo(ROOT)), expected)
 
     def test_v8_0_removed_names_stay_removed(self):

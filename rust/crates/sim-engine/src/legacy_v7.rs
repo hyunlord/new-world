@@ -384,6 +384,8 @@ impl<C: Into<sim_core::chronicle::Chronicle>> From<LegacySimResources<C>> for Si
             food: Default::default(),
             food_supply_cache: Default::default(),
             fatal_animal_attacks: Vec::new(),
+            diagnosis_cache: Default::default(),
+            requests_cache: Default::default(),
         }
     }
 }

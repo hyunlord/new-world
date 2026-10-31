@@ -1713,3 +1713,68 @@ lifetime_days; `stored` contains owner,item,pieces,born_day. Owner carries its
 kind and recorded tile/agent/workshop/pot identity. No source ancestry, recipe,
 command provenance, or opening/closing stock is inferred. Kind53 is hidden in
 the owner feed by data but reachable through actual causal parents in Why.
+
+---
+
+## M-READ diagnosis, why-not, requests and current task
+
+### `get_settlement_diagnosis` (no arguments)
+
+Cached hourly settlement diagnosis. Returns a dictionary with parallel arrays:
+
+| key | type | description |
+|---|---|---|
+| `tick` | `int` | Tick of last evaluation |
+| `check_ids` | `PackedStringArray` | Check id from diagnosis.ron |
+| `text_keys` | `PackedStringArray` | Locale text key |
+| `severities` | `PackedInt32Array` | 0=ok, 1=notice, 2=warning, 3=danger |
+| `tags` | `Array[Array[String]]` | Tags per check |
+| `params` | `Array[Dictionary]` | Resolved parameters per check |
+| `chains` | `Array[Array[Dictionary]]` | Chain entries per check (subject_kind, check_id, text_key, severity, params) |
+
+### `get_why_not` (entity_bits: int)
+
+Per-person blocked candidates from the latest mind choice. Returns:
+
+| key | type | description |
+|---|---|---|
+| `nodes` | `PackedStringArray` | Blocked node names |
+| `bands` | `PackedStringArray` | Band names |
+| `fact_names` | `PackedStringArray` | Failing fact name |
+| `ops` | `PackedStringArray` | Operator (has/not/</>/>=/<=/>=/==) |
+| `thresholds` | `PackedInt64Array` | Authored threshold |
+| `actuals` | `PackedInt64Array` | Actual observed value |
+| `ticks` | `PackedInt64Array` | Recording tick |
+| `byte_size` | `int` | Approximate bytes used per person |
+
+### `get_requests` (no arguments)
+
+Active villager requests per settlement, hourly. Returns:
+
+| key | type | description |
+|---|---|---|
+| `tick` | `int` | Tick of last aggregation |
+| `rule_ids` | `PackedStringArray` | Request rule id from requests.ron |
+| `text_keys` | `PackedStringArray` | Locale text key |
+| `action_keys` | `PackedStringArray` | Suggested action locale key |
+| `priorities` | `PackedInt32Array` | Priority (lower = more urgent) |
+| `counts` | `PackedInt32Array` | Number of blocked adults |
+| `voices` | `PackedInt64Array` | AgentId of most affected adult |
+| `voice_names` | `PackedStringArray` | Name of the voice person |
+| `steward_active` | `Array[bool]` | Whether the steward addresses this |
+
+### `get_current_task` (no arguments)
+
+The top active request or next unfinished goal. Returns:
+
+| key | type | description |
+|---|---|---|
+| `source` | `String` | "request" or "none" |
+| `text_key` | `String` | Locale text key (when source != "none") |
+| `action_key` | `String` | Action locale key |
+| `voice` | `int` | AgentId of the voice |
+| `voice_name` | `String` | Name of the voice person |
+| `steward_active` | `bool` | Whether the steward handles it |
+| `has_marker` | `bool` | Whether a marker tile is provided |
+| `marker_x` | `int` | Marker tile X (when has_marker) |
+| `marker_y` | `int` | Marker tile Y (when has_marker) |

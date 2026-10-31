@@ -1,8 +1,8 @@
 //! Pure ordered-band selection; checked integer scores and incumbent hysteresis.
 
 use super::{
-    model::*, Candidate, EvalKey, FactReader, FactRow, MindEvalError, RunningChoice, Selection,
-    Transition,
+    model::*, BlockedCandidate, Candidate, EvalKey, FactReader, FactRow, MindEvalError,
+    RunningChoice, Selection, Transition,
 };
 use arrayvec::ArrayVec;
 
@@ -46,20 +46,54 @@ impl FactWitness {
         self.roles & role.bit() != 0
     }
 }
+/// Internal record of a rejected node, before filtering to BlockedCandidate.
+#[derive(Debug, Clone, Copy)]
+struct RejectedEntry {
+    node: NodeId,
+    band: BandId,
+    depth: usize,
+    fact: FactId,
+    op_str: &'static str,
+    threshold: i64,
+    actual: i64,
+}
 /// Caller-owned reusable storage; no simulation state or causal IDs are touched.
 #[derive(Debug, Default)]
 pub struct EvalScratch {
     witnesses: Vec<FactWitness>,
     slots: Vec<Option<usize>>,
     predicates: Vec<u8>,
+    /// Rejected nodes captured during band evaluation (presentation only).
+    rejected: Vec<RejectedEntry>,
 }
 // Low five bits retain WitnessRole flags; the upper bits describe cache state.
 const PREDICATE_VALID: u8 = 1 << 7;
 const PREDICATE_MATCH: u8 = 1 << 6;
+/// Maximum rejected entries buffered during one evaluation.
+const REJECTED_CAP: usize = 16;
 impl EvalScratch {
     /// All actual predicate and score inputs read by the last completed evaluation.
     pub fn witnesses(&self) -> &[FactWitness] {
         &self.witnesses
+    }
+    /// Up to 2 blocked candidates from the most recent evaluation, filtered to
+    /// nodes in bands above the winning band. Presentation only.
+    pub fn blocked_candidates(&self, winning_band: BandId) -> ArrayVec<BlockedCandidate, 2> {
+        let mut out = ArrayVec::new();
+        for entry in &self.rejected {
+            if entry.band.index() < winning_band.index() && out.len() < 2 {
+                out.push(BlockedCandidate {
+                    node: entry.node,
+                    band: entry.band,
+                    predicate_depth: entry.depth,
+                    fact: entry.fact,
+                    op: entry.op_str,
+                    threshold: entry.threshold,
+                    actual: entry.actual,
+                });
+            }
+        }
+        out
     }
     fn clear(&mut self, columns: usize, predicates: usize) {
         self.witnesses.clear();
@@ -67,6 +101,7 @@ impl EvalScratch {
         self.slots.fill(None);
         self.predicates.resize(predicates, 0);
         self.predicates.fill(0);
+        self.rejected.clear();
     }
     #[inline]
     fn record(&mut self, fact: FactId, value: i64, roles: u8) {
@@ -277,6 +312,34 @@ pub fn choose_with_reader<R: FactReader>(
                 }
             }
             position_in_band = next;
+            // Record rejected non-structural nodes for why-not presentation.
+            // This is a pure side-effect on scratch; it never affects selection.
+            if let Eligibility::Rejected(depth) = eligibility {
+                if scratch.rejected.len() < REJECTED_CAP {
+                    let pred = &node.predicates[depth];
+                    let actual = scratch.slots[pred.fact.index()]
+                        .map(|i| scratch.witnesses[i].value)
+                        .unwrap_or(0);
+                    let op_str = match pred.op {
+                        Op::Lt => "<",
+                        Op::Le => "<=",
+                        Op::Gt => ">",
+                        Op::Ge => ">=",
+                        Op::Eq => "==",
+                        Op::Has => "has",
+                        Op::Not => "not",
+                    };
+                    scratch.rejected.push(RejectedEntry {
+                        node: id,
+                        band: node.band,
+                        depth,
+                        fact: pred.fact,
+                        op_str,
+                        threshold: pred.value,
+                        actual,
+                    });
+                }
+            }
             if matches!(eligibility, Eligibility::Eligible) {
                 let score = score(node, row, incumbent, scratch)?;
                 let candidate = Candidate {

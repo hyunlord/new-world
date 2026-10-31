@@ -643,6 +643,91 @@ pub struct SimResources {
     /// first use. Never built in the baseline world.
     #[serde(default)]
     pub nav: sim_core::nav::NavState,
+
+    /// M-READ §2.1: cached settlement diagnosis, evaluated once per in-game
+    /// hour. Presentation only: not saved, not hashed, no simulation effect.
+    #[serde(skip)]
+    pub diagnosis_cache: DiagnosisCache,
+
+    /// M-READ §2.3: active villager requests per settlement, aggregated once
+    /// per in-game hour from why-not records. Presentation only: not saved,
+    /// not hashed, no simulation effect.
+    #[serde(skip)]
+    pub requests_cache: RequestsCache,
+}
+
+/// Cached settlement diagnosis result (presentation only).
+#[derive(Debug, Clone, Default)]
+pub struct DiagnosisCache {
+    /// Tick of the last evaluation.
+    pub tick: u64,
+    /// Failing checks with parameters and chain, per settlement.
+    pub results:
+        std::collections::BTreeMap<sim_core::components::SettlementId, Vec<DiagnosisResultEntry>>,
+}
+
+/// One failing check in the diagnosis cache.
+#[derive(Debug, Clone)]
+pub struct DiagnosisResultEntry {
+    /// Check id from diagnosis.ron.
+    pub check_id: String,
+    /// Locale text key.
+    pub text_key: String,
+    /// Severity code.
+    pub severity: u8,
+    /// Resolved parameter values: name → formatted value.
+    pub params: std::collections::BTreeMap<String, String>,
+    /// Tags from the check.
+    pub tags: Vec<String>,
+    /// Chain entries (next subject checks), depth <= 5.
+    pub chain: Vec<DiagnosisChainEntry>,
+}
+
+/// One link in a diagnosis chain.
+#[derive(Debug, Clone)]
+pub struct DiagnosisChainEntry {
+    /// Subject kind code.
+    pub subject_kind: u8,
+    /// Check id.
+    pub check_id: String,
+    /// Text key.
+    pub text_key: String,
+    /// Severity code.
+    pub severity: u8,
+    /// Resolved parameters.
+    pub params: std::collections::BTreeMap<String, String>,
+}
+
+/// Cached active requests per settlement (presentation only).
+#[derive(Debug, Clone, Default)]
+pub struct RequestsCache {
+    /// Tick of the last aggregation.
+    pub tick: u64,
+    /// Active requests per settlement, ordered by priority then count.
+    pub results: std::collections::BTreeMap<sim_core::components::SettlementId, Vec<ActiveRequest>>,
+}
+
+/// One active request in the cache.
+#[derive(Debug, Clone)]
+pub struct ActiveRequest {
+    /// Request rule id from requests.ron.
+    pub rule_id: String,
+    /// Locale text key.
+    pub text_key: String,
+    /// Locale key for the suggested action.
+    pub action_key: String,
+    /// Priority (lower = more urgent).
+    pub priority: u32,
+    /// Number of adults blocked by this request.
+    pub count: u32,
+    /// AgentId of the most affected adult (the voice).
+    pub voice: sim_core::components::AgentId,
+    /// Name of the voice person.
+    pub voice_name: String,
+    /// Whether the steward has a command addressing this ("집사가 하고 있어요").
+    pub steward_active: bool,
+    /// Tags from the request rule.
+    pub tags: Vec<String>,
 }
 
 /// One daily fission check that reached the hazard draw (Pass 12);
@@ -846,6 +931,8 @@ impl SimResources {
             due_births: Vec::new(),
             spatial: sim_core::spatial::SpatialIndex::default(),
             nav: sim_core::nav::NavState::default(),
+            diagnosis_cache: DiagnosisCache::default(),
+            requests_cache: RequestsCache::default(),
         }
     }
 

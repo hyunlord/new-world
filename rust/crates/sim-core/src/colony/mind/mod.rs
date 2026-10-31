@@ -19,7 +19,7 @@ pub use error::*;
 pub use facts::{FactReader, FactRow, PersonFacts};
 pub use model::*;
 pub use select::{choose, choose_with_reader, EvalScratch, FactWitness, WitnessRole};
-pub use selection::*;
+pub use selection::{BlockedCandidate, Candidate, EvalKey, RunningChoice, Selection, Transition};
 
 #[cfg(test)]
 mod tests;

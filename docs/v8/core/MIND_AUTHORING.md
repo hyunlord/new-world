@@ -145,3 +145,70 @@ Proactive harvest entries retain the inherited stock target, hoard cap and forag
 `harvest_storage_available` is factual acquisition admission for proactive stock work: the current edible-plant target must have reachable, unreserved compatible storage with actual room, and this person's Haul priority and the item's carry capacity must permit delivery. It shares the ordinary physical storage selector and observes the once-per-tick refreshed colony index. The person's `haul_enabled` snapshot follows WorkPriorities, defaulting to the existing allowed behavior when absent. Urgent hunger harvest retains its separate admission without requiring storage. No stock score, cap, threshold or yield belongs in this provider.
 
 These work facts are not cheap continuation inputs. The existing continuation guard checks critical/finish nodes and the incumbent between absolute eight-tick full-selection phases; it does not scan every work challenger. A new storage destination may therefore start stock work at the next normal full phase, without changing that contract.
+
+## M-READ: why-not records
+
+The mind selector captures **blocked candidates** alongside each selection
+(M-READ §2.2, ADR 0055). A blocked candidate is a node whose predicates
+failed although it belongs to a higher band than the winning node (or, in
+the same band, has a higher authored priority). These are presentation-only
+records — they never affect the selection result, determinism or the state
+hash.
+
+### What is recorded
+
+For each `MindChoice`, the selector captures up to 2 blocked candidates in
+`EvalScratch::blocked_candidates()`. Each entry contains:
+
+- `node`: the blocked node's `NodeId`
+- `band`: the node's `BandId` (higher = more important = lower index)
+- `predicate_depth`: index of the first failing predicate in the node's `when` list
+- `fact`: the `FactId` of the failing predicate's fact
+- `op`: the operator string (`"has"`, `"not"`, `"<"`, `">="`, etc.)
+- `threshold`: the authored threshold value
+- `actual`: the observed fact value at evaluation time
+
+The recording code in the mind system pushes these into a per-person
+`WhyNotState` ring buffer in `MindState::why_not` (a `#[serde(skip)]`
+`BTreeMap<AgentId, WhyNotState>`). The ring holds up to 4 entries, newest
+first, and maintains an hourly bitmask for request aggregation.
+
+### How it works
+
+During `choose_with_reader` (the pure selector in `sim-core/src/colony/mind/select.rs`),
+when a node's eligibility check returns `Rejected(depth)`:
+
+1. The failing predicate's fact value has already been read and recorded in
+   the scratch's witnesses (the `record()` call precedes the match check).
+2. A `RejectedEntry` is pushed to `EvalScratch::rejected` with the node,
+   band, depth, fact, operator, threshold and actual value.
+3. After the selection completes, `blocked_candidates(winning_band)` filters
+   the entries to those in bands above the winning band and returns at most 2.
+
+### Storage budget
+
+Each `WhyNotEntry` is approximately 80 bytes (strings are short fact names).
+The ring holds 4 entries per person. At N = 200 persons, the total is
+roughly 64 KB — well within the C3 memory ceilings.
+
+### Bridge reads
+
+`get_why_not(entity_bits)` returns the latest blocked candidates for a person:
+node names (resolved from the mind dictionary), band names, fact names,
+operators, thresholds, actual values, and the byte size of the per-person
+state.
+
+### Requests aggregation
+
+The `RequestsSystem` (once per in-game hour) counts each person's latest
+why-not against the request rules in `requests.ron`. A request is active
+when >= 2 adults have been blocked by matching facts for >= 2 of the last
+4 hours. The voice is the most affected adult; steward status is matched
+by tag.
+
+### Normalising script
+
+`tools/v8/read_normalise.py` lists exactly the excluded new keys (`why_not`,
+`diagnosis_cache`, `requests_cache`) and compares two summary JSON files
+with those keys removed. Colony gameplay stays byte-identical when these
+presentation-only fields are excluded.

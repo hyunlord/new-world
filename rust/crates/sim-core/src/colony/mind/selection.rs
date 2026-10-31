@@ -1,6 +1,6 @@
 //! Pure selector inputs and outcomes, separate from authored policy metadata.
 
-use super::{BandId, BehaviourId, MindRevision, NodeId};
+use super::{BandId, BehaviourId, FactId, MindRevision, NodeId};
 use arrayvec::ArrayVec;
 use serde::{Deserialize, Serialize};
 
@@ -49,6 +49,26 @@ pub enum Transition {
     Switch,
     /// Same node is selected after its previous lifecycle completed.
     RestartAfterFinish,
+}
+/// A node whose predicates failed although it would have been preferred
+/// (higher band or same band with a higher score bound). Presentation only;
+/// never affects selection or determinism.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BlockedCandidate {
+    /// Authored node that was blocked.
+    pub node: NodeId,
+    /// The node's priority band.
+    pub band: BandId,
+    /// Index of the first failing predicate within the node's `when` list.
+    pub predicate_depth: usize,
+    /// Fact column of the first failing predicate.
+    pub fact: FactId,
+    /// Operator string code (e.g. "has", ">=").
+    pub op: &'static str,
+    /// Authored threshold value.
+    pub threshold: i64,
+    /// Actual observed value at the time of evaluation.
+    pub actual: i64,
 }
 /// Selection result; exact witnesses remain in the caller's reusable scratch.
 #[derive(Debug, Clone, PartialEq, Eq)]
