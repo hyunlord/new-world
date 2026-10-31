@@ -78,43 +78,69 @@ func _run_question(q: int, main: Node, world: Node, reads: Node, camera: Camera2
 	return result
 
 
-# Q1: 왜 이 사람이 굶어 죽었나 — no starvation death is reachable at HEAD, so Q1 shows the
-# hungriest living person at the colony's hungriest moment: steward OFF, before wolves arrive.
-# Pass 1 scans day by day for the lowest hunger; pass 2 replays to that tick (deterministic).
+# Q1: 왜 이 사람이 굶어 죽었나 — constructed: seed 0, steward OFF. People starve on day 19
+# (first at tick ~27550). Scan forward to the first starvation death (chronicle kind 11, cause 0),
+# run ~250 ticks more so a few deaths are listed, then: overview, chronicle, the dead person's
+# record, and the death entry's "왜?" chain.
 func _q1_starvation(main: Node, world: Node, reads: Node, camera: Camera2D, _tool_node: Node) -> Dictionary:
 	var result: Dictionary = {"question": 1, "images": [], "seed": 0, "tick": -1}
 	_reset_steward_off(reads, world)
-	var best_tick: int = 0
-	var lowest: float = 999.0
+	var death: Dictionary = {}
 	for _step: int in 180:  # 30 days in 240-tick steps
 		world.call("advance_ticks", 240)
-		if int(SimReads.read(world, "get_ui_facts").get("wolves_spawned", 0)) > 0:
-			print("Q1 scan: wolves at tick %d" % _now(world))
+		death = _first_starvation(world)
+		if not death.is_empty():
 			break
-		var hungers: PackedFloat32Array = (world.call("get_agent_snapshot") as Dictionary).get("hungers", PackedFloat32Array())
-		print("Q1 scan tick=%d wolves=%d min_hunger=%.1f" % [_now(world), int(SimReads.read(world, "get_ui_facts").get("wolves_spawned", 0)), hungers[_lowest_index(hungers)] if not hungers.is_empty() else -1.0])
-		for h: float in hungers:
-			if h < lowest:
-				lowest = h
-				best_tick = _now(world)
-	_reset_steward_off(reads, world)
-	world.call("advance_ticks", best_tick)
+	if death.is_empty():
+		result["note"] = "no starvation death within 30 days"
+		return result
+	var extra: int = int(death["tick"]) + 250 - _now(world)
+	if extra > 0:
+		world.call("advance_ticks", extra)
 	for _i: int in 10:
 		await process_frame
 	result["tick"] = _now(world)
-	result["constructed"] = "seed 0, steward OFF, before wolves, tick of lowest hunger"
-	var snap: Dictionary = world.call("get_agent_snapshot")
-	var idx: int = _lowest_index(snap.get("hungers", PackedFloat32Array()))
-	if idx < 0:
-		return result
-	var tile: Vector2i = Vector2i(snap["xs"][idx], snap["ys"][idx])
-	result["note"] = "no starvation death reachable; hungriest living person hunger=%.0f" % snap["hungers"][idx]
-	_frame(camera, Vector2(tile), 2.0)
+	result["constructed"] = "seed 0, steward OFF, ~250 ticks after the first starvation death"
+	result["death"] = death
+	_frame(camera, Vector2(_hearth(world)), 2.0)
 	for _i: int in 30:
 		await process_frame
 	await _save_q("q1_overview", result)
-	await _inspect_and_why(main, world, int(snap["ids"][idx]), "q1", result)
+	var chronicle_panel: Node = main.get_node_or_null("UI/ChroniclePanel")
+	if chronicle_panel != null:
+		chronicle_panel.call("toggle_visible")
+		for _i: int in 30:
+			await process_frame
+		await _save_q("q1_chronicle", result)
+		chronicle_panel.call("toggle_visible")
+	var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
+	if inspector != null:
+		inspector.call("show_person", int(death["subject"]))
+		for _i: int in 30:
+			await process_frame
+		await _save_q("q1_record", result)
+	if chronicle_panel != null and bool(chronicle_panel.call("open_why", int(death["index"]))):
+		for _i: int in 30:
+			await process_frame
+		await _save_q("q1_why", result)
 	return result
+
+
+## The first chronicle death by starvation (kind 11, cause 0) as {index, tick, subject}, or {}.
+func _first_starvation(world: Node) -> Dictionary:
+	var next: int = 0
+	while true:
+		var page: Dictionary = world.call("get_chronicle_since", next, 512)
+		var kinds: PackedInt32Array = page.get("kind", PackedInt32Array())
+		var causes: PackedInt64Array = page.get("cause", PackedInt64Array())
+		for i: int in kinds.size():
+			if kinds[i] == 11 and causes[i] == 0:
+				return {"index": int(page["index"][i]), "tick": int(page["tick"][i]), "subject": int(page["subject"][i])}
+		var after: int = int(page.get("next", next))
+		if kinds.is_empty() or after <= next:
+			return {}
+		next = after
+	return {}
 
 
 # Q2: 왜 이 어른이 일을 안 하나
