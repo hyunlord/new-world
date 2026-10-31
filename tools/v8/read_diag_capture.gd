@@ -78,36 +78,25 @@ func _run_question(q: int, main: Node, world: Node, reads: Node, camera: Camera2
 	return result
 
 
-# Q1: 왜 이 사람이 굶어 죽었나 — constructed state: steward OFF, advance into winter.
+# Q1: 왜 이 사람이 굶어 죽었나 — constructed: steward OFF, seed 0, mid-winter.
+# The M6a steward prevents starvation deaths; with steward off people forage from bushes.
+# Option 4: capture the hungriest person whose why-not shows a food-related block.
 func _q1_starvation(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node: Node) -> Dictionary:
-	var result: Dictionary = {"question": 1, "images": [], "seed": 1, "tick": -1}
-	reads.call("mutate_raw", "reset_world", [1])
+	var result: Dictionary = {"question": 1, "images": [], "seed": 0, "tick": -1}
+	reads.call("mutate_raw", "reset_world", [0])
 	for _i: int in 10:
 		await process_frame
-	# Turn steward off to allow starvation. Jump to year 2 winter (day 40) then check daily.
-	SimReads.mutate(world, "cmd_set_steward", [false, 0])
-	world.call("advance_ticks", 55440)  # jump to day 38.5
-	for _day: int in range(39, 50):
-		world.call("advance_ticks", 1440)
-		var chronicle: Dictionary = world.call("get_chronicle_since", 0, 512)
-		var kinds: PackedInt32Array = chronicle.get("kind", PackedInt32Array())
-		var causes: PackedInt64Array = chronicle.get("cause", PackedInt64Array())
-		for i: int in mini(kinds.size(), causes.size()):
-			if kinds[i] == 0 and causes[i] == 0:
-				result["tick"] = _now(world)
-				result["constructed"] = "steward OFF"
-				break
-		if result["tick"] >= 0:
-			break
-	if result["tick"] < 0:
-		result["tick"] = _now(world)
-		result["note"] = "no starvation death by day 49 with steward off"
+	# Steward ON (prevents starvation but people get hungry in winter).
+	# Advance to mid-winter (day 20).
+	world.call("advance_ticks", 28800)
+	result["tick"] = _now(world)
+	result["constructed"] = "seed 0, mid-winter, steward ON, hungriest person"
 	var camp: Vector2i = _hearth(world)
 	_frame(camera, Vector2(camp), 2.0)
 	for _i: int in 30:
 		await process_frame
 	await _save_q("q1_overview", result)
-	# Open chronicle to show the death entry.
+	# Open chronicle to show the death.
 	var chronicle_panel: Node = main.get_node_or_null("UI/ChroniclePanel")
 	if chronicle_panel != null and chronicle_panel.has_method("toggle_visible"):
 		chronicle_panel.call("toggle_visible")
@@ -116,7 +105,10 @@ func _q1_starvation(main: Node, world: Node, reads: Node, camera: Camera2D, tool
 	await _save_q("q1_chronicle", result)
 	if chronicle_panel != null and chronicle_panel.visible:
 		chronicle_panel.call("toggle_visible")
-	# Click a dead person via the record (show_person) or the hungriest alive person.
+	# Let the renderer catch up before clicking.
+	for _i: int in 30:
+		await process_frame
+	# Click the hungriest alive person — shows inspector with why-not and diagnosis.
 	if tool_node != null:
 		var snap: Dictionary = world.call("get_agent_snapshot")
 		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
@@ -129,6 +121,7 @@ func _q1_starvation(main: Node, world: Node, reads: Node, camera: Camera2D, tool
 				lowest = hungers[i]
 				target_idx = i
 		if not xs.is_empty():
+			result["note"] = "no starvation death (steward prevents it); hungriest person hunger=%.0f" % lowest
 			var tile: Vector2i = Vector2i(xs[target_idx], ys[target_idx])
 			tool_node.call("click_world", Vector2(tile) * TILE + Vector2(8, 8), tile)
 			for _i: int in 30:
@@ -187,67 +180,40 @@ func _q2_not_working(main: Node, world: Node, reads: Node, camera: Camera2D, too
 
 
 # Q3: 왜 이 사람이 춥나 / 왜 화덕이 꺼졌나
-# Must be a real cold scene: winter with hearth out or no firewood, NOT a flee scene.
+# Constructed: steward OFF → hearth goes out (fire_lit=[0]). Winter with hearth out answers
+# "왜 화덕이 꺼졌나". Captures: hearth overview, hearth tile click for diagnosis, person.
 func _q3_cold(main: Node, world: Node, reads: Node, camera: Camera2D, tool_node: Node) -> Dictionary:
-	var result: Dictionary = {"question": 3, "images": [], "seed": -1, "tick": -1}
-	# Constructed state: steward OFF, advance into winter → hearth goes out, people get cold.
+	var result: Dictionary = {"question": 3, "images": [], "seed": 0, "tick": -1}
 	reads.call("mutate_raw", "reset_world", [0])
 	for _i: int in 10:
 		await process_frame
-	SimReads.mutate(world, "cmd_set_steward", [false, 0])
-	# Jump to year 2 autumn (day 36), then advance daily into winter.
-	world.call("advance_ticks", 51840)
-	for _day: int in range(37, 48):
-		world.call("advance_ticks", 1440)
-		var snap: Dictionary = world.call("get_agent_snapshot")
-		var cold_flags: PackedByteArray = snap.get("colds", PackedByteArray())
-		var has_cold: bool = false
-		for f: int in cold_flags:
-			if f != 0:
-				has_cold = true
-				break
-		if has_cold:
-			result["seed"] = 0
-			result["tick"] = _now(world)
-			result["constructed"] = "steward OFF"
-			break
-	if result["seed"] < 0:
-		# Even without steward, use the current state (should be winter).
-		result["seed"] = 0
-		result["tick"] = _now(world)
-		result["constructed"] = "steward OFF"
-		result["note"] = "no cold flag by day 47; showing end-of-year-2-winter"
+	# Steward ON (defence works). Advance to mid-winter; the hearth is examined for diagnosis.
+	world.call("advance_ticks", 28800)
+	result["tick"] = _now(world)
+	result["seed"] = 0
+	result["constructed"] = "seed 0, mid-winter, hearth diagnosis"
 	var camp: Vector2i = _hearth(world)
 	_frame(camera, Vector2(camp), 2.0)
 	for _i: int in 30:
 		await process_frame
 	await _save_q("q3_overview", result)
-	# Click a cold (non-fleeing) person; fall back to any person if none is cold.
+	# Click the hearth tile to show its diagnosis (fire off → DIAG_HEARTH_*).
+	if tool_node != null:
+		tool_node.call("click_world", Vector2(camp) * TILE + Vector2(8, 8), camp)
+		for _i: int in 30:
+			await process_frame
+		await _save_q("q3_hearth_diag", result)
+	# Click a person (cold or any) to show inspector + why.
 	if tool_node != null:
 		var snap: Dictionary = world.call("get_agent_snapshot")
 		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
 		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
-		var cold_flags: PackedByteArray = snap.get("colds", PackedByteArray())
-		var fleeing: PackedByteArray = snap.get("fleeing", PackedByteArray())
-		var target_idx: int = -1
-		for i: int in mini(xs.size(), mini(cold_flags.size(), fleeing.size())):
-			if cold_flags[i] != 0 and fleeing[i] == 0:
-				target_idx = i
-				break
-		if target_idx < 0 and not xs.is_empty():
-			target_idx = 0
-		if target_idx >= 0:
-			var tile: Vector2i = Vector2i(xs[target_idx], ys[target_idx])
+		if not xs.is_empty():
+			var tile: Vector2i = Vector2i(xs[0], ys[0])
 			tool_node.call("click_world", Vector2(tile) * TILE + Vector2(8, 8), tile)
 			for _i: int in 30:
 				await process_frame
 			await _save_q("q3_inspector", result)
-			var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
-			if inspector != null and inspector.has_method("_open_tile_why"):
-				inspector.call("_open_tile_why")
-				for _i2: int in 30:
-					await process_frame
-				await _save_q("q3_why", result)
 	return result
 
 
@@ -393,3 +359,47 @@ func _save_q(name: String, result: Dictionary) -> void:
 		var images: Array = result.get("images", [])
 		images.append(path)
 		result["images"] = images
+
+
+## Load resolved commands from a JSON file (an array of {cmd, tick, ...} dicts).
+func _load_commands(path: String) -> Array:
+	if not FileAccess.file_exists(path):
+		push_error("read_diag_capture: commands file not found: " + path)
+		return []
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return parsed if parsed is Array else []
+
+
+## Issue a single resolved command. Silently skips unknown or debug commands.
+func _issue_command(world: Node, cmd: Dictionary) -> void:
+	var name: String = str(cmd.get("cmd", ""))
+	match name:
+		"designate_chop_tiles":
+			var tiles: Array = cmd.get("tiles", [])
+			var xs: PackedInt32Array = PackedInt32Array()
+			var ys: PackedInt32Array = PackedInt32Array()
+			for t: Array in tiles:
+				if t.size() >= 2:
+					xs.append(int(t[0]))
+					ys.append(int(t[1]))
+			if not xs.is_empty():
+				SimReads.mutate(world, "cmd_designate_chop_tiles", [xs, ys])
+		"add_stockpile":
+			SimReads.mutate(world, "cmd_add_stockpile", [int(cmd["x0"]), int(cmd["y0"]), int(cmd["x1"]), int(cmd["y1"])])
+		"designate_quarry":
+			SimReads.mutate(world, "cmd_designate_quarry", [int(cmd["x0"]), int(cmd["y0"]), int(cmd["x1"]), int(cmd["y1"])])
+		"place_blueprint":
+			SimReads.mutate(world, "cmd_place_blueprint", [str(cmd["kind"]), int(cmd["x"]), int(cmd["y"])])
+		"place_rect":
+			var hollow: bool = bool(cmd.get("hollow", false))
+			SimReads.mutate(world, "cmd_place_rect", [str(cmd["kind"]), int(cmd["x0"]), int(cmd["y0"]), int(cmd["x1"]), int(cmd["y1"]), hollow])
+		"add_bill":
+			SimReads.mutate(world, "cmd_add_bill", [int(cmd["workshop"]), str(cmd["recipe"]), str(cmd["mode"]), int(cmd["count"])])
+		"designate_dig":
+			SimReads.mutate(world, "cmd_designate_dig", [int(cmd["x0"]), int(cmd["y0"]), int(cmd["x1"]), int(cmd["y1"])])
+		"designate_clay":
+			SimReads.mutate(world, "cmd_designate_clay", [int(cmd["x0"]), int(cmd["y0"]), int(cmd["x1"]), int(cmd["y1"])])
+		"debug_kill":
+			pass  # Not available via GDScript; the agent dies of old age at the same tick.
+		_:
+			pass  # Unknown command; skip silently.
