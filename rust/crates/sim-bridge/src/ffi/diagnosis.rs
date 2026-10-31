@@ -4,7 +4,60 @@
 
 use godot::prelude::*;
 use sim_core::colony::ZoneKind;
+use sim_core::components::AgentId;
 use sim_engine::SimEngine;
+
+// ── Deterministic syllable name (matches PersonNames.gd) ──────────────
+
+const EN: &[&str] = &[
+    "a", "i", "o", "e", "ka", "ki", "ku", "ko", "ta", "ti", "tu", "to", "na", "ni", "nu", "no",
+    "ma", "mi", "mu", "mo", "ra", "ri", "ru", "ro", "sa", "si", "su", "so", "ha", "hi", "hu", "ho",
+    "ya", "yu", "yo", "wa", "ba", "bi", "bo", "bu", "da", "do", "ga", "go", "de", "ge",
+];
+
+fn mix(mut x: u32) -> u32 {
+    x ^= 0x9E3779B9;
+    x = (x ^ (x >> 16)).wrapping_mul(0x45D9F3B);
+    x = (x ^ (x >> 16)).wrapping_mul(0x45D9F3B);
+    x ^ (x >> 16)
+}
+
+/// Deterministic presented name for an agent id, matching PersonNames.gd.
+pub fn person_name(agent_id: AgentId) -> String {
+    let h = mix(mix(agent_id as u32) ^ 0x2545F491);
+    let count = if h.is_multiple_of(4) { 2 } else { 3 };
+    let mut syllables: Vec<usize> = (0..count)
+        .map(|i| ((h >> (5 * i + 2)) as usize) % 46)
+        .collect();
+    // Blocklist check (simplified — full check in GDScript).
+    let blocked = |s: &[usize]| -> bool {
+        let joined: String = s.iter().map(|i| EN[*i]).collect();
+        ["nig", "kak", "baka"].iter().any(|b| joined.contains(b))
+    };
+    let mut attempts = 0u32;
+    while blocked(&syllables) {
+        let last = syllables.len() - 1;
+        syllables[last] = (syllables[last] + 1) % 46;
+        attempts += 1;
+        if attempts.is_multiple_of(46) {
+            for i in (0..last).rev() {
+                syllables[i] = (syllables[i] + 1) % 46;
+                if syllables[i] != 0 {
+                    break;
+                }
+            }
+        }
+        if attempts > 200 {
+            break;
+        }
+    }
+    let joined: String = syllables.iter().map(|i| EN[*i]).collect();
+    let mut chars = joined.chars();
+    match chars.next() {
+        Some(c) => c.to_uppercase().to_string() + chars.as_str(),
+        None => String::new(),
+    }
+}
 
 // ── Settlement diagnosis (cached) ──────────────────────────────────────
 
@@ -327,7 +380,7 @@ pub fn requests_to_dict(engine: &SimEngine) -> VarDictionary {
             priorities.push(req.priority as i32);
             counts.push(req.count as i32);
             voices.push(req.voice as i64);
-            voice_names.push(&GString::from(&req.voice_name));
+            voice_names.push(&GString::from(&person_name(req.voice)));
             steward_active.push(&Variant::from(req.steward_active));
         }
     }
@@ -426,7 +479,7 @@ pub fn current_task_to_dict(engine: &SimEngine) -> VarDictionary {
             dict.set("text_key", GString::from(&top.text_key));
             dict.set("action_key", GString::from(&top.action_key));
             dict.set("voice", top.voice as i64);
-            dict.set("voice_name", GString::from(&top.voice_name));
+            dict.set("voice_name", GString::from(&person_name(top.voice)));
             dict.set("steward_active", top.steward_active);
             // Marker tile using the same validity check the order tool uses.
             if let Some((mx, my)) = find_marker_tile(engine, &top.action_key) {

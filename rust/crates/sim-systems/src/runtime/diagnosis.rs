@@ -635,7 +635,7 @@ impl RuntimeSystem for RequestsSystem {
                 priority: rule.priority,
                 count: *count,
                 voice: *voice,
-                voice_name: String::new(),
+                voice_name: String::from(""), // Filled by bridge read
                 steward_active: is_steward,
                 tags: rule.steward_tags.clone(),
             });

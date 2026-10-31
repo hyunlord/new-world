@@ -122,3 +122,42 @@ fn why_not_bytes_per_person_within_budget() {
         );
     }
 }
+
+#[test]
+fn person_name_is_nonempty() {
+    // The bridge must fill voice_name, not leave it empty.
+    let name = sim_bridge::ffi::diagnosis::person_name(0);
+    assert!(!name.is_empty(), "person_name(0) must not be empty");
+    // Check a few more ids.
+    for id in [1, 5, 42, 100, 9999] {
+        let n = sim_bridge::ffi::diagnosis::person_name(id);
+        assert!(!n.is_empty(), "person_name({id}) must not be empty");
+        // Name must start with an uppercase letter.
+        assert!(
+            n.chars().next().unwrap().is_uppercase(),
+            "person_name({id}) = {n:?} must be capitalized"
+        );
+    }
+}
+
+#[test]
+fn requests_voice_name_resolved_by_bridge() {
+    // The bridge resolves voice_name from agent_id using person_name().
+    // Verify that every agent id that appears in the requests cache
+    // produces a nonempty name when resolved through the bridge function.
+    let mut engine = sim_test::colony_engine(0);
+    for _ in 0..4320 {
+        engine.tick();
+    }
+    for reqs in engine.resources.requests_cache.results.values() {
+        for req in reqs {
+            let name = sim_bridge::ffi::diagnosis::person_name(req.voice);
+            assert!(
+                !name.is_empty(),
+                "person_name({}) must not be empty for request {}",
+                req.voice,
+                req.rule_id,
+            );
+        }
+    }
+}
