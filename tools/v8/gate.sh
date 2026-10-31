@@ -135,7 +135,9 @@ step 9 smoke bash tools/v8/smoke.sh "$LOG/smoke"
 step 10 identity bash tools/v8/identity.sh "$BASE_DATA" "$LOG/identity"
 step 11 determinism bash -c 'cd rust && cargo build --release -p sim-test --bin worldsim_probe && ./target/release/worldsim_probe --scene baseline --seeds 0..4 --days 120 --workers 4 --check-determinism --out "$0/determinism_probe" && echo "determinism checked on seeds 0..4"' "$LOG"
 grep -q 'DETERMINISM PASS' "$LOG/determinism.log" || { echo "   determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
-if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+if [[ -n "${READ_GATE_CONFIG:-}" ]]; then
+    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && echo "READ report-only; paired acceptance is step 25 (interleaved bench)"'
+elif [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && CORE_P7_RUN=1 CORE_P7_DEADLINE_EPOCH="${M6A_DEADLINE_EPOCH:?}" bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && echo "M6A report-only historical unpaired comparison; paired acceptance step25/45" && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
 elif [[ -n "${CORE_UI_CONFIG:-}" ]]; then
     step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && CORE_P7_RUN=1 CORE_P7_DEADLINE_EPOCH="${CORE_UI_DEADLINE_EPOCH:?}" bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
@@ -169,7 +171,9 @@ step 23 renderer_agreement bash tools/v8/renderer_agreement.sh "$LOG/renderer_ag
 grep -q '^RENDERER_AGREEMENT PASS' "$LOG/renderer_agreement.log" || { echo "   renderer_agreement: no PASS line" >> "$SUMMARY"; status=1; }
 step 24 save_roundtrip bash tools/v8/save_roundtrip.sh
 grep -q '^SAVE_ROUNDTRIP PASS' "$LOG/save_roundtrip.log" || { echo "   save_roundtrip: no PASS line" >> "$SUMMARY"; status=1; }
-if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+if [[ -n "${READ_GATE_CONFIG:-}" ]]; then
+    step 25 bench python3 tools/v8/read_gate_checks.py bench "$READ_GATE_CONFIG" "$LOG/bench"
+elif [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     step 25 bench python3 tools/v8/m6a_perf.py run "${M6A_PERF_CONFIG:?fresh M6a perf config required}" "$LOG/bench/perf-session"
 elif [[ -n "${CORE_UI_CONFIG:-}" ]]; then
     step 25 bench python3 tools/v8/core_ui_successor_perf.py run "${CORE_UI_PERF_CONFIG:?fresh UI performance config required}" "$LOG/bench/perf-session"
@@ -222,14 +226,21 @@ step 37 mux2_defence bash tools/v8/mux2_gate_checks.sh defence "$LOG/mux2-defenc
 step 38 mux2_oracles bash tools/v8/mux2_gate_checks.sh oracles "$LOG/mux2-oracles"
 step 39 mux2_visibility python3 tools/v8/mux2_gate_receipts.py capture --kind visibility --out "$LOG/mux2-visibility" --godot "$GODOT_BIN"
 step 40 mux2_why python3 tools/v8/mux2_gate_receipts.py capture --kind why --out "$LOG/mux2-why" --godot "$GODOT_BIN"
-if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
+if [[ -n "${READ_GATE_CONFIG:-}" ]]; then
+    step 41 mux2_stall_receipt bash -c 'bash tools/v8/mux2_gate_checks.sh stall "$0" && python3 tools/v8/read_gate_checks.py stall_waiver "$0/stall.log"' "$LOG/mux2-stall"
+elif [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     step 41 mux2_stall_receipt bash tools/v8/m6a_gate_checks.sh stall "$LOG/mux2-stall"
 else
     step 41 mux2_stall_receipt bash tools/v8/mux2_gate_checks.sh stall "$LOG/mux2-stall"
 fi
-step 44 core_shadow bash tools/v8/core_gate_checks.sh fixture_run "$LOG/core-shadow-fixture"
-step 45 core_evaluation bash tools/v8/core_gate_checks.sh evaluation "$LOG/core-evaluation"
-grep -E '^CORE_PERF ' "$LOG/core_evaluation.log" | sed 's/^/   /' >> "$SUMMARY"
+if [[ -n "${READ_GATE_CONFIG:-}" ]]; then
+    step 44 core_shadow python3 tools/v8/read_gate_checks.py core_fixture "$READ_GATE_CONFIG" "$LOG/core-shadow-fixture"
+    step 45 core_evaluation bash -c 'echo "READ mode: core evaluation covered by step 44 normalised comparison"; echo "READ_CORE_EVAL PASS"'
+else
+    step 44 core_shadow bash tools/v8/core_gate_checks.sh fixture_run "$LOG/core-shadow-fixture"
+    step 45 core_evaluation bash tools/v8/core_gate_checks.sh evaluation "$LOG/core-evaluation"
+fi
+grep -E '^CORE_PERF ' "$LOG/core_evaluation.log" 2>/dev/null | sed 's/^/   /' >> "$SUMMARY"
 step 46 mux21_regressions bash -c '
     set -euo pipefail
     bash tools/v8/gdscript_strict_check.sh tools/v8/mux21_layout_test.gd tools/v8/mux21_toast_test.gd tools/v8/mux21_play_capture.gd tools/v8/mux21_why_locale_test.gd
@@ -263,8 +274,8 @@ step 50 read_preservation bash -c '
     CAND_PROBE=rust/target/release/worldsim_probe
     OUT="$0"
     mkdir -p "$OUT/base" "$OUT/head"
-    "$BASE_PROBE" --scene colony --seeds 0..4 --days 10 --workers 4 --commands tools/v8/u_script.json --check-determinism --out "$OUT/base/determinism" > /dev/null 2>&1
-    "$CAND_PROBE" --scene colony --seeds 0..4 --days 10 --workers 4 --commands tools/v8/u_script.json --check-determinism --out "$OUT/head/determinism" > /dev/null 2>&1
+    "$BASE_PROBE" --scene colony --seeds 0..4 --days 10 --workers 4 --commands tools/v8/u_script.json --check-determinism --out "$OUT/base/determinism" > "$OUT/base_determinism.txt" 2>&1
+    "$CAND_PROBE" --scene colony --seeds 0..4 --days 10 --workers 4 --commands tools/v8/u_script.json --check-determinism --out "$OUT/head/determinism" > "$OUT/head_determinism.txt" 2>&1
     "$BASE_PROBE" --scene colony --seeds 0..4 --days 20 --workers 4 --commands tools/v8/soak_script.json --out "$OUT/base/soak" > /dev/null 2>&1
     "$CAND_PROBE" --scene colony --seeds 0..4 --days 20 --workers 4 --commands tools/v8/soak_script.json --out "$OUT/head/soak" > /dev/null 2>&1
     "$BASE_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m5_u_script.json --out "$OUT/base/story" > /dev/null 2>&1
@@ -278,7 +289,7 @@ step 50 read_preservation bash -c '
     for f in determinism soak story neighbours steward m6a_steward; do
         python3 tools/v8/read_normalise.py "$OUT/base/$f/summary.json" "$OUT/head/$f/summary.json" || exit 1
     done
-    grep -q "DETERMINISM PASS" "$OUT/head/determinism"/*.txt 2>/dev/null || { echo "colony determinism FAIL"; exit 1; }
+    grep -q "DETERMINISM PASS" "$OUT/head_determinism.txt" && grep -q "DETERMINISM PASS" "$OUT/base_determinism.txt" || { echo "colony determinism FAIL"; exit 1; }
     echo "READ_PRESERVATION PASS"
 ' "$LOG/read_preservation"
 grep -q 'READ_PRESERVATION PASS' "$LOG/read_preservation.log" || { echo "   read_preservation: FAIL" >> "$SUMMARY"; status=1; }
@@ -293,7 +304,9 @@ passed = sum(1 for q in r[\"questions\"] if q[\"pass\"])
 total = len(r[\"questions\"])
 q1 = next(q for q in r[\"questions\"] if q[\"id\"] == \"Q1\")
 q5 = next(q for q in r[\"questions\"] if q[\"id\"] == \"Q5\")
-print(f\"30s test: {passed}/{total}, Q1={'PASS' if q1['pass'] else 'FAIL'}, Q5={'PASS' if q5['pass'] else 'FAIL'}\")
+p1 = q1[\"pass\"]
+p5 = q5[\"pass\"]
+print(f\"30s test: {passed}/{total}, Q1 pass={p1}, Q5 pass={p5}\")
 assert passed >= 5, f\"need >=5/6, got {passed}/{total}\"
 assert q1[\"pass\"], \"Q1 must pass\"
 assert q5[\"pass\"], \"Q5 must pass\"

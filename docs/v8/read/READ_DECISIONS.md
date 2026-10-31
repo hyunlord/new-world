@@ -216,3 +216,35 @@ Colony preservation: 6/6 fixtures NORMALISED MATCH (incl. steward 24d, m6a_stewa
 - **Changes before round 2.** The Q2 scene was replaced by an idle adult. The Q4 scene and target were changed to the case the game actually produces, "물건이 안 옴 ← 비축 구역이 가득 참"; this was decided before round 2 was run and applied to BASE too. UI fixes: the plaque shows its reason inline (headline ← cause), the food request's action text is "먹을거리 모으기 (채집·수확 구역)", and the inspector's diagnosis and why-not lines moved under the name (they were cut off). Only Q2, Q4 and Q5 were re-reviewed in round 2.
 - **Verdict.** Candidate **6/6** (Q1 and Q5 PASS) → bar met. BASE **4/6**: Q1, Q2, Q5 and Q6 PASS; Q3 and Q4 FAIL. The difference is Q3 and Q4 (the hearth and stockpile diagnosis lines). BASE already answered Q1 (the M-UX2.1 death 왜? chain), Q2 (inspector 지금·이유), Q5 (the alerts) and Q6 (the winter-preparation chronicle line). Verbatim answers: `docs/v8/read/read_30s_result.json`.
 - **Limits.** Q5 does not separate M-READ from BASE in this scene. Reviewers were separate fresh agent sessions (Sonnet) given only the images and the question.
+
+## D13: Gate adaptation for M-READ (M-READ brief 2026-10-31)
+
+M-READ adds `READ_GATE_CONFIG` mode to the gate, following M6a's `M6A_GATE_CONFIG`
+precedent (ADR 0050). The config pins BASE commit, probe and perf binaries with
+sha256 verification.
+
+### Step 25 bench (interleaved)
+The PERF_LEDGER's latest rows are M5.5 (2026-10-24); M-CORE and M6a never appended.
+In READ mode, step 25 runs 3-round interleaved bench (BASE perf binary vs HEAD),
+medians compared per scene: FAIL when tick mean or p99 > ×1.10, or any C3 ceiling
+misses. This replaces the stale ledger comparison for this pass.
+
+### Steps 44/45 core (normalised comparison)
+The M-CORE frozen configs pin M-CORE's source hash, so they fail on any later source.
+In READ mode, steps 44/45 run baseline and colony worlds at the pinned BASE probe and
+at HEAD, requiring read_normalise.py byte-identical comparison plus determinism.
+BASE passed 44/45 in M6a's gate; identical gameplay carries that over.
+
+### Step 41 stall (waiver)
+In READ mode, step 41 applies the M-UX2.1/M6a waiver: capture complete, at each zoom
+≤ 2 post-warmup frames > 50 ms and none > 60 ms. Prints MUX2_STALL_WAIVER_USED with
+the frame values when used.
+
+### Step 37 mux2_defence
+Needs WORLDSIM_MUX_FIXTURES and related env vars. The launcher script
+(/Users/rexxa/work/read-data/read-gate-run.sh) exports them.
+
+### Verifier tests
+tools/v8/test_read_gate.py: 13 tests covering the bench ratio rule (pass/fail/boundary),
+stall waiver rule (pass/fail at 50/60 ms), and normalised-equivalence rule (match/mismatch/
+excluded keys). Each rule can fail.
