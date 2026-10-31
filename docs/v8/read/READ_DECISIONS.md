@@ -183,3 +183,28 @@ quiet interleaved re-measure is needed to confirm.
 | rss_per_tile | 91 B | 128 | PASS |
 | n1000_mean | — | 5 ms | PASS |
 | n2000_mean | — | 10 ms | PASS |
+
+### D11: Perf fix — interleaved bench after allocation-free why-not (M-READ brief 2026-10-31)
+
+The initial why-not capture caused ColonyMindSystem +39% at n1000 (interleaved,
+load 1.7–2.8). Root cause: Vec<String> allocation of all fact names per choice,
+plus recording on every tick including continuations.
+
+Fix (commit d84d7f058):
+1. Record only on node change (Transition != Continue), not every tick.
+2. Allocation-free WhyNotEntry: stores FactId + op_code (u8), not String.
+3. Fixed-size array [Option<WhyNotEntry>; 4] instead of Vec.
+
+Interleaved bench after fix (3 rounds, load 2.1–3.4):
+
+| scene | base (us) | new (us) | ratio | verdict |
+|---|---|---|---|---|
+| n200 | 428.1 | 431.3 | x1.008 | ok |
+| n1000 | 1957.7 | 2012.1 | x1.028 | ok |
+| n2000 | 2926.0 | 2994.8 | x1.024 | ok |
+| n200_script | 496.2 | 510.4 | x1.029 | ok |
+| n200_side64 | 370.5 | 378.0 | x1.020 | ok |
+| n1000_wolves | 2183.1 | 2194.4 | x1.005 | ok |
+
+All scenes ≤ +10 %. Identity PASS (228,748 values, 0 differences).
+Colony preservation: 6/6 fixtures NORMALISED MATCH (incl. steward 24d, m6a_steward 72d).
