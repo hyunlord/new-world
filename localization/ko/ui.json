@@ -1286,7 +1286,7 @@
 	"LOOP_PLAQUE_TITLE": "지금 할 일",
 	"LOOP_PLAQUE_IDLE": "할 일 없음 — 집사가 마을을 돌보고 있어요",
 	"LOOP_PLAQUE_CARD_FMT": "{title}",
-	"LOOP_PLAQUE_CHAPTER_FMT": "({title} {met}/{total})",
+	"LOOP_PLAQUE_CHAPTER_FMT": "· 올해 목표: {title} {met}/{total} ·",
 	"LOOP_CARD_NEED_FOOD": "먹을 게 없어요",
 	"LOOP_CARD_NEED_FOOD_BODY": "{voice}: 먹을 게 없어요 ← {cause}",
 	"LOOP_CARD_NEED_FOOD_HUNT": "사냥 구역",

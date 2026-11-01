@@ -357,7 +357,7 @@
     "LOOP_CHRON_STEWARD_DECIDED": "집사가 대신 정했어요: {card}",
     "LOOP_HELP_COLLAPSED": "? 도움말",
     "LOOP_PLAQUE_CARD_FMT": "{title}",
-    "LOOP_PLAQUE_CHAPTER_FMT": "({title} {met}/{total})",
+    "LOOP_PLAQUE_CHAPTER_FMT": "· 올해 목표: {title} {met}/{total} ·",
     "LOOP_PLAQUE_IDLE": "할 일 없음 — 집사가 마을을 돌보고 있어요",
     "LOOP_PLAQUE_TITLE": "지금 할 일",
     "LOOP_PRESSURE_COLD": "한파",

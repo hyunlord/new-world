@@ -1286,7 +1286,7 @@
 	"LOOP_PLAQUE_TITLE": "Current task",
 	"LOOP_PLAQUE_IDLE": "Nothing to do — the steward is looking after the village",
 	"LOOP_PLAQUE_CARD_FMT": "{title}",
-	"LOOP_PLAQUE_CHAPTER_FMT": "({title} {met}/{total})",
+	"LOOP_PLAQUE_CHAPTER_FMT": "· This year: {title} {met}/{total} ·",
 	"LOOP_CARD_NEED_FOOD": "Nothing to eat",
 	"LOOP_CARD_NEED_FOOD_BODY": "{voice}: Nothing to eat ← {cause}",
 	"LOOP_CARD_NEED_FOOD_HUNT": "Hunting zone",
