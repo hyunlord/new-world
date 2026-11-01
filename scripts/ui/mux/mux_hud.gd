@@ -129,6 +129,7 @@ func _ready() -> void:
 	settings.setup(store)
 	add_child(settings)
 	settings.defence_toggled.connect(_set_defence)
+	settings.extended_toggled.connect(_set_extended)
 	_why_button = _button("WhyButton", func() -> void: get_node("/root/Main/ColonyView/OrderTool").call("select_why"))
 	_goals_button = _button("GoalsButton", goals.toggle_panel)
 	_settings_button = _button("SettingsButton", settings.toggle_panel)
@@ -290,6 +291,11 @@ func _set_defence(on: bool) -> void:
 	SimReads.mutate(_world, "cmd_set_steward_defence", [on])
 	_poll_left = 0.0
 
+## M-LOOP: "집사가 더 많이" toggle (cmd_set_steward_extended).
+func _set_extended(on: bool) -> void:
+	SimReads.mutate(_world, "cmd_set_steward_extended", [on])
+	_poll_left = 0.0
+
 func _world_replaced() -> void:
 	_pending_native_resets += 1
 	_baseline_notifications()
@@ -354,6 +360,7 @@ func _process_hud(delta: float) -> void:
 		_steward.select(int(state.get("scope", 0)) if bool(state.get("enabled", false)) else 3)
 		_steward.get_popup().set_item_checked(5, bool(state.get("defence_enabled", true)))
 		settings.set_defence_state(bool(state.get("defence_enabled", true)))
+		settings.set_extended_state(bool(state.get("extended", false)))
 		_poll_steward_notifications(state)
 	if _mux2_profile:
 		_mux2_record("steward", Time.get_ticks_usec() - started)

@@ -1393,5 +1393,7 @@
 	"LOOP_ROLE_CRAFT": "Craft",
 	"LOOP_ROLE_CARE_HAUL": "Care & Haul",
 	"LOOP_ROLES_TITLE": "Roles",
-	"LOOP_ROLES_ADVANCED": "Advanced"
+	"LOOP_ROLES_ADVANCED": "Advanced",
+	"LOOP_STEWARD_EXTENDED": "Steward does more",
+	"LOOP_STEWARD_EXTENDED_TIP": "Steward also handles tool production and teaching (default: off)"
 }

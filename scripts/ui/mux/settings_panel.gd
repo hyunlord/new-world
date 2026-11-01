@@ -3,7 +3,10 @@
 extends PanelContainer
 
 signal defence_toggled(on: bool)
+## M-LOOP: "집사가 더 많이" toggle (cmd_set_steward_extended).
+signal extended_toggled(on: bool)
 var _defence: CheckButton
+var _extended: CheckButton
 
 const Catalog = preload("res://scripts/ui/mux/controls_catalog.gd")
 const Tooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
@@ -46,6 +49,11 @@ func _ready() -> void:
 	_defence.name = "StewardDefence"
 	_defence.toggled.connect(func(on: bool) -> void: defence_toggled.emit(on))
 	column.add_child(_defence)
+	# M-LOOP: "집사가 더 많이" toggle (off by default; enables rules 4+6).
+	_extended = CheckButton.new()
+	_extended.name = "StewardExtended"
+	_extended.toggled.connect(func(on: bool) -> void: extended_toggled.emit(on))
+	column.add_child(_extended)
 	var scale_row: HBoxContainer = HBoxContainer.new()
 	column.add_child(scale_row)
 	_scale_label = Label.new()
@@ -108,6 +116,9 @@ func _refresh() -> void:
 	_scale_label.text = _loc("MUX_SETTING_UI_SCALE")
 	_defence.text = _loc("MUX_STEWARD_DEFENCE")
 	_defence.tooltip_text = _loc("MUX_STEWARD_DEFENCE_TIP")
+	if _extended != null:
+		_extended.text = _loc("LOOP_STEWARD_EXTENDED")
+		_extended.tooltip_text = _loc("LOOP_STEWARD_EXTENDED_TIP")
 	_note.text = _loc("MUX_SETTING_STEWARD_NOTE")
 	for key: String in BOOLEAN_KEYS:
 		var check: CheckButton = _checks[key]
@@ -128,3 +139,9 @@ static func _loc(key: String) -> String:
 func set_defence_state(on: bool) -> void:
 	if _defence != null:
 		_defence.set_pressed_no_signal(on)
+
+
+## M-LOOP: set the "집사가 더 많이" toggle state from the steward read.
+func set_extended_state(on: bool) -> void:
+	if _extended != null:
+		_extended.set_pressed_no_signal(on)
