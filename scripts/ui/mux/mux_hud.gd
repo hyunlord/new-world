@@ -18,6 +18,7 @@ const LearningFacts = preload("res://scripts/ui/mux/learning_facts.gd")
 const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const LessonHighlight = preload("res://scripts/ui/mux/lesson_highlight.gd")
 const LegacyLayout = preload("res://scripts/ui/mux/legacy_layout.gd")
+const CardPanel = preload("res://scripts/ui/mux/card_panel.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 const PLAQUE_MIN_WIDTH: float = 560.0
 const LEARNING_PANELS: Dictionary = {"AgentInspectorPanel": "person_selected", "PriorityPanel": "priorities_opened", "RoomPanel": "rooms_opened", "TechPanel": "tech_opened", "NeighboursPanel": "neighbours_opened"}
@@ -30,6 +31,7 @@ var help: Help
 var goals: Goals
 var settings: Settings
 var alerts: Alerts
+var cards: CardPanel
 var _world: Node
 var _camera: Camera2D
 var _right: VBoxContainer
@@ -98,6 +100,10 @@ func _ready() -> void:
 	alerts.name = "Alerts"
 	alerts.setup(_world)
 	add_child(alerts)
+	# M-LOOP §2.2: decision card panel, above the alerts on the right.
+	cards = CardPanel.new()
+	cards.name = "CardPanel"
+	add_child(cards)
 	_actions = HBoxContainer.new()
 	_actions.name = "Actions"
 	_actions.add_theme_constant_override("separation", 8)
@@ -214,7 +220,13 @@ func _layout_widgets() -> void:
 	helper.size = Vector2.ZERO
 	_right.position = Vector2(area.x - _right.get_combined_minimum_size().x * factor - 12, _legacy.bar_top() - _right.get_combined_minimum_size().y * factor - 12)
 	_actions.position = Vector2(area.x - _actions.get_combined_minimum_size().x * actions_factor - 12, _legacy.top_bottom() + 8)
-	alerts.position = Vector2(area.x - alerts.get_combined_minimum_size().x * factor - 12, _actions.position.y + _actions.get_combined_minimum_size().y * actions_factor + 8)
+	# M-LOOP §2.2: card panel above the alerts, right-aligned.
+	var cards_top: float = _actions.position.y + _actions.get_combined_minimum_size().y * actions_factor + 8
+	if cards != null and cards.visible:
+		cards.scale = Vector2.ONE * factor
+		cards.position = Vector2(area.x - cards.get_combined_minimum_size().x * factor - 12, cards_top)
+		cards_top = cards.position.y + cards.get_combined_minimum_size().y * factor + 8
+	alerts.position = Vector2(area.x - alerts.get_combined_minimum_size().x * factor - 12, cards_top)
 	alerts.set_available_height((_right.position.y - alerts.position.y - 12) / factor)
 	var bottom: float = _legacy.bar_top() - 64
 	helper.position = Vector2(12, bottom - helper.get_combined_minimum_size().y * factor)
@@ -236,8 +248,9 @@ func _apply_preferences() -> void:
 	_camera.call("set_edge_pan", bool(store.value("edge_pan")))
 	_camera.call("set_invert_pan", bool(store.value("invert_pan")))
 	var factor: float = float(store.value("ui_scale"))
-	for panel: Control in [helper, alerts, help, goals, settings, _right, _actions]:
-		panel.scale = Vector2.ONE * factor
+	for panel: Control in [helper, alerts, help, goals, settings, _right, _actions, cards]:
+		if panel != null:
+			panel.scale = Vector2.ONE * factor
 	_layout.call_deferred()
 
 func _set_steward(index: int) -> void:

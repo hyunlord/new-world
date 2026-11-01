@@ -1,6 +1,9 @@
-# task_plaque.gd (UI/TaskPlaque in scenes/main.tscn): the single "지금 할 일" plaque under the topbar,
-#   left of the action row (MuxHud.plaque_slot); one line showing the top active request or nothing; reason chain on hover; a "보기"
-#   button that centres the camera on the marker tile. Must not duplicate an alert line word for word.
+# task_plaque.gd (UI/TaskPlaque in scenes/main.tscn): the "지금 할 일" plaque under the topbar.
+#   M-LOOP §2.1: always titled "지금 할 일". Content priority:
+#     1. the top open card's title (from CardPanel);
+#     2. the chapter's next unmet condition plus a tool hint (from GoalsPanel);
+#     3. "할 일 없음 — 집사가 마을을 돌보고 있어요".
+#   When the steward is handling it, show the player's next step.
 # Bridge methods: via SimReads get_current_task, get_requests, get_settlement_diagnosis;
 #   signal world_reset.
 extends Control
@@ -99,47 +102,69 @@ func _place() -> void:
 
 
 func _refresh() -> void:
+	# M-LOOP §2.1: content priority — card → chapter condition → idle message.
+	# Priority 1: the top open card's title.
+	var card_panel: Node = get_node_or_null("../MuxHud/CardPanel") if get_node_or_null("../MuxHud") != null else null
+	if card_panel == null:
+		card_panel = get_node_or_null("../CardPanel")
+	if card_panel != null and card_panel.has_method("has_active_cards") and card_panel.call("has_active_cards"):
+		var card_title: String = str(card_panel.call("top_card_title"))
+		if not card_title.is_empty():
+			_show_line(_loc("LOOP_PLAQUE_CARD_FMT").format({"title": card_title}), "")
+			return
+	# Priority 2: the chapter's next unmet condition.
+	var goals: Node = get_node_or_null("../MuxHud/Goals") if get_node_or_null("../MuxHud") != null else null
+	if goals == null:
+		goals = get_node_or_null("../Goals")
+	if goals != null and goals.has_method("next_unmet_condition"):
+		var unmet: Dictionary = goals.call("next_unmet_condition")
+		if not unmet.is_empty():
+			var hint: String = str(unmet.get("text", ""))
+			_show_line(_loc("LOOP_PLAQUE_CHAPTER_FMT").format({"condition": hint, "hint": ""}), "")
+			return
+	# Priority 3: fall back to request-based plaque (M-READ behaviour).
 	var source: String = str(_task_data.get("source", "none"))
-	if source == "none" or _task_data.is_empty():
-		visible = false
-		_current_text = ""
+	if source != "none" and not _task_data.is_empty():
+		var voice_name: String = str(_task_data.get("voice_name", ""))
+		if voice_name.is_empty():
+			var voice_id: int = int(_task_data.get("voice", -1))
+			if voice_id >= 0:
+				var language: String = "ko"
+				if _locale != null and _locale.has_method("current_language"):
+					language = str(_locale.call("current_language"))
+				voice_name = Names.present(voice_id, language)
+		var text_key: String = str(_task_data.get("text_key", ""))
+		var action_key: String = str(_task_data.get("action_key", ""))
+		var is_steward: bool = bool(_task_data.get("steward_active", false))
+		var text: String = _loc(text_key)
+		var voice: String = Names.unbroken(voice_name) if not voice_name.is_empty() else ""
+		var action: String = _loc(action_key) if not action_key.is_empty() else ""
+		var status: String = _loc("READ_STEWARD_DOING") if is_steward else _loc("READ_STEWARD_TODO")
+		var diag: Dictionary = SimReads.read(_world_sim, "get_settlement_diagnosis")
+		var request_tags: PackedStringArray = _task_data.get("match_tags", PackedStringArray())
+		var reason: String = DiagnosisText.request_reason(diag, request_tags, _locale)
+		var shown: String = text + _loc("READ_DIAG_CHAIN_SEP") + reason if not reason.is_empty() else text
+		var line: String = _loc("READ_PLAQUE_FMT").format({"voice": voice, "text": shown, "status": status, "action": action})
+		if voice.is_empty():
+			line = line.trim_prefix(": ")
+		var check: int = DiagnosisText.request_check(diag, request_tags)
+		var chain: String = DiagnosisText.chain_text(diag, check, _locale) if check >= 0 else DiagnosisText.headline_and_next(diag, _locale)
+		_show_line(line, chain)
+		var has_marker: bool = bool(_task_data.get("has_marker", false))
+		_marker_tile = Vector2i(int(_task_data.get("marker_x", -1)), int(_task_data.get("marker_y", -1))) if has_marker else Vector2i(-1, -1)
+		_view_button.visible = has_marker
 		return
-	var voice_name: String = str(_task_data.get("voice_name", ""))
-	# M-READ: the bridge may not fill voice_name; look it up from the AgentId.
-	if voice_name.is_empty():
-		var voice_id: int = int(_task_data.get("voice", -1))
-		if voice_id >= 0:
-			var language: String = "ko"
-			if _locale != null and _locale.has_method("current_language"):
-				language = str(_locale.call("current_language"))
-			voice_name = Names.present(voice_id, language)
-	var text_key: String = str(_task_data.get("text_key", ""))
-	var action_key: String = str(_task_data.get("action_key", ""))
-	var is_steward: bool = bool(_task_data.get("steward_active", false))
-	var text: String = _loc(text_key)
-	var voice: String = Names.unbroken(voice_name) if not voice_name.is_empty() else ""
-	var action: String = _loc(action_key) if not action_key.is_empty() else ""
-	var status: String = _loc("READ_STEWARD_DOING") if is_steward else _loc("READ_STEWARD_TODO")
-	# M-READ: the request's reason inline ("headline ← first cause") from the settlement check its
-	# rule's match tags map to; the hover shows that check's full chain.
-	var diag: Dictionary = SimReads.read(_world_sim, "get_settlement_diagnosis")
-	var request_tags: PackedStringArray = _task_data.get("match_tags", PackedStringArray())
-	var reason: String = DiagnosisText.request_reason(diag, request_tags, _locale)
-	var shown: String = text + _loc("READ_DIAG_CHAIN_SEP") + reason if not reason.is_empty() else text
-	var line: String = _loc("READ_PLAQUE_FMT").format({"voice": voice, "text": shown, "status": status, "action": action})
-	if voice.is_empty():
-		# A goal has no voice: drop the empty "{voice}: " prefix instead of showing a bare colon.
-		line = line.trim_prefix(": ")
+	# Priority 4: idle message.
+	_show_line(_loc("LOOP_PLAQUE_IDLE"), "")
+	_view_button.visible = false
+
+
+## M-LOOP §2.1: common display logic for the plaque content.
+func _show_line(line: String, tooltip: String) -> void:
 	_current_text = line
 	_text_label.text = KoreanText.words(line)
 	_view_button.text = _loc("READ_PLAQUE_VIEW")
-	var check: int = DiagnosisText.request_check(diag, request_tags)
-	var chain: String = DiagnosisText.chain_text(diag, check, _locale) if check >= 0 else DiagnosisText.headline_and_next(diag, _locale)
-	_panel.tooltip_text = KoreanText.raw(chain)
-	# Track marker tile.
-	var has_marker: bool = bool(_task_data.get("has_marker", false))
-	_marker_tile = Vector2i(int(_task_data.get("marker_x", -1)), int(_task_data.get("marker_y", -1))) if has_marker else Vector2i(-1, -1)
-	_view_button.visible = has_marker
+	_panel.tooltip_text = KoreanText.raw(tooltip) if not tooltip.is_empty() else ""
 	visible = true
 
 
