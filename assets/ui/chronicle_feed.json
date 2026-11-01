@@ -1,5 +1,6 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "description": "M-LOOP chronicle feed visibility. notable_kinds are shown by default; routine_kinds are behind the 전부 toggle. kind_visibility overrides for specific content kinds.",
   "kind_visibility": {
     "47": false,
     "48": true,
@@ -8,5 +9,10 @@
     "51": true,
     "52": true,
     "53": false
-  }
+  },
+  "notable_kinds": [0, 2, 11, 13, 14, 15, 19, 23, 26, 27, 28, 29, 30, 32, 33, 34, 35, 38, 39, 40, 41, 42, 44, 46],
+  "routine_kinds": [16, 18, 20, 21, 22, 24, 25, 31, 36, 37, 43, 45, 47],
+  "notable_description": "Born, Died, Paired, CameOfAge, BecameElder, Widowed, Quarrel, RoomFormed, KnowledgeDiscovered, KnowledgeAtRisk, KnowledgeLost, PressureBegan, PressureEnded, Fight, Breakdown, Drafted, WolfKilled, MigrantsArrived, MigrantsJoined, MigrantsDeclined, TraderArrived, Traded, Eureka, StewardDefence",
+  "routine_description": "Hunted, FoodOperation, StewardAction, PorterDeparted, PorterDelivered, HungerFoodChain, MindChoice, ToolBroke, KnowledgeLearned, TraderLeft, wolves approach",
+  "causal_label_required": true
 }

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "description": "M-LOOP year chapters replacing goals.json groups. Each chapter has conditions checked against bridge-read facts, a reward description, and a preview of the next chapter.",
+  "chapters": [
+    {
+      "id": "survive_winter",
+      "number": 1,
+      "title_key": "LOOP_CH1_TITLE",
+      "year_hint_key": "LOOP_CH1_YEAR",
+      "conditions": [
+        {"id": "stockpile", "fact": "stockpile_exists", "text_key": "LOOP_CH1_COND_STOCKPILE"},
+        {"id": "house", "fact": "house_beds_ready", "text_key": "LOOP_CH1_COND_HOUSE"},
+        {"id": "firewood", "fact": "winter_firewood_ready", "text_key": "LOOP_CH1_COND_FIREWOOD"},
+        {"id": "winter", "fact": "first_winter_all_alive", "text_key": "LOOP_CH1_COND_WINTER"}
+      ],
+      "reward_text_key": "LOOP_CH1_REWARD",
+      "next_preview_key": "LOOP_CH1_NEXT"
+    },
+    {
+      "id": "homes_and_stores",
+      "number": 2,
+      "title_key": "LOOP_CH2_TITLE",
+      "year_hint_key": "LOOP_CH2_YEAR",
+      "conditions": [
+        {"id": "roofed_store", "fact": "roofed_storehouse_exists", "text_key": "LOOP_CH2_COND_STORE"},
+        {"id": "cooked_meals", "fact": "cooked_meals_week", "text_key": "LOOP_CH2_COND_COOKED"},
+        {"id": "teaching", "fact": "taught_technique", "text_key": "LOOP_CH2_COND_TEACH"},
+        {"id": "second_room", "fact": "second_hearth_or_role", "text_key": "LOOP_CH2_COND_ROOM"}
+      ],
+      "reward_text_key": "LOOP_CH2_REWARD",
+      "next_preview_key": "LOOP_CH2_NEXT"
+    },
+    {
+      "id": "pottery_and_migrants",
+      "number": 3,
+      "title_key": "LOOP_CH3_TITLE",
+      "year_hint_key": "LOOP_CH3_YEAR",
+      "conditions": [
+        {"id": "pottery", "fact": "pottery_discovered_or_traded", "text_key": "LOOP_CH3_COND_POTTERY"},
+        {"id": "migrants", "fact": "migrants_accepted", "text_key": "LOOP_CH3_COND_MIGRANTS"},
+        {"id": "trade", "fact": "trade_completed", "text_key": "LOOP_CH3_COND_TRADE"}
+      ],
+      "reward_text_key": "LOOP_CH3_REWARD",
+      "next_preview_key": "LOOP_CH3_NEXT"
+    },
+    {
+      "id": "fields_and_cloth",
+      "number": 4,
+      "title_key": "LOOP_CH4_TITLE",
+      "year_hint_key": "LOOP_CH4_YEAR",
+      "conditions": [],
+      "locked": true,
+      "locked_text_key": "LOOP_CH4_LOCKED",
+      "reward_text_key": "LOOP_CH4_REWARD",
+      "next_preview_key": "LOOP_CH4_NEXT"
+    },
+    {
+      "id": "neolithic_village",
+      "number": 5,
+      "title_key": "LOOP_CH5_TITLE",
+      "year_hint_key": "LOOP_CH5_YEAR",
+      "conditions": [
+        {"id": "era", "fact": "era_progress_permille", "threshold": 600, "text_key": "LOOP_CH5_COND_ERA"},
+        {"id": "population", "fact": "population", "threshold": 40, "text_key": "LOOP_CH5_COND_POP"}
+      ],
+      "reward_text_key": "LOOP_CH5_REWARD",
+      "next_preview_key": "LOOP_CH5_NEXT"
+    }
+  ]
+}

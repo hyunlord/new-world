@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "description": "M-LOOP decision cards raised by the simulation. Each card maps a trigger (chronicle kind, request id, or diagnosis check) to player options that send existing bridge commands.",
+  "max_open": 3,
+  "cards": [
+    {
+      "id": "need_food",
+      "trigger": {"kind": "request", "request_id": "need_food"},
+      "title_key": "LOOP_CARD_NEED_FOOD",
+      "body_key": "LOOP_CARD_NEED_FOOD_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_NEED_FOOD_HUNT", "command": "cmd_designate_harvest", "params": "near_camp", "recommended": true},
+        {"text_key": "LOOP_CARD_NEED_FOOD_GATHER", "command": "enter_zone_tool", "params": "gather", "recommended": false},
+        {"text_key": "LOOP_CARD_STEWARD", "command": "steward_default", "params": "", "recommended": false}
+      ],
+      "default": "steward",
+      "expires_hours": 12,
+      "priority": 10,
+      "tags": ["food", "survival"]
+    },
+    {
+      "id": "need_warmth",
+      "trigger": {"kind": "request", "request_id": "need_warmth"},
+      "title_key": "LOOP_CARD_NEED_WARMTH",
+      "body_key": "LOOP_CARD_NEED_WARMTH_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_NEED_WARMTH_CHOP", "command": "cmd_designate_chop", "params": "nearest_trees", "recommended": true},
+        {"text_key": "LOOP_CARD_STEWARD", "command": "steward_default", "params": "", "recommended": false}
+      ],
+      "default": "steward",
+      "expires_hours": 12,
+      "priority": 10,
+      "tags": ["warmth", "survival"]
+    },
+    {
+      "id": "migrants",
+      "trigger": {"kind": "chronicle", "chronicle_kind": 38},
+      "title_key": "LOOP_CARD_MIGRANTS",
+      "body_key": "LOOP_CARD_MIGRANTS_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_MIGRANTS_ACCEPT", "command": "cmd_accept_migrants", "params": "wave_id", "recommended": true},
+        {"text_key": "LOOP_CARD_MIGRANTS_DECLINE", "command": "cmd_decline_migrants", "params": "wave_id", "recommended": false}
+      ],
+      "default": "none",
+      "expires_hours": 48,
+      "priority": 5,
+      "tags": ["migrants"]
+    },
+    {
+      "id": "trader",
+      "trigger": {"kind": "chronicle", "chronicle_kind": 41},
+      "title_key": "LOOP_CARD_TRADER",
+      "body_key": "LOOP_CARD_TRADER_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_TRADER_TRADE", "command": "cmd_trade", "params": "caravan_terms", "recommended": true},
+        {"text_key": "LOOP_CARD_TRADER_DECLINE", "command": "none", "params": "", "recommended": false}
+      ],
+      "default": "none",
+      "expires_hours": 48,
+      "priority": 5,
+      "tags": ["trade"]
+    },
+    {
+      "id": "knowledge_risk",
+      "trigger": {"kind": "chronicle", "chronicle_kind": 27},
+      "title_key": "LOOP_CARD_KNOWLEDGE_RISK",
+      "body_key": "LOOP_CARD_KNOWLEDGE_RISK_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_TEACH", "command": "cmd_order_teach", "params": "holder_to_learner", "recommended": true},
+        {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_LATER", "command": "none", "params": "", "recommended": false}
+      ],
+      "default": "none",
+      "expires_hours": 72,
+      "priority": 8,
+      "tags": ["knowledge"]
+    },
+    {
+      "id": "wolves",
+      "trigger": {"kind": "chronicle", "chronicle_kind": 36},
+      "title_key": "LOOP_CARD_WOLVES",
+      "body_key": "LOOP_CARD_WOLVES_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_WOLVES_DRAFT", "command": "cmd_draft", "params": "steward_recommended", "recommended": true},
+        {"text_key": "LOOP_CARD_WOLVES_FLEE", "command": "cmd_undraft_all", "params": "", "recommended": false}
+      ],
+      "default": "steward",
+      "expires_hours": 6,
+      "priority": 1,
+      "tags": ["defence"]
+    },
+    {
+      "id": "idle_adults",
+      "trigger": {"kind": "alert", "alert_id": "idle_adults", "min_count": 2, "min_hours": 2, "exclude_night": true, "exclude_activities": ["leisure", "social", "eating"]},
+      "title_key": "LOOP_CARD_IDLE_ADULTS",
+      "body_key": "LOOP_CARD_IDLE_ADULTS_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_IDLE_ADULTS_ROLES", "command": "open_roles", "params": "", "recommended": true},
+        {"text_key": "LOOP_CARD_IDLE_ADULTS_CHOP", "command": "cmd_designate_chop", "params": "nearest_trees", "recommended": false},
+        {"text_key": "LOOP_CARD_IDLE_ADULTS_OK", "command": "none", "params": "", "recommended": false}
+      ],
+      "default": "none",
+      "expires_hours": 24,
+      "priority": 15,
+      "tags": ["idle"]
+    },
+    {
+      "id": "quarrel",
+      "trigger": {"kind": "chronicle", "chronicle_kind": 19},
+      "title_key": "LOOP_CARD_QUARREL",
+      "body_key": "LOOP_CARD_QUARREL_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_QUARREL_SEPARATE", "command": "cmd_set_work_priority", "params": "separate_pair", "recommended": true},
+        {"text_key": "LOOP_CARD_QUARREL_IGNORE", "command": "none", "params": "", "recommended": false}
+      ],
+      "default": "none",
+      "expires_hours": 24,
+      "priority": 18,
+      "tags": ["social"],
+      "optional": true
+    },
+    {
+      "id": "pressure",
+      "trigger": {"kind": "chronicle", "chronicle_kind": 29},
+      "title_key": "LOOP_CARD_PRESSURE",
+      "body_key": "LOOP_CARD_PRESSURE_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_PRESSURE_FIREWOOD", "command": "cmd_designate_chop", "params": "nearest_trees", "recommended": true},
+        {"text_key": "LOOP_CARD_PRESSURE_STOP_HUNT", "command": "none", "params": "", "recommended": false},
+        {"text_key": "LOOP_CARD_PRESSURE_IGNORE", "command": "none", "params": "", "recommended": false}
+      ],
+      "default": "none",
+      "expires_hours": 24,
+      "priority": 6,
+      "tags": ["pressure"],
+      "optional": true
+    },
+    {
+      "id": "storage",
+      "trigger": {"kind": "diagnosis", "check_id": "stockpile_full"},
+      "title_key": "LOOP_CARD_STORAGE",
+      "body_key": "LOOP_CARD_STORAGE_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_STORAGE_BLUEPRINT", "command": "cmd_place_blueprint", "params": "storehouse_near_camp", "recommended": true},
+        {"text_key": "LOOP_CARD_STORAGE_EXPAND", "command": "cmd_add_stockpile", "params": "expand_zone", "recommended": false}
+      ],
+      "default": "none",
+      "expires_hours": 48,
+      "priority": 12,
+      "tags": ["storage"],
+      "optional": true
+    },
+    {
+      "id": "sick_person",
+      "trigger": {"kind": "chronicle", "chronicle_kind": 36},
+      "title_key": "LOOP_CARD_SICK",
+      "body_key": "LOOP_CARD_SICK_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_SICK_REST", "command": "none", "params": "", "recommended": true},
+        {"text_key": "LOOP_CARD_SICK_IGNORE", "command": "none", "params": "", "recommended": false}
+      ],
+      "default": "none",
+      "expires_hours": 24,
+      "priority": 14,
+      "tags": ["health"],
+      "test_only": true
+    }
+  ]
+}
