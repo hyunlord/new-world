@@ -452,7 +452,7 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 					return {"accepted": false, "skipped": true, "reason": "no_trees"}
 			result = SimReads.mutate(_world, "cmd_designate_chop", [cx - 3, cy - 3, cx + 3, cy + 3])
 			if result is Dictionary and not bool(result.get("accepted", false)):
-				return {"accepted": false, "skipped": true, "reason": str(result.get("reason", "rejected"))}
+				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
 		"cmd_add_hunt_zone":
 			# Dedupe: skip if a hunt zone already exists.
 			if _has_hunt_zones():
@@ -509,7 +509,7 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 				return {"accepted": false, "skipped": true, "reason": "risk_cleared"}
 			result = SimReads.mutate(_world, "cmd_order_teach", [teacher, learner, knowledge])
 			if result is Dictionary and not bool(result.get("accepted", false)):
-				return {"accepted": false, "skipped": true, "reason": str(result.get("reason", "rejected"))}
+				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
 		"cmd_draft":
 			var drafted: Dictionary = SimReads.read(_world, "get_drafted")
 			var recommended: Array = drafted.get("recommended", [])
@@ -528,7 +528,7 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			result = SimReads.mutate(_world, "cmd_trade", [caravan, PackedInt32Array(), PackedInt32Array([0, 1])])
 			# If trade was rejected (unbalanced terms), skip it.
 			if result is Dictionary and not bool(result.get("accepted", false)):
-				return {"accepted": false, "skipped": true, "reason": str(result.get("reason", "rejected"))}
+				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
 		"cmd_add_bill":
 			info = SimReads.read(_world, "get_world_info")
 			var workshops: Variant = info.get("workshops", PackedInt64Array())
@@ -544,7 +544,7 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 				return {"accepted": false, "skipped": true, "reason": "agent_gone"}
 			result = SimReads.mutate(_world, "cmd_set_work_priority", [agent_a, "chop", 3])
 			if result is Dictionary and not bool(result.get("accepted", false)):
-				return {"accepted": false, "skipped": true, "reason": str(result.get("reason", "rejected"))}
+				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
 		"cmd_place_blueprint":
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
@@ -558,10 +558,10 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 	# No match arm hit — unknown command.
 	if result == null:
 		return {"accepted": false, "skipped": true, "reason": "no_action"}
-	# Bridge rejected the command — the target was stale between the card opening
-	# and the answer. Convert to skipped so it does not count as a validation failure.
+	# A command that was sent and rejected by the bridge is a validation failure, never a skip
+	# (LOOP-D-cards); only pre-send checks above may skip.
 	if result is Dictionary and not bool(result.get("accepted", false)):
-		return {"accepted": false, "skipped": true, "reason": str(result.get("reason", "rejected"))}
+		return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
 	return result
 
 
