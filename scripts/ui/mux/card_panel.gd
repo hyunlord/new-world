@@ -29,6 +29,7 @@ var _card_defs: Array[Dictionary] = []
 var _active: Dictionary = {}
 ## Answered/expired card ids for the current in-game day (prevent re-trigger).
 var _handled: Dictionary = {}
+var _handled_day: int = -1
 var _poll_left: float = 0.0
 var _last_tick: int = -1
 var _column: VBoxContainer = null
@@ -112,6 +113,9 @@ func _poll_triggers() -> void:
 	# Clear handled list at day boundaries.
 	@warning_ignore("integer_division")
 	var day: int = tick / 1440
+	if day != _handled_day:
+		_handled.clear()
+		_handled_day = day
 	# Check each card definition for triggers.
 	var requests: Dictionary = SimReads.read(_world, "get_requests")
 	var diag: Dictionary = SimReads.read(_world, "get_settlement_diagnosis")
