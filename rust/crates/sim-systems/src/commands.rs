@@ -141,6 +141,10 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             res.steward.defence.enabled = on;
             CommandResult::ok(1)
         }
+        Command::SetStewardExtended { on } => {
+            res.steward.extended = on;
+            CommandResult::ok(1)
+        }
         Command::SetSteward { on, scope } => {
             res.steward.enabled = on;
             res.steward.scope = scope;
@@ -152,6 +156,7 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
                 Command::Steward { .. }
                     | Command::SetSteward { .. }
                     | Command::SetStewardDefence { .. }
+                    | Command::SetStewardExtended { .. }
             ) {
                 return CommandResult::rejected(RejectReason::Unknown);
             }

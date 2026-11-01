@@ -1485,6 +1485,11 @@ pub fn resolve(
         ("set_steward_defence", None) => vec![Command::SetStewardDefence {
             on: spec["on"].as_bool().ok_or("set_steward_defence needs on")?,
         }],
+        ("set_steward_extended", None) => vec![Command::SetStewardExtended {
+            on: spec["on"]
+                .as_bool()
+                .ok_or("set_steward_extended needs on")?,
+        }],
         ("set_steward", None) => vec![Command::SetSteward {
             on: spec["on"].as_bool().ok_or("set_steward needs on")?,
             scope: match spec["scope"].as_str().unwrap_or("all") {
@@ -1553,6 +1558,7 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
     let mut v = match cmd {
         Command::Steward { .. } => return Value::Null,
         Command::SetStewardDefence { on } => json!({"on":on}),
+        Command::SetStewardExtended { on } => json!({"on":on}),
         Command::DeployFoodPot { tile } => json!({"x": tile.0, "y": tile.1}),
         Command::SetSteward { on, scope } => {
             json!({"on": on, "scope": match scope { sim_core::colony::steward::StewardScope::All => "all", sim_core::colony::steward::StewardScope::Housing => "housing", sim_core::colony::steward::StewardScope::Food => "food" }})

@@ -122,6 +122,7 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             days,
             camp_radius,
             batch,
+            cap_log_margin,
         } => {
             let have: u32 = items
                 .iter()
@@ -145,10 +146,15 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                         .sum::<u32>()
                 })
                 .sum();
-            let mut need = days
-                .saturating_mul(daily_fuel(res))
-                .saturating_add(building_need)
-                .saturating_sub(have.saturating_add(marked));
+            // When a log cap margin is set, the target is building need + margin
+            // instead of the open-ended days × fuel + building_need.
+            let target = if let Some(margin) = cap_log_margin {
+                building_need.saturating_add(*margin)
+            } else {
+                days.saturating_mul(daily_fuel(res))
+                    .saturating_add(building_need)
+            };
+            let mut need = target.saturating_sub(have.saturating_add(marked));
             if need == 0 {
                 return Vec::new();
             }

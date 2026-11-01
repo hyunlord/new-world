@@ -44,6 +44,9 @@ pub enum Action {
         camp_radius: u32,
         /// Maximum fresh trees per firing.
         batch: u32,
+        /// When set, total logs ≤ building need + this margin; overrides `days` fuel reserve.
+        #[serde(default)]
+        cap_log_margin: Option<u32>,
     },
     /// One enclosing wall/door and sleeping place template.
     House {
@@ -115,6 +118,9 @@ pub struct Rule {
     pub condition: Condition,
     /// Ordinary action planner.
     pub action: Action,
+    /// When true, the rule only fires with the extended ("집사가 더 많이") toggle.
+    #[serde(default)]
+    pub extended: bool,
 }
 /// Schema version and ordered rule definitions.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

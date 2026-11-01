@@ -32,6 +32,7 @@ impl From<LegacyStewardState> for StewardState {
         Self {
             enabled: old.enabled,
             scope: old.scope,
+            extended: false,
             cooldowns: old.cooldowns,
             vetoes: old.vetoes,
             owned: old.owned,

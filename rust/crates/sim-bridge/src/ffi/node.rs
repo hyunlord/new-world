@@ -999,6 +999,15 @@ impl WorldSimNode {
         ))
     }
 
+    /// Enable or disable extended steward rules (production bills and teach).
+    #[func]
+    fn cmd_set_steward_extended(&mut self, on: bool) -> VarDictionary {
+        result_to_dict(super::steward::submit_set_steward_extended(
+            &mut self.engine,
+            on,
+        ))
+    }
+
     /// M4: one node's detail — holders with proficiency, who could learn it,
     /// discovery conditions (met or not) and what it gates.
     #[func]

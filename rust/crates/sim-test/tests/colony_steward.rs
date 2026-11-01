@@ -67,7 +67,15 @@ fn player_cancellation_blocks_the_rule_for_two_days_and_scope_is_saved() {
     for _ in 0..360 {
         engine.tick();
     }
-    assert!(engine.resources.colony.zones.is_empty());
+    // The cancelled stockpile rule must not re-fire within the cooldown; the food
+    // plan's independent single-tile zones (rule 8 storage expansion) are allowed.
+    assert!(!engine.resources.colony.command_log.iter().any(|r| {
+        r.tick > 0
+            && r.result.accepted
+            && matches!(&r.command, Command::Steward { rule, command }
+                if *rule == order.0
+                    && matches!(**command, Command::AddStockpile { .. }))
+    }));
     assert!(!engine.resources.colony.command_log.iter().any(|r| matches!(&r.command,Command::Steward{command,..} if matches!(**command,Command::PlaceBlueprint{kind:sim_core::colony::BlueprintKind::Bedroll,..}))));
     let bytes = sim_systems::save::save(&mut engine).expect("save");
     let mut loaded = sim_systems::save::load(&bytes).expect("load");
@@ -145,7 +153,7 @@ fn rule_data_accepts_a_new_identity_without_code_changes() {
         .replace("base_cells: 6", "base_cells: 7");
     let data = parse_rules(&changed).expect("data-only rule variant");
     assert_eq!(data.rules[0].id, 71);
-    assert_eq!(data.rules.len(), 8);
+    assert_eq!(data.rules.len(), 9);
     let mut expected = parse_rules(text).expect("bundled rules");
     expected.rules[0].id = 71;
     expected.rules[0].action = sim_core::colony::steward::Action::Stockpile {

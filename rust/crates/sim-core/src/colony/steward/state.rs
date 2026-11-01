@@ -68,6 +68,9 @@ pub struct StewardState {
     pub enabled: bool,
     /// Allowed action families.
     pub scope: StewardScope,
+    /// Extended mode: enables production bills and teach rules ("집사가 더 많이").
+    #[serde(default)]
+    pub extended: bool,
     /// Earliest tick each rule may fire again.
     pub cooldowns: BTreeMap<u16, u64>,
     /// Targets the player canceled, with absolute retry tick.

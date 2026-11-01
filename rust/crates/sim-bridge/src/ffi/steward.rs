@@ -10,6 +10,8 @@ use sim_engine::{SimEngine, SimResources};
 pub struct StewardView {
     /// Whether automatic planning is enabled.
     pub enabled: bool,
+    /// Extended mode: production bills and teach.
+    pub extended: bool,
     /// Independent automatic defence toggle.
     pub defence_enabled: bool,
     /// Actual count from the most recent recruitment batch.
@@ -67,6 +69,7 @@ pub fn collect_steward(res: &SimResources) -> StewardView {
     }
     StewardView {
         enabled: state.enabled,
+        extended: state.extended,
         defence_enabled: state.defence.enabled,
         defence_count: state.defence.last_count,
         defence_active_count: state.defence.owned_ids.len(),
@@ -91,6 +94,7 @@ pub fn submit_set_steward(engine: &mut SimEngine, on: bool, scope: i64) -> Comma
 pub(super) fn steward_to_dict(v: &StewardView) -> VarDictionary {
     let mut d = VarDictionary::new();
     d.set("enabled", v.enabled);
+    d.set("extended", v.extended);
     d.set("defence_enabled", v.defence_enabled);
     d.set("defence_count", i64::from(v.defence_count));
     d.set(
@@ -115,4 +119,9 @@ pub(super) fn steward_to_dict(v: &StewardView) -> VarDictionary {
 /// Log the independent defence policy change through the ordinary command path.
 pub fn submit_set_steward_defence(engine: &mut SimEngine, on: bool) -> CommandResult {
     sim_systems::commands::submit(engine, Command::SetStewardDefence { on })
+}
+
+/// Log the extended steward mode change through the ordinary command path.
+pub fn submit_set_steward_extended(engine: &mut SimEngine, on: bool) -> CommandResult {
+    sim_systems::commands::submit(engine, Command::SetStewardExtended { on })
 }

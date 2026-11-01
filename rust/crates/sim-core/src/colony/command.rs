@@ -335,6 +335,11 @@ pub enum Command {
         /// Enable defence when the overall steward is on.
         on: bool,
     },
+    /// Enable extended steward rules (production bills and teach).
+    SetStewardExtended {
+        /// Enable extended rules ("집사가 더 많이").
+        on: bool,
+    },
     /// Mark plants inside an inclusive rectangle for harvest.
     DesignateHarvest {
         /// First corner x.
@@ -394,6 +399,7 @@ impl Command {
             Self::SetSteward { .. } => "set_steward",
             Self::Steward { .. } => "steward",
             Self::SetStewardDefence { .. } => "set_steward_defence",
+            Self::SetStewardExtended { .. } => "set_steward_extended",
             Self::DesignateHarvest { .. } => "designate_harvest",
             Self::DeployFoodPot { .. } => "deploy_food_pot",
         }

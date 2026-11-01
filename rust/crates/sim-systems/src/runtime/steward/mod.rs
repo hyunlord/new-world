@@ -55,6 +55,10 @@ impl RuntimeSystem for StewardSystem {
                 profile.skip(true);
                 continue;
             }
+            if rule.extended && !res.steward.extended {
+                profile.skip(true);
+                continue;
+            }
             if res
                 .steward
                 .cooldowns
