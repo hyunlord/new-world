@@ -18,6 +18,8 @@ const ANSWER_DEADLINE: int = 60  # Answer within 1 in-game hour of appearing.
 var _output_dir: String = "/Users/rexxa/work/loop-data/cards-run"
 ## When non-empty, only answer cards of this kind (for per-kind isolation tests).
 var _kind_filter: String = ""
+## When non-empty, only run these seeds (comma-separated, e.g. "3,6").
+var _seed_filter: PackedInt64Array = PackedInt64Array()
 var _results: Array[Dictionary] = []
 var _validation_failures: int = 0
 
@@ -29,6 +31,9 @@ func _init() -> void:
 			_output_dir = args[i + 1]
 		elif args[i] == "--kind" and i + 1 < args.size():
 			_kind_filter = args[i + 1]
+		elif args[i] == "--seeds" and i + 1 < args.size():
+			for s: String in args[i + 1].split(","):
+				_seed_filter.append(int(s.strip_edges()))
 	call_deferred("_run")
 
 
@@ -46,8 +51,15 @@ func _run() -> void:
 		return
 
 	# Run with card answers.
-	print("=== CARDS RUN: answering cards ===")
-	for seed_val: int in SEEDS:
+	var active_seeds: Array[int] = []
+	if _seed_filter.size() > 0:
+		for s: int in _seed_filter:
+			active_seeds.append(s)
+	else:
+		active_seeds.assign(SEEDS)
+	var filter_label: String = " (kind=%s)" % _kind_filter if not _kind_filter.is_empty() else ""
+	print("=== CARDS RUN: answering cards%s ===" % filter_label)
+	for seed_val: int in active_seeds:
 		var result: Dictionary = await _run_seed(main, world, reads, seed_val, true)
 		result["mode"] = "answer"
 		_results.append(result)
@@ -61,7 +73,7 @@ func _run() -> void:
 
 	# Run without card answers (baseline).
 	print("=== CARDS RUN: no answers (baseline) ===")
-	for seed_val: int in SEEDS:
+	for seed_val: int in active_seeds:
 		var result: Dictionary = await _run_seed(main, world, reads, seed_val, false)
 		result["mode"] = "no_answer"
 		_results.append(result)
