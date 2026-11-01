@@ -31,17 +31,29 @@ func set_available_height(height: float) -> void:
 	_fit_rows()
 
 
+## M-LOOP §1.2e: at most 3 visible alert rows; the rest are hidden (fold count in status).
+const MAX_VISIBLE_ROWS: int = 3
+
+
 func _fit_rows() -> void:
 	if not is_instance_valid(_scroll):
 		return
 	var available: float = maxf(40, _available_height - 64)
 	var rows_height: float = 0.0
+	var visible_count: int = 0
 	for child: Node in _list.get_children():
 		var row_height: float = (child as Control).get_combined_minimum_size().y
 		var next_height: float = rows_height + (4 if rows_height > 0 else 0) + row_height
-		if next_height > available:
-			break
+		if next_height > available or visible_count >= MAX_VISIBLE_ROWS:
+			(child as Control).visible = false
+			continue
+		(child as Control).visible = true
 		rows_height = next_height
+		visible_count += 1
+	var hidden: int = _list.get_child_count() - visible_count
+	if hidden > 0 and is_instance_valid(_status):
+		_status.visible = true
+		_status.text = _tr("LOOP_CARD_PANEL_FOLDED").format({"count": hidden})
 	_scroll.custom_minimum_size.y = maxf(40, rows_height)
 	size = Vector2.ZERO
 

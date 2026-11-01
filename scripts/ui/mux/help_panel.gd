@@ -112,6 +112,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	var key: InputEventKey = event
 	if key.keycode == KEY_SLASH:
+		# M-LOOP §1.2c: `?` also expands the collapsed learning helper.
+		var helper: Node = get_parent().get_node_or_null("LearningHelper")
+		if helper != null and helper.has_method("expand_helper"):
+			helper.call("expand_helper")
 		toggle_panel()
 		get_viewport().set_input_as_handled()
 	elif key.keycode == KEY_ESCAPE and visible:

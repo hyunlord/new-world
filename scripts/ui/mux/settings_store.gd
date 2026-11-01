@@ -92,11 +92,12 @@ func _persist() -> Error:
 		persistence_failed.emit(last_error)
 	return last_error
 
+## M-LOOP §1.2a: text scale 0.85/1.0/1.15/1.25 (was 1.0/1.25/1.5; default 1.0 at 1920x1080).
 static func _valid_value(key: String, candidate: Variant) -> bool:
 	if not DEFAULTS.has(key):
 		return false
 	if key == "ui_scale":
-		return (candidate is float or candidate is int) and float(candidate) in [1.0, 1.25, 1.5]
+		return (candidate is float or candidate is int) and float(candidate) in [0.85, 1.0, 1.15, 1.25]
 	return candidate is bool
 
 static func _ids(raw: Variant) -> PackedStringArray:

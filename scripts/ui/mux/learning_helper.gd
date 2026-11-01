@@ -26,6 +26,12 @@ var _next: Button
 var _skip: Button
 var _off: Button
 var _overlay_obscured: bool = false
+## M-LOOP §1.2c: collapse to one line after the first order or 3 minutes; `?` reopens.
+const COLLAPSE_SECONDS: float = 180.0
+const ORDER_EVENTS: Array[String] = ["stockpile_exists", "chop_marked", "house_beds_ready", "workshop_bill_exists", "taught_technique", "drafted"]
+var _collapsed: bool = false
+var _collapse_timer: float = 0.0
+var _collapse_line: Label = null
 
 func set_overlay_obscured(obscured: bool) -> void:
 	if _overlay_obscured != obscured:
@@ -58,6 +64,13 @@ func _ready() -> void:
 	_skip.name = "Skip"
 	_off = _button(buttons, turn_off)
 	_off.name = "Off"
+	# M-LOOP §1.2c: collapsed one-line view.
+	_collapse_line = Label.new()
+	_collapse_line.text = _loc("LOOP_HELP_COLLAPSED")
+	_collapse_line.mouse_filter = Control.MOUSE_FILTER_STOP
+	_collapse_line.gui_input.connect(_collapse_line_input)
+	_collapse_line.visible = false
+	column.add_child(_collapse_line)
 	var locale: Node = get_node_or_null("/root/Locale")
 	if locale != null:
 		locale.connect("language_changed", _refresh.unbind(1))
@@ -96,6 +109,9 @@ func observe(event_id: String) -> void:
 	if event_id.is_empty() or _events.has(event_id):
 		return
 	_events[event_id] = true
+	# M-LOOP §1.2c: the first order triggers collapse.
+	if not _collapsed and event_id in ORDER_EVENTS:
+		_collapsed = true
 	_capture_observed_completion()
 	_save()
 	_refresh()
@@ -128,6 +144,27 @@ func _setting_changed(key: String, _value: Variant) -> void:
 	if key == "helper_on":
 		_refresh()
 
+## M-LOOP §1.2c: expand from the collapsed one-line state.
+func expand_helper() -> void:
+	_collapsed = false
+	_refresh()
+
+
+## M-LOOP §1.2c: collapse check runs each frame for the 3-minute timer.
+func _process(delta: float) -> void:
+	if not _collapsed and visible:
+		_collapse_timer += delta
+		if _collapse_timer >= COLLAPSE_SECONDS:
+			_collapsed = true
+			_refresh()
+
+
+func _collapse_line_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		expand_helper()
+		get_viewport().set_input_as_handled()
+
+
 func _refresh() -> void:
 	var previous: String = current_id()
 	_current = {}
@@ -141,6 +178,17 @@ func _refresh() -> void:
 	visible = not _overlay_obscured and _store != null and bool(_store.value("helper_on")) and not _current.is_empty()
 	if not visible:
 		highlight_requested.emit("")
+		return
+	# M-LOOP §1.2c: when collapsed, show only the one-line label.
+	var show_full: bool = not _collapsed
+	_title.visible = show_full
+	_body.visible = show_full
+	_status.visible = show_full
+	_next.get_parent().visible = show_full
+	if _collapse_line != null:
+		_collapse_line.visible = _collapsed
+		_collapse_line.text = _loc("LOOP_HELP_COLLAPSED")
+	if not show_full:
 		return
 	_title.text = "%s · %s/%s" % [_loc(str(_current["title_key"])), _completed.size() + _skipped.size() + 1, lessons.size()]
 	var by_steward: bool = _steward_observed.has(current_id())

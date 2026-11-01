@@ -53,7 +53,8 @@ func _ready() -> void:
 	scale_row.add_child(_scale_label)
 	_scale = OptionButton.new()
 	_scale.name = "UIScale"
-	for factor: float in [1.0, 1.25, 1.5]:
+	# M-LOOP §1.2a: text scale 0.85/1.0/1.15/1.25 (was 1.0/1.25/1.5).
+	for factor: float in [0.85, 1.0, 1.15, 1.25]:
 		_scale.add_item("%s×" % factor)
 	_scale.item_selected.connect(_scale_selected)
 	scale_row.add_child(_scale)
@@ -92,7 +93,7 @@ func _toggle_setting(enabled: bool, key: String) -> void:
 	_store.set_value(key, enabled)
 
 func _scale_selected(index: int) -> void:
-	var factors: Array[float] = [1.0, 1.25, 1.5]
+	var factors: Array[float] = [0.85, 1.0, 1.15, 1.25]
 	_store.set_value("ui_scale", factors[index])
 
 func _store_changed(_key: String, _value: Variant) -> void:
@@ -112,7 +113,7 @@ func _refresh() -> void:
 		var check: CheckButton = _checks[key]
 		check.text = _loc(str(BOOLEAN_KEYS[key]))
 		check.set_pressed_no_signal(bool(_store.value(key)))
-	var factors: Array[float] = [1.0, 1.25, 1.5]
+	var factors: Array[float] = [0.85, 1.0, 1.15, 1.25]
 	_scale.select(factors.find(float(_store.value("ui_scale"))))
 	_error.text = _loc("MUX_SETTINGS_SAVE_FAILED") if _store.last_error != OK else ""
 

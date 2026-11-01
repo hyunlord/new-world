@@ -104,17 +104,69 @@ func _reset() -> void:
 func open_tile(tile: Vector2i) -> void:
 	_food_tiles.clear()
 	var world: Node = get_node_or_null("/root/Main/WorldSim")
-	if world != null:
-		display_history(world.get_tile_causal_history(tile.x, tile.y), tile.x, tile.y)
-		# M-READ: show per-instance stockpile or hearth diagnosis.
-		if world.has_method("get_subject_diagnosis"):
-			var subject: Dictionary = _tile_subject(world, tile)
-			if not subject.is_empty():
-				var diag: Dictionary = world.get_subject_diagnosis(str(subject["kind"]), int(subject["id"]))
-				var line: String = DiagnosisText.headline_and_next(diag, get_node_or_null("/root/Locale"))
-				if not line.is_empty():
-					var diag_label: Label = _add_line(line)
-					diag_label.add_theme_color_override("font_color", Color("a8d888"))
+	if world == null:
+		return
+	# M-LOOP §1.3: diagnosable subject opens the M-READ diagnosis first.
+	var subject: Dictionary = _tile_subject(world, tile) if world.has_method("get_subject_diagnosis") else {}
+	if not subject.is_empty():
+		var diag: Dictionary = world.get_subject_diagnosis(str(subject["kind"]), int(subject["id"]))
+		var line: String = DiagnosisText.headline_and_next(diag, get_node_or_null("/root/Locale"))
+		if not line.is_empty():
+			_show_diagnosis_first(tile, line, world)
+			return
+	# M-LOOP §1.3: filter unlabeled causal entries ("기타 사건 기록").
+	var raw_history: Array = world.get_tile_causal_history(tile.x, tile.y)
+	var filtered: Array = _filter_labeled(raw_history)
+	display_history(filtered, tile.x, tile.y)
+	# M-READ: show per-instance stockpile or hearth diagnosis below history.
+	if not subject.is_empty():
+		var diag: Dictionary = world.get_subject_diagnosis(str(subject["kind"]), int(subject["id"]))
+		var diag_line: String = DiagnosisText.headline_and_next(diag, get_node_or_null("/root/Locale"))
+		if not diag_line.is_empty():
+			var diag_label: Label = _add_line(diag_line)
+			diag_label.add_theme_color_override("font_color", Color("a8d888"))
+
+
+## M-LOOP §1.3: open the diagnosis view first for a diagnosable tile, with a "기록 보기" link.
+func _show_diagnosis_first(tile: Vector2i, diag_line: String, world: Node) -> void:
+	_anchor_tile = tile
+	for child: Node in _history_container.get_children():
+		_history_container.remove_child(child)
+		child.queue_free()
+	_title_label.text = _ltr("MUX_WHY")
+	var diag_label: Label = _add_line(diag_line)
+	diag_label.add_theme_color_override("font_color", Color("a8d888"))
+	# "기록 보기" link to show the filtered causal entries.
+	var link_button: Button = Button.new()
+	link_button.text = _ltr("LOOP_CAUSAL_VIEW_LOG")
+	link_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	link_button.add_theme_color_override("font_color", Color("88b8e8"))
+	link_button.pressed.connect(_show_filtered_log.bind(tile, world))
+	_history_container.add_child(link_button)
+	get_parent().move_child(self, get_parent().get_child_count() - 1)
+	show()
+	_fit()
+	_fit.call_deferred()
+
+
+## M-LOOP §1.3: show filtered causal entries (called from the "기록 보기" link).
+func _show_filtered_log(tile: Vector2i, world: Node) -> void:
+	var raw_history: Array = world.get_tile_causal_history(tile.x, tile.y)
+	var filtered: Array = _filter_labeled(raw_history)
+	display_history(filtered, tile.x, tile.y)
+
+
+## M-LOOP §1.3: filter out entries without a locale label (the unlabeled "기타 사건 기록").
+func _filter_labeled(history: Array) -> Array:
+	var result: Array = []
+	for event: Variant in history:
+		if not event is Dictionary:
+			continue
+		var kind: String = str(event.get("kind", ""))
+		# Keep all events with a known label key; drop unlabeled ones.
+		if EVENT_LABEL_KEYS.has(kind) or DEATH_REASON_KEYS.has(str(event.get("reason", ""))) or DECISION_REASON_KEYS.has(str(event.get("reason", ""))) or kind in ["combat_started", "combat_completed", "memory_recalled", "pressure_cause"]:
+			result.append(event)
+	return result
 
 # The inspector supplies its cached read; opening this panel never evaluates policy.
 # M-READ: accepts an optional why_not dictionary to show the blocked-candidate line.

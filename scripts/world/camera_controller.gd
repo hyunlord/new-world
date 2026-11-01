@@ -107,7 +107,18 @@ func _stamp_gesture_source(event: InputEvent) -> void:
 		event.set_meta(GESTURE_SOURCE_META, event.get_instance_id())
 
 
+## M-LOOP §1.1: true when the pointer hovers any UI control — wheel and pinch must not zoom then.
+func _pointer_over_ui() -> bool:
+	return get_viewport().gui_get_hovered_control() != null
+
+
 func _unhandled_input(event: InputEvent) -> void:
+	# M-LOOP §1.1: scrolling over any panel never zooms — the camera zooms only over the world.
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN] and _pointer_over_ui():
+			return
+	if event is InputEventMagnifyGesture and _pointer_over_ui():
+		return
 	if event is InputEventGesture:
 		var frame: int = Engine.get_process_frames()
 		if frame != _gesture_frame:
