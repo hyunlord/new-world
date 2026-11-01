@@ -490,3 +490,10 @@ The held-out failure is a **blocker**, not an open question. The owner's LOOP-D-
 - Loose logs on day 5 summed 9205 → 1252, exposure deaths 0 → 0, alive at the end 342 → 324.
 - **Finding:** KnowledgeLost is more than double BASE even with teaching immediate. The steward's narrower default set (bills graced, tools-only rule, capped wood) loses knowledge on its own, and the snap shortfall persists without the fuel term. The two held-out runs bound the design: with a fuel term the logs pile up; without it, firewood runs short. A survival-only steward needs a redesign of fuel and knowledge upkeep, not a parameter.
 - **Decision:** no further rounds. The goal's budget and the owner's evaluate-once rule are both exceeded. The pass ends unpublished. The redesign (separate building and fuel caps, plus knowledge upkeep inside the survival set) is the follow-up, with seeds from 1744.
+
+### LOOP-R1 status — void as an acceptance run (stop-rule correction)
+- **The breach:** the brief's stop rule and the owner's LOOP-D-teach ("evaluate once on 1680–1711") required the pass to stop at the first held-out failure (p43). Running LOOP-R1 broke that rule.
+- **Its standing now:** LOOP-R1 is information only, not an acceptance evaluation.
+- **The verdict of record:** held-out 1680–1711 (p43), FAIL on four bars. The pass stopped there.
+- **What it touched:** nothing was published, so nothing needs undoing. The R1 commits (p49–p50) stay on v8/loop-review as evidence.
+- **The seeds:** 1712–1743 are spent and recorded in the seed register.
