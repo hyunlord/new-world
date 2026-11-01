@@ -115,7 +115,7 @@ func _test_text_scale() -> void:
 ## Test 3: learning helper has collapse state and expand_helper method.
 func _test_help_collapse(main: Node) -> void:
 	print("Test 3: help collapse")
-	var hud: Node = main.get_node_or_null("MuxHud")
+	var hud: Node = main.find_child("MuxHud", true, false)
 	if hud == null:
 		_assert(false, "MuxHud exists")
 		return
@@ -123,8 +123,10 @@ func _test_help_collapse(main: Node) -> void:
 	_assert(helper != null, "LearningHelper exists")
 	_assert(helper != null and helper.has_method("expand_helper"), "has expand_helper")
 	_assert(helper != null and "_collapsed" in helper, "has _collapsed state")
-	# Simulate observing an order event.
+	# Simulate observing an order event (reset state first to avoid stored progress).
 	if helper != null and helper.has_method("observe"):
+		helper.set("_collapsed", false)
+		helper.set("_events", {})
 		helper.call("observe", "stockpile_exists")
 		_assert(bool(helper.get("_collapsed")), "collapses after order event")
 		helper.call("expand_helper")
@@ -192,7 +194,7 @@ func _test_chapters_data() -> void:
 ## Test 8: chapter condition check logic.
 func _test_chapter_conditions(main: Node) -> void:
 	print("Test 8: chapter conditions")
-	var hud: Node = main.get_node_or_null("MuxHud")
+	var hud: Node = main.find_child("MuxHud", true, false)
 	if hud == null:
 		_assert(false, "MuxHud exists")
 		return
@@ -210,7 +212,7 @@ func _test_chapter_conditions(main: Node) -> void:
 ## Test 9: chronicle panel loads notable_kinds from schema 2.
 func _test_chronicle_notable(main: Node) -> void:
 	print("Test 9: chronicle notable_kinds")
-	var chronicle: Node = main.get_node_or_null("ChroniclePanel")
+	var chronicle: Node = main.find_child("ChroniclePanel", true, false)
 	_assert(chronicle != null, "ChroniclePanel exists")
 	if chronicle == null:
 		return
@@ -224,7 +226,7 @@ func _test_chronicle_notable(main: Node) -> void:
 ## Test 10: card panel instantiates with the expected methods.
 func _test_card_panel(main: Node) -> void:
 	print("Test 10: card panel")
-	var hud: Node = main.get_node_or_null("MuxHud")
+	var hud: Node = main.find_child("MuxHud", true, false)
 	if hud == null:
 		_assert(false, "MuxHud exists for cards")
 		return
@@ -242,7 +244,7 @@ func _test_card_panel(main: Node) -> void:
 ## Test 11: plaque content priority shows idle message when no cards/chapters.
 func _test_plaque_priority(main: Node) -> void:
 	print("Test 11: plaque priority")
-	var plaque: Node = main.get_node_or_null("TaskPlaque")
+	var plaque: Node = main.find_child("TaskPlaque", true, false)
 	_assert(plaque != null, "TaskPlaque exists")
 	if plaque == null:
 		return
@@ -311,7 +313,7 @@ func _test_locale_keys() -> void:
 ## Test 15: topbar lower row is hidden (single-row topbar).
 func _test_topbar_one_row(main: Node) -> void:
 	print("Test 15: topbar one row")
-	var topbar: Node = main.get_node_or_null("HudTopbar")
+	var topbar: Node = main.find_child("HudTopbar", true, false)
 	_assert(topbar != null, "HudTopbar exists")
 	if topbar == null:
 		return
@@ -326,20 +328,20 @@ func _test_topbar_one_row(main: Node) -> void:
 	_assert("_speed_compact" in topbar, "has _speed_compact label")
 
 
-## Test 16: item panel closes on outside click (has _input handler).
-func _test_item_panel_close(main: Node) -> void:
+## Test 16: item panel has _input handler for close on outside click.
+## ItemPanel is created dynamically by the order tool, so test the script directly.
+func _test_item_panel_close(_main: Node) -> void:
 	print("Test 16: item panel close on outside click")
-	var item_panel: Node = main.get_node_or_null("ItemPanel")
-	_assert(item_panel != null, "ItemPanel exists")
-	if item_panel == null:
-		return
-	_assert(item_panel.has_method("_input"), "ItemPanel has _input for outside click")
+	var ItemPanelScript = preload("res://scripts/ui/panels/item_panel.gd")
+	var instance: PanelContainer = ItemPanelScript.new()
+	_assert(instance.has_method("_input"), "ItemPanel has _input for outside click")
+	instance.queue_free()
 
 
 ## Test 17: popup stacking constants defined.
 func _test_popup_stacking(main: Node) -> void:
 	print("Test 17: popup stacking")
-	var hud: Node = main.get_node_or_null("MuxHud")
+	var hud: Node = main.find_child("MuxHud", true, false)
 	_assert(hud != null, "MuxHud exists")
 	if hud == null:
 		return
@@ -376,7 +378,7 @@ func _test_idle_adults_night() -> void:
 ## Test 19: chapter completion signal wired to toast handler.
 func _test_chapter_completion_toast(main: Node) -> void:
 	print("Test 19: chapter completion toast")
-	var hud: Node = main.get_node_or_null("MuxHud")
+	var hud: Node = main.find_child("MuxHud", true, false)
 	_assert(hud != null, "MuxHud exists")
 	if hud == null:
 		return

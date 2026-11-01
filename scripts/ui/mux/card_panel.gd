@@ -130,28 +130,31 @@ func _check_trigger(card_def: Dictionary, requests: Dictionary, diag: Dictionary
 	match kind:
 		"request":
 			var req_id: String = str(trigger.get("request_id", ""))
-			var active_requests: Array = requests.get("requests", [])
-			for req: Variant in active_requests:
-				if req is Dictionary and str(req.get("id", "")) == req_id:
-					return true
+			var active_requests: Variant = requests.get("requests", requests.get("active", []))
+			if active_requests is Array:
+				for req: Variant in active_requests as Array:
+					if req is Dictionary and str(req.get("id", "")) == req_id:
+						return true
 		"chronicle":
 			# Check recent chronicle entries for matching kind.
 			var chronicle_kind: int = int(trigger.get("chronicle_kind", -1))
 			if chronicle_kind >= 0 and _world.has_method("get_chronicle_since"):
 				var page: Dictionary = _world.get_chronicle_since(maxi(0, _last_tick - 1440), 100)
-				for entry: Variant in page.get("entries", []):
-					if entry is Dictionary and int(entry.get("kind", -1)) == chronicle_kind:
-						return true
+				var rows: Variant = page.get("rows", page.get("entries", []))
+				if rows is Array:
+					for entry: Variant in rows:
+						if entry is Dictionary and int(entry.get("kind", -1)) == chronicle_kind:
+							return true
 		"alert":
 			var alert_id: String = str(trigger.get("alert_id", ""))
 			var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
 			if facts.has(alert_id):
 				return true
 			# Check via alert conditions in the facts.
-			var people: Array = facts.get("people", [])
-			if alert_id == "idle_adults":
+			var people: Variant = facts.get("people", [])
+			if alert_id == "idle_adults" and people is Array:
 				var idle_count: int = 0
-				for person: Variant in people:
+				for person: Variant in people as Array:
 					if person is Dictionary and bool(person.get("adult", false)) and not bool(person.get("working", false)) and not bool(person.get("sleeping", false)):
 						idle_count += 1
 				var min_count: int = int(trigger.get("min_count", 2))
