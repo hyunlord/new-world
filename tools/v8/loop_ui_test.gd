@@ -84,6 +84,8 @@ func _run() -> void:
 
 	# --- Test 21: Card trigger fires in seeded run ---
 	await _test_card_trigger_seeded(main, world)
+	# --- Test 22: answering a card sends a valid command and writes the chronicle ---
+	_test_card_answer_recorded(main)
 
 	print("LOOP_UI_TEST_DONE pass=%d fail=%d" % [_pass, _fail])
 	quit(1 if _fail > 0 else 0)
@@ -468,3 +470,38 @@ func _test_card_trigger_seeded(main: Node, world: Node) -> void:
 	var count: int = card_panel.call("active_count")
 	print("  After 5 days: active_count=%d active_ids=%s" % [count, ",".join(active)])
 	_assert(count > 0 or active.size() > 0, "at least one card triggered in 5 days (seed 0, steward on)")
+
+
+## Test 22: answering the open card records an accepted bridge result and a chronicle line.
+##   Fails if card_answered is not wired to the chronicle, or the command result is dropped/rejected.
+func _test_card_answer_recorded(main: Node) -> void:
+	print("Test 22: card answer -> command result + chronicle")
+	var card_panel: Node = main.find_child("CardPanel", true, false)
+	var chronicle: Node = main.find_child("ChroniclePanel", true, false)
+	if card_panel == null or chronicle == null:
+		_assert(false, "CardPanel and ChroniclePanel exist")
+		return
+	var active: PackedStringArray = card_panel.call("active_ids")
+	if active.is_empty():
+		_assert(false, "an open card to answer (test 21 state)")
+		return
+	var card_id: String = active[0]
+	var options: Array = (card_panel.get("_active")[card_id] as Dictionary).get("def", {}).get("options", [])
+	var recommended: int = 0
+	for oi: int in options.size():
+		if bool(options[oi].get("recommended", false)):
+			recommended = oi
+			break
+	var entries_before: int = (chronicle.get("_entries") as Array).size()
+	card_panel.call("answer_card", card_id, recommended)
+	var results: Array = card_panel.call("command_results")
+	_assert(results.size() == 1, "one command result recorded for %s" % card_id)
+	_assert(results.size() == 1 and bool(results[0].get("accepted", false)),
+		"recommended command accepted (reason=%s)" % (str(results[0].get("reason", "")) if results.size() > 0 else "none"))
+	# The feed is capped at 60 rows, so check the newest row rather than the count.
+	var entries: Array = chronicle.get("_entries")
+	var newest: Dictionary = entries.back() if not entries.is_empty() else {}
+	var line: String = str(newest.get("_presentation_text", ""))
+	_assert(entries.size() >= mini(entries_before + 1, 60) and line != "" and not line.contains("{"),
+		"chronicle got a presentation line for the answer (%s)" % line)
+	_assert(not (card_panel.call("active_ids") as PackedStringArray).has(card_id), "answered card closed")

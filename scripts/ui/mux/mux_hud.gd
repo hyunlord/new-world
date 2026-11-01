@@ -106,6 +106,8 @@ func _ready() -> void:
 	# M-LOOP §2.2: decision card panel, above the alerts on the right.
 	cards = CardPanel.new()
 	cards.name = "CardPanel"
+	cards.card_answered.connect(_on_card_answered)
+	cards.card_expired.connect(_on_card_expired)
 	add_child(cards)
 	_actions = HBoxContainer.new()
 	_actions.name = "Actions"
@@ -261,6 +263,21 @@ func _apply_preferences() -> void:
 	_layout.call_deferred()
 
 ## M-LOOP §2.3: chapter completion → toast + presentation-side chronicle entry.
+func _on_card_answered(_card_id: String, card_title: String, option_text: String) -> void:
+	_add_chronicle_line(_loc("LOOP_CARD_ANSWERED_FMT").format({"card": card_title, "option": option_text}))
+
+
+func _on_card_expired(_card_id: String, card_title: String) -> void:
+	_add_chronicle_line(_loc("LOOP_CARD_EXPIRED_STEWARD").format({"card": card_title}))
+
+
+## Presentation-side chronicle entry (not sim-side, not hashed).
+func _add_chronicle_line(text: String) -> void:
+	var chronicle: Node = get_parent().get_node_or_null("ChroniclePanel")
+	if chronicle != null and chronicle.has_method("add_presentation_entry"):
+		chronicle.call("add_presentation_entry", text)
+
+
 func _on_chapter_completed(chapter_id: String) -> void:
 	var title: String = ""
 	for ch: Dictionary in goals.chapters:

@@ -18,8 +18,8 @@ const MAX_OPEN: int = 3
 const POLL_INTERVAL: float = 1.0
 const TICKS_PER_HOUR: int = 60
 
-signal card_answered(card_id: String, option_text: String)
-signal card_expired(card_id: String)
+signal card_answered(card_id: String, card_title: String, option_text: String)
+signal card_expired(card_id: String, card_title: String)
 
 var _world: Node = null
 var _locale: Node = null
@@ -30,6 +30,8 @@ var _active: Dictionary = {}
 ## Answered/expired card ids for the current in-game day (prevent re-trigger).
 var _handled: Dictionary = {}
 var _handled_day: int = -1
+## Bridge results of card answers since the last reset: {card_id, command, accepted, reason}.
+var _command_results: Array[Dictionary] = []
 var _poll_left: float = 0.0
 var _last_tick: int = -1
 var _column: VBoxContainer = null
@@ -222,7 +224,7 @@ func _expire_card(card_id: String) -> void:
 	var default_action: String = str(def.get("default", "none"))
 	if default_action == "steward":
 		# Chronicle "집사가 대신 정했어요".
-		card_expired.emit(card_id)
+		card_expired.emit(card_id, _card_title(card))
 	_handled[card_id] = true
 	_active.erase(card_id)
 
@@ -239,18 +241,26 @@ func answer_card(card_id: String, option_index: int) -> void:
 	var command: String = str(option.get("command", "none"))
 	# Send the bridge command.
 	if command != "none" and command != "steward_default" and command != "enter_zone_tool" and command != "open_roles":
-		_send_command(command, option, card)
+		var result: Variant = _send_command(command, option, card)
+		var result_dict: Dictionary = result if result is Dictionary else {}
+		_command_results.append({
+			"card_id": card_id,
+			"command": command,
+			"accepted": bool(result_dict.get("accepted", false)),
+			"reason": str(result_dict.get("reason", "not_sent")),
+		})
 	card["answered"] = true
 	_handled[card_id] = true
 	var option_text: String = _tr(str(option.get("text_key", "")))
-	card_answered.emit(card_id, option_text)
+	card_answered.emit(card_id, _card_title(card), option_text)
 	_active.erase(card_id)
 	_rebuild_ui()
 
 
-func _send_command(command: String, option: Dictionary, card: Dictionary) -> void:
+## Sends the option's bridge command; returns the last result dictionary, or null when nothing was sent.
+func _send_command(command: String, option: Dictionary, card: Dictionary) -> Variant:
 	if _world == null:
-		return
+		return null
 	var _params: String = str(option.get("params", ""))
 	match command:
 		"cmd_designate_chop":
@@ -258,22 +268,22 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> voi
 			var info: Dictionary = SimReads.read(_world, "get_world_info")
 			var cx: int = int(info.get("camp_x", 32))
 			var cy: int = int(info.get("camp_y", 32))
-			SimReads.mutate(_world, "cmd_designate_chop", [cx - 3, cy - 3, cx + 3, cy + 3])
+			return SimReads.mutate(_world, "cmd_designate_chop", [cx - 3, cy - 3, cx + 3, cy + 3])
 		"cmd_designate_harvest":
 			var info: Dictionary = SimReads.read(_world, "get_world_info")
 			var cx: int = int(info.get("camp_x", 32))
 			var cy: int = int(info.get("camp_y", 32))
-			SimReads.mutate(_world, "cmd_designate_harvest", [cx - 4, cy - 4, cx + 4, cy + 4])
+			return SimReads.mutate(_world, "cmd_designate_harvest", [cx - 4, cy - 4, cx + 4, cy + 4])
 		"cmd_accept_migrants":
 			var trigger_data: Dictionary = card.get("trigger_data", {})
 			var wave: int = int(trigger_data.get("wave_id", 0))
-			SimReads.mutate(_world, "cmd_accept_migrants", [wave])
+			return SimReads.mutate(_world, "cmd_accept_migrants", [wave])
 		"cmd_decline_migrants":
 			var trigger_data: Dictionary = card.get("trigger_data", {})
 			var wave: int = int(trigger_data.get("wave_id", 0))
-			SimReads.mutate(_world, "cmd_decline_migrants", [wave])
+			return SimReads.mutate(_world, "cmd_decline_migrants", [wave])
 		"cmd_undraft_all":
-			SimReads.mutate(_world, "cmd_undraft_all", [])
+			return SimReads.mutate(_world, "cmd_undraft_all", [])
 		"cmd_order_teach":
 			# Use trigger data for holder → learner.
 			var trigger_data: Dictionary = card.get("trigger_data", {})
@@ -281,13 +291,16 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> voi
 			var learner: int = int(trigger_data.get("learner", -1))
 			var knowledge: int = int(trigger_data.get("knowledge", -1))
 			if teacher >= 0 and learner >= 0 and knowledge >= 0:
-				SimReads.mutate(_world, "cmd_order_teach", [teacher, learner, knowledge])
+				return SimReads.mutate(_world, "cmd_order_teach", [teacher, learner, knowledge])
 		"cmd_draft":
 			# Draft the steward's recommended 4.
 			var drafted: Dictionary = SimReads.read(_world, "get_drafted")
 			var recommended: Array = drafted.get("recommended", [])
+			var last: Variant = null
 			for agent_id: Variant in recommended:
-				SimReads.mutate(_world, "cmd_draft", [int(agent_id), true])
+				last = SimReads.mutate(_world, "cmd_draft", [int(agent_id), true])
+			return last
+	return null
 
 
 func _rebuild_ui() -> void:
@@ -375,6 +388,8 @@ func _format_card_text(key: String, data: Dictionary) -> String:
 func _reset() -> void:
 	_active.clear()
 	_handled.clear()
+	_handled_day = -1
+	_command_results.clear()
 	_last_tick = -1
 	_poll_left = 0.0
 	_rebuild_ui()
@@ -425,3 +440,12 @@ func _tr(key: String) -> String:
 	if _locale != null and _locale.has_method("ltr"):
 		return KoreanText.words(str(_locale.call("ltr", key)))
 	return key
+
+
+## Bridge results of card answers since the last reset (for tests and the cards run).
+func command_results() -> Array[Dictionary]:
+	return _command_results
+
+
+func _card_title(card: Dictionary) -> String:
+	return _format_card_text(str(card.get("def", {}).get("title_key", "")), card.get("trigger_data", {}))
