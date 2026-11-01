@@ -1395,5 +1395,8 @@
 	"LOOP_ROLES_TITLE": "Roles",
 	"LOOP_ROLES_ADVANCED": "Advanced",
 	"LOOP_STEWARD_EXTENDED": "Steward does more",
-	"LOOP_STEWARD_EXTENDED_TIP": "Steward also handles tool production and teaching (default: off)"
+	"LOOP_STEWARD_EXTENDED_TIP": "Steward also handles tool production and teaching (default: off)",
+	"LOOP_CARD_TOOLS_LOW": "Tools running low",
+	"LOOP_CARD_TOOLS_LOW_BODY": "Axes or blades are below need — tools must be crafted",
+	"LOOP_CARD_TOOLS_LOW_BILL": "Craft tools"
 }

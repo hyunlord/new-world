@@ -1395,5 +1395,8 @@
 	"LOOP_ROLES_TITLE": "역할",
 	"LOOP_ROLES_ADVANCED": "고급",
 	"LOOP_STEWARD_EXTENDED": "집사가 더 많이",
-	"LOOP_STEWARD_EXTENDED_TIP": "집사가 도구 만들기와 가르치기도 합니다 (기본: 꺼짐)"
+	"LOOP_STEWARD_EXTENDED_TIP": "집사가 도구 만들기와 가르치기도 합니다 (기본: 꺼짐)",
+	"LOOP_CARD_TOOLS_LOW": "도구가 부족해요",
+	"LOOP_CARD_TOOLS_LOW_BODY": "도끼나 칼이 부족합니다 — 도구를 만들어야 해요",
+	"LOOP_CARD_TOOLS_LOW_BILL": "도구 만들기"
 }

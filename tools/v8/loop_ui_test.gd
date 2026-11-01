@@ -171,9 +171,14 @@ func _test_cards_data() -> void:
 	for card: Variant in cards:
 		if card is Dictionary:
 			ids.append(str(card["id"]))
-	var required: Array[String] = ["need_food", "need_warmth", "migrants", "trader", "knowledge_risk", "wolves", "idle_adults"]
+	var required: Array[String] = ["need_food", "need_warmth", "migrants", "trader", "knowledge_risk", "tools_low", "wolves", "idle_adults"]
 	for req: String in required:
 		_assert(ids.has(req), "has required card: " + req)
+	# knowledge_risk and tools_low expire to steward within 24h.
+	for card: Variant in cards:
+		if card is Dictionary and str(card["id"]) in ["knowledge_risk", "tools_low"]:
+			_assert(str(card.get("default", "")) == "steward", str(card["id"]) + " default is steward")
+			_assert(int(card.get("expires_hours", 99)) <= 24, str(card["id"]) + " expires <= 24h")
 
 
 ## Test 7: chapters.json parses and has 5 chapters.

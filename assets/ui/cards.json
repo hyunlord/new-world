@@ -69,10 +69,24 @@
         {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_TEACH", "command": "cmd_order_teach", "params": "holder_to_learner", "recommended": true},
         {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_LATER", "command": "none", "params": "", "recommended": false}
       ],
-      "default": "none",
-      "expires_hours": 72,
+      "default": "steward",
+      "expires_hours": 24,
       "priority": 8,
       "tags": ["knowledge"]
+    },
+    {
+      "id": "tools_low",
+      "trigger": {"kind": "diagnosis", "check_id": "settlement_no_tools"},
+      "title_key": "LOOP_CARD_TOOLS_LOW",
+      "body_key": "LOOP_CARD_TOOLS_LOW_BODY",
+      "options": [
+        {"text_key": "LOOP_CARD_TOOLS_LOW_BILL", "command": "cmd_add_bill", "params": "tool_bill", "recommended": true},
+        {"text_key": "LOOP_CARD_STEWARD", "command": "steward_default", "params": "", "recommended": false}
+      ],
+      "default": "steward",
+      "expires_hours": 24,
+      "priority": 9,
+      "tags": ["tools", "production"]
     },
     {
       "id": "wolves",
