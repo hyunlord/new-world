@@ -501,12 +501,16 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			var knowledge: int = int(trigger_data.get("knowledge", -1))
 			if teacher < 0 or learner < 0 or knowledge < 0:
 				return {"accepted": false, "skipped": true, "reason": "no_target"}
-			# Pre-validate: verify teacher still exists in the population.
+			# Pre-validate: verify teacher and learner still exist.
 			if not _agent_exists(teacher) or not _agent_exists(learner):
 				return {"accepted": false, "skipped": true, "reason": "agent_gone"}
 			# Re-check knowledge_risk alert is still active.
 			if not _alert_active("technique_at_risk"):
 				return {"accepted": false, "skipped": true, "reason": "risk_cleared"}
+			# Check teacher still has a knowledge wait (the technique is still at risk
+			# with this specific teacher). Use get_ui_facts waits collection.
+			if not _teacher_holds_knowledge(teacher, knowledge):
+				return {"accepted": false, "skipped": true, "reason": "no_practitioner"}
 			result = SimReads.mutate(_world, "cmd_order_teach", [teacher, learner, knowledge])
 			if result is Dictionary and not bool(result.get("accepted", false)):
 				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
@@ -525,10 +529,11 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			if not cids is PackedInt64Array or (cids as PackedInt64Array).size() == 0:
 				return {"accepted": false, "skipped": true, "reason": "no_caravan"}
 			var caravan: int = int((cids as PackedInt64Array)[0])
-			result = SimReads.mutate(_world, "cmd_trade", [caravan, PackedInt32Array(), PackedInt32Array([0, 1])])
-			# If trade was rejected (unbalanced terms), skip it.
-			if result is Dictionary and not bool(result.get("accepted", false)):
-				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
+			# Build balanced trade terms from the caravan's actual offer.
+			var trade_terms: Dictionary = _build_trade_terms(caravan)
+			if not bool(trade_terms.get("valid", false)):
+				return {"accepted": false, "skipped": true, "reason": "no_balanced_trade"}
+			result = SimReads.mutate(_world, "cmd_trade", [caravan, trade_terms["give"], trade_terms["take"]])
 		"cmd_add_bill":
 			info = SimReads.read(_world, "get_world_info")
 			var workshops: Variant = info.get("workshops", PackedInt64Array())
@@ -540,8 +545,8 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			var agent_a: int = int(trigger_data.get("agent_a", -1))
 			if agent_a < 0:
 				return {"accepted": false, "skipped": true, "reason": "no_target"}
-			if not _agent_exists(agent_a):
-				return {"accepted": false, "skipped": true, "reason": "agent_gone"}
+			if not _agent_is_adult(agent_a):
+				return {"accepted": false, "skipped": true, "reason": "not_adult"}
 			result = SimReads.mutate(_world, "cmd_set_work_priority", [agent_a, "chop", 3])
 			if result is Dictionary and not bool(result.get("accepted", false)):
 				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
@@ -578,6 +583,98 @@ func _agent_exists(agent_id: int) -> bool:
 				if aid == agent_id:
 					return true
 	return false
+
+
+## Whether a teacher agent still holds a specific knowledge node (technique at risk).
+## Checks the knowledge waits from get_ui_facts to verify the teacher is still a practitioner.
+func _teacher_holds_knowledge(teacher_id: int, _knowledge_id: int) -> bool:
+	if _world == null:
+		return false
+	# The technique_at_risk alert causes list the holder's agent id.
+	# Re-check the alert causes to verify this specific teacher.
+	var causes: Array = _alert_causes("technique_at_risk")
+	for cause: Variant in causes:
+		if cause is Dictionary and int(cause.get("id", -1)) == teacher_id:
+			return true
+	return false
+
+
+## Whether an agent is an adult (not a child) and alive.
+func _agent_is_adult(agent_id: int) -> bool:
+	if _world == null or agent_id < 0:
+		return false
+	var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
+	var people: Variant = facts.get("people", {})
+	if not people is Dictionary:
+		return false
+	var ids: Variant = (people as Dictionary).get("ids", PackedInt64Array())
+	var children: Variant = (people as Dictionary).get("children", PackedByteArray())
+	if ids is PackedInt64Array and children is PackedByteArray:
+		var id_arr: PackedInt64Array = ids as PackedInt64Array
+		var ch_arr: PackedByteArray = children as PackedByteArray
+		for i: int in id_arr.size():
+			if int(id_arr[i]) == agent_id:
+				return i < ch_arr.size() and int(ch_arr[i]) == 0
+	return false
+
+
+## Build balanced trade terms from the caravan's actual goods and colony stock.
+## Returns {valid: bool, give: PackedInt32Array, take: PackedInt32Array}.
+## give = flat (x, y, count) triples of colony stock; take = indices into caravan goods.
+func _build_trade_terms(caravan_id: int) -> Dictionary:
+	if _world == null or not _world.has_method("get_caravan"):
+		return {"valid": false}
+	var cv: Dictionary = _world.get_caravan(caravan_id)
+	if not bool(cv.get("found", false)):
+		return {"valid": false}
+	var goods_value: Variant = cv.get("goods_value", PackedInt32Array())
+	var goods_count: Variant = cv.get("goods_count", PackedInt32Array())
+	if not goods_value is PackedInt32Array or (goods_value as PackedInt32Array).size() == 0:
+		return {"valid": false}
+	# Pick the first good with count > 0.
+	var take_idx: int = -1
+	var take_value: int = 0
+	var gv: PackedInt32Array = goods_value as PackedInt32Array
+	var gc: PackedInt32Array = goods_count as PackedInt32Array
+	for i: int in gv.size():
+		if i < gc.size() and int(gc[i]) > 0:
+			take_idx = i
+			take_value = int(gv[i])
+			break
+	if take_idx < 0 or take_value <= 0:
+		return {"valid": false}
+	# Find colony stock to give that covers the value.
+	var buy_permille: int = int(cv.get("buy_permille", 1000))
+	var needed_value: int = maxi(1, take_value * buy_permille / 1000)
+	var stock_x: Variant = cv.get("stock_x", PackedInt32Array())
+	var stock_y: Variant = cv.get("stock_y", PackedInt32Array())
+	var stock_count: Variant = cv.get("stock_count", PackedInt32Array())
+	var stock_value: Variant = cv.get("stock_value", PackedInt32Array())
+	if not stock_x is PackedInt32Array or (stock_x as PackedInt32Array).size() == 0:
+		return {"valid": false}
+	var sx: PackedInt32Array = stock_x as PackedInt32Array
+	var sy: PackedInt32Array = stock_y as PackedInt32Array
+	var sc: PackedInt32Array = stock_count as PackedInt32Array
+	var sv: PackedInt32Array = stock_value as PackedInt32Array
+	# Accumulate stock items until we have enough value.
+	var give: PackedInt32Array = PackedInt32Array()
+	var accumulated: int = 0
+	for i: int in sx.size():
+		if i >= sc.size() or i >= sv.size():
+			break
+		if int(sc[i]) <= 0 or int(sv[i]) <= 0:
+			continue
+		var count: int = 1
+		give.append(int(sx[i]))
+		give.append(int(sy[i]))
+		give.append(count)
+		accumulated += int(sv[i]) * count
+		if accumulated >= needed_value:
+			break
+	if accumulated < needed_value:
+		return {"valid": false}
+	var take: PackedInt32Array = PackedInt32Array([take_idx])
+	return {"valid": true, "give": give, "take": take}
 
 
 ## Whether any chop designation (kind 0) exists in the colony overlay.
@@ -682,6 +779,15 @@ func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> i
 				# Recommend steward (last option).
 				return options.size() - 1
 		"need_food":
+			# LOOP-D-cards: if the steward already covers the need, recommend steward.
+			# Check: harvest target unavailable means steward already designated plants
+			# or no plants exist — either way, the player's gather adds nothing.
+			var harvest_available: bool = false
+			if _world != null and _world.has_method("get_card_harvest_target"):
+				harvest_available = bool(_world.get_card_harvest_target().get("found", false))
+			if not harvest_available:
+				# Steward covers food or nothing to gather — recommend steward.
+				return options.size() - 1
 			# Recommend hunt only if: blades exist, no hunt zone exists, and no
 			# wolves on the map (hunting near wolves causes combat deaths).
 			var hunt_unsafe: bool = _has_hunt_zones() or not _has_hunter_blades() or _alert_active("wolves_approaching")

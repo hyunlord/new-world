@@ -16,6 +16,8 @@ const CARD_CHECK_INTERVAL: int = 60  # Check cards every in-game hour.
 const ANSWER_DEADLINE: int = 60  # Answer within 1 in-game hour of appearing.
 
 var _output_dir: String = "/Users/rexxa/work/loop-data/cards-run"
+## When non-empty, only answer cards of this kind (for per-kind isolation tests).
+var _kind_filter: String = ""
 var _results: Array[Dictionary] = []
 var _validation_failures: int = 0
 
@@ -25,6 +27,8 @@ func _init() -> void:
 	for i: int in args.size():
 		if args[i] == "--output" and i + 1 < args.size():
 			_output_dir = args[i + 1]
+		elif args[i] == "--kind" and i + 1 < args.size():
+			_kind_filter = args[i + 1]
 	call_deferred("_run")
 
 
@@ -105,6 +109,9 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 		cards_seen = maxi(cards_seen, active.size())
 		if answer_cards and not active.is_empty():
 			for card_id: String in active:
+				# Per-kind filter: skip cards not matching the filter.
+				if not _kind_filter.is_empty() and card_id != _kind_filter:
+					continue
 				# Use the effective recommended option (dynamic, not static).
 				var active_cards: Dictionary = card_panel.get("_active")
 				if not active_cards.has(card_id):
