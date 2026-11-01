@@ -14,7 +14,7 @@
         {"text_key": "LOOP_CARD_NEED_FOOD_GATHER", "command": "cmd_designate_harvest", "params": "validated", "recommended": false, "requires": "harvest_target"},
         {"text_key": "LOOP_CARD_STEWARD", "command": "steward_default", "params": "", "recommended": false}
       ],
-      "default": "steward",
+      "default": "none",
       "expires_hours": 12,
       "priority": 10,
       "tags": ["food", "survival"]
@@ -28,7 +28,7 @@
         {"text_key": "LOOP_CARD_NEED_WARMTH_CHOP", "command": "cmd_designate_chop", "params": "nearest_trees", "recommended": true},
         {"text_key": "LOOP_CARD_STEWARD", "command": "steward_default", "params": "", "recommended": false}
       ],
-      "default": "steward",
+      "default": "none",
       "expires_hours": 12,
       "priority": 10,
       "tags": ["warmth", "survival"]
@@ -74,21 +74,22 @@
         {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_TEACH", "command": "cmd_order_teach", "params": "holder_to_learner", "requires": "no_teach_order", "recommended": true},
         {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_LATER", "command": "none", "params": "", "requires": "no_teach_order", "recommended": false}
       ],
-      "default": "steward",
+      "default": "none",
       "expires_hours": 24,
       "priority": 8,
       "tags": ["knowledge"]
     },
     {
       "id": "tools_low",
+      "tool_items": ["stone_axe", "flint_blade"],
       "trigger": {"kind": "bridge", "read": "tools_below_need"},
       "title_key": "LOOP_CARD_TOOLS_LOW",
       "body_key": "LOOP_CARD_TOOLS_LOW_BODY",
       "options": [
-        {"text_key": "LOOP_CARD_TOOLS_LOW_BILL", "command": "cmd_add_bill", "params": "tool_bill", "recipe": "stone_axe", "recommended": true},
+        {"text_key": "LOOP_CARD_TOOLS_LOW_BILL", "command": "cmd_add_bill", "params": "tool_bill", "recipe": "haft_axe", "recommended": true},
         {"text_key": "LOOP_CARD_STEWARD", "command": "steward_default", "params": "", "recommended": false}
       ],
-      "default": "steward",
+      "default": "none",
       "expires_hours": 24,
       "priority": 9,
       "tags": ["tools", "production"]
@@ -99,11 +100,11 @@
       "title_key": "LOOP_CARD_WOLVES",
       "body_key": "LOOP_CARD_WOLVES_BODY",
       "options": [
-        {"text_key": "LOOP_CARD_WOLVES_DRAFT", "command": "cmd_draft", "params": "steward_recommended", "recommended": true},
+        {"text_key": "LOOP_CARD_WOLVES_DRAFT", "command": "cmd_draft", "params": "one_healthy_adult", "count": 1, "min_hp": 50, "recommended": true},
         {"text_key": "LOOP_CARD_WOLVES_FLEE", "command": "cmd_undraft_all", "params": "", "recommended": false},
         {"text_key": "LOOP_CARD_STEWARD", "command": "steward_default", "params": "", "recommended": false}
       ],
-      "default": "steward",
+      "default": "none",
       "expires_hours": 6,
       "priority": 1,
       "tags": ["defence"]
@@ -160,7 +161,7 @@
       "title_key": "LOOP_CARD_STORAGE",
       "body_key": "LOOP_CARD_STORAGE_BODY",
       "options": [
-        {"text_key": "LOOP_CARD_STORAGE_BLUEPRINT", "command": "cmd_place_blueprint", "params": "storehouse_near_camp", "recommended": true},
+        {"text_key": "LOOP_CARD_STORAGE_BLUEPRINT", "command": "open_build_menu", "params": "", "recommended": true},
         {"text_key": "LOOP_CARD_STORAGE_EXPAND", "command": "cmd_add_stockpile", "params": "expand_zone", "recommended": false}
       ],
       "default": "none",

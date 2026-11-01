@@ -17,7 +17,8 @@
 #   1–9 pick while it is open); walls and floors show the drag hint "통나무 벽 · 드래그: 줄 · Shift+드래그: 네모(속 빔)";
 #   F8 파기 and F10 철거 are area modes; a "방 보기 R" button toggles the room overlay (ColonyView/OverlayLayer/Rooms;
 #   R does the same) and stays pressed while it is shown. The bar holds the buttons on one line and the hint on a
-#   second; it sits 12 px above the screen's bottom once laid out, the toast and the build menu above it. This node
+#   second while learning or using a tool; idle help collapses after the first order or 180 seconds, and ? reopens it.
+#   It sits 12 px above the screen's bottom once laid out, the toast and the build menu above it. This node
 #   also creates the room panel (UI/RoomPanel, room_panel.gd) beside itself.
 # M4 (goal 9.5): the build menu grows to eleven — 0 토기대 and - 갈돌 after 1–9 (EconomyText.menu_order()); F7 enters
 #   채석 as before and opens a small submenu above its button — "1 채석" / "2 점토 캐기" — where 1 keeps quarrying and 2
@@ -68,6 +69,7 @@ const DIG_MODES: Array[int] = [QUARRY_MODE, CLAY_MODE, HUNT_MODE, HUNT_ZONE_MODE
 const BAR_BOTTOM: float = 1080.0 - 12.0
 const ACTIVE: Color = Color("e8c46e")
 const TOAST_SECONDS: float = 2.0
+const KEY_HELP_SECONDS: float = 180.0
 ## M1.5 quick save and load keys and folder.
 const SAVE_KEY: Key = KEY_F5
 const LOAD_KEY: Key = KEY_F9
@@ -77,6 +79,10 @@ var _controls: ControlsCatalog = ControlsCatalog.new()
 var _tool: Node = null
 var _buttons: Array[Button] = []
 var _hint: Label
+var _key_help_expanded: bool = true
+var _key_help_elapsed: float = 0.0
+var _key_help_timer_done: bool = false
+var _first_player_order_seen: bool = false
 var _toast: Label
 var _toast_panel: PanelContainer
 var _toast_left: float = 0.0
@@ -313,6 +319,10 @@ func choose_dig(index: int) -> void:
 
 func _on_order_sent(_command: String, _result: Dictionary) -> void:
 	close_dig_menu()
+	if not _first_player_order_seen:
+		_first_player_order_seen = true
+		_key_help_expanded = false
+		_refresh_key_help()
 
 
 ## Whether the F3 build menu is open.
@@ -444,6 +454,7 @@ func _on_mode_changed(mode: int) -> void:
 		_hint.text = build_hint(_locale, code)
 	elif mode == 0 and build_menu_open():
 		_hint.text = _loc("UI_ORDER_HINT_BUILD_MENU")
+	_refresh_key_help()
 
 
 ## The build mode's hint for blueprint kind `code`: walls and floors "{name} · 드래그: 줄 · Shift+드래그: 네모(…)",
@@ -484,6 +495,12 @@ func _display_toast(text: String) -> void:
 
 
 func _process(delta: float) -> void:
+	if not _key_help_timer_done:
+		_key_help_elapsed += delta
+		if _key_help_elapsed >= KEY_HELP_SECONDS:
+			_key_help_timer_done = true
+			_key_help_expanded = false
+			_refresh_key_help()
 	if _toast_left > 0.0:
 		_toast_left -= delta
 		if _toast_left <= 0.0:
@@ -539,6 +556,23 @@ static func _newest_save() -> String:
 			best = path
 			best_time = time
 	return best
+
+
+## Observe help without consuming it: the existing help panel also handles this shortcut.
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_QUESTION or (event.keycode == KEY_SLASH and event.shift_pressed):
+			_key_help_expanded = true
+			_key_help_timer_done = true
+			_refresh_key_help()
+
+
+func _refresh_key_help() -> void:
+	if _hint == null:
+		return
+	# Compact idle help leaves every action button in place; active tools keep their instructions.
+	_hint.visible = _key_help_expanded or current_mode() != 0 or build_menu_open() or dig_menu_open()
+	_place_bar.call_deferred()
 
 
 func _unhandled_input(event: InputEvent) -> void:

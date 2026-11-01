@@ -11,7 +11,7 @@ fn legacy12_baseline() -> Vec<u8> {
         current_tick: engine.current_tick(),
         world: world::capture(&engine.world).expect("world"),
         systems: engine.system_states().expect("systems"),
-        steward: std::mem::take(&mut engine.resources.steward),
+        steward: std::mem::take(&mut engine.resources.steward).into(),
         content_state: std::mem::take(&mut engine.resources.content_state),
         mind: std::mem::take(&mut engine.resources.mind),
         resources: engine.resources,
@@ -33,7 +33,7 @@ fn pre_food_baseline_has_empty_sidecar_and_format14_roundtrip() {
     assert_eq!(loaded.resources.food, FoodState::default());
     assert!(loaded.system_names().is_empty());
     let current = save(&mut loaded).expect("format14");
-    assert_eq!(&current[8..12], &14u32.to_le_bytes());
+    assert_eq!(&current[8..12], &FORMAT_VERSION.to_le_bytes());
     let mut again = load_with(&current, |_| {}).expect("format14 reload");
     assert_eq!(save(&mut again).expect("stable bytes"), current);
 }

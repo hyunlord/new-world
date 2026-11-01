@@ -368,3 +368,5 @@
 - 2026-10-30: M6a R1 owner protocol and diagnosis preserved; meal admission, cooking procurement, physical harvest-to-storage and Actions visibility repaired with scoped regressions. Fresh evaluation/full gate pending, review branch only; prior failures retained.
 - 2026-10-31 — M6a 먹을 것 사슬 완료·게시(R2, 제품 `d67b42fff`): 이웃 마을 겨울 기아 수리, bench 회귀 제거, gate 계기 39·40·41 수리; 철회된 막대 하나만 실패한 gate2 47/48, 41단계 waiver 사용(오너 결정 O-1..O-4, [보고](v8/m6a/M6A_REPORT.md)).
 - 2026-11-01 — M-READ 읽기 완료·게시(제품 `71e7ad86`): 상태 진단·왜 안 하나·요청 첫 판·지금 할 일 명판·연대기 묶기, 30초 진단 시험 M-READ 6/6·BASE 4/6; 행동 보존(동일성·콜로니 정규화 일치), 게이트 3 51/51(READ 모드, 오너 결정 D13, [보고](v8/read/READ_REPORT.md)).
+
+- 2026-11-02 — M6b 인수 결정 D-minus1: M-LOOP 미게시·실패 및 LOOP-R1 무효를 보존하고, BASE 집사 동작으로 프레젠테이션을 분리 검증한다. 게시 전 상태이며 실험 집사 작업은 Stage 1로 옮긴다([결정](v8/m6b/M6B_DECISIONS.md), [보고](v8/m6b/M6B_REPORT.md)).

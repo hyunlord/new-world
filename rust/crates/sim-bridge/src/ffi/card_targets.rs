@@ -86,6 +86,121 @@ pub(super) fn harvest_target_to_dict(t: HarvestTarget) -> VarDictionary {
     d
 }
 
+/// A small stockpile rectangle containing at least one currently admissible cell.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct StockpileTarget {
+    /// False when there is no colony hearth or no unzoned item-holding cell.
+    pub found: bool,
+    /// Inclusive left column.
+    pub x0: u32,
+    /// Inclusive top row.
+    pub y0: u32,
+    /// Inclusive right column.
+    pub x1: u32,
+    /// Inclusive bottom row.
+    pub y1: u32,
+}
+
+/// Offer a clipped 3×3 rectangle around the admissible cell nearest the actual
+/// camp by Manhattan distance, breaking ties by `(y, x)`. AddStockpile filters
+/// other cells in the rectangle with this same native predicate.
+pub fn collect_stockpile_target(res: &SimResources) -> StockpileTarget {
+    if res.rules.colony.is_none() {
+        return StockpileTarget::default();
+    }
+    let Some((hx, hy)) = sim_systems::worldgen::colony::hearth(res) else {
+        return StockpileTarget::default();
+    };
+    let (width, height) = (res.tile_grid.width, res.tile_grid.height);
+    let nearest = (0..height)
+        .flat_map(|y| (0..width).map(move |x| (x, y)))
+        .filter(|tile| {
+            !res.colony.zone_of_tile.contains_key(tile)
+                && sim_systems::runtime::jobs::items::can_hold_items(res, *tile)
+        })
+        .min_by_key(|&(x, y)| (u64::from(x.abs_diff(hx)) + u64::from(y.abs_diff(hy)), y, x));
+    let Some((x, y)) = nearest else {
+        return StockpileTarget::default();
+    };
+    StockpileTarget {
+        found: true,
+        x0: x.saturating_sub(1),
+        y0: y.saturating_sub(1),
+        x1: x.saturating_add(1).min(width.saturating_sub(1)),
+        y1: y.saturating_add(1).min(height.saturating_sub(1)),
+    }
+}
+
+/// `{found, x0, y0, x1, y1}`; observation never creates a zone.
+pub(super) fn stockpile_target_to_dict(t: StockpileTarget) -> VarDictionary {
+    let mut d = VarDictionary::new();
+    d.set("found", t.found);
+    d.set("x0", i64::from(t.x0));
+    d.set("y0", i64::from(t.y0));
+    d.set("x1", i64::from(t.x1));
+    d.set("y1", i64::from(t.y1));
+    d
+}
+
+/// A one-cell rectangle for a reachable unmarked tree.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct ChopTarget {
+    /// Whether a reachable, unmarked tree exists.
+    pub found: bool,
+    /// Inclusive starting x coordinate.
+    pub x0: u32,
+    /// Inclusive starting y coordinate.
+    pub y0: u32,
+    /// Inclusive ending x coordinate (the same tree).
+    pub x1: u32,
+    /// Inclusive ending y coordinate (the same tree).
+    pub y1: u32,
+}
+
+/// A single native-admissible tree nearest the actual hearth by Manhattan
+/// distance, then `(y, x)`. Reading never creates a designation.
+pub fn collect_chop_target(res: &SimResources) -> ChopTarget {
+    if res.rules.colony.is_none() {
+        return ChopTarget::default();
+    }
+    let Some((hx, hy)) = sim_systems::worldgen::colony::hearth(res) else {
+        return ChopTarget::default();
+    };
+    let nearest = res
+        .colony
+        .trees
+        .keys()
+        .copied()
+        .filter(|&(x, y)| {
+            x < res.tile_grid.width
+                && y < res.tile_grid.height
+                && !res.colony.designations.contains_key(&(x, y))
+                && sim_systems::commands::camp_reaches(res, (x, y))
+        })
+        .min_by_key(|&(x, y)| (u64::from(x.abs_diff(hx)) + u64::from(y.abs_diff(hy)), y, x));
+    match nearest {
+        Some((x, y)) => ChopTarget {
+            found: true,
+            x0: x,
+            y0: y,
+            x1: x,
+            y1: y,
+        },
+        None => ChopTarget::default(),
+    }
+}
+
+/// `{found, x0, y0, x1, y1}` for an immediate one-cell chop command.
+pub(super) fn chop_target_to_dict(t: ChopTarget) -> VarDictionary {
+    let mut d = VarDictionary::new();
+    d.set("found", t.found);
+    d.set("x0", i64::from(t.x0));
+    d.set("y0", i64::from(t.y0));
+    d.set("x1", i64::from(t.x1));
+    d.set("y1", i64::from(t.y1));
+    d
+}
+
 /// One command-log row: the tick it was logged at, the command's variant name and whether it was accepted.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CommandLogRow {

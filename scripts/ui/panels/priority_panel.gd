@@ -47,6 +47,8 @@ var _grid: GridContainer
 ## M4: AgentId -> Pottery level, and the read's tick bucket and rows.
 var _pottery: Dictionary = {}
 var _pottery_key: Array = []
+var _roles: Array[Dictionary] = []
+var _roles_loaded: bool = false
 
 
 func _ready() -> void:
@@ -164,6 +166,9 @@ func _refresh() -> void:
 		return
 	_refresh_dress()
 	var data: Dictionary = table(SimReads.read(_world_sim, "get_work_priorities"))
+	if not _roles_loaded:
+		_roles = parse_roles(JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/roles.json")), data["works"])
+		_roles_loaded = true
 	_read_pottery(data["rows"])
 	var key: int = hash([data, Chronicle.language(_locale), _pottery])
 	if key == _key:
@@ -212,7 +217,11 @@ func _refresh() -> void:
 			name_label.text += " · " + EconomyText.ltr(_locale, "UI_PRIORITY_ELDER")
 		name_label.clip_text = true
 		name_label.custom_minimum_size.x = 300
-		_grid.add_child(name_label)
+		var identity: VBoxContainer = VBoxContainer.new()
+		identity.custom_minimum_size.x = 300
+		_grid.add_child(identity)
+		identity.add_child(name_label)
+		_role_choices(identity, row, works)
 		var levels: Array[int] = row["levels"]
 		for w: int in works.size():
 			var level: int = levels[w]
@@ -310,3 +319,97 @@ func _toast(text: String) -> void:
 	var bar: Node = get_node_or_null("/root/Main/UI/OrderBar")
 	if bar != null and bar.has_method("show_toast"):
 		bar.call("show_toast", text)
+
+
+## Presets are presentation data; loading and matching them never assign work.
+static func parse_roles(value: Variant, works: PackedStringArray) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	if not value is Dictionary or value.get("schema", 0) != 1 or not value.get("roles") is Array:
+		return result
+	var seen: Dictionary = {}
+	for entry: Variant in value["roles"]:
+		if not entry is Dictionary or not entry.get("id") is String or str(entry["id"]).is_empty():
+			return []
+		if seen.has(entry["id"]) or not entry.get("levels") is Dictionary or entry["levels"].is_empty():
+			return []
+		if not entry.get("label_key", "") is String:
+			return []
+		for work: Variant in entry["levels"]:
+			var level: Variant = entry["levels"][work]
+			if not work is String or not works.has(work) or not (level is int or level is float):
+				return []
+			if not is_finite(float(level)) or float(level) != floor(float(level)) or int(level) < 0 or int(level) > 4:
+				return []
+		seen[entry["id"]] = true
+		result.append(entry.duplicate(true))
+	return result
+
+
+func open_roles() -> void:
+	visible = true
+	_key = 0
+	_refresh()
+
+
+func _role_label(role: Dictionary) -> String:
+	var key: String = str(role.get("label_key", ""))
+	var label: String = EconomyText.ltr(_locale, key) if not key.is_empty() else ""
+	if label.is_empty() or label == key:
+		return EconomyText.ltr(_locale, "M6B_ROLE_FALLBACK").format({"role": str(role["id"])})
+	return label
+
+
+func _role_choices(parent: Control, row: Dictionary, works: PackedStringArray) -> void:
+	var choice: OptionButton = OptionButton.new()
+	choice.name = "Role_%d" % int(row["agent"])
+	choice.fit_to_longest_item = false
+	choice.custom_minimum_size.x = 300
+	choice.add_item(EconomyText.ltr(_locale, "M6B_ROLE_CUSTOM"))
+	choice.set_item_disabled(0, true)
+	var selected: int = 0
+	var matching_count: int = 0
+	for i: int in _roles.size():
+		var role: Dictionary = _roles[i]
+		choice.add_item(_role_label(role))
+		var matches: bool = true
+		for work: String in role["levels"]:
+			var desired: int = int(role["levels"][work])
+			if bool(row["elder"]) and (work == "mine" or work == "quarry"):
+				desired = 0
+			if int(row["levels"][works.find(work)]) != desired:
+				matches = false
+		if matches:
+			matching_count += 1
+			selected = i + 1
+	choice.select(selected if matching_count == 1 else 0)
+	choice.item_selected.connect(func(index: int) -> void:
+		if index > 0 and index <= _roles.size():
+			apply_role(int(row["agent"]), str(_roles[index - 1]["id"]))
+	)
+	parent.add_child(choice)
+
+
+## Only an explicit player choice reaches this command path. Unspecified cells stay unchanged.
+func apply_role(agent: int, role_id: String) -> Array[Dictionary]:
+	var receipts: Array[Dictionary] = []
+	if _world_sim == null:
+		return receipts
+	var data: Dictionary = table(SimReads.read(_world_sim, "get_work_priorities"))
+	var works: PackedStringArray = data["works"]
+	var valid: Array[Dictionary] = parse_roles({"schema": 1, "roles": _roles}, works)
+	for role: Dictionary in valid:
+		if str(role["id"]) != role_id:
+			continue
+		for row: Dictionary in data["rows"]:
+			if int(row["agent"]) != agent:
+				continue
+			for w: int in works.size():
+				var work: String = works[w]
+				if not role["levels"].has(work):
+					continue
+				var desired: int = int(role["levels"][work])
+				if bool(row["elder"]) and (work == "quarry" or work == "mine"):
+					desired = 0
+				if int(row["levels"][w]) != desired:
+					receipts.append(set_level(agent, work, desired))
+	return receipts

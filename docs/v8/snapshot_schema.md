@@ -84,6 +84,7 @@ Nested fields (the literal-key checker flattens these into the same union; they 
 | `hp` | int | animal definition default HP; get_animals.max_hps resolves per-world overrides |
 | `material_format_key` | String | item material-aware localization format key |
 | `tags` | PackedStringArray | item behavior tags |
+| `hunting_tool` | bool | item has a cutter capability or a weapon hunt rank; matches native hunting-tool eligibility |
 | `tree_output` | int | item_roles entry, when resolved; item code |
 | `width` | int | blueprint footprint width |
 | `height` | int | blueprint footprint height |
@@ -1233,6 +1234,7 @@ goods in its order (the `take` index of `cmd_trade`) and the colony's stockpiled
 | `stock_y` | PackedInt32Array | its tile y |
 | `stock_kind` | PackedInt64Array | `ItemKind::code` |
 | `stock_count` | PackedInt32Array | items |
+| `stock_available_count` | PackedInt32Array | items currently admissible for trade after this caravan's existing claims and native freshness/zone checks; same row order as stock_count |
 | `stock_quality` | PackedInt32Array | quality 0–100 |
 | `stock_value` | PackedInt32Array | one item's value at 100 % |
 
@@ -1831,6 +1833,28 @@ On-demand diagnosis for a stockpile, hearth or room. `kind` is `"stockpile"` (id
 | `x1` | int | opposite corner x |
 | `y1` | int | opposite corner y |
 | `count` | int | harvestable plants inside |
+
+### `get_card_chop_target`
+`get_card_chop_target() -> Dictionary`: `collect_chop_target(&SimResources)` (`ffi/card_targets.rs`, M6b Stage −1). Offers the nearest reachable, unmarked tree from the actual hearth, using native chop admission predicates. Read-only; no designation is issued.
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | an admissible tree exists |
+| `x0` | int | tree tile x |
+| `y0` | int | tree tile y |
+| `x1` | int | same tile x |
+| `y1` | int | same tile y |
+
+### `get_card_stockpile_target`
+`get_card_stockpile_target() -> Dictionary`: `collect_stockpile_target(&SimResources)` (`ffi/card_targets.rs`, M6b Stage −1). Offers a map-clipped 3-by-3 rectangle around the nearest native zoneable cell from the actual hearth. Read-only; no zone is created.
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | an admissible stockpile cell exists |
+| `x0` | int | first corner x |
+| `y0` | int | first corner y |
+| `x1` | int | opposite corner x |
+| `y1` | int | opposite corner y |
 
 ### `get_command_log`
 `get_command_log(start) -> Dictionary`: `command_log_to_dict` (`ffi/card_targets.rs`, M-LOOP). Command-log rows from index `start`. Player and steward commands share the log, which has no source field. Read-only.

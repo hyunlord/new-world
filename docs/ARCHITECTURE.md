@@ -766,6 +766,16 @@ Chronicle ordinals, causal links, story counts and full-state fingerprints; they
 are not a policy change or a claim of P7 byte identity. See ADR0054 for the contract
 and pending acceptance boundary.
 
+### M6b Stage −1 steward save compatibility
+
+Format15 separates the extended-steward fields retained from M-LOOP from the
+published format14 layout. `save/legacy_steward_v14.rs` freezes the prior field
+order used by formats11–14; migrations preserve existing stewardship and initialize
+extended mode off with empty grace bookkeeping. Unpublished or ambiguous LOOP
+payloads carrying the old format14 tag are rejected rather than guessed. Genuine
+BASE files, including active and empty steward state, are tested through continued
+simulation and current-format resave. See `docs/v8/m6b/M6B_DECISIONS.md` D-minus1.
+
 ## Read model: diagnosis, why-not and requests (M-READ, ADR 0055)
 
 The read model provides causal legibility without changing the simulation. All new

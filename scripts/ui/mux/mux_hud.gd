@@ -41,6 +41,7 @@ var _right: VBoxContainer
 var _actions: HBoxContainer
 var _steward: OptionButton
 var _poll_left: float = 0.0
+var _panel_foreground: bool = false
 var _sequence: int = -1
 var _chronicle_cursor: int = -1
 var _pending_native_resets: int = 0
@@ -111,6 +112,10 @@ func _ready() -> void:
 	cards.name = "CardPanel"
 	cards.card_answered.connect(_on_card_answered)
 	cards.card_expired.connect(_on_card_expired)
+	cards.state_changed.connect(_on_card_state_changed)
+	cards.visibility_changed.connect(_sync_foreground)
+	cards.roles_requested.connect(_on_roles_requested)
+	cards.build_requested.connect(_on_build_requested)
 	add_child(cards)
 	_actions = HBoxContainer.new()
 	_actions.name = "Actions"
@@ -281,6 +286,18 @@ func _on_card_answered(_card_id: String, card_title: String, option_text: String
 	_add_chronicle_line(_loc("LOOP_CARD_ANSWERED_FMT").format({"card": card_title, "option": option_text}))
 
 
+func _on_build_requested() -> void:
+	var bar: Node = get_parent().get_node_or_null("OrderBar")
+	if bar != null:
+		bar.call("open_build_menu")
+
+
+func _on_roles_requested() -> void:
+	var panel: Node = get_parent().get_node_or_null("PriorityPanel")
+	if panel != null:
+		panel.call("open_roles")
+
+
 func _on_card_expired(_card_id: String, card_title: String) -> void:
 	_add_chronicle_line(_loc("LOOP_CARD_EXPIRED_STEWARD").format({"card": card_title}))
 
@@ -419,15 +436,34 @@ func _sync_foreground() -> void:
 		for child: Node in bar.get_children():
 			if child is PanelContainer and child.name in [&"BuildMenu", &"DigMenu"] and child.is_visible_in_tree():
 				menu_open = true
-	helper.set_overlay_obscured(menu_open)
-	_highlight.visible = not menu_open and not help.visible and not goals.visible and not settings.visible
+	var panel_open: bool = false
+	for panel_name: String in LIST_PANELS + POPUP_PANELS + ["AgentInspectorPanel"]:
+		var panel: Control = get_parent().get_node_or_null(NodePath(panel_name)) as Control
+		if panel != null and panel.is_visible_in_tree():
+			panel_open = true
+	# Visibility is derived from live cards, including cards added/expired behind a foreground panel.
+	cards.visible = not panel_open and cards.has_active_cards()
+	alerts.visible = not panel_open
+	_right.visible = not panel_open
+	var plaque: Control = get_parent().get_node_or_null("TaskPlaque") as Control
+	var panel_closed: bool = _panel_foreground and not panel_open
+	_panel_foreground = panel_open
+	if plaque != null:
+		if not plaque.visibility_changed.is_connected(_sync_foreground):
+			plaque.visibility_changed.connect(_sync_foreground)
+		if panel_open:
+			plaque.hide()
+		elif panel_closed:
+			plaque.call("refresh_cards")
+	helper.set_overlay_obscured(menu_open or panel_open)
+	_highlight.visible = not menu_open and not panel_open and not help.visible and not goals.visible and not settings.visible
 
 ## M-LOOP §1.2d: watch panels entering the tree for popup stacking enforcement.
 func _popup_panel_entered(node: Node) -> void:
 	if not node is Control:
 		return
 	var node_name: String = str(node.name)
-	if node_name in LIST_PANELS or node_name in POPUP_PANELS:
+	if node_name in LIST_PANELS or node_name in POPUP_PANELS or node_name == "AgentInspectorPanel":
 		var panel: Control = node as Control
 		var enforce: Callable = _enforce_popup_limit.bind(panel)
 		if panel.is_node_ready():
@@ -441,6 +477,8 @@ func _popup_panel_entered(node: Node) -> void:
 
 ## M-LOOP §1.2d: when a panel becomes visible, close other panels in the same category.
 func _enforce_popup_limit(panel: Control) -> void:
+	_sync_foreground()
+	_layout.call_deferred()
 	if not panel.is_visible_in_tree():
 		return
 	var node_name: String = str(panel.name)
@@ -533,3 +571,13 @@ func _poll_steward_notifications(state: Dictionary) -> void:
 	_chronicle_cursor = int(page.get("next", _chronicle_cursor))
 	if _chronicle_cursor >= int(page.get("total", _chronicle_cursor)):
 		_sequence = sequence
+
+
+func _on_card_state_changed() -> void:
+	var plaque: Node = get_node_or_null("../TaskPlaque")
+	if plaque == null:
+		return
+	if plaque.is_node_ready():
+		plaque.call("refresh_cards")
+	else:
+		plaque.call_deferred("refresh_cards")

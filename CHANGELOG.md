@@ -1,6 +1,19 @@
 # Changelog
 
-## M-LOOP (in progress)
+## M6b Stage −1 — 2026-11-02 (publication pending)
+
+### Changed
+- Restore published BASE stewardship through eight default rules, off/None experimental settings and no-action card expiry, retaining optional code and command encoding.
+- Present role presets in the existing priority table; passive display never assigns work, while explicit selection changes only named priorities.
+- Correct card teacher/technique identity and recipe/workshop lookup. Preserve every attempted command receipt, including rejected retries.
+- Compare fixture summaries with exact qualified exclusions and strict coverage/types; reject missing bench ceilings and empty stall evidence.
+
+### Fixed
+- Published format14 save loading after inherited steward field insertion: explicit format15 output and frozen formats11–14 migration. Unpublished ambiguous LOOP14 payloads fail explicitly.
+
+See [M6B_REPORT](docs/v8/m6b/M6B_REPORT.md) for exact verification state; no publication or full-gate claim is made here.
+
+## M-LOOP (ended unpublished; steward acceptance failed)
 
 ### Added
 - Bridge reads `get_card_harvest_target` (harvest rectangle validated like `cmd_designate_harvest`: a plant, unmarked, reachable from camp) and `get_command_log(start)` (command-log rows; player and steward commands share the log, no source field). The bridge list `docs/v8/bridge_api_read.txt` also gains the previously unlisted `cmd_set_steward_extended`.

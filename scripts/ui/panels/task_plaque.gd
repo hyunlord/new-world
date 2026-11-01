@@ -21,7 +21,7 @@ var _world_sim: Node = null
 var _panel: PanelContainer
 var _text_label: Label
 ## Width of the title/chapter column, taken out of the text width so the plaque keeps its slot.
-const CHAPTER_WIDTH: float = 170.0
+const CHAPTER_WIDTH: float = 460.0
 var _title_label: Label
 var _chapter_label: Label
 var _view_button: Button
@@ -55,8 +55,8 @@ func _ready() -> void:
 	style.set_content_margin_all(8)
 	_panel.add_theme_stylebox_override("panel", style)
 	row.add_child(_panel)
-	var inner: HBoxContainer = HBoxContainer.new()
-	inner.add_theme_constant_override("separation", 12)
+	var inner: VBoxContainer = VBoxContainer.new()
+	inner.add_theme_constant_override("separation", 4)
 	_panel.add_child(inner)
 	# M-LOOP §2.1: the plaque is always titled "지금 할 일" (owner playtest verdict 2).
 	# Title above the current chapter, stacked so the plaque stays inside its slot (it must not
@@ -75,17 +75,20 @@ func _ready() -> void:
 	_chapter_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_chapter_label.custom_minimum_size.x = CHAPTER_WIDTH
 	head.add_child(_chapter_label)
+	var content: HBoxContainer = HBoxContainer.new()
+	content.add_theme_constant_override("separation", 12)
+	inner.add_child(content)
 	_text_label = Label.new()
 	_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_text_label.custom_minimum_size.x = 200
 	_text_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	inner.add_child(_text_label)
+	content.add_child(_text_label)
 	_view_button = Button.new()
 	_view_button.name = "ViewButton"
 	PanelTooltips.attach(_view_button, "plaque")
 	_view_button.pressed.connect(_view_pressed)
 	_view_button.focus_mode = Control.FOCUS_NONE
-	inner.add_child(_view_button)
+	content.add_child(_view_button)
 	position = Vector2(0, 8)
 	visible = false
 	# Ambient guidance: draw (and hit-test) behind every other UI panel and menu, so an opened
@@ -115,7 +118,8 @@ func _place() -> void:
 		return
 	position = slot["position"]
 	scale = Vector2.ONE * float(slot["factor"])
-	_text_label.custom_minimum_size.x = maxf(120.0, float(slot["width"]) - 120.0 - CHAPTER_WIDTH)
+	_chapter_label.custom_minimum_size.x = maxf(240.0, float(slot["width"]) - 32.0)
+	_text_label.custom_minimum_size.x = maxf(120.0, float(slot["width"]) - 120.0)
 
 
 func _refresh() -> void:
@@ -137,7 +141,7 @@ func _refresh() -> void:
 		var unmet: Dictionary = goals.call("next_unmet_condition")
 		if not unmet.is_empty():
 			var hint: String = str(unmet.get("text", ""))
-			_show_line(_loc("LOOP_PLAQUE_CHAPTER_FMT").format({"condition": hint, "hint": ""}), "")
+			_show_line(_loc("M6B_PLAQUE_CONDITION_FMT").format({"condition": hint}), "")
 			return
 	# Priority 3: fall back to request-based plaque (M-READ behaviour).
 	var source: String = str(_task_data.get("source", "none"))
@@ -178,6 +182,8 @@ func _refresh() -> void:
 
 ## M-LOOP §2.1: common display logic for the plaque content.
 func _show_line(line: String, tooltip: String) -> void:
+	_marker_tile = Vector2i(-1, -1)
+	_view_button.visible = false
 	_current_text = line
 	_title_label.text = _loc("LOOP_PLAQUE_TITLE")
 	var goals: Node = get_node_or_null("../Goals")
@@ -229,3 +235,9 @@ func plaque_tooltip() -> String:
 ## The plaque's marker tile (for tests).
 func marker_tile() -> Vector2i:
 	return _marker_tile
+
+
+## Card changes are presentation events and can occur while the simulation is paused.
+func refresh_cards() -> void:
+	_refresh()
+	_place()

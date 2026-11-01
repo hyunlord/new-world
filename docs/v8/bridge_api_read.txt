@@ -54,7 +54,9 @@ func WorldSimNode.get_agent_temperament
 func WorldSimNode.get_animals
 func WorldSimNode.get_building_snapshot
 func WorldSimNode.get_caravan
+func WorldSimNode.get_card_chop_target
 func WorldSimNode.get_card_harvest_target
+func WorldSimNode.get_card_stockpile_target
 func WorldSimNode.get_chronicle_since
 func WorldSimNode.get_chronicle_why
 func WorldSimNode.get_colony_overlay

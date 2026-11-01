@@ -8,6 +8,73 @@ use sim_engine::SimEngine;
 
 const DAY: u64 = 1_440;
 
+#[test]
+fn caravan_available_stock_obeys_native_admission_without_changing_world() {
+    use sim_core::colony::neighbours::Caravan;
+    use sim_core::colony::{ItemKind, ItemSpec, ItemStack};
+    use sim_core::rules::WorldRules;
+    use sim_engine::SimResources;
+    use sim_systems::runtime::neighbours::trade;
+
+    let world = hecs::World::new();
+    let mut res = SimResources::new(20, 20, sim_core::MaterialRegistry::new());
+    res.rules = WorldRules::colony(0);
+    let logs = ItemKind::from_name("log").unwrap();
+    let roots = ItemKind::from_name("roots").unwrap();
+    for (tile, kind) in [
+        ((4, 3), logs),
+        ((2, 3), logs),
+        ((3, 3), roots),
+        ((1, 3), logs),
+    ] {
+        res.colony
+            .ground_items
+            .insert(tile, ItemStack::of(ItemSpec::raw(kind, None), 10));
+        if tile != (1, 3) {
+            res.colony.zone_of_tile.insert(tile, 1);
+        }
+    }
+    let caravan = Caravan {
+        id: 1,
+        neighbour: 0,
+        goods: Vec::new(),
+        pos: (0, 0),
+        path: Vec::new(),
+        state: VisitState::Waiting { since: 0 },
+        day: 0,
+        spot: Some((0, 0)),
+        owed: vec![((2, 3), logs, 2), ((2, 3), logs, 4), ((4, 3), logs, 10)],
+        trades: 0,
+    };
+    res.colony.neighbours.caravans.push(caravan.clone());
+    let items_before = res.colony.ground_items.clone();
+    let commands_before = res.colony.command_log.clone();
+    let view = collect_caravan(&world, &res, 1);
+    assert_eq!(
+        view.stock.iter().map(|row| row.0).collect::<Vec<_>>(),
+        vec![2, 3, 4]
+    );
+    assert!(
+        view.stock.iter().all(|row| row.3 == 10),
+        "raw amounts remain compatible"
+    );
+    assert_eq!(
+        view.stock_available_count,
+        vec![4, 0, 0],
+        "owed and unaged food are unavailable"
+    );
+    for (row, &available) in view.stock.iter().zip(&view.stock_available_count) {
+        let tile = (row.0, row.1);
+        if available > 0 {
+            assert!(trade::values_of(&res, &caravan, &[(tile, available)], &[]).is_some());
+        }
+        assert!(trade::values_of(&res, &caravan, &[(tile, available + 1)], &[]).is_none());
+    }
+    assert_eq!(res.colony.ground_items, items_before);
+    assert_eq!(res.colony.command_log, commands_before);
+    assert_eq!(res.colony.neighbours.caravans, vec![caravan]);
+}
+
 fn until(engine: &mut SimEngine, limit: u64, done: impl Fn(&SimEngine) -> bool) {
     while !done(engine) && engine.current_tick() < limit {
         engine.tick();

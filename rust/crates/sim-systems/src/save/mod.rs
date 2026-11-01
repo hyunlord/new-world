@@ -36,6 +36,7 @@ mod food_catalog;
 mod food_tests;
 mod legacy_food_v13;
 mod legacy_steward;
+mod legacy_steward_v14;
 mod legacy_v9;
 #[cfg(test)]
 mod mind_tests;
@@ -62,7 +63,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6 through 13 are migrated. Bump it
+/// Save format version; historical versions 6 through 14 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -78,7 +79,8 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 12 = authored mind policy, running choices and independent decision history;
 /// 13 = independently persisted seasonal plants and physical food ownership.
 /// 14 = persisted food-pressure, meal-source and starvation causal evidence.
-pub const FORMAT_VERSION: u32 = 14;
+/// 15 = explicit extended steward mode and grace-window bookkeeping.
+pub const FORMAT_VERSION: u32 = 15;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;
@@ -231,7 +233,7 @@ struct LegacyBodyV12 {
     resources: SimResources,
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
-    steward: sim_core::colony::steward::StewardState,
+    steward: legacy_steward_v14::LegacyStewardStateV14,
     content_state: sim_core::colony::content_state::ContentState,
     mind: sim_core::colony::mind_state::MindState,
 }
@@ -243,7 +245,7 @@ struct LegacyBodyV11 {
     resources: SimResources,
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
-    steward: sim_core::colony::steward::StewardState,
+    steward: legacy_steward_v14::LegacyStewardStateV14,
     content_state: sim_core::colony::content_state::ContentState,
 }
 
@@ -322,6 +324,7 @@ pub fn load_with(
     let legacy_v11 = version == Some(11u32.to_le_bytes().as_slice());
     let legacy_v12 = version == Some(12u32.to_le_bytes().as_slice());
     let legacy_v13 = version == Some(13u32.to_le_bytes().as_slice());
+    let legacy_v14 = version == Some(14u32.to_le_bytes().as_slice());
     // Format13 already owns physical food and its FoodDailySystem slot.
     let legacy_food =
         legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10 || legacy_v11 || legacy_v12;
@@ -423,7 +426,7 @@ pub fn load_with(
                     resources: old.resources,
                     world: old.world,
                     systems: old.systems,
-                    steward: old.steward,
+                    steward: old.steward.into(),
                     content_state: old.content_state,
                     mind: Default::default(),
                     food: Default::default(),
@@ -435,7 +438,7 @@ pub fn load_with(
                     resources: old.resources,
                     world: old.world,
                     systems: old.systems,
-                    steward: old.steward,
+                    steward: old.steward.into(),
                     content_state: old.content_state,
                     mind: old.mind,
                     food: Default::default(),
@@ -444,6 +447,8 @@ pub fn load_with(
                 let old: legacy_food_v13::LegacyBodyV13 =
                     decode(&envelope.payload).map_err(SaveError::Decode)?;
                 old.into()
+            } else if legacy_v14 {
+                legacy_steward_v14::decode_published_v14(&envelope.payload)?
             } else {
                 decode(&envelope.payload).map_err(SaveError::Decode)?
             }
@@ -612,6 +617,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 11
         && found != 12
         && found != 13
+        && found != 14
     {
         return Err(SaveError::Version {
             found,

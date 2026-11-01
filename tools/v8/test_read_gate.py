@@ -29,10 +29,9 @@ class BenchRatioTest(unittest.TestCase):
         self.assertTrue(ok)
         self.assertAlmostEqual(ratio, 0.90, places=2)
 
-    def test_zero_base_returns_zero(self):
-        ok, ratio = read_gate_checks.check_bench_ratio(0.0, 50.0)
-        self.assertTrue(ok)  # 0 ratio = no regression
-        self.assertEqual(ratio, 0)
+    def test_zero_base_is_invalid(self):
+        with self.assertRaises(ValueError):
+            read_gate_checks.check_bench_ratio(0.0, 50.0)
 
 
 class StallWaiverTest(unittest.TestCase):
@@ -90,6 +89,8 @@ class StallWaiverTest(unittest.TestCase):
                 {"interval_ms": 61.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}},
             ]}],
         }
+        report["arms"].append({"zoom": 0.5, "capture_complete": True, "samples": [
+            {"interval_ms": 10.0, "telemetry": {"buildings": {"render_warmup": {"complete": True}}}}]})
         with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(report, f)
             path = f.name
@@ -97,9 +98,9 @@ class StallWaiverTest(unittest.TestCase):
             read_gate_checks.stall_waiver(path)
         Path(path).unlink()
 
-    def test_empty_passes(self):
+    def test_empty_fails(self):
         ok, count, mx = read_gate_checks.check_stall_frames([])
-        self.assertTrue(ok)
+        self.assertFalse(ok)
         self.assertEqual(mx, 0)
 
 
@@ -138,7 +139,7 @@ class NormalisedEquivalenceTest(unittest.TestCase):
         Path(a_path).unlink()
         Path(b_path).unlink()
 
-    def test_excluded_keys_ignored(self):
+    def test_unsupported_keys_preserved(self):
         import tempfile, json
         data_a = {"x": 1, "why_not": {"a": 1}}
         data_b = {"x": 1, "why_not": {"b": 2}}
@@ -152,9 +153,51 @@ class NormalisedEquivalenceTest(unittest.TestCase):
             [sys.executable, str(Path(__file__).parent / "read_normalise.py"), a_path, b_path],
             capture_output=True, text=True,
         )
-        self.assertEqual(result.returncode, 0, f"excluded key 'why_not' must be ignored: {result.stdout}")
+        self.assertNotEqual(result.returncode, 0, "unsupported why_not path must remain comparable")
         Path(a_path).unlink()
         Path(b_path).unlink()
+
+
+class AdmissionCoverageTest(unittest.TestCase):
+    def report(self):
+        return {"scenes": [{"label": label, "tick_mean_us": 1.0, "tick_p99_us": 2.0}
+                           for label in sorted(read_gate_checks.BENCH_SCENES)],
+                "ceilings": dict.fromkeys(read_gate_checks.BENCH_CEILINGS, "PASS")}
+
+    def test_literal_pass_and_complete_scenes(self):
+        read_gate_checks.validate_bench_report(self.report())
+        for verdict in ("MISS", "n/a", True, None):
+            report = self.report()
+            report["ceilings"]["n1000_mean_le_5ms"] = verdict
+            with self.assertRaises(ValueError):
+                read_gate_checks.validate_bench_report(report)
+
+    def test_missing_ceiling_scene_or_invalid_timing_fails(self):
+        for defect in ("ceiling", "scene", "timing", "duplicate"):
+            report = self.report()
+            if defect == "ceiling":
+                report["ceilings"] = {}
+            elif defect == "scene":
+                report["scenes"].pop()
+            elif defect == "duplicate":
+                report["scenes"][0] = report["scenes"][1]
+            else:
+                report["scenes"][0]["tick_mean_us"] = float("nan")
+            with self.assertRaises(ValueError):
+                read_gate_checks.validate_bench_report(report)
+
+    def test_empty_arms_and_missing_zoom_fail(self):
+        import tempfile
+        for arms in ([], [{"zoom": 1.0}], [{"zoom": 1.0}, {"zoom": 1.0}]):
+            with tempfile.TemporaryDirectory() as folder:
+                path = Path(folder) / "stall.json"
+                path.write_text(json.dumps({"complete": True, "arms": arms}))
+                with self.assertRaises(SystemExit):
+                    read_gate_checks.stall_waiver(path)
+
+    def test_invalid_and_empty_frames_fail(self):
+        for frames in ([], [float("nan")], [True], [0], [float("inf")]):
+            self.assertFalse(read_gate_checks.check_stall_frames(frames)[0])
 
 
 if __name__ == "__main__":

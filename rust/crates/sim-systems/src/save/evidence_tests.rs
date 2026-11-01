@@ -37,7 +37,7 @@ struct FrozenBodyV13 {
     resources: SimResources,
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
-    steward: sim_core::colony::steward::StewardState,
+    steward: legacy_steward_v14::LegacyStewardStateV14,
     content_state: sim_core::colony::content_state::ContentState,
     mind: sim_core::colony::mind_state::MindState,
     food: FrozenFoodV13,
@@ -51,7 +51,7 @@ fn baseline13() -> Vec<u8> {
         current_tick: engine.current_tick(),
         world: world::capture(&engine.world).unwrap(),
         systems: engine.system_states().unwrap(),
-        steward: std::mem::take(&mut engine.resources.steward),
+        steward: std::mem::take(&mut engine.resources.steward).into(),
         content_state: std::mem::take(&mut engine.resources.content_state),
         mind: std::mem::take(&mut engine.resources.mind),
         resources: engine.resources,
@@ -76,7 +76,7 @@ fn format13_baseline_migrates_only_empty_evidence_and_writes14() {
     assert_eq!(engine.resources.food, FoodState::default());
     assert!(engine.system_names().is_empty());
     let bytes = save(&mut engine).unwrap();
-    assert_eq!(&bytes[8..12], &14u32.to_le_bytes());
+    assert_eq!(&bytes[8..12], &FORMAT_VERSION.to_le_bytes());
     let mut again = load_with(&bytes, |_| {}).unwrap();
     assert_eq!(save(&mut again).unwrap(), bytes);
 }
@@ -146,7 +146,7 @@ fn authenticated_original13_fixtures_keep_all_physical_food_and_system_slots() {
         crate::runtime::food::evidence::observe_day(&mut loaded.resources);
         assert_ne!(loaded.resources.food.evidence, Default::default());
         let current = save(&mut loaded).unwrap();
-        assert_eq!(&current[8..12], &14u32.to_le_bytes());
+        assert_eq!(&current[8..12], &FORMAT_VERSION.to_le_bytes());
         let mut again = load(&current).unwrap();
         assert_eq!(
             again.resources.food.evidence,

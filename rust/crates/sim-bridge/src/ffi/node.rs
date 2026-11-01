@@ -1584,6 +1584,22 @@ impl WorldSimNode {
         ))
     }
 
+    /// A currently admissible stockpile rectangle near the actual camp. Read-only.
+    #[func]
+    fn get_card_stockpile_target(&self) -> VarDictionary {
+        super::card_targets::stockpile_target_to_dict(
+            super::card_targets::collect_stockpile_target(&self.engine.resources),
+        )
+    }
+
+    /// A reachable unmarked tree nearest the actual hearth. Read-only.
+    #[func]
+    fn get_card_chop_target(&self) -> VarDictionary {
+        super::card_targets::chop_target_to_dict(super::card_targets::collect_chop_target(
+            &self.engine.resources,
+        ))
+    }
+
     /// M-LOOP: command-log rows from index `start` (`{total, ticks, kinds, accepted}`;
     /// player and steward commands share the log). Read-only.
     #[func]

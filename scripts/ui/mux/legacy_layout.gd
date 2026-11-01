@@ -27,7 +27,7 @@ func setup(ui: Node) -> void:
 
 
 func apply_scale(factor: float, viewport_size: Vector2, inspector_right: float = -1.0) -> void:
-	_factor = clampf(factor, 1.0, 1.5)
+	_factor = clampf(factor, 0.85, 1.5)
 	_area = viewport_size
 	_inspector_right = inspector_right
 	_refresh()
@@ -99,7 +99,7 @@ func _layout_topbar() -> void:
 		return
 	var available: Vector2 = _area - Vector2.ONE * MARGIN * 2
 	var minimum: Vector2 = panel.get_combined_minimum_size()
-	var natural: Vector2 = Vector2(minimum.x, maxf(100.0, minimum.y))
+	var natural: Vector2 = minimum
 	var effective: float = fit_scale(natural, available, _factor)
 	panel.size = Vector2(available.x / effective, natural.y)
 	_place(panel, Rect2(Vector2.ZERO, panel.size), Vector2.ONE * MARGIN, Rect2(Vector2.ONE * MARGIN, available), effective, "HudTopbar")

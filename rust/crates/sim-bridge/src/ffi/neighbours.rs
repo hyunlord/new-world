@@ -317,6 +317,8 @@ pub struct CaravanView {
     pub goods: Vec<GoodsRow>,
     /// The colony's stockpiled stacks in `(y, x)` order: (x, y, item code, count, quality, unit value at 100 %).
     pub stock: Vec<StockRow>,
+    /// Tradable quantity after existing debts and native item admission, in stock row order.
+    pub stock_available_count: Vec<u16>,
 }
 
 /// Caravan `id` and the colony's stockpiled stacks (see the module header).
@@ -352,6 +354,23 @@ pub fn collect_caravan(world: &hecs::World, res: &SimResources, id: i64) -> Cara
         })
         .collect();
     stock.sort_by_key(|r| (r.1, r.0));
+    let stock_available_count = stock
+        .iter()
+        .map(|row| {
+            let tile = (row.0, row.1);
+            let owed = c
+                .owed
+                .iter()
+                .filter(|entry| entry.0 == tile)
+                .fold(0u16, |total, entry| total.saturating_add(entry.2));
+            let free = row.3.saturating_sub(owed);
+            if free > 0 && trade::values_of(res, c, &[(tile, free)], &[]).is_some() {
+                free
+            } else {
+                0
+            }
+        })
+        .collect();
     CaravanView {
         found: true,
         id: c.id,
@@ -378,6 +397,7 @@ pub fn collect_caravan(world: &hecs::World, res: &SimResources, id: i64) -> Cara
             })
             .collect(),
         stock,
+        stock_available_count,
     }
 }
 
@@ -424,6 +444,16 @@ pub(super) fn caravan_to_dict(v: &CaravanView) -> VarDictionary {
         ),
     );
     d.set("stock_count", s(&|r| i32::from(r.3)));
+    d.set(
+        "stock_available_count",
+        PackedInt32Array::from(
+            v.stock_available_count
+                .iter()
+                .map(|&count| i32::from(count))
+                .collect::<Vec<_>>()
+                .as_slice(),
+        ),
+    );
     d.set("stock_quality", s(&|r| i32::from(r.4)));
     d.set("stock_value", s(&|r| r.5 as i32));
     d

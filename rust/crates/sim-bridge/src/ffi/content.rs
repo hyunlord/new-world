@@ -14,6 +14,14 @@ pub fn catalog_to_dict(catalog: &Catalog) -> VarDictionary {
         let mut row = identity(&def.identity);
         row.set("category", def.category.as_str());
         row.set("material_format_key", def.material_format_key.as_str());
+        row.set(
+            "hunting_tool",
+            def.cutter.is_some()
+                || def
+                    .weapon
+                    .as_ref()
+                    .is_some_and(|weapon| weapon.hunt_rank.is_some()),
+        );
         let tags: Vec<GString> = def.tags.iter().map(GString::from).collect();
         row.set("tags", PackedStringArray::from(tags.as_slice()));
         items.push(&row);

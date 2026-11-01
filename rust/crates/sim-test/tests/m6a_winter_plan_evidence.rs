@@ -52,7 +52,10 @@ fn plan_denominator_survives_population_change_and_format14_roundtrip() {
     let days_milli = original.stored_units * 1_000_000 / original.daily_demand_milli;
     engine.world.spawn((Agent { id: 2 }, Position::new(3, 2)));
     let bytes = save::save(&mut engine).unwrap();
-    assert_eq!(&bytes[8..12], &14_u32.to_le_bytes());
+    assert_eq!(
+        &bytes[8..12],
+        &sim_systems::save::FORMAT_VERSION.to_le_bytes()
+    );
     let loaded = save::load_with(&bytes, |_| {}).unwrap();
     let historical = loaded.resources.food.winter_plans[&index];
     assert_eq!(historical, original);

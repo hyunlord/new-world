@@ -85,9 +85,9 @@ func _run() -> void:
 	# --- Test 21: Card trigger fires in seeded run ---
 	await _test_card_trigger_seeded(main, world)
 	# --- Test 22: answering a card sends a valid command and writes the chronicle ---
-	_test_card_answer_recorded(main)
+	await _test_card_answer_recorded(main)
 	# --- Test 23: card auto-closes when trigger clears ---
-	_test_card_auto_close()
+	_test_card_auto_close(world)
 	# --- Test 24: no raw text in card display (no "{" or ALL_CAPS keys) ---
 	_test_no_raw_text_in_cards()
 	# --- Test 25: wolves card uses StewardDefence (kind 46), not Sick (36) ---
@@ -173,7 +173,7 @@ func _test_help_collapse(main: Node) -> void:
 
 
 ## Test 4: alerts panel has MAX_VISIBLE_ROWS = 3.
-func _test_alert_max_rows(main: Node) -> void:
+func _test_alert_max_rows(_main: Node) -> void:
 	print("Test 4: alert max rows")
 	var Alerts = preload("res://scripts/ui/mux/alerts_panel.gd")
 	_assert(Alerts.MAX_VISIBLE_ROWS == 3, "MAX_VISIBLE_ROWS is 3")
@@ -184,6 +184,8 @@ func _test_causal_filter() -> void:
 	print("Test 5: causal filter")
 	var CausalPanel = preload("res://scripts/ui/panels/causal_panel.gd")
 	var panel: Control = CausalPanel.new()
+	root.add_child(panel)
+	_assert(panel.is_inside_tree(), "causal fixture has active locale lookup")
 	# Simulate history with labeled and unlabeled events.
 	var history: Array = [
 		{"kind": "agent_died", "tick": 100, "reason": "starvation"},
@@ -213,10 +215,10 @@ func _test_cards_data() -> void:
 	var required: Array[String] = ["need_food", "need_warmth", "migrants", "trader", "knowledge_risk", "tools_low", "wolves", "idle_adults"]
 	for req: String in required:
 		_assert(ids.has(req), "has required card: " + req)
-	# knowledge_risk and tools_low expire to steward within 24h.
+	# Expiry stays presentation-only while existing BASE stewardship continues.
 	for card: Variant in cards:
 		if card is Dictionary and str(card["id"]) in ["knowledge_risk", "tools_low"]:
-			_assert(str(card.get("default", "")) == "steward", str(card["id"]) + " default is steward")
+			_assert(str(card.get("default", "")) == "none", str(card["id"]) + " expiry has no command")
 			_assert(int(card.get("expires_hours", 99)) <= 24, str(card["id"]) + " expires <= 24h")
 
 
@@ -549,7 +551,7 @@ func _test_card_answer_recorded(main: Node) -> void:
 	var opts: Array = def.get("options", [])
 	for oi: int in opts.size():
 		var oc: String = str((opts[oi] as Dictionary).get("command", "none"))
-		if oc not in ["none", "steward_default", "enter_zone_tool", "open_roles"]:
+		if oc not in ["none", "steward_default", "enter_zone_tool", "open_roles", "open_build_menu"]:
 			recommended = oi
 			break
 	var entries_before: int = (chronicle.get("_entries") as Array).size()
@@ -563,9 +565,8 @@ func _test_card_answer_recorded(main: Node) -> void:
 	if was_sent:
 		var last_result: Dictionary = results[results.size() - 1]
 		var accepted: bool = bool(last_result.get("accepted", false))
-		# The bridge may reject a stale target (e.g. teacher died). That's a real
-		# rejection, not a synthetic one — test records the fact, not the outcome.
-		_assert(true, "command sent for %s (accepted=%s, reason=%s)" % [
+		# A rejection is a failure, even when a receipt was recorded.
+		_assert(accepted, "command sent for %s (accepted=%s, reason=%s)" % [
 			card_id, str(accepted), str(last_result.get("reason", ""))])
 		if accepted:
 			# The feed is capped at 60 rows, so check the newest row rather than the count.
@@ -574,7 +575,7 @@ func _test_card_answer_recorded(main: Node) -> void:
 			var line: String = str(newest.get("_presentation_text", ""))
 			_assert(entries.size() >= mini(entries_before + 1, 60) and line != "" and not line.contains("{"),
 				"chronicle got a presentation line for the answer (%s)" % line)
-		_assert(not (card_panel.call("active_ids") as PackedStringArray).has(card_id), "answered card closed")
+		_assert((card_panel.call("active_ids") as PackedStringArray).has(card_id) != accepted, "only accepted card closes")
 	else:
 		# Skipped: card stays open (stale target).
 		_assert((card_panel.call("active_ids") as PackedStringArray).has(card_id), "skipped card stays open")
@@ -582,13 +583,17 @@ func _test_card_answer_recorded(main: Node) -> void:
 
 ## Test 23: card auto-closes with hysteresis when trigger clears.
 ##   Fails if _close_cleared_triggers is missing or doesn't use clear_count.
-func _test_card_auto_close() -> void:
+func _test_card_auto_close(world: Node) -> void:
 	print("Test 23: card auto-close with hysteresis")
 	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
 	var panel: PanelContainer = CardPanelScript.new()
 	_assert(panel.has_method("_close_cleared_triggers"), "has _close_cleared_triggers method")
-	# Simulate an active card with a chronicle trigger that won't match (no world).
+	# Use the real chronicle, outside its event window, to prove a cleared trigger.
+	panel.set("_world", world)
+	var time: Dictionary = SimReads.read(world, "get_time_snapshot")
+	panel.set("_last_tick", int(time.get("tick", 0)) + 1441)
 	var quarrel_def: Dictionary = {"id": "quarrel", "trigger": {"kind": "chronicle", "chronicle_kind": 19}, "options": [], "priority": 18}
+	_assert(not bool(panel.call("_check_trigger", quarrel_def)), "real chronicle has no quarrel in future window")
 	panel.get("_active")["quarrel"] = {"def": quarrel_def, "opened_tick": 100, "expires_tick": 9999, "answered": false, "clear_count": 0, "trigger_data": {}}
 	# First call: trigger is clear, clear_count goes to 1 — card should NOT close yet.
 	panel.call("_close_cleared_triggers")
@@ -664,18 +669,18 @@ func _test_need_food_hunt_command() -> void:
 	_assert(false, "need_food card not found")
 
 
-## Test 27: the five previously missing commands have _send_command branches.
-##   Fails if any of the five returns null on a simple call (meaning no match arm).
+## Test 27: explicit card commands and local build navigation have routes.
+## Actual bridge acceptance is covered by m6b_presentation_test all-card fixtures.
 func _test_missing_command_branches() -> void:
 	print("Test 27: missing command branches exist")
 	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
 	var panel: PanelContainer = CardPanelScript.new()
 	# Check the _send_command match has the expected arms by inspecting the source.
 	var source: String = FileAccess.get_file_as_string("res://scripts/ui/mux/card_panel.gd")
-	for cmd: String in ["cmd_trade", "cmd_add_bill", "cmd_set_work_priority", "cmd_place_blueprint", "cmd_add_stockpile"]:
-		_assert(source.contains('"' + cmd + '"'), "card_panel _send_command has branch for " + cmd)
+	for cmd: String in ["cmd_trade", "cmd_add_bill", "cmd_set_work_priority", "open_build_menu", "cmd_add_stockpile"]:
+		_assert(source.contains('"' + cmd + '"'), "card_panel has command or local navigation route for " + cmd)
 	# Also check cmd_add_hunt_zone is present.
-	_assert(source.contains('"cmd_add_hunt_zone"'), "card_panel _send_command has branch for cmd_add_hunt_zone")
+	_assert(source.contains('"cmd_add_hunt_zone"'), "card_panel has command or local navigation route for cmd_add_hunt_zone")
 	panel.queue_free()
 
 
@@ -977,8 +982,8 @@ func _test_recommend_tools_low() -> void:
 	var steward_cmd: String = str(options[1].get("command", ""))
 	_assert(bill_cmd == "cmd_add_bill", "tools_low: option 0 is bill")
 	_assert(steward_cmd == "steward_default", "tools_low: option 1 is steward fallback")
-	# Default is steward (expires to steward).
-	_assert(str(tl_def.get("default", "")) == "steward", "tools_low: default is steward")
+	# Expiry does not dispatch a command.
+	_assert(str(tl_def.get("default", "")) == "none", "tools_low: expiry has no command")
 
 
 ## Test 39: idle_adults has safe options (roles, chop, ok).
@@ -1006,7 +1011,7 @@ func _test_recommend_idle_adults() -> void:
 
 
 ## Test 40: wolves has draft and undraft — both safe responses to wolf attacks.
-##   LOOP-D-cards: the default (steward) handles drafting, so both options are safe.
+##   BASE stewardship continues independently; card expiry sends no command.
 func _test_recommend_wolves() -> void:
 	print("Test 40: wolves recommendation safety")
 	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
@@ -1023,8 +1028,9 @@ func _test_recommend_wolves() -> void:
 	var draft_cmd: String = str(options[0].get("command", ""))
 	var flee_cmd: String = str(options[1].get("command", ""))
 	_assert(draft_cmd == "cmd_draft", "wolves: option 0 is draft")
-	_assert(flee_cmd == "cmd_undraft_all", "wolves: option 1 is undraft (flee)")
-	_assert(str(w_def.get("default", "")) == "steward", "wolves: default is steward")
+	_assert(int(options[0].get("count", 0)) == 1 and str(options[0].get("params", "")) == "one_healthy_adult", "wolves: explicit draft selects one adult")
+	_assert(flee_cmd == "cmd_undraft_all", "wolves: option 1 is undraft everyone")
+	_assert(str(w_def.get("default", "")) == "none", "wolves: expiry has no command")
 
 
 ## LOOP-D-teach: when the steward already teaches the at-risk knowledge, the knowledge card says so,

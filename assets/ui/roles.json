@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "roles": [
+    {
+      "id": "hunter_gatherer",
+      "label_key": "M6B_ROLE_HUNTER_GATHERER",
+      "levels": {
+        "hunt": 1,
+        "split": 2,
+        "haul": 2
+      }
+    },
+    {
+      "id": "wood_build",
+      "label_key": "M6B_ROLE_WOOD_BUILD",
+      "levels": {
+        "chop": 1,
+        "split": 1,
+        "build": 2
+      }
+    },
+    {
+      "id": "craft",
+      "label_key": "M6B_ROLE_CRAFT",
+      "levels": {
+        "craft": 1,
+        "haul": 2
+      }
+    },
+    {
+      "id": "care_haul",
+      "label_key": "M6B_ROLE_CARE_HAUL",
+      "levels": {
+        "haul": 1
+      }
+    }
+  ]
+}

@@ -46,7 +46,10 @@ fn blocked_cooked_output_keeps_due_age_after_format14_roundtrip() {
     food::drying::advance(&mut engine.resources).unwrap();
     assert_eq!(engine.resources.food.pending_drying.len(), 1);
     let bytes = save::save(&mut engine).unwrap();
-    assert_eq!(&bytes[8..12], &14_u32.to_le_bytes());
+    assert_eq!(
+        &bytes[8..12],
+        &sim_systems::save::FORMAT_VERSION.to_le_bytes()
+    );
     let mut loaded = save::load_with(&bytes, |_| {}).unwrap();
     assert_eq!(engine.resources.food, loaded.resources.food);
     for state in [&mut engine, &mut loaded] {

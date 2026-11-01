@@ -12,6 +12,7 @@ extends PanelContainer
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
+const Content = preload("res://scripts/ui/content_context.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 const CARDS_PATH: String = "res://assets/ui/cards.json"
@@ -21,6 +22,9 @@ const TICKS_PER_HOUR: int = 60
 const DEFAULT_CLEAR_POLLS: int = 3
 
 signal card_answered(card_id: String, card_title: String, option_text: String)
+signal state_changed
+signal build_requested
+signal roles_requested
 signal card_expired(card_id: String, card_title: String)
 
 var _world: Node = null
@@ -149,6 +153,7 @@ func _poll_triggers() -> void:
 	var tick: int = _last_tick
 	if tick < 0:
 		return
+	var previous_ids: Array = _active.keys()
 	# Expire stale cooldowns (older than 1 day = 1440 ticks).
 	var expired_cooldowns: PackedStringArray = PackedStringArray()
 	for cid: String in _cooldown:
@@ -172,6 +177,8 @@ func _poll_triggers() -> void:
 				"clear_count": 0,
 				"trigger_data": _collect_trigger_data(card_def),
 			}
+	if previous_ids != _active.keys():
+		state_changed.emit()
 
 
 func _check_trigger(card_def: Dictionary) -> bool:
@@ -212,6 +219,19 @@ func _check_bridge_trigger(read_name: String) -> bool:
 		return false
 	match read_name:
 		"tools_below_need":
+			var tool_codes: PackedInt64Array = PackedInt64Array()
+			for definition: Dictionary in _card_defs:
+				if str((definition.get("trigger", {}) as Dictionary).get("read", "")) != read_name:
+					continue
+				var items: Variant = definition.get("tool_items", [])
+				if items is Array:
+					for item: Variant in items:
+						if item is String:
+							var code: int = Content.code("items", item)
+							if code >= 0:
+								tool_codes.append(code)
+			if tool_codes.is_empty():
+				return false
 			var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
 			# Stacks: {kinds: PackedInt64Array, counts: PackedInt64Array, ...}.
 			var stacks: Variant = facts.get("stacks", {})
@@ -223,7 +243,7 @@ func _check_bridge_trigger(read_name: String) -> bool:
 					var k_arr: PackedInt64Array = kinds as PackedInt64Array
 					var c_arr: PackedInt64Array = counts as PackedInt64Array
 					for i: int in k_arr.size():
-						if int(k_arr[i]) in [3, 4, 5] and i < c_arr.size():
+						if tool_codes.has(int(k_arr[i])) and i < c_arr.size():
 							tool_count += int(c_arr[i])
 			# People: {ids: PackedInt64Array, children: PackedByteArray, ...}.
 			var people: Variant = facts.get("people", {})
@@ -290,30 +310,31 @@ func _collect_trigger_data(card_def: Dictionary) -> Dictionary:
 				data["voice"] = ""
 				data["cause"] = _tr("LOOP_ALERT_FIREWOOD_LOW")
 			"migrants":
-				var neighbours: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
-				var wave_ids: Variant = neighbours.get("wave_ids", PackedInt64Array())
-				var wave_counts: Variant = neighbours.get("wave_counts", PackedInt32Array())
-				if wave_ids is PackedInt64Array and (wave_ids as PackedInt64Array).size() > 0:
-					data["wave_id"] = int((wave_ids as PackedInt64Array)[0])
-					data["count"] = int((wave_counts as PackedInt32Array)[0]) if wave_counts is PackedInt32Array and (wave_counts as PackedInt32Array).size() > 0 else 0
-				elif not causes.is_empty():
-					data["wave_id"] = int(causes[0].get("id", 0))
-					data["count"] = causes.size()
+				var neighbours: Dictionary = SimReads.read(_world, "get_neighbours")
+				var wave: int = _visitor_id(neighbours, "wave")
+				var ids: PackedInt32Array = neighbours.get("wave_ids", PackedInt32Array())
+				var sizes: PackedInt32Array = neighbours.get("wave_sizes", PackedInt32Array())
+				var index: int = ids.find(wave)
+				if wave >= 0:
+					data["wave_id"] = wave
+					data["count"] = sizes[index] if index >= 0 and index < sizes.size() else 0
 			"trader":
-				var neighbours: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
-				var caravan_ids: Variant = neighbours.get("caravan_ids", PackedInt64Array())
-				if caravan_ids is PackedInt64Array and (caravan_ids as PackedInt64Array).size() > 0:
-					data["caravan_id"] = int((caravan_ids as PackedInt64Array)[0])
-				elif not causes.is_empty():
-					data["caravan_id"] = int(causes[0].get("id", 0))
+				var neighbours: Dictionary = SimReads.read(_world, "get_neighbours")
+				var caravan: int = _visitor_id(neighbours, "caravan")
+				if caravan >= 0:
+					data["caravan_id"] = caravan
 			"knowledge_risk":
 				if not causes.is_empty():
 					var cause: Dictionary = causes[0]
-					data["holder"] = Names.present(int(cause.get("id", -1)), lang) if int(cause.get("id", -1)) >= 0 else ""
-					data["teacher"] = int(cause.get("id", -1))
-					data["technique"] = KnowledgeText.node_name(_locale, int(cause.get("id", 0)))
-					data["learner"] = _find_best_learner(int(cause.get("id", -1)))
-					data["knowledge"] = int(cause.get("id", -1))
+					var knowledge_id: int = int(cause.get("id", -1))
+					var node: Dictionary = _world.call("get_tech_node", knowledge_id)
+					var holders: PackedInt64Array = node.get("holder_ids", PackedInt64Array())
+					var teacher: int = holders[0] if not holders.is_empty() else -1
+					data["holder"] = Names.present(teacher, lang) if teacher >= 0 else ""
+					data["teacher"] = teacher
+					data["technique"] = KnowledgeText.node_name(_locale, knowledge_id)
+					data["learner"] = _find_best_learner(teacher, knowledge_id)
+					data["knowledge"] = knowledge_id
 					# LOOP-D-teach: when the steward is already teaching this knowledge, the card says so.
 					var orders: Dictionary = SimReads.read(_world, "get_teach_orders") if _world.has_method("get_teach_orders") else {}
 					var o_ids: Variant = orders.get("ids", PackedInt64Array())
@@ -363,15 +384,28 @@ func _extract_chronicle_data(card_def: Dictionary, row: Dictionary, data: Dictio
 			data["pressure_name"] = _tr(pnames[cause]) if cause >= 0 and cause < pnames.size() else _tr("UI_UNKNOWN")
 
 
-func _find_best_learner(teacher_id: int) -> int:
-	if _world == null:
+func _find_best_learner(teacher_id: int, knowledge_id: int) -> int:
+	if _world == null or not _world.has_method("get_tech_node"):
 		return -1
-	var priorities: Dictionary = SimReads.read(_world, "get_work_priorities")
-	var agent_ids: PackedInt64Array = priorities.get("agent_ids", PackedInt64Array())
-	for aid: int in agent_ids:
-		if aid != teacher_id and aid > 0:
-			return aid
+	var node: Dictionary = _world.call("get_tech_node", knowledge_id)
+	var orders: Dictionary = SimReads.read(_world, "get_teach_orders")
+	var learners: PackedInt64Array = node.get("learner_ids", PackedInt64Array())
+	for learner: int in learners:
+		if learner != teacher_id and _learner_available(learner, knowledge_id, node, orders):
+			return learner
 	return -1
+
+
+static func _learner_available(learner: int, knowledge: int, node: Dictionary, orders: Dictionary) -> bool:
+	var eligible: PackedInt64Array = node.get("learner_ids", PackedInt64Array())
+	if not eligible.has(learner):
+		return false
+	var learners: PackedInt64Array = orders.get("learners", PackedInt64Array())
+	var nodes: PackedInt64Array = orders.get("knowledge", PackedInt64Array())
+	for i: int in mini(learners.size(), nodes.size()):
+		if learners[i] == learner and nodes[i] == knowledge:
+			return false
+	return true
 
 
 func _check_expiry() -> void:
@@ -396,6 +430,7 @@ func _expire_card(card_id: String) -> void:
 		card_expired.emit(card_id, _card_title(card))
 	_cooldown[card_id] = _last_tick
 	_active.erase(card_id)
+	state_changed.emit()
 
 
 func answer_card(card_id: String, option_index: int) -> void:
@@ -408,37 +443,77 @@ func answer_card(card_id: String, option_index: int) -> void:
 		return
 	var option: Dictionary = options[option_index]
 	var command: String = str(option.get("command", "none"))
-	if command != "none" and command != "steward_default" and command != "enter_zone_tool" and command != "open_roles":
+	if command != "none" and command != "steward_default" and command != "enter_zone_tool" and command != "open_roles" and command != "open_build_menu":
+		var log_start: int = -1
+		if _world != null and _world.has_method("get_command_log"):
+			var tail: Dictionary = _world.call("get_command_log", 9223372036854775807)
+			log_start = int(tail.get("total", -1))
 		var result: Variant = _send_command(command, option, card)
 		var result_dict: Dictionary = result if result is Dictionary else {}
+		var attempts: int = _record_command_attempts(card_id, command, log_start, result_dict)
 		if bool(result_dict.get("skipped", false)):
-			# Stale target: command was not sent. Does not count as an answer.
-			_skipped_results.append({
-				"card_id": card_id,
-				"command": command,
-				"reason": str(result_dict.get("reason", "stale")),
-			})
-			# Card stays open; it will close when the trigger clears or it expires.
+			# Only pre-send failures count as skipped. Exhausted command retries
+			# remain rejected receipts even though the card stays available.
+			if attempts == 0:
+				_skipped_results.append({
+					"card_id": card_id,
+					"command": command,
+					"reason": str(result_dict.get("reason", "stale")),
+				})
+			card["failure_reason"] = str(result_dict.get("reason", "stale"))
+			_rebuild_ui()
 			return
-		_command_results.append({
-			"card_id": card_id,
-			"command": command,
-			"accepted": bool(result_dict.get("accepted", false)),
-			"reason": str(result_dict.get("reason", "not_sent")),
-		})
+		if not bool(result_dict.get("accepted", false)):
+			card["failure_reason"] = str(result_dict.get("reason", "rejected"))
+			_rebuild_ui()
+			return
+	if command == "open_roles":
+		roles_requested.emit()
+	elif command == "open_build_menu":
+		build_requested.emit()
 	card["answered"] = true
 	_cooldown[card_id] = _last_tick
 	card_answered.emit(card_id, _card_title(card), _tr(str(option.get("text_key", ""))))
 	_active.erase(card_id)
+	state_changed.emit()
 	_rebuild_ui()
+
+
+## Capture the synchronous answer window, including every hunt/draft attempt.
+## No simulation ticks execute between these reads, so autonomous orders cannot enter it.
+func _record_command_attempts(card_id: String, command: String, start: int, result: Dictionary) -> int:
+	var count: int = 0
+	if start >= 0 and _world != null:
+		var log: Dictionary = _world.call("get_command_log", start)
+		var accepted: PackedByteArray = log.get("accepted", PackedByteArray())
+		var kinds: PackedStringArray = log.get("kinds", PackedStringArray())
+		for i: int in accepted.size():
+			_command_results.append({
+				"card_id": card_id, "command": command,
+				"accepted": accepted[i] != 0,
+				"reason": "accepted" if accepted[i] != 0 else "command_log_rejected",
+				"dispatch_reason": str(result.get("reason", "")),
+				"log_index": start + i,
+				"log_kind": kinds[i] if i < kinds.size() else "",
+			})
+			count += 1
+	# Bridge argument validation can reject before a command-log entry exists.
+	if count == 0 and not bool(result.get("skipped", false)):
+		_command_results.append({
+			"card_id": card_id, "command": command,
+			"accepted": bool(result.get("accepted", false)),
+			"reason": str(result.get("reason", "not_sent")),
+		})
+		count = 1
+	return count
 
 
 func _send_command(command: String, option: Dictionary, card: Dictionary) -> Variant:
 	if _world == null:
 		return {"accepted": false, "skipped": true, "reason": "no_world"}
-	var info: Dictionary = {}
-	var cx: int = 32
-	var cy: int = 32
+	var camp: Vector2i = _camp_tile()
+	var cx: int = camp.x
+	var cy: int = camp.y
 	var trigger_data: Dictionary = card.get("trigger_data", {})
 	var result: Variant = null
 	match command:
@@ -446,25 +521,12 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> Var
 			# Dedupe: skip if chop designations already exist.
 			if _has_chop_designations():
 				return {"accepted": false, "skipped": true, "reason": "chop_exists"}
-			# Pre-validate: check trees exist near camp before sending.
-			info = SimReads.read(_world, "get_world_info")
-			cx = int(info.get("camp_x", 32))
-			cy = int(info.get("camp_y", 32))
-			if _world.has_method("get_trees"):
-				var trees: Dictionary = _world.get_trees()
-				var txs: Variant = trees.get("xs", PackedInt32Array())
-				var tys: Variant = trees.get("ys", PackedInt32Array())
-				var found_tree: bool = false
-				if txs is PackedInt32Array and tys is PackedInt32Array:
-					for ti: int in (txs as PackedInt32Array).size():
-						var tx: int = int((txs as PackedInt32Array)[ti])
-						var ty: int = int((tys as PackedInt32Array)[ti])
-						if tx >= cx - 3 and tx <= cx + 3 and ty >= cy - 3 and ty <= cy + 3:
-							found_tree = true
-							break
-				if not found_tree:
-					return {"accepted": false, "skipped": true, "reason": "no_trees"}
-			result = SimReads.mutate(_world, "cmd_designate_chop", [cx - 3, cy - 3, cx + 3, cy + 3])
+			if not _world.has_method("get_card_chop_target"):
+				return {"accepted": false, "skipped": true, "reason": "no_chop_target_read"}
+			var target: Dictionary = _world.call("get_card_chop_target")
+			if not bool(target.get("found", false)):
+				return {"accepted": false, "skipped": true, "reason": "no_trees"}
+			result = SimReads.mutate(_world, "cmd_designate_chop", [int(target["x0"]), int(target["y0"]), int(target["x1"]), int(target["y1"])])
 			if result is Dictionary and not bool(result.get("accepted", false)):
 				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
 		"cmd_add_hunt_zone":
@@ -477,15 +539,12 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> Var
 			# Guard: skip if no bladed tools exist (hunters need them).
 			if not _has_hunter_blades():
 				return {"accepted": false, "skipped": true, "reason": "no_blades"}
-			info = SimReads.read(_world, "get_world_info")
-			cx = int(info.get("camp_x", 32))
-			cy = int(info.get("camp_y", 32))
-			for offset: Vector2i in [Vector2i.ZERO, Vector2i(12, 0), Vector2i(-12, 0), Vector2i(0, 12), Vector2i(0, -12)]:
-				result = SimReads.mutate(_world, "cmd_add_hunt_zone", [cx - 6 + offset.x, cy - 6 + offset.y, cx + 6 + offset.x, cy + 6 + offset.y])
-				if result is Dictionary and bool(result.get("accepted", false)):
-					return result
-			# All offsets rejected — zone already exists at every position.
-			return {"accepted": false, "skipped": true, "reason": "zone_exists"}
+			var info: Dictionary = SimReads.read(_world, "get_world_info")
+			var width: int = int(info.get("width", 0))
+			var height: int = int(info.get("height", 0))
+			if width <= 0 or height <= 0:
+				return {"accepted": false, "skipped": true, "reason": "no_map_bounds"}
+			result = SimReads.mutate(_world, "cmd_add_hunt_zone", [clampi(cx - 6, 0, width - 1), clampi(cy - 6, 0, height - 1), clampi(cx + 6, 0, width - 1), clampi(cy + 6, 0, height - 1)])
 		"cmd_designate_harvest":
 			if _world.has_method("get_card_harvest_target"):
 				var target: Dictionary = _world.get_card_harvest_target()
@@ -493,23 +552,16 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> Var
 					result = SimReads.mutate(_world, "cmd_designate_harvest", [int(target["x0"]), int(target["y0"]), int(target["x1"]), int(target["y1"])])
 				else:
 					return {"accepted": false, "skipped": true, "reason": "no_target"}
-		"cmd_accept_migrants":
-			if not _alert_active("migrants_waiting"):
+		"cmd_accept_migrants", "cmd_decline_migrants":
+			var neighbours: Dictionary = SimReads.read(_world, "get_neighbours")
+			var wave: int = _visitor_id(neighbours, "wave", int(trigger_data.get("wave_id", -1)))
+			if int(trigger_data.get("wave_id", -1)) < 0 or wave < 0:
 				return {"accepted": false, "skipped": true, "reason": "already_handled"}
-			var neighbours: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
-			var wids: Variant = neighbours.get("wave_ids", PackedInt64Array())
-			var wave: int = int((wids as PackedInt64Array)[0]) if wids is PackedInt64Array and (wids as PackedInt64Array).size() > 0 else int(trigger_data.get("wave_id", 0))
-			result = SimReads.mutate(_world, "cmd_accept_migrants", [wave])
-		"cmd_decline_migrants":
-			if not _alert_active("migrants_waiting"):
-				return {"accepted": false, "skipped": true, "reason": "already_handled"}
-			var neighbours2: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
-			var wids2: Variant = neighbours2.get("wave_ids", PackedInt64Array())
-			if not wids2 is PackedInt64Array or (wids2 as PackedInt64Array).size() == 0:
-				return {"accepted": false, "skipped": true, "reason": "no_visitor"}
-			var wave2: int = int((wids2 as PackedInt64Array)[0])
-			result = SimReads.mutate(_world, "cmd_decline_migrants", [wave2])
+			result = SimReads.mutate(_world, command, [wave])
 		"cmd_undraft_all":
+			var current: Dictionary = SimReads.read(_world, "get_drafted")
+			if (current.get("ids", PackedInt64Array()) as PackedInt64Array).is_empty():
+				return {"accepted": false, "skipped": true, "reason": "nobody_drafted"}
 			return SimReads.mutate(_world, "cmd_undraft_all", [])
 		"cmd_order_teach":
 			var teacher: int = int(trigger_data.get("teacher", -1))
@@ -527,62 +579,88 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> Var
 			# with this specific teacher). Use get_ui_facts waits collection.
 			if not _teacher_holds_knowledge(teacher, knowledge):
 				return {"accepted": false, "skipped": true, "reason": "no_practitioner"}
+			var node: Dictionary = _world.call("get_tech_node", knowledge)
+			var orders: Dictionary = SimReads.read(_world, "get_teach_orders")
+			if not _learner_available(learner, knowledge, node, orders):
+				return {"accepted": false, "skipped": true, "reason": "learner_unavailable"}
 			result = SimReads.mutate(_world, "cmd_order_teach", [teacher, learner, knowledge])
 			if result is Dictionary and not bool(result.get("accepted", false)):
 				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
 		"cmd_cancel_teach":
 			var order_id: int = int(trigger_data.get("order_id", -1))
-			if order_id < 0:
+			var orders: Dictionary = SimReads.read(_world, "get_teach_orders")
+			var live_ids: PackedInt64Array = orders.get("ids", PackedInt64Array())
+			if order_id < 0 or not live_ids.has(order_id):
 				return {"accepted": false, "skipped": true, "reason": "no_order"}
 			result = SimReads.mutate(_world, "cmd_cancel_teach", [order_id])
 			if result is Dictionary and not bool(result.get("accepted", false)):
 				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
 		"cmd_draft":
+			if int(option.get("count", 1)) != 1:
+				return {"accepted": false, "skipped": true, "reason": "invalid_count"}
 			var drafted: Dictionary = SimReads.read(_world, "get_drafted")
-			var recommended: Array = drafted.get("recommended", [])
-			if recommended.is_empty():
-				return {"accepted": false, "skipped": true, "reason": "no_recommended"}
-			for agent_id: Variant in recommended:
-				result = SimReads.mutate(_world, "cmd_draft", [int(agent_id), true])
+			var drafted_ids: PackedInt64Array = drafted.get("ids", PackedInt64Array())
+			var people: Dictionary = SimReads.read(_world, "get_ui_facts").get("people", {})
+			var ids: PackedInt64Array = people.get("ids", PackedInt64Array())
+			var children: PackedByteArray = people.get("children", PackedByteArray())
+			var hps: PackedFloat64Array = people.get("hps", PackedFloat64Array())
+			for i: int in mini(ids.size(), mini(children.size(), hps.size())):
+				if children[i] == 0 and is_finite(hps[i]) and hps[i] >= float(option.get("min_hp", 50)) and not drafted_ids.has(ids[i]):
+					return SimReads.mutate(_world, "cmd_draft", [ids[i], true])
+			return {"accepted": false, "skipped": true, "reason": "no_eligible_adult"}
 		"cmd_trade":
-			if not _alert_active("trader_present"):
-				return {"accepted": false, "skipped": true, "reason": "already_handled"}
-			var neighbours3: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
-			var cids: Variant = neighbours3.get("caravan_ids", PackedInt64Array())
-			if not cids is PackedInt64Array or (cids as PackedInt64Array).size() == 0:
+			var neighbours: Dictionary = SimReads.read(_world, "get_neighbours")
+			var caravan: int = _visitor_id(neighbours, "caravan", int(trigger_data.get("caravan_id", -1)))
+			if int(trigger_data.get("caravan_id", -1)) < 0 or caravan < 0:
 				return {"accepted": false, "skipped": true, "reason": "no_caravan"}
-			var caravan: int = int((cids as PackedInt64Array)[0])
 			# Build balanced trade terms from the caravan's actual offer.
 			var trade_terms: Dictionary = _build_trade_terms(caravan)
 			if not bool(trade_terms.get("valid", false)):
 				return {"accepted": false, "skipped": true, "reason": "no_balanced_trade"}
 			result = SimReads.mutate(_world, "cmd_trade", [caravan, trade_terms["give"], trade_terms["take"]])
 		"cmd_add_bill":
-			info = SimReads.read(_world, "get_world_info")
-			var workshops: Variant = info.get("workshops", PackedInt64Array())
-			if workshops is PackedInt64Array and (workshops as PackedInt64Array).size() > 0:
-				result = SimReads.mutate(_world, "cmd_add_bill", [int((workshops as PackedInt64Array)[0]), str(option.get("recipe", "")), "make", 1])
-			else:
+			var recipe: String = str(option.get("recipe", ""))
+			var recipe_data: Dictionary = Content.row("recipes", Content.code("recipes", recipe))
+			var compatible: PackedInt64Array = recipe_data.get("compatible_workshops", PackedInt64Array())
+			var shops: Dictionary = SimReads.read(_world, "get_workshops")
+			var ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
+			var kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
+			var workshop: int = -1
+			for i: int in mini(ids.size(), kinds.size()):
+				if compatible.has(kinds[i]):
+					workshop = ids[i]
+					break
+			if workshop < 0:
 				return {"accepted": false, "skipped": true, "reason": "no_workshop"}
+			result = SimReads.mutate(_world, "cmd_add_bill", [workshop, recipe, "make", 1])
 		"cmd_set_work_priority":
 			var agent_a: int = int(trigger_data.get("agent_a", -1))
 			if agent_a < 0:
 				return {"accepted": false, "skipped": true, "reason": "no_target"}
 			if not _agent_is_adult(agent_a):
 				return {"accepted": false, "skipped": true, "reason": "not_adult"}
+			var priorities: Dictionary = SimReads.read(_world, "get_work_priorities")
+			var adults: PackedInt64Array = priorities.get("agent_ids", PackedInt64Array())
+			var works: PackedStringArray = priorities.get("work_types", PackedStringArray())
+			var levels: PackedByteArray = priorities.get("levels", PackedByteArray())
+			var person_row: int = adults.find(agent_a)
+			var work_column: int = works.find("chop")
+			if person_row < 0 or work_column < 0 or person_row * works.size() + work_column >= levels.size():
+				return {"accepted": false, "skipped": true, "reason": "no_priority_target"}
+			if levels[person_row * works.size() + work_column] == 3:
+				return {"accepted": false, "skipped": true, "reason": "priority_already_set"}
 			result = SimReads.mutate(_world, "cmd_set_work_priority", [agent_a, "chop", 3])
 			if result is Dictionary and not bool(result.get("accepted", false)):
 				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
 		"cmd_place_blueprint":
-			info = SimReads.read(_world, "get_world_info")
-			cx = int(info.get("camp_x", 32))
-			cy = int(info.get("camp_y", 32))
 			result = SimReads.mutate(_world, "cmd_place_blueprint", ["storehouse", cx + 4, cy + 4])
 		"cmd_add_stockpile":
-			info = SimReads.read(_world, "get_world_info")
-			cx = int(info.get("camp_x", 32))
-			cy = int(info.get("camp_y", 32))
-			result = SimReads.mutate(_world, "cmd_add_stockpile", [cx - 3, cy - 3, cx + 3, cy + 3])
+			if not _world.has_method("get_card_stockpile_target"):
+				return {"accepted": false, "skipped": true, "reason": "no_stockpile_target_read"}
+			var target: Dictionary = _world.call("get_card_stockpile_target")
+			if not bool(target.get("found", false)):
+				return {"accepted": false, "skipped": true, "reason": "no_stockpile_space"}
+			result = SimReads.mutate(_world, "cmd_add_stockpile", [int(target["x0"]), int(target["y0"]), int(target["x1"]), int(target["y1"])])
 	# No match arm hit — unknown command.
 	if result == null:
 		return {"accepted": false, "skipped": true, "reason": "no_action"}
@@ -608,17 +686,16 @@ func _agent_exists(agent_id: int) -> bool:
 	return false
 
 
-## Whether a teacher agent still holds a specific knowledge node (technique at risk).
-## Checks the knowledge waits from get_ui_facts to verify the teacher is still a practitioner.
-func _teacher_holds_knowledge(teacher_id: int, _knowledge_id: int) -> bool:
-	if _world == null:
+## Revalidate both identities: alert causes name techniques, not their practitioners.
+func _teacher_holds_knowledge(teacher_id: int, knowledge_id: int) -> bool:
+	if _world == null or knowledge_id < 0 or teacher_id < 0:
 		return false
-	# The technique_at_risk alert causes list the holder's agent id.
-	# Re-check the alert causes to verify this specific teacher.
 	var causes: Array = _alert_causes("technique_at_risk")
 	for cause: Variant in causes:
-		if cause is Dictionary and int(cause.get("id", -1)) == teacher_id:
-			return true
+		if cause is Dictionary and int(cause.get("id", -1)) == knowledge_id:
+			var node: Dictionary = _world.call("get_tech_node", knowledge_id)
+			var holders: PackedInt64Array = node.get("holder_ids", PackedInt64Array())
+			return holders.has(teacher_id)
 	return false
 
 
@@ -643,7 +720,7 @@ func _agent_is_adult(agent_id: int) -> bool:
 
 ## Build balanced trade terms from the caravan's actual goods and colony stock.
 ## Returns {valid: bool, give: PackedInt32Array, take: PackedInt32Array}.
-## give = flat (x, y, count) triples of colony stock; take = indices into caravan goods.
+## give = flat (x, y, count) triples; take = (goods index, count) pairs.
 func _build_trade_terms(caravan_id: int) -> Dictionary:
 	if _world == null or not _world.has_method("get_caravan"):
 		return {"valid": false}
@@ -667,12 +744,15 @@ func _build_trade_terms(caravan_id: int) -> Dictionary:
 	if take_idx < 0 or take_value <= 0:
 		return {"valid": false}
 	# Find colony stock to give that covers the value.
-	var buy_permille: int = int(cv.get("buy_permille", 1000))
+	var buy_permille: int = int(cv.get("buy_permille", 800))
+	var sell_permille: int = int(cv.get("sell_permille", 1200))
+	if buy_permille <= 0 or sell_permille <= 0:
+		return {"valid": false}
 	@warning_ignore("integer_division")
-	var needed_value: int = maxi(1, take_value * buy_permille / 1000)
+	var needed_value: int = maxi(1, (take_value * sell_permille + buy_permille - 1) / buy_permille)
 	var stock_x: Variant = cv.get("stock_x", PackedInt32Array())
 	var stock_y: Variant = cv.get("stock_y", PackedInt32Array())
-	var stock_count: Variant = cv.get("stock_count", PackedInt32Array())
+	var stock_count: Variant = cv.get("stock_available_count", PackedInt32Array())
 	var stock_value: Variant = cv.get("stock_value", PackedInt32Array())
 	if not stock_x is PackedInt32Array or (stock_x as PackedInt32Array).size() == 0:
 		return {"valid": false}
@@ -684,11 +764,12 @@ func _build_trade_terms(caravan_id: int) -> Dictionary:
 	var give: PackedInt32Array = PackedInt32Array()
 	var accumulated: int = 0
 	for i: int in sx.size():
-		if i >= sc.size() or i >= sv.size():
+		if i >= sy.size() or i >= sc.size() or i >= sv.size():
 			break
 		if int(sc[i]) <= 0 or int(sv[i]) <= 0:
 			continue
-		var count: int = 1
+		@warning_ignore("integer_division")
+		var count: int = mini(int(sc[i]), (needed_value - accumulated + int(sv[i]) - 1) / int(sv[i]))
 		give.append(int(sx[i]))
 		give.append(int(sy[i]))
 		give.append(count)
@@ -697,7 +778,7 @@ func _build_trade_terms(caravan_id: int) -> Dictionary:
 			break
 	if accumulated < needed_value:
 		return {"valid": false}
-	var take: PackedInt32Array = PackedInt32Array([take_idx])
+	var take: PackedInt32Array = PackedInt32Array([take_idx, 1])
 	return {"valid": true, "give": give, "take": take}
 
 
@@ -706,9 +787,9 @@ func _has_chop_designations() -> bool:
 	if _world == null or not _world.has_method("get_colony_overlay"):
 		return false
 	var overlay: Dictionary = _world.get_colony_overlay()
-	var kinds: Variant = overlay.get("designation_kinds", PackedInt64Array())
-	if kinds is PackedInt64Array:
-		for k: int in kinds as PackedInt64Array:
+	var kinds: Variant = overlay.get("designation_kinds", PackedInt32Array())
+	if kinds is PackedInt32Array:
+		for k: int in kinds as PackedInt32Array:
 			if k == 0:
 				return true
 	return false
@@ -723,7 +804,7 @@ func _has_hunt_zones() -> bool:
 	return zones is PackedInt32Array and (zones as PackedInt32Array).size() > 0
 
 
-## Whether any bladed tool (kind 3, 4, 5 = blade/axe/spear) exists for hunters.
+## Whether an authored hunting weapon or cutter exists for hunters.
 ## Stacks in get_ui_facts use parallel-array format: {kinds: PackedInt64Array, counts: PackedInt64Array, ...}.
 func _has_hunter_blades() -> bool:
 	if _world == null:
@@ -738,7 +819,7 @@ func _has_hunter_blades() -> bool:
 		var k_arr: PackedInt64Array = kinds as PackedInt64Array
 		var c_arr: PackedInt64Array = counts as PackedInt64Array
 		for i: int in k_arr.size():
-			if int(k_arr[i]) in [3, 4, 5] and i < c_arr.size() and int(c_arr[i]) > 0:
+			if bool(Content.row("items", int(k_arr[i])).get("hunting_tool", false)) and i < c_arr.size() and int(c_arr[i]) > 0:
 				return true
 	return false
 
@@ -795,7 +876,7 @@ func _steward_on() -> bool:
 	return bool(SimReads.read(_world, "get_steward").get("enabled", false))
 
 
-## The option that leaves the matter to the steward (default "steward" or no command).
+## A no-command option that leaves existing stewardship unchanged.
 func _steward_option(options: Array, trigger_data: Dictionary = {}) -> int:
 	for i: int in options.size():
 		var cmd: String = str(options[i].get("command", ""))
@@ -807,9 +888,9 @@ func _steward_option(options: Array, trigger_data: Dictionary = {}) -> int:
 func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> int:
 	var card_id: String = str(card_def.get("id", ""))
 	var options: Array = card_def.get("options", [])
-	# LOOP-D-cards: a recommendation must never be worse than the steward. When the steward
-	# is on, it already covers firewood (wood rule), food (food plan + hunt), teaching (grace
-	# fallback), tools (rule 9) and idle work, so those cards recommend leaving it to the steward.
+	# BASE rules cover wood (2), tools and firewood bills (4), food (5/8),
+	# teaching (6), and defence (7). Idle work can also remain unchanged;
+	# opening roles is available but never assigns priorities automatically.
 	if _steward_on() and card_id in STEWARD_COVERED_CARDS:
 		return _steward_option(options, trigger_data)
 	match card_id:
@@ -916,6 +997,12 @@ func _build_card_widget(card_id: String, card: Dictionary) -> void:
 	body_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	body_label.custom_minimum_size.x = 340
 	card_box.add_child(body_label)
+	if card.has("failure_reason"):
+		var failure: Label = Label.new()
+		failure.name = "FailureReason"
+		failure.text = _tr("M6B_CARD_NOT_APPLIED").format({"reason": str(card["failure_reason"])})
+		failure.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		card_box.add_child(failure)
 	var buttons_row: HBoxContainer = HBoxContainer.new()
 	buttons_row.add_theme_constant_override("separation", 8)
 	card_box.add_child(buttons_row)
@@ -984,6 +1071,7 @@ func _reset() -> void:
 	_skipped_results.clear()
 	_last_tick = -1
 	_rebuild_ui()
+	state_changed.emit()
 
 
 func top_card_title() -> String:
@@ -1045,3 +1133,44 @@ func skipped_results() -> Array[Dictionary]:
 
 func _card_title(card: Dictionary) -> String:
 	return _format_card_text(str(card.get("def", {}).get("title_key", "")), card.get("trigger_data", {}))
+
+
+
+## Read actual camp placement; world_info intentionally contains no camp_x/y.
+func _camp_tile() -> Vector2i:
+	var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
+	var settlements: Dictionary = facts.get("settlements", {})
+	var sx: PackedInt64Array = settlements.get("xs", PackedInt64Array())
+	var sy: PackedInt64Array = settlements.get("ys", PackedInt64Array())
+	if not sx.is_empty() and not sy.is_empty():
+		return Vector2i(sx[0], sy[0])
+	var buildings: Dictionary = SimReads.read(_world, "get_building_snapshot")
+	var kinds: PackedByteArray = buildings.get("kinds", PackedByteArray())
+	var bx: PackedInt32Array = buildings.get("xs", PackedInt32Array())
+	var by: PackedInt32Array = buildings.get("ys", PackedInt32Array())
+	for i: int in mini(kinds.size(), mini(bx.size(), by.size())):
+		if kinds[i] == 0:
+			return Vector2i(bx[i], by[i])
+	var agents: Dictionary = SimReads.read(_world, "get_agent_snapshot")
+	var xs: PackedInt32Array = agents.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = agents.get("ys", PackedInt32Array())
+	if not xs.is_empty() and xs.size() == ys.size():
+		var low: Vector2i = Vector2i(xs[0], ys[0])
+		var high: Vector2i = low
+		for i: int in xs.size():
+			low = Vector2i(mini(low.x, xs[i]), mini(low.y, ys[i]))
+			high = Vector2i(maxi(high.x, xs[i]), maxi(high.y, ys[i]))
+		return Vector2i((Vector2(low) + Vector2(high)) * 0.5)
+	var info: Dictionary = SimReads.read(_world, "get_world_info")
+	return Vector2i(Vector2(int(info.get("width", 0)), int(info.get("height", 0))) * 0.5)
+
+
+
+## The neighbour table retains departed/answered rows; only state 1 is actionable.
+static func _visitor_id(neighbours: Dictionary, prefix: String, captured_id: int = -1) -> int:
+	var ids: PackedInt32Array = neighbours.get(prefix + "_ids", PackedInt32Array())
+	var states: PackedInt32Array = neighbours.get(prefix + "_states", PackedInt32Array())
+	for i: int in mini(ids.size(), states.size()):
+		if states[i] == 1 and (captured_id < 0 or ids[i] == captured_id):
+			return ids[i]
+	return -1

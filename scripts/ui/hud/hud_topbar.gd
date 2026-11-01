@@ -74,7 +74,7 @@ func _ready() -> void:
 
 	_locale = get_node_or_null("/root/Locale")
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var panel: PanelContainer = ArtUI.panel(self, Rect2(12, 12, 1896, 100))
+	var panel: PanelContainer = ArtUI.panel(self, Rect2(12, 12, 1896, 0))
 	var column: VBoxContainer = VBoxContainer.new()
 	panel.add_child(column)
 	var hbox: HBoxContainer = HBoxContainer.new()
@@ -402,12 +402,12 @@ func _refresh() -> void:
 	_clock_icon.scale = Vector2(2, 2)
 
 
-## M4: the era line, the badge and the at-risk warning from get_tech (hidden without knowledge).
+## Keep legacy text accessors current; Goals owns the visible era/risk counters.
 func _refresh_knowledge() -> void:
 	var tech: Dictionary = _snapshot("get_tech")
 	var known: bool = not (tech.get("ids", PackedInt64Array()) as PackedInt64Array).is_empty()
-	_era_label.visible = known
-	_risk_button.visible = known
+	_era_label.visible = false
+	_risk_button.visible = false
 	_warn_label.visible = false
 	if not known:
 		return

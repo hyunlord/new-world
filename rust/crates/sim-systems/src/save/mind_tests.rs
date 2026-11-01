@@ -398,7 +398,7 @@ fn switch_v11_bytes(engine: &mut SimEngine) -> Vec<u8> {
         content_state: Default::default(),
         resources,
     };
-    old.steward = std::mem::take(&mut old.resources.steward);
+    old.steward = std::mem::take(&mut old.resources.steward).into();
     old.content_state = std::mem::take(&mut old.resources.content_state);
     let envelope = Envelope {
         revision: sim_core::colony::content::installed()

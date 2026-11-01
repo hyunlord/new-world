@@ -8,11 +8,14 @@ Usage:
     python3 read_gate_checks.py stall_waiver <stall_log>
 """
 import json
+import math
 import os
 import subprocess
 import sys
 import time
 from pathlib import Path
+
+from read_summary_normalise import first_difference, load_json, normalise_pair
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -47,6 +50,32 @@ def wait_for_load(threshold=8, timeout=2700):
     raise RuntimeError(f"load did not drop below {threshold} in {timeout}s")
 
 
+BENCH_SCENES = {"n200", "n1000", "n2000", "n200_script", "n200_side64", "n1000_wolves"}
+BENCH_CEILINGS = {
+    "n1000_mean_le_5ms", "n2000_mean_le_10ms", "bytes_per_agent_le_4096",
+    "bytes_per_tile_le_96", "rss_per_agent_le_5120", "rss_per_tile_le_128",
+}
+
+
+def validate_bench_report(data, require_ceilings=True):
+    """Require each producer scene once and literal PASS ceiling verdicts."""
+    scenes = data.get("scenes")
+    if not isinstance(scenes, list) or len(scenes) != len(BENCH_SCENES) or any(not isinstance(scene, dict) for scene in scenes) or {scene.get("label") for scene in scenes} != BENCH_SCENES:
+        raise ValueError("bench: missing, duplicate, or unexpected scene coverage")
+    for scene in scenes:
+        for key in ("tick_mean_us", "tick_p99_us"):
+            value = scene.get(key)
+            if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
+                raise ValueError(f"bench/{scene['label']}/{key}: invalid timing")
+    if require_ceilings:
+        ceilings = data.get("ceilings")
+        if not isinstance(ceilings, dict) or ceilings.keys() != BENCH_CEILINGS:
+            raise ValueError("bench: incomplete or unexpected ceiling coverage")
+        for key, verdict in ceilings.items():
+            if verdict != "PASS":
+                raise ValueError(f"bench ceiling {key}: {verdict!r}, expected PASS")
+
+
 # ── Interleaved bench ───────────────────────────────────────────────────
 
 def bench(config_path, log_dir):
@@ -60,13 +89,12 @@ def bench(config_path, log_dir):
 
     base_bin = config["base_perf"]
     script = str(ROOT / "tools/v8/bench_script.json")
-    wait_for_load()
-
     # 3 rounds, interleaved
     for r in range(1, 4):
         for label, binary in [("base", base_bin), ("new", head_perf)]:
-            load1 = os.getloadavg()[0]
-            print(f"round {r} {label} load={load1:.1f}")
+            wait_for_load()
+            load1, load5, load15 = os.getloadavg()
+            print(f"round {r} {label} load1={load1:.2f} load5={load5:.2f} load15={load15:.2f}")
             run_dir = out / f"{label}-r{r}"
             subprocess.check_call(
                 [binary, "bench", "--out", str(run_dir), "--commands", script, "--repeats", "1"],
@@ -80,7 +108,8 @@ def bench(config_path, log_dir):
     for r in range(1, 4):
         for label in ("base", "new"):
             run_dir = out / f"{label}-r{r}" / "bench.json"
-            data = json.loads(run_dir.read_text())
+            data = load_json(run_dir)
+            validate_bench_report(data, require_ceilings=label == "new")
             for scene in data["scenes"]:
                 name = scene["label"]
                 scenes.setdefault(name, {"base_mean": [], "new_mean": [], "base_p99": [], "new_p99": []})
@@ -97,12 +126,10 @@ def bench(config_path, log_dir):
         np_ = sorted(scenes[name]["new_p99"])
         b_med = bm[len(bm) // 2]
         n_med = nm[len(nm) // 2]
-        ratio_mean = n_med / b_med if b_med else 0
+        ok_mean, ratio_mean = check_bench_ratio(b_med, n_med)
         b_p99 = bp[len(bp) // 2]
         n_p99 = np_[len(np_) // 2]
-        ratio_p99 = n_p99 / b_p99 if b_p99 else 0
-        ok_mean = ratio_mean <= 1.10
-        ok_p99 = ratio_p99 <= 1.10
+        ok_p99, ratio_p99 = check_bench_ratio(b_p99, n_p99)
         verdict = "ok" if ok_mean and ok_p99 else "FAIL"
         print(f"{name:<20} {b_med:>10.1f} {n_med:>10.1f} {ratio_mean:>8.3f} {verdict:>8}")
         if not ok_mean:
@@ -110,13 +137,6 @@ def bench(config_path, log_dir):
         if not ok_p99:
             failures.append(f"{name} p99 x{ratio_p99:.3f}")
 
-    # Also check C3 ceilings from the last HEAD run
-    last_head = json.loads((out / "new-r3/bench.json").read_text())
-    ceilings = last_head.get("ceilings", {})
-    for ceiling, passed in ceilings.items():
-        if not passed:
-            failures.append(f"ceiling {ceiling} MISS")
-        print(f"ceiling {ceiling}: {'PASS' if passed else 'MISS'}")
 
     if failures:
         print(f"READ_BENCH FAIL: {', '.join(failures)}")
@@ -125,18 +145,6 @@ def bench(config_path, log_dir):
 
 
 # ── Core fixture normalised comparison ──────────────────────────────────
-
-def strip_timing_and_read_keys(obj):
-    """Remove timing keys (as identity.sh does) AND the read-only presentation keys."""
-    TIMING_KEYS = {"wall_seconds", "ms_per_agent_tick", "timing", "git_sha"}
-    READ_KEYS = {"why_not", "diagnosis_cache", "requests_cache", "cap_target_by_day", "logs_ground_by_day"}
-    ALL_EXCLUDED = TIMING_KEYS | READ_KEYS
-    if isinstance(obj, dict):
-        return {k: strip_timing_and_read_keys(v) for k, v in obj.items() if k not in ALL_EXCLUDED}
-    if isinstance(obj, list):
-        return [strip_timing_and_read_keys(item) for item in obj]
-    return obj
-
 
 def core_fixture(config_path, log_dir):
     """Run baseline and colony worlds at BASE and HEAD, compare normalised."""
@@ -167,27 +175,15 @@ def core_fixture(config_path, log_dir):
                 stderr=subprocess.STDOUT,
             )
 
-    # Compare each fixture, stripping timing and read-only keys
+    # Compare each fixture using the registered pairwise schema policy.
     for name, _ in fixtures:
-        base_summary = json.loads((out / f"base_{name}/summary.json").read_text())
-        head_summary = json.loads((out / f"head_{name}/summary.json").read_text())
-        a_clean = strip_timing_and_read_keys(base_summary)
-        b_clean = strip_timing_and_read_keys(head_summary)
-        if a_clean == b_clean:
-            print(f"CORE_FIXTURE {name}: MATCH (timing and read keys excluded)")
-        else:
-            a_str = json.dumps(a_clean, sort_keys=True, indent=2).splitlines()
-            b_str = json.dumps(b_clean, sort_keys=True, indent=2).splitlines()
-            diffs = 0
-            for i, (la, lb) in enumerate(zip(a_str, b_str)):
-                if la != lb:
-                    diffs += 1
-                    if diffs <= 10:
-                        print(f"  line {i+1}:")
-                        print(f"    A: {la}")
-                        print(f"    B: {lb}")
-            print(f"CORE_FIXTURE FAIL on {name} ({diffs} differences)")
-            sys.exit(1)
+        base_summary = load_json(out / f"base_{name}/summary.json")
+        head_summary = load_json(out / f"head_{name}/summary.json")
+        a_clean, b_clean, masked = normalise_pair(base_summary, head_summary, config.get("base_commit"))
+        difference = first_difference(a_clean, b_clean)
+        if difference:
+            raise SystemExit(f"CORE_FIXTURE FAIL on {name}: {difference}")
+        print(f"CORE_FIXTURE {name}: MATCH; excluded paths: {masked}")
 
     # Check colony determinism
     determ_log = out / "head_colony_u.log"
@@ -207,23 +203,30 @@ def stall_waiver(stall_report_path):
     """
     path = Path(stall_report_path)
     assert path.exists(), f"stall report not found: {stall_report_path}"
-    report = json.loads(path.read_text())
-    assert report.get("complete"), "stall capture not complete"
+    report = load_json(path)
+    if report.get("complete") is not True:
+        raise SystemExit("stall capture not complete")
+    arms = report.get("arms")
+    if not isinstance(arms, list) or len(arms) != 2 or any(not isinstance(arm, dict) or type(arm.get("zoom")) not in (int, float) for arm in arms) or {arm["zoom"] for arm in arms} != {1.0, 0.5}:
+        raise SystemExit("stall requires exactly zoom 1.0 and 0.5 arms")
 
     waiver_used = False
-    for arm in report.get("arms", []):
+    for arm in arms:
         zoom = arm.get("zoom", "?")
-        assert arm.get("capture_complete"), f"zoom {zoom}: capture not complete"
+        if arm.get("capture_complete") is not True:
+            raise SystemExit(f"zoom {zoom}: capture not complete")
         # Post-warmup frames: those after render_warmup.complete is true.
         samples = arm.get("samples", [])
         post_warmup = False
         pw_frames = []
         for s in samples:
             warmup = s.get("telemetry", {}).get("buildings", {}).get("render_warmup", {})
-            if warmup.get("complete", False):
+            if warmup.get("complete") is True:
                 post_warmup = True
             if post_warmup:
-                pw_frames.append(s.get("interval_ms", 0))
+                pw_frames.append(s.get("interval_ms"))
+        if not pw_frames or any(type(frame) not in (int, float) or not math.isfinite(frame) or frame <= 0 for frame in pw_frames):
+            raise SystemExit(f"zoom {zoom}: missing or invalid post-warmup frames")
         over_50 = [round(f, 3) for f in pw_frames if f > 50.0]
         over_60 = [round(f, 3) for f in pw_frames if f > 60.0]
         if over_60:
@@ -248,12 +251,16 @@ def stall_waiver(stall_report_path):
 
 def check_bench_ratio(base_median, new_median, limit=1.10):
     """Return (pass, ratio)."""
-    ratio = new_median / base_median if base_median else 0
+    if any(type(value) not in (int, float) or not math.isfinite(value) or value <= 0 for value in (base_median, new_median, limit)):
+        raise ValueError("bench ratio requires finite positive numbers")
+    ratio = new_median / base_median
     return ratio <= limit, ratio
 
 
 def check_stall_frames(frames, max_over_50=2, max_ms=60.0):
     """Return (pass, over_50_count, max_frame)."""
+    if not frames or any(type(frame) not in (int, float) or not math.isfinite(frame) or frame <= 0 for frame in frames):
+        return False, 0, 0
     over_50 = [f for f in frames if f > 50.0]
     over_60 = [f for f in frames if f > max_ms]
     ok = len(over_50) <= max_over_50 and len(over_60) == 0

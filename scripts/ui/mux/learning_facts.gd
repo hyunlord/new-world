@@ -1,18 +1,24 @@
 # learning_facts.gd: converts authoritative snapshots into declarative learning and goal facts.
-# Bridge methods: via SimReads get_ui_facts and get_colony_overlay.
+# Bridge methods: via SimReads get_ui_facts, get_colony_overlay and get_tallies.
 extends RefCounted
 
 static func collect(world: Node, steward: Dictionary = {}) -> Dictionary:
-	return from_snapshots(SimReads.read(world, "get_ui_facts"), SimReads.read(world, "get_colony_overlay"), steward)
+	return from_snapshots(SimReads.read(world, "get_ui_facts"), SimReads.read(world, "get_colony_overlay"), steward, SimReads.read(world, "get_tallies"))
 
-static func from_snapshots(bulk: Dictionary, overlay: Dictionary, steward: Dictionary = {}) -> Dictionary:
+static func from_snapshots(bulk: Dictionary, overlay: Dictionary, steward: Dictionary = {}, tallies: Dictionary = {}) -> Dictionary:
 	var people: Dictionary = bulk.get("people", {})
 	var shops: Dictionary = bulk.get("workshops", {})
 	var tech: Dictionary = bulk.get("tech", {})
 	var story: Dictionary = bulk.get("story", {})
 	var neighbours: Dictionary = bulk.get("neighbours", {})
 	var storage: Dictionary = bulk.get("stockpile_tiles", {})
+	var deaths: int = 0
+	for key: String in ["deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age", "deaths_exposure"]:
+		deaths += int(tallies.get(key, 0))
 	var facts: Dictionary = {
+		"births": int(tallies.get("births", 0)),
+		"deaths": deaths,
+		"tech_at_risk": int(tech.get("at_risk", 0)),
 		"stockpile_exists": not storage.get("zones", []).is_empty(),
 		"chop_marked": overlay.get("designation_kinds", []).has(0),
 		"house_beds_ready": beds_ready(people, bulk.get("rooms", {})),
