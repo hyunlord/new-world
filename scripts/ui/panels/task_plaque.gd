@@ -21,6 +21,7 @@ var _world_sim: Node = null
 var _panel: PanelContainer
 var _text_label: Label
 var _title_label: Label
+var _chapter_label: Label
 var _view_button: Button
 var _task_data: Dictionary = {}
 var _task_tick: int = -1
@@ -60,6 +61,11 @@ func _ready() -> void:
 	_title_label.name = "Title"
 	_title_label.add_theme_color_override("font_color", Color("e8c46e"))
 	inner.add_child(_title_label)
+	# The current chapter, always visible next to the title (owner check 1: "1장: 겨울을 난다 — 조건 0/4").
+	_chapter_label = Label.new()
+	_chapter_label.name = "Chapter"
+	_chapter_label.add_theme_color_override("font_color", Color("b8a888"))
+	inner.add_child(_chapter_label)
 	_text_label = Label.new()
 	_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_text_label.custom_minimum_size.x = 200
@@ -165,6 +171,11 @@ func _refresh() -> void:
 func _show_line(line: String, tooltip: String) -> void:
 	_current_text = line
 	_title_label.text = _loc("LOOP_PLAQUE_TITLE")
+	var goals: Node = get_node_or_null("../Goals")
+	if goals == null:
+		goals = get_tree().root.find_child("Goals", true, false) if is_inside_tree() else null
+	_chapter_label.text = KoreanText.words(str(goals.call("chapter_line"))) if goals != null and goals.has_method("chapter_line") else ""
+	_chapter_label.visible = not _chapter_label.text.is_empty()
 	_text_label.text = KoreanText.words(line)
 	_view_button.text = _loc("READ_PLAQUE_VIEW")
 	_panel.tooltip_text = KoreanText.raw(tooltip) if not tooltip.is_empty() else ""

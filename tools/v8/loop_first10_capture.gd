@@ -107,6 +107,14 @@ func _run() -> void:
 		if day != last_day:
 			last_day = day
 			await _capture(main, "day_%02d" % day, "Day %d" % (day + 1))
+			# §4 (d): one daily screen with the notable chronicle open, so the latest important event
+			# and its "← cause" are on screen.
+			var chron: Control = main.find_child("ChroniclePanel", true, false) as Control
+			if chron != null:
+				chron.visible = true
+				await process_frame
+				await _capture(main, "day_%02d_chronicle" % day, "Day %d chronicle" % (day + 1))
+				chron.visible = false
 
 	# Write manifest.
 	var manifest_path: String = _output_dir.path_join("manifest.json")

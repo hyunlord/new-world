@@ -151,6 +151,22 @@ func current_chapter_data() -> Dictionary:
 	return {}
 
 
+## The current chapter's one-line summary for the always-visible plaque (§2.3, owner check 1):
+## "1장 · 겨울을 난다 · 1/4". Empty when no chapter is loaded.
+func chapter_line() -> String:
+	var chapter: Dictionary = current_chapter_data()
+	if chapter.is_empty():
+		return ""
+	var conditions: Array = chapter.get("conditions", [])
+	var met: int = 0
+	for cond: Variant in conditions:
+		if cond is Dictionary and _condition_met(cond):
+			met += 1
+	return _loc("LOOP_PLAQUE_CHAPTER_FMT").format({
+		"n": _current_index + 1, "title": _loc(str(chapter.get("title_key", ""))),
+		"met": met, "total": conditions.size()})
+
+
 ## The next unmet condition's text and tool hint for the plaque (§2.1).
 func next_unmet_condition() -> Dictionary:
 	var chapter: Dictionary = current_chapter_data()
