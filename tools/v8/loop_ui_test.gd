@@ -417,42 +417,32 @@ func _test_chapter_completion_toast(main: Node) -> void:
 	_assert(chronicle != null and chronicle.has_method("add_presentation_entry"), "ChroniclePanel has add_presentation_entry")
 
 
-## Test 20: card trigger matching uses the correct bridge data format (parallel arrays).
+## Test 20: card triggers — alert triggers use the evaluator, chronicle/diagnosis still work.
 func _test_card_trigger_format() -> void:
 	print("Test 20: card trigger format")
+	# Verify all required cards use alert triggers (not raw bridge checks).
+	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
+	var parsed: Variant = JSON.parse_string(text)
+	if not parsed is Dictionary:
+		_assert(false, "cards.json parse")
+		return
+	var alert_cards: Array[String] = ["need_food", "need_warmth", "migrants", "trader", "knowledge_risk", "wolves", "idle_adults"]
+	for card: Variant in parsed.get("cards", []):
+		if card is Dictionary and str(card["id"]) in alert_cards:
+			var trigger: Dictionary = card.get("trigger", {})
+			_assert(str(trigger.get("kind", "")) == "alert", "%s uses alert trigger" % str(card["id"]))
+			_assert(not str(trigger.get("alert_id", "")).is_empty(), "%s has alert_id" % str(card["id"]))
+	# Verify tools_low uses bridge trigger (settlement_no_tools doesn't exist).
+	for card: Variant in parsed.get("cards", []):
+		if card is Dictionary and str(card["id"]) == "tools_low":
+			var trigger: Dictionary = card.get("trigger", {})
+			_assert(str(trigger.get("kind", "")) == "bridge", "tools_low uses bridge trigger")
+	# Verify card_panel has _alert_active and _close_cleared_triggers with hysteresis.
 	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
 	var panel: PanelContainer = CardPanelScript.new()
-	# Simulate bridge get_requests return with parallel arrays.
-	var mock_requests: Dictionary = {
-		"tick": 100,
-		"rule_ids": PackedStringArray(["need_food", "need_warmth"]),
-		"text_keys": PackedStringArray(["REQ_NEED_FOOD", "REQ_NEED_WARMTH"]),
-		"priorities": PackedInt32Array([1, 2]),
-		"counts": PackedInt32Array([3, 1]),
-		"voices": PackedInt64Array([42, 43]),
-		"voice_names": PackedStringArray(["", ""]),
-		"steward_active": [true, false],
-	}
-	# Simulate bridge get_settlement_diagnosis return with parallel arrays.
-	var mock_diag: Dictionary = {
-		"tick": 100,
-		"check_ids": PackedStringArray(["settlement_no_tools", "stockpile_full"]),
-		"text_keys": PackedStringArray(["DIAG_NO_TOOLS", "DIAG_FULL"]),
-		"severities": PackedInt32Array([1, 2]),
-	}
-	# Test request trigger matching.
-	var food_card: Dictionary = {"trigger": {"kind": "request", "request_id": "need_food"}}
-	_assert(panel.call("_check_trigger", food_card, mock_requests, mock_diag, 100), "request trigger matches need_food")
-	var shelter_card: Dictionary = {"trigger": {"kind": "request", "request_id": "need_shelter"}}
-	_assert(not panel.call("_check_trigger", shelter_card, mock_requests, mock_diag, 100), "request trigger rejects need_shelter")
-	# Test diagnosis trigger matching.
-	var tools_card: Dictionary = {"trigger": {"kind": "diagnosis", "check_id": "settlement_no_tools"}}
-	_assert(panel.call("_check_trigger", tools_card, mock_requests, mock_diag, 100), "diagnosis trigger matches settlement_no_tools")
-	var missing_card: Dictionary = {"trigger": {"kind": "diagnosis", "check_id": "nonexistent"}}
-	_assert(not panel.call("_check_trigger", missing_card, mock_requests, mock_diag, 100), "diagnosis trigger rejects nonexistent")
-	# Test _collect_trigger_data extracts voice from parallel arrays.
-	var trigger_data: Dictionary = panel.call("_collect_trigger_data", food_card, mock_requests, mock_diag)
-	_assert(int(trigger_data.get("voice_id", -1)) == 42, "trigger data voice_id from parallel array")
+	_assert(panel.has_method("_alert_active"), "has _alert_active")
+	_assert(panel.has_method("_close_cleared_triggers"), "has _close_cleared_triggers")
+	_assert(panel.has_method("_check_bridge_trigger"), "has _check_bridge_trigger")
 	panel.queue_free()
 
 
@@ -543,27 +533,26 @@ func _test_card_answer_recorded(main: Node) -> void:
 	_assert(not (card_panel.call("active_ids") as PackedStringArray).has(card_id), "answered card closed")
 
 
-## Test 23: card auto-closes when its request trigger clears.
-##   Fails if _close_cleared_triggers is missing or inactive requests keep cards open.
+## Test 23: card auto-closes with hysteresis when trigger clears.
+##   Fails if _close_cleared_triggers is missing or doesn't use clear_count.
 func _test_card_auto_close() -> void:
-	print("Test 23: card auto-close on trigger clear")
+	print("Test 23: card auto-close with hysteresis")
 	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
 	var panel: PanelContainer = CardPanelScript.new()
 	_assert(panel.has_method("_close_cleared_triggers"), "has _close_cleared_triggers method")
-	# Simulate an active card whose request is no longer present.
-	var food_def: Dictionary = {"id": "need_food", "trigger": {"kind": "request", "request_id": "need_food"}, "options": [], "priority": 10}
-	panel.get("_active")["need_food"] = {"def": food_def, "opened_tick": 100, "expires_tick": 9999, "answered": false, "trigger_data": {}}
-	# Requests without need_food → card should close.
-	var empty_requests: Dictionary = {"rule_ids": PackedStringArray(["need_warmth"]), "voices": PackedInt64Array([1])}
-	var empty_diag: Dictionary = {"check_ids": PackedStringArray()}
-	panel.call("_close_cleared_triggers", empty_requests, empty_diag)
-	_assert(not panel.get("_active").has("need_food"), "need_food card closed when request inactive")
-	# Repeat with a diagnosis card.
-	var tools_def: Dictionary = {"id": "tools_low", "trigger": {"kind": "diagnosis", "check_id": "settlement_no_tools"}, "options": [], "priority": 9}
-	panel.get("_active")["tools_low"] = {"def": tools_def, "opened_tick": 100, "expires_tick": 9999, "answered": false, "trigger_data": {}}
-	var no_tools_diag: Dictionary = {"check_ids": PackedStringArray()}
-	panel.call("_close_cleared_triggers", empty_requests, no_tools_diag)
-	_assert(not panel.get("_active").has("tools_low"), "tools_low card closed when diagnosis passes")
+	# Simulate an active card with a chronicle trigger that won't match (no world).
+	var quarrel_def: Dictionary = {"id": "quarrel", "trigger": {"kind": "chronicle", "chronicle_kind": 19}, "options": [], "priority": 18}
+	panel.get("_active")["quarrel"] = {"def": quarrel_def, "opened_tick": 100, "expires_tick": 9999, "answered": false, "clear_count": 0, "trigger_data": {}}
+	# First call: trigger is clear, clear_count goes to 1 — card should NOT close yet.
+	panel.call("_close_cleared_triggers")
+	_assert(panel.get("_active").has("quarrel"), "quarrel stays open after 1 clear poll (hysteresis)")
+	_assert(int(panel.get("_active")["quarrel"]["clear_count"]) == 1, "clear_count incremented to 1")
+	# Two more calls: clear_count reaches 3 → card should close.
+	panel.call("_close_cleared_triggers")
+	panel.call("_close_cleared_triggers")
+	_assert(not panel.get("_active").has("quarrel"), "quarrel closed after 3 consecutive clear polls")
+	# Verify it was NOT marked handled (can re-trigger).
+	_assert(not panel.get("_handled").has("quarrel"), "quarrel not marked handled on clear (can re-trigger)")
 	panel.queue_free()
 
 
@@ -603,10 +592,10 @@ func _test_no_raw_text_in_cards() -> void:
 	panel.queue_free()
 
 
-## Test 25: wolves card trigger uses chronicle kind 46 (StewardDefence), not 36 (Sick).
-##   Fails if the cards.json wolves entry still has the wrong kind.
+## Test 25: wolves card uses alert wolves_approaching (not chronicle kind 36/46).
+##   Fails if wolves still uses a chronicle or diagnosis trigger.
 func _test_wolves_card_kind() -> void:
-	print("Test 25: wolves card kind = 46 (StewardDefence)")
+	print("Test 25: wolves uses wolves_approaching alert")
 	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
 	var parsed: Variant = JSON.parse_string(text)
 	if not parsed is Dictionary:
@@ -615,7 +604,8 @@ func _test_wolves_card_kind() -> void:
 	for card: Variant in parsed.get("cards", []):
 		if card is Dictionary and str(card["id"]) == "wolves":
 			var trigger: Dictionary = card.get("trigger", {})
-			_assert(int(trigger.get("chronicle_kind", -1)) == 46, "wolves chronicle_kind is 46 (StewardDefence), not 36 (Sick)")
+			_assert(str(trigger.get("kind", "")) == "alert", "wolves trigger is alert kind")
+			_assert(str(trigger.get("alert_id", "")) == "wolves_approaching", "wolves alert_id is wolves_approaching")
 			return
 	_assert(false, "wolves card not found")
 

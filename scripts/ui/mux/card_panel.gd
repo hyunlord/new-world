@@ -395,7 +395,7 @@ func answer_card(card_id: String, option_index: int) -> void:
 	_rebuild_ui()
 
 
-func _send_command(command: String, option: Dictionary, card: Dictionary) -> Variant:
+func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Variant:
 	if _world == null:
 		return null
 	var info: Dictionary = {}
