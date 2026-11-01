@@ -1307,7 +1307,7 @@
 	"LOOP_CARD_MIGRANTS_DECLINE": "거절",
 	"LOOP_CARD_TRADER": "상인이 왔어요",
 	"LOOP_CARD_TRADER_BODY": "상인이 교환을 제안합니다",
-	"LOOP_CARD_TRADER_TRADE": "교환",
+	"LOOP_CARD_TRADER_TRADE": "교역 조건 보기",
 	"LOOP_CARD_TRADER_DECLINE": "거절",
 	"LOOP_CARD_KNOWLEDGE_RISK": "기술이 사라질 위험",
 	"LOOP_CARD_KNOWLEDGE_RISK_BODY": "{technique} — 아는 사람이 {holder}뿐입니다",

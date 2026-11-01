@@ -242,7 +242,7 @@ func _refresh() -> void:
 		_close.text = NeighbourText.ltr(_locale, "M55_TRADE_CLOSE")
 		_clamp_picks()
 		var rows_key: int = hash([_read.get("goods_kind", []), _read.get("goods_count", []), _read.get("goods_quality", []), _read.get("stock_x", []),
-			_read.get("stock_y", []), _read.get("stock_kind", []), _read.get("stock_count", []), language])
+			_read.get("stock_y", []), _read.get("stock_kind", []), _read.get("stock_available_count", []), language])
 		if rows_key != _rows_key:
 			_rows_key = rows_key
 			_rebuild_rows()
@@ -263,7 +263,7 @@ func stock_rows() -> Array[Dictionary]:
 	var xs: PackedInt32Array = _read.get("stock_x", PackedInt32Array())
 	var ys: PackedInt32Array = _read.get("stock_y", PackedInt32Array())
 	var kinds: PackedInt64Array = _read.get("stock_kind", PackedInt64Array())
-	var counts: PackedInt32Array = _read.get("stock_count", PackedInt32Array())
+	var counts: PackedInt32Array = _read.get("stock_available_count", PackedInt32Array())
 	var qualities: PackedInt32Array = _read.get("stock_quality", PackedInt32Array())
 	var values: PackedInt32Array = _read.get("stock_value", PackedInt32Array())
 	var n: int = mini(mini(xs.size(), ys.size()), mini(mini(kinds.size(), counts.size()), mini(qualities.size(), values.size())))
@@ -474,6 +474,17 @@ func gift() -> Dictionary:
 func _send(as_gift: bool) -> Dictionary:
 	if _world_sim == null or _caravan < 0:
 		return {}
+	var previous_give: Dictionary = _give.duplicate()
+	var previous_take: Dictionary = _take.duplicate()
+	_read_key = []
+	_refresh()
+	if _caravan < 0 or _give != previous_give or _take != previous_take:
+		_status.text = NeighbourText.ltr(_locale, "M55_TRADE_PICK_HINT")
+		_status.add_theme_color_override("font_color", BAD)
+		_toast(_status.text)
+		return {"accepted": false, "skipped": true, "reason": "stale_selection"}
+	if _give.is_empty() or (not as_gift and (_take.is_empty() or not bool(balance().get("ok", false)))):
+		return {"accepted": false, "skipped": true, "reason": "nothing"}
 	var give: PackedInt32Array = PackedInt32Array()
 	for row: Dictionary in stock_rows():
 		var n: int = int(_give.get(row["key"], 0))

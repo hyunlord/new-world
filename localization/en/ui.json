@@ -1307,7 +1307,7 @@
 	"LOOP_CARD_MIGRANTS_DECLINE": "Decline",
 	"LOOP_CARD_TRADER": "Trader arrived",
 	"LOOP_CARD_TRADER_BODY": "A trader offers an exchange",
-	"LOOP_CARD_TRADER_TRADE": "Trade",
+	"LOOP_CARD_TRADER_TRADE": "Review trade",
 	"LOOP_CARD_TRADER_DECLINE": "Decline",
 	"LOOP_CARD_KNOWLEDGE_RISK": "Knowledge at risk",
 	"LOOP_CARD_KNOWLEDGE_RISK_BODY": "{technique} — only {holder} knows it",

@@ -9,6 +9,8 @@
 - Compare fixture summaries with exact qualified exclusions and strict coverage/types; reject missing bench ceilings and empty stall evidence.
 
 ### Fixed
+- Trader recommendations now open the existing terms dialog without sending an exchange; available stock excludes already owed goods and stale selections require review.
+- Card-run acceptance rejects any per-world mortality increase and incomplete synchronous receipts; benchmark logs retain the exact admitted load sample.
 - Published format14 save loading after inherited steward field insertion: explicit format15 output and frozen formats11–14 migration. Unpublished ambiguous LOOP14 payloads fail explicitly.
 
 See [M6B_REPORT](docs/v8/m6b/M6B_REPORT.md) for exact verification state; no publication or full-gate claim is made here.

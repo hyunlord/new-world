@@ -90,9 +90,9 @@ func _run() -> void:
 			seed_val, result.get("alive", 0), result.get("deaths", 0),
 			result.get("cards_seen", 0)])
 
-	_write_result({"seeds": active_seeds, "active_seeds": active_seeds, "kind_filter": _kind_filter, "full_suite": active_seeds == SEEDS and _kind_filter.is_empty(), "days": DAYS, "results": _results, "total_validation_failures": _validation_failures, "coverage": coverage(_results)})
+	var written: bool = _write_result({"seeds": active_seeds, "active_seeds": active_seeds, "kind_filter": _kind_filter, "full_suite": active_seeds == SEEDS and _kind_filter.is_empty(), "days": DAYS, "results": _results, "total_validation_failures": _validation_failures, "coverage": coverage(_results)})
 	var passed: bool = _print_summary(active_seeds)
-	quit(0 if passed else 1)
+	quit(0 if passed and written else 1)
 
 
 func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards: bool) -> Dictionary:
@@ -328,12 +328,12 @@ func _print_summary(active_seeds: Array[int]) -> bool:
 			for b: Dictionary in _results:
 				if str(b["mode"]) == "no_answer" and int(b["seed"]) == int(r["seed"]):
 					baseline = b
-			var worse: bool = int(r.get("deaths", 0)) > int(baseline.get("deaths", 0)) + 1
+			var worse: bool = int(r.get("deaths", 0)) > int(baseline.get("deaths", 0))
 			if worse:
 				per_seed_pass = false
-				print("  WARN seed %d: answer deaths=%d > baseline+1=%d" % [int(r["seed"]), int(r["deaths"]), int(baseline.get("deaths", 0)) + 1])
-	print("No seed worse than baseline+1: %s" % ("PASS" if per_seed_pass else "FAIL"))
-	print("Total deaths <= no-answer+1: %s" % ("PASS" if answer_deaths <= no_answer_deaths + 1 else "FAIL"))
+				print("  WARN seed %d: answer deaths=%d > baseline=%d" % [int(r["seed"]), int(r["deaths"]), int(baseline.get("deaths", 0))])
+	print("No seed worse than baseline: %s" % ("PASS" if per_seed_pass else "FAIL"))
+	print("Total deaths <= no-answer: %s" % ("PASS" if answer_deaths <= no_answer_deaths else "FAIL"))
 	print("Validation failures: %d (must be 0: %s)" % [_validation_failures, "PASS" if _validation_failures == 0 else "FAIL"])
 	if not all_rejections.is_empty():
 		print("Rejection breakdown: %s" % str(all_rejections))
@@ -369,28 +369,98 @@ static func results_pass(rows: Array[Dictionary], seeds: Array[int], failures: i
 			return false
 		if not bool(row.get("clock_valid", false)) or int(row.get("initial_tick", -1)) != 0 or int(row.get("final_tick", -1)) != TOTAL_TICKS or int(row.get("requested_ticks", -1)) != TOTAL_TICKS:
 			return false
-		if int(row.get("validation_failures", -1)) != 0 or not row.has("deaths"):
+		if int(row.get("validation_failures", -1)) != 0 or not row.get("deaths") is int or int(row["deaths"]) < 0:
 			return false
 		for receipt: Dictionary in row.get("command_results", []):
 			if not bool(receipt.get("accepted", false)):
 				return false
+		if not _answer_evidence_pass(row):
+			return false
 		pairs[seed][mode] = int(row["deaths"])
 	for seed: int in seeds:
 		var pair: Dictionary = pairs[seed]
-		if not pair.has("answer") or not pair.has("no_answer") or int(pair["answer"]) > int(pair["no_answer"]) + 1:
+		if not pair.has("answer") or not pair.has("no_answer") or int(pair["answer"]) > int(pair["no_answer"]):
 			return false
 		answer_deaths += int(pair["answer"])
 		baseline_deaths += int(pair["no_answer"])
-	return answer_deaths <= baseline_deaths + 1
+	return answer_deaths <= baseline_deaths
 
 
-func _write_result(data: Dictionary) -> void:
+## Completeness and synchronous attribution are checkable; native Player metadata and
+## a causal chronicle join are not exposed and remain explicitly unverified.
+static func _answer_evidence_pass(row: Dictionary) -> bool:
+	var attempts: Array = row.get("answer_attempts", [])
+	var answers: Array = row.get("answer_log", [])
+	var receipts: Array = row.get("command_results", [])
+	if int(row.get("cards_answered", -1)) != answers.size():
+		return false
+	if str(row.get("mode", "")) == "no_answer":
+		return attempts.is_empty() and answers.is_empty() and receipts.is_empty()
+	var consumed: Array[int] = []
+	var first_attempts: Dictionary = {}
+	var collected: Array = []
+	for i: int in attempts.size():
+		var attempt: Dictionary = attempts[i]
+		var tick: int = int(attempt.get("tick", -1))
+		var opened: int = int(attempt.get("opened_tick", -1))
+		if opened < 0 or tick < opened or tick > TOTAL_TICKS or not bool(attempt.get("synchronous_clock_valid", false)):
+			return false
+		var timely: bool = tick - opened <= ANSWER_DEADLINE
+		if not attempt.has("within_deadline") or bool(attempt["within_deadline"]) != timely:
+			return false
+		var dispatched: Array = attempt.get("command_results", [])
+		var card: String = str(attempt.get("card", ""))
+		if card.is_empty():
+			return false
+		if not first_attempts.has(card):
+			first_attempts[card] = {}
+		var openings: Dictionary = first_attempts[card]
+		if not openings.has(opened):
+			if not timely:
+				return false
+			openings[opened] = tick
+		elif tick < int(openings[opened]):
+			return false
+		# A stale target may remain open and be retried without dispatch. The first
+		# attempt and every consumed/native action must still meet the deadline.
+		if not timely and (bool(attempt.get("consumed", false)) or not dispatched.is_empty()):
+			return false
+		var matching: Dictionary = match_native_receipts(dispatched, attempt.get("native_command_delta", {}), int(attempt.get("native_log_start", -1)), tick)
+		if not bool(matching.get("complete", false)) or not bool((attempt.get("matching", {}) as Dictionary).get("complete", false)):
+			return false
+		if not bool((attempt.get("chronicle_delta", {}) as Dictionary).get("complete", false)):
+			return false
+		collected.append_array(dispatched)
+		if bool(attempt.get("consumed", false)):
+			consumed.append(i)
+	if collected != receipts or consumed.size() != answers.size():
+		return false
+	for i: int in answers.size():
+		var answer: Dictionary = answers[i]
+		if int(answer.get("attempt_index", -1)) != consumed[i]:
+			return false
+		var attempt: Dictionary = attempts[consumed[i]]
+		if str(answer.get("card", "")).is_empty() or answer.get("card") != attempt.get("card") or answer.get("tick") != attempt.get("tick"):
+			return false
+	return true
+
+
+func _write_result(data: Dictionary) -> bool:
 	var path: String = _output_dir.path_join("cards_run_result.json")
+	var written: bool = write_result_file(path, data)
+	print("Result %s: %s" % ["written" if written else "WRITE FAILED", path])
+	return written
+
+
+static func write_result_file(path: String, data: Dictionary) -> bool:
 	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
-	if file != null:
-		file.store_string(JSON.stringify(data, "\t"))
-		file.close()
-		print("Result written to: ", path)
+	if file == null:
+		return false
+	file.store_string(JSON.stringify(data, "\t"))
+	file.flush()
+	var written: bool = file.get_error() == OK
+	file.close()
+	return written
 
 
 ## Report natural coverage separately: absent kinds need focused fixture evidence.

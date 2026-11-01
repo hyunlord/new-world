@@ -551,7 +551,7 @@ func _test_card_answer_recorded(main: Node) -> void:
 	var opts: Array = def.get("options", [])
 	for oi: int in opts.size():
 		var oc: String = str((opts[oi] as Dictionary).get("command", "none"))
-		if oc not in ["none", "steward_default", "enter_zone_tool", "open_roles", "open_build_menu"]:
+		if oc not in ["none", "steward_default", "enter_zone_tool", "open_roles", "open_build_menu", "open_trade"]:
 			recommended = oi
 			break
 	var entries_before: int = (chronicle.get("_entries") as Array).size()

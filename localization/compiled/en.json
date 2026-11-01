@@ -309,7 +309,7 @@
     "LOOP_CARD_TRADER": "Trader arrived",
     "LOOP_CARD_TRADER_BODY": "A trader offers an exchange",
     "LOOP_CARD_TRADER_DECLINE": "Decline",
-    "LOOP_CARD_TRADER_TRADE": "Trade",
+    "LOOP_CARD_TRADER_TRADE": "Review trade",
     "LOOP_CARD_WOLVES": "Wolves approaching",
     "LOOP_CARD_WOLVES_BODY": "{count} wolves approaching the village",
     "LOOP_CARD_WOLVES_DRAFT": "Draft one adult",

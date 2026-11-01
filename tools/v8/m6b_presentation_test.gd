@@ -67,6 +67,11 @@ func _check(ok: bool, label: String) -> void:
 
 
 func _run() -> void:
+	if "--cards-acceptance-tests" in OS.get_cmdline_user_args():
+		_test_cards_acceptance()
+		print("CARDS_ACCEPTANCE_DONE failed=%d" % _failed)
+		quit(0 if _failed == 0 else 1)
+		return
 	var main: Node = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
 	for _i: int in 10:
@@ -145,21 +150,7 @@ func _run() -> void:
 				_check(int(after["rows"][r]["levels"][w]) == expected, "only chosen person's named work changes")
 		_check((panel.call("apply_role", int(rows[0]["agent"]), "extra_from_data") as Array).is_empty(), "repeat selection sends no redundant command")
 	_test_ambiguous_role(panel, world)
-	var good: Array[Dictionary] = [{"seed": 0, "mode": "answer", "deaths": 0, "validation_failures": 0}, {"seed": 0, "mode": "no_answer", "deaths": 0, "validation_failures": 0}]
-	for row: Dictionary in good:
-		row.merge({"initial_tick": 0, "final_tick": 69120, "requested_ticks": 69120, "clock_valid": true})
-	_check(not CardsRun.results_pass(good, [0], 0), "zero-card synthetic run rejected")
-	good[0].merge({"cards_kinds_seen": ["wolves"], "cards_answered": 1, "answer_log": [{"card": "wolves"}], "command_results": [{"accepted": true}]})
-	_check(CardsRun.results_pass(good, [0], 0), "complete passing card pair accepted")
-	good[0]["final_tick"] = 69121
-	_check(not CardsRun.results_pass(good, [0], 0), "natural-card clock drift rejects run")
-	good[0]["final_tick"] = 69120
-	_check(not CardsRun.results_pass(good, [0, 1], 0), "missing seed rejects card run")
-	_check(not CardsRun.results_pass(good, [0], 1), "synthetic validation failure rejects card run")
-	good[0]["deaths"] = 2
-	_check(not CardsRun.results_pass(good, [0], 0), "synthetic survival failure rejects card run")
-	good.pop_back()
-	_check(not CardsRun.results_pass(good, [0], 0), "missing arm rejects card run")
+	_test_cards_acceptance()
 	_test_attempt_accounting()
 	_test_tool_recipe(world)
 	_test_knowledge_identity(cards, world)
@@ -269,7 +260,7 @@ func _all_card_fixtures(_main: Node, world: Node, cards: Node) -> void:
 								return
 						covered_kinds[id] = true
 						covered_commands[command] = true
-					elif command in ["none", "steward_default", "open_roles", "open_build_menu"] and not (cards.call("active_ids") as PackedStringArray).has(id):
+					elif command in ["none", "steward_default", "open_roles", "open_build_menu", "open_trade"] and not (cards.call("active_ids") as PackedStringArray).has(id):
 						covered_kinds[id] = true
 						covered_commands[command] = true
 						evidence.append({"seed": seed, "hour": hour, "kind": id, "local_action": command, "sent_commands": 0})
@@ -640,3 +631,141 @@ func _test_ambiguous_role(panel: Node, world: Node) -> void:
 		_check(choice != null and choice.selected == 0, "multiple matching hunter/craft presets show neutral custom choice")
 		_check(world.call("get_command_log", 0) == before_refresh, "ambiguous role display emits no automatic commands")
 	panel.set("_roles", roles_before)
+
+
+## Each negative starts from an independently valid pair, so an earlier failure
+## cannot conceal a missing gate in the next assertion.
+func _card_acceptance_pair(seed: int = 0) -> Array[Dictionary]:
+	var receipt: Dictionary = {"accepted": true, "log_index": 4, "log_kind": "draft"}
+	var native: Dictionary = {"total": 5, "kinds": PackedStringArray(["draft"]), "ticks": PackedInt64Array([60]), "accepted": PackedByteArray([1])}
+	var attempt: Dictionary = {
+		"card": "wolves", "tick": 60, "opened_tick": 0, "within_deadline": true,
+		"synchronous_clock_valid": true, "native_log_start": 4,
+		"native_command_delta": native, "command_results": [receipt],
+		"matching": CardsRun.match_native_receipts([receipt], native, 4, 60),
+		"chronicle_delta": {"complete": true, "rows": [], "total": 0},
+		"consumed": true, "native_source": "UNAVAILABLE", "chronicle_causal_link": "UNVERIFIED",
+	}
+	var pair: Array[Dictionary] = [
+		{"seed": seed, "mode": "answer", "deaths": 0, "validation_failures": 0,
+		"cards_kinds_seen": ["wolves"], "cards_answered": 1,
+		"answer_log": [{"card": "wolves", "tick": 60, "attempt_index": 0}],
+		"command_results": [receipt], "answer_attempts": [attempt]},
+		{"seed": seed, "mode": "no_answer", "deaths": 0, "validation_failures": 0,
+		"cards_answered": 0, "answer_log": [], "command_results": [], "answer_attempts": []},
+	]
+	for row: Dictionary in pair:
+		row.merge({"initial_tick": 0, "final_tick": 69120, "requested_ticks": 69120, "clock_valid": true})
+	return pair
+
+
+func _test_cards_acceptance() -> void:
+	var good: Array[Dictionary] = _card_acceptance_pair()
+	_check(CardsRun.results_pass(good, [0], 0), "equal survival with complete synchronous evidence passes; causal join stays unverified")
+	var navigation: Array[Dictionary] = _card_acceptance_pair()
+	var local_attempt: Dictionary = navigation[0]["answer_attempts"][0].duplicate(true)
+	var empty_native: Dictionary = {"total": 5, "kinds": PackedStringArray(), "ticks": PackedInt64Array(), "accepted": PackedByteArray()}
+	local_attempt.merge({"card": "trader", "command": "open_trade", "native_log_start": 5,
+		"native_command_delta": empty_native, "command_results": [],
+		"matching": CardsRun.match_native_receipts([], empty_native, 5, 60)}, true)
+	navigation[0]["answer_attempts"].append(local_attempt)
+	navigation[0]["answer_log"].append({"card": "trader", "tick": 60, "attempt_index": 1})
+	navigation[0]["cards_answered"] = 2
+	_check(CardsRun.results_pass(navigation, [0], 0), "presentation navigation needs no invented native receipt or chronicle entry")
+	var stale: Array[Dictionary] = _card_acceptance_pair()
+	var first_stale: Dictionary = local_attempt.duplicate(true)
+	first_stale.merge({"consumed": false, "classification": "not_sent"}, true)
+	stale[0]["answer_attempts"].append(first_stale)
+	var retry: Dictionary = first_stale.duplicate(true)
+	retry.merge({"tick": 120, "within_deadline": false}, true)
+	stale[0]["answer_attempts"].append(retry)
+	_check(CardsRun.results_pass(stale, [0], 0), "late not-sent retry allowed after timely first attempt for same opening")
+	var late_first: Array[Dictionary] = _card_acceptance_pair()
+	late_first[0]["answer_attempts"].append(retry.duplicate(true))
+	_check(not CardsRun.results_pass(late_first, [0], 0), "late first attempt rejected even when not sent")
+	var new_opening: Array[Dictionary] = stale.duplicate(true)
+	new_opening[0]["answer_attempts"][2]["opened_tick"] = 1
+	_check(not CardsRun.results_pass(new_opening, [0], 0), "old timely opening cannot excuse new late opening of same card")
+	var consumed_late: Array[Dictionary] = stale.duplicate(true)
+	consumed_late[0]["answer_attempts"][2]["consumed"] = true
+	consumed_late[0]["answer_log"].append({"card": "trader", "tick": 120, "attempt_index": 2})
+	consumed_late[0]["cards_answered"] = 2
+	_check(not CardsRun.results_pass(consumed_late, [0], 0), "late consumption rejected even after timely first attempt")
+	var better: Array[Dictionary] = _card_acceptance_pair()
+	better[1]["deaths"] = 1
+	_check(CardsRun.results_pass(better, [0], 0), "strictly better survival passes")
+	for deaths: int in [1, 2]:
+		var worse: Array[Dictionary] = _card_acceptance_pair()
+		worse[0]["deaths"] = deaths
+		_check(not CardsRun.results_pass(worse, [0], 0), "extra deaths rejected without tolerance: %d" % deaths)
+	var offset: Array[Dictionary] = _card_acceptance_pair()
+	offset.append_array(_card_acceptance_pair(1))
+	offset[0]["deaths"] = 1
+	offset[3]["deaths"] = 1
+	_check(not CardsRun.results_pass(offset, [0, 1], 0), "one worse seed rejected even with equal aggregate deaths")
+	for invalid_deaths: Variant in [-1, "0"]:
+		var invalid: Array[Dictionary] = _card_acceptance_pair()
+		invalid[0]["deaths"] = invalid_deaths
+		_check(not CardsRun.results_pass(invalid, [0], 0), "malformed death count rejected: %s" % str(invalid_deaths))
+	var no_cards: Array[Dictionary] = _card_acceptance_pair()
+	no_cards[0].merge({"cards_kinds_seen": [], "cards_answered": 0, "answer_log": [], "command_results": [], "answer_attempts": []}, true)
+	_check(not CardsRun.results_pass(no_cards, [0], 0), "zero-card synthetic run rejected")
+	var drift: Array[Dictionary] = _card_acceptance_pair()
+	drift[0]["final_tick"] = 69121
+	_check(not CardsRun.results_pass(drift, [0], 0), "natural-card clock drift rejects run")
+	_check(not CardsRun.results_pass(_card_acceptance_pair(), [0, 1], 0), "missing seed rejects card run")
+	_check(not CardsRun.results_pass(_card_acceptance_pair(), [0], 1), "synthetic validation failure rejects card run")
+	var missing: Array[Dictionary] = _card_acceptance_pair()
+	missing.pop_back()
+	_check(not CardsRun.results_pass(missing, [0], 0), "missing arm rejects otherwise passing card run")
+	for field: String in ["within_deadline", "synchronous_clock_valid"]:
+		var invalid: Array[Dictionary] = _card_acceptance_pair()
+		invalid[0]["answer_attempts"][0][field] = false
+		_check(not CardsRun.results_pass(invalid, [0], 0), "attempt evidence rejects false " + field)
+	var late: Array[Dictionary] = _card_acceptance_pair()
+	late[0]["answer_attempts"][0]["opened_tick"] = -1
+	_check(not CardsRun.results_pass(late, [0], 0), "missing opening tick rejected despite claimed timely answer")
+	var overdue: Array[Dictionary] = _card_acceptance_pair()
+	overdue[0]["answer_attempts"][0]["tick"] = 61
+	overdue[0]["answer_attempts"][0]["native_command_delta"]["ticks"] = PackedInt64Array([61])
+	overdue[0]["answer_log"][0]["tick"] = 61
+	_check(not CardsRun.results_pass(overdue, [0], 0), "61-tick answer rejected despite claimed within-deadline flag")
+	var mismatch: Array[Dictionary] = _card_acceptance_pair()
+	mismatch[0]["answer_attempts"][0]["matching"]["complete"] = false
+	_check(not CardsRun.results_pass(mismatch, [0], 0), "recorded incomplete native matching rejected")
+	var forged: Array[Dictionary] = _card_acceptance_pair()
+	forged[0]["answer_attempts"][0]["native_command_delta"]["kinds"] = PackedStringArray(["wrong_kind"])
+	_check(not CardsRun.results_pass(forged, [0], 0), "native kind mismatch rejected despite claimed complete matching")
+	var chronicle: Array[Dictionary] = _card_acceptance_pair()
+	chronicle[0]["answer_attempts"][0]["chronicle_delta"]["complete"] = false
+	_check(not CardsRun.results_pass(chronicle, [0], 0), "incomplete chronicle read rejected")
+	var absent: Array[Dictionary] = _card_acceptance_pair()
+	absent[0]["answer_attempts"] = []
+	_check(not CardsRun.results_pass(absent, [0], 0), "answer without attempt evidence rejected")
+	var unlinked: Array[Dictionary] = _card_acceptance_pair()
+	unlinked[0]["answer_log"][0]["attempt_index"] = 1
+	_check(not CardsRun.results_pass(unlinked, [0], 0), "answer referring to missing attempt rejected")
+	var omitted: Array[Dictionary] = _card_acceptance_pair()
+	omitted[0]["answer_attempts"][0]["command_results"] = []
+	_check(not CardsRun.results_pass(omitted, [0], 0), "native receipt omitted from attempt rejected")
+	var rejected: Array[Dictionary] = _card_acceptance_pair()
+	rejected[0]["command_results"][0]["accepted"] = false
+	_check(not CardsRun.results_pass(rejected, [0], 0), "rejected receipt fails even with zero validation counter")
+	_test_cards_output_write()
+
+
+func _test_cards_output_write() -> void:
+	var base: String = OS.get_environment("M6B_PRESENTATION_EVIDENCE_DIR")
+	if base.is_empty():
+		base = OS.get_environment("WORLDSIM_TEST_SETTINGS_DIR")
+	_check(base.is_absolute_path(), "card output tests use explicit external evidence directory")
+	if not base.is_absolute_path():
+		return
+	var directory: String = base.path_join("cards-acceptance-%d" % OS.get_process_id())
+	_check(DirAccess.make_dir_recursive_absolute(directory) == OK, "card output test directory created")
+	var path: String = directory.path_join("valid.json")
+	var payload: Dictionary = {"fixture": "persisted", "accepted": true}
+	_check(CardsRun.write_result_file(path, payload), "card result write succeeds on valid path")
+	_check(JSON.parse_string(FileAccess.get_file_as_string(path)) == payload, "written card result round-trips exactly")
+	_check(not CardsRun.write_result_file(directory, payload), "card result write rejects directory target")
+	_check(not CardsRun.write_result_file(path.path_join("child.json"), payload), "card result write rejects parent that is a file")

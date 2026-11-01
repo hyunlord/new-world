@@ -42,10 +42,13 @@ def wait_for_load(threshold=8, timeout=2700):
     """Wait until 1-min load average is below threshold."""
     start = time.time()
     while time.time() - start < timeout:
-        load1 = os.getloadavg()[0]
+        loads = os.getloadavg()
+        if len(loads) != 3 or any(type(value) not in (int, float) or not math.isfinite(value) or value < 0 for value in loads):
+            raise ValueError("invalid load admission triplet")
+        load1 = loads[0]
         if load1 < threshold:
             print(f"admission: quiet (1-min load {load1:.2f} < {threshold})")
-            return load1
+            return loads
         time.sleep(30)
     raise RuntimeError(f"load did not drop below {threshold} in {timeout}s")
 
@@ -92,8 +95,7 @@ def bench(config_path, log_dir):
     # 3 rounds, interleaved
     for r in range(1, 4):
         for label, binary in [("base", base_bin), ("new", head_perf)]:
-            wait_for_load()
-            load1, load5, load15 = os.getloadavg()
+            load1, load5, load15 = wait_for_load()
             print(f"round {r} {label} load1={load1:.2f} load5={load5:.2f} load15={load15:.2f}")
             run_dir = out / f"{label}-r{r}"
             subprocess.check_call(

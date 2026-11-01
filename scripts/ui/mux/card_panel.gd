@@ -443,7 +443,19 @@ func answer_card(card_id: String, option_index: int) -> void:
 		return
 	var option: Dictionary = options[option_index]
 	var command: String = str(option.get("command", "none"))
-	if command != "none" and command != "steward_default" and command != "enter_zone_tool" and command != "open_roles" and command != "open_build_menu":
+	if command == "open_trade":
+		var caravan: int = int(card.get("trigger_data", {}).get("caravan_id", -1))
+		var reason: String = ""
+		if caravan < 0 or _visitor_id(SimReads.read(_world, "get_neighbours"), "caravan", caravan) != caravan:
+			reason = "no_caravan"
+		elif not get_parent().has_method("open_card_trade") or not bool(get_parent().call("open_card_trade", caravan)):
+			reason = "trade_panel_unavailable"
+		if not reason.is_empty():
+			_skipped_results.append({"card_id": card_id, "command": command, "reason": reason})
+			card["failure_reason"] = reason
+			_rebuild_ui()
+			return
+	elif command != "none" and command != "steward_default" and command != "enter_zone_tool" and command != "open_roles" and command != "open_build_menu":
 		var log_start: int = -1
 		if _world != null and _world.has_method("get_command_log"):
 			var tail: Dictionary = _world.call("get_command_log", 9223372036854775807)

@@ -53,7 +53,7 @@
       "title_key": "LOOP_CARD_TRADER",
       "body_key": "LOOP_CARD_TRADER_BODY",
       "options": [
-        {"text_key": "LOOP_CARD_TRADER_TRADE", "command": "cmd_trade", "params": "caravan_terms", "recommended": true},
+        {"text_key": "LOOP_CARD_TRADER_TRADE", "command": "open_trade", "recommended": true},
         {"text_key": "LOOP_CARD_TRADER_DECLINE", "command": "none", "params": "", "recommended": false}
       ],
       "default": "none",

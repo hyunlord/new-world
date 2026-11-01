@@ -9,6 +9,44 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import read_gate_checks  # noqa: E402
 
 
+class LoadAdmissionTest(unittest.TestCase):
+    def test_returns_exact_admitted_triplet_without_second_read(self):
+        from unittest.mock import patch
+        with patch.object(read_gate_checks.os, "getloadavg", side_effect=[(7.9, 9.0, 10.0), (8.1, 9.0, 10.0)]) as load:
+            self.assertEqual(read_gate_checks.wait_for_load(), (7.9, 9.0, 10.0))
+            self.assertEqual(load.call_count, 1)
+
+    def test_each_interleaved_repeat_uses_one_admitted_sample(self):
+        import tempfile
+        from unittest.mock import patch
+        report = {"scenes": [{"label": label, "tick_mean_us": 1.0, "tick_p99_us": 2.0}
+                              for label in read_gate_checks.BENCH_SCENES],
+                  "ceilings": {key: "PASS" for key in read_gate_checks.BENCH_CEILINGS}}
+        with (
+            tempfile.TemporaryDirectory() as folder,
+            patch.object(read_gate_checks, "load_config", return_value={"base_perf": "/base", "base_perf_sha256": "a" * 64}),
+            patch.object(read_gate_checks, "verify_binary"),
+            patch.object(read_gate_checks.Path, "exists", return_value=True),
+            patch.object(read_gate_checks, "load_json", return_value=report),
+            patch.object(read_gate_checks.os, "getloadavg", side_effect=[(7.0, 4.0, 3.0)] * 6) as loads,
+            patch.object(read_gate_checks.subprocess, "check_call") as run,
+        ):
+            read_gate_checks.bench("unused", folder)
+            self.assertEqual(loads.call_count, 6)
+            self.assertEqual([call.args[0][0] for call in run.call_args_list],
+                             ["/base", str(read_gate_checks.ROOT / "rust/target/release/worldsim_perf")] * 3)
+
+    def test_waits_at_boundary_and_rejects_invalid_samples(self):
+        from unittest.mock import patch
+        with patch.object(read_gate_checks.os, "getloadavg", side_effect=[(8.0, 4.0, 3.0), (7.0, 4.0, 3.0)]), patch.object(read_gate_checks.time, "sleep") as sleep:
+            self.assertEqual(read_gate_checks.wait_for_load(), (7.0, 4.0, 3.0))
+            sleep.assert_called_once_with(30)
+        for sample in ((True, 0, 0), (float("nan"), 0, 0), (1, -1, 0)):
+            with self.subTest(sample=sample), patch.object(read_gate_checks.os, "getloadavg", return_value=sample):
+                with self.assertRaises(ValueError):
+                    read_gate_checks.wait_for_load()
+
+
 class BenchRatioTest(unittest.TestCase):
     def test_pass_within_limit(self):
         ok, ratio = read_gate_checks.check_bench_ratio(100.0, 108.0)
