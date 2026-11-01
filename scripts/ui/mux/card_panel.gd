@@ -491,7 +491,9 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 				return {"accepted": false, "skipped": true, "reason": "already_handled"}
 			var neighbours2: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
 			var wids2: Variant = neighbours2.get("wave_ids", PackedInt64Array())
-			var wave2: int = int((wids2 as PackedInt64Array)[0]) if wids2 is PackedInt64Array and (wids2 as PackedInt64Array).size() > 0 else int(trigger_data.get("wave_id", 0))
+			if not wids2 is PackedInt64Array or (wids2 as PackedInt64Array).size() == 0:
+				return {"accepted": false, "skipped": true, "reason": "no_visitor"}
+			var wave2: int = int((wids2 as PackedInt64Array)[0])
 			result = SimReads.mutate(_world, "cmd_decline_migrants", [wave2])
 		"cmd_undraft_all":
 			return SimReads.mutate(_world, "cmd_undraft_all", [])
