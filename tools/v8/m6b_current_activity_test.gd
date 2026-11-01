@@ -5,6 +5,8 @@
 # Screenshots and raw save bytes go to WORLDSIM_TEST_SETTINGS_DIR; commanded evidence is separate.
 extends SceneTree
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
+# Independent expected stable-code table for the native JobKind ABI.
+const PURPOSE_KEYS: Array[String] = ["UI_UNKNOWN", "LOOP_PURPOSE_CHOP", "LOOP_PURPOSE_HAUL", "LOOP_PURPOSE_DELIVER", "LOOP_PURPOSE_BUILD", "LOOP_PURPOSE_QUARRY", "LOOP_PURPOSE_SUPPLY", "LOOP_PURPOSE_CRAFT", "LOOP_PURPOSE_GATHER", "LOOP_PURPOSE_DIG", "LOOP_PURPOSE_DECONSTRUCT", "LOOP_PURPOSE_CLEAR", "LOOP_PURPOSE_DIG_CLAY", "LOOP_PURPOSE_TEACH", "LOOP_PURPOSE_LEARN", "LOOP_PURPOSE_HUNT", "LOOP_PURPOSE_EQUIP", "LOOP_PURPOSE_TRADE", "LOOP_PURPOSE_HARVEST"]
 var failures: int = 0
 var activity: Script
 
@@ -34,14 +36,41 @@ func expect(tag: String, people: Dictionary, acts: Dictionary, key: String) -> v
 
 func pure() -> void:
 	expect("idle job/carry not working", person(0, 0), {}, "UI_ACTION_IDLE")
-	for target: int in [1, 2, 3, 4, 5, 6, 7, 9]:
-		expect("moving target %d" % target, person(1, target), {}, "INSPECTOR_STATE_SEEKING")
-	for row: Array in [[1, "MIND_BEHAVIOUR_EAT"], [2, "MIND_BEHAVIOUR_DRINK"], [3, "MIND_BEHAVIOUR_SLEEP"], [4, "MIND_BEHAVIOUR_DO_JOB"], [6, "MIND_BEHAVIOUR_DO_JOB"], [7, "MIND_BEHAVIOUR_DO_JOB"], [9, "MIND_BEHAVIOUR_DO_JOB"]]:
+	var seeks: Dictionary = {1: "LOOP_SEEK_FOOD", 2: "LOOP_SEEK_WATER", 3: "LOOP_SEEK_REST", 4: "SEEK:LOOP_PURPOSE_BUILD", 5: "UI_UNKNOWN", 6: "LOOP_SEEK_GATHER_FOOD", 7: "SEEK:LOOP_PURPOSE_GATHER", 9: "SEEK:LOOP_PURPOSE_BUILD"}
+	for target: int in seeks:
+		expect("seeking purpose %d" % target, person(1, target), {}, seeks[target])
+	for code: int in range(1, 19):
+		var job: Dictionary = person(1, 9)
+		job["jobs"] = PackedByteArray([code])
+		job["target_xs"] = PackedInt32Array([999]) # Tool/material fetch, not a proven final worksite.
+		expect("preparing job %d" % code, job, {}, "SEEK:" + PURPOSE_KEYS[code])
+		job["states"] = PackedByteArray([3])
+		expect("current job %d" % code, job, {}, "LOOP_PURPOSE_LEARN_PARTICIPATION" if code == 14 else "WORK:" + PURPOSE_KEYS[code])
+		job["states"] = PackedByteArray([0])
+		job["target_kinds"] = PackedByteArray([0])
+		expect("idle retained job %d" % code, job, {}, "UI_ACTION_IDLE")
+		job["states"] = PackedByteArray([3])
+		job["target_kinds"] = PackedByteArray([1])
+		expect("eating retained job %d" % code, job, {}, "MIND_BEHAVIOUR_EAT")
+	for state: int in [1, 3]:
+		for code: int in [0, 99]:
+			var invalid_job: Dictionary = person(state, 9)
+			invalid_job["jobs"] = PackedByteArray([code])
+			expect("unknown job %d state%d" % [code, state], invalid_job, {}, "UI_UNKNOWN")
+		var missing_job: Dictionary = person(state, 9)
+		missing_job.erase("jobs")
+		expect("missing job state%d" % state, missing_job, {}, "UI_UNKNOWN")
+		missing_job["jobs"] = PackedByteArray()
+		expect("short job state%d" % state, missing_job, {}, "UI_UNKNOWN")
+	for row: Array in [[1, "MIND_BEHAVIOUR_EAT"], [2, "MIND_BEHAVIOUR_DRINK"], [3, "MIND_BEHAVIOUR_SLEEP"], [4, "WORK:LOOP_PURPOSE_BUILD"], [6, "MIND_BEHAVIOUR_GATHER"], [7, "WORK:LOOP_PURPOSE_GATHER"], [9, "WORK:LOOP_PURPOSE_BUILD"]]:
 		expect("consuming %d" % row[0], person(3, row[0]), {}, row[1])
 	expect("social or combat is ambiguous", person(2, 5), {}, "UI_UNKNOWN")
 	var hold: Dictionary = person(3, 9)
 	hold["drafted"] = PackedByteArray([1])
 	expect("drafted hold is following orders", hold, {}, "MIND_BEHAVIOUR_FIGHT_DRAFTED")
+	hold["states"] = PackedByteArray([1])
+	expect("drafted seek ignores leftover job", hold, {}, "MIND_BEHAVIOUR_FIGHT_DRAFTED")
+	hold["states"] = PackedByteArray([3])
 	hold.erase("drafted")
 	expect("missing drafted ambiguous job", hold, {}, "UI_UNKNOWN")
 	hold["drafted"] = PackedByteArray([2])
@@ -103,6 +132,7 @@ func _run() -> void:
 	var people: Dictionary = world.call("get_agent_snapshot")
 	var acts: Dictionary = world.call("get_activity_snapshot")
 	var expected: Dictionary = activity.call("summarize", people, acts, int(tick["tick"]))
+	verify_live_purposes(world, plaque, people, directory)
 	var before: String = directory.path_join("before.save")
 	check("initial save succeeds", bool(world.call("save_world", before)))
 	var hud: Node = main.get_node("UI/MuxHud")
@@ -149,9 +179,9 @@ func _run() -> void:
 			await frames()
 			var label: Label = plaque.find_child("CurrentActivity", true, false)
 			var original_text: String = label.text
-			var fixture: Dictionary = {"available": true, "total": 3996, "counts": {
-				"UI_ACTIVITY_REPAIR": 999, "UI_ACTIVITY_HEARTH_CIRCLE": 999,
-				"UI_ACTIVITY_SIT_BY_FIRE": 999, "UI_UNKNOWN": 999}}
+			var fixture: Dictionary = {"available": true, "total": 3995, "counts": {
+				"SEEK:LOOP_PURPOSE_SUPPLY": 999, "SEEK:LOOP_PURPOSE_DELIVER": 999,
+				"LOOP_PURPOSE_LEARN_PARTICIPATION": 999, "UI_UNKNOWN": 998}}
 			var stress: Dictionary = activity.call("render", fixture, Callable(root.get_node("Locale"), "ltr"))
 			label.text = KoreanText.words(str(stress["text"]))
 			await frames()
@@ -193,7 +223,6 @@ func live_transition(world: Node, plaque: Node, directory: String) -> void:
 	var previous: Dictionary = world.call("get_agent_snapshot")
 	var observed: bool = false
 	var evidence: Array[Dictionary] = []
-	var consume_keys: Dictionary = {1: "MIND_BEHAVIOUR_EAT", 2: "MIND_BEHAVIOUR_DRINK", 3: "MIND_BEHAVIOUR_SLEEP", 4: "MIND_BEHAVIOUR_DO_JOB", 6: "MIND_BEHAVIOUR_DO_JOB", 7: "MIND_BEHAVIOUR_DO_JOB", 9: "MIND_BEHAVIOUR_DO_JOB"}
 	var start_tick: int = int((world.call("get_time_snapshot") as Dictionary)["tick"])
 	for _step: int in 299:
 		world.call("advance_ticks", 1)
@@ -205,16 +234,16 @@ func live_transition(world: Node, plaque: Node, directory: String) -> void:
 			var target: int = int(current["target_kinds"][i])
 			if prior < 0 or int(previous["states"][prior]) != 1 or int(current["states"][i]) != 3:
 				continue
-			if int(previous["target_kinds"][prior]) != target or not consume_keys.has(target) or int(current["fleeing"][i]) != 0 or int(current["drafted"][i]) != 0:
+			if int(previous["target_kinds"][prior]) != target or _expected_current_purpose(current, i).is_empty() or int(current["fleeing"][i]) != 0 or int(current["drafted"][i]) != 0:
 				continue
-			var key: String = str(consume_keys[target])
+			var key: String = _expected_current_purpose(current, i)
 			var expected_count: int = 0
 			for j: int in current["ids"].size():
-				if int(current["fleeing"][j]) == 0 and int(current["drafted"][j]) == 0 and int(current["states"][j]) == 3 and consume_keys.get(int(current["target_kinds"][j]), "") == key:
+				if int(current["fleeing"][j]) == 0 and int(current["drafted"][j]) == 0 and int(current["states"][j]) == 3 and _expected_current_purpose(current, j) == key:
 					expected_count += 1
 			var summary: Dictionary = plaque.get("_activity_summary")
 			check("live sought to consumed count", int(summary["counts"].get(key, 0)) == expected_count)
-			var part: String = str(root.get_node("Locale").call("ltr", "LOOP_PLAQUE_ACTIVITY_COUNT_FMT")).format({"activity": root.get_node("Locale").call("ltr", key), "count": expected_count})
+			var part: String = str(root.get_node("Locale").call("ltr", "LOOP_PLAQUE_ACTIVITY_COUNT_FMT")).format({"activity": _expected_purpose_label(key), "count": expected_count})
 			check("live consumed label in full tooltip", str((plaque.get("_activity_label") as Label).tooltip_text).contains(part))
 			evidence.append({"tick": world.call("get_time_snapshot"), "entity": current["ids"][i], "before": previous, "after": current, "label": plaque.call("activity_text"), "tooltip": (plaque.get("_activity_label") as Label).tooltip_text})
 			observed = true
@@ -272,3 +301,51 @@ func paused_draft_command(world: Node, plaque: Node, directory: String) -> void:
 	check("draft command evidence writable", output != null)
 	if output != null:
 		output.store_string(JSON.stringify({"oracle": "INTENTIONAL_COMMAND_NOT_PASSIVE_IDENTITY", "selected_agent": selected, "before_tick": before_tick, "after_tick": world.call("get_time_snapshot"), "before_log": before_log, "after_log": immediate_log, "receipt": receipt, "before_people": people, "after_people": current, "plaque_counts": summary}, "\t"))
+
+
+func _expected_current_purpose(people: Dictionary, i: int) -> String:
+	if int(people["fleeing"][i]) != 0 or int(people["drafted"][i]) != 0:
+		return ""
+	var state: int = int(people["states"][i])
+	var target: int = int(people["target_kinds"][i])
+	if state not in [1, 3]:
+		return ""
+	if target == 9:
+		var code: int = int(people["jobs"][i])
+		if code <= 0 or code >= PURPOSE_KEYS.size():
+			return ""
+		if state == 3 and code == 14:
+			return "LOOP_PURPOSE_LEARN_PARTICIPATION"
+		return ("SEEK:" if state == 1 else "WORK:") + PURPOSE_KEYS[code]
+	var working: Dictionary = {1: "MIND_BEHAVIOUR_EAT", 2: "MIND_BEHAVIOUR_DRINK", 3: "MIND_BEHAVIOUR_SLEEP", 4: "WORK:LOOP_PURPOSE_BUILD", 6: "MIND_BEHAVIOUR_GATHER", 7: "WORK:LOOP_PURPOSE_GATHER"}
+	var seeking: Dictionary = {1: "LOOP_SEEK_FOOD", 2: "LOOP_SEEK_WATER", 3: "LOOP_SEEK_REST", 4: "SEEK:LOOP_PURPOSE_BUILD", 6: "LOOP_SEEK_GATHER_FOOD", 7: "SEEK:LOOP_PURPOSE_GATHER"}
+	return str((seeking if state == 1 else working).get(target, ""))
+
+func _expected_purpose_label(key: String) -> String:
+	var locale: Node = root.get_node("Locale")
+	if key.begins_with("SEEK:") or key.begins_with("WORK:"):
+		var wrapper: String = "LOOP_PURPOSE_PREPARING_FMT" if key.begins_with("SEEK:") else "LOOP_PURPOSE_TASK_FMT"
+		return str(locale.call("ltr", wrapper)).format({"purpose": locale.call("ltr", key.substr(5))})
+	return str(locale.call("ltr", key))
+
+func verify_live_purposes(world: Node, plaque: Node, people: Dictionary, directory: String) -> void:
+	var counts: Dictionary = {}
+	var active_jobs: int = 0
+	for i: int in people["ids"].size():
+		var key: String = _expected_current_purpose(people, i)
+		if key.is_empty():
+			continue
+		counts[key] = int(counts.get(key, 0)) + 1
+		if int(people["target_kinds"][i]) == 9:
+			active_jobs += 1
+	check("native current job fixture populated", active_jobs > 0)
+	var summary: Dictionary = plaque.get("_activity_summary")
+	var tooltip: String = str((plaque.get("_activity_label") as Label).tooltip_text)
+	for key: String in counts:
+		check("native purpose count " + key, int(summary["counts"].get(key, 0)) == int(counts[key]))
+		var part: String = str(root.get_node("Locale").call("ltr", "LOOP_PLAQUE_ACTIVITY_COUNT_FMT")).format({"activity": _expected_purpose_label(key), "count": counts[key]})
+		check("native purpose label " + key, tooltip.contains(part))
+	var file: FileAccess = FileAccess.open(directory.path_join("live-purpose.json"), FileAccess.WRITE)
+	check("native purpose evidence writable", file != null)
+	if file != null:
+		file.store_string(JSON.stringify({"tick": world.call("get_time_snapshot"), "people": people, "independent_purpose_counts": counts, "plaque_summary": summary, "visible_text": plaque.call("activity_text"), "tooltip": tooltip}, "\t"))
