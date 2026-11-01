@@ -60,8 +60,7 @@ impl RuntimeSystem for StewardSystem {
                     Some(grace) => {
                         // Pure check: skip until the grace period has elapsed and
                         // the rule has not yet fired (no cooldown entry from accepted()).
-                        if !res.steward.cooldowns.contains_key(&rule.id)
-                            && res.current_tick < grace
+                        if !res.steward.cooldowns.contains_key(&rule.id) && res.current_tick < grace
                         {
                             profile.skip(false);
                             continue;

@@ -146,10 +146,15 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                         .sum::<u32>()
                 })
                 .sum();
-            // When a log cap margin is set, the target is building need + margin
-            // instead of the open-ended days × fuel + building_need.
+            // When a log cap margin is set, the target is the larger of
+            // (building_need + margin) and (days × fuel) — the floor ensures
+            // the early-game fuel reserve matches BASE even before blueprints
+            // exist, while the cap prevents the uncapped sum that caused the
+            // 304-log over-production.
             let target = if let Some(margin) = cap_log_margin {
-                building_need.saturating_add(*margin)
+                building_need
+                    .saturating_add(*margin)
+                    .max(days.saturating_mul(daily_fuel(res)))
             } else {
                 days.saturating_mul(daily_fuel(res))
                     .saturating_add(building_need)

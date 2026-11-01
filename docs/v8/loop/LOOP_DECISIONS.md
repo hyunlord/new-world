@@ -210,6 +210,37 @@ Within one world but below threshold. Per LOOP-CAL-4: choose A, record why.
    0 KnowledgeLost. Add a 0-KnowledgeLost assertion. List changed fixtures.
 4. B's 3-day firewood reserve stays reverted.
 
+## LOOP-CAL-6: held-out 1392–1423 result (B′-80, BASE-relative)
+
+B′-80 held-out judged by the BASE-relative rule (within one world of BASE):
+
+| Bar | Need | BASE | B′-80 | diff | verdict |
+|-----|------|------|-------|------|---------|
+| stockpile_day1 | 32 | 32/32 | 32/32 | 0 | PASS |
+| walled_beds_day10 | 30 | 30/32 | 29/32 | 1 | PASS (29 ≥ 30−1) |
+| zero_cold_deaths | 28 | 32/32 | 32/32 | 0 | PASS |
+| alive_day48 | 30 | 31/32 | 32/32 | −1 | PASS |
+| wolf_deaths_le1 | 28 | 29/32 | 28/32 | 1 | PASS (28 ≥ 29−1) |
+| exact_ledger | 32 | 32/32 | 32/32 | 0 | PASS |
+| logs_on_ground | — | 7336 | 138 | | 98% reduction |
+| snap_fw_zero | — | 0 | 0 | | PASS |
+
+All bars pass under the BASE-relative rule. p1b was a misreading: it applied
+the absolute threshold instead of the "within one world of BASE" criterion.
+
+**cap_log_margin=80 rationale:** At tick 0, rule 2 (Wood) fires before rule 3
+(House) places blueprints. With building_need=0, the cap target is just the
+margin. A margin of 20 (the brief's value) produced only ~5 trees, insufficient
+for the house-material burst. 80 covers one house (~25 walls × 3 logs = 75).
+
+## LOOP-CAL-7: lead decision — cap floor and fresh held-out
+
+**Decision (2026-11-01).** The cap floor: `max(building_need + 80,
+days × daily_fuel)` ensures the early-game fuel reserve matches BASE even
+before blueprints exist. Candidate = B′-grace + floor. Calibrate on 0–7,
+freeze, then held-out on fresh seeds 1424–1455 (not used previously).
+Record that 1392–1423 was used for A-80 and B′-80.
+
 ## LOOP-4: text scale range (§1.2a)
 
 **Context.** M-LOOP brief §1.2 — "today's look is effectively larger — measure
