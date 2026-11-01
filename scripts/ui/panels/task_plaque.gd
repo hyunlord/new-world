@@ -20,6 +20,7 @@ var _locale: Node = null
 var _world_sim: Node = null
 var _panel: PanelContainer
 var _text_label: Label
+var _title_label: Label
 var _view_button: Button
 var _task_data: Dictionary = {}
 var _task_tick: int = -1
@@ -54,10 +55,11 @@ func _ready() -> void:
 	var inner: HBoxContainer = HBoxContainer.new()
 	inner.add_theme_constant_override("separation", 12)
 	_panel.add_child(inner)
-	var icon: Label = Label.new()
-	icon.text = "▶"
-	icon.add_theme_color_override("font_color", Color("e8c46e"))
-	inner.add_child(icon)
+	# M-LOOP §2.1: the plaque is always titled "지금 할 일" (owner playtest verdict 2).
+	_title_label = Label.new()
+	_title_label.name = "Title"
+	_title_label.add_theme_color_override("font_color", Color("e8c46e"))
+	inner.add_child(_title_label)
 	_text_label = Label.new()
 	_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_text_label.custom_minimum_size.x = 200
@@ -162,6 +164,7 @@ func _refresh() -> void:
 ## M-LOOP §2.1: common display logic for the plaque content.
 func _show_line(line: String, tooltip: String) -> void:
 	_current_text = line
+	_title_label.text = _loc("LOOP_PLAQUE_TITLE")
 	_text_label.text = KoreanText.words(line)
 	_view_button.text = _loc("READ_PLAQUE_VIEW")
 	_panel.tooltip_text = KoreanText.raw(tooltip) if not tooltip.is_empty() else ""

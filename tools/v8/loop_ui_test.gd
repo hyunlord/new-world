@@ -292,6 +292,11 @@ func _test_plaque_priority(main: Node) -> void:
 	if plaque == null:
 		return
 	_assert(plaque.has_method("plaque_text"), "has plaque_text")
+	# §2.1: the plaque always carries the "지금 할 일" title next to its line.
+	plaque.call("_show_line", "테스트 줄", "")
+	var title: Label = plaque.find_child("Title", true, false) as Label
+	_assert(title != null and title.text.replace(char(0x2060), "") == "지금 할 일" and title.is_visible_in_tree() == plaque.is_visible_in_tree(),
+		"plaque title reads 지금 할 일 (got %s)" % (title.text if title != null else "none"))
 
 
 ## Test 12: data-only card — sick_person is in cards.json with test_only flag.
