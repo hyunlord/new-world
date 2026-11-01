@@ -657,7 +657,7 @@ func _can_support_migrants(_migrant_count: int) -> bool:
 		if f_arr.size() > 0 and n_arr.size() > 0:
 			var food: float = float(f_arr[0])
 			var daily_need: float = float(n_arr[0])
-			if daily_need > 0.0 and food / daily_need < 3.0:
+			if daily_need > 0.0 and food / daily_need < 5.0:
 				return false
 	return true
 
@@ -682,8 +682,10 @@ func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> i
 				# Recommend steward (last option).
 				return options.size() - 1
 		"need_food":
-			# Recommend hunt only if hunters have blades AND no hunt zone exists.
-			if _has_hunt_zones() or not _has_hunter_blades():
+			# Recommend hunt only if: blades exist, no hunt zone exists, and no
+			# wolves on the map (hunting near wolves causes combat deaths).
+			var hunt_unsafe: bool = _has_hunt_zones() or not _has_hunter_blades() or _alert_active("wolves_approaching")
+			if hunt_unsafe:
 				# Fall back to harvest if available, else steward.
 				for i: int in options.size():
 					var cmd: String = str(options[i].get("command", ""))
