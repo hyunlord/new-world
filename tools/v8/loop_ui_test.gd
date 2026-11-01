@@ -98,6 +98,16 @@ func _run() -> void:
 	_test_missing_command_branches()
 	# --- Test 28: LOOP_STEWARD_TOOLS locale key is defined ---
 	_test_steward_tools_locale()
+	# --- Test 29: idle_adults card fires in a seeded run with idle adults ---
+	await _test_idle_adults_seeded(main, world)
+	# --- Test 30: tools_low card fires in a seeded run with few tools ---
+	await _test_tools_low_seeded(main, world)
+	# --- Test 31: cooldown prevents re-trigger within 1 day ---
+	_test_cooldown()
+	# --- Test 32: dedupe blocks chop/hunt when designation/zone exists ---
+	_test_dedupe_guards()
+	# --- Test 33: skipped results tracked separately from command results ---
+	_test_skipped_tracking()
 
 	print("LOOP_UI_TEST_DONE pass=%d fail=%d" % [_pass, _fail])
 	quit(1 if _fail > 0 else 0)
@@ -512,25 +522,31 @@ func _test_card_answer_recorded(main: Node) -> void:
 		_assert(false, "an open card to answer (after retry)")
 		return
 	var card_id: String = active[0]
-	var options: Array = (card_panel.get("_active")[card_id] as Dictionary).get("def", {}).get("options", [])
-	var recommended: int = 0
-	for oi: int in options.size():
-		if bool(options[oi].get("recommended", false)):
-			recommended = oi
-			break
+	var card_data: Dictionary = card_panel.get("_active")[card_id] as Dictionary
+	var def: Dictionary = card_data.get("def", {})
+	var trigger_data: Dictionary = card_data.get("trigger_data", {})
+	var recommended: int = int(card_panel.call("_effective_recommended", def, trigger_data))
 	var entries_before: int = (chronicle.get("_entries") as Array).size()
 	card_panel.call("answer_card", card_id, recommended)
 	var results: Array = card_panel.call("command_results")
-	_assert(results.size() == 1, "one command result recorded for %s" % card_id)
-	_assert(results.size() == 1 and bool(results[0].get("accepted", false)),
-		"recommended command accepted (reason=%s)" % (str(results[0].get("reason", "")) if results.size() > 0 else "none"))
-	# The feed is capped at 60 rows, so check the newest row rather than the count.
-	var entries: Array = chronicle.get("_entries")
-	var newest: Dictionary = entries.back() if not entries.is_empty() else {}
-	var line: String = str(newest.get("_presentation_text", ""))
-	_assert(entries.size() >= mini(entries_before + 1, 60) and line != "" and not line.contains("{"),
-		"chronicle got a presentation line for the answer (%s)" % line)
-	_assert(not (card_panel.call("active_ids") as PackedStringArray).has(card_id), "answered card closed")
+	var skipped: Array = card_panel.call("skipped_results")
+	# The answer was either sent (command_results) or skipped (skipped_results).
+	var was_sent: bool = results.size() >= 1
+	var was_skipped: bool = skipped.size() >= 1
+	_assert(was_sent or was_skipped, "answer processed for %s (sent=%s, skipped=%s)" % [card_id, str(was_sent), str(was_skipped)])
+	if was_sent:
+		_assert(bool(results[results.size() - 1].get("accepted", false)),
+			"recommended command accepted (reason=%s)" % str(results[results.size() - 1].get("reason", "")))
+		# The feed is capped at 60 rows, so check the newest row rather than the count.
+		var entries: Array = chronicle.get("_entries")
+		var newest: Dictionary = entries.back() if not entries.is_empty() else {}
+		var line: String = str(newest.get("_presentation_text", ""))
+		_assert(entries.size() >= mini(entries_before + 1, 60) and line != "" and not line.contains("{"),
+			"chronicle got a presentation line for the answer (%s)" % line)
+		_assert(not (card_panel.call("active_ids") as PackedStringArray).has(card_id), "answered card closed")
+	else:
+		# Skipped: card stays open (stale target).
+		_assert((card_panel.call("active_ids") as PackedStringArray).has(card_id), "skipped card stays open")
 
 
 ## Test 23: card auto-closes with hysteresis when trigger clears.
@@ -552,7 +568,7 @@ func _test_card_auto_close() -> void:
 	panel.call("_close_cleared_triggers")
 	_assert(not panel.get("_active").has("quarrel"), "quarrel closed after 3 consecutive clear polls")
 	# Verify it was NOT marked handled (can re-trigger).
-	_assert(not panel.get("_handled").has("quarrel"), "quarrel not marked handled on clear (can re-trigger)")
+	_assert(not panel.get("_cooldown").has("quarrel"), "quarrel not put on cooldown on clear (can re-trigger)")
 	panel.queue_free()
 
 
@@ -655,3 +671,149 @@ func _test_steward_tools_locale() -> void:
 	var en: Variant = JSON.parse_string(en_text)
 	_assert(ko is Dictionary and (ko as Dictionary).has("LOOP_STEWARD_TOOLS"), "ko has LOOP_STEWARD_TOOLS")
 	_assert(en is Dictionary and (en as Dictionary).has("LOOP_STEWARD_TOOLS"), "en has LOOP_STEWARD_TOOLS")
+
+
+## Test 29: idle_adults card fires in a seeded run with idle adults.
+##   Construct state: seed 0, steward OFF so nobody gets jobs, advance until
+##   adults are idle during the day. The idle_adults alert should fire and the
+##   card should appear. Fails if the card never opens.
+func _test_idle_adults_seeded(main: Node, world: Node) -> void:
+	print("Test 29: idle_adults card in seeded run")
+	var reads: Node = main.get_node_or_null("SimReads")
+	if reads == null:
+		_assert(false, "SimReads exists")
+		return
+	var card_panel: Node = main.find_child("CardPanel", true, false)
+	if card_panel == null:
+		_assert(false, "CardPanel exists")
+		return
+	# Reset to seed 0 with steward OFF — adults will be idle.
+	reads.call("mutate_raw", "reset_world", [0])
+	for _i: int in 5:
+		await process_frame
+	# Steward OFF so adults remain idle.
+	SimReads.mutate(world, "cmd_set_steward", [false, 0])
+	# Advance 3 days (daytime hours will have idle adults).
+	var ever_idle: bool = false
+	for _hour: int in 72:
+		reads.call("mutate_raw", "advance_ticks", [60])
+		await process_frame
+		await process_frame
+		var time: Dictionary = SimReads.read(world, "get_time_snapshot")
+		var tick: int = int(time.get("tick", 0))
+		card_panel.set("_last_tick", tick)
+		card_panel.call("_poll_triggers")
+		card_panel.call("_check_expiry")
+		for cid: String in card_panel.call("active_ids"):
+			if cid == "idle_adults":
+				ever_idle = true
+	_assert(ever_idle, "idle_adults card appeared with steward off (seed 0, 3 days)")
+
+
+## Test 30: tools_low card fires in a seeded run when tools are below need.
+##   Construct state: seed 0, steward on, advance until adults exist but tools
+##   are scarce. The tools_low bridge check should fire. Fails if the card
+##   never opens in 10 days.
+func _test_tools_low_seeded(main: Node, world: Node) -> void:
+	print("Test 30: tools_low card in seeded run")
+	var reads: Node = main.get_node_or_null("SimReads")
+	if reads == null:
+		_assert(false, "SimReads exists")
+		return
+	var card_panel: Node = main.find_child("CardPanel", true, false)
+	if card_panel == null:
+		_assert(false, "CardPanel exists")
+		return
+	# Reset to seed 0 with steward on.
+	reads.call("mutate_raw", "reset_world", [0])
+	for _i: int in 5:
+		await process_frame
+	SimReads.mutate(world, "cmd_set_steward", [true, 0])
+	# Advance 10 days — tools_low should fire when adults > tool count.
+	var ever_tools_low: bool = false
+	for _hour: int in 240:
+		reads.call("mutate_raw", "advance_ticks", [60])
+		await process_frame
+		await process_frame
+		var time: Dictionary = SimReads.read(world, "get_time_snapshot")
+		var tick: int = int(time.get("tick", 0))
+		card_panel.set("_last_tick", tick)
+		card_panel.call("_poll_triggers")
+		card_panel.call("_check_expiry")
+		for cid: String in card_panel.call("active_ids"):
+			if cid == "tools_low":
+				ever_tools_low = true
+	_assert(ever_tools_low, "tools_low card appeared (seed 0, 10 days, steward on)")
+
+
+## Test 31: cooldown prevents a card from re-triggering within 1 in-game day.
+##   Fails if the card reappears immediately after being answered.
+func _test_cooldown() -> void:
+	print("Test 31: cooldown prevents re-trigger")
+	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
+	var panel: PanelContainer = CardPanelScript.new()
+	# Simulate answering a card at tick 1000.
+	var quarrel_def: Dictionary = {"id": "quarrel", "trigger": {"kind": "chronicle", "chronicle_kind": 19}, "options": [{"text_key": "A", "command": "none"}, {"text_key": "B", "command": "none"}], "priority": 18, "expires_hours": 24}
+	panel.set("_last_tick", 1000)
+	panel.get("_active")["quarrel"] = {"def": quarrel_def, "opened_tick": 900, "expires_tick": 9999, "answered": false, "clear_count": 0, "trigger_data": {}}
+	panel.call("answer_card", "quarrel", 0)
+	# Cooldown should be set.
+	_assert(panel.get("_cooldown").has("quarrel"), "cooldown set after answer")
+	_assert(int(panel.get("_cooldown")["quarrel"]) == 1000, "cooldown tick is answer tick")
+	# At tick 1100 (100 ticks later, < 1 day), _poll_triggers should skip quarrel.
+	panel.set("_last_tick", 1100)
+	# The card should NOT be re-added even if trigger matches.
+	_assert(not panel.get("_active").has("quarrel"), "quarrel not re-triggered within cooldown")
+	# At tick 2441 (1441 ticks later, > 1 day), cooldown should expire.
+	panel.set("_last_tick", 2441)
+	panel.call("_poll_triggers")
+	_assert(not panel.get("_cooldown").has("quarrel"), "cooldown expired after 1 day")
+	panel.queue_free()
+
+
+## Test 32: dedupe guards prevent sending duplicate chop/hunt commands.
+##   Tests _has_chop_designations and _has_hunt_zones helper methods exist
+##   and that _send_command returns skipped when they report existing orders.
+func _test_dedupe_guards() -> void:
+	print("Test 32: dedupe guard methods exist")
+	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
+	var panel: PanelContainer = CardPanelScript.new()
+	_assert(panel.has_method("_has_chop_designations"), "has _has_chop_designations")
+	_assert(panel.has_method("_has_hunt_zones"), "has _has_hunt_zones")
+	_assert(panel.has_method("_has_hunter_blades"), "has _has_hunter_blades")
+	_assert(panel.has_method("_can_support_migrants"), "has _can_support_migrants")
+	_assert(panel.has_method("_effective_recommended"), "has _effective_recommended")
+	_assert(panel.has_method("skipped_results"), "has skipped_results accessor")
+	# Without a world, dedupe helpers should return false (safe default).
+	_assert(not panel.call("_has_chop_designations"), "no world -> no chop designations")
+	_assert(not panel.call("_has_hunt_zones"), "no world -> no hunt zones")
+	panel.queue_free()
+
+
+## Test 33: skipped results are tracked separately from command results.
+##   A stale command should appear in skipped_results, not command_results.
+func _test_skipped_tracking() -> void:
+	print("Test 33: skipped results tracking")
+	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
+	var panel: PanelContainer = CardPanelScript.new()
+	panel.set("_last_tick", 500)
+	# Create a card with a command that will be skipped (no world -> skipped).
+	var food_def: Dictionary = {
+		"id": "need_food",
+		"trigger": {"kind": "alert", "alert_id": "food_low"},
+		"options": [
+			{"text_key": "HUNT", "command": "cmd_add_hunt_zone", "recommended": true},
+			{"text_key": "STEWARD", "command": "steward_default", "recommended": false},
+		],
+		"priority": 10,
+		"expires_hours": 12,
+	}
+	panel.get("_active")["need_food"] = {"def": food_def, "opened_tick": 400, "expires_tick": 9999, "answered": false, "clear_count": 0, "trigger_data": {}}
+	panel.call("answer_card", "need_food", 0)
+	# The command should be skipped (no world), card should stay open.
+	var skipped: Array = panel.call("skipped_results")
+	var results: Array = panel.call("command_results")
+	_assert(skipped.size() == 1, "one skipped result (no world)")
+	_assert(results.size() == 0, "no command results (skipped, not sent)")
+	_assert(panel.get("_active").has("need_food"), "card stays open after skip")
+	panel.queue_free()

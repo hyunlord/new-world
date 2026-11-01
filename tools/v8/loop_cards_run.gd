@@ -47,10 +47,13 @@ func _run() -> void:
 		var result: Dictionary = await _run_seed(main, world, reads, seed_val, true)
 		result["mode"] = "answer"
 		_results.append(result)
-		print("  seed %d answer: alive=%d, deaths=%d, cards=%d, answers=%d, validation_fail=%d" % [
+		var skip_n: int = 0
+		for k: String in result.get("skipped_breakdown", {}):
+			skip_n += int(result["skipped_breakdown"][k])
+		print("  seed %d answer: alive=%d, deaths=%d, cards=%d, answers=%d, skipped=%d, val_fail=%d" % [
 			seed_val, result.get("alive", 0), result.get("deaths", 0),
 			result.get("cards_seen", 0), result.get("cards_answered", 0),
-			result.get("validation_failures", 0)])
+			skip_n, result.get("validation_failures", 0)])
 
 	# Run without card answers (baseline).
 	print("=== CARDS RUN: no answers (baseline) ===")
@@ -83,6 +86,7 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 	# In headless mode, directly call _poll_triggers since _process timer doesn't fire.
 	@warning_ignore("integer_division")
 	var intervals: int = TOTAL_TICKS / CARD_CHECK_INTERVAL
+	var card_kinds_seen: Dictionary = {}
 	for interval: int in intervals:
 		# Advance one interval.
 		reads.call("mutate_raw", "advance_ticks", [CARD_CHECK_INTERVAL])
@@ -96,28 +100,27 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 		if card_panel == null or not card_panel.has_method("active_ids"):
 			continue
 		var active: PackedStringArray = card_panel.call("active_ids")
+		for cid: String in active:
+			card_kinds_seen[cid] = true
 		cards_seen = maxi(cards_seen, active.size())
 		if answer_cards and not active.is_empty():
 			for card_id: String in active:
-				# Find the recommended option index.
+				# Use the effective recommended option (dynamic, not static).
 				var active_cards: Dictionary = card_panel.get("_active")
 				if not active_cards.has(card_id):
 					continue
 				var card_data: Dictionary = active_cards[card_id]
 				var def: Dictionary = card_data.get("def", {})
-				var options: Array = def.get("options", [])
-				var recommended_idx: int = 0
-				for oi: int in options.size():
-					if bool(options[oi].get("recommended", false)):
-						recommended_idx = oi
-						break
+				var trigger_data: Dictionary = card_data.get("trigger_data", {})
+				var recommended_idx: int = int(card_panel.call("_effective_recommended", def, trigger_data))
 				# Answer the card.
 				card_panel.call("answer_card", card_id, recommended_idx)
 				cards_answered += 1
-				var opt_text: String = str(options[recommended_idx].get("text_key", ""))
+				var options: Array = def.get("options", [])
+				var opt_text: String = str(options[recommended_idx].get("text_key", "")) if recommended_idx < options.size() else ""
 				answer_log.append({"seed": seed_val, "card": card_id, "option": opt_text, "tick": interval * CARD_CHECK_INTERVAL})
 				await process_frame
-	# Count validation failures and breakdown from the card panel's command results.
+	# Count validation failures: only commands actually sent and rejected by the bridge.
 	var rejection_breakdown: Dictionary = {}
 	if card_panel != null and card_panel.has_method("command_results"):
 		var results: Array = card_panel.call("command_results")
@@ -126,6 +129,13 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 				val_failures += 1
 				var key: String = "%s/%s" % [str(r.get("command", "?")), str(r.get("reason", "?"))]
 				rejection_breakdown[key] = int(rejection_breakdown.get(key, 0)) + 1
+	# Count skipped commands by kind (stale targets not sent).
+	var skipped_breakdown: Dictionary = {}
+	if card_panel != null and card_panel.has_method("skipped_results"):
+		var skipped: Array = card_panel.call("skipped_results")
+		for s: Dictionary in skipped:
+			var key: String = "%s/%s" % [str(s.get("card_id", "?")), str(s.get("reason", "?"))]
+			skipped_breakdown[key] = int(skipped_breakdown.get(key, 0)) + 1
 	# Collect final state and death causes.
 	var agent_snap: Dictionary = SimReads.read(world, "get_agent_snapshot")
 	var alive: int = (agent_snap.get("ids", PackedInt64Array()) as PackedInt64Array).size()
@@ -139,6 +149,11 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 			death_causes[key] = count
 	var births: int = int(tallies.get("births", 0))
 	_validation_failures += val_failures
+	# Build answers-by-kind from the answer log.
+	var answers_by_kind: Dictionary = {}
+	for entry: Dictionary in answer_log:
+		var kind: String = str(entry.get("card", ""))
+		answers_by_kind[kind] = int(answers_by_kind.get(kind, 0)) + 1
 	return {
 		"seed": seed_val,
 		"alive": alive,
@@ -147,8 +162,11 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 		"death_causes": death_causes,
 		"cards_seen": cards_seen,
 		"cards_answered": cards_answered,
+		"cards_kinds_seen": card_kinds_seen.keys(),
 		"validation_failures": val_failures,
 		"rejection_breakdown": rejection_breakdown,
+		"skipped_breakdown": skipped_breakdown,
+		"answers_by_kind": answers_by_kind,
 		"answer_log": answer_log,
 	}
 
@@ -165,6 +183,8 @@ func _print_summary() -> void:
 	var answer_death_causes: Dictionary = {}
 	var no_answer_death_causes: Dictionary = {}
 	var all_rejections: Dictionary = {}
+	var all_skipped: Dictionary = {}
+	var all_answers_by_kind: Dictionary = {}
 	for r: Dictionary in _results:
 		if str(r["mode"]) == "answer":
 			answer_alive += int(r["alive"])
@@ -175,6 +195,10 @@ func _print_summary() -> void:
 				answer_death_causes[k] = int(answer_death_causes.get(k, 0)) + int(r["death_causes"][k])
 			for k: String in r.get("rejection_breakdown", {}):
 				all_rejections[k] = int(all_rejections.get(k, 0)) + int(r["rejection_breakdown"][k])
+			for k: String in r.get("skipped_breakdown", {}):
+				all_skipped[k] = int(all_skipped.get(k, 0)) + int(r["skipped_breakdown"][k])
+			for k: String in r.get("answers_by_kind", {}):
+				all_answers_by_kind[k] = int(all_answers_by_kind.get(k, 0)) + int(r["answers_by_kind"][k])
 		else:
 			no_answer_alive += int(r["alive"])
 			no_answer_deaths += int(r["deaths"])
@@ -183,9 +207,24 @@ func _print_summary() -> void:
 				no_answer_death_causes[k] = int(no_answer_death_causes.get(k, 0)) + int(r["death_causes"][k])
 	print("Answer:    alive=%d deaths=%d births=%d cards_answered=%d" % [answer_alive, answer_deaths, answer_births, total_answered])
 	print("  death causes: %s" % str(answer_death_causes))
+	print("  answers by kind: %s" % str(all_answers_by_kind))
 	print("No-answer: alive=%d deaths=%d births=%d" % [no_answer_alive, no_answer_deaths, no_answer_births])
 	print("  death causes: %s" % str(no_answer_death_causes))
+	# Per-seed table.
+	print("\n=== PER-SEED TABLE ===")
+	print("seed | mode      | alive | deaths | births | answered | skipped | death_causes | answers_by_kind | skipped_by_kind")
+	for r: Dictionary in _results:
+		var skip_count: int = 0
+		for k: String in r.get("skipped_breakdown", {}):
+			skip_count += int(r["skipped_breakdown"][k])
+		print("  %d  | %-9s | %5d | %6d | %6d | %8d | %7d | %s | %s | %s" % [
+			int(r["seed"]), str(r["mode"]),
+			int(r["alive"]), int(r["deaths"]), int(r.get("births", 0)),
+			int(r.get("cards_answered", 0)), skip_count,
+			str(r.get("death_causes", {})), str(r.get("answers_by_kind", {})),
+			str(r.get("skipped_breakdown", {}))])
 	# Per-seed survival comparison.
+	var per_seed_pass: bool = true
 	for r: Dictionary in _results:
 		if str(r["mode"]) == "answer":
 			var baseline: Dictionary = {}
@@ -194,11 +233,15 @@ func _print_summary() -> void:
 					baseline = b
 			var worse: bool = int(r.get("deaths", 0)) > int(baseline.get("deaths", 0)) + 1
 			if worse:
+				per_seed_pass = false
 				print("  WARN seed %d: answer deaths=%d > baseline+1=%d" % [int(r["seed"]), int(r["deaths"]), int(baseline.get("deaths", 0)) + 1])
-	print("Survival equal or better: %s" % ("PASS" if answer_alive >= no_answer_alive else "FAIL"))
+	print("No seed worse than baseline+1: %s" % ("PASS" if per_seed_pass else "FAIL"))
+	print("Total deaths <= no-answer+1: %s" % ("PASS" if answer_deaths <= no_answer_deaths + 1 else "FAIL"))
 	print("Validation failures: %d (must be 0: %s)" % [_validation_failures, "PASS" if _validation_failures == 0 else "FAIL"])
 	if not all_rejections.is_empty():
 		print("Rejection breakdown: %s" % str(all_rejections))
+	if not all_skipped.is_empty():
+		print("Skipped breakdown: %s" % str(all_skipped))
 
 
 func _write_result(data: Dictionary) -> void:

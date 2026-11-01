@@ -30,11 +30,12 @@ var _registry: Dictionary = {}
 var _card_defs: Array[Dictionary] = []
 ## Active cards: {id -> {def, trigger_data, opened_tick, expires_tick, answered, clear_count}}.
 var _active: Dictionary = {}
-## Answered/expired card ids for the current in-game day (prevent re-trigger).
-var _handled: Dictionary = {}
-var _handled_day: int = -1
-## Bridge results of card answers since the last reset.
+## Cooldown: {card_id -> tick_when_answered}. Prevents re-trigger for 1 in-game day (1440 ticks).
+var _cooldown: Dictionary = {}
+## Bridge results of card answers actually sent since the last reset.
 var _command_results: Array[Dictionary] = []
+## Skipped commands: stale targets that were not sent, counted by kind.
+var _skipped_results: Array[Dictionary] = []
 var _last_tick: int = -1
 var _clear_polls_needed: int = DEFAULT_CLEAR_POLLS
 var _column: VBoxContainer = null
@@ -146,17 +147,19 @@ func _poll_triggers() -> void:
 	var tick: int = _last_tick
 	if tick < 0:
 		return
-	@warning_ignore("integer_division")
-	var day: int = tick / 1440
-	if day != _handled_day:
-		_handled.clear()
-		_handled_day = day
+	# Expire stale cooldowns (older than 1 day = 1440 ticks).
+	var expired_cooldowns: PackedStringArray = PackedStringArray()
+	for cid: String in _cooldown:
+		if tick - int(_cooldown[cid]) >= 1440:
+			expired_cooldowns.append(cid)
+	for cid: String in expired_cooldowns:
+		_cooldown.erase(cid)
 	# Close cards whose trigger has been clear for N consecutive polls (hysteresis).
 	_close_cleared_triggers()
 	# Check each card definition for new triggers.
 	for card_def: Dictionary in _card_defs:
 		var card_id: String = str(card_def["id"])
-		if _active.has(card_id) or _handled.has(card_id):
+		if _active.has(card_id) or _cooldown.has(card_id):
 			continue
 		if _check_trigger(card_def):
 			_active[card_id] = {
@@ -366,7 +369,7 @@ func _expire_card(card_id: String) -> void:
 	var default_action: String = str(def.get("default", "none"))
 	if default_action == "steward":
 		card_expired.emit(card_id, _card_title(card))
-	_handled[card_id] = true
+	_cooldown[card_id] = _last_tick
 	_active.erase(card_id)
 
 
@@ -383,6 +386,15 @@ func answer_card(card_id: String, option_index: int) -> void:
 	if command != "none" and command != "steward_default" and command != "enter_zone_tool" and command != "open_roles":
 		var result: Variant = _send_command(command, option, card)
 		var result_dict: Dictionary = result if result is Dictionary else {}
+		if bool(result_dict.get("skipped", false)):
+			# Stale target: command was not sent. Does not count as an answer.
+			_skipped_results.append({
+				"card_id": card_id,
+				"command": command,
+				"reason": str(result_dict.get("reason", "stale")),
+			})
+			# Card stays open; it will close when the trigger clears or it expires.
+			return
 		_command_results.append({
 			"card_id": card_id,
 			"command": command,
@@ -390,7 +402,7 @@ func answer_card(card_id: String, option_index: int) -> void:
 			"reason": str(result_dict.get("reason", "not_sent")),
 		})
 	card["answered"] = true
-	_handled[card_id] = true
+	_cooldown[card_id] = _last_tick
 	card_answered.emit(card_id, _card_title(card), _tr(str(option.get("text_key", ""))))
 	_active.erase(card_id)
 	_rebuild_ui()
@@ -398,7 +410,7 @@ func answer_card(card_id: String, option_index: int) -> void:
 
 func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Variant:
 	if _world == null:
-		return null
+		return {"accepted": false, "skipped": true, "reason": "no_world"}
 	var info: Dictionary = {}
 	var cx: int = 32
 	var cy: int = 32
@@ -406,14 +418,23 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 	var result: Variant = null
 	match command:
 		"cmd_designate_chop":
+			# Dedupe: skip if chop designations already exist.
+			if _has_chop_designations():
+				return {"accepted": false, "skipped": true, "reason": "chop_exists"}
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
 			cy = int(info.get("camp_y", 32))
 			result = SimReads.mutate(_world, "cmd_designate_chop", [cx - 3, cy - 3, cx + 3, cy + 3])
 		"cmd_add_hunt_zone":
-			# Don't send hunters out when wolves are approaching (seed 6 fix).
+			# Dedupe: skip if a hunt zone already exists.
+			if _has_hunt_zones():
+				return {"accepted": false, "skipped": true, "reason": "zone_exists"}
+			# Don't send hunters out when wolves are approaching.
 			if _alert_active("wolves_approaching"):
-				return {"accepted": true, "count": 0, "reason": "wolves_near"}
+				return {"accepted": false, "skipped": true, "reason": "wolves_near"}
+			# Guard: skip if no bladed tools exist (hunters need them).
+			if not _has_hunter_blades():
+				return {"accepted": false, "skipped": true, "reason": "no_blades"}
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
 			cy = int(info.get("camp_y", 32))
@@ -421,22 +442,25 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 				result = SimReads.mutate(_world, "cmd_add_hunt_zone", [cx - 6 + offset.x, cy - 6 + offset.y, cx + 6 + offset.x, cy + 6 + offset.y])
 				if result is Dictionary and bool(result.get("accepted", false)):
 					return result
-			return {"accepted": true, "count": 0, "reason": "zone_exists"}
+			# All offsets rejected — zone already exists at every position.
+			return {"accepted": false, "skipped": true, "reason": "zone_exists"}
 		"cmd_designate_harvest":
 			if _world.has_method("get_card_harvest_target"):
 				var target: Dictionary = _world.get_card_harvest_target()
 				if bool(target.get("found", false)):
 					result = SimReads.mutate(_world, "cmd_designate_harvest", [int(target["x0"]), int(target["y0"]), int(target["x1"]), int(target["y1"])])
+				else:
+					return {"accepted": false, "skipped": true, "reason": "no_target"}
 		"cmd_accept_migrants":
 			if not _alert_active("migrants_waiting"):
-				return {"accepted": true, "count": 0, "reason": "already_handled"}
+				return {"accepted": false, "skipped": true, "reason": "already_handled"}
 			var neighbours: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
 			var wids: Variant = neighbours.get("wave_ids", PackedInt64Array())
 			var wave: int = int((wids as PackedInt64Array)[0]) if wids is PackedInt64Array and (wids as PackedInt64Array).size() > 0 else int(trigger_data.get("wave_id", 0))
 			result = SimReads.mutate(_world, "cmd_accept_migrants", [wave])
 		"cmd_decline_migrants":
 			if not _alert_active("migrants_waiting"):
-				return {"accepted": true, "count": 0, "reason": "already_handled"}
+				return {"accepted": false, "skipped": true, "reason": "already_handled"}
 			var neighbours2: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
 			var wids2: Variant = neighbours2.get("wave_ids", PackedInt64Array())
 			var wave2: int = int((wids2 as PackedInt64Array)[0]) if wids2 is PackedInt64Array and (wids2 as PackedInt64Array).size() > 0 else int(trigger_data.get("wave_id", 0))
@@ -450,17 +474,17 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			if teacher >= 0 and learner >= 0 and knowledge >= 0:
 				result = SimReads.mutate(_world, "cmd_order_teach", [teacher, learner, knowledge])
 			else:
-				return {"accepted": true, "count": 0, "reason": "no_target"}
+				return {"accepted": false, "skipped": true, "reason": "no_target"}
 		"cmd_draft":
 			var drafted: Dictionary = SimReads.read(_world, "get_drafted")
 			var recommended: Array = drafted.get("recommended", [])
 			if recommended.is_empty():
-				return {"accepted": true, "count": 0, "reason": "no_recommended"}
+				return {"accepted": false, "skipped": true, "reason": "no_recommended"}
 			for agent_id: Variant in recommended:
 				result = SimReads.mutate(_world, "cmd_draft", [int(agent_id), true])
 		"cmd_trade":
 			if not _alert_active("trader_present"):
-				return {"accepted": true, "count": 0, "reason": "already_handled"}
+				return {"accepted": false, "skipped": true, "reason": "already_handled"}
 			var neighbours3: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
 			var cids: Variant = neighbours3.get("caravan_ids", PackedInt64Array())
 			var caravan: int = int((cids as PackedInt64Array)[0]) if cids is PackedInt64Array and (cids as PackedInt64Array).size() > 0 else int(trigger_data.get("caravan_id", 0))
@@ -471,13 +495,13 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			if workshops is PackedInt64Array and (workshops as PackedInt64Array).size() > 0:
 				result = SimReads.mutate(_world, "cmd_add_bill", [int((workshops as PackedInt64Array)[0]), "stone_axe", "make", 1])
 			else:
-				return {"accepted": true, "count": 0, "reason": "no_workshop"}
+				return {"accepted": false, "skipped": true, "reason": "no_workshop"}
 		"cmd_set_work_priority":
 			var agent_a: int = int(trigger_data.get("agent_a", -1))
 			if agent_a >= 0:
 				result = SimReads.mutate(_world, "cmd_set_work_priority", [agent_a, "chop", 3])
 			else:
-				return {"accepted": true, "count": 0, "reason": "no_target"}
+				return {"accepted": false, "skipped": true, "reason": "no_target"}
 		"cmd_place_blueprint":
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
@@ -488,15 +512,118 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			cx = int(info.get("camp_x", 32))
 			cy = int(info.get("camp_y", 32))
 			result = SimReads.mutate(_world, "cmd_add_stockpile", [cx - 3, cy - 3, cx + 3, cy + 3])
-	# Validation wrapper: if the bridge rejected the command, the target was stale.
-	# The card was validly shown (the alert was active at open time), so this is a
-	# timing race, not a validation failure. Return accepted with reason "stale".
+	# No match arm hit — unknown command.
 	if result == null:
-		return {"accepted": true, "count": 0, "reason": "no_action"}
-	if result is Dictionary and not bool(result.get("accepted", false)):
-		return {"accepted": true, "count": 0, "reason": "stale"}
+		return {"accepted": false, "skipped": true, "reason": "no_action"}
+	# Bridge rejected the command — a real validation failure (not synthetic accepted).
 	return result
-	return null
+
+
+## Whether any chop designation (kind 0) exists in the colony overlay.
+func _has_chop_designations() -> bool:
+	if _world == null or not _world.has_method("get_colony_overlay"):
+		return false
+	var overlay: Dictionary = _world.get_colony_overlay()
+	var kinds: Variant = overlay.get("designation_kinds", PackedInt64Array())
+	if kinds is PackedInt64Array:
+		for k: int in kinds as PackedInt64Array:
+			if k == 0:
+				return true
+	return false
+
+
+## Whether any hunt zone exists (from the wildlife subsystem).
+func _has_hunt_zones() -> bool:
+	if _world == null or not _world.has_method("get_animals"):
+		return false
+	var animals: Dictionary = _world.get_animals()
+	var zones: Variant = animals.get("zones", PackedInt32Array())
+	return zones is PackedInt32Array and (zones as PackedInt32Array).size() > 0
+
+
+## Whether any bladed tool (kind 3, 4, 5 = blade/axe/spear) exists for hunters.
+func _has_hunter_blades() -> bool:
+	if _world == null:
+		return false
+	var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
+	var stacks: Variant = facts.get("stacks", [])
+	if stacks is Array:
+		for stack: Variant in stacks:
+			if stack is Dictionary:
+				var sk: int = int(stack.get("kind", -1))
+				if sk in [3, 4, 5]:
+					return true
+	return false
+
+
+## Whether the settlement can support incoming migrants (beds + food).
+## Returns true when there are free beds (or shelter) and food for at least 3 days
+## covering the newcomers.
+func _can_support_migrants(migrant_count: int) -> bool:
+	if _world == null:
+		return false
+	var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
+	# Count people without beds.
+	var people: Variant = facts.get("people", [])
+	var total_people: int = 0
+	var people_without_beds: int = 0
+	if people is Array:
+		for p: Variant in people:
+			if p is Dictionary:
+				total_people += 1
+				var bed_x: int = int(p.get("bed_x", -1))
+				if bed_x < 0:
+					people_without_beds += 1
+	# If current people already lack beds, don't accept more.
+	if people_without_beds > 0:
+		return false
+	# Check food supply: at least 3 days for current + new people.
+	var settlements: Variant = facts.get("settlements", [])
+	if settlements is Array and (settlements as Array).size() > 0:
+		var s: Dictionary = (settlements as Array)[0] if (settlements as Array)[0] is Dictionary else {}
+		var food: float = float(s.get("food", 0))
+		var daily_need: float = float(s.get("food_need", 1))
+		if daily_need > 0.0:
+			var food_days: float = food / daily_need
+			# Rough: each migrant adds ~1 daily need unit; need 3 days coverage.
+			if food_days < 3.0:
+				return false
+	return true
+
+
+## Return the effective recommended option index for a card, overriding the static
+## data when conditions warrant a different recommendation.
+func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> int:
+	var card_id: String = str(card_def.get("id", ""))
+	var options: Array = card_def.get("options", [])
+	match card_id:
+		"migrants":
+			var migrant_count: int = int(trigger_data.get("count", 1))
+			if not _can_support_migrants(migrant_count):
+				# Recommend decline (option 1) instead of accept (option 0).
+				for i: int in options.size():
+					if str(options[i].get("command", "")) == "cmd_decline_migrants":
+						return i
+				return 1
+		"need_warmth":
+			# Recommend chop only if no chop designation pending.
+			if _has_chop_designations():
+				# Recommend steward (last option).
+				return options.size() - 1
+		"need_food":
+			# Recommend hunt only if hunters have blades AND no hunt zone exists.
+			if _has_hunt_zones() or not _has_hunter_blades():
+				# Fall back to harvest if available, else steward.
+				for i: int in options.size():
+					var cmd: String = str(options[i].get("command", ""))
+					if cmd == "cmd_designate_harvest":
+						return i
+				return options.size() - 1
+	# Default: use the static recommended flag.
+	for i: int in options.size():
+		if bool(options[i].get("recommended", false)):
+			return i
+	return 0
 
 
 func _rebuild_ui() -> void:
@@ -557,13 +684,14 @@ func _build_card_widget(card_id: String, card: Dictionary) -> void:
 	buttons_row.add_theme_constant_override("separation", 8)
 	card_box.add_child(buttons_row)
 	var options: Array = def.get("options", [])
+	var effective_rec: int = _effective_recommended(def, trigger_data)
 	for i: int in options.size():
 		var opt: Dictionary = options[i]
 		if _option_hidden(opt):
 			continue
 		var btn: Button = Button.new()
 		btn.text = _tr(str(opt.get("text_key", "")))
-		if bool(opt.get("recommended", false)):
+		if i == effective_rec:
 			btn.text += " " + _tr("LOOP_CARD_RECOMMENDED")
 			btn.add_theme_color_override("font_color", Color("a8d888"))
 		btn.pressed.connect(answer_card.bind(card_id, i))
@@ -608,9 +736,9 @@ func _format_card_text(key: String, data: Dictionary) -> String:
 
 func _reset() -> void:
 	_active.clear()
-	_handled.clear()
-	_handled_day = -1
+	_cooldown.clear()
 	_command_results.clear()
+	_skipped_results.clear()
 	_last_tick = -1
 	_rebuild_ui()
 
@@ -666,6 +794,10 @@ func _current_lang() -> String:
 
 func command_results() -> Array[Dictionary]:
 	return _command_results
+
+
+func skipped_results() -> Array[Dictionary]:
+	return _skipped_results
 
 
 func _card_title(card: Dictionary) -> String:
