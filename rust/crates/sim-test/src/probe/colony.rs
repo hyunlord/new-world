@@ -1720,10 +1720,12 @@ pub fn colony_fingerprint(engine: &SimEngine) -> String {
         // M-LOOP: `extended` is new; while it is off it appends no text, so fingerprints of worlds
         // that never use it stay byte-identical to the legacy ones (the M-CORE empty-mind rule).
         let debug = format!("|{state:?}");
-        let debug = if state.extended {
+        let debug = if state.extended || !state.need_since.is_empty() {
             debug
         } else {
-            debug.replace(", extended: false", "")
+            debug
+                .replace(", extended: false", "")
+                .replace(", need_since: {}", "")
         };
         text.push_str(&debug);
     }

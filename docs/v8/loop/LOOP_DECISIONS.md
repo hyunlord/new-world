@@ -415,3 +415,24 @@ The full workspace tests (gate step 4) found two problems that the steward commi
 - **Plaque layout:** the title and chapter now sit in a narrow stacked column, so the plaque stays inside its slot. The wider plaque had covered a person in the mux2 visibility test.
 - **Normaliser:** the M-LOOP probe observer keys `cap_target_by_day` and `logs_ground_by_day` are instruments, not state; read_normalise and read_gate_checks exclude them.
 - **Fingerprint:** the colony fingerprint appends the steward state's Debug text when defence is non-default. The new `extended: false` field changed that text on 4 days of the story fixture, with every other value equal. Following the M-CORE empty-mind rule, `extended` now appends nothing while it is off, so legacy hashes are identical again.
+
+## LOOP-D-teach — owner decision 2026-11-02 02:10 (relayed by the planner)
+Do not publish the gate-3 candidate (p42b).
+1. **KnowledgeLost 2 → 26 on held-out is a regression.** Teaching goes back to the steward's default (rule 6: no `extended`, no grace), immediate as in BASE.
+   - The knowledge_risk card stays. When a steward teach order exists for the at-risk knowledge, the card reads "집사가 ○○에게 가르치고 있어요" and offers 그대로 두기 (recommended), 다른 사람에게 가르치기 and 가르치기 취소.
+   - General production bills (rule 4) keep the grace window, now counted from when the need appears. `StewardState.need_since` is written at the start of each steward tick, before any rule acts and also in replay, so replays match. This replaces the start-of-game counting bug (`current_tick < grace`).
+2. **KnowledgeLost joins the held-out and cards-run bars:** within BASE + 1 in each world for ≥ 30/32, and total ≤ BASE total + 3 (`tools/v8/loop_score.py`).
+3. **Evaluation:** calibrate on seeds 0–7, freeze, evaluate once on fresh held-out seeds 1680–1711, then run the full gate from step 1 and publish. Seeds 1520–1679 are reserved for M6b; the seed register is in DEPTH_ROADMAP §7.
+4. **Old worktrees:** the four stay; the M6b Codex session removes them.
+- The colony fingerprint also omits `need_since` while it is empty, keeping legacy hashes (the same rule as `extended`).
+
+### LOOP-D-teach calibration (seeds 0–7, 48 days, --mux2-observe; BASE fbc03bddb)
+- **Round 1** (teach immediate, bill grace from need): every bar passes except firewood_in_snaps, 2/4 exposed. Seed 5 ran out (1299 ticks, 1 exposure death).
+- **Cause found:** with the log cap on, the capped wood target had dropped the fuel term entirely. Logs are also the hearth's future firewood.
+  - Fix: the capped target is builds + margin + fuel days × daily fuel.
+  - Fuel days are 3 in spring (no spring pile) and the full 12 from summer on (`capped_fuel_days`).
+  - This is a cap definition, not tuning outside the caps.
+- **Round 2** (full fuel from autumn): exposure deaths 0/8; firewood_in_snaps 3/5.
+- **Round 3** (full fuel from summer): exposure deaths 0/8, wolf ≤ 1 8/8, KnowledgeLost 0 = BASE 0; firewood_in_snaps 2/4. Seeds 3 and 5 run dry during snaps; seed 3 also does at BASE.
+- **Reference:** the earlier frozen p1g scores the same 2/4 on these seeds with this scorer. The bar has failed on the calibration seeds for every steward variant; the agent's earlier metric differed.
+- **Decision:** freeze round 3. Firewood in snaps is judged on the held-out run, and this calibration result is reported as is.

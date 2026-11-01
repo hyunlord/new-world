@@ -314,6 +314,18 @@ func _collect_trigger_data(card_def: Dictionary) -> Dictionary:
 					data["technique"] = KnowledgeText.node_name(_locale, int(cause.get("id", 0)))
 					data["learner"] = _find_best_learner(int(cause.get("id", -1)))
 					data["knowledge"] = int(cause.get("id", -1))
+					# LOOP-D-teach: when the steward is already teaching this knowledge, the card says so.
+					var orders: Dictionary = SimReads.read(_world, "get_teach_orders") if _world.has_method("get_teach_orders") else {}
+					var o_ids: Variant = orders.get("ids", PackedInt64Array())
+					var o_know: Variant = orders.get("knowledge", PackedInt64Array())
+					var o_learn: Variant = orders.get("learners", PackedInt64Array())
+					if o_ids is PackedInt64Array and o_know is PackedInt64Array and o_learn is PackedInt64Array:
+						for oi: int in (o_ids as PackedInt64Array).size():
+							if int((o_know as PackedInt64Array)[oi]) == int(data["knowledge"]):
+								data["order_id"] = int((o_ids as PackedInt64Array)[oi])
+								data["ordered_learner_id"] = int((o_learn as PackedInt64Array)[oi])
+								data["ordered_learner"] = Names.present(int((o_learn as PackedInt64Array)[oi]), lang)
+								break
 			"wolves":
 				data["count"] = causes.size()
 			"idle_adults":
@@ -516,6 +528,13 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> Var
 			if not _teacher_holds_knowledge(teacher, knowledge):
 				return {"accepted": false, "skipped": true, "reason": "no_practitioner"}
 			result = SimReads.mutate(_world, "cmd_order_teach", [teacher, learner, knowledge])
+			if result is Dictionary and not bool(result.get("accepted", false)):
+				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
+		"cmd_cancel_teach":
+			var order_id: int = int(trigger_data.get("order_id", -1))
+			if order_id < 0:
+				return {"accepted": false, "skipped": true, "reason": "no_order"}
+			result = SimReads.mutate(_world, "cmd_cancel_teach", [order_id])
 			if result is Dictionary and not bool(result.get("accepted", false)):
 				return {"accepted": false, "skipped": false, "reason": str(result.get("reason", "rejected"))}
 		"cmd_draft":
@@ -777,10 +796,10 @@ func _steward_on() -> bool:
 
 
 ## The option that leaves the matter to the steward (default "steward" or no command).
-func _steward_option(options: Array) -> int:
+func _steward_option(options: Array, trigger_data: Dictionary = {}) -> int:
 	for i: int in options.size():
 		var cmd: String = str(options[i].get("command", ""))
-		if cmd == "steward_default" or cmd == "none":
+		if (cmd == "steward_default" or cmd == "none") and not _option_hidden(options[i], trigger_data):
 			return i
 	return options.size() - 1
 
@@ -792,7 +811,7 @@ func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> i
 	# is on, it already covers firewood (wood rule), food (food plan + hunt), teaching (grace
 	# fallback), tools (rule 9) and idle work, so those cards recommend leaving it to the steward.
 	if _steward_on() and card_id in STEWARD_COVERED_CARDS:
-		return _steward_option(options)
+		return _steward_option(options, trigger_data)
 	match card_id:
 		"migrants":
 			var migrant_count: int = int(trigger_data.get("count", 1))
@@ -892,7 +911,8 @@ func _build_card_widget(card_id: String, card: Dictionary) -> void:
 	title_label.add_theme_color_override("font_color", Color("e8c46e"))
 	card_box.add_child(title_label)
 	var body_label: Label = Label.new()
-	body_label.text = KoreanText.words(_format_card_text(str(def.get("body_key", "")), trigger_data))
+	var body_key: String = str(def.get("body_ordered_key", "")) if trigger_data.has("order_id") and def.has("body_ordered_key") else str(def.get("body_key", ""))
+	body_label.text = KoreanText.words(_format_card_text(body_key, trigger_data))
 	body_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	body_label.custom_minimum_size.x = 340
 	card_box.add_child(body_label)
@@ -903,7 +923,7 @@ func _build_card_widget(card_id: String, card: Dictionary) -> void:
 	var effective_rec: int = _effective_recommended(def, trigger_data)
 	for i: int in options.size():
 		var opt: Dictionary = options[i]
-		if _option_hidden(opt):
+		if _option_hidden(opt, trigger_data):
 			continue
 		var btn: Button = Button.new()
 		btn.text = _tr(str(opt.get("text_key", "")))
@@ -915,9 +935,16 @@ func _build_card_widget(card_id: String, card: Dictionary) -> void:
 
 
 ## Hide an option when its required target is unavailable.
-func _option_hidden(opt: Dictionary) -> bool:
+func _option_hidden(opt: Dictionary, trigger_data: Dictionary = {}) -> bool:
 	var requires: String = str(opt.get("requires", ""))
 	match requires:
+		"teach_order":
+			return not trigger_data.has("order_id")
+		"no_teach_order":
+			return trigger_data.has("order_id")
+		"other_learner":
+			return not trigger_data.has("order_id") or int(trigger_data.get("learner", -1)) < 0 \
+				or int(trigger_data.get("learner", -1)) == int(trigger_data.get("ordered_learner_id", -1))
 		"harvest_target":
 			if _world != null and _world.has_method("get_card_harvest_target"):
 				return not bool(_world.get_card_harvest_target().get("found", false))

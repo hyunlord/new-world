@@ -156,7 +156,13 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             // designating enough trees for the house.
             let target = if let Some(margin) = cap_log_margin {
                 let pending = pending_shelter_logs(world, res, items);
-                building_need.max(pending).saturating_add(*margin)
+                // LOOP-D-teach calibration: logs are also the hearth's future firewood, so keep a
+                // fuel term — a few days in spring and summer (no 300-log spring pile) and the full
+                // `days` from autumn on, when the winter stock has to be built.
+                building_need
+                    .max(pending)
+                    .saturating_add(*margin)
+                    .saturating_add(capped_fuel_days(res, *days).saturating_mul(daily_fuel(res)))
             } else {
                 days.saturating_mul(daily_fuel(res))
                     .saturating_add(building_need)
@@ -954,7 +960,14 @@ pub fn wood_cap_target(world: &World, res: &SimResources) -> Option<(u32, u32, u
         })
         .sum();
     let pending = pending_shelter_logs(world, res, items);
-    let target = building_need.max(pending).saturating_add(*margin);
+    let days = match &rule.action {
+        sim_core::colony::steward::Action::Wood { days, .. } => *days,
+        _ => 0,
+    };
+    let target = building_need
+        .max(pending)
+        .saturating_add(*margin)
+        .saturating_add(capped_fuel_days(res, days).saturating_mul(daily_fuel(res)));
     Some((target, building_need, pending))
 }
 
@@ -1046,6 +1059,18 @@ fn pending_shelter_logs(
         .saturating_mul(wall_cost)
         .saturating_add(door_cost)
         .saturating_add(beds.saturating_mul(bed_cost))
+}
+
+/// Days of fuel the capped wood rule keeps outside autumn and winter (LOOP-D-teach).
+const SPRING_FUEL_DAYS: u32 = 3;
+
+/// The capped wood rule's fuel days: `SPRING_FUEL_DAYS` in spring and summer, all `days` from
+/// summer (season index 1) on.
+fn capped_fuel_days(res: &SimResources, days: u32) -> u32 {
+    match crate::runtime::resource_regen::season_at(res) {
+        Some((season, _)) if season >= 1 => days,
+        _ => SPRING_FUEL_DAYS.min(days),
+    }
 }
 
 fn daily_fuel(res: &SimResources) -> u32 {

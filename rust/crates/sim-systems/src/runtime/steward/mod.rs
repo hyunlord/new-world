@@ -32,6 +32,11 @@ impl RuntimeSystem for StewardSystem {
         if res.rules.colony.is_none() {
             return;
         }
+        // LOOP-D-teach: grace-window bookkeeping runs before any rule acts and in replay too, so a
+        // replayed world reaches the same `need_since` as the live one.
+        if res.steward.enabled {
+            track_needs(world, res);
+        }
         if res.steward.replay {
             let pending = std::mem::take(&mut res.steward.pending);
             for (tick, command) in pending {
@@ -55,24 +60,12 @@ impl RuntimeSystem for StewardSystem {
                 profile.skip(true);
                 continue;
             }
-            if rule.extended && !res.steward.extended {
-                match rule.grace_ticks {
-                    Some(grace) => {
-                        // Pure check: skip until the grace period has elapsed and
-                        // the rule has not yet fired (no cooldown entry from accepted()).
-                        if !res.steward.cooldowns.contains_key(&rule.id) && res.current_tick < grace
-                        {
-                            profile.skip(false);
-                            continue;
-                        }
-                        // Grace expired or rule has fired before — fall through to
-                        // the normal cooldown check.
-                    }
-                    None => {
-                        profile.skip(true);
-                        continue;
-                    }
-                }
+            // M-LOOP: extended rules (bills) without "집사가 더 많이" never fire, unless they have a
+            // grace window; that window is checked below, counted from when the need appears.
+            let graced = rule.extended && !res.steward.extended;
+            if graced && rule.grace_ticks.is_none() {
+                profile.skip(true);
+                continue;
             }
             if res
                 .steward
@@ -86,6 +79,19 @@ impl RuntimeSystem for StewardSystem {
             profile.begin_plan();
             let commands = planning::plan(world, res, rule);
             profile.planned(commands.len());
+            if graced {
+                // LOOP-D-teach: the player gets `grace_ticks` from the first tick this rule found
+                // work (a card asks meanwhile); the steward acts only after that.
+                let grace = rule.grace_ticks.unwrap_or(0);
+                let due = res
+                    .steward
+                    .need_since
+                    .get(&rule.id)
+                    .is_some_and(|since| res.current_tick.saturating_sub(*since) >= grace);
+                if !due {
+                    continue;
+                }
+            }
             for command in commands {
                 let targets = lifecycle::targets(res, &command);
                 if targets
@@ -108,6 +114,28 @@ impl RuntimeSystem for StewardSystem {
         }
     }
 }
+/// Record, for every rule waiting on a grace window, the first tick it found work; clear it once
+/// there is none. Evaluated at the start of the steward tick, before any rule acts.
+fn track_needs(world: &World, res: &mut SimResources) {
+    let Ok(data) = rules() else {
+        return;
+    };
+    for rule in &data.rules {
+        if !(rule.extended && !res.steward.extended && rule.grace_ticks.is_some()) {
+            continue;
+        }
+        if !res.steward.scope.permits(rule.scope) {
+            continue;
+        }
+        if planning::plan(world, res, rule).is_empty() {
+            res.steward.need_since.remove(&rule.id);
+        } else {
+            let tick = res.current_tick;
+            res.steward.need_since.entry(rule.id).or_insert(tick);
+        }
+    }
+}
+
 fn issue(world: &mut World, res: &mut SimResources, command: Command) -> bool {
     crate::commands::apply_and_log(world, res, command, res.current_tick).accepted
 }

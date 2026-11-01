@@ -71,6 +71,10 @@ pub struct StewardState {
     /// Extended mode: enables production bills and teach rules ("집사가 더 많이").
     #[serde(default)]
     pub extended: bool,
+    /// M-LOOP (LOOP-D-teach): first tick each grace-window rule found work to do; the grace is
+    /// counted from here and the entry clears when the need goes away.
+    #[serde(default)]
+    pub need_since: BTreeMap<u16, u64>,
     /// Earliest tick each rule may fire again.
     pub cooldowns: BTreeMap<u16, u64>,
     /// Targets the player canceled, with absolute retry tick.

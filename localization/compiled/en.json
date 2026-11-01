@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1422,
+    "active_key_count": 1426,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1422,
+    "key_count": 1426,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -265,7 +265,11 @@
     "LOOP_CARD_IDLE_ADULTS_ROLES": "Assign roles",
     "LOOP_CARD_KNOWLEDGE_RISK": "Knowledge at risk",
     "LOOP_CARD_KNOWLEDGE_RISK_BODY": "{technique} — only {holder} knows it",
+    "LOOP_CARD_KNOWLEDGE_RISK_CANCEL": "Cancel teaching",
     "LOOP_CARD_KNOWLEDGE_RISK_LATER": "Later",
+    "LOOP_CARD_KNOWLEDGE_RISK_LEAVE": "Leave it",
+    "LOOP_CARD_KNOWLEDGE_RISK_ORDERED_BODY": "The steward is teaching {technique} to {ordered_learner}",
+    "LOOP_CARD_KNOWLEDGE_RISK_OTHER": "Teach someone else",
     "LOOP_CARD_KNOWLEDGE_RISK_TEACH": "Teach",
     "LOOP_CARD_MIGRANTS": "Migrants arrived",
     "LOOP_CARD_MIGRANTS_ACCEPT": "Accept",

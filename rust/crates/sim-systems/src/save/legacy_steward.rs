@@ -33,6 +33,7 @@ impl From<LegacyStewardState> for StewardState {
             enabled: old.enabled,
             scope: old.scope,
             extended: false,
+            need_since: BTreeMap::new(),
             cooldowns: old.cooldowns,
             vetoes: old.vetoes,
             owned: old.owned,

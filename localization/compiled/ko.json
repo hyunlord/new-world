@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1422,
+    "active_key_count": 1426,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1422,
+    "key_count": 1426,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -265,7 +265,11 @@
     "LOOP_CARD_IDLE_ADULTS_ROLES": "역할 주기",
     "LOOP_CARD_KNOWLEDGE_RISK": "기술이 사라질 위험",
     "LOOP_CARD_KNOWLEDGE_RISK_BODY": "{technique} — 아는 사람이 {holder}뿐입니다",
+    "LOOP_CARD_KNOWLEDGE_RISK_CANCEL": "가르치기 취소",
     "LOOP_CARD_KNOWLEDGE_RISK_LATER": "나중에",
+    "LOOP_CARD_KNOWLEDGE_RISK_LEAVE": "그대로 두기",
+    "LOOP_CARD_KNOWLEDGE_RISK_ORDERED_BODY": "집사가 {ordered_learner}에게 {technique}을(를) 가르치고 있어요",
+    "LOOP_CARD_KNOWLEDGE_RISK_OTHER": "다른 사람에게 가르치기",
     "LOOP_CARD_KNOWLEDGE_RISK_TEACH": "가르치기",
     "LOOP_CARD_MIGRANTS": "이주민이 왔어요",
     "LOOP_CARD_MIGRANTS_ACCEPT": "받기",

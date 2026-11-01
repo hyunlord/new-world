@@ -102,6 +102,7 @@ func _run() -> void:
 	await _test_idle_adults_seeded(main, world)
 	# --- Test 30: tools_low card fires in a seeded run with few tools ---
 	await _test_tools_low_seeded(main, world)
+	_test_knowledge_card_steward_teaching(main)
 	# --- Test 31: cooldown prevents re-trigger within 1 day ---
 	_test_cooldown()
 	# --- Test 32: dedupe blocks chop/hunt when designation/zone exists ---
@@ -1024,3 +1025,35 @@ func _test_recommend_wolves() -> void:
 	_assert(draft_cmd == "cmd_draft", "wolves: option 0 is draft")
 	_assert(flee_cmd == "cmd_undraft_all", "wolves: option 1 is undraft (flee)")
 	_assert(str(w_def.get("default", "")) == "steward", "wolves: default is steward")
+
+
+## LOOP-D-teach: when the steward already teaches the at-risk knowledge, the knowledge card says so,
+## recommends leaving it and offers cancel; with no order it offers teach/later instead.
+func _test_knowledge_card_steward_teaching(main: Node) -> void:
+	print("Test 41: knowledge card shows the steward's teaching")
+	var card_panel: Node = main.find_child("CardPanel", true, false)
+	_assert(card_panel != null, "CardPanel exists")
+	if card_panel == null:
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/cards.json"))
+	var def: Dictionary = {}
+	for card: Variant in (parsed as Dictionary).get("cards", []):
+		if card is Dictionary and str(card["id"]) == "knowledge_risk":
+			def = card
+	_assert(not def.is_empty() and def.has("body_ordered_key"), "knowledge_risk has an ordered body")
+	var opts: Array = def.get("options", [])
+	var ordered: Dictionary = {"order_id": 3, "ordered_learner_id": 5, "learner": 5, "ordered_learner": "카야", "technique": "점토 반죽"}
+	var visible_ordered: Array = []
+	var visible_none: Array = []
+	for opt: Variant in opts:
+		if not card_panel.call("_option_hidden", opt, ordered):
+			visible_ordered.append(str(opt["text_key"]))
+		if not card_panel.call("_option_hidden", opt, {}):
+			visible_none.append(str(opt["text_key"]))
+	_assert(visible_ordered.has("LOOP_CARD_KNOWLEDGE_RISK_LEAVE") and visible_ordered.has("LOOP_CARD_KNOWLEDGE_RISK_CANCEL")
+		and not visible_ordered.has("LOOP_CARD_KNOWLEDGE_RISK_TEACH") and not visible_ordered.has("LOOP_CARD_KNOWLEDGE_RISK_OTHER"),
+		"ordered: leave and cancel shown, teach hidden, same learner hides 다른 사람 (%s)" % str(visible_ordered))
+	_assert(visible_none.has("LOOP_CARD_KNOWLEDGE_RISK_TEACH") and not visible_none.has("LOOP_CARD_KNOWLEDGE_RISK_LEAVE"),
+		"no order: teach shown, leave hidden (%s)" % str(visible_none))
+	var leave_index: int = int(card_panel.call("_steward_option", opts, ordered))
+	_assert(str((opts[leave_index] as Dictionary)["text_key"]) == "LOOP_CARD_KNOWLEDGE_RISK_LEAVE", "steward-first recommendation is 그대로 두기")
