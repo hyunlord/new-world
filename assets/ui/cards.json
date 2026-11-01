@@ -71,7 +71,7 @@
         {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_LEAVE", "command": "none", "params": "", "requires": "teach_order", "recommended": true},
         {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_OTHER", "command": "cmd_order_teach", "params": "holder_to_learner", "requires": "other_learner", "recommended": false},
         {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_CANCEL", "command": "cmd_cancel_teach", "params": "order_id", "requires": "teach_order", "recommended": false},
-        {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_TEACH", "command": "cmd_order_teach", "params": "holder_to_learner", "requires": "no_teach_order", "recommended": false},
+        {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_TEACH", "command": "cmd_order_teach", "params": "holder_to_learner", "requires": "no_teach_order", "recommended": true},
         {"text_key": "LOOP_CARD_KNOWLEDGE_RISK_LATER", "command": "none", "params": "", "requires": "no_teach_order", "recommended": false}
       ],
       "default": "steward",

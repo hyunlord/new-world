@@ -854,9 +854,9 @@ func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> i
 					if str(options[i].get("command", "")) == "none":
 						return i
 				return options.size() - 1
-	# Default: use the static recommended flag.
+	# Default: the first visible option with the static recommended flag (data can mark one per state).
 	for i: int in options.size():
-		if bool(options[i].get("recommended", false)):
+		if bool(options[i].get("recommended", false)) and not _option_hidden(options[i], trigger_data):
 			return i
 	return 0
 
