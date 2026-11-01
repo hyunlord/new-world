@@ -1426,5 +1426,10 @@
 	"M6B_MIGRANT_FOOD": "합류 직후 소비량 기준 5일치 식량이 부족해요.",
 	"M6B_CARD_VOICE_PREFIX": "{voice}: ",
 	"CHRON_GROUP_COUNT_FMT": "{count}건",
-	"CHRON_GROUP_COLLAPSE": "접기"
+	"CHRON_GROUP_COLLAPSE": "접기",
+	"LOOP_PLAQUE_RESIDENTS_NOW_FMT": "주민 현재: {activities}",
+	"LOOP_PLAQUE_ACTIVITY_COUNT_FMT": "{activity} {count}명",
+	"LOOP_PLAQUE_ACTIVITY_OTHER_FMT": "그 외 {count}명",
+	"LOOP_PLAQUE_RESIDENTS_EMPTY": "현재 주민 없음",
+	"LOOP_PLAQUE_ACTIVITY_UNAVAILABLE": "주민 현재 상태 확인 불가"
 }

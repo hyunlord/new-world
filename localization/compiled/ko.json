@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1441,
+    "active_key_count": 1446,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1441,
+    "key_count": 1446,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -364,9 +364,14 @@
     "LOOP_CHRON_PERSON_FILTER": "사람별",
     "LOOP_CHRON_STEWARD_DECIDED": "집사가 대신 정했어요: {card}",
     "LOOP_HELP_COLLAPSED": "? 도움말",
+    "LOOP_PLAQUE_ACTIVITY_COUNT_FMT": "{activity} {count}명",
+    "LOOP_PLAQUE_ACTIVITY_OTHER_FMT": "그 외 {count}명",
+    "LOOP_PLAQUE_ACTIVITY_UNAVAILABLE": "주민 현재 상태 확인 불가",
     "LOOP_PLAQUE_CARD_FMT": "{title}",
     "LOOP_PLAQUE_CHAPTER_FMT": "· 올해 목표: {title} {met}/{total} ·",
     "LOOP_PLAQUE_IDLE": "할 일 없음 — 집사가 마을을 돌보고 있어요",
+    "LOOP_PLAQUE_RESIDENTS_EMPTY": "현재 주민 없음",
+    "LOOP_PLAQUE_RESIDENTS_NOW_FMT": "주민 현재: {activities}",
     "LOOP_PLAQUE_TITLE": "지금 할 일",
     "LOOP_PRESSURE_COLD": "한파",
     "LOOP_PRESSURE_DROUGHT": "가뭄",

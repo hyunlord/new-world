@@ -1426,5 +1426,10 @@
 	"M6B_MIGRANT_FOOD": "Food is below 5 days at the arrival rate.",
 	"M6B_CARD_VOICE_PREFIX": "{voice}: ",
 	"CHRON_GROUP_COUNT_FMT": "{count} records",
-	"CHRON_GROUP_COLLAPSE": "Show fewer"
+	"CHRON_GROUP_COLLAPSE": "Show fewer",
+	"LOOP_PLAQUE_RESIDENTS_NOW_FMT": "Residents now: {activities}",
+	"LOOP_PLAQUE_ACTIVITY_COUNT_FMT": "{activity}: {count}",
+	"LOOP_PLAQUE_ACTIVITY_OTHER_FMT": "Others: {count}",
+	"LOOP_PLAQUE_RESIDENTS_EMPTY": "No residents",
+	"LOOP_PLAQUE_ACTIVITY_UNAVAILABLE": "Current resident activity unavailable"
 }

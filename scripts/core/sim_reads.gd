@@ -22,6 +22,8 @@ extends Node
 ## Successful replacement receipt before the mutator returns; native world_reset follows deferred.
 signal world_replaced
 signal new_game_started
+## Observer caches may discard their tick guards; listeners must not read reentrantly.
+signal snapshots_invalidated
 
 const GETTERS: Array[String] = [
 	"get_content_catalog",
@@ -158,6 +160,7 @@ func invalidate() -> void:
 	_cache.clear()
 	_tick_cache.clear()
 	_tick = -1
+	snapshots_invalidated.emit()
 
 func _on_world_reset() -> void:
 	invalidate()

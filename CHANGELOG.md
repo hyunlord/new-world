@@ -9,6 +9,7 @@
 - Compare fixture summaries with exact qualified exclusions and strict coverage/types; reject missing bench ceilings and empty stall evidence.
 
 ### Fixed
+- Show current resident action counts in the task plaque from existing read-only snapshots, distinguishing walking from consuming and active work from merely assigned jobs; unknown data stays unknown.
 - Migrant recommendations account for arriving people, reachable completed roofed bedroll capacity, the existing fuel target and initial food demand; missing facts fail closed without changing explicit acceptance.
 - Trader arrival text explains the existing seasonal visit rule without inventing historical causal links.
 - Card actions wrap and overflow scrolls while preserving the requested text scale; the plaque clears the action row and paused locale changes refresh cards and goals.

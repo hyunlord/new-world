@@ -5,7 +5,7 @@
 #     3. "할 일 없음 — 집사가 마을을 돌보고 있어요".
 #   When the steward is handling it, show the player's next step.
 # Bridge methods: via SimReads get_current_task, get_requests, get_settlement_diagnosis;
-#   signal world_reset.
+#   get_time_snapshot, get_agent_snapshot, get_activity_snapshot; signal world_reset.
 extends Control
 
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
@@ -13,6 +13,8 @@ const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 const DiagnosisText = preload("res://scripts/ui/panels/diagnosis_text.gd")
+
+const CurrentActivity = preload("res://scripts/ui/panels/current_activity_text.gd")
 
 const TILE: float = 64.0
 
@@ -24,6 +26,9 @@ var _text_label: Label
 const CHAPTER_WIDTH: float = 460.0
 var _title_label: Label
 var _chapter_label: Label
+var _activity_label: Label
+var _activity_tick: int = -1
+var _activity_summary: Dictionary = {}
 var _view_button: Button
 var _task_data: Dictionary = {}
 var _task_tick: int = -1
@@ -36,6 +41,9 @@ func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _world_reset)
+		var reader: Node = SimReads.resolve(_world_sim)
+		if reader != null:
+			reader.connect("snapshots_invalidated", _snapshots_invalidated)
 	# Position at the top centre of the screen.
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	anchors_preset = PRESET_TOP_WIDE
@@ -89,6 +97,11 @@ func _ready() -> void:
 	_view_button.pressed.connect(_view_pressed)
 	_view_button.focus_mode = Control.FOCUS_NONE
 	content.add_child(_view_button)
+	_activity_label = Label.new()
+	_activity_label.name = "CurrentActivity"
+	_activity_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_activity_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	inner.add_child(_activity_label)
 	position = Vector2(0, 8)
 	if _locale != null:
 		_locale.connect("language_changed", refresh_cards.unbind(1), CONNECT_DEFERRED)
@@ -122,9 +135,11 @@ func _place() -> void:
 	scale = Vector2.ONE * float(slot["factor"])
 	_chapter_label.custom_minimum_size.x = maxf(240.0, float(slot["width"]) - 32.0)
 	_text_label.custom_minimum_size.x = maxf(120.0, float(slot["width"]) - 120.0)
+	_activity_label.custom_minimum_size.x = _chapter_label.custom_minimum_size.x
 
 
 func _refresh() -> void:
+	_refresh_activity()
 	# M-LOOP §2.1: content priority — card → chapter condition → idle message.
 	# Priority 1: the top open card's title.
 	var card_panel: Node = get_node_or_null("../MuxHud/CardPanel") if get_node_or_null("../MuxHud") != null else null
@@ -218,6 +233,10 @@ func _loc(key: String) -> String:
 
 func _world_reset() -> void:
 	_task_tick = -1
+	_activity_tick = -1
+	_activity_summary.clear()
+	_activity_label.text = ""
+	_activity_label.tooltip_text = ""
 	_task_data = {}
 	_marker_tile = Vector2i(-1, -1)
 	_current_text = ""
@@ -243,3 +262,30 @@ func marker_tile() -> Vector2i:
 func refresh_cards() -> void:
 	_refresh()
 	_place()
+
+
+func _refresh_activity() -> void:
+	if _activity_label == null or _world_sim == null:
+		return
+	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
+	if tick != _activity_tick or _activity_summary.is_empty():
+		_activity_tick = tick
+		_activity_summary = CurrentActivity.summarize(
+			SimReads.read(_world_sim, "get_agent_snapshot"),
+			SimReads.read(_world_sim, "get_activity_snapshot"), tick)
+	var rendered: Dictionary = CurrentActivity.render(_activity_summary, _loc)
+	var text: String = KoreanText.words(str(rendered["text"]))
+	if _activity_label.text != text:
+		_activity_label.text = text
+	_activity_label.tooltip_text = KoreanText.raw(str(rendered["tooltip"]))
+
+
+## Current actions are separate from the primary next-step capture contract.
+func activity_text() -> String:
+	return KoreanText.raw(_activity_label.text)
+
+
+## Invalidation can occur inside a command: defer reads to the next normal process frame.
+func _snapshots_invalidated() -> void:
+	_task_tick = -1
+	_activity_tick = -1
