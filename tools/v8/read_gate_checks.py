@@ -10,6 +10,7 @@ Usage:
 import json
 import math
 import os
+import re
 import subprocess
 import sys
 import time
@@ -85,6 +86,13 @@ def bench(config_path, log_dir):
     """3-round interleaved bench, BASE vs HEAD, medians compared."""
     config = load_config(config_path)
     verify_binary(config["base_perf"], config["base_perf_sha256"])
+    base_commit = config.get("base_commit")
+    head_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    if not isinstance(base_commit, str) or re.fullmatch(r"[0-9a-f]{40}", base_commit) is None:
+        raise ValueError("bench: full base_commit required for arm provenance")
+    if re.fullmatch(r"[0-9a-f]{40}", head_commit) is None:
+        raise ValueError("bench: invalid candidate HEAD")
+    commits = {"base": base_commit, "new": head_commit}
     head_perf = str(ROOT / "rust/target/release/worldsim_perf")
     assert Path(head_perf).exists(), f"HEAD perf not built: {head_perf}"
     out = Path(log_dir)
@@ -99,8 +107,9 @@ def bench(config_path, log_dir):
             print(f"round {r} {label} load1={load1:.2f} load5={load5:.2f} load15={load15:.2f}")
             run_dir = out / f"{label}-r{r}"
             subprocess.check_call(
-                [binary, "bench", "--out", str(run_dir), "--commands", script, "--repeats", "1"],
+                [binary, "bench", "--out", str(run_dir), "--commands", script, "--repeats", "1", "--commit", commits[label]],
                 cwd=str(ROOT),
+                env={**os.environ, "WORLDSIM_GIT_SHA": commits[label]},
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
@@ -111,6 +120,8 @@ def bench(config_path, log_dir):
         for label in ("base", "new"):
             run_dir = out / f"{label}-r{r}" / "bench.json"
             data = load_json(run_dir)
+            if data.get("commit") != commits[label]:
+                raise ValueError(f"bench/{label}/r{r}: summary commit does not match the product arm")
             validate_bench_report(data, require_ceilings=label == "new")
             for scene in data["scenes"]:
                 name = scene["label"]

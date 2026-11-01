@@ -24,10 +24,11 @@ class LoadAdmissionTest(unittest.TestCase):
                   "ceilings": {key: "PASS" for key in read_gate_checks.BENCH_CEILINGS}}
         with (
             tempfile.TemporaryDirectory() as folder,
-            patch.object(read_gate_checks, "load_config", return_value={"base_perf": "/base", "base_perf_sha256": "a" * 64}),
+            patch.object(read_gate_checks, "load_config", return_value={"base_perf": "/base", "base_perf_sha256": "a" * 64, "base_commit": "a" * 40}),
             patch.object(read_gate_checks, "verify_binary"),
             patch.object(read_gate_checks.Path, "exists", return_value=True),
-            patch.object(read_gate_checks, "load_json", return_value=report),
+            patch.object(read_gate_checks, "load_json", side_effect=[dict(report, commit=sha) for sha in ["a" * 40, "b" * 40] * 3]),
+            patch.object(read_gate_checks.subprocess, "check_output", return_value="b" * 40 + "\n"),
             patch.object(read_gate_checks.os, "getloadavg", side_effect=[(7.0, 4.0, 3.0)] * 6) as loads,
             patch.object(read_gate_checks.subprocess, "check_call") as run,
         ):
@@ -35,6 +36,9 @@ class LoadAdmissionTest(unittest.TestCase):
             self.assertEqual(loads.call_count, 6)
             self.assertEqual([call.args[0][0] for call in run.call_args_list],
                              ["/base", str(read_gate_checks.ROOT / "rust/target/release/worldsim_perf")] * 3)
+            for call, sha in zip(run.call_args_list, ["a" * 40, "b" * 40] * 3):
+                self.assertEqual(call.kwargs["env"]["WORLDSIM_GIT_SHA"], sha)
+                self.assertEqual(call.args[0][-2:], ["--commit", sha])
 
     def test_waits_at_boundary_and_rejects_invalid_samples(self):
         from unittest.mock import patch
@@ -48,6 +52,36 @@ class LoadAdmissionTest(unittest.TestCase):
 
 
 class BenchRatioTest(unittest.TestCase):
+    def test_invalid_base_identity_stops_before_measurement(self):
+        from unittest.mock import patch
+        for value in (None, "unknown", "a" * 8, True):
+            with (
+                self.subTest(value=value),
+                patch.object(read_gate_checks, "load_config", return_value={"base_perf": "/base", "base_perf_sha256": "a" * 64, "base_commit": value}),
+                patch.object(read_gate_checks, "verify_binary"),
+                patch.object(read_gate_checks.subprocess, "check_output", return_value="b" * 40),
+                patch.object(read_gate_checks.subprocess, "check_call") as run,
+            ):
+                with self.assertRaisesRegex(ValueError, "full base_commit"):
+                    read_gate_checks.bench("unused", "unused")
+                run.assert_not_called()
+
+    def test_wrong_arm_summary_identity_is_rejected(self):
+        import tempfile
+        from unittest.mock import patch
+        with (
+            tempfile.TemporaryDirectory() as folder,
+            patch.object(read_gate_checks, "load_config", return_value={"base_perf": "/base", "base_perf_sha256": "a" * 64, "base_commit": "a" * 40}),
+            patch.object(read_gate_checks, "verify_binary"),
+            patch.object(read_gate_checks.Path, "exists", return_value=True),
+            patch.object(read_gate_checks, "wait_for_load", return_value=(1.0, 2.0, 3.0)),
+            patch.object(read_gate_checks.subprocess, "check_output", return_value="b" * 40),
+            patch.object(read_gate_checks.subprocess, "check_call"),
+            patch.object(read_gate_checks, "load_json", return_value={"commit": "b" * 40}),
+        ):
+            with self.assertRaisesRegex(ValueError, "summary commit does not match"):
+                read_gate_checks.bench("unused", folder)
+
     def test_pass_within_limit(self):
         ok, ratio = read_gate_checks.check_bench_ratio(100.0, 108.0)
         self.assertTrue(ok)

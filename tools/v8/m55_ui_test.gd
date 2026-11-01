@@ -17,7 +17,7 @@
 #   step, and the inspector shows "도망 중: 늑대" for a fleeing person.
 # Bridge methods called: via SimReads get_neighbours, get_agent_snapshot, get_building_snapshot, get_terrain_snapshot,
 #   get_world_info, get_time_snapshot, get_story, get_tech, advance_ticks, cmd_add_stockpile, cmd_designate_chop_tiles;
-#   get_wave, get_caravan, get_trees, get_chronicle_since, get_agent_detail, get_agent_m5 (direct); and the UI's own
+#   get_wave, get_caravan, get_trees, get_chronicle_since, get_agent_detail, get_agent_m5, get_command_log (direct); and the UI's own
 #   calls (cmd_accept_migrants, cmd_trade).
 # Run: bash tools/v8/run_bounded.sh 900 "$GODOT_BIN" --headless --path . --script res://tools/v8/m55_ui_test.gd
 # Output: one "M55_UI <PASS|FAIL|INFO> <step> <detail>" line per check, then "M55_UI_DONE failures=N"; quits 0 / 1.

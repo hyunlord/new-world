@@ -149,6 +149,7 @@ func _ready() -> void:
 	_hint.text = _loc(_idle_hint())
 	# The toast sits on its own panel just above the bar; the panel shrinks to the text on every show.
 	_toast_panel = ArtUI.panel(self, Rect2(12, 1080 - 112 - 8 - 48, 0, 0))
+	_toast_panel.name = "Toast"
 	_toast = Label.new()
 	_toast.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_toast.add_theme_color_override("font_color", Color("f2e6c8"))

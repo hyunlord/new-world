@@ -82,6 +82,38 @@ func _refresh() -> void:
 	_layout_orderbar()
 	var content_top: float = maxf(_top_bottom + MARGIN, _content_top)
 	var available: Rect2 = Rect2(MARGIN, content_top, _area.x - MARGIN * 2, maxf(1.0, _bar_top - content_top - MARGIN))
+	_layout_panels(available)
+	var reserved: float = _layout_toast(available)
+	if reserved > 0.0:
+		available.size.y = maxf(1.0, available.size.y - reserved)
+	var causal_band: float = _causal_band_height(available)
+	if causal_band > 0.0:
+		available.position.y += causal_band
+		available.size.y = maxf(1.0, available.size.y - causal_band)
+	if reserved > 0.0 or causal_band > 0.0:
+		_layout_panels(available)
+	_layout_story(available)
+
+
+## Keep a real free slot for the tile-anchored popup when a wide list leaves no side gutter.
+## CausalPanel retains its own obstacle solver and anchor; only scrollable list space is reserved.
+func _causal_band_height(available: Rect2) -> float:
+	var causal: Control = _ui.get_node_or_null("CausalPanel") as Control
+	if causal == null or not causal.is_visible_in_tree():
+		return 0.0
+	var extent: Vector2 = _bounds(causal).size * causal.scale
+	for key: String in PANELS:
+		var entry: Dictionary = _report.get(key, {})
+		if not bool(entry.get("visible", false)):
+			continue
+		var rect: Rect2 = entry["rect"]
+		var gutter: float = maxf(rect.position.x - available.position.x, available.end.x - rect.end.x) - GAP
+		if gutter < extent.x:
+			return extent.y + GAP
+	return 0.0
+
+
+func _layout_panels(available: Rect2) -> void:
 	for node_name: String in PANELS:
 		var panel: Control = _ui.get_node_or_null(NodePath(node_name)) as Control
 		if panel == null:
@@ -102,7 +134,6 @@ func _refresh() -> void:
 		elif node_name == "AgentInspectorPanel":
 			desired.x = region.end.x - bounds.size.x * effective
 		_place(panel, bounds, desired, region, effective, node_name)
-	_layout_story(available)
 
 
 func _layout_topbar() -> void:
@@ -141,7 +172,7 @@ func _layout_orderbar() -> void:
 	var above: Rect2 = Rect2(MARGIN, _top_bottom + MARGIN, _area.x - MARGIN * 2, maxf(1.0, _bar_top - _top_bottom - MARGIN - GAP))
 	var buttons: Array[Node] = bar.find_children("*", "Button", true, false)
 	for child: Node in owner.get_children():
-		if not child is PanelContainer or child == bar:
+		if not child is PanelContainer or child == bar or child.name == &"Toast":
 			continue
 		var panel: Control = child as Control
 		var panel_size: Vector2 = panel.get_combined_minimum_size()
@@ -159,6 +190,72 @@ func _layout_orderbar() -> void:
 		_place(panel, Rect2(Vector2.ZERO, panel_size), desired, above, panel_scale, "OrderBar/" + str(panel.name))
 
 
+## Return a dedicated-row reservation only when a full-height side gutter cannot fit feedback.
+## This changes geometry, never toast visibility, queue, sequence, or expiry.
+func _layout_toast(available: Rect2) -> float:
+	var toast: PanelContainer = _ui.get_node_or_null("OrderBar/Toast") as PanelContainer
+	if toast == null or not toast.is_visible_in_tree():
+		return 0.0
+	var label: Label = toast.get_child(0) as Label
+	if label == null:
+		return 0.0
+	var left_edge: float = available.end.x
+	var right_edge: float = available.position.x
+	var foreground: bool = false
+	var causal: Control = _ui.get_node_or_null("CausalPanel") as Control
+	if causal != null and causal.is_visible_in_tree():
+		_report["CausalPanel"] = {"visible": true, "rect": Rect2(causal.global_position, _bounds(causal).size * causal.scale)}
+	for key: String in PANELS + ["CausalPanel"]:
+		var entry: Dictionary = _report.get(key, {})
+		if not bool(entry.get("visible", false)):
+			continue
+		foreground = true
+		var rect: Rect2 = entry["rect"]
+		left_edge = minf(left_edge, rect.position.x - GAP)
+		right_edge = maxf(right_edge, rect.end.x + GAP)
+	var region: Rect2 = available
+	if foreground:
+		var left_width: float = maxf(0.0, left_edge - available.position.x)
+		var right_width: float = maxf(0.0, available.end.x - right_edge)
+		if right_width > left_width:
+			region.position.x = right_edge
+			region.size.x = right_width
+		else:
+			region.size.x = left_width
+	var reserved: bool = foreground and region.size.x < 96.0 * _factor
+	if reserved:
+		region = available
+	var wrap: bool = foreground
+	var natural: Vector2 = _toast_size(toast, label, region.size.x / _factor, wrap)
+	if not wrap and natural.x * _factor > region.size.x:
+		wrap = true
+		natural = _toast_size(toast, label, region.size.x / _factor, wrap)
+	if foreground and natural.y * _factor > region.size.y and not reserved:
+		reserved = true
+		region = available
+		natural = _toast_size(toast, label, region.size.x / _factor, true)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if wrap else TextServer.AUTOWRAP_OFF
+	toast.custom_minimum_size = Vector2(region.size.x / _factor if wrap else 0.0, 0.0)
+	toast.size = natural
+	var effective: float = fit_scale(natural, region.size, _factor)
+	var desired: Vector2 = Vector2(region.position.x, _bar_top - GAP - natural.y * effective)
+	_place(toast, Rect2(Vector2.ZERO, natural), desired, region, effective, "OrderBar/Toast")
+	_report["OrderBar/Toast"]["reserved_row"] = reserved
+	return natural.y * effective + GAP if reserved else 0.0
+
+
+func _toast_size(toast: PanelContainer, label: Label, width: float, wrap: bool) -> Vector2:
+	var margins: Vector2 = toast.get_theme_stylebox("panel").get_minimum_size()
+	var paragraph: TextParagraph = TextParagraph.new()
+	paragraph.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+	paragraph.width = maxf(1.0, width - margins.x) if wrap else -1.0
+	paragraph.add_string(label.text, label.get_theme_font("font"), label.get_theme_font_size("font_size"))
+	var measured: Vector2 = paragraph.get_size()
+	measured.y += maxf(0.0, paragraph.get_line_count() - 1) * label.get_theme_constant("line_spacing")
+	var natural: Vector2 = Vector2(width if wrap else measured.x + margins.x, measured.y + margins.y)
+	return natural
+
+
 func _layout_story(available: Rect2) -> void:
 	var owner: Control = _ui.get_node_or_null("StoryBanner") as Control
 	if owner == null:
@@ -174,7 +271,7 @@ func _layout_story(available: Rect2) -> void:
 	column.size = natural
 	var region: Rect2 = available
 	if _story_right > MARGIN:
-		region = Rect2(MARGIN, _story_top, _story_right - MARGIN, maxf(1.0, _bar_top - _story_top - GAP))
+		region = Rect2(MARGIN, _story_top, _story_right - MARGIN, maxf(1.0, minf(_bar_top - GAP, available.end.y) - _story_top))
 	var inspector: Dictionary = _report.get("AgentInspectorPanel", {})
 	if bool(inspector.get("visible", false)):
 		var inspector_rect: Rect2 = inspector["rect"]

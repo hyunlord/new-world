@@ -512,3 +512,14 @@ func _open_teach() -> void:
 	var dialog: Node = get_parent().get_node_or_null("TeachPanel") if get_parent() != null else null
 	if dialog != null and dialog.has_method("open_for"):
 		dialog.call("open_for", _selected)
+
+
+## Adapt the existing scroll viewport; fixed header content still contributes its real minimum.
+func set_available_height(value: float) -> void:
+	for child: Node in get_children():
+		if child is PanelContainer:
+			var panel: PanelContainer = child as PanelContainer
+			var height: float = maxf(panel.get_combined_minimum_size().y, minf(PANEL_RECT.size.y, value))
+			panel.size = Vector2(PANEL_RECT.size.x, height)
+			size = panel.size
+			return

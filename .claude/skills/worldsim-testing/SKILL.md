@@ -311,3 +311,7 @@ A valid standing soak or uncensored on-screen visibility failure remains an acce
 ### Presentation metadata must be visibly reachable
 
 Emitting a known `why:index` directly proves the handler, not that a player can see or reach that link. Exercise the visible filter/group controls, require the exact original metadata in rendered text, and test actual pointer expansion separately. Group summaries must preserve original event meaning; count labels must not reinterpret every death as starvation or every pressure as cold. Compare tick, full command log and native save bytes for passive observers. Sources: `tools/v8/m5_ui_test.gd`; `tools/v8/m6b_chronicle_groups_test.gd`; `docs/v8/m6b/M6B_DECISIONS.md` D-minus1.
+
+### Benchmark arm metadata is not executable authentication
+
+A globally exported candidate SHA can label a correctly authenticated BASE executable as the candidate. Supply each arm's full product SHA in its subprocess environment and explicit CLI metadata, then reject a mismatched summary. Keep binary digests and source/build receipts as independent evidence; a correct label alone proves no build identity. Preserve interleaved order and the exact admitted load triplet. Sources: `tools/v8/read_gate_checks.py`; `tools/v8/test_read_gate.py`; M6b D-minus1-bench-provenance.

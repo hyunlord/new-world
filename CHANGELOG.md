@@ -16,8 +16,10 @@
 - Keep work-priority column names aligned and visible while the person list scrolls.
 - Reserve the visitor/warning band and actual folded-alert height; scroll long story and visitor lists without shrinking requested text or hiding decision controls.
 - Chronicle groups retain actual event sentences and expand to their original causal links; avoid numeric kind/cause summaries and incorrect cold/starvation labels.
+- Keep status feedback clear of foreground controls using wrapped side gutters or a reserved row; reuse priority/technology scrolling and reserve space for a causal popup beside an open list.
 - Trader recommendations now open the existing terms dialog without sending an exchange; available stock excludes already owed goods and stale selections require review.
 - Card-run acceptance rejects any per-world mortality increase and incomplete synchronous receipts; benchmark logs retain the exact admitted load sample.
+- Bind each benchmark arm's summary and child environment to its own full product SHA, rejecting mismatched summary metadata instead of inheriting the candidate label for BASE.
 - Published format14 save loading after inherited steward field insertion: explicit format15 output and frozen formats11–14 migration. Unpublished ambiguous LOOP14 payloads fail explicitly.
 
 See [M6B_REPORT](docs/v8/m6b/M6B_REPORT.md) for exact verification state; no publication or full-gate claim is made here.

@@ -433,3 +433,14 @@ func apply_role(agent: int, role_id: String) -> Array[Dictionary]:
 				if int(row["levels"][w]) != desired:
 					receipts.append(set_level(agent, work, desired))
 	return receipts
+
+
+## Adapt the existing scroll viewport; fixed header content still contributes its real minimum.
+func set_available_height(value: float) -> void:
+	for child: Node in get_children():
+		if child is PanelContainer:
+			var panel: PanelContainer = child as PanelContainer
+			var height: float = maxf(panel.get_combined_minimum_size().y, minf(PANEL_SIZE.y, value))
+			panel.size = Vector2(PANEL_SIZE.x, height)
+			size = panel.size
+			return
