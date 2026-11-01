@@ -473,19 +473,25 @@ func _test_card_trigger_seeded(main: Node, world: Node) -> void:
 		await process_frame
 	SimReads.mutate(world, "cmd_set_steward", [true, 0])
 	# Advance 5 days (120 in-game hours). Cards should appear from requests.
-	# In headless mode, _process may not fire reliably, so call _poll_triggers directly
-	# (same approach as loop_cards_run.gd).
+	# In headless mode, _process may not fire or _last_tick may stay at -1.
+	# Set _last_tick manually from the bridge and call _poll_triggers directly.
+	# Track cards that ever appeared (they may auto-close when the trigger clears).
+	var ever_active: Dictionary = {}
 	for _hour: int in 120:
 		reads.call("mutate_raw", "advance_ticks", [60])
 		await process_frame
 		await process_frame
-		if card_panel.has_method("_poll_triggers"):
-			card_panel.call("_poll_triggers")
-			card_panel.call("_check_expiry")
+		var time: Dictionary = SimReads.read(world, "get_time_snapshot")
+		var tick: int = int(time.get("tick", 0))
+		card_panel.set("_last_tick", tick)
+		card_panel.call("_poll_triggers")
+		card_panel.call("_check_expiry")
+		for cid: String in card_panel.call("active_ids"):
+			ever_active[cid] = true
 	var active: PackedStringArray = card_panel.call("active_ids")
 	var count: int = card_panel.call("active_count")
-	print("  After 5 days: active_count=%d active_ids=%s" % [count, ",".join(active)])
-	_assert(count > 0 or active.size() > 0, "at least one card triggered in 5 days (seed 0, steward on)")
+	print("  After 5 days: active_count=%d ever_active=%s active_ids=%s" % [count, ",".join(ever_active.keys()), ",".join(active)])
+	_assert(ever_active.size() > 0, "at least one card triggered in 5 days (seed 0, steward on)")
 
 
 ## Test 22: answering the open card records an accepted bridge result and a chronicle line.
@@ -499,7 +505,21 @@ func _test_card_answer_recorded(main: Node) -> void:
 		return
 	var active: PackedStringArray = card_panel.call("active_ids")
 	if active.is_empty():
-		_assert(false, "an open card to answer (test 21 state)")
+		# The card may have auto-closed. Force-advance until one re-opens.
+		var world: Node = main.get_node_or_null("WorldSim")
+		var reads: Node = main.get_node_or_null("SimReads")
+		if world != null and reads != null:
+			for _try: int in 48:
+				reads.call("mutate_raw", "advance_ticks", [60])
+				await process_frame
+				var time: Dictionary = SimReads.read(world, "get_time_snapshot")
+				card_panel.set("_last_tick", int(time.get("tick", 0)))
+				card_panel.call("_poll_triggers")
+				active = card_panel.call("active_ids")
+				if not active.is_empty():
+					break
+	if active.is_empty():
+		_assert(false, "an open card to answer (after retry)")
 		return
 	var card_id: String = active[0]
 	var options: Array = (card_panel.get("_active")[card_id] as Dictionary).get("def", {}).get("options", [])
