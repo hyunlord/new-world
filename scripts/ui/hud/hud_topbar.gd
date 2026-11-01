@@ -60,6 +60,12 @@ var _death_total: int = 0
 var _era_label: Label
 var _risk_button: Button
 var _warn_label: Label
+## M-LOOP §1.2b: compact upper-row labels replacing the lower row.
+var _food_compact: Label
+var _wood_compact: Label
+var _speed_compact: Label
+var _pause_compact: Control
+var _lower_row: HBoxContainer
 const DEATH_TALLY_KEYS: Array[String] = ["deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age", "deaths_exposure"]
 
 
@@ -104,8 +110,24 @@ func _ready() -> void:
 	_winter_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_winter_label.add_theme_color_override("font_color", Color("a8c0d0"))
 	hbox.add_child(_winter_label)
+	# M-LOOP §1.2b: compact food, wood, speed in the upper row; era/risk moved to chapter panel.
+	_era_label.visible = false
+	_risk_button.visible = false
+	_food_compact = Label.new()
+	_food_compact.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hbox.add_child(_food_compact)
+	_wood_compact = Label.new()
+	_wood_compact.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hbox.add_child(_wood_compact)
+	_pause_compact = ArtUI.icon("pause")
+	hbox.add_child(_pause_compact)
+	_speed_compact = Label.new()
+	_speed_compact.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hbox.add_child(_speed_compact)
 	var lower: HBoxContainer = HBoxContainer.new()
 	lower.add_theme_constant_override("separation", 8)
+	lower.visible = false
+	_lower_row = lower
 	column.add_child(lower)
 	for role: String in ["food", "foraged_food", "births", "deaths"]:
 		_resource_labels.append(ArtUI.pair(lower, role))
@@ -356,6 +378,19 @@ func _refresh() -> void:
 	if camera != null and camera.has_method("get_speed"):
 		_display_speed = float(camera.call("get_speed"))
 	_speed_label.text = _loc("UI_SPEED_PAUSED") if paused else _loc("HUD_SPEED_FMT") % str(int(_display_speed))
+	# M-LOOP §1.2b: update the compact upper-row labels.
+	if _food_compact != null:
+		_food_compact.text = _loc("HUD_STOCKPILE_FOOD") + " %d" % food
+	if _wood_compact != null:
+		var wood_val: int = 0
+		if wood_stocks is PackedInt32Array:
+			for amount: int in wood_stocks:
+				wood_val += amount
+		_wood_compact.text = _loc("HUD_STOCKPILE_WOOD") + " %d" % wood_val
+	if _speed_compact != null:
+		_speed_compact.text = _loc("UI_SPEED_PAUSED") if paused else _loc("HUD_SPEED_FMT") % str(int(_display_speed))
+	if _pause_compact != null:
+		_pause_compact.modulate.a = 1.0 if paused else 0.35
 	# M-ART2 (goal §3.6): the camera's zoom step ("확대 ½×").
 	var cam: Camera2D = camera as Camera2D
 	if cam != null:

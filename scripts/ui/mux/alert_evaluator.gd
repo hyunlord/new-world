@@ -90,6 +90,13 @@ func evaluate(facts: Dictionary) -> bool:
 				return a["id"] < b["id"]
 			return a["x"] < b["x"] if a["x"] != b["x"] else a["y"] < b["y"])
 		next_matches[definition["id"]] = causes
+	# M-LOOP §1.4: suppress idle_adults at night (hours 22–06).
+	if next_matches.has("idle_adults"):
+		var tick: int = int(facts.get("tick", 0))
+		@warning_ignore("integer_division")
+		var hour: int = (tick % 1440) / 60
+		if hour < 6 or hour >= 22:
+			next_matches["idle_adults"] = []
 	for id: String in next_matches:
 		if next_matches[id].is_empty():
 			_dismissed.erase(id)

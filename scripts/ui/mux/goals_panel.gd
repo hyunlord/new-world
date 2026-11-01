@@ -28,6 +28,10 @@ var _era: Label
 var _progress: ProgressBar
 var _close: Button
 var _column: VBoxContainer
+## M-LOOP §1.2b: stats moved from topbar.
+var _births_label: Label
+var _deaths_label: Label
+var _tech_risk_label: Label
 
 
 func _ready() -> void:
@@ -66,8 +70,21 @@ func _ready() -> void:
 	_next_preview.custom_minimum_size.x = 520
 	_next_preview.add_theme_color_override("font_color", Color("a0a0a0"))
 	_column.add_child(_next_preview)
+	# M-LOOP §1.2b: era %, tech risk, births, deaths moved here from topbar.
+	var stats_row: HBoxContainer = HBoxContainer.new()
+	stats_row.add_theme_constant_override("separation", 16)
+	_column.add_child(stats_row)
 	_era = Label.new()
-	_column.add_child(_era)
+	stats_row.add_child(_era)
+	_births_label = Label.new()
+	_births_label.add_theme_color_override("font_color", Color("a8d888"))
+	stats_row.add_child(_births_label)
+	_deaths_label = Label.new()
+	_deaths_label.add_theme_color_override("font_color", Color("e05a48"))
+	stats_row.add_child(_deaths_label)
+	_tech_risk_label = Label.new()
+	_tech_risk_label.add_theme_color_override("font_color", Color("e05a48"))
+	stats_row.add_child(_tech_risk_label)
 	_progress = ProgressBar.new()
 	_progress.max_value = 1000.0
 	_progress.show_percentage = false
@@ -243,6 +260,15 @@ func _refresh() -> void:
 	var progress_value: int = clampi(int(_facts.get("era_progress_permille", 0)), 0, 1000)
 	_era.text = "%s · %s/1000" % [_loc("MUX_GOALS_ERA"), progress_value]
 	_progress.value = progress_value
+	# M-LOOP §1.2b: births, deaths, tech risk from topbar.
+	if _births_label != null:
+		_births_label.text = _loc("UI_BIRTHS") + " %d" % int(_facts.get("births", 0))
+	if _deaths_label != null:
+		_deaths_label.text = _loc("UI_DEATHS") + " %d" % int(_facts.get("deaths", 0))
+	if _tech_risk_label != null:
+		var at_risk: int = int(_facts.get("tech_at_risk", 0))
+		_tech_risk_label.text = "⚠ %d" % at_risk if at_risk > 0 else ""
+		_tech_risk_label.visible = at_risk > 0
 
 
 func _unhandled_key_input(event: InputEvent) -> void:

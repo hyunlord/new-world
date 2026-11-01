@@ -57,6 +57,14 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		hide()
 		get_viewport().set_input_as_handled()
 
+## M-LOOP §1.2d: close on outside click (fixes the stuck "통나무 ×3 / 왜?" popup).
+func _input(event: InputEvent) -> void:
+	if not visible:
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if not get_global_rect().has_point(event.position):
+			hide()
+
 func _process(_delta: float) -> void:
 	if not visible:
 		return

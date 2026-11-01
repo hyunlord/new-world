@@ -22,6 +22,9 @@ const CardPanel = preload("res://scripts/ui/mux/card_panel.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 const PLAQUE_MIN_WIDTH: float = 560.0
 const LEARNING_PANELS: Dictionary = {"AgentInspectorPanel": "person_selected", "PriorityPanel": "priorities_opened", "RoomPanel": "rooms_opened", "TechPanel": "tech_opened", "NeighboursPanel": "neighbours_opened"}
+## M-LOOP §1.2d: popup categories — at most one panel per category open at a time.
+const LIST_PANELS: Array[String] = ["ChroniclePanel", "PriorityPanel", "TechPanel", "TeachPanel", "RoomPanel", "NeighboursPanel", "MigrantPanel", "TradePanel", "WorkshopPanel"]
+const POPUP_PANELS: Array[String] = ["ItemPanel", "CausalPanel", "WhyPanel"]
 var store: Store = Store.new()
 var catalog: Catalog = Catalog.new()
 var controls: Controls
@@ -119,6 +122,7 @@ func _ready() -> void:
 	add_child(help)
 	goals = Goals.new()
 	goals.name = "Goals"
+	goals.chapter_completed.connect(_on_chapter_completed)
 	add_child(goals)
 	settings = Settings.new()
 	settings.name = "Settings"
@@ -143,8 +147,10 @@ func _ready() -> void:
 	_highlight.setup(get_parent())
 	helper.highlight_requested.connect(_highlight.show_target)
 	get_parent().child_entered_tree.connect(_learning_panel_entered)
+	get_parent().child_entered_tree.connect(_popup_panel_entered)
 	for child: Node in get_parent().get_children():
 		_learning_panel_entered(child)
+		_popup_panel_entered(child)
 	store.changed.connect(_setting_changed)
 	get_node("/root/Locale").connect("language_changed", _locale_changed)
 	get_viewport().size_changed.connect(_layout)
@@ -253,6 +259,21 @@ func _apply_preferences() -> void:
 			panel.scale = Vector2.ONE * factor
 	_layout.call_deferred()
 
+## M-LOOP §2.3: chapter completion → toast + chronicle entry text.
+func _on_chapter_completed(chapter_id: String) -> void:
+	var chapter_data: Dictionary = goals.current_chapter_data() if goals != null else {}
+	var title: String = ""
+	# Find the completed chapter's title (it just advanced, so look back one).
+	for ch: Dictionary in goals.chapters:
+		if str(ch.get("id", "")) == chapter_id:
+			title = _loc(str(ch.get("title_key", "")))
+			break
+	var toast_text: String = _loc("LOOP_CHRON_CHAPTER_COMPLETE").format({"chapter": title})
+	var bar: Node = get_parent().get_node_or_null("OrderBar")
+	if bar != null and bar.has_method("show_toast"):
+		bar.call("show_toast", toast_text)
+
+
 func _set_steward(index: int) -> void:
 	if index == 5:
 		var current: Dictionary = SimReads.read(_world, "get_steward")
@@ -359,6 +380,43 @@ func _sync_foreground() -> void:
 				menu_open = true
 	helper.set_overlay_obscured(menu_open)
 	_highlight.visible = not menu_open and not help.visible and not goals.visible and not settings.visible
+
+## M-LOOP §1.2d: watch panels entering the tree for popup stacking enforcement.
+func _popup_panel_entered(node: Node) -> void:
+	if not node is Control:
+		return
+	var node_name: String = str(node.name)
+	if node_name in LIST_PANELS or node_name in POPUP_PANELS:
+		var panel: Control = node as Control
+		var enforce: Callable = _enforce_popup_limit.bind(panel)
+		if panel.is_node_ready():
+			if not panel.visibility_changed.is_connected(enforce):
+				panel.visibility_changed.connect(enforce)
+		else:
+			panel.ready.connect(func() -> void:
+				if not panel.visibility_changed.is_connected(enforce):
+					panel.visibility_changed.connect(enforce), CONNECT_ONE_SHOT)
+
+
+## M-LOOP §1.2d: when a panel becomes visible, close other panels in the same category.
+func _enforce_popup_limit(panel: Control) -> void:
+	if not panel.is_visible_in_tree():
+		return
+	var node_name: String = str(panel.name)
+	var category: Array[String] = []
+	if node_name in LIST_PANELS:
+		category = LIST_PANELS
+	elif node_name in POPUP_PANELS:
+		category = POPUP_PANELS
+	else:
+		return
+	for sibling_name: String in category:
+		if sibling_name == node_name:
+			continue
+		var sibling: Control = get_parent().get_node_or_null(NodePath(sibling_name)) as Control
+		if sibling != null and sibling.is_visible_in_tree():
+			sibling.hide()
+
 
 func _learning_panel_entered(node: Node) -> void:
 	if not node is Control or not LEARNING_PANELS.has(str(node.name)):

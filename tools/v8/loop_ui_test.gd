@@ -64,6 +64,21 @@ func _run() -> void:
 	# --- Test 14: Locale keys present (LOOP_ prefix) ---
 	_test_locale_keys()
 
+	# --- Test 15: Topbar is one row (lower row hidden) ---
+	_test_topbar_one_row(main)
+
+	# --- Test 16: Item panel closes on outside click ---
+	_test_item_panel_close(main)
+
+	# --- Test 17: Popup stacking — LIST_PANELS and POPUP_PANELS constants ---
+	_test_popup_stacking(main)
+
+	# --- Test 18: Idle adults alert suppressed at night ---
+	_test_idle_adults_night()
+
+	# --- Test 19: Chapter completion wired to toast ---
+	_test_chapter_completion_toast(main)
+
 	print("LOOP_UI_TEST_DONE pass=%d fail=%d" % [_pass, _fail])
 	quit(1 if _fail > 0 else 0)
 
@@ -291,3 +306,82 @@ func _test_locale_keys() -> void:
 	for key: String in required_keys:
 		_assert((ko as Dictionary).has(key), "ko has " + key)
 		_assert((en as Dictionary).has(key), "en has " + key)
+
+
+## Test 15: topbar lower row is hidden (single-row topbar).
+func _test_topbar_one_row(main: Node) -> void:
+	print("Test 15: topbar one row")
+	var topbar: Node = main.get_node_or_null("HudTopbar")
+	_assert(topbar != null, "HudTopbar exists")
+	if topbar == null:
+		return
+	_assert("_lower_row" in topbar, "has _lower_row reference")
+	var lower: HBoxContainer = topbar.get("_lower_row") as HBoxContainer
+	_assert(lower != null, "lower row is HBoxContainer")
+	if lower != null:
+		_assert(not lower.visible, "lower row is hidden (single-row topbar)")
+	# Compact labels exist in upper row.
+	_assert("_food_compact" in topbar, "has _food_compact label")
+	_assert("_wood_compact" in topbar, "has _wood_compact label")
+	_assert("_speed_compact" in topbar, "has _speed_compact label")
+
+
+## Test 16: item panel closes on outside click (has _input handler).
+func _test_item_panel_close(main: Node) -> void:
+	print("Test 16: item panel close on outside click")
+	var item_panel: Node = main.get_node_or_null("ItemPanel")
+	_assert(item_panel != null, "ItemPanel exists")
+	if item_panel == null:
+		return
+	_assert(item_panel.has_method("_input"), "ItemPanel has _input for outside click")
+
+
+## Test 17: popup stacking constants defined.
+func _test_popup_stacking(main: Node) -> void:
+	print("Test 17: popup stacking")
+	var hud: Node = main.get_node_or_null("MuxHud")
+	_assert(hud != null, "MuxHud exists")
+	if hud == null:
+		return
+	var MuxHud = preload("res://scripts/ui/mux/mux_hud.gd")
+	_assert(MuxHud.LIST_PANELS.size() > 0, "LIST_PANELS has entries")
+	_assert(MuxHud.POPUP_PANELS.size() > 0, "POPUP_PANELS has entries")
+	_assert(hud.has_method("_enforce_popup_limit"), "has _enforce_popup_limit")
+
+
+## Test 18: idle_adults alert suppressed at night (hour < 6 or >= 22).
+func _test_idle_adults_night() -> void:
+	print("Test 18: idle adults night suppression")
+	var Evaluator = preload("res://scripts/ui/mux/alert_evaluator.gd")
+	var eval_instance: RefCounted = Evaluator.new()
+	if not eval_instance.load_registry():
+		_assert(false, "evaluator loads registry")
+		return
+	# Simulate night-time facts (tick in night window: hour 23 = tick 1380).
+	var night_facts: Dictionary = {"schema_version": 1, "tick": 1380}
+	for collection: String in ["settlements", "people", "storehouses", "unreachable_orders", "knowledge_waits", "techniques", "animals", "migrants", "traders", "stacks", "households", "food_supply"]:
+		night_facts[collection] = []
+	# Add one idle adult.
+	night_facts["people"] = [{"id": 1, "x": 10, "y": 10, "adult": true, "working": false, "sleeping": false, "drafted": false, "sick": false, "breakdown": false, "hp": 100, "roofed": true}]
+	night_facts["settlements"] = [{"id": 0, "x": 10, "y": 10, "food": 50, "daily_food_need": 10, "firewood": 20, "daily_firewood_need": 5, "winter_days": 0, "stockpile_cells": 4}]
+	eval_instance.evaluate(night_facts)
+	var alerts: Array = eval_instance.active_alerts()
+	var has_idle: bool = false
+	for alert: Dictionary in alerts:
+		if str(alert.get("id", "")) == "idle_adults":
+			has_idle = true
+	_assert(not has_idle, "idle_adults alert suppressed at night (hour 23)")
+
+
+## Test 19: chapter completion signal wired to toast handler.
+func _test_chapter_completion_toast(main: Node) -> void:
+	print("Test 19: chapter completion toast")
+	var hud: Node = main.get_node_or_null("MuxHud")
+	_assert(hud != null, "MuxHud exists")
+	if hud == null:
+		return
+	_assert(hud.has_method("_on_chapter_completed"), "has _on_chapter_completed handler")
+	# Check the signal is connected.
+	var goals_node: Node = hud.get_node_or_null("Goals")
+	if goals_node != null and goals_node.has_signal("chapter_completed"):
+		_assert(goals_node.is_connected("chapter_completed", hud._on_chapter_completed), "chapter_completed signal connected")
