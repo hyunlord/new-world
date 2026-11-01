@@ -83,35 +83,38 @@ func _build_ui() -> void:
 	_column.add_child(_fold_label)
 
 
-func _process(delta: float) -> void:
+## M-LOOP: tick-driven polling so headless advance_ticks and windowed _process both trigger cards.
+func _process(_delta: float) -> void:
 	if _world == null:
 		visible = false
 		return
-	_poll_left -= delta
-	if _poll_left > 0.0:
+	var time: Dictionary = SimReads.read(_world, "get_time_snapshot")
+	var tick: int = int(time.get("tick", -1))
+	if tick < 0 or tick == _last_tick:
 		return
-	_poll_left = POLL_INTERVAL
+	# Poll every CARD_CHECK_INTERVAL ticks (1 in-game hour), not every frame.
+	@warning_ignore("integer_division")
+	var current_hour: int = tick / TICKS_PER_HOUR
+	@warning_ignore("integer_division")
+	var last_hour: int = _last_tick / TICKS_PER_HOUR if _last_tick >= 0 else -1
+	_last_tick = tick
+	if current_hour == last_hour:
+		return
 	_poll_triggers()
 	_check_expiry()
 	_rebuild_ui()
 
 
 func _poll_triggers() -> void:
-	var time: Dictionary = SimReads.read(_world, "get_time_snapshot")
-	var tick: int = int(time.get("tick", -1))
+	var tick: int = _last_tick
 	if tick < 0:
 		return
 	# Clear handled list at day boundaries.
 	@warning_ignore("integer_division")
 	var day: int = tick / 1440
-	@warning_ignore("integer_division")
-	var last_day: int = _last_tick / 1440 if _last_tick >= 0 else -1
-	if day != last_day:
-		_handled.clear()
-	_last_tick = tick
 	# Check each card definition for triggers.
-	var requests: Dictionary = SimReads.read(_world, "get_requests") if _world.has_method("get_requests") else {}
-	var diag: Dictionary = SimReads.read(_world, "get_settlement_diagnosis") if _world.has_method("get_settlement_diagnosis") else {}
+	var requests: Dictionary = SimReads.read(_world, "get_requests")
+	var diag: Dictionary = SimReads.read(_world, "get_settlement_diagnosis")
 	for card_def: Dictionary in _card_defs:
 		var card_id: String = str(card_def["id"])
 		if _active.has(card_id) or _handled.has(card_id):
@@ -131,11 +134,12 @@ func _check_trigger(card_def: Dictionary, requests: Dictionary, diag: Dictionary
 	var kind: String = str(trigger.get("kind", ""))
 	match kind:
 		"request":
+			# Bridge get_requests returns parallel arrays: rule_ids, text_keys, etc.
 			var req_id: String = str(trigger.get("request_id", ""))
-			var active_requests: Variant = requests.get("requests", requests.get("active", []))
-			if active_requests is Array:
-				for req: Variant in active_requests as Array:
-					if req is Dictionary and str(req.get("id", "")) == req_id:
+			var rule_ids: Variant = requests.get("rule_ids", PackedStringArray())
+			if rule_ids is PackedStringArray:
+				for rid: String in rule_ids as PackedStringArray:
+					if rid == req_id:
 						return true
 		"chronicle":
 			# Check recent chronicle entries for matching kind.
@@ -150,8 +154,6 @@ func _check_trigger(card_def: Dictionary, requests: Dictionary, diag: Dictionary
 		"alert":
 			var alert_id: String = str(trigger.get("alert_id", ""))
 			var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
-			if facts.has(alert_id):
-				return true
 			# Check via alert conditions in the facts.
 			var people: Variant = facts.get("people", [])
 			if alert_id == "idle_adults" and people is Array:
@@ -162,18 +164,19 @@ func _check_trigger(card_def: Dictionary, requests: Dictionary, diag: Dictionary
 				var min_count: int = int(trigger.get("min_count", 2))
 				if idle_count >= min_count:
 					# M-LOOP §1.4: exclude night window.
-					var time_data: Dictionary = SimReads.read(_world, "get_time_snapshot")
 					@warning_ignore("integer_division")
-					var hour: int = (int(time_data.get("tick", 0)) % 1440) / 60
+					var hour: int = (_last_tick % 1440) / 60
 					if bool(trigger.get("exclude_night", false)) and (hour < 6 or hour >= 22):
 						return false
 					return true
 		"diagnosis":
+			# Bridge get_settlement_diagnosis returns parallel arrays: check_ids, text_keys, etc.
 			var check_id: String = str(trigger.get("check_id", ""))
-			var checks: Array = diag.get("checks", [])
-			for check: Variant in checks:
-				if check is Dictionary and str(check.get("id", "")) == check_id:
-					return true
+			var check_ids: Variant = diag.get("check_ids", PackedStringArray())
+			if check_ids is PackedStringArray:
+				for cid: String in check_ids as PackedStringArray:
+					if cid == check_id:
+						return true
 	return false
 
 
@@ -183,11 +186,14 @@ func _collect_trigger_data(card_def: Dictionary, requests: Dictionary, _diag: Di
 	var kind: String = str(trigger.get("kind", ""))
 	if kind == "request":
 		var req_id: String = str(trigger.get("request_id", ""))
-		for req: Variant in requests.get("requests", []):
-			if req is Dictionary and str(req.get("id", "")) == req_id:
-				data["voice"] = str(req.get("voice_name", ""))
-				data["voice_id"] = int(req.get("voice", -1))
-				data["cause"] = str(req.get("text", ""))
+		# Bridge returns parallel arrays; find the index of the matching rule_id.
+		var rule_ids: PackedStringArray = requests.get("rule_ids", PackedStringArray())
+		var voices: PackedInt64Array = requests.get("voices", PackedInt64Array())
+		var text_keys: PackedStringArray = requests.get("text_keys", PackedStringArray())
+		for i: int in rule_ids.size():
+			if rule_ids[i] == req_id:
+				data["voice_id"] = int(voices[i]) if i < voices.size() else -1
+				data["cause"] = str(text_keys[i]) if i < text_keys.size() else ""
 				break
 	return data
 

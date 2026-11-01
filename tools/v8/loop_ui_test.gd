@@ -79,6 +79,12 @@ func _run() -> void:
 	# --- Test 19: Chapter completion wired to toast ---
 	_test_chapter_completion_toast(main)
 
+	# --- Test 20: Card trigger matches bridge data format ---
+	_test_card_trigger_format()
+
+	# --- Test 21: Card trigger fires in seeded run ---
+	await _test_card_trigger_seeded(main, world)
+
 	print("LOOP_UI_TEST_DONE pass=%d fail=%d" % [_pass, _fail])
 	quit(1 if _fail > 0 else 0)
 
@@ -395,3 +401,70 @@ func _test_chapter_completion_toast(main: Node) -> void:
 	# Test chronicle panel has add_presentation_entry method.
 	var chronicle: Node = main.find_child("ChroniclePanel", true, false)
 	_assert(chronicle != null and chronicle.has_method("add_presentation_entry"), "ChroniclePanel has add_presentation_entry")
+
+
+## Test 20: card trigger matching uses the correct bridge data format (parallel arrays).
+func _test_card_trigger_format() -> void:
+	print("Test 20: card trigger format")
+	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
+	var panel: PanelContainer = CardPanelScript.new()
+	# Simulate bridge get_requests return with parallel arrays.
+	var mock_requests: Dictionary = {
+		"tick": 100,
+		"rule_ids": PackedStringArray(["need_food", "need_warmth"]),
+		"text_keys": PackedStringArray(["REQ_NEED_FOOD", "REQ_NEED_WARMTH"]),
+		"priorities": PackedInt32Array([1, 2]),
+		"counts": PackedInt32Array([3, 1]),
+		"voices": PackedInt64Array([42, 43]),
+		"voice_names": PackedStringArray(["", ""]),
+		"steward_active": [true, false],
+	}
+	# Simulate bridge get_settlement_diagnosis return with parallel arrays.
+	var mock_diag: Dictionary = {
+		"tick": 100,
+		"check_ids": PackedStringArray(["settlement_no_tools", "stockpile_full"]),
+		"text_keys": PackedStringArray(["DIAG_NO_TOOLS", "DIAG_FULL"]),
+		"severities": PackedInt32Array([1, 2]),
+	}
+	# Test request trigger matching.
+	var food_card: Dictionary = {"trigger": {"kind": "request", "request_id": "need_food"}}
+	_assert(panel.call("_check_trigger", food_card, mock_requests, mock_diag, 100), "request trigger matches need_food")
+	var shelter_card: Dictionary = {"trigger": {"kind": "request", "request_id": "need_shelter"}}
+	_assert(not panel.call("_check_trigger", shelter_card, mock_requests, mock_diag, 100), "request trigger rejects need_shelter")
+	# Test diagnosis trigger matching.
+	var tools_card: Dictionary = {"trigger": {"kind": "diagnosis", "check_id": "settlement_no_tools"}}
+	_assert(panel.call("_check_trigger", tools_card, mock_requests, mock_diag, 100), "diagnosis trigger matches settlement_no_tools")
+	var missing_card: Dictionary = {"trigger": {"kind": "diagnosis", "check_id": "nonexistent"}}
+	_assert(not panel.call("_check_trigger", missing_card, mock_requests, mock_diag, 100), "diagnosis trigger rejects nonexistent")
+	# Test _collect_trigger_data extracts voice from parallel arrays.
+	var trigger_data: Dictionary = panel.call("_collect_trigger_data", food_card, mock_requests, mock_diag)
+	_assert(int(trigger_data.get("voice_id", -1)) == 42, "trigger data voice_id from parallel array")
+	panel.queue_free()
+
+
+## Test 21: a known trigger produces a card in a seeded run (seed 0, steward on, advance 5 days).
+func _test_card_trigger_seeded(main: Node, world: Node) -> void:
+	print("Test 21: card trigger in seeded run")
+	var reads: Node = main.get_node_or_null("SimReads")
+	if reads == null:
+		_assert(false, "SimReads exists")
+		return
+	var card_panel: Node = main.find_child("CardPanel", true, false)
+	if card_panel == null:
+		_assert(false, "CardPanel exists")
+		return
+	# Reset to seed 0 with steward on.
+	reads.call("mutate_raw", "reset_world", [0])
+	for _i: int in 5:
+		await process_frame
+	SimReads.mutate(world, "cmd_set_steward", [true, 0])
+	# Advance 5 days (120 in-game hours). Cards should appear from requests.
+	for _hour: int in 120:
+		reads.call("mutate_raw", "advance_ticks", [60])
+		await process_frame
+		await process_frame
+	# The card panel polls on tick change, so it should have checked triggers.
+	var active: PackedStringArray = card_panel.call("active_ids")
+	var count: int = card_panel.call("active_count")
+	print("  After 5 days: active_count=%d active_ids=%s" % [count, ",".join(active)])
+	_assert(count > 0 or active.size() > 0, "at least one card triggered in 5 days (seed 0, steward on)")
