@@ -80,6 +80,7 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 	var val_failures: int = 0
 	var answer_log: Array[Dictionary] = []
 	# Advance tick by tick, checking cards at intervals.
+	# In headless mode, directly call _poll_triggers since _process timer doesn't fire.
 	@warning_ignore("integer_division")
 	var intervals: int = TOTAL_TICKS / CARD_CHECK_INTERVAL
 	for interval: int in intervals:
@@ -87,6 +88,10 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 		reads.call("mutate_raw", "advance_ticks", [CARD_CHECK_INTERVAL])
 		await process_frame
 		await process_frame
+		# Directly trigger card polling (headless mode bypasses the delta timer).
+		if card_panel != null and card_panel.has_method("_poll_triggers"):
+			card_panel.call("_poll_triggers")
+			card_panel.call("_check_expiry")
 		# Check for open cards.
 		if card_panel == null or not card_panel.has_method("active_ids"):
 			continue
