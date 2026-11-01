@@ -1575,6 +1575,27 @@ impl WorldSimNode {
         super::diagnosis::why_not_to_dict(&self.engine, entity_bits as u64)
     }
 
+    /// M-LOOP: the harvest rectangle a food card may offer (`{found, x0, y0, x1, y1, count}`),
+    /// validated like `cmd_designate_harvest`. Read-only.
+    #[func]
+    fn get_card_harvest_target(&self) -> VarDictionary {
+        super::card_targets::harvest_target_to_dict(super::card_targets::collect_harvest_target(
+            &self.engine.resources,
+        ))
+    }
+
+    /// M-LOOP: command-log rows from index `start` (`{total, ticks, kinds, accepted}`;
+    /// player and steward commands share the log). Read-only.
+    #[func]
+    fn get_command_log(&self, start: i64) -> VarDictionary {
+        let start = usize::try_from(start.max(0)).unwrap_or(usize::MAX);
+        let res = &self.engine.resources;
+        super::card_targets::command_log_to_dict(
+            res.colony.command_log.len(),
+            &super::card_targets::collect_command_log(res, start),
+        )
+    }
+
     /// M-READ: active villager requests for the settlement.
     #[func]
     fn get_requests(&self) -> VarDictionary {

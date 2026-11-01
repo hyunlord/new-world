@@ -226,13 +226,14 @@ Reads/writes come from each file's `//!` header.
 
 All methods live on the one Godot class `WorldSimNode` (signal `world_reset`
 after a reset or a load). The exact exported list is checked by gate step 13, currently
-`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_mux2.txt` (M-UX2; the existing M5.5-named list has100 exports after Stage A; M5 checked `docs/v8/bridge_api_m5.txt` (91), M4 `docs/v8/bridge_api_m4.txt`, M3 `docs/v8/bridge_api_m3.txt`, M2 `docs/v8/bridge_api_m2.txt`, M1.5 `docs/v8/bridge_api_m1_5.txt`, M1 `docs/v8/bridge_api_m1.txt`, V8-0 `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
+`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_read.txt` (M-READ list, updated by M-LOOP p25c with `get_card_harvest_target`, `get_command_log` and the previously unlisted `cmd_set_steward_extended`; M-UX2 checked `docs/v8/bridge_api_mux2.txt`; the existing M5.5-named list has100 exports after Stage A; M5 checked `docs/v8/bridge_api_m5.txt` (91), M4 `docs/v8/bridge_api_m4.txt`, M3 `docs/v8/bridge_api_m3.txt`, M2 `docs/v8/bridge_api_m2.txt`, M1.5 `docs/v8/bridge_api_m1_5.txt`, M1 `docs/v8/bridge_api_m1.txt`, V8-0 `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
 (a pass that changes the API updates this command; section 6).
 
 | concern | methods |
 |---|---|
 | immutable content boot | static `bootstrap_catalog()` (preflight receipt), static `create()` (validated node or null), `get_content_catalog()` (selected registry metadata) |
-| steward and UI facts | `get_ui_facts`, `get_steward` (independent defence toggle, last batch and active owned counts), `cmd_set_steward`, `cmd_set_steward_defence` (ordinary logged commands; ADR 0045) |
+| steward and UI facts | `get_ui_facts`, `get_steward` (independent defence toggle, last batch and active owned counts), `cmd_set_steward`, `cmd_set_steward_defence`, `cmd_set_steward_extended` (ordinary logged commands; ADR 0045) |
+| decision cards (M-LOOP) | `get_card_harvest_target` (a harvest rectangle validated like `cmd_designate_harvest`), `get_command_log(start)` (log rows: tick, command kind, accepted; player and steward share the log) |
 | optional native profiling | `mux2_native_timings` (read-only, `WORLDSIM_MUX2_PROFILE=1`; cumulative counters and epoch, not simulation policy) |
 | lifecycle and speed | `reset_world`, `reset_world_stress` (benchmark world), `set_sim_speed`, `advance_ticks` (tooling) |
 | save files (M1.5) | `save_world(path) -> bool`, `load_world(path) -> bool` (absolute path; GDScript globalizes `user://saves/<seed>-<tick>.wsave`; a load replaces the engine and emits `world_reset`; bytes from `sim_systems::save`) |

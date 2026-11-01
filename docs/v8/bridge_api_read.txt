@@ -35,6 +35,7 @@ func WorldSimNode.cmd_set_dress_order
 func WorldSimNode.cmd_set_room_role
 func WorldSimNode.cmd_set_steward
 func WorldSimNode.cmd_set_steward_defence
+func WorldSimNode.cmd_set_steward_extended
 func WorldSimNode.cmd_set_work_priority
 func WorldSimNode.cmd_trade
 func WorldSimNode.cmd_undraft_all
@@ -53,10 +54,12 @@ func WorldSimNode.get_agent_temperament
 func WorldSimNode.get_animals
 func WorldSimNode.get_building_snapshot
 func WorldSimNode.get_caravan
+func WorldSimNode.get_card_harvest_target
 func WorldSimNode.get_chronicle_since
 func WorldSimNode.get_chronicle_why
 func WorldSimNode.get_colony_overlay
 func WorldSimNode.get_colony_versions
+func WorldSimNode.get_command_log
 func WorldSimNode.get_construction_snapshot
 func WorldSimNode.get_content_catalog
 func WorldSimNode.get_current_task

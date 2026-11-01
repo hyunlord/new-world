@@ -1,5 +1,10 @@
 # Changelog
 
+## M-LOOP (in progress)
+
+### Added
+- Bridge reads `get_card_harvest_target` (harvest rectangle validated like `cmd_designate_harvest`: a plant, unmarked, reachable from camp) and `get_command_log(start)` (command-log rows; player and steward commands share the log, no source field). The bridge list `docs/v8/bridge_api_read.txt` also gains the previously unlisted `cmd_set_steward_extended`.
+
 ## M-READ — 2026-11-01 (Claude Code; published: product 71e7ad86, gate 3 51/51 in READ mode)
 
 Owner decision D13 (2026-11-01): the M-READ gate mode is approved — step 25 compares interleaved against BASE 313ea92b (≤ ×1.10 per scene), steps 44/45 compare the M-CORE fixture worlds BASE vs candidate (normalised), step 41 uses the M-UX2.1/M6a stall waiver (one 53.382 ms frame at zoom 1.0, none over 60 ms, capture complete). BASE and M-READ bench rows appended to PERF_LEDGER (M-CORE and M6a had appended none). 30-second diagnosis test: candidate 6/6, BASE 4/6 (separates only on Q3/Q4).
