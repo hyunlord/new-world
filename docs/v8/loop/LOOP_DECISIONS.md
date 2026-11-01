@@ -378,3 +378,20 @@ Additional guards applied to all commands:
 Per-seed deaths <= no-answer + 1 on 7/8 seeds. Seed 6 remains an outlier
 (4 combat vs 0 baseline) due to simulation-path divergence from hunt zone
 placement timing — not a card logic defect.
+
+## LOOP-D-cards-2 — steward-first recommendations and honest validation (main session, 2026-11-01)
+
+**Context.** Subagent work stopped at the org spend limit; the main session finished the cards. cards-run12 still had 174 rejected commands (teach no_practitioner 78, work priority nothing 65, chop nothing 30, migrants 1) and seed 3 worse than no-answer by 2. Earlier, post-send rejections had been relabelled "skipped", which hid real validation failures.
+
+**Decision.**
+- p30: a command that was sent and rejected by the bridge is a validation failure. Only pre-send checks may skip.
+- p32/p33: following the planner rule (LOOP-D-cards), when the steward is on, cards whose need it already covers (need_food, need_warmth, knowledge_risk, tools_low, idle_adults, wolves) recommend leaving it to the steward. Wolves gains a "집사에게 맡김" option. The optional quarrel and pressure cards recommend "그대로". The players' other options stay available.
+- Test 22 now answers the first command option, so the send path stays covered.
+
+**Result (cards-run14, seeds 0–7, 48 days, recommended answers vs no answers).**
+- Deaths are equal on every seed: 0/0/0/3/0/4/0/0 in both runs, 7 in total.
+- Alive: 107 vs 81. Migrants were accepted where beds and food allowed.
+- Validation failures: 0. Skipped options are counted separately.
+- UI tests: 191/0.
+
+**Limit.** With the steward on, most recommendations are "leave it to the steward". The card's value to the player is the cause line and the choice, not a better default. The decisions that matter are migrants, trader and quarrels.

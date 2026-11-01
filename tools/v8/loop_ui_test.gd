@@ -534,6 +534,14 @@ func _test_card_answer_recorded(main: Node) -> void:
 	var def: Dictionary = card_data.get("def", {})
 	var trigger_data: Dictionary = card_data.get("trigger_data", {})
 	var recommended: int = int(card_panel.call("_effective_recommended", def, trigger_data))
+	# With the steward on, steward-covered cards recommend leaving it to the steward (no command,
+	# LOOP-D-cards). This test exercises the command path, so answer the first command option.
+	var opts: Array = def.get("options", [])
+	for oi: int in opts.size():
+		var oc: String = str((opts[oi] as Dictionary).get("command", "none"))
+		if oc not in ["none", "steward_default", "enter_zone_tool", "open_roles"]:
+			recommended = oi
+			break
 	var entries_before: int = (chronicle.get("_entries") as Array).size()
 	card_panel.call("answer_card", card_id, recommended)
 	var results: Array = card_panel.call("command_results")

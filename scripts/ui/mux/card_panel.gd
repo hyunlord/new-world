@@ -764,7 +764,7 @@ func _can_support_migrants(_migrant_count: int) -> bool:
 ## Return the effective recommended option index for a card, overriding the static
 ## data when conditions warrant a different recommendation.
 ## Cards whose need the steward already covers when it is on (LOOP-D-cards).
-const STEWARD_COVERED_CARDS: Array[String] = ["need_food", "need_warmth", "knowledge_risk", "tools_low", "idle_adults"]
+const STEWARD_COVERED_CARDS: Array[String] = ["need_food", "need_warmth", "knowledge_risk", "tools_low", "idle_adults", "wolves"]
 
 
 func _steward_on() -> bool:

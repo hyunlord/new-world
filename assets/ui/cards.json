@@ -96,7 +96,8 @@
       "body_key": "LOOP_CARD_WOLVES_BODY",
       "options": [
         {"text_key": "LOOP_CARD_WOLVES_DRAFT", "command": "cmd_draft", "params": "steward_recommended", "recommended": true},
-        {"text_key": "LOOP_CARD_WOLVES_FLEE", "command": "cmd_undraft_all", "params": "", "recommended": false}
+        {"text_key": "LOOP_CARD_WOLVES_FLEE", "command": "cmd_undraft_all", "params": "", "recommended": false},
+        {"text_key": "LOOP_CARD_STEWARD", "command": "steward_default", "params": "", "recommended": false}
       ],
       "default": "steward",
       "expires_hours": 6,
@@ -124,8 +125,8 @@
       "title_key": "LOOP_CARD_QUARREL",
       "body_key": "LOOP_CARD_QUARREL_BODY",
       "options": [
-        {"text_key": "LOOP_CARD_QUARREL_SEPARATE", "command": "cmd_set_work_priority", "params": "separate_pair", "recommended": true},
-        {"text_key": "LOOP_CARD_QUARREL_IGNORE", "command": "none", "params": "", "recommended": false}
+        {"text_key": "LOOP_CARD_QUARREL_SEPARATE", "command": "cmd_set_work_priority", "params": "separate_pair", "recommended": false},
+        {"text_key": "LOOP_CARD_QUARREL_IGNORE", "command": "none", "params": "", "recommended": true}
       ],
       "default": "none",
       "expires_hours": 24,
@@ -139,9 +140,9 @@
       "title_key": "LOOP_CARD_PRESSURE",
       "body_key": "LOOP_CARD_PRESSURE_BODY",
       "options": [
-        {"text_key": "LOOP_CARD_PRESSURE_FIREWOOD", "command": "cmd_designate_chop", "params": "nearest_trees", "recommended": true},
+        {"text_key": "LOOP_CARD_PRESSURE_FIREWOOD", "command": "cmd_designate_chop", "params": "nearest_trees", "recommended": false},
         {"text_key": "LOOP_CARD_PRESSURE_STOP_HUNT", "command": "none", "params": "", "recommended": false},
-        {"text_key": "LOOP_CARD_PRESSURE_IGNORE", "command": "none", "params": "", "recommended": false}
+        {"text_key": "LOOP_CARD_PRESSURE_IGNORE", "command": "none", "params": "", "recommended": true}
       ],
       "default": "none",
       "expires_hours": 24,
