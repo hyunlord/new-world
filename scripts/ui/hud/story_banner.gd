@@ -29,7 +29,8 @@ const WOLF_RED: Color = Color("f07060")
 
 var _world_sim: Node = null
 var _locale: Node = null
-var _column: VBoxContainer
+var _column: ScrollContainer
+var _content: VBoxContainer
 var _visitors: VBoxContainer
 var _visitor_key: int = 0
 var _visitor_texts: Array[String] = []
@@ -56,23 +57,29 @@ func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	theme = ArtUI.THEME
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_column = VBoxContainer.new()
+	_column = ScrollContainer.new()
 	_column.name = "Column"
 	_column.position = COLUMN.position
 	_column.custom_minimum_size.x = COLUMN.size.x
-	_column.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_column.add_theme_constant_override("separation", 6)
+	_column.mouse_filter = Control.MOUSE_FILTER_STOP
+	_column.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(_column)
+	_content = VBoxContainer.new()
+	_content.name = "Content"
+	_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_content.add_theme_constant_override("separation", 6)
+	_column.add_child(_content)
+	_content.minimum_size_changed.connect(_fit_column)
 	_visitors = VBoxContainer.new()
 	_visitors.name = "Visitors"
 	_visitors.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_visitors.add_theme_constant_override("separation", 6)
-	_column.add_child(_visitors)
+	_content.add_child(_visitors)
 	_banners = VBoxContainer.new()
 	_banners.name = "Banners"
 	_banners.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_banners.add_theme_constant_override("separation", 6)
-	_column.add_child(_banners)
+	_content.add_child(_banners)
 	_legend = Label.new()
 	_legend.name = "MoodLegend"
 	_legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -82,12 +89,12 @@ func _ready() -> void:
 	legend_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	legend_panel.add_child(_legend)
 	legend_panel.hide()
-	_column.add_child(legend_panel)
+	_content.add_child(legend_panel)
 	_draft_panel = PanelContainer.new()
 	_draft_panel.name = "Drafted"
 	_draft_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_draft_panel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	_column.add_child(_draft_panel)
+	_content.add_child(_draft_panel)
 	var box: VBoxContainer = VBoxContainer.new()
 	box.add_theme_constant_override("separation", 4)
 	_draft_panel.add_child(box)
@@ -108,6 +115,12 @@ func _ready() -> void:
 	_draft_rows.add_theme_constant_override("separation", 2)
 	box.add_child(_draft_rows)
 	_draft_panel.hide()
+
+
+## Keep the normal visitor line natural-sized; expose longer warning/roster lists with a scrollbar.
+func _fit_column() -> void:
+	_column.custom_minimum_size.y = minf(160.0, _content.get_combined_minimum_size().y)
+	_column.size.y = _column.custom_minimum_size.y
 
 
 func _on_world_reset() -> void:

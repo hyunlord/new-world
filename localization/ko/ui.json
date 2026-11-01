@@ -1294,12 +1294,12 @@
 	"LOOP_CARD_KNOWLEDGE_RISK_CANCEL": "가르치기 취소",
 	"LOOP_PLAQUE_CHAPTER_FMT": "· 올해 목표: {title} {met}/{total} ·",
 	"LOOP_CARD_NEED_FOOD": "먹을 게 없어요",
-	"LOOP_CARD_NEED_FOOD_BODY": "{voice}: 먹을 게 없어요 ← {cause}",
+	"LOOP_CARD_NEED_FOOD_BODY": "{voice_prefix}{cause}",
 	"LOOP_CARD_NEED_FOOD_HUNT": "사냥 구역",
 	"LOOP_CARD_NEED_FOOD_GATHER": "채집 구역 칠하기",
 	"LOOP_CARD_STEWARD": "집사에게 맡김",
 	"LOOP_CARD_NEED_WARMTH": "추워요",
-	"LOOP_CARD_NEED_WARMTH_BODY": "{voice}: 추워요 ← {cause}",
+	"LOOP_CARD_NEED_WARMTH_BODY": "{voice_prefix}추워요 ← {cause}",
 	"LOOP_CARD_NEED_WARMTH_CHOP": "벌목 지정",
 	"LOOP_CARD_MIGRANTS": "이주민이 왔어요",
 	"LOOP_CARD_MIGRANTS_BODY": "이주민 {count}명이 마을에 왔습니다",
@@ -1423,5 +1423,8 @@
 	"M6B_MIGRANT_UNKNOWN": "이주민을 맞을 여건을 확인할 수 없어요.",
 	"M6B_MIGRANT_BEDS": "모두를 위한 지붕 있는 잠자리가 부족해요.",
 	"M6B_MIGRANT_WOOD": "장작이 현재 목표보다 부족해요.",
-	"M6B_MIGRANT_FOOD": "합류 직후 소비량 기준 5일치 식량이 부족해요."
+	"M6B_MIGRANT_FOOD": "합류 직후 소비량 기준 5일치 식량이 부족해요.",
+	"M6B_CARD_VOICE_PREFIX": "{voice}: ",
+	"CHRON_GROUP_COUNT_FMT": "{count}건",
+	"CHRON_GROUP_COLLAPSE": "접기"
 }

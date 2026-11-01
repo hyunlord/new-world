@@ -44,6 +44,7 @@ var _close: Button
 ## M5: the standing order "모두 가죽 옷".
 var _dress: Button
 var _grid: GridContainer
+var _headers: GridContainer
 ## M4: AgentId -> Pottery level, and the read's tick bucket and rows.
 var _pottery: Dictionary = {}
 var _pottery_key: Array = []
@@ -89,11 +90,17 @@ func _ready() -> void:
 	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_hint.add_theme_color_override("font_color", MUTED)
 	column.add_child(_hint)
+	_headers = GridContainer.new()
+	_headers.name = "PriorityHeaders"
+	_headers.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	_headers.add_theme_constant_override("h_separation", 6)
+	column.add_child(_headers)
 	var scroll: ScrollContainer = ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	column.add_child(scroll)
 	_grid = GridContainer.new()
+	_grid.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	_grid.add_theme_constant_override("h_separation", 6)
 	_grid.add_theme_constant_override("v_separation", 4)
 	scroll.add_child(_grid)
@@ -178,29 +185,31 @@ func _refresh() -> void:
 	_hint.text = EconomyText.ltr(_locale, "UI_PRIORITY_HINT")
 	_reset.text = EconomyText.ltr(_locale, "UI_PRIORITY_RESET")
 	_close.text = EconomyText.ltr(_locale, "UI_CLOSE")
-	for child: Node in _grid.get_children():
-		_grid.remove_child(child)
-		child.queue_free()
+	for container: GridContainer in [_headers, _grid]:
+		for child: Node in container.get_children():
+			container.remove_child(child)
+			child.queue_free()
 	var works: PackedStringArray = data["works"]
 	var rows: Array[Dictionary] = data["rows"]
 	_grid.columns = works.size() + 2
+	_headers.columns = _grid.columns
 	var corner: Label = Label.new()
 	corner.text = EconomyText.ltr(_locale, "UI_PRIORITY_NAME")
 	corner.custom_minimum_size.x = 300
-	_grid.add_child(corner)
+	_headers.add_child(corner)
 	for w: String in works:
 		var title: Label = Label.new()
 		title.text = EconomyText.work(_locale, w)
 		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		title.custom_minimum_size.x = CELL_WIDTH
-		_grid.add_child(title)
+		_headers.add_child(title)
 	var pottery_title: Label = Label.new()
 	pottery_title.name = "PotteryTitle"
 	pottery_title.text = EconomyText.ltr(_locale, "M4_PRIORITY_POTTERY")
 	pottery_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	pottery_title.custom_minimum_size.x = CELL_WIDTH
 	pottery_title.add_theme_color_override("font_color", MUTED)
-	_grid.add_child(pottery_title)
+	_headers.add_child(pottery_title)
 	if rows.is_empty():
 		var none: Label = Label.new()
 		none.text = EconomyText.ltr(_locale, "UI_PRIORITY_EMPTY")
@@ -239,6 +248,17 @@ func _refresh() -> void:
 		skill.custom_minimum_size.x = CELL_WIDTH
 		skill.add_theme_color_override("font_color", MUTED)
 		_grid.add_child(skill)
+
+	# Both grids use the same measured widths, including localized headings and
+	# role controls. Only the body scrolls; no width depends on the scroll offset.
+	for c: int in _grid.columns:
+		var heading: Control = _headers.get_child(c) as Control
+		var width: float = heading.get_combined_minimum_size().x
+		for i: int in range(c, _grid.get_child_count(), _grid.columns):
+			width = maxf(width, (_grid.get_child(i) as Control).get_combined_minimum_size().x)
+		heading.custom_minimum_size.x = width
+		for i: int in range(c, _grid.get_child_count(), _grid.columns):
+			(_grid.get_child(i) as Control).custom_minimum_size.x = width
 
 
 ## M5: the dress toggle follows get_story (hidden without a storyteller).

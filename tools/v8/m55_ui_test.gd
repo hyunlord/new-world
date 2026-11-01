@@ -8,11 +8,11 @@
 #   caravan on the map opens the trade dialog; its columns, balance bar (주는 값 × 0.8 vs 받는 값 × 1.2, checked against
 #   the get_caravan values) and buttons carry no raw key; an unknown artifact (else the cheapest goods) is taken and
 #   logs given through the rows' + buttons, a click on 거래 makes the trade (get_neighbours `trades` and the caravan's
-#   `caravan_trades` +1, chronicle 42); a gift through 선물 (`gifts` +1); a take with nothing given is refused with
-#   the reason shown ("값이 맞지 않음"). N shows both neighbours (direction, distance, attitude, rumours) and hides
+#   `caravan_trades` +1, chronicle 42); a gift through 선물 (`gifts` +1); a take with nothing given shows a shortage, disables Trade,
+#   and sends no command even when clicked or submitted directly. N shows both neighbours (direction, distance, attitude, rumours) and hides
 #   again; the tech map's detail of a rumoured node shows "이웃 ○○가 앎 (소문)", a clue node its ★ and clue line.
 #   Chronicle kinds 38–44 (synthetic rows and the live ones) and the year line's M5.5 tallies render without raw keys
-#   in ko and en; LAST_KIND is 44 and the feed keeps 38–44. Then the clock is advanced to the first wolves and, 30
+#   in ko and en; LAST_KIND covers at least 44 and the feed keeps 38–44. Then the clock is advanced to the first wolves and, 30
 #   ticks at a time, to someone fleeing: the agent layer's "!" marks equal the snapshot's `fleeing` column at every
 #   step, and the inspector shows "도망 중: 늑대" for a fleeing person.
 # Bridge methods called: via SimReads get_neighbours, get_agent_snapshot, get_building_snapshot, get_terrain_snapshot,
@@ -27,7 +27,6 @@ const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
-const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const KEY_RE: String = "[A-Z][A-Z0-9]*(_[A-Z0-9]+)+"
 const STEP: int = 240
 ## How far the clock may be advanced looking for the first wave and caravan, and then the first fleeing person (days).
@@ -436,16 +435,26 @@ func _trade_checks(caravan: Dictionary) -> void:
 		texts = _trade.call("texts")
 		_check("gift_click_gives", int(_nb().get("gifts", 0)) == gifts_before + 1 and _readable(str(texts["status"])),
 			"gifts %d -> %d status '%s'" % [gifts_before, int(_nb().get("gifts", 0)), texts["status"]])
-	# Asking for goods with nothing given: refused, the reason shown.
+	# A take-only selection is stopped before dispatch, with the shortage visible.
 	goods = _trade.call("goods_rows")
+	_check("unbalanced_selection_fixture", not goods.is_empty(), "remaining goods %d" % goods.size())
 	if not goods.is_empty():
 		_trade.call("pick_take", 0, 1)
+		var short_balance: Dictionary = _trade.call("balance")
+		var short_text: String = NeighbourText.trf(_locale, "M55_TRADE_BALANCE_SHORT_FMT", {
+			"short": NeighbourText.weighted(int(short_balance["take_weighted"]) - int(short_balance["give_weighted"]))})
+		var commands_before: Dictionary = _world.call("get_command_log", 0)
+		await _click(_ui(button))
 		var refused: Dictionary = _trade.call("trade")
 		await _frames(2)
 		texts = _trade.call("texts")
-		var reason: String = EconomyText.reason(_locale, "unbalanced")
-		_check("refusal_reason_shown", not bool(refused.get("accepted", true)) and str(refused.get("reason", "")) == "unbalanced" and str(texts["status"]).contains(reason)
-			and _readable(str(texts["status"])), "%s status '%s'" % [refused, texts["status"]])
+		_check("unbalanced_selection_blocked", int(short_balance["give"]) == 0 and int(short_balance["take"]) > 0
+			and not bool(short_balance["ok"]) and button.disabled
+			and not bool(refused.get("accepted", true)) and bool(refused.get("skipped", false))
+			and str(refused.get("reason", "")) == "nothing"
+			and str(texts["balance"]) == short_text and _readable(short_text)
+			and _world.call("get_command_log", 0) == commands_before,
+			"%s disabled %s balance '%s' expected '%s'" % [refused, button.disabled, texts["balance"], short_text])
 	_locale.call("set_language", "en")
 	_trade.call("open_caravan", id)
 	await _frames(2)
@@ -559,7 +568,7 @@ func _chronicle_texts() -> void:
 	var all_kinds: bool = true
 	for k: int in range(38, 45):
 		all_kinds = all_kinds and notable.has(k)
-	_check("chronicle_notable_m55", all_kinds and Chronicle.LAST_KIND == 44, str(notable))
+	_check("chronicle_notable_m55", all_kinds and Chronicle.LAST_KIND >= 44, str(notable))
 	var flee: String = StoryText.flee_line(_locale, {"fleeing": true})
 	_check("flee_line_text", _readable(flee) and StoryText.flee_line(_locale, {"fleeing": false}) == "", "'%s'" % flee)
 

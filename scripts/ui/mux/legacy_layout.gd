@@ -2,6 +2,8 @@
 # Bridge methods: none. Attach under MuxHud, setup(UI), then apply_scale from preferences/layout.
 extends Node
 
+signal story_size_changed
+
 const MARGIN: float = 12.0
 const GAP: float = 8.0
 const PANELS: Array[String] = ["ItemPanel", "ChroniclePanel", "AgentInspectorPanel", "WorkshopPanel", "PriorityPanel", "TechPanel", "TeachPanel", "RoomPanel", "NeighboursPanel", "MigrantPanel", "TradePanel", "WhyPanel"]
@@ -12,6 +14,8 @@ var _factor: float = 1.0
 var _area: Vector2 = Vector2(1920, 1080)
 var _inspector_right: float = -1.0
 var _content_top: float = 0.0
+var _story_top: float = 0.0
+var _story_right: float = 0.0
 var _top_bottom: float = 112.0
 var _bar_top: float = 968.0
 var _origins: Dictionary = {}
@@ -36,6 +40,17 @@ func apply_scale(factor: float, viewport_size: Vector2, inspector_right: float =
 ## Reserve the complete MUX action row without changing the measured topbar edge.
 func set_content_top(value: float) -> void:
 	_content_top = maxf(0.0, value)
+
+
+## Reserve the existing story controls independently of the alerts and foreground panels.
+func set_story_slot(top: float, right: float) -> void:
+	_story_top = top
+	_story_right = right
+
+
+func story_height() -> float:
+	var column: Control = _ui.get_node_or_null("StoryBanner/Column") as Control
+	return column.get_combined_minimum_size().y * _factor if column != null else 0.0
 
 
 func top_bottom() -> float:
@@ -71,6 +86,8 @@ func _refresh() -> void:
 		var panel: Control = _ui.get_node_or_null(NodePath(node_name)) as Control
 		if panel == null:
 			continue
+		if panel.has_method("set_available_height"):
+			panel.call("set_available_height", available.size.y / _factor)
 		var bounds: Rect2 = _bounds(panel)
 		if bounds.size.x <= 0 or bounds.size.y <= 0:
 			continue
@@ -151,16 +168,20 @@ func _layout_story(available: Rect2) -> void:
 	var column: Control = owner.get_node_or_null("Column") as Control
 	if column == null:
 		return
+	if not column.minimum_size_changed.is_connected(story_size_changed.emit):
+		column.minimum_size_changed.connect(story_size_changed.emit)
 	var natural: Vector2 = column.get_combined_minimum_size()
 	column.size = natural
 	var region: Rect2 = available
+	if _story_right > MARGIN:
+		region = Rect2(MARGIN, _story_top, _story_right - MARGIN, maxf(1.0, _bar_top - _story_top - GAP))
 	var inspector: Dictionary = _report.get("AgentInspectorPanel", {})
 	if bool(inspector.get("visible", false)):
 		var inspector_rect: Rect2 = inspector["rect"]
 		# Keep warnings and the drafted roster clear of the visible inspector at every UI scale.
 		region.size.x = maxf(1.0, minf(region.end.x, inspector_rect.position.x - GAP) - region.position.x)
 	var effective: float = fit_scale(natural, region.size, _factor)
-	var desired: Vector2 = Vector2(available.get_center().x - natural.x * effective * 0.5, available.position.y)
+	var desired: Vector2 = Vector2(region.get_center().x - natural.x * effective * 0.5, region.position.y)
 	_place(column, Rect2(Vector2.ZERO, natural), desired, region, effective, "StoryBanner")
 
 

@@ -1105,8 +1105,11 @@ func _option_hidden(opt: Dictionary, trigger_data: Dictionary = {}) -> bool:
 
 func _format_card_text(key: String, data: Dictionary) -> String:
 	var text: String = _tr(key)
-	for field: String in data:
-		text = text.replace("{" + field + "}", str(data[field]))
+	var values: Dictionary = data.duplicate()
+	var voice: String = str(data.get("voice", "")).strip_edges()
+	values["voice_prefix"] = _tr("M6B_CARD_VOICE_PREFIX").format({"voice": voice}) if not voice.is_empty() else ""
+	for field: String in values:
+		text = text.replace("{" + field + "}", str(values[field]))
 	while "{" in text:
 		var start: int = text.find("{")
 		var end: int = text.find("}", start)

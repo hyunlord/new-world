@@ -90,6 +90,7 @@ func _ready() -> void:
 	_legacy = LegacyLayout.new()
 	add_child(_legacy)
 	_legacy.setup(get_parent())
+	_legacy.story_size_changed.connect(_queue_layout)
 	_right = VBoxContainer.new()
 	_right.name = "MapDock"
 	_right.add_theme_constant_override("separation", 8)
@@ -259,6 +260,8 @@ func _layout_widgets() -> void:
 	# Containers cannot shrink below their content minimum. Keep the entire card stack
 	# visible, and use a separate column beside the map dock when it cannot fit above it.
 	var cards_top: float = _actions.position.y + _actions.get_combined_minimum_size().y * actions_factor + 8
+	var story_height: float = _legacy.story_height()
+	var story_reserve: float = story_height + 8 if story_height > 0 else 0.0
 	var stack_right: float = area.x - 12
 	var stack_bottom: float = _right.position.y - 12
 	if cards != null and cards.visible:
@@ -268,13 +271,15 @@ func _layout_widgets() -> void:
 		var natural: Vector2 = Vector2(cards.size.x, cards.content_height())
 		alerts.set_available_height(120.0)
 		var alert_reserve: float = maxf(160.0, alerts.get_combined_minimum_size().y) * factor
-		if cards_top + natural.y * factor + 8 + alert_reserve > stack_bottom:
+		if cards_top + natural.y * factor + 8 + story_reserve + alert_reserve > stack_bottom:
 			stack_right = _right.position.x - 12
 			stack_bottom = _legacy.bar_top() - 12
-		cards.size.y = minf(natural.y, (stack_bottom - cards_top - 8 - alert_reserve) / factor)
+		cards.size.y = maxf(0.0, minf(natural.y, (stack_bottom - cards_top - 8 - story_reserve - alert_reserve) / factor))
 		cards.scale = Vector2.ONE * factor
 		cards.position = Vector2(stack_right - cards.size.x * factor, cards_top)
 		cards_top = cards.position.y + cards.size.y * factor + 8
+	_legacy.set_story_slot(cards_top, _right.position.x - 12)
+	cards_top += story_reserve
 	alerts.set_available_height((stack_bottom - cards_top) / factor)
 	alerts.size = alerts.get_combined_minimum_size()
 	alerts.position = Vector2(stack_right - alerts.size.x * factor, cards_top)
@@ -285,6 +290,7 @@ func _layout_widgets() -> void:
 	var plaque: Node = get_node_or_null("../TaskPlaque")
 	if plaque != null and plaque.is_node_ready():
 		plaque.call("_place")
+	_sync_foreground()
 	for panel: Control in [help, goals, settings]:
 		if panel.visible:
 			panel.call("center_in_viewport")
@@ -489,7 +495,9 @@ func _sync_foreground() -> void:
 			plaque.hide()
 		elif panel_closed:
 			plaque.call("refresh_cards")
-	helper.set_overlay_obscured(menu_open or panel_open)
+	var story: Control = get_parent().get_node_or_null("StoryBanner/Column") as Control
+	var story_over_helper: bool = story != null and story.is_visible_in_tree() and story.get_global_rect().intersects(helper.get_global_rect())
+	helper.set_overlay_obscured(menu_open or panel_open or story_over_helper)
 	_highlight.visible = not menu_open and not panel_open and not help.visible and not goals.visible and not settings.visible
 
 ## M-LOOP §1.2d: watch panels entering the tree for popup stacking enforcement.

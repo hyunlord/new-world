@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1438,
+    "active_key_count": 1441,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1438,
+    "key_count": 1441,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -90,6 +90,8 @@
     "CHRON_FISSION_STARTED_FMT": "%s began to split; %s leads a group away.",
     "CHRON_FOUNDER_FMT": "One of the founders of %s.",
     "CHRON_GROUP_COLD_FMT": "{count} hurt by cold ← {cause}",
+    "CHRON_GROUP_COLLAPSE": "Show fewer",
+    "CHRON_GROUP_COUNT_FMT": "{count} records",
     "CHRON_GROUP_EXPAND": "Show details",
     "CHRON_GROUP_GENERIC_FMT": "{count} events — {kind_text} ← {cause}",
     "CHRON_GROUP_STARVE_FMT": "{count} starving ← {cause}",
@@ -276,11 +278,11 @@
     "LOOP_CARD_MIGRANTS_BODY": "{count} migrants have arrived",
     "LOOP_CARD_MIGRANTS_DECLINE": "Decline",
     "LOOP_CARD_NEED_FOOD": "Nothing to eat",
-    "LOOP_CARD_NEED_FOOD_BODY": "{voice}: Nothing to eat ← {cause}",
+    "LOOP_CARD_NEED_FOOD_BODY": "{voice_prefix}{cause}",
     "LOOP_CARD_NEED_FOOD_GATHER": "Paint gathering zone",
     "LOOP_CARD_NEED_FOOD_HUNT": "Hunting zone",
     "LOOP_CARD_NEED_WARMTH": "It is cold",
-    "LOOP_CARD_NEED_WARMTH_BODY": "{voice}: It is cold ← {cause}",
+    "LOOP_CARD_NEED_WARMTH_BODY": "{voice_prefix}It is cold ← {cause}",
     "LOOP_CARD_NEED_WARMTH_CHOP": "Designate chopping",
     "LOOP_CARD_PANEL_FOLDED": "{count} more decisions",
     "LOOP_CARD_PANEL_TITLE": "Decisions",
@@ -749,6 +751,7 @@
     "M6A_WINTER_DAYS": "Winter preparation: stored {stored_days} days / needed {needed_days} days · food {stored} / {needed}",
     "M6A_WINTER_UNITS": "Winter preparation: stored food {stored} / needed {needed}",
     "M6B_CARD_NOT_APPLIED": "Not applied: {reason}",
+    "M6B_CARD_VOICE_PREFIX": "{voice}: ",
     "M6B_MIGRANT_BEDS": "Not enough roofed beds for everyone.",
     "M6B_MIGRANT_FOOD": "Food is below 5 days at the arrival rate.",
     "M6B_MIGRANT_UNKNOWN": "Arrival needs could not be confirmed.",

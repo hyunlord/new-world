@@ -309,7 +309,10 @@ func _hunt_orders(hearth: Vector2i) -> void:
 	var tile: Vector2i = deer["tile"]
 	await _look_at(tile)
 	await _key(KEY_F7)
-	var menu_ok: bool = bool(_bar.call("dig_menu_open")) and (_bar.get("_dig_buttons") as Array).size() == 4
+	var menu: Array = _bar.get_script().get_script_constant_map()["DIG_MENU"]
+	var menu_ok: bool = bool(_bar.call("dig_menu_open")) and (_bar.get("_dig_buttons") as Array).size() == menu.size()
+	menu_ok = menu_ok and menu.any(func(entry: Dictionary) -> bool: return int(entry["hotkey"]) == KEY_3 and int(entry["mode"]) == 10)
+	menu_ok = menu_ok and menu.any(func(entry: Dictionary) -> bool: return int(entry["hotkey"]) == KEY_4 and int(entry["mode"]) == 11)
 	await _key(KEY_3)
 	var hint: String = (_bar.get("_hint") as Label).text
 	_check("f7_3_hunt_mode", menu_ok and int(_tool.get("mode")) == 10 and not bool(_bar.call("dig_menu_open")) and _readable(hint), "mode %d hint '%s'" % [int(_tool.get("mode")), hint])
@@ -638,11 +641,33 @@ func _check_why(chronicle: Node, why: Node) -> bool:
 	if not (chronicle as Control).visible:
 		await _key(KEY_C)
 	await _frames(2)
+	# Routine linked events are retained behind the visible All control.
+	var notable: Button = chronicle.get("_notable_button")
+	if notable.button_pressed:
+		notable.button_pressed = false
+	await _frames(2)
+	var body: RichTextLabel = chronicle.get("_body") as RichTextLabel
+	var metadata: String = "why:%d" % int(pick["index"])
+	# A preferred M5 entry may be inside a collapsed group; expand its actual visible group link.
+	if not body.text.contains("[url=" + metadata + "]"):
+		var groups: Dictionary = chronicle.get("_groups")
+		var group_to_expand: String = ""
+		for group_id: String in groups:
+			for entry: Dictionary in groups[group_id]["entries"]:
+				if int(entry.get("index", -1)) == int(pick["index"]) and body.text.contains("[url=group:" + group_id + "]"):
+					group_to_expand = group_id
+					break
+			if not group_to_expand.is_empty():
+				break
+		if not group_to_expand.is_empty():
+			body.meta_clicked.emit("group:" + group_to_expand)
+		await _frames(2)
 	var feed: String = str(chronicle.call("plain_text"))
 	var link: String = StoryText.ltr(_locale, "M5_CHRON_WHY")
-	var body: RichTextLabel = chronicle.get("_body") as RichTextLabel
-	_check("chronicle_why_link_shown", feed.contains(link) and _readable(feed.substr(0, 400)), "kind %d index %d: '%s'" % [int(pick["kind"]), int(pick["index"]), feed.substr(0, 300)])
-	body.meta_clicked.emit("why:%d" % int(pick["index"]))
+	_check("chronicle_why_link_shown", body.text.contains("[url=" + metadata + "]") and feed.contains(link) and _readable(feed.substr(0, 400)), "kind %d index %d: '%s'" % [int(pick["kind"]), int(pick["index"]), feed.substr(0, 300)])
+	if not body.text.contains("[url=" + metadata + "]"):
+		return false
+	body.meta_clicked.emit(metadata)
 	await _frames(2)
 	var read: Dictionary = _world.call("get_chronicle_why", int(pick["index"]))
 	var lines: Array = why.call("lines")

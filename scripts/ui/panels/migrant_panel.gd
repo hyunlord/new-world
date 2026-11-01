@@ -81,6 +81,20 @@ func _ready() -> void:
 	_later = _button(buttons, "Later", close)
 
 
+## Keep the visitor roster scrollable while reserving all decision controls at full scale.
+func set_available_height(height: float) -> void:
+	if _panel == null or _scroll == null:
+		return
+	var column: VBoxContainer = _scroll.get_parent() as VBoxContainer
+	var overhead: float = _panel.get_theme_stylebox("panel").get_minimum_size().y
+	for child: Node in column.get_children():
+		if child != _scroll and child is Control and child.visible:
+			overhead += child.get_combined_minimum_size().y + column.get_theme_constant("separation")
+	var roster_height: float = minf(LIST_MAX, maxi(1, _people.get_child_count()) * PERSON_HEIGHT)
+	_scroll.custom_minimum_size.y = maxf(40, minf(roster_height, height - overhead))
+	_panel.size = Vector2(PANEL_RECT.size.x, 0)
+
+
 func _label(parent: Control, colour: Color) -> Label:
 	var label: Label = Label.new()
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

@@ -64,6 +64,9 @@ var _year_shown: int = -1
 var _year_key: int = -2
 ## M-READ: grouping rules loaded from chronicle_grouping.json.
 var _grouping_rules: Dictionary = {}
+var _groups: Dictionary = {}
+var _expanded_groups: Dictionary = {}
+var _highlighted_group_id: String = ""
 ## M-READ: subjects highlighted on the map from an expanded group (cleared on close or new group).
 var _highlighted_subjects: PackedInt64Array = PackedInt64Array()
 ## M-LOOP §2.5: notable/all toggle; default shows only notable kinds.
@@ -258,21 +261,39 @@ func _refresh() -> void:
 	var ticks_per_day: int = maxi(1, int(info.get("ticks_per_day", 1440)))
 	var grouped: Array = _group_entries(filtered, ticks_per_day)
 	var lines: Array[String] = []
+	_groups.clear()
 	for item: Variant in grouped:
 		if item is Dictionary and bool((item as Dictionary).get("_group", false)):
 			var g: Dictionary = item as Dictionary
-			var format_key: String = str(g.get("format_key", "CHRON_GROUP_GENERIC_FMT"))
-			var count: int = int(g.get("count", 0))
-			var kind_text: String = _kind_name(int(g.get("kind", -1)))
-			var cause_text: String = _cause_name(int(g.get("kind", -1)), int(g.get("cause", -1)))
-			var group_text: String = _loc_trf(format_key, {"count": count, "kind_text": kind_text, "cause": cause_text})
-			var subjects: PackedInt64Array = g.get("subjects", PackedInt64Array())
-			var subject_str: String = ",".join(Array(subjects).map(func(s: int) -> String: return str(s)))
-			lines.append("[url=group:%s]%s[/url]" % [subject_str, group_text])
+			var entries: Array = g["entries"]
+			# The oldest native index stays stable as newer matching entries arrive.
+			var group_id: String = str(int((entries.back() as Dictionary).get("index", -1)))
+			_groups[group_id] = g
+			var expanded: bool = bool(_expanded_groups.get(group_id, false))
+			var count_text: String = _loc_trf(str(_grouping_rules.get("count_format_key", "CHRON_GROUP_COUNT_FMT")), {"count": entries.size()})
+			var action_text: String = Chronicle.loc(_locale, "CHRON_GROUP_COLLAPSE" if expanded else "CHRON_GROUP_EXPAND")
+			lines.append("[url=group:%s]%s · %s[/url]" % [group_id, count_text, action_text])
+			if expanded:
+				for entry: Dictionary in entries:
+					lines.append(Chronicle.line(entry, -1, _locale, info, true, true))
+			else:
+				lines.append(Chronicle.line(entries[0], -1, _locale, info, true, true))
 		elif item is Dictionary and (item as Dictionary).has("_presentation_text"):
 			lines.append(str((item as Dictionary)["_presentation_text"]))
 		else:
 			lines.append(Chronicle.line(item as Dictionary, -1, _locale, info, true, true))
+	for group_id: String in _expanded_groups.keys():
+		if not _groups.has(group_id):
+			_expanded_groups.erase(group_id)
+	if not _highlighted_group_id.is_empty():
+		if _groups.has(_highlighted_group_id) and bool(_expanded_groups.get(_highlighted_group_id, false)):
+			var subjects: PackedInt64Array = _groups[_highlighted_group_id].get("subjects", PackedInt64Array())
+			if subjects != _highlighted_subjects:
+				var group_id: String = _highlighted_group_id
+				_highlight_subjects(subjects)
+				_highlighted_group_id = group_id
+		else:
+			_clear_highlights()
 	_body.text = "\n\n".join(lines)
 	_fit_body_lines.call_deferred()
 
@@ -398,13 +419,17 @@ func toggle_visible() -> void:
 func _follow_link(meta: Variant) -> void:
 	var text: String = str(meta)
 	if text.begins_with("group:"):
-		# M-READ: highlight group subjects on the map.
-		var parts: PackedStringArray = text.substr(6).split(",")
-		var subjects: PackedInt64Array = PackedInt64Array()
-		for part: String in parts:
-			if part.is_valid_int():
-				subjects.append(int(part))
-		_highlight_subjects(subjects)
+		var group_id: String = text.substr(6)
+		if not _groups.has(group_id):
+			return
+		var expanded: bool = not bool(_expanded_groups.get(group_id, false))
+		_expanded_groups[group_id] = expanded
+		if expanded:
+			_highlight_subjects((_groups[group_id] as Dictionary).get("subjects", PackedInt64Array()))
+			_highlighted_group_id = group_id
+		elif _highlighted_group_id == group_id:
+			_clear_highlights()
+		_refresh()
 		return
 	if text.begins_with("why:"):
 		open_why(int(text.split(":")[1]))
@@ -423,6 +448,8 @@ func _reset() -> void:
 	_total = 0
 	_tick = -1
 	_entries.clear()
+	_groups.clear()
+	_expanded_groups.clear()
 	_pending_porter = {}
 	_unknown_kinds = 0
 	_year_key = -2
@@ -473,10 +500,8 @@ func _group_entries(entries: Array[Dictionary], ticks_per_day: int) -> Array:
 				var subject: int = int(g_entry.get("subject", -1))
 				if subject >= 0 and not subjects.has(subject):
 					subjects.append(subject)
-			var rule: Dictionary = groupable.get(str(kind), {}) as Dictionary
 			result.append({"_group": true, "entries": group, "count": group.size(),
-				"kind": kind, "cause": cause, "subjects": subjects,
-				"format_key": str(rule.get("format_key", "CHRON_GROUP_GENERIC_FMT"))})
+				"kind": kind, "cause": cause, "subjects": subjects})
 			i = j
 		else:
 			for g_entry: Dictionary in group:
@@ -492,20 +517,6 @@ func _loc_trf(key: String, params: Dictionary) -> String:
 	return key
 
 
-## M-READ: chronicle kind name for grouping display.
-func _kind_name(kind: int) -> String:
-	var key: String = "CHRON_KIND_%d" % kind
-	var text: String = Chronicle.loc(_locale, key)
-	return text if text != key else str(kind)
-
-
-## M-READ: chronicle cause description for grouping display.
-func _cause_name(kind: int, cause: int) -> String:
-	if kind == 0:
-		return Chronicle.death(cause, _locale) if cause >= 0 else ""
-	return str(cause) if cause >= 0 else ""
-
-
 ## M-READ: highlight group subjects on the map (people ringed) until closed.
 func _highlight_subjects(subjects: PackedInt64Array) -> void:
 	_clear_highlights()
@@ -517,6 +528,7 @@ func _highlight_subjects(subjects: PackedInt64Array) -> void:
 
 ## M-READ: clear subject highlights.
 func _clear_highlights() -> void:
+	_highlighted_group_id = ""
 	if _highlighted_subjects.is_empty():
 		return
 	var agent_layer: Node = get_node_or_null("/root/Main/ColonyView/AgentLayer")

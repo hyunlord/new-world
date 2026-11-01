@@ -41,7 +41,14 @@ const MAX_VISIBLE_ROWS: int = 3
 func _fit_rows() -> void:
 	if not is_instance_valid(_scroll):
 		return
-	var available: float = maxf(40, _available_height - 64)
+	# Include the fold control while budgeting, so revealing it cannot overflow the allocation.
+	_fold_button.text = _tr("LOOP_ALERTS_FOLD_LESS") if _expanded else _tr("LOOP_ALERTS_FOLDED").format({"count": _list.get_child_count()})
+	var column: VBoxContainer = _scroll.get_parent() as VBoxContainer
+	var overhead: float = get_theme_stylebox("panel").get_minimum_size().y
+	for child: Node in column.get_children():
+		if child != _scroll and child is Control and (child.visible or (child == _fold_button and _list.get_child_count() > 0)):
+			overhead += child.get_combined_minimum_size().y + column.get_theme_constant("separation")
+	var available: float = maxf(40, _available_height - overhead)
 	var rows_height: float = 0.0
 	var visible_count: int = 0
 	for child: Node in _list.get_children():
@@ -57,7 +64,7 @@ func _fit_rows() -> void:
 	if is_instance_valid(_fold_button):
 		_fold_button.visible = hidden > 0 or _expanded
 		_fold_button.text = _tr("LOOP_ALERTS_FOLD_LESS") if _expanded else _tr("LOOP_ALERTS_FOLDED").format({"count": hidden})
-	_scroll.custom_minimum_size.y = maxf(40, rows_height)
+	_scroll.custom_minimum_size.y = maxf(40, minf(rows_height, available))
 	size = Vector2.ZERO
 
 

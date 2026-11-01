@@ -1294,12 +1294,12 @@
 	"LOOP_CARD_KNOWLEDGE_RISK_CANCEL": "Cancel teaching",
 	"LOOP_PLAQUE_CHAPTER_FMT": "· This year: {title} {met}/{total} ·",
 	"LOOP_CARD_NEED_FOOD": "Nothing to eat",
-	"LOOP_CARD_NEED_FOOD_BODY": "{voice}: Nothing to eat ← {cause}",
+	"LOOP_CARD_NEED_FOOD_BODY": "{voice_prefix}{cause}",
 	"LOOP_CARD_NEED_FOOD_HUNT": "Hunting zone",
 	"LOOP_CARD_NEED_FOOD_GATHER": "Paint gathering zone",
 	"LOOP_CARD_STEWARD": "Leave to steward",
 	"LOOP_CARD_NEED_WARMTH": "It is cold",
-	"LOOP_CARD_NEED_WARMTH_BODY": "{voice}: It is cold ← {cause}",
+	"LOOP_CARD_NEED_WARMTH_BODY": "{voice_prefix}It is cold ← {cause}",
 	"LOOP_CARD_NEED_WARMTH_CHOP": "Designate chopping",
 	"LOOP_CARD_MIGRANTS": "Migrants arrived",
 	"LOOP_CARD_MIGRANTS_BODY": "{count} migrants have arrived",
@@ -1423,5 +1423,8 @@
 	"M6B_MIGRANT_UNKNOWN": "Arrival needs could not be confirmed.",
 	"M6B_MIGRANT_BEDS": "Not enough roofed beds for everyone.",
 	"M6B_MIGRANT_WOOD": "Wood is below the current target.",
-	"M6B_MIGRANT_FOOD": "Food is below 5 days at the arrival rate."
+	"M6B_MIGRANT_FOOD": "Food is below 5 days at the arrival rate.",
+	"M6B_CARD_VOICE_PREFIX": "{voice}: ",
+	"CHRON_GROUP_COUNT_FMT": "{count} records",
+	"CHRON_GROUP_COLLAPSE": "Show fewer"
 }

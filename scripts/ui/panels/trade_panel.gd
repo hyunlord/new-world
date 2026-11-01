@@ -116,6 +116,27 @@ func _ready() -> void:
 	_close.pressed.connect(close)
 
 
+## Fit existing item scroll viewports without reducing the requested text scale.
+func set_available_height(height: float) -> void:
+	var panel: PanelContainer = get_node_or_null("Dialog") as PanelContainer
+	if panel == null or _ours == null or _theirs == null:
+		return
+	var column: VBoxContainer = panel.get_child(0) as VBoxContainer
+	var body: Control = _ours.get_parent().get_parent().get_parent() as Control
+	var overhead: float = panel.get_theme_stylebox("panel").get_minimum_size().y
+	for child: Node in column.get_children():
+		if child is Control and child.visible:
+			overhead += column.get_theme_constant("separation")
+			if child != body:
+				overhead += child.get_combined_minimum_size().y
+	overhead -= column.get_theme_constant("separation")
+	overhead += maxf(_ours_head.get_combined_minimum_size().y, _theirs_head.get_combined_minimum_size().y) + 6
+	var list_height: float = clampf(height - overhead, 40.0, LIST_HEIGHT)
+	for rows: VBoxContainer in [_ours, _theirs]:
+		(rows.get_parent() as ScrollContainer).custom_minimum_size.y = list_height
+	panel.size = Vector2(PANEL_RECT.size.x, 0)
+
+
 func _label(parent: Control, colour: Color) -> Label:
 	var label: Label = Label.new()
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
