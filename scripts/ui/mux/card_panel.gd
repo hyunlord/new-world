@@ -396,22 +396,29 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> Var
 			return SimReads.mutate(_world, "cmd_designate_chop", [cx - 3, cy - 3, cx + 3, cy + 3])
 		"cmd_add_hunt_zone":
 			# Add a hunt zone near camp (defect 4: label "사냥 구역" must match this command).
+			# If the zone already exists (rejected: nothing), try offset areas;
+			# if all are covered, the hunting setup is complete — return ok.
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
 			cy = int(info.get("camp_y", 32))
-			return SimReads.mutate(_world, "cmd_add_hunt_zone", [cx - 8, cy - 8, cx + 8, cy + 8])
+			for offset: Vector2i in [Vector2i.ZERO, Vector2i(12, 0), Vector2i(-12, 0), Vector2i(0, 12), Vector2i(0, -12)]:
+				var result: Variant = SimReads.mutate(_world, "cmd_add_hunt_zone", [cx - 6 + offset.x, cy - 6 + offset.y, cx + 6 + offset.x, cy + 6 + offset.y])
+				if result is Dictionary and bool(result.get("accepted", false)):
+					return result
+			# All offsets already covered: hunting is already set up.
+			return {"accepted": true, "count": 0, "reason": "zone_exists"}
 		"cmd_designate_harvest":
 			# Designate harvest on the nearest ripe area (search outward from camp).
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
 			cy = int(info.get("camp_y", 32))
-			# Try progressively larger areas to find harvestable tiles (defect 3).
+			# Try progressively larger areas and offsets to find harvestable tiles (defect 3).
 			for radius: int in [6, 10, 16]:
-				var result: Variant = SimReads.mutate(_world, "cmd_designate_harvest", [cx - radius, cy - radius, cx + radius, cy + radius])
-				if result is Dictionary and bool(result.get("accepted", false)):
-					return result
-			# Fallback: return the last attempt.
-			return SimReads.mutate(_world, "cmd_designate_harvest", [cx - 16, cy - 16, cx + 16, cy + 16])
+				for offset: Vector2i in [Vector2i.ZERO, Vector2i(8, 0), Vector2i(-8, 0), Vector2i(0, 8), Vector2i(0, -8)]:
+					var result: Variant = SimReads.mutate(_world, "cmd_designate_harvest", [cx - radius + offset.x, cy - radius + offset.y, cx + radius + offset.x, cy + radius + offset.y])
+					if result is Dictionary and bool(result.get("accepted", false)):
+						return result
+			return {"accepted": false, "count": 0, "reason": "nothing"}
 		"cmd_accept_migrants":
 			var trigger_data: Dictionary = card.get("trigger_data", {})
 			var wave: int = int(trigger_data.get("wave_id", 0))
