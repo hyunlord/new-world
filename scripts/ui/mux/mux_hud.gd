@@ -259,19 +259,22 @@ func _apply_preferences() -> void:
 			panel.scale = Vector2.ONE * factor
 	_layout.call_deferred()
 
-## M-LOOP §2.3: chapter completion → toast + chronicle entry text.
+## M-LOOP §2.3: chapter completion → toast + presentation-side chronicle entry.
 func _on_chapter_completed(chapter_id: String) -> void:
-	var chapter_data: Dictionary = goals.current_chapter_data() if goals != null else {}
 	var title: String = ""
-	# Find the completed chapter's title (it just advanced, so look back one).
 	for ch: Dictionary in goals.chapters:
 		if str(ch.get("id", "")) == chapter_id:
 			title = _loc(str(ch.get("title_key", "")))
 			break
-	var toast_text: String = _loc("LOOP_CHRON_CHAPTER_COMPLETE").format({"chapter": title})
+	var entry_text: String = _loc("LOOP_CHRON_CHAPTER_COMPLETE").format({"chapter": title})
+	# Toast.
 	var bar: Node = get_parent().get_node_or_null("OrderBar")
 	if bar != null and bar.has_method("show_toast"):
-		bar.call("show_toast", toast_text)
+		bar.call("show_toast", entry_text)
+	# Presentation-side chronicle entry (not sim-side, not hashed).
+	var chronicle: Node = get_parent().get_node_or_null("ChroniclePanel")
+	if chronicle != null and chronicle.has_method("add_presentation_entry"):
+		chronicle.call("add_presentation_entry", entry_text)
 
 
 func _set_steward(index: int) -> void:

@@ -229,6 +229,17 @@ func _toast_text(text: String) -> void:
 	if bar != null and bar.has_method("show_toast"):
 		bar.call("show_toast", text)
 
+
+## M-LOOP §2.3: inject a presentation-only line (e.g. chapter completion) into the chronicle feed.
+## These entries are not saved, not hashed; they are rebuilt in _entries and rendered as text.
+func add_presentation_entry(text: String) -> void:
+	var tick: int = _tick if _tick >= 0 else 0
+	_entries.append({"kind": -1, "tick": tick, "_presentation_text": text, "subject": -1})
+	while _entries.size() > 60:
+		_entries.pop_front()
+	if visible:
+		_refresh()
+
 func _refresh() -> void:
 	_language = Chronicle.language(_locale)
 	if _world != null and _world.has_method("get_neighbours"):
@@ -258,6 +269,8 @@ func _refresh() -> void:
 			var subjects: PackedInt64Array = g.get("subjects", PackedInt64Array())
 			var subject_str: String = ",".join(Array(subjects).map(func(s: int) -> String: return str(s)))
 			lines.append("[url=group:%s]%s[/url]" % [subject_str, group_text])
+		elif item is Dictionary and (item as Dictionary).has("_presentation_text"):
+			lines.append(str((item as Dictionary)["_presentation_text"]))
 		else:
 			lines.append(Chronicle.line(item as Dictionary, -1, _locale, info, true, true))
 	_body.text = "\n\n".join(lines)

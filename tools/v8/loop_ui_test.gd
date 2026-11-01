@@ -375,9 +375,9 @@ func _test_idle_adults_night() -> void:
 	_assert(not has_idle, "idle_adults alert suppressed at night (hour 23)")
 
 
-## Test 19: chapter completion signal wired to toast handler.
+## Test 19: chapter completion signal wired to toast and chronicle entry.
 func _test_chapter_completion_toast(main: Node) -> void:
-	print("Test 19: chapter completion toast")
+	print("Test 19: chapter completion toast + chronicle")
 	var hud: Node = main.find_child("MuxHud", true, false)
 	_assert(hud != null, "MuxHud exists")
 	if hud == null:
@@ -387,3 +387,6 @@ func _test_chapter_completion_toast(main: Node) -> void:
 	var goals_node: Node = hud.get_node_or_null("Goals")
 	if goals_node != null and goals_node.has_signal("chapter_completed"):
 		_assert(goals_node.is_connected("chapter_completed", hud._on_chapter_completed), "chapter_completed signal connected")
+	# Test chronicle panel has add_presentation_entry method.
+	var chronicle: Node = main.find_child("ChroniclePanel", true, false)
+	_assert(chronicle != null and chronicle.has_method("add_presentation_entry"), "ChroniclePanel has add_presentation_entry")

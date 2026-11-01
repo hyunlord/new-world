@@ -102,7 +102,9 @@ func _poll_triggers() -> void:
 	if tick < 0:
 		return
 	# Clear handled list at day boundaries.
+	@warning_ignore("integer_division")
 	var day: int = tick / 1440
+	@warning_ignore("integer_division")
 	var last_day: int = _last_tick / 1440 if _last_tick >= 0 else -1
 	if day != last_day:
 		_handled.clear()
@@ -161,6 +163,7 @@ func _check_trigger(card_def: Dictionary, requests: Dictionary, diag: Dictionary
 				if idle_count >= min_count:
 					# M-LOOP §1.4: exclude night window.
 					var time_data: Dictionary = SimReads.read(_world, "get_time_snapshot")
+					@warning_ignore("integer_division")
 					var hour: int = (int(time_data.get("tick", 0)) % 1440) / 60
 					if bool(trigger.get("exclude_night", false)) and (hour < 6 or hour >= 22):
 						return false
@@ -238,7 +241,7 @@ func answer_card(card_id: String, option_index: int) -> void:
 func _send_command(command: String, option: Dictionary, card: Dictionary) -> void:
 	if _world == null:
 		return
-	var params: String = str(option.get("params", ""))
+	var _params: String = str(option.get("params", ""))
 	match command:
 		"cmd_designate_chop":
 			# Designate chopping on nearest trees — uses a simplified area near camp.
