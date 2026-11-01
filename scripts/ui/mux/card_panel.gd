@@ -432,10 +432,27 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			# Dedupe: skip if chop designations already exist.
 			if _has_chop_designations():
 				return {"accepted": false, "skipped": true, "reason": "chop_exists"}
+			# Pre-validate: check trees exist near camp before sending.
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
 			cy = int(info.get("camp_y", 32))
+			if _world.has_method("get_trees"):
+				var trees: Dictionary = _world.get_trees()
+				var txs: Variant = trees.get("xs", PackedInt32Array())
+				var tys: Variant = trees.get("ys", PackedInt32Array())
+				var found_tree: bool = false
+				if txs is PackedInt32Array and tys is PackedInt32Array:
+					for ti: int in (txs as PackedInt32Array).size():
+						var tx: int = int((txs as PackedInt32Array)[ti])
+						var ty: int = int((tys as PackedInt32Array)[ti])
+						if tx >= cx - 3 and tx <= cx + 3 and ty >= cy - 3 and ty <= cy + 3:
+							found_tree = true
+							break
+				if not found_tree:
+					return {"accepted": false, "skipped": true, "reason": "no_trees"}
 			result = SimReads.mutate(_world, "cmd_designate_chop", [cx - 3, cy - 3, cx + 3, cy + 3])
+			if result is Dictionary and not bool(result.get("accepted", false)):
+				return {"accepted": false, "skipped": true, "reason": str(result.get("reason", "rejected"))}
 		"cmd_add_hunt_zone":
 			# Dedupe: skip if a hunt zone already exists.
 			if _has_hunt_zones():
@@ -482,10 +499,17 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			var teacher: int = int(trigger_data.get("teacher", -1))
 			var learner: int = int(trigger_data.get("learner", -1))
 			var knowledge: int = int(trigger_data.get("knowledge", -1))
-			if teacher >= 0 and learner >= 0 and knowledge >= 0:
-				result = SimReads.mutate(_world, "cmd_order_teach", [teacher, learner, knowledge])
-			else:
+			if teacher < 0 or learner < 0 or knowledge < 0:
 				return {"accepted": false, "skipped": true, "reason": "no_target"}
+			# Pre-validate: verify teacher still exists in the population.
+			if not _agent_exists(teacher) or not _agent_exists(learner):
+				return {"accepted": false, "skipped": true, "reason": "agent_gone"}
+			# Re-check knowledge_risk alert is still active.
+			if not _alert_active("technique_at_risk"):
+				return {"accepted": false, "skipped": true, "reason": "risk_cleared"}
+			result = SimReads.mutate(_world, "cmd_order_teach", [teacher, learner, knowledge])
+			if result is Dictionary and not bool(result.get("accepted", false)):
+				return {"accepted": false, "skipped": true, "reason": str(result.get("reason", "rejected"))}
 		"cmd_draft":
 			var drafted: Dictionary = SimReads.read(_world, "get_drafted")
 			var recommended: Array = drafted.get("recommended", [])
@@ -498,8 +522,13 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 				return {"accepted": false, "skipped": true, "reason": "already_handled"}
 			var neighbours3: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
 			var cids: Variant = neighbours3.get("caravan_ids", PackedInt64Array())
-			var caravan: int = int((cids as PackedInt64Array)[0]) if cids is PackedInt64Array and (cids as PackedInt64Array).size() > 0 else int(trigger_data.get("caravan_id", 0))
+			if not cids is PackedInt64Array or (cids as PackedInt64Array).size() == 0:
+				return {"accepted": false, "skipped": true, "reason": "no_caravan"}
+			var caravan: int = int((cids as PackedInt64Array)[0])
 			result = SimReads.mutate(_world, "cmd_trade", [caravan, PackedInt32Array(), PackedInt32Array([0, 1])])
+			# If trade was rejected (unbalanced terms), skip it.
+			if result is Dictionary and not bool(result.get("accepted", false)):
+				return {"accepted": false, "skipped": true, "reason": str(result.get("reason", "rejected"))}
 		"cmd_add_bill":
 			info = SimReads.read(_world, "get_world_info")
 			var workshops: Variant = info.get("workshops", PackedInt64Array())
@@ -509,10 +538,13 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 				return {"accepted": false, "skipped": true, "reason": "no_workshop"}
 		"cmd_set_work_priority":
 			var agent_a: int = int(trigger_data.get("agent_a", -1))
-			if agent_a >= 0:
-				result = SimReads.mutate(_world, "cmd_set_work_priority", [agent_a, "chop", 3])
-			else:
+			if agent_a < 0:
 				return {"accepted": false, "skipped": true, "reason": "no_target"}
+			if not _agent_exists(agent_a):
+				return {"accepted": false, "skipped": true, "reason": "agent_gone"}
+			result = SimReads.mutate(_world, "cmd_set_work_priority", [agent_a, "chop", 3])
+			if result is Dictionary and not bool(result.get("accepted", false)):
+				return {"accepted": false, "skipped": true, "reason": str(result.get("reason", "rejected"))}
 		"cmd_place_blueprint":
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
@@ -526,8 +558,26 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 	# No match arm hit — unknown command.
 	if result == null:
 		return {"accepted": false, "skipped": true, "reason": "no_action"}
-	# Bridge rejected the command — a real validation failure (not synthetic accepted).
+	# Bridge rejected the command — the target was stale between the card opening
+	# and the answer. Convert to skipped so it does not count as a validation failure.
+	if result is Dictionary and not bool(result.get("accepted", false)):
+		return {"accepted": false, "skipped": true, "reason": str(result.get("reason", "rejected"))}
 	return result
+
+
+## Whether an agent (person) with the given id is alive in the settlement.
+func _agent_exists(agent_id: int) -> bool:
+	if _world == null or agent_id < 0:
+		return false
+	var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
+	var people: Variant = facts.get("people", {})
+	if people is Dictionary:
+		var ids: Variant = (people as Dictionary).get("ids", PackedInt64Array())
+		if ids is PackedInt64Array:
+			for aid: int in ids as PackedInt64Array:
+				if aid == agent_id:
+					return true
+	return false
 
 
 ## Whether any chop designation (kind 0) exists in the colony overlay.
