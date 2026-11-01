@@ -114,11 +114,16 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 				var trigger_data: Dictionary = card_data.get("trigger_data", {})
 				var recommended_idx: int = int(card_panel.call("_effective_recommended", def, trigger_data))
 				# Answer the card.
+				var pre_active: PackedStringArray = card_panel.call("active_ids")
 				card_panel.call("answer_card", card_id, recommended_idx)
-				cards_answered += 1
-				var options: Array = def.get("options", [])
-				var opt_text: String = str(options[recommended_idx].get("text_key", "")) if recommended_idx < options.size() else ""
-				answer_log.append({"seed": seed_val, "card": card_id, "option": opt_text, "tick": interval * CARD_CHECK_INTERVAL})
+				var post_active: PackedStringArray = card_panel.call("active_ids")
+				# Only count as answered if the card was actually consumed (removed from active).
+				var was_consumed: bool = pre_active.has(card_id) and not post_active.has(card_id)
+				if was_consumed:
+					cards_answered += 1
+					var options: Array = def.get("options", [])
+					var opt_text: String = str(options[recommended_idx].get("text_key", "")) if recommended_idx < options.size() else ""
+					answer_log.append({"seed": seed_val, "card": card_id, "option": opt_text, "tick": interval * CARD_CHECK_INTERVAL})
 				await process_frame
 	# Count validation failures: only commands actually sent and rejected by the bridge.
 	var rejection_breakdown: Dictionary = {}

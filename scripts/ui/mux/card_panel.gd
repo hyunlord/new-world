@@ -690,6 +690,14 @@ func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> i
 					if cmd == "cmd_designate_harvest":
 						return i
 				return options.size() - 1
+		"knowledge_risk":
+			# Don't recommend teaching when firewood is critically low — teaching
+			# pulls both teacher and learner away from chopping.
+			if _alert_active("firewood_low"):
+				for i: int in options.size():
+					if str(options[i].get("command", "")) == "none":
+						return i
+				return options.size() - 1
 	# Default: use the static recommended flag.
 	for i: int in options.size():
 		if bool(options[i].get("recommended", false)):
