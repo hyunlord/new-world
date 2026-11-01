@@ -90,6 +90,8 @@ func _ready() -> void:
 	_view_button.focus_mode = Control.FOCUS_NONE
 	content.add_child(_view_button)
 	position = Vector2(0, 8)
+	if _locale != null:
+		_locale.connect("language_changed", refresh_cards.unbind(1), CONNECT_DEFERRED)
 	visible = false
 	# Ambient guidance: draw (and hit-test) behind every other UI panel and menu, so an opened
 	# build menu or inspector over the plaque's slot still gets its clicks.

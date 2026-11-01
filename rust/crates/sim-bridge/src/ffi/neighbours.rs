@@ -204,8 +204,13 @@ pub(super) fn neighbours_to_dict(v: &NeighboursView) -> VarDictionary {
 }
 
 /// One wave and its people (`get_wave`).
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct WaveView {
+    /// Initial warm food demand per configured day for all arriving people.
+    /// Uses the same adult projection as their initial Hunger; excludes future cold and spoilage.
+    pub food_need_per_day: f64,
+    /// Completed roofed bedrolls reachable by the sole settlement, before incumbent demand; −1 unknown.
+    pub reachable_roofed_beds: i64,
     /// Whether the wave exists.
     pub found: bool,
     /// Its number.
@@ -219,6 +224,48 @@ pub struct WaveView {
     /// People in order: (the `AgentId` they will have, female, age in years, arrives in a wrap, top 3 knowledge
     /// `(node, ‰, practitioner)` padded with `(−1, 0, false)`).
     pub people: Vec<MigrantRow>,
+}
+
+impl Default for WaveView {
+    fn default() -> Self {
+        Self {
+            food_need_per_day: 0.0,
+            reachable_roofed_beds: -1,
+            found: false,
+            id: 0,
+            neighbour: 0,
+            state: 0,
+            deadline: 0,
+            people: Vec::new(),
+        }
+    }
+}
+
+fn reachable_roofed_beds(res: &SimResources) -> i64 {
+    if res.settlements.len() != 1
+        || res.rules.agent.night_rest.is_none()
+        || res.rules.colony.is_none_or(|rule| rule.space.is_none())
+        || res.nav.map().is_empty()
+        || res.nav.map().width() != res.tile_grid.width
+        || res.nav.map().height() != res.tile_grid.height
+    {
+        return -1;
+    }
+    let Some(settlement) = res.settlements.values().next() else {
+        return -1;
+    };
+    // BedAssignment assigns every completed bedroll to the only settlement and tests this same route.
+    // Roofed rooms need not be bedrooms: role changes assignment preference, not availability.
+    let count = res
+        .colony
+        .beds
+        .keys()
+        .filter(|&&bed| {
+            sim_systems::runtime::rooms::roofed(res, bed)
+                && res.nav.reachable(settlement.formation_tile, bed)
+        })
+        .count();
+    i64::try_from(count).unwrap_or(-1)
 }
 
 /// Wave `id` (see the module header).
@@ -237,6 +284,14 @@ pub fn collect_wave(res: &SimResources, id: i64) -> WaveView {
     let top_code =
         sim_systems::runtime::neighbours::join::migrant_top().map_or(0, |(_, top)| top.code());
     WaveView {
+        food_need_per_day: sim_systems::runtime::settlement::food_economy::adult_need_per_day(
+            res.ticks_per_day,
+        ) * w.people.len() as f64,
+        reachable_roofed_beds: if w.people.is_empty() {
+            -1
+        } else {
+            reachable_roofed_beds(res)
+        },
         found: true,
         id: w.id,
         neighbour: w.neighbour,
@@ -262,6 +317,8 @@ pub fn collect_wave(res: &SimResources, id: i64) -> WaveView {
 /// Marshal [`WaveView`].
 pub(super) fn wave_to_dict(v: &WaveView) -> VarDictionary {
     let mut d = VarDictionary::new();
+    d.set("food_need_per_day", v.food_need_per_day);
+    d.set("reachable_roofed_beds", v.reachable_roofed_beds);
     d.set("found", v.found);
     d.set("id", i64::from(v.id));
     d.set("neighbour", i64::from(v.neighbour));

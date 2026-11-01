@@ -41,6 +41,7 @@ var _right: VBoxContainer
 var _actions: HBoxContainer
 var _steward: OptionButton
 var _poll_left: float = 0.0
+var _layout_queued: bool = false
 var _panel_foreground: bool = false
 var _sequence: int = -1
 var _chronicle_cursor: int = -1
@@ -69,7 +70,9 @@ func plaque_slot() -> Dictionary:
 	beside = minf(beside, max_beside)
 	if beside >= PLAQUE_MIN_WIDTH:
 		return {"position": Vector2(12, _legacy.top_bottom() + 8), "width": beside, "factor": factor}
-	return {"position": Vector2(12, alerts.position.y), "width": minf(PLAQUE_MIN_WIDTH * 1.25, (alerts.position.x - 36) / factor), "factor": factor}
+	var below: float = _actions.get_global_rect().end.y + 8
+	var right: float = cards.position.x if cards != null and cards.visible else alerts.position.x
+	return {"position": Vector2(12, below), "width": minf(PLAQUE_MIN_WIDTH, (right - 36) / factor), "factor": factor}
 
 
 ## M-READ: the formatted text of every currently active alert (for plaque deduplication).
@@ -107,6 +110,7 @@ func _ready() -> void:
 	alerts.name = "Alerts"
 	alerts.setup(_world)
 	add_child(alerts)
+	alerts.minimum_size_changed.connect(_queue_layout)
 	# M-LOOP §2.2: decision card panel, above the alerts on the right.
 	cards = CardPanel.new()
 	cards.name = "CardPanel"
@@ -117,6 +121,8 @@ func _ready() -> void:
 	cards.roles_requested.connect(_on_roles_requested)
 	cards.build_requested.connect(_on_build_requested)
 	add_child(cards)
+	cards.minimum_size_changed.connect(_queue_layout)
+	(cards.get("_column") as Control).minimum_size_changed.connect(_queue_layout)
 	_actions = HBoxContainer.new()
 	_actions.name = "Actions"
 	_actions.add_theme_constant_override("separation", 8)
@@ -216,6 +222,19 @@ func _locale_changed(_language: String) -> void:
 					(child as Button).text = "%s (%s)" % [_loc(str(entry["text_key"])), Catalog.input_text(entry)]
 	_layout.call_deferred()
 
+## Container minimums settle after rebuilt/localized card children are laid out.
+func _queue_layout() -> void:
+	if _layout_queued:
+		return
+	_layout_queued = true
+	_flush_layout.call_deferred()
+
+
+func _flush_layout() -> void:
+	_layout_queued = false
+	_layout()
+
+
 func _layout() -> void:
 	if not _mux2_profile:
 		_layout_widgets()
@@ -237,29 +256,35 @@ func _layout_widgets() -> void:
 	helper.size = Vector2.ZERO
 	_right.position = Vector2(area.x - _right.get_combined_minimum_size().x * factor - 12, _legacy.bar_top() - _right.get_combined_minimum_size().y * factor - 12)
 	_actions.position = Vector2(area.x - _actions.get_combined_minimum_size().x * actions_factor - 12, _legacy.top_bottom() + 8)
-	# M-LOOP §2.2: card panel above the alerts, right-aligned.
-	# Limit card panel height so it never pushes alerts off-screen (defect 7).
+	# Containers cannot shrink below their content minimum. Keep the entire card stack
+	# visible, and use a separate column beside the map dock when it cannot fit above it.
 	var cards_top: float = _actions.position.y + _actions.get_combined_minimum_size().y * actions_factor + 8
-	var max_card_height: float = (_right.position.y - cards_top - 80) * 0.5
+	var stack_right: float = area.x - 12
+	var stack_bottom: float = _right.position.y - 12
 	if cards != null and cards.visible:
+		cards.clip_contents = false
+		cards.custom_minimum_size.y = 0
+		cards.size.x = minf(600.0, (area.x - 24) / factor)
+		var natural: Vector2 = Vector2(cards.size.x, cards.content_height())
+		alerts.set_available_height(120.0)
+		var alert_reserve: float = maxf(160.0, alerts.get_combined_minimum_size().y) * factor
+		if cards_top + natural.y * factor + 8 + alert_reserve > stack_bottom:
+			stack_right = _right.position.x - 12
+			stack_bottom = _legacy.bar_top() - 12
+		cards.size.y = minf(natural.y, (stack_bottom - cards_top - 8 - alert_reserve) / factor)
 		cards.scale = Vector2.ONE * factor
-		var card_height: float = cards.get_combined_minimum_size().y * factor
-		if card_height > max_card_height and max_card_height > 0:
-			cards.clip_contents = true
-			cards.custom_minimum_size.y = max_card_height / factor
-			cards.size.y = max_card_height / factor
-			card_height = max_card_height
-		else:
-			cards.clip_contents = false
-			cards.custom_minimum_size.y = 0
-		cards.position = Vector2(area.x - cards.get_combined_minimum_size().x * factor - 12, cards_top)
-		cards_top = cards.position.y + card_height + 8
-	alerts.position = Vector2(area.x - alerts.get_combined_minimum_size().x * factor - 12, cards_top)
-	alerts.set_available_height((_right.position.y - alerts.position.y - 12) / factor)
+		cards.position = Vector2(stack_right - cards.size.x * factor, cards_top)
+		cards_top = cards.position.y + cards.size.y * factor + 8
+	alerts.set_available_height((stack_bottom - cards_top) / factor)
+	alerts.size = alerts.get_combined_minimum_size()
+	alerts.position = Vector2(stack_right - alerts.size.x * factor, cards_top)
 	var bottom: float = _legacy.bar_top() - 64
 	helper.position = Vector2(12, bottom - helper.get_combined_minimum_size().y * factor)
 	_legacy.set_content_top(alerts.position.y)
 	_legacy.apply_scale(factor, area, minf(alerts.position.x, _right.position.x) - 12)
+	var plaque: Node = get_node_or_null("../TaskPlaque")
+	if plaque != null and plaque.is_node_ready():
+		plaque.call("_place")
 	for panel: Control in [help, goals, settings]:
 		if panel.visible:
 			panel.call("center_in_viewport")

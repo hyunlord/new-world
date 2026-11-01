@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1434,
+    "active_key_count": 1438,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1434,
+    "key_count": 1438,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -485,7 +485,7 @@
     "M55_CHRON_MIGRANTS_UNANSWERED_FMT": "답이 없자 {neighbour}의 이주민 {count}명이 돌아갔다",
     "M55_CHRON_MIGRANT_JOINED_ONE_FMT": "{neighbour}에서 온 {person}가 마을 사람이 되었다",
     "M55_CHRON_TRADED_FMT": "{neighbour} 교역 무리와 거래했다 (준 값 {give} · 받은 값 {take})",
-    "M55_CHRON_TRADER_ARRIVED_FMT": "{neighbour} 교역 무리가 왔다",
+    "M55_CHRON_TRADER_ARRIVED_FMT": "{neighbour} 교역 무리가 왔다. 교역 가능한 이웃이 계절 교역 일정에 따라 보낸 방문입니다.",
     "M55_CHRON_TRADER_LEFT_FMT": "{neighbour} 교역 무리가 떠났다",
     "M55_DIR_EAST": "동",
     "M55_DIR_NORTH": "북",
@@ -749,6 +749,10 @@
     "M6A_WINTER_DAYS": "겨울 준비: 저장 {stored_days}일분 / 필요 {needed_days}일분 · 식량 {stored} / {needed}",
     "M6A_WINTER_UNITS": "겨울 준비: 저장 식량 {stored} / 필요 {needed}",
     "M6B_CARD_NOT_APPLIED": "적용되지 않음: {reason}",
+    "M6B_MIGRANT_BEDS": "모두를 위한 지붕 있는 잠자리가 부족해요.",
+    "M6B_MIGRANT_FOOD": "합류 직후 소비량 기준 5일치 식량이 부족해요.",
+    "M6B_MIGRANT_UNKNOWN": "이주민을 맞을 여건을 확인할 수 없어요.",
+    "M6B_MIGRANT_WOOD": "장작이 현재 목표보다 부족해요.",
     "M6B_PLAQUE_CONDITION_FMT": "다음: {condition}",
     "M6B_ROLE_CARE_HAUL": "돌봄 / 운반",
     "M6B_ROLE_CRAFT": "제작",

@@ -192,3 +192,132 @@ fn the_baseline_world_has_no_neighbours() {
         .iter()
         .all(|f| *f == 0));
 }
+
+#[test]
+fn wave_initial_food_demand_scales_with_people_and_calendar_without_mutation() {
+    use sim_core::colony::neighbours::{MigrantSpec, Wave};
+    use sim_core::rules::WorldRules;
+    use sim_engine::SimResources;
+
+    let mut res = SimResources::new(20, 20, sim_core::MaterialRegistry::new());
+    res.rules = WorldRules::colony(0);
+    res.colony.neighbours.waves.push(Wave {
+        id: 7,
+        neighbour: 0,
+        people: vec![
+            MigrantSpec {
+                agent: 20,
+                key: 1,
+                female: false,
+                age_years: 20,
+                knowledge: Vec::new(),
+                wrap: false,
+            };
+            4
+        ],
+        pos: (2, 2),
+        path: Vec::new(),
+        state: VisitState::Waiting { since: 0 },
+        day: 0,
+        answer: None,
+        joined: Vec::new(),
+    });
+    let commands = res.colony.command_log.clone();
+    for (ticks_per_day, expected) in [(1_440, 9.6), (720, 4.8)] {
+        res.ticks_per_day = ticks_per_day;
+        let waves = res.colony.neighbours.waves.clone();
+        let view = collect_wave(&res, 7);
+        assert!(view.found);
+        assert_eq!(view.people.len(), 4);
+        assert!((view.food_need_per_day - expected).abs() < 1e-9);
+        assert_eq!(res.colony.neighbours.waves, waves);
+        assert_eq!(res.colony.command_log, commands);
+    }
+    res.colony.neighbours.waves[0].people.clear();
+    assert_eq!(collect_wave(&res, 7).food_need_per_day, 0.0);
+    assert!(!collect_wave(&res, 99).found);
+    assert_eq!(collect_wave(&res, 99).food_need_per_day, 0.0);
+    res.rules = WorldRules::baseline(0);
+    assert!(!collect_wave(&res, 7).found);
+    assert_eq!(collect_wave(&res, 7).food_need_per_day, 0.0);
+}
+
+#[test]
+fn wave_roofed_capacity_excludes_disconnected_beds_and_fails_closed() {
+    use sim_core::colony::materials::OAK;
+    use sim_core::colony::neighbours::{MigrantSpec, Wave};
+    use sim_core::components::Settlement;
+    use sim_core::nav::{CostMap, COST_PLAIN};
+    use sim_core::rooms::{Room, RoomRole};
+    use sim_core::rules::WorldRules;
+    use sim_engine::SimResources;
+
+    let mut res = SimResources::new(12, 6, sim_core::MaterialRegistry::new());
+    res.rules = WorldRules::colony(0);
+    let mut settlement = Settlement::new_with_id(1, 0);
+    settlement.formation_tile = (1, 2);
+    res.settlements.insert(1, settlement);
+    let mut map = CostMap::new(12, 6);
+    for y in 0..6 {
+        map.set((5, y), 0);
+    }
+    res.nav.install(map);
+    for (id, bed, roofed) in [(1, (2, 2), true), (2, (8, 2), true), (3, (3, 2), false)] {
+        res.colony.beds.insert(bed, OAK);
+        res.colony.room_of_tile.insert(bed, id);
+        res.colony.rooms.insert(
+            id,
+            Room {
+                id,
+                tiles: [bed].into(),
+                doors: [(bed.0, bed.1 - 1)].into(),
+                roofed,
+                role: RoomRole::Bedroom,
+                dug: false,
+            },
+        );
+    }
+    res.colony.neighbours.waves.push(Wave {
+        id: 7,
+        neighbour: 0,
+        people: vec![MigrantSpec {
+            agent: 20,
+            key: 1,
+            female: false,
+            age_years: 20,
+            knowledge: Vec::new(),
+            wrap: false,
+        }],
+        pos: (1, 2),
+        path: Vec::new(),
+        state: VisitState::Waiting { since: 0 },
+        day: 0,
+        answer: None,
+        joined: Vec::new(),
+    });
+    let rooms = res.colony.rooms.clone();
+    let beds = res.colony.beds.clone();
+    let commands = res.colony.command_log.clone();
+    let version = res.nav.version;
+    assert_eq!(collect_wave(&res, 7).reachable_roofed_beds, 1);
+    assert_eq!(res.colony.rooms, rooms);
+    assert_eq!(res.colony.beds, beds);
+    assert_eq!(res.colony.command_log, commands);
+    assert_eq!(res.nav.version, version);
+    res.nav.set_cost((5, 2), COST_PLAIN);
+    assert_eq!(collect_wave(&res, 7).reachable_roofed_beds, 2);
+    res.settlements.insert(2, Settlement::new_with_id(2, 0));
+    assert_eq!(collect_wave(&res, 7).reachable_roofed_beds, -1);
+    res.settlements.remove(&2);
+    assert_eq!(collect_wave(&res, 999).reachable_roofed_beds, -1);
+    let settlement = res.settlements.remove(&1).unwrap();
+    assert_eq!(collect_wave(&res, 7).reachable_roofed_beds, -1);
+    res.settlements.insert(1, settlement);
+    res.nav.install(CostMap::default());
+    assert_eq!(collect_wave(&res, 7).reachable_roofed_beds, -1);
+    res.nav.install(CostMap::new(12, 6));
+    res.colony.neighbours.waves[0].people.clear();
+    assert_eq!(collect_wave(&res, 7).reachable_roofed_beds, -1);
+    res.settlements.clear();
+    assert_eq!(collect_wave(&res, 7).reachable_roofed_beds, -1);
+}

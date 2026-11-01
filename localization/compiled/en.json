@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1434,
+    "active_key_count": 1438,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1434,
+    "key_count": 1438,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -485,7 +485,7 @@
     "M55_CHRON_MIGRANTS_UNANSWERED_FMT": "Unanswered, {count} migrants from {neighbour} went home",
     "M55_CHRON_MIGRANT_JOINED_ONE_FMT": "{person} from {neighbour} joined the colony",
     "M55_CHRON_TRADED_FMT": "Traded with {neighbour} (gave {give} · took {take})",
-    "M55_CHRON_TRADER_ARRIVED_FMT": "Traders from {neighbour} arrived",
+    "M55_CHRON_TRADER_ARRIVED_FMT": "Traders from {neighbour} arrived. Eligible trading neighbours send these visits on the seasonal trade schedule.",
     "M55_CHRON_TRADER_LEFT_FMT": "Traders from {neighbour} left",
     "M55_DIR_EAST": "east",
     "M55_DIR_NORTH": "north",
@@ -749,6 +749,10 @@
     "M6A_WINTER_DAYS": "Winter preparation: stored {stored_days} days / needed {needed_days} days · food {stored} / {needed}",
     "M6A_WINTER_UNITS": "Winter preparation: stored food {stored} / needed {needed}",
     "M6B_CARD_NOT_APPLIED": "Not applied: {reason}",
+    "M6B_MIGRANT_BEDS": "Not enough roofed beds for everyone.",
+    "M6B_MIGRANT_FOOD": "Food is below 5 days at the arrival rate.",
+    "M6B_MIGRANT_UNKNOWN": "Arrival needs could not be confirmed.",
+    "M6B_MIGRANT_WOOD": "Wood is below the current target.",
     "M6B_PLAQUE_CONDITION_FMT": "Next: {condition}",
     "M6B_ROLE_CARE_HAUL": "Care / haul",
     "M6B_ROLE_CRAFT": "Craft",

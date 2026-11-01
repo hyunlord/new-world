@@ -1203,6 +1203,8 @@ three knowledge slots per person (their best by ‰, then node id), padded with 
 | `neighbour` | int | its neighbour id |
 | `state` | int | as `wave_states` |
 | `deadline` | int | as `wave_deadline` |
+| `food_need_per_day` | float | Total initial warm nominal food units per configured day for the wave, using the simulation adult-demand projection and actual wave size. Does not forecast future cold, spoilage, or accessible supply; zero when not found. |
+| `reachable_roofed_beds` | int | Current completed bedroll count in roofed rooms reachable from the sole settlement's formation tile using the native bed-assignment navigation predicate, before subtracting incumbents. Excludes planned beds, unroofed beds, huts and shelters; room role does not restrict eligibility. `-1` for absent/empty wave, zero/multiple settlements, disabled native bed/space rules, or unavailable/mismatched navigation map. This conservative current capacity is not a forecast or reservation of future beds. |
 | `agents` | PackedInt64Array | the `AgentId` each will have when the wave joins (reserved when it set out; names) |
 | `female` | PackedInt32Array | 1 a woman |
 | `age_years` | PackedInt32Array | age in years |

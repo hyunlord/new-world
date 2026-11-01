@@ -709,7 +709,7 @@
 	"M55_CHRON_MIGRANT_JOINED_ONE_FMT": "{person} from {neighbour} joined the colony",
 	"M55_CHRON_MIGRANTS_DECLINED_FMT": "Sent {count} migrants from {neighbour} away",
 	"M55_CHRON_MIGRANTS_UNANSWERED_FMT": "Unanswered, {count} migrants from {neighbour} went home",
-	"M55_CHRON_TRADER_ARRIVED_FMT": "Traders from {neighbour} arrived",
+	"M55_CHRON_TRADER_ARRIVED_FMT": "Traders from {neighbour} arrived. Eligible trading neighbours send these visits on the seasonal trade schedule.",
 	"M55_CHRON_TRADED_FMT": "Traded with {neighbour} (gave {give} · took {take})",
 	"M55_CHRON_GIFT_FMT": "Gave {neighbour} a gift (worth {give})",
 	"M55_CHRON_TRADER_LEFT_FMT": "Traders from {neighbour} left",
@@ -1419,5 +1419,9 @@
 	"M6B_ROLE_CRAFT": "Craft",
 	"M6B_ROLE_CARE_HAUL": "Care / haul",
 	"M6B_PLAQUE_CONDITION_FMT": "Next: {condition}",
-	"M6B_CARD_NOT_APPLIED": "Not applied: {reason}"
+	"M6B_CARD_NOT_APPLIED": "Not applied: {reason}",
+	"M6B_MIGRANT_UNKNOWN": "Arrival needs could not be confirmed.",
+	"M6B_MIGRANT_BEDS": "Not enough roofed beds for everyone.",
+	"M6B_MIGRANT_WOOD": "Wood is below the current target.",
+	"M6B_MIGRANT_FOOD": "Food is below 5 days at the arrival rate."
 }

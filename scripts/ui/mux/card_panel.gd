@@ -43,6 +43,7 @@ var _skipped_results: Array[Dictionary] = []
 var _last_tick: int = -1
 var _clear_polls_needed: int = DEFAULT_CLEAR_POLLS
 var _column: VBoxContainer = null
+var _scroll: ScrollContainer = null
 var _title: Label = null
 var _card_list: VBoxContainer = null
 var _fold_label: Label = null
@@ -58,6 +59,8 @@ func _ready() -> void:
 		_world.connect("world_reset", _reset)
 	_load_registry()
 	_build_ui()
+	if _locale != null:
+		_locale.connect("language_changed", _rebuild_ui.unbind(1))
 	visible = false
 
 
@@ -80,9 +83,14 @@ func _load_registry() -> void:
 
 
 func _build_ui() -> void:
+	_scroll = ScrollContainer.new()
+	_scroll.name = "CardScroll"
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(_scroll)
 	_column = VBoxContainer.new()
+	_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_column.add_theme_constant_override("separation", 8)
-	add_child(_column)
+	_scroll.add_child(_column)
 	_title = Label.new()
 	_title.theme_type_variation = &"Heading"
 	_column.add_child(_title)
@@ -92,6 +100,11 @@ func _build_ui() -> void:
 	_fold_label = Label.new()
 	_fold_label.add_theme_color_override("font_color", Color("a0a0a0"))
 	_column.add_child(_fold_label)
+
+
+## Full card content height, independent of the bounded scroll viewport.
+func content_height() -> float:
+	return _column.get_combined_minimum_size().y + get_theme_stylebox("panel").get_minimum_size().y
 
 
 func _process(_delta: float) -> void:
@@ -836,44 +849,75 @@ func _has_hunter_blades() -> bool:
 	return false
 
 
-## Whether the settlement can support incoming migrants (beds + food).
-## Returns true when nobody lacks a bed AND food covers at least 3 days.
-## People/settlements in get_ui_facts use parallel-array format.
-func _can_support_migrants(_migrant_count: int) -> bool:
-	if _world == null:
-		return false
+## Recommendation only: current assigned beds, completed roofed capacity, existing
+## fuel target and five days at the initial food rate. This is not a forecast of
+## cold exposure, spoilage or future food production; explicit acceptance remains available.
+func _can_support_migrants(migrant_count: int, wave_id: int = -1) -> bool:
+	return _migrant_shortage(migrant_count, wave_id).is_empty()
+
+
+func _migrant_shortage(migrant_count: int, wave_id: int) -> String:
+	var unknown: String = "M6B_MIGRANT_UNKNOWN"
+	if _world == null or migrant_count <= 0 or wave_id < 0 or not _world.has_method("get_wave") or not _world.has_method("get_ui_facts"):
+		return unknown
+	var wave: Dictionary = _world.call("get_wave", wave_id)
+	if not bool(wave.get("found", false)) or int(wave.get("id", -1)) != wave_id or int(wave.get("state", -1)) != 1:
+		return unknown
+	if not wave.get("agents") is PackedInt64Array or (wave["agents"] as PackedInt64Array).size() != migrant_count:
+		return unknown
+	if not wave.get("food_need_per_day") is float and not wave.get("food_need_per_day") is int:
+		return unknown
+	var incoming_need: float = float(wave["food_need_per_day"])
+	if not is_finite(incoming_need) or incoming_need <= 0.0:
+		return unknown
 	var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
-	# People: parallel arrays {ids, bed_xs, bed_ys, children, ...}.
-	var people: Variant = facts.get("people", {})
-	if not people is Dictionary:
-		return false
-	var bed_xs: Variant = (people as Dictionary).get("bed_xs", PackedInt64Array())
-	var ids: Variant = (people as Dictionary).get("ids", PackedInt64Array())
-	var _total_people: int = 0
-	var people_without_beds: int = 0
-	if bed_xs is PackedInt64Array and ids is PackedInt64Array:
-		_total_people = (ids as PackedInt64Array).size()
-		for bx: int in bed_xs as PackedInt64Array:
-			if bx < 0:
-				people_without_beds += 1
-	# If current people already lack beds, don't accept more.
-	if people_without_beds > 0:
-		return false
-	# Settlements: parallel arrays {ids, food, food_need, ...}.
-	var settlements: Variant = facts.get("settlements", {})
-	if not settlements is Dictionary:
-		return true
-	var food_arr: Variant = (settlements as Dictionary).get("food", PackedInt64Array())
-	var need_arr: Variant = (settlements as Dictionary).get("food_need", PackedFloat64Array())
-	if food_arr is PackedInt64Array and need_arr is PackedFloat64Array:
-		var f_arr: PackedInt64Array = food_arr as PackedInt64Array
-		var n_arr: PackedFloat64Array = need_arr as PackedFloat64Array
-		if f_arr.size() > 0 and n_arr.size() > 0:
-			var food: float = float(f_arr[0])
-			var daily_need: float = float(n_arr[0])
-			if daily_need > 0.0 and food / daily_need < 5.0:
-				return false
-	return true
+	if not bool(facts.get("enabled", false)) or not facts.get("people") is Dictionary or not facts.get("settlements") is Dictionary:
+		return unknown
+	var people: Dictionary = facts["people"]
+	for key: String in ["ids", "bed_xs", "bed_ys"]:
+		if not people.get(key) is PackedInt64Array:
+			return unknown
+	var residents: int = people["ids"].size()
+	if residents <= 0 or people["bed_xs"].size() != residents or people["bed_ys"].size() != residents:
+		return unknown
+	for i: int in residents:
+		if int(people["bed_xs"][i]) < 0 or int(people["bed_ys"][i]) < 0:
+			return "M6B_MIGRANT_BEDS"
+	if not wave.get("reachable_roofed_beds") is int:
+		return unknown
+	var bed_capacity: int = int(wave["reachable_roofed_beds"])
+	if bed_capacity < 0:
+		return unknown
+	if bed_capacity < residents + migrant_count:
+		return "M6B_MIGRANT_BEDS"
+	var settlements: Dictionary = facts["settlements"]
+	for key: String in ["ids", "food", "wood"]:
+		if not settlements.get(key) is PackedInt64Array:
+			return unknown
+	for key: String in ["food_need", "wood_target"]:
+		if not settlements.get(key) is PackedFloat64Array:
+			return unknown
+	var count: int = settlements["ids"].size()
+	if count != 1:
+		return unknown
+	for key: String in ["food", "wood", "food_need", "wood_target"]:
+		if settlements[key].size() != count:
+			return unknown
+	# The native capacity observation is defined only for one settlement.
+	if int(settlements["ids"][0]) < 0:
+		return unknown
+	var destination: int = 0
+	var wood: int = int(settlements["wood"][destination])
+	var target: float = float(settlements["wood_target"][destination])
+	var food: int = int(settlements["food"][destination])
+	var current_need: float = float(settlements["food_need"][destination])
+	if wood < 0 or food < 0 or not is_finite(target) or target < 0.0 or not is_finite(current_need) or current_need <= 0.0:
+		return unknown
+	if float(wood) < target:
+		return "M6B_MIGRANT_WOOD"
+	if float(food) < 5.0 * (current_need + incoming_need):
+		return "M6B_MIGRANT_FOOD"
+	return ""
 
 
 ## Return the effective recommended option index for a card, overriding the static
@@ -907,8 +951,10 @@ func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> i
 		return _steward_option(options, trigger_data)
 	match card_id:
 		"migrants":
-			var migrant_count: int = int(trigger_data.get("count", 1))
-			if not _can_support_migrants(migrant_count):
+			var migrant_count: int = int(trigger_data.get("count", 0))
+			var shortage: String = _migrant_shortage(migrant_count, int(trigger_data.get("wave_id", -1)))
+			trigger_data["support_reason"] = shortage
+			if not shortage.is_empty():
 				# Recommend decline (option 1) instead of accept (option 0).
 				for i: int in options.size():
 					if str(options[i].get("command", "")) == "cmd_decline_migrants":
@@ -999,13 +1045,17 @@ func _build_card_widget(card_id: String, card: Dictionary) -> void:
 	card_panel.add_theme_stylebox_override("panel", style)
 	card_panel.add_child(card_box)
 	_card_list.add_child(card_panel)
+	var effective_rec: int = _effective_recommended(def, trigger_data)
 	var title_label: Label = Label.new()
 	title_label.text = _format_card_text(str(def.get("title_key", "")), trigger_data)
 	title_label.add_theme_color_override("font_color", Color("e8c46e"))
 	card_box.add_child(title_label)
 	var body_label: Label = Label.new()
 	var body_key: String = str(def.get("body_ordered_key", "")) if trigger_data.has("order_id") and def.has("body_ordered_key") else str(def.get("body_key", ""))
-	body_label.text = KoreanText.words(_format_card_text(body_key, trigger_data))
+	var body: String = _format_card_text(body_key, trigger_data)
+	if str(def.get("id", "")) == "migrants" and not str(trigger_data.get("support_reason", "")).is_empty():
+		body += "\n" + _tr(str(trigger_data["support_reason"]))
+	body_label.text = KoreanText.words(body)
 	body_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	body_label.custom_minimum_size.x = 340
 	card_box.add_child(body_label)
@@ -1015,11 +1065,10 @@ func _build_card_widget(card_id: String, card: Dictionary) -> void:
 		failure.text = _tr("M6B_CARD_NOT_APPLIED").format({"reason": str(card["failure_reason"])})
 		failure.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		card_box.add_child(failure)
-	var buttons_row: HBoxContainer = HBoxContainer.new()
+	var buttons_row: HFlowContainer = HFlowContainer.new()
 	buttons_row.add_theme_constant_override("separation", 8)
 	card_box.add_child(buttons_row)
 	var options: Array = def.get("options", [])
-	var effective_rec: int = _effective_recommended(def, trigger_data)
 	for i: int in options.size():
 		var opt: Dictionary = options[i]
 		if _option_hidden(opt, trigger_data):
