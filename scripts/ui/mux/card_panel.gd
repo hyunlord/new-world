@@ -99,7 +99,9 @@ func _process(_delta: float) -> void:
 	if tick < 0 or tick == _last_tick:
 		return
 	@warning_ignore("integer_division")
+	@warning_ignore("integer_division")
 	var current_hour: int = tick / TICKS_PER_HOUR
+	@warning_ignore("integer_division")
 	@warning_ignore("integer_division")
 	var last_hour: int = _last_tick / TICKS_PER_HOUR if _last_tick >= 0 else -1
 	_last_tick = tick
@@ -647,6 +649,7 @@ func _build_trade_terms(caravan_id: int) -> Dictionary:
 		return {"valid": false}
 	# Find colony stock to give that covers the value.
 	var buy_permille: int = int(cv.get("buy_permille", 1000))
+	@warning_ignore("integer_division")
 	var needed_value: int = maxi(1, take_value * buy_permille / 1000)
 	var stock_x: Variant = cv.get("stock_x", PackedInt32Array())
 	var stock_y: Variant = cv.get("stock_y", PackedInt32Array())
@@ -734,10 +737,10 @@ func _can_support_migrants(_migrant_count: int) -> bool:
 		return false
 	var bed_xs: Variant = (people as Dictionary).get("bed_xs", PackedInt64Array())
 	var ids: Variant = (people as Dictionary).get("ids", PackedInt64Array())
-	var total_people: int = 0
+	var _total_people: int = 0
 	var people_without_beds: int = 0
 	if bed_xs is PackedInt64Array and ids is PackedInt64Array:
-		total_people = (ids as PackedInt64Array).size()
+		_total_people = (ids as PackedInt64Array).size()
 		for bx: int in bed_xs as PackedInt64Array:
 			if bx < 0:
 				people_without_beds += 1
