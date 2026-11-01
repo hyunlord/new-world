@@ -1402,5 +1402,8 @@
 	"LOOP_STEWARD_TOOLS": "도구 만들기",
 	"LOOP_PRESSURE_COLD": "한파",
 	"LOOP_PRESSURE_DROUGHT": "가뭄",
-	"LOOP_PRESSURE_WOLVES": "늑대 습격"
+	"LOOP_PRESSURE_WOLVES": "늑대 습격",
+	"LOOP_ALERT_FOOD_LOW": "식량 부족",
+	"LOOP_ALERT_FIREWOOD_LOW": "장작 부족",
+	"LOOP_ALERT_FOLD": "알림 {count}개 더"
 }

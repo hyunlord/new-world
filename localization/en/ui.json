@@ -1402,5 +1402,8 @@
 	"LOOP_STEWARD_TOOLS": "Tool production",
 	"LOOP_PRESSURE_COLD": "Cold snap",
 	"LOOP_PRESSURE_DROUGHT": "Drought",
-	"LOOP_PRESSURE_WOLVES": "Wolf attack"
+	"LOOP_PRESSURE_WOLVES": "Wolf attack",
+	"LOOP_ALERT_FOOD_LOW": "Food shortage",
+	"LOOP_ALERT_FIREWOOD_LOW": "Firewood shortage",
+	"LOOP_ALERT_FOLD": "{count} more alerts"
 }
