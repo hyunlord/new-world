@@ -493,3 +493,47 @@ fn assert_role_completion_replay_and_player_intent(
         assert!(!restored.resources.colony.command_log.iter().any(|r|matches!(&r.command,Command::Steward{command,..} if matches!(**command,Command::SetRoomRole{..}))),"manual role including Auto persists");
     }
 }
+
+/// LOOP-CAL-8: rule 9 (LOOP_STEWARD_TOOLS, axes/blades) is a default
+/// survival rule that fires immediately — it must NOT wait behind a
+/// grace window.  This test fails if rule 9 is marked `extended` with
+/// `grace_ticks`, which would delay tool production and leave defenders
+/// without blades during early wolf attacks.
+#[test]
+fn tools_rule_fires_immediately_without_grace_window() {
+    let mut engine = sim_test::colony_engine(0);
+    submit(
+        &mut engine,
+        Command::SetSteward {
+            on: true,
+            scope: StewardScope::All,
+        },
+    );
+    // Tick through the first steward interval (360 ticks).
+    for _ in 0..360 {
+        engine.tick();
+    }
+    // Rule 9 must have fired: look for a Steward command from rule 9.
+    let rule9_fired = engine
+        .resources
+        .colony
+        .command_log
+        .iter()
+        .any(|r| matches!(&r.command, Command::Steward { rule, .. } if *rule == 9));
+    assert!(
+        rule9_fired,
+        "rule 9 (LOOP_STEWARD_TOOLS) must fire within the first steward \
+         interval (360 ticks); it should not be gated by extended or grace_ticks"
+    );
+    // Rule 6 (Teach, extended with grace) must NOT have fired yet.
+    let rule6_fired = engine
+        .resources
+        .colony
+        .command_log
+        .iter()
+        .any(|r| matches!(&r.command, Command::Steward { rule, .. } if *rule == 6));
+    assert!(
+        !rule6_fired,
+        "rule 6 (Teach) has grace_ticks and should not fire in the first interval"
+    );
+}

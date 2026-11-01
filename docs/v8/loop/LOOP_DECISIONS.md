@@ -241,6 +241,27 @@ before blueprints exist. Candidate = B′-grace + floor. Calibrate on 0–7,
 freeze, then held-out on fresh seeds 1424–1455 (not used previously).
 Record that 1392–1423 was used for A-80 and B′-80.
 
+## LOOP-CAL-8: exempt rule 9 from grace window
+
+**Context (2026-11-01).** p1d held-out (seeds 1424–1455) failed
+wolf_deaths_le1: CAND 29/32 vs BASE 31/32, diff=2.  Seeds 1426 and 1439
+gained wolf deaths because rule 9's grace_ticks=1440 delayed tool
+production by 1 day, leaving defenders without blades.
+
+**Decision.** The owner's LOOP-D-steward item 1 makes tools that
+survival needs count as survival.  The tools-only rule (rule 9,
+axes/blades below need) is part of the default survival set and must
+fire immediately.  The grace window (item 2) applies to what became
+cards: teach (rule 6) and general production bills (rule 4).  p1d
+wrongly put rule 9 behind the grace window.
+
+**Fix.** Remove `extended: true` and `grace_ticks: Some(1440)` from
+rule 9 in steward.ron.  Add a test (`tools_rule_fires_immediately_without_grace_window`)
+that fails if rule 9 is gated by extended or grace_ticks.
+
+**Held-out seeds spent:** 1424–1455 evaluated p1d (wolf deaths failed
+by 2, all else passed).  Fresh held-out uses 1456–1487.
+
 ## LOOP-4: text scale range (§1.2a)
 
 **Context.** M-LOOP brief §1.2 — "today's look is effectively larger — measure
