@@ -204,26 +204,37 @@ func _check_trigger(card_def: Dictionary) -> bool:
 
 
 ## Custom bridge-based trigger checks for cards without a matching alert.
+## Data in get_ui_facts uses parallel-array format (not Array of Dicts).
 func _check_bridge_trigger(read_name: String) -> bool:
 	if _world == null:
 		return false
 	match read_name:
 		"tools_below_need":
 			var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
-			var stacks: Variant = facts.get("stacks", [])
+			# Stacks: {kinds: PackedInt64Array, counts: PackedInt64Array, ...}.
+			var stacks: Variant = facts.get("stacks", {})
 			var tool_count: int = 0
-			if stacks is Array:
-				for stack: Variant in stacks:
-					if stack is Dictionary:
-						var sk: int = int(stack.get("kind", -1))
-						if sk in [3, 4, 5]:
-							tool_count += int(stack.get("count", 0))
-			var people: Variant = facts.get("people", [])
+			if stacks is Dictionary:
+				var kinds: Variant = (stacks as Dictionary).get("kinds", PackedInt64Array())
+				var counts: Variant = (stacks as Dictionary).get("counts", PackedInt64Array())
+				if kinds is PackedInt64Array and counts is PackedInt64Array:
+					var k_arr: PackedInt64Array = kinds as PackedInt64Array
+					var c_arr: PackedInt64Array = counts as PackedInt64Array
+					for i: int in k_arr.size():
+						if int(k_arr[i]) in [3, 4, 5] and i < c_arr.size():
+							tool_count += int(c_arr[i])
+			# People: {ids: PackedInt64Array, children: PackedByteArray, ...}.
+			var people: Variant = facts.get("people", {})
 			var adults: int = 0
-			if people is Array:
-				for p: Variant in people:
-					if p is Dictionary and bool(p.get("adult", false)):
-						adults += 1
+			if people is Dictionary:
+				var ids: Variant = (people as Dictionary).get("ids", PackedInt64Array())
+				var children: Variant = (people as Dictionary).get("children", PackedByteArray())
+				if ids is PackedInt64Array and children is PackedByteArray:
+					var id_arr: PackedInt64Array = ids as PackedInt64Array
+					var ch_arr: PackedByteArray = children as PackedByteArray
+					for i: int in id_arr.size():
+						if i < ch_arr.size() and int(ch_arr[i]) == 0:
+							adults += 1
 			return adults > 0 and tool_count < adults
 	return false
 
@@ -542,51 +553,61 @@ func _has_hunt_zones() -> bool:
 
 
 ## Whether any bladed tool (kind 3, 4, 5 = blade/axe/spear) exists for hunters.
+## Stacks in get_ui_facts use parallel-array format: {kinds: PackedInt64Array, counts: PackedInt64Array, ...}.
 func _has_hunter_blades() -> bool:
 	if _world == null:
 		return false
 	var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
-	var stacks: Variant = facts.get("stacks", [])
-	if stacks is Array:
-		for stack: Variant in stacks:
-			if stack is Dictionary:
-				var sk: int = int(stack.get("kind", -1))
-				if sk in [3, 4, 5]:
-					return true
+	var stacks: Variant = facts.get("stacks", {})
+	if not stacks is Dictionary:
+		return false
+	var kinds: Variant = (stacks as Dictionary).get("kinds", PackedInt64Array())
+	var counts: Variant = (stacks as Dictionary).get("counts", PackedInt64Array())
+	if kinds is PackedInt64Array and counts is PackedInt64Array:
+		var k_arr: PackedInt64Array = kinds as PackedInt64Array
+		var c_arr: PackedInt64Array = counts as PackedInt64Array
+		for i: int in k_arr.size():
+			if int(k_arr[i]) in [3, 4, 5] and i < c_arr.size() and int(c_arr[i]) > 0:
+				return true
 	return false
 
 
 ## Whether the settlement can support incoming migrants (beds + food).
-## Returns true when there are free beds (or shelter) and food for at least 3 days
-## covering the newcomers.
-func _can_support_migrants(migrant_count: int) -> bool:
+## Returns true when nobody lacks a bed AND food covers at least 3 days.
+## People/settlements in get_ui_facts use parallel-array format.
+func _can_support_migrants(_migrant_count: int) -> bool:
 	if _world == null:
 		return false
 	var facts: Dictionary = SimReads.read(_world, "get_ui_facts")
-	# Count people without beds.
-	var people: Variant = facts.get("people", [])
+	# People: parallel arrays {ids, bed_xs, bed_ys, children, ...}.
+	var people: Variant = facts.get("people", {})
+	if not people is Dictionary:
+		return false
+	var bed_xs: Variant = (people as Dictionary).get("bed_xs", PackedInt64Array())
+	var ids: Variant = (people as Dictionary).get("ids", PackedInt64Array())
 	var total_people: int = 0
 	var people_without_beds: int = 0
-	if people is Array:
-		for p: Variant in people:
-			if p is Dictionary:
-				total_people += 1
-				var bed_x: int = int(p.get("bed_x", -1))
-				if bed_x < 0:
-					people_without_beds += 1
+	if bed_xs is PackedInt64Array and ids is PackedInt64Array:
+		total_people = (ids as PackedInt64Array).size()
+		for bx: int in bed_xs as PackedInt64Array:
+			if bx < 0:
+				people_without_beds += 1
 	# If current people already lack beds, don't accept more.
 	if people_without_beds > 0:
 		return false
-	# Check food supply: at least 3 days for current + new people.
-	var settlements: Variant = facts.get("settlements", [])
-	if settlements is Array and (settlements as Array).size() > 0:
-		var s: Dictionary = (settlements as Array)[0] if (settlements as Array)[0] is Dictionary else {}
-		var food: float = float(s.get("food", 0))
-		var daily_need: float = float(s.get("food_need", 1))
-		if daily_need > 0.0:
-			var food_days: float = food / daily_need
-			# Rough: each migrant adds ~1 daily need unit; need 3 days coverage.
-			if food_days < 3.0:
+	# Settlements: parallel arrays {ids, food, food_need, ...}.
+	var settlements: Variant = facts.get("settlements", {})
+	if not settlements is Dictionary:
+		return true
+	var food_arr: Variant = (settlements as Dictionary).get("food", PackedInt64Array())
+	var need_arr: Variant = (settlements as Dictionary).get("food_need", PackedFloat64Array())
+	if food_arr is PackedInt64Array and need_arr is PackedFloat64Array:
+		var f_arr: PackedInt64Array = food_arr as PackedInt64Array
+		var n_arr: PackedFloat64Array = need_arr as PackedFloat64Array
+		if f_arr.size() > 0 and n_arr.size() > 0:
+			var food: float = float(f_arr[0])
+			var daily_need: float = float(n_arr[0])
+			if daily_need > 0.0 and food / daily_need < 3.0:
 				return false
 	return true
 
