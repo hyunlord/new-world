@@ -295,8 +295,20 @@ step 50 read_preservation bash -c '
     "$CAND_PROBE" --scene colony --seeds 0..2 --days 24 --workers 2 --steward on --out "$OUT/head/steward" > /dev/null 2>&1
     "$BASE_PROBE" --scene colony --seeds 0..2 --days 72 --workers 2 --steward on --out "$OUT/base/m6a_steward" > /dev/null 2>&1
     "$CAND_PROBE" --scene colony --seeds 0..2 --days 72 --workers 2 --steward on --out "$OUT/head/m6a_steward" > /dev/null 2>&1
+    # M-LOOP (D-steward): fixtures listed in READ_CHANGED_FIXTURES changed on purpose in a recorded
+    # behaviour commit; they skip the byte comparison but must still lose no knowledge (owner rule).
     for f in determinism soak story neighbours steward m6a_steward; do
-        python3 tools/v8/read_normalise.py "$OUT/base/$f/summary.json" "$OUT/head/$f/summary.json" || exit 1
+        case " ${READ_CHANGED_FIXTURES:-} " in
+            *" $f "*)
+                python3 -c "
+import json, sys
+seeds = json.load(open(sys.argv[1]))[\"seeds\"]
+lost = [s[\"seed\"] for s in seeds if s.get(\"m4\", {}).get(\"lost\")]
+assert not lost, \"KnowledgeLost in changed fixture seeds %s\" % lost
+print(\"CHANGED FIXTURE (recorded behaviour change): \" + sys.argv[2] + \" — 0 KnowledgeLost\")
+" "$OUT/head/$f/summary.json" "$f" || exit 1 ;;
+            *) python3 tools/v8/read_normalise.py "$OUT/base/$f/summary.json" "$OUT/head/$f/summary.json" || exit 1 ;;
+        esac
     done
     grep -q "DETERMINISM PASS" "$OUT/head_determinism.txt" && grep -q "DETERMINISM PASS" "$OUT/base_determinism.txt" || { echo "colony determinism FAIL"; exit 1; }
     echo "READ_PRESERVATION PASS"
