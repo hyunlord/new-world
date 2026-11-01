@@ -1398,5 +1398,9 @@
 	"LOOP_STEWARD_EXTENDED_TIP": "Steward also handles tool production and teaching (default: off)",
 	"LOOP_CARD_TOOLS_LOW": "Tools running low",
 	"LOOP_CARD_TOOLS_LOW_BODY": "Axes or blades are below need — tools must be crafted",
-	"LOOP_CARD_TOOLS_LOW_BILL": "Craft tools"
+	"LOOP_CARD_TOOLS_LOW_BILL": "Craft tools",
+	"LOOP_STEWARD_TOOLS": "Tool production",
+	"LOOP_PRESSURE_COLD": "Cold snap",
+	"LOOP_PRESSURE_DROUGHT": "Drought",
+	"LOOP_PRESSURE_WOLVES": "Wolf attack"
 }

@@ -117,6 +117,12 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 				var opt_text: String = str(options[recommended_idx].get("text_key", ""))
 				answer_log.append({"seed": seed_val, "card": card_id, "option": opt_text, "tick": interval * CARD_CHECK_INTERVAL})
 				await process_frame
+	# Count validation failures from the card panel's command results.
+	if card_panel != null and card_panel.has_method("command_results"):
+		var results: Array = card_panel.call("command_results")
+		for r: Dictionary in results:
+			if not bool(r.get("accepted", false)):
+				val_failures += 1
 	# Collect final state.
 	var agent_snap: Dictionary = SimReads.read(world, "get_agent_snapshot")
 	var alive: int = (agent_snap.get("ids", PackedInt64Array()) as PackedInt64Array).size()

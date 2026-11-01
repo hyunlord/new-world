@@ -1398,5 +1398,9 @@
 	"LOOP_STEWARD_EXTENDED_TIP": "집사가 도구 만들기와 가르치기도 합니다 (기본: 꺼짐)",
 	"LOOP_CARD_TOOLS_LOW": "도구가 부족해요",
 	"LOOP_CARD_TOOLS_LOW_BODY": "도끼나 칼이 부족합니다 — 도구를 만들어야 해요",
-	"LOOP_CARD_TOOLS_LOW_BILL": "도구 만들기"
+	"LOOP_CARD_TOOLS_LOW_BILL": "도구 만들기",
+	"LOOP_STEWARD_TOOLS": "도구 만들기",
+	"LOOP_PRESSURE_COLD": "한파",
+	"LOOP_PRESSURE_DROUGHT": "가뭄",
+	"LOOP_PRESSURE_WOLVES": "늑대 습격"
 }

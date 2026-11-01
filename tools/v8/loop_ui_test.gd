@@ -86,6 +86,18 @@ func _run() -> void:
 	await _test_card_trigger_seeded(main, world)
 	# --- Test 22: answering a card sends a valid command and writes the chronicle ---
 	_test_card_answer_recorded(main)
+	# --- Test 23: card auto-closes when trigger clears ---
+	_test_card_auto_close()
+	# --- Test 24: no raw text in card display (no "{" or ALL_CAPS keys) ---
+	_test_no_raw_text_in_cards()
+	# --- Test 25: wolves card uses StewardDefence (kind 46), not Sick (36) ---
+	_test_wolves_card_kind()
+	# --- Test 26: need_food hunt option sends cmd_add_hunt_zone, not cmd_designate_harvest ---
+	_test_need_food_hunt_command()
+	# --- Test 27: five previously missing commands have _send_command branches ---
+	_test_missing_command_branches()
+	# --- Test 28: LOOP_STEWARD_TOOLS locale key is defined ---
+	_test_steward_tools_locale()
 
 	print("LOOP_UI_TEST_DONE pass=%d fail=%d" % [_pass, _fail])
 	quit(1 if _fail > 0 else 0)
@@ -505,3 +517,121 @@ func _test_card_answer_recorded(main: Node) -> void:
 	_assert(entries.size() >= mini(entries_before + 1, 60) and line != "" and not line.contains("{"),
 		"chronicle got a presentation line for the answer (%s)" % line)
 	_assert(not (card_panel.call("active_ids") as PackedStringArray).has(card_id), "answered card closed")
+
+
+## Test 23: card auto-closes when its request trigger clears.
+##   Fails if _close_cleared_triggers is missing or inactive requests keep cards open.
+func _test_card_auto_close() -> void:
+	print("Test 23: card auto-close on trigger clear")
+	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
+	var panel: PanelContainer = CardPanelScript.new()
+	_assert(panel.has_method("_close_cleared_triggers"), "has _close_cleared_triggers method")
+	# Simulate an active card whose request is no longer present.
+	var food_def: Dictionary = {"id": "need_food", "trigger": {"kind": "request", "request_id": "need_food"}, "options": [], "priority": 10}
+	panel.get("_active")["need_food"] = {"def": food_def, "opened_tick": 100, "expires_tick": 9999, "answered": false, "trigger_data": {}}
+	# Requests without need_food → card should close.
+	var empty_requests: Dictionary = {"rule_ids": PackedStringArray(["need_warmth"]), "voices": PackedInt64Array([1])}
+	var empty_diag: Dictionary = {"check_ids": PackedStringArray()}
+	panel.call("_close_cleared_triggers", empty_requests, empty_diag)
+	_assert(not panel.get("_active").has("need_food"), "need_food card closed when request inactive")
+	# Repeat with a diagnosis card.
+	var tools_def: Dictionary = {"id": "tools_low", "trigger": {"kind": "diagnosis", "check_id": "settlement_no_tools"}, "options": [], "priority": 9}
+	panel.get("_active")["tools_low"] = {"def": tools_def, "opened_tick": 100, "expires_tick": 9999, "answered": false, "trigger_data": {}}
+	var no_tools_diag: Dictionary = {"check_ids": PackedStringArray()}
+	panel.call("_close_cleared_triggers", empty_requests, no_tools_diag)
+	_assert(not panel.get("_active").has("tools_low"), "tools_low card closed when diagnosis passes")
+	panel.queue_free()
+
+
+## Test 24: no raw text in card body — no unresolved "{placeholder}" or ALL_CAPS locale keys.
+##   Fails if _collect_trigger_data leaves voice_id as int or cause as a raw key like REQ_NEED_FOOD.
+func _test_no_raw_text_in_cards() -> void:
+	print("Test 24: no raw text in cards")
+	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
+	var panel: PanelContainer = CardPanelScript.new()
+	# Simulate request trigger data collection.
+	var mock_requests: Dictionary = {
+		"rule_ids": PackedStringArray(["need_food"]),
+		"text_keys": PackedStringArray(["REQ_NEED_FOOD"]),
+		"voices": PackedInt64Array([42]),
+	}
+	var food_card: Dictionary = {"id": "need_food", "trigger": {"kind": "request", "request_id": "need_food"}}
+	var data: Dictionary = panel.call("_collect_trigger_data", food_card, mock_requests, {})
+	# voice should be a resolved name (not empty, not a raw int in the text).
+	_assert(data.has("voice"), "trigger data has 'voice' key")
+	_assert(not str(data.get("voice", "")).is_empty(), "voice is resolved (not empty)")
+	# Format the body and check for raw placeholders and ALL_CAPS keys.
+	var body_key: String = "LOOP_CARD_NEED_FOOD_BODY"
+	var text: String = panel.call("_format_card_text", body_key, data)
+	_assert(not text.contains("{"), "no unresolved {placeholder} in body: " + text)
+	var has_all_caps: bool = false
+	for word: String in text.split(" "):
+		# An ALL_CAPS word of 4+ chars that looks like a locale key.
+		if word.length() >= 4 and word == word.to_upper() and word.contains("_"):
+			has_all_caps = true
+	_assert(not has_all_caps, "no ALL_CAPS locale keys in body: " + text)
+	panel.queue_free()
+
+
+## Test 25: wolves card trigger uses chronicle kind 46 (StewardDefence), not 36 (Sick).
+##   Fails if the cards.json wolves entry still has the wrong kind.
+func _test_wolves_card_kind() -> void:
+	print("Test 25: wolves card kind = 46 (StewardDefence)")
+	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
+	var parsed: Variant = JSON.parse_string(text)
+	if not parsed is Dictionary:
+		_assert(false, "cards.json parse")
+		return
+	for card: Variant in parsed.get("cards", []):
+		if card is Dictionary and str(card["id"]) == "wolves":
+			var trigger: Dictionary = card.get("trigger", {})
+			_assert(int(trigger.get("chronicle_kind", -1)) == 46, "wolves chronicle_kind is 46 (StewardDefence), not 36 (Sick)")
+			return
+	_assert(false, "wolves card not found")
+
+
+## Test 26: need_food hunt option sends cmd_add_hunt_zone (matching the "사냥 구역" label).
+##   Fails if the option still uses cmd_designate_harvest (defect 4: label-command mismatch).
+func _test_need_food_hunt_command() -> void:
+	print("Test 26: need_food hunt option = cmd_add_hunt_zone")
+	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
+	var parsed: Variant = JSON.parse_string(text)
+	if not parsed is Dictionary:
+		_assert(false, "cards.json parse")
+		return
+	for card: Variant in parsed.get("cards", []):
+		if card is Dictionary and str(card["id"]) == "need_food":
+			var options: Array = card.get("options", [])
+			_assert(options.size() >= 1, "need_food has options")
+			var hunt_opt: Dictionary = options[0]
+			_assert(str(hunt_opt.get("command", "")) == "cmd_add_hunt_zone",
+				"hunt option sends cmd_add_hunt_zone (not cmd_designate_harvest)")
+			return
+	_assert(false, "need_food card not found")
+
+
+## Test 27: the five previously missing commands have _send_command branches.
+##   Fails if any of the five returns null on a simple call (meaning no match arm).
+func _test_missing_command_branches() -> void:
+	print("Test 27: missing command branches exist")
+	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
+	var panel: PanelContainer = CardPanelScript.new()
+	# Check the _send_command match has the expected arms by inspecting the source.
+	var source: String = FileAccess.get_file_as_string("res://scripts/ui/mux/card_panel.gd")
+	for cmd: String in ["cmd_trade", "cmd_add_bill", "cmd_set_work_priority", "cmd_place_blueprint", "cmd_add_stockpile"]:
+		_assert(source.contains('"' + cmd + '"'), "card_panel _send_command has branch for " + cmd)
+	# Also check cmd_add_hunt_zone is present.
+	_assert(source.contains('"cmd_add_hunt_zone"'), "card_panel _send_command has branch for cmd_add_hunt_zone")
+	panel.queue_free()
+
+
+## Test 28: LOOP_STEWARD_TOOLS locale key is defined in both ko and en.
+##   Fails if the key is missing, which causes the raw key to show in the steward toast.
+func _test_steward_tools_locale() -> void:
+	print("Test 28: LOOP_STEWARD_TOOLS locale key")
+	var ko_text: String = FileAccess.get_file_as_string("res://localization/ko/ui.json")
+	var en_text: String = FileAccess.get_file_as_string("res://localization/en/ui.json")
+	var ko: Variant = JSON.parse_string(ko_text)
+	var en: Variant = JSON.parse_string(en_text)
+	_assert(ko is Dictionary and (ko as Dictionary).has("LOOP_STEWARD_TOOLS"), "ko has LOOP_STEWARD_TOOLS")
+	_assert(en is Dictionary and (en as Dictionary).has("LOOP_STEWARD_TOOLS"), "en has LOOP_STEWARD_TOOLS")

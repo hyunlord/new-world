@@ -63,6 +63,9 @@ func plaque_slot() -> Dictionary:
 		return {}
 	var factor: float = float(store.value("ui_scale"))
 	var beside: float = (_actions.position.x - 36) / factor
+	# Cap plaque width so it never overlaps the story banner column at x=648 (defect 7).
+	var max_beside: float = (636.0 - 12.0) / factor
+	beside = minf(beside, max_beside)
 	if beside >= PLAQUE_MIN_WIDTH:
 		return {"position": Vector2(12, _legacy.top_bottom() + 8), "width": beside, "factor": factor}
 	return {"position": Vector2(12, alerts.position.y), "width": minf(PLAQUE_MIN_WIDTH * 1.25, (alerts.position.x - 36) / factor), "factor": factor}
@@ -230,11 +233,22 @@ func _layout_widgets() -> void:
 	_right.position = Vector2(area.x - _right.get_combined_minimum_size().x * factor - 12, _legacy.bar_top() - _right.get_combined_minimum_size().y * factor - 12)
 	_actions.position = Vector2(area.x - _actions.get_combined_minimum_size().x * actions_factor - 12, _legacy.top_bottom() + 8)
 	# M-LOOP §2.2: card panel above the alerts, right-aligned.
+	# Limit card panel height so it never pushes alerts off-screen (defect 7).
 	var cards_top: float = _actions.position.y + _actions.get_combined_minimum_size().y * actions_factor + 8
+	var max_card_height: float = (_right.position.y - cards_top - 80) * 0.5
 	if cards != null and cards.visible:
 		cards.scale = Vector2.ONE * factor
+		var card_height: float = cards.get_combined_minimum_size().y * factor
+		if card_height > max_card_height and max_card_height > 0:
+			cards.clip_contents = true
+			cards.custom_minimum_size.y = max_card_height / factor
+			cards.size.y = max_card_height / factor
+			card_height = max_card_height
+		else:
+			cards.clip_contents = false
+			cards.custom_minimum_size.y = 0
 		cards.position = Vector2(area.x - cards.get_combined_minimum_size().x * factor - 12, cards_top)
-		cards_top = cards.position.y + cards.get_combined_minimum_size().y * factor + 8
+		cards_top = cards.position.y + card_height + 8
 	alerts.position = Vector2(area.x - alerts.get_combined_minimum_size().x * factor - 12, cards_top)
 	alerts.set_available_height((_right.position.y - alerts.position.y - 12) / factor)
 	var bottom: float = _legacy.bar_top() - 64

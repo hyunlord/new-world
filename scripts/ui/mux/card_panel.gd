@@ -5,11 +5,13 @@
 #   Card state (open/answered/expired) is presentation only — not saved, not hashed.
 #   After a load, cards rebuild from events of the last in-game day only.
 # Bridge methods: via SimReads get_requests, get_chronicle_since, get_settlement_diagnosis,
-#   get_ui_facts, get_time_snapshot; cmd_* for card answers; signal world_reset.
+#   get_ui_facts, get_time_snapshot, get_world_info, get_agent_snapshot;
+#   cmd_* for card answers; signal world_reset.
 extends PanelContainer
 
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 const Catalog = preload("res://scripts/ui/mux/controls_catalog.gd")
+const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const DiagnosisText = preload("res://scripts/ui/panels/diagnosis_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
@@ -118,9 +120,12 @@ func _poll_triggers() -> void:
 	if day != _handled_day:
 		_handled.clear()
 		_handled_day = day
-	# Check each card definition for triggers.
+	# Read bridge data once per poll.
 	var requests: Dictionary = SimReads.read(_world, "get_requests")
 	var diag: Dictionary = SimReads.read(_world, "get_settlement_diagnosis")
+	# Close active cards whose trigger condition cleared (defect 2).
+	_close_cleared_triggers(requests, diag)
+	# Check each card definition for new triggers.
 	for card_def: Dictionary in _card_defs:
 		var card_id: String = str(card_def["id"])
 		if _active.has(card_id) or _handled.has(card_id):
@@ -148,14 +153,18 @@ func _check_trigger(card_def: Dictionary, requests: Dictionary, diag: Dictionary
 					if rid == req_id:
 						return true
 		"chronicle":
-			# Check recent chronicle entries for matching kind.
-			var chronicle_kind: int = int(trigger.get("chronicle_kind", -1))
-			if chronicle_kind >= 0 and _world.has_method("get_chronicle_since"):
-				var page: Dictionary = _world.get_chronicle_since(maxi(0, _last_tick - 1440), 100)
-				var rows: Variant = page.get("rows", page.get("entries", []))
-				if rows is Array:
-					for entry: Variant in rows:
-						if entry is Dictionary and int(entry.get("kind", -1)) == chronicle_kind:
+			# Bridge get_chronicle_since returns parallel arrays (kind, tick, subject, etc.).
+			# Use ChronicleText.rows() to convert to row dicts, filter by tick for recency.
+			var chronicle_kind_val: int = int(trigger.get("chronicle_kind", -1))
+			if chronicle_kind_val >= 0 and _world.has_method("get_chronicle_since"):
+				var probe: Dictionary = _world.get_chronicle_since(0, 1)
+				var total: int = int(probe.get("total", 0))
+				if total > 0:
+					var start_idx: int = maxi(0, total - 200)
+					var page: Dictionary = _world.get_chronicle_since(start_idx, 200)
+					var min_tick: int = maxi(0, _last_tick - 1440)
+					for row: Dictionary in ChronicleText.rows(page):
+						if int(row.get("kind", -1)) == chronicle_kind_val and int(row.get("tick", 0)) >= min_tick:
 							return true
 		"alert":
 			var alert_id: String = str(trigger.get("alert_id", ""))
@@ -186,10 +195,50 @@ func _check_trigger(card_def: Dictionary, requests: Dictionary, diag: Dictionary
 	return false
 
 
+## Close active cards whose trigger condition has cleared (defect 2: cards stay open with 263 food).
+## Request-triggered cards close when the request is inactive; diagnosis-triggered when the check passes.
+func _close_cleared_triggers(requests: Dictionary, diag: Dictionary) -> void:
+	var to_close: PackedStringArray = PackedStringArray()
+	for card_id: String in _active:
+		var card: Dictionary = _active[card_id]
+		if bool(card.get("answered", false)):
+			continue
+		var def: Dictionary = card.get("def", {})
+		var trigger: Dictionary = def.get("trigger", {})
+		var kind: String = str(trigger.get("kind", ""))
+		match kind:
+			"request":
+				var req_id: String = str(trigger.get("request_id", ""))
+				var rule_ids: Variant = requests.get("rule_ids", PackedStringArray())
+				var found: bool = false
+				if rule_ids is PackedStringArray:
+					for rid: String in rule_ids as PackedStringArray:
+						if rid == req_id:
+							found = true
+							break
+				if not found:
+					to_close.append(card_id)
+			"diagnosis":
+				var check_id: String = str(trigger.get("check_id", ""))
+				var check_ids: Variant = diag.get("check_ids", PackedStringArray())
+				var found: bool = false
+				if check_ids is PackedStringArray:
+					for cid: String in check_ids as PackedStringArray:
+						if cid == check_id:
+							found = true
+							break
+				if not found:
+					to_close.append(card_id)
+	for card_id: String in to_close:
+		_handled[card_id] = true
+		_active.erase(card_id)
+
+
 func _collect_trigger_data(card_def: Dictionary, requests: Dictionary, _diag: Dictionary) -> Dictionary:
 	var data: Dictionary = {}
 	var trigger: Dictionary = card_def.get("trigger", {})
 	var kind: String = str(trigger.get("kind", ""))
+	var lang: String = _current_lang()
 	if kind == "request":
 		var req_id: String = str(trigger.get("request_id", ""))
 		# Bridge returns parallel arrays; find the index of the matching rule_id.
@@ -198,10 +247,82 @@ func _collect_trigger_data(card_def: Dictionary, requests: Dictionary, _diag: Di
 		var text_keys: PackedStringArray = requests.get("text_keys", PackedStringArray())
 		for i: int in rule_ids.size():
 			if rule_ids[i] == req_id:
-				data["voice_id"] = int(voices[i]) if i < voices.size() else -1
-				data["cause"] = str(text_keys[i]) if i < text_keys.size() else ""
+				var voice_id: int = int(voices[i]) if i < voices.size() else -1
+				data["voice_id"] = voice_id
+				# Resolve the name so the body shows a person, not a raw int (defect 6).
+				data["voice"] = Names.present(voice_id, lang) if voice_id >= 0 else ""
+				# Resolve the cause through the locale so the body shows readable text,
+				# not a raw key like REQ_NEED_FOOD (defect 6).
+				var raw_cause: String = str(text_keys[i]) if i < text_keys.size() else ""
+				data["cause"] = _tr(raw_cause) if not raw_cause.is_empty() else ""
 				break
+	elif kind == "chronicle":
+		var chronicle_kind_val: int = int(trigger.get("chronicle_kind", -1))
+		if chronicle_kind_val >= 0 and _world != null and _world.has_method("get_chronicle_since"):
+			var probe: Dictionary = _world.get_chronicle_since(0, 1)
+			var total: int = int(probe.get("total", 0))
+			if total > 0:
+				var start_idx: int = maxi(0, total - 200)
+				var page: Dictionary = _world.get_chronicle_since(start_idx, 200)
+				var min_tick: int = maxi(0, _last_tick - 1440)
+				for row: Dictionary in ChronicleText.rows(page):
+					if int(row.get("kind", -1)) == chronicle_kind_val and int(row.get("tick", 0)) >= min_tick:
+						_extract_chronicle_data(card_def, row, data, lang)
+						break
 	return data
+
+
+## Extract card-specific data from a matching chronicle row.
+func _extract_chronicle_data(card_def: Dictionary, row: Dictionary, data: Dictionary, lang: String) -> void:
+	var card_id: String = str(card_def.get("id", ""))
+	match card_id:
+		"migrants":
+			# MigrantsArrived (38): value = wave << 8 | count.
+			var value: int = int(row.get("value", 0))
+			@warning_ignore("integer_division")
+			data["wave_id"] = value >> 8
+			data["count"] = value & 0xFF
+		"trader":
+			# TraderArrived (41): cause = neighbour id, value = caravan number.
+			data["caravan_id"] = int(row.get("value", 0))
+			data["neighbour_id"] = int(row.get("cause", 0))
+		"knowledge_risk":
+			# KnowledgeAtRisk (27): subject = the sole holder, value = knowledge node id.
+			var subject: int = int(row.get("subject", -1))
+			var node_id: int = int(row.get("value", -1))
+			data["holder"] = Names.present(subject, lang) if subject >= 0 else ""
+			data["teacher"] = subject
+			data["knowledge"] = node_id
+			data["technique"] = _tr("TECH_%d" % node_id) if node_id >= 0 else ""
+			data["learner"] = _find_best_learner(subject)
+		"wolves":
+			# StewardDefence (46): value = recruited count.
+			data["count"] = int(row.get("value", 0))
+		"quarrel":
+			# Quarrel (19): subject = forager a, other = forager b.
+			var subject: int = int(row.get("subject", -1))
+			var other: int = int(row.get("other", -1))
+			data["person1"] = Names.present(subject, lang) if subject >= 0 else ""
+			data["person2"] = Names.present(other, lang) if other >= 0 else ""
+			data["agent_a"] = subject
+			data["agent_b"] = other
+		"pressure":
+			# PressureBegan (29): cause = pressure kind code (0 cold, 1 drought, 2 wolves).
+			var cause: int = int(row.get("cause", 0))
+			var pnames: Array[String] = ["LOOP_PRESSURE_COLD", "LOOP_PRESSURE_DROUGHT", "LOOP_PRESSURE_WOLVES"]
+			data["pressure_name"] = _tr(pnames[cause]) if cause >= 0 and cause < pnames.size() else _tr("UI_UNKNOWN")
+
+
+## Find the best learner for cmd_order_teach: an adult who is not the teacher.
+func _find_best_learner(teacher_id: int) -> int:
+	if _world == null:
+		return -1
+	var snap: Dictionary = SimReads.read(_world, "get_agent_snapshot")
+	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
+	for agent_bits: int in ids:
+		if agent_bits != teacher_id and agent_bits > 0:
+			return agent_bits
+	return -1
 
 
 func _check_expiry() -> void:
@@ -262,18 +383,34 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> Var
 	if _world == null:
 		return null
 	var _params: String = str(option.get("params", ""))
+	var info: Dictionary = {}
+	var cx: int = 32
+	var cy: int = 32
 	match command:
 		"cmd_designate_chop":
 			# Designate chopping on nearest trees — uses a simplified area near camp.
-			var info: Dictionary = SimReads.read(_world, "get_world_info")
-			var cx: int = int(info.get("camp_x", 32))
-			var cy: int = int(info.get("camp_y", 32))
+			info = SimReads.read(_world, "get_world_info")
+			cx = int(info.get("camp_x", 32))
+			cy = int(info.get("camp_y", 32))
 			return SimReads.mutate(_world, "cmd_designate_chop", [cx - 3, cy - 3, cx + 3, cy + 3])
+		"cmd_add_hunt_zone":
+			# Add a hunt zone near camp (defect 4: label "사냥 구역" must match this command).
+			info = SimReads.read(_world, "get_world_info")
+			cx = int(info.get("camp_x", 32))
+			cy = int(info.get("camp_y", 32))
+			return SimReads.mutate(_world, "cmd_add_hunt_zone", [cx - 8, cy - 8, cx + 8, cy + 8])
 		"cmd_designate_harvest":
-			var info: Dictionary = SimReads.read(_world, "get_world_info")
-			var cx: int = int(info.get("camp_x", 32))
-			var cy: int = int(info.get("camp_y", 32))
-			return SimReads.mutate(_world, "cmd_designate_harvest", [cx - 4, cy - 4, cx + 4, cy + 4])
+			# Designate harvest on the nearest ripe area (search outward from camp).
+			info = SimReads.read(_world, "get_world_info")
+			cx = int(info.get("camp_x", 32))
+			cy = int(info.get("camp_y", 32))
+			# Try progressively larger areas to find harvestable tiles (defect 3).
+			for radius: int in [6, 10, 16]:
+				var result: Variant = SimReads.mutate(_world, "cmd_designate_harvest", [cx - radius, cy - radius, cx + radius, cy + radius])
+				if result is Dictionary and bool(result.get("accepted", false)):
+					return result
+			# Fallback: return the last attempt.
+			return SimReads.mutate(_world, "cmd_designate_harvest", [cx - 16, cy - 16, cx + 16, cy + 16])
 		"cmd_accept_migrants":
 			var trigger_data: Dictionary = card.get("trigger_data", {})
 			var wave: int = int(trigger_data.get("wave_id", 0))
@@ -300,6 +437,37 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> Var
 			for agent_id: Variant in recommended:
 				last = SimReads.mutate(_world, "cmd_draft", [int(agent_id), true])
 			return last
+		"cmd_trade":
+			# Trade with the caravan: accept first available terms (defect 5).
+			var trigger_data: Dictionary = card.get("trigger_data", {})
+			var caravan: int = int(trigger_data.get("caravan_id", 0))
+			# Simple accept: give nothing, take the first offered good.
+			return SimReads.mutate(_world, "cmd_trade", [caravan, PackedInt32Array(), PackedInt32Array([0, 1])])
+		"cmd_add_bill":
+			# Add a tool bill at the first available workshop (defect 5).
+			info = SimReads.read(_world, "get_world_info")
+			var workshops: Variant = info.get("workshops", PackedInt64Array())
+			if workshops is PackedInt64Array and (workshops as PackedInt64Array).size() > 0:
+				var ws_id: int = int((workshops as PackedInt64Array)[0])
+				return SimReads.mutate(_world, "cmd_add_bill", [ws_id, "stone_axe", "make", 1])
+		"cmd_set_work_priority":
+			# Separate quarrelling pair by changing one person's priority (defect 5).
+			var trigger_data: Dictionary = card.get("trigger_data", {})
+			var agent_a: int = int(trigger_data.get("agent_a", -1))
+			if agent_a >= 0:
+				return SimReads.mutate(_world, "cmd_set_work_priority", [agent_a, "chop", 3])
+		"cmd_place_blueprint":
+			# Place a storehouse blueprint near camp (defect 5).
+			info = SimReads.read(_world, "get_world_info")
+			cx = int(info.get("camp_x", 32))
+			cy = int(info.get("camp_y", 32))
+			return SimReads.mutate(_world, "cmd_place_blueprint", ["storehouse", cx + 4, cy + 4])
+		"cmd_add_stockpile":
+			# Expand stockpile zone near camp (defect 5).
+			info = SimReads.read(_world, "get_world_info")
+			cx = int(info.get("camp_x", 32))
+			cy = int(info.get("camp_y", 32))
+			return SimReads.mutate(_world, "cmd_add_stockpile", [cx - 3, cy - 3, cx + 3, cy + 3])
 	return null
 
 
@@ -382,6 +550,23 @@ func _format_card_text(key: String, data: Dictionary) -> String:
 	var text: String = _tr(key)
 	for field: String in data:
 		text = text.replace("{" + field + "}", str(data[field]))
+	# Strip any remaining unresolved {placeholders} so raw keys never show (defect 6).
+	while "{" in text:
+		var start: int = text.find("{")
+		var end: int = text.find("}", start)
+		if end < 0:
+			break
+		# Only strip lowercase-and-underscore placeholders (not user text).
+		var inner: String = text.substr(start + 1, end - start - 1)
+		var is_placeholder: bool = not inner.is_empty()
+		for ch: String in inner:
+			if ch != "_" and not (ch >= "a" and ch <= "z") and not (ch >= "0" and ch <= "9"):
+				is_placeholder = false
+				break
+		if is_placeholder:
+			text = text.left(start) + text.substr(end + 1)
+		else:
+			break
 	return text
 
 
@@ -440,6 +625,12 @@ func _tr(key: String) -> String:
 	if _locale != null and _locale.has_method("ltr"):
 		return KoreanText.words(str(_locale.call("ltr", key)))
 	return key
+
+
+func _current_lang() -> String:
+	if _locale != null and "_current_lang" in _locale:
+		return str(_locale.get("_current_lang"))
+	return "ko"
 
 
 ## Bridge results of card answers since the last reset (for tests and the cards run).

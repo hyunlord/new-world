@@ -9,7 +9,7 @@
       "title_key": "LOOP_CARD_NEED_FOOD",
       "body_key": "LOOP_CARD_NEED_FOOD_BODY",
       "options": [
-        {"text_key": "LOOP_CARD_NEED_FOOD_HUNT", "command": "cmd_designate_harvest", "params": "near_camp", "recommended": true},
+        {"text_key": "LOOP_CARD_NEED_FOOD_HUNT", "command": "cmd_add_hunt_zone", "params": "near_camp", "recommended": true},
         {"text_key": "LOOP_CARD_NEED_FOOD_GATHER", "command": "enter_zone_tool", "params": "gather", "recommended": false},
         {"text_key": "LOOP_CARD_STEWARD", "command": "steward_default", "params": "", "recommended": false}
       ],
@@ -90,7 +90,7 @@
     },
     {
       "id": "wolves",
-      "trigger": {"kind": "chronicle", "chronicle_kind": 36},
+      "trigger": {"kind": "chronicle", "chronicle_kind": 46},
       "title_key": "LOOP_CARD_WOLVES",
       "body_key": "LOOP_CARD_WOLVES_BODY",
       "options": [
