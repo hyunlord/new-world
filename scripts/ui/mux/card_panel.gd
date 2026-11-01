@@ -11,6 +11,7 @@ extends PanelContainer
 
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
+const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const THEME = preload("res://assets/ui/worldsim_theme.tres")
 const CARDS_PATH: String = "res://assets/ui/cards.json"
@@ -294,7 +295,7 @@ func _collect_trigger_data(card_def: Dictionary) -> Dictionary:
 					var cause: Dictionary = causes[0]
 					data["holder"] = Names.present(int(cause.get("id", -1)), lang) if int(cause.get("id", -1)) >= 0 else ""
 					data["teacher"] = int(cause.get("id", -1))
-					data["technique"] = _tr("TECH_%d" % int(cause.get("id", 0)))
+					data["technique"] = KnowledgeText.node_name(_locale, int(cause.get("id", 0)))
 					data["learner"] = _find_best_learner(int(cause.get("id", -1)))
 					data["knowledge"] = -1
 			"wolves":
