@@ -66,6 +66,10 @@ var _year_key: int = -2
 var _grouping_rules: Dictionary = {}
 ## M-READ: subjects highlighted on the map from an expanded group (cleared on close or new group).
 var _highlighted_subjects: PackedInt64Array = PackedInt64Array()
+## M-LOOP §2.5: notable/all toggle; default shows only notable kinds.
+var _show_all: bool = false
+var _notable_kinds: Array[int] = []
+var _notable_button: Button = null
 
 func _ready() -> void:
 	if not configure_feed_visibility(JSON.parse_string(FileAccess.get_file_as_string(FEED_PATH))):
@@ -102,6 +106,14 @@ func _ready() -> void:
 	_person_button.focus_mode = Control.FOCUS_NONE
 	_person_button.toggled.connect(set_person_only)
 	filters.add_child(_person_button)
+	# M-LOOP §2.5: notable/all toggle — default shows only notable kinds.
+	_notable_button = Button.new()
+	_notable_button.name = "NotableFilter"
+	_notable_button.toggle_mode = true
+	_notable_button.focus_mode = Control.FOCUS_NONE
+	_notable_button.set_pressed_no_signal(not _show_all)
+	_notable_button.toggled.connect(_toggle_notable)
+	filters.add_child(_notable_button)
 	_year_label = Label.new()
 	_year_label.name = "YearSummary"
 	_year_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -151,17 +163,27 @@ func _process(_delta: float) -> void:
 
 ## Initialize presentation policy before ingestion. Unspecified kinds retain the notable-kind default.
 ## Invalid documents leave the previous policy intact; no simulation records are changed.
+## M-LOOP §2.5: schema 2 adds notable_kinds and routine_kinds arrays.
 func configure_feed_visibility(raw: Variant) -> bool:
 	if not raw is Dictionary:
 		return false
 	var document: Dictionary = raw
-	if document.size() != 2 or document.get("schema_version", 0) != 1 or not document.get("kind_visibility") is Dictionary:
+	var version: int = int(document.get("schema_version", 0))
+	if version < 1 or version > 2 or not document.get("kind_visibility") is Dictionary:
 		return false
 	var rules: Dictionary = document["kind_visibility"]
 	for key: Variant in rules:
 		if not key is String or not str(key).is_valid_int() or int(key) < 0 or str(int(key)) != str(key) or not rules[key] is bool:
 			return false
 	_feed_visibility = rules.duplicate()
+	# M-LOOP §2.5: load notable_kinds for the default feed filter.
+	if version >= 2:
+		_notable_kinds.clear()
+		var notable_raw: Variant = document.get("notable_kinds", [])
+		if notable_raw is Array:
+			for k: Variant in notable_raw:
+				if k is int or k is float:
+					_notable_kinds.append(int(k))
 	return true
 
 func keeps_kind(kind: int) -> bool:
@@ -219,7 +241,7 @@ func _refresh() -> void:
 	var filtered: Array[Dictionary] = []
 	for index: int in range(_entries.size() - 1, -1, -1):
 		var row: Dictionary = _entries[index]
-		if not passes(row, _filter, person if _person_only else -1):
+		if not passes_filtered(row, _filter, person if _person_only else -1):
 			continue
 		filtered.append(row)
 	var ticks_per_day: int = maxi(1, int(info.get("ticks_per_day", 1440)))
@@ -251,8 +273,28 @@ func _refresh_filters() -> void:
 	_filter_box.select(_filter)
 	_person_button.text = Chronicle.loc(_locale, "M5_FILTER_PERSON")
 	_person_button.set_pressed_no_signal(_person_only)
+	# M-LOOP §2.5: notable/all toggle label.
+	if _notable_button != null:
+		_notable_button.text = Chronicle.loc(_locale, "LOOP_CHRON_NOTABLE" if not _show_all else "LOOP_CHRON_ALL")
+		_notable_button.set_pressed_no_signal(not _show_all)
+
+## M-LOOP §2.5: toggle between notable-only and all kinds.
+func _toggle_notable(notable_on: bool) -> void:
+	_show_all = not notable_on
+	_refresh()
+
 
 ## M5: whether `row` shows under kind group `group` (0 all; 5 삶 = no other group) and, when `person` ≥ 0, names them.
+## M-LOOP §2.5: `notable_kinds` filters the default view when non-empty.
+func passes_filtered(row: Dictionary, group: int, person: int) -> bool:
+	# M-LOOP §2.5: when not showing all and notable_kinds is defined, filter to notable only.
+	if not _show_all and not _notable_kinds.is_empty():
+		var kind: int = int(row.get("kind", -1))
+		if kind not in _notable_kinds:
+			return false
+	return passes(row, group, person)
+
+
 static func passes(row: Dictionary, group: int, person: int) -> bool:
 	var kind: int = int(row.get("kind", -1))
 	if group > 0 and group < FILTER_KINDS.size():
