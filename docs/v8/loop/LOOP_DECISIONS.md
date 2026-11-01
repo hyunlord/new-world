@@ -400,3 +400,8 @@ placement timing — not a card logic defect.
 - The M-READ gate mode (READ_GATE_CONFIG) runs with a config pinned to BASE fbc03bddb (`/Users/rexxa/work/loop-data/loop_gate_config.json`, probe and perf binaries with sha256). Launcher: `/Users/rexxa/work/loop-data/loop-gate-run.sh`.
 - Step 50 compares the colony fixtures against the BASE probe. The steward and m6a_steward fixtures changed in the recorded behaviour commits (p1–p1g, LOOP-CAL-1…9), so READ_CHANGED_FIXTURES lists them. They skip the byte comparison but must show 0 KnowledgeLost (owner decision LOOP-D-steward). Determinism, soak, story and neighbours stay byte-identical after normalising.
 - The M-LOOP first-10-minutes test replaces the 30-second test for this pass (brief §4). Step 51 still checks M-READ's recorded result file, which is unchanged.
+
+## LOOP-ENC — command encoding kept stable (gate 1 attempt 2, step 4)
+The full workspace tests (gate step 4) found two problems that the steward commits' scoped test runs had missed:
+- **Command encoding:** p1 inserted `Command::SetStewardExtended` before `DesignateHarvest` and `DeployFoodPot`. That shifted their bincode discriminants, e.g. DesignateHarvest went from 37 to 38. Command logs and saves recorded at BASE would then decode as the wrong commands. The variant now comes last, so every earlier variant keeps its encoding (`harvest_encoding_tests` pins it).
+- **Rule counts:** the steward rule count went from 8 to 9 (rule 9, tools only). The two tests that pinned 8 now pin 9, and the label test checks rule 9's label `LOOP_STEWARD_TOOLS`.

@@ -335,11 +335,6 @@ pub enum Command {
         /// Enable defence when the overall steward is on.
         on: bool,
     },
-    /// Enable extended steward rules (production bills and teach).
-    SetStewardExtended {
-        /// Enable extended rules ("집사가 더 많이").
-        on: bool,
-    },
     /// Mark plants inside an inclusive rectangle for harvest.
     DesignateHarvest {
         /// First corner x.
@@ -355,6 +350,12 @@ pub enum Command {
     DeployFoodPot {
         /// Tile holding the real vessel; deployment never moves it.
         tile: (u32, u32),
+    },
+    /// Enable extended steward rules (production bills and teach). Appended last so every
+    /// earlier variant keeps its saved and replayed encoding (M-LOOP).
+    SetStewardExtended {
+        /// Enable extended rules ("집사가 더 많이").
+        on: bool,
     },
 }
 
