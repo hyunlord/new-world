@@ -2,7 +2,7 @@
 
 **미게시 (2026-11-02): held-out 1680–1711에서 FAIL.** 오너 결정 LOOP-D-teach(2026-11-02 02:10)에 따라 가르치기를 즉시 행동으로 되돌린 후보 p43 `0ac7df82b`를 고정하고 한 번 평가했다. 그 결과 땔감·통나무 상한·KnowledgeLost 합계 막대가 실패했다. `v8/main`은 `fbc03bddb` 그대로이고, 작업은 `v8/loop-review`(`97f453bf4` 이후)에 있다. 전체 gate는 돌리지 않았다(평가 실패로 게시 조건 불충족).
 
-브리프: [LOOP_GOAL](LOOP_GOAL.md) · 결정: [LOOP_DECISIONS](LOOP_DECISIONS.md) · ADR [0056](../../decisions/0056-player-loop-cards-chapters-survival-steward.md) · 오너 플레이 화면: [loop_owner_playtest_2026-11-01.jpg](../../images/loop_owner_playtest_2026-11-01.jpg)
+브리프: [LOOP_GOAL](LOOP_GOAL.md) · 결정: [LOOP_DECISIONS](LOOP_DECISIONS.md) · ADR [0056](../../decisions/0056-player-loop-cards-chapters-survival-steward.md) · 오너 플레이 화면: 저장소 밖 `/Users/rexxa/work/loop-data/owner_playtest_2026-11-01.jpg`(원본 `~/Downloads/owner_playtest_2026-11-01.png`; docs/images 12장 한도)
 
 ## 구현 완료 보고 — M-LOOP
 
