@@ -727,6 +727,8 @@ func _test_tools_low_seeded(main: Node, world: Node) -> void:
 	for _i: int in 5:
 		await process_frame
 	SimReads.mutate(world, "cmd_set_steward", [false, 0])
+	# Explicitly reset card panel state (world_reset signal may not fire headless).
+	card_panel.call("_reset")
 	# Advance a few days so adults exist.
 	reads.call("mutate_raw", "advance_ticks", [2880])
 	await process_frame
