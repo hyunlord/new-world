@@ -299,7 +299,7 @@ func _test_plaque_priority(main: Node) -> void:
 		"plaque title reads 지금 할 일 (got %s)" % (title.text if title != null else "none"))
 	# Owner check 1: the current chapter is visible next to the title ("1장 · … · n/m").
 	var chapter: Label = plaque.find_child("Chapter", true, false) as Label
-	_assert(chapter != null and chapter.text.replace(char(0x2060), "").begins_with("1장"),
+	_assert(chapter != null and chapter.text.replace(char(0x2060), "").contains("1장"),
 		"plaque shows the current chapter (got %s)" % (chapter.text if chapter != null else "none"))
 
 

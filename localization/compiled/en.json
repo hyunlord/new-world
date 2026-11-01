@@ -357,7 +357,7 @@
     "LOOP_CHRON_STEWARD_DECIDED": "Steward decided: {card}",
     "LOOP_HELP_COLLAPSED": "? Help",
     "LOOP_PLAQUE_CARD_FMT": "{title}",
-    "LOOP_PLAQUE_CHAPTER_FMT": "Ch. {n} · {title} · {met}/{total}",
+    "LOOP_PLAQUE_CHAPTER_FMT": "({title} {met}/{total})",
     "LOOP_PLAQUE_IDLE": "Nothing to do — the steward is looking after the village",
     "LOOP_PLAQUE_TITLE": "Current task",
     "LOOP_PRESSURE_COLD": "Cold snap",
