@@ -436,3 +436,21 @@ Do not publish the gate-3 candidate (p42b).
 - **Round 3** (full fuel from summer): exposure deaths 0/8, wolf ≤ 1 8/8, KnowledgeLost 0 = BASE 0; firewood_in_snaps 2/4. Seeds 3 and 5 run dry during snaps; seed 3 also does at BASE.
 - **Reference:** the earlier frozen p1g scores the same 2/4 on these seeds with this scorer. The bar has failed on the calibration seeds for every steward variant; the agent's earlier metric differed.
 - **Decision:** freeze round 3. Firewood in snaps is judged on the held-out run, and this calibration result is reported as is.
+
+## LOOP-HELDOUT-FINAL — single held-out 1680–1711 (frozen p43 `0ac7df82b`): FAIL, not published
+| bar | BASE | candidate | verdict |
+|---|---|---|---|
+| stockpile day 1 | 32/32 | 32/32 | PASS |
+| walled beds by day 10 | 30/32 | 31/32 | PASS |
+| zero cold deaths | 32/32 | 32/32 | PASS |
+| alive on day 48 | 30/32 | 30/32 | PASS |
+| wolf deaths ≤ 1 | 31/32 | 30/32 | PASS |
+| exact ledger | 32/32 | 32/32 | PASS |
+| firewood never zero in snaps (exposed − 1) | 21/24 | 20/22 | FAIL (need 21) |
+| day-5 loose logs ≤ 1.5 × cap | — | 27/32 | FAIL (need 28) |
+| day-24 logs ≤ 1.5 × cap | — | 15/32 | FAIL (need 28) |
+| KnowledgeLost (BASE+1 in ≥ 30/32; total ≤ BASE+3) | total 42 | 31/32, total 47 | FAIL (total) |
+
+- Loose logs on day 5 summed 8864 → 3333, exposure deaths 0 → 0, alive at the end 340 → 336.
+- **Reading:** the seasonal fuel term added in calibration fixed nothing on the calibration seeds' snap bar and doubled the log stock against the earlier cap (p1g: 9088 → 709 on 1488–1519). The log bars fail because the cap target used by the bar does not separate fuel logs from building logs. KnowledgeLost at BASE is already 42 on these seeds (story pressures kill knowledge holders). Immediate teaching keeps the candidate close (47) but outside BASE + 3.
+- **Per the owner's instruction:** evaluate once, so no further tuning or held-out run. The pass is not published. `v8/main` stays at fbc03bddb and the work stays on v8/loop-review. The decisions are listed in LOOP_REPORT "오너 결정 필요".
