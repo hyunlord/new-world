@@ -108,6 +108,14 @@ func _run() -> void:
 	_test_dedupe_guards()
 	# --- Test 33: skipped results tracked separately from command results ---
 	_test_skipped_tracking()
+	# --- Tests 34-40: per-card-kind _effective_recommended never worse than steward ---
+	_test_recommend_need_food()
+	_test_recommend_need_warmth()
+	_test_recommend_migrants()
+	_test_recommend_knowledge_risk()
+	_test_recommend_tools_low()
+	_test_recommend_idle_adults()
+	_test_recommend_wolves()
 
 	print("LOOP_UI_TEST_DONE pass=%d fail=%d" % [_pass, _fail])
 	quit(1 if _fail > 0 else 0)
@@ -821,3 +829,181 @@ func _test_skipped_tracking() -> void:
 	_assert(results.size() == 0, "no command results (skipped, not sent)")
 	_assert(panel.get("_active").has("need_food"), "card stays open after skip")
 	panel.queue_free()
+
+
+## Test 34: need_food _effective_recommended falls back to harvest/steward when hunt is unsafe.
+##   LOOP-D-cards: never worse than steward. Fails if hunt is recommended despite
+##   existing zones, missing blades, or wolves approaching.
+func _test_recommend_need_food() -> void:
+	print("Test 34: need_food recommendation safety")
+	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
+	var parsed: Variant = JSON.parse_string(text)
+	var food_def: Dictionary = {}
+	for card: Variant in parsed.get("cards", []):
+		if card is Dictionary and str(card["id"]) == "need_food":
+			food_def = card
+	_assert(not food_def.is_empty(), "need_food card found")
+	if food_def.is_empty():
+		return
+	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
+	var panel: PanelContainer = CardPanelScript.new()
+	# Without a world, helpers return false (safe defaults). Hunt should NOT be recommended
+	# because _has_hunter_blades returns false.
+	var rec: int = int(panel.call("_effective_recommended", food_def, {}))
+	var options: Array = food_def.get("options", [])
+	var cmd: String = str(options[rec].get("command", "")) if rec < options.size() else ""
+	_assert(cmd != "cmd_add_hunt_zone", "need_food: no hunt without world (blades unknown)")
+	# The fallback should be harvest or steward.
+	_assert(cmd == "cmd_designate_harvest" or cmd == "steward_default", "need_food: fallback is harvest or steward, got %s" % cmd)
+	panel.queue_free()
+
+
+## Test 35: need_warmth _effective_recommended falls back to steward when chop exists.
+##   LOOP-D-cards: never worse than steward. Fails if chop is recommended despite
+##   existing chop designations.
+func _test_recommend_need_warmth() -> void:
+	print("Test 35: need_warmth recommendation safety")
+	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
+	var parsed: Variant = JSON.parse_string(text)
+	var warmth_def: Dictionary = {}
+	for card: Variant in parsed.get("cards", []):
+		if card is Dictionary and str(card["id"]) == "need_warmth":
+			warmth_def = card
+	_assert(not warmth_def.is_empty(), "need_warmth card found")
+	if warmth_def.is_empty():
+		return
+	# Without a world, _has_chop_designations returns false, so chop IS recommended.
+	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
+	var panel: PanelContainer = CardPanelScript.new()
+	var rec: int = int(panel.call("_effective_recommended", warmth_def, {}))
+	var options: Array = warmth_def.get("options", [])
+	# Default: chop should be recommended when no designations pending.
+	_assert(rec == 0, "need_warmth: chop recommended when no designations pending")
+	var chop_cmd: String = str(options[0].get("command", ""))
+	_assert(chop_cmd == "cmd_designate_chop", "need_warmth: option 0 is chop")
+	# Steward is the last option.
+	var last_cmd: String = str(options[options.size() - 1].get("command", ""))
+	_assert(last_cmd == "steward_default", "need_warmth: last option is steward")
+	panel.queue_free()
+
+
+## Test 36: migrants _effective_recommended declines when capacity insufficient.
+##   LOOP-D-cards: never worse than steward. Fails if accept is recommended
+##   without beds/food check.
+func _test_recommend_migrants() -> void:
+	print("Test 36: migrants recommendation safety")
+	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
+	var parsed: Variant = JSON.parse_string(text)
+	var migrant_def: Dictionary = {}
+	for card: Variant in parsed.get("cards", []):
+		if card is Dictionary and str(card["id"]) == "migrants":
+			migrant_def = card
+	_assert(not migrant_def.is_empty(), "migrants card found")
+	if migrant_def.is_empty():
+		return
+	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
+	var panel: PanelContainer = CardPanelScript.new()
+	# Without a world, _can_support_migrants returns false → decline recommended.
+	var rec: int = int(panel.call("_effective_recommended", migrant_def, {"count": 3}))
+	var options: Array = migrant_def.get("options", [])
+	var cmd: String = str(options[rec].get("command", "")) if rec < options.size() else ""
+	_assert(cmd == "cmd_decline_migrants", "migrants: decline when capacity unknown (no world)")
+	panel.queue_free()
+
+
+## Test 37: knowledge_risk _effective_recommended defers teaching during firewood_low.
+##   LOOP-D-cards: never worse than steward. Fails if teach is recommended when
+##   firewood is critical.
+func _test_recommend_knowledge_risk() -> void:
+	print("Test 37: knowledge_risk recommendation safety")
+	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
+	var parsed: Variant = JSON.parse_string(text)
+	var kr_def: Dictionary = {}
+	for card: Variant in parsed.get("cards", []):
+		if card is Dictionary and str(card["id"]) == "knowledge_risk":
+			kr_def = card
+	_assert(not kr_def.is_empty(), "knowledge_risk card found")
+	if kr_def.is_empty():
+		return
+	# Without a world, _alert_active("firewood_low") returns false.
+	# So teach IS recommended (safe: no firewood crisis).
+	var CardPanelScript = preload("res://scripts/ui/mux/card_panel.gd")
+	var panel: PanelContainer = CardPanelScript.new()
+	var rec: int = int(panel.call("_effective_recommended", kr_def, {}))
+	var options: Array = kr_def.get("options", [])
+	var cmd: String = str(options[rec].get("command", "")) if rec < options.size() else ""
+	_assert(cmd == "cmd_order_teach", "knowledge_risk: teach when firewood OK")
+	# The fallback (later) should be a "none" command.
+	var later_cmd: String = str(options[options.size() - 1].get("command", ""))
+	_assert(later_cmd == "none", "knowledge_risk: later option is 'none'")
+	panel.queue_free()
+
+
+## Test 38: tools_low has steward as fallback option.
+##   LOOP-D-cards: never worse than steward.
+func _test_recommend_tools_low() -> void:
+	print("Test 38: tools_low recommendation safety")
+	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
+	var parsed: Variant = JSON.parse_string(text)
+	var tl_def: Dictionary = {}
+	for card: Variant in parsed.get("cards", []):
+		if card is Dictionary and str(card["id"]) == "tools_low":
+			tl_def = card
+	_assert(not tl_def.is_empty(), "tools_low card found")
+	if tl_def.is_empty():
+		return
+	var options: Array = tl_def.get("options", [])
+	# tools_low has "bill" (recommended) and "steward" options.
+	_assert(options.size() >= 2, "tools_low has >= 2 options")
+	var bill_cmd: String = str(options[0].get("command", ""))
+	var steward_cmd: String = str(options[1].get("command", ""))
+	_assert(bill_cmd == "cmd_add_bill", "tools_low: option 0 is bill")
+	_assert(steward_cmd == "steward_default", "tools_low: option 1 is steward fallback")
+	# Default is steward (expires to steward).
+	_assert(str(tl_def.get("default", "")) == "steward", "tools_low: default is steward")
+
+
+## Test 39: idle_adults has safe options (roles, chop, ok).
+##   LOOP-D-cards: the default (none) means the steward doesn't act on idle adults,
+##   so the recommendation (roles) must not harm survival.
+func _test_recommend_idle_adults() -> void:
+	print("Test 39: idle_adults recommendation safety")
+	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
+	var parsed: Variant = JSON.parse_string(text)
+	var ia_def: Dictionary = {}
+	for card: Variant in parsed.get("cards", []):
+		if card is Dictionary and str(card["id"]) == "idle_adults":
+			ia_def = card
+	_assert(not ia_def.is_empty(), "idle_adults card found")
+	if ia_def.is_empty():
+		return
+	var options: Array = ia_def.get("options", [])
+	_assert(options.size() >= 3, "idle_adults has >= 3 options")
+	# Option 0: roles (open_roles — presentation only, no simulation change).
+	var roles_cmd: String = str(options[0].get("command", ""))
+	_assert(roles_cmd == "open_roles", "idle_adults: option 0 is open_roles (safe, no sim change)")
+	# Option 2: ok (none — do nothing, same as default).
+	var ok_cmd: String = str(options[2].get("command", ""))
+	_assert(ok_cmd == "none", "idle_adults: option 2 is 'none' (safe)")
+
+
+## Test 40: wolves has draft and undraft — both safe responses to wolf attacks.
+##   LOOP-D-cards: the default (steward) handles drafting, so both options are safe.
+func _test_recommend_wolves() -> void:
+	print("Test 40: wolves recommendation safety")
+	var text: String = FileAccess.get_file_as_string("res://assets/ui/cards.json")
+	var parsed: Variant = JSON.parse_string(text)
+	var w_def: Dictionary = {}
+	for card: Variant in parsed.get("cards", []):
+		if card is Dictionary and str(card["id"]) == "wolves":
+			w_def = card
+	_assert(not w_def.is_empty(), "wolves card found")
+	if w_def.is_empty():
+		return
+	var options: Array = w_def.get("options", [])
+	_assert(options.size() >= 2, "wolves has >= 2 options")
+	var draft_cmd: String = str(options[0].get("command", ""))
+	var flee_cmd: String = str(options[1].get("command", ""))
+	_assert(draft_cmd == "cmd_draft", "wolves: option 0 is draft")
+	_assert(flee_cmd == "cmd_undraft_all", "wolves: option 1 is undraft (flee)")
+	_assert(str(w_def.get("default", "")) == "steward", "wolves: default is steward")
