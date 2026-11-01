@@ -430,17 +430,16 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 		"cmd_accept_migrants":
 			if not _alert_active("migrants_waiting"):
 				return {"accepted": true, "count": 0, "reason": "already_handled"}
-			# Re-resolve wave_id from current neighbours.
 			var neighbours: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
-			var wave_ids: PackedInt64Array = neighbours.get("wave_ids", PackedInt64Array())
-			var wave: int = int(wave_ids[0]) if wave_ids.size() > 0 else int(trigger_data.get("wave_id", 0))
+			var wids: Variant = neighbours.get("wave_ids", PackedInt64Array())
+			var wave: int = int((wids as PackedInt64Array)[0]) if wids is PackedInt64Array and (wids as PackedInt64Array).size() > 0 else int(trigger_data.get("wave_id", 0))
 			result = SimReads.mutate(_world, "cmd_accept_migrants", [wave])
 		"cmd_decline_migrants":
 			if not _alert_active("migrants_waiting"):
 				return {"accepted": true, "count": 0, "reason": "already_handled"}
 			var neighbours2: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
-			var wave_ids2: PackedInt64Array = neighbours2.get("wave_ids", PackedInt64Array())
-			var wave2: int = int(wave_ids2[0]) if wave_ids2.size() > 0 else int(trigger_data.get("wave_id", 0))
+			var wids2: Variant = neighbours2.get("wave_ids", PackedInt64Array())
+			var wave2: int = int((wids2 as PackedInt64Array)[0]) if wids2 is PackedInt64Array and (wids2 as PackedInt64Array).size() > 0 else int(trigger_data.get("wave_id", 0))
 			result = SimReads.mutate(_world, "cmd_decline_migrants", [wave2])
 		"cmd_undraft_all":
 			return SimReads.mutate(_world, "cmd_undraft_all", [])
@@ -462,10 +461,9 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 		"cmd_trade":
 			if not _alert_active("trader_present"):
 				return {"accepted": true, "count": 0, "reason": "already_handled"}
-			# Re-resolve caravan_id from current neighbours.
 			var neighbours3: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
-			var caravan_ids: PackedInt64Array = neighbours3.get("caravan_ids", PackedInt64Array())
-			var caravan: int = int(caravan_ids[0]) if caravan_ids.size() > 0 else int(trigger_data.get("caravan_id", 0))
+			var cids: Variant = neighbours3.get("caravan_ids", PackedInt64Array())
+			var caravan: int = int((cids as PackedInt64Array)[0]) if cids is PackedInt64Array and (cids as PackedInt64Array).size() > 0 else int(trigger_data.get("caravan_id", 0))
 			result = SimReads.mutate(_world, "cmd_trade", [caravan, PackedInt32Array(), PackedInt32Array([0, 1])])
 		"cmd_add_bill":
 			info = SimReads.read(_world, "get_world_info")
