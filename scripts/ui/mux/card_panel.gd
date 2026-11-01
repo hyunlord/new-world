@@ -313,15 +313,16 @@ func _extract_chronicle_data(card_def: Dictionary, row: Dictionary, data: Dictio
 			data["pressure_name"] = _tr(pnames[cause]) if cause >= 0 and cause < pnames.size() else _tr("UI_UNKNOWN")
 
 
-## Find the best learner for cmd_order_teach: an adult who is not the teacher.
+## Find the best learner for cmd_order_teach: an adult (AgentId) who is not the teacher.
+## Uses get_work_priorities which returns real AgentIds (not entity bits).
 func _find_best_learner(teacher_id: int) -> int:
 	if _world == null:
 		return -1
-	var snap: Dictionary = SimReads.read(_world, "get_agent_snapshot")
-	var ids: PackedInt64Array = snap.get("ids", PackedInt64Array())
-	for agent_bits: int in ids:
-		if agent_bits != teacher_id and agent_bits > 0:
-			return agent_bits
+	var priorities: Dictionary = SimReads.read(_world, "get_work_priorities")
+	var agent_ids: PackedInt64Array = priorities.get("agent_ids", PackedInt64Array())
+	for aid: int in agent_ids:
+		if aid != teacher_id and aid > 0:
+			return aid
 	return -1
 
 
