@@ -421,7 +421,7 @@ func answer_card(card_id: String, option_index: int) -> void:
 	_rebuild_ui()
 
 
-func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Variant:
+func _send_command(command: String, option: Dictionary, card: Dictionary) -> Variant:
 	if _world == null:
 		return {"accepted": false, "skipped": true, "reason": "no_world"}
 	var info: Dictionary = {}
@@ -542,7 +542,7 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			info = SimReads.read(_world, "get_world_info")
 			var workshops: Variant = info.get("workshops", PackedInt64Array())
 			if workshops is PackedInt64Array and (workshops as PackedInt64Array).size() > 0:
-				result = SimReads.mutate(_world, "cmd_add_bill", [int((workshops as PackedInt64Array)[0]), "stone_axe", "make", 1])
+				result = SimReads.mutate(_world, "cmd_add_bill", [int((workshops as PackedInt64Array)[0]), str(option.get("recipe", "")), "make", 1])
 			else:
 				return {"accepted": false, "skipped": true, "reason": "no_workshop"}
 		"cmd_set_work_priority":

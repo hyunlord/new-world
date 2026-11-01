@@ -16,6 +16,9 @@ var _world: Node
 var _locale: Node
 var _list: VBoxContainer
 var _status: Label
+## The fold row (§1.2e): "알림 N개 더" — pressing it shows every alert, pressing again folds them.
+var _fold_button: Button
+var _expanded: bool = false
 var _title: Label
 var _scroll: ScrollContainer
 var _last_rows: Array[Dictionary] = []
@@ -44,16 +47,16 @@ func _fit_rows() -> void:
 	for child: Node in _list.get_children():
 		var row_height: float = (child as Control).get_combined_minimum_size().y
 		var next_height: float = rows_height + (4 if rows_height > 0 else 0) + row_height
-		if next_height > available or visible_count >= MAX_VISIBLE_ROWS:
+		if not _expanded and (next_height > available or visible_count >= MAX_VISIBLE_ROWS):
 			(child as Control).visible = false
 			continue
 		(child as Control).visible = true
 		rows_height = next_height
 		visible_count += 1
 	var hidden: int = _list.get_child_count() - visible_count
-	if hidden > 0 and is_instance_valid(_status):
-		_status.visible = true
-		_status.text = _tr("LOOP_CARD_PANEL_FOLDED").format({"count": hidden})
+	if is_instance_valid(_fold_button):
+		_fold_button.visible = hidden > 0 or _expanded
+		_fold_button.text = _tr("LOOP_ALERTS_FOLD_LESS") if _expanded else _tr("LOOP_ALERTS_FOLDED").format({"count": hidden})
 	_scroll.custom_minimum_size.y = maxf(40, rows_height)
 	size = Vector2.ZERO
 
@@ -84,6 +87,15 @@ func _ready() -> void:
 	_status = Label.new()
 	_status.autowrap_mode = TextServer.AUTOWRAP_WORD
 	column.add_child(_status)
+	_fold_button = Button.new()
+	_fold_button.name = "AlertsFold"
+	_fold_button.flat = true
+	_fold_button.focus_mode = Control.FOCUS_NONE
+	_fold_button.visible = false
+	_fold_button.pressed.connect(func() -> void:
+		_expanded = not _expanded
+		_fit_rows())
+	column.add_child(_fold_button)
 	_scroll = ScrollContainer.new()
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_scroll.custom_minimum_size = Vector2(360, 320)

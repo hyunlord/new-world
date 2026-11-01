@@ -20,6 +20,8 @@ var _locale: Node = null
 var _world_sim: Node = null
 var _panel: PanelContainer
 var _text_label: Label
+## Width of the title/chapter column, taken out of the text width so the plaque keeps its slot.
+const CHAPTER_WIDTH: float = 170.0
 var _title_label: Label
 var _chapter_label: Label
 var _view_button: Button
@@ -57,15 +59,22 @@ func _ready() -> void:
 	inner.add_theme_constant_override("separation", 12)
 	_panel.add_child(inner)
 	# M-LOOP §2.1: the plaque is always titled "지금 할 일" (owner playtest verdict 2).
+	# Title above the current chapter, stacked so the plaque stays inside its slot (it must not
+	# cover the map strip people walk through; mux2 visibility).
+	var head: VBoxContainer = VBoxContainer.new()
+	head.add_theme_constant_override("separation", 0)
+	inner.add_child(head)
 	_title_label = Label.new()
 	_title_label.name = "Title"
 	_title_label.add_theme_color_override("font_color", Color("e8c46e"))
-	inner.add_child(_title_label)
-	# The current chapter, always visible next to the title (owner check 1: "1장: 겨울을 난다 — 조건 0/4").
+	head.add_child(_title_label)
+	# The current chapter, always visible under the title (owner check 1: "1장: 겨울을 난다 — 조건 0/4").
 	_chapter_label = Label.new()
 	_chapter_label.name = "Chapter"
 	_chapter_label.add_theme_color_override("font_color", Color("b8a888"))
-	inner.add_child(_chapter_label)
+	_chapter_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_chapter_label.custom_minimum_size.x = CHAPTER_WIDTH
+	head.add_child(_chapter_label)
 	_text_label = Label.new()
 	_text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_text_label.custom_minimum_size.x = 200
@@ -106,7 +115,7 @@ func _place() -> void:
 		return
 	position = slot["position"]
 	scale = Vector2.ONE * float(slot["factor"])
-	_text_label.custom_minimum_size.x = float(slot["width"]) - 120.0
+	_text_label.custom_minimum_size.x = maxf(120.0, float(slot["width"]) - 120.0 - CHAPTER_WIDTH)
 
 
 func _refresh() -> void:

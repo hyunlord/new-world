@@ -157,14 +157,13 @@ func _show_filtered_log(tile: Vector2i, world: Node) -> void:
 
 
 ## M-LOOP §1.3: filter out entries without a locale label (the unlabeled "기타 사건 기록").
+## An entry is unlabeled exactly when `_format_event` falls back to UI_CAUSAL_EVENT_OTHER, so the
+## filter uses the same labelling as the display (special kinds like building_placed stay).
 func _filter_labeled(history: Array) -> Array:
+	var other: String = _ltr("UI_CAUSAL_EVENT_OTHER")
 	var result: Array = []
 	for event: Variant in history:
-		if not event is Dictionary:
-			continue
-		var kind: String = str(event.get("kind", ""))
-		# Keep all events with a known label key; drop unlabeled ones.
-		if EVENT_LABEL_KEYS.has(kind) or DEATH_REASON_KEYS.has(str(event.get("reason", ""))) or DECISION_REASON_KEYS.has(str(event.get("reason", ""))) or kind in ["combat_started", "combat_completed", "memory_recalled", "pressure_cause"]:
+		if event is Dictionary and not _format_event(event).contains(other):
 			result.append(event)
 	return result
 

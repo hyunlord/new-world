@@ -1717,7 +1717,15 @@ pub fn colony_fingerprint(engine: &SimEngine) -> String {
         let mut state = engine.resources.steward.clone();
         state.replay = false;
         state.pending.clear();
-        text.push_str(&format!("|{state:?}"));
+        // M-LOOP: `extended` is new; while it is off it appends no text, so fingerprints of worlds
+        // that never use it stay byte-identical to the legacy ones (the M-CORE empty-mind rule).
+        let debug = format!("|{state:?}");
+        let debug = if state.extended {
+            debug
+        } else {
+            debug.replace(", extended: false", "")
+        };
+        text.push_str(&debug);
     }
     if !engine.resources.content_state.is_empty() {
         text.push_str(&format!("|{:?}", engine.resources.content_state));

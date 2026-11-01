@@ -73,6 +73,12 @@ func _run() -> void:
 	_check("new alert evaluates actual world facts", matching.size() == 1 and int(matching[0].get("count", 0)) > 0)
 	await process_frame
 	var alert_button: Button = hud.alerts.find_child("test_supply", true, false) as Button
+	# M-LOOP §1.2e: at most 3 rows show; a folded alert stays reachable through the fold row.
+	if alert_button != null and not alert_button.is_visible_in_tree():
+		var fold: Button = hud.alerts.find_child("AlertsFold", true, false) as Button
+		if fold != null and fold.is_visible_in_tree():
+			fold.emit_signal("pressed")
+			await process_frame
 	_check("new alert has actual visible button", alert_button != null and alert_button.is_visible_in_tree())
 	if alert_button != null and matching.size() == 1:
 		_check_alert_label_fit(alert_button, matching[0])

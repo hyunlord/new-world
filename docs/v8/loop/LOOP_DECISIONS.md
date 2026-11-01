@@ -405,3 +405,13 @@ placement timing — not a card logic defect.
 The full workspace tests (gate step 4) found two problems that the steward commits' scoped test runs had missed:
 - **Command encoding:** p1 inserted `Command::SetStewardExtended` before `DesignateHarvest` and `DeployFoodPot`. That shifted their bincode discriminants, e.g. DesignateHarvest went from 37 to 38. Command logs and saves recorded at BASE would then decode as the wrong commands. The variant now comes last, so every earlier variant keeps its encoding (`harvest_encoding_tests` pins it).
 - **Rule counts:** the steward rule count went from 8 to 9 (rule 9, tools only). The two tests that pinned 8 now pin 9, and the label test checks rule 9's label `LOOP_STEWARD_TOOLS`.
+
+## LOOP-GATE2 — fixes from gate attempt 2 (p41)
+- **Screenshot:** the owner's screenshot (6.4 MB PNG) broke the docs rules (no tracked file > 5 MB; no binaries under `docs/` outside `docs/images/`). It is now `docs/images/loop_owner_playtest_2026-11-01.jpg` (1.5 MB JPEG). The brief's path in LOOP_GOAL.md stays verbatim.
+- **Schema:** documented `get_card_harvest_target`, `get_command_log` and `get_steward.extended`.
+- **Content literal:** the tool recipe moved out of card_panel.gd into cards.json (`recipe`), satisfying the extensibility grep.
+- **Alert fold:** a fold row "알림 N개 더 / 접기" makes folded alerts reachable. The data-only extension test opens the fold before it checks the new alert's button.
+- **Causal-panel filter:** the filter now drops exactly the entries the panel itself would label "기타 사건 기록", so building_placed and other specially formatted kinds stay. The earlier key list broke seven M-UX2.1 "왜?" checks.
+- **Plaque layout:** the title and chapter now sit in a narrow stacked column, so the plaque stays inside its slot. The wider plaque had covered a person in the mux2 visibility test.
+- **Normaliser:** the M-LOOP probe observer keys `cap_target_by_day` and `logs_ground_by_day` are instruments, not state; read_normalise and read_gate_checks exclude them.
+- **Fingerprint:** the colony fingerprint appends the steward state's Debug text when defence is non-default. The new `extended: false` field changed that text on 4 days of the story fixture, with every other value equal. Following the M-CORE empty-mind rule, `extended` now appends nothing while it is off, so legacy hashes are identical again.

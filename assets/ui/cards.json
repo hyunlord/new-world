@@ -81,7 +81,7 @@
       "title_key": "LOOP_CARD_TOOLS_LOW",
       "body_key": "LOOP_CARD_TOOLS_LOW_BODY",
       "options": [
-        {"text_key": "LOOP_CARD_TOOLS_LOW_BILL", "command": "cmd_add_bill", "params": "tool_bill", "recommended": true},
+        {"text_key": "LOOP_CARD_TOOLS_LOW_BILL", "command": "cmd_add_bill", "params": "tool_bill", "recipe": "stone_axe", "recommended": true},
         {"text_key": "LOOP_CARD_STEWARD", "command": "steward_default", "params": "", "recommended": false}
       ],
       "default": "steward",

@@ -1525,6 +1525,7 @@ provenance, never inferred task completion. Rules are loaded from data; missing 
 |---|---|---|
 | `enabled` | bool | automatic planning enabled |
 | `defence_enabled` | bool | independent defence policy toggle; defaults true, requires overall enabled |
+| `extended` | bool | M-LOOP "집사가 더 많이": production bills and teaching run immediately; off = they wait for the grace window |
 | `defence_count` | int | actual accepted count in the most recent recruitment batch |
 | `defence_active_count` | int | currently steward-owned defender ids, saturated at i64 maximum |
 | `scope` | int | 0 all, 1 housing, 2 food |
@@ -1818,3 +1819,25 @@ On-demand diagnosis for a stockpile, hearth or room. `kind` is `"stockpile"` (id
 | `check_id` | `String` | Chain link: check id |
 | `text_key` | `String` | Chain link: locale text key |
 | `severity` | `int` | Chain link: severity code |
+
+### `get_card_harvest_target`
+`get_card_harvest_target() -> Dictionary`: `collect_harvest_target(&SimResources)` (`ffi/card_targets.rs`, M-LOOP). The harvest rectangle a food card may offer, validated like `cmd_designate_harvest` (a ripe plant, not already designated, reachable from camp). Read-only.
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | a valid rectangle exists |
+| `x0` | int | first corner x |
+| `y0` | int | first corner y |
+| `x1` | int | opposite corner x |
+| `y1` | int | opposite corner y |
+| `count` | int | harvestable plants inside |
+
+### `get_command_log`
+`get_command_log(start) -> Dictionary`: `command_log_to_dict` (`ffi/card_targets.rs`, M-LOOP). Command-log rows from index `start`. Player and steward commands share the log, which has no source field. Read-only.
+
+| key | type | meaning |
+|---|---|---|
+| `total` | int | rows in the whole log |
+| `ticks` | PackedInt64Array | tick of each returned row |
+| `kinds` | PackedStringArray | command name of each returned row |
+| `accepted` | PackedByteArray | 1 when the command was accepted |

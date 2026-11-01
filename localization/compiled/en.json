@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1420,
+    "active_key_count": 1422,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1420,
+    "key_count": 1422,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -250,6 +250,8 @@
     "LOOK_TOP_FUR_CLOAK": "Fur cloak",
     "LOOK_TOP_HIDE_WRAP": "Hide wrap",
     "LOOK_TOP_LOINCLOTH": "Loincloth",
+    "LOOP_ALERTS_FOLDED": "{count} more alerts",
+    "LOOP_ALERTS_FOLD_LESS": "Fold",
     "LOOP_ALERT_CAUSE_FMT": "{title} {count} ← {cause}",
     "LOOP_ALERT_FIREWOOD_LOW": "Firewood shortage",
     "LOOP_ALERT_FOLD": "{count} more alerts",

@@ -17,6 +17,8 @@ import sys
 # Exactly the new keys M-READ adds to the why-not records in MindState.
 # These are #[serde(skip)] presentation-only fields.
 EXCLUDED_KEYS = [
+    "cap_target_by_day",  # M-LOOP probe observer: steward log-cap target per day (instrument, not state)
+    "logs_ground_by_day", # M-LOOP probe observer: logs on the ground per day (instrument, not state)
     "why_not",          # MindState.why_not (per-person why-not ring)
     "diagnosis_cache",  # SimResources.diagnosis_cache
     "requests_cache",   # SimResources.requests_cache

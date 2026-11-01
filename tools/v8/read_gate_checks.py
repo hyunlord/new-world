@@ -129,7 +129,7 @@ def bench(config_path, log_dir):
 def strip_timing_and_read_keys(obj):
     """Remove timing keys (as identity.sh does) AND the read-only presentation keys."""
     TIMING_KEYS = {"wall_seconds", "ms_per_agent_tick", "timing", "git_sha"}
-    READ_KEYS = {"why_not", "diagnosis_cache", "requests_cache"}
+    READ_KEYS = {"why_not", "diagnosis_cache", "requests_cache", "cap_target_by_day", "logs_ground_by_day"}
     ALL_EXCLUDED = TIMING_KEYS | READ_KEYS
     if isinstance(obj, dict):
         return {k: strip_timing_and_read_keys(v) for k, v in obj.items() if k not in ALL_EXCLUDED}
