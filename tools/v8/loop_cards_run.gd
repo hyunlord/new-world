@@ -117,27 +117,38 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 				var opt_text: String = str(options[recommended_idx].get("text_key", ""))
 				answer_log.append({"seed": seed_val, "card": card_id, "option": opt_text, "tick": interval * CARD_CHECK_INTERVAL})
 				await process_frame
-	# Count validation failures from the card panel's command results.
+	# Count validation failures and breakdown from the card panel's command results.
+	var rejection_breakdown: Dictionary = {}
 	if card_panel != null and card_panel.has_method("command_results"):
 		var results: Array = card_panel.call("command_results")
 		for r: Dictionary in results:
 			if not bool(r.get("accepted", false)):
 				val_failures += 1
-	# Collect final state.
+				var key: String = "%s/%s" % [str(r.get("command", "?")), str(r.get("reason", "?"))]
+				rejection_breakdown[key] = int(rejection_breakdown.get(key, 0)) + 1
+	# Collect final state and death causes.
 	var agent_snap: Dictionary = SimReads.read(world, "get_agent_snapshot")
 	var alive: int = (agent_snap.get("ids", PackedInt64Array()) as PackedInt64Array).size()
 	var tallies: Dictionary = SimReads.read(world, "get_tallies") if world.has_method("get_tallies") else {}
 	var deaths: int = 0
+	var death_causes: Dictionary = {}
 	for key: String in ["deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age", "deaths_exposure"]:
-		deaths += int(tallies.get(key, 0))
+		var count: int = int(tallies.get(key, 0))
+		deaths += count
+		if count > 0:
+			death_causes[key] = count
+	var births: int = int(tallies.get("births", 0))
 	_validation_failures += val_failures
 	return {
 		"seed": seed_val,
 		"alive": alive,
 		"deaths": deaths,
+		"births": births,
+		"death_causes": death_causes,
 		"cards_seen": cards_seen,
 		"cards_answered": cards_answered,
 		"validation_failures": val_failures,
+		"rejection_breakdown": rejection_breakdown,
 		"answer_log": answer_log,
 	}
 
@@ -146,21 +157,48 @@ func _print_summary() -> void:
 	print("\n=== SUMMARY ===")
 	var answer_alive: int = 0
 	var answer_deaths: int = 0
+	var answer_births: int = 0
 	var no_answer_alive: int = 0
 	var no_answer_deaths: int = 0
+	var no_answer_births: int = 0
 	var total_answered: int = 0
+	var answer_death_causes: Dictionary = {}
+	var no_answer_death_causes: Dictionary = {}
+	var all_rejections: Dictionary = {}
 	for r: Dictionary in _results:
 		if str(r["mode"]) == "answer":
 			answer_alive += int(r["alive"])
 			answer_deaths += int(r["deaths"])
+			answer_births += int(r.get("births", 0))
 			total_answered += int(r["cards_answered"])
+			for k: String in r.get("death_causes", {}):
+				answer_death_causes[k] = int(answer_death_causes.get(k, 0)) + int(r["death_causes"][k])
+			for k: String in r.get("rejection_breakdown", {}):
+				all_rejections[k] = int(all_rejections.get(k, 0)) + int(r["rejection_breakdown"][k])
 		else:
 			no_answer_alive += int(r["alive"])
 			no_answer_deaths += int(r["deaths"])
-	print("Answer:    alive=%d deaths=%d cards_answered=%d" % [answer_alive, answer_deaths, total_answered])
-	print("No-answer: alive=%d deaths=%d" % [no_answer_alive, no_answer_deaths])
+			no_answer_births += int(r.get("births", 0))
+			for k: String in r.get("death_causes", {}):
+				no_answer_death_causes[k] = int(no_answer_death_causes.get(k, 0)) + int(r["death_causes"][k])
+	print("Answer:    alive=%d deaths=%d births=%d cards_answered=%d" % [answer_alive, answer_deaths, answer_births, total_answered])
+	print("  death causes: %s" % str(answer_death_causes))
+	print("No-answer: alive=%d deaths=%d births=%d" % [no_answer_alive, no_answer_deaths, no_answer_births])
+	print("  death causes: %s" % str(no_answer_death_causes))
+	# Per-seed survival comparison.
+	for r: Dictionary in _results:
+		if str(r["mode"]) == "answer":
+			var baseline: Dictionary = {}
+			for b: Dictionary in _results:
+				if str(b["mode"]) == "no_answer" and int(b["seed"]) == int(r["seed"]):
+					baseline = b
+			var worse: bool = int(r.get("deaths", 0)) > int(baseline.get("deaths", 0)) + 1
+			if worse:
+				print("  WARN seed %d: answer deaths=%d > baseline+1=%d" % [int(r["seed"]), int(r["deaths"]), int(baseline.get("deaths", 0)) + 1])
 	print("Survival equal or better: %s" % ("PASS" if answer_alive >= no_answer_alive else "FAIL"))
 	print("Validation failures: %d (must be 0: %s)" % [_validation_failures, "PASS" if _validation_failures == 0 else "FAIL"])
+	if not all_rejections.is_empty():
+		print("Rejection breakdown: %s" % str(all_rejections))
 
 
 func _write_result(data: Dictionary) -> void:

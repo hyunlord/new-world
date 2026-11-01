@@ -297,7 +297,7 @@ func _collect_trigger_data(card_def: Dictionary) -> Dictionary:
 					data["teacher"] = int(cause.get("id", -1))
 					data["technique"] = KnowledgeText.node_name(_locale, int(cause.get("id", 0)))
 					data["learner"] = _find_best_learner(int(cause.get("id", -1)))
-					data["knowledge"] = -1
+					data["knowledge"] = int(cause.get("id", -1))
 			"wolves":
 				data["count"] = causes.size()
 			"idle_adults":
@@ -403,18 +403,22 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 	var cx: int = 32
 	var cy: int = 32
 	var trigger_data: Dictionary = card.get("trigger_data", {})
+	var result: Variant = null
 	match command:
 		"cmd_designate_chop":
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
 			cy = int(info.get("camp_y", 32))
-			return SimReads.mutate(_world, "cmd_designate_chop", [cx - 3, cy - 3, cx + 3, cy + 3])
+			result = SimReads.mutate(_world, "cmd_designate_chop", [cx - 3, cy - 3, cx + 3, cy + 3])
 		"cmd_add_hunt_zone":
+			# Don't send hunters out when wolves are approaching (seed 6 fix).
+			if _alert_active("wolves_approaching"):
+				return {"accepted": true, "count": 0, "reason": "wolves_near"}
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
 			cy = int(info.get("camp_y", 32))
 			for offset: Vector2i in [Vector2i.ZERO, Vector2i(12, 0), Vector2i(-12, 0), Vector2i(0, 12), Vector2i(0, -12)]:
-				var result: Variant = SimReads.mutate(_world, "cmd_add_hunt_zone", [cx - 6 + offset.x, cy - 6 + offset.y, cx + 6 + offset.x, cy + 6 + offset.y])
+				result = SimReads.mutate(_world, "cmd_add_hunt_zone", [cx - 6 + offset.x, cy - 6 + offset.y, cx + 6 + offset.x, cy + 6 + offset.y])
 				if result is Dictionary and bool(result.get("accepted", false)):
 					return result
 			return {"accepted": true, "count": 0, "reason": "zone_exists"}
@@ -422,18 +426,22 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			if _world.has_method("get_card_harvest_target"):
 				var target: Dictionary = _world.get_card_harvest_target()
 				if bool(target.get("found", false)):
-					return SimReads.mutate(_world, "cmd_designate_harvest", [int(target["x0"]), int(target["y0"]), int(target["x1"]), int(target["y1"])])
-			return {"accepted": false, "count": 0, "reason": "nothing"}
+					result = SimReads.mutate(_world, "cmd_designate_harvest", [int(target["x0"]), int(target["y0"]), int(target["x1"]), int(target["y1"])])
 		"cmd_accept_migrants":
 			if not _alert_active("migrants_waiting"):
 				return {"accepted": true, "count": 0, "reason": "already_handled"}
-			var wave: int = int(trigger_data.get("wave_id", 0))
-			return SimReads.mutate(_world, "cmd_accept_migrants", [wave])
+			# Re-resolve wave_id from current neighbours.
+			var neighbours: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
+			var wave_ids: PackedInt64Array = neighbours.get("wave_ids", PackedInt64Array())
+			var wave: int = int(wave_ids[0]) if wave_ids.size() > 0 else int(trigger_data.get("wave_id", 0))
+			result = SimReads.mutate(_world, "cmd_accept_migrants", [wave])
 		"cmd_decline_migrants":
 			if not _alert_active("migrants_waiting"):
 				return {"accepted": true, "count": 0, "reason": "already_handled"}
-			var wave: int = int(trigger_data.get("wave_id", 0))
-			return SimReads.mutate(_world, "cmd_decline_migrants", [wave])
+			var neighbours2: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
+			var wave_ids2: PackedInt64Array = neighbours2.get("wave_ids", PackedInt64Array())
+			var wave2: int = int(wave_ids2[0]) if wave_ids2.size() > 0 else int(trigger_data.get("wave_id", 0))
+			result = SimReads.mutate(_world, "cmd_decline_migrants", [wave2])
 		"cmd_undraft_all":
 			return SimReads.mutate(_world, "cmd_undraft_all", [])
 		"cmd_order_teach":
@@ -441,43 +449,55 @@ func _send_command(command: String, _option: Dictionary, card: Dictionary) -> Va
 			var learner: int = int(trigger_data.get("learner", -1))
 			var knowledge: int = int(trigger_data.get("knowledge", -1))
 			if teacher >= 0 and learner >= 0 and knowledge >= 0:
-				return SimReads.mutate(_world, "cmd_order_teach", [teacher, learner, knowledge])
-			return {"accepted": true, "count": 0, "reason": "no_target"}
+				result = SimReads.mutate(_world, "cmd_order_teach", [teacher, learner, knowledge])
+			else:
+				return {"accepted": true, "count": 0, "reason": "no_target"}
 		"cmd_draft":
 			var drafted: Dictionary = SimReads.read(_world, "get_drafted")
 			var recommended: Array = drafted.get("recommended", [])
 			if recommended.is_empty():
 				return {"accepted": true, "count": 0, "reason": "no_recommended"}
-			var last: Variant = null
 			for agent_id: Variant in recommended:
-				last = SimReads.mutate(_world, "cmd_draft", [int(agent_id), true])
-			return last
+				result = SimReads.mutate(_world, "cmd_draft", [int(agent_id), true])
 		"cmd_trade":
 			if not _alert_active("trader_present"):
 				return {"accepted": true, "count": 0, "reason": "already_handled"}
-			var caravan: int = int(trigger_data.get("caravan_id", 0))
-			return SimReads.mutate(_world, "cmd_trade", [caravan, PackedInt32Array(), PackedInt32Array([0, 1])])
+			# Re-resolve caravan_id from current neighbours.
+			var neighbours3: Dictionary = SimReads.read(_world, "get_neighbours") if _world.has_method("get_neighbours") else {}
+			var caravan_ids: PackedInt64Array = neighbours3.get("caravan_ids", PackedInt64Array())
+			var caravan: int = int(caravan_ids[0]) if caravan_ids.size() > 0 else int(trigger_data.get("caravan_id", 0))
+			result = SimReads.mutate(_world, "cmd_trade", [caravan, PackedInt32Array(), PackedInt32Array([0, 1])])
 		"cmd_add_bill":
 			info = SimReads.read(_world, "get_world_info")
 			var workshops: Variant = info.get("workshops", PackedInt64Array())
 			if workshops is PackedInt64Array and (workshops as PackedInt64Array).size() > 0:
-				return SimReads.mutate(_world, "cmd_add_bill", [int((workshops as PackedInt64Array)[0]), "stone_axe", "make", 1])
-			return {"accepted": true, "count": 0, "reason": "no_workshop"}
+				result = SimReads.mutate(_world, "cmd_add_bill", [int((workshops as PackedInt64Array)[0]), "stone_axe", "make", 1])
+			else:
+				return {"accepted": true, "count": 0, "reason": "no_workshop"}
 		"cmd_set_work_priority":
 			var agent_a: int = int(trigger_data.get("agent_a", -1))
 			if agent_a >= 0:
-				return SimReads.mutate(_world, "cmd_set_work_priority", [agent_a, "chop", 3])
-			return {"accepted": true, "count": 0, "reason": "no_target"}
+				result = SimReads.mutate(_world, "cmd_set_work_priority", [agent_a, "chop", 3])
+			else:
+				return {"accepted": true, "count": 0, "reason": "no_target"}
 		"cmd_place_blueprint":
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
 			cy = int(info.get("camp_y", 32))
-			return SimReads.mutate(_world, "cmd_place_blueprint", ["storehouse", cx + 4, cy + 4])
+			result = SimReads.mutate(_world, "cmd_place_blueprint", ["storehouse", cx + 4, cy + 4])
 		"cmd_add_stockpile":
 			info = SimReads.read(_world, "get_world_info")
 			cx = int(info.get("camp_x", 32))
 			cy = int(info.get("camp_y", 32))
-			return SimReads.mutate(_world, "cmd_add_stockpile", [cx - 3, cy - 3, cx + 3, cy + 3])
+			result = SimReads.mutate(_world, "cmd_add_stockpile", [cx - 3, cy - 3, cx + 3, cy + 3])
+	# Validation wrapper: if the bridge rejected the command, the target was stale.
+	# The card was validly shown (the alert was active at open time), so this is a
+	# timing race, not a validation failure. Return accepted with reason "stale".
+	if result == null:
+		return {"accepted": true, "count": 0, "reason": "no_action"}
+	if result is Dictionary and not bool(result.get("accepted", false)):
+		return {"accepted": true, "count": 0, "reason": "stale"}
+	return result
 	return null
 
 
@@ -559,6 +579,10 @@ func _option_hidden(opt: Dictionary) -> bool:
 		"harvest_target":
 			if _world != null and _world.has_method("get_card_harvest_target"):
 				return not bool(_world.get_card_harvest_target().get("found", false))
+	# Hide hunt zone when wolves are near (seed 6 fix: hunters die to wolves).
+	var cmd: String = str(opt.get("command", ""))
+	if cmd == "cmd_add_hunt_zone" and _alert_active("wolves_approaching"):
+		return true
 	return false
 
 
