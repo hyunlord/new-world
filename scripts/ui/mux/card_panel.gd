@@ -763,9 +763,33 @@ func _can_support_migrants(_migrant_count: int) -> bool:
 
 ## Return the effective recommended option index for a card, overriding the static
 ## data when conditions warrant a different recommendation.
+## Cards whose need the steward already covers when it is on (LOOP-D-cards).
+const STEWARD_COVERED_CARDS: Array[String] = ["need_food", "need_warmth", "knowledge_risk", "tools_low", "idle_adults"]
+
+
+func _steward_on() -> bool:
+	if _world == null or not _world.has_method("get_steward"):
+		return false
+	return bool(SimReads.read(_world, "get_steward").get("enabled", false))
+
+
+## The option that leaves the matter to the steward (default "steward" or no command).
+func _steward_option(options: Array) -> int:
+	for i: int in options.size():
+		var cmd: String = str(options[i].get("command", ""))
+		if cmd == "steward_default" or cmd == "none":
+			return i
+	return options.size() - 1
+
+
 func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> int:
 	var card_id: String = str(card_def.get("id", ""))
 	var options: Array = card_def.get("options", [])
+	# LOOP-D-cards: a recommendation must never be worse than the steward. When the steward
+	# is on, it already covers firewood (wood rule), food (food plan + hunt), teaching (grace
+	# fallback), tools (rule 9) and idle work, so those cards recommend leaving it to the steward.
+	if _steward_on() and card_id in STEWARD_COVERED_CARDS:
+		return _steward_option(options)
 	match card_id:
 		"migrants":
 			var migrant_count: int = int(trigger_data.get("count", 1))
