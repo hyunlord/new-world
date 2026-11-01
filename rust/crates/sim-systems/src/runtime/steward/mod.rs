@@ -9,7 +9,7 @@ pub mod food;
 mod house_profile;
 mod housing;
 pub mod lifecycle;
-mod planning;
+pub mod planning;
 mod production;
 use hecs::World;
 use sim_core::colony::{steward::rules, Command};

@@ -146,15 +146,17 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                         .sum::<u32>()
                 })
                 .sum();
-            // When a log cap margin is set, the target is the larger of
-            // (building_need + margin) and (days × fuel) — the floor ensures
-            // the early-game fuel reserve matches BASE even before blueprints
-            // exist, while the cap prevents the uncapped sum that caused the
-            // 304-log over-production.
+            // LOOP-CAL-9: when a log cap is set, the target is the larger
+            // of the existing building need and the pending shelter estimate
+            // (the house the steward is about to place but hasn't yet), plus
+            // the margin.  The 12 × daily_fuel floor is removed — firewood
+            // is capped separately (winter_need × 1.25).  The pending shelter
+            // estimate funds the first house at tick 0, before its blueprints
+            // exist, preventing the 304-log over-production while still
+            // designating enough trees for the house.
             let target = if let Some(margin) = cap_log_margin {
-                building_need
-                    .saturating_add(*margin)
-                    .max(days.saturating_mul(daily_fuel(res)))
+                let pending = pending_shelter_logs(world, res, items);
+                building_need.max(pending).saturating_add(*margin)
             } else {
                 days.saturating_mul(daily_fuel(res))
                     .saturating_add(building_need)
@@ -917,6 +919,133 @@ fn teach(world: &World, res: &SimResources) -> Vec<Command> {
         }
     }
     Vec::new()
+}
+
+/// LOOP-CAL-9: compute the wood cap target for diagnostic output.
+/// Returns `(target, building_need, pending_shelter)` or `None` if the cap
+/// is not active (no `cap_log_margin`).
+pub fn wood_cap_target(world: &World, res: &SimResources) -> Option<(u32, u32, u32)> {
+    let data = sim_core::colony::steward::rules().ok()?;
+    let rule = data.rules.iter().find(|r| {
+        matches!(
+            r.action,
+            sim_core::colony::steward::Action::Wood {
+                cap_log_margin: Some(_),
+                ..
+            }
+        )
+    })?;
+    let sim_core::colony::steward::Action::Wood {
+        items,
+        cap_log_margin: Some(margin),
+        ..
+    } = &rule.action
+    else {
+        return None;
+    };
+    let building_need: u32 = world
+        .query::<&sim_core::colony::MaterialNeeds>()
+        .iter()
+        .map(|(_, n)| {
+            n.used()
+                .filter(|l| items.contains(&l.kind))
+                .map(|l| u32::from(l.needed.saturating_sub(l.delivered)))
+                .sum::<u32>()
+        })
+        .sum();
+    let pending = pending_shelter_logs(world, res, items);
+    let target = building_need.max(pending).saturating_add(*margin);
+    Some((target, building_need, pending))
+}
+
+/// LOOP-CAL-9: estimate the log need for the house the steward is about to
+/// place, before its blueprints exist.  Returns 0 when all agents already
+/// have beds in constructed rooms (nothing pending) or when a house site is
+/// already being prepared.  The estimate uses the same geometry as the house
+/// rule: perimeter walls (2 logs each), one door (1 log), and one bed per
+/// homeless agent (1 log each).
+fn pending_shelter_logs(
+    world: &World,
+    res: &SimResources,
+    log_items: &[sim_core::colony::ItemKind],
+) -> u32 {
+    use sim_core::colony::steward::{rules, Action};
+    use sim_core::colony::BlueprintKind;
+    // If a house site is already being cleared/built, blueprints will appear
+    // and building_need covers them.
+    if !res.colony.space_sites.is_empty() {
+        return 0;
+    }
+    let Ok(data) = rules() else {
+        return 0;
+    };
+    let Some(rule) = data
+        .rules
+        .iter()
+        .find(|r| matches!(r.action, Action::House { .. }))
+    else {
+        return 0;
+    };
+    let Action::House {
+        wall,
+        door,
+        bed,
+        max_beds,
+        service_cells,
+        ..
+    } = rule.action
+    else {
+        return 0;
+    };
+    // Count beds in constructed rooms (same as the house function).
+    let covered = res
+        .colony
+        .beds
+        .keys()
+        .filter(|tile| {
+            res.colony
+                .room_of_tile
+                .get(tile)
+                .and_then(|id| res.colony.rooms.get(id))
+                .is_some_and(|room| super::housing::constructed(res, room))
+        })
+        .count() as u32;
+    let agents = world.query::<&Agent>().iter().count() as u32;
+    let beds = agents.saturating_sub(covered).min(max_beds);
+    if beds == 0 {
+        return 0;
+    }
+    let stock = res.colony.zone_of_tile.len() as u32;
+    let area = beds
+        .saturating_add(service_cells)
+        .saturating_add(stock.min(beds.saturating_add(service_cells)));
+    let mut width = 1u32;
+    while width.saturating_mul(width) < area {
+        width += 1;
+    }
+    let height = area.div_ceil(width).max(2);
+    // Perimeter of the (width+2) × (height+2) external rectangle.
+    let perimeter = 2u32
+        .saturating_mul(width.saturating_add(2))
+        .saturating_add(2u32.saturating_mul(height))
+        .max(4); // at least 4 tiles
+                 // Look up log costs from blueprint data.
+    let bp = |kind: BlueprintKind| {
+        let def = kind.definition();
+        def.needs
+            .iter()
+            .filter(|n| log_items.contains(&n.item))
+            .map(|n| u32::from(n.count))
+            .sum::<u32>()
+    };
+    let wall_cost = bp(wall);
+    let door_cost = bp(door);
+    let bed_cost = bp(bed);
+    // (perimeter - 1) walls + 1 door + beds bedrolls
+    (perimeter.saturating_sub(1))
+        .saturating_mul(wall_cost)
+        .saturating_add(door_cost)
+        .saturating_add(beds.saturating_mul(bed_cost))
 }
 
 fn daily_fuel(res: &SimResources) -> u32 {

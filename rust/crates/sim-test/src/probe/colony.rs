@@ -1839,6 +1839,8 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut designated_tick: Option<u64> = None;
     let mut felled_all_tick: Option<u64> = None;
     let mut loose_day5: Option<u64> = None;
+    let mut logs_ground_by_day: Vec<u64> = Vec::with_capacity(args.days as usize);
+    let mut cap_target_by_day: Vec<Value> = Vec::with_capacity(args.days as usize);
     let (mut ledger_bad, mut reserve_bad, mut first_bad) = (0u64, 0u64, Value::Null);
     let mut fingerprints = BTreeMap::new();
     let mut tick_ns: Vec<u64> = Vec::with_capacity(total as usize);
@@ -2008,6 +2010,25 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
             }
             if after % DAY == 0 {
                 fingerprints.insert(after / DAY, print);
+                // LOOP-CAL-9: per-day log count (ground + in zones) and cap target.
+                let c = &engine.resources.colony;
+                let day_logs: u64 = c
+                    .ground_items
+                    .iter()
+                    .filter(|(_, s)| s.kind == ItemKind::Log)
+                    .map(|(_, s)| u64::from(s.count))
+                    .sum();
+                logs_ground_by_day.push(day_logs);
+                let ct = sim_systems::runtime::steward::planning::wood_cap_target(
+                    &engine.world,
+                    &engine.resources,
+                );
+                cap_target_by_day.push(match ct {
+                    Some((t, bn, ps)) => {
+                        json!({"target": t, "building_need": bn, "pending_shelter": ps})
+                    }
+                    None => Value::Null,
+                });
             }
         }
     }
@@ -2081,6 +2102,8 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     summary["m4"] = knowledge.report(&engine);
     summary["m5"] = m5.report(&engine);
     summary["m55"] = m55.report(&engine);
+    summary["logs_ground_by_day"] = json!(logs_ground_by_day);
+    summary["cap_target_by_day"] = json!(cap_target_by_day);
     if let Some(watch) = b4 {
         summary["b4"] = serde_json::to_value(watch.report(&engine))
             .map_err(|e| format!("B4 serialization: {e}"))?;

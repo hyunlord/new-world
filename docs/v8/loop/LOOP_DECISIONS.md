@@ -260,7 +260,40 @@ rule 9 in steward.ron.  Add a test (`tools_rule_fires_immediately_without_grace_
 that fails if rule 9 is gated by extended or grace_ticks.
 
 **Held-out seeds spent:** 1424–1455 evaluated p1d (wolf deaths failed
-by 2, all else passed).  Fresh held-out uses 1456–1487.
+by 2, all else passed).  1456–1487 evaluated p1e (all bars passed,
+but log overproduction not addressed — see LOOP-CAL-9).
+
+## LOOP-CAL-9: cap-definition fix — pending shelter instead of fuel floor
+
+**Context (2026-11-01).** p1e's held-out (seeds 1456–1487) passed all
+M-UX2 bars but the log overproduction persists: loose_logs_day5 ≈ 300
+in both BASE and candidate.  The 12 × daily_fuel floor (added in
+LOOP-CAL-7) brought the day-5 pile back because it matches BASE's
+uncapped formula.  The owner's check "통나무가 수백 개 쌓이지 않는다"
+fails.
+
+**Decision.** Remove the 12 × daily_fuel floor.  Instead, fund the
+steward's own pending shelter plan: `max(building_need,
+pending_shelter_logs) + margin`, where `pending_shelter_logs` is the
+house the steward is about to place (perimeter walls + door + beds for
+the homeless, computed from blueprint data).  cap_log_margin returns to
+20 (the brief's original value).  Firewood stays under its own cap
+(winter_need × 1.25).
+
+**Changes:**
+- `steward.ron`: `cap_log_margin: Some(20)` (was 80)
+- `planning.rs`: `pending_shelter_logs()` estimates the first house's
+  log need; the cap target is `max(building_need, pending) + 20`
+- `planning.rs`: `wood_cap_target()` is public for the probe observer
+- probe: records `logs_ground_by_day` and `cap_target_by_day` per seed
+
+**Bars:**
+- day-5 loose logs ≤ (house logs + 20) × 1.5 in ≥ 28/32
+- logs at day 24 ≤ target × 1.5 in ≥ 28/32
+- all M-UX2 rows judged BASE-relative
+
+**Held-out seeds spent:** 1456–1487 evaluated p1e (survival passed,
+log bar not addressed).  Fresh held-out uses 1488–1519.
 
 ## LOOP-4: text scale range (§1.2a)
 
