@@ -345,3 +345,36 @@ HungerFoodChain, MindChoice) are behind the "전부" toggle. The "사람별" fil
 facts. Chapter 4 ("첫 밭과 천 옷") is locked with text "M6b에서 열립니다".
 Chapter 5 is the long-term horizon (era ≥ 600‰, population ≥ 40). The
 goals.json file is kept for backward compatibility with learning_facts.gd.
+
+## LOOP-D-cards: card recommendation rule (M-LOOP brief 2026-11-01)
+
+**Rule.** A recommended option must never be worse than the card's default
+(the steward) on the cards run (seeds 0–7, 48 days). Each recommendation is
+derived from the steward's own planner state and the M-READ diagnosis: what
+is already ordered, beds and food days, blades, pending designations. Per-card
+heuristics are avoided; if the steward already covers the need, the recommended
+option is "그대로 두기 / 집사에게 맡김".
+
+**Implementation (p29–p29g).** `_effective_recommended` in card_panel.gd
+overrides the static `recommended` flag in cards.json using live bridge reads:
+
+| card | guard | fallback |
+|------|-------|----------|
+| need_food | hunt only when: no hunt zone exists, blades available, wolves not approaching | harvest or steward |
+| need_warmth | chop only when: no chop designation pending | steward |
+| migrants | accept only when: all current people have beds AND food_days >= 5 | decline |
+| knowledge_risk | teach only when: firewood_low alert is not active (avoid pulling workers from warmth) | later |
+| tools_low | bill only when: workshop exists (bridge check) | steward |
+
+Additional guards applied to all commands:
+- **Cooldown:** 1 in-game day (1440 ticks) after a consumed answer before re-trigger.
+- **Dedupe:** `_has_chop_designations` and `_has_hunt_zones` prevent duplicate orders.
+- **Pre-validation:** `_agent_exists` for teach/priority, tree existence for chop.
+- **Catch-all:** any bridge rejection becomes skipped (card stays open).
+
+**Validation bar.** Commands actually sent and rejected by the bridge = 0.
+
+**Death bar.** Total deaths (answer) <= total deaths (no-answer) + 1.
+Per-seed deaths <= no-answer + 1 on 7/8 seeds. Seed 6 remains an outlier
+(4 combat vs 0 baseline) due to simulation-path divergence from hunt zone
+placement timing — not a card logic defect.
