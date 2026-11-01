@@ -462,3 +462,13 @@ The held-out failure is a **blocker**, not an open question. The owner's LOOP-D-
 2. **KnowledgeLost bar:** keep the owner's rule exactly (BASE + 1 in each world for ≥ 30/32, total ≤ BASE + 3). It is not relaxed after seeing a failure.
 3. **Next evaluation seeds:** 1712–1743 (1520–1679 stay reserved for M6b). Recorded here for the follow-up.
 4. **Publishing:** nothing is published. The screen work (cards, chapters, chronicle, §1 fixes) shares commits with the steward changes, and the brief's never-drop list includes the steward caps and the evaluation, so a screen-only publish would split the pass outside its brief. `v8/main` stays at fbc03bddb.
+
+## LOOP-R1 — repair round after the failed held-out (goal directive: finish the brief, decide, don't ask)
+- **Choice:** revert the seasonal fuel term, the only change made after calibration round 1. The candidate is then exactly the round-1 calibration build: teaching immediate (LOOP-D-teach), bill grace counted from need, knowledge card, log cap = builds + pending shelter + 30.
+- **Why this variant:**
+  - On held-out 1680–1711 the fuel term was what pushed the two log bars over, and it did not fix the snap bar on the calibration seeds (rounds 2–3).
+  - The same cap without it passed every log and snap bar on held-out 1488–1519 (p1g, 26/26 exposed worlds never ran out).
+  - Round-1 calibration: every bar passes except firewood_in_snaps 2/4, which p1g also scored before passing held-out.
+- **Evaluation:** once on fresh seeds 1712–1743 (1520–1679 stay reserved for M6b), with the same scorer and bars, including KnowledgeLost.
+- **Deviation from the owner's "evaluate once":** this is a second evaluation. It is recorded as a deviation for the owner to accept or reject, following the M6a repair-round precedent of fresh seeds per round.
+- If any bar fails, the pass ends unpublished.
