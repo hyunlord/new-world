@@ -472,3 +472,21 @@ The held-out failure is a **blocker**, not an open question. The owner's LOOP-D-
 - **Evaluation:** once on fresh seeds 1712–1743 (1520–1679 stay reserved for M6b), with the same scorer and bars, including KnowledgeLost.
 - **Deviation from the owner's "evaluate once":** this is a second evaluation. It is recorded as a deviation for the owner to accept or reject, following the M6a repair-round precedent of fresh seeds per round.
 - If any bar fails, the pass ends unpublished.
+
+### LOOP-R1 result — held-out 1712–1743 (frozen p49 `b75c3fd8a`): FAIL, pass ends unpublished
+| bar | BASE | candidate | verdict |
+|---|---|---|---|
+| stockpile day 1 | 32/32 | 32/32 | PASS |
+| walled beds by day 10 | 29/32 | 30/32 | PASS |
+| zero cold deaths | 32/32 | 32/32 | PASS |
+| alive on day 48 | 31/32 | 30/32 | PASS |
+| wolf deaths ≤ 1 | 31/32 | 30/32 | PASS |
+| exact ledger | 32/32 | 32/32 | PASS |
+| firewood never zero in snaps | — | 12/19 exposed | FAIL |
+| day-5 loose logs ≤ 1.5 × cap | — | 26/32 | FAIL |
+| day-24 logs ≤ 1.5 × cap | — | 30/32 | PASS |
+| KnowledgeLost | total 21 | 30/32 within, total 49 | FAIL |
+
+- Loose logs on day 5 summed 9205 → 1252, exposure deaths 0 → 0, alive at the end 342 → 324.
+- **Finding:** KnowledgeLost is more than double BASE even with teaching immediate. The steward's narrower default set (bills graced, tools-only rule, capped wood) loses knowledge on its own, and the snap shortfall persists without the fuel term. The two held-out runs bound the design: with a fuel term the logs pile up; without it, firewood runs short. A survival-only steward needs a redesign of fuel and knowledge upkeep, not a parameter.
+- **Decision:** no further rounds. The goal's budget and the owner's evaluate-once rule are both exceeded. The pass ends unpublished. The redesign (separate building and fuel caps, plus knowledge upkeep inside the survival set) is the follow-up, with seeds from 1744.
