@@ -190,6 +190,26 @@ burst (at tick 0 the Wood rule fires before House places blueprints, so
 Both within one world of BASE on every bar. B′-80 is brief-compliant (rules
 4+6 extended, narrow tools rule 9 default). **Chosen: B′-80.**
 
+B′-80 held-out (1392–1423) result: walled_beds_day10 29/32 (need 30, BASE 30).
+Within one world but below threshold. Per LOOP-CAL-4: choose A, record why.
+
+## LOOP-D-steward: owner decision — grace window fallback
+
+**Context.** Owner decision 2026-11-01 13:45.
+
+**Decision.**
+1. Tools that survival needs count as survival. B′ is approved as the target.
+2. Unattended runs must stay intact. Cards are presentation-only. The sim
+   provides fallback after a grace window of ≤ 1 in-game day:
+   - **knowledge risk:** the steward issues the teach order itself after the
+     grace window, if no player teach order addresses that knowledge.
+   - **tools low:** the steward adds the bill after the same window, if no
+     player bill exists.
+   Grace window is data in `steward.ron` (`grace_ticks: Some(1440)`).
+3. The soak, story, neighbours and steward fixtures (no player) must show
+   0 KnowledgeLost. Add a 0-KnowledgeLost assertion. List changed fixtures.
+4. B's 3-day firewood reserve stays reverted.
+
 ## LOOP-4: text scale range (§1.2a)
 
 **Context.** M-LOOP brief §1.2 — "today's look is effectively larger — measure

@@ -121,6 +121,11 @@ pub struct Rule {
     /// When true, the rule only fires with the extended ("집사가 더 많이") toggle.
     #[serde(default)]
     pub extended: bool,
+    /// When set on an extended rule, the rule falls back to automatic firing
+    /// after this many ticks if the player has not addressed the condition.
+    /// This is the "expires to default steward" grace window.
+    #[serde(default)]
+    pub grace_ticks: Option<u64>,
 }
 /// Schema version and ordered rule definitions.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

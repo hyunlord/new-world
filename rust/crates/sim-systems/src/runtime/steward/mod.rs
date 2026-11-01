@@ -56,8 +56,24 @@ impl RuntimeSystem for StewardSystem {
                 continue;
             }
             if rule.extended && !res.steward.extended {
-                profile.skip(true);
-                continue;
+                match rule.grace_ticks {
+                    Some(grace) => {
+                        // Pure check: skip until the grace period has elapsed and
+                        // the rule has not yet fired (no cooldown entry from accepted()).
+                        if !res.steward.cooldowns.contains_key(&rule.id)
+                            && res.current_tick < grace
+                        {
+                            profile.skip(false);
+                            continue;
+                        }
+                        // Grace expired or rule has fired before — fall through to
+                        // the normal cooldown check.
+                    }
+                    None => {
+                        profile.skip(true);
+                        continue;
+                    }
+                }
             }
             if res
                 .steward
