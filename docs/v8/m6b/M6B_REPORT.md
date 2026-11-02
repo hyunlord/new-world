@@ -363,6 +363,9 @@ Oracle 호출자에 소스가 보장하는 종료된 실패 API와 보존 결과
 
 단계32 resolver parity의 원래300초 wrapper와 Python checker를 그대로 호출하는 별도 어댑터를 추가했다. 선택된 소스의 세계 미생성 분류와 실제 bridge 로드·빌드 출처 검증은 구분하며 후자는 PENDING이다. 실제 상위 shell 종료만 기록하고 native PID를 만들어내지 않는다. 실패·반환되지 않은 실행은 UNKNOWN으로 유지하고 원래/보조 예외를 보존한다. 독립 검토에서 부모 디렉터리와 자식 파일을 함께 inventory에 전달해 실제 입력 검증이 실패하는 결함을 재현했으며, v2는 필수 경로를 먼저 확인한 뒤 중복 범위만 줄인다. 단계49 수정에 따른 gate.sh pin 변경도 해당 한 줄 diff를 별도로 검토했다. 루트18개(2.602초), 생산3.11·테스트3.14 엄격 타입·Ruff·독립 검토가 통과했다. override 테스트에3.11 설정을 잘못 적용한 초기4진단과 설정 수정은 보존한다. 실제 Godot·상위 단계32 연결·전체 gate는 미검증이다(`stage0/ordered-dispatch/resolver32-draft-v2/INDEPENDENT_REVIEW_V2.md`, patch SHA256 `f3fa8e10186f48282a8b161ef696b612b0b5a00ea6ad801a7ca2fa3e5a301bf8`).
 
+
+단계48 구조 검사의 소유 API를 보강했다. 실제 자식 종료가 확인된 뒤 보고서 작성이 실패하면 원래 예외를 보존하고 소유자가 잠금을 해제하며, descriptor 종료 자체가 불명확하면 실제 소유 객체를 유지하고 임의 재시도하지 않는다. 정상 결과는 해제 전에 terminal 해시와 전체 산출물 목록을 고정한다. 과거 결과 검증은 기록된 소유자·원래 child chain·두 군 계획·renderer oracle·전체 산출물을 대조하고 현재 PID나 파일만으로 live 잠금을 해제하지 않는다. 기존 API·명령·p39 import 규칙은 유지했다. 루트30개(50.762초), 새 구조 코드와 Oracle A2 조합34개(40.022초), 생산3.11·override 테스트3.14 엄격 타입·Ruff·독립 검토가 통과했다. 실제 renderer·상위 단계48 연결·전체 gate는 아직 미검증이다(`stage0/ordered-dispatch/structural48-prerequisite-draft/INDEPENDENT_REVIEW_V1.md`, patch SHA256 `3d54db60ddf186aeea4fa13e07aac5af59a697843d8d921ce31cb744383c2156`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

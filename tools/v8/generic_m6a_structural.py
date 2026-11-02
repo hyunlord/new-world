@@ -10,6 +10,7 @@ import stat
 import subprocess
 import sys
 import uuid
+from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from types import ModuleType
@@ -537,28 +538,39 @@ def _owned_plan(product: ProbeProduct, tools: Tooling, output: Path) -> OwnedPla
     _check_product(product);_check_tools(tools);check_owned_helpers(product,tools)
     output.mkdir();(output/'evidence').mkdir()
     path=output.parent/(output.name+'-owned-plan.json')
+    atomic_json(path,_owned_plan_document(product,tools,output))
+    return OwnedPlan(product,path,file_hash(path),output)
+
+
+def _owned_plan_document(product: ProbeProduct, tools: Tooling, output: Path) -> dict[str, Json]:
+    """One closed recipe shared by launch and historical admission."""
     inputs={str(product.input_root/name):sha for name,sha in product.input_files}
     inputs.update({str(tools.root/name):sha for name,sha in tools.files})
     inputs.update({str(tools.python):tools.python_sha256,str(tools.bash):tools.bash_sha256,
                    str(product.executable):product.executable_sha256})
     environment={'HOME':str(Path.home()),'__CF_USER_TEXT_ENCODING':f'0x{os.getuid():X}:0x3:0x33',
         'PATH':tools.path,'PYTHONNOUSERSITE':'1','PYTHONDONTWRITEBYTECODE':'1','PYTHONCOERCECLOCALE':'0'}
-    atomic_json(path,{'schema':oracle_child.SCHEMA,'mode':'structural','root':str(product.input_root),
+    return {'schema':oracle_child.SCHEMA,'mode':'structural','root':str(product.input_root),
         'evidence':str(output/'evidence'),'log':str(output/'plant-art-structural.log'),
         'argv':[str(arg) for arg in structural_command(str(product.executable))[3:]],
-        'inputs':{k:v for k,v in inputs.items()},'environment':dict(environment)})
-    return OwnedPlan(product,path,file_hash(path),output)
+        'inputs':{k:v for k,v in inputs.items()},'environment':dict(environment)}
 
 
 def _owned_join(plan: OwnedPlan, result: oracle_child.OwnedResult, tools: Tooling, lane_fd: int) -> oracle_child.OwnedResult:
+    return _owned_chain(plan,result,tools,os.getpid(),lane_fd)
+
+
+def _owned_chain(plan: OwnedPlan, result: oracle_child.OwnedResult, tools: Tooling,
+                 owner_pid: int, lane_fd: int) -> oracle_child.OwnedResult:
     check_owned_helpers(plan.product,tools)
+    require(owner_pid>0 and lane_fd>2,'/owner','invalid recorded owner identity')
     require(file_hash(plan.path)==plan.digest,'/plan','original plan changed')
     checked=oracle_child.inspect(plan.path,plan.digest,result.wrapper_pid,result.wrapper_exit)
     require(checked.settlement=='SETTLED','/settlement',checked.error)
     evidence=plan.output/'evidence'
     require({p.name for p in evidence.iterdir()}=={'wrapper-start.json','wrapper-terminal.json','native-start.json','native-terminal.json','log-closed.json'},'/receipts','incomplete/extra owned chain')
     start=document((evidence/'wrapper-start.json').read_text())
-    start.field('parent_pid').equals(os.getpid())
+    start.field('parent_pid').equals(owner_pid)
     start.field('argv').equals([str(arg) for arg in structural_command(str(plan.product.executable))])
     launch=start.field('environment').mapping()
     environment=document(plan.path.read_text()).field('environment').mapping()
@@ -569,6 +581,38 @@ def _owned_join(plan: OwnedPlan, result: oracle_child.OwnedResult, tools: Toolin
     require(launch==expected,'/environment','wrong actual parent launch')
     document((evidence/'wrapper-terminal.json').read_text()).field('error').equals('')
     return checked
+
+
+@dataclass(frozen=True, slots=True)
+class OwnedComponentResult:
+    receipt: Path
+    status: str
+    receipt_sha256: str
+    files: tuple[tuple[str,str],...]
+
+
+class StructuralSettledFailure(Exception):
+    """Publication failed after this source owner confirmed descriptor closure."""
+    def __init__(self, original: BaseException, diagnostic: BaseException | None, receipt: Path | None) -> None:
+        super().__init__('structural settled finalization failed; original exceptions retained')
+        self.original: BaseException=original
+        self.diagnostic: BaseException | None=diagnostic
+        self.receipt: Path | None=receipt
+
+
+class StructuralReleaseUnknown(Exception):
+    """Children settled; actual owner retained because descriptor closure is uncertain."""
+    def __init__(self, owner: 'StructuralLaneOwner', original: BaseException,
+                 diagnostic: BaseException | None) -> None:
+        super().__init__('structural settled descriptor disposition uncertain; actual owner retained')
+        self.owner: StructuralLaneOwner=owner
+        self.original: BaseException=original
+        self.diagnostic: BaseException | None=diagnostic
+
+
+def _component_files(output: Path, *, terminal: bool) -> dict[str,str]:
+    names=[path.name for path in output.iterdir() if terminal or path.name!='structural-owned-component.json']
+    return inventory(output,names) if names else {}
 
 
 class StructuralLaneOwner:
@@ -701,8 +745,32 @@ class StructuralLaneOwner:
         return self._settled(True).evidence
 
     def finish(self, evidence: SettledStructural | SettlementEvidence) -> ComponentResult:
+        result=self.finish_owned(evidence)
+        return ComponentResult(result.receipt,result.status)
+
+    def finish_owned(self, evidence: SettledStructural | SettlementEvidence) -> OwnedComponentResult:
         selected=evidence.evidence if isinstance(evidence,SettledStructural) else evidence
         require(self.state=='SETTLED' and selected is self.evidence,'/finish','not this owner authenticated settlement')
+        try:
+            result=self._publish_owned(selected)
+        except BaseException as original:
+            self.retained_errors.append(original)
+            try:
+                os.close(self.descriptor)
+            except BaseException as diagnostic:
+                self.retained_errors.append(diagnostic)
+                raise StructuralReleaseUnknown(self,original,diagnostic) from diagnostic
+            self.state='CLOSED'
+            raise StructuralSettledFailure(original,None,None) from original
+        try:
+            os.close(self.descriptor)
+        except BaseException as original:
+            self.retained_errors.append(original)
+            raise StructuralReleaseUnknown(self,original,None) from original
+        self.state='CLOSED'
+        return result
+
+    def _publish_owned(self, selected: SettlementEvidence) -> OwnedComponentResult:
         try:
             _check_tools(self.admission.tools)
             for product in (self.admission.products.base,self.admission.products.candidate):_check_product(product)
@@ -713,8 +781,10 @@ class StructuralLaneOwner:
         except (OSError,ValueError) as error:self.errors.append('postflight: '+str(error))
         status='FAIL' if self.errors else 'PASS'
         receipt=self.output/'structural-owned-component.json'
+        complete=_component_files(self.output,terminal=False)
         atomic_json(receipt,{'schema':'structural_owned_component_v1','status':status,'attempt':self.attempt,
-            'owner_pid':os.getpid(),'errors':[e for e in self.errors],'recovered':selected.recovered,
+            'owner_pid':os.getpid(),'lane_fd':self.descriptor,'errors':[e for e in self.errors],'recovered':selected.recovered,
+            'component_files':dict(complete),
             'source_sha':{arm:self.admission.products.arm(arm).source_sha for arm in ('base','candidate')},
             'plans':{arm:{'path':str(plan.path),'sha256':plan.digest} for arm,plan in self.plans.items()},
             'tooling':{name:sha for name,sha in self.admission.tools.files},
@@ -726,16 +796,162 @@ class StructuralLaneOwner:
             'worlds':'NO_SIMULATION_WORLD','visual_status':'NOT_EVALUATED','publication_authority':False,
             'execution_adapter':'owned_direct_wrapper_not_historical_original_run',
             'artifacts':{arm:{k:v for k,v in values.items()} for arm,values in self.frozen.items()}})
-        os.close(self.descriptor);self.state='CLOSED'
-        return ComponentResult(receipt,status)
+        digest=file_hash(receipt)
+        require(_component_files(self.output,terminal=False)==complete,'/artifacts','component changed during publication')
+        files=_component_files(self.output,terminal=True)
+        require(files.get(receipt.name)==digest,'/receipt','terminal changed during publication')
+        return OwnedComponentResult(receipt,status,digest,tuple(sorted(files.items())))
+
+
+def authenticate_owned_result(products: Products, tools: Tooling, receipt: Path,
+                              expected_digest: str) -> OwnedComponentResult:
+    """Recheck captured historical endpoints; no live ownership or build admission."""
+    real_path(receipt,directory=False)
+    require(receipt.name=='structural-owned-component.json','/receipt','wrong owned endpoint')
+    require(file_hash(receipt)==expected_digest,'/receipt','captured terminal changed')
+    output=receipt.parent
+    files=_component_files(output,terminal=True)
+    require(files.get(receipt.name)==expected_digest,'/receipt','terminal changed during inventory')
+    node=document(receipt.read_text())
+    require(set(node.mapping())=={'schema','status','attempt','owner_pid','lane_fd','errors','recovered',
+        'component_files','source_sha','plans','tooling','actual_helper_sources','recovery_native_pid',
+        'original_completions','dispatched','checks','native_pids','worlds','visual_status',
+        'publication_authority','execution_adapter','artifacts'},'/receipt','owned fields differ')
+    for key,value in {'schema':'structural_owned_component_v1','worlds':'NO_SIMULATION_WORLD',
+        'visual_status':'NOT_EVALUATED','publication_authority':False,
+        'execution_adapter':'owned_direct_wrapper_not_historical_original_run'}.items():
+        node.field(key).equals(value)
+    status=text(node.field('status'));require(status in ('PASS','FAIL'),'/status','not a complete owned endpoint')
+    attempt=text(node.field('attempt'));require(re.fullmatch('[0-9a-f]{32}',attempt) is not None,'/attempt','invalid attempt')
+    owner_pid=integer(node.field('owner_pid'));lane_fd=integer(node.field('lane_fd'))
+    require(owner_pid>0 and lane_fd>2,'/owner','invalid owner identity')
+    errors=[text(row) for row in node.field('errors').array()]
+    recovered=node.field('recovered').value;dispatched=node.field('dispatched').value
+    require(type(recovered) is bool and type(dispatched) is bool,'/state','boolean state required')
+    assert type(recovered) is bool and type(dispatched) is bool
+    node.field('component_files').equals({name:sha for name,sha in files.items() if name!=receipt.name})
+    node.field('source_sha').equals({arm:products.arm(arm).source_sha for arm in ('base','candidate')})
+    node.field('tooling').equals(dict(tools.files))
+    node.field('actual_helper_sources').equals({name:{'path':str(path),'sha256':sha}
+        for name,(path,sha) in LOADED_SOURCES.items() if name+'.py' in dict(tools.files)})
+    _check_tools(tools)
+    for product in (products.base,products.candidate):
+        _check_product(product);check_owned_helpers(product,tools)
+    plans=node.field('plans').mapping();completions=node.field('original_completions').mapping()
+    frozen=node.field('artifacts').mapping();checks=node.field('checks').mapping()
+    pids=node.field('native_pids').mapping()
+    require(list(plans) in ([],['base'],['base','candidate']),'/plans','not original paired plans')
+    require(list(completions) in ([],['base'],['base','candidate']) and set(completions)<=set(plans),
+            '/completions','not original launch prefix')
+    require(set(frozen)==set(completions)==set(pids) and set(checks)<=set(completions),
+            '/artifacts','completed arm accounting differs')
+    require(dispatched==bool(completions),'/dispatch','dispatch/completion mismatch')
+    require(status!='PASS' or (not errors and not recovered and set(checks)==set(plans)==set(completions)=={'base','candidate'}),
+            '/status','incomplete or failed PASS')
+    require(status!='FAIL' or bool(errors),'/errors','failure has no retained error')
+    expected_names={'structural-owned-component.json'}
+    completed: dict[str,oracle_child.OwnedResult]={}
+    for arm in plans:
+        product=products.arm(arm)
+        path=output/(arm+'-owned-plan.json')
+        plan_row=node.field('plans').field(arm)
+        require(set(plan_row.mapping())=={'path','sha256'},'/plan','plan fields differ')
+        plan_row.field('path').equals(str(path))
+        digest=text(plan_row.field('sha256'))
+        require(file_hash(path)==digest,'/plan','plan changed')
+        document(path.read_text()).equals(_owned_plan_document(product,tools,output/arm))
+        expected_names.update({arm,path.name})
+        if arm not in completions:
+            require(not any((output/arm/'evidence').iterdir()) and not (output/arm/'plant-art-structural.log').exists(),
+                    '/plans','unlaunched arm has child evidence')
+            continue
+        row=node.field('original_completions').field(arm)
+        require(set(row.mapping())=={'settlement','error','wrapper_pid','wrapper_exit'},'/completion','completion fields differ')
+        recorded_settlement=text(row.field('settlement'));recorded_error=row.field('error').text()
+        require(recorded_settlement=='SETTLED' and not recorded_error or
+                recovered and arm==list(completions)[-1] and recorded_settlement=='UNKNOWN',
+                '/completion','unresolved original completion')
+        wrapper_pid=integer(row.field('wrapper_pid'));wrapper_exit=integer(row.field('wrapper_exit'))
+        require(wrapper_pid>0 and wrapper_pid!=owner_pid,'/pid','invalid wrapper identity')
+        plan=OwnedPlan(product,path,digest,output/arm)
+        observed=oracle_child.OwnedResult('SETTLED',wrapper_pid,None,wrapper_exit,None,'')
+        checked=_owned_chain(plan,observed,tools,owner_pid,lane_fd)
+        completed[arm]=checked
+        if recorded_settlement=='SETTLED':node.field('native_pids').field(arm).equals(checked.native_pid)
+        else:require(node.field('native_pids').field(arm).value in (None,checked.native_pid),'/pid','recovered original pid differs')
+        node.field('artifacts').field(arm).equals({name:sha for name,sha in inventory(plan.output,[p.name for p in plan.output.iterdir()]).items()})
+        require({p.name for p in plan.output.iterdir()}=={'evidence','plant-art-structural.log'},'/arm','extra arm output')
+        _historical_chain_fields(plan)
+        if arm in checks:
+            require(checked.native_exit==0 and checked.wrapper_exit==0,'/oracle','nonzero checked arm')
+            node.field('checks').field(arm).equals(_renderer_oracle((plan.output/'plant-art-structural.log').read_bytes().decode('utf-8')))
+        require(status!='PASS' or checked.native_exit==checked.wrapper_exit==0,'/native','failed PASS arm')
+    if recovered:
+        require(status=='FAIL' and bool(completed),'/recovery','invalid recovered endpoint')
+        node.field('recovery_native_pid').equals(completed[list(completed)[-1]].native_pid)
+    else:
+        node.field('recovery_native_pid').equals(None)
+    events=sorted((path for path in output.iterdir() if path.name.startswith('ownership-event-')),
+                  key=lambda path: int(path.stem.removeprefix('ownership-event-')))
+    for index,path in enumerate(events,1):
+        require(path.name==f'ownership-event-{index}.json','/events','event sequence differs')
+        event=document(path.read_text())
+        require(set(event.mapping())=={'schema','attempt','owner_pid','state','errors','kernel_ownership','final_inventory'},
+                '/events','event fields differ')
+        for key,value in {'schema':'structural_live_owner_v1','attempt':attempt,'owner_pid':owner_pid,
+            'kernel_ownership':'live_descriptor_only_not_crash_resilient','final_inventory':False}.items():
+            event.field(key).equals(value)
+        require(text(event.field('state')) in ('ACQUIRED','RUNNING','SETTLED','RECOVERY_REQUIRED'),'/events','invalid live state')
+        for error in event.field('errors').array():_=text(error)
+        expected_names.add(path.name)
+    require({p.name for p in output.iterdir()}==expected_names,'/output','extra or missing component files')
+    for product in (products.base,products.candidate):
+        _check_product(product);check_owned_helpers(product,tools)
+    _check_tools(tools)
+    require(_component_files(output,terminal=True)==files,'/artifacts','historical bytes changed during authentication')
+    return OwnedComponentResult(receipt,status,expected_digest,tuple(sorted(files.items())))
+
+
+def _historical_chain_fields(plan: OwnedPlan) -> None:
+    fields={
+        'wrapper-start.json':{'schema','plan_sha256','parent_pid','wrapper_pid','argv','environment'},
+        'wrapper-terminal.json':{'schema','plan_sha256','parent_pid','wrapper_pid','wrapper_exit','error'},
+        'native-start.json':{'schema','plan_sha256','wrapper_pid','parent_pid','native_pid','argv','environment','stream_start'},
+        'native-terminal.json':{'schema','plan_sha256','wrapper_pid','parent_pid','native_pid','native_exit',
+            'timed_out','timeout_seconds','settlement','error','stream_start','stream_end','stream_sha256',
+            'started_monotonic_ns','ended_monotonic_ns'},
+        'log-closed.json':{'schema','plan_sha256','sha256'}}
+    for name,keys in fields.items():
+        row=document((plan.output/'evidence'/name).read_text())
+        require(set(row.mapping())==keys,'/chain','child receipt fields differ')
+        row.field('schema').equals(oracle_child.SCHEMA)
 
 
 def run_owned_entrypoint(products: Products, tools: Tooling, output: Path, control_fd: int) -> ComponentResult:
+    result=run_owned_result(products,tools,output,control_fd)
+    return ComponentResult(result.receipt,result.status)
+
+
+def _finish_entrypoint(owner: StructuralLaneOwner, evidence: SettledStructural | SettlementEvidence) -> OwnedComponentResult:
+    try:
+        return owner.finish_owned(evidence)
+    except StructuralReleaseUnknown as failure:
+        # Retain this actual owner. Never retry close against a potentially reused fd.
+        while True:
+            with suppress(BaseException):
+                try:
+                    signal.pause()
+                except BaseException as interruption:
+                    failure.owner.retained_errors.append(interruption)
+                    raise
+
+
+def run_owned_result(products: Products, tools: Tooling, output: Path, control_fd: int) -> OwnedComponentResult:
     """Retain a strong live owner; EOF does not authorize dropping its lane."""
     require(type(control_fd) is int and control_fd>2 and stat.S_ISFIFO(os.fstat(control_fd).st_mode),'/control','dedicated recovery pipe required')
     owner=StructuralLaneOwner.acquire(output,OwnedAdmission(products,tools))
     outcome=owner.run(products,tools)
-    if isinstance(outcome,SettledStructural):return owner.finish(outcome)
+    if isinstance(outcome,SettledStructural):return _finish_entrypoint(owner,outcome)
     pending: bytes=b''
     pause_after_error=False
     while True:
@@ -757,8 +973,10 @@ def run_owned_entrypoint(products: Products, tools: Tooling, output: Path, contr
                 command: bytes=pieces[0];pending=pieces[1]
                 if command==b'inspect':
                     inspected=owner.inspect_recovery(outcome)
-                    if isinstance(inspected,SettlementEvidence):return owner.finish(inspected)
+                    if isinstance(inspected,SettlementEvidence):return _finish_entrypoint(owner,inspected)
                 owner.record_status()
+        except StructuralSettledFailure:
+            raise
         except BaseException as error:  # noqa: BLE001 - retain live ownership on unclassified faults
             owner.retained_errors.append(error)
             owner.errors.append('recovery controller fault; original exception retained in live owner');pending=b''

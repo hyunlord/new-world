@@ -9,7 +9,7 @@ import unittest
 from collections.abc import Callable
 from dataclasses import replace
 from pathlib import Path
-from typing import final
+from typing import final, override
 from unittest.mock import patch
 
 import gate_oracle_child as oracle_child
@@ -20,6 +20,7 @@ from generic_gate import GateContractError, document
 from generic_process import ProcessResult, atomic_json, file_hash
 from generic_sources import inventory
 from m6a_gate_history import run as original_run
+from mux2_gate_inputs import Json
 
 
 def transcript() -> str:
@@ -339,6 +340,203 @@ def contender(lock: Path) -> int:
 
 @final
 class OwnedTests(unittest.TestCase):
+    def test_settled_terminal_write_failure_preserves_primary_and_releases(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder).resolve();products,tools,lock=owned_fixture(root)
+            with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'LOCK',lock),patch.object(structural,'check_owned_helpers'):
+                owner=structural.StructuralLaneOwner.acquire(root/'owned',structural.OwnedAdmission(products,tools))
+                result=owner.run(products,tools)
+                assert isinstance(result,structural.SettledStructural)
+                primary=OSError('terminal write failed')
+                try:
+                    with patch.object(structural,'atomic_json',side_effect=primary), self.assertRaises(structural.StructuralSettledFailure) as raised:
+                        _=owner.finish(result)
+                    self.assertIs(raised.exception.original,primary)
+                    self.assertIsNone(raised.exception.diagnostic)
+                    self.assertEqual(owner.state,'CLOSED')
+                    self.assertEqual(contender(lock),0)
+                finally:
+                    if owner.state!='CLOSED':os.close(owner.descriptor)
+
+    def test_owned_retained_result_binds_terminal_and_complete_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder).resolve();products,tools,lock=owned_fixture(root)
+            with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'LOCK',lock),patch.object(structural,'check_owned_helpers'):
+                owner=structural.StructuralLaneOwner.acquire(root/'owned',structural.OwnedAdmission(products,tools))
+                result=owner.run(products,tools)
+                assert isinstance(result,structural.SettledStructural)
+                final=owner.finish_owned(result)
+                self.assertEqual(final.status,'PASS')
+                self.assertEqual(final.receipt_sha256,file_hash(final.receipt))
+                self.assertIn('base-owned-plan.json',dict(final.files))
+                self.assertIn('structural-owned-component.json',dict(final.files))
+                checked=structural.authenticate_owned_result(products,tools,final.receipt,final.receipt_sha256)
+                self.assertEqual(checked,final)
+                _=final.receipt.write_text(final.receipt.read_text()+'\n')
+                with self.assertRaises(ValueError):
+                    _=structural.authenticate_owned_result(products,tools,final.receipt,final.receipt_sha256)
+
+    def test_settled_close_failure_retains_actual_owner_and_both_errors(self) -> None:
+        for publication in (False,True):
+            with self.subTest(publication=publication),tempfile.TemporaryDirectory() as folder:
+                root=Path(folder).resolve();products,tools,lock=owned_fixture(root)
+                with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'LOCK',lock),patch.object(structural,'check_owned_helpers'):
+                    owner=structural.StructuralLaneOwner.acquire(root/'owned',structural.OwnedAdmission(products,tools))
+                    result=owner.run(products,tools)
+                    assert isinstance(result,structural.SettledStructural)
+                    original=TypeError('publication');closing=OSError('close failed')
+                    real_close=os.close
+                    def close(fd: int, descriptor: int=owner.descriptor, failure: OSError=closing, actual: Callable[[int],None]=real_close) -> None:
+                        if fd==descriptor:raise failure
+                        actual(fd)
+                    try:
+                        with patch.object(os,'close',side_effect=close), patch.object(structural,'atomic_json',side_effect=original if publication else atomic_json), self.assertRaises(structural.StructuralReleaseUnknown) as raised:
+                            _=owner.finish_owned(result)
+                        self.assertIs(raised.exception.owner,owner)
+                        self.assertIs(raised.exception.original,original if publication else closing)
+                        self.assertIs(raised.exception.diagnostic,closing if publication else None)
+                        self.assertEqual(owner.state,'SETTLED')
+                        self.assertNotEqual(contender(lock),0)
+                    finally:real_close(owner.descriptor)
+
+    def test_historical_auth_is_read_only_and_does_not_compare_current_pid(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder).resolve();products,tools,lock=owned_fixture(root)
+            with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'LOCK',lock),patch.object(structural,'check_owned_helpers'):
+                owner=structural.StructuralLaneOwner.acquire(root/'owned',structural.OwnedAdmission(products,tools))
+                outcome=owner.run(products,tools)
+                assert isinstance(outcome,structural.SettledStructural)
+                final=owner.finish_owned(outcome)
+                with patch.object(os,'getpid',return_value=9999999),patch.object(os,'close',side_effect=AssertionError('historical close')),patch.object(structural.StructuralLaneOwner,'acquire',side_effect=AssertionError('historical lane acquire')):
+                    self.assertEqual(structural.authenticate_owned_result(products,tools,final.receipt,final.receipt_sha256),final)
+                self.assertEqual(contender(lock),0)
+
+    def test_resealed_pass_cannot_drop_arms_or_change_parent_or_closed_schema(self) -> None:
+        for mutation in ('empty','owner','plan','extra','chain_field','checks','source'):
+            with self.subTest(mutation=mutation),tempfile.TemporaryDirectory() as folder:
+                root=Path(folder).resolve();products,tools,lock=owned_fixture(root)
+                with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'LOCK',lock),patch.object(structural,'check_owned_helpers'):
+                    owner=structural.StructuralLaneOwner.acquire(root/'owned',structural.OwnedAdmission(products,tools))
+                    result=owner.run(products,tools)
+                    assert isinstance(result,structural.SettledStructural)
+                    final=owner.finish_owned(result)
+                    row=document(final.receipt.read_text()).mapping()
+                    if mutation=='empty':
+                        for key in ('plans','original_completions','checks','native_pids','artifacts'):row[key]={}
+                        row['dispatched']=False
+                    elif mutation=='owner':row['owner_pid']=999999
+                    elif mutation=='plan':
+                        path=owner.plans['base'].path
+                        changed=document(path.read_text()).mapping();changed['root']=str(products.candidate.input_root)
+                        path.unlink();atomic_json(path,changed)
+                        plans=document(final.receipt.read_text()).field('plans').mapping()
+                        plans['base']={'path':str(path),'sha256':file_hash(path)};row['plans']=plans
+                    elif mutation=='extra':_=(final.receipt.parent/'unexpected').write_text('extra')
+                    elif mutation=='chain_field':
+                        path=owner.plans['base'].output/'evidence/native-terminal.json'
+                        changed=document(path.read_text()).mapping();changed['extra']=True
+                        path.unlink();atomic_json(path,changed)
+                        artifacts=document(final.receipt.read_text()).field('artifacts').mapping()
+                        artifacts['base']={k:v for k,v in inventory(owner.plans['base'].output,['evidence','plant-art-structural.log']).items()};row['artifacts']=artifacts
+                    elif mutation=='checks':row['checks']={'base':9999,'candidate':9999}
+                    else:row['source_sha']={'base':'b'*40,'candidate':'b'*40}
+                    row['component_files']={k:v for k,v in inventory(final.receipt.parent,[p.name for p in final.receipt.parent.iterdir() if p!=final.receipt]).items()}
+                    final.receipt.unlink();atomic_json(final.receipt,row)
+                    with self.assertRaises(ValueError):
+                        _=structural.authenticate_owned_result(products,tools,final.receipt,file_hash(final.receipt))
+
+    def test_historical_nonzero_and_recovered_endpoints_remain_failures(self) -> None:
+        for recovery in (False,True):
+            with self.subTest(recovery=recovery),tempfile.TemporaryDirectory() as folder:
+                root=Path(folder).resolve();products,tools,lock=owned_fixture(root,0 if recovery else 7)
+                original=oracle_child.inspect
+                calls=0
+                def inspect(path: Path,digest: str,pid: int | None,code: int | None, recover: bool=recovery, actual: Callable[[Path,str,int | None,int | None],oracle_child.OwnedResult]=original) -> oracle_child.OwnedResult:
+                    nonlocal calls
+                    calls+=1
+                    if recover and calls==1:return oracle_child.OwnedResult('UNKNOWN',pid,None,code,None,'reader fault')
+                    return actual(path,digest,pid,code)
+                with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'LOCK',lock),patch.object(structural,'check_owned_helpers'),patch.object(oracle_child,'inspect',side_effect=inspect):
+                    owner=structural.StructuralLaneOwner.acquire(root/'owned',structural.OwnedAdmission(products,tools))
+                    result=owner.run(products,tools)
+                    if isinstance(result,structural.RecoveryRequired):
+                        recovered=owner.inspect_recovery(result)
+                        assert isinstance(recovered,structural.SettlementEvidence)
+                        final=owner.finish_owned(recovered)
+                    else:final=owner.finish_owned(result)
+                    self.assertEqual(final.status,'FAIL')
+                    self.assertEqual(structural.authenticate_owned_result(products,tools,final.receipt,final.receipt_sha256),final)
+
+    def test_recovery_finalization_failure_propagates_settled_without_unsafe_rendering(self) -> None:
+        class HostileError(Exception):
+            @override
+            def __str__(self) -> str:
+                raise AssertionError('must not render primary')
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder).resolve();products,tools,lock=owned_fixture(root)
+            primary=HostileError();original=oracle_child.inspect;calls=0
+            def inspect(path: Path,digest: str,pid: int | None,code: int | None) -> oracle_child.OwnedResult:
+                nonlocal calls
+                calls+=1
+                if calls==1:return oracle_child.OwnedResult('UNKNOWN',pid,None,code,None,'reader fault')
+                return original(path,digest,pid,code)
+            def write(path: Path,value: dict[str, Json]) -> None:
+                if path.name=='structural-owned-component.json':raise primary
+                atomic_json(path,value)
+            read,writer=os.pipe()
+            try:
+                _=os.write(writer,b'inspect\n')
+                with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'LOCK',lock),patch.object(structural,'check_owned_helpers'),patch.object(oracle_child,'inspect',side_effect=inspect),patch.object(structural,'atomic_json',side_effect=write),self.assertRaises(structural.StructuralSettledFailure) as raised:
+                    _=structural.run_owned_result(products,tools,root/'owned',read)
+                self.assertIs(raised.exception.original,primary)
+                self.assertEqual(contender(lock),0)
+            finally:os.close(read);os.close(writer)
+
+    def test_close_uncertainty_entrypoint_retains_owner_without_retry(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder).resolve();read,write=os.pipe()
+            script=r"""
+import os,sys
+from pathlib import Path
+from unittest.mock import patch
+sys.path[:0]=sys.argv[3:]
+from test_generic_m6a_structural import owned_fixture
+import generic_m6a_structural as s
+root=Path(sys.argv[1]);products,tools,lock=owned_fixture(root)
+original=s.StructuralLaneOwner.finish_owned
+actual=os.close
+count=0
+def finish(self,evidence):
+ def close(fd):
+  global count
+  if fd==self.descriptor:
+   count+=1
+   (root/'close-count').write_text(str(count))
+   raise OSError('test-owned close fault')
+  actual(fd)
+ with patch.object(os,'close',side_effect=close):
+  return original(self,evidence)
+s.StructuralLaneOwner.finish_owned=finish
+with patch.object(s,'LOCK',lock),patch.object(s.oracle_child,'LOCK',lock),patch.object(s,'check_owned_helpers'):
+ s.run_owned_result(products,tools,root/'owned',int(sys.argv[2]))
+"""
+            with subprocess.Popen([sys.executable,'-c',script,str(root),str(read),str(Path(__file__).resolve().parent),str(Path(structural.__file__).resolve().parent),str(Path(oracle_child.__file__).resolve().parent)],pass_fds=(read,),stdout=subprocess.PIPE,stderr=subprocess.PIPE) as child:
+                os.close(read)
+                try:
+                    deadline=time.monotonic()+10
+                    while not (root/'close-count').exists() and child.poll() is None and time.monotonic()<deadline:time.sleep(0.01)
+                    self.assertIsNone(child.poll())
+                    self.assertEqual((root/'close-count').read_text(),'1')
+                    self.assertNotEqual(contender(root/'owned.lock'),0)
+                    os.close(write);write=-1
+                    time.sleep(0.1)
+                    self.assertIsNone(child.poll())
+                    self.assertEqual((root/'close-count').read_text(),'1')
+                finally:
+                    if write>=0:os.close(write)
+                    if child.poll() is None:child.terminate()
+                    _=child.communicate(timeout=5)
+
     def test_loaded_helper_and_product_copy_must_both_match_sealed_tools(self) -> None:
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder).resolve();products,tools,_=owned_fixture(root)
