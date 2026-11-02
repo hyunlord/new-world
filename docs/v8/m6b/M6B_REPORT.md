@@ -420,6 +420,8 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 단계45 재평가기를 owned 순서의44 직후에 연결했다. 실제44 반환값과 당시 전체 증거 파일을 소비하며, 실패를 유지하고 source/build·안전성 전체 판정은 PENDING으로 남긴다. 루트18개(14.705초), 타입·Ruff와 독립 검토가 통과했다. 외부153개 통합 실행은 기존 순서 기대값1건이 실패한 기록을 보존했고, V2에서 정확한45 기대값을 추가한 제한 재검사가 통과했다. 실제 native 실행이나 전체 gate 통과를 뜻하지 않는다(`stage0/ordered-dispatch/core45-coordinator-review/REVIEW_V2.md`).
 
+단계42/43 실행은 원래 source scan·Cargo·tee·grep 명령과 실제 자식 반환·독립 목록을 연결한다. 42의4개,43의1개 테스트를 계수하고 43 내부 두 분기의 관측은 아직 NOT_RECORDED다. 독립 검토가 찾은 빈 decision 추가·baseline 삭제 누락을 V2에서 모든 원래 scanner 조건과 Rust 입력 재검사로 차단했다. 루트 runtime/coordinator31개(39.971초), 타입·Ruff 및 독립 재현이 통과했다. 49 경로는 유지하며 실제 source/build·observer qualification과42/43 coordinator 연결은 아직 미완료다(`stage0/ordered-dispatch/library4243-review-metadata-v2/REVIEW.json`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

@@ -15,6 +15,7 @@ from generic_gate import GateContractError
 from generic_library_siblings import DIAGNOSIS
 from generic_process import ProcessResult, ProcessSpec, execute, file_hash
 from generic_workspace_capture import read
+from generic_workspace_cases import ListingProcess, process_output
 from generic_workspace_tests import Executable, Target
 
 
@@ -224,6 +225,154 @@ raise SystemExit(subprocess.call([*runner,{str(binary)!r},{DIAGNOSIS!r},'--exact
             for relative in ('outer/process.json','capture/000001/receipt.json','capture/000002/receipt.json'):
                 environment=read(request.output/relative).field('environment').mapping()
                 self.assertNotIn('RUSTC_WRAPPER',environment);self.assertNotIn('RUSTC_WORKSPACE_WRAPPER',environment)
+
+
+class SiblingRuntimeTests(unittest.TestCase):
+    def fixture(self, base: Path, step: int, *, fail: bool = False) -> runner.Library49Request:
+        from generic_library_siblings import LibraryStep, prepare, recipe
+        fixture=RuntimeTests();self.addCleanup(fixture.doCleanups)
+        request=fixture.fixture(base);selected=recipe(LibraryStep(step))
+        target=request.root/'rust/crates/sim-systems';(target/'src/runtime/baseline').mkdir(parents=True)
+        _=(target/'Cargo.toml').write_text('synthetic systems manifest')
+        _=(target/'src/lib.rs').write_text('synthetic systems source')
+        shell=request.root/'tools/v8/core_gate_checks.sh';shell.parent.mkdir(parents=True)
+        _=shell.write_bytes((request.helper.parent/'core_gate_checks.sh').read_bytes())
+        names=selected.expected;count=len(names)
+        body=f'''import sys
+names={names!r}
+if '--list' in sys.argv:
+ if '--ignored' in sys.argv: print('0 tests, 0 benchmarks')
+ else: print(''.join(n+': test\\n' for n in names)+'other: test\\n\\n{count+1} tests, 0 benchmarks')
+else:
+ assert sys.argv[1:]=={[selected.filter,'--nocapture' if selected.nocapture else '--exact']!r}
+ print('running {count} {"test" if count==1 else "tests"}')
+ for name in names: print('test '+name+' ... {"FAILED" if fail else "ok"}')
+ print('\\ntest result: {"FAILED" if fail else "ok"}. {0 if fail else count} passed; {count if fail else 0} failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s\\n')
+ raise SystemExit({101 if fail else 0})
+'''
+        _=request.executable.binary.write_text('#!'+str(request.python)+'\n'+body)
+        command=prepare(LibraryStep(step),request.root,request.output/'original.log')
+        cargo=f'''import os,shlex,subprocess,sys
+assert sys.argv[1:]=={list(command.cargo_argv[1:])!r}
+print('synthetic Cargo diagnostic',file=sys.stderr,flush=True)
+runner=shlex.split(os.environ['CARGO_TARGET_TEST_HOST_RUNNER'])
+raise SystemExit(subprocess.call([*runner,{str(request.executable.binary)!r},{selected.filter!r},{'--nocapture' if selected.nocapture else '--exact'!r}],cwd={str(target)!r}))
+'''
+        _=request.cargo.write_text('#!'+str(request.python)+'\n'+cargo)
+        tools=dict(request.tools)
+        for path in (request.cargo,request.executable.binary,Path('/usr/bin/dirname'),Path('/usr/bin/tee'),Path('/usr/bin/grep')):
+            tools[path.resolve()]=file_hash(path.resolve())
+        inputs=(*request.inputs,*((str(path.relative_to(request.root)),file_hash(path)) for path in (shell,target/'Cargo.toml',target/'src/lib.rs')))
+        return replace(request,invocation=f'synthetic{step}',executable=Executable(
+            Target('sim-systems','sim-systems','sim_systems',('lib',),target/'src/lib.rs',target/'Cargo.toml',False,True),
+            request.executable.binary,step,'debug',selected.filter),inputs=inputs,tools=tuple(sorted(tools.items())),
+            environment=(('PATH',str(Path(sys.executable).parent)+':/usr/bin:/bin'),))
+
+    def test_closed42_and43_execute_original_shell_and_actual_selected_cases(self) -> None:
+        for step,count in ((42,4),(43,1)):
+            with self.subTest(step=step),TemporaryDirectory() as temporary:
+                base=Path(temporary).resolve();request=self.fixture(base,step)
+                with patch.object(runner,'LOCK',base/'lane.lock'):
+                    result=runner.run42_owned(request) if step==42 else runner.run43_owned(request)
+                self.assertEqual(result.status,'PASS');self.assertEqual(len(result.accounting.selected),count)
+                self.assertEqual(result.accounting.filtered_out,1)
+                self.assertEqual(result.accounting.branch_observation,'NOT_RECORDED')
+                receipt=read(result.receipt);self.assertEqual(receipt.field('step').value,step)
+                self.assertEqual(receipt.field('source_build_admission').text(),'PENDING_CALLER_HANDOFF')
+                self.assertIn(b'synthetic Cargo diagnostic',(request.output/'original.log').read_bytes())
+                if step==42:self.assertTrue((request.output/'outer/stdout.log').read_bytes().startswith(b'BASELINE_ISOLATION source PASS\n'))
+
+    def test_native_failure_is_not_hidden_by_tee(self) -> None:
+        for step in (42,43):
+            with self.subTest(step=step),TemporaryDirectory() as temporary:
+                base=Path(temporary).resolve();request=self.fixture(base,step,fail=True)
+                with patch.object(runner,'LOCK',base/'lane.lock'):
+                    result=runner.run42_owned(request) if step==42 else runner.run43_owned(request)
+                self.assertEqual(result.status,'FAIL')
+                self.assertEqual(read(result.receipt).field('native_exit').value,101)
+                self.assertEqual(read(result.receipt).field('outer_exit').value,101)
+
+    def test_wrapper_failure_preserves_native_success(self) -> None:
+        with TemporaryDirectory() as temporary:
+            base=Path(temporary).resolve();request=self.fixture(base,43)
+            body=request.cargo.read_text().replace('raise SystemExit(subprocess.call(', 'code=subprocess.call(')
+            body=body.replace('))\n',')\nraise SystemExit(7)\n')
+            _=request.cargo.write_text(body)
+            request=replace(request,tools=tuple((path,file_hash(path)) for path,_ in request.tools))
+            with patch.object(runner,'LOCK',base/'lane.lock'):
+                result=runner.run43_owned(request)
+            self.assertEqual(result.status,'FAIL')
+            self.assertEqual(result.accounting.accounting_status,'PASS')
+            self.assertEqual(read(result.receipt).field('native_exit').value,0)
+            self.assertEqual(read(result.receipt).field('outer_exit').value,7)
+
+    def test_script_or_shell_tool_missing_binding_rejects_before_launch(self) -> None:
+        for missing in ('script','tee'):
+            with self.subTest(missing=missing),TemporaryDirectory() as temporary:
+                base=Path(temporary).resolve();request=self.fixture(base,42)
+                if missing=='script':request=replace(request,inputs=tuple((name,digest) for name,digest in request.inputs if name!='tools/v8/core_gate_checks.sh'))
+                else:request=replace(request,tools=tuple((path,digest) for path,digest in request.tools if path!=Path('/usr/bin/tee')))
+                with patch.object(runner,'LOCK',base/'lane.lock'),self.assertRaises(GateContractError):
+                    _=runner.run42_owned(request)
+                self.assertFalse(request.output.exists())
+
+    def test_failed_source_scan_does_not_fabricate_native_completion(self) -> None:
+        with TemporaryDirectory() as temporary:
+            base=Path(temporary).resolve();request=self.fixture(base,42)
+            (request.root/'rust/crates/sim-systems/src/runtime/decision').mkdir()
+            with patch.object(runner,'LOCK',base/'lane.lock'),self.assertRaises(runner.LibraryOwnershipUnknown) as caught:
+                _=runner.run42_owned(request)
+            self.assertIs(caught.exception.request,request)
+            self.assertFalse((request.output/'result.json').exists())
+            self.assertFalse((request.output/'capture/000001').exists())
+
+    def test_source_scanner_new_input_during_listings_is_rejected(self) -> None:
+        with TemporaryDirectory() as temporary:
+            base=Path(temporary).resolve();request=self.fixture(base,42)
+            actual=execute
+            def added(spec: ProcessSpec) -> ProcessResult:
+                result=actual(spec)
+                if spec.output_root.name=='ignored':
+                    _=(request.root/'rust/crates/sim-systems/src/runtime/added.rs').write_text('// added')
+                return result
+            with patch.object(runner,'LOCK',base/'lane.lock'),patch.object(runner,'execute',added),self.assertRaises(runner.LibrarySettledFailure):
+                _=runner.run42_owned(request)
+
+    def test_scanner_path_predicates_are_rechecked_after_each_child(self) -> None:
+        for phase in ('outer','full','ignored'):
+            for mutation in ('decision','baseline','seam'):
+                with self.subTest(phase=phase,mutation=mutation),TemporaryDirectory() as temporary:
+                    base=Path(temporary).resolve();request=self.fixture(base,42)
+                    def changed(spec: ProcessSpec, phase: str = phase,
+                                request: runner.Library49Request = request,
+                                mutation: str = mutation) -> ProcessResult:
+                        result=execute(spec)
+                        if spec.output_root.name==phase:
+                            runtime=request.root/'rust/crates/sim-systems/src/runtime'
+                            if mutation=='decision':(runtime/'decision').mkdir()
+                            elif mutation=='baseline':(runtime/'baseline').rmdir()
+                            else:
+                                (runtime/'jobs').mkdir(exist_ok=True)
+                                (runtime/'jobs/seam.rs').mkdir()
+                        return result
+                    with patch.object(runner,'LOCK',base/'lane.lock'),patch.object(runner,'execute',changed),self.assertRaises(runner.LibrarySettledFailure):
+                        _=runner.run42_owned(request)
+                    self.assertFalse((request.output/'result.json').exists())
+
+    def test_scanner_rechecked_after_final_parent_authentication_callback(self) -> None:
+        with TemporaryDirectory() as temporary:
+            base=Path(temporary).resolve();request=self.fixture(base,42)
+            calls=0
+            def changed(binding: ListingProcess, argv: tuple[str,...], cwd: Path,
+                        environment: dict[str,str], inputs: dict[str,str]) -> bytes:
+                nonlocal calls
+                result=process_output(binding,argv,cwd,environment,inputs)
+                if binding.spec.output_root.name=='outer':
+                    calls+=1
+                    if calls==2:(request.root/'rust/crates/sim-systems/src/runtime/decision').mkdir()
+                return result
+            with patch.object(runner,'LOCK',base/'lane.lock'),patch.object(runner,'process_output',changed),self.assertRaises(runner.LibrarySettledFailure):
+                _=runner.run42_owned(request)
 
 
 if __name__ == '__main__':
