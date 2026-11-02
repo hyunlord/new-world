@@ -1,5 +1,6 @@
 """Bench boundaries use portable synthetic receipts, never machine-local fixtures."""
 import unittest
+from typing import final
 
 from generic_bench import AuditError, justified_ratio
 
@@ -312,3 +313,129 @@ class BenchmarkSafetyWiringTests(ProductFixture):
             self.assertEqual(item.process.external_inputs,((script,sha256(script)),))
         self.assertTrue((output/'failure.json').is_file())
         self.assertFalse((output/'result.json').exists())
+
+
+@final
+class RetainedBenchTests(ProductFixture):
+    """Tiny processes plus mocked safety: receipt plumbing, never benchmark proof."""
+
+    def prepare(self) -> tuple[Path, Path]:
+        from dataclasses import replace
+        for index, product in enumerate(self.products):
+            _ = product.binary.write_bytes(b'#!/bin/sh\nexit 0\n')
+            row = document(product.build_receipt.read_text()).mapping()
+            row['binary_sha256'] = sha256(product.binary)
+            _ = product.build_receipt.write_text(json.dumps(row))
+            self.products[index] = replace(product, binary_sha256=sha256(product.binary),
+                                           build_receipt_sha256=sha256(product.build_receipt))
+        script = self.root/'commands.json'; _ = script.write_text('[]')
+        output = self.root/'retained'
+        with patch('generic_bench_run.wait_for_load', return_value=(1.0,2.0,3.0)), \
+             patch('generic_bench_run.audit_bench_safety', side_effect=self.audit):
+            _ = run_bench(self.products[0],self.products[1], 'publication', script, sha256(script), output)
+        return script, output
+
+    @staticmethod
+    def audit(*_args: object) -> dict[str, Json]:
+        return {'status':'BENCH_NUMERICAL_AND_SAFETY_PASS','publication_authority':False,
+                'worlds':126,'pairs':63,'hashes':{},'numerical':{},'safety':[],
+                'authority_dependency':'synthetic test oracle only'}
+
+    def authenticate(self, script: Path, output: Path):
+        import generic_bench_run as runner
+        with patch.object(runner,'audit_bench_safety',side_effect=self.audit):
+            return runner.authenticate_result(self.products[0],self.products[1],'publication',script,sha256(script),output,
+                receipt_sha256=sha256(output/'result.json'))
+
+    def test_actual_six_retained_processes_reaudited(self):
+        script,output=self.prepare()
+        result=self.authenticate(script,output)
+        self.assertEqual(result.status,'COMPONENT_PASS')
+        self.assertEqual(result.receipt,output/'result.json')
+
+    def test_completed_process_lifecycle_cannot_be_resealed_away(self):
+        for key,value in (('duration_ns',0),('duration_ns',True),('ended_at','2020-01-01T00:00:00+00:00')):
+            with self.subTest(key=key,value=value):
+                script,output=self.prepare()
+                process=output/'base-r1/process.json'
+                row=document(process.read_text()).mapping();row[key]=value;_ = process.write_text(json.dumps(row))
+                self.reseal(output)
+                result=self.authenticate(script,output)
+                self.assertEqual(result.status,'FAIL')
+                # Fresh evidence path for next synthetic subtest; never delete prior evidence.
+                self.root=self.root/'next';self.root.mkdir()
+
+    def test_finished_and_result_disagreement_rejected(self):
+        script,output=self.prepare()
+        finished=output/'base-r1.finished.json'
+        row=document(finished.read_text()).mapping();row['producer_pid']=1;_ = finished.write_text(json.dumps(row))
+        self.assertEqual(self.authenticate(script,output).status,'FAIL')
+
+    def test_result_and_failure_cannot_coexist(self):
+        script,output=self.prepare();_ = (output/'failure.json').write_text('{}')
+        self.assertEqual(self.authenticate(script,output).status,'FAIL')
+
+    def test_no_terminal_is_pending_without_manufactured_file(self):
+        import generic_bench_run as runner
+        output=self.root/'pending';output.mkdir()
+        script=self.root/'commands.json';_ = script.write_text('[]')
+        result=runner.authenticate_result(self.products[0],self.products[1],'publication',script,sha256(script),output,receipt_sha256=None)
+        self.assertEqual(result.status,'PENDING');self.assertIsNone(result.receipt)
+        self.assertEqual(list(output.iterdir()),[])
+
+    def test_original_failure_retained_without_success_shape(self):
+        import generic_bench_run as runner
+        script=self.root/'commands.json';_ = script.write_text('[]');output=self.root/'failed'
+        with patch.object(runner,'wait_for_load',return_value=(1.0,2.0,3.0)),self.assertRaises(AuditError):
+            _ = run_bench(self.products[0],self.products[1],'publication',script,sha256(script),output)
+        result=runner.authenticate_result(self.products[0],self.products[1],'publication',script,sha256(script),output,
+            receipt_sha256=sha256(output/'failure.json'))
+        self.assertEqual(result.status,'FAIL');self.assertEqual(result.receipt,output/'failure.json')
+        self.assertFalse((output/'result.json').exists())
+
+    @staticmethod
+    def reseal(output: Path, label: str = 'base-r1') -> None:
+        process=output/label/'process.json'
+        finished=output/(label+'.finished.json')
+        row=document(finished.read_text()).mapping();row['process_receipt_sha256']=sha256(process)
+        _ = finished.write_text(json.dumps(row))
+        terminal=output/'result.json';result=document(terminal.read_text()).mapping()
+        records=Node(result['invocations']).array()
+        result['invocations']=[row if item.field('arm').text()+'-r'+str(item.field('repeat').value)==label else item.value for item in records]
+        _ = terminal.write_text(json.dumps(result))
+
+    def test_resealed_spawn_and_start_drift_reject(self):
+        cases: tuple[tuple[str,str,Json], ...] = (('process-spawn.json','pid',0),('process-spawn.json','spawned_at','2099-01-01T00:00:00+00:00'),
+                               ('process-start.json','expected_inputs',{}))
+        for name,key,value in cases:
+            script,output=self.prepare();path=output/'base-r1'/name
+            row=document(path.read_text()).mapping();row[key]=value;_ = path.write_text(json.dumps(row))
+            self.assertEqual(self.authenticate(script,output).status,'FAIL')
+            self.root=self.root/'next';self.root.mkdir()
+
+    def test_extra_file_or_empty_directory_rejected(self):
+        for directory in (False,True):
+            script,output=self.prepare();path=output/'extra'
+            if directory:path.mkdir()
+            else:_ = path.write_text('unowned')
+            self.assertEqual(self.authenticate(script,output).status,'FAIL')
+            self.root=self.root/'next';self.root.mkdir()
+
+    def test_late_mutation_rejected_by_full_snapshot(self):
+        import generic_bench_run as runner
+        script,output=self.prepare()
+        def mutate(*args: object) -> dict[str,Json]:
+            _ = (output/'base-r1/process-start.json').write_text('{}')
+            return self.audit(*args)
+        with patch.object(runner,'audit_bench_safety',side_effect=mutate):
+            result=runner.authenticate_result(self.products[0],self.products[1],'publication',script,sha256(script),output,
+                receipt_sha256=sha256(output/'result.json'))
+        self.assertEqual(result.status,'FAIL');self.assertTrue(any('final:' in error for error in result.errors))
+
+    def test_real_safety_rejection_is_not_numeric_success(self):
+        import generic_bench_run as runner
+        script,output=self.prepare()
+        # Tiny aggregate logs have no bench children; real audit must reject them.
+        result=runner.authenticate_result(self.products[0],self.products[1],'publication',script,sha256(script),output,
+            receipt_sha256=sha256(output/'result.json'))
+        self.assertEqual(result.status,'FAIL')

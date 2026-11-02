@@ -327,6 +327,8 @@ workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignore
 
 직접 Cargo 실행과 기록 실행의 전체 native·doctest 사례를 대조하는 순수 집계를 추가했다. 원래 단계4/5 명령·전체 실행 선언·패키지 manifest의 표준 harness·실제 산출물·기록 실행 이후의 독립 전체/ignored 목록을 연결한다. 모든 section과 바이트가 맞기 전에는 소스별 결과를 배정하지 않으며, 양쪽 실패가 같아도 실행 결과는 FAILED로 유지한다. 루트37개가3.254초에 통과했고 엄격 타입 검사30·Ruff 및 독립 v3 검토도 통과했다. 직접 자식의 PID·환경·숫자 종료 코드는 관찰되지 않았고, populated jobserver FD·실제 workspace 실행·세계 안전성과 전체 gate는 미검증이다(`stage0/workspace-cases/v3/INDEPENDENT_REVIEW_V3.md`, patch SHA256 `06d64cdf0843b4d90db71eddcfc641e2478d538a052700fb25ccc9467ab0b860`).
 
+벤치의 보존 결과를 원래6개 교차 실행 계획과 실제 시작·spawn·종료 기록에 다시 대조하는 검증기를 추가했다. 기존 수치·안전성 검증기를 그대로 호출해126개 자식 산출물과63쌍 안전성 결과를 재계산하고, 전체 산출물 목록·바이트·순서·부하·스크립트·CHANGELOG를 확인한다. 루트 독립44개가10.795초에 통과했고 표준 루트36개, 설정된 엄격 타입 범위·Ruff도 통과했다. 테스트 파일의 기존 타입 진단81개는 유지하며 전체 clean을 주장하지 않는다. COMPONENT_PASS는 빌드 출처·자식 종료 권한을 주지 않고, 실제 벤치·조정기 연결·ledger·전체 gate는 미완료다(`stage0/ordered-dispatch/BENCH_AUTH_ROOT_REVIEW_V1.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

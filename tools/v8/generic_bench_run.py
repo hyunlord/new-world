@@ -1,6 +1,8 @@
 """Execute interleaved benchmark aggregates and require numerical plus world safety."""
 import hashlib
 import time
+from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Literal
 
@@ -9,14 +11,18 @@ from generic_bench import (
     Product,
     git_bytes,
     justified_ratio,
+    loads,
+    number,
     require,
     sha256,
     validate_products,
     write_new,
 )
 from generic_bench_safety import Aggregate, audit_bench_safety
-from generic_process import ProcessSpec, execute
-from mux2_gate_inputs import Json
+from generic_gate import document, integer
+from generic_process import ProcessResult, ProcessSpec, execute, file_hash, real_path
+from generic_sources import inventory
+from mux2_gate_inputs import Json, Node
 from read_gate_checks import wait_for_load
 
 
@@ -51,20 +57,8 @@ def run_bench(base: Product, candidate: Product, purpose: str, script: Path,
                 require(sha256(script) == script_sha256, 'command input drift')
                 triplet = wait_for_load()
                 run_dir = output / f'{arm}-r{repeat}'
-                argv = [str(product.binary), 'bench', '--out', str(run_dir), '--commands', str(script),
-                        '--repeats', '1', '--commit', product.source_sha]
-                runtime_inputs = dict(product.input_files)
-                external_inputs: tuple[tuple[Path, str], ...] = ()
-                if script.is_relative_to(product.root):
-                    relative = script.relative_to(product.root).as_posix()
-                    require(relative in runtime_inputs and runtime_inputs[relative] == script_sha256,
-                            'script missing from authenticated product inventory')
-                else:
-                    external_inputs = ((script, script_sha256),)
-                spec = ProcessSpec(tuple(argv), product.root, product.binary, product.binary_sha256,
-                                   product.root, tuple(sorted(runtime_inputs.items())), run_dir,
-                                   (('WORLDSIM_GIT_SHA', product.source_sha), ('WORLDSIM_GATE_OBSERVER', '1')),
-                                   external_inputs=external_inputs)
+                spec = aggregate_spec(product, arm, repeat, script, script_sha256, output)
+                argv = spec.argv
                 record: dict[str, Json] = {'arm': arm, 'repeat': repeat, 'argv': [part for part in argv],
                     'cwd': str(product.root), 'source_sha': product.source_sha,
                     'binary_sha256': product.binary_sha256, 'script_sha256': script_sha256,
@@ -95,3 +89,159 @@ def run_bench(base: Product, candidate: Product, purpose: str, script: Path,
         write_new(output / 'failure.json', {'status': 'FAIL_OR_INCOMPLETE', 'reason': str(exc),
                                           'invocations': invocations})
         raise
+
+
+def aggregate_spec(product: Product, arm: Literal['base','candidate'], repeat: int,
+                   script: Path, script_sha256: str, output: Path) -> ProcessSpec:
+    """Closed execution/retained-admission plan, not caller-selectable argv."""
+    require(arm in ('base','candidate') and type(repeat) is int and repeat in (1,2,3), 'invalid occurrence')
+    runtime_inputs = dict(product.input_files)
+    require(bool(runtime_inputs) and len(runtime_inputs) == len(product.input_files), 'missing/duplicate product inputs')
+    external_inputs: tuple[tuple[Path,str], ...] = ()
+    if script.is_relative_to(product.root):
+        require(runtime_inputs.get(script.relative_to(product.root).as_posix()) == script_sha256,
+                'script missing from authenticated product inventory')
+    else:
+        external_inputs = ((script,script_sha256),)
+    run_dir = output/f'{arm}-r{repeat}'
+    argv = (str(product.binary),'bench','--out',str(run_dir),'--commands',str(script),
+            '--repeats','1','--commit',product.source_sha)
+    return ProcessSpec(argv,product.root,product.binary,product.binary_sha256,product.root,
+                       tuple(sorted(runtime_inputs.items())),run_dir,
+                       (('WORLDSIM_GIT_SHA',product.source_sha),('WORLDSIM_GATE_OBSERVER','1')),
+                       external_inputs=external_inputs)
+
+
+@dataclass(frozen=True, slots=True)
+class BenchResult:
+    receipt: Path | None
+    sha256: str | None
+    status: Literal['COMPONENT_PASS','FAIL','PENDING']
+    errors: tuple[str, ...] = ()
+    files: tuple[tuple[str,str], ...] = ()
+
+
+def _snapshot(output: Path) -> dict[str,str]:
+    real_path(output,directory=True)
+    names = sorted(path.name for path in output.iterdir())
+    files = inventory(output,names) if names else {}
+    # Empty directory additions also change evidence membership.
+    for path in output.rglob('*'):
+        if path.is_dir():
+            real_path(path,directory=True)
+            files[path.relative_to(output).as_posix()+'/'] = ''
+    return files
+
+
+def _lifecycle(spec: ProcessSpec, pid: int, started: float, finished: float) -> None:
+    row=document((spec.output_root/'process.json').read_text())
+    spawn=document((spec.output_root/'process-spawn.json').read_text())
+    start=document((spec.output_root/'process-start.json').read_text())
+    spawn.field('pid').equals(pid)
+    times=tuple(datetime.fromisoformat(value) for value in
+                (row.field('started_at').text(),spawn.field('spawned_at').text(),row.field('ended_at').text()))
+    require(all(value.tzinfo is not None and value.utcoffset() is not None for value in times), 'naive process timestamp')
+    require(started <= times[0].timestamp() <= times[1].timestamp() <= times[2].timestamp() <= finished,
+            'aggregate/process chronology differs')
+    require(integer(row.field('duration_ns')) > 0, 'nonpositive process duration')
+    require('timeout_seconds' not in row.mapping() and 'timed_out' not in row.mapping(), 'unexpected process timeout')
+    row.field('build_provenance_verified').equals(False)
+    immutable=('schema_version','argv','cwd','executable','expected_executable_sha256','input_root',
+               'expected_inputs','output_root','environment','expected_external_inputs','fresh_directories',
+               'environment_policy','started_at','build_provenance_verified','before_executable_sha256',
+               'before_inputs','before_external_inputs')
+    for key in immutable:start.field(key).equals(row.field(key).value)
+    initial: dict[str,Json] = {'status':'FAIL','pid':None,'native_exit':None,'errors':[],'after_external_inputs':{}}
+    for key,value in initial.items():
+        start.field(key).equals(value)
+    require(not {'ended_at','duration_ns','timeout_seconds','timed_out'} & start.mapping().keys(), 'invalid start completion fields')
+
+
+def authenticate_result(base: Product, candidate: Product, purpose: str, script: Path,
+                        script_sha256: str, output: Path, *, receipt_sha256: str | None,
+                        justifications: tuple[dict[str,str], ...] = ()) -> BenchResult:
+    """Retained numeric/safety admission only; source/build authority stays caller-owned.
+
+    Never executes children, waits for load, rewrites receipts or appends a ledger.
+    FAIL/PENDING do not establish descendant quiescence or release a caller's lane.
+    """
+    errors: list[str] = []; before: dict[str,str] | None = None
+    terminal: Path | None = None; terminal_hash: str | None = None
+    status: Literal['COMPONENT_PASS','FAIL','PENDING'] = 'FAIL'
+    try:
+        before=_snapshot(output)
+        result_path=output/'result.json';failure=output/'failure.json'
+        require(not (result_path.exists() and failure.exists()), 'both result and failure retained')
+        terminal=result_path if result_path.exists() else failure if failure.exists() else None
+        if terminal is None:
+            require(receipt_sha256 is None, 'expected terminal receipt is missing')
+            status='PENDING'
+        else:
+            terminal_hash=file_hash(terminal)
+            require(terminal_hash == receipt_sha256, 'terminal digest differs')
+            node=document(terminal.read_text())
+            if terminal == failure:
+                require(set(node.mapping()) == {'status','reason','invocations'}, 'unknown failure schema')
+                node.field('status').equals('FAIL_OR_INCOMPLETE')
+                _=node.field('reason').text();_=node.field('invocations').array()
+                status='FAIL'
+            else:
+                validate_products(base,candidate,purpose)
+                real_path(script,directory=False)
+                require(file_hash(script) == script_sha256, 'script changed')
+                require(not any(output.is_relative_to(product.root) for product in (base,candidate)), 'output overlaps product')
+                aggregates: list[Aggregate] = []; invocations: list[Json] = []
+                expected_files={'result.json'}; previous=0.0
+                arms: tuple[tuple[Literal['base','candidate'],Product], ...] = (('base',base),('candidate',candidate))
+                for repeat in (1,2,3):
+                    for arm,product in arms:
+                        spec=aggregate_spec(product,arm,repeat,script,script_sha256,output)
+                        label=f'{arm}-r{repeat}'
+                        start=document((output/(label+'.started.json')).read_text())
+                        end=document((output/(label+'.finished.json')).read_text())
+                        fixed: dict[str,Json]={'arm':arm,'repeat':repeat,'argv':list(spec.argv),'cwd':str(product.root),
+                            'source_sha':product.source_sha,'binary_sha256':product.binary_sha256,
+                            'script_sha256':script_sha256,'build_receipt_sha256':product.build_receipt_sha256}
+                        for key,value in fixed.items():start.field(key).equals(value);end.field(key).equals(value)
+                        require(set(start.mapping()) == set(fixed)|{'load_1_5_15','started_unix','exit_code','finished_unix'}, 'started record schema differs')
+                        added={'producer_pid','process_status','process_receipt','process_receipt_sha256','stdout_sha256','stderr_sha256'}
+                        require(set(end.mapping()) == set(start.mapping())|added, 'finished record schema differs')
+                        start.field('exit_code').equals(None);start.field('finished_unix').equals(None)
+                        for key in ('load_1_5_15','started_unix'):end.field(key).equals(start.field(key).value)
+                        require(loads(start.field('load_1_5_15').value,'aggregate load')[0] < 8, 'aggregate admission load >=8')
+                        begin=number(start.field('started_unix').value,'start',positive=True)
+                        finish=number(end.field('finished_unix').value,'finish',positive=True)
+                        require(previous < begin <= finish, 'interleaved aggregate overlap/reversal')
+                        previous=finish
+                        pid=integer(end.field('producer_pid'));require(pid > 0, 'invalid aggregate PID')
+                        end.field('exit_code').equals(0);end.field('process_status').equals('PASS')
+                        process=spec.output_root/'process.json'
+                        end.field('process_receipt').equals(str(process));end.field('process_receipt_sha256').equals(file_hash(process))
+                        for stream in ('stdout','stderr'):end.field(stream+'_sha256').equals(file_hash(spec.output_root/(stream+'.log')))
+                        _lifecycle(spec,pid,begin,finish)
+                        aggregates.append(Aggregate(arm,repeat,product,spec,ProcessResult(process,'PASS',0,pid),file_hash(process)))
+                        invocations.append(end.mapping())
+                        expected_files.update({label+'.started.json',label+'.finished.json',label+'/process-start.json',label+'/process-spawn.json'})
+                changelog=git_bytes(candidate.root,'show',f'{candidate.source_sha}:CHANGELOG.md')
+                audit=audit_bench_safety(output,tuple(aggregates),purpose,script,script_sha256,justifications)
+                audit.update(invocations=invocations,purpose=purpose,changelog_sha256=hashlib.sha256(changelog).hexdigest())
+                node.equals(audit)
+                for name in Node(audit['hashes']).mapping():
+                    path=Path(name)
+                    if path.is_relative_to(output):expected_files.add(path.relative_to(output).as_posix())
+                # Aggregate receipt/logs are mandatory even for test doubles of the safety oracle.
+                for item in aggregates:
+                    expected_files.update(f'{item.arm}-r{item.round_index}/{name}' for name in ('process.json','stdout.log','stderr.log'))
+                actual_files={name for name in before if not name.endswith('/')}
+                require(actual_files == expected_files, 'unexpected/missing benchmark evidence files')
+                expected_dirs={parent.as_posix()+'/' for name in expected_files for parent in Path(name).parents if parent != Path('.')}
+                require({name for name in before if name.endswith('/')} == expected_dirs, 'unexpected/missing benchmark evidence directories')
+                status='COMPONENT_PASS'
+    except (AuditError, OSError, ValueError, KeyError, UnicodeError) as error:
+        errors.append(str(error))
+    finally:
+        if before is not None:
+            try:require(_snapshot(output) == before, 'retained evidence changed during authentication')
+            except (AuditError,OSError,ValueError) as error:errors.append('final: '+str(error))
+    return BenchResult(terminal,terminal_hash,'FAIL' if errors else status,tuple(errors),
+                       tuple(sorted(before.items())) if before is not None else ())
