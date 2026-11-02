@@ -267,6 +267,8 @@ stall 결과 연결부는 원래 타이밍 계산과 pristine 캡처 인증을 �
 
 작은 실제 Cargo runner 검증 run01은 테스트 실행 전 no-run 빌드에서 FAIL했다. 별도 읽기 전용 fixture의 Cargo.lock에 Cargo 표준 생성 주석 두 줄이 없어 재기록하려다 권한 오류가 발생했다. 원래 직접/기록 실행과 파일 디스크립터 동등성 검증은 NOT_RUN이며 실패 입력·원시 종료·부분 산출물을 보존했다. 고정된 Cargo 소스에 근거해 주석만 추가한 v3는 오프라인10개와 독립 검토를 통과했으나 실제 복구 실행 결과로 간주하지 않는다(`stage0/workspace-runtime/cargo-hook-qualification/debug-native-run-01/RESULT.json`).
 
+원래 단계16의 `python_unittest`는 기존 정적 명령 실행기를 확장해 연결했다. 전체 `test_*.py` discovery 명령을 유지하고 문서 입력, 실제 셸·Perl 도구, 두 아트 원본 Git 참조와 명시적 시작 환경을 검증한다. 실행된 unittest의 종료 요약에서 검사 수·skip·expected failure·failure·error를 읽으며 소스 선언 수를 실행 수로 쓰지 않는다. 기존 여덟 단계의 경로는 유지했다. 독립 리뷰와 루트 합성19개, 엄격 타입 검사19 및 Ruff가 통과했다. 새 Perl 의존성 목록의 실제 수집·동결과 원래 전체 discovery 실행은 아직 NOT_RUN이며, 기존 정적8개 증거를 단계16 완료로 재사용하지 않는다(`stage0/ordered-dispatch/step16-draft/`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

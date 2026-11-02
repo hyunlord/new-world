@@ -35,7 +35,8 @@ class Fixture:
         _ = patch.object(shutil, 'which', return_value=str(self.child)).start()
         self.source = Mock(return_value={'source': 'synthetic'})
         _ = patch.object(runner, 'freeze_source', new=self.source).start()
-        _ = patch.object(runner, '_refs', return_value={}).start()
+        self.refs_patch = patch.object(runner, '_refs', return_value={})
+        _ = self.refs_patch.start()
         _ = patch.object(runner, 'inventory', side_effect=self.inventory).start()
 
     def inventory(self, root: Path, names: list[str]) -> dict[str, str]:
@@ -49,8 +50,10 @@ class Fixture:
 class StaticTests(unittest.TestCase):
     def test_all_exact_commands_cwd_and_component_scope(self) -> None:
         fixture = Fixture(self)
-        self.assertEqual(set(runner.COMMANDS), {1, 7, 13, 15, 20, 22, 31, 33})
+        self.assertEqual(set(runner.COMMANDS), {1, 7, 13, 15, 16, 20, 22, 31, 33})
         for step, (_, argv) in runner.COMMANDS.items():
+            if step == 16:
+                continue
             with self.subTest(step=step):
                 result = fixture.run_one(step, str(step))
                 self.assertEqual(result.status, 'PASS')
@@ -168,6 +171,108 @@ class StaticTests(unittest.TestCase):
         _ = (result.receipt.parent / 'extra').write_text('unbound')
         with self.assertRaises(GateContractError):
             runner.verify_receipt(result.receipt, file_hash(result.receipt))
+
+
+@final
+class Step16Tests(unittest.TestCase):
+    def fixture(self, summary: str = 'Ran 7 tests in 0.01s\n\nOK (skipped=1, expected failures=2)', code: int = 0) -> Fixture:
+        fixture = Fixture(self)
+        _ = fixture.child.write_text("#!/bin/sh\ncat >&2 <<'END'\n" + summary + '\nEND\nexit ' + str(code) + '\n')
+        names = ('python3', 'git', 'bash', 'grep', 'sh', 'sleep', 'dirname', 'mkdir', 'sed', 'date', 'touch', 'env', 'shasum', 'cmp', 'perl')
+        paths = {name: (Path('/bin', name).resolve() if name in ('bash', 'sh', 'sleep') else
+                       Path('/usr/bin/perl').resolve() if name == 'perl' else fixture.child) for name in names}
+        def selected(name: str, *, path: str) -> str:
+            _ = path
+            return str(paths[name])
+        _ = patch.object(shutil, 'which', side_effect=selected).start()
+        fixture.context = runner.ExecutionEnvironment(
+            (*fixture.context.values, ('HOME', str(fixture.base)), ('TMPDIR', str(fixture.base)),
+             ('PYTHONDONTWRITEBYTECODE', '1'), ('PYTHONNOUSERSITE', '1'),
+             ('GIT_CONFIG_GLOBAL', '/dev/null'), ('GIT_CONFIG_NOSYSTEM', '1')),
+            tuple((name, path, file_hash(path)) for name, path in paths.items()), ())
+        return fixture
+
+    def test_exact_discovery_and_actual_counts_with_docs_inputs(self) -> None:
+        fixture = self.fixture()
+        seen: list[list[str]] = []
+        def observe(root: Path, names: list[str]) -> dict[str, str]:
+            if root == fixture.root:
+                seen.append(names)
+            return fixture.inventory(root, names)
+        with patch.object(runner, 'inventory', side_effect=observe):
+            result = fixture.run_one(16)
+        self.assertEqual(result.status, 'PASS')
+        child = document((result.receipt.parent / 'process/process.json').read_text())
+        self.assertEqual(child.field('argv').value,
+                         [str(fixture.child), '-m', 'unittest', 'discover', '-s', 'tools/v8', '-p', 'test_*.py'])
+        self.assertNotIn('timeout_seconds', child.mapping())
+        self.assertTrue(seen and all('docs' in names for names in seen))
+        report = document(result.receipt.read_text()).field('unittest')
+        self.assertEqual(document(result.receipt.read_text()).field('name').value, 'python_unittest')
+        self.assertEqual(report.field('tests_run').value, 7)
+        self.assertEqual(report.field('counts').field('skipped').value, 1)
+        self.assertEqual(report.field('counts').field('expected failures').value, 2)
+        runner.verify_receipt(result.receipt, file_hash(result.receipt))
+
+    def test_native_failure_retains_actual_terminal_and_logs(self) -> None:
+        fixture = self.fixture('Ran 3 tests in 0.02s\n\nFAILED (failures=1, errors=1)', 1)
+        result = fixture.run_one(16)
+        report = document(result.receipt.read_text())
+        self.assertEqual(result.status, 'FAIL')
+        self.assertEqual(report.field('unittest').field('tests_run').value, 3)
+        self.assertEqual(report.field('native_exit').value, 1)
+        self.assertIn('FAILED', (result.receipt.parent / 'process/stderr.log').read_text())
+        self.assertIn('source_end', report.mapping())
+
+    def test_each_required_tool_and_environment_policy_before_spawn(self) -> None:
+        fixture = self.fixture()
+        original = fixture.context
+        for name in ('bash', 'grep', 'sh', 'sleep', 'dirname', 'mkdir', 'sed', 'date', 'touch', 'env', 'shasum', 'cmp', 'perl'):
+            fixture.context = runner.ExecutionEnvironment(original.values,
+                tuple(row for row in original.tools if row[0] != name), ())
+            result = fixture.run_one(16, 'missing-' + name)
+            self.assertEqual(result.status, 'FAIL')
+            self.assertFalse((result.receipt.parent / 'process').exists())
+        for name in ('HOME', 'TMPDIR', 'PYTHONDONTWRITEBYTECODE', 'PYTHONNOUSERSITE', 'GIT_CONFIG_GLOBAL', 'GIT_CONFIG_NOSYSTEM'):
+            fixture.context = runner.ExecutionEnvironment(tuple(row for row in original.values if row[0] != name), original.tools, ())
+            result = fixture.run_one(16, 'env-' + name)
+            self.assertEqual(result.status, 'FAIL')
+            self.assertFalse((result.receipt.parent / 'process').exists())
+        fixture.context = runner.ExecutionEnvironment((*original.values, ('WORLDSIM_MUX2_LANE_FD', '999')), original.tools, ())
+        self.assertEqual(fixture.run_one(16, 'lane').status, 'FAIL')
+
+    def test_invalid_or_contradictory_terminal(self) -> None:
+        for summary in ('OK', 'Ran 0 tests in 0.1s\n\nOK', 'Ran 2 tests in 0.1s\n\nOK\ntrailing',
+                        'Ran 2 tests in 0.1s\n\nOK (errors=1)', 'Ran 2 tests in 0.1s\n\nFAILED',
+                        'Ran 2 tests in 0.1s\n\nOK (skipped=3)',
+                        'Ran 2 tests in 0.1s\n\nOK (skipped=1, skipped=1)',
+                        'Ran 2 tests in 0.1s\n\nOK (unknown=1)',
+                        'Ran 2 tests in 0.1s\n\nOK\nRan 2 tests in 0.1s\n\nOK'):
+            with self.subTest(summary=summary), self.assertRaises(GateContractError):
+                _ = runner.unittest_terminal(summary)
+
+    def test_unexpected_success_is_failed_not_an_allowed_skip(self) -> None:
+        row = runner.unittest_terminal('Ran 1 test in 0.001s\n\nFAILED (unexpected successes=1)')
+        self.assertEqual(row['outcome'], 'FAILED')
+
+    def test_real_source_refs_include_both_art_commits_without_import(self) -> None:
+        fixture = self.fixture()
+        fixture.refs_patch.stop()
+        root = fixture.root
+        _ = (root / 'tools/v8/art_import.json').write_text('{"source_commit":"' + 'f' * 40 + '"}')
+        _ = (root / 'tools/v8/art_masks.py').write_text("raise RuntimeError('must not import')\nSOURCE_COMMIT = '" + 'c' * 40 + "'\n")
+        calls: list[tuple[str, ...]] = []
+        def resolve(path: Path, *args: str) -> bytes:
+            self.assertEqual(path, root)
+            calls.append(args)
+            return args[-1].removesuffix('^{commit}').encode()
+        with patch.object(runner, 'git', side_effect=resolve):
+            result = fixture.run_one(16)
+        self.assertEqual(result.status, 'PASS')
+        refs = document(result.receipt.read_text()).field('refs_before').mapping()
+        self.assertEqual(set(refs), {'f' * 40, 'c' * 40})
+        self.assertEqual(calls, [('rev-parse', '--verify', 'f' * 40 + '^{commit}'),
+                                 ('rev-parse', '--verify', 'c' * 40 + '^{commit}')] * 2)
 
 
 if __name__ == '__main__':
