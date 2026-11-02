@@ -3,14 +3,15 @@
 # dependencies = []
 # ///
 # Run: python3 -m unittest test_generic_setup_clippy
-"""Original step6 endpoint only; shared-target chronology is not yet authenticated."""
+"""Original step6 with optional retained step5 endpoint; no build-product authority."""
 import os
 import shutil
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Final, Literal
 
-from generic_gate import require
+from gate_oracle_child import import_generated
+from generic_gate import document, require
 from generic_process import (
     ProcessResult,
     ProcessSpec,
@@ -29,6 +30,15 @@ from generic_setup_bridge import (
 from generic_setup_prepare import COMMANDS, PreparedSetup
 from generic_sources import inventory
 from generic_workspace_cases import ListingProcess, process_output
+from generic_workspace_endpoints import (
+    EvidenceAnchor,
+    GeneratedState,
+    WorkspaceEndpoint,
+    anchor,
+    check_endpoint,
+    generated,
+    state_json,
+)
 from mux2_gate_inputs import Json
 
 CLIPPY_SOURCES: Final = {
@@ -56,6 +66,64 @@ class ClippyResult:
     status: Literal['PASS_STEP6_ENDPOINT_ONLY'] = 'PASS_STEP6_ENDPOINT_ONLY'
     chronology_authority: Literal[False] = False
     build_product_authority: Literal[False] = False
+    endpoint: 'ClippyEndpoint | None' = None
+
+
+@dataclass(frozen=True, slots=True)
+class ClippyRequest:
+    prepared: PreparedSetup
+    wait: ClippyWaitEvidence
+    output: Path
+    descriptor: int
+    predecessor: WorkspaceEndpoint | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class ClippyEndpoint:
+    request: ClippyRequest
+    predecessor: WorkspaceEndpoint
+    result: ClippyResult
+    receipt_sha256: str
+    before: GeneratedState
+    after: GeneratedState
+    history: tuple[EvidenceAnchor, ...]
+
+
+def check_clippy_endpoint(endpoint: ClippyEndpoint) -> None:
+    """Validate retained history, without freezing a later producer's target state."""
+    request = endpoint.request
+    prior = endpoint.predecessor
+    require(request.predecessor is prior and prior.prepared is request.prepared
+            and prior.step == 5, '/clippy/chain', 'wrong predecessor')
+    check_endpoint(prior)
+    immutable_inputs(request.prepared)
+    for item in endpoint.history: item.recheck()
+    result = endpoint.result
+    require(result.receipt == request.output/'receipt.json'
+            and result.status == 'PASS_STEP6_ENDPOINT_ONLY' and result.native_exit == 0
+            and result.pid > 0 and not (request.output/'failure.json').exists(),
+            '/clippy/endpoint', 'failed or unrelated endpoint')
+    require(file_hash(result.receipt) == endpoint.receipt_sha256, '/clippy/endpoint', 'receipt changed')
+    row = document(result.receipt.read_text())
+    require(row.field('predecessor_sha256').value == prior.receipt_sha256
+            and row.field('chronology').value == 'OBSERVED_ENDPOINTS_ONLY'
+            and row.field('generated_before').value == state_json(endpoint.before)
+            and row.field('generated_after').value == state_json(endpoint.after)
+            and endpoint.before == prior.after
+            and endpoint.before.cache == endpoint.after.cache
+            and endpoint.before.settings == endpoint.after.settings
+            and row.field('status').value == result.status
+            and row.field('native_exit').value == result.native_exit
+            and row.field('pid').value == result.pid,
+            '/clippy/endpoint', 'retained endpoint mismatch')
+
+
+def recheck_chain(request: ClippyRequest, expected: GeneratedState) -> None:
+    prior = request.predecessor
+    assert prior is not None
+    immutable_inputs(request.prepared)
+    check_endpoint(prior)
+    require(generated(request.prepared) == expected, '/clippy/chain', 'generated state changed outside producer')
 
 
 class ClippyFailure(RuntimeError):
@@ -116,12 +184,18 @@ def clippy_command(prepared: PreparedSetup) -> tuple[str, ...]:
 
 
 def run_clippy_owned(prepared: PreparedSetup, wait: ClippyWaitEvidence, output: Path, descriptor: int) -> ClippyResult:
-    """Run the unchanged command on the existing shared target, under caller ownership.
+    """Preserve the original fresh API; preceding chronology remains unqualified."""
+    return run_clippy_request(ClippyRequest(prepared, wait, output, descriptor))
 
-    This endpoint does not admit preceding steps4/5, a runnable build product,
-    runtime/cache closure, paired gate coverage or publication. An actual normal
-    zero return plus pinned source/receipt checks settles only this owned call.
-    """
+
+def run_clippy_request(request: ClippyRequest) -> ClippyResult:
+    """Execute one actual Clippy producer, optionally after an actual step5 endpoint."""
+    prepared, wait, output, descriptor = request.prepared, request.wait, request.output, request.descriptor
+    prior = request.predecessor
+    before: GeneratedState | None = None
+    after: GeneratedState | None = None
+    process_anchor: EvidenceAnchor | None = None
+    output_state: dict[str, Json] | None = None
     receipt_path: Path | None = None
     in_flight = False
     result: ProcessResult | None = None
@@ -142,6 +216,16 @@ def run_clippy_owned(prepared: PreparedSetup, wait: ClippyWaitEvidence, output: 
                 and not prepared.inputs.settings.is_relative_to(output)
                 and not output.is_relative_to(prepared.inputs.cargo_home)
                 and not prepared.inputs.cargo_home.is_relative_to(output), '/output', 'output overlaps product/settings/cache')
+        if prior is not None:
+            require(prior.prepared is prepared and prior.step == 5, '/clippy/chain', 'step5 of same setup required')
+            check_endpoint(prior)
+            for item in prior.history:
+                require(not output.is_relative_to(item.root) and not item.root.is_relative_to(output),
+                        '/output', 'output overlaps historical evidence')
+            before = generated(prepared)
+            require(before == prior.after, '/clippy/chain', 'state drift since step5')
+            row.update(chronology='OBSERVED_ENDPOINTS_ONLY', predecessor_sha256=prior.receipt_sha256,
+                       generated_before=state_json(before), generated_after=None)
         target_before = inventory(prepared.inputs.root, ['rust/target'])
         require(bool(target_before), '/target', 'existing target required; prior producer admission remains separate')
         external = dict(prepared.external)
@@ -159,8 +243,16 @@ def run_clippy_owned(prepared: PreparedSetup, wait: ClippyWaitEvidence, output: 
                    wait_inputs={str(path): digest for path, digest in wait_inputs}, target_before={key: value for key, value in target_before.items()})
         atomic_json(output/'started.json', row)
         require(inventory(prepared.inputs.root, ['rust/target']) == target_before, '/target', 'target changed before launch')
+        if before is not None: recheck_chain(request, before)
         in_flight = True
         result = execute(spec)
+        # Freeze immediately on producer return, before any authentication callbacks.
+        if before is not None:
+            after = generated(prepared)
+            process_anchor = anchor(output/'process')
+            output_state = import_generated(output)
+            require(after.cache == before.cache and after.settings == before.settings,
+                    '/clippy/chain', 'Clippy changed cache/settings')
         row.update(native_exit=result.native_exit, pid=result.pid, process_status=result.status, process_receipt=str(result.receipt))
         require(result.native_exit == 0 and result.status == 'PASS', '/wait', 'successful normal Clippy return not established')
         process_inventory = inventory(output, ['process'])
@@ -173,6 +265,10 @@ def run_clippy_owned(prepared: PreparedSetup, wait: ClippyWaitEvidence, output: 
         assert result.pid is not None
         require(clippy_command(prepared) == argv and qualify_clippy(prepared, wait) == wait_inputs, '/wait', 'normal-path source anchors changed')
         # Only this live execute return and authenticated normal-source path can clear ownership.
+        if after is not None:
+            recheck_chain(request, after)
+            assert process_anchor is not None
+            process_anchor.recheck()
         in_flight = False
         row['ownership'] = 'NORMAL_CLIPPY_RETURN'
         target_after = inventory(prepared.inputs.root, ['rust/target'])
@@ -183,9 +279,32 @@ def run_clippy_owned(prepared: PreparedSetup, wait: ClippyWaitEvidence, output: 
         require(clippy_command(prepared) == argv and qualify_clippy(prepared, wait) == wait_inputs, '/wait', 'late source mutation')
         _ = process_output(binding, argv, spec.cwd, environment_for(spec), required)
         held_lane(descriptor)
+        if after is not None:
+            recheck_chain(request, after)
+            assert process_anchor is not None
+            process_anchor.recheck()
+            require(import_generated(output) == output_state, '/clippy/output', 'output changed during authentication')
+            row['generated_after'] = state_json(after)
         row['status'] = 'PASS_STEP6_ENDPOINT_ONLY'
         atomic_json(receipt_path, row)
-        return ClippyResult(receipt_path, 0, result.pid)
+        if prior is not None:
+            published = import_generated(output)
+            require({key: value for key, value in published.items() if key != 'receipt.json'} == output_state,
+                    '/clippy/output', 'output changed during publication')
+            require(document(receipt_path.read_bytes().decode('utf-8')).mapping() == row,
+                    '/clippy/endpoint', 'published receipt differs from actual result')
+        returned = ClippyResult(receipt_path, 0, result.pid)
+        if prior is not None:
+            assert before is not None and after is not None and process_anchor is not None
+            recheck_chain(request, after)
+            process_anchor.recheck()
+            endpoint = ClippyEndpoint(request, prior, returned, file_hash(receipt_path), before, after,
+                                      (*prior.history, anchor(output)))
+            check_clippy_endpoint(endpoint)
+            recheck_chain(request, after)
+            for item in endpoint.history: item.recheck()
+            returned = replace(returned, endpoint=endpoint)
+        return returned
     except BaseException as primary:
         row['ownership'] = 'UNKNOWN_KEEP_CALLER_LANE' if in_flight else 'NO_INFLIGHT_OWNED_CALL'
         row['status'] = 'FAIL'
