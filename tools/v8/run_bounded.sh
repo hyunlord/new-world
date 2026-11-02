@@ -12,6 +12,14 @@ import sys
 import os
 from pathlib import Path
 limit = int(sys.argv[1])
+oracle = ('WORLDSIM_ORACLE_CHILD_PLAN', 'WORLDSIM_ORACLE_CHILD_PLAN_SHA256')
+stall = ('WORLDSIM_STALL_CHILD_PLAN', 'WORLDSIM_STALL_CHILD_PLAN_SHA256')
+if any(key in os.environ for key in oracle):
+    if not all(key in os.environ for key in oracle) or any(key in os.environ for key in stall):
+        raise SystemExit('incomplete or conflicting child protocol')
+    sys.path.insert(0, str(Path.cwd() / 'tools/v8'))
+    from gate_oracle_child import run
+    raise SystemExit(run(Path(os.environ[oracle[0]]), os.environ[oracle[1]], tuple(sys.argv[2:]), limit))
 if 'WORLDSIM_STALL_CHILD_PLAN' in os.environ or 'WORLDSIM_STALL_CHILD_PLAN_SHA256' in os.environ:
     sys.path.insert(0, str(Path.cwd() / 'tools/v8'))
     from gate_stall_child import run

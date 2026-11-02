@@ -309,6 +309,8 @@ Stall 관찰자 patch의 실제 변환과 공급된 빌드 증거 대조를 분�
 
 원래 단계24의 저장·복원 검사를 전체 단계 조정기에 연결했다. 각 군의 release `save_load` 제품·실제 실행 기록·원래7개 검사·46개 저장 이력과 쌍별 안전성을 다시 대조하고, 실행기가 단독으로 lane을 소유하도록 중복 잠금을 피한다. 실패 산출물과 실행되지 않은 후보를 보존하며 전체 gate 상태는 여전히 FAIL/INCOMPLETE다. 독립 리뷰에서 찾은 순차 PID 재사용 오검출은 각 실행의 별도 인증 기록으로 식별하도록 고쳤다. 루트 통합60개 검사가56.232초에 통과했고 엄격 타입 검사·Ruff도 통과했다. 실제 양쪽 release 실행 및 원래 셸/Cargo 준비 순서의 증명은 아직 미완료이며, 기존 빌드 준비와 직접 native 실행의 분리 연결을 전체 셸 실행으로 주장하지 않는다(`stage0/ordered-dispatch/GATE24_INDEPENDENT_IMPLEMENTATION_V2_REVIEW.md`).
 
+구조 렌더러용 자식 프로세스 소유 helper를 기본 비활성 경로로 추가했다. 원래180초 명령을 유지하며 부모가 실제 wrapper PID를 기록한 뒤 실행을 허용하고, 실제 native PID·원시 종료·합쳐진 로그 범위를 연결한다. 이미 관측 가능한 제어 파이프 단절은 실행 전에 거절하며, 이후 단절과 실행의 경쟁은 기존 supervisor가 종료·회수한다. 종료 증거가 불완전하면 UNKNOWN을 반환하며 lane 해제나 완료를 주장하지 않는다. 루트의 새 helper 및 기존 stall/play 호환39개 검사가2.508초에 통과했고 타입·Ruff·셸 구문 및 독립 검토도 통과했다. timeout 회귀는 합성 복사본의 대기 한도를0으로 주입한 회수 검사이며 실제180초 또는 Godot 실행 증거가 아니다. 실제 렌더러·suite·전체 조정기 연결과 UNKNOWN 상태의 lane 소유·복구는 아직 미완료다(`stage0/ordered-dispatch/ORACLE_CHILD_INDEPENDENT_REVIEW_V1.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
