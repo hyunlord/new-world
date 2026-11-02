@@ -9,13 +9,56 @@ import shutil
 import subprocess
 import sys
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from generic_gate import GateContractError, boundary, document, require, text
 from generic_observations import keys
 from generic_process import atomic_json, file_hash, real_path
 from mux2_gate_inputs import Node
+
+# Exact labels owned by the original full test_play.sh. Negative cases have no
+# child except the unknown-version Godot version probe.
+CASES = ('unknown version', 'GODOT_BIN=/nonexistent', 'bad --speed',
+         '--headless-check main', '--headless-check m1', '--headless-check v7')
+
+
+@dataclass(frozen=True, slots=True)
+class Selection:
+    suite: Path
+    suite_sha256: str
+    case: str
+    plan: Path
+    plan_sha256: str
+
+
+@boundary
+def select_case(path: Path, digest: str, case: str, role: str) -> Selection:
+    """Select one immutable child plan; this grants no source/build authority."""
+    real_path(path, directory=False)
+    raw = path.read_bytes()
+    require(hashlib.sha256(raw).hexdigest() == digest, '/suite', 'suite hash differs')
+    node = document(raw.decode('utf-8')); keys(node, {'schema_version', 'cases'})
+    node.field('schema_version').equals(1)
+    cases = node.field('cases'); keys(cases, set(CASES))
+    require(case in CASES, '/case', 'unknown original case')
+    plans: dict[str, tuple[Path, str]] = {}
+    for label in CASES:
+        row = cases.field(label)
+        if label in CASES[1:3]:
+            row.equals(None)
+            continue
+        keys(row, {'path', 'sha256'})
+        plan = Path(text(row.field('path'))); checksum = text(row.field('sha256'))
+        real_path(plan, directory=False)
+        require(plan != path and file_hash(plan) == checksum, '/plan', 'case plan changed')
+        plans[label] = (plan, checksum)
+    require(len({plan for plan, _ in plans.values()}) == 4, '/plans', 'case plans must be distinct')
+    require(case in plans, '/case', 'no child permitted for negative control')
+    require(role == 'version' if case == CASES[0] else role in {'version', 'build', 'import-1', 'import-2', 'headless'},
+            '/role', 'unexpected child for original case')
+    plan, checksum = plans[case]
+    return Selection(path, digest, case, plan, checksum)
 
 
 @dataclass(frozen=True, slots=True)
@@ -66,8 +109,14 @@ def admit(path: Path, digest: str, role: str, argv: tuple[str,...]) -> Child:
     return Child(args,cwd,executable,expected,inputs,artifacts,output,timeout,merged)
 
 
-def run(plan_path: Path, digest: str, role: str, argv: tuple[str,...]) -> int:
+def run(plan_path: Path, digest: str, role: str, argv: tuple[str,...], selection: Selection | None = None) -> int:
+    if selection is not None:
+        require(select_case(selection.suite, selection.suite_sha256, selection.case, role) == selection
+                and (plan_path, digest) == (selection.plan, selection.plan_sha256), '/selection', 'case binding differs')
     child=admit(plan_path,digest,role,argv)
+    if selection is not None:
+        child=replace(child,inputs=(*child.inputs,(selection.suite,selection.suite_sha256)))
+    wrapper_pid=os.getpid();parent_pid=os.getppid()
     child.output.mkdir(parents=True,exist_ok=False)
     environment=dict(os.environ)
     started=time.time_ns();timed_out=False
@@ -76,7 +125,7 @@ def run(plan_path: Path, digest: str, role: str, argv: tuple[str,...]) -> int:
         process=subprocess.Popen(child.argv,executable=child.executable,cwd=child.cwd,env=environment,
                                  stdin=subprocess.DEVNULL if bounded else None,
                                  stdout=stdout,stderr=subprocess.STDOUT if child.merged else stderr)
-        try:atomic_json(child.output/'started.json',{'schema_version':1,'role':role,'pid':process.pid,
+        try:atomic_json(child.output/'started.json',{'schema_version':1,'role':role,'pid':process.pid,'wrapper_pid':wrapper_pid,'parent_pid':parent_pid,
             'argv':[a for a in child.argv],'cwd':str(child.cwd),'environment':{k:v for k,v in environment.items()},
             'started_ns':started,'plan_sha256':digest,'executable_sha256':child.executable_sha256})
         except OSError:
@@ -99,7 +148,9 @@ def run(plan_path: Path, digest: str, role: str, argv: tuple[str,...]) -> int:
     native_shell_exit=code % 256 if bounded else (128-code if code<0 else code)
     result=125 if errors else (124 if timed_out else native_shell_exit)
     atomic_json(child.output/'receipt.json',{'schema_version':1,'role':role,'plan_sha256':digest,
-        'pid':process.pid,'argv':[a for a in child.argv],'cwd':str(child.cwd),'environment':{k:v for k,v in environment.items()},
+        'pid':process.pid,'wrapper_pid':wrapper_pid,'parent_pid':parent_pid,
+        'parent_pid_after_wait':os.getppid(),'case':selection.case if selection is not None else None,
+        'suite_sha256':selection.suite_sha256 if selection is not None else None,'argv':[a for a in child.argv],'cwd':str(child.cwd),'environment':{k:v for k,v in environment.items()},
         'executable':str(child.executable),'executable_sha256':child.executable_sha256,
         'expected_inputs':{str(p):v for p,v in child.inputs},'after_inputs':{k:v for k,v in observed.items()},
         'declared_artifacts':[str(p) for p in child.artifacts],'artifact_hashes':{k:v for k,v in artifacts.items()},
@@ -117,7 +168,17 @@ def main() -> None:
     require(len(sys.argv)>=4 and sys.argv[2]=='--','/argv','expected ROLE -- COMMAND...')
     path=Path(os.environ.get('WORLDSIM_GATE_PLAY_PLAN',''))
     digest=os.environ.get('WORLDSIM_GATE_PLAY_PLAN_SHA256','')
-    try:code=run(path,digest,sys.argv[1],tuple(sys.argv[3:]))
+    try:
+        selection=None
+        suite=os.environ.get('WORLDSIM_GATE_PLAY_SUITE_PLAN')
+        if suite is not None:
+            require('WORLDSIM_GATE_PLAY_PLAN' not in os.environ
+                    and 'WORLDSIM_GATE_PLAY_PLAN_SHA256' not in os.environ,
+                    '/plan', 'ambiguous single and suite plan')
+            selection=select_case(Path(suite),os.environ.get('WORLDSIM_GATE_PLAY_SUITE_PLAN_SHA256',''),
+                                  os.environ.get('WORLDSIM_GATE_PLAY_CASE',''),sys.argv[1])
+            path,digest=selection.plan,selection.plan_sha256
+        code=run(path,digest,sys.argv[1],tuple(sys.argv[3:]),selection)
     except (GateContractError,OSError,UnicodeError) as error:
         print('play gate child rejected: '+str(error),file=sys.stderr);code=125
     raise SystemExit(code)

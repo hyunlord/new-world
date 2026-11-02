@@ -394,6 +394,9 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 원래 단계2 bridge 빌드를 실제 호출하는 owned 어댑터를 추가했다. 기존 준비 계약·Bash 명령·소스/도구/version 기록·검토된 정상 Cargo wait 경로를 대조하고 실제 호출 결과를 보존한다. 정상0만 종료가 확인된 경로로 취급하며 nonzero·중단·입력 불일치는 호출자의 실제 잠금을 유지하는 UNKNOWN이다. 성공도 endpoint 해시 확인 범위이며 BuildResult·후속 import/shared-target/clippy·전체 gate 권한은 없다. 루트10개와 엄격 타입·Ruff·독립10개가 통과했다. 실제 Cargo 실행은 미검증이다(`stage0/ordered-dispatch/setup-bridge-draft/INDEPENDENT_REVIEW_V1.md`, patch SHA256 `b6c727bf58988d78933e990209d67b755bc321c6e0243583234228a90e0e7fd6`).
 
+
+원래 단계21 launcher의 여섯 경우를 구분하는 기본 비활성 plan 선택 경로를 추가했다. 원래 인자·순서·3/2/4/0/0/0 기대값은 유지하고 각 경우의 별도 plan 해시와 실제 wrapper/parent PID 관찰을 남긴다. 독립 검토가 재현한 `/`·`.` 경로 정규화로 인한 단일/suite 설정 동시 수락을 수정했고 초기 실패는 보존했다. 루트21개(0.306초), 엄격 타입·Ruff·Bash 구문·독립 검토가 통과했다. 실제 launcher를 호출하는 기존 검사1개는 이번 focused 검사에서 제외했으며 실제 역사 버전 실행·aggregate 소유권·세계 관찰·전체 단계21 통과는 아직 미검증이다(`stage0/play-run/case-selector-draft/v2/INDEPENDENT_REVIEW_V2.md`, patch SHA256 `4f36f846abba24da9e442ad3c1fdc5b7cbfead64cd0beee9f1d4fa4d4ffbd808`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

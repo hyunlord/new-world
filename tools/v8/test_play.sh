@@ -15,8 +15,13 @@ failures=0
 expect() {
     local want="$1" label="$2"; shift 2
     local out code
-    out="$("$@" 2>&1)"
-    code=$?
+    if [[ "${WORLDSIM_GATE_PLAY_RECEIPTS:-}" == 1 && -n "${WORLDSIM_GATE_PLAY_SUITE_PLAN:-}" ]]; then
+        out="$(WORLDSIM_GATE_PLAY_CASE="$label" "$@" 2>&1)"
+        code=$?
+    else
+        out="$("$@" 2>&1)"
+        code=$?
+    fi
     if (( code == want )); then
         echo "PLAY_TEST_PASS $label (exit $code)"
     else
