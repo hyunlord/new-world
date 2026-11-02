@@ -308,11 +308,14 @@ class OrderedInputs:
     environment: static.ExecutionEnvironment
     discovery_product: static.StaticProduct
     discovery_environment: static.ExecutionEnvironment
+    diagnosis_product: static.StaticProduct
+    diagnosis_environment: static.ExecutionEnvironment
 
 
 def static_context(context: OrderedInputs, step: int) -> tuple[static.StaticProduct, static.ExecutionEnvironment]:
-    """Keep discovery's docs/runtime scope separate from the literal static eight."""
-    require(step in (1,7,13,15,16,20,22,31,33), '/static', 'unknown static step')
+    """Keep static eight, full discovery and selected diagnosis data scopes separate."""
+    require(step in (1,7,13,15,16,20,22,31,33,51), '/static', 'unknown static step')
+    if step == 51:return context.diagnosis_product, context.diagnosis_environment
     return ((context.discovery_product, context.discovery_environment) if step == 16
             else (context.static_product, context.environment))
 
@@ -333,7 +336,7 @@ def ordered_calls() -> tuple[OrderedCall, ...]:
     result: list[OrderedCall] = []
     for step in ORDER:
         rows = tuple(row for row in obligations() if row.step == step)
-        if step in (1,7,13,15,20,22,31,33) or step == 16:
+        if step in (1,7,13,15,20,22,31,33) or step in (16,51):
             result.append(OrderedCall(step,'static',tuple(row.identity for row in rows)))
         elif step == 9:
             result.append(OrderedCall(step,'smoke',tuple(row.identity for row in rows)))
@@ -365,17 +368,21 @@ def authenticate_static(path: Path, step: int | None, product: static.StaticProd
     node.field('source_invocation').equals(list(static.COMMANDS[step][1]))
     state=node.field('status').text();require(state in {'PASS','FAIL'},'/status','invalid static status')
     _=node.field('errors').array()
-    if step == 16:
-        require(environment is not None, '/static', 'missing discovery environment')
-        if environment is None:raise GateContractError('binding','/static','missing discovery environment')
-        discovery_terminal(path, node, product, environment)
+    if step in (16,51):
+        require(environment is not None, '/static', 'missing selected static environment')
+        if environment is None:raise GateContractError('binding','/static','missing selected static environment')
+        if step == 16:discovery_terminal(path, node, product, environment)
+        else:
+            static_process_terminal(path, node, product, environment, step)
+            if state == 'PASS':static.diagnosis_terminal((path.parent/'process/stdout.log').read_bytes().decode('utf-8'))
     static.verify_receipt(path,initial_digest)
     return state
 
 
-def discovery_terminal(path: Path, node: Node, product: static.StaticProduct,
-                       environment: static.ExecutionEnvironment) -> None:
-    """Join actual process identity and raw unittest output; early FAIL may lack both."""
+def static_process_terminal(path: Path, node: Node, product: static.StaticProduct,
+                            environment: static.ExecutionEnvironment, step: int) -> None:
+    """Closed16/51 process join: Python discovery or Bash diagnosis, never an inner PID."""
+    require(type(step) is int and step in (16,51), '/step', 'unsupported process contract')
     fields = node.mapping()
     passing = node.field('status').text() == 'PASS'
     if 'process_receipt' in fields:
@@ -384,10 +391,11 @@ def discovery_terminal(path: Path, node: Node, product: static.StaticProduct,
         node.field('process_receipt_sha256').equals(file_hash(process))
         native = document(process.read_text(encoding='utf-8'))
         tools = {name: (entry, digest) for name, entry, digest in environment.tools}
-        require('python3' in tools, '/tools', 'missing discovery interpreter')
-        entry, digest = tools['python3']
+        tool = static.COMMANDS[step][1][0]
+        require(tool in tools, '/tools', 'missing selected process entry')
+        entry, digest = tools[tool]
         native.field('schema_version').equals(1)
-        native.field('argv').equals([str(entry), *static.COMMANDS[16][1][1:]])
+        native.field('argv').equals([str(entry), *static.COMMANDS[step][1][1:]])
         for field, expected in (('cwd', str(product.root)), ('input_root', str(product.root)),
                                 ('output_root', str(process.parent)), ('executable', str(entry)),
                                 ('expected_executable_sha256', digest)):
@@ -399,7 +407,7 @@ def discovery_terminal(path: Path, node: Node, product: static.StaticProduct,
             require(str(external) not in externals or externals[str(external)] == value, '/external', 'conflicting tool binding')
             externals[str(external)] = value
         native.field('expected_external_inputs').equals(externals)
-        require(not {'timeout_seconds','timed_out'} & native.mapping().keys(), '/process', 'unexpected discovery timeout')
+        require(not {'timeout_seconds','timed_out'} & native.mapping().keys(), '/process', 'unexpected static timeout')
         native.field('status').equals(node.field('process_status').value)
         native.field('native_exit').equals(node.field('native_exit').value)
         native.field('pid').equals(node.field('pid').value)
@@ -407,13 +415,21 @@ def discovery_terminal(path: Path, node: Node, product: static.StaticProduct,
             native.field(stream + '_sha256').equals(file_hash(process.parent / (stream + '.log')))
         if passing:
             native.field('status').equals('PASS');native.field('native_exit').equals(0)
-            discovery_completion(process, native)
+            static_completion(process, native)
             require(not native.field('errors').array(), '/process', 'PASS process has errors')
             for field in ('before_inputs','after_inputs'):native.field(field).equals(dict(product.inputs))
             for field in ('before_executable_sha256','after_executable_sha256'):native.field(field).equals(digest)
             for field in ('before_external_inputs','after_external_inputs'):native.field(field).equals(externals)
     else:
-        require(not passing and 'unittest' not in fields, '/process', 'missing discovery process receipt')
+        require(not passing and 'unittest' not in fields, '/process', 'missing static process receipt')
+    if passing:require(not node.field('errors').array(), '/static', 'PASS receipt has errors')
+
+
+def discovery_terminal(path: Path, node: Node, product: static.StaticProduct,
+                       environment: static.ExecutionEnvironment) -> None:
+    static_process_terminal(path, node, product, environment, 16)
+    fields = node.mapping()
+    passing = node.field('status').text() == 'PASS'
     if 'unittest' in fields:
         summary = static.unittest_terminal((path.parent / 'process/stderr.log').read_bytes().decode('utf-8'))
         node.field('unittest').equals(summary)
@@ -423,7 +439,7 @@ def discovery_terminal(path: Path, node: Node, product: static.StaticProduct,
     if passing:require(not node.field('errors').array(), '/static', 'PASS receipt has errors')
 
 
-def discovery_completion(path: Path, native: Node) -> None:
+def static_completion(path: Path, native: Node) -> None:
     """Bind producer start/spawn/finish records, without inferring OS attestation."""
     require(integer(native.field('pid')) > 0, '/pid', 'PASS needs a positive process PID')
     require(integer(native.field('duration_ns')) > 0, '/duration', 'PASS needs positive elapsed time')
@@ -469,14 +485,14 @@ def ordered_bindings(context: OrderedInputs) -> None:
     for product in (inputs.probes.base,inputs.probes.candidate,inputs.godot.base,inputs.godot.candidate):
         require(file_hash(product.executable)==product.executable_sha256 and
                 inventory(product.input_root,[name for name,_ in product.input_files])==dict(product.input_files),'/inputs','product drift')
-    for step in (1,7,13,15,16,20,22,31,33):
+    for step in (1,7,13,15,16,20,22,31,33,51):
         _, environment = static_context(context, step)
         _ = static.validate_environment(environment, step)
-    for step in (1,16):
+    for step in (1,16,51):
         product, environment = static_context(context, step)
         require(product.root==inputs.probes.candidate.input_root and product.source_sha==inputs.probes.candidate.source_sha,
                 '/static','static source differs from candidate')
-        names = [*INPUT_DIRS, *INPUT_FILES, *(['docs'] if step == 16 else [])]
+        names = [*INPUT_DIRS, *INPUT_FILES, *(['docs'] if step == 16 else [static.DIAGNOSIS_RESULT] if step == 51 else [])]
         require(len(dict(product.inputs)) == len(product.inputs) and inventory(product.root,names)==dict(product.inputs),
                 '/static','complete static input scope differs')
         for path,digest in environment.prior_receipts:authenticate_prior(context,path,digest)
@@ -493,7 +509,8 @@ def authenticate_prior(context: OrderedInputs, path: Path, digest: str) -> None:
 def with_static_priors(context: OrderedInputs, rows: tuple[Outcome, ...]) -> OrderedInputs:
     """Propagate authenticated FAIL as well as PASS; malformed outputs stay in the ledger."""
     priors: dict[Path,str] = {}
-    candidates = [*context.environment.prior_receipts, *context.discovery_environment.prior_receipts]
+    candidates = [*context.environment.prior_receipts, *context.discovery_environment.prior_receipts,
+                  *context.diagnosis_environment.prior_receipts]
     candidates.extend((row.receipt,row.sha256) for row in rows if row.component == 'static'
                       and row.reported_status in {'PASS','FAIL'} and row.receipt is not None and row.sha256 is not None)
     for path,digest in candidates:
@@ -502,7 +519,8 @@ def with_static_priors(context: OrderedInputs, rows: tuple[Outcome, ...]) -> Ord
         priors[path] = digest
     frozen = tuple(priors.items())
     return replace(context,environment=replace(context.environment,prior_receipts=frozen),
-                   discovery_environment=replace(context.discovery_environment,prior_receipts=frozen))
+                   discovery_environment=replace(context.discovery_environment,prior_receipts=frozen),
+                   diagnosis_environment=replace(context.diagnosis_environment,prior_receipts=frozen))
 
 
 def run_ordered(context: OrderedInputs, output: Path) -> Path:

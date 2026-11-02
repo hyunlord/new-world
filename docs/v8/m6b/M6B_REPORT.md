@@ -299,6 +299,8 @@ Cargo 기록 정책v2는 컴파일 산출물을 소스 입력과 분리하고 �
 
 단계51의 커밋된 진단 결과 검사를 정적 어댑터에 추가했다. 원래 Bash/Python 본문과 truthiness·첫 Q1/Q5 선택·5개 이상 통과 조건을 그대로 유지하고, 해당 JSON만 별도 입력 범위로 포함한다. 이는 과거 결과 파일 검사이며 새 UX·시각·월드 평가가 아니다. 독립 검토에서 BASH_ENV가 Python assertion을 꺼 0/6도 통과시키는 우회를 재현했고, 단계51만 허용 환경 키를 제한해 실행 전에 거절하도록 수리했다. 루트28개 검사(1.939초)·엄격 타입·Ruff와 독립28개 검사가 통과했다. 정적8개와 전체 discovery의 범위는 유지하며 원래 순서 조정기 연결·커밋 소스 실제 실행·전체 gate는 아직 완료하지 않았다(`stage0/ordered-dispatch/STEP51_INDEPENDENT_REVIEW_V2.md`).
 
+단계51을 원래 순서의 마지막 정적 호출로 연결했다. 정적8개·전체 discovery·진단 JSON의 입력과 환경은 세 context로 분리하고, 시작 전·각 경계에서 같은 후보 소스와 정확한 범위를 확인한다. 세 환경의 이전 PASS/FAIL 영수증을 모두 전달하며, 단계16/51의 공통 프로세스 대조는 실제 Python/Bash 시작·spawn·종료·출력 해시에 결합했다. 실패한 실행에 PASS marker나 가짜 unittest 요약을 요구하지 않는다. 루트 조정기50개(9.784초)와 앞선 동일 정적 어댑터28개, 독립 통합78개·엄격 타입·Ruff를 통과했다. 실제 전체 순서 실행과 full gate는 미완료이며 알려진 BASE COREoff 지식 손실 FAIL도 유지한다(`stage0/ordered-dispatch/STEP51_COORDINATOR_INDEPENDENT_REVIEW_V1.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

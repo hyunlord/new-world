@@ -242,6 +242,124 @@ class DispatchTests(unittest.TestCase):
         with self.assertRaises(GateContractError):_=gate.aggregate((gate.Outcome('foreign','PASS',None,None,''),))
 
 
+
+class DiagnosisCoordinatorTests(unittest.TestCase):
+    def test_selected_data_context_and_final_order(self) -> None:
+        with TemporaryDirectory() as temp:
+            context=ordered_inputs(Path(temp).resolve())
+            self.assertEqual(gate.static_context(context,51),(context.diagnosis_product,context.diagnosis_environment))
+            self.assertIn(static.DIAGNOSIS_RESULT,dict(context.diagnosis_product.inputs))
+            self.assertNotIn('docs/scope.md',dict(context.diagnosis_product.inputs))
+            self.assertNotIn(static.DIAGNOSIS_RESULT,dict(context.static_product.inputs))
+            self.assertIn('docs/scope.md',dict(context.discovery_product.inputs))
+            self.assertEqual(gate.ordered_calls()[-1],gate.OrderedCall(51,'static',('51:read_diagnosis_test',)))
+            gate.ordered_bindings(context)
+
+    def test_missing_wrong_or_foreign_diagnosis_context_blocks_every_launch(self) -> None:
+        for fault in ('missing_data','full_docs','foreign_root','source','optimize','bash_env','helpers','duplicate'):
+            with self.subTest(fault=fault),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();context=ordered_inputs(root)
+                if fault=='missing_data':context=replace(context,diagnosis_product=context.static_product)
+                elif fault=='full_docs':context=replace(context,diagnosis_product=context.discovery_product)
+                elif fault=='foreign_root':context=replace(context,diagnosis_product=replace(context.diagnosis_product,root=root/'foreign'))
+                elif fault=='source':context=replace(context,diagnosis_product=replace(context.diagnosis_product,source_sha='f'*40))
+                elif fault in ('optimize','bash_env'):
+                    key='PYTHONOPTIMIZE' if fault=='optimize' else 'BASH_ENV'
+                    context=replace(context,diagnosis_environment=replace(context.diagnosis_environment,
+                        values=(*context.diagnosis_environment.values,(key,'1'))))
+                elif fault=='helpers':context=replace(context,diagnosis_environment=replace(context.diagnosis_environment,tools=()))
+                else:context=replace(context,diagnosis_product=replace(context.diagnosis_product,
+                    inputs=(*context.diagnosis_product.inputs,context.diagnosis_product.inputs[0])))
+                with patch.object(gate,'ordered_action',side_effect=AssertionError('no launch')):
+                    result=document(gate.run_ordered(context,root/'out').read_text())
+                self.assertEqual(result.field('status').value,'FAIL')
+                self.assertEqual(result.field('actual_component_sequence').value,[])
+
+    def test_success_binds_bash_endpoint_without_inner_python_identity_claim(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            result=ordered_endpoint(gate.OrderedCall(51,'static',('51:read_diagnosis_test',)),root/'out',context)
+            self.assertEqual(gate.authenticate_static(result.receipt,51,context.diagnosis_product,context.diagnosis_environment),'PASS')
+            native=document((root/'out/process/process.json').read_text())
+            self.assertEqual(native.field('executable').value,str(Path('/bin/bash').resolve()))
+            self.assertNotIn('unittest',document(result.receipt.read_text()).mapping())
+
+    def test_self_consistently_rehashed_marker_and_process_forgery_rejects(self) -> None:
+        for fault in ('missing_marker','duplicate_marker','trailing_marker','null_pid','zero_pid','spawn_pid',
+                      'start_argv','duration','native_exit','inner_python','unittest','environment','timeout'):
+            with self.subTest(fault=fault),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();context=ordered_inputs(root)
+                result=ordered_endpoint(gate.OrderedCall(51,'static',('51:read_diagnosis_test',)),root/'out',context)
+                data=document(result.receipt.read_text()).mapping();process=root/'out/process/process.json'
+                native=document(process.read_text()).mapping()
+                if fault in ('missing_marker','duplicate_marker','trailing_marker'):
+                    raw={'missing_marker':'no oracle\n','duplicate_marker':'READ_DIAGNOSIS_TEST PASS\n'*2,
+                         'trailing_marker':'READ_DIAGNOSIS_TEST PASS\nextra\n'}[fault]
+                    _=(process.parent/'stdout.log').write_text(raw)
+                    native['stdout_sha256']=file_hash(process.parent/'stdout.log')
+                elif fault in ('null_pid','zero_pid'):
+                    native['pid']=None if fault=='null_pid' else 0;data['pid']=native['pid']
+                elif fault=='spawn_pid':_=(process.parent/'process-spawn.json').write_text('{"pid":999,"spawned_at":"2026-01-01T00:00:01+00:00"}')
+                elif fault=='start_argv':
+                    start=document((process.parent/'process-start.json').read_text()).mapping();start['argv']=['forged']
+                    _=(process.parent/'process-start.json').write_text(json.dumps(start))
+                elif fault=='duration':native['duration_ns']=0
+                elif fault=='native_exit':native['native_exit']=9;data['native_exit']=9
+                elif fault=='inner_python':
+                    python,digest=next((p,h) for name,p,h in context.diagnosis_environment.tools if name=='python3')
+                    native['executable']=str(python);native['expected_executable_sha256']=digest
+                    native['argv']=[str(python),*static.COMMANDS[51][1][1:]]
+                elif fault=='unittest':data['unittest']={}
+                elif fault=='environment':native['environment']={}
+                else:native['timeout_seconds']=5
+                _=process.write_text(json.dumps(native));data['process_receipt_sha256']=file_hash(process)
+                data['artifacts']={key:value for key,value in inventory(result.receipt.parent,['process']).items()}
+                _=result.receipt.write_text(json.dumps(data))
+                with self.assertRaises((ValueError,OSError)):
+                    _=gate.authenticate_static(result.receipt,51,context.diagnosis_product,context.diagnosis_environment)
+
+    def test_early_and_process_failures_remain_fail_without_marker(self) -> None:
+        for early in (False,True):
+            with self.subTest(early=early),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();context=ordered_inputs(root)
+                result=ordered_endpoint(gate.OrderedCall(51,'static',('51:read_diagnosis_test',)),root/'out',context,'FAIL')
+                if early:
+                    data=document(result.receipt.read_text()).mapping()
+                    for key in ('process_receipt','process_receipt_sha256','native_exit','pid'):del data[key]
+                    for path in (root/'out/process').iterdir():path.unlink()
+                    (root/'out/process').rmdir();data['artifacts']={};data['process_status']='NOT_RUN'
+                    _=result.receipt.write_text(json.dumps(data))
+                self.assertEqual(gate.authenticate_static(result.receipt,51,context.diagnosis_product,context.diagnosis_environment),'FAIL')
+
+    def test_three_way_prior_union_keeps_caller_diagnosis_and_earlier_failed_static(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            prior=ordered_endpoint(gate.OrderedCall(51,'static',('51:read_diagnosis_test',)),root/'prior',context,'FAIL')
+            binding=(prior.receipt,file_hash(prior.receipt))
+            context=replace(context,diagnosis_environment=replace(context.diagnosis_environment,prior_receipts=(binding,)))
+            def failed(out: Path) -> ComponentResult:
+                return ordered_endpoint(gate.OrderedCall(15,'static',('15:inventory_closure',)),out,context,'FAIL')
+            row=gate.invoke('static',failed,root/'earlier',context.components,step=15,static_product=context.static_product)
+            merged=gate.with_static_priors(context,(row,))
+            expected=(binding,(root/'earlier/receipt.json',file_hash(root/'earlier/receipt.json')))
+            for env in (merged.environment,merged.discovery_environment,merged.diagnosis_environment):
+                self.assertEqual(env.prior_receipts,expected)
+            self.assertEqual(context.environment.prior_receipts,())
+            self.assertEqual(row.reported_status,'FAIL')
+            conflicting=replace(context,environment=replace(context.environment,prior_receipts=((prior.receipt,'f'*64),)))
+            with self.assertRaises(ValueError):_=gate.with_static_priors(conflicting,(row,))
+
+    def test_late_diagnosis_artifact_mutation_rejects_frozen_outcome(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            def action(out: Path) -> ComponentResult:
+                return ordered_endpoint(gate.OrderedCall(51,'static',('51:read_diagnosis_test',)),out,context)
+            row=gate.invoke('static',action,root/'out',context.components,step=51,
+                static_product=context.diagnosis_product,static_environment=context.diagnosis_environment)
+            self.assertEqual(row.status,'PASS')
+            _=(root/'out/process/stdout.log').write_text('changed')
+            with self.assertRaises(ValueError):gate.recheck(row)
+
 if __name__ == '__main__':
     _ = unittest.main()
 
@@ -250,7 +368,7 @@ class OrderedDispatchTests(unittest.TestCase):
     def test_closed_order_retains_every_missing_obligation(self) -> None:
         calls = gate.ordered_calls()
         self.assertEqual([call.step for call in calls], sorted([call.step for call in calls], key=gate.ORDER.index))
-        self.assertEqual([call.step for call in calls if call.component == 'static'], [1,7,13,15,16,20,22,31,33])
+        self.assertEqual([call.step for call in calls if call.component == 'static'], [1,7,13,15,16,20,22,31,33,51])
         self.assertEqual([call.step for call in calls if call.component == 'direct'], [10,11,18,19,26,28,29,30,35,44,47,48,50])
         self.assertEqual({row.step for row in gate.obligations()}, set(range(1,52)))
         self.assertEqual(next(call for call in calls if call.step == 50).identities,
@@ -279,6 +397,9 @@ def ordered_inputs(root: Path) -> gate.OrderedInputs:
     for name in INPUT_FILES:
         target=product.input_root/name;target.parent.mkdir(parents=True,exist_ok=True);_=target.write_text('input')
     _=(product.input_root/'docs/scope.md').write_text('discovery-only')
+    diagnosis_path=product.input_root/static.DIAGNOSIS_RESULT
+    diagnosis_path.parent.mkdir(parents=True)
+    _=diagnosis_path.write_text('{"questions": []}')
     bindir=root/'bin';bindir.mkdir()
     tool_rows: list[tuple[str,Path,str]]=[]
     for name in ('python3','git','bash','grep','sh','sleep','dirname','mkdir','sed','date','touch','env','shasum','cmp','perl',
@@ -296,8 +417,11 @@ def ordered_inputs(root: Path) -> gate.OrderedInputs:
     old=static.StaticProduct(product.input_root,product.source_sha,
         tuple(inventory(product.input_root,[*INPUT_DIRS,*INPUT_FILES]).items()))
     discovery=replace(old,inputs=tuple(inventory(product.input_root,[*INPUT_DIRS,*INPUT_FILES,'docs']).items()))
+    diagnosis=replace(old,inputs=tuple(inventory(product.input_root,[*INPUT_DIRS,*INPUT_FILES,static.DIAGNOSIS_RESULT]).items()))
+    diagnosis_values=(*values,('PYTHONDONTWRITEBYTECODE','1'),('PYTHONNOUSERSITE','1'))
     return gate.OrderedInputs(context,old,static.ExecutionEnvironment(values,tuple(row for row in tools if row[0] in {'python3','git','bash','grep','cargo','cargo-fmt','rustfmt'}),()),discovery,
-                              static.ExecutionEnvironment(discovery_values,tools,()))
+                              static.ExecutionEnvironment(discovery_values,tools,()),diagnosis,
+                              static.ExecutionEnvironment(diagnosis_values,tools,()))
 
 
 def ordered_endpoint(call: gate.OrderedCall, out: Path, context: gate.OrderedInputs, status: str='PASS') -> ComponentResult:
@@ -321,20 +445,20 @@ def ordered_endpoint(call: gate.OrderedCall, out: Path, context: gate.OrderedInp
         if call.component=='direct':
             data.update(schema='direct_step_components_v1',step=call.step,obligations=list(call.identities),
                         fixtures=list(direct.step_fixtures(call.step)),whole_step_complete=False,original_order_executed=False)
-    if call.component=='static' and call.step==16:
-        discovery_process(out,data,context,status)
+    if call.component=='static' and call.step in (16,51):
+        discovery_process(out,data,context,status,call.step)
     atomic_json(path,data)
     return ComponentResult(path,status)
 
 
-def discovery_process(out: Path, data: dict[str,Json], context: gate.OrderedInputs, status: str) -> None:
-    product,environment=gate.static_context(context,16)
+def discovery_process(out: Path, data: dict[str,Json], context: gate.OrderedInputs, status: str, step: int=16) -> None:
+    product,environment=gate.static_context(context,step)
     process=out/'process';process.mkdir()
-    _=(process/'stdout.log').write_text('raw output')
+    _=(process/'stdout.log').write_text('READ_DIAGNOSIS_TEST PASS\n' if step==51 and status=='PASS' else 'raw output')
     _=(process/'stderr.log').write_text('Ran 2 tests in 0.001s\n\nOK\n' if status=='PASS'
                                       else 'Ran 2 tests in 0.001s\n\nFAILED (errors=1)\n')
-    executable,digest=next((path,digest) for name,path,digest in environment.tools if name=='python3')
-    native: dict[str,Json]={'schema_version':1,'argv':[str(executable),*static.COMMANDS[16][1][1:]],
+    executable,digest=next((path,digest) for name,path,digest in environment.tools if name==static.COMMANDS[step][1][0])
+    native: dict[str,Json]={'schema_version':1,'argv':[str(executable),*static.COMMANDS[step][1][1:]],
         'cwd':str(product.root),'input_root':str(product.root),'output_root':str(process),'executable':str(executable),
         'expected_executable_sha256':digest,'expected_inputs':dict(product.inputs),'environment':dict(environment.values),
         'status':status,'native_exit':0 if status=='PASS' else 1,'pid':123,'errors':[] if status=='PASS' else ['failed'],
@@ -354,8 +478,8 @@ def discovery_process(out: Path, data: dict[str,Json], context: gate.OrderedInpu
     atomic_json(process/'process-spawn.json',{'pid':123,'spawned_at':'2026-01-01T00:00:01+00:00'})
     atomic_json(process/'process.json',native)
     data.update(process_receipt=str(process/'process.json'),process_receipt_sha256=file_hash(process/'process.json'),
-                native_exit=native['native_exit'],pid=123,artifacts={key:value for key,value in inventory(out,['process']).items()},
-                unittest=static.unittest_terminal((process/'stderr.log').read_text()))
+                native_exit=native['native_exit'],pid=123,artifacts={key:value for key,value in inventory(out,['process']).items()})
+    if step==16:data['unittest']=static.unittest_terminal((process/'stderr.log').read_text())
 
 
 class OrderedExecutionTests(unittest.TestCase):
@@ -372,7 +496,7 @@ class OrderedExecutionTests(unittest.TestCase):
                 terminal=gate.run_ordered(context,root/'out')
             node=document(terminal.read_text());plan=document((terminal.parent/'plan.json').read_text())
             self.assertEqual(trace,[call.identity for call in gate.ordered_calls()])
-            self.assertEqual(lock.call_count,len(trace)-9)
+            self.assertEqual(lock.call_count,len(trace)-10)
             self.assertEqual(node.field('status').value,'INCOMPLETE')
             self.assertFalse(node.field('full_gate_claim').value)
             missing={row.field('identity').text() for row in node.field('obligations').array() if row.field('status').value=='NOT_IMPLEMENTED'}
@@ -649,7 +773,7 @@ class DiscoveryCoordinatorTests(unittest.TestCase):
             calls=tuple(call for call in gate.ordered_calls() if call.component=='static')
             with patch.object(gate,'ordered_calls',return_value=calls),patch.object(static,'run_step',side_effect=child):
                 node=document(gate.run_ordered(context,root/'out').read_text())
-            self.assertEqual(seen,[1,7,13,15,16,20,22,31,33])
+            self.assertEqual(seen,[1,7,13,15,16,20,22,31,33,51])
             self.assertEqual(node.field('status').value,'FAIL')
             self.assertEqual(node.field('components').array()[-1].field('status').value,'PASS')
 
