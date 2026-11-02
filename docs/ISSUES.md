@@ -423,3 +423,11 @@ M-UX2 게시 시점의 332개 고유 이슈: fixed197 / open103 / deferred30 / w
 | ISS-358 | 진단+요청 ≤1ms 벤치 사례 미작성 | §4 "bench it" | testing | fixed | diagnosis_bench.rs: release에서 시간당 91+87=179µs(N=200, 한도 1000µs)(3bbeb7b64) | `rust/crates/sim-test/tests/diagnosis_bench.rs`; `docs/v8/read/READ_DECISIONS.md` D10 |
 | ISS-359 | 게이트 44/45단계와 벤치 기준이 특정 패스(M-CORE 소스·M5.5 장부)에 묶여 패스마다 게이트 모드가 필요 | M-READ gate 1(2a9378f7c): 테스트 실패 0건인데 8단계 실패 | tooling | open | 기준을 "출발한 공개 v8/main"으로 일반화(오너 결정 D13 (c)), [#679](https://github.com/hyunlord/new-world/issues/679) | `docs/v8/read/READ_DECISIONS.md` D13a·D14; `tools/v8/read_gate_checks.py` |
 | ISS-360 | 비축 구역 진단에 "물건이 안 옴 ← 운반자 없음" 검사가 없음 | 30초 시험 1회차 Q4(목표 사슬을 보일 장면 없음) | feature | open | diagnosis.ron에 운반자 없음 검사·stockpile_full의 헤드라인 연결 추가, [#680](https://github.com/hyunlord/new-world/issues/680) | `docs/v8/read/READ_DECISIONS.md` D12; `rust/crates/sim-core/data/colony/diagnosis.ron` |
+
+## M6b Stage −1 임시 후속
+
+| ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
+|---|---|---|---|---|---|---|
+| M6B-STEWARD-1 | M-LOOP 집사 범위·상한·가르침 held-out 실패 | LOOP-HELDOUT-FINAL1680–1711, R1 승인 무효 | sim | open | Stage1: 통나무·땔감·식량 상한, 도구 전용 생존 규칙, 가르침 카드. 프레젠테이션 게시가 이 실패를 고친 것은 아님 | docs/v8/loop/LOOP_REPORT.md; docs/v8/m6b/M6B_DECISIONS.md D-minus1 |
+
+게시 때 중복을 확인하고 `steward scope and caps (M-LOOP evidence): firewood in snaps, log caps, teaching` 이슈를 만든다. 현재 다음 빈 번호는 ISS-361이나 실제 게시 때 재확인한다. 이 문서는 이슈 생성·폐쇄를 주장하지 않는다. #650/#663의 기존 폐쇄와 새 작업을 혼동하지 않는다. 실제 URL과 확정 ISS는 게시 영수증에 먼저 보존한다. 이후 별도로 검증되는 문서에서 반영하며, 알려진 BASE 안전성 충돌 때문에 Stage0 게시를 전제하지 않는다.

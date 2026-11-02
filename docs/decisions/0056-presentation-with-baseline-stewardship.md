@@ -33,3 +33,5 @@ The stage includes genuine compatibility and presentation-action repairs but no 
 ## Source
 
 Owner D-minus1 relayed 2026-11-02 03:20; `docs/v8/m6b/M6B_DECISIONS.md`; `docs/v8/loop/LOOP_REPORT.md`; `docs/v8/loop/LOOP_DECISIONS.md`.
+
+Evidence disposition: p8 presentation results are recorded separately in `docs/v8/m6b/M6B_REPORT.md`. They do not change this behavior-preserving decision or admit the failed LOOP steward. The final documentation commit requires its own complete gate before publication; BASE0 is the externally verified published SHA.

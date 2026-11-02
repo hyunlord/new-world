@@ -529,7 +529,7 @@ BASE의 NOT_OBSERVED는 동결 observer의 해당 계절 관측 부재, NOT_SUPP
 
 #### 실제 화면과 최종 검증 범위
 
-![R1 실제 화면 모음](../../images/m6a_contact_sheet.png)
+[R1 실제 화면 모음 — 당시 BASE에 보존](https://github.com/hyunlord/new-world/blob/fbc03bddb8f5b68f43fba1b2dad283982e5cf436/docs/images/m6a_contact_sheet.png)
 
 위 모음은 **보존fixture·명시된 P17 debug bridge**의 UI 근거다. 같은tick/camera/pose에서 Actions 배경alpha만0.60→0.45로 바꿔idle/work52/45→89/98픽셀, 보존8장면80/80person·KO낮/밤×1.0/1.25의20화면·why42검사가 통과했다. 텍스트/입력/geometry/식물/metric/threshold는 유지했다. 이는 새 최종 bridge·신선 장면의 전체 게이트를 대신하지 않으며 placeholder #670은 OPEN이다. 원래 자연 UI13/15·실패2와 별도 집중 증거 합성15사례의 구분도 유지한다.
 
