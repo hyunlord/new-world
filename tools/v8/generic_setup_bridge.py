@@ -24,8 +24,8 @@ from generic_process import (
     execute,
     file_hash,
 )
-from generic_setup_prepare import BRIDGE, PreparedSetup, recipe
-from generic_sources import freeze_source, inventory, manifest_hash
+from generic_setup_prepare import BRIDGE, PreparedSetup, recheck_prepared_source, recipe
+from generic_sources import inventory
 from generic_workspace_cases import ListingProcess, process_output
 from mux2_gate_inputs import Json, Node
 from mux2_gate_lock import LOCK
@@ -125,8 +125,7 @@ def qualify_wait(prepared: PreparedSetup, evidence: CargoWaitEvidence) -> tuple[
 def immutable_inputs(prepared: PreparedSetup) -> None:
     """Recheck initial source anchors without incorrectly requiring target to stay absent."""
     context = prepared.inputs
-    require(manifest_hash(freeze_source(context.root, context.source_sha)) == prepared.source_digest,
-            '/source', 'source changed after original build')
+    recheck_prepared_source(prepared)
     require(inventory(context.root, list(dict(prepared.materialized))) == dict(prepared.materialized),
             '/inputs', 'effective inputs changed')
     for path, digest in prepared.external:

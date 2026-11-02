@@ -558,7 +558,7 @@ class _WorkspacePrefix:
     inputs: tuple[tuple[str, str], ...]
     publication: _BuildPublication
 
-    def check(self, *, before: bool) -> None:
+    def check_source(self) -> None:
         real_path(self.spec.root, directory=True)
         real_path(self.spec.cargo_home, directory=True)
         _ = config_inventory(self.spec)
@@ -571,6 +571,8 @@ class _WorkspacePrefix:
         _ = self.publication.source(self.spec)
         require(inventory(self.spec.root, [*INPUT_DIRS, *INPUT_FILES]) == dict(self.inputs),
                 '/antecedent', 'prior source/input changed')
+    def check(self, *, before: bool) -> None:
+        self.check_source()
         current = _chain_tree(self.spec.root/'rust/target')
         expected = dict(self.target)
         require(all(current.get(name) == value for name, value in expected.items()),
@@ -625,6 +627,13 @@ class _PairAnchor:
     release_evidence: tuple[tuple[str, str], ...]
     output: Path
     pair_evidence: tuple[tuple[str, str], ...]
+
+    def check_source(self) -> None:
+        self.prior.check_source()
+        _ = self.release_publication.source(self.release_spec)
+        require(_chain_tree(self.release_spec.output) == dict(self.release_evidence),
+                '/pair/source', 'historical release evidence changed')
+        require(_chain_tree(self.output) == dict(self.pair_evidence), '/pair/source', 'historical pair evidence changed')
 
     def check(self) -> None:
         self.prior.check(before=False)
@@ -719,3 +728,47 @@ def build_workspace_pair(debug: BuildSpec, release: BuildSpec, output: Path) -> 
         atomic_json(terminal, row)
     return WorkspaceBuildPair(terminal, 'BUILD_ANTECEDENTS_ONLY' if row['status'] == 'BUILD_ANTECEDENTS_ONLY' else 'FAIL',
                               first, second, anchor)
+
+
+@dataclass(frozen=True, slots=True)
+class WorkspaceSourceProof:
+    baseline_json: str
+    effective_json: str
+    effective_inputs: tuple[tuple[str, str], ...]
+    source_kind: Literal['PRISTINE_COMMIT', 'DERIVED_OBSERVER']
+    retained_anchor: _PairAnchor | None = None
+    runtime_qualification: Literal['NOT_RUN'] = 'NOT_RUN'
+    publication_authority: Literal[False] = False
+
+
+def _source_fields(anchor: _PairAnchor) -> tuple[str, str, tuple[tuple[str, str], ...], Literal['PRISTINE_COMMIT', 'DERIVED_OBSERVER']]:
+    row = document(anchor.prior.publication.receipt_text)
+    return (json.dumps(row.field('source_before').value, sort_keys=True),
+            json.dumps(row.field('effective_source_after').value, sort_keys=True), anchor.prior.inputs,
+            'PRISTINE_COMMIT' if anchor.prior.spec.overlay is None else 'DERIVED_OBSERVER')
+
+
+def workspace_pair_source(pair: WorkspaceBuildPair) -> WorkspaceSourceProof:
+    """Mint a source-only live proof while the entire actual build pair is still intact."""
+    _ = recheck_workspace_pair(pair)
+    anchor = pair.retained_anchor
+    assert anchor is not None
+    proof = WorkspaceSourceProof(*_source_fields(anchor), retained_anchor=anchor)
+    recheck_workspace_source(proof)
+    _ = recheck_workspace_pair(pair)
+    return proof
+
+
+def recheck_workspace_source(proof: WorkspaceSourceProof) -> None:
+    """Recheck source/history, not later generated targets or current artifact bytes.
+
+    Actual producer endpoints govern generated-state transitions. This live proof
+    cannot be reconstructed from serialized fields and grants no runtime authority.
+    """
+    anchor = proof.retained_anchor
+    require(anchor is not None and proof.runtime_qualification == 'NOT_RUN' and proof.publication_authority is False,
+            '/pair/source', 'retained live source proof required')
+    assert anchor is not None
+    require((proof.baseline_json, proof.effective_json, proof.effective_inputs, proof.source_kind) == _source_fields(anchor),
+            '/pair/source', 'source proof fields differ from actual retained producer')
+    anchor.check_source()

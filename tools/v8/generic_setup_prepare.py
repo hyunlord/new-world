@@ -16,8 +16,11 @@ from typing import Final, Literal
 from generic_build import (
     BuildSpec,
     WorkspaceBuildPair,
+    WorkspaceSourceProof,
     config_inventory,
     recheck_workspace_pair,
+    recheck_workspace_source,
+    workspace_pair_source,
 )
 from generic_gate import GateContractError, document, require
 from generic_process import check_digest, file_hash, real_path
@@ -84,6 +87,9 @@ class PreparedSetup:
     preparation_kind: Literal['FRESH', 'WARM_BUILD_ANTECEDENTS'] = 'FRESH'
     environment_delta: tuple[tuple[str, str | None, str | None], ...] = ()
     environment_equal: Literal[False] = False
+    source_kind: Literal['PRISTINE_COMMIT', 'DERIVED_OBSERVER'] = 'PRISTINE_COMMIT'
+    effective_source_digest: str | None = None
+    derived_source: WorkspaceSourceProof | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -138,7 +144,7 @@ def warm_projection(inputs: SetupInputs, pair: WorkspaceBuildPair) -> tuple[tupl
     actuals: list[dict[str, str]] = []
     for spec, result in zip(specs, (pair.debug, pair.release), strict=True):
         require(result is not None and spec.root == inputs.root and spec.source_sha == inputs.source_sha
-                and spec.cargo_home == inputs.cargo_home and spec.overlay is None
+                and spec.cargo_home == inputs.cargo_home
                 and dict(spec.config_inputs) == dict(inputs.configs), '/warm', 'foreign source/config/build kind')
         assert result is not None
         require(all(name in tools and (tools[name].path, tools[name].sha256) == (path, checksum)
@@ -173,13 +179,17 @@ def _prepare(inputs: SetupInputs, pair: WorkspaceBuildPair | None) -> PreparedSe
     root = inputs.root
     real_path(root, directory=True)
     real_path(inputs.cargo_home, directory=True)
-    source = freeze_source(root, inputs.source_sha)
+    derived: WorkspaceSourceProof | None = None
+    if pair is not None and recheck_workspace_pair(pair)[0].overlay is not None:
+        derived = workspace_pair_source(pair)
+    source = freeze_source(root, inputs.source_sha) if derived is None else document(derived.baseline_json).mapping()
     tracked = Node(source).field('tracked_manifest').mapping()
     required_source = {'tools/v8/gate.sh', 'tools/v8/run_bounded.sh', 'rust/rust-toolchain.toml',
                        'rust/crates/sim-bridge/Cargo.toml', 'sim_bridge.gdextension', 'project.godot'}
     require(required_source <= tracked.keys(), '/source', 'recipe/product source must be tracked')
     effective = dict(inputs.effective_inputs)
-    require(len(effective) == len(inputs.effective_inputs) and tracked.keys() <= effective.keys(),
+    current_paths = tracked.keys() if derived is None else document(derived.effective_json).field('manifest').mapping().keys()
+    require(len(effective) == len(inputs.effective_inputs) and current_paths <= effective.keys(),
             '/inputs', 'complete unique tracked/effective input inventory required')
     require(inventory(root, list(effective)) == effective, '/inputs', 'effective input changed')
     require(not any(name.startswith(('rust/target/', '.godot/')) for name in effective),
@@ -265,7 +275,9 @@ def _prepare(inputs: SetupInputs, pair: WorkspaceBuildPair | None) -> PreparedSe
         require(file_hash(path) == digest, str(path), 'external input changed')
     require(all(effective.get(Path(name).relative_to(root).as_posix()) == digest
                 for name, digest in configs.items() if Path(name).is_relative_to(root)), '/configs', 'in-tree config unbound')
-    require(config_inventory(spec) == configs and freeze_source(root, inputs.source_sha) == source
+    if derived is not None: recheck_workspace_source(derived)
+    final_source = freeze_source(root, inputs.source_sha) if derived is None else document(derived.baseline_json).mapping()
+    require(config_inventory(spec) == configs and final_source == source
             and inventory(root, list(effective)) == effective, '/inputs', 'inputs changed during preparation')
     for path, digest in external.items():
         require(file_hash(path) == digest, str(path), 'external input changed at final check')
@@ -274,7 +286,33 @@ def _prepare(inputs: SetupInputs, pair: WorkspaceBuildPair | None) -> PreparedSe
     if pair is None: absent(root/'rust/target')
     else: require(warm_projection(inputs, pair) == delta, '/warm', 'antecedent projection changed')
     return PreparedSetup(inputs, manifest_hash(source), tuple(sorted(effective.items())), tuple(sorted(external.items())), candidates,
-                         warm_pair=pair, preparation_kind='FRESH' if pair is None else 'WARM_BUILD_ANTECEDENTS', environment_delta=delta)
+                         warm_pair=pair, preparation_kind='FRESH' if pair is None else 'WARM_BUILD_ANTECEDENTS', environment_delta=delta,
+                         source_kind='PRISTINE_COMMIT' if derived is None else derived.source_kind,
+                         effective_source_digest=None if derived is None else manifest_hash(document(derived.effective_json).mapping()),
+                         derived_source=derived)
+
+
+def recheck_prepared_source(prepared: PreparedSetup) -> None:
+    """Source-only validation after producers; generated-state endpoints stay separate."""
+    proof = prepared.derived_source
+    if proof is None:
+        require(prepared.source_kind == 'PRISTINE_COMMIT' and prepared.effective_source_digest is None,
+                '/source', 'missing retained derived proof')
+        require(manifest_hash(freeze_source(prepared.inputs.root, prepared.inputs.source_sha)) == prepared.source_digest,
+                '/source', 'source changed after original build')
+        return
+    recheck_workspace_source(proof)
+    baseline = document(proof.baseline_json)
+    baseline.field('root').equals(str(prepared.inputs.root))
+    baseline.field('source_sha').equals(prepared.inputs.source_sha)
+    effective = document(proof.effective_json).mapping()
+    require(proof.source_kind == prepared.source_kind == 'DERIVED_OBSERVER'
+            and manifest_hash(baseline.mapping()) == prepared.source_digest
+            and manifest_hash(effective) == prepared.effective_source_digest,
+            '/source', 'prepared baseline/derived binding changed')
+    require(all(dict(prepared.materialized).get(name) == digest for name, digest in proof.effective_inputs)
+            and document(proof.effective_json).field('manifest').mapping().keys() <= dict(prepared.materialized).keys(),
+            '/source', 'prepared inputs omit or change derived source')
 
 
 def recipe(prepared: PreparedSetup, step: Literal[2, 3, 6]) -> SetupRecipe:
