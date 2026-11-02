@@ -9,6 +9,8 @@ from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from pathlib import Path
 
+import generic_fixture_registry as registry_module
+import generic_m6a_run as component
 from generic_declarations import Change, Declarations
 from generic_fixture_registry import (
     ExpansionContext,
@@ -126,7 +128,7 @@ def scenario() -> Generator[Scenario]:
         binary = root / 'probe'
         _ = binary.write_text('#!' + str(Path(sys.executable).resolve()) + '\n' + PRODUCER)
         binary.chmod(0o755)
-        yield Scenario(root, inputs, binary, load_registry(Path(__file__).with_name('gate_fixtures.json')))
+        yield Scenario(root, inputs, binary, load_registry(Path(registry_module.__file__).with_name('gate_fixtures.json')))
 
 
 class M6aRunTests(unittest.TestCase):
@@ -185,7 +187,7 @@ class M6aRunTests(unittest.TestCase):
     def test_real_original_scorer_rejects_incomplete_synthetic_ledger(self) -> None:
         with scenario() as state:
             for name in SCORERS:
-                _ = shutil.copyfile(Path(__file__).parent / Path(name).name, state.inputs / name)
+                _ = shutil.copyfile(Path(registry_module.__file__).parent / Path(name).name, state.inputs / name)
             result = state.run()
             self.assertEqual(result.field('status').value, 'FAIL')
             log = state.root / 'out/base/m6a.food72/1/standing-scorer/process/stderr.log'
@@ -225,3 +227,140 @@ class M6aRunTests(unittest.TestCase):
                 _ = state.run()
             self.assertFalse((state.root / 'component.json').exists())
             self.assertFalse((state.root / 'out/base/m6a.food72').exists())
+
+
+class M6aStepTests(unittest.TestCase):
+    def test_fixed_step_runs_only_four_primaries_and_two_scorers(self) -> None:
+        with scenario() as state:
+            plans, products = state.bindings()
+            selected = tuple(p for p in plans if p.fixture_id == FIXED)
+            declarations = Declarations('b'*40,'a'*40,'publication',(FIXED,SELECTED),(),(),(),(),'d'*64)
+            result = component.run_step(state.registry,selected,products,declarations,47,state.root/'component.json')
+            node = document(result.receipt.read_text())
+            self.assertEqual(result.status,'PASS',node.value)
+            self.assertEqual([row.field('id').text() for row in node.field('executions').array()],[p.id for p in selected])
+            self.assertEqual(len(node.field('scorers').array()),2)
+            self.assertEqual(node.field('step').value,47)
+            self.assertEqual(node.field('fixtures').value,[FIXED])
+            self.assertFalse((state.root/'out/base'/SELECTED).exists())
+
+    def test_selected_step_keeps_two_primaries_and_fresh_matched_base(self) -> None:
+        with scenario() as state:
+            plans, products = state.bindings()
+            selected = tuple(p for p in plans if p.fixture_id == SELECTED)
+            declarations = Declarations('b'*40,'a'*40,'publication',(FIXED,SELECTED),(),(),(),(),'d'*64)
+            result = component.run_step(state.registry,selected,products,declarations,48,state.root/'component.json')
+            node = document(result.receipt.read_text())
+            self.assertEqual(result.status,'PASS',node.value)
+            self.assertEqual([row.field('id').text() for row in node.field('executions').array()],
+                             [p.id for p in selected]+['base/'+SELECTED+'/1/matched-companion'])
+            self.assertEqual(node.field('scorers').array(),[])
+            self.assertFalse((state.root/'out/base'/FIXED).exists())
+            pair=node.field('pairs').array()[0]
+            self.assertEqual(pair.field('base_companion').field('world').field('terminal_tick').value,121)
+
+    def test_closed_step_coverage_and_order_reject_before_execution(self) -> None:
+        with scenario() as state:
+            plans, products = state.bindings()
+            for step,fixture in ((47,FIXED),(48,SELECTED)):
+                selected=tuple(p for p in plans if p.fixture_id==fixture)
+                other=next(p for p in plans if p.fixture_id!=fixture)
+                for changed in (selected[:-1],(*selected,other),tuple(reversed(selected)),(*selected,selected[0])):
+                    with self.subTest(step=step,changed=len(changed)),self.assertRaises(GateContractError):
+                        component.prepare_step(state.registry,changed,products,step)
+                for invalid in (46,49,True):
+                    with self.assertRaises(GateContractError):component.prepare_step(state.registry,selected,products,invalid)
+            self.assertFalse((state.root/'out').exists())
+
+    def test_selected_primary_failure_does_not_launch_companion_or_scorers(self) -> None:
+        with scenario() as state:
+            plans,products=state.bindings({'chain_fail':True})
+            plans=tuple(p for p in plans if p.fixture_id==SELECTED)
+            declarations=Declarations('b'*40,'a'*40,'publication',(FIXED,SELECTED),(),(),(),(),'d'*64)
+            result=component.run_step(state.registry,plans,products,declarations,48,state.root/'component.json')
+            node=document(result.receipt.read_text())
+            self.assertEqual(result.status,'FAIL')
+            self.assertEqual(len(node.field('executions').array()),2)
+            self.assertEqual(node.field('scorers').array(),[])
+            self.assertFalse((plans[0].out.parent/'matched-companion').exists())
+            self.assertEqual(len(node.field('artifact_snapshots').mapping()),2)
+
+    def test_failed_step_producers_and_scorers_keep_original_raw_snapshots(self) -> None:
+        for config in ({'exit':'candidate'},{'score_fail':True}):
+            with self.subTest(config=config),scenario() as state:
+                plans,products=state.bindings(config)
+                plans=tuple(p for p in plans if p.fixture_id==FIXED)
+                declarations=Declarations('b'*40,'a'*40,'publication',(FIXED,SELECTED),(),(),(),(),'d'*64)
+                result=component.run_step(state.registry,plans,products,declarations,47,state.root/'component.json')
+                node=document(result.receipt.read_text())
+                self.assertEqual(result.status,'FAIL')
+                self.assertEqual(len(node.field('executions').array()),4)
+                for plan in plans:
+                    hashes=node.field('artifact_snapshots').field(str(plan.out)).mapping()
+                    self.assertEqual(hashes['process.json'],file_hash(plan.out/'process.json'))
+                if 'score_fail' in config:
+                    for arm in ('base','candidate'):
+                        target=state.root/'out'/arm/FIXED/'1/standing-scorer'
+                        self.assertEqual(node.field('artifact_snapshots').field(str(target)).field('process/process.json').value,
+                                         file_hash(target/'process/process.json'))
+
+    def test_later_scorer_cannot_reseal_earlier_primary_or_scorer_mutation(self) -> None:
+        for target in ('primary','scorer'):
+            with self.subTest(target=target),scenario() as state:
+                scorer=state.inputs/SCORERS[0]
+                injection="""
+if receipt['product_arm']=='candidate':
+ path=Path(receipt['worlds'][0]['files'][0]['path'].replace('/candidate/','/base/'))
+ if TARGET=='scorer':path=path.parents[2]/'standing-scorer/score.json'
+ path.write_text(path.read_text()+' ')
+""".replace('TARGET',repr(target))
+                _=scorer.write_text(SCORER.replace("status='FAIL'",injection+"\nstatus='FAIL'"))
+                plans,products=state.bindings()
+                plans=tuple(p for p in plans if p.fixture_id==FIXED)
+                declarations=Declarations('b'*40,'a'*40,'publication',(FIXED,SELECTED),(),(),(),(),'d'*64)
+                result=component.run_step(state.registry,plans,products,declarations,47,state.root/'component.json')
+                node=document(result.receipt.read_text())
+                self.assertEqual(result.status,'FAIL',node.value)
+                self.assertTrue(any('artifacts changed during component' in json.dumps(row.value) for row in node.field('errors').array()))
+
+    def test_exception_after_child_output_keeps_failed_artifacts(self) -> None:
+        from unittest.mock import patch
+        with scenario() as state:
+            plans,products=state.bindings()
+            plans=tuple(p for p in plans if p.fixture_id==SELECTED)
+            declarations=Declarations('b'*40,'a'*40,'publication',(FIXED,SELECTED),(),(),(),(),'d'*64)
+            original=component.run_invocation
+            def interrupted(*args,**kwargs):
+                result=original(*args,**kwargs)
+                if args[0].arm=='base':raise OSError('after writing child output')
+                return result
+            with patch.object(component,'run_invocation',side_effect=interrupted):
+                result=component.run_step(state.registry,plans,products,declarations,48,state.root/'component.json')
+            node=document(result.receipt.read_text())
+            self.assertEqual(result.status,'FAIL')
+            self.assertEqual(node.field('artifact_snapshots').field(str(plans[0].out)).field('process.json').value,
+                             file_hash(plans[0].out/'process.json'))
+
+    def test_stale_derived_destination_never_starts_either_step(self) -> None:
+        for step,fixture in ((47,FIXED),(48,SELECTED)):
+            with self.subTest(step=step),scenario() as state:
+                plans,products=state.bindings()
+                plans=tuple(p for p in plans if p.fixture_id==fixture)
+                derived=plans[0].out.parent/('standing-scorer' if step==47 else 'matched-companion')
+                derived.mkdir(parents=True)
+                declarations=Declarations('b'*40,'a'*40,'publication',(FIXED,SELECTED),(),(),(),(),'d'*64)
+                with self.assertRaises(GateContractError):
+                    component.run_step(state.registry,plans,products,declarations,step,state.root/'component.json')
+                self.assertTrue(all(not plan.out.exists() for plan in plans))
+
+    def test_each_step_keeps_strict_candidate_safety_failure(self) -> None:
+        for step,fixture in ((47,FIXED),(48,SELECTED)):
+            with self.subTest(step=step),scenario() as state:
+                plans,products=state.bindings({'loss':True})
+                plans=tuple(p for p in plans if p.fixture_id==fixture)
+                declarations=Declarations('b'*40,'a'*40,'publication',(FIXED,SELECTED),(),(),(),(),'d'*64)
+                result=component.run_step(state.registry,plans,products,declarations,step,state.root/'component.json')
+                node=document(result.receipt.read_text())
+                self.assertEqual(result.status,'FAIL')
+                self.assertTrue(all(row.field('status').value=='FAIL' for row in node.field('pairs').array()))
+                self.assertFalse(node.field('publication_authority').value)

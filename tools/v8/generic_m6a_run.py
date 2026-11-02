@@ -39,14 +39,33 @@ SCORERS: Final = ('tools/v8/m6a_score.py', 'tools/v8/m6a_protocol.py',
 _normalise: Callable[[Json, Json, str | None], tuple[object, object, list[str]]] = normalise_pair
 
 
+def step_fixtures(step: int) -> tuple[str, ...]:
+    require(type(step) is int and step in (47,48), '/step', 'only closed M6a steps47/48 supported')
+    return (FIXED,) if step == 47 else (SELECTED,)
+
+
 def prepare(registry: Registry, plans: tuple[Invocation, ...], products: Products) -> None:
-    """Require the exact two standing fixtures, all seeds and both full primaries."""
+    """Preserve the joint six-primary validation contract."""
+    _prepare(registry,plans,products,(FIXED,SELECTED))
+
+
+def prepare_step(registry: Registry, plans: tuple[Invocation, ...], products: Products, step: int) -> None:
+    """Require one complete closed fixture group, retaining the full registry."""
+    _prepare(registry,plans,products,step_fixtures(step))
+    require(tuple((p.arm,p.seeds) for p in plans) == tuple(sorted((p.arm,p.seeds) for p in plans)),
+            '/plans','changed step primary order')
+
+
+def _prepare(registry: Registry, plans: tuple[Invocation, ...], products: Products,
+             selected: tuple[str, ...]) -> None:
+    """Keep original domain/workload/input checks before selecting whole fixtures."""
     fixtures = {fixture.id: fixture for fixture in registry.fixtures}
     expected = {(arm, FIXED, seed) for arm in ('base', 'candidate') for seed in (0, 1)}
     expected |= {(arm, SELECTED, 0) for arm in ('base', 'candidate')}
-    require(len(plans) == 6 and {(p.arm, p.fixture_id, p.seeds) for p in plans} ==
+    expected = {row for row in expected if row[1] in selected}
+    require(len(plans) == len(expected) and {(p.arm, p.fixture_id, p.seeds) for p in plans} ==
             {(arm, fixture, (seed,)) for arm, fixture, seed in expected}, '/plans', 'exact M6a seed/arm coverage required')
-    require(len({p.id for p in plans}) == len({p.out for p in plans}) == 6, '/plans', 'duplicate M6a output/identity')
+    require(len({p.id for p in plans}) == len({p.out for p in plans}) == len(expected), '/plans', 'duplicate M6a output/identity')
     for name in (FIXED, SELECTED):
         require(name in fixtures, name, 'missing registered fixture')
         enforce_required_workload(document(fixtures[name].metadata_json).mapping(), {})
@@ -138,16 +157,32 @@ def score_fixed(arm: str, plans: tuple[Invocation, ...], product: ProbeProduct, 
 
 def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: Products,
                    declarations: Declarations, output: Path) -> ComponentResult:
-    """Run full primaries first; then add BASE at the candidate's actual endpoint."""
-    prepare(registry, plans, products)
+    """Preserve the joint primary/scorer/companion API and receipt schema."""
+    return _run(registry,plans,products,declarations,output,None)
+
+
+def run_step(registry: Registry, plans: tuple[Invocation, ...], products: Products,
+             declarations: Declarations, step: int, output: Path) -> ComponentResult:
+    """Execute one whole original fixture, never the other step's workload."""
+    _=step_fixtures(step)
+    return _run(registry,plans,products,declarations,output,step)
+
+
+def _run(registry: Registry, plans: tuple[Invocation, ...], products: Products,
+         declarations: Declarations, output: Path, step: int | None) -> ComponentResult:
+    if step is None:prepare(registry,plans,products)
+    else:prepare_step(registry,plans,products,step)
     require(declarations.base == products.base.source_sha and declarations.candidate == products.candidate.source_sha
             and {FIXED, SELECTED} <= set(declarations.known_fixtures), '/declarations', 'unbound declarations')
     require(not output.exists(), str(output), 'component receipt already exists')
     require(output.is_absolute() and all(not output.is_relative_to(p.input_root)
             for p in (products.base, products.candidate)), str(output), 'receipt overlaps source inputs')
-    derived = [next(p for p in plans if p.arm == arm and p.fixture_id == FIXED).out.parent / 'standing-scorer'
-               for arm in ('base', 'candidate')]
-    derived.append(next(p for p in plans if p.arm == 'base' and p.fixture_id == SELECTED).out.parent / 'matched-companion')
+    fixed_plans = {arm:tuple(p for p in plans if p.arm == arm and p.fixture_id == FIXED)
+                   for arm in ('base','candidate')}
+    scorer_roots = {arm:group[0].out.parent/'standing-scorer' for arm,group in fixed_plans.items() if group}
+    selected_base = next((p for p in plans if p.arm == 'base' and p.fixture_id == SELECTED),None)
+    companion_roots = {} if selected_base is None else {selected_base.id+'/matched-companion':selected_base.out.parent/'matched-companion'}
+    derived = [*scorer_roots.values(),*companion_roots.values()]
     destinations = [p.out for p in plans] + derived
     require(all(not path.exists() and not path.is_symlink() for path in destinations), '/outputs', 'fresh producer outputs required')
     require(all(not output.is_relative_to(path) and not path.is_relative_to(output) for path in destinations)
@@ -158,6 +193,7 @@ def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: 
     errors: list[Json] = []
     observations: dict[str, M6aObservation] = {}
     artifacts: dict[str, Json] = {}
+    frozen: dict[Path,dict[str,str]] = {}
     for plan in plans:
         try:
             assert plan.argv is not None
@@ -167,20 +203,23 @@ def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: 
             actual = replace(plan, argv=argv)
             result = run_invocation(actual, products.arm(plan.arm), (), resolved_blockers=plan.blockers)
             executions.append({'id': plan.id, 'receipt': reference(result.receipt), 'status': result.status})
-            artifacts[plan.id] = {key: value for key, value in inventory(plan.out, [p.name for p in plan.out.iterdir()]).items()}
+            _freeze_output(plan.out,frozen,errors)
             observations[plan.id] = observe(actual, result)
         except (OSError, ValueError, KeyError) as error:
             errors.append({'id': plan.id, 'error': str(error)})
+        finally:
+            _freeze_output(plan.out,frozen,errors)
+            if plan.out in frozen:artifacts[plan.id]=dict(frozen[plan.out])
     scorers: list[Json] = []
-    for arm in ('base', 'candidate'):
-        selected = tuple(p for p in plans if p.arm == arm and p.fixture_id == FIXED)
-        target = selected[0].out.parent / 'standing-scorer'
+    for arm,target in scorer_roots.items():
+        selected = fixed_plans[arm]
         try:
             require(all(p.id in observations for p in selected), arm, 'food worlds incomplete')
             result = score_fixed(arm, selected, products.arm(arm), target)
             scorers.append({'arm': arm, 'receipt': reference(result.receipt), 'score': reference(target / 'score.json')})
         except (OSError, ValueError, KeyError) as error:
             errors.append({'arm': arm, 'scorer': str(target), 'error': str(error)})
+        finally:_freeze_output(target,frozen,errors)
     pairs: list[Json] = []
     for base in (p for p in plans if p.arm == 'base'):
         candidate = next(p for p in plans if p.arm == 'candidate' and p.fixture_id == base.fixture_id and p.seeds == base.seeds)
@@ -207,10 +246,14 @@ def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: 
                 companion = replace(base, id=base.id + '/matched-companion', out=companion_out,
                                     argv=(str(products.base.executable), 'm6a-data-only', '--out', str(companion_out / 'observed'),
                                           '--matched-horizon-ticks', str(ticks), '--gate-observations'))
-                result = run_invocation(companion, products.base, (), resolved_blockers=base.blockers)
-                executions.append({'id': companion.id, 'receipt': reference(result.receipt), 'status': result.status})
-                artifacts[companion.id] = {key: value for key, value in inventory(companion.out, [p.name for p in companion.out.iterdir()]).items()}
-                matched = observe(companion, result, companion_ticks=ticks)
+                try:
+                    result = run_invocation(companion, products.base, (), resolved_blockers=base.blockers)
+                    executions.append({'id': companion.id, 'receipt': reference(result.receipt), 'status': result.status})
+                    _freeze_output(companion.out,frozen,errors)
+                    matched = observe(companion, result, companion_ticks=ticks)
+                finally:
+                    _freeze_output(companion.out,frozen,errors)
+                    if companion.out in frozen:artifacts[companion.id]=dict(frozen[companion.out])
                 row['base_companion'] = asdict(matched)
                 safety = paired_selected_safety(left, right, matched)
             row.update(status='PASS', safety=safety)
@@ -222,16 +265,26 @@ def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: 
             require(file_hash(product.executable) == product.executable_sha256 and
                     inventory(product.input_root, [name for name, _ in product.input_files]) == dict(product.input_files),
                     product.source_sha, 'product inputs or executable changed during component')
-        for identity, frozen in artifacts.items():
-            plan = next((p for p in plans if p.id == identity), None)
-            path = plan.out if plan is not None else derived[-1]
-            require(inventory(path, [p.name for p in path.iterdir()]) == frozen, identity, 'native artifacts changed during component')
     except (OSError, ValueError) as error:
         errors.append({'postflight': str(error)})
+    for path in tuple(frozen):_freeze_output(path,frozen,errors,required=True)
     status = 'FAIL' if errors else 'PASS'
-    atomic_json(output, {'schema': 'm6a_component_v1', 'status': status, 'publication_authority': False,
+    atomic_json(output, {'schema': 'm6a_component_v1' if step is None else 'm6a_step_component_v1',
+                        **({} if step is None else {'step':step,'fixtures':list(step_fixtures(step)),
+                                                   'whole_step_complete':False,'artifact_snapshots':{str(path):dict(hashes) for path,hashes in frozen.items()}}), 'status': status, 'publication_authority': False,
                         'registry_sha256': registry.sha256, 'base': declarations.base, 'candidate': declarations.candidate,
                         'declaration_manifest_sha256': declarations.source_manifest_sha256,
                         'executions': executions, 'scorers': scorers, 'pairs': pairs, 'artifacts': artifacts, 'errors': errors,
                         'limit': 'Component only; caller authenticates builds/source and exclusive runtime lane.'})
     return ComponentResult(output, status)
+
+
+def _freeze_output(path: Path, frozen: dict[Path,dict[str,str]], errors: list[Json], *, required: bool=False) -> None:
+    """Keep the first snapshot, including failed child outputs, and compare later."""
+    try:
+        require(not required or path.exists(),str(path),'completed output disappeared')
+        if path.exists():
+            current=inventory(path,[item.name for item in path.iterdir()])
+            if path in frozen:require(current==frozen[path],str(path),'artifacts changed during component')
+            else:frozen[path]=current
+    except (OSError,ValueError) as error:errors.append({'artifact':str(path),'error':str(error)})

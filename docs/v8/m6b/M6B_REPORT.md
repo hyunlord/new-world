@@ -279,6 +279,10 @@ Cargo 기록의 순수 대조기는 원래 부모 명령·manifest·패키지별
 
 stall의 기존 960초 wrapper에 기본 비활성인 직접 자식 기록 경로를 연결했다. 원래 stdin EOF·병합 실시간 출력·명령을 유지하고, 시작 승인 파이프와 부모 연결 감시로 기록 실패·중단 시 소유한 자식만 종료·회수한다. 실제 부모/자식 환경, 입력 해시, 출력 바이트 구간과 시간·종료 기록을 대조하며 일반 프로세스 영수증으로 위장하지 않는다. 루트 검사에서 임시 제품에 helper 의존 모듈이 없어3개가 실패한 기록을 보존하고, 필요한5개 모듈을 복사하며 PYTHONPATH를 제거한 뒤13개를 통과했다. 결과 검증12개·기존 명령9개·play child15개와 엄격 타입 검사22도 통과했다. 기존 mux2_gate_receipts의 Ruff3건 및 타입33건은 이전 소스와 동일하며 새 오류로 숨기거나 전체 lint 통과로 기록하지 않는다. 독립 검토는 자식 회수·환경 연결·영수증 검증을 승인했지만 실제 Godot stall, 양쪽 세계 안전성 및 관찰 비용은 아직 미검증이다(`stage0/stall-run/CHILD_CHAIN_INDEPENDENT_REVIEW_V2.md`).
 
+고정 리뷰 커밋 `09c0a3c5020f11962d1e0bbbfef15e5262f33269`의 독립 pristine 제품·하네스에서 단계16 원래 전체 discovery를 실행했다. 실제1,199개가571.933초에 OK·exit0으로 끝났고 failure/error/skip/expected failure/unexpected success는0이었다. ResourceWarning 두 건과 거절 테스트 진단은 원시 stderr에 보존했다. 소스·런타임·참조·산출물 최종 검사 및 driver 종료0을 확인했고 독립 감사가 정확한 명령·환경·작업 디렉터리와 영수증 연결을 검증했다. 결과는 PASS_COMPONENTS_ONLY이며 이후 커밋이나 전체 gate·세계 안전성·게시 승인으로 확장하지 않는다(`stage0/python-discovery-qualification/INDEPENDENT_RUN01_AUDIT.md`, 결과 SHA256 `672bfe065392ddaf5d844b25fa3a9c24f701ca19dd353adc68091662ad134b00`).
+
+M6a 실행기는 기존 공동 API를 보존하면서 단계47의 네72일 primary·두 scorer와 단계48의 두 selected primary·실제 후보 종료 tick에 맞춘 새 BASE companion을 분리했다. 전체 fixture 정의·정확한 군/seed/순서와 fresh 출력 경로를 검증하고, 실패 산출물 및 scorer/companion의 첫 해시를 마지막까지 대조한다. 독립 검토와 루트20개 검사를 통과했다. direct/coordinator 연결과 실제 native qualification은 미완료이며, 단계48의 별도 식물 구조 렌더러 검사도 아직 필수 미구현 의무로 남는다(`stage0/ordered-dispatch/m6a-split-draft/independent-review-v1.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
