@@ -43,7 +43,7 @@ LOADED_SOURCES = {
 }
 
 # Source-reviewed scene/autoload/rebuild paths: layers never enter the scene tree.
-PINS: dict[str, str] = {'scripts/world/art_hash.gd': 'e37c1a4553175450dbf598bfc3b7a0d86c51016bc2c781a6e4ef82a93e288afe', 'scripts/ui/person_names.gd': 'cd8afd961c3eb31fc6b7706ea1bdb4ea0c9334e229cff590974aa6e2de422791', 'sim_bridge.gdextension': '6c47616cc217caf4b9dfcecfba4c6157f98b8ee8954c18602081ab8a63eb1b5a', 'project.godot': 'cd16a69aa33fbde80fb64c2bf8fb584f6d7aaef0f4b135ed92c8a35cb6061c98', 'tools/v8/m6a_plant_art_test.gd': 'c8deea193b8ffc26436213fa8bece13a912d2870dc4276ec52c3f6da634c2006', 'tools/v8/run_bounded.sh': '5c41c4672e053b00c10284e2a5ed49fc0dddedfddc9af7305cac29ee180ce61d', 'scripts/world/colony/plant_layer.gd': '84c7bb21b959d2511028b7df42d09b10cb16888b82c65aa59e849a66d95d0fc3', 'scripts/world/art/art_data.gd': 'fd3d27da528819c6ace5ad04824c1c7f8b8a5232b9f2535f40c3d7b1160fa919', 'scripts/ui/content_context.gd': 'e8cdac02c9d5241464a2d153e51c1c1db3a30696198d255d791213f0ac31ce10', 'scripts/core/locale.gd': 'b92c662d50966ce294be3596d91ef7530a3defd59010beee2c898e2e85ae50e3', 'scripts/core/sim_reads.gd': 'b50284a716ee296186fd007e78532a2c3c2569e7ce3e06f01b1b1428e6ba1128', 'scripts/world/colony/view.gd': 'f67192ce8caefbff8971a449f1b5e001c3b787cfb72807b8546c51f42f8e95ab'}
+PINS: dict[str, str] = {'scripts/world/art_hash.gd': 'e37c1a4553175450dbf598bfc3b7a0d86c51016bc2c781a6e4ef82a93e288afe', 'scripts/ui/person_names.gd': 'cd8afd961c3eb31fc6b7706ea1bdb4ea0c9334e229cff590974aa6e2de422791', 'sim_bridge.gdextension': '6c47616cc217caf4b9dfcecfba4c6157f98b8ee8954c18602081ab8a63eb1b5a', 'project.godot': 'cd16a69aa33fbde80fb64c2bf8fb584f6d7aaef0f4b135ed92c8a35cb6061c98', 'tools/v8/m6a_plant_art_test.gd': 'c8deea193b8ffc26436213fa8bece13a912d2870dc4276ec52c3f6da634c2006', 'tools/v8/run_bounded.sh': '64b0d037c1a854add96cccf25ae7a0bcfc40be78ab4406f092514e4891009bf7', 'scripts/world/colony/plant_layer.gd': '84c7bb21b959d2511028b7df42d09b10cb16888b82c65aa59e849a66d95d0fc3', 'scripts/world/art/art_data.gd': 'fd3d27da528819c6ace5ad04824c1c7f8b8a5232b9f2535f40c3d7b1160fa919', 'scripts/ui/content_context.gd': 'e8cdac02c9d5241464a2d153e51c1c1db3a30696198d255d791213f0ac31ce10', 'scripts/core/locale.gd': 'b92c662d50966ce294be3596d91ef7530a3defd59010beee2c898e2e85ae50e3', 'scripts/core/sim_reads.gd': 'b50284a716ee296186fd007e78532a2c3c2569e7ce3e06f01b1b1428e6ba1128', 'scripts/world/colony/view.gd': 'f67192ce8caefbff8971a449f1b5e001c3b787cfb72807b8546c51f42f8e95ab'}
 CLASS_CACHE_SHA256 = 'b82c2e7b1bd0f527aa0683cbc0225e49af2f5c54f20d5c9d603015e0d1236f6f'
 ORACLE_PINS: dict[str, str] = {'m6a_gate_art.py': '05e6173b0142f1f1b2bbf78aab0170b07d6f1e9cc14675ae82996d622c7013d6', 'm6a_gate_history.py': '75b3893f7732caa48c670d5b9017d6cef1e1077b44249a63170d24b0510f2ff4'}
 
@@ -481,7 +481,7 @@ class OwnedPlan:
 def check_owned_helpers(product: ProbeProduct, tools: Tooling) -> None:
     """Bind actual loaded helper closure and each wrapper's materialized copy."""
     coordinator_sources(tools)
-    require(dict(tools.files).get('gate_oracle_child.py')=='c5fe850b1544c460b19ae3e63356705f225173c078926e5127348701d6ec5c32','/helper','unreviewed owned helper')
+    require(dict(tools.files).get('gate_oracle_child.py')=='af1d16e2774710ad2800c3ebd6479454657a460067651cec1f0f5a11f43ad785','/helper','unreviewed owned helper')
     for name in import_closure(tools.root,'gate_oracle_child.py'):
         digest=dict(tools.files).get(name)
         require(digest is not None,'/helper','unsealed helper dependency')
