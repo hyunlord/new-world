@@ -294,7 +294,7 @@ if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     step 48 m6a_food_data_only bash tools/v8/m6a_gate_checks.sh data_only "$LOG/m6a-food-data-only"
 fi
 # M-READ gate steps
-step 49 read_data_only bash -c 'cd rust && cargo test --release -p sim-core --lib "diagnosis::tests::data_only_check_addition" -- --exact'
+step 49 read_data_only bash -c 'cd rust && cargo test --release -p sim-core --lib "colony::diagnosis::tests::data_only_check_addition" -- --exact'
 step 50 read_preservation bash -c '
     set -euo pipefail
     BASE_PROBE="${READ_BASE_PROBE:-/Users/rexxa/work/read-base/rust/target/release/worldsim_probe}"

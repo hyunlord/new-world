@@ -5,6 +5,7 @@
 # How to run: python3 -m unittest discover -s tools/v8 -p test_gate_test_summary.py
 """Libtest accounting regression tests use synthetic byte-stream fixtures."""
 import json
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -18,6 +19,37 @@ VALID = 'running 1 test\ntest case_a ... ok\n\n' + RESULT
 
 
 class SummaryTests(unittest.TestCase):
+    def test_read_data_only_uses_full_exact_case_filter(self) -> None:
+        rows = [shlex.split(line) for line in Path(__file__).with_name('gate.sh').read_text().splitlines()
+                if line.startswith('step 49 ')]
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0][:5], ['step', '49', 'read_data_only', 'bash', '-c'])
+        self.assertEqual(len(rows[0]), 6)
+        self.assertEqual(shlex.split(rows[0][5]), [
+            'cd', 'rust', '&&', 'cargo', 'test', '--release', '-p', 'sim-core', '--lib',
+            'colony::diagnosis::tests::data_only_check_addition', '--', '--exact',
+        ])
+
+    def test_read_data_only_rejects_historical_zero_selection_and_wrong_identity(self) -> None:
+        expected = ('colony::diagnosis::tests::data_only_check_addition',)
+        # Preserved final-d-03 shape; exit0 did not select the dedicated test.
+        zero = ('running 0 tests\n\n'
+                'test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; '
+                '491 filtered out; finished in 0.00s\n')
+        parsed = parse_log(zero)
+        self.assertEqual((parsed.passed, parsed.failed, parsed.filtered_out), (0, 0, 491))
+        with self.assertRaises(SummaryError):
+            validate_cases(parsed, expected, ())
+        with self.assertRaises(SummaryError):
+            validate_cases(parse_log(VALID.replace('case_a', 'diagnosis::tests::data_only_check_addition')),
+                           expected, ())
+        for filtered in (0, 490, 999):
+            with self.subTest(filtered=filtered):
+                correct = VALID.replace('case_a', expected[0]).replace('490 filtered', f'{filtered} filtered')
+                result = parse_log(correct)
+                self.assertIsNone(validate_cases(result, expected, ()))
+                self.assertEqual((result.passed, result.failed, result.ignored, result.measured), (1, 0, 0, 0))
+
     def test_counts_preserve_filtered_and_ignored(self) -> None:
         # Given an ignored mechanism and one ordinary success.
         raw = 'test a ... ok\ntest b ... ignored, mechanism\n' + RESULT.replace('0 ignored', '1 ignored')

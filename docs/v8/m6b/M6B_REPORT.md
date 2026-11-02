@@ -349,6 +349,11 @@ workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignore
 
 문서 검사에도 소스가 소유하는 종료 상태 API를 분리했다. 원래 API는 그대로이며, owned 실행은 실제 PASS·exit0과 연결된 프로세스 기록을 확인한 뒤에만 종료 상태가 된다. 양의 오류 종료도 Cargo 내부 wait 실패를 배제하지 못하므로 UNKNOWN으로 남겨 산출물 확정과 잠금 해제를 허용하지 않는다. 실행 전 거부와 종료 후 문서·출처 검증 실패는 별도 종료된 실패로 남기고, 진단·중단 오류가 원래 실패를 가리지 않게 했다. 루트71개(4.850초), 엄격 타입·Ruff 및 독립 검토가 통과했다. 상위 조정기 연결과 실제 원래 문서 검사 실행은 아직 미검증이다(`stage0/ordered-dispatch/DOCS14_OWNED_INDEPENDENT_REVIEW_V1.md`).
 
+
+고정 소스 `64df8ed208f9ed48d8c47fb4e81e7f9244843de1`의 전체 Python discovery 재실행은1,583개를916.857초에 실행해 모두 통과했다. 실행 전에 기록한397개 도구 입력 해시는 종료 시 모두 같았다. 앞선1,511개 실패 기록은 보존하며, 이번 결과는 개발 회귀 검사로서 정식 단계16·전체 gate·BASE 자기 비교를 대체하지 않는다(`stage0/integrated-python-32-terminal.json`, 로그 SHA256 `591dbb0e591891915c333f6ccc9dbaa0baf1e46c83d7c0146f4ae08e374ee30f`).
+
+단계49의 원래 정확 일치 필터에서 빠진 `colony::`를 명시적으로 수정했다. 보존된 Stage−1 final-d-03의 전용 검사는 exit0이지만0개를 실행했으며, 같은 실행의 전체 workspace에서 해당 테스트가 통과한 사실은 이 전용 호출의 누락을 대신하지 않는다. 과거 로그·게시 분류는 변경하지 않는다. release·패키지·lib·cwd·기본 스레드·capture 정책은 유지했다. 정확한 전체 명령과0개·잘못된 이름 거부 회귀를 포함한 루트28개(0.096초), Bash 구문·Ruff·독립 검토가 통과했다. 기존 테스트 타입 진단12개는 그대로이며 신규0이다. 아직 구현되지 않은 generic 단계49 호출을 지원한다고 선언하지 않으며, 수정된 실제 native 실행·독립 목록·정확히1개 성공의 전체 연결은 미검증이다(`stage0/ordered-dispatch/step49-filter-review.md`, 과거 로그 SHA256 `ed6489047d2306ba4bfc309eb82d12a7a7c6bbef9e06f0e0c720e5b15503d661`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
