@@ -14,7 +14,7 @@ import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from generic_bench import AuditError, Product, validate_products, verify_product
+from generic_bench import AuditError, Product
 from generic_build import derived_snapshot
 from generic_gate import document, integer, require
 from generic_process import ProcessSpec, atomic_json, execute, file_hash
@@ -32,6 +32,7 @@ from generic_test_history import (
     identity,
     resolve,
 )
+from generic_test_invocation import invocations, verify_artifact
 from generic_test_observations import (
     Binding,
     ExpectedOccurrence,
@@ -238,23 +239,25 @@ def _process_from_receipt(path: Path, digest: str) -> Binding:
     return binding
 
 
-def verify_test_product(product: Product, target: str) -> None:
+def verify_test_product(product: Product, target: str, profile: str = 'release') -> None:
     """Follow artifact->build->actual compiler process; reject dirty development receipts."""
     require(target in TESTS, target, 'unregistered native family')
-    verify_product(product)
+    verify_artifact(product, profile)
     artifact = document(bound_bytes(product.build_receipt, product.build_receipt_sha256).decode())
     artifact.field('binary').equals(str(product.binary))
     build_path = Path(artifact.field('build_receipt').text())
     build = document(bound_bytes(build_path, artifact.field('build_receipt_sha256').text()).decode())
     for key,value in (('status','PASS'), ('build_kind','integration_tests'), ('source_sha',product.source_sha),
-                      ('root',str(product.root)), ('profile','release'), ('exit_code',0)):
+                      ('root',str(product.root)), ('profile',profile), ('exit_code',0)):
         build.field(key).equals(value)
+    build.field('packages').equals(['sim-test'])
+    build.field('features').equals([])
     targets = tuple(row.text() for row in build.field('test_targets').array())
     require(target in targets and len(set(targets)) == len(targets), target, 'test target absent/duplicate')
     built = build.field('artifacts').field(target)
     built.field('path').equals(str(product.binary))
     built.field('sha256').equals(product.binary_sha256)
-    require(product.binary.is_relative_to(product.root/'rust/target/release/deps'), target, 'test binary outside independent target')
+    require(product.binary.is_relative_to(product.root/f'rust/target/{profile}/deps'), target, 'test binary outside independent target')
     inputs = {name: Node(value).text() for name,value in build.field('effective_inputs_before').mapping().items()}
     require(dict(product.input_files) == inputs and len(product.input_files) == len(inputs), target, 'not full build input inventory')
     require(inventory(product.root, list(inputs)) == inputs, target, 'effective build input drift')
@@ -286,7 +289,8 @@ def verify_test_product(product: Product, target: str) -> None:
     expected_argv = [argv[0], 'test', '--locked', '--message-format=json-render-diagnostics', '--no-run']
     for name in targets:
         expected_argv.extend(('--test', name))
-    expected_argv.append('--release')
+    if profile == 'release':
+        expected_argv.append('--release')
     for package in build.field('packages').array():
         expected_argv.extend(('-p', package.text()))
     features = [feature.text() for feature in build.field('features').array()]
@@ -340,50 +344,108 @@ def authenticate_family(target: str, binding: Binding) -> tuple[Planned, ...]:
     return planned
 
 
-def prepare(base: dict[str, Product], candidate: dict[str, Product], output: Path) -> None:
-    require(set(base) == set(candidate) == set(TESTS), '/families', 'all four original binary families required')
+def native_summary(binding: Binding, target: str) -> None:
+    stdout = bound_bytes(binding.process.output_root/'stdout.log',dict(binding.output_hashes)['stdout.log']).decode()
+    summaries = re.findall(r'^test result: ok\. ([1-9][0-9]*) passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in .+$',stdout,re.MULTILINE)
+    require(summaries == [str(len(TESTS[target]))], target, 'original positive native summary missing or altered')
+
+
+def authenticate_invocation(path: Path, product: Product, plan: str) -> Binding:
+    """Recheck a recorded identity against compiler and actual native process evidence."""
+    receipt = document(path.read_bytes().decode())
+    receipt.field('schema').equals('native_invocation_v1')
+    receipt.field('plan').equals(plan)
+    target = receipt.field('identity').field('target').text()
+    selected = [row for row in invocations(plan) if row.target == target]
+    require(len(selected) == 1, target, 'target absent from named invocation')
+    row = selected[0]
+    receipt.field('identity').equals(document(json.dumps(asdict(row))).value)
+    require(receipt.field('arm').text() in {'base','candidate'}, str(path), 'unknown arm')
+    receipt.field('artifact_receipt').equals(str(product.build_receipt))
+    receipt.field('artifact_sha256').equals(product.build_receipt_sha256)
+    verify_test_product(product,target,row.profile)
+    binding = _process_from_receipt(Path(receipt.field('process_receipt').text()),receipt.field('process_sha256').text())
+    spec = binding.process
+    require(spec.argv == (str(product.binary),*row.argv) and spec.cwd == product.root/'rust', target, 'invocation argv/cwd mismatch')
+    require(spec.executable == product.binary and spec.executable_sha256 == product.binary_sha256, target, 'foreign executable')
+    require(spec.input_root == product.root and dict(spec.inputs) == dict(product.input_files) and len(spec.inputs) == len(product.input_files), target, 'foreign invocation inputs')
+    expected_environment = {'PATH':'/usr/bin:/bin:/usr/sbin:/sbin','LANG':'C','LC_ALL':'C','WORLDSIM_GATE_OBSERVER':'1','WORLDSIM_GATE_TEST_OUT':str(spec.output_root),
+                                'TMPDIR':str(spec.output_root/'tmp')}
+    if plan != 'development':
+        expected_environment['WORLDSIM_GATE_TEST_INVOCATION'] = plan
+    require(dict(spec.environment) == expected_environment and spec.fresh_directories == ('tmp',)
+            and spec.external_inputs == (), target, 'foreign observer environment/inputs')
+    require(spec.output_root == path.parent/f"{receipt.field('arm').text()}-{target}", target, 'foreign invocation output')
+    receipt.field('pid').equals(binding.pid)
+    receipt.field('argv').equals(list(spec.argv))
+    hashes = freeze(spec.output_root)
+    receipt.field('output_sha256').equals({name:digest for name,digest in hashes.items()})
+    binding = Binding(spec,binding.receipt_sha256,binding.pid,tuple(hashes.items()))
+    _ = authenticate_family(target,binding)
+    if plan != 'development':
+        native_summary(binding,target)
+    return binding
+
+
+def prepare(base: dict[str, Product], candidate: dict[str, Product], output: Path, *, invocation: str = 'development') -> None:
+    selected = invocations(invocation)
+    targets = {row.target for row in selected}
+    require(set(base) == set(candidate) == targets, '/families', 'exact named invocation families required')
     require(output.is_absolute() and output == output.resolve() and not output.exists(), '/output', 'fresh canonical output required')
-    for target in TESTS:
-        validate_products(base[target], candidate[target], 'publication')
+    for row in selected:
+        target = row.target
+        require(not base[target].root.is_relative_to(candidate[target].root) and
+                not candidate[target].root.is_relative_to(base[target].root), target, 'independent roots required')
+        require(not os.path.samefile(base[target].binary,candidate[target].binary), target, 'shared binary inode')
         for products in (base, candidate):
             product = products[target]
             require(not output.is_relative_to(product.root) and not product.root.is_relative_to(output), target, 'overlapping evidence/source roots')
-            verify_test_product(product, target)
+            verify_test_product(product, target, row.profile)
     for products in (base, candidate):
         require(len({row.source_sha for row in products.values()}) == 1 and len({row.root for row in products.values()}) == 1,
                 '/products', 'one independent source/build root per arm required')
-        require(len({os.stat(row.binary).st_ino for row in products.values()}) == len(TESTS), '/products', 'test binaries reused')
+        require(len({os.stat(row.binary).st_ino for row in products.values()}) == len(targets), '/products', 'test binaries reused')
 
 
-def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Path) -> Path:
-    prepare(base, candidate, output)
+def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Path, *, invocation: str = 'development') -> Path:
+    selected = invocations(invocation)
+    prepare(base, candidate, output, invocation=invocation)
     output.mkdir(parents=True)
     families: list[Json] = []
     report: dict[str,Json] = {'status':'PENDING', 'broader_gate17_37':'INCOMPLETE', 'publication_authorized':False,
+        'invocation_plan':invocation, 'invocations':[document(json.dumps(asdict(row))).value for row in selected],
+        'workspace_enumeration':'INCOMPLETE', 'step_coverage':'PARTIAL',
         'products':{arm:{target:{'source_sha':product.source_sha, 'binary':str(product.binary),
                     'binary_sha256':product.binary_sha256, 'artifact_receipt':str(product.build_receipt),
                     'artifact_receipt_sha256':product.build_receipt_sha256}
                     for target,product in products.items()} for arm,products in (('base',base),('candidate',candidate))},
-        'coverage':'save_load46 + colony_world20 + colony_commands3 + gifted_hut1 planned ordinary occurrences per arm',
+        'coverage':('save_load46 + colony_world20 + colony_commands3 + gifted_hut1 planned ordinary occurrences per arm'
+                    if invocation == 'development' else 'Named invocation subset; see invocation_coverage.'),
+        'invocation_coverage':{row.target:{'save_load':46,'colony_world':20,'colony_commands':3,'colony_jobs':1}[row.target] for row in selected},
         'limits':['Other world occurrences and native suite families remain unregistered.',
                   'Observer semantic qualification is a separate gate obligation.'], 'families':families, 'errors':[]}
     frozen: dict[Path,dict[str,str]] = {}
+    frozen_receipts: dict[Path,str] = {}
     try:
         with lane():
             bindings: dict[tuple[str,str],Binding] = {}
             plans: dict[tuple[str,str],tuple[Planned,...]] = {}
             unresolved = False
-            for target, native_names in TESTS.items():
+            for invocation_row in selected:
+                target = invocation_row.target
+                native_names = TESTS[target]
                 declared_setup: Json = None
                 for arm, products in (('base',base),('candidate',candidate)):
+                    require(all(file_hash(path) == digest for path,digest in frozen_receipts.items()), '/invocations', 'prior invocation drift')
                     for directory, hashes in frozen.items():
                         require(freeze(directory) == hashes, str(directory), 'completed producer evidence changed')
                     product = products[target]
                     directory = output/f'{arm}-{target}'
-                    spec = ProcessSpec((str(product.binary),'--test-threads=1','--nocapture'), product.root/'rust',
+                    spec = ProcessSpec((str(product.binary),*invocation_row.argv), product.root/'rust',
                         product.binary, product.binary_sha256, product.root, product.input_files, directory,
                         (('WORLDSIM_GATE_OBSERVER','1'), ('WORLDSIM_GATE_TEST_OUT',str(directory)),
-                         ('TMPDIR',str(directory/'tmp'))), fresh_directories=('tmp',))
+                         ('TMPDIR',str(directory/'tmp'))) + (() if invocation == 'development' else
+                         (('WORLDSIM_GATE_TEST_INVOCATION',invocation),)), fresh_directories=('tmp',))
                     result = execute(spec)
                     hashes = freeze(directory)
                     frozen[directory] = hashes
@@ -393,6 +455,15 @@ def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Pa
                     binding = Binding(spec, hashes['process.json'], result.pid, tuple(hashes.items()))
                     bindings[arm,target] = binding
                     plans[arm,target] = authenticate_family(target, binding)
+                    if invocation != 'development':
+                        native_summary(binding,target)
+                    receipt: dict[str,Json] = {'schema':'native_invocation_v1', 'plan':invocation,
+                        'identity':document(json.dumps(asdict(invocation_row))).value, 'arm':arm,
+                        'process_receipt':str(directory/'process.json'), 'process_sha256':hashes['process.json'],
+                        'pid':result.pid, 'argv':list(spec.argv), 'output_sha256':{name:digest for name,digest in hashes.items()},
+                        'artifact_receipt':str(product.build_receipt), 'artifact_sha256':product.build_receipt_sha256}
+                    atomic_json(output/f'{arm}-{target}-invocation.json',receipt)
+                    frozen_receipts[output/f'{arm}-{target}-invocation.json'] = file_hash(output/f'{arm}-{target}-invocation.json')
                 if target == 'colony_jobs':
                     left, left_setup = hut_evidence(bindings['base',target])
                     right, right_setup = hut_evidence(bindings['candidate',target])
@@ -412,8 +483,9 @@ def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Pa
                     'occurrences':[document(json.dumps({'base':asdict(row.base), 'candidate':asdict(row.candidate),
                                                        'safety':row.safety})).value for row in paired.occurrences]})
             for products in (base,candidate):
-                for target, product in products.items():
-                    verify_test_product(product,target)
+                for row in selected:
+                    verify_test_product(products[row.target],row.target,row.profile)
+            require(all(file_hash(path) == digest for path,digest in frozen_receipts.items()), '/invocations', 'invocation receipt drift')
             require(all(freeze(directory) == hashes for directory,hashes in frozen.items()), '/outputs', 'terminal evidence drift')
             report['status'] = 'UNRESOLVED' if unresolved else 'COMPONENT_PASS'
     except (AuditError, ValueError, OSError, KeyError) as error:
@@ -422,6 +494,7 @@ def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Pa
     try:
         report['output_sha256'] = {name:digest for name,digest in freeze(output).items()}
         report['output_inventory_complete'] = True
+        require(all(file_hash(path) == digest for path,digest in frozen_receipts.items()), '/invocations', 'final invocation drift')
         require(all(freeze(directory) == hashes for directory,hashes in frozen.items()), '/outputs', 'final evidence drift')
     except (ValueError, OSError) as error:
         report['status'] = 'FAIL'

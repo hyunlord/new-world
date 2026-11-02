@@ -4,17 +4,19 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 from unittest.mock import patch
 
 import generic_build
+import generic_test_run
 from generic_bench import AuditError, Product
 from generic_build import BuildSpec, build_product
 from generic_gate import document
 from generic_process import file_hash
 from generic_sources import inventory
 from generic_test_history import FORMAT_SOURCE, identity
+from generic_test_invocation import invocations
 from generic_test_run import (
     JOBS_INPUTS,
     JOBS_RULES,
@@ -39,6 +41,21 @@ checkpoint('after_log_gift',0,{'ground_logs':12,'log_ledger':[12,12,0,0,0],'requ
 checkpoint('accepted_direct_blueprint',0,{'intervention':'direct_apply_command','accepted_assertion_completed':True,'command':{'tick':0,'cmd':'place_blueprint','kind':'hut','x':10,'y':10}})
 checkpoint('hut_completion',COMPLETION_TICK,{'actual_completed_ticks':COMPLETION_TICK,'limit_ticks':4320,'centre':[11,11],'owned_hut_assertion_completed':True})
 """
+
+
+class InvocationTests(unittest.TestCase):
+    def test_named_plans_preserve_original_flags_and_distinct_steps(self) -> None:
+        plan = invocations
+        self.assertEqual([r.target for r in plan('gate17')],
+                         ['colony_commands','colony_jobs','colony_world'])
+        self.assertEqual([(r.step,r.profile,r.package,r.kind,r.filter,r.ignored,r.argv) for r in plan('gate24')],
+                         [(24,'release','sim-test','integration_test',None,'exclude',('--test-threads=8',))])
+        self.assertEqual({r.profile for r in plan('gate04')},{'debug'})
+        self.assertEqual({r.profile for r in plan('gate05')},{'release'})
+        self.assertEqual({r.argv for r in plan('development')},{('--test-threads=1','--nocapture')})
+        self.assertEqual(len(plan('gate04')),4)
+        with self.assertRaises(ValueError):
+            _ = plan('unknown')
 
 
 class PlansTests(unittest.TestCase):
@@ -71,7 +88,7 @@ class PlansTests(unittest.TestCase):
 
 
 class RunnerTests(unittest.TestCase):
-    def exercise(self, defect: str = '') -> Node:
+    def exercise(self, defect: str = '', invocation: str = 'development') -> Node:
         with tempfile.TemporaryDirectory() as temporary:
             home = Path(temporary).resolve()
             products: dict[str,dict[str,Product]] = {}
@@ -127,6 +144,8 @@ class RunnerTests(unittest.TestCase):
                             child += "for n in ('before_log_gift','after_log_gift'):\n p=folder/('checkpoint_'+n+'.json');r=json.loads(p.read_text());r['detail']['tile']=[4,5];p.write_text(json.dumps(r))\n"
                     names = TESTS[target][:-1] if defect == 'missing_test' and arm == 'candidate' else TESTS[target]
                     child += '\nfor test in '+repr(names)+": print('test '+test+' ... ok')\n"
+                    if defect != 'missing_summary':
+                        child += "print('test result: ok. "+str(len(names))+" passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s')\n"
                     if defect == 'extra_world' and arm == 'candidate':
                         child += "(root/'save_load_pid999999').mkdir()\n"
                     if defect == 'exit' and arm == 'candidate':
@@ -144,12 +163,48 @@ class RunnerTests(unittest.TestCase):
             with patch('generic_test_run.prepare'), patch('generic_test_run.verify_test_product',
                  side_effect=AuditError('postflight failed') if defect == 'postflight' else None), \
                  patch('generic_test_run.lane'):
-                result = run_pair(products['base'],products['candidate'],home/'out')
+                selected = {row.target for row in invocations(invocation)}
+                result = run_pair({k:v for k,v in products['base'].items() if k in selected},
+                                  {k:v for k,v in products['candidate'].items() if k in selected},
+                                  home/'out',invocation=invocation)
+                if defect == '' and invocation != 'development':
+                    for arm in ('base','candidate'):
+                        for target in selected:
+                            path = home/f'out/{arm}-{target}-invocation.json'
+                            binding = generic_test_run.authenticate_invocation(path,products[arm][target],invocation)
+                            self.assertEqual(binding.process.argv[1:],('--test-threads=8',))
+                            original = path.read_bytes()
+                            relabeled = document(original.decode()).mapping()
+                            other = 'gate24' if target == 'save_load' and invocation != 'gate24' else 'gate05'
+                            if invocation == other:
+                                other = 'gate04'
+                            relabeled['plan'] = other
+                            relabeled['identity'] = document(json.dumps(asdict(next(row for row in invocations(other) if row.target == target)))).value
+                            _ = path.write_text(json.dumps(relabeled))
+                            with self.assertRaises(ValueError):
+                                _ = generic_test_run.authenticate_invocation(path,products[arm][target],other)
+                            altered = document(original.decode()).mapping()
+                            Node(altered['identity']).mapping()['threads'] = 1
+                            _ = path.write_text(json.dumps(altered))
+                            with self.assertRaises(ValueError):
+                                _ = generic_test_run.authenticate_invocation(path,products[arm][target],invocation)
             return document(result.read_text())
+
+    def test_gate_invocations_and_reauthentication(self) -> None:
+        for plan,counts in (('gate17',[3,1,20]),('gate24',[46]),('gate04',[46,20,3,1]),('gate05',[46,20,3,1])):
+            with self.subTest(plan=plan):
+                result = self.exercise(invocation=plan)
+                result.field('status').equals('COMPONENT_PASS')
+                result.field('workspace_enumeration').equals('INCOMPLETE')
+                self.assertEqual([len(row.field('occurrences').array()) for row in result.field('families').array()
+                                  if 'occurrences' in row.mapping()],counts)
+        self.exercise('missing_summary','gate24').field('status').equals('FAIL')
 
     def test_full_original_binaries_preserve69_and_add_hut(self) -> None:
         result = self.exercise()
         result.field('status').equals('COMPONENT_PASS')
+        result.field('coverage').equals('save_load46 + colony_world20 + colony_commands3 + gifted_hut1 planned ordinary occurrences per arm')
+        result.field('invocation_coverage').equals({'save_load':46,'colony_world':20,'colony_commands':3,'colony_jobs':1})
         result.field('broader_gate17_37').equals('INCOMPLETE')
         result.field('publication_authorized').equals(False)
         self.assertEqual([len(row.field('occurrences').array()) for row in result.field('families').array() if 'occurrences' in row.mapping()], [46,20,3,1])
@@ -174,6 +229,11 @@ class RunnerTests(unittest.TestCase):
 
 class BuildConsumerTests(unittest.TestCase):
     def test_actual_build_chain_and_dirty_source_rejection(self) -> None:
+        for profile in ('release','debug'):
+            with self.subTest(profile=profile):
+                self.build_chain(profile)
+
+    def build_chain(self, profile: str) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             home = Path(temporary).resolve()
             root = home/'source'
@@ -198,7 +258,7 @@ class BuildConsumerTests(unittest.TestCase):
             _ = compiler.write_text('#!'+sys.executable+'''\nimport json,os,pathlib,sys
 if '--version' in sys.argv:
  print('synthetic compiler\\nrelease: 1.93.0\\nhost: synthetic');sys.exit(0)
-p=pathlib.Path(os.environ['CARGO_TARGET_DIR'])/'release/deps/save_load-synthetic'
+p=pathlib.Path(os.environ['CARGO_TARGET_DIR'])/('release' if '--release' in sys.argv else 'debug')/'deps/save_load-synthetic'
 p.parent.mkdir(parents=True);p.write_text('not a native executable');p.chmod(0o755)
 print(json.dumps({'reason':'compiler-artifact','target':{'name':'save_load','kind':['test']},'profile':{'test':True},'fresh':False,'executable':str(p),'filenames':[str(p)]}))
 print(json.dumps({'reason':'build-finished','success':True}))
@@ -207,7 +267,7 @@ print(json.dumps({'reason':'build-finished','success':True}))
             cargo_home = home/'cargo-home'
             cargo_home.mkdir()
             spec = BuildSpec(root,sha,compiler,file_hash(compiler),compiler,file_hash(compiler),cargo_home,
-                             home/'build',('sim-test',),(),test_targets=('save_load',))
+                             home/'build',('sim-test',),(),profile='debug' if profile == 'debug' else 'release',test_targets=('save_load',))
             built = build_product(spec)
             self.assertEqual(built.status,'PASS')
             receipt = spec.output/'artifact-save_load.json'
@@ -215,10 +275,12 @@ print(json.dumps({'reason':'build-finished','success':True}))
             binary = built.artifacts[0][1]
             inputs = tuple((name,Node(value).text()) for name,value in build.field('effective_inputs_before').mapping().items())
             product = Product(root,binary,sha,file_hash(binary),receipt,file_hash(receipt),inputs)
-            verify_test_product(product,'save_load')
+            verify_test_product(product,'save_load',profile)
+            with self.assertRaises(ValueError):
+                verify_test_product(product,'save_load','release' if profile == 'debug' else 'debug')
             _ = (root/'rust/Cargo.toml').write_text('dirty')
             with self.assertRaises(ValueError):
-                verify_test_product(product,'save_load')
+                verify_test_product(product,'save_load',profile)
             with self.assertRaises(ValueError):
                 verify_test_product(replace(product,input_files=()),'save_load')
 

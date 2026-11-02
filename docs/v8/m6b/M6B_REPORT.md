@@ -231,6 +231,14 @@ Stage 0 자기 비교의 알려진 충돌은 유지한다. 공개 BASE0의 기�
 
 최신 Python 검증10은 generic468개와 기존 요약/READ/정규화61개를 모두 통과했다. generic 실행 전후 Python 소스 해시 변화는 없으며, 생산 모듈 엄격 타입 검사12도 오류0·경고0이었다. 검토한 작업 경로145개만 Stage0 리뷰용 변경으로 보존하며, unrelated `.gitignore`와 로컬 Godot 로그는 포함하지 않는다. 원래51단계 전체 연결·workspace 테스트 세계의 완전한 열거·독립 제품 및 관찰자 중립성 증명은 아직 미완료다.
 
+선택 콘텐츠 팩 UI의 실제 run01은 bridge 빌드와 원래 headless 실행을 exit0으로 마쳤다. 보고서41항목 중39개 단언이 통과했고 렌더링은 NOT_RUN_HEADLESS다. 한 연속 세계의 실제 tick0→1, 창립자/생존자10명·KnowledgeLost0 및 전체5체크포인트를 검증했다. 소스1471개·runtime 입력6419개와 실행 파일·HEAD·작업 상태는 전후 같았다(`stage0/ui-pack-native/RESULT.md`). Rust 기제 검사·양쪽 제품 비교·장기 생존·전체 gate를 대신하지 않는다.
+
+리뷰 커밋 `886ff0e5ee58fadda44fc653d962c3f5d6697d74`의 native 파일902개는 foundation03 입력 바이트와 일치했다. 나머지 입력 `rust/Cargo.lock`은 기존 ignore 규칙에 의해 Git 밖에 있으며, 당시와 현재 해시가 같다. 따라서 커밋 SHA만으로 의존성 잠금 파일의 출처까지 증명하지 않는다. 독립 빌드는 이 파일의 바이트와 출처를 별도 입력으로 고정해야 한다(`stage0/foundation-lockfile-qualification.json`).
+
+후속 smoke run01은 입력 목록에서 기존 `smoke.sh`·`smoke_base_counts.txt`가 빠져 세계 실행 전에 FAIL했고, 네 실행은 NOT_RUN으로 남겼다. 목록을 수리한 새 run02는 원래 두900프레임 검사와 각 동일 제품 companion을 모두 exit0으로 마쳤다. boot tick80·labels tick82가 각각 일치했고 모든 세계 생존10명·KnowledgeLost0, 오류·raw key0이었다. 소스·설정 복원·입출력 해시의 최종 검증도 통과했다(`stage0/ui-smoke-native/run-02/README.md`). 독립 BASE/후보 비교나 전체 gate는 아니다.
+
+테스트 실행 식별 연결은 기존 네 가족의 기본 호출을 유지하며 debug/release·step17·step24를 서로 다른 실행으로 묶는다. 같은 명령행이라도 기록된 실행 환경의 식별자가 다르면 재사용을 거절한다. 기본 `coverage` 문자열의 호환성을 복원한 회귀와 실제 빌드 프로필·원래 스레드 수 검증을 포함한 집중10개가 통과했다. 모든 workspace/step17/37 검사를 구현한 것은 아니다. 별도 Python 조정기는 원래51단계의 필수 목록을 고정하고 현재12개 구성요소를 호출하지만, 빠진 의무 때문에 항상 INCOMPLETE 또는 FAIL이며 게시 승인을 내리지 않는다. 독립 검토에서 찾은 반환 상태/파일 상태 불일치, 실패 출력의 변경 누락, 실행 순서 표기 문제를 수리한14개 검사가 통과했다. smoke의 세 경계 회귀를 포함한15개와 전체 생산 모듈 엄격 타입 검사13·Ruff 후속 검사도 통과했다. 셸 gate의 실행 경로는 아직 이 조정기로 전환하지 않았다.
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

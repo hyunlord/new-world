@@ -353,5 +353,3 @@ def compare_rounds(root: Path, base_sha: str, candidate_sha: str,
             'comparisons': comparisons, 'hashes': {key: value for key, value in hashes.items()},
             'limits': [('Not publication authorization; source/build authentication, ordinary world safety, '
                        'measurement exclusivity and remaining gate steps are required.')]}
-
-
