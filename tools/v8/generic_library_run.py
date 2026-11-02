@@ -92,6 +92,18 @@ def checked_request(request: Library49Request) -> dict[str, str]:
     return _checked_request(request, LibraryStep.READ_DATA_ONLY)
 
 
+def checked42_request(request: Library49Request) -> dict[str, str]:
+    require(request.executable.filter == library_recipe(LibraryStep.BASELINE_ISOLATION).filter,
+            "/library", "wrong closed filter")
+    return _checked_request(request, LibraryStep.BASELINE_ISOLATION)
+
+
+def checked43_request(request: Library49Request) -> dict[str, str]:
+    require(request.executable.filter == library_recipe(LibraryStep.MIND_DATA_ONLY).filter,
+            "/library", "wrong closed filter")
+    return _checked_request(request, LibraryStep.MIND_DATA_ONLY)
+
+
 def _checked_request(request: Library49Request, step: LibraryStep) -> dict[str, str]:
     held = os.fstat(request.held_lane_fd)
     canonical = LOCK.stat()

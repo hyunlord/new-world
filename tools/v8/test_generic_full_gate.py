@@ -2607,12 +2607,14 @@ class Library49CoordinatorTests(unittest.TestCase):
 import os,signal,subprocess,sys
 from pathlib import Path
 from unittest.mock import patch
-sys.path[:0]=sys.argv[4:]
+sys.path[:0]=sys.argv[5:]
 import generic_full_gate as g
 import generic_library_run as lib
-from test_generic_full_gate import Library49CoordinatorTests
+from test_generic_full_gate import Library49CoordinatorTests, LibrarySiblingCoordinatorTests
 root=Path(sys.argv[1]);control=int(sys.argv[2]);mode=sys.argv[3]
-case=Library49CoordinatorTests();context=case.context(root,control)
+step=int(sys.argv[4])
+case=Library49CoordinatorTests() if step==49 else LibrarySiblingCoordinatorTests()
+context=case.context(root,control) if step==49 else case.context(root,control,step)
 children=[]
 def cleanup(_signum,_frame):
  for child in children:
@@ -2628,19 +2630,20 @@ def launch(request):
  (root/'entered').write_text(str(request.held_lane_fd))
  if mode=='typed': raise lib.LibraryOwnershipUnknown(request,Hostile())
  raise Hostile()
-calls=(g.OrderedCall(49,'library49',('49:read_data_only',)),g.OrderedCall(50,'direct',()))
-with patch.object(g,'LOCK',root/'lane'),patch.object(lib,'LOCK',root/'lane'),patch.object(g,'ordered_owned_calls',return_value=calls),patch.object(g,'ordered_bindings'),patch.object(g,'perf_bindings'),patch.object(lib,'run49_owned',side_effect=launch),patch.object(g,'library49_outcome',side_effect=AssertionError('must not snapshot unknown')):
- g.run_ordered_owned(context,context.strict,root/'out',control,library49=context.library49)
+name={42:'baseline_isolation',43:'mind_data_only',49:'read_data_only'}[step]
+calls=(g.OrderedCall(step,f'library{step}',(f'{step}:{name}',)),g.OrderedCall(50,'direct',()))
+with patch.object(g,'LOCK',root/'lane'),patch.object(lib,'LOCK',root/'lane'),patch.object(g,'ordered_owned_calls',return_value=calls),patch.object(g,'ordered_bindings'),patch.object(g,'perf_bindings'),patch.object(lib,f'run{step}_owned',side_effect=launch),patch.object(g,'library49_outcome',side_effect=AssertionError('must not snapshot unknown')):
+ g.run_ordered_owned(context,context.strict,root/'out',control,library49=context.library49,library42=context.library42,library43=context.library43)
 '''
         import signal
 
         import mux2_gate_receipts
-        for mode in ('typed','raw'):
-            with self.subTest(mode=mode),TemporaryDirectory() as temporary:
+        for step,mode in ((49,'typed'),(49,'raw'),(42,'typed'),(42,'raw'),(43,'typed'),(43,'raw')):
+            with self.subTest(step=step,mode=mode),TemporaryDirectory() as temporary:
                 root=Path(temporary).resolve();read,write=os.pipe()
                 paths=[str(Path(__file__).resolve().parent),str(Path(gate.__file__).resolve().parent),
                        str(Path(mux2_gate_receipts.__file__).resolve().parent),str(Path(static.__file__).resolve().parent)]
-                with subprocess.Popen([sys.executable,'-c',script,str(root),str(read),mode,*paths],pass_fds=(read,),
+                with subprocess.Popen([sys.executable,'-c',script,str(root),str(read),mode,str(step),*paths],pass_fds=(read,),
                                       stdout=subprocess.PIPE,stderr=subprocess.PIPE) as child:
                     os.close(read)
                     try:
@@ -2655,7 +2658,7 @@ with patch.object(g,'LOCK',root/'lane'),patch.object(lib,'LOCK',root/'lane'),pat
                         self.assertIsNone(child.poll());self.assertNotEqual(lock_contender(root/'lane'),0)
                         self.assertFalse((root/'out/ordered-dispatch.json').exists())
                         self.assertFalse((root/'out/step-50').exists())
-                        self.assertFalse((root/'out/step-49/library49').exists())
+                        self.assertFalse((root/f'out/step-{step}/library{step}').exists())
                     finally:
                         if write>=0:os.close(write)
                         if child.poll() is None and (root/'entered').exists():
@@ -2723,3 +2726,130 @@ with patch.object(g,'LOCK',root/'lane'),patch.object(lib,'LOCK',root/'lane'),pat
                 with self.assertRaisesRegex(ValueError,'directory membership'):
                     gate.recheck_library49(context,row)
             finally:os.close(read);os.close(write)
+
+
+class LibrarySiblingCoordinatorTests(unittest.TestCase):
+    def context(self, root: Path, control: int, step: int, *, fail: bool = False) -> gate.OwnedOrderedInputs:
+        from test_generic_library_run import SiblingRuntimeTests
+        fixture=SiblingRuntimeTests();self.addCleanup(fixture.doCleanups)
+        request=fixture.fixture(root/'native-fixture',step,fail=fail)
+        context=owned_inputs(root,control)
+        product=ProbeProduct(context.components.probes.candidate.source_sha,request.executable.binary,
+            file_hash(request.executable.binary),request.root,request.inputs)
+        context=replace(context,components=replace(context.components,probes=replace(context.components.probes,candidate=product)))
+        bound=gate.Library49Context(product.source_sha,replace(request,held_lane_fd=-1))
+        return replace(context,library42=bound) if step==42 else replace(context,library43=bound)
+
+    def test_optional_calls_preserve_exact_original_order_and_other_routes(self) -> None:
+        options={'bench_enabled':True,'docs_enabled':True,'oracles_enabled':True,'resolver_enabled':True,
+                 'structural_enabled':True,'stall_enabled':True,'library49_enabled':True}
+        old=gate.ordered_owned_calls(**options)
+        calls=gate.ordered_owned_calls(**options,library42_enabled=True,library43_enabled=True)
+        added=(gate.OrderedCall(42,'library42',('42:baseline_isolation',)),gate.OrderedCall(43,'library43',('43:mind_data_only',)))
+        self.assertEqual(tuple(call for call in calls if call not in old),added)
+        self.assertEqual(tuple(call for call in calls if call in old),old)
+        self.assertEqual(calls[calls.index(added[0])-1].step,36)
+        self.assertGreater(gate.ORDER.index(calls[calls.index(added[1])+1].step),gate.ORDER.index(43))
+
+    def test_actual_returns_preserve_pending_failure_case_counts_and_members(self) -> None:
+        import generic_library_run as library
+        for step in (42,43):
+            for fail in (False,True):
+                with self.subTest(step=step,fail=fail),TemporaryDirectory() as temporary:
+                    root=Path(temporary).resolve();read,write=os.pipe()
+                    try:
+                        context=self.context(root,read,step,fail=fail)
+                        call=gate.OrderedCall(step,f'library{step}',(f'{step}:'+('baseline_isolation' if step==42 else 'mind_data_only'),))
+                        with patch.object(gate,'LOCK',root/'lane'),patch.object(library,'LOCK',root/'lane'):
+                            row=gate.invoke_library_sibling(call,context,root/'out')
+                        self.assertEqual(row.status,'FAIL' if fail else 'PENDING')
+                        assert row.library49_result is not None
+                        self.assertEqual(len(row.library49_result.accounting.selected),4 if step==42 else 1)
+                        self.assertEqual(row.library49_result.accounting.branch_observation,'NOT_RECORDED')
+                        gate.recheck_library49(context,row)
+                        (root/'out/new-empty').mkdir()
+                        with self.assertRaises(ValueError):gate.recheck_library49(context,row)
+                        self.assertEqual(lock_contender(root/'lane'),0)
+                    finally:os.close(read);os.close(write)
+
+    def test_invalid_sibling_prelaunch_validation_releases_owner_without_launch(self) -> None:
+        import generic_library_run as library
+        for step in (42,43):
+            with self.subTest(step=step),TemporaryDirectory() as temporary:
+                root=Path(temporary).resolve();read,write=os.pipe()
+                try:
+                    context=self.context(root,read,step)
+                    bound=context.library42 if step==42 else context.library43
+                    assert bound is not None
+                    invalid=replace(bound,request=replace(bound.request,environment=(('BASH_ENV','/untrusted'),)))
+                    context=replace(context,library42=invalid) if step==42 else replace(context,library43=invalid)
+                    call=gate.OrderedCall(step,f'library{step}',(f'{step}:'+('baseline_isolation' if step==42 else 'mind_data_only'),))
+                    with patch.object(gate,'LOCK',root/'lane'),patch.object(library,'LOCK',root/'lane'),patch.object(library,f'run{step}_owned') as launch,self.assertRaises(ValueError):
+                        _=gate.invoke_library_sibling(call,context,root/'out')
+                    launch.assert_not_called();self.assertEqual(lock_contender(root/'lane'),0)
+                    self.assertFalse((root/'out').exists())
+                finally:os.close(read);os.close(write)
+
+    def test_original43_position_dispatches_owned_without_nested_lane_then_continues(self) -> None:
+        from contextlib import nullcontext
+
+        import generic_library_run as library
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=self.context(root,read,43,fail=True)
+                calls=(gate.OrderedCall(43,'library43',('43:mind_data_only',)),gate.OrderedCall(37,'direct',()))
+                seen:list[str]=[]
+                def next_action(call:gate.OrderedCall,_context:gate.OrderedInputs) -> gate.Action:
+                    seen.append(call.identity)
+                    return lambda out:ComponentResult(out/'receipt.json','FAIL')
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(library,'LOCK',root/'lane'),patch.object(gate,'ordered_owned_calls',return_value=calls),patch.object(gate,'ordered_bindings'),patch.object(gate,'perf_bindings'),patch.object(gate,'ordered_action',side_effect=next_action),patch.object(gate,'invoke',return_value=gate.Outcome('direct','INCOMPLETE',None,None,'')),patch.object(gate,'lane',return_value=nullcontext()) as outer_lane:
+                    path=gate.run_ordered_owned(context,context.strict,root/'out',read,library43=context.library43)
+                self.assertEqual(seen,['37:direct']);self.assertEqual(outer_lane.call_count,1)
+                result=document(path.read_text())
+                self.assertEqual(result.field('actual_component_sequence').value,['43:library43','37:direct'])
+                self.assertEqual(result.field('components').array()[0].field('reported_status').text(),'FAIL')
+                self.assertEqual(result.field('library43_dependencies').field('source_build_admission').text(),'PENDING_CALLER_HANDOFF')
+                self.assertEqual(lock_contender(root/'lane'),0)
+            finally:os.close(read);os.close(write)
+
+    def test_both_optional_contexts_are_forwarded_without_dropping49(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=self.context(root,read,42)
+                bound=context.library42
+                assert bound is not None
+                def capture(selected:gate.OrderedInputs,output:Path) -> Path:
+                    assert isinstance(selected,gate.OwnedOrderedInputs)
+                    self.assertIs(selected.library42,bound);self.assertIs(selected.library43,bound)
+                    self.assertIs(selected.library49,bound)
+                    return output
+                with patch.object(gate,'_run_ordered',side_effect=capture):
+                    _=gate.run_ordered_owned(context,context.strict,root/'out',read,library42=bound,library43=bound,library49=bound)
+            finally:os.close(read);os.close(write)
+
+
+    def test_wrong_sibling_filter_is_rejected_before_launch_and_owner_released(self) -> None:
+        import generic_library_run as library
+        for step in (42,43):
+            with self.subTest(step=step),TemporaryDirectory() as temporary:
+                root=Path(temporary).resolve();read,write=os.pipe()
+                try:
+                    context=self.context(root,read,step)
+                    bound=context.library42 if step==42 else context.library43
+                    assert bound is not None
+                    invalid=replace(bound.request,executable=replace(bound.request.executable,filter='foreign'))
+                    validator=library.checked42_request if step==42 else library.checked43_request
+                    with patch.object(gate,'LOCK',root/'lane'),patch.object(library,'LOCK',root/'lane'),(root/'lane').open('a+') as owner:
+                        fcntl.flock(owner.fileno(),fcntl.LOCK_EX)
+                        with self.assertRaisesRegex(ValueError,'filter'):
+                            _=validator(replace(invalid,held_lane_fd=owner.fileno()))
+                    fixed=replace(bound,request=invalid)
+                    context=replace(context,library42=fixed) if step==42 else replace(context,library43=fixed)
+                    call=gate.OrderedCall(step,f'library{step}',(f'{step}:'+('baseline_isolation' if step==42 else 'mind_data_only'),))
+                    with patch.object(gate,'LOCK',root/'lane'),patch.object(library,'LOCK',root/'lane'),patch.object(library,f'run{step}_owned') as launch,self.assertRaisesRegex(ValueError,'filter'):
+                        _=gate.invoke_library_sibling(call,context,root/'out')
+                    launch.assert_not_called();self.assertEqual(lock_contender(root/'lane'),0)
+                    self.assertFalse((root/'out').exists())
+                finally:os.close(read);os.close(write)
