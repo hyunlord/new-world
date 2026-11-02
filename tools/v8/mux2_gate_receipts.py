@@ -12,6 +12,7 @@ import os
 import subprocess
 import sys
 import time
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Final, Literal, TypeAlias, assert_never
@@ -301,7 +302,84 @@ def _capture_artifacts(out: Path) -> dict[str,Json]:
     return artifacts
 
 
+@dataclass(frozen=True, slots=True)
+class DerivedCaptureCompletion:
+    """Live synchronous wrapper/child chain confirmation, not historical authority."""
+    child: 'ChildPlan'
+    environment: tuple[tuple[str,str], ...]
+    chain_files: tuple[tuple[str,str], ...]
+    native_exit: int
+
+
+@dataclass(frozen=True, slots=True)
+class OwnedDerivedCapture:
+    completion: DerivedCaptureCompletion
+    receipt: Path
+    sha256: str
+    files: tuple[tuple[str,str], ...]
+
+
+@dataclass(frozen=True, slots=True)
+class DerivedCaptureSettledFailure(Exception):
+    original: BaseException
+    diagnostics: tuple[BaseException, ...]
+    completion: DerivedCaptureCompletion
+
+
+@dataclass(frozen=True, slots=True)
+class DerivedCaptureUnknown(Exception):
+    original: BaseException
+    diagnostics: tuple[BaseException, ...]
+
+
+@dataclass(slots=True)
+class _DerivedCaptureState:
+    """Mutable live state advances only after the actual source-owned chain joins."""
+    completion: DerivedCaptureCompletion | None = None
+    original: BaseException | None = None
+    diagnostics: list[BaseException] = field(default_factory=list)
+
+
+def _derived_error(error: BaseException, state: _DerivedCaptureState | None, *, diagnostic: bool = False) -> str:
+    if state is None:
+        return str(error)
+    if diagnostic:
+        state.diagnostics.append(error)
+    elif state.original is None:
+        state.original=error
+    return 'owned derived capture diagnostic failure' if diagnostic else 'owned derived capture operation failed'
+
+
+def capture_derived_stall_owned(root: Path, output: Path, godot: Path,
+                                reference: BuildEvidenceReference) -> OwnedDerivedCapture:
+    """Expose live settlement without changing legacy strict1 failure semantics."""
+    from generic_sources import inventory
+    state=_DerivedCaptureState()
+    unclassified: BaseException | None=None
+    try:
+        _capture_derived_stall(root,output,godot,reference,state)
+        require(state.completion is not None, 'owned capture returned without chain confirmation')
+        assert state.completion is not None
+        files=tuple(inventory(output,[p.name for p in output.iterdir()]).items())
+        return OwnedDerivedCapture(state.completion,output/'receipt.json',digest(output/'receipt.json'),files)
+    except BaseException as error:
+        unclassified=error
+        raise
+    finally:
+        if unclassified is not None:
+            original=state.original if state.original is not None else unclassified
+            diagnostics=tuple(state.diagnostics)+((unclassified,) if unclassified is not original and not any(unclassified is d for d in state.diagnostics) else ())
+            if state.completion is None:
+                raise DerivedCaptureUnknown(original,diagnostics) from original
+            raise DerivedCaptureSettledFailure(original,diagnostics,state.completion) from original
+
+
 def capture_derived_stall(root: Path, output: Path, godot: Path, reference: BuildEvidenceReference) -> None:
+    _capture_derived_stall(root,output,godot,reference)
+
+
+def _capture_derived_stall(root: Path, output: Path, godot: Path, reference: BuildEvidenceReference,
+                           owned: _DerivedCaptureState | None = None) -> None:
     """Reuse caller-owned lane; INCOMPLETE leaves its recovery obligation with the caller."""
     from gate_stall_child import bind_chain, close_capture
     from generic_gate import document
@@ -335,14 +413,22 @@ def capture_derived_stall(root: Path, output: Path, godot: Path, reference: Buil
                     _ = log.write(json.dumps(command)+'\n');log.flush()
                     launched = True
                     code = _capture_command(command,root,env,log.fileno(),descriptor,True)
+            except BaseException as error:
+                if owned is not None:
+                    _ = _derived_error(error,owned)
+                raise
             finally:
                 try:
                     if launched:
                         close_capture(env,out/'command.log')
-                except (OSError,ValueError) as error:
-                    cleanup = str(error)
+                except BaseException as error:
+                    if owned is None and not isinstance(error,(OSError,ValueError)):
+                        raise
+                    cleanup = _derived_error(error,owned,diagnostic=True)
             chain = _derived_chain(plan,env,code)
             confirmed = True
+            if owned is not None:
+                owned.completion=DerivedCaptureCompletion(plan,tuple(env.items()),chain,code)
             # The first producer anchor precedes every timing/output oracle.
             artifacts = _capture_artifacts(out)
             arms = validate_stall_capture(document((out/'run/stall-report.json').read_text()).value, strict=False)
@@ -352,25 +438,25 @@ def capture_derived_stall(root: Path, output: Path, godot: Path, reference: Buil
                 _ = validate_output(root,out,'stall')
             oracles_complete = True
         except (OSError,ValueError,subprocess.SubprocessError) as error:
-            primary = str(error)
+            primary = _derived_error(error,owned)
         except BaseException as error:
-            primary = type(error).__name__+': '+str(error)
+            primary = type(error).__name__+': '+str(error) if owned is None else _derived_error(error,owned)
             raise
         finally:
             # Independent endpoint checks cannot erase the original operational failure.
             try:
                 require(derived_source_binding(root,reference)==source, 'derived evidence changed')
             except (OSError,ValueError) as error:
-                postflight['source'] = str(error)
+                postflight['source'] = _derived_error(error,owned,diagnostic=True)
             try:
                 receipt['inputs_end'] = snapshot(root)
                 same_inputs(before,Node(receipt['inputs_end']).mapping())
             except (OSError,ValueError) as error:
-                postflight['runtime'] = str(error)
+                postflight['runtime'] = _derived_error(error,owned,diagnostic=True)
             try:
                 check_hash(godot,godot_sha)
             except (OSError,ValueError) as error:
-                postflight['godot'] = str(error)
+                postflight['godot'] = _derived_error(error,owned,diagnostic=True)
             if confirmed:
                 try:
                     require(_capture_artifacts(out)==artifacts, 'capture changed during validators')
@@ -382,7 +468,7 @@ def capture_derived_stall(root: Path, output: Path, godot: Path, reference: Buil
                     if oracles_complete and primary is None and cleanup is None and not postflight and code==0:
                         receipt['artifacts']=artifacts;receipt['complete']=True
                 except (OSError,ValueError) as error:
-                    postflight['final'] = str(error)
+                    postflight['final'] = _derived_error(error,owned,diagnostic=True)
             receipt['integrity'] = {'status':'INCOMPLETE' if not confirmed else ('FAILED' if not oracles_complete or primary or cleanup or postflight else 'VERIFIED'),
                 'child_completion':'CONFIRMED' if confirmed else 'UNCONFIRMED','expected_timing_failure':timing_failure,
                 'primary_error':primary,'cleanup_error':cleanup,'postflight_errors':postflight}
@@ -390,8 +476,10 @@ def capture_derived_stall(root: Path, output: Path, godot: Path, reference: Buil
             write(receipt_path,receipt)
         require(confirmed, 'INCOMPLETE: caller retains lane/child recovery obligation; no downstream continuation')
         require(primary is None and cleanup is None and not postflight, 'derived capture integrity failed')
-        require(code==0, 'stall capture exited 1 (provisional diagnostic only)')
-    print(f'MUX2_CAPTURE_PASS {receipt_path}')
+        if owned is None:
+            require(code==0, 'stall capture exited 1 (provisional diagnostic only)')
+    if code==0:
+        print(f'MUX2_CAPTURE_PASS {receipt_path}')
 
 
 if __name__ == '__main__':

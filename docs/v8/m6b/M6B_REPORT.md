@@ -402,6 +402,8 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 단계49의 원래 Bash·Cargo·정확 일치 libtest 호출을 연결하는 owned 실행 어댑터를 추가했다. Cargo와 libtest의 실제 부모 관계·종료·로그·입력과 독립 전체/ignored 목록을 대조해 정확히1개 선택을 요구하며 UNKNOWN은 호출자의 실제 잠금을 유지한다. 검토에서 목록 생성 중 추가 파일을 놓치는 결함을 재현해 전체 파일·디렉터리 집합을 고정했고, 통합 타입 검사가 발견한 순환 import는 library 전용 연결을 실행 모듈로 옮겨 제거했다. 이전 실패 증거는 보존했다. 루트67개(48개12.510초와19개3.484초), 생산3.11·테스트3.14 엄격 타입·Ruff·독립 V3 검토가 통과했다. 첫 루트 호출의 잘못된 cwd로 발생한 import 오류도 별도 로그로 남겼다. 실제 native 실행·소스/빌드 승인·direct 대비 관찰자 검증·상위 조정기 연결·전체 gate는 아직 미완료다(`stage0/ordered-dispatch/LIBRARY_RUNTIME49_INDEPENDENT_REVIEW_V3.md`, patch SHA256 `3c329baa86dff941908797f0dd4cb45edb16e7ba805803cbd9802b655f91f4db`).
 
+단계41 stall 검사를 선택적 owned context로 원래 순서에 연결했다. 실제 bounded wrapper와 native 종료 연결이 확인된 뒤에만 소스가 종료 토큰을 만들고, 이후 검증 실패는 원래/보조 예외를 보존한다. UNKNOWN은 실제 잠금을 유지해 후속 실행과 최종 기록을 막는다. 원래 strict1·complete=false 기록은 유지하며 timing STRICT_PASS 또는 WAIVER_ELIGIBLE도 생존/KnowledgeLost와 나머지 단계의 최종 결합 전에는 PENDING이다. 루트171개(217.645초), 조정기 생산/테스트 엄격 타입·Ruff·독립13개 검토가 통과했다. 기존 capture 파일의175개 타입 진단과2개 EXE001은 그대로이며 신규 진단은0이다. 실제 GPU·빌드 출처·세계 안전성·전체 gate는 미검증이다(`stage0/ordered-dispatch/stall41-coordinator-draft/v2/INDEPENDENT_REVIEW_V2.md`, patch SHA256 `79229f2cafdcd80e784f59a81a62fd75dd886ee174ccfa70df576197533cf32a`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

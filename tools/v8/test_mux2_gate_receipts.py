@@ -12,15 +12,29 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from collections.abc import Callable, Generator
+from contextlib import ExitStack, contextmanager, nullcontext
 from pathlib import Path
+from typing import override
 from unittest.mock import patch
 
 import mux2_gate_receipts as receipts
 import mux2_gate_visual as visual
+from gate_stall_child import ChildPlan
+from generic_stall_build import BuildEvidenceReference
 from mux2_gate_fixtures import validate_fixtures
-from mux2_gate_inputs import BRIDGE, INPUT_DIRS, INPUT_FILES, Json, Node, snapshot
+from mux2_gate_inputs import (
+    BRIDGE,
+    INPUT_DIRS,
+    INPUT_FILES,
+    Json,
+    Node,
+    read_json,
+    snapshot,
+)
 from mux2_gate_lock import FD_ENV
 from mux2_gate_oracle_log import validate_log
+from mux2_gate_stall import ArmTiming, SlowFrame
 from mux2_gate_testdata import stall_fixture
 from mux2_gate_visual import validate_visibility, validate_why
 
@@ -572,3 +586,91 @@ class DerivedLifecycleTests(unittest.TestCase):
                     self.assertIn('synthetic oracle interruption',raw.field('integrity').field('primary_error').text())
                     self.assertFalse(raw.field('complete').value)
                     self.assertEqual(raw.field('artifacts').value,{})
+
+
+class OwnedDerivedCaptureTests(unittest.TestCase):
+    def test_owned_entry_is_separate_from_legacy_capture(self) -> None:
+        self.assertTrue(callable(getattr(receipts, 'capture_derived_stall_owned', None)))
+
+
+@contextmanager
+def owned_capture_fixture(code: int = 0) -> Generator[tuple[Path,Path,Path,BuildEvidenceReference]]:
+    """Synthetic producer/chain boundaries only; no native timing or source authority."""
+    with tempfile.TemporaryDirectory() as temporary,ExitStack() as stack:
+        home=Path(temporary).resolve();root=home/'root';root.mkdir();out=home/'capture'
+        godot=home/'godot';_=godot.write_text('nonexecutable synthetic product')
+        evidence=home/'chain';evidence.mkdir();reference=BuildEvidenceReference(home/'reference','0'*64)
+        plan=ChildPlan(home/'plan','1'*64,root,out,evidence,(),())
+        def child(_command: list[str], _root: Path, _environment: dict[str,str], log_fd: int,
+                  _lane_fd: int, _child_chain: bool) -> int:
+            (out/'run').mkdir();_=(out/'run/stall-report.json').write_text('{}')
+            _=os.write(log_fd,b'synthetic native bytes\n')
+            for name in ('native-terminal.json','wrapper-terminal.json'):
+                _=(evidence/name).write_text(json.dumps({'native_exit':code,'errors':[],'duration_ns':100,
+                    'timed_out':False,'wrapper_exit':code,'native_pid':123}))
+            return code
+        arm=ArmTiming(1.0,(),(0,0,0,0,0)) if code==0 else ArmTiming(1.0,(SlowFrame(11.0,55.0,1,0),),(4,0,0,0,0))
+        stack.enter_context(patch.dict(os.environ,{FD_ENV:'9'},clear=True))
+        _=stack.enter_context(patch.object(receipts,'_derived_child_plan',return_value=plan))
+        _=stack.enter_context(patch.object(receipts,'derived_source_binding',return_value={'origin_sha':'a'*40}))
+        _=stack.enter_context(patch.object(receipts,'lane',return_value=nullcontext(9)))
+        _=stack.enter_context(patch.object(receipts,'snapshot',return_value={'input':'1'*64}))
+        _=stack.enter_context(patch.object(receipts,'_capture_command',side_effect=child))
+        _=stack.enter_context(patch('gate_stall_child.close_capture'))
+        _=stack.enter_context(patch('gate_stall_child.bind_chain',return_value=123))
+        _=stack.enter_context(patch('mux2_gate_stall.validate_stall_capture',return_value=(arm,)))
+        _=stack.enter_context(patch.object(receipts,'validate_output'))
+        yield root,out,godot,reference
+
+
+class OwnedDerivedLifecycleTests(unittest.TestCase):
+    def test_strict_zero_and_one_have_live_completion_without_upgrading_raw_one(self) -> None:
+        for code in (0,1):
+            with self.subTest(code=code),owned_capture_fixture(code) as args:
+                result=receipts.capture_derived_stall_owned(*args)
+                raw=read_json(result.receipt)
+                self.assertEqual(result.completion.native_exit,code)
+                self.assertEqual(raw.field('complete').value,code==0)
+                self.assertEqual(raw.field('exit_code').value,code)
+                self.assertEqual(raw.field('integrity').field('status').value,'VERIFIED')
+                self.assertEqual(dict(result.files)['receipt.json'],result.sha256)
+
+    def test_unconfirmed_chain_does_not_produce_settled_token(self) -> None:
+        original=ValueError('chain-missing')
+        with owned_capture_fixture() as args,patch.object(receipts,'_derived_chain',side_effect=original),self.assertRaises(receipts.DerivedCaptureUnknown) as caught:
+            _=receipts.capture_derived_stall_owned(*args)
+        self.assertIs(caught.exception.original,original)
+
+    def test_hostile_operation_and_cleanup_preserve_primary_without_rendering(self) -> None:
+        class Hostile(Exception):
+            @override
+            def __str__(self) -> str:raise AssertionError('must not render')
+        original=Hostile();secondary=RuntimeError('cleanup')
+        with owned_capture_fixture() as args,patch.object(receipts,'_capture_command',side_effect=original),patch('gate_stall_child.close_capture',side_effect=secondary),self.assertRaises(receipts.DerivedCaptureUnknown) as caught:
+            _=receipts.capture_derived_stall_owned(*args)
+        self.assertIs(caught.exception.original,original)
+        self.assertTrue(any(item is secondary for item in caught.exception.diagnostics))
+
+    def test_confirmed_oracle_exception_is_settled_and_terminal_write_keeps_primary(self) -> None:
+        for error in (TypeError('oracle'),KeyboardInterrupt('oracle'),SystemExit('oracle')):
+            for write_failure in (False,True):
+                with self.subTest(error=type(error),write_failure=write_failure),owned_capture_fixture() as args:
+                    original_write=receipts.write;diagnostic=RuntimeError('terminal-write')
+                    def write(path: Path, value: Json, fail: bool = write_failure, fault: RuntimeError = diagnostic, original: Callable[[Path,Json],None] = original_write) -> None:
+                        if fail and path.exists():raise fault
+                        original(path,value)
+                    with patch('mux2_gate_stall.validate_stall_capture',side_effect=error),patch.object(receipts,'write',side_effect=write),self.assertRaises(receipts.DerivedCaptureSettledFailure) as caught:
+                        _=receipts.capture_derived_stall_owned(*args)
+                    self.assertIs(caught.exception.original,error)
+                    self.assertEqual(caught.exception.completion.native_exit,0)
+                    if write_failure:self.assertTrue(any(item is diagnostic for item in caught.exception.diagnostics))
+
+    def test_final_inventory_failure_remains_settled(self) -> None:
+        import generic_sources
+        original=generic_sources.inventory
+        with owned_capture_fixture() as args:
+            def inventory(root: Path,names: list[str]) -> dict[str,str]:
+                if root==args[1]:raise OSError('freeze failed')
+                return original(root,names)
+            with patch.object(generic_sources,'inventory',side_effect=inventory),self.assertRaises(receipts.DerivedCaptureSettledFailure):
+                _=receipts.capture_derived_stall_owned(*args)

@@ -6,6 +6,7 @@
 import fcntl
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -33,6 +34,7 @@ import generic_ui_pack_run as pack
 import generic_ui_smoke_run as smoke
 import generic_ui_visibility_run as visibility
 import generic_ui_why_run as why
+import mux2_gate_receipts as stall_capture
 from generic_bench import Product
 from generic_declarations import Declarations
 from generic_fixture_registry import (
@@ -48,6 +50,7 @@ from generic_gate import GateContractError, document, integer
 from generic_m6a_structural import Tooling
 from generic_process import atomic_json, file_hash
 from generic_sources import inventory
+from generic_stall_build import BuildEvidenceReference, derived_source_binding
 from mux2_gate_inputs import INPUT_DIRS, INPUT_FILES, Json
 
 
@@ -2352,3 +2355,181 @@ class CombinedOwnedCoordinatorTests(unittest.TestCase):
                     self.assertEqual(gate.run_ordered_owned(context,context.strict,root/'out',read,
                         oracles=oracle_bound,resolver=context.resolver,structural=structural_bound),root/'out')
             finally:os.close(read);os.close(write)
+
+
+class Stall41RoutingTests(unittest.TestCase):
+    def test_optional_stall_adds_exact41_preserving_all_other_routes(self) -> None:
+        options={'bench_enabled':True,'docs_enabled':True,'oracles_enabled':True,'resolver_enabled':True,'structural_enabled':True}
+        old=gate.ordered_owned_calls(**options)
+        new=gate.ordered_owned_calls(**options,stall_enabled=True)
+        added=gate.OrderedCall(41,'stall',('41:mux2_stall_receipt',))
+        self.assertEqual(tuple(row for row in new if row not in old),(added,))
+        self.assertEqual(tuple(row for row in new if row in old),old)
+        index=new.index(added)
+        self.assertEqual(new[index-1].step,40);self.assertEqual(new[index+1].step,44)
+        self.assertFalse(any(row.step==41 for row in gate.ordered_calls()))
+
+
+class Stall41LifecycleTests(unittest.TestCase):
+    def test_source_identity_rejects_before_capture(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=owned_inputs(root,read)
+                bound=gate.StallContext(root,'f'*40,Path('/unused'),'0'*64,
+                    BuildEvidenceReference(root/'reference','0'*64),(),())
+                context=replace(context,stall=bound)
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(stall_capture,'capture_derived_stall_owned') as launch,self.assertRaisesRegex(ValueError,'candidate identity'):
+                    _=gate.invoke_stall(gate.OrderedCall(41,'stall',('41:mux2_stall_receipt',)),context,root/'out')
+                launch.assert_not_called();self.assertEqual(lock_contender(root/'lane'),0)
+            finally:os.close(read);os.close(write)
+
+    def test_owned_normal_return_keeps_timing_pending_and_restores_environment(self) -> None:
+        for timing in ('STRICT_PASS','WAIVER_ELIGIBLE'):
+            with self.subTest(timing=timing),TemporaryDirectory() as temporary:
+                root=Path(temporary).resolve();read,write=os.pipe()
+                try:
+                    context=owned_inputs(root,read);product=root/'derived';product.mkdir()
+                    bound=gate.StallContext(product,context.components.probes.candidate.source_sha,Path('/synthetic-godot'),'0'*64,
+                        BuildEvidenceReference(root/'reference','0'*64),(('LANG','C'),),())
+                    context=replace(context,stall=bound);previous=dict(os.environ)
+                    def capture(_root: Path,out: Path,_godot: Path,_reference: BuildEvidenceReference, fixture_root: Path = root, selected: gate.StallContext = bound) -> stall_capture.OwnedDerivedCapture:
+                        self.assertNotEqual(lock_contender(fixture_root/'lane'),0)
+                        self.assertEqual(os.environ['WORLDSIM_TEST_SETTINGS_DIR'],str(out/'settings'))
+                        self.assertNotIn('unbound-marker',os.environ)
+                        child=gate.stall_plan(selected,out.parent)
+                        out.mkdir();receipt=out/'receipt.json';atomic_json(receipt,{'synthetic':True})
+                        completion=stall_capture.DerivedCaptureCompletion(child,tuple(os.environ.items()),(),0)
+                        return stall_capture.OwnedDerivedCapture(completion,receipt,file_hash(receipt),(('receipt.json',file_hash(receipt)),))
+                    with patch.object(gate,'LOCK',root/'lane'),patch.object(gate,'stall_bindings',return_value=bound),patch.object(gate,'snapshot',return_value={}),patch.object(stall_capture,'capture_derived_stall_owned',side_effect=capture),patch.object(gate,'stall_evidence',return_value=timing):
+                        row=gate.invoke_stall(gate.OrderedCall(41,'stall',('41:mux2_stall_receipt',)),context,root/'out')
+                    self.assertEqual(row.status,'PENDING');self.assertEqual(row.reported_status,timing)
+                    self.assertEqual(dict(os.environ),previous);self.assertEqual(lock_contender(root/'lane'),0)
+                    gate.recheck(row)
+                    assert row.receipt is not None
+                    _=row.receipt.write_text('changed')
+                    with self.assertRaises(ValueError):gate.recheck(row)
+                finally:os.close(read);os.close(write)
+
+    def test_typed_settled_failure_keeps_primary_partial_evidence_and_releases(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=owned_inputs(root,read);product=root/'derived';product.mkdir()
+                bound=gate.StallContext(product,context.components.probes.candidate.source_sha,Path('/synthetic-godot'),'0'*64,
+                    BuildEvidenceReference(root/'reference','0'*64),(),())
+                context=replace(context,stall=bound)
+                def capture(_root: Path,out: Path,_godot: Path,_reference: BuildEvidenceReference) -> stall_capture.OwnedDerivedCapture:
+                    child=gate.stall_plan(bound,out.parent);out.mkdir();_=(out/'partial.log').write_text('retained')
+                    completion=stall_capture.DerivedCaptureCompletion(child,tuple(os.environ.items()),(),0)
+                    raise stall_capture.DerivedCaptureSettledFailure(ValueError('primary-marker'),(OSError('secondary-marker'),),completion)
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(gate,'stall_bindings',return_value=bound),patch.object(gate,'snapshot',return_value={}),patch.object(stall_capture,'capture_derived_stall_owned',side_effect=capture):
+                    row=gate.invoke_stall(gate.OrderedCall(41,'stall',('41:mux2_stall_receipt',)),context,root/'out')
+                self.assertEqual(row.status,'FAIL');self.assertIn('primary-marker',row.error);self.assertIn('secondary-marker',row.error)
+                self.assertIn('capture/partial.log',dict(row.files));self.assertEqual(lock_contender(root/'lane'),0)
+            finally:os.close(read);os.close(write)
+
+    def test_settled_failure_continues_original_later_steps_without_full_pass(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=owned_inputs(root,read)
+                bound=gate.StallContext(root/'derived',context.components.probes.candidate.source_sha,Path('/synthetic-godot'),'0'*64,
+                    BuildEvidenceReference(root/'reference','0'*64),(),())
+                calls=(gate.OrderedCall(41,'stall',('41:mux2_stall_receipt',)),gate.OrderedCall(44,'direct',tuple('44:'+name for name in direct.step_fixtures(44))))
+                trace: list[str]=[]
+                def action(call: gate.OrderedCall,selected: gate.OrderedInputs) -> gate.Action:
+                    def run(out: Path) -> ComponentResult:
+                        trace.append(call.identity);return ordered_endpoint(call,out,selected)
+                    return run
+                with patch.object(gate,'ordered_owned_calls',return_value=calls),patch.object(gate,'ordered_bindings'),patch.object(gate,'perf_bindings'),patch.object(gate,'stall_bindings',return_value=bound),patch.object(gate,'stall_dependencies',return_value={'synthetic':True}),patch.object(gate,'invoke_stall',return_value=gate.Outcome('stall','FAIL',None,None,'settled')),patch.object(gate,'ordered_action',side_effect=action),patch.object(gate,'lane',return_value=nullcontext()) as lane:
+                    path=gate.run_ordered_owned(context,context.strict,root/'out',read,stall=bound)
+                raw=document(path.read_text());self.assertEqual(trace,['44:direct']);self.assertEqual(lane.call_count,1)
+                self.assertEqual(raw.field('actual_component_sequence').value,['41:stall','44:direct'])
+                self.assertEqual(raw.field('status').value,'FAIL');self.assertFalse(raw.field('full_gate_claim').value)
+            finally:os.close(read);os.close(write)
+
+    def test_unknown_capture_holds_actual_lane_and_no_terminal_or_downstream(self) -> None:
+        script=r"""
+import os,sys
+from pathlib import Path
+from unittest.mock import patch
+from dataclasses import replace
+sys.path[:0]=sys.argv[3:]
+import generic_full_gate as g
+import mux2_gate_receipts as stall_capture
+from generic_stall_build import BuildEvidenceReference
+from test_generic_full_gate import owned_inputs
+root=Path(sys.argv[1]);control=int(sys.argv[2]);context=owned_inputs(root,control)
+product=root/'derived';product.mkdir()
+bound=g.StallContext(product,context.components.probes.candidate.source_sha,Path('/synthetic-godot'),'0'*64,BuildEvidenceReference(root/'reference','0'*64),(),())
+class Hostile(Exception):
+ def __str__(self):raise AssertionError('must not render')
+def capture(*args):
+ (root/'entered').write_text('unknown actual owner')
+ raise stall_capture.DerivedCaptureUnknown(Hostile(),())
+calls=(g.OrderedCall(41,'stall',('41:mux2_stall_receipt',)),g.OrderedCall(44,'direct',()))
+with patch.object(g,'LOCK',root/'lane'),patch.object(g,'snapshot',return_value={}),patch.object(g,'ordered_owned_calls',return_value=calls),patch.object(g,'ordered_bindings'),patch.object(g,'perf_bindings'),patch.object(g,'stall_bindings',return_value=bound),patch.object(g,'stall_dependencies',return_value={'synthetic':True}),patch.object(stall_capture,'capture_derived_stall_owned',side_effect=capture),patch.object(g,'stall_outcome',side_effect=AssertionError('must not freeze unknown')):
+ g.run_ordered_owned(context,context.strict,root/'out',control,stall=bound)
+"""
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            args=[sys.executable,'-c',script,str(root),str(read),str(Path(__file__).resolve().parent),str(Path(static.__file__).resolve().parent)]
+            with subprocess.Popen(args,pass_fds=(read,),stdout=subprocess.PIPE,stderr=subprocess.PIPE) as child:
+                os.close(read)
+                try:
+                    deadline=time.monotonic()+10
+                    while not (root/'entered').exists() and child.poll() is None and time.monotonic()<deadline:time.sleep(.01)
+                    self.assertTrue((root/'entered').exists());self.assertIsNone(child.poll())
+                    self.assertNotEqual(lock_contender(root/'lane'),0)
+                    os.close(write);write=-1;time.sleep(.1)
+                    self.assertIsNone(child.poll());self.assertNotEqual(lock_contender(root/'lane'),0)
+                    self.assertFalse((root/'out/ordered-dispatch.json').exists());self.assertFalse((root/'out/step-44').exists())
+                    self.assertFalse((root/'out/step-41/stall/capture').exists())
+                finally:
+                    if write>=0:os.close(write)
+                    if child.poll() is None:child.terminate()
+                    _=child.communicate(timeout=5)
+
+
+class Stall41EvidenceTests(unittest.TestCase):
+    def test_real_outcome_validator_rechecks_capture_and_retains_waiver_diagnostics(self) -> None:
+        from gate_stall_child import ChildPlan
+        from test_generic_stall import derived_fixture
+        for strict in (True,False):
+            with self.subTest(strict=strict),derived_fixture(strict) as fixture:
+                c=fixture.capture;output=c.root.parent.parent/'coordinator-capture'
+                bound=gate.StallContext(c.root,c.sha,c.godot,file_hash(c.godot),fixture.reference,(),())
+                child=gate.stall_plan(bound,output,create=True)
+                _=shutil.copytree(c.capture,child.capture)
+                (child.capture/'receipt.json').unlink()
+                c.capture=child.capture;c.argv=('bash',str(c.root/'tools/v8/run_bounded.sh'),'960',*child.argv)
+                _=c.prepare(strict)
+                c.receipt['schema']='derived_stall_capture.v1'
+                c.receipt['derived_binding']=derived_source_binding(c.root,fixture.reference)
+                c.receipt['integrity']={'status':'VERIFIED','child_completion':'CONFIRMED','expected_timing_failure':not strict,
+                    'primary_error':None,'cleanup_error':None,'postflight_errors':{}}
+                sealed=c.seal();env=gate.stall_environment(bound,child,9)
+                atomic_json(child.evidence/'native-terminal.json',{'native_exit':0 if strict else 1})
+                atomic_json(child.evidence/'wrapper-start.json',{'environment':{key:value for key,value in env.items()}})
+                chain=tuple(inventory(child.evidence,[p.name for p in child.evidence.iterdir()]).items())
+                completion=stall_capture.DerivedCaptureCompletion(child,tuple(env.items()),chain,0 if strict else 1)
+                files=tuple(inventory(child.capture,[p.name for p in child.capture.iterdir()]).items())
+                result=stall_capture.OwnedDerivedCapture(completion,child.capture/'receipt.json',sealed.receipt_sha256,files)
+                def bind(actual: ChildPlan, environment: dict[str,str], expected: int, hashes: tuple[tuple[str,str],...], selected: ChildPlan = child, bound_env: dict[str,str] = env, code: int = completion.native_exit, bound_chain: tuple[tuple[str,str],...] = chain) -> int:
+                    self.assertEqual(actual,selected);self.assertEqual(environment,bound_env)
+                    self.assertEqual(expected,code);self.assertEqual(hashes,bound_chain)
+                    return 123
+                with patch('generic_stall_outcome.bind_chain',side_effect=bind):
+                    row=gate.stall_outcome(bound,output,result)
+                    self.assertEqual(row.status,'PENDING',row.error)
+                    self.assertEqual(row.reported_status,'STRICT_PASS' if strict else 'WAIVER_ELIGIBLE')
+                    gate.recheck(row)
+                    with TemporaryDirectory() as temporary:
+                        root=Path(temporary).resolve();read,write=os.pipe()
+                        try:
+                            context=replace(owned_inputs(root,read),stall=bound)
+                            gate.recheck_stall(context,row)
+                            _=(child.evidence/'native-terminal.json').write_text('mutated')
+                            with self.assertRaises(ValueError):gate.recheck_stall(context,row)
+                        finally:os.close(read);os.close(write)
