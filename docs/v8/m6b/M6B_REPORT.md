@@ -378,6 +378,9 @@ Oracle 호출자에 소스가 보장하는 종료된 실패 API와 보존 결과
 
 실제 workspace debug V6 실행 중 `probe::runner::tests::the_baseline_scene_takes_both_twin_checks`가 실패했다(기대1·실제0). 관찰자 오류 처리 closure를 넣은 `886ff0e5`에서 실제 들여쓰기가 바뀌었는데 기존 include_str 검사는12칸 공백을 그대로 요구했다. 현재 후보의 테스트만 각 줄 공백을 제거한 연속3줄 guard 검사로 수정했으며, 두 determinism guard 개수2와 허용 scene 검사는 유지한다. 독립 소스 검토와 공백 변경·guard 삭제·순서 변경의 텍스트 검사는 통과했으나 Rust 컴파일·native 재검증은 아직 NOT_RUN이다. 실행 중인 고정 ff512 소스와 V6 실패 증거는 수정하지 않는다. V7의 같은 ff512 준비본도 이 실패를 포함하므로 실행하지 않는다(`stage0/workspace-runtime/workspace-v6-live-diagnostic/twin-test-fix-offline-review.json`, SHA256 `411afdee14c96b98803148312ad93470d993787a4a66a487793f788c7b92267a`).
 
+
+단계48 구조 검사를 기존 data-only 비교 뒤에 연결했다. 직전 direct48의 실제 인증된 PASS가 있어야 실행하고, 구조 실행기가 원래 잠금을 소유하므로 외부 잠금을 중복 획득하지 않는다. 종료된 실패만 후속 단계로 진행하며 분류되지 않은 예외는 보존하고 종료 이벤트·산출물 확정·후속 호출을 막는다. resolver32와 oracle38의 인자·순서·입력 기록·보존 결과 재검증을 유지한 통합본의 루트121개(77.383초), 엄격 타입·Ruff·독립23개가 통과했다. 아직 지원하지 않는 단계49 의무를 지원한다고 바꾸지 않았으며 실제 renderer·빌드 출처·전체 gate는 미검증이다(`stage0/ordered-dispatch/structural48-coordinator-draft/v2/INDEPENDENT_REVIEW_V2.md`, patch SHA256 `866915c9e7985bbefd6f3a86e72ac027c4efbe1a721d8934bdddb7dbca2e049b`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

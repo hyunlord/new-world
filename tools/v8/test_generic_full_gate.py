@@ -17,9 +17,11 @@ from tempfile import TemporaryDirectory
 from typing import Literal, override
 from unittest.mock import patch
 
+import gate_oracle_child as oracle_child
 import generic_bench_run as bench
 import generic_direct_run as direct
 import generic_full_gate as gate
+import generic_m6a_structural as structural
 import generic_oracles_run as oracles
 import generic_perf_run as perf
 import generic_renderer_run as renderer
@@ -2146,3 +2148,207 @@ with fixture(native_code=3) as f:
                         if driver.poll() is None:driver.terminate()
                         _=driver.wait(timeout=5)
                 self.assertEqual(lock_contender(root/'lane'),0)
+
+
+def structural_context(root: Path, control: int) -> gate.OwnedOrderedInputs:
+    context=owned_inputs(root,control)
+    separate=root/'separate-base';separate.mkdir()
+    base=replace(context.components.godot.base,input_root=separate)
+    return replace(context,components=replace(context.components,godot=Products(base,context.components.godot.candidate)))
+
+
+class Structural48CoordinatorTests(unittest.TestCase):
+    def test_optional_structural_sibling_exact_order_and_coverage(self) -> None:
+        old=gate.ordered_owned_calls(bench_enabled=True,docs_enabled=True,oracles_enabled=True)
+        new=gate.ordered_owned_calls(bench_enabled=True,docs_enabled=True,oracles_enabled=True,structural_enabled=True)
+        added=tuple(row for row in new if row not in old)
+        self.assertEqual(added,(gate.OrderedCall(48,'structural',('48:m6a.plant_art_structural',)),))
+        self.assertEqual(tuple(row for row in new if row in old),old)
+        index=new.index(added[0])
+        self.assertEqual(new[index-1].identity,'48:direct')
+        self.assertGreater(new[index+1].step,48)
+        self.assertFalse(any(row.step==49 for row in new))
+
+    def test_predecessor_rejects_every_nonpass_and_missing_or_changed_endpoint(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();context=ordered_inputs(root)
+            call=gate.OrderedCall(48,'direct',('48:m6a.food_data_only',))
+            result=ordered_endpoint(call,root/'prior',context)
+            row=gate.Outcome('direct','PASS',result.receipt,file_hash(result.receipt),'',
+                tuple(inventory(root/'prior',[p.name for p in (root/'prior').iterdir()]).items()),root/'prior','PASS','PASS')
+            gate.structural_predecessor(context.components,{'48:direct':row})
+            for state in ('FAIL','INCOMPLETE','PENDING','NOT_RUN'):
+                with self.subTest(state=state),self.assertRaises(ValueError):
+                    gate.structural_predecessor(context.components,{'48:direct':replace(row,status=state)})
+            for bad in (replace(row,receipt=None),replace(row,reported_status=None),replace(row,returned_status='FAIL')):
+                with self.assertRaises(ValueError):gate.structural_predecessor(context.components,{'48:direct':bad})
+            with self.assertRaises(ValueError):gate.structural_predecessor(context.components,{})
+            _=result.receipt.write_text(result.receipt.read_text()+'\n')
+            with self.assertRaises(ValueError):gate.structural_predecessor(context.components,{'48:direct':row})
+
+    def test_real_structural_owner_and_historical_rechecks_without_outer_lane(self) -> None:
+        from test_generic_m6a_structural import owned_fixture
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();fixture=root/'fixture';fixture.mkdir()
+            products,tools,lock=owned_fixture(fixture)
+            base=root/'coordinator';base.mkdir();read,write=os.pipe()
+            try:
+                context=owned_inputs(base,read)
+                context=replace(context,components=replace(context.components,godot=products),
+                    structural=gate.Structural48Context(products,tools))
+                with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'LOCK',lock),patch.object(structural,'check_owned_helpers'),patch.object(gate,'lane',side_effect=AssertionError('outer lane')),patch.object(gate,'_StrictOwner',side_effect=AssertionError('outer owner')):
+                    row=gate.invoke_structural(gate.OrderedCall(48,'structural',('48:m6a.plant_art_structural',)),context,fixture/'owned')
+                    self.assertEqual(row.status,'PASS',row.error+row.snapshot_error)
+                    self.assertEqual(lock_contender(lock),0)
+                    gate.recheck(row);gate.recheck_structural(context,row)
+                    assert row.receipt is not None
+                    _=row.receipt.write_text(row.receipt.read_text()+'\n')
+                    with self.assertRaises(ValueError):gate.recheck_structural(context,row)
+            finally:os.close(read);os.close(write)
+
+    def test_paired_godot_binding_rejects_candidate_reuse_before_entry(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=owned_inputs(root,read)
+                context=replace(context,components=replace(context.components,godot=Products(replace(context.components.godot.base,source_sha='b'*40),context.components.godot.candidate)))
+                python=Path(sys.executable).resolve();bash=Path('/bin/bash').resolve()
+                tools=Tooling(python,file_hash(python),bash,file_hash(bash),root,(),str(python.parent))
+                context=replace(context,structural=gate.Structural48Context(Products(context.components.godot.candidate,context.components.godot.candidate),tools))
+                with patch.object(structural,'run_owned_result') as launch,self.assertRaisesRegex(ValueError,'paired'):
+                    _=gate.invoke_structural(gate.OrderedCall(48,'structural',('48:m6a.plant_art_structural',)),context,root/'out')
+                launch.assert_not_called()
+            finally:os.close(read);os.close(write)
+
+    def test_step48_nonpass_blocks_only_structural_and_settled_failure_continues(self) -> None:
+        for state in ('PASS','FAIL','INCOMPLETE'):
+            with self.subTest(state=state),TemporaryDirectory() as temporary:
+                root=Path(temporary).resolve();read,write=os.pipe()
+                try:
+                    context=owned_inputs(root,read)
+                    python=Path(sys.executable).resolve();bash=Path('/bin/bash').resolve()
+                    tools=Tooling(python,file_hash(python),bash,file_hash(bash),root,(),str(python.parent))
+                    context=replace(context,structural=gate.Structural48Context(context.components.godot,tools))
+                    calls=(gate.OrderedCall(48,'direct',('48:m6a.food_data_only',)),gate.OrderedCall(48,'structural',('48:m6a.plant_art_structural',)),gate.OrderedCall(50,'direct',tuple('50:'+name for name in direct.step_fixtures(50))))
+                    trace: list[str]=[]
+                    def action(call: gate.OrderedCall,bound: gate.OrderedInputs,selected: str=state, observed: list[str]=trace) -> gate.Action:
+                        def execute(out: Path) -> ComponentResult:
+                            observed.append(call.identity)
+                            return ordered_endpoint(call,out,bound,selected if call.step==48 else 'PASS')
+                        return execute
+                    with patch.object(gate,'ordered_owned_calls',return_value=calls),patch.object(gate,'ordered_bindings'),patch.object(gate,'perf_bindings'),patch.object(gate,'structural_bindings',return_value=context.structural),patch.object(gate,'structural_dependencies',return_value={'synthetic':True}),patch.object(gate,'ordered_action',side_effect=action),patch.object(gate,'invoke_structural',return_value=gate.Outcome('structural','FAIL',None,None,'settled')) as launch,patch.object(gate,'lane',return_value=nullcontext()) as lease:
+                        path=gate.run_ordered_owned(context,context.strict,root/'out',read,structural=context.structural)
+                    row=document(path.read_text());self.assertEqual(trace,['48:direct','50:direct'])
+                    self.assertEqual(lease.call_count,2)
+                    self.assertEqual(launch.call_count,1 if state=='PASS' else 0)
+                    sibling=next(item for item in row.field('obligations').array() if item.field('identity').value=='48:m6a.plant_art_structural')
+                    self.assertEqual(sibling.field('component_status').value,'FAIL' if state=='PASS' else 'NOT_RUN')
+                    self.assertEqual(sibling.field('blocked_by').value,None if state=='PASS' else '48:direct')
+                    self.assertFalse(row.field('full_gate_claim').value)
+                finally:os.close(read);os.close(write)
+
+    def test_typed_settled_failure_retains_diagnostics_and_partial_inventory(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=structural_context(root,read);toolroot=root/'toolroot';toolroot.mkdir()
+                python=Path(sys.executable).resolve();bash=Path('/bin/bash').resolve()
+                tools=Tooling(python,file_hash(python),bash,file_hash(bash),toolroot,(),str(python.parent))
+                context=replace(context,structural=gate.Structural48Context(context.components.godot,tools))
+                def child(_products: Products,_tools: Tooling,output: Path,_control: int) -> structural.OwnedComponentResult:
+                    output.mkdir();_=(output/'partial.log').write_text('retained')
+                    raise structural.StructuralSettledFailure(ValueError('primary-marker'),OSError('secondary-marker'),None)
+                with patch.object(gate,'structural_bindings',return_value=context.structural),patch.object(structural,'run_owned_result',side_effect=child):
+                    row=gate.invoke_structural(gate.OrderedCall(48,'structural',('48:m6a.plant_art_structural',)),context,root/'out')
+                self.assertEqual(row.status,'FAIL');self.assertIn('primary-marker',row.error);self.assertIn('secondary-marker',row.error)
+                self.assertIn('partial.log',dict(row.files));self.assertIsNone(row.receipt)
+            finally:os.close(read);os.close(write)
+
+    def test_unclassified_entry_fault_retains_actual_token_and_prevents_finalization(self) -> None:
+        script=r"""
+import os,sys
+from pathlib import Path
+from unittest.mock import patch
+sys.path[:0]=sys.argv[4:]
+import generic_full_gate as g
+import generic_m6a_structural as s
+from dataclasses import replace
+from test_generic_full_gate import structural_context,ordered_endpoint
+from generic_process import file_hash
+root=Path(sys.argv[1]);control=int(sys.argv[2]);token=sys.argv[3]=='token'
+context=structural_context(root,control);toolsroot=root/'tools';toolsroot.mkdir()
+python=Path(sys.executable).resolve();bash=Path('/bin/bash').resolve()
+tools=s.Tooling(python,file_hash(python),bash,file_hash(bash),toolsroot,(),str(python.parent))
+context=replace(context,structural=g.Structural48Context(context.components.godot,tools))
+class Hostile(Exception):
+ def __str__(self):raise AssertionError('unsafe rendering')
+def launch(products,tools,out,control):
+ if token:
+  owner=s.StructuralLaneOwner.acquire(out,s.OwnedAdmission(products,tools))
+  (root/'entered').write_text('actual owner retained in exception')
+  raise s.StructuralReleaseUnknown(owner,Hostile(),None)
+ (root/'entered').write_text('unclassified disposition')
+ raise Hostile()
+def action(call,bound):
+ if call.step!=48:raise AssertionError('downstream')
+ return lambda out:ordered_endpoint(call,out,bound)
+calls=(g.OrderedCall(48,'direct',('48:m6a.food_data_only',)),g.OrderedCall(48,'structural',('48:m6a.plant_art_structural',)),g.OrderedCall(50,'direct',()))
+from contextlib import nullcontext
+with patch.object(s,'LOCK',root/'lane'),patch.object(g,'lane',return_value=nullcontext()),patch.object(g,'ordered_owned_calls',return_value=calls),patch.object(g,'ordered_bindings'),patch.object(g,'perf_bindings'),patch.object(g,'structural_bindings',return_value=context.structural),patch.object(g,'structural_dependencies',return_value={'synthetic':True}),patch.object(g,'ordered_action',side_effect=action),patch.object(s,'run_owned_result',side_effect=launch),patch.object(g,'structural_outcome',side_effect=AssertionError('snapshot before settlement')):
+ g.run_ordered_owned(context,context.strict,root/'out',control,structural=context.structural)
+"""
+        for token in (False,True):
+            with self.subTest(token=token),TemporaryDirectory() as temporary:
+                root=Path(temporary).resolve();read,write=os.pipe()
+                args=[sys.executable,'-c',script,str(root),str(read),'token' if token else 'plain',str(Path(__file__).resolve().parent),str(Path(gate.__file__).resolve().parent),str(Path(structural.__file__).resolve().parent)]
+                with subprocess.Popen(args,pass_fds=(read,),stdout=subprocess.PIPE,stderr=subprocess.PIPE) as child:
+                    os.close(read)
+                    try:
+                        deadline=time.monotonic()+10
+                        while not (root/'entered').exists() and child.poll() is None and time.monotonic()<deadline:time.sleep(.01)
+                        self.assertTrue((root/'entered').exists())
+                        self.assertIsNone(child.poll())
+                        if token:self.assertNotEqual(lock_contender(root/'lane'),0)
+                        os.close(write);write=-1
+                        time.sleep(.1)
+                        self.assertIsNone(child.poll())
+                        self.assertFalse((root/'out/ordered-dispatch.json').exists())
+                        self.assertFalse((root/'out/step-50').exists())
+                        self.assertFalse((root/'out/step-48/structural').exists())
+                    finally:
+                        if write>=0:os.close(write)
+                        if child.poll() is None:child.terminate()
+                        _=child.communicate(timeout=5)
+
+
+class CombinedOwnedCoordinatorTests(unittest.TestCase):
+    def test_resolver_oracle_structural_flags_and_context_slots_survive_combination(self) -> None:
+        selected=gate.ordered_owned_calls(bench_enabled=True,docs_enabled=True,oracles_enabled=True,resolver_enabled=True,structural_enabled=True)
+        identities=[row.identity for row in selected]
+        for identity in ('14:static','25:bench','32:resolver','38:oracles','48:structural'):
+            self.assertEqual(identities.count(identity),1)
+        self.assertLess(identities.index('32:resolver'),identities.index('33:static'))
+        self.assertLess(identities.index('38:oracles'),identities.index('39:visibility'))
+        self.assertEqual(identities.index('48:structural'),identities.index('48:direct')+1)
+        self.assertEqual([row.step for row in selected],sorted([row.step for row in selected],key=gate.ORDER.index))
+        self.assertEqual(len([name for row in selected for name in row.identities]),len({name for row in selected for name in row.identities}))
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=resolver_context(root,read);assert context.resolver is not None
+                python=Path(sys.executable).resolve();bash=Path('/bin/bash').resolve()
+                tools=Tooling(python,file_hash(python),bash,file_hash(bash),root,(),str(python.parent))
+                structural_bound=gate.Structural48Context(context.components.godot,tools)
+                oracle_bound=gate.OracleContext(oracles.OracleInputs(context.components.godot.candidate,tools))
+                def capture(bound: gate.OrderedInputs,output: Path) -> Path:
+                    self.assertIsInstance(bound,gate.OwnedOrderedInputs)
+                    assert isinstance(bound,gate.OwnedOrderedInputs)
+                    self.assertIs(bound.resolver,context.resolver)
+                    self.assertIs(bound.oracles,oracle_bound)
+                    self.assertIs(bound.structural,structural_bound)
+                    self.assertEqual(bound.control_fd,read)
+                    return output
+                with patch.object(gate,'_run_ordered',side_effect=capture):
+                    self.assertEqual(gate.run_ordered_owned(context,context.strict,root/'out',read,
+                        oracles=oracle_bound,resolver=context.resolver,structural=structural_bound),root/'out')
+            finally:os.close(read);os.close(write)
