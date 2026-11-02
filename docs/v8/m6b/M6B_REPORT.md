@@ -345,6 +345,8 @@ workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignore
 
 전체 discovery에서 확인한 구조 검사 import 순서 결함을 수정했다. 실제 사용하는 eager 모듈26개의 객체·경로·초기 해시를 한 번 고정하고, 사용하지 않는 함수 내부 import가 나중에 로드돼도 이 집합이 바뀌지 않게 했다. 원래 전체36개 파일의 seal은 유지하므로 제외된 lazy 파일의 변경도 거부한다. 정확한 기존 거부를 RED로 재현했고 양쪽 import 순서·사용 모듈 누락·객체 교체·경로·바이트·seal 누락 검사를 추가했다. 루트22개(30.159초), 엄격 타입·Ruff와 독립 검토가 통과했다. 앞선1,511개 discovery 실패는 아직 전체 재실행으로 대체되지 않았으며 실제 Godot·전체 gate도 미검증이다(`stage0/ordered-dispatch/STRUCTURAL_DISCOVERY_INDEPENDENT_REVIEW_V1.md`).
 
+단계38 원래16개 oracle shell·checker의 호출자를 추가했다. 실제 shell·helper 채널·잠금 descriptor를 보존하고, Popen 의도 이후 handle이 반환되지 않거나 종료 처리 중 오류가 나면 typed UNKNOWN으로 live 객체를 유지한다. 원래 순서·300/120초 한도·checker 중단 규칙을 바꾸지 않으며 helper 종료 확인 뒤에만 전체 로그와 산출물을 검증한다. 독립 검토에서 같은 ambient import 순서 결함을 재현해 v2에서 실제 eager 출처 고정으로 수정했다. 수정된 구조 모듈과의 별도 조합 검사 및 루트23개(29.742초), Ruff가 통과했다. 생산 코드는3.11 엄격 타입, override를 사용하는 테스트는 실제3.14 타입 검사에서0진단이며 잘못 적용한3.11 테스트 설정의6진단은 원본 로그에 보존한다. 실제 Godot·제품 빌드 출처·GPU·상위 조정기 연결·전체 gate는 미검증이다(`stage0/ordered-dispatch/ORACLES_RUN_INDEPENDENT_REVIEW_V2.md`, `ORACLES_RUN_COMBINED_STRUCTURAL_REVIEW.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
