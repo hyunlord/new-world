@@ -372,6 +372,9 @@ Oracle 호출자에 소스가 보장하는 종료된 실패 API와 보존 결과
 
 단계17의 원래 M1 명령 연결을 별도 소스 계약으로 고정했다. 첫 Cargo 호출의4개 integration target, 후속3개 library filter의 기본 스레드 정책, && 실패 연결, Locale의120초·원래 grep·합계 요약을 그대로 대조한다. 독립 검토가 발견한 쉘 인용 제거에 따른 `$LOG` 확장 의미 누락을 수정했고 원래 실패 사례를 보존했다. 루트2개(0.003초, 변조7종 포함), 엄격 타입·Ruff·독립 재검토가 통과했다. 이 모듈은 명령 설명과 소스 대조만 제공하며 실제 빌드·자식 실행·전체 단계17 연결이나 세계 안전성을 증명하지 않는다(`stage0/ordered-dispatch/step17-command-review/REVIEW_V2.md`).
 
+
+단계32 resolver parity를 선택적 owned context로 원래 순서에 연결했다. 실제 원래300초 wrapper와 checker를 실행하는 기존 어댑터만 사용하고, UNKNOWN에서는 원래 예외·잠금을 보존해 단계33과 최종 기록으로 진행하지 않는다. 종료된 실패는 원래/보조 오류를 기록한 FAIL로 유지하며 이후와 최종 기록 전에 보존 결과를 다시 인증한다. 루트113개(73.712초), 생산3.11·테스트3.14 엄격 타입·Ruff·독립15개 조합 검사가 통과했다. 실제 Godot·빌드 출처·전체 gate는 미검증이며 구조48과의 후속 통합 검사는 별도로 필요하다(`stage0/ordered-dispatch/RESOLVER32_COORDINATOR_INDEPENDENT_REVIEW_V1.md`, patch SHA256 `cfd462094bcf3495303f175297d73fbd79091abc10a71cf060ecb02ce69f2bc1`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

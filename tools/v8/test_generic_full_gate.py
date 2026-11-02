@@ -23,6 +23,7 @@ import generic_full_gate as gate
 import generic_oracles_run as oracles
 import generic_perf_run as perf
 import generic_renderer_run as renderer
+import generic_resolver_run as resolver
 import generic_static_run as static
 import generic_test_run as native
 import generic_ui_fixed_run as fixed
@@ -2004,3 +2005,144 @@ with synthetic() as fixture:
                     _=gate.invoke_oracles(gate.oracle_call(),context,root/'out')
                 launch.assert_not_called()
             self.assertEqual(lock_contender(root/'lane'),0)
+
+
+def resolver_context(root: Path, control: int) -> gate.OwnedOrderedInputs:
+    context=owned_inputs(root,control)
+    environment=replace(context.environment,values=(*context.environment.values,('GODOT_BIN',str(context.components.godot.candidate.executable))))
+    return replace(context,resolver=gate.ResolverContext(context.components.godot.candidate,environment))
+
+
+class ResolverCoordinatorTests(unittest.TestCase):
+    def test_optional_call32_preserves_oracle_docs_bench_order(self) -> None:
+        before=gate.ordered_owned_calls(bench_enabled=True,docs_enabled=True,oracles_enabled=True)
+        after=gate.ordered_owned_calls(bench_enabled=True,docs_enabled=True,oracles_enabled=True,resolver_enabled=True)
+        self.assertEqual(tuple(call for call in after if call not in before),(gate.OrderedCall(32,'resolver',('32:resolver_parity',)),))
+        self.assertEqual(tuple(call for call in after if call in before),before)
+        self.assertEqual([call.step for call in after],sorted([call.step for call in after],key=gate.ORDER.index))
+
+    def test_actual_original_checker_receipt_and_historical_recheck(self) -> None:
+        from test_generic_resolver_run import fixture
+        with fixture() as f:
+            root=f.root/'coordinator';root.mkdir();context=owned_inputs(root,-1)
+            bound=gate.ResolverContext(f.product,replace(f.context,held_lane_fd=None))
+            context=replace(context,components=replace(context.components,godot=Products(f.product,f.product)),resolver=bound)
+            with patch.object(gate,'LOCK',f.root/'lane'),patch.object(resolver,'bindings',return_value=f.external):
+                row=gate.invoke_resolver(gate.OrderedCall(32,'resolver',('32:resolver_parity',)),context,f.output)
+                self.assertEqual(row.status,'PASS');self.assertEqual(lock_contender(f.root/'lane'),0)
+                gate.recheck(row);gate.recheck_resolver(context,row)
+                _=(f.output/'resolver_godot.json').write_text('{}')
+                with self.assertRaises(ValueError):gate.recheck_resolver(context,row)
+
+    def test_candidate_and_transient_descriptor_rejected_before_launch(self) -> None:
+        for defect in ('candidate','descriptor','source'):
+            with self.subTest(defect=defect),TemporaryDirectory() as temporary:
+                root=Path(temporary).resolve();context=resolver_context(root,-1);bound=context.resolver;assert bound is not None
+                if defect=='candidate':context=replace(context,resolver=replace(bound,product=replace(bound.product,source_sha='b'*40)))
+                if defect=='descriptor':context=replace(context,resolver=replace(bound,environment=replace(bound.environment,held_lane_fd=99)))
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(resolver,'bindings',side_effect=ValueError('changed source')),patch.object(resolver,'run_owned') as launch:
+                    with self.assertRaises(ValueError):_=gate.invoke_resolver(gate.OrderedCall(32,'resolver',('32:resolver_parity',)),context,root/'out')
+                    launch.assert_not_called()
+                self.assertEqual(lock_contender(root/'lane'),0)
+
+    def test_settled_hostile_failure_keeps_raw_evidence_and_releases(self) -> None:
+        class Evil(RuntimeError):
+            @override
+            def __str__(self) -> str:raise AssertionError('unsafe rendering')
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();context=resolver_context(root,-1)
+            def child(_product: ProbeProduct, environment: static.ExecutionEnvironment, output: Path) -> ComponentResult:
+                self.assertIsNotNone(environment.held_lane_fd);self.assertNotEqual(lock_contender(root/'lane'),0)
+                output.mkdir();_=(output/'raw.log').write_text('retained')
+                raise resolver.ResolverSettledFailure(Evil(),(Evil(),),None)
+            with patch.object(gate,'LOCK',root/'lane'),patch.object(resolver,'bindings',return_value=()),patch.object(resolver,'run_owned',side_effect=child):
+                row=gate.invoke_resolver(gate.OrderedCall(32,'resolver',('32:resolver_parity',)),context,root/'out')
+            self.assertEqual(row.status,'FAIL');self.assertIn('raw.log',dict(row.files));self.assertIsNone(row.receipt)
+            self.assertEqual(lock_contender(root/'lane'),0)
+
+    def test_settled_failure_may_continue33_without_nested_lane(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=resolver_context(root,read)
+                calls=(gate.OrderedCall(32,'resolver',('32:resolver_parity',)),gate.OrderedCall(33,'static',('33:extensibility_grep',)))
+                with patch.object(gate,'ordered_owned_calls',return_value=calls),patch.object(gate,'ordered_bindings'),patch.object(gate,'perf_bindings'),patch.object(resolver,'bindings',return_value=()),patch.object(gate,'invoke_resolver',return_value=gate.Outcome('resolver','FAIL',None,None,'settled')),patch.object(gate,'invoke',return_value=gate.Outcome('static','FAIL',None,None,'synthetic')) as later,patch.object(gate,'lane',side_effect=AssertionError('nested lane')):
+                    path=gate.run_ordered_owned(context,context.strict,root/'out',read,resolver=context.resolver)
+                later.assert_called_once();node=document(path.read_text());node.field('status').equals('FAIL')
+                self.assertEqual(len(node.field('dispatch_events').array()),4)
+            finally:os.close(read);os.close(write)
+
+    def test_status_only_endpoint_rejected(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();context=resolver_context(root,-1);assert context.resolver is not None
+            out=root/'out';out.mkdir();receipt=out/'receipt.json';_=receipt.write_text('{"status":"PASS"}')
+            row=gate.resolver_outcome(context.resolver,out,ComponentResult(receipt,'PASS'))
+            self.assertEqual(row.status,'FAIL');self.assertIsNone(row.reported_status)
+            self.assertIn('receipt.json',dict(row.files))
+
+    def test_actual_failed_chain_unknown_retains_lane_through_diagnostic_faults(self) -> None:
+        for fault in ('ordinary','status','read'):
+            with self.subTest(fault=fault),TemporaryDirectory() as temporary:
+                root=Path(temporary).resolve();read,write=os.pipe()
+                script=r'''
+import os,sys,signal
+from pathlib import Path
+from dataclasses import replace
+from unittest.mock import patch
+sys.path[:0]=sys.argv[4:]
+import generic_full_gate as g
+import generic_resolver_run as r
+from generic_fixture_run import Products
+from test_generic_full_gate import owned_inputs
+from test_generic_resolver_run import fixture
+root=Path(sys.argv[1]);control=int(sys.argv[2]);fault=sys.argv[3]
+signal.signal(signal.SIGTERM,lambda _a,_b:os._exit(0))
+class Evil(Exception):
+ def __str__(self):raise AssertionError('unsafe diagnostic')
+with fixture(native_code=3) as f:
+ context=owned_inputs(root,control)
+ bound=g.ResolverContext(f.product,replace(f.context,held_lane_fd=None))
+ context=replace(context,components=replace(context.components,godot=Products(f.product,f.product)),resolver=bound)
+ original=g._ResolverOwner.status
+ retained=[]
+ def status(self):
+  assert isinstance(self.retained_failure,r.ResolverOwnershipUnknown)
+  if retained:assert self.retained_failure is retained[0]
+  else:retained.append(self.retained_failure)
+  (root/'retained').write_text('actual failed shell chain; descriptor held')
+  if fault=='status':raise Evil()
+  original(self)
+ g._ResolverOwner.status=status
+ if fault=='read':
+  original_read=g.os.read
+  def bad_read(fd,*args):
+   if fd==control:raise OSError('controller read fault')
+   return original_read(fd,*args)
+  g.os.read=bad_read
+ calls=(g.OrderedCall(32,'resolver',('32:resolver_parity',)),g.OrderedCall(33,'static',('33:extensibility_grep',)))
+ with patch.object(g,'LOCK',root/'lane'),patch.object(r,'LOCK',root/'lane'),patch.object(g,'ordered_owned_calls',return_value=calls),patch.object(g,'ordered_bindings'),patch.object(g,'perf_bindings'),patch.object(r,'bindings',return_value=f.external),patch.object(g,'resolver_outcome',side_effect=AssertionError('unknown snapshot')),patch.object(g,'ordered_action',side_effect=AssertionError('downstream')):
+  g.run_ordered_owned(context,context.strict,root/'out',control,resolver=context.resolver)
+ raise AssertionError('unknown returned')
+'''
+                command=[sys.executable,'-B','-c',script,str(root),str(read),fault,str(Path(__file__).resolve().parent),str(Path(gate.__file__).resolve().parent),str(Path(resolver.__file__).resolve().parent)]
+                with subprocess.Popen(command,pass_fds=(read,),env={k:v for k,v in os.environ.items() if k!='PYTHONPATH'},stdout=subprocess.PIPE,stderr=subprocess.PIPE) as driver:
+                    os.close(read)
+                    try:
+                        deadline=time.monotonic()+10
+                        while not (root/'retained').exists() and driver.poll() is None and time.monotonic()<deadline:time.sleep(0.01)
+                        if not (root/'retained').exists():
+                            if driver.poll() is None:driver.terminate()
+                            stdout,stderr=driver.communicate(timeout=5)
+                            self.fail(f'startup: {stdout!r} {stderr!r}')
+                        _=os.write(write,b'inspect\n');os.close(write);write=-1;time.sleep(0.1)
+                        self.assertIsNone(driver.poll());self.assertNotEqual(lock_contender(root/'lane'),0)
+                        self.assertFalse((root/'out/ordered-dispatch.json').exists())
+                        self.assertFalse((root/'out/step-33').exists())
+                        process=document((root/'out/step-32/resolver/process/process.json').read_text())
+                        process.field('native_exit').equals(3)
+                        self.assertFalse((root/'out/step-32/resolver/receipt.json').exists())
+                    finally:
+                        if write>=0:os.close(write)
+                        if driver.poll() is None:driver.terminate()
+                        _=driver.wait(timeout=5)
+                self.assertEqual(lock_contender(root/'lane'),0)
