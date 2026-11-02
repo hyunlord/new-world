@@ -292,7 +292,13 @@ def load_suite(path: Path, digest: str) -> SuitePlan:
     for source,sha in inputs:
         real_path(source,directory=False);check_digest(sha,str(source))
         require(not source.is_relative_to(evidence) and not source.is_relative_to(logs) and source!=path,'/inputs','output/plan overlap')
-    environment=tuple((key,text(Node(value))) for key,value in node.field('environment').mapping().items())
+    environment_values: dict[str,str]={}
+    for key,value in node.field('environment').mapping().items():
+        if import_pair and key in {'RUSTC_WRAPPER','RUSTC_WORKSPACE_WRAPPER'}:
+            require(value == '', '/environment', 'import compiler wrappers must be explicitly empty')
+            environment_values[key]=''
+        else:environment_values[key]=text(Node(value))
+    environment=tuple(environment_values.items())
     allowed={'PATH','HOME','LANG','LC_ALL','PYTHONNOUSERSITE','PYTHONDONTWRITEBYTECODE','PYTHONCOERCECLOCALE','__CF_USER_TEXT_ENCODING','GODOT_BIN'}
     if import_pair:allowed |= {'CARGO_HOME','CARGO_BUILD_JOBS','CARGO_NET_OFFLINE','RUSTC_WRAPPER','RUSTC_WORKSPACE_WRAPPER','WORLDSIM_TEST_SETTINGS_DIR'}
     require(set(dict(environment))<=allowed and dict(environment).get('GODOT_BIN')==str(godot),'/environment','closed suite environment required')

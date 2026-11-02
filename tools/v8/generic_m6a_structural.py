@@ -521,7 +521,7 @@ class OwnedPlan:
 def check_owned_helpers(product: ProbeProduct, tools: Tooling) -> None:
     """Bind actual loaded helper closure and each wrapper's materialized copy."""
     coordinator_sources(tools)
-    require(dict(tools.files).get('gate_oracle_child.py')=='09b9a8989bf5b4f40561bd71ad0e7631f1e5d5bf4458bfdc0908f9a164102437','/helper','unreviewed owned helper')
+    require(dict(tools.files).get('gate_oracle_child.py')=='94e673739f8f89173e4d8db1ede112d185f12e1c020fe6451e00865c08904571','/helper','unreviewed owned helper')
     for name in import_closure(tools.root,'gate_oracle_child.py'):
         digest=dict(tools.files).get(name)
         require(digest is not None,'/helper','unsealed helper dependency')

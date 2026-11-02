@@ -422,6 +422,8 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 단계42/43 실행은 원래 source scan·Cargo·tee·grep 명령과 실제 자식 반환·독립 목록을 연결한다. 42의4개,43의1개 테스트를 계수하고 43 내부 두 분기의 관측은 아직 NOT_RECORDED다. 독립 검토가 찾은 빈 decision 추가·baseline 삭제 누락을 V2에서 모든 원래 scanner 조건과 Rust 입력 재검사로 차단했다. 루트 runtime/coordinator31개(39.971초), 타입·Ruff 및 독립 재현이 통과했다. 49 경로는 유지하며 실제 source/build·observer qualification과42/43 coordinator 연결은 아직 미완료다(`stage0/ordered-dispatch/library4243-review-metadata-v2/REVIEW.json`).
 
+실제 import→workspace 연결 fixture가 드러낸 빈 wrapper 파싱 결함을 수정했다. import profile에서 명시한 두 compiler-wrapper 키만 빈 문자열을 허용하고 일반 oracle 및 다른 환경키의 검증은 유지한다. 실제 소형 두 import의 값 보존·생략·잘못된 값 거부, 독립 normal oracle 검토와 최종 공유 소비자114개(126.674초), 타입·Ruff가 통과했다. 수정 중 구 버전 pin을 로드한 예비 실행의9실패27오류와 잘못된 테스트 출력경로 실패는 보존하며 최종 통과로 재분류하지 않는다. 실제 Godot/native qualification은 여전히 미완료다(`stage0/ordered-dispatch/import-empty-wrappers-review-metadata/REVIEW.json`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

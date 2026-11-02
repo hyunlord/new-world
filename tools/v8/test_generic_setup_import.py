@@ -11,7 +11,7 @@ from unittest.mock import patch
 import gate_oracle_child as child
 import generic_process
 import generic_setup_import as imports
-from generic_gate import document
+from generic_gate import GateContractError, document
 from generic_process import file_hash
 from generic_setup_bridge import run_bridge_owned
 from generic_setup_prepare import PreparedSetup, Tool, prepare
@@ -51,9 +51,11 @@ def make_fixture(home: Path, first: int, second: int) -> Fixture:
 
 
 class ImportTests(unittest.TestCase):
-    def exercise(self, first: int, second: int, mutation: str='') -> None:
+    def exercise(self, first: int, second: int, mutation: str='', *, wrappers: bool=False) -> None:
         with tempfile.TemporaryDirectory() as temp:
-            home=Path(temp).resolve();f=make_fixture(home,first,second);prepared=prepare(f.inputs)
+            home=Path(temp).resolve();f=make_fixture(home,first,second)
+            if wrappers:f.inputs=replace(f.inputs,environment=(*f.inputs.environment,('RUSTC_WRAPPER',''),('RUSTC_WORKSPACE_WRAPPER','')))
+            prepared=prepare(f.inputs)
             lock=home/'lock'
             with lock.open('w') as lane,patch('generic_setup_bridge.LOCK',lock),patch.object(child,'LOCK',lock),\
                  patch('generic_setup_bridge.qualify_wait',return_value=()),patch.object(imports,'qualify_wait',return_value=()):
@@ -100,9 +102,20 @@ class ImportTests(unittest.TestCase):
                     raw=document((row.evidence/'native-terminal.json').read_text())
                     self.assertEqual(raw.field('settlement').value,'SETTLED')
                     self.assertEqual(raw.field('request').field('limit').value,600)
+                    environment=document((row.evidence/'native-start.json').read_text()).field('environment').mapping()
+                    for key in ('RUSTC_WRAPPER','RUSTC_WORKSPACE_WRAPPER'):
+                        if wrappers:self.assertEqual(environment[key],'')
+                        else:self.assertNotIn(key,environment)
+                if wrappers:
+                    for index,(key,value) in enumerate((('RUSTC_WRAPPER','/untrusted'),('RUSTC_WORKSPACE_WRAPPER',' '),('RUSTC_WRAPPER',None),('LANG',''))):
+                        plan=document(owner.controller.plan.path.read_text()).mapping().copy()
+                        environment=dict(owner.controller.plan.environment);plan['environment']={**environment,key:value}
+                        invalid=home/f'invalid-environment-{index}.json';generic_process.atomic_json(invalid,plan)
+                        with self.assertRaises(GateContractError):_=child.load_suite(invalid,file_hash(invalid))
                 with lock.open('a') as other,self.assertRaises(BlockingIOError):fcntl.flock(other.fileno(),fcntl.LOCK_EX|fcntl.LOCK_NB)
 
     def test_pair_success(self) -> None:self.exercise(0,0)
+    def test_explicit_empty_wrappers_reach_both_native_imports(self) -> None:self.exercise(0,0,wrappers=True)
     def test_first_failure_still_runs_second(self) -> None:self.exercise(7,0)
     def test_second_failure_sets_original_aggregate(self) -> None:self.exercise(0,9)
     def test_both_failures_retained(self) -> None:self.exercise(7,9)
