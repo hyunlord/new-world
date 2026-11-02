@@ -23,6 +23,7 @@ from generic_sources import freeze_source, git, inventory
 from mux2_gate_inputs import INPUT_DIRS, INPUT_FILES, EvidenceError, Json
 
 GATE_SHA256 = 'e794a514289ee13b58b76a1745f6b42c5040ae1acb0af20bf43c5261b7e1cc1d'
+DIAGNOSIS_RESULT = 'docs/v8/read/read_30s_result.json'
 COMMANDS: dict[int, tuple[str, tuple[str, ...]]] = {
     1: ('fmt', ('bash', '-c', 'cd rust && cargo fmt --all -- --check')),
     7: ('forbidden_math', ('bash', '-c', r"cd rust && ! grep -rnE '\.(exp|exp2|ln|log2|log10|powf|powi|sin|cos|tan|tanh|atan2|hypot|cbrt)\(' crates/sim-core/src crates/sim-systems/src crates/sim-engine/src")),
@@ -33,6 +34,7 @@ COMMANDS: dict[int, tuple[str, tuple[str, ...]]] = {
     22: ('schema_docs', ('python3', 'tools/v8/check_docs_helpers.py', 'schema', '.')),
     31: ('art_manifest', ('python3', 'tools/v8/art_import.py', '--verify')),
     33: ('extensibility_grep', ('python3', '-m', 'unittest', 'tools/v8/test_mart2_extensibility.py', 'tools/v8/test_art_masks.py', 'tools/v8/test_art_import.py')),
+    51: ('read_diagnosis_test', ('bash', '-c', '\n    set -euo pipefail\n    RESULT="docs/v8/read/read_30s_result.json"\n    [[ -f "$RESULT" ]] || { echo "result file $RESULT does not exist"; exit 1; }\n    python3 -c "\nimport json, sys\nr = json.load(open(sys.argv[1]))\npassed = sum(1 for q in r[\\"questions\\"] if q[\\"pass\\"])\ntotal = len(r[\\"questions\\"])\nq1 = next(q for q in r[\\"questions\\"] if q[\\"id\\"] == \\"Q1\\")\nq5 = next(q for q in r[\\"questions\\"] if q[\\"id\\"] == \\"Q5\\")\np1 = q1[\\"pass\\"]\np5 = q5[\\"pass\\"]\nprint(f\\"30s test: {passed}/{total}, Q1 pass={p1}, Q5 pass={p5}\\")\nassert passed >= 5, f\\"need >=5/6, got {passed}/{total}\\"\nassert q1[\\"pass\\"], \\"Q1 must pass\\"\nassert q5[\\"pass\\"], \\"Q5 must pass\\"\nprint(\\"READ_DIAGNOSIS_TEST PASS\\")\n" "$RESULT"\n')),
 }
 
 
@@ -77,7 +79,7 @@ def _tools(context: ExecutionEnvironment, step: int) -> dict[str, Path]:
         required |= {'cargo', 'cargo-fmt', 'rustfmt'}
     if step == 7:
         required.add('grep')
-    if step == 20:
+    if step in {20, 51}:
         required.add('python3')
     if step == 16:
         required |= {'bash', 'grep', 'sh', 'sleep', 'dirname', 'mkdir', 'sed', 'date', 'touch', 'env', 'shasum', 'cmp', 'perl'}
@@ -89,6 +91,13 @@ def _tools(context: ExecutionEnvironment, step: int) -> dict[str, Path]:
             real_path(Path(env[key]), directory=True)
         require(not ({'PYTHONPATH', 'PYTHONHOME', 'PERL5LIB', 'PERL5OPT', 'WORLDSIM_MUX2_LANE_FD'} & env.keys()),
                 '/environment', 'step16 inherited runtime or lane override')
+    if step == 51:
+        allowed = {'PATH', 'LANG', 'LC_ALL', 'CARGO_BUILD_JOBS', 'HOME', 'TMPDIR',
+                   'PYTHONNOUSERSITE', 'PYTHONDONTWRITEBYTECODE', 'PYTHONCOERCECLOCALE',
+                   'GIT_CONFIG_GLOBAL', 'GIT_CONFIG_NOSYSTEM', '__CF_USER_TEXT_ENCODING'}
+        require(env.keys() <= allowed, '/environment', 'step51 unapproved shell or process environment key')
+        for key in ('PYTHONNOUSERSITE', 'PYTHONDONTWRITEBYTECODE'):
+            require(env.get(key) == '1', key, 'step51 Python startup policy differs')
     result: dict[str, Path] = {}
     for name, path, digest in context.tools:
         require(name not in result and '/' not in name, '/tools', 'duplicate or unsafe tool name')
@@ -127,6 +136,13 @@ def _refs(product: StaticProduct, step: int) -> dict[str, str]:
                 '/refs', 'art mask source commit is not one literal full SHA')
         names.extend(values)
     return {name: git(product.root, 'rev-parse', '--verify', name + '^{commit}').decode().strip() for name in names}
+
+
+def diagnosis_terminal(stdout: str) -> None:
+    """Require the original diagnosis marker once, as the last nonblank line."""
+    lines = [line for line in stdout.splitlines() if line.strip()]
+    require(lines.count('READ_DIAGNOSIS_TEST PASS') == 1 and lines[-1] == 'READ_DIAGNOSIS_TEST PASS',
+            '/diagnosis', 'missing, duplicate or nonterminal original diagnosis marker')
 
 
 def unittest_terminal(stderr: str) -> dict[str, Json]:
@@ -178,7 +194,7 @@ def run_step(product: StaticProduct, step: int, output: Path,
     before: dict[str, Json] | None = None
     refs: dict[str, str] | None = None
     context = execution_environment
-    input_names = [*INPUT_DIRS, *INPUT_FILES, *(['docs'] if step == 16 else [])]
+    input_names = [*INPUT_DIRS, *INPUT_FILES, *(['docs'] if step == 16 else [DIAGNOSIS_RESULT] if step == 51 else [])]
     try:
         tools = _tools(context, step)
         for path, digest in context.prior_receipts:
@@ -212,6 +228,8 @@ def run_step(product: StaticProduct, step: int, output: Path,
             terminal = unittest_terminal((output / 'process/stderr.log').read_bytes().decode('utf-8'))
             receipt['unittest'] = terminal
             require(terminal['outcome'] == 'OK' and result.native_exit == 0, '/unittest', 'original discovery failed')
+        if step == 51:
+            diagnosis_terminal((output / 'process/stdout.log').read_bytes().decode('utf-8'))
         require(result.status == 'PASS' and result.native_exit == 0, '/process', 'original command failed')
     except (OSError, ValueError, SyntaxError, EvidenceError) as error:
         errors.append(str(error))

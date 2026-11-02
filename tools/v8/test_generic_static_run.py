@@ -1,5 +1,8 @@
 """Synthetic children only; these tests do not run any original gate check."""
+import json
 import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -10,7 +13,9 @@ import generic_static_run as runner
 from generic_fixture_run import ComponentResult
 from generic_gate import GateContractError, document
 from generic_process import file_hash
+from generic_sources import git
 from generic_sources import inventory as actual_inventory
+from mux2_gate_inputs import Json
 
 
 @final
@@ -50,9 +55,9 @@ class Fixture:
 class StaticTests(unittest.TestCase):
     def test_all_exact_commands_cwd_and_component_scope(self) -> None:
         fixture = Fixture(self)
-        self.assertEqual(set(runner.COMMANDS), {1, 7, 13, 15, 16, 20, 22, 31, 33})
+        self.assertEqual(set(runner.COMMANDS), {1, 7, 13, 15, 16, 20, 22, 31, 33, 51})
         for step, (_, argv) in runner.COMMANDS.items():
-            if step == 16:
+            if step in {16, 51}:
                 continue
             with self.subTest(step=step):
                 result = fixture.run_one(step, str(step))
@@ -273,6 +278,146 @@ class Step16Tests(unittest.TestCase):
         self.assertEqual(set(refs), {'f' * 40, 'c' * 40})
         self.assertEqual(calls, [('rev-parse', '--verify', 'f' * 40 + '^{commit}'),
                                  ('rev-parse', '--verify', 'c' * 40 + '^{commit}')] * 2)
+
+
+@final
+class DiagnosisTests(unittest.TestCase):
+    def diagnosis_fixture(self, payload: str | None) -> Fixture:
+        fixture = Fixture(self)
+        path = fixture.root / runner.DIAGNOSIS_RESULT
+        path.parent.mkdir(parents=True)
+        if payload is not None:
+            _ = path.write_text(payload)
+        fixture.product = runner.StaticProduct(fixture.root, 'a' * 40,
+            ((runner.DIAGNOSIS_RESULT, file_hash(path)),) if payload is not None else ())
+        python = Path(sys.executable).resolve()
+        tools = {'python3': python, 'bash': Path('/bin/bash').resolve(), 'git': Path('/usr/bin/git').resolve()}
+        fixture.context = runner.ExecutionEnvironment(
+            (('PATH', str(python.parent) + ':/usr/bin:/bin'), ('LANG', 'C'), ('LC_ALL', 'C'),
+             ('CARGO_BUILD_JOBS', '8'), ('PYTHONNOUSERSITE', '1'), ('PYTHONDONTWRITEBYTECODE', '1')),
+            tuple((name, tool, file_hash(tool)) for name, tool in tools.items()), ())
+        def resolve_tool(name: str, path: str) -> str:
+            _ = path
+            return str(tools[name])
+        _ = patch.object(shutil, 'which', side_effect=resolve_tool).start()
+        def runtime_inventory(root: Path, names: list[str]) -> dict[str, str]:
+            if root == fixture.root:
+                self.assertIn(runner.DIAGNOSIS_RESULT, names)
+                self.assertNotIn('docs', names)
+                return {runner.DIAGNOSIS_RESULT: file_hash(path)} if path.exists() else {}
+            return actual_inventory(root, names)
+        _ = patch.object(runner, 'inventory', side_effect=runtime_inventory).start()
+        return fixture
+
+    def payload(self, passes: tuple[Json, ...] = (True,) * 6) -> str:
+        return json.dumps({'questions': [{'id': 'Q' + str(i + 1), 'pass': value} for i, value in enumerate(passes)]})
+
+    def test_exact_source_body(self) -> None:
+        source = Path(git.__code__.co_filename).parent / 'gate.sh'
+        body = source.read_text().split("step 51 read_diagnosis_test bash -c '", 1)[1].split("\n'", 1)[0] + '\n'
+        self.assertEqual(runner.COMMANDS[51], ('read_diagnosis_test', ('bash', '-c', body)))
+
+    def test_original_assertions_and_truthiness(self) -> None:
+        for passes in ((True,) * 6, (True, True, True, True, True, False), ('truthy',) * 7):
+            with self.subTest(passes=passes):
+                fixture = self.diagnosis_fixture(self.payload(passes))
+                result = fixture.run_one(51)
+                self.assertEqual(result.status, 'PASS')
+                self.assertIn('READ_DIAGNOSIS_TEST PASS', (result.receipt.parent / 'process/stdout.log').read_text())
+                runner.verify_receipt(result.receipt, file_hash(result.receipt))
+                patch.stopall()
+
+    def test_failed_original_assertions_and_bad_data_retain_native_failures(self) -> None:
+        cases = [self.payload((True, True, False, False, True, False)),
+                 self.payload((False, True, True, True, True, True)),
+                 self.payload((True, True, True, True, False, True)),
+                 '{bad json', '{"questions": []}', '{"questions": [{"id": "Q1", "pass": true}]}', None]
+        for payload in cases:
+            with self.subTest(payload=payload):
+                fixture = self.diagnosis_fixture(payload)
+                result = fixture.run_one(51)
+                self.assertEqual(result.status, 'FAIL')
+                child = document((result.receipt.parent / 'process/process.json').read_text())
+                self.assertNotEqual(child.field('native_exit').value, 0)
+                self.assertTrue((result.receipt.parent / 'process/stderr.log').is_file())
+                patch.stopall()
+
+    def test_original_first_q1_match_controls_assertion(self) -> None:
+        for first in (True, False):
+            with self.subTest(first=first):
+                rows: list[Json] = [{'id': 'Q1', 'pass': first}, {'id': 'Q1', 'pass': not first}]
+                rows.extend({'id': 'Q' + str(i), 'pass': True} for i in range(2, 7))
+                fixture = self.diagnosis_fixture(json.dumps({'questions': rows}))
+                self.assertEqual(fixture.run_one(51).status, 'PASS' if first else 'FAIL')
+                patch.stopall()
+
+    def test_startup_overrides_and_missing_python_reject_before_launch(self) -> None:
+        for override in ('PYTHONOPTIMIZE', 'PYTHONPATH', 'PYTHONHOME', 'BASH_ENV', 'ENV', 'SHELLOPTS', 'BASHOPTS',
+                         'BASH_FUNC_python3%%', 'BASH_FUNC_python3()', 'LD_PRELOAD', 'DYLD_INSERT_LIBRARIES', 'missing-python'):
+            with self.subTest(override=override):
+                fixture = self.diagnosis_fixture(self.payload())
+                values = fixture.context.values if override == 'missing-python' else (*fixture.context.values, (override, '1'))
+                tools = tuple(row for row in fixture.context.tools if override != 'missing-python' or row[0] != 'python3')
+                fixture.context = runner.ExecutionEnvironment(values, tools, ())
+                result = fixture.run_one(51)
+                self.assertEqual(result.status, 'FAIL')
+                self.assertFalse((result.receipt.parent / 'process').exists())
+                patch.stopall()
+
+    def test_actual_bash_startup_assertion_bypass_is_rejected_before_capture(self) -> None:
+        fixture = self.diagnosis_fixture(self.payload((False,) * 6))
+        startup = fixture.base / 'startup.sh'
+        _ = startup.write_text('export PYTHONOPTIMIZE=1\n')
+        values = (*fixture.context.values, ('BASH_ENV', str(startup)))
+        # Demonstrate why a marker/native0 join alone is insufficient: the original
+        # shell command bypasses every Python assertion after this startup script.
+        raw = subprocess.run(['/bin/bash', *runner.COMMANDS[51][1][1:]], cwd=fixture.root,
+                             env=dict(values), capture_output=True, text=True, check=False)
+        self.assertEqual(raw.returncode, 0, raw.stderr)
+        self.assertIn('30s test: 0/6', raw.stdout)
+        self.assertIn('READ_DIAGNOSIS_TEST PASS', raw.stdout)
+        fixture.context = runner.ExecutionEnvironment(values, fixture.context.tools, ((startup,file_hash(startup)),))
+        result = fixture.run_one(51)
+        self.assertEqual(result.status, 'FAIL')
+        self.assertFalse((result.receipt.parent / 'process').exists())
+
+    def test_missing_data_inventory_and_postflight_data_mutation_fail(self) -> None:
+        fixture = self.diagnosis_fixture(self.payload())
+        fixture.product = runner.StaticProduct(fixture.root, 'a' * 40, ())
+        result = fixture.run_one(51, 'missing-data')
+        self.assertEqual(result.status, 'FAIL')
+        self.assertFalse((result.receipt.parent / 'process').exists())
+        path = fixture.root / runner.DIAGNOSIS_RESULT
+        fixture.product = runner.StaticProduct(fixture.root, 'a' * 40, ((runner.DIAGNOSIS_RESULT, file_hash(path)),))
+        def mutate(root: Path, sha: str) -> dict[str, str]:
+            _ = root, sha
+            if (fixture.base / 'mutated/process/process.json').exists():
+                _ = path.write_text(self.payload((False,) * 6))
+            return {'source': 'synthetic'}
+        fixture.source.side_effect = mutate
+        result = fixture.run_one(51, 'mutated')
+        self.assertEqual(result.status, 'FAIL')
+        self.assertEqual(document((result.receipt.parent / 'process/process.json').read_text()).field('native_exit').value, 0)
+
+    def test_terminal_marker_must_be_unique_last_and_joined_to_zero_exit(self) -> None:
+        bodies = ('echo READ_DIAGNOSIS_TEST PASS; echo READ_DIAGNOSIS_TEST PASS',
+                  'echo READ_DIAGNOSIS_TEST PASS; echo unexpected-tail',
+                  'echo READ_DIAGNOSIS_TEST PASS; exit 9')
+        for body in bodies:
+            with self.subTest(body=body):
+                fixture = Fixture(self)
+                _ = fixture.child.write_text('#!/bin/sh\n' + body + '\n')
+                fixture.context = runner.ExecutionEnvironment(
+                    (*fixture.context.values, ('PYTHONNOUSERSITE', '1'), ('PYTHONDONTWRITEBYTECODE', '1')),
+                    tuple((name, path, file_hash(path)) for name, path, _ in fixture.context.tools), ())
+                self.assertEqual(fixture.run_one(51).status, 'FAIL')
+                patch.stopall()
+
+    def test_zero_exit_without_original_terminal_rejects(self) -> None:
+        fixture = Fixture(self)
+        fixture.context = runner.ExecutionEnvironment((*fixture.context.values, ('PYTHONNOUSERSITE', '1'),
+                                                      ('PYTHONDONTWRITEBYTECODE', '1')), fixture.context.tools, ())
+        self.assertEqual(fixture.run_one(51).status, 'FAIL')
 
 
 if __name__ == '__main__':
