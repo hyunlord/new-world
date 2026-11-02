@@ -347,6 +347,8 @@ workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignore
 
 단계38 원래16개 oracle shell·checker의 호출자를 추가했다. 실제 shell·helper 채널·잠금 descriptor를 보존하고, Popen 의도 이후 handle이 반환되지 않거나 종료 처리 중 오류가 나면 typed UNKNOWN으로 live 객체를 유지한다. 원래 순서·300/120초 한도·checker 중단 규칙을 바꾸지 않으며 helper 종료 확인 뒤에만 전체 로그와 산출물을 검증한다. 독립 검토에서 같은 ambient import 순서 결함을 재현해 v2에서 실제 eager 출처 고정으로 수정했다. 수정된 구조 모듈과의 별도 조합 검사 및 루트23개(29.742초), Ruff가 통과했다. 생산 코드는3.11 엄격 타입, override를 사용하는 테스트는 실제3.14 타입 검사에서0진단이며 잘못 적용한3.11 테스트 설정의6진단은 원본 로그에 보존한다. 실제 Godot·제품 빌드 출처·GPU·상위 조정기 연결·전체 gate는 미검증이다(`stage0/ordered-dispatch/ORACLES_RUN_INDEPENDENT_REVIEW_V2.md`, `ORACLES_RUN_COMBINED_STRUCTURAL_REVIEW.md`).
 
+문서 검사에도 소스가 소유하는 종료 상태 API를 분리했다. 원래 API는 그대로이며, owned 실행은 실제 PASS·exit0과 연결된 프로세스 기록을 확인한 뒤에만 종료 상태가 된다. 양의 오류 종료도 Cargo 내부 wait 실패를 배제하지 못하므로 UNKNOWN으로 남겨 산출물 확정과 잠금 해제를 허용하지 않는다. 실행 전 거부와 종료 후 문서·출처 검증 실패는 별도 종료된 실패로 남기고, 진단·중단 오류가 원래 실패를 가리지 않게 했다. 루트71개(4.850초), 엄격 타입·Ruff 및 독립 검토가 통과했다. 상위 조정기 연결과 실제 원래 문서 검사 실행은 아직 미검증이다(`stage0/ordered-dispatch/DOCS14_OWNED_INDEPENDENT_REVIEW_V1.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

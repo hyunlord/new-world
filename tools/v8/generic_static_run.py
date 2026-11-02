@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import NoReturn
 
 from generic_fixture_run import ComponentResult
-from generic_gate import document, require
+from generic_gate import document, integer, require
 from generic_m6a_structural import resolution_paths
 from generic_process import (
     ProcessSpec,
@@ -356,13 +356,79 @@ def unittest_terminal(stderr: str) -> dict[str, Json]:
             'count_authority': 'actual_unittest_terminal_not_source_declarations'}
 
 
+@dataclass(slots=True)
+class _DocsExecution:
+    output_created: bool = False
+    in_flight: bool = False
+    primary: BaseException | None = None
+
+
+class DocsSettledFailure(RuntimeError):
+    def __init__(self, original: BaseException, diagnostic: BaseException | None,
+                 receipt: Path | None) -> None:
+        super().__init__('docs failed with owned execution settled')
+        self.original: BaseException = original
+        self.diagnostic: BaseException | None = diagnostic
+        self.receipt: Path | None = receipt
+
+
+class DocsOwnershipUnknown(RuntimeError):
+    def __init__(self, original: BaseException, diagnostic: BaseException | None,
+                 ownership_receipt: Path | None) -> None:
+        super().__init__('docs descendant ownership unknown; retain lane')
+        self.original: BaseException = original
+        self.diagnostic: BaseException | None = diagnostic
+        self.ownership_receipt: Path | None = ownership_receipt
+
+
+def run_docs_owned(product: StaticProduct, output: Path,
+                   execution_environment: ExecutionEnvironment) -> ComponentResult:
+    """Original14 only; caller owns source/build admission and the actual held lane.
+
+    A source-qualified successful Bash/Cargo chain settles on bound actual PASS/0.
+    Failed/unreturned execution may have skipped a descendant wait; retain ownership.
+    Retained receipt parsing does not independently grant this live settlement.
+    """
+    state=_DocsExecution()
+    try:
+        result=_run_step(product,14,output,execution_environment,state)
+    except BaseException as original:
+        primary=state.primary if state.primary is not None else original
+        secondary=original if primary is not original else None
+        receipt: Path | None=None
+        if state.output_created:
+            try:
+                path=output/('ownership.json' if state.in_flight else 'settled-failure.json')
+                atomic_json(path,{'schema':'docs_owned_failure_v1',
+                    'ownership':'INCOMPLETE_DESCENDANTS_UNKNOWN' if state.in_flight else 'SETTLED_FAILURE',
+                    'final_inventory':False,'publication_authorized':False,
+                    'exception_type':type(original).__name__})
+                receipt=path
+            except BaseException as diagnostic:
+                if state.in_flight:raise DocsOwnershipUnknown(primary,diagnostic,None) from diagnostic
+                raise DocsSettledFailure(primary,diagnostic,None) from diagnostic
+        if state.in_flight:raise DocsOwnershipUnknown(primary,secondary,receipt) from original
+        raise DocsSettledFailure(primary,secondary,receipt) from original
+    if result.status!='PASS':
+        original=state.primary if state.primary is not None else RuntimeError('docs validation failed')
+        raise DocsSettledFailure(original,None,result.receipt) from original
+    return result
+
+
 def run_step(product: StaticProduct, step: int, output: Path,
              execution_environment: ExecutionEnvironment) -> ComponentResult:
+    """Legacy command API; existing caller ownership responsibilities are unchanged."""
+    return _run_step(product,step,output,execution_environment,None)
+
+
+def _run_step(product: StaticProduct, step: int, output: Path,
+              execution_environment: ExecutionEnvironment, state: _DocsExecution | None) -> ComponentResult:
     require(type(step) is int and step in COMMANDS, '/step', 'unsupported required step')
     real_path(output.parent, directory=True)
     require(output.is_absolute() and not output.exists() and not output.is_symlink(), str(output), 'stale output')
     require(not output.is_relative_to(product.root), str(output), 'output overlaps source')
     output.mkdir()
+    if state is not None:state.output_created=True
     name, original = COMMANDS[step]
     receipt: dict[str, Json] = {
         'schema': 'generic_static_run.v1', 'step': step, 'name': name,
@@ -416,8 +482,19 @@ def run_step(product: StaticProduct, step: int, output: Path,
                            product.root, product.inputs, output / 'process', context.values,
                            tuple(externals.items()))
         try:
+            if state is not None:state.in_flight=True
             result = execute(spec)
+            if state is not None:
+                require(result.status=='PASS' and result.native_exit==0 and type(result.pid) is int and result.pid>0
+                        and result.receipt==output/'process/process.json','/docs','aggregate completion unknown')
+                native=document(result.receipt.read_text())
+                native.field('status').equals('PASS');native.field('native_exit').equals(0)
+                native.field('pid').equals(result.pid);native.field('errors').equals([])
+                native.field('argv').equals(list(spec.argv));native.field('cwd').equals(str(spec.cwd))
+                require(integer(native.field('duration_ns'))>0,'/docs','invalid completion duration')
+                state.in_flight=False
         except BaseException:
+            if state is not None:raise
             if step in {8, 14, 46}:
                 receipt['process_status'] = 'UNKNOWN'
                 _strict_unknown(output, receipt, 'docs execution did not return' if step == 14 else 'strict execution did not return')
@@ -449,8 +526,13 @@ def run_step(product: StaticProduct, step: int, output: Path,
             diagnosis_terminal((output / 'process/stdout.log').read_bytes().decode('utf-8'))
         require(result.status == 'PASS' and result.native_exit == 0, '/process', 'original command failed')
     except (OSError, ValueError, SyntaxError, EvidenceError) as error:
-        errors.append(str(error))
+        if state is not None:
+            if state.in_flight:raise
+            state.primary=error
+            errors.append('owned docs validation failed')
+        else:errors.append(str(error))
     except BaseException as failure:
+        if state is not None:raise
         if step == 14 and not (output/'receipt.json').exists():
             try:
                 receipt['errors'] = ['unexpected docs validation failure']
@@ -492,8 +574,12 @@ def run_step(product: StaticProduct, step: int, output: Path,
             verify_receipt(path, digest)
         require(inventory(output, ['process']) == artifacts, '/artifacts', 'late child output mutation')
     except (OSError, ValueError, SyntaxError, EvidenceError) as error:
-        errors.append('terminal: ' + str(error))
+        if state is not None:
+            if state.primary is None:state.primary=error
+            errors.append('owned docs postflight failed')
+        else:errors.append('terminal: ' + str(error))
     except BaseException as failure:
+        if state is not None:raise
         if step == 14 and not (output/'receipt.json').exists():
             try:
                 receipt['errors'] = ['unexpected docs postflight failure']

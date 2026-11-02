@@ -6,7 +6,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from typing import final
+from typing import Literal, final
 from unittest.mock import Mock, patch
 
 import bridge_api
@@ -898,3 +898,134 @@ class DocsConfigPartitionTests(unittest.TestCase):
                 self.assertIn(config_name,native.field('before_inputs').mapping())
                 self.assertNotIn(str(config),native.field('before_external_inputs').mapping())
                 patch.stopall()
+
+
+class DocsOwnedTests(unittest.TestCase):
+    def test_owned_success_keeps_original_receipt(self) -> None:
+        fixture=DocsTests.docs_fixture(self)
+        result=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+        self.assertEqual(result.status,'PASS')
+        runner.verify_receipt(result.receipt,file_hash(result.receipt))
+        document(result.receipt.read_text()).field('source_invocation').equals(['bash','tools/v8/check_docs.sh'])
+
+    def test_positive_native_failure_is_unknown_before_inventory(self) -> None:
+        fixture=DocsTests.docs_fixture(self,'echo "docs: FAIL"; exit 1')
+        with self.assertRaises(runner.DocsOwnershipUnknown):
+            _=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+        self.assertFalse((fixture.base/'out/receipt.json').exists())
+        self.assertEqual(fixture.source.call_count,1)
+        document((fixture.base/'out/process/process.json').read_text()).field('native_exit').equals(1)
+        document((fixture.base/'out/ownership.json').read_text()).field('final_inventory').equals(False)
+
+    def test_prelaunch_rejection_is_settled_and_does_not_launch(self) -> None:
+        fixture=DocsTests.docs_fixture(self);primary=ValueError('admission failure')
+        with patch.object(runner,'_tools',side_effect=primary),patch.object(runner,'execute') as child,self.assertRaises(runner.DocsSettledFailure) as caught:
+            _=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+        child.assert_not_called();self.assertIs(caught.exception.original,primary)
+        self.assertEqual(caught.exception.receipt,fixture.base/'out/receipt.json')
+        document((fixture.base/'out/receipt.json').read_text()).field('process_status').equals('NOT_RUN')
+
+    def test_stale_output_is_preserved_without_diagnostics(self) -> None:
+        fixture=DocsTests.docs_fixture(self);out=fixture.base/'out';out.mkdir();_=(out/'raw').write_text('keep')
+        with self.assertRaises(runner.DocsSettledFailure) as caught:
+            _=runner.run_docs_owned(fixture.product,out,fixture.context)
+        self.assertIsNone(caught.exception.receipt)
+        self.assertEqual([p.name for p in out.iterdir()],['raw'])
+
+    def test_pass0_then_oracle_or_postflight_failure_is_settled(self) -> None:
+        for location in ('oracle','postflight'):
+            with self.subTest(location=location):
+                fixture=DocsTests.docs_fixture(self);primary=ValueError('failed '+location)
+                selected=patch.object(runner,'docs_terminal',side_effect=primary) if location=='oracle' else patch.object(runner,'docs_bindings',side_effect=[{'synthetic':True},primary])
+                with selected,self.assertRaises(runner.DocsSettledFailure) as caught:
+                    _=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+                self.assertIs(caught.exception.original,primary)
+                self.assertEqual(fixture.source.call_count,2)
+                document((fixture.base/'out/process/process.json').read_text()).field('native_exit').equals(0)
+                document((fixture.base/'out/receipt.json').read_text()).field('status').equals('FAIL')
+                self.assertFalse((fixture.base/'out/ownership.json').exists())
+
+    def test_all_unreturned_exceptions_remain_unknown(self) -> None:
+        for primary in (OSError('after spawn'),TypeError('after spawn'),KeyboardInterrupt(),SystemExit(2)):
+            with self.subTest(exception=type(primary).__name__):
+                fixture=DocsTests.docs_fixture(self)
+                with patch.object(runner,'execute',side_effect=primary),self.assertRaises(runner.DocsOwnershipUnknown) as caught:
+                    _=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+                self.assertIs(caught.exception.original,primary)
+                self.assertFalse((fixture.base/'out/receipt.json').exists())
+                self.assertEqual(fixture.source.call_count,1)
+
+    def test_failed_missing_or_unbound_completions_are_unknown(self) -> None:
+        from generic_process import ProcessResult, ProcessSpec
+        rows: tuple[tuple[int | None,int,Literal['PASS','FAIL']],...]=((1,123,'FAIL'),(-9,123,'FAIL'),(None,123,'FAIL'),(0,123,'FAIL'),(0,0,'PASS'),(0,123,'PASS'))
+        for code,pid,status in rows:
+            with self.subTest(code=code,pid=pid,status=status):
+                fixture=DocsTests.docs_fixture(self)
+                def child(spec: ProcessSpec, code: int | None=code,pid: int=pid,status: Literal['PASS','FAIL']=status) -> ProcessResult:
+                    return ProcessResult(spec.output_root/'process.json',status,code,pid)
+                with patch.object(runner,'execute',side_effect=child),self.assertRaises(runner.DocsOwnershipUnknown):
+                    _=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+                self.assertFalse((fixture.base/'out/receipt.json').exists())
+                self.assertEqual(fixture.source.call_count,1)
+
+    def test_contradictory_actual_completion_receipt_stays_unknown(self) -> None:
+        from generic_process import ProcessResult, ProcessSpec, execute
+        fixture=DocsTests.docs_fixture(self)
+        def child(spec: ProcessSpec) -> ProcessResult:
+            result=execute(spec)
+            raw=document(result.receipt.read_text()).mapping();raw['native_exit']=1
+            _=result.receipt.write_text(json.dumps(raw))
+            return result
+        with patch.object(runner,'execute',side_effect=child),self.assertRaises(runner.DocsOwnershipUnknown):
+            _=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+        self.assertEqual(fixture.source.call_count,1)
+        self.assertFalse((fixture.base/'out/receipt.json').exists())
+
+    def test_unknown_diagnostic_failure_retains_primary(self) -> None:
+        fixture=DocsTests.docs_fixture(self);primary=TypeError('primary execution failure');diagnostic=KeyboardInterrupt()
+        with patch.object(runner,'execute',side_effect=primary),patch.object(runner,'atomic_json',side_effect=diagnostic),self.assertRaises(runner.DocsOwnershipUnknown) as caught:
+            _=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+        self.assertIs(caught.exception.original,primary);self.assertIs(caught.exception.diagnostic,diagnostic)
+        self.assertFalse((fixture.base/'out/receipt.json').exists());self.assertEqual(fixture.source.call_count,1)
+
+    def test_terminal_write_failure_does_not_mask_first_validation_failure(self) -> None:
+        from generic_process import atomic_json
+        fixture=DocsTests.docs_fixture(self);primary=ValueError('oracle failure');secondary=OSError('terminal write')
+        def writer(path: Path, value: dict[str,Json]) -> None:
+            if path.name=='receipt.json':raise secondary
+            atomic_json(path,value)
+        with patch.object(runner,'docs_terminal',side_effect=primary),patch.object(runner,'atomic_json',side_effect=writer),self.assertRaises(runner.DocsSettledFailure) as caught:
+            _=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+        self.assertIs(caught.exception.original,primary);self.assertIs(caught.exception.diagnostic,secondary)
+        self.assertEqual(caught.exception.receipt,fixture.base/'out/settled-failure.json')
+
+    def test_existing_raw_receipt_is_never_overwritten_on_unknown(self) -> None:
+        from generic_process import ProcessSpec
+        fixture=DocsTests.docs_fixture(self);raw=b'raw diagnostic already written\n'
+        def child(spec: ProcessSpec) -> None:
+            _=(spec.output_root.parent/'receipt.json').write_bytes(raw)
+            raise OSError('execution uncertain')
+        with patch.object(runner,'execute',side_effect=child),self.assertRaises(runner.DocsOwnershipUnknown):
+            _=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+        self.assertEqual((fixture.base/'out/receipt.json').read_bytes(),raw)
+        self.assertTrue((fixture.base/'out/ownership.json').exists())
+
+    def test_hostile_primary_is_not_rendered_before_safe_diagnostics(self) -> None:
+        class Hostile(ValueError):
+            pass
+        for phase in ('execute','oracle'):
+            with self.subTest(phase=phase):
+                fixture=DocsTests.docs_fixture(self);primary=Hostile('never rendered')
+                target='execute' if phase=='execute' else 'docs_terminal'
+                expected=runner.DocsOwnershipUnknown if phase=='execute' else runner.DocsSettledFailure
+                with patch.object(Hostile,'__str__',side_effect=AssertionError('primary was rendered')),patch.object(runner,target,side_effect=primary),self.assertRaises(expected) as caught:
+                    _=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+                self.assertIs(caught.exception.original,primary)
+
+    def test_second_diagnostic_failure_keeps_first_validation_primary(self) -> None:
+        fixture=DocsTests.docs_fixture(self);primary=ValueError('oracle failure');secondary=OSError('all diagnostic writes fail')
+        with patch.object(runner,'docs_terminal',side_effect=primary),patch.object(runner,'atomic_json',side_effect=secondary),self.assertRaises(runner.DocsSettledFailure) as caught:
+            _=runner.run_docs_owned(fixture.product,fixture.base/'out',fixture.context)
+        self.assertIs(caught.exception.original,primary);self.assertIs(caught.exception.diagnostic,secondary)
+        self.assertIsNone(caught.exception.receipt)
+        self.assertFalse((fixture.base/'out/ownership.json').exists())
