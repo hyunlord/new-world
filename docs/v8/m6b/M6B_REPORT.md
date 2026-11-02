@@ -301,6 +301,10 @@ Cargo 기록 정책v2는 컴파일 산출물을 소스 입력과 분리하고 �
 
 단계51을 원래 순서의 마지막 정적 호출로 연결했다. 정적8개·전체 discovery·진단 JSON의 입력과 환경은 세 context로 분리하고, 시작 전·각 경계에서 같은 후보 소스와 정확한 범위를 확인한다. 세 환경의 이전 PASS/FAIL 영수증을 모두 전달하며, 단계16/51의 공통 프로세스 대조는 실제 Python/Bash 시작·spawn·종료·출력 해시에 결합했다. 실패한 실행에 PASS marker나 가짜 unittest 요약을 요구하지 않는다. 루트 조정기50개(9.784초)와 앞선 동일 정적 어댑터28개, 독립 통합78개·엄격 타입·Ruff를 통과했다. 실제 전체 순서 실행과 full gate는 미완료이며 알려진 BASE COREoff 지식 손실 FAIL도 유지한다(`stage0/ordered-dispatch/STEP51_COORDINATOR_INDEPENDENT_REVIEW_V1.md`).
 
+Stall 관찰자 patch의 실제 변환과 공급된 빌드 증거 대조를 분리했다. 외부의 새 scratch에 고정한 원래 blob을 펼쳐 Git patch를 적용하고 정확한 postimage를 확인하며, 제품 소스·index는 바꾸지 않는다. debug sim-bridge의 도구·프로세스·compiler package/target/source·artifact를 대조하되 과거 실행 권한은 CALLER_DRIVER_EVIDENCE_REQUIRED, runtime은 PENDING으로 남긴다. 독립 검토의 외부 패키지 artifact·0 duration 수락, 추가 무결성 오류가 있는 예상 Git128을 로컬 변환 PASS로 처리한 문제를 회귀와 함께 고쳤다. 루트16개 검사(26.835초)·엄격 타입 검사27·Ruff와 독립 검토를 통과했다. 실제 빌드·stall capture 연결·성능/안전 admission은 아직 없다(`stage0/stall-run/build-draft/INDEPENDENT_REVIEW_V3.md`).
+
+실제 Cargo run04도 FAIL로 보존한다. 네 일반 자식은 COMPLETE와 원래 종료0/7/0/0을 기록했으나, alpha doctest는 직접 실행 PASS와 달리 기록 실행에서125로 실패했다. 실제 요청은 `/var/folders/.../T/rustdoctestGIBDro/rust_out`, 선언한 임시 루트는 Python이 선택한 `/private/tmp`여서 생성 파일을 실행하기 전에 차단됐다. pinned Rust의 Darwin 사용자 임시 디렉터리 선택과 Python 기본값의 차이를 확인했으며 환경 변경이나 허용 경로 확대 없이 실행기 선언을 수리할 예정이다. 산출물592개·바이너리4개·sealed 파일72개를 재검증하고 기록된 자식/launcher PID18개의 종료 및 외부 실행기 exit1을 확인했다. 원시 Cargo101 두 개만으로 동등성을 인정하지 않는다(`stage0/workspace-runtime/cargo-hook-qualification/INDEPENDENT_RUN04_AUDIT.md`, RESULT SHA256 `01e42405a78bd2e833404d0926155a8903458b26905983f79b054d8a602d707d`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
