@@ -341,6 +341,8 @@ workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignore
 
 단계14 문서 검사 어댑터는 원래 `bash tools/v8/check_docs.sh`와 system-table 생성을 그대로 실행하도록 추가했다. 문서·skill 연결·Cargo 설정의 존재와 내용·원래 검사기의 경로 조회를 연결하며, 현재 제품의 세계 분류와 빌드 출처는 호출자 검증이 필요하다고 명시한다. 독립 검토에서 저장소 내부 Cargo 설정을 외부 입력으로 요구해 실행 전에 거부되는 v1 결함을 재현했고, v2는 내부 설정을 제품 입력에 넣고 실제 외부 설정만 외부 입력으로 유지한다. 원래 프로세스 경계는 완화하지 않았다. 루트58개(6.809초), 생산 코드 엄격 타입·Ruff와 독립 v2 검토가 통과했다. 임시 프로세스 입력 검증이며 원래 Cargo/system-table 실행·조정기 연결·전체 gate는 미검증이다(`stage0/ordered-dispatch/docs14-adapter-draft-v2/INDEPENDENT_REVIEW_V2.md`).
 
+벤치 조정기를 원래 단계25 위치에 연결했다. 선택적 명시 소유 context가 있을 때만 원래6회 실행을 수행하며, BASE와 후보의 입력·스크립트·출처와 registry를 대조한다. 기존 실제 descriptor 소유자를 재사용해 잠금 하나를 유지하고, 소스가 종료를 확인한 뒤에만 보존 결과 검증을 수행한다. UNKNOWN은 최종 산출물 확정이나 다음 단계로 진행하지 않는다. 종료가 확인된 실패·PENDING 등 비통과 결과는 이후 실행과 아직 연결하지 않은 모든 의무를 NOT_RUN·blocked_by로 남긴다. 루트85개(63.265초), 엄격 타입·Ruff와 독립 검토가 통과했다. 실제 벤치·컴파일 출처 승인·전체 gate·ledger는 미완료이며 기존 strict 호출의 API와 동작은 유지한다(`stage0/ordered-dispatch/bench-coordinator-draft/INDEPENDENT_REVIEW_V1.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

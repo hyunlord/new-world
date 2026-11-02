@@ -23,8 +23,9 @@ from contextlib import nullcontext
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime
 from pathlib import Path
-from typing import Final, Literal, NoReturn
+from typing import Final, Literal, NoReturn, final
 
+import generic_bench_run as bench
 import generic_direct_run as direct
 import generic_perf_run as perf
 import generic_renderer_run as renderer
@@ -98,7 +99,7 @@ def obligations() -> tuple[Obligation, ...]:
         for name in (composite[step] if step in (28,48) else direct_fixtures.get(step, composite.get(step, (STEP_NAMES[step-1],)))):
             fixture = name if name in direct_fixtures.get(step, ()) else None
             component = 'direct' if fixture else name if name in COMPONENTS else mapped.get(step)
-            result.append(Obligation(step,f'{step}:{name}',component,fixture))
+            result.append(Obligation(step,f'{step}:{name}',component,'bench.timed_rss' if step==25 else fixture))
     return tuple(result)
 
 
@@ -369,9 +370,20 @@ class StrictContext:
 
 
 @dataclass(frozen=True, slots=True)
+class BenchContext:
+    base: Product
+    candidate: Product
+    purpose: Literal['publication','self_proof','defect_proof']
+    script: Path
+    script_sha256: str
+    justifications: tuple[dict[str,str], ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
 class OwnedOrderedInputs(OrderedInputs):
     strict: StrictContext
     control_fd: int
+    bench: BenchContext | None = None
 
 
 def strict_bindings(context: OwnedOrderedInputs) -> None:
@@ -394,6 +406,8 @@ def strict_bindings(context: OwnedOrderedInputs) -> None:
 
 class _StrictOwner:
     """One actual descriptor; UNKNOWN keeps this owner alive, never a PID recovery."""
+    ownership_label: str = 'strict'
+
     def __init__(self, control_fd: int, output: Path) -> None:
         require(FD_ENV not in os.environ,'/lane','inherited ownership unsupported')
         self.descriptor: int=os.open(LOCK,os.O_RDWR|os.O_CREAT,0o600)
@@ -413,8 +427,8 @@ class _StrictOwner:
 
     def status(self) -> None:
         self.event+=1
-        atomic_json(self.output.parent/f'strict-ownership-{self.event}.json',{
-            'schema':'strict_ordered_live_owner_v1','attempt':self.attempt,'owner_pid':os.getpid(),
+        atomic_json(self.output.parent/f'{self.ownership_label}-ownership-{self.event}.json',{
+            'schema':f'{self.ownership_label}_ordered_live_owner_v1','attempt':self.attempt,'owner_pid':os.getpid(),
             'state':'INCOMPLETE_DESCENDANTS_UNKNOWN','final_inventory':False,
             'recovery_authority':'NONE_CURRENT_ADAPTER','publication_authorized':False})
 
@@ -438,6 +452,92 @@ class _StrictOwner:
                 if isinstance(diagnostic,OSError):eof=True
 
 
+@final
+class _BenchOwner(_StrictOwner):
+    ownership_label: str = 'bench'
+
+
+def bench_bindings(context: OwnedOrderedInputs) -> BenchContext:
+    bound=context.bench
+    require(bound is not None,'/bench','explicit owned bench context required')
+    assert bound is not None
+    require(bound.purpose==context.components.declarations.purpose,'/bench','purpose differs')
+    validate_products(bound.base,bound.candidate,bound.purpose)
+    for product,probe in ((bound.base,context.components.probes.base),(bound.candidate,context.components.probes.candidate)):
+        require(product.root==probe.input_root and product.source_sha==probe.source_sha,'/bench','ordered source differs')
+        require(product.binary.name=='worldsim_perf','/bench','release worldsim_perf required')
+        require(bool(product.input_files) and len(dict(product.input_files))==len(product.input_files)
+                and inventory(product.root,[*INPUT_DIRS,*INPUT_FILES])==dict(product.input_files),'/bench','complete effective inputs differ')
+    name='tools/v8/bench_script.json'
+    require(bound.script==bound.candidate.root/name and bound.script==bound.script.resolve(strict=True),'/bench','original candidate script required')
+    require(bound.script_sha256=='cb655db4a4207c9c8fa07a3303d0db5b309e90a80221bf5aa2eb0972bd8aaa31'
+            and file_hash(bound.script)==bound.script_sha256
+            and all(dict(product.input_files).get(name)==bound.script_sha256 for product in (bound.base,bound.candidate)),
+            '/bench','original paired script binding differs')
+    rows=[document(row) for row in context.components.registry.backlog if document(row).field('id').text()=='bench.timed_rss']
+    require(len(rows)==1,'/bench','missing/duplicate registry obligation')
+    rows[0].field('consumers').equals([25])
+    rows[0].field('scripted_suffix').equals(['--commands','{inputs}/tools/v8/bench_script.json'])
+    return bound
+
+
+def bench_dependencies(bound: BenchContext) -> dict[str,Json]:
+    return {'purpose':bound.purpose,'script':str(bound.script),'script_sha256':bound.script_sha256,
+        'justifications':[dict(row) for row in bound.justifications],
+        'build_authority':'CALLER_OWNED_NOT_CERTIFIED_HERE',
+        'products':{arm:{'root':str(product.root),'source_sha':product.source_sha,'binary':str(product.binary),
+            'binary_sha256':product.binary_sha256,'build_receipt':str(product.build_receipt),
+            'build_receipt_sha256':product.build_receipt_sha256,'inputs':dict(product.input_files)}
+            for arm,product in (('base',bound.base),('candidate',bound.candidate))}}
+
+
+def bench_outcome(bound: BenchContext, output: Path, *, failed: bool) -> Outcome:
+    """Only entered after source-owned settlement; retained auth never settles children."""
+    error='source-owned settled benchmark failure' if failed else ''
+    receipt: Path | None=None;digest: str | None=None;reported: str | None=None
+    try:
+        terminal=output/'result.json' if (output/'result.json').exists() else output/'failure.json'
+        digest=file_hash(terminal) if terminal.exists() else None
+        result=bench.authenticate_result(bound.base,bound.candidate,bound.purpose,bound.script,
+            bound.script_sha256,output,receipt_sha256=digest,justifications=bound.justifications)
+        receipt=result.receipt;digest=result.sha256;reported=result.status
+        require(receipt is None or receipt in (output/'result.json',output/'failure.json'),'/bench','foreign terminal')
+        require(receipt is None or file_hash(receipt)==digest,'/bench','terminal changed')
+        if result.errors:error+='; '+ '; '.join(result.errors)
+    except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as caught:
+        error+='; '+str(caught)
+    files: tuple[tuple[str,str],...]=();snapshot_error=''
+    if output.exists():
+        try:
+            names=[p.name for p in output.iterdir()]
+            files=tuple(inventory(output,names).items()) if names else ()
+        except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as caught:snapshot_error=str(caught)
+    return Outcome('bench','FAIL' if error or snapshot_error else reported or 'FAIL',receipt,digest,error,
+                   files,output,None,reported,snapshot_error)
+
+
+def invoke_bench(call: OrderedCall, context: OwnedOrderedInputs, output: Path) -> Outcome:
+    require(call==OrderedCall(25,'bench',('25:bench',)),'/bench','unknown obligation')
+    owner=_BenchOwner(context.control_fd,output)
+    entered=False;settled=False
+    try:
+        bound=bench_bindings(context)
+        entered=True
+        try:
+            _=bench.run_bench_owned(bound.base,bound.candidate,bound.purpose,bound.script,
+                bound.script_sha256,output,bound.justifications)
+        except bench.BenchSettledFailure:
+            settled=True
+            return bench_outcome(bound,output,failed=True)
+        settled=True
+        return bench_outcome(bound,output,failed=False)
+    except BaseException as error:
+        if entered and not settled:owner.hold(error)
+        raise
+    finally:
+        if not entered or settled:os.close(owner.descriptor)
+
+
 def invoke_strict(call: OrderedCall, context: OwnedOrderedInputs, output: Path) -> Outcome:
     owner=_StrictOwner(context.control_fd,output)
     entered=False;settled=False
@@ -458,12 +558,12 @@ def invoke_strict(call: OrderedCall, context: OwnedOrderedInputs, output: Path) 
         if not entered or settled:os.close(owner.descriptor)
 
 
-def run_ordered_owned(context: OrderedInputs, strict: StrictContext, output: Path, control_fd: int) -> Path:
+def run_ordered_owned(context: OrderedInputs, strict: StrictContext, output: Path, control_fd: int, *, bench: BenchContext | None = None) -> Path:
     require(type(control_fd) is int and control_fd>2 and stat.S_ISFIFO(os.fstat(control_fd).st_mode),
             '/control','dedicated persistent controller pipe required')
     owned=OwnedOrderedInputs(context.components,context.static_product,context.environment,
         context.discovery_product,context.discovery_environment,context.diagnosis_product,
-        context.diagnosis_environment,context.save_roundtrip,context.perf,strict,control_fd)
+        context.diagnosis_environment,context.save_roundtrip,context.perf,strict,control_fd,bench)
     return _run_ordered(owned,output)
 
 
@@ -619,11 +719,14 @@ def ordered_calls() -> tuple[OrderedCall, ...]:
     return tuple(result)
 
 
-def ordered_owned_calls() -> tuple[OrderedCall,...]:
+def ordered_owned_calls(*, bench_enabled: bool = False) -> tuple[OrderedCall,...]:
     result=list(ordered_calls())
     for step,identity in ((8,'8:gdscript_strict'),(46,'46:gdscript.four_files')):
         insertion=next((index for index,call in enumerate(result) if ORDER.index(call.step)>=ORDER.index(step)),len(result))
         result.insert(insertion,OrderedCall(step,'static',(identity,)))
+    if bench_enabled:
+        insertion=next(index for index,call in enumerate(result) if ORDER.index(call.step)>ORDER.index(25))
+        result.insert(insertion,OrderedCall(25,'bench',('25:bench',)))
     return tuple(result)
 
 
@@ -792,7 +895,9 @@ def ordered_action(call: OrderedCall, context: OrderedInputs) -> Action:
 
 
 def ordered_bindings(context: OrderedInputs) -> None:
-    if isinstance(context,OwnedOrderedInputs):strict_bindings(context)
+    if isinstance(context,OwnedOrderedInputs):
+        strict_bindings(context)
+        if context.bench is not None:_=bench_bindings(context)
     save_roundtrip_bindings(context)
     perf_bindings(context)
     inputs=context.components
@@ -869,12 +974,15 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
     require(output.is_absolute() and output==output.resolve() and not output.exists(),'/output','fresh canonical output required')
     for product in (inputs.probes.base,inputs.probes.candidate,inputs.godot.base,inputs.godot.candidate):
         require(not output.is_relative_to(product.input_root) and not product.input_root.is_relative_to(output),'/output','product overlap')
-    calls=ordered_owned_calls() if isinstance(context,OwnedOrderedInputs) else ordered_calls();rows: dict[str,Outcome]={};errors: list[str]=[];sequence: list[str]=[]
+    calls=ordered_owned_calls(bench_enabled=context.bench is not None) if isinstance(context,OwnedOrderedInputs) else ordered_calls();rows: dict[str,Outcome]={};errors: list[str]=[];sequence: list[str]=[]
+    tail_stop: str | None=None;bench_inputs: dict[str,Json] | None=None
     plan_hash: str | None=None;blocked: dict[int,str]={};events: list[Json]=[];perf_inputs: dict[str,Json] | None=None
     try:
         output.mkdir(parents=True)
         _=direct.partition(inputs.registry)
         perf_bindings(context);perf_inputs=perf_dependencies(context.perf)
+        if isinstance(context,OwnedOrderedInputs) and context.bench is not None:
+            bench_inputs=bench_dependencies(bench_bindings(context))
         for product in (context.perf.base,context.perf.candidate):
             require(not output.is_relative_to(product.root) and not product.root.is_relative_to(output),'/output','perf product overlap')
         require(inputs.declarations.base==inputs.probes.base.source_sha and inputs.declarations.candidate==inputs.probes.candidate.source_sha,
@@ -884,7 +992,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
         refs: dict[int,dict[str,list[Json]]]={step:references(inputs,output/f'step-{step:02d}',validate=True) for step in direct.DIRECT_STEP_FIXTURES}
         atomic_json(output/'plan.json',{'schema_version':3,'original_step_order':list(ORDER),
             'original_order_executed':False,'publication_authorized':False,
-            'supported_call_sequence':[call.identity for call in calls],'perf_dependencies':perf_inputs,
+            'supported_call_sequence':[call.identity for call in calls],'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,
             'strict_owned_entrypoint':isinstance(context,OwnedOrderedInputs),
             'obligations':[{'identity':row.identity,'step':row.step,'fixture':row.fixture,
                 'invocation_references':refs.get(row.step,{}).get(row.fixture or '',[])} for row in obligations()]})
@@ -892,29 +1000,37 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
         ordered_bindings(context)
         _ = with_static_priors(context,())
         for call in calls:
+            if tail_stop is not None:
+                rows[call.identity]=Outcome(call.component,'NOT_RUN',None,None,'blocked by '+tail_stop);continue
             if call.step in blocked:
                 rows[call.identity]=Outcome(call.component,'NOT_RUN',None,None,'blocked by '+blocked[call.step]);continue
             for row in rows.values():recheck(row)
             ordered_bindings(context)
+            if isinstance(context,OwnedOrderedInputs) and context.bench is not None:
+                require(bench_dependencies(context.bench)==bench_inputs,'/bench','context binding changed')
             require(file_hash(output/'plan.json')==plan_hash,'/plan','scope changed')
             parent=output/f'step-{call.step:02d}';parent.mkdir(exist_ok=True)
             destination=parent/call.component
             try:
-                with nullcontext() if call.component in {'static','save_roundtrip','perf','nav'} else lane():
+                with nullcontext() if call.component in {'static','save_roundtrip','perf','nav','bench'} else lane():
                     selected = with_static_priors(context,tuple(rows.values())) if call.component == 'static' else context
-                    action=ordered_action(call,selected)
+                    action=ordered_action(call,selected) if call.component!='bench' else None
                     static_product, static_environment = static_context(selected,call.step) if call.component == 'static' else (None,None)
                     sequence.append(call.identity);events.append({'call':call.identity,'event':'start','at':timestamp()})
                     try:
-                        if call.step in (8,46) and call.component=='static' and isinstance(selected,OwnedOrderedInputs):
+                        if call.component=='bench' and isinstance(selected,OwnedOrderedInputs):
+                            rows[call.identity]=invoke_bench(call,selected,destination)
+                        elif call.step in (8,46) and call.component=='static' and isinstance(selected,OwnedOrderedInputs):
                             rows[call.identity]=invoke_strict(call,selected,destination)
                         else:
+                            assert action is not None
                             rows[call.identity]=invoke(call.component,action,destination,inputs,
                                                        step=call.step,static_product=static_product,static_environment=static_environment,
                                                        save_products=selected.save_roundtrip,perf_context=selected.perf)
                     finally:events.append({'call':call.identity,'event':'end','at':timestamp()})
             except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
                 rows[call.identity]=replace(rows[call.identity],status='FAIL',error=rows[call.identity].error+'; lane: '+str(error)) if call.identity in rows else Outcome(call.component,'FAIL',None,None,str(error))
+            if call.component=='bench' and rows[call.identity].status!='COMPONENT_PASS':tail_stop=call.identity
             if rows[call.identity].status=='FAIL' and call.step in (34,46):blocked[call.step]=call.identity
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     for row in rows.values():
@@ -922,13 +1038,15 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
         except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     try:
         ordered_bindings(context)
+        if isinstance(context,OwnedOrderedInputs) and context.bench is not None:
+            require(bench_dependencies(context.bench)==bench_inputs,'/bench','context binding changed')
         require(plan_hash is not None and file_hash(output/'plan.json')==plan_hash,'/plan','scope changed or plan failed')
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     by_obligation={identity:call.identity for call in calls for identity in call.identities}
     output.mkdir(parents=True,exist_ok=True);terminal=output/'ordered-dispatch.json'
     atomic_json(terminal,{'schema_version':3,'status':'FAIL' if errors or any(row.status=='FAIL' for row in rows.values()) else 'INCOMPLETE',
         'publication_authorized':False,'full_gate_claim':False,'original_order_executed':False,
-        'original_step_order':list(ORDER),'perf_dependencies':perf_inputs,'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
+        'original_step_order':list(ORDER),'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
         'components':[{'identity':call.identity,'step':call.step,'component':call.component,
             'status':rows[call.identity].status if call.identity in rows else 'NOT_RUN',
             'receipt':str(rows[call.identity].receipt) if call.identity in rows and rows[call.identity].receipt else None,
@@ -939,7 +1057,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             'reported_status':rows[call.identity].reported_status if call.identity in rows else None,
             'snapshot_error':rows[call.identity].snapshot_error if call.identity in rows else ''} for call in calls],
         'obligations':[{'identity':row.identity,'step':row.step,'fixture':row.fixture,
-            'status':'COMPONENT_ONLY' if row.identity in by_obligation else 'NOT_IMPLEMENTED',
+            'status':'NOT_RUN' if tail_stop is not None and ORDER.index(row.step)>ORDER.index(25) else 'COMPONENT_ONLY' if row.identity in by_obligation else 'NOT_IMPLEMENTED',
+            'blocked_by':tail_stop if tail_stop is not None and ORDER.index(row.step)>ORDER.index(25) else None,
             'call':by_obligation.get(row.identity),
             'component_status':rows[by_obligation[row.identity]].status if row.identity in by_obligation and by_obligation[row.identity] in rows else None}
             for row in obligations()]})

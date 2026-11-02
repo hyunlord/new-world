@@ -16,6 +16,7 @@ from tempfile import TemporaryDirectory
 from typing import Literal
 from unittest.mock import patch
 
+import generic_bench_run as bench
 import generic_direct_run as direct
 import generic_full_gate as gate
 import generic_perf_run as perf
@@ -1419,3 +1420,181 @@ class StrictHistoricalChainTests(unittest.TestCase):
             node['artifacts']={};node['process_status']='NOT_RUN'
             result.receipt.unlink();atomic_json(result.receipt,node)
             self.assertEqual(gate.authenticate_static(result.receipt,46,context.strict.product,context.strict.environment),'FAIL')
+
+
+class BenchOwnedRoutingTests(unittest.TestCase):
+    def test_optional_bench_adds_only_exact25(self) -> None:
+        original=gate.ordered_owned_calls()
+        selected=gate.ordered_owned_calls(bench_enabled=True)
+        self.assertEqual(tuple(c for c in selected if c not in original),(gate.OrderedCall(25,'bench',('25:bench',)),))
+        self.assertEqual(tuple(c for c in selected if c in original),original)
+        self.assertNotIn(25,[c.step for c in gate.ordered_calls()])
+
+
+def bench_owned_inputs(root: Path, control: int) -> gate.OwnedOrderedInputs:
+    context=owned_inputs(root,control)
+    products: list[Product]=[]
+    for probe in (context.components.probes.base,context.components.probes.candidate):
+        for name in INPUT_DIRS:(probe.input_root/name).mkdir(parents=True,exist_ok=True)
+        for name in INPUT_FILES:
+            path=probe.input_root/name;path.parent.mkdir(parents=True,exist_ok=True)
+            if not path.exists():_=path.write_text('input')
+        script=probe.input_root/'tools/v8/bench_script.json';script.parent.mkdir(parents=True,exist_ok=True)
+        import generic_fixture_registry as registry_module
+        _=script.write_bytes(Path(registry_module.__file__).with_name('bench_script.json').read_bytes())
+        binary=probe.input_root/'worldsim_perf';_=binary.write_text('synthetic executable');binary.chmod(0o755)
+        products.append(Product(probe.input_root,binary,probe.source_sha,file_hash(binary),root/'not-certified-build','b'*64,
+                                tuple(inventory(probe.input_root,[*INPUT_DIRS,*INPUT_FILES]).items())))
+    script=products[1].root/'tools/v8/bench_script.json'
+    return replace(context,bench=gate.BenchContext(products[0],products[1],'self_proof',script,file_hash(script)))
+
+
+class BenchBindingsTests(unittest.TestCase):
+    def test_exact_source_script_and_registry_join(self) -> None:
+        with TemporaryDirectory() as temp:
+            context=bench_owned_inputs(Path(temp).resolve(),-1)
+            self.assertIsNotNone(context.bench)
+            assert context.bench is not None
+            with patch.object(gate,'validate_products'):
+                self.assertEqual(gate.bench_bindings(context),context.bench)
+                for bad in (replace(context.bench,script=context.bench.candidate.root/'tools/v8/u_script.json'),
+                            replace(context.bench,script_sha256='a'*64),
+                            replace(context.bench,candidate=replace(context.bench.candidate,source_sha='f'*40)),
+                            replace(context.bench,candidate=replace(context.bench.candidate,input_files=()))):
+                    with self.assertRaises(ValueError):_=gate.bench_bindings(replace(context,bench=bad))
+                changed=tuple(row.replace('bench_script.json','u_script.json') for row in context.components.registry.backlog)
+                wrong=replace(context,components=replace(context.components,registry=replace(context.components.registry,backlog=changed)))
+                with self.assertRaises(ValueError):_=gate.bench_bindings(wrong)
+
+
+class BenchCoordinatorLifecycleTests(unittest.TestCase):
+    def test_settled_success_failure_and_pending_release_one_lane(self) -> None:
+        for state in ('COMPONENT_PASS','FAIL','PENDING'):
+            with self.subTest(state=state),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();read,write=os.pipe()
+                try:
+                    context=bench_owned_inputs(root,read);out=root/'out';lock=root/'lane'
+                    def producer(_base: Product,_candidate: Product,_purpose: str,_script: Path,_digest: str,output: Path,
+                                 _quotes: tuple[dict[str,str],...],state: str=state,lock: Path=lock) -> dict[str,Json]:
+                        self.assertNotEqual(lock_contender(lock),0)
+                        output.mkdir()
+                        if state=='FAIL':raise bench.BenchSettledFailure(ValueError('raw failure'),None,None)
+                        if state!='PENDING':_= (output/'result.json').write_text('{}')
+                        return {}
+                    def auth(_base: Product,_candidate: Product,_purpose: str,_script: Path,_digest: str,output: Path,
+                             *,receipt_sha256: str | None,justifications: tuple[dict[str,str],...],state: str=state,lock: Path=lock) -> bench.BenchResult:
+                        self.assertNotEqual(lock_contender(lock),0)
+                        del justifications
+                        return bench.BenchResult(output/'result.json' if state=='COMPONENT_PASS' else None,
+                            receipt_sha256,state if state in ('COMPONENT_PASS','FAIL','PENDING') else 'FAIL')
+                    with patch.object(gate,'LOCK',lock),patch.object(gate,'validate_products'),patch.object(bench,'run_bench_owned',side_effect=producer),patch.object(bench,'authenticate_result',side_effect=auth):
+                        row=gate.invoke_bench(gate.OrderedCall(25,'bench',('25:bench',)),context,out)
+                    self.assertEqual(row.status,state)
+                    self.assertEqual(lock_contender(lock),0)
+                    if state=='FAIL':self.assertIn('settled benchmark failure',row.error)
+                finally:os.close(read);os.close(write)
+
+    def test_preflight_rejection_releases_without_producer(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();read,write=os.pipe()
+            try:
+                context=bench_owned_inputs(root,read)
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(gate,'bench_bindings',side_effect=ValueError('preflight')),patch.object(bench,'run_bench_owned') as producer,self.assertRaises(ValueError):
+                    _=gate.invoke_bench(gate.OrderedCall(25,'bench',('25:bench',)),context,root/'out')
+                producer.assert_not_called();self.assertEqual(lock_contender(root/'lane'),0)
+            finally:os.close(read);os.close(write)
+
+    def test_any_nonpass_bench_blocks_every_later_call(self) -> None:
+        for state in ('FAIL','PENDING'):
+            with self.subTest(state=state),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();read,write=os.pipe()
+                try:
+                    context=bench_owned_inputs(root,read)
+                    calls=tuple(c for c in gate.ordered_owned_calls(bench_enabled=True) if gate.ORDER.index(c.step)>=gate.ORDER.index(25))
+                    with patch.object(gate,'ordered_owned_calls',return_value=calls),patch.object(gate,'ordered_bindings'),patch.object(gate,'perf_bindings'),patch.object(gate,'bench_bindings',return_value=context.bench),patch.object(gate,'invoke_bench',return_value=gate.Outcome('bench',state,None,None,'')) as invoke_bench,patch.object(gate,'ordered_action',side_effect=AssertionError('downstream attempted')),patch.object(gate,'lane',side_effect=AssertionError('nested lane')):
+                        path=gate.run_ordered_owned(context,context.strict,root/'out',read,bench=context.bench)
+                    invoke_bench.assert_called_once()
+                    result=document(path.read_text());result.field('actual_component_sequence').equals(['25:bench'])
+                    for node in result.field('components').array()[1:]:
+                        node.field('status').equals('NOT_RUN');node.field('error').equals('blocked by 25:bench')
+                    self.assertFalse((root/'out/step-26').exists())
+                    for node in result.field('obligations').array():
+                        if gate.ORDER.index(integer(node.field('step')))>gate.ORDER.index(25):
+                            node.field('status').equals('NOT_RUN');node.field('blocked_by').equals('25:bench')
+                    self.assertNotEqual(result.field('status').text(),'PASS')
+                finally:os.close(read);os.close(write)
+
+    def test_unknown_keeps_live_lock_through_controller_eof_and_faults(self) -> None:
+        for fault in ('unknown','type','interrupt','evil','status'):
+            with self.subTest(fault=fault),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();read,write=os.pipe()
+                script=r"""
+import os,sys,signal
+from pathlib import Path
+from unittest.mock import patch
+sys.path[:0]=sys.argv[4:]
+import generic_full_gate as g
+import generic_bench_run as b
+from test_generic_full_gate import bench_owned_inputs
+root=Path(sys.argv[1]);control=int(sys.argv[2]);fault=sys.argv[3]
+context=bench_owned_inputs(root,control)
+signal.signal(signal.SIGTERM,lambda _a,_b:os._exit(0))
+class Evil(Exception):
+ def __str__(self):raise AssertionError('never render unknown')
+def child(*_args):
+ (root/'entered').write_text('attempted')
+ if fault=='type':raise TypeError('after execute entered')
+ if fault=='interrupt':raise KeyboardInterrupt()
+ if fault=='evil':raise Evil()
+ raise b.BenchOwnershipUnknown(ValueError('unknown aggregate'),None,None)
+def bad_status(self):raise Evil()
+if fault=='status':g._BenchOwner.status=bad_status
+calls=(g.OrderedCall(25,'bench',('25:bench',)),g.OrderedCall(26,'direct',('26:economy.soak_no_beasts',)))
+with patch.object(g,'LOCK',root/'lane'),patch.object(g,'ordered_owned_calls',return_value=calls),patch.object(g,'ordered_bindings'),patch.object(g,'perf_bindings'),patch.object(g,'bench_bindings',return_value=context.bench),patch.object(b,'run_bench_owned',side_effect=child),patch.object(g,'bench_outcome',side_effect=AssertionError('unexpected snapshot')),patch.object(g,'ordered_action',side_effect=AssertionError('downstream')):
+ g.run_ordered_owned(context,context.strict,root/'out',control,bench=context.bench)
+raise AssertionError('unknown unwound')
+"""
+                command=[sys.executable,'-B','-c',script,str(root),str(read),fault,str(Path(__file__).resolve().parent),str(Path(gate.__file__).resolve().parent),str(Path(bench.__file__).resolve().parent),str(Path(static.__file__).resolve().parent)]
+                with subprocess.Popen(command,pass_fds=(read,),env={k:v for k,v in os.environ.items() if k!='PYTHONPATH'},stdout=subprocess.PIPE,stderr=subprocess.PIPE) as driver:
+                    os.close(read)
+                    try:
+                        deadline=time.monotonic()+10
+                        while not (root/'entered').exists() and driver.poll() is None and time.monotonic()<deadline:time.sleep(0.01)
+                        if not (root/'entered').exists():
+                            if driver.poll() is None:driver.terminate()
+                            stdout,stderr=driver.communicate(timeout=5)
+                            self.fail(f'startup: {stdout!r} {stderr!r}')
+                        _=os.write(write,b'inspect\n');os.close(write);write=-1;time.sleep(0.1)
+                        self.assertIsNone(driver.poll())
+                        self.assertNotEqual(lock_contender(root/'lane'),0)
+                        self.assertFalse((root/'out/ordered-dispatch.json').exists())
+                        self.assertFalse((root/'out/step-26').exists())
+                        self.assertFalse((root/'out/step-25/bench/result.json').exists())
+                    finally:
+                        if write>=0:os.close(write)
+                        if driver.poll() is None:driver.terminate()
+                        _=driver.wait(timeout=5)
+                self.assertEqual(lock_contender(root/'lane'),0)
+
+    def test_success_continues_at26_without_second_bench_lease(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();read,write=os.pipe()
+            try:
+                context=bench_owned_inputs(root,read)
+                calls=(gate.OrderedCall(25,'bench',('25:bench',)),gate.OrderedCall(26,'direct',('26:economy.soak_no_beasts',)))
+                with patch.object(gate,'ordered_owned_calls',return_value=calls),patch.object(gate,'ordered_bindings'),patch.object(gate,'perf_bindings'),patch.object(gate,'bench_bindings',return_value=context.bench),patch.object(gate,'invoke_bench',return_value=gate.Outcome('bench','COMPONENT_PASS',None,None,'')) as first,patch.object(gate,'invoke',return_value=gate.Outcome('direct','PASS',None,None,'')) as second,patch.object(gate,'lane',return_value=nullcontext()) as lease:
+                    path=gate.run_ordered_owned(context,context.strict,root/'out',read,bench=context.bench)
+                first.assert_called_once();second.assert_called_once();lease.assert_called_once()
+                result=document(path.read_text());result.field('actual_component_sequence').equals(['25:bench','26:direct'])
+                result.field('status').equals('INCOMPLETE')
+            finally:os.close(read);os.close(write)
+
+    def test_raw_pass_dictionary_cannot_admit_bench_result(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=bench_owned_inputs(root,-1)
+            assert context.bench is not None
+            out=root/'out';out.mkdir();_=(out/'result.json').write_text('{"status":"PASS"}')
+            row=gate.bench_outcome(context.bench,out,failed=False)
+            self.assertEqual(row.status,'FAIL')
+            self.assertEqual(row.receipt,out/'result.json')
+            self.assertTrue(row.error)
