@@ -315,6 +315,8 @@ workspace 기록 대조기는 기존 schema1 일반 자식 경로를 유지하�
 
 perf/nav 실행기의 보존 결과를 검증하는 source-owned 함수를 추가했다. 실제 계획된 세계·프로세스·sidecar·부하 승인 기록·원래 요약기와 안전성 결과를 다시 연결하며 실행 순서·명령·잠금·시간 기준은 바꾸지 않는다. 독립 검토에서 완료된 자식 산출물을 목록에서 누락해도 PENDING으로 인정하던 결함을 재현하고, 보존 산출물과 완료 prefix를 대조하도록 고쳤다. 최종 루트 합성19개가1.928초에 통과했고 엄격 타입·Ruff 및 독립 v2 검토도 통과했다. 실제 성능 측정·관찰자 비용·원래 빌드 순서·전체 조정기12/27 연결은 아직 미완료이며, COMPONENT_PASS/FAIL/PENDING 원시 상태를 바꾸지 않는다(`stage0/ordered-dispatch/PERF_AUTH_INDEPENDENT_REVIEW_V2.md`).
 
+원래 단계12·27의 perf/nav 실행을 전체 순서 조정기에 연결했다. 각 군의 별도 제품·입력·빌드 영수증과 nav 스크립트, 유한 deadline·목적을 명시적으로 대조하고 기존 실행기만 lane을 소유한다. 보존 결과를 source-owned 검증기로 재확인하며 COMPONENT_PASS/FAIL/PENDING을 그대로 유지한다. 루트 조정기65개가57.984초에 통과했고 엄격 타입·Ruff 및 독립 검토도 통과했다. 이후 strict 어댑터와의 호환65개도56.498초에 통과했다. 원래 빌드 준비 순서, 실제 측정, 관찰자 비용, 동적 companion·ledger 및 전체 gate 승인은 아직 미완료다(`stage0/ordered-dispatch/PERF_COORDINATOR_INDEPENDENT_V1_REVIEW.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

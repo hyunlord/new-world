@@ -9,10 +9,12 @@ from contextlib import nullcontext
 from dataclasses import replace
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Literal
 from unittest.mock import patch
 
 import generic_direct_run as direct
 import generic_full_gate as gate
+import generic_perf_run as perf
 import generic_renderer_run as renderer
 import generic_static_run as static
 import generic_test_run as native
@@ -255,6 +257,14 @@ def routing_native_status(path: Path, products: gate.SaveRoundtripProducts | Non
     return document(path.read_text()).field('status').text()
 
 
+def routing_perf_status(path: Path, name: str, step: int | None, context: gate.PerfContext | None) -> str:
+    assert context is not None
+    _=gate.perf_fixture(name,step)
+    return document(path.read_text()).field('status').text()
+
+
+@patch.object(gate,'perf_bindings',new=routing_native_bindings)
+@patch.object(gate,'authenticate_perf',new=routing_perf_status)
 @patch.object(gate,'save_roundtrip_bindings',new=routing_native_bindings)
 @patch.object(gate,'authenticate_save_roundtrip',new=routing_native_status)
 class DiagnosisCoordinatorTests(unittest.TestCase):
@@ -436,7 +446,8 @@ def ordered_inputs(root: Path) -> gate.OrderedInputs:
     native_product=Product(product.input_root,product.executable,product.source_sha,product.executable_sha256,root/'unused-artifact','b'*64,product.input_files)
     return gate.OrderedInputs(context,old,static.ExecutionEnvironment(values,tuple(row for row in tools if row[0] in {'python3','git','bash','grep','cargo','cargo-fmt','rustfmt'}),()),discovery,
                               static.ExecutionEnvironment(discovery_values,tools,()),diagnosis,
-                              static.ExecutionEnvironment(diagnosis_values,tools,()),gate.SaveRoundtripProducts(native_product,native_product))
+                              static.ExecutionEnvironment(diagnosis_values,tools,()),gate.SaveRoundtripProducts(native_product,native_product),
+                              gate.PerfContext(native_product,native_product,123456.0,'defect_proof'))
 
 
 def ordered_endpoint(call: gate.OrderedCall, out: Path, context: gate.OrderedInputs, status: str='PASS') -> ComponentResult:
@@ -449,6 +460,9 @@ def ordered_endpoint(call: gate.OrderedCall, out: Path, context: gate.OrderedInp
             'source_invocation':list(static.COMMANDS[call.step][1]),'started_at':'synthetic','status':status,
             'process_status':status,'artifacts':{},'tool_dependency_closure':'caller_supplied_not_independently_complete',
             'errors':[],'finished_at':'synthetic'}
+    elif call.component in {'perf','nav'}:
+        out.mkdir();path=out/'result.json';data={'status':'COMPONENT_PASS' if status=='PASS' else status}
+        status=str(data['status'])
     elif call.component=='save_roundtrip':
         out.mkdir();path=out/'result.json';data={'status':status}
     elif call.component=='smoke':
@@ -499,6 +513,8 @@ def discovery_process(out: Path, data: dict[str,Json], context: gate.OrderedInpu
     if step==16:data['unittest']=static.unittest_terminal((process/'stderr.log').read_text())
 
 
+@patch.object(gate,'perf_bindings',new=routing_native_bindings)
+@patch.object(gate,'authenticate_perf',new=routing_perf_status)
 @patch.object(gate,'save_roundtrip_bindings',new=routing_native_bindings)
 @patch.object(gate,'authenticate_save_roundtrip',new=routing_native_status)
 class OrderedExecutionTests(unittest.TestCase):
@@ -515,7 +531,7 @@ class OrderedExecutionTests(unittest.TestCase):
                 terminal=gate.run_ordered(context,root/'out')
             node=document(terminal.read_text());plan=document((terminal.parent/'plan.json').read_text())
             self.assertEqual(trace,[call.identity for call in gate.ordered_calls()])
-            self.assertEqual(lock.call_count,len(trace)-11)
+            self.assertEqual(lock.call_count,len(trace)-13)
             self.assertEqual(node.field('status').value,'INCOMPLETE')
             self.assertFalse(node.field('full_gate_claim').value)
             missing={row.field('identity').text() for row in node.field('obligations').array() if row.field('status').value=='NOT_IMPLEMENTED'}
@@ -584,7 +600,7 @@ class OrderedExecutionTests(unittest.TestCase):
                 node=document(gate.run_ordered(context,root/'out').read_text())
             self.assertEqual(node.field('status').value,'FAIL')
             self.assertEqual([row.text() for row in node.field('actual_component_sequence').array()],
-                             [call.identity for call in gate.ordered_calls() if call.component in {'static','save_roundtrip'}])
+                             [call.identity for call in gate.ordered_calls() if call.component in {'static','save_roundtrip','perf','nav'}])
 
     def test_invalid_global_registry_fails_before_any_call(self) -> None:
         with TemporaryDirectory() as temp:
@@ -624,17 +640,18 @@ class OrderedExecutionTests(unittest.TestCase):
                 try:yield
                 finally:held=False
             calls={call.identity:call for call in gate.ordered_calls()}
-            def child(*args: Path | str | int | Registry | Products | Declarations | static.StaticProduct | static.ExecutionEnvironment | renderer.RendererProducts | gate.SaveRoundtripProducts) -> ComponentResult:
+            def child(*args: Path | str | int | Registry | Products | Declarations | static.StaticProduct | static.ExecutionEnvironment | renderer.RendererProducts | gate.SaveRoundtripProducts | gate.PerfContext) -> ComponentResult:
                 out=next(arg for arg in reversed(args) if isinstance(arg,Path))
                 identity=str(int(out.parent.name.removeprefix('step-')))+':'+out.name
                 call=calls[identity];trace.append(identity)
-                self.assertEqual(held,call.component not in {'static','save_roundtrip'})
+                self.assertEqual(held,call.component not in {'static','save_roundtrip','perf','nav'})
                 if call.component=='direct':self.assertEqual(args[3],call.step)
                 if call.component=='static':self.assertEqual(args[1],call.step)
                 return ordered_endpoint(call,out,context)
             with ExitStack() as stack:
                 _=stack.enter_context(patch.object(gate,'lane',side_effect=lock))
                 _=stack.enter_context(patch.object(gate,'run_save_roundtrip',side_effect=child))
+                _=stack.enter_context(patch.object(gate,'run_perf',side_effect=child))
                 _=stack.enter_context(patch.object(direct,'run_all',side_effect=AssertionError('no aggregate')))
                 for module,name in ((direct,'run_step'),(static,'run_step'),(smoke,'run_pair'),
                                     (renderer,'run_pair'),(fixed,'run_pair'),(pack,'run_pair'),(visibility,'run_pair'),(why,'run_pair')):
@@ -679,6 +696,8 @@ class OrderedExecutionTests(unittest.TestCase):
                 _=gate.authenticate('direct',document(result.receipt.read_text()),context.components,step=48)
 
 
+@patch.object(gate,'perf_bindings',new=routing_native_bindings)
+@patch.object(gate,'authenticate_perf',new=routing_perf_status)
 @patch.object(gate,'save_roundtrip_bindings',new=routing_native_bindings)
 @patch.object(gate,'authenticate_save_roundtrip',new=routing_native_status)
 class DiscoveryCoordinatorTests(unittest.TestCase):
@@ -1044,7 +1063,8 @@ class SaveRoundtripAuthenticationTests(unittest.TestCase):
                 self.assertIsNotNone(products)
                 return document(path.read_text()).field('status').text()
             with patch.object(gate,'ordered_action',side_effect=action),patch.object(gate,'lane',return_value=nullcontext()), \
-                 patch.object(gate,'save_roundtrip_bindings'),patch.object(gate,'authenticate_save_roundtrip',side_effect=status):
+                 patch.object(gate,'save_roundtrip_bindings'),patch.object(gate,'authenticate_save_roundtrip',side_effect=status), \
+                 patch.object(gate,'perf_bindings'),patch.object(gate,'authenticate_perf',new=routing_perf_status):
                 result=document(gate.run_ordered(context,root/'out').read_text())
             self.assertEqual(result.field('status').value,'FAIL')
             self.assertTrue(any('changed' in row.text() for row in result.field('errors').array()))
@@ -1059,3 +1079,90 @@ class SaveRoundtripAuthenticationTests(unittest.TestCase):
             gate.separate_save_invocations(left,right)
             with self.assertRaisesRegex(GateContractError,'reused authenticated invocation'):
                 gate.separate_save_invocations(left,replace(left,pid=456))
+
+
+class PerfCoordinatorShapeTests(unittest.TestCase):
+    def test_original_perf_nav_positions_and_unordered_exclusion(self) -> None:
+        selected=[call for call in gate.ordered_calls() if call.step in (12,27)]
+        self.assertEqual(selected,[gate.OrderedCall(12,'perf',('12:perf',)),gate.OrderedCall(27,'nav',('27:nav_bench',))])
+        self.assertNotIn('perf',gate.COMPONENTS);self.assertNotIn('nav',gate.COMPONENTS)
+        self.assertEqual(gate.endpoint('perf'),'result.json');self.assertEqual(gate.endpoint('nav'),'result.json')
+
+
+class PerfCoordinatorTests(unittest.TestCase):
+    def test_source_owned_authentication_and_raw_statuses(self) -> None:
+        statuses: tuple[Literal['COMPONENT_PASS','FAIL','PENDING'], ...]=('COMPONENT_PASS','FAIL','PENDING')
+        for status in statuses:
+            with self.subTest(status=status), TemporaryDirectory() as temp:
+                root=Path(temp).resolve();context=ordered_inputs(root);out=root/'perf';out.mkdir()
+                path=out/'result.json';atomic_json(path,{'status':status})
+                result=perf.PerfResult(path,file_hash(path),status)
+                with patch.object(perf,'run_pair',return_value=path) as run, \
+                     patch.object(perf,'authenticate_result',return_value=result) as authenticate:
+                    self.assertEqual(gate.run_perf(context.perf,'perf.natural_quick',out),result)
+                    self.assertEqual(gate.authenticate_perf(path,'perf',12,context.perf),status)
+                run.assert_called_once_with('perf.natural_quick',context.perf.base,context.perf.candidate,out,
+                    deadline=context.perf.deadline,purpose=context.perf.purpose)
+                self.assertEqual(authenticate.call_count,2)
+                authenticate.assert_called_with('perf.natural_quick',context.perf.base,context.perf.candidate,out,
+                    receipt_sha256=file_hash(path),deadline=context.perf.deadline,purpose=context.perf.purpose)
+
+    def test_foreign_endpoint_and_wrong_step_never_authenticate(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root);foreign=root/'foreign';_=foreign.write_text('{}')
+            with patch.object(perf,'run_pair',return_value=foreign), \
+                 patch.object(perf,'authenticate_result') as authenticate, self.assertRaises(ValueError):
+                _=gate.run_perf(context.perf,'nav.soak',root/'out')
+            authenticate.assert_not_called()
+            with self.assertRaises(ValueError):_=gate.perf_fixture('nav',12)
+            with patch.object(gate,'run_perf') as child,self.assertRaises(ValueError):
+                _=gate.invoke('nav',lambda out:gate.run_perf(context.perf,'nav.soak',out),root/'wrong',
+                    context.components,step=12,perf_context=context.perf)
+            child.assert_not_called()
+
+    def test_invocation_retains_failed_partial_and_pending_receipts(self) -> None:
+        statuses: tuple[Literal['COMPONENT_PASS','FAIL','PENDING'], ...]=('FAIL','PENDING','COMPONENT_PASS')
+        for status in statuses:
+            with self.subTest(status=status),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();context=ordered_inputs(root);out=root/'out'
+                def action(destination: Path, raw: Literal['COMPONENT_PASS','FAIL','PENDING']=status) -> perf.PerfResult:
+                    destination.mkdir();_= (destination/'raw.log').write_text('partial evidence')
+                    path=destination/'result.json';atomic_json(path,{'status':raw})
+                    return perf.PerfResult(path,file_hash(path),raw)
+                with patch.object(gate,'authenticate_perf',new=routing_perf_status):
+                    row=gate.invoke('perf',action,out,context.components,step=12,perf_context=context.perf)
+                self.assertEqual((row.status,row.returned_status,row.reported_status),(status,status,status))
+                self.assertIn('raw.log',dict(row.files))
+                _=(out/'raw.log').write_text('later component changed raw bytes')
+                with self.assertRaisesRegex(ValueError,'changed'):gate.recheck(row)
+
+    def test_bindings_reject_wrong_deadline_purpose_source_binary_and_inputs(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            products: list[Product]=[]
+            for arm in ('base','candidate'):
+                product_root=root/arm;product_root.mkdir()
+                for name in INPUT_DIRS:(product_root/name).mkdir(parents=True,exist_ok=True)
+                for name in INPUT_FILES:
+                    path=product_root/name;path.parent.mkdir(parents=True,exist_ok=True);_=path.write_text('input')
+                script=product_root/'tools/v8/soak_script.json';script.parent.mkdir(parents=True,exist_ok=True);_=script.write_text('same')
+                binary=product_root/'worldsim_perf';_=binary.write_text(arm)
+                products.append(Product(product_root,binary,'a'*40,file_hash(binary),root/'receipt','b'*64,
+                    tuple(inventory(product_root,[*INPUT_DIRS,*INPUT_FILES]).items())))
+            base,candidate=products
+            bound=gate.PerfContext(base,candidate,123.0,'self_proof');context=replace(context,perf=bound)
+            with patch.object(gate,'validate_products') as validate:
+                gate.perf_bindings(context)
+                validate.assert_called_once_with(base,candidate,'self_proof')
+                bad=(replace(bound,deadline=float('nan')),replace(bound,deadline=True),replace(bound,purpose='publication'),
+                     replace(bound,candidate=replace(candidate,source_sha='c'*40)),
+                     replace(bound,candidate=replace(candidate,binary=candidate.root/'wrong')),
+                     replace(bound,candidate=replace(candidate,input_files=())))
+                for value in bad:
+                    with self.subTest(value=value),self.assertRaises(ValueError):gate.perf_bindings(replace(context,perf=value))
+                script=candidate.root/'tools/v8/soak_script.json';_=script.write_text('different')
+                changed=replace(candidate,input_files=tuple(inventory(candidate.root,[*INPUT_DIRS,*INPUT_FILES]).items()))
+                with self.assertRaisesRegex(ValueError,'script'):gate.perf_bindings(replace(context,perf=replace(bound,candidate=changed)))
+            dependency=gate.perf_dependencies(bound)
+            self.assertEqual(dependency['embedded_preparation'],'NOT_QUALIFIED')
+            self.assertEqual(dependency['compile_root_authority'],'CALLER_OWNED_NOT_CERTIFIED_HERE')

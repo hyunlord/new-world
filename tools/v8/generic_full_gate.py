@@ -6,20 +6,22 @@
 """Closed obligation ledger and bounded adapter dispatch, never publication authority.
 
 The Python API executes existing direct/UI components. Build authentication,
-remaining native suites and performance dispatch are explicitly incomplete.
+remaining native suites and original preparation chronology are explicitly incomplete.
 """
 from __future__ import annotations
 
 import json
+import math
 import sys
 from collections.abc import Callable
 from contextlib import nullcontext
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime
 from pathlib import Path
-from typing import Final
+from typing import Final, Literal
 
 import generic_direct_run as direct
+import generic_perf_run as perf
 import generic_renderer_run as renderer
 import generic_static_run as static
 import generic_test_run as native
@@ -28,7 +30,7 @@ import generic_ui_pack_run as pack
 import generic_ui_smoke_run as smoke
 import generic_ui_visibility_run as visibility
 import generic_ui_why_run as why
-from generic_bench import AuditError, Product
+from generic_bench import AuditError, Product, validate_products
 from generic_declarations import Declarations
 from generic_fixture_registry import (
     DIRECT_IDS,
@@ -132,11 +134,11 @@ def write_plan(output: Path, inputs: Inputs | None = None) -> Path:
     return path
 
 
-Action = Callable[[Path], ComponentResult]
+Action = Callable[[Path], ComponentResult | perf.PerfResult]
 
 
 def endpoint(name: str) -> str:
-    return ('result.json' if name == 'save_roundtrip' else 'receipt.json' if name in {'direct','static'} else 'fixed-ui.json' if name in fixed.FIXTURES else
+    return ('result.json' if name in {'save_roundtrip','perf','nav'} else 'receipt.json' if name in {'direct','static'} else 'fixed-ui.json' if name in fixed.FIXTURES else
             'why.json' if name.startswith('why.') else 'pack-ui.json' if name == 'pack' else name+'.json')
 
 
@@ -199,22 +201,22 @@ def authenticate(name: str, node: Node, inputs: Inputs, *, step: int | None = No
     return state
 
 
-def invoke(name: str, action: Action, output: Path, inputs: Inputs, *, step: int | None = None, static_product: static.StaticProduct | None = None, static_environment: static.ExecutionEnvironment | None = None, save_products: SaveRoundtripProducts | None = None) -> Outcome:
-    require((name in COMPONENTS or (step is not None and name in {'smoke','static'}) or (step == 24 and name == 'save_roundtrip')) and not output.exists(), '/component', 'unknown component or stale output')
+def invoke(name: str, action: Action, output: Path, inputs: Inputs, *, step: int | None = None, static_product: static.StaticProduct | None = None, static_environment: static.ExecutionEnvironment | None = None, save_products: SaveRoundtripProducts | None = None, perf_context: PerfContext | None = None) -> Outcome:
+    require((name in COMPONENTS or (step is not None and name in {'smoke','static'}) or (step == 24 and name == 'save_roundtrip') or ((name,step) in {('perf',12),('nav',27)})) and not output.exists(), '/component', 'unknown component or stale output')
     error='';returned: str | None=None;reported: str | None=None;receipt: Path | None=None;digest: str | None=None
     expected=output/endpoint(name)
     try:
         result=action(output);returned=result.status
         require(result.receipt==expected and expected==expected.resolve(strict=True),'/receipt','foreign terminal path')
         receipt=expected;digest=file_hash(expected)
-        reported=authenticate_save_roundtrip(expected,save_products) if name == 'save_roundtrip' else authenticate_static(expected,step,static_product,static_environment) if name == 'static' else authenticate(name,document(expected.read_text()),inputs,step=step if name == 'direct' else None)
+        reported=authenticate_perf(expected,name,step,perf_context) if name in {'perf','nav'} else authenticate_save_roundtrip(expected,save_products) if name == 'save_roundtrip' else authenticate_static(expected,step,static_product,static_environment) if name == 'static' else authenticate(name,document(expected.read_text()),inputs,step=step if name == 'direct' else None)
         require(returned==reported,'/status','returned and on-disk status differ')
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as caught:
         error=str(caught)
         if expected.is_file():
             try:
                 receipt=expected;digest=file_hash(expected)
-                reported=authenticate_save_roundtrip(expected,save_products) if name == 'save_roundtrip' else authenticate_static(expected,step,static_product,static_environment) if name == 'static' else authenticate(name,document(expected.read_text()),inputs,step=step if name == 'direct' else None)
+                reported=authenticate_perf(expected,name,step,perf_context) if name in {'perf','nav'} else authenticate_save_roundtrip(expected,save_products) if name == 'save_roundtrip' else authenticate_static(expected,step,static_product,static_environment) if name == 'static' else authenticate(name,document(expected.read_text()),inputs,step=step if name == 'direct' else None)
             except (AuditError,GateContractError,OSError,ValueError) as terminal_error:
                 error+='; terminal: '+str(terminal_error)
     files: tuple[tuple[str,str],...]=();snapshot_error=''
@@ -314,6 +316,35 @@ class SaveRoundtripProducts:
 
 
 @dataclass(frozen=True, slots=True)
+class PerfContext:
+    base: Product
+    candidate: Product
+    deadline: float
+    purpose: Literal['publication','self_proof','defect_proof']
+
+
+def perf_fixture(name: str, step: int | None) -> str:
+    require((name,step) in {('perf',12),('nav',27)}, '/perf', 'unknown perf/nav step mapping')
+    return 'perf.natural_quick' if name == 'perf' else 'nav.soak'
+
+
+def run_perf(context: PerfContext, fixture: str, output: Path) -> perf.PerfResult:
+    path=perf.run_pair(fixture,context.base,context.candidate,output,deadline=context.deadline,purpose=context.purpose)
+    require(path == output/'result.json' and path == path.resolve(strict=True), '/perf', 'foreign producer endpoint')
+    return perf.authenticate_result(fixture,context.base,context.candidate,output,
+        receipt_sha256=file_hash(path),deadline=context.deadline,purpose=context.purpose)
+
+
+def authenticate_perf(path: Path, name: str, step: int | None, context: PerfContext | None) -> str:
+    require(context is not None, '/perf', 'missing explicit perf context')
+    assert context is not None
+    result=perf.authenticate_result(perf_fixture(name,step),context.base,context.candidate,path.parent,
+        receipt_sha256=file_hash(path),deadline=context.deadline,purpose=context.purpose)
+    require(result.receipt == path, '/perf', 'foreign authenticated endpoint')
+    return result.status
+
+
+@dataclass(frozen=True, slots=True)
 class OrderedInputs:
     components: Inputs
     static_product: static.StaticProduct
@@ -323,6 +354,31 @@ class OrderedInputs:
     diagnosis_product: static.StaticProduct
     diagnosis_environment: static.ExecutionEnvironment
     save_roundtrip: SaveRoundtripProducts
+    perf: PerfContext
+
+
+def perf_bindings(context: OrderedInputs) -> None:
+    bound=context.perf
+    require(type(bound.deadline) in (int,float) and math.isfinite(bound.deadline), '/perf/deadline', 'finite absolute deadline required')
+    require(bound.purpose == context.components.declarations.purpose, '/perf/purpose', 'purpose differs from declarations')
+    validate_products(bound.base,bound.candidate,bound.purpose)
+    for product, probe in ((bound.base,context.components.probes.base),(bound.candidate,context.components.probes.candidate)):
+        require(product.source_sha == probe.source_sha, '/perf/source', 'perf product differs from ordered arm')
+        require(product.binary.name == 'worldsim_perf', '/perf/binary', 'release worldsim_perf required')
+        require(bool(product.input_files) and len(dict(product.input_files)) == len(product.input_files)
+            and inventory(product.root,[*INPUT_DIRS,*INPUT_FILES]) == dict(product.input_files), '/perf/inputs', 'complete effective inputs differ')
+    script='tools/v8/soak_script.json'
+    require(script in dict(bound.base.input_files) and script in dict(bound.candidate.input_files)
+        and dict(bound.base.input_files)[script] == dict(bound.candidate.input_files)[script], '/perf/script', 'paired nav script binding differs')
+
+
+def perf_dependencies(context: PerfContext) -> dict[str,Json]:
+    return {'deadline':context.deadline,'purpose':context.purpose,'embedded_preparation':'NOT_QUALIFIED',
+        'compile_root_authority':'CALLER_OWNED_NOT_CERTIFIED_HERE',
+        'products':{arm:{'root':str(product.root),'source_sha':product.source_sha,'binary':str(product.binary),
+            'binary_sha256':product.binary_sha256,'build_receipt':str(product.build_receipt),
+            'build_receipt_sha256':product.build_receipt_sha256,'inputs':dict(product.input_files)}
+            for arm,product in (('base',context.base),('candidate',context.candidate))}}
 
 
 def save_roundtrip_bindings(context: OrderedInputs) -> None:
@@ -436,6 +492,8 @@ def ordered_calls() -> tuple[OrderedCall, ...]:
         rows = tuple(row for row in obligations() if row.step == step)
         if step in (1,7,13,15,20,22,31,33) or step in (16,51):
             result.append(OrderedCall(step,'static',tuple(row.identity for row in rows)))
+        elif step in (12,27):
+            result.append(OrderedCall(step,'perf' if step==12 else 'nav',tuple(row.identity for row in rows)))
         elif step == 24:
             result.append(OrderedCall(step,'save_roundtrip',('24:save_load.release',)))
         elif step == 9:
@@ -570,6 +628,9 @@ def ordered_action(call: OrderedCall, context: OrderedInputs) -> Action:
     if name=='static':
         product, environment = static_context(context, call.step)
         return lambda out:static.run_step(product,call.step,out,environment)
+    if name in {'perf','nav'}:
+        fixture=perf_fixture(name,call.step)
+        return lambda out:run_perf(context.perf,fixture,out)
     if name=='save_roundtrip':
         require(call.step == 24, '/step', 'save adapter only supports step24')
         return lambda out:run_save_roundtrip(context.save_roundtrip,out)
@@ -585,6 +646,7 @@ def ordered_action(call: OrderedCall, context: OrderedInputs) -> Action:
 
 def ordered_bindings(context: OrderedInputs) -> None:
     save_roundtrip_bindings(context)
+    perf_bindings(context)
     inputs=context.components
     for product in (inputs.probes.base,inputs.probes.candidate,inputs.godot.base,inputs.godot.candidate):
         require(file_hash(product.executable)==product.executable_sha256 and
@@ -640,10 +702,13 @@ def run_ordered(context: OrderedInputs, output: Path) -> Path:
     for product in (inputs.probes.base,inputs.probes.candidate,inputs.godot.base,inputs.godot.candidate):
         require(not output.is_relative_to(product.input_root) and not product.input_root.is_relative_to(output),'/output','product overlap')
     calls=ordered_calls();rows: dict[str,Outcome]={};errors: list[str]=[];sequence: list[str]=[]
-    plan_hash: str | None=None;blocked: dict[int,str]={};events: list[Json]=[]
+    plan_hash: str | None=None;blocked: dict[int,str]={};events: list[Json]=[];perf_inputs: dict[str,Json] | None=None
     try:
         output.mkdir(parents=True)
         _=direct.partition(inputs.registry)
+        perf_bindings(context);perf_inputs=perf_dependencies(context.perf)
+        for product in (context.perf.base,context.perf.candidate):
+            require(not output.is_relative_to(product.root) and not product.root.is_relative_to(output),'/output','perf product overlap')
         require(inputs.declarations.base==inputs.probes.base.source_sha and inputs.declarations.candidate==inputs.probes.candidate.source_sha,
                 '/declarations','source identity differs')
         require(DIRECT_IDS <= set(inputs.declarations.known_fixtures),'/declarations','incomplete coverage')
@@ -651,7 +716,7 @@ def run_ordered(context: OrderedInputs, output: Path) -> Path:
         refs: dict[int,dict[str,list[Json]]]={step:references(inputs,output/f'step-{step:02d}',validate=True) for step in direct.DIRECT_STEP_FIXTURES}
         atomic_json(output/'plan.json',{'schema_version':3,'original_step_order':list(ORDER),
             'original_order_executed':False,'publication_authorized':False,
-            'supported_call_sequence':[call.identity for call in calls],
+            'supported_call_sequence':[call.identity for call in calls],'perf_dependencies':perf_inputs,
             'obligations':[{'identity':row.identity,'step':row.step,'fixture':row.fixture,
                 'invocation_references':refs.get(row.step,{}).get(row.fixture or '',[])} for row in obligations()]})
         plan_hash=file_hash(output/'plan.json')
@@ -666,7 +731,7 @@ def run_ordered(context: OrderedInputs, output: Path) -> Path:
             parent=output/f'step-{call.step:02d}';parent.mkdir(exist_ok=True)
             destination=parent/call.component
             try:
-                with nullcontext() if call.component in {'static','save_roundtrip'} else lane():
+                with nullcontext() if call.component in {'static','save_roundtrip','perf','nav'} else lane():
                     selected = with_static_priors(context,tuple(rows.values())) if call.component == 'static' else context
                     action=ordered_action(call,selected)
                     static_product, static_environment = static_context(selected,call.step) if call.component == 'static' else (None,None)
@@ -674,7 +739,7 @@ def run_ordered(context: OrderedInputs, output: Path) -> Path:
                     try:
                         rows[call.identity]=invoke(call.component,action,destination,inputs,
                                                    step=call.step,static_product=static_product,static_environment=static_environment,
-                                                   save_products=selected.save_roundtrip)
+                                                   save_products=selected.save_roundtrip,perf_context=selected.perf)
                     finally:events.append({'call':call.identity,'event':'end','at':timestamp()})
             except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
                 rows[call.identity]=replace(rows[call.identity],status='FAIL',error=rows[call.identity].error+'; lane: '+str(error)) if call.identity in rows else Outcome(call.component,'FAIL',None,None,str(error))
@@ -691,7 +756,7 @@ def run_ordered(context: OrderedInputs, output: Path) -> Path:
     output.mkdir(parents=True,exist_ok=True);terminal=output/'ordered-dispatch.json'
     atomic_json(terminal,{'schema_version':3,'status':'FAIL' if errors or any(row.status=='FAIL' for row in rows.values()) else 'INCOMPLETE',
         'publication_authorized':False,'full_gate_claim':False,'original_order_executed':False,
-        'original_step_order':list(ORDER),'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
+        'original_step_order':list(ORDER),'perf_dependencies':perf_inputs,'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
         'components':[{'identity':call.identity,'step':call.step,'component':call.component,
             'status':rows[call.identity].status if call.identity in rows else 'NOT_RUN',
             'receipt':str(rows[call.identity].receipt) if call.identity in rows and rows[call.identity].receipt else None,
