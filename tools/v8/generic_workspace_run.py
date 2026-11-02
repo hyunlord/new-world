@@ -4,7 +4,7 @@ import json
 import os
 import shlex
 import stat
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, replace
 from pathlib import Path
 from typing import Literal
 
@@ -33,33 +33,31 @@ from generic_workspace_cases import (
     reconcile_native,
     standard_harness,
 )
-from generic_workspace_tests import Inventory
+from generic_workspace_endpoints import (
+    WorkspaceRequest,
+    WorkspaceResult,
+    begin_workspace,
+    finish_endpoint,
+    producer_finished,
+    recheck_generated,
+    state_json,
+)
 from mux2_gate_inputs import Json
 from mux2_gate_lock import LOCK
 
-
-@dataclass(frozen=True, slots=True)
-class WorkspaceRequest:
-    step: Literal[4, 5]
-    arm: Literal['base', 'candidate']
-    invocation: str
-    spec: ProcessSpec
-    inventory: Inventory
-    manifest: Path
-    manifest_sha256: str
-    output: Path
-    held_lane_fd: int
-
-
-@dataclass(frozen=True, slots=True)
-class WorkspaceResult:
-    receipt: Path
-    status: Literal['OBSERVED_CASES_ONLY', 'FAIL']
-    capture: WorkspaceCapture
-    source_build_admission: Literal['PENDING_CALLER_HANDOFF'] = 'PENDING_CALLER_HANDOFF'
-    observer_qualification: Literal['PENDING_ORIGINAL_DIRECT_CONTROL'] = 'PENDING_ORIGINAL_DIRECT_CONTROL'
-    publication_authority: Literal[False] = False
-
+__all__ = [
+    'WorkspaceOwnershipUnknown',
+    'WorkspaceRequest',
+    'WorkspaceResult',
+    'WorkspaceSettledFailure',
+    'checked',
+    'held_lane',
+    'listing_jobs',
+    'listing_members',
+    'listing_spec',
+    'run_workspace_owned',
+    'workspace_argv',
+]
 
 class WorkspaceOwnershipUnknown(RuntimeError):
     """Caller must keep persistent ownership; no recoverable Popen API is exposed."""
@@ -108,6 +106,9 @@ def checked(request: WorkspaceRequest) -> tuple[Path, Path | None, dict[str, str
     allowed = {'PATH', 'HOME', 'TMPDIR', 'LANG', 'LC_ALL', 'CARGO_HOME', 'RUSTUP_HOME', 'RUSTC', 'RUSTDOC',
                'CARGO_TARGET_DIR', 'CARGO_BUILD_JOBS', 'CARGO_NET_OFFLINE', 'DYLD_LIBRARY_PATH', 'LD_LIBRARY_PATH',
                'RUSTC_WRAPPER', 'RUSTC_WORKSPACE_WRAPPER', 'CARGO_CAPTURE_MANIFEST', 'CARGO_CAPTURE_MANIFEST_SHA256'}
+    if request.chain is not None:
+        allowed |= {'GODOT_BIN', 'WORLDSIM_TEST_SETTINGS_DIR', 'PYTHONNOUSERSITE', 'PYTHONDONTWRITEBYTECODE',
+                    '__CF_USER_TEXT_ENCODING', 'PYTHONCOERCECLOCALE'}
     runners = [key for key in env if key.startswith('CARGO_TARGET_') and key.endswith('_RUNNER')]
     require(len(runners) == 1 and set(dict(spec.environment)) <= allowed | set(runners), '/environment', 'unreviewed overrides')
     runner = shlex.split(env[runners[0]])
@@ -191,13 +192,17 @@ def listing_members(root: Path) -> dict[str, int]:
 def run_workspace_owned(request: WorkspaceRequest) -> WorkspaceResult:
     """Execute wrapped original command and real listings; caller retains UNKNOWN ownership."""
     capture_root, exec_root, bound = checked(request)
+    before = begin_workspace(request) if request.chain is not None else None
     request.output.mkdir(); capture_root.mkdir()
     if exec_root is not None: exec_root.mkdir()
     in_flight = False
     try:
+        if before is not None: recheck_generated(before, before.state)
         in_flight = True
         parent = execute(request.spec)
         require(parent.native_exit is not None and parent.native_exit >= 0, '/parent', 'parent wait unresolved')
+        # Provisional endpoint only; incomplete child capture still yields UNKNOWN, no handoff.
+        after = producer_finished(before) if before is not None else None
         plan = CapturePlan(request.invocation, request.step, request.arm, 'debug' if request.step == 4 else 'release',
             request.spec, file_hash(parent.receipt), request.manifest, request.manifest_sha256, request.inventory,
             capture_root, tuple(sorted(snapshot(capture_root).items())),
@@ -205,6 +210,7 @@ def run_workspace_owned(request: WorkspaceRequest) -> WorkspaceResult:
         capture = reconcile_capture(plan, parent)
         require(capture.integrity == 'PASS' and capture.completeness == 'COMPLETE', '/capture', 'actual child tree incomplete')
         in_flight = False
+        if before is not None and after is not None: recheck_generated(before, after)
         frozen = snapshot(request.output)
         members = {path.relative_to(request.output) for path in request.output.rglob('*')}
         listing_bindings: list[ListingProcess] = []; listing_anchors: dict[Path, dict[str, str]] = {}
@@ -229,6 +235,7 @@ def run_workspace_owned(request: WorkspaceRequest) -> WorkspaceResult:
                 pairs.append(binding); listing_bindings.append(binding)
                 listing_anchors[spec.output_root] = snapshot(spec.output_root)
                 listing_membership[spec.output_root] = listing_members(spec.output_root)
+                if before is not None and after is not None: recheck_generated(before, after)
             if native:
                 section = reconcile_native(capture.targets[index].receipt.with_name('stdout.log').read_bytes(), parse_listing(raw[0]), parse_listing(raw[1]))
                 failed |= section.failed > 0
@@ -264,12 +271,32 @@ def run_workspace_owned(request: WorkspaceRequest) -> WorkspaceResult:
                     '/listing', 'listing changed during final checks')
         status = 'FAIL' if failed else 'OBSERVED_CASES_ONLY'
         result_path = request.output/'result.json'
+        if before is not None and after is not None: recheck_generated(before, after)
+        terminal_members = listing_members(request.output) if before is not None else {}
         atomic_json(result_path, {'component': 'WORKSPACE_WRAPPED_RUNTIME', 'status': status, 'step': request.step,
             'invocation_id': request.invocation, 'arm': request.arm, 'profile': plan.profile,
+            'generated_before': state_json(before.state) if before is not None else None,
+            'generated_after': state_json(after) if after is not None else None,
+            'predecessor_sha256': before.predecessor_sha256 if before is not None else None,
+            'chronology': 'OBSERVED_ENDPOINTS_ONLY' if before is not None else 'UNQUALIFIED',
             'parent_exit': parent.native_exit, 'native_cases': native_cases, 'doctest_cases': doctest_cases, 'output_inventory': {key: value for key, value in current.items()},
             'source_build_admission': 'PENDING_CALLER_HANDOFF', 'observer_qualification': 'PENDING_ORIGINAL_DIRECT_CONTROL',
             'world_safety': 'INCOMPLETE', 'publication_authority': False, 'persistent_caller_owner_required': True})
-        return WorkspaceResult(result_path, status, capture)
+        result = WorkspaceResult(result_path, status, capture)
+        if before is not None and after is not None:
+            require(snapshot(request.output) == {**current, 'result.json':file_hash(result_path)}
+                    and listing_members(request.output) == {**terminal_members, 'result.json':stat.S_IFREG},
+                    '/outputs', 'evidence changed during endpoint publication')
+            endpoint = finish_endpoint(request, result, before, after)
+            held_lane(request.held_lane_fd)
+            result = replace(result, endpoint=endpoint)
+        return result
     except BaseException as error:
         if in_flight: raise WorkspaceOwnershipUnknown(request, error) from error
+        if before is not None and (request.output/'result.json').exists():
+            try:
+                atomic_json(request.output/'endpoint-failure.json', {'status':'FAIL',
+                    'chronology':'ENDPOINT_NOT_RETURNED', 'publication_authority':False})
+            except BaseException as diagnostic:
+                raise WorkspaceSettledFailure(request, error) from diagnostic
         raise WorkspaceSettledFailure(request, error) from error
