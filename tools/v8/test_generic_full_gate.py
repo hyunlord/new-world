@@ -3,6 +3,7 @@
 # dependencies = []
 # ///
 """Synthetic endpoint envelopes and mocked orchestration, never native proof."""
+import json
 import unittest
 from contextlib import nullcontext
 from dataclasses import replace
@@ -234,3 +235,226 @@ class DispatchTests(unittest.TestCase):
 
 if __name__ == '__main__':
     _ = unittest.main()
+
+
+class OrderedDispatchTests(unittest.TestCase):
+    def test_closed_order_retains_every_missing_obligation(self) -> None:
+        calls = gate.ordered_calls()
+        self.assertEqual([call.step for call in calls], sorted([call.step for call in calls], key=gate.ORDER.index))
+        self.assertEqual([call.step for call in calls if call.component == 'static'], [1,7,13,15,20,22,31,33])
+        self.assertEqual([call.step for call in calls if call.component == 'direct'], [10,11,18,19,26,28,29,30,35,44,50])
+        self.assertEqual({row.step for row in gate.obligations()}, set(range(1,52)))
+        self.assertEqual(next(call for call in calls if call.step == 50).identities,
+                         tuple('50:'+name for name in direct.DIRECT_STEP_FIXTURES[50]))
+
+    def test_direct_step_authentication_binds_exact_step(self) -> None:
+        with TemporaryDirectory() as temp:
+            root = Path(temp).resolve(); context = inputs(root)
+            result = synthetic_endpoint('direct', root/'direct', context)
+            data = document(result.receipt.read_text()).mapping()
+            data.update(schema='direct_step_components_v1',step=50,
+                        obligations=['50:'+name for name in direct.DIRECT_STEP_FIXTURES[50]],
+                        fixtures=list(direct.DIRECT_STEP_FIXTURES[50]),whole_step_complete=False,original_order_executed=False)
+            self.assertEqual(gate.authenticate('direct', document(json.dumps(data)), context, step=50),'PASS')
+            with self.assertRaises(ValueError):
+                gate.authenticate('direct', document(json.dumps(data)), context, step=44)
+
+
+def ordered_inputs(root: Path) -> gate.OrderedInputs:
+    import generic_fixture_registry as registry_module
+    context=inputs(root)
+    registry=registry_module.load_registry(Path(registry_module.__file__).with_name('gate_fixtures.json'))
+    context=replace(context,registry=registry,declarations=replace(context.declarations,known_fixtures=tuple(sorted(direct.DIRECT_IDS))))
+    product=context.probes.candidate
+    return gate.OrderedInputs(context,gate.static.StaticProduct(product.input_root,product.source_sha,product.input_files),
+                              gate.static.ExecutionEnvironment((),(),()))
+
+
+def ordered_endpoint(call: gate.OrderedCall, out: Path, context: gate.OrderedInputs, status: str='PASS') -> ComponentResult:
+    if call.component=='static':
+        out.mkdir();path=out/'receipt.json'
+        data: dict[str,Json]={'schema':'generic_static_run.v1','step':call.step,'name':gate.static.COMMANDS[call.step][0],
+            'scope':'COMPONENT_ONLY','original_order_executed':False,'full_gate_complete':False,'source_admission_granted':False,
+            'source_root':str(context.static_product.root),'source_sha':context.static_product.source_sha,
+            'source_invocation':list(gate.static.COMMANDS[call.step][1]),'started_at':'synthetic','status':status,
+            'process_status':status,'artifacts':{},'tool_dependency_closure':'caller_supplied_not_independently_complete',
+            'errors':[],'finished_at':'synthetic'}
+    elif call.component=='smoke':
+        out.mkdir();path=out/'smoke.json'
+        data={'schema_version':1,'status':status,'errors':[],'counts':{},'matched_companions':[],'originals':[],
+              'artifacts':{},'build_provenance':'caller_owned_not_certified_here','full_gate_claim':False}
+    else:
+        result=synthetic_endpoint(call.component,out,context.components)
+        path=result.receipt;data=document(path.read_text()).mapping();path.unlink()
+        data['status']=status
+        if call.component=='direct':
+            data.update(schema='direct_step_components_v1',step=call.step,obligations=list(call.identities),
+                        fixtures=list(direct.step_fixtures(call.step)),whole_step_complete=False,original_order_executed=False)
+    atomic_json(path,data)
+    return ComponentResult(path,status)
+
+
+class OrderedExecutionTests(unittest.TestCase):
+    def test_supported_trace_and_fresh_step50_are_bound_without_full_pass(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root);trace: list[str]=[]
+            def action(call: gate.OrderedCall, bound: gate.OrderedInputs) -> gate.Action:
+                def run(out: Path) -> ComponentResult:
+                    trace.append(call.identity)
+                    return ordered_endpoint(call,out,bound)
+                return run
+            with patch.object(gate,'ordered_action',side_effect=action),patch.object(gate,'lane',return_value=nullcontext()) as lock, \
+                 patch.object(direct,'run_all',side_effect=AssertionError('not ordered')):
+                terminal=gate.run_ordered(context,root/'out')
+            node=document(terminal.read_text());plan=document((terminal.parent/'plan.json').read_text())
+            self.assertEqual(trace,[call.identity for call in gate.ordered_calls()])
+            self.assertEqual(lock.call_count,len(trace)-8)
+            self.assertEqual(node.field('status').value,'INCOMPLETE')
+            self.assertFalse(node.field('full_gate_claim').value)
+            missing={row.field('identity').text() for row in node.field('obligations').array() if row.field('status').value=='NOT_IMPLEMENTED'}
+            self.assertTrue({'28:colony_knowledge.release','36:data_only_ext.release','46:gdscript.four_files',
+                             '47:m6a.food72','48:m6a.food_data_only','4:workspace.debug','5:workspace.release'} <= missing)
+            for row in plan.field('obligations').array():
+                if row.field('step').value==50:
+                    refs=row.field('invocation_references').array()
+                    self.assertTrue(refs)
+                    self.assertTrue(all('/step-50/direct/runs/' in ref.field('out').text() for ref in refs))
+
+    def test_core_failure_is_retained_after_later_success(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            def action(call: gate.OrderedCall, bound: gate.OrderedInputs) -> gate.Action:
+                return lambda out:ordered_endpoint(call,out,bound,'FAIL' if call.step==44 else 'PASS')
+            with patch.object(gate,'ordered_action',side_effect=action),patch.object(gate,'lane',return_value=nullcontext()):
+                node=document(gate.run_ordered(context,root/'out').read_text())
+            self.assertEqual(node.field('status').value,'FAIL')
+            states={row.field('identity').text():row.field('status').text() for row in node.field('components').array()}
+            self.assertEqual((states['44:direct'],states['50:direct']),('FAIL','PASS'))
+
+    def test_failed_sibling_stops_remaining_step_children(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root);trace: list[str]=[]
+            def action(call: gate.OrderedCall, bound: gate.OrderedInputs) -> gate.Action:
+                def run(out: Path) -> ComponentResult:
+                    trace.append(call.identity)
+                    return ordered_endpoint(call,out,bound,'FAIL' if call.component in {'render.people','toast'} else 'PASS')
+                return run
+            with patch.object(gate,'ordered_action',side_effect=action),patch.object(gate,'lane',return_value=nullcontext()):
+                node=document(gate.run_ordered(context,root/'out').read_text())
+            self.assertEqual(node.field('status').value,'FAIL')
+            for blocked in ('34:render.trees','46:marker.layout','46:why.en','46:why.ko'):self.assertNotIn(blocked,trace)
+            self.assertIn('50:direct',trace)
+
+    def test_late_mutation_of_earlier_failed_artifact_fails_finalizer(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            def action(call: gate.OrderedCall, bound: gate.OrderedInputs) -> gate.Action:
+                def run(out: Path) -> ComponentResult:
+                    result=ordered_endpoint(call,out,bound,'FAIL' if call.step==9 else 'PASS')
+                    if call.step==9:(out/'raw.log').write_text('retained failure')
+                    if call.step==50:(root/'out/step-09/smoke/raw.log').write_text('mutated')
+                    return result
+                return run
+            with patch.object(gate,'ordered_action',side_effect=action),patch.object(gate,'lane',return_value=nullcontext()):
+                node=document(gate.run_ordered(context,root/'out').read_text())
+            self.assertTrue(any('artifacts changed' in row.text() for row in node.field('errors').array()))
+
+    def test_lane_failure_has_terminal_and_no_launch_claim(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            def action(call: gate.OrderedCall, bound: gate.OrderedInputs) -> gate.Action:
+                return lambda out:ordered_endpoint(call,out,bound)
+            with patch.object(gate,'ordered_action',side_effect=action),patch.object(gate,'lane',side_effect=OSError('lane unavailable')):
+                node=document(gate.run_ordered(context,root/'out').read_text())
+            self.assertEqual(node.field('status').value,'FAIL')
+            self.assertEqual([row.text() for row in node.field('actual_component_sequence').array()],
+                             [call.identity for call in gate.ordered_calls() if call.component=='static'])
+
+    def test_invalid_global_registry_fails_before_any_call(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            context=replace(context,components=replace(context.components,registry=replace(context.components.registry,fixtures=())))
+            with patch.object(gate,'ordered_action',side_effect=AssertionError('must not launch')):
+                node=document(gate.run_ordered(context,root/'out').read_text())
+            self.assertEqual(node.field('status').value,'FAIL')
+            self.assertEqual(node.field('actual_component_sequence').array(),[])
+
+    def test_lane_exit_failure_preserves_completed_output_authentication(self) -> None:
+        from contextlib import contextmanager
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            @contextmanager
+            def failed_exit():
+                yield
+                raise OSError('unlock failed')
+            def action(call: gate.OrderedCall, bound: gate.OrderedInputs) -> gate.Action:
+                return lambda out:ordered_endpoint(call,out,bound)
+            with patch.object(gate,'ordered_action',side_effect=action),patch.object(gate,'lane',side_effect=failed_exit):
+                node=document(gate.run_ordered(context,root/'out').read_text())
+            row=next(row for row in node.field('components').array() if row.field('identity').value=='9:smoke')
+            self.assertEqual(row.field('status').value,'FAIL')
+            self.assertEqual(row.field('reported_status').value,'PASS')
+            self.assertTrue(row.field('files').mapping())
+            self.assertEqual(len(row.field('sha256').text()),64)
+
+    def test_real_adapter_entrypoints_receive_own_step_and_lane_boundary(self) -> None:
+        from contextlib import ExitStack, contextmanager
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root);held=False;trace: list[str]=[]
+            @contextmanager
+            def lock():
+                nonlocal held
+                self.assertFalse(held);held=True
+                try:yield
+                finally:held=False
+            calls={call.identity:call for call in gate.ordered_calls()}
+            def child(*args):
+                out=next(arg for arg in reversed(args) if isinstance(arg,Path))
+                identity=str(int(out.parent.name.removeprefix('step-')))+':'+out.name
+                call=calls[identity];trace.append(identity)
+                self.assertEqual(held,call.component!='static')
+                if call.component=='direct':self.assertEqual(args[3],call.step)
+                if call.component=='static':self.assertEqual(args[1],call.step)
+                return ordered_endpoint(call,out,context)
+            with ExitStack() as stack:
+                stack.enter_context(patch.object(gate,'lane',side_effect=lock))
+                stack.enter_context(patch.object(direct,'run_all',side_effect=AssertionError('no aggregate')))
+                for module,name in ((direct,'run_step'),(gate.static,'run_step'),(gate.smoke,'run_pair'),
+                                    (renderer,'run_pair'),(fixed,'run_pair'),(pack,'run_pair'),(visibility,'run_pair'),(why,'run_pair')):
+                    stack.enter_context(patch.object(module,name,side_effect=child))
+                node=document(gate.run_ordered(context,root/'out').read_text())
+            self.assertEqual(trace,list(calls))
+            self.assertEqual(node.field('status').value,'INCOMPLETE')
+            self.assertEqual([(row.field('call').text(),row.field('event').text()) for row in node.field('dispatch_events').array()],
+                             [(identity,event) for identity in trace for event in ('start','end')])
+
+    def test_plan_write_failure_retains_terminal_without_launches(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            def write(path: Path, data):
+                if path.name=='plan.json':raise OSError('plan failed')
+                return atomic_json(path,data)
+            with patch.object(gate,'atomic_json',side_effect=write),patch.object(gate,'ordered_action',side_effect=AssertionError('no call')):
+                node=document(gate.run_ordered(context,root/'out').read_text())
+            self.assertEqual(node.field('status').value,'FAIL')
+            self.assertIsNone(node.field('plan_sha256').value)
+            self.assertEqual(node.field('actual_component_sequence').array(),[])
+
+    def test_duplicate_expansion_is_rejected_before_any_producer(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root);original=gate.expand
+            def duplicate(registry, expansion):
+                rows=original(registry,expansion)
+                return (*rows,rows[0])
+            with patch.object(gate,'expand',side_effect=duplicate),patch.object(gate,'ordered_action',side_effect=AssertionError('no call')):
+                node=document(gate.run_ordered(context,root/'out').read_text())
+            self.assertEqual(node.field('status').value,'FAIL')
+            self.assertTrue(any('duplicate identity/output' in row.text() for row in node.field('errors').array()))
+
+    def test_unsupported_direct_step_incomplete_schema_is_not_a_pass(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            call=gate.OrderedCall(47,'direct',('47:m6a.food72',))
+            result=ordered_endpoint(call,root/'out',context,'INCOMPLETE')
+            self.assertEqual(gate.authenticate('direct',document(result.receipt.read_text()),context.components,step=47),'INCOMPLETE')
+            self.assertNotIn(47,[call.step for call in gate.ordered_calls()])
