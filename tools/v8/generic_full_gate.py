@@ -10,10 +10,11 @@ remaining native suites and performance dispatch are explicitly incomplete.
 """
 from __future__ import annotations
 
+import json
 import sys
 from collections.abc import Callable
 from contextlib import nullcontext
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 from datetime import datetime
 from pathlib import Path
 from typing import Final
@@ -21,11 +22,13 @@ from typing import Final
 import generic_direct_run as direct
 import generic_renderer_run as renderer
 import generic_static_run as static
+import generic_test_run as native
 import generic_ui_fixed_run as fixed
 import generic_ui_pack_run as pack
 import generic_ui_smoke_run as smoke
 import generic_ui_visibility_run as visibility
 import generic_ui_why_run as why
+from generic_bench import AuditError, Product
 from generic_declarations import Declarations
 from generic_fixture_registry import (
     DIRECT_IDS,
@@ -39,6 +42,9 @@ from generic_gate import GateContractError, document, integer, require
 from generic_observations import keys
 from generic_process import atomic_json, file_hash, timestamp
 from generic_sources import inventory
+from generic_test_invocation import invocations
+from generic_test_observations import Binding, ExpectedOccurrence
+from generic_test_safety import pair
 from mux2_gate_inputs import INPUT_DIRS, INPUT_FILES, Json, Node
 from mux2_gate_lock import lane
 
@@ -130,7 +136,7 @@ Action = Callable[[Path], ComponentResult]
 
 
 def endpoint(name: str) -> str:
-    return ('receipt.json' if name in {'direct','static'} else 'fixed-ui.json' if name in fixed.FIXTURES else
+    return ('result.json' if name == 'save_roundtrip' else 'receipt.json' if name in {'direct','static'} else 'fixed-ui.json' if name in fixed.FIXTURES else
             'why.json' if name.startswith('why.') else 'pack-ui.json' if name == 'pack' else name+'.json')
 
 
@@ -193,28 +199,28 @@ def authenticate(name: str, node: Node, inputs: Inputs, *, step: int | None = No
     return state
 
 
-def invoke(name: str, action: Action, output: Path, inputs: Inputs, *, step: int | None = None, static_product: static.StaticProduct | None = None, static_environment: static.ExecutionEnvironment | None = None) -> Outcome:
-    require((name in COMPONENTS or (step is not None and name in {'smoke','static'})) and not output.exists(), '/component', 'unknown component or stale output')
+def invoke(name: str, action: Action, output: Path, inputs: Inputs, *, step: int | None = None, static_product: static.StaticProduct | None = None, static_environment: static.ExecutionEnvironment | None = None, save_products: SaveRoundtripProducts | None = None) -> Outcome:
+    require((name in COMPONENTS or (step is not None and name in {'smoke','static'}) or (step == 24 and name == 'save_roundtrip')) and not output.exists(), '/component', 'unknown component or stale output')
     error='';returned: str | None=None;reported: str | None=None;receipt: Path | None=None;digest: str | None=None
     expected=output/endpoint(name)
     try:
         result=action(output);returned=result.status
         require(result.receipt==expected and expected==expected.resolve(strict=True),'/receipt','foreign terminal path')
         receipt=expected;digest=file_hash(expected)
-        reported=authenticate_static(expected,step,static_product,static_environment) if name == 'static' else authenticate(name,document(expected.read_text()),inputs,step=step if name == 'direct' else None)
+        reported=authenticate_save_roundtrip(expected,save_products) if name == 'save_roundtrip' else authenticate_static(expected,step,static_product,static_environment) if name == 'static' else authenticate(name,document(expected.read_text()),inputs,step=step if name == 'direct' else None)
         require(returned==reported,'/status','returned and on-disk status differ')
-    except (GateContractError,OSError,ValueError,RuntimeError) as caught:
+    except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as caught:
         error=str(caught)
         if expected.is_file():
             try:
                 receipt=expected;digest=file_hash(expected)
-                reported=authenticate_static(expected,step,static_product,static_environment) if name == 'static' else authenticate(name,document(expected.read_text()),inputs,step=step if name == 'direct' else None)
-            except (GateContractError,OSError,ValueError) as terminal_error:
+                reported=authenticate_save_roundtrip(expected,save_products) if name == 'save_roundtrip' else authenticate_static(expected,step,static_product,static_environment) if name == 'static' else authenticate(name,document(expected.read_text()),inputs,step=step if name == 'direct' else None)
+            except (AuditError,GateContractError,OSError,ValueError) as terminal_error:
                 error+='; terminal: '+str(terminal_error)
     files: tuple[tuple[str,str],...]=();snapshot_error=''
     if output.exists():
         try:files=tuple(inventory(output,[p.name for p in output.iterdir()]).items())
-        except (GateContractError,OSError,ValueError,RuntimeError) as caught:snapshot_error=str(caught)
+        except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as caught:snapshot_error=str(caught)
     return Outcome(name,'FAIL' if error or snapshot_error else reported or 'FAIL',receipt,digest,error,files,output,
                    returned,reported,snapshot_error)
 
@@ -302,6 +308,12 @@ def run(inputs: Inputs, output: Path) -> Path:
 
 
 @dataclass(frozen=True, slots=True)
+class SaveRoundtripProducts:
+    base: Product
+    candidate: Product
+
+
+@dataclass(frozen=True, slots=True)
 class OrderedInputs:
     components: Inputs
     static_product: static.StaticProduct
@@ -310,6 +322,92 @@ class OrderedInputs:
     discovery_environment: static.ExecutionEnvironment
     diagnosis_product: static.StaticProduct
     diagnosis_environment: static.ExecutionEnvironment
+    save_roundtrip: SaveRoundtripProducts
+
+
+def save_roundtrip_bindings(context: OrderedInputs) -> None:
+    products = context.save_roundtrip
+    require(not products.base.root.is_relative_to(products.candidate.root) and
+            not products.candidate.root.is_relative_to(products.base.root), '/save/products', 'independent roots required')
+    require(not products.base.binary.samefile(products.candidate.binary), '/save/products', 'shared binary inode')
+    for product, probe in ((products.base,context.components.probes.base),
+                           (products.candidate,context.components.probes.candidate)):
+        require(product.root == probe.input_root and product.source_sha == probe.source_sha,
+                '/save/products', 'source identity differs from ordered arm')
+        native.verify_test_product(product,'save_load','release')
+
+
+def run_save_roundtrip(products: SaveRoundtripProducts, output: Path) -> ComponentResult:
+    path = native.run_pair({'save_load':products.base},{'save_load':products.candidate},output,invocation='gate24')
+    return ComponentResult(path,document(path.read_bytes().decode('utf-8')).field('status').text())
+
+
+def separate_save_invocations(base: Binding, candidate: Binding) -> None:
+    """A reusable OS PID is not an invocation identity; callers authenticate receipts."""
+    left = (base.process.output_root/'process.json',base.receipt_sha256)
+    right = (candidate.process.output_root/'process.json',candidate.receipt_sha256)
+    require(base.process.output_root != candidate.process.output_root and left != right,
+            '/save/process','reused authenticated invocation identity')
+
+
+def authenticate_save_roundtrip(path: Path, products: SaveRoundtripProducts | None) -> str:
+    """Rejoin real release invocations and all save histories; never shell authority."""
+    if products is None:raise GateContractError('binding','/save','missing native products')
+    require(path.name == 'result.json' and path.is_absolute() and path == path.resolve(strict=True), '/save/result', 'foreign terminal path')
+    digest = file_hash(path)
+    node = document(path.read_bytes().decode('utf-8'))
+    keys(node,{'status','broader_gate17_37','publication_authorized','invocation_plan','invocations',
+               'workspace_enumeration','step_coverage','cargo_working_directory_equivalence','products',
+               'coverage','invocation_coverage','limits','families','errors','output_sha256','output_inventory_complete'})
+    state = node.field('status').text()
+    require(state in {'COMPONENT_PASS','FAIL'},'/save/status','unsupported save result')
+    for key,value in (('invocation_plan','gate24'),('broader_gate17_37','INCOMPLETE'),
+                      ('workspace_enumeration','INCOMPLETE'),('step_coverage','PARTIAL'),
+                      ('cargo_working_directory_equivalence','PACKAGE_ROOT'),('publication_authorized',False),
+                      ('coverage','Named invocation subset; see invocation_coverage.')):
+        node.field(key).equals(value)
+    node.field('invocations').equals([document(json.dumps(asdict(row))).value for row in invocations('gate24')])
+    node.field('invocation_coverage').equals({'save_load':46})
+    node.field('limits').equals(['Other world occurrences and native suite families remain unregistered.',
+                                'Observer semantic qualification is a separate gate obligation.'])
+    expected_products: dict[str,Json] = {}
+    for arm,product in (('base',products.base),('candidate',products.candidate)):
+        expected_products[arm] = {'save_load':{'source_sha':product.source_sha,'binary':str(product.binary),
+            'binary_sha256':product.binary_sha256,'artifact_receipt':str(product.build_receipt),
+            'artifact_receipt_sha256':product.build_receipt_sha256}}
+    node.field('products').equals(expected_products)
+    errors = node.field('errors').array()
+    for error in errors:_ = error.text()
+    _ = node.field('families').array()
+    # Failed native processes can lack either invocation receipt. Never promote them.
+    if state == 'FAIL':
+        require(bool(errors),'/save/errors','failed report lacks failure reason')
+        require(file_hash(path) == digest,'/save/result','terminal changed')
+        return state
+    require(not errors,'/save/errors','passing report contains errors')
+    node.field('output_inventory_complete').equals(True)
+    hashes = native.freeze(path.parent)
+    require(hashes.pop('result.json',None) == digest,'/save/result','foreign terminal')
+    node.field('output_sha256').equals(dict(hashes))
+    bindings: list[Binding] = []
+    plans: list[tuple[ExpectedOccurrence,...]] = []
+    for arm,product in (('base',products.base),('candidate',products.candidate)):
+        receipt = path.parent/f'{arm}-save_load-invocation.json'
+        document(receipt.read_bytes().decode('utf-8')).field('arm').equals(arm)
+        binding = native.authenticate_invocation(receipt,product,'gate24')
+        planned = native.authenticate_family('save_load',binding)
+        native.native_summary(binding,'save_load')
+        require(len(planned) == 46,'/save/history','incomplete save scope')
+        bindings.append(binding);plans.append(tuple(row.occurrence for row in planned))
+    separate_save_invocations(bindings[0],bindings[1])
+    paired = pair(bindings[0],plans[0],bindings[1],plans[1])
+    expected_family = [document(json.dumps({'target':'save_load','status':'PAIRED_SAFETY_PASS','declared_setup':None,
+        'occurrences':[{'base':asdict(row.base),'candidate':asdict(row.candidate),'safety':row.safety}
+                       for row in paired.occurrences]})).value]
+    node.field('families').equals(expected_family)
+    for product in (products.base,products.candidate):native.verify_test_product(product,'save_load','release')
+    require(native.freeze(path.parent) == {**hashes,'result.json':digest},'/save/output','evidence changed during authentication')
+    return state
 
 
 def static_context(context: OrderedInputs, step: int) -> tuple[static.StaticProduct, static.ExecutionEnvironment]:
@@ -338,6 +436,8 @@ def ordered_calls() -> tuple[OrderedCall, ...]:
         rows = tuple(row for row in obligations() if row.step == step)
         if step in (1,7,13,15,20,22,31,33) or step in (16,51):
             result.append(OrderedCall(step,'static',tuple(row.identity for row in rows)))
+        elif step == 24:
+            result.append(OrderedCall(step,'save_roundtrip',('24:save_load.release',)))
         elif step == 9:
             result.append(OrderedCall(step,'smoke',tuple(row.identity for row in rows)))
         elif step in direct.DIRECT_STEP_FIXTURES:
@@ -470,6 +570,9 @@ def ordered_action(call: OrderedCall, context: OrderedInputs) -> Action:
     if name=='static':
         product, environment = static_context(context, call.step)
         return lambda out:static.run_step(product,call.step,out,environment)
+    if name=='save_roundtrip':
+        require(call.step == 24, '/step', 'save adapter only supports step24')
+        return lambda out:run_save_roundtrip(context.save_roundtrip,out)
     if name=='smoke':return lambda out:smoke.run_pair(inputs.godot,out)
     if name=='direct':return lambda out:direct.run_step(inputs.registry,inputs.probes,inputs.declarations,call.step,out)
     if name=='renderer':return lambda out:renderer.run_pair(renderer.RendererProducts(inputs.probes,inputs.godot),out)
@@ -481,6 +584,7 @@ def ordered_action(call: OrderedCall, context: OrderedInputs) -> Action:
 
 
 def ordered_bindings(context: OrderedInputs) -> None:
+    save_roundtrip_bindings(context)
     inputs=context.components
     for product in (inputs.probes.base,inputs.probes.candidate,inputs.godot.base,inputs.godot.candidate):
         require(file_hash(product.executable)==product.executable_sha256 and
@@ -562,26 +666,27 @@ def run_ordered(context: OrderedInputs, output: Path) -> Path:
             parent=output/f'step-{call.step:02d}';parent.mkdir(exist_ok=True)
             destination=parent/call.component
             try:
-                with nullcontext() if call.component=='static' else lane():
+                with nullcontext() if call.component in {'static','save_roundtrip'} else lane():
                     selected = with_static_priors(context,tuple(rows.values())) if call.component == 'static' else context
                     action=ordered_action(call,selected)
                     static_product, static_environment = static_context(selected,call.step) if call.component == 'static' else (None,None)
                     sequence.append(call.identity);events.append({'call':call.identity,'event':'start','at':timestamp()})
                     try:
                         rows[call.identity]=invoke(call.component,action,destination,inputs,
-                                                   step=call.step,static_product=static_product,static_environment=static_environment)
+                                                   step=call.step,static_product=static_product,static_environment=static_environment,
+                                                   save_products=selected.save_roundtrip)
                     finally:events.append({'call':call.identity,'event':'end','at':timestamp()})
-            except (GateContractError,OSError,ValueError,RuntimeError) as error:
+            except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
                 rows[call.identity]=replace(rows[call.identity],status='FAIL',error=rows[call.identity].error+'; lane: '+str(error)) if call.identity in rows else Outcome(call.component,'FAIL',None,None,str(error))
             if rows[call.identity].status=='FAIL' and call.step in (34,46):blocked[call.step]=call.identity
-    except (GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
+    except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     for row in rows.values():
         try:recheck(row)
-        except (GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
+        except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     try:
         ordered_bindings(context)
         require(plan_hash is not None and file_hash(output/'plan.json')==plan_hash,'/plan','scope changed or plan failed')
-    except (GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
+    except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     by_obligation={identity:call.identity for call in calls for identity in call.identities}
     output.mkdir(parents=True,exist_ok=True);terminal=output/'ordered-dispatch.json'
     atomic_json(terminal,{'schema_version':3,'status':'FAIL' if errors or any(row.status=='FAIL' for row in rows.values()) else 'INCOMPLETE',

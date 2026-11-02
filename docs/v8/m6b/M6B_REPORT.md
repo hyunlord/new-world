@@ -307,6 +307,8 @@ Stall 관찰자 patch의 실제 변환과 공급된 빌드 증거 대조를 분�
 
 실제 Cargo run05는 작은 debug 검증 프로젝트에 한해 PASS다. pinned Rust의 Darwin `confstr` 임시 디렉터리 선택을 실행기 선언에 반영했으며 TMPDIR 주입이나 helper·원래 테스트 명령 변경은 없었다. 일반 자식4개는 원래 종료0/7/0/0, 임시 doctest 자식1개는 종료0으로 모두 COMPLETE였고 직접/기록 실행의 alpha doctest PASS·beta 0개 및 의도한 Cargo101이 일치했다. 임시 루트·의존성 최종 검사와 독립 감사도 통과했다. 산출물599개·native 바이너리4개·sealed 입력88개의 해시를 재검증했고 기록된 PID19개 부재와 외부 실행기 exit0을 확인했다. 실제 jobserver FD 관측은 양쪽 모두 빈 목록이므로 활성 FD 상속 증명은 아니다. workspace 전체 집계는 INCOMPLETE, release·반복 실행은 NOT_RUN이며 세계 실행·전체 gate·게시 승인을 뜻하지 않는다. run01–04 실패는 그대로 보존한다(`stage0/workspace-runtime/cargo-hook-qualification/INDEPENDENT_RUN05_AUDIT.md`, RESULT SHA256 `060b193bc6d8970014132abadedd9f3805dcda59efe8e92d79c87bf7cff16d23`).
 
+원래 단계24의 저장·복원 검사를 전체 단계 조정기에 연결했다. 각 군의 release `save_load` 제품·실제 실행 기록·원래7개 검사·46개 저장 이력과 쌍별 안전성을 다시 대조하고, 실행기가 단독으로 lane을 소유하도록 중복 잠금을 피한다. 실패 산출물과 실행되지 않은 후보를 보존하며 전체 gate 상태는 여전히 FAIL/INCOMPLETE다. 독립 리뷰에서 찾은 순차 PID 재사용 오검출은 각 실행의 별도 인증 기록으로 식별하도록 고쳤다. 루트 통합60개 검사가56.232초에 통과했고 엄격 타입 검사·Ruff도 통과했다. 실제 양쪽 release 실행 및 원래 셸/Cargo 준비 순서의 증명은 아직 미완료이며, 기존 빌드 준비와 직접 native 실행의 분리 연결을 전체 셸 실행으로 주장하지 않는다(`stage0/ordered-dispatch/GATE24_INDEPENDENT_IMPLEMENTATION_V2_REVIEW.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

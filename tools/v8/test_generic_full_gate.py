@@ -15,11 +15,13 @@ import generic_direct_run as direct
 import generic_full_gate as gate
 import generic_renderer_run as renderer
 import generic_static_run as static
+import generic_test_run as native
 import generic_ui_fixed_run as fixed
 import generic_ui_pack_run as pack
 import generic_ui_smoke_run as smoke
 import generic_ui_visibility_run as visibility
 import generic_ui_why_run as why
+from generic_bench import Product
 from generic_declarations import Declarations
 from generic_fixture_registry import (
     DIRECT_IDS,
@@ -243,6 +245,18 @@ class DispatchTests(unittest.TestCase):
 
 
 
+def routing_native_bindings(context: gate.OrderedInputs) -> None:
+    """Existing routing fixtures do not claim native compiler admission."""
+    del context
+
+
+def routing_native_status(path: Path, products: gate.SaveRoundtripProducts | None) -> str:
+    assert products is not None
+    return document(path.read_text()).field('status').text()
+
+
+@patch.object(gate,'save_roundtrip_bindings',new=routing_native_bindings)
+@patch.object(gate,'authenticate_save_roundtrip',new=routing_native_status)
 class DiagnosisCoordinatorTests(unittest.TestCase):
     def test_selected_data_context_and_final_order(self) -> None:
         with TemporaryDirectory() as temp:
@@ -419,9 +433,10 @@ def ordered_inputs(root: Path) -> gate.OrderedInputs:
     discovery=replace(old,inputs=tuple(inventory(product.input_root,[*INPUT_DIRS,*INPUT_FILES,'docs']).items()))
     diagnosis=replace(old,inputs=tuple(inventory(product.input_root,[*INPUT_DIRS,*INPUT_FILES,static.DIAGNOSIS_RESULT]).items()))
     diagnosis_values=(*values,('PYTHONDONTWRITEBYTECODE','1'),('PYTHONNOUSERSITE','1'))
+    native_product=Product(product.input_root,product.executable,product.source_sha,product.executable_sha256,root/'unused-artifact','b'*64,product.input_files)
     return gate.OrderedInputs(context,old,static.ExecutionEnvironment(values,tuple(row for row in tools if row[0] in {'python3','git','bash','grep','cargo','cargo-fmt','rustfmt'}),()),discovery,
                               static.ExecutionEnvironment(discovery_values,tools,()),diagnosis,
-                              static.ExecutionEnvironment(diagnosis_values,tools,()))
+                              static.ExecutionEnvironment(diagnosis_values,tools,()),gate.SaveRoundtripProducts(native_product,native_product))
 
 
 def ordered_endpoint(call: gate.OrderedCall, out: Path, context: gate.OrderedInputs, status: str='PASS') -> ComponentResult:
@@ -434,6 +449,8 @@ def ordered_endpoint(call: gate.OrderedCall, out: Path, context: gate.OrderedInp
             'source_invocation':list(static.COMMANDS[call.step][1]),'started_at':'synthetic','status':status,
             'process_status':status,'artifacts':{},'tool_dependency_closure':'caller_supplied_not_independently_complete',
             'errors':[],'finished_at':'synthetic'}
+    elif call.component=='save_roundtrip':
+        out.mkdir();path=out/'result.json';data={'status':status}
     elif call.component=='smoke':
         out.mkdir();path=out/'smoke.json'
         data={'schema_version':1,'status':status,'errors':[],'counts':{},'matched_companions':[],'originals':[],
@@ -482,6 +499,8 @@ def discovery_process(out: Path, data: dict[str,Json], context: gate.OrderedInpu
     if step==16:data['unittest']=static.unittest_terminal((process/'stderr.log').read_text())
 
 
+@patch.object(gate,'save_roundtrip_bindings',new=routing_native_bindings)
+@patch.object(gate,'authenticate_save_roundtrip',new=routing_native_status)
 class OrderedExecutionTests(unittest.TestCase):
     def test_supported_trace_and_fresh_step50_are_bound_without_full_pass(self) -> None:
         with TemporaryDirectory() as temp:
@@ -496,7 +515,7 @@ class OrderedExecutionTests(unittest.TestCase):
                 terminal=gate.run_ordered(context,root/'out')
             node=document(terminal.read_text());plan=document((terminal.parent/'plan.json').read_text())
             self.assertEqual(trace,[call.identity for call in gate.ordered_calls()])
-            self.assertEqual(lock.call_count,len(trace)-10)
+            self.assertEqual(lock.call_count,len(trace)-11)
             self.assertEqual(node.field('status').value,'INCOMPLETE')
             self.assertFalse(node.field('full_gate_claim').value)
             missing={row.field('identity').text() for row in node.field('obligations').array() if row.field('status').value=='NOT_IMPLEMENTED'}
@@ -565,7 +584,7 @@ class OrderedExecutionTests(unittest.TestCase):
                 node=document(gate.run_ordered(context,root/'out').read_text())
             self.assertEqual(node.field('status').value,'FAIL')
             self.assertEqual([row.text() for row in node.field('actual_component_sequence').array()],
-                             [call.identity for call in gate.ordered_calls() if call.component=='static'])
+                             [call.identity for call in gate.ordered_calls() if call.component in {'static','save_roundtrip'}])
 
     def test_invalid_global_registry_fails_before_any_call(self) -> None:
         with TemporaryDirectory() as temp:
@@ -605,16 +624,17 @@ class OrderedExecutionTests(unittest.TestCase):
                 try:yield
                 finally:held=False
             calls={call.identity:call for call in gate.ordered_calls()}
-            def child(*args: Path | str | int | Registry | Products | Declarations | static.StaticProduct | static.ExecutionEnvironment | renderer.RendererProducts) -> ComponentResult:
+            def child(*args: Path | str | int | Registry | Products | Declarations | static.StaticProduct | static.ExecutionEnvironment | renderer.RendererProducts | gate.SaveRoundtripProducts) -> ComponentResult:
                 out=next(arg for arg in reversed(args) if isinstance(arg,Path))
                 identity=str(int(out.parent.name.removeprefix('step-')))+':'+out.name
                 call=calls[identity];trace.append(identity)
-                self.assertEqual(held,call.component!='static')
+                self.assertEqual(held,call.component not in {'static','save_roundtrip'})
                 if call.component=='direct':self.assertEqual(args[3],call.step)
                 if call.component=='static':self.assertEqual(args[1],call.step)
                 return ordered_endpoint(call,out,context)
             with ExitStack() as stack:
                 _=stack.enter_context(patch.object(gate,'lane',side_effect=lock))
+                _=stack.enter_context(patch.object(gate,'run_save_roundtrip',side_effect=child))
                 _=stack.enter_context(patch.object(direct,'run_all',side_effect=AssertionError('no aggregate')))
                 for module,name in ((direct,'run_step'),(static,'run_step'),(smoke,'run_pair'),
                                     (renderer,'run_pair'),(fixed,'run_pair'),(pack,'run_pair'),(visibility,'run_pair'),(why,'run_pair')):
@@ -659,6 +679,8 @@ class OrderedExecutionTests(unittest.TestCase):
                 _=gate.authenticate('direct',document(result.receipt.read_text()),context.components,step=48)
 
 
+@patch.object(gate,'save_roundtrip_bindings',new=routing_native_bindings)
+@patch.object(gate,'authenticate_save_roundtrip',new=routing_native_status)
 class DiscoveryCoordinatorTests(unittest.TestCase):
     def test_explicit_context_selection_preserves_static_eight(self) -> None:
         with TemporaryDirectory() as temp:
@@ -900,3 +922,140 @@ class DiscoveryCoordinatorTests(unittest.TestCase):
                 _,environment=gate.static_context(context,step)
                 self.assertEqual(static.validate_environment(environment,step),{name:path for name,path,_ in environment.tools})
             with self.assertRaises(ValueError):_=static.validate_environment(context.environment,2)
+
+
+class SaveRoundtripRoutingTests(unittest.TestCase):
+    def test_gate24_is_one_closed_ordered_call(self) -> None:
+        calls = gate.ordered_calls()
+        selected = [row for row in calls if row.step == 24]
+        self.assertEqual(selected, [gate.OrderedCall(24, 'save_roundtrip', ('24:save_load.release',))])
+        self.assertNotIn('save_roundtrip', gate.COMPONENTS)
+        self.assertFalse(any(row.step == 17 for row in calls))
+
+
+class SaveRoundtripAuthenticationTests(unittest.TestCase):
+    def exercise(self, defect: str = '') -> None:
+        """Real Python child/process/save receipts; compiler admission mocked by original fixture."""
+        import test_generic_test_run as fixtures
+        original = native.run_pair
+        observed: list[str] = []
+        def wrapped(base: dict[str,Product], candidate: dict[str,Product], output: Path, *, invocation: str='development') -> Path:
+            path = original(base,candidate,output,invocation=invocation)
+            products = gate.SaveRoundtripProducts(base['save_load'],candidate['save_load'])
+            raw = path.read_bytes()
+            originals={entry:entry.read_bytes() for entry in output.rglob('*') if entry.is_file()}
+            data = document(raw.decode()).mapping()
+            if defect == 'coverage':data['invocation_coverage']={'save_load':45}
+            if defect == 'development':data['invocation_plan']='development'
+            if defect == 'status':data['status']='PASS'
+            if defect == 'family':data['families']=[]
+            if defect == 'inventory':data['output_sha256']={}
+            if defect == 'errors':data['errors']=['pretend pass']
+            if defect == 'arm':
+                receipt=output/'base-save_load-invocation.json'
+                changed=document(receipt.read_text()).mapping();changed['arm']='candidate'
+                _=receipt.write_text(json.dumps(changed))
+                hashes=native.freeze(output);_=hashes.pop('result.json');data['output_sha256']=dict(hashes)
+            if defect == 'malformed':_ = path.write_bytes(b'\xff')
+            else:_ = path.write_text(json.dumps(data))
+            try:
+                if defect:
+                    with self.assertRaises((GateContractError,ValueError)):
+                        _ = gate.authenticate_save_roundtrip(path,products)
+                    observed.append('rejected')
+                else:observed.append(gate.authenticate_save_roundtrip(path,products))
+            finally:
+                for entry,content in originals.items():_=entry.write_bytes(content)
+            return path
+        with patch.object(fixtures,'run_pair',side_effect=wrapped):
+            result = fixtures.RunnerTests().exercise(invocation='gate24')
+        self.assertEqual(result.field('status').text(),'COMPONENT_PASS')
+        self.assertEqual(observed,['rejected' if defect else 'COMPONENT_PASS'])
+
+    def test_actual_synthetic_child_receipts_join_all46_histories(self) -> None:
+        self.exercise()
+
+    def test_terminal_forgery_does_not_replace_real_scope_or_safety(self) -> None:
+        for defect in ('coverage','development','status','family','inventory','errors','arm','malformed'):
+            with self.subTest(defect=defect):self.exercise(defect)
+
+    def test_missing_product_binding_is_rejected(self) -> None:
+        with self.assertRaises(GateContractError):
+            _ = gate.authenticate_save_roundtrip(Path('/unused'),None)
+
+    def test_direct_native_action_preserves_gate24_and_component_status(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root);out=root/'native'
+            out.mkdir();terminal=out/'result.json';atomic_json(terminal,{'status':'FAIL'})
+            with patch.object(native,'run_pair',return_value=terminal) as runner:
+                result=gate.ordered_action(gate.OrderedCall(24,'save_roundtrip',('24:save_load.release',)),context)(out)
+            self.assertEqual(result,ComponentResult(terminal,'FAIL'))
+            runner.assert_called_once_with({'save_load':context.save_roundtrip.base},
+                {'save_load':context.save_roundtrip.candidate},out,invocation='gate24')
+
+    def test_missing_native_terminal_is_retained_as_failed_call(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            def child(out: Path) -> ComponentResult:
+                raise RuntimeError(str(out)+' native preflight rejected')
+            result=gate.invoke('save_roundtrip',child,root/'out',context.components,step=24,save_products=context.save_roundtrip)
+            self.assertEqual(result.status,'FAIL')
+            self.assertIsNone(result.receipt)
+            self.assertIn('native preflight rejected',result.error)
+
+
+    def test_native_failure_is_retained_without_successful_candidate_receipt(self) -> None:
+        import test_generic_test_run as fixtures
+        original=native.run_pair
+        seen: list[str]=[]
+        def wrapped(base: dict[str,Product], candidate: dict[str,Product], output: Path, *, invocation: str='development') -> Path:
+            path=original(base,candidate,output,invocation=invocation)
+            self.assertFalse((output/'candidate-save_load-invocation.json').exists())
+            result=gate.authenticate_save_roundtrip(path,gate.SaveRoundtripProducts(base['save_load'],candidate['save_load']))
+            seen.append(result)
+            self.assertEqual(document((output/'candidate-save_load/process.json').read_text()).field('native_exit').value,7)
+            return path
+        with patch.object(fixtures,'run_pair',side_effect=wrapped):
+            result=fixtures.RunnerTests().exercise('exit',invocation='gate24')
+        self.assertEqual(result.field('status').value,'FAIL')
+        self.assertEqual(seen,['FAIL'])
+
+    def test_native_arm_binding_rejects_shared_root_and_wrong_source(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            with self.assertRaisesRegex(GateContractError,'independent roots'):
+                gate.save_roundtrip_bindings(context)
+            other=root/'other';other.mkdir();binary=other/'native';_=binary.write_text('independent')
+            base=replace(context.save_roundtrip.base,root=other,binary=binary,binary_sha256=file_hash(binary))
+            context=replace(context,save_roundtrip=gate.SaveRoundtripProducts(base,context.save_roundtrip.candidate))
+            with self.assertRaisesRegex(GateContractError,'source identity'):
+                gate.save_roundtrip_bindings(context)
+
+    def test_completed_native_output_mutation_is_terminal_failure(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=ordered_inputs(root)
+            def action(call: gate.OrderedCall, bound: gate.OrderedInputs) -> gate.Action:
+                def child(out: Path) -> ComponentResult:
+                    if call.step == 26:
+                        _=(root/'out/step-24/save_roundtrip/result.json').write_text('changed')
+                    return ordered_endpoint(call,out,bound)
+                return child
+            def status(path: Path, products: gate.SaveRoundtripProducts | None) -> str:
+                self.assertIsNotNone(products)
+                return document(path.read_text()).field('status').text()
+            with patch.object(gate,'ordered_action',side_effect=action),patch.object(gate,'lane',return_value=nullcontext()), \
+                 patch.object(gate,'save_roundtrip_bindings'),patch.object(gate,'authenticate_save_roundtrip',side_effect=status):
+                result=document(gate.run_ordered(context,root/'out').read_text())
+            self.assertEqual(result.field('status').value,'FAIL')
+            self.assertTrue(any('changed' in row.text() for row in result.field('errors').array()))
+
+
+    def test_reused_os_pid_does_not_alias_distinct_authenticated_invocations(self) -> None:
+        from test_generic_test_history import graph
+        # Identity boundary only: these modified bindings do not claim native PID evidence.
+        with graph() as base,graph() as candidate:
+            left=replace(base.binding(),pid=123)
+            right=replace(candidate.binding(),pid=123)
+            gate.separate_save_invocations(left,right)
+            with self.assertRaisesRegex(GateContractError,'reused authenticated invocation'):
+                gate.separate_save_invocations(left,replace(left,pid=456))
