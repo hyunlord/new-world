@@ -48,6 +48,7 @@ class CaptureTests(unittest.TestCase):
             receipt.field('environment').field('LD_LIBRARY_PATH').equals('/actual cargo path')
             receipt.field('cwd').equals(str(binary.parent));receipt.field('parent_pid').equals(os.getpid())
             receipt.field('workspace_case_accounting').equals('INCOMPLETE')
+            self.assertNotIn('transient', receipt.mapping())
 
     def test_large_both_streams_not_truncated(self) -> None:
         with TemporaryDirectory() as folder:

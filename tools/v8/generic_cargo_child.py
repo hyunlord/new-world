@@ -17,6 +17,7 @@ from pathlib import Path
 from types import FrameType
 from typing import BinaryIO
 
+from gate_rustdoc_exec import Transient, admit_transient, postflight
 from generic_gate import GateContractError, boundary, document, integer, require, text
 from generic_observations import keys
 from generic_process import atomic_json, file_hash, real_path
@@ -78,7 +79,7 @@ def execute(manifest: Path, digest: str, argv: tuple[str,...]) -> int:
     raw=manifest.read_bytes()
     require(hashlib.sha256(raw).hexdigest()==digest,'/manifest','caller anchor mismatch')
     plan=document(raw.decode('utf-8'))
-    keys(plan,{'schema_version','invocation_id','step','arm','profile','output_root','launcher_sha256','python_sha256','inputs','artifacts','observer_variable'})
+    keys(plan,({'doctest_policy'} if 'doctest_policy' in plan.mapping() else set[str]()) | {'schema_version','invocation_id','step','arm','profile','output_root','launcher_sha256','python_sha256','inputs','artifacts','observer_variable'})
     plan.field('schema_version').equals(1)
     root=Path(text(plan.field('output_root')))
     sequence,output=allocate(root)
@@ -88,7 +89,7 @@ def execute(manifest: Path, digest: str, argv: tuple[str,...]) -> int:
     threads: list[threading.Thread]=[];cleanup_active=False
     child: subprocess.Popen[bytes] | None=None
     code: int | None=None;artifact_id: str | None=None;before_binary: str | None=None;after_binary: str | None=None
-    binary: Path | None=None
+    binary: Path | None=None;transient: Transient | None=None;transient_after: dict[str,Json] | None=None
     inputs: dict[str,str]={};after_inputs: dict[str,str]={}
     identity: dict[str,Json]={'schema_version':1,'component':'NATIVE_CAPTURE_COMPONENT',
         'invocation_id':text(plan.field('invocation_id')),'step':integer(plan.field('step')),
@@ -106,14 +107,19 @@ def execute(manifest: Path, digest: str, argv: tuple[str,...]) -> int:
         require(file_hash(Path(__file__).resolve())==text(plan.field('launcher_sha256')) and
                 file_hash(Path(sys.executable).resolve())==text(plan.field('python_sha256')),'/launcher','launcher/interpreter changed')
         require(bool(argv) and all('\0' not in arg for arg in argv),'/argv','missing binary or NUL')
-        binary=Path(argv[0]).absolute();real_path(binary,directory=False)
+        binary=Path(argv[0]).absolute()
         require(not root.is_relative_to(cwd) and not cwd.is_relative_to(root),'/output','receipts overlap child cwd')
         artifacts=plan.field('artifacts').array()
         matched=[item for item in artifacts if text(item.field('path'))==str(binary)]
-        require(len(matched)==1,'/artifact','binary must match exactly one authenticated artifact')
-        item=matched[0];keys(item,{'id','path','sha256'});artifact_id=text(item.field('id'))
-        before_binary=file_hash(binary)
-        require(before_binary==text(item.field('sha256')),'/artifact','binary differs from build admission')
+        if not matched and 'doctest_policy' in plan.mapping():
+            transient=admit_transient(plan,digest,argv,cwd,output)
+            binary=transient.lexical;before_binary=file_hash(transient.canonical)
+        else:
+            real_path(binary,directory=False)
+            require(len(matched)==1,'/artifact','binary must match exactly one authenticated artifact')
+            item=matched[0];keys(item,{'id','path','sha256'});artifact_id=text(item.field('id'))
+            before_binary=file_hash(binary)
+            require(before_binary==text(item.field('sha256')),'/artifact','binary differs from build admission')
         inputs={name:text(Node(value,'/inputs/'+name)) for name,value in plan.field('inputs').mapping().items()}
         for name,checksum in inputs.items():
             path=Path(name)
@@ -150,7 +156,8 @@ def execute(manifest: Path, digest: str, argv: tuple[str,...]) -> int:
     if child is not None:
         assert binary is not None
         try:
-            after_binary=file_hash(binary)
+            if transient is not None:transient_after=postflight(transient)
+            after_binary=file_hash(binary if transient is None else transient.canonical)
             require(after_binary==before_binary,'/artifact','binary mutated during child')
             require(file_hash(manifest)==digest,'/manifest','manifest changed during child')
             require(file_hash(Path(__file__).resolve())==text(plan.field('launcher_sha256')) and
@@ -163,7 +170,8 @@ def execute(manifest: Path, digest: str, argv: tuple[str,...]) -> int:
         path=output/name
         if path.exists():logs[name]=file_hash(path)
     output_hashes=inventory(output,[p.name for p in output.iterdir()])
-    atomic_json(output/'receipt.json',{**identity,'child_pid':None if child is None else child.pid,
+    extra: dict[str,Json]={} if transient is None else {'transient':{**transient.evidence,'identity_after':transient_after}}
+    atomic_json(output/'receipt.json',{**identity,**extra,'child_pid':None if child is None else child.pid,
         'artifact_id':artifact_id,'native_exit':code,'native_signal':-code if code is not None and code<0 else None,
         'received_signals':[s for s in received],'environment':{k:v for k,v in environment.items()},
         'original_environment':{k:v for k,v in original_env.items()},'observer_additions':{k:v for k,v in additions.items()},

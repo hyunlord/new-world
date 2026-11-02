@@ -283,6 +283,8 @@ stall의 기존 960초 wrapper에 기본 비활성인 직접 자식 기록 경�
 
 M6a 실행기는 기존 공동 API를 보존하면서 단계47의 네72일 primary·두 scorer와 단계48의 두 selected primary·실제 후보 종료 tick에 맞춘 새 BASE companion을 분리했다. 전체 fixture 정의·정확한 군/seed/순서와 fresh 출력 경로를 검증하고, 실패 산출물 및 scorer/companion의 첫 해시를 마지막까지 대조한다. 독립 검토와 루트20개 검사를 통과했다. direct/coordinator 연결과 실제 native qualification은 미완료이며, 단계48의 별도 식물 구조 렌더러 검사도 아직 필수 미구현 의무로 남는다(`stage0/ordered-dispatch/m6a-split-draft/independent-review-v1.md`).
 
+Cargo가 임시 doctest 파일에도 runner를 적용한 실제 run02 실패에 대응해, 선택적으로 같은 PID의 rustdoc exec-intent와 실제 직계 부모 실행 파일을 연결하는 기록 경로를 추가했다. 원래 임시 파일 경로를 실행하고 정규 경로·파일 식별·보존 복사본을 별도 기록한다. 검토에서 재현한 joined dependency 인자 우회와 검증 도중 intent 변경 수락을 수리했으며, 지원하지 않는 인자 문법은 실행 인자를 고치지 않고 거절한다. 루트33개 합성 검사·엄격 타입 검사23·Ruff 및 독립 검토가 통과했다. 실제 Cargo/rustdoc 호출 인자 고정·live probe·환경/FD 동등성·최종 부모 영수증 연결·doctest 집계는 아직 미검증이다. 원래 run02 FAIL과 미등록 transient를 거절하는 workspace 대조기의 제한은 유지한다(`stage0/workspace-runtime/INDEPENDENT_DOCTEST_V2_REVIEW.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
