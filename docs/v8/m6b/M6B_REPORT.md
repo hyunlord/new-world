@@ -319,6 +319,8 @@ perf/nav 실행기의 보존 결과를 검증하는 source-owned 함수를 추�
 
 Stall 파생 capture는 실제 빌드 증거 참조·원래 bounded 자식 연결·처음 보존한 원시 산출물을 검증한다. 호출자가 이미 소유한 lane을 요구하고 종료 불명확 상태에서 해제하지 않는다. 독립 검토와 루트 재현으로 발견한 검증 중단·예상 밖 예외의 허위 VERIFIED를 수정했으며, 검증 완료 조건과 오류 기록 후 재전파를 분리했다. 원래 strict 종료1은 잠정 진단으로만 남고 PASS·waiver가 아니다. 루트 capture37개(11.611초)와 stall53개(489.663초), 설정된 엄격 타입 범위 검사를 통과했다. 전체 변경 파일의 기존 타입 진단은206→205로 신규0이며 전체 clean을 뜻하지 않는다. Ruff의 기존 EXE001 두 건은 유지했고 파일 끝 빈 줄1개만 정리했다. 실제 빌드 실행 권한·native capture·관찰자 중립성·안전성·전체 gate는 아직 미검증이다(`stage0/stall-run/DERIVED_CAPTURE_SLICE_B_INDEPENDENT_V4_REVIEW.md`).
 
+원래 GDScript strict 단계8·46의 별도 어댑터를 추가했다. 단계8은 원래 전체 scripts 선택을, 단계46은 원래4개 파일과 전체 FFI 검사를 유지하며 준비된 Godot 입력·명시적 실행 파일·호출자 소유 lane을 요구한다. 실행이나 진단 기록 중 예외·중단은 StrictOwnershipUnknown으로 남아 최종 산출물 고정과 정상 실패 처리를 막고, project.godot의 바이트뿐 아니라 권한도 대조한다. 독립 리뷰의 예외 종류 누락과 같은 바이트의 권한 변경 허위 통과를 수정했다. 루트42개(4.302초), 조정기 호환65개(56.498초), 구조 helper 변경 후42개(3.331초), 엄격 타입·Ruff를 통과했다. 실제 Godot 검사·전체 순서 연결과 불명확한 자식의 상위 소유·복구 통합은 아직 미완료다(`stage0/ordered-dispatch/GDSCRIPT_STRICT_INDEPENDENT_REVIEW_V3.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

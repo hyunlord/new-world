@@ -4,13 +4,18 @@
 # ///
 """One original static gate command; never a full-gate admission."""
 import ast
+import fcntl
+import os
 import re
 import shutil
+import stat
 from dataclasses import dataclass
 from pathlib import Path
+from typing import NoReturn
 
 from generic_fixture_run import ComponentResult
 from generic_gate import document, require
+from generic_m6a_structural import resolution_paths
 from generic_process import (
     ProcessSpec,
     atomic_json,
@@ -20,11 +25,16 @@ from generic_process import (
     timestamp,
 )
 from generic_sources import freeze_source, git, inventory
-from mux2_gate_inputs import INPUT_DIRS, INPUT_FILES, EvidenceError, Json
+from mux2_gate_inputs import BRIDGE, INPUT_DIRS, INPUT_FILES, EvidenceError, Json
+from mux2_gate_lock import LOCK
 
 GATE_SHA256 = 'e794a514289ee13b58b76a1745f6b42c5040ae1acb0af20bf43c5261b7e1cc1d'
 DIAGNOSIS_RESULT = 'docs/v8/read/read_30s_result.json'
+STRICT_FILES = ('tools/v8/mux21_layout_test.gd', 'tools/v8/mux21_toast_test.gd',
+                'tools/v8/mux21_play_capture.gd', 'tools/v8/mux21_why_locale_test.gd')
 COMMANDS: dict[int, tuple[str, tuple[str, ...]]] = {
+    8: ('gdscript_strict', ('bash', 'tools/v8/gdscript_strict_check.sh')),
+    46: ('gdscript.four_files', ('bash', 'tools/v8/gdscript_strict_check.sh', *STRICT_FILES)),
     1: ('fmt', ('bash', '-c', 'cd rust && cargo fmt --all -- --check')),
     7: ('forbidden_math', ('bash', '-c', r"cd rust && ! grep -rnE '\.(exp|exp2|ln|log2|log10|powf|powi|sin|cos|tan|tanh|atan2|hypot|cbrt)\(' crates/sim-core/src crates/sim-systems/src crates/sim-engine/src")),
     13: ('bridge_api', ('python3', 'tools/v8/bridge_api.py', '.', '--check', 'docs/v8/bridge_api_read.txt')),
@@ -53,6 +63,8 @@ class ExecutionEnvironment:
     # Caller supplies Python/toolchain/config dependency files; no inferred closure.
     external_inputs: tuple[tuple[Path, str], ...]
     prior_receipts: tuple[tuple[Path, str], ...] = ()
+    # Only strict Godot checks: caller retains this descriptor, including on unknown ownership.
+    held_lane_fd: int | None = None
 
 
 def verify_receipt(path: Path, digest: str) -> None:
@@ -66,6 +78,52 @@ def verify_receipt(path: Path, digest: str) -> None:
     require(actual == expected, str(path), 'prior artifacts changed')
     require({p.name for p in path.parent.iterdir()} == ({'receipt.json', 'process'} if actual else {'receipt.json'}),
             str(path), 'unexpected receipt output')
+
+
+class StrictOwnershipUnknown(RuntimeError):
+    """Outer shell settlement does not establish descendant quiescence; retain lane."""
+
+
+def _strict_unknown(output: Path, receipt: dict[str, Json], reason: str) -> NoReturn:
+    try:
+        receipt.update(ownership='INCOMPLETE_DESCENDANTS_UNKNOWN', errors=[reason],
+                       finished_at=timestamp())
+        atomic_json(output/'receipt.json', receipt)
+    except BaseException as error:
+        # Even diagnostic interruption cannot establish descendant quiescence.
+        raise StrictOwnershipUnknown('strict diagnostic write failed; retain lane') from error
+    raise StrictOwnershipUnknown(f'{output}: {reason}')
+
+
+def strict_files(root: Path, step: int) -> tuple[str, ...]:
+    require(step in {8, 46}, '/strict', 'unknown strict step')
+    names = STRICT_FILES if step == 46 else tuple(sorted(
+        path.relative_to(root).as_posix() for path in (root/'scripts').rglob('*.gd')
+        if 'test' not in path.relative_to(root).parts))
+    require(bool(names), '/strict', 'empty original script selection')
+    for name in names:real_path(root/name, directory=False)
+    return names
+
+
+def strict_input_names(root: Path) -> list[str]:
+    """Reuse the admitted Godot resolver; require a stable prepared runtime."""
+    caches = ['.godot/global_script_class_cache.cfg', '.godot/extension_list.cfg', '.godot/uid_cache.bin']
+    real_path(root/'.godot/imported', directory=True)
+    names = [*INPUT_DIRS, *INPUT_FILES, BRIDGE, *caches, '.godot/imported']
+    names.extend(name for name in sorted(resolution_paths(root)) if not any(
+        name == prior or name.startswith(prior+'/') for prior in names))
+    return names
+
+
+def strict_terminal(stdout: str, stderr: str, count: int) -> None:
+    lines = [line for line in stdout.splitlines() if line.strip()]
+    require(count > 0 and bool(lines) and lines[-1] == '[gdcheck] ALL CHECKS PASS' and
+            lines.count('[gdcheck] ALL CHECKS PASS') == 1, '/strict', 'missing or nonterminal strict marker')
+    parse = re.findall(r'^\[gdcheck\] parse \+ warnings: ([0-9]+) file\(s\) clean ✓$', stdout, re.MULTILINE)
+    ffi = re.findall(r'^\[gdcheck\] FFI bindings: ([0-9]+) GDScript call\(s\) all match Rust #\[func\] exports ✓$', stdout, re.MULTILINE)
+    require(parse == [str(count)] and len(ffi) == 1, '/strict', 'parse count or FFI terminal differs')
+    require(not re.search(r'^\[gdcheck\] (?:FAIL|WARN|ERROR)', stdout+'\n'+stderr, re.MULTILINE),
+            '/strict', 'original strict oracle reported failure or skipped FFI')
 
 
 def _tools(context: ExecutionEnvironment, step: int) -> dict[str, Path]:
@@ -91,6 +149,28 @@ def _tools(context: ExecutionEnvironment, step: int) -> dict[str, Path]:
             real_path(Path(env[key]), directory=True)
         require(not ({'PYTHONPATH', 'PYTHONHOME', 'PERL5LIB', 'PERL5OPT', 'WORLDSIM_MUX2_LANE_FD'} & env.keys()),
                 '/environment', 'step16 inherited runtime or lane override')
+    if step in {8, 46}:
+        descriptor = context.held_lane_fd
+        require(type(descriptor) is int and descriptor >= 0, '/lane', 'caller-held descriptor required')
+        if descriptor is None:raise StrictOwnershipUnknown('missing caller lane')
+        held = os.fstat(descriptor);canonical = LOCK.stat()
+        require(stat.S_ISREG(held.st_mode) and (held.st_dev, held.st_ino) == (canonical.st_dev, canonical.st_ino),
+                '/lane', 'descriptor is not the canonical native lane')
+        fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        required |= {'python3', 'find', 'mktemp', 'rm', 'cp', 'cat', 'wc', 'tr', 'grep', 'head', 'sed', 'sort'}
+        allowed = {'PATH', 'LANG', 'LC_ALL', 'CARGO_BUILD_JOBS', 'HOME', 'TMPDIR', 'GODOT_BIN',
+                   'PYTHONNOUSERSITE', 'PYTHONDONTWRITEBYTECODE', 'PYTHONCOERCECLOCALE',
+                   'GIT_CONFIG_GLOBAL', 'GIT_CONFIG_NOSYSTEM', '__CF_USER_TEXT_ENCODING'}
+        require(env.keys() <= allowed, '/environment', 'strict unapproved startup/runtime override')
+        for key in ('PYTHONNOUSERSITE', 'PYTHONDONTWRITEBYTECODE'):
+            require(env.get(key) == '1', key, 'strict Python startup policy differs')
+        for key in ('HOME', 'TMPDIR'):
+            require(key in env, key, 'strict directory missing')
+            real_path(Path(env[key]), directory=True)
+        require('GODOT_BIN' in env, '/godot', 'explicit Godot required')
+        godot = Path(env['GODOT_BIN']);real_path(godot, directory=False)
+        require(len(dict(context.external_inputs)) == len(context.external_inputs) and
+                dict(context.external_inputs).get(godot) == file_hash(godot), '/godot', 'unbound Godot executable')
     if step == 51:
         allowed = {'PATH', 'LANG', 'LC_ALL', 'CARGO_BUILD_JOBS', 'HOME', 'TMPDIR',
                    'PYTHONNOUSERSITE', 'PYTHONDONTWRITEBYTECODE', 'PYTHONCOERCECLOCALE',
@@ -194,9 +274,15 @@ def run_step(product: StaticProduct, step: int, output: Path,
     before: dict[str, Json] | None = None
     refs: dict[str, str] | None = None
     context = execution_environment
+    selected: tuple[str, ...] = ()
+    project_mode: int | None = None
     input_names = [*INPUT_DIRS, *INPUT_FILES, *(['docs'] if step == 16 else [DIAGNOSIS_RESULT] if step == 51 else [])]
     try:
         tools = _tools(context, step)
+        if step in {8, 46}:
+            project_mode = stat.S_IMODE((product.root/'project.godot').stat().st_mode)
+            selected = strict_files(product.root, step)
+            input_names = strict_input_names(product.root)
         for path, digest in context.prior_receipts:
             verify_receipt(path, digest)
         require(file_hash(product.root / 'tools/v8/gate.sh') == GATE_SHA256, '/gate', 'command source changed')
@@ -218,12 +304,24 @@ def run_step(product: StaticProduct, step: int, output: Path,
         spec = ProcessSpec((str(entry), *original[1:]), product.root, entry, file_hash(entry),
                            product.root, product.inputs, output / 'process', context.values,
                            tuple(externals.items()))
-        result = execute(spec)
+        try:
+            result = execute(spec)
+        except BaseException:
+            if step in {8, 46}:
+                receipt['process_status'] = 'UNKNOWN'
+                _strict_unknown(output, receipt, 'strict execution did not return')
+            raise
+        if step in {8, 46} and result.pid is not None and (result.native_exit is None or result.native_exit < 0):
+            receipt.update(process_status=result.status, native_exit=result.native_exit, pid=result.pid,
+                           process_receipt=str(result.receipt))
+            _strict_unknown(output, receipt, 'strict shell completion unknown')
         artifacts = inventory(output, ['process'])
         receipt.update(process_status=result.status, native_exit=result.native_exit, pid=result.pid,
                        process_receipt=str(result.receipt), process_receipt_sha256=file_hash(result.receipt))
         native = document(result.receipt.read_text(encoding='utf-8'))
         require(native.field('environment').mapping() == dict(context.values), '/environment', 'effective environment differs')
+        if step in {8, 46}:
+            strict_terminal((output/'process/stdout.log').read_text(), (output/'process/stderr.log').read_text(), len(selected))
         if step == 16:
             terminal = unittest_terminal((output / 'process/stderr.log').read_bytes().decode('utf-8'))
             receipt['unittest'] = terminal
@@ -247,6 +345,11 @@ def run_step(product: StaticProduct, step: int, output: Path,
         after = freeze_source(product.root, product.source_sha)
         receipt['source_end'] = after
         require(before is not None and after == before, '/source', 'source binding differs')
+        if step in {8, 46}:
+            require(stat.S_IMODE((product.root/'project.godot').stat().st_mode) == project_mode,
+                    '/strict', 'project mode changed')
+            require(strict_files(product.root, step) == selected, '/strict', 'script selection changed')
+            require(strict_input_names(product.root) == input_names, '/strict', 'resource resolution changed')
         ending = inventory(product.root, input_names)
         receipt['inputs_end'] = dict(ending)
         require(ending == dict(product.inputs), '/inputs', 'effective inputs changed')

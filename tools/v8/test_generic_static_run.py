@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import final
 from unittest.mock import Mock, patch
 
+import bridge_api
 import generic_static_run as runner
 from generic_fixture_run import ComponentResult
 from generic_gate import GateContractError, document
@@ -27,6 +28,7 @@ class Fixture:
         self.root = self.base / 'root'
         (self.root / 'tools/v8').mkdir(parents=True)
         _ = (self.root / 'tools/v8/gate.sh').write_text('synthetic command source')
+        _ = (self.root / 'project.godot').write_text('synthetic project')
         self.child = self.base / 'tiny-child'
         _ = self.child.write_text('#!/bin/sh\necho synthetic-only\nexit 0\n')
         self.child.chmod(0o755)
@@ -55,9 +57,9 @@ class Fixture:
 class StaticTests(unittest.TestCase):
     def test_all_exact_commands_cwd_and_component_scope(self) -> None:
         fixture = Fixture(self)
-        self.assertEqual(set(runner.COMMANDS), {1, 7, 13, 15, 16, 20, 22, 31, 33, 51})
+        self.assertEqual(set(runner.COMMANDS), {1, 7, 8, 13, 15, 16, 20, 22, 31, 33, 46, 51})
         for step, (_, argv) in runner.COMMANDS.items():
-            if step in {16, 51}:
+            if step in {8, 16, 46, 51}:
                 continue
             with self.subTest(step=step):
                 result = fixture.run_one(step, str(step))
@@ -422,3 +424,227 @@ class DiagnosisTests(unittest.TestCase):
 
 if __name__ == '__main__':
     _ = unittest.main()
+
+
+class StrictTests(unittest.TestCase):
+    def test_exact_closed_commands(self) -> None:
+        self.assertIn(8, runner.COMMANDS)
+        self.assertEqual(runner.COMMANDS[8][1], ('bash', 'tools/v8/gdscript_strict_check.sh'))
+        self.assertEqual(runner.COMMANDS[46][1], ('bash', 'tools/v8/gdscript_strict_check.sh',
+            'tools/v8/mux21_layout_test.gd', 'tools/v8/mux21_toast_test.gd',
+            'tools/v8/mux21_play_capture.gd', 'tools/v8/mux21_why_locale_test.gd'))
+
+    def test_terminal_requires_count_ffi_and_final_marker(self) -> None:
+        good = '[gdcheck] parse + warnings: 4 file(s) clean ✓\n[gdcheck] FFI bindings: 2 GDScript call(s) all match Rust #[func] exports ✓\n[gdcheck] ALL CHECKS PASS\n'
+        runner.strict_terminal(good, '', 4)
+        for text in (good.replace('4 file(s)', '3 file(s)'), good + 'other\n',
+                     good.replace('[gdcheck] ALL CHECKS PASS', ''),
+                     good.replace('[gdcheck] FFI bindings:', '[gdcheck] WARN:'),
+                     '[gdcheck] no .gd files to check\n'):
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                runner.strict_terminal(text, '', 4)
+        with self.assertRaises(ValueError):
+            runner.strict_terminal(good, '[gdcheck] FAIL parse/warning: a.gd', 4)
+
+    def test_original_shell_full_selection_masked_exit_and_restoration(self) -> None:
+        import os
+        source = Path(bridge_api.__file__).resolve().parent
+        for output, code, expected in (('', 7, 0), ('SCRIPT ERROR synthetic', 0, 2)):
+            with self.subTest(output=output), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp).resolve()
+                (root/'tools/v8').mkdir(parents=True)
+                (root/'scripts/test').mkdir(parents=True)
+                _ = (root/'scripts/a.gd').write_text('extends Node\n')
+                _ = (root/'scripts/b.gd').write_text('extends Node\n')
+                _ = (root/'scripts/test/skip.gd').write_text('extends Node\n')
+                (root/'rust/crates/sim-bridge/src').mkdir(parents=True)
+                _ = (root/'rust/crates/sim-bridge/src/lib.rs').write_text('')
+                for name in ('gdscript_strict_check.sh', 'godot_bin.sh', 'bridge_api.py'):
+                    _ = shutil.copyfile(source/name, root/'tools/v8'/name)
+                project=root/'project.godot';_ = project.write_text('config_version=5\n')
+                original=project.read_bytes()
+                fake=root/'fake-godot'
+                _ = fake.write_text('#!/bin/sh\necho "$*" >> "'+str(root/'calls')+'"\necho "'+output+'"\nexit '+str(code)+'\n')
+                fake.chmod(0o755)
+                result=subprocess.run(('/bin/bash', 'tools/v8/gdscript_strict_check.sh'), cwd=root,
+                    env={'PATH':str(Path(sys.executable).parent)+':/usr/bin:/bin','GODOT_BIN':str(fake),
+                         'HOME':str(root),'TMPDIR':str(root),'LANG':'C','LC_ALL':'C','PYTHONDONTWRITEBYTECODE':'1'},
+                    capture_output=True, check=False)
+                self.assertEqual(result.returncode,expected, result.stderr.decode())
+                self.assertEqual(project.read_bytes(),original)
+                calls=(root/'calls').read_text().splitlines()
+                self.assertEqual(len(calls),2)
+                self.assertTrue(all('--headless --check-only --script scripts/' in row for row in calls))
+                self.assertFalse(any('skip.gd' in row for row in calls))
+                self.assertEqual(runner.strict_files(root,8),('scripts/a.gd','scripts/b.gd'))
+                if expected==0:runner.strict_terminal(result.stdout.decode(),result.stderr.decode(),2)
+                self.assertEqual(os.stat(project).st_mode & 0o777, 0o644)
+
+    def test_runtime_scope_reuses_resolver_without_overlapping_input_scopes(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp).resolve();(root/'.godot/imported').mkdir(parents=True)
+            with patch.object(runner,'resolution_paths',return_value={'scripts/a.gd','.godot/imported/a.ctex','extra.gd'}):
+                names=runner.strict_input_names(root)
+            self.assertIn('extra.gd',names)
+            self.assertNotIn('scripts/a.gd',names)
+            self.assertNotIn('.godot/imported/a.ctex',names)
+            self.assertIn('rust/target/debug/libsim_bridge.dylib',names)
+
+    def test_unknown_shell_ownership_is_not_returned_as_ordinary_failure(self) -> None:
+        from generic_process import ProcessResult, ProcessSpec
+        fixture=Fixture(self)
+        def unknown(spec: ProcessSpec) -> ProcessResult:
+            spec.output_root.mkdir()
+            path=spec.output_root/'process.json';_ = path.write_text('{}')
+            return ProcessResult(path,'FAIL',-9,123)
+        with patch.object(runner,'_tools',return_value={'bash':fixture.child}), \
+             patch.object(runner,'strict_files',return_value=('scripts/a.gd',)), \
+             patch.object(runner,'strict_input_names',return_value=['scripts']), \
+             patch.object(runner,'execute',side_effect=unknown), \
+             self.assertRaises(runner.StrictOwnershipUnknown):
+            _ = fixture.run_one(8)
+        receipt=document((fixture.base/'out/receipt.json').read_text())
+        self.assertEqual(receipt.field('ownership').text(),'INCOMPLETE_DESCENDANTS_UNKNOWN')
+        self.assertEqual(receipt.field('native_exit').value,-9)
+        self.assertEqual(receipt.field('artifacts').value,{})
+
+    def test_strict_environment_requires_explicit_canonical_lane_and_godot(self) -> None:
+        from dataclasses import replace
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp).resolve()
+            fake=root/'godot';_ = fake.write_text('#!/bin/sh\nexit 0\n');fake.chmod(0o755)
+            path=str(Path(sys.executable).parent)+':/usr/bin:/bin'
+            names=('git','bash','python3','find','mktemp','rm','cp','cat','wc','tr','grep','head','sed','sort')
+            tools: list[tuple[str,Path,str]]=[]
+            for name in names:
+                found=shutil.which(name,path=path)
+                self.assertIsNotNone(found)
+                if found is None:raise AssertionError(name)
+                binary=Path(found).resolve();tools.append((name,binary,file_hash(binary)))
+            values=(('PATH',path),('LANG','C'),('LC_ALL','C'),('CARGO_BUILD_JOBS','2'),
+                    ('HOME',str(root)),('TMPDIR',str(root)),('GODOT_BIN',str(fake)),
+                    ('PYTHONNOUSERSITE','1'),('PYTHONDONTWRITEBYTECODE','1'))
+            context=runner.ExecutionEnvironment(values,tuple(tools),((fake,file_hash(fake)),))
+            lock=root/'lane'
+            with lock.open('w') as held, patch.object(runner,'LOCK',lock):
+                with self.assertRaises(ValueError):_ = runner.validate_environment(context,8)
+                context=replace(context,held_lane_fd=held.fileno())
+                self.assertEqual(runner.validate_environment(context,8)['bash'],{n:p for n,p,_ in tools}['bash'])
+                for key in ('BASH_ENV','PYTHONPATH','LD_PRELOAD','WORLDSIM_MUX2_LANE_FD'):
+                    with self.subTest(key=key),self.assertRaises(ValueError):
+                        _ = runner.validate_environment(replace(context,values=(*values,(key,'foreign'))),46)
+                with self.assertRaises(ValueError):_ = runner.validate_environment(replace(context,external_inputs=()),8)
+                with (root/'foreign').open('w') as other,self.assertRaises(ValueError):
+                    _ = runner.validate_environment(replace(context,held_lane_fd=other.fileno()),8)
+                self.assertFalse(held.closed)
+
+    def test_step46_selection_remains_exact_four_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp).resolve()
+            for name in runner.STRICT_FILES:
+                path=root/name;path.parent.mkdir(parents=True,exist_ok=True);_ = path.write_text('extends Node\n')
+            self.assertEqual(runner.strict_files(root,46),runner.STRICT_FILES)
+
+    def test_strict_adapter_retains_original_terminal_and_endpoint_checks(self) -> None:
+        fixture=Fixture(self)
+        _ = fixture.child.write_text('#!/bin/sh\necho "[gdcheck] parse + warnings: 1 file(s) clean ✓"\necho "[gdcheck] FFI bindings: 0 GDScript call(s) all match Rust #[func] exports ✓"\necho "[gdcheck] ALL CHECKS PASS"\n')
+        fixture.context=runner.ExecutionEnvironment(fixture.context.values,
+            tuple((name,path,file_hash(path)) for name,path,_ in fixture.context.tools),())
+        with patch.object(runner,'_tools',return_value={'bash':fixture.child}), \
+             patch.object(runner,'strict_files',return_value=('scripts/a.gd',)), \
+             patch.object(runner,'strict_input_names',return_value=['scripts']):
+            result=fixture.run_one(8)
+        self.assertEqual(result.status,'PASS')
+        runner.verify_receipt(result.receipt,file_hash(result.receipt))
+        self.assertEqual(document(result.receipt.read_text()).field('source_invocation').value,
+                         ['bash','tools/v8/gdscript_strict_check.sh'])
+
+    def test_strict_unreturned_execution_cannot_freeze_unknown_descendants(self) -> None:
+        from generic_process import ProcessSpec
+        fixture=Fixture(self)
+        def unknown(spec: ProcessSpec) -> None:
+            spec.output_root.mkdir()
+            _ = (spec.output_root/'process-spawn.json').write_text('{"pid":123,"spawned_at":"2026-11-03T00:00:00+00:00"}')
+            raise OSError('injected terminal write failure after spawn')
+        with patch.object(runner,'_tools',return_value={'bash':fixture.child}), \
+             patch.object(runner,'strict_files',return_value=('scripts/a.gd',)), \
+             patch.object(runner,'strict_input_names',return_value=['scripts']), \
+             patch.object(runner,'execute',side_effect=unknown), \
+             self.assertRaises(runner.StrictOwnershipUnknown):
+            _ = fixture.run_one(8)
+        receipt=document((fixture.base/'out/receipt.json').read_text())
+        self.assertEqual(receipt.field('ownership').text(),'INCOMPLETE_DESCENDANTS_UNKNOWN')
+        self.assertNotIn('source_end',receipt.mapping())
+        self.assertEqual(receipt.field('artifacts').value,{})
+
+    def test_strict_negative_exit_missing_receipt_stays_unknown(self) -> None:
+        from generic_process import ProcessResult, ProcessSpec
+        fixture=Fixture(self)
+        def unknown(spec: ProcessSpec) -> ProcessResult:
+            spec.output_root.mkdir()
+            return ProcessResult(spec.output_root/'process.json','FAIL',-9,123)
+        with patch.object(runner,'_tools',return_value={'bash':fixture.child}), \
+             patch.object(runner,'strict_files',return_value=('scripts/a.gd',)), \
+             patch.object(runner,'strict_input_names',return_value=['scripts']), \
+             patch.object(runner,'execute',side_effect=unknown), \
+             self.assertRaises(runner.StrictOwnershipUnknown):
+            _ = fixture.run_one(8)
+        receipt=document((fixture.base/'out/receipt.json').read_text())
+        self.assertEqual(receipt.field('ownership').text(),'INCOMPLETE_DESCENDANTS_UNKNOWN')
+        self.assertEqual(receipt.field('native_exit').value,-9)
+        self.assertNotIn('source_end',receipt.mapping())
+
+    def test_strict_project_full_mode_change_is_rejected_not_repaired(self) -> None:
+        fixture=Fixture(self)
+        project=fixture.root/'project.godot';_ = project.write_text('config_version=5\n');project.chmod(0o644)
+        _ = fixture.child.write_text('#!/bin/sh\nchmod 600 project.godot\necho "[gdcheck] parse + warnings: 1 file(s) clean ✓"\necho "[gdcheck] FFI bindings: 0 GDScript call(s) all match Rust #[func] exports ✓"\necho "[gdcheck] ALL CHECKS PASS"\n')
+        fixture.context=runner.ExecutionEnvironment(fixture.context.values,
+            tuple((name,path,file_hash(path)) for name,path,_ in fixture.context.tools),())
+        with patch.object(runner,'_tools',return_value={'bash':fixture.child}), \
+             patch.object(runner,'strict_files',return_value=('scripts/a.gd',)), \
+             patch.object(runner,'strict_input_names',return_value=['scripts']):
+            result=fixture.run_one(8)
+        self.assertEqual(result.status,'FAIL')
+        self.assertIn('project mode',result.receipt.read_text())
+        self.assertEqual(project.stat().st_mode & 0o777,0o600)
+        self.assertEqual(project.read_text(),'config_version=5\n')
+
+    def test_strict_unknown_diagnostic_failure_cannot_downgrade_ownership(self) -> None:
+        fixture=Fixture(self)
+        with patch.object(runner,'_tools',return_value={'bash':fixture.child}), \
+             patch.object(runner,'strict_files',return_value=('scripts/a.gd',)), \
+             patch.object(runner,'strict_input_names',return_value=['scripts']), \
+             patch.object(runner,'execute',side_effect=OSError('execution unknown')), \
+             patch.object(runner,'atomic_json',side_effect=OSError('diagnostic unavailable')), \
+             self.assertRaisesRegex(runner.StrictOwnershipUnknown,'diagnostic write failed'):
+            _ = fixture.run_one(8)
+        self.assertFalse((fixture.base/'out/receipt.json').exists())
+        self.assertEqual(fixture.source.call_count,1)
+
+    def test_strict_all_execution_exceptions_retain_unknown(self) -> None:
+        fixture=Fixture(self)
+        for index, error in enumerate((TypeError('after spawn'), AssertionError('after spawn'),
+                                       KeyboardInterrupt(), SystemExit(2))):
+            with self.subTest(error=type(error).__name__), \
+                 patch.object(runner,'_tools',return_value={'bash':fixture.child}), \
+                 patch.object(runner,'strict_files',return_value=('scripts/a.gd',)), \
+                 patch.object(runner,'strict_input_names',return_value=['scripts']), \
+                 patch.object(runner,'execute',side_effect=error), \
+                 self.assertRaises(runner.StrictOwnershipUnknown):
+                _ = fixture.run_one(8,f'exception-{index}')
+
+    def test_strict_all_diagnostic_exceptions_retain_unknown(self) -> None:
+        fixture=Fixture(self)
+        index=0
+        for target in ('atomic_json','timestamp'):
+            for error in (TypeError('diagnostic'), RuntimeError('diagnostic'), KeyboardInterrupt(), SystemExit(2)):
+                effects = ['2026-11-03T00:00:00+00:00',error] if target == 'timestamp' else error
+                with self.subTest(target=target,error=type(error).__name__), \
+                     patch.object(runner,'_tools',return_value={'bash':fixture.child}), \
+                     patch.object(runner,'strict_files',return_value=('scripts/a.gd',)), \
+                     patch.object(runner,'strict_input_names',return_value=['scripts']), \
+                     patch.object(runner,'execute',side_effect=TypeError('execution unknown')), \
+                     patch.object(runner,target,side_effect=effects), \
+                     self.assertRaises(runner.StrictOwnershipUnknown):
+                    _ = fixture.run_one(8,f'diagnostic-{index}')
+                index+=1
