@@ -3,14 +3,18 @@ import json
 import tempfile
 import unittest
 from contextlib import nullcontext
+from dataclasses import replace
 from pathlib import Path
+from typing import final
 from unittest.mock import patch
 
+import generic_perf_run
 from core_p7_admission import AdmissionError, admit
 from generic_bench import AuditError, Product
-from generic_gate import document
+from generic_gate import document, typed_json
+from generic_perf_observations import PerfObservation
 from generic_perf_run import plans, run_pair
-from generic_process import ProcessResult, ProcessSpec
+from generic_process import ProcessResult, ProcessSpec, environment_for, file_hash
 from mux2_gate_inputs import Json, Node
 from test_generic_observations import receipt
 
@@ -21,6 +25,9 @@ def product(root: Path) -> Product:
 
 
 class PlansTests(unittest.TestCase):
+    def test_authenticator_is_source_owned(self) -> None:
+        self.assertTrue(callable(getattr(generic_perf_run, "authenticate_result", None)))
+
     def test_standing_perf_matrix_and_explicit_companion(self) -> None:
         root = Path('/synthetic')
         for arm in ('base', 'candidate'):
@@ -48,10 +55,12 @@ class PlansTests(unittest.TestCase):
 
 
 class SyntheticRunTests(unittest.TestCase):
-    def exercise(self, fixture: str, defect: str = '') -> Node:
+    def exercise(self, fixture: str, defect: str = '', *, authenticate: bool=False, mutation: str='') -> Node:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             products = [product(root / arm) for arm in ('base','candidate')]
+            if authenticate:
+                products=[replace(p,input_files=((*p.input_files,('tools/v8/soak_script.json','e'*64)))) for p in products]
             output = root / 'out'
             matrix = {arm: plans(fixture, prod, output / arm, arm)
                       for arm,prod in zip(('base','candidate'),products)}
@@ -117,6 +126,7 @@ class SyntheticRunTests(unittest.TestCase):
                     (spec.output_root/'forbidden').symlink_to(raw)
                 if defect == 'admission_rewrite':
                     _ = (output/'admission.jsonl').write_text('rewritten')
+                if authenticate:synthetic_process(spec,42)
                 return ProcessResult(process, 'PASS', 0, 42)
 
             def admission(log: Path, label: str, *, deadline: float) -> tuple[float,float,float]:
@@ -125,19 +135,36 @@ class SyntheticRunTests(unittest.TestCase):
                         _ = log.write_text('rewritten\n')
                     return admit(log, label, deadline=deadline, sample=lambda: (1.,1.,1.),
                                  clock=lambda: 50. if not calls else 100.)
+                if defect=='bad_sample' and calls:
+                    return admit(log,label,deadline=deadline,sample=lambda:(-1.,1.,1.),clock=lambda:50.)
                 if defect == 'admission':
                     raise AdmissionError('load not admitted')
                 with log.open('a') as stream:
-                    _ = stream.write(json.dumps({'label':label, 'deadline':deadline})+'\n')
+                    _ = stream.write(json.dumps({'label':label,'utc':50.,'window':0,'loads_1_5_15':[1.,1.,1.],'status':'ADMITTED'} if authenticate else {'label':label, 'deadline':deadline})+'\n')
                 return (1.,1.,1.)
 
             with patch('generic_perf_run.prepare', return_value=matrix), \
                  patch('generic_perf_run.lane', return_value=nullcontext()), \
                  patch('generic_perf_run.admit', side_effect=admission), \
                  patch('generic_perf_run.verify_product', side_effect=AuditError('postflight changed') if defect=='postflight' else None), \
-                 patch('generic_perf_run.inventory', return_value={'content.ron':'d'*64}), \
+                 patch('generic_perf_run.validate_products'), \
+                 patch('generic_perf_run.inventory', side_effect=synthetic_inventory), \
                  patch('generic_perf_run.execute', side_effect=child):
                 target = run_pair(fixture, products[0], products[1], output, deadline=100.)
+                if authenticate:
+                    if mutation and mutation!='late_log':mutate(output,mutation)
+                    original_audit=generic_perf_run.audit
+                    audit_count=0
+                    def checked_audit(run: generic_perf_run.Run, prod: Product, pid: int, raw: Path) -> tuple[PerfObservation,dict[Path,str]]:
+                        nonlocal audit_count
+                        result=original_audit(run,prod,pid,raw);audit_count+=1
+                        if mutation=='late_log' and audit_count==len(lookup):
+                            _=(processes[0].parent/'stdout.log').write_text('changed after checked')
+                        return result
+                    with patch('generic_perf_run.audit',side_effect=checked_audit):
+                        result=generic_perf_run.authenticate_result(fixture,products[0],products[1],output,
+                            receipt_sha256=file_hash(target),deadline=100.)
+                    self.assertEqual(result.status,document(target.read_text()).field('status').text())
             result = document(target.read_text())
             result.field('publication_authorized').equals(False)
             self.assertIn('output_sha256', result.mapping())
@@ -203,6 +230,95 @@ class SyntheticRunTests(unittest.TestCase):
         result = self.exercise('nav.soak','admission')
         self.assertEqual(result.field('status').text(), 'PENDING')
         self.assertEqual(result.field('worlds').array(), [])
+
+
+def synthetic_inventory(_root: Path, names: list[str]) -> dict[str,str]:
+    return {name:('e' if name.endswith('soak_script.json') else 'd')*64 for name in names}
+
+
+def synthetic_process(spec: ProcessSpec, pid: int) -> None:
+    """Native-shaped frozen receipts, explicitly synthetic process evidence."""
+    start: dict[str,Json]={'schema_version':1,'argv':list(spec.argv),'cwd':str(spec.cwd),'executable':str(spec.executable),
+        'expected_executable_sha256':spec.executable_sha256,'input_root':str(spec.input_root),'expected_inputs':dict(spec.inputs),
+        'output_root':str(spec.output_root),'environment':{k:v for k,v in environment_for(spec).items()},'expected_external_inputs':{},
+        'fresh_directories':[],'environment_policy':'fixed_defaults_plus_explicit_only_no_inheritance','build_provenance_verified':False,
+        'before_executable_sha256':spec.executable_sha256,'before_inputs':dict(spec.inputs),'before_external_inputs':{},'after_external_inputs':{},
+        'started_at':'1970-01-01T00:01:00+00:00','pid':None,'native_exit':None,'status':'FAIL','errors':[]}
+    _=(spec.output_root/'process-start.json').write_text(json.dumps(start))
+    _=(spec.output_root/'process-spawn.json').write_text(json.dumps({'pid':pid,'spawned_at':'1970-01-01T00:01:01+00:00'}))
+    _=(spec.output_root/'stderr.log').write_text('')
+    terminal=dict(start);terminal.update(pid=pid,native_exit=0,status='PASS',ended_at='1970-01-01T00:01:02+00:00',duration_ns=2_000_000_000,
+        after_executable_sha256=spec.executable_sha256,after_inputs=dict(spec.inputs),stdout_sha256=file_hash(spec.output_root/'stdout.log'),
+        stderr_sha256=file_hash(spec.output_root/'stderr.log'),limit='Endpoint executable/input binding only; no build, descendants, output schema, or whole-gate authority.')
+    _=(spec.output_root/'process.json').write_text(json.dumps(terminal))
+
+
+def mutate(output: Path, mutation: str) -> None:
+    target=output/'result.json';report=document(target.read_text()).mapping()
+    first=Node(report['worlds']).array()[0]
+    process=Path(first.field('process').text())
+    payload=document(process.read_text()).mapping()
+    match mutation:
+        case 'pid':payload['pid']=True
+        case 'argv':payload['argv']=[]
+        case 'duration_zero':payload['duration_ns']=0
+        case 'duration_negative':payload['duration_ns']=-1
+        case 'ended':payload['ended_at']='1970-01-01T00:00:01+00:00'
+        case 'start':
+            start=process.parent/'process-start.json';row=document(start.read_text()).mapping();row['pid']=42
+            _=start.write_text(json.dumps(row))
+        case 'safety':report['safety']=[]
+        case 'source':first.mapping()['source_sha']='f'*40
+        case 'terminal_extra':report['schema_version']=1
+        case 'extra_process':_=(process.parent/'extra').write_text('extra')
+        case 'omit_pending':
+            report.update(status='PENDING',worlds=[],safety=[],errors=['load not admitted'])
+            (output/'admission.jsonl').unlink()
+        case 'extra_output':_=(output/'unregistered.txt').write_text('extra')
+        case 'missing_admission':(output/'admission.jsonl').unlink()
+        case 'admission':
+            path=output/'admission.jsonl';rows=[document(line).mapping() for line in path.read_text().splitlines()];rows[0]['utc']=101.
+            _=path.write_text(''.join(json.dumps(row)+'\n' for row in rows))
+        case 'index':
+            index=Path(first.field('raw').text()).parent/'runs.json';row=document(index.read_text()).mapping();row['runs']=[entry.value for entry in reversed(Node(row['runs']).array())]
+            _=index.write_text(json.dumps(row))
+        case _:raise AssertionError(mutation)
+    _=process.write_text(json.dumps(payload))
+    frozen=generic_perf_run.freeze(output);_=frozen.pop('result.json');report['output_sha256']=typed_json(frozen)
+    _=target.write_text(json.dumps(report))
+
+
+@final
+class AuthenticationTests(unittest.TestCase):
+    exercise=SyntheticRunTests.exercise
+    def test_both_complete_producers_reauthenticate(self) -> None:
+        for fixture in ('nav.soak','perf.natural_quick'):
+            self.exercise(fixture,authenticate=True).field('status').equals('COMPONENT_PASS')
+
+    def test_resealed_false_success_rejected(self) -> None:
+        for mutation in ('pid','argv','duration_zero','duration_negative','ended','start','safety','source','terminal_extra','extra_process','admission','late_log','extra_output','missing_admission'):
+            with self.subTest(mutation=mutation),self.assertRaises(ValueError):
+                _=self.exercise('nav.soak',authenticate=True,mutation=mutation)
+        with self.assertRaises(ValueError):_=self.exercise('perf.natural_quick',authenticate=True,mutation='index')
+
+    def test_missing_terminal_is_not_an_authenticated_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as directory,patch('generic_perf_run.validate_products'):
+            root=Path(directory).resolve()
+            with self.assertRaises(OSError):
+                _=generic_perf_run.authenticate_result('nav.soak',product(root/'base'),product(root/'candidate'),root,
+                    receipt_sha256='a'*64,deadline=100.)
+
+    def test_pending_cannot_omit_retained_completed_children(self) -> None:
+        with self.assertRaises(ValueError):
+            _=self.exercise('nav.soak',authenticate=True,mutation='omit_pending')
+
+    def test_inconsistent_partial_pending_is_rejected(self) -> None:
+        with self.assertRaises(ValueError):
+            _=self.exercise('nav.soak','late_admission',authenticate=True,mutation='admission')
+
+    def test_partial_pending_and_failure_retained(self) -> None:
+        for defect,status in (('admission','PENDING'),('late_admission','PENDING'),('bad_sample','PENDING'),('exit','FAIL')):
+            self.exercise('nav.soak',defect,authenticate=True).field('status').equals(status)
 
 
 if __name__ == '__main__':

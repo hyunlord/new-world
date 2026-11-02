@@ -11,15 +11,25 @@ import hashlib
 import json
 import math
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Literal, Protocol, runtime_checkable
 
 import perf_summary
 from core_p7_admission import AdmissionError, admit
 from generic_bench import AuditError, Product, validate_products, verify_product
-from generic_gate import document, require, typed_json
+from generic_gate import boundary, document, integer, require, typed_json
+from generic_observations import keys
 from generic_perf_observations import PerfObservation, Plan, paired_safety, parse_native
-from generic_process import ProcessSpec, atomic_json, execute, file_hash
+from generic_process import (
+    ProcessSpec,
+    atomic_json,
+    check_digest,
+    environment_for,
+    execute,
+    file_hash,
+    real_path,
+)
 from generic_sources import inventory
 from mux2_gate_inputs import Json
 from mux2_gate_lock import LOCK, lane
@@ -223,11 +233,7 @@ def run_pair(fixture: str, base: Product, candidate: Product, output: Path, *,
                     retained[admission] = hashlib.sha256(updated).hexdigest()
                     run.raw.mkdir(parents=True, exist_ok=True)
                     before = set(run.raw.glob('*.json'))
-                    process = execute(ProcessSpec(run.argv, product.root, product.binary, product.binary_sha256,
-                                                  product.root, product.input_files,
-                                                  arm_root / 'processes' / run.name,
-                                                  (('WORLDSIM_GATE_OBSERVER','1'),
-                                                   ('WORLDSIM_GIT_SHA',product.source_sha))))
+                    process = execute(_process_spec(run, product, arm_root / 'processes' / run.name))
                     process_files = freeze(process.receipt.parent)
                     process_directories[process.receipt.parent] = set(process_files)
                     retained.update({process.receipt.parent/name: digest for name,digest in process_files.items()})
@@ -316,3 +322,190 @@ def run_pair(fixture: str, base: Product, candidate: Product, output: Path, *,
     target = output / 'result.json'
     atomic_json(target, report)
     return target
+
+@dataclass(frozen=True, slots=True)
+class PerfResult:
+    receipt: Path
+    sha256: str
+    status: Literal['COMPONENT_PASS','FAIL','PENDING']
+
+
+def _process_spec(run: Run, product: Product, output: Path) -> ProcessSpec:
+    return ProcessSpec(run.argv,product.root,product.binary,product.binary_sha256,product.root,
+                       product.input_files,output,(('WORLDSIM_GATE_OBSERVER','1'),('WORLDSIM_GIT_SHA',product.source_sha)))
+
+
+def _completed(spec: ProcessSpec, pid: int) -> datetime:
+    folder=spec.output_root
+    require(set(freeze(folder))=={'process.json','process-start.json','process-spawn.json','stdout.log','stderr.log'},str(folder),'process file coverage')
+    terminal=document((folder/'process.json').read_text())
+    start=document((folder/'process-start.json').read_text())
+    spawn=document((folder/'process-spawn.json').read_text())
+    immutable: dict[str,Json]={'schema_version':1,'argv':list(spec.argv),'cwd':str(spec.cwd),'executable':str(spec.executable),
+        'expected_executable_sha256':spec.executable_sha256,'input_root':str(spec.input_root),'expected_inputs':dict(spec.inputs),
+        'output_root':str(folder),'environment':{k:v for k,v in environment_for(spec).items()},'expected_external_inputs':{},
+        'fresh_directories':[],'environment_policy':'fixed_defaults_plus_explicit_only_no_inheritance','build_provenance_verified':False,
+        'before_executable_sha256':spec.executable_sha256,'before_inputs':dict(spec.inputs),'before_external_inputs':{},'after_external_inputs':{}}
+    keys(start,set(immutable)|{'started_at','pid','native_exit','status','errors'})
+    keys(terminal,set(start.mapping())|{'ended_at','duration_ns','after_executable_sha256','after_inputs','stdout_sha256','stderr_sha256','limit'})
+    keys(spawn,{'pid','spawned_at'})
+    for key,value in immutable.items():
+        start.field(key).equals(value);terminal.field(key).equals(value)
+    initial: tuple[tuple[str,Json],...]=(('pid',None),('native_exit',None),('status','FAIL'),('errors',[]))
+    for key,value in initial:
+        start.field(key).equals(value)
+    require(type(pid) is int and pid>0,str(folder),'positive actual PID required')
+    terminal.field('pid').equals(pid);spawn.field('pid').equals(pid)
+    terminal.field('status').equals('PASS');terminal.field('native_exit').equals(0);terminal.field('errors').equals([])
+    terminal.field('after_executable_sha256').equals(spec.executable_sha256);terminal.field('after_inputs').equals(dict(spec.inputs))
+    terminal.field('started_at').equals(start.field('started_at').value)
+    terminal.field('limit').equals('Endpoint executable/input binding only; no build, descendants, output schema, or whole-gate authority.')
+    require(integer(terminal.field('duration_ns'))>0,str(folder),'positive duration required')
+    for stream in ('stdout','stderr'):terminal.field(stream+'_sha256').equals(file_hash(folder/(stream+'.log')))
+    times=[datetime.fromisoformat(node.text()) for node in (start.field('started_at'),spawn.field('spawned_at'),terminal.field('ended_at'))]
+    require(all(value.tzinfo is not None for value in times) and times==sorted(times),str(folder),'invalid process timestamp chain')
+    return times[0]
+
+
+def _admissions(path: Path, labels: tuple[str,...], starts: tuple[datetime,...], deadline: float, pending: bool, next_label: str | None=None) -> None:
+    if not path.exists():
+        require(pending and not labels,str(path),'missing admission journal')
+        return
+    rows=[document(line) for line in path.read_text().splitlines()]
+    position=0
+    for index,label in enumerate(labels):
+        admitted=False
+        for window in range(9):
+            require(position<len(rows),str(path),'missing admitted occurrence')
+            row=rows[position];position+=1
+            keys(row,{'label','utc','window','loads_1_5_15','status'})
+            row.field('label').equals(label);row.field('window').equals(window)
+            now=row.field('utc').number();loads=[value.number() for value in row.field('loads_1_5_15').array()]
+            require(math.isfinite(now) and len(loads)==3 and all(math.isfinite(v) and v>=0 for v in loads),str(path),'invalid admission sample')
+            allowed=now<deadline and loads[0]<8
+            row.field('status').equals('ADMITTED' if allowed else 'NOT_RUN')
+            if allowed:
+                require(now<=starts[index].timestamp()+0.000001,str(path),'admission after native start')
+                admitted=True
+                break
+            require(now<deadline and window<8 and now+900<deadline,str(path),'admission continued after hard stop')
+        require(admitted,str(path),'no admitted terminal')
+    if pending and position<len(rows):
+        require(next_label is not None,str(path),'admission after all planned worlds')
+        for window,row in enumerate(rows[position:]):
+            keys(row,{'label','utc','window','loads_1_5_15','status'})
+            row.field('label').equals(next_label);row.field('window').equals(window);row.field('status').equals('NOT_RUN')
+            now=row.field('utc').number();loads=[value.number() for value in row.field('loads_1_5_15').array()]
+            require(window<=8 and math.isfinite(now) and len(loads)==3 and all(math.isfinite(v) and v>=0 for v in loads),str(path),'invalid pending sample')
+            require(now>=deadline or loads[0]>=8,str(path),'false NOT_RUN admission')
+            if position+window+1<len(rows):
+                require(now<deadline and window<8 and now+900<deadline,str(path),'pending admission continued after hard stop')
+        position=len(rows)
+    require(position==len(rows),str(path),'extra admission groups')
+
+
+@boundary
+def authenticate_result(fixture: str, base: Product, candidate: Product, output: Path, *,
+                        receipt_sha256: str, deadline: float, purpose: str='publication') -> PerfResult:
+    """Rejoin retained output bytes; source-owner build/compile-root admission is external."""
+    require(fixture in {'perf.natural_quick','nav.soak'},'/fixture','unsupported producer')
+    require(type(deadline) in (int,float) and math.isfinite(deadline),'/deadline','finite deadline required')
+    validate_products(base,candidate,purpose)
+    real_path(output,directory=True)
+    target=output/'result.json';check_digest(receipt_sha256,'/receipt')
+    require(file_hash(target)==receipt_sha256,str(target),'terminal hash differs')
+    node=document(target.read_text())
+    common={'status','fixture','publication_authorized','timing_policy','measurement_lock','worlds','safety','errors','output_inventory_complete','output_sha256'}
+    extras={'timing_summaries','standing_timing_comparison','coverage_expansion'} if fixture=='perf.natural_quick' else {'standing_oracle'}
+    require(common<=set(node.mapping())<=common|extras,str(target),'terminal fields differ')
+    state=node.field('status').text()
+    require(state in {'COMPONENT_PASS','FAIL','PENDING'},'/status','unknown perf status')
+    assert state in ('COMPONENT_PASS','FAIL','PENDING')
+    node.field('fixture').equals(fixture);node.field('publication_authorized').equals(False)
+    node.field('timing_policy').equals('standing report-only; safety mandatory');node.field('measurement_lock').equals(str(LOCK))
+    errors=tuple(row.text() for row in node.field('errors').array());safety=node.field('safety').array()
+    for row in safety: _=row.mapping()
+    if 'timing_summaries' in node.mapping():_=node.field('timing_summaries').mapping()
+    for key in extras-{'timing_summaries'}:
+        if key in node.mapping():_=node.field(key).text()
+    require(type(node.field('output_inventory_complete').value) is bool,'/inventory','boolean required')
+    node.field('output_inventory_complete').equals(True)
+    hashes=freeze(output);_=hashes.pop('result.json')
+    node.field('output_sha256').equals({k:v for k,v in hashes.items()})
+    def products_current() -> None:
+        validate_products(base,candidate,purpose)
+        for product in (base,candidate):
+            require(not output.is_relative_to(product.root) and not product.root.is_relative_to(output),'/output','product overlap')
+            require(bool(product.input_files) and len(dict(product.input_files))==len(product.input_files),'/inputs','missing/duplicate inventory')
+            require(inventory(product.root,[name for name,_ in product.input_files])==dict(product.input_files),'/inputs','input drift')
+        if fixture=='nav.soak':
+            require('tools/v8/soak_script.json' in dict(base.input_files) and 'tools/v8/soak_script.json' in dict(candidate.input_files),'/script','missing script binding')
+            require(dict(base.input_files)['tools/v8/soak_script.json']==dict(candidate.input_files)['tools/v8/soak_script.json'],'/script','paired script differs')
+    products_current()
+    planned=tuple((arm,product,run) for arm,product in (('base',base),('candidate',candidate)) for run in plans(fixture,product,output/arm,arm))
+    worlds=node.field('worlds').array()
+    require(len(worlds)<=len(planned),'/worlds','extra occurrences')
+    observations: dict[tuple[str,str],PerfObservation]={};retained: dict[Path,str]={};indexes: dict[Path,list[Json]]={}
+    starts: list[datetime]=[];labels: list[str]=[];raws: set[Path]=set()
+    for row,(arm,product,run) in zip(worlds,planned):
+        keys(row,{'arm','occurrence','companion','source_sha','process','raw','pid'})
+        for key,value in (('arm',arm),('occurrence',run.name),('source_sha',product.source_sha),('companion',run.companion)):
+            row.field(key).equals(value)
+        folder=output/arm/'processes'/run.name;row.field('process').equals(str(folder/'process.json'))
+        raw=Path(row.field('raw').text());real_path(raw,directory=False)
+        require(raw.parent==run.raw and raw.suffix=='.json' and raw.name!='runs.json' and raw not in raws,'/raw','wrong or reused native report')
+        raws.add(raw);pid=integer(row.field('pid'));require(pid>0,'/pid','positive PID required')
+        if run.kind=='nav':require(raw==Path(run.argv[3]),'/raw','wrong nav filename')
+        starts.append(_completed(_process_spec(run,product,folder),pid));labels.append(arm+'/'+run.name)
+        if run.kind=='nav':
+            require(any(line.startswith('nav_bench:') for line in (folder/'stdout.log').read_text().splitlines()),'/stdout','nav oracle missing')
+        observed,bound=audit(run,product,pid,raw);observations[arm,run.name]=observed;retained.update(bound)
+        if run.kind=='perf':
+            index=run.raw/'runs.json';indexes.setdefault(index,[]).append({'file':raw.name,'seed':run.seed,'status':'ok'})
+            retained[raw.with_suffix('.tick_us.bin')]=file_hash(raw.with_suffix('.tick_us.bin'))
+    if state=='COMPONENT_PASS':
+        keys(node,common|extras);require(not errors and len(worlds)==len(planned),'/worlds','incomplete success')
+        for index,expected in indexes.items():
+            rows=document(index.read_text()).field('runs').array()
+            require(len(rows)==len(expected),str(index),'wrong index cardinality')
+            for row,wanted in zip(rows,expected):
+                for key,value in document(json.dumps(wanted)).mapping().items():row.field(key).equals(value)
+            retained[index]=file_hash(index)
+        raw_coverage(output,retained,indexes)
+        expected_safety=[{'occurrence':run.name,**paired_safety(observations['base',run.name],observations['candidate',run.name])}
+                         for run in plans(fixture,base,output/'base','base')]
+        node.field('safety').equals(typed_json(expected_safety))
+        if fixture=='perf.natural_quick':
+            summaries={arm:reducer().summarize(output/arm/'raw') for arm in ('base','candidate')}
+            node.field('timing_summaries').equals(typed_json(summaries))
+            node.field('standing_timing_comparison').equals(reducer().compare(summaries['base'],summaries['candidate']))
+            node.field('coverage_expansion').equals('original BASE14/candidate13 plus candidate unchanged stress companion: 14/14')
+        else:node.field('standing_oracle').equals('native exit and report-only within_budget; no new timing threshold')
+        _admissions(output/'admission.jsonl',tuple(labels),tuple(starts),deadline,False)
+        require({p.name for p in output.iterdir()}=={'result.json','admission.jsonl','base','candidate'},'/outputs','extra top-level outputs')
+        for arm in ('base','candidate'):
+            require({p.name for p in (output/arm).iterdir()}=={'raw','processes'},'/outputs','extra arm outputs')
+            require({p.name for p in (output/arm/'processes').iterdir()}=={run.name for a,_,run in planned if a==arm},'/processes','extra process occurrence')
+    else:
+        require(bool(errors),'/errors','noncompletion lacks diagnostic')
+        if state=='PENDING':
+            require(len(worlds)<len(planned) and not safety,'/pending','admission pending cannot finish coverage or safety')
+            next_label=planned[len(worlds)][0]+'/'+planned[len(worlds)][2].name if len(worlds)<len(planned) else None
+            _admissions(output/'admission.jsonl',tuple(labels),tuple(starts),deadline,True,next_label)
+            # Admission runs before raw/process creation, but after the next arm's
+            # empty processes directory. Retained children cannot disappear from worlds.
+            next_arm=planned[len(worlds)][0]
+            active={arm for arm,_,_ in planned[:len(worlds)]}|{next_arm}
+            expected_top={'result.json',*active}
+            if (output/'admission.jsonl').exists():expected_top.add('admission.jsonl')
+            require({p.name for p in output.iterdir()}==expected_top,'/pending','unregistered pending outputs')
+            for arm in active:
+                completed={run.name for a,_,run in planned[:len(worlds)] if a==arm}
+                require({p.name for p in (output/arm).iterdir()}==({'processes','raw'} if completed else {'processes'}),
+                        '/pending','unregistered pre-admission arm artifacts')
+                require({p.name for p in (output/arm/'processes').iterdir()}==completed,
+                        '/pending','omitted or unregistered completed children')
+            raw_coverage(output,retained,indexes)
+    products_current()
+    require(freeze(output)=={**hashes,'result.json':receipt_sha256},'/outputs','artifacts changed during authentication')
+    return PerfResult(target,receipt_sha256,state)

@@ -313,6 +313,8 @@ Stall 관찰자 patch의 실제 변환과 공급된 빌드 증거 대조를 분�
 
 workspace 기록 대조기는 기존 schema1 일반 자식 경로를 유지하고 policy2 Rustdoc 실행 의도와 임시 자식을 별도로 연결한다. 실행되지 않은 doctest 의무·부분 기록·알 수 없는 기록도 남기며, 사라진 임시 실행 파일을 다시 조사하거나 재생하지 않는다. 루트 검토에서 재현한 다른 UID 및 부모와 다른 자식 환경의 허위 통과를 수정했다. 동일 사용자/runtime의 보존 소유자와 인증된 Rustdoc 실행 환경을 정확히 대조하며, 이 한계를 다른 사용자 환경으로 옮길 수 있는 증명으로 확대하지 않는다. 최종 루트 합성26개가1.269초에 통과했고 엄격 타입·Ruff도 통과했다. 처음 통합 시 테스트 import 순서 Ruff 오류1개를 고친 뒤 재검사했으며 이전 로그를 보존했다. 전체 테스트 사례·doctest·세계 안전성은 여전히 INCOMPLETE이고 실제 workspace 실행은 아직 NOT_RUN이다(`stage0/workspace-capture-v2/v2/HANDOFF.md`, 원래 오검출 증거 `stage0/workspace-capture-v2/owner-review/RED.log`).
 
+perf/nav 실행기의 보존 결과를 검증하는 source-owned 함수를 추가했다. 실제 계획된 세계·프로세스·sidecar·부하 승인 기록·원래 요약기와 안전성 결과를 다시 연결하며 실행 순서·명령·잠금·시간 기준은 바꾸지 않는다. 독립 검토에서 완료된 자식 산출물을 목록에서 누락해도 PENDING으로 인정하던 결함을 재현하고, 보존 산출물과 완료 prefix를 대조하도록 고쳤다. 최종 루트 합성19개가1.928초에 통과했고 엄격 타입·Ruff 및 독립 v2 검토도 통과했다. 실제 성능 측정·관찰자 비용·원래 빌드 순서·전체 조정기12/27 연결은 아직 미완료이며, COMPONENT_PASS/FAIL/PENDING 원시 상태를 바꾸지 않는다(`stage0/ordered-dispatch/PERF_AUTH_INDEPENDENT_REVIEW_V2.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
