@@ -384,6 +384,9 @@ Oracle 호출자에 소스가 보장하는 종료된 실패 API와 보존 결과
 
 단계42·43·49의 library 검사 명령과 선택 사례 집계를 분리했다. 기존 전체 workspace의 filtered0 계약을 바꾸지 않고, 독립 전체/ignored 목록에서 실제 필터와 제외 수를 계산해 정확히4·1·1개 사례를 요구한다. 단계43은 테스트1개 안의 두 메커니즘 분기로 구분하며 과거 단계49의0개 실행은 거부한다. 루트10개(0.013초), 엄격 타입·Ruff·독립 검토가 통과했다. 실제 빌드·wrapper·Cargo capture·소유권·메커니즘 관찰의 출처는 아직 미검증이다. 이 순수 집계의 PASS는 native 실행이나 전체 단계 지원을 뜻하지 않으며 dispatch는 NOT_RUN이다(`stage0/ordered-dispatch/LIBRARY_SIBLINGS_INDEPENDENT_REVIEW_V1.md`, patch SHA256 `9235f5692aa297ba9c55e18706de3e0426bfffc65a7806be7eed81f8bdeae476`).
 
+
+원래 단계2·3·6의 빌드·두 번 import·clippy 준비 계약과 단계4·5 사이의 공유 target 순서를 고정했다. 현재 소스·설정·도구·환경·별도 lock 출처 기록을 대조하되 실행하거나 빌드 증명을 만들지 않는다. 독립 검토에서 중복·추가 플랫폼 selector와 잘못된 초기 checkpoint를 수락하는 결함을 재현했고, v3는 검토된8개 library 매핑 및 경로·SHA·초기 조건을 명시적으로 확인한다. 이전 실패를 보존했다. 루트15개(4.999초), 엄격 타입·Ruff·독립15개가 통과했다. 준비 상태는 PREPARED_ONLY이며 실제 producer 검증·원래 실행 순서·target 변경 출처·소유권·전체 gate는 미완료다(`stage0/ordered-dispatch/setup-prepare-draft-v3/INDEPENDENT_REVIEW_V3.md`, patch SHA256 `7bf26c9b32a4cd8b5e32a24c69811067f6c6382ba9dc244d400b75ba3930d4c0`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
