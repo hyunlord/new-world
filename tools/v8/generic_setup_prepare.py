@@ -128,7 +128,7 @@ def prepare(inputs: SetupInputs) -> PreparedSetup:
     required = {'HOME', 'PATH', 'LANG', 'LC_ALL', 'CARGO_HOME', 'CARGO_BUILD_JOBS', 'GODOT_BIN',
                 'WORLDSIM_TEST_SETTINGS_DIR', 'PYTHONNOUSERSITE', 'PYTHONDONTWRITEBYTECODE'}
     require(len(env) == len(inputs.environment) and required <= env.keys()
-            and env.keys() <= required | {'RUSTC_WRAPPER', 'RUSTC_WORKSPACE_WRAPPER', 'CARGO_NET_OFFLINE'},
+            and env.keys() <= required | {'RUSTC_WRAPPER', 'RUSTC_WORKSPACE_WRAPPER', 'CARGO_NET_OFFLINE', '__CF_USER_TEXT_ENCODING', 'PYTHONCOERCECLOCALE'},
             '/environment', 'missing/duplicate/undeclared environment key')
     require(env['CARGO_HOME'] == str(inputs.cargo_home) and env['GODOT_BIN'] == str(tools['godot'].path)
             and env['WORLDSIM_TEST_SETTINGS_DIR'] == str(inputs.settings)
@@ -142,7 +142,8 @@ def prepare(inputs: SetupInputs) -> PreparedSetup:
     for directory in env['PATH'].split(os.pathsep):
         real_path(Path(directory), directory=True)
     for name in TOOLS-{'godot'}:
-        require(shutil.which(name, path=env['PATH']) == str(tools[name].path), name, 'PATH tool mismatch')
+        found = shutil.which(name, path=env['PATH'])
+        require(found is not None and Path(found).resolve(strict=True) == tools[name].path, name, 'PATH tool mismatch')
     spec = BuildSpec(root, inputs.source_sha, tools['cargo'].path, tools['cargo'].sha256,
                      tools['rustc'].path, tools['rustc'].sha256, inputs.cargo_home, inputs.output,
                      (), (), config_inputs=inputs.configs)

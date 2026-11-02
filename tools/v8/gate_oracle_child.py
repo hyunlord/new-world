@@ -19,6 +19,7 @@ from gate_stall_child import (
 )
 from generic_gate import boundary, document, integer, require, text
 from generic_process import atomic_json, check_digest, file_hash, real_path
+from generic_sources import inventory
 from mux2_gate_inputs import EvidenceError, Json, Node
 from mux2_gate_lock import FD_ENV, LOCK
 
@@ -213,6 +214,8 @@ SUITE_NAMES: Final = ('mux2_camp_framing_test','mux2_visibility_validator_test',
     'mux2_badge_aggregate_test','mux2_bake_receipt_test','mux2_badge_extent_test',
     'mux2_wall_cache_test','mux2_badge_local_test','mux2_person_cache_test',
     'mux2_extent_owner_test','mux2_stall_test')
+IMPORT_SCHEMA: Final = 'oracle_import_pair_v1'
+IMPORT_COMMAND: Final = 'bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit'
 SUITE_KEYS: Final = (SUITE_PLAN,SUITE_HASH,SUITE_REQUEST,SUITE_CONTROL)
 
 
@@ -236,6 +239,7 @@ class SuitePlan:
     rows: tuple[SuiteRow,...]
     inputs: tuple[tuple[Path,str],...]
     environment: tuple[tuple[str,str],...]
+    import_pair: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -270,7 +274,8 @@ def load_suite(path: Path, digest: str) -> SuitePlan:
     require(file_hash(path)==digest,'/suite','plan changed')
     node=document(path.read_text())
     require(set(node.mapping())=={'schema','root','evidence','logs','godot','inputs','environment'},'/suite','fields differ')
-    node.field('schema').equals(SUITE_SCHEMA)
+    require(node.field('schema').value in {SUITE_SCHEMA,IMPORT_SCHEMA},'/suite','unknown closed schema')
+    import_pair=node.field('schema').value==IMPORT_SCHEMA
     root=Path(text(node.field('root')));evidence=Path(text(node.field('evidence')));logs=Path(text(node.field('logs')))
     for directory in (root,evidence,logs):
         real_path(directory,directory=True)
@@ -281,20 +286,56 @@ def load_suite(path: Path, digest: str) -> SuitePlan:
     inputs=tuple((Path(name),text(Node(value))) for name,value in node.field('inputs').mapping().items())
     required={root/'tools/v8'/name for name in ('run_bounded.sh','gate_oracle_child.py','gate_stall_child.py',
         'generic_gate.py','generic_process.py','generic_sources.py','mux2_gate_inputs.py','mux2_gate_lock.py',
-        'mux2_gate_checks.sh','godot_bin.sh','mux2_gate_oracle_log.py',*(name+'.gd' for name in SUITE_NAMES))}
+        *(('gate.sh','generic_setup_import.py') if import_pair else
+          ('mux2_gate_checks.sh','godot_bin.sh','mux2_gate_oracle_log.py',*(name+'.gd' for name in SUITE_NAMES))))}
     require(required|{godot,Path(sys.executable).resolve(),Path('/bin/bash').resolve()} <= {p for p,_ in inputs},'/inputs','missing suite helper/tool closure')
     for source,sha in inputs:
         real_path(source,directory=False);check_digest(sha,str(source))
         require(not source.is_relative_to(evidence) and not source.is_relative_to(logs) and source!=path,'/inputs','output/plan overlap')
     environment=tuple((key,text(Node(value))) for key,value in node.field('environment').mapping().items())
     allowed={'PATH','HOME','LANG','LC_ALL','PYTHONNOUSERSITE','PYTHONDONTWRITEBYTECODE','PYTHONCOERCECLOCALE','__CF_USER_TEXT_ENCODING','GODOT_BIN'}
+    if import_pair:allowed |= {'CARGO_HOME','CARGO_BUILD_JOBS','CARGO_NET_OFFLINE','RUSTC_WRAPPER','RUSTC_WORKSPACE_WRAPPER','WORLDSIM_TEST_SETTINGS_DIR'}
     require(set(dict(environment))<=allowed and dict(environment).get('GODOT_BIN')==str(godot),'/environment','closed suite environment required')
     for name,expected in (('bash',Path('/bin/bash').resolve()),('python3',Path(sys.executable).resolve())):
         found=shutil.which(name,path=dict(environment).get('PATH',''))
         require(found is not None and Path(found).resolve()==expected,'/tools','unbound interpreter')
-    result=SuitePlan(path,digest,root,evidence,logs,suite_rows(root,evidence,logs,godot),inputs,environment)
+    rows=(tuple(SuiteRow(i,name,(str(godot),'--headless','--path','.', '--import','--editor','--quit'),600,
+                        logs/'imports.log',evidence/f'{i:02d}-{name}') for i,name in enumerate(('import.first','import.second'),1))
+          if import_pair else suite_rows(root,evidence,logs,godot))
+    result=SuitePlan(path,digest,root,evidence,logs,rows,inputs,environment,import_pair)
     suite_current(result)
     return result
+
+
+def import_generated(directory: Path) -> dict[str, Json]:
+    if not directory.exists() and not directory.is_symlink():return {}
+    real_path(directory,directory=True)
+    result: dict[str,Json]={}
+    def visit(path: Path) -> None:
+        info=path.lstat();key=str(path.relative_to(directory))
+        require(stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode),'/imports','special generated input')
+        children=sorted(path.iterdir()) if stat.S_ISDIR(info.st_mode) else []
+        result[key]={'mode':info.st_mode,'sha256':None if stat.S_ISDIR(info.st_mode) else file_hash(path)}
+        for child in children:visit(child)
+        after=path.lstat()
+        require((info.st_ino,info.st_mtime_ns,info.st_ctime_ns)==(after.st_ino,after.st_mtime_ns,after.st_ctime_ns),'/imports','generated input changed during scan')
+        if stat.S_ISDIR(info.st_mode):require(children==sorted(path.iterdir()),'/imports','generated membership changed')
+    visit(directory)
+    return result
+
+
+def import_state(plan: SuitePlan) -> dict[str, Json]:
+    """Closed import checkpoints; shared target must remain the admitted step2 endpoint."""
+    require(plan.import_pair,'/imports','wrong profile')
+    target=inventory(plan.root,['rust/target'])
+    expected={str(path.relative_to(plan.root)):digest for path,digest in plan.inputs
+              if path.is_relative_to(plan.root/'rust/target')}
+    require(target==expected,'/target','shared build endpoint changed')
+    cache=import_generated(plan.root/'.godot')
+    settings=Path(dict(plan.environment)['WORLDSIM_TEST_SETTINGS_DIR'])
+    generated=import_generated(settings)
+    return {'target':{k:v for k,v in target.items()},'cache':{k:v for k,v in cache.items()},
+            'settings':{k:v for k,v in generated.items()}}
 
 
 def suite_lane(descriptor: int) -> None:
@@ -328,7 +369,10 @@ def run_suite(path: Path, digest: str, argv: tuple[str,...], limit: int) -> int:
     """Original Bash owns this wrapper; only this wrapper owns the native Popen."""
     plan=load_suite(path,digest)
     matches=tuple(row for row in plan.rows if row.argv==argv and row.limit==limit)
-    require(len(matches)==1 and Path.cwd()==plan.root,'/recipe','changed suite recipe')
+    require(len(matches)==(2 if plan.import_pair else 1) and Path.cwd()==plan.root,'/recipe','changed suite recipe')
+    if plan.import_pair:
+        matches=tuple(row for row in matches if not row.evidence.exists())
+        require(bool(matches),'/recipe','both import occurrences already claimed')
     row=matches[0];suite_lane(int(os.environ[FD_ENV]))
     request=int(os.environ[SUITE_REQUEST]);control=int(os.environ[SUITE_CONTROL])
     for descriptor in (request,control):require(stat.S_ISFIFO(os.fstat(descriptor).st_mode),'/channel','pipe required')
@@ -423,6 +467,7 @@ class SuiteController:
         self.completed: list[str]=[];self.anchors: dict[Path,str]={}
         self.ranges: list[tuple[Path,int,int,str,int,int]]=[]
         self.error='';self.halted=False;self.closed=False;self.started=False
+        self.import_checkpoint: dict[str,Json] | None=None
 
     def start(self) -> None:
         """Fallible attachment occurs after the caller retains this live owner."""
@@ -436,7 +481,8 @@ class SuiteController:
             self.anchors[prepared]=self.channels.prepared_sha256
             keys={p.name for p in plan.evidence.iterdir()}
             require(keys in ({'suite-prepared.json'},{'suite-prepared.json',plan.rows[0].evidence.name}),'/suite','unexpected startup evidence')
-            command=('bash','tools/v8/mux2_gate_checks.sh','oracles',str(plan.logs))
+            command=(('bash','-c',IMPORT_COMMAND+'; '+IMPORT_COMMAND) if plan.import_pair else
+                     ('bash','tools/v8/mux2_gate_checks.sh','oracles',str(plan.logs)))
             require(shell.args==command or shell.args==list(command),'/suite','not original shell argv')
             for descriptor in (self.request_read,self.control_write):require(stat.S_ISFIFO(os.fstat(descriptor).st_mode),'/channel','pipe required')
             preparation=document(prepared.read_text())
@@ -445,6 +491,7 @@ class SuiteController:
             atomic_json(plan.evidence/'suite-start.json',{'schema':SUITE_SCHEMA,'plan_sha256':plan.digest,
                 'shell_pid':shell.pid,'owner_pid':os.getpid(),'argv':list(command),'cwd':str(plan.root)})
             self.anchors[plan.evidence/'suite-start.json']=file_hash(plan.evidence/'suite-start.json')
+            if plan.import_pair:self.import_checkpoint=import_state(plan)
             self.started=True
         except BaseException as failure:
             try:self.cancel('controller operation failed')
@@ -497,7 +544,9 @@ class SuiteController:
             self._close_row(row,request)
             return
         require(event=='request' and not self.halted and self.active is None,'/request','unexpected/concurrent request')
-        require(len(self.completed)<16 and self.shell.poll() is None,'/request','suite is not live')
+        require(len(self.completed)<len(self.plan.rows) and self.shell.poll() is None,'/request','suite is not live')
+        if self.plan.import_pair:
+            require(import_state(self.plan)==self.import_checkpoint,'/imports','shared cache changed between occurrences')
         row=self.plan.rows[len(self.completed)]
         require(set(node.mapping())=={'event','ordinal','wrapper_pid','plan_sha256','request_sha256'},'/request','notification fields differ')
         node.field('ordinal').equals(row.ordinal);node.field('plan_sha256').equals(self.plan.digest)
@@ -546,8 +595,13 @@ class SuiteController:
         for name in ('native-start.json','native-terminal.json'):self.anchors[row.evidence/name]=file_hash(row.evidence/name)
         self.ranges.append((row.log,first,last,text(end.field('stream_sha256')),integer(Node(request['log_device'])),integer(Node(request['log_inode']))))
         self.current()
+        if self.plan.import_pair:
+            self.import_checkpoint=import_state(self.plan)
+            checkpoint=row.evidence/'import-checkpoint.json'
+            atomic_json(checkpoint,self.import_checkpoint)
+            self.anchors[checkpoint]=file_hash(checkpoint)
         self.completed.append(row.identity);self.active=None
-        if code!=0 or end.field('timed_out').value is True:self.halted=True
+        if not self.plan.import_pair and (code!=0 or end.field('timed_out').value is True):self.halted=True
 
     def snapshot(self) -> SuiteResult:
         """Only an actual shell wait plus all admitted native waits can settle this owner."""
@@ -556,7 +610,7 @@ class SuiteController:
             if code is not None and code<0:
                 self.cancel('outer shell signaled; descendant settlement unknown')
             settled=code is not None and self.active is None and not self.buffer and not self.error
-            if code==0:require(len(self.completed)==16,'/suite','successful shell lacks all rows')
+            if code==0 or (self.plan.import_pair and code is not None):require(len(self.completed)==len(self.plan.rows),'/suite','shell lacks required rows')
             return SuiteResult('SETTLED' if settled else 'UNKNOWN',self.shell.pid,code,tuple(self.completed),self.error)
         except BaseException as failure:
             try:self.cancel('controller operation failed')

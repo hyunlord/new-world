@@ -412,6 +412,8 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 단계49 실행 환경은 호출자가 명시한 빈 `RUSTC_WRAPPER`·`RUSTC_WORKSPACE_WRAPPER`만 보존하도록 확장했다. 생략과 빈 값은 구분하며 외부 환경을 가져오지 않고 비어 있지 않은 값은 실행 전에 거부한다. V6의 build/실행 환경 불일치가 근거이며, 캐시 재사용이나 build 적합성의 증명은 아니다. 루트 실행15개(15.819초)·coordinator8개(6.139초), 타입 검사·Ruff 및 독립 검토가 통과했다. 실제 native qualification은 여전히 진행 중이다(`stage0/ordered-dispatch/library49-empty-wrappers-review-metadata/REVIEW.json`).
 
+원래 단계3의 import 두 호출을 실제 단계2 반환 영수증에 연결했다. 첫 호출 실패 뒤 두 번째 호출을 수행하는 세미콜론 동작과 raw 종료값을 보존하며, 각 native 종료 및 최종 게시 전후의 target·cache·settings 상태를 마지막 인증 checkpoint와 비교한다. 독립 검토에서 발견한 최종 상태 재기준화 결함은 V2에서 차단했다. 루트 관련138개 검사(139.256초), 타입·Ruff 및 독립 변조 검토가 통과했다. 기존 oracle/structural 소비자의 helper 해시도 같은 코드로 고정했다. 이는 실제 Godot import 실행 또는 전체 gate 통과 증거가 아니다(`stage0/ordered-dispatch/setup-import-draft-v2/INDEPENDENT_REVIEW_V2.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
