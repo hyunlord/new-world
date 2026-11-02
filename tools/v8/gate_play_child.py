@@ -12,6 +12,7 @@ import time
 from dataclasses import dataclass, replace
 from pathlib import Path
 
+import gate_play_protocol as protocol
 from generic_gate import GateContractError, boundary, document, require, text
 from generic_observations import keys
 from generic_process import atomic_json, file_hash, real_path
@@ -117,6 +118,9 @@ def run(plan_path: Path, digest: str, role: str, argv: tuple[str,...], selection
     if selection is not None:
         child=replace(child,inputs=(*child.inputs,(selection.suite,selection.suite_sha256)))
     wrapper_pid=os.getpid();parent_pid=os.getppid()
+    if protocol.enabled():
+        require(selection is not None, '/owner', 'owned child requires selected original case')
+        protocol.child_request(role, argv, plan_path, digest)
     child.output.mkdir(parents=True,exist_ok=False)
     environment=dict(os.environ)
     started=time.time_ns();timed_out=False
@@ -158,6 +162,8 @@ def run(plan_path: Path, digest: str, role: str, argv: tuple[str,...], selection
         'merged':child.merged,'stdin_policy':'eof' if bounded else 'inherited','started_ns':started,'ended_ns':time.time_ns(),'errors':[e for e in errors],
         'stdout_sha256':file_hash(child.output/'stdout.log'),'stderr_sha256':file_hash(child.output/'stderr.log'),
         'build_provenance_verified':False,'historical_observer_qualified':False})
+    if protocol.enabled():
+        protocol.child_returned(role, child.output/'receipt.json')
     _=sys.stdout.buffer.write((child.output/'stdout.log').read_bytes());_=sys.stdout.buffer.flush()
     _=sys.stderr.buffer.write((child.output/'stderr.log').read_bytes());_=sys.stderr.buffer.flush()
     if errors:print('play gate child evidence failed: '+'; '.join(errors),file=sys.stderr)

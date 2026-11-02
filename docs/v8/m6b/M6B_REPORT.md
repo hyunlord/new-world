@@ -408,6 +408,8 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 단계49 실행기를 원래48과50 사이에 선택적 owned context로 연결했다. 실제 소유 descriptor와 실행기 반환 객체를 사용하고 runtime PASS도 소스/빌드·관찰자 검증 전에는 PENDING으로 유지한다. UNKNOWN은 후속50·최종 기록·잠금 해제를 막으며 종료가 확인된 실패는 FAIL로 보존한다. 독립 검토에서 반환 객체 없는 종료된 실패의 빈 디렉터리 변경을 놓치는 결함을 재현해 모든 고정된49 결과의 파일·디렉터리 구성을 다시 대조하도록 수정했다. V1 전체135개, 루트 V2 통합25개(13.052초), 엄격 타입·Ruff·독립8개가 통과했다. 실제 native49와 전체 gate는 아직 미검증이다(`stage0/ordered-dispatch/LIBRARY49_COORDINATOR_INDEPENDENT_REVIEW_V2.md`, patch SHA256 `e9d802f96f2c168cce3c03e8f5bc6cab87f23fb0f43846895c4a6b9d8b4a0586`).
 
+원래 launcher의6개 경우와16개 자식 호출을 실제 request/grant·native wait·case wait·outer wait/EOF로 연결하는 지속 소유자를 추가했다. 원래 명령과3/2/4 기대 오류는 유지하고, UNKNOWN은 실제 Popen·채널·복제한 잠금 descriptor를 보존한다. 독립 검토에서 이미 끝난 외부 native 증거 폴더에 추가된 파일을 허용하는 결함을 재현해 파일·디렉터리 종류와 전체 구성을 매 후속 검사 및 최종 종료까지 고정했다. 루트29개(11.541초), 타입 검사·Ruff·Bash 구문과 독립 변조6종이 통과했다. 실제 루트에서 발생한 import 정렬3건은 기록 후 수정했으며 독립 AST 검토가 본문 불변을 확인했다. 실제 launcher를 호출하는 기존 테스트1개는 제외했다. 역사 source/build·native/world·단계21 qualification은 INCOMPLETE이며 이 소유자가 게시 권한을 만들지 않는다(`stage0/play-run/owner-review-metadata-supplemental-v2/REVIEW.json`, `IMPORT_SUPPLEMENT.json`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
