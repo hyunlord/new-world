@@ -187,6 +187,44 @@ raise SystemExit(subprocess.call([*runner,{str(binary)!r},{DIAGNOSIS!r},'--exact
                     _ = runner.run49_owned(request)
                 self.assertFalse((request.output/'result.json').exists())
 
+    def test_explicit_empty_wrappers_survive_all_actual_receipts(self) -> None:
+        for supplied in ((('RUSTC_WRAPPER',''),), (('RUSTC_WORKSPACE_WRAPPER',''),),
+                         (('RUSTC_WRAPPER',''),('RUSTC_WORKSPACE_WRAPPER',''))):
+            with self.subTest(supplied=supplied), TemporaryDirectory() as temporary:
+                base=Path(temporary).resolve();request=replace(self.fixture(base),environment=supplied)
+                with patch.object(runner,'LOCK',base/'lane.lock'):
+                    result=runner.run49_owned(request)
+                self.assertEqual(result.status,'PASS')
+                for relative in ('outer/process-start.json','outer/process.json',
+                                 'capture/000001/started.json','capture/000001/receipt.json',
+                                 'capture/000002/started.json','capture/000002/receipt.json',
+                                 'full/process.json','ignored/process.json'):
+                    row=read(request.output/relative)
+                    for field in ('environment','original_environment') if 'original_environment' in row.mapping() else ('environment',):
+                        environment=row.field(field).mapping()
+                        for name in ('RUSTC_WRAPPER','RUSTC_WORKSPACE_WRAPPER'):
+                            if name in dict(supplied):self.assertEqual(environment[name],'')
+                            else:self.assertNotIn(name,environment)
+
+    def test_nonempty_wrapper_injection_rejected_before_launch(self) -> None:
+        for name in ('RUSTC_WRAPPER','RUSTC_WORKSPACE_WRAPPER'):
+            for value in ('/untrusted/wrapper',' '):
+                with self.subTest(name=name,value=value), TemporaryDirectory() as temporary:
+                    base=Path(temporary).resolve();request=replace(self.fixture(base),environment=((name,value),))
+                    with patch.object(runner,'LOCK',base/'lane.lock'),self.assertRaises(GateContractError):
+                        _=runner.run49_owned(request)
+                    self.assertFalse(request.output.exists())
+
+    def test_absent_wrappers_remain_absent_despite_ambient_values(self) -> None:
+        with TemporaryDirectory() as temporary:
+            base=Path(temporary).resolve();request=self.fixture(base)
+            with patch.object(runner,'LOCK',base/'lane.lock'),patch.dict(os.environ,{'RUSTC_WRAPPER':'/ambient/wrapper','RUSTC_WORKSPACE_WRAPPER':''}):
+                result=runner.run49_owned(request)
+            self.assertEqual(result.status,'PASS')
+            for relative in ('outer/process.json','capture/000001/receipt.json','capture/000002/receipt.json'):
+                environment=read(request.output/relative).field('environment').mapping()
+                self.assertNotIn('RUSTC_WRAPPER',environment);self.assertNotIn('RUSTC_WORKSPACE_WRAPPER',environment)
+
 
 if __name__ == '__main__':
     _ = unittest.main()

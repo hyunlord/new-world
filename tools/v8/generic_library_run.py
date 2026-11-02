@@ -108,9 +108,12 @@ def checked_request(request: Library49Request) -> dict[str, str]:
     for path, digest in bound.items():
         require(file_hash(Path(path)) == digest, path, 'input differs')
     allowed = {'PATH', 'HOME', 'TMPDIR', 'LANG', 'LC_ALL', 'CARGO_HOME', 'RUSTUP_HOME', 'RUSTC', 'RUSTDOC',
-               'DYLD_LIBRARY_PATH', 'LD_LIBRARY_PATH', 'CARGO_TARGET_DIR'}
+               'DYLD_LIBRARY_PATH', 'LD_LIBRARY_PATH', 'CARGO_TARGET_DIR', 'RUSTC_WRAPPER', 'RUSTC_WORKSPACE_WRAPPER'}
     require(len(dict(request.environment)) == len(request.environment)
             and set(dict(request.environment)) <= allowed, '/environment', 'unreviewed environment override')
+    require(all(value == '' for key, value in request.environment
+                if key in {'RUSTC_WRAPPER', 'RUSTC_WORKSPACE_WRAPPER'}),
+            '/environment', 'only explicit empty compiler wrappers are supported')
     require(not request.output.exists() and not request.output.is_relative_to(request.root)
             and not request.root.is_relative_to(request.output), '/output', 'fresh external output required')
     return bound

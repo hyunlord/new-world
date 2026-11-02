@@ -410,6 +410,8 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 원래 launcher의6개 경우와16개 자식 호출을 실제 request/grant·native wait·case wait·outer wait/EOF로 연결하는 지속 소유자를 추가했다. 원래 명령과3/2/4 기대 오류는 유지하고, UNKNOWN은 실제 Popen·채널·복제한 잠금 descriptor를 보존한다. 독립 검토에서 이미 끝난 외부 native 증거 폴더에 추가된 파일을 허용하는 결함을 재현해 파일·디렉터리 종류와 전체 구성을 매 후속 검사 및 최종 종료까지 고정했다. 루트29개(11.541초), 타입 검사·Ruff·Bash 구문과 독립 변조6종이 통과했다. 실제 루트에서 발생한 import 정렬3건은 기록 후 수정했으며 독립 AST 검토가 본문 불변을 확인했다. 실제 launcher를 호출하는 기존 테스트1개는 제외했다. 역사 source/build·native/world·단계21 qualification은 INCOMPLETE이며 이 소유자가 게시 권한을 만들지 않는다(`stage0/play-run/owner-review-metadata-supplemental-v2/REVIEW.json`, `IMPORT_SUPPLEMENT.json`).
 
+단계49 실행 환경은 호출자가 명시한 빈 `RUSTC_WRAPPER`·`RUSTC_WORKSPACE_WRAPPER`만 보존하도록 확장했다. 생략과 빈 값은 구분하며 외부 환경을 가져오지 않고 비어 있지 않은 값은 실행 전에 거부한다. V6의 build/실행 환경 불일치가 근거이며, 캐시 재사용이나 build 적합성의 증명은 아니다. 루트 실행15개(15.819초)·coordinator8개(6.139초), 타입 검사·Ruff 및 독립 검토가 통과했다. 실제 native qualification은 여전히 진행 중이다(`stage0/ordered-dispatch/library49-empty-wrappers-review-metadata/REVIEW.json`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
