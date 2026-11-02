@@ -335,6 +335,10 @@ workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignore
 
 벤치 registry의 scripted_suffix 오기를 수정했다. 실제 BASE0와 현재 READ·bench.sh가 쓰는 bench_script.json(60개 나무·8×8 비축장·4개 오두막)을 기록하며, u_script.json을 쓰는 colony·replay fixture는 그대로다. 두 스크립트의 현재 바이트가 BASE0와 같은지 확인했고 registry14개 검사(0.143초)가 통과했다. 실행 명령이나 게임 동작 변경이 아니며 벤치 backlog의 NOT_RUN·미해결 상태도 유지한다(`stage0/ordered-dispatch/BENCH25_OWNED_COORDINATOR_PLAN.md`).
 
+벤치 실행에 명시적인 소유 상태 진입점을 추가했다. 기존 API·6개 교차 실행·수치 및 안전성 검사는 유지한다. 실제 aggregate 실행에 들어간 뒤 정상 PASS·exit0·양의 PID·원래 영수증 경로가 확인된 경우에만 종료 상태로 전환하며, 실패하거나 반환되지 않은 실행은 UNKNOWN으로 남겨 호출자가 실제 잠금을 유지해야 한다. 실행 사이 또는 모든 실행 종료 후의 검증 실패는 별도 종료된 실패로 구분한다. 진단 자체가 실패해도 원래 예외를 보존한다. 독립 검토와 루트52개(13.887초), 생산 코드 엄격 타입·Ruff가 통과했다. 테스트의 기존 타입 진단81개는 유지한다. 조정기 연결·실제 벤치·빌드 출처·전체 gate·ledger는 아직 미완료다(`stage0/ordered-dispatch/BENCH25_OWNED_LIFECYCLE_INDEPENDENT_REVIEW_V1.md`).
+
+고정 소스 `b25149c6fd78178cb9b0991bbeebbe4ce58e51f1`의 개발용 전체 Python discovery는1,511개를849.791초에 실행해 실패4·오류15·exit1로 종료했다. 모두 구조 검사 어댑터에 집중됐으며, 나중에 로드된 `core_ui_successor_perf_validate`를 초기 모듈 스냅샷에 없다는 이유로 거부한 사전 검증과 그 후속 실패를 확인했다. 실행 후 기록한395개 입력 해시는 종료 시 동일했다. 이 기록은 정식 단계16이나 전체 gate 통과가 아니며 원본 실패 로그를 보존하고 로딩 순서 수리를 진행한다(`stage0/integrated-python-31.log`, SHA256 `079a72483b5c3755e33e6bfa7b2426ee3e6ad899a22e9d157f49cfdb9accdbb5`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

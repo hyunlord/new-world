@@ -1,7 +1,7 @@
 """Execute interleaved benchmark aggregates and require numerical plus world safety."""
 import hashlib
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Literal
@@ -29,6 +29,79 @@ from read_gate_checks import wait_for_load
 def run_bench(base: Product, candidate: Product, purpose: str, script: Path,
               script_sha256: str, output: Path,
               justifications: tuple[dict[str, str], ...] = ()) -> dict[str, Json]:
+    """Legacy execution API; caller owns source/build admission and measurement lane."""
+    return _run_bench(base,candidate,purpose,script,script_sha256,output,justifications,None)
+
+
+@dataclass(slots=True)
+class _BenchExecution:
+    output_created: bool = False
+    in_flight: bool = False
+    invocations: list[Json] = field(default_factory=list)
+
+
+class BenchSettledFailure(RuntimeError):
+    """Source-owned no-in-flight failure; not numeric or publication acceptance."""
+    def __init__(self, original: BaseException, diagnostic: BaseException | None,
+                 failure_receipt: Path | None) -> None:
+        super().__init__('benchmark failed with owned aggregate execution settled')
+        self.original: BaseException = original
+        self.diagnostic: BaseException | None = diagnostic
+        self.failure_receipt: Path | None = failure_receipt
+
+
+class BenchOwnershipUnknown(RuntimeError):
+    """Retain the actual caller lane; no descendant quiescence is established."""
+    def __init__(self, original: BaseException, diagnostic: BaseException | None,
+                 ownership_receipt: Path | None) -> None:
+        super().__init__('benchmark descendant ownership unknown; retain lane')
+        self.original: BaseException = original
+        self.diagnostic: BaseException | None = diagnostic
+        self.ownership_receipt: Path | None = ownership_receipt
+
+
+def run_bench_owned(base: Product, candidate: Product, purpose: str, script: Path,
+                    script_sha256: str, output: Path,
+                    justifications: tuple[dict[str,str], ...] = ()) -> dict[str,Json]:
+    """Same workload, explicit source-owned settlement boundary for a live lane owner.
+
+    PASS/0 from actual execute settles the bound original aggregate only because
+    its source-admitted successful native path waits all children. Every failed or
+    unreturned execution is conservatively UNKNOWN. No receipt or caller boolean
+    can grant this state. This function does not acquire/release the caller lane.
+    """
+    state=_BenchExecution()
+    try:
+        return _run_bench(base,candidate,purpose,script,script_sha256,output,justifications,state)
+    except BaseException as original:
+        receipt: Path | None = None
+        # Never format the original exception before preserving safe diagnostics.
+        # Diagnostic failures/interruption cannot replace the primary or settlement.
+        if state.output_created:
+            try:
+                name='ownership.json' if state.in_flight else 'failure.json'
+                path=output/name
+                if state.in_flight:
+                    value: dict[str,Json] = {'schema':'bench_owned_unknown_v1',
+                        'ownership':'INCOMPLETE_DESCENDANTS_UNKNOWN','final_inventory':False,
+                        'publication_authorized':False,'exception_type':type(original).__name__}
+                else:
+                    value={'status':'FAIL_OR_INCOMPLETE','reason':'owned benchmark execution failed after settlement',
+                           'invocations':list(state.invocations)}
+                write_new(path,value)
+                receipt=path
+            except BaseException as error:
+                if state.in_flight:
+                    raise BenchOwnershipUnknown(original,error,None) from error
+                raise BenchSettledFailure(original,error,None) from error
+        if state.in_flight:
+            raise BenchOwnershipUnknown(original,None,receipt) from original
+        raise BenchSettledFailure(original,None,receipt) from original
+
+
+def _run_bench(base: Product, candidate: Product, purpose: str, script: Path,
+              script_sha256: str, output: Path,
+              justifications: tuple[dict[str, str], ...], state: _BenchExecution | None) -> dict[str, Json]:
     """Execute sequential admitted arms. Caller owns the global measurement lock.
 
     Build receipts must be generated/authenticated by the generic source runner,
@@ -43,11 +116,12 @@ def run_bench(base: Product, candidate: Product, purpose: str, script: Path,
     require(not any(output.is_relative_to(product.root) for product in (base, candidate)),
             'evidence output must be outside products')
     output.mkdir(exist_ok=False)
+    if state is not None:state.output_created=True
     changelog_bytes = git_bytes(candidate.root, 'show', f'{candidate.source_sha}:CHANGELOG.md')
     changelog = changelog_bytes.decode()
     # Validate every supplied explanation even if all observed ratios later pass.
     _ = justified_ratio(1, 1, 'n200', 'mean', justifications, changelog)
-    invocations: list[Json] = []
+    invocations: list[Json] = state.invocations if state is not None else []
     aggregates: list[Aggregate] = []
     try:
         arms: tuple[tuple[Literal['base', 'candidate'], Product], ...] = (('base', base), ('candidate', candidate))
@@ -66,7 +140,13 @@ def run_bench(base: Product, candidate: Product, purpose: str, script: Path,
                     'load_1_5_15': list(triplet), 'started_unix': time.time(),
                     'exit_code': None, 'finished_unix': None}
                 write_new(output / f'{arm}-r{repeat}.started.json', record)
+                if state is not None:state.in_flight=True
                 result = execute(spec)
+                if state is not None:
+                    require(result.status == 'PASS' and result.native_exit == 0 and
+                            type(result.pid) is int and result.pid > 0 and result.receipt == run_dir/'process.json',
+                            'owned aggregate did not return a bound successful completion')
+                    state.in_flight=False
                 record.update(exit_code=result.native_exit, finished_unix=time.time(),
                               producer_pid=result.pid, process_status=result.status,
                               process_receipt=str(result.receipt), process_receipt_sha256=sha256(result.receipt))
@@ -86,6 +166,7 @@ def run_bench(base: Product, candidate: Product, purpose: str, script: Path,
         write_new(output / 'result.json', audit)
         return audit
     except (AuditError, ValueError, KeyError, OSError, UnicodeError) as exc:
+        if state is not None:raise
         write_new(output / 'failure.json', {'status': 'FAIL_OR_INCOMPLETE', 'reason': str(exc),
                                           'invocations': invocations})
         raise

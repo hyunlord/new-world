@@ -1,6 +1,6 @@
 """Bench boundaries use portable synthetic receipts, never machine-local fixtures."""
 import unittest
-from typing import final
+from typing import final, override
 
 from generic_bench import AuditError, justified_ratio
 
@@ -439,3 +439,130 @@ class RetainedBenchTests(ProductFixture):
         result=runner.authenticate_result(self.products[0],self.products[1],'publication',script,sha256(script),output,
             receipt_sha256=sha256(output/'result.json'))
         self.assertEqual(result.status,'FAIL')
+
+
+@final
+class BenchOwnedLifecycleTests(ProductFixture):
+    def owned_fixture(self) -> tuple[Path,Path]:
+        from dataclasses import replace
+        for index,product in enumerate(self.products):
+            _ = product.binary.write_bytes(b'#!/bin/sh\nexit 0\n')
+            row=document(product.build_receipt.read_text()).mapping();row['binary_sha256']=sha256(product.binary)
+            _ = product.build_receipt.write_text(json.dumps(row))
+            self.products[index]=replace(product,binary_sha256=sha256(product.binary),build_receipt_sha256=sha256(product.build_receipt))
+        script=self.root/'script.json';_ = script.write_text('[]')
+        return script,self.root/'owned'
+
+    def test_owned_success_preserves_original_result(self) -> None:
+        import generic_bench_run as runner
+        script,output=self.owned_fixture()
+        with patch.object(runner,'wait_for_load',return_value=(1.0,2.0,3.0)), \
+             patch.object(runner,'audit_bench_safety',side_effect=RetainedBenchTests.audit):
+            result=runner.run_bench_owned(self.products[0],self.products[1],'publication',script,sha256(script),output)
+        self.assertEqual(result['status'],'BENCH_NUMERICAL_AND_SAFETY_PASS')
+        self.assertTrue((output/'result.json').exists())
+
+    def test_preflight_failure_is_settled_without_writing_foreign_output(self) -> None:
+        import generic_bench_run as runner
+        script,output=self.owned_fixture();output.mkdir();_ = (output/'keep').write_text('unchanged')
+        with self.assertRaises(runner.BenchSettledFailure) as caught:
+            _ = runner.run_bench_owned(self.products[0],self.products[1],'publication',script,sha256(script),output)
+        self.assertIsNone(caught.exception.failure_receipt)
+        self.assertEqual(sorted(path.name for path in output.iterdir()),['keep'])
+
+    def test_audit_failure_after_six_zero_exits_is_settled(self) -> None:
+        import generic_bench_run as runner
+        script,output=self.owned_fixture();primary=ValueError('numeric rejection')
+        with patch.object(runner,'wait_for_load',return_value=(1.0,2.0,3.0)), \
+             patch.object(runner,'audit_bench_safety',side_effect=primary), \
+             self.assertRaises(runner.BenchSettledFailure) as caught:
+            _ = runner.run_bench_owned(self.products[0],self.products[1],'publication',script,sha256(script),output)
+        self.assertIs(caught.exception.original,primary)
+        self.assertEqual(len(list(output.glob('*.finished.json'))),6)
+        self.assertEqual(caught.exception.failure_receipt,output/'failure.json')
+        self.assertEqual(len(document((output/'failure.json').read_text()).field('invocations').array()),6)
+
+    def test_unreturned_exception_families_remain_unknown(self) -> None:
+        import generic_bench_run as runner
+        script,output=self.owned_fixture()
+        for index,primary in enumerate((OSError('after spawn'),TypeError('after spawn'),KeyboardInterrupt(),SystemExit(2))):
+            with patch.object(runner,'wait_for_load',return_value=(1.0,2.0,3.0)), \
+                 patch.object(runner,'execute',side_effect=primary), \
+                 self.assertRaises(runner.BenchOwnershipUnknown) as caught:
+                _ = runner.run_bench_owned(self.products[0],self.products[1],'publication',script,sha256(script),output.with_name(f'unknown-{index}'))
+            self.assertIs(caught.exception.original,primary)
+
+    def test_prior_success_does_not_settle_next_failed_aggregate(self) -> None:
+        import generic_bench_run as runner
+        from generic_process import ProcessResult, ProcessSpec, execute
+        script,output=self.owned_fixture();calls=0
+        def producer(spec: ProcessSpec) -> ProcessResult:
+            nonlocal calls
+            calls+=1
+            if calls == 2:raise OSError('second producer uncertain')
+            return execute(spec)
+        with patch.object(runner,'wait_for_load',return_value=(1.0,2.0,3.0)), \
+             patch.object(runner,'execute',side_effect=producer), \
+             self.assertRaises(runner.BenchOwnershipUnknown):
+            _ = runner.run_bench_owned(self.products[0],self.products[1],'publication',script,sha256(script),output)
+        self.assertEqual(calls,2);self.assertEqual(len(list(output.glob('*.finished.json'))),1)
+
+    def test_all_failed_returned_outcomes_are_unknown(self) -> None:
+        import generic_bench_run as runner
+        from generic_process import ProcessResult, ProcessSpec
+        script,output=self.owned_fixture()
+        for index,code in enumerate((1,-9,None,0)):
+            def producer(spec: ProcessSpec, code: int | None = code) -> ProcessResult:
+                return ProcessResult(spec.output_root/'process.json','FAIL',code,123)
+            with patch.object(runner,'wait_for_load',return_value=(1.0,2.0,3.0)), \
+                 patch.object(runner,'execute',side_effect=producer), \
+                 self.assertRaises(runner.BenchOwnershipUnknown):
+                _ = runner.run_bench_owned(self.products[0],self.products[1],'publication',script,sha256(script),output.with_name(f'failed-{index}'))
+
+    def test_hostile_exception_render_and_diagnostic_failure_keep_primary(self) -> None:
+        import generic_bench_run as runner
+        class HostileError(Exception):
+            @override
+            def __str__(self) -> str:
+                raise AssertionError('must not render primary')
+        script,output=self.owned_fixture();primary=HostileError();diagnostic=RuntimeError('diagnostic failure')
+        from generic_bench import write_new
+        original_write=write_new
+        def writer(path: Path,value: Json) -> None:
+            if path.name == 'ownership.json':raise diagnostic
+            original_write(path,value)
+        with patch.object(runner,'wait_for_load',return_value=(1.0,2.0,3.0)), \
+             patch.object(runner,'execute',side_effect=primary), \
+             patch.object(runner,'write_new',side_effect=writer), \
+             self.assertRaises(runner.BenchOwnershipUnknown) as caught:
+            _ = runner.run_bench_owned(self.products[0],self.products[1],'publication',script,sha256(script),output)
+        self.assertIs(caught.exception.original,primary);self.assertIs(caught.exception.diagnostic,diagnostic)
+        self.assertIs(caught.exception.__cause__,diagnostic)
+        self.assertFalse((output/'failure.json').exists());self.assertFalse((output/'result.json').exists())
+
+    def test_between_round_load_failure_is_settled(self) -> None:
+        import generic_bench_run as runner
+        script,output=self.owned_fixture();primary=RuntimeError('load admission')
+        with patch.object(runner,'wait_for_load',side_effect=[(1.0,2.0,3.0),primary]), \
+             self.assertRaises(runner.BenchSettledFailure) as caught:
+            _ = runner.run_bench_owned(self.products[0],self.products[1],'publication',script,sha256(script),output)
+        self.assertIs(caught.exception.original,primary)
+        self.assertEqual(len(list(output.glob('*.finished.json'))),1)
+        self.assertFalse((output/'ownership.json').exists())
+
+    def test_settled_diagnostic_failure_keeps_primary(self) -> None:
+        import generic_bench_run as runner
+        from generic_bench import write_new
+        script,output=self.owned_fixture();primary=ValueError('audit failed');diagnostic=KeyboardInterrupt()
+        def writer(path: Path,value: Json) -> None:
+            if path.name == 'failure.json':raise diagnostic
+            write_new(path,value)
+        with patch.object(runner,'wait_for_load',return_value=(1.0,2.0,3.0)), \
+             patch.object(runner,'audit_bench_safety',side_effect=primary), \
+             patch.object(runner,'write_new',side_effect=writer), \
+             self.assertRaises(runner.BenchSettledFailure) as caught:
+            _ = runner.run_bench_owned(self.products[0],self.products[1],'publication',script,sha256(script),output)
+        self.assertIs(caught.exception.original,primary)
+        self.assertIs(caught.exception.diagnostic,diagnostic)
+        self.assertIsNone(caught.exception.failure_receipt)
+        self.assertEqual(len(list(output.glob('*.finished.json'))),6)
