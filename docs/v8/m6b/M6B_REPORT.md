@@ -343,6 +343,8 @@ workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignore
 
 벤치 조정기를 원래 단계25 위치에 연결했다. 선택적 명시 소유 context가 있을 때만 원래6회 실행을 수행하며, BASE와 후보의 입력·스크립트·출처와 registry를 대조한다. 기존 실제 descriptor 소유자를 재사용해 잠금 하나를 유지하고, 소스가 종료를 확인한 뒤에만 보존 결과 검증을 수행한다. UNKNOWN은 최종 산출물 확정이나 다음 단계로 진행하지 않는다. 종료가 확인된 실패·PENDING 등 비통과 결과는 이후 실행과 아직 연결하지 않은 모든 의무를 NOT_RUN·blocked_by로 남긴다. 루트85개(63.265초), 엄격 타입·Ruff와 독립 검토가 통과했다. 실제 벤치·컴파일 출처 승인·전체 gate·ledger는 미완료이며 기존 strict 호출의 API와 동작은 유지한다(`stage0/ordered-dispatch/bench-coordinator-draft/INDEPENDENT_REVIEW_V1.md`).
 
+전체 discovery에서 확인한 구조 검사 import 순서 결함을 수정했다. 실제 사용하는 eager 모듈26개의 객체·경로·초기 해시를 한 번 고정하고, 사용하지 않는 함수 내부 import가 나중에 로드돼도 이 집합이 바뀌지 않게 했다. 원래 전체36개 파일의 seal은 유지하므로 제외된 lazy 파일의 변경도 거부한다. 정확한 기존 거부를 RED로 재현했고 양쪽 import 순서·사용 모듈 누락·객체 교체·경로·바이트·seal 누락 검사를 추가했다. 루트22개(30.159초), 엄격 타입·Ruff와 독립 검토가 통과했다. 앞선1,511개 discovery 실패는 아직 전체 재실행으로 대체되지 않았으며 실제 Godot·전체 gate도 미검증이다(`stage0/ordered-dispatch/STRUCTURAL_DISCOVERY_INDEPENDENT_REVIEW_V1.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

@@ -1,7 +1,6 @@
 """Original no-world plant-art renderer; visual and native ancestry remain unqualified."""
 import ast
 import fcntl
-import hashlib
 import logging
 import os
 import re
@@ -13,6 +12,7 @@ import sys
 import uuid
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+from types import ModuleType
 from typing import Literal
 
 import gate_oracle_child as oracle_child
@@ -35,13 +35,6 @@ from mux2_gate_inputs import Json
 from mux2_gate_lock import FD_ENV, LOCK
 
 LOGGER = logging.getLogger(__name__)
-# Snapshot actual imported sources now, not an unrelated later copy of the tooling.
-LOADED_SOURCES = {
-    name: (Path(module.__file__).resolve(), hashlib.sha256(Path(module.__file__).read_bytes()).hexdigest())
-    for name,module in tuple(sys.modules.items())
-    if hasattr(module, '__file__') and module.__file__ is not None and module.__file__.endswith('.py')
-}
-
 # Source-reviewed scene/autoload/rebuild paths: layers never enter the scene tree.
 PINS: dict[str, str] = {'scripts/world/art_hash.gd': 'e37c1a4553175450dbf598bfc3b7a0d86c51016bc2c781a6e4ef82a93e288afe', 'scripts/ui/person_names.gd': 'cd8afd961c3eb31fc6b7706ea1bdb4ea0c9334e229cff590974aa6e2de422791', 'sim_bridge.gdextension': '6c47616cc217caf4b9dfcecfba4c6157f98b8ee8954c18602081ab8a63eb1b5a', 'project.godot': 'cd16a69aa33fbde80fb64c2bf8fb584f6d7aaef0f4b135ed92c8a35cb6061c98', 'tools/v8/m6a_plant_art_test.gd': 'c8deea193b8ffc26436213fa8bece13a912d2870dc4276ec52c3f6da634c2006', 'tools/v8/run_bounded.sh': '64b0d037c1a854add96cccf25ae7a0bcfc40be78ab4406f092514e4891009bf7', 'scripts/world/colony/plant_layer.gd': '84c7bb21b959d2511028b7df42d09b10cb16888b82c65aa59e849a66d95d0fc3', 'scripts/world/art/art_data.gd': 'fd3d27da528819c6ace5ad04824c1c7f8b8a5232b9f2535f40c3d7b1160fa919', 'scripts/ui/content_context.gd': 'e8cdac02c9d5241464a2d153e51c1c1db3a30696198d255d791213f0ac31ce10', 'scripts/core/locale.gd': 'b92c662d50966ce294be3596d91ef7530a3defd59010beee2c898e2e85ae50e3', 'scripts/core/sim_reads.gd': 'b50284a716ee296186fd007e78532a2c3c2569e7ce3e06f01b1b1428e6ba1128', 'scripts/world/colony/view.gd': 'f67192ce8caefbff8971a449f1b5e001c3b787cfb72807b8546c51f42f8e95ab'}
 CLASS_CACHE_SHA256 = 'b82c2e7b1bd0f527aa0683cbc0225e49af2f5c54f20d5c9d603015e0d1236f6f'
@@ -92,17 +85,63 @@ def import_closure(root: Path, entry: str) -> tuple[str, ...]:
     return tuple(sorted(found))
 
 
+def eager_sources() -> dict[str, tuple[ModuleType, Path, str]]:
+    """Capture the used eager graph once; unused function-local imports stay file-sealed.
+
+    Structural call paths do not invoke the legacy lazy imports. Adding a used lazy
+    helper requires reviewed pre-use admission, not a refresh of this snapshot.
+    """
+    entry = Path(__file__).resolve()
+    roots = (entry.parent, Path(original_run.__code__.co_filename).resolve().parent)
+    pending = [('generic_m6a_structural', entry)]
+    found: dict[str, tuple[ModuleType, Path, str]] = {}
+    while pending:
+        name, source = pending.pop()
+        if name in found:
+            continue
+        key = __name__ if name == 'generic_m6a_structural' else name
+        module = sys.modules.get(key)
+        if module is None or module.__file__ is None:
+            raise ValueError('missing eager coordinator module: '+name)
+        actual = Path(module.__file__).resolve()
+        found[name] = (module, actual, file_hash(actual))
+        nodes: list[ast.AST] = list(ast.parse(source.read_text()).body)
+        while nodes:
+            node = nodes.pop()
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)):
+                continue
+            modules: list[str] = []
+            if isinstance(node, ast.Import):
+                modules = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.module is not None:
+                require(node.level == 0, '/imports', 'relative tooling import requires review')
+                modules = [node.module]
+            for imported in modules:
+                relative = imported.replace('.', '/')+'.py'
+                for root in roots:
+                    candidate = root/relative
+                    if candidate.is_file():
+                        pending.append((imported, candidate.resolve()))
+                        break
+            nodes.extend(ast.iter_child_nodes(node))
+    return dict(sorted(found.items()))
+
+
+EAGER_SOURCES = eager_sources()
+LOADED_SOURCES = {name: (source, digest) for name, (_, source, digest) in EAGER_SOURCES.items()}
+
+
 def coordinator_sources(tools: Tooling) -> None:
-    """Authenticate loaded coordinator dependencies before trusting their helpers."""
-    for filename,digest in tools.files:
-        name = filename.removesuffix('.py').replace('/', '.')
-        module = sys.modules.get(name)
-        if module is None:
-            continue  # Legacy function-local imports are never invoked by this adapter.
-        admitted = LOADED_SOURCES.get(name)
-        if admitted is None or module.__file__ is None or Path(module.__file__).resolve() != admitted[0]:
+    """Authenticate every used helper; ambient late imports cannot alter admission."""
+    sealed = dict(tools.files)
+    for name, (admitted_module, source, digest) in EAGER_SOURCES.items():
+        key = __name__ if name == 'generic_m6a_structural' else name
+        module = sys.modules.get(key)
+        if module is None or module is not admitted_module or module.__file__ is None or Path(module.__file__).resolve() != source:
             raise ValueError('unrecorded coordinator module: '+name)
-        if admitted[1] != digest or hashlib.sha256(admitted[0].read_bytes()).hexdigest() != digest:
+        filename = name.replace('.', '/')+'.py'
+        require(filename in sealed, '/tools', 'missing used coordinator source: '+name)
+        if sealed[filename] != digest or file_hash(source) != digest:
             raise ValueError('coordinator source differs from sealed tooling: '+name)
 
 

@@ -522,5 +522,90 @@ with patch.object(s,'LOCK',lock),patch.object(s.oracle_child,'LOCK',lock),patch.
                         if driver.poll() is None:driver.terminate();_=driver.wait(timeout=5)
 
 
+class EagerProvenanceTests(unittest.TestCase):
+    def run_boundary(self, mode: str) -> subprocess.CompletedProcess[str]:
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            source = Path(original_run.__code__.co_filename).resolve().parent
+            for name in structural.import_closure(source, 'generic_m6a_structural.py'):
+                _ = shutil.copy2(source/name, root/name)
+            _ = shutil.copy2(Path(structural.__file__), root/'generic_m6a_structural.py')
+            script = """
+import importlib, sys
+from pathlib import Path
+from types import ModuleType
+mode = sys.argv[1]
+if mode == 'early':
+    importlib.import_module('core_ui_successor_perf_validate')
+import generic_m6a_structural as s
+from generic_gate import GateContractError
+root = Path(s.__file__).parent
+files = tuple((n, s.file_hash(root/n)) for n in s.import_closure(root, 'generic_m6a_structural.py'))
+tools = s.Tooling(Path(sys.executable), '', Path('/bin/bash'), '', root, files, '')
+before = tuple(s.LOADED_SOURCES)
+s.coordinator_sources(tools)
+if mode in ('late', 'early'):
+    importlib.import_module('core_ui_successor_perf_validate')
+    s.coordinator_sources(tools)
+    assert tuple(s.LOADED_SOURCES) == before
+    assert 'core_ui_successor_perf_validate.py' in dict(files)
+    assert 'core_ui_successor_perf_validate' not in before
+    print(','.join(before))
+else:
+    name = 'm6a_gate_art'
+    module = sys.modules[name]
+    if mode == 'missing':
+        del sys.modules[name]
+    elif mode == 'replacement':
+        replacement = ModuleType(name)
+        replacement.__file__ = module.__file__
+        sys.modules[name] = replacement
+    elif mode == 'path':
+        module.__file__ = str(root/'m6a_gate_history.py')
+    elif mode == 'bytes':
+        path = root/(name+'.py')
+        path.write_text(path.read_text()+'\\n')
+    elif mode == 'unsealed':
+        from dataclasses import replace
+        tools = replace(tools, files=tuple(row for row in files if row[0] != name+'.py'))
+    else:
+        raise AssertionError(mode)
+    try:
+        s.coordinator_sources(tools)
+    except (ValueError, GateContractError):
+        print('REJECTED')
+    else:
+        raise AssertionError('altered used helper admitted')
+"""
+            return subprocess.run([sys.executable, '-c', script, mode], cwd=root,
+                                  capture_output=True, text=True, check=False, timeout=20)
+
+    def test_unused_late_import_and_reverse_order_have_identical_used_inventory(self) -> None:
+        late = self.run_boundary('late')
+        early = self.run_boundary('early')
+        self.assertEqual(late.returncode, 0, late.stderr)
+        self.assertEqual(early.returncode, 0, early.stderr)
+        self.assertEqual(late.stdout, early.stdout)
+
+    def test_unused_lazy_source_still_requires_full_file_seal(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder).resolve()
+            products, tools = StructuralTests().fixture(root)
+            name = 'core_ui_successor_perf_validate.py'
+            self.assertIn(name, dict(tools.files))
+            self.assertNotIn(name.removesuffix('.py'), structural.LOADED_SOURCES)
+            source = tools.root/name
+            _ = source.write_text(source.read_text()+'\n')
+            with self.assertRaises(GateContractError):
+                _ = structural.prepare(products.base, tools, root/'capture')
+
+    def test_every_used_helper_requires_original_object_path_bytes_and_seal(self) -> None:
+        for mode in ('missing', 'replacement', 'path', 'bytes', 'unsealed'):
+            with self.subTest(mode=mode):
+                result = self.run_boundary(mode)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(result.stdout.strip(), 'REJECTED')
+
+
 if __name__ == '__main__':
     _ = unittest.main()
