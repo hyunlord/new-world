@@ -5,6 +5,7 @@
 # Run: python3 -m unittest test_generic_setup_bridge
 """Owned original step2; normal-return scope is not arbitrary descendant quiescence."""
 import fcntl
+import json
 import os
 import stat
 import tomllib
@@ -12,7 +13,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Final, Literal
 
-from generic_build import BuildSpec, config_inventory
+from gate_oracle_child import import_generated
+from generic_build import BuildSpec, config_inventory, recheck_workspace_pair
 from generic_gate import require
 from generic_process import (
     ProcessResult,
@@ -136,6 +138,26 @@ def immutable_inputs(prepared: PreparedSetup) -> None:
     _ = config_inventory(spec)
 
 
+@dataclass(frozen=True, slots=True)
+class EndpointAnchor:
+    root: Path
+    encoded: str
+
+    @classmethod
+    def freeze(cls, root: Path) -> 'EndpointAnchor':
+        return cls(root, json.dumps(import_generated(root), sort_keys=True))
+
+    def recheck(self, receipt: Path | None = None, expected: bytes | None = None) -> None:
+        state = import_generated(self.root)
+        if receipt is not None:
+            require(receipt.parent == self.root and expected is not None
+                    and receipt.is_file() and not receipt.is_symlink()
+                    and receipt.read_bytes() == expected, '/endpoint', 'terminal receipt changed')
+            require(state.pop(receipt.name, None) is not None, '/endpoint', 'terminal receipt missing')
+        require(json.dumps(state, sort_keys=True) == self.encoded,
+                '/endpoint', 'producer endpoint bytes, kind or membership changed')
+
+
 def run_bridge_owned(prepared: PreparedSetup, wait: CargoWaitEvidence, descriptor: int) -> BridgeResult:
     """Execute exact step2 under caller ownership; nonzero/unreturned branches retain UNKNOWN.
 
@@ -154,6 +176,8 @@ def run_bridge_owned(prepared: PreparedSetup, wait: CargoWaitEvidence, descripto
     try:
         held_lane(descriptor)
         original = recipe(prepared, 2)
+        initial_generated = tuple(EndpointAnchor.freeze(path) for path in
+            (prepared.inputs.root/'rust/target', prepared.inputs.root/'.godot', prepared.inputs.settings))
         wait_inputs = qualify_wait(prepared, wait)
         external = dict(prepared.external)
         for path, digest in wait_inputs:
@@ -168,9 +192,22 @@ def run_bridge_owned(prepared: PreparedSetup, wait: CargoWaitEvidence, descripto
         row.update(source_sha=prepared.inputs.source_sha, source_digest=prepared.source_digest,
                    original_argv=list(spec.argv), environment={key: value for key, value in environment_for(spec).items()},
                    wait_inputs={str(path): digest for path, digest in wait_inputs})
+        initial_output = EndpointAnchor.freeze(output)
+        expected_started = (json.dumps(row, indent=2, sort_keys=True, allow_nan=False)+'\n').encode()
         atomic_json(output/'started.json', row)
+        require(qualify_wait(prepared, wait) == wait_inputs, '/wait', 'wait evidence changed before launch')
+        immutable_inputs(prepared)
+        if prepared.warm_pair is not None:
+            _ = recheck_workspace_pair(prepared.warm_pair)
+        held_lane(descriptor)
+        initial_output.recheck(output/'started.json', expected_started)
+        for anchor in initial_generated: anchor.recheck()
         in_flight = True
         result = execute(spec)
+        # Freeze the actual producer endpoint before any authentication callback.
+        output_anchor = EndpointAnchor.freeze(output)
+        generated_anchors = tuple(EndpointAnchor.freeze(path) for path in
+            (prepared.inputs.root/'rust/target', prepared.inputs.root/'.godot', prepared.inputs.settings))
         row.update(native_exit=result.native_exit, pid=result.pid, process_status=result.status,
                    process_receipt=str(result.receipt))
         # Never equate an arbitrary nonzero Cargo return with a fully drained build.
@@ -186,6 +223,8 @@ def run_bridge_owned(prepared: PreparedSetup, wait: CargoWaitEvidence, descripto
         # The live execute call returned through child.wait; retained receipts alone cannot grant this transition.
         immutable_inputs(prepared)
         require(qualify_wait(prepared, wait) == wait_inputs, '/wait', 'wait evidence changed')
+        output_anchor.recheck()
+        for anchor in generated_anchors: anchor.recheck()
         in_flight = False
         row['ownership'] = 'NORMAL_CARGO_RETURN'
         row['process_artifacts'] = {key: value for key, value in raw_inventory.items()}
@@ -200,8 +239,16 @@ def run_bridge_owned(prepared: PreparedSetup, wait: CargoWaitEvidence, descripto
         require(inventory(prepared.inputs.root, ['rust/target']) == target, '/target', 'target changed during endpoint validation')
         _ = process_output(binding, original.argv, original.cwd, environment_for(spec), required)
         held_lane(descriptor)
+        output_anchor.recheck()
+        for anchor in generated_anchors: anchor.recheck()
         row['status'] = 'PASS_STEP2_ENDPOINT_ONLY'
+        expected_receipt = (json.dumps(row, indent=2, sort_keys=True, allow_nan=False)+'\n').encode()
         atomic_json(receipt_path, row)
+        require(qualify_wait(prepared, wait) == wait_inputs, "/wait", "wait evidence changed")
+        immutable_inputs(prepared)
+        held_lane(descriptor)
+        output_anchor.recheck(receipt_path, expected_receipt)
+        for anchor in generated_anchors: anchor.recheck()
         return BridgeResult(receipt_path, 0, result.pid, bridge_hash)
     except BaseException as primary:
         # Set ownership before any exception formatting or diagnostic I/O.
