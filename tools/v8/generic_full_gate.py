@@ -77,10 +77,11 @@ def obligations() -> tuple[Obligation, ...]:
     }
     direct_fixtures = direct.DIRECT_STEP_FIXTURES
     composite[28] = ('colony_knowledge.release', *direct_fixtures[28])
+    composite[48] = (*direct_fixtures[48], 'm6a.plant_art_structural')
     mapped = {23:'renderer',39:'visibility',40:'why.base'}
     result: list[Obligation] = []
     for step in ORDER:
-        for name in (composite[28] if step == 28 else direct_fixtures.get(step, composite.get(step, (STEP_NAMES[step-1],)))):
+        for name in (composite[step] if step in (28,48) else direct_fixtures.get(step, composite.get(step, (STEP_NAMES[step-1],)))):
             fixture = name if name in direct_fixtures.get(step, ()) else None
             component = 'direct' if fixture else name if name in COMPONENTS else mapped.get(step)
             result.append(Obligation(step,f'{step}:{name}',component,fixture))

@@ -242,7 +242,7 @@ class OrderedDispatchTests(unittest.TestCase):
         calls = gate.ordered_calls()
         self.assertEqual([call.step for call in calls], sorted([call.step for call in calls], key=gate.ORDER.index))
         self.assertEqual([call.step for call in calls if call.component == 'static'], [1,7,13,15,20,22,31,33])
-        self.assertEqual([call.step for call in calls if call.component == 'direct'], [10,11,18,19,26,28,29,30,35,44,50])
+        self.assertEqual([call.step for call in calls if call.component == 'direct'], [10,11,18,19,26,28,29,30,35,44,47,48,50])
         self.assertEqual({row.step for row in gate.obligations()}, set(range(1,52)))
         self.assertEqual(next(call for call in calls if call.step == 50).identities,
                          tuple('50:'+name for name in direct.DIRECT_STEP_FIXTURES[50]))
@@ -313,7 +313,16 @@ class OrderedExecutionTests(unittest.TestCase):
             self.assertFalse(node.field('full_gate_claim').value)
             missing={row.field('identity').text() for row in node.field('obligations').array() if row.field('status').value=='NOT_IMPLEMENTED'}
             self.assertTrue({'28:colony_knowledge.release','36:data_only_ext.release','46:gdscript.four_files',
-                             '47:m6a.food72','48:m6a.food_data_only','4:workspace.debug','5:workspace.release'} <= missing)
+                             '48:m6a.plant_art_structural','4:workspace.debug','5:workspace.release'} <= missing)
+            self.assertLess(trace.index('47:direct'),trace.index('48:direct'))
+            for identity in ('47:m6a.food72','48:m6a.food_data_only'):
+                row=next(row for row in node.field('obligations').array() if row.field('identity').value==identity)
+                self.assertEqual(row.field('status').value,'COMPONENT_ONLY')
+                self.assertEqual(row.field('component_status').value,'PASS')
+            structural=next(row for row in plan.field('obligations').array()
+                            if row.field('identity').value=='48:m6a.plant_art_structural')
+            self.assertIsNone(structural.field('fixture').value)
+            self.assertEqual(structural.field('invocation_references').value,[])
             for row in plan.field('obligations').array():
                 if row.field('step').value==50:
                     refs=row.field('invocation_references').array()
@@ -451,10 +460,12 @@ class OrderedExecutionTests(unittest.TestCase):
             self.assertEqual(node.field('status').value,'FAIL')
             self.assertTrue(any('duplicate identity/output' in row.text() for row in node.field('errors').array()))
 
-    def test_unsupported_direct_step_incomplete_schema_is_not_a_pass(self) -> None:
+    def test_supported_direct_step_incomplete_schema_is_not_a_pass(self) -> None:
         with TemporaryDirectory() as temp:
             root=Path(temp).resolve();context=ordered_inputs(root)
             call=gate.OrderedCall(47,'direct',('47:m6a.food72',))
             result=ordered_endpoint(call,root/'out',context,'INCOMPLETE')
             self.assertEqual(gate.authenticate('direct',document(result.receipt.read_text()),context.components,step=47),'INCOMPLETE')
-            self.assertNotIn(47,[call.step for call in gate.ordered_calls()])
+            self.assertIn(47,[call.step for call in gate.ordered_calls()])
+            with self.assertRaises(ValueError):
+                gate.authenticate('direct',document(result.receipt.read_text()),context.components,step=48)

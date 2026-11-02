@@ -80,6 +80,7 @@ class DirectTests(unittest.TestCase):
         step: int | None = None,
         output_name: str = "out",
         raise_after_outputs: str = "",
+        m6a_mutation: str = "",
     ) -> ComponentResult:
         def run(
             name: str, registry: Registry, plans: tuple[Invocation, ...], output: Path
@@ -109,13 +110,15 @@ class DirectTests(unittest.TestCase):
             oracles: list[Json] = []
             scorer_outputs: dict[str, Json] = {}
             if name == 'm6a':
-                selected = next(p for p in plans if p.arm == 'base' and p.fixture_id == m6a.SELECTED)
-                folder = selected.out.parent / 'matched-companion'
-                folder.mkdir()
-                _ = (folder / 'raw.json').write_text('{}')
-                manifests[selected.id + '/matched-companion'] = dict(inventory(folder, ['raw.json']))
+                selected = next((p for p in plans if p.arm == 'base' and p.fixture_id == m6a.SELECTED),None)
+                if selected is not None:
+                    folder = selected.out.parent / 'matched-companion'
+                    folder.mkdir()
+                    _ = (folder / 'raw.json').write_text('{}')
+                    manifests[selected.id + '/matched-companion'] = dict(inventory(folder, ['raw.json']))
                 for arm in ('base', 'candidate'):
-                    selected = next(p for p in plans if p.arm == arm and p.fixture_id == m6a.FIXED)
+                    selected = next((p for p in plans if p.arm == arm and p.fixture_id == m6a.FIXED),None)
+                    if selected is None:continue
                     folder = selected.out.parent / 'standing-scorer'
                     (folder / 'process').mkdir(parents=True)
                     for path in (folder / 'process/process.json', folder / 'score.json'):
@@ -143,7 +146,13 @@ class DirectTests(unittest.TestCase):
                 atomic_json(
                     output,
                     {
-                        "schema": direct.SCHEMAS[name],
+                        "schema": 'm6a_step_component_v1' if name=='m6a' and step is not None else direct.SCHEMAS[name],
+                        **({'step':step,'fixtures':list(m6a.step_fixtures(step)),'whole_step_complete':False,
+                            'artifact_snapshots':{str(folder):dict(inventory(folder,[p.name for p in folder.iterdir()]))
+                                for folder in [*(p.out for p in plans),
+                                    *(p.out.parent/'standing-scorer' for p in plans if p.fixture_id==m6a.FIXED),
+                                    *(p.out.parent/'matched-companion' for p in plans if p.fixture_id==m6a.SELECTED and p.arm=='base')]}}
+                           if name=='m6a' and step is not None else {}),
                         "status": status,
                         "publication_authority": False,
                         "base": "a" * 40,
@@ -158,6 +167,18 @@ class DirectTests(unittest.TestCase):
                         "scorers": scorers,
                     },
                 )
+            if name=='m6a' and m6a_mutation:
+                data=document(output.read_text()).mapping()
+                if m6a_mutation=='step':data['step']=48 if step==47 else 47
+                elif m6a_mutation=='schema':data['schema']='m6a_component_v1'
+                elif m6a_mutation=='fixture':data['fixtures']=['m6a.foreign']
+                elif m6a_mutation=='missing_scorer':data['scorers']=[]
+                elif m6a_mutation=='missing_snapshot':data['artifact_snapshots']={}
+                elif m6a_mutation=='foreign_snapshot':data['artifact_snapshots']={str(self.root/'foreign'): {}}
+                elif m6a_mutation=='late_raw':
+                    prior=plans[0].out/'raw.json';_=prior.write_text(prior.read_text()+' ')
+                elif m6a_mutation=='selected_scorer':data['scorers']=[{'arm':'base'}]
+                output.unlink();atomic_json(output,data)
             if name == raise_after_outputs:
                 raise GateContractError("SYNTHETIC", name, "raised after retained artifacts")
             return ComponentResult(
@@ -173,7 +194,7 @@ class DirectTests(unittest.TestCase):
                     _ = stack.enter_context(
                         patch.object(
                             module,
-                            "prepare",
+                            "prepare_step" if name=="m6a" and step is not None else "prepare",
                             side_effect=GateContractError(
                                 "SYNTHETIC", name, "preflight failed"
                             ),
@@ -181,7 +202,7 @@ class DirectTests(unittest.TestCase):
                     )
                 else:
                     _ = stack.enter_context(
-                        patch.object(module, "prepare", return_value=None)
+                        patch.object(module, "prepare_step" if name=="m6a" and step is not None else "prepare", return_value=None)
                     )
                 if name in ("ordinary", "m6a"):
 
@@ -199,6 +220,12 @@ class DirectTests(unittest.TestCase):
                     _ = stack.enter_context(
                         patch.object(module, "run_registered", side_effect=runner)
                     )
+                    if name == "m6a" and step is not None:
+                        def step_runner(registry: Registry, plans: tuple[Invocation,...], _products: Products,
+                                        _declarations: Declarations, actual_step: int, output: Path) -> ComponentResult:
+                            self.assertEqual(actual_step,step)
+                            return run('m6a',registry,plans,output)
+                        _=stack.enter_context(patch.object(module,'run_step',side_effect=step_runner))
                     if name == "ordinary":
                         _ = stack.enter_context(patch.object(module, "run_preservation", side_effect=runner))
                 else:
@@ -431,18 +458,19 @@ class DirectTests(unittest.TestCase):
                 self.assertEqual(plan.arm, producer.arm)
                 self.assertEqual(dependency.path, producer.out / "commands/colony_s5_commands.json")
 
-    def test_m6a47_and48_retain_obligations_without_joint_execution(self) -> None:
+    def test_m6a47_and48_run_only_their_closed_fixture_groups(self) -> None:
         for step in (47, 48):
             with self.subTest(step=step):
                 result = self.invoke(step=step, output_name=f"step{step}")
-                self.assertEqual(result.status, "INCOMPLETE")
+                self.assertEqual(result.status, "PASS")
                 receipt = document(result.receipt.read_text())
                 self.assertEqual(receipt.field("fixtures").value, list(direct.step_fixtures(step)))
                 rows = receipt.field("components").array()
                 self.assertEqual(len(rows), 1)
-                self.assertEqual(rows[0].field("status").value, "NOT_IMPLEMENTED")
+                self.assertEqual(rows[0].field("status").value, "PASS")
                 self.assertTrue(rows[0].field("invocations").array())
-        self.assertFalse(self.calls)
+        self.assertEqual([len(plans) for _,plans in self.calls],[4,2])
+        self.assertEqual([{p.fixture_id for p in plans} for _,plans in self.calls],[{m6a.FIXED},{m6a.SELECTED}])
 
     def test_step_safety_failure_retained(self) -> None:
         result = self.invoke(step=44, fail="ordinary")
@@ -467,3 +495,48 @@ class DirectTests(unittest.TestCase):
         row = document(result.receipt.read_text()).field("components").array()[0]
         self.assertTrue(row.field("failed_artifact_snapshots").mapping())
         self.assertIn("artifact", row.field("postflight_error").text())
+
+
+    def test_m6a_step_identity_and_artifact_receipts_fail_closed(self) -> None:
+        for step,mutation in ((47,'step'),(48,'step'),(47,'schema'),(48,'fixture'),
+                              (47,'missing_scorer'),(47,'missing_snapshot'),(48,'foreign_snapshot'),
+                              (47,'late_raw'),(48,'selected_scorer')):
+            with self.subTest(step=step,mutation=mutation):
+                result=self.invoke(step=step,m6a_mutation=mutation,output_name=f'{step}-{mutation}')
+                self.assertEqual(result.status,'FAIL')
+                node=document(result.receipt.read_text())
+                self.assertEqual(node.field('components').array()[0].field('status').value,'FAIL')
+                self.assertFalse(node.field('whole_step_complete').value)
+
+    def test_m6a_step_preflight_retains_full_registry_validation(self) -> None:
+        self.registry=replace(self.registry,fixtures=tuple(f for f in self.registry.fixtures if f.id!='colony.u10'))
+        result=self.invoke(step=47)
+        self.assertEqual(result.status,'FAIL')
+        self.assertFalse(self.calls)
+
+    def test_m6a_step_failure_retains_failed_artifacts(self) -> None:
+        for step in (47,48):
+            with self.subTest(step=step):
+                result=self.invoke(step=step,fail='m6a',output_name=f'failed{step}')
+                self.assertEqual(result.status,'FAIL')
+                row=document(result.receipt.read_text()).field('components').array()[0]
+                self.assertTrue(row.field('failed_artifact_snapshots').mapping())
+                self.assertIsNotNone(row.field('receipt_sha256').value)
+
+
+class M6aDirectIntegrationTests(unittest.TestCase):
+    def test_real_synthetic_m6a_step_children_bind_through_direct(self) -> None:
+        from test_generic_m6a_run import scenario
+        for step,fixture,count,scorers in ((47,m6a.FIXED,4,2),(48,m6a.SELECTED,3,0)):
+            with self.subTest(step=step),scenario() as state:
+                _,products=state.bindings()
+                declarations=Declarations('b'*40,'a'*40,'publication',tuple(sorted(DIRECT_IDS)),(),(),(),(),'d'*64)
+                result=direct.run_step(state.registry,products,declarations,step,state.root/f'step{step}')
+                node=document(result.receipt.read_text())
+                self.assertEqual(result.status,'PASS',node.value)
+                child=document((result.receipt.parent/'m6a.json').read_text())
+                self.assertEqual(child.field('schema').value,'m6a_step_component_v1')
+                self.assertEqual(child.field('fixtures').value,[fixture])
+                self.assertEqual(len(child.field('executions').array()),count)
+                self.assertEqual(len(child.field('scorers').array()),scorers)
+                self.assertEqual(len(node.field('components').array()[0].field('artifact_snapshots').mapping()),count+scorers)

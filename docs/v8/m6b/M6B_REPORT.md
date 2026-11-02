@@ -285,6 +285,8 @@ M6a 실행기는 기존 공동 API를 보존하면서 단계47의 네72일 prima
 
 Cargo가 임시 doctest 파일에도 runner를 적용한 실제 run02 실패에 대응해, 선택적으로 같은 PID의 rustdoc exec-intent와 실제 직계 부모 실행 파일을 연결하는 기록 경로를 추가했다. 원래 임시 파일 경로를 실행하고 정규 경로·파일 식별·보존 복사본을 별도 기록한다. 검토에서 재현한 joined dependency 인자 우회와 검증 도중 intent 변경 수락을 수리했으며, 지원하지 않는 인자 문법은 실행 인자를 고치지 않고 거절한다. 루트33개 합성 검사·엄격 타입 검사23·Ruff 및 독립 검토가 통과했다. 실제 Cargo/rustdoc 호출 인자 고정·live probe·환경/FD 동등성·최종 부모 영수증 연결·doctest 집계는 아직 미검증이다. 원래 run02 FAIL과 미등록 transient를 거절하는 workspace 대조기의 제한은 유지한다(`stage0/workspace-runtime/INDEPENDENT_DOCTEST_V2_REVIEW.md`).
 
+분리한 M6a47/48을 direct와 원래 순서 조정기에 각각 연결했다. 선택 전에 전체 registry·선언을 검증하고, 단계·fixture·scorer·companion의 산출물 해시를 정확히 묶어 다른 단계 영수증 재사용을 거절한다. 단계48의 `m6a.plant_art_structural`은 별도 필수 미구현 의무로 명시했다. 연결 전 조정기 회귀3개 실패를 보존한 뒤 direct33개·조정기27개가 통과했으며 엄격 타입·Ruff도 통과했다. 이 결과는 오프라인 연결 검증이고 전체 gate 결과는 여전히 INCOMPLETE/FAIL만 가능하다. 실제 분리 실행 및 구조 렌더러 검증은 미완료다(`stage0/ordered-dispatch/m6a-direct-draft/independent-review-v1.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

@@ -56,7 +56,7 @@ DIRECT_STEP_FIXTURES: Final[Mapping[int, tuple[str, ...]]] = MappingProxyType({
     50: ("read.determinism", "read.soak20", "read.story48", "read.neighbours48",
          "read.steward_on24", "read.m6a_steward_on72"),
 })
-UNSUPPORTED_DIRECT_STEPS: Final = frozenset({47, 48})
+UNSUPPORTED_DIRECT_STEPS: Final[frozenset[int]] = frozenset()
 
 
 def step_fixtures(step: int) -> tuple[str, ...]:
@@ -142,7 +142,7 @@ def _plans(
     }
 
 
-def _prepare(name: str, registry: Registry, plans: tuple[Invocation, ...], products: Products) -> None:
+def _prepare(name: str, registry: Registry, plans: tuple[Invocation, ...], products: Products, step: int | None = None) -> None:
     """Keep concrete typed adapter boundaries for whole paired fixture batches."""
     if name == "baseline":
         baseline.prepare(registry, plans, products)
@@ -152,7 +152,8 @@ def _prepare(name: str, registry: Registry, plans: tuple[Invocation, ...], produ
         f10.prepare(registry, plans, products)
     else:
         require(name == "m6a", "/component", "unknown component")
-        m6a.prepare(registry, plans, products)
+        if step in (47,48):m6a.prepare_step(registry,plans,products,step)
+        else:m6a.prepare(registry, plans, products)
 
 
 def _run(
@@ -173,6 +174,7 @@ def _run(
     if name == "f10":
         return f10.run_registered(registry, plans, products, output)
     require(name == "m6a", "/component", "unknown component")
+    if step in (47,48):return m6a.run_step(registry,plans,products,declarations,step,output)
     return m6a.run_registered(registry, plans, products, declarations, output)
 
 
@@ -184,11 +186,16 @@ def _attest(
     products: Products,
     declarations: Declarations,
     row: dict[str, Json],
+    step: int | None = None,
 ) -> None:
     require(result.receipt == expected, name, "foreign component receipt path")
     row["receipt_sha256"] = file_hash(expected)
     receipt = document(expected.read_text())
-    receipt.field("schema").equals(SCHEMAS[name])
+    receipt.field("schema").equals("m6a_step_component_v1" if name=="m6a" and step in (47,48) else SCHEMAS[name])
+    if name=="m6a" and step in (47,48):
+        receipt.field("step").equals(step)
+        receipt.field("fixtures").equals(list(step_fixtures(step)))
+        receipt.field("whole_step_complete").equals(False)
     receipt.field("registry_sha256").equals(registry.sha256)
     receipt.field("base").equals(products.base.source_sha)
     receipt.field("candidate").equals(products.candidate.source_sha)
@@ -217,8 +224,8 @@ def _freeze_artifacts(name: str, receipt: Node, plans: tuple[Invocation, ...],
     """Read only the four producer schemas; constrain every root to its registered plan."""
     paths = {plan.id: plan.out for plan in plans}
     if name == 'm6a':
-        selected = next(p for p in plans if p.arm == 'base' and p.fixture_id == m6a.SELECTED)
-        paths[selected.id + '/matched-companion'] = selected.out.parent / 'matched-companion'
+        selected = next((p for p in plans if p.arm == 'base' and p.fixture_id == m6a.SELECTED),None)
+        if selected is not None:paths[selected.id + '/matched-companion'] = selected.out.parent / 'matched-companion'
     key = {'baseline': 'producer_outputs', 'ordinary': 'producer_outputs',
            'f10': 'producer_artifacts', 'm6a': 'artifacts'}[name]
     manifests = receipt.field(key).mapping()
@@ -241,8 +248,22 @@ def _freeze_artifacts(name: str, receipt: Node, plans: tuple[Invocation, ...],
                     name, 'foreign or duplicate scorer artifact root')
             expected[folder] = oracle.field('outputs').value
     elif name == 'm6a':
+        step_receipt=receipt.field('schema').value=='m6a_step_component_v1'
+        scorer_roots={p.arm:p.out.parent/'standing-scorer' for p in plans if p.fixture_id==m6a.FIXED}
+        snapshots={} if not step_receipt else {Path(path):raw for path,raw in receipt.field('artifact_snapshots').mapping().items()}
+        if step_receipt:
+            raw_snapshots=receipt.field('artifact_snapshots').mapping()
+            require(len(snapshots)==len(raw_snapshots) and all(str(Path(path))==path for path in raw_snapshots),
+                    name,'aliased step artifact root')
+            allowed=set(paths.values())|set(scorer_roots.values())
+            require(snapshots.keys() <= allowed,name,'foreign step artifact root')
+            if receipt.field('status').value=='PASS':require(snapshots.keys()==allowed,name,'missing step artifact root')
+            require(all(path in snapshots and snapshots[path]==hashes for path,hashes in expected.items()),
+                    name,'primary/companion snapshot mismatch')
+        seen_arms: set[str]=set()
         for scorer in receipt.field('scorers').array():
             arm = scorer.field('arm').text()
+            require(arm not in seen_arms,name,'duplicate scorer arm');seen_arms.add(arm)
             selected = next((p for p in plans if p.arm == arm and p.fixture_id == m6a.FIXED), None)
             require(selected is not None, name, 'foreign scorer arm')
             if selected is None:
@@ -253,7 +274,13 @@ def _freeze_artifacts(name: str, receipt: Node, plans: tuple[Invocation, ...],
                 reference = scorer.field(field)
                 require(reference.field('path').text() == str(path) and
                         reference.field('sha256').text() == file_hash(path), name, 'M6a scorer reference changed')
-            expected[folder] = dict(inventory(folder, [p.name for p in folder.iterdir()]))
+            if step_receipt:
+                require(folder in snapshots,name,'missing scorer snapshot')
+                expected[folder]=snapshots[folder]
+            else:expected[folder] = dict(inventory(folder, [p.name for p in folder.iterdir()]))
+        if step_receipt:
+            if receipt.field('status').value=='PASS':require(seen_arms==scorer_roots.keys(),name,'missing original scorer')
+            expected.update(snapshots)
     frozen: dict[Path, dict[str, str]] = {}
     for folder, hashes in expected.items():
         require(folder.is_relative_to(output / 'runs') and folder == folder.resolve(strict=True),
@@ -344,7 +371,7 @@ def _run_batch(
         # All selected complete component batches validate before any producer starts.
         for name, plans in groups.items():
             if step not in UNSUPPORTED_DIRECT_STEPS:
-                _prepare(name, registry, plans, products)
+                _prepare(name, registry, plans, products, step)
     except (OSError, ValueError) as error:
         errors.append({"phase": "preflight", "error": str(error)})
     if not errors:
@@ -358,7 +385,7 @@ def _run_batch(
             path = freshoutput / f"{name}.json"
             try:
                 result = _run(name, registry, plans, products, declarations, path, step)
-                _attest(name, result, path, registry, products, declarations, row)
+                _attest(name, result, path, registry, products, declarations, row, step)
                 artifacts[name] = _freeze_artifacts(name, document(path.read_text()), plans, freshoutput)
                 row['artifact_snapshots'] = {str(folder): dict(hashes) for folder, hashes in artifacts[name].items()}
                 require(
