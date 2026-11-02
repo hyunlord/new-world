@@ -381,6 +381,9 @@ Oracle 호출자에 소스가 보장하는 종료된 실패 API와 보존 결과
 
 단계48 구조 검사를 기존 data-only 비교 뒤에 연결했다. 직전 direct48의 실제 인증된 PASS가 있어야 실행하고, 구조 실행기가 원래 잠금을 소유하므로 외부 잠금을 중복 획득하지 않는다. 종료된 실패만 후속 단계로 진행하며 분류되지 않은 예외는 보존하고 종료 이벤트·산출물 확정·후속 호출을 막는다. resolver32와 oracle38의 인자·순서·입력 기록·보존 결과 재검증을 유지한 통합본의 루트121개(77.383초), 엄격 타입·Ruff·독립23개가 통과했다. 아직 지원하지 않는 단계49 의무를 지원한다고 바꾸지 않았으며 실제 renderer·빌드 출처·전체 gate는 미검증이다(`stage0/ordered-dispatch/structural48-coordinator-draft/v2/INDEPENDENT_REVIEW_V2.md`, patch SHA256 `866915c9e7985bbefd6f3a86e72ac027c4efbe1a721d8934bdddb7dbca2e049b`).
 
+
+단계42·43·49의 library 검사 명령과 선택 사례 집계를 분리했다. 기존 전체 workspace의 filtered0 계약을 바꾸지 않고, 독립 전체/ignored 목록에서 실제 필터와 제외 수를 계산해 정확히4·1·1개 사례를 요구한다. 단계43은 테스트1개 안의 두 메커니즘 분기로 구분하며 과거 단계49의0개 실행은 거부한다. 루트10개(0.013초), 엄격 타입·Ruff·독립 검토가 통과했다. 실제 빌드·wrapper·Cargo capture·소유권·메커니즘 관찰의 출처는 아직 미검증이다. 이 순수 집계의 PASS는 native 실행이나 전체 단계 지원을 뜻하지 않으며 dispatch는 NOT_RUN이다(`stage0/ordered-dispatch/LIBRARY_SIBLINGS_INDEPENDENT_REVIEW_V1.md`, patch SHA256 `9235f5692aa297ba9c55e18706de3e0426bfffc65a7806be7eed81f8bdeae476`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
