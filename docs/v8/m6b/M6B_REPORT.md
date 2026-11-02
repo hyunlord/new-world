@@ -448,3 +448,6 @@ Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·�
 
 
 실제 workspace V8의 직접 실행은 native0으로 종료했다(원본180개 요약 합계2901통과·0실패·13ignored, 고유 case 수 아님). 이후 manifest 준비는 테스트 실행 파일154개와 구분되지 않은 non-test compiled dependency9개 때문에 실패했고 관찰자 경유 실행은 NOT_RUN이다. 전후 의존성 목록은 동일했다. fresh146114-file 연속성 검사와 실제 direct0/driver1 종료를 확인한 뒤 대기 owner9637만 관리상 종료했다(session91861 exit143). 프로토콜 SETTLEMENT·EOF 관측이나 전체 검증 성공으로 바꾸지 않는다. 추가 소스 감사에서 실제 테스트가 쓰는 상위 worldsim_probe 경로가 직접 실행 전 해시에 없음을 확인해 V8 직접 실행 재사용은 거부했다. 새 직접 실행은 해당 실제 compiler output도 먼저 고정해야 한다. 증거와 결정은 `D0-workspace-compiled-dependencies`, `stage0/workspace-runtime/workspace-debug-qualification-v9-draft/DIRECT_REUSE_SOURCE_AUDIT.md`(SHA256 `6ae992c5b8ddc3515d15bb2fdecd1e15476f0888923e76db6a5b3796ebbf78f1`)에 보존한다. V8 전체 결과와 엄격 BASE 자기 비교는 계속 FAIL이다.
+
+
+단계17/37의 선택 실행을 위해 default·substring·ignored-only·exact-ignored 네 모드의 순수 case 집계를 추가했다. 실제 독립 전체/ignored 목록에서 선택·필터 제외 집합을 계산하고 기존 parser의 이름별 결과와 숫자 합계를 재사용한다. 선택된 ignored 테스트를 일괄 거부하지 않으며 실패 수와 원본 로그 해시를 유지한다. 루트 공유 parser 조합45개(0.105초), 생산3.11·테스트3.14 엄격 타입·Ruff와 독립17개 및 잘못된 로그9종 거부가 통과했다. 실제 argv·프로세스 종료·목록·빌드·세계 검증은 호출자가 별도로 인증해야 하며 이 함수에 실행 승인 권한은 없다(`stage0/selected-cases-draft/INDEPENDENT_REVIEW_V1.md`, SHA256 `44e4de1efcdacf3d8dfebc9e87888ccb2321d1897b0ac77e49b4b12bfb68d5d7`; patch `d3cec787c6056324461f955b4e9500d5a48044f0384376d558adabf16288e728`).
