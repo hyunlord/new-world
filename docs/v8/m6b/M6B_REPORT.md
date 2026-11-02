@@ -400,6 +400,8 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 단계36 native 의무의 이름을 실제 원래 명령에 맞게 `data_only_ext.debug`로 바로잡았다. 원래 `data_only_ext.sh`는 `--release` 없이 debug·threads1로 실행하며 UI 검사는 그 뒤에 온다. 실행 명령이나 지원 범위는 변경하지 않았고 아직 미구현인 native 의무를 PASS로 바꾸지 않았다. 순서 조정기11개(8.374초), 엄격 타입·Ruff가 통과했다(`stage0/ordered-dispatch/IMPLEMENTATION_PRIORITY_AUDIT_P53.md`).
 
+단계49의 원래 Bash·Cargo·정확 일치 libtest 호출을 연결하는 owned 실행 어댑터를 추가했다. Cargo와 libtest의 실제 부모 관계·종료·로그·입력과 독립 전체/ignored 목록을 대조해 정확히1개 선택을 요구하며 UNKNOWN은 호출자의 실제 잠금을 유지한다. 검토에서 목록 생성 중 추가 파일을 놓치는 결함을 재현해 전체 파일·디렉터리 집합을 고정했고, 통합 타입 검사가 발견한 순환 import는 library 전용 연결을 실행 모듈로 옮겨 제거했다. 이전 실패 증거는 보존했다. 루트67개(48개12.510초와19개3.484초), 생산3.11·테스트3.14 엄격 타입·Ruff·독립 V3 검토가 통과했다. 첫 루트 호출의 잘못된 cwd로 발생한 import 오류도 별도 로그로 남겼다. 실제 native 실행·소스/빌드 승인·direct 대비 관찰자 검증·상위 조정기 연결·전체 gate는 아직 미완료다(`stage0/ordered-dispatch/LIBRARY_RUNTIME49_INDEPENDENT_REVIEW_V3.md`, patch SHA256 `3c329baa86dff941908797f0dd4cb45edb16e7ba805803cbd9802b655f91f4db`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

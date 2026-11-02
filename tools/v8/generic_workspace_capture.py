@@ -50,6 +50,18 @@ class CapturedTarget:
     original_environment: tuple[tuple[str, str], ...]
 
 
+@dataclass(frozen=True, slots=True)
+class CapturedProcess:
+    receipt: Path
+    receipt_sha256: str
+    sequence: int
+    launcher_pid: int
+    child_pid: int | None
+    native_exit: int | None
+    capture_complete: bool
+    original_environment: tuple[tuple[str, str], ...]
+
+
 @dataclass(frozen=True)
 class CapturedExec:
     receipt: Path
@@ -156,15 +168,24 @@ def parent_binding(plan: CapturePlan, result: ProcessResult) -> dict[str, str]:
 
 
 def child_binding(plan: CapturePlan, parent: ProcessResult, entry: Node, executable: Executable, directory: Path) -> CapturedTarget:
+    captured = captured_process(plan, parent.pid, entry, executable.binary, executable.cwd,
+                                 (str(executable.binary), '--test-threads=8'), directory)
+    return CapturedTarget(executable, captured.receipt, captured.receipt_sha256, captured.sequence,
+                          captured.launcher_pid, captured.child_pid, captured.native_exit,
+                          captured.capture_complete, captured.original_environment)
+
+
+def captured_process(plan: CapturePlan, parent_pid: int | None, entry: Node, binary: Path,
+                      cwd: Path, argv: tuple[str, ...], directory: Path) -> CapturedProcess:
     sequence = int(directory.name)
     pending = read(directory/'pending.json')
     expected: dict[str, Json] = {'schema_version': 1, 'component': 'NATIVE_CAPTURE_COMPONENT', 'invocation_id': plan.invocation_id,
-        'step': plan.step, 'arm': plan.arm, 'profile': plan.profile, 'sequence': sequence, 'parent_pid': parent.pid,
-        'argv': [str(executable.binary), '--test-threads=8'], 'cwd': str(executable.cwd), 'manifest_sha256': plan.manifest_sha256}
+        'step': plan.step, 'arm': plan.arm, 'profile': plan.profile, 'sequence': sequence, 'parent_pid': parent_pid,
+        'argv': list(argv), 'cwd': str(cwd), 'manifest_sha256': plan.manifest_sha256}
     for key, value in expected.items(): pending.field(key).equals(value)
     launcher = integer(pending.field('launcher_pid'), positive=True)
     _ = integer(pending.field('started_ns'), positive=True)
-    claim = plan.capture_root/('artifact-'+hashlib.sha256(str(executable.binary).encode()).hexdigest()+'.claim')
+    claim = plan.capture_root/('artifact-'+hashlib.sha256(str(binary).encode()).hexdigest()+'.claim')
     require(claim.read_bytes() == str(sequence).encode(), '/claim', 'claim/sequence differs')
     terminal_path = directory/'receipt.json'
     if not terminal_path.exists():
@@ -174,7 +195,7 @@ def child_binding(plan: CapturePlan, parent: ProcessResult, entry: Node, executa
             for key, value in pending.mapping().items(): partial.field(key).equals(value)
             partial_pid = integer(partial.field('child_pid'), positive=True)
             partial.field('artifact_id').equals(entry.field('id').text())
-        return CapturedTarget(executable, directory/'pending.json', file_hash(directory/'pending.json'), sequence, launcher, partial_pid, None, False, ())
+        return CapturedProcess(directory/'pending.json', file_hash(directory/'pending.json'), sequence, launcher, partial_pid, None, False, ())
     terminal = read(terminal_path)
     for key, value in pending.mapping().items(): terminal.field(key).equals(value)
     actual = snapshot(directory)
@@ -183,7 +204,7 @@ def child_binding(plan: CapturePlan, parent: ProcessResult, entry: Node, executa
     terminal.field('artifact_id').equals(entry.field('id').text())
     digest = entry.field('sha256').text()
     for key in ('before_binary_sha256', 'after_binary_sha256'): terminal.field(key).equals(digest)
-    require(file_hash(executable.binary) == digest, '/binary', 'artifact changed')
+    require(file_hash(binary) == digest, '/binary', 'artifact changed')
     manifest = read(plan.manifest)
     inputs = strings(manifest.field('inputs'))
     for key in ('expected_inputs', 'after_inputs'): terminal.field(key).equals({key: value for key, value in inputs.items()})
@@ -210,7 +231,8 @@ def child_binding(plan: CapturePlan, parent: ProcessResult, entry: Node, executa
     errors = tuple(row.text() for row in terminal.field('errors').array())
     terminal.field('capture_status').equals('FAIL' if errors else 'COMPLETE')
     for name in ('stdout', 'stderr'): terminal.field(name+'_sha256').equals(file_hash(directory/(name+'.log')))
-    return CapturedTarget(executable, terminal_path, file_hash(terminal_path), sequence, launcher, pid, code, not errors, tuple(sorted(original.items())))
+    return CapturedProcess(terminal_path, file_hash(terminal_path), sequence, launcher, pid, code, not errors, tuple(sorted(original.items())))
+
 
 
 def exec_binding(plan: CapturePlan, parent: ProcessResult, manifest: Node, policy: Node, directory: Path) -> CapturedExec:
