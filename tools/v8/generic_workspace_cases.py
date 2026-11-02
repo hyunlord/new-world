@@ -1,0 +1,318 @@
+"""Pure standalone case accounting; no source/build, runtime, or world admission."""
+import hashlib
+import re
+import shlex
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+
+from gate_rustdoc_exec import match_invocation, policy_for
+from gate_test_summary import parse_log
+from generic_gate import require
+from generic_process import ProcessResult, ProcessSpec, environment_for, file_hash
+from generic_workspace_capture import CapturePlan, read, reconcile_capture, snapshot
+from mux2_gate_inputs import Json
+
+
+@dataclass(frozen=True, slots=True)
+class Listing:
+    names: tuple[str, ...]
+    benchmarks: tuple[str, ...]
+    sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class Outcome:
+    name: str
+    status: str
+    mode: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class Section:
+    outcomes: tuple[Outcome, ...]
+    sha256: str
+    failed: int
+
+
+@dataclass(frozen=True, slots=True)
+class ListingProcess:
+    spec: ProcessSpec
+    result: ProcessResult
+    receipt_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class CaseLists:
+    invocation: str
+    all_cases: ListingProcess
+    ignored_cases: ListingProcess
+
+
+@dataclass(frozen=True, slots=True)
+class JoinedSection:
+    invocation: str
+    package_id: str
+    source: str
+    start: int
+    end: int
+    section: Section
+
+
+@dataclass(frozen=True, slots=True)
+class CaseAccounting:
+    sections: tuple[JoinedSection, ...]
+    errors: tuple[str, ...]
+    status: str
+    native_outcome: str
+    stdout_sha256: str
+    stderr_sha256: str
+    unresolved_start: int
+    source_build_admission: str = 'CALLER_AUTHENTICATED_BUILD_REQUIRED'
+    world_safety: str = 'INCOMPLETE'
+    observed_ranges: tuple[tuple[int, int, str], ...] = ()
+
+
+def digest(raw: bytes) -> str:
+    return hashlib.sha256(raw).hexdigest()
+
+
+def lines(raw: bytes) -> list[str]:
+    text = raw.decode('utf-8')
+    require(bool(raw) and raw.endswith(b'\n'), '/text', 'empty or truncated output')
+    require(all(char == '\n' or ord(char) >= 32 and ord(char) != 127 for char in text), '/text', 'control/CRLF output unsupported')
+    return text.splitlines()
+
+
+def parse_listing(raw: bytes) -> Listing:
+    records = lines(raw)
+    match = re.fullmatch(r'(\d+) (test|tests), (\d+) (benchmark|benchmarks)', records[-1])
+    require(match is not None, '/listing', 'missing exact summary')
+    assert match is not None
+    count, benches = int(match[1]), int(match[3])
+    require(match[2] == ('test' if count == 1 else 'tests') and match[4] == ('benchmark' if benches == 1 else 'benchmarks'), '/listing', 'wrong plural')
+    body = records[:-1]
+    if count + benches:
+        require(bool(body) and body[-1] == '', '/listing', 'missing summary separator')
+        body = body[:-1]
+    names: list[str] = []; benchmarks: list[str] = []
+    for row in body:
+        name, separator, kind = row.rpartition(': ')
+        require(bool(name) and bool(separator) and kind in ('test', 'benchmark'), '/listing', 'invalid name/type')
+        (names if kind == 'test' else benchmarks).append(name)
+    require(len(set(names + benchmarks)) == len(names + benchmarks) and (len(names), len(benchmarks)) == (count, benches), '/listing', 'duplicate or mismatched count')
+    return Listing(tuple(names), tuple(benchmarks), digest(raw))
+
+
+def parse_section(raw: bytes, names: tuple[str, ...], ignored: tuple[str, ...]) -> Section:
+    records = lines(raw)
+    require(len(set(names)) == len(names) and len(set(ignored)) == len(ignored) and set(ignored) <= set(names), '/cases', 'invalid independent inventory')
+    require(len(records) >= 4 and records[0] == '' and records[-1] == '', '/section', 'missing exact boundaries')
+    require(records[1] == f'running {len(names)} '+('test' if len(names) == 1 else 'tests'), '/section', 'running count differs')
+    summary = re.fullmatch(r'test result: (ok|FAILED)\. (\d+) passed; (\d+) failed; (\d+) ignored; (\d+) measured; (\d+) filtered out; finished in (\d+(?:\.\d+)?)s', records[-2])
+    require(summary is not None, '/section', 'missing exact summary')
+    assert summary is not None
+    outcomes: list[Outcome] = []
+    body = records[2:-2]
+    require(bool(body) and body[-1] == '', '/section', 'missing summary separator')
+    for row in body[:-1]:
+        candidates: list[Outcome] = []
+        for name in names:
+            prefix = 'test '+name
+            if row.startswith(prefix+' has been running for over ') and re.fullmatch(r'\d+ seconds', row[len(prefix+' has been running for over '):]):
+                candidates.append(Outcome(name, 'progress', None))
+            for mode in (None, 'compile fail', 'compile', 'should panic'):
+                start = prefix + ('' if mode is None else ' - '+mode) + ' ... '
+                if row.startswith(start):
+                    status = row[len(start):]
+                    if status in ('ok', 'FAILED', 'ignored') or status.startswith('ignored, '):
+                        candidates.append(Outcome(name, status.split(',', 1)[0], mode))
+        require(len(candidates) == 1, '/section', 'unknown, ambiguous or unsupported output record')
+        if candidates[0].status != 'progress': outcomes.append(candidates[0])
+    actual = [row.name for row in outcomes]
+    require(len(actual) == len(set(actual)) and set(actual) == set(names), '/section', 'missing/extra/duplicate case')
+    require({row.name for row in outcomes if row.status == 'ignored'} == set(ignored), '/section', 'ignored set differs')
+    counts = tuple(sum(row.status == status for row in outcomes) for status in ('ok', 'FAILED', 'ignored'))
+    require(tuple(int(summary[i]) for i in (2, 3, 4)) == counts and (summary[5], summary[6]) == ('0', '0'), '/section', 'numeric accounting differs')
+    require(summary[1] == ('FAILED' if counts[1] else 'ok'), '/section', 'status differs')
+    return Section(tuple(outcomes), digest(raw), counts[1])
+
+
+def reconcile_native(raw: bytes, all_cases: Listing, ignored_cases: Listing) -> Section:
+    require(not all_cases.benchmarks and not ignored_cases.benchmarks and set(ignored_cases.names) <= set(all_cases.names), '/native', 'unsupported benchmark or ignored inventory')
+    summary = parse_log(raw.decode('utf-8'))
+    names = [row.name for row in summary.outcomes]
+    require(summary.summaries == 1 and len(names) == len(set(names)) and set(names) == set(all_cases.names), '/native', 'case inventory differs')
+    require({row.name for row in summary.outcomes if row.status == 'ignored'} == set(ignored_cases.names) and
+            summary.measured == 0 and summary.filtered_out == 0, '/native', 'selection differs')
+    return Section(tuple(Outcome(row.name, row.status, None) for row in summary.outcomes), digest(raw), summary.failed)
+
+
+def flattened_test_args(argv: tuple[str, ...]) -> tuple[str, ...]:
+    result: list[str] = []; index = 0
+    while index < len(argv):
+        arg = argv[index]
+        if arg == '--test-args':
+            index += 1
+            require(index < len(argv), '/argv', 'missing test-args value')
+            result.extend(argv[index].split())
+        elif arg.startswith('--test-args='):
+            result.extend(arg.split('=', 1)[1].split())
+        index += 1
+    require(tuple(result) == ('--test-threads=8',), '/argv', 'original test selection differs')
+    return tuple(result)
+
+
+def listing_output(binding: ListingProcess, argv: tuple[str, ...], cwd: Path,
+                   environment: dict[str, str], required: dict[str, str]) -> bytes:
+    spec, result = binding.spec, binding.result
+    require(spec.argv == argv and spec.cwd == cwd and spec.timeout_seconds is None and environment_for(spec) == environment,
+            '/listing-process', 'argv/cwd/environment/timeout differs')
+    require(result.receipt == spec.output_root/'process.json' and file_hash(result.receipt) == binding.receipt_sha256,
+            '/listing-process', 'receipt differs')
+    row = read(result.receipt)
+    require(result.status == 'PASS' and result.native_exit == 0 and type(result.pid) is int and result.pid > 0, '/listing-process', 'listing did not succeed')
+    expected: dict[str, Json] = {'schema_version': 1, 'status': 'PASS', 'native_exit': 0, 'pid': result.pid, 'errors': [],
+        'argv': list(argv), 'cwd': str(cwd), 'environment': {k: v for k, v in environment.items()},
+        'environment_policy': 'fixed_defaults_plus_explicit_only_no_inheritance', 'executable': str(spec.executable),
+        'input_root': str(spec.input_root), 'output_root': str(spec.output_root), 'fresh_directories': list(spec.fresh_directories)}
+    require(required.get(str(spec.executable)) == spec.executable_sha256, '/listing-process', 'wrong required tool hash')
+    require(argv[0] == str(spec.executable), '/listing-process', 'entry executable differs')
+    for key, value in expected.items(): row.field(key).equals(value)
+    require('timed_out' not in row.mapping() and 'timeout_seconds' not in row.mapping(), '/listing-process', 'changed timeout policy')
+    for prefix in ('expected_', 'before_', 'after_'): row.field(prefix+'executable_sha256').equals(spec.executable_sha256)
+    bound: dict[str, str] = {str(spec.executable): spec.executable_sha256}
+    for suffix, pairs in (('inputs', spec.inputs), ('external_inputs', tuple((str(p), h) for p, h in spec.external_inputs))):
+        values = dict(pairs)
+        require(len(values) == len(pairs), '/listing-process', 'duplicate binding')
+        for prefix in ('expected_', 'before_', 'after_'): row.field(prefix+suffix).equals({k: v for k, v in values.items()})
+        for name, value in values.items(): bound[str(spec.input_root/name) if suffix == 'inputs' else name] = value
+    require(all(bound.get(name) == value for name, value in required.items()), '/listing-process', 'required source/exec/tool binding missing')
+    for name, value in bound.items(): require(file_hash(Path(name)) == value, '/listing-process', 'input changed')
+    spawn = read(spec.output_root/'process-spawn.json')
+    spawn.field('pid').equals(result.pid)
+    times = tuple(datetime.fromisoformat(value) for value in (row.field('started_at').text(), spawn.field('spawned_at').text(), row.field('ended_at').text()))
+    require(all(value.tzinfo is not None and value.utcoffset() is not None for value in times), '/listing-process', 'timezone missing')
+    require(times[0] <= times[1] <= times[2], '/listing-process', 'start/spawn/end chronology differs')
+    duration = row.field('duration_ns').value
+    require(type(duration) is int and duration > 0, '/listing-process', 'positive nonboolean duration required')
+    row.field('build_provenance_verified').equals(False)
+    start = read(spec.output_root/'process-start.json')
+    for key in (*[key for key in expected if key not in ('status', 'native_exit', 'pid')], 'started_at',
+                'expected_executable_sha256', 'before_executable_sha256', 'expected_inputs', 'before_inputs',
+                'expected_external_inputs', 'before_external_inputs', 'build_provenance_verified'):
+        start.field(key).equals(row.field(key).value)
+    start_values: dict[str, Json] = {'pid': None, 'native_exit': None, 'status': 'FAIL', 'after_external_inputs': {}}
+    for key, value in start_values.items():
+        start.field(key).equals(value)
+    require(not {'ended_at', 'duration_ns'} & start.mapping().keys(), '/listing-process', 'start contains terminal completion')
+    for name in ('stdout', 'stderr'): row.field(name+'_sha256').equals(file_hash(spec.output_root/(name+'.log')))
+    return (spec.output_root/'stdout.log').read_bytes()
+
+
+def declarations(raw: bytes, executable: str, static_commands: tuple[tuple[str, ...], ...] = ()) -> tuple[tuple[str, ...], ...]:
+    prefixes = {executable, *(row[0] for row in static_commands)}
+    require(all(re.fullmatch(r'/[A-Za-z0-9_./+@-]+', prefix) is not None for prefix in prefixes), '/declarations', 'ambiguous executable path')
+    result: list[tuple[str, ...]] = []; observed_static: list[tuple[str, ...]] = []
+    for raw_line in raw.splitlines(keepends=True):
+        if b'Running `' not in raw_line:
+            require(executable.encode() not in raw_line, '/declarations', 'malformed executable display')
+            continue
+        line = raw_line.decode('utf-8').removesuffix('\n')
+        require(all(ord(c) >= 32 and ord(c) != 127 for c in line) and re.fullmatch(r' +Running `.*`', line) is not None,
+                '/declarations', 'unsupported display framing')
+        command = line.lstrip()[9:-1]
+        matches = [prefix for prefix in prefixes if command.startswith(prefix+' ')]
+        require(len(matches) == 1, '/declarations', 'unknown/ambiguous executable prefix')
+        prefix = matches[0]
+        args = tuple(shlex.split(command[len(prefix)+1:]))
+        if prefix == executable:
+            require('--test' in args and args not in result, '/declarations', 'duplicate or non-test invocation')
+            result.append(args)
+        else:
+            require(not result, '/declarations', 'static command after doctests')
+            observed_static.append((prefix, *args))
+    require(tuple(observed_static) == static_commands, '/declarations', 'static execution declarations differ')
+    return tuple(result)
+
+
+def join_standalone_sections(plan: CapturePlan, parent: ProcessResult, listings: tuple[CaseLists, ...]) -> CaseAccounting:
+    joined: list[JoinedSection] = []; errors: list[str] = []; offset = 0
+    raw_ranges: list[tuple[int, int, str]] = []
+    stdout = b''; stderr = b''; frozen: dict[Path, dict[str, str]] = {}
+    try:
+        capture = reconcile_capture(plan, parent)
+        require(capture.integrity == 'PASS' and capture.completeness == 'COMPLETE', '/capture', 'capture incomplete or invalid')
+        stdout = (plan.parent_spec.output_root/'stdout.log').read_bytes()
+        stderr = (plan.parent_spec.output_root/'stderr.log').read_bytes()
+        manifest = read(plan.manifest); policy = policy_for(manifest)
+        policy.field('schema_version').equals(2)
+        for root in (plan.parent_spec.output_root, plan.capture_root, Path(policy.field('exec_root').text()),
+                     *(item.spec.output_root for pair in listings for item in (pair.all_cases, pair.ignored_cases))):
+            frozen[root] = snapshot(root)
+        # Exact serial native bytes precede doctests; no timestamp or suffix search.
+        prefix = b''.join(row.receipt.with_name('stdout.log').read_bytes() for row in sorted(capture.targets, key=lambda row: row.sequence))
+        require(stdout.startswith(prefix), '/prefix', 'static stdout prefix differs')
+        offset = len(prefix)
+        environment = environment_for(plan.parent_spec)
+        runners = [value for key, value in environment.items() if key.startswith('CARGO_TARGET_') and key.endswith('_RUNNER')]
+        require(len(runners) == 1, '/runner', 'exactly one bound host runner required')
+        runner = tuple(shlex.split(runners[0]))
+        require(len(runner) == 2 and file_hash(Path(runner[0])) == manifest.field('python_sha256').text() and
+                file_hash(Path(runner[1])) == manifest.field('launcher_sha256').text(), '/runner', 'runner bindings differ')
+        static_commands = tuple((*runner, str(item.executable.binary), '--test-threads=8') for item in sorted(capture.targets, key=lambda item: item.sequence))
+        ordered = declarations(stderr, policy.field('entrypoint').text(), static_commands)
+        rows = tuple(match_invocation(manifest, policy, args, plan.parent_spec.cwd) for args in ordered)
+        ids = tuple(row.field('id').text() for row in rows)
+        require(len(ids) == len(set(ids)) and set(ids) == {row.field('id').text() for row in policy.field('invocations').array()}, '/order', 'declarations differ from obligations')
+        expected = {item.invocation: item for item in listings}
+        require(len(expected) == len(listings) and set(expected) == set(ids), '/listings', 'missing/duplicate/extra expected inventory')
+        boundary = offset
+        for match in re.finditer(rb'\ntest result: [^\n]*\n\n', stdout[offset:]):
+            end = offset+match.end()
+            raw_ranges.append((boundary, end, digest(stdout[boundary:end])))
+            boundary = end
+        require(len(raw_ranges) == len(rows) and boundary == len(stdout), '/sections', 'ordinal cardinality/framing incomplete; all ranges unassigned')
+        for row in rows:
+            identity = row.field('id').text()
+            row.field('edition').equals('2021')
+            args = tuple(arg.text() for arg in row.field('argv').array())
+            _ = flattened_test_args(args)
+            require(not any(arg in ('--nocapture', '--no-capture', '--show-output') for arg in args), '/mode', 'changed standalone mode')
+            intents = [item for item in capture.exec_intents if item.source_invocation == identity]
+            require(len(intents) == 1, '/exec', 'missing unique actual compiler invocation')
+            intent = read(intents[0].receipt)
+            environment = {key: intent.field('environment').field(key).text() for key in intent.field('environment').mapping()}
+            required = {key: manifest.field('inputs').field(key).text() for key in manifest.field('inputs').mapping()}
+            required.update({str(plan.manifest): plan.manifest_sha256, str(intents[0].receipt): intents[0].receipt_sha256})
+            required.update({item.field('path').text(): item.field('sha256').text() for item in manifest.field('artifacts').array()})
+            real_argv = (policy.field('rustdoc').text(), *args)
+            pair = expected[identity]
+            all_raw = listing_output(pair.all_cases, (*real_argv, '--test-args', '--list'), Path(row.field('compiler_cwd').text()), environment, required)
+            ignored_raw = listing_output(pair.ignored_cases, (*real_argv, '--test-args', '--list', '--test-args', '--ignored'), Path(row.field('compiler_cwd').text()), environment, required)
+            all_cases, ignored_cases = parse_listing(all_raw), parse_listing(ignored_raw)
+            require(not all_cases.benchmarks and not ignored_cases.benchmarks, '/doctests', 'benchmark listing unsupported')
+            # One standalone summary per serial invocation. Ambiguous diagnostics fail parsing.
+            terminal = re.search(rb'\ntest result: [^\n]*\n\n', stdout[offset:])
+            require(terminal is not None, '/section', 'missing terminal section; later records not shifted')
+            assert terminal is not None
+            end = offset+terminal.end()
+            section = parse_section(stdout[offset:end], all_cases.names, ignored_cases.names)
+            joined.append(JoinedSection(identity, row.field('package_id').text(), row.field('source').text(), offset, end, section))
+            offset = end
+        require(offset == len(stdout), '/stdout', 'unconsumed output or extra section')
+        _ = policy_for(manifest)
+        require(file_hash(plan.manifest) == plan.manifest_sha256, '/manifest', 'manifest changed')
+    except (OSError, ValueError, IndexError) as error:
+        errors.append(str(error))
+    finally:
+        final_capture = reconcile_capture(plan, parent)
+        if final_capture.integrity != 'PASS' or final_capture.completeness != 'COMPLETE':
+            errors.append('capture-final: source/receipt/closure no longer complete and valid')
+        for root, before in frozen.items():
+            try: require(snapshot(root) == before, '/freeze', 'evidence membership/bytes changed')
+            except (OSError, ValueError) as error: errors.append(str(error))
+    if errors: joined.clear()  # Incomplete framing may shift even an apparently matching prefix.
+    outcome = 'FAILED' if parent.native_exit != 0 or any(row.section.failed for row in joined) else 'SUCCEEDED'
+    return CaseAccounting(tuple(joined), tuple(errors), 'INCOMPLETE' if errors else 'COMPLETE_OBSERVED_AND_LISTED_DOCTEST_CASES',
+                          outcome, digest(stdout), digest(stderr), offset, observed_ranges=tuple(raw_ranges))
