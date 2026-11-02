@@ -404,6 +404,8 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 단계41 stall 검사를 선택적 owned context로 원래 순서에 연결했다. 실제 bounded wrapper와 native 종료 연결이 확인된 뒤에만 소스가 종료 토큰을 만들고, 이후 검증 실패는 원래/보조 예외를 보존한다. UNKNOWN은 실제 잠금을 유지해 후속 실행과 최종 기록을 막는다. 원래 strict1·complete=false 기록은 유지하며 timing STRICT_PASS 또는 WAIVER_ELIGIBLE도 생존/KnowledgeLost와 나머지 단계의 최종 결합 전에는 PENDING이다. 루트171개(217.645초), 조정기 생산/테스트 엄격 타입·Ruff·독립13개 검토가 통과했다. 기존 capture 파일의175개 타입 진단과2개 EXE001은 그대로이며 신규 진단은0이다. 실제 GPU·빌드 출처·세계 안전성·전체 gate는 미검증이다(`stage0/ordered-dispatch/stall41-coordinator-draft/v2/INDEPENDENT_REVIEW_V2.md`, patch SHA256 `79229f2cafdcd80e784f59a81a62fd75dd886ee174ccfa70df576197533cf32a`).
 
+단계45용 평가기는 직전44의 실제 생산자 반환 시 고정한 영수증·전체 파일 해시를 받아7개 등록 family·9개 짝 비교를 다시 검증한다. 원래18개 프로세스의 명령·입력·로그, 보호된 baseline 원시 identity, normalizer·선언 및 생존/KnowledgeLost를 재계산하며 기존 실패를 PASS로 바꾸지 않는다. 과거 CORE held-out 과학 평가와 새 일반 fixture 비교를 구분하고 소모된 seed를 실행하지 않는다. 루트10개(7.494초), 엄격 타입·Ruff·독립10개가 통과했다. 성공도 범위 내 평가만 통과한 PENDING이며 실제 소스/빌드·성능·전체 coverage·상위45 연결·전체 gate는 미완료다(`stage0/ordered-dispatch/core45-evaluation-draft/INDEPENDENT_REVIEW_V1.md`, patch SHA256 `46f89729f72486e5ff470cb5015f8eb12fefd507616e84179151d573af02d27d`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
