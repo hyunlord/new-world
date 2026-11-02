@@ -481,7 +481,7 @@ def ordered_endpoint(call: gate.OrderedCall, out: Path, context: gate.OrderedInp
         if call.component=='direct':
             data.update(schema='direct_step_components_v1',step=call.step,obligations=list(call.identities),
                         fixtures=list(direct.step_fixtures(call.step)),whole_step_complete=False,original_order_executed=False)
-    if call.component=='static' and call.step in (8,16,46,51):
+    if call.component=='static' and call.step in (8,14,16,46,51):
         discovery_process(out,data,context,status,call.step)
     atomic_json(path,data)
     return ComponentResult(path,status)
@@ -490,7 +490,12 @@ def ordered_endpoint(call: gate.OrderedCall, out: Path, context: gate.OrderedInp
 def discovery_process(out: Path, data: dict[str,Json], context: gate.OrderedInputs, status: str, step: int=16) -> None:
     product,environment=gate.static_context(context,step)
     process=out/'process';process.mkdir()
-    _=(process/'stdout.log').write_text(strict_transcript(len(static.STRICT_FILES) if step==46 else 1) if step in (8,46) and status=='PASS' else 'READ_DIAGNOSIS_TEST PASS\n' if step==51 and status=='PASS' else 'raw output')
+    if step==14:
+        data.update(reviewed_world_scope='construction_no_tick_advance',reviewed_initial_state_mutations=True,
+                    current_product_world_scope='CALLER_REQUIRED',build_provenance='CALLER_REQUIRED',
+                    docs_before={'synthetic':True},docs_end={'synthetic':True},errors=[] if status=='PASS' else ['synthetic validation failure'])
+        status='PASS';data['process_status']='PASS'
+    _=(process/'stdout.log').write_text(strict_transcript(len(static.STRICT_FILES) if step==46 else 1) if step in (8,46) and status=='PASS' else 'READ_DIAGNOSIS_TEST PASS\n' if step==51 and status=='PASS' else 'docs: PASS\n' if step==14 else 'raw output')
     _=(process/'stderr.log').write_text('Ran 2 tests in 0.001s\n\nOK\n' if status=='PASS'
                                       else 'Ran 2 tests in 0.001s\n\nFAILED (errors=1)\n')
     executable,digest=next((path,digest) for name,path,digest in environment.tools if name==static.COMMANDS[step][1][0])
@@ -516,7 +521,7 @@ def discovery_process(out: Path, data: dict[str,Json], context: gate.OrderedInpu
     data.update(process_receipt=str(process/'process.json'),process_receipt_sha256=file_hash(process/'process.json'),
                 native_exit=native['native_exit'],pid=123,artifacts={key:value for key,value in inventory(out,['process']).items()})
     if step==16:data['unittest']=static.unittest_terminal((process/'stderr.log').read_text())
-    if step in (8,46):
+    if step in (8,14,46):
         source: dict[str,Json]={'source_sha':product.source_sha,'root':str(product.root),'source_clean':True}
         data.update(source_before=source,source_end=source,inputs_before=dict(product.inputs),inputs_end=dict(product.inputs),
                     refs_before={},refs_end={},tool_bindings={name:{'path':str(entry),'sha256':sha} for name,entry,sha in environment.tools},
@@ -1598,3 +1603,232 @@ raise AssertionError('unknown unwound')
             self.assertEqual(row.status,'FAIL')
             self.assertEqual(row.receipt,out/'result.json')
             self.assertTrue(row.error)
+
+
+class DocsOwnedRoutingTests(unittest.TestCase):
+    def test_optional_docs_adds_only_original14_and_preserves_bench(self) -> None:
+        before=gate.ordered_owned_calls(bench_enabled=True)
+        after=gate.ordered_owned_calls(bench_enabled=True,docs_enabled=True)
+        self.assertEqual(tuple(row for row in after if row not in before),(gate.OrderedCall(14,'static',('14:docs',)),))
+        self.assertEqual(tuple(row for row in after if row in before),before)
+        self.assertNotIn(14,[row.step for row in gate.ordered_calls()])
+
+
+def docs_owned_inputs(root: Path, control: int) -> gate.OwnedOrderedInputs:
+    context=owned_inputs(root,control)
+    _=(context.strict.product.root/'scripts/a.gd').write_text('extends Node\n')
+    context=replace(context,strict=replace(context.strict,product=replace(context.strict.product,inputs=tuple(inventory(context.strict.product.root,[*INPUT_DIRS,*INPUT_FILES]).items()))))
+    product=replace(context.discovery_product,inputs=tuple(inventory(context.discovery_product.root,[*INPUT_DIRS,*INPUT_FILES,'docs']).items()))
+    return replace(context,docs=gate.DocsContext(product,context.discovery_environment))
+
+
+class DocsCoordinatorTests(unittest.TestCase):
+    def test_actual_schema_pass_and_settled_fail_with_bound_prior_prefix(self) -> None:
+        for state in ('PASS','FAIL'):
+            with self.subTest(state=state),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();original=docs_owned_inputs(root,-1)
+                prior=ordered_endpoint(gate.OrderedCall(13,'static',('13:bridge_api',)),root/'prior',original)
+                prior_row=gate.Outcome('static','PASS',prior.receipt,file_hash(prior.receipt),'',reported_status='PASS')
+                selected=gate.with_static_priors(original,(prior_row,))
+                result=ordered_endpoint(gate.OrderedCall(14,'static',('14:docs',)),root/'docs',selected,state)
+                row=gate.Outcome('static',state,result.receipt,file_hash(result.receipt),'',reported_status=state)
+                with patch.object(static,'docs_bindings',return_value={'synthetic':True}):
+                    product,environment=gate.static_context(selected,14)
+                    self.assertEqual(gate.authenticate_static(result.receipt,14,product,environment),state)
+                    joined=gate.with_static_priors(original,(prior_row,row))
+                    self.assertIsInstance(joined,gate.OwnedOrderedInputs)
+                    assert isinstance(joined,gate.OwnedOrderedInputs) and joined.docs is not None
+                    self.assertEqual(len(joined.docs.environment.prior_receipts),2)
+                    self.assertEqual(joined.docs.environment.prior_receipts,joined.strict.environment.prior_receipts)
+                    self.assertEqual(gate.with_static_priors(joined,(prior_row,row)),joined)
+
+    def test_resealed_bad_native_or_prefix_rejected_as_completed_prior(self) -> None:
+        for fault in ('exit','pid','duration','spawn','prefix','classification'):
+            with self.subTest(fault=fault),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();context=docs_owned_inputs(root,-1)
+                result=ordered_endpoint(gate.OrderedCall(14,'static',('14:docs',)),root/'docs',context,'FAIL')
+                receipt=document(result.receipt.read_text()).mapping()
+                path=root/'docs/process/process.json';native=document(path.read_text()).mapping()
+                if fault=='exit':native['native_exit']=1;receipt['native_exit']=1
+                elif fault=='pid':native['pid']=None;receipt['pid']=None
+                elif fault=='duration':native['duration_ns']=0
+                elif fault=='spawn':(path.parent/'process-spawn.json').unlink()
+                elif fault=='prefix':receipt['prior_receipts']={'/foreign':'a'*64}
+                else:receipt['current_product_world_scope']='QUALIFIED'
+                _=path.write_text(json.dumps(native));receipt['process_receipt_sha256']=file_hash(path)
+                receipt['artifacts']=dict(inventory(result.receipt.parent,['process']))
+                _=result.receipt.write_text(json.dumps(receipt))
+                product,environment=gate.static_context(context,14)
+                with patch.object(static,'docs_bindings',return_value={'synthetic':True}),self.assertRaises((OSError,ValueError)):
+                    _=gate.authenticate_static(result.receipt,14,product,environment)
+
+    def test_docs_context_scope_and_candidate_source_are_checked(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=docs_owned_inputs(root,-1)
+            assert context.docs is not None
+            with patch.object(static,'docs_input_names',return_value=[*INPUT_DIRS,*INPUT_FILES,'docs']),patch.object(static,'docs_bindings',return_value={'synthetic':True}):
+                self.assertEqual(gate.docs_bindings(context),context.docs)
+                for changed in (replace(context.docs,product=replace(context.docs.product,source_sha='f'*40)),
+                                replace(context.docs,product=replace(context.docs.product,inputs=())),
+                                replace(context.docs,environment=replace(context.docs.environment,held_lane_fd=123))):
+                    with self.assertRaises(ValueError):_=gate.docs_bindings(replace(context,docs=changed))
+
+    def test_one_lane_success_and_typed_settled_failure_release(self) -> None:
+        for state in ('PASS','FAIL'):
+            with self.subTest(state=state),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();read,write=os.pipe()
+                try:
+                    context=docs_owned_inputs(root,read);lock=root/'lane'
+                    def child(_product: static.StaticProduct,out: Path,env: static.ExecutionEnvironment,state: str=state,lock: Path=lock,context: gate.OwnedOrderedInputs=context) -> ComponentResult:
+                        self.assertNotEqual(lock_contender(lock),0);self.assertIsNotNone(env.held_lane_fd)
+                        result=ordered_endpoint(gate.OrderedCall(14,'static',('14:docs',)),out,context,state)
+                        if state=='FAIL':raise static.DocsSettledFailure(ValueError('validation failed'),None,result.receipt)
+                        return result
+                    with patch.object(gate,'LOCK',lock),patch.object(gate,'docs_bindings',return_value=context.docs),patch.object(static,'docs_bindings',return_value={'synthetic':True}),patch.object(static,'validate_environment',return_value={}),patch.object(static,'run_docs_owned',side_effect=child):
+                        row=gate.invoke_docs(gate.OrderedCall(14,'static',('14:docs',)),context,root/'out')
+                    self.assertEqual(row.status,state);self.assertEqual(row.reported_status,state)
+                    self.assertEqual(lock_contender(lock),0)
+                finally:os.close(read);os.close(write)
+
+    def test_settled_failure_does_not_add_step25_style_tailstop(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();read,write=os.pipe()
+            try:
+                context=docs_owned_inputs(root,read)
+                calls=(gate.OrderedCall(14,'static',('14:docs',)),gate.OrderedCall(15,'static',('15:inventory_closure',)))
+                with patch.object(gate,'ordered_owned_calls',return_value=calls),patch.object(gate,'ordered_bindings'),patch.object(gate,'perf_bindings'),patch.object(gate,'docs_bindings',return_value=context.docs),patch.object(static,'docs_bindings',return_value={'synthetic':True}),patch.object(gate,'invoke_docs',return_value=gate.Outcome('static','FAIL',None,None,'settled failure')),patch.object(gate,'invoke',return_value=gate.Outcome('static','PASS',None,None,'')) as later,patch.object(gate,'lane',side_effect=AssertionError('nested lease')):
+                    path=gate.run_ordered_owned(context,context.strict,root/'out',read,docs=context.docs)
+                later.assert_called_once();result=document(path.read_text())
+                result.field('actual_component_sequence').equals(['14:static','15:static']);result.field('status').equals('FAIL')
+            finally:os.close(read);os.close(write)
+
+    def test_historical_chain_through_strict_docs_discovery_and_diagnosis(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=docs_owned_inputs(root,-1);rows: list[gate.Outcome]=[]
+            with patch.object(static,'docs_bindings',return_value={'synthetic':True}):
+                for step,identity in ((8,'gdscript_strict'),(14,'docs'),(16,'python_unittest'),(46,'gdscript.four_files'),(51,'read_diagnosis_test')):
+                    selected=gate.with_static_priors(context,tuple(rows));status='FAIL' if step==14 else 'PASS'
+                    result=ordered_endpoint(gate.OrderedCall(step,'static',(f'{step}:{identity}',)),root/f'step-{step}',selected,status)
+                    rows.append(gate.Outcome('static',status,result.receipt,file_hash(result.receipt),'',reported_status=status))
+                final_context=gate.with_static_priors(context,tuple(rows))
+                assert isinstance(final_context,gate.OwnedOrderedInputs) and final_context.docs is not None
+                self.assertEqual(len(final_context.docs.environment.prior_receipts),5)
+                self.assertEqual(final_context.docs.environment.prior_receipts,final_context.diagnosis_environment.prior_receipts)
+
+    def test_missing_settled_diagnostic_is_fail_and_releases(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();read,write=os.pipe()
+            try:
+                context=docs_owned_inputs(root,read)
+                failure=static.DocsSettledFailure(ValueError('prelaunch validation'),OSError('write failure'),None)
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(gate,'docs_bindings',return_value=context.docs),patch.object(static,'validate_environment',return_value={}),patch.object(static,'run_docs_owned',side_effect=failure):
+                    row=gate.invoke_docs(gate.OrderedCall(14,'static',('14:docs',)),context,root/'out')
+                self.assertEqual(row.status,'FAIL');self.assertIsNone(row.receipt)
+                self.assertEqual(lock_contender(root/'lane'),0)
+            finally:os.close(read);os.close(write)
+
+    def test_unknown_docs_retains_actual_lane_and_never_continues15(self) -> None:
+        for fault in ('native','type','interrupt','status'):
+            with self.subTest(fault=fault),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();read,write=os.pipe()
+                script=r"""
+import os,sys,signal
+from pathlib import Path
+from unittest.mock import patch
+sys.path[:0]=sys.argv[4:]
+import generic_full_gate as g
+import generic_static_run as s
+from test_generic_full_gate import docs_owned_inputs
+root=Path(sys.argv[1]);control=int(sys.argv[2]);fault=sys.argv[3]
+context=docs_owned_inputs(root,control)
+signal.signal(signal.SIGTERM,lambda _a,_b:os._exit(0))
+class Evil(Exception):
+ def __str__(self):raise AssertionError('must not render unknown')
+def child(*_args):
+ (root/'entered').write_text('attempted')
+ if fault=='type':raise TypeError('after dispatch')
+ if fault=='interrupt':raise KeyboardInterrupt()
+ raise s.DocsOwnershipUnknown(ValueError('native failed; waits unresolved'),None,None)
+def bad_status(self):raise Evil()
+if fault=='status':g._DocsOwner.status=bad_status
+calls=(g.OrderedCall(14,'static',('14:docs',)),g.OrderedCall(15,'static',('15:inventory_closure',)))
+with patch.object(g,'LOCK',root/'lane'),patch.object(g,'ordered_owned_calls',return_value=calls),patch.object(g,'ordered_bindings'),patch.object(g,'perf_bindings'),patch.object(g,'docs_bindings',return_value=context.docs),patch.object(s,'docs_bindings',return_value={'synthetic':True}),patch.object(s,'validate_environment',return_value={}),patch.object(s,'run_docs_owned',side_effect=child),patch.object(g,'invoke',side_effect=AssertionError('snapshot/downstream')):
+ g.run_ordered_owned(context,context.strict,root/'out',control,docs=context.docs)
+raise AssertionError('unknown returned')
+"""
+                command=[sys.executable,'-B','-c',script,str(root),str(read),fault,str(Path(__file__).resolve().parent),str(Path(gate.__file__).resolve().parent),str(Path(static.__file__).resolve().parent),str(Path(direct.__file__).resolve().parent)]
+                with subprocess.Popen(command,pass_fds=(read,),env={k:v for k,v in os.environ.items() if k!='PYTHONPATH'},stdout=subprocess.PIPE,stderr=subprocess.PIPE) as driver:
+                    os.close(read)
+                    try:
+                        deadline=time.monotonic()+10
+                        while not (root/'entered').exists() and driver.poll() is None and time.monotonic()<deadline:time.sleep(0.01)
+                        if not (root/'entered').exists():
+                            if driver.poll() is None:driver.terminate()
+                            stdout,stderr=driver.communicate(timeout=5)
+                            self.fail(f'startup: {stdout!r} {stderr!r}')
+                        _=os.write(write,b'inspect\n');os.close(write);write=-1;time.sleep(0.1)
+                        self.assertIsNone(driver.poll());self.assertNotEqual(lock_contender(root/'lane'),0)
+                        self.assertFalse((root/'out/ordered-dispatch.json').exists());self.assertFalse((root/'out/step-15').exists())
+                        if fault!='status':
+                            status_path=root/'out/step-14/docs-ownership-1.json'
+                            document(status_path.read_text()).field('schema').equals('docs_ordered_live_owner_v1')
+                    finally:
+                        if write>=0:os.close(write)
+                        if driver.poll() is None:driver.terminate()
+                        _=driver.wait(timeout=5)
+                self.assertEqual(lock_contender(root/'lane'),0)
+
+    def test_no_launch_failure_cannot_hide_unjoined_native_fields(self) -> None:
+        import shutil
+        defects: tuple[tuple[str,Json],...]=(('process_status','PASS'),('pid',123),('native_exit',1),('process_receipt_sha256','a'*64))
+        for field,value in defects:
+            with self.subTest(field=field),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();context=docs_owned_inputs(root,-1)
+                result=ordered_endpoint(gate.OrderedCall(14,'static',('14:docs',)),root/'docs',context,'FAIL')
+                node=document(result.receipt.read_text()).mapping()
+                for name in ('process_receipt','process_receipt_sha256','pid','native_exit'):_=node.pop(name)
+                shutil.rmtree(result.receipt.parent/'process')
+                node.update(process_status='NOT_RUN',artifacts={})
+                node[field]=value;_=result.receipt.write_text(json.dumps(node))
+                product,environment=gate.static_context(context,14)
+                with self.assertRaises(ValueError):_=gate.authenticate_static(result.receipt,14,product,environment)
+
+    def test_settled_failure_retains_safe_original_and_secondary_diagnostics(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();read,write=os.pipe()
+            try:
+                context=docs_owned_inputs(root,read)
+                failure=static.DocsSettledFailure(ValueError('original-marker'),OSError('diagnostic-marker'),None)
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(gate,'docs_bindings',return_value=context.docs),patch.object(static,'validate_environment',return_value={}),patch.object(static,'run_docs_owned',side_effect=failure):
+                    row=gate.invoke_docs(gate.OrderedCall(14,'static',('14:docs',)),context,root/'out')
+                self.assertEqual(row.status,'FAIL')
+                for text in ('ValueError','original-marker','OSError','diagnostic-marker'):self.assertIn(text,row.error)
+                self.assertEqual(lock_contender(root/'lane'),0)
+            finally:os.close(read);os.close(write)
+
+    def test_outer_failed_docs_requires_native_pass_endpoint_consistency(self) -> None:
+        for field in ('before_inputs','after_inputs','before_executable_sha256','after_executable_sha256','before_external_inputs','after_external_inputs'):
+            with self.subTest(field=field),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();context=docs_owned_inputs(root,-1)
+                result=ordered_endpoint(gate.OrderedCall(14,'static',('14:docs',)),root/'docs',context,'FAIL')
+                receipt=document(result.receipt.read_text()).mapping();path=result.receipt.parent/'process/process.json'
+                native=document(path.read_text()).mapping();native[field]='a'*64 if 'executable' in field else {}
+                _=path.write_text(json.dumps(native));receipt['process_receipt_sha256']=file_hash(path)
+                receipt['artifacts']=dict(inventory(result.receipt.parent,['process']));_=result.receipt.write_text(json.dumps(receipt))
+                product,environment=gate.static_context(context,14)
+                with self.assertRaises(ValueError):_=gate.authenticate_static(result.receipt,14,product,environment)
+
+    def test_diagnostics_do_not_render_unknown_arguments_or_properties(self) -> None:
+        from unittest.mock import PropertyMock
+        class Hostile:
+            pass
+        class FailureSubtype(static.DocsSettledFailure):
+            pass
+        value=Hostile()
+        with patch.object(Hostile,'__str__',side_effect=AssertionError('str invoked')),patch.object(Hostile,'__repr__',side_effect=AssertionError('repr invoked')):
+            message=gate.docs_failure_message(static.DocsSettledFailure(ValueError('safe-marker',value),None,None))
+        self.assertIn('safe-marker',message);self.assertIn('<uninspected argument>',message)
+        failure=FailureSubtype(ValueError('primary'),None,None)
+        with patch.object(FailureSubtype,'original',create=True,new_callable=PropertyMock,side_effect=AssertionError('property invoked')):
+            self.assertIn('uninspected failure subtype',gate.docs_failure_message(failure))
+        self.assertIn('uninspected exception subtype',gate.safe_docs_exception(failure))
