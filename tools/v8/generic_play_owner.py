@@ -7,7 +7,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import BinaryIO, Literal, final
+from typing import TYPE_CHECKING, BinaryIO, Literal, final
 
 import gate_play_child as child
 import gate_play_protocol as protocol
@@ -16,6 +16,9 @@ from generic_gate import document, integer, require, text
 from generic_process import atomic_json, file_hash, real_path
 from mux2_gate_inputs import Json, Node
 from mux2_gate_lock import FD_ENV
+
+if TYPE_CHECKING:
+    from generic_play_sources import HistoricalBindings, SourceGrants
 
 
 @dataclass(frozen=True, slots=True)
@@ -28,6 +31,7 @@ class PlayPlan:
     environment: tuple[tuple[str, str], ...]
     # Exact source-owned projections supplied by caller, not an environment waiver.
     child_environments: tuple[tuple[str, str, tuple[tuple[str, str], ...]], ...]
+    historical: 'HistoricalBindings | None' = None
 
 
 def case_argv(root: Path, index: int) -> tuple[str, ...]:
@@ -63,6 +67,8 @@ def validate(plan: PlayPlan) -> None:
             and not plan.root.is_relative_to(plan.output), '/output', 'fresh separate output required')
     required = {plan.root / 'tools/v8' / name for name in ('test_play.sh', 'gate_play_child.py',
         'gate_play_protocol.py', 'generic_play_owner.py')}
+    if plan.historical is not None:
+        required |= {plan.root / 'tools/v8' / name for name in ('generic_play_sources.py', 'generic_sources.py')}
     required |= {plan.root / 'tools/play.sh', Path('/bin/bash').resolve(), Path(sys.executable).resolve()}
     require(required <= {p for p, _ in plan.inputs}, '/inputs', 'helper/launcher/tool bindings missing')
     env = dict(plan.environment)
@@ -103,7 +109,12 @@ class PlayOutcome:
 class PlayOwner:
     """Owns a duplicated real lane FD until every source-owned wait is joined."""
     def __init__(self, plan: PlayPlan, lane_fd: int) -> None:
-        validate(plan); suite_lane(lane_fd)
+        validate(plan)
+        self.source_grants: SourceGrants | None = None
+        if plan.historical is not None:
+            from generic_play_sources import SourceGrants as HistoricalGrants
+            self.source_grants = HistoricalGrants(plan.historical, plan.root, Path(dict(plan.environment)['PLAY_ROOT']))
+        suite_lane(lane_fd)
         fcntl.flock(lane_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         self.plan = plan; self.lane_fd = os.dup(lane_fd)
         self.shell: subprocess.Popen[bytes] | None = None
@@ -117,6 +128,8 @@ class PlayOwner:
 
     def check(self) -> None:
         suite_lane(self.lane_fd); current(self.plan)
+        if self.source_grants is not None:
+            self.source_grants.check()
         for root, members in self.native_memberships.items():
             require(evidence_membership(root) == members, str(root), 'native evidence membership changed')
         for path, digest in self.anchors.items():
@@ -137,6 +150,7 @@ class PlayOwner:
             atomic_json(self.plan.output / 'intent.json', {'argv': list(argv), 'cwd': str(self.plan.root),
                 'environment': {k: v for k, v in env.items()}, 'owner_pid': os.getpid(),
                 'inputs': {str(p): digest for p, digest in self.plan.inputs},
+                **({'historical_bindings': self.source_grants.declaration()} if self.source_grants is not None else {}),
                 'child_environment_projections': [{'case': case, 'role': role, 'environment': {k: v for k, v in values}}
                     for case, role, values in self.plan.child_environments]})
             self.shell = subprocess.Popen(argv, cwd=self.plan.root, env=env, stdout=self.stdout, stderr=self.stderr,
@@ -232,6 +246,13 @@ class PlayOwner:
                 for key in (protocol.REQUEST, protocol.CONTROL, protocol.EVIDENCE, FD_ENV):
                     _ = observed.pop(key, None)
                 require(observed == dict(expected[0]), '/environment', 'child environment differs')
+                if self.source_grants is not None:
+                    self.source_grants.check_environment(payload)
+                if self.source_grants is not None and index >= 3 and role != 'version':
+                    source_record = self.source_grants.request(('main', 'm1', 'v7')[index - 3], role, entry, payload)
+                    source_path = path.with_name('source-grant.json')
+                    atomic_json(source_path, source_record)
+                    self.anchors[source_path] = file_hash(source_path)
                 self.active_child = row.mapping()
             elif event == 'returned':
                 require(self.active_child is not None, '/child', 'no admitted child')
@@ -281,6 +302,11 @@ class PlayOwner:
                     log = receipt.parent / (name + '.log')
                     require(file_hash(log) == text(terminal.field(name + '_sha256')), '/logs', 'child output changed')
                     self.anchors[log] = file_hash(log)
+                if self.source_grants is not None and role == 'build':
+                    build_record = self.source_grants.returned(('main', 'm1', 'v7')[index - 3], receipt)
+                    build_path = path.with_name('build-join.json')
+                    atomic_json(build_path, build_record)
+                    self.anchors[build_path] = file_hash(build_path)
                 members = evidence_membership(receipt.parent)
                 require(members == {'.': 'directory', 'receipt.json': 'file', 'started.json': 'file',
                     'stdout.log': 'file', 'stderr.log': 'file'}, '/output', 'unexpected child evidence membership')
