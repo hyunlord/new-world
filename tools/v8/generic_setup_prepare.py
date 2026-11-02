@@ -13,7 +13,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Final, Literal
 
-from generic_build import BuildSpec, config_inventory
+from generic_build import (
+    BuildSpec,
+    WorkspaceBuildPair,
+    config_inventory,
+    recheck_workspace_pair,
+)
 from generic_gate import GateContractError, document, require
 from generic_process import check_digest, file_hash, real_path
 from generic_sources import freeze_source, inventory, manifest_hash
@@ -75,6 +80,10 @@ class PreparedSetup:
     execution_authority: Literal[False] = False
     producer_authentication: Literal['NOT_RUN'] = 'NOT_RUN'
     runtime_closure: Literal['CALLER_OWNED_UNQUALIFIED'] = 'CALLER_OWNED_UNQUALIFIED'
+    warm_pair: WorkspaceBuildPair | None = None
+    preparation_kind: Literal['FRESH', 'WARM_BUILD_ANTECEDENTS'] = 'FRESH'
+    environment_delta: tuple[tuple[str, str | None, str | None], ...] = ()
+    environment_equal: Literal[False] = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -96,7 +105,71 @@ def absent(path: Path) -> None:
 
 
 def prepare(inputs: SetupInputs) -> PreparedSetup:
+    return _prepare(inputs, None)
+
+
+def prepare_warm(inputs: SetupInputs, pair: WorkspaceBuildPair) -> PreparedSetup:
+    """Admit live build antecedents only; actual step2 and runtime remain unqualified."""
+    return _prepare(inputs, pair)
+
+
+def warm_projection(inputs: SetupInputs, pair: WorkspaceBuildPair) -> tuple[tuple[str, str | None, str | None], ...]:
+    specs = recheck_workspace_pair(pair)
+    tools = {tool.name: tool for tool in inputs.tools}
+    env = dict(inputs.environment)
+    require(all(key in env and env[key] == '' for key in ('RUSTC_WRAPPER', 'RUSTC_WORKSPACE_WRAPPER')),
+            '/warm/environment', 'both wrappers must be explicitly present-empty')
+    require(env.get('LANG') == env.get('LC_ALL') == 'C', '/warm/environment', 'build locale differs')
+    jobs: list[int] = []
+    for name, _ in inputs.configs:
+        config = Node(tomllib.loads(Path(name).read_text())).mapping()
+        require(config.keys() <= {'build', 'net'}, '/warm/config', 'unreviewed Cargo config table')
+        if 'build' in config:
+            build = Node(config['build']).mapping()
+            require(build.keys() <= {'jobs'}, '/warm/config', 'unreviewed build config')
+            if 'jobs' in build:
+                count = build['jobs']
+                require(type(count) is int and count > 0 and str(count) == env.get('CARGO_BUILD_JOBS'),
+                        '/warm/jobs', 'explicit config/setup jobs differ')
+                assert isinstance(count, int)
+                jobs.append(count)
+        if 'net' in config: require(Node(config['net']).mapping() == {'offline': True}, '/warm/config', 'unreviewed net config')
+    require(bool(jobs), '/warm/jobs', 'default antecedent jobs are not qualified')
+    actuals: list[dict[str, str]] = []
+    for spec, result in zip(specs, (pair.debug, pair.release), strict=True):
+        require(result is not None and spec.root == inputs.root and spec.source_sha == inputs.source_sha
+                and spec.cargo_home == inputs.cargo_home and spec.overlay is None
+                and dict(spec.config_inputs) == dict(inputs.configs), '/warm', 'foreign source/config/build kind')
+        assert result is not None
+        require(all(name in tools and (tools[name].path, tools[name].sha256) == (path, checksum)
+                    for name, path, checksum in (('cargo', spec.cargo, spec.cargo_sha256), ('rustc', spec.rustc, spec.rustc_sha256))),
+                '/warm/tools', 'build/setup tool identity differs')
+        for fresh in (inputs.output, inputs.settings):
+            for previous in (spec.output, pair.receipt.parent):
+                require(not fresh.is_relative_to(previous) and not previous.is_relative_to(fresh), '/warm/paths', 'antecedent evidence overlap')
+        row = document(result.receipt.read_text())
+        previous_inputs = row.field('effective_inputs_before').mapping()
+        require(all(dict(inputs.effective_inputs).get(name) == Node(value, name).text() for name, value in previous_inputs.items()),
+                '/warm/inputs', 'antecedent effective input differs')
+        process = document(Path(row.field('process_receipt').text()).read_text())
+        actual = {name: Node(value, name).text() for name, value in process.field('environment').mapping().items()}
+        expected = {'PATH': f'{spec.rustc.parent}:/usr/bin:/bin:/usr/sbin:/sbin', 'LANG': 'C', 'LC_ALL': 'C',
+                    'CARGO_HOME': str(spec.cargo_home), 'CARGO_TARGET_DIR': str(inputs.root/'rust/target'),
+                    'RUSTC': str(spec.rustc), 'RUSTC_WRAPPER': '', 'RUSTC_WORKSPACE_WRAPPER': ''}
+        require(actual == expected, '/warm/environment', 'unreviewed actual antecedent environment')
+        actuals.append(actual)
+    require(actuals[0] == actuals[1], '/warm/environment', 'profile environments differ')
+    before = actuals[0]
+    if 'CARGO_NET_OFFLINE' in env:
+        require(any(Node(tomllib.loads(Path(name).read_text())).mapping().get('net') == {'offline': True}
+                    for name, _ in inputs.configs), '/warm/environment', 'offline presence lacks shared config')
+    _ = recheck_workspace_pair(pair)
+    return tuple((key, before.get(key), env.get(key)) for key in sorted(before.keys() | env.keys()) if before.get(key) != env.get(key))
+
+
+def _prepare(inputs: SetupInputs, pair: WorkspaceBuildPair | None) -> PreparedSetup:
     """Bind clean current source/config/inputs without creating or executing anything."""
+    delta = warm_projection(inputs, pair) if pair is not None else ()
     root = inputs.root
     real_path(root, directory=True)
     real_path(inputs.cargo_home, directory=True)
@@ -111,7 +184,7 @@ def prepare(inputs: SetupInputs) -> PreparedSetup:
     require(inventory(root, list(effective)) == effective, '/inputs', 'effective input changed')
     require(not any(name.startswith(('rust/target/', '.godot/')) for name in effective),
             '/inputs', 'mutable outputs cannot be immutable inputs')
-    for name in ('rust/target', '.godot', 'override.cfg', 'addons/godot_test_mcp'):
+    for name in (('.godot', 'override.cfg', 'addons/godot_test_mcp') if pair is not None else ('rust/target', '.godot', 'override.cfg', 'addons/godot_test_mcp')):
         absent(root/name)
     for path in (inputs.output, inputs.settings):
         require(path.is_absolute() and path.parent == path.parent.resolve(strict=True)
@@ -196,14 +269,17 @@ def prepare(inputs: SetupInputs) -> PreparedSetup:
             and inventory(root, list(effective)) == effective, '/inputs', 'inputs changed during preparation')
     for path, digest in external.items():
         require(file_hash(path) == digest, str(path), 'external input changed at final check')
-    for path in (inputs.output, inputs.settings, root/'rust/target', root/'.godot'):
+    for path in (inputs.output, inputs.settings, root/'.godot'):
         absent(path)
-    return PreparedSetup(inputs, manifest_hash(source), tuple(sorted(effective.items())), tuple(sorted(external.items())), candidates)
+    if pair is None: absent(root/'rust/target')
+    else: require(warm_projection(inputs, pair) == delta, '/warm', 'antecedent projection changed')
+    return PreparedSetup(inputs, manifest_hash(source), tuple(sorted(effective.items())), tuple(sorted(external.items())), candidates,
+                         warm_pair=pair, preparation_kind='FRESH' if pair is None else 'WARM_BUILD_ANTECEDENTS', environment_delta=delta)
 
 
 def recipe(prepared: PreparedSetup, step: Literal[2, 3, 6]) -> SetupRecipe:
     """Recheck the preparation, then return a declaration, not a launch grant."""
-    require(prepare(prepared.inputs) == prepared, '/preparation', 'stale preparation')
+    require(_prepare(prepared.inputs, prepared.warm_pair) == prepared, '/preparation', 'stale preparation')
     selected = [command for number, _, command in COMMANDS if number == step]
     require(len(selected) == 1, '/step', 'unsupported step')
     bash = next(tool.path for tool in prepared.inputs.tools if tool.name == 'bash')
