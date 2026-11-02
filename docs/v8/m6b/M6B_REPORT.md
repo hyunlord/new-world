@@ -451,3 +451,6 @@ Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·�
 
 
 단계17/37의 선택 실행을 위해 default·substring·ignored-only·exact-ignored 네 모드의 순수 case 집계를 추가했다. 실제 독립 전체/ignored 목록에서 선택·필터 제외 집합을 계산하고 기존 parser의 이름별 결과와 숫자 합계를 재사용한다. 선택된 ignored 테스트를 일괄 거부하지 않으며 실패 수와 원본 로그 해시를 유지한다. 루트 공유 parser 조합45개(0.105초), 생산3.11·테스트3.14 엄격 타입·Ruff와 독립17개 및 잘못된 로그9종 거부가 통과했다. 실제 argv·프로세스 종료·목록·빌드·세계 검증은 호출자가 별도로 인증해야 하며 이 함수에 실행 승인 권한은 없다(`stage0/selected-cases-draft/INDEPENDENT_REVIEW_V1.md`, SHA256 `44e4de1efcdacf3d8dfebc9e87888ccb2321d1897b0ac77e49b4b12bfb68d5d7`; patch `d3cec787c6056324461f955b4e9500d5a48044f0384376d558adabf16288e728`).
+
+
+단계21의 여섯 launcher 경우를 원래21→22 순서의 선택적 owned 호출로 연결했다. 실제 역사 버전 출처·후보 launcher 입력·원래3/2/4/0/0/0 반환·16개 자식 산출물을 대조하고 성공도 검증 전 PENDING으로 남긴다. UNKNOWN은 실제 owner·descriptor·예외를 유지하며 settled FAIL은 뒤 단계를 계속한다. 독립 V1 검토에서 거부된 외부 산출물의 예상 밖 파일 바이트 변조가 통과하는 결함을 재현해 V2에서 전체 파일 해시와 디렉터리 종류를 함께 고정했다. 실패 기록은 보존한다. 루트150개(287.761초), 독립8개(28.825초), 생산3.11·테스트3.14 엄격 타입·Ruff가 통과했다. 테스트 파일 공백 한 줄은 AST 동일성을 확인해 정리했다. 실제 역사 버전 빌드·Godot·세계 관찰·전체 gate는 아직 미완료다(`stage0/ordered-dispatch/play21-coordinator-review-metadata-v2/REVIEW.json`, SHA256 `68eede5475c75a85599f85f056b88519b9de6e0ab0bcf69581ec34c4a918bc83`; patch `ba2f91bb8947f9af027d03642ae06d875a5bc6f41db792f09003b39e02821ab7`).

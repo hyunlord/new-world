@@ -33,6 +33,8 @@ import generic_library_run as library49
 import generic_m6a_structural as structural
 import generic_oracles_run as oracles
 import generic_perf_run as perf
+import generic_play_owner as play_owner
+import generic_play_sources as play_sources
 import generic_renderer_run as renderer
 import generic_resolver_run as resolver
 import generic_static_run as static
@@ -67,7 +69,7 @@ from generic_process import (
     file_hash,
     timestamp,
 )
-from generic_sources import inventory
+from generic_sources import freeze_source, inventory
 from generic_stall_build import BuildEvidenceReference, derived_source_binding
 from generic_stall_outcome import StallOutcomePlan, validate_derived_bounded_outcome
 from generic_test_invocation import invocations
@@ -139,6 +141,7 @@ class Outcome:
     library49_members: tuple[str,...] = ()
     core_prior: core_evaluation.PriorArtifacts | None = None
     core_result: core_evaluation.EvaluationResult | None = None
+    play_evidence: PlayEvidence | None = None
 
 
 def aggregate(rows: tuple[Outcome, ...]) -> str:
@@ -444,6 +447,24 @@ class Library49Context:
 
 
 @dataclass(frozen=True, slots=True)
+class PlayContext:
+    plan: play_owner.PlayPlan
+
+
+@dataclass(frozen=True, slots=True)
+class PlayEvidence:
+    owner: play_owner.PlayOwner
+    returned: play_owner.PlayOutcome
+    retained: tuple[tuple[Path,str], ...]
+    native_members: tuple[tuple[Path,tuple[tuple[str,str], ...]], ...]
+    members: tuple[tuple[str,str], ...]
+    failure: BaseException | None = None
+    rejected_external: tuple[tuple[Path,str], ...] = ()
+    rejected_members: tuple[tuple[Path,tuple[tuple[str,str], ...]], ...] = ()
+    rejected_native_files: tuple[tuple[Path,tuple[tuple[str,str], ...]], ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
 class OwnedOrderedInputs(OrderedInputs):
     strict: StrictContext
     control_fd: int
@@ -456,6 +477,7 @@ class OwnedOrderedInputs(OrderedInputs):
     library49: Library49Context | None = None
     library42: Library49Context | None = None
     library43: Library49Context | None = None
+    play: PlayContext | None = None
 
 
 def strict_bindings(context: OwnedOrderedInputs) -> None:
@@ -1293,6 +1315,156 @@ def _invoke_library(call: OrderedCall, context: OwnedOrderedInputs, output: Path
         if not entered or settled:os.close(owner.descriptor)
 
 
+def play_call() -> OrderedCall:
+    return OrderedCall(21,'play',tuple(row.identity for row in obligations() if row.step==21))
+
+
+def play_bindings(context: OwnedOrderedInputs) -> PlayContext:
+    bound=context.play
+    require(bound is not None,'/play','explicit context required')
+    assert bound is not None
+    plan=bound.plan;candidate=context.components.probes.candidate
+    require(plan.historical is not None,'/play','historical source grants required')
+    assert plan.historical is not None
+    play_sources.check_bindings(plan.historical)
+    require(plan.historical.sources[0].commit==context.components.probes.base.source_sha
+            ==context.components.declarations.base,'/play','historical main differs from published baseline')
+    _=freeze_source(plan.root,candidate.source_sha)
+    supplied=dict(plan.inputs)
+    require(len(supplied)==len(plan.inputs) and all(supplied.get(plan.root/name)==digest
+            for name,digest in candidate.input_files),'/play','candidate launcher input closure differs')
+    play_owner.current(plan)
+    return bound
+
+
+def play_dependencies(bound: PlayContext) -> dict[str,Json]:
+    plan=bound.plan
+    require(plan.historical is not None,'/play','missing historical source grants')
+    assert plan.historical is not None
+    declaration=play_sources.SourceGrants(plan.historical,plan.root,Path(dict(plan.environment)['PLAY_ROOT'])).declaration()
+    return {'root':str(plan.root),'template_output':str(plan.output),'suite':str(plan.suite),
+        'suite_sha256':plan.suite_sha256,'inputs':{str(p):h for p,h in plan.inputs},
+        'environment':dict(plan.environment),'child_environments':[
+            {'case':case,'role':role,'environment':dict(env)} for case,role,env in plan.child_environments],
+        'historical':declaration,'source_build_qualification':'PENDING','observer_qualification':'PENDING',
+        'world_admission':'PENDING','publication_authority':False}
+
+
+@final
+class _PlayOwner(_StrictOwner):
+    ownership_label: str = 'play'
+    retained_owner: play_owner.PlayOwner | None = None
+    retained_failure: BaseException | None = None
+
+
+def authenticate_play(evidence: PlayEvidence, output: Path) -> str:
+    live=evidence.owner;result=evidence.returned
+    require(live.closed and not live.unknown and live.shell is not None,'/play','no source-owned settlement')
+    assert live.shell is not None
+    require(live.plan.output==output and live.shell.returncode==result.outer_exit
+            and tuple(live.case_exits)==result.case_exits and result.settlement=='SETTLED'
+            and result.qualification=='INCOMPLETE','/play','returned outcome differs from actual owner')
+    node=document((output/'terminal.json').read_text())
+    values: dict[str,Json]={'settlement':'SETTLED','outer_pid':live.shell.pid,'outer_exit':result.outer_exit,
+                      'case_exits':list(result.case_exits),'qualification':'INCOMPLETE',
+                      'wrapper_wait_authority':'SOURCE_FOREGROUND_CASE_SHELL_WAIT','native_waits':'OBSERVED'}
+    for key,value in values.items():node.field(key).equals(value)
+    node.field('retained_files').equals({str(p):h for p,h in evidence.retained})
+    node.field('native_output_membership').equals({str(p):dict(m) for p,m in evidence.native_members})
+    require(dict(evidence.retained)==live.anchors and {p:dict(m) for p,m in evidence.native_members}==live.native_memberships,
+            '/play','source-owned frozen evidence differs')
+    require(len(evidence.native_members)==16,'/play','original child coverage missing')
+    for path,digest in evidence.retained:require(file_hash(path)==digest,'/play','retained input/artifact changed')
+    for path,members in evidence.native_members:
+        require(play_owner.evidence_membership(path)==dict(members),'/play','external native membership changed')
+    require(play_owner.evidence_membership(output)==dict(evidence.members),'/play','owner output membership changed')
+    expected_members={'.':'directory'}
+    expected_files={output/name for name in ('terminal.json','stdout.log','stderr.log')} | {p for p,_ in evidence.retained if p.is_relative_to(output)}
+    for path in expected_files:
+        expected_members[str(path.relative_to(output))]='file'
+        for parent in path.parents:
+            if parent==output:break
+            expected_members[str(parent.relative_to(output))]='directory'
+    require(dict(evidence.members)==expected_members,'/play','unaccounted owner evidence membership')
+    for name in ('stdout.log','stderr.log'):
+        node.field('outer_log_hashes').field(name).equals(file_hash(output/name))
+    require(live.source_grants is not None,'/play','source grants absent')
+    assert live.source_grants is not None
+    live.source_grants.check()
+    require(set(live.source_grants.built)=={'main','m1','v7'},'/play','original build joins absent')
+    return 'PENDING' if result.outer_exit==0 and result.case_exits==(3,2,4,0,0,0) else 'FAIL'
+
+
+def play_outcome(live: play_owner.PlayOwner, result: play_owner.PlayOutcome) -> Outcome:
+    output=live.plan.output
+    evidence=PlayEvidence(live,result,tuple(live.anchors.items()),
+        tuple((p,tuple(m.items())) for p,m in live.native_memberships.items()),
+        tuple(play_owner.evidence_membership(output).items()))
+    receipt=output/'terminal.json';digest=file_hash(receipt)
+    files=tuple(inventory(output,[p.name for p in output.iterdir()]).items())
+    error=''
+    try:status=authenticate_play(evidence,output)
+    except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as caught:
+        status='FAIL';error='settled play evidence rejected: '+safe_docs_exception(caught)
+        # This is a retained rejected observation, never refreshed successful evidence.
+        evidence=replace(evidence,failure=caught,
+            rejected_external=tuple((p,file_hash(p)) for p,_ in evidence.retained if not p.is_relative_to(output)),
+            rejected_members=tuple((p,tuple(play_owner.evidence_membership(p).items())) for p,_ in evidence.native_members),
+            rejected_native_files=tuple((p,tuple(inventory(p,[child.name for child in p.iterdir()]).items()))
+                                        for p,_ in evidence.native_members))
+    return Outcome('play',status,receipt,digest,error,files,output,result.settlement,
+                   result.qualification,play_evidence=evidence)
+
+
+def recheck_play(context: OrderedInputs, row: Outcome) -> None:
+    if row.component!='play':return
+    if row.play_evidence is None:
+        require(row.status in {'FAIL','NOT_RUN'},'/play','missing actual source-owned result')
+        return
+    require(isinstance(context,OwnedOrderedInputs) and context.play is not None,'/play','lost historical context')
+    assert row.root is not None
+    assert isinstance(context,OwnedOrderedInputs) and context.play is not None
+    require(row.play_evidence.owner.plan==replace(context.play.plan,output=row.root),
+            '/play','historical request changed')
+    recheck(row)
+    evidence=row.play_evidence
+    if evidence.failure is not None:
+        require(row.status=='FAIL','/play','rejected evidence promoted')
+        require(play_owner.evidence_membership(row.root)==dict(evidence.members),'/play','rejected owner membership changed')
+        for path,digest in evidence.rejected_external:
+            require(file_hash(path)==digest,'/play','rejected external evidence changed')
+        for path,members in evidence.rejected_members:
+            require(play_owner.evidence_membership(path)==dict(members),'/play','rejected native membership changed')
+        for path,files in evidence.rejected_native_files:
+            require(inventory(path,[child.name for child in path.iterdir()])==dict(files),
+                    '/play','rejected native file bytes changed')
+    else:
+        status=authenticate_play(evidence,row.root)
+        require(row.status=='FAIL' or row.status==status,'/play','historical outcome changed')
+    recheck(row)
+
+
+def invoke_play(call: OrderedCall, context: OwnedOrderedInputs, output: Path) -> Outcome:
+    require(call==play_call(),'/play','not original whole six-case obligation')
+    owner=_PlayOwner(context.control_fd,output);entered=False;settled=False
+    try:
+        bound=play_bindings(context);plan=replace(bound.plan,output=output)
+        live=play_owner.PlayOwner(plan,owner.descriptor)
+        owner.retained_owner=live
+        entered=True
+        live.launch();result=live.wait()
+        settled=True
+        return play_outcome(live,result)
+    except BaseException as error:
+        if entered and not settled:
+            owner.retained_failure=error
+            if isinstance(error,play_owner.PlayOwnershipUnknown):owner.retained_owner=error.owner
+            owner.hold(error)
+        raise
+    finally:
+        if not entered or settled:os.close(owner.descriptor)
+
+
 def invoke_strict(call: OrderedCall, context: OwnedOrderedInputs, output: Path) -> Outcome:
     owner=_StrictOwner(context.control_fd,output)
     entered=False;settled=False
@@ -1313,12 +1485,12 @@ def invoke_strict(call: OrderedCall, context: OwnedOrderedInputs, output: Path) 
         if not entered or settled:os.close(owner.descriptor)
 
 
-def run_ordered_owned(context: OrderedInputs, strict: StrictContext, output: Path, control_fd: int, *, bench: BenchContext | None = None, docs: DocsContext | None = None, oracles: OracleContext | None = None, resolver: ResolverContext | None = None, structural: Structural48Context | None = None, stall: StallContext | None = None, library49: Library49Context | None = None, library42: Library49Context | None = None, library43: Library49Context | None = None) -> Path:
+def run_ordered_owned(context: OrderedInputs, strict: StrictContext, output: Path, control_fd: int, *, bench: BenchContext | None = None, docs: DocsContext | None = None, oracles: OracleContext | None = None, resolver: ResolverContext | None = None, structural: Structural48Context | None = None, stall: StallContext | None = None, library49: Library49Context | None = None, library42: Library49Context | None = None, library43: Library49Context | None = None, play: PlayContext | None = None) -> Path:
     require(type(control_fd) is int and control_fd>2 and stat.S_ISFIFO(os.fstat(control_fd).st_mode),
             '/control','dedicated persistent controller pipe required')
     owned=OwnedOrderedInputs(context.components,context.static_product,context.environment,
         context.discovery_product,context.discovery_environment,context.diagnosis_product,
-        context.diagnosis_environment,context.save_roundtrip,context.perf,strict,control_fd,bench,docs,oracles,resolver,structural,stall,library49,library42,library43)
+        context.diagnosis_environment,context.save_roundtrip,context.perf,strict,control_fd,bench,docs,oracles,resolver,structural,stall,library49,library42,library43,play)
     return _run_ordered(owned,output)
 
 
@@ -1562,13 +1734,16 @@ def invoke_core_evaluation(inputs: Inputs, predecessor: Outcome | None, output: 
             snapshot_error,core_prior=prior,core_result=result)
 
 
-def ordered_owned_calls(*, bench_enabled: bool = False, docs_enabled: bool = False, oracles_enabled: bool = False, resolver_enabled: bool = False, structural_enabled: bool = False, stall_enabled: bool = False, library49_enabled: bool = False, library42_enabled: bool = False, library43_enabled: bool = False) -> tuple[OrderedCall,...]:
+def ordered_owned_calls(*, bench_enabled: bool = False, docs_enabled: bool = False, oracles_enabled: bool = False, resolver_enabled: bool = False, structural_enabled: bool = False, stall_enabled: bool = False, library49_enabled: bool = False, library42_enabled: bool = False, library43_enabled: bool = False, play_enabled: bool = False) -> tuple[OrderedCall,...]:
     result=list(ordered_calls())
     insertion=next(index for index,call in enumerate(result) if ORDER.index(call.step)>ORDER.index(45))
     result.insert(insertion,OrderedCall(45,'core_evaluation',('45:core_evaluation',)))
     for step,identity in ((8,'8:gdscript_strict'),(46,'46:gdscript.four_files')):
         insertion=next((index for index,call in enumerate(result) if ORDER.index(call.step)>=ORDER.index(step)),len(result))
         result.insert(insertion,OrderedCall(step,'static',(identity,)))
+    if play_enabled:
+        insertion=next(index for index,call in enumerate(result) if ORDER.index(call.step)>ORDER.index(21))
+        result.insert(insertion,play_call())
     if docs_enabled:
         insertion=next(index for index,call in enumerate(result) if ORDER.index(call.step)>ORDER.index(14))
         result.insert(insertion,OrderedCall(14,'static',('14:docs',)))
@@ -1862,8 +2037,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
     require(output.is_absolute() and output==output.resolve() and not output.exists(),'/output','fresh canonical output required')
     for product in (inputs.probes.base,inputs.probes.candidate,inputs.godot.base,inputs.godot.candidate):
         require(not output.is_relative_to(product.input_root) and not product.input_root.is_relative_to(output),'/output','product overlap')
-    calls=ordered_owned_calls(bench_enabled=context.bench is not None,docs_enabled=context.docs is not None,oracles_enabled=context.oracles is not None,resolver_enabled=context.resolver is not None,structural_enabled=context.structural is not None,stall_enabled=context.stall is not None,library49_enabled=context.library49 is not None,library42_enabled=context.library42 is not None,library43_enabled=context.library43 is not None) if isinstance(context,OwnedOrderedInputs) else ordered_calls();rows: dict[str,Outcome]={};errors: list[str]=[];sequence: list[str]=[]
-    tail_stop: str | None=None;bench_inputs: dict[str,Json] | None=None;docs_inputs: dict[str,Json] | None=None;oracle_inputs: dict[str,Json] | None=None;resolver_inputs: dict[str,Json] | None=None;structural_inputs: dict[str,Json] | None=None;stall_inputs: dict[str,Json] | None=None;library49_inputs: dict[str,Json] | None=None;library42_inputs: dict[str,Json] | None=None;library43_inputs: dict[str,Json] | None=None
+    calls=ordered_owned_calls(bench_enabled=context.bench is not None,docs_enabled=context.docs is not None,oracles_enabled=context.oracles is not None,resolver_enabled=context.resolver is not None,structural_enabled=context.structural is not None,stall_enabled=context.stall is not None,library49_enabled=context.library49 is not None,library42_enabled=context.library42 is not None,library43_enabled=context.library43 is not None,play_enabled=context.play is not None) if isinstance(context,OwnedOrderedInputs) else ordered_calls();rows: dict[str,Outcome]={};errors: list[str]=[];sequence: list[str]=[]
+    tail_stop: str | None=None;bench_inputs: dict[str,Json] | None=None;docs_inputs: dict[str,Json] | None=None;oracle_inputs: dict[str,Json] | None=None;resolver_inputs: dict[str,Json] | None=None;structural_inputs: dict[str,Json] | None=None;stall_inputs: dict[str,Json] | None=None;library49_inputs: dict[str,Json] | None=None;library42_inputs: dict[str,Json] | None=None;library43_inputs: dict[str,Json] | None=None;play_inputs: dict[str,Json] | None=None
     plan_hash: str | None=None;blocked: dict[int,str]={};events: list[Json]=[];perf_inputs: dict[str,Json] | None=None
     try:
         output.mkdir(parents=True)
@@ -1887,6 +2062,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             library42_inputs=library49_dependencies(library49_bindings(context,42))
         if isinstance(context,OwnedOrderedInputs) and context.library43 is not None:
             library43_inputs=library49_dependencies(library49_bindings(context,43))
+        if isinstance(context,OwnedOrderedInputs) and context.play is not None:
+            play_inputs=play_dependencies(play_bindings(context))
         for product in (context.perf.base,context.perf.candidate):
             require(not output.is_relative_to(product.root) and not product.root.is_relative_to(output),'/output','perf product overlap')
         require(inputs.declarations.base==inputs.probes.base.source_sha and inputs.declarations.candidate==inputs.probes.candidate.source_sha,
@@ -1896,7 +2073,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
         refs: dict[int,dict[str,list[Json]]]={step:references(inputs,output/f'step-{step:02d}',validate=True) for step in direct.DIRECT_STEP_FIXTURES}
         atomic_json(output/'plan.json',{'schema_version':3,'original_step_order':list(ORDER),
             'original_order_executed':False,'publication_authorized':False,
-            'supported_call_sequence':[call.identity for call in calls],'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,'library49_dependencies':library49_inputs,'library42_dependencies':library42_inputs,'library43_dependencies':library43_inputs,
+            'supported_call_sequence':[call.identity for call in calls],'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,'library49_dependencies':library49_inputs,'library42_dependencies':library42_inputs,'library43_dependencies':library43_inputs,'play_dependencies':play_inputs,
             'strict_owned_entrypoint':isinstance(context,OwnedOrderedInputs),
             'obligations':[{'identity':row.identity,'step':row.step,'fixture':row.fixture,
                 'invocation_references':refs.get(row.step,{}).get(row.fixture or '',[])} for row in obligations()]})
@@ -1915,7 +2092,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
                     rows[call.identity]=Outcome('structural','NOT_RUN',None,None,'blocked by 48:direct; '+safe_docs_exception(failure))
                     continue
             for row in rows.values():
-                recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row);recheck_core_evaluation(context.components,row)
+                recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row);recheck_play(context,row);recheck_core_evaluation(context.components,row)
             ordered_bindings(context)
             if isinstance(context,OwnedOrderedInputs) and context.bench is not None:
                 require(bench_dependencies(context.bench)==bench_inputs,'/bench','context binding changed')
@@ -1937,16 +2114,20 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
                 require(library49_dependencies(library49_bindings(context,43))==library43_inputs,'/library43','context binding changed')
             require(file_hash(output/'plan.json')==plan_hash,'/plan','scope changed')
             parent=output/f'step-{call.step:02d}';parent.mkdir(exist_ok=True)
+            if isinstance(context,OwnedOrderedInputs) and context.play is not None:
+                require(play_dependencies(play_bindings(context))==play_inputs,'/play','context binding changed')
             destination=parent/call.component
             try:
-                with nullcontext() if call.component in {'static','save_roundtrip','perf','nav','bench','oracles','resolver','structural','stall','library49','library42','library43'} else lane():
+                with nullcontext() if call.component in {'static','save_roundtrip','perf','nav','bench','oracles','resolver','structural','stall','library49','library42','library43','play'} else lane():
                     selected = with_static_priors(context,tuple(rows.values())) if call.component == 'static' else context
-                    action=ordered_action(call,selected) if call.component not in {'bench','oracles','resolver','structural','stall','library49','library42','library43','core_evaluation'} else None
+                    action=ordered_action(call,selected) if call.component not in {'bench','oracles','resolver','structural','stall','library49','library42','library43','core_evaluation','play'} else None
                     static_product, static_environment = static_context(selected,call.step) if call.component == 'static' else (None,None)
                     sequence.append(call.identity);events.append({'call':call.identity,'event':'start','at':timestamp()})
                     try:
                         if call.step==14 and call.component=='static' and isinstance(selected,OwnedOrderedInputs):
                             rows[call.identity]=invoke_docs(call,selected,destination)
+                        elif call.component=='play' and isinstance(selected,OwnedOrderedInputs):
+                            rows[call.identity]=invoke_play(call,selected,destination)
                         elif call.component=='core_evaluation':
                             rows[call.identity]=invoke_core_evaluation(inputs,rows.get('44:direct'),destination)
                         elif call.component=='resolver' and isinstance(selected,OwnedOrderedInputs):
@@ -1978,7 +2159,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     for row in rows.values():
         try:
-            recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row);recheck_core_evaluation(context.components,row)
+            recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row);recheck_play(context,row);recheck_core_evaluation(context.components,row)
         except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     try:
         ordered_bindings(context)
@@ -1994,6 +2175,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             require(structural_dependencies(structural_bindings(context))==structural_inputs,'/structural','context binding changed')
         if isinstance(context,OwnedOrderedInputs) and context.stall is not None:
             require(stall_dependencies(stall_bindings(context))==stall_inputs,'/stall','context binding changed')
+        if isinstance(context,OwnedOrderedInputs) and context.play is not None:
+            require(play_dependencies(play_bindings(context))==play_inputs,'/play','context binding changed')
         if isinstance(context,OwnedOrderedInputs) and context.library49 is not None:
             require(library49_dependencies(library49_bindings(context))==library49_inputs,'/library49','context binding changed')
         if isinstance(context,OwnedOrderedInputs) and context.library42 is not None:
@@ -2006,7 +2189,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
     output.mkdir(parents=True,exist_ok=True);terminal=output/'ordered-dispatch.json'
     atomic_json(terminal,{'schema_version':3,'status':'FAIL' if errors or any(row.status=='FAIL' for row in rows.values()) else 'INCOMPLETE',
         'publication_authorized':False,'full_gate_claim':False,'original_order_executed':False,
-        'original_step_order':list(ORDER),'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,'library49_dependencies':library49_inputs,'library42_dependencies':library42_inputs,'library43_dependencies':library43_inputs,'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
+        'original_step_order':list(ORDER),'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,'library49_dependencies':library49_inputs,'library42_dependencies':library42_inputs,'library43_dependencies':library43_inputs,'play_dependencies':play_inputs,'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
         'components':[{'identity':call.identity,'step':call.step,'component':call.component,
             'status':rows[call.identity].status if call.identity in rows else 'NOT_RUN',
             'receipt':str(rows[call.identity].receipt) if call.identity in rows and rows[call.identity].receipt else None,
