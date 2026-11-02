@@ -37,7 +37,7 @@ func _placement_regression(panel: Control, camera: Camera2D, tile: Vector2i) -> 
 	store.call("set_value", "ui_scale", saved_scale)
 	await frames(12)
 
-# Additional 1.5x coverage accounts for clipped alert rows; the inherited 42 checks stay unchanged.
+# Additional 1.5x coverage accounts for clipped alert rows; the inherited 53 checks stay unchanged.
 func _visible_intersections(node: Node, popup: Control, rectangle: Rect2, clip_rect: Rect2, hits: Array[String]) -> void:
 	if node == popup or (node is CanvasItem and not (node as CanvasItem).is_visible_in_tree()):
 		return

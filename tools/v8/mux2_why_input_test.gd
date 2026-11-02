@@ -3,6 +3,7 @@
 extends SceneTree
 const View = preload("res://scripts/world/colony/view.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
+const Obstacles = preload("res://scripts/world/colony/marker_layout.gd")
 var main: Node
 var checks: int = 0
 var orders: int = 0
@@ -42,7 +43,7 @@ func run() -> void:
 	camera.call("center_on_tile", Vector2i(96,96))
 	await frames()
 	var panel: Control = main.get_node("UI/CausalPanel")
-	var point: Vector2 = root.get_visible_rect().size * Vector2(0.55,0.55)
+	var point: Vector2 = _map_fixture_point(panel, true)
 	panel.hide()
 	await pointer(point, true)
 	await pointer(point, false)
@@ -86,6 +87,8 @@ func run() -> void:
 	var recorded: Array = world.get_tile_causal_history(tile.x,tile.y)
 	check("engine recorded a real causal event", not recorded.is_empty())
 	panel.hide()
+	await frames()
+	point = await _expose_tile(camera, tile)
 	await pointer(point,true,true)
 	await pointer(point,false,true)
 	await frames(10)
@@ -107,6 +110,7 @@ func run() -> void:
 	var why_button: Control = main.get_node_or_null("UI/MuxHud/Actions/WhyButton")
 	check("top why tool exists",why_button != null)
 	if why_button != null:
+		point = await _expose_tile(camera, tile)
 		var button_point: Vector2 = why_button.get_global_rect().get_center()
 		await pointer(button_point,true)
 		await pointer(button_point,false)
@@ -123,6 +127,7 @@ func run() -> void:
 	for factor: float in [1.0,1.25]:
 		main.get_node("UI/MuxHud").get("store").set_value("ui_scale",factor)
 		await frames(10)
+		point = await _expose_tile(camera, tile)
 		await pointer(point,true,true)
 		await pointer(point,false,true)
 		await frames(12)
@@ -163,9 +168,7 @@ func run() -> void:
 		await frames()
 		check("drag ending over GUI never opens",not panel.visible)
 		check("GUI crossing releases camera gesture",int(camera.get("_pointer_button")) == MOUSE_BUTTON_NONE)
-	camera.call("center_on_tile",tile)
-	await frames(8)
-	point = root.get_canvas_transform() * View.tile_centre(tile)
+	point = await _expose_tile(camera, tile)
 	var tool: Node = main.get_node("ColonyView/OrderTool")
 	tool.connect("order_sent",func(_command: String,_result: Dictionary) -> void: orders += 1)
 	tool.call("set_mode",1)
@@ -197,6 +200,9 @@ func _placement_regression(panel: Control, camera: Camera2D, tile: Vector2i) -> 
 	camera.set_process(false)
 	var store: RefCounted = main.get_node("UI/MuxHud").get("store")
 	var saved_scale: float = float(store.call("value", "ui_scale"))
+	# Close the previous foreground popup before observing the ordinary HUD.
+	panel.hide()
+	await frames(12)
 	# MuxHud owns this instance inside MapDock; use its verified public property.
 	var minimap: Control = main.get_node("UI/MuxHud").get("minimap") as Control
 	check("placement minimap fixture exists and is visible", minimap != null and minimap.is_visible_in_tree())
@@ -242,3 +248,44 @@ func _placement_regression(panel: Control, camera: Camera2D, tile: Vector2i) -> 
 		check("saturated viewport reports exhausted bounded fallback", bool(panel.get("_placement_exhausted")) and Rect2(Vector2.ZERO, area).encloses(Rect2(placed, Vector2(200, 100))))
 	else:
 		check("saturated viewport reports exhausted bounded fallback", false)
+
+
+# Place the real event tile under an actually unobscured map point at the current UI scale.
+# This is fixture camera setup; the click still traverses normal Godot input dispatch.
+func _expose_tile(camera: Camera2D, tile: Vector2i) -> Vector2:
+	var target: Vector2 = _map_fixture_point(main.get_node("UI/CausalPanel"), false)
+	var current: Vector2 = root.get_canvas_transform() * View.tile_centre(tile)
+	camera.position += (current - target) / camera.zoom
+	camera.call("_clamp_position")
+	await frames(8)
+	var point: Vector2 = root.get_canvas_transform() * View.tile_centre(tile)
+	var motion := InputEventMouseMotion.new()
+	motion.position = point
+	Input.parse_input_event(motion)
+	await frames(2)
+	print("MUX2_WHY_TARGET " + JSON.stringify({"point": str(point), "hovered": _hovered_path(), "tile": str(tile)}))
+	check("real event click target is on map after camera clamp", root.get_visible_rect().has_point(point) and root.gui_get_hovered_control() == null)
+	return point
+
+
+func _map_fixture_point(panel: Control, require_empty: bool) -> Vector2:
+	var blocked: Array[Rect2] = []
+	Obstacles.ui_rects(main.get_node("UI"), blocked)
+	var area: Vector2 = root.get_visible_rect().size
+	for y: float in [0.5, 0.6, 0.4, 0.7, 0.3]:
+		for x: float in [0.25, 0.35, 0.45, 0.65, 0.75, 0.15]:
+			var candidate: Vector2 = area * Vector2(x, y)
+			var clear: bool = true
+			for rectangle: Rect2 in blocked:
+				clear = clear and not rectangle.grow(12.0).has_point(candidate)
+			if not clear:
+				continue
+			if require_empty:
+				var tile: Vector2i = View.world_to_tile(root.get_canvas_transform().affine_inverse() * candidate)
+				var history: Array = main.get_node("WorldSim").get_tile_causal_history(tile.x, tile.y)
+				if not history.is_empty() or str(panel.call("wait_text", tile)) != "":
+					continue
+			check("unobscured empty map point" if require_empty else "unobscured event fixture point", true)
+			return candidate
+	check("unobscured empty map point" if require_empty else "unobscured event fixture point", false)
+	return area * 0.5

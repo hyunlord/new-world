@@ -546,13 +546,7 @@ func _show_overlapping_figures() -> void:
 		var texture: Texture2D = person.body.texture
 		if texture == null:
 			continue
-		var key: int = texture.get_instance_id()
-		if not _opaque_rects.has(key):
-			var image: Image = texture.get_image()
-			if image.is_compressed():
-				image.decompress()
-			_opaque_rects[key] = image.get_used_rect()
-		var used: Rect2i = _opaque_rects[key]
+		var used: Rect2i = _opaque_texture_rect(texture)
 		if person.body.flip_h:
 			used.position.x = texture.get_width() - used.end.x
 		var rectangle: Rect2 = Rect2(person.position + person.body.offset + Vector2(used.position), Vector2(used.size))
@@ -950,6 +944,58 @@ func _observe_settlements() -> void:
 	if not settlements.has("settlement_ids"):
 		settlements["settlement_ids"] = PackedInt32Array(Array(settlements.get("ids", PackedInt64Array())))
 	SettlementSelection.observe(society, settlements)
+
+
+## Shared opaque texture bounds: image reads occur only once per cached frame texture.
+func _opaque_texture_rect(texture: Texture2D) -> Rect2i:
+	var key: int = texture.get_instance_id()
+	if not _opaque_rects.has(key):
+		var image: Image = texture.get_image()
+		if image.is_compressed():
+			image.decompress()
+		_opaque_rects[key] = image.get_used_rect()
+	return _opaque_rects[key]
+
+
+## Stable framing envelope for the current animation cycle, evaluated only on Home.
+## Drawing stays unchanged; union authored frame anchors and bob instead of picking boxes.
+func framing_body_rect(bits: int) -> Rect2:
+	var person: Person = _persons.get(bits)
+	if _lod or person == null or person.body.texture == null:
+		return Rect2()
+	var poses: Array[String] = ["idle"]
+	match person.activity:
+		"work": poses = ["idle", "work_a"]
+		"walk": poses = ["idle", "walk_a"]
+		"carry": poses = ["carry"]
+		"sleep": poses = ["sleep"]
+		# Flee overrides the activity name after the ordinary pose was chosen.
+		"flee": poses = ["idle", "walk_a", "work_a", "carry"]
+	var facing: String = "E" if person.facing == "E" else "S"
+	var flip: bool = person.west and facing == "E"
+	var bob: float = maxf(0.0, float(ArtData.param("people.bob_px", 1))) if person.activity in ["walk", "carry", "flee"] else 0.0
+	var local: Rect2 = Rect2()
+	for pose: String in poses:
+		var key: String = "%s/%s/%s" % [person.frames, facing, pose]
+		var texture: Texture2D = ArtData.texture_at(ArtData.frame_path(person.frames, facing, pose))
+		if texture == null:
+			return Rect2()
+		var used: Rect2i = _opaque_texture_rect(texture)
+		if not used.has_area():
+			return Rect2()
+		var anchor: Vector2i = ArtData.anchor(key)
+		if flip:
+			used.position.x = texture.get_width() - used.end.x
+			anchor.x = texture.get_width() - anchor.x
+		var frame: Rect2 = Rect2(Vector2(used.position - anchor), Vector2(used.size))
+		frame = frame.merge(Rect2(frame.position - Vector2(0, bob), frame.size))
+		local = frame if not local.has_area() else local.merge(frame)
+	if person.outline.a > 0.0:
+		local = local.grow(maxf(0.0, float(person.mat.get_shader_parameter("outline_px"))))
+	# Sprite.offset is already represented by each authored anchor, not the current pose.
+	var projected: Rect2 = (person.body.get_global_transform_with_canvas() * local).grow(1.0)
+	var start: Vector2 = projected.position.floor()
+	return Rect2(start, projected.end.ceil() - start)
 
 
 ## The drawn rect of a person in world coordinates (what a click hits).

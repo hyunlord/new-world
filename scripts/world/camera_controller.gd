@@ -11,11 +11,12 @@
 #   node (M2: P opens the work-priority table, priority_panel.gd). M5: while the inspector shows a living person, D
 #   drafts them (order_tool.gd), so D does not pan then (the arrow keys still do). M5.5: set_paused() lets the
 #   migrant dialog pause the clock when a wave arrives (only at 1×, migrant_panel.gd).
-# Bridge methods: set_sim_speed (direct); via SimReads get_world_info, get_building_snapshot; signal world_reset.
+# Bridge methods: set_sim_speed (direct); via SimReads get_world_info, get_building_snapshot, get_agent_snapshot; signal world_reset.
 extends Camera2D
 
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
+const MarkerLayout = preload("res://scripts/world/colony/marker_layout.gd")
 const TOAST_SECONDS: float = 2.0
 const MARGIN_TILES: int = 4
 const SPEED_KEYS: Dictionary = {KEY_1: 1.0, KEY_2: 2.0, KEY_3: 3.0, KEY_4: 4.0}
@@ -54,6 +55,10 @@ var _gesture_ids: Dictionary[int, bool] = {}
 var _edge_pan: bool = false
 var _invert_pan: bool = false
 var _center_pending: bool = true
+var _frame_camp_pending: bool = false
+var _frame_obstacles: Array[Rect2] = []
+var _frame_stable: int = 0
+var _camp_report: Dictionary = {"status": "idle"}
 var _toast: Label = null
 var _toast_left: float = 0.0
 
@@ -220,6 +225,7 @@ func _release_pointer() -> void:
 
 ## A screen-space drag; settings affect gestures, not keyboard direction.
 func pan_screen(distance: Vector2) -> void:
+	_cancel_camp_framing()
 	position -= distance * (-1.0 if _invert_pan else 1.0) / zoom.x
 	_zoom_anchor_world -= distance * (-1.0 if _invert_pan else 1.0) / zoom.x
 	_clamp_position()
@@ -293,6 +299,7 @@ func set_speed(speed: float) -> void:
 
 ## Step the zoom ladder by `direction` (+1 in, -1 out; 0 snaps to the nearest step).
 func step_zoom(direction: int, screen_anchor: Vector2 = Vector2(-1, -1)) -> void:
+	_cancel_camp_framing()
 	var steps: Array[float] = zoom_steps()
 	var reference: float = _zoom_target if _zoom_elapsed < ZOOM_SECONDS else zoom.x
 	var index: int = 0
@@ -357,11 +364,14 @@ func _process(delta: float) -> void:
 		if Rect2(Vector2.ZERO, viewport_size).has_point(cursor):
 			direction += Vector2(float(cursor.x > viewport_size.x - EDGE_PAN_MARGIN) - float(cursor.x < EDGE_PAN_MARGIN), float(cursor.y > viewport_size.y - EDGE_PAN_MARGIN) - float(cursor.y < EDGE_PAN_MARGIN))
 	if direction != Vector2.ZERO:
+		_cancel_camp_framing()
 		var movement: Vector2 = direction * float(ArtData.param("camera.pan_px_per_second", 900.0)) * delta / zoom.x
 		position += movement
 		_zoom_anchor_world += movement
 		_clamp_position()
 		camera_activity.emit("pan")
+	if _frame_camp_pending:
+		_frame_camp()
 
 
 ## Keep the view inside the map plus the margin, and on whole screen pixels.
@@ -382,6 +392,8 @@ func _clamp_position() -> void:
 
 ## Centre on the camp hearth now (the Home/H key; also used by tools).
 func center_on_camp() -> void:
+	_cancel_camp_framing()
+	_center_pending = true
 	_center_on_camp()
 
 
@@ -397,11 +409,14 @@ func _center_on_camp() -> void:
 		if bool(ArtData.binding("buildings", kinds[i]).get("light", false)):
 			center_on_tile(Vector2i(xs[i], ys[i]))
 			_center_pending = false
+			_frame_camp_pending = true
+			_camp_report = {"status": "pending"}
 			return
 
 
 ## Centre the view on tile `t`.
 func center_on_tile(t: Vector2i) -> void:
+	_cancel_camp_framing()
 	if _zoom_elapsed < ZOOM_SECONDS:
 		zoom = Vector2.ONE * _zoom_target
 	_zoom_elapsed = ZOOM_SECONDS
@@ -412,6 +427,7 @@ func center_on_tile(t: Vector2i) -> void:
 
 
 func _on_world_reset() -> void:
+	_cancel_camp_framing()
 	_center_pending = true
 	if _world_sim != null:
 		_world_sim.call("set_sim_speed", _speed)
@@ -421,3 +437,79 @@ func _on_world_reset() -> void:
 func _person_selected() -> bool:
 	var inspector: Node = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
 	return inspector != null and (inspector as Control).visible and int(inspector.call("get_selected_entity_bits")) >= 0
+
+
+## Diagnostic receipt for one-shot Home framing, never a simulation mutation.
+func camp_framing_report() -> Dictionary:
+	return _camp_report.duplicate(true)
+
+
+func _cancel_camp_framing() -> void:
+	_center_pending = false
+	_frame_camp_pending = false
+	_frame_obstacles.clear()
+	_frame_stable = 0
+	_camp_report = {"status": "cancelled"}
+
+
+## Wait for populated figures and consecutive settled HUD layouts, then frame once.
+func _frame_camp() -> void:
+	var layer: Node2D = get_node_or_null("/root/Main/ColonyView/AgentLayer") as Node2D
+	var ui: Node = get_node_or_null("/root/Main/UI")
+	if layer == null or ui == null or not layer.is_node_ready():
+		return
+	if bool(layer.call("lod_active")):
+		_frame_camp_pending = false
+		_camp_report = {"status": "lod"}
+		return
+	var obstacles: Array[Rect2] = []
+	MarkerLayout.ui_rects(ui, obstacles)
+	if obstacles.is_empty():
+		return
+	if obstacles != _frame_obstacles:
+		_frame_obstacles = obstacles
+		_frame_stable = 0
+		return
+	_frame_stable += 1
+	if _frame_stable < 2:
+		return
+	var snapshot: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot")
+	var ids: PackedInt64Array = snapshot.get("ids", PackedInt64Array())
+	if ids.is_empty():
+		_frame_camp_pending = false
+		_camp_report = {"status": "empty"}
+		return
+	var bodies: Array[Rect2] = []
+	var included: Array[int] = []
+	var outside: Array[int] = []
+	var viewport: Rect2 = get_viewport_rect()
+	for bits: int in ids:
+		var rectangle: Rect2 = layer.call("framing_body_rect", bits)
+		if not rectangle.has_area():
+			return
+		if viewport.encloses(rectangle):
+			bodies.append(rectangle)
+			included.append(bits)
+		elif rectangle.intersects(viewport):
+			# Partially visible render bounds must never silently drop an original resident.
+			_frame_camp_pending = false
+			_camp_report = {"status": "partial_bounds", "entity_bits": bits}
+			return
+		else:
+			outside.append(bits)
+	_frame_camp_pending = false
+	var result: Dictionary = MarkerLayout.frame_translation(bodies, obstacles, viewport)
+	_camp_report = {"status": "no_fit", "ids": included, "outside_ids": outside, "bodies": bodies, "obstacles": obstacles, "translation": Vector2.ZERO}
+	if not bool(result["found"]):
+		return
+	var shift: Vector2 = result["translation"]
+	var original: Vector2 = position
+	position -= shift / zoom.x
+	_clamp_position()
+	var achieved: Vector2 = (original - position) * zoom.x
+	if not MarkerLayout.frame_translation_clear(bodies, obstacles, viewport, achieved):
+		position = original
+		_camp_report["status"] = "clamped"
+		return
+	_camp_report["status"] = "placed"
+	_camp_report["translation"] = achieved

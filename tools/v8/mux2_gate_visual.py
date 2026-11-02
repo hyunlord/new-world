@@ -78,13 +78,19 @@ def validate_scene(scene: Node, output: Path) -> None:
             check_hash(directory / f'{prefix}-{bits}.png', row.field(key).text())
 
 
-def validate_why(log: Path) -> list[Path]:
-    text = log.read_text()
+def validate_why_checks(text: str, expected_checks: int = 53) -> None:
+    """Require the complete measured assertion census, never a marker alone."""
     require('SCRIPT ERROR' not in text and 'MUX2_WHY_FAIL' not in text, 'why runtime error')
     require(re.findall(r'^MUX2_WHY_DONE\b[^\n]*$', text, re.M)
-            == ['MUX2_WHY_DONE failures=0 checks=42'],
-            'why test requires exactly 42 completed checks')
-    require(len(re.findall(r'^MUX2_WHY_PASS ', text, re.M)) == 42, 'why PASS coverage mismatch')
+            == [f'MUX2_WHY_DONE failures=0 checks={expected_checks}'],
+            f'why test requires exactly {expected_checks} completed checks')
+    require(len(re.findall(r'^MUX2_WHY_PASS ', text, re.M)) == expected_checks,
+            'why PASS coverage mismatch')
+
+
+def validate_why(log: Path) -> list[Path]:
+    text = log.read_text()
+    validate_why_checks(text)
     outputs = set(re.findall(r'^MUX2_WHY_OUTPUT (.+)$', text, re.M))
     require(len(outputs) == 1, 'missing GPU screenshot output')
     directory = Path(next(iter(outputs)))

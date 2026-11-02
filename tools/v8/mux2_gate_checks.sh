@@ -36,7 +36,7 @@ case "$mode" in
       actual_h_format9_fixture_loads_as_oak_then_resaves_as_current_format -- --ignored --exact)
     ;;
   oracles)
-    for test in mux2_visibility_validator_test mux2_marker_layout_test mux2_coincident_test mux2_badge_index_test mux2_badge_packing_test mux2_overlap_test mux2_badge_grid_test mux2_badge_aggregate_test mux2_bake_receipt_test mux2_badge_extent_test mux2_wall_cache_test; do
+    for test in mux2_camp_framing_test mux2_visibility_validator_test mux2_marker_layout_test mux2_coincident_test mux2_badge_index_test mux2_badge_packing_test mux2_overlap_test mux2_badge_grid_test mux2_badge_aggregate_test mux2_bake_receipt_test mux2_badge_extent_test mux2_wall_cache_test; do
       log="$LOG/$test.log"
       bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . \
         --script "res://tools/v8/$test.gd" > "$log" 2>&1

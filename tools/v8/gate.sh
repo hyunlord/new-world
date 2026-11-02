@@ -67,7 +67,7 @@
 #   37 mux2_defence      defence/replay/flight/fuel plus genuine format10 migration
 #   38 mux2_oracles      visibility negative controls, marker/overlap/wall-cache and stall scorer
 #   39 mux2_visibility   fresh current-policy saves and actual eight-scene GPU acceptance
-#   40 mux2_why          actual windowed 30-check input and screenshot acceptance
+#   40 mux2_why          actual windowed 53-check input and screenshot acceptance
 #   41 mux2_stall_receipt fresh two-arm windowed timing after builds, or strict explicit receipt verification
 #   42 baseline_isolation source boundary/dead seam checks and real registration tests
 #   43 mind_data_only     shipped policy warm-at-hearth real target/record regression
@@ -261,10 +261,13 @@ step 46 mux21_regressions bash -c '
     ! grep -q "SCRIPT ERROR" "$0/mux21-layout.log"
     for language in en ko; do
         bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --path . --resolution 1920x1080 --script res://tools/v8/mux21_why_locale_test.gd -- --locale="$language" > "$0/mux21-why-$language.log" 2>&1
-        grep -q "^MUX2_WHY_DONE failures=0 checks=53$" "$0/mux21-why-$language.log"
         ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" "$0/mux21-why-$language.log"
     done
     python3 -c '\''import json,sys; from pathlib import Path
+sys.path.insert(0,"tools/v8")
+from mux2_gate_visual import validate_why_checks
+for language in ("en","ko"):
+ validate_why_checks((Path(sys.argv[1])/f"mux21-why-{language}.log").read_text(),64)
 for filename,prefix in [("mux21-toast.log","MUX21_TOAST_DONE "),("mux21-layout.log","MUX21_LAYOUT_DONE ")]:
  rows=[json.loads(line[len(prefix):]) for line in (Path(sys.argv[1])/filename).read_text().splitlines() if line.startswith(prefix)]
  assert len(rows)==1 and rows[0]["failures"]==0 and rows[0]["checks"]>0,filename

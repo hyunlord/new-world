@@ -16,6 +16,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import mux2_gate_receipts as receipts
+import mux2_gate_visual as visual
 from mux2_gate_visual import validate_why, validate_visibility
 from mux2_gate_oracle_log import validate_log
 from mux2_gate_inputs import snapshot, INPUT_DIRS, INPUT_FILES, BRIDGE
@@ -269,6 +270,26 @@ class VisualReceiptTests(unittest.TestCase):
                         with self.assertRaises(ValueError):
                             validate_log(name, path)
 
+    def test_camp_framing_exact_pure_coverage(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'camp.log'
+            rows = ''.join(f'CAMP_FRAMING PASS case_{i}\n' for i in range(12))
+            done = 'CAMP_FRAMING_DONE checks=12 failures=0\n'
+            path.write_text(rows + done)
+            self.assertIsNone(validate_log('mux2_camp_framing_test', path))
+            malformed = [rows, rows + done + done,
+                         rows + 'CAMP_FRAMING_DONE failures=0\n',
+                         rows + done + 'SCRIPT ERROR: deliberate\n',
+                         rows + done + 'CAMP_FRAMING FAIL deliberate\n']
+            for count in (11, 13):
+                malformed.append('CAMP_FRAMING PASS case\n' * count
+                                 + f'CAMP_FRAMING_DONE checks={count} failures=0\n')
+            for body in malformed:
+                with self.subTest(body=body[-100:]):
+                    path.write_text(body)
+                    with self.assertRaises(ValueError):
+                        validate_log('mux2_camp_framing_test', path)
+
     def test_wall_oracle_uses_real_hash_marker_contract(self):
         # Given canonical wall logs without per-check PASS lines; when parsed; then accept.
         with tempfile.TemporaryDirectory() as tmp:
@@ -279,32 +300,48 @@ class VisualReceiptTests(unittest.TestCase):
                             + 'MUX2_WALL_CACHE_DONE failures=[]\n')
             self.assertIsNone(validate_log('mux2_wall_cache_test', path))
 
+    def test_locale_why_requires_exact_64_checks(self) -> None:
+        rows = 'MUX2_WHY_PASS case\n' * 64
+        done = 'MUX2_WHY_DONE failures=0 checks=64\n'
+        self.assertIsNone(visual.validate_why_checks(rows + done, 64))
+        bodies = [rows, rows + done + done,
+                  rows + done + 'MUX2_WHY_FAIL deliberate\n',
+                  rows + done + 'SCRIPT ERROR: deliberate\n',
+                  rows + 'MUX2_WHY_DONE failures=1 checks=64\n']
+        for count in (53, 63, 65):
+            bodies.append('MUX2_WHY_PASS case\n' * count + done)
+            bodies.append('MUX2_WHY_PASS case\n' * count
+                          + f'MUX2_WHY_DONE failures=0 checks={count}\n')
+        for body in bodies:
+            with self.subTest(body=body[-100:]), self.assertRaises(ValueError):
+                visual.validate_why_checks(body, 64)
+
     def test_why_requires_both_real_scale_names(self):
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
             for scale in ('1.0', '1.25'):
                 (directory / f'why-{scale}.png').write_bytes(b'PNG fixture')
             path = directory / 'why.log'
-            path.write_text('MUX2_WHY_PASS case\n' * 42 + 'MUX2_WHY_OUTPUT ' + str(directory)
-                            + '\nMUX2_WHY_DONE failures=0 checks=42\n')
+            path.write_text('MUX2_WHY_PASS case\n' * 53 + 'MUX2_WHY_OUTPUT ' + str(directory)
+                            + '\nMUX2_WHY_DONE failures=0 checks=53\n')
             self.assertEqual(len(validate_why(path)), 2)
 
     def test_why_rejects_old_wrong_or_incomplete_coverage(self) -> None:
-        # Given42 original-plus-placement checks; when evidence is mutated; then reject.
+        # Given53 original-plus-placement checks; when evidence is mutated; then reject.
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
             for scale in ('1.0', '1.25'):
                 (directory / f'why-{scale}.png').write_bytes(b'PNG fixture')
             path = directory / 'why.log'
-            rows = 'MUX2_WHY_PASS case\n' * 42
+            rows = 'MUX2_WHY_PASS case\n' * 53
             output = f'MUX2_WHY_OUTPUT {directory}\n'
-            done = 'MUX2_WHY_DONE failures=0 checks=42\n'
+            done = 'MUX2_WHY_DONE failures=0 checks=53\n'
             bodies = [rows + output, rows + output + done + done,
-                      rows + output + done + 'MUX2_WHY_DONE failures=1 checks=42\n',
+                      rows + output + done + 'MUX2_WHY_DONE failures=1 checks=53\n',
                       rows + output + done + 'MUX2_WHY_FAIL deliberate\n',
                       rows + output + done + 'SCRIPT ERROR: deliberate\n',
                       rows + done]
-            for count in (30, 41, 43):
+            for count in (30, 42, 52, 54):
                 bodies.append('MUX2_WHY_PASS case\n' * count + output
                               + f'MUX2_WHY_DONE failures=0 checks={count}\n')
                 bodies.append('MUX2_WHY_PASS case\n' * count + output + done)
@@ -315,13 +352,13 @@ class VisualReceiptTests(unittest.TestCase):
                         validate_why(path)
 
     def test_why_rejects_missing_scale_images(self) -> None:
-        # Given a complete42-check log; when either required scale image is absent; then reject.
+        # Given a complete53-check log; when either required scale image is absent; then reject.
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
             path = directory / 'why.log'
-            path.write_text('MUX2_WHY_PASS case\n' * 42
+            path.write_text('MUX2_WHY_PASS case\n' * 53
                             + f'MUX2_WHY_OUTPUT {directory}\n'
-                            + 'MUX2_WHY_DONE failures=0 checks=42\n')
+                            + 'MUX2_WHY_DONE failures=0 checks=53\n')
             for missing in ('1.0', '1.25'):
                 for scale in ('1.0', '1.25'):
                     image = directory / f'why-{scale}.png'

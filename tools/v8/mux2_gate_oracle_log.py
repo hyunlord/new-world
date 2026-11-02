@@ -11,7 +11,8 @@ import sys
 from typing import Final
 from mux2_gate_inputs import EvidenceError, require
 
-PREFIXES: Final = {'mux2_visibility_validator_test': 'MUX2_VISIBILITY_ORACLE',
+PREFIXES: Final = {'mux2_camp_framing_test': 'CAMP_FRAMING',
+                  'mux2_visibility_validator_test': 'MUX2_VISIBILITY_ORACLE',
                   'mux2_marker_layout_test': 'MUX2_MARKER_LAYOUT',
                   'mux2_coincident_test': 'MUX2_COINCIDENT',
                   'mux2_badge_index_test': 'MUX2_BADGE_INDEX',
@@ -26,7 +27,8 @@ PREFIXES: Final = {'mux2_visibility_validator_test': 'MUX2_VISIBILITY_ORACLE',
                   'mux2_extent_owner_test': 'MUX2_EXTENT_OWNER',
                   'mux2_wall_cache_test': 'MUX2_WALL_CACHE'}
 
-EXPECTED_COUNTS: Final = {'mux2_visibility_validator_test': 24,
+EXPECTED_COUNTS: Final = {'mux2_camp_framing_test': 12,
+                          'mux2_visibility_validator_test': 24,
                           'mux2_marker_layout_test': 21, 'mux2_coincident_test': 30,
                           'mux2_badge_index_test': 116, 'mux2_badge_packing_test': 114,
                           'mux2_overlap_test': 81, 'mux2_badge_grid_test': 514,
