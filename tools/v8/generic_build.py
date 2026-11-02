@@ -21,7 +21,8 @@ from typing import Final, Literal
 from generic_gate import GateContractError, document, require
 from generic_process import ProcessSpec, atomic_json, execute, file_hash, real_path
 from generic_sources import freeze_source, git, inventory, manifest_hash, safe_path
-from mux2_gate_inputs import INPUT_DIRS, INPUT_FILES, Json
+from generic_workspace_tests import inspect_inventory
+from mux2_gate_inputs import INPUT_DIRS, INPUT_FILES, Json, Node
 
 # These are the reviewed full-suite and normal-boot lifecycle seams, not a
 # blanket permission to overlay gameplay scripts or arbitrary integration tests.
@@ -74,6 +75,7 @@ class BuildSpec:
     overlay: Overlay | None = None
     config_inputs: tuple[tuple[str, str], ...] = ()
     test_targets: tuple[str, ...] = ()
+    workspace_tests: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -184,7 +186,12 @@ def build_product(spec: BuildSpec) -> BuildResult:
     for values, label in ((spec.packages, 'packages'), (spec.features, 'features')):
         require(len(set(values)) == len(values) and all(re.fullmatch('[A-Za-z0-9_/-]+', x) for x in values),
                 label, 'invalid or duplicate Cargo selector')
-    require(bool(spec.packages) and bool(spec.artifacts or spec.test_targets), '/build', 'empty packages or artifacts')
+    require(type(spec.workspace_tests) is bool, '/build', 'workspace mode must be boolean')
+    if spec.workspace_tests:
+        require(not (spec.packages or spec.features or spec.artifacts or spec.test_targets),
+                '/build', 'workspace mode excludes package/feature/target narrowing and normal artifacts')
+    else:
+        require(bool(spec.packages) and bool(spec.artifacts or spec.test_targets), '/build', 'empty packages or artifacts')
     require(not (spec.artifacts and spec.test_targets), '/build', 'test and normal artifacts require separate builds')
     require(len(set(spec.test_targets)) == len(spec.test_targets)
             and all(re.fullmatch('[A-Za-z0-9_-]+', name) for name in spec.test_targets),
@@ -215,7 +222,14 @@ def build_product(spec: BuildSpec) -> BuildResult:
         'cargo_sha256': spec.cargo_sha256, 'rustc_sha256': spec.rustc_sha256, 'cargo_configs': {key: value for key, value in configs.items()}}
     if spec.test_targets:
         receipt.update(build_kind='integration_tests', test_targets=list(spec.test_targets))
+    if spec.workspace_tests:
+        receipt.update(build_kind='workspace_tests', workspace_runtime='NOT_RUN',
+                       workspace_world_safety='INCOMPLETE', workspace_environment_equivalence='NOT_RUN',
+                       workspace_doctest_execution='NOT_RUN')
     artifacts: list[tuple[str, Path, str]] = []
+    workspace_targets: dict[str,Json] = {}
+    workspace_evidence: dict[str,str] = {}
+    metadata: Node | None = None
     changed: dict[str, tuple[str | None, str]] = {}
     before: dict[str, Json] | None = None
     inputs: dict[str, str] | None = None
@@ -250,9 +264,36 @@ def build_product(spec: BuildSpec) -> BuildResult:
                     name, 'actual executable version differs from pinned source toolchain')
             versions[name] = {'text': version, 'process_receipt': str(result.receipt),
                               'process_receipt_sha256': file_hash(result.receipt)}
+            if spec.workspace_tests:
+                workspace_evidence.update(inventory(spec.output,[name+'-version']))
         receipt['toolchain_versions'] = versions
+        if spec.workspace_tests:
+            metadata_argv = (str(spec.cargo),'metadata','--locked','--format-version=1','--no-deps')
+            metadata_result = execute(ProcessSpec(metadata_argv,spec.root/'rust',spec.cargo,spec.cargo_sha256,
+                spec.root,tuple(sorted(inputs.items())),spec.output/'cargo-metadata',environment))
+            receipt['metadata_process_receipt'] = str(metadata_result.receipt)
+            receipt['metadata_receipt_sha256'] = file_hash(metadata_result.receipt)
+            receipt['metadata_exit_code'] = metadata_result.native_exit
+            require(metadata_result.status == 'PASS', '/metadata', 'metadata failed or source changed')
+            metadata_path = metadata_result.receipt.parent/'stdout.log'
+            receipt['metadata_sha256'] = file_hash(metadata_path)
+            metadata = document(metadata_path.read_bytes().decode())
+            metadata.field('version').equals(1)
+            metadata.field('workspace_root').equals(str(spec.root/'rust'))
+            metadata.field('target_directory').equals(str(target))
+            for package in metadata.field('packages').array():
+                names = [package.field('manifest_path').text(),
+                         *(item.field('src_path').text() for item in package.field('targets').array())]
+                for name in names:
+                    path = Path(name)
+                    real_path(path,directory=False)
+                    require(path.is_relative_to(spec.root) and path.relative_to(spec.root).as_posix() in inputs,
+                            name, 'metadata target/manifest absent from authenticated source inputs')
+            workspace_evidence.update(inventory(spec.output,['cargo-metadata']))
         require(not target.exists() and not target.is_symlink(), str(target), 'target appeared before build')
-        argv = [str(spec.cargo), 'test' if spec.test_targets else 'build', '--locked', '--message-format=json-render-diagnostics']
+        argv = [str(spec.cargo), 'test' if spec.test_targets or spec.workspace_tests else 'build', '--locked', '--message-format=json-render-diagnostics']
+        if spec.workspace_tests:
+            argv.extend(('--workspace','--no-run'))
         if spec.test_targets:
             argv.append('--no-run')
             for name in spec.test_targets:
@@ -297,6 +338,29 @@ def build_product(spec: BuildSpec) -> BuildResult:
             require(path.is_file() and os.access(path, os.X_OK), name, 'test executable is not executable')
             require(path not in {prior for _, prior, _ in artifacts}, name, 'duplicate test executable')
             artifacts.append((name, path, file_hash(path)))
+        if spec.workspace_tests:
+            assert metadata is not None
+            selected = inspect_inventory(metadata,tuple(messages),4 if spec.profile == 'debug' else 5)
+            receipt['workspace_doctests'] = [
+                {'package_id':row.package_id,'package':row.package,'name':row.name,'kinds':list(row.kinds),
+                 'source':str(row.source),'manifest':str(row.manifest)} for row in selected.doctests]
+            inodes: set[tuple[int,int]] = set()
+            for executable in selected.executables:
+                row = executable.target
+                identity: dict[str,Json] = {'package_id':row.package_id,'package':row.package,
+                    'name':row.name,'kinds':list(row.kinds),'source':str(row.source),
+                    'manifest':str(row.manifest),'profile':spec.profile}
+                name = 'workspace-'+hashlib.sha256(json.dumps(identity,sort_keys=True).encode()).hexdigest()
+                path = executable.binary
+                real_path(path,directory=False)
+                require(os.access(path,os.X_OK),str(path),'workspace test artifact not executable')
+                inode = (path.stat().st_dev,path.stat().st_ino)
+                require(inode not in inodes, str(path), 'workspace test artifacts share inode')
+                inodes.add(inode)
+                workspace_targets[name] = identity
+                artifacts.append((name,path,file_hash(path)))
+            receipt['workspace_targets'] = workspace_targets
+            workspace_evidence.update(inventory(spec.output,['cargo-build']))
         after = derived_snapshot(spec.root, source, changed, index_before)
         receipt['effective_source_after'] = after
         require(before == after, '/source', 'source changed during build')
@@ -307,6 +371,10 @@ def build_product(spec: BuildSpec) -> BuildResult:
         if spec.overlay is not None:
             require(file_hash(spec.overlay.patch) == spec.overlay.patch_sha256 and
                     file_hash(spec.overlay.manifest) == spec.overlay.manifest_sha256, '/overlay', 'overlay proof changed')
+        if spec.workspace_tests:
+            require(inventory(spec.output,['cargo-version','rustc-version','cargo-metadata','cargo-build']) == workspace_evidence,
+                    '/workspace-evidence', 'earlier metadata/compiler evidence changed')
+            receipt['workspace_evidence_sha256'] = {path:digest for path,digest in workspace_evidence.items()}
         receipt['artifacts'] = {name: {'path': str(path), 'sha256': digest} for name, path, digest in artifacts}
         receipt['binary_sha256'] = artifacts[0][2]
         receipt['status'] = 'PASS'
@@ -329,8 +397,13 @@ def build_product(spec: BuildSpec) -> BuildResult:
     atomic_json(terminal, receipt)
     if receipt['status'] == 'PASS':
         for name, path, digest in artifacts:
-            atomic_json(spec.output / f'artifact-{name}.json', {
+            artifact_receipt: dict[str,Json] = {
                 'source_sha': spec.source_sha, 'binary_sha256': digest, 'binary': str(path),
                 'profile': spec.profile, 'exit_code': receipt['exit_code'], 'source_kind': receipt['source_kind'],
-                'build_receipt': str(terminal), 'build_receipt_sha256': file_hash(terminal)})
+                'build_receipt': str(terminal), 'build_receipt_sha256': file_hash(terminal)}
+            if spec.workspace_tests:
+                artifact_receipt.update(build_kind='workspace_tests',workspace_target=workspace_targets[name],
+                    metadata_process_receipt=receipt['metadata_process_receipt'],
+                    metadata_receipt_sha256=receipt['metadata_receipt_sha256'],metadata_sha256=receipt['metadata_sha256'])
+            atomic_json(spec.output / f'artifact-{name}.json', artifact_receipt)
     return BuildResult(terminal, 'PASS' if receipt['status'] == 'PASS' else 'FAIL', tuple(artifacts))

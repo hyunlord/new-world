@@ -7,8 +7,10 @@ import unittest
 from collections.abc import Callable
 from dataclasses import replace
 from pathlib import Path
+from typing import final
 
 from generic_build import Artifact, BuildSpec, Overlay, build_product
+from generic_gate import document
 from generic_process import file_hash
 
 
@@ -345,3 +347,125 @@ print(json.dumps({'reason':'build-finished','success':True}))
                     self.assertEqual(result.status, 'PASS')
                 finally:
                     fixture.doCleanups()
+
+
+@final
+class WorkspaceBuildTests(BuildContractTests):
+    def workspace_spec(self) -> None:
+        for package in ('alpha','beta'):
+            for name in ('Cargo.toml','src/lib.rs'):
+                path = self.root/'rust/crates'/package/name
+                path.parent.mkdir(parents=True,exist_ok=True)
+                _ = path.write_text('synthetic '+name)
+        _ = subprocess.run(['git','-C',str(self.root),'add','.'],check=True)
+        _ = subprocess.run(['git','-C',str(self.root),'-c','user.name=Test','-c','user.email=t@example.invalid',
+                            'commit','-qm','synthetic workspace inputs'],check=True)
+        sha = subprocess.check_output(['git','-C',str(self.root),'rev-parse','HEAD'],text=True).strip()
+        _ = self.compiler.write_text('#!'+sys.executable+WORKSPACE_COMPILER)
+        self.compiler.chmod(0o755)
+        self.spec = replace(self.spec,source_sha=sha,cargo_sha256=file_hash(self.compiler),
+                            rustc_sha256=file_hash(self.compiler),packages=(),artifacts=(),workspace_tests=True)
+
+    def test_workspace_metadata_and_package_qualified_artifacts(self) -> None:
+        self.workspace_spec()
+        result = build_product(self.spec)
+        self.assertEqual(result.status,'PASS')
+        receipt = document(result.receipt.read_text())
+        receipt.field('build_kind').equals('workspace_tests')
+        receipt.field('packages').equals([])
+        self.assertEqual([row.text() for row in receipt.field('argv').array()][1:],
+            ['test','--locked','--message-format=json-render-diagnostics','--workspace','--no-run','--release'])
+        self.assertEqual(len(result.artifacts),2)
+        self.assertEqual(len({name for name,_,_ in result.artifacts}),2)
+        receipt.field('workspace_runtime').equals('NOT_RUN')
+        receipt.field('workspace_world_safety').equals('INCOMPLETE')
+        self.assertEqual(len(receipt.field('workspace_doctests').array()),2)
+        for name,_,_ in result.artifacts:
+            artifact = document((self.spec.output/f'artifact-{name}.json').read_text())
+            artifact.field('workspace_target').equals(receipt.field('workspace_targets').field(name).value)
+            artifact.field('metadata_receipt_sha256').equals(file_hash(self.spec.output/'cargo-metadata/process.json'))
+
+    def test_workspace_debug_has_separate_profile_artifacts(self) -> None:
+        self.workspace_spec()
+        result = build_product(replace(self.spec,profile='debug'))
+        self.assertEqual(result.status,'PASS')
+        self.assertTrue(all(path.parent == self.root/'rust/target/debug/deps' for _,path,_ in result.artifacts))
+        self.assertNotIn('--release',[row.text() for row in document(result.receipt.read_text()).field('argv').array()])
+
+    def test_workspace_selectors_cannot_narrow_inventory(self) -> None:
+        self.workspace_spec()
+        for changed in (replace(self.spec,packages=('alpha',)),replace(self.spec,features=('extra',)),
+                        replace(self.spec,test_targets=('one',)),replace(self.spec,artifacts=(Artifact('bin','release/bin'),))):
+            with self.subTest(spec=changed), self.assertRaises(ValueError):
+                _ = build_product(changed)
+        self.assertFalse(self.spec.output.exists())
+
+    def test_workspace_missing_artifact_retains_failure_without_artifact_receipts(self) -> None:
+        self.workspace_spec()
+        self.change_compiler(lambda text:text.replace('for package in packages:', 'for package in packages[:1]:'))
+        result = build_product(self.spec)
+        self.assertEqual(result.status,'FAIL')
+        self.assertIn('missing selected',document(result.receipt.read_text()).field('error').text())
+        self.assertEqual(list(self.spec.output.glob('artifact-*.json')),[])
+
+    def test_workspace_metadata_failure_retains_real_exit(self) -> None:
+        self.workspace_spec()
+        self.change_compiler(lambda text:text.replace("if sys.argv[1]=='metadata':", "if sys.argv[1]=='metadata':\n sys.exit(19)"))
+        result = build_product(self.spec)
+        self.assertEqual(result.status,'FAIL')
+        document(result.receipt.read_text()).field('metadata_exit_code').equals(19)
+        self.assertFalse((self.spec.output/'cargo-build').exists())
+
+    def test_workspace_foreign_metadata_source_rejected_before_build(self) -> None:
+        self.workspace_spec()
+        self.change_compiler(lambda text:text.replace("str(package/'src/lib.rs')", "'/tmp/foreign-source.rs'"))
+        result = build_product(self.spec)
+        self.assertEqual(result.status,'FAIL')
+        self.assertFalse((self.spec.output/'cargo-build').exists())
+
+    def test_workspace_build_cannot_rewrite_metadata_receipt(self) -> None:
+        self.workspace_spec()
+        victim = self.spec.output/'cargo-metadata/stdout.log'
+        self.change_compiler(lambda text:text.replace("assert '--workspace'", f"pathlib.Path({str(victim)!r}).write_text('rewritten')\nassert '--workspace'"))
+        result = build_product(self.spec)
+        self.assertEqual(result.status,'FAIL')
+        self.assertIn('earlier metadata',document(result.receipt.read_text()).field('error').text())
+
+    def test_workspace_metadata_cannot_rewrite_prior_version_receipt(self) -> None:
+        self.workspace_spec()
+        victim = self.spec.output/'cargo-version/stdout.log'
+        self.change_compiler(lambda text:text.replace("if sys.argv[1]=='metadata':", "if sys.argv[1]=='metadata':\n pathlib.Path("+repr(str(victim))+').write_text("rewritten")'))
+        result = build_product(self.spec)
+        self.assertEqual(result.status,'FAIL')
+        self.assertIn('earlier metadata',document(result.receipt.read_text()).field('error').text())
+
+    def test_workspace_conditional_selection_fails_without_feature_resolution(self) -> None:
+        self.workspace_spec()
+        self.change_compiler(lambda text:text.replace("'test':True,'doctest':True", "'test':True,'doctest':True,'required-features':['extra']"))
+        result = build_product(self.spec)
+        self.assertEqual(result.status,'FAIL')
+        self.assertIn('conditional target',document(result.receipt.read_text()).field('error').text())
+
+
+WORKSPACE_COMPILER = r"""
+import json,os,pathlib,sys
+if '--version' in sys.argv:
+ print('synthetic compiler 1.93.0\nrelease: 1.93.0\nhost: synthetic-test-only');sys.exit(0)
+root=pathlib.Path.cwd();target=pathlib.Path(os.environ['CARGO_TARGET_DIR'])
+packages=[]
+for name in ('alpha','beta'):
+ package=root/'crates'/name
+ packages.append({'id':'path+'+str(package),'name':name,'manifest_path':str(package/'Cargo.toml'),
+   'targets':[{'name':'shared','kind':['lib'],'src_path':str(package/'src/lib.rs'),'test':True,'doctest':True}]})
+if sys.argv[1]=='metadata':
+ assert sys.argv[2:]==['--locked','--format-version=1','--no-deps']
+ print(json.dumps({'version':1,'workspace_root':str(root),'target_directory':str(target),
+  'workspace_members':[p['id'] for p in packages],'packages':packages}));sys.exit(0)
+assert '--workspace' in sys.argv and '--no-run' in sys.argv
+for package in packages:
+ binary=target/('release' if '--release' in sys.argv else 'debug')/'deps'/(package['name']+'-hash')
+ binary.parent.mkdir(parents=True,exist_ok=True);binary.write_bytes(b'synthetic only');binary.chmod(0o755)
+ print(json.dumps({'reason':'compiler-artifact','package_id':package['id'],'manifest_path':package['manifest_path'],
+   'target':package['targets'][0],'profile':{'test':True},'fresh':False,'executable':str(binary),'filenames':[str(binary)]}))
+print(json.dumps({'reason':'build-finished','success':True}))
+"""

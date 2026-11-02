@@ -243,6 +243,16 @@ Stage 0 자기 비교의 알려진 충돌은 유지한다. 공개 BASE0의 기�
 
 통합 Python11은 generic·요약·READ·정규화569개 검사를214.780초에 통과했고 실행 전후 Python 소스 해시는 같았다. 전체 생산 모듈의 엄격 타입 검사14는 오류0·경고0, Ruff06도 통과했다. 이는 원래 gate 전체의 Python 단계나 native workspace 전체 실행을 대신하지 않는다.
 
+독립 관찰자 검증 run02는 공개 BASE0 `2f6993009ddb600e9249c28f9768a1a5252c8821`에서 새로 만든 두 제품을 사용했다. 한 제품에는 검토한 probe 관찰 경로7개만 추가했고, 하네스는 리뷰 커밋 `886ff0e5ee58fadda44fc653d962c3f5d6697d74`였다. 원본 비활성·파생 비활성·파생 활성의9개 프로세스, 총51세계 실행에서 baseline120일·U10·CORE-off20일의 여섯 비교가 모두 일치했다. 활성 관찰 이력17개와 원래 출력의 연결도 통과했다. 사전 고정한 timing12경로 템플릿(실제 확장 경로 보존)·colony 측정2필드 및 원시 요약과 대조한 Markdown 시간 행만 측정값으로 분리했고, 알 수 없는 시뮬레이션 키는 제거하지 않았다(`stage0/observer-qualification/RUN02_SUMMARY.md`, 원시 결과 SHA256 `e3a42bdbe512b1ee73063a5122bbb7ecb0b8271999aba35ddc9ed9e9fb4c5406`).
+
+같은 실행의 ordinary safety는 **FAIL**이다. 세 CORE-off 원시 요약은 바이트가 같고 종료0명과 tick28560의 `clay_digging` 상실을 동일하게 기록했다. 창립자10명은 파생 활성 제품의 sidecar에서 관측했으며 원래 colony 요약에는 초기 인원 필드가 없다. runtime의 git_sha는 원래 명시 환경에서 `unknown`이며 제품 출처는 별도 source/build·실행 파일 해시로 인증했다. 실제 전체 명령 순서는 NOT_AVAILABLE이고 명령·수락 집계만 비교했다. 이 중립성 증거는 CLI로 활성화한 probe 경로와 위 세 fixture에 한정한다. 전체 Stage0 자기 비교·UI·저장·mirror 모드·성능·게시 자격으로 확대하지 않는다. 첫 run01의 실행 전 파서 실패도 보존한다.
+
+workspace 빌드 연결부는 패키지·target·feature 축소와 배타적인 명시 모드를 추가했다. 실제 Cargo metadata와 새 workspace no-run 빌드의 프로세스·입력·출력을 묶고 패키지별 target과 실행 파일을 대조하며, 이전 metadata/version 증거가 변경되면 거절한다. 독립 검토와 루트의 기존/신규 회귀78개가 통과했다. 이 검사는 작은 합성 compiler를 사용했으며 새 모드의 실제 Cargo 빌드·테스트 실행·doctest·전체 세계 안전성은 아직 NOT_RUN 또는 INCOMPLETE다.
+
+과거 버전 실행기에는 기본 비활성인 자식 프로세스 기록 경로를 추가했다. 원래 명령행·디렉터리·실행 파일·입력 해시를 사전에 고정하고 실제 PID·환경·원시 종료·출력 해시를 기록한다. 독립 검토에서 발견한 bounded 자식의 표준입력 EOF, 시그널 종료 코드, 타임아웃 문구 차이를 재현한 뒤 원래 래퍼와 맞췄다. 루트 회귀15개가 통과했으며 기본 실행 분기는 그대로다. 기록 경로는 출력을 종료 후 재생하므로 성능 증거가 아니다. 원래 여섯 launcher 경우의 실제 native 실행·과거 버전 빌드 출처·관찰자 자격은 아직 미완료다.
+
+통합 Python12는623개를207.845초에 통과했고 검사 대상 Python 입력은 전후 동일했다. 생산 generic 모듈과 새 launcher helper/검사의 엄격 타입 검사15는 오류0·경고0이며 변경 파일 Ruff와 shell 구문 검사도 통과했다. 이는 원래 gate16 전체 discovery나 실제 workspace native 실행을 대신하지 않는다.
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
