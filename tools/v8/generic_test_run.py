@@ -366,7 +366,8 @@ def authenticate_invocation(path: Path, product: Product, plan: str) -> Binding:
     verify_test_product(product,target,row.profile)
     binding = _process_from_receipt(Path(receipt.field('process_receipt').text()),receipt.field('process_sha256').text())
     spec = binding.process
-    require(spec.argv == (str(product.binary),*row.argv) and spec.cwd == product.root/'rust', target, 'invocation argv/cwd mismatch')
+    expected_cwd = product.root/('rust' if plan == 'development' else 'rust/crates/sim-test')
+    require(spec.argv == (str(product.binary),*row.argv) and spec.cwd == expected_cwd, target, 'invocation argv/cwd mismatch')
     require(spec.executable == product.binary and spec.executable_sha256 == product.binary_sha256, target, 'foreign executable')
     require(spec.input_root == product.root and dict(spec.inputs) == dict(product.input_files) and len(spec.inputs) == len(product.input_files), target, 'foreign invocation inputs')
     expected_environment = {'PATH':'/usr/bin:/bin:/usr/sbin:/sbin','LANG':'C','LC_ALL':'C','WORLDSIM_GATE_OBSERVER':'1','WORLDSIM_GATE_TEST_OUT':str(spec.output_root),
@@ -378,6 +379,7 @@ def authenticate_invocation(path: Path, product: Product, plan: str) -> Binding:
     require(spec.output_root == path.parent/f"{receipt.field('arm').text()}-{target}", target, 'foreign invocation output')
     receipt.field('pid').equals(binding.pid)
     receipt.field('argv').equals(list(spec.argv))
+    receipt.field('cwd').equals(str(spec.cwd))
     hashes = freeze(spec.output_root)
     receipt.field('output_sha256').equals({name:digest for name,digest in hashes.items()})
     binding = Binding(spec,binding.receipt_sha256,binding.pid,tuple(hashes.items()))
@@ -415,6 +417,7 @@ def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Pa
     report: dict[str,Json] = {'status':'PENDING', 'broader_gate17_37':'INCOMPLETE', 'publication_authorized':False,
         'invocation_plan':invocation, 'invocations':[document(json.dumps(asdict(row))).value for row in selected],
         'workspace_enumeration':'INCOMPLETE', 'step_coverage':'PARTIAL',
+        'cargo_working_directory_equivalence':('NOT_ORIGINAL_CARGO_QUALIFICATION' if invocation == 'development' else 'PACKAGE_ROOT'),
         'products':{arm:{target:{'source_sha':product.source_sha, 'binary':str(product.binary),
                     'binary_sha256':product.binary_sha256, 'artifact_receipt':str(product.build_receipt),
                     'artifact_receipt_sha256':product.build_receipt_sha256}
@@ -441,7 +444,8 @@ def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Pa
                         require(freeze(directory) == hashes, str(directory), 'completed producer evidence changed')
                     product = products[target]
                     directory = output/f'{arm}-{target}'
-                    spec = ProcessSpec((str(product.binary),*invocation_row.argv), product.root/'rust',
+                    cwd = product.root/('rust' if invocation == 'development' else 'rust/crates/sim-test')
+                    spec = ProcessSpec((str(product.binary),*invocation_row.argv), cwd,
                         product.binary, product.binary_sha256, product.root, product.input_files, directory,
                         (('WORLDSIM_GATE_OBSERVER','1'), ('WORLDSIM_GATE_TEST_OUT',str(directory)),
                          ('TMPDIR',str(directory/'tmp'))) + (() if invocation == 'development' else
@@ -460,7 +464,7 @@ def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Pa
                     receipt: dict[str,Json] = {'schema':'native_invocation_v1', 'plan':invocation,
                         'identity':document(json.dumps(asdict(invocation_row))).value, 'arm':arm,
                         'process_receipt':str(directory/'process.json'), 'process_sha256':hashes['process.json'],
-                        'pid':result.pid, 'argv':list(spec.argv), 'output_sha256':{name:digest for name,digest in hashes.items()},
+                        'pid':result.pid, 'argv':list(spec.argv), 'cwd':str(spec.cwd), 'output_sha256':{name:digest for name,digest in hashes.items()},
                         'artifact_receipt':str(product.build_receipt), 'artifact_sha256':product.build_receipt_sha256}
                     atomic_json(output/f'{arm}-{target}-invocation.json',receipt)
                     frozen_receipts[output/f'{arm}-{target}-invocation.json'] = file_hash(output/f'{arm}-{target}-invocation.json')

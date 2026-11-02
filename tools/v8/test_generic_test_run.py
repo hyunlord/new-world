@@ -127,6 +127,9 @@ class RunnerTests(unittest.TestCase):
                     if defect == 'missing_world' and arm == 'candidate' and target == 'colony_commands':
                         _ = rows.pop()
                     _ = (root/'rust'/f'{target}.json').write_text(json.dumps(rows))
+                    package = root/'rust/crates/sim-test'
+                    package.mkdir(parents=True,exist_ok=True)
+                    _ = (package/f'{target}.json').write_text(json.dumps(rows))
                     child = CHILD.replace("'plan.json'",repr(target+'.json')).replace(
                         "'synthetic planned boundary'", "r['stop']")
                     child = child[:child.index("for test in sorted({r['test'] for r in rows})")]
@@ -173,7 +176,14 @@ class RunnerTests(unittest.TestCase):
                             path = home/f'out/{arm}-{target}-invocation.json'
                             binding = generic_test_run.authenticate_invocation(path,products[arm][target],invocation)
                             self.assertEqual(binding.process.argv[1:],('--test-threads=8',))
+                            self.assertEqual(binding.process.cwd,products[arm][target].root/'rust/crates/sim-test')
                             original = path.read_bytes()
+                            altered_cwd = document(original.decode()).mapping()
+                            altered_cwd['cwd'] = str(products[arm][target].root/'rust')
+                            _ = path.write_text(json.dumps(altered_cwd))
+                            with self.assertRaises(ValueError):
+                                _ = generic_test_run.authenticate_invocation(path,products[arm][target],invocation)
+                            _ = path.write_bytes(original)
                             relabeled = document(original.decode()).mapping()
                             other = 'gate24' if target == 'save_load' and invocation != 'gate24' else 'gate05'
                             if invocation == other:
@@ -205,6 +215,7 @@ class RunnerTests(unittest.TestCase):
         result.field('status').equals('COMPONENT_PASS')
         result.field('coverage').equals('save_load46 + colony_world20 + colony_commands3 + gifted_hut1 planned ordinary occurrences per arm')
         result.field('invocation_coverage').equals({'save_load':46,'colony_world':20,'colony_commands':3,'colony_jobs':1})
+        result.field('cargo_working_directory_equivalence').equals('NOT_ORIGINAL_CARGO_QUALIFICATION')
         result.field('broader_gate17_37').equals('INCOMPLETE')
         result.field('publication_authorized').equals(False)
         self.assertEqual([len(row.field('occurrences').array()) for row in result.field('families').array() if 'occurrences' in row.mapping()], [46,20,3,1])
