@@ -21,6 +21,7 @@ class Transient:
     lexical: Path
     canonical: Path
     evidence: dict[str, Json]
+    closure_plan: Node | None = None
 
 
 def read(path: Path) -> Node:
@@ -28,11 +29,84 @@ def read(path: Path) -> Node:
 
 
 @boundary
+def dependency_closure(plan: Node, policy: Node) -> None:
+    """Verify v2 member bindings, never confer compiler provenance."""
+    inputs = plan.field('inputs').mapping()
+    artifacts: dict[str, tuple[Path, str]] = {}
+    paths: set[Path] = set()
+    for row in plan.field('artifacts').array():
+        keys(row, {'id', 'path', 'sha256'})
+        ident = text(row.field('id')); path = Path(text(row.field('path')))
+        real_path(path, directory=False)
+        require(ident not in artifacts and path not in paths and str(path) not in inputs,
+                '/dependencies', 'duplicate artifact or overlapping input')
+        artifacts[ident] = (path, text(row.field('sha256'))); paths.add(path)
+    refs = [text(row) for row in policy.field('artifact_dependencies').array()]
+    require(refs == sorted(set(refs)), '/dependencies', 'artifact references not sorted unique')
+    used: set[str] = set(); roots: list[Path] = []
+    for search in policy.field('dependency_searches').array():
+        keys(search, {'path', 'directories', 'files'})
+        root = Path(text(search.field('path'))); real_path(root, directory=True)
+        require(not any(root.is_relative_to(other) or other.is_relative_to(root) for other in roots),
+                '/dependencies', 'overlapping search directories')
+        roots.append(root)
+        directories: list[str] = []; files: list[str] = []
+        for member in root.rglob('*'):
+            require(not member.is_symlink(), '/dependencies', 'symlink search member')
+            name = str(member.relative_to(root))
+            if member.is_dir(): directories.append(name)
+            else:
+                require(member.is_file(), '/dependencies', 'unsupported search member')
+                files.append(name)
+        search.field('directories').equals([name for name in sorted(directories)])
+        declared: list[str] = []
+        for row in search.field('files').array():
+            keys(row, {'relative_path', 'binding_kind', 'binding_id', 'sha256'})
+            name = text(row.field('relative_path')); relative = Path(name)
+            require(not relative.is_absolute() and '..' not in relative.parts and str(relative) == name,
+                    '/dependencies', 'noncanonical relative member')
+            path = root/relative; declared.append(name)
+            ident = text(row.field('binding_id')); digest = text(row.field('sha256'))
+            match text(row.field('binding_kind')):
+                case 'input':
+                    require(ident == str(path) and inputs.get(ident) == digest and path not in paths,
+                            '/dependencies', 'unbound input member')
+                    require(not path.stat().st_mode & 0o111, '/dependencies', 'executable member requires artifact binding')
+                case 'artifact':
+                    require(ident in refs and artifacts.get(ident) == (path, digest),
+                            '/dependencies', 'unbound artifact member')
+                    used.add(ident)
+                case _:
+                    require(False, '/dependencies', 'unknown binding kind')
+            require(file_hash(path) == digest, '/dependencies', 'member bytes changed')
+        require(declared == sorted(files), '/dependencies', 'search membership differs')
+    require([str(root) for root in roots] == sorted(str(root) for root in roots), '/dependencies', 'search roots not sorted')
+    require(used == set(refs), '/dependencies', 'unused or missing artifact references')
+    expected: set[Path] = set()
+    for row in policy.field('invocations').array():
+        argv = [text(arg) for arg in row.field('argv').array()]
+        cwd = Path(text(row.field('compiler_cwd')))
+        for index, arg in enumerate(argv):
+            if arg == '-L':
+                require(index+1 < len(argv) and argv[index+1].startswith('dependency='), '/dependencies', 'unsupported search operand')
+                expected.add((cwd/argv[index+1].split('=', 1)[1]).resolve(strict=True))
+    require(set(roots) == expected, '/dependencies', 'search set differs from invocations')
+
+
+@boundary
+def closure_for(plan: Node) -> None:
+    """Shared v2 entry/terminal check; v1 retains its original path."""
+    if 'doctest_policy' in plan.mapping() and integer(plan.field('doctest_policy').field('schema_version')) != 1:
+        _ = policy_for(plan)
+
+
+@boundary
 def policy_for(plan: Node) -> Node:
     policy = plan.field('doctest_policy')
-    keys(policy, {'schema_version', 'parent_receipt', 'rustdoc', 'rustdoc_sha256', 'version_receipt',
+    version = integer(policy.field('schema_version'))
+    require(version in (1, 2), '/policy', 'unsupported policy version')
+    keys(policy, ({'artifact_dependencies', 'dependency_searches'} if version == 2 else set[str]()) | {'schema_version', 'parent_receipt', 'rustdoc', 'rustdoc_sha256', 'version_receipt',
                   'version_sha256', 'entrypoint', 'entrypoint_sha256', 'wrapper_sha256', 'exec_root', 'temporary_root', 'invocations'})
-    policy.field('schema_version').equals(1)
     inputs = plan.field('inputs').mapping()
     parent = Path(text(policy.field('parent_receipt')))
     require(parent.is_absolute() and parent.name == 'process.json' and parent.parent.resolve() == parent.parent,
@@ -48,21 +122,35 @@ def policy_for(plan: Node) -> Node:
     require(file_hash(Path(sys.executable).resolve()) == text(plan.field('python_sha256')), '/wrapper', 'interpreter changed')
     for name, digest in inputs.items(): require(file_hash(Path(name)) == text(Node(digest, name)), name, 'immutable input changed')
     for key in ('exec_root', 'temporary_root'): real_path(Path(text(policy.field(key))), directory=True)
+    if version == 2: dependency_closure(plan, policy)
     return policy
 
 
 @boundary
 def match_invocation(plan: Node, policy: Node, argv: tuple[str, ...], cwd: Path) -> Node:
+    version = integer(policy.field('schema_version'))
     matches: list[Node] = []
     for row in policy.field('invocations').array():
-        keys(row, {'id', 'cwd', 'source', 'package_manifest', 'crate_name', 'edition', 'argv'})
-        if text(row.field('cwd')) == str(cwd) and tuple(text(arg) for arg in row.field('argv').array()) == argv:
+        fields = {'id', 'source', 'package_manifest', 'crate_name', 'edition', 'argv'}
+        keys(row, fields | ({'package_id', 'source_argument', 'compiler_cwd', 'run_cwd'} if version == 2 else {'cwd'}))
+        if text(row.field('compiler_cwd' if version == 2 else 'cwd')) == str(cwd) and tuple(text(arg) for arg in row.field('argv').array()) == argv:
             matches.append(row)
     require(len(matches) == 1, '/rustdoc/argv', 'no unique source-owned exact invocation')
     row = matches[0]
     source = Path(text(row.field('source')))
     package = Path(text(row.field('package_manifest')))
-    require(package == cwd/'Cargo.toml' and source.is_relative_to(cwd), '/source', 'foreign source/package')
+    run_cwd = Path(text(row.field('run_cwd'))) if version == 2 else cwd
+    real_path(cwd, directory=True); real_path(run_cwd, directory=True)
+    require(package == run_cwd/'Cargo.toml' and source.is_relative_to(run_cwd), '/source', 'foreign source/package')
+    if version == 2:
+        require(not any(arg.startswith(('--test=', '--test-run-directory=')) for arg in argv),
+                '/source', 'joined source/run operands unsupported')
+        require(bool(text(row.field('package_id'))), '/source', 'empty package identity')
+        real_path(source, directory=False); real_path(package, directory=False)
+        source_arg = text(row.field('source_argument'))
+        require(argv.count('--test') == 1 and argv.index('--test')+1 < len(argv) and argv[argv.index('--test')+1] == source_arg and argv.count(source_arg) == 1 and (cwd/source_arg).resolve(strict=True) == source, '/source', 'source argument differs')
+        values = [argv[i+1] for i, arg in enumerate(argv[:-1]) if arg == '--test-run-directory']
+        require(argv.count('--test-run-directory') == 1 and values == [str(run_cwd)], '/source', 'run directory differs')
     for path in (source, package):
         require(plan.field('inputs').field(str(path)).text() == file_hash(path), '/source', 'unbound source/package')
     require(argv.count('--test') == 1 and any(not arg.startswith('-') and (cwd/arg).resolve() == source for arg in argv),
@@ -71,12 +159,16 @@ def match_invocation(plan: Node, policy: Node, argv: tuple[str, ...], cwd: Path)
         values = [arg.split('=', 1)[1] for arg in argv if arg.startswith(flag+'=')]
         values.extend(argv[index+1] for index, arg in enumerate(argv[:-1]) if arg == flag)
         require(values == [value], '/rustdoc/argv', 'crate/edition differs')
+    bound = set(plan.field('inputs').mapping())
+    if version == 2:
+        bound.update(text(item.field('path')) for item in plan.field('artifacts').array()
+                     if text(item.field('id')) in [text(ref) for ref in policy.field('artifact_dependencies').array()])
     # Exact declaration is caller source-owned; all concrete file arguments must also be frozen inputs.
     for arg in argv:
         value = arg.split('=', 1)[-1]
         candidate = cwd/value
         if candidate.is_file():
-            require(str(candidate.resolve()) in plan.field('inputs').mapping(), '/rustdoc/argv', 'unbound file argument')
+            require(str(candidate.resolve()) in bound, '/rustdoc/argv', 'unbound file argument')
     for index, arg in enumerate(argv):
         require(not arg.startswith('--extern=') and not (arg.startswith('-L') and arg != '-L'),
                 '/rustdoc/argv', 'joined dependency grammar unsupported; no argument rewriting')
@@ -89,7 +181,7 @@ def match_invocation(plan: Node, policy: Node, argv: tuple[str, ...], cwd: Path)
             for dependency in files:
                 require(not dependency.is_symlink(), '/rustdoc/argv', 'symlink dependency')
                 if dependency.is_file():
-                    require(str(dependency) in plan.field('inputs').mapping(), '/rustdoc/argv', 'unbound dependency search input')
+                    require(str(dependency) in bound, '/rustdoc/argv', 'unbound dependency search input')
     return row
 
 
@@ -175,12 +267,14 @@ def admit_transient(plan: Node, digest: str, argv: tuple[str, ...], cwd: Path, o
     row.field('occurrence').equals(path.parent.name)
     row.field('manifest_sha256').equals(digest)
     for name in ('invocation_id', 'step', 'arm', 'profile'): row.field(name).equals(plan.field(name).value)
-    row.field('cwd').equals(str(cwd))
+    compiler_cwd = Path(text(row.field('cwd')))
+    if integer(policy.field('schema_version')) == 1: row.field('cwd').equals(str(cwd))
     args = tuple(text(arg) for arg in row.field('rustdoc_argv').array())
     require(bool(args) and args[0] == text(policy.field('rustdoc')), '/exec-intent', 'rustdoc path differs')
     row.field('wrapper_argv').equals([str(Path(__file__).resolve()), *args[1:]])
     row.field('environment').field('CARGO_CAPTURE_MANIFEST_SHA256').equals(digest)
-    source = match_invocation(plan, policy, args[1:], cwd)
+    source = match_invocation(plan, policy, args[1:], compiler_cwd)
+    if integer(policy.field('schema_version')) == 2: source.field('run_cwd').equals(str(cwd))
     row.field('source_invocation').equals(text(source.field('id')))
     ancestry = ancestor(policy, integer(row.field('cargo_parent_pid')))
     try:
@@ -207,12 +301,15 @@ def admit_transient(plan: Node, digest: str, argv: tuple[str, ...], cwd: Path, o
         'saved_binary': str(saved), 'sha256': before, 'temporary_root': text(policy.field('temporary_root')),
         'endpoint_limit': 'NO_ATOMIC_EXEC_OR_HOSTILE_PATH_RACE_PROOF', 'doctest_cases': 'INCOMPLETE'}
     require(file_hash(path) == intent_hash, '/exec-intent', 'validated intent changed before admission')
+    if integer(policy.field('schema_version')) == 2:
+        evidence['compiler_cwd'] = str(compiler_cwd); evidence['run_cwd'] = str(cwd)
     atomic_json(output/'transient-admission.json', evidence)
-    return Transient(lexical, canonical, evidence)
+    return Transient(lexical, canonical, evidence, plan if integer(policy.field('schema_version')) == 2 else None)
 
 
 @boundary
 def postflight(admission: Transient) -> dict[str, Json]:
+    if admission.closure_plan is not None: closure_for(admission.closure_plan)
     _, identity = transient_identity(admission.lexical, Path(text(Node(admission.evidence['temporary_root'], '/temporary'))))
     require(identity == admission.evidence['identity_before'], '/transient', 'endpoint identity changed')
     require(file_hash(admission.canonical) == admission.evidence['sha256'], '/transient', 'endpoint bytes changed')

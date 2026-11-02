@@ -295,6 +295,8 @@ Cargo가 임시 doctest 파일에도 runner를 적용한 실제 run02 실패에 
 
 M6a 단계48의 원래 식물 구조 검사를 실행하는 별도 어댑터를 추가했다. 원래 windowed 명령·통합 출력·검증기를 유지하고 실제로 import한 조정기 소스와 Godot extension/class/UID/import 경로를 고정 입력에 대조한다. 독립 검토에서 재현한 다른 검증기 import와 미등록 extension 수락은 모두 거절되며, 루트12개 검사(12.594초)·엄격 타입 검사26·Ruff를 통과했다. Godot PID는 기록되지 않아 null이고 시각 평가는 NOT_EVALUATED, 실제 renderer 실행은 NOT_RUN이다. 자식 종료가 불명확한 경우에는 INCOMPLETE로 남기고 후속 군 실행·최종 inventory를 하지 않는다. 기존 조정기는 이 상태에서의 소유 프로세스·lane 유지가 아직 해결되지 않아 연결하지 않았다. 독립 검토는 이 제한된 컴포넌트만 승인했다(`stage0/ordered-dispatch/M6A_STRUCTURAL_INDEPENDENT_REVIEW_V2.md`).
 
+Cargo 기록 정책v2는 컴파일 산출물을 소스 입력과 분리하고 전체 dependency 디렉터리의 파일·하위 디렉터리·해시를 대조한다. 실행하지 않은 참조 산출물도 각 자식의 시작·종료에 확인하며, rustdoc compiler cwd와 native run cwd를 별도로 검증·기록한다. v1/default 경로는 유지했다. 독립 검토에서 발견한 잘못된 정책의 종료 기록 누락, 중복 joined run-directory 인자 수락, 저장된 admission의 cwd 누락을 회귀와 함께 고쳤다. 루트24+19개 검사·엄격 타입·Ruff 및 독립43개 검사를 통과했다. 실제 compiler/metadata 출처 대조와 마지막 외부 closure 검사는 새 실행기에서 연결해야 하며, 실제 재실행·전체 workspace 검증은 NOT_RUN이다. run03 FAIL을 변경하지 않는다(`stage0/workspace-runtime/doctest-policy-v2-draft/INDEPENDENT_REVIEW_REVISION2.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

@@ -17,7 +17,7 @@ from pathlib import Path
 from types import FrameType
 from typing import BinaryIO
 
-from gate_rustdoc_exec import Transient, admit_transient, postflight
+from gate_rustdoc_exec import Transient, admit_transient, closure_for, postflight
 from generic_gate import GateContractError, boundary, document, integer, require, text
 from generic_observations import keys
 from generic_process import atomic_json, file_hash, real_path
@@ -109,6 +109,7 @@ def execute(manifest: Path, digest: str, argv: tuple[str,...]) -> int:
         require(bool(argv) and all('\0' not in arg for arg in argv),'/argv','missing binary or NUL')
         binary=Path(argv[0]).absolute()
         require(not root.is_relative_to(cwd) and not cwd.is_relative_to(root),'/output','receipts overlap child cwd')
+        closure_for(plan)
         artifacts=plan.field('artifacts').array()
         matched=[item for item in artifacts if text(item.field('path'))==str(binary)]
         if not matched and 'doctest_policy' in plan.mapping():
@@ -165,6 +166,8 @@ def execute(manifest: Path, digest: str, argv: tuple[str,...]) -> int:
             for name,checksum in inputs.items():
                 after_inputs[name]=file_hash(Path(name));require(after_inputs[name]==checksum,name,'immutable input changed during child')
         except (GateContractError,OSError) as error:errors.append(str(error))
+    try:closure_for(plan)
+    except (GateContractError,OSError,UnicodeError) as error:errors.append(str(error))
     logs: dict[str,str]={}
     for name in ('stdout.log','stderr.log'):
         path=output/name

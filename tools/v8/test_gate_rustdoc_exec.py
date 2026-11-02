@@ -38,7 +38,7 @@ class Fixture:
         self.version = self.root/'version'; _ = self.version.write_text('synthetic version')
         self.source = self.cwd/'lib.rs'; _ = self.source.write_text('synthetic source')
         self.package = self.cwd/'Cargo.toml'; _ = self.package.write_text('synthetic manifest')
-        self.args = ('--test', 'lib.rs', '--crate-name', 'alpha', '--edition', '2021')
+        self.args: tuple[str, ...] = ('--test', 'lib.rs', '--crate-name', 'alpha', '--edition', '2021')
         inputs = {str(p): file_hash(p) for p in (self.rustdoc, self.entrypoint, self.version, self.source, self.package, Path(wrapper.__file__).resolve())}
         self.policy: dict[str, Json] = {'schema_version': 1, 'parent_receipt': str(self.parent/'process.json'),
             'entrypoint': str(self.entrypoint), 'entrypoint_sha256': file_hash(self.entrypoint),
@@ -237,3 +237,109 @@ class WrapperTests(unittest.TestCase):
 
 if __name__ == '__main__':
     _ = unittest.main()
+
+
+def v2_fixture(test: unittest.TestCase) -> Fixture:
+    f = Fixture(test)
+    deps = f.root/'deps'; deps.mkdir()
+    binary = deps/'native'; _ = binary.write_text('#!'+sys.executable+'\nraise SystemExit(0)\n'); binary.chmod(0o755)
+    f.data['artifacts'] = [{'id': 'package/target/debug', 'path': str(binary), 'sha256': file_hash(binary)}]
+    f.args = ('--test', 'package/lib.rs', '--crate-name', 'alpha', '--edition', '2021', '--test-run-directory', str(f.cwd), '-L', 'dependency='+str(deps))
+    f.policy.update({'schema_version': 2, 'artifact_dependencies': ['package/target/debug'],
+        'dependency_searches': [{'path': str(deps), 'directories': [], 'files': [{'relative_path': 'native', 'binding_kind': 'artifact', 'binding_id': 'package/target/debug', 'sha256': file_hash(binary)}]}],
+        'invocations': [{'id': 'alpha', 'package_id': 'package', 'package_manifest': str(f.package), 'source': str(f.source),
+            'source_argument': 'package/lib.rs', 'compiler_cwd': str(f.root), 'run_cwd': str(f.cwd),
+            'crate_name': 'alpha', 'edition': '2021', 'argv': list(f.args)}]})
+    f.save()
+    return f
+
+
+class PolicyV2Tests(unittest.TestCase):
+    def test_artifact_dependency_and_distinct_compiler_cwd(self) -> None:
+        f = v2_fixture(self)
+        policy = wrapper.policy_for(f.node())
+        wrapper.match_invocation(f.node(), policy, f.args, f.root).field('id').equals('alpha')
+        with self.assertRaises(GateContractError):
+            _ = wrapper.match_invocation(f.node(), policy, f.args, f.cwd)
+
+    def test_native_cwd_is_separate_from_intent_compiler_cwd(self) -> None:
+        f = v2_fixture(self); intent = f.intent()
+        body = wrapper.read(intent).mapping(); body['cwd'] = str(f.root); _ = intent.write_text(json.dumps(body))
+        admission = f.admit()
+        self.assertEqual(wrapper.postflight(admission), admission.evidence['identity_before'])
+        _ = (f.root/'deps/native').write_text('mutated unlaunched artifact')
+        with self.assertRaises(GateContractError): _ = wrapper.postflight(admission)
+
+    def test_dependency_membership_and_artifact_mutations_reject(self) -> None:
+        for defect in ('add', 'remove', 'mutate', 'symlink', 'overlap', 'unknown_id'):
+            with self.subTest(defect=defect):
+                f = v2_fixture(self)
+                if defect == 'add': _ = (f.root/'deps/new').write_text('new')
+                if defect == 'remove': (f.root/'deps/native').unlink()
+                if defect == 'mutate': _ = (f.root/'deps/native').write_text('changed')
+                if defect == 'symlink': (f.root/'deps/link').symlink_to(f.source)
+                if defect == 'overlap':
+                    inputs = Node(f.data['inputs'], '/inputs').mapping(); inputs[str(f.root/'deps/native')] = file_hash(f.root/'deps/native'); f.data['inputs'] = inputs
+                if defect == 'unknown_id': f.policy['artifact_dependencies'] = ['unknown']
+                f.save()
+                with self.assertRaises((GateContractError, OSError)): _ = wrapper.policy_for(f.node())
+
+    def test_static_child_validates_closure_before_spawn(self) -> None:
+        f = v2_fixture(self)
+        with patch.object(Path, 'cwd', return_value=f.cwd):
+            self.assertEqual(child.execute(f.manifest, file_hash(f.manifest), (str(f.root/'deps/native'),)), 0)
+        wrapper.read(f.capture/'000001/receipt.json').field('capture_status').equals('COMPLETE')
+
+    def test_closed_artifact_and_directory_bindings_reject_invalid_rows(self) -> None:
+        for defect in ('duplicate_id', 'duplicate_path', 'foreign_path', 'unused_ref', 'extra_field', 'missing_row', 'directory', 'executable_input'):
+            with self.subTest(defect=defect):
+                f = v2_fixture(self)
+                artifact = f.node().field('artifacts').array()[0].mapping()
+                search = Node(f.policy['dependency_searches'], '/search').array()[0].mapping()
+                if defect == 'duplicate_id': f.data['artifacts'] = [artifact, artifact]
+                if defect == 'duplicate_path': f.data['artifacts'] = [artifact, {**artifact, 'id': 'other'}]
+                if defect == 'foreign_path': artifact['path'] = str(f.rustdoc); f.data['artifacts'] = [artifact]
+                if defect == 'unused_ref': f.policy['artifact_dependencies'] = ['other', 'package/target/debug']
+                if defect == 'extra_field': artifact['package'] = 'untrusted'; f.data['artifacts'] = [artifact]
+                if defect == 'missing_row': search['files'] = []; f.policy['dependency_searches'] = [search]
+                if defect == 'directory': (f.root/'deps/newdir').mkdir()
+                if defect == 'executable_input':
+                    f.data['artifacts'] = []; f.policy['artifact_dependencies'] = []
+                    inputs = Node(f.data['inputs'], '/inputs').mapping()
+                    inputs[str(f.root/'deps/native')] = file_hash(f.root/'deps/native'); f.data['inputs'] = inputs
+                    search['files'] = [{'relative_path': 'native', 'binding_kind': 'input', 'binding_id': str(f.root/'deps/native'), 'sha256': file_hash(f.root/'deps/native')}]
+                    f.policy['dependency_searches'] = [search]
+                f.save()
+                with self.assertRaises(GateContractError): _ = wrapper.policy_for(f.node())
+
+    def test_dual_cwd_source_and_run_directory_mismatches_reject(self) -> None:
+        for defect in ('run_cwd', 'source', 'package', 'run_operand', 'duplicate_test'):
+            with self.subTest(defect=defect):
+                f = v2_fixture(self)
+                row = Node(f.policy['invocations'], '/invocations').array()[0].mapping()
+                args = list(f.args)
+                if defect == 'run_cwd': row['run_cwd'] = str(f.root)
+                if defect == 'source': row['source_argument'] = 'lib.rs'
+                if defect == 'package': row['package_manifest'] = str(f.source)
+                if defect == 'run_operand': args[args.index('--test-run-directory')+1] = str(f.root)
+                if defect == 'duplicate_test': args.extend(['--test', 'package/lib.rs'])
+                row['argv'] = [arg for arg in args]; f.policy['invocations'] = [row]; f.save()
+                policy = wrapper.policy_for(f.node())
+                with self.assertRaises(GateContractError): _ = wrapper.match_invocation(f.node(), policy, tuple(args), f.root)
+
+    def test_joined_and_duplicate_run_operands_reject(self) -> None:
+        for suffix in (('--test-run-directory=/other',), ('--test=package/lib.rs',), ('--test-run-directory', '/other')):
+            f = v2_fixture(self)
+            args = (*f.args, *suffix)
+            row = Node(f.policy['invocations'], '/invocations').array()[0].mapping()
+            row['argv'] = list(args); f.policy['invocations'] = [row]; f.save()
+            policy = wrapper.policy_for(f.node())
+            with self.assertRaises(GateContractError): _ = wrapper.match_invocation(f.node(), policy, args, f.root)
+
+    def test_persisted_admission_includes_both_actual_cwds(self) -> None:
+        f = v2_fixture(self); intent = f.intent()
+        body = wrapper.read(intent).mapping(); body['cwd'] = str(f.root); _ = intent.write_text(json.dumps(body))
+        admission = f.admit()
+        wrapper.read(f.output/'transient-admission.json').field('compiler_cwd').equals(str(f.root))
+        wrapper.read(f.output/'transient-admission.json').field('run_cwd').equals(str(f.cwd))
+        self.assertEqual(wrapper.read(f.output/'transient-admission.json').mapping(), admission.evidence)

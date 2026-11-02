@@ -215,3 +215,37 @@ class CaptureTests(unittest.TestCase):
 
 if __name__=='__main__':
     _=unittest.main()
+
+
+class StaticPolicyV2Tests(unittest.TestCase):
+    def test_static_closure_entry_and_terminal_reject_unlaunched_mutation(self) -> None:
+        from test_gate_rustdoc_exec import v2_fixture
+        for phase in ('entry', 'terminal'):
+            with self.subTest(phase=phase):
+                f = v2_fixture(self)
+                target = f.root/'deps/native'
+                other = f.cwd/'launcher'
+                _ = other.write_text('#!'+sys.executable+'\nfrom pathlib import Path\nPath('+repr(str(target))+').write_text("changed")\n')
+                other.chmod(0o755)
+                artifacts = f.node().field('artifacts').array()
+                f.data['artifacts'] = [row.value for row in artifacts]+[{'id': 'other', 'path': str(other), 'sha256': file_hash(other)}]
+                f.save()
+                if phase == 'entry': _ = target.write_text('changed')
+                with patch.object(Path, 'cwd', return_value=f.cwd):
+                    self.assertEqual(capture.execute(f.manifest, file_hash(f.manifest), (str(other),)), 125)
+                receipt = document((f.capture/'000001/receipt.json').read_text())
+                receipt.field('capture_status').equals('FAIL')
+                receipt.field('native_exit').equals(None if phase == 'entry' else 0)
+
+    def test_malformed_policy_retains_terminal_receipt(self) -> None:
+        from test_gate_rustdoc_exec import v2_fixture
+        for defect in ('missing_version', 'wrong_version_type'):
+            with self.subTest(defect=defect):
+                f = v2_fixture(self)
+                if defect == 'missing_version': del f.policy['schema_version']
+                else: f.policy['schema_version'] = '2'
+                f.save()
+                with patch.object(Path, 'cwd', return_value=f.cwd):
+                    self.assertEqual(capture.execute(f.manifest, file_hash(f.manifest), (str(f.root/'deps/native'),)), 125)
+                receipt = document((f.capture/'000001/receipt.json').read_text())
+                receipt.field('capture_status').equals('FAIL'); receipt.field('native_exit').equals(None)
