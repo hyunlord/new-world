@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import Final, Literal, NoReturn, final
 
 import generic_bench_run as bench
+import generic_core_evaluation as core_evaluation
 import generic_direct_run as direct
 import generic_library_run as library49
 import generic_m6a_structural as structural
@@ -134,6 +135,8 @@ class Outcome:
     snapshot_error: str = ''
     library49_result: library49.Library49Result | None = None
     library49_members: tuple[str,...] = ()
+    core_prior: core_evaluation.PriorArtifacts | None = None
+    core_result: core_evaluation.EvaluationResult | None = None
 
 
 def aggregate(rows: tuple[Outcome, ...]) -> str:
@@ -1461,8 +1464,88 @@ def oracle_call() -> OrderedCall:
     return OrderedCall(38,'oracles',identities)
 
 
+def core_predecessor(inputs: Inputs, row: Outcome | None) -> core_evaluation.PriorArtifacts:
+    """Use only the actual saved step44 return, never rebind a later disk snapshot."""
+    require(row is not None, '/core45', 'missing actual step44 return')
+    assert row is not None
+    require(row.component == 'direct' and row.root is not None and row.receipt == row.root/'receipt.json'
+            and row.sha256 is not None and not row.error and not row.snapshot_error
+            and row.returned_status == row.reported_status == row.status
+            and row.status in {'PASS','FAIL','INCOMPLETE'}, '/core45', 'unconfirmed step44 producer return')
+    assert row.receipt is not None and row.sha256 is not None
+    recheck(row)
+    require(authenticate('direct', document(row.receipt.read_text()), inputs, step=44) == row.returned_status,
+            '/core45', 'original step44 status changed')
+    prior = core_evaluation.PriorArtifacts(row.receipt, row.sha256, row.files)
+    core_evaluation.recheck(prior)
+    return prior
+
+
+def recheck_core_evaluation(inputs: Inputs, row: Outcome) -> None:
+    """Bind source-returned evaluation and its unchanged original step44 artifacts."""
+    if row.component != 'core_evaluation':return
+    recheck(row)
+    if row.core_result is None:
+        require(row.status == 'FAIL', '/core45', 'missing source-returned evaluation')
+        return
+    result = row.core_result; prior = row.core_prior
+    require(prior is not None and row.root is not None, '/core45', 'missing prior/output binding')
+    assert prior is not None and row.root is not None
+    core_evaluation.recheck(prior)
+    require(result.receipt == row.root/'evaluation.json' and result.receipt == row.receipt
+            and result.sha256 == row.sha256 == file_hash(result.receipt)
+            and result.status == row.returned_status == row.reported_status
+            and result.status in {'FAIL','PENDING'}, '/core45', 'source-returned evaluation differs')
+    node = document(result.receipt.read_text())
+    expected: dict[str,Json] = {'schema':'generic_core_evaluation_v1','step':45,'status':result.status,
+        'fixtures':list(direct.step_fixtures(44)), 'base':inputs.probes.base.source_sha,
+        'candidate':inputs.probes.candidate.source_sha,'registry_sha256':inputs.registry.sha256,
+        'declaration_manifest_sha256':inputs.declarations.source_manifest_sha256,
+        'prior':{'path':str(prior.receipt),'sha256':prior.sha256,'files':dict(prior.files)},
+        'ordinary_safety':'PENDING_SOURCE_BUILD_QUALIFICATION','source_build_authority':'CALLER_OWNED_PENDING',
+        'global_coverage':'PENDING','final_conjunction':'PENDING','generic_performance':'PENDING_SEPARATE_BENCH_AUTHENTICATION',
+        'legacy_core':{name:'HISTORICAL_NOT_FRESH_ACCEPTANCE' for name in ('heldout_outcomes','heldout_why','story','performance')},
+        'publication_authority':False,'full_gate_claim':False}
+    keys(node,set(expected)|{'evaluated_scope','pairs','errors','original_results'})
+    for name,value in expected.items():node.field(name).equals(value)
+    errors=node.field('errors').array()
+    node.field('evaluated_scope').equals('FAIL' if errors else 'PASS')
+    require(bool(errors) == (result.status == 'FAIL'), '/core45', 'failure status differs')
+    _=node.field('pairs').array();_=node.field('original_results').array()
+    if result.status == 'PENDING':
+        plans=core_evaluation.plans_for(inputs.registry,inputs.probes,prior.receipt.parent)
+        core_evaluation.authenticate_prior(inputs.registry,inputs.probes,inputs.declarations,prior,plans)
+    core_evaluation.recheck(prior);recheck(row)
+
+
+def invoke_core_evaluation(inputs: Inputs, predecessor: Outcome | None, output: Path) -> Outcome:
+    """Read-only step45 under the caller lane; no child lifetime or wait is invented."""
+    prior: core_evaluation.PriorArtifacts | None=None
+    result: core_evaluation.EvaluationResult | None=None
+    try:
+        prior=core_predecessor(inputs,predecessor)
+        result=core_evaluation.evaluate(inputs.registry,inputs.probes,inputs.declarations,prior,output)
+        require(result.receipt == output/'evaluation.json', '/core45', 'foreign evaluation return')
+        files=tuple(inventory(output,[p.name for p in output.iterdir()]).items())
+        row=Outcome('core_evaluation',result.status,result.receipt,result.sha256,'',files,output,
+                    result.status,result.status,core_prior=prior,core_result=result)
+        recheck_core_evaluation(inputs,row)
+        return row
+    except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
+        files=();snapshot_error=''
+        if output.exists():
+            try:files=tuple(inventory(output,[p.name for p in output.iterdir()]).items())
+            except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as failure:snapshot_error=safe_docs_exception(failure)
+        return Outcome('core_evaluation','FAIL',None if result is None else result.receipt,
+            None if result is None else result.sha256,safe_docs_exception(error),files,output,
+            None if result is None else result.status,None if result is None else result.status,
+            snapshot_error,core_prior=prior,core_result=result)
+
+
 def ordered_owned_calls(*, bench_enabled: bool = False, docs_enabled: bool = False, oracles_enabled: bool = False, resolver_enabled: bool = False, structural_enabled: bool = False, stall_enabled: bool = False, library49_enabled: bool = False) -> tuple[OrderedCall,...]:
     result=list(ordered_calls())
+    insertion=next(index for index,call in enumerate(result) if ORDER.index(call.step)>ORDER.index(45))
+    result.insert(insertion,OrderedCall(45,'core_evaluation',('45:core_evaluation',)))
     for step,identity in ((8,'8:gdscript_strict'),(46,'46:gdscript.four_files')):
         insertion=next((index for index,call in enumerate(result) if ORDER.index(call.step)>=ORDER.index(step)),len(result))
         result.insert(insertion,OrderedCall(step,'static',(identity,)))
@@ -1804,7 +1887,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
                     rows[call.identity]=Outcome('structural','NOT_RUN',None,None,'blocked by 48:direct; '+safe_docs_exception(failure))
                     continue
             for row in rows.values():
-                recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row)
+                recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row);recheck_core_evaluation(context.components,row)
             ordered_bindings(context)
             if isinstance(context,OwnedOrderedInputs) and context.bench is not None:
                 require(bench_dependencies(context.bench)==bench_inputs,'/bench','context binding changed')
@@ -1826,12 +1909,14 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             try:
                 with nullcontext() if call.component in {'static','save_roundtrip','perf','nav','bench','oracles','resolver','structural','stall','library49'} else lane():
                     selected = with_static_priors(context,tuple(rows.values())) if call.component == 'static' else context
-                    action=ordered_action(call,selected) if call.component not in {'bench','oracles','resolver','structural','stall','library49'} else None
+                    action=ordered_action(call,selected) if call.component not in {'bench','oracles','resolver','structural','stall','library49','core_evaluation'} else None
                     static_product, static_environment = static_context(selected,call.step) if call.component == 'static' else (None,None)
                     sequence.append(call.identity);events.append({'call':call.identity,'event':'start','at':timestamp()})
                     try:
                         if call.step==14 and call.component=='static' and isinstance(selected,OwnedOrderedInputs):
                             rows[call.identity]=invoke_docs(call,selected,destination)
+                        elif call.component=='core_evaluation':
+                            rows[call.identity]=invoke_core_evaluation(inputs,rows.get('44:direct'),destination)
                         elif call.component=='resolver' and isinstance(selected,OwnedOrderedInputs):
                             rows[call.identity]=invoke_resolver(call,selected,destination)
                         elif call.component=='library49' and isinstance(selected,OwnedOrderedInputs):
@@ -1859,7 +1944,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     for row in rows.values():
         try:
-            recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row)
+            recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row);recheck_core_evaluation(context.components,row)
         except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     try:
         ordered_bindings(context)

@@ -1193,11 +1193,12 @@ class PerfCoordinatorTests(unittest.TestCase):
 
 
 class StrictOwnedRoutingTests(unittest.TestCase):
-    def test_owned_map_adds_only_exact_strict_obligations(self) -> None:
+    def test_owned_map_adds_only_exact_strict_and_core_evaluation_obligations(self) -> None:
         legacy=gate.ordered_calls()
         owned=gate.ordered_owned_calls()
         self.assertEqual(tuple(row for row in owned if row not in legacy),(
             gate.OrderedCall(8,'static',('8:gdscript_strict',)),
+            gate.OrderedCall(45,'core_evaluation',('45:core_evaluation',)),
             gate.OrderedCall(46,'static',('46:gdscript.four_files',))))
         self.assertEqual(tuple(row for row in owned if row in legacy),legacy)
         self.assertEqual(next(row.identities for row in owned if row.step==46),('46:gdscript.four_files',))
