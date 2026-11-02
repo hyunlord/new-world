@@ -376,7 +376,8 @@ def reconcile_capture(plan: CapturePlan, parent_result: ProcessResult) -> Worksp
         ledger = tuple(str(path) for path in sorted(plan.capture_root.iterdir()))
         hashes = {str(plan.capture_root/name): digest for name, digest in snapshot(plan.capture_root).items()}
         require(len(dict(plan.captured_files)) == len(plan.captured_files) and snapshot(plan.capture_root) == dict(plan.captured_files), '/capture', 'frozen capture inventory differs')
-        hashes.update(parent_binding(plan, parent_result))
+        parent_inputs = parent_binding(plan, parent_result)
+        hashes.update(parent_inputs)
         parent_files = snapshot(plan.parent_spec.output_root)
         require(file_hash(plan.manifest) == plan.manifest_sha256, '/manifest', 'manifest changed')
         hashes[str(plan.manifest)] = plan.manifest_sha256
@@ -399,11 +400,16 @@ def reconcile_capture(plan: CapturePlan, parent_result: ProcessResult) -> Worksp
             digest = entries[binary].field('sha256').text()
             require(file_hash(row.binary) == digest, binary, 'binary differs from caller-bound manifest')
             hashes[binary] = digest
+        if 'doctest_policy' in manifest.mapping() and integer(manifest.field('doctest_policy').field('schema_version')) == 3:
+            immutable_inputs = {str(plan.parent_spec.input_root/name): digest for name, digest in plan.parent_spec.inputs}
+            immutable_inputs.update({str(path): digest for path, digest in plan.parent_spec.external_inputs})
+            require(all(immutable_inputs.get(path) == digest for path, digest in strings(manifest.field('inputs')).items()),
+                    '/inputs', 'schema3 immutable input absent from actual parent bindings')
         for path, digest in strings(manifest.field('inputs')).items():
             require(file_hash(Path(path)) == digest, path, 'source input differs')
             hashes[path] = digest
         if 'doctest_policy' in manifest.mapping():
-            manifest.field('doctest_policy').field('schema_version').equals(2)
+            require(integer(manifest.field('doctest_policy').field('schema_version')) in (2, 3), '/policy', 'schema2/3 required')
             policy = rustdoc.policy_for(manifest)
             policy.field('parent_receipt').equals(str(parent_result.receipt))
             exec_root = Path(policy.field('exec_root').text())

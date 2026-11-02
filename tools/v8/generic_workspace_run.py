@@ -8,7 +8,8 @@ from dataclasses import asdict, replace
 from pathlib import Path
 from typing import Literal
 
-from generic_gate import document, require
+from generic_compiled_dependencies import read_compiled_dependencies
+from generic_gate import document, integer, require
 from generic_process import (
     ProcessSpec,
     atomic_json,
@@ -136,7 +137,9 @@ def checked(request: WorkspaceRequest) -> tuple[Path, Path | None, dict[str, str
             require(str(path) in required, '/source', 'source/manifest absent from immutable manifest')
     exec_root: Path | None = None
     if 'doctest_policy' in manifest.mapping():
-        policy = manifest.field('doctest_policy'); policy.field('schema_version').equals(2)
+        policy = manifest.field('doctest_policy')
+        require(integer(policy.field('schema_version')) in (2, 3), '/policy', 'schema2/3 required')
+        if integer(policy.field('schema_version')) == 3: _ = read_compiled_dependencies(manifest, policy)
         exec_root = Path(policy.field('exec_root').text())
         require(exec_root == request.output/'rustdoc-execs' and env.get('RUSTDOC') == policy.field('entrypoint').text(),
                 '/rustdoc', 'closed exec root/actual wrapper required')

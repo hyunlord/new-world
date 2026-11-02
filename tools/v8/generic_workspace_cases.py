@@ -11,7 +11,7 @@ from pathlib import Path
 
 from gate_rustdoc_exec import match_invocation, policy_for
 from gate_test_summary import parse_log
-from generic_gate import document, require
+from generic_gate import document, integer, require
 from generic_process import ProcessResult, ProcessSpec, environment_for, file_hash
 from generic_workspace_capture import CapturePlan, read, reconcile_capture, snapshot
 from generic_workspace_tests import Executable, Target
@@ -260,7 +260,7 @@ def join_standalone_sections(plan: CapturePlan, parent: ProcessResult, listings:
         stdout = (plan.parent_spec.output_root/'stdout.log').read_bytes()
         stderr = (plan.parent_spec.output_root/'stderr.log').read_bytes()
         manifest = read(plan.manifest); policy = policy_for(manifest)
-        policy.field('schema_version').equals(2)
+        require(integer(policy.field('schema_version')) in (2, 3), '/policy', 'schema2/3 required')
         for root in (plan.parent_spec.output_root, plan.capture_root, Path(policy.field('exec_root').text()),
                      *(item.spec.output_root for pair in listings for item in (pair.all_cases, pair.ignored_cases))):
             frozen[root] = snapshot(root)
