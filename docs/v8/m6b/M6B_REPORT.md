@@ -416,6 +416,8 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 단계4/5 workspace 실행기는 원래 Cargo 인자·cwd·무제한 실행과 실제 native/Rustdoc capture 및 전체·ignored 목록을 연결한다. 목록별 파일 해시와 파일/디렉터리 구성을 마지막 재검사까지 고정하며, native 실패와 소유권 UNKNOWN을 구분한다. 루트94개(18.063초), 타입·Ruff와 독립 검토가 통과했다. 반환은 `OBSERVED_CASES_ONLY`이며 source/build 인계, 원래 direct 대조, world 안전성과 전체 gate 권한은 없다. 호출자는 UNKNOWN에서 실제 lane 소유권을 유지해야 한다(`stage0/ordered-dispatch/workspace-runtime-review-v2/INDEPENDENT_REVIEW_V2.md`).
 
+단계6 Clippy 실행은 원래 Bash 명령을 유지하고 고정한 Cargo/Clippy 소스·도구와 실제 정상 종료를 연결한다. 명시적인 setup 환경값을 보존하며 주변 환경을 가져오지 않는다. 루트 준비/bridge/Clippy37개(16.747초), 타입·Ruff와 독립 검토가 통과했다. 정상 종료는 해당 endpoint만 증명하고, 이전 단계4/5의 실행 순서와 생성물 인계는 아직 별도 검증이 필요하다. 실제 Clippy 실행은 NOT_RUN이며 비정상 또는 미확인 반환에서 caller lane을 유지한다(`stage0/ordered-dispatch/setup-clippy-review-v2/INDEPENDENT_REVIEW_V2.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
