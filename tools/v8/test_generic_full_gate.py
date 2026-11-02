@@ -2533,3 +2533,192 @@ class Stall41EvidenceTests(unittest.TestCase):
                             _=(child.evidence/'native-terminal.json').write_text('mutated')
                             with self.assertRaises(ValueError):gate.recheck_stall(context,row)
                         finally:os.close(read);os.close(write)
+
+
+class Library49CoordinatorTests(unittest.TestCase):
+    def context(self, root: Path, control: int, *, fail: bool = False) -> gate.OwnedOrderedInputs:
+        from test_generic_library_run import RuntimeTests
+        fixture=RuntimeTests();self.addCleanup(fixture.doCleanups)
+        request=fixture.fixture(root/'native-fixture',fail=fail)
+        context=owned_inputs(root,control)
+        product=ProbeProduct(context.components.probes.candidate.source_sha,request.executable.binary,
+            file_hash(request.executable.binary),request.root,request.inputs)
+        return replace(context,components=replace(context.components,probes=replace(context.components.probes,candidate=product)),
+            library49=gate.Library49Context(product.source_sha,replace(request,held_lane_fd=-1)))
+
+    def test_optional_exact49_preserves_stall_and_all_other_calls(self) -> None:
+        options={'bench_enabled':True,'docs_enabled':True,'oracles_enabled':True,'resolver_enabled':True,
+                 'structural_enabled':True,'stall_enabled':True}
+        old=gate.ordered_owned_calls(**options);new=gate.ordered_owned_calls(**options,library49_enabled=True)
+        added=gate.OrderedCall(49,'library49',('49:read_data_only',))
+        self.assertEqual(tuple(row for row in new if row not in old),(added,))
+        self.assertEqual(tuple(row for row in new if row in old),old)
+        self.assertEqual(new[new.index(added)-1].identity,'48:structural')
+        self.assertEqual(new[new.index(added)+1].step,50)
+        self.assertFalse(any(row.step==49 for row in gate.ordered_calls()))
+
+    def test_actual_tiny_runtime_return_remains_pending_or_fail_and_rechecks(self) -> None:
+        import generic_library_run as library49
+        for fail in (False,True):
+            with self.subTest(fail=fail),TemporaryDirectory() as temporary:
+                root=Path(temporary).resolve();read,write=os.pipe()
+                try:
+                    context=self.context(root,read,fail=fail)
+                    with patch.object(gate,'LOCK',root/'lane'),patch.object(library49,'LOCK',root/'lane'):
+                        row=gate.invoke_library49(gate.OrderedCall(49,'library49',('49:read_data_only',)),context,root/'out')
+                    self.assertEqual(row.status,'FAIL' if fail else 'PENDING')
+                    self.assertEqual(row.returned_status,'FAIL' if fail else 'PASS')
+                    self.assertIsNotNone(row.library49_result)
+                    self.assertEqual(lock_contender(root/'lane'),0)
+                    gate.recheck_library49(context,row)
+                    _=(root/'out/extra').write_text('extra')
+                    with self.assertRaises(ValueError):gate.recheck_library49(context,row)
+                finally:os.close(read);os.close(write)
+
+    def test_source_mismatch_rejects_before_launch_and_releases_owner(self) -> None:
+        import generic_library_run as library49
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=self.context(root,read);assert context.library49 is not None
+                context=replace(context,library49=replace(context.library49,source_sha='f'*40))
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(library49,'run49_owned') as launch,self.assertRaisesRegex(ValueError,'candidate source'):
+                    _=gate.invoke_library49(gate.OrderedCall(49,'library49',('49:read_data_only',)),context,root/'out')
+                launch.assert_not_called();self.assertEqual(lock_contender(root/'lane'),0)
+            finally:os.close(read);os.close(write)
+
+    def test_context_forwarding_does_not_drop_stall(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=self.context(root,read)
+                stall=gate.StallContext(root,'a'*40,root/'godot','b'*64,BuildEvidenceReference(root/'ref','c'*64),(),())
+                def capture(selected: gate.OrderedInputs,output: Path) -> Path:
+                    assert isinstance(selected,gate.OwnedOrderedInputs)
+                    self.assertIs(selected.library49,context.library49);self.assertIs(selected.stall,stall)
+                    return output
+                with patch.object(gate,'_run_ordered',side_effect=capture):
+                    _=gate.run_ordered_owned(context,context.strict,root/'out',read,stall=stall,library49=context.library49)
+            finally:os.close(read);os.close(write)
+
+    def test_live_unknown_keeps_lane_and_stops_ordered_dispatch_after_controller_eof(self) -> None:
+        script=r'''
+import os,signal,subprocess,sys
+from pathlib import Path
+from unittest.mock import patch
+sys.path[:0]=sys.argv[4:]
+import generic_full_gate as g
+import generic_library_run as lib
+from test_generic_full_gate import Library49CoordinatorTests
+root=Path(sys.argv[1]);control=int(sys.argv[2]);mode=sys.argv[3]
+case=Library49CoordinatorTests();context=case.context(root,control)
+children=[]
+def cleanup(_signum,_frame):
+ for child in children:
+  if child.poll() is None: child.terminate()
+  child.wait()
+ (root/'child-reaped').write_text('yes')
+signal.signal(signal.SIGUSR1,cleanup)
+class Hostile(RuntimeError):
+ def __str__(self): raise TypeError('unsafe diagnostic')
+def launch(request):
+ child=subprocess.Popen([sys.executable,'-c','import time; time.sleep(300)'])
+ children.append(child)
+ (root/'entered').write_text(str(request.held_lane_fd))
+ if mode=='typed': raise lib.LibraryOwnershipUnknown(request,Hostile())
+ raise Hostile()
+calls=(g.OrderedCall(49,'library49',('49:read_data_only',)),g.OrderedCall(50,'direct',()))
+with patch.object(g,'LOCK',root/'lane'),patch.object(lib,'LOCK',root/'lane'),patch.object(g,'ordered_owned_calls',return_value=calls),patch.object(g,'ordered_bindings'),patch.object(g,'perf_bindings'),patch.object(lib,'run49_owned',side_effect=launch),patch.object(g,'library49_outcome',side_effect=AssertionError('must not snapshot unknown')):
+ g.run_ordered_owned(context,context.strict,root/'out',control,library49=context.library49)
+'''
+        import signal
+
+        import mux2_gate_receipts
+        for mode in ('typed','raw'):
+            with self.subTest(mode=mode),TemporaryDirectory() as temporary:
+                root=Path(temporary).resolve();read,write=os.pipe()
+                paths=[str(Path(__file__).resolve().parent),str(Path(gate.__file__).resolve().parent),
+                       str(Path(mux2_gate_receipts.__file__).resolve().parent),str(Path(static.__file__).resolve().parent)]
+                with subprocess.Popen([sys.executable,'-c',script,str(root),str(read),mode,*paths],pass_fds=(read,),
+                                      stdout=subprocess.PIPE,stderr=subprocess.PIPE) as child:
+                    os.close(read)
+                    try:
+                        deadline=time.monotonic()+15
+                        while not (root/'entered').exists() and child.poll() is None and time.monotonic()<deadline:time.sleep(.01)
+                        if child.poll() is not None:
+                            stdout,stderr=child.communicate()
+                            self.fail('worker startup failed: '+repr((stdout,stderr)))
+                        self.assertTrue((root/'entered').exists())
+                        self.assertNotEqual(lock_contender(root/'lane'),0)
+                        os.close(write);write=-1;time.sleep(.1)
+                        self.assertIsNone(child.poll());self.assertNotEqual(lock_contender(root/'lane'),0)
+                        self.assertFalse((root/'out/ordered-dispatch.json').exists())
+                        self.assertFalse((root/'out/step-50').exists())
+                        self.assertFalse((root/'out/step-49/library49').exists())
+                    finally:
+                        if write>=0:os.close(write)
+                        if child.poll() is None and (root/'entered').exists():
+                            child.send_signal(signal.SIGUSR1)
+                            deadline=time.monotonic()+10
+                            while not (root/'child-reaped').exists() and time.monotonic()<deadline:time.sleep(.01)
+                            self.assertTrue((root/'child-reaped').exists(),'test-owned child must be waited before owner cleanup')
+                        if child.poll() is None:child.kill()
+                        _=child.communicate(timeout=5)
+
+    def test_settled_failure_continues50_without_fabricating_admission(self) -> None:
+        import generic_library_run as library49
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=self.context(root,read,fail=True)
+                calls=(gate.OrderedCall(49,'library49',('49:read_data_only',)),gate.OrderedCall(50,'direct',()))
+                seen: list[str]=[]
+                def next_action(call: gate.OrderedCall,_context: gate.OrderedInputs) -> gate.Action:
+                    seen.append(call.identity)
+                    return lambda out: ComponentResult(out/'receipt.json','FAIL')
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(library49,'LOCK',root/'lane'),patch.object(gate,'ordered_owned_calls',return_value=calls),patch.object(gate,'ordered_bindings'),patch.object(gate,'perf_bindings'),patch.object(gate,'ordered_action',side_effect=next_action),patch.object(gate,'invoke',return_value=gate.Outcome('direct','INCOMPLETE',None,None,'')),patch.object(gate,'lane',return_value=nullcontext()) as outer_lane:
+                    path=gate.run_ordered_owned(context,context.strict,root/'out',read,library49=context.library49)
+                self.assertEqual(seen,['50:direct']);self.assertEqual(outer_lane.call_count,1)
+                receipt=document(path.read_text());self.assertEqual(receipt.field('status').text(),'FAIL')
+                rows=receipt.field('components').array()
+                self.assertEqual(rows[0].field('status').text(),'FAIL')
+                self.assertEqual(rows[0].field('reported_status').text(),'FAIL')
+                self.assertEqual(receipt.field('actual_component_sequence').value,['49:library49','50:direct'])
+                self.assertEqual(receipt.field('library49_dependencies').field('observer_qualification').text(),'PENDING_ORIGINAL_DIRECT_CONTROL')
+            finally:os.close(read);os.close(write)
+
+    def test_resealed_json_cannot_replace_source_owned_result_identity(self) -> None:
+        import generic_library_run as library49
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=self.context(root,read)
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(library49,'LOCK',root/'lane'):
+                    row=gate.invoke_library49(gate.OrderedCall(49,'library49',('49:read_data_only',)),context,root/'out')
+                assert row.receipt is not None
+                data=document(row.receipt.read_text()).mapping();data['invocation_id']='different-attempt'
+                _=row.receipt.write_text(json.dumps(data))
+                row=replace(row,sha256=file_hash(row.receipt),files=tuple(inventory(root/'out',[p.name for p in (root/'out').iterdir()]).items()))
+                with self.assertRaises(ValueError):gate.recheck_library49(context,row)
+            finally:os.close(read);os.close(write)
+
+
+    def test_settled_exception_rechecks_replaced_empty_directories(self) -> None:
+        import generic_library_run as library49
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=self.context(root,read)
+                def settled(request: library49.Library49Request) -> library49.Library49Result:
+                    request.output.mkdir();(request.output/'original-empty').mkdir()
+                    _=(request.output/'raw-failure.json').write_text('{}')
+                    raise library49.LibrarySettledFailure(request,ValueError('retained validation failure'))
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(library49,'LOCK',root/'lane'),patch.object(library49,'run49_owned',side_effect=settled):
+                    row=gate.invoke_library49(gate.OrderedCall(49,'library49',('49:read_data_only',)),context,root/'out')
+                self.assertEqual(row.status,'FAIL');self.assertIsNone(row.library49_result)
+                gate.recheck_library49(context,row)
+                (root/'out/original-empty').rmdir();(root/'out/extra-empty').mkdir()
+                gate.recheck(row)
+                with self.assertRaisesRegex(ValueError,'directory membership'):
+                    gate.recheck_library49(context,row)
+            finally:os.close(read);os.close(write)

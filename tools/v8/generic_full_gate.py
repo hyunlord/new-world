@@ -28,6 +28,7 @@ from typing import Final, Literal, NoReturn, final
 
 import generic_bench_run as bench
 import generic_direct_run as direct
+import generic_library_run as library49
 import generic_m6a_structural as structural
 import generic_oracles_run as oracles
 import generic_perf_run as perf
@@ -131,6 +132,8 @@ class Outcome:
     returned_status: str | None = None
     reported_status: str | None = None
     snapshot_error: str = ''
+    library49_result: library49.Library49Result | None = None
+    library49_members: tuple[str,...] = ()
 
 
 def aggregate(rows: tuple[Outcome, ...]) -> str:
@@ -430,6 +433,12 @@ class StallContext:
 
 
 @dataclass(frozen=True, slots=True)
+class Library49Context:
+    source_sha: str
+    request: library49.Library49Request
+
+
+@dataclass(frozen=True, slots=True)
 class OwnedOrderedInputs(OrderedInputs):
     strict: StrictContext
     control_fd: int
@@ -439,6 +448,7 @@ class OwnedOrderedInputs(OrderedInputs):
     resolver: ResolverContext | None = None
     structural: Structural48Context | None = None
     stall: StallContext | None = None
+    library49: Library49Context | None = None
 
 
 def strict_bindings(context: OwnedOrderedInputs) -> None:
@@ -1132,6 +1142,134 @@ def invoke_stall(call: OrderedCall, context: OwnedOrderedInputs, output: Path) -
             os.close(owner.descriptor)
 
 
+@final
+class _Library49Owner(_StrictOwner):
+    ownership_label: str = 'library49'
+    retained_request: library49.Library49Request | None = None
+    retained_failure: BaseException | None = None
+
+
+def library49_bindings(context: OwnedOrderedInputs) -> Library49Context:
+    bound=context.library49
+    require(bound is not None,'/library49','explicit context required')
+    assert bound is not None
+    candidate=context.components.probes.candidate;request=bound.request
+    require(bound.source_sha==candidate.source_sha and request.root==candidate.input_root,
+            '/library49','prepared candidate source differs')
+    require(request.arm=='candidate' and request.held_lane_fd==-1,'/library49','candidate template without transient FD required')
+    require(bool(request.invocation) and request.executable.step==49 and request.executable.profile=='release',
+            '/library49','wrong invocation or selected executable')
+    supplied=dict(request.inputs)
+    require(len(supplied)==len(request.inputs) and all(supplied.get(name)==digest for name,digest in candidate.input_files),
+            '/library49','candidate effective inputs omitted or changed')
+    require(len(dict(request.tools))==len(request.tools),'/library49','duplicate tool binding')
+    for name,digest in request.inputs:require(file_hash(request.root/name)==digest,'/library49','source input changed')
+    for path,digest in request.tools:require(file_hash(path)==digest,'/library49','tool or executable changed')
+    return bound
+
+
+def library49_dependencies(bound: Library49Context) -> dict[str,Json]:
+    request=bound.request;selected=request.executable;target=selected.target
+    return {'source_sha':bound.source_sha,'root':str(request.root),'invocation':request.invocation,'arm':request.arm,
+        'binary':str(selected.binary),'target':{'package_id':target.package_id,'package':target.package,'name':target.name,
+        'kinds':list(target.kinds),'source':str(target.source),'manifest':str(target.manifest),'doctest':target.doctest,'test':target.test},
+        'step':selected.step,'profile':selected.profile,'filter':selected.filter,'ignored':selected.ignored,
+        'template_output':str(request.output),'cargo':str(request.cargo),'bash':str(request.bash),
+        'python':str(request.python),'helper':str(request.helper),'host':request.host,
+        'inputs':dict(request.inputs),'tools':{str(path):digest for path,digest in request.tools},
+        'environment':dict(request.environment),'source_build_admission':'PENDING_CALLER_HANDOFF',
+        'observer_qualification':'PENDING_ORIGINAL_DIRECT_CONTROL','historical_settlement_authority':False}
+
+
+def authenticate_library49(bound: Library49Context, output: Path, result: library49.Library49Result) -> str:
+    # Only an actual in-process source-owned return supplies result; JSON is never completion authority.
+    require(result.receipt==output/'result.json','/library49','foreign source-owned terminal')
+    require(result.source_build_admission=='PENDING_CALLER_HANDOFF'
+            and result.observer_qualification=='PENDING_ORIGINAL_DIRECT_CONTROL' and not result.publication_authority,
+            '/library49','unsupported admission upgrade')
+    node=document(result.receipt.read_text());request=bound.request
+    values: dict[str,Json]={'schema_version':1,'component':'LIBRARY49_RUNTIME','status':result.status,'step':49,
+        'invocation_id':request.invocation,'arm':request.arm,'source_build_admission':'PENDING_CALLER_HANDOFF',
+        'observer_qualification':'PENDING_ORIGINAL_DIRECT_CONTROL','observer_transformation':'PATH_CARGO_SHIM_AND_HOST_RUNNER',
+        'original_environment_byte_identity':False,'recipe_scope':'DATA_SCHEMA_NO_SIMULATION',
+        'world_admission':'PENDING_SOURCE_BUILD_HANDOFF','publication_authority':False}
+    for key,value in values.items():node.field(key).equals(value)
+    node.field('native_exit').equals(result.accounting.native_exit)
+    require(result.accounting.recipe.step==49 and result.status in {'PASS','FAIL'},'/library49','wrong returned accounting')
+    require(result.status!='PASS' or result.accounting.accounting_status=='PASS','/library49','successful return contradicts accounting')
+    for key in ('outer_pid','cargo_pid','native_pid'):
+        value=node.field(key).value;require(type(value) is int and value>0,'/library49','missing actual PID')
+    node.field('output_inventory').equals({name:digest for name,digest in inventory(output,[p.name for p in output.iterdir()]).items()
+                                         if name!='result.json'})
+    return result.status
+
+
+def library49_outcome(bound: Library49Context, output: Path, result: library49.Library49Result | None) -> Outcome:
+    error='source-owned settled library49 failure' if result is None else ''
+    receipt: Path | None=None;digest: str | None=None;reported: str | None=None
+    try:
+        if result is not None:
+            reported=authenticate_library49(bound,output,result);receipt=result.receipt;digest=file_hash(receipt)
+    except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as caught:
+        error+='; library49 terminal authentication failed: '+safe_docs_exception(caught)
+    files: tuple[tuple[str,str],...]=();snapshot_error=''
+    if output.exists():
+        try:files=tuple(inventory(output,[p.name for p in output.iterdir()]).items())
+        except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as caught:
+            snapshot_error='library49 artifact snapshot failed: '+safe_docs_exception(caught)
+    members=tuple(sorted(str(path.relative_to(output)) for path in output.rglob('*'))) if output.exists() else ()
+    return Outcome('library49','FAIL' if error or snapshot_error or reported!='PASS' else 'PENDING',receipt,digest,error,
+        files,output,None if result is None else result.status,reported,snapshot_error,result,members)
+
+
+def recheck_library49(context: OrderedInputs, row: Outcome) -> None:
+    if row.component!='library49':return
+    if row.root is None:
+        require(row.status in {'FAIL','NOT_RUN'} and row.library49_result is None and row.receipt is None and not row.files,
+                '/library49','unanchored completed result')
+        return
+    require(isinstance(context,OwnedOrderedInputs) and context.library49 is not None,
+            '/library49','missing historical binding')
+    assert isinstance(context,OwnedOrderedInputs) and context.library49 is not None
+    recheck(row)
+    require(tuple(sorted(str(path.relative_to(row.root)) for path in row.root.rglob('*')))==row.library49_members,
+            '/library49','completed directory membership changed')
+    if row.library49_result is not None:
+        require(authenticate_library49(context.library49,row.root,row.library49_result)==row.reported_status,
+                '/library49','source-owned returned result changed')
+    recheck(row)
+
+
+def invoke_library49(call: OrderedCall, context: OwnedOrderedInputs, output: Path) -> Outcome:
+    require(call==OrderedCall(49,'library49',('49:read_data_only',)),'/library49','unknown obligation')
+    owner=_Library49Owner(context.control_fd,output);entered=False;settled=False
+    try:
+        bound=library49_bindings(context)
+        request=replace(bound.request,output=output,held_lane_fd=owner.descriptor)
+        _=library49.checked_request(request)
+        owner.retained_request=request
+        entered=True
+        try:
+            result=library49.run49_owned(request)
+        except library49.LibraryOwnershipUnknown as unknown:
+            owner.retained_request=unknown.request
+            owner.retained_failure=unknown
+            owner.hold(unknown)
+        except library49.LibrarySettledFailure as failure:
+            settled=True
+            row=library49_outcome(bound,output,None)
+            return replace(row,error=row.error+'; primary='+safe_docs_exception(failure.original))
+        settled=True
+        return library49_outcome(bound,output,result)
+    except BaseException as error:
+        if entered and not settled:
+            owner.retained_failure=error
+            owner.hold(error)
+        raise
+    finally:
+        if not entered or settled:os.close(owner.descriptor)
+
+
 def invoke_strict(call: OrderedCall, context: OwnedOrderedInputs, output: Path) -> Outcome:
     owner=_StrictOwner(context.control_fd,output)
     entered=False;settled=False
@@ -1152,12 +1290,12 @@ def invoke_strict(call: OrderedCall, context: OwnedOrderedInputs, output: Path) 
         if not entered or settled:os.close(owner.descriptor)
 
 
-def run_ordered_owned(context: OrderedInputs, strict: StrictContext, output: Path, control_fd: int, *, bench: BenchContext | None = None, docs: DocsContext | None = None, oracles: OracleContext | None = None, resolver: ResolverContext | None = None, structural: Structural48Context | None = None, stall: StallContext | None = None) -> Path:
+def run_ordered_owned(context: OrderedInputs, strict: StrictContext, output: Path, control_fd: int, *, bench: BenchContext | None = None, docs: DocsContext | None = None, oracles: OracleContext | None = None, resolver: ResolverContext | None = None, structural: Structural48Context | None = None, stall: StallContext | None = None, library49: Library49Context | None = None) -> Path:
     require(type(control_fd) is int and control_fd>2 and stat.S_ISFIFO(os.fstat(control_fd).st_mode),
             '/control','dedicated persistent controller pipe required')
     owned=OwnedOrderedInputs(context.components,context.static_product,context.environment,
         context.discovery_product,context.discovery_environment,context.diagnosis_product,
-        context.diagnosis_environment,context.save_roundtrip,context.perf,strict,control_fd,bench,docs,oracles,resolver,structural,stall)
+        context.diagnosis_environment,context.save_roundtrip,context.perf,strict,control_fd,bench,docs,oracles,resolver,structural,stall,library49)
     return _run_ordered(owned,output)
 
 
@@ -1323,7 +1461,7 @@ def oracle_call() -> OrderedCall:
     return OrderedCall(38,'oracles',identities)
 
 
-def ordered_owned_calls(*, bench_enabled: bool = False, docs_enabled: bool = False, oracles_enabled: bool = False, resolver_enabled: bool = False, structural_enabled: bool = False, stall_enabled: bool = False) -> tuple[OrderedCall,...]:
+def ordered_owned_calls(*, bench_enabled: bool = False, docs_enabled: bool = False, oracles_enabled: bool = False, resolver_enabled: bool = False, structural_enabled: bool = False, stall_enabled: bool = False, library49_enabled: bool = False) -> tuple[OrderedCall,...]:
     result=list(ordered_calls())
     for step,identity in ((8,'8:gdscript_strict'),(46,'46:gdscript.four_files')):
         insertion=next((index for index,call in enumerate(result) if ORDER.index(call.step)>=ORDER.index(step)),len(result))
@@ -1346,6 +1484,9 @@ def ordered_owned_calls(*, bench_enabled: bool = False, docs_enabled: bool = Fal
     if structural_enabled:
         insertion=next(index for index,call in enumerate(result) if call.identity=='48:direct')+1
         result.insert(insertion,OrderedCall(48,'structural',('48:m6a.plant_art_structural',)))
+    if library49_enabled:
+        insertion=next(index for index,call in enumerate(result) if ORDER.index(call.step)>ORDER.index(49))
+        result.insert(insertion,OrderedCall(49,'library49',('49:read_data_only',)))
     return tuple(result)
 
 
@@ -1614,8 +1755,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
     require(output.is_absolute() and output==output.resolve() and not output.exists(),'/output','fresh canonical output required')
     for product in (inputs.probes.base,inputs.probes.candidate,inputs.godot.base,inputs.godot.candidate):
         require(not output.is_relative_to(product.input_root) and not product.input_root.is_relative_to(output),'/output','product overlap')
-    calls=ordered_owned_calls(bench_enabled=context.bench is not None,docs_enabled=context.docs is not None,oracles_enabled=context.oracles is not None,resolver_enabled=context.resolver is not None,structural_enabled=context.structural is not None,stall_enabled=context.stall is not None) if isinstance(context,OwnedOrderedInputs) else ordered_calls();rows: dict[str,Outcome]={};errors: list[str]=[];sequence: list[str]=[]
-    tail_stop: str | None=None;bench_inputs: dict[str,Json] | None=None;docs_inputs: dict[str,Json] | None=None;oracle_inputs: dict[str,Json] | None=None;resolver_inputs: dict[str,Json] | None=None;structural_inputs: dict[str,Json] | None=None;stall_inputs: dict[str,Json] | None=None
+    calls=ordered_owned_calls(bench_enabled=context.bench is not None,docs_enabled=context.docs is not None,oracles_enabled=context.oracles is not None,resolver_enabled=context.resolver is not None,structural_enabled=context.structural is not None,stall_enabled=context.stall is not None,library49_enabled=context.library49 is not None) if isinstance(context,OwnedOrderedInputs) else ordered_calls();rows: dict[str,Outcome]={};errors: list[str]=[];sequence: list[str]=[]
+    tail_stop: str | None=None;bench_inputs: dict[str,Json] | None=None;docs_inputs: dict[str,Json] | None=None;oracle_inputs: dict[str,Json] | None=None;resolver_inputs: dict[str,Json] | None=None;structural_inputs: dict[str,Json] | None=None;stall_inputs: dict[str,Json] | None=None;library49_inputs: dict[str,Json] | None=None
     plan_hash: str | None=None;blocked: dict[int,str]={};events: list[Json]=[];perf_inputs: dict[str,Json] | None=None
     try:
         output.mkdir(parents=True)
@@ -1633,6 +1774,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             structural_inputs=structural_dependencies(structural_bindings(context))
         if isinstance(context,OwnedOrderedInputs) and context.stall is not None:
             stall_inputs=stall_dependencies(stall_bindings(context))
+        if isinstance(context,OwnedOrderedInputs) and context.library49 is not None:
+            library49_inputs=library49_dependencies(library49_bindings(context))
         for product in (context.perf.base,context.perf.candidate):
             require(not output.is_relative_to(product.root) and not product.root.is_relative_to(output),'/output','perf product overlap')
         require(inputs.declarations.base==inputs.probes.base.source_sha and inputs.declarations.candidate==inputs.probes.candidate.source_sha,
@@ -1642,7 +1785,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
         refs: dict[int,dict[str,list[Json]]]={step:references(inputs,output/f'step-{step:02d}',validate=True) for step in direct.DIRECT_STEP_FIXTURES}
         atomic_json(output/'plan.json',{'schema_version':3,'original_step_order':list(ORDER),
             'original_order_executed':False,'publication_authorized':False,
-            'supported_call_sequence':[call.identity for call in calls],'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,
+            'supported_call_sequence':[call.identity for call in calls],'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,'library49_dependencies':library49_inputs,
             'strict_owned_entrypoint':isinstance(context,OwnedOrderedInputs),
             'obligations':[{'identity':row.identity,'step':row.step,'fixture':row.fixture,
                 'invocation_references':refs.get(row.step,{}).get(row.fixture or '',[])} for row in obligations()]})
@@ -1661,7 +1804,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
                     rows[call.identity]=Outcome('structural','NOT_RUN',None,None,'blocked by 48:direct; '+safe_docs_exception(failure))
                     continue
             for row in rows.values():
-                recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row)
+                recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row)
             ordered_bindings(context)
             if isinstance(context,OwnedOrderedInputs) and context.bench is not None:
                 require(bench_dependencies(context.bench)==bench_inputs,'/bench','context binding changed')
@@ -1675,13 +1818,15 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
                 require(structural_dependencies(structural_bindings(context))==structural_inputs,'/structural','context binding changed')
             if isinstance(context,OwnedOrderedInputs) and context.stall is not None:
                 require(stall_dependencies(stall_bindings(context))==stall_inputs,'/stall','context binding changed')
+            if isinstance(context,OwnedOrderedInputs) and context.library49 is not None:
+                require(library49_dependencies(library49_bindings(context))==library49_inputs,'/library49','context binding changed')
             require(file_hash(output/'plan.json')==plan_hash,'/plan','scope changed')
             parent=output/f'step-{call.step:02d}';parent.mkdir(exist_ok=True)
             destination=parent/call.component
             try:
-                with nullcontext() if call.component in {'static','save_roundtrip','perf','nav','bench','oracles','resolver','structural','stall'} else lane():
+                with nullcontext() if call.component in {'static','save_roundtrip','perf','nav','bench','oracles','resolver','structural','stall','library49'} else lane():
                     selected = with_static_priors(context,tuple(rows.values())) if call.component == 'static' else context
-                    action=ordered_action(call,selected) if call.component not in {'bench','oracles','resolver','structural','stall'} else None
+                    action=ordered_action(call,selected) if call.component not in {'bench','oracles','resolver','structural','stall','library49'} else None
                     static_product, static_environment = static_context(selected,call.step) if call.component == 'static' else (None,None)
                     sequence.append(call.identity);events.append({'call':call.identity,'event':'start','at':timestamp()})
                     try:
@@ -1689,6 +1834,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
                             rows[call.identity]=invoke_docs(call,selected,destination)
                         elif call.component=='resolver' and isinstance(selected,OwnedOrderedInputs):
                             rows[call.identity]=invoke_resolver(call,selected,destination)
+                        elif call.component=='library49' and isinstance(selected,OwnedOrderedInputs):
+                            rows[call.identity]=invoke_library49(call,selected,destination)
                         elif call.component=='stall' and isinstance(selected,OwnedOrderedInputs):
                             rows[call.identity]=invoke_stall(call,selected,destination)
                         elif call.component=='structural' and isinstance(selected,OwnedOrderedInputs):
@@ -1712,7 +1859,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     for row in rows.values():
         try:
-            recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row)
+            recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row)
         except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     try:
         ordered_bindings(context)
@@ -1728,13 +1875,15 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             require(structural_dependencies(structural_bindings(context))==structural_inputs,'/structural','context binding changed')
         if isinstance(context,OwnedOrderedInputs) and context.stall is not None:
             require(stall_dependencies(stall_bindings(context))==stall_inputs,'/stall','context binding changed')
+        if isinstance(context,OwnedOrderedInputs) and context.library49 is not None:
+            require(library49_dependencies(library49_bindings(context))==library49_inputs,'/library49','context binding changed')
         require(plan_hash is not None and file_hash(output/'plan.json')==plan_hash,'/plan','scope changed or plan failed')
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     by_obligation={identity:call.identity for call in calls for identity in call.identities}
     output.mkdir(parents=True,exist_ok=True);terminal=output/'ordered-dispatch.json'
     atomic_json(terminal,{'schema_version':3,'status':'FAIL' if errors or any(row.status=='FAIL' for row in rows.values()) else 'INCOMPLETE',
         'publication_authorized':False,'full_gate_claim':False,'original_order_executed':False,
-        'original_step_order':list(ORDER),'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
+        'original_step_order':list(ORDER),'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,'library49_dependencies':library49_inputs,'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
         'components':[{'identity':call.identity,'step':call.step,'component':call.component,
             'status':rows[call.identity].status if call.identity in rows else 'NOT_RUN',
             'receipt':str(rows[call.identity].receipt) if call.identity in rows and rows[call.identity].receipt else None,
@@ -1743,7 +1892,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             'error':rows[call.identity].error if call.identity in rows else '',
             'returned_status':rows[call.identity].returned_status if call.identity in rows else None,
             'reported_status':rows[call.identity].reported_status if call.identity in rows else None,
-            'snapshot_error':rows[call.identity].snapshot_error if call.identity in rows else ''} for call in calls],
+            'snapshot_error':rows[call.identity].snapshot_error if call.identity in rows else '',
+            'library49_members':list(rows[call.identity].library49_members) if call.identity in rows else []} for call in calls],
         'obligations':[{'identity':row.identity,'step':row.step,'fixture':row.fixture,
             'status':'NOT_RUN' if tail_stop is not None and ORDER.index(row.step)>ORDER.index(25) or row.identity=='48:m6a.plant_art_structural' and blocked.get(48)=='48:direct' else 'COMPONENT_ONLY' if row.identity in by_obligation else 'NOT_IMPLEMENTED',
             'blocked_by':tail_stop if tail_stop is not None and ORDER.index(row.step)>ORDER.index(25) else '48:direct' if row.identity=='48:m6a.plant_art_structural' and blocked.get(48)=='48:direct' else None,

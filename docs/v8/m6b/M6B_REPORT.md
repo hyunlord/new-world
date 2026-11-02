@@ -406,6 +406,8 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 단계45용 평가기는 직전44의 실제 생산자 반환 시 고정한 영수증·전체 파일 해시를 받아7개 등록 family·9개 짝 비교를 다시 검증한다. 원래18개 프로세스의 명령·입력·로그, 보호된 baseline 원시 identity, normalizer·선언 및 생존/KnowledgeLost를 재계산하며 기존 실패를 PASS로 바꾸지 않는다. 과거 CORE held-out 과학 평가와 새 일반 fixture 비교를 구분하고 소모된 seed를 실행하지 않는다. 루트10개(7.494초), 엄격 타입·Ruff·독립10개가 통과했다. 성공도 범위 내 평가만 통과한 PENDING이며 실제 소스/빌드·성능·전체 coverage·상위45 연결·전체 gate는 미완료다(`stage0/ordered-dispatch/core45-evaluation-draft/INDEPENDENT_REVIEW_V1.md`, patch SHA256 `46f89729f72486e5ff470cb5015f8eb12fefd507616e84179151d573af02d27d`).
 
+단계49 실행기를 원래48과50 사이에 선택적 owned context로 연결했다. 실제 소유 descriptor와 실행기 반환 객체를 사용하고 runtime PASS도 소스/빌드·관찰자 검증 전에는 PENDING으로 유지한다. UNKNOWN은 후속50·최종 기록·잠금 해제를 막으며 종료가 확인된 실패는 FAIL로 보존한다. 독립 검토에서 반환 객체 없는 종료된 실패의 빈 디렉터리 변경을 놓치는 결함을 재현해 모든 고정된49 결과의 파일·디렉터리 구성을 다시 대조하도록 수정했다. V1 전체135개, 루트 V2 통합25개(13.052초), 엄격 타입·Ruff·독립8개가 통과했다. 실제 native49와 전체 gate는 아직 미검증이다(`stage0/ordered-dispatch/LIBRARY49_COORDINATOR_INDEPENDENT_REVIEW_V2.md`, patch SHA256 `e9d802f96f2c168cce3c03e8f5bc6cab87f23fb0f43846895c4a6b9d8b4a0586`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
