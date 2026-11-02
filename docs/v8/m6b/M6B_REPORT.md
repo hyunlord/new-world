@@ -387,6 +387,13 @@ Oracle 호출자에 소스가 보장하는 종료된 실패 API와 보존 결과
 
 원래 단계2·3·6의 빌드·두 번 import·clippy 준비 계약과 단계4·5 사이의 공유 target 순서를 고정했다. 현재 소스·설정·도구·환경·별도 lock 출처 기록을 대조하되 실행하거나 빌드 증명을 만들지 않는다. 독립 검토에서 중복·추가 플랫폼 selector와 잘못된 초기 checkpoint를 수락하는 결함을 재현했고, v3는 검토된8개 library 매핑 및 경로·SHA·초기 조건을 명시적으로 확인한다. 이전 실패를 보존했다. 루트15개(4.999초), 엄격 타입·Ruff·독립15개가 통과했다. 준비 상태는 PREPARED_ONLY이며 실제 producer 검증·원래 실행 순서·target 변경 출처·소유권·전체 gate는 미완료다(`stage0/ordered-dispatch/setup-prepare-draft-v3/INDEPENDENT_REVIEW_V3.md`, patch SHA256 `7bf26c9b32a4cd8b5e32a24c69811067f6c6382ba9dc244d400b75ba3930d4c0`).
 
+
+고정 소스 `850cda05d644f3cadb22bd033efd66a5c936a542`의 개발용 전체 Python discovery는1,685개를979.552초에 실행해 모두 통과했다. 실행 전후405개 도구 입력 해시와 HEAD가 같았다. 정식 단계16·전체 gate·BASE 자기 비교 통과를 대신하지 않는다(`stage0/integrated-python-33-terminal.json`, 로그 SHA256 `a054e916a4250cc2c238454e383ab3b7859100b9bd8187bdb69b020ecd689149`).
+
+workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 종료했다. 최종 실패 target은 `sim-test --lib` 하나이며 p50에서 원인을 수리한 source-string guard 실패다. 원시180개 summary의 합계2,900통과·1실패·13제외에는 중첩 출력이 있어 고유 사례 수나 target 수로 주장하지 않는다. 입력15,807개 중 기존 bridge 산출물3개가 바뀌었고 deps에12,628개가 추가됐으며 삭제는0이다. 독립 검토는 모두 기록된 compiler 출력 계열과 연결했고 소스·도구·runtime 불변 및 실제 native/driver wait를 확인했다. FAIL·프로토콜 UNKNOWN·미관찰 EOF는 보존하고, 별도 판단으로 제가 시작한 대기 소유자만 SIGTERM해 실제143과 잠금 해제를 기록했다. SETTLEMENT나 ACK를 만들지 않았다. 수정된 p50 제품의 V8 검증은 사전 점검0 후 별도 실행 중이며 아직 통과를 주장하지 않는다(`stage0/workspace-runtime/v6-terminal-actual-audit-20261103-01/INDEPENDENT_REVIEW.md`, `v6-administrative-cessation-01/TERMINAL.json`).
+
+원래 단계2 bridge 빌드를 실제 호출하는 owned 어댑터를 추가했다. 기존 준비 계약·Bash 명령·소스/도구/version 기록·검토된 정상 Cargo wait 경로를 대조하고 실제 호출 결과를 보존한다. 정상0만 종료가 확인된 경로로 취급하며 nonzero·중단·입력 불일치는 호출자의 실제 잠금을 유지하는 UNKNOWN이다. 성공도 endpoint 해시 확인 범위이며 BuildResult·후속 import/shared-target/clippy·전체 gate 권한은 없다. 루트10개와 엄격 타입·Ruff·독립10개가 통과했다. 실제 Cargo 실행은 미검증이다(`stage0/ordered-dispatch/setup-bridge-draft/INDEPENDENT_REVIEW_V1.md`, patch SHA256 `b6c727bf58988d78933e990209d67b755bc321c6e0243583234228a90e0e7fd6`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
