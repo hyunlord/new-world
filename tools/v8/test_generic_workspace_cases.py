@@ -86,12 +86,22 @@ def listing_process(root: Path, spec: ProcessSpec, raw: bytes) -> ListingProcess
 
 
 class OrdinalTests(unittest.TestCase):
-    def fixture(self, count: int = 1, documents: int = 1):
+    def fixture(self, count: int = 1, documents: int = 1, *, ordinary: bool = False, failed: bool = False):
         f = policy_fixture(self)
         manifest = read(f.manifest).mapping(); policy = read(f.manifest).field('doctest_policy').mapping()
         source = read(f.manifest).field('doctest_policy').field('invocations').array()[0].mapping()
         argv = read(f.manifest).field('doctest_policy').field('invocations').array()[0].field('argv').array()
         source['argv'] = [*(arg.text() for arg in argv), '--test-args', '--test-threads=8']
+        if ordinary:
+            from generic_workspace_cases import host_args
+            source['argv'] = list(host_args(tuple(str(arg) for arg in source['argv']), (str(Path(sys.executable).resolve()), str(f.helper))))
+            inputs = read(f.manifest).field('inputs').mapping()
+            inputs[str(Path(sys.executable).resolve())] = file_hash(Path(sys.executable).resolve())
+            for executable in f.executables:
+                target = executable.target
+                _ = target.manifest.write_text(f'[package]\nname="{target.package}"\n[lib]\nname="same_name"\npath="lib.rs"\n')
+                for path in (target.source, target.manifest): inputs[str(path)] = file_hash(path)
+            manifest['inputs'] = inputs
         sources: list[Json] = [source]
         if documents == 2:
             target = f.executables[1].target
@@ -110,8 +120,22 @@ class OrdinalTests(unittest.TestCase):
         f.spec = replace(f.spec, environment=(('CARGO_CAPTURE_MANIFEST', str(f.manifest)), ('CARGO_CAPTURE_MANIFEST_SHA256', file_hash(f.manifest)),
                          ('CARGO_TARGET_SYNTHETIC_RUNNER', str(Path(sys.executable).resolve())+' '+str(f.helper))),
                          external_inputs=tuple((p, file_hash(p)) for p, _ in f.spec.external_inputs))
+        if ordinary:
+            f.spec = replace(f.spec, environment=(*f.spec.environment, ('RUSTDOC', read(f.manifest).field('doctest_policy').field('entrypoint').text())))
         f.parent(0)
         one = policy_static(f, 1); two = policy_static(f, 2); intent = exec_record(f)
+        if ordinary:
+            from generic_workspace_capture import snapshot
+            for directory in (one, two):
+                raw = b'\nrunning 1 test\ntest common ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n'
+                if failed and directory == one:
+                    raw = raw.replace(b'common ... ok', b'common ... FAILED').replace(b'result: ok. 1 passed; 0 failed;', b'result: FAILED. 0 passed; 1 failed;')
+                _ = (directory/'stdout.log').write_bytes(raw)
+                row = read(directory/'receipt.json').mapping()
+                if failed and directory == one: row['native_exit'] = 101
+                row['stdout_sha256'] = file_hash(directory/'stdout.log')
+                row['output_inventory'] = {k: v for k, v in snapshot(directory).items() if k != 'receipt.json'}
+                write(directory/'receipt.json', row)
         policy_node = read(f.manifest).field('doctest_policy')
         args = tuple(arg.text() for arg in policy_node.field('invocations').array()[0].field('argv').array())
         import shlex
@@ -139,6 +163,9 @@ class OrdinalTests(unittest.TestCase):
         stdout = (one/'stdout.log').read_bytes()+(two/'stdout.log').read_bytes()+section*count
         for name, raw in (('stdout', stdout), ('stderr', stderr)):
             _ = (f.output/(name+'.log')).write_bytes(raw); f.parent_data[name+'_sha256'] = file_hash(f.output/(name+'.log'))
+        if failed:
+            f.parent_data.update({'status': 'FAIL', 'native_exit': 101, 'errors': ['native exit 101']})
+            f.result = replace(f.result, status='FAIL', native_exit=101)
         write(f.output/'process.json', f.parent_data)
         environment = tuple((k, read(intent).field('environment').field(k).text()) for k in read(intent).field('environment').mapping())
         bound = {k: read(f.manifest).field('inputs').field(k).text() for k in read(f.manifest).field('inputs').mapping()}
@@ -329,3 +356,253 @@ class OrdinalTests(unittest.TestCase):
         self.assertEqual(result.sections, ())
         self.assertEqual(len(result.observed_ranges), 1)
         self.assertEqual(len(result.observed_ranges[0][2]), 64)
+
+
+class SuccessorTests(unittest.TestCase):
+    def fixture(self, *, ordinary: bool = False, failed: bool = False):
+        owner = OrdinalTests()
+        self.addCleanup(owner.doCleanups)
+        return owner.fixture(ordinary=ordinary, failed=failed)
+
+    def test_harness_false_is_not_a_caller_boolean(self) -> None:
+        import generic_workspace_cases as cases
+        f, _ = self.fixture()
+        target = f.executables[0].target
+        _ = target.manifest.write_text('[package]\nname="alpha"\n[lib]\nharness=false\n')
+        with self.assertRaises(GateContractError):
+            cases.standard_harness(target, file_hash(target.manifest))
+
+    def test_host_transform_preserves_exact_operands(self) -> None:
+        import generic_workspace_cases as cases
+        args = ('--test', 'src/lib.rs', '--test-run-directory', '/package', '--edition=2021')
+        self.assertEqual(cases.host_args(args, ('/python', '/helper')),
+                         (*args[:4], '--test-runtool', '/python', '--test-runtool-arg', '/helper', *args[4:]))
+        for bad in (args+('--test-runtool=x',), args+('--test-run-directory=/else',), ('--test-run-directory',)):
+            with self.assertRaises(GateContractError): _ = cases.host_args(bad, ('/python', '/helper'))
+
+
+    def pair_fixture(self, *, failed: bool = False):
+        import shlex
+
+        from generic_workspace_capture import reconcile_capture
+        from generic_workspace_cases import NativeCaseLists
+
+        f, docs = self.fixture(ordinary=True, failed=failed)
+        plan = policy_plan(f)
+        captured = reconcile_capture(plan, f.result)
+        self.assertEqual(captured.integrity, 'PASS')
+        manifest = read(f.manifest)
+        bound = {k: manifest.field('inputs').field(k).text() for k in manifest.field('inputs').mapping()}
+        bound.update({row.field('path').text(): row.field('sha256').text() for row in manifest.field('artifacts').array()})
+        native: list[NativeCaseLists] = []
+        for i, child in enumerate(captured.targets):
+            executable = child.executable
+            inputs = {**bound, str(f.manifest): file_hash(f.manifest), str(child.receipt): child.receipt_sha256}
+            spec = ProcessSpec((str(executable.binary), '--list'), executable.cwd, executable.binary,
+                file_hash(executable.binary), f.source, (), f.base/'unused', child.original_environment,
+                tuple((Path(k), v) for k, v in inputs.items()))
+            all_cases = listing_process(f.base/f'native-all{i}', spec, b'common: test\n\n1 test, 0 benchmarks\n')
+            ignored = listing_process(f.base/f'native-ignore{i}', replace(spec, argv=(*spec.argv, '--ignored')), b'0 tests, 0 benchmarks\n')
+            native.append(NativeCaseLists(executable, file_hash(executable.target.manifest), all_cases, ignored))
+        spec = replace(f.spec, environment=(('RUSTDOC',manifest.field('doctest_policy').field('rustdoc').text()),), external_inputs=tuple((Path(k), v) for k, v in bound.items()))
+        direct = listing_process(f.base/'direct', spec, (f.output/'stdout.log').read_bytes())
+        stderr = b''
+        for executable in f.executables:
+            stderr += f'     Running `{executable.binary} --test-threads=8`\n'.encode()
+        policy = manifest.field('doctest_policy')
+        args = [arg.text() for arg in policy.field('invocations').array()[0].field('argv').array()]
+        insertion = args.index('--test-runtool'); del args[insertion:insertion+4]
+        stderr += ('     Running `'+policy.field('rustdoc').text()+' '+' '.join(shlex.quote(arg) for arg in args)+'`\n').encode()
+        _ = (direct.spec.output_root/'stderr.log').write_bytes(stderr)
+        row = read(direct.result.receipt).mapping(); row['stderr_sha256'] = file_hash(direct.spec.output_root/'stderr.log')
+        if failed:
+            row.update({'status':'FAIL','native_exit':101,'errors':['native exit 101']})
+            direct = replace(direct, result=replace(direct.result,status='FAIL',native_exit=101))
+        write(direct.result.receipt, row)
+        direct = replace(direct, receipt_sha256=file_hash(direct.result.receipt))
+        return f, docs, tuple(native), direct
+
+    def test_paired_full_native_and_doctest_case_accounting(self) -> None:
+        from generic_workspace_cases import pair_cases
+        f, docs, native, direct = self.pair_fixture()
+        result = pair_cases(direct, policy_plan(f), f.result, native, docs)
+        self.assertEqual(result.errors, ())
+        self.assertEqual(result.case_parity, 'EQUAL')
+        self.assertEqual(len(result.direct), 3)
+        self.assertEqual(len(result.required), 3)
+        self.assertEqual(result.native_outcome, 'SUCCEEDED')
+        self.assertIn('DIRECT_CHILD_ENVIRONMENT_NOT_OBSERVED', result.limitations)
+
+    def test_direct_missing_section_retains_no_identity_prefix(self) -> None:
+        from generic_workspace_cases import pair_cases
+        f, docs, native, direct = self.pair_fixture()
+        path = direct.spec.output_root/'stdout.log'
+        _ = path.write_bytes(path.read_bytes().split(b'\n\n', 2)[-1])
+        row = read(direct.result.receipt).mapping(); row['stdout_sha256'] = file_hash(path); write(direct.result.receipt, row)
+        direct = replace(direct, receipt_sha256=file_hash(direct.result.receipt))
+        result = pair_cases(direct, policy_plan(f), f.result, native, docs)
+        self.assertEqual(result.case_parity, 'INCOMPLETE')
+        self.assertEqual(result.direct, ())
+        self.assertEqual(len(result.required), 3)
+
+    def test_closed_native_listing_argv_cwd_env_and_time(self) -> None:
+        from generic_workspace_cases import pair_cases
+        for defect in ('argv', 'cwd', 'environment', 'early', 'target'):
+            with self.subTest(defect=defect):
+                f, docs, native, direct = self.pair_fixture()
+                item = native[0]; listed = item.all_cases
+                if defect == 'argv': listed = replace(listed, spec=replace(listed.spec, argv=(*listed.spec.argv, '--test-threads=8')))
+                elif defect == 'cwd': listed = replace(listed, spec=replace(listed.spec, cwd=f.source))
+                elif defect == 'environment': listed = replace(listed, spec=replace(listed.spec, environment=()))
+                elif defect == 'early':
+                    row = read(listed.result.receipt).mapping(); row['started_at'] = '2026-10-31T00:00:00+00:00'
+                    row['ended_at'] = '2026-10-31T00:00:02+00:00'; write(listed.result.receipt, row)
+                    start = read(listed.spec.output_root/'process-start.json').mapping(); start['started_at'] = row['started_at']
+                    write(listed.spec.output_root/'process-start.json', start)
+                    write(listed.spec.output_root/'process-spawn.json', {'pid':600, 'spawned_at':'2026-10-31T00:00:01+00:00'})
+                    listed = replace(listed, receipt_sha256=file_hash(listed.result.receipt))
+                else: item = replace(item, executable=replace(item.executable, profile='release'))
+                result = pair_cases(direct, policy_plan(f), f.result, (replace(item, all_cases=listed), *native[1:]), docs)
+                self.assertEqual(result.case_parity, 'INCOMPLETE')
+                self.assertEqual(result.direct, ())
+
+    def test_native_case_listing_cannot_shrink_or_change_ignored_set(self) -> None:
+        from generic_workspace_cases import pair_cases
+        for ignored in (False, True):
+            f, docs, native, direct = self.pair_fixture()
+            item = native[0]
+            listed = item.ignored_cases if ignored else item.all_cases
+            raw = b'common: test\n\n1 test, 0 benchmarks\n' if ignored else b'0 tests, 0 benchmarks\n'
+            changed = listing_process(f.base/'changed-list', listed.spec, raw)
+            item = replace(item, ignored_cases=changed) if ignored else replace(item, all_cases=changed)
+            result = pair_cases(direct, policy_plan(f), f.result, (item, *native[1:]), docs)
+            self.assertEqual(result.case_parity, 'INCOMPLETE')
+            self.assertEqual(len(result.required), 3)
+
+    def test_direct_flags_unrecognized_declarations_and_leftover_bytes(self) -> None:
+        from generic_workspace_cases import pair_cases
+        for defect in ('flag', 'command', 'stdout', 'environment'):
+            f, docs, native, direct = self.pair_fixture()
+            if defect == 'flag': direct = replace(direct, spec=replace(direct.spec, argv=(*direct.spec.argv, '--ignored')))
+            elif defect == 'environment': direct = replace(direct, spec=replace(direct.spec, environment=(('RUSTDOC', '/unbound'),)))
+            else:
+                path = direct.spec.output_root/('stderr.log' if defect == 'command' else 'stdout.log')
+                _ = path.write_bytes(path.read_bytes()+(b'     Running `/foreign --test`\n' if defect == 'command' else b'extra\n'))
+                row = read(direct.result.receipt).mapping(); row['stderr_sha256' if defect == 'command' else 'stdout_sha256'] = file_hash(path)
+                write(direct.result.receipt, row); direct = replace(direct, receipt_sha256=file_hash(direct.result.receipt))
+            result = pair_cases(direct, policy_plan(f), f.result, native, docs)
+            self.assertEqual(result.case_parity, 'INCOMPLETE')
+            self.assertEqual(result.direct, ())
+
+    def test_direct_process_signal_outcome_retained_not_succeeded(self) -> None:
+        from generic_workspace_cases import pair_cases
+        f, docs, native, direct = self.pair_fixture()
+        row = read(direct.result.receipt).mapping(); row.update({'status':'FAIL','native_exit':-9,'errors':['native exit -9']})
+        write(direct.result.receipt,row)
+        direct = replace(direct, receipt_sha256=file_hash(direct.result.receipt), result=replace(direct.result,status='FAIL',native_exit=-9))
+        result = pair_cases(direct,policy_plan(f),f.result,native,docs)
+        self.assertEqual(result.case_parity,'INCOMPLETE')
+        self.assertEqual(result.direct_exit,-9)
+        self.assertEqual(result.native_outcome,'FAILED')
+
+    def test_late_raw_mutation_invalidates_complete_pair(self) -> None:
+        from unittest.mock import patch
+
+        import generic_workspace_cases as cases
+        f,docs,native,direct=self.pair_fixture()
+        original=cases.native_section
+        def mutate(raw:bytes,all_cases:cases.Listing,ignored:cases.Listing)->cases.Section:
+            result=original(raw,all_cases,ignored)
+            _ = (direct.spec.output_root/'stderr.log').write_bytes(b'changed')
+            return result
+        with patch.object(cases,'native_section',side_effect=mutate):
+            result=cases.pair_cases(direct,policy_plan(f),f.result,native,docs)
+        self.assertEqual(result.case_parity,'INCOMPLETE')
+        self.assertTrue(any('final-' in error for error in result.errors))
+
+    def test_harness_default_bin_test_and_library_metadata_names(self) -> None:
+        from generic_workspace_cases import standard_harness
+        f,_=self.fixture()
+        original=f.executables[0].target; root=original.manifest.parent
+        for kind,name,relative,manifest in (
+            ('lib','alpha','src/lib.rs','[package]\nname="alpha"\n'),
+            ('bin','alpha','src/main.rs','[package]\nname="alpha"\n'),
+            ('test','integration','tests/integration.rs','[package]\nname="alpha"\n'),
+            ('test','integration','custom.rs','[package]\nname="alpha"\n[[test]]\nname="integration"\npath="custom.rs"\nharness=true\n')):
+            path=root/relative; path.parent.mkdir(parents=True,exist_ok=True); _=path.write_bytes(b'source')
+            _=original.manifest.write_text(manifest)
+            target=replace(original,kinds=(kind,),name=name,source=path)
+            standard_harness(target,file_hash(target.manifest))
+        _=original.manifest.write_text('[package]\nname="alpha"\nautotests=false\n')
+        with self.assertRaises(ValueError): standard_harness(replace(original,kinds=('test',),name='integration',source=root/'tests/integration.rs'),file_hash(original.manifest))
+        with self.assertRaises(GateContractError): standard_harness(replace(original,kinds=('example',)),file_hash(original.manifest))
+
+
+    def test_equal_failed_cases_retain_native_failure_not_pass(self) -> None:
+        from generic_workspace_cases import pair_cases
+        f, docs, native, direct = self.pair_fixture(failed=True)
+        result = pair_cases(direct, policy_plan(f), f.result, native, docs)
+        self.assertEqual(result.errors, ())
+        self.assertEqual(result.case_parity, 'EQUAL')
+        self.assertEqual(result.native_outcome, 'FAILED')
+        self.assertEqual((result.direct_exit,result.wrapped_exit),(101,101))
+        self.assertEqual(result.direct[0].section.failed,1)
+        self.assertFalse(hasattr(result.direct[0],'pid'))
+
+    def test_missing_first_middle_last_sections_are_unassigned(self) -> None:
+        from generic_workspace_cases import pair_cases, section_ranges
+        for missing in (0,1,2):
+            f,docs,native,direct=self.pair_fixture()
+            path=direct.spec.output_root/'stdout.log'; raw=path.read_bytes()
+            ranges=section_ranges(raw,3); start,end,_=ranges[missing]
+            _=path.write_bytes(raw[:start]+raw[end:])
+            row=read(direct.result.receipt).mapping(); row['stdout_sha256']=file_hash(path); write(direct.result.receipt,row)
+            direct=replace(direct,receipt_sha256=file_hash(direct.result.receipt))
+            result=pair_cases(direct,policy_plan(f),f.result,native,docs)
+            self.assertEqual(result.direct,())
+            self.assertEqual(result.case_parity,'INCOMPLETE')
+            self.assertEqual(len(result.required),3)
+            self.assertEqual(len(result.direct_ranges),2)
+
+    def test_harness_explicit_false_ambiguous_and_hash_changes_reject(self) -> None:
+        from generic_workspace_cases import standard_harness
+        f,_=self.fixture(); target=f.executables[0].target
+        for suffix in ('harness=false\n','harness="true"\n','test=false\n'):
+            _=target.manifest.write_text('[package]\nname="alpha"\n[lib]\nname="same_name"\npath="lib.rs"\n'+suffix)
+            with self.assertRaises(ValueError): standard_harness(target,file_hash(target.manifest))
+        _=target.manifest.write_text('[package]\nname="alpha"\n[lib]\nname="same_name"\npath="lib.rs"\n')
+        with self.assertRaises(ValueError): standard_harness(target,'0'*64)
+        _=target.manifest.write_text('[package]\nname="alpha"\n[[test]]\nname="one"\npath="lib.rs"\n[[test]]\nname="one"\npath="lib.rs"\n')
+        with self.assertRaises(ValueError): standard_harness(replace(target,name='one',kinds=('test',)),file_hash(target.manifest))
+
+
+    def test_resealed_outer_environment_drift_is_not_an_allowed_observer_delta(self) -> None:
+        from generic_workspace_cases import pair_cases
+        f,docs,native,direct=self.pair_fixture()
+        changed=replace(direct.spec,environment=(*direct.spec.environment,('UNQUALIFIED_SELECTION','1')))
+        alternative=listing_process(f.base/'direct-changed-env',changed,(direct.spec.output_root/'stdout.log').read_bytes())
+        _=(alternative.spec.output_root/'stderr.log').write_bytes((direct.spec.output_root/'stderr.log').read_bytes())
+        row=read(alternative.result.receipt).mapping();row['stderr_sha256']=file_hash(alternative.spec.output_root/'stderr.log')
+        write(alternative.result.receipt,row);alternative=replace(alternative,receipt_sha256=file_hash(alternative.result.receipt))
+        result=pair_cases(alternative,policy_plan(f),f.result,native,docs)
+        self.assertEqual(result.case_parity,'INCOMPLETE')
+        self.assertTrue(any('outer delta' in error for error in result.errors))
+
+
+    def test_failed_final_policy_does_not_skip_output_inventory_checks(self) -> None:
+        from unittest.mock import patch
+
+        import generic_workspace_cases as cases
+        f,docs,native,direct=self.pair_fixture()
+        original=cases.native_section
+        def mutate(raw:bytes,all_cases:cases.Listing,ignored:cases.Listing)->cases.Section:
+            result=original(raw,all_cases,ignored)
+            _=f.manifest.write_bytes(b'invalid')
+            _=(direct.spec.output_root/'stderr.log').write_bytes(b'changed')
+            return result
+        with patch.object(cases,'native_section',side_effect=mutate):
+            result=cases.pair_cases(direct,policy_plan(f),f.result,native,docs)
+        self.assertEqual(result.case_parity,'INCOMPLETE')
+        self.assertTrue(any(error.startswith('final-policy:') for error in result.errors))
+        self.assertTrue(any(error.startswith('final-freeze:') for error in result.errors))
+        self.assertTrue(any(error.startswith('final-process:') for error in result.errors))

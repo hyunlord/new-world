@@ -325,6 +325,8 @@ Stall 파생 capture는 실제 빌드 증거 참조·원래 bounded 자식 연�
 
 workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignored 목록·원래 stdout/stderr를 연결하는 순수 검증기로 분리했다. 고정한 edition2021 직렬 실행의 전체 section 수와 모든 바이트가 맞을 때만 선언 순서대로 배정하며, 누락 시 일치해 보이는 앞부분도 특정 소스 결과로 인정하지 않는다. 목록 실행의 실제 시작·spawn·종료·duration·입력·로그도 대조한다. 독립 검토에서 앞선 실행 누락의 오배정과 종료 필드가 없는 목록 영수증 수락을 재현해 수정했다. 루트22개가1.164초에 통과했고 엄격 타입 검사30·Ruff도 통과했다. 루트 import 순서 오류2개를 고친 기록을 보존한다. 직접 실행 및 native 프로세스 집계, 실제 목록 실행, 전체 workspace·세계 안전성은 아직 미완료다(`stage0/workspace-cases/v2/INDEPENDENT_REVIEW_V2.md`).
 
+직접 Cargo 실행과 기록 실행의 전체 native·doctest 사례를 대조하는 순수 집계를 추가했다. 원래 단계4/5 명령·전체 실행 선언·패키지 manifest의 표준 harness·실제 산출물·기록 실행 이후의 독립 전체/ignored 목록을 연결한다. 모든 section과 바이트가 맞기 전에는 소스별 결과를 배정하지 않으며, 양쪽 실패가 같아도 실행 결과는 FAILED로 유지한다. 루트37개가3.254초에 통과했고 엄격 타입 검사30·Ruff 및 독립 v3 검토도 통과했다. 직접 자식의 PID·환경·숫자 종료 코드는 관찰되지 않았고, populated jobserver FD·실제 workspace 실행·세계 안전성과 전체 gate는 미검증이다(`stage0/workspace-cases/v3/INDEPENDENT_REVIEW_V3.md`, patch SHA256 `06d64cdf0843b4d90db71eddcfc641e2478d538a052700fb25ccc9467ab0b860`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
