@@ -106,6 +106,12 @@ def _tools(context: ExecutionEnvironment, step: int) -> dict[str, Path]:
     return result
 
 
+def validate_environment(context: ExecutionEnvironment, step: int) -> dict[str, Path]:
+    """Apply the same tool/startup policy before a coordinator launches any child."""
+    require(type(step) is int and step in COMMANDS, '/step', 'unsupported required step')
+    return _tools(context, step)
+
+
 def _refs(product: StaticProduct, step: int) -> dict[str, str]:
     names: list[str] = []
     if step == 15:

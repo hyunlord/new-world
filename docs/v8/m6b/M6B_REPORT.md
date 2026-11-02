@@ -289,6 +289,10 @@ Cargo가 임시 doctest 파일에도 runner를 적용한 실제 run02 실패에 
 
 관찰자 overlay 소스의 읽기 전용 대조기를 추가했다. 원래 commit tree와 현재 index, 외부에서 고정한 manifest의 pre/postimage, 허용 경로 및 실제 작업 파일을 대조하고 입력을 다시 확인한다. patch를 적용·되돌리거나 index를 변경하지 않는다. 동일 경로의 다른 hunk가 있어도 이 좁은 대조만으로 patch 적용을 증명할 수 없음을 회귀로 고정하고 `patch_application_provenance=NOT_VERIFIED`를 명시했다. 빌드·runtime은 PENDING, 관찰자 의미 검증은 NOT_RUN이다. 독립 검토와11개 작은 Git 저장소 검사·엄격 타입·Ruff를 통과했으며 pristine capture의 clean 요구나 실제 stall 실행 경로는 바꾸지 않았다(`stage0/stall-run/source-draft/INDEPENDENT_REVIEW_V2.md`).
 
+원래 Python 전체 discovery를 조정기의 단계16에 연결했다. 기존 정적8개와 문서·추가 runtime 입력이 필요한 discovery의 환경을 분리하고, 첫 작업 전부터 원래 도구/PATH/시작 정책을 검증한다. 실제 프로세스·raw unittest 요약·시작/spawn/완료 기록과 이전 FAIL 영수증을 대조하며, null/0 PID나0 duration을 PASS로 수락했던 회귀도 거절하도록 고쳤다. 루트 조정기43개·정적19개, 엄격 타입 검사25·Ruff·문서 검사를 통과했다. p7의 과거1,199개 결과를 이 변경의 실행 증거로 재사용하지 않으며, 실제 순서 실행·완전한 runtime admission·전체 gate는 여전히 미완료다(`stage0/ordered-dispatch/step16-coordinator-draft/independent-review-v2.md`, `independent-root-duration-review.md`).
+
+작은 Cargo 실제 run03은 수정된 실행기의 사전 검증 후 수행했지만 FAIL했다. 직접 실행의 doctest는 통과했고 두 Cargo 부모는 각각101로 끝났으나, 기록 실행은 네 static 실행 파일이 소스 입력에도 포함되어 기존 경계 검증에 거절됐다. rustdoc 인자 배열은 선언과 일치했지만 실제 compiler 작업 디렉터리는 workspace 루트이고 선언은 패키지 디렉터리여서 역시 거절됐다. 후처리의 `wrapped-snapshots: empty or duplicate input scope` 오류와 원시 process 종료101·phase STARTED 표기의 차이도 별도로 보존한다. 모든 소유 프로세스14개의 종료와 최종 입력·산출물 무결성을 확인했으며, 같은 외부 종료 코드만으로 동등성을 인정하지 않는다(`stage0/workspace-runtime/cargo-hook-qualification/debug-native-run-03/RESULT.json`, SHA256 `b6cf7359280f5f305059afcd04254731c1708d9e43e1610deff9832e6ed69834`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
