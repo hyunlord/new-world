@@ -556,7 +556,7 @@ class OrderedExecutionTests(unittest.TestCase):
             self.assertEqual(node.field('status').value,'INCOMPLETE')
             self.assertFalse(node.field('full_gate_claim').value)
             missing={row.field('identity').text() for row in node.field('obligations').array() if row.field('status').value=='NOT_IMPLEMENTED'}
-            self.assertTrue({'28:colony_knowledge.release','36:data_only_ext.release','46:gdscript.four_files',
+            self.assertTrue({'28:colony_knowledge.release','36:data_only_ext.debug','46:gdscript.four_files',
                              '48:m6a.plant_art_structural','4:workspace.debug','5:workspace.release'} <= missing)
             self.assertLess(trace.index('47:direct'),trace.index('48:direct'))
             for identity in ('47:m6a.food72','48:m6a.food_data_only'):

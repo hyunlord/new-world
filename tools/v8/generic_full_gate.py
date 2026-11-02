@@ -85,7 +85,7 @@ def obligations() -> tuple[Obligation, ...]:
         21: ('unknown_version.exit3', 'no_godot.exit2', 'bad_argument.exit4', 'main.headless', 'm1.headless', 'v7.headless'),
         24: ('save_load.release',), 28: ('colony_knowledge.release', 'f10'),
         34: ('render.ground', 'render.people', 'render.trees'),
-        36: ('data_only_ext.release', 'pack'),
+        36: ('data_only_ext.debug', 'pack'),
         37: ('steward_defence.release', 'steward_defence_fingerprint.release', 'colony_flee_mux2.release',
              'colony_wildlife.release', 'mux2_firewood.release', 'mux2_fuel_sleep.release', 'colony_steward.release',
              'v10.fixture_manifest', 'steward_defence_migration.ignored.release',

@@ -397,6 +397,9 @@ workspace V6의 원래 Cargo 실행은3254.415초 후101, 드라이버는1로 �
 
 원래 단계21 launcher의 여섯 경우를 구분하는 기본 비활성 plan 선택 경로를 추가했다. 원래 인자·순서·3/2/4/0/0/0 기대값은 유지하고 각 경우의 별도 plan 해시와 실제 wrapper/parent PID 관찰을 남긴다. 독립 검토가 재현한 `/`·`.` 경로 정규화로 인한 단일/suite 설정 동시 수락을 수정했고 초기 실패는 보존했다. 루트21개(0.306초), 엄격 타입·Ruff·Bash 구문·독립 검토가 통과했다. 실제 launcher를 호출하는 기존 검사1개는 이번 focused 검사에서 제외했으며 실제 역사 버전 실행·aggregate 소유권·세계 관찰·전체 단계21 통과는 아직 미검증이다(`stage0/play-run/case-selector-draft/v2/INDEPENDENT_REVIEW_V2.md`, patch SHA256 `4f36f846abba24da9e442ad3c1fdc5b7cbfead64cd0beee9f1d4fa4d4ffbd808`).
 
+
+단계36 native 의무의 이름을 실제 원래 명령에 맞게 `data_only_ext.debug`로 바로잡았다. 원래 `data_only_ext.sh`는 `--release` 없이 debug·threads1로 실행하며 UI 검사는 그 뒤에 온다. 실행 명령이나 지원 범위는 변경하지 않았고 아직 미구현인 native 의무를 PASS로 바꾸지 않았다. 순서 조정기11개(8.374초), 엄격 타입·Ruff가 통과했다(`stage0/ordered-dispatch/IMPLEMENTATION_PRIORITY_AUDIT_P53.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
