@@ -57,9 +57,9 @@ class Fixture:
 class StaticTests(unittest.TestCase):
     def test_all_exact_commands_cwd_and_component_scope(self) -> None:
         fixture = Fixture(self)
-        self.assertEqual(set(runner.COMMANDS), {1, 7, 8, 13, 15, 16, 20, 22, 31, 33, 46, 51})
+        self.assertEqual(set(runner.COMMANDS), {1, 7, 8, 13, 14, 15, 16, 20, 22, 31, 33, 46, 51})
         for step, (_, argv) in runner.COMMANDS.items():
-            if step in {8, 16, 46, 51}:
+            if step in {8, 14, 16, 46, 51}:
                 continue
             with self.subTest(step=step):
                 result = fixture.run_one(step, str(step))
@@ -648,3 +648,253 @@ class StrictTests(unittest.TestCase):
                      self.assertRaises(runner.StrictOwnershipUnknown):
                     _ = fixture.run_one(8,f'diagnostic-{index}')
                 index+=1
+
+
+class DocsTests(unittest.TestCase):
+    def test_original_command_includes_system_table_without_extra_flags(self) -> None:
+        self.assertEqual(runner.COMMANDS.get(14), ('docs', ('bash', 'tools/v8/check_docs.sh')))
+
+    def test_docs_terminal_is_original_unique_final_marker(self) -> None:
+        runner.docs_terminal('ok: system table PASS\ndocs: PASS\n')
+        for raw in ('', 'docs: FAIL\n', 'docs: PASS\ntrailing\n', 'docs: PASS\ndocs: PASS\n',
+                    'FAIL: system table\ndocs: PASS\n'):
+            with self.subTest(raw=raw), self.assertRaises(ValueError):runner.docs_terminal(raw)
+
+    def test_docs_scope_requires_exact_skill_links_and_complete_targets(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp).resolve()
+            for name in runner.DOCS_SKILLS:
+                target=root/'.claude/skills'/name;target.mkdir(parents=True)
+                _ = (target/'SKILL.md').write_text('synthetic skill')
+                link=root/'.agents/skills'/name;link.parent.mkdir(parents=True,exist_ok=True)
+                link.symlink_to('../../.claude/skills/'+name)
+            context=runner.ExecutionEnvironment((('CARGO_HOME',str(root/'cargo-home')),),(),())
+            names=runner.docs_input_names(root,context)
+            self.assertIn('docs',names)
+            self.assertIn('.claude/skills',names)
+            self.assertIn('rust/Cargo.lock',names)
+            self.assertNotIn('.agents',names)
+            link=root/'.agents/skills'/runner.DOCS_SKILLS[0]
+            link.unlink();link.symlink_to('../../.claude/skills/'+runner.DOCS_SKILLS[1])
+            with self.assertRaises(ValueError):_ = runner.docs_input_names(root,context)
+            link.unlink();link.symlink_to('../../.claude/skills/'+runner.DOCS_SKILLS[0])
+            (root/'.claude/skills'/runner.DOCS_SKILLS[0]/'SKILL.md').unlink()
+            with self.assertRaises(OSError):_ = runner.docs_input_names(root,context)
+
+    @staticmethod
+    def docs_fixture(test: unittest.TestCase, body: str='echo "docs: PASS"') -> Fixture:
+        fixture=Fixture(test)
+        _ = fixture.child.write_text('#!/bin/sh\n'+body+'\n')
+        fixture.context=runner.ExecutionEnvironment(fixture.context.values,
+            tuple((name,path,file_hash(path)) for name,path,_ in fixture.context.tools),())
+        _ = patch.object(runner,'_tools',return_value={'bash':fixture.child}).start()
+        _ = patch.object(runner,'docs_input_names',return_value=['docs']).start()
+        _ = patch.object(runner,'docs_bindings',return_value={'synthetic':True}).start()
+        return fixture
+
+    def test_docs_actual_tiny_process_retains_native_and_classification_limits(self) -> None:
+        fixture=self.docs_fixture(self)
+        result=fixture.run_one(14)
+        self.assertEqual(result.status,'PASS')
+        receipt=document(result.receipt.read_text())
+        self.assertEqual(receipt.field('source_invocation').value,['bash','tools/v8/check_docs.sh'])
+        self.assertEqual(receipt.field('reviewed_world_scope').text(),'construction_no_tick_advance')
+        self.assertTrue(receipt.field('reviewed_initial_state_mutations').value)
+        self.assertEqual(receipt.field('current_product_world_scope').text(),'CALLER_REQUIRED')
+        self.assertEqual(receipt.field('build_provenance').text(),'CALLER_REQUIRED')
+        self.assertFalse(receipt.field('full_gate_complete').value)
+        runner.verify_receipt(result.receipt,file_hash(result.receipt))
+
+    def test_docs_misleading_marker_or_nonzero_never_pass(self) -> None:
+        for index,body in enumerate(('echo "docs: PASS"; exit 7','echo unrelated','echo "FAIL: source"; echo "docs: PASS"')):
+            with self.subTest(body=body):
+                fixture=self.docs_fixture(self,body)
+                result=fixture.run_one(14,str(index))
+                self.assertEqual(result.status,'FAIL')
+                self.assertTrue((result.receipt.parent/'process/stdout.log').is_file())
+                patch.stopall()
+
+    def test_docs_unreturned_or_negative_parent_retains_unknown(self) -> None:
+        from generic_process import ProcessResult, ProcessSpec
+        for index,code in enumerate((-9,None)):
+            fixture=self.docs_fixture(self)
+            def unknown(spec: ProcessSpec, native_exit: int | None=code) -> ProcessResult:
+                spec.output_root.mkdir()
+                return ProcessResult(spec.output_root/'process.json','FAIL',native_exit,123)
+            with patch.object(runner,'execute',side_effect=unknown),self.assertRaises(runner.StrictOwnershipUnknown):
+                _ = fixture.run_one(14,str(index))
+            receipt=document((fixture.base/str(index)/'receipt.json').read_text())
+            self.assertEqual(receipt.field('artifacts').value,{})
+            self.assertNotIn('source_end',receipt.mapping())
+            patch.stopall()
+        fixture=self.docs_fixture(self)
+        with patch.object(runner,'execute',side_effect=KeyboardInterrupt()),self.assertRaises(runner.StrictOwnershipUnknown):
+            _ = fixture.run_one(14)
+        self.assertEqual(document((fixture.base/'out/receipt.json').read_text()).field('process_status').text(),'UNKNOWN')
+
+
+class DocsBindingTests(unittest.TestCase):
+    def test_all_original_shell_tools_and_caller_lane_are_required(self) -> None:
+        from dataclasses import replace
+        fixture=Fixture(self)
+        expected={'python3','cargo','rustc','dirname','grep','wc','tr','cat','tail','rm',
+                  'head','readlink','awk','sed','xargs','stat','ls'}
+        self.assertEqual(runner.DOCS_TOOLS,expected)
+        names={'git','bash',*expected}
+        values=(*fixture.context.values,('HOME',str(fixture.base)),('TMPDIR',str(fixture.base)),
+                ('CARGO_HOME',str(fixture.base)),('RUSTUP_HOME',str(fixture.base)),
+                ('PYTHONNOUSERSITE','1'),('PYTHONDONTWRITEBYTECODE','1'))
+        context=runner.ExecutionEnvironment(values,tuple((name,fixture.child,file_hash(fixture.child)) for name in names),())
+        lock=fixture.base/'lane'
+        with lock.open('w') as held,patch.object(runner,'LOCK',lock):
+            with self.assertRaises(ValueError):_ = runner.validate_environment(context,14)
+            context=replace(context,held_lane_fd=held.fileno())
+            self.assertEqual(runner.validate_environment(context,14)['bash'],fixture.child)
+            for missing in names:
+                with self.subTest(missing=missing),self.assertRaises(ValueError):
+                    _ = runner.validate_environment(replace(context,tools=tuple(row for row in context.tools if row[0]!=missing)),14)
+            for key in ('BASH_ENV','PYTHONOPTIMIZE','RUSTC_WRAPPER','RUSTDOC','CARGO_ENCODED_RUSTFLAGS','WORLDSIM_GATE_OBSERVE'):
+                with self.subTest(key=key),self.assertRaises(ValueError):
+                    _ = runner.validate_environment(replace(context,values=(*values,(key,'injected'))),14)
+            self.assertFalse(held.closed)
+
+    def test_config_absence_membership_is_bound_without_per_pass_rust_pin(self) -> None:
+        from dataclasses import replace
+
+        with tempfile.TemporaryDirectory() as temp:
+            base=Path(temp).resolve();root=base/'root';(root/'rust/crates').mkdir(parents=True)
+            (root/'docs').mkdir();_ = (root/'docs/ARCHITECTURE.md').write_text('`rust/crates` `docs/missing`')
+            home=base/'cargo-home';home.mkdir()
+            source=root/'rust/crates/main.rs';_ = source.write_text('synthetic no-advance source')
+            context=runner.ExecutionEnvironment((('CARGO_HOME',str(home)),),(),())
+            with patch.object(runner,'DOCS_CHECKERS',dict[str,str]()),patch.object(runner,'git',return_value=b'rust/crates/main.rs\0'):
+                before=runner.docs_bindings(root,context)
+                self.assertEqual(before['architecture_exists'],{'rust/crates':True,'docs/missing':False})
+                config=home/'config.toml';_ = config.write_text('[build]\njobs=2\n')
+                with self.assertRaises(ValueError):_ = runner.docs_bindings(root,context)
+                context=replace(context,external_inputs=((config,file_hash(config)),))
+                after=runner.docs_bindings(root,context)
+                self.assertNotEqual(before,after)
+                _ = source.write_text('synthetic future farming source')
+                self.assertEqual(runner.docs_bindings(root,context),after)
+
+    def test_docs_missing_positive_terminal_cannot_claim_settlement(self) -> None:
+        from generic_process import ProcessResult, ProcessSpec
+        fixture=DocsTests.docs_fixture(self)
+        def missing(spec: ProcessSpec) -> ProcessResult:
+            spec.output_root.mkdir()
+            return ProcessResult(spec.output_root/'process.json','PASS',0,123)
+        with patch.object(runner,'execute',side_effect=missing),self.assertRaises(runner.StrictOwnershipUnknown):
+            _ = fixture.run_one(14)
+        receipt=document((fixture.base/'out/receipt.json').read_text())
+        self.assertEqual(receipt.field('ownership').text(),'INCOMPLETE_DESCENDANTS_UNKNOWN')
+        self.assertEqual(receipt.field('artifacts').value,{})
+
+    def test_unexpected_docs_oracle_keeps_failed_checkpoint_and_propagates(self) -> None:
+        for index,error in enumerate((RuntimeError('oracle'),KeyboardInterrupt(),SystemExit(3))):
+            fixture=DocsTests.docs_fixture(self)
+            with patch.object(runner,'docs_terminal',side_effect=error):
+                try:_ = fixture.run_one(14,str(index))
+                except (RuntimeError,KeyboardInterrupt,SystemExit) as actual:self.assertIs(actual,error)
+                else:self.fail('oracle exception did not propagate')
+            receipt=document((fixture.base/str(index)/'receipt.json').read_text())
+            self.assertEqual(receipt.field('status').text(),'FAIL')
+            self.assertEqual(receipt.field('native_exit').value,0)
+            self.assertTrue(receipt.field('artifacts').mapping())
+            patch.stopall()
+
+
+class DocsClosureTests(unittest.TestCase):
+    def test_lookup_endpoint_mutation_fails_after_real_tiny_child(self) -> None:
+        fixture=DocsTests.docs_fixture(self)
+        with patch.object(runner,'docs_bindings',side_effect=[{'config':None},{'config':'changed'}]):
+            result=fixture.run_one(14)
+        self.assertEqual(result.status,'FAIL')
+        receipt=document(result.receipt.read_text())
+        self.assertEqual(receipt.field('native_exit').value,0)
+        self.assertIn('lookup bindings changed',result.receipt.read_text())
+
+    def test_input_binding_mismatch_prevents_spawn(self) -> None:
+        fixture=DocsTests.docs_fixture(self)
+        fixture.product=runner.StaticProduct(fixture.root,'a'*40,(('docs/unbound','f'*64),))
+        result=fixture.run_one(14)
+        self.assertEqual(result.status,'FAIL')
+        self.assertFalse((result.receipt.parent/'process').exists())
+
+    def test_unknown_does_not_close_or_release_caller_lane(self) -> None:
+        import fcntl
+        from dataclasses import replace
+        fixture=DocsTests.docs_fixture(self)
+        lock=fixture.base/'lane'
+        with lock.open('w') as held,lock.open('r') as contender:
+            fcntl.flock(held,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            fixture.context=replace(fixture.context,held_lane_fd=held.fileno())
+            with patch.object(runner,'execute',side_effect=OSError('terminal unavailable')),self.assertRaises(runner.StrictOwnershipUnknown):
+                _ = fixture.run_one(14)
+            self.assertFalse(held.closed)
+            with self.assertRaises(BlockingIOError):fcntl.flock(contender,fcntl.LOCK_EX|fcntl.LOCK_NB)
+
+    def test_system_table_and_checker_bytes_are_reviewed_inputs(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp).resolve();(root/'tools/v8').mkdir(parents=True)
+            path=root/'tools/v8/system_table.py';_ = path.write_text('synthetic original cargo argv')
+            context=runner.ExecutionEnvironment((),(),())
+            expected={'system_table.py':file_hash(path)}
+            _ = path.write_text('synthetic substituted JSON or shorter command')
+            with patch.object(runner,'DOCS_CHECKERS',expected),self.assertRaisesRegex(ValueError,'checker changed'):
+                _ = runner.docs_bindings(root,context)
+
+
+    def test_unreadable_optional_config_is_not_recorded_as_absent(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            config=Path(temp).resolve()/'config.toml'
+            self.assertIsNone(runner.docs_optional_hash(config))
+            with patch.object(Path,'lstat',side_effect=PermissionError('unreadable config ancestor')),self.assertRaises(PermissionError):
+                _ = runner.docs_optional_hash(config)
+
+
+class DocsConfigPartitionTests(unittest.TestCase):
+    def test_internal_configs_reach_actual_process_as_product_inputs(self) -> None:
+        from mux2_gate_inputs import INPUT_DIRS, INPUT_FILES
+        for index,config_name in enumerate(('.cargo/config.toml','rust/.cargo/config.toml','cargo-home/config')):
+            with self.subTest(config=config_name):
+                fixture=Fixture(self)
+                for folder in (*INPUT_DIRS,'docs','.claude/skills','.agents/skills'):
+                    (fixture.root/folder).mkdir(parents=True,exist_ok=True)
+                for name in (*INPUT_FILES,'README.md','AGENTS.md','CLAUDE.md','CHANGELOG.md','docs/ARCHITECTURE.md'):
+                    path=fixture.root/name;path.parent.mkdir(parents=True,exist_ok=True)
+                    if not path.exists():_ = path.write_text('synthetic docs input')
+                for skill in runner.DOCS_SKILLS:
+                    target=fixture.root/'.claude/skills'/skill;target.mkdir()
+                    _ = (target/'SKILL.md').write_text('synthetic skill')
+                    (fixture.root/'.agents/skills'/skill).symlink_to('../../.claude/skills/'+skill)
+                home=fixture.root/'cargo-home';home.mkdir()
+                config=fixture.root/config_name;config.parent.mkdir(parents=True,exist_ok=True)
+                _ = config.write_text('[build]\njobs=2\n')
+                _ = fixture.child.write_text('#!/bin/sh\ntest -f '+str(config)+' || exit 9\necho "docs: PASS"\n')
+                fixture.context=runner.ExecutionEnvironment((*fixture.context.values,('CARGO_HOME',str(home))),
+                    tuple((name,path,file_hash(path)) for name,path,_ in fixture.context.tools),())
+                with patch.object(runner,'_tools',return_value={'bash':fixture.child}), \
+                     patch.object(runner,'DOCS_CHECKERS',dict[str,str]()), \
+                     patch.object(runner,'git',return_value=b''), \
+                     patch.object(runner,'inventory',side_effect=actual_inventory):
+                    names=runner.docs_input_names(fixture.root,fixture.context)
+                    fixture.product=runner.StaticProduct(fixture.root,'a'*40,tuple(sorted(actual_inventory(fixture.root,names).items())))
+                    self.assertIn(config_name,dict(fixture.product.inputs))
+                    result=fixture.run_one(14,str(index))
+                    complete=fixture.product
+                    fixture.product=runner.StaticProduct(fixture.root,'a'*40,tuple(row for row in complete.inputs if row[0]!=config_name))
+                    omitted=fixture.run_one(14,'omitted-'+str(index))
+                    self.assertEqual(omitted.status,'FAIL')
+                    self.assertFalse((omitted.receipt.parent/'process').exists())
+                    fixture.product=complete
+                    fixture.context=runner.ExecutionEnvironment(fixture.context.values,fixture.context.tools,((config,file_hash(config)),))
+                    misplaced=fixture.run_one(14,'external-'+str(index))
+                    self.assertEqual(misplaced.status,'FAIL')
+                    self.assertFalse((misplaced.receipt.parent/'process').exists())
+                self.assertEqual(result.status,'PASS',result.receipt.read_text())
+                native=document((result.receipt.parent/'process/process.json').read_text())
+                self.assertEqual(native.field('native_exit').value,0)
+                self.assertIn(config_name,native.field('before_inputs').mapping())
+                self.assertNotIn(str(config),native.field('before_external_inputs').mapping())
+                patch.stopall()

@@ -24,11 +24,21 @@ from generic_process import (
     real_path,
     timestamp,
 )
-from generic_sources import freeze_source, git, inventory
+from generic_sources import freeze_source, git, inventory, safe_path
 from mux2_gate_inputs import BRIDGE, INPUT_DIRS, INPUT_FILES, EvidenceError, Json
 from mux2_gate_lock import LOCK
 
 GATE_SHA256 = 'e794a514289ee13b58b76a1745f6b42c5040ae1acb0af20bf43c5261b7e1cc1d'
+DOCS_SKILLS = ('worldsim-architecture', 'worldsim-godot', 'worldsim-pitfalls', 'worldsim-testing',
+               'worldsim-docs-upkeep', 'systematic-debugging', 'verification-before-completion')
+DOCS_TOOLS = {'python3', 'cargo', 'rustc', 'dirname', 'grep', 'wc', 'tr', 'cat', 'tail', 'rm',
+              'head', 'readlink', 'awk', 'sed', 'xargs', 'stat', 'ls'}
+DOCS_CHECKERS = {
+    'check_docs.sh': '7b96439637cd407a4b6c370bb10d6a2bbcee9ef56e083f66a694c414f6fd440f',
+    'system_table.py': 'bfddc9e6e2876711a8f8445119b2b19fc0c5298a7ed84a63cae84bb1fd4b7a29',
+    'check_docs_helpers.py': '1cb534486144404cc03e98649f779d1ec70c0cfbb39f884a85c2944346bcb2f0',
+    'bridge_api.py': 'b98e86cdcbf03d704d1bd11df2851dd3cd53f76b8642ae6c0074ae7477526903',
+}
 DIAGNOSIS_RESULT = 'docs/v8/read/read_30s_result.json'
 STRICT_FILES = ('tools/v8/mux21_layout_test.gd', 'tools/v8/mux21_toast_test.gd',
                 'tools/v8/mux21_play_capture.gd', 'tools/v8/mux21_why_locale_test.gd')
@@ -37,6 +47,7 @@ COMMANDS: dict[int, tuple[str, tuple[str, ...]]] = {
     46: ('gdscript.four_files', ('bash', 'tools/v8/gdscript_strict_check.sh', *STRICT_FILES)),
     1: ('fmt', ('bash', '-c', 'cd rust && cargo fmt --all -- --check')),
     7: ('forbidden_math', ('bash', '-c', r"cd rust && ! grep -rnE '\.(exp|exp2|ln|log2|log10|powf|powi|sin|cos|tan|tanh|atan2|hypot|cbrt)\(' crates/sim-core/src crates/sim-systems/src crates/sim-engine/src")),
+    14: ('docs', ('bash', 'tools/v8/check_docs.sh')),
     13: ('bridge_api', ('python3', 'tools/v8/bridge_api.py', '.', '--check', 'docs/v8/bridge_api_read.txt')),
     15: ('inventory_closure', ('python3', 'tools/v8/inventory.py', 'check', 'docs/v8/V8_0_INVENTORY.md')),
     16: ('python_unittest', ('python3', '-m', 'unittest', 'discover', '-s', 'tools/v8', '-p', 'test_*.py')),
@@ -63,7 +74,7 @@ class ExecutionEnvironment:
     # Caller supplies Python/toolchain/config dependency files; no inferred closure.
     external_inputs: tuple[tuple[Path, str], ...]
     prior_receipts: tuple[tuple[Path, str], ...] = ()
-    # Only strict Godot checks: caller retains this descriptor, including on unknown ownership.
+    # Native docs/strict checks: caller retains this descriptor, including on unknown ownership.
     held_lane_fd: int | None = None
 
 
@@ -115,6 +126,86 @@ def strict_input_names(root: Path) -> list[str]:
     return names
 
 
+def docs_input_names(root: Path, context: ExecutionEnvironment) -> list[str]:
+    """Bind regular target trees while preserving the original seven skill links."""
+    for name in DOCS_SKILLS:
+        link = safe_path(root, '.agents/skills/'+name)
+        require(link.is_symlink() and os.readlink(link) == '../../.claude/skills/'+name,
+                str(link), 'original skill link differs')
+        target = safe_path(root, '.claude/skills/'+name+'/SKILL.md')
+        real_path(target, directory=False)
+        require((link/'SKILL.md').resolve(strict=True) == target, str(link), 'skill target differs')
+    names = [*INPUT_DIRS, *INPUT_FILES, 'docs', '.claude/skills',
+             'README.md', 'AGENTS.md', 'CLAUDE.md', 'CHANGELOG.md']
+    for path in docs_config_paths(root, context):
+        if path.is_relative_to(root) and docs_optional_hash(path) is not None:
+            name = path.relative_to(root).as_posix()
+            if not any(name == prior or name.startswith(prior+'/') for prior in names):names.append(name)
+    return names
+
+
+def docs_config_paths(root: Path, context: ExecutionEnvironment) -> tuple[Path, ...]:
+    """Enumerate the original Cargo cwd/ancestor and explicit Cargo-home lookups."""
+    env = dict(context.values)
+    require('CARGO_HOME' in env, '/docs', 'explicit Cargo home required')
+    paths = {ancestor/'.cargo'/name for ancestor in (root/'rust', *(root/'rust').parents)
+             for name in ('config', 'config.toml')}
+    paths.update(Path(env['CARGO_HOME'])/name for name in ('config', 'config.toml'))
+    return tuple(sorted(paths))
+
+
+def docs_optional_hash(path: Path) -> str | None:
+    """Only a missing file is absent; unreadable config/ignore endpoints fail closed."""
+    try:_ = path.lstat()
+    except FileNotFoundError:return None
+    return file_hash(path)
+
+
+def docs_bindings(root: Path, context: ExecutionEnvironment) -> dict[str, Json]:
+    """Bind original checker and lookup endpoints; caller owns current world classification."""
+    for name, digest in DOCS_CHECKERS.items():
+        require(file_hash(root/'tools/v8'/name) == digest, '/docs', 'original docs checker changed')
+    configs: dict[str, Json] = {}
+    external = dict(context.external_inputs)
+    require(len(external) == len(context.external_inputs), '/docs', 'duplicate external inputs')
+    for path in docs_config_paths(root, context):
+        digest = docs_optional_hash(path)
+        if path.is_relative_to(root):
+            require(path not in external, str(path), 'in-tree Cargo config belongs to product inputs')
+        else:
+            require(digest is None or external.get(path) == digest, str(path), 'unbound external Cargo config')
+        configs[str(path)] = digest
+    # check_docs_helpers only asks existence for these source-owned literal paths.
+    architecture: dict[str, Json] = {}
+    prefixes = ('rust/', 'scripts/', 'scenes/', 'tools/', 'docs/', 'assets/', 'localization/',
+                'shaders/', '.claude/', '.agents/')
+    for match in re.finditer(r'`([^`\s]+)`', (root/'docs/ARCHITECTURE.md').read_text()):
+        name = match[1].split(':')[0].rstrip('.,;)')
+        if name.startswith(prefixes) and not any(char in name for char in '*<{'):
+            path = root/name
+            require(path.resolve().is_relative_to(root), name, 'architecture lookup escapes source')
+            architecture[name] = path.exists()
+    ignores: dict[str, Json] = {}
+    for raw in git(root, 'ls-files', '-z').split(b'\0'):
+        name = os.fsdecode(raw)
+        if name.endswith(('.gd', '.gdshader')):
+            parent = safe_path(root, name).parent
+            while parent != root:
+                path = parent/'.gdignore'
+                ignores[path.relative_to(root).as_posix()] = docs_optional_hash(path)
+                parent = parent.parent
+    return {'cargo_config_endpoints': configs,
+            'architecture_exists': architecture, 'godot_ignore_endpoints': ignores}
+
+
+def docs_terminal(stdout: str) -> None:
+    """Require the original aggregated result; do not replace individual docs checks."""
+    lines = [line for line in stdout.splitlines() if line.strip()]
+    require(lines.count('docs: PASS') == 1 and lines[-1] == 'docs: PASS' and
+            not any(line.startswith('FAIL:') or line == 'docs: FAIL' for line in lines),
+            '/docs', 'missing, failed, duplicate or nonterminal original docs marker')
+
+
 def strict_terminal(stdout: str, stderr: str, count: int) -> None:
     lines = [line for line in stdout.splitlines() if line.strip()]
     require(count > 0 and bool(lines) and lines[-1] == '[gdcheck] ALL CHECKS PASS' and
@@ -149,7 +240,7 @@ def _tools(context: ExecutionEnvironment, step: int) -> dict[str, Path]:
             real_path(Path(env[key]), directory=True)
         require(not ({'PYTHONPATH', 'PYTHONHOME', 'PERL5LIB', 'PERL5OPT', 'WORLDSIM_MUX2_LANE_FD'} & env.keys()),
                 '/environment', 'step16 inherited runtime or lane override')
-    if step in {8, 46}:
+    if step in {8, 14, 46}:
         descriptor = context.held_lane_fd
         require(type(descriptor) is int and descriptor >= 0, '/lane', 'caller-held descriptor required')
         if descriptor is None:raise StrictOwnershipUnknown('missing caller lane')
@@ -157,6 +248,7 @@ def _tools(context: ExecutionEnvironment, step: int) -> dict[str, Path]:
         require(stat.S_ISREG(held.st_mode) and (held.st_dev, held.st_ino) == (canonical.st_dev, canonical.st_ino),
                 '/lane', 'descriptor is not the canonical native lane')
         fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    if step in {8, 46}:
         required |= {'python3', 'find', 'mktemp', 'rm', 'cp', 'cat', 'wc', 'tr', 'grep', 'head', 'sed', 'sort'}
         allowed = {'PATH', 'LANG', 'LC_ALL', 'CARGO_BUILD_JOBS', 'HOME', 'TMPDIR', 'GODOT_BIN',
                    'PYTHONNOUSERSITE', 'PYTHONDONTWRITEBYTECODE', 'PYTHONCOERCECLOCALE',
@@ -171,6 +263,18 @@ def _tools(context: ExecutionEnvironment, step: int) -> dict[str, Path]:
         godot = Path(env['GODOT_BIN']);real_path(godot, directory=False)
         require(len(dict(context.external_inputs)) == len(context.external_inputs) and
                 dict(context.external_inputs).get(godot) == file_hash(godot), '/godot', 'unbound Godot executable')
+    if step == 14:
+        required |= DOCS_TOOLS
+        allowed = {'PATH', 'LANG', 'LC_ALL', 'CARGO_BUILD_JOBS', 'HOME', 'TMPDIR', 'CARGO_HOME',
+                   'RUSTUP_HOME', 'CARGO_TARGET_DIR', 'PYTHONNOUSERSITE', 'PYTHONDONTWRITEBYTECODE',
+                   'PYTHONCOERCECLOCALE', 'GIT_CONFIG_GLOBAL', 'GIT_CONFIG_NOSYSTEM', '__CF_USER_TEXT_ENCODING'}
+        require(env.keys() <= allowed, '/environment', 'docs unapproved startup/runtime override')
+        for key in ('PYTHONNOUSERSITE', 'PYTHONDONTWRITEBYTECODE'):
+            require(env.get(key) == '1', key, 'docs Python startup policy differs')
+        for key in ('HOME', 'TMPDIR', 'CARGO_HOME', 'RUSTUP_HOME'):
+            require(key in env, key, 'docs explicit directory missing')
+            real_path(Path(env[key]), directory=True)
+        if 'CARGO_TARGET_DIR' in env:real_path(Path(env['CARGO_TARGET_DIR']), directory=True)
     if step == 51:
         allowed = {'PATH', 'LANG', 'LC_ALL', 'CARGO_BUILD_JOBS', 'HOME', 'TMPDIR',
                    'PYTHONNOUSERSITE', 'PYTHONDONTWRITEBYTECODE', 'PYTHONCOERCECLOCALE',
@@ -276,6 +380,7 @@ def run_step(product: StaticProduct, step: int, output: Path,
     context = execution_environment
     selected: tuple[str, ...] = ()
     project_mode: int | None = None
+    docs_before: dict[str, Json] | None = None
     input_names = [*INPUT_DIRS, *INPUT_FILES, *(['docs'] if step == 16 else [DIAGNOSIS_RESULT] if step == 51 else [])]
     try:
         tools = _tools(context, step)
@@ -283,6 +388,12 @@ def run_step(product: StaticProduct, step: int, output: Path,
             project_mode = stat.S_IMODE((product.root/'project.godot').stat().st_mode)
             selected = strict_files(product.root, step)
             input_names = strict_input_names(product.root)
+        if step == 14:
+            input_names = docs_input_names(product.root, context)
+            docs_before = docs_bindings(product.root, context)
+            receipt.update(reviewed_world_scope='construction_no_tick_advance', reviewed_initial_state_mutations=True,
+                           current_product_world_scope='CALLER_REQUIRED', build_provenance='CALLER_REQUIRED',
+                           docs_before=docs_before)
         for path, digest in context.prior_receipts:
             verify_receipt(path, digest)
         require(file_hash(product.root / 'tools/v8/gate.sh') == GATE_SHA256, '/gate', 'command source changed')
@@ -307,21 +418,29 @@ def run_step(product: StaticProduct, step: int, output: Path,
         try:
             result = execute(spec)
         except BaseException:
-            if step in {8, 46}:
+            if step in {8, 14, 46}:
                 receipt['process_status'] = 'UNKNOWN'
-                _strict_unknown(output, receipt, 'strict execution did not return')
+                _strict_unknown(output, receipt, 'docs execution did not return' if step == 14 else 'strict execution did not return')
             raise
-        if step in {8, 46} and result.pid is not None and (result.native_exit is None or result.native_exit < 0):
+        if step in {8, 14, 46} and result.pid is not None and (result.native_exit is None or result.native_exit < 0):
             receipt.update(process_status=result.status, native_exit=result.native_exit, pid=result.pid,
                            process_receipt=str(result.receipt))
-            _strict_unknown(output, receipt, 'strict shell completion unknown')
+            _strict_unknown(output, receipt, 'docs shell completion unknown' if step == 14 else 'strict shell completion unknown')
+        if step == 14 and result.pid is not None and not result.receipt.is_file():
+            receipt.update(process_status=result.status, native_exit=result.native_exit, pid=result.pid,
+                           process_receipt=str(result.receipt))
+            _strict_unknown(output, receipt, 'docs terminal receipt missing')
         artifacts = inventory(output, ['process'])
         receipt.update(process_status=result.status, native_exit=result.native_exit, pid=result.pid,
                        process_receipt=str(result.receipt), process_receipt_sha256=file_hash(result.receipt))
+        if step == 14:
+            receipt['artifacts'] = dict(artifacts)
         native = document(result.receipt.read_text(encoding='utf-8'))
         require(native.field('environment').mapping() == dict(context.values), '/environment', 'effective environment differs')
         if step in {8, 46}:
             strict_terminal((output/'process/stdout.log').read_text(), (output/'process/stderr.log').read_text(), len(selected))
+        if step == 14:
+            docs_terminal((output/'process/stdout.log').read_text())
         if step == 16:
             terminal = unittest_terminal((output / 'process/stderr.log').read_bytes().decode('utf-8'))
             receipt['unittest'] = terminal
@@ -331,6 +450,13 @@ def run_step(product: StaticProduct, step: int, output: Path,
         require(result.status == 'PASS' and result.native_exit == 0, '/process', 'original command failed')
     except (OSError, ValueError, SyntaxError, EvidenceError) as error:
         errors.append(str(error))
+    except BaseException as failure:
+        if step == 14 and not (output/'receipt.json').exists():
+            try:
+                receipt['errors'] = ['unexpected docs validation failure']
+                atomic_json(output/'receipt.json', receipt)
+            except BaseException as cleanup:raise failure from cleanup
+        raise
     # Always check all endpoint bindings, even following a failed child.
     try:
         if (output / 'process').exists():
@@ -350,6 +476,11 @@ def run_step(product: StaticProduct, step: int, output: Path,
                     '/strict', 'project mode changed')
             require(strict_files(product.root, step) == selected, '/strict', 'script selection changed')
             require(strict_input_names(product.root) == input_names, '/strict', 'resource resolution changed')
+        if step == 14:
+            require(docs_input_names(product.root, context) == input_names, '/docs', 'docs input scope changed')
+            docs_after = docs_bindings(product.root, context)
+            receipt['docs_end'] = docs_after
+            require(docs_before is not None and docs_before == docs_after, '/docs', 'docs lookup bindings changed')
         ending = inventory(product.root, input_names)
         receipt['inputs_end'] = dict(ending)
         require(ending == dict(product.inputs), '/inputs', 'effective inputs changed')
@@ -362,6 +493,13 @@ def run_step(product: StaticProduct, step: int, output: Path,
         require(inventory(output, ['process']) == artifacts, '/artifacts', 'late child output mutation')
     except (OSError, ValueError, SyntaxError, EvidenceError) as error:
         errors.append('terminal: ' + str(error))
+    except BaseException as failure:
+        if step == 14 and not (output/'receipt.json').exists():
+            try:
+                receipt['errors'] = ['unexpected docs postflight failure']
+                atomic_json(output/'receipt.json', receipt)
+            except BaseException as cleanup:raise failure from cleanup
+        raise
     receipt['artifacts'] = dict(artifacts)
     receipt['errors'] = list(errors)
     receipt['finished_at'] = timestamp()

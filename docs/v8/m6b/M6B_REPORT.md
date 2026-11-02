@@ -339,6 +339,8 @@ workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignore
 
 고정 소스 `b25149c6fd78178cb9b0991bbeebbe4ce58e51f1`의 개발용 전체 Python discovery는1,511개를849.791초에 실행해 실패4·오류15·exit1로 종료했다. 모두 구조 검사 어댑터에 집중됐으며, 나중에 로드된 `core_ui_successor_perf_validate`를 초기 모듈 스냅샷에 없다는 이유로 거부한 사전 검증과 그 후속 실패를 확인했다. 실행 후 기록한395개 입력 해시는 종료 시 동일했다. 이 기록은 정식 단계16이나 전체 gate 통과가 아니며 원본 실패 로그를 보존하고 로딩 순서 수리를 진행한다(`stage0/integrated-python-31.log`, SHA256 `079a72483b5c3755e33e6bfa7b2426ee3e6ad899a22e9d157f49cfdb9accdbb5`).
 
+단계14 문서 검사 어댑터는 원래 `bash tools/v8/check_docs.sh`와 system-table 생성을 그대로 실행하도록 추가했다. 문서·skill 연결·Cargo 설정의 존재와 내용·원래 검사기의 경로 조회를 연결하며, 현재 제품의 세계 분류와 빌드 출처는 호출자 검증이 필요하다고 명시한다. 독립 검토에서 저장소 내부 Cargo 설정을 외부 입력으로 요구해 실행 전에 거부되는 v1 결함을 재현했고, v2는 내부 설정을 제품 입력에 넣고 실제 외부 설정만 외부 입력으로 유지한다. 원래 프로세스 경계는 완화하지 않았다. 루트58개(6.809초), 생산 코드 엄격 타입·Ruff와 독립 v2 검토가 통과했다. 임시 프로세스 입력 검증이며 원래 Cargo/system-table 실행·조정기 연결·전체 gate는 미검증이다(`stage0/ordered-dispatch/docs14-adapter-draft-v2/INDEPENDENT_REVIEW_V2.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
