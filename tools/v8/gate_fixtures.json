@@ -1948,7 +1948,7 @@
       ],
       "scripted_suffix": [
         "--commands",
-        "{inputs}/tools/v8/u_script.json"
+        "{inputs}/tools/v8/bench_script.json"
       ],
       "rss_child_argv": [
         "{perf}",

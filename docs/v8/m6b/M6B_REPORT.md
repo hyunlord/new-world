@@ -333,6 +333,8 @@ workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignore
 
 원래16개 oracle shell 검사를 위한 별도 helper handshake를 추가했다. 시작 전 준비·고정 request 파일·작은 알림·실제 native wait·merged log 범위를 연결하며 원래 순서와300/120초 한도를 유지한다. 신호로 끝난 상위 shell과 진단 문자열·클래스명 접근 중 예외가 허위 SETTLED가 되던 경로는 독립 재현 후 수정했다. 루트 helper34개(13.843초), 구조19개(27.387초), stall13개(0.857초)와 Ruff·Bash 검사가 통과했다. 구조 helper의 기존 동작 AST는 같고 검토한 두 해시만 갱신했다. 생산 코드는 Python3.11 엄격 타입 범위를 유지하고, typing.override를 쓰는 새 테스트는 실제 실행 도구인 Python3.14로 별도 검사해 모두0진단이다. 기존3.11 설정의 테스트 진단6개는 보존하며3.11 테스트 호환성을 주장하지 않는다. 실제 Godot oracle suite·상위 호출자 연결·전체 gate는 미완료다(`stage0/ordered-dispatch/SUITE_HANDSHAKE_INDEPENDENT_V3_REVIEW.md`, `STRUCTURAL_SUITE_V3_REBIND_REVIEW.md`).
 
+벤치 registry의 scripted_suffix 오기를 수정했다. 실제 BASE0와 현재 READ·bench.sh가 쓰는 bench_script.json(60개 나무·8×8 비축장·4개 오두막)을 기록하며, u_script.json을 쓰는 colony·replay fixture는 그대로다. 두 스크립트의 현재 바이트가 BASE0와 같은지 확인했고 registry14개 검사(0.143초)가 통과했다. 실행 명령이나 게임 동작 변경이 아니며 벤치 backlog의 NOT_RUN·미해결 상태도 유지한다(`stage0/ordered-dispatch/BENCH25_OWNED_COORDINATOR_PLAN.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
