@@ -142,8 +142,18 @@ def standing(plan: Invocation, product: ProbeProduct, summary: Node, results: di
     return evidence
 
 
-def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: Products,
-                   declarations: Declarations, output: Path) -> ComponentResult:
+REPLAY_CHAIN: Final = ("replay.generate", "replay.recorded", "replay.scripted")
+
+
+def _execution_order(plans: tuple[Invocation, ...]) -> tuple[Invocation, ...]:
+    """Order each replay chain while leaving every unrelated plan in its existing slot."""
+    replay = iter(sorted((p for p in plans if p.fixture_id in REPLAY_CHAIN),
+                         key=lambda p: (p.arm, REPLAY_CHAIN.index(p.fixture_id))))
+    return tuple(next(replay) if p.fixture_id in REPLAY_CHAIN else p for p in plans)
+
+
+def _run_registered(registry: Registry, plans: tuple[Invocation, ...], products: Products,
+                    declarations: Declarations, output: Path, stop_after_failure: bool) -> ComponentResult:
     """Run a selected complete paired subset, retaining failed children and all safety rows."""
     prepare(registry, plans, products)
     require(declarations.base == products.base.source_sha and declarations.candidate == products.candidate.source_sha,
@@ -156,13 +166,23 @@ def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: 
     executions: list[Json] = []
     artifacts: dict[str, dict[str, str]] = {}
     scorer_outputs: dict[Path, dict[str, str]] = {}
-    # Dependencies are concrete registry producers; ordering preserves independent instances.
-    ordered = sorted(plans, key=lambda p: p.generated_input is not None)
+    # Original step19 uses same-arm generate && recorded && scripted.
+    completed: set[str] = set()
+    ordered = _execution_order(plans)
+    not_run: list[Json] = []
+    blocked_by: str | None = None
     for plan in ordered:
+        if blocked_by is not None:
+            not_run.append({'id': plan.id, 'status': 'NOT_RUN', 'blocked_by': blocked_by,
+                            'reason': 'original step50 set-e producer chain stopped'})
+            continue
         try:
+            if plan.fixture_id == "replay.scripted":
+                require(f"{plan.arm}/replay.recorded/1" in completed,
+                        plan.id, "same-arm recorded replay unsuccessful; scripted child not started")
             if plan.generated_input is not None:
                 dependency = plan.generated_input
-                require(dependency.producer_invocation in results and results[dependency.producer_invocation].status == 'PASS',
+                require(dependency.producer_invocation in completed,
                         plan.id, 'generated replay producer unsuccessful')
                 plan = replace(plan, generated_input=replace(dependency, sha256=file_hash(dependency.path)))
             result = run_invocation(plan, products.arm(plan.arm), ())
@@ -173,8 +193,11 @@ def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: 
                                 'producer': plan.generated_input.producer_invocation}})
             artifacts[plan.id] = inventory(plan.out, [p.name for p in plan.out.iterdir()])
             require(result.status == 'PASS', plan.id, 'producer failed')
+            completed.add(plan.id)
         except (OSError, ValueError) as error:
             errors.append({'invocation': plan.id, 'error': str(error)})
+            if stop_after_failure:
+                blocked_by = plan.id
     pairs: list[Json] = []
     fixtures = {f.id: f for f in registry.fixtures}
     for base in (p for p in plans if p.arm == 'base'):
@@ -219,6 +242,10 @@ def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: 
                     world.update(status='PASS', safety=safety)
                 except GateContractError as error:
                     world['error'] = str(error)
+            if blocked_by is not None:
+                row['oracle_status'] = 'NOT_RUN'
+                row['oracle_blocked_by'] = blocked_by
+                require(False, fixture.id, 'step50 producer chain stopped; standing validation not run')
             oracle_errors: list[str] = []
             for plan, summary in zip((base, candidate), summaries):
                 try:
@@ -255,7 +282,21 @@ def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: 
     atomic_json(output, {'schema': 'ordinary_colony_component_v1', 'status': status, 'publication_authority': False,
                         'registry_sha256': registry.sha256, 'declaration_manifest_sha256': declarations.source_manifest_sha256,
                         'base': declarations.base, 'candidate': declarations.candidate,
-                        'executions': executions, 'pairs': pairs, 'errors': errors,
+                        'executions': executions, **({'not_run': not_run} if stop_after_failure else {}), 'pairs': pairs, 'errors': errors,
                         'producer_outputs': {name: dict(hashes) for name, hashes in artifacts.items()},
                         'scorer_outputs': {str(folder): dict(hashes) for folder, hashes in scorer_outputs.items()}})
     return ComponentResult(output, status)
+
+
+def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: Products,
+                   declarations: Declarations, output: Path) -> ComponentResult:
+    """Keep the development batch continuation contract unchanged."""
+    return _run_registered(registry, plans, products, declarations, output, False)
+
+
+def run_preservation(registry: Registry, plans: tuple[Invocation, ...], products: Products,
+                     declarations: Declarations, output: Path) -> ComponentResult:
+    """Run the complete step50 chain; the direct helper supplies its closed mapped order."""
+    require(frozenset(p.fixture_id for p in plans) == frozenset(name for name in SUPPORTED if name.startswith('read.')),
+            '/preservation', 'complete six-fixture preservation batch required')
+    return _run_registered(registry, plans, products, declarations, output, True)

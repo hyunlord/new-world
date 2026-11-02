@@ -12,6 +12,8 @@ from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
+import generic_direct_run as direct
+import generic_fixture_registry as registry_module
 import generic_fixture_run as component
 from generic_declarations import Change, Declarations
 from generic_fixture_registry import ExpansionContext, expand, load_registry
@@ -30,7 +32,7 @@ class ComponentTests(unittest.TestCase):
         self.root = Path(self.temp.name).resolve()
         self.inputs = self.root / 'inputs'
         self.inputs.mkdir()
-        self.registry = load_registry(Path(__file__).with_name('gate_fixtures.json'))
+        self.registry = load_registry(Path(registry_module.__file__).with_name('gate_fixtures.json'))
         self.template = self.inputs / 'observation.json'
         self.template.write_text(json.dumps(receipt()))
         (self.inputs / 'tools/v8').mkdir(parents=True)
@@ -46,6 +48,7 @@ out=Path(args[args.index('--out')+1]);out.mkdir(exist_ok=True)
 cfg=json.loads(Path('config.json').read_text())
 arm='candidate' if os.environ['WORLDSIM_GIT_SHA']=='b'*40 else 'base'
 if cfg.get('exit')==arm: sys.exit(7)
+if cfg.get('fail_arm')==arm and cfg.get('fail_fixture')==out.parent.name: sys.exit(7)
 start,end=map(int,args[args.index('--seeds')+1].split('..'))
 days=int(args[args.index('--days')+1]);duration=days*1440
 rows=[]
@@ -67,13 +70,21 @@ if arm=='candidate' and cfg.get('mutate_prior'):
 ''')
         self.binary.chmod(0o755)
 
-    def run_component(self, ids=('core.steward_off',), *, change=False):
+    def run_component(self, ids=('core.steward_off',), *, change=False, reverse_plans=False, preservation=False):
+        if preservation:
+            for name in ('soak_script.json', 'm5_u_script.json', 'm55_u_script.json'):
+                (self.inputs / 'tools/v8' / name).write_text('[]')
         files=tuple((p.relative_to(self.inputs).as_posix(),file_hash(p)) for p in self.inputs.rglob('*') if p.is_file())
         products=Products(*(ProbeProduct(c*40,self.binary,file_hash(self.binary),self.inputs,files) for c in ('a','b')))
         plans=tuple(p for p in expand(self.registry,ExpansionContext(self.inputs,self.inputs,self.root/'out',self.binary,self.binary)) if p.fixture_id in ids)
+        if preservation:
+            order=direct.step_fixtures(50)
+            plans=tuple(sorted(plans,key=lambda p:(order.index(p.fixture_id),p.arm,p.repeat)))
+        if reverse_plans: plans=tuple(reversed(plans))
         declarations=Declarations('b'*40,'a'*40,'publication',tuple(f.id for f in self.registry.fixtures),('b'*40,'c'*40),
             (Change(ids[0],'a'*40,'c'*40,'intentional','docs/pass/CHANGED_FIXTURES.json','b'*40,('behavior.rs',)),) if change else (),(),(),'d'*64)
-        result=run_registered(self.registry,plans,products,declarations,self.root/'result.json')
+        runner=component.run_preservation if preservation else run_registered
+        result=runner(self.registry,plans,products,declarations,self.root/'result.json')
         return result,json.loads(result.receipt.read_text()),plans,products
 
     def test_actual_distinct_children_pass_and_never_publish(self):
@@ -138,7 +149,7 @@ if arm=='candidate' and cfg.get('mutate_prior'):
         self.assertEqual(len(data['pairs'][0]['oracle_errors']),2)
 
     def test_existing_story_scorer_runs_with_hash_bound_script(self):
-        source = Path(__file__).resolve().parents[2]
+        source = Path(registry_module.__file__).resolve().parents[2]
         script = self.inputs / 'docs/v8/m5/m5_score.py'
         script.parent.mkdir(parents=True)
         script.write_bytes((source / 'docs/v8/m5/m5_score.py').read_bytes())
@@ -152,7 +163,7 @@ if arm=='candidate' and cfg.get('mutate_prior'):
             self.assertIn('docs/v8/m5/m5_score.py', process['before_inputs'])
 
     def test_existing_neighbours_scorer_failure_is_retained(self):
-        source = Path(__file__).resolve().parents[2]
+        source = Path(registry_module.__file__).resolve().parents[2]
         script = self.inputs / 'docs/v8/m5_5/m55_score.py'
         script.parent.mkdir(parents=True)
         script.write_bytes((source / 'docs/v8/m5_5/m55_score.py').read_bytes())
@@ -202,6 +213,97 @@ if arm=='candidate' and cfg.get('mutate_prior'):
         with self.assertRaises(GateContractError): prepare(self.registry,(replace(plans[0],seeds=(1,)),plans[1]),products)
         unsupported=tuple(p for p in expand(self.registry,ExpansionContext(self.inputs,self.inputs,self.root/'other',self.binary,self.binary)) if p.fixture_id=='identity.baseline_twins')
         with self.assertRaisesRegex(GateContractError,'unsupported'): prepare(self.registry,unsupported,products)
+
+
+    def test_replay_native_order_is_original_chain_even_with_reversed_input(self):
+        result, data, _, _ = self.run_component(component.REPLAY_CHAIN, reverse_plans=True)
+        self.assertEqual(result.status, 'PASS')
+        for arm in ('base', 'candidate'):
+            actual = [row['id'].split('/')[1] for row in data['executions'] if row['id'].startswith(arm + '/')]
+            self.assertEqual(actual, list(component.REPLAY_CHAIN))
+
+    def test_failed_generate_blocks_only_its_same_arm_recorded_and_scripted(self):
+        self.config.write_text('{"fail_arm":"base","fail_fixture":"replay.generate"}')
+        result, data, _, _ = self.run_component(component.REPLAY_CHAIN)
+        self.assertEqual(result.status, 'FAIL')
+        self.assertEqual([row['id'] for row in data['executions'] if row['id'].startswith('base/')],
+                         ['base/replay.generate/1'])
+        self.assertEqual([row['id'].split('/')[1] for row in data['executions'] if row['id'].startswith('candidate/')],
+                         list(component.REPLAY_CHAIN))
+        self.assertTrue(any(row['invocation'] == 'base/replay.recorded/1' for row in data['errors'] if 'invocation' in row))
+        self.assertTrue(any(row['invocation'] == 'base/replay.scripted/1' for row in data['errors'] if 'invocation' in row))
+
+    def test_failed_recorded_blocks_only_its_same_arm_scripted(self):
+        self.config.write_text('{"fail_arm":"candidate","fail_fixture":"replay.recorded"}')
+        result, data, _, _ = self.run_component(component.REPLAY_CHAIN)
+        self.assertEqual(result.status, 'FAIL')
+        self.assertEqual([row['id'].split('/')[1] for row in data['executions'] if row['id'].startswith('candidate/')],
+                         ['replay.generate', 'replay.recorded'])
+        self.assertEqual([row['id'].split('/')[1] for row in data['executions'] if row['id'].startswith('base/')],
+                         list(component.REPLAY_CHAIN))
+
+    def test_replay_reordering_keeps_unrelated_fixture_slots(self):
+        _, _, plans, _ = self.run_component(('replay.generate', 'replay.recorded', 'replay.scripted', 'core.steward_off'))
+        shuffled = tuple(reversed(plans))
+        ordered = component._execution_order(shuffled)
+        for index, plan in enumerate(shuffled):
+            if plan.fixture_id not in component.REPLAY_CHAIN:
+                self.assertEqual(ordered[index], plan)
+
+
+    def test_preservation_actual_child_sequence_is_fixture_then_base_candidate(self):
+        _, data, plans, _ = self.run_component(direct.step_fixtures(50), preservation=True)
+        # Standing story/neighbour source prerequisites are intentionally absent in
+        # this synthetic child-order fixture; no whole-component PASS is claimed.
+        expected=[f'{arm}/{fixture}/1' for fixture in direct.step_fixtures(50) for arm in ('base','candidate')]
+        self.assertEqual([row['id'] for row in data['executions']],expected)
+        self.assertEqual([p.id for p in plans],expected)
+        self.assertEqual(data['not_run'],[])
+
+    def preservation_failure(self, arm):
+        self.config.write_text(json.dumps({'fail_arm':arm,'fail_fixture':'read.determinism'}))
+        result,data,plans,_=self.run_component(direct.step_fixtures(50),preservation=True)
+        self.assertEqual(result.status,'FAIL')
+        count=1 if arm=='base' else 2
+        expected=[f'{a}/{fixture}/1' for fixture in direct.step_fixtures(50) for a in ('base','candidate')]
+        self.assertEqual([row['id'] for row in data['executions']],expected[:count])
+        self.assertEqual(data['executions'][-1]['status'],'FAIL')
+        self.assertEqual([row['id'] for row in data['not_run']],expected[count:])
+        self.assertTrue(all(row['status']=='NOT_RUN' and row['blocked_by']==expected[count-1] for row in data['not_run']))
+        self.assertTrue(all(not p.out.exists() for p in plans[count:]))
+
+    def test_preservation_base_failure_stops_every_later_child(self):
+        self.preservation_failure('base')
+
+    def test_preservation_candidate_failure_stops_every_later_child(self):
+        self.preservation_failure('candidate')
+
+    def test_development_batch_still_continues_after_first_failed_child(self):
+        self.config.write_text('{"fail_arm":"base","fail_fixture":"core.steward_off"}')
+        result,data,_,_=self.run_component(('core.steward_off',))
+        self.assertEqual(result.status,'FAIL')
+        self.assertEqual([row['id'] for row in data['executions']],
+                         ['base/core.steward_off/1','candidate/core.steward_off/1'])
+        self.assertNotIn('not_run',data)
+
+
+    def test_preservation_late_failure_never_launches_completed_pair_scorers(self):
+        for relative in ('docs/v8/m5/m5_score.py', 'docs/v8/m5_5/m55_score.py'):
+            path=self.inputs/relative
+            path.parent.mkdir(parents=True,exist_ok=True)
+            path.write_text('raise SystemExit(0)\n')
+        self.config.write_text('{"fail_arm":"base","fail_fixture":"read.m6a_steward_on72"}')
+        with patch.object(component,'execute',wraps=component.execute) as scorer_child:
+            result,data,_,_=self.run_component(direct.step_fixtures(50),preservation=True)
+        self.assertEqual(result.status,'FAIL')
+        self.assertEqual(len(data['executions']),11)
+        self.assertEqual(data['not_run'][0]['id'],'candidate/read.m6a_steward_on72/1')
+        scorer_child.assert_not_called()
+        self.assertEqual(data['scorer_outputs'],{})
+        prior=[row for row in data['pairs'] if row['fixture']!='read.m6a_steward_on72']
+        self.assertEqual(len(prior),5)
+        self.assertTrue(all(row['oracle_status']=='NOT_RUN' and row['worlds'] for row in prior))
+        self.assertTrue(data['producer_outputs'])
 
 
 if __name__ == '__main__':

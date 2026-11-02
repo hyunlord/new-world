@@ -5,7 +5,9 @@
 # How to run: python3 -B -m unittest discover -s tools/v8 -p test_generic_direct_run.py
 """Coordinate all registered direct fixtures, without full-gate authority."""
 
+from collections.abc import Mapping
 from pathlib import Path
+from types import MappingProxyType
 from typing import Final
 
 import generic_baseline_run as baseline
@@ -34,6 +36,36 @@ SCHEMAS: Final = {
     "f10": "f10_component_v1",
     "m6a": "m6a_component_v1",
 }
+
+
+# Imported by ordered planning and execution; unsupported steps stay in the map.
+DIRECT_STEP_FIXTURES: Final[Mapping[int, tuple[str, ...]]] = MappingProxyType({
+    10: ("identity.baseline_samples", "identity.baseline_twins"),
+    11: ("determinism.baseline",),
+    18: ("colony.u10",),
+    19: ("replay.generate", "replay.recorded", "replay.scripted"),
+    26: ("economy.soak_no_beasts",),
+    28: ("knowledge.f10_injected", "knowledge.f10_no_kill"),
+    29: ("story.script48",),
+    30: ("neighbours.script48",),
+    35: ("steward.on24_twins",),
+    44: ("core.baseline10", "core.colony_u10", "core.colony_soak20", "core.steward_off",
+         "core.steward_on", "m6a.lifecycle_off", "m6a.lifecycle_on"),
+    47: ("m6a.food72",),
+    48: ("m6a.food_data_only",),
+    50: ("read.determinism", "read.soak20", "read.story48", "read.neighbours48",
+         "read.steward_on24", "read.m6a_steward_on72"),
+})
+UNSUPPORTED_DIRECT_STEPS: Final = frozenset({47, 48})
+
+
+def step_fixtures(step: int) -> tuple[str, ...]:
+    """Return the closed original obligation sequence, never a caller-selected subset."""
+    require(type(step) is int and step in DIRECT_STEP_FIXTURES, "/step", "unknown direct step")
+    assigned = [fixture for fixtures in DIRECT_STEP_FIXTURES.values() for fixture in fixtures]
+    require(len(assigned) == len(set(assigned)) and frozenset(assigned) == DIRECT_IDS,
+            "/step-map", "missing, duplicate or extra direct fixture")
+    return DIRECT_STEP_FIXTURES[step]
 
 
 def partition(registry: Registry) -> dict[str, frozenset[str]]:
@@ -110,6 +142,19 @@ def _plans(
     }
 
 
+def _prepare(name: str, registry: Registry, plans: tuple[Invocation, ...], products: Products) -> None:
+    """Keep concrete typed adapter boundaries for whole paired fixture batches."""
+    if name == "baseline":
+        baseline.prepare(registry, plans, products)
+    elif name == "ordinary":
+        ordinary.prepare(registry, plans, products)
+    elif name == "f10":
+        f10.prepare(registry, plans, products)
+    else:
+        require(name == "m6a", "/component", "unknown component")
+        m6a.prepare(registry, plans, products)
+
+
 def _run(
     name: str,
     registry: Registry,
@@ -117,10 +162,13 @@ def _run(
     products: Products,
     declarations: Declarations,
     output: Path,
+    step: int | None = None,
 ) -> ComponentResult:
     if name == "baseline":
         return baseline.run_registered(registry, plans, products, output)
     if name == "ordinary":
+        if step == 50:
+            return ordinary.run_preservation(registry, plans, products, declarations, output)
         return ordinary.run_registered(registry, plans, products, declarations, output)
     if name == "f10":
         return f10.run_registered(registry, plans, products, output)
@@ -217,13 +265,14 @@ def _freeze_artifacts(name: str, receipt: Node, plans: tuple[Invocation, ...],
     return frozen
 
 
-def run_all(
+def _run_batch(
     registry: Registry,
     products: Products,
     declarations: Declarations,
     freshoutput: Path,
+    step: int | None,
 ) -> ComponentResult:
-    """Run trusted component producers; caller-supplied PASS rows are never accepted."""
+    """Shared execution with global preflight before any closed step selection."""
     require(
         freshoutput.is_absolute()
         and freshoutput == freshoutput.resolve()
@@ -241,6 +290,7 @@ def run_all(
         "output overlaps product inputs",
     )
     freshoutput.mkdir(parents=True, exist_ok=False)
+    required = step_fixtures(step) if step is not None else tuple(sorted(DIRECT_IDS))
     rows: dict[str, dict[str, Json]] = {
         name: {
             "component": name,
@@ -268,6 +318,14 @@ def run_all(
             "missing direct fixture declaration coverage",
         )
         groups = _plans(registry, products, freshoutput, selected)
+        if step is not None:
+            required_ids = frozenset(required)
+            groups = {name: tuple(sorted((p for p in plans if p.fixture_id in required_ids),
+                                         key=lambda p: (required.index(p.fixture_id), p.arm)))
+                      for name, plans in groups.items() if required_ids.intersection(selected[name])}
+            rows = {name: rows[name] for name in groups}
+            require(frozenset(p.fixture_id for plans in groups.values() for p in plans) == required_ids,
+                    "/step", "missing mapped fixture expansion")
         for name, plans in groups.items():
             rows[name]["invocations"] = [
                 {
@@ -283,20 +341,23 @@ def run_all(
                 }
                 for p in plans
             ]
-        # Every component validates before any producer starts.
-        baseline.prepare(registry, groups["baseline"], products)
-        ordinary.prepare(registry, groups["ordinary"], products)
-        f10.prepare(registry, groups["f10"], products)
-        m6a.prepare(registry, groups["m6a"], products)
+        # All selected complete component batches validate before any producer starts.
+        for name, plans in groups.items():
+            if step not in UNSUPPORTED_DIRECT_STEPS:
+                _prepare(name, registry, plans, products)
     except (OSError, ValueError) as error:
         errors.append({"phase": "preflight", "error": str(error)})
     if not errors:
         for name, plans in groups.items():
             row = rows[name]
+            if step in UNSUPPORTED_DIRECT_STEPS:
+                row["status"] = "NOT_IMPLEMENTED"
+                row["reason"] = "Joint M6a adapter cannot authenticate separate original step occurrences"
+                continue
             row["status"] = "FAIL"
             path = freshoutput / f"{name}.json"
             try:
-                result = _run(name, registry, plans, products, declarations, path)
+                result = _run(name, registry, plans, products, declarations, path, step)
                 _attest(name, result, path, registry, products, declarations, row)
                 artifacts[name] = _freeze_artifacts(name, document(path.read_text()), plans, freshoutput)
                 row['artifact_snapshots'] = {str(folder): dict(hashes) for folder, hashes in artifacts[name].items()}
@@ -314,12 +375,18 @@ def run_all(
                         row["receipt_sha256"] = file_hash(path)
                     except (OSError, ValueError) as hash_error:
                         row["receipt_hash_error"] = str(hash_error)
+                try:
+                    failed = _failed_artifacts(name, plans, freshoutput)
+                    artifacts.setdefault(name, {}).update(failed)
+                    row["failed_artifact_snapshots"] = {str(folder): dict(hashes) for folder, hashes in failed.items()}
+                except (OSError, ValueError) as freeze_error:
+                    row["artifact_freeze_error"] = str(freeze_error)
                 errors.append({"component": name, "error": str(error)})
         for name, row in rows.items():
-            if row["receipt_sha256"] is not None:
+            if row["receipt_sha256"] is not None or name in artifacts:
                 try:
                     require(
-                        file_hash(freshoutput / f"{name}.json")
+                        row["receipt_sha256"] is None or file_hash(freshoutput / f"{name}.json")
                         == row["receipt_sha256"],
                         name,
                         "component receipt changed during direct run",
@@ -333,12 +400,15 @@ def run_all(
                     errors.append(
                         {"component": name, "phase": "postflight", "error": str(error)}
                     )
-    status = "FAIL" if errors else "PASS"
+    status = "FAIL" if errors else "INCOMPLETE" if step in UNSUPPORTED_DIRECT_STEPS else "PASS"
     receipt = freshoutput / "receipt.json"
     atomic_json(
         receipt,
         {
-            "schema": "direct_components_v1",
+            "schema": "direct_components_v1" if step is None else "direct_step_components_v1",
+            **({} if step is None else {"step": step, "obligations": [f"{step}:{fixture}" for fixture in required],
+                                       "fixtures": list(required), "whole_step_complete": False,
+                                       "original_order_executed": False}),
             "status": status,
             "publication_authority": False,
             "full_gate_status": "NOT_QUALIFIED",
@@ -363,3 +433,30 @@ def run_all(
         },
     )
     return ComponentResult(receipt, status)
+
+
+def _failed_artifacts(name: str, plans: tuple[Invocation, ...], output: Path) -> dict[Path, dict[str, str]]:
+    """Freeze actual failed outputs even if the producer omitted or never wrote its receipt."""
+    folders = {plan.out for plan in plans}
+    if name == "m6a":
+        folders.update(plan.out.parent / "standing-scorer" for plan in plans if plan.fixture_id == m6a.FIXED)
+        folders.update(plan.out.parent / "matched-companion" for plan in plans
+                       if plan.arm == "base" and plan.fixture_id == m6a.SELECTED)
+    result: dict[Path, dict[str, str]] = {}
+    for folder in sorted(folders):
+        if folder.exists() or folder.is_symlink():
+            require(folder.is_relative_to(output / "runs") and folder == folder.resolve(strict=True),
+                    str(folder), "unsafe failed artifact root")
+            result[folder] = inventory(folder, [p.name for p in folder.iterdir()])
+    return result
+
+
+def run_all(registry: Registry, products: Products, declarations: Declarations, freshoutput: Path) -> ComponentResult:
+    """Retain the complete development batch API and its original component receipt schema."""
+    return _run_batch(registry, products, declarations, freshoutput, None)
+
+
+def run_step(registry: Registry, products: Products, declarations: Declarations,
+             step: int, freshoutput: Path) -> ComponentResult:
+    """Run only the closed direct obligations at one step; never claim the whole gate step."""
+    return _run_batch(registry, products, declarations, freshoutput, step)

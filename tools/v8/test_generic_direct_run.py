@@ -16,6 +16,7 @@ from unittest.mock import patch
 import generic_baseline_run as baseline
 import generic_direct_run as direct
 import generic_f10_run as f10
+import generic_fixture_registry as registry_module
 import generic_m6a_run as m6a
 from generic_declarations import Declarations
 from generic_fixture_registry import DIRECT_IDS, Invocation, Registry, load_registry
@@ -34,7 +35,7 @@ class DirectTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name).resolve()
-        self.registry = load_registry(Path(__file__).with_name("gate_fixtures.json"))
+        self.registry = load_registry(Path(registry_module.__file__).with_name("gate_fixtures.json"))
         products: list[ProbeProduct] = []
         for arm, sha in (("base", "a" * 40), ("candidate", "b" * 40)):
             folder = self.root / arm
@@ -76,6 +77,9 @@ class DirectTests(unittest.TestCase):
         artifact_tamper: str = "",
         artifact_kind: str = "raw",
         unsafe_manifest: bool = False,
+        step: int | None = None,
+        output_name: str = "out",
+        raise_after_outputs: str = "",
     ) -> ComponentResult:
         def run(
             name: str, registry: Registry, plans: tuple[Invocation, ...], output: Path
@@ -154,6 +158,8 @@ class DirectTests(unittest.TestCase):
                         "scorers": scorers,
                     },
                 )
+            if name == raise_after_outputs:
+                raise GateContractError("SYNTHETIC", name, "raised after retained artifacts")
             return ComponentResult(
                 output,
                 ("FAIL" if status == "PASS" else "PASS")
@@ -193,6 +199,8 @@ class DirectTests(unittest.TestCase):
                     _ = stack.enter_context(
                         patch.object(module, "run_registered", side_effect=runner)
                     )
+                    if name == "ordinary":
+                        _ = stack.enter_context(patch.object(module, "run_preservation", side_effect=runner))
                 else:
 
                     def protected(
@@ -208,9 +216,9 @@ class DirectTests(unittest.TestCase):
                     _ = stack.enter_context(
                         patch.object(module, "run_registered", side_effect=protected)
                     )
-            return direct.run_all(
-                self.registry, self.products, self.declarations, self.root / "out"
-            )
+            if step is not None:
+                return direct.run_step(self.registry, self.products, self.declarations, step, self.root / output_name)
+            return direct.run_all(self.registry, self.products, self.declarations, self.root / output_name)
 
     def test_complete_partition_own_arm_roots_repeats_and_no_authority(self) -> None:
         result = self.invoke()
@@ -347,3 +355,115 @@ class DirectTests(unittest.TestCase):
         result = self.invoke()
         self.assertEqual(result.status, "FAIL")
         self.assertFalse(self.calls)
+
+
+    def test_closed_map_partitions_all_direct_fixtures_once(self) -> None:
+        assigned = [fixture for step in direct.DIRECT_STEP_FIXTURES for fixture in direct.step_fixtures(step)]
+        self.assertEqual(len(assigned), len(set(assigned)))
+        self.assertEqual(set(assigned), DIRECT_IDS)
+        self.assertEqual(direct.step_fixtures(19), ("replay.generate", "replay.recorded", "replay.scripted"))
+        for step in (0, 17, 51, True):
+            with self.assertRaises(GateContractError):
+                _ = direct.step_fixtures(step)
+
+    def test_step44_runs_baseline_and_ordinary_lifecycle_but_no_joint_m6a(self) -> None:
+        result = self.invoke(step=44)
+        self.assertEqual(result.status, "PASS")
+        self.assertEqual([name for name, _ in self.calls], ["baseline", "ordinary"])
+        plans = [plan for _, group in self.calls for plan in group]
+        self.assertEqual({plan.fixture_id for plan in plans}, set(direct.step_fixtures(44)))
+        self.assertEqual(len([p for p in plans if p.fixture_id == "m6a.lifecycle_off"]), 4)
+        receipt = document(result.receipt.read_text())
+        self.assertEqual(receipt.field("schema").value, "direct_step_components_v1")
+        self.assertEqual(receipt.field("step").value, 44)
+        self.assertFalse(receipt.field("publication_authority").value)
+        self.assertFalse(receipt.field("whole_step_complete").value)
+
+    def test_step50_runs_six_fresh_fixtures_not_prior_receipts(self) -> None:
+        _ = self.invoke(step=18, output_name="step18")
+        earlier = [p for _, plans in self.calls for p in plans]
+        self.calls.clear()
+        result = self.invoke(step=50, output_name="step50")
+        self.assertEqual(result.status, "PASS")
+        self.assertEqual([name for name, _ in self.calls], ["ordinary"])
+        current = [p for _, plans in self.calls for p in plans]
+        self.assertEqual({p.fixture_id for p in current}, set(direct.step_fixtures(50)))
+        self.assertEqual(len({p.fixture_id for p in current}), 6)
+        self.assertEqual([(p.fixture_id, p.arm) for p in current],
+                         [(fixture, arm) for fixture in direct.step_fixtures(50) for arm in ("base", "candidate")])
+        self.assertTrue(all(p.out.is_relative_to(self.root / "step50/runs") for p in current))
+        self.assertFalse({p.out for p in current}.intersection(p.out for p in earlier))
+        with self.assertRaises(GateContractError):
+            _ = self.invoke(step=50, output_name="step50")
+
+    def test_global_registry_and_declarations_validated_before_subset(self) -> None:
+        self.registry = replace(self.registry, fixtures=self.registry.fixtures[:-1])
+        self.assertEqual(self.invoke(step=10).status, "FAIL")
+        self.assertFalse(self.calls)
+
+    def test_unselected_fixture_declaration_coverage_still_required(self) -> None:
+        self.declarations = replace(self.declarations,
+                                    known_fixtures=tuple(f for f in self.declarations.known_fixtures if f == "colony.u10"))
+        self.assertEqual(self.invoke(step=18).status, "FAIL")
+        self.assertFalse(self.calls)
+
+    def test_f10_indivisible_four_plan_batch(self) -> None:
+        self.assertEqual(self.invoke(step=28).status, "PASS")
+        self.assertEqual(len(self.calls), 1)
+        name, plans = self.calls[0]
+        self.assertEqual(name, "f10")
+        self.assertEqual(len(plans), 4)
+        self.assertEqual({(p.arm, p.fixture_id) for p in plans},
+                         {(arm, fixture) for arm in ("base", "candidate") for fixture in direct.step_fixtures(28)})
+
+    def test_replay_keeps_complete_group_and_same_arm_dependency(self) -> None:
+        self.assertEqual(self.invoke(step=19).status, "PASS")
+        plans = self.calls[0][1]
+        self.assertEqual(len(plans), 6)
+        self.assertEqual({p.fixture_id for p in plans}, set(direct.step_fixtures(19)))
+        for plan in plans:
+            if plan.fixture_id == "replay.recorded":
+                dependency = plan.generated_input
+                self.assertIsNotNone(dependency)
+                if dependency is None:
+                    raise AssertionError("missing generated replay dependency")
+                producer = next(p for p in plans if p.id == dependency.producer_invocation)
+                self.assertEqual(plan.arm, producer.arm)
+                self.assertEqual(dependency.path, producer.out / "commands/colony_s5_commands.json")
+
+    def test_m6a47_and48_retain_obligations_without_joint_execution(self) -> None:
+        for step in (47, 48):
+            with self.subTest(step=step):
+                result = self.invoke(step=step, output_name=f"step{step}")
+                self.assertEqual(result.status, "INCOMPLETE")
+                receipt = document(result.receipt.read_text())
+                self.assertEqual(receipt.field("fixtures").value, list(direct.step_fixtures(step)))
+                rows = receipt.field("components").array()
+                self.assertEqual(len(rows), 1)
+                self.assertEqual(rows[0].field("status").value, "NOT_IMPLEMENTED")
+                self.assertTrue(rows[0].field("invocations").array())
+        self.assertFalse(self.calls)
+
+    def test_step_safety_failure_retained(self) -> None:
+        result = self.invoke(step=44, fail="ordinary")
+        self.assertEqual(result.status, "FAIL")
+        plans = [p for _, group in self.calls for p in group]
+        self.assertIn("core.steward_off", {p.fixture_id for p in plans})
+        row = document(result.receipt.read_text()).field("components").array()[1]
+        self.assertEqual(row.field("original_receipt_status").value, "FAIL")
+        self.assertTrue(row.field("failed_artifact_snapshots").mapping())
+
+    def test_step_exception_after_written_failure_keeps_artifacts(self) -> None:
+        result = self.invoke(step=18, fail="ordinary", raise_after_outputs="ordinary")
+        self.assertEqual(result.status, "FAIL")
+        row = document(result.receipt.read_text()).field("components").array()[0]
+        self.assertIsNotNone(row.field("receipt_sha256").value)
+        self.assertTrue(row.field("failed_artifact_snapshots").mapping())
+
+
+    def test_failed_component_raw_artifacts_still_detect_later_mutation(self) -> None:
+        result = self.invoke(fail="baseline", raise_after_outputs="baseline", artifact_tamper="m6a")
+        self.assertEqual(result.status, "FAIL")
+        row = document(result.receipt.read_text()).field("components").array()[0]
+        self.assertTrue(row.field("failed_artifact_snapshots").mapping())
+        self.assertIn("artifact", row.field("postflight_error").text())
