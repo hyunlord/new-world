@@ -4,12 +4,15 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from collections.abc import Callable
 from dataclasses import replace
 from pathlib import Path
+from typing import final
 from unittest.mock import patch
 
+import gate_oracle_child as oracle_child
 import generic_m6a_structural as structural
 from generic_fixture_run import Products
 from generic_fixtures import ProbeProduct
@@ -32,6 +35,9 @@ def transcript() -> str:
 
 
 class StructuralTests(unittest.TestCase):
+    def test_owned_api_is_separate_from_legacy_capture(self) -> None:
+        self.assertTrue(callable(getattr(structural, "run_owned_entrypoint", None)))
+
     def fixture(self, parent: Path, payload: bytes | None = None, exit_code: int = 0
                 ) -> tuple[Products, structural.Tooling]:
         source = Path(original_run.__code__.co_filename).resolve().parent
@@ -255,6 +261,7 @@ lines[node.lineno-1:node.end_lineno]=['def validate(text: str) -> int:\n    retu
 shadow=home/'m6a_gate_art.py';shadow.write_text(''.join(lines))
 spec=importlib.util.spec_from_file_location('m6a_gate_art',shadow)
 module=importlib.util.module_from_spec(spec);sys.modules['m6a_gate_art']=module;spec.loader.exec_module(module)
+import gate_oracle_child as oracle_child
 import generic_m6a_structural as structural
 from test_generic_m6a_structural import StructuralTests,transcript
 products,tools=StructuralTests().fixture(home,transcript().replace('native anchor phase 2','missing anchor phase 2').encode())
@@ -301,6 +308,218 @@ print(result.status)
                 for child in children:
                     child.terminate()
                     _ = child.wait(timeout=5)
+
+
+def owned_fixture(root: Path, code: int=0, timeout: bool=False) -> tuple[Products,structural.Tooling,Path]:
+    """Synthetic lock-path overlay; lifecycle tests separately mock source admission."""
+    products,tools=StructuralTests().fixture(root,exit_code=code)
+    lock=root/'owned.lock';lock.touch()
+    if timeout:
+        binary=products.base.executable
+        _=binary.write_text(binary.read_text().replace('sys.exit(', 'import time; time.sleep(30); sys.exit('))
+    prepared: list[ProbeProduct]=[]
+    for product in (products.base,products.candidate):
+        names=set(dict(product.input_files))
+        for name in structural.import_closure(tools.root,'gate_oracle_child.py'):
+            target=product.input_root/'tools/v8'/name
+            value=(tools.root/name).read_text()
+            if name=='mux2_gate_lock.py':value=value.replace('/Users/rexxa/work/mux2-data/.mux2-gpu.lock',str(lock))
+            if name=='gate_oracle_child.py' and timeout:value=value.replace('supervise(argv,limit,started,control)','supervise(argv,0,started,control)')
+            _=target.write_text(value);names.add('tools/v8/'+name)
+        prepared.append(replace(product,executable_sha256=file_hash(product.executable),input_files=tuple(sorted(inventory(product.input_root,sorted(names)).items()))))
+    return Products(prepared[0],prepared[1]),tools,lock
+
+
+def contender(lock: Path) -> int:
+    result=subprocess.run([sys.executable,'-c',
+        'import fcntl,sys; f=open(sys.argv[1],"a"); fcntl.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB)',str(lock)],
+        capture_output=True,check=False)
+    return result.returncode
+
+
+@final
+class OwnedTests(unittest.TestCase):
+    def test_loaded_helper_and_product_copy_must_both_match_sealed_tools(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder).resolve();products,tools,_=owned_fixture(root)
+            original=tools.root/'mux2_gate_lock.py'
+            target=products.base.input_root/'tools/v8/mux2_gate_lock.py'
+            _=target.write_bytes(original.read_bytes())
+            product=replace(products.base,input_files=tuple((name,file_hash(products.base.input_root/name)) for name,_ in products.base.input_files))
+            structural.check_owned_helpers(product,tools)
+            _=target.write_text(target.read_text()+'\n')
+            changed=replace(product,input_files=tuple((name,file_hash(product.input_root/name)) for name,_ in product.input_files))
+            with self.assertRaises(ValueError):structural.check_owned_helpers(changed,tools)
+
+    def test_real_lane_lifetime_normal_and_nonzero(self) -> None:
+        for code,timeout in ((0,False),(7,False),(0,True)):
+            with self.subTest(code=code,timeout=timeout),tempfile.TemporaryDirectory() as folder:
+                root=Path(folder).resolve();products,tools,lock=owned_fixture(root,code,timeout)
+                with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'LOCK',lock),patch.object(structural,'check_owned_helpers'):
+                    owner=structural.StructuralLaneOwner.acquire(root/'owned',structural.OwnedAdmission(products,tools))
+                    self.assertNotEqual(contender(lock),0)
+                    result=owner.run(products,tools)
+                    self.assertIsInstance(result,structural.SettledStructural)
+                    assert isinstance(result,structural.SettledStructural)
+                    self.assertNotEqual(contender(lock),0)
+                    with self.assertRaises(ValueError):_=owner.finish(structural.SettlementEvidence(owner.attempt,False))
+                    self.assertNotEqual(contender(lock),0)
+                    final=owner.finish(result)
+                    self.assertEqual(final.status,'PASS' if code==0 and not timeout else 'FAIL')
+                    if timeout:self.assertEqual(owner.results['base'].wrapper_exit,124)
+                    self.assertEqual(contender(lock),0)
+                    self.assertEqual(owner.state,'CLOSED')
+                    self.assertTrue(owner.results['base'].native_pid)
+                    with self.assertRaises(ValueError):_=owner.finish(result)
+
+    def test_no_launch_preflight_failure_closes_only_via_finish(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder).resolve();products,tools,lock=owned_fixture(root)
+            bad=Products(replace(products.base,input_files=()),products.candidate)
+            with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'capture') as capture:
+                owner=structural.StructuralLaneOwner.acquire(root/'owned',structural.OwnedAdmission(bad,tools))
+                result=owner.run(bad,tools)
+                capture.assert_not_called();self.assertFalse(owner.dispatched)
+                self.assertIsInstance(result,structural.SettledStructural)
+                assert isinstance(result,structural.SettledStructural)
+                self.assertNotEqual(contender(lock),0)
+                self.assertEqual(owner.finish(result).status,'FAIL')
+                self.assertEqual(contender(lock),0)
+
+    def test_original_completed_receipts_recover_after_reader_fault(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder).resolve();products,tools,lock=owned_fixture(root)
+            original=oracle_child.inspect
+            reads=0
+            def once(path: Path,digest: str,pid: int | None,code: int | None) -> oracle_child.OwnedResult:
+                nonlocal reads
+                reads+=1
+                if reads==1:return oracle_child.OwnedResult('UNKNOWN',pid,None,code,None,'one-time reader fault')
+                if reads in (2,3):raise KeyboardInterrupt
+                return original(path,digest,pid,code)
+            with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'LOCK',lock),patch.object(structural,'check_owned_helpers'),patch.object(oracle_child,'inspect',side_effect=once):
+                owner=structural.StructuralLaneOwner.acquire(root/'owned',structural.OwnedAdmission(products,tools))
+                pending=owner.run(products,tools)
+                self.assertIsInstance(pending,structural.RecoveryRequired)
+                assert isinstance(pending,structural.RecoveryRequired)
+                self.assertEqual(set(owner.results),{'base'})
+                self.assertNotEqual(contender(lock),0)
+                with self.assertRaises(ValueError):_=owner.finish(structural.SettlementEvidence(owner.attempt,True))
+                forged=structural.RecoveryRequired(pending.attempt,pending.arm,pending.paths)
+                with self.assertRaises(ValueError):_=owner.inspect_recovery(forged)
+                for _ in range(2):
+                    self.assertIsInstance(owner.inspect_recovery(pending),structural.StillUnknown)
+                    self.assertNotEqual(contender(lock),0)
+                recovered=owner.inspect_recovery(pending)
+                self.assertIsInstance(recovered,structural.SettlementEvidence)
+                assert isinstance(recovered,structural.SettlementEvidence)
+                self.assertEqual(owner.finish(recovered).status,'FAIL')
+                self.assertEqual(contender(lock),0)
+                self.assertEqual(set(owner.results),{'base'})
+
+    def test_post_settlement_drift_is_failed_but_safe_to_close(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder).resolve();products,tools,lock=owned_fixture(root)
+            with patch.object(structural,'LOCK',lock),patch.object(oracle_child,'LOCK',lock),patch.object(structural,'check_owned_helpers'):
+                owner=structural.StructuralLaneOwner.acquire(root/'owned',structural.OwnedAdmission(products,tools))
+                result=owner.run(products,tools)
+                assert isinstance(result,structural.SettledStructural)
+                _=(owner.plans['base'].output/'plant-art-structural.log').write_text('late mutation')
+                self.assertEqual(owner.finish(result).status,'FAIL')
+                self.assertEqual(contender(lock),0)
+
+    def test_live_driver_inspection_and_controller_eof(self) -> None:
+        for disconnect,missing,live,boundary in ((False,False,False,''),(True,False,False,''),(False,True,False,''),(True,False,True,''),(True,False,True,'capture'),(True,False,True,'inspect_recovery'),(True,False,True,'record_status'),(True,False,True,'evil_capture'),(True,False,True,'evil_inspect'),(True,False,True,'evil_status')):
+            with self.subTest(disconnect=disconnect,missing=missing,live=live,boundary=boundary),tempfile.TemporaryDirectory() as folder:
+                root=Path(folder).resolve();read,write=os.pipe()
+                script=r"""
+import os,sys
+from pathlib import Path
+from unittest.mock import patch
+sys.path[:0]=sys.argv[5:]
+import generic_m6a_structural as s
+from test_generic_m6a_structural import owned_fixture
+root=Path(sys.argv[1]);products,tools,lock=owned_fixture(root)
+missing=sys.argv[3]=='missing'
+live=sys.argv[3]=='live'
+boundary=sys.argv[4]
+children=[]
+class EvilError(Exception):
+ def __str__(self):raise RuntimeError('exception rendering failed')
+def capture(path,digest,fd):
+ import subprocess
+ child=subprocess.Popen([sys.executable,'-c','import time; time.sleep(60)'])
+ children.append(child)
+ (root/'test-owned-child.pid').write_text(str(child.pid))
+ if boundary=='capture':raise RuntimeError('injected after actual test-owned dispatch')
+ if boundary=='evil_capture':raise EvilError()
+ return s.oracle_child.OwnedResult('UNKNOWN',None,None,None,None,'test-owned direct child; not production recovery')
+def reap():
+ for child in children:
+  if child.poll() is None:child.terminate()
+  child.wait()
+def cleanup(signum,frame):
+ reap()
+ os._exit(0)
+import atexit
+atexit.register(reap)
+if live:
+ import signal
+ signal.signal(signal.SIGTERM,cleanup)
+original=s.oracle_child.inspect
+once=True
+def inspect(path,digest,pid,code):
+ global once
+ if once:
+  once=False
+  if missing:
+   original(path,digest,pid,code)
+   (root/'owned/base/evidence/native-terminal.json').unlink()
+  return s.oracle_child.OwnedResult('UNKNOWN',pid,None,code,None,'one-time reader fault')
+ return original(path,digest,pid,code)
+def broken_inspect(self,token):
+ if boundary=='evil_inspect':raise EvilError()
+ raise TypeError('injected recovery inspection')
+def broken_status(self):
+ if boundary=='evil_status':raise EvilError()
+ raise RuntimeError('injected status publication')
+if boundary in ('inspect_recovery','evil_inspect'):s.StructuralLaneOwner.inspect_recovery=broken_inspect
+if boundary in ('record_status','evil_status'):s.StructuralLaneOwner.record_status=broken_status
+with patch.object(s,'LOCK',lock),patch.object(s.oracle_child,'LOCK',lock),patch.object(s,'check_owned_helpers'),patch.object(s.oracle_child,'inspect',side_effect=inspect),patch.object(s.oracle_child,'capture',side_effect=capture if live else s.oracle_child.capture):
+ result=s.run_owned_entrypoint(products,tools,root/'owned',int(sys.argv[2]))
+ print(result.status,flush=True)
+"""
+                with subprocess.Popen([sys.executable,'-c',script,str(root),str(read),'live' if live else ('missing' if missing else 'reader'),boundary,str(Path(__file__).resolve().parent),str(Path(structural.__file__).resolve().parent),str(Path(oracle_child.__file__).resolve().parent)],pass_fds=(read,),env={key:value for key,value in os.environ.items() if key!='PYTHONPATH'},stdout=subprocess.PIPE,stderr=subprocess.PIPE) as driver:
+                    os.close(read)
+                    try:
+                        deadline=time.monotonic()+10
+                        marker=root/'test-owned-child.pid' if boundary else root/'owned/ownership-event-1.json'
+                        while not marker.exists() and driver.poll() is None and time.monotonic()<deadline:time.sleep(0.01)
+                        if not marker.exists():
+                            if driver.poll() is None:driver.terminate()
+                            stdout,stderr=driver.communicate(timeout=5)
+                            self.fail(f'child startup failed ({driver.returncode}): stdout={stdout.decode(errors="replace")} stderr={stderr.decode(errors="replace")}')
+                        self.assertIsNone(driver.poll());self.assertNotEqual(contender(root/'owned.lock'),0)
+                        if live:os.kill(int((root/'test-owned-child.pid').read_text()),0)
+                        if boundary in ('inspect_recovery','evil_inspect'):
+                            _=os.write(write,b'inspect\n');time.sleep(0.1)
+                            self.assertIsNone(driver.poll())
+                        if disconnect or missing:
+                            if missing:_=os.write(write,b'inspect\n')
+                            else:os.close(write);write=-1
+                            time.sleep(0.1)
+                            self.assertIsNone(driver.poll());self.assertNotEqual(contender(root/'owned.lock'),0)
+                            # The live-fixture handler reaps its own actual Popen before exiting;
+                            # other modes already completed. This is not production recovery.
+                            driver.terminate();_=driver.wait(timeout=5)
+                        else:
+                            _=os.write(write,b'status\ninspect\n')
+                            stdout,stderr=driver.communicate(timeout=10)
+                            self.assertEqual(driver.returncode,0,stderr.decode())
+                            self.assertEqual(stdout.strip(),b'FAIL');self.assertEqual(contender(root/'owned.lock'),0)
+                    finally:
+                        if write>=0:os.close(write)
+                        if driver.poll() is None:driver.terminate();_=driver.wait(timeout=5)
 
 
 if __name__ == '__main__':

@@ -321,6 +321,8 @@ Stall 파생 capture는 실제 빌드 증거 참조·원래 bounded 자식 연�
 
 원래 GDScript strict 단계8·46의 별도 어댑터를 추가했다. 단계8은 원래 전체 scripts 선택을, 단계46은 원래4개 파일과 전체 FFI 검사를 유지하며 준비된 Godot 입력·명시적 실행 파일·호출자 소유 lane을 요구한다. 실행이나 진단 기록 중 예외·중단은 StrictOwnershipUnknown으로 남아 최종 산출물 고정과 정상 실패 처리를 막고, project.godot의 바이트뿐 아니라 권한도 대조한다. 독립 리뷰의 예외 종류 누락과 같은 바이트의 권한 변경 허위 통과를 수정했다. 루트42개(4.302초), 조정기 호환65개(56.498초), 구조 helper 변경 후42개(3.331초), 엄격 타입·Ruff를 통과했다. 실제 Godot 검사·전체 순서 연결과 불명확한 자식의 상위 소유·복구 통합은 아직 미완료다(`stage0/ordered-dispatch/GDSCRIPT_STRICT_INDEPENDENT_REVIEW_V3.md`).
 
+구조 렌더러의 별도 live owner는 실제 lane descriptor를 소유하며 UNKNOWN·제어 파이프 EOF·중단 중에도 소유 프레임을 유지한다. 원래 wrapper/native 종료 증거가 있을 때만 동일 시도의 복구를 허용하고 복구 결과도 FAIL로 남긴다. 독립 검토에서 예외 종류 및 예외 문자열 변환으로 소유 프레임이 풀리는 결함을 재현해 수정했다. 루트 표준 discovery의 초기10개 하위 사례 실패는 테스트 자식의 모듈 검색 경로 누락으로 확인했고, 명시적인 실제 모듈 경로와 시작 stderr 기록을 추가했다. PYTHONPATH를 해제한 최종 루트19개가26.466초에 통과했고 타입·Ruff도 통과했다. 원래180초 명령을 유지하지만 timeout 검사는 합성 대기 한도이며 실제 Godot·전체 단계 연결·프로세스 강제 종료나 시스템 손실 후 보장은 없다(`stage0/ordered-dispatch/M6A_STRUCTURAL_OWNER_INDEPENDENT_REVIEW_V3.md`, `STRUCTURAL_OWNER_TEST_IMPORT_FIX.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

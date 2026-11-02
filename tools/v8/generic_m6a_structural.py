@@ -1,15 +1,21 @@
 """Original no-world plant-art renderer; visual and native ancestry remain unqualified."""
 import ast
+import fcntl
 import hashlib
 import logging
 import os
 import re
 import shutil
+import signal
+import stat
 import subprocess
 import sys
+import uuid
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+from typing import Literal
 
+import gate_oracle_child as oracle_child
 from generic_fixture_run import ComponentResult, Products
 from generic_fixtures import ProbeProduct
 from generic_gate import document, integer, require, text
@@ -26,6 +32,7 @@ from generic_sources import inventory
 from m6a_gate_art import structural_command, validate
 from m6a_gate_history import run as original_run
 from mux2_gate_inputs import Json
+from mux2_gate_lock import FD_ENV, LOCK
 
 LOGGER = logging.getLogger(__name__)
 # Snapshot actual imported sources now, not an unrelated later copy of the tooling.
@@ -36,7 +43,7 @@ LOADED_SOURCES = {
 }
 
 # Source-reviewed scene/autoload/rebuild paths: layers never enter the scene tree.
-PINS: dict[str, str] = {'scripts/world/art_hash.gd': 'e37c1a4553175450dbf598bfc3b7a0d86c51016bc2c781a6e4ef82a93e288afe', 'scripts/ui/person_names.gd': 'cd8afd961c3eb31fc6b7706ea1bdb4ea0c9334e229cff590974aa6e2de422791', 'sim_bridge.gdextension': '6c47616cc217caf4b9dfcecfba4c6157f98b8ee8954c18602081ab8a63eb1b5a', 'project.godot': 'cd16a69aa33fbde80fb64c2bf8fb584f6d7aaef0f4b135ed92c8a35cb6061c98', 'tools/v8/m6a_plant_art_test.gd': 'c8deea193b8ffc26436213fa8bece13a912d2870dc4276ec52c3f6da634c2006', 'tools/v8/run_bounded.sh': 'd2cec75c52279860395c3d76e2e886428e3957311eb082935bfb8331bbb0fee1', 'scripts/world/colony/plant_layer.gd': '84c7bb21b959d2511028b7df42d09b10cb16888b82c65aa59e849a66d95d0fc3', 'scripts/world/art/art_data.gd': 'fd3d27da528819c6ace5ad04824c1c7f8b8a5232b9f2535f40c3d7b1160fa919', 'scripts/ui/content_context.gd': 'e8cdac02c9d5241464a2d153e51c1c1db3a30696198d255d791213f0ac31ce10', 'scripts/core/locale.gd': 'b92c662d50966ce294be3596d91ef7530a3defd59010beee2c898e2e85ae50e3', 'scripts/core/sim_reads.gd': 'b50284a716ee296186fd007e78532a2c3c2569e7ce3e06f01b1b1428e6ba1128', 'scripts/world/colony/view.gd': 'f67192ce8caefbff8971a449f1b5e001c3b787cfb72807b8546c51f42f8e95ab'}
+PINS: dict[str, str] = {'scripts/world/art_hash.gd': 'e37c1a4553175450dbf598bfc3b7a0d86c51016bc2c781a6e4ef82a93e288afe', 'scripts/ui/person_names.gd': 'cd8afd961c3eb31fc6b7706ea1bdb4ea0c9334e229cff590974aa6e2de422791', 'sim_bridge.gdextension': '6c47616cc217caf4b9dfcecfba4c6157f98b8ee8954c18602081ab8a63eb1b5a', 'project.godot': 'cd16a69aa33fbde80fb64c2bf8fb584f6d7aaef0f4b135ed92c8a35cb6061c98', 'tools/v8/m6a_plant_art_test.gd': 'c8deea193b8ffc26436213fa8bece13a912d2870dc4276ec52c3f6da634c2006', 'tools/v8/run_bounded.sh': '5c41c4672e053b00c10284e2a5ed49fc0dddedfddc9af7305cac29ee180ce61d', 'scripts/world/colony/plant_layer.gd': '84c7bb21b959d2511028b7df42d09b10cb16888b82c65aa59e849a66d95d0fc3', 'scripts/world/art/art_data.gd': 'fd3d27da528819c6ace5ad04824c1c7f8b8a5232b9f2535f40c3d7b1160fa919', 'scripts/ui/content_context.gd': 'e8cdac02c9d5241464a2d153e51c1c1db3a30696198d255d791213f0ac31ce10', 'scripts/core/locale.gd': 'b92c662d50966ce294be3596d91ef7530a3defd59010beee2c898e2e85ae50e3', 'scripts/core/sim_reads.gd': 'b50284a716ee296186fd007e78532a2c3c2569e7ce3e06f01b1b1428e6ba1128', 'scripts/world/colony/view.gd': 'f67192ce8caefbff8971a449f1b5e001c3b787cfb72807b8546c51f42f8e95ab'}
 CLASS_CACHE_SHA256 = 'b82c2e7b1bd0f527aa0683cbc0225e49af2f5c54f20d5c9d603015e0d1236f6f'
 ORACLE_PINS: dict[str, str] = {'m6a_gate_art.py': '05e6173b0142f1f1b2bbf78aab0170b07d6f1e9cc14675ae82996d622c7013d6', 'm6a_gate_history.py': '75b3893f7732caa48c670d5b9017d6cef1e1077b44249a63170d24b0510f2ff4'}
 
@@ -318,6 +325,13 @@ def _completed(plan: StructuralPlan, result: ProcessResult) -> bool:
     return code >= 0 and result.native_exit == (0 if code == 0 else 1)
 
 
+def _renderer_oracle(raw: str) -> int:
+    backends = re.findall(r'^M6A_PLANT_ART_BACKEND display=(\S+) method=(\S+)$',raw,re.MULTILINE)
+    require(backends == [('macOS','gl_compatibility')], '/backend', 'missing/duplicate/unreviewed actual renderer')
+    require(not re.search(r'(?:Vulkan|Metal|Dummy).*API',raw), '/backend', 'conflicting renderer banner')
+    return validate(raw)
+
+
 def inspect_output(plan: StructuralPlan, result: ProcessResult) -> int:
     coordinator_sources(plan.tools)
     require(_completed(plan,result), '/completion', 'original wrapper completion missing')
@@ -353,10 +367,7 @@ def inspect_output(plan: StructuralPlan, result: ProcessResult) -> int:
     child.field('native_child_pid_evidence').equals('NOT_RECORDED')
     child.field('error').equals(None)
     raw = (plan.output/'plant-art-structural.log').read_bytes().decode('utf-8')
-    backends = re.findall(r'^M6A_PLANT_ART_BACKEND display=(\S+) method=(\S+)$',raw,re.MULTILINE)
-    require(backends == [('macOS','gl_compatibility')], '/backend', 'missing/duplicate/unreviewed actual renderer')
-    require(not re.search(r'(?:Vulkan|Metal|Dummy).*API',raw), '/backend', 'conflicting renderer banner')
-    count = validate(raw)
+    count = _renderer_oracle(raw)
     _check_product(plan.product)
     _check_tools(plan.tools)
     require(file_hash(plan.plan_path) == plan.plan_sha256, '/plan', 'plan changed')
@@ -426,6 +437,293 @@ def run_pair(products: Products, tools: Tooling, output: Path) -> ComponentResul
         'resolution_policy':'sole_pinned_extension_class_map_and_bound_uid_import_paths_v2',
         'publication_authority':False})
     return ComponentResult(receipt,status)
+
+
+
+@dataclass(frozen=True, slots=True)
+class OwnedAdmission:
+    products: Products
+    tools: Tooling
+
+
+@dataclass(frozen=True, slots=True)
+class RecoveryRequired:
+    attempt: str
+    arm: str
+    paths: tuple[Path,...]
+
+
+@dataclass(frozen=True, slots=True)
+class SettlementEvidence:
+    attempt: str
+    recovered: bool
+
+
+@dataclass(frozen=True, slots=True)
+class SettledStructural:
+    evidence: SettlementEvidence
+
+
+@dataclass(frozen=True, slots=True)
+class StillUnknown:
+    attempt: str
+    reason: str
+
+
+@dataclass(frozen=True, slots=True)
+class OwnedPlan:
+    product: ProbeProduct
+    path: Path
+    digest: str
+    output: Path
+
+
+def check_owned_helpers(product: ProbeProduct, tools: Tooling) -> None:
+    """Bind actual loaded helper closure and each wrapper's materialized copy."""
+    coordinator_sources(tools)
+    require(dict(tools.files).get('gate_oracle_child.py')=='c5fe850b1544c460b19ae3e63356705f225173c078926e5127348701d6ec5c32','/helper','unreviewed owned helper')
+    for name in import_closure(tools.root,'gate_oracle_child.py'):
+        digest=dict(tools.files).get(name)
+        require(digest is not None,'/helper','unsealed helper dependency')
+        module=sys.modules.get(name.removesuffix('.py'))
+        require(module is not None and module.__file__ is not None,'/helper','missing loaded dependency')
+        assert module is not None and module.__file__ is not None
+        require(file_hash(Path(module.__file__).resolve())==digest,'/helper','ambient helper differs')
+        target=product.input_root/'tools/v8'/name
+        require(dict(product.input_files).get('tools/v8/'+name)==digest and file_hash(target)==digest,
+                '/helper','wrapper helper copy differs from authenticated loaded helper')
+
+
+def _owned_plan(product: ProbeProduct, tools: Tooling, output: Path) -> OwnedPlan:
+    _check_product(product);_check_tools(tools);check_owned_helpers(product,tools)
+    output.mkdir();(output/'evidence').mkdir()
+    path=output.parent/(output.name+'-owned-plan.json')
+    inputs={str(product.input_root/name):sha for name,sha in product.input_files}
+    inputs.update({str(tools.root/name):sha for name,sha in tools.files})
+    inputs.update({str(tools.python):tools.python_sha256,str(tools.bash):tools.bash_sha256,
+                   str(product.executable):product.executable_sha256})
+    environment={'HOME':str(Path.home()),'__CF_USER_TEXT_ENCODING':f'0x{os.getuid():X}:0x3:0x33',
+        'PATH':tools.path,'PYTHONNOUSERSITE':'1','PYTHONDONTWRITEBYTECODE':'1','PYTHONCOERCECLOCALE':'0'}
+    atomic_json(path,{'schema':oracle_child.SCHEMA,'mode':'structural','root':str(product.input_root),
+        'evidence':str(output/'evidence'),'log':str(output/'plant-art-structural.log'),
+        'argv':[str(arg) for arg in structural_command(str(product.executable))[3:]],
+        'inputs':{k:v for k,v in inputs.items()},'environment':dict(environment)})
+    return OwnedPlan(product,path,file_hash(path),output)
+
+
+def _owned_join(plan: OwnedPlan, result: oracle_child.OwnedResult, tools: Tooling, lane_fd: int) -> oracle_child.OwnedResult:
+    check_owned_helpers(plan.product,tools)
+    require(file_hash(plan.path)==plan.digest,'/plan','original plan changed')
+    checked=oracle_child.inspect(plan.path,plan.digest,result.wrapper_pid,result.wrapper_exit)
+    require(checked.settlement=='SETTLED','/settlement',checked.error)
+    evidence=plan.output/'evidence'
+    require({p.name for p in evidence.iterdir()}=={'wrapper-start.json','wrapper-terminal.json','native-start.json','native-terminal.json','log-closed.json'},'/receipts','incomplete/extra owned chain')
+    start=document((evidence/'wrapper-start.json').read_text())
+    start.field('parent_pid').equals(os.getpid())
+    start.field('argv').equals([str(arg) for arg in structural_command(str(plan.product.executable))])
+    launch=start.field('environment').mapping()
+    environment=document(plan.path.read_text()).field('environment').mapping()
+    control=start.field('environment').field(oracle_child.CONTROL).text()
+    require(control.isdecimal(),'/control','invalid startup descriptor')
+    expected={**environment,oracle_child.PLAN:str(plan.path),oracle_child.HASH:plan.digest,
+              oracle_child.CONTROL:control,FD_ENV:str(lane_fd)}
+    require(launch==expected,'/environment','wrong actual parent launch')
+    document((evidence/'wrapper-terminal.json').read_text()).field('error').equals('')
+    return checked
+
+
+class StructuralLaneOwner:
+    """One live attempt owns its descriptor until authenticated settlement.
+
+    Deliberately no destructor/context manager: UNKNOWN is a live recovery state.
+    The standalone driver must retain this object; OS death is outside this guarantee.
+    """
+    def __init__(self, output: Path, admission: OwnedAdmission, descriptor: int) -> None:
+        self.output: Path=output
+        self.admission: OwnedAdmission=admission
+        self.descriptor: int=descriptor
+        self.attempt: str=uuid.uuid4().hex
+        self.state: Literal['ACQUIRED','RUNNING','SETTLED','RECOVERY_REQUIRED','CLOSED']='ACQUIRED'
+        self.plans: dict[str,OwnedPlan]={}
+        self.results: dict[str,oracle_child.OwnedResult]={}
+        self.frozen: dict[str,dict[str,str]]={}
+        self.errors: list[str]=[]
+        self.retained_errors: list[BaseException]=[]
+        self.checks: dict[str,int]={}
+        self.recovery: RecoveryRequired | None=None
+        self.evidence: SettlementEvidence | None=None
+        self.original_receipts: tuple[tuple[Path,str],...]=()
+        self.dispatched: bool=False
+        self.recovery_completion: oracle_child.OwnedResult | None=None
+        self.event: int=0
+        self.active_arm: str | None=None
+
+    @classmethod
+    def acquire(cls, output: Path, admitted_inputs: OwnedAdmission) -> 'StructuralLaneOwner':
+        require(FD_ENV not in os.environ,'/lane','nested/inherited owner unsupported')
+        require(output.is_absolute() and output==output.resolve() and not output.exists(),'/output','fresh output required')
+        real_path(output.parent,directory=True)
+        roots=(output,admitted_inputs.tools.root,admitted_inputs.products.base.input_root,admitted_inputs.products.candidate.input_root)
+        require(all(not a.is_relative_to(b) and not b.is_relative_to(a) for i,a in enumerate(roots) for b in roots[i+1:]),'/roots','overlapping ownership roots')
+        descriptor=os.open(LOCK,os.O_RDWR|os.O_CREAT,0o600)
+        try:
+            fcntl.flock(descriptor,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            held=os.fstat(descriptor);canonical=LOCK.stat()
+            require((held.st_dev,held.st_ino)==(canonical.st_dev,canonical.st_ino),'/lane','changed lock inode')
+        except BaseException:
+            os.close(descriptor)
+            raise
+        return cls(output,admitted_inputs,descriptor)
+
+    def _settled(self, recovered: bool=False) -> SettledStructural:
+        self.state='SETTLED';self.evidence=SettlementEvidence(self.attempt,recovered)
+        return SettledStructural(self.evidence)
+
+    def _unknown(self, arm: str, reason: str) -> RecoveryRequired:
+        self.state='RECOVERY_REQUIRED';self.errors.append(reason)
+        plan=self.plans[arm]
+        self.recovery=RecoveryRequired(self.attempt,arm,(plan.path,plan.output/'evidence'))
+        observed: list[tuple[Path,str]]=[]
+        for path in (plan.output/'evidence').iterdir():
+            try:observed.append((path,file_hash(path)))
+            except (ValueError,OSError) as error:self.errors.append('partial observation: '+str(error))
+        self.original_receipts=tuple(observed)
+        self.record_status()
+        return self.recovery
+
+    def record_status(self) -> None:
+        self.event+=1
+        atomic_json(self.output/f'ownership-event-{self.event}.json',{'schema':'structural_live_owner_v1',
+            'attempt':self.attempt,'owner_pid':os.getpid(),'state':self.state,'errors':[e for e in self.errors],
+            'kernel_ownership':'live_descriptor_only_not_crash_resilient','final_inventory':False})
+
+    def run(self, products: Products, tools: Tooling) -> SettledStructural | RecoveryRequired:
+        require(self.state=='ACQUIRED' and OwnedAdmission(products,tools)==self.admission,'/owner','wrong admission/state')
+        try:
+            return self._run(products,tools)
+        except BaseException as error:  # noqa: BLE001 - retain live ownership on unclassified faults
+            self.retained_errors.append(error)
+            if self.active_arm is not None:
+                try:return self._unknown(self.active_arm,'unclassified dispatch fault; original exception retained in live owner')
+                except BaseException as recording:  # noqa: BLE001 - diagnostics cannot release live ownership
+                    self.retained_errors.append(recording)
+                    self.state='RECOVERY_REQUIRED';self.errors.append('ownership recording failed; original exception retained in live owner')
+                    plan=self.plans[self.active_arm]
+                    self.recovery=RecoveryRequired(self.attempt,self.active_arm,(plan.path,plan.output/'evidence'))
+                    return self.recovery
+            self.errors.append('NOT_LAUNCHED: unclassified fault; original exception retained in live owner')
+            return self._settled()
+
+    def _run(self, products: Products, tools: Tooling) -> SettledStructural | RecoveryRequired:
+        require(self.state=='ACQUIRED' and OwnedAdmission(products,tools)==self.admission,'/owner','wrong admission/state')
+        self.state='RUNNING';self.output.mkdir()
+        try:
+            for arm in ('base','candidate'):
+                self.plans[arm]=_owned_plan(products.arm(arm),tools,self.output/arm)
+        except (OSError,ValueError,KeyboardInterrupt,SystemExit) as error:
+            self.errors.append('NOT_LAUNCHED: '+str(error))
+            return self._settled()
+        for arm,plan in self.plans.items():
+            dispatched=False
+            try:
+                _check_product(plan.product);_check_tools(tools);check_owned_helpers(plan.product,tools)
+                self.active_arm=arm
+                self.dispatched=True;dispatched=True
+                result=oracle_child.capture(plan.path,plan.digest,self.descriptor)
+                self.results[arm]=result
+                if result.settlement!='SETTLED':return self._unknown(arm,result.error)
+                checked=_owned_join(plan,result,tools,self.descriptor)
+            except (OSError,ValueError,KeyboardInterrupt,SystemExit) as error:
+                if not dispatched:
+                    self.errors.append(arm+' NOT_LAUNCHED: '+str(error));return self._settled()
+                return self._unknown(arm,str(error))
+            self.frozen[arm]=inventory(plan.output,[p.name for p in plan.output.iterdir()])
+            try:
+                require(checked.native_exit==0 and checked.wrapper_exit==0,'/native','settled native failure')
+                raw=(plan.output/'plant-art-structural.log').read_bytes().decode('utf-8')
+                self.checks[arm]=_renderer_oracle(raw)
+            except (OSError,ValueError) as error:self.errors.append(arm+': '+str(error))
+            self.active_arm=None
+        return self._settled()
+
+    def inspect_recovery(self, token: RecoveryRequired) -> StillUnknown | SettlementEvidence:
+        require(self.state=='RECOVERY_REQUIRED' and token is self.recovery,'/recovery','foreign attempt/token')
+        plan=self.plans[token.arm];result=self.results.get(token.arm)
+        if result is None:return StillUnknown(self.attempt,'no actual wrapper wait identity returned')
+        try:
+            require(len(self.original_receipts)==5,'/recovery','original completion files unavailable')
+            require(all(file_hash(path)==sha for path,sha in self.original_receipts),'/recovery','original evidence changed')
+            self.recovery_completion=_owned_join(plan,result,self.admission.tools,self.descriptor)
+            self.frozen[token.arm]=inventory(plan.output,[p.name for p in plan.output.iterdir()])
+        except (OSError,ValueError,KeyboardInterrupt,SystemExit) as error:
+            self.errors.append('recovery inspection: '+str(error))
+            return StillUnknown(self.attempt,str(error))
+        self.errors.append('recovered original completion after UNKNOWN; workload not retried')
+        return self._settled(True).evidence
+
+    def finish(self, evidence: SettledStructural | SettlementEvidence) -> ComponentResult:
+        selected=evidence.evidence if isinstance(evidence,SettledStructural) else evidence
+        require(self.state=='SETTLED' and selected is self.evidence,'/finish','not this owner authenticated settlement')
+        try:
+            _check_tools(self.admission.tools)
+            for product in (self.admission.products.base,self.admission.products.candidate):_check_product(product)
+            for arm,plan in self.plans.items():
+                require(file_hash(plan.path)==plan.digest,'/plan','admitted plan drift')
+                if arm in self.frozen:
+                    require(inventory(plan.output,[p.name for p in plan.output.iterdir()])==self.frozen[arm],'/artifacts','settled arm drift')
+        except (OSError,ValueError) as error:self.errors.append('postflight: '+str(error))
+        status='FAIL' if self.errors else 'PASS'
+        receipt=self.output/'structural-owned-component.json'
+        atomic_json(receipt,{'schema':'structural_owned_component_v1','status':status,'attempt':self.attempt,
+            'owner_pid':os.getpid(),'errors':[e for e in self.errors],'recovered':selected.recovered,
+            'source_sha':{arm:self.admission.products.arm(arm).source_sha for arm in ('base','candidate')},
+            'plans':{arm:{'path':str(plan.path),'sha256':plan.digest} for arm,plan in self.plans.items()},
+            'tooling':{name:sha for name,sha in self.admission.tools.files},
+            'actual_helper_sources':{name:{'path':str(path),'sha256':sha} for name,(path,sha) in LOADED_SOURCES.items() if name+'.py' in dict(self.admission.tools.files)},
+            'recovery_native_pid':self.recovery_completion.native_pid if self.recovery_completion is not None else None,
+            'original_completions':{arm:{'settlement':row.settlement,'error':row.error,'wrapper_pid':row.wrapper_pid,'wrapper_exit':row.wrapper_exit} for arm,row in self.results.items()},
+            'dispatched':self.dispatched,'checks':{k:v for k,v in self.checks.items()},
+            'native_pids':{arm:row.native_pid for arm,row in self.results.items()},
+            'worlds':'NO_SIMULATION_WORLD','visual_status':'NOT_EVALUATED','publication_authority':False,
+            'execution_adapter':'owned_direct_wrapper_not_historical_original_run',
+            'artifacts':{arm:{k:v for k,v in values.items()} for arm,values in self.frozen.items()}})
+        os.close(self.descriptor);self.state='CLOSED'
+        return ComponentResult(receipt,status)
+
+
+def run_owned_entrypoint(products: Products, tools: Tooling, output: Path, control_fd: int) -> ComponentResult:
+    """Retain a strong live owner; EOF does not authorize dropping its lane."""
+    require(type(control_fd) is int and control_fd>2 and stat.S_ISFIFO(os.fstat(control_fd).st_mode),'/control','dedicated recovery pipe required')
+    owner=StructuralLaneOwner.acquire(output,OwnedAdmission(products,tools))
+    outcome=owner.run(products,tools)
+    if isinstance(outcome,SettledStructural):return owner.finish(outcome)
+    pending: bytes=b''
+    pause_after_error=False
+    while True:
+        try:
+            if pause_after_error:
+                signal.pause()
+                pause_after_error=False
+            data=os.read(control_fd,1024)
+            if not data:
+                try:owner.record_status()
+                except BaseException as error:  # noqa: BLE001 - retain live ownership on unclassified faults
+                    owner.retained_errors.append(error)
+                    owner.errors.append('EOF status unavailable; original exception retained in live owner')
+                while True:signal.pause()
+            pending+=data
+            require(len(pending)<=4096,'/control','oversized recovery request')
+            while b'\n' in pending:
+                pieces: list[bytes]=pending.split(b'\n',1)
+                command: bytes=pieces[0];pending=pieces[1]
+                if command==b'inspect':
+                    inspected=owner.inspect_recovery(outcome)
+                    if isinstance(inspected,SettlementEvidence):return owner.finish(inspected)
+                owner.record_status()
+        except BaseException as error:  # noqa: BLE001 - retain live ownership on unclassified faults
+            owner.retained_errors.append(error)
+            owner.errors.append('recovery controller fault; original exception retained in live owner');pending=b''
+            pause_after_error=isinstance(error,OSError)
 
 
 if __name__ == '__main__':
