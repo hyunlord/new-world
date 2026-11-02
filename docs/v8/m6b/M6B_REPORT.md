@@ -311,6 +311,8 @@ Stall 관찰자 patch의 실제 변환과 공급된 빌드 증거 대조를 분�
 
 구조 렌더러용 자식 프로세스 소유 helper를 기본 비활성 경로로 추가했다. 원래180초 명령을 유지하며 부모가 실제 wrapper PID를 기록한 뒤 실행을 허용하고, 실제 native PID·원시 종료·합쳐진 로그 범위를 연결한다. 이미 관측 가능한 제어 파이프 단절은 실행 전에 거절하며, 이후 단절과 실행의 경쟁은 기존 supervisor가 종료·회수한다. 종료 증거가 불완전하면 UNKNOWN을 반환하며 lane 해제나 완료를 주장하지 않는다. 루트의 새 helper 및 기존 stall/play 호환39개 검사가2.508초에 통과했고 타입·Ruff·셸 구문 및 독립 검토도 통과했다. timeout 회귀는 합성 복사본의 대기 한도를0으로 주입한 회수 검사이며 실제180초 또는 Godot 실행 증거가 아니다. 실제 렌더러·suite·전체 조정기 연결과 UNKNOWN 상태의 lane 소유·복구는 아직 미완료다(`stage0/ordered-dispatch/ORACLE_CHILD_INDEPENDENT_REVIEW_V1.md`).
 
+workspace 기록 대조기는 기존 schema1 일반 자식 경로를 유지하고 policy2 Rustdoc 실행 의도와 임시 자식을 별도로 연결한다. 실행되지 않은 doctest 의무·부분 기록·알 수 없는 기록도 남기며, 사라진 임시 실행 파일을 다시 조사하거나 재생하지 않는다. 루트 검토에서 재현한 다른 UID 및 부모와 다른 자식 환경의 허위 통과를 수정했다. 동일 사용자/runtime의 보존 소유자와 인증된 Rustdoc 실행 환경을 정확히 대조하며, 이 한계를 다른 사용자 환경으로 옮길 수 있는 증명으로 확대하지 않는다. 최종 루트 합성26개가1.269초에 통과했고 엄격 타입·Ruff도 통과했다. 처음 통합 시 테스트 import 순서 Ruff 오류1개를 고친 뒤 재검사했으며 이전 로그를 보존했다. 전체 테스트 사례·doctest·세계 안전성은 여전히 INCOMPLETE이고 실제 workspace 실행은 아직 NOT_RUN이다(`stage0/workspace-capture-v2/v2/HANDOFF.md`, 원래 오검출 증거 `stage0/workspace-capture-v2/owner-review/RED.log`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
