@@ -366,6 +366,9 @@ Oracle 호출자에 소스가 보장하는 종료된 실패 API와 보존 결과
 
 단계48 구조 검사의 소유 API를 보강했다. 실제 자식 종료가 확인된 뒤 보고서 작성이 실패하면 원래 예외를 보존하고 소유자가 잠금을 해제하며, descriptor 종료 자체가 불명확하면 실제 소유 객체를 유지하고 임의 재시도하지 않는다. 정상 결과는 해제 전에 terminal 해시와 전체 산출물 목록을 고정한다. 과거 결과 검증은 기록된 소유자·원래 child chain·두 군 계획·renderer oracle·전체 산출물을 대조하고 현재 PID나 파일만으로 live 잠금을 해제하지 않는다. 기존 API·명령·p39 import 규칙은 유지했다. 루트30개(50.762초), 새 구조 코드와 Oracle A2 조합34개(40.022초), 생산3.11·override 테스트3.14 엄격 타입·Ruff·독립 검토가 통과했다. 실제 renderer·상위 단계48 연결·전체 gate는 아직 미검증이다(`stage0/ordered-dispatch/structural48-prerequisite-draft/INDEPENDENT_REVIEW_V1.md`, patch SHA256 `3d54db60ddf186aeea4fa13e07aac5af59a697843d8d921ce31cb744383c2156`).
 
+
+단계38의 원래16개 oracle 검사를 선택적 owned context로 전체 순서에 연결했다. 실제 live handle은 진단 오류와 별도로 보존하며 UNKNOWN이면 이후 단계·종료 이벤트·산출물 확정을 막는다. 소스가 종료를 확인한 실패는 FAIL을 유지한 채 원래 단계39로 진행하고, 이후 실행과 최종 기록 전에 보존 결과를 다시 인증한다. 루트106개(71.411초), 생산3.11·테스트3.14 엄격 타입·Ruff·독립 검토가 통과했다. override 테스트를 기존3.11 범위에 넣어 발생한 초기4진단과 설정 수정은 보존했다. 실제 Godot oracle 실행·제품 빌드 출처·전체 gate는 아직 미검증이며 조정기의 최종 상태는 계속 FAIL 또는 INCOMPLETE다(`stage0/ordered-dispatch/ORACLES38_COORDINATOR_INDEPENDENT_REVIEW_V2.md`, patch SHA256 `2a9260d9b8d9c38d1f359a668ea05e422180b0f231b47c68d9f501aa8534aeaf`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

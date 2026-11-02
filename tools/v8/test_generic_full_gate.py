@@ -3,6 +3,7 @@
 # dependencies = []
 # ///
 """Synthetic endpoint envelopes and mocked orchestration, never native proof."""
+import fcntl
 import json
 import os
 import subprocess
@@ -13,12 +14,13 @@ from contextlib import nullcontext
 from dataclasses import replace
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Literal
+from typing import Literal, override
 from unittest.mock import patch
 
 import generic_bench_run as bench
 import generic_direct_run as direct
 import generic_full_gate as gate
+import generic_oracles_run as oracles
 import generic_perf_run as perf
 import generic_renderer_run as renderer
 import generic_static_run as static
@@ -40,6 +42,7 @@ from generic_fixture_registry import (
 from generic_fixture_run import ComponentResult, Products
 from generic_fixtures import ProbeProduct
 from generic_gate import GateContractError, document, integer
+from generic_m6a_structural import Tooling
 from generic_process import atomic_json, file_hash
 from generic_sources import inventory
 from mux2_gate_inputs import INPUT_DIRS, INPUT_FILES, Json
@@ -119,7 +122,7 @@ class DispatchTests(unittest.TestCase):
                 value=fixed_endpoint(out)
                 return ComponentResult(value.receipt,'FAIL')
             row=gate.invoke('toast',child,root/'toast',context)
-            self.assertEqual(row.status,'FAIL');self.assertIsNotNone(row.receipt)
+            self.assertEqual(row.status,'FAIL');self.assertIsNotNone(row.receipt,repr(row))
             self.assertIn('status',row.error)
             self.assertTrue(row.files)
 
@@ -1832,3 +1835,172 @@ raise AssertionError('unknown returned')
         with patch.object(FailureSubtype,'original',create=True,new_callable=PropertyMock,side_effect=AssertionError('property invoked')):
             self.assertIn('uninspected failure subtype',gate.docs_failure_message(failure))
         self.assertIn('uninspected exception subtype',gate.safe_docs_exception(failure))
+
+
+def oracle_context(root: Path, control: int) -> gate.OwnedOrderedInputs:
+    root.mkdir(exist_ok=True)
+    context=owned_inputs(root,control)
+    python=Path(sys.executable).resolve();bash=Path('/bin/bash').resolve()
+    tools=Tooling(python,file_hash(python),bash,file_hash(bash),root,(),str(python.parent))
+    return replace(context,oracles=gate.OracleContext(oracles.OracleInputs(context.components.godot.candidate,tools)))
+
+
+class OracleCoordinatorTests(unittest.TestCase):
+    def test_optional_single_call_exact_sixteen_position(self) -> None:
+        old=gate.ordered_owned_calls(bench_enabled=True,docs_enabled=True)
+        new=gate.ordered_owned_calls(bench_enabled=True,docs_enabled=True,oracles_enabled=True)
+        added=tuple(row for row in new if row not in old)
+        self.assertEqual(added,(gate.oracle_call(),))
+        self.assertEqual(tuple(row for row in new if row in old),old)
+        self.assertEqual(len(added[0].identities),16)
+        self.assertEqual(added[0].identities,tuple(row.identity for row in gate.obligations() if row.step==38))
+        self.assertEqual([row.step for row in new],sorted([row.step for row in new],key=gate.ORDER.index))
+
+    def test_candidate_and_admission_reject_before_launch(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=oracle_context(root,read);assert context.oracles is not None
+                wrong=replace(context.oracles.inputs.product,source_sha='f'*40)
+                context=replace(context,oracles=replace(context.oracles,inputs=replace(context.oracles.inputs,product=wrong)))
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(oracles,'run_owned_component') as launch:
+                    with self.assertRaisesRegex(ValueError,'candidate'):_=gate.invoke_oracles(gate.oracle_call(),context,root/'out')
+                    launch.assert_not_called()
+                self.assertEqual(lock_contender(root/'lane'),0)
+            finally:os.close(read);os.close(write)
+
+    def test_owned_settled_failure_does_not_stringify_primary(self) -> None:
+        class Hostile(RuntimeError):
+            @override
+            def __str__(self) -> str:raise AssertionError('unsafe formatting')
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=oracle_context(root,read);out=root/'out'
+                def child(_inputs: oracles.OracleInputs, output: Path, descriptor: int) -> oracles.OracleResult:
+                    self.assertGreater(descriptor,2)
+                    self.assertNotEqual(lock_contender(root/'lane'),0)
+                    output.mkdir();_=(output/'raw.log').write_text('retained')
+                    raise oracles.OracleSettledFailure(output,Hostile())
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(oracles,'inputs_current',return_value=()),patch.object(oracles,'run_owned_component',side_effect=child):
+                    row=gate.invoke_oracles(gate.oracle_call(),context,out)
+                self.assertEqual(row.status,'FAIL');self.assertIn('raw.log',dict(row.files))
+                self.assertEqual(lock_contender(root/'lane'),0)
+            finally:os.close(read);os.close(write)
+
+    def test_actual_tiny_suite_result_and_history_authentication(self) -> None:
+        from test_generic_oracles_run import synthetic
+        for fail in (0,1):
+            with self.subTest(fail=fail),synthetic(fail_native=fail) as fixture:
+                read,write=os.pipe()
+                try:
+                    context=oracle_context(fixture.base/'coordinator',read)
+                    context=replace(context,components=replace(context.components,godot=Products(fixture.inputs.product,fixture.inputs.product)),oracles=gate.OracleContext(fixture.inputs))
+                    fcntl.flock(fixture.lane_fd,fcntl.LOCK_UN)
+                    with patch.object(gate,'LOCK',fixture.base/'lock'),patch.object(oracles,'inputs_current',return_value=fixture.plan.inputs):
+                        row=gate.invoke_oracles(gate.oracle_call(),context,fixture.base/'component')
+                        self.assertEqual(row.status,'FAIL' if fail else 'PASS');self.assertIsNotNone(row.receipt,repr(row))
+                        gate.recheck(row);gate.recheck_oracle(context,row)
+                        assert row.receipt is not None
+                        _=row.receipt.write_text(row.receipt.read_text()+' ')
+                        with self.assertRaises(ValueError):gate.recheck_oracle(context,row)
+                finally:os.close(read);os.close(write)
+
+    def test_normal_settled_failure_continues39_without_nested_lane(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();read,write=os.pipe()
+            try:
+                context=oracle_context(root,read)
+                calls=(gate.oracle_call(),gate.OrderedCall(39,'visibility',('39:mux2_visibility',)))
+                with patch.object(gate,'ordered_owned_calls',return_value=calls),patch.object(gate,'ordered_bindings'),patch.object(gate,'perf_bindings'),patch.object(oracles,'inputs_current',return_value=()),patch.object(gate,'invoke_oracles',return_value=gate.Outcome('oracles','FAIL',None,None,'settled')),patch.object(gate,'invoke',return_value=gate.Outcome('visibility','FAIL',None,None,'synthetic')) as later,patch.object(gate,'lane',return_value=nullcontext()) as lease:
+                    path=gate.run_ordered_owned(context,context.strict,root/'out',read,oracles=context.oracles)
+                later.assert_called_once();lease.assert_called_once()
+                node=document(path.read_text());node.field('status').equals('FAIL')
+                self.assertEqual(len(node.field('dispatch_events').array()),4)
+            finally:os.close(read);os.close(write)
+
+    def test_unknown_retains_handles_across_diagnostic_failure_and_eof(self) -> None:
+        for fault in ('status','read','evil'):
+            with self.subTest(fault=fault),TemporaryDirectory() as temporary:
+                root=Path(temporary).resolve();read,write=os.pipe()
+                script=r'''
+import os,sys,signal,subprocess
+from pathlib import Path
+from unittest.mock import patch
+sys.path[:0]=sys.argv[4:]
+import generic_full_gate as g
+import generic_oracles_run as o
+from test_generic_full_gate import oracle_context
+from test_generic_oracles_run import synthetic
+root=Path(sys.argv[1]);control=int(sys.argv[2]);fault=sys.argv[3]
+context=oracle_context(root,control)
+class Evil(Exception):
+ def __str__(self):raise RuntimeError('unsafe diagnostic')
+with synthetic() as fixture:
+ channels=o.child.prepare_suite(fixture.plan,fixture.lane_fd)
+ stdout=(root/'tiny.stdout').open('wb');stderr=(root/'tiny.stderr').open('wb')
+ native=subprocess.Popen([sys.executable,'-c','import time;time.sleep(60)'],stdout=stdout,stderr=stderr)
+ live=o.LiveInvocation(fixture.plan,-1,channels,stdout,stderr,native,launch_intent=True)
+ def cleanup(_a,_b):
+  native.terminate();native.wait(timeout=5);os._exit(0)
+ signal.signal(signal.SIGTERM,cleanup)
+ def launch(_inputs,_output,fd):
+  live.lane_fd=fd
+  (root/'entered').write_text(str(native.pid))
+  raise o.OracleSuiteOwnershipUnknown(live,(Evil(),))
+ original=g._OraclesOwner.status
+ def status(self):
+  assert self.retained_live is live and self.retained_live.shell is native
+  (root/'retained').write_text('same actual handle')
+  if fault in ('status','evil'):raise Evil()
+  original(self)
+ g._OraclesOwner.status=status
+ if fault=='read':
+  def bad_read(*_args):raise OSError('read fault')
+  g.os.read=bad_read
+ calls=(g.oracle_call(),g.OrderedCall(39,'visibility',('39:mux2_visibility',)))
+ with patch.object(g,'LOCK',root/'lane'),patch.object(g,'ordered_owned_calls',return_value=calls),patch.object(g,'ordered_bindings'),patch.object(g,'perf_bindings'),patch.object(o,'inputs_current',return_value=()),patch.object(o,'run_owned_component',side_effect=launch),patch.object(g,'oracle_outcome',side_effect=AssertionError('unknown snapshot')),patch.object(g,'ordered_action',side_effect=AssertionError('downstream')):
+  g.run_ordered_owned(context,context.strict,root/'out',control,oracles=context.oracles)
+ raise AssertionError('unknown returned')
+'''
+                command=[sys.executable,'-B','-c',script,str(root),str(read),fault,
+                    str(Path(__file__).resolve().parent),str(Path(gate.__file__).resolve().parent),
+                    str(Path(oracles.__file__).resolve().parent)]
+                with subprocess.Popen(command,pass_fds=(read,),env={k:v for k,v in os.environ.items() if k!='PYTHONPATH'},stdout=subprocess.PIPE,stderr=subprocess.PIPE) as driver:
+                    os.close(read)
+                    try:
+                        deadline=time.monotonic()+10
+                        while not (root/'retained').exists() and driver.poll() is None and time.monotonic()<deadline:time.sleep(0.01)
+                        if not (root/'retained').exists():
+                            if driver.poll() is None:driver.terminate()
+                            stdout,stderr=driver.communicate(timeout=5)
+                            self.fail(f'startup: {stdout!r} {stderr!r}')
+                        os.close(write);write=-1;time.sleep(0.1)
+                        self.assertIsNone(driver.poll());self.assertNotEqual(lock_contender(root/'lane'),0)
+                        self.assertFalse((root/'out/ordered-dispatch.json').exists())
+                        self.assertFalse((root/'out/step-39').exists())
+                        self.assertFalse((root/'out/step-38/oracles').exists())
+                    finally:
+                        if write>=0:os.close(write)
+                        if driver.poll() is None:driver.terminate()
+                        _=driver.wait(timeout=5)
+                self.assertEqual(lock_contender(root/'lane'),0)
+
+    def test_authentication_mismatch_never_promotes_result(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();context=oracle_context(root,-1)
+            assert context.oracles is not None
+            out=root/'out';out.mkdir();receipt=out/'result.json'
+            _=receipt.write_text('{"status":"PASS"}')
+            row=gate.oracle_outcome(context.oracles,out,oracles.OracleResult('PASS',receipt,file_hash(receipt)))
+            self.assertEqual(row.status,'FAIL');self.assertIsNone(row.reported_status)
+            self.assertIn('result.json',dict(row.files))
+
+    def test_source_admission_failure_prevents_launch_and_releases_lane(self) -> None:
+        with TemporaryDirectory() as temporary:
+            root=Path(temporary).resolve();context=oracle_context(root,-1)
+            with patch.object(gate,'LOCK',root/'lane'),patch.object(oracles,'inputs_current',side_effect=ValueError('changed tool manifest')),patch.object(oracles,'run_owned_component') as launch:
+                with self.assertRaisesRegex(ValueError,'changed tool'):
+                    _=gate.invoke_oracles(gate.oracle_call(),context,root/'out')
+                launch.assert_not_called()
+            self.assertEqual(lock_contender(root/'lane'),0)

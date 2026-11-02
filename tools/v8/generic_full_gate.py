@@ -27,6 +27,7 @@ from typing import Final, Literal, NoReturn, final
 
 import generic_bench_run as bench
 import generic_direct_run as direct
+import generic_oracles_run as oracles
 import generic_perf_run as perf
 import generic_renderer_run as renderer
 import generic_static_run as static
@@ -36,6 +37,7 @@ import generic_ui_pack_run as pack
 import generic_ui_smoke_run as smoke
 import generic_ui_visibility_run as visibility
 import generic_ui_why_run as why
+from gate_oracle_child import SUITE_NAMES
 from generic_bench import AuditError, Product, validate_products
 from generic_declarations import Declarations
 from generic_fixture_registry import (
@@ -386,11 +388,17 @@ class DocsContext:
 
 
 @dataclass(frozen=True, slots=True)
+class OracleContext:
+    inputs: oracles.OracleInputs
+
+
+@dataclass(frozen=True, slots=True)
 class OwnedOrderedInputs(OrderedInputs):
     strict: StrictContext
     control_fd: int
     bench: BenchContext | None = None
     docs: DocsContext | None = None
+    oracles: OracleContext | None = None
 
 
 def strict_bindings(context: OwnedOrderedInputs) -> None:
@@ -633,6 +641,92 @@ def invoke_docs(call: OrderedCall, context: OwnedOrderedInputs, output: Path) ->
         if not entered or settled:os.close(owner.descriptor)
 
 
+@final
+class _OraclesOwner(_StrictOwner):
+    ownership_label: str = 'oracles'
+    # Diagnostic faults may overwrite retained_error; actual handles never live there alone.
+    retained_live: oracles.LiveInvocation | None = None
+
+
+def oracle_bindings(context: OwnedOrderedInputs) -> OracleContext:
+    bound=context.oracles
+    require(bound is not None,'/oracles','explicit oracle context required')
+    assert bound is not None
+    require(bound.inputs.product==context.components.godot.candidate,'/oracles','prepared candidate differs')
+    _=oracles.inputs_current(bound.inputs)
+    return bound
+
+
+def oracle_dependencies(bound: OracleContext) -> dict[str,Json]:
+    product=bound.inputs.product
+    return {'source_sha':product.source_sha,'input_root':str(product.input_root),
+        'executable':str(product.executable),'executable_sha256':product.executable_sha256,
+        'inputs':dict(product.input_files),'tool_root':str(bound.inputs.tools.root),
+        'tools':dict(bound.inputs.tools.files),'python':str(bound.inputs.tools.python),
+        'python_sha256':bound.inputs.tools.python_sha256,'bash':str(bound.inputs.tools.bash),
+        'bash_sha256':bound.inputs.tools.bash_sha256,'path':bound.inputs.tools.path,
+        'effective_dependencies':{str(path):digest for path,digest in oracles.inputs_current(bound.inputs)},
+        'build_authority':'CALLER_OWNED_NOT_CERTIFIED_HERE'}
+
+
+def oracle_outcome(bound: OracleContext, output: Path, result: oracles.OracleResult | None) -> Outcome:
+    # This function is reached only after source-owned settlement, never to infer it.
+    error='source-owned settled oracle failure' if result is None else ''
+    receipt: Path | None=None;digest: str | None=None;reported: str | None=None
+    try:
+        terminal=output/'result.json'
+        if result is not None or terminal.exists():
+            require(result is None or result.receipt==terminal,'/oracles','foreign terminal')
+            digest=file_hash(terminal) if result is None else result.sha256
+            authenticated=oracles.authenticate_result(bound.inputs,terminal,digest)
+            receipt=authenticated.receipt;reported=authenticated.status
+            require(result is None or result==authenticated,'/oracles','returned result differs')
+    except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as caught:
+        error+='; oracle terminal authentication failed: '+safe_docs_exception(caught)
+    files: tuple[tuple[str,str],...]=();snapshot_error=''
+    if output.exists():
+        try:files=tuple(inventory(output,[p.name for p in output.iterdir()]).items())
+        except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as caught:
+            snapshot_error='oracle artifact snapshot failed: '+safe_docs_exception(caught)
+    return Outcome('oracles','FAIL' if error or snapshot_error else reported or 'FAIL',receipt,digest,error,
+                   files,output,result.status if result is not None else None,reported,snapshot_error)
+
+
+def recheck_oracle(context: OrderedInputs, row: Outcome) -> None:
+    if row.component!='oracles' or row.receipt is None:return
+    require(isinstance(context,OwnedOrderedInputs) and context.oracles is not None,'/oracles','missing historical context')
+    assert isinstance(context,OwnedOrderedInputs) and context.oracles is not None
+    require(row.sha256 is not None,'/oracles','missing historical digest')
+    assert row.sha256 is not None
+    result=oracles.authenticate_result(context.oracles.inputs,row.receipt,row.sha256)
+    require(result.status==row.reported_status,'/oracles','historical status changed')
+
+
+def invoke_oracles(call: OrderedCall, context: OwnedOrderedInputs, output: Path) -> Outcome:
+    require(call==oracle_call(),'/oracles','unknown oracle obligation')
+    owner=_OraclesOwner(context.control_fd,output);entered=False;settled=False
+    try:
+        bound=oracle_bindings(context)
+        entered=True
+        try:
+            result=oracles.run_owned_component(bound.inputs,output,owner.descriptor)
+        except oracles.OracleSuiteOwnershipUnknown as unknown:
+            owner.retained_live=unknown.live
+            owner.hold(unknown)
+        except oracles.OracleSettledFailure as failure:
+            settled=True
+            row=oracle_outcome(bound,output,None)
+            primary=safe_docs_exception(failure.primary) if type(failure) is oracles.OracleSettledFailure else 'uninspected failure subtype'
+            return replace(row,error=row.error+'; primary='+primary)
+        settled=True
+        return oracle_outcome(bound,output,result)
+    except BaseException as error:
+        if entered and not settled:owner.hold(error)
+        raise
+    finally:
+        if not entered or settled:os.close(owner.descriptor)
+
+
 def invoke_strict(call: OrderedCall, context: OwnedOrderedInputs, output: Path) -> Outcome:
     owner=_StrictOwner(context.control_fd,output)
     entered=False;settled=False
@@ -653,12 +747,12 @@ def invoke_strict(call: OrderedCall, context: OwnedOrderedInputs, output: Path) 
         if not entered or settled:os.close(owner.descriptor)
 
 
-def run_ordered_owned(context: OrderedInputs, strict: StrictContext, output: Path, control_fd: int, *, bench: BenchContext | None = None, docs: DocsContext | None = None) -> Path:
+def run_ordered_owned(context: OrderedInputs, strict: StrictContext, output: Path, control_fd: int, *, bench: BenchContext | None = None, docs: DocsContext | None = None, oracles: OracleContext | None = None) -> Path:
     require(type(control_fd) is int and control_fd>2 and stat.S_ISFIFO(os.fstat(control_fd).st_mode),
             '/control','dedicated persistent controller pipe required')
     owned=OwnedOrderedInputs(context.components,context.static_product,context.environment,
         context.discovery_product,context.discovery_environment,context.diagnosis_product,
-        context.diagnosis_environment,context.save_roundtrip,context.perf,strict,control_fd,bench,docs)
+        context.diagnosis_environment,context.save_roundtrip,context.perf,strict,control_fd,bench,docs,oracles)
     return _run_ordered(owned,output)
 
 
@@ -817,7 +911,14 @@ def ordered_calls() -> tuple[OrderedCall, ...]:
     return tuple(result)
 
 
-def ordered_owned_calls(*, bench_enabled: bool = False, docs_enabled: bool = False) -> tuple[OrderedCall,...]:
+def oracle_call() -> OrderedCall:
+    identities=tuple(row.identity for row in obligations() if row.step==38)
+    require(len(identities)==16 and tuple(identity.split(':',1)[1].split('.',1)[0]+'_test' for identity in identities)==SUITE_NAMES,
+            '/oracles','original oracle coverage differs')
+    return OrderedCall(38,'oracles',identities)
+
+
+def ordered_owned_calls(*, bench_enabled: bool = False, docs_enabled: bool = False, oracles_enabled: bool = False) -> tuple[OrderedCall,...]:
     result=list(ordered_calls())
     for step,identity in ((8,'8:gdscript_strict'),(46,'46:gdscript.four_files')):
         insertion=next((index for index,call in enumerate(result) if ORDER.index(call.step)>=ORDER.index(step)),len(result))
@@ -828,6 +929,9 @@ def ordered_owned_calls(*, bench_enabled: bool = False, docs_enabled: bool = Fal
     if bench_enabled:
         insertion=next(index for index,call in enumerate(result) if ORDER.index(call.step)>ORDER.index(25))
         result.insert(insertion,OrderedCall(25,'bench',('25:bench',)))
+    if oracles_enabled:
+        insertion=next(index for index,call in enumerate(result) if ORDER.index(call.step)>ORDER.index(38))
+        result.insert(insertion,oracle_call())
     return tuple(result)
 
 
@@ -1096,8 +1200,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
     require(output.is_absolute() and output==output.resolve() and not output.exists(),'/output','fresh canonical output required')
     for product in (inputs.probes.base,inputs.probes.candidate,inputs.godot.base,inputs.godot.candidate):
         require(not output.is_relative_to(product.input_root) and not product.input_root.is_relative_to(output),'/output','product overlap')
-    calls=ordered_owned_calls(bench_enabled=context.bench is not None,docs_enabled=context.docs is not None) if isinstance(context,OwnedOrderedInputs) else ordered_calls();rows: dict[str,Outcome]={};errors: list[str]=[];sequence: list[str]=[]
-    tail_stop: str | None=None;bench_inputs: dict[str,Json] | None=None;docs_inputs: dict[str,Json] | None=None
+    calls=ordered_owned_calls(bench_enabled=context.bench is not None,docs_enabled=context.docs is not None,oracles_enabled=context.oracles is not None) if isinstance(context,OwnedOrderedInputs) else ordered_calls();rows: dict[str,Outcome]={};errors: list[str]=[];sequence: list[str]=[]
+    tail_stop: str | None=None;bench_inputs: dict[str,Json] | None=None;docs_inputs: dict[str,Json] | None=None;oracle_inputs: dict[str,Json] | None=None
     plan_hash: str | None=None;blocked: dict[int,str]={};events: list[Json]=[];perf_inputs: dict[str,Json] | None=None
     try:
         output.mkdir(parents=True)
@@ -1107,6 +1211,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             bench_inputs=bench_dependencies(bench_bindings(context))
         if isinstance(context,OwnedOrderedInputs) and context.docs is not None:
             docs_inputs=docs_dependencies(docs_bindings(context))
+        if isinstance(context,OwnedOrderedInputs) and context.oracles is not None:
+            oracle_inputs=oracle_dependencies(oracle_bindings(context))
         for product in (context.perf.base,context.perf.candidate):
             require(not output.is_relative_to(product.root) and not product.root.is_relative_to(output),'/output','perf product overlap')
         require(inputs.declarations.base==inputs.probes.base.source_sha and inputs.declarations.candidate==inputs.probes.candidate.source_sha,
@@ -1116,7 +1222,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
         refs: dict[int,dict[str,list[Json]]]={step:references(inputs,output/f'step-{step:02d}',validate=True) for step in direct.DIRECT_STEP_FIXTURES}
         atomic_json(output/'plan.json',{'schema_version':3,'original_step_order':list(ORDER),
             'original_order_executed':False,'publication_authorized':False,
-            'supported_call_sequence':[call.identity for call in calls],'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,
+            'supported_call_sequence':[call.identity for call in calls],'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,
             'strict_owned_entrypoint':isinstance(context,OwnedOrderedInputs),
             'obligations':[{'identity':row.identity,'step':row.step,'fixture':row.fixture,
                 'invocation_references':refs.get(row.step,{}).get(row.fixture or '',[])} for row in obligations()]})
@@ -1128,24 +1234,29 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
                 rows[call.identity]=Outcome(call.component,'NOT_RUN',None,None,'blocked by '+tail_stop);continue
             if call.step in blocked:
                 rows[call.identity]=Outcome(call.component,'NOT_RUN',None,None,'blocked by '+blocked[call.step]);continue
-            for row in rows.values():recheck(row)
+            for row in rows.values():
+                recheck(row);recheck_oracle(context,row)
             ordered_bindings(context)
             if isinstance(context,OwnedOrderedInputs) and context.bench is not None:
                 require(bench_dependencies(context.bench)==bench_inputs,'/bench','context binding changed')
             if isinstance(context,OwnedOrderedInputs) and context.docs is not None:
                 require(docs_dependencies(context.docs)==docs_inputs,'/docs','context binding changed')
+            if isinstance(context,OwnedOrderedInputs) and context.oracles is not None:
+                require(oracle_dependencies(oracle_bindings(context))==oracle_inputs,'/oracles','context binding changed')
             require(file_hash(output/'plan.json')==plan_hash,'/plan','scope changed')
             parent=output/f'step-{call.step:02d}';parent.mkdir(exist_ok=True)
             destination=parent/call.component
             try:
-                with nullcontext() if call.component in {'static','save_roundtrip','perf','nav','bench'} else lane():
+                with nullcontext() if call.component in {'static','save_roundtrip','perf','nav','bench','oracles'} else lane():
                     selected = with_static_priors(context,tuple(rows.values())) if call.component == 'static' else context
-                    action=ordered_action(call,selected) if call.component!='bench' else None
+                    action=ordered_action(call,selected) if call.component not in {'bench','oracles'} else None
                     static_product, static_environment = static_context(selected,call.step) if call.component == 'static' else (None,None)
                     sequence.append(call.identity);events.append({'call':call.identity,'event':'start','at':timestamp()})
                     try:
                         if call.step==14 and call.component=='static' and isinstance(selected,OwnedOrderedInputs):
                             rows[call.identity]=invoke_docs(call,selected,destination)
+                        elif call.component=='oracles' and isinstance(selected,OwnedOrderedInputs):
+                            rows[call.identity]=invoke_oracles(call,selected,destination)
                         elif call.component=='bench' and isinstance(selected,OwnedOrderedInputs):
                             rows[call.identity]=invoke_bench(call,selected,destination)
                         elif call.step in (8,46) and call.component=='static' and isinstance(selected,OwnedOrderedInputs):
@@ -1162,7 +1273,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             if rows[call.identity].status=='FAIL' and call.step in (34,46):blocked[call.step]=call.identity
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     for row in rows.values():
-        try:recheck(row)
+        try:
+            recheck(row);recheck_oracle(context,row)
         except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     try:
         ordered_bindings(context)
@@ -1170,13 +1282,15 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             require(bench_dependencies(context.bench)==bench_inputs,'/bench','context binding changed')
         if isinstance(context,OwnedOrderedInputs) and context.docs is not None:
             require(docs_dependencies(context.docs)==docs_inputs,'/docs','context binding changed')
+        if isinstance(context,OwnedOrderedInputs) and context.oracles is not None:
+            require(oracle_dependencies(oracle_bindings(context))==oracle_inputs,'/oracles','context binding changed')
         require(plan_hash is not None and file_hash(output/'plan.json')==plan_hash,'/plan','scope changed or plan failed')
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     by_obligation={identity:call.identity for call in calls for identity in call.identities}
     output.mkdir(parents=True,exist_ok=True);terminal=output/'ordered-dispatch.json'
     atomic_json(terminal,{'schema_version':3,'status':'FAIL' if errors or any(row.status=='FAIL' for row in rows.values()) else 'INCOMPLETE',
         'publication_authorized':False,'full_gate_claim':False,'original_order_executed':False,
-        'original_step_order':list(ORDER),'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
+        'original_step_order':list(ORDER),'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
         'components':[{'identity':call.identity,'step':call.step,'component':call.component,
             'status':rows[call.identity].status if call.identity in rows else 'NOT_RUN',
             'receipt':str(rows[call.identity].receipt) if call.identity in rows and rows[call.identity].receipt else None,
