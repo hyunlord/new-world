@@ -329,6 +329,8 @@ workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignore
 
 벤치의 보존 결과를 원래6개 교차 실행 계획과 실제 시작·spawn·종료 기록에 다시 대조하는 검증기를 추가했다. 기존 수치·안전성 검증기를 그대로 호출해126개 자식 산출물과63쌍 안전성 결과를 재계산하고, 전체 산출물 목록·바이트·순서·부하·스크립트·CHANGELOG를 확인한다. 루트 독립44개가10.795초에 통과했고 표준 루트36개, 설정된 엄격 타입 범위·Ruff도 통과했다. 테스트 파일의 기존 타입 진단81개는 유지하며 전체 clean을 주장하지 않는다. COMPONENT_PASS는 빌드 출처·자식 종료 권한을 주지 않고, 실제 벤치·조정기 연결·ledger·전체 gate는 미완료다(`stage0/ordered-dispatch/BENCH_AUTH_ROOT_REVIEW_V1.md`).
 
+전체 순서 조정기에 GDScript 단계8·46을 연결하는 명시적 소유 진입점을 추가했다. 실제 lane descriptor는 자식 종료 불명확·제어 EOF·중단 동안 유지하며, 단계46 실패 뒤의 같은 단계 검사는 실행하지 않는다. 독립 검토에서 재현한 이전 검사 prefix 대조 오류와 process 링크를 지워 강제 종료 기록을 숨기는 경로를 수정했다. 과거 결과 검증은 실제 잠금·프로세스 조회 없이 원래 선행 기록과 보존 산출물을 대조한다. 루트77개가58.057초에 통과했고 엄격 타입·Ruff 및 독립 v2 검토도 통과했다. 원래 Godot 실행·전체 gate·자동 복구 권한은 아직 없으며, UNKNOWN은 최종 inventory나 정상 실패로 바뀌지 않는다(`stage0/ordered-dispatch/STRICT_COORDINATOR_INDEPENDENT_REVIEW_V2.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

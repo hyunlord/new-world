@@ -4,6 +4,10 @@
 # ///
 """Synthetic endpoint envelopes and mocked orchestration, never native proof."""
 import json
+import os
+import subprocess
+import sys
+import time
 import unittest
 from contextlib import nullcontext
 from dataclasses import replace
@@ -476,7 +480,7 @@ def ordered_endpoint(call: gate.OrderedCall, out: Path, context: gate.OrderedInp
         if call.component=='direct':
             data.update(schema='direct_step_components_v1',step=call.step,obligations=list(call.identities),
                         fixtures=list(direct.step_fixtures(call.step)),whole_step_complete=False,original_order_executed=False)
-    if call.component=='static' and call.step in (16,51):
+    if call.component=='static' and call.step in (8,16,46,51):
         discovery_process(out,data,context,status,call.step)
     atomic_json(path,data)
     return ComponentResult(path,status)
@@ -485,7 +489,7 @@ def ordered_endpoint(call: gate.OrderedCall, out: Path, context: gate.OrderedInp
 def discovery_process(out: Path, data: dict[str,Json], context: gate.OrderedInputs, status: str, step: int=16) -> None:
     product,environment=gate.static_context(context,step)
     process=out/'process';process.mkdir()
-    _=(process/'stdout.log').write_text('READ_DIAGNOSIS_TEST PASS\n' if step==51 and status=='PASS' else 'raw output')
+    _=(process/'stdout.log').write_text(strict_transcript(len(static.STRICT_FILES) if step==46 else 1) if step in (8,46) and status=='PASS' else 'READ_DIAGNOSIS_TEST PASS\n' if step==51 and status=='PASS' else 'raw output')
     _=(process/'stderr.log').write_text('Ran 2 tests in 0.001s\n\nOK\n' if status=='PASS'
                                       else 'Ran 2 tests in 0.001s\n\nFAILED (errors=1)\n')
     executable,digest=next((path,digest) for name,path,digest in environment.tools if name==static.COMMANDS[step][1][0])
@@ -511,6 +515,11 @@ def discovery_process(out: Path, data: dict[str,Json], context: gate.OrderedInpu
     data.update(process_receipt=str(process/'process.json'),process_receipt_sha256=file_hash(process/'process.json'),
                 native_exit=native['native_exit'],pid=123,artifacts={key:value for key,value in inventory(out,['process']).items()})
     if step==16:data['unittest']=static.unittest_terminal((process/'stderr.log').read_text())
+    if step in (8,46):
+        source: dict[str,Json]={'source_sha':product.source_sha,'root':str(product.root),'source_clean':True}
+        data.update(source_before=source,source_end=source,inputs_before=dict(product.inputs),inputs_end=dict(product.inputs),
+                    refs_before={},refs_end={},tool_bindings={name:{'path':str(entry),'sha256':sha} for name,entry,sha in environment.tools},
+                    prior_receipts={str(entry):sha for entry,sha in environment.prior_receipts})
 
 
 @patch.object(gate,'perf_bindings',new=routing_native_bindings)
@@ -1166,3 +1175,247 @@ class PerfCoordinatorTests(unittest.TestCase):
             dependency=gate.perf_dependencies(bound)
             self.assertEqual(dependency['embedded_preparation'],'NOT_QUALIFIED')
             self.assertEqual(dependency['compile_root_authority'],'CALLER_OWNED_NOT_CERTIFIED_HERE')
+
+
+class StrictOwnedRoutingTests(unittest.TestCase):
+    def test_owned_map_adds_only_exact_strict_obligations(self) -> None:
+        legacy=gate.ordered_calls()
+        owned=gate.ordered_owned_calls()
+        self.assertEqual(tuple(row for row in owned if row not in legacy),(
+            gate.OrderedCall(8,'static',('8:gdscript_strict',)),
+            gate.OrderedCall(46,'static',('46:gdscript.four_files',))))
+        self.assertEqual(tuple(row for row in owned if row in legacy),legacy)
+        self.assertEqual(next(row.identities for row in owned if row.step==46),('46:gdscript.four_files',))
+
+
+def strict_transcript(count: int) -> str:
+    return f'[gdcheck] parse + warnings: {count} file(s) clean ✓\n[gdcheck] FFI bindings: 2 GDScript call(s) all match Rust #[func] exports ✓\n[gdcheck] ALL CHECKS PASS\n'
+
+
+def owned_inputs(root: Path, control: int) -> gate.OwnedOrderedInputs:
+    context=ordered_inputs(root)
+    for name in static.STRICT_FILES:
+        target=context.static_product.root/name
+        target.parent.mkdir(parents=True,exist_ok=True)
+        _=target.write_text('extends Node\n')
+    product=replace(context.static_product,inputs=tuple(inventory(context.static_product.root,[*INPUT_DIRS,*INPUT_FILES]).items()))
+    strict=gate.StrictContext(product,replace(context.environment,
+        values=(*context.environment.values,('GODOT_BIN',str(context.components.godot.candidate.executable)))))
+    return gate.OwnedOrderedInputs(context.components,context.static_product,context.environment,
+        context.discovery_product,context.discovery_environment,context.diagnosis_product,
+        context.diagnosis_environment,context.save_roundtrip,context.perf,strict,control)
+
+
+def lock_contender(path: Path) -> int:
+    return subprocess.run([sys.executable,'-c',
+        'import fcntl,sys; f=open(sys.argv[1],"a"); fcntl.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB)',str(path)],
+        stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=False).returncode
+
+
+class StrictOwnershipTests(unittest.TestCase):
+    def test_normal_completion_authenticates_before_lane_release(self) -> None:
+        for status in ('PASS','FAIL'):
+            with self.subTest(status=status),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();read,write=os.pipe()
+                try:
+                    context=owned_inputs(root,read);lock=root/'lane';call=gate.OrderedCall(46,'static',('46:gdscript.four_files',))
+                    def child(_product: static.StaticProduct,_step: int,out: Path,env: static.ExecutionEnvironment, lock: Path=lock, call: gate.OrderedCall=call, context: gate.OwnedOrderedInputs=context, status: str=status) -> ComponentResult:
+                        self.assertIsNotNone(env.held_lane_fd);self.assertNotEqual(lock_contender(lock),0)
+                        return ordered_endpoint(call,out,context,status)
+                    with patch.object(gate,'LOCK',lock),patch.object(gate,'strict_bindings'),patch.object(static,'validate_environment',return_value={}),patch.object(static,'run_step',side_effect=child):
+                        row=gate.invoke_strict(call,context,root/'out')
+                    self.assertEqual(row.status,status,row.error)
+                    self.assertEqual(lock_contender(lock),0)
+                    self.assertTrue(row.files)
+                finally:os.close(read);os.close(write)
+
+    def test_prelaunch_rejection_releases_without_child(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();read,write=os.pipe()
+            try:
+                context=owned_inputs(root,read);lock=root/'lane'
+                with patch.object(gate,'LOCK',lock),patch.object(gate,'strict_bindings',side_effect=ValueError('preflight')),patch.object(static,'run_step') as child,self.assertRaises(ValueError):
+                    _=gate.invoke_strict(gate.OrderedCall(8,'static',('8:gdscript_strict',)),context,root/'out')
+                child.assert_not_called();self.assertEqual(lock_contender(lock),0)
+            finally:os.close(read);os.close(write)
+
+    def test_history_authentication_never_requires_live_descriptor(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=owned_inputs(root,-1)
+            result=ordered_endpoint(gate.OrderedCall(46,'static',('46:gdscript.four_files',)),root/'prior',context)
+            with patch.object(static,'validate_environment',side_effect=AssertionError('historical FD check')):
+                self.assertEqual(gate.authenticate_static(result.receipt,46,context.strict.product,context.strict.environment),'PASS')
+                bound=gate.with_static_priors(context,(gate.Outcome('static','PASS',result.receipt,file_hash(result.receipt),'',reported_status='PASS'),))
+            self.assertIsInstance(bound,gate.OwnedOrderedInputs)
+            if not isinstance(bound,gate.OwnedOrderedInputs):self.fail('lost strict context')
+            self.assertEqual(bound.strict.environment.prior_receipts,bound.environment.prior_receipts)
+            self.assertIsNone(bound.strict.environment.held_lane_fd)
+
+    def test_owned_46_failure_blocks_all_siblings_without_changing_legacy(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();read,write=os.pipe()
+            try:
+                context=owned_inputs(root,read);calls=tuple(c for c in gate.ordered_owned_calls() if c.step==46)
+                def child(_product: static.StaticProduct,_step: int,out: Path,_env: static.ExecutionEnvironment) -> ComponentResult:
+                    return ordered_endpoint(calls[0],out,context,'FAIL')
+                with patch.object(gate,'LOCK',root/'lane'),patch.object(gate,'ordered_owned_calls',return_value=calls),patch.object(gate,'ordered_bindings'),patch.object(gate,'perf_bindings'),patch.object(gate,'strict_bindings'),patch.object(static,'validate_environment',return_value={}),patch.object(static,'run_step',side_effect=child),patch.object(fixed,'run_pair',side_effect=AssertionError('blocked sibling')):
+                    result=gate.run_ordered_owned(context,context.strict,root/'out',read)
+                node=document(result.read_text());rows=node.field('components').array()
+                self.assertEqual(rows[0].field('status').text(),'FAIL')
+                self.assertTrue(all(row.field('status').text()=='NOT_RUN' for row in rows[1:]))
+                self.assertFalse(node.field('full_gate_claim').value)
+            finally:os.close(read);os.close(write)
+
+    def test_unknown_actual_child_keeps_driver_lane_and_never_finalizes(self) -> None:
+        for fault in ('unknown','runtime','type','interrupt','evil','status'):
+            with self.subTest(fault=fault),TemporaryDirectory() as temp:
+                root=Path(temp).resolve();read,write=os.pipe()
+                script=r"""
+import os,sys,signal,subprocess,atexit
+from pathlib import Path
+from unittest.mock import patch
+sys.path[:0]=sys.argv[4:]
+import generic_full_gate as g
+import generic_static_run as s
+from test_generic_full_gate import owned_inputs
+root=Path(sys.argv[1]);control=int(sys.argv[2]);fault=sys.argv[3]
+context=owned_inputs(root,control);children=[]
+def reap():
+ for child in children:
+  if child.poll() is None:child.terminate()
+  child.wait()
+def stop(_signum,_frame):reap();os._exit(0)
+atexit.register(reap);signal.signal(signal.SIGTERM,stop)
+class Evil(Exception):
+ def __str__(self):raise RuntimeError('unrenderable')
+def child(*_args):
+ process=subprocess.Popen([sys.executable,'-c','import time;time.sleep(60)']);children.append(process)
+ (root/'child.pid').write_text(str(process.pid))
+ if fault=='runtime':raise RuntimeError('after dispatch')
+ if fault=='type':raise TypeError('after dispatch')
+ if fault=='interrupt':raise KeyboardInterrupt()
+ if fault=='evil':raise Evil()
+ raise s.StrictOwnershipUnknown('unknown')
+def bad_status(self):raise Evil()
+if fault=='status':g._StrictOwner.status=bad_status
+calls=(g.OrderedCall(8,'static',('8:gdscript_strict',)),g.OrderedCall(9,'smoke',('9:smoke',)))
+with patch.object(g,'LOCK',root/'lane'),patch.object(g,'ordered_owned_calls',return_value=calls),patch.object(g,'ordered_bindings'),patch.object(g,'perf_bindings'),patch.object(g,'strict_bindings'),patch.object(s,'validate_environment',return_value={}),patch.object(s,'run_step',side_effect=child),patch.object(g,'invoke',side_effect=AssertionError('unexpected snapshot/nextcall')):
+ g.run_ordered_owned(context,context.strict,root/'out',control)
+raise AssertionError('unknown unwound')
+"""
+                command=[sys.executable,'-B','-c',script,str(root),str(read),fault,str(Path(__file__).resolve().parent),str(Path(gate.__file__).resolve().parent),str(Path(static.__file__).resolve().parent)]
+                with subprocess.Popen(command,pass_fds=(read,),env={k:v for k,v in os.environ.items() if k!='PYTHONPATH'},stdout=subprocess.PIPE,stderr=subprocess.PIPE) as driver:
+                    os.close(read)
+                    try:
+                        deadline=time.monotonic()+10
+                        while not (root/'child.pid').exists() and driver.poll() is None and time.monotonic()<deadline:time.sleep(0.01)
+                        if not (root/'child.pid').exists():
+                            if driver.poll() is None:driver.terminate()
+                            stdout,stderr=driver.communicate(timeout=5)
+                            self.fail(f'startup: {stdout!r} {stderr!r}')
+                        _=os.write(write,b'inspect\n');os.close(write);write=-1;time.sleep(0.1)
+                        self.assertIsNone(driver.poll());os.kill(int((root/'child.pid').read_text()),0)
+                        self.assertNotEqual(lock_contender(root/'lane'),0)
+                        self.assertFalse((root/'out/ordered-dispatch.json').exists())
+                        self.assertFalse((root/'out/step-09').exists())
+                    finally:
+                        if write>=0:os.close(write)
+                        if driver.poll() is None:driver.terminate()
+                        _=driver.wait(timeout=5)
+                self.assertEqual(lock_contender(root/'lane'),0)
+
+
+class StrictPriorRejectionTests(unittest.TestCase):
+    def test_signal_exit_cannot_be_resealed_as_normal_failed_prior(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=owned_inputs(root,-1)
+            result=ordered_endpoint(gate.OrderedCall(46,'static',('46:gdscript.four_files',)),root/'out',context,'FAIL')
+            receipt=document(result.receipt.read_text()).mapping().copy()
+            process=result.receipt.parent/'process/process.json'
+            native=document(process.read_text()).mapping().copy();native['native_exit']=-9
+            process.unlink();atomic_json(process,native)
+            receipt['native_exit']=-9;receipt['process_receipt_sha256']=file_hash(process)
+            receipt['artifacts']={name:digest for name,digest in inventory(result.receipt.parent,['process']).items()}
+            result.receipt.unlink();atomic_json(result.receipt,receipt)
+            with self.assertRaises(GateContractError):
+                _=gate.authenticate_static(result.receipt,46,context.strict.product,context.strict.environment)
+
+    def test_missing_control_pipe_rejects_before_any_dispatch(self) -> None:
+        with TemporaryDirectory() as temp:
+            context=owned_inputs(Path(temp).resolve(),-1)
+            with patch.object(gate,'_run_ordered') as run,self.assertRaises(GateContractError):
+                _=gate.run_ordered_owned(context,context.strict,Path(temp).resolve()/'out',-1)
+            run.assert_not_called()
+
+
+class StrictHistoricalChainTests(unittest.TestCase):
+    def chain(self, root: Path, status: str = 'PASS') -> tuple[gate.OwnedOrderedInputs,gate.Outcome,gate.Outcome]:
+        original=owned_inputs(root,-1)
+        _=(original.strict.product.root/'scripts/a.gd').write_text('extends Node\n')
+        product=replace(original.strict.product,inputs=tuple(inventory(original.strict.product.root,[*INPUT_DIRS,*INPUT_FILES]).items()))
+        original=replace(original,strict=replace(original.strict,product=product))
+        first=ordered_endpoint(gate.OrderedCall(1,'static',('1:fmt',)),root/'first',original)
+        prior=gate.Outcome('static','PASS',first.receipt,file_hash(first.receipt),'',reported_status='PASS')
+        selected=gate.with_static_priors(original,(prior,))
+        result=ordered_endpoint(gate.OrderedCall(8,'static',('8:gdscript_strict',)),root/'strict',selected,status)
+        row=gate.Outcome('static',status,result.receipt,file_hash(result.receipt),'',reported_status=status)
+        return original,prior,row
+
+    def test_nonempty_historical_prefix_survives_next_selection(self) -> None:
+        with TemporaryDirectory() as temp:
+            original,prior,row=self.chain(Path(temp).resolve())
+            selected=gate.with_static_priors(original,(prior,row))
+            self.assertIsInstance(selected,gate.OwnedOrderedInputs)
+            if not isinstance(selected,gate.OwnedOrderedInputs):self.fail('lost owned context')
+            self.assertEqual(len(selected.strict.environment.prior_receipts),2)
+            again=gate.with_static_priors(selected,(prior,row))
+            self.assertEqual(again,selected)
+            with patch.object(static,'strict_input_names',return_value=[*INPUT_DIRS,*INPUT_FILES]):
+                gate.strict_bindings(selected)
+            later=ordered_endpoint(gate.OrderedCall(13,'static',('13:bridge_api',)),Path(temp).resolve()/'later',selected)
+            later_row=gate.Outcome('static','PASS',later.receipt,file_hash(later.receipt),'',reported_status='PASS')
+            selected=gate.with_static_priors(original,(prior,row,later_row))
+            final=ordered_endpoint(gate.OrderedCall(46,'static',('46:gdscript.four_files',)),Path(temp).resolve()/'final',selected)
+            final_row=gate.Outcome('static','PASS',final.receipt,file_hash(final.receipt),'',reported_status='PASS')
+            selected=gate.with_static_priors(original,(prior,row,later_row,final_row))
+            if not isinstance(selected,gate.OwnedOrderedInputs):self.fail('lost strict context')
+            with patch.object(static,'strict_input_names',return_value=[*INPUT_DIRS,*INPUT_FILES]):
+                gate.strict_bindings(selected)
+            self.assertEqual(len(selected.strict.environment.prior_receipts),4)
+
+    def test_resealed_missing_extra_corrupt_prefix_is_rejected(self) -> None:
+        for status,defect in ((status,defect) for status in ('PASS','FAIL') for defect in ('missing','extra','corrupt')):
+            with self.subTest(status=status,defect=defect),TemporaryDirectory() as temp:
+                original,prior,row=self.chain(Path(temp).resolve(),status)
+                if row.receipt is None or prior.receipt is None:self.fail('fixture lacks receipt')
+                node=document(row.receipt.read_text()).mapping().copy()
+                prefix=node['prior_receipts']
+                if not isinstance(prefix,dict):self.fail('fixture prior type')
+                if defect=='missing':prefix.clear()
+                elif defect=='extra':prefix['/unadmitted/extra.json']='a'*64
+                else:prefix[str(prior.receipt)]='c'*64
+                row.receipt.unlink();atomic_json(row.receipt,node)
+                row=replace(row,sha256=file_hash(row.receipt))
+                with self.assertRaises(ValueError):_=gate.with_static_priors(original,(prior,row))
+
+    def test_omitted_process_link_cannot_hide_retained_unknown_shell(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=owned_inputs(root,-1)
+            result=ordered_endpoint(gate.OrderedCall(46,'static',('46:gdscript.four_files',)),root/'failed',context,'FAIL')
+            node=document(result.receipt.read_text()).mapping().copy()
+            for name in ('process_receipt','process_receipt_sha256','native_exit','pid'):_=node.pop(name)
+            result.receipt.unlink();atomic_json(result.receipt,node)
+            with self.assertRaises(GateContractError):
+                _=gate.authenticate_static(result.receipt,46,context.strict.product,context.strict.environment)
+
+    def test_preflight_without_process_tree_is_still_a_failed_prior(self) -> None:
+        with TemporaryDirectory() as temp:
+            root=Path(temp).resolve();context=owned_inputs(root,-1)
+            result=ordered_endpoint(gate.OrderedCall(46,'static',('46:gdscript.four_files',)),root/'failed',context,'FAIL')
+            node=document(result.receipt.read_text()).mapping().copy()
+            for name in ('process_receipt','process_receipt_sha256','native_exit','pid'):_=node.pop(name)
+            import shutil
+            shutil.rmtree(result.receipt.parent/'process')
+            node['artifacts']={};node['process_status']='NOT_RUN'
+            result.receipt.unlink();atomic_json(result.receipt,node)
+            self.assertEqual(gate.authenticate_static(result.receipt,46,context.strict.product,context.strict.environment),'FAIL')
