@@ -9,7 +9,14 @@ limit="$1"; shift
 exec python3 - "$limit" "$@" <<'PY'
 import subprocess
 import sys
+import os
+from pathlib import Path
 limit = int(sys.argv[1])
+if 'WORLDSIM_STALL_CHILD_PLAN' in os.environ or 'WORLDSIM_STALL_CHILD_PLAN_SHA256' in os.environ:
+    sys.path.insert(0, str(Path.cwd() / 'tools/v8'))
+    from gate_stall_child import run
+    raise SystemExit(run(Path(os.environ['WORLDSIM_STALL_CHILD_PLAN']),
+                         os.environ['WORLDSIM_STALL_CHILD_PLAN_SHA256'], tuple(sys.argv[2:]), limit))
 try:
     raise SystemExit(subprocess.run(sys.argv[2:], timeout=limit, check=False).returncode)
 except subprocess.TimeoutExpired:

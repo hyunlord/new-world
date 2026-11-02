@@ -114,6 +114,10 @@ def validate_output(root: Path, out: Path, kind: Kind) -> list[Path]:
 
 
 def capture(root: Path, output: Path, kind: Kind, godot: Path) -> None:
+    child_chain = 'WORLDSIM_STALL_CHILD_PLAN' in os.environ or 'WORLDSIM_STALL_CHILD_PLAN_SHA256' in os.environ
+    if child_chain:
+        require(kind == 'stall' and 'WORLDSIM_STALL_CHILD_PLAN' in os.environ
+                and 'WORLDSIM_STALL_CHILD_PLAN_SHA256' in os.environ, 'incomplete or foreign child plan')
     out = external(output, root)
     require(not out.exists(), 'capture output must be new')
     clean_sources(root)
@@ -136,8 +140,12 @@ def capture(root: Path, output: Path, kind: Kind, godot: Path) -> None:
                 for command in commands(root, out, kind, godot):
                     log.write(json.dumps(command) + '\n')
                     log.flush()
-                    code = subprocess.run(command, cwd=root, env=env, stdout=log,
-                                          stderr=subprocess.STDOUT, pass_fds=(descriptor,), check=False).returncode
+                    if child_chain:
+                        from gate_stall_child import capture_wrapper
+                        code = capture_wrapper(command, root, env, log.fileno(), descriptor)
+                    else:
+                        code = subprocess.run(command, cwd=root, env=env, stdout=log,
+                                              stderr=subprocess.STDOUT, pass_fds=(descriptor,), check=False).returncode
                     require(code == 0, f'{kind} capture exited {code}')
             same_inputs(before, snapshot(root))
             clean_sources(root)
@@ -148,10 +156,15 @@ def capture(root: Path, output: Path, kind: Kind, godot: Path) -> None:
             receipt['artifacts'] = {str(p): digest(p) for p in sorted(set(artifacts + extra))}
             receipt['complete'] = True
         finally:
-            receipt['exit_code'] = code
-            receipt['finished_utc'] = now()
-            receipt['inputs_end'] = snapshot(root)
-            write(receipt_path, receipt)
+            try:
+                if child_chain:
+                    from gate_stall_child import close_capture
+                    close_capture(env, out / 'command.log')
+            finally:
+                receipt['exit_code'] = code
+                receipt['finished_utc'] = now()
+                receipt['inputs_end'] = snapshot(root)
+                write(receipt_path, receipt)
     print(f'MUX2_CAPTURE_PASS {receipt_path}')
 
 

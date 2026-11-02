@@ -1,10 +1,12 @@
 """Local pristine stall outcome consistency; never whole-chain or safety admission."""
 import re
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import Literal
 
+from gate_stall_child import ChildPlan, bind_chain, projected_environment
 from generic_gate import GateContractError, boundary, require
 from generic_process import (
     ProcessResult,
@@ -136,6 +138,10 @@ def _bind_native(plan: StallOutcomePlan, result: ProcessResult, expected_exit: L
 @boundary
 def validate_outcome(plan: StallOutcomePlan, native_result: ProcessResult) -> StallOutcome:
     """Authenticate pristine NONE captures; all lifecycle/safety and parent joins remain pending."""
+    return _validate_outcome(plan, lambda code: _bind_native(plan, native_result, code))
+
+
+def _validate_outcome(plan: StallOutcomePlan, bind: Callable[[Literal[0, 1]], int]) -> StallOutcome:
     require(plan.protocol == "NONE", "/protocol", "only NONE supported")
     require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", plan.invocation_id) is not None,
             "/invocation", "invalid invocation identity")
@@ -169,13 +175,35 @@ def validate_outcome(plan: StallOutcomePlan, native_result: ProcessResult) -> St
     require("p7_admission" not in parse(raw).mapping(), "/protocol", "P7 report forbidden")
     verdict = assess_timing(raw)
     expected_exit: Literal[0, 1] = 0 if verdict.strict_pass else 1
-    pid = _bind_native(plan, native_result, expected_exit)
+    pid = bind(expected_exit)
     wrapper_argv = ("bash", str(spec.input_root / "tools/v8/run_bounded.sh"), "960", *expected_argv)
     evidence = authenticate_capture(spec.input_root, plan.capture_root,
                                     CaptureBinding(plan.source_sha, wrapper_argv, expected_exit,
                                                    plan.capture_receipt_sha256))
     require(evidence.verdict == verdict, "/capture", "verdict changed during authentication")
     require(_manifest(plan) == frozen, "/capture", "capture changed during authentication")
-    _ = _bind_native(plan, native_result, expected_exit)
+    _ = bind(expected_exit)
     return StallOutcome(verdict, expected_exit, pid, plan.capture_receipt_sha256,
                         plan.native_receipt_sha256, frozen, evidence.original_complete)
+
+
+@boundary
+def validate_bounded_outcome(plan: StallOutcomePlan, child_plan: ChildPlan,
+                             wrapper_environment: dict[str, str],
+                             chain_files: tuple[tuple[str, str], ...]) -> StallOutcome:
+    """Admit only a frozen original bounded child chain and recomputed exit0/1."""
+    require(plan.protocol == "NONE" and child_plan.root == plan.native_spec.input_root
+            and child_plan.capture == plan.capture_root
+            and child_plan.evidence == plan.native_spec.output_root
+            and child_plan.argv == plan.native_spec.argv, "/chain", "foreign child plan")
+    require(dict(chain_files).get("native-terminal.json") == plan.native_receipt_sha256,
+            "/chain", "native receipt digest differs")
+    require(len(dict(plan.native_spec.environment)) == len(plan.native_spec.environment),
+            '/environment', 'duplicate inherited native environment key')
+    require(projected_environment(child_plan.root, wrapper_environment) == dict(plan.native_spec.environment),
+            '/environment', 'actual inherited native environment differs from outcome plan')
+    required = {(plan.native_spec.input_root/name, sha) for name,sha in plan.native_spec.inputs}
+    required.add((plan.native_spec.executable, plan.native_spec.executable_sha256))
+    required.update(plan.native_spec.external_inputs)
+    require(required <= set(child_plan.inputs), "/chain", "incomplete source binding")
+    return _validate_outcome(plan, lambda code: bind_chain(child_plan, wrapper_environment, code, chain_files))

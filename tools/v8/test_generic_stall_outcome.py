@@ -7,10 +7,15 @@ from dataclasses import dataclass, replace
 from unittest.mock import patch
 
 import test_generic_stall as capture_fixtures
+from gate_stall_child import ChildPlan, projected_environment
 from generic_gate import GateContractError
 from generic_process import ProcessResult, ProcessSpec, environment_for, file_hash
 from generic_stall import parse
-from generic_stall_outcome import StallOutcomePlan, validate_outcome
+from generic_stall_outcome import (
+    StallOutcomePlan,
+    validate_bounded_outcome,
+    validate_outcome,
+)
 from mux2_gate_inputs import Json, Node, snapshot
 from test_generic_stall import report_with
 
@@ -78,6 +83,40 @@ def fixture(strict: bool = False) -> Generator[Synthetic]:
 
 
 class OutcomeTests(unittest.TestCase):
+
+    def test_bounded_entry_recomputes_exact_exit_before_chain_admission(self) -> None:
+        for strict in (True,False):
+            with fixture(strict) as f:
+                child=ChildPlan(f.result.receipt,f.plan.native_receipt_sha256,f.plan.native_spec.input_root,
+                    f.plan.capture_root,f.plan.native_spec.output_root,f.plan.native_spec.argv,
+                    tuple((f.plan.native_spec.input_root/name,digest) for name,digest in f.plan.native_spec.inputs)
+                    +((f.plan.native_spec.executable,f.plan.native_spec.executable_sha256),))
+                wrapper_env=environment_for(f.plan.native_spec)
+                native_spec=replace(f.plan.native_spec,environment=tuple(projected_environment(child.root,wrapper_env).items()))
+                bounded_plan=replace(f.plan,native_spec=native_spec)
+                expected=0 if strict else 1
+                # Chain receipts are tested separately with real tiny child processes;
+                # this regression verifies the timing core chooses the required exit.
+                def authenticate(plan: ChildPlan, environment: dict[str,str], code: int,
+                                 files: tuple[tuple[str,str], ...], bound_child: ChildPlan = child, bound_exit: int = expected, bound_env: dict[str,str] = wrapper_env) -> int:
+                    self.assertEqual(plan,bound_child);self.assertEqual(environment,bound_env);self.assertEqual(code,bound_exit)
+                    self.assertEqual(files,(("native-terminal.json",f.plan.native_receipt_sha256),))
+                    return 12345
+                with patch('generic_stall_outcome.bind_chain',side_effect=authenticate):
+                    outcome=validate_bounded_outcome(bounded_plan,child,wrapper_env,(("native-terminal.json",f.plan.native_receipt_sha256),))
+                self.assertEqual(outcome.native_exit,expected);self.assertEqual(outcome.safety,'PENDING')
+                self.assertEqual(outcome.capture_wrapper_complete,strict)
+                for key,value in (('CORE_P7_ENABLED','1'),('WORLDSIM_TEST_SETTINGS_DIR','/foreign'),
+                                  ('WORLDSIM_MUX2_PROFILE','0'),('UNAUTHORIZED','changed')):
+                    with self.subTest(key=key),self.assertRaises(GateContractError):
+                        _=validate_bounded_outcome(bounded_plan,child,{**wrapper_env,key:value},
+                            (("native-terminal.json",f.plan.native_receipt_sha256),))
+                p7_env={**wrapper_env,'CORE_P7_ENABLED':'1'}
+                p7_plan=replace(bounded_plan,native_spec=replace(native_spec,
+                    environment=tuple(projected_environment(child.root,p7_env).items())))
+                with self.assertRaises(GateContractError):
+                    _=validate_bounded_outcome(p7_plan,child,p7_env,(("native-terminal.json",f.plan.native_receipt_sha256),))
+
     def test_strict_and_eligible_retain_raw_outcome_without_safety_authority(self) -> None:
         for strict in (True, False):
             with self.subTest(strict=strict), fixture(strict) as f:
