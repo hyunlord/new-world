@@ -287,6 +287,8 @@ Cargo가 임시 doctest 파일에도 runner를 적용한 실제 run02 실패에 
 
 분리한 M6a47/48을 direct와 원래 순서 조정기에 각각 연결했다. 선택 전에 전체 registry·선언을 검증하고, 단계·fixture·scorer·companion의 산출물 해시를 정확히 묶어 다른 단계 영수증 재사용을 거절한다. 단계48의 `m6a.plant_art_structural`은 별도 필수 미구현 의무로 명시했다. 연결 전 조정기 회귀3개 실패를 보존한 뒤 direct33개·조정기27개가 통과했으며 엄격 타입·Ruff도 통과했다. 이 결과는 오프라인 연결 검증이고 전체 gate 결과는 여전히 INCOMPLETE/FAIL만 가능하다. 실제 분리 실행 및 구조 렌더러 검증은 미완료다(`stage0/ordered-dispatch/m6a-direct-draft/independent-review-v1.md`).
 
+관찰자 overlay 소스의 읽기 전용 대조기를 추가했다. 원래 commit tree와 현재 index, 외부에서 고정한 manifest의 pre/postimage, 허용 경로 및 실제 작업 파일을 대조하고 입력을 다시 확인한다. patch를 적용·되돌리거나 index를 변경하지 않는다. 동일 경로의 다른 hunk가 있어도 이 좁은 대조만으로 patch 적용을 증명할 수 없음을 회귀로 고정하고 `patch_application_provenance=NOT_VERIFIED`를 명시했다. 빌드·runtime은 PENDING, 관찰자 의미 검증은 NOT_RUN이다. 독립 검토와11개 작은 Git 저장소 검사·엄격 타입·Ruff를 통과했으며 pristine capture의 clean 요구나 실제 stall 실행 경로는 바꾸지 않았다(`stage0/stall-run/source-draft/INDEPENDENT_REVIEW_V2.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
