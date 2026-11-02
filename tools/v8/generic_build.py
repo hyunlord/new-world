@@ -241,8 +241,8 @@ def _build_product(spec: BuildSpec, prior: '_WorkspacePrefix | None',
         require(bool(Path(artifact.relative_path).parts) and Path(artifact.relative_path).parts[0] == spec.profile
                 and '..' not in Path(artifact.relative_path).parts and not Path(artifact.relative_path).is_absolute(),
                 '/artifacts', 'artifact outside selected profile')
-    source = freeze_source(spec.root, spec.source_sha)
-    index_before = git(spec.root, 'ls-files', '--stage', '-z')
+    source = freeze_source(spec.root, spec.source_sha) if prior is None else prior.publication.source(spec)
+    index_before = git(spec.root, 'ls-files', '--stage', '-z') if prior is None else prior.publication.index_before
     configs = config_inventory(spec)
     require(file_hash(spec.cargo) == spec.cargo_sha256 and file_hash(spec.rustc) == spec.rustc_sha256,
             '/toolchain', 'tool executable hash mismatch')
@@ -254,6 +254,9 @@ def _build_product(spec: BuildSpec, prior: '_WorkspacePrefix | None',
         'observer_semantic_qualification': 'NOT_RUN' if spec.overlay else 'NOT_APPLICABLE',
         'status': 'FAIL', 'exit_code': None, 'publication_authority': False,
         'cargo_sha256': spec.cargo_sha256, 'rustc_sha256': spec.rustc_sha256, 'cargo_configs': {key: value for key, value in configs.items()}}
+    if publications is not None:
+        receipt.update(source_before_role='ORIGINAL_PRISTINE_BASELINE',
+                       overlay_applied_this_build=spec.overlay is not None and prior is None)
     if spec.test_targets:
         receipt.update(build_kind='integration_tests', test_targets=list(spec.test_targets))
     if spec.workspace_tests:
@@ -268,7 +271,7 @@ def _build_product(spec: BuildSpec, prior: '_WorkspacePrefix | None',
     before: dict[str, Json] | None = None
     inputs: dict[str, str] | None = None
     try:
-        changed = overlay_files(spec)
+        changed = overlay_files(spec) if prior is None else dict(prior.publication.changed)
         receipt['overlay'] = None if spec.overlay is None else {
             'patch': str(spec.overlay.patch), 'patch_sha256': spec.overlay.patch_sha256,
             'manifest': str(spec.overlay.manifest), 'manifest_sha256': spec.overlay.manifest_sha256}
@@ -442,7 +445,7 @@ def _build_product(spec: BuildSpec, prior: '_WorkspacePrefix | None',
                                         tuple(artifacts), workspace_targets)
         publications.append(_BuildPublication(expected, tuple(sorted(_chain_tree(target).items())),
             tuple(sorted(_chain_tree(spec.output).items())), tuple(sorted((name, json.dumps(value, indent=2, sort_keys=True, allow_nan=False)+'\n')
-                for name, value in documents.items()))))
+                for name, value in documents.items())), index_before, tuple(sorted(changed.items()))))
     atomic_json(terminal, receipt)
     if receipt['status'] == 'PASS':
         for name, artifact_receipt in _artifact_documents(spec, receipt, terminal, file_hash(terminal),
@@ -504,9 +507,31 @@ class _BuildPublication:
     target: tuple[tuple[str, str], ...]
     evidence: tuple[tuple[str, str], ...]
     sidecars: tuple[tuple[str, str], ...]
+    index_before: bytes
+    changed: tuple[tuple[str, tuple[str | None, str]], ...]
+
+    def source(self, spec: BuildSpec) -> dict[str, Json]:
+        '''Revalidate the retained baseline/index and exact derived bytes without reapplying.'''
+        row = document(self.receipt_text)
+        row.field('root').equals(str(spec.root))
+        row.field('source_sha').equals(spec.source_sha)
+        expected_overlay: Json = None
+        if spec.overlay is not None:
+            overlay = spec.overlay
+            require(file_hash(overlay.patch) == overlay.patch_sha256
+                    and file_hash(overlay.manifest) == overlay.manifest_sha256,
+                    '/overlay', 'retained overlay proof changed')
+            expected_overlay = {'patch': str(overlay.patch), 'patch_sha256': overlay.patch_sha256,
+                                'manifest': str(overlay.manifest), 'manifest_sha256': overlay.manifest_sha256}
+        row.field('overlay').equals(expected_overlay)
+        source = row.field('source_before').mapping()
+        current = derived_snapshot(spec.root, source, dict(self.changed), self.index_before)
+        row.field('effective_source_after').equals(current)
+        return source
 
     def check(self, spec: BuildSpec, result: BuildResult) -> None:
         """Authenticate against producer-time anchors, never a post-callback baseline."""
+        _ = self.source(spec)
         require(result.status == 'PASS' and result.receipt == spec.output/'build.json',
                 '/publication', 'failed or foreign producer return')
         require(result.receipt.read_text() == self.receipt_text, '/publication', 'producer receipt changed')
@@ -531,7 +556,7 @@ class _WorkspacePrefix:
     evidence: tuple[tuple[str, str], ...]
     target: tuple[tuple[str, str], ...]
     inputs: tuple[tuple[str, str], ...]
-    source: str
+    publication: _BuildPublication
 
     def check(self, *, before: bool) -> None:
         real_path(self.spec.root, directory=True)
@@ -543,8 +568,8 @@ class _WorkspacePrefix:
                 '/antecedent', 'prior tool changed')
         require(file_hash(self.result.receipt) == self.receipt_sha256
                 and _chain_tree(self.spec.output) == dict(self.evidence), '/antecedent', 'prior build evidence changed')
-        require(manifest_hash(freeze_source(self.spec.root, self.spec.source_sha)) == self.source
-                and inventory(self.spec.root, [*INPUT_DIRS, *INPUT_FILES]) == dict(self.inputs),
+        _ = self.publication.source(self.spec)
+        require(inventory(self.spec.root, [*INPUT_DIRS, *INPUT_FILES]) == dict(self.inputs),
                 '/antecedent', 'prior source/input changed')
         current = _chain_tree(self.spec.root/'rust/target')
         expected = dict(self.target)
@@ -557,7 +582,7 @@ class _WorkspacePrefix:
                     '/antecedent', 'release producer changed non-release target membership')
 
 
-def _workspace_prefix(spec: BuildSpec, result: BuildResult) -> _WorkspacePrefix:
+def _workspace_prefix(spec: BuildSpec, result: BuildResult, publication: _BuildPublication) -> _WorkspacePrefix:
     """Only called with the actual first return in the closed pair execution."""
     require(result.status == 'PASS' and result.receipt == spec.output/'build.json', '/antecedent', 'prior build failed/foreign')
     row = document(result.receipt.read_text())
@@ -570,10 +595,10 @@ def _workspace_prefix(spec: BuildSpec, result: BuildResult) -> _WorkspacePrefix:
     row.field('artifacts').equals({name: {'path': str(path), 'sha256': digest} for name, path, digest in result.artifacts})
     require(bool(result.artifacts) and all(file_hash(path) == digest for _, path, digest in result.artifacts),
             '/antecedent', 'prior protected executable changed')
-    source = freeze_source(spec.root, spec.source_sha)
+    source = publication.source(spec)
     row.field('source_before').equals(source)
     prefix = _WorkspacePrefix(spec, result, file_hash(result.receipt), tuple(sorted(_chain_tree(spec.output).items())),
-        tuple(sorted(_chain_tree(spec.root/'rust/target').items())), tuple(sorted(actual_inputs.items())), manifest_hash(source))
+        tuple(sorted(_chain_tree(spec.root/'rust/target').items())), tuple(sorted(actual_inputs.items())), publication)
     prefix.check(before=True)
     return prefix
 
@@ -637,7 +662,7 @@ def build_workspace_pair(debug: BuildSpec, release: BuildSpec, output: Path) -> 
     a quiescence claim. No public prior-result or digest-only warm grant is accepted.
     """
     require(debug.profile == 'debug' and release.profile == 'release' and debug.workspace_tests
-            and debug.overlay is None and replace(debug, profile='release', output=release.output) == release,
+            and replace(debug, profile='release', output=release.output) == release,
             '/pair', 'same-source workspace debug/release specs required')
     paths = (debug.output, release.output, output)
     for path in paths:
@@ -666,7 +691,7 @@ def build_workspace_pair(debug: BuildSpec, release: BuildSpec, output: Path) -> 
         require(first.status == 'PASS', '/pair', 'debug antecedent failed; release NOT_RUN')
         require(len(publications) == 1, '/publication', 'missing debug producer anchor')
         publications[0].check(debug, first)
-        prior = _workspace_prefix(debug, first)
+        prior = _workspace_prefix(debug, first, publications[0])
         pair_evidence = _publish_pair(output, 'debug-returned.json', row, pair_evidence)
         prior.check(before=True)
         row['target_before_release'] = dict(prior.target)

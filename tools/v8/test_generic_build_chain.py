@@ -1,4 +1,7 @@
 """Real tiny compiler subprocesses; no Cargo, native workloads or qualification."""
+import hashlib
+import json
+import subprocess
 import unittest
 from dataclasses import replace
 from pathlib import Path
@@ -7,7 +10,7 @@ from unittest.mock import patch
 
 import generic_build as build
 from generic_gate import document
-from generic_process import ProcessResult, ProcessSpec, atomic_json, execute
+from generic_process import ProcessResult, ProcessSpec, atomic_json, execute, file_hash
 from mux2_gate_inputs import Json
 from test_generic_build import WorkspaceBuildTests
 
@@ -273,3 +276,100 @@ class WorkspaceChainTests(unittest.TestCase):
         copied = build.WorkspaceBuildPair(result.receipt, result.status, result.debug, result.release)
         with self.assertRaises(ValueError):
             _ = build.recheck_workspace_pair(copied)
+
+    def test_existing_overlay_applied_once_across_profiles(self) -> None:
+        overlay = self.fixture.make_overlay()
+        self.fixture.spec = replace(self.fixture.spec, overlay=overlay)
+        result = build.build_workspace_pair(self.debug_spec, self.release, self.output)
+        self.assertEqual(result.status, 'BUILD_ANTECEDENTS_ONLY')
+        self.assertEqual(build.recheck_workspace_pair(result), (self.debug_spec, self.release))
+        for spec in (self.debug_spec, self.release):
+            row = document((spec.output/'build.json').read_text())
+            row.field('source_kind').equals('DERIVED_OBSERVER')
+            row.field('observer_semantic_qualification').equals('NOT_RUN')
+            row.field('source_before').field('source_sha').equals(spec.source_sha)
+            row.field('effective_source_before').equals(row.field('effective_source_after').value)
+        self.assertEqual((self.debug_spec.root/'tools/v8/input.txt').read_text(), 'observer-derived')
+
+    def test_overlay_proof_and_derived_source_drift_reject_after_return(self) -> None:
+        overlay = self.fixture.make_overlay()
+        self.fixture.spec = replace(self.fixture.spec, overlay=overlay)
+        result = build.build_workspace_pair(self.debug_spec, self.release, self.output)
+        self.assertEqual(result.status, 'BUILD_ANTECEDENTS_ONLY')
+        for victim in (overlay.patch, overlay.manifest, self.debug_spec.root/'tools/v8/input.txt',
+                       self.debug_spec.root/'rust/crates/alpha/src/lib.rs'):
+            with self.subTest(path=victim):
+                before = victim.read_bytes()
+                try:
+                    _ = victim.write_bytes(before+b'drift')
+                    with self.assertRaises(ValueError):
+                        _ = build.recheck_workspace_pair(result)
+                finally:
+                    _ = victim.write_bytes(before)
+        _ = build.recheck_workspace_pair(result)
+
+    def test_second_profile_must_share_exact_overlay(self) -> None:
+        overlay = self.fixture.make_overlay()
+        with self.assertRaises(ValueError):
+            _ = build.build_workspace_pair(replace(self.debug_spec, overlay=overlay), self.release, self.output)
+        self.assertFalse(self.output.exists())
+
+    def test_overlay_addition_keeps_baseline_index_and_classification(self) -> None:
+        name = 'tools/v8/observer_added.py'
+        patch_file = self.fixture.home/'added.patch'
+        _ = patch_file.write_text('diff --git a/'+name+' b/'+name+'\nnew file mode 100644\n--- /dev/null\n+++ b/'+name+'\n@@ -0,0 +1 @@\n+observer = True\n')
+        manifest = self.fixture.home/'added.json'
+        _ = manifest.write_text(json.dumps({'schema_version': 1, 'product_base_sha': self.fixture.spec.source_sha,
+            'observer_patch_sha256': file_hash(patch_file), 'allowed_paths': [name], 'files': [
+                {'path': name, 'base0_sha256': None, 'observer_sha256': hashlib.sha256(b'observer = True\n').hexdigest(),
+                 'operation': 'add'}]}))
+        overlay = build.Overlay(patch_file, file_hash(patch_file), manifest, file_hash(manifest))
+        self.fixture.spec = replace(self.fixture.spec, overlay=overlay)
+        before = subprocess.check_output(['git', '-C', str(self.debug_spec.root), 'ls-files', '--stage', '-z'])
+        result = build.build_workspace_pair(self.debug_spec, self.release, self.output)
+        self.assertEqual(result.status, 'BUILD_ANTECEDENTS_ONLY')
+        self.assertEqual(subprocess.check_output(['git', '-C', str(self.debug_spec.root), 'ls-files', '--stage', '-z']), before)
+        for spec in (self.debug_spec, self.release):
+            row = document((spec.output/'build.json').read_text())
+            self.assertNotIn(name, row.field('source_before').field('tracked_manifest').mapping())
+            self.assertIn(name, row.field('effective_source_after').field('manifest').mapping())
+            row.field('overlay_applied_this_build').equals(spec.profile == 'debug')
+            row.field('source_before_role').equals('ORIGINAL_PRISTINE_BASELINE')
+        _ = build.recheck_workspace_pair(result)
+        _ = subprocess.run(['git', '-C', str(self.debug_spec.root), 'add', name], check=True)
+        with self.assertRaisesRegex(ValueError, 'index drift'):
+            _ = build.recheck_workspace_pair(result)
+
+    def test_overlay_later_child_cannot_change_unlisted_source(self) -> None:
+        overlay = self.fixture.make_overlay()
+        self.fixture.spec = replace(self.fixture.spec, overlay=overlay)
+        def run(spec: ProcessSpec) -> ProcessResult:
+            returned = execute(spec)
+            if spec.output_root == self.release.output/'cargo-version':
+                _ = (self.debug_spec.root/'rust/crates/alpha/src/lib.rs').write_text('unlisted drift')
+            return returned
+        with patch('generic_build.execute', side_effect=run):
+            result = build.build_workspace_pair(self.debug_spec, self.release, self.output)
+        self.assertEqual(result.status, 'FAIL')
+        self.assertFalse((self.release.output/'rustc-version').exists())
+
+    def test_overlay_proof_cannot_change_at_debug_publication(self) -> None:
+        overlay = self.fixture.make_overlay()
+        self.fixture.spec = replace(self.fixture.spec, overlay=overlay)
+        def publish(path: Path, value: dict[str, Json]) -> None:
+            atomic_json(path, value)
+            if path == self.debug_spec.output/'build.json':
+                _ = overlay.manifest.write_text('{}\n')
+        with patch('generic_build.atomic_json', side_effect=publish):
+            result = build.build_workspace_pair(self.debug_spec, self.release, self.output)
+        self.assertEqual(result.status, 'FAIL')
+        self.assertFalse(self.release.output.exists())
+
+    def test_overlay_preapplied_source_is_not_a_clean_entry(self) -> None:
+        overlay = self.fixture.make_overlay()
+        self.fixture.spec = replace(self.fixture.spec, overlay=overlay)
+        _ = (self.debug_spec.root/'tools/v8/input.txt').write_text('observer-derived')
+        result = build.build_workspace_pair(self.debug_spec, self.release, self.output)
+        self.assertEqual(result.status, 'FAIL')
+        self.assertFalse(self.debug_spec.output.exists())
+        self.assertFalse(self.release.output.exists())
