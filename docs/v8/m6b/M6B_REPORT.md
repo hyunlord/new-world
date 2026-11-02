@@ -305,6 +305,8 @@ Stall 관찰자 patch의 실제 변환과 공급된 빌드 증거 대조를 분�
 
 실제 Cargo run04도 FAIL로 보존한다. 네 일반 자식은 COMPLETE와 원래 종료0/7/0/0을 기록했으나, alpha doctest는 직접 실행 PASS와 달리 기록 실행에서125로 실패했다. 실제 요청은 `/var/folders/.../T/rustdoctestGIBDro/rust_out`, 선언한 임시 루트는 Python이 선택한 `/private/tmp`여서 생성 파일을 실행하기 전에 차단됐다. pinned Rust의 Darwin 사용자 임시 디렉터리 선택과 Python 기본값의 차이를 확인했으며 환경 변경이나 허용 경로 확대 없이 실행기 선언을 수리할 예정이다. 산출물592개·바이너리4개·sealed 파일72개를 재검증하고 기록된 자식/launcher PID18개의 종료 및 외부 실행기 exit1을 확인했다. 원시 Cargo101 두 개만으로 동등성을 인정하지 않는다(`stage0/workspace-runtime/cargo-hook-qualification/INDEPENDENT_RUN04_AUDIT.md`, RESULT SHA256 `01e42405a78bd2e833404d0926155a8903458b26905983f79b054d8a602d707d`).
 
+실제 Cargo run05는 작은 debug 검증 프로젝트에 한해 PASS다. pinned Rust의 Darwin `confstr` 임시 디렉터리 선택을 실행기 선언에 반영했으며 TMPDIR 주입이나 helper·원래 테스트 명령 변경은 없었다. 일반 자식4개는 원래 종료0/7/0/0, 임시 doctest 자식1개는 종료0으로 모두 COMPLETE였고 직접/기록 실행의 alpha doctest PASS·beta 0개 및 의도한 Cargo101이 일치했다. 임시 루트·의존성 최종 검사와 독립 감사도 통과했다. 산출물599개·native 바이너리4개·sealed 입력88개의 해시를 재검증했고 기록된 PID19개 부재와 외부 실행기 exit0을 확인했다. 실제 jobserver FD 관측은 양쪽 모두 빈 목록이므로 활성 FD 상속 증명은 아니다. workspace 전체 집계는 INCOMPLETE, release·반복 실행은 NOT_RUN이며 세계 실행·전체 gate·게시 승인을 뜻하지 않는다. run01–04 실패는 그대로 보존한다(`stage0/workspace-runtime/cargo-hook-qualification/INDEPENDENT_RUN05_AUDIT.md`, RESULT SHA256 `060b193bc6d8970014132abadedd9f3805dcda59efe8e92d79c87bf7cff16d23`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
