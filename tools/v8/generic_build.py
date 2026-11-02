@@ -14,12 +14,19 @@ import os
 import re
 import stat
 import tomllib
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Final, Literal
 
 from generic_gate import GateContractError, document, require
-from generic_process import ProcessSpec, atomic_json, execute, file_hash, real_path
+from generic_process import (
+    ProcessResult,
+    ProcessSpec,
+    atomic_json,
+    execute,
+    file_hash,
+    real_path,
+)
 from generic_sources import freeze_source, git, inventory, manifest_hash, safe_path
 from generic_workspace_tests import inspect_inventory
 from mux2_gate_inputs import INPUT_DIRS, INPUT_FILES, Json, Node
@@ -179,7 +186,31 @@ def derived_snapshot(root: Path, source: dict[str, Json], changed: dict[str, tup
 
 
 def build_product(spec: BuildSpec) -> BuildResult:
+    """Fresh independent build; warm admission is confined to the owned pair entrypoint."""
+    return _build_product(spec, None)
+
+
+def _build_product(spec: BuildSpec, prior: '_WorkspacePrefix | None',
+                   publications: 'list[_BuildPublication] | None' = None) -> BuildResult:
     """Run a fully explicit Cargo recipe into a new target; retain failed build evidence."""
+    def run(process: ProcessSpec) -> ProcessResult:
+        if prior is not None:
+            prior.check(before=True)
+        result = execute(process)
+        if publications is not None:
+            require(result.receipt == process.output_root/'process.json', '/producer', 'foreign process return')
+            actual = document(result.receipt.read_text())
+            actual.field('status').equals(result.status)
+            actual.field('native_exit').equals(result.native_exit)
+            actual.field('pid').equals(result.pid)
+            actual.field('argv').equals(list(process.argv))
+            actual.field('cwd').equals(str(process.cwd))
+            for stream in ('stdout', 'stderr'):
+                actual.field(stream+'_sha256').equals(file_hash(process.output_root/(stream+'.log')))
+        if prior is not None:
+            prior.check(before=process.output_root != spec.output/'cargo-build')
+        return result
+
     real_path(spec.root, directory=True)
     real_path(spec.cargo_home, directory=True)
     require(spec.profile in {'release', 'debug'}, '/profile', 'unsupported profile')
@@ -199,7 +230,10 @@ def build_product(spec: BuildSpec) -> BuildResult:
     require(len({a.name for a in spec.artifacts}) == len(spec.artifacts), '/artifacts', 'duplicate artifact name')
     require(len({a.relative_path for a in spec.artifacts}) == len(spec.artifacts), '/artifacts', 'duplicate artifact path')
     target = spec.root / 'rust/target'
-    require(not target.exists() and not target.is_symlink(), str(target), 'fresh independent target required')
+    if prior is None:
+        require(not target.exists() and not target.is_symlink(), str(target), 'fresh independent target required')
+    else:
+        prior.check(before=True)
     require(spec.output.is_absolute() and spec.output.parent.resolve() == spec.output.parent
             and not spec.output.is_relative_to(spec.root), str(spec.output), 'fresh external evidence root required')
     for artifact in spec.artifacts:
@@ -252,7 +286,7 @@ def build_product(spec: BuildSpec) -> BuildResult:
                 '/toolchain', 'build requires a pinned numeric source toolchain')
         versions: dict[str, Json] = {}
         for name, executable, digest in (('cargo', spec.cargo, spec.cargo_sha256), ('rustc', spec.rustc, spec.rustc_sha256)):
-            result = execute(ProcessSpec((str(executable), '--version', '--verbose'), spec.root / 'rust',
+            result = run(ProcessSpec((str(executable), '--version', '--verbose'), spec.root / 'rust',
                              executable, digest, spec.root, tuple(sorted(inputs.items())),
                              spec.output / (name + '-version'), environment))
             require(result.status == 'PASS', name, 'toolchain version command failed')
@@ -269,7 +303,7 @@ def build_product(spec: BuildSpec) -> BuildResult:
         receipt['toolchain_versions'] = versions
         if spec.workspace_tests:
             metadata_argv = (str(spec.cargo),'metadata','--locked','--format-version=1','--no-deps')
-            metadata_result = execute(ProcessSpec(metadata_argv,spec.root/'rust',spec.cargo,spec.cargo_sha256,
+            metadata_result = run(ProcessSpec(metadata_argv,spec.root/'rust',spec.cargo,spec.cargo_sha256,
                 spec.root,tuple(sorted(inputs.items())),spec.output/'cargo-metadata',environment))
             receipt['metadata_process_receipt'] = str(metadata_result.receipt)
             receipt['metadata_receipt_sha256'] = file_hash(metadata_result.receipt)
@@ -290,7 +324,10 @@ def build_product(spec: BuildSpec) -> BuildResult:
                     require(path.is_relative_to(spec.root) and path.relative_to(spec.root).as_posix() in inputs,
                             name, 'metadata target/manifest absent from authenticated source inputs')
             workspace_evidence.update(inventory(spec.output,['cargo-metadata']))
-        require(not target.exists() and not target.is_symlink(), str(target), 'target appeared before build')
+        if prior is None:
+            require(not target.exists() and not target.is_symlink(), str(target), 'target appeared before build')
+        else:
+            prior.check(before=True)
         argv = [str(spec.cargo), 'test' if spec.test_targets or spec.workspace_tests else 'build', '--locked', '--message-format=json-render-diagnostics']
         if spec.workspace_tests:
             argv.extend(('--workspace','--no-run'))
@@ -304,7 +341,7 @@ def build_product(spec: BuildSpec) -> BuildResult:
             argv.extend(('-p', package))
         if spec.features:
             argv.extend(('--features', ','.join(spec.features)))
-        result = execute(ProcessSpec(tuple(argv), spec.root / 'rust', spec.cargo, spec.cargo_sha256,
+        result = run(ProcessSpec(tuple(argv), spec.root / 'rust', spec.cargo, spec.cargo_sha256,
                          spec.root, tuple(sorted(inputs.items())), spec.output / 'cargo-build', environment))
         receipt.update(exit_code=result.native_exit, argv=[part for part in argv], process_receipt=str(result.receipt),
                        process_receipt_sha256=file_hash(result.receipt), environment={key: value for key, value in environment})
@@ -375,6 +412,11 @@ def build_product(spec: BuildSpec) -> BuildResult:
             require(inventory(spec.output,['cargo-version','rustc-version','cargo-metadata','cargo-build']) == workspace_evidence,
                     '/workspace-evidence', 'earlier metadata/compiler evidence changed')
             receipt['workspace_evidence_sha256'] = {path:digest for path,digest in workspace_evidence.items()}
+        if prior is not None:
+            prior.check(before=False)
+            receipt['antecedent_build_receipt'] = str(prior.result.receipt)
+            receipt['antecedent_build_receipt_sha256'] = prior.receipt_sha256
+            receipt['target_before'] = dict(prior.target)
         receipt['artifacts'] = {name: {'path': str(path), 'sha256': digest} for name, path, digest in artifacts}
         receipt['binary_sha256'] = artifacts[0][2]
         receipt['status'] = 'PASS'
@@ -394,16 +436,261 @@ def build_product(spec: BuildSpec) -> BuildResult:
                          'Observer-only behavior must be qualified independently; no semantic claim follows from path/hash validation.',
                          'Caller must bind full gate, independent product arms and runtime safety.']
     terminal = spec.output / 'build.json'
+    if receipt['status'] == 'PASS' and publications is not None:
+        expected = json.dumps(receipt, indent=2, sort_keys=True, allow_nan=False)+'\n'
+        documents = _artifact_documents(spec, receipt, terminal, hashlib.sha256(expected.encode()).hexdigest(),
+                                        tuple(artifacts), workspace_targets)
+        publications.append(_BuildPublication(expected, tuple(sorted(_chain_tree(target).items())),
+            tuple(sorted(_chain_tree(spec.output).items())), tuple(sorted((name, json.dumps(value, indent=2, sort_keys=True, allow_nan=False)+'\n')
+                for name, value in documents.items()))))
     atomic_json(terminal, receipt)
     if receipt['status'] == 'PASS':
-        for name, path, digest in artifacts:
-            artifact_receipt: dict[str,Json] = {
-                'source_sha': spec.source_sha, 'binary_sha256': digest, 'binary': str(path),
-                'profile': spec.profile, 'exit_code': receipt['exit_code'], 'source_kind': receipt['source_kind'],
-                'build_receipt': str(terminal), 'build_receipt_sha256': file_hash(terminal)}
-            if spec.workspace_tests:
-                artifact_receipt.update(build_kind='workspace_tests',workspace_target=workspace_targets[name],
-                    metadata_process_receipt=receipt['metadata_process_receipt'],
-                    metadata_receipt_sha256=receipt['metadata_receipt_sha256'],metadata_sha256=receipt['metadata_sha256'])
-            atomic_json(spec.output / f'artifact-{name}.json', artifact_receipt)
+        for name, artifact_receipt in _artifact_documents(spec, receipt, terminal, file_hash(terminal),
+                                                         tuple(artifacts), workspace_targets).items():
+            atomic_json(spec.output/name, artifact_receipt)
     return BuildResult(terminal, 'PASS' if receipt['status'] == 'PASS' else 'FAIL', tuple(artifacts))
+
+
+def _artifact_documents(spec: BuildSpec, receipt: dict[str, Json], terminal: Path,
+                        receipt_sha256: str, artifacts: tuple[tuple[str, Path, str], ...],
+                        workspace_targets: dict[str, Json]) -> dict[str, dict[str, Json]]:
+    """One source for ordinary publication and the pair's prepublication expectation."""
+    documents: dict[str, dict[str, Json]] = {}
+    for name, path, digest in artifacts:
+        artifact_receipt: dict[str,Json] = {
+            'source_sha': spec.source_sha, 'binary_sha256': digest, 'binary': str(path),
+            'profile': spec.profile, 'exit_code': receipt['exit_code'], 'source_kind': receipt['source_kind'],
+            'build_receipt': str(terminal), 'build_receipt_sha256': receipt_sha256}
+        if spec.workspace_tests:
+            artifact_receipt.update(build_kind='workspace_tests',workspace_target=workspace_targets[name],
+                metadata_process_receipt=receipt['metadata_process_receipt'],
+                metadata_receipt_sha256=receipt['metadata_receipt_sha256'],metadata_sha256=receipt['metadata_sha256'])
+        documents[f'artifact-{name}.json'] = artifact_receipt
+    return documents
+
+
+@dataclass(frozen=True, slots=True)
+class WorkspaceBuildPair:
+    receipt: Path
+    status: Literal['BUILD_ANTECEDENTS_ONLY', 'FAIL']
+    debug: BuildResult | None
+    release: BuildResult | None
+    retained_anchor: '_PairAnchor | None' = None
+    runtime_qualification: Literal['NOT_RUN'] = 'NOT_RUN'
+    publication_authority: Literal[False] = False
+
+
+def _chain_tree(root: Path) -> dict[str, str]:
+    """Include empty directories and modes; reject links/specials instead of following them."""
+    real_path(root, directory=True)
+    found: dict[str, str] = {}
+    pending = [root]
+    while pending:
+        path = pending.pop()
+        mode = path.lstat().st_mode
+        name = path.relative_to(root).as_posix()
+        if stat.S_ISDIR(mode):
+            found[name] = f'directory:{mode}'
+            pending.extend(sorted(path.iterdir()))
+        else:
+            require(stat.S_ISREG(mode), str(path), 'nonregular chain member')
+            found[name] = f'file:{mode}:{file_hash(path)}'
+    return found
+
+
+@dataclass(frozen=True, slots=True)
+class _BuildPublication:
+    receipt_text: str
+    target: tuple[tuple[str, str], ...]
+    evidence: tuple[tuple[str, str], ...]
+    sidecars: tuple[tuple[str, str], ...]
+
+    def check(self, spec: BuildSpec, result: BuildResult) -> None:
+        """Authenticate against producer-time anchors, never a post-callback baseline."""
+        require(result.status == 'PASS' and result.receipt == spec.output/'build.json',
+                '/publication', 'failed or foreign producer return')
+        require(result.receipt.read_text() == self.receipt_text, '/publication', 'producer receipt changed')
+        require(_chain_tree(spec.root/'rust/target') == dict(self.target),
+                '/publication', 'producer target changed during publication')
+        current = _chain_tree(spec.output)
+        old = dict(self.evidence)
+        additions = {'build.json', *(name for name, _ in self.sidecars)}
+        require(current.keys() == old.keys() | additions
+                and all(current[name] == value for name, value in old.items()),
+                '/publication', 'producer evidence changed during publication')
+        for name, expected in self.sidecars:
+            require((spec.output/name).read_text() == expected,
+                    '/publication', 'artifact sidecar differs from producer-time expectation')
+
+
+@dataclass(frozen=True, slots=True)
+class _WorkspacePrefix:
+    spec: BuildSpec
+    result: BuildResult
+    receipt_sha256: str
+    evidence: tuple[tuple[str, str], ...]
+    target: tuple[tuple[str, str], ...]
+    inputs: tuple[tuple[str, str], ...]
+    source: str
+
+    def check(self, *, before: bool) -> None:
+        real_path(self.spec.root, directory=True)
+        real_path(self.spec.cargo_home, directory=True)
+        _ = config_inventory(self.spec)
+        require(file_hash(self.spec.cargo) == self.spec.cargo_sha256
+                and file_hash(self.spec.rustc) == self.spec.rustc_sha256
+                and os.access(self.spec.cargo, os.X_OK) and os.access(self.spec.rustc, os.X_OK),
+                '/antecedent', 'prior tool changed')
+        require(file_hash(self.result.receipt) == self.receipt_sha256
+                and _chain_tree(self.spec.output) == dict(self.evidence), '/antecedent', 'prior build evidence changed')
+        require(manifest_hash(freeze_source(self.spec.root, self.spec.source_sha)) == self.source
+                and inventory(self.spec.root, [*INPUT_DIRS, *INPUT_FILES]) == dict(self.inputs),
+                '/antecedent', 'prior source/input changed')
+        current = _chain_tree(self.spec.root/'rust/target')
+        expected = dict(self.target)
+        require(all(current.get(name) == value for name, value in expected.items()),
+                '/antecedent', 'protected prior target changed')
+        if before:
+            require(current == expected, '/antecedent', 'prior target membership changed before release')
+        else:
+            require(all(name == 'release' or name.startswith('release/') for name in current.keys()-expected.keys()),
+                    '/antecedent', 'release producer changed non-release target membership')
+
+
+def _workspace_prefix(spec: BuildSpec, result: BuildResult) -> _WorkspacePrefix:
+    """Only called with the actual first return in the closed pair execution."""
+    require(result.status == 'PASS' and result.receipt == spec.output/'build.json', '/antecedent', 'prior build failed/foreign')
+    row = document(result.receipt.read_text())
+    for name, value in (('status', 'PASS'), ('profile', 'debug'), ('build_kind', 'workspace_tests'),
+                        ('root', str(spec.root)), ('source_sha', spec.source_sha), ('exit_code', 0)):
+        row.field(name).equals(value)
+    row.field('effective_source_before').equals(row.field('effective_source_after').value)
+    actual_inputs = inventory(spec.root, [*INPUT_DIRS, *INPUT_FILES])
+    row.field('effective_inputs_before').equals({name: digest for name, digest in actual_inputs.items()})
+    row.field('artifacts').equals({name: {'path': str(path), 'sha256': digest} for name, path, digest in result.artifacts})
+    require(bool(result.artifacts) and all(file_hash(path) == digest for _, path, digest in result.artifacts),
+            '/antecedent', 'prior protected executable changed')
+    source = freeze_source(spec.root, spec.source_sha)
+    row.field('source_before').equals(source)
+    prefix = _WorkspacePrefix(spec, result, file_hash(result.receipt), tuple(sorted(_chain_tree(spec.output).items())),
+        tuple(sorted(_chain_tree(spec.root/'rust/target').items())), tuple(sorted(actual_inputs.items())), manifest_hash(source))
+    prefix.check(before=True)
+    return prefix
+
+
+def _publish_pair(output: Path, name: str, row: dict[str, Json], before: dict[str, str]) -> dict[str, str]:
+    """Check pair-owned files before/after publication against intended bytes and modes."""
+    require(_chain_tree(output) == before, '/pair-output', 'prior pair evidence changed')
+    require(name not in before, '/pair-output', 'pair receipt already exists')
+    raw = json.dumps(row, indent=2, sort_keys=True, allow_nan=False)+'\n'
+    # mkdir(0777) and atomic_json open(0666) share the caller's unchanged umask.
+    mode = stat.S_IFREG | (stat.S_IMODE(output.lstat().st_mode) & 0o666)
+    expected = {**before, name: f'file:{mode}:{hashlib.sha256(raw.encode()).hexdigest()}'}
+    atomic_json(output/name, row)
+    require(_chain_tree(output) == expected, '/pair-output', 'pair publication content/membership/mode changed')
+    return expected
+
+
+@dataclass(frozen=True, slots=True)
+class _PairAnchor:
+    prior: _WorkspacePrefix
+    release_spec: BuildSpec
+    release_result: BuildResult
+    release_publication: _BuildPublication
+    release_evidence: tuple[tuple[str, str], ...]
+    output: Path
+    pair_evidence: tuple[tuple[str, str], ...]
+
+    def check(self) -> None:
+        self.prior.check(before=False)
+        self.release_publication.check(self.release_spec, self.release_result)
+        require(_chain_tree(self.release_spec.output) == dict(self.release_evidence),
+                '/pair', 'release evidence drift after return')
+        require(_chain_tree(self.output) == dict(self.pair_evidence), '/pair', 'pair evidence drift after return')
+        for result in (self.prior.result, self.release_result):
+            for _, path, digest in result.artifacts:
+                require(file_hash(path) == digest, '/pair', 'returned artifact drift')
+
+
+def recheck_workspace_pair(result: WorkspaceBuildPair) -> tuple[BuildSpec, BuildSpec]:
+    """Recheck retained live-chain provenance; never reconstruct authority from JSON.
+
+    Python constructors/private attributes are not a security boundary. Only the
+    source-owned returned anchor is supported; this grants no runtime qualification.
+    """
+    anchor = result.retained_anchor
+    require(result.status == 'BUILD_ANTECEDENTS_ONLY' and anchor is not None
+            and result.runtime_qualification == 'NOT_RUN' and result.publication_authority is False,
+            '/pair', 'successful live pair anchor required')
+    assert anchor is not None
+    require(result.receipt == anchor.output/'chain.json' and result.debug is anchor.prior.result
+            and result.release is anchor.release_result, '/pair', 'pair result identity differs')
+    anchor.check()
+    return anchor.prior.spec, anchor.release_spec
+
+
+def build_workspace_pair(debug: BuildSpec, release: BuildSpec, output: Path) -> WorkspaceBuildPair:
+    """Own fresh debug then release antecedents; never substitute them for original gate steps.
+
+    This inherits build_product's process execution/ownership limits. An unexpected
+    interruption propagates with the initial INCOMPLETE receipt retained; it is not
+    a quiescence claim. No public prior-result or digest-only warm grant is accepted.
+    """
+    require(debug.profile == 'debug' and release.profile == 'release' and debug.workspace_tests
+            and debug.overlay is None and replace(debug, profile='release', output=release.output) == release,
+            '/pair', 'same-source workspace debug/release specs required')
+    paths = (debug.output, release.output, output)
+    for path in paths:
+        require(path.is_absolute() and path.parent == path.parent.resolve(strict=True)
+                and not path.is_relative_to(debug.root) and not path.exists() and not path.is_symlink(),
+                '/pair', 'fresh canonical external outputs required')
+    require(all(not left.is_relative_to(right) for left in paths for right in paths if left != right)
+            and len(set(paths)) == 3, '/pair', 'pair outputs overlap')
+    output.mkdir()
+    terminal = output/'chain.json'
+    row: dict[str, Json] = {'schema': 'workspace_build_pair.v1', 'status': 'INCOMPLETE',
+        'root': str(debug.root), 'source_sha': debug.source_sha, 'debug': None, 'release': None,
+        'runtime_qualification': 'NOT_RUN', 'rustdoc_invocations': 'NOT_AVAILABLE',
+        'publication_authority': False, 'original_gate_steps_executed': False}
+    pair_evidence = _chain_tree(output)
+    publications: list[_BuildPublication] = []
+    first: BuildResult | None = None
+    second: BuildResult | None = None
+    anchor: _PairAnchor | None = None
+    try:
+        pair_evidence = _publish_pair(output, 'started.json', row, pair_evidence)
+        first = _build_product(debug, None, publications)
+        row['debug'] = {'receipt': str(first.receipt), 'sha256': file_hash(first.receipt), 'status': first.status}
+        if first.status != 'PASS':
+            pair_evidence = _publish_pair(output, 'debug-returned.json', row, pair_evidence)
+        require(first.status == 'PASS', '/pair', 'debug antecedent failed; release NOT_RUN')
+        require(len(publications) == 1, '/publication', 'missing debug producer anchor')
+        publications[0].check(debug, first)
+        prior = _workspace_prefix(debug, first)
+        pair_evidence = _publish_pair(output, 'debug-returned.json', row, pair_evidence)
+        prior.check(before=True)
+        row['target_before_release'] = dict(prior.target)
+        second = _build_product(release, prior, publications)
+        row['release'] = {'receipt': str(second.receipt), 'sha256': file_hash(second.receipt), 'status': second.status}
+        require(second.status == 'PASS', '/pair', 'release antecedent failed')
+        require(len(publications) == 2, '/publication', 'missing release producer anchor')
+        publications[1].check(release, second)
+        prior.check(before=False)
+        require(all(file_hash(path) == digest for _, path, digest in second.artifacts), '/pair', 'release artifact changed')
+        target_end = _chain_tree(debug.root/'rust/target')
+        release_end = _chain_tree(release.output)
+        row.update(status='BUILD_ANTECEDENTS_ONLY', target_after={name: value for name, value in target_end.items()},
+                   debug_evidence=dict(prior.evidence), release_evidence={name: value for name, value in release_end.items()})
+        pair_evidence = _publish_pair(output, 'chain.json', row, pair_evidence)
+        prior.check(before=False)
+        require(_chain_tree(debug.root/'rust/target') == target_end and _chain_tree(release.output) == release_end,
+                '/pair', 'pair changed during terminal publication')
+        anchor = _PairAnchor(prior, release, second, publications[1], tuple(sorted(release_end.items())),
+                             output, tuple(sorted(pair_evidence.items())))
+        anchor.check()
+    except (OSError, ValueError, KeyError) as error:
+        row.update(status='FAIL', error=str(error))
+        terminal = output/'chain-failure.json'
+        atomic_json(terminal, row)
+    return WorkspaceBuildPair(terminal, 'BUILD_ANTECEDENTS_ONLY' if row['status'] == 'BUILD_ANTECEDENTS_ONLY' else 'FAIL',
+                              first, second, anchor)
