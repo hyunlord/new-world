@@ -293,6 +293,8 @@ Cargo가 임시 doctest 파일에도 runner를 적용한 실제 run02 실패에 
 
 작은 Cargo 실제 run03은 수정된 실행기의 사전 검증 후 수행했지만 FAIL했다. 직접 실행의 doctest는 통과했고 두 Cargo 부모는 각각101로 끝났으나, 기록 실행은 네 static 실행 파일이 소스 입력에도 포함되어 기존 경계 검증에 거절됐다. rustdoc 인자 배열은 선언과 일치했지만 실제 compiler 작업 디렉터리는 workspace 루트이고 선언은 패키지 디렉터리여서 역시 거절됐다. 후처리의 `wrapped-snapshots: empty or duplicate input scope` 오류와 원시 process 종료101·phase STARTED 표기의 차이도 별도로 보존한다. 모든 소유 프로세스14개의 종료와 최종 입력·산출물 무결성을 확인했으며, 같은 외부 종료 코드만으로 동등성을 인정하지 않는다(`stage0/workspace-runtime/cargo-hook-qualification/debug-native-run-03/RESULT.json`, SHA256 `b6cf7359280f5f305059afcd04254731c1708d9e43e1610deff9832e6ed69834`).
 
+M6a 단계48의 원래 식물 구조 검사를 실행하는 별도 어댑터를 추가했다. 원래 windowed 명령·통합 출력·검증기를 유지하고 실제로 import한 조정기 소스와 Godot extension/class/UID/import 경로를 고정 입력에 대조한다. 독립 검토에서 재현한 다른 검증기 import와 미등록 extension 수락은 모두 거절되며, 루트12개 검사(12.594초)·엄격 타입 검사26·Ruff를 통과했다. Godot PID는 기록되지 않아 null이고 시각 평가는 NOT_EVALUATED, 실제 renderer 실행은 NOT_RUN이다. 자식 종료가 불명확한 경우에는 INCOMPLETE로 남기고 후속 군 실행·최종 inventory를 하지 않는다. 기존 조정기는 이 상태에서의 소유 프로세스·lane 유지가 아직 해결되지 않아 연결하지 않았다. 독립 검토는 이 제한된 컴포넌트만 승인했다(`stage0/ordered-dispatch/M6A_STRUCTURAL_INDEPENDENT_REVIEW_V2.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
