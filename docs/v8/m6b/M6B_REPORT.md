@@ -375,6 +375,9 @@ Oracle 호출자에 소스가 보장하는 종료된 실패 API와 보존 결과
 
 단계32 resolver parity를 선택적 owned context로 원래 순서에 연결했다. 실제 원래300초 wrapper와 checker를 실행하는 기존 어댑터만 사용하고, UNKNOWN에서는 원래 예외·잠금을 보존해 단계33과 최종 기록으로 진행하지 않는다. 종료된 실패는 원래/보조 오류를 기록한 FAIL로 유지하며 이후와 최종 기록 전에 보존 결과를 다시 인증한다. 루트113개(73.712초), 생산3.11·테스트3.14 엄격 타입·Ruff·독립15개 조합 검사가 통과했다. 실제 Godot·빌드 출처·전체 gate는 미검증이며 구조48과의 후속 통합 검사는 별도로 필요하다(`stage0/ordered-dispatch/RESOLVER32_COORDINATOR_INDEPENDENT_REVIEW_V1.md`, patch SHA256 `cfd462094bcf3495303f175297d73fbd79091abc10a71cf060ecb02ce69f2bc1`).
 
+
+실제 workspace debug V6 실행 중 `probe::runner::tests::the_baseline_scene_takes_both_twin_checks`가 실패했다(기대1·실제0). 관찰자 오류 처리 closure를 넣은 `886ff0e5`에서 실제 들여쓰기가 바뀌었는데 기존 include_str 검사는12칸 공백을 그대로 요구했다. 현재 후보의 테스트만 각 줄 공백을 제거한 연속3줄 guard 검사로 수정했으며, 두 determinism guard 개수2와 허용 scene 검사는 유지한다. 독립 소스 검토와 공백 변경·guard 삭제·순서 변경의 텍스트 검사는 통과했으나 Rust 컴파일·native 재검증은 아직 NOT_RUN이다. 실행 중인 고정 ff512 소스와 V6 실패 증거는 수정하지 않는다. V7의 같은 ff512 준비본도 이 실패를 포함하므로 실행하지 않는다(`stage0/workspace-runtime/workspace-v6-live-diagnostic/twin-test-fix-offline-review.json`, SHA256 `411afdee14c96b98803148312ad93470d993787a4a66a487793f788c7b92267a`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

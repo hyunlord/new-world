@@ -616,7 +616,20 @@ mod tests {
                 .count(),
             2
         );
-        assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
+        let trace_check = ["if ", "twin_checked(&args.scene)"].concat();
+        let trace_guard = [
+            "if let Some(twin) = &mut twin {",
+            "twin.tick();",
+            trace_check.as_str(),
+        ];
+        let lines: Vec<_> = source.lines().map(str::trim).collect();
+        assert_eq!(
+            lines
+                .windows(trace_guard.len())
+                .filter(|window| *window == trace_guard)
+                .count(),
+            1
+        );
         // Every scene the probe accepts is twin-checked.
         for scene in ["baseline", "game_v26"] {
             assert!(super::super::args::ProbeArgs::parse(["--scene".into(), scene.into()]).is_ok());
