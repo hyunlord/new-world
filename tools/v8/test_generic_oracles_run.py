@@ -39,6 +39,7 @@ from generic_fixtures import ProbeProduct
 from generic_gate import document
 from generic_m6a_structural import Tooling, import_closure
 from generic_process import atomic_json, file_hash
+from mux2_gate_inputs import Json
 
 ROOT = Path(child.__file__).resolve().parent
 
@@ -426,3 +427,184 @@ class EagerProvenanceTests(unittest.TestCase):
             _ = path.write_text(path.read_text()+'\n# changed unused but sealed source\n')
             with self.assertRaisesRegex(ValueError, 'tool source changed'):
                 _ = run.inputs_current(inputs)
+
+
+class OwnedSeamTests(unittest.TestCase):
+    def test_prelaunch_owned_failure_preserves_primary_without_formatting(self) -> None:
+        class Unprintable(RuntimeError):
+            @override
+            def __str__(self) -> str:
+                raise TypeError('cannot render')
+        primary = Unprintable()
+        with synthetic() as fixture, patch.object(run, 'inputs_current', side_effect=primary), \
+                patch.object(subprocess, 'Popen') as spawn:
+            with self.assertRaises(run.OracleSettledFailure) as caught:
+                _ = run.run_owned_component(fixture.inputs, fixture.base/'component', fixture.lane_fd)
+            self.assertIs(caught.exception.primary, primary)
+            self.assertEqual(caught.exception.output, fixture.base/'component')
+            spawn.assert_not_called()
+
+    def test_owned_unknown_is_same_exception_and_live_record(self) -> None:
+        with synthetic() as fixture, patch.object(run, 'inputs_current', return_value=fixture.plan.inputs), \
+                patch.object(child.SuiteController, 'start', side_effect=RuntimeError('startup fault')):
+            actual_unknown: list[run.OracleSuiteOwnershipUnknown] = []
+            original = run.run_component
+            def capture(inputs: run.OracleInputs, output: Path, lane_fd: int) -> run.OracleResult:
+                try:
+                    return original(inputs, output, lane_fd)
+                except run.OracleSuiteOwnershipUnknown as error:
+                    actual_unknown.append(error)
+                    raise
+            with patch.object(run, 'run_component', side_effect=capture), self.assertRaises(run.OracleSuiteOwnershipUnknown) as caught:
+                _ = run.run_owned_component(fixture.inputs, fixture.base/'component', fixture.lane_fd)
+            try:
+                self.assertIs(caught.exception, actual_unknown[0])
+                self.assertIs(caught.exception.live, actual_unknown[0].live)
+            finally:
+                clean_unknown(caught.exception.live)
+
+    def test_returned_settlement_then_validation_error_is_typed_settled(self) -> None:
+        primary = RuntimeError('settled validation fault')
+        with synthetic(fail_native=1) as fixture, patch.object(run, 'inputs_current', return_value=fixture.plan.inputs), \
+                patch.object(run, 'finish', side_effect=primary):
+            with self.assertRaises(run.OracleSettledFailure) as caught:
+                _ = run.run_owned_component(fixture.inputs, fixture.base/'component', fixture.lane_fd)
+            self.assertIs(caught.exception.primary, primary)
+            self.assertTrue((fixture.base/'component/evidence/suite-terminal.json').exists())
+            self.assertTrue((fixture.base/'component/caller.json').exists())
+            self.assertFalse((fixture.base/'component/result.json').exists())
+
+    def test_legacy_entrypoint_preserves_raw_preflight_exception(self) -> None:
+        primary = RuntimeError('legacy preflight')
+        with synthetic() as fixture, patch.object(run, 'inputs_current', side_effect=primary):
+            with self.assertRaises(RuntimeError) as caught:
+                _ = run.run_component(fixture.inputs, fixture.base/'component', fixture.lane_fd)
+            self.assertIs(caught.exception, primary)
+
+
+def mutate_json(path: Path, field: str, value: Json) -> None:
+    import json
+    data = document(path.read_text()).mapping()
+    data[field] = value
+    _ = path.write_text(json.dumps(data)+'\n')
+
+
+def reseal(receipt: Path) -> str:
+    """Tamper test only: recompute outer hashes to expose semantic authentication gaps."""
+    import json
+    data = document(receipt.read_text()).mapping()
+    data['artifacts'] = {k: v for k, v in run.output_snapshot(receipt.parent).items() if k != 'result.json'}
+    _ = receipt.write_text(json.dumps(data)+'\n')
+    return file_hash(receipt)
+
+
+class HistoricalTests(unittest.TestCase):
+    def test_original_success_and_failed_prefix_authenticate_without_live_lane(self) -> None:
+        for fail in (0, 1):
+            with self.subTest(fail=fail), synthetic(fail_native=fail) as fixture, \
+                    patch.object(run, 'inputs_current', return_value=fixture.plan.inputs):
+                result = run.run_owned_component(fixture.inputs, fixture.base/'component', fixture.lane_fd)
+                with patch.object(child, 'suite_lane', side_effect=AssertionError('historical parser used a live lane')), \
+                        patch.object(subprocess, 'Popen', side_effect=AssertionError('historical parser launched process')):
+                    parsed = run.authenticate_result(fixture.inputs, result.receipt, result.sha256)
+                self.assertEqual(parsed, result)
+
+    def test_resealed_native_field_and_caller_failures_reject(self) -> None:
+        cases: tuple[tuple[str, str, Json], ...] = (
+            ('caller.json', 'shell_wait_observed', False),
+            ('caller.json', 'shell_pid', True),
+            ('caller.json', 'pass_fds', [3, 3, 4]),
+            ('caller.json', 'shell_exit', -9),
+            ('evidence/suite-terminal.json', 'settlement', 'UNKNOWN'),
+            ('evidence/suite-terminal.json', 'wrapper_waits_observed', True),
+            ('evidence/01-mux2_camp_framing_test/native-terminal.json', 'native_exit', True),
+            ('evidence/01-mux2_camp_framing_test/native-terminal.json', 'timed_out', 0),
+            ('evidence/01-mux2_camp_framing_test/native-terminal.json', 'ended_monotonic_ns', 0),
+            ('evidence/01-mux2_camp_framing_test/native-start.json', 'environment', {}),
+        )
+        with synthetic(fail_native=1) as fixture, patch.object(run, 'inputs_current', return_value=fixture.plan.inputs):
+            result = run.run_owned_component(fixture.inputs, fixture.base/'component', fixture.lane_fd)
+            root = result.receipt.parent
+            originals = {path: path.read_bytes() for path in root.rglob('*') if path.is_file()}
+            for name, field, value in cases:
+                with self.subTest(name=name, field=field):
+                    for path, content in originals.items():
+                        _ = path.write_bytes(content)
+                    mutate_json(root/name, field, value)
+                    digest = reseal(result.receipt)
+                    with self.assertRaises(ValueError):
+                        _ = run.authenticate_result(fixture.inputs, result.receipt, digest)
+
+    def test_impossible_failed_prefix_cannot_continue_after_native_or_checker_failure(self) -> None:
+        with synthetic() as fixture, patch.object(run, 'inputs_current', return_value=fixture.plan.inputs):
+            result = run.run_owned_component(fixture.inputs, fixture.base/'component', fixture.lane_fd)
+            root = result.receipt.parent
+            originals = {path: path.read_bytes() for path in root.rglob('*') if path.is_file()}
+            for failure in ('native', 'timeout', 'checker'):
+                with self.subTest(failure=failure):
+                    for path, content in originals.items():
+                        _ = path.write_bytes(content)
+                    for name in ('result.json', 'caller.json', 'evidence/suite-terminal.json'):
+                        mutate_json(root/name, 'shell_exit', 1)
+                    mutate_json(result.receipt, 'status', 'FAIL')
+                    native = root/'evidence/01-mux2_camp_framing_test/native-terminal.json'
+                    if failure == 'native':
+                        mutate_json(native, 'native_exit', 7)
+                    elif failure == 'timeout':
+                        mutate_json(native, 'timed_out', True)
+                    else:
+                        log = root/'logs/mux2_camp_framing_test.log'
+                        with log.open('a') as stream:
+                            _ = stream.write('SCRIPT ERROR\n')
+                        terminal = root/'evidence/suite-terminal.json'
+                        hashes = document(terminal.read_text()).field('closed_log_sha256').mapping()
+                        hashes[str(log)] = file_hash(log)
+                        mutate_json(terminal, 'closed_log_sha256', hashes)
+                    digest = reseal(result.receipt)
+                    with self.assertRaises(ValueError):
+                        _ = run.authenticate_result(fixture.inputs, result.receipt, digest)
+
+    def test_complete_input_map_and_godot_plan_cannot_be_substituted(self) -> None:
+        with synthetic(fail_native=1) as fixture, patch.object(run, 'inputs_current', return_value=fixture.plan.inputs):
+            result = run.run_owned_component(fixture.inputs, fixture.base/'component', fixture.lane_fd)
+            with patch.object(run, 'inputs_current', return_value=fixture.plan.inputs[:-1]), self.assertRaisesRegex(ValueError, 'complete suite input map differs'):
+                _ = run.authenticate_result(fixture.inputs, result.receipt, result.sha256)
+            plan = result.receipt.parent/'plan.json'
+            mutate_json(plan, 'godot', str(Path(sys.executable).resolve()))
+            mutate_json(result.receipt, 'plan_sha256', file_hash(plan))
+            digest = reseal(result.receipt)
+            with self.assertRaises(ValueError):
+                _ = run.authenticate_result(fixture.inputs, result.receipt, digest)
+
+    def test_omitted_row_and_unjoined_artifact_reject_even_with_outer_hashes(self) -> None:
+        with synthetic(fail_native=1) as fixture, patch.object(run, 'inputs_current', return_value=fixture.plan.inputs):
+            result = run.run_owned_component(fixture.inputs, fixture.base/'component', fixture.lane_fd)
+            original = result.receipt.read_bytes()
+            mutate_json(result.receipt, 'completed', [])
+            with self.assertRaisesRegex(ValueError, 'unjoined producer evidence'):
+                _ = run.authenticate_result(fixture.inputs, result.receipt, reseal(result.receipt))
+            _ = result.receipt.write_bytes(original)
+            _ = (result.receipt.parent/'logs/unjoined.log').write_text('foreign child')
+            with self.assertRaisesRegex(ValueError, 'unjoined producer logs'):
+                _ = run.authenticate_result(fixture.inputs, result.receipt, reseal(result.receipt))
+
+    def test_history_audit_cannot_adopt_mutation_after_initial_hashes(self) -> None:
+        with synthetic(fail_oracle=1) as fixture, patch.object(run, 'inputs_current', return_value=fixture.plan.inputs):
+            result = run.run_owned_component(fixture.inputs, fixture.base/'component', fixture.lane_fd)
+            original = run.audit_log
+            def changing(name: str, path: Path) -> str:
+                with path.open('a') as stream:
+                    _ = stream.write('\n')
+                return original(name, path)
+            with patch.object(run, 'audit_log', side_effect=changing), self.assertRaisesRegex(ValueError, 'changed during authentication'):
+                _ = run.authenticate_result(fixture.inputs, result.receipt, result.sha256)
+
+    def test_nested_bool_cannot_impersonate_request_ordinal_one(self) -> None:
+        with synthetic(fail_native=1) as fixture, patch.object(run, 'inputs_current', return_value=fixture.plan.inputs):
+            result = run.run_owned_component(fixture.inputs, fixture.base/'component', fixture.lane_fd)
+            path = result.receipt.parent/'evidence/01-mux2_camp_framing_test/wrapper-start.json'
+            request = document(path.read_text()).field('request').mapping()
+            request['ordinal'] = True
+            mutate_json(path, 'request', request)
+            with self.assertRaisesRegex(ValueError, 'typed request differs'):
+                _ = run.authenticate_result(fixture.inputs, result.receipt, reseal(result.receipt))

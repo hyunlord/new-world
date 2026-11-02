@@ -357,6 +357,9 @@ workspace doctest 집계는 기록된 Rustdoc 실행·독립적인 전체/ignore
 
 문서 검사를 선택적 owned context로 원래 단계14 위치에 연결했다. 기존 소유자를 재사용하고 UNKNOWN이면 다음 단계·산출물 확정·잠금 해제를 막는다. 종료가 확인된 문서 검증 실패는 FAIL을 유지한 채 원래 단계15로 진행할 수 있다. 독립 검토에서 원래/보조 오류 소실과 외부 FAIL 아래의 native PASS 입력 대조 누락을 재현해 v2에서 수정했다. 이전 정적 검사 prefix와 실제 프로세스 입력·도구·외부 파일·로그를 다시 대조하며 bench의 별도 중단 규칙을 유지한다. 루트98개(77.003초), 생산 코드 엄격 타입·Ruff·독립 검토가 통과했다. 실제 원래 문서 검사와 현재 제품의 세계 분류·빌드 출처는 아직 호출자 검증이 필요하며 전체 gate 승인을 뜻하지 않는다(`stage0/ordered-dispatch/docs14-coordinator-review/REVIEW_V2.md`, patch SHA256 `b290f2ddde918262f2b768c76e294ba40fae0d48db5929717fb0b041113e5c87`).
 
+
+Oracle 호출자에 소스가 보장하는 종료된 실패 API와 보존 결과 검증기를 추가했다. 원래 launch·16개 checker·명령·순서·한도·출처 pin은 유지하며 UNKNOWN 예외와 실제 live 객체를 그대로 전달한다. 재검증은 전체 계획·shell·wrapper·native 기록·환경·로그 범위·산출물·원래 checker를 연결하고, 중간 실패 뒤 검사를 계속한 불가능한 prefix를 거부한다. 과거 파일 검증에 실제 잠금 해제나 빌드 승인 권한은 없다. 루트34개(47.159초), 생산3.11·테스트3.14 엄격 타입·Ruff·독립34개가 통과했다. 상위 단계38 조정기·실제 Godot·전체 gate는 미완료다(`stage0/ordered-dispatch/ORACLES_A2_INDEPENDENT_REVIEW_V1.md`, patch SHA256 `43659d6797c17b8666af3d7a068632657cae3ab2d4e01612c221e81a178f13ff`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
