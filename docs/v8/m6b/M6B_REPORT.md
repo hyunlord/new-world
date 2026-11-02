@@ -275,6 +275,8 @@ stall 결과 연결부는 원래 타이밍 계산과 pristine 캡처 인증을 �
 
 작은 Cargo 검증 run02도 FAIL로 보존했다. v3 잠금 파일로 no-run 빌드는 통과했고 원래 직접/기록 Cargo 명령을 모두 실행했으며 계획된 네 native 파일은 COMPLETE 영수증을 남겼다. 그러나 실제 host runner는 rustdoc의 다섯 번째 임시 doctest 실행 파일에도 적용되었다. 기록기가 비정규 경로·미등록 파일을 거절해 직접 실행에서 통과한 doctest가 기록 실행에서 실패했다. 실제 관찰이 과거의 별도 doctest hook 가정을 반박하므로, 해당 실행을 제외하거나 성공으로 인정하지 않는다. 전체 환경·파일 디스크립터 동등성 판정은 아직 완료하지 못했다(`stage0/workspace-runtime/cargo-hook-qualification/debug-native-run-02/RESULT.json`, SHA256 `5c4df09a56d7a36257bf50d74b58dfba472aedb200b0d1ece62042341f681679`).
 
+Cargo 기록의 순수 대조기는 원래 부모 명령·manifest·패키지별 실행 파일·순번 claim·시작/종료 기록과 출력 해시를 연결한다. 프로세스를 새로 실행하지 않고, 비정상 종료·부분 기록·미등록 doctest를 누락시키지 않는다. 기록 완결성과 native 성공을 분리하며 PID 재사용을 전역 중복 오류로 취급하지 않는다. 독립 리뷰와 루트 합성10개·엄격 타입 검사21이 통과했다. 루트 Ruff에서 발견한 테스트 import 순서 한 건을 고친 뒤10개 재검사와 Ruff도 통과했다. 실제 빌드 출처 승인, Cargo 환경·파일 디스크립터 동등성, 개별 testcase·doctest 집계와 세계 안전성은 여전히 미완료다(`stage0/workspace-runtime/INDEPENDENT_CAPTURE_V1_REVIEW.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.

@@ -1,0 +1,255 @@
+"""Pure Cargo receipt joins; authenticated build handoff remains caller-owned."""
+import hashlib
+import re
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+
+from generic_gate import document, require
+from generic_process import (
+    ProcessResult,
+    ProcessSpec,
+    environment_for,
+    file_hash,
+    real_path,
+)
+from generic_sources import inventory
+from generic_workspace_tests import Executable, Inventory
+from mux2_gate_inputs import Json, Node
+
+
+@dataclass(frozen=True)
+class CapturePlan:
+    invocation_id: str
+    step: int
+    arm: str
+    profile: str
+    parent_spec: ProcessSpec
+    parent_receipt_sha256: str
+    manifest: Path
+    manifest_sha256: str
+    inventory: Inventory
+    capture_root: Path
+    captured_files: tuple[tuple[str, str], ...]
+
+
+@dataclass(frozen=True)
+class CapturedTarget:
+    executable: Executable
+    receipt: Path
+    receipt_sha256: str
+    sequence: int
+    launcher_pid: int
+    child_pid: int | None
+    native_exit: int | None
+    capture_complete: bool
+    original_environment: tuple[tuple[str, str], ...]
+
+
+@dataclass(frozen=True)
+class WorkspaceCapture:
+    targets: tuple[CapturedTarget, ...]
+    missing: tuple[Executable, ...]
+    rejected: tuple[tuple[str, str], ...]
+    hashes: tuple[tuple[str, str], ...]
+    parent_status: str
+    parent_exit: int | None
+    integrity: str
+    completeness: str
+    outcome: str
+    declared_snapshot: tuple[tuple[str, str], ...] = ()
+    source_build_admission: str = 'CALLER_AUTHENTICATED_BUILD_HANDOFF_REQUIRED'
+    cargo_environment_qualification: str = 'UNRESOLVED_ACTUAL_CARGO_TRANSFORMS_AND_FDS'
+    case_accounting: str = 'INCOMPLETE'
+    doctests: str = 'INCOMPLETE'
+    world_safety: str = 'INCOMPLETE'
+
+
+def read(path: Path) -> Node:
+    return document(path.read_bytes().decode('utf-8'))
+
+
+def integer(node: Node, *, positive: bool = False) -> int:
+    value = node.value
+    require(type(value) is int, node.label, 'integer required')
+    assert isinstance(value, int)
+    require(not positive or value > 0, node.label, 'positive integer required')
+    return value
+
+
+def strings(node: Node) -> dict[str, str]:
+    return {key: node.field(key).text() for key in node.mapping()}
+
+
+def snapshot(root: Path) -> dict[str, str]:
+    real_path(root, directory=True)
+    return inventory(root, [path.name for path in root.iterdir()])
+
+
+def parent_binding(plan: CapturePlan, result: ProcessResult) -> dict[str, str]:
+    spec = plan.parent_spec
+    require(result.receipt == spec.output_root/'process.json' and file_hash(result.receipt) == plan.parent_receipt_sha256,
+            '/parent', 'receipt path/hash differs')
+    node = read(result.receipt)
+    require(type(result.pid) is int and result.pid > 0 and type(result.native_exit) is int, '/parent', 'missing actual outcome/PID')
+    require(spec.timeout_seconds is None, '/parent', 'original Cargo invocation has no timeout')
+    argv = (str(spec.executable), 'test', '--workspace', *(('--release',) if plan.step == 5 else ()), '--no-fail-fast', '--', '--test-threads=8')
+    require(spec.argv == argv and spec.cwd == spec.input_root/'rust', '/parent', 'original Cargo argv/cwd differs')
+    status = 'PASS' if result.native_exit == 0 else 'FAIL'
+    require(result.status == status, '/parent', 'native outcome/status differs')
+    expected: dict[str, Json] = {'schema_version': 1, 'status': status, 'native_exit': result.native_exit, 'pid': result.pid,
+        'argv': list(argv), 'cwd': str(spec.cwd), 'executable': str(spec.executable), 'input_root': str(spec.input_root),
+        'output_root': str(spec.output_root), 'environment': dict(environment_for(spec)),
+        'environment_policy': 'fixed_defaults_plus_explicit_only_no_inheritance', 'fresh_directories': list(spec.fresh_directories),
+        'expected_executable_sha256': spec.executable_sha256, 'before_executable_sha256': spec.executable_sha256,
+        'after_executable_sha256': spec.executable_sha256, 'errors': [] if result.native_exit == 0 else [f'native exit {result.native_exit}']}
+    for key, value in expected.items(): node.field(key).equals(value)
+    require('timed_out' not in node.mapping() and 'timeout_seconds' not in node.mapping(), '/parent', 'changed timeout policy')
+    for key in ('started_at', 'ended_at'):
+        require(datetime.fromisoformat(node.field(key).text()).tzinfo is not None, '/parent', 'timestamp lacks timezone')
+    _ = integer(node.field('duration_ns'), positive=True)
+    require(len(dict(spec.inputs)) == len(spec.inputs) and len(dict(spec.external_inputs)) == len(spec.external_inputs), '/parent', 'duplicate inputs')
+    bound = {str(spec.executable): spec.executable_sha256}
+    for suffix, rows in (('inputs', {name: digest for name, digest in spec.inputs}),
+                         ('external_inputs', {str(path): digest for path, digest in spec.external_inputs})):
+        for prefix in ('expected_', 'before_', 'after_'): node.field(prefix+suffix).equals({key: value for key, value in rows.items()})
+        for name, digest in rows.items(): bound[str(spec.input_root/name) if suffix == 'inputs' else name] = digest
+    env = environment_for(spec)
+    require(env.get('CARGO_CAPTURE_MANIFEST') == str(plan.manifest) and env.get('CARGO_CAPTURE_MANIFEST_SHA256') == plan.manifest_sha256,
+            '/parent', 'manifest not tied to actual outer environment')
+    require(bound.get(str(plan.manifest)) == plan.manifest_sha256, '/parent', 'manifest absent from immutable parent inputs')
+    for name in ('stdout', 'stderr'): node.field(name+'_sha256').equals(file_hash(spec.output_root/(name+'.log')))
+    started = read(spec.output_root/'process-start.json')
+    for key in ('argv', 'cwd', 'environment', 'started_at'): started.field(key).equals(node.field(key).value)
+    read(spec.output_root/'process-spawn.json').field('pid').equals(result.pid)
+    for path, digest in bound.items(): require(file_hash(Path(path)) == digest, path, 'bound parent input changed')
+    return {**bound, **{str(spec.output_root/name): digest for name, digest in snapshot(spec.output_root).items()}}
+
+
+def child_binding(plan: CapturePlan, parent: ProcessResult, entry: Node, executable: Executable, directory: Path) -> CapturedTarget:
+    sequence = int(directory.name)
+    pending = read(directory/'pending.json')
+    expected: dict[str, Json] = {'schema_version': 1, 'component': 'NATIVE_CAPTURE_COMPONENT', 'invocation_id': plan.invocation_id,
+        'step': plan.step, 'arm': plan.arm, 'profile': plan.profile, 'sequence': sequence, 'parent_pid': parent.pid,
+        'argv': [str(executable.binary), '--test-threads=8'], 'cwd': str(executable.cwd), 'manifest_sha256': plan.manifest_sha256}
+    for key, value in expected.items(): pending.field(key).equals(value)
+    launcher = integer(pending.field('launcher_pid'), positive=True)
+    _ = integer(pending.field('started_ns'), positive=True)
+    claim = plan.capture_root/('artifact-'+hashlib.sha256(str(executable.binary).encode()).hexdigest()+'.claim')
+    require(claim.read_bytes() == str(sequence).encode(), '/claim', 'claim/sequence differs')
+    terminal_path = directory/'receipt.json'
+    if not terminal_path.exists():
+        partial_pid: int | None = None
+        if (directory/'started.json').exists():
+            partial = read(directory/'started.json')
+            for key, value in pending.mapping().items(): partial.field(key).equals(value)
+            partial_pid = integer(partial.field('child_pid'), positive=True)
+            partial.field('artifact_id').equals(entry.field('id').text())
+        return CapturedTarget(executable, directory/'pending.json', file_hash(directory/'pending.json'), sequence, launcher, partial_pid, None, False, ())
+    terminal = read(terminal_path)
+    for key, value in pending.mapping().items(): terminal.field(key).equals(value)
+    actual = snapshot(directory)
+    terminal.field('output_inventory').equals({key: digest for key, digest in actual.items() if key != 'receipt.json'})
+    _ = integer(terminal.field('ended_ns'), positive=True)  # wall-clock values, not monotonic ordering evidence
+    terminal.field('artifact_id').equals(entry.field('id').text())
+    digest = entry.field('sha256').text()
+    for key in ('before_binary_sha256', 'after_binary_sha256'): terminal.field(key).equals(digest)
+    require(file_hash(executable.binary) == digest, '/binary', 'artifact changed')
+    manifest = read(plan.manifest)
+    inputs = strings(manifest.field('inputs'))
+    for key in ('expected_inputs', 'after_inputs'): terminal.field(key).equals({key: value for key, value in inputs.items()})
+    for path, checksum in inputs.items(): require(file_hash(Path(path)) == checksum, path, 'immutable child input changed')
+    require({path.name for path in directory.iterdir()} <= {'pending.json', 'started.json', 'receipt.json', 'stdout.log', 'stderr.log', 'observer'}, '/child', 'unknown output file')
+    original = strings(terminal.field('original_environment'))
+    require(original.get('CARGO_CAPTURE_MANIFEST') == str(plan.manifest) and original.get('CARGO_CAPTURE_MANIFEST_SHA256') == plan.manifest_sha256,
+            '/child/environment', 'Cargo manifest propagation differs')
+    variable = manifest.field('observer_variable').value
+    require(variable is None or variable == 'WORLDSIM_GATE_TEST_OUT', '/observer', 'unsupported observer')
+    additions = {} if variable is None else {'WORLDSIM_GATE_TEST_OUT': str(directory/'observer')}
+    require(not set(additions) & original.keys(), '/observer', 'observer overwrote original Cargo environment')
+    terminal.field('observer_additions').equals({key: value for key, value in additions.items()})
+    terminal.field('environment').equals({**original, **additions})
+    started = read(directory/'started.json')
+    for key in started.mapping(): started.field(key).equals(terminal.field(key).value)
+    for key in (*pending.mapping(), 'child_pid', 'artifact_id', 'before_binary_sha256', 'environment', 'observer_additions'):
+        started.field(key).equals(terminal.field(key).value)
+    pid = integer(terminal.field('child_pid'), positive=True)
+    code = integer(terminal.field('native_exit'))
+    terminal.field('native_signal').equals(-code if code < 0 else None)
+    for signal in terminal.field('received_signals').array(): _ = integer(signal, positive=True)
+    for key in ('workspace_case_accounting', 'doctests', 'world_coverage'): terminal.field(key).equals('INCOMPLETE')
+    errors = tuple(row.text() for row in terminal.field('errors').array())
+    terminal.field('capture_status').equals('FAIL' if errors else 'COMPLETE')
+    for name in ('stdout', 'stderr'): terminal.field(name+'_sha256').equals(file_hash(directory/(name+'.log')))
+    return CapturedTarget(executable, terminal_path, file_hash(terminal_path), sequence, launcher, pid, code, not errors, tuple(sorted(original.items())))
+
+
+def reconcile_capture(plan: CapturePlan, parent_result: ProcessResult) -> WorkspaceCapture:
+    rejected: list[tuple[str, str]] = []
+    targets: list[CapturedTarget] = []
+    hashes: dict[str, str] = {}
+    seen: set[Path] = set()
+    parent_files: dict[str, str] | None = None
+    try:
+        require(plan.step in {4, 5} and plan.profile == ('debug' if plan.step == 4 else 'release') and plan.arm in {'base', 'candidate'}, '/identity', 'unsupported step/profile/arm')
+        require(re.fullmatch(r'[A-Za-z0-9_.-]+', plan.invocation_id) is not None, '/identity', 'invalid invocation')
+        hashes = {str(plan.capture_root/name): digest for name, digest in snapshot(plan.capture_root).items()}
+        require(len(dict(plan.captured_files)) == len(plan.captured_files) and snapshot(plan.capture_root) == dict(plan.captured_files), '/capture', 'frozen capture inventory differs')
+        hashes.update(parent_binding(plan, parent_result))
+        parent_files = snapshot(plan.parent_spec.output_root)
+        require(file_hash(plan.manifest) == plan.manifest_sha256, '/manifest', 'manifest changed')
+        hashes[str(plan.manifest)] = plan.manifest_sha256
+        manifest = read(plan.manifest)
+        require(set(manifest.mapping()) == {'schema_version', 'invocation_id', 'step', 'arm', 'profile', 'output_root', 'launcher_sha256', 'python_sha256', 'inputs', 'artifacts', 'observer_variable'}, '/manifest', 'schema keys differ')
+        for key in ('launcher_sha256', 'python_sha256'):
+            require(manifest.field(key).text() in hashes.values(), key, 'launcher/interpreter digest absent from parent bindings')
+        for key, value in {'schema_version': 1, 'invocation_id': plan.invocation_id, 'step': plan.step, 'arm': plan.arm,
+                           'profile': plan.profile, 'output_root': str(plan.capture_root)}.items(): manifest.field(key).equals(value)
+        entries = {row.field('path').text(): row for row in manifest.field('artifacts').array()}
+        expected = {str(row.binary): row for row in plan.inventory.executables}
+        require(bool(expected) and len(expected) == len(plan.inventory.executables) and set(entries) == set(expected)
+                and len(entries) == len(manifest.field('artifacts').array()), '/inventory', 'missing/extra/duplicate manifest artifact')
+        require(len({row.field('id').text() for row in entries.values()}) == len(entries), '/inventory', 'duplicate artifact ID')
+        for binary, row in expected.items():
+            require((row.step, row.profile, row.filter, row.ignored, row.threads) == (plan.step, plan.profile, None, 'exclude', 8), '/inventory', 'selector/profile differs')
+            require(row.target.test and row.target.manifest.is_relative_to(plan.parent_spec.cwd) and row.target.source.is_relative_to(row.cwd), '/inventory', 'foreign target source/package')
+            digest = entries[binary].field('sha256').text()
+            require(file_hash(row.binary) == digest, binary, 'binary differs from caller-bound manifest')
+            hashes[binary] = digest
+        for path, digest in strings(manifest.field('inputs')).items():
+            require(file_hash(Path(path)) == digest, path, 'source input differs')
+            hashes[path] = digest
+        directories = sorted(path for path in plan.capture_root.iterdir() if path.is_dir())
+        counter = (plan.capture_root/'sequence.lock').read_bytes()
+        require(counter == str(len(directories)).encode() or (not directories and counter == b''), '/sequence', 'counter differs')
+        for sequence, directory in enumerate(directories, 1):
+            try:
+                require(directory.name == f'{sequence:06d}', '/sequence', 'nonconsecutive six-digit directory')
+                pending = read(directory/'pending.json')
+                binary = Path(pending.field('argv').array()[0].text())
+                require(str(binary) in expected and binary not in seen, '/artifact', 'foreign or duplicate invocation')
+                seen.add(binary)
+                target = child_binding(plan, parent_result, entries[str(binary)], expected[str(binary)], directory)
+                targets.append(target)
+                if not target.capture_complete and target.receipt.name == 'receipt.json':
+                    rejected.append((str(directory), 'native capture integrity failed: ' + str(read(target.receipt).field('errors').value)))
+            except (OSError, ValueError, IndexError) as error: rejected.append((str(directory), str(error)))
+        claims = {('artifact-'+hashlib.sha256(str(binary).encode()).hexdigest()+'.claim') for binary in seen}
+        actual_roots = {path.name for path in plan.capture_root.iterdir()}
+        for name in sorted(actual_roots - {'sequence.lock', *(path.name for path in directories), *claims}):
+            rejected.append((str(plan.capture_root/name), 'extra or claim-only root record'))
+    except (OSError, ValueError) as error: rejected.append(('parent/manifest/capture', str(error)))
+    for path, digest in tuple(hashes.items()):
+        try: require(file_hash(Path(path)) == digest, path, 'late evidence mutation')
+        except (OSError, ValueError) as error: rejected.append((path, str(error)))
+    if parent_files is not None:
+        try: require(snapshot(plan.parent_spec.output_root) == parent_files, '/parent', 'late parent artifact set changed')
+        except (OSError, ValueError) as error: rejected.append(('parent-final', str(error)))
+    try: require(snapshot(plan.capture_root) == dict(plan.captured_files), '/capture', 'late output mutation')
+    except (OSError, ValueError) as error: rejected.append(('capture-final', str(error)))
+    missing = tuple(row for row in plan.inventory.executables if row.binary not in {target.executable.binary for target in targets})
+    complete = not rejected and not missing and all(row.capture_complete for row in targets)
+    failed = parent_result.native_exit != 0 or any(row.native_exit not in (None, 0) for row in targets)
+    return WorkspaceCapture(tuple(targets), missing, tuple(rejected), tuple(sorted(hashes.items())), parent_result.status,
+                            parent_result.native_exit, 'FAIL' if rejected else 'PASS', 'COMPLETE' if complete else 'INCOMPLETE',
+                            'FAILED' if failed else 'SUCCEEDED' if complete else 'INCOMPLETE', plan.captured_files)
