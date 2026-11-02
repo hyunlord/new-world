@@ -11,6 +11,13 @@ from pathlib import Path
 from typing import Literal
 
 from generic_gate import decode_json
+from generic_stall_build import (
+    BuildEvidence,
+    BuildEvidenceReference,
+    authenticate_build,
+    decode_build_reference,
+    derived_source_binding,
+)
 from m6a_r1_stall_capture import producer_sources, required_artifacts
 from mux2_gate_inputs import (
     BRIDGE,
@@ -125,20 +132,31 @@ def authenticate_capture(root: Path, capture: Path, binding: CaptureBinding) -> 
         raise EvidenceError(f'unreadable or invalid stall evidence: {error}') from error
 
 
-def _authenticate(root: Path, capture: Path, binding: CaptureBinding) -> StallEvidence:
+def _authenticate(root: Path, capture: Path, binding: CaptureBinding,
+                  reference: BuildEvidenceReference | None = None) -> StallEvidence:
     real_path(root)
     real_path(capture)
     require(not capture.is_relative_to(root), 'capture evidence must be external')
     require(re.fullmatch('[0-9a-f]{40}', binding.source_sha) is not None, 'full source SHA required')
     require(type(binding.process_exit) is int and binding.process_exit in (0, 1), 'invalid native capture exit')
     require(re.fullmatch('[0-9a-f]{64}', binding.receipt_sha256) is not None, 'runner receipt hash required')
-    clean_sources(root)
+    if reference is None:
+        clean_sources(root)
+    else:
+        _ = derived_source_binding(root, reference)
     require(git(root, 'rev-parse', 'HEAD') == binding.source_sha, 'source SHA changed')
     receipt_path = capture / 'receipt.json'
     real_path(receipt_path)
     check_hash(receipt_path, binding.receipt_sha256)
     receipt = parse(receipt_path.read_text())
-    receipt.field('schema').equals(1)
+    if reference is None:
+        receipt.field('schema').equals(1)
+    else:
+        receipt.field('schema').equals('derived_stall_capture.v1')
+        receipt.field('derived_binding').equals(derived_source_binding(root, reference))
+        receipt.field('integrity').equals({'status':'VERIFIED', 'child_completion':'CONFIRMED',
+            'expected_timing_failure':binding.process_exit == 1, 'primary_error':None,
+            'cleanup_error':None, 'postflight_errors':{}})
     receipt.field('kind').equals('stall')
     receipt.field('source_head').equals(binding.source_sha)
     receipt.field('root').equals(str(root))
@@ -192,10 +210,36 @@ def _authenticate(root: Path, capture: Path, binding: CaptureBinding) -> StallEv
         require(sealed == {}, 'unexpected failed-capture artifact sealing')
     same_inputs(current, snapshot(root))
     same_inputs(artifacts, artifact_inventory(capture))
-    clean_sources(root)
+    if reference is None:
+        clean_sources(root)
+    else:
+        _ = derived_source_binding(root, reference)
     require(git(root, 'rev-parse', 'HEAD') == binding.source_sha, 'source changed during stall audit')
     check_hash(godot, receipt.field('godot_sha256').text())
     check_hash(receipt_path, binding.receipt_sha256)
     return StallEvidence(binding.source_sha, verdict, expected_exit, verdict.strict_pass,
                          binding.receipt_sha256,
                          tuple((name, Node(value).text()) for name, value in sorted(artifacts.items())))
+
+
+@dataclass(frozen=True, slots=True)
+class DerivedStallEvidence:
+    capture: StallEvidence
+    reference: BuildEvidenceReference
+    build: BuildEvidence
+
+
+def authenticate_derived_capture(root: Path, capture: Path, binding: CaptureBinding,
+                                 reference: BuildEvidenceReference) -> DerivedStallEvidence:
+    """Authenticate a derived diagnostic capture, never safety or final waiver admission."""
+    try:
+        before = derived_source_binding(root, reference)
+        evidence = _authenticate(root, capture, binding, reference)
+        build = authenticate_build(decode_build_reference(reference))
+        require(derived_source_binding(root, reference) == before, 'derived evidence changed')
+        check_hash(capture / 'receipt.json', binding.receipt_sha256)
+        same_inputs(dict(evidence.artifacts), artifact_inventory(capture))
+        same_inputs(parse((capture/'receipt.json').read_text()).field('inputs').mapping(),snapshot(root))
+        return DerivedStallEvidence(evidence, reference, build)
+    except (OSError, ValueError) as error:
+        raise EvidenceError(f'unreadable or invalid derived stall evidence: {error}') from error

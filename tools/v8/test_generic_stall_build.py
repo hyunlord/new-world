@@ -6,7 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -37,7 +37,9 @@ class Fixture:
         _=(crate/'Cargo.toml').write_text('[package]\nname="sim-bridge"\nversion.workspace=true\n[lib]\ncrate-type=["cdylib","rlib"]\n')
         _=(crate/'src/lib.rs').write_text('// tiny source fixture, never compiled\n')
         _=(self.root/'sim_bridge.gdextension').write_text('[libraries]\nmacos.debug = "res://rust/target/debug/libsim_bridge.dylib"\n')
-        _=(self.root/'.gitignore').write_text('target/\n')
+        _=(self.root/'.gitignore').write_text('target/\n.godot/\n')
+        _=(self.root/'scripts/producer.gd').write_text('# synthetic producer')
+        _=(self.root/'tools/v8/mux2_stall_test.gd').write_text('const SOURCE_PATHS: Array[String] = ["scripts/producer.gd"]')
         self.changed: Path=self.root/'tools/v8/observer.py';_=self.changed.write_text('old\n')
         self.changed.chmod(0o755)
         _=self.run('add','.');_=self.run('-c','user.name=Tiny','-c','user.email=t@example.invalid','commit','-qm','fixture')
@@ -299,3 +301,55 @@ class ReviewRegressionTests(unittest.TestCase):
                 side=f.build.output/'artifact-sim_bridge.json';data=document(side.read_text()).mapping();data['build_receipt_sha256']=file_hash(receipt)
                 _=side.write_text(json.dumps(data))
                 with self.assertRaises(ValueError):_=subject.authenticate_build(f.evidence())
+
+
+class ReferenceTests(unittest.TestCase):
+    def test_reference_decodes_actual_evidence_and_rejects_closed_schema_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            f=Fixture(Path(temp).resolve());spec=f.prepared()
+            path=Path(temp).resolve()/'reference.json'
+            raw=document(json.dumps(asdict(spec),default=str)).mapping()
+            raw['schema']='stall_build_evidence.v1'
+            _=path.write_text(json.dumps(raw))
+            reference=subject.BuildEvidenceReference(path,file_hash(path))
+            self.assertEqual(subject.decode_build_reference(reference),spec)
+            raw['approved']=True
+            _=path.write_text(json.dumps(raw))
+            with self.assertRaises(ValueError):_=subject.decode_build_reference(reference)
+            with self.assertRaises(ValueError):
+                _=subject.decode_build_reference(subject.BuildEvidenceReference(path,file_hash(path)))
+
+    def test_reference_rejects_recipe_paths_pairs_and_non_json_authority(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            home=Path(temp).resolve();f=Fixture(home);spec=f.prepared()
+            path=home/'reference.json';reference=reference_for(spec,path);original=path.read_text()
+            mutations: tuple[tuple[str,str,Json],...] = (
+                ('build','features',['foreign']),('build','profile','release'),('build','workspace_tests',0),
+                ('build','root',str(f.patch)),('build','source_sha','short'),('build','overlay',None),
+                ('transform','origin_sha','f'*40),('transform','scratch',str(home/'missing')),
+                ('build','cargo',str(home/'link')),('build','artifacts',[]))
+            (home/'link').symlink_to(f.build.cargo)
+            for section,key,value in mutations:
+                raw=document(original);raw.field(section).mapping()[key]=value
+                _=path.write_text(json.dumps(raw.value))
+                with self.subTest(section=section,key=key),self.assertRaises((ValueError,OSError)):
+                    _=subject.decode_build_reference(subject.BuildEvidenceReference(path,file_hash(path)))
+            raw=document(original);pairs=raw.field('build_files').array()
+            bad_pairs: tuple[Json,...] = ([row.value for row in pairs]+[pairs[0].value],[['../escape','a'*64]])
+            for values in bad_pairs:
+                raw.mapping()['build_files']=values;_=path.write_text(json.dumps(raw.value))
+                with self.assertRaises(ValueError):
+                    _=subject.decode_build_reference(subject.BuildEvidenceReference(path,file_hash(path)))
+            for text in ('{"schema":1,"schema":2}', '{"approved":NaN}', '{"approved":1e999}'):
+                _=path.write_text(text)
+                with self.assertRaises(ValueError):
+                    _=subject.decode_build_reference(subject.BuildEvidenceReference(path,file_hash(path)))
+            _=path.write_text(original)
+            self.assertEqual(subject.decode_build_reference(reference),spec)
+
+
+def reference_for(spec: subject.BuildEvidenceSpec, path: Path) -> subject.BuildEvidenceReference:
+    raw=document(json.dumps(asdict(spec),default=str)).mapping()
+    raw['schema']='stall_build_evidence.v1'
+    _=path.write_text(json.dumps(raw))
+    return subject.BuildEvidenceReference(path,file_hash(path))

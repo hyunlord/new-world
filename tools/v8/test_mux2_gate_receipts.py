@@ -5,25 +5,24 @@
 # ///
 # How to run: python3 -m unittest discover -s tools/v8 -p test_mux2_gate_receipts.py
 """Receipt counterexamples use synthetic data, never runtime acceptance."""
-import copy
 import json
 import math
 import os
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
+
 import mux2_gate_receipts as receipts
 import mux2_gate_visual as visual
-from mux2_gate_visual import validate_why, validate_visibility
-from mux2_gate_oracle_log import validate_log
-from mux2_gate_inputs import snapshot, INPUT_DIRS, INPUT_FILES, BRIDGE
 from mux2_gate_fixtures import validate_fixtures
-
-
+from mux2_gate_inputs import BRIDGE, INPUT_DIRS, INPUT_FILES, Json, Node, snapshot
+from mux2_gate_lock import FD_ENV
+from mux2_gate_oracle_log import validate_log
 from mux2_gate_testdata import stall_fixture
+from mux2_gate_visual import validate_visibility, validate_why
 
 
 def adjust_intervals(report, indexes, interval):
@@ -365,9 +364,8 @@ class VisualReceiptTests(unittest.TestCase):
                     image.unlink(missing_ok=True)
                     if scale != missing:
                         image.write_bytes(b'PNG fixture')
-                with self.subTest(missing=missing):
-                    with self.assertRaises(ValueError):
-                        validate_why(path)
+                with self.subTest(missing=missing), self.assertRaises(ValueError):
+                    validate_why(path)
 
     def test_visibility_rejects_old_bridge_before_accepting_saved_scene(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -417,3 +415,160 @@ class VisualReceiptTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DerivedEntryTests(unittest.TestCase):
+    def test_derived_entry_requires_real_bounded_chain_before_launch(self) -> None:
+        from generic_stall_build import BuildEvidenceReference
+        with patch.dict(os.environ,{},clear=True),patch.object(receipts, 'lane') as lease:
+            with self.assertRaises(ValueError):
+                receipts.capture_derived_stall(Path('/missing'),Path('/missing-capture'),Path('/missing-godot'),
+                    BuildEvidenceReference(Path('/missing-reference'),'0'*64))
+            lease.assert_not_called()
+
+
+class DerivedLifecycleTests(unittest.TestCase):
+    def test_missing_inherited_lane_rejects_before_preflight(self) -> None:
+        from generic_stall_build import BuildEvidenceReference
+        with patch.dict(os.environ,{},clear=True), \
+             patch.object(receipts,'_derived_child_plan',side_effect=AssertionError('preflight reached without inherited lane')), \
+             self.assertRaisesRegex(ValueError,'caller-owned inherited lane'):
+            receipts.capture_derived_stall(Path('/missing'),Path('/external'),Path('/godot'),
+                BuildEvidenceReference(Path('/reference'),'0'*64))
+
+    def test_postflight_retains_primary_cleanup_and_source_failure_without_freeze(self) -> None:
+        import fcntl
+        from contextlib import ExitStack
+
+        from gate_stall_child import ChildPlan
+        from generic_gate import document
+        from generic_stall_build import BuildEvidenceReference
+        from mux2_gate_lock import lane as actual_lane
+        with tempfile.TemporaryDirectory() as temp, ExitStack() as stack:
+            home=Path(temp).resolve();root=home/'root';root.mkdir();out=home/'out'
+            godot=home/'godot';_=godot.write_text('not executable')
+            evidence=home/'chain';evidence.mkdir()
+            lock_path=home/'lane';held=stack.enter_context(lock_path.open('a'))
+            fcntl.flock(held,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            reference=BuildEvidenceReference(home/'reference','0'*64)
+            plan=ChildPlan(home/'plan','1'*64,root,out,evidence,(),())
+            calls=0
+            def source(bound_root: Path, ref: BuildEvidenceReference) -> dict[str, Json]:
+                nonlocal calls
+                self.assertEqual(bound_root,root);self.assertEqual(ref,reference);calls+=1
+                if calls>=3:raise ValueError('source drift')
+                return {'origin_sha':'a'*40}
+            with patch.dict(os.environ,{FD_ENV:str(held.fileno())}), \
+                 patch.object(receipts,'_derived_child_plan',return_value=plan), \
+                 patch.object(receipts,'derived_source_binding',side_effect=source), \
+                 patch.object(receipts,'lane',return_value=actual_lane(lock_path)), \
+                 patch.object(receipts,'snapshot',return_value={'input':'1'*64}), \
+                 patch.object(receipts,'_capture_command',side_effect=OSError('primary failure')), \
+                 patch('gate_stall_child.close_capture',side_effect=ValueError('cleanup failure')), \
+                 self.assertRaisesRegex(ValueError,'INCOMPLETE'):
+                receipts.capture_derived_stall(root,out,godot,reference)
+            raw=document((out/'receipt.json').read_text())
+            integrity=raw.field('integrity')
+            self.assertEqual(integrity.field('status').value,'INCOMPLETE')
+            self.assertEqual(integrity.field('primary_error').value,'primary failure')
+            self.assertEqual(integrity.field('cleanup_error').value,'cleanup failure')
+            self.assertEqual(integrity.field('postflight_errors').field('source').value,'source drift')
+            self.assertEqual(raw.field('artifacts').value,{})
+            self.assertFalse(raw.field('complete').value)
+            self.assertEqual(calls,3)
+            with lock_path.open('a') as other, self.assertRaises(BlockingIOError):
+                fcntl.flock(other,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            self.assertEqual(os.fstat(held.fileno()).st_ino,lock_path.stat().st_ino)
+
+    def timing_one(self, mutate: bool = False, during_validation: bool = False, interruption: str = '', code: int = 1) -> Node:
+        from contextlib import nullcontext
+
+        from gate_stall_child import ChildPlan
+        from generic_gate import document
+        from generic_stall_build import BuildEvidenceReference
+        from mux2_gate_stall import ArmTiming, SlowFrame
+        with tempfile.TemporaryDirectory() as temp:
+            home=Path(temp).resolve();root=home/'root';root.mkdir();out=home/'out'
+            godot=home/'godot';_=godot.write_text('not executable')
+            evidence=home/'chain';evidence.mkdir()
+            reference=BuildEvidenceReference(home/'reference','0'*64)
+            plan=ChildPlan(home/'plan','1'*64,root,out,evidence,(),())
+            def child(command: list[str], bound_root: Path, environment: dict[str,str], log_fd: int,
+                      lane_fd: int, child_chain: bool) -> int:
+                self.assertEqual(command,receipts.commands(root,out,'stall',godot)[0])
+                self.assertEqual(bound_root,root);self.assertEqual(lane_fd,9);self.assertTrue(child_chain)
+                self.assertEqual(environment['WORLDSIM_MUX2_PROFILE'],'1')
+                (out/'run').mkdir();_=(out/'run/stall-report.json').write_text('{}')
+                _=os.write(log_fd,b'synthetic child bytes\n')
+                for name in ('native-terminal.json','wrapper-terminal.json'):
+                    _=(evidence/name).write_text(json.dumps({'native_exit':code,'errors':[],'duration_ns':100,'timed_out':False,'wrapper_exit':code,'native_pid':123}))
+                return code
+            # Producer samples and the actual chain oracle have independent fixture suites.
+            # This bounded test isolates expected exit1 versus operational-error classification.
+            arm=ArmTiming(1.0,(SlowFrame(11.0,55.0,1,0),),(4,0,0,0,0)) if code else ArmTiming(1.0,(),(0,0,0,0,0))
+            def validate(raw: Json, *, strict: bool) -> tuple[ArmTiming,...]:
+                self.assertEqual(raw,{});self.assertFalse(strict)
+                if interruption == 'keyboard':raise KeyboardInterrupt('synthetic oracle interruption')
+                if interruption == 'system':raise SystemExit('synthetic oracle interruption')
+                if interruption == 'runtime':raise RuntimeError('synthetic oracle interruption')
+                if interruption == 'type':raise TypeError('synthetic oracle interruption')
+                if interruption == 'assert':raise AssertionError('synthetic oracle interruption')
+                if during_validation:
+                    _=(out/'command.log').write_text('mutated inside timing oracle')
+                return (arm,)
+            binds=0
+            def bind(bound_plan: ChildPlan, environment: dict[str,str], expected_code: int,
+                     files: tuple[tuple[str,str],...]) -> int:
+                nonlocal binds
+                self.assertEqual(bound_plan,plan);self.assertEqual(expected_code,code)
+                self.assertTrue(environment);self.assertTrue(files);binds+=1
+                if mutate and binds==2:
+                    _=(out/'command.log').write_text('late mutated stream')
+                return 123
+
+            with patch.dict(os.environ,{FD_ENV:'9'}), \
+                 patch.object(receipts,'_derived_child_plan',return_value=plan), \
+                 patch.object(receipts,'derived_source_binding',return_value={'origin_sha':'a'*40}), \
+                 patch.object(receipts,'lane',return_value=nullcontext(9)), \
+                 patch.object(receipts,'snapshot',return_value={'input':'1'*64}), \
+                 patch.object(receipts,'_capture_command',side_effect=child), \
+                 patch('gate_stall_child.close_capture'), \
+                 patch('gate_stall_child.bind_chain',side_effect=bind), \
+                 patch('mux2_gate_stall.validate_stall_capture',side_effect=validate), \
+                 self.assertRaisesRegex(KeyboardInterrupt if interruption=='keyboard' else SystemExit if interruption=='system' else RuntimeError if interruption=='runtime' else TypeError if interruption=='type' else AssertionError if interruption=='assert' else ValueError,
+                     'synthetic oracle interruption' if interruption else 'integrity failed' if mutate or during_validation else 'provisional diagnostic'):
+                receipts.capture_derived_stall(root,out,godot,reference)
+            return document((out/'receipt.json').read_text())
+
+    def test_expected_timing_one_keeps_raw_failure_and_verified_integrity(self) -> None:
+            raw=self.timing_one()
+            self.assertEqual(raw.field('exit_code').value,1)
+            self.assertEqual(raw.field('integrity').value,{'status':'VERIFIED','child_completion':'CONFIRMED',
+                'expected_timing_failure':True,'primary_error':None,'cleanup_error':None,'postflight_errors':{}})
+            self.assertEqual(raw.field('artifacts').value,{})
+            self.assertFalse(raw.field('complete').value)
+
+
+    def test_late_raw_stream_mutation_rejects_derived_capture(self) -> None:
+        raw=self.timing_one(True)
+        self.assertEqual(raw.field('integrity').field('status').value,'FAILED')
+        self.assertIn('capture changed',raw.field('integrity').field('postflight_errors').field('final').text())
+        self.assertEqual(raw.field('artifacts').value,{})
+
+
+    def test_oracle_cannot_replace_original_producer_anchor(self) -> None:
+        raw=self.timing_one(during_validation=True)
+        self.assertEqual(raw.field('integrity').field('status').value,'FAILED')
+        self.assertIn('during validators',raw.field('integrity').field('postflight_errors').field('final').text())
+        self.assertEqual(raw.field('artifacts').value,{})
+
+
+    def test_control_interruption_keeps_failed_receipt_and_propagates(self) -> None:
+        for interruption in ('keyboard','system','runtime','type','assert'):
+            for code in (0,1):
+                with self.subTest(interruption=interruption,code=code):
+                    raw=self.timing_one(interruption=interruption,code=code)
+                    self.assertEqual(raw.field('integrity').field('status').value,'FAILED')
+                    self.assertIn('synthetic oracle interruption',raw.field('integrity').field('primary_error').text())
+                    self.assertFalse(raw.field('complete').value)
+                    self.assertEqual(raw.field('artifacts').value,{})

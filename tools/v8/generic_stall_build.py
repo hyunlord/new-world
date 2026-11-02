@@ -315,3 +315,103 @@ def authenticate_build(spec: BuildEvidenceSpec) -> BuildEvidence:
     _=recheck_derived_source(source);_frozen(transform.output,spec.transformation_files);_frozen(build.output,spec.build_files)
     require(inventory(build.root,[*INPUT_DIRS,*INPUT_FILES])==inputs and file_hash(artifact)==digest,'/inputs','late source/artifact drift')
     return BuildEvidence('CONSISTENT_SUCCESS',(),(artifact,digest),source.effective_source_sha256)
+
+
+@dataclass(frozen=True, slots=True)
+class BuildEvidenceReference:
+    path: Path
+    sha256: str
+
+
+def _keys(node: Node, expected: str) -> None:
+    require(set(node.mapping()) == set(expected.split()), '/reference', 'unknown or missing fields')
+
+
+def _reference_path(node: Node, *, directory: bool = False) -> Path:
+    path = Path(node.text())
+    real_path(path, directory=directory)
+    require(str(path) == node.text(), '/reference', 'noncanonical path')
+    return path
+
+
+def _reference_digest(node: Node) -> str:
+    value = node.text()
+    require(re.fullmatch('[0-9a-f]{64}', value) is not None, '/reference', 'full digest required')
+    return value
+
+
+def _reference_pairs(node: Node, *, absolute: bool = False) -> tuple[tuple[str, str], ...]:
+    pairs: list[tuple[str, str]] = []
+    for row in node.array():
+        values = row.array()
+        require(len(values) == 2, '/reference', 'invalid pair')
+        name = values[0].text()
+        if absolute:
+            _ = _reference_path(values[0])
+        else:
+            path = PurePosixPath(name)
+            require(bool(name) and name != '.' and not path.is_absolute() and '..' not in path.parts
+                    and path.as_posix() == name, '/reference', 'unsafe inventory path')
+        pairs.append((name, _reference_digest(values[1])))
+    require(len(dict(pairs)) == len(pairs), '/reference', 'duplicate pair')
+    return tuple(pairs)
+
+
+def _reference_overlay(node: Node) -> Overlay:
+    _keys(node, 'patch patch_sha256 manifest manifest_sha256')
+    return Overlay(_reference_path(node.field('patch')), _reference_digest(node.field('patch_sha256')),
+                   _reference_path(node.field('manifest')), _reference_digest(node.field('manifest_sha256')))
+
+
+def decode_build_reference(reference: BuildEvidenceReference) -> BuildEvidenceSpec:
+    """Decode pinned evidence, without granting execution or capture authority."""
+    real_path(reference.path, directory=False)
+    _ = _reference_digest(Node(reference.sha256))
+    require(file_hash(reference.path) == reference.sha256, '/reference', 'reference changed')
+    node = document(reference.path.read_text())
+    _keys(node, 'schema build transform transformation_files build_files')
+    node.field('schema').equals('stall_build_evidence.v1')
+    build = node.field('build'); transform = node.field('transform')
+    _keys(build, 'root source_sha cargo cargo_sha256 rustc rustc_sha256 cargo_home output packages artifacts features profile overlay config_inputs test_targets workspace_tests')
+    _keys(transform, 'root origin_sha overlay git git_sha256 scratch output')
+    build.field('profile').equals('debug'); build.field('packages').equals(['sim-bridge'])
+    build.field('artifacts').equals([{'name':'sim_bridge', 'relative_path':'debug/libsim_bridge.dylib'}])
+    build.field('features').equals([]); build.field('test_targets').equals([]); build.field('workspace_tests').equals(False)
+    sha = build.field('source_sha').text()
+    require(re.fullmatch('[0-9a-f]{40}', sha) is not None, '/reference', 'full source SHA required')
+    spec = BuildSpec(root=_reference_path(build.field('root'),directory=True), source_sha=sha,
+        cargo=_reference_path(build.field('cargo')), cargo_sha256=_reference_digest(build.field('cargo_sha256')),
+        rustc=_reference_path(build.field('rustc')), rustc_sha256=_reference_digest(build.field('rustc_sha256')),
+        cargo_home=_reference_path(build.field('cargo_home'),directory=True), output=_reference_path(build.field('output'),directory=True),
+        packages=('sim-bridge',), artifacts=(Artifact('sim_bridge','debug/libsim_bridge.dylib'),), profile='debug',
+        overlay=_reference_overlay(build.field('overlay')), config_inputs=_reference_pairs(build.field('config_inputs'),absolute=True))
+    proof = TransformSpec(_reference_path(transform.field('root'),directory=True), transform.field('origin_sha').text(),
+        _reference_overlay(transform.field('overlay')), _reference_path(transform.field('git')),
+        _reference_digest(transform.field('git_sha256')), _reference_path(transform.field('scratch'),directory=True),
+        _reference_path(transform.field('output'),directory=True))
+    require((proof.root,proof.origin_sha,proof.overlay)==(spec.root,spec.source_sha,spec.overlay), '/reference', 'build/transform differ')
+    require(not any(reference.path.is_relative_to(base) for base in (spec.root,spec.output,proof.output,proof.scratch)),
+            '/reference', 'reference overlaps product or evidence')
+    result = BuildEvidenceSpec(spec,proof,_reference_pairs(node.field('transformation_files')),_reference_pairs(node.field('build_files')))
+    require(file_hash(reference.path) == reference.sha256, '/reference', 'reference changed during decoding')
+    return result
+
+
+def derived_source_binding(root: Path, reference: BuildEvidenceReference) -> dict[str, Json]:
+    """Recompute the closed derived binding; never certify historical execution."""
+    spec = decode_build_reference(reference)
+    require(spec.build.root == root, '/derived', 'foreign derived product')
+    evidence = authenticate_build(spec)
+    require(evidence.status == 'CONSISTENT_SUCCESS' and evidence.artifact is not None,
+            '/derived', 'derived build failed')
+    if evidence.artifact is None:
+        raise GateContractError('INVALID_EVIDENCE', '/derived', 'derived bridge absent')
+    path, sha = evidence.artifact
+    require(path == root / 'rust/target/debug/libsim_bridge.dylib', '/derived', 'bridge installation differs')
+    require(file_hash(reference.path) == reference.sha256, '/reference', 'reference changed')
+    return {'reference':str(reference.path), 'reference_sha256':reference.sha256,
+        'source_kind':'DERIVED_OBSERVER', 'origin_sha':spec.build.source_sha,
+        'effective_source_sha256':evidence.effective_source_sha256,
+        'artifact':str(path), 'artifact_sha256':sha,
+        'patch_application_provenance':'NOT_VERIFIED', 'transformation':'PATCH_TRANSFORMATION_MATCH',
+        'build_evidence_consistency':evidence.status, 'execution_provenance':evidence.execution_provenance}

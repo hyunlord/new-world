@@ -3,10 +3,15 @@ import json
 import subprocess
 import tempfile
 import unittest
-from dataclasses import replace
+from collections.abc import Generator
+from contextlib import contextmanager
+from dataclasses import dataclass, replace
 from pathlib import Path
+from unittest.mock import patch
 
+import generic_stall as subject
 from generic_stall import CaptureBinding, assess_timing, authenticate_capture
+from generic_stall_build import BuildEvidenceReference, derived_source_binding
 from mux2_gate_inputs import (
     BRIDGE,
     INPUT_DIRS,
@@ -18,6 +23,7 @@ from mux2_gate_inputs import (
     snapshot,
 )
 from mux2_gate_testdata import stall_fixture
+from test_generic_stall_build import Fixture, reference_for
 from test_mux2_gate_receipts import adjust_intervals
 
 
@@ -172,3 +178,67 @@ class CaptureTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+@dataclass(frozen=True, slots=True)
+class DerivedFixture:
+    capture: CaptureTests
+    build: Fixture
+    reference: BuildEvidenceReference
+    binding: CaptureBinding
+
+
+@contextmanager
+def derived_fixture(strict: bool = False) -> Generator[DerivedFixture]:
+    c=CaptureTests();c.setUp()
+    try:
+        home=c.root.parent/'derived';home.mkdir()
+        build=Fixture(home);spec=build.prepared()
+        c.root=build.root;c.sha=build.sha
+        (c.root/'.godot/imported').mkdir(parents=True)
+        c.argv=('bash',str(c.root/'tools/v8/run_bounded.sh'),'960',str(c.godot),'--path',str(c.root),
+            '--resolution','1920x1080','--always-on-top','--windowed','--script','res://tools/v8/mux2_stall_test.gd','--',str(c.capture/'run'))
+        _=c.prepare(strict)
+        reference=reference_for(spec,home/'reference.json')
+        c.receipt['schema']='derived_stall_capture.v1'
+        c.receipt['derived_binding']=derived_source_binding(c.root,reference)
+        c.receipt['integrity']={'status':'VERIFIED','child_completion':'CONFIRMED','expected_timing_failure':not strict,
+            'primary_error':None,'cleanup_error':None,'postflight_errors':{}}
+        yield DerivedFixture(c,build,reference,c.seal())
+    finally:
+        _=c.doCleanups()
+
+
+class DerivedCaptureTests(unittest.TestCase):
+    def test_derived_strict_and_eligible_remain_provisional(self) -> None:
+        for strict in (True,False):
+            with self.subTest(strict=strict),derived_fixture(strict) as f:
+                evidence=subject.authenticate_derived_capture(f.capture.root,f.capture.capture,f.binding,f.reference)
+                self.assertEqual(evidence.capture.verdict.status,'STRICT_PASS' if strict else 'WAIVER_ELIGIBLE')
+                self.assertEqual(evidence.capture.original_complete,strict)
+                self.assertEqual(evidence.build.execution_provenance,'CALLER_DRIVER_EVIDENCE_REQUIRED')
+                with self.assertRaises(ValueError):
+                    _=subject.authenticate_capture(f.capture.root,f.capture.capture,f.binding)
+
+    def test_failed_or_incomplete_integrity_never_authenticates(self) -> None:
+        with derived_fixture() as f:
+            mutations: tuple[tuple[str,Json],...] = (('status','INCOMPLETE'),('primary_error','unexpected wrapper error'),
+                              ('cleanup_error','failed close'),('postflight_errors',{'source':'changed'}),('extra',True))
+            for key,value in mutations:
+                with self.subTest(key=key):
+                    raw=dict(Node(f.capture.receipt['integrity']).mapping());raw[key]=value
+                    original=f.capture.receipt['integrity'];f.capture.receipt['integrity']=raw
+                    with self.assertRaises(ValueError):
+                        _=subject.authenticate_derived_capture(f.capture.root,f.capture.capture,f.capture.seal(),f.reference)
+                    f.capture.receipt['integrity']=original
+
+    def test_late_build_log_mutation_rejects_capture(self) -> None:
+        with derived_fixture() as f:
+            original=subject.assess_timing
+            def mutate(raw: str) -> subject.StallVerdict:
+                verdict=original(raw)
+                path=f.build.build.output/'cargo-version/stdout.log'
+                _=path.write_text('late mutation')
+                return verdict
+            with patch.object(subject,'assess_timing',side_effect=mutate),self.assertRaises(ValueError):
+                _=subject.authenticate_derived_capture(f.capture.root,f.capture.capture,f.binding,f.reference)

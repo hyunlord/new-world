@@ -18,11 +18,14 @@ from generic_process import (
 )
 from generic_stall import (
     CaptureBinding,
+    DerivedStallEvidence,
     StallVerdict,
     assess_timing,
     authenticate_capture,
+    authenticate_derived_capture,
     parse,
 )
+from generic_stall_build import BuildEvidenceReference, derived_source_binding
 from mux2_gate_inputs import Json
 
 
@@ -141,7 +144,8 @@ def validate_outcome(plan: StallOutcomePlan, native_result: ProcessResult) -> St
     return _validate_outcome(plan, lambda code: _bind_native(plan, native_result, code))
 
 
-def _validate_outcome(plan: StallOutcomePlan, bind: Callable[[Literal[0, 1]], int]) -> StallOutcome:
+def _validate_outcome(plan: StallOutcomePlan, bind: Callable[[Literal[0, 1]], int],
+                      reference: BuildEvidenceReference | None = None) -> StallOutcome:
     require(plan.protocol == "NONE", "/protocol", "only NONE supported")
     require(re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", plan.invocation_id) is not None,
             "/invocation", "invalid invocation identity")
@@ -177,12 +181,17 @@ def _validate_outcome(plan: StallOutcomePlan, bind: Callable[[Literal[0, 1]], in
     expected_exit: Literal[0, 1] = 0 if verdict.strict_pass else 1
     pid = bind(expected_exit)
     wrapper_argv = ("bash", str(spec.input_root / "tools/v8/run_bounded.sh"), "960", *expected_argv)
-    evidence = authenticate_capture(spec.input_root, plan.capture_root,
-                                    CaptureBinding(plan.source_sha, wrapper_argv, expected_exit,
-                                                   plan.capture_receipt_sha256))
+    capture_binding = CaptureBinding(plan.source_sha, wrapper_argv, expected_exit, plan.capture_receipt_sha256)
+    if reference is None:
+        evidence = authenticate_capture(spec.input_root, plan.capture_root, capture_binding)
+    else:
+        evidence = authenticate_derived_capture(spec.input_root, plan.capture_root, capture_binding, reference).capture
     require(evidence.verdict == verdict, "/capture", "verdict changed during authentication")
     require(_manifest(plan) == frozen, "/capture", "capture changed during authentication")
     _ = bind(expected_exit)
+    if reference is not None:
+        _ = derived_source_binding(spec.input_root, reference)
+        require(_manifest(plan) == frozen, '/capture', 'capture changed in final derived check')
     return StallOutcome(verdict, expected_exit, pid, plan.capture_receipt_sha256,
                         plan.native_receipt_sha256, frozen, evidence.original_complete)
 
@@ -192,6 +201,12 @@ def validate_bounded_outcome(plan: StallOutcomePlan, child_plan: ChildPlan,
                              wrapper_environment: dict[str, str],
                              chain_files: tuple[tuple[str, str], ...]) -> StallOutcome:
     """Admit only a frozen original bounded child chain and recomputed exit0/1."""
+    _bounded_inputs(plan, child_plan, wrapper_environment, chain_files)
+    return _validate_outcome(plan, lambda code: bind_chain(child_plan, wrapper_environment, code, chain_files))
+
+
+def _bounded_inputs(plan: StallOutcomePlan, child_plan: ChildPlan,
+                    wrapper_environment: dict[str, str], chain_files: tuple[tuple[str, str], ...]) -> None:
     require(plan.protocol == "NONE" and child_plan.root == plan.native_spec.input_root
             and child_plan.capture == plan.capture_root
             and child_plan.evidence == plan.native_spec.output_root
@@ -206,4 +221,33 @@ def validate_bounded_outcome(plan: StallOutcomePlan, child_plan: ChildPlan,
     required.add((plan.native_spec.executable, plan.native_spec.executable_sha256))
     required.update(plan.native_spec.external_inputs)
     require(required <= set(child_plan.inputs), "/chain", "incomplete source binding")
-    return _validate_outcome(plan, lambda code: bind_chain(child_plan, wrapper_environment, code, chain_files))
+
+
+
+@dataclass(frozen=True, slots=True)
+class DerivedStallOutcome:
+    outcome: StallOutcome
+    derived: DerivedStallEvidence
+
+
+@boundary
+def validate_derived_bounded_outcome(plan: StallOutcomePlan, child_plan: ChildPlan,
+        wrapper_environment: dict[str, str], chain_files: tuple[tuple[str, str], ...],
+        reference: BuildEvidenceReference) -> DerivedStallOutcome:
+    """Require the actual bounded chain; strict1 eligibility stays provisional."""
+    _bounded_inputs(plan, child_plan, wrapper_environment, chain_files)
+    require((reference.path, reference.sha256) in child_plan.inputs, '/reference', 'unbound reference')
+    before = derived_source_binding(plan.native_spec.input_root, reference)
+    result = _validate_outcome(plan, lambda code: bind_chain(child_plan, wrapper_environment, code, chain_files), reference)
+    argv = ('bash', str(child_plan.root/'tools/v8/run_bounded.sh'), '960', *child_plan.argv)
+    derived = authenticate_derived_capture(child_plan.root, plan.capture_root,
+        CaptureBinding(plan.source_sha, argv, result.native_exit, plan.capture_receipt_sha256), reference)
+    require(derived_source_binding(child_plan.root, reference) == before, '/source', 'derived evidence changed')
+    _ = bind_chain(child_plan, wrapper_environment, result.native_exit, chain_files)
+    require(_manifest(plan) == result.artifacts, '/capture', 'capture changed in final chain check')
+    _ = derived_source_binding(child_plan.root, reference)
+    require(_manifest(plan) == result.artifacts, '/capture', 'capture changed in final source check')
+    require(all(file_hash(child_plan.evidence/name) == sha for name,sha in chain_files), '/chain', 'chain changed in final source check')
+    for path,sha in child_plan.inputs:
+        require(file_hash(path) == sha, '/inputs', 'child input changed in final source check')
+    return DerivedStallOutcome(result, derived)

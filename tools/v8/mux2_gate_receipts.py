@@ -6,20 +6,37 @@
 # How to run: python3 tools/v8/mux2_gate_receipts.py --help
 """Capture or verify serialized GPU evidence, bound to source content and binary."""
 import argparse
-from datetime import datetime, timezone
 import json
 import math
 import os
-from pathlib import Path
 import subprocess
 import sys
 import time
-from typing import Final, Literal, TypeAlias, assert_never
-from mux2_gate_inputs import (BRIDGE, EvidenceError, Json, Node, check_hash, clean_sources,
-                             digest, external, git, read_json, require, same_inputs, snapshot,
-                             validate_capture_status)
-from mux2_gate_stall import validate_stall
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import TYPE_CHECKING, Final, Literal, TypeAlias, assert_never
+
+if TYPE_CHECKING:
+    from gate_stall_child import ChildPlan
+from generic_stall_build import BuildEvidenceReference, derived_source_binding
+from mux2_gate_inputs import (
+    BRIDGE,
+    EvidenceError,
+    Json,
+    Node,
+    check_hash,
+    clean_sources,
+    digest,
+    external,
+    git,
+    read_json,
+    require,
+    same_inputs,
+    snapshot,
+    validate_capture_status,
+)
 from mux2_gate_lock import FD_ENV, lane
+from mux2_gate_stall import validate_stall
 from mux2_gate_visual import validate_visibility, validate_why
 
 Kind: TypeAlias = Literal['stall', 'visibility', 'why']
@@ -27,7 +44,7 @@ KINDS: Final = ('stall', 'visibility', 'why')
 
 
 def now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def write(path: Path, value: Json) -> None:
@@ -140,12 +157,7 @@ def capture(root: Path, output: Path, kind: Kind, godot: Path) -> None:
                 for command in commands(root, out, kind, godot):
                     log.write(json.dumps(command) + '\n')
                     log.flush()
-                    if child_chain:
-                        from gate_stall_child import capture_wrapper
-                        code = capture_wrapper(command, root, env, log.fileno(), descriptor)
-                    else:
-                        code = subprocess.run(command, cwd=root, env=env, stdout=log,
-                                              stderr=subprocess.STDOUT, pass_fds=(descriptor,), check=False).returncode
+                    code = _capture_command(command, root, env, log.fileno(), descriptor, child_chain)
                     require(code == 0, f'{kind} capture exited {code}')
             same_inputs(before, snapshot(root))
             clean_sources(root)
@@ -216,6 +228,170 @@ def main() -> int:
     except (EvidenceError, OSError, ValueError, subprocess.CalledProcessError) as error:
         print(f'MUX2_RECEIPT_FAIL {error}', file=sys.stderr)
         return 1
+
+
+
+
+
+def _capture_command(command: list[str], root: Path, environment: dict[str, str],
+                     log_fd: int, lane_fd: int, child_chain: bool) -> int:
+    """Share the unchanged original command and descriptor launch path."""
+    if child_chain:
+        from gate_stall_child import capture_wrapper
+        return capture_wrapper(command, root, environment, log_fd, lane_fd)
+    return subprocess.run(command, cwd=root, env=environment, stdout=log_fd,
+        stderr=subprocess.STDOUT, pass_fds=(lane_fd,), check=False).returncode
+
+
+def _derived_child_plan(root: Path, out: Path, godot: Path, reference: BuildEvidenceReference) -> 'ChildPlan':
+    from gate_stall_child import ChildPlan
+    from generic_gate import document as parse
+    from generic_process import real_path
+    require('WORLDSIM_STALL_CHILD_PLAN' in os.environ and 'WORLDSIM_STALL_CHILD_PLAN_SHA256' in os.environ,
+            'both bounded child plan bindings required')
+    require(not any(key.startswith('CORE_P7_') for key in os.environ), 'only NONE supported')
+    path = Path(os.environ['WORLDSIM_STALL_CHILD_PLAN'])
+    sha = os.environ['WORLDSIM_STALL_CHILD_PLAN_SHA256']
+    real_path(path, directory=False); check_hash(path, sha)
+    node = parse(path.read_text())
+    require(set(node.mapping()) == {'schema','protocol','root','capture','evidence','argv','inputs'}, 'invalid child plan keys')
+    node.field('schema').equals('stall_bounded_child_v1'); node.field('protocol').equals('NONE')
+    node.field('root').equals(str(root)); node.field('capture').equals(str(out))
+    argv = tuple(commands(root,out,'stall',godot)[0][3:])
+    node.field('argv').equals(list(argv))
+    evidence = Path(node.field('evidence').text()); real_path(evidence,directory=True)
+    require(all(not a.is_relative_to(b) and not b.is_relative_to(a)
+                for a,b in ((root,out),(root,evidence),(out,evidence))), 'overlapping roots')
+    inputs = tuple((Path(name),Node(value).text()) for name,value in node.field('inputs').mapping().items())
+    required = {(root/name,Node(value).text()) for name,value in snapshot(root).items()}
+    required.update({(godot,digest(godot)),(reference.path,reference.sha256)})
+    require(required <= set(inputs), 'child plan lacks runtime/reference binding')
+    for source, value in inputs:
+        real_path(source,directory=False)
+        require(not source.is_relative_to(out) and not source.is_relative_to(evidence), 'evidence input overlap')
+        check_hash(source,value)
+    return ChildPlan(path,sha,root,out,evidence,argv,inputs)
+
+
+def _derived_chain(plan: 'ChildPlan', environment: dict[str,str], code: int) -> tuple[tuple[str,str],...]:
+    """Require terminal evidence before anchoring the completed chain."""
+    from gate_stall_child import bind_chain
+    from generic_gate import document
+    from generic_sources import inventory
+    require(code in (0,1), 'unconfirmed native completion')
+    for name in ('native-terminal.json','wrapper-terminal.json'):
+        terminal = document((plan.evidence/name).read_text())
+        terminal.field('native_exit').equals(code); terminal.field('errors').equals([])
+        require(terminal.field('duration_ns').number()>0, 'missing terminal duration')
+    native = document((plan.evidence/'native-terminal.json').read_text())
+    native.field('timed_out').equals(False); native.field('wrapper_exit').equals(code)
+    require(native.field('native_pid').number()>0, 'missing native PID')
+    chain = tuple(inventory(plan.evidence,[p.name for p in plan.evidence.iterdir()]).items())
+    _ = bind_chain(plan,environment,code,chain)
+    return chain
+
+
+def _capture_artifacts(out: Path) -> dict[str,Json]:
+    from generic_process import real_path
+    artifacts: dict[str,Json] = {}
+    for path in sorted(out.rglob('*')):
+        real_path(path,directory=path.is_dir())
+        if path.is_file() and path != out/'receipt.json':
+            artifacts[str(path)] = digest(path)
+    return artifacts
+
+
+def capture_derived_stall(root: Path, output: Path, godot: Path, reference: BuildEvidenceReference) -> None:
+    """Reuse caller-owned lane; INCOMPLETE leaves its recovery obligation with the caller."""
+    from gate_stall_child import bind_chain, close_capture
+    from generic_gate import document
+    from generic_sources import inventory
+    from mux2_gate_stall import validate_stall_capture
+    require(FD_ENV in os.environ, 'derived capture requires a caller-owned inherited lane')
+    out = external(output,root)
+    require(not out.exists(), 'capture output must be new')
+    plan = _derived_child_plan(root,out,godot,reference)
+    source = derived_source_binding(root,reference)
+    out.mkdir(parents=True)
+    with lane() as descriptor:
+        before = snapshot(root)
+        godot_sha = digest(godot)
+        receipt: dict[str, Json] = {'schema':'derived_stall_capture.v1','kind':'stall','complete':False,
+            'exit_code':-1,'started_utc':now(),'source_head':source['origin_sha'],'root':str(root),
+            'inputs':before,'godot':str(godot),'godot_sha256':godot_sha,'artifacts':{},'derived_binding':source}
+        receipt_path = out/'receipt.json'
+        env = dict(os.environ,WORLDSIM_TEST_SETTINGS_DIR=str(out/'settings'),WORLDSIM_MUX2_PROFILE='1',**{FD_ENV:str(descriptor)})
+        code = -1; primary: str | None = None; cleanup: str | None = None
+        postflight: dict[str,Json] = {}; launched = False; confirmed = False; timing_failure = False; oracles_complete = False
+        chain: tuple[tuple[str,str],...] = (); artifacts: dict[str,Json] = {}
+        write(receipt_path,receipt)
+        try:
+            require(derived_source_binding(root,reference)==source, 'derived source changed under lane')
+            require(_derived_child_plan(root,out,godot,reference)==plan, 'child plan changed under lane')
+            (out/'settings').mkdir()
+            try:
+                with (out/'command.log').open('w') as log:
+                    command = commands(root,out,'stall',godot)[0]
+                    _ = log.write(json.dumps(command)+'\n');log.flush()
+                    launched = True
+                    code = _capture_command(command,root,env,log.fileno(),descriptor,True)
+            finally:
+                try:
+                    if launched:
+                        close_capture(env,out/'command.log')
+                except (OSError,ValueError) as error:
+                    cleanup = str(error)
+            chain = _derived_chain(plan,env,code)
+            confirmed = True
+            # The first producer anchor precedes every timing/output oracle.
+            artifacts = _capture_artifacts(out)
+            arms = validate_stall_capture(document((out/'run/stall-report.json').read_text()).value, strict=False)
+            require(code == (0 if all(arm.strict_pass for arm in arms) else 1), 'strict timing/native exit differ')
+            timing_failure = code == 1
+            if code == 0:
+                _ = validate_output(root,out,'stall')
+            oracles_complete = True
+        except (OSError,ValueError,subprocess.SubprocessError) as error:
+            primary = str(error)
+        except BaseException as error:
+            primary = type(error).__name__+': '+str(error)
+            raise
+        finally:
+            # Independent endpoint checks cannot erase the original operational failure.
+            try:
+                require(derived_source_binding(root,reference)==source, 'derived evidence changed')
+            except (OSError,ValueError) as error:
+                postflight['source'] = str(error)
+            try:
+                receipt['inputs_end'] = snapshot(root)
+                same_inputs(before,Node(receipt['inputs_end']).mapping())
+            except (OSError,ValueError) as error:
+                postflight['runtime'] = str(error)
+            try:
+                check_hash(godot,godot_sha)
+            except (OSError,ValueError) as error:
+                postflight['godot'] = str(error)
+            if confirmed:
+                try:
+                    require(_capture_artifacts(out)==artifacts, 'capture changed during validators')
+                    _ = bind_chain(plan,env,code,chain)
+                    require(derived_source_binding(root,reference)==source, 'derived evidence changed after chain')
+                    require(_capture_artifacts(out)==artifacts, 'capture changed during final checks')
+                    require(inventory(plan.evidence,[p.name for p in plan.evidence.iterdir()])==dict(chain), 'chain changed during final checks')
+                    same_inputs(before,snapshot(root)); check_hash(godot,godot_sha)
+                    if oracles_complete and primary is None and cleanup is None and not postflight and code==0:
+                        receipt['artifacts']=artifacts;receipt['complete']=True
+                except (OSError,ValueError) as error:
+                    postflight['final'] = str(error)
+            receipt['integrity'] = {'status':'INCOMPLETE' if not confirmed else ('FAILED' if not oracles_complete or primary or cleanup or postflight else 'VERIFIED'),
+                'child_completion':'CONFIRMED' if confirmed else 'UNCONFIRMED','expected_timing_failure':timing_failure,
+                'primary_error':primary,'cleanup_error':cleanup,'postflight_errors':postflight}
+            receipt['exit_code']=code;receipt['finished_utc']=now()
+            write(receipt_path,receipt)
+        require(confirmed, 'INCOMPLETE: caller retains lane/child recovery obligation; no downstream continuation')
+        require(primary is None and cleanup is None and not postflight, 'derived capture integrity failed')
+        require(code==0, 'stall capture exited 1 (provisional diagnostic only)')
+    print(f'MUX2_CAPTURE_PASS {receipt_path}')
 
 
 if __name__ == '__main__':

@@ -276,3 +276,34 @@ class OutcomeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     _ = unittest.main()
+
+
+class DerivedOutcomeTests(unittest.TestCase):
+    def test_derived_bounded_strict_and_waiver_keep_pending_safety(self) -> None:
+        from generic_stall_outcome import validate_derived_bounded_outcome
+        from test_generic_stall import derived_fixture
+        for strict in (True,False):
+            with self.subTest(strict=strict),derived_fixture(strict) as f:
+                capture=f.capture;output=capture.root.parent/'native';output.mkdir()
+                terminal=output/'native-terminal.json';_=terminal.write_text('synthetic boundary receipt')
+                inputs=tuple((name,Node(value).text()) for name,value in snapshot(capture.root).items())
+                wrapper_env={'WORLDSIM_TEST_SETTINGS_DIR':str(capture.capture/'settings'),'WORLDSIM_MUX2_PROFILE':'1'}
+                spec=ProcessSpec(capture.argv[3:],capture.root,capture.godot,file_hash(capture.godot),capture.root,
+                    inputs,output,environment=tuple(projected_environment(capture.root,wrapper_env).items()),
+                    external_inputs=((f.reference.path,f.reference.sha256),))
+                files=tuple(sorted((p.relative_to(capture.capture).as_posix(),file_hash(p)) for p in capture.capture.rglob('*') if p.is_file()))
+                plan=StallOutcomePlan('synthetic-derived','NONE',capture.sha,capture.capture,spec,
+                    f.binding.receipt_sha256,file_hash(terminal),files)
+                child=ChildPlan(output/'plan','a'*64,capture.root,capture.capture,output,spec.argv,
+                    tuple((capture.root/name,sha) for name,sha in inputs)
+                    +((capture.godot,spec.executable_sha256),(f.reference.path,f.reference.sha256)))
+                chain=(('native-terminal.json',file_hash(terminal)),)
+                with patch('generic_stall_outcome.bind_chain',return_value=123):
+                    result=validate_derived_bounded_outcome(plan,child,wrapper_env,chain,f.reference)
+                    self.assertEqual(result.outcome.native_exit,0 if strict else 1)
+                    self.assertEqual(result.outcome.verdict.status,'STRICT_PASS' if strict else 'WAIVER_ELIGIBLE')
+                    self.assertEqual(result.outcome.safety,'PENDING')
+                    self.assertFalse(result.outcome.publication_authority)
+                    self.assertEqual(result.outcome.capture_wrapper_complete,strict)
+                    with self.assertRaises(ValueError):
+                        _=validate_derived_bounded_outcome(plan,replace(child,inputs=child.inputs[:-1]),wrapper_env,chain,f.reference)

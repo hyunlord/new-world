@@ -317,6 +317,8 @@ perf/nav 실행기의 보존 결과를 검증하는 source-owned 함수를 추�
 
 원래 단계12·27의 perf/nav 실행을 전체 순서 조정기에 연결했다. 각 군의 별도 제품·입력·빌드 영수증과 nav 스크립트, 유한 deadline·목적을 명시적으로 대조하고 기존 실행기만 lane을 소유한다. 보존 결과를 source-owned 검증기로 재확인하며 COMPONENT_PASS/FAIL/PENDING을 그대로 유지한다. 루트 조정기65개가57.984초에 통과했고 엄격 타입·Ruff 및 독립 검토도 통과했다. 이후 strict 어댑터와의 호환65개도56.498초에 통과했다. 원래 빌드 준비 순서, 실제 측정, 관찰자 비용, 동적 companion·ledger 및 전체 gate 승인은 아직 미완료다(`stage0/ordered-dispatch/PERF_COORDINATOR_INDEPENDENT_V1_REVIEW.md`).
 
+Stall 파생 capture는 실제 빌드 증거 참조·원래 bounded 자식 연결·처음 보존한 원시 산출물을 검증한다. 호출자가 이미 소유한 lane을 요구하고 종료 불명확 상태에서 해제하지 않는다. 독립 검토와 루트 재현으로 발견한 검증 중단·예상 밖 예외의 허위 VERIFIED를 수정했으며, 검증 완료 조건과 오류 기록 후 재전파를 분리했다. 원래 strict 종료1은 잠정 진단으로만 남고 PASS·waiver가 아니다. 루트 capture37개(11.611초)와 stall53개(489.663초), 설정된 엄격 타입 범위 검사를 통과했다. 전체 변경 파일의 기존 타입 진단은206→205로 신규0이며 전체 clean을 뜻하지 않는다. Ruff의 기존 EXE001 두 건은 유지했고 파일 끝 빈 줄1개만 정리했다. 실제 빌드 실행 권한·native capture·관찰자 중립성·안전성·전체 gate는 아직 미검증이다(`stage0/stall-run/DERIVED_CAPTURE_SLICE_B_INDEPENDENT_V4_REVIEW.md`).
+
 ## Stage 0–3
 
 Stage −1 게시 SHA가 BASE0가 된다. 이후 각 stage를 설계·구현·평가·전체 gate·게시 순서로 완료한다. Stage 1은 농경과 함께 생산 상한, 도구 전용 생존 규칙, 가르침 카드를 담당한다. 1680–1743은 이미 소모했고 Stage 1의 1520–1551은 보존한다.
