@@ -121,13 +121,28 @@ step() {
     fi
     return "$code"
 }
+summarize_tests() {
+    local name="$1" producer_exit="$2"
+    if ! python3 tools/v8/gate_test_summary.py "$LOG/$name.log" "$producer_exit" > "$LOG/$name.summary.json"; then
+        echo "   $name accounting FAIL (see $name.summary.json)" >> "$SUMMARY"
+        status=1
+        return
+    fi
+    python3 - "$LOG/$name.summary.json" "$name" >> "$SUMMARY" <<'PY_SUMMARY' || status=1
+import json
+from pathlib import Path
+import sys
+result = json.loads(Path(sys.argv[1]).read_text())
+print(f"   {sys.argv[2]} passed {result['passed']} failed {result['failed']} ignored {result['ignored']}")
+PY_SUMMARY
+}
 step 1 fmt bash -c 'cd rust && cargo fmt --all -- --check'
 step 2 bridge_build bash -c 'cd rust && cargo build -p sim-bridge'
 step 3 godot_import bash -c 'bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit; bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit'
 step 4 test_debug bash -c 'cd rust && cargo test --workspace --no-fail-fast -- --test-threads=8'
-grep -E '^test result' "$LOG/test_debug.log" | awk '{p+=$4; f+=$6; i+=$8} END {print "   test_debug passed", p, "failed", f, "ignored", i}' >> "$SUMMARY"
+summarize_tests test_debug "$?"
 step 5 test_release bash -c 'cd rust && cargo test --workspace --release --no-fail-fast -- --test-threads=8'
-grep -E '^test result' "$LOG/test_release.log" | awk '{p+=$4; f+=$6; i+=$8} END {print "   test_release passed", p, "failed", f, "ignored", i}' >> "$SUMMARY"
+summarize_tests test_release "$?"
 step 6 clippy bash -c 'cd rust && cargo clippy --workspace --all-targets -- -D warnings'
 step 7 forbidden_math bash -c "cd rust && ! grep -rnE '\\.(exp|exp2|ln|log2|log10|powf|powi|sin|cos|tan|tanh|atan2|hypot|cbrt)\\(' crates/sim-core/src crates/sim-systems/src crates/sim-engine/src"
 step 8 gdscript_strict bash tools/v8/gdscript_strict_check.sh
@@ -157,8 +172,8 @@ step 15 inventory_closure python3 tools/v8/inventory.py check docs/v8/V8_0_INVEN
 step 16 python_unittest python3 -m unittest discover -s tools/v8 -p 'test_*.py'
 # M1 (goal 11.3): the Part 1-3 tests by name, the Locale.trf test, colony
 # determinism with the U-script, replay of a recorded command log, the UID check.
-step 17 m1_tests bash -c 'cd rust && cargo test --release -p sim-test --test colony_commands --test colony_jobs --test colony_world --test engine_colony_ffi -- --test-threads=8 && cargo test --release -p sim-test --lib probe::colony && cargo test --release -p sim-systems --lib jobs:: && cargo test --release -p sim-core --lib colony:: && cd .. && bash tools/v8/run_bounded.sh 120 "$GODOT_BIN" --headless --path . --script res://tools/v8/test_locale_trf.gd 2>&1 | tee /dev/stderr | grep -q "^TRF_TEST_PASS"'
-grep -E '^test result' "$LOG/m1_tests.log" | awk '{p+=$4; f+=$6} END {print "   m1_tests passed", p, "failed", f}' >> "$SUMMARY"
+step 17 m1_tests bash -c 'cd rust && cargo test --release -p sim-test --test colony_commands --test colony_jobs --test colony_world --test engine_colony_ffi -- --test-threads=8 && cargo test --release -p sim-test --lib probe::colony && cargo test --release -p sim-systems --lib jobs:: && cargo test --release -p sim-core --lib colony:: && cd .. || exit $?; bash tools/v8/run_bounded.sh 120 "$GODOT_BIN" --headless --path . --script res://tools/v8/test_locale_trf.gd > "$0/m1-trf.log" 2>&1; godot_code=$?; cat "$0/m1-trf.log" || exit 1; (( godot_code == 0 )) && grep -q "^TRF_TEST_PASS" "$0/m1-trf.log"' "$LOG"
+summarize_tests m1_tests "$?"
 step 18 colony_determinism bash -c 'cd rust && cargo build --release -p sim-test --bin worldsim_probe && ./target/release/worldsim_probe --scene colony --seeds 0..4 --days 10 --workers 4 --commands ../tools/v8/u_script.json --check-determinism --out "$0/colony_determinism"' "$LOG"
 grep -q 'DETERMINISM PASS' "$LOG/colony_determinism.log" || { echo "   colony_determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
 step 19 replay bash -c 'p=rust/target/release/worldsim_probe; $p --scene colony --seeds 5..7 --days 3 --workers 2 --commands tools/v8/u_script.json --out "$0/replay/first" --commands-out "$0/replay/log" && $p --scene colony --seeds 5..6 --days 3 --workers 1 --commands "$0/replay/log/colony_s5_commands.json" --out "$0/replay/s5" && $p --scene colony --seeds 5..6 --days 3 --workers 1 --commands tools/v8/u_script.json --out "$0/replay/s5_script" && cmp "$0/replay/s5/summary.json" "$0/replay/s5_script/summary.json" && echo "replay: the recorded log reproduces the scripted run byte for byte"' "$LOG"
@@ -199,7 +214,7 @@ fi
 grep -E '^nav_bench' "$LOG/nav_bench.log" | sed 's/^/   /' >> "$SUMMARY"
 # M4 (goal §11): the knowledge tests and the loss fixture (F10: the doorway's only holder killed at tick 1800 on
 # seeds 0..8 -> KnowledgeLost within 240 ticks, the doorway Lost, door orders waiting on it).
-step 28 knowledge bash -c 'cd rust && cargo test --release -p sim-test --test colony_knowledge -- --test-threads=8 && cd .. && rust/target/release/worldsim_probe --scene colony --seeds 0..8 --days 4 --workers 4 --commands tools/v8/m4_f10_script.json --out "$0/knowledge_f10" > /dev/null && python3 docs/v8/m4/m4_score.py --f10 "$0/knowledge_f10/summary.json" | tee /dev/stderr | grep -q "^F10: 8/8 PASS"' "$LOG"
+step 28 knowledge bash -c 'set -euo pipefail; cd rust && cargo test --release -p sim-test --test colony_knowledge -- --test-threads=8 && cd .. && rust/target/release/worldsim_probe --scene colony --seeds 0..8 --days 4 --workers 4 --commands tools/v8/m4_f10_script.json --out "$0/knowledge_f10" > /dev/null && python3 docs/v8/m4/m4_score.py --f10 "$0/knowledge_f10/summary.json" | tee /dev/stderr | grep -q "^F10: 8/8 PASS"' "$LOG"
 grep -E '^F10|test result' "$LOG/knowledge.log" | sed 's/^/   /' >> "$SUMMARY"
 # M5 (goal §12): the storyteller fixture — two worlds through two years of pressure.
 step 29 story bash -c 'rust/target/release/worldsim_probe --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m5_u_script.json --out "$0/story" > /dev/null && python3 docs/v8/m5/m5_score.py --story "$0/story/summary.json"' "$LOG"
@@ -213,7 +228,7 @@ grep -E '^NEIGHBOURS' "$LOG/neighbours.log" | sed 's/^/   /' >> "$SUMMARY"
 step 31 art_manifest python3 tools/v8/art_import.py --verify
 step 32 resolver_parity bash -c 'bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . --script res://tools/v8/resolver_parity.gd -- "$0/resolver_godot.json" && python3 tools/v8/resolver_parity.py --check "$0/resolver_godot.json"' "$LOG"
 step 33 extensibility_grep python3 -m unittest tools/v8/test_mart2_extensibility.py tools/v8/test_art_masks.py tools/v8/test_art_import.py
-step 34 mart2_render bash -c 'for t in mart2_ground_test mart2_people_test mart21_trees_test; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/$t.gd > "$0/$t.out" 2>&1; grep -E "^MART21?_(GROUND|PEOPLE|TREES) (PASS|FAIL)|_DONE" "$0/$t.out"; grep -q "_DONE failures=0" "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
+step 34 mart2_render bash -c 'set -euo pipefail; for t in mart2_ground_test mart2_people_test mart21_trees_test; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/$t.gd > "$0/$t.out" 2>&1; grep -E "^MART21?_(GROUND|PEOPLE|TREES) (PASS|FAIL)|_DONE" "$0/$t.out"; grep -q "_DONE failures=0" "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
 grep -E 'PASS|FAIL' "$LOG/resolver_parity.log" | tail -1 | sed 's/^/   /' >> "$SUMMARY"
 grep -cE '^MART21?_(GROUND|PEOPLE|TREES) PASS' "$LOG/mart2_render.log" | awk '{print "   mart2_render checks passed", $1}' >> "$SUMMARY"
 step 35 steward bash tools/v8/mux_steward.sh "$LOG/steward"

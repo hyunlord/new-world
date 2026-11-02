@@ -6,6 +6,10 @@
 # --cache also checks real MultiMesh getters and requires a windowed renderer; not FPS/visual acceptance.
 extends SceneTree
 
+# Gate-only bridge reads are delegated to GateObserver; synthetic geometry is not a native world.
+const GateObserver = preload("res://tools/v8/gate_ui_observer.gd")
+var _gate_observer: RefCounted = GateObserver.new("marker.layout", "res://tools/v8/mux21_layout_test.gd")
+
 const Layout = preload("res://scripts/world/colony/marker_layout.gd")
 const Markers = preload("res://scripts/world/colony/lod_markers.gd")
 var _checks: int = 0
@@ -48,6 +52,7 @@ func _case(label: String, points: PackedVector2Array, ids: PackedInt64Array, ext
 	print("MUX21_LAYOUT_CASE " + label)
 
 func _run() -> void:
+	_gate_observer.declare_no_native("geometry and synthetic marker DTOs; SubViewport/World2D are not WorldSim")
 	var viewport: Rect2 = Rect2(0, 0, 800, 600)
 	var none: Array[Rect2] = []
 	_case("empty", PackedVector2Array(), PackedInt64Array(), 24, true, viewport, none, 4)
@@ -98,7 +103,7 @@ func _run() -> void:
 		_cache_cases()
 		await _marker_integration()
 	print("MUX21_LAYOUT_DONE " + JSON.stringify({"cases": _cases, "checks": _checks, "failures": _failures, "reference_usec": _reference_usec, "candidate_usec": _candidate_usec, "display": DisplayServer.get_name(), "timing_scope": "geometry diagnostic only; not release FPS acceptance"}))
-	quit(0 if _failures == 0 else 1)
+	quit(_gate_observer.finish(0 if _failures == 0 else 1))
 
 func _cache_sample(markers: Node, label: String, points: PackedVector2Array, ids: PackedInt64Array, extent: float, glyphs: bool, viewport: Rect2, blocked: Array[Rect2], gap: float, should_hit: bool) -> void:
 	var calls: int = int(markers.get("layout_calls"))

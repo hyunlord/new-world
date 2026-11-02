@@ -19,6 +19,7 @@ mod family_trace;
 mod fingerprint;
 pub(crate) mod fission_settlements;
 mod food_fingerprint;
+pub(crate) mod gate_observation;
 /// M3 built space and rooms in a colony run (`m3` summary block).
 pub mod knowledge;
 mod long_run;

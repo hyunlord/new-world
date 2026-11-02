@@ -428,6 +428,6 @@ M-UX2 게시 시점의 332개 고유 이슈: fixed197 / open103 / deferred30 / w
 
 | ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
 |---|---|---|---|---|---|---|
-| M6B-STEWARD-1 | M-LOOP 집사 범위·상한·가르침 held-out 실패 | LOOP-HELDOUT-FINAL1680–1711, R1 승인 무효 | sim | open | Stage1: 통나무·땔감·식량 상한, 도구 전용 생존 규칙, 가르침 카드. 프레젠테이션 게시가 이 실패를 고친 것은 아님 | docs/v8/loop/LOOP_REPORT.md; docs/v8/m6b/M6B_DECISIONS.md D-minus1 |
+| ISS-361 | M-LOOP 집사 범위·상한·가르침 held-out 실패 | LOOP-HELDOUT-FINAL1680–1711, R1 승인 무효 | sim | open | [#684](https://github.com/hyunlord/new-world/issues/684), Stage1: 통나무·땔감·식량 상한, 도구 전용 생존 규칙, 가르침 카드. 프레젠테이션 게시가 이 실패를 고친 것은 아님 | docs/v8/loop/LOOP_REPORT.md; docs/v8/m6b/M6B_DECISIONS.md D-minus1 |
 
-게시 때 중복을 확인하고 `steward scope and caps (M-LOOP evidence): firewood in snaps, log caps, teaching` 이슈를 만든다. 현재 다음 빈 번호는 ISS-361이나 실제 게시 때 재확인한다. 이 문서는 이슈 생성·폐쇄를 주장하지 않는다. #650/#663의 기존 폐쇄와 새 작업을 혼동하지 않는다. 실제 URL과 확정 ISS는 게시 영수증에 먼저 보존한다. 이후 별도로 검증되는 문서에서 반영하며, 알려진 BASE 안전성 충돌 때문에 Stage0 게시를 전제하지 않는다.
+Stage −1 게시 뒤 중복·다음 빈 ISS를 재확인하고 위 제목의 #684를 생성·readback했다. #650/#663은 이미 닫혀 있었으며 새로 닫은 것으로 집계하지 않는다. 실제 URL과 확정 ISS는 외부 `minus1/steward-issue-publication.json`에 먼저 보존했다. 이 문서 갱신은 Stage0 게시를 뜻하지 않는다.

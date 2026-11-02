@@ -2,8 +2,10 @@
 //! Explicitly run with WORLDSIM_MUX_FIXTURES=<stage-b>; no old-future oracle is replaced.
 #[path = "legacy_migration_support/inventory.rs"]
 mod inventory;
+pub mod save_gate_observation;
 #[path = "legacy_migration_support/wire.rs"]
 mod wire;
+use save_gate_observation::Watch;
 use serde::Deserialize;
 use sim_core::colony::materials::OAK;
 use sim_core::colony::{
@@ -59,7 +61,7 @@ fn genuine_legacy_inventory_preserves_fields_and_current_policy_continuation() {
     assert!(root.is_absolute() && root.is_dir());
     inventory::verify_provenance(&root);
     assert_eq!(inventory::FIXTURES.len(), 9);
-    for fixture in inventory::FIXTURES {
+    for (case, fixture) in inventory::FIXTURES.iter().enumerate() {
         let path = root.join(fixture.path);
         inventory::check_hash(&path, fixture.sha256);
         let original = std::fs::read(&path).expect("required genuine file");
@@ -67,6 +69,14 @@ fn genuine_legacy_inventory_preserves_fields_and_current_policy_continuation() {
         assert_eq!(&original[8..12], &fixture.version.to_le_bytes());
         let expected = wire::read(&original, fixture.version);
         let mut migrated = save::load(&original).expect("migrate genuine legacy file");
+        let test = "genuine_legacy_inventory_preserves_fields_and_current_policy_continuation";
+        let initial_watch = Watch::external(
+            test,
+            &format!("fixture_{case}_initial"),
+            &migrated,
+            &original,
+        );
+        initial_watch.annotate(&migrated, "source", || serde_json::json!({"path": path, "sha256": fixture.sha256, "version": fixture.version}));
         assert_eq!(migrated.current_tick(), fixture.tick);
         assert_eq!(expected.tick, fixture.tick);
         assert_eq!(migrated.resources.world_seed, fixture.seed);
@@ -110,12 +120,27 @@ fn genuine_legacy_inventory_preserves_fields_and_current_policy_continuation() {
             (!migrated.resources.colony.trees.is_empty()).then_some(OAK)
         );
         let first = encoded(&mut migrated);
+        let link = initial_watch.save(&migrated, &first, "current");
         let mut twin = save::load(&first).expect("current reload");
+        let twin_watch = Watch::loaded(
+            test,
+            fixture.seed,
+            &format!("fixture_{case}_twin"),
+            &twin,
+            link,
+        );
         assert_eq!(first, encoded(&mut twin), "{} stable resave", fixture.path);
         // Exercise an unsaved migrated branch against the current-format reloaded branch.
+        initial_watch.finish(&migrated, "load_and_resave_only");
         migrated = save::load(&original).expect("fresh unsaved migration");
+        let migrated_watch =
+            Watch::external(test, &format!("fixture_{case}_fresh"), &migrated, &original);
         let bills: Vec<Bill> = if fixture.version == 6 && fixture.tick == 2000 {
             let parent = path.parent().expect("historical directory");
+            migrated_watch.retain_file(
+                &parent.join("continuation-2000-3000.json"),
+                "captured_bills",
+            );
             serde_json::from_slice(
                 &std::fs::read(parent.join("continuation-2000-3000.json")).expect("captured bills"),
             )
@@ -156,6 +181,8 @@ fn genuine_legacy_inventory_preserves_fields_and_current_policy_continuation() {
         );
         assert_eq!(std::fs::read(&path).expect("immutable fixture"), original);
         inventory::check_hash(&path, fixture.sha256);
+        migrated_watch.finish(&migrated, "current_policy_duration_reached");
+        twin_watch.finish(&twin, "current_policy_duration_reached");
         println!(
             "legacy migration verified: {} format{} tick{}",
             fixture.path, fixture.version, fixture.tick

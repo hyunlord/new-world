@@ -14,6 +14,10 @@
 #   "SMOKE_DONE frames=N labels=L raw_keys=K".
 extends SceneTree
 
+# Gate-only bridge reads are delegated to GateObserver.
+const GateObserver = preload("res://tools/v8/gate_ui_observer.gd")
+var _gate_observer: RefCounted = GateObserver.new("smoke.labels", "res://tools/v8/smoke.gd")
+
 const KEY_RE: String = "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)+$"
 const View = preload("res://scripts/world/colony/view.gd")
 
@@ -31,8 +35,10 @@ func _init() -> void:
 func _run() -> void:
 	var main: Node = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
+	_gate_observer.capture(main, "bootstrap")
 	for _i: int in _frames:
 		await process_frame
+	_gate_observer.capture(main, "initial_frames_complete", {"requested_frames": _frames})
 	await _open_panels(main)
 	var regex: RegEx = RegEx.new()
 	regex.compile(KEY_RE)
@@ -58,7 +64,7 @@ func _run() -> void:
 				hits += 1
 				print("SMOKE_RAW_KEY %s %s" % [main.get_path_to(node), token])
 	print("SMOKE_DONE frames=%d labels=%d raw_keys=%d" % [_frames, labels, hits])
-	quit(0)
+	quit(_gate_observer.finish(0))
 
 
 func _open_panels(main: Node) -> void:

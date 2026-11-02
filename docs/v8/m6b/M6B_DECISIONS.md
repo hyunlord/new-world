@@ -1,5 +1,11 @@
 # M6b decisions
 
+## D-minus1-publication — actual published BASE0
+
+Stage −1 was published at 2026-11-02T10:45:18Z as `2f6993009ddb600e9249c28f9768a1a5252c8821`, fast-forwarding wip then main from the BASE lineage. The publication receipt and independent final-D audit are external immutable evidence under `m6b-data/minus1/`; later Stage0 documentation does not replace that tested product SHA. #650/#663 were already closed; remaining steward work is ISS-361/#684. Original fullgate03 launcher exit2, metadata audits v1/v2 exit1 and strict stall failure remain retained alongside the successful owner-authorized LOOP-mode metadata-v3 admission.
+
+Stage0 starts from this BASE0. Ordinary CORE steward-OFF seed0 at20days still has native KnowledgeLost clay_digging at28560 (holder9) in BASE and D. Behavior equality does not satisfy the new absolute zero-loss requirement. Keep the full fixture and strict failure; do not shorten its horizon, add commands, declare its loss away or claim the required BASE self-gate passed. Continue generic tooling and independent future-stage design; actual Stage0 proof/publication remains pending.
+
 ## D-minus1 — owner takeover and presentation-only publication
 
 Authority: owner decision relayed by planner, 2026-11-02 03:20 (received in this thread). Supersedes original §0 wait for LOOP_REPORT on main.

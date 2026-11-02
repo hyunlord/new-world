@@ -29,7 +29,7 @@ func _placement_regression(panel: Control, camera: Camera2D, tile: Vector2i) -> 
 	_visible_intersections(main.get_node("UI"), panel, rectangle, root.get_visible_rect(), visible_hits)
 	check("placement scale1.5 clears actual visible controls", visible_hits.is_empty())
 	if DisplayServer.get_name() != "headless":
-		var directory: String = "/Users/rexxa/work/mux2-data/ui-why/run-%d" % OS.get_process_id()
+		var directory: String = _capture_directory(false)
 		DirAccess.make_dir_recursive_absolute(directory)
 		await RenderingServer.frame_post_draw
 		check("capture scale1.5", root.get_texture().get_image().save_png(directory.path_join("why-1.5.png")) == OK)

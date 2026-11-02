@@ -27,6 +27,7 @@ pub mod economy;
 pub mod engine_build;
 pub mod family;
 pub mod food;
+mod gate_observer;
 pub mod knowledge;
 pub mod material_category;
 pub mod mind;

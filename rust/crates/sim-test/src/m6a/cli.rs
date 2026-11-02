@@ -7,6 +7,32 @@ use std::io::{BufWriter, Write};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 
+/// Strip the one additive boolean option; the historical valued-option parser stays unchanged.
+pub(super) fn gate_arguments(args: &[String]) -> Result<(Vec<String>, bool), String> {
+    let setting = std::env::var_os("WORLDSIM_GATE_OBSERVER");
+    gate_arguments_with_setting(args, setting.as_deref())
+}
+
+pub(super) fn gate_arguments_with_setting(
+    args: &[String],
+    setting: Option<&std::ffi::OsStr>,
+) -> Result<(Vec<String>, bool), String> {
+    let environment_enabled = crate::probe::ProbeArgs::gate_observations_enabled(false, setting)?;
+    let mut enabled = false;
+    let mut remaining = Vec::with_capacity(args.len());
+    for arg in args {
+        if arg == "--gate-observations" {
+            if enabled {
+                return Err("duplicate --gate-observations".into());
+            }
+            enabled = true;
+        } else {
+            remaining.push(arg.clone());
+        }
+    }
+    Ok((remaining, enabled || environment_enabled))
+}
+
 pub(super) fn arguments(
     args: &[String],
     allowed: &[&str],
@@ -30,6 +56,37 @@ pub(super) fn arguments(
     Ok(values)
 }
 
+/// The companion is a separate fixed-duration workload and always requires safety evidence.
+pub(super) fn data_only_arguments(
+    args: &[String],
+    gate_enabled: bool,
+) -> Result<(BTreeMap<String, String>, Option<u64>), String> {
+    let companion = args.iter().any(|arg| arg == "--matched-horizon-ticks");
+    let allowed: &[&str] = if companion {
+        &["--out", "--matched-horizon-ticks"]
+    } else {
+        &["--out"]
+    };
+    let values = arguments(args, allowed)?;
+    let ticks = if companion {
+        if !gate_enabled {
+            return Err("--matched-horizon-ticks requires gate observations".into());
+        }
+        let value = &values["--matched-horizon-ticks"];
+        if value.is_empty() || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+            return Err("matched horizon must be a positive integer tick".into());
+        }
+        let ticks: u64 = value.parse().map_err(|_| "matched horizon overflow")?;
+        if ticks == 0 {
+            return Err("matched horizon must be positive".into());
+        }
+        Some(ticks)
+    } else {
+        None
+    };
+    Ok((values, ticks))
+}
+
 pub(super) fn output_dir(path: &str) -> Result<PathBuf, String> {
     let path = PathBuf::from(path);
     let parent = path
@@ -50,7 +107,8 @@ pub(super) fn output_dir(path: &str) -> Result<PathBuf, String> {
 
 /// Run one unchanged production colony with additive read-only food instrumentation.
 pub fn run(args: &[String]) -> Result<(), String> {
-    let args = arguments(args, &["--seed", "--days", "--out"])?;
+    let (args, gate_enabled) = gate_arguments(args)?;
+    let args = arguments(&args, &["--seed", "--days", "--out"])?;
     let seed: u64 = args["--seed"].parse().map_err(|_| "invalid seed")?;
     let days: u64 = args["--days"].parse().map_err(|_| "invalid days")?;
     if !(1..=72).contains(&days) {
@@ -71,6 +129,13 @@ pub fn run(args: &[String]) -> Result<(), String> {
     }
     let tpd = engine.resources.ticks_per_day;
     let total = days.checked_mul(tpd).ok_or("duration overflow")?;
+    let gate = gate_enabled
+        .then(|| {
+            crate::probe::gate_observation::GateObservation::begin(
+                &engine, &out, "m6a", seed, "primary", total,
+            )
+        })
+        .transpose()?;
     let mut stream =
         BufWriter::new(std::fs::File::create(out.join("events.jsonl")).map_err(|e| e.to_string())?);
     let boundaries: Boundaries = Arc::new(Mutex::new(Vec::new()));
@@ -90,25 +155,32 @@ pub fn run(args: &[String]) -> Result<(), String> {
     let mut watch = Watch::default();
     let mut common = crate::probe::steward::StewardWatch::default();
     let mut mux2 = crate::probe::mux2::Mux2Watch::default();
-    for _ in 0..total {
-        common.before_tick(&engine);
-        engine.tick();
-        for snapshot in boundaries
-            .lock()
-            .map_err(|_| "boundary observer lock poisoned")?
-            .drain(..)
-        {
-            observer::write(
-                &mut stream,
-                &Record::Daily {
-                    snapshot: &snapshot,
-                },
-            )?;
+    let loop_result = (|| -> Result<(), String> {
+        for _ in 0..total {
+            common.before_tick(&engine);
+            engine.tick();
+            for snapshot in boundaries
+                .lock()
+                .map_err(|_| "boundary observer lock poisoned")?
+                .drain(..)
+            {
+                observer::write(
+                    &mut stream,
+                    &Record::Daily {
+                        snapshot: &snapshot,
+                    },
+                )?;
+            }
+            watch.after_tick(&engine, &mut stream)?;
+            common.after_tick(&engine);
+            mux2.after_tick(&engine);
         }
-        watch.after_tick(&engine, &mut stream)?;
-        common.after_tick(&engine);
-        mux2.after_tick(&engine);
+        Ok(())
+    })();
+    if let Some(watch) = gate {
+        watch.finish(&engine, loop_result.is_ok())?;
     }
+    loop_result?;
     stream.flush().map_err(|e| e.to_string())?;
     let summary = json!({
         "schema_version":1, "kind":"m6a_food_observation_v1", "seed":seed, "days":days,
@@ -152,4 +224,50 @@ pub fn run(args: &[String]) -> Result<(), String> {
         ));
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod gate_environment_tests {
+    use super::*;
+    use std::ffi::OsStr;
+
+    #[test]
+    fn both_m6a_commands_share_strict_environment_and_cli_handling() {
+        for original in [
+            vec!["--out".to_string(), "/tmp/new-output".to_string()],
+            vec![
+                "--seed".to_string(),
+                "0".to_string(),
+                "--days".to_string(),
+                "72".to_string(),
+                "--out".to_string(),
+                "/tmp/new-output".to_string(),
+            ],
+        ] {
+            for setting in [None, Some(OsStr::new("1"))] {
+                for cli in [false, true] {
+                    let mut args = original.clone();
+                    if cli {
+                        args.push("--gate-observations".into());
+                    }
+                    let (remaining, enabled) =
+                        gate_arguments_with_setting(&args, setting).expect("valid setting");
+                    assert_eq!(remaining, original);
+                    assert_eq!(enabled, cli || setting.is_some());
+                }
+                let mut duplicate = original.clone();
+                duplicate.extend(["--gate-observations".into(), "--gate-observations".into()]);
+                assert!(gate_arguments_with_setting(&duplicate, setting)
+                    .expect_err("duplicate")
+                    .contains("duplicate"));
+            }
+            for value in ["", "0", "true", " 1"] {
+                assert_eq!(
+                    gate_arguments_with_setting(&original, Some(OsStr::new(value)))
+                        .expect_err("invalid environment"),
+                    "WORLDSIM_GATE_OBSERVER must be absent or 1"
+                );
+            }
+        }
+    }
 }

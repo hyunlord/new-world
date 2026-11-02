@@ -4,6 +4,8 @@
 //! checks the 7.6 invariants (log ledger, reservations, stacks).
 
 mod colony_support;
+pub mod save_gate_observation;
+use save_gate_observation::Watch;
 
 use colony_support::*;
 use sim_core::colony::{
@@ -447,6 +449,7 @@ fn jobs_children_never_work() {
 #[test]
 fn hut_sleeps_four() {
     let mut engine = sim_test::colony_engine(2);
+    let watch = Watch::begin("hut_sleeps_four", 2, "gifted_hut", &engine);
     let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
     let spot = (3..24)
         .flat_map(|dy| (0..10).map(move |dx| (hearth.0 + dx, hearth.1 + dy)))
@@ -456,7 +459,15 @@ fn hut_sleeps_four() {
         .map(|d| (hearth.0.saturating_sub(d), hearth.1))
         .find(|t| sim_systems::runtime::jobs::items::can_hold_items(&engine.resources, *t))
         .expect("a pile tile");
+    watch.annotate(&engine, "before_log_gift", || serde_json::json!({
+        "intervention": "direct_ledger_create_and_ground_stack_insert", "item": "log", "count": 12, "tile": pile,
+        "ground_logs": ground_logs(&engine), "log_ledger": log_ledger(&engine.world, &engine.resources)}));
     drop_logs(&mut engine, pile, 12);
+    watch.annotate(&engine, "after_log_gift", || {
+        serde_json::json!({
+        "ground_logs": ground_logs(&engine), "log_ledger": log_ledger(&engine.world, &engine.resources),
+        "requested_count": 12, "tile": pile})
+    });
     order(
         &mut engine,
         Command::PlaceBlueprint {
@@ -465,6 +476,10 @@ fn hut_sleeps_four() {
             y: spot.1,
         },
     );
+    watch.annotate(&engine, "accepted_direct_blueprint", || serde_json::json!({
+        "intervention": "direct_apply_command", "accepted_assertion_completed": true,
+        "command": sim_test::probe::colony::command_json(engine.current_tick(), &Command::PlaceBlueprint {
+            kind: BlueprintKind::Hut, x: spot.0, y: spot.1})}));
     let centre = (spot.0 + 1, spot.1 + 1);
     let used = run_until(&mut engine, 3 * 1_440, |e| {
         e.resources.building_kinds.get(&centre) == Some(&BuildingKind::Hut)
@@ -474,6 +489,11 @@ fn hut_sleeps_four() {
         engine.resources.building_owner.contains_key(&centre),
         "the colony owns the hut"
     );
+    watch.annotate(&engine, "hut_completion", || {
+        serde_json::json!({
+        "actual_completed_ticks": used, "limit_ticks": 3 * 1_440, "centre": centre,
+        "owned_hut_assertion_completed": true})
+    });
     // Beds are assigned at 20:00 (display) or when the dwellings change.
     for _ in 0..1_440 {
         tick_checked(&mut engine);
@@ -485,4 +505,5 @@ fn hut_sleeps_four() {
         .filter(|b| **b == centre)
         .count();
     assert_eq!(sleepers, RULE.hut_beds as usize, "four beds at the hut");
+    watch.finish(&engine, "actual_hut_completion_plus_1440");
 }

@@ -2,6 +2,8 @@
 //! viability without orders, and determinism with the U-script.
 
 mod colony_support;
+pub mod save_gate_observation;
+use save_gate_observation::Watch;
 
 use colony_support::tick_checked;
 use sim_core::colony::Command;
@@ -122,6 +124,7 @@ fn deaths(engine: &SimEngine) -> u64 {
 fn colony_viability_no_orders() {
     for seed in 0u64..8 {
         let mut engine = sim_test::colony_engine(seed);
+        let watch = Watch::begin("colony_viability_no_orders", seed, "ordinary", &engine);
         for _ in 0..10 * 1_440 {
             engine.tick();
         }
@@ -130,6 +133,7 @@ fn colony_viability_no_orders() {
             0,
             "seed {seed}: deaths in 10 days without orders"
         );
+        watch.finish(&engine, "exact_14400_ticks_no_orders");
     }
 }
 
@@ -145,8 +149,15 @@ pub fn u_script(engine: &SimEngine) -> Vec<Command> {
 fn colony_invariants_hold_over_8_seeds_x_10_days() {
     for seed in 0u64..8 {
         let mut engine = sim_test::colony_engine(seed);
+        let watch = Watch::begin(
+            "colony_invariants_hold_over_8_seeds_x_10_days",
+            seed,
+            "u_script",
+            &engine,
+        );
         for tick in 0..10 * 1_440u64 {
             if tick == 360 {
+                watch.checkpoint(&engine, "before_u_script");
                 for cmd in u_script(&engine) {
                     assert!(
                         sim_systems::commands::submit(&mut engine, cmd).accepted,
@@ -171,16 +182,24 @@ fn colony_invariants_hold_over_8_seeds_x_10_days() {
             0,
             "seed {seed}: deaths in 10 days with the script"
         );
+        watch.finish(&engine, "exact_14400_ticks_u_script");
     }
 }
 
 #[test]
 fn colony_determinism_with_the_u_script() {
-    let run = |seed: u64| {
+    let run = |seed: u64, branch: &str| {
         let mut engine = sim_test::colony_engine(seed);
+        let watch = Watch::begin(
+            "colony_determinism_with_the_u_script",
+            seed,
+            branch,
+            &engine,
+        );
         let mut prints = Vec::new();
         for tick in 0..2 * 1_440u64 {
             if tick == 360 {
+                watch.checkpoint(&engine, "before_u_script");
                 for cmd in u_script(&engine) {
                     sim_systems::commands::submit(&mut engine, cmd);
                 }
@@ -190,11 +209,12 @@ fn colony_determinism_with_the_u_script() {
                 prints.push(sim_test::probe::colony::colony_fingerprint(&engine));
             }
         }
+        watch.finish(&engine, "exact_2880_ticks_u_script");
         prints
     };
     for seed in [0u64, 4] {
-        let a = run(seed);
-        assert_eq!(a, run(seed), "seed {seed}");
+        let a = run(seed, "first");
+        assert_eq!(a, run(seed, "second"), "seed {seed}");
     }
 }
 

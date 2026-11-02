@@ -16,6 +16,10 @@
 # The historical seed-0 art fixture explicitly keeps the steward OFF; the layers read the rest.
 extends SceneTree
 
+# Gate-only bridge reads are delegated to GateObserver; synthetic geometry is not a native world.
+const GateObserver = preload("res://tools/v8/gate_ui_observer.gd")
+var _gate_observer: RefCounted = GateObserver.new("render.people", "res://tools/v8/mart2_people_test.gd")
+
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 
@@ -35,9 +39,12 @@ func _check(name: String, ok: bool, detail: String) -> void:
 func _run() -> void:
 	var main: Node = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
+	_gate_observer.capture(main, "bootstrap")
 	var world: Node = main.get_node("WorldSim")
 	await process_frame
+	_gate_observer.capture(main, "before_colony_reset")
 	world.call("reset_world", 0)
+	_gate_observer.capture(main, "after_colony_reset", {"fixture_classification": "ordinary_colony"})
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	var steward_command: Dictionary = world.call("cmd_set_steward", false, 0)
 	var steward: Dictionary = world.call("get_steward")
@@ -45,9 +52,11 @@ func _run() -> void:
 	var fixture_ready: bool = bool(steward_command.get("accepted", false)) and not bool(steward.get("enabled", true)) and int(clock.get("tick", -1)) == 0
 	_check("fixture_steward_off", fixture_ready, "ordinary OFF command accepted, state OFF at tick zero")
 	if not fixture_ready:
-		quit(1)
+		quit(_gate_observer.finish(1))
 		return
+	_gate_observer.capture(main, "before_explicit_tick")
 	world.call("advance_ticks", 1)
+	_gate_observer.capture(main, "after_explicit_tick")
 	for _i: int in 20:
 		await process_frame
 	var layer: Node = main.get_node("ColonyView/AgentLayer")
@@ -59,7 +68,7 @@ func _run() -> void:
 	await _check_reload(layer, camera)
 	_check_tint(layer, snap)
 	print("MART2_PEOPLE_DONE failures=%d" % _failures)
-	quit(1 if _failures > 0 else 0)
+	quit(_gate_observer.finish(1 if _failures > 0 else 0))
 
 
 func _check_appearance(layer: Node, snap: Dictionary) -> void:

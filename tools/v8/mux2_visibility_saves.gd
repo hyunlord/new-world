@@ -2,6 +2,10 @@
 # Bridge methods: reset_world, cmd_set_steward, advance_ticks, save_world, get_time_snapshot, get_world_info.
 extends SceneTree
 
+# Gate-only bridge reads are delegated to GateObserver.
+const GateObserver = preload("res://tools/v8/gate_ui_observer.gd")
+var _gate_observer: RefCounted = GateObserver.new("visibility.generator", "res://tools/v8/mux2_visibility_saves.gd")
+
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
 
 
@@ -28,6 +32,7 @@ func _run() -> void:
 	var main: Node = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	main.get_node("UI/MuxHud").set("store", Store.new(out.path_join("settings.cfg")))
 	root.add_child(main)
+	_gate_observer.capture(main, "bootstrap")
 	if not bool(main.get("boot_ok")) or not main.has_node("WorldSim"):
 		_fail("main scene bootstrap failed")
 		return
@@ -36,6 +41,7 @@ func _run() -> void:
 	if not bool(SimReads.mutate(world, "reset_world", [0])):
 		_fail("reset failed")
 		return
+	_gate_observer.capture(main, "after_reset")
 	var command: Dictionary = SimReads.mutate(world, "cmd_set_steward", [true, 0])
 	if not bool(command.get("accepted", false)):
 		_fail("steward ON rejected")
@@ -66,10 +72,12 @@ func _run() -> void:
 				_fail("actual clock does not match requested scene " + id + ": " + JSON.stringify(clock))
 				return
 			var path: String = out.path_join(id + ".wsave")
+			var prefix: int = _gate_observer.capture(main, "save_prefix", {"save_path": path, "scene_id": id})
 			if not bool(world.save_world(path)):
 				_fail("save failed: " + id)
 				return
 			var row: Dictionary = {"id": id, "save": path, "sha256": FileAccess.get_sha256(path), "day": day, "hour": hour, "tick": int(clock.get("tick", -1)), "clock": clock}
+			_gate_observer.capture(main, "save_link", {"prefix_checkpoint": prefix, "save_path": path, "save_sha256": row["sha256"], "scene_id": id})
 			scenes.append(row)
 			print("MUX2_VISIBILITY_SAVE " + JSON.stringify(row))
 	var result: Dictionary = {"schema": 1, "seed": 0, "steward": "on", "source": "actual debug bridge; no player construction/draft orders; batched advance only for preparation", "bridge_sha256": FileAccess.get_sha256("res://rust/target/debug/libsim_bridge.dylib"), "script_sha256": FileAccess.get_sha256("res://tools/v8/mux2_visibility_saves.gd"), "scenes": scenes}
@@ -80,9 +88,9 @@ func _run() -> void:
 	file.store_string(JSON.stringify(result, "  "))
 	file.close()
 	print("MUX2_VISIBILITY_SAVES_DONE scenes=4")
-	quit(0)
+	quit(_gate_observer.finish(0))
 
 
 func _fail(reason: String) -> void:
 	push_error("MUX2_VISIBILITY_SAVES_FAIL " + reason)
-	quit(1)
+	quit(_gate_observer.finish(1))

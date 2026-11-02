@@ -269,6 +269,7 @@ fn the_text_renderer_people_json_carries_the_bridge_looks() {
         legend: false,
         out: Some(dir.join("grid.txt")),
         people_json: Some(json_path.clone()),
+        gate_observations: false,
     };
     ascii::run(&args).expect("text renderer runs");
     let text = std::fs::read_to_string(&json_path).expect("people json written");

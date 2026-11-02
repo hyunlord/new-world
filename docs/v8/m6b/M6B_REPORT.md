@@ -1,5 +1,18 @@
 # M6b 보고서
 
+## Stage −1 게시 확정 기록 (Stage 0 작업 중 추가)
+
+2026-11-02 10:45:18 UTC에 [2f6993009ddb600e9249c28f9768a1a5252c8821](https://github.com/hyunlord/new-world/commit/2f6993009ddb600e9249c28f9768a1a5252c8821)을 `v8/wip` 다음 `v8/main`에 fast-forward하고 두 ref와 review ref의 같은 SHA를 확인했다. **BASE0는 이 SHA**다. 아래 p8·이전 후보 기록은 당시 상태 그대로 보존한다. 이 후속 문서가 포함될 Stage 0 커밋은 별도 검증 대상이다.
+
+- 최종 D의 전체 gate03은 필수49단계 exit0, metadata 감사v3과 후속 queue도 exit0이다. 원래 queue exit2, 감사v1·v2 exit1, strict stall FAIL은 보존했다. 최신 오너가 허용한 LOOP gate의 waiver로 게시했다. zoom1의 >50ms는52.701·58.127ms, zoom0.5는58.176ms, 모두60ms 미만이다. >33ms 분당 수는 각각 `[1,5,1,2,0]`, `[1,0,3,0,1]`로 남긴다.
+- debug/release 각각2,853통과·0실패·13ignored. M1은229개 통과 실행(222개 고유 이름과 중복7회)이다. 원시 awk의 `inf`/228 집계는 보존하고 별도 이름별·숫자별 감사를 첨부했다.
+- baseline identity와 전체 colony fixture는 BASE와 동일하다. 128개 원시 파일 쌍,9개 CORE/READ 정규화 쌍, 일반3개와F10, 실제 format14→15 저장 호환3개 검사를 구분해 보존했다. 일반 CORE 집사OFF의 BASE 지식 손실은 남아 있으며 Stage0 자기 비교의 무손실 기준과 충돌한다.
+- 최종 D 첫10분 이미지 판독은 두 배율4/4, 같은 프로토콜 BASE1/4. 집중420·입력62 검사,158PNG 중 별도 정적 검토36장이다. 전체 종류 카드296검사·12종·17경로와16세계×48일 자연 실행에서950응답·29건 native 카드 수락·카드 거절0·KnowledgeLost0을 확인했다. 직접 사람의 플레이·연속 애니메이션 평가는 NOT_RUN이다.
+- 성능 mean/p99 비율: n200 `1.008790/1.016270`, n1000 `1.008982/0.982165`, n2000 `1.000848/1.006368`, script `1.003925/0.995846`, side64 `0.986017/0.969118`, wolves `1.004362/1.026251`. 이전 gate02 side64 p99 실패1.121212와 원인 UNKNOWN을 보존한다.
+- #650/#663은 이미 닫혀 있음을 확인했다. 미완료 집사 작업은 [ISS-361 / #684](https://github.com/hyunlord/new-world/issues/684)에 LOOP held-out 실패와 함께 이관했다. LOOP-R1 승인 무효와1680–1743 소모 상태는 변하지 않는다.
+
+게시 영수증: `/Users/rexxa/work/m6b-data/minus1/STAGE_MINUS1_PUBLICATION.json`. 독립 감사: 같은 디렉터리의 `FINAL_D_03_PUBLICATION_AUDIT.md/json`. unrelated `.gitignore`로 인한 `worktree_clean=false`와 별도 product source clean 증거를 함께 보존했다. 실제 gate의 bridge 재빌드도 별도 출처로 묶었다. Stage0는 이 예외를 일반화하지 않고 깨끗한 별도 제품 checkout을 사용한다.
+
 ## Stage −1: BASE 집사 동작으로 프레젠테이션 게시
 
 상태: 진행 중, 미게시. BASE0 미정. 기준 동작은 `fbc03bddb8f5b68f43fba1b2dad283982e5cf436`, 인수한 증거 분기는 `d88fca82cd7d5501d9cb5a68f0761d40b0e9bf36`이다. 오너 결정 D-minus1에 따라 M-LOOP 게시 대기는 종료했다. LOOP-R1은 승인 근거로 무효이며 실패 기록은 보존한다.
@@ -185,6 +198,38 @@ p4 첫10분 캡처는 두 배율 모두 tick0→14400을 정확히 실행했다.
 p6(`67b1ba2e1`)는 정적 화면62장과 카드16세계·48일을 통과했다(949응답,27수락 영수증, 거절·검증 실패·KnowledgeLost0, 시드별 사망 증가 없음). 별도 전체 종류 검사는12종·17경로이며 실제 카드 선택21건과 명시적 준비 명령2건을 구분한다. 그러나 새 첫10분 판독32장은 두 배율3/4였다. “일하기6명·이동 중4명”은 작업 목적을 설명하지 못하므로 실패를 유지하고 p6 전체 gate는 실행하지 않았다.
 
 후속 수정은 현재 상태와 연결된 기존 작업 코드를 이용해 “벌목 작업”, “건설 재료 운반 준비” 등을 표시한다. 교사 대기는 학습 진전으로 단정하지 않고, 유휴 상태의 배정·소집·불명확한 상호작용은 분리한다. 회귀63개 실패를 재현한 뒤 집중420개가 통과했다. 실제 native 작업별 인원과 화면, 행동 전환, 수동 표시 전후 저장 바이트·tick·명령 로그 동일성을 확인했다. 새 첫10분 이해도와 커밋별 카드·전체 fixture gate는 아직 필요하며, 미게시 상태다.
+
+## Stage 0 개발 검증 중간 기록
+
+Stage 0은 미게시이며 전체 generic gate·BASE 자기 비교·고의 결함 후보 증명은 아직 완료하지 않았다. 새 관찰자는 기본 비활성이고, 원시 결과와 자식 프로세스·실행 파일·입력 해시를 묶는 도구를 추가 중이다. 기존 gate의 성공이나 단위 검사 결과를 generic gate 통과로 대신하지 않는다.
+
+개발 중 foundation 빌드의 identity는 공유 값228,748개에서 차이0, chronicle64파일과 샘플64파일 일치, seed0–3 determinism을 통과했다(`stage0/development-identity-01.log`). 이 실행 중 후속 M6a companion 코드가 추가되었으므로 현재 전체 소스나 새 커밋의 identity 증거로 사용하지 않는다. 당시 workspace check·clippy, 집중 Rust30개와 perf observer7개는 통과했다. Python 통합256개는 `integrated-python-03.log`에 기록하며 이후 추가된 실행 어댑터는 별도 재검증 대상이다.
+
+M6a 실제 selected-pack 주 실행은 tick1409에 성공했고, 별도 고정 종료 companion은 tick1410까지 진행했다. 두 실행 모두 시작10명·종료10명, KnowledgeLost0·사망0이다. 첫 실행은 테스트 자식의 콘텐츠 초기화 누락으로 실패했으며 로그를 보존했다. 생산 초기화 경로를 호출한 수정 후 두 집중 release 검사가 통과했다(`stage0/m6a-companion/native-20261102-r2/`). 이는 BASE 대 후보의 source-bound 증명이나 전체 gate가 아니다.
+
+후속 동결 개발 검사 `stage0/development-foundation-02/`는 workspace 전체 대상 check·clippy, release probe 빌드 및 전체 identity를 통과했다. 실행 전후 Rust·RON·Cargo 소스와 기준·하네스 해시가 같았으며, 공유 값228,748개 차이0, chronicle64파일19,683항목·원시 샘플64파일 일치, seed0–3 결정성을 확인했다. 이후 벤치 관찰 JSON 할당을 capacity companion 뒤로 옮겼으므로 이 identity 결과를 수정 후 전체 소스에 소급하지 않는다. 해당 순서 수정의 집중 Rust10개는 통과했고 실제 이중 옵션 할당량 측정은 NOT_RUN이다.
+
+`stage0/integrated-python-06/`은 검사 대상 소스가 전후 동일한 상태에서382개를 통과했다. 앞선05 실행은 작성 중 모듈과 겹쳐10오류가 발생한 무효 통합 시도로 보존한다. 이후 검토에서 원시 산출물의 늦은 변조, 이전 벤치 해시 덮어쓰기, CRLF 정규화로 인한 바이트 비교 누락을 재현하여 수정했다. 이 후속 수정과 새 저장 이력·UI 실행 모듈은 다시 통합 검증해야 한다. 단위 검사 통과를 실제 전체 세계 실행이나 게시 근거로 사용하지 않는다.
+
+Godot 인증된 smoke 비교에서 boot는 tick80, labels는 tick83의 별도 실행과 일치했다. 네 프로세스 모두 종료0, 생존10명·KnowledgeLost0, 명령16개의 전체 메타데이터·인원·이력이 같았다. labels는592개·raw key0을 확인했다(`stage0/ui-companion-native/RESULT.json`). 실행 파일·입력 해시는 인증했으나 빌드 출처는 UNVERIFIED이므로 전체 gate나 exact-SHA 제품 검증으로 사용하지 않는다. 첫 인증 시도는 빈 argv 기록과 정상 native 집사 명령을 금지한 어댑터 가정 때문에 거절되었다. teardown 가설은 캐시 후에도 빈 argv였으므로 기각했다. Godot이 소비하는 엔진 인자와 내부 노출 인자를 구분하고 전체 프로세스 argv는 별도로 검증한다. 정상 초기 SetSteward와 이후 native Steward 기록은 원래·별도 실행 사이에서 전체 로그를 대조한다. 실패 기록과 원래 native 집사 동작을 유지한다.
+
+완료된 작업 디렉터리 정리는 원본·WIP·ignored 결과를 보관하고 독립 Git 복원 증명 뒤 수행했다. loop/core/mux2/m6a/q4 및 등록된 하위18개를 제거했고, 활성 프로세스가 있던 m6a-r2는 보존했다. 상세 목록과 제외 이유는 `minus1/archives/cleanup-20261102T1050Z/FINAL_SUMMARY.json`에 있다.
+
+후속 Python 통합07은 검사 소스가 전후 동일한 상태에서420개를 통과했다. 고정 UI 실행02는 toast·layout·ground·people·trees 다섯 native 검사 모두 종료0·빈 stderr로 통과했다. 첫 UI 실행의 layout은244개 도메인 검사를 통과했어도 shader cache ERROR 때문에 FAIL로 남겼다. 원인은 실행 환경에서 HOME을 제거하여 Godot 캐시 경로가 상대 경로가 된 것으로 별도 실제 프로세스에서 재현했고, 실제 계정 HOME만 명시적으로 전달해 수정했다. 앱 설정은 계속 새 출력 디렉터리에 격리한다. 증거는 `stage0/ui-fixed-native/`에 있으며, 두 제품의 독립 빌드·비교를 대신하지 않는다.
+
+렌더러·가시성·Why·네이티브 테스트 연결부의 독립 검토 후 통합09는512개 검사와 소스 전후 동일성을 통과했다. generic 생산 모듈 전체의 엄격 타입 검사10은 오류0·경고0이며 Ruff 검사도 통과했다. ASCII 관찰 경로는 기본 렌더링 출력·저장 바이트 보존을 포함한 집중7개와 기존 외형 검사1개를 실제 native 실행으로 통과했다. 테스트 바이너리는 `cargo test --no-run`의 실제 compiler-artifact에서 선택하고 종류·프로필·새 빌드 여부·실행 파일 경로와 해시를 검증한다. BASE 관찰자 패치의 허용 경로에는 ASCII 인자 기본값 추가가 필요한 기존 외형 테스트 한 파일만 추가했다. 관련 경로 거절 회귀를 재현한 뒤 빌드 계약30개가 통과했다. 이 기록은 전체 generic gate나 독립 BASE/후보 실행의 완료를 뜻하지 않는다.
+
+실제 save_load 바이너리는7개 검사와46개 세계 이력(새 세계29·불러온 세계17)을 모두 통과했다(`stage0/native-save-history/run-01/`). 별도 새 release 빌드의 colony_world·colony_commands는17개 검사와23개 세계 이력을 통과했다(`stage0/native-named-history/run-01/`). 후자는 유효 입력1107개의 해시·HEAD·작업 상태가 실행 전후 같았다. 두 실행 모두 누락 이력은 없으며 한 개발 제품의 관찰자 검증이다. BASE 대비 생존·독립 두 제품·전체 gate 승인으로 승격하지 않는다.
+
+Stage 0 자기 비교의 알려진 충돌은 유지한다. 공개 BASE0의 기존 `core.steward_off` seed0·20일 세계는 창립자10명에서 생존0명, 굶주림 사망9·전투 사망1이며 tick28560에 `clay_digging` KnowledgeLost(보유자9)가 발생했다. 실제 진단과 엄격한 B/B 판정은 FAIL이다(`stage0/core-off-native-01/`, `design/S0_BASE_SAFETY_READINESS.md`). 원래 fixture의 기간·명령·분류나 절대 KnowledgeLost0 기준을 바꾸어 자기 비교를 통과시킨 것으로 기록하지 않는다.
+
+후속 foundation03은 workspace 전체 대상 check·clippy, release probe 빌드와 원래32세계×120일 identity를 통과했다. 공유 값228,748개 차이0·한쪽 전용 경로0, chronicle/relation64파일19,683항목 및 원시 샘플64파일 일치, seed0–3 결정성을 확인했다. native 소스·기준 자료·identity 하네스의 전후 해시는 같았다. 실행 중 Python 연결부와 Why 도구는 추가되었으므로 전체 작업 트리 동결이나 최종 커밋의 gate로 주장하지 않는다(`stage0/development-foundation-03/RESULT.md`).
+
+실제 가시성 첫 실행은 Godot JSON의 정수→실수 표현 차이를 연결부가 거절하여 FAIL로 보존했다. 가시성 manifest 경계에서만 안전한 정수를 Godot 표현으로 맞추고 값·경로·해시 변경 거절 회귀를 검증한 뒤 새 run02를 실행했다. 원래 네 저장 시점, 실제10세계·저장 연결4개·GPU8장면을 통과했고 모든 세계 생존10명·KnowledgeLost0이었다. 소스1470개와 runtime 입력6418개의 해시가 실행 전후 같았다(`stage0/ui-visibility-native/RESULT-run02.md`).
+
+렌더러 실제 run01은 원래 생성기·ASCII·Godot·비교기를 모두 exit0으로 종료했다. 사람10명의 위치·외형, 타일3개, tick900 일치 및 실제4세계 이력을 확인했다(`stage0/renderer-native/run-01-summary.md`). Why run01은 bridge 빌드·부모/locale strictcheck 후 기본53·영어64·한국어64 검사를 통과했다. 세 실행의 실제 prefix→terminal tick은 각각7→8·8→9·7→8이며 모두 생존10명·KnowledgeLost0, exit0·빈 stderr였다. 직접 건물 이벤트 주입은 기제 검사로 명시하며 자연 발생 사건이나 명령 로그로 바꾸어 분류하지 않는다. 설정 복원과 전체 입력·출력 해시 재검증도 통과했다(`stage0/ui-why-native/run-01/README.md`). 이 세 실행은 개발 제품 한쪽의 연결부 검증이고, 독립 BASE/후보 비교·동일 종료 조건·전체 gate·사람의 시각 수용 검증은 아니다.
+
+최신 Python 검증10은 generic468개와 기존 요약/READ/정규화61개를 모두 통과했다. generic 실행 전후 Python 소스 해시 변화는 없으며, 생산 모듈 엄격 타입 검사12도 오류0·경고0이었다. 검토한 작업 경로145개만 Stage0 리뷰용 변경으로 보존하며, unrelated `.gitignore`와 로컬 Godot 로그는 포함하지 않는다. 원래51단계 전체 연결·workspace 테스트 세계의 완전한 열거·독립 제품 및 관찰자 중립성 증명은 아직 미완료다.
 
 ## Stage 0–3
 

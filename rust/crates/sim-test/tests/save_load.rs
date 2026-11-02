@@ -6,6 +6,9 @@
 //! tick 360) the way the colony probe does: resolve against the engine at the
 //! entry's tick, `commands::submit`, then tick.
 
+pub mod save_gate_observation;
+use save_gate_observation::Watch;
+
 use sim_engine::SimEngine;
 use sim_systems::save::{self, SaveError, FORMAT_VERSION};
 use sim_test::probe::colony::{colony_fingerprint, load_script, resolve, ScriptEntry};
@@ -67,9 +70,16 @@ fn round_trip(
     mut continuous: SimEngine,
     mut saved: SimEngine,
     script: &[ScriptEntry],
+    watches: (Watch, Watch),
+    identity: (&str, u64),
 ) {
+    let (continuous_watch, saved_watch) = watches;
+    continuous_watch.checkpoint(&continuous, "before_save");
+    saved_watch.checkpoint(&saved, "before_save");
     let bytes = save::save(&mut saved).expect("save");
+    let link = saved_watch.save(&saved, &bytes, "main");
     let mut loaded = save::load(&bytes).expect("load");
+    let loaded_watch = Watch::loaded(identity.0, identity.1, "loaded", &loaded, link);
     for &after in &CHECKS {
         let to = SAVE_AT + after;
         advance(&mut continuous, script, to);
@@ -77,6 +87,9 @@ fn round_trip(
         advance(&mut loaded, script, to);
         assert_same(&format!("{label} +{after} (loaded)"), &continuous, &loaded);
         assert_same(&format!("{label} +{after} (saved)"), &continuous, &saved);
+        continuous_watch.checkpoint(&continuous, &format!("after_{after}"));
+        saved_watch.checkpoint(&saved, &format!("after_{after}"));
+        loaded_watch.checkpoint(&loaded, &format!("after_{after}"));
     }
     let end_continuous = save::save(&mut continuous).expect("save continuous");
     let end_loaded = save::save(&mut loaded).expect("save loaded");
@@ -90,6 +103,12 @@ fn round_trip(
         end_continuous == end_saved,
         "{label}: full state differs after save"
     );
+    let _ = continuous_watch.save(&continuous, &end_continuous, "terminal");
+    let _ = saved_watch.save(&saved, &end_saved, "terminal");
+    let _ = loaded_watch.save(&loaded, &end_loaded, "terminal");
+    continuous_watch.finish(&continuous, "save_at_plus_1000");
+    saved_watch.finish(&saved, "save_at_plus_1000");
+    loaded_watch.finish(&loaded, "save_at_plus_1000");
 }
 
 #[test]
@@ -100,14 +119,23 @@ fn save_load_roundtrip() {
             let script = &script;
             scope.spawn(move || {
                 let mut a = sim_test::colony_engine(seed);
+                let wa = Watch::begin("save_load_roundtrip", seed, "continuous", &a);
                 let mut b = sim_test::colony_engine(seed);
+                let wb = Watch::begin("save_load_roundtrip", seed, "saved", &b);
                 advance(&mut a, script, SAVE_AT);
                 advance(&mut b, script, SAVE_AT);
                 // The run did something worth saving: the orders were applied
                 // and logs moved (observed: 3 commands; trees felled > 0).
                 assert_eq!(a.resources.colony.command_log.len(), 3, "seed {seed}");
                 assert!(a.resources.colony.tallies.trees_felled > 0, "seed {seed}");
-                round_trip(&format!("colony seed {seed}"), a, b, script);
+                round_trip(
+                    &format!("colony seed {seed}"),
+                    a,
+                    b,
+                    script,
+                    (wa, wb),
+                    ("save_load_roundtrip", seed),
+                );
             });
         }
     });
@@ -121,10 +149,19 @@ fn save_load_roundtrip_baseline() {
         for seed in 0..2u64 {
             scope.spawn(move || {
                 let mut a = sim_test::baseline_engine(seed);
+                let wa = Watch::begin("save_load_roundtrip_baseline", seed, "continuous", &a);
                 let mut b = sim_test::baseline_engine(seed);
+                let wb = Watch::begin("save_load_roundtrip_baseline", seed, "saved", &b);
                 advance(&mut a, &[], SAVE_AT);
                 advance(&mut b, &[], SAVE_AT);
-                round_trip(&format!("baseline seed {seed}"), a, b, &[]);
+                round_trip(
+                    &format!("baseline seed {seed}"),
+                    a,
+                    b,
+                    &[],
+                    (wa, wb),
+                    ("save_load_roundtrip_baseline", seed),
+                );
             });
         }
     });
@@ -149,7 +186,19 @@ fn save_load_roundtrip_through_deaths_and_births() {
     // allocator). Breaking the free-list generations in `save::world::build`
     // fails this test (checked once on purpose).
     let mut a = sim_test::baseline_engine(0);
+    let wa = Watch::begin(
+        "save_load_roundtrip_through_deaths_and_births",
+        0,
+        "continuous",
+        &a,
+    );
     let mut b = sim_test::baseline_engine(0);
+    let mut wb = Watch::begin(
+        "save_load_roundtrip_through_deaths_and_births",
+        0,
+        "original",
+        &b,
+    );
     advance(&mut a, &[], 20_000);
     advance(&mut b, &[], 20_000);
     let before = deaths(&a);
@@ -164,12 +213,23 @@ fn save_load_roundtrip_through_deaths_and_births() {
     let births_at_save = a.resources.tallies.births;
     let first_save = b.current_tick();
     for (step, to) in [(1, first_save + 3_000), (2, first_save + 12_000)] {
+        wa.checkpoint(&a, &format!("before_save_{step}"));
+        wb.checkpoint(&b, "before_save");
         let bytes = save::save(&mut b).expect("save");
+        let link = wb.save(&b, &bytes, "chain");
         if step == 1 {
             let saved = save::world::capture(&b.world).expect("capture");
             assert!(saved.free_len() >= 1, "the save holds a free id");
         }
+        wb.finish(&b, "replaced_by_chained_load");
         b = save::load(&bytes).expect("load");
+        wb = Watch::loaded(
+            "save_load_roundtrip_through_deaths_and_births",
+            0,
+            &format!("loaded_{step}"),
+            &b,
+            link,
+        );
         for check in [b.current_tick() + 1, b.current_tick() + 60, to] {
             advance(&mut a, &[], check);
             advance(&mut b, &[], check);
@@ -185,16 +245,24 @@ fn save_load_roundtrip_through_deaths_and_births() {
     let end_a = save::save(&mut a).expect("save a");
     let end_b = save::save(&mut b).expect("save b");
     assert!(end_a == end_b, "full state differs after two loads");
+    let _ = wa.save(&a, &end_a, "terminal");
+    let _ = wb.save(&b, &end_b, "terminal");
+    wa.finish(&a, "first_natural_death_after_20000_plus_12000");
+    wb.finish(&b, "first_natural_death_after_20000_plus_12000");
 }
 
 #[test]
 fn save_is_deterministic() {
     let script = script();
     let mut a = sim_test::colony_engine(3);
+    let wa = Watch::begin("save_is_deterministic", 3, "original", &a);
     let mut b = sim_test::colony_engine(3);
+    let wb = Watch::begin("save_is_deterministic", 3, "twin", &b);
     advance(&mut a, &script, 1_500);
     advance(&mut b, &script, 1_500);
+    wa.checkpoint(&a, "before_save");
     let first = save::save(&mut a).expect("save");
+    let link = wa.save(&a, &first, "first");
     let twin = save::save(&mut b).expect("save twin");
     // Two engines hold their hash maps under different hash seeds; the
     // sorted writing makes their saves equal anyway.
@@ -202,6 +270,7 @@ fn save_is_deterministic() {
     let again = save::save(&mut a).expect("second save");
     assert!(first == again, "a second save of the same engine differs");
     let mut loaded = save::load(&first).expect("load");
+    let wl = Watch::loaded("save_is_deterministic", 3, "loaded_no_ticks", &loaded, link);
     let reloaded = save::save(&mut loaded).expect("save loaded");
     assert!(first == reloaded, "save → load → save differs");
     assert!(
@@ -209,6 +278,12 @@ fn save_is_deterministic() {
         "a colony save holds the world ({} bytes)",
         first.len()
     );
+    let _ = wa.save(&a, &again, "again");
+    let _ = wb.save(&b, &twin, "twin");
+    let _ = wl.save(&loaded, &reloaded, "resaved");
+    wa.finish(&a, "tick_1500");
+    wb.finish(&b, "tick_1500");
+    wl.finish(&loaded, "resave_without_ticks");
 }
 
 #[test]
@@ -218,17 +293,23 @@ fn bridge_save_files_round_trip() {
     let dir = std::env::temp_dir().join(format!("worldsim-save-test-{}", std::process::id()));
     let path = dir.join("saves").join("0-1200.wsave");
     let mut engine = sim_test::colony_engine(0);
+    let watch = Watch::begin("bridge_save_files_round_trip", 0, "original", &engine);
     advance(&mut engine, &script, 1_200);
+    watch.checkpoint(&engine, "before_save_file");
     let written = sim_bridge::ffi::save_engine_to_file(&mut engine, &path).expect("save file");
     assert_eq!(
         std::fs::metadata(&path).map(|m| m.len()).ok(),
         Some(written as u64)
     );
+    let link = watch.save_file(&engine, &path, "bridge_file");
     let mut loaded = sim_bridge::ffi::load_engine_from_file(&path).expect("load file");
+    let loaded_watch = Watch::loaded("bridge_save_files_round_trip", 0, "loaded", &loaded, link);
     advance(&mut engine, &script, 1_500);
     advance(&mut loaded, &script, 1_500);
     assert_same("bridge file", &engine, &loaded);
     assert!(sim_bridge::ffi::load_engine_from_file(&dir.join("missing.wsave")).is_err());
+    watch.finish(&engine, "tick_1500");
+    loaded_watch.finish(&loaded, "tick_1500");
     let _ = std::fs::remove_dir_all(&dir);
 }
 
@@ -269,9 +350,27 @@ fn run_until(engine: &mut SimEngine, limit: u64, stop: impl Fn(&SimEngine) -> bo
 
 /// Save at `engine`'s current tick, load, and tick the loaded and a twin
 /// continuous engine `ticks` further; both must stay equal.
-fn compare_after_load(label: &str, mut twin: SimEngine, mut engine: SimEngine, ticks: u64) {
+fn compare_after_load(
+    label: &str,
+    mut twin: SimEngine,
+    mut engine: SimEngine,
+    ticks: u64,
+    watches: (Watch, Watch),
+    cohort: &str,
+) {
+    let (twin_watch, saved_watch) = watches;
+    twin_watch.checkpoint(&twin, "event_stop");
+    saved_watch.checkpoint(&engine, "event_stop");
     let bytes = save::save(&mut engine).expect("save");
+    let link = saved_watch.save(&engine, &bytes, "event");
     let mut loaded = save::load(&bytes).expect("load");
+    let loaded_watch = Watch::loaded(
+        "save_load_roundtrip_through_a_pregnancy_and_a_due_birth",
+        1,
+        &format!("{cohort}_loaded"),
+        &loaded,
+        link,
+    );
     for step in 0..ticks {
         twin.tick();
         loaded.tick();
@@ -282,6 +381,11 @@ fn compare_after_load(label: &str, mut twin: SimEngine, mut engine: SimEngine, t
     let a = save::save(&mut twin).expect("save twin");
     let b = save::save(&mut loaded).expect("save loaded");
     assert!(a == b, "{label}: full state differs after load");
+    let _ = twin_watch.save(&twin, &a, "terminal");
+    let _ = loaded_watch.save(&loaded, &b, "terminal");
+    twin_watch.finish(&twin, &format!("{cohort}_event_plus_{ticks}"));
+    saved_watch.finish(&engine, &format!("{cohort}_event_save_only"));
+    loaded_watch.finish(&loaded, &format!("{cohort}_event_plus_{ticks}"));
 }
 
 fn pregnancy_diagnostics(engine: &SimEngine) -> String {
@@ -325,8 +429,14 @@ fn save_load_roundtrip_through_a_pregnancy_and_a_due_birth() {
     // Physical seasonal food needs ordinary winter planning to keep the
     // naturally pregnant mother alive until delivery. This fixture tests save
     // continuity, not survival without orders or stored food.
-    let engine_with_steward = || {
+    let engine_with_steward = |branch: &str| {
         let mut engine = sim_test::colony_engine(1);
+        let watch = Watch::begin(
+            "save_load_roundtrip_through_a_pregnancy_and_a_due_birth",
+            1,
+            branch,
+            &engine,
+        );
         let result = sim_systems::commands::submit(
             &mut engine,
             sim_core::colony::Command::SetSteward {
@@ -335,7 +445,8 @@ fn save_load_roundtrip_through_a_pregnancy_and_a_due_birth() {
             },
         );
         assert!(result.accepted, "fixture steward command must be accepted");
-        engine
+        watch.checkpoint(&engine, "accepted_SetSteward_on_All");
+        (engine, watch)
     };
     let pregnant = |e: &SimEngine| {
         e.world
@@ -345,8 +456,8 @@ fn save_load_roundtrip_through_a_pregnancy_and_a_due_birth() {
             > 0
     };
     let queued = |e: &SimEngine| !e.resources.due_births.is_empty();
-    let mut a = engine_with_steward();
-    let mut b = engine_with_steward();
+    let (mut a, wa) = engine_with_steward("pregnancy_continuous");
+    let (mut b, wb) = engine_with_steward("pregnancy_saved");
     assert!(
         run_until(&mut a, 40 * 1_440, pregnant),
         "no pregnancy in 40 days: {}",
@@ -354,9 +465,9 @@ fn save_load_roundtrip_through_a_pregnancy_and_a_due_birth() {
     );
     assert!(run_until(&mut b, 40 * 1_440, pregnant));
     let births = a.resources.tallies.births;
-    compare_after_load("seed 1 mid-pregnancy", a, b, 1_000);
-    let mut a = engine_with_steward();
-    let mut b = engine_with_steward();
+    compare_after_load("seed 1 mid-pregnancy", a, b, 1_000, (wa, wb), "pregnancy");
+    let (mut a, wa) = engine_with_steward("queued_continuous");
+    let (mut b, wb) = engine_with_steward("queued_saved");
     // Observe the first natural pregnancy without changing simulation state.
     let first_pregnancy = std::cell::RefCell::new(None);
     let queued_with_observation = |engine: &SimEngine| {
@@ -386,7 +497,17 @@ fn save_load_roundtrip_through_a_pregnancy_and_a_due_birth() {
     assert_eq!(births, 0, "the first save was before any birth");
     let before = a.resources.tallies.births;
     let waiting = a.resources.due_births.len() as u64;
-    let mut probe = save::load(&save::save(&mut a).expect("save")).expect("load");
+    wa.checkpoint(&a, "queued_probe_before_save");
+    let probe_bytes = save::save(&mut a).expect("save");
+    let link = wa.save(&a, &probe_bytes, "queued_probe");
+    let mut probe = save::load(&probe_bytes).expect("load");
+    let probe_watch = Watch::loaded(
+        "save_load_roundtrip_through_a_pregnancy_and_a_due_birth",
+        1,
+        "queued_probe",
+        &probe,
+        link,
+    );
     assert_eq!(probe.resources.due_births.len() as u64, waiting);
     probe.tick();
     assert_eq!(
@@ -394,5 +515,6 @@ fn save_load_roundtrip_through_a_pregnancy_and_a_due_birth() {
         before + waiting,
         "the queued births survived the load"
     );
-    compare_after_load("seed 1 due birth queued", a, b, 2_000);
+    probe_watch.finish(&probe, "one_tick_after_queued_birth_load");
+    compare_after_load("seed 1 due birth queued", a, b, 2_000, (wa, wb), "queued");
 }

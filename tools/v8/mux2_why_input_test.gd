@@ -1,6 +1,10 @@
 # MUX2 dispatched input regression, real scene and bridge facts; no simulated UI outcomes.
 # Bridge: get_tile_causal_history; normal scene reads. Runtime owned by root.
 extends SceneTree
+
+# Gate-only bridge reads are delegated to GateObserver.
+const GateObserver = preload("res://tools/v8/gate_ui_observer.gd")
+var _gate_observer: RefCounted = GateObserver.new("why", "res://tools/v8/mux2_why_input_test.gd")
 const View = preload("res://scripts/world/colony/view.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
 const Obstacles = preload("res://scripts/world/colony/marker_layout.gd")
@@ -35,11 +39,16 @@ func _hovered_path() -> String:
 	return "" if hovered == null else str(hovered.get_path())
 func run() -> void:
 	main = load("res://scenes/main.tscn").instantiate()
-	main.get_node("UI/MuxHud").set("store", Store.new("/Users/rexxa/work/mux2-data/why-settings-%d.cfg" % OS.get_process_id()))
+	var settings_path: String = "/Users/rexxa/work/mux2-data/why-settings-%d.cfg" % OS.get_process_id()
+	if OS.has_environment("WORLDSIM_TEST_SETTINGS_DIR"):
+		settings_path = OS.get_environment("WORLDSIM_TEST_SETTINGS_DIR").path_join("why-%d.cfg" % OS.get_process_id())
+	main.get_node("UI/MuxHud").set("store", Store.new(settings_path))
 	root.add_child(main)
+	_gate_observer.capture(main, "bootstrap")
 	await frames(20)
 	var camera: Camera2D = main.get_node("Camera2D")
 	camera.call("set_paused", true)
+	_gate_observer.capture(main, "ordinary_prefix")
 	camera.call("center_on_tile", Vector2i(96,96))
 	await frames()
 	var panel: Control = main.get_node("UI/CausalPanel")
@@ -81,8 +90,12 @@ func run() -> void:
 		check("popup maximum screen height", panel.size.y * panel.scale.y <= root.get_visible_rect().size.y * 0.5 + 0.5)
 	# Positive fixture uses the actual engine event path, never synthetic display_history.
 	var world: Node = main.get_node("WorldSim")
-	check("fixture accepted by bridge", bool(SimReads.mutate(world,"on_building_placed",[tile.x,tile.y,1])))
+	_gate_observer.capture(main, "before_intervention", {"method": "on_building_placed", "args": [tile.x, tile.y, 1]})
+	var fixture_accepted: bool = bool(SimReads.mutate(world,"on_building_placed",[tile.x,tile.y,1]))
+	check("fixture accepted by bridge", fixture_accepted)
+	_gate_observer.capture(main, "intervention_queued", {"method": "on_building_placed", "args": [tile.x, tile.y, 1], "accepted": fixture_accepted})
 	SimReads.mutate(world,"advance_ticks",[1])
+	_gate_observer.capture(main, "after_intervention_tick")
 	await frames()
 	var recorded: Array = world.get_tile_causal_history(tile.x,tile.y)
 	check("engine recorded a real causal event", not recorded.is_empty())
@@ -135,7 +148,7 @@ func run() -> void:
 		check("scale%s width bound" % factor,panel.size.x * panel.scale.x <= 420.5)
 		check("scale%s height bound" % factor,panel.size.y * panel.scale.y <= root.get_visible_rect().size.y*0.5 + 0.5)
 		if DisplayServer.get_name() != "headless":
-			var directory: String = "/Users/rexxa/work/mux2-data/ui-why/run-%d" % OS.get_process_id()
+			var directory: String = _capture_directory(false)
 			print("MUX2_WHY_OUTPUT " + directory)
 			DirAccess.make_dir_recursive_absolute(directory)
 			await RenderingServer.frame_post_draw
@@ -179,7 +192,7 @@ func run() -> void:
 	check("alt click preserves active tool without order",int(tool.get("mode")) == 1 and orders == 0)
 	tool.call("set_mode",0)
 	print("MUX2_WHY_DONE failures=%d checks=%d" % [failures,checks])
-	quit(1 if failures else 0)
+	quit(_gate_observer.finish(1 if failures else 0))
 
 # Independent traversal reports actual visible panel/button rectangles, not the placement helper's output.
 func _popup_intersections(node: Node, popup: Control, rectangle: Rect2, hits: Array[String]) -> void:
@@ -231,7 +244,7 @@ func _placement_regression(panel: Control, camera: Camera2D, tile: Vector2i) -> 
 		check("placement scale%s remains in viewport" % factor, root.get_visible_rect().encloses(rectangle))
 		check("placement scale%s clears actual visible controls" % factor, hits.is_empty())
 		if DisplayServer.get_name() != "headless":
-			var directory: String = "/Users/rexxa/work/mux2-data/ui-why-placement/run-%d" % OS.get_process_id()
+			var directory: String = _capture_directory(true)
 			DirAccess.make_dir_recursive_absolute(directory)
 			await RenderingServer.frame_post_draw
 			check("placement capture scale%s" % factor, root.get_texture().get_image().save_png(directory.path_join("why-placement-%s.png" % factor)) == OK)
@@ -289,3 +302,10 @@ func _map_fixture_point(panel: Control, require_empty: bool) -> Vector2:
 			return candidate
 	check("unobscured empty map point" if require_empty else "unobscured event fixture point", false)
 	return area * 0.5
+
+# Gate captures stay inside the runner's fresh output; ordinary paths are unchanged.
+func _capture_directory(placement: bool) -> String:
+	if _gate_observer.enabled and OS.has_environment("WORLDSIM_GATE_UI_OUT"):
+		return OS.get_environment("WORLDSIM_GATE_UI_OUT").path_join("placement" if placement else "why")
+	var base: String = "/Users/rexxa/work/mux2-data/ui-why-placement" if placement else "/Users/rexxa/work/mux2-data/ui-why"
+	return base.path_join("run-%d" % OS.get_process_id())

@@ -275,6 +275,8 @@ pub struct RunOutput {
     pub json: Value,
     /// Wall time of every tick, µs (warm-up included).
     pub tick_us: Vec<u32>,
+    /// Opt-in native safety receipt, excluded from the scored report.
+    pub gate_observation: Option<Value>,
 }
 
 /// Pass 19: each settlement's member count, largest first.
@@ -301,6 +303,7 @@ pub fn run_scripted(
     mut engine: SimEngine,
     script: &[crate::probe::colony::ScriptEntry],
 ) -> Result<RunOutput, String> {
+    let observation = crate::perf_observation::Initial::capture(&engine)?;
     let mut next_command = 0usize;
     let started = Instant::now();
     let founders = alive(&engine);
@@ -482,7 +485,11 @@ pub fn run_scripted(
         json["subprofile"] = subprofile.summary(offset, tpd);
         json
     };
+    let gate_observation = observation
+        .map(|start| start.finish(&engine, spec.ticks))
+        .transpose()?;
     Ok(RunOutput {
+        gate_observation,
         json,
         tick_us: profile.tick_us,
     })
@@ -668,7 +675,8 @@ pub fn write_run(dir: &Path, stem: &str, output: &RunOutput) -> Result<String, S
     std::fs::create_dir_all(dir).map_err(|e| format!("{}: {e}", dir.display()))?;
     let name = format!("{stem}.json");
     let text = serde_json::to_string_pretty(&output.json).map_err(|e| e.to_string())?;
-    std::fs::write(dir.join(&name), text + "\n").map_err(|e| format!("{name}: {e}"))?;
+    let text = text + "\n";
+    std::fs::write(dir.join(&name), &text).map_err(|e| format!("{name}: {e}"))?;
     let bytes: Vec<u8> = output
         .tick_us
         .iter()
@@ -676,6 +684,7 @@ pub fn write_run(dir: &Path, stem: &str, output: &RunOutput) -> Result<String, S
         .collect();
     std::fs::write(dir.join(format!("{stem}.tick_us.bin")), bytes)
         .map_err(|e| format!("{stem}: {e}"))?;
+    crate::perf_observation::write(&dir.join(&name), &text, output.gate_observation.as_ref())?;
     Ok(name)
 }
 

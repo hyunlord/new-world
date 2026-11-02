@@ -18,6 +18,7 @@
 //! ("Text renderer glyphs"). `worldsim_probe --scene colony --ascii` drives it
 //! ([`AsciiArgs`], [`run`]).
 use super::colony::{load_script, resolve, ScriptEntry};
+use super::gate_observation::GateObservation;
 use sim_bridge::ffi::{
     collect_agent_jobs, collect_agent_snapshot, collect_appearance, collect_building_snapshot,
     collect_colony_overlay, collect_terrain_snapshot, collect_time_snapshot, collect_trees,
@@ -25,7 +26,7 @@ use sim_bridge::ffi::{
 };
 use sim_engine::SimEngine;
 use std::collections::{BTreeMap, BTreeSet};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// A tile `(x, y)`.
 pub type Tile = (u32, u32);
@@ -342,21 +343,58 @@ pub fn engine_at(
     script: &[ScriptEntry],
     tick: u64,
 ) -> Result<(SimEngine, StumpTracker), String> {
+    engine_at_observed(seed, script, tick, None)
+}
+
+fn engine_at_observed(
+    seed: u64,
+    script: &[ScriptEntry],
+    tick: u64,
+    observation_out: Option<&Path>,
+) -> Result<(SimEngine, StumpTracker), String> {
     let mut engine = crate::scenes::colony_scene(seed);
+    let mut watch = observation_out
+        .map(|out| GateObservation::begin(&engine, out, "colony", seed, "primary", tick))
+        .transpose()?;
     let mut stumps = StumpTracker::new();
     stumps.observe(&engine);
     let mut next = 0usize;
-    for t in 0..tick {
-        let mut avoid = Vec::new();
-        while next < script.len() && script[next].tick == t {
-            for cmd in resolve(&engine, &script[next].spec, &mut avoid)? {
-                sim_systems::commands::submit(&mut engine, cmd);
+    let replay = (|| -> Result<(), String> {
+        for t in 0..tick {
+            let mut avoid = Vec::new();
+            while next < script.len() && script[next].tick == t {
+                if let Some(watch) = watch.as_mut() {
+                    watch.checkpoint(&engine, next, &script[next].spec, None)?;
+                }
+                for (index, cmd) in resolve(&engine, &script[next].spec, &mut avoid)?
+                    .into_iter()
+                    .enumerate()
+                {
+                    if let sim_core::colony::Command::DebugKill { agent } = &cmd {
+                        if let Some(watch) = watch.as_mut() {
+                            watch.checkpoint(
+                                &engine,
+                                next,
+                                &script[next].spec,
+                                Some((index, *agent)),
+                            )?;
+                        }
+                    }
+                    sim_systems::commands::submit(&mut engine, cmd);
+                }
+                next += 1;
             }
-            next += 1;
+            engine.tick();
+            stumps.observe(&engine);
         }
-        engine.tick();
-        stumps.observe(&engine);
-    }
+        Ok(())
+    })();
+    let observation = match watch {
+        Some(watch) => watch.finish(&engine, replay.is_ok()),
+        None => Ok(()),
+    };
+    replay?;
+    observation?;
     Ok((engine, stumps))
 }
 
@@ -377,6 +415,8 @@ pub struct AsciiArgs {
     pub out: Option<PathBuf>,
     /// Write the people tiles as JSON here (`--people-json FILE`).
     pub people_json: Option<PathBuf>,
+    /// Write the native sidecar beside `--out FILE` (`--gate-observations`).
+    pub gate_observations: bool,
 }
 
 /// The longest run `--tick` accepts (480 days, the colony probe's limit).
@@ -407,11 +447,19 @@ impl AsciiArgs {
             legend: false,
             out: None,
             people_json: None,
+            gate_observations: false,
         };
         let mut args = args.into_iter();
         while let Some(flag) = args.next() {
             match flag.as_str() {
                 "--ascii" => continue,
+                "--gate-observations" => {
+                    if parsed.gate_observations {
+                        return Err("duplicate --gate-observations".into());
+                    }
+                    parsed.gate_observations = true;
+                    continue;
+                }
                 "--ascii-legend" => {
                     parsed.legend = true;
                     continue;
@@ -449,6 +497,9 @@ impl AsciiArgs {
         if parsed.tick > MAX_TICK {
             return Err(format!("--tick must be at most {MAX_TICK}"));
         }
+        if parsed.gate_observations && parsed.out.is_none() {
+            return Err("--gate-observations needs --out FILE for its sidecar directory".into());
+        }
         Ok(parsed)
     }
 }
@@ -459,7 +510,17 @@ pub fn run(args: &AsciiArgs) -> Result<(), String> {
         Some(path) => load_script(path)?,
         None => Vec::new(),
     };
-    let (engine, stumps) = engine_at(args.seed, &script, args.tick)?;
+    let observation_out = if args.gate_observations {
+        Some(
+            args.out
+                .as_deref()
+                .and_then(Path::parent)
+                .ok_or("--gate-observations needs --out FILE for its sidecar directory")?,
+        )
+    } else {
+        None
+    };
+    let (engine, stumps) = engine_at_observed(args.seed, &script, args.tick, observation_out)?;
     let mut text = String::new();
     if args.legend {
         text.push_str(&legend());
@@ -545,3 +606,7 @@ mod tests {
         assert_eq!(terrain_glyph(200), b'?');
     }
 }
+
+#[cfg(test)]
+#[path = "ascii_gate_tests.rs"]
+mod gate_tests;

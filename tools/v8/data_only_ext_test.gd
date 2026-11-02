@@ -4,6 +4,10 @@
 # godot --path . --script tools/v8/data_only_ext_test.gd -- /absolute/external/evidence
 extends SceneTree
 
+# Gate-only bridge reads are delegated to GateObserver; synthetic geometry is not a native world.
+const GateObserver = preload("res://tools/v8/gate_ui_observer.gd")
+var _gate_observer: RefCounted = GateObserver.new("pack.ui", "res://tools/v8/data_only_ext_test.gd")
+
 const Hud = preload("res://scripts/ui/mux/mux_hud.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
 const Facts = preload("res://scripts/ui/mux/ui_facts_adapter.gd")
@@ -32,7 +36,7 @@ func _run() -> void:
 	_check("external evidence path", _out.is_absolute_path() and not _out.begins_with(ProjectSettings.globalize_path("res://")))
 	_check("explicit selected pack", not OS.get_environment("WORLDSIM_CONTENT_PACK").is_empty())
 	if _failures > 0:
-		quit(1)
+		quit(_gate_observer.finish(1))
 		return
 	_check("evidence directory", DirAccess.make_dir_recursive_absolute(_out) == OK)
 	var boot: Dictionary = WorldSimNode.bootstrap_catalog()
@@ -45,6 +49,7 @@ func _run() -> void:
 	var hud: Hud = main.get_node("UI/MuxHud") as Hud
 	hud.store = Store.new(_out.path_join("selected-pack-settings-%d.cfg" % OS.get_process_id()))
 	root.add_child(main)
+	_gate_observer.capture(main, "bootstrap")
 	await process_frame
 	_check("real selected scene boot", bool(main.get("boot_ok")))
 	if not bool(main.get("boot_ok")):
@@ -52,6 +57,9 @@ func _run() -> void:
 		return
 	var world: Node = main.get_node("WorldSim")
 	main.get_node("Camera2D").call("set_paused", true)
+	if _gate_observer.enabled:
+		var selected_pack: String = OS.get_environment("WORLDSIM_CONTENT_PACK")
+		_gate_observer.capture(main, "paused_selected_pack", {"manifest_path": selected_pack, "manifest_sha256": FileAccess.get_sha256(selected_pack), "fixture_classification": "ordinary_selected_pack", "synthetic_DTO_checks": "presentation_validation_only"})
 	var dto: Dictionary = world.call("get_content_catalog")
 	_check_story_controls(dto)
 	for entry: Array in [["items", 65537, "test_hide"], ["recipes", 65538, "test_hide_recipe"], ["blueprints", 65539, "test_mudbrick_wall"], ["pressures", 4294967294, "test_cold"], ["animals", 4294967293, "test_grazer"]]:
@@ -66,7 +74,9 @@ func _run() -> void:
 	var resolved: Dictionary = resolver.call("resolve", "test_mudbrick", "clay", "", "wall")
 	_check("novel style identity uses existing art", str(resolved.get("style_id", "")) == "test_mudbrick" and not (resolved.get("textures", {}) as Dictionary).is_empty())
 	_check_alias_negatives(dto)
+	_gate_observer.capture(main, "before_explicit_tick")
 	world.call("advance_ticks", 1)
+	_gate_observer.capture(main, "after_explicit_tick")
 	var facts: Dictionary = Facts.adapt(world.call("get_ui_facts"))
 	_check("real world facts accepted", hud.alerts.refresh_from_facts(facts))
 	var matching: Array[Dictionary] = hud.alerts.evaluator.active_alerts().filter(func(row: Dictionary) -> bool: return row["id"] == "test_supply")
@@ -184,8 +194,8 @@ func _check_alias_negatives(dto: Dictionary) -> void:
 func _finish() -> void:
 	var file: FileAccess = FileAccess.open(_out.path_join("data-only-ext-results.json"), FileAccess.WRITE)
 	if file == null:
-		quit(1)
+		quit(_gate_observer.finish(1))
 		return
 	file.store_string(JSON.stringify({"checks": _rows, "failures": _failures, "selected_pack": OS.get_environment("WORLDSIM_CONTENT_PACK"), "rendered": DisplayServer.get_name() != "headless"}, "\t"))
 	file.close()
-	quit(0 if _failures == 0 else 1)
+	quit(_gate_observer.finish(0 if _failures == 0 else 1))

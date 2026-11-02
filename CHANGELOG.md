@@ -1,6 +1,15 @@
 # Changelog
 
-## M6b Stage −1 — 2026-11-02 (publication pending)
+## M6b Stage 0 — work in progress
+
+### Added
+- Explicit native gate observers for probe, bridge, performance and named save-test worlds, disabled by default; full runtime qualification remains pending.
+- Source/build/process bindings, mandatory fixture contracts, ordinary safety and injected-fault validators for the generic gate. Incomplete coverage and BASE self-proof losses remain failures.
+
+### Fixed
+- Parse numeric test outcomes independently of interleaved child output; retain native process failure and distinguish duplicate invocations from unique test names.
+
+## M6b Stage −1 — 2026-11-02 (published 2f6993009)
 
 ### Changed
 - Restore published BASE stewardship through eight default rules, off/None experimental settings and no-action card expiry, retaining optional code and command encoding.

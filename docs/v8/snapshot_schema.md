@@ -1867,3 +1867,50 @@ On-demand diagnosis for a stockpile, hearth or room. `kind` is `"stockpile"` (id
 | `ticks` | PackedInt64Array | tick of each returned row |
 | `kinds` | PackedStringArray | command name of each returned row |
 | `accepted` | PackedByteArray | 1 when the command was accepted |
+
+### `get_gate_observation` — opt-in gate evidence
+
+Enabled at node creation only by `WORLDSIM_GATE_OBSERVER=1`. This read never
+issues commands or changes simulation state. All unsigned 64-bit values cross
+the Godot boundary as decimal strings. The runner binds node identity to its
+process/invocation identity and reads each node before freeing it.
+
+| key | type | meaning |
+|---|---|---|
+| `schema_version` | int | 1 |
+| `status` | String | DISABLED or OBSERVED |
+| `node_instance_id` | String | Godot node instance ID, scoped to process |
+| `instances` | Array[Dictionary] | all engines owned by this node, in construction order |
+| `instance_ordinal` | int | zero-based native engine ordinal within this node |
+| `reason` | String | bootstrap, reset, stress_reset, load |
+| `seed` | String | native unsigned seed |
+| `initial_tick` | String | actual native clock before any advance of this instance |
+| `initial_population` | int | complete Agent census at construction/load |
+| `initial_agent_ids` | Array[String] | sorted unsigned Agent IDs |
+| `terminal_tick` | String | current native tick, or tick at replacement |
+| `terminal_alive` | int | complete Agent census at receipt/replacement |
+| `terminal_agent_ids` | Array[String] | sorted unique unsigned stable Agent IDs from the same census as `terminal_alive`; length must equal it; frozen on replacement, current on read |
+| `closed` | bool | true only for replaced engines; live row is a checkpoint |
+| `history_complete` | bool | fresh tick-zero history observed without gaps |
+| `history_gap` | String or null | initial_history_unauthenticated, chronicle_shrank, unknown_knowledge_node |
+| `chronicle_cursor` | int | append-only native chronicle entries consumed |
+| `knowledge_enabled` | bool | actual native rule capability |
+| `knowledge_capability_source` | String | resources.rules.colony.knowledge |
+| `knowledge_lost` | Array[Dictionary] or null | observed losses in append order, null when disabled |
+| `tick` | String | loss event tick, not endpoint tick |
+| `node` | String or null | registered knowledge name; unknown index retains null and fails history completeness |
+| `node_index` | int | native chronicle value retained for diagnosis |
+| `holder` | String or null | unsigned optional native subject, never a sentinel |
+
+Disabled output contains schema_version, status and node_instance_id only.
+Every actual process/manual tick consumes newly appended chronicle entries;
+duplicate loss rows remain distinct. Census reads occur at construction,
+replacement and receipt reads. Loaded instances always mark prior history
+unauthenticated, even when the save contains chronicle entries or tick zero.
+The runner must authenticate a matching save-prefix receipt before claiming
+full cumulative history. It must not interpret an empty observed list as
+complete zero loss when history_complete is false. No receipt is written
+automatically and node destruction discards its list: harnesses must read it
+before freeing the node. Observation cost remains part of process timing;
+measurement neutrality and pristine/derived BASE qualification are separate
+required runtime checks.

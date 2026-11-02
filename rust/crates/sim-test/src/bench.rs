@@ -170,7 +170,7 @@ fn deaths(engine: &SimEngine) -> Value {
 
 /// Build one scene's world in this process and read its memory (the RSS outer bound's
 /// build-only run, M5.5): `{label, build_only, repeat, rss_kib.after_build, alloc_bytes.after_build}`.
-pub fn build_one(scene: &Scene, repeat: u32) -> Value {
+pub fn build_one(scene: &Scene, repeat: u32) -> Result<(Value, Option<Value>), String> {
     let rss_before = rss_kib();
     let alloc_before = alloc_bytes();
     let engine = build_world_with(
@@ -180,11 +180,16 @@ pub fn build_one(scene: &Scene, repeat: u32) -> Value {
     let rss_built = rss_kib();
     let alloc_built = alloc_bytes();
     let alive = crate::perf::alive(&engine);
+    let observation = crate::perf_observation::Initial::capture(&engine)?;
+    let safety = observation
+        .map(|start| start.finish(&engine, 0))
+        .transpose()?;
     drop(engine);
-    json!({"label": scene.label, "build_only": true, "repeat": repeat, "agents": scene.agents, "side": scene.side,
+    let report = json!({"label": scene.label, "build_only": true, "repeat": repeat, "agents": scene.agents, "side": scene.side,
            "alive": alive, "load_before": load_average(),
            "rss_kib": {"before_build": rss_before, "after_build": rss_built},
-           "alloc_bytes": {"before_build": alloc_before, "after_build": alloc_built}})
+           "alloc_bytes": {"before_build": alloc_before, "after_build": alloc_built}});
+    Ok((report, safety))
 }
 
 /// The RSS outer bound from build-only runs (`label` → runs): the k-th runs of the three
@@ -224,6 +229,13 @@ fn rss_outer(build_runs: &std::collections::BTreeMap<String, Vec<Value>>) -> Val
 
 /// Run one scene in this process and return its JSON (see the module header).
 pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, String> {
+    run_one_observed(scene, script_path).map(|(report, _)| report)
+}
+
+fn run_one_observed(
+    scene: &Scene,
+    script_path: Option<&Path>,
+) -> Result<(Value, Option<Value>), String> {
     let script = match (scene.script, script_path) {
         (true, Some(path)) => crate::probe::colony::load_script(path)?,
         (true, None) => return Err(format!("{} needs --commands", scene.label)),
@@ -241,8 +253,11 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
     let rss_built = rss_kib();
     let alloc_built = alloc_bytes();
     let founders = crate::perf::alive(&engine);
+    let observation = crate::perf_observation::Initial::capture(&engine)?;
     let mut next = 0usize;
     let mut gifts = 0u64;
+    let mut gift_requested = 0u64;
+    let mut gift_applied = 0u64;
     let mut gift = |engine: &mut SimEngine| -> Result<(), String> {
         let now = engine.current_tick();
         let offset = engine.resources.rules.clock_offset_ticks;
@@ -250,7 +265,15 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
         if gifts == 0 || at_six {
             if let Some(home) = engine.resources.settlements.keys().copied().min() {
                 let amount = crate::perf::GIFT_PER_ALIVE * crate::perf::alive(engine);
-                crate::perf::gift_food(engine, home, u32::try_from(amount).unwrap_or(u32::MAX))?;
+                let applied = crate::perf::gift_food(
+                    engine,
+                    home,
+                    u32::try_from(amount).unwrap_or(u32::MAX),
+                )?;
+                if observation.is_some() {
+                    gift_requested = gift_requested.saturating_add(amount);
+                    gift_applied = gift_applied.saturating_add(applied);
+                }
                 gifts += 1;
             }
         }
@@ -275,6 +298,9 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
     }
     let alive_after_warmup = crate::perf::alive(&engine);
     // M5.5: the wolves line — a pack at the map edge nearest the camp's forest, hunting through the measured ticks.
+    let wolves_before = observation
+        .as_ref()
+        .map(|_| engine.resources.colony.wildlife.wolves().count());
     if scene.wolves > 0 {
         if let Some(h) = sim_systems::worldgen::colony::hearth(&engine.resources) {
             sim_systems::runtime::nav::ensure(&mut engine.resources);
@@ -289,6 +315,9 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
             }
         }
     }
+    let wolves_after = observation
+        .as_ref()
+        .map(|_| engine.resources.colony.wildlife.wolves().count());
     let mut profile = engine.new_tick_profile();
     #[cfg(feature = "perf_arms")]
     let mut arms = crate::arm_profile::ArmProfile::start();
@@ -404,7 +433,19 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
     } else {
         report
     };
-    Ok(report)
+    // Construct heap-backed observer evidence only after the capacity allocator reads.
+    // The terminal companion must not change tick, census, Chronicle, rules or death tallies.
+    let safety = observation
+        .map(|start| {
+            let mut result = start.finish(&engine, WARMUP + MEASURED_TICKS)?;
+            result["warmup_alive"] = json!(alive_after_warmup);
+            result["interventions"] = json!({"gifts": gifts, "gift_requested": gift_requested,
+            "gift_applied": gift_applied, "wolves_requested": scene.wolves,
+            "wolves_before": wolves_before, "wolves_after": wolves_after});
+            Ok::<Value, String>(result)
+        })
+        .transpose()?;
+    Ok((report, safety))
 }
 
 fn median(mut values: Vec<f64>) -> f64 {
@@ -623,6 +664,9 @@ fn admit_child(
     }
 }
 
+#[path = "bench_process.rs"]
+mod process;
+
 #[cfg(test)]
 #[path = "bench_admission_tests.rs"]
 mod admission_tests;
@@ -643,6 +687,7 @@ pub fn run_all(
         .create_new(true)
         .open(out.join("admission.jsonl"))
         .map_err(|e| e.to_string())?;
+    let mut process_journal = process::Journal::from_environment(out)?;
     let mut runs: std::collections::BTreeMap<String, Vec<Value>> = Default::default();
     for repeat in 1..=repeats {
         for scene in &SCENES {
@@ -659,9 +704,17 @@ pub fn run_all(
                 cmd.args(["--commands", &script.display().to_string()]);
             }
             admit_child(&mut admission, &file, "timed", scene.label, repeat)?;
-            let status = cmd
-                .status()
-                .map_err(|e| format!("{}: {e}", exe.display()))?;
+            let status = process::status(
+                &mut process_journal,
+                &mut cmd,
+                &process::Run {
+                    output: &file,
+                    kind: "timed",
+                    scene: scene.label,
+                    repeat,
+                },
+            )
+            .map_err(|e| format!("{}: {e}", exe.display()))?;
             if !status.success() {
                 return Err(format!("bench-one {} repeat {repeat} failed", scene.label));
             }
@@ -705,9 +758,17 @@ pub fn run_all(
                 &file.display().to_string(),
             ]);
             admit_child(&mut admission, &file, "rss", label, repeat)?;
-            let status = cmd
-                .status()
-                .map_err(|e| format!("{}: {e}", exe.display()))?;
+            let status = process::status(
+                &mut process_journal,
+                &mut cmd,
+                &process::Run {
+                    output: &file,
+                    kind: "rss",
+                    scene: label,
+                    repeat,
+                },
+            )
+            .map_err(|e| format!("{}: {e}", exe.display()))?;
             if !status.success() {
                 return Err(format!(
                     "bench-one --build-only {label} repeat {repeat} failed"
@@ -770,15 +831,16 @@ pub fn main(args: &[String]) -> Result<(), String> {
                 .iter()
                 .find(|s| s.label == label)
                 .ok_or_else(|| format!("unknown scene {label}"))?;
-            let run = match build_only {
-                Some(repeat) => build_one(scene, repeat),
-                None => run_one(scene, commands.as_deref())?,
+            let (run, safety) = match build_only {
+                Some(repeat) => build_one(scene, repeat)?,
+                None => run_one_observed(scene, commands.as_deref())?,
             };
             if let Some(dir) = out.parent() {
                 std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
             }
-            std::fs::write(&out, serde_json::to_string_pretty(&run).map_err(|e| e.to_string())?)
-                .map_err(|e| e.to_string())
+            let text = serde_json::to_string_pretty(&run).map_err(|e| e.to_string())?;
+            std::fs::write(&out, &text).map_err(|e| e.to_string())?;
+            crate::perf_observation::write(&out, &text, safety.as_ref())
         }
         "bench" => {
             let exe = std::env::current_exe().map_err(|e| e.to_string())?;

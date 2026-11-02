@@ -53,10 +53,13 @@ use super::economy::{
     collect_workshops, priorities_to_dict, recipes_to_dict, submit_economy, workshops_to_dict,
     EconomyCommand,
 };
-use super::engine_build::{advance_engine_ticks, build_game_engine, build_stress_engine};
+use super::engine_build::{
+    advance_engine_ticks, advance_engine_ticks_observed, build_game_engine, build_stress_engine,
+};
 use super::family::{
     agent_family_to_dict, collect_agent_family, collect_kin_columns, signed_or_none,
 };
+use super::gate_observer::{observation_to_dict, GateObserver};
 use super::knowledge::{
     agent_knowledge_to_dict, collect_agent_knowledge, collect_knowledge_waits,
     collect_teach_orders, collect_tech, collect_tech_node, submit_cancel_teach,
@@ -128,6 +131,7 @@ pub struct WorldSimNode {
     /// wall-time feeds the fixed-timestep loop changes, never `FIXED_DT`.
     sim_speed: f64,
     mux2_profile: Option<Mux2Profile>,
+    gate_observer: Option<GateObserver>,
     base: Base<Node>,
 }
 
@@ -247,6 +251,9 @@ impl INode for WorldSimNode {
             } else {
                 self.engine.tick();
             }
+            if let Some(observer) = self.gate_observer.as_mut() {
+                observer.observe(&self.engine);
+            }
             self.accumulator -= FIXED_DT;
             iters += 1;
         }
@@ -275,6 +282,7 @@ impl WorldSimNode {
             return None;
         }
         let engine = build_game_engine(DEFAULT_GAME_SEED);
+        let gate_observer = GateObserver::from_environment(&engine);
         let mux2_profile = (std::env::var("WORLDSIM_MUX2_PROFILE").as_deref() == Ok("1"))
             .then(|| Mux2Profile::new(&engine, 0));
         Some(Gd::from_init_fn(move |base| Self {
@@ -283,6 +291,7 @@ impl WorldSimNode {
             accumulator: 0.0,
             sim_speed: 1.0,
             mux2_profile,
+            gate_observer,
             base,
         }))
     }
@@ -327,6 +336,20 @@ impl WorldSimNode {
         out
     }
 
+    /// Gate-only evidence for every engine owned by this node, including replaced bootstraps.
+    #[func]
+    fn get_gate_observation(&mut self) -> VarDictionary {
+        if let Some(observer) = self.gate_observer.as_mut() {
+            observer.observe(&self.engine);
+        }
+        let mut out = observation_to_dict(self.gate_observer.as_ref(), &self.engine);
+        out.set(
+            "node_instance_id",
+            self.base().instance_id().to_i64().to_string(),
+        );
+        out
+    }
+
     /// Immutable definitions; each call creates a defensive projection.
     #[func]
     pub fn get_content_catalog(&self) -> VarDictionary {
@@ -344,7 +367,11 @@ impl WorldSimNode {
     #[func]
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
-        self.engine = build_game_engine(self.world_seed);
+        let engine = build_game_engine(self.world_seed);
+        if let Some(observer) = self.gate_observer.as_mut() {
+            observer.replace(&self.engine, &engine, "reset", false);
+        }
+        self.engine = engine;
         self.reset_mux2_profile();
         self.accumulator = 0.0;
         self.base_mut()
@@ -359,7 +386,11 @@ impl WorldSimNode {
     #[func]
     fn reset_world_stress(&mut self, seed: i64, agents: i64) -> bool {
         self.world_seed = seed as u64;
-        self.engine = build_stress_engine(self.world_seed, agents.clamp(1, 5000) as u32);
+        let engine = build_stress_engine(self.world_seed, agents.clamp(1, 5000) as u32);
+        if let Some(observer) = self.gate_observer.as_mut() {
+            observer.replace(&self.engine, &engine, "stress_reset", false);
+        }
+        self.engine = engine;
         self.reset_mux2_profile();
         self.accumulator = 0.0;
         self.base_mut()
@@ -390,6 +421,9 @@ impl WorldSimNode {
     fn load_world(&mut self, path: GString) -> bool {
         match load_engine_from_file(std::path::Path::new(&path.to_string())) {
             Ok(engine) => {
+                if let Some(observer) = self.gate_observer.as_mut() {
+                    observer.replace(&self.engine, &engine, "load", true);
+                }
                 self.world_seed = engine.resources.world_seed;
                 self.engine = engine;
                 self.reset_mux2_profile();
@@ -426,7 +460,12 @@ impl WorldSimNode {
     /// Advance a bounded number of deterministic ticks for capture tooling.
     #[func]
     fn advance_ticks(&mut self, n: i64) -> i64 {
-        advance_engine_ticks(&mut self.engine, n) as i64
+        match self.gate_observer.as_mut() {
+            Some(observer) => advance_engine_ticks_observed(&mut self.engine, n, |engine| {
+                observer.observe(engine)
+            }) as i64,
+            None => advance_engine_ticks(&mut self.engine, n) as i64,
+        }
     }
 
     /// Read the authoritative simulation clock, independent of render frames.
