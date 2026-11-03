@@ -41,6 +41,9 @@ NESTED = ('\nrunning 2 tests\ntest selected_pack_child ... ok\ntest '+PARENT+' .
           'ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s\n\n')
 
 
+BASE0_GATE28 = 'step 28 knowledge bash -c \'cd rust && cargo test --release -p sim-test --test colony_knowledge -- --test-threads=8 && cd .. && rust/target/release/worldsim_probe --scene colony --seeds 0..8 --days 4 --workers 4 --commands tools/v8/m4_f10_script.json --out "$0/knowledge_f10" > /dev/null && python3 docs/v8/m4/m4_score.py --f10 "$0/knowledge_f10/summary.json" | tee /dev/stderr | grep -q "^F10: 8/8 PASS"\' "$LOG"'
+
+
 class RuntimeTests(unittest.TestCase):
     def fixture(self, base: Path, step: int, *, fail: bool = False, omit: bool = False) -> Library49Request:
         name, profile, threads, argv = runner.recipe(step)
@@ -86,6 +89,30 @@ raise SystemExit(subprocess.call([*runner,{str(binary)!r},{f'--test-threads={thr
             Executable(Target('sim-test', 'sim-test', name, ('test',), target/f'tests/{name}.rs', target/'Cargo.toml', False, True),
                        binary, step, profile, threads=threads), cargo, Path('/bin/bash').resolve(), Path(sys.executable).resolve(), helper,
             'test-host', inputs, tuple(sorted((path, file_hash(path)) for path in tools)), (), descriptor)
+
+    def test_step36_accepts_original_base_gate28_without_weakening_own_source(self) -> None:
+        with TemporaryDirectory() as temporary:
+            request = self.fixture(Path(temporary).resolve(), 36)
+            _ = self.enterContext(patch.object(runner, 'LOCK', Path(temporary).resolve()/'lane.lock'))
+            gate = request.root/'tools/v8/gate.sh'
+            _ = gate.write_text(gate.read_text().replace(runner.GATE28, BASE0_GATE28))
+            request = replace(request, inputs=tuple((name, file_hash(request.root/name)) for name, _ in request.inputs))
+            _ = runner.checked_request(request, 36)
+            _ = gate.write_text(gate.read_text().replace('step 36 data_only_ext bash ', 'step 36 data_only_ext sh '))
+            request = replace(request, inputs=tuple((name, file_hash(request.root/name)) for name, _ in request.inputs))
+            with self.assertRaisesRegex(GateContractError, 'original36 changed'):
+                _ = runner.checked_request(request, 36)
+
+    def test_step28_still_rejects_original_base_and_changed_own_command(self) -> None:
+        for changed in (BASE0_GATE28, runner.GATE28.replace('--test-threads=8', '--test-threads=1')):
+            with self.subTest(command=changed), TemporaryDirectory() as temporary:
+                request = self.fixture(Path(temporary).resolve(), 28)
+                _ = self.enterContext(patch.object(runner, 'LOCK', Path(temporary).resolve()/'lane.lock'))
+                gate = request.root/'tools/v8/gate.sh'
+                _ = gate.write_text(gate.read_text().replace(runner.GATE28, changed))
+                request = replace(request, inputs=tuple((name, file_hash(request.root/name)) for name, _ in request.inputs))
+                with self.assertRaisesRegex(GateContractError, 'original28 changed'):
+                    _ = runner.checked_request(request, 28)
 
     def test_both_actual_prefixes_and_independent_lists(self) -> None:
         for step in (28, 36):

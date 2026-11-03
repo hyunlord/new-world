@@ -562,3 +562,9 @@ Driver98042의 실제 종료1 후 전용 owner94208은 완료되지 않은 settl
 원래 문서 검사와 소유 프로세스를 한 번 실행하고, 단계12의 실제 endpoint에서 단계14가 만든 target 변경을 후속 단계에 넘긴다. 기존 API와 기본 실행은 유지하며 실제 ProcessSpec/ProcessResult, 원래 양쪽 source closure, 외부 도구 바이트·권한, 이전 증거 전체를 보존한다. 정상 oracle FAIL은 FAIL로 남기고 독립적으로 검증된 산출물 인계만 허용한다. 소유권 불명은 실제 실행과 FD를 유지하며 후속 endpoint를 발급하지 않는다.
 
 V2는 마지막 generated callback이 source 빈 디렉터리를 추가하는 독립 재현에서 실패했다. V3는 의미 검사 뒤 원래 target/cache/settings를 직접 비교해 같은 호출에서 이를 차단했다. 독립490개 해시 대조·원래 재현 및 외부 도구 권한/닫힌 FD 검사, 추가 회귀1개22.801초가 통과했다. 루트 신규·static27개(397.613초)와 기존 경로58개(6.691초), production/test 전체 타입0오류·Ruff 및 제한된 docs 검사가 실제 종료0으로 통과했다. 이전 V1/V2 실패는 보존한다. 단계15/16/17 순서 연결, BASE0 원본 gate 계약, 실제 native/세계·전체 gate 자격은 별도 미완료다. 증거: `stage0/ordered-dispatch/docs14-successor-review-v3/REVIEW.md` SHA256 `6f88ea0843f15e06f93bc8a429770248c45ac91f654c750aed34c30890793763`; patch `244c5527b0abdedc9b8e847b092247a1dcd7186b959365f9d9bfcba69df27d72`.
+
+### S0-p103 — 단계36의 원본 소스 검사를 자기 단계로 한정
+
+단계36이 무관한 최신 단계28 명령을 요구해 정확한 BASE0 gate를 거부하던 경로를 수정했다. 요청된 단계의 정확한 명령만 검사하며 단계36 wrapper·Godot 환경·자식9회 topology 해시와 실제 입력/FD 계약은 유지한다. 단계28 자체는 기존 최신 명령을 계속 요구하므로 BASE0 단계28 호환성을 새로 주장하지 않는다.
+
+전체 원본 BASE0 gate 바이트로 거부를 재현하고 수정 후 단계36 admission을 확인했다. 루트14개(20.276초), 외부 postimage14개(22.385초), production/test 타입0오류·Ruff가 통과했다. 앞선 mirror12개 실행은 수정 전 fixture 검사로 별도 보존하며 수정 후 검사로 계산하지 않는다. 실제 native/전체 단계36·세계·전체 gate는 미완료다. 증거: `stage0/ordered-dispatch/step36-root-validation.json`; patch `4e84c532a513d599618720a18a89cd3c0ad4418cd4dbd5865657bcdf5fe8bbd7`.

@@ -99,9 +99,10 @@ def checked_request(request: Library49Request, step: int) -> dict[str, str]:
     for path, value in bound.items():
         require(file_hash(Path(path)) == value, path, 'input changed')
     gate = (request.root/'tools/v8/gate.sh').read_text().splitlines()
-    require([line for line in gate if line.startswith('step 28 knowledge ')] == [GATE28], '/source', 'original28 changed')
-    require([line for line in gate if line.startswith('step 36 data_only_ext ')] == ['step 36 data_only_ext bash tools/v8/data_only_ext.sh "$LOG/data_only_ext"'], '/source', 'original36 changed')
+    if step == 28:
+        require([line for line in gate if line.startswith('step 28 knowledge ')] == [GATE28], '/source', 'original28 changed')
     if step == 36:
+        require([line for line in gate if line.startswith('step 36 data_only_ext ')] == ['step 36 data_only_ext bash tools/v8/data_only_ext.sh "$LOG/data_only_ext"'], '/source', 'original36 changed')
         require(bound[str(request.root/'tools/v8/data_only_ext.sh')] == SCRIPT36_SHA
                 and bound[str(request.root/'tools/v8/godot_bin.sh')] == GODOT_ENV_SHA, '/source', 'original36 wrapper changed')
         source = item.target.source.read_text()
