@@ -753,3 +753,9 @@ V2는 실제 disk anchor와 aggregate·source 검사를 통과하는 공개 coll
 실제 p111 debug 실패에서 빠진 rustdoc를 비롯해 rustfmt·cargo-fmt·cargo-clippy·clippy-driver를 selector의 PATH로 해석하고, 실행 가능한 일반 파일·canonical 경로·명시적 외부 해시를 준비 전에 검사한다. 세션에 선택 경로를 저장해 이후 alias가 다른 bound 실행 파일로 바뀌는 경우도 거부한다. 독립 검토가 발견한 상대·빈 PATH 항목의 cwd 의존성은 도구 검색 전 전체 항목을 절대경로로 제한해 수정했다. 환경 allowlist는 넓히지 않았다. 이전 materialized 세션은 새 필수 binding이 없으므로 새 H로 재준비해야 하며, 실행 중인 동결 p111에는 소급 적용하지 않는다.
 
 루트 회귀51개 종료0(58.689초), 변경5개 Python 파일 엄격한 타입0오류·기본 Ruff·diff 통과다. 실제 selector를 읽기만 한 검사에서 p111은 rustdoc 누락으로 거부되고 준비된 p121은 다섯 canonical 경로와 해시를 통과했다. 이는 PATH binding 검사이며 실행·materialization·native qualification이 아니다. 증거: `stage0/ordered-dispatch/whole-gate-root-required-tools-01.log`, `whole-gate-root-required-tools-types-01.log`, `whole-gate-required-tools-actual-selectors.log`, `whole-gate-required-tools-review/REVIEW_V2.md`. Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p125 — 원본 제품과 H 실행 파일의 명시적 연결
+
+original_off renderer 경로에 명시적인 session 경로·해시·arm context를 추가했다. 원본 P의 전체 파일·index를 보존하고 선택된 H의 Python/shell 실행 파일만 덧붙이는 source overlay를 생성·검사한다. O·Rust·GDScript·command JSON의 추가나 대체는 거부한다. 실제 workspace build pair와 warm source/environment 검사를 통과해야 실행할 수 있으며, 기존 build 인증기를 완화하지 않는다. derived mode에는 이 context를 넣을 수 없고 기존 O 검사를 유지한다. 세션의 필수 도구 검사와 공통 H·원본 workload 검사는 모든 mode에 남는다.
+
+루트 소스·기존 경로23개 종료0(56.078초), 연결부41개 종료0(3.182초), 관련6개 Python 파일 엄격한 타입0오류·기본 Ruff·diff 통과다. 독립 검토는 실제 작은 Git 저장소에서 원본 누락·O/data 혼입·mode/session 변경을 거부하고 기존 pair 인증을 유지함을 확인했다. 긍정적인 실제 native pair·renderer 세 mode 실행은 NOT_RUN이다. 합성 dispatch 검사는 이를 대체하지 않으며 matrix UNAVAILABLE·Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다. 증거: `stage0/ordered-dispatch/whole-gate-root-original-projection-{01,02}.log`, `whole-gate-root-original-projection-types-{01,02}.log`, `original-harness-projection-review/REVIEW.md`, `whole-gate-renderer-owner-review/REVIEW_V3.md`.

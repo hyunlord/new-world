@@ -1,4 +1,4 @@
-"""Owned renderer prerequisite execution; original-off H projection remains unavailable.
+"""Owned renderer prerequisites with explicit original-P plus executable-H authority.
 
 Call with an actual retained workspace pair prepared before step2. This alternative
 uses the original non-JSON bridge recipe and never converts it to generic_build.
@@ -11,6 +11,7 @@ from generic_build import normal_workspace_products, recheck_normal_products
 from generic_fixtures import ProbeProduct
 from generic_gate import document, require
 from generic_import_runtime_reader import read_import_closure
+from generic_original_harness_projection import OriginalHarnessContext
 from generic_process import ProcessResult, ProcessSpec, atomic_json, execute, file_hash
 from generic_renderer_qualification_specs import independent_roots, renderer_spec
 from generic_renderer_run import PINS, bind_process, inspect_godot, inspect_probe
@@ -46,34 +47,55 @@ class RendererRequest:
     prepared: PreparedSetup
     wait: CargoWaitEvidence
     output: Path
+    original_harness: OriginalHarnessContext | None = None
 
 
-def mode_source(session: Node, arm_name: str, mode: str, prepared: PreparedSetup) -> None:
-    """Bind exact admitted H/P/O bytes; fail before execution for unresolved original H projection."""
+def request_context(request: RendererRequest) -> None:
+    """Explicit projection authority belongs to this exact request, never a derived mode."""
+    context = request.original_harness
+    if request.mode == 'original_off':
+        require(context is not None, '/original_off', 'UNAVAILABLE: explicit authenticated H-only projection required')
+        assert context is not None
+        require((context.session_path, context.session_sha256, context.arm)
+                == (request.session, request.session_sha256, request.arm),
+                '/projection/context', 'projection context differs from exact selected request')
+    else:
+        require(context is None, '/projection/context', 'original projection context forbidden for derived mode')
+
+
+def mode_source(session: Node, arm_name: str, mode: str, prepared: PreparedSetup,
+                original_harness: OriginalHarnessContext | None = None) -> None:
+    """Bind exact admitted source; original H-only and derived H/O are separate contracts."""
     require(mode in MODES and arm_name in {'base', 'candidate'}, '/selection', 'unknown arm/mode')
-    require(mode != 'original_off', '/original_off',
-            'UNAVAILABLE: original P lacks import hooks; authenticated H-only projection not implemented')
     arm = session.field('arms').field(arm_name)
     arm.field('source_sha').equals(prepared.inputs.source_sha)
-    proof = prepared.derived_source
-    require(proof is not None, '/source', 'actual derived workspace source proof required')
-    assert proof is not None
-    document(proof.baseline_json).field('tracked_manifest').equals(arm.field('source_before').field('tracked_manifest').value)
-    document(proof.effective_json).equals(arm.field('effective_source').value)
-    required = matrix(session)
-    for name, raw in required.field('observer_postimages').mapping().items():
-        arm.field('effective_source').field('manifest').field(name).equals(raw)
+    if mode == 'original_off':
+        require(original_harness is not None, '/original_off',
+                'UNAVAILABLE: explicit authenticated H-only projection required')
+        assert original_harness is not None
+        require(original_harness.arm == arm_name, '/projection/context', 'foreign original arm')
+        original_harness.validate_prepared(session, prepared)
+    else:
+        require(original_harness is None, '/projection/context', 'original projection context forbidden for derived mode')
+        proof = prepared.derived_source
+        require(proof is not None, '/source', 'actual derived workspace source proof required')
+        assert proof is not None
+        document(proof.baseline_json).field('tracked_manifest').equals(arm.field('source_before').field('tracked_manifest').value)
+        document(proof.effective_json).equals(arm.field('effective_source').value)
+        required = matrix(session)
+        for name, raw in required.field('observer_postimages').mapping().items():
+            arm.field('effective_source').field('manifest').field(name).equals(raw)
+        for name, raw in arm.field('source_inputs').mapping().items():
+            require(dict(prepared.materialized).get(name) == Node(raw).text(), '/source', 'prepared source differs from admitted H/P/O')
     materialized = dict(prepared.materialized)
     for name in ('tools/v8/renderer_agreement.sh', 'tools/v8/u_script.json'):
         require(materialized.get(name) == PINS[name], '/workload', 'original renderer recipe/U-script changed')
-    for name, raw in arm.field('source_inputs').mapping().items():
-        require(materialized.get(name) == Node(raw).text(), '/source', 'prepared source differs from admitted H/P/O')
     # Executed Python is H, including this successor after integration into a selected H.
     harness = session.field('harness')
     for name in ('generic_renderer_qualification_owner.py', 'generic_renderer_qualification_specs.py',
                  'generic_setup_bridge.py', 'generic_setup_import.py', 'generic_import_runtime_reader.py',
                  'generic_import_checkpoint_reader.py', 'gate_oracle_child.py', 'generic_renderer_run.py',
-                 'generic_whole_gate_renderer_compare.py'):
+                 'generic_whole_gate_renderer_compare.py', 'generic_original_harness_projection.py'):
         loaded = Path(__file__).resolve().parent/name
         require(file_hash(loaded) == harness.field('inputs').field('tools/v8/'+name).text(),
                 '/harness', 'loaded producer/reader differs from exact admitted H')
@@ -95,10 +117,11 @@ class RendererOwner:
     def run(self) -> RendererArtifacts:
         request = self.request
         prepared = request.prepared
+        request_context(request)
         held_lane(self.descriptor)
         session = load_session(request.session, request.session_sha256)
         require('materialization' in session.mapping(), '/session', 'real materialized session required')
-        mode_source(session, request.arm, request.mode, prepared)
+        mode_source(session, request.arm, request.mode, prepared, request.original_harness)
         pair = prepared.warm_pair
         require(pair is not None, '/pair', 'actual retained debug/release workspace pair required')
         assert pair is not None
@@ -198,14 +221,15 @@ class RendererOwner:
 
 
 def prepare_modes(requests: tuple[RendererRequest, ...], descriptor: int) -> tuple[RendererOwner, ...]:
-    """Full path stays blocked before native work until original-off H projection exists."""
+    """Preflight all independent modes and explicit source authorities before native work."""
     require(tuple(request.mode for request in requests) == MODES, '/modes', 'exact ordered three-mode requests required')
     independent_roots(tuple(request.prepared.inputs.root for request in requests))
     require(len({(request.session, request.session_sha256, request.arm) for request in requests}) == 1,
             '/selection', 'three modes must use the same selected H/P/O arm')
     # Validate every mode before beginning any bridge or import process.
     for request in requests:
+        request_context(request)
         session = load_session(request.session, request.session_sha256)
         require('materialization' in session.mapping(), '/session', 'real materialized session required')
-        mode_source(session, request.arm, request.mode, request.prepared)
+        mode_source(session, request.arm, request.mode, request.prepared, request.original_harness)
     return tuple(RendererOwner(request, descriptor) for request in requests)

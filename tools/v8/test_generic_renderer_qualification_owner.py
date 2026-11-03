@@ -22,7 +22,7 @@ class SourceTest(unittest.TestCase):
         names = ('generic_renderer_qualification_owner.py', 'generic_renderer_qualification_specs.py',
                  'generic_setup_bridge.py', 'generic_setup_import.py', 'generic_import_runtime_reader.py',
                  'generic_import_checkpoint_reader.py', 'gate_oracle_child.py', 'generic_renderer_run.py',
-                 'generic_whole_gate_renderer_compare.py')
+                 'generic_whole_gate_renderer_compare.py', 'generic_original_harness_projection.py')
         source: dict[str, Json] = {'o.rs': ['100644', 'a'*40, 'b'*64]}
         effective: dict[str, Json] = {'manifest': {'o.rs': ['100644', 'c'*64]}}
         proof = WorkspaceSourceProof(json.dumps({'tracked_manifest': source}), json.dumps(effective), (), 'DERIVED_OBSERVER')
