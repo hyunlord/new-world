@@ -6,7 +6,11 @@ from pathlib import Path
 from typing import Literal
 
 from generic_build import recheck_workspace_source
-from generic_cli_prepare import CliSetupSourceClosure, setup_source_closure
+from generic_cli_prepare import (
+    CliSetupSourceClosure,
+    PairedSetupSourceClosure,
+    setup_source_closure,
+)
 from generic_cli_products import CliProducts, recheck_products
 from generic_gate import document, require
 from generic_process import file_hash, real_path
@@ -34,7 +38,7 @@ class _HandoffAnchor:
     evidence: tuple[EvidenceAnchor, ...]
     selected: tuple[tuple[Path, str, int], ...]
     source_modes: tuple[tuple[Path, int], ...]
-    immutable: CliSetupSourceClosure
+    immutable: CliSetupSourceClosure | PairedSetupSourceClosure
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,7 +101,17 @@ def _selected(bound: _HandoffAnchor) -> None:
 
 
 def begin_setup_handoff(products: CliProducts, prepared: PreparedSetup) -> SetupProductHandoff:
-    immutable = setup_source_closure(products.builds)
+    return _begin_setup_handoff(products, prepared, setup_source_closure(products.builds))
+
+
+def begin_paired_setup_handoff(products: CliProducts, prepared: PreparedSetup,
+                               immutable: PairedSetupSourceClosure) -> SetupProductHandoff:
+    immutable.check(products.builds)
+    return _begin_setup_handoff(products, prepared, immutable)
+
+
+def _begin_setup_handoff(products: CliProducts, prepared: PreparedSetup,
+                         immutable: CliSetupSourceClosure | PairedSetupSourceClosure) -> SetupProductHandoff:
     recheck_products(products)
     require(prepared.warm_pair is products.builds.candidate and prepared.warm_pair is not None
             and prepared.preparation_kind == 'WARM_BUILD_ANTECEDENTS', '/handoff', 'exact warm candidate pair required')
@@ -234,6 +248,17 @@ def check_runtime_current(result: RuntimeProducts) -> None:
     _ = _history(result.handoff)
     _selected(bound)
     require(generated(bound.prepared) == result.endpoint.after, '/runtime', 'unowned generated-state change')
+    for evidence in bound.evidence:
+        evidence.recheck()
+    bound.immutable.check(bound.products.builds)
+
+
+def check_candidate_setup(handoff: SetupProductHandoff, endpoint: ClippyEndpoint) -> None:
+    """Authenticate actual candidate chain; paired caller owns separate BASE endpoint."""
+    bound = _history(handoff)
+    _chain(bound, endpoint)
+    _selected(bound)
+    require(generated(bound.prepared) == endpoint.after, '/runtime', 'candidate endpoint changed')
     for evidence in bound.evidence:
         evidence.recheck()
     bound.immutable.check(bound.products.builds)

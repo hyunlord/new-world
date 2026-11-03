@@ -338,3 +338,31 @@ def setup_source_closure(result: CliBuilds) -> CliSetupSourceClosure:
     closure = CliSetupSourceClosure(candidate, frozen, original, result)
     closure.check()
     return closure
+
+
+@dataclass(frozen=True, slots=True)
+class PairedSetupSourceClosure:
+    """Original two-arm immutable projection; generated endpoints checked separately."""
+    original: _CliAnchor
+    builds: CliBuilds
+
+    def check(self, expected: CliBuilds | None = None) -> None:
+        require(expected is None or expected is self.builds, '/setup/closure', 'foreign paired builds')
+        require(_cli_anchor(self.builds) is self.original, '/setup/closure', 'original issuer replaced')
+        selected = self.original.prepared.selectors
+        arms = (selected.base.root, selected.candidate.root)
+        for path, source, raw in self.original.closure:
+            excluded = (path/'rust/target', path/'.godot') if path in arms else ()
+            frozen = tuple((name, value) for name, value in raw
+                           if not any(Path(name).is_relative_to(root) for root in excluded))
+            require(_raw(path, source, excluded) == frozen, '/setup/closure', 'paired immutable evidence changed')
+
+
+def paired_setup_source_closure(result: CliBuilds) -> PairedSetupSourceClosure:
+    """Mint before either actual arm starts setup; no replacement snapshots."""
+    recheck_cli_builds(result)
+    original = _cli_anchor(result)
+    closure = PairedSetupSourceClosure(original, result)
+    closure.check(result)
+    original.check_closure()
+    return closure
