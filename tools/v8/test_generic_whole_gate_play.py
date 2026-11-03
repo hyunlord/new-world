@@ -14,18 +14,17 @@ from unittest.mock import patch
 import gate_oracle_child
 from generic_gate import GateContractError
 from generic_play_main_projection import prepare_main_projection
+from generic_play_sources import HistoricalBindings, HistoricalSource, SourceGrants
 from generic_process import atomic_json, file_hash
 from generic_sources import freeze_source
+from generic_whole_gate_play import run
 from generic_whole_gate_play_environment import validate_environment
 from generic_whole_gate_play_join import collect_play
+from generic_whole_gate_play_plan import build_plan
 from generic_whole_gate_play_sources import next_admin, object_manifest
 from mux2_gate_inputs import Node
 from mux2_gate_lock import FD_ENV
 from test_generic_play_owner import OwnerTests
-
-from generic_play_sources import HistoricalBindings, HistoricalSource, SourceGrants
-from generic_whole_gate_play import run
-from generic_whole_gate_play_plan import build_plan
 
 
 class WholePlayTests(unittest.TestCase):
@@ -66,9 +65,14 @@ class WholePlayTests(unittest.TestCase):
         with TemporaryDirectory() as folder:
             base=Path(folder).resolve();root=base/'root';(root/'tools/v8').mkdir(parents=True)
             observer=root/'tools/v8/gate_legacy_observer.gd';_=observer.write_text('fixture observer')
+            # Synthetic H files exercise the real launcher check; session admission stays mocked.
+            harness=base/'harness';(harness/'tools').mkdir(parents=True)
+            launcher=root/'tools/play.sh';_=launcher.write_text('#!/bin/bash\nexit 0\n');launcher.chmod(0o755)
+            selected=harness/'tools/play.sh';_=selected.write_bytes(launcher.read_bytes());selected.chmod(0o755)
             python=Path(sys.executable).resolve();tool=(python,file_hash(python));session_file=base/'session.json';_=session_file.write_text('{}')
             session=Node({'output':str(base/'out'),'environment':{'HOME':str(base)},'arms':{'candidate':{'root':str(root),
-                'source_inputs':{'tools/v8/gate_legacy_observer.gd':file_hash(observer)}}},
+                'source_inputs':{'tools/v8/gate_legacy_observer.gd':file_hash(observer),'tools/play.sh':file_hash(launcher)}}},
+                'harness':{'root':str(harness),'inputs':{'tools/play.sh':file_hash(selected)}},
                 'external_inputs':{str(python):tool[1]},'python':{'path':str(python)}})
             env={'PATH':str(python.parent)+':/bin:/usr/bin','HOME':str(base),'GODOT_BIN':str(python),'CARGO_TARGET_DIR':str(root/'rust/target')}
             sources=tuple(HistoricalSource(v,'a'*40,'b'*64,'c'*64) for v in ('main','m1','v7'))

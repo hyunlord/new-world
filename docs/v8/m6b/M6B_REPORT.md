@@ -849,3 +849,11 @@ p135의 pubmod·정확한 O 해시·import 순서 변경을 선행조건으로, 
 이 초안 시점 V6 실제 실행 전으로 compiler·43세계 emission·off/on·중립성 검증은 NOT_RUN이다. 코드 경로 구현을 전체 세계 검증 또는 Stage0 게시로 바꾸지 않는다. Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL 유지. 증거: [colony-knowledge-fresh-subset-draft/RESULT.md](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/colony-knowledge-fresh-subset-draft/RESULT.md), [독립 검토](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/knowledge-fresh-independent-c-review/REVIEW.md), [동결 patch](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/colony-knowledge-fresh-subset-draft/knowledge-fresh-subset.patch) (SHA9102ce35a62fc82b1b75654d0f3c1b368ea8aeb04787ecf7af2789d1c982559e).
 
 실제 root 통합 검증: focused26개(3.324초), sibling71개(14.350초) PASS. 선택된7파일 all-mode 타입0오류, 원래 명시적 public reexport PLC0414 두 진단만 파일 한정 제외한 Ruff PASS, Rust 형식 검사 PASS. default Ruff 진단은 별도 보존한다. [root focused](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/p136-root-focused.log), [siblings](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/p136-root-siblings.log), [types](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/p136-root-types.log), [default Ruff](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/p136-root-ruff.log).
+
+### S0-p137 — 전체 Python 검증에서 빠진 play harness fixture 보완
+
+p134 전체 Python 실제 종료1(2,666개/4,328.222초, 오류1·skip6)의 유일한 오류는 source-owned play 계획 fixture에 새 harness 필드가 빠진 것이다. production `check_launcher`를 그대로 실행하도록 임시 synthetic H/product의 실제 0755 launcher 두 파일과 정확한 소스 해시를 fixture에 추가했다. 기존 여섯 case·16 child·격리 assertions는 유지하며 native 영수증을 만들거나 입장 검사를 mock으로 우회하지 않는다. import 정렬만 함께 수정했다.
+
+원래 오류 RED 재현 후 실제 root10개 테스트 PASS(2.987초), 독립5개 PASS, root Ruff PASS. 기존 테스트 파일의 all-mode 타입 진단23개는 p134 원본과 메시지별 동일하며 새 진단은 없다. 문서 검사는 올바른 tools/v8 경로로 재실행해 PASS했고, 앞선 잘못된 tools/check_docs.sh 호출127도 로그로 남겼다. [patch/RED/GREEN](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/play-plan-fixture-followup/RESULT.md), [독립 검토](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/play-plan-fixture-followup/INDEPENDENT_A_REVIEW.md), [root 테스트](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/p137-root-tests.log), [타입 비교](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/p137-types-baseline/COMPARISON.json).
+
+이 커밋의 전체 Python 재실행과 V6 native10명령은 다음 검증이며 아직 결과를 주장하지 않는다. Stage0 미게시·엄격한 BASE CORE-off KnowledgeLost FAIL·전체 세계/O 중립성 미완료를 유지한다.

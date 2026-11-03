@@ -227,3 +227,7 @@ Actual p134 Python ended1 with one missing-harness fixture error in2666 tests; a
 ### D0-knowledge-fresh-subset-retains-whole-target-gap
 
 원본17개 테스트의 성공 여부를 계속 요구하면서, founding tick0부터 완전한 이력을 가진 세 fresh-colony 사례43세계만 관측한다. 의도적 사망·상실이나 직접 개입이 포함된 나머지14개 사례는 이 부분집합으로 대체하거나 면제하지 않는다. 양쪽 arm의 전체 colony_knowledge gap과 INCOMPLETE를 유지하고, 새로운 O 바이트는 별도 실제 중립성 qualification 전까지 UNAVAILABLE로 둔다. p135 pubmod/import-order 선행 변경 및 이전 실패 기록을 보존한다. V6 실제 검증은 이 초안에서 NOT_RUN이며 향후 결과를 소급하지 않는다.
+
+### D0-play-plan-fixture-keeps-real-launcher-admission
+
+When launcher admission gains a required source namespace, repair the isolated plan fixture with real temporary equal-byte executable H/product files and explicit inputs. Keep actual check_launcher and original plan assertions active; do not weaken production admission or manufacture process evidence. Preserve original p134 full-suite FAIL and rerun the integrated successor. Existing23 all-mode diagnostics are baseline-equal, not a strict-clean claim.
