@@ -28,7 +28,7 @@ from generic_sources import freeze_source, git, inventory, safe_path
 from mux2_gate_inputs import BRIDGE, INPUT_DIRS, INPUT_FILES, EvidenceError, Json
 from mux2_gate_lock import LOCK
 
-GATE_SHA256 = 'e794a514289ee13b58b76a1745f6b42c5040ae1acb0af20bf43c5261b7e1cc1d'
+GATE_SHA256 = 'ba949251efa089536c44b9883515d017c7254122b4167756833dfd7070d8c523'
 DOCS_SKILLS = ('worldsim-architecture', 'worldsim-godot', 'worldsim-pitfalls', 'worldsim-testing',
                'worldsim-docs-upkeep', 'systematic-debugging', 'verification-before-completion')
 DOCS_TOOLS = {'python3', 'cargo', 'rustc', 'dirname', 'grep', 'wc', 'tr', 'cat', 'tail', 'rm',

@@ -55,6 +55,9 @@ class Fixture:
 
 @final
 class StaticTests(unittest.TestCase):
+    def test_current_gate_source_pin(self) -> None:
+        self.assertEqual(runner.GATE_SHA256,file_hash(Path(runner.__file__).with_name('gate.sh')))
+
     def test_all_exact_commands_cwd_and_component_scope(self) -> None:
         fixture = Fixture(self)
         self.assertEqual(set(runner.COMMANDS), {1, 7, 8, 13, 14, 15, 16, 20, 22, 31, 33, 46, 51})
