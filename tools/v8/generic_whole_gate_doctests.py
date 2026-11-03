@@ -8,7 +8,7 @@ from generic_gate import require, text
 from generic_process import file_hash
 from mux2_gate_inputs import Json, Node
 
-EXPECTED: Final = {'sim-bridge': '78b3818ae6a643af936d3d5e1c3515846358c8bff676f194e99a453bc7012d48', 'sim-core': 'cab3e7ff8861d2753b7b1746776b0908780825c2713e1e304d3acb07820258e7', 'sim-engine': 'ff0e2d53967311c463405e8f2ac3bb410e1f15d3494a12482af3618b0f02a5c2', 'sim-systems': 'aa04ee3c93326380cc81cfcd7e5a5cfc02966b3af6e24f7eb3df213d10285b42', 'sim-test': 'd30dcf483673bc675c00fe2790165c7765b0b00437a71cb368a49e1edf60fad4'}
+EXPECTED: Final = {'sim-bridge': '78b3818ae6a643af936d3d5e1c3515846358c8bff676f194e99a453bc7012d48', 'sim-core': 'cab3e7ff8861d2753b7b1746776b0908780825c2713e1e304d3acb07820258e7', 'sim-engine': 'ff0e2d53967311c463405e8f2ac3bb410e1f15d3494a12482af3618b0f02a5c2', 'sim-systems': 'aa04ee3c93326380cc81cfcd7e5a5cfc02966b3af6e24f7eb3df213d10285b42', 'sim-test': '165dca951834a7d83d7cec4f387f917384ce782b5382ab608b7cd96ce457b693'}
 
 
 def source_closure(root: Path, package: str) -> dict[str, str]:

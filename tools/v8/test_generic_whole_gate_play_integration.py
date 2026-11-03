@@ -4,10 +4,9 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
+from generic_whole_gate_families import evaluate
 from generic_whole_gate_play import QUALIFICATION_INPUTS
 from mux2_gate_inputs import Json, Node
-
-from generic_whole_gate_families import evaluate
 
 
 def pending_rows() -> tuple[Json,...]:
@@ -26,7 +25,11 @@ class PlayIntegrationTests(unittest.TestCase):
                 result=evaluate(session,steps)
             call.assert_called_once_with(session,steps['base',21],steps['candidate',21])
             self.assertEqual(result.errors,());self.assertEqual(result.safety,());self.assertEqual(result.completed,())
-            self.assertEqual(len(result.incomplete),8)
+            expected = tuple(f'ui.play: {arm}: {item}'
+                             for arm in ('base', 'candidate') for item in QUALIFICATION_INPUTS)
+            expected += ('named step13: missing paired original execution',
+                         'named step32: missing paired original execution')
+            self.assertEqual(result.incomplete, expected)
             self.assertEqual(Node(result.coverage[0]).field('status').text(),'INCOMPLETE')
 
     def test_missing_original_arm_does_not_invoke_or_complete(self) -> None:

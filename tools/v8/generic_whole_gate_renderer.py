@@ -13,7 +13,7 @@ from generic_whole_gate_aggregate import LIMIT, aggregate_output
 from generic_whole_gate_perf import Anchors
 from mux2_gate_inputs import Json, Node
 
-ASCII_SHA: Final = 'be72c38d71306fe9f2fe500f4539dbaa016c022b3fd7a1c7ff62394e7b19d76e'
+ASCII_SHA: Final = '3875c7069915139df4202ed1fcb754c742e33323508c0bb8edd9772433333b4d'
 
 
 @dataclass(frozen=True, slots=True)

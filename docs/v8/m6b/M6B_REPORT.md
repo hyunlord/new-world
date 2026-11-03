@@ -817,3 +817,15 @@ p111 BASE step21은 H의 protocol hook이 있는 `tools/play.sh` 대신 BASE의 
 독립13개 순수 검사 통과(0.556초), 작성자 focused/adjacent/qualification32개와 기존 compatibility58개 통과를 확인했다. 검사 범위가 겹치므로 합산하지 않는다. 합동 review worktree에 적용할 때는 테스트 파일 끝의 빈 줄만 정리했으며 동결 원본 patch는 보존했다. 선택된 타입 검사 오류0·Ruff·rustfmt 결과는 외부 draft 범위의 증거이며 기존 제외 fixture까지 type clean이라고 주장하지 않는다. 새 HEAD나 p127 전체 suite 완료를 뜻하지 않는다.
 
 증거: `stage0/ordered-dispatch/colony-items-observer-draft/{RESULT.md,BINDINGS.json,focused-final.log,compat-final.log}`, `colony-items-independent-c-review/REVIEW.md`. 원본 patch SHA는 `8ec98bd44e05630a72c359cc67451269f13ee79a1b619409735def51e9f4fffd`이며 source base는 pristine product가 아닌 기존 합동 review worktree다. 실제 Rust compile·plain/on 열한 세계·BASE 상대 survival·default-off identity·observer neutrality는 NOT_RUN이다. qualification UNAVAILABLE·Stage0 미게시·엄격한 기존 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p134 — 실제 전체 Python 실패와 source pin 후속 검증
+
+p127 원본 전체 discovery는 2,623개를 4,231.050초 실행하여 실패3·오류4·skip6, 실제 종료1이었다. 514개 tracked Python/shell 입력과 HEAD·git status가 전후 동일했다. 전체 실행을 통과로 바꾸지 않는다. appearance·ASCII sibling 오류 두 건은 p128에서 수정했다. 남은 doctest 두 integration fixture는 새 pure classifier 세 개를 격리하며 기존 doctest gap과 whole-world 비완료 assertions를 유지한다. play fixture는 단순 개수 대신 여덟 qualification 메시지와 named13/32의 실제 미실행 메시지를 정확히 비교한다.
+
+sim-test doctest closure의 변경 파일은 probe/colony.rs 하나이며 Rust doc/include 줄은 동일하다. renderer의 ASCII source는 no-op callback 경로 및 기존 함수 본문 동등성을 확인한 뒤 현재 정확한 해시에 연결한다. 소스 변경을 무조건 허용하지 않고 다음 변경에서도 고정 해시 검사를 유지한다. 이는 실제 doctest나 renderer native 통과 증거가 아니다.
+
+증거: `stage0/ordered-dispatch/p127-python-discovery/{RESULT.md,BINDINGS_FINAL.json}`, `p127-python-followup/{SOURCE_REVIEW.json,remaining-failures.patch}`. 실제 전체 실행의 FAIL과 p111 abort247·play UNKNOWN, 엄격한 CORE-off KnowledgeLost FAIL을 유지한다. 전체 재실행과 최종 native·default-off identity는 아직 NOT_RUN이다.
+
+후속 좁은 검증: 동일한 15개 관련 테스트가 수정 전 실패3·오류2를 재현했고, 외부 수정본에서는 15/15 PASS(0.619초)였다. combined Python 코드와 실제 source/lock 경로를 명시적으로 연결했으며 combined tree나 root는 수정하지 않았다. 변경한 네 Python 파일은 baseline·수정본 모두 all-mode 타입 오류0, E9/F 검사 PASS, patch 적용 가능성 검사 PASS였다. 테스트 두 파일의 기존 I001 두 건은 baseline과 동일하며 별도 import 정리로 범위를 넓히지 않았다. 후속 patch SHA-256은 `7acf8697e28836f4baf1afec8d8d30f631a9479e59f280fd480095fdc23c02e8`, 봉인된 `p127-python-followup/BINDINGS.json`은 `5db878a9806a00617e40894940625ae17ce7339a41b1f273e1ca649f1f93db1b`이다. 이 focused PASS가 보존된 전체 discovery FAIL을 대체하지 않는다.
+
+최종 채택용 V2는 V1을 보존하고 이미 변경한 테스트 두 파일의 import 순서만 정리했다. 동일한 15개 focused 테스트 PASS(0.636초), 기본 Ruff PASS, 네 파일 all-mode 타입 오류0을 확인했다. 누적 patch는 `p127-python-followup-v2/remaining-failures.patch` SHA-256 `8c24b497a72e40eafe009c909801395a663d27ecb26e0d1dfeb51611808a663b`, V1→V2 import-only delta는 `01325bf5bffac01a4127740cab5a60cdf3e4a527af71422f285d6c035dc88f7c`, V2 봉인은 `80aaffe4a4192c0454bb4e6335f2144f98d4ef2cd6c29145ad7edde5aa851e39`이다. 생산 코드의 고정값·검증 의미와 source review 근거는 V1과 같다.

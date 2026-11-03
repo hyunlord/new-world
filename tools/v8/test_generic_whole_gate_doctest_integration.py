@@ -4,11 +4,12 @@ from pathlib import Path
 from unittest.mock import patch
 
 import generic_process
-from generic_whole_gate_doctests import EXPECTED, source_closure
 from generic_whole_gate_workspace import evaluate_family
 from generic_whole_gate_workspace_plan import MANIFESTS
 from mux2_gate_inputs import Json, Node
 from test_generic_whole_gate_workspace import fixture
+
+from generic_whole_gate_doctests import EXPECTED, source_closure
 
 ROOT = Path(generic_process.__file__).resolve().parents[2]
 
@@ -26,6 +27,9 @@ class IntegrationTests(unittest.TestCase):
         stage: dict[str, Json] = {'step': 4, 'environment': {}, 'argv': ['bash', '-c',
                  'cd rust && cargo test --workspace --no-fail-fast -- --test-threads=8']}
         with patch('generic_whole_gate_workspace.aggregate_output', return_value=(raw, 123)), \
+             patch('generic_whole_gate_workspace.classify_core_pure', return_value=[]), \
+             patch('generic_whole_gate_workspace.classify_core_material', return_value=[]), \
+             patch('generic_whole_gate_workspace.classify_config_pure', return_value=[]), \
              patch('generic_whole_gate_workspace.classify_routes', return_value=[]):
             result = evaluate_family(session, Node(stage | {'arm': 'base'}), Node(stage | {'arm': 'candidate'}))
         self.assertEqual(result['scope'], 'WORKSPACE_AGGREGATE_ACCOUNTING_ONLY')
@@ -51,6 +55,9 @@ class IntegrationTests(unittest.TestCase):
         stage: dict[str, Json] = {'step': 4, 'environment': {}, 'argv': ['bash', '-c',
                  'cd rust && cargo test --workspace --no-fail-fast -- --test-threads=8']}
         with patch('generic_whole_gate_workspace.aggregate_output', return_value=(raw, 123)), \
+             patch('generic_whole_gate_workspace.classify_core_pure', return_value=[]), \
+             patch('generic_whole_gate_workspace.classify_core_material', return_value=[]), \
+             patch('generic_whole_gate_workspace.classify_config_pure', return_value=[]), \
              patch('generic_whole_gate_workspace.classify_routes', return_value=[]):
             result = evaluate_family(session, Node(stage | {'arm': 'base'}), Node(stage | {'arm': 'candidate'}))
         for arm in ('base', 'candidate'):
