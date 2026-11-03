@@ -23,6 +23,8 @@ def load_session(path: Path, expected_sha256: str) -> Node:
     session = document(path.read_text())
     session.field('schema').equals('whole_gate_session.v1')
     if 'materialization' in session.mapping():
+        from generic_whole_gate_required_tools import check_required_path_tools
+        check_required_path_tools(session)
         from generic_whole_gate_qualification import qualification
         session.field('qualification').equals(qualification(session))
         from generic_whole_gate_source import check_materialization

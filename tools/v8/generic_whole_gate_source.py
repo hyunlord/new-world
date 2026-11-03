@@ -187,13 +187,17 @@ def prepare_session(config: Path) -> Path:
                  'WORLDSIM_MUX2_LANE_FD', 'WORLDSIM_TEST_SETTINGS_DIR'}
     require(not set(environment) & forbidden, '/environment', 'legacy pass selector or owner override')
     require('GODOT_BIN' in environment and 'PATH' in environment, '/environment', 'explicit Godot and tool PATH required')
+    from generic_whole_gate_required_tools import validate_search_path
+    validate_search_path(environment['PATH'])
     for command, expected in (('python3', path(node.field('python').field('path'))),
                               ('bash', path(node.field('bash').field('path'))),
                               ('cargo', selection.cargo), ('rustc', selection.rustc)):
         resolved = shutil.which(command, path=environment['PATH'])
         require(resolved is not None and Path(resolved).resolve() == expected, command, 'PATH tool differs from selected tool')
-    prepared = prepare_cli(selection)
     external_original = {name: Node(value).text() for name, value in node.field('external_inputs').mapping().items()}
+    from generic_whole_gate_required_tools import required_path_tools
+    required_tools = required_path_tools(environment['PATH'], external_original)
+    prepared = prepare_cli(selection)
     require(environment['GODOT_BIN'] in external_original, '/godot', 'Godot requires explicit executable hash')
     external_modes = {name: Path(name).lstat().st_mode for name in external_original}
     for name, expected in external_original.items():
@@ -239,7 +243,7 @@ def prepare_session(config: Path) -> Path:
         'declarations': materialized.field('declarations').value,
         'materialization': {'path': str(receipt), 'sha256': file_hash(receipt)},
         'output': str(selection.output), 'python': node.field('python').value, 'bash': node.field('bash').value,
-        'environment': node.field('environment').value,
+        'environment': node.field('environment').value, 'required_path_tools': required_tools,
         'external_inputs': {name: value for name, value in external.items()},
         'external_modes': {name: Path(name).lstat().st_mode for name in external},
         'registry': {'path': str(selection.harness_root/'tools/v8/gate_fixtures.json'),
@@ -251,6 +255,8 @@ def prepare_session(config: Path) -> Path:
     require(file_hash(config) == config_hash, '/config', 'selector changed during materialization')
     if 'observer_qualification' in node.mapping():
         session['observer_qualification'] = node.field('observer_qualification').value
+    from generic_whole_gate_required_tools import check_required_path_tools
+    check_required_path_tools(Node(session))
     from generic_whole_gate_qualification import qualification
     session['qualification'] = qualification(Node(session))
     target = selection.output/'session.json'

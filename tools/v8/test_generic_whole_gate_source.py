@@ -15,8 +15,6 @@ import test_generic_cli_prepare as fixtures
 from generic_build import Overlay
 from generic_cli_prepare import prepare_cli
 from generic_gate import document
-from mux2_gate_inputs import Node
-
 from generic_process import file_hash
 from generic_whole_gate_contract import load_session
 from generic_whole_gate_source import (
@@ -24,6 +22,7 @@ from generic_whole_gate_source import (
     materialize,
     prepare_session,
 )
+from mux2_gate_inputs import Node
 
 
 class MaterializationTests(unittest.TestCase):
@@ -39,6 +38,9 @@ class MaterializationTests(unittest.TestCase):
         python = Path(sys.executable).resolve()
         for name, target in (('python3', python), ('cargo', selected.cargo), ('rustc', selected.rustc)):
             (bindings/name).symlink_to(target)
+        from generic_whole_gate_required_tools import REQUIRED
+        for name in REQUIRED:
+            (bindings/name).symlink_to(selected.cargo)
         row = document(overlay.manifest.read_text()).field('files').array()[0]
         role = home/'roles.json'
         _ = role.write_text(json.dumps({'schema':'whole_gate_layers.v1', 'product_sha':selected.base.source_sha,

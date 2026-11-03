@@ -747,3 +747,9 @@ V2는 실제 disk anchor와 aggregate·source 검사를 통과하는 공개 coll
 실제 workspace build pair를 받는 실행 owner를 추가했다. 기존 bridge recipe, 원본 두 import의 종료 기록과 checkpoint, generator·ASCII·Godot 세 producer, 원시 결과 비교를 순서대로 연결한다. 실패 시 caller의 lane을 해제하지 않고 반환된 bridge/import/process 기록을 보존한다. 마지막 source·build history·process 영수증·artifact 검사가 끝나야 ordinary 완료 기록을 생성하며, 이 기록도 qualification NOT_RUN·matrix UNAVAILABLE다. original_off의 H 전용 투영은 별도 미완료로 남겨 세 mode 실행 전에 거부한다.
 
 독립37개와 루트 확대63개 종료0(72.791초), 새6개 Python 파일 엄격한 타입0오류·기본 Ruff·diff 통과다. 실제 run() 순서 검사는 native/admission 경계를 명시적으로 대체한 합성 검사다. 기존 작은 shell child 검사를 함께 실행했으나 실제 Cargo·Godot·관측기 중립성 증거로 계산하지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-root-renderer-owner-01.log`, `whole-gate-root-renderer-owner-types-01.log`, `whole-gate-renderer-owner-review/REVIEW_V2.md`. Rust/data/O 변경 없이 Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p124 — 필수 Cargo 보조 도구를 실행 전에 검증
+
+실제 p111 debug 실패에서 빠진 rustdoc를 비롯해 rustfmt·cargo-fmt·cargo-clippy·clippy-driver를 selector의 PATH로 해석하고, 실행 가능한 일반 파일·canonical 경로·명시적 외부 해시를 준비 전에 검사한다. 세션에 선택 경로를 저장해 이후 alias가 다른 bound 실행 파일로 바뀌는 경우도 거부한다. 독립 검토가 발견한 상대·빈 PATH 항목의 cwd 의존성은 도구 검색 전 전체 항목을 절대경로로 제한해 수정했다. 환경 allowlist는 넓히지 않았다. 이전 materialized 세션은 새 필수 binding이 없으므로 새 H로 재준비해야 하며, 실행 중인 동결 p111에는 소급 적용하지 않는다.
+
+루트 회귀51개 종료0(58.689초), 변경5개 Python 파일 엄격한 타입0오류·기본 Ruff·diff 통과다. 실제 selector를 읽기만 한 검사에서 p111은 rustdoc 누락으로 거부되고 준비된 p121은 다섯 canonical 경로와 해시를 통과했다. 이는 PATH binding 검사이며 실행·materialization·native qualification이 아니다. 증거: `stage0/ordered-dispatch/whole-gate-root-required-tools-01.log`, `whole-gate-root-required-tools-types-01.log`, `whole-gate-required-tools-actual-selectors.log`, `whole-gate-required-tools-review/REVIEW_V2.md`. Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
