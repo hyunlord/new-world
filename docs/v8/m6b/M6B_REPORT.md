@@ -699,3 +699,9 @@ engine_bridge_ffi의 원래22개 사례는 빈 세계에서 BuildingStampSystem�
 기존 probe/perf 빌드 검사를 재사용하고 debug sim_bridge의 정확한 recipe·source·Cargo artifact 형식을 검사하도록 확장했다. probe와 bridge의 원본·파생 소스 및 제품 root가 일치해야 하며, 선택된 Godot는 원본 selector와 session의 경로·외부 해시가 모두 같아야 한다. 첫 검토에서 존재하지 않는 selector 필드 사용을 발견했고, 후속 검토에서 session 경로 일치 누락도 재현해 수정했다. 이 두 실패는 외부 V2/V3 기록에 남겼다.
 
 V4의 실제 p111 selector 읽기 검증과 독립26개 검사, 루트 합동47개(1.270초), 변경6개 Python 파일의 엄격한 타입0오류·Ruff·diff가 통과했다. 루트 첫 명령의 잘못된 테스트 모듈명 오류는 별도 로그로 보존했다. retained 실제 workspace Cargo 산출물은 target 형식만 뒷받침하며, 전용 bridge 빌드 recipe의 실제 실행은 미검증이다. import/cache/runtime 인증과 세 모드 실행은 여전히 빠져 있어 renderer matrix는 UNAVAILABLE다. Rust/data와 O는 변경하지 않았다. 증거: `stage0/ordered-dispatch/whole-gate-root-renderer-builds-v4-{01,02}.log`, `whole-gate-root-renderer-builds-types-01.log`, `renderer-prerequisites-independent-review/V4_REVIEW.md`, `whole-gate-renderer-admission-p112-v4`. Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p117 — 세계를 실행하지 않는 규칙 값 테스트 분류
+
+sim-core의 `baseline_matches_v7_final` target 두 사례는 규칙 값을 생성하고 고정 dump와 비교하며 세계를 만들거나 tick하지 않는다. 두 원본 사례 전체와 성공 상태, 정의·호출 경로·dump 12개 해시가 모두 일치할 때만 이 target 하나를 미분류 목록에서 제거한다. 다른 sim-core library 및 nested child 경로에는 적용하지 않으며 세계 안전성이나 전체 통과를 부여하지 않는다.
+
+루트 합동34개 종료0(0.078초), 변경 Python 세 파일의 엄격한 타입0오류·Ruff·diff를 확인했다. 첫 타입 검사에서 테스트 main 반환값 미사용1건을 수정한 기록도 보존했다. Rust/data/O 변경과 새 native 실행은 없다. 증거: `stage0/ordered-dispatch/whole-gate-root-core-pure-{01,02}.log`, `whole-gate-root-core-pure-types-{01,02}.log`, `whole-gate-core-pure-classification/REVIEW.md`. Stage0 미게시와 엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
