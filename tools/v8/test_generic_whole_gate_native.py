@@ -118,6 +118,7 @@ class WholeNativeTests(unittest.TestCase):
         with patch('generic_whole_gate_workspace.evaluate_family', return_value=accounting()), \
              patch('generic_whole_gate_colony_ffi.evaluate_family', return_value={'status': 'PASS', 'safety': [], 'coverage': []}), \
              patch('generic_whole_gate_baseline_observer.evaluate_family', return_value={'safety': [], 'coverage': []}), \
+             patch('generic_whole_gate_twins.evaluate_family', return_value={'safety': [], 'coverage': []}), \
              patch('generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults', return_value={'safety': [], 'coverage': []}), \
              patch('generic_whole_gate_appearance.evaluate_appearance',
                    return_value={'status':'INCOMPLETE','safety':[],'coverage':[]}), \

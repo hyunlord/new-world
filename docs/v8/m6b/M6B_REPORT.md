@@ -733,3 +733,11 @@ H의 후손인 결함 후보가 H/O 파일을 그대로 포함하면 적용할 d
 O 집합은62개로 바뀌므로 이전 O 실행 증거를 재사용하지 않는다. 새 matrix 항목은 UNAVAILABLE/NOT_RUN이며 Rust compile·off/on 중립성·실제 공개 수집 경로 실행은 아직 NOT_RUN이다. 별도 runtime 계획에서 원본/off에는 원시 상태 witness가 없다는 한계도 남겼다.
 
 독립 조합40개와 루트159개 종료0(48.275초), 새 생산·fixture·테스트 및 관련8개 Python 파일의 엄격한 타입0오류, Ruff·rustfmt·diff 통과다. 첫159개 검사의 기존 독립 fixture seam 누락1건과 새 코드 타입5건은 수정하고 실패 로그를 보존했다. 기존 fixture 두 개의 타입99건(70+29)은 정확한 변경 전 SHA와 비교해 새 진단0·해결0임을 확인했으며 타입 clean으로 주장하지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-root-colony-ffi-{01,02}.log`, `whole-gate-root-colony-ffi-types-{01,02}.log`, `colony-ffi-integration-independent-review/REVIEW.md`, `whole-gate-fixture-types-baseline-audit/REVIEW.md`. Stage0 미게시·CORE-off KnowledgeLost FAIL은 유지한다.
+
+### S0-p122 — library twin 세계 여덟 개의 원본 실행 순서 연결
+
+두 원본 library 테스트가 만드는 baseline/colony의 ordinary·observed run과 primary·determinism twin을 실제 output 묶음과 소스에서 보장되는 선후 관계로 연결했다. 전역 counter의 연속성이나 BASE/candidate의 숫자 일치는 요구하지 않는다. 여덟 세계 모두 전체 이력·survival·KnowledgeLost 규칙을 적용하며 나머지 library 세계와 controlled debug-kill 의무는 미완료로 남긴다. 이 두 테스트를 선택하지 않는 step17은 지원하지 않고 steps4/5만 연결한다. 두 run 모두 관측 환경이 켜져 있으므로 off/on 중립성 증거가 아니다.
+
+V2는 실제 disk anchor와 aggregate·source 검사를 통과하는 공개 collect/evaluate/dispatch fixture를 포함한다. 루트73개 종료0(21.570초), 관련8개 Python 파일 엄격한 타입0오류·Ruff·diff 통과다. 독립 검토에서 각 세계의 survival 퇴행 여덟 건을 모두 거부하고 counter 간격·교차 실행을 허용함을 확인했다. 기존 독립 fixture의 새 sibling seam도 보완했으며 생산 검사기를 완화하지 않았다. 증거: `stage0/ordered-dispatch/whole-gate-root-twins-01.log`, `whole-gate-root-twins-types-01.log`, `twin-mirror-independent-review/V2_REVIEW.md`. Rust/data/O와 기존 미분류 목록은 바꾸지 않았다.
+
+동결 p111 실제 BASE debug 단계는3295초 뒤 종료101이었다. Cargo target header154개에서 `test … FAILED` 행은 없지만, 다섯 doctest 모두 `rustdoc` ENOENT로 실행되지 않아 단계가 실패했다. process 영수증 SHA는 `a42cd885512cea0500b653b8c663c0c985400cbf980ca3f3cbc16e9f357a4402`다. 기존 실행 입력은 보존하고 successor 도구 검증을 보완 중이다. 이는 gameplay 결함 후보 증명이 아니며, 전체 gate 완료·Stage0 게시·엄격한 CORE-off KnowledgeLost FAIL 상태는 달라지지 않는다.
