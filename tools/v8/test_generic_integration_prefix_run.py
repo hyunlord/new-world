@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 import generic_cargo_child
 import generic_integration_prefix_run as runner
+from gate_legacy_test_fixture import legacy_gate_bytes
 from generic_gate import GateContractError
 from generic_integration_accounting import PARENT, account36
 from generic_library_run import (
@@ -52,7 +53,8 @@ class RuntimeTests(unittest.TestCase):
         _ = (target/'Cargo.toml').write_text('synthetic manifest')
         _ = (target/f'tests/{name}.rs').write_bytes((ROOT/f'rust/crates/sim-test/tests/{name}.rs').read_bytes())
         for script in ('gate.sh', 'data_only_ext.sh', 'godot_bin.sh'):
-            _ = (root/'tools/v8'/script).write_bytes((ROOT/'tools/v8'/script).read_bytes())
+            _ = (root/'tools/v8'/script).write_bytes(legacy_gate_bytes() if script == 'gate.sh' and step == 28
+                else (ROOT/'tools/v8'/script).read_bytes())
         binary = base/'integration-test'
         listing = ('selected_pack_child: test\n'+PARENT+': test\n\n2 tests, 0 benchmarks\n') if step == 36 else 'mechanism: test\n\n1 test, 0 benchmarks\n'
         output = NESTED if step == 36 else ('\nrunning 1 test\ntest mechanism ... '+('FAILED' if fail else 'ok')+
@@ -95,7 +97,11 @@ raise SystemExit(subprocess.call([*runner,{str(binary)!r},{f'--test-threads={thr
             request = self.fixture(Path(temporary).resolve(), 36)
             _ = self.enterContext(patch.object(runner, 'LOCK', Path(temporary).resolve()/'lane.lock'))
             gate = request.root/'tools/v8/gate.sh'
-            _ = gate.write_text(gate.read_text().replace(runner.GATE28, BASE0_GATE28))
+            current = gate.read_text()
+            original28 = [line for line in current.splitlines() if line.startswith('step 28 ')]
+            self.assertEqual(len(original28), 1)
+            self.assertNotEqual(original28[0], BASE0_GATE28)
+            _ = gate.write_text(current.replace(original28[0], BASE0_GATE28, 1))
             request = replace(request, inputs=tuple((name, file_hash(request.root/name)) for name, _ in request.inputs))
             _ = runner.checked_request(request, 36)
             _ = gate.write_text(gate.read_text().replace('step 36 data_only_ext bash ', 'step 36 data_only_ext sh '))
@@ -109,7 +115,10 @@ raise SystemExit(subprocess.call([*runner,{str(binary)!r},{f'--test-threads={thr
                 request = self.fixture(Path(temporary).resolve(), 28)
                 _ = self.enterContext(patch.object(runner, 'LOCK', Path(temporary).resolve()/'lane.lock'))
                 gate = request.root/'tools/v8/gate.sh'
-                _ = gate.write_text(gate.read_text().replace(runner.GATE28, changed))
+                current = gate.read_text()
+                self.assertEqual(current.splitlines().count(runner.GATE28), 1)
+                self.assertNotEqual(runner.GATE28, changed)
+                _ = gate.write_text(current.replace(runner.GATE28, changed, 1))
                 request = replace(request, inputs=tuple((name, file_hash(request.root/name)) for name, _ in request.inputs))
                 with self.assertRaisesRegex(GateContractError, 'original28 changed'):
                     _ = runner.checked_request(request, 28)

@@ -16,11 +16,12 @@ from generic_observations import Observation, keys, ordinary_pair
 from generic_process import ProcessResult, ProcessSpec, atomic_json, execute, file_hash
 from generic_sources import inventory
 from generic_ui_companion import native_commands
-from generic_ui_history import SaveLink, UIEvidence, join_visibility_history
 from generic_ui_observations import UIInstance, require_fresh_history
-from generic_ui_receipts import CheckpointPlan, InstancePlan, UIPlan, validate_ui
 from mux2_gate_inputs import BRIDGE, Json, Node
 from mux2_gate_visual import validate_visibility
+
+from generic_ui_history import SaveLink, UIEvidence, join_visibility_history
+from generic_ui_receipts import CheckpointPlan, InstancePlan, UIPlan, validate_ui
 
 TARGETS: Final = (('day1_noon',1,12,240),('day1_night',1,22,840),
                  ('day20_noon',20,12,27600),('day20_night',20,22,28200))
@@ -88,9 +89,8 @@ def loader_context(value: Json) -> Json:
     return value
 
 
-def plan(spec: ProcessSpec, rows: tuple[Node,...], generator: bool) -> UIPlan:
+def lifecycle_plan(arm: Path, rows: tuple[Node,...], generator: bool) -> tuple[tuple[CheckpointPlan,...],tuple[tuple[InstancePlan,...],...]]:
     require(len(rows)==4,'/plan','four scenes required')
-    arm=spec.output_root.parent
     checkpoints: list[CheckpointPlan]=[]
     instances: list[tuple[InstancePlan,...]]=[]
     if generator:
@@ -113,6 +113,11 @@ def plan(spec: ProcessSpec, rows: tuple[Node,...], generator: bool) -> UIPlan:
                 checkpoints.append(CheckpointPlan('zoom_complete',index,2,tick,json.dumps({'zoom':zoom,'saved_tick':float(tick),'scene_id':target[0]})))
             checkpoints.append(CheckpointPlan('loaded_terminal',index,2,tick,json.dumps(loader_context(row.value)),True))
             instances.append((InstancePlan('bootstrap',20261010,0,0),InstancePlan('load',0,tick,tick)))
+    return tuple(checkpoints),tuple(instances)
+
+
+def plan(spec: ProcessSpec, rows: tuple[Node,...], generator: bool) -> UIPlan:
+    checkpoints,instances=lifecycle_plan(spec.output_root.parent,rows,generator)
     producer='visibility.generator' if generator else 'visibility.loader'
     return UIPlan(producer,producer+':'+str(spec.output_root),spec,'res://'+(GENERATOR if generator else LOADER),
                   HELPER,tuple(checkpoints),tuple(instances))

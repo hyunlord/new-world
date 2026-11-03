@@ -13,8 +13,9 @@ from generic_ui_observations import (
     require_fresh_history,
     unsigned_string,
 )
-from generic_ui_receipts import UIPlan, validate_ui
 from mux2_gate_inputs import Node
+
+from generic_ui_receipts import UIPlan, ValidatedUI, validate_ui
 
 
 @dataclass(frozen=True)
@@ -96,6 +97,20 @@ def join_visibility_history(generator: UIEvidence, loader: UIEvidence, link: Sav
     bridge_hash = dict(generator.plan.process.inputs).get(link.bridge_input)
     require(bridge_hash is not None and dict(loader.plan.process.inputs).get(link.bridge_input) == bridge_hash,
             "/history", "native products differ or are unbound")
+    assert bridge_hash is not None
+    _input(loader, link.save, link.save_sha256)
+    _input(loader, link.manifest, link.manifest_sha256)
+    validated=validate_ui(loader.sidecar,loader.sidecar_sha256,loader.plan,loader.process,loader.process_sha256)
+    return join_validated_history(source,destination,validated,loader.plan.checkpoints[link.loaded_checkpoint].node_slot,
+                                  link,bridge_hash,generator.sidecar_sha256,generator.process_sha256,
+                                  loader.sidecar_sha256,loader.process_sha256)
+
+
+def join_validated_history(source: Node, destination: Node, validated: ValidatedUI, loader_slot: int,
+                           link: SaveLink, bridge_hash: str, generator_sidecar_sha256: str,
+                           generator_process_sha256: str, loader_sidecar_sha256: str,
+                           loader_process_sha256: str) -> JoinedHistory:
+    """Join native prefix semantics after the caller authenticates both producers and save inputs."""
     require(link.link_checkpoint == link.prefix_checkpoint + 1, "/history", "save link is not adjacent to prefix")
     prefix_context, prefix = _checkpoint(source, link.prefix_checkpoint, "save_prefix")
     saved_context, saved = _checkpoint(source, link.link_checkpoint, "save_link")
@@ -115,8 +130,6 @@ def join_visibility_history(generator: UIEvidence, loader: UIEvidence, link: Sav
     loaded_context.field("save_sha256").equals(link.save_sha256)
     loaded_context.field("manifest_path").equals(str(link.manifest))
     loaded_context.field("manifest_sha256").equals(link.manifest_sha256)
-    _input(loader, link.save, link.save_sha256)
-    _input(loader, link.manifest, link.manifest_sha256)
     manifest_raw = link.manifest.read_bytes()
     require(hashlib.sha256(manifest_raw).hexdigest() == link.manifest_sha256, "/history", "manifest changed during read")
     rows = document(manifest_raw.decode("utf-8")).field("scenes").array()
@@ -134,16 +147,15 @@ def join_visibility_history(generator: UIEvidence, loader: UIEvidence, link: Sav
             (prefix.seed, prefix.state.terminal_tick, prefix.state.terminal_tick, prefix.terminal_agent_ids,
              prefix.terminal_agent_ids, prefix.state.knowledge_enabled, prefix.state.losses, prefix.chronicle_cursor),
             "/history", "loaded prefix census, capability, tick or cumulative history differs")
-    slot = loader.plan.checkpoints[link.loaded_checkpoint].node_slot
-    validated = validate_ui(loader.sidecar, loader.sidecar_sha256, loader.plan, loader.process, loader.process_sha256)
+    slot = loader_slot
     terminal = validated.instances[slot][initial.ordinal]
     require(terminal.history_gap == "initial_history_unauthenticated" and not terminal.history_complete,
             "/history", "loaded continuation has native corruption")
     require(terminal.state.losses[:len(prefix.state.losses)] == prefix.state.losses,
             "/history", "loaded continuation lost authenticated prefix")
     evidence = {"schema_version": 1, "kind": "authenticated_visibility_save_prefix",
-                "generator_sidecar_sha256": generator.sidecar_sha256, "generator_process_sha256": generator.process_sha256,
-                "loader_sidecar_sha256": loader.sidecar_sha256, "loader_process_sha256": loader.process_sha256,
+                "generator_sidecar_sha256": generator_sidecar_sha256, "generator_process_sha256": generator_process_sha256,
+                "loader_sidecar_sha256": loader_sidecar_sha256, "loader_process_sha256": loader_process_sha256,
                 "save_sha256": link.save_sha256, "manifest_sha256": link.manifest_sha256,
                 "save_path": str(link.save), "manifest_path": str(link.manifest), "scene_id": link.scene_id,
                 "prefix_checkpoint": link.prefix_checkpoint, "link_checkpoint": link.link_checkpoint,

@@ -24,10 +24,11 @@ from generic_ui_observations import (
     require_fresh_history,
     unsigned_string,
 )
-from generic_ui_receipts import CheckpointPlan, InstancePlan, UIPlan, validate_ui
 from generic_ui_visibility_run import freeze
 from mux2_gate_inputs import BRIDGE, Node
 from mux2_gate_visual import validate_why_checks
+
+from generic_ui_receipts import CheckpointPlan, InstancePlan, UIPlan, validate_ui
 
 PARENT: Final = 'tools/v8/mux2_why_input_test.gd'
 LOCALE: Final = 'tools/v8/mux21_why_locale_test.gd'
@@ -75,16 +76,23 @@ def mechanism(raw: Node) -> tuple[int,tuple[int,int,int]]:
     return integer(checkpoints[1].field('clock').field('tick')),(args[0],args[1],args[2])
 
 
-def plan(spec: ProcessSpec, variant: str, horizon: int, args: tuple[int,int,int]) -> UIPlan:
-    require(variant in VARIANTS and type(horizon) is int and horizon>=0,'/plan','invalid Why plan')
+def lifecycle_plan(horizon: int, args: tuple[int,int,int]) -> tuple[tuple[CheckpointPlan, ...], tuple[tuple[InstancePlan, ...], ...]]:
+    """Existing exact Why intervention lifecycle independent of native transport."""
+    require(type(horizon) is int and horizon>=0,'/plan','invalid Why plan')
     context={'method':'on_building_placed','args':list(args)}
     checkpoints=(CheckpointPlan('bootstrap',0,1,0),CheckpointPlan('ordinary_prefix',0,1,horizon),
                  CheckpointPlan('before_intervention',0,1,horizon,json.dumps(context)),
                  CheckpointPlan('intervention_queued',0,1,horizon,json.dumps({**context,'accepted':True})),
                  CheckpointPlan('after_intervention_tick',0,1,horizon+1),
                  CheckpointPlan('terminal',0,1,horizon+1,releases_node=True))
+    return checkpoints, ((InstancePlan('bootstrap',20261010,0,horizon+1),),)
+
+
+def plan(spec: ProcessSpec, variant: str, horizon: int, args: tuple[int,int,int]) -> UIPlan:
+    require(variant in VARIANTS,'/plan','invalid Why variant')
+    checkpoints, instances = lifecycle_plan(horizon,args)
     return UIPlan('why','why.'+variant+':'+str(spec.output_root),spec,'res://'+PARENT,HELPER,
-                  checkpoints,((InstancePlan('bootstrap',20261010,0,horizon+1),),))
+                  checkpoints,instances)
 
 
 @boundary

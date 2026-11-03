@@ -319,10 +319,16 @@ def verify_product(product: Product) -> None:
     require(sha256(product.binary) == product.binary_sha256, 'binary changed')
     require(sha256(product.build_receipt) == product.build_receipt_sha256, 'build receipt changed')
     receipt = parse(product.build_receipt.read_text(), str(product.build_receipt))
-    identity(receipt['source_sha'], product.source_sha, 'build source')
-    identity(receipt['binary_sha256'], product.binary_sha256, 'build binary')
-    identity(receipt['profile'], 'release', 'build profile')
-    identity(receipt['exit_code'], 0, 'build exit')
+    if receipt.get('schema') == 'whole_gate_step.v1':
+        from mux2_gate_inputs import Node
+
+        from generic_whole_gate_bench_stage import verify_stage
+        verify_stage(product, Node(dict(receipt)))
+    else:
+        identity(receipt['source_sha'], product.source_sha, 'build source')
+        identity(receipt['binary_sha256'], product.binary_sha256, 'build binary')
+        identity(receipt['profile'], 'release', 'build profile')
+        identity(receipt['exit_code'], 0, 'build exit')
     _ = process_inputs(product)
 
 

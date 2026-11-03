@@ -9,7 +9,6 @@ Products contain Godot executables and complete effective project/input inventor
 including the bridge. This component never supplies build or publication authority.
 """
 import hashlib
-import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Final
@@ -22,9 +21,17 @@ from generic_process import ProcessResult, ProcessSpec, atomic_json, execute, fi
 from generic_sources import inventory
 from generic_ui_companion import native_commands
 from generic_ui_observations import UIInstance, require_fresh_history
-from generic_ui_receipts import CheckpointPlan, InstancePlan, UIPlan, validate_ui
 from mux2_gate_inputs import BRIDGE, Json, Node
 
+from generic_ui_fixed_lifecycle import (
+    BOOT_SEED,
+    NO_NATIVE,
+    CommandPlan,
+    lifecycle_plan,
+)
+from generic_ui_receipts import UIPlan, validate_ui
+
+__all__ = ['BOOT_SEED', 'NO_NATIVE', 'lifecycle_plan']
 
 @dataclass(frozen=True, slots=True)
 class Fixture:
@@ -41,8 +48,6 @@ FIXTURES: Final = {
     'render.trees': Fixture('mart21_trees_test.gd', 'MART21_TREES', 600),
 }
 HELPER: Final = 'res://tools/v8/gate_ui_observer.gd'
-NO_NATIVE: Final = 'geometry and synthetic marker DTOs; SubViewport/World2D are not WorldSim'
-BOOT_SEED: Final = 20261010
 # Pins are inspected workload/observer semantics, not a caller-controlled PASS flag.
 PINS: Final[dict[str, str]] = {'tools/v8/mux21_toast_test.gd': 'cfb838663d66f01093850284b1f7052dbeb48612b0e4bf21191f1ac7da7e9429', 'tools/v8/mux21_layout_test.gd': '18082c2a49bcdeb19acfd124b73417740ad4855ccfbc9782f0334f0f9dde0834', 'tools/v8/mart2_ground_test.gd': '168b8bf1fa9a26263a30e7310fa144a24bbcde2f8385bc83606fe96ecd293789', 'tools/v8/mart2_people_test.gd': '699fec4f7d08a416ce8faa73478df2dbb0f0cc06d58ce9de40064f86be519994', 'tools/v8/mart21_trees_test.gd': '32b9dbdb247170653de40faf25578cffc83f68f26155fba064745285c59f0271', 'tools/v8/gate_ui_observer.gd': 'b0f2ef8c577d777aff9442a55bf3f8ad29c5a5898011d0b331a24db4c9dba967', 'scripts/core/main_bootstrap.gd': '1801e3bb6cac5d4e6085ae804648d86bca17d073f2d09d17d882dec719d9e1f5', 'scripts/ui/mux/settings_store.gd': '70ced6c709f8d63f60a3d3e04127db6432eaf86972a69a3a4a9f618e642907ec', 'rust/crates/sim-bridge/src/ffi/engine_build.rs': '7b90e7dd8d2ae713bf88721fabffc478df1cfe46adbed0ac83d667da5129b892', 'rust/crates/sim-systems/src/worldgen/mod.rs': '11525a81664d3206c72754f3772d1ba4e61cd3f9dbe2ab611be4e4124378b601'}
 CommandRows = tuple[tuple[int, str, int], ...]
@@ -53,38 +58,19 @@ def definition(producer: str) -> Fixture:
     return FIXTURES[producer]
 
 
+
+
 def make_plan(producer: str, spec: ProcessSpec, bootstrap_tick: int) -> UIPlan:
-    """Freeze lifecycle structure; only actual discarded-bootstrap horizon varies."""
+    """Bind the unchanged fixed lifecycle to the original direct process."""
     fixture = definition(producer)
-    require(type(bootstrap_tick) is int and bootstrap_tick >= 0, '/bootstrap', 'invalid horizon')
-    checkpoints: list[CheckpointPlan] = [CheckpointPlan('bootstrap', 0, 1, 0)]
-    instances = [InstancePlan('bootstrap', BOOT_SEED, 0, bootstrap_tick)]
-    if producer == 'marker.layout':
-        require(bootstrap_tick == 0, '/layout', 'synthetic fixture has no native horizon')
-        return UIPlan(producer, producer+':'+str(spec.output_root), spec, 'res://tools/v8/'+fixture.script,
-                      HELPER, (), (), 'synthetic_renderer_only', no_native_reason=NO_NATIVE)
-    if producer == 'toast':
-        require(bootstrap_tick == 0, '/toast', 'toast must remain at zero ticks')
-    else:
-        checkpoints.append(CheckpointPlan('before_colony_reset', 0, 1, bootstrap_tick))
-        kinds = ('reset', 'stress_reset', 'reset') if producer == 'render.trees' else ('reset',)
-        for ordinal, reason in enumerate(kinds, 2):
-            stress = reason == 'stress_reset'
-            if ordinal > 2:
-                checkpoints.append(CheckpointPlan('before_stress_reset' if stress else 'before_colony_reset', 0, ordinal-1, 1))
-            label = 'after_stress_reset' if stress else 'after_colony_reset'
-            context = json.dumps({'fixture_classification': 'stress_render' if stress else 'ordinary_colony'})
-            checkpoints.extend((CheckpointPlan(label, 0, ordinal, 0, context),
-                                CheckpointPlan('before_explicit_tick', 0, ordinal, 0),
-                                CheckpointPlan('after_explicit_tick', 0, ordinal, 1)))
-            instances.append(InstancePlan(reason, 0, 0, 1))
-    checkpoints.append(CheckpointPlan('terminal', 0, len(instances), instances[-1].terminal_tick, releases_node=True))
-    return UIPlan(producer, producer+':'+str(spec.output_root), spec, 'res://tools/v8/'+fixture.script,
-                  HELPER, tuple(checkpoints), (tuple(instances),))
+    plan = lifecycle_plan(producer, bootstrap_tick)
+    return UIPlan(producer, producer+':'+str(spec.output_root), spec,
+                  'res://tools/v8/'+fixture.script, HELPER, plan.checkpoints,
+                  plan.instances, plan.classification, no_native_reason=plan.no_native_reason)
 
 
 @boundary
-def command_policy(plan: UIPlan, logs: tuple[Node, ...]) -> tuple[CommandRows, ...]:
+def command_policy(plan: CommandPlan, logs: tuple[Node, ...]) -> tuple[CommandRows, ...]:
     """Check every checkpoint, including native factory ON and fixture OFF commands."""
     require(len(logs) == len(plan.checkpoints), '/commands', 'missing command checkpoint')
     output: list[CommandRows] = []

@@ -110,12 +110,18 @@ def _admit(request: Request) -> tuple[Path, str, bytes]:
         raise OverlayError("build receipt does not match runner trust anchor")
     receipt = decode_json(receipt_bytes)
     tree = git(request.repository, "rev-parse", request.commit + "^{tree}").decode().strip()
-    if not isinstance(receipt, dict) or receipt.get("schema_version") != 1 or receipt.get("build_status") != "PASS":
-        raise OverlayError("unsupported or incomplete build receipt")
-    if receipt.get("product_commit") != request.commit or receipt.get("product_tree") != tree:
-        raise OverlayError("build provenance does not bind this product tree")
-    if not request.binary.is_file() or receipt.get("binary_sha256") != sha256(request.binary):
-        raise OverlayError("native binary hash mismatch")
+    if isinstance(receipt, dict) and receipt.get("schema") == "play_build_join_v1":
+        from mux2_gate_inputs import Node
+
+        from generic_legacy_play_build import validate_play_build
+        _ = validate_play_build(Node(receipt), request.commit, request.binary)
+    else:
+        if not isinstance(receipt, dict) or receipt.get("schema_version") != 1 or receipt.get("build_status") != "PASS":
+            raise OverlayError("unsupported or incomplete build receipt")
+        if receipt.get("product_commit") != request.commit or receipt.get("product_tree") != tree:
+            raise OverlayError("build provenance does not bind this product tree")
+        if not request.binary.is_file() or receipt.get("binary_sha256") != sha256(request.binary):
+            raise OverlayError("native binary hash mismatch")
     if not request.observer.is_file():
         raise OverlayError("missing observer implementation")
     return target, tree, receipt_bytes
@@ -175,7 +181,7 @@ def materialize(request: Request) -> Path:
     _ = shutil.copyfile(request.binary, binary_target)
     injected_receipt = decode_json(receipt_bytes)
     assert isinstance(injected_receipt, dict)
-    if sha256(binary_target) != injected_receipt["binary_sha256"]:
+    if sha256(binary_target) != injected_receipt.get("binary_sha256", injected_receipt.get("bridge_sha256")):
         raise OverlayError("binary injection changed bytes")
     receipt = {
         "schema_version": 1, "product_commit": request.commit, "product_tree": tree,

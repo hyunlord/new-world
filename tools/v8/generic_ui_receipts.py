@@ -186,12 +186,19 @@ def validate_ui(path: Path, sidecar_sha256: str, plan: UIPlan, result: ProcessRe
     require(file_hash(path) == sidecar_sha256, "/sidecar", "sidecar hash mismatch")
     node = document(path.read_text())
     _bind_envelope(node, plan, result)
+    return validate_lifecycle(node, plan.checkpoints, plan.instances)
+
+
+@boundary
+def validate_lifecycle(node: Node, checkpoint_plan: tuple[CheckpointPlan, ...],
+                       instance_plan: tuple[tuple[InstancePlan, ...], ...]) -> ValidatedUI:
+    """Validate native lifecycle semantics after an independently authenticated envelope."""
     checkpoints = node.field("checkpoints").array()
-    require(len(checkpoints) == len(plan.checkpoints), "/checkpoints", "missing or extra checkpoint")
+    require(len(checkpoints) == len(checkpoint_plan), "/checkpoints", "missing or extra checkpoint")
     states: dict[int, tuple[UIInstance, ...]] = {}
     identities: dict[int, int] = {}
     released: set[int] = set()
-    for index, (checkpoint, expected) in enumerate(zip(checkpoints, plan.checkpoints)):
+    for index, (checkpoint, expected) in enumerate(zip(checkpoints, checkpoint_plan)):
         keys(checkpoint, {"index", "label", "node_instance_id", "observation", "tallies", "commands",
                           "clock", "command_log_capability", "context"})
         checkpoint.field("index").equals(index)
@@ -199,7 +206,7 @@ def validate_ui(path: Path, sidecar_sha256: str, plan: UIPlan, result: ProcessRe
         require(type(expected.tick) is int and expected.tick >= 0, "/plan", "unknown or invalid actual horizon")
         require(type(expected.instance_count) is int and expected.instance_count > 0,
                 "/plan", "invalid retained-instance obligation")
-        require(0 <= expected.node_slot < len(plan.instances) and expected.node_slot not in released,
+        require(0 <= expected.node_slot < len(instance_plan) and expected.node_slot not in released,
                 "/checkpoint", "unknown or already released native node")
         require(_json(checkpoint.field("context")) == _json(document(expected.context_json)), "/context", "unbound input/intervention/save context")
         identity = unsigned_string(checkpoint.field("node_instance_id"))
@@ -222,11 +229,11 @@ def validate_ui(path: Path, sidecar_sha256: str, plan: UIPlan, result: ProcessRe
         states[expected.node_slot] = current
         if expected.releases_node:
             released.add(expected.node_slot)
-    require(set(states) == set(range(len(plan.instances))), "/instances", "missing native node")
+    require(set(states) == set(range(len(instance_plan))), "/instances", "missing native node")
     require(released == set(states), "/instances", "missing explicit terminal/release checkpoint")
-    ordered = tuple(states[slot] for slot in range(len(plan.instances)))
+    ordered = tuple(states[slot] for slot in range(len(instance_plan)))
     unresolved: list[tuple[int, int]] = []
-    for slot, (actual, expected_rows) in enumerate(zip(ordered, plan.instances)):
+    for slot, (actual, expected_rows) in enumerate(zip(ordered, instance_plan)):
         require(len(actual) == len(expected_rows), "/instances", "final retained history incomplete")
         for instance, expected in zip(actual, expected_rows):
             require(expected.reason in {"bootstrap", "reset", "stress_reset", "load"}, "/plan", "unknown native lifecycle")

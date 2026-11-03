@@ -1,14 +1,16 @@
-"""Execute the production shell step function with failing admission children."""
-from pathlib import Path
+"""Execute the pinned historical P7 shell with failing admission children."""
 import os
 import subprocess
 import tempfile
 import unittest
+from pathlib import Path
+
+from gate_legacy_test_fixture import legacy_gate_bytes
 
 
 class GateStopTests(unittest.TestCase):
     def run_step(self, number: int, name: str, code: int, p7: bool):
-        source = Path(__file__).with_name('gate.sh').read_text()
+        source = legacy_gate_bytes().decode()
         start = source.index('step() {\n')
         function = source[start:source.index('\n}\n', start) + 3]
         with tempfile.TemporaryDirectory() as folder:

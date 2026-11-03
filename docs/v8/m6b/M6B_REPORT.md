@@ -608,3 +608,20 @@ V9는 원래 입력 admission과 잠금 획득 후 남은 listing314개를 실�
 루트 기존 debug cache에서 실제 Rust ASCII 검사8개가 통과했다(실제 Cargo 종료0, 검사6.80초, 전체13.591초). 기존 U-script 렌더 출력 byte equality, full-save/fingerprint/명령 상태 동일성, 중단 endpoint와 실제 DebugKill 경계 검사도 포함한다. 제한된 rustfmt 검사와 diff 검사를 통과했다. 전체 baseline identity·전체 clippy·Godot/renderer paired qualification·전체 gate는 이 검사로 입증하지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-ascii-observer-native-01/{native.log,started.json,terminal.json}`.
 
 V9 후속 listing의 실제314개 종료 영수증은 모두 PASS/0이고 출력 해시와 일치한다. 마지막 자식은2026-11-03 05:14:45 UTC에 끝났으나 소유자 PID66725 및 실행 세션87478은 더 이상 없고 최종 RESULT/OWNER_TERMINAL/UNKNOWN·집계 보고서가 없다. 소유자 종료 코드와 종료 원인은 UNKNOWN이며 완료로 복구하지 않는다. 원래 V9 FAIL/UNSETTLED도 그대로다. 독립 감사: `stage0/workspace-runtime/v9-accounting-successor-v3/ROOT_TERMINAL_AUDIT_20261103.json` SHA256 `c045c31784fb60cd271466c66cc7b77e370b19d5ceaa10e502cdd300877aa007`. 06:20 UTC 원격 확인에서 main/wip는 Stage−1 게시 SHA 그대로이며 Stage0 자기검증 KnowledgeLost FAIL은 미해결이다.
+
+### p108 전체 baseline identity 및 독립 준비 검증
+
+고정 HEAD `ff617e06a1d283b64a361c8a4440a2329703dfbd`에서 기존 cache를 사용한 workspace 전체 대상 check·clippy·release probe 빌드와 표준 baseline identity가 모두 실제 종료0으로 끝났다. identity는 게시된 Stage−1 final-d-03 데이터를 기준으로228,748개 공통 값에서 차이0개·한쪽에만 있는 경로0개, chronicle64개/19,683항목 동일, 샘플64개 동일, seeds0–3 결정성을 확인했다. 표준 identity의 기존 git_sha 및 제거된0값 키 제외 규칙을 그대로 사용했다. native 소스·기준 데이터·identity 하네스의 전후 해시도 동일하다. 전체 gate나 colony 자기검증 KnowledgeLost 실패를 대체하지 않는다. 증거: `stage0/development-foundation-p108/{commands.json,result.json,identity.log}`; 실행 소유자 실제 종료0·잠금 반환 확인.
+
+새 전체 게이트 준비본의 독립 검사에서는 A 체크포인트38개(19.802초), 기존 테스트 이관67개(21.272초), B V3 판정부13개(1.765초)가 실제 종료0으로 통과했다. 각각 별도 동결 준비본 검사이며 합쳐진 전체 gate의 실행 증거가 아니다. 증거: `stage0/ordered-dispatch/whole-gate-root-prepared-validation-v1.json`. UI·native·성능·stall의 남은 경로를 계속 연결하고 있으며 Stage0은 게시하지 않았다.
+
+
+### S0-p109 — 새 전체 게이트 실행 경로 통합
+
+새 기본 `gate.sh`가 소스가 고정된 selector를 받아 독립 BASE 제품과 후보 제품에서 원래 단계 순서를 실행하고, 실제 프로세스 종료와 관측 원본을 공통 journal로 연결하도록 통합했다. BASE 참조31단계와 후보51단계는 별개 실행이며, BASE의 참조 timing 결과와 후보 stall 예외를 구분한다. 기존 native/UI history 검증은 공통 순수 함수로 분리해 기존 호출 경로도 유지했다. 과거 gate 전체 해시를 검사하던 진단 테스트는 정확한 p107 스크립트 fixture를 사용하며 기존 소스 변조 검사를 남겼다.
+
+현재 통합 작업 트리의 집중130개(54.179초), 기존 검증기 회귀199개(127.011초), 과거 계약67개(21.660초)가 실제 종료0으로 통과했다. 첫 외부 합동 준비본124개(50.052초)와 이 결과는 서로 다른 구성이다. 별도 검토에서44→45 anchor 키, bench의 실제 단계 receipt 및 runtime 상대 경로, 변경 없는 원본 normalizer의 승인 경로 불일치를 찾아 수정했다. 루트는 실제 셸의 여섯 acceptance 출력 경로에 남은 `..` 때문에 엄격한 경로 검사가 거부하는 문제를 재현한 뒤 고쳤다. 후속 bench·경로61개(14.500초)가 실제 종료0으로 통과했다. 관측 없는 작은 벤치 fixture는 성공으로 바꾸지 않고 예상된 FAIL을 보존한다.
+
+이 구성은 전체 제품 gate가 아니다. 실제 play21 연결·일부 native 관측·외부 저장 이력의 출처·선택된 전체 O 패치의 중립성 qualification이 남으며, source materialization 자체는 build 증명이 아니다. 제품 qualification이 없거나 관측 경로가 미완료이면 최종 PASS를 내지 않는다. 엄격한 BASE0 자기 비교에서 이미 확인한 CORE-off KnowledgeLost FAIL은 그대로이고 Stage0은 게시하지 않는다. 통합 증거는 `stage0/ordered-dispatch/whole-gate-root-integration-v1.json`, 개별 `whole-gate-root-*-01.log`, `whole-gate-root-bench-paths-02.log`, `whole-gate-combined-review.md`에 보존한다.
+
+최종 통합에서 원본 fixture 환경의 닫힌 입력 검사를 추가했고 M1의 실제 네 replay 관측을 연결했다. 후속 source/native/bench101개(29.666초)와 엄격한 타입·Ruff 검사가 통과했다. 이 과정의 타입 import 순환과 파일 열거 순서에 의존한 negative test 실패는 별도 로그로 남긴 뒤 수정했다. native negative는 실제 `first` branch를 선택해 변조하도록 고쳤으며 생산 판정기는 약화하지 않았다. 전체 Python discovery와 실제 제품 실행은 다음 검증으로 남는다.

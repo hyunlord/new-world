@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# usage: gate.sh <log_dir> [--base-data DIR]
+# usage: gate.sh /absolute/whole-gate.json
 #
-# V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21; M1.5 10.4 added steps
-# 22-25; M3 added steps 26-27; M4 added step 28; M5 added step 29; M5.5 added step 30; M-ART2 added steps 31-34; M-UX added step 35). Forty-six steps, each logged to <log_dir>/<step>.log
-# with its start time, duration and exit code in <log_dir>/gate.txt. The
-# gate passes only when every step except `perf` and `nav_bench` (report only) exits 0.
+# Generic V8 gate: source-bound BASE reference producers followed by all 51
+# candidate steps. One inherited lane owns every build, capture and observation.
+# Per-pass modes are not accepted. Native returns and postchecks remain separate;
+# only the final complete collector can qualify the recorded stall exception.
 #    1 fmt               cargo fmt --all -- --check
 #    2 bridge_build      cargo build -p sim-bridge (the library Godot loads)
 #    3 godot_import      bounded headless --import --editor --quit (twice: a fresh
@@ -17,8 +17,8 @@
 #    9 smoke             tools/v8/smoke.sh (counts must not exceed the base counts)
 #   10 identity          tools/v8/identity.sh <base data> (32 worlds × 120 days)
 #   11 determinism       probe --check-determinism, seeds 0..4
-#   12 perf              tools/v8/perf.sh + perf_summary.py --compare (report only;
-#                        > +10 % mean is a WARN)
+#   12 perf              fresh same-scene observations on both products (report only;
+#                        paired performance acceptance is steps 25 and 45)
 #   13 bridge_api        tools/v8/bridge_api.py --check docs/v8/bridge_api_core.txt
 #   14 docs              tools/v8/check_docs.sh
 #   15 inventory_closure tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md
@@ -76,7 +76,6 @@
 #   46 mux21_regressions  strict tools, headless HUD cursor tests and real-renderer marker cache tests
 #   47 m6a_food_fixture   two ordinary worlds x72 days, food ledger and nonvacuous chain
 #   48 m6a_food_data_only fresh selected plants/items pack end-to-end
-#   M6a explicit mode executes all 48 steps; other passes retain their 46 steps.
 #   Since M-ART2 step 23 (renderer_agreement) also checks appearance: every person's look and face variant.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -87,9 +86,14 @@ if [[ -z "${WORLDSIM_MUX2_LANE_FD:-}" ]]; then
     exec python3 tools/v8/mux2_gate_lock.py -- bash "$ROOT/tools/v8/gate.sh" "$@"
 fi
 python3 tools/v8/mux2_gate_lock.py --check || exit 1
-LOG="${1:?usage: gate.sh <log_dir> [--base-data DIR]}"
-BASE_DATA=/Users/rexxa/work/v8-0-data/base
-[[ "${2:-}" == --base-data ]] && BASE_DATA="$3"
+# The normal gate receives a committed whole-gate selector. The internal session
+# path is hash checked again by every stage; it is not an acceptance bypass.
+if [[ "${1:-}" != --whole-session ]]; then
+    exec python3 tools/v8/generic_whole_gate.py prepare "${1:?usage: gate.sh WHOLE_GATE.json}"
+fi
+SESSION="${2:?session}"; SESSION_SHA="${3:?session hash}"; ARM="${4:-candidate}"
+LOG=$(python3 tools/v8/generic_whole_gate.py info "$SESSION" "$SESSION_SHA" "$ARM" output) || exit 2
+BASE_DATA=$(python3 tools/v8/generic_whole_gate.py info "$SESSION" "$SESSION_SHA" base identity) || exit 2
 mkdir -p "$LOG"
 LOG="$(cd "$LOG" && pwd -P)"
 mkdir -p "$LOG/settings" || exit 1
@@ -99,26 +103,19 @@ export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-8}"
 SUMMARY="$LOG/gate.txt"
 { echo "head $(git rev-parse HEAD)"; echo "dirty $(git status --porcelain --untracked-files=no | grep -v '^ M .gitignore$' | wc -l | tr -d ' ')"; echo "started $(date '+%Y-%m-%d %H:%M:%S %Z')"; } > "$SUMMARY"
 status=0
-if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
-    bash tools/v8/m6a_gate_checks.sh preflight "$LOG" || exit 1
-fi
+stage_status=0
+
 step() {
     local n="$1" name="$2"; shift 2
     local start end code
     start=$(date +%s)
     echo "[$n $name] $(date '+%H:%M:%S') $*" > "$LOG/$name.log"
-    "$@" >> "$LOG/$name.log" 2>&1
+    python3 tools/v8/generic_whole_gate.py step "$SESSION" "$SESSION_SHA" "$ARM" "$n" "$name" -- "$@" >> "$LOG/$name.log" 2>&1
     code=$?
+    if (( code == 125 )) || { [[ "$n" == 41 || "$n" == 25 || "$n" == 44 || "$n" == 45 || "$n" == 47 || "$n" == 48 || "$n" == 50 ]] && (( code == 2 )); }; then echo "UNKNOWN ownership; remaining steps NOT_RUN" >> "$SUMMARY"; exit 125; fi
     end=$(date +%s)
     printf '%2s %-18s exit %3s  %5ss  started %s\n' "$n" "$name" "$code" "$((end - start))" "$(date -r "$start" '+%H:%M:%S')" >> "$SUMMARY"
-    if [[ "$name" != perf && "$name" != nav_bench ]] && (( code != 0 )); then status=1; fi
-    # P7 stops on any non-exempt standing/C3 failure; no optimization or partial resume.
-    if [[ -n "${CORE_P7_RUN:-}" ]]; then
-        if (( code == 75 )) || { [[ "$name" == bench ]] && (( code != 0 )); }; then
-            echo "P7 STOP: step$n $name exit$code; remaining steps NOT_RUN" >> "$SUMMARY"
-            exit "$code"
-        fi
-    fi
+    if [[ "$name" != perf && "$name" != nav_bench ]] && (( code != 0 )); then stage_status=1; fi
     return "$code"
 }
 summarize_tests() {
@@ -136,146 +133,196 @@ result = json.loads(Path(sys.argv[1]).read_text())
 print(f"   {sys.argv[2]} passed {result['passed']} failed {result['failed']} ignored {result['ignored']}")
 PY_SUMMARY
 }
+selected() {
+    [[ "$ARM" == candidate ]] && return 0
+    case "$1" in
+        2|3|4|5|9|10|11|12|17|18|19|21|23|24|26|27|28|29|30|34|35|36|37|38|39|40|41|42|43|46|49) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+if selected 1; then
 step 1 fmt bash -c 'cd rust && cargo fmt --all -- --check'
+fi
+if selected 2; then
 step 2 bridge_build bash -c 'cd rust && cargo build -p sim-bridge'
+fi
+if selected 3; then
 step 3 godot_import bash -c 'bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit; bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --import --editor --quit'
+fi
+if selected 4; then
 step 4 test_debug bash -c 'cd rust && cargo test --workspace --no-fail-fast -- --test-threads=8'
 summarize_tests test_debug "$?"
+fi
+if selected 5; then
 step 5 test_release bash -c 'cd rust && cargo test --workspace --release --no-fail-fast -- --test-threads=8'
 summarize_tests test_release "$?"
+fi
+if selected 6; then
 step 6 clippy bash -c 'cd rust && cargo clippy --workspace --all-targets -- -D warnings'
+fi
+if selected 7; then
 step 7 forbidden_math bash -c "cd rust && ! grep -rnE '\\.(exp|exp2|ln|log2|log10|powf|powi|sin|cos|tan|tanh|atan2|hypot|cbrt)\\(' crates/sim-core/src crates/sim-systems/src crates/sim-engine/src"
+fi
+if selected 8; then
 step 8 gdscript_strict bash tools/v8/gdscript_strict_check.sh
+fi
+if selected 9; then
 step 9 smoke bash tools/v8/smoke.sh "$LOG/smoke"
-step 10 identity bash tools/v8/identity.sh "$BASE_DATA" "$LOG/identity"
+if [[ "$ARM" == candidate ]]; then
+    python3 tools/v8/generic_whole_gate.py companions "$SESSION" "$SESSION_SHA" || status=1
+fi
+fi
+if selected 10; then
+step 10 identity bash -c 'if [[ "$1" == base ]]; then (cd rust && cargo build --release -p sim-test --bin worldsim_probe) && bash tools/v8/identity.sh --capture rust/target/release "$0/identity"; else bash tools/v8/identity.sh "$2" "$0/identity"; fi' "$LOG" "$ARM" "$BASE_DATA"
+fi
+if selected 11; then
 step 11 determinism bash -c 'cd rust && cargo build --release -p sim-test --bin worldsim_probe && ./target/release/worldsim_probe --scene baseline --seeds 0..4 --days 120 --workers 4 --check-determinism --out "$0/determinism_probe" && echo "determinism checked on seeds 0..4"' "$LOG"
 grep -q 'DETERMINISM PASS' "$LOG/determinism.log" || { echo "   determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
-if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
-    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && CORE_P7_RUN=1 CORE_P7_DEADLINE_EPOCH="${M6A_DEADLINE_EPOCH:?}" bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && echo "M6A report-only historical unpaired comparison; paired acceptance step25/45" && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
-elif [[ -n "${CORE_UI_CONFIG:-}" ]]; then
-    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && CORE_P7_RUN=1 CORE_P7_DEADLINE_EPOCH="${CORE_UI_DEADLINE_EPOCH:?}" bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
-elif [[ -n "${CORE_P7_RUN:-}" ]]; then
-    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && echo "P7 report-only natural timings; no unpaired historical comparison; paired acceptance is step25/45"' "$LOG"
-elif [[ -n "${READ_GATE_CONFIG:-}" ]]; then
-    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && echo "READ report-only; paired acceptance is step 25 (interleaved bench)"'
-else
-    step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
 fi
+if selected 12; then
+step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" base > /dev/null && echo "Fresh arm observations; paired performance acceptance is step25/45"' "$LOG"
 grep -E 'WARN|OK \(' "$LOG/perf.log" | sed 's/^/   /' >> "$SUMMARY"
-if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
-    step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_read.txt
-else
-    step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_read.txt
 fi
+if selected 13; then
+step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_read.txt
+fi
+if selected 14; then
 step 14 docs bash tools/v8/check_docs.sh
+fi
+if selected 15; then
 step 15 inventory_closure python3 tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md
-step 16 python_unittest python3 -m unittest discover -s tools/v8 -p 'test_*.py'
+fi
+if selected 16; then
+step 16 python_unittest bash -c 'cd "$1" && python3 -m unittest discover -s tools/v8 -p '\''test_*.py'\''' whole-harness "$(python3 tools/v8/generic_whole_gate.py info "$SESSION" "$SESSION_SHA" candidate harness)"
 # M1 (goal 11.3): the Part 1-3 tests by name, the Locale.trf test, colony
 # determinism with the U-script, replay of a recorded command log, the UID check.
+fi
+if selected 17; then
 step 17 m1_tests bash -c 'cd rust && cargo test --release -p sim-test --test colony_commands --test colony_jobs --test colony_world --test engine_colony_ffi -- --test-threads=8 && cargo test --release -p sim-test --lib probe::colony && cargo test --release -p sim-systems --lib jobs:: && cargo test --release -p sim-core --lib colony:: && cd .. || exit $?; bash tools/v8/run_bounded.sh 120 "$GODOT_BIN" --headless --path . --script res://tools/v8/test_locale_trf.gd > "$0/m1-trf.log" 2>&1; godot_code=$?; cat "$0/m1-trf.log" || exit 1; (( godot_code == 0 )) && grep -q "^TRF_TEST_PASS" "$0/m1-trf.log"' "$LOG"
 summarize_tests m1_tests "$?"
+fi
+if selected 18; then
 step 18 colony_determinism bash -c 'cd rust && cargo build --release -p sim-test --bin worldsim_probe && ./target/release/worldsim_probe --scene colony --seeds 0..4 --days 10 --workers 4 --commands ../tools/v8/u_script.json --check-determinism --out "$0/colony_determinism"' "$LOG"
 grep -q 'DETERMINISM PASS' "$LOG/colony_determinism.log" || { echo "   colony_determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
+fi
+if selected 19; then
 step 19 replay bash -c 'p=rust/target/release/worldsim_probe; $p --scene colony --seeds 5..7 --days 3 --workers 2 --commands tools/v8/u_script.json --out "$0/replay/first" --commands-out "$0/replay/log" && $p --scene colony --seeds 5..6 --days 3 --workers 1 --commands "$0/replay/log/colony_s5_commands.json" --out "$0/replay/s5" && $p --scene colony --seeds 5..6 --days 3 --workers 1 --commands tools/v8/u_script.json --out "$0/replay/s5_script" && cmp "$0/replay/s5/summary.json" "$0/replay/s5_script/summary.json" && echo "replay: the recorded log reproduces the scripted run byte for byte"' "$LOG"
+fi
+if selected 20; then
 step 20 uid_check bash -c 'out=$(python3 tools/v8/check_docs_helpers.py uid); [[ -z "$out" ]] || { echo "$out"; exit 1; }; echo "every Godot source has its committed .uid"'
+fi
+if selected 21; then
 step 21 play_check bash tools/v8/test_play.sh
 grep -c '^PLAY_TEST_PASS' "$LOG/play_check.log" | awk '{print "   play_check passed", $1, "of 6"}' >> "$SUMMARY"
 # M1.5 (goal 10.4, ADR 0016): the contract's new checks.
+fi
+if selected 22; then
 step 22 schema_docs python3 tools/v8/check_docs_helpers.py schema .
+fi
+if selected 23; then
 step 23 renderer_agreement bash tools/v8/renderer_agreement.sh "$LOG/renderer_agreement"
 grep -q '^RENDERER_AGREEMENT PASS' "$LOG/renderer_agreement.log" || { echo "   renderer_agreement: no PASS line" >> "$SUMMARY"; status=1; }
+fi
+if selected 24; then
 step 24 save_roundtrip bash tools/v8/save_roundtrip.sh
 grep -q '^SAVE_ROUNDTRIP PASS' "$LOG/save_roundtrip.log" || { echo "   save_roundtrip: no PASS line" >> "$SUMMARY"; status=1; }
-if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
-    step 25 bench python3 tools/v8/m6a_perf.py run "${M6A_PERF_CONFIG:?fresh M6a perf config required}" "$LOG/bench/perf-session"
-elif [[ -n "${CORE_UI_CONFIG:-}" ]]; then
-    step 25 bench python3 tools/v8/core_ui_successor_perf.py run "${CORE_UI_PERF_CONFIG:?fresh UI performance config required}" "$LOG/bench/perf-session"
-elif [[ -n "${CORE_P7_RUN:-}" ]]; then
-    step 25 bench python3 tools/v8/core_p7_bench.py "$LOG/bench"
-    export CORE_EVAL_CONFIG_SHA256="$(shasum -a 256 "$CORE_EVAL_CONFIG" | cut -d' ' -f1)"
-elif [[ -n "${READ_GATE_CONFIG:-}" ]]; then
-    step 25 bench python3 tools/v8/read_gate_checks.py bench "$READ_GATE_CONFIG" "$LOG/bench"
-else
-    step 25 bench bash tools/v8/bench.sh "$LOG/bench"
 fi
+if selected 25; then
+step 25 bench python3 tools/v8/generic_whole_gate_acceptance.py run "$SESSION" "$SESSION_SHA" 25 "${LOG%/*}/steps/candidate/25-bench/acceptance"
 grep -E 'admission|ceiling|rss outer|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^/   /' >> "$SUMMARY"
 # M3 (goal 3.4): the economy soak fixture, every pass from now on.
+fi
+if selected 26; then
 step 26 soak bash tools/v8/soak.sh "$LOG/soak" rust/target/release/worldsim_probe
 grep -E '^SOAK' "$LOG/soak.log" | sed 's/^/   /' >> "$SUMMARY"
-if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
-    step 27 nav_bench env CORE_P7_DEADLINE_EPOCH="${M6A_DEADLINE_EPOCH:?}" python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
-elif [[ -n "${CORE_UI_CONFIG:-}" ]]; then
-    step 27 nav_bench env CORE_P7_DEADLINE_EPOCH="${CORE_UI_DEADLINE_EPOCH:?}" python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
-elif [[ -n "${CORE_P7_RUN:-}" ]]; then
-    step 27 nav_bench python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
-else
-    step 27 nav_bench rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
 fi
+if selected 27; then
+step 27 nav_bench rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
 grep -E '^nav_bench' "$LOG/nav_bench.log" | sed 's/^/   /' >> "$SUMMARY"
 # M4 (goal §11): the knowledge tests and the loss fixture (F10: the doorway's only holder killed at tick 1800 on
 # seeds 0..8 -> KnowledgeLost within 240 ticks, the doorway Lost, door orders waiting on it).
-step 28 knowledge bash -c 'set -euo pipefail; cd rust && cargo test --release -p sim-test --test colony_knowledge -- --test-threads=8 && cd .. && rust/target/release/worldsim_probe --scene colony --seeds 0..8 --days 4 --workers 4 --commands tools/v8/m4_f10_script.json --out "$0/knowledge_f10" > /dev/null && python3 docs/v8/m4/m4_score.py --f10 "$0/knowledge_f10/summary.json" | tee /dev/stderr | grep -q "^F10: 8/8 PASS"' "$LOG"
+fi
+if selected 28; then
+step 28 knowledge bash -c 'set -euo pipefail; cd rust && cargo test --release -p sim-test --test colony_knowledge -- --test-threads=8 && cd .. && rust/target/release/worldsim_probe --scene colony --seeds 0..8 --days 4 --workers 4 --commands tools/v8/m4_f10_script.json --out "$0/knowledge_f10" --commands-out "$0/knowledge_f10/commands" > /dev/null && python3 docs/v8/m4/m4_score.py --f10 "$0/knowledge_f10/summary.json" | tee /dev/stderr | grep -q "^F10: 8/8 PASS" && rust/target/release/worldsim_probe --scene colony --seeds 0..8 --days 4 --workers 4 --commands tools/v8/gate_f10_no_kill.json --out "$0/knowledge_f10_control" > /dev/null' "$LOG"
 grep -E '^F10|test result' "$LOG/knowledge.log" | sed 's/^/   /' >> "$SUMMARY"
 # M5 (goal §12): the storyteller fixture — two worlds through two years of pressure.
+fi
+if selected 29; then
 step 29 story bash -c 'rust/target/release/worldsim_probe --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m5_u_script.json --out "$0/story" > /dev/null && python3 docs/v8/m5/m5_score.py --story "$0/story/summary.json"' "$LOG"
 grep -E '^STORY' "$LOG/story.log" | sed 's/^/   /' >> "$SUMMARY"
 # M5.5 (goal §11): the neighbours fixture — two worlds × 48 days with neighbours on, every wave accepted, the blade
 # trade at every caravan: waves 1 and 2 in their windows and accepted, at least one trade, ledger exact (with traded
 # in and out) and reservations exact every tick.
+fi
+if selected 30; then
 step 30 neighbours bash -c 'rust/target/release/worldsim_probe --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$0/neighbours" > /dev/null && python3 docs/v8/m5_5/m55_score.py --neighbours "$0/neighbours/summary.json"' "$LOG"
 grep -E '^NEIGHBOURS' "$LOG/neighbours.log" | sed 's/^/   /' >> "$SUMMARY"
 # M-ART2 (goal §11): the imported art, the material resolver, the extensibility grep and the renderer tests.
+fi
+if selected 31; then
 step 31 art_manifest python3 tools/v8/art_import.py --verify
+fi
+if selected 32; then
 step 32 resolver_parity bash -c 'bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . --script res://tools/v8/resolver_parity.gd -- "$0/resolver_godot.json" && python3 tools/v8/resolver_parity.py --check "$0/resolver_godot.json"' "$LOG"
+fi
+if selected 33; then
 step 33 extensibility_grep python3 -m unittest tools/v8/test_mart2_extensibility.py tools/v8/test_art_masks.py tools/v8/test_art_import.py
+fi
+if selected 34; then
 step 34 mart2_render bash -c 'set -euo pipefail; for t in mart2_ground_test mart2_people_test mart21_trees_test; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/$t.gd > "$0/$t.out" 2>&1; grep -E "^MART21?_(GROUND|PEOPLE|TREES) (PASS|FAIL)|_DONE" "$0/$t.out"; grep -q "_DONE failures=0" "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
 grep -E 'PASS|FAIL' "$LOG/resolver_parity.log" | tail -1 | sed 's/^/   /' >> "$SUMMARY"
 grep -cE '^MART21?_(GROUND|PEOPLE|TREES) PASS' "$LOG/mart2_render.log" | awk '{print "   mart2_render checks passed", $1}' >> "$SUMMARY"
+fi
+if selected 35; then
 step 35 steward bash tools/v8/mux_steward.sh "$LOG/steward"
+fi
+if selected 36; then
 step 36 data_only_ext bash tools/v8/data_only_ext.sh "$LOG/data_only_ext"
 # M-CORE compile checks precede the serialized GPU lane.
+fi
+if selected 42; then
 step 42 baseline_isolation bash tools/v8/core_gate_checks.sh baseline_isolation "$LOG/core-registration-tests.log"
+fi
+if selected 43; then
 step 43 mind_data_only bash tools/v8/core_gate_checks.sh data_only "$LOG/core-data-only-tests.log"
 # All builds finish before the serialized M-UX2 GPU lane. Missing/stale timing evidence fails.
+fi
+if selected 37; then
 step 37 mux2_defence bash tools/v8/mux2_gate_checks.sh defence "$LOG/mux2-defence"
+fi
+if selected 38; then
 step 38 mux2_oracles bash tools/v8/mux2_gate_checks.sh oracles "$LOG/mux2-oracles"
+fi
+if selected 39; then
 step 39 mux2_visibility python3 tools/v8/mux2_gate_receipts.py capture --kind visibility --out "$LOG/mux2-visibility" --godot "$GODOT_BIN"
+fi
+if selected 40; then
 step 40 mux2_why python3 tools/v8/mux2_gate_receipts.py capture --kind why --out "$LOG/mux2-why" --godot "$GODOT_BIN"
-if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
-    step 41 mux2_stall_receipt bash tools/v8/m6a_gate_checks.sh stall "$LOG/mux2-stall"
-elif [[ -n "${READ_GATE_CONFIG:-}" ]]; then
-    step 41 mux2_stall_receipt bash -c '
-        set -euo pipefail
-        # Run the capture only; the strict verify may exit 1 on frames the waiver allows.
-        python3 tools/v8/mux2_gate_receipts.py capture --kind stall --out "$0/capture" --godot "$GODOT_BIN" || true
-        # The waiver judges the stall-report.json: complete, <=2 frames >50ms per zoom, none >60.
-        python3 tools/v8/read_gate_checks.py stall_waiver "$0/capture/run/stall-report.json"
-    ' "$LOG/mux2-stall"
-else
-    step 41 mux2_stall_receipt bash tools/v8/mux2_gate_checks.sh stall "$LOG/mux2-stall"
 fi
-if [[ -n "${M6A_GATE_CONFIG:-}" || -n "${CORE_UI_CONFIG:-}" || -n "${CORE_P7_RUN:-}" || -n "${CORE_SHADOW_CONFIG:-}" ]]; then
-    step 44 core_shadow bash tools/v8/core_gate_checks.sh fixture_run "$LOG/core-shadow-fixture"
-    step 45 core_evaluation bash tools/v8/core_gate_checks.sh evaluation "$LOG/core-evaluation"
-elif [[ -n "${READ_GATE_CONFIG:-}" ]]; then
-    step 44 core_shadow python3 tools/v8/read_gate_checks.py core_fixture "$READ_GATE_CONFIG" "$LOG/core-shadow-fixture"
-    step 45 core_evaluation bash -c 'echo "READ mode: core evaluation covered by step 44 normalised comparison"; echo "READ_CORE_EVAL PASS"'
-else
-    step 44 core_shadow bash tools/v8/core_gate_checks.sh fixture_run "$LOG/core-shadow-fixture"
-    step 45 core_evaluation bash tools/v8/core_gate_checks.sh evaluation "$LOG/core-evaluation"
+if selected 41; then
+step 41 mux2_stall_receipt python3 tools/v8/generic_whole_gate_stall_capture.py "$SESSION" "$SESSION_SHA" "$ARM" "$LOG/mux2-stall"
 fi
+if selected 44; then
+step 44 core_shadow python3 tools/v8/generic_whole_gate_acceptance.py run "$SESSION" "$SESSION_SHA" 44 "${LOG%/*}/steps/candidate/44-core_shadow/acceptance"
+fi
+if selected 45; then
+step 45 core_evaluation python3 tools/v8/generic_whole_gate_acceptance.py run "$SESSION" "$SESSION_SHA" 45 "${LOG%/*}/steps/candidate/45-core_evaluation/acceptance"
 grep -E '^CORE_PERF ' "$LOG/core_evaluation.log" 2>/dev/null | sed 's/^/   /' >> "$SUMMARY"
+fi
+if selected 46; then
 step 46 mux21_regressions bash -c '
     set -euo pipefail
     bash tools/v8/gdscript_strict_check.sh tools/v8/mux21_layout_test.gd tools/v8/mux21_toast_test.gd tools/v8/mux21_play_capture.gd tools/v8/mux21_why_locale_test.gd
-    bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --headless --path . --script res://tools/v8/mux21_toast_test.gd > "$0/mux21-toast.log" 2>&1
+    mkdir -p "$WORLDSIM_GATE_UI_OUT/toast" "$WORLDSIM_GATE_UI_OUT/layout"
+    WORLDSIM_GATE_UI_OUT="$WORLDSIM_GATE_UI_OUT/toast" bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --headless --path . --script res://tools/v8/mux21_toast_test.gd > "$0/mux21-toast.log" 2>&1
     grep -q "^MUX21_TOAST_DONE " "$0/mux21-toast.log"
     ! grep -q "SCRIPT ERROR" "$0/mux21-toast.log"
-    bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --path . --rendering-method gl_compatibility --script res://tools/v8/mux21_layout_test.gd -- --cache > "$0/mux21-layout.log" 2>&1
+    WORLDSIM_GATE_UI_OUT="$WORLDSIM_GATE_UI_OUT/layout" bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --path . --rendering-method gl_compatibility --script res://tools/v8/mux21_layout_test.gd -- --cache > "$0/mux21-layout.log" 2>&1
     grep -q "^MUX21_LAYOUT_DONE " "$0/mux21-layout.log"
     ! grep -q "SCRIPT ERROR" "$0/mux21-layout.log"
     for language in en ko; do
-        bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --path . --resolution 1920x1080 --script res://tools/v8/mux21_why_locale_test.gd -- --locale="$language" > "$0/mux21-why-$language.log" 2>&1
+        mkdir -p "$WORLDSIM_GATE_UI_OUT/why-$language"
+        WORLDSIM_GATE_UI_OUT="$WORLDSIM_GATE_UI_OUT/why-$language" bash tools/v8/run_bounded.sh 180 "$GODOT_BIN" --path . --resolution 1920x1080 --script res://tools/v8/mux21_why_locale_test.gd -- --locale="$language" > "$0/mux21-why-$language.log" 2>&1
         ! grep -E "SCRIPT ERROR|Parse Error|ERROR:" "$0/mux21-why-$language.log"
     done
     python3 -c '\''import json,sys; from pathlib import Path
@@ -289,49 +336,21 @@ for filename,prefix in [("mux21-toast.log","MUX21_TOAST_DONE "),("mux21-layout.l
  if filename=="mux21-layout.log": assert rows[0]["display"]!="headless",filename
 '\'' "$0"
 ' "$LOG"
-if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
-    step 47 m6a_food_fixture bash tools/v8/m6a_gate_checks.sh food_fixture "$LOG/m6a-food-fixture"
-    step 48 m6a_food_data_only bash tools/v8/m6a_gate_checks.sh data_only "$LOG/m6a-food-data-only"
 fi
+if selected 47; then
+step 47 m6a_food_fixture python3 tools/v8/generic_whole_gate_acceptance.py run "$SESSION" "$SESSION_SHA" 47 "${LOG%/*}/steps/candidate/47-m6a_food_fixture/acceptance"
+fi
+if selected 48; then
+step 48 m6a_food_data_only python3 tools/v8/generic_whole_gate_acceptance.py run "$SESSION" "$SESSION_SHA" 48 "${LOG%/*}/steps/candidate/48-m6a_food_data_only/acceptance"
 # M-READ gate steps
+fi
+if selected 49; then
 step 49 read_data_only bash -c 'cd rust && cargo test --release -p sim-core --lib "colony::diagnosis::tests::data_only_check_addition" -- --exact'
-step 50 read_preservation bash -c '
-    set -euo pipefail
-    BASE_PROBE="${READ_BASE_PROBE:-/Users/rexxa/work/read-base/rust/target/release/worldsim_probe}"
-    CAND_PROBE=rust/target/release/worldsim_probe
-    OUT="$0"
-    mkdir -p "$OUT/base" "$OUT/head"
-    "$BASE_PROBE" --scene colony --seeds 0..4 --days 10 --workers 4 --commands tools/v8/u_script.json --check-determinism --out "$OUT/base/determinism" > "$OUT/base_determinism.txt" 2>&1
-    "$CAND_PROBE" --scene colony --seeds 0..4 --days 10 --workers 4 --commands tools/v8/u_script.json --check-determinism --out "$OUT/head/determinism" > "$OUT/head_determinism.txt" 2>&1
-    "$BASE_PROBE" --scene colony --seeds 0..4 --days 20 --workers 4 --commands tools/v8/soak_script.json --out "$OUT/base/soak" > /dev/null 2>&1
-    "$CAND_PROBE" --scene colony --seeds 0..4 --days 20 --workers 4 --commands tools/v8/soak_script.json --out "$OUT/head/soak" > /dev/null 2>&1
-    "$BASE_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m5_u_script.json --out "$OUT/base/story" > /dev/null 2>&1
-    "$CAND_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m5_u_script.json --out "$OUT/head/story" > /dev/null 2>&1
-    "$BASE_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$OUT/base/neighbours" > /dev/null 2>&1
-    "$CAND_PROBE" --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$OUT/head/neighbours" > /dev/null 2>&1
-    "$BASE_PROBE" --scene colony --seeds 0..2 --days 24 --workers 2 --steward on --out "$OUT/base/steward" > /dev/null 2>&1
-    "$CAND_PROBE" --scene colony --seeds 0..2 --days 24 --workers 2 --steward on --out "$OUT/head/steward" > /dev/null 2>&1
-    "$BASE_PROBE" --scene colony --seeds 0..2 --days 72 --workers 2 --steward on --out "$OUT/base/m6a_steward" > /dev/null 2>&1
-    "$CAND_PROBE" --scene colony --seeds 0..2 --days 72 --workers 2 --steward on --out "$OUT/head/m6a_steward" > /dev/null 2>&1
-    # M-LOOP (D-steward): fixtures listed in READ_CHANGED_FIXTURES changed on purpose in a recorded
-    # behaviour commit; they skip the byte comparison but must still lose no knowledge (owner rule).
-    for f in determinism soak story neighbours steward m6a_steward; do
-        case " ${READ_CHANGED_FIXTURES:-} " in
-            *" $f "*)
-                python3 -c "
-import json, sys
-seeds = json.load(open(sys.argv[1]))[\"seeds\"]
-lost = [s[\"seed\"] for s in seeds if s.get(\"m4\", {}).get(\"lost\")]
-assert not lost, \"KnowledgeLost in changed fixture seeds %s\" % lost
-print(\"CHANGED FIXTURE (recorded behaviour change): \" + sys.argv[2] + \" — 0 KnowledgeLost\")
-" "$OUT/head/$f/summary.json" "$f" || exit 1 ;;
-            *) python3 tools/v8/read_normalise.py "$OUT/base/$f/summary.json" "$OUT/head/$f/summary.json" || exit 1 ;;
-        esac
-    done
-    grep -q "DETERMINISM PASS" "$OUT/head_determinism.txt" && grep -q "DETERMINISM PASS" "$OUT/base_determinism.txt" || { echo "colony determinism FAIL"; exit 1; }
-    echo "READ_PRESERVATION PASS"
-' "$LOG/read_preservation"
-grep -q 'READ_PRESERVATION PASS' "$LOG/read_preservation.log" || { echo "   read_preservation: FAIL" >> "$SUMMARY"; status=1; }
+fi
+if selected 50; then
+step 50 read_preservation python3 tools/v8/generic_whole_gate_acceptance.py run "$SESSION" "$SESSION_SHA" 50 "${LOG%/*}/steps/candidate/50-read_preservation/acceptance"
+fi
+if selected 51; then
 step 51 read_diagnosis_test bash -c '
     set -euo pipefail
     RESULT="docs/v8/read/read_30s_result.json"
@@ -352,12 +371,10 @@ assert q5[\"pass\"], \"Q5 must pass\"
 print(\"READ_DIAGNOSIS_TEST PASS\")
 " "$RESULT"
 '
-echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
-if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
-    if ! bash tools/v8/m6a_gate_checks.sh final "$LOG" > "$LOG/m6a-final.log" 2>&1; then
-        status=1
-        echo "M6A final evidence validation failed; terminal status 1" >> "$SUMMARY"
-    fi
 fi
+python3 tools/v8/generic_whole_gate.py finish "$SESSION" "$SESSION_SHA" "$ARM" "$status" "$stage_status" || exit 1
+status=$((status | stage_status))
+echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
+
 cat "$SUMMARY"
 exit "$status"

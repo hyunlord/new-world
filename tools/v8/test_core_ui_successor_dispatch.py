@@ -5,13 +5,14 @@ import ast
 import json
 import os
 import subprocess
-from pathlib import Path
 import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import Mock, patch
 
 import core_shadow_freeze as freeze
 import core_ui_successor as ui
+from gate_legacy_test_fixture import legacy_gate_bytes
 
 
 def evaluation_tree() -> ast.Module:
@@ -87,9 +88,9 @@ class UISuccessorDispatchTests(unittest.TestCase):
             legacy.assert_not_called()
 
 
-class UIAdmissionScopeTests(unittest.TestCase):
+class HistoricalUIAdmissionScopeTests(unittest.TestCase):
     def test_ui_timing_children_get_admission_without_enabling_parent_p7(self) -> None:
-        source = Path(__file__).with_name('gate.sh').read_text()
+        source = legacy_gate_bytes().decode()
         blocks = []
         for marker in ('    step 12 perf ', '    step 27 nav_bench '):
             stop = source.index('\nfi', source.index(marker)) + len('\nfi')

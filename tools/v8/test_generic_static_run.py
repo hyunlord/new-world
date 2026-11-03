@@ -1,4 +1,5 @@
 """Synthetic children only; these tests do not run any original gate check."""
+import hashlib
 import json
 import shutil
 import subprocess
@@ -11,6 +12,7 @@ from unittest.mock import Mock, patch
 
 import bridge_api
 import generic_static_run as runner
+from gate_legacy_test_fixture import legacy_gate_bytes
 from generic_fixture_run import ComponentResult
 from generic_gate import GateContractError, document
 from generic_process import execute as actual_execute
@@ -57,8 +59,15 @@ class Fixture:
 
 @final
 class StaticTests(unittest.TestCase):
-    def test_current_gate_source_pin(self) -> None:
-        self.assertEqual(runner.GATE_SHA256,file_hash(Path(runner.__file__).with_name('gate.sh')))
+    def test_historical_fixture_rejects_changed_bytes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory)/'gate.sh'
+            _ = source.write_bytes(legacy_gate_bytes()+b'\n# changed\n')
+            with self.assertRaisesRegex(ValueError, 'historical gate fixture changed'):
+                _ = legacy_gate_bytes(source)
+
+    def test_historical_gate_source_pin(self) -> None:
+        self.assertEqual(runner.GATE_SHA256,hashlib.sha256(legacy_gate_bytes()).hexdigest())
 
     def test_all_exact_commands_cwd_and_component_scope(self) -> None:
         fixture = Fixture(self)

@@ -13,6 +13,7 @@ from unittest.mock import patch
 
 import generic_resolver_run as resolver
 import generic_static_run
+from gate_legacy_test_fixture import legacy_gate_bytes
 from generic_fixtures import ProbeProduct
 from generic_gate import document
 from generic_process import ProcessResult, ProcessSpec, execute, file_hash
@@ -226,7 +227,8 @@ class ResolverTests(unittest.TestCase):
             for name in (*INPUT_FILES,*resolver.PINS):
                 target=product/name;target.parent.mkdir(parents=True,exist_ok=True)
                 source=SOURCE.parents[1]/name
-                _=target.write_bytes(source.read_bytes() if name in resolver.PINS else b'synthetic source only')
+                _=target.write_bytes(legacy_gate_bytes() if name == 'tools/v8/gate.sh' else
+                    source.read_bytes() if name in resolver.PINS else b'synthetic source only')
             for name in ('scripts/core/sim_reads.gd','scripts/ui/person_names.gd','scripts/world/art_hash.gd'):
                 target=product/name;target.parent.mkdir(parents=True,exist_ok=True)
                 _=target.write_bytes((SOURCE.parents[1]/name).read_bytes())

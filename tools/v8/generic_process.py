@@ -39,6 +39,7 @@ class ProcessSpec:
     external_inputs: tuple[tuple[Path, str], ...] = ()
     fresh_directories: tuple[str, ...] = ()
     timeout_seconds: float | None = None
+    pass_fds: tuple[int, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -88,10 +89,13 @@ def environment_for(spec: ProcessSpec) -> dict[str, str]:
     return environment
 
 
-def atomic_json(path: Path, value: dict[str, Json]) -> None:
+def atomic_json(path: Path, value: dict[str, Json], *, mode: int | None = None) -> None:
     """Publish complete evidence without replacing any existing terminal receipt."""
+    require(mode is None or (type(mode) is int and 0 <= mode <= 0o777), str(path), "invalid publication mode")
     pending = path.with_suffix(path.suffix + ".pending")
     with pending.open("x", encoding="utf-8") as stream:
+        if mode is not None:
+            os.fchmod(stream.fileno(), mode)
         json.dump(value, stream, indent=2, sort_keys=True, allow_nan=False)
         _ = stream.write("\n")
         stream.flush()
@@ -107,6 +111,11 @@ def execute(spec: ProcessSpec) -> ProcessResult:
     if spec.timeout_seconds is not None:
         require(type(spec.timeout_seconds) in (int, float) and 0 < spec.timeout_seconds < math.inf,
                 "/timeout_seconds", "timeout must be finite and positive, excluding bool")
+    require(len(set(spec.pass_fds)) == len(spec.pass_fds) and
+            all(type(fd) is int and fd >= 3 for fd in spec.pass_fds),
+            "/pass_fds", "duplicate or invalid descriptor")
+    descriptor_ids: dict[str, Json] = {str(fd): [os.fstat(fd).st_dev, os.fstat(fd).st_ino, os.fstat(fd).st_mode]
+                      for fd in spec.pass_fds}
     check_digest(spec.executable_sha256, "/executable_sha256")
     names = [name for name, _ in spec.inputs]
     require(len(names) == len(set(names)), "/inputs", "duplicate declared input")
@@ -147,6 +156,9 @@ def execute(spec: ProcessSpec) -> ProcessResult:
     if spec.timeout_seconds is not None:
         receipt["timeout_seconds"] = spec.timeout_seconds
         receipt["timed_out"] = False
+    if spec.pass_fds:
+        receipt["pass_fds"] = list(spec.pass_fds)
+        receipt["descriptor_identities"] = {key: value for key, value in descriptor_ids.items()}
     errors: list[str] = []
     before_inputs: dict[str, str] = {}
     before_external_inputs: dict[str, str] = {}
@@ -186,7 +198,8 @@ def execute(spec: ProcessSpec) -> ProcessResult:
         if not errors:
             try:
                 with subprocess.Popen(spec.argv, cwd=spec.cwd, env=environment, stdin=subprocess.DEVNULL,
-                                      stdout=stdout, stderr=stderr, shell=False, close_fds=True) as child:
+                                      stdout=stdout, stderr=stderr, shell=False, close_fds=True,
+                                      pass_fds=spec.pass_fds) as child:
                     pid = child.pid
                     try:
                         atomic_json(output / "process-spawn.json", {"pid": pid, "spawned_at": timestamp()})
@@ -235,6 +248,13 @@ def execute(spec: ProcessSpec) -> ProcessResult:
         except (OSError, GateContractError) as error:
             errors.append(f"postflight external input: {error}")
     receipt["after_external_inputs"] = {key: value for key, value in after_external_inputs.items()}
+    if spec.pass_fds:
+        try:
+            current_ids = {str(fd): [os.fstat(fd).st_dev, os.fstat(fd).st_ino, os.fstat(fd).st_mode]
+                           for fd in spec.pass_fds}
+            require(current_ids == descriptor_ids, "/pass_fds", "descriptor identity changed")
+        except (OSError, GateContractError) as error:
+            errors.append(f"postflight descriptor: {error}")
     receipt["stdout_sha256"] = file_hash(output / "stdout.log")
     receipt["stderr_sha256"] = file_hash(output / "stderr.log")
     receipt["errors"] = [error for error in errors]
