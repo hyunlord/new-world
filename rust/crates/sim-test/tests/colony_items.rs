@@ -1,7 +1,7 @@
 //! M2 Part 1: items, resource nodes and the per-kind ledger (goal 3.1, 3.2, §5).
 
 mod colony_support;
-mod save_gate_observation;
+pub mod save_gate_observation;
 
 use save_gate_observation::Watch;
 

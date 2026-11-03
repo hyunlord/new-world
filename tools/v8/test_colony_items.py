@@ -84,5 +84,5 @@ class ItemsTests(unittest.TestCase):
         base = Path(__file__).resolve().parents[2]
         original = (Path(__file__).parent / 'fixtures/colony_items.original.rs').read_text()
         observed = (base / 'rust/crates/sim-test/tests/colony_items.rs').read_text()
-        observed = observed.replace('mod save_gate_observation;', '').replace('use save_gate_observation::Watch;', '')
+        observed = observed.replace('pub mod save_gate_observation;', '').replace('use save_gate_observation::Watch;', '')
         self.assertEqual(tokens(original), tokens(observed))

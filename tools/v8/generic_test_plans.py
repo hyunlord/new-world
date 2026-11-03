@@ -28,7 +28,7 @@ from generic_test_history_graph import (
 from mux2_gate_inputs import Json, Node
 
 SOURCE_PINS = {
-    'colony_items': '71ea0de04f994960c5b319b92c3b06e560e94efdbb8d60ca012360914d274054',
+    'colony_items': '76608c79b7c3e30f6dcd36d935e34d895e3836eaf69bee209f5599eaf5acff61',
     'colony_jobs': 'd10150e355f443b92a42cc19095e6a8a2971a57bc3dbf2c309e0d6d5f23bbd34',
     'save_load': 'fccd2174e5466798f686e7518248c41fe6374338cb78d9c0b67121d1ed1dd21a',
     'colony_world': 'a622f80b35aca286b77a650d87a9125c5f4a04e7363ea81a5dcedcab0f254a32',

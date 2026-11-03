@@ -4,12 +4,11 @@ from pathlib import Path
 from unittest.mock import patch
 
 import generic_process
+from generic_whole_gate_doctests import EXPECTED, source_closure
 from generic_whole_gate_workspace import evaluate_family
 from generic_whole_gate_workspace_plan import MANIFESTS
 from mux2_gate_inputs import Json, Node
 from test_generic_whole_gate_workspace import fixture
-
-from generic_whole_gate_doctests import EXPECTED, source_closure
 
 ROOT = Path(generic_process.__file__).resolve().parents[2]
 

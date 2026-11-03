@@ -13,7 +13,7 @@ from generic_test_plans import Planned
 from mux2_gate_inputs import Json, Node
 
 TESTS = ALL_TESTS['colony_items']
-INPUTS: dict[str, str] = {'rust/crates/sim-test/tests/colony_items.rs': '71ea0de04f994960c5b319b92c3b06e560e94efdbb8d60ca012360914d274054', 'rust/crates/sim-test/tests/colony_support/mod.rs': 'b5fb68e830fee08ff7e04694a23919ec62cfdcdab3431a69aed58899db616525', 'rust/crates/sim-test/tests/save_gate_observation/mod.rs': 'ab7c324c94846f231128040f7ccf34fbd2c8a9339a927a65962c1f2c17ce2cdf', 'rust/crates/sim-test/src/lib.rs': 'd5a126519bca132d236972c8813faf27a8f58dec8c514c1e1a96c95a16ec9a49', 'rust/crates/sim-test/src/probe/colony.rs': '97d9bc0216240cfb91f39e52871d4227919ba7d379cfd9c3ee8f9eb8f9111cfd', 'rust/crates/sim-core/src/colony/command.rs': 'e34ac1d2a0715d971f957b9760609475e15f0f09bb2a5ba2b16741b41b2de05b'}
+INPUTS: dict[str, str] = {'rust/crates/sim-test/tests/colony_items.rs': '76608c79b7c3e30f6dcd36d935e34d895e3836eaf69bee209f5599eaf5acff61', 'rust/crates/sim-test/tests/colony_support/mod.rs': 'b5fb68e830fee08ff7e04694a23919ec62cfdcdab3431a69aed58899db616525', 'rust/crates/sim-test/tests/save_gate_observation/mod.rs': 'ab7c324c94846f231128040f7ccf34fbd2c8a9339a927a65962c1f2c17ce2cdf', 'rust/crates/sim-test/src/lib.rs': 'd5a126519bca132d236972c8813faf27a8f58dec8c514c1e1a96c95a16ec9a49', 'rust/crates/sim-test/src/probe/colony.rs': '97d9bc0216240cfb91f39e52871d4227919ba7d379cfd9c3ee8f9eb8f9111cfd', 'rust/crates/sim-core/src/colony/command.rs': 'e34ac1d2a0715d971f957b9760609475e15f0f09bb2a5ba2b16741b41b2de05b'}
 
 
 def submitted(before: Snapshot, after: Snapshot, terminal: Snapshot, expected: list[Json]) -> None:
