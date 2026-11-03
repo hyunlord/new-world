@@ -40,6 +40,10 @@ import generic_play_owner as play_owner
 import generic_play_sources as play_sources
 import generic_renderer_run as renderer
 import generic_resolver_run as resolver
+import generic_setup_bridge as setup_bridge
+import generic_setup_clippy as setup_clippy
+import generic_setup_import as setup_import
+import generic_setup_prepare as setup_prepare
 import generic_static_run as static
 import generic_test_run as native
 import generic_ui_fixed_run as fixed
@@ -47,6 +51,8 @@ import generic_ui_pack_run as pack
 import generic_ui_smoke_run as smoke
 import generic_ui_visibility_run as visibility
 import generic_ui_why_run as why
+import generic_workspace_endpoints as workspace_endpoints
+import generic_workspace_run as workspace_runtime
 import mux2_gate_receipts as stall_capture
 from gate_oracle_child import SUITE_NAMES
 from gate_stall_child import ChildPlan, projected_environment
@@ -151,6 +157,8 @@ class Outcome:
     m1_state: tuple[tuple[str,tuple[str,str]], ...] = ()
     mux2_result: mux2_runtime.DefenceResult | None = None
     mux2_state: tuple[tuple[str,tuple[str,str]], ...] = ()
+    setup_evidence: SetupEvidence | None = None
+    setup_state: str = ''
 
 
 def aggregate(rows: tuple[Outcome, ...]) -> str:
@@ -270,7 +278,8 @@ def invoke(name: str, action: Action, output: Path, inputs: Inputs, *, step: int
 
 
 def recheck(row: Outcome) -> None:
-    if row.root is not None and (row.files or row.root.exists()):
+    if row.component=='setup':recheck_setup_anchor(row)
+    elif row.root is not None and (row.files or row.root.exists()):
         require(not row.snapshot_error,'/outputs','initial inventory failed: '+row.snapshot_error)
         require(inventory(row.root,[p.name for p in row.root.iterdir()])==dict(row.files),'/outputs','completed artifacts changed')
     if row.receipt is not None:require(file_hash(row.receipt)==row.sha256,'/receipt','completed receipt changed')
@@ -503,6 +512,7 @@ class OwnedOrderedInputs(OrderedInputs):
     prefix36: Library49Context | None = None
     m1: M1Context | None = None
     mux2: Mux2Context | None = None
+    setup: SetupContext | None = None
 
 
 def strict_bindings(context: OwnedOrderedInputs) -> None:
@@ -569,6 +579,225 @@ class _StrictOwner:
             except BaseException as diagnostic:  # noqa: BLE001 - retain actual lane through controller faults
                 self.retained_error=diagnostic
                 if isinstance(diagnostic,OSError):eof=True
+
+
+@dataclass(frozen=True, slots=True)
+class SetupContext:
+    prepared: setup_prepare.PreparedSetup
+    wait: setup_bridge.CargoWaitEvidence
+    clippy_wait: setup_clippy.ClippyWaitEvidence
+    # Construction only: no producer execution. New manifests belong below preparation.
+    workspace_factory: Callable[[Literal[4,5], workspace_endpoints.WorkspaceChain, Path, Path, int], workspace_endpoints.WorkspaceRequest]
+
+
+@dataclass(frozen=True, slots=True)
+class SetupEvidence:
+    step: int
+    result: setup_bridge.BridgeResult | setup_import.ImportResult | workspace_endpoints.WorkspaceResult | setup_clippy.ClippyResult
+    anchor: workspace_endpoints.EvidenceAnchor
+    receipt_sha256: str
+    endpoint: workspace_endpoints.WorkspaceEndpoint | setup_clippy.ClippyEndpoint | None
+    import_owner: setup_import.ImportOwner | None = None
+
+
+def setup_calls() -> tuple[OrderedCall,...]:
+    return tuple(OrderedCall(step,'setup',tuple(row.identity for row in obligations() if row.step==step))
+                 for step in range(2,7))
+
+
+def setup_bindings(context: OwnedOrderedInputs) -> SetupContext:
+    bound=context.setup
+    require(bound is not None,'/setup','explicit prepared context required')
+    assert bound is not None
+    prepared=bound.prepared;candidate=context.components.probes.candidate
+    require(prepared.inputs.root==candidate.input_root and prepared.inputs.source_sha==candidate.source_sha,
+            '/setup','candidate source differs')
+    godot=context.components.godot.candidate
+    tool=next(t for t in prepared.inputs.tools if t.name=='godot')
+    require(godot.input_root==prepared.inputs.root and godot.source_sha==prepared.inputs.source_sha
+            and godot.executable==tool.path and godot.executable_sha256==tool.sha256,
+            '/setup','candidate Godot binding differs')
+    setup_bridge.immutable_inputs(prepared)
+    require(all(dict(prepared.materialized).get(name)==sha for name,sha in candidate.input_files),
+            '/setup','candidate input binding differs')
+    return bound
+
+
+def setup_dependencies(bound: SetupContext) -> dict[str,Json]:
+    prepared=bound.prepared
+    return {'root':str(prepared.inputs.root),'source_sha':prepared.inputs.source_sha,
+        'source_digest':prepared.source_digest,'output':str(prepared.inputs.output),
+        'inputs':dict(prepared.materialized),'external':{str(path):sha for path,sha in prepared.external},
+        'environment':dict(prepared.inputs.environment),
+        'wait_inputs':{str(path):sha for path,sha in setup_bridge.qualify_wait(prepared,bound.wait)},
+        'clippy_wait_inputs':{str(path):sha for path,sha in setup_clippy.qualify_clippy(prepared,bound.clippy_wait)},
+        'factory_scope':'CONSTRUCTION_ONLY_NO_NATIVE_PRODUCER',
+        'source_build_qualification':'PENDING','observer_world_qualification':'PENDING'}
+
+
+@final
+class SetupOwner(_StrictOwner):
+    ownership_label: str = 'setup'
+
+    def __init__(self, control: int, output: Path, bound: SetupContext) -> None:
+        super().__init__(control,output)
+        self.bound=bound
+        self.bridge: setup_bridge.BridgeResult | None=None
+        self.import_owner: setup_import.ImportOwner | None=None
+        self.imported: setup_import.ImportResult | None=None
+        self.workspace: workspace_endpoints.WorkspaceEndpoint | None=None
+        self.request: workspace_endpoints.WorkspaceRequest | setup_clippy.ClippyRequest | None=None
+        self.retained_failure: BaseException | None=None
+        self.in_flight=False
+        self.closed=False
+        self.next_step=2
+        self.rows: list[Outcome]=[]
+        self.generated: workspace_endpoints.GeneratedState | None=None
+        self.evidence_root: Path=output
+        self.factory_anchor: workspace_endpoints.EvidenceAnchor | None=None
+
+    def retain_unknown(self, error: BaseException) -> NoReturn:
+        self.retained_failure=error
+        self.hold(error)
+
+    def close(self) -> None:
+        require(not self.in_flight,'/setup','cannot close unknown workload')
+        if not self.closed:
+            os.close(self.descriptor);self.closed=True
+
+
+def setup_files(state: str) -> tuple[tuple[str,str], ...]:
+    node=document(state)
+    return tuple((name,node.field(name).field('sha256').text()) for name in node.mapping()
+                 if node.field(name).field('sha256').value is not None)
+
+
+def recheck_setup_anchor(row: Outcome) -> None:
+    if row.component!='setup' or row.root is None:return
+    require(workspace_endpoints.anchor(row.root).state==row.setup_state,
+            '/setup','historical output bytes/kinds/membership changed')
+
+
+def recheck_setup(context: OrderedInputs, row: Outcome) -> None:
+    if row.component!='setup':return
+    recheck_setup_anchor(row)
+    evidence=row.setup_evidence
+    if evidence is None:
+        require(row.status in {'FAIL','NOT_RUN'},'/setup','missing actual evidence')
+        return
+    require(isinstance(context,OwnedOrderedInputs),'/setup','owned entrypoint required')
+    assert isinstance(context,OwnedOrderedInputs)
+    _=setup_bindings(context)
+    recheck(row);evidence.anchor.recheck()
+    require(file_hash(evidence.result.receipt)==evidence.receipt_sha256,'/setup','historical receipt changed')
+    if isinstance(evidence.endpoint,workspace_endpoints.WorkspaceEndpoint):
+        workspace_endpoints.check_endpoint(evidence.endpoint)
+    elif isinstance(evidence.endpoint,setup_clippy.ClippyEndpoint):
+        setup_clippy.check_clippy_endpoint(evidence.endpoint)
+    evidence.anchor.recheck()
+
+
+def setup_workspace_request(owner: SetupOwner, step: Literal[4,5], output: Path) -> workspace_endpoints.WorkspaceRequest:
+    prepared=owner.bound.prepared
+    if step==4:
+        require(owner.import_owner is not None and owner.imported is not None,'/setup','missing actual import return')
+        assert owner.import_owner is not None and owner.imported is not None
+        prior: workspace_endpoints.ImportPredecessor | workspace_endpoints.WorkspaceEndpoint = workspace_endpoints.ImportPredecessor(
+            owner.import_owner,owner.imported,file_hash(owner.imported.receipt))
+        _=workspace_endpoints.admit_import(prepared,prior)
+    else:
+        require(owner.workspace is not None and owner.workspace.step==4,'/setup','missing actual debug endpoint')
+        assert owner.workspace is not None
+        prior=owner.workspace;workspace_endpoints.check_endpoint(prior)
+    chain=workspace_endpoints.WorkspaceChain(prepared,prior)
+    before=workspace_endpoints.generated(prepared)
+    history=tuple(row.setup_evidence.anchor for row in owner.rows if row.setup_evidence is not None)
+    preparation=output.parent/'workspace-preparation'
+    require(not preparation.exists() and not preparation.is_symlink(),'/setup/factory','fresh preparation directory required')
+    preparation.mkdir()
+    request=owner.bound.workspace_factory(step,chain,output,preparation,owner.descriptor)
+    owner.factory_anchor=workspace_endpoints.anchor(preparation)
+    require(workspace_endpoints.generated(prepared)==before,'/setup/factory','factory changed generated producer state')
+    setup_bridge.immutable_inputs(prepared)
+    for item in history:item.recheck()
+    require(request.step==step and request.arm=='candidate' and request.chain is chain
+            and request.spec.input_root==prepared.inputs.root and request.output==output
+            and request.held_lane_fd==owner.descriptor and request.manifest.is_relative_to(preparation)
+            and request.manifest==request.manifest.resolve(),'/setup/factory','foreign request/manifest/chain')
+    require(request.spec.argv==workspace_runtime.workspace_argv(str(request.spec.executable),step),
+            '/setup/factory','original workspace argv required')
+    owner.factory_anchor.recheck()
+    return request
+
+
+def invoke_setup(call: OrderedCall, context: OwnedOrderedInputs, output: Path, owner: SetupOwner) -> Outcome:
+    require(call in setup_calls() and call.step==owner.next_step and not owner.closed,'/setup','setup chronology differs')
+    bound=setup_bindings(context)
+    require(bound is owner.bound,'/setup','context replaced')
+    for row in owner.rows:recheck_setup(context,row)
+    if owner.generated is not None:
+        require(workspace_endpoints.generated(bound.prepared)==owner.generated,'/setup','generated drift between original steps')
+    if call.step==2:output=bound.prepared.inputs.output
+    owner.evidence_root=output.parent if call.step in (4,5) else output
+    result: setup_bridge.BridgeResult | setup_import.ImportResult | workspace_endpoints.WorkspaceResult | setup_clippy.ClippyResult
+    endpoint: workspace_endpoints.WorkspaceEndpoint | setup_clippy.ClippyEndpoint | None=None
+    try:
+        if call.step==2:
+            owner.in_flight=True
+            result=setup_bridge.run_bridge_owned(bound.prepared,bound.wait,owner.descriptor)
+            owner.in_flight=False;owner.bridge=result
+        elif call.step==3:
+            require(owner.bridge is not None,'/setup','missing actual bridge return')
+            assert owner.bridge is not None
+            prior=setup_import.PriorBridge(owner.bridge,file_hash(owner.bridge.receipt),bound.wait)
+            owner.in_flight=True
+            owner.import_owner=setup_import.start_import_pair(bound.prepared,prior,output,owner.descriptor)
+            result=owner.import_owner.finish()
+            owner.in_flight=False;owner.imported=result
+        elif call.step in (4,5):
+            request=setup_workspace_request(owner,4 if call.step==4 else 5,output);owner.request=request
+            _=workspace_runtime.checked(request)
+            owner.in_flight=True
+            result=workspace_runtime.run_workspace_owned(request)
+            owner.in_flight=False
+            require(result.endpoint is not None,'/setup','actual workspace endpoint missing')
+            owner.workspace=result.endpoint;endpoint=result.endpoint
+        else:
+            require(owner.workspace is not None and owner.workspace.step==5,'/setup','actual release endpoint missing')
+            assert owner.workspace is not None
+            clippy_request=setup_clippy.ClippyRequest(bound.prepared,bound.clippy_wait,output,owner.descriptor,owner.workspace)
+            owner.request=clippy_request;owner.in_flight=True
+            result=setup_clippy.run_clippy_request(clippy_request)
+            owner.in_flight=False;endpoint=result.endpoint
+            require(endpoint is not None,'/setup','actual Clippy endpoint missing')
+        # Freeze the actual return before any coordinator validation callback.
+        if owner.factory_anchor is not None:owner.factory_anchor.recheck()
+        evidence=SetupEvidence(call.step,result,workspace_endpoints.anchor(owner.evidence_root),file_hash(result.receipt),endpoint,owner.import_owner if call.step==3 else None)
+        owner.generated=workspace_endpoints.generated(bound.prepared)
+        failed=result.status in {'FAIL','FAIL_STEP3'}
+        state=evidence.anchor.state
+        row=Outcome('setup','FAIL' if failed else 'PENDING',result.receipt,evidence.receipt_sha256,
+            'source/build/observer/world qualification pending',
+            setup_files(state),owner.evidence_root,
+            result.status,result.status,setup_evidence=evidence,setup_state=state)
+        recheck_setup(context,row)
+        owner.rows.append(row);owner.next_step+=1
+        if call.step==6:owner.close()
+        return row
+    except setup_bridge.BridgeOwnershipUnknown as unknown:owner.retain_unknown(unknown)
+    except setup_clippy.ClippyOwnershipUnknown as unknown:owner.retain_unknown(unknown)
+    except workspace_runtime.WorkspaceOwnershipUnknown as unknown:
+        owner.request=unknown.request;owner.retain_unknown(unknown)
+    except setup_import.ImportFailure as unknown:
+        owner.import_owner=unknown.owner;owner.retain_unknown(unknown)
+    except (setup_bridge.BridgeFailure,setup_clippy.ClippyFailure,workspace_runtime.WorkspaceSettledFailure):
+        owner.in_flight=False
+        raise
+    except BaseException as error:
+        if owner.in_flight:owner.retain_unknown(error)
+        raise
+
+
 
 
 @final
@@ -1874,12 +2103,12 @@ def invoke_strict(call: OrderedCall, context: OwnedOrderedInputs, output: Path) 
         if not entered or settled:os.close(owner.descriptor)
 
 
-def run_ordered_owned(context: OrderedInputs, strict: StrictContext, output: Path, control_fd: int, *, bench: BenchContext | None = None, docs: DocsContext | None = None, oracles: OracleContext | None = None, resolver: ResolverContext | None = None, structural: Structural48Context | None = None, stall: StallContext | None = None, library49: Library49Context | None = None, library42: Library49Context | None = None, library43: Library49Context | None = None, play: PlayContext | None = None, prefix28: Library49Context | None = None, prefix36: Library49Context | None = None, m1: M1Context | None = None, mux2: Mux2Context | None = None) -> Path:
+def run_ordered_owned(context: OrderedInputs, strict: StrictContext, output: Path, control_fd: int, *, bench: BenchContext | None = None, docs: DocsContext | None = None, oracles: OracleContext | None = None, resolver: ResolverContext | None = None, structural: Structural48Context | None = None, stall: StallContext | None = None, library49: Library49Context | None = None, library42: Library49Context | None = None, library43: Library49Context | None = None, play: PlayContext | None = None, prefix28: Library49Context | None = None, prefix36: Library49Context | None = None, m1: M1Context | None = None, mux2: Mux2Context | None = None, setup: SetupContext | None = None) -> Path:
     require(type(control_fd) is int and control_fd>2 and stat.S_ISFIFO(os.fstat(control_fd).st_mode),
             '/control','dedicated persistent controller pipe required')
     owned=OwnedOrderedInputs(context.components,context.static_product,context.environment,
         context.discovery_product,context.discovery_environment,context.diagnosis_product,
-        context.diagnosis_environment,context.save_roundtrip,context.perf,strict,control_fd,bench,docs,oracles,resolver,structural,stall,library49,library42,library43,play,prefix28,prefix36,m1,mux2)
+        context.diagnosis_environment,context.save_roundtrip,context.perf,strict,control_fd,bench,docs,oracles,resolver,structural,stall,library49,library42,library43,play,prefix28,prefix36,m1,mux2,setup)
     return _run_ordered(owned,output)
 
 
@@ -2123,12 +2352,15 @@ def invoke_core_evaluation(inputs: Inputs, predecessor: Outcome | None, output: 
             snapshot_error,core_prior=prior,core_result=result)
 
 
-def ordered_owned_calls(*, bench_enabled: bool = False, docs_enabled: bool = False, oracles_enabled: bool = False, resolver_enabled: bool = False, structural_enabled: bool = False, stall_enabled: bool = False, library49_enabled: bool = False, library42_enabled: bool = False, library43_enabled: bool = False, play_enabled: bool = False, prefix28_enabled: bool = False, prefix36_enabled: bool = False, m1_enabled: bool = False, mux2_enabled: bool = False) -> tuple[OrderedCall,...]:
+def ordered_owned_calls(*, bench_enabled: bool = False, docs_enabled: bool = False, oracles_enabled: bool = False, resolver_enabled: bool = False, structural_enabled: bool = False, stall_enabled: bool = False, library49_enabled: bool = False, library42_enabled: bool = False, library43_enabled: bool = False, play_enabled: bool = False, prefix28_enabled: bool = False, prefix36_enabled: bool = False, m1_enabled: bool = False, mux2_enabled: bool = False, setup_enabled: bool = False) -> tuple[OrderedCall,...]:
     result=[call for call in ordered_calls() if not m1_enabled or call.step!=17]
     if mux2_enabled:
         result=[call for call in result if call.step!=37]
         insertion=next(index for index,call in enumerate(result) if ORDER.index(call.step)>ORDER.index(37))
         result.insert(insertion,mux2_call())
+    if setup_enabled:
+        insertion=next(index for index,call in enumerate(result) if call.step>1)
+        result[insertion:insertion]=setup_calls()
     if m1_enabled:
         insertion=next(index for index,call in enumerate(result) if ORDER.index(call.step)>ORDER.index(17))
         result.insert(insertion,m1_call())
@@ -2433,15 +2665,23 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
     Exhaustive runtime trees, links and absent configurations remain caller admission;
     this coordinator checks supplied regular files, not hermetic runtime closure.
     """
+    dispatch_context: Final[OrderedInputs]=context
     inputs=context.components
     require(output.is_absolute() and output==output.resolve() and not output.exists(),'/output','fresh canonical output required')
     for product in (inputs.probes.base,inputs.probes.candidate,inputs.godot.base,inputs.godot.candidate):
         require(not output.is_relative_to(product.input_root) and not product.input_root.is_relative_to(output),'/output','product overlap')
-    calls=ordered_owned_calls(bench_enabled=context.bench is not None,docs_enabled=context.docs is not None,oracles_enabled=context.oracles is not None,resolver_enabled=context.resolver is not None,structural_enabled=context.structural is not None,stall_enabled=context.stall is not None,library49_enabled=context.library49 is not None,library42_enabled=context.library42 is not None,library43_enabled=context.library43 is not None,play_enabled=context.play is not None,prefix28_enabled=context.prefix28 is not None,prefix36_enabled=context.prefix36 is not None,m1_enabled=context.m1 is not None,mux2_enabled=context.mux2 is not None) if isinstance(context,OwnedOrderedInputs) else ordered_calls();rows: dict[str,Outcome]={};errors: list[str]=[];sequence: list[str]=[]
+    calls=ordered_owned_calls(bench_enabled=context.bench is not None,docs_enabled=context.docs is not None,oracles_enabled=context.oracles is not None,resolver_enabled=context.resolver is not None,structural_enabled=context.structural is not None,stall_enabled=context.stall is not None,library49_enabled=context.library49 is not None,library42_enabled=context.library42 is not None,library43_enabled=context.library43 is not None,play_enabled=context.play is not None,prefix28_enabled=context.prefix28 is not None,prefix36_enabled=context.prefix36 is not None,m1_enabled=context.m1 is not None,mux2_enabled=context.mux2 is not None,setup_enabled=context.setup is not None) if isinstance(context,OwnedOrderedInputs) else ordered_calls();rows: dict[str,Outcome]={};errors: list[str]=[];sequence: list[str]=[]
     tail_stop: str | None=None;bench_inputs: dict[str,Json] | None=None;docs_inputs: dict[str,Json] | None=None;oracle_inputs: dict[str,Json] | None=None;resolver_inputs: dict[str,Json] | None=None;structural_inputs: dict[str,Json] | None=None;stall_inputs: dict[str,Json] | None=None;library49_inputs: dict[str,Json] | None=None;library42_inputs: dict[str,Json] | None=None;library43_inputs: dict[str,Json] | None=None;play_inputs: dict[str,Json] | None=None;prefix_inputs: dict[str,Json]={};m1_inputs: dict[str,Json] | None=None;mux2_inputs: dict[str,Json] | None=None
+    setup_owner: SetupOwner | None=None;setup_inputs: dict[str,Json] | None=None
+    terminal_generated: workspace_endpoints.GeneratedState | None=None
     plan_hash: str | None=None;blocked: dict[int,str]={};events: list[Json]=[];perf_inputs: dict[str,Json] | None=None
     try:
         output.mkdir(parents=True)
+        if isinstance(context,OwnedOrderedInputs) and context.setup is not None:
+            setup_inputs=setup_dependencies(setup_bindings(context))
+            bridge_output=context.setup.prepared.inputs.output
+            require(not bridge_output.exists() and not bridge_output.is_relative_to(output) and not output.is_relative_to(bridge_output),
+                    '/setup','fresh external prepared bridge output must not overlap dispatch')
         _=direct.partition(inputs.registry)
         perf_bindings(context);perf_inputs=perf_dependencies(context.perf)
         if isinstance(context,OwnedOrderedInputs) and context.bench is not None:
@@ -2478,7 +2718,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
         refs: dict[int,dict[str,list[Json]]]={step:references(inputs,output/f'step-{step:02d}',validate=True) for step in direct.DIRECT_STEP_FIXTURES}
         atomic_json(output/'plan.json',{'schema_version':3,'original_step_order':list(ORDER),
             'original_order_executed':False,'publication_authorized':False,
-            'supported_call_sequence':[call.identity for call in calls],'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,'library49_dependencies':library49_inputs,'library42_dependencies':library42_inputs,'library43_dependencies':library43_inputs,'play_dependencies':play_inputs,'native_prefix_dependencies':prefix_inputs,'m1_dependencies':m1_inputs,'mux2_dependencies':mux2_inputs,
+            'supported_call_sequence':[call.identity for call in calls],'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,'library49_dependencies':library49_inputs,'library42_dependencies':library42_inputs,'library43_dependencies':library43_inputs,'play_dependencies':play_inputs,'native_prefix_dependencies':prefix_inputs,'m1_dependencies':m1_inputs,'mux2_dependencies':mux2_inputs,'setup_dependencies':setup_inputs,
             'strict_owned_entrypoint':isinstance(context,OwnedOrderedInputs),
             'obligations':[{'identity':row.identity,'step':row.step,'fixture':row.fixture,
                 'invocation_references':refs.get(row.step,{}).get(row.fixture or '',[])} for row in obligations()]})
@@ -2490,6 +2730,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
                 rows[call.identity]=Outcome(call.component,'NOT_RUN',None,None,'blocked by '+tail_stop);continue
             if call.step in blocked:
                 rows[call.identity]=Outcome(call.component,'NOT_RUN',None,None,'blocked by '+blocked[call.step]);continue
+            if call.component=='setup' and setup_owner is not None and setup_owner.closed:
+                rows[call.identity]=Outcome('setup','NOT_RUN',None,None,'previous setup endpoint unavailable');continue
             if call.component=='structural':
                 try:structural_predecessor(inputs,rows)
                 except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as failure:
@@ -2497,8 +2739,10 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
                     rows[call.identity]=Outcome('structural','NOT_RUN',None,None,'blocked by 48:direct; '+safe_docs_exception(failure))
                     continue
             for row in rows.values():
-                recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row);recheck_play(context,row);recheck_prefix(context,row);recheck_m1(context,row);recheck_mux2(context,row);recheck_core_evaluation(context.components,row)
+                recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row);recheck_play(context,row);recheck_prefix(context,row);recheck_m1(context,row);recheck_mux2(context,row);recheck_setup(context,row);recheck_core_evaluation(context.components,row)
             ordered_bindings(context)
+            if isinstance(context,OwnedOrderedInputs) and context.setup is not None:
+                require(setup_dependencies(setup_bindings(context))==setup_inputs,'/setup','context drift')
             if isinstance(context,OwnedOrderedInputs) and context.bench is not None:
                 require(bench_dependencies(context.bench)==bench_inputs,'/bench','context binding changed')
             if isinstance(context,OwnedOrderedInputs) and context.docs is not None:
@@ -2530,13 +2774,18 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
                 require(play_dependencies(play_bindings(context))==play_inputs,'/play','context binding changed')
             destination=parent/call.component
             try:
-                with nullcontext() if call.component in {'static','save_roundtrip','perf','nav','bench','oracles','resolver','structural','stall','library49','library42','library43','play','native_prefix','m1','mux2'} else lane():
-                    selected = with_static_priors(context,tuple(rows.values())) if call.component == 'static' else context
-                    action=ordered_action(call,selected) if call.component not in {'bench','oracles','resolver','structural','stall','library49','library42','library43','core_evaluation','play','native_prefix','m1','mux2'} else None
+                with nullcontext() if call.component in {'static','save_roundtrip','perf','nav','bench','oracles','resolver','structural','stall','library49','library42','library43','play','native_prefix','m1','mux2','setup'} else lane():
+                    selected = with_static_priors(dispatch_context,tuple(rows.values())) if call.component == 'static' else dispatch_context
+                    action=ordered_action(call,selected) if call.component not in {'bench','oracles','resolver','structural','stall','library49','library42','library43','core_evaluation','play','native_prefix','m1','mux2','setup'} else None
                     static_product, static_environment = static_context(selected,call.step) if call.component == 'static' else (None,None)
                     sequence.append(call.identity);events.append({'call':call.identity,'event':'start','at':timestamp()})
                     try:
-                        if call.step==14 and call.component=='static' and isinstance(selected,OwnedOrderedInputs):
+                        if call.component=='setup' and isinstance(selected,OwnedOrderedInputs):
+                            if setup_owner is None:
+                                require(call.step==2,'/setup','bridge must start chain')
+                                setup_owner=SetupOwner(selected.control_fd,destination,setup_bindings(selected))
+                            rows[call.identity]=invoke_setup(call,selected,destination,setup_owner)
+                        elif call.step==14 and call.component=='static' and isinstance(selected,OwnedOrderedInputs):
                             rows[call.identity]=invoke_docs(call,selected,destination)
                         elif call.component=='mux2' and isinstance(selected,OwnedOrderedInputs):
                             rows[call.identity]=invoke_mux2(call,selected,destination)
@@ -2571,15 +2820,30 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
                                                        save_products=selected.save_roundtrip,perf_context=selected.perf)
                     finally:events.append({'call':call.identity,'event':'end','at':timestamp()})
             except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
-                rows[call.identity]=replace(rows[call.identity],status='FAIL',error=rows[call.identity].error+'; lane: '+str(error)) if call.identity in rows else Outcome(call.component,'FAIL',None,None,str(error))
+                if call.component=='setup' and setup_owner is not None:
+                    if setup_owner.in_flight:setup_owner.retain_unknown(error)
+                    setup_owner.retained_error=error;setup_owner.close()
+                    root=setup_owner.evidence_root
+                    state=workspace_endpoints.anchor(root).state if root.exists() else ''
+                    rows[call.identity]=Outcome('setup','FAIL',None,None,safe_docs_exception(error),
+                        setup_files(state) if state else (),root if root.exists() else None,setup_state=state)
+                else:rows[call.identity]=replace(rows[call.identity],status='FAIL',error=rows[call.identity].error+'; lane: '+str(error)) if call.identity in rows else Outcome(call.component,'FAIL',None,None,str(error))
             if call.component=='native_prefix' and rows[call.identity].reported_status!='PASS_PREFIX_ONLY':blocked[call.step]=call.identity
             if call.component=='native_prefix' and rows[call.identity].status=='FAIL':blocked[call.step]=call.identity
             if call.component=='bench' and rows[call.identity].status!='COMPONENT_PASS':tail_stop=call.identity
             if rows[call.identity].status=='FAIL' and call.step in (34,46):blocked[call.step]=call.identity
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
+    finally:
+        if setup_owner is not None and setup_owner.in_flight:
+            setup_owner.retain_unknown(RuntimeError('setup call did not establish settlement'))
+        if isinstance(context,OwnedOrderedInputs) and context.setup is not None:
+            try:terminal_generated=workspace_endpoints.generated(context.setup.prepared)
+            except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
+                errors.append('terminal generated snapshot: '+safe_docs_exception(error))
+        if setup_owner is not None:setup_owner.close()
     for row in rows.values():
         try:
-            recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row);recheck_play(context,row);recheck_prefix(context,row);recheck_m1(context,row);recheck_mux2(context,row);recheck_core_evaluation(context.components,row)
+            recheck(row);recheck_oracle(context,row);recheck_resolver(context,row);recheck_structural(context,row);recheck_stall(context,row);recheck_library49(context,row);recheck_play(context,row);recheck_prefix(context,row);recheck_m1(context,row);recheck_mux2(context,row);recheck_setup(context,row);recheck_core_evaluation(context.components,row)
         except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     try:
         ordered_bindings(context)
@@ -2613,14 +2877,20 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
         require(plan_hash is not None and file_hash(output/'plan.json')==plan_hash,'/plan','scope changed or plan failed')
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:errors.append(str(error))
     for row in rows.values():
-        try:recheck_prefix_anchor(row);recheck_m1_anchor(row);recheck_mux2_anchor(row)
+        try:recheck_prefix_anchor(row);recheck_m1_anchor(row);recheck_mux2_anchor(row);recheck_setup_anchor(row)
         except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
             errors.append('final native evidence: '+safe_docs_exception(error))
+    if isinstance(context,OwnedOrderedInputs) and context.setup is not None:
+        try:
+            require(terminal_generated is not None and workspace_endpoints.generated(context.setup.prepared)==terminal_generated,
+                    '/setup/terminal_generated','current generated state changed after producers settled')
+        except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
+            errors.append('terminal generated evidence: '+safe_docs_exception(error))
     by_obligation={identity:call.identity for call in calls for identity in call.identities}
     output.mkdir(parents=True,exist_ok=True);terminal=output/'ordered-dispatch.json'
     payload: dict[str,Json]={'schema_version':3,'status':'FAIL' if errors or any(row.status=='FAIL' for row in rows.values()) else 'INCOMPLETE',
         'publication_authorized':False,'full_gate_claim':False,'original_order_executed':False,
-        'original_step_order':list(ORDER),'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,'library49_dependencies':library49_inputs,'library42_dependencies':library42_inputs,'library43_dependencies':library43_inputs,'play_dependencies':play_inputs,'native_prefix_dependencies':prefix_inputs,'m1_dependencies':m1_inputs,'mux2_dependencies':mux2_inputs,'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
+        'original_step_order':list(ORDER),'perf_dependencies':perf_inputs,'bench_dependencies':bench_inputs,'docs_dependencies':docs_inputs,'oracle_dependencies':oracle_inputs,'resolver_dependencies':resolver_inputs,'structural_dependencies':structural_inputs,'stall_dependencies':stall_inputs,'library49_dependencies':library49_inputs,'library42_dependencies':library42_inputs,'library43_dependencies':library43_inputs,'play_dependencies':play_inputs,'native_prefix_dependencies':prefix_inputs,'m1_dependencies':m1_inputs,'mux2_dependencies':mux2_inputs,'setup_dependencies':setup_inputs,'dispatch_events':events,'actual_component_sequence':list(sequence),'plan_sha256':plan_hash,'errors':list(errors),
         'components':[{'identity':call.identity,'step':call.step,'component':call.component,
             'status':rows[call.identity].status if call.identity in rows else 'NOT_RUN',
             'receipt':str(rows[call.identity].receipt) if call.identity in rows and rows[call.identity].receipt else None,
@@ -2631,6 +2901,7 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             'reported_status':rows[call.identity].reported_status if call.identity in rows else None,
             'snapshot_error':rows[call.identity].snapshot_error if call.identity in rows else '',
             'mux2_state':{name:[kind,sha] for name,(kind,sha) in rows[call.identity].mux2_state} if call.identity in rows else {},
+            'setup_state':document(rows[call.identity].setup_state).mapping() if call.identity in rows and rows[call.identity].setup_state else {},
             'm1_state':{name:[kind,sha] for name,(kind,sha) in rows[call.identity].m1_state} if call.identity in rows else {},
             'native_prefix_state':{name:[kind,sha] for name,(kind,sha) in rows[call.identity].prefix_state} if call.identity in rows else {},
             'library49_members':list(rows[call.identity].library49_members) if call.identity in rows else []} for call in calls],
@@ -2640,8 +2911,15 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
             'call':by_obligation.get(row.identity),
             'component_status':rows[by_obligation[row.identity]].status if row.identity in by_obligation and by_obligation[row.identity] in rows else None}
             for row in obligations()]}
+    if terminal_generated is not None:payload['setup_terminal_generated']=workspace_endpoints.state_json(terminal_generated)
     atomic_json(terminal,payload)
     before_publication_check=len(errors)
+    if isinstance(context,OwnedOrderedInputs) and context.setup is not None:
+        try:
+            require(setup_dependencies(setup_bindings(context))==setup_inputs,'/setup','published inputs drift')
+            for row in rows.values():recheck_setup(context,row)
+        except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
+            errors.append('published setup evidence: '+safe_docs_exception(error))
     if isinstance(context,OwnedOrderedInputs) and context.m1 is not None:
         try:require(m1_dependencies(m1_bindings(context))==m1_inputs,'/m1','published source/context drift')
         except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
@@ -2651,9 +2929,15 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
         except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
             errors.append('published MUX2 inputs: '+safe_docs_exception(error))
     for row in rows.values():
-        try:recheck_prefix_anchor(row);recheck_m1_anchor(row);recheck_mux2_anchor(row)
+        try:recheck_prefix_anchor(row);recheck_m1_anchor(row);recheck_mux2_anchor(row);recheck_setup_anchor(row)
         except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
             errors.append('published native evidence: '+safe_docs_exception(error))
+    if isinstance(context,OwnedOrderedInputs) and context.setup is not None:
+        try:
+            require(terminal_generated is not None and workspace_endpoints.generated(context.setup.prepared)==terminal_generated,
+                    '/setup/terminal_generated','current generated state changed after producers settled')
+        except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as error:
+            errors.append('terminal generated evidence: '+safe_docs_exception(error))
     if len(errors)!=before_publication_check:
         payload['status']='FAIL';payload['errors']=list(errors)
         payload['supersedes']={'path':str(terminal),'sha256':file_hash(terminal)}
