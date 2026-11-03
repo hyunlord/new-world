@@ -687,3 +687,9 @@ engine_bridge_ffi의 원래22개 사례는 빈 세계에서 BuildingStampSystem�
 다섯 package의 전체 source/build/manifest/lock 묶음을 검토한 해시와 대조하고, 실행 가능한 예제가 없으며 실제 사례 집합도 빈 경우에만 doctest의 미분류 경로를 제거한다. text 도식14개와 생성 문서의 prose를 확인했다. 새 소스·변경된 소스·이름 있는 예제는 INCOMPLETE를 유지하며, 다섯 그룹의 누락·중복은 거부한다. 다른 native 세계 경로와 전체 안전성 의무는 그대로다.
 
 루트 통합38개 종료0, 독립 검토18개 종료0(서로 겹치는 검사), 변경 생산 파일과 두 새 테스트의 엄격한 타입0오류를 확인했다. 첫 루트 타입 검사에서 테스트의 annotation·사용하지 않은 반환값20건을 찾아 수정한 실패 로그도 보존했다. p111 BASE의 실제 입력과 다섯 소스 묶음은 일치했지만 현재 doctest native 실행 완료를 뜻하지 않는다. Rust/data는 변경하지 않았다. 증거: `stage0/ordered-dispatch/whole-gate-root-doctests-{01,02}.log`, `whole-gate-root-doctests-types{,-02}.log`, `whole-gate-native-draft/doctest-followup/integration`. 전체 Stage0 미게시와 CORE-off KnowledgeLost FAIL은 유지한다.
+
+### S0-p115 — 이름이 고정된 baseline tick0 관측 연결
+
+원래 baseline capability/read-only 테스트의 seed0·tick0 세계 하나를 정확한 소스와 실제 library 결과, 관측 파일의 위치·해시·PID·thread 이름에 연결했다. 일반 probe의 양수 기간 규칙은 그대로 두고 별도 tick0 계약을 사용한다. knowledge 비활성은 null 이력으로 유지하며, 죽음·개입 없음과 인구 불변을 검사한다. 라이브러리 전체 완료나 다른 세계의 안전성으로 확대하지 않는다.
+
+독립 검토는 합성 disk 영수증으로 실제 공개 수집 경로를 실행한13개 검사를 확인했다. 루트 통합67개 종료0(12.038초), 새 생산·fixture·테스트 및 dispatcher의 엄격한 타입0오류, Ruff(기존 명시적 reexport 규칙 예외)·diff 통과다. 첫 통합의 잘못된 모듈명과 기존 독립 fixture의 새 seam 누락, 첫 타입 검사8건은 로그로 보존했다. fixture seam과 타입만 보완했고 생산 판정기는 약화하지 않았다. 증거: `stage0/ordered-dispatch/whole-gate-root-baseline-zero-{01,02}.log`, `whole-gate-root-baseline-zero-types-{01,02,03}.log`, `whole-gate-baseline-collector-review-v2.md`. Rust/data 변경과 새 native 실행은 없으며, Stage0 미게시와 엄격한 CORE-off KnowledgeLost FAIL을 유지한다.

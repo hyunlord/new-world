@@ -159,6 +159,14 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
         replay_scope = evaluate_replays(session, base_stage, candidate_stage)
         safety.extend(replay_scope['safety'] if isinstance(replay_scope['safety'], list) else [])
         coverage.extend(replay_scope['coverage'] if isinstance(replay_scope['coverage'], list) else [])
+    baseline_observer_scope: dict[str, Json] = {}
+    if step in {4, 5}:
+        from generic_whole_gate_baseline_observer import (
+            evaluate_family as evaluate_baseline_observer,
+        )
+        baseline_observer_scope = evaluate_baseline_observer(session, base_stage, candidate_stage)
+        safety.extend(row.value for row in Node(baseline_observer_scope['safety']).array())
+        coverage.extend(row.value for row in Node(baseline_observer_scope['coverage']).array())
     appearance_scope: dict[str, Json] = {}
     if step in {4, 5}:
         from generic_whole_gate_appearance import evaluate_appearance
@@ -206,4 +214,4 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
     gaps.extend(row.value for row in Node(ascii_scope.get('unsupported', [])).array())
     return {'status': 'PASS' if step in {17, 24} else 'INCOMPLETE', 'safety': safety, 'coverage': coverage,
             'unsupported': migrations.get('unsupported', []) if step == 37 else gaps,
-            'mechanisms': mechanism, 'native_probe_replays': replay_scope, 'appearance': appearance_scope, 'ascii': ascii_scope, 'workspace_accounting': workspace_scope, 'knowledge_defaults': knowledge_defaults_scope, 'migrations': migrations, 'qualification': LIMIT}
+            'mechanisms': mechanism, 'native_probe_replays': replay_scope, 'baseline_observer': baseline_observer_scope, 'appearance': appearance_scope, 'ascii': ascii_scope, 'workspace_accounting': workspace_scope, 'knowledge_defaults': knowledge_defaults_scope, 'migrations': migrations, 'qualification': LIMIT}

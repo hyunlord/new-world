@@ -185,3 +185,7 @@ The sixth workspace source classification covers only the exact22 engine_bridge_
 ## D0-doctest-source-closure — empty output needs a reviewed source basis
 
 The five current package doctest groups contain no runnable snippets: the source review identifies fourteen explicit text diagrams and only prose in generated documentation. Bind each package's complete source/build/manifest/lock closure to its reviewed digest and admitted inputs before classifying its actual empty case set. Missing or duplicate groups reject; changed closure or any named snippet remains INCOMPLETE. Original aggregate accounting and all other world routes remain required. The retained historical output fixture is an excerpt with only its final blank separator removed; it is not a new native execution receipt.
+
+## D0-named-baseline-zero — tick zero is an explicit source contract
+
+The original baseline capability/read-only test constructs one baseline seed0 world and observes tick0 without advancing it. Admit only its exact source-pinned native test, actual successful library outcome, anchored mirror namespace and emitted identity. Its dedicated parser requires complete fresh history, disabled knowledge with null losses, zero deaths/checkpoints and unchanged population. Do not relax the general positive-duration probe parser or invent a positive duration. This adds one safety row while the library and workspace remain incomplete.
