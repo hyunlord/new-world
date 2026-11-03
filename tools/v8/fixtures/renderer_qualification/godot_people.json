@@ -1,0 +1,230 @@
+{
+  "seed": 100,
+  "tick": 900,
+  "count": 10,
+  "people": [
+    [
+      78,
+      79
+    ],
+    [
+      80,
+      82
+    ],
+    [
+      80,
+      82
+    ],
+    [
+      80,
+      82
+    ],
+    [
+      80,
+      82
+    ],
+    [
+      80,
+      82
+    ],
+    [
+      80,
+      82
+    ],
+    [
+      82,
+      79
+    ],
+    [
+      82,
+      79
+    ],
+    [
+      82,
+      79
+    ]
+  ],
+  "settled": true,
+  "detail": [
+    {
+      "agent_id": 0,
+      "tile": [
+        80,
+        82
+      ],
+      "layer_tile": [
+        80,
+        82
+      ],
+      "frame": "E/sleep",
+      "bed": [
+        0.0,
+        0.0
+      ],
+      "look": 27,
+      "variant": 0
+    },
+    {
+      "agent_id": 1,
+      "tile": [
+        82,
+        79
+      ],
+      "layer_tile": [
+        82,
+        79
+      ],
+      "frame": "E/sleep",
+      "bed": [
+        0.0,
+        0.0
+      ],
+      "look": 20,
+      "variant": 1
+    },
+    {
+      "agent_id": 2,
+      "tile": [
+        80,
+        82
+      ],
+      "layer_tile": [
+        80,
+        82
+      ],
+      "frame": "E/sleep",
+      "bed": [
+        0.0,
+        -24.0
+      ],
+      "look": 19,
+      "variant": 4
+    },
+    {
+      "agent_id": 3,
+      "tile": [
+        82,
+        79
+      ],
+      "layer_tile": [
+        82,
+        79
+      ],
+      "frame": "E/sleep",
+      "bed": [
+        0.0,
+        -24.0
+      ],
+      "look": 28,
+      "variant": 5
+    },
+    {
+      "agent_id": 4,
+      "tile": [
+        80,
+        82
+      ],
+      "layer_tile": [
+        80,
+        82
+      ],
+      "frame": "E/sleep",
+      "bed": [
+        0.0,
+        24.0
+      ],
+      "look": 18,
+      "variant": 2
+    },
+    {
+      "agent_id": 5,
+      "tile": [
+        80,
+        82
+      ],
+      "layer_tile": [
+        80,
+        82
+      ],
+      "frame": "E/sleep",
+      "bed": [
+        -8.0,
+        -48.0
+      ],
+      "look": 29,
+      "variant": 5
+    },
+    {
+      "agent_id": 6,
+      "tile": [
+        82,
+        79
+      ],
+      "layer_tile": [
+        82,
+        79
+      ],
+      "frame": "E/sleep",
+      "bed": [
+        0.0,
+        24.0
+      ],
+      "look": 19,
+      "variant": 0
+    },
+    {
+      "agent_id": 7,
+      "tile": [
+        78,
+        79
+      ],
+      "layer_tile": [
+        78,
+        79
+      ],
+      "frame": "E/sleep",
+      "bed": [
+        0.0,
+        0.0
+      ],
+      "look": 28,
+      "variant": 3
+    },
+    {
+      "agent_id": 8,
+      "tile": [
+        80,
+        82
+      ],
+      "layer_tile": [
+        80,
+        82
+      ],
+      "frame": "E/sleep",
+      "bed": [
+        8.0,
+        48.0
+      ],
+      "look": 27,
+      "variant": 4
+    },
+    {
+      "agent_id": 9,
+      "tile": [
+        80,
+        82
+      ],
+      "layer_tile": [
+        80,
+        82
+      ],
+      "frame": "E/sleep",
+      "bed": [
+        0.0,
+        0.0
+      ],
+      "look": 27,
+      "variant": 1
+    }
+  ]
+}

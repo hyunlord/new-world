@@ -1,4 +1,4 @@
-"""Five reviewed source-owned mechanism/parser routes; never ordinary safety evidence."""
+"""Six reviewed source-owned mechanism/parser routes; never ordinary safety evidence."""
 from pathlib import Path
 from typing import Final
 
@@ -6,7 +6,8 @@ from generic_gate import require, text
 from generic_process import file_hash
 from mux2_gate_inputs import Json, Node
 
-PINS: Final = {'rust/crates/sim-bridge/src/ffi/colony.rs': '8ac2a8e5e595bf4ec1bafe70d3121af27a77dfdf7bf855e9943882651d7017da',
+PINS: Final = {'rust/crates/sim-test/tests/engine_bridge_ffi.rs': '449bbb9d9d70cda245a456e166fb10656c332724221ad2033ca596ccf5d63102',
+ 'rust/crates/sim-bridge/src/ffi/colony.rs': '8ac2a8e5e595bf4ec1bafe70d3121af27a77dfdf7bf855e9943882651d7017da',
  'rust/crates/sim-bridge/src/ffi/mod.rs': 'e81cd6a9f329474c579b8f3d03e6ab43069d4464d139ae4fac192c54c85ba945',
  'rust/crates/sim-bridge/src/ffi/node.rs': '8f624202216995c4cee88eaf89d189b3041965889410c24cf41e8a5575785af1',
  'rust/crates/sim-core/src/rules/colony.rs': '3fa9680569223cb974acdcf7247f0aabf8296da707752f17ac24e94f02471946',
@@ -96,7 +97,40 @@ CONTRACTS: Final = (('worldsim_perf',
    'rust/crates/sim-systems/src/worldgen/mod.rs',
    'rust/crates/sim-core/src/rules/colony.rs',
    'rust/crates/sim-engine/src/lib.rs',
-   'rust/crates/sim-systems/src/lib.rs')))
+   'rust/crates/sim-systems/src/lib.rs')),
+ ('engine_bridge_ffi',
+ 'test',
+ 'rust/crates/sim-test/tests/engine_bridge_ffi.rs',
+ 'CONTROLLED_EMPTY_BSS_ONLY',
+ ('harness_ffi_queue_field_init_empty',
+  'harness_ffi_all_8_channels_overlay_buffer_length_correct',
+  'harness_ffi_all_8_channels_overlay_buffer_zeros_on_fresh_engine',
+  'harness_ffi_tile_detail_all_8_channels_zero_on_fresh_engine',
+  'harness_ffi_on_building_placed_inbounds_enqueues_and_returns_true',
+  'harness_ffi_on_building_placed_oob_does_not_enqueue_and_returns_false',
+  'harness_ffi_stamp_marks_exactly_warmth_dirty',
+  'harness_ffi_stamp_marks_exactly_spiritual_dirty',
+  'harness_ffi_stamp_marks_exactly_beauty_dirty',
+  'harness_ffi_stamp_marks_exactly_light_dirty',
+  'harness_ffi_stamp_marks_exactly_noise_dirty',
+  'harness_ffi_non_stamped_channels_produce_zero_dirty_regions',
+  'harness_ffi_oob_event_discarded_no_dirty_regions_queue_drained',
+  'harness_ffi_dirty_region_coordinate_bounds_match_input',
+  'harness_ffi_three_events_all_drained_in_single_tick',
+  'harness_ffi_three_events_all_4_stamped_channels_three_dirty_regions',
+  'harness_ffi_large_radius_clamped_no_panic_yields_gte1_dirty_region_within_bounds',
+  'harness_ffi_mixed_oob_then_valid_event_proves_continue_not_break',
+  'harness_ffi_no_dirty_regions_accumulate_on_empty_queue_tick',
+  'harness_ffi_isolation_invariant_survives_empty_queue_tick',
+  'harness_ffi_dirty_regions_all_channels_empty_at_construction',
+  'harness_ffi_radius_zero_produces_single_pixel_dirty_region'),
+ ('rust/crates/sim-test/tests/engine_bridge_ffi.rs',
+  'rust/crates/sim-engine/src/lib.rs',
+  'rust/crates/sim-systems/src/runtime/influence/building_stamp.rs',
+  'rust/crates/sim-systems/src/runtime/influence/mod.rs',
+  'rust/crates/sim-bridge/src/ffi/node.rs',
+  'rust/crates/sim-bridge/src/ffi/mod.rs')))
+
 
 def classify_routes(root: Path, inputs: dict[str, str], sections: list[Json]) -> list[Json]:
     """Consume already authenticated original aggregate sections, with exact case sets."""

@@ -27,8 +27,8 @@ def sections():
 class ClassificationTests(unittest.TestCase):
     def test_reviewed_source_and_exact_original_outcomes(self):
         result = classify_routes(ROOT, dict(PINS), sections())
-        self.assertEqual(len(result), 5)
-        self.assertEqual(sum(len(row['cases']) for row in result), 21)
+        self.assertEqual(len(result), 6)
+        self.assertEqual(sum(len(row['cases']) for row in result), 43)
         self.assertTrue(all(row['publication_authority'] is False for row in result))
 
     def test_missing_original_target(self):

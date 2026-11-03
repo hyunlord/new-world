@@ -173,3 +173,11 @@ New observer files may have absent parent directories. Only explicitly declared 
 ## D0-qualification-recomputed — reports cannot supply their own equality verdict
 
 A separately supplied qualification reference is optional for execution and mandatory for final qualification. Authenticate the original build recipe, complete source/config/tool closure, actual process evidence and exact O postimages, then recompute three-mode artifact equality. An unsupported comparator, missing state witness or missing arm rejects qualification. Treat timing as a closed schema with only explicit measurement exclusions; preserve JSON scalar types. Pin and recheck normalizer source before using it. The current61-file O matrix has22 supported comparisons and29 unavailable routes; these counts are readiness, never execution evidence.
+
+## D0-renderer-byte-comparison — ordinary artifacts do not authenticate their producers
+
+The renderer comparator retains all three original artifact bytes, including unknown fields. It also repeats the ordinary seed100/tick900, person tile and appearance agreement, settled state and accepted command checks. Commands must be nondecreasing within the original half-open replay interval [0,900). A review reproduced acceptance of a common tick900 or descending command sequence in the first draft; the second draft rejects both. The committed small fixtures are retained historical outputs, not fresh native qualification.
+
+Producer admission still lacks the authenticated Godot/debug-bridge build chain. Keep the renderer qualification route unavailable until that chain is implemented and actual evidence is admitted. Byte equality alone does not change the qualification matrix or establish observer neutrality.
+
+The sixth workspace source classification covers only the exact22 engine_bridge_ffi cases and six pinned direct authorities. These construct empty worlds and manually invoke BuildingStampSystem without ordinary Engine progression. Preserve their original aggregate outcomes; the classification supplies no ordinary-world survival evidence. Replacing a manual call with Engine.tick invalidates the source pin and rejects classification.

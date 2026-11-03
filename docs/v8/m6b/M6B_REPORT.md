@@ -667,3 +667,13 @@ workspace의 파서 전용2개·빈 Phase2/scaffold/수동 tree identity3개 대
 
 
 p111-r2의 마지막 baseline identity도 실제 종료0으로 완료됐다. Stage−1 기준 공통228,748값 차이0·한쪽 경로0, chronicle64개/19,683항목 동일, 표준 git_sha·기존0값 제외 후 샘플64개 동일, seeds0–3 결정성 통과다. native 소스·기준 자료·identity 하네스 전후 해시가 동일하고 실행 소유자 종료0·잠금 반환을 확인했다. 실제 검증한 것은 커밋 전 p111 작업 트리이며 출력의 git_sha 라벨은 당시 부모 HEAD8000f5f다. 전체 gate나 별도 제품 중립성 증명은 아니다. 최종 구성 Python74개(5.545초), import 정리 후 qualification38개, 엄격한 타입0오류·Ruff(명시적 public reexport 규칙 제외)·rustfmt·diff·제한된 docs 검사도 통과했다.
+
+### S0-p112 — 렌더러 원본 비교와 빈 bridge 세계 분류
+
+렌더러 원본 산출물 세 개를 제외 키 없이 비교하는 순수 비교기를 추가했다. seed100·tick900, 인물 위치와 외형, settled, 명령 수락 여부를 함께 검사한다. 독립 검토가 찾은 tick900 경계와 역순 명령의 공통 오류를 재현해 거부하도록 고쳤다. 보존된 과거 원본 fixture는 현재 native 실행 증거가 아니며 Godot·debug bridge 생산 경로 인증은 남아 있다. qualification matrix의 미지원 상태는 유지한다.
+
+engine_bridge_ffi의 원래22개 사례는 빈 세계에서 BuildingStampSystem만 수동 실행하는 소스 분류로 연결했다. 여섯 직접 소스 pin과 정확한 사례 집합을 요구하며 일반 세계 안전성으로 계산하지 않는다. 루트 통합39개 검사 종료0(0.126초), 추가 Python 파일의 엄격한 타입0오류를 확인했다. 증거는 `stage0/ordered-dispatch/whole-gate-root-p112-integration-02.log`, `whole-gate-root-p112-types.log`, `whole-gate-native-draft/p112-renderer-review/v2-evidence.json`, `whole-gate-engine-bridge-review/CLASSIFIER_REVIEW_V2.md`다.
+
+동결 p109 전체 Python discovery는 2,328개 실행(4,544.006초) 후 import 오류2개·skip5개로 종료1이었다. tools/v8에서 PYTHONPATH 없이 실행해 `test_mux_safety`와 `test_mux_score`가 `tools` 패키지를 찾지 못했다. 원래 FAIL을 보존하고 두 모듈의 경로 보정 검증을 별도 기록한다. p111 공개 전체 게이트는 별도 동결 H와 독립 BASE/후보 제품으로 실행 중이다. BASE bridge 빌드·Godot import는 실제 종료0이며 debug workspace는 아직 실행 중이다. Stage0은 미게시이고 엄격한 CORE-off KnowledgeLost 실패는 유지한다.
+
+후속 검증은 같은 동결 p109에 명시적 repository PYTHONPATH를 사용해 해당 두 모듈만 실행했고19개(0.800초) 종료0이었다. 원본 입력430개 해시가 전후 동일하다. 원래 discovery의 argv/cwd/env는 원본 영수증에 없어 실행 당시 기록과 오류 로그를 구분했으며, 보충 성공을 전체 suite 성공으로 바꾸지 않는다. 증거: `stage0/ordered-dispatch/python-p109-mux-import-rerun/REVIEW.md`. p112 최종 통합39개와 변경 파일 Ruff·diff 검사는 통과했다. 이 변경은 Python 판정기·테스트·문서뿐이며 Rust/data는 p111과 동일하다. p111-r2 identity 증거를 보존하며 새 native identity 실행으로 표현하지 않는다.
