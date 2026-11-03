@@ -22,6 +22,9 @@ from generic_sources import inventory
 from m6a_gate_history import run as original_run
 from mux2_gate_inputs import Json
 
+# Synthetic source-owned cache matching the unchanged production resolution pin.
+CLASS_CACHE_FIXTURE = 'list=[{\n"base": &"Node",\n"class": &"SimReads",\n"icon": "",\n"is_abstract": false,\n"is_tool": false,\n"language": &"GDScript",\n"path": "res://scripts/core/sim_reads.gd"\n}, {\n"base": &"RefCounted",\n"class": &"PersonNames",\n"icon": "",\n"is_abstract": false,\n"is_tool": false,\n"language": &"GDScript",\n"path": "res://scripts/ui/person_names.gd"\n}, {\n"base": &"RefCounted",\n"class": &"ArtHash",\n"icon": "",\n"is_abstract": false,\n"is_tool": false,\n"language": &"GDScript",\n"path": "res://scripts/world/art_hash.gd"\n}]\n'
+
 
 def transcript() -> str:
     labels = ['data-only plant maps admitted', 'fixture content installs',
@@ -36,6 +39,21 @@ def transcript() -> str:
 
 
 class StructuralTests(unittest.TestCase):
+    def test_class_cache_fixture_does_not_read_generated_checkout_state(self) -> None:
+        original = shutil.copyfile
+        def copy(source: str | Path, target: str | Path) -> str | Path:
+            if Path(source).name == 'global_script_class_cache.cfg':
+                raise AssertionError('fixture read generated checkout cache')
+            return original(source, target)
+        with tempfile.TemporaryDirectory() as directory, patch.object(shutil, 'copyfile', side_effect=copy):
+            products, _ = self.fixture(Path(directory).resolve())
+            for product in (products.base, products.candidate):
+                self.assertEqual(file_hash(product.input_root/'.godot/global_script_class_cache.cfg'),
+                                 structural.CLASS_CACHE_SHA256)
+                paths = structural.resolution_paths(product.input_root)
+                self.assertTrue({'scripts/core/sim_reads.gd', 'scripts/ui/person_names.gd',
+                                 'scripts/world/art_hash.gd'} <= paths)
+
     def test_owned_api_is_separate_from_legacy_capture(self) -> None:
         self.assertTrue(callable(getattr(structural, "run_owned_entrypoint", None)))
 
@@ -81,7 +99,7 @@ class StructuralTests(unittest.TestCase):
                 path.parent.mkdir(parents=True,exist_ok=True)
                 if not path.exists():
                     _ = path.write_text('synthetic fixture only')
-            _ = shutil.copyfile(product_source/'.godot/global_script_class_cache.cfg',root/'.godot/global_script_class_cache.cfg')
+            _ = (root/'.godot/global_script_class_cache.cfg').write_text(CLASS_CACHE_FIXTURE)
             for name in ('scripts/ui/person_names.gd','scripts/world/art_hash.gd'):
                 target = root/name
                 target.parent.mkdir(parents=True,exist_ok=True)
