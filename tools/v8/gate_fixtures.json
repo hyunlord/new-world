@@ -32,7 +32,7 @@
     "tools/v8/m6a_run.py": "1c997bb0567e09456be1cbad0041acdd61e802f33eebf59e9cc5112b08c18072",
     "tools/v8/m6a_data_only.py": "516ad7a4a8f23b32c94da7be7a68697d08e3c4b0c604d30252998962a5e5d056",
     "tools/v8/renderer_agreement.sh": "0d05f038764de1b611297445ae9e713d3829790e82d0670af9c7b04a03373be8",
-    "tools/v8/perf.sh": "e5e97afe9207a0deee3830717b9e8469db862f920532067ee2d35f4874244773",
+    "tools/v8/perf.sh": "e57c1de6ed7535da9716bff679aa71194d5f04f739ffae4662960a23f0443fa9",
     "rust/crates/sim-test/src/bench.rs": "bc222518ac71900035508ae85b656e5122d46bffda3d088885c4e3bf9fcaa571",
     "rust/crates/sim-test/src/probe/colony.rs": "3e54223c6fb17a55363cf4baa743bfbe8a50d026dfe50835878feac1870ebf56",
     "rust/crates/sim-test/data/m6a_apple/items.ron": "94ed88bc381c214a876d39228a058c30c1b4643b7dc66ac24db43f3f9e2ad90c",

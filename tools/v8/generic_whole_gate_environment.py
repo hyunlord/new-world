@@ -7,10 +7,9 @@
 from pathlib import Path
 
 from generic_gate import require
-from mux2_gate_inputs import Node
-
 from generic_process import ProcessSpec
 from generic_whole_gate_contract import hashes
+from mux2_gate_inputs import Node
 
 
 def process_spec(session: Node, arm: str, argv: tuple[str, ...], output: Path,
@@ -23,6 +22,10 @@ def process_spec(session: Node, arm: str, argv: tuple[str, ...], output: Path,
                 for key in set(common) & set(arm_environment)),
             '/environment', 'common environment changes product build identity')
     environment = arm_environment | common
+    from generic_whole_gate_perf_admission import DEADLINE_ENV, session_deadline
+    require(DEADLINE_ENV not in environment, '/environment', 'deadline cannot be selected by incoming environment')
+    if 'materialization' in session.mapping() or 'measurement_deadline_epoch' in session.mapping():
+        environment[DEADLINE_ENV] = str(session_deadline(session))
     if 'source_sha' in product.mapping():
         environment['WORLDSIM_GIT_SHA'] = product.field('source_sha').text()
     environment['WORLDSIM_TEST_SETTINGS_DIR'] = str(Path(session.field('output').text())/arm/'settings')

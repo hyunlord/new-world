@@ -71,7 +71,7 @@ class MaterializationTests(unittest.TestCase):
         fixture_inputs = {str(item): file_hash(item) for item in fixture_paths(fixture_environment)}
         bash = Path('/bin/bash').resolve()
         config = home/'whole-gate.json'
-        _ = config.write_text(json.dumps({'schema':'whole_gate.v1','selectors':{
+        _ = config.write_text(json.dumps({'schema':'whole_gate.v1','measurement_deadline_epoch':4102444800.,'selectors':{
             'harness_root':str(selected.harness_root),'harness_sha':selected.harness_sha,
             'published_sha':selected.published_sha,'purpose':'self_proof',
             'base':arm(selected.base),'candidate':arm(selected.candidate),

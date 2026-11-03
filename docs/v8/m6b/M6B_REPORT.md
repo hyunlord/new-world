@@ -783,3 +783,11 @@ appearance·ASCII routing fixture 두 파일에서 새로 연결된 colony FFI·
 V2는 인접 FFI fixture의 미완료 예제를 새로 관측되는 colony_jobs에서 실제 미관측 colony_items로 바꾼 두 문자열 수정만 더한다. 처음 인접19개 검사 중 두 실패와 수정 후 parser를 포함한53개 통과를 모두 보존했다. 합동 검토93개 통과는 별도 겹치는 검사 집합이므로 합산하지 않는다. 선택20+3개 파일의 타입 오류0, 기존 fixture 세 파일은 별도 비교의31·45건 진단이 그대로여서 clean 주장 대상에서 제외한다.
 
 증거: `stage0/ordered-dispatch/colony-jobs-observer-draft-v2/RESULT.md`, `colony-jobs-observer-review/REVIEW_FROZEN.md`, `summary-interleave-p111-m1-review/REVIEW.md`, `combined-p127-review-bindings-01.json`. 원본 gameplay를 바꾸려는 수정은 없지만 Rust compile·default-off identity·off/on 실제 열 mirror·중립성은 NOT_RUN이다. O postimage 변경으로 과거 qualification을 재사용하지 않으며 matrix는 UNAVAILABLE다. Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p130 — 성능 child 시작 전 부하와 명시적 기한 검사
+
+H에서 selector에 명시된 유효한 measurement deadline을 session·환경에 연결하고, step12의 원본 성능 child마다 및 step27 launch 직전에 기존 load1<8 admission을 적용한다. 원래 argv·workload·성능 기준과 shell의 실행·wait 소유권은 유지한다. 기한이 없거나 만료됐거나 외부 환경으로 대체되면 거부한다. 거부된 step27에는 NOT_RUN admission 기록만 남기며 존재하지 않는 child의 PID·exit·stage를 만들지 않는다. V2의 먼 미래 epoch는 required-tools 합성 fixture용이며 운영 기본 기한이 아니다.
+
+독립21개 검사와 합동 검토는 통과했다. 입력·생산물 및 합동 검사 범위는 `stage0/ordered-dispatch/perf-load-admission-draft-v2/RESULT_V2.md`, `perf-load-admission-independent-review/REVIEW.md`, `combined-p127-review-bindings-01.json`에 고정했다. 기존 step25의 별도 wait에는 새 global deadline이 적용되지 않고 실행 중 child를 종료하지도 않으므로 전체 실행 hard stop은 아니다. admission 이후 부하 안정성도 보장하지 않는다.
+
+동결 p111 BASE step12는 실제 종료0이지만 load1 시작9.42·종료8.37로 유효한 측정 창을 충족하지 못했다. 새 H는 그 결과를 소급 통과시키지 않는다. 새 admission의 실제 native 실행은 NOT_RUN이며 qualification UNAVAILABLE·Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.

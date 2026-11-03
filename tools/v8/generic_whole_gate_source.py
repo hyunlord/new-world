@@ -6,6 +6,7 @@
 """Materialize named H/O layers over admitted P; this module never builds a binary."""
 import hashlib
 import shutil
+import time
 from pathlib import Path
 
 from generic_build import derived_snapshot, overlay_files
@@ -161,7 +162,10 @@ def prepare_session(config: Path) -> Path:
     node = document(config.read_text())
     node.field('schema').equals('whole_gate.v1')
     require(set(node.mapping()) - {'observer_qualification'} == {'schema', 'selectors', 'output', 'layers', 'python', 'bash',
-            'environment', 'external_inputs', 'acceptance', 'observations'}, '/config', 'unknown or missing field')
+            'environment', 'external_inputs', 'acceptance', 'observations', 'measurement_deadline_epoch'}, '/config', 'unknown or missing field')
+    from generic_whole_gate_perf_admission import deadline_epoch
+    measurement_deadline = deadline_epoch(node.field('measurement_deadline_epoch'))
+    require(time.time() < measurement_deadline, '/measurement_deadline_epoch', 'measurement hard stop already reached')
     selected = node.field('selectors')
     require(set(selected.mapping()) == {'harness_root', 'harness_sha', 'published_sha', 'purpose',
             'base', 'candidate', 'cargo', 'rustc'}, '/selectors', 'unknown or missing selector field')
@@ -236,6 +240,7 @@ def prepare_session(config: Path) -> Path:
               for name, value in source.field('tracked_manifest').mapping().items()
               if Node(value).array()[0].text() != '120000'}
     session: dict[str, Json] = {'schema': 'whole_gate_session.v1', 'purpose': checked,
+        'measurement_deadline_epoch': node.field('measurement_deadline_epoch').value,
         'selector_path': str(config), 'selector_sha256': config_hash, 'qualification': 'PRODUCT_UNQUALIFIED',
         'harness': {'root': str(selection.harness_root), 'source_sha': selection.harness_sha,
                     'inputs': {name: value for name, value in inputs.items()}},

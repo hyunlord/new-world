@@ -10,8 +10,6 @@ import sys
 from pathlib import Path
 
 from generic_gate import document, require
-from mux2_gate_inputs import Json, Node
-
 from generic_process import (
     ProcessResult,
     atomic_json,
@@ -32,6 +30,7 @@ from generic_whole_gate_journal import (
     recheck,
     snapshot,
 )
+from mux2_gate_inputs import Json, Node
 
 
 def run_step(path: Path, digest: str, arm: str, step: int, name: str,
@@ -47,6 +46,12 @@ def run_step(path: Path, digest: str, arm: str, step: int, name: str,
         if key in additions:
             Path(additions[key]).mkdir(mode=0o700)
     spec = process_spec(session, arm, argv, output / 'process', additions, descriptor)
+    if step == 27 and 'materialization' in session.mapping():
+        from generic_whole_gate_perf_admission import (
+            admit_measurement,
+            session_deadline,
+        )
+        _ = admit_measurement(output/'measurement-admission.jsonl', f'{arm}:nav-bench', session_deadline(session))
     result = execute(spec)
     artifacts, directories = snapshot(output)
     original_stage = Node(anchored(output))

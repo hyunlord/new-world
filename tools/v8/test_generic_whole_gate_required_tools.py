@@ -28,7 +28,7 @@ def selector(root: Path) -> Path:
     tools = {name: executable(root, name) for name in ('python3', 'bash', 'cargo', 'rustc')}
     arm: dict[str, Json] = {'root': str(root), 'source_sha': '0' * 40, 'cargo_home': str(root),
                             'configs': [], 'environment': [], 'overlay': None}
-    config: dict[str, Json] = {'schema': 'whole_gate.v1', 'selectors': {
+    config: dict[str, Json] = {'schema': 'whole_gate.v1', 'measurement_deadline_epoch': 4102444800., 'selectors': {
         'harness_root': str(root), 'harness_sha': '0' * 40, 'published_sha': '0' * 40,
         'purpose': 'self_proof', 'base': arm, 'candidate': dict(arm),
         'cargo': {'name': 'cargo', 'path': str(tools['cargo']), 'sha256': file_hash(tools['cargo'])},

@@ -197,3 +197,7 @@ The p111 actual debug evidence contains zero M1/M2 replay mirrors although both 
 ## D0-jobs-observation-boundary — original interventions remain ordinary safety
 
 Observe the original ten colony_jobs worlds without replacing their setup, commands, horizons or assertions. The eight M1 worlds start after original worker creation at tick0, not at the preceding empty constructor. Keep knowledge=None where the source disables it. Record the direct adult insertion and hunger/food interventions explicitly; do not invent births or queued commands. Require full recorded history, matched actual horizons and ordinary survival/KnowledgeLost checks for all ten worlds. Removing one completed target gap cannot complete the workspace. Changed O bytes require fresh default-off identity and observer qualification; current native proof remains NOT_RUN.
+
+## D0-measurement-launch-admission — a successful process is not a valid measurement window
+
+Bind an explicitly supplied measurement deadline to the original selector and session, and reject environment overrides. Admit each step12 measurement child and step27 before its original launch only when strict load1<8 and the deadline permit it. Admission owns no child, wait or termination. A rejected prelaunch must not manufacture a native result. This is neither a whole-run hard stop nor proof that load remains acceptable after admission; existing step25 policy is separate. Preserve the p111 native0 performance result as invalid-window evidence, not retroactive PASS.
