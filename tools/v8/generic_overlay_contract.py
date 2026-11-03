@@ -22,6 +22,7 @@ OBSERVER_EXACT_PATHS: Final = frozenset(
         "rust/crates/sim-test/tests/engine_appearance_ffi.rs",
         "rust/crates/sim-test/tests/engine_ascii.rs",
         "rust/crates/sim-test/tests/engine_knowledge_ffi.rs",
+        "rust/crates/sim-test/tests/engine_colony_ffi.rs",
         "rust/crates/sim-test/tests/m6b_presentation_defaults.rs",
         "rust/crates/sim-test/tests/save_gate_observation/external.rs",
     }

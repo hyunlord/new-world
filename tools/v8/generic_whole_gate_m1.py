@@ -6,11 +6,11 @@ from typing import Final
 
 from gate_test_summary import TestSummary, parse_log, validate_cases
 from generic_gate import boundary, require, text
-from generic_m1_commands import COMMANDS, BODY, authenticate_source
+from generic_m1_commands import BODY, COMMANDS, authenticate_source
 from generic_process import file_hash
 from generic_sources import manifest_hash
-from generic_whole_gate_aggregate import aggregate_output, LIMIT
-from mux2_gate_inputs import Json,Node
+from generic_whole_gate_aggregate import LIMIT, aggregate_output
+from mux2_gate_inputs import Json, Node
 
 FFI: Final = ('colony_reads_follow_the_orders','agent_job_columns_match_the_snapshot_rows')
 PROBE: Final = (
@@ -23,7 +23,7 @@ PROBE: Final = (
  'probe::colony::mux2_args_tests::evaluation_requires_explicit_arm_and_equivalent_inputs',
  'probe::colony::gate_environment_tests::environment_and_flag_are_independent_opt_ins',
 )
-SOURCE_PINS: Final = {'rust/crates/sim-test/tests/engine_colony_ffi.rs': 'f73d92341e117f97f85b5a78b331b7f520ba6a582da7ef1c7aa3a46533c399ab', 'rust/crates/sim-test/src/probe/colony.rs': 'b04d435eaf9be48eaee11a631982fa44b932fbca5f484da7c9e263cfdae30365', 'rust/crates/sim-test/src/probe/gate_observation_mirror.rs': '3250c195fd648fd323f57b5d6508ca136cc63d3e940f35f35df65ad11c97b7e3', 'rust/crates/sim-test/src/probe/gate_observation.rs': '23d328e105091e43c63eb24ae598e7c9901bf537e69d3d1bffb3b6fadc75fe61', 'tools/v8/test_locale_trf.gd': 'e5ab7e76920ce98f68f923ceb37eb434d350e48bd3cc59fb8910cfcba9db9487', 'rust/crates/sim-bridge/src/ffi/node.rs': '8f624202216995c4cee88eaf89d189b3041965889410c24cf41e8a5575785af1', 'rust/crates/sim-core/Cargo.toml': '667c583914926240faf8514f0d6450c864322a868d5d1b10a2933f753bc871b7', 'tools/v8/run_bounded.sh': '64b0d037c1a854add96cccf25ae7a0bcfc40be78ab4406f092514e4891009bf7', 'tools/v8/m2_u_script.json': '78261b13ce779811788945c3c77eed4eb5c709c7292fa40a849668520ce3bb75'}
+SOURCE_PINS: Final = {'rust/crates/sim-test/tests/engine_colony_ffi.rs': '0666f7abbb4fd7deb11cabb0ec8347c231a5c546cee16d7c94561a327230d366', 'rust/crates/sim-test/src/probe/colony.rs': 'b04d435eaf9be48eaee11a631982fa44b932fbca5f484da7c9e263cfdae30365', 'rust/crates/sim-test/src/probe/gate_observation_mirror.rs': '3250c195fd648fd323f57b5d6508ca136cc63d3e940f35f35df65ad11c97b7e3', 'rust/crates/sim-test/src/probe/gate_observation.rs': '23d328e105091e43c63eb24ae598e7c9901bf537e69d3d1bffb3b6fadc75fe61', 'tools/v8/test_locale_trf.gd': 'e5ab7e76920ce98f68f923ceb37eb434d350e48bd3cc59fb8910cfcba9db9487', 'rust/crates/sim-bridge/src/ffi/node.rs': '8f624202216995c4cee88eaf89d189b3041965889410c24cf41e8a5575785af1', 'rust/crates/sim-core/Cargo.toml': '667c583914926240faf8514f0d6450c864322a868d5d1b10a2933f753bc871b7', 'tools/v8/run_bounded.sh': '64b0d037c1a854add96cccf25ae7a0bcfc40be78ab4406f092514e4891009bf7', 'tools/v8/m2_u_script.json': '78261b13ce779811788945c3c77eed4eb5c709c7292fa40a849668520ce3bb75'}
 SOURCE_TREES: Final = {'rust/crates/sim-systems/src/runtime/jobs': '21fcddf3f0afd2f48cd3c2e64e228f512df35ec14395eb8691fc6a10530eb2db', 'rust/crates/sim-core/src/colony': '71f78e5657a11e7ef4fcca3a693bd267adf5879148f9172dcd25d5086161aa41'}
 
 

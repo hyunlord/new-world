@@ -116,6 +116,7 @@ class WholeNativeTests(unittest.TestCase):
     def test_actual_aggregate_subset_never_grants_full_coverage(self) -> None:
         # This fixture owns fixed-family evidence; appearance and ASCII routing have separate tests.
         with patch('generic_whole_gate_workspace.evaluate_family', return_value=accounting()), \
+             patch('generic_whole_gate_colony_ffi.evaluate_family', return_value={'status': 'PASS', 'safety': [], 'coverage': []}), \
              patch('generic_whole_gate_baseline_observer.evaluate_family', return_value={'safety': [], 'coverage': []}), \
              patch('generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults', return_value={'safety': [], 'coverage': []}), \
              patch('generic_whole_gate_appearance.evaluate_appearance',

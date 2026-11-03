@@ -159,6 +159,13 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
         replay_scope = evaluate_replays(session, base_stage, candidate_stage)
         safety.extend(replay_scope['safety'] if isinstance(replay_scope['safety'], list) else [])
         coverage.extend(replay_scope['coverage'] if isinstance(replay_scope['coverage'], list) else [])
+    colony_ffi_scope: dict[str, Json] = {}
+    if step in {4, 5, 17}:
+        from generic_whole_gate_colony_ffi import evaluate_family as evaluate_colony_ffi
+        colony_ffi_scope = evaluate_colony_ffi(session, base_stage, candidate_stage)
+        Node(colony_ffi_scope).field('status').equals('PASS')
+        safety.extend(row.value for row in Node(colony_ffi_scope['safety']).array())
+        coverage.extend(row.value for row in Node(colony_ffi_scope['coverage']).array())
     baseline_observer_scope: dict[str, Json] = {}
     if step in {4, 5}:
         from generic_whole_gate_baseline_observer import (
@@ -206,7 +213,7 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
                 # Completed source-selected collectors own these exact target routes.
                 if (row.field('package').value, row.field('target').value, row.field('kind').value) in {
                         ('sim-test', 'engine_ascii', 'test'), ('sim-test', 'engine_knowledge_ffi', 'test'),
-                        ('sim-test', 'm6b_presentation_defaults', 'test')}:
+                        ('sim-test', 'm6b_presentation_defaults', 'test'), ('sim-test', 'engine_colony_ffi', 'test')}:
                     continue
                 gaps.append({'arm': arm, 'world_route': row.value})
             gaps.extend({'arm': arm, 'doctest_world_route': row.value}
@@ -214,4 +221,4 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
     gaps.extend(row.value for row in Node(ascii_scope.get('unsupported', [])).array())
     return {'status': 'PASS' if step in {17, 24} else 'INCOMPLETE', 'safety': safety, 'coverage': coverage,
             'unsupported': migrations.get('unsupported', []) if step == 37 else gaps,
-            'mechanisms': mechanism, 'native_probe_replays': replay_scope, 'baseline_observer': baseline_observer_scope, 'appearance': appearance_scope, 'ascii': ascii_scope, 'workspace_accounting': workspace_scope, 'knowledge_defaults': knowledge_defaults_scope, 'migrations': migrations, 'qualification': LIMIT}
+            'mechanisms': mechanism, 'native_probe_replays': replay_scope, 'colony_ffi': colony_ffi_scope, 'baseline_observer': baseline_observer_scope, 'appearance': appearance_scope, 'ascii': ascii_scope, 'workspace_accounting': workspace_scope, 'knowledge_defaults': knowledge_defaults_scope, 'migrations': migrations, 'qualification': LIMIT}

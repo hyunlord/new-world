@@ -121,10 +121,10 @@ class QualificationTests(unittest.TestCase):
         with self.assertRaises((GateContractError, EvidenceError)):
             compare_artifacts(Node({'comparator': 'UNAVAILABLE', 'artifacts': ['state.json']}), outputs, Node(evidence))
 
-    def test_complete_61(self) -> None:
+    def test_complete_62(self) -> None:
         production = document(Path(__file__).with_name('whole_gate_observer_matrix.json').read_text())
-        self.assertEqual(len(production.field('observer_postimages').mapping()), 61)
-        self.assertEqual(len(production.field('rows').array()), 51)
+        self.assertEqual(len(production.field('observer_postimages').mapping()), 62)
+        self.assertEqual(len(production.field('rows').array()), 52)
         covered = {path.text() for row in production.field('rows').array() for path in row.field('observer_paths').array()}
         self.assertEqual(covered, set(production.field('observer_postimages').mapping()))
         self.assertTrue(any(row.field('comparator').text() == 'UNAVAILABLE' for row in production.field('rows').array()))
@@ -176,17 +176,17 @@ class QualificationTests(unittest.TestCase):
         with self.assertRaises((GateContractError, EvidenceError)):
             identity(session, Node(report), required)
 
-    def test_three_added_targets_remain_unqualified(self) -> None:
+    def test_four_added_targets_remain_unqualified(self) -> None:
         production = document(Path(__file__).with_name('whole_gate_observer_matrix.json').read_text())
         rows = {row.field('id').text():row for row in production.field('rows').array()}
-        for target in ('engine_ascii','engine_knowledge_ffi','m6b_presentation_defaults'):
+        for target in ('engine_ascii','engine_knowledge_ffi','m6b_presentation_defaults','engine_colony_ffi'):
             name = 'rust/crates/sim-test/tests/'+target+'.rs'
             self.assertIn(name, production.field('observer_postimages').mapping())
             row = rows['native_'+target]
             self.assertEqual(row.field('observer_paths').value,[name])
             self.assertEqual(row.field('comparator').text(),'UNAVAILABLE')
             self.assertEqual(row.field('command').text(),'cargo test --release -p sim-test --test '+target+' -- --test-threads=1')
-        self.assertEqual(sum(row.field('comparator').text()=='UNAVAILABLE' for row in rows.values()),29)
+        self.assertEqual(sum(row.field('comparator').text()=='UNAVAILABLE' for row in rows.values()),30)
         self.assertEqual(production.field('origin_source_state').text(),'WORKING_TREE_SNAPSHOT_NOT_COMMITTED')
 
     def test_unbound_matrix(self) -> None:

@@ -149,6 +149,10 @@
       "100644",
       "4c3d79cd188e62126d7614a2498f102afb500344568dda24187da37abd7dfb63"
     ],
+    "rust/crates/sim-test/tests/engine_colony_ffi.rs": [
+      "100644",
+      "0666f7abbb4fd7deb11cabb0ec8347c231a5c546cee16d7c94561a327230d366"
+    ],
     "rust/crates/sim-test/tests/engine_knowledge_ffi.rs": [
       "100644",
       "d57ea436bc99fe5c804812e92b404156536a9a3f26aa8571965fe87623e6281e"
@@ -252,7 +256,7 @@
   },
   "origin_bound_source_manifest_sha256": "94028ee9da4d639617b55ef039b0fa1267c9b70fa4f3e3cfd0d34834c71b880f",
   "origin_harness_sha": "8000f5f10a9efc367f7ac60fcc57477edddc7e66",
-  "origin_source_note": "Native sources frozen for root-owned foundation run; these are exact working bytes over HEAD, not a claimed future p111 commit.",
+  "origin_source_note": "Native sources frozen for root-owned foundation run; these are exact working bytes over HEAD, not a claimed future p111 commit. Successor engine_colony_ffi producer is separately source-pinned in its row; retained origin metadata describes the prior foundation snapshot, not qualification of this new producer.",
   "origin_source_state": "WORKING_TREE_SNAPSHOT_NOT_COMMITTED",
   "rows": [
     {
@@ -1617,6 +1621,21 @@
       ],
       "source_refs": {
         "rust/crates/sim-test/tests/m6b_presentation_defaults.rs": "e1c52685391c4f0944f6766b68370bf5303faa76aedec335944093f79ae1ab53"
+      }
+    },
+    {
+      "artifacts": [],
+      "authority": "Selected original workspace stages4/5 and M1 stage17 engine_colony_ffi target; target-specific invocation below is qualification only.",
+      "command": "cargo test --release -p sim-test --test engine_colony_ffi -- --test-threads=1",
+      "comparator": "UNAVAILABLE",
+      "evidence": "NOT_RUN",
+      "gap": "New opt-in tick0 census and Carry annotation producer: no admitted original-off/derived-off/derived-on state comparator or native neutrality run. Prior 61-path O qualification cannot qualify this 62-path successor.",
+      "id": "native_engine_colony_ffi",
+      "observer_paths": [
+        "rust/crates/sim-test/tests/engine_colony_ffi.rs"
+      ],
+      "source_refs": {
+        "rust/crates/sim-test/tests/engine_colony_ffi.rs": "0666f7abbb4fd7deb11cabb0ec8347c231a5c546cee16d7c94561a327230d366"
       }
     }
   ],

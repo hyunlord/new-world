@@ -725,3 +725,11 @@ H의 후손인 결함 후보가 H/O 파일을 그대로 포함하면 적용할 d
 재료 loader/registry의 두 원본 target 30개 사례를 소스에서 검토했다. 이 경로는 RON을 읽고 지역 registry 값과 범위를 검사하며 세계나 nested process를 실행하지 않는다. Rust14개·RON105개의 정확한 해시와 다섯 디렉터리의 실제 입력 목록, 전체 사례·성공 상태가 일치할 때만 두 target을 분류한다. 추가·누락·symlink 입력과 변경된 source를 거부한다. sim_core library·nested recipe·더 넓은 Catalog 경로는 계속 미분류다.
 
 독립27개 검사 및 추가 source-map/symlink 검사, 루트 합동43개 종료0(1.547초), 변경4개 Python 파일의 엄격한 타입0오류·Ruff·diff 통과다. 원본 Rust/data/assertion/O는 변경하지 않았으며 30개 사례를 30개 세계로 세지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-root-core-material-01.log`, `whole-gate-root-core-material-types-01.log`, `whole-gate-core-material-classification/INDEPENDENT_UI_REVIEW.md`. 실제 native qualification·전체 gate는 별도이고 Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p121 — colony FFI 두 원본 세계의 수집 경로
+
+원본 두 tick0 테스트에 opt-in Watch 시작·종료를 넣고, 두 번째 테스트가 직접 삽입하는 Carry를 별도 annotation으로 기록한다. 기존 명령과 assertion은 보존했다. 수집기는 실제 세 accepted command의 종류·tick·count와 인구 목록, Carry row/entity 정합성, 전체 KnowledgeLost 이력을 검사한다. 직접 Carry 개입도 안전성 검사를 면제하지 않는다. steps4/5/17에서 수집 성공을 요구한 뒤 정확한 target 하나만 미분류 목록에서 제거하며 전체 workspace는 INCOMPLETE를 유지한다.
+
+O 집합은62개로 바뀌므로 이전 O 실행 증거를 재사용하지 않는다. 새 matrix 항목은 UNAVAILABLE/NOT_RUN이며 Rust compile·off/on 중립성·실제 공개 수집 경로 실행은 아직 NOT_RUN이다. 별도 runtime 계획에서 원본/off에는 원시 상태 witness가 없다는 한계도 남겼다.
+
+독립 조합40개와 루트159개 종료0(48.275초), 새 생산·fixture·테스트 및 관련8개 Python 파일의 엄격한 타입0오류, Ruff·rustfmt·diff 통과다. 첫159개 검사의 기존 독립 fixture seam 누락1건과 새 코드 타입5건은 수정하고 실패 로그를 보존했다. 기존 fixture 두 개의 타입99건(70+29)은 정확한 변경 전 SHA와 비교해 새 진단0·해결0임을 확인했으며 타입 clean으로 주장하지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-root-colony-ffi-{01,02}.log`, `whole-gate-root-colony-ffi-types-{01,02}.log`, `colony-ffi-integration-independent-review/REVIEW.md`, `whole-gate-fixture-types-baseline-audit/REVIEW.md`. Stage0 미게시·CORE-off KnowledgeLost FAIL은 유지한다.

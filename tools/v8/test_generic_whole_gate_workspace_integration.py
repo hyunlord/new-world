@@ -31,6 +31,7 @@ class WorkspaceDispatchTests(unittest.TestCase):
                          'generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults'):
                 count = 6 if knowledge_rows and name.endswith('evaluate_knowledge_defaults') else 0
                 _ = stack.enter_context(patch(name, return_value={'safety': [{} for _ in range(count)], 'coverage': [{} for _ in range(count)]}))
+            _ = stack.enter_context(patch('generic_whole_gate_colony_ffi.evaluate_family', return_value={'status': 'PASS', 'safety': [], 'coverage': []}))
             _ = stack.enter_context(patch('generic_whole_gate_ascii.evaluate_ascii', return_value={
                 'safety': [], 'coverage': [], 'unsupported': ['actual carrier horizon differs'] if ascii_gap else []}))
             mock = stack.enter_context(patch('generic_whole_gate_workspace.evaluate_family',
