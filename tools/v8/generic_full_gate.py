@@ -27,6 +27,8 @@ from pathlib import Path
 from typing import Final, Literal, NoReturn, final
 
 import generic_bench_run as bench
+import generic_cli_execute as cli_execute
+import generic_cli_setup_handoff as cli_handoff
 import generic_core_evaluation as core_evaluation
 import generic_direct_run as direct
 import generic_integration_prefix_run as integration_prefix
@@ -591,6 +593,17 @@ class SetupContext:
 
 
 @dataclass(frozen=True, slots=True)
+class SetupPrefixContext:
+    """Actual setup selectors without fabricated future runtime products."""
+    setup: SetupContext
+    candidate_root: Path
+    candidate_sha: str
+    candidate_inputs: tuple[tuple[str,str], ...]
+    godot: Path
+    godot_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
 class SetupEvidence:
     step: int
     result: setup_bridge.BridgeResult | setup_import.ImportResult | workspace_endpoints.WorkspaceResult | setup_clippy.ClippyResult
@@ -605,7 +618,17 @@ def setup_calls() -> tuple[OrderedCall,...]:
                  for step in range(2,7))
 
 
-def setup_bindings(context: OwnedOrderedInputs) -> SetupContext:
+def setup_bindings(context: OwnedOrderedInputs | SetupPrefixContext) -> SetupContext:
+    if isinstance(context,SetupPrefixContext):
+        bound=context.setup;prepared=bound.prepared
+        tool=next(t for t in prepared.inputs.tools if t.name=='godot')
+        require((prepared.inputs.root,prepared.inputs.source_sha)==(context.candidate_root,context.candidate_sha),
+                '/setup','candidate source differs')
+        require((tool.path,tool.sha256)==(context.godot,context.godot_sha256),'/setup','Godot binding differs')
+        setup_bridge.immutable_inputs(prepared)
+        require(all(dict(prepared.materialized).get(name)==sha for name,sha in context.candidate_inputs),
+                '/setup','candidate input binding differs')
+        return bound
     bound=context.setup
     require(bound is not None,'/setup','explicit prepared context required')
     assert bound is not None
@@ -678,15 +701,15 @@ def recheck_setup_anchor(row: Outcome) -> None:
             '/setup','historical output bytes/kinds/membership changed')
 
 
-def recheck_setup(context: OrderedInputs, row: Outcome) -> None:
+def recheck_setup(context: OrderedInputs | SetupPrefixContext, row: Outcome) -> None:
     if row.component!='setup':return
     recheck_setup_anchor(row)
     evidence=row.setup_evidence
     if evidence is None:
         require(row.status in {'FAIL','NOT_RUN'},'/setup','missing actual evidence')
         return
-    require(isinstance(context,OwnedOrderedInputs),'/setup','owned entrypoint required')
-    assert isinstance(context,OwnedOrderedInputs)
+    require(isinstance(context,(OwnedOrderedInputs,SetupPrefixContext)),'/setup','owned entrypoint required')
+    assert isinstance(context,(OwnedOrderedInputs,SetupPrefixContext))
     _=setup_bindings(context)
     recheck(row);evidence.anchor.recheck()
     require(file_hash(evidence.result.receipt)==evidence.receipt_sha256,'/setup','historical receipt changed')
@@ -730,7 +753,7 @@ def setup_workspace_request(owner: SetupOwner, step: Literal[4,5], output: Path)
     return request
 
 
-def invoke_setup(call: OrderedCall, context: OwnedOrderedInputs, output: Path, owner: SetupOwner) -> Outcome:
+def invoke_setup(call: OrderedCall, context: OwnedOrderedInputs | SetupPrefixContext, output: Path, owner: SetupOwner) -> Outcome:
     require(call in setup_calls() and call.step==owner.next_step and not owner.closed,'/setup','setup chronology differs')
     bound=setup_bindings(context)
     require(bound is owner.bound,'/setup','context replaced')
@@ -2966,8 +2989,213 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
     return terminal
 
 
+def prefix_container(step: int, root: Path) -> workspace_endpoints.EvidenceAnchor:
+    """Close a completed original step's container before admitting its history."""
+    children: set[str] = {'static'} if step in (1,7,8) else set() if step==2 else {'workspace-preparation','setup'} if step in (4,5) else {'setup'}
+    require(step in range(1,9) and {path.name for path in root.iterdir()}==children,
+            '/prefix/container','unexpected completed step membership')
+    require(all(stat.S_ISDIR((root/name).lstat().st_mode) for name in children),
+            '/prefix/container','component root kind changed')
+    return workspace_endpoints.anchor(root)
+
+
+def prefix_membership(root: Path, steps: tuple[int,...], stage: bool, terminal: bool, mode: int) -> None:
+    """Allow only source-scheduled prefix paths, including empty directories."""
+    files={'plan.json'}
+    if stage:files.add('stage-06.json')
+    if terminal:files.add('setup-prefix.json')
+    directories={f'step-{step:02d}' for step in steps}
+    require(root.lstat().st_mode==mode and {path.name for path in root.iterdir()}==files|directories,
+            '/prefix/membership','unscheduled prefix path or root mode changed')
+    require(all(stat.S_ISREG((root/name).lstat().st_mode) for name in files)
+            and all(stat.S_ISDIR((root/name).lstat().st_mode) for name in directories),
+            '/prefix/membership','scheduled prefix path kind changed')
+
+
+def _prefix_static(step: Literal[1,7,8], product: static.StaticProduct,
+                   environment: static.ExecutionEnvironment, output: Path, control_fd: int) -> tuple[Outcome,workspace_endpoints.EvidenceAnchor]:
+    owner=_StrictOwner(control_fd,output) if step==8 else None
+    entered=False;settled=False
+    try:
+        selected=replace(environment,held_lane_fd=owner.descriptor) if owner is not None else environment
+        _=static.validate_environment(selected,step)
+        entered=True
+        result=static.run_step(product,step,output,selected)
+        settled=True
+        retained=workspace_endpoints.anchor(output)
+        container=prefix_container(step,output.parent)
+        status=authenticate_static(result.receipt,step,product,selected)
+        retained.recheck();container.recheck()
+        return Outcome('static','COMPONENT_PASS' if status=='PASS' else 'FAIL',result.receipt,
+            file_hash(result.receipt),'',setup_files(retained.state),output,result.status,status),retained
+    except BaseException as error:
+        if owner is not None and entered and not settled:owner.hold(error)
+        raise
+    finally:
+        if owner is not None and (not entered or settled):os.close(owner.descriptor)
+
+
+def _run_setup_prefix(context: SetupPrefixContext, handoff: cli_handoff.SetupProductHandoff,
+                      product: static.StaticProduct, environment: static.ExecutionEnvironment,
+                      strict: static.ExecutionEnvironment, output: Path, control_fd: int, selectors: cli_execute.PrefixDocument) -> Path:
+    """Private closed CLI continuation; no eager future runtime product placeholders."""
+    require(type(control_fd) is int and control_fd>2 and stat.S_ISFIFO(os.fstat(control_fd).st_mode),
+            '/control','dedicated persistent controller pipe required')
+    require(handoff.prepared is context.setup.prepared and product.root==context.candidate_root
+            and product.source_sha==context.candidate_sha,'/prefix','source-owned construction differs')
+    require(output.is_absolute() and output==output.resolve() and not output.exists(),'/output','fresh prefix output required')
+    require(not environment.prior_receipts and not strict.prior_receipts,'/prior','prefix starts without imported result authority')
+    bound=setup_bindings(context)
+    require(context.candidate_inputs==handoff.products.probes.candidate.input_files
+            and product.inputs==context.candidate_inputs,'/prefix','source projection differs')
+    handoff=cli_handoff.begin_setup_handoff(handoff.products,bound.prepared)
+    dependencies=setup_dependencies(bound)
+    output.mkdir(parents=True)
+    root_mode=output.lstat().st_mode
+    plan=output/'plan.json'
+    _=cli_execute.publish(plan,{'schema':'closed_setup_prefix.v1','original_step_order':list(ORDER),
+        'supported_prefix':list(range(1,9)),'source_sha':context.candidate_sha,
+        'selectors':str(selectors.path),'selectors_sha256':selectors.sha256,
+        'setup_dependencies':dependencies,'publication_authorized':False,
+        'obligations':[{'identity':row.identity,'step':row.step,'fixture':row.fixture} for row in obligations()]})
+    plan_sha=file_hash(plan)
+    rows: dict[int,Outcome]={};anchors: list[workspace_endpoints.EvidenceAnchor]=[]
+    static_rows: list[tuple[int,Outcome,static.StaticProduct,static.ExecutionEnvironment]]=[]
+    owner: SetupOwner | None=None;runtime: cli_handoff.RuntimeProducts | None=None
+    errors: list[str]=[];stage_path: Path | None=None;stage_hash: str | None=None
+    scheduled: list[int]=[];step_modes: dict[int,int]={};terminal_written=False
+    def check_history() -> None:
+        prefix_membership(output,tuple(scheduled),stage_path is not None,terminal_written,root_mode)
+        cli_execute.check_spec(selectors)
+        require(file_hash(plan)==plan_sha,'/plan','immutable plan changed')
+        if stage_path is not None:require(file_hash(stage_path)==stage_hash,'/stage','retained runtime stage changed')
+        require(setup_dependencies(setup_bindings(context))==dependencies,'/setup','immutable selectors changed')
+        for step,mode in step_modes.items():
+            require((output/f'step-{step:02d}').lstat().st_mode==mode,'/prefix/container','step container mode changed')
+        for retained in anchors:retained.recheck()
+        for row in rows.values():recheck_setup(context,row)
+        for step,row,source,selected in static_rows:
+            assert row.receipt is not None
+            require(authenticate_static(row.receipt,step,source,selected)==row.reported_status,'/static','historical outcome differs')
+        if runtime is not None:cli_handoff.check_runtime_current(runtime)
+        # Recheck after all semantic callbacks, before the next producer or publication.
+        for step,mode in step_modes.items():
+            require((output/f'step-{step:02d}').lstat().st_mode==mode,'/prefix/container','step container mode changed')
+        for retained in anchors:retained.recheck()
+        require(file_hash(plan)==plan_sha,'/plan','immutable plan changed')
+        if stage_path is not None:require(file_hash(stage_path)==stage_hash,'/stage','retained runtime stage changed')
+        prefix_membership(output,tuple(scheduled),stage_path is not None,terminal_written,root_mode)
+    try:
+        for step in range(1,9):
+            check_history()
+            destination=output/f'step-{step:02d}';destination.mkdir();scheduled.append(step);step_modes[step]=destination.lstat().st_mode
+            if 2<=step<=6:
+                if owner is None:owner=SetupOwner(control_fd,destination/'setup',bound)
+                call=setup_calls()[step-2]
+                rows[step]=invoke_setup(call,context,destination/'setup',owner)
+                if step==6:
+                    evidence=rows[step].setup_evidence
+                    require(evidence is not None and isinstance(evidence.endpoint,setup_clippy.ClippyEndpoint),
+                            '/handoff','actual completed step6 endpoint required')
+                    assert evidence is not None and isinstance(evidence.endpoint,setup_clippy.ClippyEndpoint)
+                    runtime=cli_handoff.finish_setup_handoff(handoff,evidence.endpoint)
+                    stage_path=output/'stage-06.json'
+                    _= cli_execute.publish(stage_path,{'schema':'closed_setup_runtime.v1','endpoint_sha256':runtime.endpoint.receipt_sha256,
+                        'runtime_inputs':{'base':dict(runtime.runtime_inputs[0]),'candidate':dict(runtime.runtime_inputs[1])},
+                        'runtime_qualification':'NOT_RUN','publication_authorized':False})
+                    stage_hash=file_hash(stage_path)
+                    cli_handoff.check_runtime_current(runtime)
+                    require(file_hash(stage_path)==stage_hash,'/stage','runtime stage changed')
+            else:
+                require(step in (1,7,8),'/step','unsupported prefix call')
+                phase: Literal[1,7,8]=1 if step==1 else 7 if step==7 else 8
+                priors=tuple((row.receipt,row.sha256) for _,row,_,_ in static_rows
+                             if row.receipt is not None and row.sha256 is not None)
+                selected=replace(strict if step==8 else environment,prior_receipts=priors)
+                source=product
+                if step==8:
+                    require(runtime is not None,'/strict','actual step6 handoff required')
+                    assert runtime is not None
+                    cli_handoff.check_runtime_current(runtime)
+                    source=static.StaticProduct(product.root,product.source_sha,
+                        tuple(sorted(inventory(product.root,static.strict_input_names(product.root)).items())))
+                    cli_handoff.check_runtime_current(runtime)
+                row,retained=_prefix_static(phase,source,selected,destination/'static',control_fd)
+                rows[step]=row;anchors.append(retained);static_rows.append((step,row,source,selected))
+            require(destination.lstat().st_mode==step_modes[step],'/prefix/container','step container mode changed')
+            anchors.append(prefix_container(step,destination))
+            check_history()
+        check_history()
+    except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as failure:
+        if owner is not None and owner.in_flight:owner.retain_unknown(failure)
+        errors.append(safe_docs_exception(failure))
+    finally:
+        if owner is not None:
+            if owner.in_flight:owner.retain_unknown(RuntimeError('prefix setup did not settle'))
+            owner.close()
+    try:check_history()
+    except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as failure:errors.append(safe_docs_exception(failure))
+    terminal=output/'setup-prefix.json'
+    payload: dict[str,Json]={'schema':'closed_setup_prefix_result.v1',
+        'status':'FAIL' if errors or any(row.status=='FAIL' for row in rows.values()) else 'INCOMPLETE',
+        'publication_authorized':False,'full_gate_claim':False,'original_order_executed':False,
+        'plan_sha256':plan_sha,'stage06':str(stage_path) if stage_path else None,'errors':list(errors),
+        'actual_steps':list(rows),'obligations':[{'identity':ob.identity,'step':ob.step,
+            'status':rows[ob.step].status if ob.step in rows else 'NOT_RUN'} for ob in obligations()]}
+    terminal_anchor=cli_execute.publish(terminal,payload)
+    terminal_written=True
+    check_history()
+    terminal_anchor.recheck()
+    return terminal
+
+
+def execute_setup_prefix(spec_path: Path) -> Path:
+    selected=cli_execute.read_spec(spec_path)
+    spec=selected.spec
+    require(spec.control_fd>2 and stat.S_ISFIFO(os.fstat(spec.control_fd).st_mode),'/control','persistent controller pipe required')
+    initializer=cli_execute.InitializationOwner()
+    owner=_StrictOwner(spec.control_fd,spec.output/'antecedent')
+    try:
+        try:
+            prepared=cli_execute.initialize(spec,initializer)
+        except BaseException as error:
+            if initializer.in_flight:owner.hold(error)
+            if not spec.output.exists():raise
+            terminal=spec.output/'setup-prefix-failure.json'
+            retained=cli_execute.publish(terminal,{'schema':'closed_setup_prefix_result.v1','status':'FAIL',
+                'publication_authorized':False,'full_gate_claim':False,'original_order_executed':False,
+                'spec_sha256':selected.sha256,'errors':[safe_docs_exception(error)],'actual_steps':[],
+                'original_step_order':list(ORDER),
+                'obligations':[{'identity':ob.identity,'step':ob.step,'status':'NOT_RUN'} for ob in obligations()]})
+            cli_execute.check_spec(selected);retained.recheck()
+            return terminal
+    finally:
+        if not initializer.in_flight:os.close(owner.descriptor)
+    cli_execute.check_spec(selected)
+    def factory(step: Literal[4,5], chain: workspace_endpoints.WorkspaceChain,
+                output: Path, preparation: Path, descriptor: int) -> workspace_endpoints.WorkspaceRequest:
+        cli_execute.check_spec(selected)
+        request=cli_execute.workspace_request(prepared,step,chain,output,preparation,descriptor)
+        cli_execute.check_spec(selected)
+        return request
+    setup=SetupContext(prepared.handoff.prepared,prepared.wait,prepared.clippy_wait,factory)
+    godot=next(tool for tool in spec.setup.tools if tool.name=='godot')
+    context=SetupPrefixContext(setup,spec.selectors.candidate.root,spec.selectors.candidate.source_sha,
+                               prepared.products.probes.candidate.input_files,godot.path,godot.sha256)
+    result=_run_setup_prefix(context,prepared.handoff,prepared.static_product,spec.static,
+        spec.strict,spec.output/'ordered',spec.control_fd,selected)
+    returned=workspace_endpoints.anchor(spec.output/'ordered')
+    cli_execute.check_spec(selected)
+    returned.recheck()
+    return result
+
+
 def main(argv: tuple[str,...]) -> int:
-    require(len(argv)==2 and argv[0]=='--plan','/argv','only --plan ABSOLUTE_FRESH_OUTPUT supported; no full execution CLI yet')
+    require(len(argv)==2,'/argv','expected one closed mode and absolute path')
+    if argv[0]=='--execute-setup-prefix':
+        result=execute_setup_prefix(Path(argv[1]))
+        return 1 if document(result.read_text()).field('status').text()=='FAIL' else 2
+    require(argv[0]=='--plan','/argv','only --plan or --execute-setup-prefix supported')
     _=write_plan(Path(argv[1]))
     return 2
 

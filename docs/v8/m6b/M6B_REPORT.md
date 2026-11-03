@@ -538,3 +538,9 @@ CLI fixture09에서 static1/7/8이 실행 전에 거부됐다. 고정된 gate.sh
 ### S0-p99 — 저장소 루트 discovery에서 순수 모듈 검사 실행
 
 p96 고정 worktree 전체 discovery는2,137개·2,538.273초 뒤 실패1개/건너뜀5개로 종료됐다. 추적한 tools 입력461개는 바뀌지 않았다. 유일한 실패는 순수 matcher import 검사 자식이 저장소 루트 cwd를 상속해 `generic_workspace_arguments`를 찾지 못한 것이었다. 루트에서 같은 실패를 재현한 뒤 자식 cwd를 실제 로드한 matcher 모듈 디렉터리로 명시했다. import 순환 방지 assertion은 그대로다. 저장소 루트 discovery의 해당 모듈11개(6.693초)와 tools/v8에서 단일 검사, 테스트 전체 타입0오류·Ruff가 통과했다. p96 전체 실패 기록은 보존하며 전체2,137개 재통과를 주장하지 않는다. 원래 잠금5개 건너뜀도 실제 실행으로 바꾸어 계산하지 않는다. 증거: `stage0/python-regression-p96-terminal.json`, 로그 SHA256 `33b5f7b893a104b5c03de687af09c11d4a0e80b97737b6c3f1c8c3f5d5f86aee`; `workspace-policy-cwd-red.log`, `workspace-policy-cwd-green.log`.
+
+### S0-p100 — 실제 준비1→8을 수행하는 닫힌 CLI
+
+`--execute-setup-prefix`가 실제 양쪽 선행 빌드, 원본 compiler/policy, 준비2→6, static1/7/8을 연결한다. 아직 생성되지 않은 runtime product를 가정하지 않고 실제 반환 객체와 소유 FD를 유지한다. 전체51단계113의무 중 이후 단계는 NOT_RUN이며 성공한 prefix도 INCOMPLETE/종료2·게시 권한 없음으로 남긴다. 이전 UNKNOWN/실패 시도01–09는 보존했다. 명시적 test-only 도구/잠금 치환을 사용한 실제 C/Python fixture10은1→8을 끝냈고 static1/7/8은0/PASS, setup2→6은PENDING이었다. 실제 제품 Cargo/Godot 자격 검증은 아니다.
+
+V1에서 후속 callback이 앞 단계 receipt 옆에 빈 디렉터리를 추가하면 마지막 snapshot이 이를 채택하는 문제가 재현됐다. V2는 각 완료 단계의 전체 컨테이너와 원래 모드, 허용된 prefix 항목을 다음 producer 전과 게시 후 대조한다. 루트24개(160.668초), 독립17개(13.275초), production/test 전체 타입0오류·Ruff가 통과했다. 독립 네 가지 경로/모드 변경이 거부됐고 정상 mock coordinator는 INCOMPLETE를 유지했다. fixture10은 V1 당시 실제 실행 기록이며 V2 실제 fixture 재실행으로 바꾸어 적지 않는다. 현재 static pin은 현재 후보 gate.sh 계약만 검증한다. BASE0 자체 gate.sh 해시는 `dd3d52db1905af1211d207dcd39796de150d6c2c6eba2595624cef3afbec7938`이며 self-proof 원본 계약 및 기존 KnowledgeLost 실패는 별도 미해결이다. 증거: `stage0/ordered-dispatch/cli-execute-review-v2/REVIEW.md` SHA256 `90960f11db37cb1dc031933672ad17a054c77431ee889f54313a8a1809a0a019`; patch `e88d9796312c6721b5570d9e871573588b7c3e46e0dac3436800ba7d124a2883`; `cli-execute-root-v2-validation.json`.
