@@ -534,3 +534,7 @@ V1/V2에서 마지막 검증 callback 뒤 소스 변경이 누락되는 경로�
 ### S0-p98 — 승인된 단계49 수정과 static 소스 고정값 일치
 
 CLI fixture09에서 static1/7/8이 실행 전에 거부됐다. 고정된 gate.sh 해시는 p42 이전 값이었고, 현재 파일과의 전체 차이는 이미 승인된 단계49 exact filter의 `colony::` 접두사 하나뿐이었다. 독립 Git/blob 대조로 static13개 경로가 그대로임을 확인한 뒤 고정값만 현재 `ba949251efa089536c44b9883515d017c7254122b4167756833dfd7070d8c523`으로 갱신했다. 임의 버전 허용이나 검증 우회는 추가하지 않았다. 실제 저장소 파일과 상수를 비교하는 회귀 검사는 옛 값에서 실패하고 새 값에서 통과했다. 루트 static72개(5.582초), production/test 전체 타입0오류·Ruff가 통과했다. fixture09 실패와 과거 static 실행 기록은 원래 소스 기준으로 보존한다. 증거: `stage0/ordered-dispatch/static-gate-pin-audit/REPORT.md` SHA256 `07caaad547bfb89dfcd20a715dfb9f046ac01331ba4cd5a9179206fa3cc7053a`; patch `e45f84211eea6d98b3f2de8abfea5f34e523b6a247a9bd87470983f6ea5a2db0`; `static-gate-pin-root-v1-validation.json`. 전체 gate 통과를 뜻하지 않는다.
+
+### S0-p99 — 저장소 루트 discovery에서 순수 모듈 검사 실행
+
+p96 고정 worktree 전체 discovery는2,137개·2,538.273초 뒤 실패1개/건너뜀5개로 종료됐다. 추적한 tools 입력461개는 바뀌지 않았다. 유일한 실패는 순수 matcher import 검사 자식이 저장소 루트 cwd를 상속해 `generic_workspace_arguments`를 찾지 못한 것이었다. 루트에서 같은 실패를 재현한 뒤 자식 cwd를 실제 로드한 matcher 모듈 디렉터리로 명시했다. import 순환 방지 assertion은 그대로다. 저장소 루트 discovery의 해당 모듈11개(6.693초)와 tools/v8에서 단일 검사, 테스트 전체 타입0오류·Ruff가 통과했다. p96 전체 실패 기록은 보존하며 전체2,137개 재통과를 주장하지 않는다. 원래 잠금5개 건너뜀도 실제 실행으로 바꾸어 계산하지 않는다. 증거: `stage0/python-regression-p96-terminal.json`, 로그 SHA256 `33b5f7b893a104b5c03de687af09c11d4a0e80b97737b6c3f1c8c3f5d5f86aee`; `workspace-policy-cwd-red.log`, `workspace-policy-cwd-green.log`.

@@ -71,7 +71,7 @@ class PolicyTests(unittest.TestCase):
             "import sys; import generic_workspace_arguments; "
             + "assert 'generic_workspace_policy' not in sys.modules; "
             + "assert not any(n.startswith('generic_setup_') for n in sys.modules)"),
-            capture_output=True, text=True, check=False)
+            cwd=Path(arguments.__file__).parent, capture_output=True, text=True, check=False)
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_complete_five_rows_derive_new_default_off_feature(self) -> None:
