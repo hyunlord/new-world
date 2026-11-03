@@ -6,6 +6,7 @@ from gate_test_summary import parse_log
 from generic_gate import boundary, integer, require, text
 from generic_process import file_hash
 from generic_whole_gate_aggregate import LIMIT, aggregate_output
+from generic_whole_gate_config_pure import classify_config_pure
 from generic_whole_gate_core_material import classify_core_material
 from generic_whole_gate_core_pure import classify_core_pure
 from generic_whole_gate_doctests import classify_doctests
@@ -113,7 +114,7 @@ def collect_workspace(session: Node, stage: Node) -> dict[str, Json]:
     require(actual_tests == expected_tests, '/topology', 'added or missing original test target')
     rows = account_workspace(raw, step, root, inputs, stage.field('environment'))
     classifications = (classify_routes(root, inputs, rows) + classify_core_pure(root, inputs, rows)
-                       + classify_core_material(root, inputs, rows))
+                       + classify_core_material(root, inputs, rows) + classify_config_pure(root, inputs, rows))
     doctests = classify_doctests(root, inputs, rows)
     return {'status': 'PASS', 'reviewed_doctest_routes': doctests, 'reviewed_mechanism_routes': classifications, 'accounting': 'COMPLETE_SOURCE_QUALIFIED_AGGREGATE',
             'authority': 'ORIGINAL_UNFILTERED_CARGO_COMMAND_AND_ACTUAL_AGGREGATE_OUTCOMES',
