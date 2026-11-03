@@ -121,10 +121,10 @@ class QualificationTests(unittest.TestCase):
         with self.assertRaises((GateContractError, EvidenceError)):
             compare_artifacts(Node({'comparator': 'UNAVAILABLE', 'artifacts': ['state.json']}), outputs, Node(evidence))
 
-    def test_complete_62(self) -> None:
+    def test_complete_63(self) -> None:
         production = document(Path(__file__).with_name('whole_gate_observer_matrix.json').read_text())
-        self.assertEqual(len(production.field('observer_postimages').mapping()), 62)
-        self.assertEqual(len(production.field('rows').array()), 52)
+        self.assertEqual(len(production.field('observer_postimages').mapping()), 63)
+        self.assertEqual(len(production.field('rows').array()), 53)
         covered = {path.text() for row in production.field('rows').array() for path in row.field('observer_paths').array()}
         self.assertEqual(covered, set(production.field('observer_postimages').mapping()))
         self.assertTrue(any(row.field('comparator').text() == 'UNAVAILABLE' for row in production.field('rows').array()))
@@ -186,7 +186,7 @@ class QualificationTests(unittest.TestCase):
             self.assertEqual(row.field('observer_paths').value,[name])
             self.assertEqual(row.field('comparator').text(),'UNAVAILABLE')
             self.assertEqual(row.field('command').text(),'cargo test --release -p sim-test --test '+target+' -- --test-threads=1')
-        self.assertEqual(sum(row.field('comparator').text()=='UNAVAILABLE' for row in rows.values()),31)
+        self.assertEqual(sum(row.field('comparator').text()=='UNAVAILABLE' for row in rows.values()),32)
         self.assertEqual(rows['probe_core'].field('comparator').text(), 'UNAVAILABLE')
         self.assertEqual(rows['probe_core'].field('evidence').text(), 'NOT_RUN')
         self.assertEqual(production.field('origin_source_state').text(),'WORKING_TREE_SNAPSHOT_NOT_COMMITTED')

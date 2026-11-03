@@ -26,6 +26,7 @@ from generic_test_history import (
 )
 from generic_test_history_graph import HistoryEvidence
 from generic_test_invocation import invocations, verify_artifact
+from generic_test_items_plans import items_plan
 from generic_test_jobs_plans import jobs_plan
 from generic_test_observations import (
     Binding,
@@ -173,7 +174,8 @@ def authenticate_family(target: str, binding: Binding) -> tuple[Planned, ...]:
             target, 'missing/extra/duplicate original native test outcomes')
     require(all(status == 'ok' for _,status in outcomes), target, 'original native test failed or ignored')
     planned = (save_plan(binding) if target == 'save_load' else
-               jobs_plan(_history_evidence(binding))[0] if target == 'colony_jobs' else fixed_plan(target))
+               jobs_plan(_history_evidence(binding))[0] if target == 'colony_jobs' else
+               items_plan(_history_evidence(binding))[0] if target == 'colony_items' else fixed_plan(target))
     resolved = resolve(binding, tuple(row.occurrence for row in planned))
     for plan, observed in zip(planned, resolved, strict=True):
         require(observed.observation.stop_reason == plan.stop, identity(plan.occurrence), 'wrong native stop condition')
@@ -259,9 +261,9 @@ def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Pa
                     'binary_sha256':product.binary_sha256, 'artifact_receipt':str(product.build_receipt),
                     'artifact_receipt_sha256':product.build_receipt_sha256}
                     for target,product in products.items()} for arm,products in (('base',base),('candidate',candidate))},
-        'coverage':('save_load46 + colony_world20 + colony_commands3 + colony_jobs10 planned ordinary occurrences per arm'
+        'coverage':('save_load46 + colony_world20 + colony_commands3 + colony_jobs10 + colony_items11 planned ordinary occurrences per arm'
                     if invocation == 'development' else 'Named invocation subset; see invocation_coverage.'),
-        'invocation_coverage':{row.target:{'save_load':46,'colony_world':20,'colony_commands':3,'colony_jobs':10}[row.target] for row in selected},
+        'invocation_coverage':{row.target:{'save_load':46,'colony_world':20,'colony_commands':3,'colony_jobs':10,'colony_items':11}[row.target] for row in selected},
         'limits':['Other world occurrences and native suite families remain unregistered.',
                   'Observer semantic qualification is a separate gate obligation.'], 'families':families, 'errors':[]}
     frozen: dict[Path,dict[str,str]] = {}
@@ -304,9 +306,10 @@ def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Pa
                         'artifact_receipt':str(product.build_receipt), 'artifact_sha256':product.build_receipt_sha256}
                     atomic_json(output/f'{arm}-{target}-invocation.json',receipt)
                     frozen_receipts[output/f'{arm}-{target}-invocation.json'] = file_hash(output/f'{arm}-{target}-invocation.json')
-                if target == 'colony_jobs':
-                    left, left_setup = jobs_plan(_history_evidence(bindings['base',target]))
-                    right, right_setup = jobs_plan(_history_evidence(bindings['candidate',target]))
+                if target in {'colony_jobs', 'colony_items'}:
+                    planner = jobs_plan if target == 'colony_jobs' else items_plan
+                    left, left_setup = planner(_history_evidence(bindings['base',target]))
+                    right, right_setup = planner(_history_evidence(bindings['candidate',target]))
                     declared_setup = left_setup
                     if left_setup != right_setup or left != right:
                         unresolved = True

@@ -252,6 +252,10 @@
     "tools/v8/smoke.gd": [
       "100644",
       "a35860cd99ae462d7c9cda66a007fc6ac84c383742ddbd8445acc8c4237b3f56"
+    ],
+    "rust/crates/sim-test/tests/colony_items.rs": [
+      "100644",
+      "71ea0de04f994960c5b319b92c3b06e560e94efdbb8d60ca012360914d274054"
     ]
   },
   "origin_bound_source_manifest_sha256": "94028ee9da4d639617b55ef039b0fa1267c9b70fa4f3e3cfd0d34834c71b880f",
@@ -1637,6 +1641,20 @@
       "source_refs": {
         "rust/crates/sim-test/tests/engine_colony_ffi.rs": "0666f7abbb4fd7deb11cabb0ec8347c231a5c546cee16d7c94561a327230d366"
       }
+    },
+    {
+      "id": "native_colony_items",
+      "command": "cargo test --release -p sim-test --test colony_items -- --test-threads=1",
+      "observer_paths": [
+        "rust/crates/sim-test/tests/colony_items.rs"
+      ],
+      "source_refs": {
+        "rust/crates/sim-test/tests/colony_items.rs": "71ea0de04f994960c5b319b92c3b06e560e94efdbb8d60ca012360914d274054"
+      },
+      "comparator": "UNAVAILABLE",
+      "evidence": "NOT_RUN",
+      "artifacts": [],
+      "gap": "Original-off retains assertions only; eleven-world observer semantics require actual qualification."
     }
   ],
   "schema": "whole_gate_observer_matrix.v1"

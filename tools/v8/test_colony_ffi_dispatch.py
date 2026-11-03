@@ -14,7 +14,7 @@ from mux2_gate_inputs import Json, Node
 def accounting() -> dict[str, Json]:
     arm: dict[str, Json] = {'remaining_world_routes': [
         {'package': 'sim-test', 'target': 'engine_colony_ffi', 'kind': 'test'},
-        {'package': 'sim-test', 'target': 'colony_items', 'kind': 'test'}], 'doctest_world_routes': []}
+        {'package': 'sim-test', 'target': 'colony_knowledge', 'kind': 'test'}], 'doctest_world_routes': []}
     return {'status': 'PASS', 'scope': 'WORKSPACE_AGGREGATE_ACCOUNTING_ONLY', 'base': arm, 'candidate': arm}
 
 
@@ -49,7 +49,7 @@ class DispatchTests(unittest.TestCase):
                     gaps = result.field('unsupported').array()
                     self.assertEqual(len(gaps), 2)
                     for gap in gaps:
-                        gap.field('world_route').field('target').equals('colony_items')
+                        gap.field('world_route').field('target').equals('colony_knowledge')
 
     def test_actual_bad_endpoint_cannot_remove_target_gap(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

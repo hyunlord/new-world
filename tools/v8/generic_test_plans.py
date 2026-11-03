@@ -28,12 +28,14 @@ from generic_test_history_graph import (
 from mux2_gate_inputs import Json, Node
 
 SOURCE_PINS = {
+    'colony_items': '71ea0de04f994960c5b319b92c3b06e560e94efdbb8d60ca012360914d274054',
     'colony_jobs': 'd10150e355f443b92a42cc19095e6a8a2971a57bc3dbf2c309e0d6d5f23bbd34',
     'save_load': 'fccd2174e5466798f686e7518248c41fe6374338cb78d9c0b67121d1ed1dd21a',
     'colony_world': 'a622f80b35aca286b77a650d87a9125c5f4a04e7363ea81a5dcedcab0f254a32',
     'colony_commands': 'bae084f3e439a93aaae915f9eedc423c60a8626d490b9bdaa7f40e5457328902',
 }
 TESTS = {
+    'colony_items': ('resource_nodes_follow_the_placement_rule', 'quarrying_a_boulder_exhausts_it_in_batches_of_four', 'per_kind_ledger_holds_over_8_seeds_x_10_days_with_quarry_and_chop'),
     'save_load': (ROUNDTRIP, BASELINE, DEATHS, DETERMINISTIC, BRIDGE,
                   'load_rejects_other_version', PREGNANCY),
     'colony_world': ('colony_world_shape', 'colony_founder_fix_makes_adults_when_short',

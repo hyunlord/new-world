@@ -1,6 +1,9 @@
 //! M2 Part 1: items, resource nodes and the per-kind ledger (goal 3.1, 3.2, §5).
 
 mod colony_support;
+mod save_gate_observation;
+
+use save_gate_observation::Watch;
 
 use colony_support::tick_checked;
 use sim_core::colony::materials::{embedded_definitions, MaterialStats, FLINT, GRANITE, LIMESTONE};
@@ -52,6 +55,12 @@ fn resource_nodes_follow_the_placement_rule() {
         .collect();
     for seed in [0u64, 3] {
         let engine = sim_test::colony_engine(seed);
+        let watch = Watch::begin(
+            "resource_nodes_follow_the_placement_rule",
+            seed,
+            "primary",
+            &engine,
+        );
         let r = &engine.resources;
         let camp = hearth(r).expect("hearth");
         let (mut hill, mut grass, mut outcrops) = (0usize, 0usize, 0usize);
@@ -104,18 +113,27 @@ fn resource_nodes_follow_the_placement_rule() {
             "seed {seed}: outcrops on {bank} bank tiles"
         );
         assert_eq!(r.colony.materials.by_id, expected_materials);
+        watch.finish(&engine, "original_endpoint");
     }
 }
 
 #[test]
 fn quarrying_a_boulder_exhausts_it_in_batches_of_four() {
     let mut engine = sim_test::colony_engine(1);
+    let watch = Watch::begin(
+        "quarrying_a_boulder_exhausts_it_in_batches_of_four",
+        1,
+        "primary",
+        &engine,
+    );
     let boulder = nearest_nodes(&engine, NodeKind::Boulder, 1)[0];
     let node = engine.resources.colony.nodes[&boulder];
     let (x0, y0, x1, y1) = stockpile_block(&engine, 4, 3).expect("stockpile");
+    watch.annotate(&engine, "selected_quarry", || serde_json::json!({"boulder": boulder, "node_left": node.left, "stockpile": [x0, y0, x1, y1]}));
     for _ in 0..360 {
         tick_checked(&mut engine);
     }
+    watch.annotate(&engine, "before_orders", || serde_json::json!({}));
     assert!(submit(&mut engine, Command::AddStockpile { x0, y0, x1, y1 }).accepted);
     let quarry = Command::DesignateQuarry {
         x0: boulder.0,
@@ -124,6 +142,7 @@ fn quarrying_a_boulder_exhausts_it_in_batches_of_four() {
         y1: boulder.1,
     };
     assert_eq!(submit(&mut engine, quarry).count, 1);
+    watch.annotate(&engine, "after_orders", || serde_json::json!({}));
     let mut gone_at = None;
     for tick in 0..3 * 1_440u64 {
         tick_checked(&mut engine);
@@ -160,6 +179,8 @@ fn quarrying_a_boulder_exhausts_it_in_batches_of_four() {
         })
         .sum();
     assert_eq!(stocked, stone.created, "all stone hauled to the stockpile");
+    watch.annotate(&engine, "quarry_completion", || serde_json::json!({"first_exhaustion_loop_index": gone_at, "quarry_batches": c.tallies.quarry_batches, "nodes_exhausted": c.tallies.nodes_exhausted, "stone_created": stone.created, "stocked": stocked}));
+    watch.finish(&engine, "original_endpoint");
 }
 
 /// Goal §5: the per-kind ledger, reservations and stacks over 8 seeds × 10
@@ -169,6 +190,12 @@ fn quarrying_a_boulder_exhausts_it_in_batches_of_four() {
 fn per_kind_ledger_holds_over_8_seeds_x_10_days_with_quarry_and_chop() {
     for seed in 0u64..8 {
         let mut engine = sim_test::colony_engine(seed);
+        let watch = Watch::begin(
+            "per_kind_ledger_holds_over_8_seeds_x_10_days_with_quarry_and_chop",
+            seed,
+            "primary",
+            &engine,
+        );
         for tick in 0..10 * 1_440u64 {
             if tick == 360 {
                 let mut cmds = u_script_commands(&engine);
@@ -182,12 +209,14 @@ fn per_kind_ledger_holds_over_8_seeds_x_10_days_with_quarry_and_chop() {
                         });
                     }
                 }
+                watch.annotate(&engine, "resolved_orders", || serde_json::json!({"commands": cmds.iter().map(|cmd| sim_test::probe::colony::command_json(engine.current_tick(), cmd)).collect::<Vec<_>>()}));
                 for cmd in cmds {
                     assert!(
                         submit(&mut engine, cmd).accepted,
                         "seed {seed}: an order was rejected"
                     );
                 }
+                watch.annotate(&engine, "after_orders", || serde_json::json!({}));
             }
             tick_checked(&mut engine);
         }
@@ -200,5 +229,6 @@ fn per_kind_ledger_holds_over_8_seeds_x_10_days_with_quarry_and_chop() {
             engine.resources.colony.tallies.nodes_exhausted >= 1,
             "seed {seed}"
         );
+        watch.finish(&engine, "original_endpoint");
     }
 }

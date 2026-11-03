@@ -807,3 +807,13 @@ p111 BASE step21은 H의 protocol hook이 있는 `tools/play.sh` 대신 BASE의 
 정확히 `tools/play.sh`만 H tooling에 추가하고 O 분류는 거부한다. schema1 overlay, identity 전체 source census, materialization, original-product H projection과 새 외부 preparer-v6가 같은 제한을 사용한다. 실제 owned case를 만들기 전에 H와 P launcher의 기록된 해시·실제 바이트·일반 파일 및 실행 모드0755를 확인한다. launcher 본문·원래 명령·gameplay·O matrix는 변경하지 않는다. UNKNOWN에는 최대2048자 원인 문구를 보존하며 원인 문자열 변환 실패도 ownership을 해제하지 않는다.
 
 외부 초안 25개 source/순수 검사와 최종 집중6개 검사, all-mode 타입 검사 및 적용 검사가 통과했다. 독립 C 리뷰도 PASS다. 증거: `stage0/ordered-dispatch/play-harness-admission-draft/{BINDINGS.json,RESULT.md,green.log,final-focused.log}`. 패치 SHA `9d2099d55be0527f32dda7d2093f73d8ae62c277319de94992b39c4a3b88a554`. 새 native 실행·play runtime qualification은 NOT_RUN이며 기존 UNKNOWN 복구나 전체 게이트 PASS를 주장하지 않는다. Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p133 — colony items의 원본 열한 세계 관측 연결
+
+원본 세 테스트의 열한 ordinary 세계에 기존 opt-in Watch를 연결한다. placement는 seeds0·3의 tick0, quarry는 seed1의 tick4680, ledger는 seeds0..7 각각 tick14400이다. quarry의 boulder·node·stockpile 선택은 원래처럼 첫360 tick 이전에 두고, 최초 소진 시점은 metadata로만 기록하여 원래4320회 후속 loop를 줄이지 않는다. ledger의 tick360 U-script·nearest-node 명령은 실제 resolved 순서와 optional 선택을 기록한 뒤 원래 submit loop와 accepted assertions를 그대로 실행한다. 원본 token 보존 검사를 통과했으며 gameplay·명령·loop·assertion 변경이나 history/survival/KnowledgeLost 예외는 없다.
+
+공유 items_plan이 standalone과 whole-stage4/5에서 실제 초기/종료 census·전체 기록 손실 이력·명령 이력을 검사한다. gate17·24에는 추가하지 않으며, 성공적으로 수집한 정확한 colony_items target만 남은 경로에서 제거한다. 다른 경로와 전체 INCOMPLETE는 유지한다. 관측 detail closure는 off일 때 평가하지 않는다. O allowlist에는 이 테스트 파일 하나만 추가하고 새 native_colony_items matrix 항목은 UNAVAILABLE/NOT_RUN으로 둔다.
+
+독립13개 순수 검사 통과(0.556초), 작성자 focused/adjacent/qualification32개와 기존 compatibility58개 통과를 확인했다. 검사 범위가 겹치므로 합산하지 않는다. 합동 review worktree에 적용할 때는 테스트 파일 끝의 빈 줄만 정리했으며 동결 원본 patch는 보존했다. 선택된 타입 검사 오류0·Ruff·rustfmt 결과는 외부 draft 범위의 증거이며 기존 제외 fixture까지 type clean이라고 주장하지 않는다. 새 HEAD나 p127 전체 suite 완료를 뜻하지 않는다.
+
+증거: `stage0/ordered-dispatch/colony-items-observer-draft/{RESULT.md,BINDINGS.json,focused-final.log,compat-final.log}`, `colony-items-independent-c-review/REVIEW.md`. 원본 patch SHA는 `8ec98bd44e05630a72c359cc67451269f13ee79a1b619409735def51e9f4fffd`이며 source base는 pristine product가 아닌 기존 합동 review worktree다. 실제 Rust compile·plain/on 열한 세계·BASE 상대 survival·default-off identity·observer neutrality는 NOT_RUN이다. qualification UNAVAILABLE·Stage0 미게시·엄격한 기존 CORE-off KnowledgeLost FAIL을 유지한다.

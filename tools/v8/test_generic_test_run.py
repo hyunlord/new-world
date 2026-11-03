@@ -17,6 +17,7 @@ from generic_process import file_hash
 from generic_sources import inventory
 from generic_test_history import FORMAT_SOURCE, identity
 from generic_test_invocation import invocations
+from generic_test_items_plans import INPUTS as ITEMS_INPUTS
 from generic_test_run import (
     JOBS_INPUTS,
     JOBS_RULES,
@@ -26,7 +27,9 @@ from generic_test_run import (
     save_plan,
     verify_test_product,
 )
-from jobs_fixture import child_emission, source_path
+from items_fixture import child_emission as items_emission
+from items_fixture import source_path
+from jobs_fixture import child_emission
 from mux2_gate_inputs import Json, Node
 from test_generic_test_history import CHILD, cases, graph
 
@@ -54,7 +57,7 @@ class InvocationTests(unittest.TestCase):
         self.assertEqual({r.profile for r in plan('gate04')},{'debug'})
         self.assertEqual({r.profile for r in plan('gate05')},{'release'})
         self.assertEqual({r.argv for r in plan('development')},{('--test-threads=1','--nocapture')})
-        self.assertEqual(len(plan('gate04')),4)
+        self.assertEqual(len(plan('gate04')),5)
         with self.assertRaises(ValueError):
             _ = plan('unknown')
 
@@ -99,7 +102,7 @@ class RunnerTests(unittest.TestCase):
                 format_source = root/FORMAT_SOURCE
                 format_source.parent.mkdir(parents=True)
                 _ = format_source.write_text('pub const FORMAT_VERSION: u32 = 15;\n')
-                for name in JOBS_INPUTS:
+                for name in {**JOBS_INPUTS, **ITEMS_INPUTS}:
                     path = root/name
                     path.parent.mkdir(parents=True,exist_ok=True)
                     _ = path.write_bytes(source_path(name).read_bytes())
@@ -108,7 +111,7 @@ class RunnerTests(unittest.TestCase):
                     _ = path.write_text(path.read_text().replace('hut_beds: 4,','hut_beds: 5,',1))
                 binaries: dict[str,Path] = {}
                 for target in TESTS:
-                    rows: list[dict[str,Json]] = cases() if target == 'save_load' else (
+                    rows: list[dict[str,Json]] = [] if target == 'colony_items' else cases() if target == 'save_load' else (
                         [{'test':'hut_sleeps_four','seed':2,'branch':'gifted_hut','start':0,'end':1640,
                           'stop':'actual_hut_completion_plus_1440'}] if target == 'colony_jobs' else [
                         {'test':p.occurrence.test,'seed':p.occurrence.seed,'branch':p.occurrence.branch,
@@ -134,6 +137,8 @@ class RunnerTests(unittest.TestCase):
                     child = CHILD.replace("'plan.json'",repr(target+'.json')).replace(
                         "'synthetic planned boundary'", "r['stop']")
                     child = child[:child.index("for test in sorted({r['test'] for r in rows})")]
+                    if target == 'colony_items':
+                        child += items_emission()
                     if target == 'colony_jobs':
                         child += child_emission()
                         child += HUT_CHILD.replace('COMPLETION_TICK', '201' if defect == 'hut_horizon' and arm == 'candidate' else '200')
@@ -203,7 +208,7 @@ class RunnerTests(unittest.TestCase):
             return document(result.read_text())
 
     def test_gate_invocations_and_reauthentication(self) -> None:
-        for plan,counts in (('gate17',[3,10,20]),('gate24',[46]),('gate04',[46,20,3,10]),('gate05',[46,20,3,10])):
+        for plan,counts in (('gate17',[3,10,20]),('gate24',[46]),('gate04',[46,20,3,10,11]),('gate05',[46,20,3,10,11])):
             with self.subTest(plan=plan):
                 result = self.exercise(invocation=plan)
                 result.field('status').equals('COMPONENT_PASS')
@@ -215,12 +220,12 @@ class RunnerTests(unittest.TestCase):
     def test_full_original_binaries_preserve69_and_observe_ten_job_worlds(self) -> None:
         result = self.exercise()
         result.field('status').equals('COMPONENT_PASS')
-        result.field('coverage').equals('save_load46 + colony_world20 + colony_commands3 + colony_jobs10 planned ordinary occurrences per arm')
-        result.field('invocation_coverage').equals({'save_load':46,'colony_world':20,'colony_commands':3,'colony_jobs':10})
+        result.field('coverage').equals('save_load46 + colony_world20 + colony_commands3 + colony_jobs10 + colony_items11 planned ordinary occurrences per arm')
+        result.field('invocation_coverage').equals({'save_load':46,'colony_world':20,'colony_commands':3,'colony_jobs':10,'colony_items':11})
         result.field('cargo_working_directory_equivalence').equals('NOT_ORIGINAL_CARGO_QUALIFICATION')
         result.field('broader_gate17_37').equals('INCOMPLETE')
         result.field('publication_authorized').equals(False)
-        self.assertEqual([len(row.field('occurrences').array()) for row in result.field('families').array() if 'occurrences' in row.mapping()], [46,20,3,10])
+        self.assertEqual([len(row.field('occurrences').array()) for row in result.field('families').array() if 'occurrences' in row.mapping()], [46,20,3,10,11])
 
     def test_hut_mismatched_horizon_or_setup_remains_unresolved(self) -> None:
         for defect in ('hut_horizon','hut_setup'):

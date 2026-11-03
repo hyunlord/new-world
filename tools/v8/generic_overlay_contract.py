@@ -21,6 +21,7 @@ OBSERVER_EXACT_PATHS: Final = frozenset(
         "rust/crates/sim-test/tests/colony_world.rs",
         "rust/crates/sim-test/tests/colony_commands.rs",
         "rust/crates/sim-test/tests/colony_jobs.rs",
+        "rust/crates/sim-test/tests/colony_items.rs",
         "rust/crates/sim-test/tests/colony_steward.rs",
         "rust/crates/sim-test/tests/colony_steward_housing/construction.rs",
         "rust/crates/sim-test/tests/steward_defence.rs",

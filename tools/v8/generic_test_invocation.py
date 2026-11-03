@@ -24,7 +24,7 @@ class Invocation:
 
 
 def invocations(name: str) -> tuple[Invocation, ...]:
-    targets = ('save_load','colony_world','colony_commands','colony_jobs')
+    targets = ('save_load','colony_world','colony_commands','colony_jobs','colony_items')
     match name:
         case 'development':
             return tuple(Invocation(None,'release','sim-test',target,threads=1,capture=False) for target in targets)
