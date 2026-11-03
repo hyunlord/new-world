@@ -2232,6 +2232,29 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
 
 /// Run every seed (a scoped pool of `workers`) and write the outputs.
 pub fn run(args: &ColonyArgs) -> Result<(), String> {
+    let setting = std::env::var_os("WORLDSIM_GATE_OBSERVER");
+    run_with_gate_setting(args, setting.as_deref())
+}
+
+fn effective_gate_args<'a>(
+    args: &'a ColonyArgs,
+    setting: Option<&std::ffi::OsStr>,
+) -> Result<std::borrow::Cow<'a, ColonyArgs>, String> {
+    let enabled = super::ProbeArgs::gate_observations_enabled(args.gate_observations, setting)?;
+    if enabled == args.gate_observations {
+        return Ok(std::borrow::Cow::Borrowed(args));
+    }
+    let mut observed = args.clone();
+    observed.gate_observations = enabled;
+    Ok(std::borrow::Cow::Owned(observed))
+}
+
+fn run_with_gate_setting(
+    args: &ColonyArgs,
+    setting: Option<&std::ffi::OsStr>,
+) -> Result<(), String> {
+    let effective = effective_gate_args(args, setting)?;
+    let args = effective.as_ref();
     let script = match &args.commands {
         Some(path) => load_script(path)?,
         None => Vec::new(),
@@ -2612,6 +2635,51 @@ mod gate_environment_tests {
                 assert_eq!(
                     ColonyArgs::parse_with_gate_setting(args, Some(OsStr::new(value)))
                         .expect_err("invalid environment"),
+                    "WORLDSIM_GATE_OBSERVER must be absent or 1"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn direct_args_borrow_unchanged_and_clone_only_when_enabled() {
+        for setting in [None, Some(OsStr::new("1"))] {
+            for enabled in [false, true] {
+                let mut args = ColonyArgs::parse_with_gate_setting(Vec::new(), None)
+                    .expect("default arguments");
+                args.gate_observations = enabled;
+                let before = format!("{args:?}");
+                let effective = effective_gate_args(&args, setting).expect("valid setting");
+                assert_eq!(effective.gate_observations, enabled || setting.is_some());
+                assert_eq!(format!("{args:?}"), before);
+                match effective {
+                    std::borrow::Cow::Borrowed(borrowed) => {
+                        assert!(enabled || setting.is_none());
+                        assert!(std::ptr::eq(borrowed, &args));
+                    }
+                    std::borrow::Cow::Owned(mut owned) => {
+                        assert!(!enabled && setting.is_some());
+                        owned.gate_observations = enabled;
+                        assert_eq!(format!("{owned:?}"), before);
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn direct_run_rejects_invalid_environment_before_script_or_output_access() {
+        let executable = std::env::current_exe().expect("test executable");
+        for value in ["", "0", "true", " 1", "1 "] {
+            for enabled in [false, true] {
+                let mut args = ColonyArgs::parse_with_gate_setting(Vec::new(), None)
+                    .expect("default arguments");
+                args.gate_observations = enabled;
+                args.out = executable.join("never-created");
+                args.commands = Some(executable.join("missing-script"));
+                assert_eq!(
+                    run_with_gate_setting(&args, Some(OsStr::new(value)))
+                        .expect_err("invalid environment precedes filesystem access"),
                     "WORLDSIM_GATE_OBSERVER must be absent or 1"
                 );
             }

@@ -186,7 +186,9 @@ class QualificationTests(unittest.TestCase):
             self.assertEqual(row.field('observer_paths').value,[name])
             self.assertEqual(row.field('comparator').text(),'UNAVAILABLE')
             self.assertEqual(row.field('command').text(),'cargo test --release -p sim-test --test '+target+' -- --test-threads=1')
-        self.assertEqual(sum(row.field('comparator').text()=='UNAVAILABLE' for row in rows.values()),30)
+        self.assertEqual(sum(row.field('comparator').text()=='UNAVAILABLE' for row in rows.values()),31)
+        self.assertEqual(rows['probe_core'].field('comparator').text(), 'UNAVAILABLE')
+        self.assertEqual(rows['probe_core'].field('evidence').text(), 'NOT_RUN')
         self.assertEqual(production.field('origin_source_state').text(),'WORKING_TREE_SNAPSHOT_NOT_COMMITTED')
 
     def test_unbound_matrix(self) -> None:

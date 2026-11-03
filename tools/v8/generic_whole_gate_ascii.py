@@ -19,7 +19,7 @@ from generic_whole_gate_projection import project_endpoint
 from mux2_gate_inputs import Json, Node
 
 PINS: Final = {
-    'rust/crates/sim-test/src/probe/colony.rs': 'b04d435eaf9be48eaee11a631982fa44b932fbca5f484da7c9e263cfdae30365',
+    'rust/crates/sim-test/src/probe/colony.rs': '97d9bc0216240cfb91f39e52871d4227919ba7d379cfd9c3ee8f9eb8f9111cfd',
     'rust/crates/sim-test/tests/save_gate_observation/mod.rs': 'ab7c324c94846f231128040f7ccf34fbd2c8a9339a927a65962c1f2c17ce2cdf',
     'rust/crates/sim-test/tests/engine_ascii.rs': '4c3d79cd188e62126d7614a2498f102afb500344568dda24187da37abd7dfb63',
     'rust/crates/sim-test/src/probe/ascii.rs': '3875c7069915139df4202ed1fcb754c742e33323508c0bb8edd9772433333b4d',

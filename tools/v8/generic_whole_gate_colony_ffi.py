@@ -31,7 +31,7 @@ PINS: Final = {'rust/crates/sim-bridge/src/ffi/colony.rs': '8ac2a8e5e595bf4ec1ba
  'rust/crates/sim-systems/src/commands.rs': '43ca9cf7be9f8e4dce24535566bf781dbe836e4624b4df119e41ac6259682897',
  'rust/crates/sim-systems/src/worldgen/mod.rs': '11525a81664d3206c72754f3772d1ba4e61cd3f9dbe2ab611be4e4124378b601',
  'rust/crates/sim-test/src/lib.rs': 'd5a126519bca132d236972c8813faf27a8f58dec8c514c1e1a96c95a16ec9a49',
- 'rust/crates/sim-test/src/probe/colony.rs': 'b04d435eaf9be48eaee11a631982fa44b932fbca5f484da7c9e263cfdae30365',
+ 'rust/crates/sim-test/src/probe/colony.rs': '97d9bc0216240cfb91f39e52871d4227919ba7d379cfd9c3ee8f9eb8f9111cfd',
  'rust/crates/sim-test/src/scenes.rs': '7fd693a1db13dafcbce414897ea0f98f2d40e888e8a1085532b8438c13418173',
  'rust/crates/sim-test/tests/engine_colony_ffi.rs': '0666f7abbb4fd7deb11cabb0ec8347c231a5c546cee16d7c94561a327230d366',
  'rust/crates/sim-test/tests/save_gate_observation/external.rs': '8ddf8a602f0eb81f819c9929a3ed1cc54133262c2d264dc126030f60ee9e2bcc',

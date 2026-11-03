@@ -763,3 +763,9 @@ original_off renderer 경로에 명시적인 session 경로·해시·arm context
 ### S0-p126 — 세계 생성 설정 값의 두 사례 분류
 
 원본 worldgen 설정 target은 두 테스트 모두 설정 값·상수·keyed RNG 산술과 네 저장된 dump를 비교하며 실제 세계 생성이나 tick을 실행하지 않는다. 정확한 두 사례의 성공 상태와 소스·dump10개 해시가 모두 일치할 때만 이 target을 분류한다. ignored target·nested recipe·library와 다른 세계 실행 의무는 그대로 남긴다. 루트42개 종료0(2.576초), 변경3개 Python 파일 엄격한 타입0오류·기본 Ruff·diff 통과이며 독립 검토도 완료했다. 증거: `stage0/ordered-dispatch/whole-gate-root-config-pure-01.log`, `whole-gate-root-config-pure-types-01.log`, `whole-gate-config-pure-classification/INDEPENDENT_UI_REVIEW.md`. 실제 native aggregate 성공이나 세계 안전성 PASS를 부여하지 않고 Stage0 미게시·CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p127 — 직접 호출 replay의 관측 설정 누락 수정
+
+실제 동결 p111 BASE debug에서 원본 replay 두 테스트는 성공했으나 기대한 네 mirror는 없었다. 직접 만든 ColonyArgs가 parser의 환경 설정 결합을 건너뛰는 것이 원인이었다. colony run 진입부에서 기존의 엄격한 환경 resolver를 적용하고, 설정이 그대로면 원본 인자를 빌리며 false→true일 때만 관측 bit를 바꾼 복사본을 쓴다. 실제 simulation body·명령·seed·horizon과 ASCII의 명시적 plain-off 경로는 보존했다. 잘못된 관측 환경은 직접 호출에서도 I/O 이전에 거부한다.
+
+Python 확대122개 종료0(21.036초), 기존 M1 테스트의 미사용 반환값 두 건 수정 뒤 해당2개 종료0, 변경6개 Python 파일 엄격한 타입0오류·기본 Ruff·rustfmt·diff 통과다. 독립 검토에서 simulation body 동일성과 clone 조건을 확인했다. Rust mechanism 테스트 두 개를 추가했지만 compile·실제 off/on replay·네 mirror 수집·baseline identity는 아직 NOT_RUN이다. 새 O postimage를 source 계약에 반영하고 probe_core를 UNAVAILABLE/NOT_RUN으로 두었으며 과거 중립성 증거를 재사용하지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-root-replay-boundary-{01,02}.log`, `whole-gate-root-replay-boundary-types-{01,02}.log`, `replay-run-boundary-independent-review/FINAL_REVIEW.md`. 실행 중인 p111·준비된 p121 증거는 바꾸지 않았고 Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.

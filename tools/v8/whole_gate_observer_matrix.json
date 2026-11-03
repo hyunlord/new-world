@@ -87,7 +87,7 @@
     ],
     "rust/crates/sim-test/src/probe/colony.rs": [
       "100644",
-      "b04d435eaf9be48eaee11a631982fa44b932fbca5f484da7c9e263cfdae30365"
+      "97d9bc0216240cfb91f39e52871d4227919ba7d379cfd9c3ee8f9eb8f9111cfd"
     ],
     "rust/crates/sim-test/src/probe/gate_observation.rs": [
       "100644",
@@ -345,9 +345,9 @@
         "summary.json"
       ],
       "command": "worldsim_probe --scene colony --seeds 0..1 --days 20 --workers 1 --steward off --story on --neighbours on --out {out}",
-      "comparator": "bytes",
+      "comparator": "UNAVAILABLE",
       "evidence": "NOT_RUN",
-      "gap": "",
+      "gap": "Run-boundary observer opt-in changed; successor original off/on runtime and comparator qualification NOT_RUN.",
       "id": "probe_core",
       "observer_paths": [
         "rust/crates/sim-test/src/probe/args.rs",
@@ -363,7 +363,7 @@
         "rust/crates/sim-test/src/probe/runner.rs"
       ],
       "source_refs": {
-        "rust/crates/sim-test/src/probe/colony.rs": "b04d435eaf9be48eaee11a631982fa44b932fbca5f484da7c9e263cfdae30365"
+        "rust/crates/sim-test/src/probe/colony.rs": "97d9bc0216240cfb91f39e52871d4227919ba7d379cfd9c3ee8f9eb8f9111cfd"
       }
     },
     {
