@@ -29,7 +29,8 @@ class ProbeProduct:
 
 
 def run_invocation(plan: Invocation, product: ProbeProduct, inputs: tuple[tuple[str, str], ...],
-                   *, resolved_blockers: tuple[str, ...] = ()) -> ProcessResult:
+                   *, resolved_blockers: tuple[str, ...] = (),
+                   retain: Callable[[ProcessSpec, ProcessResult], None] | None = None) -> ProcessResult:
     """Run one already-authenticated plan; preserve actual child failure receipts."""
     require(set(plan.blockers) == set(resolved_blockers), plan.id, "unresolved or unregistered adapter obligations")
     require(plan.argv is not None and plan.argv[0] == str(product.executable), plan.id, "wrong product executable")
@@ -60,9 +61,13 @@ def run_invocation(plan: Invocation, product: ProbeProduct, inputs: tuple[tuple[
     environment = dict(plan.environment)
     require(not set(environment) & {"WORLDSIM_GIT_SHA", "WORLDSIM_GATE_OBSERVER"}, plan.id, "reserved observer environment override")
     environment.update(WORLDSIM_GIT_SHA=product.source_sha, WORLDSIM_GATE_OBSERVER="1")
-    return execute(ProcessSpec(plan.argv, plan.cwd, product.executable, product.executable_sha256,
-                               product.input_root, tuple(sorted(merged.items())), plan.out,
-                               tuple(sorted(environment.items())), external_inputs=external_inputs))
+    spec = ProcessSpec(plan.argv, plan.cwd, product.executable, product.executable_sha256,
+                       product.input_root, tuple(sorted(merged.items())), plan.out,
+                       tuple(sorted(environment.items())), external_inputs=external_inputs)
+    result = execute(spec)
+    if retain is not None:
+        retain(spec, result)
+    return result
 
 
 def fixed_observations(fixture: Fixture, plan: Invocation, result: ProcessResult) -> dict[tuple[int, str], Observation]:

@@ -15,7 +15,7 @@ from generic_fixture_run import ComponentResult, Products
 from generic_fixtures import fixed_observations, run_invocation
 from generic_gate import GateContractError, document, integer, require, typed_json
 from generic_observations import ordinary_pair
-from generic_process import ProcessResult, atomic_json, file_hash
+from generic_process import ProcessResult, ProcessSpec, atomic_json, file_hash
 from generic_sources import inventory
 from mux2_gate_inputs import Json
 from read_summary_normalise import first_difference, normalise_pair
@@ -124,7 +124,8 @@ def identity(base: Invocation, candidate: Invocation, base_sha: str) -> dict[str
     return result
 
 
-def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: Products, output: Path) -> ComponentResult:
+def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: Products, output: Path, *,
+                   retain: Callable[[ProcessSpec, ProcessResult], None] | None = None) -> ComponentResult:
     """Execute selected paired baseline workloads and retain all failures and safety rows."""
     prepare(registry, plans, products)
     require(not output.exists(), str(output), 'component receipt exists')
@@ -136,12 +137,15 @@ def run_registered(registry: Registry, plans: tuple[Invocation, ...], products: 
     artifacts: dict[str, dict[str, str]] = {}
     for plan in plans:
         try:
-            result = run_invocation(plan, products.arm(plan.arm), ())
+            result = (run_invocation(plan, products.arm(plan.arm), ()) if retain is None else
+                      run_invocation(plan, products.arm(plan.arm), (), retain=retain))
             results[plan.id] = result
             executions.append({'id': plan.id, 'receipt': str(result.receipt), 'receipt_sha256': file_hash(result.receipt), 'status': result.status})
             artifacts[plan.id] = inventory(plan.out, [p.name for p in plan.out.iterdir()])
             require(result.status == 'PASS', plan.id, 'baseline producer failed')
         except (OSError, ValueError) as error:
+            if retain is not None and plan.id not in results:
+                raise
             errors.append({'invocation': plan.id, 'error': str(error)})
     pairs: list[Json] = []
     fixtures = {f.id: f for f in registry.fixtures}
