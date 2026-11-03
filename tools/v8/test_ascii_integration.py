@@ -17,6 +17,7 @@ class AsciiIntegrationTests(unittest.TestCase):
                           'unsupported':['carrier actual first-success horizons differ']}
             base=Node({'step':step,'arm':'base'});candidate=Node({'step':step,'arm':'candidate'})
             with patch('generic_whole_gate_workspace.evaluate_family', return_value=accounting()), \
+                 patch('generic_whole_gate_knowledge_fresh.evaluate_family', return_value={'safety': [], 'coverage': []}), \
                  patch('generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults', return_value={'safety': [], 'coverage': []}), \
                  patch('generic_whole_gate_colony_ffi.evaluate_family', return_value={'status': 'PASS', 'safety': [], 'coverage': []}), \
                  patch('generic_whole_gate_baseline_observer.evaluate_family', return_value={'safety': [], 'coverage': []}), \

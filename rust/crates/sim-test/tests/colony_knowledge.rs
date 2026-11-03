@@ -2,6 +2,9 @@
 //! cap, the channels, forgetting, discovery, the aggregate and the era.
 
 mod colony_support;
+pub mod save_gate_observation;
+
+use save_gate_observation::Watch;
 
 use colony_support::{build_workshop, drop_items, job_world_m2, run_until, tick_checked, worker};
 use sim_core::colony::knowledge::{self, bit, defs, Knowledge, Source};
@@ -75,6 +78,12 @@ fn founders_are_seeded_by_the_goal_table_on_seeds_0_to_7() {
     .collect();
     for seed in 0..8u64 {
         let engine = sim_test::colony_engine(seed);
+        let watch = Watch::begin(
+            "founders_are_seeded_by_the_goal_table_on_seeds_0_to_7",
+            seed,
+            "primary",
+            &engine,
+        );
         let people: Vec<(bool, Knowledge)> = engine
             .world
             .query::<(&Agent, Option<&Child>, Option<&Knowledge>)>()
@@ -133,6 +142,7 @@ fn founders_are_seeded_by_the_goal_table_on_seeds_0_to_7() {
             .filter(|n| holders(&n.name).len() == 1)
             .count();
         assert!(single >= 2, "seed {seed}: {single}");
+        watch.finish(&engine, "original_endpoint");
     }
 }
 
@@ -745,6 +755,12 @@ fn tech(engine: &SimEngine, name: &str) -> (u8, u16, u16) {
 fn the_aggregate_of_a_fresh_colony_matches_its_seeding() {
     for seed in [0u64, 3, 6] {
         let mut engine = sim_test::colony_engine(seed);
+        let watch = Watch::begin(
+            "the_aggregate_of_a_fresh_colony_matches_its_seeding",
+            seed,
+            "primary",
+            &engine,
+        );
         tick_checked(&mut engine);
         assert_eq!(tech(&engine, "doorway"), (1, 1, 1), "seed {seed}");
         assert_eq!(tech(&engine, "hide_scraping"), (1, 1, 1), "seed {seed}");
@@ -754,6 +770,7 @@ fn the_aggregate_of_a_fresh_colony_matches_its_seeding() {
         assert_eq!(t.at_risk(), 2, "seed {seed}");
         assert_eq!(t.adults, 10);
         assert_eq!(t.progress_permille, (2 * 200 / 14) as u16);
+        watch.finish(&engine, "original_endpoint");
     }
 }
 
@@ -900,6 +917,12 @@ fn clay_banks_lie_near_the_camp_on_30_of_32_seeds() {
     let mut counts = Vec::new();
     for seed in 0..32u64 {
         let engine = sim_test::colony_engine(seed);
+        let watch = Watch::begin(
+            "clay_banks_lie_near_the_camp_on_30_of_32_seeds",
+            seed,
+            "primary",
+            &engine,
+        );
         let r = &engine.resources;
         let camp = sim_systems::worldgen::colony::hearth(r).expect("hearth");
         let near = r
@@ -921,6 +944,7 @@ fn clay_banks_lie_near_the_camp_on_30_of_32_seeds() {
         if near >= 3 {
             good += 1;
         }
+        watch.finish(&engine, "original_endpoint");
     }
     assert!(
         good >= 30,

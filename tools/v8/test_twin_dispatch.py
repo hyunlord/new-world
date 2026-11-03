@@ -22,7 +22,7 @@ def dispatch(run: Fixture) -> dict[str, Json]:
                      'generic_whole_gate_baseline_observer.evaluate_family',
                      'generic_whole_gate_colony_ffi.evaluate_family',
                      'generic_whole_gate_appearance.evaluate_appearance', 'generic_whole_gate_ascii.evaluate_ascii',
-                     'generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults'):
+                     'generic_whole_gate_knowledge_fresh.evaluate_family', 'generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults'):
             _ = stack.enter_context(patch(name, return_value={'status': 'PASS', 'safety': [], 'coverage': []}))
         unresolved: dict[str, Json] = {'remaining_world_routes': [
             {'package': 'sim-test', 'target': 'sim_test', 'kind': 'lib', 'reason': 'remaining library worlds'}],

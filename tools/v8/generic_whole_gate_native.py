@@ -194,6 +194,14 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
         ascii_scope = evaluate_ascii(session, base_stage, candidate_stage)
         safety.extend(ascii_scope['safety'] if isinstance(ascii_scope['safety'], list) else [])
         coverage.extend(ascii_scope['coverage'] if isinstance(ascii_scope['coverage'], list) else [])
+    knowledge_fresh_scope: dict[str, Json] = {}
+    if step in {4, 5}:
+        from generic_whole_gate_knowledge_fresh import (
+            evaluate_family as evaluate_knowledge_fresh,
+        )
+        knowledge_fresh_scope = evaluate_knowledge_fresh(session, base_stage, candidate_stage)
+        safety.extend(row.value for row in Node(knowledge_fresh_scope['safety']).array())
+        coverage.extend(row.value for row in Node(knowledge_fresh_scope['coverage']).array())
     knowledge_defaults_scope: dict[str, Json] = {}
     if step in {4, 5}:
         from generic_whole_gate_knowledge_defaults import evaluate_knowledge_defaults
@@ -229,4 +237,4 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
     gaps.extend(row.value for row in Node(ascii_scope.get('unsupported', [])).array())
     return {'status': 'PASS' if step in {17, 24} else 'INCOMPLETE', 'safety': safety, 'coverage': coverage,
             'unsupported': migrations.get('unsupported', []) if step == 37 else gaps,
-            'mechanisms': mechanism, 'native_probe_replays': replay_scope, 'colony_ffi': colony_ffi_scope, 'baseline_observer': baseline_observer_scope, 'native_twins': twin_scope, 'appearance': appearance_scope, 'ascii': ascii_scope, 'workspace_accounting': workspace_scope, 'knowledge_defaults': knowledge_defaults_scope, 'migrations': migrations, 'qualification': LIMIT}
+            'mechanisms': mechanism, 'native_probe_replays': replay_scope, 'colony_ffi': colony_ffi_scope, 'baseline_observer': baseline_observer_scope, 'native_twins': twin_scope, 'appearance': appearance_scope, 'ascii': ascii_scope, 'workspace_accounting': workspace_scope, 'knowledge_defaults': knowledge_defaults_scope, 'knowledge_fresh_subset': knowledge_fresh_scope, 'migrations': migrations, 'qualification': LIMIT}

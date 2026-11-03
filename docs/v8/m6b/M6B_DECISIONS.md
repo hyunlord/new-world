@@ -223,3 +223,7 @@ Reuse the existing observer and shared endpoint/history plan; remove only the ex
 Adopt the existing public test-module visibility pattern for colony_items rather than suppress dead_code broadly. Preserve all simulation statements, commands, original assertions and default-off behavior; change only module visibility, exact O/source digests and exact source-projection declaration, plus independent import ordering. An O-byte change requires new qualification: never transfer p134 native/identity evidence to p135 or mark matrix UNAVAILABLE rows qualified. Preserve actual p134 clippy101 and the full Python run on its frozen inputs. Receipt-only case0 and zero-case doctest aggregate accounting do not establish live protocol completion, world safety or full-gate PASS.
 
 Actual p134 Python ended1 with one missing-harness fixture error in2666 tests; all533 Python/shell inputs and Git state stayed identical. Preserve this FAIL and repair the fixture separately. Root p135 focused10 tests, selected45-file all-mode typecheck and changed Python Ruff PASS. Native remains NOT_RUN until combined V6; no future result is implied.
+
+### D0-knowledge-fresh-subset-retains-whole-target-gap
+
+원본17개 테스트의 성공 여부를 계속 요구하면서, founding tick0부터 완전한 이력을 가진 세 fresh-colony 사례43세계만 관측한다. 의도적 사망·상실이나 직접 개입이 포함된 나머지14개 사례는 이 부분집합으로 대체하거나 면제하지 않는다. 양쪽 arm의 전체 colony_knowledge gap과 INCOMPLETE를 유지하고, 새로운 O 바이트는 별도 실제 중립성 qualification 전까지 UNAVAILABLE로 둔다. p135 pubmod/import-order 선행 변경 및 이전 실패 기록을 보존한다. V6 실제 검증은 이 초안에서 NOT_RUN이며 향후 결과를 소급하지 않는다.

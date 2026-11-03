@@ -27,7 +27,7 @@ def dispatch(run: Fixture) -> dict[str, Json]:
                      'generic_whole_gate_baseline_observer.evaluate_family',
                      'generic_whole_gate_twins.evaluate_family',
                      'generic_whole_gate_appearance.evaluate_appearance', 'generic_whole_gate_ascii.evaluate_ascii',
-                     'generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults'):
+                     'generic_whole_gate_knowledge_fresh.evaluate_family', 'generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults'):
             _ = stack.enter_context(patch(name, return_value={'safety': [], 'coverage': []}))
         _ = stack.enter_context(patch('generic_whole_gate_m1.collect_m1', return_value={}))
         _ = stack.enter_context(patch('generic_whole_gate_workspace.evaluate_family', return_value=accounting()))

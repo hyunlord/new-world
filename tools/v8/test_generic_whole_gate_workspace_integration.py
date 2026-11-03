@@ -29,7 +29,7 @@ class WorkspaceDispatchTests(unittest.TestCase):
             for name in ('generic_whole_gate_native_probes.evaluate_replays', 'generic_whole_gate_appearance.evaluate_appearance',
                          'generic_whole_gate_baseline_observer.evaluate_family',
                          'generic_whole_gate_twins.evaluate_family',
-                         'generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults'):
+                         'generic_whole_gate_knowledge_fresh.evaluate_family', 'generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults'):
                 count = 6 if knowledge_rows and name.endswith('evaluate_knowledge_defaults') else 0
                 _ = stack.enter_context(patch(name, return_value={'safety': [{} for _ in range(count)], 'coverage': [{} for _ in range(count)]}))
             _ = stack.enter_context(patch('generic_whole_gate_colony_ffi.evaluate_family', return_value={'status': 'PASS', 'safety': [], 'coverage': []}))
