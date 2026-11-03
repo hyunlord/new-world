@@ -56,7 +56,7 @@ import generic_workspace_run as workspace_runtime
 import mux2_gate_receipts as stall_capture
 from gate_oracle_child import SUITE_NAMES
 from gate_stall_child import ChildPlan, projected_environment
-from generic_bench import AuditError, Product, validate_products
+from generic_bench import AuditError, Product, process_inputs, validate_products
 from generic_declarations import Declarations
 from generic_fixture_registry import (
     DIRECT_IDS,
@@ -830,12 +830,16 @@ def bench_bindings(context: OwnedOrderedInputs) -> BenchContext:
 
 
 def bench_dependencies(bound: BenchContext) -> dict[str,Json]:
+    for product in (bound.base,bound.candidate):
+        if product.runtime_inputs:
+            _=process_inputs(product)
     return {'purpose':bound.purpose,'script':str(bound.script),'script_sha256':bound.script_sha256,
         'justifications':[dict(row) for row in bound.justifications],
         'build_authority':'CALLER_OWNED_NOT_CERTIFIED_HERE',
         'products':{arm:{'root':str(product.root),'source_sha':product.source_sha,'binary':str(product.binary),
             'binary_sha256':product.binary_sha256,'build_receipt':str(product.build_receipt),
-            'build_receipt_sha256':product.build_receipt_sha256,'inputs':dict(product.input_files)}
+            'build_receipt_sha256':product.build_receipt_sha256,'inputs':dict(product.input_files),
+            **({'runtime_inputs':dict(product.runtime_inputs)} if product.runtime_inputs else {})}
             for arm,product in (('base',bound.base),('candidate',bound.candidate))}}
 
 
@@ -2128,11 +2132,15 @@ def perf_bindings(context: OrderedInputs) -> None:
 
 
 def perf_dependencies(context: PerfContext) -> dict[str,Json]:
+    for product in (context.base,context.candidate):
+        if product.runtime_inputs:
+            _=process_inputs(product)
     return {'deadline':context.deadline,'purpose':context.purpose,'embedded_preparation':'NOT_QUALIFIED',
         'compile_root_authority':'CALLER_OWNED_NOT_CERTIFIED_HERE',
         'products':{arm:{'root':str(product.root),'source_sha':product.source_sha,'binary':str(product.binary),
             'binary_sha256':product.binary_sha256,'build_receipt':str(product.build_receipt),
-            'build_receipt_sha256':product.build_receipt_sha256,'inputs':dict(product.input_files)}
+            'build_receipt_sha256':product.build_receipt_sha256,'inputs':dict(product.input_files),
+            **({'runtime_inputs':dict(product.runtime_inputs)} if product.runtime_inputs else {})}
             for arm,product in (('base',context.base),('candidate',context.candidate))}}
 
 

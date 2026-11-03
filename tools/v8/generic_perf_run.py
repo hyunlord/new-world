@@ -17,7 +17,13 @@ from typing import Literal, Protocol, runtime_checkable
 
 import perf_summary
 from core_p7_admission import AdmissionError, admit
-from generic_bench import AuditError, Product, validate_products, verify_product
+from generic_bench import (
+    AuditError,
+    Product,
+    process_inputs,
+    validate_products,
+    verify_product,
+)
 from generic_gate import boundary, document, integer, require, typed_json
 from generic_observations import keys
 from generic_perf_observations import PerfObservation, Plan, paired_safety, parse_native
@@ -188,6 +194,7 @@ def prepare(fixture: str, base: Product, candidate: Product, output: Path,
                 str(product.root), 'missing/duplicate effective input inventory')
         require(inventory(product.root, [name for name, _ in product.input_files]) == dict(product.input_files),
                 str(product.root), 'effective input inventory drift')
+        _ = process_inputs(product)
         if fixture == 'nav.soak':
             require('tools/v8/soak_script.json' in dict(product.input_files), fixture, 'script not source-bound')
     if fixture == 'nav.soak':
@@ -207,6 +214,8 @@ def run_pair(fixture: str, base: Product, candidate: Product, output: Path, *,
     report: dict[str, Json] = {'status':'PENDING', 'fixture':fixture, 'publication_authorized':False,
                               'timing_policy':'standing report-only; safety mandatory',
                               'measurement_lock':str(LOCK), 'worlds':worlds, 'safety':safety, 'errors':[]}
+    if base.runtime_inputs or candidate.runtime_inputs:
+        report['runtime_inputs'] = {arm: dict(product.runtime_inputs) for arm, product in (('base', base), ('candidate', candidate))}
     observations: dict[tuple[str,str], PerfObservation] = {}
     retained: dict[Path, str] = {}
     indexes: dict[Path, list[Json]] = {}
@@ -283,6 +292,7 @@ def run_pair(fixture: str, base: Product, candidate: Product, output: Path, *,
                 report['standing_oracle'] = 'native exit and report-only within_budget; no new timing threshold'
             for product in (base, candidate):
                 verify_product(product)
+                _ = process_inputs(product)
                 require(inventory(product.root, [n for n,_ in product.input_files]) == dict(product.input_files),
                         str(product.root), 'end input drift')
             require(all(file_hash(path) == digest for path,digest in retained.items()),
@@ -332,7 +342,7 @@ class PerfResult:
 
 def _process_spec(run: Run, product: Product, output: Path) -> ProcessSpec:
     return ProcessSpec(run.argv,product.root,product.binary,product.binary_sha256,product.root,
-                       product.input_files,output,(('WORLDSIM_GATE_OBSERVER','1'),('WORLDSIM_GIT_SHA',product.source_sha)))
+                       process_inputs(product),output,(('WORLDSIM_GATE_OBSERVER','1'),('WORLDSIM_GIT_SHA',product.source_sha)))
 
 
 def _completed(spec: ProcessSpec, pid: int) -> datetime:
@@ -416,6 +426,9 @@ def authenticate_result(fixture: str, base: Product, candidate: Product, output:
     require(file_hash(target)==receipt_sha256,str(target),'terminal hash differs')
     node=document(target.read_text())
     common={'status','fixture','publication_authorized','timing_policy','measurement_lock','worlds','safety','errors','output_inventory_complete','output_sha256'}
+    if base.runtime_inputs or candidate.runtime_inputs:
+        common.add('runtime_inputs')
+        node.field('runtime_inputs').equals({arm: dict(product.runtime_inputs) for arm, product in (('base', base), ('candidate', candidate))})
     extras={'timing_summaries','standing_timing_comparison','coverage_expansion'} if fixture=='perf.natural_quick' else {'standing_oracle'}
     require(common<=set(node.mapping())<=common|extras,str(target),'terminal fields differ')
     state=node.field('status').text()
@@ -435,6 +448,7 @@ def authenticate_result(fixture: str, base: Product, candidate: Product, output:
     def products_current() -> None:
         validate_products(base,candidate,purpose)
         for product in (base,candidate):
+            _ = process_inputs(product)
             require(not output.is_relative_to(product.root) and not product.root.is_relative_to(output),'/output','product overlap')
             require(bool(product.input_files) and len(dict(product.input_files))==len(product.input_files),'/inputs','missing/duplicate inventory')
             require(inventory(product.root,[name for name,_ in product.input_files])==dict(product.input_files),'/inputs','input drift')

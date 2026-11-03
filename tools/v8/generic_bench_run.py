@@ -13,6 +13,7 @@ from generic_bench import (
     justified_ratio,
     loads,
     number,
+    process_inputs,
     require,
     sha256,
     validate_products,
@@ -139,6 +140,7 @@ def _run_bench(base: Product, candidate: Product, purpose: str, script: Path,
                     'build_receipt_sha256': product.build_receipt_sha256,
                     'load_1_5_15': list(triplet), 'started_unix': time.time(),
                     'exit_code': None, 'finished_unix': None}
+                if product.runtime_inputs: record['runtime_inputs'] = dict(product.runtime_inputs)
                 write_new(output / f'{arm}-r{repeat}.started.json', record)
                 if state is not None:state.in_flight=True
                 result = execute(spec)
@@ -164,6 +166,8 @@ def _run_bench(base: Product, candidate: Product, purpose: str, script: Path,
         audit['purpose'] = purpose
         audit['changelog_sha256'] = hashlib.sha256(changelog_bytes).hexdigest()
         write_new(output / 'result.json', audit)
+        for product in (base, candidate):
+            if product.runtime_inputs: _ = process_inputs(product)
         return audit
     except (AuditError, ValueError, KeyError, OSError, UnicodeError) as exc:
         if state is not None:raise
@@ -176,8 +180,8 @@ def aggregate_spec(product: Product, arm: Literal['base','candidate'], repeat: i
                    script: Path, script_sha256: str, output: Path) -> ProcessSpec:
     """Closed execution/retained-admission plan, not caller-selectable argv."""
     require(arm in ('base','candidate') and type(repeat) is int and repeat in (1,2,3), 'invalid occurrence')
-    runtime_inputs = dict(product.input_files)
-    require(bool(runtime_inputs) and len(runtime_inputs) == len(product.input_files), 'missing/duplicate product inputs')
+    runtime_inputs = dict(process_inputs(product))
+    require(bool(runtime_inputs) and len(dict(product.input_files)) == len(product.input_files), 'missing/duplicate product inputs')
     external_inputs: tuple[tuple[Path,str], ...] = ()
     if script.is_relative_to(product.root):
         require(runtime_inputs.get(script.relative_to(product.root).as_posix()) == script_sha256,
@@ -283,6 +287,7 @@ def authenticate_result(base: Product, candidate: Product, purpose: str, script:
                         fixed: dict[str,Json]={'arm':arm,'repeat':repeat,'argv':list(spec.argv),'cwd':str(product.root),
                             'source_sha':product.source_sha,'binary_sha256':product.binary_sha256,
                             'script_sha256':script_sha256,'build_receipt_sha256':product.build_receipt_sha256}
+                        if product.runtime_inputs: fixed['runtime_inputs'] = dict(product.runtime_inputs)
                         for key,value in fixed.items():start.field(key).equals(value);end.field(key).equals(value)
                         require(set(start.mapping()) == set(fixed)|{'load_1_5_15','started_unix','exit_code','finished_unix'}, 'started record schema differs')
                         added={'producer_pid','process_status','process_receipt','process_receipt_sha256','stdout_sha256','stderr_sha256'}
@@ -321,6 +326,10 @@ def authenticate_result(base: Product, candidate: Product, purpose: str, script:
     except (AuditError, OSError, ValueError, KeyError, UnicodeError) as error:
         errors.append(str(error))
     finally:
+        for product in (base, candidate):
+            if product.runtime_inputs:
+                try: _ = process_inputs(product)
+                except (AuditError, OSError, ValueError) as error: errors.append('runtime: '+str(error))
         if before is not None:
             try:require(_snapshot(output) == before, 'retained evidence changed during authentication')
             except (AuditError,OSError,ValueError) as error:errors.append('final: '+str(error))

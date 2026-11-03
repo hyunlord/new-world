@@ -16,6 +16,7 @@ from generic_bench import (
     Product,
     compare_rounds,
     git_bytes,
+    process_inputs,
     validate_products,
 )
 from generic_gate import boundary, document, integer, require
@@ -72,7 +73,7 @@ def _bind_aggregate(item: Aggregate, root: Path, script: Path, script_sha256: st
             spec.cwd == spec.input_root == product.root and spec.executable == product.binary and
             spec.executable_sha256 == product.binary_sha256, '/aggregate', 'foreign aggregate plan')
     require(bool(product.input_files) and bool(spec.inputs) and len(dict(spec.inputs)) == len(spec.inputs), '/inputs', 'missing or duplicate effective inputs')
-    require(all(dict(spec.inputs).get(name) == digest for name, digest in product.input_files),
+    require(all(dict(spec.inputs).get(name) == digest for name, digest in process_inputs(product)),
             '/inputs', 'product input inventory differs')
     bound_script = dict(spec.external_inputs).get(script)
     if script.is_relative_to(spec.input_root):

@@ -16,11 +16,12 @@ import re
 import subprocess
 from collections.abc import Mapping
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from statistics import median
 from typing import Final, Literal, TypedDict
 
 from generic_gate import decode_json
+from generic_sources import safe_path
 from mux2_gate_inputs import Json
 from read_gate_checks import check_bench_ratio, validate_bench_report
 
@@ -270,6 +271,27 @@ class Product:
     build_receipt: Path
     build_receipt_sha256: str
     input_files: tuple[tuple[str, str], ...] = ()
+    runtime_inputs: tuple[tuple[str, str], ...] = ()
+
+
+def process_inputs(product: Product) -> tuple[tuple[str, str], ...]:
+    """Merge explicit stage inputs without changing the source-only product inventory."""
+    if not product.runtime_inputs:
+        return product.input_files
+    require(product.root.is_absolute() and product.root.resolve() == product.root, 'canonical runtime root required')
+    merged = dict(product.input_files)
+    require(bool(merged) and len(merged) == len(product.input_files), 'missing/duplicate source inputs')
+    require(len(dict(product.runtime_inputs)) == len(product.runtime_inputs), 'duplicate runtime inputs')
+    for name, digest in (*product.input_files, *product.runtime_inputs):
+        path = PurePosixPath(name)
+        require(bool(name) and not path.is_absolute() and path.as_posix() == name and name != '.'
+                and '..' not in path.parts and '\0' not in name, 'noncanonical input path')
+        require(re.fullmatch('[0-9a-f]{64}', digest) is not None, 'invalid input SHA256')
+    for name, digest in product.runtime_inputs:
+        require(name not in merged or merged[name] == digest, 'conflicting source/runtime input')
+        require(sha256(safe_path(product.root, name)) == digest, 'runtime input changed')
+        merged[name] = digest
+    return tuple(sorted(merged.items()))
 
 
 def sha256(path: Path) -> str:
@@ -301,6 +323,7 @@ def verify_product(product: Product) -> None:
     identity(receipt['binary_sha256'], product.binary_sha256, 'build binary')
     identity(receipt['profile'], 'release', 'build profile')
     identity(receipt['exit_code'], 0, 'build exit')
+    _ = process_inputs(product)
 
 
 def validate_products(base: Product, candidate: Product, purpose: str) -> None:
