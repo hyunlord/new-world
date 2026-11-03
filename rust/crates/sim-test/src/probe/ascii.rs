@@ -346,7 +346,9 @@ pub fn engine_at(
     engine_at_observed(seed, script, tick, None)
 }
 
-fn engine_at_observed(
+/// Run the same ASCII world with optional complete gate observations and retained test mirrors.
+/// Passing `None` preserves the ordinary [`engine_at`] path.
+pub fn engine_at_observed(
     seed: u64,
     script: &[ScriptEntry],
     tick: u64,

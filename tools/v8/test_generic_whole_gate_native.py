@@ -3,6 +3,7 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from dataclasses import replace
 
@@ -103,7 +104,10 @@ class WholeNativeTests(unittest.TestCase):
         self.base,self.candidate=stages
 
     def test_actual_aggregate_subset_never_grants_full_coverage(self) -> None:
-        result=evaluate_family(Node(self.session),self.base,self.candidate)
+        # This fixture owns fixed-family evidence; appearance routing has separate tests.
+        with patch('generic_whole_gate_appearance.evaluate_appearance',
+                   return_value={'status':'INCOMPLETE','safety':[],'coverage':[]}):
+            result=evaluate_family(Node(self.session),self.base,self.candidate)
         self.assertEqual(result['status'],'INCOMPLETE')
         self.assertEqual(len(Node(result['coverage']).array()),106)
         family=collect_family(Node(self.session),self.base,'colony_commands')

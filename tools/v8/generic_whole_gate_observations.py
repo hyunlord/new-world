@@ -11,8 +11,6 @@ from typing import Final
 from generic_fixture_registry import BACKLOG_IDS, DIRECT_IDS, Registry
 from generic_gate import boundary, document, integer, require, text
 from generic_process import file_hash, real_path
-from mux2_gate_inputs import Json, Node
-
 from generic_whole_gate_paired import PAIRED, Paired, authenticate, recheck
 from generic_whole_gate_probe import (
     ProbeEvidence,
@@ -20,6 +18,7 @@ from generic_whole_gate_probe import (
     probe_safety,
     recheck_probe,
 )
+from mux2_gate_inputs import Json, Node
 
 __all__ = [
     'ProbeEvidence',
@@ -42,7 +41,7 @@ MISSING: Final = {
     'bench.timed_rss': 'actual bench child journal and acceptance result join',
     'nav.soak': 'actual nav epochs and child source join',
     'ui.smoke': 'whole-shell native UI lifecycle/process binding',
-    'ui.play': 'actual six-case owner and source-grant join',
+    'ui.play': 'original owner join callable; native observer qualification remains pending',
     'renderer.agreement': 'original three producers and four native instances join',
     'render_and_pack': 'original render/pack native journal lifecycle join',
     'visibility': 'actual generator/loader state and native lifecycle join',
@@ -53,13 +52,13 @@ MISSING: Final = {
 }
 
 
-IMPLEMENTED: Final = frozenset(MISSING) - {'ui.play', 'named_integration_boundaries'}
+IMPLEMENTED: Final = frozenset(MISSING) - {'named_integration_boundaries'}
 
 
 @dataclass(frozen=True, slots=True)
 class Route:
     fixture: str
-    supported: bool
+    supported: bool  # Callable collection readiness; never returned qualification or safety PASS.
     missing: str | None
 
 
@@ -246,7 +245,6 @@ def evaluate(session: Node, journal: tuple[Node, ...], output: Path, *, descript
                 rows = probe_safety(planned[fixture, arm, repeat], planned[fixture, 'candidate', repeat])
             if (fixture, 'base', repeat) in probe_steps:
                 from generic_whole_gate_acceptance import parse_declarations
-
                 from generic_whole_gate_comparison import compare
                 comparison = compare(session, parse_declarations(session.field('declarations')),
                     steps['base', probe_steps[fixture, 'base', repeat]],

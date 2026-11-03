@@ -88,6 +88,18 @@ def selected_bridge(root: Path) -> tuple[Path, tuple[str, ...]]:
     return path, ('cargo', 'build', '-p', 'sim-bridge', *(('--release',) if relative.parts[2] == 'release' else ()))
 
 
+def validate_build_target(environment: Node, rust_root: Path) -> None:
+    """Reject an inherited arm/shared target before granting original Cargo."""
+    values=environment.mapping()
+    if 'CARGO_TARGET_DIR' not in values:
+        return  # Existing opt-out source grants retain their prior contract.
+    raw=environment.field('CARGO_TARGET_DIR').text()
+    require(bool(raw),'/target','empty explicit Cargo target')
+    selected=Path(raw)
+    effective=selected if selected.is_absolute() else rust_root/selected
+    require(effective.resolve()==rust_root/'target','/target','Cargo target escapes original worktree')
+
+
 @final
 class SourceGrants:
     def __init__(self, bindings: HistoricalBindings, launcher: Path, play_root: Path) -> None:
@@ -165,6 +177,7 @@ class SourceGrants:
         require(required <= set(dict(self.bindings.configs)), '/configs', 'ancestral Cargo/Git configuration presence bindings missing')
         check_bindings(self.bindings)
         if role == 'build':
+            validate_build_target(payload.field('environment'),root/'rust')
             require(version not in self.started, '/build', 'duplicate original build')
             payload.field('argv').equals(list(build_argv)); payload.field('cwd').equals(str(root / 'rust'))
             entry.field('executable').equals(str(self.bindings.cargo[0])); entry.field('executable_sha256').equals(self.bindings.cargo[1])

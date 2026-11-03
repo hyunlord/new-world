@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Final
 
 from generic_gate import boundary, integer, require, text
-from generic_observations import Observation, ordinary_pair
+from generic_observations import ordinary_pair
 from generic_process import file_hash
 from generic_test_endpoint import Endpoint, authenticate_endpoint
 from generic_whole_gate_endpoints import bind_observer
@@ -49,16 +49,9 @@ def _files(node: Node) -> dict[str, str]:
     return {name: text(Node(value)) for name, value in node.mapping().items()}
 
 
-def _project(endpoint: Endpoint, history: ResolvedHistory) -> Observation:
-    require(history.history_complete and not history.pending, '/history', 'unresolved native endpoint')
-    founding = history.founding
-    require(founding is not None and founding.tick == 0, '/founding', 'tick-zero founding required')
-    assert founding is not None
-    end = endpoint.terminal
-    require(founding.knowledge_enabled == end.knowledge_enabled, '/knowledge', 'capability changed')
-    losses = () if end.losses is None else tuple((row.tick, row.node, row.holder) for row in end.losses)
-    return Observation(0, end.tick, len(founding.alive_ids), len(end.alive_ids),
-                       end.knowledge_enabled, losses, '[]')
+from generic_whole_gate_projection import project_endpoint as _project
+
+project_endpoint = _project
 
 
 def _native_segment(stdout: str, target: str) -> str:
@@ -161,6 +154,12 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
         replay_scope = evaluate_replays(session, base_stage, candidate_stage)
         safety.extend(replay_scope['safety'] if isinstance(replay_scope['safety'], list) else [])
         coverage.extend(replay_scope['coverage'] if isinstance(replay_scope['coverage'], list) else [])
+    appearance_scope: dict[str, Json] = {}
+    if step in {4, 5}:
+        from generic_whole_gate_appearance import evaluate_appearance
+        appearance_scope = evaluate_appearance(session, base_stage, candidate_stage)
+        safety.extend(appearance_scope['safety'] if isinstance(appearance_scope['safety'], list) else [])
+        coverage.extend(appearance_scope['coverage'] if isinstance(appearance_scope['coverage'], list) else [])
     if step == 17:
         from generic_whole_gate_m1 import collect_m1
         mechanism.extend([collect_m1(session, stage) for stage in (base_stage, candidate_stage)])
@@ -174,4 +173,4 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
         gaps = ['workspace outcome accounting outside the source-mapped fixed/save/hut/steward families remains unjoined']
     return {'status': 'PASS' if step in {17, 24} else 'INCOMPLETE', 'safety': safety, 'coverage': coverage,
             'unsupported': migrations.get('unsupported', []) if step == 37 else gaps,
-            'mechanisms': mechanism, 'native_probe_replays': replay_scope, 'migrations': migrations, 'qualification': LIMIT}
+            'mechanisms': mechanism, 'native_probe_replays': replay_scope, 'appearance': appearance_scope, 'migrations': migrations, 'qualification': LIMIT}

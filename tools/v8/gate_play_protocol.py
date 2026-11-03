@@ -46,10 +46,11 @@ def case_index(case: str) -> int:
     return CASES.index(case)
 
 
-def child_request(role: str, argv: tuple[str, ...], plan: Path, digest: str) -> None:
+def child_request(role: str, argv: tuple[str, ...], plan: Path, digest: str, projection: dict[str, Json] | None = None) -> None:
     _ = exchange('request', 'child', role, {'argv': list(argv), 'cwd': str(Path.cwd()),
         'plan': str(plan), 'plan_sha256': digest,
-        'environment': {k: v for k, v in os.environ.items()}})
+        'environment': {k: v for k, v in os.environ.items()},
+        **({'projection':projection} if projection is not None else {})})
 
 
 def child_returned(role: str, receipt: Path) -> None:

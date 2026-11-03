@@ -51,9 +51,12 @@ class ProbeRoutingTests(unittest.TestCase):
             self.assertEqual(len(subject.probe_safety(left, right)), 8)
             table = subject.routes(registry)
             self.assertEqual(len(table), 40)
-            self.assertEqual(sum(r.supported for r in table), 38)
+            self.assertEqual(sum(r.supported for r in table), 39)
             self.assertEqual({r.fixture for r in table if not r.supported},
-                             {'ui.play', 'named_integration_boundaries'})
+                             {'named_integration_boundaries'})
+            play = next(row for row in table if row.fixture == 'ui.play')
+            self.assertTrue(play.supported)
+            self.assertIsNotNone(play.missing)
 
     def test_missing_foreign_duplicate_partial_and_forged_census_reject(self) -> None:
         for mutation in ('missing', 'foreign', 'duplicate', 'partial', 'founders', 'symlink'):

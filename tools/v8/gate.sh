@@ -212,7 +212,7 @@ if selected 20; then
 step 20 uid_check bash -c 'out=$(python3 tools/v8/check_docs_helpers.py uid); [[ -z "$out" ]] || { echo "$out"; exit 1; }; echo "every Godot source has its committed .uid"'
 fi
 if selected 21; then
-step 21 play_check bash tools/v8/test_play.sh
+step 21 play_check python3 tools/v8/generic_whole_gate_play.py "$SESSION" "$SESSION_SHA" "$ARM"
 grep -c '^PLAY_TEST_PASS' "$LOG/play_check.log" | awk '{print "   play_check passed", $1, "of 6"}' >> "$SUMMARY"
 # M1.5 (goal 10.4, ADR 0016): the contract's new checks.
 fi

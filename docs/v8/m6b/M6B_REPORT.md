@@ -625,3 +625,23 @@ V9 후속 listing의 실제314개 종료 영수증은 모두 PASS/0이고 출력
 이 구성은 전체 제품 gate가 아니다. 실제 play21 연결·일부 native 관측·외부 저장 이력의 출처·선택된 전체 O 패치의 중립성 qualification이 남으며, source materialization 자체는 build 증명이 아니다. 제품 qualification이 없거나 관측 경로가 미완료이면 최종 PASS를 내지 않는다. 엄격한 BASE0 자기 비교에서 이미 확인한 CORE-off KnowledgeLost FAIL은 그대로이고 Stage0은 게시하지 않는다. 통합 증거는 `stage0/ordered-dispatch/whole-gate-root-integration-v1.json`, 개별 `whole-gate-root-*-01.log`, `whole-gate-root-bench-paths-02.log`, `whole-gate-combined-review.md`에 보존한다.
 
 최종 통합에서 원본 fixture 환경의 닫힌 입력 검사를 추가했고 M1의 실제 네 replay 관측을 연결했다. 후속 source/native/bench101개(29.666초)와 엄격한 타입·Ruff 검사가 통과했다. 이 과정의 타입 import 순환과 파일 열거 순서에 의존한 negative test 실패는 별도 로그로 남긴 뒤 수정했다. native negative는 실제 `first` branch를 선택해 변조하도록 고쳤으며 생산 판정기는 약화하지 않았다. 전체 Python discovery와 실제 제품 실행은 다음 검증으로 남는다.
+
+
+### S0-p110 — 기존 appearance 테스트 관측과 엄격한 저장 이력 판정
+
+원래 appearance 테스트의 여섯 assertion 집합과 명령·진행 시간을 유지하면서 다섯 Watch endpoint와 두 renderer 관측을 연결했다. 저장 tick2000의 부모·자식 이력과 실제 kin 첫 성공 시점을 그대로 사용한다. 실제 release 테스트는 관측 꺼짐·켜짐 각각 여섯 개가 종료0으로 통과했다. 관측 파일은 실제 다섯 endpoint·두 mirror 및 원래 세 명령 checkpoint와 일치했다. 이 결과는 독립 BASE 제품의 관측 중립성이나 전체 workspace 관측 완전성을 입증하지 않는다.
+
+외부 저장의 candidate 전체 기록에 KnowledgeLost가 있으면 출처 조회 전부터 실패하도록 판정을 연결했다. v6/v7/v9의 확인 가능한 원래 소스 출처를 묶고, v8/v10의 미확인 출처는 미완료로 남긴다. founders를 새로 만들지 않으며 후보 생존 수가 같은 horizon의 BASE 이상인 경우만 보수적인 생존 증거로 인정한다. 기존 migration fixture에 새 reader 소스 목록이 빠진 실패3건을 보존하고 fixture 입력을 보충한 뒤 기존·strict·origin 합동12개가 실제 종료0으로 통과했다.
+
+UI projection의 무조건 import가 기존 작은 launcher fixture를 깨뜨린 문제를 관측 기능 활성 시에만 import하도록 수정했다. 기존 owner/source 및 새 projection·migration 합동31개가 실제 종료0으로 통과했다. p109 공개 진입점은 양쪽 Cargo cache가 같아 준비 단계에서 실패했다. 독립 cache와 별도 제품 root를 만든 후속 준비본을 보존했으며 실제 재실행은 별도 기록한다. 원래 실패를 성공으로 덮어쓰지 않는다. 엄격한 BASE0 CORE-off KnowledgeLost 실패와 Stage0 미게시 상태는 유지한다.
+
+증거: `stage0/ordered-dispatch/whole-gate-root-p110-progress-01.json`, `whole-gate-appearance-native-01`, `whole-gate-root-migrations-03.log`, `whole-gate-native-draft/appearance-integration/actual-shapes.json`, `stage0/whole-gate-prepared-p109-r2`. 전체 Python 회귀·baseline identity·전체 gate 결과는 각각 실제 종료 후 별도로 기록한다.
+
+
+play21은 새 전체 게이트 session에서 원래 여섯 사례와 실제 자식16회를 실행하는 owner에 연결했다. main의 원래 bridge 빌드와 관측 제품 bridge의 출처를 분리하고, m1/v7도 원래 빌드 후 명시적인 관측 export만 사용한다. Git 원본 worktree는 관측 패치로 덮어쓰지 않는다. 실행 준비 여부와 관측 자격을 구분해 `ui.play` 경로는 호출 가능하지만, 수집 결과는 미완료 coverage로만 남기며 일반 세계 안전성이나 완료 판정에 더하지 않는다. 루트 관련40개 검사(40.156초)와 엄격한 타입 검사는 실제 종료0으로 통과했다. 실제 Godot/Cargo play21 실행과 과거 관측 중립성은 미검증이다.
+
+
+play 연결의 독립 검토에서 상위 제품의 Cargo target 상속, 명시적 HOME 누락, UNKNOWN 진단 파일 쓰기 실패 시 owner 종료 문제를 확인했다. 각 원본 worktree의 상대 `target`을 명시하고 세션 HOME을 검증하며, 진단 쓰기 성공 여부와 관계없이 미정리 owner·잠금을 유지하도록 고쳤다. 수정 후 루트52개 검사(52.099초)와 독립 격리4개가 통과했다. 작은 실제 파일 쓰기로 후보 제품 bridge가 덮어써지지 않음을 확인했고, 진단 OSError 주입으로 실제 FD 유지도 확인했다. 실제 Cargo/Godot 검증으로 대신 계산하지 않는다. 검토: `stage0/ordered-dispatch/whole-gate-a-draft/play-v9-independent-review.md` SHA256 `65911bc4e005cebe73dd8660856e44069879b48f7d9feef63b2f47482cf7c955`; 루트 로그 `whole-gate-root-play-v9-05.log`.
+
+
+p110 검증 작업 트리에서 workspace 전체 대상 check·clippy·release probe 빌드·표준 baseline identity가 모두 실제 종료0으로 끝났다. 게시된 Stage−1과 공통228,748값 차이0·한쪽 경로0, chronicle64개/19,683항목 동일, 표준 git_sha·기존0값 제외 후 샘플64개 동일, seeds0–3 결정성이 통과했다. native 소스·기준 파일·identity 하네스 전후 해시가 동일하다. 증거: `stage0/development-foundation-p110/{commands.json,result.json,identity.log}`. 기존 cache를 사용한 개발 검증이며 전체 gate·독립 제품 관측 중립성·CORE-off 자기검증 FAIL을 대체하지 않는다. 최종 엄격한 타입0오류·Ruff·셸 문법·diff 및 제한된 docs 검사도 통과했다.

@@ -12,7 +12,7 @@ from generic_process import ProcessSpec,execute,environment_for,file_hash
 from generic_test_endpoint import Endpoint
 from generic_test_endpoint_types import Snapshot,Loss,PendingReason
 from generic_test_history_graph import FORMAT_SOURCE
-from generic_whole_gate_migrations import V10,SOURCE_PINS,collect_migration,proposed_window
+from generic_whole_gate_migrations import V10,SOURCE_PINS,STRICT_READER_PINS,collect_migration,proposed_window
 from mux2_gate_inputs import Json,Node
 from test_generic_test_history import CHILD
 
@@ -39,7 +39,7 @@ class MigrationTests(unittest.TestCase):
             root=Path(temporary).resolve();h=root/'h';(h/'tools/v8').mkdir(parents=True)
             python=Path(sys.executable).resolve();bash=Path('/bin/bash');gate=h/'tools/v8/gate.sh';gate.write_text(f'step 37 migration {python} driver.py\n')
             product=root/'product';product.mkdir();inputs:dict[str,str]={}
-            for name in (*SOURCE_PINS,FORMAT_SOURCE):
+            for name in (*(SOURCE_PINS | STRICT_READER_PINS),FORMAT_SOURCE):
                 path=product/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes((original/name).read_bytes());inputs[name]=file_hash(path)
             fixtures=root/'fixtures';fixtures.mkdir();external:dict[str,str]={};manifest:dict[str,str]={};rows:list[dict[str,Json]]=[]
             for case in range(4):
@@ -79,7 +79,7 @@ class LegacyFixtureTests(unittest.TestCase):
         for target,test in (('legacy_migration_current',LEGACY),('b5_flora',B5)):
             with self.subTest(target=target),tempfile.TemporaryDirectory() as temporary:
                 root=Path(temporary).resolve();product=root/'product';product.mkdir();inputs:dict[str,str]={}
-                for name in (*SOURCE_PINS,FORMAT_SOURCE):
+                for name in (*(SOURCE_PINS | STRICT_READER_PINS),FORMAT_SOURCE):
                     path=product/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes((original/name).read_bytes());inputs[name]=file_hash(path)
                 fixtures=root/'fixtures';fixtures.mkdir();external:dict[str,str]={};source_rows:list[tuple[str,str,int,int,int]]=[];source_bytes:dict[str,str]={}
                 for index,(relative,_,version,tick,seed) in enumerate(LEGACY_ROWS):

@@ -42,6 +42,26 @@ def evaluate(session: Node, steps: dict[tuple[str, int], Node], *, descriptor: i
             completed.append('ui.smoke')
         except (GateContractError, EvidenceError) as error:
             errors.append(f'UI step9: {error}')
+    if ('base', 21) in steps and ('candidate', 21) in steps:
+        from generic_whole_gate_play_join import evaluate_family as play
+        try:
+            rows = play(session, steps['base', 21], steps['candidate', 21])
+            require(len(rows) == 2, '/play', 'missing paired original owner results')
+            for arm, value in zip(('base', 'candidate'), rows, strict=True):
+                row = Node(value)
+                row.field('arm').equals(arm)
+                row.field('qualification').equals('INCOMPLETE')
+                pending = row.field('pending_native_qualification').array()
+                require(bool(pending), '/play', 'pending native qualification silently omitted')
+                incomplete.extend(f'ui.play: {arm}: {item.text()}' for item in pending)
+            coverage.append({'step': 21, 'scope': 'actual_original_six_case_owner_join',
+                             'status': 'INCOMPLETE', 'results': list(rows)})
+            # Real nested waits are execution evidence. No native safety or
+            # completed-family claim exists until historical qualification closes.
+        except (GateContractError, EvidenceError) as error:
+            errors.append(f'play step21: {error}')
+    else:
+        incomplete.append('ui.play: missing paired original stage21 owner evidence')
     if ('base', 34) in steps and ('candidate', 34) in steps:
         from generic_whole_gate_ui_fixed import evaluate_family as render
         try:

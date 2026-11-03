@@ -3,6 +3,8 @@
 A caller-hashed plan admits exact command vectors, not arbitrary shell snippets.
 This producer is not build attestation or historical observer qualification.
 """
+from __future__ import annotations
+
 import hashlib
 import os
 import shutil
@@ -11,12 +13,17 @@ import sys
 import time
 from dataclasses import dataclass, replace
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import gate_play_protocol as protocol
 from generic_gate import GateContractError, boundary, document, require, text
 from generic_observations import keys
 from generic_process import atomic_json, file_hash, real_path
-from mux2_gate_inputs import Node
+from mux2_gate_inputs import Json, Node
+
+import gate_play_protocol as protocol
+
+if TYPE_CHECKING:
+    from generic_play_projection import PlayProjection
 
 # Exact labels owned by the original full test_play.sh. Negative cases have no
 # child except the unknown-version Godot version probe.
@@ -73,6 +80,7 @@ class Child:
     output: Path
     timeout: float | None
     merged: bool
+    projection: PlayProjection | None = None
 
 
 @boundary
@@ -83,7 +91,8 @@ def admit(path: Path, digest: str, role: str, argv: tuple[str,...]) -> Child:
     node.field('schema_version').equals(1)
     require(role in {'version','build','import-1','import-2','headless','windowed'},'/role','unknown child role')
     item=node.field('roles').field(role)
-    keys(item,{'argv','cwd','executable','executable_sha256','inputs','artifacts','output','timeout_seconds','merged'})
+    keys(item,{'argv','cwd','executable','executable_sha256','inputs','artifacts','output','timeout_seconds','merged'} |
+         ({'projection_manifest'} if 'projection_manifest' in item.mapping() else set()))
     args=tuple(text(value) for value in item.field('argv').array())
     require(args==argv and bool(argv) and all('\0' not in value for value in argv),'/argv','unplanned command vector')
     cwd=Path(text(item.field('cwd')));executable=Path(text(item.field('executable')))
@@ -107,7 +116,13 @@ def admit(path: Path, digest: str, role: str, argv: tuple[str,...]) -> Child:
     assert isinstance(merged,bool)
     require(timeout==(600 if role in {'import-1','import-2','headless'} else None),'/timeout','original launcher timeout differs')
     require(merged==(role!='version'),'/merged','original launcher stream routing differs')
-    return Child(args,cwd,executable,expected,inputs,artifacts,output,timeout,merged)
+    projection=None
+    if 'projection_manifest' in item.mapping():
+        require(protocol.enabled(),'/projection','observer export requires live source owner')
+        from generic_play_projection import read_projection
+        projection=read_projection(Path(text(item.field('projection_manifest'))))
+        _=projection.command(role,args,cwd)
+    return Child(args,cwd,executable,expected,inputs,artifacts,output,timeout,merged,projection)
 
 
 def run(plan_path: Path, digest: str, role: str, argv: tuple[str,...], selection: Selection | None = None) -> int:
@@ -120,17 +135,19 @@ def run(plan_path: Path, digest: str, role: str, argv: tuple[str,...], selection
     wrapper_pid=os.getpid();parent_pid=os.getppid()
     if protocol.enabled():
         require(selection is not None, '/owner', 'owned child requires selected original case')
-        protocol.child_request(role, argv, plan_path, digest)
+        protocol.child_request(role, argv, plan_path, digest,child.projection.declaration() if child.projection is not None else None)
+    effective_argv,effective_cwd=child.projection.command(role,child.argv,child.cwd) if child.projection is not None else (child.argv,child.cwd)
+    projected: dict[str,Json]={'requested_argv':list(child.argv),'requested_cwd':str(child.cwd),'projection':child.projection.declaration()} if child.projection is not None else {}
     child.output.mkdir(parents=True,exist_ok=False)
     environment=dict(os.environ)
     started=time.time_ns();timed_out=False
     bounded=role in {'import-1','import-2','headless'}
     with (child.output/'stdout.log').open('xb') as stdout,(child.output/'stderr.log').open('xb') as stderr:
-        process=subprocess.Popen(child.argv,executable=child.executable,cwd=child.cwd,env=environment,
+        process=subprocess.Popen(effective_argv,executable=child.executable,cwd=effective_cwd,env=environment,
                                  stdin=subprocess.DEVNULL if bounded else None,
                                  stdout=stdout,stderr=subprocess.STDOUT if child.merged else stderr)
         try:atomic_json(child.output/'started.json',{'schema_version':1,'role':role,'pid':process.pid,'wrapper_pid':wrapper_pid,'parent_pid':parent_pid,
-            'argv':[a for a in child.argv],'cwd':str(child.cwd),'environment':{k:v for k,v in environment.items()},
+            'argv':[a for a in effective_argv],'cwd':str(effective_cwd),**projected,'environment':{k:v for k,v in environment.items()},
             'started_ns':started,'plan_sha256':digest,'executable_sha256':child.executable_sha256})
         except OSError:
             process.kill();_=process.wait();raise
@@ -141,6 +158,7 @@ def run(plan_path: Path, digest: str, role: str, argv: tuple[str,...], selection
     errors: list[str]=[]
     observed: dict[str,str]={};artifacts: dict[str,str]={}
     try:
+        if child.projection is not None:child.projection.recheck()
         require(file_hash(plan_path)==digest,'/plan','plan changed during child')
         require(file_hash(child.executable)==child.executable_sha256,'/executable','binary changed during child')
         for path,checksum in child.inputs:
@@ -154,7 +172,7 @@ def run(plan_path: Path, digest: str, role: str, argv: tuple[str,...], selection
     atomic_json(child.output/'receipt.json',{'schema_version':1,'role':role,'plan_sha256':digest,
         'pid':process.pid,'wrapper_pid':wrapper_pid,'parent_pid':parent_pid,
         'parent_pid_after_wait':os.getppid(),'case':selection.case if selection is not None else None,
-        'suite_sha256':selection.suite_sha256 if selection is not None else None,'argv':[a for a in child.argv],'cwd':str(child.cwd),'environment':{k:v for k,v in environment.items()},
+        'suite_sha256':selection.suite_sha256 if selection is not None else None,'argv':[a for a in effective_argv],'cwd':str(effective_cwd),**projected,'environment':{k:v for k,v in environment.items()},
         'executable':str(child.executable),'executable_sha256':child.executable_sha256,
         'expected_inputs':{str(p):v for p,v in child.inputs},'after_inputs':{k:v for k,v in observed.items()},
         'declared_artifacts':[str(p) for p in child.artifacts],'artifact_hashes':{k:v for k,v in artifacts.items()},

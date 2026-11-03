@@ -1,4 +1,6 @@
 """Persistent owner for original launcher cases; runtime qualification stays incomplete."""
+from __future__ import annotations
+
 import fcntl
 import os
 import select
@@ -9,15 +11,17 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO, Literal, final
 
-import gate_play_child as child
-import gate_play_protocol as protocol
 from gate_oracle_child import suite_lane
 from generic_gate import document, integer, require, text
 from generic_process import atomic_json, file_hash, real_path
 from mux2_gate_inputs import Json, Node
 from mux2_gate_lock import FD_ENV
 
+import gate_play_child as child
+import gate_play_protocol as protocol
+
 if TYPE_CHECKING:
+    from generic_play_projection import PlayProjection
     from generic_play_sources import HistoricalBindings, SourceGrants
 
 
@@ -31,7 +35,10 @@ class PlayPlan:
     environment: tuple[tuple[str, str], ...]
     # Exact source-owned projections supplied by caller, not an environment waiver.
     child_environments: tuple[tuple[str, str, tuple[tuple[str, str], ...]], ...]
-    historical: 'HistoricalBindings | None' = None
+    historical: HistoricalBindings | None = None
+    legacy_observer: tuple[Path,str] | None = None
+    projection_root: Path | None = None
+    whole_session: tuple[Path,str] | None = None
 
 
 def case_argv(root: Path, index: int) -> tuple[str, ...]:
@@ -85,6 +92,24 @@ def validate(plan: PlayPlan) -> None:
         '/python', 'unbound helper interpreter')
     for path, _ in plan.inputs:
         require(not path.is_relative_to(plan.output) and not plan.output.is_relative_to(path), '/inputs', 'output overlap')
+    require((plan.legacy_observer is None)==(plan.projection_root is None),'/projection','incomplete observer export binding')
+    if plan.legacy_observer is not None:
+        require(plan.historical is not None,'/projection','historical grants required')
+        if plan.whole_session is not None:
+            require(plan.whole_session in plan.inputs,'/projection','whole session lacks frozen input binding')
+        assert plan.projection_root is not None
+        require(plan.projection_root.is_absolute() and plan.projection_root==plan.projection_root.resolve()
+                and not plan.projection_root.exists() and not plan.projection_root.is_relative_to(plan.root),
+                '/projection','fresh isolated observer export root required')
+        require(plan.legacy_observer in plan.inputs,'/projection','observer lacks frozen plan input')
+        helpers={plan.root/'tools/v8'/name for name in ('generic_play_projection.py','generic_legacy_overlay.py',
+                 'generic_legacy_play_build.py','gate_play_protocol.py')}
+        if plan.whole_session is not None:
+            helpers |= {plan.root/'tools/v8'/name for name in ('generic_play_main_projection.py','generic_whole_gate_play_environment.py')}
+        require(helpers<={path for path,_ in plan.inputs},'/projection','new projection helpers lack source bindings')
+        roots=(Path(env['PLAY_ROOT']),Path(env['PLAY_DATA']),plan.projection_root)
+        require(all(path.parent==plan.output.parent for path in roots) and len(set(roots))==3,
+                '/projection','launcher/export roots must be distinct siblings under the owned output parent')
     current(plan)
     for case in (child.CASES[0], *child.CASES[3:]):
         _ = child.select_case(plan.suite, plan.suite_sha256, case, 'version')
@@ -92,7 +117,7 @@ def validate(plan: PlayPlan) -> None:
 
 @final
 class PlayOwnershipUnknown(RuntimeError):
-    def __init__(self, owner: 'PlayOwner', reason: str) -> None:
+    def __init__(self, owner: PlayOwner, reason: str) -> None:
         super().__init__('play ownership UNKNOWN; retain live owner and lane: ' + reason)
         self.owner = owner
 
@@ -111,6 +136,7 @@ class PlayOwner:
     def __init__(self, plan: PlayPlan, lane_fd: int) -> None:
         validate(plan)
         self.source_grants: SourceGrants | None = None
+        self.projections: dict[str,PlayProjection] = {}
         if plan.historical is not None:
             from generic_play_sources import SourceGrants as HistoricalGrants
             self.source_grants = HistoricalGrants(plan.historical, plan.root, Path(dict(plan.environment)['PLAY_ROOT']))
@@ -128,6 +154,7 @@ class PlayOwner:
 
     def check(self) -> None:
         suite_lane(self.lane_fd); current(self.plan)
+        for projection in self.projections.values():projection.recheck()
         if self.source_grants is not None:
             self.source_grants.check()
         for root, members in self.native_memberships.items():
@@ -245,7 +272,12 @@ class PlayOwner:
                 observed = dict(payload.field('environment').mapping())
                 for key in (protocol.REQUEST, protocol.CONTROL, protocol.EVIDENCE, FD_ENV):
                     _ = observed.pop(key, None)
-                require(observed == dict(expected[0]), '/environment', 'child environment differs')
+                if self.plan.whole_session is not None:
+                    from generic_whole_gate_play_environment import validate_environment
+                    validate_environment(payload.field('environment'), dict(expected[0]),
+                        Path(text(payload.field('cwd'))), self.plan.root, Path(dict(self.plan.environment)['PLAY_ROOT']))
+                else:
+                    require(observed == dict(expected[0]), '/environment', 'child environment differs')
                 if self.source_grants is not None:
                     self.source_grants.check_environment(payload)
                 if self.source_grants is not None and index >= 3 and role != 'version':
@@ -253,6 +285,12 @@ class PlayOwner:
                     source_path = path.with_name('source-grant.json')
                     atomic_json(source_path, source_record)
                     self.anchors[source_path] = file_hash(source_path)
+                projection=self.projections.get(('main','m1','v7')[index-3]) if index>=3 else None
+                if projection is not None and role in {'import-1','import-2','headless'}:
+                    payload.field('projection').equals(projection.declaration())
+                    _=projection.command(role,tuple(text(v) for v in payload.field('argv').array()),Path(text(payload.field('cwd'))))
+                else:
+                    require('projection' not in payload.mapping(),'/projection','ungranted runtime export')
                 self.active_child = row.mapping()
             elif event == 'returned':
                 require(self.active_child is not None, '/child', 'no admitted child')
@@ -270,8 +308,17 @@ class PlayOwner:
                 terminal.field('plan_sha256').equals(selected.plan_sha256)
                 terminal.field('suite_sha256').equals(self.plan.suite_sha256)
                 request_payload = Node(self.active_child['payload'])
-                for key in ('argv', 'cwd', 'environment'):
-                    terminal.field(key).equals(request_payload.field(key).value)
+                if 'projection' in request_payload.mapping():
+                    projection=self.projections[('main','m1','v7')[index-3]]
+                    terminal.field('requested_argv').equals(request_payload.field('argv').value)
+                    terminal.field('requested_cwd').equals(request_payload.field('cwd').value)
+                    terminal.field('projection').equals(projection.declaration())
+                    terminal.field('argv').equals(request_payload.field('argv').value)
+                    terminal.field('cwd').equals(str(projection.export_root))
+                    terminal.field('environment').equals(request_payload.field('environment').value)
+                else:
+                    for key in ('argv', 'cwd', 'environment'):
+                        terminal.field(key).equals(request_payload.field(key).value)
                 terminal.field('executable').equals(entry.field('executable').value)
                 terminal.field('executable_sha256').equals(entry.field('executable_sha256').value)
                 terminal.field('parent_pid').equals(self.active_child['parent_pid'])
@@ -307,6 +354,28 @@ class PlayOwner:
                     build_path = path.with_name('build-join.json')
                     atomic_json(build_path, build_record)
                     self.anchors[build_path] = file_hash(build_path)
+                    version=('main','m1','v7')[index-3]
+                    if self.plan.legacy_observer is not None and (version in {'m1','v7'} or self.plan.whole_session is not None):
+                        assert self.plan.projection_root is not None
+                        self.plan.projection_root.mkdir(parents=True,exist_ok=True)
+                        if version=='main':
+                            assert self.plan.whole_session is not None
+                            from generic_play_main_projection import (
+                                prepare_main_projection,
+                            )
+                            session_path,session_sha=self.plan.whole_session
+                            projection=prepare_main_projection(self.source_grants,build_path,self.anchors[build_path],
+                                session_path,session_sha,self.plan.projection_root/version)
+                        else:
+                            observer,observer_hash=self.plan.legacy_observer
+                            from generic_play_projection import (
+                                prepare_legacy_projection,
+                            )
+                            projection=prepare_legacy_projection(self.source_grants,version,build_path,self.anchors[build_path],
+                                self.plan.projection_root/version,observer,observer_hash)
+                        self.projections[version]=projection
+                        manifest=self.plan.projection_root/(version+'.json')
+                        atomic_json(manifest,projection.declaration());self.anchors[manifest]=file_hash(manifest)
                 members = evidence_membership(receipt.parent)
                 require(members == {'.': 'directory', 'receipt.json': 'file', 'started.json': 'file',
                     'stdout.log': 'file', 'stderr.log': 'file'}, '/output', 'unexpected child evidence membership')

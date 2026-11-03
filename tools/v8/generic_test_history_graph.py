@@ -67,6 +67,7 @@ def source_edge(row: ExpectedOccurrence) -> tuple[str, str] | None:
     if row.test in {ROUNDTRIP, BASELINE} and row.branch == 'loaded':
         return 'saved', 'main'
     cases = {
+        ('appearance_is_a_pure_function_across_save_load_and_a_twin', 'loaded'): ('primary', 'tick2000'),
         (DEATHS, 'loaded_1'): ('original', 'chain'),
         (DEATHS, 'loaded_2'): ('loaded_1', 'chain'),
         (DETERMINISTIC, 'loaded_no_ticks'): ('original', 'first'),

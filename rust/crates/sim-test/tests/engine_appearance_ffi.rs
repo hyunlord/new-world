@@ -7,6 +7,9 @@
 //! Expected values are computed here from the documented formula and constants (`data/appearance.ron`), not by
 //! calling the function under test. M-ART2.1 adds the kin columns (`mothers`, `fathers`, `partners`) the LOD
 //! household rings read: row-aligned with the agent snapshot and equal to each entity's `Kin` component.
+pub mod save_gate_observation;
+use save_gate_observation::Watch;
+
 use sim_bridge::ffi::{
     collect_agent_snapshot, collect_appearance, collect_kin_columns, AppearanceRow,
 };
@@ -129,7 +132,19 @@ fn advance(engine: &mut SimEngine, script: &[ScriptEntry], to: u64) {
 fn appearance_is_a_pure_function_across_save_load_and_a_twin() {
     let script = u_script();
     let mut a = sim_test::colony_engine(3);
+    let watch_a = Watch::begin(
+        "appearance_is_a_pure_function_across_save_load_and_a_twin",
+        3,
+        "primary",
+        &a,
+    );
     let mut b = sim_test::colony_engine(3);
+    let watch_b = Watch::begin(
+        "appearance_is_a_pure_function_across_save_load_and_a_twin",
+        3,
+        "twin",
+        &b,
+    );
     advance(&mut a, &script, 2_000);
     advance(&mut b, &script, 2_000);
     let rows_a = collect_appearance(&a.world);
@@ -141,7 +156,15 @@ fn appearance_is_a_pure_function_across_save_load_and_a_twin() {
     assert_eq!(rows_a, collect_appearance(&b.world), "twin");
     // Save → load: the same AgentIds give the same looks and variants.
     let bytes = save::save(&mut a).expect("save");
+    let link = watch_a.save(&a, &bytes, "tick2000");
     let mut loaded = save::load(&bytes).expect("load");
+    let watch_loaded = Watch::loaded(
+        "appearance_is_a_pure_function_across_save_load_and_a_twin",
+        3,
+        "loaded",
+        &loaded,
+        link,
+    );
     assert_eq!(
         by_id(&collect_appearance(&loaded.world)),
         by_id(&rows_a),
@@ -160,6 +183,9 @@ fn appearance_is_a_pure_function_across_save_load_and_a_twin() {
             assert_eq!(row.hair, before.hair, "agent {id}: hair is fixed");
         }
     }
+    watch_a.finish(&a, "3000_ticks");
+    watch_b.finish(&b, "2000_ticks");
+    watch_loaded.finish(&loaded, "3000_ticks");
 }
 
 #[test]
@@ -261,6 +287,13 @@ fn the_text_renderer_people_json_carries_the_bridge_looks() {
     let dir = std::path::Path::new(env!("CARGO_TARGET_TMPDIR")).join("engine_appearance_ffi");
     std::fs::create_dir_all(&dir).expect("tmp dir");
     let json_path = dir.join("people.json");
+    let gate_observer = match std::env::var_os("WORLDSIM_GATE_OBSERVER") {
+        None => false,
+        Some(value) => {
+            assert_eq!(value, std::ffi::OsStr::new("1"), "explicit observer flag");
+            true
+        }
+    };
     let args = AsciiArgs {
         seed: 100,
         tick: 900,
@@ -269,7 +302,7 @@ fn the_text_renderer_people_json_carries_the_bridge_looks() {
         legend: false,
         out: Some(dir.join("grid.txt")),
         people_json: Some(json_path.clone()),
-        gate_observations: false,
+        gate_observations: gate_observer,
     };
     ascii::run(&args).expect("text renderer runs");
     let text = std::fs::read_to_string(&json_path).expect("people json written");
@@ -288,7 +321,9 @@ fn the_text_renderer_people_json_carries_the_bridge_looks() {
         .collect();
     // The same run, read through the bridge collectors.
     let script = load_script(&script_path).expect("script");
-    let (engine, _) = ascii::engine_at(100, &script, 900).expect("run");
+    let replay_observations = gate_observer.then(|| dir.join("bridge-replay"));
+    let (engine, _) =
+        ascii::engine_at_observed(100, &script, 900, replay_observations.as_deref()).expect("run");
     let snap = collect_agent_snapshot(&engine.world);
     let looks = collect_appearance(&engine.world);
     let bridge: BTreeMap<u64, (u64, u64, u64, u64, u64)> = snap
@@ -327,6 +362,7 @@ fn the_text_renderer_people_json_carries_the_bridge_looks() {
 #[test]
 fn the_baseline_rows_are_consistent() {
     let mut engine = sim_test::baseline_engine(0);
+    let watch = Watch::begin("the_baseline_rows_are_consistent", 0, "primary", &engine);
     for _ in 0..100 {
         engine.tick();
     }
@@ -337,11 +373,18 @@ fn the_baseline_rows_are_consistent() {
     assert_eq!(by_id(&rows), expected(&engine));
     // An empty world has no rows.
     assert!(collect_appearance(&hecs::World::new()).is_empty());
+    watch.finish(&engine, "100_ticks");
 }
 
 #[test]
 fn kin_columns_line_up_with_the_snapshot_and_the_kin_component() {
     let mut engine = sim_test::baseline_engine(3);
+    let watch = Watch::begin(
+        "kin_columns_line_up_with_the_snapshot_and_the_kin_component",
+        3,
+        "primary",
+        &engine,
+    );
     let ticks_per_day = engine.resources.ticks_per_day.max(1);
     // Run until the world holds both a recorded mother and a partner (births and pairings), at most 120 days.
     let mut day = 0;
@@ -376,4 +419,13 @@ fn kin_columns_line_up_with_the_snapshot_and_the_kin_component() {
         assert!(engine.world.get::<&Agent>(entity).is_ok());
     }
     assert!(with_kin > 0);
+    watch.annotate(&engine, "event_stop", || {
+        serde_json::json!({
+            "predicate": "mother_and_partner_present", "days_advanced": day,
+            "ticks_per_day": ticks_per_day, "maximum_days": 120,
+            "mother_rows": kin.iter().filter(|row| row[0].is_some()).count(),
+            "partner_rows": kin.iter().filter(|row| row[2].is_some()).count()
+        })
+    });
+    watch.finish(&engine, "mother_and_partner_present");
 }

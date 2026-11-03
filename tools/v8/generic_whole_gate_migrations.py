@@ -1,4 +1,4 @@
-"""Authentic legacy loaded windows; proposed safety never grants ordinary admission."""
+"""Strict loaded-history admission; diagnostic no-new-loss proposals stay unadopted."""
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -8,7 +8,7 @@ from gate_test_summary import parse_log, validate_cases
 from generic_gate import boundary, document, integer, require, text
 from generic_process import file_hash
 from generic_test_endpoint import Endpoint, authenticate_endpoint
-from generic_test_endpoint_types import ExpectedOccurrence, Loss, bound_bytes
+from generic_test_endpoint_types import ExpectedOccurrence, Loss, PendingReason, bound_bytes
 from generic_test_history_graph import ResolvedHistory, identity, resolve_graph, extends
 from generic_test_plans import Planned
 from generic_whole_gate_aggregate import aggregate_output
@@ -16,12 +16,15 @@ from generic_whole_gate_endpoints import bind_observer
 from mux2_gate_fixtures import validate_fixtures
 from mux2_gate_inputs import Json, Node
 
+from generic_whole_gate_migration_origin import Origin, authenticate as authenticate_origin, recheck as recheck_origin
+
 V10: Final = 'genuine_v10_saves_gain_defence_defaults_and_continue_identically_after_resave'
 LEGACY: Final = 'genuine_legacy_inventory_preserves_fields_and_current_policy_continuation'
 B5: Final = 'actual_h_format9_fixture_loads_as_oak_then_resaves_as_current_format'
 TARGETS: Final = {'steward_defence_migration':V10,'legacy_migration_current':LEGACY,'b5_flora':B5}
 ENV: Final = ('MUX2_V10_FIXTURES','MUX2_V10_MANIFEST','WORLDSIM_MUX_FIXTURES','WORLDSIM_B5_LEGACY9')
 SOURCE_PINS: Final = {'rust/crates/sim-test/tests/steward_defence_migration.rs': '00f5b80f9e692ebbc9c2e9771c930072ea51bff4fb90d6b6a62dc8853efbe2ce', 'rust/crates/sim-test/tests/legacy_migration_current.rs': 'b7664df1c3a3bc6c4e00523706f323aaa9901ef2d0eaaf93c8778ceefef0751f', 'rust/crates/sim-test/tests/b5_flora.rs': '78e45dfed2005065d20b3363fcc9ad209c26c85dd62efda47a0b7183ed60cc7d', 'rust/crates/sim-test/tests/legacy_migration_support/inventory.rs': '087990f9a5a75f1c9179badd8b3e2c7f26219315073e464d8c4f58c4f519f5b5', 'rust/crates/sim-test/tests/legacy_migration_support/wire.rs': '0d2294417cad814c5c5e546d1b8195cff157479484d456ed2357718019cbd24e', 'tools/v8/mux2_gate_checks.sh': '527313c36d44e0f462a1986d181718c370ca819e282fbbf7e6f029982222471c', 'tools/v8/mux2_gate_fixtures.py': '5f44a642c68e63daf907d55316415312e300a2e5d3e69a4eaad8c0630b793525'}
+STRICT_READER_PINS: Final = {'rust/crates/sim-test/tests/save_gate_observation/mod.rs': 'ab7c324c94846f231128040f7ccf34fbd2c8a9339a927a65962c1f2c17ce2cdf', 'rust/crates/sim-test/tests/save_gate_observation/external.rs': '8ddf8a602f0eb81f819c9929a3ed1cc54133262c2d264dc126030f60ee9e2bcc', 'rust/crates/sim-core/src/chronicle.rs': '2d9898ea1ac7c0dcdcce8816837ae6d2f4ab8552dce5f0e655c7949d1c746b66', 'rust/crates/sim-systems/src/save/mod.rs': '667a63ede4a96d50697d1bcc0f83d9bce234c655a023f8e2abf8eed29287da7b', 'rust/crates/sim-engine/src/legacy_v7.rs': '5d9d4bf39b037dc09cc167b64e036d9c7d0f7af8021108032672e56004290391', 'rust/crates/sim-core/src/chronicle/legacy_v7.rs': '85242bc1ec62d00f30bb9fcb8f96e8b40954bbc791f0a6ad9a0cc1d65bd3e913'}
 LEGACY_ROWS: Final = (('historical/m55/tick-2000.save', '5043fca3c5262693ea6040c9746fe8ea249ff9b6db6676d121879ebbd19c7efa', 6, 2000, 5), ('historical/m55/tick-3000.save', '94616c6ded2e86989300d8b15b75159cd925242eb123c83bfd77fdfa414607b3', 6, 3000, 5), ('historical/mart2/tick-2000.save', '5043fca3c5262693ea6040c9746fe8ea249ff9b6db6676d121879ebbd19c7efa', 6, 2000, 5), ('historical/mart2/tick-3000.save', '94616c6ded2e86989300d8b15b75159cd925242eb123c83bfd77fdfa414607b3', 6, 3000, 5), ('base/on-tick-5000.save', 'b24605f9f8086a06f6de42597b4eb84a8d8dd3d535dd43afd41832efdfd46397', 7, 5000, 5), ('base/on-tick-6000.save', '362a377d37a759e42c3b6c9d0e20f0c49b9dae793ec1a3653406a8e256d8ee53', 7, 6000, 5), ('core8/on-tick-5000.save', 'fed3fe2616fb94001858493aedb523421d3e93273e96e39c9db971e82130dadb', 8, 5000, 5), ('core8/on-tick-6000.save', 'c6ada78c90ca7420791fabc2245033645f950771b6d693cfa2e0ab8b5878ce7f', 8, 6000, 5), ('b4/h-format9-fixture/tick4000.save', 'e315e1c952b7e0504fd7cbe3b46c867b8c16d0735787e27e11ddab65f6894141', 9, 4000, 0))
 LEGACY_PROVENANCE: Final = {'historical/acquisition-receipt.json': 'd75171a4d51a9867e37c5bb670412511b16e05c394dbf47ae55f2ec05640508e', 'historical/m55/source-commit.txt': '898b1e64ef4bf3de5c94d1552e4430c7b17e6a377b0bf3492d29add961780709', 'historical/mart2/source-commit.txt': '0ece54b3e9ffc01873d2bea9885e48a03c77aced9516417f730274e85e672b16', 'historical/m55/continuation-2000-3000.json': '4a44834c6720e5e02619c0db6e9e08bf74b2bd9ac131f2929203be8af47357f6', 'historical/mart2/continuation-2000-3000.json': '4a44834c6720e5e02619c0db6e9e08bf74b2bd9ac131f2929203be8af47357f6', 'base/provenance.json': '109c3dda2e1b2d5583d0fab115d4df31677716b3d29f2bed566abb4213c17db4', 'core8/acquisition-receipt.json': 'dac021d09b22ad8792b721ef84c54e094216366b3240e3f09b4c293a4d2b7aae', 'b4/h-format9-fixture/receipt.json': '2fdae7bcf9481347afaeda967f49144febadff727258f3f6eba8e38d2cf15bbc'}
 
@@ -51,7 +54,7 @@ def collect_migration(session:Node,stage:Node,target:str) -> LoadedFamily:
     raw,_=aggregate_output(session,stage);selected_output(raw,target)
     arm=text(stage.field('arm'));product=session.field('arms').field(arm);root=Path(text(product.field('root')))
     inputs={name:text(Node(value)) for name,value in product.field('source_inputs').mapping().items()}
-    for name,digest in SOURCE_PINS.items():
+    for name,digest in (SOURCE_PINS | STRICT_READER_PINS).items():
         require(inputs.get(name)==digest and file_hash(root/name)==digest,name,'unregistered migration source scope')
     environment={name:text(Node(value)) for name,value in stage.field('environment').mapping().items()}
     anchors={name:text(Node(value)) for name,value in session.field('external_inputs').mapping().items()}
@@ -145,26 +148,105 @@ def proposed_window(base:Endpoint,candidate:Endpoint) -> dict[str,Json]:
             'strict_ordinary_admission':False}
 
 
+
+def recorded_zero(base: Endpoint, candidate: Endpoint) -> None:
+    """Reject any recorded inherited/full loss before consulting origin availability."""
+    require(not candidate.initial.losses and not candidate.terminal.losses,
+            '/KnowledgeLost', 'strict candidate FULL recorded history contains inherited or terminal KnowledgeLost')
+    extends(base.initial, base.terminal, '/base-history')
+    extends(candidate.initial, candidate.terminal, '/candidate-history')
+    require(base.initial == candidate.initial and base.terminal.tick == candidate.terminal.tick,
+            '/pair', 'different actual loaded prefix or continuation horizon')
+    require(base.founding is None and candidate.founding is None,
+            '/founders', 'external source acquired invented founders')
+
+
+def strict_window(base: Endpoint, candidate: Endpoint, history: ResolvedHistory,
+                  origin: Origin) -> dict[str, Json]:
+    recorded_zero(base, candidate)
+    allowed = {PendingReason.EXTERNAL_ORIGIN_UNRESOLVED, PendingReason.PREFIX_GRAPH_UNRESOLVED}
+    require(set(history.pending) <= allowed and history.founding is None,
+            '/history', 'unresolved history is not solely its source-qualified external origin')
+    missing: list[Json] = list(origin.missing)
+    if len(candidate.terminal.alive_ids) < len(base.terminal.alive_ids):
+        missing.append('INCOMPLETE_SURVIVAL_FLOOR: candidate below BASE; unknown founders cannot settle original minimum floor')
+    return {'status': 'INCOMPLETE' if missing else 'PASS',
+            'policy': 'STRICT_FULL_HISTORY_ZERO_LOSS_CONSERVATIVE_SURVIVAL',
+            'founding_census': None,
+            'survival_proof': 'candidate_alive_at_least_matched_BASE',
+            'base_alive': len(base.terminal.alive_ids), 'candidate_alive': len(candidate.terminal.alive_ids),
+            'initial_tick': candidate.initial.tick, 'terminal_tick': candidate.terminal.tick,
+            'candidate_inherited_losses': [], 'candidate_full_recorded_losses': [],
+            'origin': origin.report(), 'reader_sources': dict(SOURCE_PINS | STRICT_READER_PINS),
+            'save_graph_edges': [{'parent': edge.parent, 'child': edge.child,
+                'checkpoint': edge.checkpoint, 'checkpoint_sha256': edge.checkpoint_sha256,
+                'save_artifact': edge.save_artifact, 'save_sha256': edge.save_sha256,
+                'tick': edge.tick, 'version': edge.version} for edge in history.edges],
+            'missing': missing}
+
+
+def original_input(stage: Node, target: str, plan: Planned) -> tuple[Path, Path, int]:
+    environment = stage.field('environment')
+    if target == 'steward_defence_migration':
+        directory = Path(environment.field('MUX2_V10_FIXTURES').text())
+        paths = sorted(p for p in directory.iterdir() if p.suffix in {'.save', '.wsave'})
+        index = int(plan.occurrence.branch.split('_')[1])
+        return directory, paths[index], 10
+    directory = Path(environment.field('WORLDSIM_MUX_FIXTURES').text())
+    if target == 'b5_flora':
+        return directory, Path(environment.field('WORLDSIM_B5_LEGACY9').text()), 9
+    index = int(plan.occurrence.branch.split('_')[1])
+    relative, _, version, _, _ = LEGACY_ROWS[index]
+    return directory, directory / relative, version
+
+
 @boundary
-def evaluate_migrations(session:Node,base:Node,candidate:Node) -> dict[str,Json]:
-    missing=[name for name in ENV if name not in base.field('environment').mapping() or name not in candidate.field('environment').mapping()]
-    if missing:return {'status':'INCOMPLETE','coverage':[],'proposed_windows':[],'unsupported':['migration external environment missing: '+','.join(missing)]}
-    coverage:list[Json]=[];windows:list[Json]=[];unresolved:list[Json]=[]
+def evaluate_migrations(session: Node, base: Node, candidate: Node) -> dict[str, Json]:
+    coverage: list[Json] = []
+    windows: list[Json] = []
+    strict: list[Json] = []
+    unresolved: list[Json] = []
+    origins: dict[tuple[Path, int], Origin] = {}
+    required = {'steward_defence_migration': ENV[:2], 'legacy_migration_current': (ENV[2],),
+                'b5_flora': ENV[2:]}
     for target in TARGETS:
-        left,right=collect_migration(session,base,target),collect_migration(session,candidate,target)
-        require(left.plans==right.plans and left.external==right.external,target,'loaded source/horizon contract differs between arms')
-        for plan,a,b,history in zip(left.plans,left.endpoints,right.endpoints,right.histories,strict=True):
-            mechanism=plan.occurrence.branch=='post_chop_mechanism_load'
-            load_only=plan.occurrence.start_tick==plan.occurrence.end_tick
-            coverage.append({'target':target,'test':plan.occurrence.test,'branch':plan.occurrence.branch,'seed':plan.occurrence.seed,
-                'initial_tick':plan.occurrence.start_tick,'terminal_tick':plan.occurrence.end_tick,'base_emitted_pid':left.pid,'candidate_emitted_pid':right.pid,
-                'scope':'mechanism_load_only' if mechanism else ('legacy_load_only' if load_only else 'legacy_loaded_continuation'),
-                'founding_census':None,'prefix_pending':[str(value) for value in history.pending],
-                'full_recorded_losses':[[loss.tick,loss.node,loss.holder] for loss in b.terminal.losses or ()]})
-            if load_only:
-                if not mechanism:
-                    require(a.initial==b.initial and a.terminal==b.terminal,target,'BASE/candidate load-only preservation differs')
+        missing = [name for name in required[target] if name not in base.field('environment').mapping()
+                   or name not in candidate.field('environment').mapping()]
+        if missing:
+            unresolved.append({'target': target, 'reason': 'migration external environment missing: ' + ','.join(missing)})
+            continue
+        left, right = collect_migration(session, base, target), collect_migration(session, candidate, target)
+        require(left.plans == right.plans and left.external == right.external, target,
+                'loaded source/horizon contract differs between arms')
+        for plan, a, b, history in zip(left.plans, left.endpoints, right.endpoints, right.histories, strict=True):
+            mechanism = plan.occurrence.branch == 'post_chop_mechanism_load'
+            load_only = plan.occurrence.start_tick == plan.occurrence.end_tick
+            coverage.append({'target': target, 'test': plan.occurrence.test, 'branch': plan.occurrence.branch,
+                'seed': plan.occurrence.seed, 'initial_tick': plan.occurrence.start_tick,
+                'terminal_tick': plan.occurrence.end_tick, 'base_emitted_pid': left.pid, 'candidate_emitted_pid': right.pid,
+                'scope': 'mechanism_load_only' if mechanism else ('legacy_load_only' if load_only else 'legacy_loaded_continuation'),
+                'founding_census': None, 'prefix_pending': [str(value) for value in history.pending],
+                'full_recorded_losses': [[loss.tick, loss.node, loss.holder] for loss in b.terminal.losses or ()]})
+            if mechanism:
                 continue
-            windows.append(proposed_window(a,b))
-            unresolved.append({'test':plan.occurrence.test,'branch':plan.occurrence.branch,'reason':'external bytes and actual loaded history authenticated; original founding census unavailable; loaded-window policy requires owner review'})
-    return {'status':'INCOMPLETE','coverage':coverage,'proposed_windows':windows,'unsupported':unresolved}
+            # This check precedes origin lookup: unavailable provenance never masks
+            # an already recorded historical KnowledgeLost violation.
+            recorded_zero(a, b)
+            if load_only:
+                require(a.terminal == b.terminal, target, 'BASE/candidate load-only preservation differs')
+            else:
+                windows.append(proposed_window(a, b))
+            directory, save, version = original_input(candidate, target, plan)
+            key = (save, version)
+            if key not in origins:
+                origins[key] = authenticate_origin(session, directory, save, version)
+            row = strict_window(a, b, history, origins[key])
+            row.update(test=plan.occurrence.test, branch=plan.occurrence.branch)
+            strict.append(row)
+            if row['status'] != 'PASS':
+                unresolved.append({'test': plan.occurrence.test, 'branch': plan.occurrence.branch,
+                                   'reason': row['missing']})
+    for origin in origins.values():
+        recheck_origin(origin)
+    return {'status': 'INCOMPLETE' if unresolved else 'PASS', 'coverage': coverage,
+            'proposed_windows': windows, 'strict_safety': strict, 'unsupported': unresolved}

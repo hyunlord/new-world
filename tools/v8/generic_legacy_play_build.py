@@ -4,6 +4,7 @@
 # ///
 # Run: python3 -m unittest test_generic_legacy_play_build
 """Authenticate a real source-owned historical play build join without conversion."""
+import re
 from pathlib import Path
 
 from generic_gate import boundary, document, integer, require
@@ -17,7 +18,9 @@ def validate_play_build(join: Node, commit: str, binary: Path) -> str:
     join.field('schema').equals('play_build_join_v1')
     version=join.field('version').text()
     expected={'m1':'892edca1d31b26e535a3e9b62b37d62b99bb1130','v7':'b1ca032f8fa84cee87d68a185e471b8e2c2bddce'}
-    require(version in expected and expected[version]==commit,'/source','foreign historical play source')
+    require(re.fullmatch('[0-9a-f]{40}',commit) is not None and
+            ((version in expected and expected[version]==commit) or version=='main'),
+            '/source','foreign historical play source')
     source=join.field('source');source.field('source_sha').equals(commit);source.field('source_clean').equals(True)
     root=Path(source.field('root').text())
     require(binary==root/'rust/target/debug/libsim_bridge.dylib','/binary','foreign original selected bridge')
