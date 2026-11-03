@@ -181,3 +181,7 @@ The renderer comparator retains all three original artifact bytes, including unk
 Producer admission still lacks the authenticated Godot/debug-bridge build chain. Keep the renderer qualification route unavailable until that chain is implemented and actual evidence is admitted. Byte equality alone does not change the qualification matrix or establish observer neutrality.
 
 The sixth workspace source classification covers only the exact22 engine_bridge_ffi cases and six pinned direct authorities. These construct empty worlds and manually invoke BuildingStampSystem without ordinary Engine progression. Preserve their original aggregate outcomes; the classification supplies no ordinary-world survival evidence. Replacing a manual call with Engine.tick invalidates the source pin and rejects classification.
+
+## D0-doctest-source-closure — empty output needs a reviewed source basis
+
+The five current package doctest groups contain no runnable snippets: the source review identifies fourteen explicit text diagrams and only prose in generated documentation. Bind each package's complete source/build/manifest/lock closure to its reviewed digest and admitted inputs before classifying its actual empty case set. Missing or duplicate groups reject; changed closure or any named snippet remains INCOMPLETE. Original aggregate accounting and all other world routes remain required. The retained historical output fixture is an excerpt with only its final blank separator removed; it is not a new native execution receipt.

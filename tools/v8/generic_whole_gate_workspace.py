@@ -6,6 +6,7 @@ from gate_test_summary import parse_log
 from generic_gate import boundary, integer, require, text
 from generic_process import file_hash
 from generic_whole_gate_aggregate import LIMIT, aggregate_output
+from generic_whole_gate_doctests import classify_doctests
 from generic_whole_gate_workspace_classification import (
     classified_target,
     classify_routes,
@@ -110,7 +111,8 @@ def collect_workspace(session: Node, stage: Node) -> dict[str, Json]:
     require(actual_tests == expected_tests, '/topology', 'added or missing original test target')
     rows = account_workspace(raw, step, root, inputs, stage.field('environment'))
     classifications = classify_routes(root, inputs, rows)
-    return {'status': 'PASS', 'reviewed_mechanism_routes': classifications, 'accounting': 'COMPLETE_SOURCE_QUALIFIED_AGGREGATE',
+    doctests = classify_doctests(root, inputs, rows)
+    return {'status': 'PASS', 'reviewed_doctest_routes': doctests, 'reviewed_mechanism_routes': classifications, 'accounting': 'COMPLETE_SOURCE_QUALIFIED_AGGREGATE',
             'authority': 'ORIGINAL_UNFILTERED_CARGO_COMMAND_AND_ACTUAL_AGGREGATE_OUTCOMES',
             'independent_listing': False, 'native_child_wait': False, 'aggregate_pid': aggregate_pid,
             'qualification': LIMIT, 'world_safety': 'SEPARATE_SOURCE_FAMILY_JOINS_REQUIRED', 'sections': rows,
@@ -122,8 +124,7 @@ def collect_workspace(session: Node, stage: Node) -> dict[str, Json]:
                 for package, name, kind, source in TARGETS
                 if not (package == 'sim-test' and kind == 'test' and name in COMPLETE_FAMILIES)
                 and not classified_target(Node({'package': package, 'target': name, 'kind': kind}), classifications)],
-            'doctest_world_routes': [{'package': package, 'reason': 'source snippet classification required; actual outcomes retained'}
-                                    for package in sorted({row[0] for row in TARGETS})]}
+            'doctest_world_routes': [row for row in doctests if Node(row).field('status').text() != 'PASS']}
 
 
 def account_workspace(raw: str, step: int, root: Path, inputs: dict[str, str], environment: Node) -> list[Json]:

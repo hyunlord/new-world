@@ -681,3 +681,9 @@ engine_bridge_ffi의 원래22개 사례는 빈 세계에서 BuildingStampSystem�
 ### S0-p113 — 실제 fingerprint 형식과 비교기 일치
 
 독립 소스 검토에서 성능 출력은 소문자16자리 hex 문자열, M6a 출력은 같은 두 문자열을 하이픈으로 잇는 형식인데 비교기가 정수를 요구하던 결함을 찾았다. 루트에서 정상 문자열 거부2건과 잘못된 정수 수락2건을 먼저 재현했다. 실제 출력 형식으로 검사하도록 수정했고 fingerprint는 제외하지 않고 원래 값 그대로 비교한다. 합동29개 검사 종료0(0.021초), 변경 비교기·새 회귀의 엄격한 타입0오류, Ruff·diff 통과다. Rust/data 변경은 없으며 native 실행·전체 qualification을 새로 주장하지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-root-fingerprint-{red,green,types}.log`, `qualification-fingerprint-p112/REVIEW.md`. 동결 p111 전체 게이트는 계속 실행 중이고 Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p114 — 원본 doctest의 소스 한정 분류
+
+다섯 package의 전체 source/build/manifest/lock 묶음을 검토한 해시와 대조하고, 실행 가능한 예제가 없으며 실제 사례 집합도 빈 경우에만 doctest의 미분류 경로를 제거한다. text 도식14개와 생성 문서의 prose를 확인했다. 새 소스·변경된 소스·이름 있는 예제는 INCOMPLETE를 유지하며, 다섯 그룹의 누락·중복은 거부한다. 다른 native 세계 경로와 전체 안전성 의무는 그대로다.
+
+루트 통합38개 종료0, 독립 검토18개 종료0(서로 겹치는 검사), 변경 생산 파일과 두 새 테스트의 엄격한 타입0오류를 확인했다. 첫 루트 타입 검사에서 테스트의 annotation·사용하지 않은 반환값20건을 찾아 수정한 실패 로그도 보존했다. p111 BASE의 실제 입력과 다섯 소스 묶음은 일치했지만 현재 doctest native 실행 완료를 뜻하지 않는다. Rust/data는 변경하지 않았다. 증거: `stage0/ordered-dispatch/whole-gate-root-doctests-{01,02}.log`, `whole-gate-root-doctests-types{,-02}.log`, `whole-gate-native-draft/doctest-followup/integration`. 전체 Stage0 미게시와 CORE-off KnowledgeLost FAIL은 유지한다.
