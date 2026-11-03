@@ -201,3 +201,7 @@ Observe the original ten colony_jobs worlds without replacing their setup, comma
 ## D0-measurement-launch-admission — a successful process is not a valid measurement window
 
 Bind an explicitly supplied measurement deadline to the original selector and session, and reject environment overrides. Admit each step12 measurement child and step27 before its original launch only when strict load1<8 and the deadline permit it. Admission owns no child, wait or termination. A rejected prelaunch must not manufacture a native result. This is neither a whole-run hard stop nor proof that load remains acceptable after admission; existing step25 policy is separate. Preserve the p111 native0 performance result as invalid-window evidence, not retroactive PASS.
+
+## D0-nested-success-summary — recover only two explicit success tokens
+
+Recover the retained nested libtest split only when one pending name, exact success fragment and complete zero-failed/zero-ignored numeric success suffix establish the two identical statuses. Preserve named-count reconciliation and trusted native exit; do not infer FAILED/ignored attribution or accept truncated/unknown summaries. Re-parsing retained stdout creates an offline diagnostic only. The original stage accounting FAIL and its original receipt remain evidence until a fresh gate establishes its own result.

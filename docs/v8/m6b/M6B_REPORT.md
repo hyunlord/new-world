@@ -791,3 +791,11 @@ H에서 selector에 명시된 유효한 measurement deadline을 session·환경�
 독립21개 검사와 합동 검토는 통과했다. 입력·생산물 및 합동 검사 범위는 `stage0/ordered-dispatch/perf-load-admission-draft-v2/RESULT_V2.md`, `perf-load-admission-independent-review/REVIEW.md`, `combined-p127-review-bindings-01.json`에 고정했다. 기존 step25의 별도 wait에는 새 global deadline이 적용되지 않고 실행 중 child를 종료하지도 않으므로 전체 실행 hard stop은 아니다. admission 이후 부하 안정성도 보장하지 않는다.
 
 동결 p111 BASE step12는 실제 종료0이지만 load1 시작9.42·종료8.37로 유효한 측정 창을 충족하지 못했다. 새 H는 그 결과를 소급 통과시키지 않는다. 새 admission의 실제 native 실행은 NOT_RUN이며 qualification UNAVAILABLE·Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p131 — nested libtest 성공 요약의 제한된 interleave 판독
+
+미완료 이름이 정확히 하나이고 fragment가 정확히 `test result: ok`이며 다음 suffix가 완전한 numeric 성공 요약(실패·ignored 모두0)일 때만 두 명시적 ok token을 각각 이름과 요약에 연결한다. FAILED·ignored 혼합, 불명확하거나 잘린 요약, 이름/합계 불일치는 계속 거부한다. 원본 native assertion·실행 명령·trusted exit 판정은 바꾸지 않는다.
+
+독립34개 순수 테스트와 추가 실패·unknown-summary·truncation 검사가 통과했다. 실제 동결 p111 BASE step17은 native 종료0 뒤 accounting FAIL이었다. 보존된 stdout SHA `da396be01575888d4936f41365e7a8a654a3703e2632df06329cf7569b6ebb10`을 새 parser로 오프라인 판독하면 passed230·failed0·ignored0·요약14개이며, 이는 재실행이나 원본 FAIL 교체가 아니다. 증거: `stage0/ordered-dispatch/summary-interleave-p111-m1/RESULT.md`, `summary-interleave-p111-m1/RAW_BINDING.json`, `summary-interleave-p111-m1-review/REVIEW.md`, `combined-p127-review-bindings-01.json`.
+
+기존 실제 p111 BASE debug·release는 각각 rustdoc ENOENT로 다섯 doctest가 실행되지 않아 종료101이었다. 이 실패와 invalid perf 창은 그대로 남으며 새 native 실행·전체 게이트 PASS·Stage0 게시를 주장하지 않는다. 엄격한 CORE-off KnowledgeLost FAIL도 유지한다.

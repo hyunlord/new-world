@@ -38,8 +38,8 @@ _NAME: Final = re.compile(r'test (?!result:)(\S+) \.\.\.[ \t]*')
 _COMPLETE: Final = re.compile(r'test (?!result:)(\S+) \.\.\. (ok|FAILED|ignored)(?:, [^\n]*)?$')
 _SUMMARY: Final = re.compile(
     r'test result: (ok|FAILED)\s*\. ([0-9]+) passed; ([0-9]+) failed; '
-    r'([0-9]+) ignored; ([0-9]+) measured; ([0-9]+) filtered out\s*; '
-    r'finished in ([0-9]+(?:\.[0-9]+)?)s'
+    + r'([0-9]+) ignored; ([0-9]+) measured; ([0-9]+) filtered out\s*; '
+    + r'finished in ([0-9]+(?:\.[0-9]+)?)s'
 )
 
 
@@ -82,6 +82,16 @@ def parse_stream(text: str) -> TestSummary:
         line = line.strip()
         if not line:
             continue
+        if fragment == 'test result: ok' and pending is not None:
+            child = _SUMMARY.fullmatch('test result: ' + line)
+            if child is not None and child[1] == 'ok' and int(child[3]) == 0 and int(child[4]) == 0:
+                # Two success tokens: one closes the sole pending named outcome;
+                # the other belongs to this complete numeric summary. Mixed
+                # failed/ignored outcomes remain ambiguous and are not recovered.
+                outcomes.append(Outcome(pending, 'ok'))
+                pending = None
+                fragment = ''
+                line = 'test result: ' + line
         if fragment:
             fragment += ' ' + line
         elif line.startswith('test result:'):
