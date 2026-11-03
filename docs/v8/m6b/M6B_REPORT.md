@@ -592,3 +592,11 @@ V1의 미등록 progress 이름 및 ok 뒤 임의 suffix 허용을 독립 재현
 정확한 BASE0 self_proof에서만 p105 소스 계약을 발급하고 단계8 입력 재구성에도 같은 계약을 유지한다. 전체 process·native exit·입력·oracle 검사를 전후 소스 검증과 함께 유지하며 소스 계약을 실행 증명으로 사용하지 않는다. 두 변경의 독립 검토 후 루트에서 합친41개 검사가410.045초·실제 종료0으로 통과했고, production/test 전체 타입0오류·Ruff가 통과했다. 작은 fixture의 실제 프로세스와 명시적인 native/world 검증 대체를 구분한다. 실제 BASE0/Godot/세계 및 전체 gate는 미완료이고 기존 자기검증 FAIL은 그대로다.
 
 증거: `stage0/ordered-dispatch/cli-smoke-static-root-p106-validation.json`; CLI V2 review SHA256 `cc87059a1471385bb3d8ea1cac8f3aa1ca2d06f588e359f487b9522db4131579`; 정적 연결 review `3a45e50457ff743b6bd69aca730009c6bca29f0ee21d5ea0d47e4ee0073fafbb`. 원래 V1 실패와 전체39개 작성자 검사·독립5개 및 정적 연결 독립2개 결과는 별도 보존한다.
+
+### S0-p107 — 새 하네스와 제품 소스 경계로 통합 경로 수정
+
+목표의 “new gate on BASE0 against itself”를 다시 대조했다. BASE0 제품의 동일성을 지키는 것과 과거 gate 스크립트를 그대로 실행하는 것은 다르다. 독립 검토에 따라 새 하네스 H·제품 P·명시적인 관측 패치 O를 구분하고, 원래 전체 실행 순서와 공통 단계 journal에서 실제 결과를 검증하는 경로를 채택한다. 단계마다 별도의 인계 타입을 계속 추가하는 것은 필수 조건이 아니다. 실제 세계 관측 완전성·동일성·native 종료·성능·stall 판정은 계속 요구한다.
+
+검토된 M1 successorV2와 resolver32 준비본은 루트 합동37개(474.966초)·타입0오류·Ruff를 통과했지만 새 경로의 필수 변경으로 채택하지 않았다. 원래 외부 패치와 검증 증거를 보존한 뒤 정확한 역패치로 미커밋 루트 변경만 제거했다. BASE0 과거 M1 셸 호환 V1은 별도 마지막 callback 후 증거 변경 결함이 확인돼 CHANGES_REQUIRED로 보존하며 후속 수정을 보류했다. 이는 기존 M1V2 검토 결과와 다른 준비본이다.
+
+V9는 원래 입력 admission과 잠금 획득 후 남은 listing314개를 실제 실행 중이다. 아직 완료/전체 집계 통과를 주장하지 않는다. 기존 V9 FAIL/UNSETTLED와 엄격한 BASE0 자기검증 KnowledgeLost FAIL은 그대로다. 결정: D0-new-harness-product-boundary. 원격 main/wip는 게시된 Stage−1 `2f6993009ddb600e9249c28f9768a1a5252c8821`이며 Stage0 게시가 아니다.
