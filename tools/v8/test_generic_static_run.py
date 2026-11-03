@@ -1428,3 +1428,131 @@ class DocsSuccessorTests(unittest.TestCase):
                 self.assertFalse(injected, 'semantic generated callback ran after original source closure')
                 runner.check_docs_successor_current(endpoint)
                 patch.stopall()
+
+
+class Base0SourceTests(unittest.TestCase):
+    def source_fixture(self, home: Path, derived: bool = False) -> tuple[runner.DocsSuccessorRequest, runner.Base0StaticSource]:
+        """Real fake-tool pair/proofs; only exact BASE0 selectors are transformed for this tiny repository."""
+        from dataclasses import replace
+
+        import generic_cli_prepare as cli
+        import generic_setup_prepare as setup
+        from generic_build import Overlay
+
+        fixture=DocsSuccessorTests();self.addCleanup(fixture.doCleanups)
+        builds_seen: list[cli.CliBuilds]=[]
+        closures: list[cli.PairedSetupSourceClosure]=[]
+        contracts: list[runner.Base0StaticSource]=[]
+        actual_closure=cli.paired_setup_source_closure
+        actual_prepare=setup.prepare_warm
+        actual_cli=cli.prepare_cli
+        def select(selection: cli.CliSelectors) -> cli.PreparedCli:
+            if derived:
+                raw=b'diff --git a/tools/v8/observer_marker.py b/tools/v8/observer_marker.py\nnew file mode 100644\n--- /dev/null\n+++ b/tools/v8/observer_marker.py\n@@ -0,0 +1 @@\n+# inert observer fixture\n'
+                patch_path=home/'observer.patch';_=patch_path.write_bytes(raw)
+                manifest=home/'observer.json'
+                import hashlib
+                _=manifest.write_text(json.dumps({'schema_version':1,'product_base_sha':selection.published_sha,
+                    'observer_patch_sha256':file_hash(patch_path),'allowed_paths':['tools/v8/observer_marker.py'],
+                    'files':[{'path':'tools/v8/observer_marker.py','operation':'add','base0_sha256':None,
+                              'observer_sha256':hashlib.sha256(b'# inert observer fixture\n').hexdigest()}]}))
+                overlay=Overlay(patch_path,file_hash(patch_path),manifest,file_hash(manifest))
+                selection=replace(selection,candidate=replace(selection.candidate,overlay=overlay))
+            return actual_cli(selection)
+        def closure(builds: cli.CliBuilds) -> cli.PairedSetupSourceClosure:
+            result=actual_closure(builds);builds_seen.append(builds);closures.append(result)
+            return result
+        from generic_build import WorkspaceBuildPair, workspace_pair_source
+        def prepared(inputs: setup.SetupInputs, pair: WorkspaceBuildPair) -> setup.PreparedSetup:
+            if derived:
+                source=workspace_pair_source(pair)
+                bound=dict(inputs.effective_inputs)
+                for name,value in source.effective_inputs:
+                    if name in bound:self.assertEqual(bound[name],value)
+                    bound[name]=value
+                inputs=replace(inputs,effective_inputs=tuple(sorted(bound.items())))
+            result=actual_prepare(inputs,pair)
+            if builds_seen:
+                for name,value in (('BASE0_SHA',inputs.source_sha),('BASE0_GATE_SHA256',file_hash(inputs.root/'tools/v8/gate.sh'))):
+                    selected=patch.object(runner,name,value);_=selected.start();self.addCleanup(selected.stop)
+                contracts.append(runner.base0_static_source(builds_seen[-1],result,closures[-1]))
+            return result
+        with patch.object(cli,'prepare_cli',side_effect=select),patch.object(cli,'paired_setup_source_closure',side_effect=closure),patch.object(setup,'prepare_warm',side_effect=prepared):
+            request=fixture.successor_fixture(home)
+        self.assertEqual(len(contracts),1)
+        return replace(request,product=replace(request.product,source_contract=contracts[0])),contracts[0]
+
+    def test_actual_pristine_source_issuer_survives_generated_transition(self) -> None:
+        from dataclasses import replace
+        with tempfile.TemporaryDirectory() as tmp:
+            request,contract=self.source_fixture(Path(tmp).resolve())
+            source=runner.static_source(request.product)
+            self.assertIsNotNone(runner.source_contract_descriptor(request.product))
+            self.assertEqual(request.product.source_contract,contract)
+            with self.assertRaises(ValueError):_=runner.static_source(replace(request.product,source_contract=replace(contract)))
+            with self.assertRaises(ValueError):_=runner.static_source(replace(request.product,root=request.builds.prepared.selectors.base.root))
+            with self.assertRaises(ValueError):_=runner.base0_static_source(request.builds,request.prepared,request.source_closure)
+            self.assertEqual(runner.static_source(request.product),source)
+            self.assertEqual(tuple(sorted(runner.COMMANDS)),(1,7,8,13,14,15,16,20,22,31,33,46,51))
+            with patch.dict(runner.COMMANDS,{13:('foreign',('python3','wrong'))}),self.assertRaises(ValueError):
+                _=runner.static_source(request.product)
+
+    def test_actual_derived_proof_and_docs_successor_use_original_source(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            request,_=self.source_fixture(Path(tmp).resolve(),True)
+            self.assertEqual(request.prepared.source_kind,'DERIVED_OBSERVER')
+            result=runner.run_docs_successor(request)
+            self.assertEqual(result.component.status,'PASS')
+            node=document(result.component.receipt.read_text())
+            runner.authenticate_source_receipt(request.product,node)
+            self.assertEqual(node.field('source_contract').field('scope').text(),'STATIC_COMMAND_SOURCE_ONLY')
+            runner.check_docs_successor_history(result)
+            runner.check_docs_successor_current(result)
+            marker=request.product.root/'tools/v8/observer_marker.py'
+            _=marker.write_text('# changed after successful docs\n')
+            with self.assertRaises(ValueError):runner.authenticate_source_receipt(request.product,node)
+
+    def test_wrong_selector_gate_and_unqualified_receipt_reject(self) -> None:
+        from dataclasses import replace
+        with tempfile.TemporaryDirectory() as tmp:
+            request,_=self.source_fixture(Path(tmp).resolve())
+            with patch.object(runner,'BASE0_SHA','f'*40),self.assertRaises(ValueError):
+                _=runner.static_source(request.product)
+            before=runner.static_source(request.product)
+            fake=document(json.dumps({'status':'PASS','source_contract':runner.source_contract_descriptor(request.product),
+                                      'source_before':before,'source_end':before}))
+            runner.authenticate_source_receipt(request.product,fake)
+            with self.assertRaises(ValueError):runner.authenticate_source_receipt(replace(request.product,source_contract=None),fake)
+            path=request.product.root/'tools/v8/gate.sh';_=path.write_text(path.read_text()+'# wrong gate\n')
+            with self.assertRaises(ValueError):_=runner.static_source(request.product)
+
+    def test_source_namespace_and_modes_are_anchored_and_postpublication_drift_rejects(self) -> None:
+        from dataclasses import replace
+
+        from generic_process import atomic_json
+
+        with tempfile.TemporaryDirectory() as tmp:
+            request,_=self.source_fixture(Path(tmp).resolve())
+            selection=request.builds.prepared.selectors
+            for root in (selection.base.root,selection.candidate.root,selection.harness_root):
+                extra=root/'late-empty';extra.mkdir()
+                with self.assertRaises(ValueError):_=runner.static_source(request.product)
+                extra.rmdir()
+            source=request.product.root/'tools/v8/gate.sh';mode=source.stat().st_mode
+            source.chmod(mode ^ 0o100)
+            with self.assertRaises(ValueError):_=runner.static_source(request.product)
+            source.chmod(mode)
+            for purpose in ('publication','defect_proof'):
+                object.__setattr__(request.builds.prepared,'selectors',replace(selection,purpose=purpose))
+                try:
+                    with self.assertRaises(ValueError):_=runner.static_source(request.product)
+                finally:object.__setattr__(request.builds.prepared,'selectors',selection)
+            original=atomic_json
+            def publish(path: Path, value: dict[str,Json]) -> None:
+                original(path,value)
+                if path == request.static_output/'receipt.json':
+                    _=source.write_text(source.read_text()+'# mutation after publication\n')
+            with patch.object(runner,'atomic_json',side_effect=publish),self.assertRaises(runner.DocsSettledFailure):
+                _=runner.run_docs_successor(request)
+            receipt=document((request.static_output/'receipt.json').read_text())
+            with self.assertRaises(ValueError):runner.authenticate_source_receipt(request.product,receipt)

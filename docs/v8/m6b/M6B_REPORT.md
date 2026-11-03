@@ -574,3 +574,13 @@ V2는 마지막 generated callback이 source 빈 디렉터리를 추가하는 �
 sim_core 등 실제7개 target의 부모/자식 테스트 블록·guard 상수·원본 실행 입력을 확인한 경우에만 정해진 중첩 횟수를 집계한다. 원래 전체 목록과 ignored 목록, 모든 outcome·summary·filtered 수를 대조하며 원본 출력 해시를 유지한다. PID 관계는 관측하지 않았으므로 SOURCE_BOUND_AGGREGATE_ONLY로 남긴다. 직접 실행은 실제 Cargo Running 순서와 각 전체 aggregate를 검증한 뒤 범위를 나눈다. 일반 단일-summary 경로와 알 수 없는 중첩 실행 거부는 유지한다.
 
 V1의 미등록 progress 이름 및 ok 뒤 임의 suffix 허용을 독립 재현해 V2에서 엄격한 이름/문법 검사로 닫았다. 루트가 실행한 동결 postimage58개(16.595초), 독립9개(0.237초), 통합22파일 바이트 일치, production/test 전체 타입0오류·Ruff 및 제한된 docs 검사가 통과했다. B5 ignored, 같은 이름의 재귀 child, data-only9회는 그대로다. 실제 stdout의 빈 줄은 byte identity를 위해 유지한다. 추가6개 target의 테스트 목록은 소스 유도 fixture이며 실제 listing 증거가 아니다. 실제 남은 listing 실행과 전체 direct/wrapped parity는 미완료이고 V9 FAIL/UNSETTLED는 바꾸지 않는다. 증거: `stage0/ordered-dispatch/workspace-nested-accounting-review/REVIEW_V2.md` SHA256 `2078430d587474968b1b41c554f723b070a27a897c6b0d87358c02459f034869`; patch `dcdae761a07da5d24566115eb558c500e9543efef3cb9b802fb464def15eb6e3`; `nested-accounting-root-v2-validation.json`.
+
+### p99 고정 소스 전체 Python 회귀 종료
+
+고정 SHA `3f6fe40edab11b9fa12b6c36b5b5fce850137968`의 전체 discovery는2,140개·2,538.536초, 실제 종료0으로 통과했다. 원래 잠금 검사5개는 기본 건너뜀으로 유지하며 실행한 검사로 계산하지 않는다. 추적 입력463개의 전후 해시가 동일하다. p96의 원래 실패와 p99 수정은 보존하고, 이 결과를 이후 HEAD 또는 formal 단계16/전체 gate 통과로 바꾸지 않는다. 증거: `stage0/python-regression-p99-terminal.json`; 로그 SHA256 `8dfc60ff6a5beca3c79b54841638015e44e2191102c456dc49b50637122c7f39`.
+
+### S0-p105 — BASE0 자체 검증용 정적 소스 계약
+
+정확한 BASE0 self_proof 선택, 실제 양쪽 선행 빌드와 원래 paired source closure에서만 정적 소스 계약을 발급한다. 원본 gate blob·변경 없는13개 명령·승인된 effective source를 대조하며 gate를 observer postimage로 바꾸는 것은 거부한다. 기본 현재 gate 검사는 그대로다. 후속 generated 변경 뒤에도 원래 source proof를 유지하고, 계약을 복사하거나 다른 docs predecessor에 붙이는 경로를 거부한다.
+
+소스 receipt 조인 함수는 실행 증명이 아니다. CLI/fullgate 연결에서는 기존 실제 process·입력·oracle·전체 receipt 검사를 계속 요구하며, 이 커밋은 그 연결을 아직 포함하지 않는다. 루트 실제 작은 fixture4개(56.766초), 통합 현재 gate 검사1개, 독립 foreign closure 거부 및 production/test 타입0오류·Ruff·제한된 docs 검사가 통과했다. 작성자 전체89개는88성공과 외부 sibling gate.sh 누락 오류1개로 종료됐고, 정확한 fixture 보충 후 해당1개만 재검사해 통과했다. 이를 깨끗한89개 전체 재실행으로 기록하지 않는다. 실제 BASE0/native·전체 gate와 기존 KnowledgeLost 실패는 미해결이다. 증거: `stage0/ordered-dispatch/base0-static-independent-review/REVIEW.md` SHA256 `30ff264e8f0131eb20a7ba506352a64029b409c02511b6f2547fb8053813bce3`; patch `8d391fb44c72e8440a98a1c3e8f1cc7aaf11beaa4122b9985bdd56bb90433fcf`; `base0-static-root-validation.json`.

@@ -5,6 +5,7 @@
 """One original static gate command; never a full-gate admission."""
 import ast
 import fcntl
+import hashlib
 import json
 import os
 import re
@@ -16,7 +17,8 @@ from pathlib import Path
 from typing import Final, NoReturn
 
 from gate_oracle_child import import_generated
-from generic_cli_prepare import CliBuilds, PairedSetupSourceClosure
+from generic_build import WorkspaceSourceProof
+from generic_cli_prepare import CliBuilds, PairedSetupSourceClosure, recheck_cli_builds
 from generic_embedded_build import EmbeddedEndpoint, check_endpoint
 from generic_fixture_run import ComponentResult
 from generic_gate import document, integer, require
@@ -43,7 +45,7 @@ from generic_workspace_endpoints import (
     generated,
     state_json,
 )
-from mux2_gate_inputs import BRIDGE, INPUT_DIRS, INPUT_FILES, EvidenceError, Json
+from mux2_gate_inputs import BRIDGE, INPUT_DIRS, INPUT_FILES, EvidenceError, Json, Node
 from mux2_gate_lock import LOCK
 
 GATE_SHA256 = 'ba949251efa089536c44b9883515d017c7254122b4167756833dfd7070d8c523'
@@ -77,11 +79,38 @@ COMMANDS: dict[int, tuple[str, tuple[str, ...]]] = {
 }
 
 
+BASE0_SHA = '2f6993009ddb600e9249c28f9768a1a5252c8821'
+BASE0_GATE_SHA256 = 'dd3d52db1905af1211d207dcd39796de150d6c2c6eba2595624cef3afbec7938'
+STATIC_COMMANDS_SHA256 = 'ec73a616bba44c4cca4eeefecf8832deafbbf96eb1e93f7fef95fcaa71029b77'
+BASE0_STATIC_STEPS = (1,7,8,13,14,15,16,20,22,31,33,46,51)
+
+
+@dataclass(frozen=True, slots=True)
+class Base0StaticSource:
+    """Live-issued static-only source identity; not runtime or publication authority."""
+    root: Path
+
+
+@dataclass(frozen=True, slots=True)
+class _Base0SourceProof:
+    contract: Base0StaticSource
+    builds: CliBuilds
+    prepared: PreparedSetup
+    closure: PairedSetupSourceClosure
+    derived: WorkspaceSourceProof | None
+    source_json: str
+    descriptor_json: str
+
+
+_BASE0_SOURCES: Final[dict[int,_Base0SourceProof]] = {}
+
+
 @dataclass(frozen=True)
 class StaticProduct:
     root: Path
     source_sha: str
     inputs: tuple[tuple[str, str], ...]
+    source_contract: Base0StaticSource | None = None
 
 
 @dataclass(frozen=True)
@@ -94,6 +123,115 @@ class ExecutionEnvironment:
     prior_receipts: tuple[tuple[Path, str], ...] = ()
     # Native docs/strict checks: caller retains this descriptor, including on unknown ownership.
     held_lane_fd: int | None = None
+
+
+def _command_contract() -> None:
+    require(tuple(sorted(COMMANDS)) == BASE0_STATIC_STEPS
+            and hashlib.sha256(json.dumps(COMMANDS,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+            == STATIC_COMMANDS_SHA256, '/static/source', 'reviewed static command projection changed')
+
+
+def _base0_identity(builds: CliBuilds, prepared: PreparedSetup, closure: PairedSetupSourceClosure) -> None:
+    PairedSetupSourceClosure.check(closure,builds)
+    require(closure.builds is builds and closure.original is builds.retained_anchor,
+            '/static/source', 'foreign original paired source issuer')
+    selected=builds.prepared.selectors
+    require(selected.purpose=='self_proof' and selected.published_sha==selected.base.source_sha
+            ==selected.candidate.source_sha==BASE0_SHA, '/static/source', 'not exact BASE0 self proof')
+    binding=document(builds.prepared.binding_json)
+    for name,value in (('purpose','self_proof'),('base_product_sha',BASE0_SHA),
+                       ('candidate_product_sha',BASE0_SHA),('frozen_main',BASE0_SHA),('merge_base',BASE0_SHA)):
+        binding.field(name).equals(value)
+    require(prepared.warm_pair is builds.candidate and prepared.warm_pair is not None
+            and prepared.inputs.root==selected.candidate.root and prepared.inputs.source_sha==BASE0_SHA,
+            '/static/source', 'foreign actual prepared candidate')
+    assert prepared.warm_pair is not None
+    require(prepared.derived_source is None or prepared.derived_source.retained_anchor is prepared.warm_pair.retained_anchor,
+            '/static/source','foreign prepared source proof issuer')
+    immutable_inputs(prepared)
+    _command_contract()
+    require(file_hash(prepared.inputs.root/'tools/v8/gate.sh')==BASE0_GATE_SHA256,
+            '/static/source', 'BASE0 gate blob changed')
+    baseline=document(prepared.derived_source.baseline_json) if prepared.derived_source is not None else document(json.dumps(freeze_source(prepared.inputs.root,BASE0_SHA)))
+    baseline.field('root').equals(str(prepared.inputs.root))
+    baseline.field('source_sha').equals(BASE0_SHA)
+    baseline.field('tracked_manifest').field('tools/v8/gate.sh').array()[2].equals(BASE0_GATE_SHA256)
+    for plan in builds.prepared.arms:
+        for build in (plan.debug,plan.release):
+            if build.overlay is not None:
+                overlay=document(build.overlay.manifest.read_text())
+                require('tools/v8/gate.sh' not in tuple(row.field('path').text() for row in overlay.field('files').array()),
+                        '/static/source', 'gate cannot be an observer postimage')
+    PairedSetupSourceClosure.check(closure,builds)
+
+
+def _prepared_static_source(prepared: PreparedSetup) -> dict[str,Json]:
+    immutable_inputs(prepared)
+    return document(prepared.derived_source.effective_json).mapping() if prepared.derived_source is not None else freeze_source(prepared.inputs.root,prepared.inputs.source_sha)
+
+
+def base0_static_source(builds: CliBuilds, prepared: PreparedSetup,
+                        paired_closure: PairedSetupSourceClosure) -> Base0StaticSource:
+    """Mint before setup changes generated endpoints; later use checks source/history only."""
+    recheck_cli_builds(builds)
+    _base0_identity(builds,prepared,paired_closure)
+    source=json.dumps(_prepared_static_source(prepared),sort_keys=True)
+    descriptor: dict[str,Json]={'schema':'base0_static_source.v1','purpose':'self_proof',
+        'published_sha':BASE0_SHA,'source_sha':BASE0_SHA,'root':str(prepared.inputs.root),
+        'gate_sha256':BASE0_GATE_SHA256,'commands_sha256':STATIC_COMMANDS_SHA256,
+        'steps':list(BASE0_STATIC_STEPS),'source_kind':prepared.source_kind,
+        'baseline_digest':prepared.source_digest,'effective_digest':prepared.effective_source_digest,
+        'source_json_sha256':hashlib.sha256(source.encode()).hexdigest(),
+        'scope':'STATIC_COMMAND_SOURCE_ONLY','publication_authority':False}
+    contract=Base0StaticSource(prepared.inputs.root)
+    proof=_Base0SourceProof(contract,builds,prepared,paired_closure,prepared.derived_source,source,json.dumps(descriptor,sort_keys=True))
+    recheck_cli_builds(builds)
+    _base0_identity(builds,prepared,paired_closure)
+    require(json.dumps(_prepared_static_source(prepared),sort_keys=True)==source,'/static/source','source changed during issuance')
+    PairedSetupSourceClosure.check(paired_closure,builds)
+    _BASE0_SOURCES[id(contract)]=proof
+    return contract
+
+
+def _base0_proof(product: StaticProduct) -> _Base0SourceProof:
+    contract=product.source_contract
+    proof=_BASE0_SOURCES.get(id(contract))
+    require(proof is not None and proof.contract is contract,'/static/source','unissued or copied BASE0 contract')
+    assert proof is not None and contract is not None
+    require(contract.root==product.root==proof.prepared.inputs.root and product.source_sha==BASE0_SHA
+            and proof.prepared.derived_source is proof.derived, '/static/source','replaced source contract binding')
+    _base0_identity(proof.builds,proof.prepared,proof.closure)
+    require(json.dumps(_prepared_static_source(proof.prepared),sort_keys=True)==proof.source_json,
+            '/static/source','original effective source changed')
+    PairedSetupSourceClosure.check(proof.closure,proof.builds)
+    return proof
+
+
+def source_contract_descriptor(product: StaticProduct) -> dict[str,Json] | None:
+    """Source-only historical join; never rechecks obsolete generated build endpoints."""
+    if product.source_contract is None:return None
+    return document(_base0_proof(product).descriptor_json).mapping()
+
+
+def static_source(product: StaticProduct) -> dict[str,Json]:
+    if product.source_contract is None:
+        require(file_hash(product.root/'tools/v8/gate.sh')==GATE_SHA256,'/gate','command source changed')
+        return freeze_source(product.root,product.source_sha)
+    return document(_base0_proof(product).source_json).mapping()
+
+
+def authenticate_source_receipt(product: StaticProduct, receipt: Node) -> None:
+    """Join explicit contract history without treating serialized labels as authority."""
+    if product.source_contract is None:
+        require('source_contract' not in receipt.mapping(),'/static/source','unexpected source contract')
+        return
+    proof=_base0_proof(product)
+    receipt.field('source_contract').equals(document(proof.descriptor_json).value)
+    for name in ('source_before','source_end'):
+        if name in receipt.mapping():receipt.field(name).equals(document(proof.source_json).value)
+    if receipt.field('status').text()=='PASS':
+        require({'source_before','source_end'} <= receipt.mapping().keys(),'/static/source','missing source endpoints')
+    _= _base0_proof(product)
 
 
 def verify_receipt(path: Path, digest: str) -> None:
@@ -431,6 +569,11 @@ def _docs_files(request: DocsSuccessorRequest) -> tuple[tuple[Path, int, str], .
 
 
 def _docs_source(request: DocsSuccessorRequest) -> dict[str, Json]:
+    if request.product.source_contract is not None:
+        proof=_base0_proof(request.product)
+        require(proof.builds is request.builds and proof.prepared is request.prepared and proof.closure is request.source_closure,
+                '/static/source', 'docs successor has foreign source issuer')
+        return document(proof.source_json).mapping()
     immutable_inputs(request.prepared)
     proof = request.prepared.derived_source
     if proof is not None:
@@ -677,8 +820,10 @@ def _run_step(product: StaticProduct, step: int, output: Path,
                            docs_before=docs_before)
         for path, digest in context.prior_receipts:
             verify_receipt(path, digest)
-        require(file_hash(product.root / 'tools/v8/gate.sh') == GATE_SHA256, '/gate', 'command source changed')
-        before = _docs_source(state.successor_request) if state is not None and state.successor_request is not None else freeze_source(product.root, product.source_sha)
+        descriptor=source_contract_descriptor(product)
+        if descriptor is not None:receipt['source_contract']=descriptor
+        else:require(file_hash(product.root / 'tools/v8/gate.sh') == GATE_SHA256, '/gate', 'command source changed')
+        before = _docs_source(state.successor_request) if state is not None and state.successor_request is not None else static_source(product)
         inputs = inventory(product.root, input_names)
         require(len(dict(product.inputs)) == len(product.inputs) and inputs == dict(product.inputs), '/inputs', 'effective inventory differs')
         refs = _refs(product, step)
@@ -775,7 +920,7 @@ def _run_step(product: StaticProduct, step: int, output: Path,
         _ = _tools(context, step)
         for path, digest in context.prior_receipts:
             verify_receipt(path, digest)
-        after = _docs_source(state.successor_request) if state is not None and state.successor_request is not None else freeze_source(product.root, product.source_sha)
+        after = _docs_source(state.successor_request) if state is not None and state.successor_request is not None else static_source(product)
         receipt['source_end'] = after
         require(before is not None and after == before, '/source', 'source binding differs')
         if step in {8, 46}:
@@ -819,6 +964,8 @@ def _run_step(product: StaticProduct, step: int, output: Path,
     if state is not None and state.successor_request is not None:
         state.intended_receipt=json.dumps(receipt,sort_keys=True,indent=2)+'\n'
     atomic_json(output / 'receipt.json', receipt)
+    if product.source_contract is not None:
+        authenticate_source_receipt(product,document((output/'receipt.json').read_text()))
     return ComponentResult(output / 'receipt.json', 'FAIL' if errors else 'PASS')
 
 
