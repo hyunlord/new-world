@@ -76,6 +76,11 @@ class _CliAnchor:
     candidate: WorkspaceBuildPair
     closure: tuple[tuple[Path, bool, tuple[tuple[str, str], ...]], ...]
 
+    def check_closure(self) -> None:
+        """Compare original raw producer closure only; not standalone authority."""
+        require(all(_raw(path, source) == frozen for path, source, frozen in self.closure),
+                '/closure', 'retained source/input/producer evidence changed after authentication')
+
 
 @dataclass(frozen=True, slots=True)
 class CliBuilds:
@@ -241,8 +246,7 @@ def recheck_cli_builds(result: CliBuilds) -> None:
     _check_pair(prepared.arms[0], anchor.base)
     _harness(prepared)
     _check_pair(prepared.arms[1], anchor.candidate)
-    require(all(_raw(path, source) == frozen for path, source, frozen in anchor.closure),
-            '/closure', 'retained source/input/producer evidence changed after authentication')
+    anchor.check_closure()
 
 
 def build_cli(prepared: PreparedCli) -> CliBuilds:
