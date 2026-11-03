@@ -799,3 +799,11 @@ H에서 selector에 명시된 유효한 measurement deadline을 session·환경�
 독립34개 순수 테스트와 추가 실패·unknown-summary·truncation 검사가 통과했다. 실제 동결 p111 BASE step17은 native 종료0 뒤 accounting FAIL이었다. 보존된 stdout SHA `da396be01575888d4936f41365e7a8a654a3703e2632df06329cf7569b6ebb10`을 새 parser로 오프라인 판독하면 passed230·failed0·ignored0·요약14개이며, 이는 재실행이나 원본 FAIL 교체가 아니다. 증거: `stage0/ordered-dispatch/summary-interleave-p111-m1/RESULT.md`, `summary-interleave-p111-m1/RAW_BINDING.json`, `summary-interleave-p111-m1-review/REVIEW.md`, `combined-p127-review-bindings-01.json`.
 
 기존 실제 p111 BASE debug·release는 각각 rustdoc ENOENT로 다섯 doctest가 실행되지 않아 종료101이었다. 이 실패와 invalid perf 창은 그대로 남으며 새 native 실행·전체 게이트 PASS·Stage0 게시를 주장하지 않는다. 엄격한 CORE-off KnowledgeLost FAIL도 유지한다.
+
+### S0-p132 — original play launcher의 명시적 H 입장 검사
+
+p111 BASE step21은 H의 protocol hook이 있는 `tools/play.sh` 대신 BASE의 이전 launcher를 실행했다. case0 launcher 실제 종료3 기록은 있으나 기대한 version child receipt가 없어 owner가 UNKNOWN으로 남았다. 원래 source_inputs가 이전 launcher를 고정했으므로 사후 파일 변조가 아니라 H closure 누락이다. 실제 p111 실행은 이후 abort 종료247이며 PASS가 아니다. 기존 play UNKNOWN과 수집되지 않은 하위 wait·native descendant census는 그대로 남는다.
+
+정확히 `tools/play.sh`만 H tooling에 추가하고 O 분류는 거부한다. schema1 overlay, identity 전체 source census, materialization, original-product H projection과 새 외부 preparer-v6가 같은 제한을 사용한다. 실제 owned case를 만들기 전에 H와 P launcher의 기록된 해시·실제 바이트·일반 파일 및 실행 모드0755를 확인한다. launcher 본문·원래 명령·gameplay·O matrix는 변경하지 않는다. UNKNOWN에는 최대2048자 원인 문구를 보존하며 원인 문자열 변환 실패도 ownership을 해제하지 않는다.
+
+외부 초안 25개 source/순수 검사와 최종 집중6개 검사, all-mode 타입 검사 및 적용 검사가 통과했다. 독립 C 리뷰도 PASS다. 증거: `stage0/ordered-dispatch/play-harness-admission-draft/{BINDINGS.json,RESULT.md,green.log,final-focused.log}`. 패치 SHA `9d2099d55be0527f32dda7d2093f73d8ae62c277319de94992b39c4a3b88a554`. 새 native 실행·play runtime qualification은 NOT_RUN이며 기존 UNKNOWN 복구나 전체 게이트 PASS를 주장하지 않는다. Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.

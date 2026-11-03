@@ -8,6 +8,7 @@ from generic_original_harness_projection import (
     OriginalHarnessContext,
     projected_manifest,
 )
+from generic_overlay_contract import harness_tool
 from generic_process import file_hash
 from generic_sources import freeze_source, git, manifest_hash
 from generic_whole_gate_source import materialize
@@ -36,7 +37,7 @@ class ProjectionTests(unittest.TestCase):
         context = OriginalHarnessContext(selected, file_hash(selected), 'base')
         expected = projected_manifest(receipt.field('harness'), original)
         for name, raw in expected.items():
-            if apply_tools and name.startswith('tools/v8/') and name.endswith(('.py', '.sh')):
+            if apply_tools and harness_tool(name) and name.endswith(('.py', '.sh')):
                 target = clone / name
                 target.parent.mkdir(parents=True, exist_ok=True)
                 _ = target.write_bytes((h / name).read_bytes())
@@ -47,7 +48,7 @@ class ProjectionTests(unittest.TestCase):
         context, session, original, root = self.fixture()
         expected = context.expected(session, original)
         for name, raw in original.field('tracked_manifest').mapping().items():
-            if not (name.startswith('tools/v8/') and name.endswith(('.py', '.sh'))):
+            if not (harness_tool(name) and name.endswith(('.py', '.sh'))):
                 fields = Node(raw).array()
                 self.assertEqual(expected[name], [fields[0].value, fields[2].value])
         self.assertNotIn('tools/v8/observer.gd', expected)
@@ -116,7 +117,7 @@ class ProjectionTests(unittest.TestCase):
                          unused, '0' * 64, unused, unused, (), (), overlay=overlay)
         changed = overlay_files(spec)
         self.assertTrue(changed)
-        self.assertTrue(all(name.startswith('tools/v8/') and name.endswith(('.py', '.sh')) for name in changed))
+        self.assertTrue(all(harness_tool(name) and name.endswith(('.py', '.sh')) for name in changed))
         _ = context.expected(session, original)
         self.assertFalse((root / 'tools/v8/observer.gd').exists())
         self.assertFalse((root / 'tools/v8/gate_f10_no_kill.json').exists())

@@ -10,6 +10,7 @@ from generic_build import (
 )
 from generic_gate import document, require
 from generic_identity_overlay import selected_roles
+from generic_overlay_contract import harness_tool
 from generic_process import file_hash
 from generic_setup_bridge import immutable_inputs
 from generic_setup_prepare import PreparedSetup, warm_projection
@@ -32,7 +33,7 @@ def projected_manifest(harness: Node, product: Node) -> dict[str, Json]:
         name = row.field('path').text()
         if row.field('role').text() != 'H' or not name.endswith(('.py', '.sh')):
             continue
-        require(name.startswith('tools/v8/'), name, 'H executable outside tooling namespace')
+        require(harness_tool(name), name, 'H executable outside tooling namespace')
         expected[name] = [row.field('mode').text(), row.field('sha256').text()]
     require(bool(expected), '/projection', 'empty original-product census')
     return expected

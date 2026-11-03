@@ -11,6 +11,7 @@ from pathlib import Path
 
 from gate_play_child import CASES
 from generic_gate import require
+from generic_play_harness import check_launcher
 from generic_play_owner import PlayPlan
 from generic_process import atomic_json, file_hash
 from generic_whole_gate_contract import load_session
@@ -33,6 +34,7 @@ def explicit_home(session: Node, environment: dict[str,str]) -> Path:
 def build_plan(session_path: Path, session_sha256: str, arm: str, output: Path) -> PlayPlan:
     session=load_session(session_path,session_sha256)
     require(arm in {'base','candidate'},'/arm','unknown play arm')
+    check_launcher(session, arm)
     root=Path(session.field('arms').field(arm).field('root').text())
     allowed=Path(session.field('output').text())/'steps'/arm/'21-play_check'
     require(output.is_absolute() and output==output.resolve() and output.is_relative_to(allowed) and not output.exists(),

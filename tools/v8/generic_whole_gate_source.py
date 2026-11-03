@@ -13,6 +13,7 @@ from generic_build import derived_snapshot, overlay_files
 from generic_cli_prepare import PreparedCli
 from generic_gate import document, require
 from generic_identity_overlay import IdentityContext, validate_identity
+from generic_overlay_contract import HARNESS_EXACT_PATHS, harness_tool
 from generic_process import atomic_json, file_hash
 from generic_sources import freeze_source, git, safe_path
 from mux2_gate_inputs import Json, Node
@@ -52,11 +53,12 @@ def materialize(prepared: PreparedCli, role_manifests: tuple[Path, Path]) -> Nod
             require(role in {'H', 'O'}, name, 'product data replacement is not a tooling role')
             row.field('post_sha256').equals(expected[name])
             if role == 'H':
-                require(name.startswith('tools/v8/') and (name.endswith(('.py', '.sh')) or name == 'tools/v8/gate_f10_no_kill.json'),
+                require(harness_tool(name),
                         name, 'H is named executable tooling, not fixture/product data')
                 require(file_hash(safe_path(prepared.selectors.harness_root, name)) == expected[name],
                         name, 'H postimage differs from admitted harness')
             else:
+                require(name not in HARNESS_EXACT_PATHS, name, 'explicit H launcher cannot be classified as O')
                 _ = row.field('qualification').text()
         identity = None
         selected_binding: Json = None

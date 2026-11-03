@@ -22,6 +22,7 @@ if TYPE_CHECKING:
     from generic_identity_overlay import IdentityContext
 
 from generic_gate import GateContractError, document, require
+from generic_overlay_contract import HARNESS_EXACT_PATHS
 from generic_overlay_contract import OBSERVER_EXACT_PATHS as OBSERVER_EXACT_PATHS
 from generic_process import (
     ProcessResult,
@@ -115,7 +116,7 @@ def overlay_files(spec: BuildSpec, identity: 'IdentityContext | None' = None) ->
     for row in node.field('files').array():
         name = row.field('path').text()
         require(name not in rows and name in allowed, '/overlay', 'unlisted or duplicate file')
-        require(name in OBSERVER_EXACT_PATHS or name.startswith(
+        require(name in HARNESS_EXACT_PATHS or name in OBSERVER_EXACT_PATHS or name.startswith(
                     ('rust/crates/sim-test/src/', 'rust/crates/sim-bridge/src/', 'tools/v8/', 'docs/v8/')),
                 name, 'observer compatibility path outside tooling/bridge scope')
         before = row.field('base0_sha256').value

@@ -6,19 +6,24 @@ from pathlib import Path
 from typing import Final
 
 from generic_gate import require
-from generic_overlay_contract import OBSERVER_EXACT_PATHS, IdentityInput
+from generic_overlay_contract import (
+    HARNESS_EXACT_PATHS,
+    OBSERVER_EXACT_PATHS,
+    IdentityInput,
+    harness_tool,
+)
 from generic_process import file_hash
 from generic_sources import safe_path
 from mux2_gate_inputs import Json, Node
 
-EXPLICIT: Final = ('tools/v8/gate.sh', 'tools/v8/read_summary_normalise.py',
+EXPLICIT: Final = ('tools/play.sh', 'tools/v8/gate.sh', 'tools/v8/read_summary_normalise.py',
                   'tools/v8/gate_f10_no_kill.json', 'tools/v8/generic_whole_gate_ui_companions.py',
                   'tools/v8/generic_whole_gate_stall_capture.py', 'tools/v8/generic_whole_gate_acceptance.py')
 MATRIX: Final = 'tools/v8/whole_gate_observer_matrix.json'
 
 
 def compatible(name: str) -> bool:
-    return name in OBSERVER_EXACT_PATHS or name.startswith(
+    return name in HARNESS_EXACT_PATHS or name in OBSERVER_EXACT_PATHS or name.startswith(
         ('rust/crates/sim-test/src/', 'rust/crates/sim-bridge/src/', 'tools/v8/', 'docs/v8/'))
 
 
@@ -70,8 +75,7 @@ def selected_roles(root: Path, harness: Node) -> list[Json]:
         name = pending.pop()
         if name in selected:
             continue
-        require(name.startswith('tools/v8/') and
-                (name.endswith(('.py', '.sh')) or name == 'tools/v8/gate_f10_no_kill.json'),
+        require(harness_tool(name),
                 name, 'H role is not named executable tooling')
         raw = read(name)
         selected.add(name)

@@ -8,6 +8,7 @@ from generic_original_harness_projection import (
     OriginalHarnessContext,
     projected_manifest,
 )
+from generic_overlay_contract import harness_tool
 from generic_process import file_hash
 from generic_sources import freeze_source, git
 from mux2_gate_inputs import Json, Node
@@ -30,7 +31,7 @@ def prepare_overlay(context: OriginalHarnessContext, session: Node, root: Path, 
             if name in before:
                 Node(before[name]).array()[0].equals(mode)
             continue
-        require(name.startswith('tools/v8/') and name.endswith(('.py', '.sh')),
+        require(harness_tool(name) and name.endswith(('.py', '.sh')),
                 name, 'non-executable-H replacement')
         require(mode == ('100644' if name not in before else Node(before[name]).array()[0].text()),
                 name, 'generic overlay cannot change original modes or add executable mode')

@@ -3,6 +3,14 @@
 from pathlib import Path
 from typing import Final, Protocol
 
+HARNESS_EXACT_PATHS: Final = frozenset({'tools/play.sh'})
+
+
+def harness_tool(name: str) -> bool:
+    return name in HARNESS_EXACT_PATHS or (name.startswith('tools/v8/') and
+        (name.endswith(('.py', '.sh')) or name == 'tools/v8/gate_f10_no_kill.json'))
+
+
 # These are the reviewed full-suite and normal-boot lifecycle seams, not a
 # blanket permission to overlay gameplay scripts or arbitrary integration tests.
 OBSERVER_EXACT_PATHS: Final = frozenset(

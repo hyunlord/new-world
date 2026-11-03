@@ -11,14 +11,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, BinaryIO, Literal, final
 
+import gate_play_child as child
+import gate_play_protocol as protocol
 from gate_oracle_child import suite_lane
 from generic_gate import document, integer, require, text
 from generic_process import atomic_json, file_hash, real_path
 from mux2_gate_inputs import Json, Node
 from mux2_gate_lock import FD_ENV
-
-import gate_play_child as child
-import gate_play_protocol as protocol
 
 if TYPE_CHECKING:
     from generic_play_projection import PlayProjection
@@ -201,9 +200,15 @@ class PlayOwner:
         diagnostic_finished = False
         try:
             if self.plan.output.exists() and not (self.plan.output / 'unknown.json').exists():
+                try:
+                    detail = str(primary)[:2048]
+                except BaseException as error:  # noqa: BLE001 - diagnostic formatting cannot release ownership
+                    self.diagnostic_error = error
+                    detail = 'cause text unavailable: ' + type(error).__name__
                 atomic_json(self.plan.output / 'unknown.json', {'settlement': 'UNKNOWN', 'reason': self.unknown,
                     'owner_pid': os.getpid(), 'outer_pid': self.shell.pid if self.shell is not None else None,
-                    'lane_retained': True, 'completed_cases': list(self.case_exits)})
+                    'lane_retained': True, 'completed_cases': list(self.case_exits),
+                    'cause_detail': detail})
             diagnostic_finished = True
         finally:
             secondary = sys.exception()

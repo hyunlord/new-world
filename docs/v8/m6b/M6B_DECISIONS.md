@@ -205,3 +205,9 @@ Bind an explicitly supplied measurement deadline to the original selector and se
 ## D0-nested-success-summary — recover only two explicit success tokens
 
 Recover the retained nested libtest split only when one pending name, exact success fragment and complete zero-failed/zero-ignored numeric success suffix establish the two identical statuses. Preserve named-count reconciliation and trusted native exit; do not infer FAILED/ignored attribution or accept truncated/unknown summaries. Re-parsing retained stdout creates an offline diagnostic only. The original stage accounting FAIL and its original receipt remain evidence until a fresh gate establishes its own result.
+
+## D0-play-explicit-h-launcher — bind the actual launcher before owning cases
+
+Admit only the exact tools/play.sh path as executable H tooling, never O, and preserve the full P source census. Require its actual bytes and mode to match frozen H before output creation or an owned case launch. Keep launcher content, original case commands, native assertions and settlement rules unchanged. Retain bounded primary-cause text in UNKNOWN diagnostics without allowing diagnostic failure to release ownership.
+
+The retained p111 abort exit247 is not PASS and does not settle the earlier play UNKNOWN or manufacture missing child waits. Future preparation uses a new preparer version; frozen p111 and p121 source/selectors remain evidence. Pure tests and static admission checks do not establish runtime play or observer neutrality qualification.
