@@ -16,9 +16,13 @@ import stat
 import tomllib
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Final, Literal
+from typing import TYPE_CHECKING, Literal
+
+if TYPE_CHECKING:
+    from generic_identity_overlay import IdentityContext
 
 from generic_gate import GateContractError, document, require
+from generic_overlay_contract import OBSERVER_EXACT_PATHS as OBSERVER_EXACT_PATHS
 from generic_process import (
     ProcessResult,
     ProcessSpec,
@@ -30,28 +34,6 @@ from generic_process import (
 from generic_sources import freeze_source, git, inventory, manifest_hash, safe_path
 from generic_workspace_tests import inspect_inventory
 from mux2_gate_inputs import INPUT_DIRS, INPUT_FILES, Json, Node
-
-# These are the reviewed full-suite and normal-boot lifecycle seams, not a
-# blanket permission to overlay gameplay scripts or arbitrary integration tests.
-OBSERVER_EXACT_PATHS: Final = frozenset({
-    'scripts/core/main_bootstrap.gd',
-    'rust/crates/sim-test/tests/save_load.rs',
-    'rust/crates/sim-test/tests/save_gate_observation/mod.rs',
-    'rust/crates/sim-test/tests/colony_world.rs',
-    'rust/crates/sim-test/tests/colony_commands.rs',
-    'rust/crates/sim-test/tests/colony_jobs.rs',
-    'rust/crates/sim-test/tests/colony_steward.rs',
-    'rust/crates/sim-test/tests/colony_steward_housing/construction.rs',
-    'rust/crates/sim-test/tests/steward_defence.rs',
-    'rust/crates/sim-test/tests/legacy_migration_current.rs',
-    'rust/crates/sim-test/tests/steward_defence_migration.rs',
-    'rust/crates/sim-test/tests/b5_flora.rs',
-    'rust/crates/sim-test/tests/engine_appearance_ffi.rs',
-    'rust/crates/sim-test/tests/engine_ascii.rs',
-    'rust/crates/sim-test/tests/engine_knowledge_ffi.rs',
-    'rust/crates/sim-test/tests/m6b_presentation_defaults.rs',
-    'rust/crates/sim-test/tests/save_gate_observation/external.rs',
-})
 
 
 @dataclass(frozen=True, slots=True)
@@ -106,13 +88,24 @@ def config_inventory(spec: BuildSpec) -> dict[str, str]:
     return actual
 
 
-def overlay_files(spec: BuildSpec) -> dict[str, tuple[str | None, str]]:
+def overlay_files(spec: BuildSpec, identity: 'IdentityContext | None' = None) -> dict[str, tuple[str | None, str]]:
     if spec.overlay is None:
         return {}
     overlay = spec.overlay
     require(file_hash(overlay.patch) == overlay.patch_sha256 and
             file_hash(overlay.manifest) == overlay.manifest_sha256, '/overlay', 'overlay artifact hash mismatch')
     node = document(overlay.manifest.read_text())
+    if node.field('schema_version').value == 2:
+        from generic_identity_overlay import IdentityContext
+        require(isinstance(identity, IdentityContext), '/identity', 'admitted whole-gate identity context required')
+        assert identity is not None
+        node.field('observer_patch_sha256').equals(overlay.patch_sha256)
+        require(overlay.patch.read_bytes() == b'', '/identity', 'identity patch must be exactly zero bytes')
+        identity.validate(spec)
+        require(file_hash(overlay.patch) == overlay.patch_sha256 and
+                file_hash(overlay.manifest) == overlay.manifest_sha256, '/identity', 'identity artifact changed during validation')
+        return {}
+    require(identity is None, '/overlay', 'identity context cannot authorize a normal overlay')
     node.field('schema_version').equals(1)
     node.field('product_base_sha').equals(spec.source_sha)
     node.field('observer_patch_sha256').equals(overlay.patch_sha256)

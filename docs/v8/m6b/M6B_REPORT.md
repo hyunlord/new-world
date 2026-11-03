@@ -711,3 +711,11 @@ sim-core의 `baseline_matches_v7_final` target 두 사례는 규칙 값을 생�
 원본 setup import의 plan·controller·두 native 결과·log 범위·checkpoint를 연결하는 판독기를 추가했다. bridge/source/tool 인증은 기존 검사를 재사용하며, 현재 cache는 마지막 원본 checkpoint와 대조만 한다. 두 import 모두 정상 종료해야 하고, 첫 실패 뒤 두 번째 성공을 두 번의 성공으로 바꾸지 않는다. renderer 실행과 matrix 승인은 아직 연결하지 않아 UNAVAILABLE를 유지한다.
 
 독립 검토에서 checkpoint 스캔 도중 소스 또는 prior bridge 영수증이 바뀌어도 수락하는 V1 결함을 재현했다. 마지막 전체 plan 입력 재검사를 추가한 V2에서 두 사례 모두 거부됐다. 루트 합동57개 종료0(56.373초), 새 파일 네 개의 엄격한 타입0오류·Ruff·diff 통과다. 새 판독기의 합성 테스트는 upstream bridge 인증만 명시적으로 mock하며 실제 Cargo/Godot 인증 증거가 아니다. 증거: `stage0/ordered-dispatch/whole-gate-root-import-reader-01.log`, `whole-gate-root-import-reader-types-01.log`, `whole-gate-import-reader-p116-v2/INDEPENDENT_UI_REVIEW_V2.md`; V1 재현도 보존했다. Rust/data/O 변경과 실제 import 실행은 없고, Stage0 미게시·CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p119 — 명시적인 빈 H/O 적용과 결함 후보 준비
+
+H의 후손인 결함 후보가 H/O 파일을 그대로 포함하면 적용할 diff가 비어 있을 수 있다. schema1의 빈 overlay 거부는 유지하고, schema2 identity만 명시적 0바이트 patch·H/P 전체 호환 경로 합집합·정확한 mode/hash·H import 묶음·O matrix 역할 목록을 모두 인증한 뒤 허용한다. 실제 게임 상수 차이는 P에 남아 있어야 하며, materialization 전후 소스·index·외부 역할 파일 변경을 거부한다. identity 자체는 관측기 qualification을 부여하지 않는다.
+
+실제 작은 Git 저장소 회귀를 포함한 루트101개 종료0(53.348초), import 정리 후 새12개 종료0(10.832초), 변경7개 Python 파일 엄격한 타입0오류·Ruff(명시적 public reexport PLC0414 예외)·diff 통과다. 최초 타입94건과 순환 import 오류는 보존했고, 공용 읽기 전용 입력 타입·정확한 경로 집합을 분리하고 테스트를 typed fixture와 두 모듈로 나눠 해결했다. 기존 `IdentityContext` 실제 타입 인증과 allowlist 내용은 유지했다. 독립32개 검사와 원본37개 검토는 서로 겹치므로 합산하지 않는다.
+
+증거: `stage0/ordered-dispatch/whole-gate-root-identity-overlay-{01,02,03}.log`, `whole-gate-root-identity-overlay-types-{01,02,03}.log`, `identity-overlay-independent-review/STRICT_CORRECTION_REVIEW.md`. 외부 preparer의 명시적 defect_proof 옵션은 별도 successor patch이며 실제 상수 변경 후보의 native 실패 증명은 아직 NOT_RUN이다. Rust/data/O 변경은 없고 Stage0 미게시·CORE-off KnowledgeLost FAIL을 유지한다.

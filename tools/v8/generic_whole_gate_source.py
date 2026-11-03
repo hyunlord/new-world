@@ -11,6 +11,7 @@ from pathlib import Path
 from generic_build import derived_snapshot, overlay_files
 from generic_cli_prepare import PreparedCli
 from generic_gate import document, require
+from generic_identity_overlay import IdentityContext, validate_identity
 from generic_process import atomic_json, file_hash
 from generic_sources import freeze_source, git, safe_path
 from mux2_gate_inputs import Json, Node
@@ -25,6 +26,7 @@ def materialize(prepared: PreparedCli, role_manifests: tuple[Path, Path]) -> Nod
             '/harness', 'harness changed after source admission')
     role_anchors = tuple((file_hash(path), path.lstat().st_mode) for path in role_manifests)
     arms: dict[str, Json] = {}
+    identities: list[tuple[IdentityContext, int]] = []
     output.mkdir(mode=0o700)
     for label, plan, role_path in zip(('base', 'candidate'), prepared.arms, role_manifests, strict=True):
         source = document(plan.baseline_json)
@@ -55,7 +57,18 @@ def materialize(prepared: PreparedCli, role_manifests: tuple[Path, Path]) -> Nod
                         name, 'H postimage differs from admitted harness')
             else:
                 _ = row.field('qualification').text()
-        changed = overlay_files(plan.debug)
+        identity = None
+        selected_binding: Json = None
+        if declared.field('schema_version').value == 2:
+            selected = declared.field('selected_source')
+            selected_path = Path(selected.field('path').text())
+            selected_binding = selected.value
+            identity = IdentityContext(prepared.harness_json, plan.baseline_json, prepared.binding_json,
+                role_path, file_hash(role_path), role_path.lstat().st_mode,
+                selected_path, selected.field('sha256').text(), selected_path.lstat().st_mode)
+            selected.field('mode').equals(identity.selected_mode)
+            identities.append((identity, 0 if label == 'base' else 1))
+        changed = overlay_files(plan.debug, identity)
         effective = derived_snapshot(plan.debug.root, source.mapping(), changed, index)
         arms[label] = {'root': str(plan.debug.root), 'source_sha': plan.debug.source_sha,
                        'source_before': source.value, 'effective_source': effective,
@@ -68,6 +81,7 @@ def materialize(prepared: PreparedCli, role_manifests: tuple[Path, Path]) -> Nod
                        'layer_manifest_path': str(role_path), 'layer_manifest_sha256': file_hash(role_path),
                        'overlay_manifest': str(plan.debug.overlay.manifest),
                        'overlay_manifest_sha256': plan.debug.overlay.manifest_sha256,
+                       **({'identity_selected_source': selected_binding} if identity is not None else {}),
                        'environment': dict(plan.environment), 'cargo_home': str(plan.debug.cargo_home),
                        'generated_roots': [str(plan.debug.root/'rust/target'), str(plan.debug.root/'.godot')]}
     d = prepared.declarations
@@ -86,6 +100,8 @@ def materialize(prepared: PreparedCli, role_manifests: tuple[Path, Path]) -> Nod
         'binding': document(prepared.binding_json).value, 'arms': arms, 'declarations': declarations}
     require(tuple((file_hash(path), path.lstat().st_mode) for path in role_manifests) == role_anchors,
             '/layers', 'original role manifests changed during materialization')
+    for identity, index in identities:
+        identity.validate(prepared.arms[index].debug)
     atomic_json(output/'materialization.json', receipt)
     return Node(receipt)
 
@@ -111,6 +127,19 @@ def check_materialization(session: Node) -> None:
         manifest = Path(arm.field('overlay_manifest').text())
         require(file_hash(manifest) == arm.field('overlay_manifest_sha256').text(),
                 '/overlay', 'overlay manifest changed')
+        declaration = document(manifest.read_text())
+        if declaration.field('schema_version').value == 2:
+            selected = arm.field('identity_selected_source')
+            declaration.field('selected_source').equals(selected.value)
+            selected_path = Path(selected.field('path').text())
+            require(file_hash(selected_path) == selected.field('sha256').text()
+                    and selected_path.lstat().st_mode == selected.field('mode').value,
+                    '/identity', 'selected H/O role source changed')
+            role_path = Path(arm.field('layer_manifest_path').text())
+            require(file_hash(role_path) == arm.field('layer_manifest_sha256').text(), '/identity', 'role map changed')
+            document(role_path.read_text()).field('files').equals([])
+            validate_identity(Path(harness.field('root').text()), original.field('harness'),
+                              arm.field('source_before'), declaration, document(selected_path.read_text()))
         changed: dict[str, tuple[str | None, str]] = {}
         for row in document(manifest.read_text()).field('files').array():
             before = row.field('base0_sha256')
@@ -188,6 +217,14 @@ def prepare_session(config: Path) -> Path:
         assert overlay is not None
         external[str(overlay.patch)] = overlay.patch_sha256
         external[str(overlay.manifest)] = overlay.manifest_sha256
+        declaration = document(overlay.manifest.read_text())
+        if declaration.field('schema_version').value == 2:
+            selected = declaration.field('selected_source')
+            selected_path = Path(selected.field('path').text())
+            require(file_hash(selected_path) == selected.field('sha256').text()
+                    and selected_path.lstat().st_mode == selected.field('mode').value,
+                    '/identity', 'selected H/O source changed before session')
+            external[str(selected_path)] = selected.field('sha256').text()
     receipt = selection.output/'materialization.json'
     external[str(receipt)] = file_hash(receipt)
     source = document(prepared.harness_json)
