@@ -857,3 +857,19 @@ p134 전체 Python 실제 종료1(2,666개/4,328.222초, 오류1·skip6)의 유�
 원래 오류 RED 재현 후 실제 root10개 테스트 PASS(2.987초), 독립5개 PASS, root Ruff PASS. 기존 테스트 파일의 all-mode 타입 진단23개는 p134 원본과 메시지별 동일하며 새 진단은 없다. 문서 검사는 올바른 tools/v8 경로로 재실행해 PASS했고, 앞선 잘못된 tools/check_docs.sh 호출127도 로그로 남겼다. [patch/RED/GREEN](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/play-plan-fixture-followup/RESULT.md), [독립 검토](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/play-plan-fixture-followup/INDEPENDENT_A_REVIEW.md), [root 테스트](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/p137-root-tests.log), [타입 비교](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/p137-types-baseline/COMPARISON.json).
 
 이 커밋의 전체 Python 재실행과 V6 native10명령은 다음 검증이며 아직 결과를 주장하지 않는다. Stage0 미게시·엄격한 BASE CORE-off KnowledgeLost FAIL·전체 세계/O 중립성 미완료를 유지한다.
+
+### S0-p138 — p137 검증 체크포인트와 공유 Mac 운영 제한
+
+| 범위 | 실제 확인 / 남은 의무 |
+|---|---|
+| 게시 상태 | Stage−1 `2f6993009ddb600e9249c28f9768a1a5252c8821`은 wip→main 게시 완료. 이후 Stage0은 **UNPUBLISHED**이며 그 게시 제품을 대체하지 않는다. [STAGE_MINUS1_PUBLICATION.json](/Users/rexxa/work/m6b-data/minus1/STAGE_MINUS1_PUBLICATION.json) |
+| p137 native 개발 검증 | 소스 `c4b6bc09a24404a1c00c07d8145a4eeb7ee9c738`의 V6 실제10명령 종료0, 상위 wait0, source/baseline/tools 불변. identity 공통228,748값 차이0·한쪽경로0, chronicle64개/19,683항목, raw64개, 결정성 seeds0–3 PASS. **독립 감사 PASS** ([감사 기록](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/development-p137-v6-native-audit/REVIEW.md)). DEVELOPMENT_ONLY이며 full gate NOT_RUN·observer neutrality NOT_QUALIFIED. [result.json](/Users/rexxa/work/m6b-data/stage0/development-foundation-p137-v6/result.json), [actual-terminal.json](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/development-driver-p137-v6/actual-terminal.json), [identity.log](/Users/rexxa/work/m6b-data/stage0/development-foundation-p137-v6/identity.log) |
+| p137 전체 Python | **PASS** — 실제 child wait0, 2,673 tests / 4,259.812s / skipped6. 추적 Python·shell537개 해시와 HEAD·Git status 실행 전후 동일. 22:44:18 KST 종료. [result.json](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/p137-python-discovery/result.json), [wait.json](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/p137-python-discovery/wait.json) |
+| Stage0 수용 조건 | strict CORE steward-OFF seed0·20일의 KnowledgeLost1건(`clay_digging`, tick28560)은 유지한다. BASE 보존·부분집합 native 성공은 절대 zero-loss self-pass, 고의 결함 후보 실행, 전체 world/observer qualification을 대신하지 않는다. |
+| Stage1–3 | 단계별 gameplay 구현·측정·held-out·gate·게시 미완료. 외부 설계·합성 산수 준비만 존재한다. 예약1520–1551 / 1552–1583 / 1584–1615는 평가에 사용하지 않았고, 소모1680–1743은 재사용하지 않는다. [next-stage-readiness-p137.md](/Users/rexxa/work/m6b-data/stage0/ordered-dispatch/next-stage-readiness-p137.md) |
+
+사용자의 최신 지시로23:00–07:00 KST에는 build·모든 test·실험/시뮬레이션·Godot 실행/전면화·LSP/index 작업을 하지 않는다. 무거운 archive I/O는 낮에만 하며, 새 작업은22:45 이내 실행·정리 여유와23:00 전 실제 종료를 확인할 수 있어야 한다.48시간 목표·자동 계속이 이를 넘어서지 않는다. 정확한 소유 작업만 정리하고 광범위 process-name kill이나 가짜 wait/lane 해제는 금지한다. 이는 운영 규칙이며 OS 차단장치 설치가 아니다.
+
+보존 정책은 과거 인벤토리975항목을 분류했으며 데이터 삭제0·압축0·DGX전송0이다. 활성 p137·BASE identity·미해결 실패 원본이 기간 만료보다 우선한다. 이 세션 소유 유휴 LSP7개는 정확한 소유권 확인 뒤 종료·부재를 기록했으며 다른 세션이나 전역 설정을 바꾸지 않았다. [RETENTION_POLICY.md](/Users/rexxa/work/worldsim-operations/retention-20261103/RETENTION_POLICY.md), [retention-manifest.json](/Users/rexxa/work/worldsim-operations/retention-20261103/retention-manifest.json), [owned-idle-lsp-termination.json](/Users/rexxa/work/worldsim-operations/retention-20261103/owned-idle-lsp-termination.json).10/31 당시 활동은 M-READ로 좁혔지만 정확히 kill된 PID/명령은 **UNKNOWN**이다. 이후 별도 SHA의 실제51단계 gate PASS는 존재하나 과거 불명확한 실행을 소급 PASS로 만들지 않으며 추정 재실행도 요구하지 않는다. [interruption-1031.md](/Users/rexxa/work/worldsim-operations/retention-20261103/interruption-1031.md).
+
+이 체크포인트는 p137 실행의 증거와 문서 정책만 기록한다. 향후 p138 문서 커밋의 전체 gate 또는 Stage0–3 완료를 주장하지 않는다. 새로운 gameplay·visual·performance·held-out 증거는 없다.

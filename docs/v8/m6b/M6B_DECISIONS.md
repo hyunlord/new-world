@@ -231,3 +231,7 @@ Actual p134 Python ended1 with one missing-harness fixture error in2666 tests; a
 ### D0-play-plan-fixture-keeps-real-launcher-admission
 
 When launcher admission gains a required source namespace, repair the isolated plan fixture with real temporary equal-byte executable H/product files and explicit inputs. Keep actual check_launcher and original plan assertions active; do not weaken production admission or manufacture process evidence. Preserve original p134 full-suite FAIL and rerun the integrated successor. Existing23 all-mode diagnostics are baseline-equal, not a strict-clean claim.
+
+## D0-user-night-window-overrides-continuation — 2026-11-03
+
+The user's latest shared-Mac restriction overrides the earlier 48-hour goal and automatic continuation: on this shared Mac, 23:00–07:00 KST permits no build, test, experiment/simulation, Godot launch/foregrounding or LSP/indexing work; heavy archive I/O is daytime-only. Admit heavy work only when its expected longest duration plus cleanup fits 22:45 and actual owned children/waits can settle before 23:00; otherwise defer. Preserve original failures and UNKNOWN ownership, never use broad process-name kills or invent settlement to release a lane. The [external retention policy](/Users/rexxa/work/worldsim-operations/retention-20261103/RETENTION_POLICY.md) protects active p137/source/BASE identity and raw evidence; it is policy, not deployed OS enforcement or evidence of deletion/DGX transfer. This docs-only decision does not assert pending run outcomes or waive Stage0 proof/publication requirements.

@@ -24,6 +24,13 @@ manifest ids in the gate).
 - Never discard work with a hard reset; inspect with `git status` / `git diff` and fix forward.
 - The V7 lines and research are pinned: tags `v7-final-sim`, `v7-final-art`; world-model work lives on `codex/worldmodel-2026-10`.
 
+## Shared Mac operating window (user override, 2026-11-03)
+
+- On this shared Mac, in **Asia/Seoul, 23:00–07:00**, do not build, run any tests or experiments/simulations, launch or foreground Godot, or start LSP/indexing work. Heavy archive hashing, compression, transfer, copying, deletion and disk scans belong to the daytime window. Short log reads and small document edits are permitted.
+- Before admitting heavy work, verify that its expected longest duration plus cleanup fits **22:45**, with owned children and actual waits settled before **23:00**. If duration is unknown or does not fit, defer to daytime or a separately validated DGX plan. Do not start new long work merely because an earlier run was delayed.
+- This latest user limit overrides the M6b 48-hour goal and autonomous continuation instructions; those do not authorize a night overrun. Preserve failed/aborted/UNKNOWN evidence when stopping work. Never bulk-kill by process-name patterns: revalidate exact owned PID/start/parent/cwd and retain ownership until actual child/lock settlement is established.
+- Follow the [retention policy](/Users/rexxa/work/worldsim-operations/retention-20261103/RETENTION_POLICY.md) for active inputs, BASE identity and evidence protection. These are agent operating rules, not a claim that an OS scheduler, quota or automatic enforcement has been installed.
+
 ## Pass coordination (depth roadmap v2 §7)
 
 - Only one performance measurement job may run on this Mac at a time; overlapping measurements are both invalid. Admit each repetition at 1-minute load < 8 and interleave old/new binaries in the same session.
