@@ -556,3 +556,9 @@ V2의 마지막 source callback 뒤 빈 디렉터리 누락과 V3의 외부 Godo
 고정 제품 `40f3feb81`/harness `71820a6a4`의 direct와 wrapped는 각각 실제 종료0이며154개 capture의 무결성 PASS·완전성 COMPLETE였다. 그러나 독립 listing 대조에서 sim_core가 거부돼 자격 검증은 FAIL이다. 실제 목록491개와 관측된 고유 이름491개는 같지만, 소스에 선언된 내부 child7회가 출력에 섞여 outcome498개·summary8개가 되었고 기존 단일-summary parser가 이를 거부했다. 전체 direct/wrapped case parity 및 세계 안전성은 완료되지 않았다. 실패 RESULT SHA256 `2e862c2cdd1fa639230ce499afd9adc5d1eebd3628bfeab9510ea7cf3cebea67`, 독립 원인 감사 `workspace-runtime/v9-static-listing-failure-audit-01/REVIEW.md` SHA256 `daa8eb51c8ba7dbb9bb75afc0adaa6cfb920d31618340ab4493506475037f4ff`를 보존한다.
 
 Driver98042의 실제 종료1 후 전용 owner94208은 완료되지 않은 settlement를 계속 검사했다. 두 프로세스 목록·정확 시작/명령/cwd/FD·자식 없음과 원래 결과 해시를 확인한 뒤 이 owner에만 SIGTERM을 보냈고 session44604 실제 종료143을 얻었다. 기존 잠금 inode가 그대로 사용 가능함을 확인했지만 원래 FAIL과 protocol UNSETTLED, SETTLEMENT/UNKNOWN 파일 부재는 바꾸지 않았다. 상세: `workspace-runtime/v9-administrative-recovery-audit/ROOT_TERMINAL.json`. 후속 parser 수정·과거 결과 대조는 별도 원본 입력 검증과 실제 listing 실행을 요구하며 V9를 재분류하지 않는다.
+
+### S0-p102 — 원래 문서 검사14의 실제 산출물 인계
+
+원래 문서 검사와 소유 프로세스를 한 번 실행하고, 단계12의 실제 endpoint에서 단계14가 만든 target 변경을 후속 단계에 넘긴다. 기존 API와 기본 실행은 유지하며 실제 ProcessSpec/ProcessResult, 원래 양쪽 source closure, 외부 도구 바이트·권한, 이전 증거 전체를 보존한다. 정상 oracle FAIL은 FAIL로 남기고 독립적으로 검증된 산출물 인계만 허용한다. 소유권 불명은 실제 실행과 FD를 유지하며 후속 endpoint를 발급하지 않는다.
+
+V2는 마지막 generated callback이 source 빈 디렉터리를 추가하는 독립 재현에서 실패했다. V3는 의미 검사 뒤 원래 target/cache/settings를 직접 비교해 같은 호출에서 이를 차단했다. 독립490개 해시 대조·원래 재현 및 외부 도구 권한/닫힌 FD 검사, 추가 회귀1개22.801초가 통과했다. 루트 신규·static27개(397.613초)와 기존 경로58개(6.691초), production/test 전체 타입0오류·Ruff 및 제한된 docs 검사가 실제 종료0으로 통과했다. 이전 V1/V2 실패는 보존한다. 단계15/16/17 순서 연결, BASE0 원본 gate 계약, 실제 native/세계·전체 gate 자격은 별도 미완료다. 증거: `stage0/ordered-dispatch/docs14-successor-review-v3/REVIEW.md` SHA256 `6f88ea0843f15e06f93bc8a429770248c45ac91f654c750aed34c30890793763`; patch `244c5527b0abdedc9b8e847b092247a1dcd7186b959365f9d9bfcba69df27d72`.

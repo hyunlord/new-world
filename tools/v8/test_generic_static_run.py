@@ -6,16 +6,18 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from typing import Literal, final
+from typing import Literal, TextIO, final
 from unittest.mock import Mock, patch
 
 import bridge_api
 import generic_static_run as runner
 from generic_fixture_run import ComponentResult
 from generic_gate import GateContractError, document
+from generic_process import execute as actual_execute
 from generic_process import file_hash
 from generic_sources import git
 from generic_sources import inventory as actual_inventory
+from generic_workspace_cases import ListingProcess, process_output
 from mux2_gate_inputs import Json
 
 
@@ -1032,3 +1034,397 @@ class DocsOwnedTests(unittest.TestCase):
         self.assertIs(caught.exception.original,primary);self.assertIs(caught.exception.diagnostic,secondary)
         self.assertIsNone(caught.exception.receipt)
         self.assertFalse((fixture.base/'out/ownership.json').exists())
+
+
+class DocsSuccessorTests(unittest.TestCase):
+    owner_lane: TextIO | None = None
+
+    def test_explicit_successor_api_does_not_replace_legacy(self) -> None:
+        self.assertTrue(callable(getattr(runner, "run_docs_successor", None)))
+        self.assertTrue(callable(getattr(runner, "check_docs_successor_history", None)))
+        self.assertTrue(callable(getattr(runner, "check_docs_successor_current", None)))
+
+    def successor_fixture(self, home: Path, body: str = 'echo "docs: PASS"') -> runner.DocsSuccessorRequest:
+        from dataclasses import replace
+
+        import generic_cli_prepare as cli
+        import generic_embedded_build as embedded
+        from generic_setup_prepare import prepare_warm
+        from generic_workspace_endpoints import generated
+        from test_generic_cli_products import COMPILER
+        from test_generic_embedded_build import fixture
+        from test_generic_setup_bridge import unused_wait
+
+        prepared, prior = fixture(home)
+        root = prepared.inputs.root
+        cargo = next(tool for tool in prepared.inputs.tools if tool.name == 'cargo')
+        rustc = next(tool for tool in prepared.inputs.tools if tool.name == 'rustc')
+        compiler = '#!'+sys.executable+'\nimport sys,pathlib\nOMIT=False\n'
+        compiler += "if '--version' in sys.argv or sys.argv[1]=='metadata' or '--no-run' in sys.argv:\n exec("+repr(COMPILER)+")\n raise SystemExit(0)\n"
+        compiler += "pathlib.Path('target/docs-marker' if sys.argv[1]=='run' else 'target/build-marker').write_text('produced')\n"
+        _ = cargo.path.write_text(compiler)
+        _ = rustc.path.write_text('#!'+sys.executable+'\nprint("synthetic rustc\\nrelease: 1.93.0\\nhost: synthetic-test-only")\n')
+        tools = tuple(replace(tool,sha256=file_hash(tool.path)) for tool in prepared.inputs.tools)
+        for directory in ('scripts','scenes','shaders','assets','localization'):
+            folder = root/directory; folder.mkdir(exist_ok=True); _ = (folder/'input.txt').write_text('fixture')
+        for name in ('Cargo.toml','src/lib.rs','src/bin/worldsim_probe.rs','src/bin/worldsim_perf.rs'):
+            path = root/'rust/crates/sim-test'/name
+            path.parent.mkdir(parents=True,exist_ok=True); _ = path.write_text('synthetic normal '+name)
+        _ = (root/'rust/Cargo.toml').write_text('[workspace]\n')
+        _ = (root/'tools/play.sh').write_text('#!/bin/sh\n')
+        _ = shutil.copy2(Path(cli.__file__).with_name('gate_fixtures.json'),root/'tools/v8/gate_fixtures.json')
+        config = root/'rust/.cargo/config.toml'
+        _ = config.write_text('[build]\njobs=8\n[net]\noffline=true\n')
+        script = root/'tools/v8/check_docs.sh'
+        _ = script.write_text('(cd rust && cargo run --release -q -p sim-test --bin worldsim_systems)\n'+body+'\n')
+        _ = git(root,'add','.'); _ = git(root,'-c','user.name=Test','-c','user.email=t@example.invalid','commit','-qm','tiny docs')
+        shutil.rmtree(root/'rust/target')  # Only this fixture-owned synthetic tree.
+        values = dict(prepared.inputs.environment)
+        values["PATH"] += ":/usr/bin"
+        values.update(RUSTC_WRAPPER="",RUSTC_WORKSPACE_WRAPPER="")
+        sha = git(root,'rev-parse','HEAD').decode().strip()
+        base, harness = home/'base',home/'harness'
+        for other in (base,harness):
+            _ = subprocess.run(('git','clone','-q',str(root),str(other)),check=True,capture_output=True)
+            _ = shutil.copy2(root/'rust/Cargo.lock',other/'rust/Cargo.lock')
+        _ = git(harness,'update-ref','refs/remotes/origin/v8/main',sha)
+        base_home = home/'base-cache'; base_home.mkdir()
+        def arm(path: Path, cache: Path) -> cli.ArmSelector:
+            environment = {'PATH':f'{rustc.path.parent}:/usr/bin:/bin:/usr/sbin:/sbin','LANG':'C','LC_ALL':'C',
+                'CARGO_HOME':str(cache),'CARGO_TARGET_DIR':str(path/'rust/target'),'RUSTC':str(rustc.path),
+                'RUSTC_WRAPPER':'','RUSTC_WORKSPACE_WRAPPER':''}
+            config = path/'rust/.cargo/config.toml'
+            return cli.ArmSelector(path,sha,cache,((str(config),file_hash(config)),),tuple(sorted(environment.items())))
+        selection = cli.CliSelectors(harness,sha,sha,'self_proof',arm(base,base_home),arm(root,prepared.inputs.cargo_home),
+            cargo.path,file_hash(cargo.path),rustc.path,file_hash(rustc.path),home/'builds')
+        builds = cli.build_cli(cli.prepare_cli(selection))
+        self.assertEqual(builds.status,'BUILD_ANTECEDENTS_ONLY')
+        closure = cli.paired_setup_source_closure(builds)
+        assert builds.candidate is not None
+        names = git(root,'ls-files').decode().splitlines()+['rust/Cargo.lock']
+        prepared = prepare_warm(replace(prepared.inputs,tools=tools,source_sha=sha,configs=((str(config),file_hash(config)),),
+            environment=tuple(sorted(values.items())),effective_inputs=tuple(sorted((name,file_hash(root/name)) for name in names))),builds.candidate)
+        before = generated(prepared)
+        prior = replace(prior,request=replace(prior.request,prepared=prepared),before=before,after=before)
+        lane = (home/'lane').open('w+')
+        self.owner_lane = lane
+        self.addCleanup(lane.close)
+        self.addCleanup(patch.stopall)
+        _ = patch.object(embedded,'check_clippy_endpoint').start()
+        _ = patch.object(embedded,'qualify_wait',return_value=()).start()
+        _ = patch.object(embedded,'held_lane').start()
+        predecessor = embedded.run_owned(embedded.EmbeddedRequest(prepared,12,prior,unused_wait(prepared),home/'step12',lane.fileno()))
+        env = tuple((key,value) for key,value in prepared.inputs.environment
+                    if key not in {'GODOT_BIN','WORLDSIM_TEST_SETTINGS_DIR','RUSTC_WRAPPER','RUSTC_WORKSPACE_WRAPPER'})
+        tools = tuple((tool.name,tool.path,tool.sha256) for tool in prepared.inputs.tools if tool.name in {'bash','python3','cargo','rustc'})
+        git_path = Path('/usr/bin/git').resolve()
+        context = runner.ExecutionEnvironment((*env,('TMPDIR',str(home)),('RUSTUP_HOME',str(home))),(*tools,('git',git_path,file_hash(git_path))),prepared.external,held_lane_fd=lane.fileno())
+        _ = patch.object(runner,'LOCK',home/'lane').start()
+        _ = patch.object(runner,'DOCS_TOOLS',{'cargo','rustc'}).start()
+        _ = patch.object(runner,'GATE_SHA256',file_hash(root/'tools/v8/gate.sh')).start()
+        _ = patch.object(runner,'docs_input_names',return_value=list(dict(prepared.materialized))).start()
+        _ = patch.object(runner,'docs_bindings',return_value={'tiny_fixture':True}).start()
+        return runner.DocsSuccessorRequest(runner.StaticProduct(root,prepared.inputs.source_sha,prepared.materialized),
+            context,prepared,predecessor,home/'docs14',builds,closure)
+
+    def test_real_docs_owner_retains_transition_and_original_process_once(self) -> None:
+        from dataclasses import replace
+
+        with tempfile.TemporaryDirectory() as tmp:
+            request = self.successor_fixture(Path(tmp).resolve())
+            with patch.object(runner,'execute',wraps=actual_execute) as launch:
+                result = runner.run_docs_successor(request)
+            self.assertEqual(launch.call_count,1)
+            self.assertEqual(result.component.status,'PASS')
+            self.assertNotEqual(result.before.target,result.after.target)
+            self.assertGreater(result.process.result.pid or 0,0)
+            self.assertEqual(result.process.spec.argv[1:],('tools/v8/check_docs.sh',))
+            self.assertEqual(result.process.result.native_exit,0)
+            runner.verify_receipt(result.component.receipt,result.docs_receipt_sha256)
+            runner.check_docs_successor_current(result)
+            with self.assertRaisesRegex(ValueError,'unissued'):
+                runner.check_docs_successor_history(replace(result))
+            _ = (request.product.root/'rust/target/later').write_text('later authenticated producer placeholder')
+            runner.check_docs_successor_history(result)
+            with self.assertRaisesRegex(ValueError,'generated state changed'):
+                runner.check_docs_successor_current(result)
+
+    def test_oracle_fail_is_not_promoted_and_native_failure_keeps_owner(self) -> None:
+        for body in ('echo invalid-marker','exit 7'):
+            with self.subTest(body=body),tempfile.TemporaryDirectory() as tmp:
+                request = self.successor_fixture(Path(tmp).resolve(),body)
+                if body == 'exit 7':
+                    with self.assertRaises(runner.DocsOwnershipUnknown) as caught:
+                        _ = runner.run_docs_successor(request)
+                    state = caught.exception.execution
+                    self.assertIsNotNone(state)
+                    assert state is not None
+                    self.assertTrue(state.in_flight)
+                    self.assertIsNone(state.after)
+                    self.assertFalse(request.output.exists())
+                    self.assertIsNotNone(state.result)
+                else:
+                    with self.assertRaises(runner.DocsSettledFailure) as caught_settled:
+                        _ = runner.run_docs_successor(request)
+                    successor = caught_settled.exception.successor
+                    self.assertIsNotNone(successor)
+                    assert successor is not None
+                    self.assertEqual(successor.component.status,'FAIL')
+                    runner.check_docs_successor_current(successor)
+                patch.stopall()
+
+    def test_late_prelaunch_target_and_foreign_binding_reject_without_execute(self) -> None:
+        from dataclasses import replace
+
+        for fault in ('late-target','foreign-target','foreign-source','reordered','foreign-builds','base-output'):
+            with self.subTest(fault=fault),tempfile.TemporaryDirectory() as tmp:
+                request = self.successor_fixture(Path(tmp).resolve())
+                if fault == 'foreign-target':
+                    request = replace(request,environment=replace(request.environment,
+                        values=(*request.environment.values,('CARGO_TARGET_DIR',str(request.output.parent)))))
+                if fault == 'foreign-source':
+                    request = replace(request,product=replace(request.product,source_sha='b'*40))
+                if fault == 'foreign-builds': request = replace(request,builds=replace(request.builds))
+                if fault == 'base-output': request = replace(request,output=request.builds.prepared.selectors.base.root/'docs-output')
+                if fault == 'reordered':
+                    request = replace(request,predecessor=replace(request.predecessor,
+                        request=replace(request.predecessor.request,step=11)))
+                def refs(product: runner.StaticProduct, step: int, fault: str = fault,
+                         request: runner.DocsSuccessorRequest = request) -> dict[str,str]:
+                    self.assertIs(product,request.product)
+                    self.assertEqual(step,14)
+                    value: dict[str,str] = {}
+                    if fault == 'late-target': (request.product.root/'rust/target/unexpected').mkdir()
+                    return value
+                with patch.object(runner,'_refs',side_effect=refs),patch.object(runner,'execute',wraps=actual_execute) as launch:
+                    with self.assertRaises(runner.DocsSettledFailure): _ = runner.run_docs_successor(request)
+                    self.assertEqual(launch.call_count,0)
+                self.assertFalse(request.output.exists())
+                patch.stopall()
+
+    def test_publication_rechecks_original_generated_source_history_and_output(self) -> None:
+        from generic_process import atomic_json
+
+        for fault in ('target','source','history','cache','settings','receipt','directory','mode','static-directory','static-receipt'):
+            with self.subTest(fault=fault),tempfile.TemporaryDirectory() as tmp:
+                request = self.successor_fixture(Path(tmp).resolve())
+                injected = False
+                def publish(path: Path, row: dict[str,Json], fault: str = fault,
+                            request: runner.DocsSuccessorRequest = request) -> None:
+                    nonlocal injected
+                    atomic_json(path,row)
+                    if path != request.output/'receipt.json': return
+                    injected = True
+                    if fault == 'target': (request.product.root/'rust/target/late').mkdir()
+                    if fault == 'source': _ = (request.product.root/'project.godot').write_text('changed')
+                    if fault == 'history': _ = request.predecessor.receipt.write_text('changed')
+                    if fault == 'cache': (request.product.root/'.godot').mkdir()
+                    if fault == 'settings': request.prepared.inputs.settings.mkdir()
+                    if fault == 'receipt': _ = path.write_text('{}')
+                    if fault == 'directory': (request.output/'extra').mkdir()
+                    if fault == 'mode': path.chmod(0o600)
+                    if fault == 'static-directory': (request.static_output/'extra').mkdir()
+                    if fault == 'static-receipt': _ = (request.static_output/'receipt.json').write_text('{}')
+                with patch.object(runner,'atomic_json',side_effect=publish),self.assertRaises(runner.DocsSettledFailure):
+                    _ = runner.run_docs_successor(request)
+                self.assertTrue(injected)
+                patch.stopall()
+
+    def test_return_authentication_drift_cannot_replace_first_anchor(self) -> None:
+        original = process_output
+        for fault in ('raw','target','source','tool-mode','external-mode','source-directory','base-directory'):
+            with self.subTest(fault=fault),tempfile.TemporaryDirectory() as tmp:
+                request = self.successor_fixture(Path(tmp).resolve())
+                injected = False
+                def authenticate(binding: ListingProcess, argv: tuple[str,...], cwd: Path,
+                                 environment: dict[str,str], required: dict[str,str], fault: str = fault,
+                                 request: runner.DocsSuccessorRequest = request) -> bytes:
+                    nonlocal injected
+                    raw = original(binding,argv,cwd,environment,required)
+                    if not injected:
+                        injected = True
+                        if fault == 'raw': _ = (binding.spec.output_root/'stdout.log').write_text('changed')
+                        if fault == 'target': (request.product.root/'rust/target/late-auth').mkdir()
+                        if fault == 'source': _ = (request.product.root/'project.godot').write_text('changed')
+                        if fault == 'source-directory': (request.product.root/'rust/unexpected-empty').mkdir()
+                        if fault == 'base-directory': (request.builds.prepared.selectors.base.root/'rust/unexpected-empty').mkdir()
+                        if fault == 'tool-mode': next(path for name,path,_ in request.environment.tools if name == 'cargo').chmod(0o644)
+                        if fault == 'external-mode': request.prepared.inputs.lock_origin.chmod(0o600)
+                    return raw
+                with patch.object(runner,'process_output',side_effect=authenticate),self.assertRaises(runner.DocsSettledFailure):
+                    _ = runner.run_docs_successor(request)
+                self.assertTrue(injected)
+                patch.stopall()
+
+    def test_cache_settings_mutations_keep_unknown_without_after_and_hold_descriptor(self) -> None:
+        import os
+
+        for body in ('mkdir .godot; echo "docs: PASS"','mkdir ../settings; echo "docs: PASS"'):
+            with self.subTest(body=body),tempfile.TemporaryDirectory() as tmp:
+                request = self.successor_fixture(Path(tmp).resolve(),body)
+                descriptor = request.environment.held_lane_fd
+                assert descriptor is not None
+                identity = os.fstat(descriptor)
+                with self.assertRaises(runner.DocsOwnershipUnknown) as caught:
+                    _ = runner.run_docs_successor(request)
+                owner = caught.exception.execution
+                assert owner is not None
+                self.assertIs(owner.successor_request,request)
+                self.assertIsNone(owner.after)
+                self.assertIsNotNone(owner.result)
+                self.assertTrue(owner.in_flight)
+                self.assertEqual(os.fstat(descriptor).st_ino,identity.st_ino)
+                self.assertFalse(request.output.exists())
+                patch.stopall()
+
+    def test_static_publication_original_bytes_modes_and_namespace_not_refrozen(self) -> None:
+        from generic_process import atomic_json
+
+        for fault in ('mode','directory','bytes'):
+            with self.subTest(fault=fault),tempfile.TemporaryDirectory() as tmp:
+                request = self.successor_fixture(Path(tmp).resolve())
+                injected = False
+                def publish(path: Path, row: dict[str,Json], fault: str = fault,
+                            request: runner.DocsSuccessorRequest = request) -> None:
+                    nonlocal injected
+                    atomic_json(path,row)
+                    if path != request.static_output/'receipt.json': return
+                    injected = True
+                    if fault == 'mode': path.chmod(0o600)
+                    if fault == 'directory': (path.parent/'unowned').mkdir()
+                    if fault == 'bytes': _ = path.write_text('{}')
+                with patch.object(runner,'atomic_json',side_effect=publish),self.assertRaises(runner.DocsSettledFailure) as caught:
+                    _ = runner.run_docs_successor(request)
+                self.assertTrue(injected)
+                self.assertIsNone(caught.exception.successor)
+                self.assertFalse(request.output.exists())
+                patch.stopall()
+
+    def test_prior_static_evidence_keeps_its_complete_original_tree(self) -> None:
+        from dataclasses import replace
+
+        for mutate in (False,True):
+            with self.subTest(mutate=mutate),tempfile.TemporaryDirectory() as tmp:
+                request = self.successor_fixture(Path(tmp).resolve())
+                prior_output = request.output.parent/'static13'
+                with patch.object(runner,'INPUT_DIRS',()),patch.object(runner,'INPUT_FILES',tuple(dict(request.product.inputs))):
+                    prior = runner.run_step(request.product,13,prior_output,request.environment)
+                self.assertEqual(prior.status,'FAIL')  # The tiny Python stand-in exits97; never a PASS baseline.
+                request = replace(request,environment=replace(request.environment,
+                    prior_receipts=((prior.receipt,file_hash(prior.receipt)),)))
+                injected = False
+                def authenticate(binding: ListingProcess, argv: tuple[str,...], cwd: Path,
+                                 environment: dict[str,str], required: dict[str,str],
+                                 mutate: bool = mutate, prior_output: Path = prior_output) -> bytes:
+                    nonlocal injected
+                    raw = process_output(binding,argv,cwd,environment,required)
+                    if mutate and not injected:
+                        injected = True
+                        (prior_output/'process/extra').mkdir()
+                    return raw
+                with patch.object(runner,'process_output',side_effect=authenticate):
+                    if mutate:
+                        with self.assertRaises(runner.DocsSettledFailure): _ = runner.run_docs_successor(request)
+                        self.assertTrue(injected)
+                    else:
+                        result = runner.run_docs_successor(request)
+                        self.assertIn(prior_output,tuple(item.root for item in result.history))
+                        runner.check_docs_successor_current(result)
+                patch.stopall()
+
+    def test_unexpected_process_member_at_actual_return_is_not_adopted(self) -> None:
+        from generic_process import ProcessResult, ProcessSpec
+
+        with tempfile.TemporaryDirectory() as tmp:
+            request = self.successor_fixture(Path(tmp).resolve())
+            injected = False
+            def producer(spec: ProcessSpec) -> ProcessResult:
+                nonlocal injected
+                result = actual_execute(spec)
+                (spec.output_root/'unowned-empty').mkdir()
+                injected = True
+                return result
+            with patch.object(runner,'execute',side_effect=producer),self.assertRaises(runner.DocsOwnershipUnknown) as caught:
+                _ = runner.run_docs_successor(request)
+            self.assertTrue(injected)
+            self.assertIsNotNone(caught.exception.execution)
+            self.assertFalse(request.output.exists())
+
+    def test_settled_history_does_not_require_the_closed_owner_descriptor(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            request = self.successor_fixture(Path(tmp).resolve())
+            successor = runner.run_docs_successor(request)
+            descriptor = request.environment.held_lane_fd
+            assert descriptor is not None
+            assert self.owner_lane is not None
+            self.owner_lane.close()
+            runner.check_docs_successor_history(successor)
+            runner.check_docs_successor_current(successor)
+
+    def test_extra_tool_is_rechecked_after_last_history_callbacks(self) -> None:
+        from dataclasses import replace
+
+        from generic_workspace_endpoints import EvidenceAnchor
+
+        original = EvidenceAnchor.recheck
+        for phase in ('issue','history','current'):
+            with self.subTest(phase=phase),tempfile.TemporaryDirectory() as tmp:
+                request = self.successor_fixture(Path(tmp).resolve())
+                helper = request.builds.prepared.selectors.cargo.parent/'extra-docs'
+                _ = helper.write_text('#!/bin/sh\nexit 0\n'); helper.chmod(0o755)
+                request = replace(request,environment=replace(request.environment,
+                    tools=(*request.environment.tools,('extra-docs',helper,file_hash(helper)))))
+                endpoint = None if phase == 'issue' else runner.run_docs_successor(request)
+                injected = False
+                visits = 0
+                def history(item: EvidenceAnchor, helper: Path = helper, phase: str = phase,
+                            request: runner.DocsSuccessorRequest = request) -> None:
+                    nonlocal injected, visits
+                    original(item)
+                    if item.root == request.output: visits += 1
+                    if item.root == request.output and visits == (1 if phase == 'history' else 2):
+                        injected = True
+                        _ = helper.write_text('#!/bin/sh\nexit 7\n')
+                with patch.object(EvidenceAnchor,'recheck',new=history):
+                    if endpoint is None:
+                        with self.assertRaises(runner.DocsSettledFailure): _ = runner.run_docs_successor(request)
+                    else:
+                        with self.assertRaises(ValueError):
+                            if phase == 'history': runner.check_docs_successor_history(endpoint)
+                            else: runner.check_docs_successor_current(endpoint)
+                self.assertTrue(injected)
+                patch.stopall()
+
+    def test_terminal_raw_closure_has_no_semantic_generated_callback(self) -> None:
+        import inspect
+
+        from generic_setup_prepare import PreparedSetup
+        from generic_workspace_endpoints import GeneratedState, generated
+
+        for phase in ('issue', 'current'):
+            with self.subTest(phase=phase), tempfile.TemporaryDirectory() as tmp:
+                request = self.successor_fixture(Path(tmp).resolve())
+                endpoint = None if phase == 'issue' else runner.run_docs_successor(request)
+                calls = 0
+                injected = False
+                extra = request.product.root/'late-semantic-source-directory'
+
+                def semantic(prepared: PreparedSetup, extra: Path = extra) -> GeneratedState:
+                    nonlocal injected, calls
+                    result = generated(prepared)
+                    calls += 1
+                    frame = inspect.currentframe()
+                    if frame is not None and frame.f_back is not None and frame.f_back.f_code.co_name == '_docs_raw':
+                        injected = True
+                        extra.mkdir()
+                    return result
+
+                with patch.object(runner, 'generated', new=semantic):
+                    if endpoint is None:
+                        endpoint = runner.run_docs_successor(request)
+                    else:
+                        runner.check_docs_successor_current(endpoint)
+                self.assertGreater(calls, 0)
+                self.assertFalse(injected, 'semantic generated callback ran after original source closure')
+                runner.check_docs_successor_current(endpoint)
+                patch.stopall()

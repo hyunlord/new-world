@@ -5,26 +5,44 @@
 """One original static gate command; never a full-gate admission."""
 import ast
 import fcntl
+import json
 import os
 import re
 import shutil
 import stat
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import NoReturn
+from typing import Final, NoReturn
 
+from gate_oracle_child import import_generated
+from generic_cli_prepare import CliBuilds, PairedSetupSourceClosure
+from generic_embedded_build import EmbeddedEndpoint, check_endpoint
 from generic_fixture_run import ComponentResult
 from generic_gate import document, integer, require
 from generic_m6a_structural import resolution_paths
 from generic_process import (
+    ProcessResult,
     ProcessSpec,
     atomic_json,
+    environment_for,
     execute,
     file_hash,
     real_path,
     timestamp,
 )
+from generic_setup_bridge import immutable_inputs
+from generic_setup_prepare import PreparedSetup
 from generic_sources import freeze_source, git, inventory, safe_path
+from generic_workspace_cases import ListingProcess, process_output
+from generic_workspace_endpoints import (
+    EvidenceAnchor,
+    GeneratedState,
+    anchor,
+    encoded,
+    generated,
+    state_json,
+)
 from mux2_gate_inputs import BRIDGE, INPUT_DIRS, INPUT_FILES, EvidenceError, Json
 from mux2_gate_lock import LOCK
 
@@ -217,7 +235,7 @@ def strict_terminal(stdout: str, stderr: str, count: int) -> None:
             '/strict', 'original strict oracle reported failure or skipped FFI')
 
 
-def _tools(context: ExecutionEnvironment, step: int) -> dict[str, Path]:
+def _tools(context: ExecutionEnvironment, step: int, *, live_lane: bool = True) -> dict[str, Path]:
     env = dict(context.values)
     require(len(env) == len(context.values), '/environment', 'duplicate environment key')
     require({'PATH', 'LANG', 'LC_ALL', 'CARGO_BUILD_JOBS'} <= env.keys(), '/environment', 'explicit gate environment missing')
@@ -240,7 +258,7 @@ def _tools(context: ExecutionEnvironment, step: int) -> dict[str, Path]:
             real_path(Path(env[key]), directory=True)
         require(not ({'PYTHONPATH', 'PYTHONHOME', 'PERL5LIB', 'PERL5OPT', 'WORLDSIM_MUX2_LANE_FD'} & env.keys()),
                 '/environment', 'step16 inherited runtime or lane override')
-    if step in {8, 14, 46}:
+    if step in {8, 14, 46} and live_lane:
         descriptor = context.held_lane_fd
         require(type(descriptor) is int and descriptor >= 0, '/lane', 'caller-held descriptor required')
         if descriptor is None:raise StrictOwnershipUnknown('missing caller lane')
@@ -356,11 +374,200 @@ def unittest_terminal(stderr: str) -> dict[str, Json]:
             'count_authority': 'actual_unittest_terminal_not_source_declarations'}
 
 
+@dataclass(frozen=True, slots=True)
+class DocsSuccessorRequest:
+    product: StaticProduct
+    environment: ExecutionEnvironment
+    prepared: PreparedSetup
+    predecessor: EmbeddedEndpoint
+    output: Path
+    builds: CliBuilds
+    source_closure: PairedSetupSourceClosure
+
+    @property
+    def static_output(self) -> Path:
+        return self.output.with_name(self.output.name+'-static')
+
+
+@dataclass(frozen=True, slots=True)
+class DocsSuccessor:
+    request: DocsSuccessorRequest
+    component: ComponentResult
+    process: ListingProcess
+    before: GeneratedState
+    after: GeneratedState
+    receipt: Path
+    receipt_sha256: str
+    docs_receipt_sha256: str
+    history: tuple[EvidenceAnchor, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class _DocsProof:
+    successor: DocsSuccessor
+    request: DocsSuccessorRequest
+    source: str
+    bindings: str
+    files: tuple[tuple[Path, int, str], ...]
+    source_check: Callable[[CliBuilds | None], None]
+
+
+_DOCS_ISSUED: Final[dict[int, _DocsProof]] = {}
+
+
+def _docs_files(request: DocsSuccessorRequest) -> tuple[tuple[Path, int, str], ...]:
+    bindings = {request.product.root/name:digest for name,digest in request.product.inputs}
+    for path,digest in (*request.environment.external_inputs,
+                        *((path,digest) for _,path,digest in request.environment.tools)):
+        require(path not in bindings or bindings[path] == digest, '/docs-successor', 'conflicting immutable binding')
+        bindings[path] = digest
+    for _,path,_ in request.environment.tools:
+        require(os.access(path,os.X_OK), '/docs-successor', 'nonexecutable tool')
+    result: list[tuple[Path,int,str]] = []
+    for path,digest in sorted(bindings.items()):
+        require(file_hash(path) == digest, '/docs-successor', 'immutable file changed')
+        result.append((path,path.stat().st_mode,digest))
+    return tuple(result)
+
+
+def _docs_source(request: DocsSuccessorRequest) -> dict[str, Json]:
+    immutable_inputs(request.prepared)
+    proof = request.prepared.derived_source
+    if proof is not None:
+        return document(proof.effective_json).mapping()
+    return freeze_source(request.product.root, request.product.source_sha)
+
+
+def _docs_admit(request: DocsSuccessorRequest) -> None:
+    prepared = request.prepared; context = request.environment
+    require(request.source_closure.builds is request.builds and prepared.warm_pair is request.builds.candidate
+            and prepared.warm_pair is not None
+            and prepared.inputs.root == request.builds.prepared.selectors.candidate.root
+            and prepared.inputs.source_sha == request.builds.prepared.selectors.candidate.source_sha,
+            '/docs-successor', 'foreign original build/source issuer')
+    request.source_closure.check(request.builds)
+    require(request.predecessor.request.prepared is prepared and request.predecessor.request.step == 12,
+            '/docs-successor', 'actual same-setup step12 predecessor required')
+    require(request.product.root == prepared.inputs.root and request.product.source_sha == prepared.inputs.source_sha,
+            '/docs-successor', 'foreign source')
+    check_endpoint(request.predecessor)
+    immutable_inputs(prepared)
+    env = dict(context.values); original = dict(prepared.inputs.environment)
+    # Docs intentionally excludes setup-only Godot/settings/empty-wrapper keys.
+    omitted = {'GODOT_BIN', 'WORLDSIM_TEST_SETTINGS_DIR', 'RUSTC_WRAPPER', 'RUSTC_WORKSPACE_WRAPPER'}
+    require(all(env.get(key) == value for key,value in original.items() if key not in omitted),
+            '/docs-successor', 'setup environment projection differs')
+    require(all(original.get(key, '') == '' for key in ('RUSTC_WRAPPER','RUSTC_WORKSPACE_WRAPPER')),
+            '/docs-successor', 'nonempty setup compiler wrapper')
+    require(env.get('CARGO_HOME') == str(prepared.inputs.cargo_home)
+            and env.get('CARGO_TARGET_DIR', str(prepared.inputs.root/'rust/target')) == str(prepared.inputs.root/'rust/target'),
+            '/docs-successor', 'foreign Cargo home or target')
+    tools = {name:(path,digest) for name,path,digest in context.tools}
+    for tool in prepared.inputs.tools:
+        if tool.name in {'bash','python3','cargo','rustc'}:
+            require(tools.get(tool.name) == (tool.path,tool.sha256), '/docs-successor', 'setup tool differs')
+    bound = {request.product.root/name:digest for name,digest in request.product.inputs}
+    bound.update(dict(context.external_inputs))
+    for name,digest in prepared.materialized:
+        require(bound.get(prepared.inputs.root/name) == digest, '/docs-successor', 'missing setup source binding')
+    for path,digest in prepared.external:
+        require(bound.get(path) == digest, '/docs-successor', 'missing setup external binding')
+
+
+def _docs_raw(proof: _DocsProof, current: GeneratedState | None = None) -> None:
+    """Terminal concrete comparisons after all semantic callbacks; no new baseline."""
+    if current is not None:
+        prepared = proof.request.prepared
+        for path, expected in ((prepared.inputs.root/'rust/target', current.target),
+                               (prepared.inputs.root/'.godot', current.cache),
+                               (prepared.inputs.settings, current.settings)):
+            require(encoded(import_generated(path)) == expected,
+                    '/docs-successor', 'late generated state changed')
+    for path,mode,digest in proof.files:
+        require(file_hash(path) == digest and path.stat().st_mode == mode,
+                '/docs-successor', 'late immutable file bytes/mode changed')
+    for item in proof.successor.history:
+        require(import_generated(item.root) == document(item.state).mapping(),
+                '/docs-successor', 'late historical namespace changed')
+
+
+def _docs_history(proof: _DocsProof) -> None:
+    endpoint = proof.successor; request = proof.request
+    require(endpoint.request is request and endpoint.component.receipt == request.static_output/'receipt.json'
+            and endpoint.receipt == request.output/'receipt.json', '/docs-successor', 'retained request differs')
+    _docs_admit(request)
+    require(json.dumps(_docs_source(request), sort_keys=True) == proof.source,
+            '/docs-successor', 'source admission changed')
+    require(json.dumps(docs_bindings(request.product.root,request.environment), sort_keys=True) == proof.bindings,
+            '/docs-successor', 'lookup bindings changed')
+    _ = _tools(request.environment,14,live_lane=False)
+    require(inventory(request.product.root,docs_input_names(request.product.root,request.environment)) == dict(request.product.inputs),
+            '/docs-successor', 'docs inputs changed')
+    for path,digest in request.environment.prior_receipts: verify_receipt(path,digest)
+    spec = endpoint.process.spec
+    required = {str(spec.input_root/name):digest for name,digest in spec.inputs}
+    required.update({str(path):digest for path,digest in spec.external_inputs})
+    required[str(spec.executable)] = spec.executable_sha256
+    _ = process_output(endpoint.process,spec.argv,spec.cwd,environment_for(spec),required)
+    verify_receipt(endpoint.component.receipt,endpoint.docs_receipt_sha256)
+    require(file_hash(endpoint.receipt) == endpoint.receipt_sha256, '/docs-successor', 'successor receipt changed')
+    # Authentication callbacks cannot replace the original source/lookup baseline.
+    require(json.dumps(_docs_source(request),sort_keys=True) == proof.source,
+            '/docs-successor', 'late source admission changed')
+    require(json.dumps(docs_bindings(request.product.root,request.environment),sort_keys=True) == proof.bindings,
+            '/docs-successor', 'late lookup bindings changed')
+    require(inventory(request.product.root,docs_input_names(request.product.root,request.environment)) == dict(request.product.inputs),
+            '/docs-successor', 'late docs inputs changed')
+    for _,path,digest in request.environment.tools:
+        require(file_hash(path) == digest, '/docs-successor', 'late tool mutation')
+    for path,digest in request.environment.external_inputs:
+        require(file_hash(path) == digest, '/docs-successor', 'late external input mutation')
+    require(_docs_files(request) == proof.files, '/docs-successor', 'immutable file mode changed')
+    for item in endpoint.history: item.recheck()
+    proof.source_check(request.builds)
+    _docs_raw(proof)
+
+
+def check_docs_successor_history(successor: DocsSuccessor) -> None:
+    """Original issued identity and immutable history; later target evolution is allowed."""
+    proof = _DOCS_ISSUED.get(id(successor))
+    require(proof is not None and proof.successor is successor, '/docs-successor', 'unissued successor')
+    assert proof is not None
+    _docs_history(proof)
+
+
+def check_docs_successor_current(successor: DocsSuccessor) -> None:
+    """History plus the exact generated endpoint; never refresh the old baseline."""
+    check_docs_successor_history(successor)
+    require(generated(successor.request.prepared) == successor.after, '/docs-successor', 'generated state changed')
+    for item in successor.history: item.recheck()
+    proof = _DOCS_ISSUED[id(successor)]
+    proof.source_check(successor.request.builds)
+    _docs_raw(proof,successor.after)
+
+
 @dataclass(slots=True)
 class _DocsExecution:
     output_created: bool = False
     in_flight: bool = False
     primary: BaseException | None = None
+    successor_request: DocsSuccessorRequest | None = None
+    spec: ProcessSpec | None = None
+    result: ProcessResult | None = None
+    before: GeneratedState | None = None
+    after: GeneratedState | None = None
+    process_anchor: EvidenceAnchor | None = None
+    initial_output: EvidenceAnchor | None = None
+    returned_output: EvidenceAnchor | None = None
+    binding: ListingProcess | None = None
+    source: str | None = None
+    bindings: str | None = None
+    intended_receipt: str | None = None
+    history: tuple[EvidenceAnchor, ...] = ()
+    files: tuple[tuple[Path, int, str], ...] = ()
+    source_check: Callable[[CliBuilds | None], None] | None = None
+    oracle_failed: bool = False
+    integrity_failed: bool = False
 
 
 class DocsSettledFailure(RuntimeError):
@@ -370,6 +577,7 @@ class DocsSettledFailure(RuntimeError):
         self.original: BaseException = original
         self.diagnostic: BaseException | None = diagnostic
         self.receipt: Path | None = receipt
+        self.successor: DocsSuccessor | None = None
 
 
 class DocsOwnershipUnknown(RuntimeError):
@@ -379,6 +587,7 @@ class DocsOwnershipUnknown(RuntimeError):
         self.original: BaseException = original
         self.diagnostic: BaseException | None = diagnostic
         self.ownership_receipt: Path | None = ownership_receipt
+        self.execution: _DocsExecution | None = None
 
 
 def run_docs_owned(product: StaticProduct, output: Path,
@@ -389,7 +598,11 @@ def run_docs_owned(product: StaticProduct, output: Path,
     Failed/unreturned execution may have skipped a descendant wait; retain ownership.
     Retained receipt parsing does not independently grant this live settlement.
     """
-    state=_DocsExecution()
+    return _owned_docs(product,output,execution_environment,_DocsExecution())
+
+
+def _owned_docs(product: StaticProduct, output: Path,
+                execution_environment: ExecutionEnvironment, state: _DocsExecution) -> ComponentResult:
     try:
         result=_run_step(product,14,output,execution_environment,state)
     except BaseException as original:
@@ -428,7 +641,9 @@ def _run_step(product: StaticProduct, step: int, output: Path,
     require(output.is_absolute() and not output.exists() and not output.is_symlink(), str(output), 'stale output')
     require(not output.is_relative_to(product.root), str(output), 'output overlaps source')
     output.mkdir()
-    if state is not None:state.output_created=True
+    if state is not None:
+        state.output_created=True
+        if state.successor_request is not None: state.initial_output=anchor(output)
     name, original = COMMANDS[step]
     receipt: dict[str, Json] = {
         'schema': 'generic_static_run.v1', 'step': step, 'name': name,
@@ -463,7 +678,7 @@ def _run_step(product: StaticProduct, step: int, output: Path,
         for path, digest in context.prior_receipts:
             verify_receipt(path, digest)
         require(file_hash(product.root / 'tools/v8/gate.sh') == GATE_SHA256, '/gate', 'command source changed')
-        before = freeze_source(product.root, product.source_sha)
+        before = _docs_source(state.successor_request) if state is not None and state.successor_request is not None else freeze_source(product.root, product.source_sha)
         inputs = inventory(product.root, input_names)
         require(len(dict(product.inputs)) == len(product.inputs) and inputs == dict(product.inputs), '/inputs', 'effective inventory differs')
         refs = _refs(product, step)
@@ -482,9 +697,15 @@ def _run_step(product: StaticProduct, step: int, output: Path,
                            product.root, product.inputs, output / 'process', context.values,
                            tuple(externals.items()))
         try:
-            if state is not None:state.in_flight=True
+            if state is not None:
+                state.spec=spec
+                if state.successor_request is not None: _docs_before_launch(state)
+                state.in_flight=True
             result = execute(spec)
             if state is not None:
+                state.result=result
+                if state.successor_request is not None: _docs_returned(state)
+
                 require(result.status=='PASS' and result.native_exit==0 and type(result.pid) is int and result.pid>0
                         and result.receipt==output/'process/process.json','/docs','aggregate completion unknown')
                 native=document(result.receipt.read_text())
@@ -517,7 +738,10 @@ def _run_step(product: StaticProduct, step: int, output: Path,
         if step in {8, 46}:
             strict_terminal((output/'process/stdout.log').read_text(), (output/'process/stderr.log').read_text(), len(selected))
         if step == 14:
-            docs_terminal((output/'process/stdout.log').read_text())
+            try: docs_terminal((output/'process/stdout.log').read_text())
+            except (OSError, ValueError, EvidenceError):
+                if state is not None: state.oracle_failed=True
+                raise
         if step == 16:
             terminal = unittest_terminal((output / 'process/stderr.log').read_bytes().decode('utf-8'))
             receipt['unittest'] = terminal
@@ -529,6 +753,7 @@ def _run_step(product: StaticProduct, step: int, output: Path,
         if state is not None:
             if state.in_flight:raise
             state.primary=error
+            state.integrity_failed=not state.oracle_failed
             errors.append('owned docs validation failed')
         else:errors.append(str(error))
     except BaseException as failure:
@@ -550,7 +775,7 @@ def _run_step(product: StaticProduct, step: int, output: Path,
         _ = _tools(context, step)
         for path, digest in context.prior_receipts:
             verify_receipt(path, digest)
-        after = freeze_source(product.root, product.source_sha)
+        after = _docs_source(state.successor_request) if state is not None and state.successor_request is not None else freeze_source(product.root, product.source_sha)
         receipt['source_end'] = after
         require(before is not None and after == before, '/source', 'source binding differs')
         if step in {8, 46}:
@@ -576,6 +801,7 @@ def _run_step(product: StaticProduct, step: int, output: Path,
     except (OSError, ValueError, SyntaxError, EvidenceError) as error:
         if state is not None:
             if state.primary is None:state.primary=error
+            state.integrity_failed=True
             errors.append('owned docs postflight failed')
         else:errors.append('terminal: ' + str(error))
     except BaseException as failure:
@@ -590,5 +816,157 @@ def _run_step(product: StaticProduct, step: int, output: Path,
     receipt['errors'] = list(errors)
     receipt['finished_at'] = timestamp()
     receipt['status'] = 'FAIL' if errors else 'PASS'
+    if state is not None and state.successor_request is not None:
+        state.intended_receipt=json.dumps(receipt,sort_keys=True,indent=2)+'\n'
     atomic_json(output / 'receipt.json', receipt)
     return ComponentResult(output / 'receipt.json', 'FAIL' if errors else 'PASS')
+
+
+def _docs_before_launch(state: _DocsExecution) -> None:
+    request = state.successor_request
+    assert request is not None and state.initial_output is not None
+    _docs_admit(request)
+    state.source = json.dumps(_docs_source(request),sort_keys=True)
+    state.bindings = json.dumps(docs_bindings(request.product.root,request.environment),sort_keys=True)
+    state.before = generated(request.prepared)
+    require(state.before == request.predecessor.after, '/docs-successor', 'prelaunch generated state differs')
+    require(_docs_files(request) == state.files, '/docs-successor', 'prelaunch immutable file mode changed')
+    for item in state.history: item.recheck()
+    state.initial_output.recheck()
+    assert state.source_check is not None
+    state.source_check(request.builds)
+
+
+def _docs_returned(state: _DocsExecution) -> None:
+    request = state.successor_request; result = state.result; spec = state.spec
+    assert request is not None and result is not None and spec is not None
+    require(result.status == 'PASS' and result.native_exit == 0 and type(result.pid) is int and result.pid > 0,
+            '/docs-successor', 'normal actual return required')
+    # Capture once at actual return, before any authentication callback.
+    state.after = generated(request.prepared)
+    state.process_anchor = anchor(spec.output_root)
+    state.returned_output = anchor(request.static_output)
+    state.binding = ListingProcess(spec,result,file_hash(result.receipt))
+    assert state.before is not None and state.initial_output is not None
+    process_state = document(state.process_anchor.state)
+    expected_members = {'.','process-start.json','process-spawn.json','process.json','stdout.log','stderr.log'}
+    require(set(process_state.mapping()) == expected_members, '/docs-successor', 'unexpected actual process member')
+    initial = document(state.initial_output.state).field('.')
+    process_state.field('.').equals({'mode':stat.S_IFDIR | (integer(initial.field('mode')) & 0o2700),'sha256':None})
+    expected_file_mode = stat.S_IFREG | (integer(initial.field('mode')) & 0o666)
+    for name in expected_members-{'.'}:
+        process_state.field(name).field('mode').equals(expected_file_mode)
+    output_state = document(state.returned_output.state).mapping()
+    require({key:value for key,value in output_state.items() if key != 'process' and not key.startswith('process/')} ==
+            document(state.initial_output.state).mapping(), '/docs-successor', 'producer changed output namespace')
+    require(state.before.cache == state.after.cache and state.before.settings == state.after.settings,
+            '/docs-successor', 'docs changed cache/settings')
+
+
+def _finish_docs(state: _DocsExecution, component: ComponentResult) -> DocsSuccessor:
+    request = state.successor_request
+    assert request is not None
+    require(not state.in_flight and not state.integrity_failed, '/docs-successor', 'unsettled or invalid producer')
+    assert state.before is not None and state.after is not None and state.binding is not None
+    assert state.returned_output is not None and state.process_anchor is not None
+    assert state.source is not None and state.bindings is not None and state.intended_receipt is not None
+    require(component.receipt.read_text() == state.intended_receipt, '/docs-successor', 'docs receipt publication changed')
+    returned = document(state.returned_output.state).mapping()
+    actual = import_generated(request.static_output)
+    require({key:value for key,value in actual.items() if key != 'receipt.json'} == returned,
+            '/docs-successor', 'late docs output membership/mode change')
+    assert state.initial_output is not None
+    expected_file_mode = stat.S_IFREG | (integer(document(state.initial_output.state).field('.').field('mode')) & 0o666)
+    require(actual.get('receipt.json') == {'mode':expected_file_mode,'sha256':file_hash(component.receipt)},
+            '/docs-successor', 'docs receipt mode/kind differs')
+    history = (*state.history,anchor(request.static_output))
+    output = request.output
+    output.mkdir(mode=0o700)
+    empty = anchor(output)
+    receipt = output/'receipt.json'
+    assert request.builds.candidate is not None
+    row: dict[str, Json] = {
+        'cli_base_pair_receipt':str(request.builds.base.receipt),
+        'cli_base_pair_sha256':file_hash(request.builds.base.receipt),
+        'cli_candidate_pair_receipt':str(request.builds.candidate.receipt),
+        'cli_candidate_pair_sha256':file_hash(request.builds.candidate.receipt),
+        'prepared_source_digest':request.prepared.source_digest,
+        'prepared_effective_source_digest':request.prepared.effective_source_digest,
+        'source_kind':request.prepared.source_kind,
+        'schema':'docs_successor.v1','step':14,'status':component.status,
+        'scope':'GENERATED_TRANSITION_ONLY','build_product_authority':False,'normal_product_authority':False,
+        'publication_authority':False,'chronology':'INTERVENING_COMPONENT_HANDOFF_PENDING',
+        'source_sha':request.product.source_sha,'predecessor_sha256':request.predecessor.receipt_sha256,
+        'pid':state.binding.result.pid,'native_exit':state.binding.result.native_exit,
+        'docs_receipt':str(component.receipt),'docs_receipt_sha256':file_hash(component.receipt),
+        'process_receipt':str(state.binding.result.receipt),'process_receipt_sha256':state.binding.receipt_sha256,
+        'generated_before':state_json(state.before),'generated_after':state_json(state.after),
+        'history':[{'root':str(item.root),'state':document(item.state).value} for item in history],
+    }
+    expected = json.dumps(row,sort_keys=True,indent=2)+'\n'
+    atomic_json(receipt,row)
+    require(receipt.read_text() == expected, '/docs-successor', 'successor publication content changed')
+    written = import_generated(output)
+    require({key:value for key,value in written.items() if key != 'receipt.json'} == document(empty.state).mapping()
+            and written.get('receipt.json') == {'mode':expected_file_mode,'sha256':file_hash(receipt)},
+            '/docs-successor', 'successor publication membership/mode changed')
+    endpoint = DocsSuccessor(request,component,state.binding,state.before,state.after,receipt,file_hash(receipt),
+                             file_hash(component.receipt),(*history,anchor(output)))
+    assert state.source_check is not None
+    proof = _DocsProof(endpoint,request,state.source,state.bindings,state.files,state.source_check)
+    _docs_history(proof)
+    require(generated(request.prepared) == state.after, '/docs-successor', 'late generated mutation')
+    state.process_anchor.recheck()
+    for item in endpoint.history: item.recheck()
+    proof.source_check(request.builds)
+    _docs_raw(proof,state.after)
+    _DOCS_ISSUED[id(endpoint)] = proof
+    return endpoint
+
+
+def run_docs_successor(request: DocsSuccessorRequest) -> DocsSuccessor:
+    """Run original14 once with its existing owner; issue only generated/history authority.
+
+    The legacy receipt is in the sibling ``<output>-static`` directory. A settled
+    docs oracle FAIL remains a typed failure, with a successor only if the independent
+    transition checks complete. UNKNOWN retains the actual owner and caller descriptor.
+    """
+    state = _DocsExecution(successor_request=request)
+    try:
+        state.source_check = request.source_closure.check
+        state.source_check(request.builds)
+        state.files = _docs_files(request)
+        state.history = (*request.predecessor.history,
+                         *(anchor(path.parent) for path,_ in request.environment.prior_receipts))
+        _docs_admit(request)
+        real_path(request.output.parent,directory=True)
+        require(request.output.is_absolute() and request.output == request.output.resolve()
+                and not request.output.exists() and not request.output.is_symlink(), '/docs-successor', 'stale output')
+        selectors = request.builds.prepared.selectors
+        for protected in (request.product.root,request.prepared.inputs.settings,request.prepared.inputs.cargo_home,
+                          selectors.base.root,selectors.base.cargo_home,selectors.harness_root,selectors.output,
+                          *(item.root for item in state.history)):
+            for output in (request.output,request.static_output):
+                require(not output.is_relative_to(protected) and not protected.is_relative_to(output),
+                        '/docs-successor', 'output overlap')
+        require(generated(request.prepared) == request.predecessor.after,
+                '/docs-successor', 'stale predecessor current state')
+    except BaseException as error:
+        raise DocsSettledFailure(error,None,None) from error
+    try:
+        component = _owned_docs(request.product,request.static_output,request.environment,state)
+    except DocsOwnershipUnknown as error:
+        state.after = None
+        error.execution = state
+        raise
+    except DocsSettledFailure as failure:
+        if state.oracle_failed and not state.integrity_failed and failure.receipt == request.static_output/'receipt.json':
+            try:
+                failure.successor = _finish_docs(state,ComponentResult(request.static_output/'receipt.json','FAIL'))
+            except BaseException as secondary:
+                raise DocsSettledFailure(failure.original,secondary,failure.receipt) from secondary
+        raise
+    try:
+        return _finish_docs(state,component)
+    except BaseException as error:
+        raise DocsSettledFailure(error,None,component.receipt) from error
