@@ -194,12 +194,14 @@ def _harness(prepared: PreparedCli) -> None:
     require(json.dumps(binding, sort_keys=True) == prepared.binding_json, '/binding', 'local source relation changed')
 
 
-def _raw(path: Path, source: bool) -> tuple[tuple[str, str], ...]:
+def _raw(path: Path, source: bool, excluded: tuple[Path, ...] = ()) -> tuple[tuple[str, str], ...]:
     """Independent terminal bytes/kinds/modes anchor, including empty directories."""
     found: dict[str, str] = {}
     pending = [path]
     while pending:
         member = pending.pop()
+        if any(member.is_relative_to(root) for root in excluded):
+            continue
         if not member.exists() and not member.is_symlink():
             found[str(member)] = 'ABSENT'; continue
         mode = member.lstat().st_mode
@@ -228,8 +230,8 @@ def _fixed_paths(prepared: PreparedCli) -> set[Path]:
     return paths
 
 
-def recheck_cli_builds(result: CliBuilds) -> None:
-    """Authenticate retained live antecedents; never refresh after generated-state changes."""
+def _cli_anchor(result: CliBuilds) -> _CliAnchor:
+    """Validate original identity and coverage without inspecting generated state."""
     anchor = result.retained_anchor
     require(anchor is not None and result.status == 'BUILD_ANTECEDENTS_ONLY'
             and result.runtime_qualification == 'NOT_RUN' and result.original_gate_steps_executed is False
@@ -243,6 +245,13 @@ def recheck_cli_builds(result: CliBuilds) -> None:
         expected.update(((plan.debug.root, True), (plan.debug.output, False), (plan.release.output, False), (plan.pair_output, False)))
     require(len(anchor.closure) == len(expected) and {(path, source) for path, source, _ in anchor.closure} == expected,
             '/closure', 'retained closure coverage changed')
+    return anchor
+
+
+def recheck_cli_builds(result: CliBuilds) -> None:
+    """Authenticate retained live antecedents; never refresh after generated-state changes."""
+    anchor = _cli_anchor(result)
+    prepared = anchor.prepared
     _check_pair(prepared.arms[0], anchor.base)
     _harness(prepared)
     _check_pair(prepared.arms[1], anchor.candidate)
@@ -284,3 +293,48 @@ def build_cli(prepared: PreparedCli) -> CliBuilds:
     result = CliBuilds(prepared, base, candidate, 'BUILD_ANTECEDENTS_ONLY', retained_anchor=anchor)
     recheck_cli_builds(result)
     return result
+
+
+@dataclass(frozen=True, slots=True)
+class CliSetupSourceClosure:
+    """Original immutable closure projection; generated-state admission is separate."""
+    candidate: Path
+    closure: tuple[tuple[Path, bool, tuple[tuple[str, str], ...]], ...]
+    original: _CliAnchor
+    builds: CliBuilds
+
+    def check(self, expected: CliBuilds | None = None) -> None:
+        require(expected is None or expected is self.builds,
+                '/setup/closure', 'issuing CLI build identity differs')
+        require(_cli_anchor(self.builds) is self.original,
+                '/setup/closure', 'original issuing anchor replaced')
+        require(self.candidate == self.original.prepared.selectors.candidate.root
+                and self.closure == tuple((path, source, _setup_immutable(raw, path, self.candidate))
+                                          for path, source, raw in self.original.closure),
+                '/setup/closure', 'original closure or fixed candidate projection changed')
+        for path, source, frozen in self.closure:
+            excluded = (self.candidate/'rust/target', self.candidate/'.godot') if path == self.candidate else ()
+            require(_raw(path, source, excluded) == frozen,
+                    '/setup/closure', 'original immutable source/input/evidence changed')
+
+
+def _setup_immutable(raw: tuple[tuple[str, str], ...], path: Path,
+                     candidate: Path) -> tuple[tuple[str, str], ...]:
+    if path != candidate:
+        return raw
+    generated = (candidate/'rust/target', candidate/'.godot')
+    return tuple((name, value) for name, value in raw
+                 if not any(Path(name).is_relative_to(root) for root in generated))
+
+
+def setup_source_closure(result: CliBuilds) -> CliSetupSourceClosure:
+    """Project the admitted original anchor, never capture replacement file state."""
+    recheck_cli_builds(result)
+    original = result.retained_anchor
+    assert original is not None
+    candidate = original.prepared.selectors.candidate.root
+    frozen = tuple((path, source, _setup_immutable(raw, path, candidate))
+                   for path, source, raw in original.closure)
+    closure = CliSetupSourceClosure(candidate, frozen, original, result)
+    closure.check()
+    return closure
