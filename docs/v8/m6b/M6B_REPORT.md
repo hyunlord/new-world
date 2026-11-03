@@ -741,3 +741,9 @@ O 집합은62개로 바뀌므로 이전 O 실행 증거를 재사용하지 않�
 V2는 실제 disk anchor와 aggregate·source 검사를 통과하는 공개 collect/evaluate/dispatch fixture를 포함한다. 루트73개 종료0(21.570초), 관련8개 Python 파일 엄격한 타입0오류·Ruff·diff 통과다. 독립 검토에서 각 세계의 survival 퇴행 여덟 건을 모두 거부하고 counter 간격·교차 실행을 허용함을 확인했다. 기존 독립 fixture의 새 sibling seam도 보완했으며 생산 검사기를 완화하지 않았다. 증거: `stage0/ordered-dispatch/whole-gate-root-twins-01.log`, `whole-gate-root-twins-types-01.log`, `twin-mirror-independent-review/V2_REVIEW.md`. Rust/data/O와 기존 미분류 목록은 바꾸지 않았다.
 
 동결 p111 실제 BASE debug 단계는3295초 뒤 종료101이었다. Cargo target header154개에서 `test … FAILED` 행은 없지만, 다섯 doctest 모두 `rustdoc` ENOENT로 실행되지 않아 단계가 실패했다. process 영수증 SHA는 `a42cd885512cea0500b653b8c663c0c985400cbf980ca3f3cbc16e9f357a4402`다. 기존 실행 입력은 보존하고 successor 도구 검증을 보완 중이다. 이는 gameplay 결함 후보 증명이 아니며, 전체 gate 완료·Stage0 게시·엄격한 CORE-off KnowledgeLost FAIL 상태는 달라지지 않는다.
+
+### S0-p123 — renderer 실행 소유권과 완료 기록의 순서
+
+실제 workspace build pair를 받는 실행 owner를 추가했다. 기존 bridge recipe, 원본 두 import의 종료 기록과 checkpoint, generator·ASCII·Godot 세 producer, 원시 결과 비교를 순서대로 연결한다. 실패 시 caller의 lane을 해제하지 않고 반환된 bridge/import/process 기록을 보존한다. 마지막 source·build history·process 영수증·artifact 검사가 끝나야 ordinary 완료 기록을 생성하며, 이 기록도 qualification NOT_RUN·matrix UNAVAILABLE다. original_off의 H 전용 투영은 별도 미완료로 남겨 세 mode 실행 전에 거부한다.
+
+독립37개와 루트 확대63개 종료0(72.791초), 새6개 Python 파일 엄격한 타입0오류·기본 Ruff·diff 통과다. 실제 run() 순서 검사는 native/admission 경계를 명시적으로 대체한 합성 검사다. 기존 작은 shell child 검사를 함께 실행했으나 실제 Cargo·Godot·관측기 중립성 증거로 계산하지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-root-renderer-owner-01.log`, `whole-gate-root-renderer-owner-types-01.log`, `whole-gate-renderer-owner-review/REVIEW_V2.md`. Rust/data/O 변경 없이 Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
