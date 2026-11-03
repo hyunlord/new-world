@@ -705,3 +705,9 @@ V4의 실제 p111 selector 읽기 검증과 독립26개 검사, 루트 합동47�
 sim-core의 `baseline_matches_v7_final` target 두 사례는 규칙 값을 생성하고 고정 dump와 비교하며 세계를 만들거나 tick하지 않는다. 두 원본 사례 전체와 성공 상태, 정의·호출 경로·dump 12개 해시가 모두 일치할 때만 이 target 하나를 미분류 목록에서 제거한다. 다른 sim-core library 및 nested child 경로에는 적용하지 않으며 세계 안전성이나 전체 통과를 부여하지 않는다.
 
 루트 합동34개 종료0(0.078초), 변경 Python 세 파일의 엄격한 타입0오류·Ruff·diff를 확인했다. 첫 타입 검사에서 테스트 main 반환값 미사용1건을 수정한 기록도 보존했다. Rust/data/O 변경과 새 native 실행은 없다. 증거: `stage0/ordered-dispatch/whole-gate-root-core-pure-{01,02}.log`, `whole-gate-root-core-pure-types-{01,02}.log`, `whole-gate-core-pure-classification/REVIEW.md`. Stage0 미게시와 엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p118 — 원본 import 종료 기록과 cache 연결
+
+원본 setup import의 plan·controller·두 native 결과·log 범위·checkpoint를 연결하는 판독기를 추가했다. bridge/source/tool 인증은 기존 검사를 재사용하며, 현재 cache는 마지막 원본 checkpoint와 대조만 한다. 두 import 모두 정상 종료해야 하고, 첫 실패 뒤 두 번째 성공을 두 번의 성공으로 바꾸지 않는다. renderer 실행과 matrix 승인은 아직 연결하지 않아 UNAVAILABLE를 유지한다.
+
+독립 검토에서 checkpoint 스캔 도중 소스 또는 prior bridge 영수증이 바뀌어도 수락하는 V1 결함을 재현했다. 마지막 전체 plan 입력 재검사를 추가한 V2에서 두 사례 모두 거부됐다. 루트 합동57개 종료0(56.373초), 새 파일 네 개의 엄격한 타입0오류·Ruff·diff 통과다. 새 판독기의 합성 테스트는 upstream bridge 인증만 명시적으로 mock하며 실제 Cargo/Godot 인증 증거가 아니다. 증거: `stage0/ordered-dispatch/whole-gate-root-import-reader-01.log`, `whole-gate-root-import-reader-types-01.log`, `whole-gate-import-reader-p116-v2/INDEPENDENT_UI_REVIEW_V2.md`; V1 재현도 보존했다. Rust/data/O 변경과 실제 import 실행은 없고, Stage0 미게시·CORE-off KnowledgeLost FAIL을 유지한다.
