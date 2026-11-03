@@ -17,9 +17,13 @@ from generic_gate import boundary, integer, require, text
 from generic_observations import ordinary_pair
 from generic_process import file_hash
 from generic_test_endpoint import Endpoint, authenticate_endpoint
+from generic_test_plans import SOURCE_PINS as BASE_PINS
+from generic_test_plans import TESTS as BASE_TESTS
+from generic_test_plans import Planned, fixed_plan, hut_evidence, save_plan
+from generic_test_steward_plans import IGNORED, steward_plan
+from generic_test_steward_plans import SOURCE_PINS as STEWARD_PINS
+from generic_test_steward_plans import TESTS as STEWARD_TESTS
 from generic_whole_gate_endpoints import bind_observer
-from generic_test_plans import SOURCE_PINS as BASE_PINS, TESTS as BASE_TESTS, Planned, fixed_plan, save_plan, hut_evidence
-from generic_test_steward_plans import SOURCE_PINS as STEWARD_PINS, TESTS as STEWARD_TESTS, IGNORED, steward_plan
 
 SOURCE_PINS = {**BASE_PINS, **STEWARD_PINS}
 TESTS = {**BASE_TESTS, **STEWARD_TESTS}
@@ -30,7 +34,8 @@ FIXED: Final = ('colony_commands', 'colony_world')
 TARGETS: Final = {4: (*FIXED, 'save_load', 'colony_jobs', 'colony_steward', 'steward_defence'), 5: (*FIXED, 'save_load', 'colony_jobs', 'colony_steward', 'steward_defence'),
                  17: (*FIXED, 'colony_jobs'), 24: ('save_load',), 37: ('colony_steward', 'steward_defence')}
 STEPS: Final = frozenset(TARGETS)
-from generic_whole_gate_aggregate import LIMIT as LIMIT, aggregate_output as aggregate_output
+from generic_whole_gate_aggregate import LIMIT as LIMIT
+from generic_whole_gate_aggregate import aggregate_output as aggregate_output
 
 
 @dataclass(frozen=True, slots=True)
@@ -160,6 +165,18 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
         appearance_scope = evaluate_appearance(session, base_stage, candidate_stage)
         safety.extend(appearance_scope['safety'] if isinstance(appearance_scope['safety'], list) else [])
         coverage.extend(appearance_scope['coverage'] if isinstance(appearance_scope['coverage'], list) else [])
+    ascii_scope: dict[str, Json] = {}
+    if step in {4, 5}:
+        from generic_whole_gate_ascii import evaluate_ascii
+        ascii_scope = evaluate_ascii(session, base_stage, candidate_stage)
+        safety.extend(ascii_scope['safety'] if isinstance(ascii_scope['safety'], list) else [])
+        coverage.extend(ascii_scope['coverage'] if isinstance(ascii_scope['coverage'], list) else [])
+    knowledge_defaults_scope: dict[str, Json] = {}
+    if step in {4, 5}:
+        from generic_whole_gate_knowledge_defaults import evaluate_knowledge_defaults
+        knowledge_defaults_scope = evaluate_knowledge_defaults(session, base_stage, candidate_stage)
+        safety.extend(row.value for row in Node(knowledge_defaults_scope['safety']).array())
+        coverage.extend(row.value for row in Node(knowledge_defaults_scope['coverage']).array())
     if step == 17:
         from generic_whole_gate_m1 import collect_m1
         mechanism.extend([collect_m1(session, stage) for stage in (base_stage, candidate_stage)])
@@ -169,8 +186,24 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
         migrations = evaluate_migrations(session, base_stage, candidate_stage)
         coverage.extend(migrations['coverage'] if isinstance(migrations['coverage'], list) else [])
     gaps: list[Json] = []
+    workspace_scope: dict[str, Json] = {}
     if step in {4, 5}:
-        gaps = ['workspace outcome accounting outside the source-mapped fixed/save/hut/steward families remains unjoined']
+        from generic_whole_gate_workspace import evaluate_family as evaluate_workspace
+        workspace_scope = evaluate_workspace(session, base_stage, candidate_stage)
+        Node(workspace_scope).field('status').equals('PASS')
+        Node(workspace_scope).field('scope').equals('WORKSPACE_AGGREGATE_ACCOUNTING_ONLY')
+        for arm in ('base', 'candidate'):
+            accounting = Node(workspace_scope).field(arm)
+            for row in accounting.field('remaining_world_routes').array():
+                # Completed source-selected collectors own these exact target routes.
+                if (row.field('package').value, row.field('target').value, row.field('kind').value) in {
+                        ('sim-test', 'engine_ascii', 'test'), ('sim-test', 'engine_knowledge_ffi', 'test'),
+                        ('sim-test', 'm6b_presentation_defaults', 'test')}:
+                    continue
+                gaps.append({'arm': arm, 'world_route': row.value})
+            gaps.extend({'arm': arm, 'doctest_world_route': row.value}
+                        for row in accounting.field('doctest_world_routes').array())
+    gaps.extend(row.value for row in Node(ascii_scope.get('unsupported', [])).array())
     return {'status': 'PASS' if step in {17, 24} else 'INCOMPLETE', 'safety': safety, 'coverage': coverage,
             'unsupported': migrations.get('unsupported', []) if step == 37 else gaps,
-            'mechanisms': mechanism, 'native_probe_replays': replay_scope, 'appearance': appearance_scope, 'migrations': migrations, 'qualification': LIMIT}
+            'mechanisms': mechanism, 'native_probe_replays': replay_scope, 'appearance': appearance_scope, 'ascii': ascii_scope, 'workspace_accounting': workspace_scope, 'knowledge_defaults': knowledge_defaults_scope, 'migrations': migrations, 'qualification': LIMIT}

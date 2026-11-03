@@ -267,11 +267,22 @@ def nested_native_source(spec: ProcessSpec, executable: Executable) -> NestedSou
     return NestedSource(spec,executable,tuple(files),tuple(blocks),tuple(NestedChild(row[1],row[2],row[3]) for row in rules))
 
 
-def reconcile_nested_native(raw: bytes, all_cases: Listing, ignored: Listing, source: NestedSource) -> Section:
-    """Reconcile known aggregate multiplicities; interleaving supplies no child PID tree."""
-    require(nested_native_source(source.spec,source.executable)==source,'/nested/source','source policy changed')
+def nested_policy(package: str, name: str, kind: str) -> tuple[tuple[tuple[str, str, str, int, str, str], ...], tuple[str, ...], tuple[str, ...]]:
+    if (package, name, kind) == ('sim-core', 'sim_core', 'lib'):
+        rules = tuple(('rust/crates/sim-core/src/colony/' + row[0], *row[1:]) for row in _NESTED_RULES)
+        return rules, (), _NESTED_ENV[package, name]
+    selected = _NESTED_TARGETS.get((package, name)) if kind == 'test' else None
+    if selected is None:
+        return (), (), ()
+    return (selected[:6],), selected[6], _NESTED_ENV[package, name]
+
+
+def reconcile_nested_records(raw: bytes, all_cases: Listing, ignored: Listing,
+                             children: tuple[NestedChild, ...], files: tuple[tuple[str, str], ...],
+                             blocks: tuple[tuple[str, str], ...]) -> Section:
+    """Pure aggregate arithmetic; caller authenticates the source contract."""
     records=lines(raw);count=len(all_cases.names)
-    children=source.children; nested_count=sum(child.count for child in children)
+    nested_count=sum(child.count for child in children)
     require(len(records)>=4 and records[0]==records[-1]=='','/nested','truncated outer framing')
     for row in records:
         if not row or row.startswith(('running ','test result:')): continue
@@ -316,8 +327,15 @@ def reconcile_nested_native(raw: bytes, all_cases: Listing, ignored: Listing, so
             and outer[1]==('FAILED' if values[1] else 'ok'),'/nested','outer numeric accounting differs')
     require(summary.summaries==nested_count+1 and summary.measured==0 and summary.filtered_out==nested_count*(count-1),
             '/nested','aggregate numeric accounting differs')
+    return Section(outcomes,digest(raw),values[1],NestedAccounting(count,nested_count,children,files,blocks))
+
+
+
+def reconcile_nested_native(raw: bytes, all_cases: Listing, ignored: Listing, source: NestedSource) -> Section:
+    require(nested_native_source(source.spec,source.executable)==source,'/nested/source','source policy changed')
+    result = reconcile_nested_records(raw, all_cases, ignored, source.children, source.files, source.blocks)
     require(nested_native_source(source.spec,source.executable)==source,'/nested/source','source changed during accounting')
-    return Section(outcomes,digest(raw),values[1],NestedAccounting(count,nested_count,children,source.files,source.blocks))
+    return result
 
 
 def reconcile_native(raw: bytes, all_cases: Listing, ignored_cases: Listing, nested: NestedSource | None = None) -> Section:

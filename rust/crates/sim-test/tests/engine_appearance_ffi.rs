@@ -284,9 +284,6 @@ fn a_person_without_sex_counts_as_male_and_tops_follow_apparel() {
 fn the_text_renderer_people_json_carries_the_bridge_looks() {
     let script_path =
         std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../tools/v8/u_script.json");
-    let dir = std::path::Path::new(env!("CARGO_TARGET_TMPDIR")).join("engine_appearance_ffi");
-    std::fs::create_dir_all(&dir).expect("tmp dir");
-    let json_path = dir.join("people.json");
     let gate_observer = match std::env::var_os("WORLDSIM_GATE_OBSERVER") {
         None => false,
         Some(value) => {
@@ -294,6 +291,23 @@ fn the_text_renderer_people_json_carries_the_bridge_looks() {
             true
         }
     };
+    let dir = if gate_observer {
+        let root = std::path::PathBuf::from(
+            std::env::var_os("WORLDSIM_GATE_TEST_OUT").expect("external invocation evidence root"),
+        );
+        assert!(root.is_absolute() && root.is_dir());
+        assert_eq!(
+            root.canonicalize().expect("canonical invocation root"),
+            root
+        );
+        let parent = root.join(format!("renderer_pid{}", std::process::id()));
+        std::fs::create_dir(&parent).expect("exclusive renderer invocation");
+        parent.join("engine_appearance_ffi")
+    } else {
+        std::path::Path::new(env!("CARGO_TARGET_TMPDIR")).join("engine_appearance_ffi")
+    };
+    std::fs::create_dir_all(&dir).expect("tmp dir");
+    let json_path = dir.join("people.json");
     let args = AsciiArgs {
         seed: 100,
         tick: 900,

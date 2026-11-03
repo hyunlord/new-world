@@ -354,7 +354,30 @@ pub fn engine_at_observed(
     tick: u64,
     observation_out: Option<&Path>,
 ) -> Result<(SimEngine, StumpTracker), String> {
+    engine_at_with_initial_observer(seed, script, tick, observation_out, |_| ())
+        .map(|(engine, stumps, ())| (engine, stumps))
+}
+
+/// Observe the actual founding world before the ordinary ASCII replay, retaining
+/// the observer for callers whose original test continues that same world.
+pub fn engine_at_with_observer<T>(
+    seed: u64,
+    script: &[ScriptEntry],
+    tick: u64,
+    observe: impl FnOnce(&SimEngine) -> T,
+) -> Result<(SimEngine, StumpTracker, T), String> {
+    engine_at_with_initial_observer(seed, script, tick, None, observe)
+}
+
+fn engine_at_with_initial_observer<T>(
+    seed: u64,
+    script: &[ScriptEntry],
+    tick: u64,
+    observation_out: Option<&Path>,
+    observe: impl FnOnce(&SimEngine) -> T,
+) -> Result<(SimEngine, StumpTracker, T), String> {
     let mut engine = crate::scenes::colony_scene(seed);
+    let initial_observer = observe(&engine);
     let mut watch = observation_out
         .map(|out| GateObservation::begin(&engine, out, "colony", seed, "primary", tick))
         .transpose()?;
@@ -397,7 +420,7 @@ pub fn engine_at_observed(
     };
     replay?;
     observation?;
-    Ok((engine, stumps))
+    Ok((engine, stumps, initial_observer))
 }
 
 /// Parsed `worldsim_probe --scene colony --ascii` arguments.

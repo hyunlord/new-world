@@ -166,8 +166,8 @@ def completed(plan: ResolverPlan, result: ProcessResult, digest: str) -> bytes:
     return process_output(ListingProcess(spec,result,digest),spec.argv,spec.cwd,environment_for(spec),required)
 
 
-def checker_terminal(plan: ResolverPlan, stdout: bytes) -> dict[str,Json]:
-    expected=document((plan.product.input_root/'tools/v8/resolver_parity_expected.json').read_text())
+def checker_counts(root: Path, stdout: bytes) -> dict[str,Json]:
+    expected=document((root/'tools/v8/resolver_parity_expected.json').read_text())
     material=len(expected.field('results').array());flora=len(expected.field('flora_results').array())
     require(material>0 and flora>0,'/checker','empty original expectation')
     terminal=f'resolver_parity: PASS ({material} material and {flora} flora cases, 0 differences)'
@@ -176,6 +176,10 @@ def checker_terminal(plan: ResolverPlan, stdout: bytes) -> dict[str,Json]:
     # Original --check owns comparison/normalisation; no substitute comparator runs here.
     return {'material':material,'flora':flora,'checker':'ORIGINAL_SUBPROCESS_PASS','native_marker_diagnostic':
         any(line.startswith('RESOLVER_PARITY_DONE') for line in lines)}
+
+
+def checker_terminal(plan: ResolverPlan, stdout: bytes) -> dict[str,Json]:
+    return checker_counts(plan.product.input_root, stdout)
 
 
 def raw_inventory(output: Path) -> dict[str,str]:

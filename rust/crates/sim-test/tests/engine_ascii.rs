@@ -1,6 +1,8 @@
 //! The text renderer (`sim_test::probe::ascii`, M1.5 goal 8.1): grid size,
 //! people, the hearth, trees and stumps, carry marks and the crop, on the
 //! colony world of seed 100 driven by the U-script (`tools/v8/u_script.json`).
+pub mod save_gate_observation;
+use save_gate_observation::Watch;
 use serde_json::json;
 use sim_bridge::ffi::{
     collect_agent_jobs, collect_agent_snapshot, collect_building_snapshot, collect_trees,
@@ -25,8 +27,11 @@ fn u_script() -> Vec<ScriptEntry> {
     .collect()
 }
 
-fn at(tick: u64) -> (sim_engine::SimEngine, StumpTracker) {
-    ascii::engine_at(SEED, &u_script(), tick).expect("scripted colony run")
+fn at(test: &str, branch: &str, tick: u64) -> (sim_engine::SimEngine, StumpTracker, Watch) {
+    ascii::engine_at_with_observer(SEED, &u_script(), tick, |engine| {
+        Watch::begin(test, SEED, branch, engine)
+    })
+    .expect("scripted colony run")
 }
 
 fn lines(grid: &str) -> Vec<&str> {
@@ -42,7 +47,11 @@ fn glyph(grid: &str, x: u32, y: u32) -> char {
 
 #[test]
 fn the_grid_has_one_character_per_tile_of_the_map_or_rect() {
-    let (engine, _) = at(0);
+    let (engine, _, watch) = at(
+        "the_grid_has_one_character_per_tile_of_the_map_or_rect",
+        "primary",
+        0,
+    );
     let info = collect_world_info(&engine.resources);
     let grid = ascii::render(&engine, None);
     let rows = lines(&grid);
@@ -57,11 +66,16 @@ fn the_grid_has_one_character_per_tile_of_the_map_or_rect() {
     let rect = ascii::render(&engine, Some((80, 80, 40, 30)));
     assert_eq!(lines(&rect).len(), 30);
     assert!(lines(&rect).iter().all(|r| r.len() == 40));
+    watch.finish(&engine, "original_endpoint");
 }
 
 #[test]
 fn every_living_person_is_drawn_where_the_agent_snapshot_puts_them() {
-    let (engine, _) = at(900);
+    let (engine, _, watch) = at(
+        "every_living_person_is_drawn_where_the_agent_snapshot_puts_them",
+        "primary",
+        900,
+    );
     let rows = collect_agent_snapshot(&engine.world);
     let alive = engine.world.query::<&Agent>().iter().count();
     // Observed: 10 alive at tick 900 (23:00), 9–10 asleep, sharing the two shelter tiles and the hut.
@@ -93,11 +107,16 @@ fn every_living_person_is_drawn_where_the_agent_snapshot_puts_them() {
             assert_eq!(glyph(&grid, row.x, row.y), 'z');
         }
     }
+    watch.finish(&engine, "original_endpoint");
 }
 
 #[test]
 fn the_hearth_star_is_where_the_building_snapshot_says() {
-    let (engine, _) = at(900);
+    let (engine, _, watch) = at(
+        "the_hearth_star_is_where_the_building_snapshot_says",
+        "primary",
+        900,
+    );
     let hearths: Vec<(u32, u32)> = collect_building_snapshot(&engine.resources)
         .iter()
         .filter(|b| b.kind == 0)
@@ -116,14 +135,23 @@ fn the_hearth_star_is_where_the_building_snapshot_says() {
         })
         .collect();
     assert_eq!(stars, hearths);
+    watch.finish(&engine, "original_endpoint");
 }
 
 #[test]
 fn standing_trees_are_t_and_felled_ones_leave_a_stump_for_a_day() {
-    let (at_360, _) = at(360);
+    let (at_360, _, watch_360) = at(
+        "standing_trees_are_t_and_felled_ones_leave_a_stump_for_a_day",
+        "before_commands",
+        360,
+    );
     let designated = nearest_trees(&at_360, 15);
     assert_eq!(designated.len(), 15);
-    let (engine, stumps) = at(900);
+    let (engine, stumps, watch_felled) = at(
+        "standing_trees_are_t_and_felled_ones_leave_a_stump_for_a_day",
+        "felled",
+        900,
+    );
     let standing: BTreeSet<(u32, u32)> = collect_trees(&engine.resources).1.into_iter().collect();
     let people: BTreeSet<(u32, u32)> = ascii::people_tiles(&engine).into_iter().collect();
     let felled: Vec<(u32, u32)> = designated
@@ -152,7 +180,11 @@ fn standing_trees_are_t_and_felled_ones_leave_a_stump_for_a_day() {
         .expect("an unmarked tree");
     assert_eq!(glyph(&grid, tree.0, tree.1), 'T');
     // A day after the last felling the stumps are gone.
-    let (later, later_stumps) = at(900 + ascii::STUMP_TICKS);
+    let (later, later_stumps, watch_expired) = at(
+        "standing_trees_are_t_and_felled_ones_leave_a_stump_for_a_day",
+        "expired",
+        900 + ascii::STUMP_TICKS,
+    );
     let later_grid = ascii::render_with(&later, None, Some(&later_stumps));
     let later_people: BTreeSet<(u32, u32)> = ascii::people_tiles(&later).into_iter().collect();
     for &(x, y) in felled.iter().filter(|t| !later_people.contains(t)) {
@@ -162,6 +194,9 @@ fn standing_trees_are_t_and_felled_ones_leave_a_stump_for_a_day() {
             "stump at ({x}, {y}) outlived a day"
         );
     }
+    watch_360.finish(&at_360, "original_endpoint");
+    watch_felled.finish(&engine, "original_endpoint");
+    watch_expired.finish(&later, "original_endpoint");
 }
 
 #[test]
@@ -169,7 +204,8 @@ fn awake_carriers_have_a_plus_on_their_right() {
     // M1.5 observed carriers at tick 600; M2's work order moves the first loads,
     // so the check starts at 600 and steps on (U-script orders are all at 360)
     // to the first tick with an awake carrier whose right-hand tile is free.
-    let (mut engine, _) = at(600);
+    let (mut engine, _, watch) = at("awake_carriers_have_a_plus_on_their_right", "primary", 600);
+    watch.annotate(&engine, "search_start", || json!({"start_tick": 600}));
     let mut checked = 0;
     for _ in 0..1_440 {
         let rows = collect_agent_snapshot(&engine.world);
@@ -195,11 +231,20 @@ fn awake_carriers_have_a_plus_on_their_right() {
         checked >= 1,
         "no carrier to check in day 0–1 after tick 600"
     );
+    watch.annotate(&engine, "event_stop", || {
+        json!({
+            "predicate": "awake_carrier_free_right_tile", "checked_carriers": checked,
+            "start_tick": 600, "maximum_additional_ticks": 1440,
+            "actual_tick": engine.current_tick(),
+            "attempts_before_success": engine.current_tick() - 600
+        })
+    });
+    watch.finish(&engine, "first_awake_carrier");
 }
 
 #[test]
 fn a_rect_crops_the_full_grid_exactly() {
-    let (engine, stumps) = at(900);
+    let (engine, stumps, watch) = at("a_rect_crops_the_full_grid_exactly", "primary", 900);
     let full = ascii::render_with(&engine, None, Some(&stumps));
     let full_lines = lines(&full);
     for (x, y, w, h) in [(80, 80, 40, 30), (0, 0, 1, 1), (180, 185, 20, 20)] {
@@ -216,4 +261,5 @@ fn a_rect_crops_the_full_grid_exactly() {
     let edge = ascii::render(&engine, Some((180, 185, 20, 20)));
     assert_eq!(lines(&edge).len(), 7);
     assert!(lines(&edge).iter().all(|r| r.len() == 12));
+    watch.finish(&engine, "original_endpoint");
 }

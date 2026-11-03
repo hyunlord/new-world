@@ -3,9 +3,11 @@ import unittest
 from unittest.mock import patch
 
 import generic_whole_gate_native as native
-from generic_whole_gate_appearance import evaluate_appearance
 from generic_observations import Observation
+from generic_whole_gate_appearance import evaluate_appearance
 from mux2_gate_inputs import Node
+from test_generic_whole_gate_workspace_integration import accounting
+
 
 class AppearanceIntegrationTests(unittest.TestCase):
     def test_stage4_and5_include_seven_rows_without_clearing_gaps(self):
@@ -15,9 +17,12 @@ class AppearanceIntegrationTests(unittest.TestCase):
                     'coverage':[{'target':'engine_appearance_ffi'} for _ in range(7)]}
         for step in (4,5):
             base=Node({'step':step,'arm':'base'});candidate=Node({'step':step,'arm':'candidate'})
-            with patch.object(native,'STEWARD_PINS',{}), patch.dict(native.TARGETS,{step:()}), \
+            with patch('generic_whole_gate_workspace.evaluate_family', return_value=accounting()), \
+                 patch('generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults', return_value={'safety': [], 'coverage': []}), \
+                 patch.object(native,'STEWARD_PINS',{}), patch.dict(native.TARGETS,{step:()}), \
                  patch.object(native,'aggregate_output',return_value=('',1)), \
                  patch('generic_whole_gate_native_probes.evaluate_replays',return_value={'safety':[],'coverage':[]}), \
+                 patch('generic_whole_gate_ascii.evaluate_ascii',return_value={'safety':[],'coverage':[],'unsupported':[]}), \
                  patch('generic_whole_gate_appearance.evaluate_appearance',return_value=appearance) as selected:
                 result=native.evaluate_family(session,base,candidate)
                 selected.assert_called_once_with(session,base,candidate)

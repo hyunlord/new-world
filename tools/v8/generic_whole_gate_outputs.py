@@ -7,16 +7,16 @@
 from pathlib import Path
 from typing import Final
 
-from mux2_gate_inputs import Json, Node
-
 from generic_process import file_hash
 from generic_whole_gate_journal import anchored, snapshot
+from mux2_gate_inputs import Json, Node
 
 OUTPUTS: Final = {
     9: ('smoke',), 10: ('identity',), 11: ('determinism_probe',), 12: ('perf',),
     17: ('m1-trf.log',), 18: ('colony_determinism',), 19: ('replay',),
     23: ('renderer_agreement',), 26: ('soak',), 27: ('nav_bench',),
     28: ('knowledge_f10', 'knowledge_f10_control'), 29: ('story',), 30: ('neighbours',),
+    32: ('resolver_godot.json',),
     34: ('mart2_ground_test.out', 'mart2_people_test.out', 'mart21_trees_test.out'),
     35: ('steward',), 36: ('data_only_ext',), 42: ('core-registration-tests.log',),
     43: ('core-data-only-tests.log',), 37: ('mux2-defence',), 38: ('mux2-oracles',),

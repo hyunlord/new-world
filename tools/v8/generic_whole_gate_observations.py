@@ -52,7 +52,7 @@ MISSING: Final = {
 }
 
 
-IMPLEMENTED: Final = frozenset(MISSING) - {'named_integration_boundaries'}
+IMPLEMENTED: Final = frozenset(MISSING)
 
 
 @dataclass(frozen=True, slots=True)

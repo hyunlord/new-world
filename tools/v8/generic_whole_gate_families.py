@@ -28,6 +28,7 @@ def evaluate(session: Node, steps: dict[tuple[str, int], Node], *, descriptor: i
     errors: list[str] = []
     incomplete: list[str] = []
     completed: list[str] = []
+    named_passed: set[int] = set()
     auxiliary = Path(session.field('output').text()) / 'auxiliary-index/smoke.json'
     if auxiliary.exists():
         from generic_whole_gate_ui_smoke_join import evaluate_family as smoke
@@ -124,10 +125,25 @@ def evaluate(session: Node, steps: dict[tuple[str, int], Node], *, descriptor: i
             completed.append('visibility')
         except (GateContractError, EvidenceError) as error:
             errors.append(f'UI step39: {error}')
+    for step in (13, 32):
+        if ('base', step) not in steps or ('candidate', step) not in steps:
+            incomplete.append(f'named step{step}: missing paired original execution')
+            continue
+        from generic_whole_gate_named import evaluate_family as named
+        try:
+            result = named(session, steps['base', step], steps['candidate', step])
+            Node(result).field('status').equals('PASS')
+            coverage.append({'step': step, 'scope': 'original_source_qualified_no_world_mechanism', 'result': result})
+            named_passed.add(step)
+        except (GateContractError, EvidenceError) as error:
+            errors.append(f'named step{step}: {error}')
     if ('base', 38) in steps and ('candidate', 38) in steps:
         from generic_whole_gate_oracles import evaluate_family as oracles
         try:
-            coverage.append({'step': 38, 'result': oracles(session, steps['base', 38], steps['candidate', 38])})
+            result = oracles(session, steps['base', 38], steps['candidate', 38])
+            Node(result).field('status').equals('PASS')
+            coverage.append({'step': 38, 'result': result})
+            named_passed.add(38)
         except (GateContractError, EvidenceError) as error:
             errors.append(f'oracle step38: {error}')
     for step in (4, 5, 17, 24, 37, 42, 43, 49):
@@ -138,6 +154,8 @@ def evaluate(session: Node, steps: dict[tuple[str, int], Node], *, descriptor: i
             result = native(session, steps['base', step], steps['candidate', step])
             safety.extend(row.value for row in Node(result).field('safety').array())
             coverage.append({'step': step, 'result': result})
+            if step in {17, 37, 42, 43, 49} and Node(result).field('status').value == 'PASS':
+                named_passed.add(step)
             if step == 24 and Node(result).field('status').value == 'PASS':
                 completed.append('save_roundtrip')
             if Node(result).field('status').value != 'PASS':
@@ -164,4 +182,6 @@ def evaluate(session: Node, steps: dict[tuple[str, int], Node], *, descriptor: i
             completed.append('bench.timed_rss')
         except (GateContractError, EvidenceError) as error:
             errors.append(f'bench step25: {error}')
+    if named_passed == {13, 17, 32, 37, 38, 42, 43, 49}:
+        completed.append('named_integration_boundaries')
     return Families(tuple(safety), tuple(coverage), tuple(errors), tuple(incomplete), tuple(completed))

@@ -11,11 +11,17 @@ from generic_process import file_hash, real_path
 from generic_test_endpoint import authenticate_endpoint
 from generic_test_endpoint_types import bound_bytes, fields
 from generic_test_history_graph import identity, resolve_graph
-from generic_whole_gate_aggregate import aggregate_output, LIMIT
+from generic_whole_gate_aggregate import LIMIT, aggregate_output
+from generic_whole_gate_appearance_plan import (
+    BASELINE_TEST,
+    KIN_TEST,
+    RENDER_TEST,
+    SAVE_TEST,
+    appearance_plan,
+)
 from generic_whole_gate_endpoints import bind_observer
 from generic_whole_gate_m1 import sections
 from generic_whole_gate_projection import project_endpoint
-from generic_whole_gate_appearance_plan import appearance_plan, SAVE_TEST, BASELINE_TEST, KIN_TEST, RENDER_TEST
 from mux2_gate_inputs import Json, Node
 
 TESTS: Final = (SAVE_TEST, 'hair_and_variant_spread_elders_take_older_faces_children_the_child_band',
@@ -25,8 +31,8 @@ PINS: Final = {
     'rust/crates/sim-test/src/probe/gate_observation.rs': '23d328e105091e43c63eb24ae598e7c9901bf537e69d3d1bffb3b6fadc75fe61',
     'rust/crates/sim-test/tests/save_gate_observation/mod.rs': 'ab7c324c94846f231128040f7ccf34fbd2c8a9339a927a65962c1f2c17ce2cdf',
     'tools/v8/u_script.json': '32e9f6423867c858b678bcec9d1a14a170bba043917898c52434bcf00515f5b0',
-    'rust/crates/sim-test/tests/engine_appearance_ffi.rs': 'b1a49c176714acc672fe3b4c47a038f98cef86d98751e9d9cc62ac0014107976',
-    'rust/crates/sim-test/src/probe/ascii.rs': '8244f93ab9c6441ac13381e2563c42b5e7105b14d2b8cdeccc8e5faa0e7dba66',
+    'rust/crates/sim-test/tests/engine_appearance_ffi.rs': '396f39a2f65c755bc9952c0c34a9edf15566d1aefcc9c79b338e97d1ad19fa5d',
+    'rust/crates/sim-test/src/probe/ascii.rs': '3875c7069915139df4202ed1fcb754c742e33323508c0bb8edd9772433333b4d',
 }
 
 

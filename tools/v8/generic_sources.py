@@ -30,14 +30,20 @@ def git(root: Path, *args: str) -> bytes:
     return result.stdout
 
 
-def safe_path(root: Path, name: str) -> Path:
+def safe_path(root: Path, name: str, *, allow_missing_parents: bool = False) -> Path:
     relative = PurePosixPath(name)
     require(bool(name) and not relative.is_absolute() and ".." not in relative.parts
             and relative.as_posix() == name and name != ".", name, "unsafe relative input path")
     path = root
     for part in relative.parts[:-1]:
         path /= part
-        require(stat.S_ISDIR(path.lstat().st_mode), name, "non-directory input ancestor")
+        try:
+            mode = path.lstat().st_mode
+        except FileNotFoundError:
+            if not allow_missing_parents:
+                raise
+        else:
+            require(stat.S_ISDIR(mode), name, "non-directory input ancestor")
     return root / name
 
 

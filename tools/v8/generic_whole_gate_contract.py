@@ -7,11 +7,10 @@
 from pathlib import Path
 
 from generic_gate import document, require
-from generic_sources import safe_path
-from mux2_gate_inputs import Node
-
 from generic_process import file_hash
+from generic_sources import safe_path
 from generic_whole_gate_journal import ORDER
+from mux2_gate_inputs import Node
 
 
 def hashes(node: Node) -> dict[str, str]:
@@ -24,7 +23,8 @@ def load_session(path: Path, expected_sha256: str) -> Node:
     session = document(path.read_text())
     session.field('schema').equals('whole_gate_session.v1')
     if 'materialization' in session.mapping():
-        session.field('qualification').equals('PRODUCT_UNQUALIFIED')
+        from generic_whole_gate_qualification import qualification
+        session.field('qualification').equals(qualification(session))
         from generic_whole_gate_source import check_materialization
         check_materialization(session)
     else:

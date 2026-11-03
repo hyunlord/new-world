@@ -1,6 +1,9 @@
 //! M4: the knowledge bridge collectors (`ffi/knowledge.rs`) on built engines —
 //! content and row order, and their empty form in the baseline world.
 
+pub mod save_gate_observation;
+use save_gate_observation::Watch;
+
 use sim_bridge::ffi::{
     collect_agent_knowledge, collect_knowledge_waits, collect_teach_orders, collect_tech,
     collect_tech_node,
@@ -17,6 +20,12 @@ fn id(name: &str) -> u8 {
 #[test]
 fn knowledge_reads_are_empty_in_the_baseline_world() {
     let mut engine = sim_test::baseline_engine(3);
+    let watch = Watch::begin(
+        "knowledge_reads_are_empty_in_the_baseline_world",
+        3,
+        "primary",
+        &engine,
+    );
     engine.tick();
     let tech = collect_tech(&engine.world, &engine.resources);
     assert_eq!((tech.version, tech.nodes.len(), tech.at_risk), (0, 0, 0));
@@ -35,11 +44,18 @@ fn knowledge_reads_are_empty_in_the_baseline_world() {
         view.rows.is_empty(),
         "nobody knows anything in the baseline"
     );
+    watch.finish(&engine, "original_endpoint");
 }
 
 #[test]
 fn the_tech_view_lists_every_node_in_id_order_with_the_aggregate() {
     let mut engine = sim_test::colony_engine(1);
+    let watch = Watch::begin(
+        "the_tech_view_lists_every_node_in_id_order_with_the_aggregate",
+        1,
+        "primary",
+        &engine,
+    );
     for _ in 0..241 {
         engine.tick();
     }
@@ -74,11 +90,18 @@ fn the_tech_view_lists_every_node_in_id_order_with_the_aggregate() {
     let door = &tech.nodes[usize::from(id("doorway"))];
     assert_eq!((door.status, door.holders), (TechStatus::AtRisk.code(), 1));
     assert!(door.first_name >= 0, "the holder is named");
+    watch.finish(&engine, "original_endpoint");
 }
 
 #[test]
 fn node_and_person_views_agree_with_the_component() {
     let mut engine = sim_test::colony_engine(1);
+    let watch = Watch::begin(
+        "node_and_person_views_agree_with_the_component",
+        1,
+        "primary",
+        &engine,
+    );
     for _ in 0..241 {
         engine.tick();
     }
@@ -124,11 +147,18 @@ fn node_and_person_views_agree_with_the_component() {
         .expect("doorway row");
     assert_eq!(door_row.state, 0, "a fresh seeded entry is practised");
     assert!(!collect_agent_knowledge(&engine.world, &engine.resources, -1).found);
+    watch.finish(&engine, "original_endpoint");
 }
 
 #[test]
 fn teach_orders_are_listed_until_cancelled() {
     let mut engine = sim_test::colony_engine(1);
+    let watch = Watch::begin(
+        "teach_orders_are_listed_until_cancelled",
+        1,
+        "primary",
+        &engine,
+    );
     for _ in 0..241 {
         engine.tick();
     }
@@ -165,4 +195,5 @@ fn teach_orders_are_listed_until_cancelled() {
     assert!(r.accepted, "{r:?}");
     engine.tick();
     assert!(collect_teach_orders(&engine.world, &engine.resources).is_empty());
+    watch.finish(&engine, "original_endpoint");
 }

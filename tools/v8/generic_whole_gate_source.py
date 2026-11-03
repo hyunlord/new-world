@@ -11,10 +11,9 @@ from pathlib import Path
 from generic_build import derived_snapshot, overlay_files
 from generic_cli_prepare import PreparedCli
 from generic_gate import document, require
+from generic_process import atomic_json, file_hash
 from generic_sources import freeze_source, git, safe_path
 from mux2_gate_inputs import Json, Node
-
-from generic_process import atomic_json, file_hash
 
 
 def materialize(prepared: PreparedCli, role_manifests: tuple[Path, Path]) -> Node:
@@ -132,7 +131,7 @@ def prepare_session(config: Path) -> Path:
     config_mode = config.lstat().st_mode
     node = document(config.read_text())
     node.field('schema').equals('whole_gate.v1')
-    require(set(node.mapping()) == {'schema', 'selectors', 'output', 'layers', 'python', 'bash',
+    require(set(node.mapping()) - {'observer_qualification'} == {'schema', 'selectors', 'output', 'layers', 'python', 'bash',
             'environment', 'external_inputs', 'acceptance', 'observations'}, '/config', 'unknown or missing field')
     selected = node.field('selectors')
     require(set(selected.mapping()) == {'harness_root', 'harness_sha', 'published_sha', 'purpose',
@@ -213,6 +212,10 @@ def prepare_session(config: Path) -> Path:
             '/external_inputs', 'external input mode changed during materialization')
     require(config.lstat().st_mode == config_mode, '/config', 'selector mode changed during materialization')
     require(file_hash(config) == config_hash, '/config', 'selector changed during materialization')
+    if 'observer_qualification' in node.mapping():
+        session['observer_qualification'] = node.field('observer_qualification').value
+    from generic_whole_gate_qualification import qualification
+    session['qualification'] = qualification(Node(session))
     target = selection.output/'session.json'
     atomic_json(target, session)
     return target

@@ -6,6 +6,7 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 
+import generic_whole_gate_observations as subject
 from generic_fixture_registry import (
     ExpansionContext,
     Invocation,
@@ -17,8 +18,6 @@ from generic_gate import GateContractError, document, integer
 from generic_process import ProcessSpec, execute, file_hash
 from mux2_gate_inputs import Node
 from test_generic_observations import receipt
-
-import generic_whole_gate_observations as subject
 
 
 class ProbeRoutingTests(unittest.TestCase):
@@ -51,9 +50,9 @@ class ProbeRoutingTests(unittest.TestCase):
             self.assertEqual(len(subject.probe_safety(left, right)), 8)
             table = subject.routes(registry)
             self.assertEqual(len(table), 40)
-            self.assertEqual(sum(r.supported for r in table), 39)
+            self.assertEqual(sum(r.supported for r in table), 40)
             self.assertEqual({r.fixture for r in table if not r.supported},
-                             {'named_integration_boundaries'})
+                             set())
             play = next(row for row in table if row.fixture == 'ui.play')
             self.assertTrue(play.supported)
             self.assertIsNotNone(play.missing)

@@ -3,26 +3,36 @@ import json
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
-from pathlib import Path
 from dataclasses import replace
+from pathlib import Path
+from unittest.mock import patch
 
+import generic_process
 from generic_gate import GateContractError
 from generic_process import ProcessSpec, environment_for, execute, file_hash
 from generic_test_endpoint import EndpointEvidence, authenticate_endpoint
-import generic_process
-from generic_test_run import fixed_plan, save_plan, JOBS_INPUTS
-from generic_whole_gate_native import SOURCE_PINS, TESTS
-from generic_test_steward_scope import EXTRA_SOURCE, REPLAY, HOUSING, DEFENCE, IGNORED, TESTS as STEWARD_TESTS
-from test_generic_whole_gate_steward import rows as steward_rows, EXTRA
-from test_generic_whole_gate_m1 import PROBE_CHILD
-from generic_whole_gate_m1 import SOURCE_PINS as M1_PINS, SOURCE_TREES
 from generic_test_history import FORMAT_SOURCE, identity
-from test_generic_test_history import CHILD, cases, graph
-from test_generic_test_run import HUT_CHILD
-from generic_whole_gate_native import _native_segment, collect_family, evaluate_family
-from test_generic_test_observations import ObservationTests
+from generic_test_run import JOBS_INPUTS, fixed_plan, save_plan
+from generic_test_steward_scope import DEFENCE, EXTRA_SOURCE, HOUSING, IGNORED, REPLAY
+from generic_test_steward_scope import TESTS as STEWARD_TESTS
+from generic_whole_gate_m1 import SOURCE_PINS as M1_PINS
+from generic_whole_gate_m1 import SOURCE_TREES
+from generic_whole_gate_native import (
+    SOURCE_PINS,
+    TESTS,
+    _native_segment,
+    collect_family,
+    evaluate_family,
+)
 from mux2_gate_inputs import Json, Node
+from test_generic_test_history import CHILD, cases, graph
+from test_generic_test_observations import ObservationTests
+from test_generic_test_run import HUT_CHILD
+from test_generic_whole_gate_m1 import PROBE_CHILD
+from test_generic_whole_gate_steward import EXTRA
+from test_generic_whole_gate_steward import rows as steward_rows
+from test_generic_whole_gate_workspace_integration import accounting
+
 
 class EndpointTests(ObservationTests):
     def test_endpoint_never_invents_native_exit(self) -> None:
@@ -104,9 +114,13 @@ class WholeNativeTests(unittest.TestCase):
         self.base,self.candidate=stages
 
     def test_actual_aggregate_subset_never_grants_full_coverage(self) -> None:
-        # This fixture owns fixed-family evidence; appearance routing has separate tests.
-        with patch('generic_whole_gate_appearance.evaluate_appearance',
-                   return_value={'status':'INCOMPLETE','safety':[],'coverage':[]}):
+        # This fixture owns fixed-family evidence; appearance and ASCII routing have separate tests.
+        with patch('generic_whole_gate_workspace.evaluate_family', return_value=accounting()), \
+             patch('generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults', return_value={'safety': [], 'coverage': []}), \
+             patch('generic_whole_gate_appearance.evaluate_appearance',
+                   return_value={'status':'INCOMPLETE','safety':[],'coverage':[]}), \
+             patch('generic_whole_gate_ascii.evaluate_ascii',
+                   return_value={'status':'INCOMPLETE','safety':[],'coverage':[],'unsupported':[]}):
             result=evaluate_family(Node(self.session),self.base,self.candidate)
         self.assertEqual(result['status'],'INCOMPLETE')
         self.assertEqual(len(Node(result['coverage']).array()),106)

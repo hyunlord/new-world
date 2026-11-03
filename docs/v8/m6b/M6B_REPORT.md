@@ -645,3 +645,25 @@ play 연결의 독립 검토에서 상위 제품의 Cargo target 상속, 명시�
 
 
 p110 검증 작업 트리에서 workspace 전체 대상 check·clippy·release probe 빌드·표준 baseline identity가 모두 실제 종료0으로 끝났다. 게시된 Stage−1과 공통228,748값 차이0·한쪽 경로0, chronicle64개/19,683항목 동일, 표준 git_sha·기존0값 제외 후 샘플64개 동일, seeds0–3 결정성이 통과했다. native 소스·기준 파일·identity 하네스 전후 해시가 동일하다. 증거: `stage0/development-foundation-p110/{commands.json,result.json,identity.log}`. 기존 cache를 사용한 개발 검증이며 전체 gate·독립 제품 관측 중립성·CORE-off 자기검증 FAIL을 대체하지 않는다. 최종 엄격한 타입0오류·Ruff·셸 문법·diff 및 제한된 docs 검사도 통과했다.
+
+
+### S0-p111 — 원래 workspace 결과와 추가 관측 연결
+
+원래 workspace 실행의154 native 대상·5 doctest 집합을 실제 aggregate 출력과 소스에 묶었다. ASCII6개 검사의8개 세계, knowledge4개와 presentation-default2개 세계를 기존 명령·assertion을 유지한 채 관측한다. 실제 첫 성공 시점이 다른 carrier 비교는 horizon을 바꾸지 않고 미완료로 남긴다. bridge API13·resolver32의 원래 검사도 별도로 연결했으며 모든40 실행 경로는 호출 가능하지만 전체 안전성·관측 중립성 입증은 아직 미완료다.
+
+p110 공개 진입점은 새 관측 파일의 부모 디렉터리가 아직 없다는 이유로 overlay 적용 전에 실패했다. 명시적인 추가 파일에만 없는 부모를 허용하고 기존 symlink·경로 탈출 검사를 유지했다. 실패 제품과 로그를 보존했으며 후속 합동95개 검사는 실제 종료0으로 통과했다. workspace 연결 후 옛 합성 fixture 세 건이 새 입력 계약을 충족하지 못한 실패도 보존하고, 해당 테스트의 독립 seam만 보충한 후94개가 통과했다. 엄격한 타입 검사0오류다.
+
+첫 native 검증은 관측 꺼짐18개 통과 후, 관측 켜짐 appearance에서 이전 sidecar 충돌로 실패했다. 기존 파일의 생성 시점이 이번 실행 이전임을 확인하고, 관측 켜짐 출력만 명시적 외부 실행 디렉터리로 분리했다. 수정 후 Python 관련52개가 실제 종료0으로 통과했다. 새 경로 두 곳의 native 연속 재실행·workspace check/clippy·baseline identity는 실행 중이며, 완료 전에는 성공으로 계산하지 않는다. 원래 실패와 Stage0 CORE-off KnowledgeLost FAIL은 유지한다.
+
+증거: `stage0/development-foundation-p111/{commands.json,result.json,DEBUG_JOURNAL.md}`, 후속 `development-foundation-p111-r2`, `stage0/ordered-dispatch/whole-gate-root-p111-integration-02.log`, `whole-gate-root-overlay-parents-01.log`, `whole-gate-root-p111-isolation-python.log`.
+
+
+p111-r2 실제 native 재실행은 관측 꺼짐18개·켜짐18개 두 회 모두 종료0이었다. workspace 전체 대상 check·clippy·release probe 빌드도 종료0이다. 별도 원본 관측 감사는 각 회19개 완전한 Watch 이력과 renderer2개, 서로 다른 출력 경로를 확인했다. 이 감사는 source/history 검사이며 독립 BASE 중립성 증명이 아니다. 추가 대상 세 파일의 명시적 overlay 허용 목록 누락을 실패3건으로 재현해 고친 뒤 build·workspace·ASCII·knowledge 합동95개가 종료0으로 통과했다. 이후 테스트 형식 정리 후9개도 종료0이었다.
+
+독립 검토를 통과한 관측 중립성 reader/comparator를 선택적 증거 입력으로 연결했다. 원래 제품·동일 파생 제품의 관측 꺼짐·켜짐 세 모드에 대해 실제 build/process 영수증과 원본 산출물을 다시 읽는다. 허용된 timing 키 밖의 state 손실, boolean/integer 혼동, 실행 후 normalizer 변조를 거부한다. O61개·비교 경로51개 중22개 비교기가 구현됐고29개는 미지원으로 남는다. 불완전한 보고서나 일반 gate 성공 로그로 PRODUCT_QUALIFIED가 되지 않는다. 루트41개 검사가 종료0(5.153초)으로 통과했으며 실제 전체 qualification은 NOT_RUN이다. 증거: `whole-gate-root-qualification-v5.log`, `whole-gate-qualification-adoption-v5/ADOPTION_RESULT_V5.md`, `whole-gate-comparator-review-v4/REVIEW.md`.
+
+
+workspace의 파서 전용2개·빈 Phase2/scaffold/수동 tree identity3개 대상, 원래21개 검사에 한정한 소스 분류도 추가했다. 첫 검토에서 직접 factory/FFI 소스 pin 누락을 찾아 보충한 V2가 독립 검토를 통과했다. 해당 다섯 대상만 일반 세계 미완료 목록에서 제외하며 원래 aggregate 검사와 다른 세계·doctest 의무는 유지한다. 루트 통합26개 검사 종료0(0.090초). 증거: `whole-gate-workspace-classification-review/REVIEW_V2.md`, `whole-gate-root-classification-v2.log`. 전체 native workspace 실행·안전성 PASS로 확대하지 않는다.
+
+
+p111-r2의 마지막 baseline identity도 실제 종료0으로 완료됐다. Stage−1 기준 공통228,748값 차이0·한쪽 경로0, chronicle64개/19,683항목 동일, 표준 git_sha·기존0값 제외 후 샘플64개 동일, seeds0–3 결정성 통과다. native 소스·기준 자료·identity 하네스 전후 해시가 동일하고 실행 소유자 종료0·잠금 반환을 확인했다. 실제 검증한 것은 커밋 전 p111 작업 트리이며 출력의 git_sha 라벨은 당시 부모 HEAD8000f5f다. 전체 gate나 별도 제품 중립성 증명은 아니다. 최종 구성 Python74개(5.545초), import 정리 후 qualification38개, 엄격한 타입0오류·Ruff(명시적 public reexport 규칙 제외)·rustfmt·diff·제한된 docs 검사도 통과했다.

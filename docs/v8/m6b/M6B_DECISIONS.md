@@ -159,3 +159,17 @@ KnowledgeLost still means zero full history, including the saved prefix. The pro
 A route is supported for preflight when the original execution path and its collector are callable. That field is not evidence that the actual run passed or that its observers are neutral. Collectors retain explicit INCOMPLETE results, missing native qualification inputs, and complete safety requirements. This permits gathering the required original evidence without claiming it already exists; final publication still requires qualified products and complete successful observations.
 
 For play21, preserve the original six cases and sixteen native children under the existing live owner. Historical builds use their own original worktree target paths; they must not inherit an arm product target directory. HOME is an explicit session input with existing configuration grants, not an ambient fallback. Keep main's original built bridge distinct from the observer product bridge. A failed diagnostic write cannot release an owner whose descendants remain unsettled. Original Git worktrees remain unmodified by observer exports. These constraints do not grant historical observer neutrality or ordinary safety.
+
+
+## D0-original-workspace-accounting — complete target outcomes are not world safety
+
+Retain the original Cargo workspace command and authenticate all154 native targets and five doctest groups from the actual aggregate. Missing, duplicate, unknown or changed outcomes reject. Do not manufacture child waits or independent listings. Completed ASCII, knowledge and presentation-default collectors discharge only their exact source-selected worlds; remaining ordinary routes and doctest coverage stay INCOMPLETE. A carrier test that stops at different actual first-success ticks between products cannot silently normalize its horizons.
+
+The appearance renderer originally used a shared CARGO_TARGET_TMPDIR path even when observation was enabled. A subsequent invocation encountered the preserved prior sidecar and correctly failed create-new. Observer-on rendering now writes below its explicit canonical external invocation root, with an exclusive real-process parent. Default-off output, original commands/assertions and old evidence stay unchanged. Repeat observed runs must have separate invocation evidence, not delete or overwrite prior sidecars.
+
+New observer files may have absent parent directories. Only explicitly declared additions permit missing ancestors during overlay validation; lexical traversal, existing symlink and non-directory ancestors remain rejected. The actual git apply creates those directories. This does not authorize arbitrary output paths or change the product source census.
+
+
+## D0-qualification-recomputed — reports cannot supply their own equality verdict
+
+A separately supplied qualification reference is optional for execution and mandatory for final qualification. Authenticate the original build recipe, complete source/config/tool closure, actual process evidence and exact O postimages, then recompute three-mode artifact equality. An unsupported comparator, missing state witness or missing arm rejects qualification. Treat timing as a closed schema with only explicit measurement exclusions; preserve JSON scalar types. Pin and recheck normalizer source before using it. The current61-file O matrix has22 supported comparisons and29 unavailable routes; these counts are readiness, never execution evidence.

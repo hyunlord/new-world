@@ -47,6 +47,9 @@ OBSERVER_EXACT_PATHS: Final = frozenset({
     'rust/crates/sim-test/tests/steward_defence_migration.rs',
     'rust/crates/sim-test/tests/b5_flora.rs',
     'rust/crates/sim-test/tests/engine_appearance_ffi.rs',
+    'rust/crates/sim-test/tests/engine_ascii.rs',
+    'rust/crates/sim-test/tests/engine_knowledge_ffi.rs',
+    'rust/crates/sim-test/tests/m6b_presentation_defaults.rs',
     'rust/crates/sim-test/tests/save_gate_observation/external.rs',
 })
 
@@ -129,7 +132,7 @@ def overlay_files(spec: BuildSpec) -> dict[str, tuple[str | None, str]]:
         require(re.fullmatch('[0-9a-f]{64}', after) is not None and before != after,
                 name, 'invalid or unchanged overlay postimage')
         row.field('operation').equals('add' if before is None else 'modify')
-        path = safe_path(spec.root, name)
+        path = safe_path(spec.root, name, allow_missing_parents=before is None)
         require((not path.exists() and not path.is_symlink()) if before is None else file_hash(path) == before,
                 name, 'overlay preimage differs')
         if before is not None and not isinstance(before, str):
