@@ -18,6 +18,9 @@ class AsciiIntegrationTests(unittest.TestCase):
             base=Node({'step':step,'arm':'base'});candidate=Node({'step':step,'arm':'candidate'})
             with patch('generic_whole_gate_workspace.evaluate_family', return_value=accounting()), \
                  patch('generic_whole_gate_knowledge_defaults.evaluate_knowledge_defaults', return_value={'safety': [], 'coverage': []}), \
+                 patch('generic_whole_gate_colony_ffi.evaluate_family', return_value={'status': 'PASS', 'safety': [], 'coverage': []}), \
+                 patch('generic_whole_gate_baseline_observer.evaluate_family', return_value={'safety': [], 'coverage': []}), \
+                 patch('generic_whole_gate_twins.evaluate_family', return_value={'safety': [], 'coverage': []}), \
                  patch.object(native,'STEWARD_PINS',{}), patch.dict(native.TARGETS,{step:()}), \
                  patch.object(native,'aggregate_output',return_value=('',1)), \
                  patch('generic_whole_gate_native_probes.evaluate_replays',return_value={'safety':[],'coverage':[]}), \

@@ -769,3 +769,9 @@ original_off renderer 경로에 명시적인 session 경로·해시·arm context
 실제 동결 p111 BASE debug에서 원본 replay 두 테스트는 성공했으나 기대한 네 mirror는 없었다. 직접 만든 ColonyArgs가 parser의 환경 설정 결합을 건너뛰는 것이 원인이었다. colony run 진입부에서 기존의 엄격한 환경 resolver를 적용하고, 설정이 그대로면 원본 인자를 빌리며 false→true일 때만 관측 bit를 바꾼 복사본을 쓴다. 실제 simulation body·명령·seed·horizon과 ASCII의 명시적 plain-off 경로는 보존했다. 잘못된 관측 환경은 직접 호출에서도 I/O 이전에 거부한다.
 
 Python 확대122개 종료0(21.036초), 기존 M1 테스트의 미사용 반환값 두 건 수정 뒤 해당2개 종료0, 변경6개 Python 파일 엄격한 타입0오류·기본 Ruff·rustfmt·diff 통과다. 독립 검토에서 simulation body 동일성과 clone 조건을 확인했다. Rust mechanism 테스트 두 개를 추가했지만 compile·실제 off/on replay·네 mirror 수집·baseline identity는 아직 NOT_RUN이다. 새 O postimage를 source 계약에 반영하고 probe_core를 UNAVAILABLE/NOT_RUN으로 두었으며 과거 중립성 증거를 재사용하지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-root-replay-boundary-{01,02}.log`, `whole-gate-root-replay-boundary-types-{01,02}.log`, `replay-run-boundary-independent-review/FINAL_REVIEW.md`. 실행 중인 p111·준비된 p121 증거는 바꾸지 않았고 Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p128 — 선택된 routing 테스트의 sibling 경계 보완
+
+appearance·ASCII routing fixture 두 파일에서 새로 연결된 colony FFI·baseline·twin 세 sibling만 격리했다. 선택된 collector 호출과 기존 safety/coverage 수, INCOMPLETE·남은 경로 검증은 그대로이며 생산 코드·원본 oracle·gameplay는 바꾸지 않는다. 좁은 세 테스트는 통과했고, 두 파일의 기존 타입 진단31건은 변경 전후 동일하다. 이 fixture를 전체 세계 안전성이나 타입 clean 증거로 사용하지 않는다.
+
+증거: `stage0/ordered-dispatch/p127-python-discovery/routing-fix/RESULT.md`, `p127-python-discovery/routing-independent-review/REVIEW.md`. 원래 p127 discovery의 실패 기록은 유지하며 이 검사로 원래 전체 실행 결과를 대체하지 않는다.
