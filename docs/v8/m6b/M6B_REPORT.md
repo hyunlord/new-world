@@ -584,3 +584,11 @@ V1의 미등록 progress 이름 및 ok 뒤 임의 suffix 허용을 독립 재현
 정확한 BASE0 self_proof 선택, 실제 양쪽 선행 빌드와 원래 paired source closure에서만 정적 소스 계약을 발급한다. 원본 gate blob·변경 없는13개 명령·승인된 effective source를 대조하며 gate를 observer postimage로 바꾸는 것은 거부한다. 기본 현재 gate 검사는 그대로다. 후속 generated 변경 뒤에도 원래 source proof를 유지하고, 계약을 복사하거나 다른 docs predecessor에 붙이는 경로를 거부한다.
 
 소스 receipt 조인 함수는 실행 증명이 아니다. CLI/fullgate 연결에서는 기존 실제 process·입력·oracle·전체 receipt 검사를 계속 요구하며, 이 커밋은 그 연결을 아직 포함하지 않는다. 루트 실제 작은 fixture4개(56.766초), 통합 현재 gate 검사1개, 독립 foreign closure 거부 및 production/test 타입0오류·Ruff·제한된 docs 검사가 통과했다. 작성자 전체89개는88성공과 외부 sibling gate.sh 누락 오류1개로 종료됐고, 정확한 fixture 보충 후 해당1개만 재검사해 통과했다. 이를 깨끗한89개 전체 재실행으로 기록하지 않는다. 실제 BASE0/native·전체 gate와 기존 KnowledgeLost 실패는 미해결이다. 증거: `stage0/ordered-dispatch/base0-static-independent-review/REVIEW.md` SHA256 `30ff264e8f0131eb20a7ba506352a64029b409c02511b6f2547fb8053813bce3`; patch `8d391fb44c72e8440a98a1c3e8f1cc7aaf11beaa4122b9985bdd56bb90433fcf`; `base0-static-root-validation.json`.
+
+### S0-p106 — CLI 원래 smoke9 연결과 BASE0 정적 계약 유지
+
+명시적인 양쪽 setup 선택을 받는 추가 CLI 경로가 BASE bridge/import를 한 번 실행한 뒤 원래 후보1~9 순서를 수행한다. 실제 smoke 자식8회의 spec/result·원래 출력과 소유 FD를 유지한다. V1에서 재현한 terminal 내용·권한·빈 디렉터리 변경 및 마지막 callback의 selector 변경을 V2에서 거부한다. 기존1~8 경로는 유지하며 성공한 prefix도 INCOMPLETE이고10~51은 NOT_RUN이다.
+
+정확한 BASE0 self_proof에서만 p105 소스 계약을 발급하고 단계8 입력 재구성에도 같은 계약을 유지한다. 전체 process·native exit·입력·oracle 검사를 전후 소스 검증과 함께 유지하며 소스 계약을 실행 증명으로 사용하지 않는다. 두 변경의 독립 검토 후 루트에서 합친41개 검사가410.045초·실제 종료0으로 통과했고, production/test 전체 타입0오류·Ruff가 통과했다. 작은 fixture의 실제 프로세스와 명시적인 native/world 검증 대체를 구분한다. 실제 BASE0/Godot/세계 및 전체 gate는 미완료이고 기존 자기검증 FAIL은 그대로다.
+
+증거: `stage0/ordered-dispatch/cli-smoke-static-root-p106-validation.json`; CLI V2 review SHA256 `cc87059a1471385bb3d8ea1cac8f3aa1ca2d06f588e359f487b9522db4131579`; 정적 연결 review `3a45e50457ff743b6bd69aca730009c6bca29f0ee21d5ea0d47e4ee0073fafbb`. 원래 V1 실패와 전체39개 작성자 검사·독립5개 및 정적 연결 독립2개 결과는 별도 보존한다.

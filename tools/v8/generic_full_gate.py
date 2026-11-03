@@ -28,6 +28,7 @@ from typing import Final, Literal, NoReturn, final
 
 import generic_bench_run as bench
 import generic_cli_execute as cli_execute
+import generic_cli_godot_products as cli_godot
 import generic_cli_setup_handoff as cli_handoff
 import generic_core_evaluation as core_evaluation
 import generic_direct_run as direct
@@ -74,6 +75,7 @@ from generic_library_siblings import LibraryStep
 from generic_library_siblings import recipe as library_recipe
 from generic_observations import keys
 from generic_process import (
+    ProcessResult,
     ProcessSpec,
     atomic_json,
     environment_for,
@@ -160,6 +162,7 @@ class Outcome:
     mux2_result: mux2_runtime.DefenceResult | None = None
     mux2_state: tuple[tuple[str,tuple[str,str]], ...] = ()
     setup_evidence: SetupEvidence | None = None
+    smoke_evidence: _SmokePrefixRun | None = None
     setup_state: str = ''
 
 
@@ -519,6 +522,7 @@ class OwnedOrderedInputs(OrderedInputs):
 
 def strict_bindings(context: OwnedOrderedInputs) -> None:
     strict=context.strict;product=strict.product;environment=strict.environment
+    _=static.source_contract_descriptor(product)
     candidate=context.components.godot.candidate
     require(product.root==candidate.input_root and product.source_sha==candidate.source_sha,
             '/strict','prepared candidate source differs')
@@ -923,6 +927,7 @@ def docs_bindings(context: OwnedOrderedInputs) -> DocsContext:
     require(bound is not None,'/docs','explicit owned docs context required')
     assert bound is not None
     product=bound.product;environment=bound.environment;candidate=context.components.probes.candidate
+    _=static.source_contract_descriptor(product)
     require(product.root==candidate.input_root and product.source_sha==candidate.source_sha,'/docs','prepared source differs')
     require(environment.held_lane_fd is None,'/docs','caller cannot supply transient lane ownership')
     names=static.docs_input_names(product.root,environment)
@@ -2446,6 +2451,7 @@ def authenticate_static(path: Path, step: int | None, product: static.StaticProd
               'tool_dependency_closure','errors','finished_at'}
     optional={'source_before','inputs_before','refs_before','tool_bindings','prior_receipts','native_exit','pid',
               'process_receipt','process_receipt_sha256','source_end','inputs_end','refs_end'}
+    if product.source_contract is not None:optional.add('source_contract')
     if step == 14:optional.update({'reviewed_world_scope','reviewed_initial_state_mutations','current_product_world_scope','build_provenance','docs_before','docs_end'})
     if step == 16:optional.add('unittest')
     require(required <= node.mapping().keys() <= required|optional,'/static','terminal schema differs')
@@ -2453,6 +2459,7 @@ def authenticate_static(path: Path, step: int | None, product: static.StaticProd
                         ('source_sha',product.source_sha),('scope','COMPONENT_ONLY'),('original_order_executed',False),
                         ('full_gate_complete',False),('source_admission_granted',False)):
         node.field(field).equals(value)
+    static.authenticate_source_receipt(product,node)
     node.field('source_invocation').equals(list(static.COMMANDS[step][1]))
     state=node.field('status').text();require(state in {'PASS','FAIL'},'/status','invalid static status')
     _=node.field('errors').array()
@@ -2478,9 +2485,10 @@ def authenticate_static(path: Path, step: int | None, product: static.StaticProd
         if step in (8,14,46) and state=='PASS':
             for field in ('inputs_before','inputs_end'):node.field(field).equals(dict(product.inputs))
             node.field('source_end').equals(node.field('source_before').value)
-            node.field('source_before').field('source_sha').equals(product.source_sha)
-            node.field('source_before').field('root').equals(str(product.root))
-            node.field('source_before').field('source_clean').equals(True)
+            if product.source_contract is None:
+                node.field('source_before').field('source_sha').equals(product.source_sha)
+                node.field('source_before').field('root').equals(str(product.root))
+                node.field('source_before').field('source_clean').equals(True)
             node.field('refs_end').equals(node.field('refs_before').value)
             node.field('tool_bindings').equals({name:{'path':str(entry),'sha256':digest} for name,entry,digest in environment.tools})
         if step == 16:discovery_terminal(path, node, product, environment)
@@ -2491,6 +2499,7 @@ def authenticate_static(path: Path, step: int | None, product: static.StaticProd
                 if step in (8,46):static.strict_terminal(stdout,(path.parent/'process/stderr.log').read_text(),len(static.strict_files(product.root,step)))
                 elif step==14:static.docs_terminal(stdout)
                 else:static.diagnosis_terminal(stdout)
+    static.authenticate_source_receipt(product,node)
     static.verify_receipt(path,initial_digest)
     return state
 
@@ -2627,7 +2636,8 @@ def ordered_bindings(context: OrderedInputs) -> None:
         require(file_hash(product.executable)==product.executable_sha256 and
                 inventory(product.input_root,[name for name,_ in product.input_files])==dict(product.input_files),'/inputs','product drift')
     for step in (1,7,13,15,16,20,22,31,33,51):
-        _, environment = static_context(context, step)
+        product, environment = static_context(context, step)
+        _=static.source_contract_descriptor(product)
         _ = static.validate_environment(environment, step)
     for step in (1,16,51):
         product, environment = static_context(context, step)
@@ -2991,8 +3001,8 @@ def _run_ordered(context: OrderedInputs, output: Path) -> Path:
 
 def prefix_container(step: int, root: Path) -> workspace_endpoints.EvidenceAnchor:
     """Close a completed original step's container before admitting its history."""
-    children: set[str] = {'static'} if step in (1,7,8) else set() if step==2 else {'workspace-preparation','setup'} if step in (4,5) else {'setup'}
-    require(step in range(1,9) and {path.name for path in root.iterdir()}==children,
+    children: set[str] = {'smoke'} if step==9 else {'static'} if step in (1,7,8) else set() if step==2 else {'workspace-preparation','setup'} if step in (4,5) else {'setup'}
+    require(step in range(1,10) and {path.name for path in root.iterdir()}==children,
             '/prefix/container','unexpected completed step membership')
     require(all(stat.S_ISDIR((root/name).lstat().st_mode) for name in children),
             '/prefix/container','component root kind changed')
@@ -3035,9 +3045,93 @@ def _prefix_static(step: Literal[1,7,8], product: static.StaticProduct,
         if owner is not None and (not entered or settled):os.close(owner.descriptor)
 
 
+class _SmokePrefixRun:
+    """Retain actual calls and immutable raw endpoints before smoke validators."""
+    def __init__(self, products: cli_godot.GodotProducts, owner: _StrictOwner) -> None:
+        self.products: cli_godot.GodotProducts=products
+        self.owner: _StrictOwner=owner
+        self.active: ProcessSpec | None=None
+        self.calls: list[tuple[ProcessSpec,ProcessResult,workspace_endpoints.EvidenceAnchor]]=[]
+        self.root_mode: int | None=None
+        self.component: ComponentResult | None=None
+        self.terminal: workspace_endpoints.EvidenceAnchor | None=None
+
+    def namespace(self) -> None:
+        root=self.owner.output
+        if root.exists():
+            if self.root_mode is None:
+                require(not self.calls and not tuple(root.iterdir()),'/smoke','initial output must be empty')
+                self.root_mode=root.lstat().st_mode
+            expected={spec.output_root.name for spec,_result,_evidence in self.calls}
+            if self.component is not None:expected.add('smoke.json')
+            require(root.lstat().st_mode==self.root_mode and {p.name for p in root.iterdir()}==expected,
+                    '/smoke','unscheduled pair output or changed root mode')
+
+    def check(self) -> None:
+        self.namespace()
+        for _spec,_result,evidence in self.calls:evidence.recheck()
+        cli_godot.check_godot_products(self.products)
+        for _spec,_result,evidence in self.calls:evidence.recheck()
+        if self.terminal is not None:self.terminal.recheck()
+        self.namespace()
+
+    def before(self, spec: ProcessSpec) -> None:
+        require(self.active is None,'/smoke','previous invocation has not returned')
+        self.check()
+        self.active=spec
+
+    def retain(self, spec: ProcessSpec, result: ProcessResult) -> None:
+        require(self.active is spec,'/smoke','foreign returned invocation')
+        # First operation on a returned child is the raw file/kind/mode anchor.
+        evidence=workspace_endpoints.anchor(spec.output_root)
+        self.calls.append((spec,result,evidence))
+        if result.native_exit is None or result.native_exit<0 or result.pid is None:
+            self.owner.hold(RuntimeError('smoke child returned without normal wait qualification'))
+        raw=document(result.receipt.read_text())
+        if raw.field('timed_out').value is not False:
+            self.owner.hold(RuntimeError('smoke timeout does not establish descendant settlement'))
+        self.active=None
+        self.check()
+
+
+def _prefix_smoke(products: cli_godot.GodotProducts, output: Path,
+                  control_fd: int) -> tuple[Outcome,workspace_endpoints.EvidenceAnchor]:
+    owner=_StrictOwner(control_fd,output)
+    run=_SmokePrefixRun(products,owner)
+    try:
+        result=smoke.run_pair(products.products,output,before=run.before,retain=run.retain)
+        retained=workspace_endpoints.anchor(output)
+        run.component=result;run.terminal=retained
+        container=prefix_container(9,output.parent)
+        run.check();container.recheck()
+        require(result.receipt==output/'smoke.json' and document(result.receipt.read_text()).field('status').text()==result.status,
+                '/smoke','actual returned component receipt differs')
+        run.check();container.recheck()
+        return Outcome('smoke','COMPONENT_PASS' if result.status=='PASS' else 'FAIL',result.receipt,
+                       file_hash(result.receipt),'',setup_files(retained.state),output,result.status,result.status,
+                       smoke_evidence=run),retained
+    except BaseException as error:
+        if run.active is not None:owner.hold(error)
+        raise
+    finally:
+        if run.active is None:os.close(owner.descriptor)
+
+
+@dataclass(slots=True)
+class _SmokePrefixState:
+    """Private continuation retains the actual step6 join for final CLI rechecks."""
+    base: cli_godot.BaseGodotReady
+    runtime: cli_godot.GodotProducts | None=None
+
+    def check(self) -> None:
+        if self.runtime is None:cli_godot.check_base_current(self.base)
+        else:cli_godot.check_godot_products(self.runtime)
+
+
 def _run_setup_prefix(context: SetupPrefixContext, handoff: cli_handoff.SetupProductHandoff,
                       product: static.StaticProduct, environment: static.ExecutionEnvironment,
-                      strict: static.ExecutionEnvironment, output: Path, control_fd: int, selectors: cli_execute.PrefixDocument) -> Path:
+                      strict: static.ExecutionEnvironment, output: Path, control_fd: int, selectors: cli_execute.PrefixDocument,
+                      paired: _SmokePrefixState | None = None) -> Path:
     """Private closed CLI continuation; no eager future runtime product placeholders."""
     require(type(control_fd) is int and control_fd>2 and stat.S_ISFIFO(os.fstat(control_fd).st_mode),
             '/control','dedicated persistent controller pipe required')
@@ -3045,16 +3139,22 @@ def _run_setup_prefix(context: SetupPrefixContext, handoff: cli_handoff.SetupPro
             and product.source_sha==context.candidate_sha,'/prefix','source-owned construction differs')
     require(output.is_absolute() and output==output.resolve() and not output.exists(),'/output','fresh prefix output required')
     require(not environment.prior_receipts and not strict.prior_receipts,'/prior','prefix starts without imported result authority')
+    base_ready=paired.base if paired is not None else None
     bound=setup_bindings(context)
     require(context.candidate_inputs==handoff.products.probes.candidate.input_files
             and product.inputs==context.candidate_inputs,'/prefix','source projection differs')
-    handoff=cli_handoff.begin_setup_handoff(handoff.products,bound.prepared)
+    if base_ready is None:
+        handoff=cli_handoff.begin_setup_handoff(handoff.products,bound.prepared)
+    else:
+        require(base_ready.setup.candidate is handoff,'/prefix','original paired candidate handoff required')
+        cli_godot.check_base_current(base_ready)
+    limit=9 if base_ready is not None else 8
     dependencies=setup_dependencies(bound)
     output.mkdir(parents=True)
     root_mode=output.lstat().st_mode
     plan=output/'plan.json'
     _=cli_execute.publish(plan,{'schema':'closed_setup_prefix.v1','original_step_order':list(ORDER),
-        'supported_prefix':list(range(1,9)),'source_sha':context.candidate_sha,
+        'supported_prefix':list(range(1,limit+1)),'source_sha':context.candidate_sha,
         'selectors':str(selectors.path),'selectors_sha256':selectors.sha256,
         'setup_dependencies':dependencies,'publication_authorized':False,
         'obligations':[{'identity':row.identity,'step':row.step,'fixture':row.fixture} for row in obligations()]})
@@ -3062,6 +3162,7 @@ def _run_setup_prefix(context: SetupPrefixContext, handoff: cli_handoff.SetupPro
     rows: dict[int,Outcome]={};anchors: list[workspace_endpoints.EvidenceAnchor]=[]
     static_rows: list[tuple[int,Outcome,static.StaticProduct,static.ExecutionEnvironment]]=[]
     owner: SetupOwner | None=None;runtime: cli_handoff.RuntimeProducts | None=None
+    godot_runtime: cli_godot.GodotProducts | None=None
     errors: list[str]=[];stage_path: Path | None=None;stage_hash: str | None=None
     scheduled: list[int]=[];step_modes: dict[int,int]={};terminal_written=False
     def check_history() -> None:
@@ -3073,11 +3174,15 @@ def _run_setup_prefix(context: SetupPrefixContext, handoff: cli_handoff.SetupPro
         for step,mode in step_modes.items():
             require((output/f'step-{step:02d}').lstat().st_mode==mode,'/prefix/container','step container mode changed')
         for retained in anchors:retained.recheck()
-        for row in rows.values():recheck_setup(context,row)
+        for row in rows.values():
+            recheck_setup(context,row)
+            if row.smoke_evidence is not None:row.smoke_evidence.check()
         for step,row,source,selected in static_rows:
             assert row.receipt is not None
             require(authenticate_static(row.receipt,step,source,selected)==row.reported_status,'/static','historical outcome differs')
         if runtime is not None:cli_handoff.check_runtime_current(runtime)
+        if godot_runtime is not None:cli_godot.check_godot_products(godot_runtime)
+        elif base_ready is not None:cli_godot.check_base_current(base_ready)
         # Recheck after all semantic callbacks, before the next producer or publication.
         for step,mode in step_modes.items():
             require((output/f'step-{step:02d}').lstat().st_mode==mode,'/prefix/container','step container mode changed')
@@ -3085,8 +3190,9 @@ def _run_setup_prefix(context: SetupPrefixContext, handoff: cli_handoff.SetupPro
         require(file_hash(plan)==plan_sha,'/plan','immutable plan changed')
         if stage_path is not None:require(file_hash(stage_path)==stage_hash,'/stage','retained runtime stage changed')
         prefix_membership(output,tuple(scheduled),stage_path is not None,terminal_written,root_mode)
+        require(file_hash(selectors.path)==selectors.sha256,'/spec','selector changed after final prefix callbacks')
     try:
-        for step in range(1,9):
+        for step in range(1,limit+1):
             check_history()
             destination=output/f'step-{step:02d}';destination.mkdir();scheduled.append(step);step_modes[step]=destination.lstat().st_mode
             if 2<=step<=6:
@@ -3098,14 +3204,27 @@ def _run_setup_prefix(context: SetupPrefixContext, handoff: cli_handoff.SetupPro
                     require(evidence is not None and isinstance(evidence.endpoint,setup_clippy.ClippyEndpoint),
                             '/handoff','actual completed step6 endpoint required')
                     assert evidence is not None and isinstance(evidence.endpoint,setup_clippy.ClippyEndpoint)
-                    runtime=cli_handoff.finish_setup_handoff(handoff,evidence.endpoint)
+                    if base_ready is None:
+                        runtime=cli_handoff.finish_setup_handoff(handoff,evidence.endpoint)
+                        runtime_inputs=runtime.runtime_inputs
+                    else:
+                        godot_runtime=cli_godot.finish_godot_products(base_ready,evidence.endpoint)
+                        assert paired is not None
+                        paired.runtime=godot_runtime
+                        runtime_inputs=(godot_runtime.products.base.input_files,godot_runtime.products.candidate.input_files)
                     stage_path=output/'stage-06.json'
-                    _= cli_execute.publish(stage_path,{'schema':'closed_setup_runtime.v1','endpoint_sha256':runtime.endpoint.receipt_sha256,
-                        'runtime_inputs':{'base':dict(runtime.runtime_inputs[0]),'candidate':dict(runtime.runtime_inputs[1])},
+                    _=cli_execute.publish(stage_path,{'schema':'closed_setup_runtime.v1','endpoint_sha256':evidence.endpoint.receipt_sha256,
+                        'runtime_inputs':{'base':dict(runtime_inputs[0]),'candidate':dict(runtime_inputs[1])},
                         'runtime_qualification':'NOT_RUN','publication_authorized':False})
                     stage_hash=file_hash(stage_path)
-                    cli_handoff.check_runtime_current(runtime)
+                    if runtime is not None:cli_handoff.check_runtime_current(runtime)
+                    if godot_runtime is not None:cli_godot.check_godot_products(godot_runtime)
                     require(file_hash(stage_path)==stage_hash,'/stage','runtime stage changed')
+            elif step==9:
+                require(godot_runtime is not None,'/smoke','actual paired step6 endpoint required')
+                assert godot_runtime is not None
+                row,retained=_prefix_smoke(godot_runtime,destination/'smoke',control_fd)
+                rows[step]=row;anchors.append(retained)
             else:
                 require(step in (1,7,8),'/step','unsupported prefix call')
                 phase: Literal[1,7,8]=1 if step==1 else 7 if step==7 else 8
@@ -3114,12 +3233,13 @@ def _run_setup_prefix(context: SetupPrefixContext, handoff: cli_handoff.SetupPro
                 selected=replace(strict if step==8 else environment,prior_receipts=priors)
                 source=product
                 if step==8:
-                    require(runtime is not None,'/strict','actual step6 handoff required')
-                    assert runtime is not None
-                    cli_handoff.check_runtime_current(runtime)
-                    source=static.StaticProduct(product.root,product.source_sha,
+                    require(runtime is not None or godot_runtime is not None,'/strict','actual step6 handoff required')
+                    if runtime is not None:cli_handoff.check_runtime_current(runtime)
+                    if godot_runtime is not None:cli_godot.check_godot_products(godot_runtime)
+                    source=replace(product,inputs=
                         tuple(sorted(inventory(product.root,static.strict_input_names(product.root)).items())))
-                    cli_handoff.check_runtime_current(runtime)
+                    if runtime is not None:cli_handoff.check_runtime_current(runtime)
+                    if godot_runtime is not None:cli_godot.check_godot_products(godot_runtime)
                 row,retained=_prefix_static(phase,source,selected,destination/'static',control_fd)
                 rows[step]=row;anchors.append(retained);static_rows.append((step,row,source,selected))
             require(destination.lstat().st_mode==step_modes[step],'/prefix/container','step container mode changed')
@@ -3136,7 +3256,7 @@ def _run_setup_prefix(context: SetupPrefixContext, handoff: cli_handoff.SetupPro
     try:check_history()
     except (AuditError,GateContractError,OSError,ValueError,RuntimeError) as failure:errors.append(safe_docs_exception(failure))
     terminal=output/'setup-prefix.json'
-    payload: dict[str,Json]={'schema':'closed_setup_prefix_result.v1',
+    payload: dict[str,Json]={'schema':'closed_smoke_prefix_result.v1' if base_ready is not None else 'closed_setup_prefix_result.v1',
         'status':'FAIL' if errors or any(row.status=='FAIL' for row in rows.values()) else 'INCOMPLETE',
         'publication_authorized':False,'full_gate_claim':False,'original_order_executed':False,
         'plan_sha256':plan_sha,'stage06':str(stage_path) if stage_path else None,'errors':list(errors),
@@ -3149,9 +3269,10 @@ def _run_setup_prefix(context: SetupPrefixContext, handoff: cli_handoff.SetupPro
     return terminal
 
 
-def execute_setup_prefix(spec_path: Path) -> Path:
+def execute_setup_prefix(spec_path: Path, *, smoke_prefix: bool=False) -> Path:
     selected=cli_execute.read_spec(spec_path)
     spec=selected.spec
+    require((spec.base_setup is not None)==smoke_prefix,'/mode','selector schema and execution mode differ')
     require(spec.control_fd>2 and stat.S_ISFIFO(os.fstat(spec.control_fd).st_mode),'/control','persistent controller pipe required')
     initializer=cli_execute.InitializationOwner()
     owner=_StrictOwner(spec.control_fd,spec.output/'antecedent')
@@ -3171,31 +3292,55 @@ def execute_setup_prefix(spec_path: Path) -> Path:
             return terminal
     finally:
         if not initializer.in_flight:os.close(owner.descriptor)
-    cli_execute.check_spec(selected)
-    def factory(step: Literal[4,5], chain: workspace_endpoints.WorkspaceChain,
-                output: Path, preparation: Path, descriptor: int) -> workspace_endpoints.WorkspaceRequest:
+    base_ready: cli_godot.BaseGodotReady | None=None
+    auxiliary: _StrictOwner | None=None
+    if prepared.godot_setup is not None:
+        require(spec.base_setup is not None,'/base','explicit auxiliary selectors required')
+        assert spec.base_setup is not None
+        auxiliary=_StrictOwner(spec.control_fd,spec.output/'base-auxiliary')
+        try:
+            base_wait=setup_bridge.CargoWaitEvidence(spec.base_setup.cargo_wait_sources,
+                                                     prepared.wait.cargo_version,prepared.wait.rustc_version)
+            base_ready=cli_godot.run_base_setup_owned(prepared.godot_setup,base_wait,
+                                                    spec.output/'base-imports',auxiliary.descriptor)
+        except cli_godot.BaseSetupFailure as error:
+            auxiliary.hold(error)
+        else:
+            # Settled history still validates this original descriptor's inode.
+            # Release only the lock; keep the exact FD alive until all history checks finish.
+            fcntl.flock(auxiliary.descriptor,fcntl.LOCK_UN)
+    try:
         cli_execute.check_spec(selected)
-        request=cli_execute.workspace_request(prepared,step,chain,output,preparation,descriptor)
+        def factory(step: Literal[4,5], chain: workspace_endpoints.WorkspaceChain,
+                    output: Path, preparation: Path, descriptor: int) -> workspace_endpoints.WorkspaceRequest:
+            cli_execute.check_spec(selected)
+            request=cli_execute.workspace_request(prepared,step,chain,output,preparation,descriptor)
+            cli_execute.check_spec(selected)
+            return request
+        setup=SetupContext(prepared.handoff.prepared,prepared.wait,prepared.clippy_wait,factory)
+        godot=next(tool for tool in spec.setup.tools if tool.name=='godot')
+        context=SetupPrefixContext(setup,spec.selectors.candidate.root,spec.selectors.candidate.source_sha,
+                                   prepared.products.probes.candidate.input_files,godot.path,godot.sha256)
+        paired=_SmokePrefixState(base_ready) if base_ready is not None else None
+        result=_run_setup_prefix(context,prepared.handoff,prepared.static_product,spec.static,
+            spec.strict,spec.output/'ordered',spec.control_fd,selected,paired)
+        returned=workspace_endpoints.anchor(spec.output/'ordered')
         cli_execute.check_spec(selected)
-        return request
-    setup=SetupContext(prepared.handoff.prepared,prepared.wait,prepared.clippy_wait,factory)
-    godot=next(tool for tool in spec.setup.tools if tool.name=='godot')
-    context=SetupPrefixContext(setup,spec.selectors.candidate.root,spec.selectors.candidate.source_sha,
-                               prepared.products.probes.candidate.input_files,godot.path,godot.sha256)
-    result=_run_setup_prefix(context,prepared.handoff,prepared.static_product,spec.static,
-        spec.strict,spec.output/'ordered',spec.control_fd,selected)
-    returned=workspace_endpoints.anchor(spec.output/'ordered')
-    cli_execute.check_spec(selected)
-    returned.recheck()
-    return result
+        if paired is not None:paired.check()
+        require(file_hash(selected.path)==selected.sha256,
+                '/spec','selector changed after final paired callback')
+        returned.recheck()
+        return result
+    finally:
+        if auxiliary is not None:os.close(auxiliary.descriptor)
 
 
 def main(argv: tuple[str,...]) -> int:
     require(len(argv)==2,'/argv','expected one closed mode and absolute path')
-    if argv[0]=='--execute-setup-prefix':
-        result=execute_setup_prefix(Path(argv[1]))
+    if argv[0] in ('--execute-setup-prefix','--execute-smoke-prefix'):
+        result=execute_setup_prefix(Path(argv[1]),smoke_prefix=argv[0]=='--execute-smoke-prefix')
         return 1 if document(result.read_text()).field('status').text()=='FAIL' else 2
-    require(argv[0]=='--plan','/argv','only --plan or --execute-setup-prefix supported')
+    require(argv[0]=='--plan','/argv','only --plan, --execute-setup-prefix or --execute-smoke-prefix supported')
     _=write_plan(Path(argv[1]))
     return 2
 

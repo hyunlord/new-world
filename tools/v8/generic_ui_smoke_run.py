@@ -6,6 +6,8 @@ Companions qualify native history only, never the original label oracle.
 import hashlib
 import json
 import re
+import stat
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Final
@@ -21,7 +23,8 @@ from generic_ui_history import UIEvidence
 from generic_ui_observations import require_fresh_history
 from generic_ui_receipts import CheckpointPlan, InstancePlan, UIPlan, validate_ui
 from generic_ui_visibility_run import freeze
-from mux2_gate_inputs import BRIDGE, Node
+from generic_workspace_endpoints import EvidenceAnchor, anchor, encoded
+from mux2_gate_inputs import BRIDGE, Json, Node
 
 HELPER: Final = 'res://tools/v8/gate_ui_observer.gd'
 SCRIPTS: Final = {'smoke.boot':'res://scripts/core/main_bootstrap.gd',
@@ -135,7 +138,14 @@ def oracle(boot: SmokeEvidence, labels: SmokeEvidence) -> dict[str,int]:
     return counts
 
 
-def run_pair(products: Products, output: Path) -> ComponentResult:
+class UnreturnedInvocation(RuntimeError):
+    """The enclosing owner must retain its actual in-flight child and lane."""
+
+
+def run_pair(products: Products, output: Path, *,
+             before: Callable[[ProcessSpec],None] | None = None,
+             retain: Callable[[ProcessSpec,ProcessResult],None] | None = None) -> ComponentResult:
+    require((before is None)==(retain is None),'/owner','both lifecycle hooks required')
     require(output.is_absolute() and output==output.resolve() and not output.exists(),'/output','fresh canonical output required')
     roots=(products.base.input_root,products.candidate.input_root)
     require(all(r==r.resolve(strict=True) and not output.is_relative_to(r) and not r.is_relative_to(output) for r in roots),'/output','input/output overlap')
@@ -143,11 +153,22 @@ def run_pair(products: Products, output: Path) -> ComponentResult:
     require(products.base.executable_sha256==products.candidate.executable_sha256,'/products','different Godot binaries')
     for product in (products.base,products.candidate):check_product(product)
     output.mkdir()
+    output_mode=output.lstat().st_mode
     frozen: dict[Path,dict[str,str]]={};errors: list[str]=[]
     originals: dict[tuple[str,str],SmokeEvidence]={};counts: dict[str,dict[str,int]]={}
     links: list[dict[str,str|int]]=[]
     def run(product: ProbeProduct, producer: str, folder: Path, original: UIEvidence | None = None) -> SmokeEvidence:
-        spec=process_spec(product,producer,folder,original);result=execute(spec)
+        spec=process_spec(product,producer,folder,original)
+        if before is not None:
+            try:before(spec)
+            except BaseException as error:raise RuntimeError('smoke prelaunch admission failed') from error
+        try:result=execute(spec)
+        except BaseException as error:
+            if retain is not None:raise UnreturnedInvocation('owned smoke invocation did not return') from error
+            raise
+        if retain is not None:
+            try:retain(spec,result)
+            except BaseException as error:raise RuntimeError('smoke returned-child admission failed') from error
         freeze(folder,frozen)
         return inspect(spec,result,producer,original)
     for arm,product in (('base',products.base),('candidate',products.candidate)):
@@ -180,9 +201,19 @@ def run_pair(products: Products, output: Path) -> ComponentResult:
         try:check_product(product)
         except (GateContractError,OSError) as error:errors.append(str(error))
     status='FAIL' if errors else 'PASS';receipt=output/'smoke.json'
-    atomic_json(receipt,{'schema_version':1,'status':status,'errors':[e for e in errors],'counts':{arm:{k:v for k,v in values.items()} for arm,values in counts.items()},'matched_companions':[{k:v for k,v in link.items()} for link in links],
+    payload: dict[str,Json]={'schema_version':1,'status':status,'errors':[e for e in errors],'counts':{arm:{k:v for k,v in values.items()} for arm,values in counts.items()},'matched_companions':[{k:v for k,v in link.items()} for link in links],
         'originals':[{'arm':arm,'kind':kind,'sidecar':str(e.evidence.sidecar),'sha256':e.evidence.sidecar_sha256,
                       'actual_tick':e.state.terminal_tick} for (arm,kind),e in originals.items()],
         'artifacts':{str(folder):{k:v for k,v in hashes.items()} for folder,hashes in frozen.items()},
-        'build_provenance':'caller_owned_not_certified_here','full_gate_claim':False})
+        'build_provenance':'caller_owned_not_certified_here','full_gate_claim':False}
+    require(output.lstat().st_mode==output_mode,'/publication','original pair root mode changed')
+    previous=document(anchor(output).state).mapping()
+    require(receipt.name not in previous,'/publication','fresh terminal required')
+    raw=json.dumps(payload,indent=2,sort_keys=True,allow_nan=False)+'\n'
+    expected: dict[str,Json]={**previous,receipt.name:{
+        'mode':stat.S_IFREG|(stat.S_IMODE(output_mode)&0o666),
+        'sha256':hashlib.sha256(raw.encode()).hexdigest()}}
+    # Authenticate the intended terminal and all existing members, never newly observed callback bytes.
+    atomic_json(receipt,payload)
+    EvidenceAnchor(output,encoded(expected)).recheck()
     return ComponentResult(receipt,status)

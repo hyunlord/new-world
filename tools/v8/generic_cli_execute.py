@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
+import generic_cli_godot_products as cli_godot
 import generic_cli_prepare as cli_prepare
 import generic_cli_products as cli_products
 import generic_cli_setup_handoff as cli_handoff
@@ -66,6 +67,7 @@ class PrefixSpec:
     static: ExecutionEnvironment
     strict: ExecutionEnvironment
     rustdoc: Tool
+    base_setup: SetupSelectors | None = None
 
 
 def fields(node: Node, expected: set[str]) -> None:
@@ -128,8 +130,11 @@ def environment(node: Node) -> ExecutionEnvironment:
 
 
 def parse_spec(node: Node) -> PrefixSpec:
-    fields(node,{'schema','output','control_fd','selectors','setup','static','strict','rustdoc'})
-    node.field('schema').equals('cli_setup_prefix.v1')
+    schema=node.field('schema').text()
+    require(schema in {'cli_setup_prefix.v1','cli_smoke_prefix.v1'},'/schema','unsupported closed prefix')
+    keys={'schema','output','control_fd','selectors','setup','static','strict','rustdoc'}
+    if schema=='cli_smoke_prefix.v1':keys.add('base_setup')
+    fields(node,keys)
     output=path(node.field('output'));control=integer(node.field('control_fd'))
     require(control>=0,'/control_fd','actual controller descriptor required')
     selected=node.field('selectors')
@@ -147,17 +152,22 @@ def parse_spec(node: Node) -> PrefixSpec:
     selectors=CliSelectors(path(selected.field('harness_root')),digest(selected.field('harness_sha'),40),
         digest(selected.field('published_sha'),40),closed_purpose,arm(selected.field('base')),arm(selected.field('candidate')),
         cargo.path,cargo.sha256,rustc.path,rustc.sha256,output/'antecedents')
-    setup=node.field('setup')
+    prepared=setup_selector(node.field('setup'),cargo,rustc)
+    base=setup_selector(node.field('base_setup'),cargo,rustc) if schema=='cli_smoke_prefix.v1' else None
+    require(base is None or base.tools==prepared.tools,'/base_setup','both arms require exact same selected tools')
+    rustdoc=tool(node.field('rustdoc'));require(rustdoc.name=='rustdoc','/rustdoc','wrong tool name')
+    return PrefixSpec(output,control,selectors,prepared,environment(node.field('static')),environment(node.field('strict')),rustdoc,base)
+
+
+def setup_selector(setup: Node, cargo: Tool, rustc: Tool) -> SetupSelectors:
     fields(setup,{'tools','environment','lock_origin','lock_origin_sha256','cargo_wait_sources','clippy_wait_sources'})
     tools=tuple(tool(row) for row in setup.field('tools').array())
     require(len(tools)==len(TOOLS) and frozenset(t.name for t in tools)==TOOLS,'/setup/tools','exact setup tools required')
     require(next(t for t in tools if t.name=='cargo')==cargo and next(t for t in tools if t.name=='rustc')==rustc,
             '/setup/tools','compiler selection differs')
-    prepared=SetupSelectors(tools,pairs(setup.field('environment')),path(setup.field('lock_origin')),
+    return SetupSelectors(tools,pairs(setup.field('environment')),path(setup.field('lock_origin')),
         digest(setup.field('lock_origin_sha256')),tuple(path(row) for row in setup.field('cargo_wait_sources').array()),
         tuple(path(row) for row in setup.field('clippy_wait_sources').array()))
-    rustdoc=tool(node.field('rustdoc'));require(rustdoc.name=='rustdoc','/rustdoc','wrong tool name')
-    return PrefixSpec(output,control,selectors,prepared,environment(node.field('static')),environment(node.field('strict')),rustdoc)
 
 
 @dataclass(frozen=True, slots=True)
@@ -173,6 +183,7 @@ class PrefixPrepared:
     temporary_root: Path
     version_anchor: EvidenceAnchor
     temporary_identity: tuple[int,int,int,int]
+    godot_setup: cli_godot.GodotSetup | None = None
 
 
 @dataclass(slots=True)
@@ -230,7 +241,24 @@ def initialize(spec: PrefixSpec, owner: InitializationOwner) -> PrefixPrepared:
         setup.tools,setup.environment,setup_source_inputs(products.sources[1]),candidate.configs,
         setup.lock_origin,setup.lock_origin_sha256,spec.output/'settings',spec.output/'bridge')
     prepared=setup_prepare.prepare_warm(inputs,builds.candidate)
-    handoff=cli_handoff.begin_setup_handoff(products,prepared)
+    paired: cli_godot.GodotSetup | None=None
+    if spec.base_setup is None:
+        handoff=cli_handoff.begin_setup_handoff(products,prepared)
+    else:
+        base_setup=spec.base_setup;base=spec.selectors.base
+        base_inputs=setup_prepare.SetupInputs(base.root,base.source_sha,base.cargo_home,
+            base_setup.tools,base_setup.environment,setup_source_inputs(products.sources[0]),base.configs,
+            base_setup.lock_origin,base_setup.lock_origin_sha256,spec.output/'base-settings',spec.output/'base-bridge')
+        base_prepared=setup_prepare.prepare_warm(base_inputs,builds.base)
+        paired=cli_godot.begin_godot_setup(products,base_prepared,prepared)
+        handoff=paired.candidate
+    source_contract: static.Base0StaticSource | None = None
+    if (spec.selectors.purpose == 'self_proof'
+            and spec.selectors.published_sha == static.BASE0_SHA
+            and spec.selectors.base.source_sha == static.BASE0_SHA
+            and spec.selectors.candidate.source_sha == static.BASE0_SHA):
+        closure = paired.closure if paired is not None else cli_prepare.paired_setup_source_closure(builds)
+        source_contract = static.base0_static_source(builds,prepared,closure)
     versions: list[ListingProcess]=[]
     for name in ('cargo','rustc'):
         selected=next(t for t in setup.tools if t.name==name)
@@ -246,7 +274,7 @@ def initialize(spec: PrefixSpec, owner: InitializationOwner) -> PrefixPrepared:
     clippy=setup_clippy.ClippyWaitEvidence(wait,setup.clippy_wait_sources)
     _=setup_bridge.qualify_wait(prepared,wait)
     _=setup_clippy.qualify_clippy(prepared,clippy)
-    product=static.StaticProduct(candidate.root,candidate.source_sha,products.probes.candidate.input_files)
+    product=static.StaticProduct(candidate.root,candidate.source_sha,products.probes.candidate.input_files,source_contract)
     version_spec=ProcessSpec((str(spec.rustdoc.path),'--version','--verbose'),candidate.root,
         spec.rustdoc.path,spec.rustdoc.sha256,candidate.root,prepared.materialized,spec.output/'rustdoc-version',setup.environment,
         external_inputs=prepared.external)
@@ -265,7 +293,7 @@ def initialize(spec: PrefixSpec, owner: InitializationOwner) -> PrefixPrepared:
     cli_products.recheck_products(products)
     for policy in policies:_=workspace_policy.recheck_policy(policy)
     version_anchor.recheck()
-    return PrefixPrepared(spec,products,handoff,wait,clippy,product,policies,version,temporary,version_anchor,temporary_identity)
+    return PrefixPrepared(spec,products,handoff,wait,clippy,product,policies,version,temporary,version_anchor,temporary_identity,paired)
 
 
 @dataclass(frozen=True, slots=True)
