@@ -772,3 +772,134 @@ def recheck_workspace_source(proof: WorkspaceSourceProof) -> None:
     require((proof.baseline_json, proof.effective_json, proof.effective_inputs, proof.source_kind) == _source_fields(anchor),
             '/pair/source', 'source proof fields differ from actual retained producer')
     anchor.check_source()
+
+
+@dataclass(frozen=True, slots=True)
+class NormalProduct:
+    package: str
+    package_id: str
+    name: str
+    source: Path
+    manifest: Path
+    source_sha: str
+    profile: Literal['debug', 'release']
+    binary: Path
+    sha256: str
+    metadata_sha256: str
+    compiler_stream_sha256: str
+    compiler_line: int
+    compiler_line_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class _NormalAnchor:
+    pair: WorkspaceBuildPair
+    profile: Literal['debug', 'release']
+    names: tuple[tuple[str, str], ...]
+    products: tuple[NormalProduct, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class NormalProducts:
+    pair: WorkspaceBuildPair
+    profile: Literal['debug', 'release']
+    names: tuple[tuple[str, str], ...]
+    products: tuple[NormalProduct, ...]
+    retained_anchor: _NormalAnchor | None = None
+    runtime_qualification: Literal['NOT_RUN'] = 'NOT_RUN'
+    publication_authority: Literal[False] = False
+
+
+def _normal_products(pair: WorkspaceBuildPair, profile: Literal['debug', 'release'],
+                     names: tuple[tuple[str, str], ...]) -> tuple[NormalProduct, ...]:
+    """V9 exact normal-bin joins, parameterized by authenticated workspace metadata."""
+    specs = recheck_workspace_pair(pair)
+    pair_anchor = pair.retained_anchor
+    assert pair_anchor is not None
+    require(profile in ('debug', 'release') and bool(names) and len(set(names)) == len(names),
+            '/normal', 'explicit profile and unique nonempty selectors required')
+    spec = specs[0] if profile == 'debug' else specs[1]
+    result = pair.debug if profile == 'debug' else pair.release
+    require(result is not None and spec.profile == profile and spec.workspace_tests, '/normal', 'actual profile result required')
+    assert result is not None
+    receipt = document(result.receipt.read_text())
+    metadata_path = spec.output/'cargo-metadata/stdout.log'
+    stream = spec.output/'cargo-build/stdout.log'
+    metadata_hash = file_hash(metadata_path); raw = stream.read_bytes()
+    stream_hash = hashlib.sha256(raw).hexdigest()
+    receipt.field('metadata_sha256').equals(metadata_hash)
+    receipt.field('metadata_process_receipt').equals(str(metadata_path.parent/'process.json'))
+    receipt.field('process_receipt').equals(str(stream.parent/'process.json'))
+    metadata = document(metadata_path.read_text())
+    metadata.field('workspace_root').equals(str(spec.root/'rust'))
+    metadata.field('target_directory').equals(str(spec.root/'rust/target'))
+    members = {node.text() for node in metadata.field('workspace_members').array()}
+    messages = tuple((index,line,document(line.decode())) for index,line in enumerate(raw.splitlines()))
+    native_test_paths = {path for _,path,_ in result.artifacts}
+    products: list[NormalProduct] = []
+    for package_name,name in names:
+        packages = [node for node in metadata.field('packages').array()
+                    if node.field('name').text() == package_name and node.field('id').text() in members]
+        require(len(packages) == 1, '/normal/package', 'missing or ambiguous workspace package')
+        package = packages[0]; identity = package.field('id').text()
+        targets = [node for node in package.field('targets').array()
+                   if node.field('name').text() == name and node.field('kind').value == ['bin']]
+        require(len(targets) == 1, '/normal/target', 'missing or ambiguous normal bin metadata')
+        target = targets[0]
+        target.field('crate_types').equals(['bin'])
+        source = Path(target.field('src_path').text()); manifest = Path(package.field('manifest_path').text())
+        for path in (source,manifest):
+            real_path(path,directory=False)
+            require(path.is_relative_to(spec.root) and str(path.relative_to(spec.root)) in receipt.field('effective_inputs_before').mapping(),
+                    '/normal/source', 'source outside authenticated build input scope')
+        selected = [(index,line,node) for index,line,node in messages
+                    if node.field('reason').value == 'compiler-artifact'
+                    and node.field('package_id').value == identity
+                    and node.field('target').field('name').value == name
+                    and node.field('target').field('kind').value == ['bin']
+                    and node.field('profile').field('test').value is False]
+        require(len(selected) == 1, '/normal/compiler', 'missing or ambiguous actual non-test record')
+        index,line,node = selected[0]
+        node.field('fresh').equals(False)
+        require(node.field('fresh').value is False, '/normal/compiler', 'fresh must be false boolean')
+        node.field('manifest_path').equals(str(manifest))
+        compiled = node.field('target')
+        compiled.field('src_path').equals(str(source)); compiled.field('crate_types').equals(['bin'])
+        host = receipt.field('toolchain_versions').field('rustc').field('text').text()
+        suffix = '.exe' if re.search(r'^host: .*windows[^\n]*$',host,re.MULTILINE) else ''
+        expected = spec.root/'rust/target'/profile/(name+suffix)
+        require(expected.parent == spec.root/'rust/target'/profile, '/normal/path', 'nested target name')
+        node.field('executable').equals(str(expected))
+        node.field('filenames').equals([str(expected)])
+        real_path(expected,directory=False)
+        require(expected not in native_test_paths and os.access(expected,os.X_OK), '/normal/path', 'test harness or nonexecutable output')
+        products.append(NormalProduct(package_name,identity,name,source,manifest,spec.source_sha,profile,expected,
+            file_hash(expected),metadata_hash,stream_hash,index,hashlib.sha256(line).hexdigest()))
+    require(len({item.binary for item in products}) == len(products), '/normal/path', 'shared selected output')
+    _ = recheck_workspace_pair(pair)
+    require(file_hash(metadata_path) == metadata_hash and file_hash(stream) == stream_hash,
+            '/normal', 'metadata/compiler stream changed during selection')
+    require(all(file_hash(item.binary) == item.sha256 for item in products),
+            '/normal', 'selected binary changed at final boundary')
+    pair_anchor.check()
+    return tuple(products)
+
+
+def normal_workspace_products(pair: WorkspaceBuildPair, profile: Literal['debug', 'release'],
+                              names: tuple[tuple[str, str], ...]) -> NormalProducts:
+    """Read actual live-pair normal bins; no build, alias, test or bridge authority is invented."""
+    products = _normal_products(pair,profile,names)
+    anchor = _NormalAnchor(pair,profile,names,products)
+    return NormalProducts(pair,profile,names,products,anchor)
+
+
+def recheck_normal_products(result: NormalProducts) -> None:
+    """Reject reconstructed/digest-only products; retain the actual source-owned pair."""
+    anchor = result.retained_anchor
+    require(anchor is not None and result.runtime_qualification == 'NOT_RUN' and result.publication_authority is False,
+            '/normal', 'live normal-product anchor required')
+    assert anchor is not None
+    require(result.pair is anchor.pair and result.profile == anchor.profile and result.names == anchor.names
+            and result.products is anchor.products, '/normal', 'retained selection identity changed')
+    require(_normal_products(result.pair,result.profile,result.names) == anchor.products,
+            '/normal', 'retained products changed')
