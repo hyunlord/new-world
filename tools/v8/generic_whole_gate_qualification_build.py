@@ -27,12 +27,16 @@ def authenticate(session: Node, build: Node, process: Node, product: str, mode: 
         session.field('external_inputs').field(str(path)).equals(digest)
         require(file_hash(path) == digest and os.access(path, os.X_OK), name, 'selected build tool changed or not executable')
         build.field(name+'_sha256').equals(digest)
-    expected = [cargo.field('path').text(), 'build', '--locked', '--message-format=json-render-diagnostics', '--release', '-p', 'sim-test']
+    require(product in {'sim_bridge', 'worldsim_probe', 'worldsim_perf'}, '/product', 'unsupported qualification product')
+    bridge = product == 'sim_bridge'
+    profile = 'debug' if bridge else 'release'
+    package = 'sim-bridge' if bridge else 'sim-test'
+    expected = [cargo.field('path').text(), 'build', '--locked', '--message-format=json-render-diagnostics', *(() if bridge else ('--release',)), '-p', package]
     build.field('argv').equals([arg for arg in expected])
     process.field('argv').equals([arg for arg in expected])
     process.field('errors').equals([])
-    build.field('profile').equals('release')
-    build.field('packages').equals(['sim-test'])
+    build.field('profile').equals(profile)
+    build.field('packages').equals([package])
     build.field('features').equals([])
     build.field('source_kind').equals('PRISTINE_COMMIT' if mode == 'original_off' else 'DERIVED_OBSERVER')
     root = Path(build.field('root').text())
@@ -66,9 +70,8 @@ def authenticate(session: Node, build: Node, process: Node, product: str, mode: 
     target = root/'rust/target'
     build.field('target_dir').equals(str(target))
     environment.field('CARGO_TARGET_DIR').equals(str(target))
-    require(product in {'worldsim_probe', 'worldsim_perf'}, '/product', 'unsupported qualification binary')
     binary = build.field('artifacts').field(product)
-    path = target/'release'/product
+    path = target/profile/('libsim_bridge.dylib' if bridge else product)
     binary.field('path').equals(str(path))
     require(os.access(path, os.X_OK), '/binary', 'selected compiled artifact is not executable')
     require(file_hash(path) == binary.field('sha256').text(), '/binary', 'selected compiled artifact changed')
@@ -85,12 +88,12 @@ def authenticate(session: Node, build: Node, process: Node, product: str, mode: 
     require(len(matches) == 1, '/binary', 'missing or repeated actual Cargo compiler artifact')
     artifact = matches[0]
     artifact.field('fresh').equals(False)
-    artifact.field('target').field('kind').equals(['bin'])
-    artifact.field('target').field('src_path').equals(str(root/'rust/crates/sim-test/src/bin'/f'{product}.rs'))
+    artifact.field('target').field('kind').equals(['cdylib', 'rlib'] if bridge else ['bin'])
+    artifact.field('target').field('src_path').equals(str(root/'rust/crates/sim-bridge/src/lib.rs') if bridge else str(root/'rust/crates/sim-test/src/bin'/f'{product}.rs'))
     workspace = document(json.dumps(tomllib.loads((root/'rust/Cargo.toml').read_text())))
     version = workspace.field('workspace').field('package').field('version').text()
-    artifact.field('package_id').equals('path+'+(root/'rust/crates/sim-test').as_uri()+'#'+version)
-    artifact.field('profile').field('debug_assertions').equals(False)
+    artifact.field('package_id').equals('path+'+(root/'rust/crates'/package).as_uri()+'#'+version)
+    artifact.field('profile').field('debug_assertions').equals(bridge)
     artifact.field('profile').field('test').equals(False)
-    artifact.field('executable').equals(str(path))
+    artifact.field('executable').equals(None if bridge else str(path))
     require(str(path) in [item.text() for item in artifact.field('filenames').array()], '/binary', 'compiled file differs')

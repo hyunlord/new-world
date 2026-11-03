@@ -693,3 +693,9 @@ engine_bridge_ffi의 원래22개 사례는 빈 세계에서 BuildingStampSystem�
 원래 baseline capability/read-only 테스트의 seed0·tick0 세계 하나를 정확한 소스와 실제 library 결과, 관측 파일의 위치·해시·PID·thread 이름에 연결했다. 일반 probe의 양수 기간 규칙은 그대로 두고 별도 tick0 계약을 사용한다. knowledge 비활성은 null 이력으로 유지하며, 죽음·개입 없음과 인구 불변을 검사한다. 라이브러리 전체 완료나 다른 세계의 안전성으로 확대하지 않는다.
 
 독립 검토는 합성 disk 영수증으로 실제 공개 수집 경로를 실행한13개 검사를 확인했다. 루트 통합67개 종료0(12.038초), 새 생산·fixture·테스트 및 dispatcher의 엄격한 타입0오류, Ruff(기존 명시적 reexport 규칙 예외)·diff 통과다. 첫 통합의 잘못된 모듈명과 기존 독립 fixture의 새 seam 누락, 첫 타입 검사8건은 로그로 보존했다. fixture seam과 타입만 보완했고 생산 판정기는 약화하지 않았다. 증거: `stage0/ordered-dispatch/whole-gate-root-baseline-zero-{01,02}.log`, `whole-gate-root-baseline-zero-types-{01,02,03}.log`, `whole-gate-baseline-collector-review-v2.md`. Rust/data 변경과 새 native 실행은 없으며, Stage0 미게시와 엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p116 — 렌더러 빌드 선행조건 인증
+
+기존 probe/perf 빌드 검사를 재사용하고 debug sim_bridge의 정확한 recipe·source·Cargo artifact 형식을 검사하도록 확장했다. probe와 bridge의 원본·파생 소스 및 제품 root가 일치해야 하며, 선택된 Godot는 원본 selector와 session의 경로·외부 해시가 모두 같아야 한다. 첫 검토에서 존재하지 않는 selector 필드 사용을 발견했고, 후속 검토에서 session 경로 일치 누락도 재현해 수정했다. 이 두 실패는 외부 V2/V3 기록에 남겼다.
+
+V4의 실제 p111 selector 읽기 검증과 독립26개 검사, 루트 합동47개(1.270초), 변경6개 Python 파일의 엄격한 타입0오류·Ruff·diff가 통과했다. 루트 첫 명령의 잘못된 테스트 모듈명 오류는 별도 로그로 보존했다. retained 실제 workspace Cargo 산출물은 target 형식만 뒷받침하며, 전용 bridge 빌드 recipe의 실제 실행은 미검증이다. import/cache/runtime 인증과 세 모드 실행은 여전히 빠져 있어 renderer matrix는 UNAVAILABLE다. Rust/data와 O는 변경하지 않았다. 증거: `stage0/ordered-dispatch/whole-gate-root-renderer-builds-v4-{01,02}.log`, `whole-gate-root-renderer-builds-types-01.log`, `renderer-prerequisites-independent-review/V4_REVIEW.md`, `whole-gate-renderer-admission-p112-v4`. Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.

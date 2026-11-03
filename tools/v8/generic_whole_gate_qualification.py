@@ -68,7 +68,7 @@ def identity(session: Node, report: Node, required: Node) -> None:
             arm.field('effective_source').field('manifest').field(name).equals(raw)
 
 
-def producer(mode: str, evidence: Node, arm: Node, row: Node, session: Node) -> tuple[Path, Node]:
+def authenticated_build(mode: str, evidence: Node, arm: Node, product: str, session: Node) -> Node:
     """Authenticate real build/process receipts before reading comparison artifacts."""
     build_path, build = reference(evidence.field('build'))
     require(build_path.name == 'build.json', '/build', 'not original generic build receipt')
@@ -98,7 +98,14 @@ def producer(mode: str, evidence: Node, arm: Node, row: Node, session: Node) -> 
         require(file_hash(build_process_path.parent/(label+'.log')) == build_process.field(label+'_sha256').text(),
                 '/build', 'original build log changed')
     from generic_whole_gate_qualification_build import authenticate
-    authenticate(session, build, build_process, row.field('product').text() if 'product' in row.mapping() else 'worldsim_probe', mode)
+    authenticate(session, build, build_process, product, mode)
+    return build
+
+
+def producer(mode: str, evidence: Node, arm: Node, row: Node, session: Node) -> tuple[Path, Node]:
+    """Authenticate real build/process receipts before reading comparison artifacts."""
+    build = authenticated_build(mode, evidence, arm, row.field('product').text() if 'product' in row.mapping() else 'worldsim_probe', session)
+    expected = build.field('effective_source_before').field('manifest').mapping()
     process_path, process = reference(evidence.field('process'))
     process.field('status').equals('PASS')
     process.field('native_exit').equals(0)
