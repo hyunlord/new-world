@@ -600,3 +600,11 @@ V1의 미등록 progress 이름 및 ok 뒤 임의 suffix 허용을 독립 재현
 검토된 M1 successorV2와 resolver32 준비본은 루트 합동37개(474.966초)·타입0오류·Ruff를 통과했지만 새 경로의 필수 변경으로 채택하지 않았다. 원래 외부 패치와 검증 증거를 보존한 뒤 정확한 역패치로 미커밋 루트 변경만 제거했다. BASE0 과거 M1 셸 호환 V1은 별도 마지막 callback 후 증거 변경 결함이 확인돼 CHANGES_REQUIRED로 보존하며 후속 수정을 보류했다. 이는 기존 M1V2 검토 결과와 다른 준비본이다.
 
 V9는 원래 입력 admission과 잠금 획득 후 남은 listing314개를 실제 실행 중이다. 아직 완료/전체 집계 통과를 주장하지 않는다. 기존 V9 FAIL/UNSETTLED와 엄격한 BASE0 자기검증 KnowledgeLost FAIL은 그대로다. 결정: D0-new-harness-product-boundary. 원격 main/wip는 게시된 Stage−1 `2f6993009ddb600e9249c28f9768a1a5252c8821`이며 Stage0 게시가 아니다.
+
+### S0-p108 — 원래 ASCII 명령의 관측 환경 연결
+
+단계23의 원래 ASCII 명령이 일반 probe와 같은 `WORLDSIM_GATE_OBSERVER=1` 설정으로 관측을 켜도록 기존 parser에 연결했다. 기본 미설정은 꺼짐이며 CLI와 환경을 함께 지정해도 중복 flag로 처리하지 않는다. 잘못된 환경값·실제 중복 flag·출력 경로 누락은 거부한다. 기존 관측 schema와 replay 경로를 재사용하고 시뮬레이션 정책·데이터는 수정하지 않았다.
+
+루트 기존 debug cache에서 실제 Rust ASCII 검사8개가 통과했다(실제 Cargo 종료0, 검사6.80초, 전체13.591초). 기존 U-script 렌더 출력 byte equality, full-save/fingerprint/명령 상태 동일성, 중단 endpoint와 실제 DebugKill 경계 검사도 포함한다. 제한된 rustfmt 검사와 diff 검사를 통과했다. 전체 baseline identity·전체 clippy·Godot/renderer paired qualification·전체 gate는 이 검사로 입증하지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-ascii-observer-native-01/{native.log,started.json,terminal.json}`.
+
+V9 후속 listing의 실제314개 종료 영수증은 모두 PASS/0이고 출력 해시와 일치한다. 마지막 자식은2026-11-03 05:14:45 UTC에 끝났으나 소유자 PID66725 및 실행 세션87478은 더 이상 없고 최종 RESULT/OWNER_TERMINAL/UNKNOWN·집계 보고서가 없다. 소유자 종료 코드와 종료 원인은 UNKNOWN이며 완료로 복구하지 않는다. 원래 V9 FAIL/UNSETTLED도 그대로다. 독립 감사: `stage0/workspace-runtime/v9-accounting-successor-v3/ROOT_TERMINAL_AUDIT_20261103.json` SHA256 `c045c31784fb60cd271466c66cc7b77e370b19d5ceaa10e502cdd300877aa007`. 06:20 UTC 원격 확인에서 main/wip는 Stage−1 게시 SHA 그대로이며 Stage0 자기검증 KnowledgeLost FAIL은 미해결이다.

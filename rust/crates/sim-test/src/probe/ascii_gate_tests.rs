@@ -42,14 +42,20 @@ fn gate_flag_requires_output_and_rejects_duplicates() {
         ],
     ] {
         // Then parsing fails before constructing a world.
-        assert!(AsciiArgs::parse(argv.into_iter().chain(extra).map(String::from)).is_err());
+        assert!(AsciiArgs::parse_with_gate_setting(
+            argv.into_iter().chain(extra).map(String::from),
+            None
+        )
+        .is_err());
     }
-    let plain = AsciiArgs::parse(argv.map(String::from)).expect("default arguments");
+    let plain = AsciiArgs::parse_with_gate_setting(argv.map(String::from), None)
+        .expect("default arguments");
     assert!(!plain.gate_observations);
-    let observed = AsciiArgs::parse(
+    let observed = AsciiArgs::parse_with_gate_setting(
         argv.into_iter()
             .chain(["--gate-observations", "--out", "grid.txt"])
             .map(String::from),
+        None,
     )
     .expect("observed arguments");
     assert!(observed.gate_observations);
@@ -204,4 +210,58 @@ fn zero_tick_snapshot_is_retained_without_applying_tick_zero_commands() {
     assert_eq!(receipt["terminal_tick"], 0);
     assert_eq!(receipt["checkpoints"], json!([]));
     assert_eq!(receipt["history_complete"], true);
+}
+
+#[test]
+fn environment_opt_in_preserves_cli_and_rejects_invalid_settings() {
+    use std::ffi::OsStr;
+
+    let argv = [
+        "--ascii", "--seeds", "100..101", "--tick", "900", "--out", "grid.txt",
+    ];
+    let plain =
+        AsciiArgs::parse_with_gate_setting(argv.map(String::from), None).expect("default off");
+    assert!(!plain.gate_observations);
+    let enabled = AsciiArgs::parse_with_gate_setting(argv.map(String::from), Some(OsStr::new("1")))
+        .expect("environment opt-in");
+    let explicit = AsciiArgs::parse_with_gate_setting(
+        argv.into_iter()
+            .chain(["--gate-observations"])
+            .map(String::from),
+        None,
+    )
+    .expect("explicit CLI");
+    assert_eq!(enabled, explicit);
+    let both = AsciiArgs::parse_with_gate_setting(
+        argv.into_iter()
+            .chain(["--gate-observations"])
+            .map(String::from),
+        Some(OsStr::new("1")),
+    )
+    .expect("one flag plus environment is not a duplicate");
+    assert_eq!(both, explicit);
+    for setting in [None, Some(OsStr::new("1"))] {
+        assert!(AsciiArgs::parse_with_gate_setting(
+            argv.into_iter()
+                .chain(["--gate-observations", "--gate-observations"])
+                .map(String::from),
+            setting,
+        )
+        .is_err());
+    }
+    for value in ["", "0", "true", "2"] {
+        for flags in [vec![], vec!["--gate-observations"]] {
+            let error = AsciiArgs::parse_with_gate_setting(
+                argv.into_iter().chain(flags).map(String::from),
+                Some(OsStr::new(value)),
+            )
+            .expect_err("CLI must not hide an invalid environment setting");
+            assert_eq!(error, "WORLDSIM_GATE_OBSERVER must be absent or 1");
+        }
+    }
+    assert!(AsciiArgs::parse_with_gate_setting(
+        ["--ascii", "--seeds", "100..101", "--tick", "900"].map(String::from),
+        Some(OsStr::new("1")),
+    )
+    .is_err());
 }

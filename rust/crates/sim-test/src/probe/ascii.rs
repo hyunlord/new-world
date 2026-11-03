@@ -415,7 +415,7 @@ pub struct AsciiArgs {
     pub out: Option<PathBuf>,
     /// Write the people tiles as JSON here (`--people-json FILE`).
     pub people_json: Option<PathBuf>,
-    /// Write the native sidecar beside `--out FILE` (`--gate-observations`).
+    /// Write the native sidecar beside `--out FILE` (CLI flag or gate observer environment).
     pub gate_observations: bool,
 }
 
@@ -437,6 +437,15 @@ fn parse_rect(value: &str) -> Result<Rect, String> {
 impl AsciiArgs {
     /// Parse argv (without the program name); `--scene colony` and `--ascii` are accepted and ignored.
     pub fn parse(args: impl IntoIterator<Item = String>) -> Result<Self, String> {
+        let setting = std::env::var_os("WORLDSIM_GATE_OBSERVER");
+        Self::parse_with_gate_setting(args, setting.as_deref())
+    }
+
+    fn parse_with_gate_setting(
+        args: impl IntoIterator<Item = String>,
+        setting: Option<&std::ffi::OsStr>,
+    ) -> Result<Self, String> {
+        let environment_enabled = super::ProbeArgs::gate_observations_enabled(false, setting)?;
         let mut seeds: Option<std::ops::Range<u64>> = None;
         let mut tick: Option<u64> = None;
         let mut parsed = Self {
@@ -497,6 +506,7 @@ impl AsciiArgs {
         if parsed.tick > MAX_TICK {
             return Err(format!("--tick must be at most {MAX_TICK}"));
         }
+        parsed.gate_observations |= environment_enabled;
         if parsed.gate_observations && parsed.out.is_none() {
             return Err("--gate-observations needs --out FILE for its sidecar directory".into());
         }
@@ -568,7 +578,7 @@ mod tests {
 
     #[test]
     fn ascii_args_parse_and_reject() {
-        let a = AsciiArgs::parse(
+        let a = AsciiArgs::parse_with_gate_setting(
             [
                 "--scene",
                 "colony",
@@ -582,6 +592,7 @@ mod tests {
                 "--ascii-legend",
             ]
             .map(String::from),
+            None,
         )
         .expect("valid");
         assert_eq!(
@@ -595,7 +606,10 @@ mod tests {
             vec!["--seeds", "1..2", "--tick", "5", "--rect", "1,2,0,4"],
             vec!["--seeds", "1..2", "--tick", "5", "--bogus", "1"],
         ] {
-            assert!(AsciiArgs::parse(bad.iter().map(|s| s.to_string())).is_err());
+            assert!(
+                AsciiArgs::parse_with_gate_setting(bad.iter().map(|s| s.to_string()), None)
+                    .is_err()
+            );
         }
     }
 
