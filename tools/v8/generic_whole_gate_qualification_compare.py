@@ -5,6 +5,7 @@
 # Run: python3 -m unittest test_generic_whole_gate_qualification_compare
 """Compare existing original-off artifacts; timing exclusions never hide state."""
 import math
+import re
 from collections.abc import Callable
 from copy import deepcopy
 from pathlib import Path
@@ -81,7 +82,8 @@ def projection(kind: str, raw: str) -> tuple[Json, list[str]]:
         value.field('end_tick').equals(72*1440)
         value.field('observed_ticks').equals(72*1440)
         value.field('invariant_checks').equals(2*72*1440)
-        _ = integer(value.field('fingerprint'))
+        require(re.fullmatch(r'[0-9a-f]{16}-[0-9a-f]{16}', value.field('fingerprint').text()) is not None,
+                '/fingerprint', 'expected colony fingerprint: two lowercase 16-digit hex words')
     elif kind == 'm6a-data-only':
         keys(value, CHAIN_FIELDS)
         value.field('schema_version').equals(1)
@@ -101,8 +103,10 @@ def projection(kind: str, raw: str) -> tuple[Json, list[str]]:
             omit(row, ('mean_ms','p999_ms','max_ms','wall_seconds'), f'/runs/{i}', excluded)
     elif kind == 'perf':
         value.field('pass').equals(15)
-        for name in ('seed', 'ticks', 'fingerprint', 'alive_end', 'founders', 'settlements_end', 'chronicle_entries_end', 'buildings_end'):
+        for name in ('seed', 'ticks', 'alive_end', 'founders', 'settlements_end', 'chronicle_entries_end', 'buildings_end'):
             _ = integer(value.field(name))
+        require(re.fullmatch(r'[0-9a-f]{16}', value.field('fingerprint').text()) is not None,
+                '/fingerprint', 'expected lowercase 16-digit hex fingerprint')
         omit(value, PERF_TIMING, '', excluded)
         omit(value.field('warmup'), ('tick0_ms',), '/warmup', excluded)
         omit(value.field('warmup').field('summary'), TICK_TIMING, '/warmup/summary', excluded)

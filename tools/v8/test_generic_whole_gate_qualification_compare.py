@@ -54,9 +54,9 @@ class ComparatorTests(unittest.TestCase):
     def test_m6a_summary_no_exclusions(self) -> None:
         a: dict[str, Json] = {key:None for key in FIXED_FIELDS}
         a.update(schema_version=1,kind='m6a_food_observation_v1',days=72,ticks_per_day=1440,end_tick=103680,
-                 observed_ticks=103680,invariant_checks=207360,fingerprint=10)
+                 observed_ticks=103680,invariant_checks=207360,fingerprint='0000000000000000-000000000000000a')
         self.assertEqual(compare('m6a',json.dumps(a),json.dumps(a)),[])
-        b=deepcopy(a);b['fingerprint']=11
+        b=deepcopy(a);b['fingerprint']='0000000000000000-000000000000000b'
         with self.assertRaises(GateContractError):
             _ = compare('m6a',json.dumps(a),json.dumps(b))
 
@@ -73,7 +73,7 @@ class ComparatorTests(unittest.TestCase):
         tick: dict[str, Json] = {key:1 for key in TICK_TIMING};tick['ticks']=2
         system: dict[str, Json] = {key:1 for key in SYSTEM_TIMING};system.update(name='System',calls=2,calls_incl_warmup=3)
         a: dict[str, Json] = {key:1 for key in ('seed','ticks','fingerprint','alive_end','founders','settlements_end','chronicle_entries_end','buildings_end','wall_seconds','steady_tick_ms_total','prune_ms','unaccounted_ms')}
-        a.update({'pass':15,'warmup':{'ticks':1,'tick0_ms':2,'summary':deepcopy(tick)},'tick_summary':tick,
+        a.update({'fingerprint':'0000000000000001','pass':15,'warmup':{'ticks':1,'tick0_ms':2,'summary':deepcopy(tick)},'tick_summary':tick,
                   'systems':[system],'per_day':[{'day':1,'ticks':2,'alive_0600':3,'tick_ms':1,'systems_ms':[2]}],
                   'snapshot_timings':{'get_agent_snapshot':{'median_us':1,'p90_us':2,'rows':3}},'slowest_ticks':[]})
         return a

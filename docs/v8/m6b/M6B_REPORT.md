@@ -677,3 +677,7 @@ engine_bridge_ffi의 원래22개 사례는 빈 세계에서 BuildingStampSystem�
 동결 p109 전체 Python discovery는 2,328개 실행(4,544.006초) 후 import 오류2개·skip5개로 종료1이었다. tools/v8에서 PYTHONPATH 없이 실행해 `test_mux_safety`와 `test_mux_score`가 `tools` 패키지를 찾지 못했다. 원래 FAIL을 보존하고 두 모듈의 경로 보정 검증을 별도 기록한다. p111 공개 전체 게이트는 별도 동결 H와 독립 BASE/후보 제품으로 실행 중이다. BASE bridge 빌드·Godot import는 실제 종료0이며 debug workspace는 아직 실행 중이다. Stage0은 미게시이고 엄격한 CORE-off KnowledgeLost 실패는 유지한다.
 
 후속 검증은 같은 동결 p109에 명시적 repository PYTHONPATH를 사용해 해당 두 모듈만 실행했고19개(0.800초) 종료0이었다. 원본 입력430개 해시가 전후 동일하다. 원래 discovery의 argv/cwd/env는 원본 영수증에 없어 실행 당시 기록과 오류 로그를 구분했으며, 보충 성공을 전체 suite 성공으로 바꾸지 않는다. 증거: `stage0/ordered-dispatch/python-p109-mux-import-rerun/REVIEW.md`. p112 최종 통합39개와 변경 파일 Ruff·diff 검사는 통과했다. 이 변경은 Python 판정기·테스트·문서뿐이며 Rust/data는 p111과 동일하다. p111-r2 identity 증거를 보존하며 새 native identity 실행으로 표현하지 않는다.
+
+### S0-p113 — 실제 fingerprint 형식과 비교기 일치
+
+독립 소스 검토에서 성능 출력은 소문자16자리 hex 문자열, M6a 출력은 같은 두 문자열을 하이픈으로 잇는 형식인데 비교기가 정수를 요구하던 결함을 찾았다. 루트에서 정상 문자열 거부2건과 잘못된 정수 수락2건을 먼저 재현했다. 실제 출력 형식으로 검사하도록 수정했고 fingerprint는 제외하지 않고 원래 값 그대로 비교한다. 합동29개 검사 종료0(0.021초), 변경 비교기·새 회귀의 엄격한 타입0오류, Ruff·diff 통과다. Rust/data 변경은 없으며 native 실행·전체 qualification을 새로 주장하지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-root-fingerprint-{red,green,types}.log`, `qualification-fingerprint-p112/REVIEW.md`. 동결 p111 전체 게이트는 계속 실행 중이고 Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
