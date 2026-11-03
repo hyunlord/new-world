@@ -4,10 +4,12 @@ import json
 import re
 import shlex
 import tomllib
+from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import pairwise
 from pathlib import Path
+from typing import Literal
 
 from gate_rustdoc_exec import match_invocation, policy_for
 from gate_test_summary import parse_log
@@ -33,10 +35,38 @@ class Outcome:
 
 
 @dataclass(frozen=True, slots=True)
+class NestedChild:
+    parent: str
+    name: str
+    count: int
+
+
+@dataclass(frozen=True, slots=True)
+class NestedAccounting:
+    outer_cases: int
+    nested_passed: int
+    children: tuple[NestedChild, ...]
+    source_files: tuple[tuple[str, str], ...]
+    source_blocks: tuple[tuple[str, str], ...]
+    pid_tree: Literal['NOT_OBSERVED'] = 'NOT_OBSERVED'
+    attribution: Literal['SOURCE_BOUND_AGGREGATE_ONLY'] = 'SOURCE_BOUND_AGGREGATE_ONLY'
+
+
+@dataclass(frozen=True, slots=True)
+class NestedSource:
+    spec: ProcessSpec
+    executable: Executable
+    files: tuple[tuple[str, str], ...]
+    blocks: tuple[tuple[str, str], ...]
+    children: tuple[NestedChild, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class Section:
     outcomes: tuple[Outcome, ...]
     sha256: str
     failed: int
+    nested: NestedAccounting | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -142,8 +172,157 @@ def parse_section(raw: bytes, names: tuple[str, ...], ignored: tuple[str, ...]) 
     return Section(tuple(outcomes), digest(raw), counts[1])
 
 
-def reconcile_native(raw: bytes, all_cases: Listing, ignored_cases: Listing) -> Section:
+# Source-owned parent/child test contracts. Other gameplay source is not version-pinned.
+_NESTED_RULES: tuple[tuple[str,str,str,int,str,str], ...] = (
+    ('content/tests.rs','colony::content::tests::bootstrap_negative_cases_run_in_fresh_processes',
+     'colony::content::tests::bootstrap_child',4,
+     'b70113a4ff4deb454fb183e88ce0293d7bb8c5ce1e90f5eb398c6f1d5fe5da7a',
+     '1f08871e132cc6ec3e1127a3f6e1cdff0f17700009581d1f1e70584c30dddac2'),
+    ('content/ecology_tests.rs','colony::content::ecology_tests::ecology_id_bootstrap_boundaries_are_isolated',
+     'colony::content::ecology_tests::ecology_id_child',2,
+     '3a8714172edcba97cf35a4324914aa3a9e9b2e02bbb146bfb4187a36c3852780',
+     '98c299cca4535300dca3d001e826796904319161367101e0caaa6d32e8898765'),
+    ('knowledge/registry_tests.rs','colony::knowledge::registry_tests::local_catalog_and_knowledge_decode_are_bootstrap_isolated',
+     'colony::knowledge::registry_tests::uninstalled_child',1,
+     'cd2c481a31df94b120a309aa3a53715cea1774d5c7639e8dd2aa060550c0c8f4',
+     '7a0d227cb05cb8764e77041a863a53c68b29f5cf777cdd19c9a7dfe637be0aa3'),
+)
+_NESTED_TARGETS: dict[tuple[str, str], tuple[str,str,str,int,str,str,tuple[str,...]]] = {
+    ('sim-core', 'recipe_registry'): ('rust/crates/sim-core/tests/recipe_registry.rs', 'steward_rule_parsing_requires_boot_without_poisoning_later_rules', 'steward_rule_boot_child', 1,
+        '14bb0633145b88f4653c15f264fc062d785ef40d399a02ba6c189861c112bc45', 'eb8a1c6ed8b1e79c24ce07ff55bb082392ee09fdc79d5c8a19e1351f5b62de17', ()),
+    ('sim-test', 'b5_flora'): ('rust/crates/sim-test/tests/b5_flora.rs', 'actual_host_distribution_replacement_runs_in_fresh_process', 'host_pine_child', 1,
+        '7598c83a43049721c906e3f440fa2a15f347d5be16bde35d223899ba0eecf812', 'cc18506f30a98a6dd7b5ed75c835b9e8bd2b638ee86bf7f003c07764168f7c8e', ()),
+    ('sim-test', 'blueprint_completion_identity'): ('rust/crates/sim-test/tests/blueprint_completion_identity.rs', 'novel_same_art_layers_survive_save_and_upper_layer_demolition', 'novel_same_art_layers_survive_save_and_upper_layer_demolition', 1,
+        'a1a384eaa234715c231e3a498b2d0d656d91e20efba9f384287a88cfbe4fc23c', 'a1a384eaa234715c231e3a498b2d0d656d91e20efba9f384287a88cfbe4fc23c', ()),
+    ('sim-test', 'data_only_ext'): ('rust/crates/sim-test/tests/data_only_ext.rs', 'selected_pack_runs_all_simulation_families_and_rejects_bad_boundaries', 'selected_pack_child', 9,
+        'b5dc52c185bff0aae8ddbce84089f2510c077ff4441c31d880345c37785b8ea2', '93511563c114a2671d3fe735cd25628248daff314ce50401d6717d3374cbdfa2', ('const CHILD: &str = "WORLDSIM_DATA_ONLY_CASE";',)),
+    ('sim-test', 'predator_registry_runtime'): ('rust/crates/sim-test/tests/predator_registry_runtime.rs', 'novel_predator_pack_runs_in_an_isolated_catalogue_process', 'novel_predator_pack_child', 1,
+        'a844472f9451377022e8ea3e75c954b74025a9e49c4379ef89b52c0cdc9fdde8', 'da0bf9f4989e6552e075ad1f9bdf52746d11aa1d6f11b5f6c5e37a4f807e41e8', ('const CHILD: &str = "WORLDSIM_PREDATOR_REGISTRY_CHILD";',)),
+    ('sim-test', 'recipe_registry_runtime'): ('rust/crates/sim-test/tests/recipe_registry_runtime.rs', 'alternate_cutter_runs_in_an_isolated_catalogue_process', 'alternate_cutter_child', 1,
+        'af88d93b81cb083a9ca8ee15e4d5697a7f7e2c2b2429d2cbeb899f89bf11ce6e', 'c08d3c8f85ea5b008defa81f9102c2bd6d4c5b7114eec0b9fdc47b4a646e280d', ()),
+}
+_NESTED_ENV: dict[tuple[str,str],tuple[str,...]] = {
+    ('sim-core','sim_core'): ('WORLDSIM_CONTENT_TEST_CASE','WORLDSIM_ECOLOGY_TEST_CASE','WORLDSIM_KNOWLEDGE_TEST_CHILD'),
+    ('sim-core','recipe_registry'): ('WORLDSIM_STEWARD_BOOT_CHILD',),
+    ('sim-test','b5_flora'): ('WORLDSIM_B5_HOST_CHILD',),
+    ('sim-test','blueprint_completion_identity'): ('WORLDSIM_BLUEPRINT_LAYER_TEST_CHILD',),
+    ('sim-test','data_only_ext'): ('WORLDSIM_DATA_ONLY_CASE',),
+    ('sim-test','predator_registry_runtime'): ('WORLDSIM_PREDATOR_REGISTRY_CHILD',),
+    ('sim-test','recipe_registry_runtime'): ('WORLDSIM_RECIPE_CUTTER_CHILD',),
+}
+_NATIVE_SUMMARY = re.compile(r'test result: (ok|FAILED)\. (\d+) passed; (\d+) failed; (\d+) ignored; (\d+) measured; (\d+) filtered out; finished in (\d+(?:\.\d+)?)s')
+
+
+def nested_native_source(spec: ProcessSpec, executable: Executable) -> NestedSource | None:
+    """Admit fixed test blocks from actual upstream-authenticated process inputs."""
+    target=executable.target
+    root=spec.input_root
+    constants: tuple[str,...]=()
+    if (target.package,target.name,target.kinds)==('sim-core','sim_core',('lib',)):
+        rules=tuple(('rust/crates/sim-core/src/colony/'+row[0],*row[1:]) for row in _NESTED_RULES)
+        source=root/'rust/crates/sim-core/src/lib.rs'
+    else:
+        admitted=_NESTED_TARGETS.get((target.package,target.name))
+        if admitted is None or target.kinds!=('test',):return None
+        rules=(admitted[:6],)
+        constants=admitted[6]
+        source=root/admitted[0]
+    paths=tuple(root/rule[0] for rule in rules)
+    require(not any(key in environment_for(spec) for key in _NESTED_ENV[(target.package,target.name)]),
+            '/nested/environment','outer invocation already selects child branch')
+    # Synthetic/other source without this test family keeps strict single-summary accounting.
+    if not any(path.exists() for path in paths):return None
+    require(root==root.resolve() and target.source==source
+            and target.manifest==root/'rust/crates'/target.package/'Cargo.toml', '/nested/source','native source identity differs')
+    require(executable.step in (4,5) and executable.profile==('debug' if executable.step==4 else 'release')
+            and executable.filter is None and executable.ignored=='exclude' and executable.threads==8,
+            '/nested/source','original native selection differs')
+    expected=(str(spec.executable),'test','--workspace',*(('--release',) if executable.step==5 else ()),
+              '--no-fail-fast','--','--test-threads=8')
+    require(spec.argv==expected and spec.cwd==root/'rust' and spec.timeout_seconds is None,
+            '/nested/source','original parent invocation differs')
+    require(executable.binary.parent==root/'rust/target'/executable.profile/'deps',
+            '/nested/source','native binary location differs')
+    bound={str(root/name):value for name,value in spec.inputs}
+    require(len(bound)==len(spec.inputs),'/nested/source','duplicate process input')
+    for path,value in spec.external_inputs:
+        require(str(path) not in bound,'/nested/source','duplicate external binding')
+        bound[str(path)]=value
+    files: list[tuple[str,str]]=[];blocks: list[tuple[str,str]]=[]
+    for path in (*paths,target.source,target.manifest,executable.binary):
+        require(path==path.resolve() and bound.get(str(path))==file_hash(path),'/nested/source','unbound or changed source/binary')
+    for path,rule in zip(paths,rules,strict=True):
+        raw=path.read_bytes();files.append((str(path),digest(raw)))
+        for declaration in constants:
+            require(raw.decode('utf-8').splitlines().count(declaration)==1, '/nested/source', 'nested environment constant changed')
+            blocks.append((declaration,digest(declaration.encode())))
+        for name,expected_hash in ((rule[1],rule[4]),(rule[2],rule[5])):
+            marker=('#[test]\nfn '+name.rsplit('::',1)[-1]+'() {').encode()
+            require(raw.count(marker)==1,'/nested/source','missing/ambiguous test block')
+            start=raw.index(marker);end=raw.find(b'\n#[test]',start+len(marker))
+            block=raw[start:end if end>=0 else len(raw)].rstrip()+b'\n'
+            require(digest(block)==expected_hash,'/nested/source','nested test command/body contract changed')
+            blocks.append((name,expected_hash))
+        require(file_hash(path)==bound[str(path)],'/nested/source','source changed during admission')
+    return NestedSource(spec,executable,tuple(files),tuple(blocks),tuple(NestedChild(row[1],row[2],row[3]) for row in rules))
+
+
+def reconcile_nested_native(raw: bytes, all_cases: Listing, ignored: Listing, source: NestedSource) -> Section:
+    """Reconcile known aggregate multiplicities; interleaving supplies no child PID tree."""
+    require(nested_native_source(source.spec,source.executable)==source,'/nested/source','source policy changed')
+    records=lines(raw);count=len(all_cases.names)
+    children=source.children; nested_count=sum(child.count for child in children)
+    require(len(records)>=4 and records[0]==records[-1]=='','/nested','truncated outer framing')
+    for row in records:
+        if not row or row.startswith(('running ','test result:')): continue
+        outcome=re.fullmatch(r'test (\S+) \.\.\. (?:ok|FAILED|ignored(?:, [^\n]*)?)',row)
+        progress=re.fullmatch(r'test (\S+) has been running for over \d+ seconds',row)
+        matched=outcome if outcome is not None else progress
+        require(matched is not None and matched[1] in all_cases.names,
+                '/nested','unsupported, unlisted or ambiguous native record')
+    require(count>1 and len(set(all_cases.names))==count and len(set(ignored.names))==len(ignored.names),
+            '/nested','invalid independent listing')
+    headers=[row for row in records if row.startswith('running ')]
+    require(headers==[f'running {count} tests',*(['running 1 test']*nested_count)],'/nested','outer/nested running counts differ')
+    nonempty=[row for row in records if row]
+    summary_rows=[row for row in records if row.startswith('test result:')]
+    summaries=[_NATIVE_SUMMARY.fullmatch(row) for row in summary_rows]
+    require(len(summaries)==nested_count+1 and all(row is not None for row in summaries),'/nested','summary framing/count differs')
+    outer=_NATIVE_SUMMARY.fullmatch(nonempty[-1])
+    require(outer is not None and summary_rows[-1]==nonempty[-1],'/nested','missing terminal outer summary')
+    assert outer is not None
+    for child in summaries[:-1]:
+        assert child is not None
+        require(tuple(child[i] for i in range(1,7))==('ok','1','0','0','0',str(count-1)),
+                '/nested','nested summary is not one successful exact selected test')
+    summary=parse_log(raw.decode('utf-8'))
+    counts=Counter(row.name for row in summary.outcomes)
+    expected=Counter({name:1 for name in all_cases.names})
+    for child in children:
+        require(child.parent in expected and child.name in expected and child.parent not in ignored.names
+                and child.name not in ignored.names,'/nested','parent/child listing missing or ignored')
+        expected[child.name]+=child.count
+    require(counts==expected,'/nested','unknown/missing/extra repeated outcomes')
+    statuses: dict[str,str]={}
+    protected={name for row in children for name in (row.parent,row.name)}
+    for outcome in summary.outcomes:
+        require(outcome.name not in statuses or statuses[outcome.name]==outcome.status,'/nested','ambiguous duplicate status')
+        require(outcome.name not in protected or outcome.status=='ok','/nested','nested parent/child failed')
+        statuses[outcome.name]=outcome.status
+    outcomes=tuple(Outcome(name,statuses[name],None) for name in all_cases.names)
+    require({row.name for row in outcomes if row.status=='ignored'}==set(ignored.names),'/nested','ignored inventory differs')
+    values=tuple(sum(row.status==status for row in outcomes) for status in ('ok','FAILED','ignored'))
+    require(tuple(int(outer[i]) for i in (2,3,4))==values and (outer[5],outer[6])==('0','0')
+            and outer[1]==('FAILED' if values[1] else 'ok'),'/nested','outer numeric accounting differs')
+    require(summary.summaries==nested_count+1 and summary.measured==0 and summary.filtered_out==nested_count*(count-1),
+            '/nested','aggregate numeric accounting differs')
+    require(nested_native_source(source.spec,source.executable)==source,'/nested/source','source changed during accounting')
+    return Section(outcomes,digest(raw),values[1],NestedAccounting(count,nested_count,children,source.files,source.blocks))
+
+
+def reconcile_native(raw: bytes, all_cases: Listing, ignored_cases: Listing, nested: NestedSource | None = None) -> Section:
     require(not all_cases.benchmarks and not ignored_cases.benchmarks and set(ignored_cases.names) <= set(all_cases.names), '/native', 'unsupported benchmark or ignored inventory')
+    if nested is not None:return reconcile_nested_native(raw,all_cases,ignored_cases,nested)
     summary = parse_log(raw.decode('utf-8'))
     names = [row.name for row in summary.outcomes]
     require(summary.summaries == 1 and len(names) == len(set(names)) and set(names) == set(all_cases.names), '/native', 'case inventory differs')
@@ -444,6 +623,33 @@ def native_section(raw: bytes, all_cases: Listing, ignored: Listing) -> Section:
     return parsed
 
 
+def qualified_native_section(raw: bytes, all_cases: Listing, ignored: Listing, source: NestedSource | None) -> Section:
+    return native_section(raw, all_cases, ignored) if source is None else reconcile_native(raw, all_cases, ignored, source)
+
+
+def direct_section_ranges(raw: bytes, native: tuple[tuple[Listing, Listing, NestedSource | None], ...],
+                          docs: int) -> tuple[tuple[int, int, str], ...]:
+    """Source-qualified serial Cargo sections, with exact aggregate validation."""
+    ends = tuple(match.end() for match in re.finditer(rb'\ntest result: [^\n]*\n\n', raw))
+    result: list[tuple[int, int, str]] = []
+    cursor = 0; start = 0
+    for all_cases, ignored, source in native:
+        # Source policy is rederived by native_section before any range is admitted.
+        summaries = 1 + (sum(child.count for child in source.children) if source is not None else 0)
+        require(cursor + summaries <= len(ends), '/sections', 'missing source-required native summaries')
+        end = ends[cursor + summaries - 1]
+        _ = qualified_native_section(raw[start:end], all_cases, ignored, source)
+        result.append((start, end, digest(raw[start:end])))
+        start = end; cursor += summaries
+    require(docs >= 0 and len(ends) - cursor == docs, '/sections', 'unresolved native/doctest summary cardinality')
+    for end in ends[cursor:]:
+        require(raw[start:end].startswith(b'\nrunning '), '/sections', 'missing standalone section boundary')
+        result.append((start, end, digest(raw[start:end])))
+        start = end
+    require(start == len(raw), '/sections', 'unconsumed direct output')
+    return tuple(result)
+
+
 def pair_cases(direct: ListingProcess, plan: CapturePlan, parent: ProcessResult,
                native: tuple[NativeCaseLists, ...], docs: tuple[CaseLists, ...]) -> PairedCases:
     """Full-case equality is separate from upstream build/runtime and world admission."""
@@ -492,7 +698,6 @@ def pair_cases(direct: ListingProcess, plan: CapturePlan, parent: ProcessResult,
         require(len(ids) == len(set(ids)) and set(ids) == {row.field('id').text() for row in policy.field('invocations').array()}, '/direct-docs', 'source obligations differ')
         ends = (0, *(match.end() for match in re.finditer(rb'\ntest result: [^\n]*\n\n', raw)))
         ranges = tuple((start, end, digest(raw[start:end])) for start, end in pairwise(ends))
-        _ = section_ranges(raw, len(ordered)+len(ids))
         for pair in docs:
             for listing in (pair.all_cases, pair.ignored_cases): after_parent(listing, parent)
         wrapped_docs = join_standalone_sections(plan, parent, docs)
@@ -514,13 +719,15 @@ def pair_cases(direct: ListingProcess, plan: CapturePlan, parent: ProcessResult,
                 parsed.append(parse_listing(output))
             native_listings[binary] = (parsed[0], parsed[1])
             wrapped_raw = actual.receipt.with_name('stdout.log').read_bytes()
-            section = native_section(wrapped_raw, *native_listings[binary])
+            section = qualified_native_section(wrapped_raw, *native_listings[binary], nested_native_source(plan.parent_spec, item.executable))
             require(actual.native_exit == (101 if section.failed else 0), '/native', 'libtest section/native exit differs')
             right.append(JoinedSection('native:'+binary, target.package_id, str(target.source), 0, len(wrapped_raw), section))
+        direct_sources = {binary: nested_native_source(direct.spec, expected[binary].executable) for binary in ordered}
+        ranges = direct_section_ranges(raw, tuple((*native_listings[binary], direct_sources[binary]) for binary in ordered), len(ids))
         for index, binary in enumerate(ordered):
             start, end, _ = ranges[index]; target = expected[binary].executable.target
             left.append(JoinedSection('native:'+binary, target.package_id, str(target.source), start, end,
-                                      native_section(raw[start:end], *native_listings[binary])))
+                                      qualified_native_section(raw[start:end], *native_listings[binary], direct_sources[binary])))
         for index, row in enumerate(doc_rows, len(ordered)):
             identity = row.field('id').text(); actual = wrapped_doc_rows[identity]
             start, end, _ = ranges[index]

@@ -1,0 +1,17 @@
+
+running 6 tests
+test steward_rule_boot_child ... ok
+
+running 1 test
+test full_width_recipe_is_ordered_and_uses_declared_compatibility ... ok
+test second_workshop_with_the_capability_supports_the_same_recipe ... ok
+test recipe_requirements_preserve_order_material_distinction_and_reusable_count ... ok
+test steward_rule_boot_child ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.01s
+
+test steward_rule_parsing_requires_boot_without_poisoning_later_rules ... ok
+test malformed_recipe_metadata_is_rejected_before_world_creation ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+

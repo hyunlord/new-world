@@ -30,6 +30,7 @@ from generic_workspace_cases import (
     ListingProcess,
     declarations,
     join_standalone_sections,
+    nested_native_source,
     parse_listing,
     process_output,
     reconcile_native,
@@ -267,7 +268,8 @@ def run_workspace_owned(request: WorkspaceRequest) -> WorkspaceResult:
                 listing_membership[spec.output_root] = listing_members(spec.output_root)
                 if before is not None and after is not None: recheck_generated(before, after)
             if native:
-                section = reconcile_native(capture.targets[index].receipt.with_name('stdout.log').read_bytes(), parse_listing(raw[0]), parse_listing(raw[1]))
+                section = reconcile_native(capture.targets[index].receipt.with_name('stdout.log').read_bytes(), parse_listing(raw[0]), parse_listing(raw[1]),
+                                           nested_native_source(request.spec,capture.targets[index].executable))
                 failed |= section.failed > 0
                 native_cases.append(document(json.dumps(asdict(section))).value)
             else: doc_pairs.append(CaseLists(identity, pairs[0], pairs[1]))

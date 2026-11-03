@@ -568,3 +568,9 @@ V2는 마지막 generated callback이 source 빈 디렉터리를 추가하는 �
 단계36이 무관한 최신 단계28 명령을 요구해 정확한 BASE0 gate를 거부하던 경로를 수정했다. 요청된 단계의 정확한 명령만 검사하며 단계36 wrapper·Godot 환경·자식9회 topology 해시와 실제 입력/FD 계약은 유지한다. 단계28 자체는 기존 최신 명령을 계속 요구하므로 BASE0 단계28 호환성을 새로 주장하지 않는다.
 
 전체 원본 BASE0 gate 바이트로 거부를 재현하고 수정 후 단계36 admission을 확인했다. 루트14개(20.276초), 외부 postimage14개(22.385초), production/test 타입0오류·Ruff가 통과했다. 앞선 mirror12개 실행은 수정 전 fixture 검사로 별도 보존하며 수정 후 검사로 계산하지 않는다. 실제 native/전체 단계36·세계·전체 gate는 미완료다. 증거: `stage0/ordered-dispatch/step36-root-validation.json`; patch `4e84c532a513d599618720a18a89cd3c0ad4418cd4dbd5865657bcdf5fe8bbd7`.
+
+### S0-p104 — 소스에 선언된 중첩 native 테스트 집계
+
+sim_core 등 실제7개 target의 부모/자식 테스트 블록·guard 상수·원본 실행 입력을 확인한 경우에만 정해진 중첩 횟수를 집계한다. 원래 전체 목록과 ignored 목록, 모든 outcome·summary·filtered 수를 대조하며 원본 출력 해시를 유지한다. PID 관계는 관측하지 않았으므로 SOURCE_BOUND_AGGREGATE_ONLY로 남긴다. 직접 실행은 실제 Cargo Running 순서와 각 전체 aggregate를 검증한 뒤 범위를 나눈다. 일반 단일-summary 경로와 알 수 없는 중첩 실행 거부는 유지한다.
+
+V1의 미등록 progress 이름 및 ok 뒤 임의 suffix 허용을 독립 재현해 V2에서 엄격한 이름/문법 검사로 닫았다. 루트가 실행한 동결 postimage58개(16.595초), 독립9개(0.237초), 통합22파일 바이트 일치, production/test 전체 타입0오류·Ruff 및 제한된 docs 검사가 통과했다. B5 ignored, 같은 이름의 재귀 child, data-only9회는 그대로다. 실제 stdout의 빈 줄은 byte identity를 위해 유지한다. 추가6개 target의 테스트 목록은 소스 유도 fixture이며 실제 listing 증거가 아니다. 실제 남은 listing 실행과 전체 direct/wrapped parity는 미완료이고 V9 FAIL/UNSETTLED는 바꾸지 않는다. 증거: `stage0/ordered-dispatch/workspace-nested-accounting-review/REVIEW_V2.md` SHA256 `2078430d587474968b1b41c554f723b070a27a897c6b0d87358c02459f034869`; patch `dcdae761a07da5d24566115eb558c500e9543efef3cb9b802fb464def15eb6e3`; `nested-accounting-root-v2-validation.json`.
