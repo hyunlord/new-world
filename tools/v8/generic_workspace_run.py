@@ -8,6 +8,7 @@ from dataclasses import asdict, replace
 from pathlib import Path
 from typing import Literal
 
+import gate_rustdoc_exec as rustdoc
 from generic_compiled_dependencies import read_compiled_dependencies
 from generic_gate import document, integer, require
 from generic_process import (
@@ -138,12 +139,27 @@ def checked(request: WorkspaceRequest) -> tuple[Path, Path | None, dict[str, str
     exec_root: Path | None = None
     if 'doctest_policy' in manifest.mapping():
         policy = manifest.field('doctest_policy')
-        require(integer(policy.field('schema_version')) in (2, 3), '/policy', 'schema2/3 required')
-        if integer(policy.field('schema_version')) == 3: _ = read_compiled_dependencies(manifest, policy)
+        require(integer(policy.field('schema_version')) in (2, 3, 4), '/policy', 'schema2/3/4 required')
+        if integer(policy.field('schema_version')) in (3, 4): _ = read_compiled_dependencies(manifest, policy)
         exec_root = Path(policy.field('exec_root').text())
         require(exec_root == request.output/'rustdoc-execs' and env.get('RUSTDOC') == policy.field('entrypoint').text(),
                 '/rustdoc', 'closed exec root/actual wrapper required')
         policy.field('parent_receipt').equals(str(spec.output_root/'process.json'))
+        if integer(policy.field('schema_version')) == 4:
+            from generic_workspace_arguments import validate_policy
+            validate_policy(policy)
+            projected_environment: dict[str, Json] = {key: value for key, value in env.items() if key != 'CARGO_CAPTURE_MANIFEST_SHA256'}
+            policy.field('parent_spec').equals({'executable': str(spec.executable), 'executable_sha256': spec.executable_sha256,
+                'argv': list(spec.argv), 'cwd': str(spec.cwd), 'input_root': str(spec.input_root),
+                'environment': projected_environment, 'inputs': dict(spec.inputs),
+                'external_inputs': {str(path): digest for path, digest in spec.external_inputs if path != request.manifest},
+                'fresh_directories': list(spec.fresh_directories)})
+            declared = [(row.field('package_id').text(), row.field('package_manifest').text(), row.field('source').text())
+                        for row in policy.field('invocations').array()]
+            expected_docs = {(row.package_id, str(row.manifest), str(row.source)) for row in request.inventory.doctests}
+            require(len(declared) == len(expected_docs) and set(declared) == expected_docs,
+                    '/doctests', 'full predeclared metadata obligations required')
+
     else:
         require(not request.inventory.doctests, '/doctests', 'declared doctests require schema2 capture policy')
     require(all(bound.get(path) == digest and file_hash(Path(path)) == digest for path, digest in required.items()),
@@ -175,9 +191,20 @@ def listing_jobs(request: WorkspaceRequest, capture: WorkspaceCapture) -> tuple[
         for row in policy.field('invocations').array():
             identity = row.field('id').text(); intents = [entry for entry in capture.exec_intents if entry.source_invocation == identity]
             require(len(intents) == 1, '/doctests', 'unique actual exec intent required')
-            intent = intents[0]; env = read(intent.receipt).field('environment')
-            jobs.append((identity, (policy.field('rustdoc').text(), *(arg.text() for arg in row.field('argv').array())),
-                Path(row.field('compiler_cwd').text()), tuple((key, env.field(key).text()) for key in sorted(env.mapping())),
+            intent = intents[0]
+            observed = read(intent.receipt); env = observed.field('environment')
+            if integer(policy.field('schema_version')) == 4:
+                require(file_hash(request.manifest) == request.manifest_sha256 and file_hash(intent.receipt) == intent.receipt_sha256,
+                        '/doctests', 'authenticated manifest/intent changed before listing')
+                argv = tuple(arg.text() for arg in observed.field('rustdoc_argv').array())
+                cwd = Path(observed.field('cwd').text())
+                require(bool(argv) and argv[0] == policy.field('rustdoc').text(), '/doctests', 'foreign rustdoc intent')
+                rustdoc.match_invocation(manifest, policy, argv[1:], cwd).field('id').equals(identity)
+                observed.field('source_invocation').equals(identity)
+            else:
+                argv = (policy.field('rustdoc').text(), *(arg.text() for arg in row.field('argv').array()))
+                cwd = Path(row.field('compiler_cwd').text())
+            jobs.append((identity, argv, cwd, tuple((key, env.field(key).text()) for key in sorted(env.mapping())),
                 intent.receipt, intent.receipt_sha256))
     return tuple(jobs)
 

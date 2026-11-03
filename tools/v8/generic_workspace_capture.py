@@ -259,6 +259,11 @@ def exec_binding(plan: CapturePlan, parent: ProcessResult, manifest: Node, polic
     ancestry.field('spawn_receipt').equals(str(parent.receipt.with_name('process-spawn.json')))
     ancestry.field('spawn_sha256').equals(file_hash(parent.receipt.with_name('process-spawn.json')))
     ancestry.field('final_parent_qualification').equals('PENDING_AUTHENTICATED_PROCESS_RECEIPT_JOIN')
+    if integer(policy.field('schema_version')) == 4:
+        expected_parent = rustdoc.parent_start_binding(manifest, policy, plan.manifest, plan.manifest_sha256)
+        ancestry.field('strict_parent').equals({**expected_parent, 'live_pid': parent.pid,
+                                               'live_path': expected_parent['executable']})
+
     source: str | None = None
     if '--test' in argv:
         source = rustdoc.match_invocation(manifest, policy, argv[1:], Path(intent.field('cwd').text())).field('id').text()
@@ -400,7 +405,7 @@ def reconcile_capture(plan: CapturePlan, parent_result: ProcessResult) -> Worksp
             digest = entries[binary].field('sha256').text()
             require(file_hash(row.binary) == digest, binary, 'binary differs from caller-bound manifest')
             hashes[binary] = digest
-        if 'doctest_policy' in manifest.mapping() and integer(manifest.field('doctest_policy').field('schema_version')) == 3:
+        if 'doctest_policy' in manifest.mapping() and integer(manifest.field('doctest_policy').field('schema_version')) in (3, 4):
             immutable_inputs = {str(plan.parent_spec.input_root/name): digest for name, digest in plan.parent_spec.inputs}
             immutable_inputs.update({str(path): digest for path, digest in plan.parent_spec.external_inputs})
             require(all(immutable_inputs.get(path) == digest for path, digest in strings(manifest.field('inputs')).items()),
@@ -409,7 +414,7 @@ def reconcile_capture(plan: CapturePlan, parent_result: ProcessResult) -> Worksp
             require(file_hash(Path(path)) == digest, path, 'source input differs')
             hashes[path] = digest
         if 'doctest_policy' in manifest.mapping():
-            require(integer(manifest.field('doctest_policy').field('schema_version')) in (2, 3), '/policy', 'schema2/3 required')
+            require(integer(manifest.field('doctest_policy').field('schema_version')) in (2, 3, 4), '/policy', 'schema2/3/4 required')
             policy = rustdoc.policy_for(manifest)
             policy.field('parent_receipt').equals(str(parent_result.receipt))
             exec_root = Path(policy.field('exec_root').text())

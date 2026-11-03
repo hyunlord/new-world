@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from generic_gate import boundary, require, text
+from generic_gate import boundary, integer, require, text
 from generic_observations import keys
 from generic_process import check_digest, file_hash, real_path
 from mux2_gate_inputs import Node
@@ -18,7 +18,7 @@ class CompiledDependency:
 @boundary
 def read_compiled_dependencies(plan: Node, policy: Node) -> tuple[CompiledDependency, ...]:
     """Check a distinct input-backed category, never authorize it as a launch target."""
-    policy.field('schema_version').equals(3)
+    require(integer(policy.field('schema_version')) in (3, 4), '/compiled', 'schema3/4 required')
     inputs = plan.field('inputs').mapping()
     module = Path(__file__).resolve()
     require(inputs.get(str(module)) == file_hash(module), '/compiled', 'reader source is not bound')

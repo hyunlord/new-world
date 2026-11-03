@@ -260,7 +260,7 @@ def join_standalone_sections(plan: CapturePlan, parent: ProcessResult, listings:
         stdout = (plan.parent_spec.output_root/'stdout.log').read_bytes()
         stderr = (plan.parent_spec.output_root/'stderr.log').read_bytes()
         manifest = read(plan.manifest); policy = policy_for(manifest)
-        require(integer(policy.field('schema_version')) in (2, 3), '/policy', 'schema2/3 required')
+        require(integer(policy.field('schema_version')) in (2, 3, 4), '/policy', 'schema2/3/4 required')
         for root in (plan.parent_spec.output_root, plan.capture_root, Path(policy.field('exec_root').text()),
                      *(item.spec.output_root for pair in listings for item in (pair.all_cases, pair.ignored_cases))):
             frozen[root] = snapshot(root)
@@ -287,15 +287,19 @@ def join_standalone_sections(plan: CapturePlan, parent: ProcessResult, listings:
             raw_ranges.append((boundary, end, digest(stdout[boundary:end])))
             boundary = end
         require(len(raw_ranges) == len(rows) and boundary == len(stdout), '/sections', 'ordinal cardinality/framing incomplete; all ranges unassigned')
-        for row in rows:
+        for row, actual_args in zip(rows, ordered, strict=True):
             identity = row.field('id').text()
             row.field('edition').equals('2021')
-            args = tuple(arg.text() for arg in row.field('argv').array())
+            args = actual_args if integer(policy.field('schema_version')) == 4 else tuple(arg.text() for arg in row.field('argv').array())
             _ = flattened_test_args(args)
             require(not any(arg in ('--nocapture', '--no-capture', '--show-output') for arg in args), '/mode', 'changed standalone mode')
             intents = [item for item in capture.exec_intents if item.source_invocation == identity]
             require(len(intents) == 1, '/exec', 'missing unique actual compiler invocation')
             intent = read(intents[0].receipt)
+            if integer(policy.field('schema_version')) == 4:
+                require(file_hash(intents[0].receipt) == intents[0].receipt_sha256, '/exec', 'intent changed before accounting')
+                intent.field('rustdoc_argv').equals([policy.field('rustdoc').text(), *args])
+                intent.field('cwd').equals(str(plan.parent_spec.cwd))
             environment = {key: intent.field('environment').field(key).text() for key in intent.field('environment').mapping()}
             required = {key: manifest.field('inputs').field(key).text() for key in manifest.field('inputs').mapping()}
             required.update({str(plan.manifest): plan.manifest_sha256, str(intents[0].receipt): intents[0].receipt_sha256})
