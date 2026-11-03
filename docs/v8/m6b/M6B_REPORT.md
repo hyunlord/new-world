@@ -719,3 +719,9 @@ H의 후손인 결함 후보가 H/O 파일을 그대로 포함하면 적용할 d
 실제 작은 Git 저장소 회귀를 포함한 루트101개 종료0(53.348초), import 정리 후 새12개 종료0(10.832초), 변경7개 Python 파일 엄격한 타입0오류·Ruff(명시적 public reexport PLC0414 예외)·diff 통과다. 최초 타입94건과 순환 import 오류는 보존했고, 공용 읽기 전용 입력 타입·정확한 경로 집합을 분리하고 테스트를 typed fixture와 두 모듈로 나눠 해결했다. 기존 `IdentityContext` 실제 타입 인증과 allowlist 내용은 유지했다. 독립32개 검사와 원본37개 검토는 서로 겹치므로 합산하지 않는다.
 
 증거: `stage0/ordered-dispatch/whole-gate-root-identity-overlay-{01,02,03}.log`, `whole-gate-root-identity-overlay-types-{01,02,03}.log`, `identity-overlay-independent-review/STRICT_CORRECTION_REVIEW.md`. 외부 preparer의 명시적 defect_proof 옵션은 별도 successor patch이며 실제 상수 변경 후보의 native 실패 증명은 아직 NOT_RUN이다. Rust/data/O 변경은 없고 Stage0 미게시·CORE-off KnowledgeLost FAIL을 유지한다.
+
+### S0-p120 — 재료 정의 두 target의 전체 사례 분류
+
+재료 loader/registry의 두 원본 target 30개 사례를 소스에서 검토했다. 이 경로는 RON을 읽고 지역 registry 값과 범위를 검사하며 세계나 nested process를 실행하지 않는다. Rust14개·RON105개의 정확한 해시와 다섯 디렉터리의 실제 입력 목록, 전체 사례·성공 상태가 일치할 때만 두 target을 분류한다. 추가·누락·symlink 입력과 변경된 source를 거부한다. sim_core library·nested recipe·더 넓은 Catalog 경로는 계속 미분류다.
+
+독립27개 검사 및 추가 source-map/symlink 검사, 루트 합동43개 종료0(1.547초), 변경4개 Python 파일의 엄격한 타입0오류·Ruff·diff 통과다. 원본 Rust/data/assertion/O는 변경하지 않았으며 30개 사례를 30개 세계로 세지 않는다. 증거: `stage0/ordered-dispatch/whole-gate-root-core-material-01.log`, `whole-gate-root-core-material-types-01.log`, `whole-gate-core-material-classification/INDEPENDENT_UI_REVIEW.md`. 실제 native qualification·전체 gate는 별도이고 Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.
