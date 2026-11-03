@@ -127,7 +127,7 @@
     ],
     "rust/crates/sim-test/tests/colony_jobs.rs": [
       "100644",
-      "a5826d9be2af9ffb7ee4ac5792935795befa0a8b5684465af7e70e1f745158c7"
+      "d10150e355f443b92a42cc19095e6a8a2971a57bc3dbf2c309e0d6d5f23bbd34"
     ],
     "rust/crates/sim-test/tests/colony_steward.rs": [
       "100644",
@@ -1188,7 +1188,7 @@
         "rust/crates/sim-test/tests/colony_jobs.rs"
       ],
       "source_refs": {
-        "rust/crates/sim-test/tests/colony_jobs.rs": "a5826d9be2af9ffb7ee4ac5792935795befa0a8b5684465af7e70e1f745158c7"
+        "rust/crates/sim-test/tests/colony_jobs.rs": "d10150e355f443b92a42cc19095e6a8a2971a57bc3dbf2c309e0d6d5f23bbd34"
       }
     },
     {

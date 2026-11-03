@@ -26,6 +26,7 @@ from generic_test_run import (
     save_plan,
     verify_test_product,
 )
+from jobs_fixture import child_emission, source_path
 from mux2_gate_inputs import Json, Node
 from test_generic_test_history import CHILD, cases, graph
 
@@ -101,7 +102,7 @@ class RunnerTests(unittest.TestCase):
                 for name in JOBS_INPUTS:
                     path = root/name
                     path.parent.mkdir(parents=True,exist_ok=True)
-                    _ = path.write_bytes((ROOT/name).read_bytes())
+                    _ = path.write_bytes(source_path(name).read_bytes())
                 if defect == 'hut_beds' and arm == 'candidate':
                     path = root/JOBS_RULES
                     _ = path.write_text(path.read_text().replace('hut_beds: 4,','hut_beds: 5,',1))
@@ -134,6 +135,7 @@ class RunnerTests(unittest.TestCase):
                         "'synthetic planned boundary'", "r['stop']")
                     child = child[:child.index("for test in sorted({r['test'] for r in rows})")]
                     if target == 'colony_jobs':
+                        child += child_emission()
                         child += HUT_CHILD.replace('COMPLETION_TICK', '201' if defect == 'hut_horizon' and arm == 'candidate' else '200')
                         if defect == 'hut_missing' and arm == 'candidate':
                             child += "(folder/'checkpoint_before_log_gift.json').unlink()\n"
@@ -201,7 +203,7 @@ class RunnerTests(unittest.TestCase):
             return document(result.read_text())
 
     def test_gate_invocations_and_reauthentication(self) -> None:
-        for plan,counts in (('gate17',[3,1,20]),('gate24',[46]),('gate04',[46,20,3,1]),('gate05',[46,20,3,1])):
+        for plan,counts in (('gate17',[3,10,20]),('gate24',[46]),('gate04',[46,20,3,10]),('gate05',[46,20,3,10])):
             with self.subTest(plan=plan):
                 result = self.exercise(invocation=plan)
                 result.field('status').equals('COMPONENT_PASS')
@@ -210,15 +212,15 @@ class RunnerTests(unittest.TestCase):
                                   if 'occurrences' in row.mapping()],counts)
         self.exercise('missing_summary','gate24').field('status').equals('FAIL')
 
-    def test_full_original_binaries_preserve69_and_add_hut(self) -> None:
+    def test_full_original_binaries_preserve69_and_observe_ten_job_worlds(self) -> None:
         result = self.exercise()
         result.field('status').equals('COMPONENT_PASS')
-        result.field('coverage').equals('save_load46 + colony_world20 + colony_commands3 + gifted_hut1 planned ordinary occurrences per arm')
-        result.field('invocation_coverage').equals({'save_load':46,'colony_world':20,'colony_commands':3,'colony_jobs':1})
+        result.field('coverage').equals('save_load46 + colony_world20 + colony_commands3 + colony_jobs10 planned ordinary occurrences per arm')
+        result.field('invocation_coverage').equals({'save_load':46,'colony_world':20,'colony_commands':3,'colony_jobs':10})
         result.field('cargo_working_directory_equivalence').equals('NOT_ORIGINAL_CARGO_QUALIFICATION')
         result.field('broader_gate17_37').equals('INCOMPLETE')
         result.field('publication_authorized').equals(False)
-        self.assertEqual([len(row.field('occurrences').array()) for row in result.field('families').array() if 'occurrences' in row.mapping()], [46,20,3,1])
+        self.assertEqual([len(row.field('occurrences').array()) for row in result.field('families').array() if 'occurrences' in row.mapping()], [46,20,3,10])
 
     def test_hut_mismatched_horizon_or_setup_remains_unresolved(self) -> None:
         for defect in ('hut_horizon','hut_setup'):
@@ -260,7 +262,7 @@ class BuildConsumerTests(unittest.TestCase):
             for name in (FORMAT_SOURCE,'rust/crates/sim-test/tests/save_load.rs'):
                 path = root/name
                 path.parent.mkdir(parents=True,exist_ok=True)
-                _ = path.write_bytes((ROOT/name).read_bytes())
+                _ = path.write_bytes(source_path(name).read_bytes())
             _ = subprocess.run(['git','-C',str(root),'add','.'],check=True)
             _ = subprocess.run(['git','-C',str(root),'-c','user.name=Test','-c','user.email=test@example.invalid',
                                 'commit','-qm','synthetic fixture'],check=True)

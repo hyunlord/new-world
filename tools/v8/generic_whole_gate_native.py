@@ -17,9 +17,10 @@ from generic_gate import boundary, integer, require, text
 from generic_observations import ordinary_pair
 from generic_process import file_hash
 from generic_test_endpoint import Endpoint, authenticate_endpoint
+from generic_test_jobs_plans import jobs_plan
 from generic_test_plans import SOURCE_PINS as BASE_PINS
 from generic_test_plans import TESTS as BASE_TESTS
-from generic_test_plans import Planned, fixed_plan, hut_evidence, save_plan
+from generic_test_plans import Planned, fixed_plan, save_plan
 from generic_test_steward_plans import IGNORED, steward_plan
 from generic_test_steward_plans import SOURCE_PINS as STEWARD_PINS
 from generic_test_steward_plans import TESTS as STEWARD_TESTS
@@ -98,8 +99,7 @@ def collect_family(session: Node, stage: Node, target: str) -> Family:
     match target:
         case 'save_load': plans = save_plan(graph)
         case 'colony_jobs':
-            plan, setup = hut_evidence(graph)
-            plans = (plan,)
+            plans, setup = jobs_plan(graph)
         case 'colony_commands' | 'colony_world': plans = fixed_plan(target)
         case 'colony_steward' | 'steward_defence': plans, setup = steward_plan(graph, target)
         case _: raise AssertionError('source route checked above')
@@ -219,7 +219,7 @@ def evaluate_family(session: Node, base_stage: Node, candidate_stage: Node) -> d
                 # Completed source-selected collectors own these exact target routes.
                 if (row.field('package').value, row.field('target').value, row.field('kind').value) in {
                         ('sim-test', 'engine_ascii', 'test'), ('sim-test', 'engine_knowledge_ffi', 'test'),
-                        ('sim-test', 'm6b_presentation_defaults', 'test'), ('sim-test', 'engine_colony_ffi', 'test')}:
+                        ('sim-test', 'm6b_presentation_defaults', 'test'), ('sim-test', 'engine_colony_ffi', 'test'), ('sim-test', 'colony_jobs', 'test')}:
                     continue
                 gaps.append({'arm': arm, 'world_route': row.value})
             gaps.extend({'arm': arm, 'doctest_world_route': row.value}

@@ -24,20 +24,25 @@ from generic_test_history import (
     identity,
     resolve,
 )
+from generic_test_history_graph import HistoryEvidence
 from generic_test_invocation import invocations, verify_artifact
+from generic_test_jobs_plans import jobs_plan
 from generic_test_observations import (
     Binding,
     bound_bytes,
     process_receipt,
 )
+from generic_test_plans import JOBS_INPUTS as JOBS_INPUTS
+from generic_test_plans import JOBS_RULES as JOBS_RULES
+from generic_test_plans import SOURCE_PINS as SOURCE_PINS
+from generic_test_plans import TESTS as TESTS
+from generic_test_plans import Planned as Planned
+from generic_test_plans import fixed_plan as fixed_plan
+from generic_test_plans import hut_evidence as shared_hut_evidence
+from generic_test_plans import save_plan as shared_save_plan
 from generic_test_safety import pair
 from mux2_gate_inputs import Json, Node
 from mux2_gate_lock import lane
-
-from generic_test_plans import (SOURCE_PINS as SOURCE_PINS, TESTS as TESTS, Planned as Planned,
-                                JOBS_INPUTS as JOBS_INPUTS, JOBS_RULES as JOBS_RULES, fixed_plan as fixed_plan)
-from generic_test_plans import save_plan as shared_save_plan, hut_evidence as shared_hut_evidence
-from generic_test_history_graph import HistoryEvidence
 
 
 def _history_evidence(binding: Binding) -> HistoryEvidence:
@@ -168,7 +173,7 @@ def authenticate_family(target: str, binding: Binding) -> tuple[Planned, ...]:
             target, 'missing/extra/duplicate original native test outcomes')
     require(all(status == 'ok' for _,status in outcomes), target, 'original native test failed or ignored')
     planned = (save_plan(binding) if target == 'save_load' else
-               (hut_evidence(binding)[0],) if target == 'colony_jobs' else fixed_plan(target))
+               jobs_plan(_history_evidence(binding))[0] if target == 'colony_jobs' else fixed_plan(target))
     resolved = resolve(binding, tuple(row.occurrence for row in planned))
     for plan, observed in zip(planned, resolved, strict=True):
         require(observed.observation.stop_reason == plan.stop, identity(plan.occurrence), 'wrong native stop condition')
@@ -254,9 +259,9 @@ def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Pa
                     'binary_sha256':product.binary_sha256, 'artifact_receipt':str(product.build_receipt),
                     'artifact_receipt_sha256':product.build_receipt_sha256}
                     for target,product in products.items()} for arm,products in (('base',base),('candidate',candidate))},
-        'coverage':('save_load46 + colony_world20 + colony_commands3 + gifted_hut1 planned ordinary occurrences per arm'
+        'coverage':('save_load46 + colony_world20 + colony_commands3 + colony_jobs10 planned ordinary occurrences per arm'
                     if invocation == 'development' else 'Named invocation subset; see invocation_coverage.'),
-        'invocation_coverage':{row.target:{'save_load':46,'colony_world':20,'colony_commands':3,'colony_jobs':1}[row.target] for row in selected},
+        'invocation_coverage':{row.target:{'save_load':46,'colony_world':20,'colony_commands':3,'colony_jobs':10}[row.target] for row in selected},
         'limits':['Other world occurrences and native suite families remain unregistered.',
                   'Observer semantic qualification is a separate gate obligation.'], 'families':families, 'errors':[]}
     frozen: dict[Path,dict[str,str]] = {}
@@ -268,7 +273,6 @@ def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Pa
             unresolved = False
             for invocation_row in selected:
                 target = invocation_row.target
-                native_names = TESTS[target]
                 declared_setup: Json = None
                 for arm, products in (('base',base),('candidate',candidate)):
                     require(all(file_hash(path) == digest for path,digest in frozen_receipts.items()), '/invocations', 'prior invocation drift')
@@ -301,17 +305,15 @@ def run_pair(base: dict[str, Product], candidate: dict[str, Product], output: Pa
                     atomic_json(output/f'{arm}-{target}-invocation.json',receipt)
                     frozen_receipts[output/f'{arm}-{target}-invocation.json'] = file_hash(output/f'{arm}-{target}-invocation.json')
                 if target == 'colony_jobs':
-                    left, left_setup = hut_evidence(bindings['base',target])
-                    right, right_setup = hut_evidence(bindings['candidate',target])
+                    left, left_setup = jobs_plan(_history_evidence(bindings['base',target]))
+                    right, right_setup = jobs_plan(_history_evidence(bindings['candidate',target]))
                     declared_setup = left_setup
-                    families.append({'target':'colony_jobs_mechanisms', 'status':'ORIGINAL_NATIVE_TESTS_OK',
-                        'ordinary_safety':'NOT_APPLICABLE', 'hunger_preemption':'jobs_cancel_on_hunger original gifted/forced-needs mechanism',
-                        'partial_tests':[name for name in native_names if name not in {'hut_sleeps_four','jobs_cancel_on_hunger'}]})
-                    if left_setup != right_setup or left.occurrence.end_tick != right.occurrence.end_tick:
+                    if left_setup != right_setup or left != right:
                         unresolved = True
                         families.append({'target':target,'status':'UNRESOLVED','reason':'declared setup or actual horizon differs; matched companion required',
                             'base_setup':left_setup,'candidate_setup':right_setup,
-                            'base_end_tick':left.occurrence.end_tick,'candidate_end_tick':right.occurrence.end_tick})
+                            'base_end_ticks':[row.occurrence.end_tick for row in left],
+                            'candidate_end_ticks':[row.occurrence.end_tick for row in right]})
                         continue
                 paired = pair(bindings['base',target], tuple(row.occurrence for row in plans['base',target]),
                               bindings['candidate',target], tuple(row.occurrence for row in plans['candidate',target]))

@@ -34,8 +34,10 @@ fn zone(x0: u32, y0: u32, x1: u32, y1: u32) -> Command {
 fn jobs_chop_one_tree() {
     let mut engine = job_world(24, 24);
     let w = worker(&mut engine, 2, 2);
+    let watch = Watch::begin("jobs_chop_one_tree", 0, "primary", &engine);
     plant(&mut engine, (14, 10), 4);
     order(&mut engine, chop((14, 10)));
+    watch.annotate(&engine, "fixture_setup", || serde_json::json!({"recipe": "jobs_chop_one_tree", "founding_boundary": "post_worker_spawn_tick_zero", "world_seed": engine.resources.world_seed, "width": engine.resources.tile_grid.width, "height": engine.resources.tile_grid.height, "ground_logs": ground_logs(&engine), "log_ledger": log_ledger(&engine.world, &engine.resources)}));
     let mut working_ticks = 0;
     let used = run_until(&mut engine, 2_000, |e| {
         !e.resources.colony.trees.contains_key(&(14, 10))
@@ -44,8 +46,10 @@ fn jobs_chop_one_tree() {
     // Re-run to count the work ticks independently of the walk.
     let mut again = job_world(24, 24);
     let w2 = worker(&mut again, 2, 2);
+    let again_watch = Watch::begin("jobs_chop_one_tree", 0, "again", &again);
     plant(&mut again, (14, 10), 4);
     order(&mut again, chop((14, 10)));
+    again_watch.annotate(&again, "fixture_setup", || serde_json::json!({"recipe": "jobs_chop_one_tree", "founding_boundary": "post_worker_spawn_tick_zero", "world_seed": again.resources.world_seed, "width": again.resources.tile_grid.width, "height": again.resources.tile_grid.height, "ground_logs": ground_logs(&again), "log_ledger": log_ledger(&again.world, &again.resources)}));
     while again.resources.colony.trees.contains_key(&(14, 10)) {
         if matches!(
             job_of(&again, w2).map(|j| j.stage),
@@ -55,6 +59,8 @@ fn jobs_chop_one_tree() {
         }
         tick_checked(&mut again);
     }
+    again_watch.annotate(&again, "event_stop", || serde_json::json!({"predicate": "tree_felled", "tree_absent": !again.resources.colony.trees.contains_key(&(14, 10)), "working_ticks": working_ticks}));
+    again_watch.finish(&again, "tree_felled");
     // Arrival sets Working{90}; ticks 90..1 then fell: 90 ticks seen in Working.
     assert_eq!(working_ticks, RULE.chop_ticks);
     let c = &engine.resources.colony;
@@ -74,6 +80,8 @@ fn jobs_chop_one_tree() {
     assert!(c.reservations.is_empty());
     assert_eq!((c.tallies.trees_felled, c.tallies.jobs_done), (1, 1));
     assert!(c.trees_version > 0);
+    watch.annotate(&engine, "event_stop", || serde_json::json!({"predicate": "tree_felled", "tree_absent": !engine.resources.colony.trees.contains_key(&(14, 10)), "used": used, "limit": 2000}));
+    watch.finish(&engine, "tree_felled");
 }
 
 #[test]
@@ -81,9 +89,11 @@ fn jobs_haul_to_stockpile() {
     let mut engine = job_world(30, 30);
     let a = worker(&mut engine, 1, 1);
     let b = worker(&mut engine, 2, 1);
+    let watch = Watch::begin("jobs_haul_to_stockpile", 0, "primary", &engine);
     drop_logs(&mut engine, (4, 4), 25);
     drop_logs(&mut engine, (5, 4), 13);
     order(&mut engine, zone(20, 20, 21, 21));
+    watch.annotate(&engine, "fixture_setup", || serde_json::json!({"recipe": "jobs_haul_to_stockpile", "founding_boundary": "post_worker_spawn_tick_zero", "world_seed": engine.resources.world_seed, "width": engine.resources.tile_grid.width, "height": engine.resources.tile_grid.height, "ground_logs": ground_logs(&engine), "log_ledger": log_ledger(&engine.world, &engine.resources)}));
     let in_zone = |e: &SimEngine| -> u64 {
         e.resources
             .colony
@@ -113,6 +123,8 @@ fn jobs_haul_to_stockpile() {
     assert!(job_of(&engine, a).is_none() && job_of(&engine, b).is_none());
     // 38 logs over 5-log trips: at least 8 haul jobs finished.
     assert!(engine.resources.colony.tallies.jobs_done >= 8);
+    watch.annotate(&engine, "event_stop", || serde_json::json!({"predicate": "all_38_logs_in_zone", "used": used, "limit": 6000, "logs_in_zone": in_zone(&engine)}));
+    watch.finish(&engine, "all_38_logs_in_zone");
 }
 
 #[test]
@@ -121,6 +133,7 @@ fn jobs_deliver_and_build_hut() {
     for x in 1..4 {
         worker(&mut engine, x, 1);
     }
+    let watch = Watch::begin("jobs_deliver_and_build_hut", 0, "primary", &engine);
     order(&mut engine, zone(3, 20, 4, 20));
     drop_logs(&mut engine, (3, 20), 9);
     drop_logs(&mut engine, (10, 2), 6);
@@ -132,10 +145,12 @@ fn jobs_deliver_and_build_hut() {
             y: 15,
         },
     );
+    watch.annotate(&engine, "fixture_setup", || serde_json::json!({"recipe": "jobs_deliver_and_build_hut", "founding_boundary": "post_worker_spawn_tick_zero", "world_seed": engine.resources.world_seed, "width": engine.resources.tile_grid.width, "height": engine.resources.tile_grid.height, "ground_logs": ground_logs(&engine), "log_ledger": log_ledger(&engine.world, &engine.resources)}));
     let used = run_until(&mut engine, 8_000, |e| {
         e.resources.building_kinds.get(&(16, 16)) == Some(&BuildingKind::Hut)
     });
     assert!(used < 8_000, "the hut was never finished");
+    watch.annotate(&engine, "construction_stop", || serde_json::json!({"used": used, "limit": 8000, "hut_present": engine.resources.building_kinds.get(&(16, 16)) == Some(&BuildingKind::Hut)}));
     // 12 logs went into the hut; the other 3 are on the ground or being hauled.
     let (created, ground, carried, delivered, consumed) =
         log_ledger(&engine.world, &engine.resources);
@@ -165,6 +180,12 @@ fn jobs_deliver_and_build_hut() {
         .colony
         .reservations
         .contains_key(&ReserveKey::Site((16, 16))));
+    watch.annotate(
+        &engine,
+        "event_stop",
+        || serde_json::json!({"predicate": "hut_completion_plus1", "used": used}),
+    );
+    watch.finish(&engine, "hut_completion_plus1");
 }
 
 #[test]
@@ -172,8 +193,10 @@ fn jobs_two_agents_one_tree() {
     let mut engine = job_world(24, 24);
     let a = worker(&mut engine, 5, 5);
     let b = worker(&mut engine, 15, 5);
+    let watch = Watch::begin("jobs_two_agents_one_tree", 0, "primary", &engine);
     plant(&mut engine, (10, 12), 3);
     order(&mut engine, chop((10, 12)));
+    watch.annotate(&engine, "fixture_setup", || serde_json::json!({"recipe": "jobs_two_agents_one_tree", "founding_boundary": "post_worker_spawn_tick_zero", "world_seed": engine.resources.world_seed, "width": engine.resources.tile_grid.width, "height": engine.resources.tile_grid.height, "ground_logs": ground_logs(&engine), "log_ledger": log_ledger(&engine.world, &engine.resources)}));
     tick_checked(&mut engine);
     let holders: Vec<_> = [a, b]
         .into_iter()
@@ -198,12 +221,15 @@ fn jobs_two_agents_one_tree() {
     });
     assert!(!b_ever, "the second worker never took the reserved tree");
     assert_eq!(engine.resources.colony.tallies.trees_felled, 1);
+    watch.annotate(&engine, "event_stop", || serde_json::json!({"predicate": "reserved_tree_felled", "trees_felled": engine.resources.colony.tallies.trees_felled, "second_worker_took_job": b_ever}));
+    watch.finish(&engine, "reserved_tree_felled");
 }
 
 #[test]
 fn jobs_cancel_on_hunger() {
     // The live colony: a worker carrying logs far from camp gets hungry.
     let mut engine = sim_test::colony_engine(1);
+    let watch = Watch::begin("jobs_cancel_on_hunger", 1, "primary", &engine);
     let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
     // Logs 14 tiles east, a zone 14 tiles south-east: hauls far from the camp
     // (its meal radius is 8).
@@ -223,6 +249,7 @@ fn jobs_cancel_on_hunger() {
         .find(|t| open(&engine, *t))
         .expect("a free tile east or west of the camp");
     let east = source.0 > hearth.0;
+    watch.annotate(&engine, "before_log_gift", || serde_json::json!({"tile": source, "count": 20, "log_ledger": log_ledger(&engine.world, &engine.resources)}));
     drop_logs(&mut engine, source, 20);
     let cell = (0..30)
         .flat_map(|d| {
@@ -238,6 +265,7 @@ fn jobs_cancel_on_hunger() {
         .find(|t| open(&engine, *t))
         .expect("a free tile for the zone");
     order(&mut engine, zone(cell.0, cell.1, cell.0, cell.1));
+    watch.annotate(&engine, "fixture_setup", || serde_json::json!({"recipe": "jobs_cancel_on_hunger", "source": source, "cell": cell, "log_ledger": log_ledger(&engine.world, &engine.resources)}));
     let mut carrier = None;
     for _ in 0..4_000 {
         tick_checked(&mut engine);
@@ -283,6 +311,7 @@ fn jobs_cancel_on_hunger() {
             )
         })
         .expect("reachable empty meal tile");
+    watch.annotate(&engine, "before_hunger_intervention", || serde_json::json!({"predicate": "log_carrier_far_from_hearth", "carrier_id": id, "load": load, "position": position, "hearth": hearth, "meal_tile": meal_tile, "food_count": 10, "requested_hunger": 80.0, "meal_tile_empty": !engine.resources.colony.ground_items.contains_key(&meal_tile)}));
     let day = sim_systems::runtime::food::day(&engine.resources);
     sim_systems::runtime::food::items::create_ground(
         &mut engine.resources,
@@ -298,6 +327,7 @@ fn jobs_cancel_on_hunger() {
     if let Ok(mut hunger) = engine.world.get::<&mut Hunger>(carrier) {
         hunger.value = 80.0;
     }
+    watch.annotate(&engine, "after_hunger_intervention", || serde_json::json!({"carrier_id": id, "actual_hunger": engine.world.get::<&Hunger>(carrier).ok().map(|h| h.value), "meal_tile": meal_tile, "direct_food_source": "Debug", "requested_food_count": 10, "meal_count": engine.resources.colony.ground_items.get(&meal_tile).map(|s| s.count), "meal_is_porridge": engine.resources.colony.ground_items.get(&meal_tile).is_some_and(|s| s.kind == ItemKind::from_name("porridge").expect("meal"))}));
     let cancels_before = engine
         .resources
         .colony
@@ -341,12 +371,15 @@ fn jobs_cancel_on_hunger() {
         "it went for food: {:?}",
         state_of(&engine, carrier)
     );
+    watch.annotate(&engine, "event_stop", || serde_json::json!({"predicate": "needs_cancel_within_one_tick", "carrier_id": id, "cancel_before": cancels_before, "cancel_after": engine.resources.colony.tallies.cancels_of(CancelReason::Needs)}));
+    watch.finish(&engine, "hunger_intervention_plus1");
 }
 
 #[test]
 fn jobs_cancel_area_mid_delivery() {
     let mut engine = job_world(30, 30);
     let w = worker(&mut engine, 2, 2);
+    let watch = Watch::begin("jobs_cancel_area_mid_delivery", 0, "primary", &engine);
     drop_logs(&mut engine, (3, 3), 10);
     order(
         &mut engine,
@@ -356,6 +389,7 @@ fn jobs_cancel_area_mid_delivery() {
             y: 20,
         },
     );
+    watch.annotate(&engine, "fixture_setup", || serde_json::json!({"recipe": "jobs_cancel_area_mid_delivery", "founding_boundary": "post_worker_spawn_tick_zero", "world_seed": engine.resources.world_seed, "width": engine.resources.tile_grid.width, "height": engine.resources.tile_grid.height, "ground_logs": ground_logs(&engine), "log_ledger": log_ledger(&engine.world, &engine.resources)}));
     let used = run_until(&mut engine, 2_000, |e| {
         carry_of(e, w).is_some()
             && matches!(job_of(e, w).map(|j| j.kind), Some(JobKind::Deliver { .. }))
@@ -363,6 +397,7 @@ fn jobs_cancel_area_mid_delivery() {
     assert!(used < 2_000, "the worker never picked logs up");
     let carried = carry_of(&engine, w).expect("load").count;
     assert_eq!(carried, RULE.carry_logs);
+    watch.annotate(&engine, "before_cancel", || serde_json::json!({"used": used, "limit": 2000, "carried": carried, "worker_id": engine.world.get::<&Agent>(w).expect("worker").id}));
     let result = submit(
         &mut engine,
         Command::CancelArea {
@@ -395,16 +430,25 @@ fn jobs_cancel_area_mid_delivery() {
         tick_checked(&mut engine);
     }
     assert!(job_of(&engine, w).is_none_or(|j| !matches!(j.kind, JobKind::Deliver { .. })));
+    watch.annotate(&engine, "event_stop", || serde_json::json!({"predicate": "cancel_delivery_plus50", "used": used, "cancel_count": engine.resources.colony.tallies.cancels_of(CancelReason::Command)}));
+    watch.finish(&engine, "cancel_delivery_plus50");
 }
 
 #[test]
 fn jobs_stuck_cancel() {
     let mut engine = job_world(24, 24);
     let w = worker(&mut engine, 2, 2);
+    let watch = Watch::begin("jobs_stuck_cancel", 0, "primary", &engine);
     // Without its movement stream the worker never moves: no progress.
     let _ = engine.world.remove_one::<MovementRng>(w);
     plant(&mut engine, (20, 20), 3);
     order(&mut engine, chop((20, 20)));
+    watch.annotate(&engine, "fixture_setup", || serde_json::json!({"recipe": "jobs_stuck_cancel", "founding_boundary": "post_worker_spawn_tick_zero", "world_seed": engine.resources.world_seed, "width": engine.resources.tile_grid.width, "height": engine.resources.tile_grid.height, "ground_logs": ground_logs(&engine), "log_ledger": log_ledger(&engine.world, &engine.resources)}));
+    watch.annotate(
+        &engine,
+        "removed_movement",
+        || serde_json::json!({"movement_rng_absent": engine.world.get::<&MovementRng>(w).is_err()}),
+    );
     tick_checked(&mut engine);
     let job = job_of(&engine, w).expect("the worker took the tree");
     for _ in 0..RULE.stuck_ticks - 1 {
@@ -424,26 +468,44 @@ fn jobs_stuck_cancel() {
     );
     assert!(job.taken_at < engine.current_tick());
     assert!(engine.resources.colony.trees.contains_key(&(20, 20)));
+    watch.annotate(&engine, "event_stop", || serde_json::json!({"predicate": "stuck_cancel", "stuck_ticks": RULE.stuck_ticks, "cancel_count": engine.resources.colony.tallies.cancels_of(CancelReason::Stuck), "tree_present": engine.resources.colony.trees.contains_key(&(20, 20))}));
+    watch.finish(&engine, "stuck_cancel");
 }
 
 #[test]
 fn jobs_children_never_work() {
     let mut engine = job_world(24, 24);
     let kid = worker(&mut engine, 5, 5);
+    let watch = Watch::begin("jobs_children_never_work", 0, "primary", &engine);
     let _ = engine.world.insert_one(kid, Child { born_tick: 0 });
     plant(&mut engine, (8, 8), 3);
     order(&mut engine, chop((8, 8)));
     drop_logs(&mut engine, (6, 6), 5);
     order(&mut engine, zone(12, 12, 12, 12));
+    watch.annotate(&engine, "fixture_setup", || serde_json::json!({"recipe": "jobs_children_never_work", "founding_boundary": "post_worker_spawn_tick_zero", "world_seed": engine.resources.world_seed, "width": engine.resources.tile_grid.width, "height": engine.resources.tile_grid.height, "ground_logs": ground_logs(&engine), "log_ledger": log_ledger(&engine.world, &engine.resources)}));
+    watch.annotate(
+        &engine,
+        "child_inserted",
+        || serde_json::json!({"child_component_present": engine.world.get::<&Child>(kid).is_ok()}),
+    );
     for _ in 0..600 {
         tick_checked(&mut engine);
         assert!(job_of(&engine, kid).is_none(), "a child took a job");
     }
     assert_eq!(engine.resources.colony.tallies.jobs_taken, 0);
     // The same world with an adult does take work (the test can fail).
+    watch.annotate(
+        &engine,
+        "before_adult_spawn",
+        || serde_json::json!({"direct_spawn": true, "position": [5, 6]}),
+    );
     let adult = worker(&mut engine, 5, 6);
+    watch.annotate(&engine, "after_adult_spawn", || serde_json::json!({"direct_spawn": true, "position": [5, 6], "adult_id": engine.world.get::<&Agent>(adult).expect("adult").id}));
+
     tick_checked(&mut engine);
     assert!(job_of(&engine, adult).is_some());
+    watch.annotate(&engine, "event_stop", || serde_json::json!({"predicate": "child_600_then_adult1", "adult_has_job": job_of(&engine, adult).is_some()}));
+    watch.finish(&engine, "child_600_then_adult1");
 }
 
 #[test]

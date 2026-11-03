@@ -24,6 +24,7 @@ from generic_whole_gate_native import (
     collect_family,
     evaluate_family,
 )
+from jobs_fixture import child_emission, source_path
 from mux2_gate_inputs import Json, Node
 from test_generic_test_history import CHILD, cases, graph
 from test_generic_test_observations import ObservationTests
@@ -77,17 +78,17 @@ class WholeNativeTests(unittest.TestCase):
             inputs: dict[str,str]={}
             for target in plan:
                 name=f'rust/crates/sim-test/tests/{target}.rs'; dest=product/name; dest.parent.mkdir(parents=True,exist_ok=True)
-                dest.write_bytes((original/name).read_bytes()); self.assertEqual(file_hash(dest),SOURCE_PINS[target]); inputs[name]=file_hash(dest)
+                dest.write_bytes(source_path(name).read_bytes()); self.assertEqual(file_hash(dest),SOURCE_PINS[target]); inputs[name]=file_hash(dest)
             extra_source = [str(path.relative_to(original)) for prefix in SOURCE_TREES for path in (original/prefix).rglob('*.rs')]
             for name in (*JOBS_INPUTS, FORMAT_SOURCE, EXTRA_SOURCE, *M1_PINS, *extra_source):
                 dest=product/name;dest.parent.mkdir(parents=True,exist_ok=True)
-                dest.write_bytes((original/name).read_bytes());inputs[name]=file_hash(dest)
+                dest.write_bytes(source_path(name).read_bytes());inputs[name]=file_hash(dest)
             driver = 'import subprocess,sys\n'
             for target, members in plan.items():
                 (product/(target+'.json')).write_text(json.dumps(members))
                 child=CHILD.replace("'plan.json'", repr(target+'.json')).replace("'synthetic planned boundary'", "r['stop']")
                 child=child[:child.index("for test in sorted({r['test'] for r in rows})")]
-                if target=='colony_jobs':child+=HUT_CHILD.replace('COMPLETION_TICK','200')
+                if target=='colony_jobs':child+=child_emission()+HUT_CHILD.replace('COMPLETION_TICK','200')
                 if target in ('colony_steward','steward_defence'):
                     child+='\nTARGET='+repr(target)+'\nREPLAY='+repr(REPLAY)+'\nHOUSING='+repr(HOUSING)+'\nDEFENCE='+repr(DEFENCE)+'\n'+EXTRA
                 child+='\nfor test in '+repr(TESTS[target])+": print('test '+test+' ... '+('ignored' if test=="+repr(IGNORED)+" else 'ok'))\n"
@@ -126,7 +127,7 @@ class WholeNativeTests(unittest.TestCase):
                    return_value={'status':'INCOMPLETE','safety':[],'coverage':[],'unsupported':[]}):
             result=evaluate_family(Node(self.session),self.base,self.candidate)
         self.assertEqual(result['status'],'INCOMPLETE')
-        self.assertEqual(len(Node(result['coverage']).array()),106)
+        self.assertEqual(len(Node(result['coverage']).array()),115)
         family=collect_family(Node(self.session),self.base,'colony_commands')
         self.assertNotEqual(family.emitted_pid,family.aggregate_pid)
 

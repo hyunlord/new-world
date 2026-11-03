@@ -775,3 +775,11 @@ Python 확대122개 종료0(21.036초), 기존 M1 테스트의 미사용 반환�
 appearance·ASCII routing fixture 두 파일에서 새로 연결된 colony FFI·baseline·twin 세 sibling만 격리했다. 선택된 collector 호출과 기존 safety/coverage 수, INCOMPLETE·남은 경로 검증은 그대로이며 생산 코드·원본 oracle·gameplay는 바꾸지 않는다. 좁은 세 테스트는 통과했고, 두 파일의 기존 타입 진단31건은 변경 전후 동일하다. 이 fixture를 전체 세계 안전성이나 타입 clean 증거로 사용하지 않는다.
 
 증거: `stage0/ordered-dispatch/p127-python-discovery/routing-fix/RESULT.md`, `p127-python-discovery/routing-independent-review/REVIEW.md`. 원래 p127 discovery의 실패 기록은 유지하며 이 검사로 원래 전체 실행 결과를 대체하지 않는다.
+
+### S0-p129 — colony jobs 원본 열 세계의 opt-in 관측
+
+원본 아홉 테스트가 만드는 열 세계를 기존 Watch와 실제 aggregate 결과에 연결한다. M1 여덟 세계는 원래 worker 생성 직후 tick0에서 시작하고, seed1 hunger·seed2 gifted hut도 전체 기록 이력과 ordinary safety를 적용한다. tick600의 직접 성인 추가는 출생으로 꾸미지 않으며, hunger의 실제 carrier 탐색·빈 meal 위치·food/Hunger 변경과 한 tick 후 결과를 별도 개입으로 검증한다. 원본 command·loop·horizon·assertion은 유지하고 직접 mutation을 queued command 기록으로 만들지 않는다. standalone과 whole-stage가 같은 plan을 사용하며 정확한 colony_jobs 경로만 완료 목록에서 제거한다.
+
+V2는 인접 FFI fixture의 미완료 예제를 새로 관측되는 colony_jobs에서 실제 미관측 colony_items로 바꾼 두 문자열 수정만 더한다. 처음 인접19개 검사 중 두 실패와 수정 후 parser를 포함한53개 통과를 모두 보존했다. 합동 검토93개 통과는 별도 겹치는 검사 집합이므로 합산하지 않는다. 선택20+3개 파일의 타입 오류0, 기존 fixture 세 파일은 별도 비교의31·45건 진단이 그대로여서 clean 주장 대상에서 제외한다.
+
+증거: `stage0/ordered-dispatch/colony-jobs-observer-draft-v2/RESULT.md`, `colony-jobs-observer-review/REVIEW_FROZEN.md`, `summary-interleave-p111-m1-review/REVIEW.md`, `combined-p127-review-bindings-01.json`. 원본 gameplay를 바꾸려는 수정은 없지만 Rust compile·default-off identity·off/on 실제 열 mirror·중립성은 NOT_RUN이다. O postimage 변경으로 과거 qualification을 재사용하지 않으며 matrix는 UNAVAILABLE다. Stage0 미게시·엄격한 CORE-off KnowledgeLost FAIL을 유지한다.

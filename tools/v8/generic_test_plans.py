@@ -8,12 +8,27 @@ import re
 from dataclasses import dataclass
 
 from generic_gate import document, integer, require
-from generic_test_history_graph import (HistoryEvidence, ROUNDTRIP, BASELINE, DEATHS, DETERMINISTIC, BRIDGE, PREGNANCY, SAVE_OCCURRENCES, extends)
-from generic_test_endpoint_types import ExpectedOccurrence, bound_bytes, fields, snapshot
+from generic_test_endpoint_types import (
+    ExpectedOccurrence,
+    bound_bytes,
+    fields,
+    snapshot,
+)
+from generic_test_history_graph import (
+    BASELINE,
+    BRIDGE,
+    DEATHS,
+    DETERMINISTIC,
+    PREGNANCY,
+    ROUNDTRIP,
+    SAVE_OCCURRENCES,
+    HistoryEvidence,
+    extends,
+)
 from mux2_gate_inputs import Json, Node
 
 SOURCE_PINS = {
-    'colony_jobs': 'a5826d9be2af9ffb7ee4ac5792935795befa0a8b5684465af7e70e1f745158c7',
+    'colony_jobs': 'd10150e355f443b92a42cc19095e6a8a2971a57bc3dbf2c309e0d6d5f23bbd34',
     'save_load': 'fccd2174e5466798f686e7518248c41fe6374338cb78d9c0b67121d1ed1dd21a',
     'colony_world': 'a622f80b35aca286b77a650d87a9125c5f4a04e7363ea81a5dcedcab0f254a32',
     'colony_commands': 'bae084f3e439a93aaae915f9eedc423c60a8626d490b9bdaa7f40e5457328902',
@@ -108,6 +123,7 @@ def save_plan(evidence: HistoryEvidence) -> tuple[Planned, ...]:
 
 
 JOBS_INPUTS = {
+    'rust/crates/sim-engine/src/lib.rs': '4281c820c3fa89b95588de0396bdf1233539f865a3b33856679b8520974003e8',
     'rust/crates/sim-test/tests/colony_jobs.rs': SOURCE_PINS['colony_jobs'],
     'rust/crates/sim-core/src/rules/colony.rs': '3fa9680569223cb974acdcf7247f0aabf8296da707752f17ac24e94f02471946',
     'rust/crates/sim-test/tests/colony_support/mod.rs': 'b5fb68e830fee08ff7e04694a23919ec62cfdcdab3431a69aed58899db616525',
