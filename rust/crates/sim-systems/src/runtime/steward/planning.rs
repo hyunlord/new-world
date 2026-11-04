@@ -850,7 +850,15 @@ fn house(
                 && !crate::runtime::rooms::roofed(res, tile)
         })
         .collect();
-    for (x, y, width, height) in locations {
+    let shortlist = !store && clearing_budget.is_some();
+    let mut first_valid: Option<usize> = None;
+    let mut scored = 0;
+    let mut best: Option<(u32, HousePlan)> = None;
+    for (index, (x, y, width, height)) in locations.into_iter().enumerate() {
+        // Bound both expensive scores and all additional candidate visits.
+        if first_valid.is_some_and(|first| index > first + 256) || scored == 16 {
+            break;
+        }
         profile.visit();
         if x + width + 2 >= res.tile_grid.width || y + height + 2 >= res.tile_grid.height {
             continue;
@@ -1130,57 +1138,75 @@ fn house(
         {
             continue;
         }
-        if !clearing.is_empty() {
-            let tiles = clearing
+        let score = if shortlist {
+            let Some(path) = future_nav.path(door_tile, hearth) else {
+                continue;
+            };
+            let mut previous = door_tile;
+            path.iter()
+                .map(|&next| {
+                    let cost = future_nav.map().step_cost(previous, next);
+                    previous = next;
+                    cost
+                })
+                .sum()
+        } else {
+            0
+        };
+        let commands = if !clearing.is_empty() {
+            let tiles: Vec<_> = clearing
                 .into_iter()
                 .filter(|tile| !res.colony.designations.contains_key(tile))
-                .collect::<Vec<_>>();
-            return HousePlan {
-                reserved,
-                covered,
-                commands: if tiles.is_empty() {
-                    Vec::new()
-                } else {
-                    vec![Command::DesignateChopTiles { tiles }]
-                },
-            };
-        }
-        free.sort_by_key(|&tile| (Reverse(distance(tile, hearth)), tile.1, tile.0));
-        let mut commands: Vec<_> = free
-            .into_iter()
-            .take(beds as usize)
-            .map(|(x, y)| Command::PlaceBlueprint { kind: bed, x, y })
-            .collect();
-        commands.extend(border);
-        // Static geometry is stable across transient people. Ordinary placement still waits
-        // until every intended bed and boundary tile passes the real person-aware validator.
-        if commands.iter().any(|command| match command {
-            Command::PlaceBlueprint { kind, x, y } => {
-                crate::commands::check_space_after_tree_clear(
-                    res,
-                    &actual_people,
-                    *kind,
-                    (*x, *y),
-                    false,
-                )
-                .is_err()
+                .collect();
+            if tiles.is_empty() {
+                Vec::new()
+            } else {
+                vec![Command::DesignateChopTiles { tiles }]
             }
-            _ => false,
-        }) {
-            return HousePlan {
-                commands: Vec::new(),
-                reserved,
-                covered,
-            };
-        }
-        return HousePlan {
+        } else {
+            free.sort_by_key(|&tile| (Reverse(distance(tile, hearth)), tile.1, tile.0));
+            let mut commands: Vec<_> = free
+                .into_iter()
+                .take(beds as usize)
+                .map(|(x, y)| Command::PlaceBlueprint { kind: bed, x, y })
+                .collect();
+            commands.extend(border);
+            // Occupancy delays the selected geometry; it must not redirect the home.
+            if commands.iter().any(|command| match command {
+                Command::PlaceBlueprint { kind, x, y } => {
+                    crate::commands::check_space_after_tree_clear(
+                        res,
+                        &actual_people,
+                        *kind,
+                        (*x, *y),
+                        false,
+                    )
+                    .is_err()
+                }
+                _ => false,
+            }) {
+                commands.clear();
+            }
+            commands
+        };
+        let candidate = HousePlan {
             commands,
             reserved,
             covered,
         };
+        if !shortlist {
+            return candidate;
+        }
+        first_valid.get_or_insert(index);
+        scored += 1;
+        // Equal route costs retain the original stable housing order.
+        if best.as_ref().is_none_or(|(cost, _)| score < *cost) {
+            best = Some((score, candidate));
+        }
     }
-    HousePlan::default()
+    best.map_or_else(HousePlan::default, |(_, plan)| plan)
 }
+
 fn teach(world: &World, res: &SimResources) -> Vec<Command> {
     for (node, state) in res.colony.tech.states.iter().enumerate() {
         if state.status != TechStatus::AtRisk || state.practitioners == 0 {

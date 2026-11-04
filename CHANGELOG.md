@@ -9,6 +9,7 @@
 
 ### Changed
 - Bound proactive food and seed-consuming cooking commitments, separate fuel conversion from construction logs, and plan a real roofed Storehouse.
+- Compare a bounded shortlist of affordable home sites by actual hearth route cost while preserving clearing caps and complete-shell access.
 - Base initial field area on measured wild production, annual seasonal consumption and a replacement share; calibration and held-out acceptance remain pending.
 
 ## M6b Stage 0 — stopped, 2026-11-04 (not published)

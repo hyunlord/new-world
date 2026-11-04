@@ -1104,6 +1104,27 @@ fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
     let preview = house(&e.world, &e.resources, hearth, &home.action, true);
     assert_eq!(preview.reserved, selected.reserved);
     assert_eq!(preview.covered, selected.covered);
+    // The cap boundary is independent of the intentional commute ranking change.
+    let original_tree_tile = tree_tile;
+    e.resources.colony.trees.remove(&tree_tile);
+    let clean = house(&e.world, &e.resources, hearth, &home.action, false);
+    let tree_tile = clean
+        .commands
+        .iter()
+        .find_map(|command| match command {
+            Command::PlaceBlueprint { kind, x, y }
+                if kind.is_wall() && distance((*x, *y), hearth) > *camp_radius =>
+            {
+                Some((*x, *y))
+            }
+            _ => None,
+        })
+        .expect("selected new wall outside autonomous clearing radius");
+    e.resources
+        .colony
+        .trees
+        .insert(tree_tile, sim_core::colony::Tree { logs: 3 });
+    let uncapped = reference_house(&e.world, &e.resources, hearth, &home.action, false);
     // One physical tree reaches the boundary exactly; one additional log rejects it.
     let cost: u32 = clean
         .commands
@@ -1171,7 +1192,7 @@ fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
         .insert(tree_tile, sim_core::colony::Designation::Chop);
     let waiting = house(&e.world, &e.resources, hearth, &home.action, false);
     assert_eq!(
-        waiting.reserved, old.reserved,
+        waiting.reserved, clean.reserved,
         "already accepted clearance adds no yield twice"
     );
     assert!(waiting.commands.is_empty());
@@ -1179,10 +1200,16 @@ fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
     e.resources.steward.enabled = false;
     assert_eq!(
         house(&e.world, &e.resources, hearth, &home.action, false).reserved,
-        old.reserved,
+        uncapped.reserved,
         "inactive cap preserves original candidate choice"
     );
     e.resources.steward.enabled = true;
+    // Restore the original tree-free plan's obstacle state after the cap subcase.
+    e.resources.colony.trees.remove(&tree_tile);
+    e.resources
+        .colony
+        .trees
+        .insert(original_tree_tile, sim_core::colony::Tree { logs: 3 });
     for command in selected.commands {
         assert!(crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted);
     }
@@ -1228,4 +1255,113 @@ fn capped_seed5_house_preserves_post_shell_access() {
         inaccessible.is_empty(),
         "accepted seed5 shell isolates construction from hearth {hearth:?}: {inaccessible:?}"
     );
+}
+
+#[test]
+fn capped_seed5_house_avoids_long_camp_detour() {
+    let mut e = engine(5);
+    assert!(
+        crate::commands::submit(
+            &mut e,
+            Command::SetSteward {
+                on: true,
+                scope: sim_core::colony::steward::StewardScope::All,
+            }
+        )
+        .accepted
+    );
+    let hearth = hearth_tiles(&e.resources)[0];
+    e.tick();
+    let bed = sim_core::colony::steward::rules()
+        .expect("rules")
+        .rules
+        .iter()
+        .find_map(|rule| match rule.action {
+            Action::House { bed, .. } => Some(bed),
+            _ => None,
+        })
+        .expect("home bed");
+    let beds: Vec<_> = crate::runtime::jobs::items::colony_sites(&e.world)
+        .values()
+        .filter(|site| site.site.kind == bed)
+        .map(|site| site.site.top_left)
+        .collect();
+    assert_eq!(beds.len(), 10);
+    for tile in beds {
+        let path = e.resources.nav.path(hearth, tile).expect("reachable bed");
+        let mut previous = hearth;
+        let cost: u32 = path
+            .iter()
+            .map(|&next| {
+                let cost = e.resources.nav.map().step_cost(previous, next);
+                previous = next;
+                cost
+            })
+            .sum();
+        // The retained first-fit diagnostic costs at least 962; an affordable
+        // candidate within 230 further visits costs at most 526 for every bed.
+        assert!(
+            cost < 962,
+            "bed {tile:?} retains the long camp detour: {cost}"
+        );
+    }
+}
+
+#[test]
+fn capped_house_commute_choice_keeps_occupied_reservations() {
+    let mut e = engine(5);
+    assert!(
+        crate::commands::submit(
+            &mut e,
+            Command::SetSteward {
+                on: true,
+                scope: sim_core::colony::steward::StewardScope::All,
+            }
+        )
+        .accepted
+    );
+    crate::runtime::nav::ensure(&mut e.resources);
+    let data = sim_core::colony::steward::rules().expect("rules");
+    for rule in data
+        .rules
+        .iter()
+        .filter(|r| matches!(r.action, Action::Stockpile { .. } | Action::Wood { .. }))
+    {
+        for command in plan(&e.world, &e.resources, rule) {
+            assert!(
+                crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted
+            );
+        }
+    }
+    let action = &data
+        .rules
+        .iter()
+        .find(|r| matches!(r.action, Action::House { .. }))
+        .expect("home")
+        .action;
+    let hearth = hearth_tiles(&e.resources)[0];
+    let before = *e.resources.nav.stats.borrow();
+    let ready = house(&e.world, &e.resources, hearth, action, false);
+    let repeat = house(&e.world, &e.resources, hearth, action, false);
+    assert_eq!(ready.commands, repeat.commands);
+    assert_eq!(ready.reserved, repeat.reserved);
+    let wall = ready
+        .commands
+        .iter()
+        .find_map(|command| match command {
+            Command::PlaceBlueprint { kind, x, y } if kind.is_wall() => Some((*x, *y)),
+            _ => None,
+        })
+        .expect("ready home wall");
+    for (_, position) in e.world.query::<&mut Position>().iter() {
+        position.x = wall.0;
+        position.y = wall.1;
+    }
+    for reserve_only in [false, true] {
+        let blocked = house(&e.world, &e.resources, hearth, action, reserve_only);
+        assert!(blocked.commands.is_empty());
+        assert_eq!(blocked.reserved, ready.reserved);
+        assert_eq!(blocked.covered, ready.covered);
+    }
+    assert_eq!(*e.resources.nav.stats.borrow(), before);
 }
