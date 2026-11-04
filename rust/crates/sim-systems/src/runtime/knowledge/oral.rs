@@ -30,6 +30,8 @@
 //! topic also takes precedence in rehearsal and ordinary telling; all
 //! non-overdue choices retain their original keyed order. Hearth lore and
 //! entries protected by their decay floor do not need this preference.
+//! Actual use by an earlier pair removes overdue priority for later pairs,
+//! but teller practice and receiving eligibility still use the evening snapshot.
 //! This is local conversation policy, not a forecast of colony-wide loss. Every
 //! gathered holder of fire keeping is stamped as using it (the hearth lore),
 //! and a teller who practises storytelling as using that.
@@ -94,13 +96,16 @@ impl RuntimeSystem for OralTransmissionSystem {
         let hearth_lore = gates.lore(Lore::Hearth);
         let story = gates.oral();
         let today = sim_core::colony::knowledge::day_of(tick);
-        let overdue = |known: &Knowledge, node: u8| {
+        let overdue = |known: &Knowledge, used: &Knowledge, node: u8| {
             let entry = known.get(node)?;
+            let last_used = used
+                .get(node)
+                .map_or(entry.last_used, |used| used.last_used);
             (sim_core::colony::knowledge::bit(node) & hearth_lore == 0
-                && u64::from(today.saturating_sub(entry.last_used)) > rule.unused_days
+                && u64::from(today.saturating_sub(last_used)) > rule.unused_days
                 && rule.decay_of(entry.source()) > 0
                 && rule.floor_of(entry.source()) < d.threshold(node))
-            .then_some(entry.last_used)
+            .then_some(last_used)
         };
         // The evening's snapshot: every gathered person's knowledge before tonight.
         let before: Vec<_> = here.iter().map(|p| knowledge_of(world, p.entity)).collect();
@@ -126,7 +131,7 @@ impl RuntimeSystem for OralTransmissionSystem {
                             && before[li].proficiency(node) < rule.oral_gain)
                             || before[li].proficiency(node) >= rule.oral_gain.min(d.threshold(node))
                     })
-                    .filter_map(|node| overdue(&before[i], node))
+                    .filter_map(|node| overdue(&before[i], &after[i], node))
                     .min()
             };
             if let Some(oldest) = tellers.iter().filter_map(|&i| oldest_topic(i)).min() {
@@ -161,10 +166,10 @@ impl RuntimeSystem for OralTransmissionSystem {
             };
             if let Some(oldest) = shared
                 .iter()
-                .filter_map(|&node| overdue(teller, node))
+                .filter_map(|&node| overdue(teller, &after[ti], node))
                 .min()
             {
-                shared.retain(|&node| overdue(teller, node) == Some(oldest));
+                shared.retain(|&node| overdue(teller, &after[ti], node) == Some(oldest));
             } else if let Some(oldest) = shared.iter().map(last_use).min() {
                 shared.retain(|node| last_use(node) == oldest);
             }
@@ -217,7 +222,7 @@ impl RuntimeSystem for OralTransmissionSystem {
                         0x1_0200 + u32::from(*c),
                         0,
                     );
-                    let priority = match overdue(teller, *c) {
+                    let priority = match overdue(teller, &after[ti], *c) {
                         Some(last_used) => (false, last_used, rank),
                         None => (true, 0, rank),
                     };
@@ -586,6 +591,97 @@ mod tests {
                 "case={case}"
             );
         }
+    }
+
+    #[test]
+    fn overdue_priority_moves_on_after_an_actual_earlier_conversation() {
+        // Given: two empty listeners precede two experts with distinct overdue topics.
+        let (mut world, mut res, listeners) = pair();
+        certain_telling(&mut res);
+        for &entity in &listeners {
+            store(&mut world, entity, Knowledge::default());
+        }
+        let first = defs().id_of("pot_firing").expect("pot");
+        let second = defs().id_of("pressure_flaking").expect("pressure");
+        let pos = *world.get::<&Position>(listeners[0]).expect("position");
+        let experts: Vec<_> = [(first, 0), (second, 1)]
+            .into_iter()
+            .enumerate()
+            .map(|(i, (node, day))| {
+                world.spawn((
+                    sim_core::components::Agent {
+                        id: 1000 + i as u64,
+                    },
+                    pos,
+                    Knowledge::from_entries(vec![KnowledgeEntry::new(
+                        node,
+                        Source::Discovered,
+                        400,
+                        day,
+                    )]),
+                ))
+            })
+            .collect();
+        // When: actual use in the first pair removes its topic's overdue priority.
+        OralTransmissionSystem.tick(&mut world, &mut res);
+        // Then: the second listener hears the other expert, without extra gains or promotion.
+        for (&entity, (learned, absent)) in listeners.iter().zip([(first, second), (second, first)])
+        {
+            let known = knowledge_of(&world, entity);
+            assert_eq!(known.proficiency(learned), 350);
+            assert_eq!(known.proficiency(absent), 0);
+            assert!(!known.practises(learned));
+        }
+        for (&entity, node) in experts.iter().zip([first, second]) {
+            assert_eq!(
+                knowledge_of(&world, entity)
+                    .get(node)
+                    .expect("expert")
+                    .last_used,
+                10
+            );
+        }
+        assert!(res.colony.command_log.is_empty());
+    }
+
+    #[test]
+    fn overdue_priority_use_does_not_make_a_new_learner_a_same_evening_teller() {
+        // Given: ordinary fallback chooses the newly informed first listener for the second.
+        let (mut world, mut res, listeners) = pair();
+        certain_telling(&mut res);
+        for &entity in &listeners {
+            store(&mut world, entity, Knowledge::default());
+        }
+        let node = defs().id_of("flint_knapping").expect("flint");
+        assert!(defs().threshold(node) <= rule(&res).expect("rule").oral_gain);
+        let pos = *world.get::<&Position>(listeners[0]).expect("position");
+        world.spawn((
+            sim_core::components::Agent { id: 1000 },
+            pos,
+            Knowledge::from_entries(vec![KnowledgeEntry::new(node, Source::Discovered, 500, 0)]),
+        ));
+        let listener = &people(&world, &res)[1];
+        res.world_seed = (0..1000)
+            .find(|&seed| {
+                keyed_below(
+                    seed,
+                    STREAM_KNOWLEDGE,
+                    listener.key,
+                    res.current_tick,
+                    0x1_0000,
+                    0,
+                    2,
+                ) == 0
+            })
+            .expect("new learner fallback draw");
+        // When: the original expert has been used, but teaching eligibility stays in before.
+        OralTransmissionSystem.tick(&mut world, &mut res);
+        // Then: newly learned practice waits until tomorrow before it can be transmitted.
+        assert_eq!(knowledge_of(&world, listeners[0]).proficiency(node), 350);
+        assert!(knowledge_of(&world, listeners[0]).practises(node));
+        assert_eq!(knowledge_of(&world, listeners[1]).proficiency(node), 0);
+        assert_eq!(res.colony.tallies.oral_learned, 1);
+        assert!(res.colony.command_log.is_empty());
     }
 
     #[test]

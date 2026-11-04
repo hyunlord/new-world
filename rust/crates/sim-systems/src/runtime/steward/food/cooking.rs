@@ -241,6 +241,169 @@ fn available_recipes(
     available
 }
 
+// Allocate one cooked-stock budget in authored order; procurement keeps daily_target.
+fn priority_targets(
+    world: &World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    facts: &FoodSummary,
+    reserved: &std::collections::BTreeMap<sim_core::colony::ItemKind, u64>,
+) -> std::collections::BTreeMap<RecipeKind, u16> {
+    use sim_core::colony::{ItemKind, JobStage};
+    let available = available_recipes(world, res, policy, reserved);
+    let total = facts
+        .daily_milli
+        .saturating_mul(u64::from(policy.cooked_days_milli))
+        .div_ceil(1_000_000);
+    // Match the executor: all physical cooked stock, assigned crafts and drying.
+    // Each output kind appears once, including meals outside this recipe policy.
+    let occupied: u64 = ItemKind::all()
+        .filter(|kind| {
+            kind.definition()
+                .food
+                .as_ref()
+                .is_some_and(|food| food.cooked && food.raw_edible)
+        })
+        .map(|kind| {
+            u64::from(crate::runtime::jobs::bills::bill_count(world, res, kind))
+                * edible_units(kind, false)
+        })
+        .sum();
+    let mut room = total.saturating_sub(occupied);
+    let (immediate, durable) = super::harvest::targets(policy, facts);
+    // Reserve accepted edible outputs once, independent of overlapping food
+    // horizons. Future drying is a commitment, never immediately usable food.
+    let mut committed: u64 = res
+        .food
+        .pending_drying
+        .iter()
+        .map(|batch| u64::from(batch.count) * edible_units(batch.output.kind, true))
+        .sum();
+    for (_, job) in world.query::<&Job>().iter() {
+        let JobKind::Craft { workshop, bill, .. } = job.kind else {
+            continue;
+        };
+        let Some(recipe) = res
+            .colony
+            .workshops
+            .get(&workshop)
+            .and_then(|shop| shop.bill(bill))
+            .and_then(|bill| bill.recipe.recipe())
+        else {
+            continue;
+        };
+        let output = u64::from(recipe.output.1) * edible_units(recipe.output.0, true);
+        let raw: u64 = recipe
+            .inputs
+            .iter()
+            .map(|(item, count)| u64::from(*count) * edible_units(*item, true))
+            .sum();
+        // ToSource inputs still exist in usable food; Working inputs have been
+        // consumed. Finished passive crafts live only in pending_drying above.
+        let contribution = match job.stage {
+            JobStage::ToSource => output.saturating_sub(raw),
+            JobStage::Working { .. } => output,
+            _ => 0,
+        };
+        committed = committed.saturating_add(contribution);
+    }
+    let mut headroom = immediate
+        .max(durable)
+        .saturating_sub(facts.usable_units)
+        .saturating_sub(committed);
+    let mut inputs = free_inputs(world, res);
+    let mut deductions = reserved.clone();
+    for ((_, item), count) in &mut inputs {
+        let deduction = deductions.entry(*item).or_default();
+        let taken = (*count).min(*deduction);
+        *count -= taken;
+        *deduction -= taken;
+    }
+    let mut targets = std::collections::BTreeMap::new();
+    let mut allocated = false;
+    let mut outputs = std::collections::BTreeSet::new();
+    for &kind in &policy.recipes {
+        if !available.contains(&kind) {
+            continue;
+        }
+        let Some(recipe) = kind.recipe() else {
+            continue;
+        };
+        let Some(shop) = res
+            .colony
+            .workshops
+            .values()
+            .find(|shop| recipe.supports_workshop(shop.kind))
+        else {
+            continue;
+        };
+        if res
+            .steward
+            .vetoed(&Target::Bill(shop.id, kind.code()), res.current_tick)
+            || shop
+                .bills
+                .iter()
+                .find(|bill| bill.recipe == kind)
+                .is_some_and(|bill| {
+                    !(bill.auto || steward_owns_recipe(res, shop.id, kind))
+                        || super::super::production::player_edited_bill(res, shop.id, bill.id)
+                })
+            || !has_practitioner(world, res, recipe, |practice| {
+                crate::runtime::jobs::food_recipe_supplyable(res, shop, recipe, practice)
+            })
+        {
+            continue;
+        }
+        let item_units = edible_units(recipe.output.0, true);
+        let output = u64::from(recipe.output.1) * item_units;
+        if output == 0 || outputs.contains(&recipe.output.0) {
+            continue;
+        }
+        let counted = u64::from(crate::runtime::jobs::bills::bill_count(
+            world,
+            res,
+            recipe.output.0,
+        ));
+        let raw: u64 = recipe
+            .inputs
+            .iter()
+            .map(|(item, count)| u64::from(*count) * edible_units(*item, true))
+            .sum();
+        let net = output.saturating_sub(raw);
+        let capacity = if net == 0 {
+            room
+        } else {
+            headroom.saturating_mul(output) / net
+        };
+        let allowance = room.min(capacity);
+        let physical = recipe
+            .inputs
+            .iter()
+            .map(|(item, count)| input_count(&inputs, shop.id, *item) / u64::from(*count).max(1))
+            .min()
+            .unwrap_or(0);
+        let mut batches = (allowance / output).min(physical);
+        // Preserve the small-budget Maintain(2) meal: one indivisible batch may
+        // cross a positive shortage, never one rounding allowance per recipe.
+        if batches == 0 && allowance > 0 && physical > 0 && !allocated {
+            batches = 1;
+        }
+        let extra = allowance.min(batches.saturating_mul(output));
+        let target = counted.saturating_add(extra.div_ceil(item_units));
+        targets.insert(kind, u16::try_from(target).unwrap_or(u16::MAX));
+        if batches > 0 {
+            outputs.insert(recipe.output.0);
+            allocated = true;
+            room = room.saturating_sub(batches * output);
+            headroom = headroom.saturating_sub(batches * net);
+            for (item, count) in &recipe.inputs {
+                consume_inputs(&mut inputs, shop.id, *item, batches * u64::from(*count));
+            }
+        }
+    }
+    targets
+}
+
 /// Net new edible units backed by active bills and uncommitted physical inputs.
 pub(super) fn convertible_immediate(
     world: &World,
@@ -258,7 +421,7 @@ pub(super) fn convertible_immediate(
             }
         }
     }
-    let available = available_recipes(world, res, policy, &reserved);
+    let targets = priority_targets(world, res, policy, facts, &reserved);
     let mut deductions = if emergency {
         std::collections::BTreeMap::new()
     } else {
@@ -271,14 +434,14 @@ pub(super) fn convertible_immediate(
         *deduction -= taken;
     }
     let mut credited = 0_u64;
-    for &kind in &available {
+    for &kind in &policy.recipes {
         let Some(recipe) = kind.recipe() else {
             continue;
         };
         if recipe.food_requirements.duration_days > 0 {
             continue;
         }
-        let target = u64::from(daily_target(policy, facts, available.len(), kind));
+        let target = u64::from(targets.get(&kind).copied().unwrap_or(0));
         let made = u64::from(crate::runtime::jobs::bills::bill_count(
             world,
             res,
@@ -375,7 +538,7 @@ pub(super) fn plan(
             bootstrap_recipes.push((kind, u16::try_from(target).unwrap_or(u16::MAX)));
         }
     }
-    let available = available_recipes(world, res, policy, &seed_reserve);
+    let targets = priority_targets(world, res, policy, facts, &seed_reserve);
     let mut wanted = bootstrap_recipes.clone();
     for &kind in &policy.recipes {
         let Some(recipe) = kind.recipe() else {
@@ -383,10 +546,8 @@ pub(super) fn plan(
         };
         let target = if recipe.food_requirements.duration_days > 0 {
             preservation.targets.get(&kind).copied().unwrap_or(0)
-        } else if available.contains(&kind) {
-            daily_target(policy, facts, available.len(), kind)
         } else {
-            0
+            targets.get(&kind).copied().unwrap_or(0)
         };
         wanted.push((kind, target));
     }

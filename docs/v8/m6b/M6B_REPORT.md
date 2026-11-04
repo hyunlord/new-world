@@ -1,6 +1,6 @@
 # M6b 보고서
 
-Current Stage1 runtime state (2026-11-04): calibration07 gameplay **FAIL**, despite all8 process exits0. Survival8/8; KnowledgeLost6 versus BASE1; year3 field-intake target0/8; food-overage streak criterion8/8. Both owner-confirmed bars remain unchanged. P13 repairs passed638system/17knowledge/2data tests and Clippy; strict baseline identity08 and docs15 passed. Held-out1520–1551 unused; final natural UI/cards, performance, full gate and publication remain pending. Earlier failed rounds below are retained evidence, not current status.
+Current Stage1 runtime state (2026-11-04): calibration08 gameplay **FAIL**, despite all8 process exits0. Survival/winter hunger/timely sowing/overage8/8; field-intake30%0/8; KnowledgeLost15 versus BASE1. Cold, log and #675 checks each7/8. P13 exact source5170ace63 remains review-only; held-out1520–1551 unused. Full cards comparison completed with0rejected commands but seed3 combat deaths1 versus no-answer0: FAIL. P14 bounded policy experiments are under regression verification; no publication claim.
 
 ## 현재 상태 — 2026-11-04 낮 작업
 
@@ -1016,3 +1016,17 @@ Stage1 tools 실제 차분을 Stage0 중단 SHAfd2f6d9f와 비교했다: 기존6
 조리 credit 분모 회귀는 실제12≠24로 실패했고, 기존 가용성 판정을 계획과 credit에서 공유한 뒤 unit24가 실제 종료0으로 완료됐다: 시스템638PASS/1기존ignore, 지식17PASS, 데이터2PASS, fmt 및 workspace all-target Clippy 경고0. 원래 조달 eligible 집합과 실제 유한 입력·수동 보호는 유지한다. build15·identity08·docs15가 진행 중이며 이 결과만으로 보정08이나 게시 성공을 주장하지 않는다.
 
 build15·identity08·docs15는21:01KST wrapper실제 종료0으로 완료됐다. BASE228,748값 차이0·한쪽 경로0,64연대기19,683항목과64원시 파일 동일,결정성0–3 PASS다. Rust diff가 검증 시작 patch0407d572a04e238ba2707039c23f162bd72dd85d3a6af6f2ee27d06a477cdb00와 바이트 동일하다. 보정08 Mac probe baa81170455cba74bb1f19d8463177572512583bfb57bf16d3cb1ff9ab77ad07를 별도 고정했다. 다음 보정과 held-out·게시 검증은 아직 미실행이다.
+
+### Stage1 보정08 및 실제 카드 비교 — 실패 보존
+
+5170ace63의 DGX 고정 probea57a48ca는0–7×96일 모두 종료0,원시64,069,013바이트(원격 디렉터리 포함),불변식2,211,840회·위반0이다. Mac seed0의 세 결과 파일도 바이트 동일하다. 생존·2–4년차 겨울 기아·day48 이전 파종·과잉 기간8/8,밭30%0/8,지식 세계별4/8·총15 대 BASE1이다. seed5 장작0은732/10080 대 BASE720/12960,day5 느슨한 통나무180 대 허용129이며 #675는seed4 day7 1일 대 BASE0이다. held-out과 기준은 유지한다.
+
+자연 seed0 day56 정오 저장은 최종 지문9aca943c7b0ce841-2bbfaa9ca78619ee가 보정과 같고 읽기 전후80881틱·원본 hash가 같다. 실제 죽10개가 Maintain8을 채우고 과일죽4개를 보충할 곡물2개가 운반 중이다. 이 순간에는 조리 정지 결함이 확인되지 않았다. 균등 목표 배분을 개선하는 S1-CAL-11과 실제 그날 사용을 반영하는 S1-CAL-12는 의도적 정책 실험으로 구분한다. 두 변경의 실제 RED는 조리1PASS/1FAIL(8≠16),대화1PASS/2FAIL이며 모두cargo종료101이다.
+
+카드 debug 실행은 속도상30분 내 완주 불가를 확인해 정확한 소유 PID를 검증한 뒤 중단했다(root71845 종료241). 원본을 보존했고 동일 소스 release 브리지로16세계×48일을 완주했다(root10679 종료1). 총1,109응답·실제91영수증·거절0이나 seed3 전투 사망1 대 무응답0으로 세계별 생존 FAIL이다. 두 군 총사망은 각각3으로 같으며 인구·출생 차이 자체를 이 실패 기준으로 세지 않는다. 자연 파종/수확 카드는 보였으나 Auto 무명령 응답으로 실제 전환 증거는 아니다. release e1feaeecc61341dc500943b4b8b9ef04d2fd1ccea81fbf8f4cab18d4fa30ff4b 사용 뒤 원래 debug c38e98dae58c5925761e36e5424ff2f465f8a22d17727fbec9df66f7a1c4662d 복원을 확인했다. 최종 UI·전체 gate·게시 미완료다.
+
+### p14 검증 진행 — 2026-11-04 21:40KST
+
+unit26 실제 종료0: 시스템645PASS/기존ignored1, 지식17PASS, 데이터 확장2PASS, fmt 및 all-target Clippy PASS. 추가 생산의 서로 다른 기간을 max로 합치던 누락은 실제 RED(priority-commitment-red01,1FAIL101) 후 수락 작업을 한 번씩 세도록 수정했다. 독립 소스 검토는 ToSource 입력 소비→Working→건조 대기 전이와 취소 시 제거를 확인했다. unit25의 과거 균등분배 기대 실패는 보존했고, 같은 조달 예산과 실제 우선 recipe 출력 수를 명시하는 단언으로 갱신했다. Rust patch ac9718e52d11872c011fcc6efcde9ff746ecfa7ecb4079f13380a82c8100a172를 고정해 build16/identity09/docs16 진행 중이며 결과는 아직 미확정이다. 추가 tools 파일/줄0. 보정09·held-out·최종 UI/cards·전체 게이트·게시 미완료; 두 owner 기준 유지.
+
+p14 build16 실제 PASS(릴리스4분,debug bridge). identity09 실제 PASS:228748공유값/차이0/일방경로0,chronicle64파일19683항목,원시64파일쌍 동일,결정성0–3PASS. 전체 묶음은 마지막 docs16 중1200초 제한으로 종료124했고 원시 로그를 유지했다. 기존 소유 프로세스 종료를 확인하고 docs16-r2 별도300초 재실행은 실제 종료0·docs PASS다. Rust patch는 여전히ac9718e5와 바이트 동일.

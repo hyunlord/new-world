@@ -257,6 +257,401 @@ fn cooking_credit_matches_target_when_other_recipes_lack_inputs() {
     );
 }
 
+fn priority_cooking_fixture() -> (World, SimResources, FoodPlan, u32) {
+    use sim_core::colony::{ItemKind, ItemSpec, ItemStack};
+    let (mut world, mut res, mut policy, bill) = fixture(true);
+    let known = world
+        .query::<&Knowledge>()
+        .iter()
+        .next()
+        .expect("founder")
+        .1
+        .clone();
+    for id in 8..17 {
+        world.spawn((Agent { id }, Position::new(4, 4), known.clone()));
+    }
+    res.fires.insert(1, sim_engine::FireState { lit: true });
+    policy.recipes = ["porridge", "fruit_porridge", "roasted_roots"]
+        .map(|name| RecipeKind::from_name(name).expect("recipe"))
+        .to_vec();
+    let seed = ItemKind::from_name("emmer_seed").expect("durable seed");
+    res.colony
+        .ground_items
+        .insert((2, 3), ItemStack::of(ItemSpec::raw(seed, None), 34));
+    (world, res, policy, bill)
+}
+
+#[test]
+fn priority_cooking_retains_other_meals_inside_one_stock_budget() {
+    use sim_core::colony::{ItemKind, ItemSpec};
+    let (world, mut res, policy, _) = priority_cooking_fixture();
+    for (tile, name, count) in [
+        ((1, 1), "porridge", 10),
+        ((1, 2), "fruit_porridge", 4),
+        ((1, 3), "roasted_roots", 3),
+        ((2, 1), "wild_grain", 16),
+        ((2, 2), "berries", 8),
+        ((3, 1), "roots", 8),
+    ] {
+        let item = ItemKind::from_name(name).expect("item");
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            tile,
+            ItemSpec::raw(item, None),
+            count,
+            0,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("fresh physical stock");
+    }
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(facts.daily_milli, 24_000);
+    assert_eq!(facts.cooked_units, 17);
+    assert!(super::dependencies::seed_inputs(&world, &res, &policy, &facts).is_empty());
+    let commands = super::cooking::plan(&world, &res, &policy, &facts);
+    assert!(
+        commands.contains(&Command::AddBill {
+            workshop: 1,
+            recipe: policy.recipes[0],
+            mode: BillMode::Maintain(16),
+        }),
+        "24 total minus 17 existing meals permits two preferred three-unit batches: {commands:?}"
+    );
+}
+
+#[test]
+fn priority_cooking_falls_back_when_preferred_grain_is_absent() {
+    use sim_core::colony::{ItemKind, ItemSpec};
+    let (mut world, mut res, policy, bill) = priority_cooking_fixture();
+    for (tile, name, count) in [((1, 1), "roots", 20), ((1, 2), "roasted_roots", 3)] {
+        let item = ItemKind::from_name(name).expect("item");
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            tile,
+            ItemSpec::raw(item, None),
+            count,
+            0,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("fresh physical stock");
+    }
+    assert!(
+        crate::commands::apply_command(
+            &mut world,
+            &mut res,
+            Command::Steward {
+                rule: 8,
+                command: Box::new(Command::SetBillMode {
+                    workshop: 1,
+                    bill,
+                    mode: BillMode::Maintain(3),
+                }),
+            },
+        )
+        .accepted
+    );
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(facts.daily_milli, 24_000);
+    assert_eq!(facts.cooked_units, 3);
+    let commands = super::cooking::plan(&world, &res, &policy, &facts);
+    assert!(
+        commands.contains(&Command::SetBillMode {
+            workshop: 1,
+            bill,
+            mode: BillMode::Maintain(24),
+        }),
+        "missing grain must leave the existing cooked budget available to roots: {commands:?}"
+    );
+    assert!(!commands.iter().any(|command| matches!(command,
+        Command::AddBill { recipe, .. } if *recipe == policy.recipes[0] || *recipe == policy.recipes[1]
+    )));
+}
+
+#[test]
+fn priority_cooking_counts_in_flight_output_once_at_both_craft_stages() {
+    use sim_core::colony::food::FoodOwner;
+    use sim_core::colony::{ItemKind, ItemSpec, Job, JobKind, JobStage};
+    for stage in [JobStage::ToSource, JobStage::Working { ticks_left: 30 }] {
+        let (mut world, mut res, policy, _) = priority_cooking_fixture();
+        for (tile, name, count) in [
+            ((1, 1), "porridge", 10),
+            ((1, 2), "fruit_porridge", 4),
+            ((1, 3), "roasted_roots", 3),
+            ((2, 1), "wild_grain", 16),
+            ((2, 2), "berries", 8),
+        ] {
+            let item = ItemKind::from_name(name).expect("item");
+            crate::runtime::food::items::create_ground(
+                &mut res,
+                tile,
+                ItemSpec::raw(item, None),
+                count,
+                0,
+                crate::runtime::food::items::FoodSource::Harvest,
+            )
+            .expect("fresh stock");
+        }
+        let fruit = policy.recipes[1];
+        assert!(
+            crate::commands::apply_and_log(
+                &mut world,
+                &mut res,
+                Command::Steward {
+                    rule: 8,
+                    command: Box::new(Command::AddBill {
+                        workshop: 1,
+                        recipe: fruit,
+                        mode: BillMode::Maintain(8)
+                    }),
+                },
+                0
+            )
+            .accepted
+        );
+        let bill = res.colony.workshops[&1]
+            .bills
+            .iter()
+            .find(|bill| bill.recipe == fruit)
+            .expect("fruit bill")
+            .id;
+        if matches!(stage, JobStage::Working { .. }) {
+            for (tile, count) in [((2, 1), 2), ((2, 2), 1)] {
+                crate::runtime::food::items::take(
+                    &mut world,
+                    &mut res,
+                    FoodOwner::Ground(tile),
+                    count,
+                    0,
+                )
+                .expect("Working inputs already consumed");
+            }
+        } else {
+            // ToSource reserves a real shelf batch, so free_inputs removes it once.
+            for (tile, count) in [((2, 1), 2), ((2, 2), 1)] {
+                let stack = crate::runtime::food::items::take(
+                    &mut world,
+                    &mut res,
+                    FoodOwner::Ground(tile),
+                    count,
+                    0,
+                )
+                .expect("physical shelf input");
+                let owner = FoodOwner::Shelf {
+                    workshop: 1,
+                    key: sim_core::colony::food::FoodStackKey::from(stack.spec),
+                };
+                crate::runtime::food::items::put(&mut world, &mut res, owner, stack, 0)
+                    .expect("fresh shelf ownership and age");
+            }
+        }
+        let worker = world.query::<&Agent>().iter().next().expect("worker").0;
+        world
+            .insert_one(
+                worker,
+                Job {
+                    kind: JobKind::Craft {
+                        workshop: 1,
+                        bill,
+                        at: (4, 5),
+                    },
+                    stage,
+                    taken_at: 0,
+                    amount: 0,
+                    item: fruit.recipe().expect("recipe").output.0,
+                    material: None,
+                    fetch: None,
+                    best_distance: 0,
+                    progress_tick: 0,
+                },
+            )
+            .expect("accepted craft");
+        let facts = super::summary(&world, &res, &policy);
+        let commands = super::cooking::plan(&world, &res, &policy, &facts);
+        assert!(
+            commands.contains(&Command::AddBill {
+                workshop: 1,
+                recipe: policy.recipes[0],
+                mode: BillMode::Maintain(13),
+            }),
+            "17 physical plus 4 assigned leaves one preferred batch at {stage:?}: {commands:?}"
+        );
+    }
+}
+
+#[test]
+fn priority_cooking_does_not_allocate_to_player_owned_preferred_bill() {
+    use sim_core::colony::{ItemKind, ItemSpec};
+    let (mut world, mut res, policy, bill) = priority_cooking_fixture();
+    for (tile, name) in [((1, 1), "wild_grain"), ((1, 2), "roots")] {
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            tile,
+            ItemSpec::raw(ItemKind::from_name(name).expect("item"), None),
+            20,
+            0,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("fresh stock");
+    }
+    assert!(
+        crate::commands::apply_and_log(
+            &mut world,
+            &mut res,
+            Command::AddBill {
+                workshop: 1,
+                recipe: policy.recipes[0],
+                mode: BillMode::Maintain(1),
+            },
+            0
+        )
+        .accepted
+    );
+    assert!(
+        crate::commands::apply_command(
+            &mut world,
+            &mut res,
+            Command::Steward {
+                rule: 8,
+                command: Box::new(Command::SetBillMode {
+                    workshop: 1,
+                    bill,
+                    mode: BillMode::Maintain(1)
+                }),
+            }
+        )
+        .accepted
+    );
+    let facts = super::summary(&world, &res, &policy);
+    let commands = super::cooking::plan(&world, &res, &policy, &facts);
+    assert!(
+        commands.contains(&Command::SetBillMode {
+            workshop: 1,
+            bill,
+            mode: BillMode::Maintain(24),
+        }),
+        "player-owned preferred recipe cannot spend the automatic budget: {commands:?}"
+    );
+    let preferred = res.colony.workshops[&1]
+        .bills
+        .iter()
+        .find(|entry| entry.recipe == policy.recipes[0])
+        .expect("player bill")
+        .id;
+    assert!(!commands.iter().any(|command| matches!(command,
+        Command::SetBillMode { bill, .. } | Command::SetBillSuspended { bill, .. } if *bill == preferred
+    )));
+}
+
+#[test]
+fn priority_cooking_counts_disjoint_accepted_food_horizons_once_each() {
+    use sim_core::colony::food::{DryingBatch, FoodOwner};
+    use sim_core::colony::{ItemKind, ItemSpec, Job, JobKind, JobStage};
+    let (mut world, mut res, mut policy, _) = priority_cooking_fixture();
+    res.rules.clock_offset_ticks = 0;
+    res.ticks_per_day = res.rules.calendar.ticks_per_day;
+    res.current_tick = 14 * res.ticks_per_day;
+    policy.recipes.truncate(1);
+    let roots = ItemKind::from_name("roots").expect("roots");
+    for x in 1..=5 {
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            (x, 1),
+            ItemSpec::raw(roots, None),
+            28,
+            14,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("140 fresh edible units");
+    }
+    let grain = ItemKind::from_name("wild_grain").expect("grain");
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        (6, 1),
+        ItemSpec::raw(grain, None),
+        18,
+        14,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("fresh grain");
+    let porridge = policy.recipes[0];
+    assert!(
+        crate::commands::apply_and_log(
+            &mut world,
+            &mut res,
+            Command::Steward {
+                rule: 8,
+                command: Box::new(Command::AddBill {
+                    workshop: 1,
+                    recipe: porridge,
+                    mode: BillMode::Maintain(3),
+                }),
+            },
+            14 * 1440
+        )
+        .accepted
+    );
+    let bill = res.colony.workshops[&1]
+        .bills
+        .iter()
+        .find(|bill| bill.recipe == porridge)
+        .expect("porridge bill")
+        .id;
+    crate::runtime::food::items::take(&mut world, &mut res, FoodOwner::Ground((6, 1)), 2, 14)
+        .expect("working grain already consumed");
+    let worker = world.query::<&Agent>().iter().next().expect("worker").0;
+    world
+        .insert_one(
+            worker,
+            Job {
+                kind: JobKind::Craft {
+                    workshop: 1,
+                    bill,
+                    at: (4, 5),
+                },
+                stage: JobStage::Working { ticks_left: 30 },
+                taken_at: res.current_tick,
+                amount: 0,
+                item: porridge.recipe().expect("recipe").output.0,
+                material: None,
+                fetch: None,
+                best_distance: 0,
+                progress_tick: res.current_tick,
+            },
+        )
+        .expect("accepted immediate craft");
+    crate::runtime::food::origin::push_drying(
+        &mut res,
+        DryingBatch {
+            workshop: 1,
+            bill,
+            tile: (4, 5),
+            output: ItemSpec::raw(
+                ItemKind::from_name("dried_berries").expect("dried berries"),
+                None,
+            ),
+            count: 2,
+            due_tick: 17 * 1440,
+        },
+        Default::default(),
+    );
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(facts.usable_units, 140);
+    assert_eq!(super::harvest::targets(&policy, &facts), (48, 144));
+    assert_eq!(
+        super::harvest::pending_output(&world, &res, &policy, &facts),
+        (3, 2),
+        "immediate porridge expires before winter; later dried berries miss immediate horizon"
+    );
+    let commands = super::cooking::plan(&world, &res, &policy, &facts);
+    assert!(
+        !commands.iter().any(|command| matches!(command,
+            Command::SetBillMode { bill: id, mode: BillMode::Maintain(target), .. }
+                if *id == bill && *target > 3
+        )),
+        "140 usable plus disjoint accepted 3+2 already fills 144: {commands:?}"
+    );
+}
+
 #[test]
 fn reserved_seed_cooking_is_finite_and_does_not_reopen_after_completion() {
     let (mut world, mut res, mut policy, _) = fixture(true);

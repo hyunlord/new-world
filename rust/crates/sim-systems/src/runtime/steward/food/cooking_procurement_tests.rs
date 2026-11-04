@@ -181,19 +181,22 @@ fn cooking_procurement_and_available_bills_share_the_same_daily_budget() {
     )
     .expect("physical portable berries");
     let facts = super::super::summary(&world, &res, &policy);
-    // When both bills become available, procurement still shares the same 24 portions.
+    // When both recipes become available, procurement retains its 24-portion horizon.
     let demand = super::super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
     let commands = super::super::cooking::plan(&world, &res, &policy, &facts);
-    // Then new availability does not duplicate grain demand or raise the total target.
+    // Then procurement does not duplicate demand; current bills allocate the five
+    // physical grain once, as two authored-priority porridge batches (six portions).
     assert_eq!(before.get(&grain), Some(&9));
     assert_eq!(demand.get(&grain), Some(&9));
-    for recipe in policy.recipes {
-        assert!(commands.contains(&Command::AddBill {
-            workshop: 1,
-            recipe,
-            mode: BillMode::Maintain(12),
-        }));
-    }
+    assert!(commands.contains(&Command::AddBill {
+        workshop: 1,
+        recipe: policy.recipes[0],
+        mode: BillMode::Maintain(6),
+    }));
+    assert!(!commands.iter().any(|command| matches!(
+        command,
+        Command::AddBill { recipe, .. } if *recipe == policy.recipes[1]
+    )));
 }
 
 #[test]
