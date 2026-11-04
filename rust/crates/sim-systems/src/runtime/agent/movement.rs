@@ -13,7 +13,9 @@
 //! food, water or sleep target out of reach is replaced by the nearest
 //! reachable one of the same kind. Every other colony step (idle wander, play,
 //! the tether pull) is refused when it would enter an impassable tile or cut a
-//! corner. Paths of agents that no longer walk are dropped. The baseline
+//! corner. A blocked evening home tether follows the existing pathfinder until
+//! inside its gathering radius, retaining an initiated detour through idle pauses.
+//! Paths of agents that no longer walk are dropped. The baseline
 //! (`rules.colony = None`) keeps the sign step and never reads `nav`.
 //! M3 (ADR 0023): inside the evening-gather window an idle step does not
 //! leave the hall (the room the hearth stands in).
@@ -313,12 +315,12 @@ impl RuntimeSystem for AgentMovementSystem {
         let mut home: BTreeMap<AgentId, (u32, u32)> = BTreeMap::new();
         // Pass 4: elders keep to the camp at all hours. Pass 6: inside the
         // evening-gather window they follow the evening tether when it is tighter.
-        let elder_radius = resources.rules.society.aging.map(|rule| {
-            match (rule.elder_evening_tether, evening_radius) {
+        let elder_rule = resources.rules.society.aging;
+        let elder_radius =
+            elder_rule.map(|rule| match (rule.elder_evening_tether, evening_radius) {
                 (true, Some(evening)) => rule.elder_tether_radius.min(evening),
                 _ => rule.elder_tether_radius,
-            }
-        });
+            });
         if rules.idle_tether_radius.is_some()
             || child_rule.is_some()
             || evening_radius.is_some()
@@ -619,6 +621,37 @@ impl RuntimeSystem for AgentMovementSystem {
                     }
                 }
             }
+            // Keep an initiated evening detour through idle pauses, until the
+            // existing gathering radius is reached. Other tethers remain greedy.
+            let evening_home = evening_radius.and_then(|radius| {
+                if !colony || walker || child.is_some() {
+                    return None;
+                }
+                let radius = if elder.is_some() {
+                    let rule = elder_rule.filter(|rule| rule.elder_evening_tether)?;
+                    radius.min(rule.elder_tether_radius)
+                } else {
+                    radius
+                };
+                let id = agent?.id;
+                let anchor = *home.get(&id)?;
+                (pos.x.abs_diff(anchor.0).max(pos.y.abs_diff(anchor.1)) > radius)
+                    .then_some((id, anchor))
+            });
+            let continuing_detour = evening_home.is_some_and(|(id, anchor)| {
+                nav.paths.get(&id).is_some_and(|path| {
+                    let at = match path.next {
+                        0 => path.planned_from(),
+                        n => path.steps.get(n as usize - 1).copied(),
+                    };
+                    path.goal == anchor && at == Some((pos.x, pos.y))
+                })
+            });
+            if continuing_detour {
+                if let Some((id, _)) = evening_home {
+                    walking.insert(id);
+                }
+            }
             // Idle / no AgentState: Brownian motion. v8–v14 (and any mover
             // without a lineage key) draw from the agent's sequential stream;
             // v15 draws each number from its key (section 7.1).
@@ -676,7 +709,13 @@ impl RuntimeSystem for AgentMovementSystem {
                     ny = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum()).clamp(0, max_y);
                 }
             }
-            let to = (nx as u32, ny as u32);
+            let mut to = (nx as u32, ny as u32);
+            if let Some((id, anchor)) = evening_home {
+                if continuing_detour || !nav.can_step((pos.x, pos.y), to) {
+                    to = path_step(nav, id, (pos.x, pos.y), anchor, tick);
+                    walking.insert(id);
+                }
+            }
             if colony && to != (pos.x, pos.y) && !nav.can_step((pos.x, pos.y), to) {
                 continue;
             }
@@ -972,5 +1011,172 @@ mod tests {
             diverged,
             "distinct seeds should produce distinct trajectories"
         );
+    }
+}
+
+#[cfg(test)]
+mod evening_detour_tests {
+    use super::*;
+    fn scene() -> (sim_engine::SimEngine, hecs::Entity) {
+        let mut e = sim_engine::SimEngine::new(32, 32, sim_core::material::MaterialRegistry::new());
+        e.resources.rules = sim_core::rules::WorldRules::colony(0);
+        e.resources.rules.agent.idle_pause_chance = 0.0;
+        e.resources.rules.agent.move_interval_ticks = 1;
+        e.resources.rules.clock_offset_ticks = 0;
+        e.resources.current_tick = 1200;
+        e.resources.nav.install(sim_core::nav::CostMap::new(32, 32));
+        let mut home = sim_core::components::Settlement::new_with_id(1, 0);
+        home.formation_tile = (20, 10);
+        home.member_agents.insert(1);
+        e.resources.settlements.insert(1, home);
+        // A U open west: reaching the eastward home requires first walking away.
+        for y in 7..=13 {
+            e.resources.nav.set_cost((12, y), sim_core::nav::IMPASSABLE);
+        }
+        for x in 7..=12 {
+            for y in [7, 13] {
+                e.resources.nav.set_cost((x, y), sim_core::nav::IMPASSABLE);
+            }
+        }
+        let person = e.world.spawn((
+            Agent { id: 1 },
+            Position::new(10, 10),
+            MovementRng::new(42),
+            AgentState::Idle,
+        ));
+        (e, person)
+    }
+    #[test]
+    fn evening_tether_follows_concave_detour_until_gathering_radius() {
+        let (mut e, person) = scene();
+        assert!(e.resources.nav.path((10, 10), (20, 10)).is_some());
+        let mut reached = false;
+        for _ in 0..80 {
+            AgentMovementSystem::new().tick(&mut e.world, &mut e.resources);
+            let p = *e.world.get::<&Position>(person).unwrap();
+            if p.x.abs_diff(20).max(p.y.abs_diff(10)) <= 3 {
+                reached = true;
+                break;
+            }
+            e.resources.current_tick += 1;
+        }
+        assert!(
+            reached,
+            "reachable evening home must not trap idle adult against U-shaped obstacle"
+        );
+    }
+
+    #[test]
+    fn evening_detour_preserves_clear_steps_and_inactive_boundaries() {
+        for case in [
+            "clear",
+            "day",
+            "baseline",
+            "child",
+            "founder",
+            "seeking",
+            "consuming",
+        ] {
+            let (mut e, person) = scene();
+            *e.world.get::<&mut Position>(person).unwrap() = Position::new(11, 10);
+            e.resources.rules.agent.idle_tether_radius = Some(3);
+            match case {
+                "clear" => e.resources.nav.install(sim_core::nav::CostMap::new(32, 32)),
+                "day" => e.resources.current_tick = 900,
+                "baseline" => e.resources.rules.colony = None,
+                "child" => {
+                    e.world.insert_one(person, Child { born_tick: 0 }).unwrap();
+                }
+                "founder" => {
+                    e.world
+                        .insert_one(
+                            person,
+                            Founding {
+                                site: (1, 1),
+                                fission_id: 1,
+                                leader: 1,
+                                since_tick: 0,
+                            },
+                        )
+                        .unwrap();
+                }
+                "seeking" => {
+                    *e.world.get::<&mut AgentState>(person).unwrap() = AgentState::Seeking {
+                        target: sim_core::components::TargetKind::Food,
+                    };
+                }
+                "consuming" => {
+                    *e.world.get::<&mut AgentState>(person).unwrap() = AgentState::Consuming {
+                        target: sim_core::components::TargetKind::Water,
+                    };
+                }
+                _ => unreachable!(),
+            }
+            AgentMovementSystem::new().tick(&mut e.world, &mut e.resources);
+            assert!(
+                !e.resources.nav.paths.contains_key(&1),
+                "{case} must not initiate evening detour"
+            );
+            let p = *e.world.get::<&Position>(person).unwrap();
+            if matches!(case, "clear" | "baseline") {
+                assert_eq!((p.x, p.y), (12, 10), "{case}");
+            }
+            if matches!(case, "day" | "seeking" | "consuming") {
+                assert_eq!((p.x, p.y), (11, 10), "{case}");
+            }
+        }
+    }
+
+    #[test]
+    fn evening_detour_retains_paused_route_and_releases_at_radius_or_window_end() {
+        let (mut e, person) = scene();
+        for _ in 0..3 {
+            AgentMovementSystem::new().tick(&mut e.world, &mut e.resources);
+            e.resources.current_tick += 1;
+            if e.resources.nav.paths.contains_key(&1) {
+                break;
+            }
+        }
+        let path = e.resources.nav.paths.get(&1).unwrap().clone();
+        let pos = *e.world.get::<&Position>(person).unwrap();
+        e.resources.rules.agent.idle_pause_chance = 1.0;
+        AgentMovementSystem::new().tick(&mut e.world, &mut e.resources);
+        assert_eq!(*e.world.get::<&Position>(person).unwrap(), pos);
+        assert_eq!(e.resources.nav.paths.get(&1), Some(&path));
+        // Ending the evening releases even a paused detour.
+        e.resources.current_tick = 1260;
+        AgentMovementSystem::new().tick(&mut e.world, &mut e.resources);
+        assert!(!e.resources.nav.paths.contains_key(&1));
+        // An agent moved inside the existing radius also stops the detour.
+        e.resources.current_tick = 1200;
+        *e.world.get::<&mut Position>(person).unwrap() = Position::new(18, 10);
+        e.resources.nav.paths.insert(
+            1,
+            sim_core::nav::AgentPath::new(
+                (20, 10),
+                e.resources.nav.version,
+                (18, 10),
+                vec![(19, 10), (20, 10)],
+                1200,
+            ),
+        );
+        AgentMovementSystem::new().tick(&mut e.world, &mut e.resources);
+        assert!(!e.resources.nav.paths.contains_key(&1));
+        let pos = *e.world.get::<&Position>(person).unwrap();
+        assert_eq!((pos.x, pos.y), (18, 10));
+    }
+
+    #[test]
+    fn evening_detour_unreachable_home_does_not_move_through_obstacles() {
+        let (mut e, person) = scene();
+        *e.world.get::<&mut Position>(person).unwrap() = Position::new(11, 10);
+        for y in 0..32 {
+            e.resources.nav.set_cost((12, y), sim_core::nav::IMPASSABLE);
+        }
+        assert!(e.resources.nav.path((11, 10), (20, 10)).is_none());
+        AgentMovementSystem::new().tick(&mut e.world, &mut e.resources);
+        let pos = *e.world.get::<&Position>(person).unwrap();
+        assert_eq!((pos.x, pos.y), (11, 10));
+        assert!(!e.resources.nav.paths.contains_key(&1));
     }
 }
