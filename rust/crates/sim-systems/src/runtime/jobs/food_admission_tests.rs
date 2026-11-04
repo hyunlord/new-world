@@ -121,3 +121,163 @@ fn unreachable_or_expired_food_does_not_hold_a_hungry_worker_idle() {
     index.refresh(&res);
     assert!(!index.available_to(&res, (6, 2), 1, None));
 }
+
+fn reserve_gather_scene() -> (World, SimResources, Entity) {
+    let (world, mut res, person) = scene();
+    res.steward.enabled = true;
+    world.get::<&mut Hunger>(person).unwrap().value = 0.0;
+    world.get::<&mut WorkPriorities>(person).unwrap().levels[WorkType::Split.code() as usize] = 1;
+    let mut settlement = sim_core::components::Settlement::new_with_id(1, 0);
+    settlement.formation_tile = (4, 4);
+    let rule = res.rules.society.firewood.unwrap();
+    use crate::runtime::settlement::firewood::{burn_hours, night_tick_at, winter_burn_per_hour};
+    let night = night_tick_at(&res, &rule, res.current_tick);
+    let tonight = u32::from(winter_burn_per_hour(&res, &rule, night)) * burn_hours(&rule);
+    settlement.store(sim_core::components::ResourceKind::Wood, tonight);
+    res.settlements.insert(1, settlement);
+    res.wood_tiles.insert((2, 3), 20);
+    assert!(super::assign::gather_shortfall(&world, &res) > 0);
+    (world, res, person)
+}
+
+#[test]
+fn urgent_food_defers_tied_reserve_gather_to_real_harvest() {
+    let (mut world, mut res, person) = reserve_gather_scene();
+    JobAssignSystem::new().tick(&mut world, &mut res);
+    assert!(matches!(
+        world.get::<&Job>(person).unwrap().kind,
+        JobKind::Harvest { plant: (3, 2) }
+    ));
+}
+
+#[test]
+fn urgent_food_gather_deferral_preserves_heat_priorities_and_legacy() {
+    for case in [
+        "cold_hearth",
+        "steward_off",
+        "haul_disabled",
+        "split_priority",
+        "no_harvest",
+        "food_ready",
+        "other_cold_hearth",
+    ] {
+        let (mut world, mut res, person) = reserve_gather_scene();
+        match case {
+            "cold_hearth" => {
+                *res.settlements
+                    .get_mut(&1)
+                    .unwrap()
+                    .stockpile
+                    .get_mut(&sim_core::components::ResourceKind::Wood)
+                    .unwrap() -= 1;
+            }
+            "steward_off" => res.steward.enabled = false,
+            "haul_disabled" => {
+                world.get::<&mut WorkPriorities>(person).unwrap().levels
+                    [WorkType::Haul.code() as usize] = 0
+            }
+            "split_priority" => {
+                world.get::<&mut WorkPriorities>(person).unwrap().levels
+                    [WorkType::Haul.code() as usize] = 2
+            }
+            "no_harvest" => res.colony.designations.clear(),
+            "food_ready" => {
+                items::create_ground(
+                    &mut res,
+                    (2, 2),
+                    ItemSpec::raw(ItemKind::from_name("roots").unwrap(), None),
+                    3,
+                    0,
+                    items::FoodSource::Harvest,
+                )
+                .unwrap();
+            }
+            "other_cold_hearth" => {
+                let mut settlement = sim_core::components::Settlement::new_with_id(2, 0);
+                settlement.formation_tile = (7, 7);
+                res.settlements.insert(2, settlement);
+            }
+            _ => unreachable!(),
+        }
+        JobAssignSystem::new().tick(&mut world, &mut res);
+        assert!(
+            matches!(
+                world.get::<&Job>(person).unwrap().kind,
+                JobKind::Gather { .. }
+            ),
+            "{case}"
+        );
+    }
+}
+
+#[test]
+fn urgent_food_harvest_selection_skips_nearer_inedible_crop() {
+    let (mut world, mut res, person) = reserve_gather_scene();
+    res.current_tick = 6 * res.ticks_per_day;
+    res.rules.society.firewood.as_mut().unwrap().base_days = 10.0;
+    assert!(super::assign::gather_shortfall(&world, &res) > 0);
+    let species = sim_core::colony::content::installed_or_bundled()
+        .plant_by_name("wild_flax")
+        .unwrap();
+    res.food.plants.insert(
+        (2, 2),
+        PlantState {
+            species,
+            units_left: 4,
+            next_regrow_day: u32::MAX,
+        },
+    );
+    res.colony.designations.insert((2, 2), Designation::Harvest);
+    res.colony.touch(false);
+    assert!(super::harvest::target_exists(&res, (2, 2)));
+    JobAssignSystem::new().tick(&mut world, &mut res);
+    assert!(matches!(
+        world.get::<&Job>(person).unwrap().kind,
+        JobKind::Harvest { plant: (3, 2) }
+    ));
+}
+
+#[test]
+fn urgent_food_gather_keeps_actual_cold_snap_heating_reserve() {
+    let (mut world, mut res, person) = reserve_gather_scene();
+    res.rules.colony.as_mut().unwrap().story = Some(sim_core::rules::StoryRule::M5);
+    res.colony
+        .story
+        .active
+        .push(sim_core::colony::story::Pressure {
+            kind: sim_core::colony::story::PressureKind::ColdSnap,
+            start_day: 0,
+            end_day: 3,
+            began_entry: None,
+            deaths_at_start: 0,
+            intensity: 0,
+            subject: None,
+            cost: Default::default(),
+        });
+    assert!(crate::runtime::settlement::fire::effective_burn_per_hour(&res, 2) > 2);
+    JobAssignSystem::new().tick(&mut world, &mut res);
+    assert!(matches!(
+        world.get::<&Job>(person).unwrap().kind,
+        JobKind::Gather { .. }
+    ));
+}
+
+#[test]
+fn urgent_food_gather_keeps_possible_positive_winter_night_cost() {
+    let (world, mut res, _) = reserve_gather_scene();
+    res.current_tick = 19 * res.ticks_per_day;
+    let mut rule = res.rules.society.firewood.unwrap();
+    rule.winter_severity_permille = Some([1000, 0, 0]);
+    rule.winter_night_burn_permille = Some([0, 0, 1000]);
+    rule.winter_night_burn_step = 1;
+    res.rules.society.firewood = Some(rule);
+    use crate::runtime::settlement::firewood::{burn_hours, night_tick_at, winter_burn_per_hour};
+    let night = night_tick_at(&res, &rule, res.current_tick);
+    let nominal = u32::from(winter_burn_per_hour(&res, &rule, night)) * burn_hours(&rule);
+    res.settlements
+        .get_mut(&1)
+        .unwrap()
+        .stockpile
+        .insert(sim_core::components::ResourceKind::Wood, nominal);
+    assert!(!super::assign::reserve_gather_food_urgent(&world, &res));
+}

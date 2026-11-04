@@ -1828,3 +1828,59 @@ fn owned_vessel_target_counts_physical_pots_waiting_outside_store() {
         }
     }
 }
+
+#[test]
+fn discovery_grain_floor_survives_low_reserves_but_not_zero_food() {
+    for (meals, grain_count, cook) in [(16, 2, false), (16, 36, true), (0, 2, true)] {
+        let (mut world, mut res, mut policy, _) = fixture(true);
+        let cultivation = knowledge::id("cultivation").expect("cultivation");
+        let known = Knowledge::from_entries(
+            knowledge::defs()
+                .nodes
+                .iter()
+                .filter(|node| node.id != cultivation)
+                .map(|node| KnowledgeEntry::new(node.id, Source::Oral, 1000, 0))
+                .collect(),
+        );
+        let first = world.query::<&Agent>().iter().next().expect("person").0;
+        world.insert_one(first, known.clone()).expect("knowledge");
+        for id in 8..17 {
+            world.spawn((Agent { id }, Position::new(4, 4), known.clone()));
+        }
+        let porridge = RecipeKind::from_name("porridge").expect("porridge");
+        policy.recipes = vec![porridge];
+        for (name, tile, count) in [
+            ("wild_grain", (2, 2), grain_count),
+            ("roots", (3, 2), meals),
+        ] {
+            if count == 0 {
+                continue;
+            }
+            crate::runtime::food::items::create_ground(
+                &mut res,
+                tile,
+                sim_core::colony::ItemSpec::raw(
+                    sim_core::colony::ItemKind::from_name(name).expect("item"),
+                    None,
+                ),
+                count,
+                0,
+                crate::runtime::food::items::FoodSource::Harvest,
+            )
+            .expect("physical food");
+        }
+        let facts = super::summary(&world, &res, &policy);
+        assert_eq!(facts.usable_units, u64::from(meals));
+        assert_eq!(facts.daily_milli, 24000);
+        let commands = super::cooking::plan(&world, &res, &policy, &facts);
+        let admitted = commands.iter().any(|command| {
+            matches!(command,
+            Command::AddBill { recipe, mode: BillMode::Make(count), .. }
+            if *recipe == porridge && *count > 0)
+        });
+        assert_eq!(
+            admitted, cook,
+            "meals={meals}, grain={grain_count}: {commands:?}"
+        );
+    }
+}

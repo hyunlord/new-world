@@ -485,21 +485,9 @@ pub(super) fn convertible_immediate(
     facts: &FoodSummary,
 ) -> u64 {
     let mut inputs = free_inputs(world, res);
-    let mut reserved = super::dependencies::seed_inputs(world, res, policy, facts);
-    let emergency = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
-    if emergency {
-        for (item, count) in &mut reserved {
-            if item.definition().food.is_some() {
-                *count = 0;
-            }
-        }
-    }
+    let reserved = super::dependencies::cooking_reserve(world, res, policy, facts);
     let targets = priority_targets(world, res, policy, facts, &reserved, false).targets;
-    let mut deductions = if emergency {
-        std::collections::BTreeMap::new()
-    } else {
-        reserved
-    };
+    let mut deductions = reserved;
     for ((_, item), count) in &mut inputs {
         let deduction = deductions.entry(*item).or_default();
         let taken = (*count).min(*deduction);
@@ -582,16 +570,8 @@ pub(super) fn plan(
     policy: &FoodPlan,
     facts: &FoodSummary,
 ) -> Vec<Command> {
-    let mut seed_reserve = super::dependencies::seed_inputs(world, res, policy, facts);
+    let seed_reserve = super::dependencies::cooking_reserve(world, res, policy, facts);
     let emergency = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
-    if emergency {
-        // Grain is not raw-edible: protecting future seed must not forbid today's meal.
-        for (item, reserved) in &mut seed_reserve {
-            if item.definition().food.is_some() {
-                *reserved = 0;
-            }
-        }
-    }
     let bootstrap = super::dependencies::seed_recipe(policy);
     let mut bootstrap_recipes = policy.vessel_recipes.clone();
     if let Some(kind) = bootstrap {

@@ -117,14 +117,7 @@ pub(super) fn ingredient_deficits(
     policy: &FoodPlan,
     facts: &super::FoodSummary,
 ) -> BTreeMap<ItemKind, u64> {
-    let mut reserved = seed_inputs(world, res, policy, facts);
-    if facts.usable_units.saturating_mul(1000) < facts.daily_milli {
-        for (item, count) in &mut reserved {
-            if item.definition().food.is_some() {
-                *count = 0;
-            }
-        }
-    }
+    let reserved = cooking_reserve(world, res, policy, facts);
     super::cooking::priority_targets(world, res, policy, facts, &reserved, true).missing
 }
 
@@ -194,6 +187,30 @@ pub(super) fn seed_inputs(
     for &(item, count) in &recipe.inputs {
         let amount = reserved.entry(item).or_default();
         *amount = amount.saturating_add(batches.saturating_mul(u64::from(count)));
+    }
+    reserved
+}
+
+/// Release seasonal seed inputs below one day of food; retain discovery floors
+/// until no currently usable meal remains.
+pub(super) fn cooking_reserve(
+    world: &World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    facts: &super::FoodSummary,
+) -> BTreeMap<ItemKind, u64> {
+    let mut reserved = seed_inputs(world, res, policy, facts);
+    if facts.usable_units.saturating_mul(1000) < facts.daily_milli {
+        let discovery = discovery_materials(world, policy);
+        for (item, count) in &mut reserved {
+            if item.definition().food.is_some() {
+                *count = if facts.usable_units == 0 {
+                    0
+                } else {
+                    u64::from(discovery.get(item).copied().unwrap_or(0))
+                };
+            }
+        }
     }
     reserved
 }

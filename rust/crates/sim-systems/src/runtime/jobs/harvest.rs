@@ -69,6 +69,24 @@ pub struct HarvestQuery {
 
 /// Pick one free, reachable, ripe designation without scanning every plant.
 pub fn pick(res: &SimResources, index: &mut HarvestIndex, query: HarvestQuery) -> Option<Job> {
+    pick_filtered(res, index, query, false)
+}
+
+/// Pick an immediately edible harvest for an urgent meal without hiding it behind fibre or grain.
+pub fn pick_edible(
+    res: &SimResources,
+    index: &mut HarvestIndex,
+    query: HarvestQuery,
+) -> Option<Job> {
+    pick_filtered(res, index, query, true)
+}
+
+fn pick_filtered(
+    res: &SimResources,
+    index: &mut HarvestIndex,
+    query: HarvestQuery,
+    edible_only: bool,
+) -> Option<Job> {
     res.rules.colony?;
     if gates().designation(Designation::Harvest) & !query.practice != 0 {
         return None;
@@ -101,6 +119,14 @@ pub fn pick(res: &SimResources, index: &mut HarvestIndex, query: HarvestQuery) -
         !res.colony
             .reservations
             .contains_key(&ReserveKey::Plant(tile))
+            && (!edible_only
+                || res
+                    .food
+                    .plants
+                    .get(&tile)
+                    .and_then(|plant| installed_or_bundled().plant(plant.species))
+                    .and_then(|plant| plant.yield_item.definition().food.as_ref())
+                    .is_some_and(|food| food.raw_edible))
     })?;
     let state = res.food.plants.get(&plant)?;
     let def = installed_or_bundled().plant(state.species)?;

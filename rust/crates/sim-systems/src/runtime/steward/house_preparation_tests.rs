@@ -876,6 +876,110 @@ fn house_order_preserves_occupied_reservations_and_independent_nav_stats() {
 }
 
 #[test]
+fn capped_wood_counts_logs_in_transit_and_on_shelves_once() {
+    use sim_core::colony::{Carry, ItemSpec, ItemStack, Job, JobKind, JobStage, Workshop};
+    for owner in 0..5 {
+        let mut e = engine(29);
+        let data = sim_core::colony::steward::rules().expect("rules");
+        let wood = data
+            .rules
+            .iter()
+            .find(|r| matches!(r.action, Action::Wood { .. }))
+            .expect("wood");
+        let Action::Wood { items, .. } = &wood.action else {
+            unreachable!()
+        };
+        let log = items[0];
+        let hearth = hearth_tiles(&e.resources)[0];
+        e.resources.colony.ground_items.clear();
+        assert!(
+            !plan(&e.world, &e.resources, wood).is_empty(),
+            "shortage must still request wood"
+        );
+        let (target, _, _, _, _) = wood_budget_observation(&e.world, &e.resources).expect("target");
+        let count = u16::try_from(target).expect("small fixture");
+        let spec = ItemSpec::raw(log, None);
+        match owner {
+            0 => {
+                e.resources
+                    .colony
+                    .ground_items
+                    .insert(hearth, ItemStack::of(spec, count));
+            }
+            1..=3 => {
+                let kind = match owner {
+                    1 => JobKind::Haul {
+                        from: hearth,
+                        to: hearth,
+                    },
+                    2 => JobKind::Deliver {
+                        from: hearth,
+                        site: hearth,
+                    },
+                    _ => JobKind::Supply {
+                        from: hearth,
+                        workshop: 100,
+                        to: hearth,
+                    },
+                };
+                e.world.spawn((
+                    Carry::of(spec, count),
+                    Job {
+                        kind,
+                        stage: JobStage::ToDest,
+                        taken_at: 0,
+                        amount: count,
+                        item: log,
+                        material: None,
+                        fetch: None,
+                        best_distance: 0,
+                        progress_tick: 0,
+                    },
+                ));
+            }
+            _ => {
+                e.resources.colony.workshops.insert(
+                    100,
+                    Workshop {
+                        id: 100,
+                        kind: sim_core::colony::BlueprintKind::WoodBench,
+                        top_left: hearth,
+                        size: (2, 1),
+                        bills: vec![],
+                        shelf: vec![ItemStack::of(spec, count)],
+                        active: None,
+                    },
+                );
+            }
+        }
+        assert_eq!(
+            wood_budget_observation(&e.world, &e.resources)
+                .expect("target")
+                .0,
+            target
+        );
+        assert!(
+            plan(&e.world, &e.resources, wood).is_empty(),
+            "owner={owner}: physical logs already cover the cap"
+        );
+        assert_eq!(
+            wood_supply(&e.world, &e.resources, items, true),
+            (target, 0),
+            "owner={owner}"
+        );
+        assert_eq!(
+            wood_supply(&e.world, &e.resources, items, false).0,
+            items
+                .iter()
+                .map(|&kind| maintain_count(&e.world, &e.resources, kind))
+                .sum::<u32>()
+                + crate::runtime::jobs::hearth::settlement_wood(&e.resources),
+            "uncapped legacy accounting remains unchanged"
+        );
+    }
+}
+
+#[test]
 fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
     let mut e = engine(29);
     let data = sim_core::colony::steward::rules().expect("rules");

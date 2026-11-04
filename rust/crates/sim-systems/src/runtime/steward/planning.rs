@@ -111,7 +111,35 @@ fn wood_supply(
     let have: u32 = items
         .iter()
         .filter(|kind| !capped || kind.definition().fuel_units.is_none())
-        .map(|&k| maintain_count(world, res, k))
+        .map(|&k| {
+            let counted = maintain_count(world, res, k);
+            if !capped || k.definition().food.is_some() {
+                return counted;
+            }
+            // Nonfood Maintain counts only Haul carriers and no shelves. Wood
+            // admission must retain those inputs while delivery/supply owns them.
+            let carried: u32 = world
+                .query::<(&sim_core::colony::Carry, Option<&sim_core::colony::Job>)>()
+                .iter()
+                .filter(|(_, (carry, job))| {
+                    carry.kind == k
+                        && !job.is_some_and(|job| {
+                            matches!(job.kind, sim_core::colony::JobKind::Haul { .. })
+                        })
+                })
+                .map(|(_, (carry, _))| u32::from(carry.count))
+                .sum();
+            let stored: u32 = res
+                .colony
+                .workshops
+                .values()
+                .flat_map(|shop| shop.shelf.iter())
+                .chain(res.food.pots.values().flat_map(|pot| pot.contents.iter()))
+                .filter(|stack| stack.kind == k)
+                .map(|stack| u32::from(stack.count))
+                .sum();
+            counted.saturating_add(carried).saturating_add(stored)
+        })
         .sum::<u32>()
         .saturating_add(if !capped {
             crate::runtime::jobs::hearth::settlement_wood(res)

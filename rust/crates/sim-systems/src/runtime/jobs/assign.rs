@@ -61,6 +61,64 @@ impl JobAssignSystem {
     }
 }
 
+/// Whether reserve gathering can yield to an admitted urgent food harvest.
+pub(super) fn reserve_gather_food_urgent(world: &World, resources: &SimResources) -> bool {
+    let Some(firewood) = resources.rules.society.firewood else {
+        return false;
+    };
+    use crate::runtime::settlement::firewood::{
+        burn_hours, night_tick_at, severity_level_at, winter_burn_per_hour,
+    };
+    // Use the same authored night booking as tonight_burn.
+    let night = night_tick_at(resources, &firewood, resources.current_tick);
+    let base = u32::from(winter_burn_per_hour(resources, &firewood, night));
+    // Cover the authored possible increase without reading a future nightly draw.
+    let step = if severity_level_at(resources, &firewood, night).is_some()
+        && firewood
+            .winter_night_burn_permille
+            .is_some_and(|weights| weights[2] > 0)
+    {
+        u32::from(firewood.winter_night_burn_step)
+    } else {
+        0
+    };
+    let tonight = crate::runtime::settlement::fire::effective_burn_per_hour(resources, base + step)
+        * burn_hours(&firewood);
+    // Stored fuel covers every hearth; promises and shared loose
+    // piles cannot make an unfed hearth safe for this exception.
+    if resources.settlements.is_empty()
+        || resources.settlements.values().any(|s| {
+            s.stockpile
+                .get(&sim_core::components::ResourceKind::Wood)
+                .copied()
+                .unwrap_or(0)
+                < tonight
+        })
+    {
+        return false;
+    }
+    let Ok(data) = sim_core::colony::steward::rules() else {
+        return false;
+    };
+    data.rules
+        .iter()
+        .find_map(|r| {
+            if !resources.steward.scope.permits(r.scope)
+                || (r.extended && !resources.steward.extended)
+            {
+                return None;
+            }
+            match &r.action {
+                sim_core::colony::steward::Action::FoodPlan(policy) => Some(policy),
+                _ => None,
+            }
+        })
+        .is_some_and(|policy| {
+            let food = crate::runtime::steward::food::summary(world, resources, policy);
+            food.usable_units < food.daily_milli.div_ceil(1000)
+        })
+}
+
 /// Items on their way to each site, by `(site centre, kind)` (sum of `Deliver` jobs' amounts).
 pub fn in_transit(world: &World) -> BTreeMap<((u32, u32), ItemKind), u16> {
     let mut out = BTreeMap::new();
@@ -1285,6 +1343,7 @@ impl RuntimeSystem for JobAssignSystem {
         let pot_sources = std::cell::OnceCell::new();
         let gather_short = std::cell::Cell::new(None);
         let hearth = std::cell::OnceCell::new();
+        let urgent_food = std::cell::OnceCell::new();
         let mut taken: Vec<(Entity, Job, (u32, u32))> = Vec::new();
         // M3: the "found nothing" memos hold per nav region (the searches filter by it).
         let mut exhausted: BTreeMap<u32, Exhausted> = BTreeMap::new();
@@ -1381,6 +1440,29 @@ impl RuntimeSystem for JobAssignSystem {
                             &mut self.harvest,
                         ),
                     }
+                };
+                let found = if matches!(found, Some((JobKind::Gather { .. }, ..)))
+                    && resources.steward.enabled
+                    && priorities.level(WorkType::Haul) > 0
+                    && priorities.level(WorkType::Haul) <= priorities.level(WorkType::Split)
+                    && *urgent_food.get_or_init(|| reserve_gather_food_urgent(world, resources))
+                {
+                    // Replace only automatic reserve gathering, preserving explicit
+                    // work priorities and the ordinary reservation/commit path.
+                    super::harvest::pick_edible(
+                        resources,
+                        &mut self.harvest,
+                        super::harvest::HarvestQuery {
+                            practice,
+                            region: ctx.region,
+                            pos,
+                            radius: rule.job_scan_radius,
+                        },
+                    )
+                    .map(|job| (job.kind, job.amount, job.item))
+                    .or(found)
+                } else {
+                    found
                 };
                 let Some((kind, amount, item)) = found else {
                     continue;
