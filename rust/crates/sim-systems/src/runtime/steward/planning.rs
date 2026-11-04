@@ -1063,6 +1063,45 @@ fn house(
                 }
             }
         }
+        // Wall sites block navigation immediately. Validate the complete shell on an
+        // isolated map only after the cheaper geometry and material-budget checks.
+        let mut future_nav = sim_core::nav::NavState::default();
+        future_nav.install(if res.nav.is_built() {
+            res.nav.map().clone()
+        } else {
+            crate::runtime::nav::build(res)
+        });
+        let camp_region = future_nav.region_of(hearth);
+        let access: Vec<_> = actual_people
+            .iter()
+            .copied()
+            .chain(res.colony.workshops.values().map(|shop| shop.work_tile()))
+            .chain(res.colony.site_work_tiles.values().copied())
+            .chain(stock.iter().copied())
+            .filter(|&tile| future_nav.reaches(camp_region, tile))
+            .collect();
+        for command in &border {
+            if let Command::PlaceBlueprint { kind, x, y } = command {
+                use sim_core::colony::content::PlannedNav;
+                let cost = match kind.definition().planned_nav {
+                    PlannedNav::Blocked => sim_core::nav::IMPASSABLE,
+                    PlannedNav::Door => sim_core::nav::COST_DOOR,
+                    PlannedNav::Unchanged => continue,
+                };
+                future_nav.set_cost((*x, *y), cost);
+            }
+        }
+        let future_region = future_nav.region_of(hearth);
+        if future_region == 0
+            || boundary
+                .iter()
+                .copied()
+                .chain(room.tiles.iter().copied().map(local))
+                .chain(access)
+                .any(|tile| !future_nav.reaches(future_region, tile))
+        {
+            continue;
+        }
         if !clearing.is_empty() {
             let tiles = clearing
                 .into_iter()

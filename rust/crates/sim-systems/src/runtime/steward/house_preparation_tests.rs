@@ -1083,3 +1083,45 @@ fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
         assert!(crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted);
     }
 }
+
+#[test]
+fn capped_seed5_house_preserves_post_shell_access() {
+    let mut e = engine(5);
+    for command in [
+        Command::SetSteward {
+            on: true,
+            scope: sim_core::colony::steward::StewardScope::All,
+        },
+        Command::SetStewardDefence { on: true },
+    ] {
+        assert!(crate::commands::submit(&mut e, command).accepted);
+    }
+    let hearth = hearth_tiles(&e.resources)[0];
+    e.tick();
+    let sites = crate::runtime::jobs::items::colony_sites(&e.world);
+    let data = sim_core::colony::steward::rules().expect("rules");
+    let (bed, door) = data
+        .rules
+        .iter()
+        .find_map(|rule| match rule.action {
+            Action::House { bed, door, .. } => Some((bed, door)),
+            _ => None,
+        })
+        .expect("house rule");
+    assert!(sites.values().any(|site| site.site.kind == bed));
+    assert!(sites.values().any(|site| site.site.kind == door));
+    let region = e.resources.nav.region_of(hearth);
+    assert_ne!(region, 0, "accepted shell must preserve the camp tile");
+    let inaccessible: Vec<_> = sites
+        .values()
+        .filter(|site| {
+            !e.resources.nav.reaches(region, site.site.top_left)
+                || e.resources.nav.path(hearth, site.site.top_left).is_none()
+        })
+        .map(|site| (site.site.kind, site.site.top_left))
+        .collect();
+    assert!(
+        inaccessible.is_empty(),
+        "accepted seed5 shell isolates construction from hearth {hearth:?}: {inaccessible:?}"
+    );
+}
