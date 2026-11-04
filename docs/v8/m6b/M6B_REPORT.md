@@ -1067,3 +1067,12 @@ p14 build16 실제 PASS(릴리스4분,debug bridge). identity09 실제 PASS:2287
 p16 BASE identity10 actual PASS:228748shared/0differences/0one-sided,64chronicles19683entries,64raw files, determinism0–3. Frozen Rust patchf390d6e812aad792c8bad15c0e7922a14ee80f015a008e0ff64d478a96b9b2f7. Macprobe2f775a247541d0f7bf0473cb991a17c9817c704677a36510afc7cf2fcc8ffecf; DGXprobe93f9015f74f0283a750aaa65d2b2cfcad5b37dcc41d24700835457f576e211f2. 재보정10 진행 중 완료seed0–4의 밭섭취는 이전과 같으며, seed2 지문도동일하다. 이 수정만으로 섭취 기준을 달성했다고 주장하지 않는다.
 
 p16 검증 마감: build/identity/docs 통합 실행 actual exit0, 변경된 GD2개 strict/FFI76개 PASS. Rust diff는 동결 patch와 동일하다. 정식 전체 gate·held-out·게시 완료는 아니다.
+
+
+### 재보정10 완료와 p17 재료 조달 수정
+
+p16 리뷰SHA b2bc68d5d9cd64f40b4fc48569ce14959852fd9a, 원격 일치 확인. 재보정10 전8세계 actual0, Mac/DGXseed0의 summary/events/chronicle byte-identical. 밭30%는3/8, 한파 장작 never-zero8/8, KnowledgeLost총1(BASE1), 생존/겨울기아/식량초과/#675/원장8/8. 파종/목재는7/8. 여전히 밭 기준을 충족하지 못해 held-out 미사용.
+
+p17은 다른 요리의 예약 생산을 재료 조달에서 누락하는 실제 RED를 수정한다. 재고140+예약4=상한144인데 즉시 요리용 베리2를 더 요청했다. 실제2/142/2를 기대2/140/0으로 고쳐 필요한 겨울 보존140은 유지한다. 식량59PASS; 전체 시스템/BASE동일성/재보정11은 진행 전이다. tools 추가0, 누적net525 유지.
+
+p17 검증: 시스템647PASS/기존ignore1, fmt/Clippy, release/debug빌드, BASEidentity11, docs 모두 actual0. 동일성228748항목 차이0,64chronicles/19683entries·64raw파일·결정성0–3 PASS. 재보정11 진행 중이며 seed2–4는 여전히 밭30% 미달이다. 기준을 낮추지 않고 남은 변환 경로를 추적한다. held-out·전체gate·게시 미완료.

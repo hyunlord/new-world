@@ -337,3 +337,162 @@ fn cooking_procurement_uses_aged_local_shelf_only_at_a_compatible_workshop() {
         );
     }
 }
+
+#[test]
+fn cooking_procurement_counts_other_accepted_food_without_blocking_preservation() {
+    use crate::runtime::food::{items, origin};
+    use sim_core::colony::food::{DryingBatch, FoodOwner, PlantState};
+    use sim_core::colony::{ItemKind, ItemSpec, Workshop};
+
+    let mut observed = Vec::new();
+    for (pending, preserve) in [(0, false), (4, true), (4, false)] {
+        let (mut world, mut res, mut policy) = ten_adult_cooking_fixture(&["fruit_porridge"]);
+        res.rules.clock_offset_ticks = 0;
+        res.ticks_per_day = res.rules.calendar.ticks_per_day;
+        res.current_tick = 14 * res.ticks_per_day;
+        policy.reserve_days = 2;
+        policy.winter_keep_days = 6;
+        res.fires.insert(1, sim_engine::FireState { lit: true });
+        let fruit = policy.recipes[0];
+        let drying = RecipeKind::from_name("dry_berries").expect("drying recipe");
+        let berries = ItemKind::from_name("berries").expect("berries");
+        let roots = ItemKind::from_name("roots").expect("roots");
+        let grain = ItemKind::from_name("wild_grain").expect("grain");
+        res.colony.workshops.insert(
+            2,
+            Workshop {
+                id: 2,
+                kind: drying.recipe().expect("recipe").workshop,
+                top_left: (6, 3),
+                size: (1, 1),
+                bills: vec![],
+                shelf: vec![],
+                active: None,
+            },
+        );
+        for (workshop, recipe) in [(1, fruit), (2, drying)] {
+            let tick = res.current_tick;
+            assert!(
+                crate::commands::apply_and_log(
+                    &mut world,
+                    &mut res,
+                    Command::Steward {
+                        rule: 8,
+                        command: Box::new(Command::AddBill {
+                            workshop,
+                            recipe,
+                            mode: BillMode::Maintain(24),
+                        }),
+                    },
+                    tick,
+                )
+                .accepted
+            );
+        }
+        for x in 1..=5 {
+            items::create_ground(
+                &mut res,
+                (x, 1),
+                ItemSpec::raw(roots, None),
+                28,
+                13,
+                items::FoodSource::Harvest,
+            )
+            .expect("140 actual fresh roots expiring before winter ends");
+        }
+        items::create_ground(
+            &mut res,
+            (6, 1),
+            ItemSpec::raw(grain, None),
+            4,
+            14,
+            items::FoodSource::Harvest,
+        )
+        .expect("four portable grain, not raw edible food");
+        if pending > 0 {
+            items::create_ground(
+                &mut res,
+                (6, 2),
+                ItemSpec::raw(berries, None),
+                pending,
+                14,
+                items::FoodSource::Harvest,
+            )
+            .expect("real drying inputs");
+            items::take(&mut world, &mut res, FoodOwner::Ground((6, 2)), pending, 14)
+                .expect("accepted drying has consumed its inputs");
+            let shop = &res.colony.workshops[&2];
+            let bill = shop
+                .bills
+                .iter()
+                .find(|bill| bill.recipe == drying)
+                .expect("owned drying bill")
+                .id;
+            let batch = DryingBatch {
+                workshop: 2,
+                bill,
+                tile: shop.work_tile(),
+                output: ItemSpec::raw(drying.recipe().expect("recipe").output.0, None),
+                count: pending,
+                due_tick: 16 * res.ticks_per_day,
+            };
+            origin::push_drying(&mut res, batch, Default::default());
+        }
+        if preserve {
+            policy.recipes.push(drying);
+        }
+        let species = sim_core::colony::content::installed_or_bundled()
+            .plant_by_name("berry_bush")
+            .expect("berry plant");
+        res.food.plants.insert(
+            (6, 5),
+            PlantState {
+                species,
+                units_left: 4,
+                next_regrow_day: u32::MAX,
+            },
+        );
+        assert!(crate::runtime::food::plants::harvestable(&res, (6, 5)));
+        let facts = super::super::summary(&world, &res, &policy);
+        assert_eq!(facts.usable_units, 140);
+        assert_eq!(facts.cooked_units, 0);
+        assert_eq!(facts.winter_units, 0);
+        assert_eq!(super::super::harvest::targets(&policy, &facts), (48, 144));
+        assert!(super::super::dependencies::seed_inputs(&world, &res, &policy, &facts).is_empty());
+        assert_eq!(
+            crate::runtime::jobs::bills::bill_count(
+                &world,
+                &res,
+                fruit.recipe().expect("recipe").output.0,
+            ),
+            0
+        );
+        let preservation = super::super::preservation::budget(&world, &res, &policy, &facts);
+        assert_eq!(
+            preservation.inputs.get(&berries).copied().unwrap_or(0),
+            if preserve { 140 } else { 0 }
+        );
+        let demand = super::super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
+        let commands = super::super::harvest::plan(&world, &res, &policy, &facts);
+        observed.push((
+            pending,
+            preserve,
+            demand.get(&berries).copied().unwrap_or(0),
+            commands.contains(&Command::DesignateHarvest {
+                x0: 6,
+                y0: 5,
+                x1: 6,
+                y1: 5,
+            }),
+        ));
+    }
+    assert_eq!(
+        observed,
+        vec![
+            (0, false, 2, true),
+            (4, true, 140, true),
+            (4, false, 0, false)
+        ],
+        "accepted other-output food closes immediate procurement, not genuine winter preservation"
+    );
+}

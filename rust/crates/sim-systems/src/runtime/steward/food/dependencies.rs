@@ -139,7 +139,20 @@ pub(super) fn ingredient_deficits(
     }
     let mut available = super::cooking::free_inputs(world, res);
     let mut immediate: BTreeMap<ItemKind, u64> = BTreeMap::new();
+    let headroom = super::cooking::food_headroom(world, res, policy, facts);
     for recipe in &eligible {
+        let output =
+            u64::from(recipe.output.1) * super::cooking::edible_units(recipe.output.0, true);
+        let raw: u64 = recipe
+            .inputs
+            .iter()
+            .map(|(item, count)| u64::from(*count) * super::cooking::edible_units(*item, true))
+            .sum();
+        // Other recipes' accepted output also fills the shared food reserve.
+        // Net-zero conversions and genuine winter preservation remain eligible.
+        if headroom == 0 && output > raw {
+            continue;
+        }
         let target = super::cooking::daily_target(policy, facts, eligible.len(), recipe.id);
         // Use the bill's own count, including assigned crafts and pending output.
         let made = crate::runtime::jobs::bills::bill_count(world, res, recipe.output.0);

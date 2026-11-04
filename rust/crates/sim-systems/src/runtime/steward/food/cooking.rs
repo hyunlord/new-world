@@ -72,7 +72,7 @@ pub(super) fn daily_target(
     u16::try_from(share.div_ceil(u64::from(units))).unwrap_or(u16::MAX)
 }
 
-fn edible_units(item: sim_core::colony::ItemKind, raw_only: bool) -> u64 {
+pub(super) fn edible_units(item: sim_core::colony::ItemKind, raw_only: bool) -> u64 {
     item.definition()
         .food
         .as_ref()
@@ -241,35 +241,14 @@ fn available_recipes(
     available
 }
 
-// Allocate one cooked-stock budget in authored order; procurement keeps daily_target.
-fn priority_targets(
+/// Remaining net edible capacity after fresh food and each accepted output once.
+pub(super) fn food_headroom(
     world: &World,
     res: &SimResources,
     policy: &FoodPlan,
     facts: &FoodSummary,
-    reserved: &std::collections::BTreeMap<sim_core::colony::ItemKind, u64>,
-) -> std::collections::BTreeMap<RecipeKind, u16> {
-    use sim_core::colony::{ItemKind, JobStage};
-    let available = available_recipes(world, res, policy, reserved);
-    let total = facts
-        .daily_milli
-        .saturating_mul(u64::from(policy.cooked_days_milli))
-        .div_ceil(1_000_000);
-    // Match the executor: all physical cooked stock, assigned crafts and drying.
-    // Each output kind appears once, including meals outside this recipe policy.
-    let occupied: u64 = ItemKind::all()
-        .filter(|kind| {
-            kind.definition()
-                .food
-                .as_ref()
-                .is_some_and(|food| food.cooked && food.raw_edible)
-        })
-        .map(|kind| {
-            u64::from(crate::runtime::jobs::bills::bill_count(world, res, kind))
-                * edible_units(kind, false)
-        })
-        .sum();
-    let mut room = total.saturating_sub(occupied);
+) -> u64 {
+    use sim_core::colony::JobStage;
     let (immediate, durable) = super::harvest::targets(policy, facts);
     // Reserve accepted edible outputs once, independent of overlapping food
     // horizons. Future drying is a commitment, never immediately usable food.
@@ -307,10 +286,42 @@ fn priority_targets(
         };
         committed = committed.saturating_add(contribution);
     }
-    let mut headroom = immediate
+    immediate
         .max(durable)
         .saturating_sub(facts.usable_units)
-        .saturating_sub(committed);
+        .saturating_sub(committed)
+}
+
+// Allocate one cooked-stock budget in authored order; procurement keeps daily_target.
+fn priority_targets(
+    world: &World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    facts: &FoodSummary,
+    reserved: &std::collections::BTreeMap<sim_core::colony::ItemKind, u64>,
+) -> std::collections::BTreeMap<RecipeKind, u16> {
+    use sim_core::colony::ItemKind;
+    let available = available_recipes(world, res, policy, reserved);
+    let total = facts
+        .daily_milli
+        .saturating_mul(u64::from(policy.cooked_days_milli))
+        .div_ceil(1_000_000);
+    // Match the executor: all physical cooked stock, assigned crafts and drying.
+    // Each output kind appears once, including meals outside this recipe policy.
+    let occupied: u64 = ItemKind::all()
+        .filter(|kind| {
+            kind.definition()
+                .food
+                .as_ref()
+                .is_some_and(|food| food.cooked && food.raw_edible)
+        })
+        .map(|kind| {
+            u64::from(crate::runtime::jobs::bills::bill_count(world, res, kind))
+                * edible_units(kind, false)
+        })
+        .sum();
+    let mut room = total.saturating_sub(occupied);
+    let mut headroom = food_headroom(world, res, policy, facts);
     let mut inputs = free_inputs(world, res);
     let mut deductions = reserved.clone();
     for ((_, item), count) in &mut inputs {
