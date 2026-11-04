@@ -1,6 +1,6 @@
 # M6b 보고서
 
-Current Stage1 runtime state (2026-11-04): calibration08 gameplay **FAIL**, despite all8 process exits0. Survival/winter hunger/timely sowing/overage8/8; field-intake30%0/8; KnowledgeLost15 versus BASE1. Cold, log and #675 checks each7/8. P13 exact source5170ace63 remains review-only; held-out1520–1551 unused. Full cards comparison completed with0rejected commands but seed3 combat deaths1 versus no-answer0: FAIL. P14 bounded policy experiments are under regression verification; no publication claim.
+Current Stage1 runtime state (2026-11-04): calibration09 gameplay **FAIL**, despite all8 qualified process exits0. Survival/winter hunger/overage/KnowledgeLost/#6758/8; field-intake30%2/8; timely sowing7/8; KnowledgeLost total2 versus BASE1. Cold-zero and log checks7/8 (seed5). P14 exact Rust source d75c66798 remains review-only; held-out1520–1551 unused. P13 cards FAIL remains preserved. P14 cards also FAIL: seed0 combat deaths1 versus no-answer0, with67sent receipts and0rejections. Natural field UI292checks andeightvisualcaptures PASS; no publication claim.
 
 ## 현재 상태 — 2026-11-04 낮 작업
 
@@ -1030,3 +1030,19 @@ build15·identity08·docs15는21:01KST wrapper실제 종료0으로 완료됐다.
 unit26 실제 종료0: 시스템645PASS/기존ignored1, 지식17PASS, 데이터 확장2PASS, fmt 및 all-target Clippy PASS. 추가 생산의 서로 다른 기간을 max로 합치던 누락은 실제 RED(priority-commitment-red01,1FAIL101) 후 수락 작업을 한 번씩 세도록 수정했다. 독립 소스 검토는 ToSource 입력 소비→Working→건조 대기 전이와 취소 시 제거를 확인했다. unit25의 과거 균등분배 기대 실패는 보존했고, 같은 조달 예산과 실제 우선 recipe 출력 수를 명시하는 단언으로 갱신했다. Rust patch ac9718e52d11872c011fcc6efcde9ff746ecfa7ecb4079f13380a82c8100a172를 고정해 build16/identity09/docs16 진행 중이며 결과는 아직 미확정이다. 추가 tools 파일/줄0. 보정09·held-out·최종 UI/cards·전체 게이트·게시 미완료; 두 owner 기준 유지.
 
 p14 build16 실제 PASS(릴리스4분,debug bridge). identity09 실제 PASS:228748공유값/차이0/일방경로0,chronicle64파일19683항목,원시64파일쌍 동일,결정성0–3PASS. 전체 묶음은 마지막 docs16 중1200초 제한으로 종료124했고 원시 로그를 유지했다. 기존 소유 프로세스 종료를 확인하고 docs16-r2 별도300초 재실행은 실제 종료0·docs PASS다. Rust patch는 여전히ac9718e5와 바이트 동일.
+
+## 보정09 및 자연 밭 UI — 2026-11-04
+
+보정09 확정 원본은 외부 `stage1/calibration-09/RESULT.md`와 seed0–7 출력이다. DGX r2의8개 종료0·cohort0·systemd terminal0을 확인하고 복사했다. 원래 실행은 systemd 변수 선치환 오류로 실패했고 원본은 보존했다. `--expand-environment=no`로 새 디렉터리에서 다시 실행했다. Mac/DGX seed0 요약·이벤트·연대기는 모두 바이트 동일하며, 이를 Mac 성능·UI 게이트 대체로 사용하지 않는다.
+
+3년차 밭 섭취2/8(0·1), 제때 파종7/8(seed5 day49), 생존·겨울기아·과잉기간·개별지식·#6758/8. 지식 손실 총2 대 BASE1로 total≤BASE+3를 충족했다. seed5 한파 장작0 구간183/8640(BASE720/12960)으로 개선됐어도 never-zero는 실패다. seed5 day5 느슨한 통나무264>121.5이며 day24는0이다. 전체장부2211840검사/위반0. 밭30%와 과잉6일 기준, held-out 미사용을 유지한다.
+
+같은 p14 seed0의 자연 저장34671/36000/40320/40321은 경작·성장·익음·수확 상태를 실제로 보유했고, 네 실행 모두96일 지문8e48750d6b8484d1-d6f2927c85b85552와 일치했다. 기존 reader는 읽기 전후 시간을 유지했다. r3 경작/익음 캡처, r4 성장/수확 캡처는 각각 종료0·failures0이며 두 크기1.0/1.25에서 실제 밭 클릭/inspector/닫기를 검증했다. 직접 선택 주체가 없는 저장의 item capture는 명시적 NOT_RUN이며 실패를 통과로 바꾸지 않았다. 기존 r1–r3 실패 로그·PNG도 유지한다.
+
+실제 실패 수정으로 기존 tools2파일의 이번 변경은+46/−9(net37)줄, 새 파일0이다. Stage1 전체 tools는 기존6파일+576/−59(net517)줄이다. 새 observer/audit 계층을 추가하지 않았다. 최종 밭 카드·전체 cards·문서 검사 결과는 아래 후속 기록으로 확정한다.
+
+자연 밭 카드 r4는 실제 종료0,292PASS/0FAIL이다. 파종/수확 각각 now/paused/auto의 실제 수락1건·같은틱·정확한 로그/영수증·작물/phase 불변을 검증했다. 독립 검토는 최종 경작/익음 r3 및 성장/수확 r4의8개 inspector PNG를 실제로 확인해 읽기·잘림·가림 차단 문제 없음을 보고했다. 전체 카드16arm 비교는 별도 진행 중이며 이 결과로 대체하지 않는다.
+
+전체 p14 카드 비교도 실제 종료1·FAIL이다. 16arm×48일 완료,1183답변·67실제 전송 영수증·거절/validation0. 답변 전체 사망1 대 무응답0이며 seed0 전투 사망1 대0이 원인이다. 같은 총생존94는 출생 차이 때문에 무사망 증거가 아니다. 원인별 직접 답변 인과는 기존 읽기로 미확인이다. storage카드는 미관측이며 모든 종류를 검증했다고 주장하지 않는다. 원래 debug bridge efd265649f2d94ed783dc413370e988832b274b0a5a92ffc72c42a447fc9ce5d 복원을 실제 확인했다.
+
+최종 짧은 검증은 모두 실제 종료0: seed2 자연 저장 reader, GDScript83파일 및FFI76호출 strict, docs. UI-only patch SHA256 e0fbfc9cfeeb2e3688d26136db0b270944eaf965f3dc6c7cd8ff6b85f8cfa3f2. Rust는p14와 동일하다. Stage1 수용·게시에는 보정 실패 및 카드 추가 사망 해결, held-out, 전체 gate·성능·최종 문서가 여전히 필요하다.

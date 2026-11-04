@@ -193,12 +193,29 @@ func capture_field(world: Node, scale: float, requested_phase: int = -1) -> void
 	camera.reset_smoothing()
 	camera.force_update_scroll()
 	await frames(10)
+	# Keep the selected field in the open left map area, outside the decision cards.
+	var corner: Vector2 = View.tile_to_world(tile) + Vector2(8, 8)
+	var point: Vector2 = root.get_canvas_transform() * corner
+	var target: Vector2 = root.get_visible_rect().size * Vector2(0.25, 0.70)
+	camera.position += root.get_canvas_transform().affine_inverse().basis_xform(point - target)
+	camera.reset_smoothing()
+	camera.force_update_scroll()
+	await frames(10)
 	var tag: String = "field-phase-%d-ko-%s" % [int(field["phase"]), "1_0" if scale == 1.0 else "1_25"]
 	await capture(tag + "-map")
 	# A tile corner avoids the farmer sprite; selection still traverses real map input.
-	var point: Vector2 = root.get_canvas_transform() * (View.tile_to_world(tile) + Vector2(8, 8))
+	point = root.get_canvas_transform() * corner
 	root.warp_mouse(point)
-	await click_point(point)
+	var motion := InputEventMouseMotion.new()
+	motion.position = point
+	Input.parse_input_event(motion)
+	await frames(2)
+	var hovered: Control = root.gui_get_hovered_control()
+	print("MUX2_FIELD_HIT " + JSON.stringify({"scale": scale, "point": str(point), "hovered": str(hovered.get_path()) if hovered != null else ""}))
+	var exposed: bool = root.get_visible_rect().has_point(point) and hovered == null
+	check("field map click is unobstructed", exposed)
+	if exposed:
+		await click_point(point)
 	await frames(10)
 	var panel: Control = main.get_node("UI/FieldPanel") as Control
 	check("field map click opens selected inspector", panel.is_visible_in_tree() and panel.get("_tile") == tile)
@@ -260,6 +277,13 @@ func run() -> void:
 		var toggle: Control = hud.get("settings").find_child("StewardDefence",true,false)
 		check("settings defence exists",toggle != null)
 		if toggle != null:
+			var toggle_motion := InputEventMouseMotion.new()
+			toggle_motion.position = toggle.get_global_rect().get_center()
+			Input.parse_input_event(toggle_motion)
+			await frames(2)
+			var toggle_hovered: Control = root.gui_get_hovered_control()
+			print("MUX2_DEFENCE_HIT " + JSON.stringify({"scale": scale, "point": str(toggle_motion.position), "hovered": str(toggle_hovered.get_path()) if toggle_hovered != null else ""}))
+			check("settings defence receives pointer", toggle_hovered == toggle or (toggle_hovered != null and toggle.is_ancestor_of(toggle_hovered)))
 			await click(toggle)
 			await frames(35)
 			var after: Dictionary = SimReads.read(world,"get_steward")
@@ -330,13 +354,16 @@ func run() -> void:
 			var camera_processing: bool = item_camera.is_processing()
 			item_camera.set_process(false)
 			# Leave the expanded decision cards visible; frame the item in the free map gutter.
-			var item_screen: Vector2 = root.get_visible_rect().size * Vector2(0.25,0.65)
+			var item_screen: Vector2 = root.get_visible_rect().size * Vector2(0.25,0.70)
 			item_camera.position = View.tile_centre(tile) - (item_screen - root.get_visible_rect().size * 0.5) / item_camera.zoom
 			item_camera.reset_smoothing()
 			item_camera.force_update_scroll()
 			await frames(10)
 			var item_point: Vector2 = root.get_canvas_transform()*View.tile_centre(tile)
 			root.warp_mouse(item_point)
+			var item_motion := InputEventMouseMotion.new()
+			item_motion.position = item_point
+			Input.parse_input_event(item_motion)
 			await frames(2)
 			var hovered: Control = root.gui_get_hovered_control()
 			var click_evidence: Dictionary = {"source":"item_input", "scale":scale, "tile":[tile.x,tile.y], "point":str(item_point), "hovered":str(hovered.get_path()) if hovered != null else "", "hovered_rect":str(hovered.get_global_rect()) if hovered != null else "", "tool_mode":main.get_node("ColonyView/OrderTool").get("mode")}

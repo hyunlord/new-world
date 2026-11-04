@@ -122,7 +122,7 @@ func _run() -> void:
 	if not arguments.is_empty():
 		_assert(arguments.size() == 3 and arguments[0] == "--field-saves", "field arguments: --field-saves SOWABLE_SAVE RIPE_SAVE")
 		if arguments.size() == 3 and arguments[0] == "--field-saves":
-			_test_field_card_transitions(main, world, arguments)
+			await _test_field_card_transitions(main, world, arguments)
 
 	print("LOOP_UI_TEST_DONE pass=%d fail=%d" % [_pass, _fail])
 	quit(1 if _fail > 0 else 0)
@@ -1093,15 +1093,25 @@ func _test_field_card_transitions(main: Node, world: Node, arguments: PackedStri
 			_assert(loaded, label + " loads natural save")
 			if not loaded:
 				continue
+			# Native load emits world_reset deferred; wait for the real UI reset.
+			var loaded_tick: int = int(SimReads.read(world, "get_time_snapshot").get("tick", -1))
+			await Signal(world, "world_reset")
+			_assert(int(SimReads.read(world, "get_time_snapshot").get("tick", -1)) == loaded_tick, label + " world reset does not advance simulation")
+			_assert((panel.call("active_ids") as PackedStringArray).is_empty() and (panel.get("_cooldown") as Dictionary).is_empty() and (panel.call("command_results") as Array).is_empty(), label + " native world reset cleared prior card state")
 			var target: Dictionary = FieldFacts.target(world, kind)
 			_assert(not target.is_empty(), label + " has eligible real target")
 			if target.is_empty():
 				continue
 			var tile := Vector2i(int(target["x"]), int(target["y"]))
 			var prior: String = "paused" if mode == "auto" else "auto"
-			var setup: Dictionary = SimReads.mutate(world, "cmd_set_field_work", [tile.x, tile.y, prior])
-			_assert(bool(setup.get("accepted", false)), label + " ordinary prior-mode setup accepted")
-			if not bool(setup.get("accepted", false)):
+			if str(target.get("mode", "")) != prior:
+				var setup: Dictionary = SimReads.mutate(world, "cmd_set_field_work", [tile.x, tile.y, prior])
+				_assert(bool(setup.get("accepted", false)), label + " ordinary prior-mode setup accepted")
+				if not bool(setup.get("accepted", false)):
+					continue
+			var prepared: Dictionary = FieldFacts.at(world, tile)
+			_assert(str(prepared.get("mode", "")) == prior and prior != mode, label + " verified distinct prior mode")
+			if str(prepared.get("mode", "")) != prior:
 				continue
 			var tick: int = int(SimReads.read(world, "get_time_snapshot").get("tick", -1))
 			panel.set("_last_tick", tick)
@@ -1130,12 +1140,12 @@ func _test_field_card_transitions(main: Node, world: Node, arguments: PackedStri
 			var kinds: PackedStringArray = log.get("kinds", PackedStringArray())
 			var accepted: PackedByteArray = log.get("accepted", PackedByteArray())
 			var ticks: PackedInt64Array = log.get("ticks", PackedInt64Array())
-			_assert(int(log.get("total", -1)) == before + 1 and kinds == PackedStringArray(["set_field_work"]) and accepted == PackedByteArray([1]) and ticks == PackedInt64Array([tick]), label + " exactly one native accepted command at same tick")
+			_assert(int(log.get("total", -1)) == before + 1 and kinds == PackedStringArray(["SetFieldWork"]) and accepted == PackedByteArray([1]) and ticks == PackedInt64Array([tick]), label + " exactly one native accepted command at same tick")
 			var receipts: Array = panel.call("command_results")
 			_assert(receipts.size() == receipts_before + 1 and (panel.call("skipped_results") as Array).size() == skipped_before, label + " one receipt and no skipped answer")
 			if receipts.size() == receipts_before + 1:
 				var receipt: Dictionary = receipts.back()
-				_assert(bool(receipt.get("accepted", false)) and int(receipt.get("log_index", -1)) == before and str(receipt.get("log_kind", "")) == "set_field_work", label + " receipt matches native log")
+				_assert(bool(receipt.get("accepted", false)) and int(receipt.get("log_index", -1)) == before and str(receipt.get("log_kind", "")) == "SetFieldWork", label + " receipt matches native log")
 			var after: Dictionary = FieldFacts.at(world, tile)
 			_assert(str(after.get("mode", "")) == mode and after.get("phase") == target.get("phase") and after.get("crop") == target.get("crop"), label + " mode changed without phase/crop mutation")
 			_assert(int(SimReads.read(world, "get_time_snapshot").get("tick", -1)) == tick, label + " no simulation advance")

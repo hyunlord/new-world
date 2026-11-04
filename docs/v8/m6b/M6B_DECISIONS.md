@@ -384,3 +384,9 @@ KnowledgeLost 기준은 유지한다. 기존 자연 저장은 모인 전문가�
 |7|200|0|300|240|199.8|
 
 근거: calibration08 seed0–7의 harvest events/consumption summaries, 현행 crops.ron, S1_DESIGN. 최소 여유 seed5의12.3단위.
+
+## S1-UI-1 — 자연 저장에서 확인한 전경과 실제 입력 검사
+
+1.25배 자연 저장 검사에서 설정창 뒤 결정 카드·알림이 남는 경로를 확인했다. 기존 전경 동기화에 HUD 자신의 Settings/Help/Goals 표시 상태를 포함하고 기존 visibility_changed 신호를 연결한다. 새 coordinator나 simulation 변경은 없다. 알림이 방어 토글을 직접 가렸다는 초기 추측은 좌표로 확인되지 않아 기각했다. 실제 재검사는 토글이 포인터를 받고 명령을 보내는지 확인한다.
+
+밭/아이템을 중앙 또는 이야기 배너 밑으로 프레이밍하던 기존 캡처는 보이는 지도의25%폭/70%높이로 카메라를 옮기고 실제 mouse motion·hit target·click을 확인한다. UI를 숨겨 클릭을 우회하지 않는다. StoryBanner는 상호작용 UI이므로 그 입력 정책을 바꾸지 않는다. 자연 카드 검사는 이미 같은 mode에 보내는 명령의 정상 거부, 실제 네이티브 이름 SetFieldWork, deferred world_reset 신호를 반영한다. 상태 직접 주입·수락 조건 완화 없이 여섯 답변의 정확한 명령수/수락/틱/영수증/작물·phase 불변을 유지한다.

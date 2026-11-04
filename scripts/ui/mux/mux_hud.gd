@@ -147,6 +147,8 @@ func _ready() -> void:
 	add_child(settings)
 	settings.defence_toggled.connect(_set_defence)
 	settings.extended_toggled.connect(_set_extended)
+	for panel: Control in [settings, help, goals]:
+		panel.visibility_changed.connect(_sync_foreground)
 	_why_button = _button("WhyButton", func() -> void: get_node("/root/Main/ColonyView/OrderTool").call("select_why"))
 	_goals_button = _button("GoalsButton", goals.toggle_panel)
 	_settings_button = _button("SettingsButton", settings.toggle_panel)
@@ -476,7 +478,7 @@ func _sync_foreground() -> void:
 		for child: Node in bar.get_children():
 			if child is PanelContainer and child.name in [&"BuildMenu", &"DigMenu"] and child.is_visible_in_tree():
 				menu_open = true
-	var panel_open: bool = false
+	var panel_open: bool = settings.is_visible_in_tree() or help.is_visible_in_tree() or goals.is_visible_in_tree()
 	for panel_name: String in LIST_PANELS + POPUP_PANELS + ["AgentInspectorPanel"]:
 		var panel: Control = get_parent().get_node_or_null(NodePath(panel_name)) as Control
 		if panel != null and panel.is_visible_in_tree():
