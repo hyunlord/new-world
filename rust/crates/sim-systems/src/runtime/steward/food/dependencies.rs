@@ -137,6 +137,7 @@ pub(super) fn ingredient_deficits(
         }
         eligible.push(recipe);
     }
+    let mut available = super::cooking::free_inputs(world, res);
     let mut immediate: BTreeMap<ItemKind, u64> = BTreeMap::new();
     for recipe in &eligible {
         let target = super::cooking::daily_target(policy, facts, eligible.len(), recipe.id);
@@ -146,30 +147,38 @@ pub(super) fn ingredient_deficits(
             .div_ceil(u64::from(recipe.output.1).max(1));
         for &(item, count) in &recipe.inputs {
             let amount = immediate.entry(item).or_default();
-            *amount = amount.saturating_add(batches.saturating_mul(u64::from(count)));
+            let needed = batches.saturating_mul(u64::from(count));
+            let supplied =
+                super::cooking::take_recipe_input(world, res, &mut available, recipe, item, needed);
+            *amount = amount.saturating_add(needed.saturating_sub(supplied));
         }
     }
-    for (item, amount) in super::preservation::budget(world, res, policy, facts).inputs {
+    let preservation = super::preservation::budget(world, res, policy, facts);
+    for (item, amount) in preservation.inputs {
+        // Preservation already chooses physical shops; only those shelves can serve its inputs.
+        let mut missing = amount;
+        for (kind, &shop) in &preservation.workshops {
+            if !kind
+                .recipe()
+                .is_some_and(|recipe| recipe.inputs.iter().any(|(input, _)| *input == item))
+            {
+                continue;
+            }
+            if let Some(local) = available.get_mut(&(Some(shop), item)) {
+                let taken = (*local).min(missing);
+                *local -= taken;
+                missing -= taken;
+            }
+        }
+        if let Some(public) = available.get_mut(&(None, item)) {
+            let taken = (*public).min(missing);
+            *public -= taken;
+            missing -= taken;
+        }
         let need = immediate.entry(item).or_default();
-        *need = need.saturating_add(amount);
+        *need = need.saturating_add(missing);
     }
-    let committed = unconsumed_craft_inputs(world, res);
     immediate
-        .into_iter()
-        .map(|(item, amount)| {
-            (
-                item,
-                amount.saturating_sub(
-                    facts
-                        .pieces
-                        .get(&item)
-                        .copied()
-                        .unwrap_or(0)
-                        .saturating_sub(committed.get(&item).copied().unwrap_or(0)),
-                ),
-            )
-        })
-        .collect()
 }
 
 /// Assigned output already counts toward bills; its still-shelved input cannot count twice.

@@ -341,3 +341,181 @@ fn cultivation_waits_for_accepted_house_roof_without_changing_existing_fields() 
         "existing erased established player crop must be preserved"
     );
 }
+
+#[test]
+fn later_house_does_not_indirectly_roof_outdoor_fields() {
+    use sim_core::colony::cultivation::{FieldPhase, FieldTile, FieldWork};
+    let (mut engine, action, hearth) = fixture();
+    engine
+        .resources
+        .tile_grid
+        .terrain_type
+        .fill(sim_core::TerrainType::Plain);
+    engine.resources.colony.nodes.clear();
+    let initial = house(&engine.world, &engine.resources, hearth, &action, false);
+    let Action::House { wall, door, .. } = &action else {
+        panic!("house action")
+    };
+    let boundary = |commands: &[Command]| {
+        commands
+            .iter()
+            .filter_map(|command| match command {
+                Command::PlaceBlueprint { kind, x, y } if kind == wall || kind == door => {
+                    Some((*x, *y))
+                }
+                _ => None,
+            })
+            .collect::<BTreeSet<_>>()
+    };
+    let original_boundary = boundary(&initial.commands);
+    let right = original_boundary
+        .iter()
+        .map(|tile| tile.0)
+        .max()
+        .expect("house right edge");
+    let top = original_boundary
+        .iter()
+        .map(|tile| tile.1)
+        .min()
+        .expect("house top edge");
+    assert!(right + 4 < engine.resources.tile_grid.width);
+    assert!(original_boundary.contains(&(right, top + 3)));
+    let fields: BTreeSet<_> = (top + 1..=top + 2)
+        .flat_map(|y| (right + 1..=right + 2).map(move |x| (x, y)))
+        .collect();
+    // The fourth side is still open: only the prospective house closes this pocket.
+    for tile in (right + 1..=right + 3)
+        .flat_map(|x| [(x, top), (x, top + 3)])
+        .chain((top + 1..=top + 2).map(|y| (right + 3, y)))
+    {
+        let index = engine.resources.tile_grid.idx(tile.0, tile.1);
+        engine.resources.tile_grid.wall_material[index] = Some(sim_core::colony::materials::OAK);
+    }
+    let roof = |res: &SimResources, proposed: &BTreeSet<Tile>| {
+        let space = res
+            .rules
+            .colony
+            .and_then(|rule| rule.space)
+            .expect("space rules");
+        sim_core::rooms::detect(
+            res.tile_grid.width,
+            res.tile_grid.height,
+            space.room_min_tiles,
+            space.room_max_tiles,
+            |tile| proposed.contains(&tile) || crate::runtime::rooms::bounds(res, tile),
+            |_| false,
+            |tile| {
+                proposed.contains(&tile)
+                    || res.tile_grid.wall_material[res.tile_grid.idx(tile.0, tile.1)].is_some()
+            },
+        )
+        .into_iter()
+        .filter(|room| room.built)
+        .flat_map(|room| room.tiles)
+        .collect::<BTreeSet<_>>()
+    };
+    assert!(
+        fields.is_disjoint(&roof(&engine.resources, &BTreeSet::new())),
+        "fields initially outdoors"
+    );
+    assert!(
+        fields.is_subset(&roof(&engine.resources, &original_boundary)),
+        "original house closes a separate doorless field room"
+    );
+    let crop = sim_core::colony::content::installed_or_bundled()
+        .crop_by_name("emmer")
+        .expect("crop");
+    for &tile in &fields {
+        engine.resources.cultivation.fields.insert(
+            tile,
+            FieldTile {
+                owner: 1,
+                crop,
+                phase: FieldPhase::Fallow,
+                active: true,
+                work: FieldWork::Auto,
+                tended: false,
+            },
+        );
+    }
+    let after = house(&engine.world, &engine.resources, hearth, &action, false);
+    let after_boundary = boundary(&after.commands);
+    assert!(!after_boundary.is_empty(), "another house remains possible");
+    assert!(
+        fields.is_disjoint(&roof(&engine.resources, &after_boundary)),
+        "house must not indirectly roof occupied outdoor fields"
+    );
+    for tile in fields {
+        assert!(engine.resources.cultivation.fields[&tile].active);
+        assert_eq!(
+            engine.resources.cultivation.fields[&tile].phase,
+            FieldPhase::Fallow
+        );
+    }
+}
+
+#[test]
+fn indirect_field_roof_uses_room_size_and_open_boundary_semantics() {
+    let (mut engine, _, _) = fixture();
+    engine
+        .resources
+        .tile_grid
+        .terrain_type
+        .fill(sim_core::TerrainType::Plain);
+    engine.resources.tile_grid.wall_material.fill(None);
+    for tile in (9..=13)
+        .flat_map(|x| [(x, 9), (x, 13)])
+        .chain((10..=12).map(|y| (9, y)))
+    {
+        let index = engine.resources.tile_grid.idx(tile.0, tile.1);
+        engine.resources.tile_grid.wall_material[index] = Some(sim_core::colony::materials::OAK);
+    }
+    let boundary = BTreeSet::from([(13, 10), (13, 11), (13, 12)]);
+    let fields = [(10, 10)];
+    assert!(roofs_outdoor_fields(
+        &engine.resources,
+        &boundary,
+        &fields,
+        9
+    ));
+    assert!(!roofs_outdoor_fields(
+        &engine.resources,
+        &boundary,
+        &fields,
+        8
+    ));
+    assert!(!roofs_outdoor_fields(
+        &engine.resources,
+        &BTreeSet::new(),
+        &fields,
+        120
+    ));
+    // A missing existing wall leaves a path to the map edge, not a roof.
+    let opening = engine.resources.tile_grid.idx(9, 10);
+    engine.resources.tile_grid.wall_material[opening] = None;
+    assert!(!roofs_outdoor_fields(
+        &engine.resources,
+        &boundary,
+        &fields,
+        120
+    ));
+    // A final one-cell pocket is below room_min, but an earlier partial shell
+    // can roof it together with neighboring land before this divider is built.
+    for tile in [(19, 20), (20, 19), (20, 21)] {
+        let index = engine.resources.tile_grid.idx(tile.0, tile.1);
+        engine.resources.tile_grid.wall_material[index] = Some(sim_core::colony::materials::OAK);
+    }
+    let space = engine
+        .resources
+        .rules
+        .colony
+        .and_then(|rule| rule.space)
+        .expect("space rules");
+    assert!(space.room_min_tiles > 1);
+    assert!(roofs_outdoor_fields(
+        &engine.resources,
+        &BTreeSet::from([(21, 20)]),
+        &[(20, 20)],
+        space.room_max_tiles,
+    ));
+}

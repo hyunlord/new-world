@@ -984,3 +984,19 @@ Identity05, docs12 and field-capture-strict01 completed18:53KST, actual wrappere
 p10 자연 seed2의 저녁 tick66990/66991 저장을 기존 bridge getter로 읽었다(root52901 종료0). 두 읽기 모두 시각·원본 저장 바이트가 불변이며96일 최종 지문0ebcf30f911234ab-3e07282f20ba52cf가 보정05와 같다. 전문가1은 화덕 반경 안에 있었지만 pot_firing412/마지막사용54720이 그 저녁 갱신되지 않았고, 다른 주민 중 복습 조건350을 만족하는 사람도 없었다. 모임 부재나 시도 후 확률 실패라는 설명은 이 한 시점에서 배제된다. 정확한 대화 상대·후보 순서는 미관측이므로 새 구술 정책의 성공을 주장하지 않는다. 외부 일회성 읽기 스크립트는 기존 get_agent_knowledge 호출로82→85줄이며 이전 원본도 보존했다.
 
 build13·identity06·docs13이19:26KST 실제 종료0으로 완료됐다. BASE32×120일228,748값 차이0·한쪽만 있는 경로0,64연대기19,683항목·64원시 파일 동일,시드0–3 결정성 PASS다. 기존 정규화 제외 목록은 그대로다. Rust patch3899f617이 검증 내내 같았고 다음 보정용 probe03989b75를 별도 고정했다. 새 tools 파일/변경0이며 Stage1 tools 누적net475줄은 유지한다. 보정06·held-out·최종 UI/카드/성능/전체 gate·게시 결과는 아직 없다.
+
+### Stage1 보정06 — 재파종·조달 결함의 실제 증거
+
+887d62df/probe03989b75의8세계×96일은 root84606 실제 종료0,70,030,104바이트·invariant0이다. 게임 기준은 FAIL이다: 생존7/8,day48 이전 파종5/8,3년차 밭30%0/8(최고29.655345%),KnowledgeLost33 대 BASE1·세계별 허용5/8,#675일수6/8이다. 음식 과잉 연속일은4/4/5/4/4/5/4/0이며 멸종 세계를 제외한7/8만 성공이다. 기준과 held-out1520–1551은 그대로 유지한다.
+
+자연 저장3개(root59962)와 seed7 저장2개(root36965)는 probe·기존 getter 읽기 모두 종료0이며 읽기는 시각과 원본 저장 hash를 바꾸지 않았다. seed3의 새 집 명령40680 이후41062에 의도하지 않은 방4가 생겨 기존 밭16칸을 덮었다. 밭은 새 집 사각형 밖이므로 기존 직접 겹침 방지로는 잡히지 않는다. seed1의 첫 파종은 경작 발견86160 이후 다음 봄103737로,day24 직전 저장에는 종자34개가 있으나 발견 조건인 stockpile 곡물이0개였다. 종자 부족이나 발견 확률 오류로 단정하지 않는다.
+
+추가 조달 회귀는 오래된 Store 곡물16개를 운반할 수 없는데도 신규 조달이0이 되는 오류를 재현했다(procurement-freshness-red02,1FAIL,종료101). red01은 잘못된 exact 필터로0테스트이므로 증거로 쓰지 않는다. 집의 간접 지붕 회귀도 실제1FAIL·종료101(indirect-field-roof-red01)로 재현했다. 수정안과 검증은 진행 중이며 테스트 성공이나 게시를 주장하지 않는다. 기존 외부 저장 읽기에 get_field_tiles 한 줄을 추가해85→86줄이고 이전본을 보존했다. 새 저장 관찰기나 tools 파일은 없다.
+
+DGX p11빌드는 최초 archive에서 빠진 Cargo.lock과 compile-time presentation JSON을 확인해 같은 커밋/실제 Mac lock으로 보완했다. 실패로그 두 개를 보존했고 r3 실제 종료0이다. DGX의 동일96일 seed0 실행도 종료0이며 summary/events/chronicle 세 파일의 SHA256이 Mac과 모두 일치한다. 이 증거는 해당 소스·세계의 플랫폼 일치이며 Mac UI/성능 gate나 다른 세계의 측정을 대신하지 않는다.
+
+seed7 저장의 실제 품목 코드를 확인했다:4=돌날,5=돌도끼,8=생도기. 도끼59→65개와 생도기25→29개가 저장고 밖에 남는데도 각 Maintain2 작업이 계속된다. 돌날의 실제 수량은9→5개이며 누적 제작량78→81을 현존 수량으로 바꾸어 말하지 않는다. 도구 상한 회귀(tool-target-red01)는 수동·정지 보호1PASS/관리인 상한1FAIL, 용기 회귀(vessel-target-red01)는1FAIL로 모두 실제 종료101이다. 음식 부족과의 노동 경쟁은 가능성일 뿐 이 저장 두 개로 아사 인과를 확정하지 않는다.
+
+수정안 unit22는 실제 종료0이다: 시스템630PASS/1기존ignore, 지식17PASS, 데이터2PASS, fmt와 workspace all-target Clippy 경고0. 혼합 재고 도구 회귀 red02는 수정 전 Maintain4≠0으로 실제 실패했으며, red01의 잘못된 Store fixture 실패는 의미적 증거에서 제외했다. 용기 FormPot/FirePot, 플레이어 소유·정지 보호, 실제 선택 작업장 선반, 간접 지붕의 최소/최대 방 크기와 외부 연결 대조군을 유지한다. build14·identity07·docs14는 진행 중이며 이 단위 검증만으로 게임 기준이나 게시 성공을 주장하지 않는다. 이번 패치의 tools 변경은0, Stage1 누적net475줄이다.
+
+build14의 release probe/perf·debug bridge와 identity07은 완료됐다. BASE228,748값 차이0·한쪽 경로0,64연대기19,683항목 및64원시 파일 동일,결정성0–3 PASS다. 최초 docs14는 경로 오타로 실패했고 원본 로그를 보존했다. 올바른 경로의 docs14-r2는20:23KST 실제 종료0·docs PASS다. 검증한 Rust patch SHA2560a6bcb1675f444e1cc5877e96bd1f45cd06ee2664c1790cf457a62936fde8ce5와 현재 diff가 같으며 보정07 Mac probe a61bd7eb을 고정했다. 보정07 게임 결과·held-out·게시 gate는 아직 없다.

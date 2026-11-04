@@ -81,7 +81,8 @@ fn edible_units(item: sim_core::colony::ItemKind, raw_only: bool) -> u64 {
 }
 
 // None is portable public stock; Some(shop) is fresh input already on that shelf.
-type CookingInputs = std::collections::BTreeMap<(Option<u32>, sim_core::colony::ItemKind), u64>;
+pub(super) type CookingInputs =
+    std::collections::BTreeMap<(Option<u32>, sim_core::colony::ItemKind), u64>;
 
 fn cooking_inputs(world: &World, res: &SimResources) -> CookingInputs {
     use crate::runtime::food::{items, storage};
@@ -113,12 +114,16 @@ fn cooking_inputs(world: &World, res: &SimResources) -> CookingInputs {
     inputs
 }
 
-fn input_count(inputs: &CookingInputs, shop: u32, item: sim_core::colony::ItemKind) -> u64 {
+pub(super) fn input_count(
+    inputs: &CookingInputs,
+    shop: u32,
+    item: sim_core::colony::ItemKind,
+) -> u64 {
     inputs.get(&(None, item)).copied().unwrap_or(0)
         + inputs.get(&(Some(shop), item)).copied().unwrap_or(0)
 }
 
-fn consume_inputs(
+pub(super) fn consume_inputs(
     inputs: &mut CookingInputs,
     shop: u32,
     item: sim_core::colony::ItemKind,
@@ -133,15 +138,9 @@ fn consume_inputs(
     }
 }
 
-/// Net new edible units backed by active bills and uncommitted physical inputs.
-pub(super) fn convertible_immediate(
-    world: &World,
-    res: &SimResources,
-    policy: &FoodPlan,
-    facts: &FoodSummary,
-) -> u64 {
+/// Available food ingredients after actual workshop-local Craft commitments.
+pub(super) fn free_inputs(world: &World, res: &SimResources) -> CookingInputs {
     let mut inputs = cooking_inputs(world, res);
-    let reserved = super::dependencies::seed_inputs(world, res, policy, facts);
     for (_, job) in world.query::<&Job>().iter() {
         let JobKind::Craft { workshop, bill, .. } = job.kind else {
             continue;
@@ -164,6 +163,55 @@ pub(super) fn convertible_immediate(
             }
         }
     }
+    inputs
+}
+
+/// Allocate one ingredient once, using only shelves whose shop can run this recipe.
+pub(super) fn take_recipe_input(
+    world: &World,
+    res: &SimResources,
+    inputs: &mut CookingInputs,
+    recipe: &sim_core::colony::workshop::Recipe,
+    item: sim_core::colony::ItemKind,
+    mut needed: u64,
+) -> u64 {
+    let requested = needed;
+    // Match plan's first compatible workshop; another shelf cannot supply its bill.
+    let Some(shop) = res
+        .colony
+        .workshops
+        .values()
+        .find(|shop| recipe.supports_workshop(shop.kind))
+    else {
+        return 0;
+    };
+    if !has_practitioner(world, res, recipe, |practice| {
+        crate::runtime::jobs::food_recipe_supplyable(res, shop, recipe, practice)
+    }) {
+        return 0;
+    }
+    if let Some(local) = inputs.get_mut(&(Some(shop.id), item)) {
+        let taken = (*local).min(needed);
+        *local -= taken;
+        needed -= taken;
+    }
+    if let Some(public) = inputs.get_mut(&(None, item)) {
+        let taken = (*public).min(needed);
+        *public -= taken;
+        needed -= taken;
+    }
+    requested - needed
+}
+
+/// Net new edible units backed by active bills and uncommitted physical inputs.
+pub(super) fn convertible_immediate(
+    world: &World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    facts: &FoodSummary,
+) -> u64 {
+    let mut inputs = free_inputs(world, res);
+    let reserved = super::dependencies::seed_inputs(world, res, policy, facts);
     let emergency = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
     let mut deductions = if emergency {
         std::collections::BTreeMap::new()
@@ -340,22 +388,14 @@ pub(super) fn plan(
         &material_recipes,
         super::dependencies::discovery_materials(world, policy),
     );
-    let committed = super::dependencies::unconsumed_craft_inputs(world, res);
-    let mut seed_budget: std::collections::BTreeMap<_, _> = seed_reserve
-        .iter()
-        .map(|(&item, &reserved)| {
-            (
-                item,
-                facts
-                    .pieces
-                    .get(&item)
-                    .copied()
-                    .unwrap_or(0)
-                    .saturating_sub(reserved)
-                    .saturating_sub(committed.get(&item).copied().unwrap_or(0)),
-            )
-        })
-        .collect();
+    let mut seed_budget = free_inputs(world, res);
+    let mut protected = seed_reserve.clone();
+    for ((_, item), count) in &mut seed_budget {
+        let reserved = protected.entry(*item).or_default();
+        let taken = (*count).min(*reserved);
+        *count -= taken;
+        *reserved -= taken;
+    }
     for (kind, mut target) in wanted {
         let Some(recipe) = kind.recipe() else {
             continue;
@@ -371,6 +411,19 @@ pub(super) fn plan(
                 .filter(|pot| pot.vessel.kind == recipe.output.0)
                 .count();
             target = target.saturating_sub(u16::try_from(deployed).unwrap_or(u16::MAX));
+        }
+        if policy
+            .vessel_recipes
+            .iter()
+            .any(|(vessel, _)| *vessel == kind)
+        {
+            let physical = crate::runtime::jobs::bills::maintain_count(world, res, recipe.output.0);
+            let counted = crate::runtime::jobs::bills::bill_count(world, res, recipe.output.0);
+            // Covered-store counting omits outside vessels, not physical production.
+            // Keep the original cap even when already-counted stock exceeds it.
+            target = target.saturating_sub(
+                u16::try_from(physical.saturating_sub(counted)).unwrap_or(u16::MAX),
+            );
         }
         if let Some((&id, shop)) = res.colony.workshops.iter().find(|(id, shop)| {
             preservation.workshops.get(&kind).map_or_else(
@@ -391,9 +444,16 @@ pub(super) fn plan(
                     continue;
                 }
                 let mode = if Some(kind) == bootstrap {
-                    bootstrap_mode(world, res, policy, facts, kind, target)
+                    bootstrap_mode(world, res, policy, id, kind, target)
                 } else {
-                    seed_limited_mode(world, res, kind, target, &mut seed_budget)
+                    seed_limited_mode(
+                        world,
+                        res,
+                        (id, kind),
+                        target,
+                        &mut seed_budget,
+                        &seed_reserve,
+                    )
                 };
                 if mode == BillMode::Make(0)
                     || target == 0 && !matches!(mode, BillMode::Make(n) if n > 0)
@@ -427,9 +487,16 @@ pub(super) fn plan(
                 }
             } else if target > 0 {
                 let mode = if Some(kind) == bootstrap {
-                    bootstrap_mode(world, res, policy, facts, kind, target)
+                    bootstrap_mode(world, res, policy, id, kind, target)
                 } else {
-                    seed_limited_mode(world, res, kind, target, &mut seed_budget)
+                    seed_limited_mode(
+                        world,
+                        res,
+                        (id, kind),
+                        target,
+                        &mut seed_budget,
+                        &seed_reserve,
+                    )
                 };
                 if mode == BillMode::Make(0) {
                     continue;
@@ -461,9 +528,10 @@ pub(super) fn plan(
 fn seed_limited_mode(
     world: &World,
     res: &SimResources,
-    kind: RecipeKind,
+    (shop, kind): (u32, RecipeKind),
     target: u16,
-    budget: &mut std::collections::BTreeMap<sim_core::colony::ItemKind, u64>,
+    budget: &mut CookingInputs,
+    reserved: &std::collections::BTreeMap<sim_core::colony::ItemKind, u64>,
 ) -> BillMode {
     let Some(recipe) = kind.recipe() else {
         return BillMode::Maintain(target);
@@ -471,7 +539,7 @@ fn seed_limited_mode(
     let limited: Vec<_> = recipe
         .inputs
         .iter()
-        .filter(|(item, _)| budget.contains_key(item))
+        .filter(|(item, _)| reserved.contains_key(item))
         .collect();
     if limited.is_empty() {
         return BillMode::Maintain(target);
@@ -480,12 +548,15 @@ fn seed_limited_mode(
     let needed = u64::from(u32::from(target).saturating_sub(counted))
         .div_ceil(u64::from(recipe.output.1).max(1));
     let batches = limited.iter().fold(needed, |limit, (item, count)| {
-        limit.min(budget.get(item).copied().unwrap_or(0) / u64::from(*count).max(1))
+        limit.min(input_count(budget, shop, *item) / u64::from(*count).max(1))
     });
     for (item, count) in limited {
-        if let Some(available) = budget.get_mut(item) {
-            *available = available.saturating_sub(batches.saturating_mul(u64::from(*count)));
-        }
+        consume_inputs(
+            budget,
+            shop,
+            *item,
+            batches.saturating_mul(u64::from(*count)),
+        );
     }
     let assigned = assigned_crafts(world, res, kind);
     BillMode::Make(u16::try_from(batches.saturating_add(assigned)).unwrap_or(u16::MAX))
@@ -495,7 +566,7 @@ fn bootstrap_mode(
     world: &World,
     res: &SimResources,
     policy: &FoodPlan,
-    facts: &FoodSummary,
+    shop: u32,
     kind: RecipeKind,
     target: u16,
 ) -> BillMode {
@@ -507,16 +578,16 @@ fn bootstrap_mode(
         .saturating_sub(counted)
         .div_ceil(u64::from(recipe.output.1).max(1));
     let discovery = super::dependencies::discovery_materials(world, policy);
+    let inputs = free_inputs(world, res);
     let committed = super::dependencies::unconsumed_craft_inputs(world, res);
     let batches = recipe.inputs.iter().fold(needed, |limit, (item, count)| {
         let physical = if item.definition().food.is_some() {
-            facts.pieces.get(item).copied().unwrap_or(0)
+            input_count(&inputs, shop, *item)
         } else {
             super::dependencies::physical_pieces(world, res, *item)
+                .saturating_sub(committed.get(item).copied().unwrap_or(0))
         };
-        let free = physical
-            .saturating_sub(u64::from(discovery.get(item).copied().unwrap_or(0)))
-            .saturating_sub(committed.get(item).copied().unwrap_or(0));
+        let free = physical.saturating_sub(u64::from(discovery.get(item).copied().unwrap_or(0)));
         limit.min(free / u64::from(*count).max(1))
     });
     BillMode::Make(

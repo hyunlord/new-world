@@ -1213,3 +1213,113 @@ fn executable_cooking_credit_debits_committed_inputs_from_the_actual_workshop() 
         "shop 2's grain is already committed; shop 1 cannot replace that debit"
     );
 }
+
+#[test]
+fn owned_vessel_target_counts_physical_pots_waiting_outside_store() {
+    for recipe_name in ["form_pot", "fire_pot"] {
+        for (outside, inside, expected) in [(2, 0, 0), (1, 4, 1)] {
+            for player in [false, true] {
+                let (mut world, mut res, mut policy, _) = fixture(true);
+                let recipe = RecipeKind::from_name(recipe_name).expect("vessel recipe");
+                let def = recipe.recipe().expect("definition");
+                policy.recipes.clear();
+                policy.cultivation = None;
+                policy.vessel_recipes = vec![(recipe, 2)];
+                res.colony.workshops.clear();
+                res.colony.workshops.insert(
+                    1,
+                    Workshop {
+                        id: 1,
+                        kind: def.workshop,
+                        top_left: (4, 4),
+                        size: (1, 1),
+                        bills: Vec::new(),
+                        shelf: Vec::new(),
+                        active: None,
+                    },
+                );
+                let add = Command::AddBill {
+                    workshop: 1,
+                    recipe,
+                    mode: BillMode::Maintain(2),
+                };
+                let command = if player {
+                    add
+                } else {
+                    Command::Steward {
+                        rule: 8,
+                        command: Box::new(add),
+                    }
+                };
+                assert!(crate::commands::apply_and_log(&mut world, &mut res, command, 1).accepted);
+                let bill = res.colony.workshops[&1].bills[0].id;
+                res.colony.rooms.insert(
+                    90,
+                    sim_core::rooms::Room {
+                        id: 90,
+                        tiles: std::collections::BTreeSet::from([(4, 4)]),
+                        doors: std::collections::BTreeSet::new(),
+                        roofed: true,
+                        role: sim_core::rooms::RoomRole::Storehouse,
+                        dug: false,
+                    },
+                );
+                res.colony.room_of_tile.insert((4, 4), 90);
+                crate::runtime::food::items::create_ground(
+                    &mut res,
+                    (2, 2),
+                    sim_core::colony::ItemSpec::raw(def.output.0, None),
+                    outside,
+                    0,
+                    crate::runtime::food::items::FoodSource::Debug,
+                )
+                .expect("actual outside vessels");
+                if inside > 0 {
+                    crate::runtime::food::items::create_ground(
+                        &mut res,
+                        (4, 4),
+                        sim_core::colony::ItemSpec::raw(def.output.0, None),
+                        inside,
+                        0,
+                        crate::runtime::food::items::FoodSource::Debug,
+                    )
+                    .expect("actual inside vessels");
+                }
+                assert_eq!(
+                    crate::runtime::jobs::bills::maintain_count(&world, &res, def.output.0),
+                    u32::from(outside + inside)
+                );
+                assert_eq!(
+                    crate::runtime::jobs::bills::bill_count(&world, &res, def.output.0),
+                    u32::from(inside)
+                );
+                let facts = super::summary(&world, &res, &policy);
+                let commands = super::cooking::plan(&world, &res, &policy, &facts);
+                let stop = Command::SetBillSuspended {
+                    workshop: 1,
+                    bill,
+                    suspended: true,
+                };
+                if player {
+                    assert!(!commands.iter().any(|command| matches!(command,
+                    Command::SetBillMode { bill: id, .. } | Command::SetBillSuspended { bill: id, .. }
+                    if *id == bill)), "manual vessel bill stays unchanged");
+                } else if expected == 0 {
+                    assert!(
+                        commands.contains(&stop),
+                        "outside vessels fulfill {recipe_name} target: {commands:?}"
+                    );
+                } else {
+                    assert!(
+                        commands.contains(&Command::SetBillMode {
+                            workshop: 1,
+                            bill,
+                            mode: BillMode::Maintain(expected),
+                        }),
+                        "mixed excess stock must not inflate the vessel target: {commands:?}"
+                    );
+                }
+            }
+        }
+    }
+}

@@ -644,3 +644,180 @@ fn tool_progression_leaves_inflight_work_and_suspended_bills_untouched() {
             .any(|command| matches!(command, Command::MoveBill { .. })));
     }
 }
+
+fn outside_axe_target_fixture(player: bool) -> (sim_engine::SimEngine, Rule, u32, u32) {
+    use sim_core::colony::{ItemSpec, RecipeKind, Workshop};
+    let (mut e, mut rule, _, _) = tool_progression_fixture(false);
+    let recipe = RecipeKind::from_name("haft_axe").expect("axe recipe");
+    let def = recipe.recipe().expect("definition");
+    if let Action::Bills { recipes, .. } = &mut rule.action {
+        *recipes = vec![(recipe, 2)];
+    }
+    let shop = 901;
+    let home = hearth_tiles(&e.resources)[0];
+    e.resources.colony.workshops.insert(
+        shop,
+        Workshop {
+            id: shop,
+            kind: def.workshop,
+            top_left: home,
+            size: (1, 1),
+            bills: Vec::new(),
+            shelf: Vec::new(),
+            active: None,
+        },
+    );
+    let add = Command::AddBill {
+        workshop: shop,
+        recipe,
+        mode: BillMode::Maintain(2),
+    };
+    let command = if player {
+        add
+    } else {
+        Command::Steward {
+            rule: rule.id,
+            command: Box::new(add),
+        }
+    };
+    assert!(crate::commands::apply_and_log(&mut e.world, &mut e.resources, command, 2).accepted);
+    let bill = e.resources.colony.workshops[&shop].bills[0].id;
+    e.resources.colony.rooms.insert(
+        990,
+        sim_core::rooms::Room {
+            id: 990,
+            tiles: BTreeSet::from([home]),
+            doors: BTreeSet::new(),
+            roofed: true,
+            role: sim_core::rooms::RoomRole::Storehouse,
+            dug: false,
+        },
+    );
+    e.resources.colony.room_of_tile.insert(home, 990);
+    crate::runtime::food::items::create_ground(
+        &mut e.resources,
+        (5, 5),
+        ItemSpec::raw(def.output.0, None),
+        2,
+        0,
+        crate::runtime::food::items::FoodSource::Debug,
+    )
+    .expect("physical outside axes");
+    assert_eq!(
+        crate::runtime::jobs::bills::maintain_count(&e.world, &e.resources, def.output.0),
+        2
+    );
+    assert_eq!(
+        crate::runtime::jobs::bills::bill_count(&e.world, &e.resources, def.output.0),
+        0
+    );
+    (e, rule, shop, bill)
+}
+
+#[test]
+fn owned_tool_target_counts_axes_waiting_outside_store() {
+    let (mut e, rule, shop, bill) = outside_axe_target_fixture(false);
+    let commands = plan(&e.world, &e.resources, &rule);
+    let stop = Command::SetBillMode {
+        workshop: shop,
+        bill,
+        mode: BillMode::Maintain(0),
+    };
+    assert!(
+        commands.contains(&stop),
+        "two actual axes fulfill the target; commands={commands:?}"
+    );
+    assert!(
+        crate::commands::apply_and_log(
+            &mut e.world,
+            &mut e.resources,
+            Command::Steward {
+                rule: rule.id,
+                command: Box::new(stop)
+            },
+            3
+        )
+        .accepted
+    );
+    assert!(!crate::runtime::jobs::bills::runnable(
+        &e.world,
+        &e.resources,
+        &e.resources.colony.workshops[&shop],
+        0
+    ));
+}
+
+#[test]
+fn outside_tool_target_preserves_player_and_suspended_bills() {
+    for player in [true, false] {
+        let (mut e, rule, shop, bill) = outside_axe_target_fixture(player);
+        if !player {
+            assert!(
+                crate::commands::apply_and_log(
+                    &mut e.world,
+                    &mut e.resources,
+                    Command::Steward {
+                        rule: rule.id,
+                        command: Box::new(Command::SetBillSuspended {
+                            workshop: shop,
+                            bill,
+                            suspended: true,
+                        })
+                    },
+                    3
+                )
+                .accepted
+            );
+        }
+        assert!(!plan(&e.world, &e.resources, &rule).iter().any(
+            |command| matches!(command, Command::SetBillMode { workshop, bill: id, .. }
+                if *workshop == shop && *id == bill)
+        ));
+    }
+}
+
+#[test]
+fn mixed_tool_target_never_promotes_existing_surplus_to_a_new_target() {
+    let (mut e, rule, shop, bill) = outside_axe_target_fixture(false);
+    let home = hearth_tiles(&e.resources)[0];
+    let axe = sim_core::colony::ItemKind::from_name("stone_axe").expect("axe");
+    crate::runtime::food::items::create_ground(
+        &mut e.resources,
+        home,
+        sim_core::colony::ItemSpec::raw(axe, None),
+        4,
+        0,
+        crate::runtime::food::items::FoodSource::Debug,
+    )
+    .expect("actual covered surplus");
+    let covered = e
+        .resources
+        .colony
+        .ground_items
+        .iter()
+        .find(|(_, stack)| stack.kind == axe && stack.count == 4)
+        .map(|(tile, _)| *tile)
+        .expect("new surplus stack");
+    e.resources
+        .colony
+        .rooms
+        .get_mut(&990)
+        .expect("store")
+        .tiles
+        .insert(covered);
+    e.resources.colony.room_of_tile.insert(covered, 990);
+    assert_eq!(maintain_count(&e.world, &e.resources, axe), 6);
+    assert_eq!(
+        crate::runtime::jobs::bills::bill_count(&e.world, &e.resources, axe),
+        4
+    );
+    let commands = plan(&e.world, &e.resources, &rule);
+    assert!(
+        commands.contains(&Command::SetBillMode {
+            workshop: shop,
+            bill,
+            mode: BillMode::Maintain(0),
+        }),
+        "outside axes already satisfy target; covered surplus must drain: {commands:?}"
+    );
+}

@@ -34,9 +34,22 @@ pub(super) fn plan(
     let catalog = installed_or_bundled();
     let mut ingredients = super::dependencies::ingredient_deficits(world, res, policy, facts);
     let mut seed_need = super::dependencies::seed_inputs(world, res, policy, facts);
+    let mut seed_available = super::cooking::free_inputs(world, res);
+    let seed_recipe = super::dependencies::seed_recipe(policy).and_then(|kind| kind.recipe());
     for (kind, missing) in &mut seed_need {
         let physical = if kind.definition().food.is_some() {
-            facts.pieces.get(kind).copied().unwrap_or(0)
+            if let Some(recipe) = seed_recipe {
+                super::cooking::take_recipe_input(
+                    world,
+                    res,
+                    &mut seed_available,
+                    recipe,
+                    *kind,
+                    *missing,
+                )
+            } else {
+                seed_available.get(&(None, *kind)).copied().unwrap_or(0)
+            }
         } else {
             super::dependencies::physical_pieces(world, res, *kind)
         };

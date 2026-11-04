@@ -242,7 +242,20 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
         } => {
             let mut profile = BillsProfile::new(res.current_tick);
             let mut reserved_house = None;
-            let mut wanted = recipes.clone();
+            let mut wanted: Vec<_> = recipes
+                .iter()
+                .map(|&(kind, target)| {
+                    let Some(definition) = kind.recipe() else {
+                        return (kind, target);
+                    };
+                    let physical = maintain_count(world, res, definition.output.0);
+                    let counted =
+                        crate::runtime::jobs::bills::bill_count(world, res, definition.output.0);
+                    let effective =
+                        u32::from(target).saturating_sub(physical.saturating_sub(counted));
+                    (kind, u16::try_from(effective).unwrap_or(u16::MAX))
+                })
+                .collect();
             if *days > 0 {
                 let mut target = fuel_target(res, *winter_recipe, *days, fuel.as_ref());
                 if fuel.is_some() {
@@ -567,6 +580,45 @@ fn house_locations(
     std::iter::from_fn(move || ranked.pop().map(|Reverse((_, _, location))| location))
 }
 
+// A candidate can close a second room outside its rectangle by joining existing walls.
+// Start at the few protected outdoor fields, not every map tile; an open/oversize
+// component stops at the map edge or max + 1 discovered cells, as it cannot be a room.
+fn roofs_outdoor_fields(
+    res: &SimResources,
+    boundary: &BTreeSet<Tile>,
+    fields: &[Tile],
+    max: u32,
+) -> bool {
+    let grid = &res.tile_grid;
+    fields.iter().copied().any(|start| {
+        if boundary.contains(&start) || crate::runtime::rooms::bounds(res, start) {
+            return false;
+        }
+        let mut seen = BTreeSet::from([start]);
+        let mut queue = std::collections::VecDeque::from([start]);
+        let mut touches_new_wall = false;
+        while let Some((x, y)) = queue.pop_front() {
+            if x == 0 || y == 0 || x + 1 == grid.width || y + 1 == grid.height {
+                return false;
+            }
+            for tile in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)] {
+                if boundary.contains(&tile) {
+                    touches_new_wall = true;
+                } else if !crate::runtime::rooms::bounds(res, tile) && seen.insert(tile) {
+                    if seen.len() > max as usize {
+                        return false;
+                    }
+                    queue.push_back(tile);
+                }
+            }
+        }
+        // Protect even sub-minimum pockets: partial construction can first close
+        // a larger roofed region before the final dividing wall is completed.
+        // A new wall supplies the built criterion; no door or dug soil is needed.
+        touches_new_wall
+    })
+}
+
 fn house(
     world: &World,
     res: &SimResources,
@@ -718,6 +770,16 @@ fn house(
         world,
         knowledge::gates().designation(sim_core::colony::Designation::Chop),
     );
+    let outdoor_fields: Vec<_> = res
+        .cultivation
+        .fields
+        .keys()
+        .copied()
+        .filter(|&tile| {
+            crate::runtime::cultivation::occupies(res, tile)
+                && !crate::runtime::rooms::roofed(res, tile)
+        })
+        .collect();
     for (x, y, width, height) in locations {
         profile.visit();
         if x + width + 2 >= res.tile_grid.width || y + height + 2 >= res.tile_grid.height {
@@ -909,6 +971,9 @@ fn house(
         }) else {
             continue;
         };
+        if roofs_outdoor_fields(res, &boundary, &outdoor_fields, space.room_max_tiles) {
+            continue;
+        }
         free.retain(|tile| room.tiles.contains(&(tile.0 - x, tile.1 - y)));
         free.sort_by_key(|&tile| (Reverse(distance(tile, hearth)), tile.1, tile.0));
         let reserved: BTreeSet<_> = boundary
