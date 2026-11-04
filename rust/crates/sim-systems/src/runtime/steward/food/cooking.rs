@@ -17,10 +17,8 @@ pub(super) fn daily_target(
         .daily_milli
         .saturating_mul(u64::from(policy.cooked_days_milli))
         .div_ceil(1_000_000);
-    let reserve = facts
-        .daily_milli
-        .saturating_mul(u64::from(policy.reserve_days))
-        .div_ceil(1000);
+    let (immediate, durable) = super::harvest::targets(policy, facts);
+    let reserve = immediate.max(durable);
     // Maintain targets already include finished and assigned cooked output.
     // Credit only raw edible stock here, avoiding a second subtraction of meals.
     let raw = facts.usable_units.saturating_sub(facts.cooked_units);

@@ -6,6 +6,15 @@ use sim_core::colony::workshop::Recipe;
 use sim_core::colony::Workshop;
 use sim_engine::SimResources;
 
+/// Auxiliary recipe knowledge actually supplied by the crafter, excluding pot-only admission.
+pub(super) fn practiced_requirements(recipe: &Recipe, practice: u32) -> u32 {
+    recipe
+        .food_requirements
+        .knowledge_any
+        .iter()
+        .fold(0, |mask, code| mask | (practice & (1_u32 << code)))
+}
+
 fn local_pot(res: &SimResources, shop: &Workshop) -> bool {
     shop.shelf
         .iter()

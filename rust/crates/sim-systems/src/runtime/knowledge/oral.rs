@@ -20,9 +20,12 @@
 //! makes a practitioner at once, a harder one a learner; the teller is
 //! stamped as using what it told. Everyone reads the
 //! evening's snapshot: what is learned tonight is told from tomorrow. Every
-//! pair also rehearses one node both practise (keyed, slot 0x1_0003): both
-//! are stamped as using it, so shared knowledge lives while people talk
-//! (DECISIONS D14). Every
+//! pair also rehearses one node the teller practises and the listener has
+//! sufficiently learned: at least min(oral_gain, practitioner threshold).
+//! Prefer the pair's oldest last use; equal ages use keyed slot 0x1_0003.
+//! Both are stamped as using it, without gaining proficiency. This lets an
+//! expert revisit difficult knowledge with an oral learner without promoting
+//! that learner (M6b S1-CAL-3). Every
 //! gathered holder of fire keeping is stamped as using it (the hearth lore),
 //! and a teller who practises storytelling as using that.
 use hecs::World;
@@ -113,9 +116,25 @@ impl RuntimeSystem for OralTransmissionSystem {
             );
             let ti = tellers[pick as usize];
             let teller = &before[ti];
-            // The pair also talk over one node both practise, and both use it
-            // (rehearsal; DECISIONS D14).
-            let shared: Vec<u8> = ids_of(teller.practice() & before[li].practice()).collect();
+            // Rehearsal uses existing understanding, never grants proficiency.
+            let mut shared: Vec<u8> = ids_of(teller.practice())
+                .filter(|node| {
+                    before[li].proficiency(*node) >= rule.oral_gain.min(d.threshold(*node))
+                })
+                .collect();
+            let last_use = |node: &u8| {
+                teller
+                    .get(*node)
+                    .map_or(u16::MAX, |entry| entry.last_used)
+                    .min(
+                        before[li]
+                            .get(*node)
+                            .map_or(u16::MAX, |entry| entry.last_used),
+                    )
+            };
+            if let Some(oldest) = shared.iter().map(last_use).min() {
+                shared.retain(|node| last_use(node) == oldest);
+            }
             if !shared.is_empty() {
                 let pick = keyed_below(
                     seed,
@@ -216,6 +235,104 @@ impl RuntimeSystem for OralTransmissionSystem {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use sim_core::colony::knowledge::{Knowledge, KnowledgeEntry};
+    use sim_core::components::Position;
+
+    fn pair() -> (World, SimResources, Vec<hecs::Entity>) {
+        let mut engine = crate::worldgen::build_world_with(
+            &crate::worldgen::WorldGenConfig::colony(1),
+            sim_core::rules::WorldRules::colony(1),
+        );
+        let hearth = crate::runtime::jobs::hearth::hearth_tiles(&engine.resources)[0];
+        let people = people(&engine.world, &engine.resources);
+        let entities: Vec<_> = people.iter().take(2).map(|p| p.entity).collect();
+        for p in people.iter().skip(2) {
+            engine
+                .world
+                .despawn(p.entity)
+                .expect("remove unrelated people");
+        }
+        for &entity in &entities {
+            let mut pos = engine.world.get::<&mut Position>(entity).expect("position");
+            pos.x = hearth.0;
+            pos.y = hearth.1;
+        }
+        engine.resources.current_tick = 10 * 1440 + 750;
+        (engine.world, engine.resources, entities)
+    }
+
+    #[test]
+    fn an_expert_rehearses_with_an_informed_learner_without_promoting_them() {
+        let (mut world, mut res, entities) = pair();
+        let node = defs().id_of("pot_firing").expect("pot firing");
+        for (entity, proficiency) in entities.iter().zip([400, 350]) {
+            store(
+                &mut world,
+                *entity,
+                Knowledge::from_entries(vec![KnowledgeEntry::new(
+                    node,
+                    Source::Oral,
+                    proficiency,
+                    0,
+                )]),
+            );
+        }
+        OralTransmissionSystem.tick(&mut world, &mut res);
+        for (entity, proficiency) in entities.iter().zip([400, 350]) {
+            let known = knowledge_of(&world, *entity);
+            assert_eq!(known.proficiency(node), proficiency);
+            assert_eq!(known.get(node).expect("existing knowledge").last_used, 10);
+        }
+        assert!(!knowledge_of(&world, entities[1]).practises(node));
+        assert_eq!(res.colony.tallies.oral_learned, 0);
+        assert!(res.colony.command_log.is_empty());
+    }
+
+    #[test]
+    fn rehearsal_prefers_old_use_and_does_not_refresh_every_known_node() {
+        let (mut world, mut res, entities) = pair();
+        let old = defs().id_of("pot_firing").expect("pot firing");
+        let recent = defs().id_of("hut_building").expect("hut building");
+        for &entity in &entities {
+            store(
+                &mut world,
+                entity,
+                Knowledge::from_entries(vec![
+                    KnowledgeEntry::new(old, Source::Oral, 500, 0),
+                    KnowledgeEntry::new(recent, Source::Oral, 500, 9),
+                ]),
+            );
+        }
+        OralTransmissionSystem.tick(&mut world, &mut res);
+        for entity in entities {
+            let known = knowledge_of(&world, entity);
+            assert_eq!(known.get(old).expect("old").last_used, 10);
+            assert_eq!(known.get(recent).expect("recent").last_used, 9);
+            assert_eq!(known.proficiency(old), 500);
+        }
+        assert_eq!(res.colony.tallies.oral_rehearsed, 2);
+    }
+
+    #[test]
+    fn a_lone_expert_does_not_get_free_rehearsal() {
+        let (mut world, mut res, entities) = pair();
+        world.despawn(entities[1]).expect("remove listener");
+        let node = defs().id_of("pot_firing").expect("pot firing");
+        store(
+            &mut world,
+            entities[0],
+            Knowledge::from_entries(vec![KnowledgeEntry::new(node, Source::Oral, 400, 0)]),
+        );
+        OralTransmissionSystem.tick(&mut world, &mut res);
+        assert_eq!(
+            knowledge_of(&world, entities[0])
+                .get(node)
+                .expect("knowledge")
+                .last_used,
+            0
+        );
+        assert_eq!(res.colony.tallies.oral_rehearsed, 0);
+    }
 
     #[test]
     fn the_telling_runs_at_the_oral_minute_of_the_clock() {

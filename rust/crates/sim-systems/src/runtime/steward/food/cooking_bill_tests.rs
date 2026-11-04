@@ -659,3 +659,63 @@ fn executable_cooking_credit_waits_for_the_required_pot_to_arrive() {
         "the same ingredients become executable only with the local pot and lit hearth"
     );
 }
+
+#[test]
+fn winter_grain_cooking_uses_combined_headroom_without_a_second_food_budget() {
+    for (raw, expected_batches) in [(100, 8), (144, 0), (188, 0)] {
+        let (mut world, mut res, mut policy, _) = fixture(true);
+        let known = world
+            .query::<&Knowledge>()
+            .iter()
+            .next()
+            .expect("founder")
+            .1
+            .clone();
+        for id in 8..17 {
+            world.spawn((Agent { id }, Position::new(4, 4), known.clone()));
+        }
+        let porridge = RecipeKind::from_name("porridge").expect("porridge");
+        policy.recipes = vec![porridge];
+        res.current_tick = 8 * res.ticks_per_day;
+        res.fires.insert(1, sim_engine::FireState { lit: true });
+        for (tile, name, count) in [((2, 2), "hazelnuts", raw), ((2, 3), "wild_grain", 100)] {
+            crate::runtime::food::items::create_ground(
+                &mut res,
+                tile,
+                sim_core::colony::ItemSpec::raw(
+                    sim_core::colony::ItemKind::from_name(name).expect("input"),
+                    None,
+                ),
+                count,
+                8,
+                crate::runtime::food::items::FoodSource::Harvest,
+            )
+            .expect("real food");
+        }
+        let facts = super::summary(&world, &res, &policy);
+        assert!(facts.preparing);
+        assert_eq!(super::harvest::targets(&policy, &facts), (48, 144));
+        assert_eq!(facts.usable_units, u64::from(raw));
+        let commands = super::cooking::plan(&world, &res, &policy, &facts);
+        let meal = commands.iter().find(|command| {
+            matches!(command,
+            Command::AddBill { recipe, .. } if *recipe == porridge)
+        });
+        if expected_batches == 0 {
+            assert!(
+                meal.is_none(),
+                "raw stock at/above max(48,144) forbids net-new grain meals: {commands:?}"
+            );
+        } else {
+            assert_eq!(
+                meal,
+                Some(&Command::AddBill {
+                    workshop: 1,
+                    recipe: porridge,
+                    mode: BillMode::Make(expected_batches),
+                })
+            );
+            assert!(u64::from(raw) + u64::from(expected_batches) * 3 <= 144);
+        }
+    }
+}

@@ -158,7 +158,7 @@ pub fn run(args: &[String]) -> Result<(), String> {
 #[cfg(test)]
 mod cultivation_tests {
     #[test]
-    fn daily_projection_counts_only_loose_logs_and_preserves_food_categories() {
+    fn daily_projection_distinguishes_unzoned_zoned_and_carried_logs() {
         use sim_core::colony::{Carry, ItemKind, ItemSpec, ItemStack};
         let mut res = sim_engine::SimResources::new(8, 8, sim_core::MaterialRegistry::new());
         let mut world = hecs::World::new();
@@ -166,6 +166,10 @@ mod cultivation_tests {
         res.colony
             .ground_items
             .insert((1, 1), ItemStack::of(logs, 7));
+        res.colony
+            .ground_items
+            .insert((2, 1), ItemStack::of(logs, 9));
+        res.colony.zone_of_tile.insert((2, 1), 1);
         world.spawn((sim_core::components::Agent { id: 1 }, Carry::of(logs, 5)));
         for (name, count) in [("berries", 2), ("wild_grain", 3), ("meat", 4)] {
             res.food
@@ -175,6 +179,7 @@ mod cultivation_tests {
         }
         let row = super::super::metrics::daily(&world, &res);
         assert_eq!(row.loose_logs, 7);
+        assert_eq!(row.ground_logs, 16);
         assert_eq!(row.harvested_edible_units, 10);
         assert_eq!(row.harvested_convertible_units, 3);
     }

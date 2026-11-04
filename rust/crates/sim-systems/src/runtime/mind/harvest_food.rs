@@ -215,6 +215,10 @@ impl HarvestBudget {
     pub(super) fn shortfall(&self) -> bool {
         self.immediate > 0 || self.durable > 0
     }
+    /// Pending commitments limit new orders, but unassigned accepted work still needs labour.
+    pub(super) fn work_needed(&self, res: &SimResources) -> bool {
+        self.shortfall() || self.credited.iter().any(|&tile| eligible(res, tile))
+    }
     fn output(&self, res: &SimResources, tile: (u32, u32)) -> (u64, bool) {
         let Some(plant) = res.food.plants.get(&tile) else {
             return (0, false);

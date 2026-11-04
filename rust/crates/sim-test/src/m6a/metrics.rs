@@ -63,6 +63,7 @@ pub(super) struct Daily {
     pub food_budget: Option<serde_json::Value>,
     pub wood_budget: Option<serde_json::Value>,
     pub loose_logs: u64,
+    pub ground_logs: u64,
     pub physical_food_units: u64,
     pub harvested_edible_units: u64,
     pub harvested_convertible_units: u64,
@@ -136,7 +137,11 @@ pub(super) fn daily(world: &World, res: &SimResources) -> Daily {
                 "target_logs":target, "building_need_logs":building, "pending_shelter_logs":shelter,
                 "margin_logs":margin, "fuel_input_logs":fuel
             })),
-        loose_logs: res.colony.ground_items.values()
+        loose_logs: res.colony.ground_items.iter()
+            .filter(|(tile, stack)| stack.kind == sim_core::colony::ItemKind::role("tree_output")
+                && !res.colony.zone_of_tile.contains_key(tile))
+            .map(|(_, stack)| u64::from(stack.count)).sum(),
+        ground_logs: res.colony.ground_items.values()
             .filter(|stack| stack.kind == sim_core::colony::ItemKind::role("tree_output"))
             .map(|stack| u64::from(stack.count)).sum(),
         physical_food_units: 0,

@@ -461,13 +461,13 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
     fact!("social_seek_enabled", Bool, |_p, _c, r, _n| Ok(i64::from(
         r.rules.agent.social_seek.is_some()
     ))),
-    fact!("stock_shortfall", Bool, |p, c, _r, _n| Ok(i64::from(
+    fact!("stock_shortfall", Bool, |p, c, r, _n| Ok(i64::from(
         c.harvest_budget
             .as_ref()
             .map_or(c.target_scope(p.agent)?.stock_shortfall, |budget| budget
                 .lock()
                 .expect("harvest budget")
-                .shortfall())
+                .work_needed(r))
     ))),
     // R2-1A: colony winter stocking may displace this adult's held ordinary work.
     fact!("winter_stock_duty", Bool, |p, c, _r, _n| Ok(i64::from(

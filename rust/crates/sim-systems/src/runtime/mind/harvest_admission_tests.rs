@@ -256,3 +256,49 @@ fn steward_budget_does_not_double_credit_designated_running_harvest() {
         "target5 - stored1 - unique output2 still leaves2; double credit would close it"
     );
 }
+
+#[test]
+fn accepted_harvest_keeps_proactive_labour_without_opening_new_commitments() {
+    let (mut world, mut res, entity) = fixture();
+    res.steward.enabled = true;
+    res.steward.scope = sim_core::colony::steward::StewardScope::Food;
+    // The farther marked plant covers the remaining budget. The nearer unmarked
+    // plant must not win merely because proactive work becomes eligible again.
+    res.colony
+        .designations
+        .insert((3, 2), sim_core::colony::Designation::Harvest);
+    let read = |world: &hecs::World, res: &sim_engine::SimResources| {
+        let context = super::context::TickContext::capture(world, res).expect("context");
+        let provider = super::facts::BUILTIN_PROVIDERS
+            .iter()
+            .find(|provider| provider.name == "stock_shortfall")
+            .expect("registered fact");
+        (provider.read)(
+            context.row(7).expect("person"),
+            &context,
+            res,
+            provider.name,
+        )
+        .expect("fact")
+    };
+    assert_eq!(
+        read(&world, &res),
+        1,
+        "accepted unassigned output still needs labour"
+    );
+    mind()
+        .try_tick(&mut world, &mut res)
+        .expect("execute accepted work");
+    assert!(world
+        .get::<&Job>(entity)
+        .is_ok_and(|job| matches!(job.kind, JobKind::Harvest { plant: (3, 2) })));
+    assert!(
+        !res.colony.designations.contains_key(&(2, 2)),
+        "no excess new commitment"
+    );
+    assert_eq!(
+        read(&world, &res),
+        0,
+        "assigned output cannot recruit a duplicate worker"
+    );
+}

@@ -404,8 +404,10 @@ pub fn finish_craft(
     entry.1 += u64::from(quality);
     let ticks = scaled_ticks(recipe.work_ticks, level);
     train(world, entity, recipe.skill, ticks);
-    if gated {
-        crate::runtime::knowledge::used(world, res, entity, gate);
+    if crate::runtime::knowledge::rule(res).is_some() {
+        let practice = crate::runtime::knowledge::practice_of(world, entity);
+        let auxiliary = super::craft_food::practiced_requirements(recipe, practice);
+        crate::runtime::knowledge::used(world, res, entity, gate | auxiliary);
     }
     true
 }

@@ -181,3 +181,89 @@ fn non_colony_daytime_fire_remains_off_even_with_legacy_workshop_data() {
     assert!(!res.fires[&1].lit);
     assert_eq!(res.settlements[&1].stockpile[&ResourceKind::Wood], 100);
 }
+
+#[test]
+fn successful_porridge_credits_only_actual_auxiliary_practitioners() {
+    use sim_core::colony::knowledge::{defs, Knowledge, Source};
+
+    // Actual knowledge route, pot-only route, and rejected cold start.
+    for (knows, wood) in [(true, 100), (false, 100), (true, 0)] {
+        let (mut world, mut res) = fixture(wood);
+        res.rules.colony.as_mut().expect("colony").knowledge =
+            WorldRules::colony(1).colony.expect("colony").knowledge;
+        res.current_tick += res.ticks_per_day;
+        let recipe = RecipeKind::from_name("porridge").expect("porridge");
+        res.colony.workshops.get_mut(&1).expect("shop").bills[0].recipe = recipe;
+        let grain = ItemSpec::raw(ItemKind::from_name("wild_grain").expect("grain"), None);
+        items::create_ground(&mut res, (2, 3), grain, 2, 1, items::FoodSource::Debug)
+            .expect("grain inputs");
+        items::transfer(
+            &mut world,
+            &mut res,
+            FoodOwner::Ground((2, 3)),
+            FoodOwner::Shelf {
+                workshop: 1,
+                key: FoodStackKey::from(grain),
+            },
+            2,
+            1,
+        )
+        .expect("grain shelf");
+        if !knows {
+            let pot = ItemSpec::raw(ItemKind::from_name("clay_pot").expect("pot"), None);
+            items::create_ground(&mut res, (4, 5), pot, 1, 1, items::FoodSource::Debug)
+                .expect("physical pot");
+            crate::runtime::food::storage::deploy_pot(
+                &mut world,
+                &mut res,
+                FoodOwner::Ground((4, 5)),
+                (4, 5),
+                1,
+            )
+            .expect("deployed alternative");
+        }
+        let cooking = defs().id_of("cooking").expect("primary knowledge");
+        let auxiliary = defs().id_of("grain_parching").expect("auxiliary knowledge");
+        let mut knowledge = Knowledge::default();
+        knowledge.raise_to(cooking, 600, Source::Oral, 0);
+        if knows {
+            knowledge.raise_to(auxiliary, 600, Source::Oral, 0);
+        }
+        let before = knowledge.clone();
+        let person = world.spawn((Agent { id: 7 }, knowledge));
+        crate::runtime::settlement::fire::FireSystem::new().tick(&mut world, &mut res);
+        let mut job = craft_job(&res);
+        let started = super::craft::start(&mut world, &mut res, person, &mut job, 1, 1);
+        assert_eq!(started.is_some(), wood > 0);
+        assert_eq!(
+            crate::runtime::knowledge::knowledge_of(&world, person),
+            before,
+            "admission and input consumption alone never credit knowledge"
+        );
+        if wood == 0 {
+            continue;
+        }
+        assert!(super::craft::finish_craft(
+            &mut world, &mut res, 7, person, &job
+        ));
+        let after = crate::runtime::knowledge::knowledge_of(&world, person);
+        let gain = crate::runtime::knowledge::rule(&res)
+            .expect("knowledge")
+            .use_gain;
+        assert_eq!(
+            after.proficiency(cooking),
+            600 + gain,
+            "primary credited once"
+        );
+        if knows {
+            assert_eq!(after.proficiency(auxiliary), 600 + gain);
+            assert_eq!(after.get(auxiliary).expect("held").last_used, 1);
+        } else {
+            assert!(
+                after.get(auxiliary).is_none(),
+                "pot does not invent knowledge"
+            );
+        }
+        assert_eq!(res.colony.tallies.crafts_done, 1);
+    }
+}
