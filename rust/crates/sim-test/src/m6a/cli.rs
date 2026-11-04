@@ -53,8 +53,8 @@ pub fn run(args: &[String]) -> Result<(), String> {
     let args = arguments(args, &["--seed", "--days", "--out"])?;
     let seed: u64 = args["--seed"].parse().map_err(|_| "invalid seed")?;
     let days: u64 = args["--days"].parse().map_err(|_| "invalid days")?;
-    if !(1..=72).contains(&days) {
-        return Err("days must be 1..72".into());
+    if !(1..=96).contains(&days) {
+        return Err("days must be 1..96".into());
     }
     let out = output_dir(&args["--out"])?;
     let mut engine = crate::colony_engine(seed);
