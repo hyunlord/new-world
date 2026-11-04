@@ -65,6 +65,7 @@ fn origin_tail_wire_preserves_all_nonzero_maps_and_pending_alignment() {
         },
     );
     tail.counters.seeded_food_units = 8;
+    tail.counters.seed_lost = 2;
     let bytes = encode(&tail).expect("tail");
     let loaded: CultivationState = decode(&bytes).expect("tail reload");
     assert_eq!(loaded, tail);

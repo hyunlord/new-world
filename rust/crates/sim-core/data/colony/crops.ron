@@ -4,7 +4,7 @@
         (
             identity: (code: 0, id: "emmer", name_key: "CROP_EMMER", serde_name: "Emmer", serde_aliases: [], resolver_aliases: []),
             category: "grain", tags: [],
-            seed_item: "wild_grain", seeds_per_tile: 2, yields: [(item: "wild_grain", count: 12)],
+            seed_item: "emmer_seed", seeds_per_tile: 2, yields: [(item: "wild_grain", count: 10), (item: "emmer_seed", count: 2)],
             frost_sensitive: true, sow_windows: [(season: 0, start_day: 0, end_day_exclusive: 3)], growth_days: 4,
             till_ticks: 60, sow_ticks: 30, tend_ticks: 30, harvest_ticks: 60,
             untended_yield_permille: 750, initial_fertility: 1000, min_fertility: 400,

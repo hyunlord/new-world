@@ -450,5 +450,11 @@
             stack_rule: None, carry_rule: None, value: 1, made_by: None, clue_nodes: [],
             chop: None, weapon: None, cutter: None, food: None, fuel_units: None, apparel: None,
         ),
+        (
+            identity: (code: 31, id: "emmer_seed", name_key: "ITEM_EMMER_SEED", serde_name: "EmmerSeed", serde_aliases: [], resolver_aliases: []),
+            category: "seed", material_format_key: "", tags: ["seed"], stack_max: 30, carry: 10,
+            stack_rule: None, carry_rule: None, value: 1, made_by: None, clue_nodes: [],
+            chop: None, weapon: None, cutter: None, food: None, fuel_units: None, apparel: None,
+        ),
     ],
 )

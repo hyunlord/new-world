@@ -239,5 +239,12 @@
             work_ticks: 30, skill: "woodwork", work: "craft", quality_add: 0, material_term: None,
             tool: None, auto_bill_role: None,
         ),
+        (
+            identity: (code: 19, id: "extract_emmer_seed", name_key: "RECIPE_EXTRACT_EMMER_SEED", serde_name: "ExtractEmmerSeed", serde_aliases: [], resolver_aliases: []),
+            workshop: "wood_bench", workshop_tags: ["woodworking"],
+            inputs: [("wild_grain", 2)], output: ("emmer_seed", 2),
+            work_ticks: 30, skill: "woodwork", work: "craft", quality_add: 0, material_term: None,
+            tool: None, auto_bill_role: None,
+        ),
     ],
 )

@@ -102,6 +102,8 @@ pub struct CultivationCounters {
     pub seed_units_sown: BTreeMap<CropKind, u64>,
     /// Nominal food units consumed as seeds, never meals.
     pub seeded_food_units: u64,
+    /// Physical seed pieces lost when a dead carrier cannot drop them.
+    pub seed_lost: u64,
     /// Completed harvest jobs.
     pub harvests: u64,
     /// Physical output pieces committed by item.
