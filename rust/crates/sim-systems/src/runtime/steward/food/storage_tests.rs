@@ -213,3 +213,173 @@ fn ingredient_only_loose_food_gets_space_without_edible_reserve_credit() {
     );
     crate::runtime::food::validate(&world, &res).expect("fresh conserved ingredient inventory");
 }
+
+#[test]
+fn open_stockpile_capacity_does_not_block_finite_covered_food_storage() {
+    use sim_engine::RuntimeSystem;
+    let (mut world, mut res, policy) = fixture(false);
+    crate::runtime::food::items::transfer(
+        &mut world,
+        &mut res,
+        sim_core::colony::food::FoodOwner::Ground((6, 12)),
+        sim_core::colony::food::FoodOwner::Ground((8, 14)),
+        20,
+        14,
+    )
+    .expect("food actually stored outdoors");
+    assert!(
+        stock_commands(&world, &res, &policy).is_empty(),
+        "outdoor capacity already meets old bound"
+    );
+    // Physical built perimeter, then the actual room detector and role command.
+    for y in 8..=13 {
+        for x in 15..=20 {
+            if x == 15 || x == 20 || y == 8 || y == 13 {
+                let i = res.tile_grid.idx(x, y);
+                res.tile_grid.wall_material[i] = Some(sim_core::colony::materials::OAK);
+            }
+        }
+    }
+    let door = res.tile_grid.idx(15, 11);
+    res.tile_grid.set_door(door, true);
+    res.colony.rooms_dirty = true;
+    crate::runtime::rooms::RoomSystem::new().tick(&mut world, &mut res);
+    let room = res.colony.room_of_tile[&(16, 9)];
+    for role in [
+        sim_core::rooms::RoomRole::Bedroom,
+        sim_core::rooms::RoomRole::Workshop,
+        sim_core::rooms::RoomRole::Hall,
+    ] {
+        assert!(
+            crate::commands::apply_command(
+                &mut world,
+                &mut res,
+                Command::SetRoomRole {
+                    room,
+                    role: Some(role)
+                }
+            )
+            .accepted
+        );
+        assert!(
+            stock_commands(&world, &res, &policy).is_empty(),
+            "extra food demand must not zone a {role:?} or spill outdoors"
+        );
+    }
+    assert!(
+        crate::commands::apply_command(
+            &mut world,
+            &mut res,
+            Command::SetRoomRole {
+                room,
+                role: Some(sim_core::rooms::RoomRole::Storehouse)
+            }
+        )
+        .accepted
+    );
+    let covered = res.colony.rooms[&room].tiles.clone();
+    assert!(res.colony.rooms[&room].roofed);
+    assert!(covered
+        .iter()
+        .all(|tile| !res.colony.zone_of_tile.contains_key(tile)));
+    for &(x, y) in &covered {
+        res.steward
+            .vetoes
+            .insert(Target::Tile(x, y), res.current_tick + res.ticks_per_day);
+    }
+    assert!(
+        stock_commands(&world, &res, &policy).is_empty(),
+        "covered demand cannot bypass player veto or spill outdoors"
+    );
+    for &(x, y) in &covered {
+        res.steward.vetoes.remove(&Target::Tile(x, y));
+    }
+    let occupied = (16, 9);
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        occupied,
+        ItemSpec::raw(ItemKind::from_name("firewood").expect("fuel"), None),
+        1,
+        14,
+        crate::runtime::food::items::FoodSource::Debug,
+    )
+    .expect("occupied covered cell");
+    let field = (17, 9);
+    res.cultivation.fields.insert(
+        field,
+        sim_core::colony::cultivation::FieldTile {
+            owner: 1,
+            crop: policy.cultivation.as_ref().expect("crop plan").crop,
+            phase: sim_core::colony::cultivation::FieldPhase::Sown { planted_day: 14 },
+            active: false,
+            work: sim_core::colony::cultivation::FieldWork::Paused,
+            tended: false,
+        },
+    );
+    let wall_index = res.tile_grid.idx(16, 8);
+    let wall = res.tile_grid.wall_material[wall_index].take();
+    assert!(
+        stock_commands(&world, &res, &policy).is_empty(),
+        "stale roof metadata without a complete physical Store cannot add capacity"
+    );
+    res.tile_grid.wall_material[wall_index] = wall;
+    let old_zones = res.colony.zone_of_tile.clone();
+    let old_food = res.food.clone();
+    let old_items = res.colony.ground_items.clone();
+    let commands = stock_commands(&world, &res, &policy);
+    assert!(
+        !commands.is_empty(),
+        "fresh outdoor food needs usable covered destination cells despite ample open zones"
+    );
+    assert!(
+        commands.len() <= usize::try_from(policy.harvest_batch).expect("bounded harvest batch")
+    );
+    for command in commands {
+        let Command::AddStockpile { x0, y0, x1, y1 } = command else {
+            unreachable!()
+        };
+        assert_eq!((x0, y0), (x1, y1));
+        assert_ne!((x0, y0), occupied);
+        assert_ne!((x0, y0), field);
+        assert!(
+            covered.contains(&(x0, y0)),
+            "covered demand must not create more outdoor zones"
+        );
+        assert!(crate::commands::apply_command(&mut world, &mut res, command).accepted);
+    }
+    assert!(old_zones
+        .iter()
+        .all(|(tile, id)| res.colony.zone_of_tile.get(tile) == Some(id)));
+    assert_eq!(
+        res.food, old_food,
+        "planning cannot relocate or rejuvenate food"
+    );
+    assert_eq!(res.colony.ground_items, old_items);
+    // Accepted empty capacity must count on subsequent firings, before any hauling.
+    for _ in 0..covered.len() {
+        let next = stock_commands(&world, &res, &policy);
+        if next.is_empty() {
+            break;
+        }
+        for command in next {
+            let Command::AddStockpile { x0, y0, .. } = command else {
+                unreachable!()
+            };
+            assert!(covered.contains(&(x0, y0)));
+            assert_ne!((x0, y0), occupied);
+            assert_ne!((x0, y0), field);
+            assert!(crate::commands::apply_command(&mut world, &mut res, command).accepted);
+        }
+    }
+    assert!(
+        stock_commands(&world, &res, &policy).is_empty(),
+        "finite covered target converges without moving food"
+    );
+    let stable = res.colony.zone_of_tile.clone();
+    for _ in 0..3 {
+        assert!(stock_commands(&world, &res, &policy).is_empty());
+    }
+    assert_eq!(res.colony.zone_of_tile, stable);
+    assert_eq!(res.colony.ground_items, old_items);
+    assert_eq!(res.food, old_food);
+}

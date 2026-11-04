@@ -110,13 +110,13 @@ pub fn maintain_count(world: &World, res: &SimResources, kind: ItemKind) -> u32 
     ground + carried + making + pending
 }
 
-/// The count a `Maintain` bill compares with its target (M3, ADR 0023): as
-/// [`maintain_count`], except that while the colony has a roofed storehouse
-/// only the items on the ground under its roof count (in hands and in the
-/// making still do), so the colony keeps making until the stock is indoors.
+/// The count a `Maintain` bill compares with its target. Food uses all of
+/// [`maintain_count`]: meals awaiting storage still limit further production.
+/// Nonfood retains the M3, ADR 0023 rule: with a roofed storehouse, outside
+/// ground stock is excluded while carried and in-progress output still count.
 pub fn bill_count(world: &World, res: &SimResources, kind: ItemKind) -> u32 {
     let all = maintain_count(world, res, kind);
-    if !crate::runtime::rooms::storehouse_exists(res) {
+    if kind.definition().food.is_some() || !crate::runtime::rooms::storehouse_exists(res) {
         return all;
     }
     let outside: u32 = res

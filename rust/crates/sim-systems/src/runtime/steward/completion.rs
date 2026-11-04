@@ -26,7 +26,7 @@ pub(super) fn plan(res: &SimResources, rule: &Rule) -> Option<Command> {
     }) {
         return None;
     }
-    let replaced_by_other = |tile: (u32, u32)| {
+    let latest_placement = |tile: (u32, u32)| {
         res.colony
             .command_log
             .iter()
@@ -38,14 +38,15 @@ pub(super) fn plan(res: &SimResources, rule: &Rule) -> Option<Command> {
                     command => (command, None),
                 };
                 match command {
-                    Command::PlaceBlueprint { x, y, .. } if (*x, *y) == tile => {
-                        Some(source_rule != Some(rule.id))
+                    Command::PlaceBlueprint { kind, x, y } if (*x, *y) == tile => {
+                        Some((source_rule, *kind))
                     }
                     _ => None,
                 }
             })
-            .unwrap_or(false)
     };
+    let replaced_by_other =
+        |tile| latest_placement(tile).is_some_and(|(owner, _)| owner != Some(rule.id));
     let owned = res
         .steward
         .owned
@@ -75,8 +76,33 @@ pub(super) fn plan(res: &SimResources, rule: &Rule) -> Option<Command> {
             _ => None,
         })
         .collect();
+    let mut compatible_boundary = boundary.clone();
+    if store {
+        if let Ok(data) = sim_core::colony::steward::rules() {
+            for order in &res.steward.owned {
+                let Command::PlaceBlueprint { kind, x, y } = order.command else {
+                    continue;
+                };
+                if latest_placement((x, y)) != Some((Some(order.rule), kind)) {
+                    continue;
+                }
+                if data.rules.iter().any(|source| {
+                    source.id == order.rule
+                        && matches!(source.action, Action::House { wall, door, .. }
+                        if kind == wall || kind == door)
+                }) {
+                    compatible_boundary.insert((x, y));
+                }
+            }
+        }
+    }
     for room in res.colony.rooms.values() {
         if !super::housing::constructed(res, room)
+            || (store
+                && !matches!(
+                    room.role,
+                    sim_core::rooms::RoomRole::Unassigned | sim_core::rooms::RoomRole::Storehouse
+                ))
             || res.colony.room_overrides.get(&room.id) == Some(&role)
         {
             continue;
@@ -114,8 +140,12 @@ pub(super) fn plan(res: &SimResources, rule: &Rule) -> Option<Command> {
             })
             .chain(room.doors.iter().copied())
             .collect();
-        // Every physical boundary component must belong to this steward house.
-        if !built_boundary.is_empty() && built_boundary.iter().all(|tile| boundary.contains(tile)) {
+        // A store may reuse steward house walls, but must contribute its own real boundary.
+        if built_boundary.iter().any(|tile| boundary.contains(tile))
+            && built_boundary
+                .iter()
+                .all(|tile| compatible_boundary.contains(tile))
+        {
             return Some(Command::SetRoomRole {
                 room: room.id,
                 role: Some(role),

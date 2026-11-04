@@ -15,6 +15,81 @@ fn scene() -> (World, SimResources) {
     (World::new(), res)
 }
 
+fn constructed_store(world: &World, res: &mut SimResources) {
+    for y in 3..=7 {
+        for x in 3..=7 {
+            if x == 3 || x == 7 || y == 3 || y == 7 {
+                let index = res.tile_grid.idx(x, y);
+                res.tile_grid.wall_material[index] = Some(sim_core::colony::materials::OAK);
+            } else {
+                res.colony.zone_of_tile.insert((x, y), 1);
+            }
+        }
+    }
+    crate::runtime::rooms::detect_rooms(world, res);
+    assert!(crate::runtime::rooms::storehouse_exists(res));
+    assert!(crate::runtime::rooms::covered(res, (4, 4)));
+    assert!(!crate::runtime::rooms::covered(res, (1, 1)));
+}
+
+#[test]
+fn food_bill_count_includes_real_outside_meals_with_constructed_store() {
+    let (mut world, mut res) = scene();
+    constructed_store(&world, &mut res);
+    let meal = ItemKind::from_name("roasted_roots").unwrap();
+    let spec = ItemSpec::raw(meal, None);
+    items::create_ground(&mut res, (1, 1), spec, 6, 0, items::FoodSource::Harvest).unwrap();
+    items::create_ground(&mut res, (4, 4), spec, 3, 0, items::FoodSource::Harvest).unwrap();
+    assert_eq!(super::bills::maintain_count(&world, &res, meal), 9);
+    assert_eq!(super::bills::bill_count(&world, &res, meal), 9);
+
+    world.spawn((Agent { id: 1 }, Position::new(1, 1)));
+    items::transfer(
+        &mut world,
+        &mut res,
+        FoodOwner::Ground((1, 1)),
+        FoodOwner::Carried(1),
+        2,
+        0,
+    )
+    .unwrap();
+    res.colony.workshops.insert(
+        1,
+        Workshop {
+            id: 1,
+            kind: BlueprintKind::WoodBench,
+            top_left: (2, 2),
+            size: (1, 1),
+            bills: Vec::new(),
+            shelf: Vec::new(),
+            active: None,
+        },
+    );
+    let shelf = FoodOwner::Shelf {
+        workshop: 1,
+        key: FoodStackKey::from(spec),
+    };
+    items::transfer(&mut world, &mut res, FoodOwner::Ground((1, 1)), shelf, 2, 0).unwrap();
+    assert_eq!(
+        super::bills::bill_count(&world, &res, meal),
+        9,
+        "moving food must not duplicate its physical count"
+    );
+    food::validate(&world, &res).unwrap();
+}
+
+#[test]
+fn food_bill_count_preserves_nonfood_roof_filter() {
+    let (world, mut res) = scene();
+    let spec = ItemSpec::raw(ItemKind::Log, None);
+    super::items::put_items(&mut res, (1, 1), spec, 6);
+    super::items::put_items(&mut res, (4, 4), spec, 3);
+    assert_eq!(super::bills::bill_count(&world, &res, ItemKind::Log), 9);
+    constructed_store(&world, &mut res);
+    assert_eq!(super::bills::maintain_count(&world, &res, ItemKind::Log), 9);
+    assert_eq!(super::bills::bill_count(&world, &res, ItemKind::Log), 3);
+}
+
 #[test]
 fn job_pickup_shelf_delivery_and_cancellation_keep_original_birth_day() {
     let (mut world, mut res) = scene();

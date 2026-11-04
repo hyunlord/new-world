@@ -109,9 +109,35 @@ pub(super) fn plan(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -
         })
         .collect();
     let room_to_expand = limit.saturating_sub(zones.len() as u64);
-    if room_to_expand == 0 {
-        return Vec::new();
-    }
+    let store_tiles: std::collections::BTreeSet<_> = res
+        .colony
+        .rooms
+        .values()
+        .filter(|room| {
+            room.role == sim_core::rooms::RoomRole::Storehouse
+                && super::super::housing::constructed(res, room)
+        })
+        .flat_map(|room| room.tiles.iter().copied())
+        .collect();
+    // Open zones cannot supply the separate, finite covered-food service.
+    // Reserved cells still count: a temporary haul must not grow the target.
+    let covered_capacity = zones
+        .iter()
+        .filter(|&&tile| {
+            store_tiles.contains(&tile)
+                && can_hold_items(res, tile)
+                && !crate::runtime::cultivation::occupies(res, tile)
+                && res
+                    .colony
+                    .ground_items
+                    .get(&tile)
+                    .is_none_or(|stack| stack.kind.definition().food.is_some())
+        })
+        .count() as u64;
+    let covered_target = food_slots
+        .max(reserve_slots)
+        .saturating_add(food_buckets.len() as u64);
+    let mut covered_gap = covered_target.saturating_sub(covered_capacity);
     let empty = zones
         .iter()
         .filter(|tile| {
@@ -152,10 +178,8 @@ pub(super) fn plan(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -
     missing_slots = missing_slots
         .saturating_add(reserve_gap_slots)
         .saturating_sub(empty);
-    let count = missing_slots
-        .min(room_to_expand)
-        .min(u64::from(policy.harvest_batch));
-    if count == 0 {
+    let mut ordinary_gap = missing_slots.min(room_to_expand);
+    if ordinary_gap == 0 && covered_gap == 0 {
         return Vec::new();
     }
     let mut candidates = Vec::new();
@@ -195,6 +219,7 @@ pub(super) fn plan(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -
     }
     candidates.sort_by_key(|&tile| {
         (
+            covered_gap > 0 && !store_tiles.contains(&tile),
             !zones.iter().any(|&zone| distance(tile, zone) == 1),
             distance(tile, hearth),
             tile.1,
@@ -203,7 +228,18 @@ pub(super) fn plan(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -
     });
     candidates
         .into_iter()
-        .take(usize::try_from(count).unwrap_or(usize::MAX))
+        .filter(|&tile| {
+            let covered = store_tiles.contains(&tile);
+            if ordinary_gap == 0 && !(covered && covered_gap > 0) {
+                return false;
+            }
+            ordinary_gap = ordinary_gap.saturating_sub(1);
+            if covered {
+                covered_gap = covered_gap.saturating_sub(1);
+            }
+            true
+        })
+        .take(usize::try_from(policy.harvest_batch).unwrap_or(usize::MAX))
         .map(|(x, y)| Command::AddStockpile {
             x0: x,
             y0: y,
