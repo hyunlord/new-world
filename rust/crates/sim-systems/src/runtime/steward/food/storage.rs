@@ -64,19 +64,8 @@ pub(super) fn plan(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -
                 .then_some(u64::from(stack_max(res, spec.kind)) * u64::from(food.units.max(1)))
         })
         .min();
-    let reserve = facts
-        .daily_milli
-        .saturating_mul(u64::from(if facts.preparing {
-            facts.winter_days.max(policy.reserve_days)
-        } else {
-            policy.reserve_days
-        }))
-        .div_ceil(1000)
-        .max(if facts.preparing {
-            super::winter_need(facts.adults)
-        } else {
-            0
-        });
+    let (immediate, winter) = super::harvest::targets(policy, facts);
+    let reserve = immediate.max(winter);
     // Inedible ingredients still need physical slots, but never receive
     // an invented edible-unit conversion for future reserve capacity.
     let reserve_slots = min_food_stack_units.map_or(0, |units| reserve.div_ceil(units));

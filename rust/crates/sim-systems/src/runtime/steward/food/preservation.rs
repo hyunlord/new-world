@@ -80,11 +80,7 @@ pub(super) fn budget(
     if recipes.is_empty() {
         return out;
     }
-    let reserve = facts
-        .daily_milli
-        .saturating_mul(u64::from(facts.winter_days))
-        .div_ceil(1000)
-        .max(super::winter_need(facts.adults));
+    let reserve = super::summary::winter_target(policy, facts);
     let commitments = commitments(world, res, policy, facts, &outputs);
     let deficit = reserve
         .saturating_sub(facts.winter_units)

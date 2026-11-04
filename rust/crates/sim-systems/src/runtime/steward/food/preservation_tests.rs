@@ -73,14 +73,14 @@ fn preservation_budget_covers_winter_deficit_without_current_inputs() {
     let (world, mut res, policy) = fixture();
     assert_eq!(
         target(&world, &res, &policy),
-        Some(144),
+        Some(216),
         "preservation must not be capped to one day24 or require already harvested inputs"
     );
     let facts = super::summary(&world, &res, &policy);
     let berries = ItemKind::from_name("berries").expect("berries");
     assert_eq!(
         super::dependencies::ingredient_deficits(&world, &res, &policy, &facts).get(&berries),
-        Some(&144)
+        Some(&216)
     );
     let catalog = sim_core::colony::content::installed_or_bundled();
     let species = catalog.plant_by_name("berry_bush").expect("berries plant");
@@ -96,13 +96,13 @@ fn preservation_budget_covers_winter_deficit_without_current_inputs() {
         &mut res,
         (7, 8),
         ItemSpec::raw(ItemKind::from_name("hazelnuts").expect("nuts"), None),
-        144,
+        216,
         14,
         crate::runtime::food::items::FoodSource::Harvest,
     )
     .expect("actual full reserve");
     let mut fed = super::summary(&world, &res, &policy);
-    assert_eq!(fed.usable_units, 144);
+    assert_eq!(fed.usable_units, 216);
     fed.groups.extend(
         berries
             .definition()
@@ -147,13 +147,13 @@ fn pending_preservation_is_credited_once_without_becoming_actual_stores() {
     assert_eq!(facts.winter_units, 0);
     assert_eq!(
         target(&world, &res, &policy),
-        Some(144),
-        "20 existing promises plus124 outstanding, not164 or124"
+        Some(216),
+        "20 existing promises plus196 outstanding, not236 or196"
     );
     let berries = ItemKind::from_name("berries").expect("berries");
     assert_eq!(
         super::dependencies::ingredient_deficits(&world, &res, &policy, &facts).get(&berries),
-        Some(&124)
+        Some(&196)
     );
 }
 
@@ -208,10 +208,10 @@ fn completed_preservation_keeps_one_credit_while_waiting_for_and_finishing_haul(
         }
         let facts = super::summary(&world, &res, &policy);
         assert_eq!(facts.winter_units, if stored { 20 } else { 0 });
-        assert_eq!(target(&world, &res, &policy), Some(144));
+        assert_eq!(target(&world, &res, &policy), Some(216));
         assert_eq!(
             super::dependencies::ingredient_deficits(&world, &res, &policy, &facts).get(&berries),
-            Some(&124)
+            Some(&196)
         );
     }
 }
@@ -234,16 +234,16 @@ fn late_or_already_expired_pending_output_does_not_reduce_winter_deficit() {
         let berries = ItemKind::from_name("berries").expect("input");
         assert_eq!(
             target(&world, &res, &policy),
-            Some(if due_day == 0 { 144 } else { 164 }),
+            Some(if due_day == 0 { 216 } else { 236 }),
             "overdue accepted20 retain physical capacity until cleared; future20 are excluded only by emergency admission"
         );
         assert_eq!(
             super::dependencies::ingredient_deficits(&world, &res, &policy, &facts).get(&berries),
-            Some(if due_day == 0 { &124 } else { &144 })
+            Some(if due_day == 0 { &196 } else { &216 })
         );
         assert_eq!(
             super::harvest::targets(&policy, &facts).1,
-            144,
+            216,
             "the durable goal is unchanged even when admission is bounded"
         );
         assert_eq!(facts.stored_units, 0);
@@ -300,10 +300,10 @@ fn paused_player_first_rack_does_not_hide_eligible_second_rack() {
             .preservation
             .targets
             .get(&recipe),
-        Some(&144)
+        Some(&216)
     );
     let commands = super::cooking::plan(&world, &res, &policy, &facts);
-    assert!(commands.contains(&Command::AddBill { workshop: 2, recipe, mode: BillMode::Maintain(144) }),
+    assert!(commands.contains(&Command::AddBill { workshop: 2, recipe, mode: BillMode::Maintain(216) }),
         "the same eligible rack that admitted the reserve budget must receive its bill: {commands:?}");
     assert!(
         !commands.iter().any(|command| matches!(
@@ -511,8 +511,8 @@ fn preservation_admission_keeps_physical_grain_cooking_room_before_real_drying()
     let demand = super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
     let admitted = *demand.get(&berries).expect("real winter demand");
     assert_eq!(
-        admitted, 72,
-        "144 reserve minus48 current minus24 executable physical grain; the winter goal remains144"
+        admitted, 144,
+        "216 reserve minus48 current minus24 executable physical grain; the winter goal remains216"
     );
     let commands = super::cooking::plan(&world, &res, &policy, &facts);
     let rack = commands
@@ -522,7 +522,7 @@ fn preservation_admission_keeps_physical_grain_cooking_room_before_real_drying()
     assert!(matches!(
         rack,
         Command::AddBill {
-            mode: BillMode::Maintain(72),
+            mode: BillMode::Maintain(144),
             ..
         }
     ));
@@ -608,8 +608,8 @@ fn emergency_procurement_and_preservation_bills_share_the_urgent_reservation() {
     let drying = RecipeKind::from_name("dry_berries").expect("drying");
     assert_eq!(
         physical.preservation.targets.get(&drying),
-        Some(&120),
-        "reserve24 urgent food before120 future food under the unchanged144 cap"
+        Some(&192),
+        "reserve24 urgent food before192 future food under the216 cap"
     );
     let demand = super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
     assert_eq!(
@@ -618,25 +618,25 @@ fn emergency_procurement_and_preservation_bills_share_the_urgent_reservation() {
     );
     assert_eq!(
         demand.get(&ItemKind::from_name("berries").expect("berries")),
-        Some(&120)
+        Some(&192)
     );
 }
 
 #[test]
 fn full_food_cap_allows_physical_net_zero_drying_but_not_missing_raw_inputs() {
-    for (name, expected) in [("berries", 144), ("hazelnuts", 0)] {
+    for (name, expected) in [("berries", 216), ("hazelnuts", 0)] {
         let (world, mut res, policy) = fixture();
         crate::runtime::food::items::create_ground(
             &mut res,
             (9, 8),
             ItemSpec::raw(ItemKind::from_name(name).expect("food"), None),
-            144,
+            216,
             14,
             crate::runtime::food::items::FoodSource::Harvest,
         )
         .expect("physical edible reserve");
         let facts = super::summary(&world, &res, &policy);
-        assert_eq!(facts.usable_units, 144);
+        assert_eq!(facts.usable_units, 216);
         let allocation = super::cooking::priority_targets(
             &world,
             &res,
@@ -676,7 +676,7 @@ fn physical_cooking_and_preservation_cannot_spend_the_same_berry_stack() {
     for (tile, name, count) in [
         ((5, 5), "clay_pot", 1),
         ((6, 6), "wild_grain", 12),
-        ((7, 7), "berries", 120),
+        ((7, 7), "berries", 192),
     ] {
         crate::runtime::food::items::create_ground(
             &mut res,
@@ -696,7 +696,7 @@ fn physical_cooking_and_preservation_cannot_spend_the_same_berry_stack() {
         .shelf
         .push(pot);
     let facts = super::summary(&world, &res, &policy);
-    assert_eq!(facts.usable_units, 120);
+    assert_eq!(facts.usable_units, 192);
     let allocation =
         super::cooking::priority_targets(&world, &res, &policy, &facts, &Default::default(), false);
     assert_eq!(allocation.targets.get(&recipe), Some(&24));
@@ -704,10 +704,66 @@ fn physical_cooking_and_preservation_cannot_spend_the_same_berry_stack() {
     let dry = RecipeKind::from_name("dry_berries").expect("dry");
     assert_eq!(
         allocation.preservation.targets.get(&dry),
-        Some(&120),
-        "six berries spent cooking leave114 physical berries and6 net-new capacity"
+        Some(&192),
+        "six berries spent cooking leave186 physical berries and6 net-new capacity"
     );
     assert_eq!(allocation.preservation.missing.get(&berries), Some(&6));
     let demand = super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
     assert_eq!(demand.get(&berries), Some(&6));
+}
+
+#[test]
+fn winter_forecast_uses_cold_demand_before_people_are_cold() {
+    let (mut world, res, policy) = fixture();
+    for id in 10..12 {
+        world.spawn((
+            Agent { id },
+            Position::new(8, 8),
+            sim_core::components::Child { born_tick: 0 },
+        ));
+    }
+    let people: Vec<_> = world
+        .query::<&Agent>()
+        .iter()
+        .map(|(entity, _)| entity)
+        .collect();
+    for cold in [false, true] {
+        if cold {
+            for &person in &people {
+                world
+                    .insert_one(person, sim_core::components::Cold)
+                    .expect("cold person");
+            }
+        }
+        let mut facts = super::summary(&world, &res, &policy);
+        assert_eq!(facts.adults, 10);
+        assert_eq!(facts.warm_daily_milli, 26880);
+        assert_eq!(facts.daily_milli, if cold { 40320 } else { 26880 });
+        assert!(facts.preparing);
+        // (10 * 2.4 + 2 * 1.44) * 1.5 * 6 = 241.92, rounded up once.
+        let (immediate, reserve) = super::harvest::targets(&policy, &facts);
+        assert_eq!(
+            reserve, 242,
+            "winter forecast must not depend on current Cold"
+        );
+        assert_eq!(policy.reserve_days, 2);
+        assert_eq!(immediate, if cold { 81 } else { 54 });
+        let mut inputs = super::cooking::free_inputs(&world, &res);
+        let mut headroom = 1000;
+        let budget =
+            super::preservation::budget(&world, &res, &policy, &facts, &mut inputs, &mut headroom);
+        assert_eq!(budget.targets.get(&policy.recipes[0]), Some(&242));
+        facts.preparing = false;
+        assert_eq!(super::harvest::targets(&policy, &facts), (immediate, 0));
+        assert!(super::preservation::budget(
+            &world,
+            &res,
+            &policy,
+            &facts,
+            &mut inputs,
+            &mut headroom
+        )
+        .targets
+        .is_empty());
+    }
 }

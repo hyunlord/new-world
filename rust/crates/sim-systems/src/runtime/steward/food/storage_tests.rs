@@ -383,3 +383,41 @@ fn open_stockpile_capacity_does_not_block_finite_covered_food_storage() {
     assert_eq!(res.colony.ground_items, old_items);
     assert_eq!(res.food, old_food);
 }
+
+#[test]
+fn warm_people_get_storage_for_the_cold_winter_forecast() {
+    let (mut world, res, mut policy) = fixture(true);
+    for id in 10..12 {
+        world.spawn((
+            Agent { id },
+            Position::new(12, 12),
+            sim_core::components::Child { born_tick: 0 },
+        ));
+    }
+    policy.harvest_batch = 64;
+    assert_eq!(policy.reserve_days, 2);
+    let roots = ItemKind::from_name("roots").expect("roots");
+    let stack = u64::from(crate::runtime::jobs::items::stack_max(&res, roots));
+    let expected = |units: u64| (1 + (units - 20).div_ceil(stack)).min(1 + units.div_ceil(stack));
+    assert!(
+        expected(242) > expected(162),
+        "forecast crosses actual stack capacity"
+    );
+    let mut facts = super::summary(&world, &res, &policy);
+    assert_eq!(facts.daily_milli, 26880);
+    assert!(facts.preparing);
+    for (preparing, units) in [(true, 242), (false, 54)] {
+        facts.preparing = preparing;
+        let commands = super::storage::plan(&res, &policy, &facts);
+        let cells: u64 = commands
+            .iter()
+            .map(|command| match command {
+                Command::AddStockpile { x0, y0, x1, y1 } => {
+                    u64::from(x1 - x0 + 1) * u64::from(y1 - y0 + 1)
+                }
+                _ => unreachable!(),
+            })
+            .sum();
+        assert_eq!(cells, expected(units), "preparing={preparing}");
+    }
+}

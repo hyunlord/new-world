@@ -260,11 +260,7 @@ pub(super) fn targets(policy: &FoodPlan, facts: &FoodSummary) -> (u64, u64) {
         .saturating_mul(u64::from(policy.reserve_days))
         .div_ceil(1000);
     let reserve = if facts.preparing {
-        facts
-            .daily_milli
-            .saturating_mul(u64::from(facts.winter_days))
-            .div_ceil(1000)
-            .max(super::winter_need(facts.adults))
+        super::summary::winter_target(policy, facts)
     } else {
         0
     };

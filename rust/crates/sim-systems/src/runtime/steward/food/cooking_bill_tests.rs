@@ -552,16 +552,25 @@ fn priority_cooking_counts_disjoint_accepted_food_horizons_once_each() {
     res.current_tick = 14 * res.ticks_per_day;
     policy.recipes.truncate(1);
     let roots = ItemKind::from_name("roots").expect("roots");
-    for x in 1..=5 {
+    for (x, y, count) in [
+        (1, 1, 28),
+        (2, 1, 28),
+        (3, 1, 28),
+        (4, 1, 28),
+        (5, 1, 28),
+        (1, 2, 24),
+        (2, 2, 24),
+        (3, 2, 24),
+    ] {
         crate::runtime::food::items::create_ground(
             &mut res,
-            (x, 1),
+            (x, y),
             ItemSpec::raw(roots, None),
-            28,
+            count,
             14,
             crate::runtime::food::items::FoodSource::Harvest,
         )
-        .expect("140 fresh edible units");
+        .expect("212 fresh edible units");
     }
     let grain = ItemKind::from_name("wild_grain").expect("grain");
     crate::runtime::food::items::create_ground(
@@ -635,8 +644,8 @@ fn priority_cooking_counts_disjoint_accepted_food_horizons_once_each() {
         Default::default(),
     );
     let facts = super::summary(&world, &res, &policy);
-    assert_eq!(facts.usable_units, 140);
-    assert_eq!(super::harvest::targets(&policy, &facts), (48, 144));
+    assert_eq!(facts.usable_units, 212);
+    assert_eq!(super::harvest::targets(&policy, &facts), (48, 216));
     assert_eq!(
         super::harvest::pending_output(&world, &res, &policy, &facts),
         (3, 2),
@@ -648,7 +657,7 @@ fn priority_cooking_counts_disjoint_accepted_food_horizons_once_each() {
             Command::SetBillMode { bill: id, mode: BillMode::Maintain(target), .. }
                 if *id == bill && *target > 3
         )),
-        "140 usable plus disjoint accepted 3+2 already fills 144: {commands:?}"
+        "212 usable plus disjoint accepted 3+2 already fills 216: {commands:?}"
     );
 }
 
@@ -1167,7 +1176,7 @@ fn executable_cooking_credit_waits_for_the_required_pot_to_arrive() {
 
 #[test]
 fn winter_grain_cooking_uses_combined_headroom_without_a_second_food_budget() {
-    for (raw, expected_batches) in [(100, 8), (144, 0), (188, 0)] {
+    for (raw, expected_batches) in [(172, 8), (216, 0), (260, 0)] {
         let (mut world, mut res, mut policy, _) = fixture(true);
         let known = world
             .query::<&Knowledge>()
@@ -1199,7 +1208,7 @@ fn winter_grain_cooking_uses_combined_headroom_without_a_second_food_budget() {
         }
         let facts = super::summary(&world, &res, &policy);
         assert!(facts.preparing);
-        assert_eq!(super::harvest::targets(&policy, &facts), (48, 144));
+        assert_eq!(super::harvest::targets(&policy, &facts), (48, 216));
         assert_eq!(facts.usable_units, u64::from(raw));
         let commands = super::cooking::plan(&world, &res, &policy, &facts);
         let meal = commands.iter().find(|command| {
@@ -1209,7 +1218,7 @@ fn winter_grain_cooking_uses_combined_headroom_without_a_second_food_budget() {
         if expected_batches == 0 {
             assert!(
                 meal.is_none(),
-                "raw stock at/above max(48,144) forbids net-new grain meals: {commands:?}"
+                "raw stock at/above max(48,216) forbids net-new grain meals: {commands:?}"
             );
         } else {
             assert_eq!(
@@ -1220,7 +1229,7 @@ fn winter_grain_cooking_uses_combined_headroom_without_a_second_food_budget() {
                     mode: BillMode::Make(expected_batches),
                 })
             );
-            assert!(u64::from(raw) + u64::from(expected_batches) * 3 <= 144);
+            assert!(u64::from(raw) + u64::from(expected_batches) * 3 <= 216);
         }
     }
 }

@@ -199,7 +199,7 @@ fn winter_only_gap_does_not_admit_non_durable_diversity_forage() {
         );
         assert!(crate::runtime::food::plants::harvestable(&res, (9, 8)));
         let facts = super::summary(&world, &res, &policy);
-        assert_eq!(super::harvest::targets(&policy, &facts), (5, 15));
+        assert_eq!(super::harvest::targets(&policy, &facts), (5, 22));
         assert_eq!(facts.usable_units, u64::from(stored));
         assert_eq!(facts.winter_units, u64::from(stored));
         assert!(!facts.groups.contains("fruit"));

@@ -408,16 +408,25 @@ fn cooking_procurement_counts_other_accepted_food_without_blocking_preservation(
                 .accepted
             );
         }
-        for x in 1..=5 {
+        for (x, y, count) in [
+            (1, 1, 28),
+            (2, 1, 28),
+            (3, 1, 28),
+            (4, 1, 28),
+            (5, 1, 28),
+            (1, 2, 24),
+            (2, 2, 24),
+            (3, 2, 24),
+        ] {
             items::create_ground(
                 &mut res,
-                (x, 1),
+                (x, y),
                 ItemSpec::raw(roots, None),
-                28,
+                count,
                 13,
                 items::FoodSource::Harvest,
             )
-            .expect("140 actual fresh roots expiring before winter ends");
+            .expect("212 actual fresh roots expiring before winter ends");
         }
         items::create_ground(
             &mut res,
@@ -473,10 +482,10 @@ fn cooking_procurement_counts_other_accepted_food_without_blocking_preservation(
         );
         assert!(crate::runtime::food::plants::harvestable(&res, (6, 5)));
         let facts = super::super::summary(&world, &res, &policy);
-        assert_eq!(facts.usable_units, 140);
+        assert_eq!(facts.usable_units, 212);
         assert_eq!(facts.cooked_units, 0);
         assert_eq!(facts.winter_units, 0);
-        assert_eq!(super::super::harvest::targets(&policy, &facts), (48, 144));
+        assert_eq!(super::super::harvest::targets(&policy, &facts), (48, 216));
         assert!(super::super::dependencies::seed_inputs(&world, &res, &policy, &facts).is_empty());
         assert_eq!(
             crate::runtime::jobs::bills::bill_count(
@@ -517,7 +526,7 @@ fn cooking_procurement_counts_other_accepted_food_without_blocking_preservation(
             (4, true, 0, false),
             (4, false, 0, false)
         ],
-        "accepted other-output food closes new input admission while the real winter goal stays144"
+        "accepted other-output food closes new input admission while the real winter goal stays216"
     );
 }
 
@@ -605,8 +614,8 @@ fn future_preservation_does_not_block_emergency_cooking_or_its_missing_inputs() 
                 bills: vec![Bill {
                     id: 1,
                     recipe: drying,
-                    mode: BillMode::Make(72),
-                    done: 72,
+                    mode: BillMode::Make(108),
+                    done: 108,
                     suspended: false,
                     auto: false,
                 }],
@@ -622,7 +631,7 @@ fn future_preservation_does_not_block_emergency_cooking_or_its_missing_inputs() 
                 bill: 1,
                 tile: (6, 4),
                 output: ItemSpec::raw(drying.recipe().expect("recipe").output.0, None),
-                count: 144,
+                count: 216,
                 due_tick,
             },
             Default::default(),
@@ -641,7 +650,7 @@ fn future_preservation_does_not_block_emergency_cooking_or_its_missing_inputs() 
         }
         let facts = super::super::summary(&world, &res, &policy);
         assert_eq!(facts.usable_units, 0);
-        assert_eq!(super::super::harvest::targets(&policy, &facts), (48, 144));
+        assert_eq!(super::super::harvest::targets(&policy, &facts), (48, 216));
         let demand = super::super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
         assert_eq!(
             demand.get(&grain).copied().unwrap_or(0),
@@ -674,7 +683,16 @@ fn projected_missing_edible_inputs_spend_their_full_new_food_capacity() {
     res.fires.insert(1, sim_engine::FireState { lit: true });
     let nuts = ItemKind::from_name("hazelnuts").expect("nuts");
     let roots = ItemKind::from_name("roots").expect("roots");
-    for (x, count) in [(1, 28), (2, 28), (3, 28), (4, 28), (5, 24)] {
+    for (x, count) in [
+        (1, 28),
+        (2, 28),
+        (3, 28),
+        (4, 28),
+        (5, 24),
+        (6, 24),
+        (7, 24),
+        (8, 24),
+    ] {
         crate::runtime::food::items::create_ground(
             &mut res,
             (x, 1),
@@ -683,11 +701,11 @@ fn projected_missing_edible_inputs_spend_their_full_new_food_capacity() {
             14,
             crate::runtime::food::items::FoodSource::Harvest,
         )
-        .expect("136 physical edible units");
+        .expect("208 physical edible units");
     }
     let facts = super::super::summary(&world, &res, &policy);
-    assert_eq!(facts.usable_units, 136);
-    assert_eq!(super::super::harvest::targets(&policy, &facts), (48, 144));
+    assert_eq!(facts.usable_units, 208);
+    assert_eq!(super::super::harvest::targets(&policy, &facts), (48, 216));
     let demand = super::super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
     assert_eq!(demand.get(&roots), Some(&4),
         "eight spare units fund two three-portion batches; absent raw roots are not existing food credit");

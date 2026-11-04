@@ -44,6 +44,16 @@ pub fn winter_need(adults: u64) -> u64 {
     adults.saturating_mul(72).div_ceil(5)
 }
 
+/// Prospective winter demand uses the authored cold rate even before people are cold.
+pub(super) fn winter_target(policy: &FoodPlan, facts: &FoodSummary) -> u64 {
+    facts
+        .warm_daily_milli
+        .saturating_mul(u64::from(policy.cold_multiplier))
+        .saturating_mul(u64::from(facts.winter_days))
+        .div_ceil(1_000_000)
+        .max(winter_need(facts.adults))
+}
+
 /// Build one food planning snapshot, never once per person or per tick.
 pub fn summary(world: &World, res: &SimResources, policy: &FoodPlan) -> FoodSummary {
     let mut facts = FoodSummary::default();

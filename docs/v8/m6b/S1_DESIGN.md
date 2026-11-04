@@ -148,3 +148,13 @@ Seed5 day12 noon has52 ripe designated berry units and no Harvest worker while f
 ### Affordable housing service access (S1-CAL-20)
 
 A connected house can still impose a long daily detour. For capped homes, retain all physical-yield, material-budget, field and complete-shell access checks, then compare prospective door-to-hearth movement cost over at most256 additional ranked visits and16 valid plans including the first. Strictly lower cost wins; stable ties retain the original order. Reserve preview and actual placement select the same footprint, including transient occupancy waits. Uncapped homes and Storehouses keep their original selection. This bounded local comparison neither relaxes production caps nor claims a global shortest commute; natural completed-home routes and performance are measured separately.
+
+
+### Prospective winter food reserve (S1-CAL-21)
+
+During preparation, harvest admission, preservation and operational storage capacity use ceil(warm_daily_milli × cold_multiplier × winter_days /1,000,000), with the existing owner adult floor. This implements the same conservative winter exposure budget used in annual field arithmetic; today's actual Cold components affect immediate meals, not the future winter forecast. For ten adults and two children,26.88 warm units/day becomes242 units for six days at1500permille, not162. The immediate/durable maximum and continuous autumn replenishment assumption remain unchanged; no extra prewinter horizon is silently added.
+
+
+### Winter holding-budget correction (S1-CAL-22)
+
+The earlier shared admission-budget overage definition is superseded during winter only. Admission stops preparing in winter, but its remaining consumption liability does not vanish. At each after-expiry midnight sample, use max(immediate target, operational durable target, ceil(warm_daily_milli × authored cold_multiplier × remaining winter calendar days /1,000,000)); remaining days include the newly started day and are0 outside winter. Keep admission unchanged, never sum the budgets, and return to immediate-only at spring. The1.5 multiplier, >6-day limit,28/32 and nonextinction requirement remain. Ten adults need a conservative216-unit winter reserve; a224-unit stock consumed at24/day remains above the old72-unit threshold for seven samples with zero new production. The corrected declining targets216,180,144,108,72,48,48 distinguish legitimate winter liability from persistent spring excess. Original calibration17FAIL0/8 is preserved alongside rescored longest streaks3–5days (7/8 with nonextinction). No new tool or observer is introduced; raw existing daily values and frozen data suffice.
