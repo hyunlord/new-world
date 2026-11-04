@@ -128,6 +128,17 @@ pub(super) fn eat_continue(c: &mut EffectContext<'_>) -> EffectResult {
     advance(c, TargetKind::Food)
 }
 pub(super) fn drink_continue(c: &mut EffectContext<'_>) -> EffectResult {
+    if c.resources.rules.colony.is_some()
+        && c.state()?
+            == (AgentState::Seeking {
+                target: TargetKind::Water,
+            })
+    {
+        if c.target == ActionTarget::None {
+            return finish(c);
+        }
+        c.attach(c.tile_target()?);
+    }
     advance(c, TargetKind::Water)
 }
 pub(super) fn sleep_continue(c: &mut EffectContext<'_>) -> EffectResult {

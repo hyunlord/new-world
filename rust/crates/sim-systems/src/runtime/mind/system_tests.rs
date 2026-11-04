@@ -329,3 +329,64 @@ fn initialized_system_rejects_replaced_history_before_tick_effects() {
         next
     );
 }
+
+#[test]
+fn colony_water_binding_coordinator_retains_walk_then_reselects_on_navigation_change() {
+    let program = MindProgram::load(r#"(
+        schema_version: 1, bands: ["critical", "duty", "need", "work", "leisure", "idle"],
+        nodes: [
+            (id: "water", band: "need", behaviour: "drink", target: Some("water"), when: [(fact: "water_available", op: "has")],
+             score: (constant: 1, terms: []), hysteresis: 0,
+             life_stages: ["adult", "child", "elder"], tags: [], name_key: "WATER"),
+            (id: "fallback", band: "idle", behaviour: "wander", when: [],
+             score: (constant: 0, terms: [(fact: "thirst", weight_permille: 0)]), hysteresis: 0,
+             life_stages: ["adult", "child", "elder"], tags: [], name_key: "FALLBACK")
+        ])"#).unwrap();
+    let mut system = ColonyMindSystem::new(program);
+    let mut world = hecs::World::new();
+    let person = world.spawn((
+        Agent { id: 7 },
+        Position::new(2, 2),
+        AgentState::Idle,
+        sim_core::components::Thirst::new(80.0, 0.08),
+        crate::runtime::agent::MovementRng::new(7),
+    ));
+    let mut r = sim_engine::SimResources::new(12, 12, sim_core::MaterialRegistry::new());
+    r.rules = WorldRules::colony(0);
+    r.nav.install(sim_core::nav::CostMap::new(12, 12));
+    r.water_tiles.insert((8, 2), 255);
+    system.try_tick(&mut world, &mut r).unwrap();
+    assert_eq!(world.get::<&SeekTarget>(person).unwrap().tile, (8, 2));
+    let path = r.nav.path((2, 2), (8, 2)).unwrap();
+    r.nav.paths.insert(
+        7,
+        sim_core::nav::AgentPath::new((8, 2), r.nav.version, (2, 2), path.to_vec(), 0),
+    );
+    r.water_tiles.insert((2, 3), 255);
+    let stats = *r.nav.stats.borrow();
+    for tick in 1..4 {
+        r.current_tick = tick;
+        system.try_tick(&mut world, &mut r).unwrap();
+        assert_eq!(world.get::<&SeekTarget>(person).unwrap().tile, (8, 2));
+    }
+    assert_eq!(
+        *r.nav.stats.borrow(),
+        stats,
+        "valid binding performs no path queries"
+    );
+    r.nav.set_cost((9, 9), sim_core::nav::COST_DOOR);
+    r.current_tick += 1;
+    system.try_tick(&mut world, &mut r).unwrap();
+    assert_eq!(world.get::<&SeekTarget>(person).unwrap().tile, (2, 3));
+    r.rules.agent.move_interval_ticks = 1;
+    crate::runtime::agent::AgentMovementSystem::new().tick(&mut world, &mut r);
+    assert_eq!(
+        *world.get::<&Position>(person).unwrap(),
+        Position::new(2, 3)
+    );
+    assert_eq!(
+        r.nav.paths.get(&7).unwrap().goal,
+        (2, 3),
+        "movement replaces the old water route"
+    );
+}

@@ -148,3 +148,32 @@ fn routine_binding_writes_exact_fact_target_pairs_and_keeps_unknown_noop() {
         Err(FactError::Context(ContextError::UnknownAgent(999)))
     ));
 }
+
+#[test]
+fn colony_water_binding_avoids_a_geometrically_near_barrier_detour() {
+    let mut world = hecs::World::new();
+    world.spawn((Agent { id: 7 }, Position::new(5, 5), AgentState::Idle));
+    let mut resources = SimResources::new(20, 20, sim_core::MaterialRegistry::new());
+    resources.rules = sim_core::rules::WorldRules::colony(0);
+    let mut map = sim_core::nav::CostMap::new(20, 20);
+    for y in 0..17 {
+        map.set((6, y), sim_core::nav::IMPASSABLE);
+    }
+    resources.nav.install(map);
+    resources
+        .water_tiles
+        .extend([((7, 5), 255), ((2, 10), 255)]);
+    assert_eq!(
+        targets::nearest_resource_tile(&Position::new(5, 5), &resources.water_tiles),
+        Some((7, 5))
+    );
+    assert!(resources.nav.path((5, 5), (7, 5)).unwrap().len() > 20);
+    let mut context = prepare_context(&world, &resources).unwrap();
+    assert_eq!(
+        resolve_target(&mut context, &resources, 7, "water")
+            .unwrap()
+            .unwrap()
+            .tile,
+        (2, 10)
+    );
+}

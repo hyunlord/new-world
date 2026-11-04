@@ -51,6 +51,82 @@ pub fn nearest_resource_tile(
         .copied()
 }
 
+/// Colony drinking uses route cost, retaining only a current, owned water walk.
+/// The baseline and the pre-map bootstrap retain the original geometric selector.
+pub(in crate::runtime) fn water_target(
+    resources: &sim_engine::SimResources,
+    agent: sim_core::components::AgentId,
+    pos: &Position,
+    state: sim_core::components::AgentState,
+    seek: Option<sim_core::nav::Tile>,
+) -> Option<sim_core::nav::Tile> {
+    use sim_core::components::{AgentState, TargetKind};
+    let nav = &resources.nav;
+    if resources.rules.colony.is_none() || !nav.is_built() {
+        return nearest_resource_tile(pos, &resources.water_tiles);
+    }
+    let here = (pos.x, pos.y);
+    let available = |tile: &sim_core::nav::Tile| {
+        resources
+            .water_tiles
+            .get(tile)
+            .is_some_and(|amount| *amount > 0)
+            && nav.passable(*tile)
+    };
+    if let Some(goal) = seek.filter(available) {
+        if matches!(
+            state,
+            AgentState::Seeking {
+                target: TargetKind::Water
+            }
+        ) && nav.paths.get(&agent).is_some_and(|path| {
+            let at = match path.next {
+                0 => Some(path.from),
+                n => path.steps.get(n as usize - 1).copied(),
+            };
+            path.goal == goal && path.version == nav.version && at == Some(here)
+        }) {
+            return Some(goal);
+        }
+    }
+    let region = nav.region_of(here);
+    if region == 0 {
+        return None;
+    }
+    // Authored navigation costs are at least the plain cost used by octile.
+    // This is a lower bound, not a fixed shortlist: equal-cost ties still run.
+    let mut candidates: Vec<_> = resources
+        .water_tiles
+        .keys()
+        .copied()
+        .filter(|tile| available(tile) && nav.region_of(*tile) == region)
+        .map(|tile| (sim_core::nav::octile(here, tile), tile))
+        .collect();
+    candidates.sort_unstable();
+    let mut best: Option<(u64, sim_core::nav::Tile)> = None;
+    for (lower_bound, tile) in candidates {
+        if best.is_some_and(|(cost, _)| u64::from(lower_bound) > cost) {
+            break;
+        }
+        if let Some(path) = nav.path(here, tile) {
+            let mut previous = here;
+            let cost = path
+                .iter()
+                .map(|next| {
+                    let cost = u64::from(nav.map().step_cost(previous, *next));
+                    previous = *next;
+                    cost
+                })
+                .sum();
+            let candidate = (cost, tile);
+            if best.is_none_or(|old| candidate < old) {
+                best = Some(candidate);
+            }
+        }
+    }
+    best.map(|(_, tile)| tile)
+}
+
 /// Pass 12 (`local_food_availability`): the Manhattan-nearest food tile with
 /// food within Chebyshev `radius` of `home` (tie-break `(dist, x, y)`), the
 /// meal target of a settlement member; `None` when the catchment is bare.
@@ -189,6 +265,138 @@ mod tests {
     use crate::runtime::agent_actions::forage::bush_eligible;
     use sim_core::rules::ForageRule;
     use std::collections::HashMap;
+
+    fn water_scene() -> sim_engine::SimResources {
+        let mut r = sim_engine::SimResources::new(12, 12, sim_core::MaterialRegistry::new());
+        r.rules = sim_core::rules::WorldRules::colony(0);
+        r.nav.install(sim_core::nav::CostMap::new(12, 12));
+        r
+    }
+
+    fn water(r: &sim_engine::SimResources) -> Option<sim_core::nav::Tile> {
+        water_target(
+            r,
+            7,
+            &Position::new(2, 2),
+            sim_core::components::AgentState::Idle,
+            None,
+        )
+    }
+
+    #[test]
+    fn water_route_binding_keeps_baseline_and_pre_map_selection() {
+        let mut r = water_scene();
+        r.water_tiles.extend([((3, 2), 0), ((2, 4), 255)]);
+        assert_eq!(water(&r), Some((2, 4)));
+        r.rules = sim_core::rules::WorldRules::baseline(0);
+        assert_eq!(water(&r), Some((3, 2)));
+        r.rules = sim_core::rules::WorldRules::colony(0);
+        r.nav = sim_core::nav::NavState::default();
+        assert_eq!(water(&r), Some((3, 2)));
+    }
+
+    #[test]
+    fn water_route_binding_filters_sources_and_keeps_cost_ties_deterministic() {
+        let mut r = water_scene();
+        r.water_tiles.extend([
+            ((3, 2), 0),
+            ((2, 3), 255),
+            ((2, 4), 255),
+            ((0, 2), 255),
+            ((8, 2), 255),
+        ]);
+        r.nav.set_cost((2, 3), sim_core::nav::IMPASSABLE);
+        for y in 0..12 {
+            r.nav.set_cost((6, y), sim_core::nav::IMPASSABLE);
+        }
+        assert_eq!(water(&r), Some((0, 2)));
+        r.water_tiles.remove(&(0, 2));
+        assert_eq!(water(&r), Some((2, 4)));
+        r.water_tiles.remove(&(2, 4));
+        assert_eq!(water(&r), None);
+        r.water_tiles.insert((2, 2), 1);
+        assert_eq!(water(&r), Some((2, 2)));
+    }
+
+    #[test]
+    fn water_route_binding_breaks_equal_cost_ties_by_tile() {
+        for sources in [[(0, 2), (2, 0)], [(2, 0), (0, 2)]] {
+            let mut r = water_scene();
+            r.water_tiles.extend(sources.map(|tile| (tile, 255)));
+            assert_eq!(water(&r), Some((0, 2)));
+            assert_eq!(
+                r.nav.stats.borrow().requests,
+                2,
+                "equal lower bounds must both run"
+            );
+        }
+    }
+
+    #[test]
+    fn water_route_binding_uses_actual_terrain_cost() {
+        let mut r = water_scene();
+        r.water_tiles.extend([((3, 2), 255), ((2, 4), 255)]);
+        r.nav.set_cost((3, 2), sim_core::nav::COST_BANK);
+        assert_eq!(water(&r), Some((2, 4)));
+    }
+
+    #[test]
+    fn water_route_binding_retains_owned_walk_without_new_path_queries() {
+        use sim_core::components::{AgentState, TargetKind};
+        let mut r = water_scene();
+        let goal = (8, 2);
+        r.water_tiles.extend([(goal, 255), ((2, 3), 255)]);
+        let steps = r.nav.path((1, 2), goal).unwrap();
+        let mut path =
+            sim_core::nav::AgentPath::new(goal, r.nav.version, (1, 2), steps.to_vec(), 0);
+        path.next = 1;
+        r.nav.paths.insert(7, path);
+        let seeking = AgentState::Seeking {
+            target: TargetKind::Water,
+        };
+        let before = *r.nav.stats.borrow();
+        for _ in 0..10 {
+            assert_eq!(
+                water_target(&r, 7, &Position::new(2, 2), seeking, Some(goal)),
+                Some(goal)
+            );
+        }
+        assert_eq!(*r.nav.stats.borrow(), before);
+        // Save/load discards derived memo/map, not the owned path or its progress.
+        let bytes = bincode::serialize(&r.nav).unwrap();
+        let map = r.nav.map().clone();
+        r.nav = bincode::deserialize(&bytes).unwrap();
+        r.nav.install(map);
+        let before = *r.nav.stats.borrow();
+        assert_eq!(
+            water_target(&r, 7, &Position::new(2, 2), seeking, Some(goal)),
+            Some(goal)
+        );
+        assert_eq!(*r.nav.stats.borrow(), before);
+        assert_eq!(
+            water_target(&r, 7, &Position::new(2, 2), AgentState::Idle, Some(goal)),
+            Some((2, 3))
+        );
+        assert_eq!(
+            water_target(&r, 7, &Position::new(2, 2), seeking, Some((2, 3))),
+            Some((2, 3))
+        );
+        assert_eq!(
+            water_target(&r, 7, &Position::new(2, 3), seeking, Some(goal)),
+            Some((2, 3))
+        );
+        r.water_tiles.insert(goal, 0);
+        assert_eq!(
+            water_target(&r, 7, &Position::new(2, 2), seeking, Some(goal)),
+            Some((2, 3))
+        );
+        r.water_tiles.insert(goal, 255);
+        r.nav.set_cost((9, 9), sim_core::nav::COST_DOOR);
+        assert_eq!(
+            water_target(&r, 7, &Position::new(2, 2), seeking, Some(goal)),
+            Some((2, 3))
+        );
+    }
 
     #[test]
     fn gather_selectors_skip_tiles_on_an_avoided_side() {

@@ -1359,7 +1359,7 @@ pub fn resolve_target(
             &[Domain::Person, Domain::FoodSources],
         ),
         "water" => (
-            targets::nearest_resource_tile(&person.position, &resources.water_tiles),
+            targets::water_target(resources, agent, &person.position, person.state, None),
             &[Domain::Person, Domain::WaterSources],
         ),
         "sleep" => (

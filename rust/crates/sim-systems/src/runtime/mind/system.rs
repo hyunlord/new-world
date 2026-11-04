@@ -4,7 +4,7 @@ use super::{
     behaviours::{
         self, ActionTarget, EffectContext, EffectDomain, EffectState, EffectStatus, FinishReason,
     },
-    context::{Domain, TickContext},
+    context::{Domain, TargetCandidate, TickContext},
     facts, record, MindProgram,
 };
 use crate::runtime::agent_actions::{
@@ -385,7 +385,10 @@ impl ColonyMindSystem {
             && !(resources.rules.colony.is_some()
                 && matches!(
                     effect.lifecycle,
-                    behaviours::LifecycleBinding::Resource(sim_core::components::TargetKind::Food)
+                    behaviours::LifecycleBinding::Resource(
+                        sim_core::components::TargetKind::Food
+                            | sim_core::components::TargetKind::Water
+                    )
                 )) {
             super::scheduling::owned_target(
                 effect.lifecycle,
@@ -396,6 +399,21 @@ impl ColonyMindSystem {
             .ok_or_else(|| failure("retained lifecycle target missing"))?
         } else {
             let candidate = match node.target.as_deref() {
+                Some("water") if resources.rules.colony.is_some() => {
+                    let person = context.row(agent).map_err(failure)?;
+                    crate::runtime::agent_actions::targets::water_target(
+                        resources,
+                        agent,
+                        &person.position,
+                        person.state,
+                        seek.map(|target| target.tile),
+                    )
+                    .map(|tile| TargetCandidate {
+                        tile,
+                        agent: None,
+                        food: None,
+                    })
+                }
                 Some(name) => {
                     if name.starts_with("routine_") && context.target(agent, name).is_err() {
                         facts::prepare_routine_fact(

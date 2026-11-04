@@ -254,7 +254,9 @@ fn resource_target(
     match state {
         AgentState::Seeking {
             target: TargetKind::Water,
-        } => nearest_resource_tile(pos, &resources.water_tiles),
+        } => {
+            crate::runtime::agent_actions::targets::water_target(resources, agent, pos, state, None)
+        }
         AgentState::Seeking {
             target: TargetKind::Sleep,
         } => resources
