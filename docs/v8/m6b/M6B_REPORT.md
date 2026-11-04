@@ -1,8 +1,10 @@
 # M6b 보고서
 
-Current Stage1 runtime state (2026-11-04): calibration09 gameplay **FAIL**, despite all8 qualified process exits0. Survival/winter hunger/overage/KnowledgeLost/#6758/8; field-intake30%2/8; timely sowing7/8; KnowledgeLost total2 versus BASE1. Cold-zero and log checks7/8 (seed5). P14 exact Rust source d75c66798 remains review-only; held-out1520–1551 unused. P13 cards FAIL remains preserved. P14 cards also FAIL: seed0 combat deaths1 versus no-answer0, with67sent receipts and0rejections. Natural field UI292checks andeightvisualcaptures PASS; no publication claim.
+현재 Stage 1 상태 (2026-11-05): **미게시, 재보정 진행 중**. p18은 전체 시스템651개·fmt·Clippy·빌드·BASE동일성12·문서 검사를 통과했다. 재보정12의8개 실행은 정상 종료했지만 수용 결과는 FAIL이다: 밭 식량30%는1/8, seed5 전멸·파종0·KnowledgeLost21(전체 BASE1)이다. 목재 기준8/8을 안전성 성공으로 해석하지 않는다. seed5 사망은 모두 기아이며 첫 한파는 전멸 뒤에 시작했다. seed0 밭 식량127/554(22.9%)도 기준 미달이나 수확170곡물로30%는 산술상 가능하다. 기준을 유지하고 보존 생산이 물리 곡물 조리 공간을 선점하는 경로를 수정한다. 주택 상한에 따른 위치 변경은 별도 진단 실행으로 인과를 확인한다. held-out1520–1551은 미사용이다.
 
-## 현재 상태 — 2026-11-04 낮 작업
+D-S1-1에 따라 p14 카드 사망 기준은 **PASS**로 정정했다: seed0과 전체가 각각 무응답 대비+1이며,67개 명령 모두 수락되고 거절0건이다. 원본 runner exit1은 그대로 보존한다. 새 후보의 카드·전체 gate 통과를 뜻하지 않는다. 자연 밭 UI292시험과8개 캡처는 이전 검증이며 최종 후보의 게시 검증과 구분한다. D-S1-3으로 야간 제한은 해제됐고 caffeinate를 유지한다. 시간 측정은 load1<8·교차 실행·동시 측정1개 규칙을 따른다.
+
+## 당시 상태 — 2026-11-04 낮 작업 (이하 이력 보존)
 
 **Stage 0 중단·미게시, Stage 1 구현 및 통합 검증 중.** D-S0-2의 기존 gate fallback을 선택했으며 후속 작업은 [#685](https://github.com/hyunlord/new-world/issues/685)에 남겼다. Stage 0 추가 도구는 408개/88,383줄에서 2개/696줄로 줄였다. 전체 목록은 [S0_TOOLING_INVENTORY.md](S0_TOOLING_INVENTORY.md)에 있다. 정리 후 기존 Python suite 573개와 D-S0-1 회귀 29개가 통과했다. generic gate 전체 적격성은 미달 상태를 보존하며 게시하지 않았다.
 

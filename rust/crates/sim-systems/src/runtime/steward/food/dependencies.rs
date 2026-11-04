@@ -125,34 +125,7 @@ pub(super) fn ingredient_deficits(
             }
         }
     }
-    let (_, mut immediate, mut available) =
-        super::cooking::priority_targets(world, res, policy, facts, &reserved, true);
-    let preservation = super::preservation::budget(world, res, policy, facts);
-    for (item, amount) in preservation.inputs {
-        // Preservation already chooses physical shops; only those shelves can serve its inputs.
-        let mut missing = amount;
-        for (kind, &shop) in &preservation.workshops {
-            if !kind
-                .recipe()
-                .is_some_and(|recipe| recipe.inputs.iter().any(|(input, _)| *input == item))
-            {
-                continue;
-            }
-            if let Some(local) = available.get_mut(&(Some(shop), item)) {
-                let taken = (*local).min(missing);
-                *local -= taken;
-                missing -= taken;
-            }
-        }
-        if let Some(public) = available.get_mut(&(None, item)) {
-            let taken = (*public).min(missing);
-            *public -= taken;
-            missing -= taken;
-        }
-        let need = immediate.entry(item).or_default();
-        *need = need.saturating_add(missing);
-    }
-    immediate
+    super::cooking::priority_targets(world, res, policy, facts, &reserved, true).missing
 }
 
 /// Assigned output already counts toward bills; its still-shelved input cannot count twice.

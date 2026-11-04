@@ -92,8 +92,17 @@ fn preservation_budget_covers_winter_deficit_without_current_inputs() {
             next_regrow_day: u32::MAX,
         },
     );
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        (7, 8),
+        ItemSpec::raw(ItemKind::from_name("hazelnuts").expect("nuts"), None),
+        144,
+        14,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("actual full reserve");
     let mut fed = super::summary(&world, &res, &policy);
-    fed.usable_units = 1000;
+    assert_eq!(fed.usable_units, 144);
     fed.groups.extend(
         berries
             .definition()
@@ -104,9 +113,20 @@ fn preservation_budget_covers_winter_deficit_without_current_inputs() {
             .iter()
             .cloned(),
     );
-    assert!(super::harvest::plan(&world, &res, &policy, &fed).iter().any(|command| matches!(command,
-        Command::DesignateHarvest { x0: 9, y0: 8, x1: 9, y1: 8 })),
-        "physical berries harvest must follow preservation deficit even without immediate hunger/diversity/winter-edible gap");
+    assert!(
+        !super::harvest::plan(&world, &res, &policy, &fed)
+            .iter()
+            .any(|command| matches!(
+                command,
+                Command::DesignateHarvest {
+                    x0: 9,
+                    y0: 8,
+                    x1: 9,
+                    y1: 8
+                }
+            )),
+        "a genuine winter deficit cannot admit new food beyond the shared physical reserve"
+    );
 }
 
 #[test]
@@ -214,12 +234,17 @@ fn late_or_already_expired_pending_output_does_not_reduce_winter_deficit() {
         let berries = ItemKind::from_name("berries").expect("input");
         assert_eq!(
             target(&world, &res, &policy),
-            Some(164),
-            "unqualified existing promises cannot replace144 units needed on time"
+            Some(if due_day == 0 { 144 } else { 164 }),
+            "overdue accepted20 retain physical capacity until cleared; future20 are excluded only by emergency admission"
         );
         assert_eq!(
             super::dependencies::ingredient_deficits(&world, &res, &policy, &facts).get(&berries),
-            Some(&144)
+            Some(if due_day == 0 { &124 } else { &144 })
+        );
+        assert_eq!(
+            super::harvest::targets(&policy, &facts).1,
+            144,
+            "the durable goal is unchanged even when admission is bounded"
         );
         assert_eq!(facts.stored_units, 0);
     }
@@ -271,7 +296,8 @@ fn paused_player_first_rack_does_not_hide_eligible_second_rack() {
     );
     let facts = super::summary(&world, &res, &policy);
     assert_eq!(
-        super::preservation::budget(&world, &res, &policy, &facts)
+        super::cooking::priority_targets(&world, &res, &policy, &facts, &Default::default(), false)
+            .preservation
             .targets
             .get(&recipe),
         Some(&144)
@@ -325,9 +351,17 @@ fn all_player_paused_racks_do_not_create_an_extra_preservation_workshop() {
         .accepted
     );
     let facts = super::summary(&world, &res, &policy);
-    assert!(super::preservation::budget(&world, &res, &policy, &facts)
-        .targets
-        .is_empty());
+    assert!(super::cooking::priority_targets(
+        &world,
+        &res,
+        &policy,
+        &facts,
+        &Default::default(),
+        false
+    )
+    .preservation
+    .targets
+    .is_empty());
     assert!(
         super::cooking::plan(&world, &res, &policy, &facts).is_empty(),
         "player controls cannot be bypassed by building a replacement rack"
@@ -419,4 +453,261 @@ fn harvest_budget_counts_only_executable_fresh_output_once() {
         super::harvest::pending_output(&world, &res, &policy, &facts),
         (0, 0)
     );
+}
+
+#[test]
+fn preservation_admission_keeps_physical_grain_cooking_room_before_real_drying() {
+    use crate::runtime::food::items::{self, FoodSource};
+    use sim_core::components::AgentState;
+    use sim_engine::RuntimeSystem;
+    let (mut world, mut res, mut policy) = fixture();
+    policy.cultivation = None;
+    let porridge = RecipeKind::from_name("porridge").expect("porridge");
+    policy.recipes.insert(0, porridge);
+    res.colony.workshops.insert(
+        2,
+        Workshop {
+            id: 2,
+            kind: porridge.recipe().expect("recipe").workshop,
+            top_left: (8, 8),
+            size: (1, 1),
+            bills: vec![],
+            shelf: vec![],
+            active: None,
+        },
+    );
+    res.fires.insert(1, sim_engine::FireState { lit: true });
+    let pot = ItemSpec::raw(ItemKind::from_name("clay_pot").expect("pot"), None);
+    items::create_ground(&mut res, (5, 6), pot, 1, 14, FoodSource::Debug).expect("pot");
+    let pot = res.colony.ground_items.remove(&(5, 6)).expect("pot");
+    res.colony
+        .workshops
+        .get_mut(&2)
+        .expect("hearth")
+        .shelf
+        .push(pot);
+    for (tile, name, count) in [((6, 6), "hazelnuts", 48), ((6, 7), "wild_grain", 16)] {
+        items::create_ground(
+            &mut res,
+            tile,
+            ItemSpec::raw(ItemKind::from_name(name).expect("food"), None),
+            count,
+            14,
+            FoodSource::Harvest,
+        )
+        .expect("food");
+    }
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(facts.usable_units, 48);
+    assert_eq!(
+        super::cooking::priority_targets(&world, &res, &policy, &facts, &Default::default(), false)
+            .targets
+            .get(&porridge)
+            .copied(),
+        Some(24)
+    );
+    assert!(res.food.pending_drying.is_empty());
+    let berries = ItemKind::from_name("berries").expect("berries");
+    let demand = super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
+    let admitted = *demand.get(&berries).expect("real winter demand");
+    assert_eq!(
+        admitted, 72,
+        "144 reserve minus48 current minus24 executable physical grain; the winter goal remains144"
+    );
+    let commands = super::cooking::plan(&world, &res, &policy, &facts);
+    let rack = commands
+        .into_iter()
+        .find(|command| matches!(command, Command::AddBill { workshop: 1, .. }))
+        .expect("rack bill");
+    assert!(matches!(
+        rack,
+        Command::AddBill {
+            mode: BillMode::Maintain(72),
+            ..
+        }
+    ));
+    assert!(
+        crate::commands::apply_and_log(
+            &mut world,
+            &mut res,
+            Command::Steward {
+                rule: 8,
+                command: Box::new(rack)
+            },
+            0
+        )
+        .accepted
+    );
+    items::create_ground(
+        &mut res,
+        (9, 8),
+        ItemSpec::raw(berries, None),
+        u16::try_from(admitted).expect("bounded input"),
+        14,
+        FoodSource::Harvest,
+    )
+    .expect("procured berries");
+    let worker = world.query::<&Agent>().iter().next().expect("worker").0;
+    world
+        .insert(
+            worker,
+            (AgentState::Idle, crate::runtime::agent::MovementRng::new(1)),
+        )
+        .expect("worker state");
+    let mut assign = crate::runtime::jobs::JobAssignSystem::new();
+    let mut execute = crate::runtime::jobs::JobExecuteSystem::new();
+    let mut movement = crate::runtime::agent::AgentMovementSystem::new();
+    let start = res.current_tick;
+    for tick in start..start + 600 {
+        res.current_tick = tick;
+        movement.tick(&mut world, &mut res);
+        crate::runtime::jobs::bills::schedule(&mut world, &mut res);
+        assign.tick(&mut world, &mut res);
+        execute.tick(&mut world, &mut res);
+        if !res.food.pending_drying.is_empty() {
+            break;
+        }
+    }
+    assert!(
+        !res.food.pending_drying.is_empty(),
+        "normal Supply/Craft must create the passive commitment"
+    );
+    let after = super::summary(&world, &res, &policy);
+    assert_eq!(super::cooking::priority_targets(&world, &res, &policy, &after, &Default::default(), false).targets.get(&porridge).copied(), Some(24), "accepted drying and its consumed raw input count once, retaining executable grain capacity");
+    crate::runtime::food::validate(&world, &res).expect("food conservation");
+    crate::runtime::jobs::invariants::check(&world, &res).expect("reservation conservation");
+}
+
+#[test]
+fn emergency_procurement_and_preservation_bills_share_the_urgent_reservation() {
+    let (world, mut res, mut policy) = fixture();
+    policy.cultivation = None;
+    let recipe = RecipeKind::from_name("roasted_roots").expect("recipe");
+    policy.recipes.insert(0, recipe);
+    res.colony.workshops.insert(
+        2,
+        Workshop {
+            id: 2,
+            kind: recipe.recipe().expect("recipe").workshop,
+            top_left: (8, 8),
+            size: (1, 1),
+            bills: vec![],
+            shelf: vec![],
+            active: None,
+        },
+    );
+    res.fires.insert(1, sim_engine::FireState { lit: true });
+    let facts = super::summary(&world, &res, &policy);
+    let physical =
+        super::cooking::priority_targets(&world, &res, &policy, &facts, &Default::default(), false);
+    assert_eq!(
+        physical.targets.get(&recipe).copied().unwrap_or(0),
+        0,
+        "missing roots are not a physical cooking bill"
+    );
+    let drying = RecipeKind::from_name("dry_berries").expect("drying");
+    assert_eq!(
+        physical.preservation.targets.get(&drying),
+        Some(&120),
+        "reserve24 urgent food before120 future food under the unchanged144 cap"
+    );
+    let demand = super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
+    assert_eq!(
+        demand.get(&ItemKind::from_name("roots").expect("roots")),
+        Some(&16)
+    );
+    assert_eq!(
+        demand.get(&ItemKind::from_name("berries").expect("berries")),
+        Some(&120)
+    );
+}
+
+#[test]
+fn full_food_cap_allows_physical_net_zero_drying_but_not_missing_raw_inputs() {
+    for (name, expected) in [("berries", 144), ("hazelnuts", 0)] {
+        let (world, mut res, policy) = fixture();
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            (9, 8),
+            ItemSpec::raw(ItemKind::from_name(name).expect("food"), None),
+            144,
+            14,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("physical edible reserve");
+        let facts = super::summary(&world, &res, &policy);
+        assert_eq!(facts.usable_units, 144);
+        let allocation = super::cooking::priority_targets(
+            &world,
+            &res,
+            &policy,
+            &facts,
+            &Default::default(),
+            false,
+        );
+        assert_eq!(
+            allocation.preservation.targets.get(&policy.recipes[0]),
+            Some(&expected)
+        );
+        let demand = super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
+        assert!(demand.values().all(|count| *count == 0), "physical conversion consumes only existing food; absent berries cannot gain fictional net-zero credit");
+    }
+}
+
+#[test]
+fn physical_cooking_and_preservation_cannot_spend_the_same_berry_stack() {
+    let (world, mut res, mut policy) = fixture();
+    policy.cultivation = None;
+    let recipe = RecipeKind::from_name("fruit_porridge").expect("recipe");
+    policy.recipes.insert(0, recipe);
+    res.colony.workshops.insert(
+        2,
+        Workshop {
+            id: 2,
+            kind: recipe.recipe().expect("recipe").workshop,
+            top_left: (8, 8),
+            size: (1, 1),
+            bills: vec![],
+            shelf: vec![],
+            active: None,
+        },
+    );
+    res.fires.insert(1, sim_engine::FireState { lit: true });
+    for (tile, name, count) in [
+        ((5, 5), "clay_pot", 1),
+        ((6, 6), "wild_grain", 12),
+        ((7, 7), "berries", 120),
+    ] {
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            tile,
+            ItemSpec::raw(ItemKind::from_name(name).expect("item"), None),
+            count,
+            14,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("actual ingredients");
+    }
+    let pot = res.colony.ground_items.remove(&(5, 5)).expect("pot");
+    res.colony
+        .workshops
+        .get_mut(&2)
+        .expect("hearth")
+        .shelf
+        .push(pot);
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(facts.usable_units, 120);
+    let allocation =
+        super::cooking::priority_targets(&world, &res, &policy, &facts, &Default::default(), false);
+    assert_eq!(allocation.targets.get(&recipe), Some(&24));
+    let berries = ItemKind::from_name("berries").expect("berries");
+    let dry = RecipeKind::from_name("dry_berries").expect("dry");
+    assert_eq!(
+        allocation.preservation.targets.get(&dry),
+        Some(&120),
+        "six berries spent cooking leave114 physical berries and6 net-new capacity"
+    );
+    assert_eq!(allocation.preservation.missing.get(&berries), Some(&6));
+    let demand = super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
+    assert_eq!(demand.get(&berries), Some(&6));
 }

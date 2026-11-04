@@ -486,11 +486,16 @@ fn cooking_procurement_counts_other_accepted_food_without_blocking_preservation(
             ),
             0
         );
-        let preservation = super::super::preservation::budget(&world, &res, &policy, &facts);
-        assert_eq!(
-            preservation.inputs.get(&berries).copied().unwrap_or(0),
-            if preserve { 140 } else { 0 }
-        );
+        let preservation = super::super::cooking::priority_targets(
+            &world,
+            &res,
+            &policy,
+            &facts,
+            &Default::default(),
+            false,
+        )
+        .preservation;
+        assert_eq!(preservation.missing.get(&berries).copied().unwrap_or(0), 0);
         let demand = super::super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
         let commands = super::super::harvest::plan(&world, &res, &policy, &facts);
         observed.push((
@@ -509,10 +514,10 @@ fn cooking_procurement_counts_other_accepted_food_without_blocking_preservation(
         observed,
         vec![
             (0, false, 1, true),
-            (4, true, 140, true),
+            (4, true, 0, false),
             (4, false, 0, false)
         ],
-        "accepted other-output food closes immediate procurement, not genuine winter preservation"
+        "accepted other-output food closes new input admission while the real winter goal stays144"
     );
 }
 

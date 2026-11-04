@@ -254,7 +254,13 @@ pub(super) fn food_headroom(
         .saturating_sub(committed)
 }
 
-// Physical cooking goes first; procurement projects only its residual budget.
+pub(super) struct Allocation {
+    pub targets: std::collections::BTreeMap<RecipeKind, u16>,
+    pub missing: std::collections::BTreeMap<sim_core::colony::ItemKind, u64>,
+    pub preservation: super::preservation::Budget,
+}
+
+// Physical cooking, then preservation, then missing-input cooking share one capacity.
 pub(super) fn priority_targets(
     world: &World,
     res: &SimResources,
@@ -262,11 +268,7 @@ pub(super) fn priority_targets(
     facts: &FoodSummary,
     reserved: &std::collections::BTreeMap<sim_core::colony::ItemKind, u64>,
     procure: bool,
-) -> (
-    std::collections::BTreeMap<RecipeKind, u16>,
-    std::collections::BTreeMap<sim_core::colony::ItemKind, u64>,
-    CookingInputs,
-) {
+) -> Allocation {
     use sim_core::colony::ItemKind;
     let available = available_recipes(world, res, policy, reserved);
     let total = facts
@@ -301,9 +303,28 @@ pub(super) fn priority_targets(
     let mut allocated = false;
     let mut outputs = std::collections::BTreeMap::new();
     let mut missing = std::collections::BTreeMap::new();
+    let mut preservation = super::preservation::Budget::default();
+    let emergency = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
+    let mut physical_targets = None;
     for project in [false, true] {
-        if project && !procure {
-            break;
+        if project {
+            if !emergency {
+                preservation = super::preservation::budget(
+                    world,
+                    res,
+                    policy,
+                    facts,
+                    &mut inputs,
+                    &mut headroom,
+                );
+                if !procure {
+                    break;
+                }
+            } else if !procure {
+                // Both callers reserve the same urgent missing-input meals, but
+                // only procurement may turn hypothetical inputs into demand.
+                physical_targets = Some(targets.clone());
+            }
         }
         let mut visited = std::collections::BTreeSet::new();
         for &kind in &policy.recipes {
@@ -439,7 +460,21 @@ pub(super) fn priority_targets(
             }
         }
     }
-    (targets, missing, inputs)
+    if emergency {
+        preservation =
+            super::preservation::budget(world, res, policy, facts, &mut inputs, &mut headroom);
+    }
+    for (&item, &amount) in &preservation.missing {
+        *missing.entry(item).or_default() += amount;
+    }
+    if let Some(physical) = physical_targets {
+        targets = physical;
+    }
+    Allocation {
+        targets,
+        missing,
+        preservation,
+    }
 }
 
 /// Net new edible units backed by active bills and uncommitted physical inputs.
@@ -459,7 +494,7 @@ pub(super) fn convertible_immediate(
             }
         }
     }
-    let targets = priority_targets(world, res, policy, facts, &reserved, false).0;
+    let targets = priority_targets(world, res, policy, facts, &reserved, false).targets;
     let mut deductions = if emergency {
         std::collections::BTreeMap::new()
     } else {
@@ -547,7 +582,6 @@ pub(super) fn plan(
     policy: &FoodPlan,
     facts: &FoodSummary,
 ) -> Vec<Command> {
-    let preservation = super::preservation::budget(world, res, policy, facts);
     let mut seed_reserve = super::dependencies::seed_inputs(world, res, policy, facts);
     let emergency = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
     if emergency {
@@ -576,7 +610,9 @@ pub(super) fn plan(
             bootstrap_recipes.push((kind, u16::try_from(target).unwrap_or(u16::MAX)));
         }
     }
-    let targets = priority_targets(world, res, policy, facts, &seed_reserve, false).0;
+    let allocation = priority_targets(world, res, policy, facts, &seed_reserve, false);
+    let targets = allocation.targets;
+    let preservation = allocation.preservation;
     let mut wanted = bootstrap_recipes.clone();
     for &kind in &policy.recipes {
         let Some(recipe) = kind.recipe() else {

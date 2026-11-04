@@ -15,7 +15,7 @@ use std::collections::{BTreeMap, BTreeSet};
 pub(super) struct Budget {
     pub targets: BTreeMap<RecipeKind, u16>,
     pub workshops: BTreeMap<RecipeKind, u32>,
-    pub inputs: BTreeMap<ItemKind, u64>,
+    pub missing: BTreeMap<ItemKind, u64>,
 }
 
 pub(super) fn budget(
@@ -23,6 +23,8 @@ pub(super) fn budget(
     res: &SimResources,
     policy: &FoodPlan,
     facts: &FoodSummary,
+    inputs: &mut super::cooking::CookingInputs,
+    headroom: &mut u64,
 ) -> Budget {
     let mut out = Budget::default();
     if !facts.preparing {
@@ -98,15 +100,46 @@ pub(super) fn budget(
             .map_or(1, |food| food.units.max(1));
         let share =
             deficit / count + u64::from(u64::try_from(index).unwrap_or(u64::MAX) < deficit % count);
-        let pieces = share.div_ceil(u64::from(units));
+        let desired = share
+            .div_ceil(u64::from(units))
+            .div_ceil(u64::from(recipe.output.1.max(1)));
+        let output = u64::from(recipe.output.1) * u64::from(units);
+        // Only edible inputs physically left after cooking offset new food. Missing
+        // inputs are new food too; net-zero conversion remains possible at the cap.
+        let charge = |batches: u64| {
+            let physical: u64 = recipe
+                .inputs
+                .iter()
+                .map(|(item, amount)| {
+                    (batches * u64::from(*amount))
+                        .min(super::cooking::input_count(inputs, workshop, *item))
+                        * super::cooking::edible_units(*item, true)
+                })
+                .sum();
+            (batches * output).saturating_sub(physical)
+        };
+        let (mut low, mut high) = (0, desired);
+        while low < high {
+            let mid = low + (high - low).div_ceil(2);
+            if charge(mid) <= *headroom {
+                low = mid;
+            } else {
+                high = mid - 1;
+            }
+        }
+        let batches = low;
+        *headroom = headroom.saturating_sub(charge(batches));
+        let pieces = batches * u64::from(recipe.output.1);
         let existing = crate::runtime::jobs::bills::bill_count(world, res, recipe.output.0);
         let target = u16::try_from(u64::from(existing).saturating_add(pieces)).unwrap_or(u16::MAX);
         out.targets.insert(kind, target);
         out.workshops.insert(kind, workshop);
-        let batches = pieces.div_ceil(u64::from(recipe.output.1.max(1)));
         for &(item, amount) in &recipe.inputs {
-            let entry = out.inputs.entry(item).or_default();
-            *entry = entry.saturating_add(batches.saturating_mul(u64::from(amount)));
+            let needed = batches * u64::from(amount);
+            let missing =
+                needed.saturating_sub(super::cooking::input_count(inputs, workshop, item));
+            *out.missing.entry(item).or_default() += missing;
+            super::cooking::consume_inputs(inputs, workshop, item, needed);
         }
     }
     out
