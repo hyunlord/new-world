@@ -23,7 +23,7 @@ const THEME = preload("res://assets/ui/worldsim_theme.tres")
 const PLAQUE_MIN_WIDTH: float = 560.0
 const LEARNING_PANELS: Dictionary = {"AgentInspectorPanel": "person_selected", "PriorityPanel": "priorities_opened", "RoomPanel": "rooms_opened", "TechPanel": "tech_opened", "NeighboursPanel": "neighbours_opened"}
 ## M-LOOP §1.2d: popup categories — at most one panel per category open at a time.
-const LIST_PANELS: Array[String] = ["ChroniclePanel", "PriorityPanel", "TechPanel", "TeachPanel", "RoomPanel", "NeighboursPanel", "MigrantPanel", "TradePanel", "WorkshopPanel"]
+const LIST_PANELS: Array[String] = ["ChroniclePanel", "PriorityPanel", "TechPanel", "TeachPanel", "RoomPanel", "FieldPanel", "NeighboursPanel", "MigrantPanel", "TradePanel", "WorkshopPanel"]
 const POPUP_PANELS: Array[String] = ["ItemPanel", "CausalPanel", "WhyPanel"]
 var store: Store = Store.new()
 var catalog: Catalog = Catalog.new()

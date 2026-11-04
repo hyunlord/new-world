@@ -48,8 +48,12 @@
       "number": 4,
       "title_key": "LOOP_CH4_TITLE",
       "year_hint_key": "LOOP_CH4_YEAR",
-      "conditions": [],
-      "locked": true,
+      "conditions": [
+        {"id": "field_sown", "fact": "first_field_sown", "text_key": "S1_FIRST_SOWN"},
+        {"id": "field_harvest", "fact": "first_field_harvest", "text_key": "S1_FIRST_HARVEST"},
+        {"id": "cloth", "fact": "first_woven_clothing", "text_key": "S1_CLOTH_LATER"}
+      ],
+      "locked": false,
       "locked_text_key": "LOOP_CH4_LOCKED",
       "reward_text_key": "LOOP_CH4_REWARD",
       "next_preview_key": "LOOP_CH4_NEXT"

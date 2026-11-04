@@ -230,6 +230,8 @@ func _check_trigger(card_def: Dictionary) -> bool:
 func _check_bridge_trigger(read_name: String) -> bool:
 	if _world == null:
 		return false
+	if read_name in ["sowing_window", "harvest_ready"]:
+		return not preload("res://scripts/ui/field_facts.gd").target(_world, read_name).is_empty()
 	match read_name:
 		"tools_below_need":
 			var tool_codes: PackedInt64Array = PackedInt64Array()
@@ -301,6 +303,9 @@ func _collect_trigger_data(card_def: Dictionary) -> Dictionary:
 	var kind: String = str(trigger.get("kind", ""))
 	var lang: String = _current_lang()
 	var card_id: String = str(card_def.get("id", ""))
+	if card_id in ["sowing_window", "harvest_ready"]:
+		data = preload("res://scripts/ui/field_facts.gd").target(_world, card_id)
+		return data
 	if kind == "alert":
 		var alert_id: String = str(trigger.get("alert_id", ""))
 		var causes: Array = _alert_causes(alert_id)
@@ -348,7 +353,7 @@ func _collect_trigger_data(card_def: Dictionary) -> Dictionary:
 					data["technique"] = KnowledgeText.node_name(_locale, knowledge_id)
 					data["learner"] = _find_best_learner(teacher, knowledge_id)
 					data["knowledge"] = knowledge_id
-					# LOOP-D-teach: when the steward is already teaching this knowledge, the card says so.
+					# Preserve an actual existing teaching order; new teaching requires a player choice.
 					var orders: Dictionary = SimReads.read(_world, "get_teach_orders") if _world.has_method("get_teach_orders") else {}
 					var o_ids: Variant = orders.get("ids", PackedInt64Array())
 					var o_know: Variant = orders.get("knowledge", PackedInt64Array())
@@ -542,6 +547,15 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> Var
 	var trigger_data: Dictionary = card.get("trigger_data", {})
 	var result: Variant = null
 	match command:
+		"cmd_set_field_work":
+			var tile := Vector2i(int(trigger_data.get("x", -1)), int(trigger_data.get("y", -1)))
+			var current: Dictionary = preload("res://scripts/ui/field_facts.gd").at(_world, tile)
+			var mode: String = str(option.get("params", "auto"))
+			if current.is_empty() or not bool(current.get("active", false)) or int(current.get("crop", -1)) != int(trigger_data.get("crop", -2)) or str(current.get("mode", "")) == mode:
+				return {"accepted": false, "skipped": true, "reason": "nothing"}
+			if not preload("res://scripts/ui/field_facts.gd").eligible(current, str(card.get("def", {}).get("id", ""))):
+				return {"accepted": false, "skipped": true, "reason": "field_phase_changed"}
+			result = SimReads.mutate(_world, command, [tile.x, tile.y, mode])
 		"cmd_designate_chop":
 			# Dedupe: skip if chop designations already exist.
 			if _has_chop_designations():
@@ -923,7 +937,7 @@ func _migrant_shortage(migrant_count: int, wave_id: int) -> String:
 ## Return the effective recommended option index for a card, overriding the static
 ## data when conditions warrant a different recommendation.
 ## Cards whose need the steward already covers when it is on (LOOP-D-cards).
-const STEWARD_COVERED_CARDS: Array[String] = ["need_food", "need_warmth", "knowledge_risk", "tools_low", "idle_adults", "wolves"]
+const STEWARD_COVERED_CARDS: Array[String] = ["need_food", "need_warmth", "tools_low", "idle_adults", "wolves"]
 
 
 func _steward_on() -> bool:
@@ -945,7 +959,8 @@ func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> i
 	var card_id: String = str(card_def.get("id", ""))
 	var options: Array = card_def.get("options", [])
 	# BASE rules cover wood (2), tools and firewood bills (4), food (5/8),
-	# teaching (6), and defence (7). Idle work can also remain unchanged;
+	# and defence (7). Teaching requires an explicit card choice in Stage 1.
+	# Idle work can also remain unchanged;
 	# opening roles is available but never assigns priorities automatically.
 	if _steward_on() and card_id in STEWARD_COVERED_CARDS:
 		return _steward_option(options, trigger_data)
@@ -990,7 +1005,7 @@ func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> i
 			# pulls both teacher and learner away from chopping.
 			if _alert_active("firewood_low"):
 				for i: int in options.size():
-					if str(options[i].get("command", "")) == "none":
+					if str(options[i].get("command", "")) == "none" and not _option_hidden(options[i], trigger_data):
 						return i
 				return options.size() - 1
 	# Default: the first visible option with the static recommended flag (data can mark one per state).

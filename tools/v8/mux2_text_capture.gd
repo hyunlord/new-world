@@ -1,5 +1,6 @@
 # MUX2 real-scene Korean text inventory and rendered capture at both requested scales.
-# Bridge reads: get_agent_snapshot/get_agent_detail, get_rooms, get_colony_overlay, get_steward.
+# Bridge reads: get_agent_snapshot/get_agent_detail, get_rooms, get_colony_overlay, get_steward;
+# field capture via FieldFacts/SimReads: get_field_tiles, get_crop_defs, get_time_snapshot; direct get_command_log.
 # Mutations only through actual UI defence toggle; optional load_world through SimReads.
 extends SceneTree
 const View = preload("res://scripts/world/colony/view.gd")
@@ -9,6 +10,7 @@ var out: String = "/Users/rexxa/work/mux2-data/ui-text/run-%d" % OS.get_process_
 var inventory: Array[Dictionary] = []
 var causal_histories: Array[Dictionary] = []
 var failures: int = 0
+var field_observation: Dictionary = {}
 func _init() -> void:
 	call_deferred("run")
 func frames(n: int = 5) -> void:
@@ -110,19 +112,104 @@ func wheel_into_view(scroll: ScrollContainer, label: Control, description: Strin
 	check(description+" fully visible after wheel scrolling",false)
 func verify_explanation(tile: Vector2i, source: String) -> void:
 	var causal: Control = main.get_node("UI/CausalPanel")
-	var history: Array = main.get_node("WorldSim").get_tile_causal_history(tile.x,tile.y)
-	causal_histories.append({"source": source, "tile": [tile.x,tile.y], "history": history})
+	var world: Node = main.get_node("WorldSim")
+	var history: Array = world.get_tile_causal_history(tile.x,tile.y)
+	var other: String = str(root.get_node("Locale").call("ltr","UI_CAUSAL_EVENT_OTHER"))
+	var displayed: Array[String] = []
 	for event: Dictionary in history:
 		var rendered: String = str(causal.call("_format_event",event)).replace("\u2060", "")
-		check(source+" event has readable category "+str(event.get("kind", "")),not rendered.ends_with("] ?") and not rendered.contains("UI_CAUSAL_") and not rendered.ends_with(str(root.get_node("Locale").call("ltr","UI_CAUSAL_EVENT_OTHER"))))
-	var has_content: bool = not history.is_empty() or not str(causal.call("wait_text",tile)).is_empty()
+		if not rendered.contains(other):
+			displayed.append(rendered)
+			check(source+" event has readable category "+str(event.get("kind", "")),not rendered.ends_with("] ?") and not rendered.contains("UI_CAUSAL_"))
+	var inspector_mind: Dictionary = main.get_node("UI/AgentInspectorPanel").get("_mind_snapshot") if source == "person" else {}
+	if bool(inspector_mind.get("found",false)):
+		var actual: Array[String] = []
+		for child: Node in (causal.get("_history_container") as Node).get_children():
+			if child is Label and child.is_visible_in_tree():
+				var label: String = child.text.replace("\u2060", "")
+				actual.append(label)
+				check(source+" visible mind label is readable",not label.contains("UI_CAUSAL_") and not label.contains("MIND_") and not label.contains(other))
+		check(source+" mind targets exact live tile",causal.get("_anchor_tile") == tile)
+		check(source+" mind summary displayed",causal.visible and actual.has(str(causal.call("mind_summary",inspector_mind)).replace("\u2060", "")))
+		var locale: Node = root.get_node("Locale")
+		check(source+" candidate heading displayed",actual.has(str(locale.call("ltr","MIND_CANDIDATES"))))
+		var candidates: Array = inspector_mind.get("top3",[])
+		for index: int in mini(3,candidates.size()):
+			var candidate: Dictionary = candidates[index]
+			var expected: String = str(locale.call("ltr","MIND_CANDIDATE_FMT")).format({"rank":index+1,"choice":causal.call("_mind_name",str(candidate.get("name_key",""))),"score":int(candidate.get("score",0))})
+			check(source+" candidate displayed",actual.has(expected.replace("\u2060", "")))
+		var why_not: Dictionary = main.get_node("UI/AgentInspectorPanel").get("_why_not_data")
+		var why_line: String = preload("res://scripts/ui/panels/diagnosis_text.gd").why_not_line(why_not,locale)
+		if not why_line.is_empty():
+			check(source+" blocked candidate reason displayed",actual.has(why_line.replace("\u2060", "")))
+		causal_histories.append({"source":source,"tile":[tile.x,tile.y],"history":history,"mind":inspector_mind,"visible_labels":actual})
+		return
+	var subject: Dictionary = causal.call("_tile_subject",world,tile)
+	var diagnosis: String = ""
+	if not subject.is_empty():
+		diagnosis = preload("res://scripts/ui/panels/diagnosis_text.gd").headline_and_next(world.get_subject_diagnosis(str(subject["kind"]),int(subject["id"])),root.get_node("Locale"))
+	causal_histories.append({"source": source, "tile": [tile.x,tile.y], "history": history, "displayed": displayed, "diagnosis": diagnosis})
+	var has_content: bool = not displayed.is_empty() or not str(causal.call("wait_text",tile)).is_empty() or not diagnosis.is_empty()
 	check(source+" why targets exact live tile",causal.get("_anchor_tile") == tile)
 	check(source+" why matches real content",causal.visible == has_content)
+	var visible_labels: Array[String] = []
+	if causal.visible:
+		for child: Node in (causal.get("_history_container") as Node).get_children():
+			if child is Label and child.is_visible_in_tree():
+				var label: String = child.text.replace("\u2060", "")
+				visible_labels.append(label)
+				check(source+" visible causal label is readable",not label.contains(other) and not label.contains("UI_CAUSAL_") and not label.ends_with("] ?"))
+		if diagnosis.is_empty():
+			for label: String in displayed:
+				check(source+" labeled event is displayed",visible_labels.has(label))
+		else:
+			check(source+" diagnosis is displayed",visible_labels.has(diagnosis.replace("\u2060", "")))
 	if not has_content:
 		var toast: Control = main.get_node("UI/OrderBar").get("_toast_panel")
 		var label: Label = main.get_node("UI/OrderBar").get("_toast")
 		var expected: String = str(root.get_node("Locale").call("ltr","MUX_WHY_EMPTY"))
 		check(source+" empty why shows actual toast",toast.visible and label.text.replace("\u2060", "") == expected)
+func capture_field(world: Node) -> void:
+	var rows: Array[Dictionary] = preload("res://scripts/ui/field_facts.gd").rows(world)
+	if rows.is_empty():
+		return
+	var field: Dictionary = rows[0]
+	for row: Dictionary in rows:
+		if bool(row["active"]) and int(row["phase"]) > 0:
+			field = row
+			break
+	var tile := Vector2i(int(field["x"]), int(field["y"]))
+	var camera: Camera2D = main.get_node("Camera2D") as Camera2D
+	var old_position: Vector2 = camera.position
+	var was_processing: bool = camera.is_processing()
+	var commands: Dictionary = world.call("get_command_log", 0)
+	camera.set_process(false)
+	camera.position = View.tile_centre(tile)
+	camera.reset_smoothing()
+	camera.force_update_scroll()
+	await frames(10)
+	var tag: String = "field-phase-%d-ko-1_0" % int(field["phase"])
+	await capture(tag + "-map")
+	# A tile corner avoids the farmer sprite; selection still traverses real map input.
+	var point: Vector2 = root.get_canvas_transform() * (View.tile_to_world(tile) + Vector2(8, 8))
+	root.warp_mouse(point)
+	await click_point(point)
+	await frames(10)
+	var panel: Control = main.get_node("UI/FieldPanel") as Control
+	check("field map click opens selected inspector", panel.is_visible_in_tree() and panel.get("_tile") == tile)
+	if panel.is_visible_in_tree() and panel.get("_tile") == tile:
+		var label: Label = panel.get("_text") as Label
+		field_observation = {"shot": tag, "field": field, "tick": SimReads.read(world, "get_time_snapshot").get("tick", -1), "inspector_text": label.text}
+		check("field inspector uses requested scale", panel.scale.is_equal_approx(Vector2.ONE))
+		await capture(tag + "-inspector")
+		await click(panel.get("_close") as Control)
+		check("field inspector closes through UI", not panel.is_visible_in_tree())
+	check("field observation sends no commands", world.call("get_command_log", 0) == commands)
+	camera.position = old_position
+	camera.reset_smoothing()
+	camera.force_update_scroll()
+	camera.set_process(was_processing)
+
 func run() -> void:
 	print("MUX2_TEXT_OUTPUT " + out)
 	DirAccess.make_dir_recursive_absolute(out)
@@ -142,6 +229,8 @@ func run() -> void:
 		hud.get("store").set_value("ui_scale",scale)
 		var suffix: String = str(scale).replace(".","_")
 		await capture("hud-"+suffix)
+		if scale == 1.0 and not arguments.is_empty():
+			await capture_field(world)
 		var hover := InputEventMouseMotion.new()
 		hover.position = (hud.get_node("Actions/WhyButton") as Control).get_global_rect().get_center()
 		Input.parse_input_event(hover)
@@ -208,15 +297,42 @@ func run() -> void:
 		var item_tile: Vector2i = Vector2i(-1,-1)
 		for item_index: int in mini(item_xs.size(),item_ys.size()):
 			var candidate: Vector2i = Vector2i(item_xs[item_index],item_ys[item_index])
-			if int(main.get_node("ColonyView/AgentLayer").call("entity_at",View.tile_centre(candidate))) < 0 and int(main.get_node("ColonyView/OrderTool").call("workshop_at",candidate)) < 0:
-				item_tile = candidate
-				break
+			if int(main.get_node("ColonyView/AgentLayer").call("entity_at",View.tile_centre(candidate),true)) >= 0 or int(main.get_node("ColonyView/OrderTool").call("workshop_at",candidate)) >= 0:
+				continue
+			if not preload("res://scripts/ui/field_facts.gd").at(world,candidate).is_empty() or not (main.get_node("UI/CausalPanel").call("_tile_subject",world,candidate) as Dictionary).is_empty():
+				continue
+			var visitors: Node = main.get_node_or_null("ColonyView/VisitorLayer")
+			if visitors != null and (int(visitors.call("caravan_at",View.tile_centre(candidate))) >= 0 or int(visitors.call("wave_at",View.tile_centre(candidate))) >= 0):
+				continue
+			var room_overlay: Node = main.get_node("ColonyView/OverlayLayer/Rooms")
+			if bool(room_overlay.call("is_shown")) and int(room_overlay.call("room_at",candidate)) >= 0:
+				continue
+			item_tile = candidate
+			break
 		if item_tile.x >= 0:
 			var tile: Vector2i = item_tile
-			main.get_node("Camera2D").call("center_on_tile",tile)
+			var item_camera: Camera2D = main.get_node("Camera2D") as Camera2D
+			var camera_processing: bool = item_camera.is_processing()
+			item_camera.set_process(false)
+			# Leave the expanded decision cards visible; frame the item in the free map gutter.
+			var item_screen: Vector2 = root.get_visible_rect().size * Vector2(0.25,0.65)
+			item_camera.position = View.tile_centre(tile) - (item_screen - root.get_visible_rect().size * 0.5) / item_camera.zoom
+			item_camera.reset_smoothing()
+			item_camera.force_update_scroll()
 			await frames(10)
-			await click_point(root.get_canvas_transform()*View.tile_centre(tile))
+			var item_point: Vector2 = root.get_canvas_transform()*View.tile_centre(tile)
+			root.warp_mouse(item_point)
+			await frames(2)
+			var hovered: Control = root.gui_get_hovered_control()
+			var click_evidence: Dictionary = {"source":"item_input", "scale":scale, "tile":[tile.x,tile.y], "point":str(item_point), "hovered":str(hovered.get_path()) if hovered != null else "", "hovered_rect":str(hovered.get_global_rect()) if hovered != null else "", "tool_mode":main.get_node("ColonyView/OrderTool").get("mode")}
+			causal_histories.append(click_evidence)
+			await capture("item-before-click-"+suffix)
+			check("item click point is unobscured by UI",root.gui_get_hovered_control() == null)
+			await click_point(item_point)
 			await frames(10)
+			click_evidence["actual_hover_tile"] = str(main.get_node("ColonyView/OrderTool").get("_hover"))
+			click_evidence["pointer_button_after"] = item_camera.get("_pointer_button")
+			item_camera.set_process(camera_processing)
 			var item_panel: Control = main.get_node_or_null("UI/ItemPanel")
 			check("item inspector opens from dispatched tile selection",item_panel != null and item_panel.visible)
 			if item_panel != null and item_panel.visible:
@@ -230,10 +346,10 @@ func run() -> void:
 				item_panel.hide()
 				main.get_node("UI/CausalPanel").hide()
 		else:
-			print("MUX2_TEXT_NOT_RUN item capture: no real items in supplied world")
+			print("MUX2_TEXT_NOT_RUN item capture: no directly selectable real item tile in supplied world (higher-priority subjects excluded)")
 	var file: FileAccess = FileAccess.open(out.path_join("text-nodes.json"),FileAccess.WRITE)
 	check("inventory writable",file != null)
 	if file != null:
-		file.store_string(JSON.stringify({"nodes":inventory,"causal_histories":causal_histories,"failures":failures,"renderer":DisplayServer.get_name()},"\t"))
+		file.store_string(JSON.stringify({"nodes":inventory,"causal_histories":causal_histories,"field_observation":field_observation,"failures":failures,"renderer":DisplayServer.get_name()},"\t"))
 	print("MUX2_TEXT_DONE failures=%d nodes=%d" % [failures,inventory.size()])
 	quit(1 if failures else 0)

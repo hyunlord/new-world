@@ -184,6 +184,76 @@
       "priority": 14,
       "tags": ["health"],
       "test_only": true
+    },
+    {
+      "id": "sowing_window",
+      "trigger": {
+        "kind": "bridge",
+        "read": "sowing_window"
+      },
+      "title_key": "S1_CARD_SOWING_WINDOW",
+      "body_key": "S1_CARD_SOWING_WINDOW_BODY",
+      "options": [
+        {
+          "text_key": "S1_WORK_NOW",
+          "command": "cmd_set_field_work",
+          "params": "now",
+          "recommended": false
+        },
+        {
+          "text_key": "S1_WORK_PAUSED",
+          "command": "cmd_set_field_work",
+          "params": "paused",
+          "recommended": false
+        },
+        {
+          "text_key": "S1_WORK_AUTO",
+          "command": "cmd_set_field_work",
+          "params": "auto",
+          "recommended": true
+        }
+      ],
+      "default": "none",
+      "expires_hours": 12,
+      "priority": 6,
+      "tags": [
+        "farming"
+      ]
+    },
+    {
+      "id": "harvest_ready",
+      "trigger": {
+        "kind": "bridge",
+        "read": "harvest_ready"
+      },
+      "title_key": "S1_CARD_HARVEST_READY",
+      "body_key": "S1_CARD_HARVEST_READY_BODY",
+      "options": [
+        {
+          "text_key": "S1_WORK_NOW",
+          "command": "cmd_set_field_work",
+          "params": "now",
+          "recommended": false
+        },
+        {
+          "text_key": "S1_WORK_PAUSED",
+          "command": "cmd_set_field_work",
+          "params": "paused",
+          "recommended": false
+        },
+        {
+          "text_key": "S1_WORK_AUTO",
+          "command": "cmd_set_field_work",
+          "params": "auto",
+          "recommended": true
+        }
+      ],
+      "default": "none",
+      "expires_hours": 12,
+      "priority": 6,
+      "tags": [
+        "farming"
+      ]
     }
   ]
 }

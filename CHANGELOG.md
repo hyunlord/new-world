@@ -1,5 +1,16 @@
 # Changelog
 
+## M6b Stage 1 — in progress, 2026-11-04 (not published)
+
+### Added
+- Data-defined emmer/flax crops, physical seed and field jobs, persistent soil and crop failure causes; explicit field controls and read-only state presentation.
+- Format16 cultivation tail with exact published format15 migration, bounded cultivated-food intake fractions and separate seed consumption accounting.
+- Actual expiry-time hungry-member predicate, projected through the existing M6a summary for paired BASE/candidate validation.
+
+### Changed
+- Bound proactive food and seed-consuming cooking commitments, separate fuel conversion from construction logs, and plan a real roofed Storehouse.
+- Base initial field area on measured wild production, annual seasonal consumption and a replacement share; calibration and held-out acceptance remain pending.
+
 ## M6b Stage 0 — stopped, 2026-11-04 (not published)
 
 ### Changed

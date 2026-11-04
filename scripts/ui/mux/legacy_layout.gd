@@ -6,8 +6,8 @@ signal story_size_changed
 
 const MARGIN: float = 12.0
 const GAP: float = 8.0
-const PANELS: Array[String] = ["ItemPanel", "ChroniclePanel", "AgentInspectorPanel", "WorkshopPanel", "PriorityPanel", "TechPanel", "TeachPanel", "RoomPanel", "NeighboursPanel", "MigrantPanel", "TradePanel", "WhyPanel"]
-const CENTERED: Array[String] = ["PriorityPanel", "TechPanel", "TeachPanel", "NeighboursPanel", "MigrantPanel", "TradePanel"]
+const PANELS: Array[String] = ["ItemPanel", "ChroniclePanel", "AgentInspectorPanel", "WorkshopPanel", "PriorityPanel", "TechPanel", "TeachPanel", "RoomPanel", "FieldPanel", "NeighboursPanel", "MigrantPanel", "TradePanel", "WhyPanel"]
+const CENTERED: Array[String] = ["FieldPanel", "PriorityPanel", "TechPanel", "TeachPanel", "NeighboursPanel", "MigrantPanel", "TradePanel"]
 
 var _ui: Node
 var _factor: float = 1.0

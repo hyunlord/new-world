@@ -255,3 +255,20 @@ After Stage 0 is published or stopped, proceed directly to Stage 1 farming and #
 ### D-S0-2 scheduling amendment — 2026-11-04 14:00 KST
 
 The owner restarted the eight-working-hour Stage0 budget at14:00KST on11/04 because no autonomous wakeup occurred. The decision/publication deadline is now22:00KST that day; this supersedes the07:00/15:00 schedule above. Continue through the authorized work in this turn. If the23:00–07:00 night rule requires stopping, explicitly tell the owner that a new "continue" after07:00 is needed; do not imply an installed wakeup scheduler.
+
+### D-S0-2 disposition — stopped, not published
+
+Stage0 fallback is selected at `fd2f6d9f34268d8041144b4b448fe4d7da0a7439`: the generic publication proof is incomplete, so retain the working M-LOOP/M-READ gate and move to Stage1. Remaining work is issue #685. Added tools shrink from408files/88,383physical lines to2files/696lines; the retained relative-contract tests pass, but do not establish full BASE-vs-BASE qualification. No Stage0 publication or deadline extension is claimed.
+
+## S1-CAL-1 — Durable seed must survive the actual seasonal transport path
+
+Before the first candidate calibration, source review found that summer grain expires under the carried-food lifetime before the next spring even when a store preserved it. Use the goal's allowed nonfood emmer_seed, made by a real2grain→2seed recipe, with2seeds sown and10grain+2seed harvested. This preserves netgrain10 and the design's15theoretical edible output. Never reset food age or grant seeds. The steward reserves real conversion inputs and authored discovery material floors; all physical seed owners and accepted conversion outputs count once.
+
+Independent review also found release-only loss on full-map nonfood placement. Seed crafting now waits in its real Working job until atomic output placement succeeds; cancellation retains carried seed for retry. Death after a failed drop records seed_lost and an item-ledger sink. These are concrete conservation fixes, not new gate layers. Their native regressions are under integration validation; no candidate-world or held-out success is claimed.
+
+
+## S1-CAL-2 — Repair observed cap bypasses before spending held-out
+
+Calibration01 at5b2e failed: four extinctions, total KnowledgeLost101 versus BASE1, year3 field intake0/8 and food oversupply acceptance0/8 when extinction cannot score success. Preserve this source and raw evidence. Grain protected for future seeds blocked emergency meals; autonomous stock-gathering used a separate legacy hoard target instead of the active steward food budget; accepted fields could overlap planned housing. Repairs must share physical admission budgets, preserve emergency food acquisition and steward-OFF behaviour, and avoid future construction footprints without destroying player fields. Do not relax bars to fit the failed implementation. O-2 confirmation was requested before any held-out freeze; implementation repair can continue independently.
+
+Owner Stage1 teaching-as-card scope removes default automatic rule6 while retaining historical parsing, planner and explicit teaching commands. This implements the November2 owner decision, not a claim of improved knowledge preservation; the same KnowledgeLost bars remain mandatory. Earlier LOOP failures are evidence and LOOP-R1 is void.

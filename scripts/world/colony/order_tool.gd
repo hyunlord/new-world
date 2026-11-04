@@ -47,7 +47,7 @@ const DRAFT_KEY: Key = KEY_D
 
 ## BUILD places the blueprint kind `build_kind` (M1's HUT mode, same code 3); M3 adds DIG (7) and DECONSTRUCT (8);
 ## M4 adds CLAY (9, clay pits); M5 HUNT (10, click a deer) and HUNT_ZONE (11, a hunt zone rectangle).
-enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT, CLAY, HUNT, HUNT_ZONE, HARVEST }
+enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT, CLAY, HUNT, HUNT_ZONE, HARVEST, FIELD, ERASE_FIELD }
 ## `get_place_preview` shapes: one tile, line, hollow rectangle, filled rectangle.
 const SHAPE_TILE: int = 0
 const SHAPE_LINE: int = 1
@@ -55,6 +55,8 @@ const SHAPE_HOLLOW: int = 2
 const SHAPE_FILLED: int = 3
 
 const AREA_COMMANDS: Dictionary = {
+	Mode.FIELD: "cmd_zone_field",
+	Mode.ERASE_FIELD: "cmd_erase_field",
 	Mode.HARVEST: "cmd_designate_harvest",
 	Mode.CHOP: "cmd_designate_chop",
 	Mode.STOCKPILE: "cmd_add_stockpile",
@@ -67,6 +69,8 @@ const AREA_COMMANDS: Dictionary = {
 	Mode.HUNT_ZONE: "cmd_add_hunt_zone",
 }
 const RECT_COLORS: Dictionary = {
+	Mode.FIELD: Color(0.65, 0.82, 0.40, 0.9),
+	Mode.ERASE_FIELD: Color(0.9, 0.5, 0.35, 0.9),
 	Mode.HARVEST: Color(0.65, 0.82, 0.40, 0.9),
 	Mode.CHOP: Color(0.98, 0.81, 0.24, 0.9),
 	Mode.STOCKPILE: Color(0.85, 0.72, 0.38, 0.9),
@@ -80,6 +84,8 @@ const RECT_COLORS: Dictionary = {
 }
 # The accepted-order toast per command ({count} = trees, tiles, blueprints or cancelled orders).
 const TOAST_KEYS: Dictionary = {
+	"cmd_zone_field": "S1_FIELD_ORDERED",
+	"cmd_erase_field": "S1_FIELD_ERASED",
 	"cmd_designate_harvest": "M6A_TOAST_HARVEST",
 	"cmd_designate_chop": "UI_ORDER_TOAST_CHOP",
 	"cmd_add_stockpile": "UI_ORDER_TOAST_STOCKPILE",
@@ -97,6 +103,9 @@ const GHOST_OK: Color = Color(0.45, 0.95, 0.45, 0.85)
 const GHOST_BAD: Color = Color(0.95, 0.35, 0.3, 0.85)
 ## The hovered tile's frame in an area mode.
 const HOVER: Color = Color(0.96, 0.94, 0.86, 0.85)
+
+signal field_selected(tile: Vector2i)
+var field_crop: String = ""
 
 signal mode_changed(mode: int)
 signal order_sent(command: String, result: Dictionary)
@@ -247,7 +256,10 @@ func area(a: Vector2i, b: Vector2i) -> Dictionary:
 		var orders: Variant = SimReads.mutate(_world_sim, "cmd_cancel_area", [a.x, a.y, b.x, b.y])
 		_finish("cmd_cancel_area", merge_results(orders if orders is Dictionary else {}, hunt if hunt is Dictionary else {}))
 		return _last_result
-	_send(AREA_COMMANDS[mode], [a.x, a.y, b.x, b.y])
+	var arguments: Array = [a.x, a.y, b.x, b.y]
+	if mode == Mode.FIELD:
+		arguments.append(field_crop)
+	_send(AREA_COMMANDS[mode], arguments)
 	return _last_result
 
 
@@ -624,6 +636,9 @@ func click_world(world_pos: Vector2, tile: Vector2i) -> void:
 		var causal: CanvasItem = get_node_or_null("/root/Main/UI/CausalPanel") as CanvasItem
 		if causal != null:
 			causal.visible = false
+		return
+	if not preload("res://scripts/ui/field_facts.gd").at(_world_sim, tile).is_empty():
+		field_selected.emit(tile)
 		return
 	# M-READ: clicking a stockpile zone tile or hearth tile opens the causal panel with diagnosis.
 	var panel: Node = get_node_or_null("/root/Main/UI/CausalPanel")

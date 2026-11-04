@@ -18,6 +18,10 @@ func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_world = get_node("/root/Main/WorldSim")
 	_world.connect("world_reset", _reset)
+	var fields: Node2D = preload("res://scripts/world/colony/field_layer.gd").new()
+	fields.name = "Fields"
+	fields.show_behind_parent = true
+	add_child(fields)
 
 func _reset() -> void:
 	_tick = -1

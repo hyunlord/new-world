@@ -801,3 +801,12 @@ state is `#[serde(skip)]` and excluded from gameplay hashes and identity compari
 | Authoring guide | `docs/v8/read/DIAGNOSIS_AUTHORING.md` | How to add a check, a fact, a subject |
 
 Stage −1 presentation reads native snapshots through SimReads. Current state qualifies task-purpose counts; assignments alone do not imply work or learning progress. `snapshots_invalidated` drops plaque tick guards without a reentrant read, allowing the next normal frame to reflect paused commands. Expiry defaults to no action; founder-role display is passive and only explicit player role selection dispatches priorities. See ADR0056 and the M6b report for behavior identity evidence and remaining attribution limits.
+
+
+### M6b Stage 1 cultivation (implementation under validation)
+
+`rust/crates/sim-core/src/colony/content/defs/crop.rs` defines open crop content loaded from `data/colony/crops.ron`; `colony/cultivation.rs` owns fields, soil, work modes and bounded intake counters. `runtime/cultivation/` handles validated zone commands and daily lifecycle, called from the existing job assignment path. `runtime/jobs/field.rs` and its execution module reuse physical seed ownership, navigation, stable reservations and the existing Haul priority. The mind order key is appended, retaining old encodings.
+
+Food-origin fractions travel through `runtime/food/origin.rs` and the existing atomic ownership/recipe operations. Only `food/meals.rs` books eaten units; sowing has its own conservation sink. `save/legacy_cultivation_v15.rs` freezes the prior body while the current format16 appends cultivation state. This avoids adding positional fields to historical FoodState or ColonyState payloads.
+
+`rust/crates/sim-bridge/src/ffi/cultivation.rs` exposes field/crop columns and explicit zone/erase/work commands. `scripts/world/colony/field_layer.gd` draws read-only phase state; `scripts/ui/panels/field_panel.gd` and `scripts/ui/field_facts.gd` provide ordinary command controls and card facts. The existing diagnosis/request providers use the same native physical field facts. No presentation timer advances crops or sends an expiry command. See [ADR 0058](decisions/0058-physical-cultivation-and-bounded-stewardship.md) and the [Stage 1 design](v8/m6b/S1_DESIGN.md); publication remains gated.

@@ -1,5 +1,19 @@
 # M6b 보고서
 
+Current Stage1 runtime state (2026-11-04): calibration01 gameplay **FAIL**, despite all8 process exits0. Four worlds extinct; KnowledgeLost101 versus BASE1; year3 field-intake target0/8. Root cause investigation and minimal policy repairs ongoing; held-out1520–1551 unused. Actual Godot import twice and strict check exit0:83scripts,76FFIcalls, no script/parse errors. Rendered interaction remains separately pending. Details: S1_DESIGN calibration01 and external raw cohort.
+
+## 현재 상태 — 2026-11-04 낮 작업
+
+**Stage 0 중단·미게시, Stage 1 구현 및 통합 검증 중.** D-S0-2의 기존 gate fallback을 선택했으며 후속 작업은 [#685](https://github.com/hyunlord/new-world/issues/685)에 남겼다. Stage 0 추가 도구는 408개/88,383줄에서 2개/696줄로 줄였다. 전체 목록은 [S0_TOOLING_INVENTORY.md](S0_TOOLING_INVENTORY.md)에 있다. 정리 후 기존 Python suite 573개와 D-S0-1 회귀 29개가 통과했다. generic gate 전체 적격성은 미달 상태를 보존하며 게시하지 않았다.
+
+Stage 1 코딩 전 BASE seed 0–7을 각각 96일 실행했고 모두 실제 exit 0이었다. 연간 야생 생산 실측과 노동·종자·면적 계산은 [S1_DESIGN.md](S1_DESIGN.md)에 기록했다. 원본 약 66.7MiB는 외부 `m6b-data/stage1/base-calibration-20261104`에 있다. 후보는 아직 자연 calibration/held-out 평가 전이며, 1520–1551은 사용하지 않았다. 통합 컴파일의 enum·명령 연결 오류와 기존 fixture 설정을 수정했다. `5b2e0dd6a`까지 core494·engine11·bridge55·probe166 라이브러리 검사, systems578(기존 ignored1), 음식 저장·재개 통합4개 및 전체 타깃 컴파일이 통과했다. 원본 실패와 재실행은 외부 `stage1/integration-01` 로그에 보존했다. 후보 실행·시각 QA·성능·전체 gate·게시를 통과했다고 주장하지 않는다.
+
+올바른 #675 BASE 계측도 0–7×96일 실제 exit0으로 완료했다. 모든 기존 summary 필드가 같고 events·chronicle은 8개 모두 바이트 동일하다. 추가한 지표는 전부0일이며, 후보도0이면 개선 근거로 채택하지 않는다. 원본은 `stage1/base-expiry-calibration-20261104`에 있다.
+
+새 씨앗은 실제 곡물에서 만드는 내구성 아이템이며, 전년 여름→다음 봄 운반 수명 문제를 해결한다. 꽉 찬 지도에서는 제작·취소가 씨앗을 버리지 않고 재시도하며, 사망 때 남은 씨앗은 명시적인 손실과 장부 소비로 기록한다. 이 경계의 단위 검사는 통과했지만 자연 월드 성공은 아직 검증 전이다. Stage1 도구 변경은 새 파일 없이 기존 `mux2_text_capture.gd`에41줄 추가·1줄 변경하여 실제 밭 클릭과 상태창 캡처를 보강한 것뿐이며, Godot 실행은 아직 NOT_RUN이다.
+
+현재 게시 SHA와 BASE0는 여전히 `2f6993009ddb600e9249c28f9768a1a5252c8821`이다. 아래 과거 작업 기록은 당시 실패와 한계를 포함해 보존한다.
+
 ## Stage −1 게시 확정 기록 (Stage 0 작업 중 추가)
 
 2026-11-02 10:45:18 UTC에 [2f6993009ddb600e9249c28f9768a1a5252c8821](https://github.com/hyunlord/new-world/commit/2f6993009ddb600e9249c28f9768a1a5252c8821)을 `v8/wip` 다음 `v8/main`에 fast-forward하고 두 ref와 review ref의 같은 SHA를 확인했다. **BASE0는 이 SHA**다. 아래 p8·이전 후보 기록은 당시 상태 그대로 보존한다. 이 후속 문서가 포함될 Stage 0 커밋은 별도 검증 대상이다.
@@ -883,3 +897,10 @@ p134 전체 Python 실제 종료1(2,666개/4,328.222초, 오류1·skip6)의 유�
 D-S0-1은 후보 KnowledgeLost수≤BASE수와 후보 생존≥BASE생존−2(전원 생존이면 founders−2)를 적용한다. 이벤트/horizon 검증은 유지했다. 수정 전 RED, 수정 후 집중29테스트 PASS. 기존573개 Python case import discovery 오류0은 실제 전체 suite 실행을 뜻하지 않는다. p137의2,673테스트/10native명령 성공은 당시 개발 증거로만 보존하며, 이번 generic gate 통과나 게시로 승격하지 않는다. BASE-vs-BASE 전체 PASS와 실제 고의 gameplay 결함 검출은 미완료다.
 
 Stage−1 게시 SHA `2f6993009ddb600e9249c28f9768a1a5252c8821`은 유지한다. Stage1 농경·#674/#675·#684 산수와 BASE 측정으로 즉시 진행하며 held-out1520–1551은 동결 전 사용하지 않는다.
+
+
+### Stage1 calibration01 presentation verification
+
+Using the actual pinned5b2e colony save at seed1/day26 12:01, existing windowed text capture completed exit0 with failures0/nodes1565, zero NOT_RUN and zero script errors (`integration-01/field-capture-06.log`, run-24399). Real map click opened the Growing field inspector; KOscale1, close and no added native commands passed. Both UI scales retain person/room/item explanation and visible-label checks. Earlier36→3→1 failures remain recorded; causes were stale raw-vs-curated explanation expectations and an actual decision-card obstruction of the selected map point. The capture now frames a visible map area without bypassing normal input. Independent images-only review recognized wheat cultivation, Growing state and sowing choices; it distinguished status labels from unobserved continuous work. Soil units are now consistently expressed /1000. This is presentation evidence on the cal01 simulation source, not final-candidate gameplay or held-out acceptance.
+
+Stage1 tools change remains one existing file: `tools/v8/mux2_text_capture.gd`,128added/12removed, net116lines (355total). No new observer/audit/matrix/receipt layer or harness. Extensions address actual field-coverage, filtered-history and input-obstruction failures. Source-generated field UID files came from real Godot import. Final candidate must repeat relevant rendered/command validation after its bridge build.

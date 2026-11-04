@@ -6,7 +6,7 @@
 #   get_terrain_snapshot, get_activity_snapshot, get_porter_snapshot, get_settlement_relations, get_colony_versions,
 #   get_trees, get_colony_overlay, get_workshops, get_work_priorities, get_recipes, get_space, get_rooms, get_tech,
 #   get_teach_orders, get_knowledge_waits, get_story, get_animals, get_drafted, get_neighbours (GETTERS);
-#   get_tile_causal_events;
+#   get_tile_causal_events; get_field_tiles, get_crop_defs (cached read-only cultivation/catalog projections);
 #   advance_ticks, reset_world, reset_world_stress, on_building_placed, cmd_designate_chop, cmd_designate_chop_tiles,
 #   cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint, cmd_designate_quarry,
 #   cmd_add_bill, cmd_remove_bill, cmd_set_bill_mode, cmd_move_bill, cmd_set_bill_suspended,
@@ -14,6 +14,7 @@
 #   cmd_set_room_role, cmd_designate_clay, cmd_order_teach, cmd_cancel_teach, cmd_draft, cmd_undraft_all,
 #   cmd_draft_move, cmd_draft_attack, cmd_draft_attack_person, cmd_designate_hunt, cmd_add_hunt_zone, cmd_cancel_hunt,
 #   cmd_set_dress_order, cmd_accept_migrants, cmd_decline_migrants, cmd_trade, save_world, load_world (MUTATORS);
+#   cmd_zone_field, cmd_erase_field, cmd_set_field_work (ordinary player MUTATORS; no expiry dispatch);
 #   signal world_reset.
 class_name SimReads
 extends Node
@@ -33,6 +34,7 @@ const GETTERS: Array[String] = [
 	"get_world_info", "get_terrain_snapshot",
 	"get_activity_snapshot", "get_porter_snapshot", "get_settlement_relations",
 	"get_colony_versions", "get_trees", "get_colony_overlay",
+	"get_field_tiles", "get_crop_defs",
 	# M2: workshops with bills and shelf, the adults' work priorities, the recipe table.
 	"get_workshops", "get_work_priorities", "get_recipes",
 	# M3: built space (walls, doors, floors, bedrolls, dug tiles) and rooms.
@@ -64,6 +66,7 @@ const MUTATORS: Array[String] = [
 	# M3 orders (walls/doors/floors/bedrolls by line or rectangle, dig, deconstruct, room roles).
 	"cmd_place_line", "cmd_place_rect", "cmd_designate_dig", "cmd_designate_deconstruct", "cmd_set_room_role",
 	# M4 orders (clay pits, apprenticeship).
+	"cmd_zone_field", "cmd_erase_field", "cmd_set_field_work",
 	"cmd_designate_harvest", "cmd_designate_clay", "cmd_order_teach", "cmd_cancel_teach",
 	# M5 orders (draft, hunt, the standing dress order).
 	"cmd_draft", "cmd_undraft_all", "cmd_draft_move", "cmd_draft_attack", "cmd_draft_attack_person",

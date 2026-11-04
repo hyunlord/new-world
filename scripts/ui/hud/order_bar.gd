@@ -57,15 +57,19 @@ const CLAY_MODE: int = 9
 const HUNT_MODE: int = 10
 const HUNT_ZONE_MODE: int = 11
 const HARVEST_MODE: int = 12
+const FIELD_MODE: int = 13
+const ERASE_FIELD_MODE: int = 14
 const DIG_MENU: Array[Dictionary] = [
 	{"mode": QUARRY_MODE, "key": "UI_ORDER_QUARRY", "hotkey": KEY_1, "icon": "icon_quarry"},
 	{"mode": CLAY_MODE, "key": "UI_ORDER_CLAY", "hotkey": KEY_2, "icon": "icon_dig"},
 	{"mode": HUNT_MODE, "key": "M5_ORDER_HUNT", "hotkey": KEY_3, "icon": "icon_hunt", "hint": "M5_HINT_HUNT"},
 	{"mode": HUNT_ZONE_MODE, "key": "M5_ORDER_HUNT_ZONE", "hotkey": KEY_4, "icon": "icon_hunt", "hint": "M5_HINT_HUNT_ZONE"},
 	{"mode": HARVEST_MODE, "key": "M6A_ORDER_HARVEST", "hotkey": KEY_5, "icon": "icon_chop", "hint": "UI_ORDER_HINT_AREA"},
+	{"mode": FIELD_MODE, "key": "S1_FIELD_TOOL", "hotkey": KEY_6, "icon": "icon_chop", "hint": "UI_ORDER_HINT_AREA"},
+	{"mode": ERASE_FIELD_MODE, "key": "S1_ERASE_TOOL", "hotkey": KEY_7, "icon": "icon_remove", "hint": "UI_ORDER_HINT_AREA"},
 ]
 ## The modes of the F7 submenu (the F7 button stays pressed in any of them).
-const DIG_MODES: Array[int] = [QUARRY_MODE, CLAY_MODE, HUNT_MODE, HUNT_ZONE_MODE, HARVEST_MODE]
+const DIG_MODES: Array[int] = [QUARRY_MODE, CLAY_MODE, HUNT_MODE, HUNT_ZONE_MODE, HARVEST_MODE, FIELD_MODE, ERASE_FIELD_MODE]
 const BAR_BOTTOM: float = 1080.0 - 12.0
 const ACTIVE: Color = Color("e8c46e")
 const TOAST_SECONDS: float = 2.0
@@ -99,6 +103,9 @@ var _rooms: Node = null
 ## M4: the F7 submenu.
 var _dig_menu: PanelContainer
 var _dig_buttons: Array[Button] = []
+var _crop_menu: PopupMenu
+var _crop_names: Array[String] = []
+var _field_panel: PanelContainer
 
 
 func _loc(key: String) -> String:
@@ -157,9 +164,16 @@ func _ready() -> void:
 	_toast_panel.visible = false
 	_tool = get_node_or_null("/root/Main/ColonyView/OrderTool")
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
+	_crop_menu = PopupMenu.new()
+	add_child(_crop_menu)
+	_crop_menu.index_pressed.connect(_choose_crop)
+	_field_panel = preload("res://scripts/ui/panels/field_panel.gd").new()
+	_field_panel.name = "FieldPanel"
+	get_parent().add_child.call_deferred(_field_panel)
 	if _tool != null:
 		_tool.connect("mode_changed", _on_mode_changed)
 		_tool.connect("order_sent", _on_order_sent)
+		_tool.connect("field_selected", Callable(_field_panel, "open_tile"))
 	_rooms = get_node_or_null("/root/Main/ColonyView/OverlayLayer/Rooms")
 	if _rooms != null:
 		_rooms.connect("toggled", _on_rooms_toggled)
@@ -315,6 +329,9 @@ func choose_dig(index: int) -> void:
 	if index < 0 or index >= DIG_MENU.size():
 		return
 	_dig_menu.visible = false
+	if int(DIG_MENU[index]["mode"]) == FIELD_MODE:
+		_open_crops()
+		return
 	select_mode(int(DIG_MENU[index]["mode"]))
 
 
@@ -631,3 +648,18 @@ func _menu_shortcut(index: int) -> String:
 	var rows: Array[Dictionary] = EconomyText.Content.menu()
 	var slot: int = int(rows[index].get("shortcut_slot", -1)) if index >= 0 and index < rows.size() else -1
 	return MENU_LABELS[slot] if slot >= 0 and slot < MENU_LABELS.size() else ""
+
+
+func _open_crops() -> void:
+	_crop_menu.clear()
+	_crop_names.clear()
+	for definition: Dictionary in preload("res://scripts/ui/field_facts.gd").definitions(_world_sim):
+		_crop_names.append(str(definition["id"]))
+		_crop_menu.add_item(_loc(str(definition["name_key"])))
+	_crop_menu.popup_centered()
+
+func _choose_crop(index: int) -> void:
+	if index < 0 or index >= _crop_names.size() or _tool == null:
+		return
+	_tool.set("field_crop", _crop_names[index])
+	select_mode(FIELD_MODE)

@@ -116,6 +116,11 @@ func _load_legacy_goals() -> void:
 
 func update_facts(facts: Dictionary) -> void:
 	_facts = facts.duplicate(true)
+	var world: Node = get_node_or_null("/root/Main/WorldSim")
+	if world != null and world.has_method("get_field_tiles"):
+		var fields: Dictionary = SimReads.read(world, "get_field_tiles")
+		_facts["first_field_sown"] = int(fields.get("sowings", 0)) > 0
+		_facts["first_field_harvest"] = int(fields.get("harvests", 0)) > 0
 	_check_completion()
 	_refresh()
 

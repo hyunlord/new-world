@@ -67,6 +67,7 @@ Top-level fields:
 | `pressures` | Array[Dictionary] | pressure definitions |
 | `animals` | Array[Dictionary] | animal definitions |
 | `plants` | Array[Dictionary] | plant identity and harvest-output metadata |
+| `crops` | Array[Dictionary] | cultivation definitions; identical rows to get_crop_defs |
 | `knowledge` | Array[Dictionary] | knowledge node metadata |
 | `materials` | Array[Dictionary] | bundled material presentation metadata; JSON rows contain id, name_key, category, raw_id |
 
@@ -101,6 +102,24 @@ Nested fields (the literal-key checker flattens these into the same union; they 
 | `work_ticks` | int | recipe authored work ticks |
 | `skill_code` | int | recipe mechanical skill code |
 | `lane` | String | knowledge node lane name |
+
+Additional nested crop-row fields (under `crops`, not top-level):
+
+| key | type | scope and meaning |
+|---|---|---|
+| `seed_item` | int | required physical input item code |
+| `seeds_per_tile` | int | input pieces consumed per committed sowing |
+| `yield_items` | PackedInt64Array | harvest output item codes |
+| `yield_counts` | PackedInt64Array | corresponding tended harvest pieces |
+| `window_seasons` | PackedInt64Array | planting interval seasons 0–3 |
+| `window_start_days` | PackedInt64Array | inclusive season-day starts |
+| `window_end_days_exclusive` | PackedInt64Array | exclusive season-day ends |
+| `growth_days` | int | whole days to maturity |
+| `initial_fertility` | int | initial soil fertility |
+| `min_fertility` | int | minimum soil required to sow |
+| `frost_sensitive` | bool | winter destroys established crop |
+| `fertility_cost` | int | depletion per committed harvest |
+| `fallow_recovery_per_day` | int | daily fertility recovery while fallow |
 
 ## Clock and world
 
@@ -1867,3 +1886,77 @@ On-demand diagnosis for a stockpile, hearth or room. `kind` is `"stockpile"` (id
 | `ticks` | PackedInt64Array | tick of each returned row |
 | `kinds` | PackedStringArray | command name of each returned row |
 | `accepted` | PackedByteArray | 1 when the command was accepted |
+
+
+## M6b cultivation
+
+These reads project persisted field state and the selected crop catalog without simulation writes.
+`get_field_tiles` and `get_crop_defs` are zero-argument SimReads getters. Their commands use
+SimReads.mutate only on explicit player actions. A card expiry issues no command.
+
+### `get_field_tiles`
+`get_field_tiles() -> Dictionary`. Parallel tile columns follow BTreeMap tile order, including
+inactive retained crops. Erasing a designation preserves its crop and soil. No UI timer grows crops.
+
+| key | type | meaning |
+|---|---|---|
+| `schema_version` | int | 1 |
+| `tick` | int | current simulation tick |
+| `xs` | PackedInt64Array | tile x |
+| `ys` | PackedInt64Array | tile y |
+| `owners` | PackedInt64Array | owning settlement IDs |
+| `crop_codes` | PackedInt64Array | selected crop identity codes |
+| `phases` | PackedInt64Array | 0 untilled, 1 tilled, 2 sown, 3 growing, 4 ripe, 5 harvested, 6 fallow |
+| `fertility_permille` | PackedInt64Array | retained soil fertility; definition initial value when absent |
+| `work_modes` | PackedStringArray | auto, now, paused |
+| `active` | PackedByteArray | designation active; erased crop may still exist |
+| `workable` | PackedByteArray | canonical uncovered outdoor soil predicate; not a worker/seed feasibility claim |
+| `sowing_open` | PackedByteArray | canonical crop/calendar planting window |
+| `planted_days` | PackedInt64Array | planted day for sown/growing, otherwise -1 |
+| `growth_days` | PackedInt64Array | elapsed growth for Growing, otherwise 0 |
+| `growth_required_days` | PackedInt64Array | crop definition maturity duration |
+| `sowings` | int | persisted committed sowing count |
+| `harvests` | int | persisted committed harvest count |
+
+### `get_crop_defs`
+`get_crop_defs() -> Dictionary`. `rows` are selected catalog definitions; nested row keys below
+are flattened only for documentation checking. Content codes are identities, never row offsets.
+
+| key | type | scope and meaning |
+|---|---|---|
+| `schema_version` | int | outer DTO version 1 |
+| `registry_revision` | String | outer selected catalog fingerprint |
+| `rows` | Array[Dictionary] | outer immutable crop rows |
+| `code` | int | crop row identity code |
+| `id` | String | crop row canonical ID |
+| `name_key` | String | crop localization key |
+| `category` | String | presentation fallback category |
+| `seed_item` | int | required physical input item code |
+| `seeds_per_tile` | int | input pieces consumed per committed sowing |
+| `yield_items` | PackedInt64Array | harvest output item codes |
+| `yield_counts` | PackedInt64Array | corresponding tended harvest pieces |
+| `window_seasons` | PackedInt64Array | planting interval seasons 0–3 |
+| `window_start_days` | PackedInt64Array | inclusive season-day starts |
+| `window_end_days_exclusive` | PackedInt64Array | exclusive season-day ends |
+| `growth_days` | int | whole days to maturity |
+| `initial_fertility` | int | initial soil fertility |
+| `min_fertility` | int | minimum soil required to sow |
+| `frost_sensitive` | bool | winter destroys established crop |
+| `fertility_cost` | int | depletion per committed harvest |
+| `fallow_recovery_per_day` | int | daily fertility recovery while fallow |
+| `knowledge` | int | required practitioner knowledge code, -1 when absent |
+
+### `cmd_zone_field`
+`cmd_zone_field(x0, y0, x1, y1, crop_id: String) -> Dictionary` resolves the selected catalog ID,
+clips the rectangle like existing colony orders, and submits ZoneField. The runtime validates
+bare outdoor soil and ownership; it does not instantly till or sow. Returns accepted/count/reason.
+
+### `cmd_erase_field`
+`cmd_erase_field(x0, y0, x1, y1) -> Dictionary` submits EraseField. It deactivates work while
+retaining established crops and soil; it does not refund seeds. Returns accepted/count/reason.
+
+### `cmd_set_field_work`
+`cmd_set_field_work(x, y, mode: String) -> Dictionary` accepts auto/now/paused and submits
+SetFieldWork. Now prioritizes actual phase work under its normal physical prerequisites;
+paused suspends work; auto returns to ordinary scheduling. It never instantly seeds or harvests.
+Inactive/covered/stale card targets are skipped before dispatch. Returns accepted/count/reason.
