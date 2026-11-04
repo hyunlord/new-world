@@ -136,7 +136,8 @@ pub(super) fn plan(
         if immediate_gap == 0 && winter_gap == 0 && !seed_needed {
             continue;
         }
-        let diversity = !urgent
+        let diversity = immediate_gap > 0
+            && !urgent
             && food.is_some_and(|food| {
                 food.groups
                     .iter()

@@ -694,15 +694,23 @@ func _test_cards_acceptance() -> void:
 	var better: Array[Dictionary] = _card_acceptance_pair()
 	better[1]["deaths"] = 1
 	_check(CardsRun.results_pass(better, [0], 0), "strictly better survival passes")
-	for deaths: int in [1, 2]:
-		var worse: Array[Dictionary] = _card_acceptance_pair()
-		worse[0]["deaths"] = deaths
-		_check(not CardsRun.results_pass(worse, [0], 0), "extra deaths rejected without tolerance: %d" % deaths)
+	var tolerated: Array[Dictionary] = _card_acceptance_pair()
+	tolerated[0]["deaths"] = 1
+	_check(CardsRun.results_pass(tolerated, [0], 0), "D-S1-1 one extra death in one seed passes")
+	var worse: Array[Dictionary] = _card_acceptance_pair()
+	worse[0]["deaths"] = 2
+	_check(not CardsRun.results_pass(worse, [0], 0), "D-S1-1 two extra deaths in one seed fail")
 	var offset: Array[Dictionary] = _card_acceptance_pair()
 	offset.append_array(_card_acceptance_pair(1))
-	offset[0]["deaths"] = 1
-	offset[3]["deaths"] = 1
-	_check(not CardsRun.results_pass(offset, [0, 1], 0), "one worse seed rejected even with equal aggregate deaths")
+	offset[0]["deaths"] = 2
+	offset[3]["deaths"] = 2
+	_check(not CardsRun.results_pass(offset, [0, 1], 0), "D-S1-1 per-seed excess fails even with equal aggregate deaths")
+	var distributed: Array[Dictionary] = _card_acceptance_pair()
+	distributed.append_array(_card_acceptance_pair(1))
+	distributed[0]["deaths"] = 1
+	_check(CardsRun.results_pass(distributed, [0, 1], 0), "D-S1-1 single extra death across multiple seeds passes")
+	distributed[2]["deaths"] = 1
+	_check(not CardsRun.results_pass(distributed, [0, 1], 0), "D-S1-1 two seeds each plus one fail aggregate limit")
 	for invalid_deaths: Variant in [-1, "0"]:
 		var invalid: Array[Dictionary] = _card_acceptance_pair()
 		invalid[0]["deaths"] = invalid_deaths

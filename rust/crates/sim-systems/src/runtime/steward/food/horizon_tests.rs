@@ -170,6 +170,65 @@ fn food_cap_fixture(stored: u16, reserve_roots: bool) -> (World, SimResources, F
 }
 
 #[test]
+fn winter_only_gap_does_not_admit_non_durable_diversity_forage() {
+    for stored in [0, 5] {
+        let (world, mut res, mut policy) = fixture();
+        policy.reserve_days = 2;
+        policy.cultivation = None;
+        let roots = ItemKind::from_name("roots").expect("roots");
+        if stored > 0 {
+            crate::runtime::food::items::create_ground(
+                &mut res,
+                (7, 7),
+                ItemSpec::raw(roots, None),
+                stored,
+                14,
+                crate::runtime::food::items::FoodSource::Debug,
+            )
+            .expect("physical fresh food");
+        }
+        let catalog = sim_core::colony::content::installed_or_bundled();
+        let species = catalog.plant_by_name("berry_bush").expect("berry plant");
+        res.food.plants.insert(
+            (9, 8),
+            PlantState {
+                species,
+                units_left: 4,
+                next_regrow_day: u32::MAX,
+            },
+        );
+        assert!(crate::runtime::food::plants::harvestable(&res, (9, 8)));
+        let facts = super::summary(&world, &res, &policy);
+        assert_eq!(super::harvest::targets(&policy, &facts), (5, 15));
+        assert_eq!(facts.usable_units, u64::from(stored));
+        assert_eq!(facts.winter_units, u64::from(stored));
+        assert!(!facts.groups.contains("fruit"));
+        assert!(super::dependencies::ingredient_deficits(&world, &res, &policy, &facts).is_empty());
+        assert!(super::dependencies::seed_inputs(&world, &res, &policy, &facts).is_empty());
+        let expected = if stored == 0 {
+            vec![Command::DesignateHarvest {
+                x0: 9,
+                y0: 8,
+                x1: 9,
+                y1: 8,
+            }]
+        } else {
+            Vec::new()
+        };
+        assert_eq!(
+            super::harvest::plan(&world, &res, &policy, &facts),
+            expected,
+            "stored={stored}; winter-only demand must not admit berries solely for fruit diversity"
+        );
+        res.steward.vetoes.insert(
+            sim_core::colony::steward::Target::Tile(9, 8),
+            res.current_tick + res.ticks_per_day,
+        );
+        assert!(super::harvest::plan(&world, &res, &policy, &facts).is_empty());
+    }
+}
+
+#[test]
 fn food_cap_stops_diversity_at_target_but_keeps_a_real_whole_plant_gap() {
     // One warm adult's two-day target is ceil(2.4 * 2) = 5 food units.
     for stored in [5, 4] {

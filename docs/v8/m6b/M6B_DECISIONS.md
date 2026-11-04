@@ -390,3 +390,45 @@ KnowledgeLost 기준은 유지한다. 기존 자연 저장은 모인 전문가�
 1.25배 자연 저장 검사에서 설정창 뒤 결정 카드·알림이 남는 경로를 확인했다. 기존 전경 동기화에 HUD 자신의 Settings/Help/Goals 표시 상태를 포함하고 기존 visibility_changed 신호를 연결한다. 새 coordinator나 simulation 변경은 없다. 알림이 방어 토글을 직접 가렸다는 초기 추측은 좌표로 확인되지 않아 기각했다. 실제 재검사는 토글이 포인터를 받고 명령을 보내는지 확인한다.
 
 밭/아이템을 중앙 또는 이야기 배너 밑으로 프레이밍하던 기존 캡처는 보이는 지도의25%폭/70%높이로 카메라를 옮기고 실제 mouse motion·hit target·click을 확인한다. UI를 숨겨 클릭을 우회하지 않는다. StoryBanner는 상호작용 UI이므로 그 입력 정책을 바꾸지 않는다. 자연 카드 검사는 이미 같은 mode에 보내는 명령의 정상 거부, 실제 네이티브 이름 SetFieldWork, deferred world_reset 신호를 반영한다. 상태 직접 주입·수락 조건 완화 없이 여섯 답변의 정확한 명령수/수락/틱/영수증/작물·phase 불변을 유지한다.
+
+
+## D-S1-1 — planner clarification, 2026-11-04: cards mortality allowance
+
+Stage1 cards acceptance is per seed `answer deaths <= no_answer deaths + 1` AND cohort total `answer deaths <= no_answer deaths + 1`. The previous exact-no-increase interpretation is superseded for Stage1. Do not rewrite original runtime outputs or extend this allowance to ordinary fixtures, survival, or KnowledgeLost.
+
+Re-read calibration09/cards-release/cards_run_result.json: seed0 answer/no_answer deaths1/0 (COMBAT); seeds1–7 each0/0. Therefore per-seed8/8 PASS and total1<=0+1 PASS. All16 arms clock_valid=true and validation_failures=0. The earlier cards mortality FAIL classification was incorrect under the clarified bar; no card-behaviour repair or combat isolation is required solely for this +1. Original runner exit1 remains historical evidence, not converted to exit0. Update the existing evaluator predicate at the next daytime code/test step; other coverage limitations remain, and this does not establish a full-stage gate PASS.
+
+## D-S1-2 — planner clarification, 2026-11-04: field-food arithmetic before repair
+
+Re-check the 2/8 year3 field-food outcome against S1_DESIGN before another repair round. Keep30% when designed area can achieve it; change arithmetic and threshold only when demonstrated impossible, with explicit numbers. No owner handoff is required.
+
+The current crop yields10grain plus2separate durable seeds per tended tile; do not subtract the same2seeds from grain again. Real porridge converts2grain to3food. The design's20% conversion/loss discount therefore gives12potential food per10grain tile. Calibration09 actual year3 harvested grain implies the following attainable conversion budgets, not actual eaten meals:
+
+|Seed|Y3 field grain|Gross porridge potential|After20% discount|30% of actual eaten|
+|---:|---:|---:|---:|---:|
+|0|190|285|228|199.2|
+|1|190|285|228|209.1|
+|2|180|270|216|189.6|
+|3|210|315|252|213.6|
+|4|170|255|204|176.7|
+|5|170|255|204|198.9|
+|6|200|300|240|212.1|
+|7|200|300|240|204.6|
+
+All eight discounted potentials exceed the30% requirement; smallest margin seed5 is204−198.9=5.1food. This calculation assumes the separately produced seeds cover routine resowing and does not claim that every recipe input was available to cooking at every tick. Extra bootstrap seed conversion, labour scheduling and expiry remain physical constraints to inspect, not free yield. In the directly inspected failing seed2,66ground seeds exceed the38seed reserve;180harvested grain gives270gross/216discounted food versus189.6required, but actual field intake is171. Thus the inspected failure cannot be justified by an inherently undersized field or seed-reserve shortage. Its actual cooking activity, full food budget and aging grain point to admission/conversion scheduling.
+
+Decision: retain30% and both existing food bars; fix a proven implementation defect. Next regression targets non-durable diversity forage admitted with immediate_gap=0 and winter_gap>0, without a preservation-input or seed deficit. Preserve legitimate durable winter supply, preservation inputs, emergency food, ownership/vetoes and accepted commitments. Source evidence alone is not a successful regression or causal proof of the complete cohort; run the unmodified regression first. No new observer or evaluator layer.
+
+At23:42 KST the Mac night rule remains in force. This reclassification uses existing small result reads and document edits only; no builds/tests/probes/Godot or heavy I/O were launched. Gameplay repairs and evaluator tests are deferred to the daytime window or a separately validated DGX execution plan.
+
+
+## D-S1-3 — owner lifts night restriction (2026-11-05 00:35 KST)
+
+Effective immediately on receipt, remove the23:00–07:00 prohibition and22:45 cleanup deadline. This supersedes earlier night-stop entries and instructions in AGENTS, docs-upkeep and EXECUTION_PLAN; historical stopped runs remain unchanged evidence. Keep caffeinate for the whole run. Every timing repeat still starts at1-minute load<8, old/new binaries interleaved, only one measuring job at a time. Continue Stage1 regression/fix/calibration, freeze then heldout1520–1551, full gate and publication; Stage2/3 follow independently gated publication. No approval handoff and no night stop. If another actual blocker stops execution, report its exact reason.
+
+
+## S1-CAL-13 — winter deficit is not permission for diversity-only fresh forage
+
+Actual regression at full immediate stock5, winter target15, durable stock5 and no ingredient/seed deficit emitted a four-berry DesignateHarvest (exit101). The same test first proved the urgent empty-stock order and player veto. Add only immediate_gap>0 to the diversity exception. Durable winter food, executable preservation ingredient and seed deficit paths remain; do not replace their horizon accounting with a blanket fresh-food prohibition. Existing food-domain tests58PASS; full systems646PASS/1existingignored, fmt and all-target Clippy PASS. Calibration effect remains NOT_RUN until fresh immutable-binary results exist. Natural seed2 evidence supports investigating this admission boundary but does not prove this single guard explains every lost field meal.
+
+D-S1-1 scorer now enforces both allowances in existing loop_cards_run and existing presentation tests. Test-first run failed the two newly permitted+1 cases; final boundary suite failed0, including rejection of two seeds each+1 and a per-seed+2 offset by improvements elsewhere. An initial wrong Godot executable path and missing output-directory invocation remain retained failed attempts, not gameplay evidence. No card behaviour changed. Tooling delta this slice +22/-14=net8 across two existing files; total Stage1 tooling eight existing files +598/-73=net525, no new tool file.

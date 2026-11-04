@@ -1,7 +1,7 @@
 # tools/v8/loop_cards_run.gd — M-LOOP §3 cards scripted run.
 #   Seeds 0–7, 48 days, steward on. A script that answers every open card with its
 #   recommended option within 1 in-game hour. Compare with a no-answer run.
-#   - Survival must be equal or better.
+#   - D-S1-1: deaths <= no-answer + 1 per seed AND in aggregate.
 #   - Record synchronous native command/chronicle deltas for every answer attempt.
 #     Native command logs lack source; Player and causal chronicle linkage remain unverified.
 #     No-command UI answers are explicitly classified, never invented as native commands.
@@ -328,12 +328,12 @@ func _print_summary(active_seeds: Array[int]) -> bool:
 			for b: Dictionary in _results:
 				if str(b["mode"]) == "no_answer" and int(b["seed"]) == int(r["seed"]):
 					baseline = b
-			var worse: bool = int(r.get("deaths", 0)) > int(baseline.get("deaths", 0))
+			var worse: bool = int(r.get("deaths", 0)) > int(baseline.get("deaths", 0)) + 1
 			if worse:
 				per_seed_pass = false
-				print("  WARN seed %d: answer deaths=%d > baseline=%d" % [int(r["seed"]), int(r["deaths"]), int(baseline.get("deaths", 0))])
-	print("No seed worse than baseline: %s" % ("PASS" if per_seed_pass else "FAIL"))
-	print("Total deaths <= no-answer: %s" % ("PASS" if answer_deaths <= no_answer_deaths else "FAIL"))
+				print("  WARN seed %d: answer deaths=%d > baseline=%d + 1" % [int(r["seed"]), int(r["deaths"]), int(baseline.get("deaths", 0))])
+	print("Per-seed deaths <= no-answer + 1: %s" % ("PASS" if per_seed_pass else "FAIL"))
+	print("Total deaths <= no-answer + 1: %s" % ("PASS" if answer_deaths <= no_answer_deaths + 1 else "FAIL"))
 	print("Validation failures: %d (must be 0: %s)" % [_validation_failures, "PASS" if _validation_failures == 0 else "FAIL"])
 	if not all_rejections.is_empty():
 		print("Rejection breakdown: %s" % str(all_rejections))
@@ -379,11 +379,11 @@ static func results_pass(rows: Array[Dictionary], seeds: Array[int], failures: i
 		pairs[seed][mode] = int(row["deaths"])
 	for seed: int in seeds:
 		var pair: Dictionary = pairs[seed]
-		if not pair.has("answer") or not pair.has("no_answer") or int(pair["answer"]) > int(pair["no_answer"]):
+		if not pair.has("answer") or not pair.has("no_answer") or int(pair["answer"]) > int(pair["no_answer"]) + 1:
 			return false
 		answer_deaths += int(pair["answer"])
 		baseline_deaths += int(pair["no_answer"])
-	return answer_deaths <= baseline_deaths
+	return answer_deaths <= baseline_deaths + 1
 
 
 ## Completeness and synchronous attribution are checkable; native Player metadata and

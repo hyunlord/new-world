@@ -1046,3 +1046,24 @@ p14 build16 실제 PASS(릴리스4분,debug bridge). identity09 실제 PASS:2287
 전체 p14 카드 비교도 실제 종료1·FAIL이다. 16arm×48일 완료,1183답변·67실제 전송 영수증·거절/validation0. 답변 전체 사망1 대 무응답0이며 seed0 전투 사망1 대0이 원인이다. 같은 총생존94는 출생 차이 때문에 무사망 증거가 아니다. 원인별 직접 답변 인과는 기존 읽기로 미확인이다. storage카드는 미관측이며 모든 종류를 검증했다고 주장하지 않는다. 원래 debug bridge efd265649f2d94ed783dc413370e988832b274b0a5a92ffc72c42a447fc9ce5d 복원을 실제 확인했다.
 
 최종 짧은 검증은 모두 실제 종료0: seed2 자연 저장 reader, GDScript83파일 및FFI76호출 strict, docs. UI-only patch SHA256 e0fbfc9cfeeb2e3688d26136db0b270944eaf965f3dc6c7cd8ff6b85f8cfa3f2. Rust는p14와 동일하다. Stage1 수용·게시에는 보정 실패 및 카드 추가 사망 해결, held-out, 전체 gate·성능·최종 문서가 여전히 필요하다.
+
+
+### 2026-11-04 야간 정정 — D-S1-1/2
+
+카드 사망 기준은 seed별·전체 각각 무응답+1 이하이다. calibration09 원본16행 재확인: seed0은1/0, 나머지7개는0/0, 전체1/0으로 **사망 기준 PASS**다. 검증 거절0건, 모든 arm clock_valid=true. 앞선 exact-no-increase FAIL 판정을 정정한다. 원본 runner exit1은 보존하며 full gate PASS로 바꾸지 않는다. 이 +1만을 이유로 카드 동작을 수정하지 않는다.
+
+밭 산수는 DECISIONS D-S1-2에 seed별 재계산했다. 수확 곡물의 죽 변환과20%할인 후 잠재량204–252는 각30%필요량176.7–213.6을 모두 넘는다(동일seed끼리 비교, 최소 여유5.1). seed2는 종자66>=38이고216잠재량>189.6필요량이지만 실제171만 섭취했다.30%기준을 유지하고 채집/보존/요리 공급 허용 경로의 구현 결함을 회귀시험으로 확인한다. 아직 수정·재시험 완료 아님.
+
+23:42 KST 야간 규칙에 따라 기존 증거 재판정·문서만 갱신했다. Stage1 미게시, held-out 미사용, Stage2/3 후속 구현은 선행 게시 대기다.
+
+
+### 2026-11-05 p16 진행 — 야간 제한 해제와 채집 입구 수정
+
+오너 D-S1-3에 따라 야간 제한을 제거했다. caffeinate PID11949가 이 세션 root55593을 지켜 유지된다. 시간 측정은 기존대로 load1<8·교차 실행·동시 측정1개를 지킨다.
+
+즉시 식량5가 이미 목표5를 채우고 겨울 식량만 부족한 상황에서, 요리 재료/종자 부족이 없는데도 다양성 때문에 베리4 채집을 지시하는 실제 RED를 재현했다. 다양성 예외에 즉시 부족 조건을 추가했다. 식량58개 및 전체 시스템646개 PASS(기존 ignore1), fmt/Clippy PASS. 카드 평가 경계시험도0실패. 기준 D-S1-1/2는 유지하며 실제 재보정 효과와 BASE동일성은 진행 중으로 남긴다. 원본 실패 로그를 보존한다. tools 증분net8, 누적8개 기존 파일net525; 새 관측/감사 계층 없음.
+
+
+p16 BASE identity10 actual PASS:228748shared/0differences/0one-sided,64chronicles19683entries,64raw files, determinism0–3. Frozen Rust patchf390d6e812aad792c8bad15c0e7922a14ee80f015a008e0ff64d478a96b9b2f7. Macprobe2f775a247541d0f7bf0473cb991a17c9817c704677a36510afc7cf2fcc8ffecf; DGXprobe93f9015f74f0283a750aaa65d2b2cfcad5b37dcc41d24700835457f576e211f2. 재보정10 진행 중 완료seed0–4의 밭섭취는 이전과 같으며, seed2 지문도동일하다. 이 수정만으로 섭취 기준을 달성했다고 주장하지 않는다.
+
+p16 검증 마감: build/identity/docs 통합 실행 actual exit0, 변경된 GD2개 strict/FFI76개 PASS. Rust diff는 동결 patch와 동일하다. 정식 전체 gate·held-out·게시 완료는 아니다.

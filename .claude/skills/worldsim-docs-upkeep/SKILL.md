@@ -23,6 +23,8 @@ agent-facing docs are English (`docs/ARCHITECTURE.md`, `docs/decisions/*`,
 
 ## Pass coordination (depth roadmap v2 §7)
 
+- Owner override 2026-11-05: no night restriction remains. Keep caffeinate running; timing admission, interleaving and the single measuring job rule below still apply. See M6B_DECISIONS D-S1-3.
+
 - Only one performance measurement job may run on this Mac at a time; overlapping measurements are both invalid. Admit each repetition at 1-minute load < 8 and interleave old/new binaries in the same session.
 - Use pass-local temporary issue IDs (for example M6A-1) before publication; at publication assign the next free ISS numbers after checking the current ledger.
 - Preserve both sides of documentation conflicts; stop and report code/data conflicts. A red gate means diagnose, fix and re-run; stop for code/data conflicts, an unfixable identity failure or the pass time limit.
