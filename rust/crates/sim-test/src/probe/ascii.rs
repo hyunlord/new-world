@@ -18,7 +18,6 @@
 //! ("Text renderer glyphs"). `worldsim_probe --scene colony --ascii` drives it
 //! ([`AsciiArgs`], [`run`]).
 use super::colony::{load_script, resolve, ScriptEntry};
-use super::gate_observation::GateObservation;
 use sim_bridge::ffi::{
     collect_agent_jobs, collect_agent_snapshot, collect_appearance, collect_building_snapshot,
     collect_colony_overlay, collect_terrain_snapshot, collect_time_snapshot, collect_trees,
@@ -26,7 +25,7 @@ use sim_bridge::ffi::{
 };
 use sim_engine::SimEngine;
 use std::collections::{BTreeMap, BTreeSet};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 /// A tile `(x, y)`.
 pub type Tile = (u32, u32);
@@ -343,84 +342,22 @@ pub fn engine_at(
     script: &[ScriptEntry],
     tick: u64,
 ) -> Result<(SimEngine, StumpTracker), String> {
-    engine_at_observed(seed, script, tick, None)
-}
-
-/// Run the same ASCII world with optional complete gate observations and retained test mirrors.
-/// Passing `None` preserves the ordinary [`engine_at`] path.
-pub fn engine_at_observed(
-    seed: u64,
-    script: &[ScriptEntry],
-    tick: u64,
-    observation_out: Option<&Path>,
-) -> Result<(SimEngine, StumpTracker), String> {
-    engine_at_with_initial_observer(seed, script, tick, observation_out, |_| ())
-        .map(|(engine, stumps, ())| (engine, stumps))
-}
-
-/// Observe the actual founding world before the ordinary ASCII replay, retaining
-/// the observer for callers whose original test continues that same world.
-pub fn engine_at_with_observer<T>(
-    seed: u64,
-    script: &[ScriptEntry],
-    tick: u64,
-    observe: impl FnOnce(&SimEngine) -> T,
-) -> Result<(SimEngine, StumpTracker, T), String> {
-    engine_at_with_initial_observer(seed, script, tick, None, observe)
-}
-
-fn engine_at_with_initial_observer<T>(
-    seed: u64,
-    script: &[ScriptEntry],
-    tick: u64,
-    observation_out: Option<&Path>,
-    observe: impl FnOnce(&SimEngine) -> T,
-) -> Result<(SimEngine, StumpTracker, T), String> {
     let mut engine = crate::scenes::colony_scene(seed);
-    let initial_observer = observe(&engine);
-    let mut watch = observation_out
-        .map(|out| GateObservation::begin(&engine, out, "colony", seed, "primary", tick))
-        .transpose()?;
     let mut stumps = StumpTracker::new();
     stumps.observe(&engine);
     let mut next = 0usize;
-    let replay = (|| -> Result<(), String> {
-        for t in 0..tick {
-            let mut avoid = Vec::new();
-            while next < script.len() && script[next].tick == t {
-                if let Some(watch) = watch.as_mut() {
-                    watch.checkpoint(&engine, next, &script[next].spec, None)?;
-                }
-                for (index, cmd) in resolve(&engine, &script[next].spec, &mut avoid)?
-                    .into_iter()
-                    .enumerate()
-                {
-                    if let sim_core::colony::Command::DebugKill { agent } = &cmd {
-                        if let Some(watch) = watch.as_mut() {
-                            watch.checkpoint(
-                                &engine,
-                                next,
-                                &script[next].spec,
-                                Some((index, *agent)),
-                            )?;
-                        }
-                    }
-                    sim_systems::commands::submit(&mut engine, cmd);
-                }
-                next += 1;
+    for t in 0..tick {
+        let mut avoid = Vec::new();
+        while next < script.len() && script[next].tick == t {
+            for cmd in resolve(&engine, &script[next].spec, &mut avoid)? {
+                sim_systems::commands::submit(&mut engine, cmd);
             }
-            engine.tick();
-            stumps.observe(&engine);
+            next += 1;
         }
-        Ok(())
-    })();
-    let observation = match watch {
-        Some(watch) => watch.finish(&engine, replay.is_ok()),
-        None => Ok(()),
-    };
-    replay?;
-    observation?;
-    Ok((engine, stumps, initial_observer))
+        engine.tick();
+        stumps.observe(&engine);
+    }
+    Ok((engine, stumps))
 }
 
 /// Parsed `worldsim_probe --scene colony --ascii` arguments.
@@ -440,8 +377,6 @@ pub struct AsciiArgs {
     pub out: Option<PathBuf>,
     /// Write the people tiles as JSON here (`--people-json FILE`).
     pub people_json: Option<PathBuf>,
-    /// Write the native sidecar beside `--out FILE` (CLI flag or gate observer environment).
-    pub gate_observations: bool,
 }
 
 /// The longest run `--tick` accepts (480 days, the colony probe's limit).
@@ -462,15 +397,6 @@ fn parse_rect(value: &str) -> Result<Rect, String> {
 impl AsciiArgs {
     /// Parse argv (without the program name); `--scene colony` and `--ascii` are accepted and ignored.
     pub fn parse(args: impl IntoIterator<Item = String>) -> Result<Self, String> {
-        let setting = std::env::var_os("WORLDSIM_GATE_OBSERVER");
-        Self::parse_with_gate_setting(args, setting.as_deref())
-    }
-
-    fn parse_with_gate_setting(
-        args: impl IntoIterator<Item = String>,
-        setting: Option<&std::ffi::OsStr>,
-    ) -> Result<Self, String> {
-        let environment_enabled = super::ProbeArgs::gate_observations_enabled(false, setting)?;
         let mut seeds: Option<std::ops::Range<u64>> = None;
         let mut tick: Option<u64> = None;
         let mut parsed = Self {
@@ -481,19 +407,11 @@ impl AsciiArgs {
             legend: false,
             out: None,
             people_json: None,
-            gate_observations: false,
         };
         let mut args = args.into_iter();
         while let Some(flag) = args.next() {
             match flag.as_str() {
                 "--ascii" => continue,
-                "--gate-observations" => {
-                    if parsed.gate_observations {
-                        return Err("duplicate --gate-observations".into());
-                    }
-                    parsed.gate_observations = true;
-                    continue;
-                }
                 "--ascii-legend" => {
                     parsed.legend = true;
                     continue;
@@ -531,10 +449,6 @@ impl AsciiArgs {
         if parsed.tick > MAX_TICK {
             return Err(format!("--tick must be at most {MAX_TICK}"));
         }
-        parsed.gate_observations |= environment_enabled;
-        if parsed.gate_observations && parsed.out.is_none() {
-            return Err("--gate-observations needs --out FILE for its sidecar directory".into());
-        }
         Ok(parsed)
     }
 }
@@ -545,17 +459,7 @@ pub fn run(args: &AsciiArgs) -> Result<(), String> {
         Some(path) => load_script(path)?,
         None => Vec::new(),
     };
-    let observation_out = if args.gate_observations {
-        Some(
-            args.out
-                .as_deref()
-                .and_then(Path::parent)
-                .ok_or("--gate-observations needs --out FILE for its sidecar directory")?,
-        )
-    } else {
-        None
-    };
-    let (engine, stumps) = engine_at_observed(args.seed, &script, args.tick, observation_out)?;
+    let (engine, stumps) = engine_at(args.seed, &script, args.tick)?;
     let mut text = String::new();
     if args.legend {
         text.push_str(&legend());
@@ -603,7 +507,7 @@ mod tests {
 
     #[test]
     fn ascii_args_parse_and_reject() {
-        let a = AsciiArgs::parse_with_gate_setting(
+        let a = AsciiArgs::parse(
             [
                 "--scene",
                 "colony",
@@ -617,7 +521,6 @@ mod tests {
                 "--ascii-legend",
             ]
             .map(String::from),
-            None,
         )
         .expect("valid");
         assert_eq!(
@@ -631,10 +534,7 @@ mod tests {
             vec!["--seeds", "1..2", "--tick", "5", "--rect", "1,2,0,4"],
             vec!["--seeds", "1..2", "--tick", "5", "--bogus", "1"],
         ] {
-            assert!(
-                AsciiArgs::parse_with_gate_setting(bad.iter().map(|s| s.to_string()), None)
-                    .is_err()
-            );
+            assert!(AsciiArgs::parse(bad.iter().map(|s| s.to_string())).is_err());
         }
     }
 
@@ -645,7 +545,3 @@ mod tests {
         assert_eq!(terrain_glyph(200), b'?');
     }
 }
-
-#[cfg(test)]
-#[path = "ascii_gate_tests.rs"]
-mod gate_tests;

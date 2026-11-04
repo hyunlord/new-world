@@ -2,18 +2,10 @@
 use sim_core::colony::steward::{parse_rules, StewardScope};
 use sim_core::colony::Command;
 use sim_systems::commands::submit;
-pub mod save_gate_observation;
-use save_gate_observation::{SaveLink, Watch};
 
 #[test]
 fn steward_is_off_in_probe_world_and_stockpile_is_an_ordinary_logged_command() {
     let mut engine = sim_test::colony_engine(0);
-    let watch = Watch::begin(
-        "steward_is_off_in_probe_world_and_stockpile_is_an_ordinary_logged_command",
-        0,
-        "original",
-        &engine,
-    );
     assert!(!engine.resources.steward.enabled);
     let result = submit(
         &mut engine,
@@ -34,7 +26,6 @@ fn steward_is_off_in_probe_world_and_stockpile_is_an_ordinary_logged_command() {
     assert!(
         sim_systems::runtime::jobs::invariants::check(&engine.world, &engine.resources).is_ok()
     );
-    watch.finish(&engine, "native_assertions_reached");
 }
 
 #[test]
@@ -46,12 +37,6 @@ fn steward_data_rejects_unknown_version_and_fields() {
 #[test]
 fn player_cancellation_blocks_the_rule_for_two_days_and_scope_is_saved() {
     let mut engine = sim_test::colony_engine(19);
-    let watch = Watch::begin(
-        "player_cancellation_blocks_the_rule_for_two_days_and_scope_is_saved",
-        19,
-        "original",
-        &engine,
-    );
     submit(
         &mut engine,
         Command::SetSteward {
@@ -93,15 +78,7 @@ fn player_cancellation_blocks_the_rule_for_two_days_and_scope_is_saved() {
     }));
     assert!(!engine.resources.colony.command_log.iter().any(|r| matches!(&r.command,Command::Steward{command,..} if matches!(**command,Command::PlaceBlueprint{kind:sim_core::colony::BlueprintKind::Bedroll,..}))));
     let bytes = sim_systems::save::save(&mut engine).expect("save");
-    let link = watch.save(&engine, &bytes, "continuation");
     let mut loaded = sim_systems::save::load(&bytes).expect("load");
-    let loaded_watch = Watch::loaded(
-        "player_cancellation_blocks_the_rule_for_two_days_and_scope_is_saved",
-        19,
-        "loaded",
-        &loaded,
-        link,
-    );
     assert_eq!(engine.resources.steward, loaded.resources.steward);
     assert_eq!(
         bytes,
@@ -115,19 +92,11 @@ fn player_cancellation_blocks_the_rule_for_two_days_and_scope_is_saved() {
         sim_systems::save::save(&mut engine).expect("continued"),
         sim_systems::save::save(&mut loaded).expect("continued load")
     );
-    loaded_watch.finish(&loaded, "360_ticks_after_load");
-    watch.finish(&engine, "native_assertions_reached");
 }
 
 #[test]
 fn source_commands_replay_after_assignment_without_duplicate_planning() {
     let mut original = sim_test::colony_engine(29);
-    let watch = Watch::begin(
-        "source_commands_replay_after_assignment_without_duplicate_planning",
-        29,
-        "original",
-        &original,
-    );
     submit(
         &mut original,
         Command::SetSteward {
@@ -140,13 +109,6 @@ fn source_commands_replay_after_assignment_without_duplicate_planning() {
     }
     let log = original.resources.colony.command_log.clone();
     let mut replay = sim_test::colony_engine(29);
-    let replay_watch = Watch::begin(
-        "source_commands_replay_after_assignment_without_duplicate_planning",
-        29,
-        "replay",
-        &replay,
-    );
-    replay_watch.annotate(&replay, "replay_setup", || serde_json::json!({"intervention": "enable replay and inject original sourced commands"}));
     replay.resources.steward.replay = true;
     for tick in 0..720 {
         for record in log.iter().filter(|r| r.tick == tick) {
@@ -179,8 +141,6 @@ fn source_commands_replay_after_assignment_without_duplicate_planning() {
         sim_systems::save::save(&mut original).expect("live"),
         sim_systems::save::save(&mut replay).expect("replay")
     );
-    replay_watch.finish(&replay, "720_ticks");
-    watch.finish(&original, "native_assertions_reached");
 }
 
 #[test]
@@ -389,10 +349,9 @@ fn cancellation_is_protected_until_the_full_two_day_deadline_then_expires() {
 #[path = "colony_steward_housing/construction.rs"]
 mod construction;
 
-fn assert_completed_bed_assignment(engine: &mut sim_engine::SimEngine, test: &str, watch: &Watch) {
+fn assert_completed_bed_assignment(engine: &mut sim_engine::SimEngine) {
     let start = engine.current_tick();
     let baseline = sim_systems::save::save(engine).expect("before completion");
-    let link = watch.save(engine, &baseline, "first_housed");
     for _ in 0..1440 {
         engine.tick();
     }
@@ -432,23 +391,15 @@ fn assert_completed_bed_assignment(engine: &mut sim_engine::SimEngine, test: &st
         engine.current_tick(),
         engine.resources.bed_of.len()
     );
-    assert_role_completion_replay_and_player_intent(engine, &baseline, start, test, link);
+    assert_role_completion_replay_and_player_intent(engine, &baseline, start);
 }
 
 fn assert_role_completion_replay_and_player_intent(
     engine: &mut sim_engine::SimEngine,
     baseline: &[u8],
     start: u64,
-    test: &str,
-    link: SaveLink,
 ) {
     let mut replay = sim_systems::save::load(baseline).expect("replay baseline");
-    let replay_watch = Watch::loaded(test, 29, "replay", &replay, link.clone());
-    replay_watch.annotate(
-        &replay,
-        "replay_setup",
-        || serde_json::json!({"intervention": "enable replay and inject original commands"}),
-    );
     replay.resources.steward.replay = true;
     let end = engine.current_tick();
     for tick in start..end {
@@ -483,18 +434,10 @@ fn assert_role_completion_replay_and_player_intent(
         sim_systems::save::save(&mut replay).expect("replay")
     );
     assert_eq!(engine.resources.colony.command_log.iter().filter(|r| matches!(&r.command,Command::Steward{command,..} if matches!(**command,Command::SetRoomRole{..}))).count(),1,"completion is not duplicated");
-    replay_watch.finish(&replay, "original_completion_tick");
     for scope in [StewardScope::Food, StewardScope::Housing] {
         let mut gated = sim_systems::save::load(baseline).expect("gated baseline");
-        let branch = if scope == StewardScope::Food {
-            "food"
-        } else {
-            "cooldown"
-        };
-        let gated_watch = Watch::loaded(test, 29, branch, &gated, link.clone());
         assert!(submit(&mut gated, Command::SetSteward { on: true, scope }).accepted);
         if scope == StewardScope::Housing {
-            gated_watch.annotate(&gated, "before_cooldown", || serde_json::json!({"classification": "mechanism", "rule": 3, "until": start + 1440}));
             gated.resources.steward.cooldowns.insert(3, start + 1440);
         }
         for _ in 0..1440 {
@@ -507,21 +450,15 @@ fn assert_role_completion_replay_and_player_intent(
             }
             assert!(gated.resources.colony.command_log.iter().any(|r| matches!(&r.command,Command::Steward{command,..} if matches!(**command,Command::SetRoomRole{..}))));
         }
-        gated_watch.finish(&gated, "scope_or_cooldown_assertions_reached");
     }
     use sim_core::rooms::RoomRole;
-    for (case, (role, clear_after)) in [
+    for (role, clear_after) in [
         (None, false),
         (Some(RoomRole::Workshop), false),
         (Some(RoomRole::Bedroom), false),
         (Some(RoomRole::Workshop), true),
-    ]
-    .into_iter()
-    .enumerate()
-    {
+    ] {
         let mut manual = sim_systems::save::load(baseline).expect("manual baseline");
-        let manual_watch =
-            Watch::loaded(test, 29, &format!("manual_{case}"), &manual, link.clone());
         assert!(
             submit(
                 &mut manual,
@@ -539,16 +476,7 @@ fn assert_role_completion_replay_and_player_intent(
             assert!(submit(&mut manual, Command::SetRoomRole { room, role: None }).accepted);
         }
         let bytes = sim_systems::save::save(&mut manual).expect("manual save");
-        let manual_link = manual_watch.save(&manual, &bytes, "manual");
         let mut restored = sim_systems::save::load(&bytes).expect("manual load");
-        let restored_watch = Watch::loaded(
-            test,
-            29,
-            &format!("restored_{case}"),
-            &restored,
-            manual_link,
-        );
-        manual_watch.finish(&manual, "load_only_manual_intent");
         assert!(
             submit(
                 &mut restored,
@@ -563,7 +491,6 @@ fn assert_role_completion_replay_and_player_intent(
             restored.tick();
         }
         assert!(!restored.resources.colony.command_log.iter().any(|r|matches!(&r.command,Command::Steward{command,..} if matches!(**command,Command::SetRoomRole{..}))),"manual role including Auto persists");
-        restored_watch.finish(&restored, "1440_ticks_after_manual_load");
     }
 }
 
@@ -571,12 +498,6 @@ fn assert_role_completion_replay_and_player_intent(
 #[test]
 fn base_production_rule_fires_immediately_without_experimental_rule() {
     let mut engine = sim_test::colony_engine(0);
-    let watch = Watch::begin(
-        "base_production_rule_fires_immediately_without_experimental_rule",
-        0,
-        "original",
-        &engine,
-    );
     submit(
         &mut engine,
         Command::SetSteward {
@@ -609,5 +530,4 @@ fn base_production_rule_fires_immediately_without_experimental_rule() {
         !experimental_fired,
         "experimental tools policy is retained in code, not enabled by default"
     );
-    watch.finish(&engine, "native_assertions_reached");
 }

@@ -1,6 +1,4 @@
 //! B5: real generated trees, ordinary material flow, current/legacy save boundaries.
-pub mod save_gate_observation;
-use save_gate_observation::Watch;
 mod colony_support;
 
 use sim_core::colony::{BlueprintKind, Carry, Command, ItemKind, Job, JobKind};
@@ -224,8 +222,6 @@ fn actual_h_format9_fixture_loads_as_oak_then_resaves_as_current_format() {
     let bytes = std::fs::read(path).expect("required actual H fixture");
     assert_eq!(&bytes[8..12], &9u32.to_le_bytes());
     let mut engine = save::load(&bytes).expect("historical format9 fixture");
-    let test = "actual_h_format9_fixture_loads_as_oak_then_resaves_as_current_format";
-    let watch = Watch::external(test, "migrated", &engine, &bytes);
     assert!(!engine.resources.colony.trees.is_empty());
     for &tile in engine.resources.colony.trees.keys() {
         assert_eq!(
@@ -237,16 +233,12 @@ fn actual_h_format9_fixture_loads_as_oak_then_resaves_as_current_format() {
     assert!(engine.resources.colony.materials.stats(PINE).is_some());
     let new = save_bytes(&mut engine);
     assert_eq!(&new[8..12], &save::FORMAT_VERSION.to_le_bytes());
-    let link = watch.save(&engine, &new, "current");
     let mut twin = save::load(&new).expect("migrated current format");
-    let twin_watch = Watch::loaded(test, twin.resources.world_seed, "twin", &twin, link);
     for _ in 0..24 {
         tick(&mut engine);
         tick(&mut twin);
     }
     assert_eq!(save_bytes(&mut engine), save_bytes(&mut twin));
-    watch.finish(&engine, "24_ticks_before_chop_mechanism");
-    twin_watch.finish(&twin, "24_ticks");
     // Controlled continuation of the actual migrated H world: retain every
     // original tree coordinate/yield and cancel active jobs through their normal
     // release path before repositioning workers and stabilizing needs.
@@ -301,16 +293,7 @@ fn actual_h_format9_fixture_loads_as_oak_then_resaves_as_current_format() {
         engine.resources.content_state.tree_material_default,
         Some(OAK)
     );
-    let post_chop_bytes = save_bytes(&mut engine);
-    let post_chop = save::load(&post_chop_bytes).expect("post-chop migrated world remains valid");
-    let post_chop_watch = Watch::external(
-        test,
-        "post_chop_mechanism_load",
-        &post_chop,
-        &post_chop_bytes,
-    );
-    post_chop_watch.annotate(&post_chop, "classification", || serde_json::json!({"classification": "mechanism_load_only", "source": "same test migrated branch after explicit chop setup; not ordinary continuation", "interventions": "cancel active jobs; M3 rules; move interval 1; positioned workers; stabilized needs; chop command"}));
-    post_chop_watch.finish(&post_chop, "post_chop_load_only");
+    save::load(&save_bytes(&mut engine)).expect("post-chop migrated world remains valid");
 }
 
 #[test]

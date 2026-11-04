@@ -3,10 +3,6 @@
 # Run windowed: --manifest /absolute/manifest.json --out /absolute/new-directory. No product hooks.
 extends SceneTree
 
-# Gate-only bridge reads are delegated to GateObserver.
-const GateObserver = preload("res://tools/v8/gate_ui_observer.gd")
-var _gate_observer: RefCounted = GateObserver.new("visibility.loader", "res://tools/v8/mux2_visibility_test.gd")
-
 const Provenance = preload("res://tools/v8/mux2_visibility_provenance.gd")
 const Metrics = preload("res://tools/v8/mux2_visibility_metrics.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
@@ -35,14 +31,14 @@ func _run() -> void:
 	var project_path: String = ProjectSettings.globalize_path("res://").simplify_path().trim_suffix("/")
 	if _out == project_path or _out.begins_with(project_path + "/"):
 		push_error("MUX2_VISIBILITY raw evidence must be outside the repository")
-		quit(_gate_observer.finish(1))
+		quit(1)
 		return
 	if DisplayServer.get_name() == "headless" or not _out.is_absolute_path() or not manifest_path.is_absolute_path() or DirAccess.dir_exists_absolute(_out):
 		push_error("MUX2_VISIBILITY requires GPU, absolute manifest and NEW output directory")
-		quit(_gate_observer.finish(1))
+		quit(1)
 		return
 	if DirAccess.make_dir_recursive_absolute(_out) != OK:
-		quit(_gate_observer.finish(1))
+		quit(1)
 		return
 	var provenance_start: Dictionary = Provenance.capture(manifest_path)
 	_write(_out.path_join("provenance-start.json"), provenance_start)
@@ -52,7 +48,7 @@ func _run() -> void:
 	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
 	if not value is Dictionary or int(value.get("schema", 0)) != 1 or not value.get("scenes") is Array:
 		push_error("MUX2_VISIBILITY invalid manifest")
-		quit(_gate_observer.finish(1))
+		quit(1)
 		return
 	var expected: Array[String] = ["day1_noon", "day1_night", "day20_noon", "day20_night"]
 	var seen: Array[String] = []
@@ -77,7 +73,7 @@ func _run() -> void:
 	var report: Dictionary = {"schema": 2, "manifest_sha256": start_hashes.get(manifest_path, ""), "bridge_sha256": start_hashes.get(Provenance.BRIDGE, ""), "render_params_sha256": start_hashes.get("res://assets/v8art/render_params.json", ""), "provenance_start": provenance_start, "provenance_end": provenance_end, "changed_inputs": changed_inputs, "inputs_unchanged": changed_inputs.is_empty(), "scenes": _scenes, "failures": _failures, "pass": _failures.is_empty(), "ground_control": "same camera/daylight; only GroundLayer visible; includes actual baked walls; no fabricated pixels", "attribution": "leave-one-person-out framebuffer difference; unchanged shadows and activity glyphs cannot count"}
 	_write(_out.path_join("visibility.json"), report)
 	print("MUX2_VISIBILITY_DONE " + JSON.stringify({"scenes": _scenes.size(), "failures": _failures.size(), "pass": _failures.is_empty()}))
-	quit(_gate_observer.finish(0 if _failures.is_empty() else 1))
+	quit(0 if _failures.is_empty() else 1)
 
 
 func _save_scenes(row: Dictionary) -> void:
@@ -88,10 +84,8 @@ func _save_scenes(row: Dictionary) -> void:
 	_main = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	_main.get_node("UI/MuxHud").set("store", Store.new(_out.path_join(str(row["id"]) + "-settings.cfg")))
 	root.add_child(_main)
-	_gate_observer.capture(_main, "bootstrap")
 	if not bool(_main.get("boot_ok")) or not _main.has_node("WorldSim"):
 		_failures.append("main scene bootstrap failed")
-		_gate_observer.release(_main, "failed_load_or_boot", row)
 		_main.queue_free()
 		await process_frame
 		return
@@ -101,12 +95,9 @@ func _save_scenes(row: Dictionary) -> void:
 	_agents = _main.get_node("ColonyView/AgentLayer") as Node2D
 	if not bool(SimReads.mutate(_world, "load_world", [path])):
 		_failures.append("load failed " + path)
-		_gate_observer.release(_main, "failed_load_or_boot", row)
 		_main.queue_free()
 		await process_frame
 		return
-	if _gate_observer.enabled:
-		_gate_observer.capture(_main, "loaded_initial", {"save_path": path, "save_sha256": FileAccess.get_sha256(path), "manifest_path": _arg("--manifest"), "manifest_sha256": FileAccess.get_sha256(_arg("--manifest")), "manifest_row": row})
 	_camera.call("set_paused", true)
 	var clock: Dictionary = _world.get_time_snapshot()
 	var info: Dictionary = _world.get_world_info()
@@ -114,7 +105,6 @@ func _save_scenes(row: Dictionary) -> void:
 	var hour: int = 12 if str(row["id"]).ends_with("noon") else 22
 	if int(info.get("seed", -1)) != 0 or int(clock.get("day_index", -1)) + 1 != day or absf(float(clock.get("time_of_day", -100)) - hour) > 0.02 or int(clock.get("tick", -1)) != int(row.get("tick", -2)):
 		_failures.append("wrong live seed/calendar " + str(row["id"]))
-		_gate_observer.release(_main, "failed_load_or_boot", row)
 		_main.queue_free()
 		await process_frame
 		return
@@ -126,8 +116,6 @@ func _save_scenes(row: Dictionary) -> void:
 			await process_frame
 		_main.process_mode = Node.PROCESS_MODE_DISABLED
 		await _measure_scene(row, clock, zoom)
-		_gate_observer.capture(_main, "zoom_complete", {"zoom": zoom, "saved_tick": row.get("tick"), "scene_id": row["id"]})
-	_gate_observer.release(_main, "loaded_terminal", row)
 	_main.queue_free()
 	await process_frame
 

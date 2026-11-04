@@ -28,14 +28,6 @@ PLAY_DATA="${PLAY_DATA:-/Users/rexxa/work/play-data}"
 BOUNDED="$REPO/tools/v8/run_bounded.sh"
 export PATH="$PATH:$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin"
 
-# Opt-in evidence only. A separately owned runner supplies an immutable plan/hash.
-# No export/worktree selection or historical observer qualification is implied.
-gate_child() {
-    local role="$1"; shift
-    python3 "$REPO/tools/v8/gate_play_child.py" "$role" -- "$@"
-}
-gate_play_enabled() { [[ "${WORLDSIM_GATE_PLAY_RECEIPTS:-}" == 1 ]]; }
-
 usage() {
     sed -n '4,5p' "$0" | sed 's/^# \{0,1\}//'
 }
@@ -96,11 +88,7 @@ if ! GODOT="$(resolve_godot)"; then
     echo "play: Godot 4.6을 찾지 못했습니다 — Godot.app을 /Applications 또는 ~/Downloads에 두거나 GODOT_BIN=<.../Godot.app/Contents/MacOS/Godot>로 알려 주세요 (GODOT_BIN=${GODOT_BIN:-없음})" >&2
     exit 2
 fi
-if gate_play_enabled; then
-    godot_version="$(gate_child version "$GODOT" --version 2>/dev/null | head -1)"
-else
-    godot_version="$("$GODOT" --version 2>/dev/null | head -1)"
-fi
+godot_version="$("$GODOT" --version 2>/dev/null | head -1)"
 case "$godot_version" in
     4.6*) ;;
     *) echo "play: 경고 — $GODOT 은(는) Godot ${godot_version:-버전 모름}입니다; 이 게임은 Godot 4.6용입니다" >&2 ;;
@@ -204,11 +192,7 @@ else
     [[ "$profile" == debug ]] && say "play: Godot 편집기 실행 파일은 .gdextension의 macos.debug($lib_path)를 읽으므로 release가 아니라 debug로 빌드합니다"
     say "play: cargo build -p sim-bridge ${cargo_flags[*]+${cargo_flags[*]}} … (증분 확인; 처음에는 수십 초~몇 분)"
     started=$(date +%s)
-    if gate_play_enabled; then
-        (cd rust && gate_child build cargo build -p sim-bridge ${cargo_flags[@]+"${cargo_flags[@]}"}) >> "$LOG" 2>&1 || { say "play: 빌드 실패 — $LOG"; exit 1; }
-    else
-        (cd rust && cargo build -p sim-bridge ${cargo_flags[@]+"${cargo_flags[@]}"}) >> "$LOG" 2>&1 || { say "play: 빌드 실패 — $LOG"; exit 1; }
-    fi
+    (cd rust && cargo build -p sim-bridge ${cargo_flags[@]+"${cargo_flags[@]}"}) >> "$LOG" 2>&1 || { say "play: 빌드 실패 — $LOG"; exit 1; }
     build_secs=$(( $(date +%s) - started ))
     build_state="완료(${profile}, ${build_secs}초)"
 fi
@@ -232,11 +216,7 @@ if (( runs > 0 )); then
     started=$(date +%s)
     for (( i = 1; i <= runs; i++ )); do
         say "play: 가져오기(import) $i/$runs …"
-        if gate_play_enabled; then
-            out="$(gate_child "import-$i" "$GODOT" --headless --path . --import --editor --quit 2>&1)"
-        else
-            out="$(bash "$BOUNDED" 600 "$GODOT" --headless --path . --import --editor --quit 2>&1)"
-        fi
+        out="$(bash "$BOUNDED" 600 "$GODOT" --headless --path . --import --editor --quit 2>&1)"
         code=$?
         printf '%s\n' "$out" >> "$LOG"
     done
@@ -275,11 +255,7 @@ args+=(${extra[@]+"${extra[@]}"})
 say "play: 버전 $version · 커밋 $short · 빌드 $build_state · 가져오기 $import_state · 시드 ${seed:-기본} · 속도 ${speed:-기본}"
 if (( headless == 1 )); then
     say "play: 헤드리스 확인 — 300프레임"
-    if gate_play_enabled; then
-        out="$(gate_child headless "$GODOT" "${args[@]}" 2>&1)"
-    else
-        out="$(bash "$BOUNDED" 600 "$GODOT" "${args[@]}" 2>&1)"
-    fi
+    out="$(bash "$BOUNDED" 600 "$GODOT" "${args[@]}" 2>&1)"
     code=$?
     printf '%s\n' "$out" >> "$LOG"
     errors=$(printf '%s\n' "$out" | grep -Ec 'SCRIPT ERROR|(^|[[:space:]])ERROR:|Parse Error')
@@ -291,11 +267,7 @@ fi
 say "play: 게임 창을 엽니다 (창을 닫으면 끝납니다)"
 echo "[play] launch $(date '+%H:%M:%S') $GODOT ${args[*]}" >> "$LOG"
 launch_line=$(( $(wc -l < "$LOG") + 1 ))
-if gate_play_enabled; then
-    gate_child windowed "$GODOT" "${args[@]}" >> "$LOG" 2>&1
-else
-    "$GODOT" "${args[@]}" >> "$LOG" 2>&1
-fi
+"$GODOT" "${args[@]}" >> "$LOG" 2>&1
 code=$?
 errors=$(tail -n "+$launch_line" "$LOG" | grep -Ec 'SCRIPT ERROR|(^|[[:space:]])ERROR:|Parse Error')
 say "play: 게임 종료 (exit $code)"

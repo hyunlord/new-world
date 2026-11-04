@@ -20,7 +20,6 @@ pub mod m6a;
 pub mod nav_bench;
 /// Revitalize Pass 15: tick timings, the stress world and snapshot costs (`worldsim_perf`).
 pub mod perf;
-mod perf_observation;
 /// Headless measurements and trajectory fingerprints.
 pub mod probe;
 /// Shared production-scene fixtures.

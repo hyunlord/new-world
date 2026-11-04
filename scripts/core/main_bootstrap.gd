@@ -1,11 +1,9 @@
 # main_bootstrap.gd — selected content preflight before gameplay children enter the tree.
 # Bridge methods: WorldSimNode.bootstrap_catalog, WorldSimNode.create.
-# Optional gate boot observer delegates read-only native evidence to the tooling helper.
 extends Node2D
 
 var boot_ok: bool = false
 var boot_error: String = ""
-var _gate_boot_observer: RefCounted
 
 
 func _enter_tree() -> void:
@@ -23,17 +21,6 @@ func _enter_tree() -> void:
 	add_child(world)
 	move_child(world, 0)
 	boot_ok = true
-	# Observe the actual plain-boot process; script-driven producers own their own receipts.
-	if OS.get_environment("WORLDSIM_GATE_OBSERVER") == "1" and OS.get_environment("WORLDSIM_GATE_UI_BOOT") == "1" and not "--script" in OS.get_cmdline_args() and not "-s" in OS.get_cmdline_args():
-		var observer_script: GDScript = load("res://tools/v8/gate_ui_observer.gd") as GDScript
-		_gate_boot_observer = observer_script.new("smoke.boot", "res://scripts/core/main_bootstrap.gd")
-		_gate_boot_observer.capture(self, "bootstrap")
-		world.tree_exiting.connect(_gate_boot_terminal)
-
-
-func _gate_boot_terminal() -> void:
-	if _gate_boot_observer != null:
-		_gate_boot_observer.shutdown(self)
 
 
 func _fail(message: String) -> void:

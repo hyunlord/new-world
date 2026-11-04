@@ -263,35 +263,6 @@ fn run_seed(
         .days
         .checked_mul(ticks_per_day)
         .ok_or("days overflow tick count")?;
-    let gate_primary = args
-        .gate_observations
-        .then(|| {
-            super::gate_observation::GateObservation::begin(
-                &engine,
-                &args.out,
-                &args.scene,
-                seed,
-                "primary",
-                total_ticks,
-            )
-        })
-        .transpose()?;
-    let gate_twin = if args.gate_observations {
-        twin.as_ref()
-            .map(|world| {
-                super::gate_observation::GateObservation::begin(
-                    world,
-                    &args.out,
-                    &args.scene,
-                    seed,
-                    "determinism_twin",
-                    total_ticks,
-                )
-            })
-            .transpose()?
-    } else {
-        None
-    };
     let path = args.out.join(format!("{}_s{seed}.jsonl", args.scene));
     let mut output = BufWriter::new(File::create(path).map_err(|e| e.to_string())?);
     let mut death_output = BufWriter::new(
@@ -322,172 +293,168 @@ fn run_seed(
             .map(|t| (t, *d))
         })
         .collect();
-    let loop_result = (|| -> Result<(), String> {
-        for tick in 0..=total_ticks {
-            if let Some(day) = winter_starts.get(&tick) {
-                winter_members.insert(*day, super::adult_work::members_now(&engine));
+    for tick in 0..=total_ticks {
+        if let Some(day) = winter_starts.get(&tick) {
+            winter_members.insert(*day, super::adult_work::members_now(&engine));
+        }
+        let regular = tick.is_multiple_of(args.sample_every);
+        let checkpoint = tick > 0 && tick.is_multiple_of(ticks_per_day);
+        let clock = clock_schedule.get(&tick).copied();
+        if regular || checkpoint || clock.is_some() {
+            let mut row = sample(&engine, &args.scene, seed, initial_shelters);
+            if let Some(twin) = &twin {
+                check_sample(
+                    &row,
+                    &sample(twin, &args.scene, seed, initial_shelters),
+                    seed,
+                )?;
             }
-            let regular = tick.is_multiple_of(args.sample_every);
-            let checkpoint = tick > 0 && tick.is_multiple_of(ticks_per_day);
-            let clock = clock_schedule.get(&tick).copied();
-            if regular || checkpoint || clock.is_some() {
-                let mut row = sample(&engine, &args.scene, seed, initial_shelters);
+            if row
+                .as_object()
+                .is_none_or(|map| map.values().any(Value::is_null))
+            {
+                return Err(format!("non-finite metric at seed={seed} tick={tick}"));
+            }
+            if twin_checked(&args.scene) {
                 if let Some(twin) = &twin {
-                    check_sample(
-                        &row,
-                        &sample(twin, &args.scene, seed, initial_shelters),
-                        seed,
-                    )?;
-                }
-                if row
-                    .as_object()
-                    .is_none_or(|map| map.values().any(Value::is_null))
-                {
-                    return Err(format!("non-finite metric at seed={seed} tick={tick}"));
-                }
-                if twin_checked(&args.scene) {
-                    if let Some(twin) = &twin {
-                        if row != sample(twin, &args.scene, seed, initial_shelters) {
-                            return Err(format!(
-                                "{} observable determinism mismatch seed={seed} tick={tick}",
-                                args.scene
-                            ));
-                        }
-                    }
-                }
-                for (emit, kind) in [
-                    (regular, "periodic"),
-                    (checkpoint, "day"),
-                    (clock.is_some(), "clock"),
-                ] {
-                    if emit {
-                        row["sample_kind"] = serde_json::json!(kind);
-                        serde_json::to_writer(&mut output, &row).map_err(|e| e.to_string())?;
-                        output.write_all(b"\n").map_err(|e| e.to_string())?;
-                    }
-                }
-                if let Some(key) = clock {
-                    clock_rows.insert(key, row.clone());
-                }
-                if regular {
-                    agent_samples += row["alive"].as_u64().unwrap_or(0);
-                    breaches += row["idle_with_breach"].as_u64().unwrap_or(0);
-                    actionable += row["idle_breach_actionable"].as_u64().unwrap_or(0);
-                    unavailable += row["idle_breach_unavailable"].as_u64().unwrap_or(0);
-                }
-                if checkpoint {
-                    row["sample_kind"] = serde_json::json!("day");
-                    row["idle_with_breach_share"] = serde_json::json!(if agent_samples == 0 {
-                        0.0
-                    } else {
-                        breaches as f64 / agent_samples as f64
-                    });
-                    row["idle_breach_actionable_share"] =
-                        serde_json::json!(share(actionable, agent_samples));
-                    row["idle_breach_unavailable_share"] =
-                        serde_json::json!(share(unavailable, agent_samples));
-                    let agent_days = agent_ticks as f64 / ticks_per_day as f64;
-                    row["agent_days"] = serde_json::json!(agent_days);
-                    row["social_completed_per_agent_day"] =
-                        serde_json::json!(if agent_days == 0.0 {
-                            0.0
-                        } else {
-                            engine.resources.tallies.social_completed as f64 / agent_days
-                        });
-                    row["housing_capacity"] = serde_json::json!(housing_capacity(&engine));
-                    checkpoints.insert(tick / ticks_per_day, row);
-                    settlement_days.insert(
-                        tick / ticks_per_day,
-                        super::fission_settlements::settlements_now(&engine),
-                    );
-                    elders_by_day.insert(
-                        tick / ticks_per_day,
-                        engine
-                            .world
-                            .query::<&sim_core::components::Elder>()
-                            .iter()
-                            .count() as u64,
-                    );
-                }
-            }
-            if tick == total_ticks {
-                break;
-            }
-            agent_ticks += engine.world.query::<&Agent>().iter().count() as u64;
-            let tick_started = Instant::now();
-            engine.tick();
-            let elapsed = tick_started.elapsed();
-            let (records, observer_time) =
-                deaths.after_tick(&engine, &args.scene, seed, &git_sha)?;
-            let routine_snapshot = routine_observer
-                .as_ref()
-                .map(|shared| super::routine_observer::take(shared, engine.resources.current_tick))
-                .transpose()?;
-            let routine_observer_time = routine_snapshot
-                .as_ref()
-                .map_or(std::time::Duration::ZERO, |snapshot| snapshot.elapsed);
-            if let Some(tracer) = &mut tracer {
-                if let Some(snapshot) = routine_snapshot {
-                    tracer.recover_routine(&engine, snapshot);
-                }
-                tracer.after_tick(&engine);
-            }
-            tick_seconds += elapsed
-                .saturating_sub(observer_time)
-                .saturating_sub(routine_observer_time)
-                .as_secs_f64();
-            for record in records {
-                if record["cause"] == "exposure" {
-                    exposure_death_ticks
-                        .push(record["tick"].as_u64().unwrap_or(0).saturating_sub(1));
-                    exposure_deaths.push((
-                        record["tick"].as_u64().unwrap_or(0).saturating_sub(1),
-                        record["stage"].as_str().unwrap_or("adult").to_string(),
-                        record["settlement_at_death"].as_u64().map(|sid| sid as u32),
-                    ));
-                }
-                serde_json::to_writer(&mut death_output, &record).map_err(|e| e.to_string())?;
-                death_output.write_all(b"\n").map_err(|e| e.to_string())?;
-            }
-            maturation.observe(&engine)?;
-            if engine.current_tick().is_multiple_of(60) {
-                let small: BTreeMap<u32, bool> = engine
-                    .resources
-                    .settlements
-                    .iter()
-                    .map(|(sid, s)| (*sid, (1..=2).contains(&s.member_agents.len())))
-                    .collect();
-                for (sid, s) in &engine.resources.settlements {
-                    formed_members
-                        .entry(*sid)
-                        .or_insert(s.member_agents.len() as u32);
-                }
-                remnant_hours.retain(|sid, _| small.get(sid).copied().unwrap_or(false));
-                for (sid, is_small) in small {
-                    if is_small {
-                        let hours = remnant_hours.entry(sid).or_insert(0);
-                        *hours += 1;
-                        max_remnant_hours = max_remnant_hours.max(*hours);
+                    if row != sample(twin, &args.scene, seed, initial_shelters) {
+                        return Err(format!(
+                            "{} observable determinism mismatch seed={seed} tick={tick}",
+                            args.scene
+                        ));
                     }
                 }
             }
-            let alive = engine.world.query::<&Agent>().iter().count() as u64;
-            if !engine.resources.settlements.is_empty() {
-                max_owned_housing_overflow = max_owned_housing_overflow
-                    .max(alive.saturating_sub(long_run::owned_capacity(&engine)));
+            for (emit, kind) in [
+                (regular, "periodic"),
+                (checkpoint, "day"),
+                (clock.is_some(), "clock"),
+            ] {
+                if emit {
+                    row["sample_kind"] = serde_json::json!(kind);
+                    serde_json::to_writer(&mut output, &row).map_err(|e| e.to_string())?;
+                    output.write_all(b"\n").map_err(|e| e.to_string())?;
+                }
             }
-            let capacity = housing_capacity(&engine);
-            if alive > max_alive {
-                max_alive = alive;
-                housing_at_max_alive = capacity;
+            if let Some(key) = clock {
+                clock_rows.insert(key, row.clone());
             }
-            if let Some(capacity) = capacity {
-                max_housing_overflow = max_housing_overflow.max(alive.saturating_sub(capacity));
+            if regular {
+                agent_samples += row["alive"].as_u64().unwrap_or(0);
+                breaches += row["idle_with_breach"].as_u64().unwrap_or(0);
+                actionable += row["idle_breach_actionable"].as_u64().unwrap_or(0);
+                unavailable += row["idle_breach_unavailable"].as_u64().unwrap_or(0);
             }
-            if let Some(twin) = &mut twin {
-                twin.tick();
-                if twin_checked(&args.scene)
-                    && (long_run::trace(&engine) != long_run::trace(twin)
+            if checkpoint {
+                row["sample_kind"] = serde_json::json!("day");
+                row["idle_with_breach_share"] = serde_json::json!(if agent_samples == 0 {
+                    0.0
+                } else {
+                    breaches as f64 / agent_samples as f64
+                });
+                row["idle_breach_actionable_share"] =
+                    serde_json::json!(share(actionable, agent_samples));
+                row["idle_breach_unavailable_share"] =
+                    serde_json::json!(share(unavailable, agent_samples));
+                let agent_days = agent_ticks as f64 / ticks_per_day as f64;
+                row["agent_days"] = serde_json::json!(agent_days);
+                row["social_completed_per_agent_day"] = serde_json::json!(if agent_days == 0.0 {
+                    0.0
+                } else {
+                    engine.resources.tallies.social_completed as f64 / agent_days
+                });
+                row["housing_capacity"] = serde_json::json!(housing_capacity(&engine));
+                checkpoints.insert(tick / ticks_per_day, row);
+                settlement_days.insert(
+                    tick / ticks_per_day,
+                    super::fission_settlements::settlements_now(&engine),
+                );
+                elders_by_day.insert(
+                    tick / ticks_per_day,
+                    engine
+                        .world
+                        .query::<&sim_core::components::Elder>()
+                        .iter()
+                        .count() as u64,
+                );
+            }
+        }
+        if tick == total_ticks {
+            break;
+        }
+        agent_ticks += engine.world.query::<&Agent>().iter().count() as u64;
+        let tick_started = Instant::now();
+        engine.tick();
+        let elapsed = tick_started.elapsed();
+        let (records, observer_time) = deaths.after_tick(&engine, &args.scene, seed, &git_sha)?;
+        let routine_snapshot = routine_observer
+            .as_ref()
+            .map(|shared| super::routine_observer::take(shared, engine.resources.current_tick))
+            .transpose()?;
+        let routine_observer_time = routine_snapshot
+            .as_ref()
+            .map_or(std::time::Duration::ZERO, |snapshot| snapshot.elapsed);
+        if let Some(tracer) = &mut tracer {
+            if let Some(snapshot) = routine_snapshot {
+                tracer.recover_routine(&engine, snapshot);
+            }
+            tracer.after_tick(&engine);
+        }
+        tick_seconds += elapsed
+            .saturating_sub(observer_time)
+            .saturating_sub(routine_observer_time)
+            .as_secs_f64();
+        for record in records {
+            if record["cause"] == "exposure" {
+                exposure_death_ticks.push(record["tick"].as_u64().unwrap_or(0).saturating_sub(1));
+                exposure_deaths.push((
+                    record["tick"].as_u64().unwrap_or(0).saturating_sub(1),
+                    record["stage"].as_str().unwrap_or("adult").to_string(),
+                    record["settlement_at_death"].as_u64().map(|sid| sid as u32),
+                ));
+            }
+            serde_json::to_writer(&mut death_output, &record).map_err(|e| e.to_string())?;
+            death_output.write_all(b"\n").map_err(|e| e.to_string())?;
+        }
+        maturation.observe(&engine)?;
+        if engine.current_tick().is_multiple_of(60) {
+            let small: BTreeMap<u32, bool> = engine
+                .resources
+                .settlements
+                .iter()
+                .map(|(sid, s)| (*sid, (1..=2).contains(&s.member_agents.len())))
+                .collect();
+            for (sid, s) in &engine.resources.settlements {
+                formed_members
+                    .entry(*sid)
+                    .or_insert(s.member_agents.len() as u32);
+            }
+            remnant_hours.retain(|sid, _| small.get(sid).copied().unwrap_or(false));
+            for (sid, is_small) in small {
+                if is_small {
+                    let hours = remnant_hours.entry(sid).or_insert(0);
+                    *hours += 1;
+                    max_remnant_hours = max_remnant_hours.max(*hours);
+                }
+            }
+        }
+        let alive = engine.world.query::<&Agent>().iter().count() as u64;
+        if !engine.resources.settlements.is_empty() {
+            max_owned_housing_overflow = max_owned_housing_overflow
+                .max(alive.saturating_sub(long_run::owned_capacity(&engine)));
+        }
+        let capacity = housing_capacity(&engine);
+        if alive > max_alive {
+            max_alive = alive;
+            housing_at_max_alive = capacity;
+        }
+        if let Some(capacity) = capacity {
+            max_housing_overflow = max_housing_overflow.max(alive.saturating_sub(capacity));
+        }
+        if let Some(twin) = &mut twin {
+            twin.tick();
+            if twin_checked(&args.scene)
+                && (long_run::trace(&engine) != long_run::trace(twin)
                     || super::fingerprint::fingerprint(&engine)
                         != super::fingerprint::fingerprint(twin)
                     || (engine.resources.rules.agent.routine.is_some()
@@ -498,24 +465,15 @@ fn run_seed(
                     // Pass 20: the relations, trips in flight and their logs.
                     || (engine.resources.rules.society.relations.is_some()
                         && engine.resources.settlement_relations != twin.resources.settlement_relations))
-                {
-                    return Err(format!(
-                        "{} tick trace mismatch seed={seed} tick={}",
-                        args.scene,
-                        engine.current_tick()
-                    ));
-                }
+            {
+                return Err(format!(
+                    "{} tick trace mismatch seed={seed} tick={}",
+                    args.scene,
+                    engine.current_tick()
+                ));
             }
         }
-        Ok(())
-    })();
-    if let Some(watch) = gate_primary {
-        watch.finish(&engine, loop_result.is_ok())?;
     }
-    if let (Some(watch), Some(world)) = (gate_twin, twin.as_ref()) {
-        watch.finish(world, loop_result.is_ok())?;
-    }
-    loop_result?;
     output.flush().map_err(|e| e.to_string())?;
     death_output.flush().map_err(|e| e.to_string())?;
     if let Some(tracer) = &tracer {
@@ -616,20 +574,7 @@ mod tests {
                 .count(),
             2
         );
-        let trace_check = ["if ", "twin_checked(&args.scene)"].concat();
-        let trace_guard = [
-            "if let Some(twin) = &mut twin {",
-            "twin.tick();",
-            trace_check.as_str(),
-        ];
-        let lines: Vec<_> = source.lines().map(str::trim).collect();
-        assert_eq!(
-            lines
-                .windows(trace_guard.len())
-                .filter(|window| *window == trace_guard)
-                .count(),
-            1
-        );
+        assert_eq!(source.matches(&["if let Some(twin) = &mut twin {\n            twin.tick();\n            if ", "twin_checked(&args.scene)"].concat()).count(), 1);
         // Every scene the probe accepts is twin-checked.
         for scene in ["baseline", "game_v26"] {
             assert!(super::super::args::ProbeArgs::parse(["--scene".into(), scene.into()]).is_ok());

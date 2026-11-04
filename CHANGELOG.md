@@ -1,13 +1,13 @@
 # Changelog
 
-## M6b Stage 0 — work in progress
+## M6b Stage 0 — stopped, 2026-11-04 (not published)
 
-### Added
-- Explicit native gate observers for probe, bridge, performance and named save-test worlds, disabled by default; full runtime qualification remains pending.
-- Source/build/process bindings, mandatory fixture contracts, ordinary safety and injected-fault validators for the generic gate. Incomplete coverage and BASE self-proof losses remain failures.
+### Changed
+- Correct KnowledgeLost and survivor contracts to merge-base-relative comparisons (D-S0-1).
+- Restore the published M-LOOP/M-READ gate for Stage 1; keep incomplete generic-gate work in #685.
 
-### Fixed
-- Parse numeric test outcomes independently of interleaved child output; retain native process failure and distinguish duplicate invocations from unique test names.
+### Removed
+- Retire 406 added tools files and 15 observer Rust files; restore their published consumers. Added tooling now consists of two contract/test files, 696 physical lines including tests. Full per-file counts are in docs/v8/m6b/S0_TOOLING_INVENTORY.md; source history and external raw evidence remain retained.
 
 ## M6b Stage −1 — 2026-11-02 (published 2f6993009)
 

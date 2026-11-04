@@ -15,16 +15,8 @@ failures=0
 expect() {
     local want="$1" label="$2"; shift 2
     local out code
-    if [[ "${WORLDSIM_GATE_PLAY_RECEIPTS:-}" == 1 && -n "${WORLDSIM_GATE_PLAY_REQUEST_FD:-}" ]]; then
-        out="$(export WORLDSIM_GATE_PLAY_CASE="$label"; exec python3 "$ROOT/tools/v8/generic_play_owner.py" --case "$@" 2>&1)"
-        code=$?
-    elif [[ "${WORLDSIM_GATE_PLAY_RECEIPTS:-}" == 1 && -n "${WORLDSIM_GATE_PLAY_SUITE_PLAN:-}" ]]; then
-        out="$(WORLDSIM_GATE_PLAY_CASE="$label" "$@" 2>&1)"
-        code=$?
-    else
-        out="$("$@" 2>&1)"
-        code=$?
-    fi
+    out="$("$@" 2>&1)"
+    code=$?
     if (( code == want )); then
         echo "PLAY_TEST_PASS $label (exit $code)"
     else

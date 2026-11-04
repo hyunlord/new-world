@@ -31,10 +31,6 @@
 # get_time_snapshot, advance_ticks (direct). Historical art fixtures keep the steward OFF.
 extends SceneTree
 
-# Gate-only bridge reads are delegated to GateObserver; synthetic geometry is not a native world.
-const GateObserver = preload("res://tools/v8/gate_ui_observer.gd")
-var _gate_observer: RefCounted = GateObserver.new("render.trees", "res://tools/v8/mart21_trees_test.gd")
-
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Tone = preload("res://scripts/world/art/tone.gd")
@@ -73,19 +69,14 @@ func _disable_steward(world: Node) -> bool:
 func _run() -> void:
 	_main = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(_main)
-	_gate_observer.capture(_main, "bootstrap")
 	var world: Node = _main.get_node("WorldSim")
 	await process_frame
-	_gate_observer.capture(_main, "before_colony_reset")
 	world.call("reset_world", 0)
-	_gate_observer.capture(_main, "after_colony_reset", {"fixture_classification": "ordinary_colony"})
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	if not _disable_steward(world):
-		quit(_gate_observer.finish(1))
+		quit(1)
 		return
-	_gate_observer.capture(_main, "before_explicit_tick")
 	world.call("advance_ticks", 1)
-	_gate_observer.capture(_main, "after_explicit_tick")
 	await _frames(20)
 	var trees: Node = _main.get_node("ColonyView/TreeLayer")
 	var ground: Node = _main.get_node("ColonyView/GroundLayer")
@@ -99,7 +90,7 @@ func _run() -> void:
 	_check_household_rule()
 	var households_ready: bool = await _check_households(world)
 	if not households_ready:
-		quit(_gate_observer.finish(1))
+		quit(1)
 		return
 	if OS.get_cmdline_user_args().has("--rendered"):
 		if DisplayServer.get_name() == "headless":
@@ -113,7 +104,7 @@ func _run() -> void:
 		print("MART21_TREES SKIP rendered — run windowed with -- --rendered for canopy saturation and season colours")
 	trees.call("force_season", "", "")
 	print("MART21_TREES_DONE failures=%d" % _failures)
-	quit(_gate_observer.finish(1 if _failures > 0 else 0))
+	quit(1 if _failures > 0 else 0)
 
 
 ## The res:// texture path a sprite draws.
@@ -357,17 +348,13 @@ func _check_households(world: Node) -> bool:
 	camera.force_update_scroll()
 	await _frames(10)
 	# A second world after the colony one: households must follow the reset.
-	_gate_observer.capture(_main, "before_stress_reset")
 	world.call("reset_world_stress", 0, 1000)
-	_gate_observer.capture(_main, "after_stress_reset", {"fixture_classification": "stress_render"})
 	var steward: Dictionary = world.call("get_steward")
 	var stress_off: bool = not bool(steward.get("enabled", true))
 	_check("stress_steward_off", stress_off, "stress fixture retains its OFF default")
 	if not stress_off:
 		return false
-	_gate_observer.capture(_main, "before_explicit_tick")
 	world.call("advance_ticks", 1)
-	_gate_observer.capture(_main, "after_explicit_tick")
 	await _frames(20)
 	var markers: Node = agents.get_node("LodMarkers")
 	var snap: Dictionary = SimReads.read(world, "get_agent_snapshot")
@@ -398,14 +385,10 @@ func _check_households(world: Node) -> bool:
 	var source: String = "the layer's colours (headless: marker readback not observable)" if DisplayServer.get_name() == "headless" else "the marker instance data"
 	_check("household_rings", persons.size() >= 1000 and bad == 0 and colours.size() >= 2 and (paired == 0 or shared > 0), "stress world: %d people, %d with a partner, %d households, %d people sharing one, %d ring colours; %d without a consistent ring in %s" % [persons.size(), paired, by_household.size(), shared, colours.size(), bad, source])
 	# Back to the seed-0 colony for the map check.
-	_gate_observer.capture(_main, "before_colony_reset")
 	world.call("reset_world", 0)
-	_gate_observer.capture(_main, "after_colony_reset", {"fixture_classification": "ordinary_colony"})
 	if not _disable_steward(world):
 		return false
-	_gate_observer.capture(_main, "before_explicit_tick")
 	world.call("advance_ticks", 1)
-	_gate_observer.capture(_main, "after_explicit_tick")
 	camera.zoom = Vector2.ONE
 	camera.force_update_scroll()
 	await _frames(20)

@@ -40,13 +40,6 @@ fn flatland_home_roofs_existing_stock_and_hearth() {
 
 fn construction(terrain: bool) {
     let mut engine = sim_test::colony_engine(29);
-    let test = if terrain {
-        "terrain_obstruction_still_builds_physical_beds_for_all_by_day10"
-    } else {
-        "flatland_home_roofs_existing_stock_and_hearth"
-    };
-    let watch = Watch::begin(test, 29, "original", &engine);
-    watch.annotate(&engine, "before_setup", || serde_json::json!({"classification": "controlled_full_production", "terrain": terrain, "recipe": "all Position to hearth; 25x25 Plain; clear radius8 trees/nodes/material; optional two Hill tiles; rebuild nav"}));
     // A controlled terrain fixture preserves real workers, resources and construction.
     // The stock's west side is an undug hill: ordinary walls cannot be placed there.
     let hearth = sim_systems::runtime::jobs::hearth::hearth_tiles(&engine.resources)[0];
@@ -97,7 +90,6 @@ fn construction(terrain: bool) {
         )
         .accepted
     );
-    watch.checkpoint(&engine, "after_setup");
     let mut housed = false;
     let mut first_hungry = None;
     let mut first_death = None;
@@ -173,9 +165,7 @@ fn construction(terrain: bool) {
     assert!(
         sim_systems::runtime::jobs::invariants::check(&engine.world, &engine.resources).is_ok()
     );
-    watch.checkpoint(&engine, "first_housed");
-    assert_completed_bed_assignment(&mut engine, test, &watch);
-    watch.finish(&engine, "first_housed_plus_1440");
+    assert_completed_bed_assignment(&mut engine);
 }
 
 fn failure_state(engine: &sim_engine::SimEngine) -> String {

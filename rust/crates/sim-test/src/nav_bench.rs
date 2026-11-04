@@ -28,20 +28,13 @@ pub const BUDGET_US: f64 = 600.0;
 
 /// Run the benchmark and return its JSON.
 pub fn run(script: &Path, agents: u32, ticks: u64) -> Result<Value, String> {
-    run_observed(script, agents, ticks).map(|(report, _)| report)
-}
-
-fn run_observed(script: &Path, agents: u32, ticks: u64) -> Result<(Value, Option<Value>), String> {
     let entries = crate::probe::colony::load_script(script)?;
     let load_before = load_average();
     let mut engine = build_world_with(
         &WorldGenConfig::colony_stress(BENCH_SEED, agents, 192),
         WorldRules::colony(BENCH_SEED),
     );
-    let observation = crate::perf_observation::Initial::capture(&engine)?;
     let mut gifts = 0u64;
-    let mut gift_requested = 0u64;
-    let mut gift_applied = 0u64;
     let mut gift = |engine: &mut SimEngine| -> Result<(), String> {
         let now = engine.current_tick();
         let offset = engine.resources.rules.clock_offset_ticks;
@@ -49,15 +42,7 @@ fn run_observed(script: &Path, agents: u32, ticks: u64) -> Result<(Value, Option
         if gifts == 0 || at_six {
             if let Some(home) = engine.resources.settlements.keys().copied().min() {
                 let amount = crate::perf::GIFT_PER_ALIVE * crate::perf::alive(engine);
-                let applied = crate::perf::gift_food(
-                    engine,
-                    home,
-                    u32::try_from(amount).unwrap_or(u32::MAX),
-                )?;
-                if observation.is_some() {
-                    gift_requested = gift_requested.saturating_add(amount);
-                    gift_applied = gift_applied.saturating_add(applied);
-                }
+                crate::perf::gift_food(engine, home, u32::try_from(amount).unwrap_or(u32::MAX))?;
                 gifts += 1;
             }
         }
@@ -69,7 +54,6 @@ fn run_observed(script: &Path, agents: u32, ticks: u64) -> Result<(Value, Option
         engine.tick();
         gift(&mut engine)?;
     }
-    let warmup_alive = observation.as_ref().map(|_| crate::perf::alive(&engine));
     let before = *engine.resources.nav.stats.borrow();
     let mut profile = engine.new_tick_profile();
     let started = Instant::now();
@@ -95,7 +79,7 @@ fn run_observed(script: &Path, agents: u32, ticks: u64) -> Result<(Value, Option
     let searches = after.searches - before.searches;
     let expanded = after.expanded - before.expanded;
     let rate = |a: u64, b: u64| if b == 0 { 0.0 } else { a as f64 / b as f64 };
-    let report = json!({
+    Ok(json!({
         "agents": agents, "seed": BENCH_SEED, "warmup_ticks": WARMUP, "measured_ticks": ticks,
         "script": script_name(script.path_hint()),
         "alive_end": crate::perf::alive(&engine),
@@ -121,20 +105,7 @@ fn run_observed(script: &Path, agents: u32, ticks: u64) -> Result<(Value, Option
         "run_seconds": seconds,
         "load_before": load_before, "load_after": load_average(),
         "build_profile": if cfg!(debug_assertions) { "debug" } else { "release" },
-    });
-    let safety = observation
-        .map(|start| {
-            let mut result = start.finish(
-                &engine,
-                WARMUP.checked_add(ticks).ok_or("horizon overflow")?,
-            )?;
-            result["warmup_alive"] = json!(warmup_alive);
-            result["interventions"] = json!({"gifts": gifts, "gift_requested": gift_requested,
-            "gift_applied": gift_applied});
-            Ok::<Value, String>(result)
-        })
-        .transpose()?;
-    Ok((report, safety))
+    }))
 }
 
 fn script_name(path: &str) -> String {
@@ -224,13 +195,15 @@ pub fn main(args: &[String]) -> Result<(), String> {
         i += 2;
     }
     let out = out.ok_or("--out is required")?;
-    let (report, safety) = run_observed(&commands, agents, ticks)?;
+    let report = run(&commands, agents, ticks)?;
     if let Some(dir) = out.parent() {
         std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
     }
-    let text = serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?;
-    std::fs::write(&out, &text).map_err(|e| e.to_string())?;
-    crate::perf_observation::write(&out, &text, safety.as_ref())?;
+    std::fs::write(
+        &out,
+        serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())?;
     println!(
         "nav_bench: N={} movement {:.1} µs/tick (budget {BUDGET_US}) {} | tick {:.1} µs | requests/100 ticks {:.1} | memo hits {:.1} % | mean expanded {:.1} | unreachable {} | load {} -> {}",
         report["agents"],

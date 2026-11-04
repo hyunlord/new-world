@@ -873,3 +873,13 @@ p134 전체 Python 실제 종료1(2,666개/4,328.222초, 오류1·skip6)의 유�
 보존 정책은 과거 인벤토리975항목을 분류했으며 데이터 삭제0·압축0·DGX전송0이다. 활성 p137·BASE identity·미해결 실패 원본이 기간 만료보다 우선한다. 이 세션 소유 유휴 LSP7개는 정확한 소유권 확인 뒤 종료·부재를 기록했으며 다른 세션이나 전역 설정을 바꾸지 않았다. [RETENTION_POLICY.md](/Users/rexxa/work/worldsim-operations/retention-20261103/RETENTION_POLICY.md), [retention-manifest.json](/Users/rexxa/work/worldsim-operations/retention-20261103/retention-manifest.json), [owned-idle-lsp-termination.json](/Users/rexxa/work/worldsim-operations/retention-20261103/owned-idle-lsp-termination.json).10/31 당시 활동은 M-READ로 좁혔지만 정확히 kill된 PID/명령은 **UNKNOWN**이다. 이후 별도 SHA의 실제51단계 gate PASS는 존재하나 과거 불명확한 실행을 소급 PASS로 만들지 않으며 추정 재실행도 요구하지 않는다. [interruption-1031.md](/Users/rexxa/work/worldsim-operations/retention-20261103/interruption-1031.md).
 
 이 체크포인트는 p137 실행의 증거와 문서 정책만 기록한다. 향후 p138 문서 커밋의 전체 gate 또는 Stage0–3 완료를 주장하지 않는다. 새로운 gameplay·visual·performance·held-out 증거는 없다.
+
+### Stage 0 종료 — D-S0-1..4, 2026-11-04
+
+**STOPPED / UNPUBLISHED.** 14:00–22:00 KST 새 시간 상한 안에서 조기 종료 경로를 택했다. 추가 tools408파일88,383줄 중 현재 gate 필수 의존만 약4만 줄이다. 미사용 삭제만으로8천 줄 목표에 닿지 않으며 전체 세계 qualification도 미완료여서, 새 실행 계층을 재작성하는 대신 게임 우선 결정에 따라 기존 M-LOOP/M-READ gate로 복귀했다. 잔여 작업은 [#685](https://github.com/hyunlord/new-world/issues/685)이다.
+
+[전체 추가 파일별 줄 수와 제거 목록](S0_TOOLING_INVENTORY.md):406파일 제거, 기존24도구 복원, 최종 추가 도구는 `generic_gate.py`와 `test_generic_gate_contract.py` **2파일696줄(테스트 포함)**이다. Rust 관찰자15파일도 제거하고 Rust32파일과 main_bootstrap을 게시 BASE0 바이트로 복원했다. 원래 제품 게임플레이를 바꾸지 않았으며, Stage0 원래 git 이력과 raw/실패 기록은 외부 m6b-data에 남는다. 구형 run_bounded/receipt 동작으로 돌아가는 한계도 목록에 명시했다.
+
+D-S0-1은 후보 KnowledgeLost수≤BASE수와 후보 생존≥BASE생존−2(전원 생존이면 founders−2)를 적용한다. 이벤트/horizon 검증은 유지했다. 수정 전 RED, 수정 후 집중29테스트 PASS. 기존573개 Python case import discovery 오류0은 실제 전체 suite 실행을 뜻하지 않는다. p137의2,673테스트/10native명령 성공은 당시 개발 증거로만 보존하며, 이번 generic gate 통과나 게시로 승격하지 않는다. BASE-vs-BASE 전체 PASS와 실제 고의 gameplay 결함 검출은 미완료다.
+
+Stage−1 게시 SHA `2f6993009ddb600e9249c28f9768a1a5252c8821`은 유지한다. Stage1 농경·#674/#675·#684 산수와 BASE 측정으로 즉시 진행하며 held-out1520–1551은 동결 전 사용하지 않는다.

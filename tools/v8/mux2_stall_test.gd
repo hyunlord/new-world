@@ -3,10 +3,6 @@
 # Automatic accumulator stays active. Windowed only; each arm has 10 startup + 300 measured seconds.
 extends SceneTree
 
-# Gate-only bridge reads are delegated to GateObserver.
-const GateObserver = preload("res://tools/v8/gate_ui_observer.gd")
-var _gate_observer: RefCounted = GateObserver.new("stall", "res://tools/v8/mux2_stall_test.gd")
-
 const Monitor = preload("res://tools/v8/mux2_perf_monitor.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
 const MAX_SECONDS: float = 900.0
@@ -39,28 +35,28 @@ func _run() -> void:
 		_errors = Monitor.self_test()
 		_errors.append_array(_admission_self_test())
 		print("MUX2_STALL_SELF_TEST failures=%s" % [_errors])
-		quit(_gate_observer.finish(0 if _errors.is_empty() else 1))
+		quit(0 if _errors.is_empty() else 1)
 		return
 	if args.size() == 2 and args[1] == "--diagnostic-120":
 		_diagnostic = true
 		args.resize(1)
 	if args.size() != 1:
 		push_error("usage: mux2_stall_test.gd -- /absolute/external/new-output-directory [--diagnostic-120]")
-		quit(_gate_observer.finish(1))
+		quit(1)
 		return
 	_out = args[0]
 	_settings_dir = OS.get_environment("WORLDSIM_TEST_SETTINGS_DIR")
 	if not _external(_out) or not _external(_settings_dir) or DirAccess.dir_exists_absolute(_out):
 		push_error("MUX2_STALL requires new external output directory and external WORLDSIM_TEST_SETTINGS_DIR")
-		quit(_gate_observer.finish(1))
+		quit(1)
 		return
 	if DisplayServer.get_name() == "headless" or not OS.has_feature("debug"):
 		push_error("MUX2_STALL requires windowed debug Godot, not dummy rendering")
-		quit(_gate_observer.finish(1))
+		quit(1)
 		return
 	if DirAccess.make_dir_recursive_absolute(_out) != OK or DirAccess.make_dir_recursive_absolute(_settings_dir) != OK:
 		push_error("MUX2_STALL cannot create evidence directories")
-		quit(_gate_observer.finish(1))
+		quit(1)
 		return
 	_report = {"started_utc": Time.get_datetime_string_from_system(true), "seed": 0, "speed": 1, "steward_enabled": true, "arms": [], "errors": _errors, "complete": false, "pass": false,
 		"purpose": "diagnostic_120_seconds_zoom1" if _diagnostic else "acceptance_5_minutes_each_zoom",
@@ -101,7 +97,6 @@ func _run() -> void:
 
 func _phase(zoom_level: float) -> void:
 	if is_instance_valid(_main):
-		_gate_observer.release(_main, "before_free")
 		_main.queue_free()
 		await process_frame
 		await process_frame
@@ -112,14 +107,12 @@ func _phase(zoom_level: float) -> void:
 	_main = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	_main.get_node("UI/MuxHud").set("store", Store.new(settings_path))
 	root.add_child(_main)
-	_gate_observer.capture(_main, "bootstrap")
 	_world = _main.get_node("WorldSim")
 	_camera = _main.get_node("Camera2D") as Camera2D
 	_camera.call("set_paused", true)
 	if not bool(_main.get("boot_ok")) or not bool(SimReads.mutate(_world, "reset_world", [0])):
 		_errors.append("bootstrap or reset failed")
 		return
-	_gate_observer.capture(_main, "after_reset", {"zoom": zoom_level})
 	var command: Dictionary = SimReads.mutate(_world, "cmd_set_steward", [true, 0])
 	if not bool(command.get("accepted", false)):
 		_errors.append("SetSteward command rejected")
@@ -153,7 +146,6 @@ func _phase(zoom_level: float) -> void:
 			return
 		monitor.setup(_main)
 		arm["sampling_started_epoch"] = Time.get_unix_time_from_system()
-	_gate_observer.capture(_main, "before_sampling", {"zoom": zoom_level})
 	var previous: int = Time.get_ticks_usec()
 	monitor.begin_sampling(previous)
 	var started: int = previous
@@ -188,7 +180,6 @@ func _phase(zoom_level: float) -> void:
 	arm["final_steward"] = state
 	arm["capture_complete"] = elapsed >= required_seconds and bool(state.get("enabled", false)) and _errors.is_empty() and int(arm["end_tick"]) > int(arm["start_tick"])
 	arm["complete"] = bool(arm["score"]["complete"]) and bool(arm["capture_complete"])
-	_gate_observer.capture(_main, "after_sampling", {"zoom": zoom_level, "end_tick": arm["end_tick"]})
 	_write_report()
 	print("MUX2_STALL_ARM zoom=%s complete=%s pass=%s >50=%s >33/min=%s" % [zoom_level, arm["complete"], arm["score"]["pass"], arm["score"]["post_warmup_over50"], arm["score"]["over33_per_minute"]])
 
@@ -318,7 +309,7 @@ func _finish() -> void:
 		_report["pass"] = false
 		diagnostic_complete = false
 	print("MUX2_STALL_DONE complete=%s pass=%s errors=%s evidence=%s" % [complete, _report["pass"], _errors, _out.path_join("stall-report.json")])
-	quit(_gate_observer.finish(0 if diagnostic_complete or bool(_report["pass"]) else 1))
+	quit(0 if diagnostic_complete or bool(_report["pass"]) else 1)
 
 func _write_report() -> bool:
 	var file: FileAccess = FileAccess.open(_out.path_join("stall-report.json"), FileAccess.WRITE)

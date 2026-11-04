@@ -235,3 +235,23 @@ When launcher admission gains a required source namespace, repair the isolated p
 ## D0-user-night-window-overrides-continuation — 2026-11-03
 
 The user's latest shared-Mac restriction overrides the earlier 48-hour goal and automatic continuation: on this shared Mac, 23:00–07:00 KST permits no build, test, experiment/simulation, Godot launch/foregrounding or LSP/indexing work; heavy archive I/O is daytime-only. Admit heavy work only when its expected longest duration plus cleanup fits 22:45 and actual owned children/waits can settle before 23:00; otherwise defer. Preserve original failures and UNKNOWN ownership, never use broad process-name kills or invent settlement to release a lane. The [external retention policy](/Users/rexxa/work/worldsim-operations/retention-20261103/RETENTION_POLICY.md) protects active p137/source/BASE identity and raw evidence; it is policy, not deployed OS enforcement or evidence of deletion/DGX transfer. This docs-only decision does not assert pending run outcomes or waive Stage0 proof/publication requirements.
+
+## D-S0-1 — Correct the absolute KnowledgeLost specification
+
+Owner/planner decision received 2026-11-03 23:00 KST; implementation effective from 2026-11-04 07:00 KST under the shared-Mac night rule. The absolute zero-KnowledgeLost requirement was a specification defect: BASE itself loses clay_digging in the CORE steward-OFF fixture with zero survivors. For each fixture and world, candidate KnowledgeLost must be <= merge-base KnowledgeLost. Candidate survivors must be >= merge-base survivors - 2, or >= founders - 2 when the base keeps every founder alive. This supersedes the absolute zero-loss requirement and resolves that acceptance-contract blocker; it does not retroactively change historical failed results. BASE-vs-BASE must pass with zero declared changes.
+
+## D-S0-2 — Bound Stage 0 and retain a working fallback
+
+Stage 0 stops growing. No new observer, audit, matrix or receipt layers. Fix only blockers to the generic gate passing BASE-vs-BASE with zero declared changes and rejecting the one deliberately broken candidate. Budget: eight working hours from 2026-11-04 07:00 KST; with continuous daytime work, deadline 15:00 KST that day. The earlier 48-hour deadline is superseded for this bounded continuation. If Stage 0 is not green and published by the deadline, stop Stage 0, record achieved and remaining work, open a follow-up issue, retain the working M-LOOP/M-READ gate mode for Stage 1, and proceed. Do not extend the budget to finish tooling.
+
+## D-S0-3 — Reduce tooling before publication
+
+Before Stage 0 publication, report every tools/ file added relative to published BASE0 (2f6993009ddb600e9249c28f9768a1a5252c8821) with line counts. Delete files unused by the gate or its tests, including one-off investigations, superseded runners and duplicate observers. Record the final added line count, targeting fewer than 8,000 lines including tests. Preserve evidence and raw logs outside the repository in m6b-data. Prepare a bounded cleanup plan and establish actual gate/test dependencies before deleting; do not replace removed tools with another framework. The owner's approximate 77,000 lines / 381 files are a reported estimate, not a fresh inventory.
+
+## D-S0-4 — Prioritize game systems after Stage 0
+
+After Stage 0 is published or stopped, proceed directly to Stage 1 farming and #684 steward work: design arithmetic, field/crop/seed/soil systems, visible fields and cards, with held-out seeds 1520-1551. Retain the earlier steward bars and spent-seed restrictions. For Stage 1 and later stages, add gate/audit tooling only to address a real failure and report its line count. Send a short Korean message when Stage 0 publishes or stops and whenever a later stage publishes. No gameplay, tests, builds, experiments, Godot, indexing or heavy cleanup is authorized during the shared-Mac night window.
+
+### D-S0-2 scheduling amendment — 2026-11-04 14:00 KST
+
+The owner restarted the eight-working-hour Stage0 budget at14:00KST on11/04 because no autonomous wakeup occurred. The decision/publication deadline is now22:00KST that day; this supersedes the07:00/15:00 schedule above. Continue through the authorized work in this turn. If the23:00–07:00 night rule requires stopping, explicitly tell the owner that a new "continue" after07:00 is needed; do not imply an installed wakeup scheduler.

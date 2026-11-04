@@ -1,7 +1,4 @@
 //! D-minus1: presentation release preserves the published steward policy.
-pub mod save_gate_observation;
-use save_gate_observation::Watch;
-
 use sim_core::colony::steward::{parse_rules, rules, StewardScope};
 use sim_core::colony::Command;
 use sim_systems::commands::submit;
@@ -10,31 +7,18 @@ use sim_systems::commands::submit;
 fn default_steward_policy_matches_published_base() {
     // Given the exact policy from fbc03bddb, decoded with retained optional fields.
     let _engine = sim_test::colony_engine(0);
-    let watch = Watch::begin(
-        "default_steward_policy_matches_published_base",
-        0,
-        "primary",
-        &_engine,
-    );
     let base =
         parse_rules(include_str!("fixtures/m6b_base_steward.ron")).expect("published BASE policy");
     // When the bundled default policy is resolved.
     let current = rules().expect("bundled policy");
     // Then no experimental rule, cap, grace, priority or parameter is enabled.
     assert_eq!(current, &base);
-    watch.finish(&_engine, "original_endpoint");
 }
 
 #[test]
 fn default_steward_does_not_accumulate_experimental_grace_state() {
     // Given an ordinary enabled colony with the presentation defaults.
     let mut engine = sim_test::colony_engine(0);
-    let watch = Watch::begin(
-        "default_steward_does_not_accumulate_experimental_grace_state",
-        0,
-        "primary",
-        &engine,
-    );
     assert!(
         submit(
             &mut engine,
@@ -64,5 +48,4 @@ fn default_steward_does_not_accumulate_experimental_grace_state() {
         .collect();
     assert!(!rules_fired.is_empty());
     assert!(rules_fired.iter().all(|rule| (1..=8).contains(rule)));
-    watch.finish(&engine, "original_endpoint");
 }

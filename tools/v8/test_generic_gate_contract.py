@@ -164,7 +164,8 @@ class GenericGateContracts(unittest.TestCase):
 
     def test_relative_survival_boundaries(self) -> None:
         for founders, base, candidate, accepted in ((10, 10, 8, True), (10, 10, 7, False),
-                (10, 6, 6, True), (10, 6, 5, False), (1, 0, 0, True)):
+                (10, 6, 4, True), (10, 6, 3, False), (10, 12, 8, True),
+                (10, 12, 7, False), (10, 2, 0, True), (1, 0, 0, True)):
             with self.subTest(founders=founders, base=base, candidate=candidate):
                 raw = safety()
                 raw.update(founders=founders, base_alive=base, candidate_alive=candidate)
@@ -208,14 +209,31 @@ class GenericGateContracts(unittest.TestCase):
         raw["base_lost"] = [[20, "unit_knowledge", None]]
         self.assertIsNone(validate_ordinary_safety(json.dumps(raw)))
         raw["lost"] = [[20, "unit_knowledge", None]]
-        self.rejected(validate_ordinary_safety, raw)
+        self.assertIsNone(validate_ordinary_safety(json.dumps(raw)))
 
-    def test_equal_base_core_off_loss_cannot_be_waived(self) -> None:
+    def test_equal_base_core_off_loss_passes_relative_self_comparison(self) -> None:
         # Given: synthetic reuse of vector07's documented loss, not a new world run.
         raw = safety()
         raw.update(base_alive=0, candidate_alive=0, end_tick=28800, planned_end_tick=28800,
                    lost=[[28560, "clay_digging", 9]], base_lost=[[28560, "clay_digging", 9]])
-        self.rejected(validate_ordinary_safety, raw)  # Equality never waives ordinary loss.
+        self.assertIsNone(validate_ordinary_safety(json.dumps(raw)))
+
+    def test_candidate_loss_count_cannot_exceed_base(self) -> None:
+        raw = safety()
+        raw["base_lost"] = [[20, "unit_knowledge", 1]]
+        raw["lost"] = [[20, "unit_knowledge", 1], [30, "other_knowledge", None]]
+        self.rejected(validate_ordinary_safety, raw)
+
+    def test_relative_loss_allowance_still_validates_every_event(self) -> None:
+        for field in ("lost", "base_lost"):
+            for bad in json_values(([[14401, "unit_knowledge", 1]],
+                                   [[20, "unit_knowledge", True]], [[20, 1, None]])):
+                with self.subTest(field=field, bad=bad):
+                    raw = safety()
+                    raw["lost"] = [[20, "unit_knowledge", None]]
+                    raw["base_lost"] = [[20, "unit_knowledge", None]]
+                    raw[field] = bad
+                    self.rejected(validate_ordinary_safety, raw)
 
     def test_safety_rejects_erased_history_wrong_horizon_or_control_reclassification(self) -> None:
         for key, value in json_cases((("prior_loss_history_complete", False), ("base_prior_loss_history_complete", False), ("complete", False),

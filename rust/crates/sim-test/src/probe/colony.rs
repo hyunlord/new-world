@@ -67,8 +67,6 @@ pub struct ColonyArgs {
     pub commands_out: Option<PathBuf>,
     /// Run a lockstep twin and compare fingerprints.
     pub check_determinism: bool,
-    /// Emit read-only per-world gate observation sidecars.
-    pub gate_observations: bool,
     /// Where to write each seed's chronicle (`chronicle_<seed>.json`).
     pub chronicle_out: Option<PathBuf>,
     /// Save the world when the run reaches this tick (with `save_out`, one seed).
@@ -93,15 +91,6 @@ pub struct ColonyArgs {
 impl ColonyArgs {
     /// Parse argv (without the program name); `--scene colony` is accepted and ignored.
     pub fn parse(args: impl IntoIterator<Item = String>) -> Result<Self, String> {
-        let setting = std::env::var_os("WORLDSIM_GATE_OBSERVER");
-        Self::parse_with_gate_setting(args, setting.as_deref())
-    }
-
-    fn parse_with_gate_setting(
-        args: impl IntoIterator<Item = String>,
-        setting: Option<&std::ffi::OsStr>,
-    ) -> Result<Self, String> {
-        let environment_enabled = super::ProbeArgs::gate_observations_enabled(false, setting)?;
         let mut parsed = Self {
             seeds: 0..1,
             days: 10,
@@ -110,7 +99,6 @@ impl ColonyArgs {
             commands: None,
             commands_out: None,
             check_determinism: false,
-            gate_observations: false,
             chronicle_out: None,
             save_at: None,
             save_out: None,
@@ -137,13 +125,6 @@ impl ColonyArgs {
                     return Err("duplicate --b4-observe".into());
                 }
                 observe = true;
-                continue;
-            }
-            if flag == "--gate-observations" {
-                if parsed.gate_observations {
-                    return Err("duplicate --gate-observations".into());
-                }
-                parsed.gate_observations = true;
                 continue;
             }
             if flag == "--check-determinism" {
@@ -250,7 +231,6 @@ impl ColonyArgs {
         {
             return Err("M-UX2 requires 48 days, steward on, explicit defence arm, story/neighbours on and no player script".into());
         }
-        parsed.gate_observations |= environment_enabled;
         Ok(parsed)
     }
 }
@@ -1862,30 +1842,6 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         }
     }
     let total = args.days * DAY;
-    let mut gate_primary = args
-        .gate_observations
-        .then(|| {
-            super::gate_observation::GateObservation::begin(
-                &engine, &args.out, "colony", seed, "primary", total,
-            )
-        })
-        .transpose()?;
-    let mut gate_twin = if args.gate_observations {
-        twin.as_ref()
-            .map(|world| {
-                super::gate_observation::GateObservation::begin(
-                    world,
-                    &args.out,
-                    "colony",
-                    seed,
-                    "determinism_twin",
-                    total,
-                )
-            })
-            .transpose()?
-    } else {
-        None
-    };
     let mut next = 0usize;
     let mut placed_tick: Option<u64> = None;
     let mut hut_done_tick: Option<u64> = None;
@@ -1914,221 +1870,178 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut repeats: Vec<(u64, usize)> = Vec::new();
     #[cfg(feature = "perf_arms")]
     let mut arms = crate::arm_profile::ArmProfile::start();
-    let loop_result = (|| -> Result<(), String> {
-        for tick in 0..total {
-            let mut avoid = Vec::new();
-            while next < script.len() && script[next].tick <= tick {
-                waiting.push(next);
-                next += 1;
+    for tick in 0..total {
+        let mut avoid = Vec::new();
+        while next < script.len() && script[next].tick <= tick {
+            waiting.push(next);
+            next += 1;
+        }
+        repeats.retain(|&(at, i)| {
+            if at <= tick {
+                waiting.push(i);
+                false
+            } else {
+                true
             }
-            repeats.retain(|&(at, i)| {
-                if at <= tick {
-                    waiting.push(i);
-                    false
-                } else {
-                    true
-                }
-            });
-            let due: Vec<usize> = waiting
-                .iter()
-                .copied()
-                .filter(|&i| entry_ready(&engine, &script[i].spec))
-                .collect();
-            waiting.retain(|i| !due.contains(i));
-            if args.gate_observations {
-                for &i in &due {
-                    if script[i].spec["cmd"].as_str() == Some("debug_kill") {
-                        if let Some(watch) = gate_primary.as_mut() {
-                            watch.checkpoint(&engine, i, &script[i].spec, None)?;
-                        }
-                        if let (Some(watch), Some(world)) = (gate_twin.as_mut(), twin.as_ref()) {
-                            watch.checkpoint(world, i, &script[i].spec, None)?;
-                        }
-                    }
-                }
+        });
+        let due: Vec<usize> = waiting
+            .iter()
+            .copied()
+            .filter(|&i| entry_ready(&engine, &script[i].spec))
+            .collect();
+        waiting.retain(|i| !due.contains(i));
+        for i in due {
+            if let Some(days) = script[i].spec["every_days"].as_u64().filter(|d| *d > 0) {
+                repeats.push((tick + days * DAY, i));
             }
-            for i in due {
-                if let Some(days) = script[i].spec["every_days"].as_u64().filter(|d| *d > 0) {
-                    repeats.push((tick + days * DAY, i));
-                }
-                for (resolved_index, cmd) in resolve(&engine, &script[i].spec, &mut avoid)?
-                    .into_iter()
-                    .enumerate()
-                {
-                    if let Command::DebugKill { agent } = &cmd {
-                        if let Some(watch) = gate_primary.as_mut() {
-                            watch.checkpoint(
-                                &engine,
-                                i,
-                                &script[i].spec,
-                                Some((resolved_index, *agent)),
-                            )?;
-                        }
-                        if let (Some(watch), Some(world)) = (gate_twin.as_mut(), twin.as_ref()) {
-                            watch.checkpoint(
-                                world,
-                                i,
-                                &script[i].spec,
-                                Some((resolved_index, *agent)),
-                            )?;
-                        }
-                    }
-                    if matches!(cmd, Command::Steward { .. }) {
-                        engine.resources.steward.pending.push((tick, cmd.clone()));
-                        if let Some(t) = twin.as_mut() {
-                            t.resources.steward.pending.push((tick, cmd));
-                        }
-                        continue;
-                    }
-                    let before = b4.as_ref().map(|watch| watch.before_command(&engine, &cmd));
-                    let result = submit(&mut engine, cmd.clone());
-                    if let (Some(watch), Some(before)) = (b4.as_mut(), before) {
-                        watch.after_command(&engine, before, &result);
-                    }
+            for cmd in resolve(&engine, &script[i].spec, &mut avoid)? {
+                if matches!(cmd, Command::Steward { .. }) {
+                    engine.resources.steward.pending.push((tick, cmd.clone()));
                     if let Some(t) = twin.as_mut() {
-                        if submit(t, cmd.clone()) != result {
-                            return Err(format!(
-                                "DETERMINISM FAIL seed={seed} tick={tick} (command result)"
-                            ));
-                        }
+                        t.resources.steward.pending.push((tick, cmd));
                     }
-                    if result.accepted {
-                        match &cmd {
-                            Command::PlaceBlueprint { .. } if placed_tick.is_none() => {
-                                placed_tick = Some(tick)
-                            }
-                            Command::DesignateChopTiles { tiles } => {
-                                designated.extend(tiles.iter().copied());
-                                designated_tick.get_or_insert(tick);
-                            }
-                            Command::DesignateChop { .. } => {
-                                designated = engine
-                                    .resources
-                                    .colony
-                                    .designations
-                                    .keys()
-                                    .copied()
-                                    .collect();
-                                designated_tick.get_or_insert(tick);
-                            }
-                            _ => {}
-                        }
+                    continue;
+                }
+                let before = b4.as_ref().map(|watch| watch.before_command(&engine, &cmd));
+                let result = submit(&mut engine, cmd.clone());
+                if let (Some(watch), Some(before)) = (b4.as_mut(), before) {
+                    watch.after_command(&engine, before, &result);
+                }
+                if let Some(t) = twin.as_mut() {
+                    if submit(t, cmd.clone()) != result {
+                        return Err(format!(
+                            "DETERMINISM FAIL seed={seed} tick={tick} (command result)"
+                        ));
                     }
                 }
-            }
-            if let Some(watch) = steward_watch.as_mut() {
-                watch.before_tick(&engine);
-            }
-            if let Some(watch) = b4.as_mut() {
-                watch.before_tick(&engine);
-            }
-            mind_coverage.before_tick(&engine.resources);
-            let started = Instant::now();
-            engine.tick();
-            tick_ns.push(started.elapsed().as_nanos() as u64);
-            mind_coverage.after_tick(&engine.resources);
-            #[cfg(feature = "perf_arms")]
-            arms.after_tick();
-            demography.after_tick(&engine);
-            economy.after_tick(&engine);
-            space.after_tick(&engine);
-            knowledge.after_tick(&engine);
-            m5.after_tick(&engine);
-            m55.after_tick(&engine);
-            if let Some(watch) = steward_watch.as_mut() {
-                watch.after_tick(&engine);
-            }
-            if let Some(watch) = mux2_watch.as_mut() {
-                watch.after_tick(&engine);
-            }
-            if let Some(t) = twin.as_mut() {
-                t.tick();
-                #[cfg(feature = "perf_arms")]
-                crate::arm_profile::ArmProfile::discard();
-            }
-            if let Err(problem) = invariants::check(&engine.world, &engine.resources) {
-                if problem.contains("ledger") {
-                    ledger_bad += 1;
-                } else {
-                    reserve_bad += 1;
-                }
-                if first_bad.is_null() {
-                    first_bad = json!({"tick": tick, "problem": problem});
-                }
-            }
-            if let Some(watch) = b4.as_mut() {
-                watch.conservation(ledger_bad, reserve_bad);
-                watch.after_tick(&engine);
-            }
-            if hut_done_tick.is_none() && engine.resources.colony.tallies.huts_built > 0 {
-                hut_done_tick = Some(tick);
-            }
-            if felled_all_tick.is_none()
-                && !designated.is_empty()
-                && designated
-                    .iter()
-                    .all(|t| !engine.resources.colony.trees.contains_key(t))
-            {
-                felled_all_tick = Some(tick);
-            }
-            let after = tick + 1;
-            if let (Some(at), Some(path)) = (args.save_at, &args.save_out) {
-                if after == at {
-                    let bytes = sim_systems::save::save(&mut engine)
-                        .map_err(|e| format!("save at tick {at}: {e}"))?;
-                    std::fs::write(path, bytes).map_err(|e| format!("{}: {e}", path.display()))?;
-                }
-            }
-            if after == 5 * DAY {
-                let c = &engine.resources.colony;
-                loose_day5 = Some(
-                    c.ground_items
-                        .iter()
-                        .filter(|(t, s)| s.kind == ItemKind::Log && !c.zone_of_tile.contains_key(t))
-                        .map(|(_, s)| u64::from(s.count))
-                        .sum(),
-                );
-            }
-            if after % 240 == 0 {
-                let print = colony_fingerprint(&engine);
-                if let Some(t) = &twin {
-                    if colony_fingerprint(t) != print {
-                        return Err(format!("DETERMINISM FAIL seed={seed} tick={after}"));
-                    }
-                }
-                if after % DAY == 0 {
-                    fingerprints.insert(after / DAY, print);
-                    // LOOP-CAL-9: per-day log count (ground + in zones) and cap target.
-                    let c = &engine.resources.colony;
-                    let day_logs: u64 = c
-                        .ground_items
-                        .iter()
-                        .filter(|(_, s)| s.kind == ItemKind::Log)
-                        .map(|(_, s)| u64::from(s.count))
-                        .sum();
-                    logs_ground_by_day.push(day_logs);
-                    let ct = sim_systems::runtime::steward::planning::wood_cap_target(
-                        &engine.world,
-                        &engine.resources,
-                    );
-                    cap_target_by_day.push(match ct {
-                        Some((t, bn, ps)) => {
-                            json!({"target": t, "building_need": bn, "pending_shelter": ps})
+                if result.accepted {
+                    match &cmd {
+                        Command::PlaceBlueprint { .. } if placed_tick.is_none() => {
+                            placed_tick = Some(tick)
                         }
-                        None => Value::Null,
-                    });
+                        Command::DesignateChopTiles { tiles } => {
+                            designated.extend(tiles.iter().copied());
+                            designated_tick.get_or_insert(tick);
+                        }
+                        Command::DesignateChop { .. } => {
+                            designated = engine
+                                .resources
+                                .colony
+                                .designations
+                                .keys()
+                                .copied()
+                                .collect();
+                            designated_tick.get_or_insert(tick);
+                        }
+                        _ => {}
+                    }
                 }
             }
         }
-        Ok(())
-    })();
-    if let Some(watch) = gate_primary {
-        watch.finish(&engine, loop_result.is_ok())?;
+        if let Some(watch) = steward_watch.as_mut() {
+            watch.before_tick(&engine);
+        }
+        if let Some(watch) = b4.as_mut() {
+            watch.before_tick(&engine);
+        }
+        mind_coverage.before_tick(&engine.resources);
+        let started = Instant::now();
+        engine.tick();
+        tick_ns.push(started.elapsed().as_nanos() as u64);
+        mind_coverage.after_tick(&engine.resources);
+        #[cfg(feature = "perf_arms")]
+        arms.after_tick();
+        demography.after_tick(&engine);
+        economy.after_tick(&engine);
+        space.after_tick(&engine);
+        knowledge.after_tick(&engine);
+        m5.after_tick(&engine);
+        m55.after_tick(&engine);
+        if let Some(watch) = steward_watch.as_mut() {
+            watch.after_tick(&engine);
+        }
+        if let Some(watch) = mux2_watch.as_mut() {
+            watch.after_tick(&engine);
+        }
+        if let Some(t) = twin.as_mut() {
+            t.tick();
+            #[cfg(feature = "perf_arms")]
+            crate::arm_profile::ArmProfile::discard();
+        }
+        if let Err(problem) = invariants::check(&engine.world, &engine.resources) {
+            if problem.contains("ledger") {
+                ledger_bad += 1;
+            } else {
+                reserve_bad += 1;
+            }
+            if first_bad.is_null() {
+                first_bad = json!({"tick": tick, "problem": problem});
+            }
+        }
+        if let Some(watch) = b4.as_mut() {
+            watch.conservation(ledger_bad, reserve_bad);
+            watch.after_tick(&engine);
+        }
+        if hut_done_tick.is_none() && engine.resources.colony.tallies.huts_built > 0 {
+            hut_done_tick = Some(tick);
+        }
+        if felled_all_tick.is_none()
+            && !designated.is_empty()
+            && designated
+                .iter()
+                .all(|t| !engine.resources.colony.trees.contains_key(t))
+        {
+            felled_all_tick = Some(tick);
+        }
+        let after = tick + 1;
+        if let (Some(at), Some(path)) = (args.save_at, &args.save_out) {
+            if after == at {
+                let bytes = sim_systems::save::save(&mut engine)
+                    .map_err(|e| format!("save at tick {at}: {e}"))?;
+                std::fs::write(path, bytes).map_err(|e| format!("{}: {e}", path.display()))?;
+            }
+        }
+        if after == 5 * DAY {
+            let c = &engine.resources.colony;
+            loose_day5 = Some(
+                c.ground_items
+                    .iter()
+                    .filter(|(t, s)| s.kind == ItemKind::Log && !c.zone_of_tile.contains_key(t))
+                    .map(|(_, s)| u64::from(s.count))
+                    .sum(),
+            );
+        }
+        if after % 240 == 0 {
+            let print = colony_fingerprint(&engine);
+            if let Some(t) = &twin {
+                if colony_fingerprint(t) != print {
+                    return Err(format!("DETERMINISM FAIL seed={seed} tick={after}"));
+                }
+            }
+            if after % DAY == 0 {
+                fingerprints.insert(after / DAY, print);
+                // LOOP-CAL-9: per-day log count (ground + in zones) and cap target.
+                let c = &engine.resources.colony;
+                let day_logs: u64 = c
+                    .ground_items
+                    .iter()
+                    .filter(|(_, s)| s.kind == ItemKind::Log)
+                    .map(|(_, s)| u64::from(s.count))
+                    .sum();
+                logs_ground_by_day.push(day_logs);
+                let ct = sim_systems::runtime::steward::planning::wood_cap_target(
+                    &engine.world,
+                    &engine.resources,
+                );
+                cap_target_by_day.push(match ct {
+                    Some((t, bn, ps)) => {
+                        json!({"target": t, "building_need": bn, "pending_shelter": ps})
+                    }
+                    None => Value::Null,
+                });
+            }
+        }
     }
-    if let (Some(watch), Some(world)) = (gate_twin, twin.as_ref()) {
-        watch.finish(world, loop_result.is_ok())?;
-    }
-    loop_result?;
     if let Some(dir) = &args.commands_out {
         std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
         std::fs::write(
@@ -2232,29 +2145,6 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
 
 /// Run every seed (a scoped pool of `workers`) and write the outputs.
 pub fn run(args: &ColonyArgs) -> Result<(), String> {
-    let setting = std::env::var_os("WORLDSIM_GATE_OBSERVER");
-    run_with_gate_setting(args, setting.as_deref())
-}
-
-fn effective_gate_args<'a>(
-    args: &'a ColonyArgs,
-    setting: Option<&std::ffi::OsStr>,
-) -> Result<std::borrow::Cow<'a, ColonyArgs>, String> {
-    let enabled = super::ProbeArgs::gate_observations_enabled(args.gate_observations, setting)?;
-    if enabled == args.gate_observations {
-        return Ok(std::borrow::Cow::Borrowed(args));
-    }
-    let mut observed = args.clone();
-    observed.gate_observations = enabled;
-    Ok(std::borrow::Cow::Owned(observed))
-}
-
-fn run_with_gate_setting(
-    args: &ColonyArgs,
-    setting: Option<&std::ffi::OsStr>,
-) -> Result<(), String> {
-    let effective = effective_gate_args(args, setting)?;
-    let args = effective.as_ref();
     let script = match &args.commands {
         Some(path) => load_script(path)?,
         None => Vec::new(),
@@ -2425,7 +2315,6 @@ mod tests {
             commands: Some(script),
             commands_out: Some(base.join("log")),
             check_determinism: false,
-            gate_observations: false,
             chronicle_out: None,
             save_at: None,
             save_out: None,
@@ -2471,7 +2360,6 @@ mod tests {
             commands: Some(script),
             commands_out: Some(base.join("log")),
             check_determinism: false,
-            gate_observations: false,
             chronicle_out: None,
             save_at: None,
             save_out: None,
@@ -2596,93 +2484,5 @@ mod mux2_args_tests {
         }
         let old = ColonyArgs::parse(Vec::<String>::new()).expect("legacy defaults");
         assert!(old.defence.is_none() && old.mux2_policy.is_none());
-    }
-}
-
-#[cfg(test)]
-mod gate_environment_tests {
-    use super::*;
-    use std::ffi::OsStr;
-
-    #[test]
-    fn environment_and_flag_are_independent_opt_ins() {
-        for setting in [None, Some(OsStr::new("1"))] {
-            for cli in [false, true] {
-                let args = if cli {
-                    vec!["--gate-observations".to_string()]
-                } else {
-                    Vec::new()
-                };
-                let parsed =
-                    ColonyArgs::parse_with_gate_setting(args, setting).expect("valid setting");
-                assert_eq!(parsed.gate_observations, cli || setting.is_some());
-            }
-            let duplicate = [
-                "--gate-observations".to_string(),
-                "--gate-observations".to_string(),
-            ];
-            assert!(ColonyArgs::parse_with_gate_setting(duplicate, setting)
-                .expect_err("duplicate flag")
-                .contains("duplicate"));
-        }
-        for value in ["", "0", "true", " 1", "1 "] {
-            for cli in [false, true] {
-                let args = if cli {
-                    vec!["--gate-observations".to_string()]
-                } else {
-                    Vec::new()
-                };
-                assert_eq!(
-                    ColonyArgs::parse_with_gate_setting(args, Some(OsStr::new(value)))
-                        .expect_err("invalid environment"),
-                    "WORLDSIM_GATE_OBSERVER must be absent or 1"
-                );
-            }
-        }
-    }
-
-    #[test]
-    fn direct_args_borrow_unchanged_and_clone_only_when_enabled() {
-        for setting in [None, Some(OsStr::new("1"))] {
-            for enabled in [false, true] {
-                let mut args = ColonyArgs::parse_with_gate_setting(Vec::new(), None)
-                    .expect("default arguments");
-                args.gate_observations = enabled;
-                let before = format!("{args:?}");
-                let effective = effective_gate_args(&args, setting).expect("valid setting");
-                assert_eq!(effective.gate_observations, enabled || setting.is_some());
-                assert_eq!(format!("{args:?}"), before);
-                match effective {
-                    std::borrow::Cow::Borrowed(borrowed) => {
-                        assert!(enabled || setting.is_none());
-                        assert!(std::ptr::eq(borrowed, &args));
-                    }
-                    std::borrow::Cow::Owned(mut owned) => {
-                        assert!(!enabled && setting.is_some());
-                        owned.gate_observations = enabled;
-                        assert_eq!(format!("{owned:?}"), before);
-                    }
-                }
-            }
-        }
-    }
-
-    #[test]
-    fn direct_run_rejects_invalid_environment_before_script_or_output_access() {
-        let executable = std::env::current_exe().expect("test executable");
-        for value in ["", "0", "true", " 1", "1 "] {
-            for enabled in [false, true] {
-                let mut args = ColonyArgs::parse_with_gate_setting(Vec::new(), None)
-                    .expect("default arguments");
-                args.gate_observations = enabled;
-                args.out = executable.join("never-created");
-                args.commands = Some(executable.join("missing-script"));
-                assert_eq!(
-                    run_with_gate_setting(&args, Some(OsStr::new(value)))
-                        .expect_err("invalid environment precedes filesystem access"),
-                    "WORLDSIM_GATE_OBSERVER must be absent or 1"
-                );
-            }
-        }
     }
 }

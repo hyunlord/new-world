@@ -8,12 +8,9 @@ checks); the system table is generated (`python3 tools/v8/system_table.py --writ
 
 ## 1. Crates and folders
 
-M6b Stage0 gate tooling is being integrated under [ADR0057](decisions/0057-generic-gate-evidence.md).
-Opt-in observers live in `sim-test` producers/test helpers and the `sim-bridge`
-FFI boundary, with gate-only GDScript sidecars. They are not simulation resources,
-save fields or command producers. Generic tooling keeps harness/product/source
-identities and actual reset/load occurrences separate. Runtime neutrality,
-complete safety coverage and Stage0 publication remain pending.
+M6b Stage0 generic-gate development was stopped under D-S0-2 on2026-11-04.
+The published M-LOOP/M-READ gate remains in use; the unfinished observer/dispatcher
+layers were removed. Small reusable contract tests remain; [ADR0057](decisions/0057-generic-gate-evidence.md) records the retired design and [#685](https://github.com/hyunlord/new-world/issues/685) tracks remaining work.
 
 The simulation is Rust; Godot 4.6 draws it and takes input through one
 GDExtension class. Dependency direction (no cycles):

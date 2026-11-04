@@ -20,11 +20,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 mkdir -p "$OUT"
 admitted_run() {
     local label="$1"; shift
-    if [[ -n "${WORLDSIM_MEASUREMENT_DEADLINE_EPOCH:-}" ]]; then
-        # Admission only: the original shell still starts and waits for this exact command.
-        python3 "$SCRIPT_DIR/generic_whole_gate_perf_admission.py" "$OUT/admission.jsonl" "$label" "$WORLDSIM_MEASUREMENT_DEADLINE_EPOCH" || return "$?"
-        "$@"
-    elif [[ -n "${CORE_P7_RUN:-}" ]]; then
+    if [[ -n "${CORE_P7_RUN:-}" ]]; then
         python3 "$SCRIPT_DIR/core_p7_admission.py" --log "$OUT/admission.jsonl" --label "$label" -- "$@"
     else
         "$@"

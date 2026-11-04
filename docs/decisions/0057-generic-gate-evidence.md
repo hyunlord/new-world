@@ -1,5 +1,7 @@
 # ADR 0057: Generic gate evidence binds products and native world occurrences
 
+> Retired before publication, 2026-11-04: D-S0-2 stops this execution/observer design. Published legacy gate restored; only small contract tests retained. Follow-up #685. Historical decisions below are evidence, not an active implementation requirement.
+
 Status: implementation in progress; runtime qualification and publication pending.
 
 ## Context

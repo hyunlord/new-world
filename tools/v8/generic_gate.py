@@ -222,11 +222,12 @@ def ordinary_safety(node: Node) -> None:
     founders = integer(node.field("founders"))
     base_alive = integer(node.field("base_alive"))
     candidate_alive = integer(node.field("candidate_alive"))
-    floor = max(0, min(founders - 2, base_alive))
+    floor = max(0, (founders if base_alive >= founders else base_alive) - 2)
     require(candidate_alive >= floor, node.label, f"survival {candidate_alive} below BASE-relative floor {floor}")
-    _ = loss_rows(node.field("base_lost"), end)
+    base_losses = loss_rows(node.field("base_lost"), end)
     losses = loss_rows(node.field("lost"), end)
-    require(not losses, node.field("lost").label, "ordinary candidate has KnowledgeLost")
+    require(len(losses) <= len(base_losses), node.field("lost").label,
+            f"candidate KnowledgeLost {len(losses)} exceeds BASE {len(base_losses)}")
 
 
 @boundary

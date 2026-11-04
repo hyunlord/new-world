@@ -1,18 +1,17 @@
 """M6a gate cannot inherit UI-only equality, P7 exceptions or incomplete gates."""
 from __future__ import annotations
 
+from pathlib import Path
 import json
 import tempfile
 import unittest
-from pathlib import Path
 from unittest.mock import patch
 
-from gate_legacy_test_fixture import legacy_gate_bytes
 from m6a_evidence import EvidenceError, Node, reference_json
-from m6a_gate_art import structural_command
-from m6a_gate_art import validate as validate_plant_art
+from m6a_gate_source import CONFLICTING, Gate, environment, keys
 from m6a_gate_evidence import gate_steps
-from m6a_gate_source import CONFLICTING, SCOPES, Gate, environment, keys
+from m6a_gate_art import structural_command, validate as validate_plant_art
+from m6a_gate_source import SCOPES
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -168,8 +167,8 @@ class GateContractTests(unittest.TestCase):
                 with self.assertRaises(EvidenceError):
                     build()
 
-    def test_historical_dispatch_preserves_legacy_steps(self) -> None:
-        text = legacy_gate_bytes().decode()
+    def test_dispatch_preserves_legacy_steps(self) -> None:
+        text = (ROOT / 'tools/v8/gate.sh').read_text()
         for index in range(1, 49):
             self.assertRegex(text, rf'(?m)^\s*step {index} ')
         self.assertIn('M6A_GATE_CONFIG', text)

@@ -14,7 +14,6 @@ import re
 import subprocess
 import sys
 import time
-from collections.abc import Mapping
 from pathlib import Path
 
 from read_summary_normalise import first_difference, load_json, normalise_pair
@@ -62,7 +61,7 @@ BENCH_CEILINGS = {
 }
 
 
-def validate_bench_report(data: Mapping[str, object], require_ceilings: bool = True) -> None:
+def validate_bench_report(data, require_ceilings=True):
     """Require each producer scene once and literal PASS ceiling verdicts."""
     scenes = data.get("scenes")
     if not isinstance(scenes, list) or len(scenes) != len(BENCH_SCENES) or any(not isinstance(scene, dict) for scene in scenes) or {scene.get("label") for scene in scenes} != BENCH_SCENES:
@@ -263,7 +262,7 @@ def stall_waiver(stall_report_path):
 
 # ── Bench ratio rule (for unit tests) ──────────────────────────────────
 
-def check_bench_ratio(base_median: float, new_median: float, limit: float = 1.10) -> tuple[bool, float]:
+def check_bench_ratio(base_median, new_median, limit=1.10):
     """Return (pass, ratio)."""
     if any(type(value) not in (int, float) or not math.isfinite(value) or value <= 0 for value in (base_median, new_median, limit)):
         raise ValueError("bench ratio requires finite positive numbers")

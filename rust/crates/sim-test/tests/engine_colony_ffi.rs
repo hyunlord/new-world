@@ -3,9 +3,6 @@
 //! `get_colony_overlay`, `get_colony_versions` and the agent snapshot's
 //! `jobs` / `carry_kinds` / `carry_counts` columns, called headless.
 
-pub mod save_gate_observation;
-use save_gate_observation::Watch;
-
 use sim_bridge::ffi::{
     can_place, collect_agent_jobs, collect_agent_snapshot, collect_colony_overlay,
     collect_colony_versions, collect_trees, submit_blueprint, submit_rect, submit_tiles,
@@ -17,7 +14,6 @@ use sim_systems::worldgen::colony::hearth;
 #[test]
 fn colony_reads_follow_the_orders() {
     let mut engine = sim_test::colony_engine(0);
-    let watch = Watch::begin("colony_reads_follow_the_orders", 0, "primary", &engine);
     let (version, trees) = collect_trees(&engine.resources);
     assert_eq!(trees.len(), engine.resources.colony.trees.len());
     assert!(
@@ -96,18 +92,11 @@ fn colony_reads_follow_the_orders() {
         "rejected off-map rects are not logged"
     );
     let _ = h;
-    watch.finish(&engine, "original_endpoint");
 }
 
 #[test]
 fn agent_job_columns_match_the_snapshot_rows() {
     let mut engine = sim_test::colony_engine(1);
-    let watch = Watch::begin(
-        "agent_job_columns_match_the_snapshot_rows",
-        1,
-        "primary",
-        &engine,
-    );
     let rows = collect_agent_snapshot(&engine.world);
     let jobs = collect_agent_jobs(&engine.world);
     assert_eq!(rows.len(), jobs.len());
@@ -132,13 +121,4 @@ fn agent_job_columns_match_the_snapshot_rows() {
     assert_eq!(marked.len(), 1);
     assert_eq!(rows[marked[0]].entity_bits, entity.to_bits().get());
     assert_eq!(jobs[marked[0]], (0, 0, 4));
-    watch.annotate(&engine, "carry_intervention", || {
-        serde_json::json!({
-            "kind": "direct_carry_insert", "selected_row": marked[0],
-            "selected_entity_bits": entity.to_bits().get(),
-            "snapshot_entity_bits": rows.iter().map(|row| row.entity_bits).collect::<Vec<_>>(),
-            "jobs": jobs, "item": "Log", "count": 4
-        })
-    });
-    watch.finish(&engine, "original_endpoint");
 }

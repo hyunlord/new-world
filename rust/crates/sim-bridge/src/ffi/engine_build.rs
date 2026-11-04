@@ -271,18 +271,8 @@ const MAX_TOOLING_ADVANCE_TICKS: i64 = 200_000;
 
 /// Advance the same engine used by the runtime without invoking Godot.
 pub fn advance_engine_ticks(engine: &mut SimEngine, n: i64) -> u64 {
-    advance_engine_ticks_observed(engine, n, |_| {})
-}
-
-/// Advance with an external read-only observer after each completed tick.
-pub(super) fn advance_engine_ticks_observed(
-    engine: &mut SimEngine,
-    n: i64,
-    mut after_tick: impl FnMut(&SimEngine),
-) -> u64 {
     for _ in 0..n.clamp(0, MAX_TOOLING_ADVANCE_TICKS) {
         engine.tick();
-        after_tick(engine);
     }
     engine.current_tick()
 }

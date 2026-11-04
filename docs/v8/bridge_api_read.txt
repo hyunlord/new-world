@@ -67,7 +67,6 @@ func WorldSimNode.get_content_catalog
 func WorldSimNode.get_current_task
 func WorldSimNode.get_drafted
 func WorldSimNode.get_event_chain
-func WorldSimNode.get_gate_observation
 func WorldSimNode.get_influence_overlay
 func WorldSimNode.get_knowledge_waits
 func WorldSimNode.get_neighbours

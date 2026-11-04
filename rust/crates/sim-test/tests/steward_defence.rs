@@ -1,8 +1,6 @@
 //! M-UX2 automatic defence: real runtime registration, player precedence and safety.
 mod colony_support;
-pub mod save_gate_observation;
 use colony_support::adults;
-use save_gate_observation::Watch;
 use sim_core::colony::people::{DraftOrder, Drafted};
 use sim_core::colony::steward::StewardScope;
 use sim_core::colony::{Command, ItemKind, ItemSpec, Tool};
@@ -11,15 +9,8 @@ use sim_systems::commands::submit;
 
 fn armed_colony() -> sim_engine::SimEngine {
     let mut engine = sim_test::colony_engine(0);
-    arm_fixture(&mut engine, None);
-    engine
-}
-fn arm_fixture(engine: &mut sim_engine::SimEngine, watch: Option<&Watch>) {
     engine.tick();
-    if let Some(watch) = watch {
-        watch.annotate(engine, "before_arming", || serde_json::json!({"adult_ids": adults(engine).iter().map(|(id, _)| *id).collect::<Vec<_>>() }));
-    }
-    for (_, entity) in adults(engine) {
+    for (_, entity) in adults(&engine) {
         engine
             .world
             .insert_one(
@@ -36,8 +27,8 @@ fn arm_fixture(engine: &mut sim_engine::SimEngine, watch: Option<&Watch>) {
             .item_ledger
             .create(ItemKind::Spear, 1);
     }
+    engine
 }
-
 fn incoming(engine: &mut sim_engine::SimEngine) {
     let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
     let at = (
@@ -707,13 +698,8 @@ fn asymmetric_weapon_reach_reassigns_flexible_adult_so_four_can_defend() {
 
 #[test]
 fn exported_replay_file_preserves_both_ordinary_and_fast_source_phases() {
-    let test = "exported_replay_file_preserves_both_ordinary_and_fast_source_phases";
-    let mut original = sim_test::colony_engine(0);
-    let watch = Watch::begin(test, 0, "original", &original);
-    watch.annotate(&original, "before_setup", || serde_json::json!({"classification": "controlled_full_production", "intervention": "tick once; arm adults with created spear; spawn four wolves pack42; enable steward"}));
-    arm_fixture(&mut original, Some(&watch));
+    let mut original = armed_colony();
     incoming(&mut original);
-    watch.checkpoint(&original, "after_setup");
     let start = original.current_tick();
     let until = start + 720;
     while original.current_tick() < until {
@@ -736,7 +722,6 @@ fn exported_replay_file_preserves_both_ordinary_and_fast_source_phases() {
     let loaded: Vec<serde_json::Value> =
         serde_json::from_slice(&std::fs::read(&file).expect("read replay file"))
             .expect("decode replay file");
-    watch.retain_file(&file, "exported_replay");
     std::fs::remove_file(file).expect("remove temporary replay file");
     let phases: std::collections::BTreeSet<_> = loaded
         .iter()
@@ -747,17 +732,12 @@ fn exported_replay_file_preserves_both_ordinary_and_fast_source_phases() {
         std::collections::BTreeSet::from(["after_assignment", "before_flight"])
     );
 
-    let mut replay = sim_test::colony_engine(0);
-    let replay_watch = Watch::begin(test, 0, "replay", &replay);
-    replay_watch.annotate(&replay, "before_setup", || serde_json::json!({"intervention": "same arm and incoming setup as original; reset steward and clear log; replay exported bytes retained under original occurrence"}));
-    arm_fixture(&mut replay, Some(&replay_watch));
+    let mut replay = armed_colony();
     incoming(&mut replay);
-    replay_watch.checkpoint(&replay, "before_replay_reset");
     // Keep the same world fixture, then let the exported player command restore policy.
     replay.resources.steward = Default::default();
     replay.resources.steward.replay = true;
     replay.resources.colony.command_log.clear();
-    replay_watch.checkpoint(&replay, "after_replay_reset");
     let mut consumed = 0;
     while replay.current_tick() < until {
         let tick = replay.current_tick();
@@ -807,8 +787,6 @@ fn exported_replay_file_preserves_both_ordinary_and_fast_source_phases() {
         sim_test::probe::colony::colony_fingerprint(&original),
         sim_test::probe::colony::colony_fingerprint(&replay)
     );
-    watch.finish(&original, "initial_tick_plus_721");
-    replay_watch.finish(&replay, "initial_tick_plus_721");
 }
 
 #[test]

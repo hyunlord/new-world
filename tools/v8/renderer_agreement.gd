@@ -17,10 +17,6 @@
 #   on any failure push_error(...) and exit 1.
 extends SceneTree
 
-# Gate-only bridge reads are delegated to GateObserver.
-const GateObserver = preload("res://tools/v8/gate_ui_observer.gd")
-var _gate_observer: RefCounted = GateObserver.new("renderer.agreement", "res://tools/v8/renderer_agreement.gd")
-
 const View = preload("res://scripts/world/colony/view.gd")
 const SETTLE_FRAMES_MAX: int = 6000
 
@@ -49,7 +45,7 @@ func _init() -> void:
 
 func _fail(message: String) -> void:
 	push_error("renderer_agreement: " + message)
-	quit(_gate_observer.finish(1))
+	quit(1)
 
 
 func _run() -> void:
@@ -63,7 +59,6 @@ func _run() -> void:
 	var log_entries: Array = parsed
 	var main: Node = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
-	_gate_observer.capture(main, "bootstrap")
 	await process_frame
 	var world: Node = main.get_node_or_null("WorldSim")
 	var reads: Node = main.get_node_or_null("SimReads")
@@ -72,10 +67,7 @@ func _run() -> void:
 		_fail("main.tscn lacks WorldSim, SimReads or ColonyView/AgentLayer")
 		return
 	world.set("process_mode", Node.PROCESS_MODE_DISABLED)
-	if _gate_observer.enabled:
-		_gate_observer.capture(main, "before_reset", {"commands_path": _commands, "commands_sha256": FileAccess.get_sha256(_commands)})
 	reads.call("mutate_raw", "reset_world", [_seed])
-	_gate_observer.capture(main, "after_reset")
 	var steward_command: Dictionary = reads.call("mutate_raw", "cmd_set_steward", [false, 0])
 	for _i: int in 10:
 		await process_frame
@@ -110,7 +102,6 @@ func _run() -> void:
 	if _now(world) != _tick:
 		_fail("reached tick %d, wanted %d" % [_now(world), _tick])
 		return
-	_gate_observer.capture(main, "replay_complete")
 	var settled: bool = false
 	for frame: int in SETTLE_FRAMES_MAX:
 		await process_frame
@@ -140,7 +131,7 @@ func _run() -> void:
 	file.store_string(JSON.stringify(out, "  ", false))
 	file.close()
 	print("RENDERER_AGREEMENT_GODOT_DONE tick=%d people=%d settled=%s" % [_now(world), people.size(), str(settled)])
-	quit(_gate_observer.finish(0))
+	quit(0)
 
 
 func _now(world: Node) -> int:

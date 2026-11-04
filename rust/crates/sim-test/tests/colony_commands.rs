@@ -5,8 +5,6 @@
 //! world reproduces it exactly.
 
 mod colony_support;
-pub mod save_gate_observation;
-use save_gate_observation::Watch;
 
 use colony_support::*;
 use sim_core::colony::{BlueprintKind, ColonySite, Command, ItemKind, MaterialNeeds, RejectReason};
@@ -353,14 +351,8 @@ fn commands_keep_the_ledger_and_move_logs_out_of_a_new_footprint() {
 }
 
 /// A scripted colony run: three orders at fixed ticks.
-fn scripted_run(seed: u64, ticks: u64) -> (SimEngine, Watch) {
+fn scripted_run(seed: u64, ticks: u64) -> SimEngine {
     let mut engine = sim_test::colony_engine(seed);
-    let watch = Watch::begin(
-        "replay_of_the_command_log_reproduces_the_run",
-        seed,
-        "original",
-        &engine,
-    );
     let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
     for tick in 0..ticks {
         match tick {
@@ -405,7 +397,7 @@ fn scripted_run(seed: u64, ticks: u64) -> (SimEngine, Watch) {
         }
         engine.tick();
     }
-    (engine, watch)
+    engine
 }
 
 fn digest(engine: &SimEngine) -> String {
@@ -427,17 +419,11 @@ fn digest(engine: &SimEngine) -> String {
 #[test]
 fn replay_of_the_command_log_reproduces_the_run() {
     let ticks = 1_200;
-    let (original, original_watch) = scripted_run(3, ticks);
+    let original = scripted_run(3, ticks);
     let log = original.resources.colony.command_log.clone();
     assert_eq!(log.len(), 3, "every order is logged");
     assert!(log.iter().all(|r| r.result.accepted), "{log:?}");
     let mut replay = sim_test::colony_engine(3);
-    let replay_watch = Watch::begin(
-        "replay_of_the_command_log_reproduces_the_run",
-        3,
-        "recorded_replay",
-        &replay,
-    );
     let mut next = 0;
     for tick in 0..ticks {
         while next < log.len() && log[next].tick == tick {
@@ -451,19 +437,10 @@ fn replay_of_the_command_log_reproduces_the_run() {
     assert_eq!(digest(&replay), digest(&original));
     // The orders mattered: the run without them differs.
     let mut idle = sim_test::colony_engine(3);
-    let idle_watch = Watch::begin(
-        "replay_of_the_command_log_reproduces_the_run",
-        3,
-        "idle_control",
-        &idle,
-    );
     for _ in 0..ticks {
         idle.tick();
     }
     assert_ne!(digest(&idle), digest(&original));
-    original_watch.finish(&original, "exact_1200_scripted_ticks");
-    replay_watch.finish(&replay, "exact_1200_recorded_replay_ticks");
-    idle_watch.finish(&idle, "exact_1200_idle_control_ticks");
 }
 
 /// Use M3 to make the fixture hut available to ordinary job builders.

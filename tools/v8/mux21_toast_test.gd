@@ -4,10 +4,6 @@
 # Run windowed or headless after import: --script res://tools/v8/mux21_toast_test.gd
 extends SceneTree
 
-# Gate-only bridge reads are delegated to GateObserver.
-const GateObserver = preload("res://tools/v8/gate_ui_observer.gd")
-var _gate_observer: RefCounted = GateObserver.new("toast", "res://tools/v8/mux21_toast_test.gd")
-
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Capture = preload("res://tools/v8/mux21_play_capture.gd")
@@ -62,12 +58,8 @@ func _run() -> void:
 	_event_normalization()
 	var main: Node = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	var hud: Node = main.get_node("UI/MuxHud")
-	var settings_path: String = "/tmp/mux21-toast-%d.cfg" % OS.get_process_id()
-	if OS.has_environment("WORLDSIM_TEST_SETTINGS_DIR"):
-		settings_path = OS.get_environment("WORLDSIM_TEST_SETTINGS_DIR").path_join("toast-%d.cfg" % OS.get_process_id())
-	hud.set("store", Store.new(settings_path))
+	hud.set("store", Store.new("/tmp/mux21-toast-%d.cfg" % OS.get_process_id()))
 	root.add_child(main)
-	_gate_observer.capture(main, "bootstrap")
 	_check("real scene boot", bool(main.get("boot_ok")))
 	if not bool(main.get("boot_ok")):
 		_finish()
@@ -119,4 +111,4 @@ func _run() -> void:
 
 func _finish() -> void:
 	print("MUX21_TOAST_DONE " + JSON.stringify({"checks": checks, "failures": failures, "scope": "HUD cursor/queue logic and JSON comparison; not natural defence or pixel acceptance"}))
-	quit(_gate_observer.finish(0 if failures == 0 else 1))
+	quit(0 if failures == 0 else 1)
