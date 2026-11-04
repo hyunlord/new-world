@@ -562,6 +562,22 @@ fn pick_work(
                 } else {
                     1
                 };
+                // Bill ids are globally unique; this count comes from committed Craft jobs.
+                // Urgent fuel may overlap a bounded refill with that bill's active craft.
+                let prefetch =
+                    (fuel_bill_only && in_progress > 0 && rule.space.is_some()).then(|| {
+                        let remaining = match bill.mode {
+                            BillMode::Make(_) => {
+                                bill.remaining().unwrap_or(0).saturating_sub(in_progress)
+                            }
+                            BillMode::Maintain(n) => u32::from(n)
+                                .saturating_sub(
+                                    ctx.made.get(&recipe.output.0).copied().unwrap_or(0),
+                                )
+                                .div_ceil(u32::from(recipe.output.1.max(1))),
+                        };
+                        remaining.min(SUPPLY_CRAFTS) as u16
+                    });
                 let selected = selected_tool(res, shop, recipe);
                 let mut needs = recipe.needs_with_tool(selected);
                 let pot = super::craft_food::pot_need(res, shop, recipe, ctx.practice);
@@ -575,10 +591,16 @@ fn pick_work(
                         || Some(kind) == pot;
                     let coming = ctx.supply.get(&(id, kind)).copied().unwrap_or(0);
                     let have = shop.shelved(kind) + coming;
-                    if have >= n {
+                    let refill = if knife { None } else { prefetch };
+                    let threshold = refill.map_or(n, |count| n.saturating_mul(count));
+                    if have >= threshold {
                         continue;
                     }
-                    let n = if knife { n } else { n.saturating_mul(crafts) };
+                    let n = if knife {
+                        n
+                    } else {
+                        n.saturating_mul(refill.unwrap_or(crafts))
+                    };
                     let stocked = search(
                         &index.ground,
                         pos,

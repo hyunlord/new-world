@@ -1010,3 +1010,187 @@ fn winter_forecast_first_morning_uses_winter_rate_without_changing_booked_night(
         "possible winter Cold night requires78, not prior-season52"
     );
 }
+
+#[test]
+fn urgent_fuel_prefetch_overlaps_committed_craft() {
+    let (mut world, mut res, crafter) = fuel_build_scene(true);
+    JobAssignSystem::new().tick(&mut world, &mut res);
+    assert!(matches!(
+        world.get::<&Job>(crafter).unwrap().kind,
+        JobKind::Craft {
+            workshop: 1,
+            bill: 1,
+            ..
+        }
+    ));
+    let worker = world.spawn((
+        Agent { id: 2 },
+        Position::new(2, 2),
+        AgentState::Idle,
+        Hunger::new(0.0, 0.0),
+        WorkPriorities::defaults(false),
+    ));
+    JobAssignSystem::new().tick(&mut world, &mut res);
+    let job = world.get::<&Job>(worker).unwrap();
+    assert!(
+        matches!(job.kind, JobKind::Supply { workshop: 1, .. }),
+        "{job:?}"
+    );
+    assert_eq!(job.amount, 4, "five future crafts minus one shelved log");
+    assert!(matches!(
+        world.get::<&Job>(crafter).unwrap().kind,
+        JobKind::Craft {
+            workshop: 1,
+            bill: 1,
+            ..
+        }
+    ));
+}
+
+#[test]
+fn urgent_fuel_prefetch_bounds_remaining_work_and_incoming_inputs() {
+    use sim_core::colony::BillMode;
+    for (mode, expected) in [
+        (BillMode::Make(3), 1),
+        (BillMode::Maintain(12), 1),
+        (BillMode::Make(2), 0),
+        (BillMode::Maintain(8), 0),
+    ] {
+        let (mut world, mut res, crafter) = fuel_build_scene(true);
+        res.colony.workshops.get_mut(&1).unwrap().bills[0].mode = mode;
+        JobAssignSystem::new().tick(&mut world, &mut res);
+        assert!(matches!(
+            world.get::<&Job>(crafter).unwrap().kind,
+            JobKind::Craft { .. }
+        ));
+        let worker = world.spawn((
+            Agent { id: 2 },
+            Position::new(2, 2),
+            AgentState::Idle,
+            Hunger::new(0.0, 0.0),
+            WorkPriorities::defaults(false),
+        ));
+        JobAssignSystem::new().tick(&mut world, &mut res);
+        let job = *world.get::<&Job>(worker).unwrap();
+        if expected == 0 {
+            assert!(
+                matches!(job.kind, JobKind::Deliver { .. }),
+                "{mode:?}: {job:?}"
+            );
+        } else {
+            assert!(
+                matches!(job.kind, JobKind::Supply { workshop: 1, .. }),
+                "{mode:?}: {job:?}"
+            );
+            assert_eq!(job.amount, expected);
+            // A second unreserved source makes the incoming-count control meaningful.
+            res.colony.ground_items.insert(
+                (1, 3),
+                sim_core::colony::ItemStack::of(
+                    ItemSpec::raw(ItemKind::role("tree_output"), None),
+                    20,
+                ),
+            );
+            res.colony.touch(false);
+            let third = world.spawn((
+                Agent { id: 3 },
+                Position::new(2, 2),
+                AgentState::Idle,
+                Hunger::new(0.0, 0.0),
+                WorkPriorities::defaults(false),
+            ));
+            JobAssignSystem::new().tick(&mut world, &mut res);
+            assert!(
+                !matches!(
+                    world.get::<&Job>(third).unwrap().kind,
+                    JobKind::Supply { workshop: 1, .. }
+                ),
+                "incoming already covers remaining inputs"
+            );
+        }
+    }
+}
+
+#[test]
+fn urgent_fuel_prefetch_requires_urgent_enabled_bill() {
+    use sim_core::colony::Command;
+    for control in 0..4 {
+        let (mut world, mut res, crafter) = fuel_build_scene(true);
+        JobAssignSystem::new().tick(&mut world, &mut res);
+        assert!(matches!(
+            world.get::<&Job>(crafter).unwrap().kind,
+            JobKind::Craft { .. }
+        ));
+        match control {
+            0 => {
+                res.settlements
+                    .get_mut(&1)
+                    .unwrap()
+                    .stockpile
+                    .insert(sim_core::components::ResourceKind::Wood, 1000);
+            }
+            1 => res.steward.enabled = false,
+            2 => res.rules.colony.as_mut().unwrap().space = None,
+            _ => {
+                assert!(
+                    crate::commands::apply_command(
+                        &mut world,
+                        &mut res,
+                        Command::SetBillSuspended {
+                            workshop: 1,
+                            bill: 1,
+                            suspended: true
+                        }
+                    )
+                    .accepted
+                );
+            }
+        }
+        let worker = world.spawn((
+            Agent { id: 2 },
+            Position::new(2, 2),
+            AgentState::Idle,
+            Hunger::new(0.0, 0.0),
+            WorkPriorities::defaults(false),
+        ));
+        JobAssignSystem::new().tick(&mut world, &mut res);
+        assert!(
+            matches!(
+                world.get::<&Job>(worker).unwrap().kind,
+                JobKind::Deliver { .. }
+            ),
+            "control {control}"
+        );
+    }
+}
+
+#[test]
+fn urgent_fuel_prefetch_overlaps_started_craft_after_consumption() {
+    let (mut world, mut res, crafter) = fuel_build_scene(true);
+    let log = ItemKind::role("tree_output");
+    res.colony.workshops.get_mut(&1).unwrap().shelf[0].count = 2;
+    res.colony.item_ledger.created.insert(log, 22);
+    JobAssignSystem::new().tick(&mut world, &mut res);
+    let tile = res.colony.workshops[&1].work_tile();
+    *world.get::<&mut Position>(crafter).unwrap() = Position::new(tile.0, tile.1);
+    super::JobExecuteSystem::new().tick(&mut world, &mut res);
+    assert!(matches!(
+        world.get::<&Job>(crafter).unwrap().stage,
+        sim_core::colony::JobStage::Working { .. }
+    ));
+    assert_eq!(res.colony.workshops[&1].shelved(log), 1);
+    let worker = world.spawn((
+        Agent { id: 2 },
+        Position::new(2, 2),
+        AgentState::Idle,
+        Hunger::new(0.0, 0.0),
+        WorkPriorities::defaults(false),
+    ));
+    JobAssignSystem::new().tick(&mut world, &mut res);
+    let job = world.get::<&Job>(worker).unwrap();
+    assert!(
+        matches!(job.kind, JobKind::Supply { workshop: 1, .. }),
+        "{job:?}"
+    );
+    assert_eq!(job.amount, 4);
+}
