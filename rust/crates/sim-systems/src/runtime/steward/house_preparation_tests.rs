@@ -874,3 +874,212 @@ fn house_order_preserves_occupied_reservations_and_independent_nav_stats() {
         }
     }
 }
+
+#[test]
+fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
+    let mut e = engine(29);
+    let data = sim_core::colony::steward::rules().expect("rules");
+    let home = data
+        .rules
+        .iter()
+        .find(|r| matches!(r.action, Action::House { .. }))
+        .expect("house");
+    let wood = data
+        .rules
+        .iter()
+        .find(|r| matches!(r.action, Action::Wood { .. }))
+        .expect("wood");
+    let stock = data
+        .rules
+        .iter()
+        .find(|r| matches!(r.action, Action::Stockpile { .. }))
+        .expect("stock");
+    for command in plan(&e.world, &e.resources, stock) {
+        assert!(crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted);
+    }
+    e.resources.colony.trees.clear();
+    e.resources.content_state.tree_materials.clear();
+    e.resources.steward.enabled = true;
+    e.resources.steward.extended = true;
+    let hearth = hearth_tiles(&e.resources)[0];
+    for (_, position) in e.world.query::<&mut Position>().iter() {
+        position.x = hearth.0;
+        position.y = hearth.1;
+    }
+    let Action::Wood {
+        items,
+        camp_radius,
+        cap_log_margin,
+        ..
+    } = &wood.action
+    else {
+        unreachable!()
+    };
+    assert!(cap_log_margin.is_some());
+    let clean = reference_house(&e.world, &e.resources, hearth, &home.action, false);
+    let mut witness = None;
+    for command in &clean.commands {
+        let Command::PlaceBlueprint { x, y, .. } = command else {
+            continue;
+        };
+        let tile = (*x, *y);
+        if distance(tile, hearth) <= *camp_radius {
+            continue;
+        }
+        let previous = e
+            .resources
+            .steward
+            .vetoes
+            .insert(Target::Tile(tile.0, tile.1), e.resources.current_tick + 100);
+        let alternative = reference_house(&e.world, &e.resources, hearth, &home.action, false);
+        e.resources
+            .steward
+            .vetoes
+            .remove(&Target::Tile(tile.0, tile.1));
+        if let Some(until) = previous {
+            e.resources
+                .steward
+                .vetoes
+                .insert(Target::Tile(tile.0, tile.1), until);
+        }
+        if !alternative.commands.is_empty() && !alternative.reserved.contains(&tile) {
+            witness = Some((tile, alternative));
+            break;
+        }
+    }
+    let (tree_tile, alternative) = witness.expect("real later tree-free candidate");
+    assert!(!clean.reserved.contains(&hearth) && !alternative.reserved.contains(&hearth));
+    e.resources.colony.ground_items.insert(
+        hearth,
+        sim_core::colony::ItemStack::of(sim_core::colony::ItemSpec::raw(items[0], None), 1000),
+    );
+    e.resources
+        .colony
+        .trees
+        .insert(tree_tile, sim_core::colony::Tree { logs: 3 });
+    e.resources.steward.vetoes.insert(
+        Target::Tile(tree_tile.0, tree_tile.1),
+        e.resources.current_tick + 100,
+    );
+    let witness_after_tree = reference_house(&e.world, &e.resources, hearth, &home.action, false);
+    assert!(!witness_after_tree.commands.is_empty());
+    assert!(witness_after_tree
+        .commands
+        .iter()
+        .all(|c| matches!(c, Command::PlaceBlueprint { .. })));
+    e.resources
+        .steward
+        .vetoes
+        .remove(&Target::Tile(tree_tile.0, tree_tile.1));
+    let (target, _, _, _, _) = wood_budget_observation(&e.world, &e.resources).expect("cap budget");
+    assert!(target <= maintain_count(&e.world, &e.resources, items[0]));
+    assert!(!plan(&e.world, &e.resources, wood)
+        .iter()
+        .any(|c| matches!(c, Command::DesignateChopTiles { .. })));
+    let old = reference_house(&e.world, &e.resources, hearth, &home.action, false);
+    assert!(
+        old.commands.iter().any(
+            |c| matches!(c, Command::DesignateChopTiles { tiles } if tiles.contains(&tree_tile))
+        ),
+        "old candidate should clear {tree_tile:?}"
+    );
+    let selected = house(&e.world, &e.resources, hearth, &home.action, false);
+    assert!(
+        !selected.commands.is_empty(),
+        "tree-free candidate remains available"
+    );
+    assert!(
+        selected
+            .commands
+            .iter()
+            .all(|c| matches!(c, Command::PlaceBlueprint { .. })),
+        "capped house must skip new clearing: {:?}",
+        selected.commands
+    );
+    assert!(!selected.covered.contains(&tree_tile));
+    let preview = house(&e.world, &e.resources, hearth, &home.action, true);
+    assert_eq!(preview.reserved, selected.reserved);
+    assert_eq!(preview.covered, selected.covered);
+    // One physical tree reaches the boundary exactly; one additional log rejects it.
+    let cost: u32 = clean
+        .commands
+        .iter()
+        .filter_map(|command| match command {
+            Command::PlaceBlueprint { kind, .. } => Some(
+                kind.definition()
+                    .needs
+                    .iter()
+                    .filter(|need| items.contains(&need.item))
+                    .map(|need| u32::from(need.count))
+                    .sum::<u32>(),
+            ),
+            _ => None,
+        })
+        .sum();
+    let (_, building, _, margin, fuel) =
+        wood_budget_observation(&e.world, &e.resources).expect("budget");
+    let candidate_target = building.max(cost) + margin + fuel;
+    let (have, marked) = wood_supply(&e.world, &e.resources, items, true);
+    assert_eq!(marked, 0);
+    let others = have - 1000;
+    let stock = u16::try_from(
+        candidate_target
+            .checked_sub(others + 3)
+            .expect("positive headroom"),
+    )
+    .expect("stock count");
+    e.resources
+        .colony
+        .ground_items
+        .get_mut(&hearth)
+        .expect("logs")
+        .count = stock;
+    let (_, _, _, _, after_fuel) = wood_budget_observation(&e.world, &e.resources).expect("budget");
+    assert_eq!(
+        after_fuel, fuel,
+        "stock change must not change executable fuel inputs"
+    );
+    let exact = house(&e.world, &e.resources, hearth, &home.action, false);
+    assert!(exact
+        .commands
+        .iter()
+        .any(|c| matches!(c, Command::DesignateChopTiles { tiles } if tiles.contains(&tree_tile))));
+    e.resources
+        .colony
+        .trees
+        .get_mut(&tree_tile)
+        .expect("tree")
+        .logs = 4;
+    let excess = house(&e.world, &e.resources, hearth, &home.action, false);
+    assert!(
+        !excess.covered.contains(&tree_tile),
+        "one log beyond headroom must choose another site"
+    );
+    e.resources
+        .colony
+        .ground_items
+        .get_mut(&hearth)
+        .expect("logs")
+        .count = 1000;
+    e.resources
+        .colony
+        .designations
+        .insert(tree_tile, sim_core::colony::Designation::Chop);
+    let waiting = house(&e.world, &e.resources, hearth, &home.action, false);
+    assert_eq!(
+        waiting.reserved, old.reserved,
+        "already accepted clearance adds no yield twice"
+    );
+    assert!(waiting.commands.is_empty());
+    e.resources.colony.designations.remove(&tree_tile);
+    e.resources.steward.enabled = false;
+    assert_eq!(
+        house(&e.world, &e.resources, hearth, &home.action, false).reserved,
+        old.reserved,
+        "inactive cap preserves original candidate choice"
+    );
+    e.resources.steward.enabled = true;
+    for command in selected.commands {
+        assert!(crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted);
+    }
+}

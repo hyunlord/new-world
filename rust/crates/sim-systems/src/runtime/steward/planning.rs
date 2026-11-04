@@ -102,6 +102,45 @@ fn permitted(res: &SimResources, tile: Tile) -> bool {
         .vetoed(&Target::Tile(tile.0, tile.1), res.current_tick)
         && camp_reaches(res, tile)
 }
+fn wood_supply(
+    world: &World,
+    res: &SimResources,
+    items: &[sim_core::colony::ItemKind],
+    capped: bool,
+) -> (u32, u32) {
+    let have: u32 = items
+        .iter()
+        .filter(|kind| !capped || kind.definition().fuel_units.is_none())
+        .map(|&k| maintain_count(world, res, k))
+        .sum::<u32>()
+        .saturating_add(if !capped {
+            crate::runtime::jobs::hearth::settlement_wood(res)
+        } else {
+            0
+        });
+    let marked: u32 = res
+        .colony
+        .trees
+        .iter()
+        .filter(|(t, _)| res.colony.designations.contains_key(t))
+        .map(|(_, t)| u32::from(t.logs))
+        .sum();
+    (have, marked)
+}
+
+fn building_log_need(world: &World, items: &[sim_core::colony::ItemKind]) -> u32 {
+    world
+        .query::<&sim_core::colony::MaterialNeeds>()
+        .iter()
+        .map(|(_, n)| {
+            n.used()
+                .filter(|l| items.contains(&l.kind))
+                .map(|l| u32::from(l.needed.saturating_sub(l.delivered)))
+                .sum::<u32>()
+        })
+        .sum()
+}
+
 /// Evaluate one rule without mutating simulation state.
 pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
     let Some(hearth) = hearth_tiles(res).first().copied() else {
@@ -153,33 +192,8 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             batch,
             cap_log_margin,
         } => {
-            let have: u32 = items
-                .iter()
-                .filter(|kind| cap_log_margin.is_none() || kind.definition().fuel_units.is_none())
-                .map(|&k| maintain_count(world, res, k))
-                .sum::<u32>()
-                .saturating_add(if cap_log_margin.is_none() {
-                    crate::runtime::jobs::hearth::settlement_wood(res)
-                } else {
-                    0
-                });
-            let marked: u32 = res
-                .colony
-                .trees
-                .iter()
-                .filter(|(t, _)| res.colony.designations.contains_key(t))
-                .map(|(_, t)| u32::from(t.logs))
-                .sum();
-            let building_need: u32 = world
-                .query::<&sim_core::colony::MaterialNeeds>()
-                .iter()
-                .map(|(_, n)| {
-                    n.used()
-                        .filter(|l| items.contains(&l.kind))
-                        .map(|l| u32::from(l.needed.saturating_sub(l.delivered)))
-                        .sum::<u32>()
-                })
-                .sum();
+            let (have, marked) = wood_supply(world, res, items, cap_log_margin.is_some());
+            let building_need = building_log_need(world, items);
             // LOOP-CAL-9: when a log cap is set, the target is the larger
             // of the existing building need and the pending shelter estimate
             // (the house the steward is about to place but hasn't yet), plus
@@ -755,6 +769,34 @@ fn house(
         .collect();
     profile.phase(3);
     profile.candidates(locations.len());
+    // Only an enabled capped Wood policy admits new housing-clearance production.
+    let clearing_budget = sim_core::colony::steward::rules().ok().and_then(|data| {
+        data.rules.iter().find_map(|rule| {
+            let Action::Wood {
+                items,
+                cap_log_margin: Some(margin),
+                ..
+            } = &rule.action
+            else {
+                return None;
+            };
+            if !res.steward.enabled
+                || !res.steward.scope.permits(rule.scope)
+                || (rule.extended && !res.steward.extended)
+            {
+                return None;
+            }
+            let (have, marked) = wood_supply(world, res, items, true);
+            Some((
+                items,
+                have.saturating_add(marked),
+                building_log_need(world, items),
+                pending_shelter_logs(world, res, items),
+                *margin,
+                fuel_input_need(world, res, items),
+            ))
+        })
+    });
     let locations = house_locations(locations, &stock_capacity, stride, hearth);
     profile.phase(4);
     let camp_radius = sim_core::colony::steward::rules()
@@ -986,6 +1028,41 @@ fn house(
             .copied()
             .chain(room.tiles.iter().copied().map(local))
             .collect();
+        if let Some((items, committed, building, pending, margin, fuel)) = clearing_budget {
+            let added: u32 = clearing
+                .iter()
+                .filter(|tile| !res.colony.designations.contains_key(tile))
+                .filter_map(|tile| res.colony.trees.get(tile))
+                .map(|tree| u32::from(tree.logs))
+                .sum();
+            if added > 0 {
+                let log_cost = |kind: sim_core::colony::BlueprintKind| {
+                    kind.definition()
+                        .needs
+                        .iter()
+                        .filter(|need| items.contains(&need.item))
+                        .map(|need| u32::from(need.count))
+                        .sum::<u32>()
+                };
+                let cost = border
+                    .iter()
+                    .filter_map(|command| match command {
+                        Command::PlaceBlueprint { kind, .. } => Some(log_cost(*kind)),
+                        _ => None,
+                    })
+                    .sum::<u32>()
+                    .saturating_add(log_cost(bed).saturating_mul(beds));
+                let demand = if store {
+                    building.max(pending).saturating_add(cost)
+                } else {
+                    building.max(cost)
+                };
+                let target = demand.saturating_add(margin).saturating_add(fuel);
+                if committed.saturating_add(added) > target {
+                    continue;
+                }
+            }
+        }
         if !clearing.is_empty() {
             let tiles = clearing
                 .into_iter()

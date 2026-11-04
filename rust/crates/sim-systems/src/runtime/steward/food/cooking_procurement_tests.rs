@@ -68,10 +68,10 @@ fn cooking_procurement_combines_shared_inputs_without_double_subtraction() {
     )
     .expect("physical shared ingredient");
     let facts = super::super::summary(&world, &res, &policy);
-    // When each recipe receives 12 of the existing 24 daily portions.
+    // Physical priority cooking uses four grain for six portions; the residual18 needs twelve grain.
     let demand = super::super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
-    // Then porridge needs eight grain, fruit porridge six, less five already held.
-    assert_eq!(demand.get(&grain), Some(&9));
+    // One physical grain remains, so eleven new grain fund the residual budget without berries.
+    assert_eq!(demand.get(&grain), Some(&11));
 }
 
 #[test]
@@ -97,9 +97,28 @@ fn cooking_procurement_counts_pending_output_without_reusing_its_inputs() {
         let (mut world, mut res, policy) = ten_adult_cooking_fixture(&["porridge"]);
         let grain = ItemKind::from_name("wild_grain").expect("grain");
         let porridge = ItemKind::from_name("porridge").expect("porridge");
-        let shop = res.colony.workshops.get_mut(&1).expect("hearth");
-        shop.bills[0].recipe = policy.recipes[0];
-        let bill = shop.bills[0].id;
+        assert!(
+            crate::commands::apply_and_log(
+                &mut world,
+                &mut res,
+                Command::Steward {
+                    rule: 8,
+                    command: Box::new(Command::AddBill {
+                        workshop: 1,
+                        recipe: policy.recipes[0],
+                        mode: BillMode::Maintain(24),
+                    })
+                },
+                0,
+            )
+            .accepted
+        );
+        let bill = res.colony.workshops[&1]
+            .bills
+            .iter()
+            .find(|bill| bill.recipe == policy.recipes[0])
+            .expect("owned porridge bill")
+            .id;
         let worker = world.query::<&Agent>().iter().next().expect("worker").0;
         world
             .insert_one(
@@ -186,8 +205,8 @@ fn cooking_procurement_and_available_bills_share_the_same_daily_budget() {
     let commands = super::super::cooking::plan(&world, &res, &policy, &facts);
     // Then procurement does not duplicate demand; current bills allocate the five
     // physical grain once, as two authored-priority porridge batches (six portions).
-    assert_eq!(before.get(&grain), Some(&9));
-    assert_eq!(demand.get(&grain), Some(&9));
+    assert_eq!(before.get(&grain), Some(&11));
+    assert_eq!(demand.get(&grain), Some(&11));
     assert!(commands.contains(&Command::AddBill {
         workshop: 1,
         recipe: policy.recipes[0],
@@ -489,10 +508,182 @@ fn cooking_procurement_counts_other_accepted_food_without_blocking_preservation(
     assert_eq!(
         observed,
         vec![
-            (0, false, 2, true),
+            (0, false, 1, true),
             (4, true, 140, true),
             (4, false, 0, false)
         ],
         "accepted other-output food closes immediate procurement, not genuine winter preservation"
     );
+}
+
+#[test]
+fn cooking_procurement_funds_only_the_residual_authored_priority_budget() {
+    use sim_core::colony::{ItemKind, ItemSpec};
+    let grain = ItemKind::from_name("wild_grain").expect("grain");
+    let berries = ItemKind::from_name("berries").expect("berries");
+    let roots = ItemKind::from_name("roots").expect("roots");
+    let mut observed = Vec::new();
+    for (grain_count, root_count) in [(16, 0), (5, 0), (0, 0), (0, 16)] {
+        let recipes = if root_count > 0 {
+            ["porridge", "roasted_roots"]
+        } else {
+            ["porridge", "fruit_porridge"]
+        };
+        let (world, mut res, policy) = ten_adult_cooking_fixture(&recipes);
+        res.fires.insert(1, sim_engine::FireState { lit: true });
+        for (tile, kind, count) in [((2, 2), grain, grain_count), ((2, 3), roots, root_count)] {
+            if count > 0 {
+                crate::runtime::food::items::create_ground(
+                    &mut res,
+                    tile,
+                    ItemSpec::raw(kind, None),
+                    count,
+                    0,
+                    crate::runtime::food::items::FoodSource::Harvest,
+                )
+                .expect("actual input");
+            }
+        }
+        let facts = super::super::summary(&world, &res, &policy);
+        let commands = super::super::cooking::plan(&world, &res, &policy, &facts);
+        if grain_count == 16 {
+            assert!(
+                commands.contains(&Command::AddBill {
+                    workshop: 1,
+                    recipe: policy.recipes[0],
+                    mode: BillMode::Maintain(24),
+                }),
+                "physical preferred recipe fills the entire cooked budget: {commands:?}"
+            );
+        }
+        let demand = super::super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
+        observed.push((
+            grain_count,
+            root_count,
+            demand.get(&grain).copied().unwrap_or(0),
+            demand.get(&berries).copied().unwrap_or(0),
+            demand.get(&roots).copied().unwrap_or(0),
+        ));
+    }
+    assert_eq!(
+        observed,
+        vec![
+            (16, 0, 0, 0, 0),
+            (5, 0, 11, 0, 0),
+            (0, 0, 16, 0, 0),
+            (0, 16, 0, 0, 0)
+        ],
+        "fund supplied recipes first, then procure only the remaining authored budget"
+    );
+}
+
+#[test]
+fn future_preservation_does_not_block_emergency_cooking_or_its_missing_inputs() {
+    use sim_core::colony::food::DryingBatch;
+    use sim_core::colony::{Bill, ItemKind, ItemSpec, Workshop};
+    for grain_count in [0, 16] {
+        let (world, mut res, mut policy) = ten_adult_cooking_fixture(&["porridge"]);
+        res.rules.clock_offset_ticks = 0;
+        res.ticks_per_day = res.rules.calendar.ticks_per_day;
+        res.current_tick = 14 * res.ticks_per_day;
+        policy.reserve_days = 2;
+        policy.winter_keep_days = 6;
+        res.fires.insert(1, sim_engine::FireState { lit: true });
+        let drying = RecipeKind::from_name("dry_berries").expect("drying");
+        res.colony.workshops.insert(
+            2,
+            Workshop {
+                id: 2,
+                kind: drying.recipe().expect("recipe").workshop,
+                top_left: (6, 3),
+                size: (1, 1),
+                bills: vec![Bill {
+                    id: 1,
+                    recipe: drying,
+                    mode: BillMode::Make(72),
+                    done: 72,
+                    suspended: false,
+                    auto: false,
+                }],
+                shelf: vec![],
+                active: None,
+            },
+        );
+        let due_tick = 16 * res.ticks_per_day;
+        crate::runtime::food::origin::push_drying(
+            &mut res,
+            DryingBatch {
+                workshop: 2,
+                bill: 1,
+                tile: (6, 4),
+                output: ItemSpec::raw(drying.recipe().expect("recipe").output.0, None),
+                count: 144,
+                due_tick,
+            },
+            Default::default(),
+        );
+        let grain = ItemKind::from_name("wild_grain").expect("grain");
+        if grain_count > 0 {
+            crate::runtime::food::items::create_ground(
+                &mut res,
+                (2, 2),
+                ItemSpec::raw(grain, None),
+                grain_count,
+                14,
+                crate::runtime::food::items::FoodSource::Harvest,
+            )
+            .expect("actual emergency ingredient");
+        }
+        let facts = super::super::summary(&world, &res, &policy);
+        assert_eq!(facts.usable_units, 0);
+        assert_eq!(super::super::harvest::targets(&policy, &facts), (48, 144));
+        let demand = super::super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
+        assert_eq!(
+            demand.get(&grain).copied().unwrap_or(0),
+            16 - u64::from(grain_count),
+            "food due in two days cannot feed today's emergency"
+        );
+        if grain_count > 0 {
+            let commands = super::super::cooking::plan(&world, &res, &policy, &facts);
+            assert!(
+                commands.contains(&Command::AddBill {
+                    workshop: 1,
+                    recipe: policy.recipes[0],
+                    mode: BillMode::Maintain(24),
+                }),
+                "emergency inputs must become a real cooking bill: {commands:?}"
+            );
+        }
+    }
+}
+
+#[test]
+fn projected_missing_edible_inputs_spend_their_full_new_food_capacity() {
+    use sim_core::colony::{ItemKind, ItemSpec};
+    let (world, mut res, mut policy) = ten_adult_cooking_fixture(&["roasted_roots"]);
+    res.rules.clock_offset_ticks = 0;
+    res.ticks_per_day = res.rules.calendar.ticks_per_day;
+    res.current_tick = 14 * res.ticks_per_day;
+    policy.reserve_days = 2;
+    policy.winter_keep_days = 6;
+    res.fires.insert(1, sim_engine::FireState { lit: true });
+    let nuts = ItemKind::from_name("hazelnuts").expect("nuts");
+    let roots = ItemKind::from_name("roots").expect("roots");
+    for (x, count) in [(1, 28), (2, 28), (3, 28), (4, 28), (5, 24)] {
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            (x, 1),
+            ItemSpec::raw(nuts, None),
+            count,
+            14,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("136 physical edible units");
+    }
+    let facts = super::super::summary(&world, &res, &policy);
+    assert_eq!(facts.usable_units, 136);
+    assert_eq!(super::super::harvest::targets(&policy, &facts), (48, 144));
+    let demand = super::super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
+    assert_eq!(demand.get(&roots), Some(&4),
+        "eight spare units fund two three-portion batches; absent raw roots are not existing food credit");
 }

@@ -110,62 +110,23 @@ pub(super) fn reserved_cooking_pots(res: &SimResources, policy: &FoodPlan) -> BT
     held
 }
 
-/// Project the daily cooked targets through whole batches; preservation keeps its own budget.
+/// Procure only residual authored cooking demand; preservation keeps its winter budget.
 pub(super) fn ingredient_deficits(
     world: &World,
     res: &SimResources,
     policy: &FoodPlan,
     facts: &super::FoodSummary,
 ) -> BTreeMap<ItemKind, u64> {
-    // Procurement must admit capable recipes before their inputs exist. Actual
-    // bills keep using the presently supplied subset of these recipes.
-    let mut eligible = Vec::new();
-    for &kind in &policy.recipes {
-        let Some(recipe) = kind.recipe() else {
-            continue;
-        };
-        if recipe.food_requirements.duration_days > 0 {
-            continue;
-        }
-        if !res.colony.workshops.values().any(|shop| {
-            recipe.supports_workshop(shop.kind)
-                && super::cooking::has_practitioner(world, res, recipe, |practice| {
-                    crate::runtime::jobs::food_recipe_supplyable(res, shop, recipe, practice)
-                })
-        }) {
-            continue;
-        }
-        eligible.push(recipe);
-    }
-    let mut available = super::cooking::free_inputs(world, res);
-    let mut immediate: BTreeMap<ItemKind, u64> = BTreeMap::new();
-    let headroom = super::cooking::food_headroom(world, res, policy, facts);
-    for recipe in &eligible {
-        let output =
-            u64::from(recipe.output.1) * super::cooking::edible_units(recipe.output.0, true);
-        let raw: u64 = recipe
-            .inputs
-            .iter()
-            .map(|(item, count)| u64::from(*count) * super::cooking::edible_units(*item, true))
-            .sum();
-        // Other recipes' accepted output also fills the shared food reserve.
-        // Net-zero conversions and genuine winter preservation remain eligible.
-        if headroom == 0 && output > raw {
-            continue;
-        }
-        let target = super::cooking::daily_target(policy, facts, eligible.len(), recipe.id);
-        // Use the bill's own count, including assigned crafts and pending output.
-        let made = crate::runtime::jobs::bills::bill_count(world, res, recipe.output.0);
-        let batches = u64::from(u32::from(target).saturating_sub(made))
-            .div_ceil(u64::from(recipe.output.1).max(1));
-        for &(item, count) in &recipe.inputs {
-            let amount = immediate.entry(item).or_default();
-            let needed = batches.saturating_mul(u64::from(count));
-            let supplied =
-                super::cooking::take_recipe_input(world, res, &mut available, recipe, item, needed);
-            *amount = amount.saturating_add(needed.saturating_sub(supplied));
+    let mut reserved = seed_inputs(world, res, policy, facts);
+    if facts.usable_units.saturating_mul(1000) < facts.daily_milli {
+        for (item, count) in &mut reserved {
+            if item.definition().food.is_some() {
+                *count = 0;
+            }
         }
     }
+    let (_, mut immediate, mut available) =
+        super::cooking::priority_targets(world, res, policy, facts, &reserved, true);
     let preservation = super::preservation::budget(world, res, policy, facts);
     for (item, amount) in preservation.inputs {
         // Preservation already chooses physical shops; only those shelves can serve its inputs.

@@ -354,43 +354,91 @@ fn seed_bootstrap_uses_real_grain_harvest_despite_full_food_budget() {
 
 #[test]
 fn cooking_shares_the_raw_food_reserve_without_double_counting_cooked_stock() {
-    let output = ItemKind::from_name("porridge").expect("cooked output");
-    for (raw, cooked_target) in [(5, 0), (4, 1)] {
-        let (world, res, policy) = food_cap_fixture(raw, false);
-        let facts = super::summary(&world, &res, &policy);
-        assert_eq!(
-            super::cooking::daily_target(
-                &policy,
-                &facts,
-                1,
-                RecipeKind::from_name("porridge").expect("recipe")
-            ),
-            cooked_target
-        );
-    }
-    let (world, mut res, policy) = food_cap_fixture(0, false);
-    crate::runtime::food::items::create_ground(
-        &mut res,
-        (7, 7),
-        ItemSpec::raw(output, None),
-        3,
-        6,
-        crate::runtime::food::items::FoodSource::Harvest,
-    )
-    .expect("physical cooked stock");
-    let facts = super::summary(&world, &res, &policy);
-    assert_eq!(facts.usable_units, 3);
-    assert_eq!(facts.cooked_units, 3);
-    assert_eq!(
-        super::cooking::daily_target(
-            &policy,
-            &facts,
+    use sim_core::colony::knowledge::{self, Knowledge, KnowledgeEntry, Source};
+    use sim_core::colony::{BillMode, Workshop};
+    let recipe = RecipeKind::from_name("porridge").expect("recipe");
+    for raw in [5, 4, 0] {
+        let (mut world, mut res, mut policy) = food_cap_fixture(raw, false);
+        let person = world.query::<&Agent>().iter().next().expect("adult").0;
+        world
+            .insert_one(
+                person,
+                Knowledge::from_entries(
+                    knowledge::defs()
+                        .nodes
+                        .iter()
+                        .map(|node| KnowledgeEntry::new(node.id, Source::Oral, 1000, 0))
+                        .collect(),
+                ),
+            )
+            .expect("real cooking practitioner");
+        policy.cultivation = None;
+        policy.recipes = vec![recipe];
+        res.rules.colony.as_mut().expect("colony").knowledge = None;
+        res.fires.insert(1, sim_engine::FireState { lit: true });
+        res.colony.workshops.insert(
             1,
-            RecipeKind::from_name("porridge").expect("recipe")
-        ),
-        3,
-        "existing cooked portions remain part of Maintain, not raw-stock credit"
-    );
+            Workshop {
+                id: 1,
+                kind: recipe.recipe().expect("recipe").workshop,
+                top_left: (8, 8),
+                size: (1, 1),
+                bills: vec![],
+                shelf: vec![],
+                active: None,
+            },
+        );
+        let grain = ItemKind::from_name("wild_grain").expect("grain");
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            (6, 7),
+            ItemSpec::raw(grain, None),
+            4,
+            6,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("actual grain");
+        if raw == 0 {
+            crate::runtime::food::items::create_ground(
+                &mut res,
+                (7, 7),
+                ItemSpec::raw(recipe.recipe().expect("recipe").output.0, None),
+                3,
+                6,
+                crate::runtime::food::items::FoodSource::Harvest,
+            )
+            .expect("actual cooked stock");
+        }
+        let facts = super::summary(&world, &res, &policy);
+        assert_eq!(facts.cooked_units, if raw == 0 { 3 } else { 0 });
+        let commands = super::cooking::plan(&world, &res, &policy, &facts);
+        let target = commands.iter().find_map(|command| match command {
+            Command::AddBill {
+                recipe: found,
+                mode: BillMode::Maintain(n),
+                ..
+            } if *found == recipe => Some(*n),
+            _ => None,
+        });
+        if raw == 0 {
+            assert_eq!(
+                crate::runtime::jobs::bills::bill_count(
+                    &world,
+                    &res,
+                    recipe.recipe().expect("recipe").output.0,
+                ),
+                3,
+                "Maintain3 is already satisfied by physical meals"
+            );
+        }
+        let expected = match raw {
+            0 => Some(3),
+            4 => Some(1),
+            _ => None,
+        };
+        assert_eq!(target, expected,
+            "real shared allocation: raw{raw}; existing cooked stock fills its quota once: {commands:?}");
+    }
 }
 
 #[test]
