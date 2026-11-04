@@ -25,6 +25,19 @@ pub(super) fn reserved_house_tiles(
     res: &SimResources,
     hearth: Tile,
 ) -> BTreeSet<Tile> {
+    future_house(world, res, hearth).reserved
+}
+
+/// Future roof and boundary excluded from fields; workshop reservations remain separate.
+pub(super) fn reserved_field_house_tiles(
+    world: &World,
+    res: &SimResources,
+    hearth: Tile,
+) -> BTreeSet<Tile> {
+    future_house(world, res, hearth).covered
+}
+
+fn future_house(world: &World, res: &SimResources, hearth: Tile) -> HousePlan {
     sim_core::colony::steward::rules()
         .ok()
         .and_then(|data| {
@@ -32,7 +45,7 @@ pub(super) fn reserved_house_tiles(
                 matches!(rule.action, Action::House { .. }) && res.steward.scope.permits(rule.scope)
             })
         })
-        .map(|rule| house(world, res, hearth, &rule.action, true).reserved)
+        .map(|rule| house(world, res, hearth, &rule.action, true))
         .unwrap_or_default()
 }
 
@@ -424,6 +437,7 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
 struct HousePlan {
     commands: Vec<Command>,
     reserved: BTreeSet<Tile>,
+    covered: BTreeSet<Tile>,
 }
 fn house_capacity(
     res: &SimResources,
@@ -898,6 +912,11 @@ fn house(
             .copied()
             .chain(free.iter().copied().take(beds as usize))
             .collect();
+        let covered = boundary
+            .iter()
+            .copied()
+            .chain(room.tiles.iter().copied().map(local))
+            .collect();
         if !clearing.is_empty() {
             let tiles = clearing
                 .into_iter()
@@ -905,6 +924,7 @@ fn house(
                 .collect::<Vec<_>>();
             return HousePlan {
                 reserved,
+                covered,
                 commands: if tiles.is_empty() {
                     Vec::new()
                 } else {
@@ -937,9 +957,14 @@ fn house(
             return HousePlan {
                 commands: Vec::new(),
                 reserved,
+                covered,
             };
         }
-        return HousePlan { commands, reserved };
+        return HousePlan {
+            commands,
+            reserved,
+            covered,
+        };
     }
     HousePlan::default()
 }

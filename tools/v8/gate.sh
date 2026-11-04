@@ -185,7 +185,11 @@ else
 fi
 grep -E 'admission|ceiling|rss outer|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^/   /' >> "$SUMMARY"
 # M3 (goal 3.4): the economy soak fixture, every pass from now on.
-step 26 soak bash tools/v8/soak.sh "$LOG/soak" rust/target/release/worldsim_probe
+if [[ -n "${READ_GATE_CONFIG:-}" && " ${READ_CHANGED_FIXTURES:-} " == *" soak_economy "* ]]; then
+    step 26 soak bash tools/v8/soak.sh "$LOG/soak" rust/target/release/worldsim_probe "${READ_BASE_PROBE:-/Users/rexxa/work/read-base/rust/target/release/worldsim_probe}"
+else
+    step 26 soak bash tools/v8/soak.sh "$LOG/soak" rust/target/release/worldsim_probe
+fi
 grep -E '^SOAK' "$LOG/soak.log" | sed 's/^/   /' >> "$SUMMARY"
 if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     step 27 nav_bench env CORE_P7_DEADLINE_EPOCH="${M6A_DEADLINE_EPOCH:?}" python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
@@ -199,7 +203,18 @@ fi
 grep -E '^nav_bench' "$LOG/nav_bench.log" | sed 's/^/   /' >> "$SUMMARY"
 # M4 (goal §11): the knowledge tests and the loss fixture (F10: the doorway's only holder killed at tick 1800 on
 # seeds 0..8 -> KnowledgeLost within 240 ticks, the doorway Lost, door orders waiting on it).
-step 28 knowledge bash -c 'cd rust && cargo test --release -p sim-test --test colony_knowledge -- --test-threads=8 && cd .. && rust/target/release/worldsim_probe --scene colony --seeds 0..8 --days 4 --workers 4 --commands tools/v8/m4_f10_script.json --out "$0/knowledge_f10" > /dev/null && python3 docs/v8/m4/m4_score.py --f10 "$0/knowledge_f10/summary.json" | tee /dev/stderr | grep -q "^F10: 8/8 PASS"' "$LOG"
+step 28 knowledge bash -c '
+    set -euo pipefail
+    (cd rust && cargo test --release -p sim-test --test colony_knowledge -- --test-threads=8)
+    rust/target/release/worldsim_probe --scene colony --seeds 0..8 --days 4 --workers 4 --commands tools/v8/m4_f10_script.json --out "$0/knowledge_f10" > /dev/null
+    python3 docs/v8/m4/m4_score.py --f10 "$0/knowledge_f10/summary.json" | tee /dev/stderr | grep -q "^F10: 8/8 PASS"
+    if [[ -n "${READ_GATE_CONFIG:-}" ]]; then
+        BASE_PROBE="${READ_BASE_PROBE:-/Users/rexxa/work/read-base/rust/target/release/worldsim_probe}"
+        "$BASE_PROBE" --scene colony --seeds 0..8 --days 4 --workers 4 --commands tools/v8/m4_f10_script.json --out "$0/knowledge_f10_base" > /dev/null
+        python3 docs/v8/m4/m4_score.py --f10 "$0/knowledge_f10_base/summary.json" | tee /dev/stderr | grep -q "^F10: 8/8 PASS"
+        python3 tools/v8/read_gate_checks.py fixture_pair knowledge "$0/knowledge_f10_base/summary.json" "$0/knowledge_f10/summary.json"
+    fi
+' "$LOG"
 grep -E '^F10|test result' "$LOG/knowledge.log" | sed 's/^/   /' >> "$SUMMARY"
 # M5 (goal §12): the storyteller fixture — two worlds through two years of pressure.
 step 29 story bash -c 'rust/target/release/worldsim_probe --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m5_u_script.json --out "$0/story" > /dev/null && python3 docs/v8/m5/m5_score.py --story "$0/story/summary.json"' "$LOG"
@@ -298,20 +313,9 @@ step 50 read_preservation bash -c '
     "$CAND_PROBE" --scene colony --seeds 0..2 --days 24 --workers 2 --steward on --out "$OUT/head/steward" > /dev/null 2>&1
     "$BASE_PROBE" --scene colony --seeds 0..2 --days 72 --workers 2 --steward on --out "$OUT/base/m6a_steward" > /dev/null 2>&1
     "$CAND_PROBE" --scene colony --seeds 0..2 --days 72 --workers 2 --steward on --out "$OUT/head/m6a_steward" > /dev/null 2>&1
-    # M-LOOP (D-steward): fixtures listed in READ_CHANGED_FIXTURES changed on purpose in a recorded
-    # behaviour commit; they skip the byte comparison but must still lose no knowledge (owner rule).
+    # Only explicitly declared colony changes use paired D-S0-1 safety.
     for f in determinism soak story neighbours steward m6a_steward; do
-        case " ${READ_CHANGED_FIXTURES:-} " in
-            *" $f "*)
-                python3 -c "
-import json, sys
-seeds = json.load(open(sys.argv[1]))[\"seeds\"]
-lost = [s[\"seed\"] for s in seeds if s.get(\"m4\", {}).get(\"lost\")]
-assert not lost, \"KnowledgeLost in changed fixture seeds %s\" % lost
-print(\"CHANGED FIXTURE (recorded behaviour change): \" + sys.argv[2] + \" — 0 KnowledgeLost\")
-" "$OUT/head/$f/summary.json" "$f" || exit 1 ;;
-            *) python3 tools/v8/read_normalise.py "$OUT/base/$f/summary.json" "$OUT/head/$f/summary.json" || exit 1 ;;
-        esac
+        python3 tools/v8/read_gate_checks.py fixture_pair "$f" "$OUT/base/$f/summary.json" "$OUT/head/$f/summary.json" || exit 1
     done
     grep -q "DETERMINISM PASS" "$OUT/head_determinism.txt" && grep -q "DETERMINISM PASS" "$OUT/base_determinism.txt" || { echo "colony determinism FAIL"; exit 1; }
     echo "READ_PRESERVATION PASS"

@@ -90,11 +90,11 @@ pub(super) fn pick(
                     .colony
                     .reservations
                     .contains_key(&ReserveKey::Field(**t))
-                && !res
+                && res
                     .colony
                     .unreachable
                     .get(&(id, **t))
-                    .is_some_and(|until| *until > res.current_tick)
+                    .is_none_or(|until| *until <= res.current_tick)
                 && res
                     .settlements
                     .get(&f.owner)

@@ -376,6 +376,7 @@ fn reference_house(
                 .filter(|tile| !res.colony.designations.contains_key(tile))
                 .collect::<Vec<_>>();
             return HousePlan {
+                covered: BTreeSet::new(),
                 reserved,
                 commands: if tiles.is_empty() {
                     Vec::new()
@@ -409,9 +410,14 @@ fn reference_house(
             return HousePlan {
                 commands: Vec::new(),
                 reserved,
+                covered: BTreeSet::new(),
             };
         }
-        return HousePlan { commands, reserved };
+        return HousePlan {
+            commands,
+            reserved,
+            covered: BTreeSet::new(),
+        };
     }
     HousePlan::default()
 }

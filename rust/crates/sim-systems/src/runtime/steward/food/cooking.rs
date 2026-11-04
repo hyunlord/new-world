@@ -6,6 +6,29 @@ use sim_core::colony::steward::{FoodPlan, Target};
 use sim_core::colony::{BillMode, ColonySite, Command, Job, JobKind, RecipeKind};
 use sim_engine::SimResources;
 
+/// One adult must supply both the primary gate and this shop's food requirements.
+pub(super) fn has_practitioner(
+    world: &World,
+    res: &SimResources,
+    recipe: &sim_core::colony::workshop::Recipe,
+    accepts: impl Fn(u32) -> bool,
+) -> bool {
+    let gated = crate::runtime::knowledge::rule(res).is_some();
+    let primary = knowledge::gates().recipe(recipe.id);
+    world
+        .query::<(&sim_core::components::Agent, Option<&Knowledge>)>()
+        .without::<&sim_core::components::Child>()
+        .iter()
+        .any(|(_, (_, known))| {
+            let practice = if gated {
+                known.map_or(0, |known| known.practice())
+            } else {
+                u32::MAX
+            };
+            primary & !practice == 0 && accepts(practice)
+        })
+}
+
 /// Share the existing daily cooked budget as whole output items per recipe.
 pub(super) fn daily_target(
     policy: &FoodPlan,
@@ -78,18 +101,12 @@ pub(super) fn convertible_immediate(
             .saturating_sub(reserve)
             .saturating_sub(committed.get(item).copied().unwrap_or(0));
     }
-    let practice = world
-        .query::<&Knowledge>()
-        .iter()
-        .fold(0, |mask, (_, knowledge)| mask | knowledge.practice());
     let mut credited = 0_u64;
     for &kind in &policy.recipes {
         let Some(recipe) = kind.recipe() else {
             continue;
         };
-        if recipe.food_requirements.duration_days > 0
-            || !crate::runtime::knowledge::anyone_practises(world, knowledge::gates().recipe(kind))
-        {
+        if recipe.food_requirements.duration_days > 0 {
             continue;
         }
         let target = u64::from(daily_target(policy, facts, policy.recipes.len(), kind));
@@ -104,7 +121,9 @@ pub(super) fn convertible_immediate(
         let mut batches = 0_u64;
         for (id, shop) in &res.colony.workshops {
             if !recipe.supports_workshop(shop.kind)
-                || !crate::runtime::jobs::food_recipe_permitted(res, shop, recipe, practice)
+                || !has_practitioner(world, res, recipe, |practice| {
+                    crate::runtime::jobs::food_recipe_permitted(res, shop, recipe, practice)
+                })
                 || res
                     .steward
                     .vetoed(&Target::Bill(*id, kind.code()), res.current_tick)
@@ -123,7 +142,7 @@ pub(super) fn convertible_immediate(
                 }
                 let remaining = match bill.mode {
                     BillMode::Make(_) => u64::from(bill.remaining().unwrap_or(0))
-                        .saturating_sub(u64::from(assigned_crafts(world, res, kind))),
+                        .saturating_sub(assigned_crafts(world, res, kind)),
                     BillMode::Maintain(count) => u64::from(count)
                         .saturating_sub(made)
                         .div_ceil(u64::from(recipe.output.1).max(1)),
@@ -189,10 +208,6 @@ pub(super) fn plan(
         }
     }
     let mut available = Vec::new();
-    let practice = world
-        .query::<&Knowledge>()
-        .iter()
-        .fold(0, |mask, (_, knowledge)| mask | knowledge.practice());
     for &kind in &policy.recipes {
         let Some(recipe) = kind.recipe() else {
             continue;
@@ -220,7 +235,9 @@ pub(super) fn plan(
         }
         let usable = res.colony.workshops.values().any(|shop| {
             recipe.supports_workshop(shop.kind)
-                && crate::runtime::jobs::food_recipe_supplyable(res, shop, recipe, practice)
+                && has_practitioner(world, res, recipe, |practice| {
+                    crate::runtime::jobs::food_recipe_supplyable(res, shop, recipe, practice)
+                })
         });
         if usable || assigned > 0 {
             available.push(kind);

@@ -5,6 +5,7 @@ and the stall waiver. Called by gate.sh when READ_GATE_CONFIG is set.
 Usage:
     python3 read_gate_checks.py bench <config_json> <log_dir>
     python3 read_gate_checks.py core_fixture <config_json> <log_dir>
+    python3 read_gate_checks.py fixture_pair <name> <base_summary> <head_summary>
     python3 read_gate_checks.py stall_waiver <stall_log>
 """
 import json
@@ -157,6 +158,84 @@ def bench(config_path, log_dir):
     print("READ_BENCH PASS")
 
 
+# D-S0-1 applies only to these existing ten-founder colony probe invocations.
+# WorldGenConfig::colony fixes starting_agents=10; retained start.adults=10.
+COLONY_FIXTURES = {
+    "determinism": (10, 4), "soak": (20, 4), "story": (48, 2),
+    "neighbours": (48, 2), "steward": (24, 2), "m6a_steward": (72, 2),
+    "colony_u": (10, 4), "colony_soak": (20, 2), "knowledge": (4, 8),
+    "soak_economy": (20, 4),
+}
+
+
+def colony_safety_rows(summary, name):
+    """Read the actual probe fields; reject partial or unsupported fixture evidence."""
+    days, count = COLONY_FIXTURES[name]
+    try:
+        if summary["scene"] != "colony" or type(summary["days"]) is not int or summary["days"] != days:
+            raise ValueError(f"{name}: wrong scene or horizon")
+        rows = summary["seeds"]
+        if type(rows) is not list or len(rows) != count:
+            raise ValueError(f"{name}: incomplete seed set")
+        parsed = {}
+        for row in rows:
+            seed, alive = row["seed"], row["alive_end"]
+            if type(seed) is not int or seed not in range(count) or seed in parsed:
+                raise ValueError(f"{name}: invalid or duplicate seed")
+            if type(row["days"]) is not int or row["days"] != days:
+                raise ValueError(f"{name}/{seed}: wrong row horizon")
+            if type(alive) is not int or alive < 0:
+                raise ValueError(f"{name}/{seed}: invalid alive_end")
+            adults = row["m4"]["start"]["adults"]
+            if type(adults) is not int or adults != 10:
+                raise ValueError(f"{name}/{seed}: unsupported founder start")
+            losses = row["m4"]["lost"]
+            if type(losses) is not list:
+                raise ValueError(f"{name}/{seed}: missing loss history")
+            for loss in losses:
+                if (type(loss) is not list or len(loss) != 3
+                        or type(loss[0]) is not int or not 0 <= loss[0] <= days * 1440
+                        or type(loss[1]) is not str or not loss[1]
+                        or type(loss[2]) is not int or loss[2] < 0):
+                    raise ValueError(f"{name}/{seed}: invalid loss record")
+            for key in ("ledger_violation_ticks", "reservation_violation_ticks"):
+                if type(row[key]) is not int or row[key] != 0:
+                    raise ValueError(f"{name}/{seed}: {key} must be zero")
+            parsed[seed] = (alive, len(losses))
+        return parsed
+    except (KeyError, TypeError, IndexError) as error:
+        raise ValueError(f"{name}: missing or malformed required probe field") from error
+
+
+def compare_fixture(name, base, head, base_commit, changed):
+    """Declared colony behavior changes get paired safety; all other worlds stay strict."""
+    if name in COLONY_FIXTURES and name in changed:
+        base_rows = colony_safety_rows(base, name)
+        head_rows = colony_safety_rows(head, name)
+        for seed, (base_alive, base_lost) in base_rows.items():
+            alive, lost = head_rows[seed]
+            floor = max(0, base_alive - 2)
+            if alive < floor:
+                raise ValueError(f"{name}/{seed}: survivors {alive} below BASE-relative floor {floor}")
+            if lost > base_lost:
+                raise ValueError(f"{name}/{seed}: KnowledgeLost {lost} exceeds BASE {base_lost}")
+        print(f"CHANGED FIXTURE {name}: BASE-relative safety PASS ({len(base_rows)} worlds)")
+        return
+    a_clean, b_clean, masked = normalise_pair(base, head, base_commit)
+    difference = first_difference(a_clean, b_clean)
+    if difference:
+        raise ValueError(f"FIXTURE MISMATCH on {name}: {difference}")
+    print(f"FIXTURE {name}: MATCH; excluded paths: {masked}")
+
+
+def fixture_pair(name, base_path, head_path):
+    """CLI adapter for the existing paired probe summaries."""
+    config_path = os.environ.get("READ_GATE_CONFIG")
+    config = load_json(config_path) if config_path else {}
+    compare_fixture(name, load_json(base_path), load_json(head_path),
+                    config.get("base_commit"), set(os.environ.get("READ_CHANGED_FIXTURES", "").split()))
+
+
 # ── Core fixture normalised comparison ──────────────────────────────────
 
 def core_fixture(config_path, log_dir):
@@ -192,11 +271,8 @@ def core_fixture(config_path, log_dir):
     for name, _ in fixtures:
         base_summary = load_json(out / f"base_{name}/summary.json")
         head_summary = load_json(out / f"head_{name}/summary.json")
-        a_clean, b_clean, masked = normalise_pair(base_summary, head_summary, config.get("base_commit"))
-        difference = first_difference(a_clean, b_clean)
-        if difference:
-            raise SystemExit(f"CORE_FIXTURE FAIL on {name}: {difference}")
-        print(f"CORE_FIXTURE {name}: MATCH; excluded paths: {masked}")
+        compare_fixture(name, base_summary, head_summary, config.get("base_commit"),
+                        set(os.environ.get("READ_CHANGED_FIXTURES", "").split()))
 
     # Check colony determinism
     determ_log = out / "head_colony_u.log"
@@ -289,6 +365,8 @@ if __name__ == "__main__":
         bench(sys.argv[2], sys.argv[3])
     elif cmd == "core_fixture":
         core_fixture(sys.argv[2], sys.argv[3])
+    elif cmd == "fixture_pair":
+        fixture_pair(sys.argv[2], sys.argv[3], sys.argv[4])
     elif cmd == "stall_waiver":
         stall_waiver(sys.argv[2])
     else:

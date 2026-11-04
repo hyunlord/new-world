@@ -583,7 +583,7 @@ fn executable_cooking_credit_counts_only_net_food_and_respects_suspension() {
         "paused bills are not future food"
     );
     res.colony.workshops.get_mut(&1).expect("shop").bills[0].suspended = false;
-    let duplicate = res.colony.workshops[&1].bills[0].clone();
+    let duplicate = res.colony.workshops[&1].bills[0];
     res.colony
         .workshops
         .get_mut(&1)
@@ -718,4 +718,168 @@ fn winter_grain_cooking_uses_combined_headroom_without_a_second_food_budget() {
             assert!(u64::from(raw) + u64::from(expected_batches) * 3 <= 144);
         }
     }
+}
+
+#[test]
+fn executable_cooking_credit_requires_one_practitioner_for_both_recipe_gates() {
+    let (mut world, mut res, mut policy, _) = fixture(true);
+    let porridge = RecipeKind::from_name("porridge").expect("porridge");
+    policy.recipes = vec![porridge];
+    policy.cultivation = None;
+    res.fires.insert(1, sim_engine::FireState { lit: true });
+    let grain = sim_core::colony::ItemKind::from_name("wild_grain").expect("grain");
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        (2, 2),
+        sim_core::colony::ItemSpec::raw(grain, None),
+        12,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("physical grain");
+    assert!(
+        crate::commands::apply_and_log(
+            &mut world,
+            &mut res,
+            Command::Steward {
+                rule: 8,
+                command: Box::new(Command::AddBill {
+                    workshop: 1,
+                    recipe: porridge,
+                    mode: BillMode::Maintain(24),
+                }),
+            },
+            0,
+        )
+        .accepted
+    );
+    let facts = super::summary(&world, &res, &policy);
+    assert!(super::cooking::convertible_immediate(&world, &res, &policy, &facts) > 0);
+    let primary = knowledge::defs().id_of("cooking").expect("cooking");
+    let auxiliary = knowledge::defs()
+        .id_of("grain_parching")
+        .expect("grain parching");
+    let cook = Knowledge::from_entries(vec![KnowledgeEntry::new(primary, Source::Oral, 1000, 0)]);
+    let parcher =
+        Knowledge::from_entries(vec![KnowledgeEntry::new(auxiliary, Source::Oral, 1000, 0)]);
+    let person = world.query::<&Agent>().iter().next().expect("adult").0;
+    world
+        .insert_one(person, cook.clone())
+        .expect("replace knowledge");
+    world.spawn((Agent { id: 8 }, Position::new(4, 4), parcher.clone()));
+    let recipe = porridge.recipe().expect("recipe");
+    for knowledge in [&cook, &parcher] {
+        assert!(
+            !(knowledge::gates().recipe(porridge) & !knowledge.practice() == 0
+                && crate::runtime::jobs::food_recipe_permitted(
+                    &res,
+                    &res.colony.workshops[&1],
+                    recipe,
+                    knowledge.practice(),
+                )),
+            "neither actual adult can execute this pot-free recipe"
+        );
+    }
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        0,
+        "separate primary and auxiliary practitioners cannot displace real food harvest"
+    );
+    let bill = res.colony.workshops[&1]
+        .bills
+        .iter()
+        .find(|bill| bill.recipe == porridge)
+        .expect("porridge bill")
+        .id;
+    assert!(
+        super::cooking::plan(&world, &res, &policy, &facts).contains(&Command::SetBillSuspended {
+            workshop: 1,
+            bill,
+            suspended: true
+        })
+    );
+    let both = Knowledge::from_entries(vec![
+        KnowledgeEntry::new(primary, Source::Oral, 1000, 0),
+        KnowledgeEntry::new(auxiliary, Source::Oral, 1000, 0),
+    ]);
+    world.insert_one(person, both.clone()).expect("same person");
+    let expected = super::cooking::convertible_immediate(&world, &res, &policy, &facts);
+    assert!(expected > 0);
+    world
+        .insert_one(person, sim_core::components::Child { born_tick: 0 })
+        .expect("child");
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        0
+    );
+    world
+        .remove_one::<sim_core::components::Child>(person)
+        .expect("adult again");
+    world
+        .insert_one(person, cook.clone())
+        .expect("pot-only cook");
+    let pot = sim_core::colony::ItemSpec::raw(
+        sim_core::colony::ItemKind::from_name("clay_pot").expect("pot"),
+        None,
+    );
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        (4, 5),
+        pot,
+        1,
+        0,
+        crate::runtime::food::items::FoodSource::Debug,
+    )
+    .expect("real pot");
+    let pot_id = crate::runtime::food::storage::deploy_pot(
+        &mut world,
+        &mut res,
+        sim_core::colony::food::FoodOwner::Ground((4, 5)),
+        (4, 5),
+        1,
+    )
+    .expect("local pot");
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        expected
+    );
+    assert!(crate::runtime::knowledge::knowledge_of(&world, person)
+        .get(auxiliary)
+        .is_none());
+    res.food.pots.get_mut(&pot_id).expect("pot").tile = (0, 0);
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        0
+    );
+    res.food.pots.remove(&pot_id);
+    // Procurement must use the same person's gates, but must not demand heat or inputs first.
+    let _grain = crate::runtime::food::items::take(
+        &mut world,
+        &mut res,
+        sim_core::colony::food::FoodOwner::Ground((2, 2)),
+        12,
+        0,
+    )
+    .expect("remove physical grain");
+    res.fires.get_mut(&1).expect("fire").lit = false;
+    let empty = super::summary(&world, &res, &policy);
+    assert_eq!(
+        super::dependencies::ingredient_deficits(&world, &res, &policy, &empty)
+            .get(&grain)
+            .copied()
+            .unwrap_or(0),
+        0
+    );
+    world.insert_one(person, both).expect("capable procurer");
+    assert!(
+        super::dependencies::ingredient_deficits(&world, &res, &policy, &empty)
+            .get(&grain)
+            .copied()
+            .unwrap_or(0)
+            > 0
+    );
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &empty),
+        0
+    );
 }

@@ -118,12 +118,67 @@ fn planned_house_has_complete_constructed_cardinal_boundary() {
     }
 }
 
+// Derive the expected roof from emitted construction, independently of planner reservations.
+fn planned_roof(res: &SimResources, action: &Action, commands: &[Command]) -> BTreeSet<Tile> {
+    let Action::House { wall, door, .. } = action else {
+        panic!("house action")
+    };
+    let mut boundary = BTreeSet::new();
+    let mut doors = BTreeSet::new();
+    for command in commands {
+        if let Command::PlaceBlueprint { kind, x, y } = command {
+            if kind == wall || kind == door {
+                boundary.insert((*x, *y));
+            }
+            if kind == door {
+                doors.insert((*x, *y));
+            }
+        }
+    }
+    assert!(!boundary.is_empty());
+    let rooms = sim_core::rooms::detect(
+        res.tile_grid.width,
+        res.tile_grid.height,
+        1,
+        256,
+        |tile| boundary.contains(&tile) || crate::runtime::rooms::bounds(res, tile),
+        |tile| doors.contains(&tile),
+        |tile| boundary.contains(&tile),
+    );
+    let mut covered = boundary;
+    for room in rooms
+        .into_iter()
+        .filter(|room| room.built && !room.doors.is_empty())
+    {
+        covered.extend(room.tiles);
+    }
+    covered
+}
+
 #[test]
 fn cultivation_avoids_future_house_and_accepted_site_work_tiles() {
-    let (mut engine, _, hearth) = fixture();
+    let (mut engine, action, hearth) = fixture();
     engine.resources.food.plants.clear();
-    let reserved = super::reserved_house_tiles(&engine.world, &engine.resources, hearth);
+    let proposed = house(&engine.world, &engine.resources, hearth, &action, false);
+    let reserved = planned_roof(&engine.resources, &action, &proposed.commands);
     assert!(!reserved.is_empty());
+    let pieces = super::reserved_house_tiles(&engine.world, &engine.resources, hearth);
+    let empty_interior: BTreeSet<_> = reserved
+        .difference(&pieces)
+        .copied()
+        .filter(|tile| crate::runtime::cultivation::commands::zoneable(&engine.resources, *tile))
+        .collect();
+    assert!(
+        !empty_interior.is_empty(),
+        "expected roof must contain eligible soil beyond reserved pieces"
+    );
+    let field_reservation =
+        super::reserved_field_house_tiles(&engine.world, &engine.resources, hearth);
+    assert!(
+        reserved.is_subset(&field_reservation),
+        "field reservation must include independently detected complete future roof"
+    );
+    assert!(empty_interior.is_subset(&field_reservation));
     let rules = sim_core::colony::steward::rules().expect("rules");
     let policy = rules
         .rules
@@ -209,4 +264,80 @@ fn later_house_envelope_preserves_active_and_erased_established_fields() {
         );
         assert_eq!(engine.resources.cultivation.fields[&tile].phase, phase);
     }
+}
+
+#[test]
+fn cultivation_waits_for_accepted_house_roof_without_changing_existing_fields() {
+    let (mut engine, action, hearth) = fixture();
+    engine.resources.food.plants.clear();
+    let proposed = house(&engine.world, &engine.resources, hearth, &action, false);
+    let roof = planned_roof(&engine.resources, &action, &proposed.commands);
+    let pieces: BTreeSet<_> = proposed
+        .commands
+        .iter()
+        .filter_map(|command| {
+            if let Command::PlaceBlueprint { x, y, .. } = command {
+                Some((*x, *y))
+            } else {
+                None
+            }
+        })
+        .collect();
+    assert!(
+        roof.iter().any(|tile| !pieces.contains(tile)
+            && crate::runtime::cultivation::commands::zoneable(&engine.resources, *tile)),
+        "fixture needs empty future roof interior, not merely wall or bed cells"
+    );
+    for command in proposed.commands {
+        assert!(
+            crate::commands::apply_command(&mut engine.world, &mut engine.resources, command)
+                .accepted
+        );
+    }
+    assert!(!engine.resources.colony.space_sites.is_empty());
+    assert!(
+        roof.iter().any(|tile| !pieces.contains(tile)
+            && crate::runtime::cultivation::commands::zoneable(&engine.resources, *tile)),
+        "accepted construction still leaves physically open interior"
+    );
+    let rules = sim_core::colony::steward::rules().expect("rules");
+    let policy = rules
+        .rules
+        .iter()
+        .find_map(|rule| match &rule.action {
+            Action::FoodPlan(policy) => Some(policy),
+            _ => None,
+        })
+        .expect("food policy");
+    let crop = policy.cultivation.as_ref().expect("cultivation").crop;
+    let outside = (1..engine.resources.tile_grid.height - 1)
+        .flat_map(|y| (1..engine.resources.tile_grid.width - 1).map(move |x| (x, y)))
+        .find(|tile| {
+            !roof.contains(tile)
+                && crate::runtime::cultivation::commands::zoneable(&engine.resources, *tile)
+        })
+        .expect("unrelated outdoor field");
+    engine.resources.cultivation.fields.insert(
+        outside,
+        sim_core::colony::cultivation::FieldTile {
+            owner: 1,
+            crop,
+            phase: sim_core::colony::cultivation::FieldPhase::Sown { planted_day: 0 },
+            active: false,
+            work: sim_core::colony::cultivation::FieldWork::Paused,
+            tended: true,
+        },
+    );
+    let before = engine.resources.cultivation.fields.clone();
+    let commands = crate::runtime::steward::food::plan(&engine.world, &engine.resources, policy);
+    assert!(
+        !commands
+            .iter()
+            .any(|command| matches!(command, Command::ZoneField { .. })),
+        "pending house pieces must prevent new fields inside their future roof"
+    );
+    assert_eq!(
+        engine.resources.cultivation.fields, before,
+        "existing erased established player crop must be preserved"
+    );
 }

@@ -117,10 +117,6 @@ pub(super) fn ingredient_deficits(
     policy: &FoodPlan,
     facts: &super::FoodSummary,
 ) -> BTreeMap<ItemKind, u64> {
-    let practice = world
-        .query::<&Knowledge>()
-        .iter()
-        .fold(0, |mask, (_, knowledge)| mask | knowledge.practice());
     // Procurement must admit capable recipes before their inputs exist. Actual
     // bills keep using the presently supplied subset of these recipes.
     let mut eligible = Vec::new();
@@ -131,12 +127,12 @@ pub(super) fn ingredient_deficits(
         if recipe.food_requirements.duration_days > 0 {
             continue;
         }
-        if !crate::runtime::knowledge::anyone_practises(world, knowledge::gates().recipe(kind))
-            || !res.colony.workshops.values().any(|shop| {
-                recipe.supports_workshop(shop.kind)
-                    && crate::runtime::jobs::food_recipe_supplyable(res, shop, recipe, practice)
-            })
-        {
+        if !res.colony.workshops.values().any(|shop| {
+            recipe.supports_workshop(shop.kind)
+                && super::cooking::has_practitioner(world, res, recipe, |practice| {
+                    crate::runtime::jobs::food_recipe_supplyable(res, shop, recipe, practice)
+                })
+        }) {
             continue;
         }
         eligible.push(recipe);

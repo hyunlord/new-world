@@ -272,5 +272,167 @@ class AdmissionCoverageTest(unittest.TestCase):
             self.assertFalse(read_gate_checks.check_stall_frames(frames)[0])
 
 
+
+class RelativeColonyFixtureTest(unittest.TestCase):
+    @staticmethod
+    def summary(name="story", alive=10, losses=2):
+        days, count = {"story": (48, 2), "colony_u": (10, 4),
+                       "knowledge": (4, 8)}[name]
+        return {"scene": "colony", "days": days, "seeds": [
+            {"seed": seed, "days": days, "alive_end": alive,
+             "ledger_violation_ticks": 0, "reservation_violation_ticks": 0,
+             "m4": {"start": {"adults": 10},
+                    "lost": [[100 + n, "node", 1] for n in range(losses)]}}
+            for seed in range(count)]}
+
+    def test_base_losses_are_relative_and_survival_boundary_is_inclusive(self):
+        for base_alive, candidate_alive, passes in ((10, 8, True), (10, 7, False),
+                                                    (5, 3, True), (5, 2, False),
+                                                    (18, 15, False), (18, 16, True), (0, 0, True)):
+            with self.subTest(base=base_alive, candidate=candidate_alive):
+                base = self.summary(alive=base_alive)
+                candidate = self.summary(alive=candidate_alive)
+                if passes:
+                    read_gate_checks.compare_fixture("story", base, candidate, None, {"story"})
+                else:
+                    with self.assertRaisesRegex(ValueError, "survivors"):
+                        read_gate_checks.compare_fixture("story", base, candidate, None, {"story"})
+
+    def test_extra_loss_fails_per_seed_not_just_total(self):
+        base, candidate = self.summary(), self.summary()
+        candidate["seeds"][0]["m4"]["lost"].append([200, "extra", 1])
+        candidate["seeds"][1]["m4"]["lost"] = []
+        with self.assertRaisesRegex(ValueError, "KnowledgeLost"):
+            read_gate_checks.compare_fixture("story", base, candidate, None, {"story"})
+
+    def test_bad_seed_horizon_start_and_required_fields_fail(self):
+        changes = [
+            lambda s: s["seeds"].pop(),
+            lambda s: s["seeds"].append(s["seeds"][0]),
+            lambda s: s["seeds"][0].update(seed=99),
+            lambda s: s.update(days=47),
+            lambda s: s["seeds"][0].update(days=47),
+            lambda s: s["seeds"][0].update(alive_end=True),
+            lambda s: s["seeds"][0]["m4"]["start"].update(adults=9),
+            lambda s: s["seeds"][0]["m4"].pop("lost"),
+            lambda s: s["seeds"][0]["m4"].update(lost=""),
+            lambda s: s["seeds"][0]["m4"].update(lost=[[999999, "node", 1]]),
+            lambda s: s["seeds"][0].pop("ledger_violation_ticks"),
+            lambda s: s["seeds"][0].update(reservation_violation_ticks=1),
+        ]
+        for change in changes:
+            with self.subTest(change=change):
+                base, candidate = self.summary(), self.summary()
+                change(candidate)
+                with self.assertRaises(ValueError):
+                    read_gate_checks.compare_fixture("story", base, candidate, None, {"story"})
+
+    def test_baseline_and_undeclared_colony_remain_strict(self):
+        for name, declared in (("baseline", {"baseline"}), ("story", set())):
+            with self.subTest(name=name):
+                base, candidate = self.summary(), self.summary(alive=9)
+                with self.assertRaisesRegex(ValueError, "MISMATCH"):
+                    read_gate_checks.compare_fixture(name, base, candidate, None, declared)
+
+    def test_core_and_knowledge_require_explicit_declaration(self):
+        for name in ("colony_u", "knowledge"):
+            with self.subTest(name=name):
+                base, candidate = self.summary(name), self.summary(name, alive=8)
+                read_gate_checks.compare_fixture(name, base, candidate, None, {name})
+                with self.assertRaisesRegex(ValueError, "MISMATCH"):
+                    read_gate_checks.compare_fixture(name, base, candidate, None, set())
+
+    def test_cli_reads_paired_files_and_fails_extra_loss(self):
+        import os
+        import subprocess
+        import tempfile
+        with tempfile.TemporaryDirectory() as folder:
+            base_path, head_path = Path(folder) / "base.json", Path(folder) / "head.json"
+            base_path.write_text(json.dumps(self.summary()))
+            env = dict(os.environ, READ_CHANGED_FIXTURES="story")
+            env.pop("READ_GATE_CONFIG", None)
+            for losses, expected in ((2, 0), (3, 1)):
+                head_path.write_text(json.dumps(self.summary(losses=losses)))
+                run = subprocess.run(
+                    [sys.executable, str(Path(__file__).with_name("read_gate_checks.py")),
+                     "fixture_pair", "story", str(base_path), str(head_path)],
+                    env=env, capture_output=True, text=True, check=False)
+                self.assertEqual(run.returncode, expected, run.stdout + run.stderr)
+
+    def test_malformed_base_cannot_lower_acceptance_bar(self):
+        base, candidate = self.summary(), self.summary(alive=0)
+        base["seeds"][0]["alive_end"] = -1
+        with self.assertRaisesRegex(ValueError, "alive_end"):
+            read_gate_checks.compare_fixture("story", base, candidate, None, {"story"})
+
+    def test_seed_order_does_not_change_relative_pairing(self):
+        base, candidate = self.summary(), self.summary()
+        candidate["seeds"].reverse()
+        read_gate_checks.compare_fixture("story", base, candidate, None, {"story"})
+
+
+class PairedEconomySoakTest(unittest.TestCase):
+    def run_soak(self, paired, *, idle=False, extra_loss=False, deaths=True):
+        import hashlib
+        import os
+        import subprocess
+        import tempfile
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            probes = []
+            for label in ("base", "head"):
+                summary = RelativeColonyFixtureTest.summary("colony_u", alive=9, losses=1)
+                summary["days"] = 20
+                for row in summary["seeds"]:
+                    row.update(days=20, workshops_built=2, crafts_done=1, trees_felled=1,
+                               first_violation=None, deaths={"combat": int(deaths)})
+                    if idle and label == "head":
+                        row["crafts_done"] = 0
+                    if extra_loss and label == "head":
+                        row["m4"]["lost"].append([200, "extra", 1])
+                source = root / f"{label}.json"
+                source.write_text(json.dumps(summary))
+                probe = root / label
+                probe.write_text("#!/usr/bin/env python3\nimport json,sys,pathlib\n"
+                                 "args=sys.argv[1:]\n"
+                                 "assert args[args.index('--story')+1]=='no-beasts'\n"
+                                 "assert '--check-determinism' in args\n"
+                                 "assert args[args.index('--days')+1]=='20'\n"
+                                 "assert args[args.index('--seeds')+1]=='0..4'\n"
+                                 "out=pathlib.Path(args[args.index('--out')+1]);out.mkdir(parents=True,exist_ok=True)\n"
+                                 "(out/'summary.json').write_text(pathlib.Path(__file__+'.json').read_text())\n"
+                                 "print('DETERMINISM PASS')\n")
+                probe.chmod(0o755)
+                probes.append(probe)
+            config = root / "config.json"
+            config.write_text(json.dumps({"schema_version": 1, "base_probe": str(probes[0]),
+                "base_probe_sha256": hashlib.sha256(probes[0].read_bytes()).hexdigest(),
+                "base_perf": "unused", "base_perf_sha256": "unused"}))
+            env = dict(os.environ, READ_GATE_CONFIG=str(config),
+                       READ_CHANGED_FIXTURES="soak_economy" if paired else "")
+            command = ["bash", str(Path(__file__).with_name("soak.sh")),
+                       str(root / "out"), str(probes[1])]
+            if paired:
+                command.append(str(probes[0]))
+            return subprocess.run(command, env=env, capture_output=True, text=True, check=False)
+
+    def test_default_keeps_absolute_death_and_loss_rejections(self):
+        for deaths in (True, False):
+            run = self.run_soak(False, deaths=deaths)
+            self.assertNotEqual(run.returncode, 0, run.stdout + run.stderr)
+            self.assertIn("KnowledgeLost", run.stdout)
+            if deaths:
+                self.assertIn("1 deaths", run.stdout)
+
+    def test_paired_relative_losses_and_deaths_pass(self):
+        run = self.run_soak(True)
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertIn("BASE-relative", run.stdout)
+
+    def test_paired_path_still_rejects_idle_colony_and_extra_loss(self):
+        for flags in ({"idle": True}, {"extra_loss": True}):
+            run = self.run_soak(True, **flags)
+            self.assertNotEqual(run.returncode, 0, run.stdout + run.stderr)
+
 if __name__ == "__main__":
     unittest.main()

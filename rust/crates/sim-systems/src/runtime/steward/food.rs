@@ -112,6 +112,10 @@ fn field_orders(
     policy: &FoodPlan,
     facts: &FoodSummary,
 ) -> Vec<Command> {
+    // Pending wall/bed pieces do not describe their eventual roof interior.
+    if !res.colony.space_sites.is_empty() {
+        return Vec::new();
+    }
     let Some(plan) = &policy.cultivation else {
         return Vec::new();
     };
@@ -149,7 +153,7 @@ fn field_orders(
     if needed == 0 {
         return Vec::new();
     }
-    let mut reserved = super::planning::reserved_house_tiles(world, res, hearth);
+    let mut reserved = super::planning::reserved_field_house_tiles(world, res, hearth);
     for (_, site) in world.query::<&sim_core::colony::ColonySite>().iter() {
         reserved.extend(site.tiles());
     }
