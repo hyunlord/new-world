@@ -4,9 +4,9 @@ use crate::colony::{BlueprintKind, Designation, ItemKind, RecipeKind};
 const KNOWLEDGE_RON: &str = include_str!("../../../data/colony/knowledge.ron");
 
 #[test]
-fn the_map_parses_to_27_nodes_with_an_acyclic_prereq_graph() {
+fn the_map_parses_to_28_nodes_with_an_acyclic_prereq_graph() {
     let d = defs();
-    assert_eq!(d.nodes.len(), 27);
+    assert_eq!(d.nodes.len(), 28);
     assert!(d.nodes.len() <= MAX_NODES);
     // Every prereq points at another node, and the graph has no cycle
     // (a depth-first search from each node never revisits its path).
@@ -45,10 +45,10 @@ fn the_map_parses_to_27_nodes_with_an_acyclic_prereq_graph() {
             vec![Cond::Stockpile(ItemKind::RawPot, 2)]
         ))
     );
-    // Markers 3 + 3 + 2 + 1 present, farming 3 and weaving 2 absent: 14.
+    // Markers 3 + 3 + 2 + 1 + cultivation 3 present; weaving 2 absent: 14.
     assert_eq!(d.marker_total(), 14);
     let present: u32 = d.nodes.iter().map(|n| u32::from(n.marker_weight)).sum();
-    assert_eq!(present, 9);
+    assert_eq!(present, 12);
     assert!(parse_defs("(schema_version: 2, absent_markers: [], knowledge: [])").is_none());
     let bad = KNOWLEDGE_RON.replace("Recipe(\"haft_axe\")", "Recipe(\"bronze\")");
     assert!(parse_defs(&bad).is_none());
@@ -213,4 +213,29 @@ fn quality_caps_and_era_labels_follow_their_tables() {
     );
     let lanes: Vec<u8> = Lane::ALL.iter().map(|l| l.code()).collect();
     assert_eq!(lanes, vec![0, 1, 2, 3, 4, 5]);
+}
+
+#[test]
+fn cultivation_is_discovered_not_seeded_and_replaces_the_farming_marker() {
+    let d = defs();
+    let crop = d
+        .get(id("cultivation").expect("cultivation"))
+        .expect("node");
+    assert_eq!(crop.id, 27);
+    assert_eq!(crop.seed, Seeding::Nobody);
+    assert_eq!(crop.era, Era::Neolithic);
+    assert_eq!(crop.marker_weight, 3);
+    let grain = crate::colony::content::installed_or_bundled()
+        .item_by_name("wild_grain")
+        .expect("grain");
+    assert_eq!(crop.discover, vec![Cond::Stockpile(grain, 2)]);
+    assert_eq!(
+        crop.prereqs,
+        vec![
+            id("foraging").expect("foraging"),
+            id("grain_parching").expect("grain")
+        ]
+    );
+    assert_eq!(d.marker_total(), 14);
+    assert!(!d.absent_markers.iter().any(|(name, _)| name == "farming"));
 }

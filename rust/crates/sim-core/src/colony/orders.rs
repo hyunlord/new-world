@@ -399,6 +399,8 @@ pub enum ReserveKey {
     Animal(u32),
     /// A plant being harvested, by tile.
     Plant((u32, u32)),
+    /// Exclusive work on a cultivated tile.
+    Field((u32, u32)),
 }
 
 impl ReserveKey {
@@ -413,7 +415,8 @@ impl ReserveKey {
             | Self::Bench(t)
             | Self::Wood(t)
             | Self::Work(t)
-            | Self::Plant(t) => t,
+            | Self::Plant(t)
+            | Self::Field(t) => t,
             // Not a tile: an animal moves (off the map, so it blocks no placement).
             Self::Animal(id) => (u32::MAX, id),
         }

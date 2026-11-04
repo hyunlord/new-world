@@ -18,7 +18,7 @@
 (
     schema_version: 1,
     // Neolithic markers that M4 does not have yet; they count in the era progress denominator (goal 3.4).
-    absent_markers: [("farming", 3), ("weaving", 2)],
+    absent_markers: [("weaving", 2)],
     knowledge: [
         (id: "fire_keeping", lane: "survival", era: "paleolithic", threshold: 300, prereqs: [], difficulty: 1,
          discover: [], gates: [Lore("hearth")], marker_weight: 0, seed: All, name_key: "KNOWLEDGE_FIRE_KEEPING"),
@@ -96,5 +96,8 @@
          prereqs: ["foraging"], difficulty: 1, discover: [],
          gates: [Workshop("food_drying_rack"), Recipe("dry_meat"), Recipe("dry_berries")],
          marker_weight: 0, seed: Count(2), name_key: "KNOWLEDGE_FOOD_DRYING"),
+        (id: "cultivation", lane: "survival", era: "neolithic", threshold: 300,
+         prereqs: ["foraging", "grain_parching"], difficulty: 1, discover: [Stockpile("wild_grain", 2)],
+         gates: [], marker_weight: 3, seed: None, name_key: "KNOWLEDGE_CULTIVATION"),
     ],
 )

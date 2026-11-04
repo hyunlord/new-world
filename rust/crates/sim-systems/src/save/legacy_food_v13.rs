@@ -74,6 +74,7 @@ impl From<LegacyBodyV13> for Body {
             content_state: old.content_state,
             mind: old.mind,
             food: old.food.into(),
+            cultivation: Default::default(),
         }
     }
 }

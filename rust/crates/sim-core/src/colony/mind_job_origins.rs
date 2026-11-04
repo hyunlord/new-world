@@ -60,6 +60,11 @@ pub enum MindOrderKey {
     },
     /// The settlement standing order to equip clothing.
     Dress,
+    /// An accepted field designation or explicit field work request.
+    Field {
+        /// Physical field work tile.
+        tile: (u32, u32),
+    },
 }
 
 /// Assignment-time origin, valid only for the exact currently held job.

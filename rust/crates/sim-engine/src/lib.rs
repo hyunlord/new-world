@@ -389,6 +389,9 @@ pub struct SimResources {
     /// Colony food state, persisted in the explicit format13 save body.
     #[serde(skip)]
     pub food: sim_core::colony::food::FoodState,
+    /// Physical fields and food origin, persisted in the version-16 tail.
+    #[serde(skip)]
+    pub cultivation: sim_core::colony::cultivation::CultivationState,
     /// Pure seasonal supply cache; rebuilt after load and navigation changes.
     #[serde(skip, default)]
     pub food_supply_cache: std::cell::RefCell<food_supply_cache::FoodSupplyCache>,
@@ -882,6 +885,7 @@ impl SimResources {
             content_state: Default::default(),
             mind: Default::default(),
             food: Default::default(),
+            cultivation: Default::default(),
             food_supply_cache: Default::default(),
             fatal_animal_attacks: Vec::new(),
             building_event_queue: VecDeque::new(),

@@ -382,6 +382,7 @@ impl<C: Into<sim_core::chronicle::Chronicle>> From<LegacySimResources<C>> for Si
             content_state: Default::default(),
             mind: Default::default(),
             food: Default::default(),
+            cultivation: Default::default(),
             food_supply_cache: Default::default(),
             fatal_animal_attacks: Vec::new(),
             diagnosis_cache: Default::default(),

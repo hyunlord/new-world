@@ -164,3 +164,5 @@ content_id!(
 );
 
 content_id!(PlantKind, plant_by_code, plant_by_serde_name, []);
+
+content_id!(CropKind, crop_by_code, crop_by_serde_name, []);

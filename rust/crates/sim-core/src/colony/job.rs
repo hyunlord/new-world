@@ -204,6 +204,28 @@ pub enum JobKind {
         /// The plant tile.
         plant: (u32, u32),
     },
+    /// Prepare designated soil.
+    TillField {
+        /// Field work tile.
+        tile: (u32, u32),
+    },
+    /// Deliver and consume physical seed once at completion.
+    SowField {
+        /// Field destination and work tile.
+        tile: (u32, u32),
+        /// Physical seed stack source.
+        from: (u32, u32),
+    },
+    /// Tend one established crop cycle.
+    TendField {
+        /// Field work tile.
+        tile: (u32, u32),
+    },
+    /// Commit the crop's complete physical output batch.
+    HarvestField {
+        /// Ripe field work tile.
+        tile: (u32, u32),
+    },
 }
 
 impl JobKind {
@@ -228,6 +250,10 @@ impl JobKind {
             Self::Equip { .. } => 16,
             Self::Trade { .. } => 17,
             Self::Harvest { .. } => 18,
+            Self::HarvestField { .. } => 22,
+            Self::TendField { .. } => 21,
+            Self::SowField { .. } => 20,
+            Self::TillField { .. } => 19,
         }
     }
 
@@ -252,6 +278,10 @@ impl JobKind {
             Self::Equip { .. } => "equip",
             Self::Trade { .. } => "trade",
             Self::Harvest { .. } => "harvest",
+            Self::HarvestField { .. } => "harvest_field",
+            Self::TendField { .. } => "tend_field",
+            Self::SowField { .. } => "sow_field",
+            Self::TillField { .. } => "till_field",
         }
     }
 
@@ -271,7 +301,11 @@ impl JobKind {
             Self::Hunt { .. } => WorkType::Hunt,
             Self::Equip { .. } => WorkType::Haul,
             Self::Trade { .. } => WorkType::Haul,
-            Self::Harvest { .. } => WorkType::Haul,
+            Self::Harvest { .. }
+            | Self::TillField { .. }
+            | Self::SowField { .. }
+            | Self::TendField { .. }
+            | Self::HarvestField { .. } => WorkType::Haul,
         }
     }
 
@@ -294,6 +328,10 @@ impl JobKind {
             Self::Equip { from } => from,
             Self::Trade { from, .. } => from,
             Self::Harvest { plant } => plant,
+            Self::SowField { from, .. } => from,
+            Self::TillField { tile } | Self::TendField { tile } | Self::HarvestField { tile } => {
+                tile
+            }
         }
     }
 
@@ -306,6 +344,7 @@ impl JobKind {
             | Self::Clear { to, .. }
             | Self::Trade { to, .. } => Some(to),
             Self::Deliver { site, .. } => Some(site),
+            Self::SowField { tile, .. } => Some(tile),
             Self::Chop { .. }
             | Self::Build { .. }
             | Self::Quarry { .. }
@@ -317,6 +356,9 @@ impl JobKind {
             | Self::Learn { .. }
             | Self::Hunt { .. }
             | Self::Harvest { .. }
+            | Self::TillField { .. }
+            | Self::TendField { .. }
+            | Self::HarvestField { .. }
             | Self::Equip { .. } => None,
         }
     }
@@ -406,6 +448,16 @@ impl Job {
             (JobKind::Trade { from, .. }, JobStage::ToSource) => vec![ReserveKey::Stack(from)],
             (JobKind::Trade { .. }, _) => Vec::new(),
             (JobKind::Harvest { plant }, _) => vec![ReserveKey::Plant(plant)],
+            (JobKind::SowField { tile, from }, JobStage::ToSource) => {
+                vec![ReserveKey::Field(tile), ReserveKey::Stack(from)]
+            }
+            (
+                JobKind::SowField { tile, .. }
+                | JobKind::TillField { tile }
+                | JobKind::TendField { tile }
+                | JobKind::HarvestField { tile },
+                _,
+            ) => vec![ReserveKey::Field(tile)],
         }
     }
 }

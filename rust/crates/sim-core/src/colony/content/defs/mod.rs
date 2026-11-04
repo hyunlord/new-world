@@ -42,3 +42,6 @@ mod food;
 pub use food::*;
 mod plant;
 pub use plant::*;
+
+mod crop;
+pub use crop::*;

@@ -170,11 +170,17 @@ pub enum ChronicleKind {
     HungerFoodChain = 52,
     /// Actual food operation; immutable typed evidence lives in the food sidecar.
     FoodOperation = 53,
+    /// First committed sowing; subject = farmer, value = crop code.
+    FirstField = 54,
+    /// First committed crop harvest; subject = farmer, value = crop code.
+    FirstHarvest = 55,
+    /// Established crop lost; cause 0 = winter frost, value = crop code.
+    CropFailure = 56,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 54] = [
+    pub const ALL: [ChronicleKind; 57] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -229,6 +235,9 @@ impl ChronicleKind {
         Self::WinterStoredSurvived,
         Self::HungerFoodChain,
         Self::FoodOperation,
+        Self::FirstField,
+        Self::FirstHarvest,
+        Self::CropFailure,
     ];
 
     /// Stable numeric discriminant.
@@ -293,6 +302,9 @@ impl ChronicleKind {
             Self::WinterStoredSurvived => "winter_stored_survived",
             Self::HungerFoodChain => "hunger_food_chain",
             Self::FoodOperation => "food_operation",
+            Self::FirstField => "first_field",
+            Self::FirstHarvest => "first_harvest",
+            Self::CropFailure => "crop_failure",
         }
     }
 }
@@ -749,10 +761,13 @@ mod tests {
         assert_eq!(ChronicleKind::MindChoice.as_str(), "mind_choice");
         assert_eq!(ChronicleKind::FoodOperation.as_u8(), 53);
         assert_eq!(ChronicleKind::FoodOperation.as_str(), "food_operation");
-        assert_eq!(ChronicleKind::ALL.len(), 54);
+        assert_eq!(ChronicleKind::FirstField.as_u8(), 54);
+        assert_eq!(ChronicleKind::FirstHarvest.as_u8(), 55);
+        assert_eq!(ChronicleKind::CropFailure.as_u8(), 56);
+        assert_eq!(ChronicleKind::ALL.len(), 57);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 54);
+        assert_eq!(names.len(), 57);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

@@ -10,6 +10,7 @@ pub mod host;
 pub mod ids;
 mod index;
 mod load;
+mod load_crops;
 mod load_ecology;
 mod load_flora;
 mod load_plants;
@@ -31,7 +32,7 @@ use crate::material::MaterialId;
 pub use boot::{bootstrap, installed, installed_or_bundled, BootSelection};
 pub use defs::*;
 pub use error::{BootError, CatalogAccessError, CatalogError};
-pub use ids::{AnimalKind, BlueprintKind, ItemKind, PlantKind, PressureKind, RecipeKind};
+pub use ids::{AnimalKind, BlueprintKind, CropKind, ItemKind, PlantKind, PressureKind, RecipeKind};
 use index::Index;
 pub use sources::{NamedSource, RawSources};
 use std::collections::{BTreeMap, BTreeSet};
@@ -40,6 +41,8 @@ use std::collections::{BTreeMap, BTreeSet};
 #[derive(Debug)]
 pub struct Catalog {
     flora: FloraCatalog,
+    crops: Vec<CropDef>,
+    crop_index: Index,
     plants: Vec<PlantDef>,
     plant_index: Index,
     animals: Vec<AnimalDef>,
@@ -123,6 +126,19 @@ impl Catalog {
     ) -> Result<Self, CatalogError> {
         load::build(base, extension)
     }
+    family_access!(
+        CropKind,
+        CropDef,
+        crops,
+        crop_index,
+        crop,
+        crop_by_code,
+        crop_by_name,
+        crop_by_serde_name,
+        require_crop,
+        crops,
+        crop_ids
+    );
     family_access!(
         PlantKind,
         PlantDef,
@@ -269,3 +285,6 @@ impl Catalog {
         &self.knowledge_gates
     }
 }
+
+#[cfg(test)]
+mod crop_tests;

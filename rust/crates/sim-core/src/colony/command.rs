@@ -357,6 +357,29 @@ pub enum Command {
         /// Enable extended rules ("집사가 더 많이").
         on: bool,
     },
+    /// Designate an inclusive field rectangle using a selected data crop.
+    ZoneField {
+        /// First inclusive rectangle corner.
+        min: (u32, u32),
+        /// Opposite inclusive rectangle corner.
+        max: (u32, u32),
+        /// Data-defined physical crop.
+        crop: super::content::CropKind,
+    },
+    /// Disable field work without destroying established plants or soil.
+    EraseField {
+        /// First inclusive rectangle corner.
+        min: (u32, u32),
+        /// Opposite inclusive rectangle corner.
+        max: (u32, u32),
+    },
+    /// Request, pause or return one field to ordinary scheduling.
+    SetFieldWork {
+        /// Existing field tile.
+        tile: (u32, u32),
+        /// Accepted scheduling preference.
+        mode: super::cultivation::FieldWork,
+    },
 }
 
 impl Command {
@@ -403,6 +426,9 @@ impl Command {
             Self::SetStewardExtended { .. } => "set_steward_extended",
             Self::DesignateHarvest { .. } => "designate_harvest",
             Self::DeployFoodPot { .. } => "deploy_food_pot",
+            Self::ZoneField { .. } => "zone_field",
+            Self::EraseField { .. } => "erase_field",
+            Self::SetFieldWork { .. } => "set_field_work",
         }
     }
 }

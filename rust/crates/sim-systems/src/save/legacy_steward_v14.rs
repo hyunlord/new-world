@@ -74,7 +74,7 @@ pub(super) struct LegacyBodyV14 {
 pub(super) fn decode_published_v14(payload: &[u8]) -> Result<super::Body, super::SaveError> {
     // M-LOOP wrote the new layout with the old tag. Do not guess when that
     // layout decodes, even if the published layout could also consume it.
-    if super::decode::<super::Body>(payload).is_ok() {
+    if super::decode::<super::legacy_cultivation_v15::LegacyBodyV15>(payload).is_ok() {
         return Err(super::SaveError::Decode(
             "format14 contains an unpublished M-LOOP or ambiguous steward layout; preserve the original file".into(),
         ));
@@ -89,6 +89,7 @@ pub(super) fn decode_published_v14(payload: &[u8]) -> Result<super::Body, super:
         content_state: old.content_state,
         mind: old.mind,
         food: old.food,
+        cultivation: Default::default(),
     })
 }
 
@@ -127,14 +128,31 @@ mod tests {
 
     #[test]
     fn new_layout_cannot_claim_published_format14_even_with_default_fields() {
-        // Given a current save, including the M-LOOP steward wire fields.
+        // Given the exact format15 body containing M-LOOP steward fields.
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
             .expect("catalog");
         let mut engine = sim_engine::SimEngine::new(4, 4, sim_core::MaterialRegistry::new());
-        let mut bytes = super::super::save(&mut engine).expect("current save");
-        assert_eq!(&bytes[8..12], &super::super::FORMAT_VERSION.to_le_bytes());
-        // When its header falsely advertises the published old layout.
-        bytes[8..12].copy_from_slice(&14u32.to_le_bytes());
+        let old = super::super::legacy_cultivation_v15::LegacyBodyV15 {
+            current_tick: engine.current_tick(),
+            world: super::super::world::capture(&engine.world).expect("world"),
+            systems: engine.system_states().expect("systems"),
+            steward: std::mem::take(&mut engine.resources.steward),
+            content_state: std::mem::take(&mut engine.resources.content_state),
+            mind: std::mem::take(&mut engine.resources.mind),
+            food: std::mem::take(&mut engine.resources.food),
+            resources: engine.resources,
+        };
+        let envelope = super::super::Envelope {
+            revision: sim_core::colony::content::installed()
+                .expect("catalog")
+                .revision()
+                .to_owned(),
+            payload: super::super::encode(&old).expect("format15 body"),
+        };
+        // Its header falsely advertises the published older layout.
+        let mut bytes = super::super::MAGIC.to_vec();
+        bytes.extend(14u32.to_le_bytes());
+        bytes.extend(super::super::encode(&envelope).expect("envelope"));
         let result = super::super::load_with(&bytes, |_| {});
         // Then the reader rejects rather than guessing or rewriting evidence.
         assert!(

@@ -362,7 +362,7 @@ mod tests {
             (3, 3)
         );
         let codes: Vec<u32> = ItemKind::all().map(|k| k.code()).collect();
-        assert_eq!(codes, (0..30).collect::<Vec<_>>());
+        assert_eq!(codes, (0..31).collect::<Vec<_>>());
         let historical = [
             ItemKind::Log,
             ItemKind::Firewood,

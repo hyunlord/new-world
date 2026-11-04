@@ -232,5 +232,12 @@
                 knowledge_any: [], pot_alternative: false,
                 requires_pot: false, duration_days: 2),
         ),
+        (
+            identity: (code: 18, id: "extract_flax_seed", name_key: "RECIPE_EXTRACT_FLAX_SEED", serde_name: "ExtractFlaxSeed", serde_aliases: [], resolver_aliases: []),
+            workshop: "wood_bench", workshop_tags: ["woodworking"],
+            inputs: [("flax_stalks", 2)], output: ("flax_seed", 4),
+            work_ticks: 30, skill: "woodwork", work: "craft", quality_add: 0, material_term: None,
+            tool: None, auto_bill_role: None,
+        ),
     ],
 )

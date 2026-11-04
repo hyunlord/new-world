@@ -48,6 +48,7 @@ pub fn read_selection(path: &Path) -> Result<BootSelection, CatalogError> {
                 | "animals"
                 | "flora"
                 | "plants"
+                | "crops"
                 | "alerts"
                 | "lessons"
                 | "locale_ko"

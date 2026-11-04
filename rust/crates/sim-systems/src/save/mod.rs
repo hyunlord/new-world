@@ -80,7 +80,10 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 13 = independently persisted seasonal plants and physical food ownership.
 /// 14 = persisted food-pressure, meal-source and starvation causal evidence.
 /// 15 = explicit extended steward mode and grace-window bookkeeping.
-pub const FORMAT_VERSION: u32 = 15;
+pub const FORMAT_VERSION: u32 = 16;
+mod cultivation_catalog;
+mod cultivation_validation;
+mod legacy_cultivation_v15;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;
@@ -154,6 +157,7 @@ struct BodyRef<'a> {
     content_state: &'a sim_core::colony::content_state::ContentState,
     mind: &'a sim_core::colony::mind_state::MindState,
     food: &'a sim_core::colony::food::FoodState,
+    cultivation: &'a sim_core::colony::cultivation::CultivationState,
 }
 
 /// The body after the header, as read (same fields, same order).
@@ -224,6 +228,7 @@ struct Body {
     content_state: sim_core::colony::content_state::ContentState,
     mind: sim_core::colony::mind_state::MindState,
     food: sim_core::colony::food::FoodState,
+    cultivation: sim_core::colony::cultivation::CultivationState,
 }
 
 /// Exact format12 body, before independently persisted food state.
@@ -269,6 +274,8 @@ struct LegacyBodyV10 {
 pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
     mind_validation::validate(&mut engine.resources).map_err(SaveError::Encode)?;
     crate::runtime::food::validate(&engine.world, &engine.resources).map_err(SaveError::Encode)?;
+    cultivation_validation::validate(&engine.world, &engine.resources)
+        .map_err(SaveError::Encode)?;
     let world = world::capture(&engine.world).map_err(SaveError::World)?;
     let systems = engine.system_states().map_err(SaveError::Systems)?;
     let body = BodyRef {
@@ -280,6 +287,7 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         content_state: &engine.resources.content_state,
         mind: &engine.resources.mind,
         food: &engine.resources.food,
+        cultivation: &engine.resources.cultivation,
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
@@ -324,6 +332,7 @@ pub fn load_with(
     let legacy_v11 = version == Some(11u32.to_le_bytes().as_slice());
     let legacy_v12 = version == Some(12u32.to_le_bytes().as_slice());
     let legacy_v13 = version == Some(13u32.to_le_bytes().as_slice());
+    let legacy_v15 = version == Some(15u32.to_le_bytes().as_slice());
     let legacy_v14 = version == Some(14u32.to_le_bytes().as_slice());
     // Format13 already owns physical food and its FoodDailySystem slot.
     let legacy_food =
@@ -343,6 +352,7 @@ pub fn load_with(
             content_state: Default::default(),
             mind: Default::default(),
             food: Default::default(),
+            cultivation: Default::default(),
         }
     } else if legacy_v7 {
         let old: LegacyBodyV7 = decode(encoded).map_err(SaveError::Decode)?;
@@ -355,6 +365,7 @@ pub fn load_with(
             content_state: Default::default(),
             mind: Default::default(),
             food: Default::default(),
+            cultivation: Default::default(),
         }
     } else {
         let envelope: Envelope = decode(encoded).map_err(SaveError::Decode)?;
@@ -377,6 +388,7 @@ pub fn load_with(
                 content_state: old.content_state.into(),
                 mind: Default::default(),
                 food: Default::default(),
+                cultivation: Default::default(),
             }
         } else if legacy_v9 {
             if envelope.revision != legacy_v9::REVISION {
@@ -396,10 +408,13 @@ pub fn load_with(
                 content_state: old.content_state.into(),
                 mind: Default::default(),
                 food: Default::default(),
+                cultivation: Default::default(),
             }
         } else {
             if envelope.revision != catalog.revision()
                 && !(legacy_food && food_catalog::accepts(&envelope.revision, catalog)?)
+                && !((legacy_v13 || legacy_v14 || legacy_v15)
+                    && cultivation_catalog::accepts(&envelope.revision, catalog)?)
             {
                 return Err(SaveError::Decode(format!(
                     "save content revision {} does not match installed {}",
@@ -418,6 +433,7 @@ pub fn load_with(
                     content_state: old.content_state,
                     mind: Default::default(),
                     food: Default::default(),
+                    cultivation: Default::default(),
                 }
             } else if legacy_v11 {
                 let old: LegacyBodyV11 = decode(&envelope.payload).map_err(SaveError::Decode)?;
@@ -430,6 +446,7 @@ pub fn load_with(
                     content_state: old.content_state,
                     mind: Default::default(),
                     food: Default::default(),
+                    cultivation: Default::default(),
                 }
             } else if legacy_v12 {
                 let old: LegacyBodyV12 = decode(&envelope.payload).map_err(SaveError::Decode)?;
@@ -442,11 +459,14 @@ pub fn load_with(
                     content_state: old.content_state,
                     mind: old.mind,
                     food: Default::default(),
+                    cultivation: Default::default(),
                 }
             } else if legacy_v13 {
                 let old: legacy_food_v13::LegacyBodyV13 =
                     decode(&envelope.payload).map_err(SaveError::Decode)?;
                 old.into()
+            } else if legacy_v15 {
+                legacy_cultivation_v15::decode_body(&envelope.payload)?
             } else if legacy_v14 {
                 legacy_steward_v14::decode_published_v14(&envelope.payload)?
             } else {
@@ -459,6 +479,23 @@ pub fn load_with(
     resources.content_state = body.content_state;
     resources.mind = body.mind;
     resources.food = body.food;
+    resources.cultivation = body.cultivation;
+    if legacy
+        || legacy_v7
+        || legacy_v8
+        || legacy_v9
+        || legacy_v10
+        || legacy_v11
+        || legacy_v12
+        || legacy_v13
+        || legacy_v14
+        || legacy_v15
+    {
+        resources
+            .cultivation
+            .drying_origins
+            .resize(resources.food.pending_drying.len(), Default::default());
+    }
     mind_validation::validate(&mut resources).map_err(SaveError::Decode)?;
     if legacy || legacy_v7 || legacy_v8 || legacy_v9 {
         legacy_v9::migrate_trees(&mut resources).map_err(SaveError::Decode)?;
@@ -481,6 +518,7 @@ pub fn load_with(
         .map_err(SaveError::Decode)?;
     }
     crate::runtime::food::validate(&world, &resources).map_err(SaveError::Decode)?;
+    cultivation_validation::validate(&world, &resources).map_err(SaveError::Decode)?;
     content_validation::validate_illness(&resources, &world).map_err(SaveError::Decode)?;
     let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
     let legacy_colony_brain =
@@ -618,6 +656,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 12
         && found != 13
         && found != 14
+        && found != 15
     {
         return Err(SaveError::Version {
             found,
@@ -756,3 +795,6 @@ mod tests {
         );
     }
 }
+
+#[cfg(test)]
+mod cultivation_tests;

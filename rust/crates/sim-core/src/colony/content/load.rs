@@ -153,6 +153,8 @@ pub(super) fn build(
     let flora = load_flora::build(&base, &extension, &base_materials, &materials)?;
     let mut catalog = Catalog {
         flora,
+        crops: Vec::new(),
+        crop_index: Index::default(),
         plants: Vec::new(),
         plant_index: Index::default(),
         animals: Vec::new(),
@@ -256,5 +258,6 @@ pub(super) fn build(
     }
     validate::knowledge_refs(&catalog)?;
     load_plants::load(&mut catalog, &base, &extension)?;
+    load_crops::load(&mut catalog, &base, &extension)?;
     Ok(catalog)
 }

@@ -12,6 +12,7 @@ use std::collections::BTreeMap;
 mod command;
 pub mod content;
 pub mod content_state;
+pub mod cultivation;
 pub mod diagnosis;
 pub mod food;
 pub mod food_evidence;
