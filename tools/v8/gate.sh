@@ -197,6 +197,20 @@ elif [[ -n "${CORE_UI_CONFIG:-}" ]]; then
     step 27 nav_bench env CORE_P7_DEADLINE_EPOCH="${CORE_UI_DEADLINE_EPOCH:?}" python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
 elif [[ -n "${CORE_P7_RUN:-}" ]]; then
     step 27 nav_bench python3 tools/v8/core_p7_admission.py --log "$LOG/nav-bench-admission.jsonl" --label nav-bench -- rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
+elif [[ -n "${READ_GATE_CONFIG:-}" ]]; then
+    step 27 nav_bench python3 -c '
+import subprocess, sys
+from pathlib import Path
+sys.path.insert(0, "tools/v8")
+from read_gate_checks import load_config, verify_binary, wait_for_load
+config = load_config(sys.argv[1])
+verify_binary(config["base_perf"], config["base_perf_sha256"])
+for label, binary, filename in [("base", config["base_perf"], "base_nav_bench.json"), ("new", "rust/target/release/worldsim_perf", "nav_bench.json")]:
+    loads = wait_for_load()
+    print(f"nav_bench admission {label} load1/5/15={loads}", flush=True)
+    subprocess.check_call([binary, "nav-bench", "--commands", "tools/v8/soak_script.json", "--out", str(Path(sys.argv[2]) / filename)])
+print("nav_bench: one interleaved BASE/HEAD pair; report only, acceptance remains step25")
+' "$READ_GATE_CONFIG" "$LOG/nav_bench"
 else
     step 27 nav_bench rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
 fi

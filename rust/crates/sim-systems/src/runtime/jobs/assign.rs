@@ -61,16 +61,9 @@ impl JobAssignSystem {
     }
 }
 
-/// Whether reserve gathering can yield to an admitted urgent food harvest.
-pub(super) fn reserve_gather_food_urgent(world: &World, resources: &SimResources) -> bool {
-    let Some(firewood) = resources.rules.society.firewood else {
-        return false;
-    };
-    use crate::runtime::settlement::firewood::{
-        burn_hours, night_tick_at, severity_level_at, winter_burn_per_hour,
-    };
-    // Use the same authored night booking as tonight_burn.
-    let night = night_tick_at(resources, &firewood, resources.current_tick);
+fn conservative_night_rate_at(resources: &SimResources, night: u64) -> Option<u32> {
+    let firewood = resources.rules.society.firewood?;
+    use crate::runtime::settlement::firewood::{severity_level_at, winter_burn_per_hour};
     let base = u32::from(winter_burn_per_hour(resources, &firewood, night));
     // Cover the authored possible increase without reading a future nightly draw.
     let step = if severity_level_at(resources, &firewood, night).is_some()
@@ -82,8 +75,135 @@ pub(super) fn reserve_gather_food_urgent(world: &World, resources: &SimResources
     } else {
         0
     };
-    let tonight = crate::runtime::settlement::fire::effective_burn_per_hour(resources, base + step)
-        * burn_hours(&firewood);
+    Some(base + step)
+}
+
+fn conservative_tonight_need(resources: &SimResources) -> Option<u32> {
+    let firewood = resources.rules.society.firewood?;
+    let night = crate::runtime::settlement::firewood::night_tick_at(
+        resources,
+        &firewood,
+        resources.current_tick,
+    );
+    let rate = conservative_night_rate_at(resources, night)?;
+    Some(
+        crate::runtime::settlement::fire::effective_burn_per_hour(resources, rate)
+            * crate::runtime::settlement::firewood::burn_hours(&firewood),
+    )
+}
+
+// Authored possibility, not a prediction of this year's keyed draw or mercy/history.
+pub(super) fn possible_winter_cold_factor<'a>(
+    rule: &sim_core::rules::StoryRule,
+    schedule: &sim_core::colony::content::PressureSchedule,
+    definitions: impl Iterator<Item = &'a sim_core::colony::content::PressureDef>,
+) -> u32 {
+    use sim_core::colony::content::PressureMechanic;
+    definitions
+        .filter(|def| def.mechanic == PressureMechanic::Cold && def.enabled(rule))
+        .filter(|def| {
+            let code = def.identity.code;
+            let mut previous = 0;
+            let drawn = schedule.seasons.get(&3).is_some_and(|rows| {
+                rows.iter().any(|row| {
+                    let positive = row.upper_exclusive > previous;
+                    previous = row.upper_exclusive;
+                    positive && row.kind.is_some_and(|kind| kind.code() == code)
+                })
+            });
+            drawn
+                || (def.due_days.is_some()
+                    && def.due_seasons.contains(&3)
+                    && schedule.due_order.iter().any(|kind| kind.code() == code))
+                || (schedule.minor.is_some_and(|kind| kind.code() == code)
+                    && schedule.minor_seasons.contains(&3))
+        })
+        .map(|def| def.resolve_rule(rule).snap_burn_permille)
+        .max()
+        .unwrap_or(1000)
+}
+
+fn prospective_fuel_need(resources: &SimResources) -> Option<u32> {
+    let current = conservative_tonight_need(resources)?;
+    if crate::runtime::resource_regen::season_at(resources).is_none_or(|(season, _)| season != 3) {
+        return Some(current);
+    }
+    let Some(rule) = crate::runtime::story::rule(resources) else {
+        return Some(current);
+    };
+    let catalog = sim_core::colony::content::installed_or_bundled();
+    let factor =
+        possible_winter_cold_factor(&rule, catalog.pressure_schedule(), catalog.pressures());
+    let per_hour = (u64::from(conservative_night_rate_at(
+        resources,
+        resources.current_tick,
+    )?) * u64::from(factor))
+    .div_ceil(1000);
+    let hours =
+        crate::runtime::settlement::firewood::burn_hours(&resources.rules.society.firewood?);
+    Some(current.max(u32::try_from(per_hour.saturating_mul(u64::from(hours))).unwrap_or(u32::MAX)))
+}
+
+fn immediate_food_shortfall(world: &World, resources: &SimResources) -> bool {
+    if !resources.steward.enabled {
+        return false;
+    }
+    let Ok(data) = sim_core::colony::steward::rules() else {
+        return false;
+    };
+    data.rules
+        .iter()
+        .filter(|rule| {
+            resources.steward.scope.permits(rule.scope)
+                && (!rule.extended || resources.steward.extended)
+        })
+        .find_map(|rule| match &rule.action {
+            sim_core::colony::steward::Action::FoodPlan(policy) => Some(policy),
+            _ => None,
+        })
+        .is_some_and(|policy| {
+            let food = crate::runtime::steward::food::summary(world, resources, policy);
+            food.usable_units
+                < food
+                    .daily_milli
+                    .saturating_mul(u64::from(policy.reserve_days))
+                    .div_ceil(1000)
+        })
+}
+
+#[derive(Clone, Copy)]
+enum Admission {
+    Normal,
+    LooseFuel,
+    UrgentFuel,
+    Edible,
+}
+
+fn urgent_fuel_bill(resources: &SimResources) -> bool {
+    if !resources.steward.enabled {
+        return false;
+    }
+    let Some(tonight) = prospective_fuel_need(resources) else {
+        return false;
+    };
+    let Ok(data) = sim_core::colony::steward::rules() else {
+        return false;
+    };
+    data.rules.iter().any(|rule| {
+        resources.steward.scope.permits(rule.scope)
+            && (!rule.extended || resources.steward.extended)
+            && matches!(
+                rule.action,
+                sim_core::colony::steward::Action::Bills { fuel: Some(_), .. }
+            )
+    }) && super::hearth::night_fuel_shortfall(resources, tonight)
+}
+
+/// Whether reserve gathering can yield to an admitted urgent food harvest.
+pub(super) fn reserve_gather_food_urgent(world: &World, resources: &SimResources) -> bool {
+    let Some(tonight) = conservative_tonight_need(resources) else {
+        return false;
+    };
     // Stored fuel covers every hearth; promises and shared loose
     // piles cannot make an unfed hearth safe for this exception.
     if resources.settlements.is_empty()
@@ -350,6 +470,7 @@ fn pick_work(
     pos: (u32, u32),
     ex: &mut Exhausted,
     harvest: &mut super::harvest::HarvestIndex,
+    fuel_bill_only: bool,
 ) -> Option<Pick> {
     let colony = &res.colony;
     let index = &res.spatial.colony;
@@ -395,8 +516,11 @@ fn pick_work(
                     let recipe = bill.recipe.recipe()?;
                     let tile = shop.work_tile();
                     let d = chebyshev(pos, tile);
-                    (recipe.work == work && d <= radius && reach(tile))
-                        .then_some((d, tile.1, tile.0, shop.id))
+                    (recipe.work == work
+                        && d <= radius
+                        && reach(tile)
+                        && (!fuel_bill_only || recipe.output.0.definition().fuel_units == Some(1)))
+                    .then_some((d, tile.1, tile.0, shop.id))
                 })
                 .collect();
             shops.sort_unstable();
@@ -554,7 +678,7 @@ fn pick_work(
                     ));
                 }
             }
-            if work == WorkType::Split {
+            if work == WorkType::Split && !fuel_bill_only {
                 return gather_pick(res, ctx, pos, ex);
             }
             None
@@ -1209,7 +1333,7 @@ fn pick(
     WorkType::ALL
         .into_iter()
         .filter(|w| pass == 0 || priorities.level(*w) == pass)
-        .find_map(|work| pick_work(res, ctx, work, pos, ex, harvest))
+        .find_map(|work| pick_work(res, ctx, work, pos, ex, harvest, false))
 }
 
 impl RuntimeSystem for JobAssignSystem {
@@ -1344,6 +1468,7 @@ impl RuntimeSystem for JobAssignSystem {
         let gather_short = std::cell::Cell::new(None);
         let hearth = std::cell::OnceCell::new();
         let urgent_food = std::cell::OnceCell::new();
+        let immediate_food = std::cell::OnceCell::new();
         let mut taken: Vec<(Entity, Job, (u32, u32))> = Vec::new();
         // M3: the "found nothing" memos hold per nav region (the searches filter by it).
         let mut exhausted: BTreeMap<u32, Exhausted> = BTreeMap::new();
@@ -1355,18 +1480,26 @@ impl RuntimeSystem for JobAssignSystem {
         // Recover loose fuel before competing work at the same hauling priority.
         // Higher priorities still run first; disabled hauling never enters this
         // round. Without the economy keep the original per-person M1 pass.
-        let rounds: Vec<(u8, Option<WorkType>, bool)> = if rule.economy.is_some() {
+        let rounds: Vec<(u8, Option<WorkType>, Admission)> = if rule.economy.is_some() {
             (1..=sim_core::colony::skills::LOWEST_PRIORITY)
                 .flat_map(|pass| {
-                    std::iter::once((pass, Some(WorkType::Haul), true)).chain(
-                        WorkType::ALL
-                            .into_iter()
-                            .map(move |w| (pass, Some(w), false)),
+                    std::iter::once((pass, Some(WorkType::Haul), Admission::LooseFuel)).chain(
+                        WorkType::ALL.into_iter().flat_map(move |work| {
+                            std::iter::once((pass, Some(work), Admission::Normal)).chain(
+                                (work == WorkType::Craft)
+                                    .then_some([
+                                        (pass, Some(WorkType::Split), Admission::UrgentFuel),
+                                        (pass, Some(WorkType::Haul), Admission::Edible),
+                                    ])
+                                    .into_iter()
+                                    .flatten(),
+                            )
+                        }),
                     )
                 })
                 .collect()
         } else {
-            vec![(0, None, false)]
+            vec![(0, None, Admission::Normal)]
         };
         let mut assigned: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
         // M4: today's apprenticeship sessions first (both partners must be free).
@@ -1390,13 +1523,27 @@ impl RuntimeSystem for JobAssignSystem {
             .collect();
         craft_skills.sort_unstable();
         craft_skills.dedup();
-        for (pass, work, fuel_only) in rounds {
+        for (pass, work, admission) in rounds {
             let mut order: Vec<&Row> = available
                 .iter()
                 .filter(|row| {
                     !assigned.contains(&row.0) && work.is_none_or(|w| row.3.level(w) == pass)
                 })
                 .collect();
+            if order.is_empty() {
+                continue;
+            }
+            // Ground reservations can change between rounds; physical food stock cannot.
+            if matches!(admission, Admission::UrgentFuel) && !urgent_fuel_bill(resources) {
+                continue;
+            }
+            if matches!(admission, Admission::Edible)
+                && (!*immediate_food.get_or_init(|| immediate_food_shortfall(world, resources))
+                    || conservative_tonight_need(resources)
+                        .is_some_and(|night| super::hearth::night_fuel_shortfall(resources, night)))
+            {
+                continue;
+            }
             if let Some(w) = work {
                 order.sort_by_key(|row| {
                     (
@@ -1425,11 +1572,31 @@ impl RuntimeSystem for JobAssignSystem {
                     agent: id,
                 };
                 let ex = exhausted.entry(ctx.region).or_default();
-                let found = if fuel_only {
+                let found = if matches!(admission, Admission::LooseFuel) {
                     loose_haul(resources, &ctx, pos, ex, true)
+                } else if matches!(admission, Admission::Edible) {
+                    super::harvest::pick_edible(
+                        resources,
+                        &mut self.harvest,
+                        super::harvest::HarvestQuery {
+                            practice,
+                            region: ctx.region,
+                            pos,
+                            radius: rule.job_scan_radius,
+                        },
+                    )
+                    .map(|job| (job.kind, job.amount, job.item))
                 } else {
                     match work {
-                        Some(w) => pick_work(resources, &ctx, w, pos, ex, &mut self.harvest),
+                        Some(w) => pick_work(
+                            resources,
+                            &ctx,
+                            w,
+                            pos,
+                            ex,
+                            &mut self.harvest,
+                            matches!(admission, Admission::UrgentFuel),
+                        ),
                         None => pick(
                             resources,
                             &ctx,

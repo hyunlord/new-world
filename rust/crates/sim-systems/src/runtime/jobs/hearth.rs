@@ -108,6 +108,66 @@ pub fn feedable_firewood(res: &SimResources) -> u32 {
         .sum()
 }
 
+// Match the feeder's eligible sources and stable distance/tile ordering.
+fn fuel_stacks(res: &SimResources, hearth: (u32, u32)) -> Vec<(u32, u32, u32, u16, ItemKind)> {
+    let c = &res.colony;
+    let mut stacks: Vec<(u32, u32, u32, u16, ItemKind)> = c
+        .ground_items
+        .iter()
+        .filter(|(tile, stack)| {
+            stack.kind.definition().fuel_units == Some(1)
+                && (c.zone_of_tile.contains_key(tile)
+                    || chebyshev(**tile, hearth) <= HEARTH_PILE_REACH)
+                && !c.reservations.contains_key(&ReserveKey::Stack(**tile))
+        })
+        .map(|(tile, stack)| {
+            (
+                chebyshev(*tile, hearth),
+                tile.1,
+                tile.0,
+                stack.count,
+                stack.kind,
+            )
+        })
+        .collect();
+    stacks.sort_unstable();
+    stacks
+}
+
+/// Whether some hearth cannot book its night from stored and unreserved ground fuel.
+pub(super) fn night_fuel_shortfall(res: &SimResources, tonight: u32) -> bool {
+    let mut used = std::collections::BTreeMap::<(u32, u32), u32>::new();
+    let mut ids: Vec<_> = res.settlements.keys().copied().collect();
+    ids.sort_unstable();
+    for sid in ids {
+        let Some(settlement) = res.settlements.get(&sid) else {
+            continue;
+        };
+        let stored = settlement
+            .stockpile
+            .get(&ResourceKind::Wood)
+            .copied()
+            .unwrap_or(0);
+        let mut need = tonight.saturating_sub(stored);
+        if need == 0 {
+            continue;
+        }
+        for (_, y, x, count, _) in fuel_stacks(res, settlement.formation_tile) {
+            let booked = used.entry((x, y)).or_default();
+            let take = u32::from(count).saturating_sub(*booked).min(need);
+            *booked += take;
+            need -= take;
+            if need == 0 {
+                break;
+            }
+        }
+        if need > 0 {
+            return true;
+        }
+    }
+    false
+}
+
 /// Feed every hearth (see the module header).
 pub fn feed(res: &mut SimResources) {
     let Some(rule) = res.rules.society.firewood else {
@@ -128,27 +188,7 @@ pub fn feed(res: &mut SimResources) {
         if have >= tonight {
             continue;
         }
-        let c = &res.colony;
-        let mut stacks: Vec<(u32, u32, u32, u16, ItemKind)> = c
-            .ground_items
-            .iter()
-            .filter(|(tile, stack)| {
-                stack.kind.definition().fuel_units == Some(1)
-                    && (c.zone_of_tile.contains_key(tile)
-                        || chebyshev(**tile, hearth) <= HEARTH_PILE_REACH)
-                    && !c.reservations.contains_key(&ReserveKey::Stack(**tile))
-            })
-            .map(|(tile, stack)| {
-                (
-                    chebyshev(*tile, hearth),
-                    tile.1,
-                    tile.0,
-                    stack.count,
-                    stack.kind,
-                )
-            })
-            .collect();
-        stacks.sort_unstable();
+        let stacks = fuel_stacks(res, hearth);
         let mut need = tonight - have;
         let mut fed = 0u32;
         for (_, y, x, count, kind) in stacks {
