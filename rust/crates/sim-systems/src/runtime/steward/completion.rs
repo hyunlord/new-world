@@ -60,7 +60,8 @@ pub(super) fn plan(res: &SimResources, rule: &Rule) -> Option<Command> {
             _ => None,
         })
         .collect();
-    if beds.is_empty() {
+    let store = role == sim_core::rooms::RoomRole::Storehouse;
+    if beds.is_empty() && !store {
         return None;
     }
     let boundary: BTreeSet<_> = owned
@@ -83,7 +84,10 @@ pub(super) fn plan(res: &SimResources, rule: &Rule) -> Option<Command> {
             .iter()
             .filter(|tile| res.colony.beds.contains_key(tile))
             .collect();
-        if finished.is_empty() || finished.iter().any(|tile| !beds.contains(tile)) {
+        if (!store && finished.is_empty())
+            || (store && !finished.is_empty())
+            || finished.iter().any(|tile| !beds.contains(tile))
+        {
             continue;
         }
         if res.colony.room_overrides.get(&room.id).is_some_and(|&current| {

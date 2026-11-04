@@ -20,23 +20,25 @@ pub(super) fn plan(
     else {
         return Vec::new();
     };
-    let immediate = facts
-        .daily_milli
-        .saturating_mul(u64::from(policy.reserve_days))
-        .div_ceil(1000);
-    let reserve = if facts.preparing {
-        facts
-            .daily_milli
-            .saturating_mul(u64::from(facts.winter_days))
-            .div_ceil(1000)
-            .max(super::winter_need(facts.adults))
-    } else {
-        0
-    };
-    let mut immediate_gap = immediate.saturating_sub(facts.usable_units);
-    let mut winter_gap = reserve.saturating_sub(facts.winter_units);
+    let (immediate, reserve) = targets(policy, facts);
+    let (pending_immediate, pending_winter) = pending_output(world, res, policy, facts);
+    let mut immediate_gap = immediate
+        .saturating_sub(facts.usable_units)
+        .saturating_sub(pending_immediate);
+    let mut winter_gap = reserve
+        .saturating_sub(facts.winter_units)
+        .saturating_sub(pending_winter);
     let catalog = installed_or_bundled();
     let mut ingredients = super::dependencies::ingredient_deficits(world, res, policy, facts);
+    let mut seed_need = super::dependencies::seed_inputs(world, res, policy, facts);
+    for (kind, missing) in &mut seed_need {
+        let physical = if kind.definition().food.is_some() {
+            facts.pieces.get(kind).copied().unwrap_or(0)
+        } else {
+            super::dependencies::physical_pieces(world, res, *kind)
+        };
+        *missing = missing.saturating_sub(physical);
+    }
     let mut candidates = Vec::new();
     for (&tile, plant) in &res.food.plants {
         if plant.units_left == 0 || !crate::runtime::food::plants::harvestable(res, tile) {
@@ -45,26 +47,30 @@ pub(super) fn plan(
         let Some(def) = catalog.plant(plant.species) else {
             continue;
         };
-        let Some(food) = &def.yield_item.definition().food else {
-            continue;
-        };
+        let food = def.yield_item.definition().food.as_ref();
         if distance(tile, hearth) > policy.forage_radius
             || !crate::commands::camp_reaches(res, tile)
         {
             continue;
         }
-        let units = u64::from(plant.units_left) * u64::from(food.units);
-        let durable = food.raw_edible
-            && super::summary::covers_winter(
-                food.lifetime_days(FoodStorageClass::Stockpile),
-                facts.winter_in,
-                policy.winter_keep_days,
-            );
+        let units = u64::from(plant.units_left) * food.map_or(0, |food| u64::from(food.units));
+        let edible = food.is_some_and(|food| food.raw_edible);
+        let durable = food.is_some_and(|food| {
+            food.raw_edible
+                && super::summary::covers_winter(
+                    food.lifetime_days(FoodStorageClass::Stockpile),
+                    facts.winter_in,
+                    policy.winter_keep_days,
+                )
+        });
         if res.colony.designations.get(&tile) == Some(&Designation::Harvest) {
+            if let Some(missing) = seed_need.get_mut(&def.yield_item) {
+                *missing = missing.saturating_sub(u64::from(plant.units_left));
+            }
             if let Some(missing) = ingredients.get_mut(&def.yield_item) {
                 *missing = missing.saturating_sub(u64::from(plant.units_left));
             }
-            if food.raw_edible {
+            if edible {
                 immediate_gap = immediate_gap.saturating_sub(units);
             }
             if durable {
@@ -79,11 +85,12 @@ pub(super) fn plan(
         {
             continue;
         }
-        let missing_group = food
-            .groups
-            .iter()
-            .any(|group| !facts.groups.contains(group));
-        candidates.push((tile, units, food.raw_edible, durable, missing_group));
+        let missing_group = food.is_some_and(|food| {
+            food.groups
+                .iter()
+                .any(|group| !facts.groups.contains(group))
+        });
+        candidates.push((tile, units, edible, durable, missing_group));
     }
     let urgent = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
     candidates.sort_by_key(|(tile, _, edible, durable, missing)| {
@@ -108,19 +115,23 @@ pub(super) fn plan(
         let Some(def) = catalog.plant(plant.species) else {
             continue;
         };
-        let Some(food) = &def.yield_item.definition().food else {
+        let food = def.yield_item.definition().food.as_ref();
+        let seed_needed = seed_need.get(&def.yield_item).copied().unwrap_or(0) > 0;
+        if immediate_gap == 0 && winter_gap == 0 && !seed_needed {
             continue;
-        };
+        }
         let diversity = !urgent
-            && food
-                .groups
-                .iter()
-                .any(|group| !chosen_groups.contains(group));
+            && food.is_some_and(|food| {
+                food.groups
+                    .iter()
+                    .any(|group| !chosen_groups.contains(group))
+            });
         let ingredient_needed = ingredients.get(&def.yield_item).copied().unwrap_or(0) > 0;
         if (immediate_gap == 0 || !edible)
             && (winter_gap == 0 || !durable)
             && !diversity
             && !ingredient_needed
+            && !seed_needed
         {
             continue;
         }
@@ -133,6 +144,9 @@ pub(super) fn plan(
             x1: tile.0,
             y1: tile.1,
         });
+        if let Some(missing) = seed_need.get_mut(&def.yield_item) {
+            *missing = missing.saturating_sub(u64::from(plant.units_left));
+        }
         if edible {
             immediate_gap = immediate_gap.saturating_sub(units);
         }
@@ -142,10 +156,100 @@ pub(super) fn plan(
         if let Some(missing) = ingredients.get_mut(&def.yield_item) {
             *missing = missing.saturating_sub(u64::from(plant.units_left));
         }
-        chosen_groups.extend(food.groups.iter().cloned());
+        if let Some(food) = food {
+            chosen_groups.extend(food.groups.iter().cloned());
+        }
     }
     out
 }
+pub(super) fn pending_output(
+    world: &hecs::World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    facts: &FoodSummary,
+) -> (u64, u64) {
+    use sim_core::colony::{Job, JobKind, JobStage};
+    let day = crate::runtime::food::day(res);
+    let winter_start = day.saturating_add(facts.winter_in);
+    let mut immediate = 0u64;
+    let mut winter = 0u64;
+    let mut count = |kind: sim_core::colony::ItemKind, pieces: u16, due: u64, tile: Tile| {
+        if !crate::commands::camp_reaches(res, tile) {
+            return;
+        }
+        let Some(food) = &kind.definition().food else {
+            return;
+        };
+        if !food.raw_edible {
+            return;
+        }
+        let Ok(born) = u32::try_from(crate::runtime::resource_regen::day_index_at(res, due)) else {
+            return;
+        };
+        let lifetime = food.lifetime_days(crate::runtime::food::storage::class(
+            res,
+            sim_core::colony::food::FoodOwner::Ground(tile),
+        ));
+        if born.saturating_add(lifetime) <= day {
+            return;
+        }
+        let units = u64::from(pieces).saturating_mul(u64::from(food.units));
+        if born <= day.saturating_add(policy.reserve_days) {
+            immediate = immediate.saturating_add(units);
+        }
+        if facts.preparing
+            && born <= winter_start
+            && born.saturating_add(food.lifetime_days(FoodStorageClass::Stockpile))
+                >= winter_start.saturating_add(policy.winter_keep_days)
+        {
+            winter = winter.saturating_add(units);
+        }
+    };
+    for batch in &res.food.pending_drying {
+        if res.colony.workshops.contains_key(&batch.workshop) {
+            count(batch.output.kind, batch.count, batch.due_tick, batch.tile);
+        }
+    }
+    for (_, job) in world.query::<&Job>().iter() {
+        let (JobKind::Craft { workshop, bill, .. }, JobStage::Working { ticks_left }) =
+            (job.kind, job.stage)
+        else {
+            continue;
+        };
+        let Some(shop) = res.colony.workshops.get(&workshop) else {
+            continue;
+        };
+        let Some(recipe) = shop.bill(bill).and_then(|bill| bill.recipe.recipe()) else {
+            continue;
+        };
+        let due = res
+            .current_tick
+            .saturating_add(u64::from(ticks_left))
+            .saturating_add(
+                u64::from(recipe.food_requirements.duration_days).saturating_mul(res.ticks_per_day),
+            );
+        count(recipe.output.0, recipe.output.1, due, shop.work_tile());
+    }
+    (immediate, winter)
+}
+
 fn distance(a: Tile, b: Tile) -> u32 {
     a.0.abs_diff(b.0).max(a.1.abs_diff(b.1))
+}
+
+pub(super) fn targets(policy: &FoodPlan, facts: &FoodSummary) -> (u64, u64) {
+    let immediate = facts
+        .daily_milli
+        .saturating_mul(u64::from(policy.reserve_days))
+        .div_ceil(1000);
+    let reserve = if facts.preparing {
+        facts
+            .daily_milli
+            .saturating_mul(u64::from(facts.winter_days))
+            .div_ceil(1000)
+            .max(super::winter_need(facts.adults))
+    } else {
+        0
+    };
+    (immediate, reserve)
 }

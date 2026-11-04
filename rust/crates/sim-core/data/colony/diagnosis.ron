@@ -209,5 +209,33 @@
             next: None,
             tags: ["storage"],
         ),
+        (
+            id: "field_no_seed",
+            when: [(fact: "field_no_seed", op: ">", value: Some(0))],
+            text_key: "S1_DIAG_NO_SEED",
+            params: {"count": "field_no_seed"},
+            severity: "warning", next: None, tags: ["farming"],
+        ),
+        (
+            id: "field_no_farmer",
+            when: [(fact: "field_no_farmer", op: ">", value: Some(0))],
+            text_key: "S1_DIAG_NO_FARMER",
+            params: {"count": "field_no_farmer"},
+            severity: "warning", next: None, tags: ["farming"],
+        ),
+        (
+            id: "field_window_closed",
+            when: [(fact: "field_window_closed", op: ">", value: Some(0))],
+            text_key: "S1_DIAG_WINDOW_CLOSED",
+            params: {"count": "field_window_closed"},
+            severity: "warning", next: None, tags: ["farming"],
+        ),
+        (
+            id: "field_soil_exhausted",
+            when: [(fact: "field_soil_exhausted", op: ">", value: Some(0))],
+            text_key: "S1_DIAG_SOIL_EXHAUSTED",
+            params: {"count": "field_soil_exhausted"},
+            severity: "warning", next: None, tags: ["farming"],
+        ),
     ]),
 ])

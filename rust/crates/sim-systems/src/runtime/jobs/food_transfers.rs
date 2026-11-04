@@ -54,7 +54,12 @@ pub(super) fn pickup(
     (count, spec)
 }
 
-/// Drop food without changing its birth day; failure retains the complete carried stack.
+/// Whether a physical nonfood seed requires lossless placement and cancellation.
+pub(super) fn durable_seed(kind: ItemKind) -> bool {
+    kind.definition().food.is_none() && kind.definition().tags.iter().any(|tag| tag == "seed")
+}
+
+/// Drop food or seeds atomically; failure retains the complete carried stack.
 pub(super) fn drop(world: &mut World, res: &mut SimResources, entity: Entity, tile: (u32, u32)) {
     let Some(id) = world.get::<&Agent>(entity).ok().map(|a| a.id) else {
         return;
@@ -69,7 +74,9 @@ pub(super) fn retry_stranded(world: &mut World, res: &mut SimResources) {
         .query::<(&Agent, &sim_core::components::Position, &Carry)>()
         .without::<&sim_core::colony::Job>()
         .iter()
-        .filter(|(_, (_, _, carry))| carry.kind.definition().food.is_some())
+        .filter(|(_, (_, _, carry))| {
+            carry.kind.definition().food.is_some() || durable_seed(carry.kind)
+        })
         .map(|(entity, (agent, position, _))| (agent.id, entity, (position.x, position.y)))
         .collect();
     loads.sort_unstable_by_key(|row| row.0);

@@ -3,6 +3,11 @@
 // request kind with a text key, suggested action, priority, and steward tags.
 (schema_version: 1, rules: [
     (
+        id: "need_seed", match_tags: ["seeds"], match_facts: ["field_no_seed"],
+        text_key: "S1_REQ_NEED_SEED", action_key: "S1_REQ_GET_SEED",
+        priority: 6, steward_tags: [],
+    ),
+    (
         id: "need_food",
         match_tags: ["food"],
         match_facts: ["hunger_actionable", "food_available", "food_cooked_available",

@@ -905,6 +905,51 @@ impl WorldSimNode {
         ))
     }
 
+    /// Authoritative field state; this read never advances cultivation.
+    #[func]
+    fn get_field_tiles(&self) -> VarDictionary {
+        super::cultivation::fields_to_dict(&self.engine.resources)
+    }
+
+    #[func]
+    fn get_crop_defs(&self) -> VarDictionary {
+        super::cultivation::crop_defs_to_dict()
+    }
+
+    #[func]
+    fn cmd_zone_field(
+        &mut self,
+        x0: i32,
+        y0: i32,
+        x1: i32,
+        y1: i32,
+        crop: GString,
+    ) -> VarDictionary {
+        result_to_dict(super::cultivation::zone(
+            &mut self.engine,
+            (x0, y0, x1, y1),
+            &crop.to_string(),
+        ))
+    }
+
+    #[func]
+    fn cmd_erase_field(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(super::cultivation::erase(
+            &mut self.engine,
+            (x0, y0, x1, y1),
+        ))
+    }
+
+    #[func]
+    fn cmd_set_field_work(&mut self, x: i32, y: i32, mode: GString) -> VarDictionary {
+        result_to_dict(super::cultivation::work(
+            &mut self.engine,
+            x,
+            y,
+            &mode.to_string(),
+        ))
+    }
+
     /// M6a: real plants intersecting an inclusive viewport tile rectangle.
     #[func]
     fn get_plants(&self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {

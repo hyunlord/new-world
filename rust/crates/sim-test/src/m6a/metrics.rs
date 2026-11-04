@@ -60,6 +60,9 @@ pub(super) struct Daily {
     pub settlement_stores: Vec<SettlementStore>,
     pub stored: Vec<Stored>,
     pub tallies: FoodTallies,
+    pub food_budget: Option<serde_json::Value>,
+    pub wood_budget: Option<serde_json::Value>,
+    pub loose_logs: u64,
     pub physical_food_units: u64,
     pub harvested_edible_units: u64,
     pub harvested_convertible_units: u64,
@@ -94,6 +97,12 @@ pub(super) fn daily(world: &World, res: &SimResources) -> Daily {
             (id, members)
         })
         .collect();
+    let mut harvested = [0_u64; 2];
+    for (kind, count) in &res.food.tallies.harvested {
+        if let Some(food) = &kind.definition().food {
+            harvested[usize::from(!food.raw_edible)] += count * u64::from(food.units);
+        }
+    }
     let mut snapshot = Daily {
         day,
         phase: "after_expiry",
@@ -114,33 +123,25 @@ pub(super) fn daily(world: &World, res: &SimResources) -> Daily {
             .collect(),
         stored: Vec::new(),
         tallies: res.food.tallies.clone(),
+        food_budget: sim_systems::runtime::steward::food::budget_observation(world, res)
+            .map(|(f, (immediate, durable, pending_immediate, pending_durable))| serde_json::json!({
+                "daily_demand_milli":f.daily_milli, "warm_daily_demand_milli":f.warm_daily_milli,
+                "stored_units":f.stored_units, "usable_units":f.usable_units, "durable_units":f.winter_units,
+                "preparing":f.preparing, "winter_in_days":f.winter_in,
+                "immediate_target":immediate, "durable_target":durable,
+                "pending_immediate":pending_immediate, "pending_durable":pending_durable
+            })),
+        wood_budget: sim_systems::runtime::steward::planning::wood_budget_observation(world, res)
+            .map(|(target, building, shelter, margin, fuel)| serde_json::json!({
+                "target_logs":target, "building_need_logs":building, "pending_shelter_logs":shelter,
+                "margin_logs":margin, "fuel_input_logs":fuel
+            })),
+        loose_logs: res.colony.ground_items.values()
+            .filter(|stack| stack.kind == sim_core::colony::ItemKind::role("tree_output"))
+            .map(|stack| u64::from(stack.count)).sum(),
         physical_food_units: 0,
-        harvested_edible_units: res
-            .food
-            .tallies
-            .harvested
-            .iter()
-            .filter_map(|(kind, count)| {
-                kind.definition()
-                    .food
-                    .as_ref()
-                    .filter(|food| food.raw_edible)
-                    .map(|food| count * u64::from(food.units))
-            })
-            .sum(),
-        harvested_convertible_units: res
-            .food
-            .tallies
-            .harvested
-            .iter()
-            .filter_map(|(kind, count)| {
-                kind.definition()
-                    .food
-                    .as_ref()
-                    .filter(|food| !food.raw_edible)
-                    .map(|food| count * u64::from(food.units))
-            })
-            .sum(),
+        harvested_edible_units: harvested[0],
+        harvested_convertible_units: harvested[1],
         errors: Vec::new(),
     };
     for (&owner, age) in &res.food.ages {

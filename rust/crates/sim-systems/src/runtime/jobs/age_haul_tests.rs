@@ -49,6 +49,7 @@ fn pick(res: &SimResources, pos: (u32, u32), ex: &mut Exhausted) -> Option<Pick>
         hearth: &std::cell::OnceCell::new(),
         region: res.nav.region_of(pos),
         practice: u32::MAX,
+        agent: 0,
     };
     loose_haul(res, &ctx, pos, ex, false)
 }

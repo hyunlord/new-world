@@ -113,14 +113,15 @@ fn preservation_budget_covers_winter_deficit_without_current_inputs() {
 fn pending_preservation_is_credited_once_without_becoming_actual_stores() {
     let (world, mut res, policy) = fixture();
     let output = ItemSpec::raw(ItemKind::from_name("dried_berries").expect("output"), None);
-    res.food.pending_drying.push(DryingBatch {
+    let batch = DryingBatch {
         workshop: 1,
         bill: 1,
         tile: (8, 8),
         output,
         count: 20,
         due_tick: 16 * res.ticks_per_day,
-    });
+    };
+    crate::runtime::food::origin::push_drying(&mut res, batch, Default::default());
     let facts = super::summary(&world, &res, &policy);
     assert_eq!(facts.stored_units, 0);
     assert_eq!(facts.winter_units, 0);
@@ -200,14 +201,15 @@ fn late_or_already_expired_pending_output_does_not_reduce_winter_deficit() {
     for due_day in [0, 19] {
         let (world, mut res, policy) = fixture();
         let output = ItemSpec::raw(ItemKind::from_name("dried_berries").expect("output"), None);
-        res.food.pending_drying.push(DryingBatch {
+        let batch = DryingBatch {
             workshop: 1,
             bill: 1,
             tile: (8, 8),
             output,
             count: 20,
             due_tick: due_day * res.ticks_per_day,
-        });
+        };
+        crate::runtime::food::origin::push_drying(&mut res, batch, Default::default());
         let facts = super::summary(&world, &res, &policy);
         let berries = ItemKind::from_name("berries").expect("input");
         assert_eq!(
@@ -290,7 +292,9 @@ fn paused_player_first_rack_does_not_hide_eligible_second_rack() {
 
 #[test]
 fn all_player_paused_racks_do_not_create_an_extra_preservation_workshop() {
-    let (mut world, mut res, policy) = fixture();
+    let (mut world, mut res, mut policy) = fixture();
+    // Isolate paused preservation racks from the independently tested seed bootstrap.
+    policy.cultivation = None;
     let recipe = policy.recipes[0];
     let now = res.current_tick;
     assert!(
@@ -327,5 +331,92 @@ fn all_player_paused_racks_do_not_create_an_extra_preservation_workshop() {
     assert!(
         super::cooking::plan(&world, &res, &policy, &facts).is_empty(),
         "player controls cannot be bypassed by building a replacement rack"
+    );
+}
+
+#[test]
+fn harvest_budget_counts_only_executable_fresh_output_once() {
+    use sim_core::colony::{Job, JobKind, JobStage};
+    let (mut world, mut res, policy) = fixture();
+    let recipe = policy.recipes[0];
+    assert!(
+        crate::commands::apply_command(
+            &mut world,
+            &mut res,
+            Command::AddBill {
+                workshop: 1,
+                recipe,
+                mode: BillMode::Maintain(20),
+            }
+        )
+        .accepted
+    );
+    let bill = res.colony.workshops[&1].bills[0].id;
+    let definition = recipe.recipe().expect("recipe");
+    let job = Job {
+        kind: JobKind::Craft {
+            workshop: 1,
+            bill,
+            at: (8, 8),
+        },
+        stage: JobStage::ToSource,
+        taken_at: res.current_tick,
+        amount: 0,
+        item: definition.output.0,
+        material: None,
+        fetch: None,
+        best_distance: 0,
+        progress_tick: res.current_tick,
+    };
+    let entity = world.spawn((job,));
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(
+        super::harvest::pending_output(&world, &res, &policy, &facts),
+        (0, 0)
+    );
+    world.get::<&mut Job>(entity).expect("job").stage = JobStage::Working { ticks_left: 1 };
+    let units = u64::from(definition.output.1)
+        * u64::from(
+            definition
+                .output
+                .0
+                .definition()
+                .food
+                .as_ref()
+                .expect("food")
+                .units,
+        );
+    assert_eq!(
+        super::harvest::pending_output(&world, &res, &policy, &facts),
+        (units, units)
+    );
+    world
+        .remove_one::<Job>(entity)
+        .expect("cancelled work removed");
+    assert_eq!(
+        super::harvest::pending_output(&world, &res, &policy, &facts),
+        (0, 0)
+    );
+    let due_tick = 16 * res.ticks_per_day;
+    crate::runtime::food::origin::push_drying(
+        &mut res,
+        DryingBatch {
+            workshop: 1,
+            bill,
+            tile: (8, 8),
+            output: ItemSpec::raw(definition.output.0, None),
+            count: definition.output.1,
+            due_tick,
+        },
+        Default::default(),
+    );
+    assert_eq!(
+        super::harvest::pending_output(&world, &res, &policy, &facts),
+        (units, units)
+    );
+    res.colony.workshops.remove(&1);
+    assert_eq!(
+        super::harvest::pending_output(&world, &res, &policy, &facts),
+        (0, 0)
     );
 }

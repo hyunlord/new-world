@@ -168,3 +168,60 @@ fn valid_manual_auto_survives_room_id_change_but_unknown_does_not_block() {
     e.resources.colony.rooms.insert(2, room);
     assert!(plan(&e.resources, &rule).is_none());
 }
+
+#[test]
+fn bedless_store_completion_requires_real_owned_enclosure() {
+    sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+        .expect("bundled content");
+    let (mut e, mut rule) = fixture();
+    let Action::House {
+        completion_role, ..
+    } = &mut rule.action
+    else {
+        panic!("house");
+    };
+    *completion_role = Some(RoomRole::Storehouse);
+    e.resources.colony.beds.clear();
+    e.resources.steward.owned.remove(3);
+    assert_eq!(
+        plan(&e.resources, &rule),
+        Some(Command::SetRoomRole {
+            room: 1,
+            role: Some(RoomRole::Storehouse),
+        })
+    );
+    e.resources.colony.rooms.get_mut(&1).expect("room").roofed = false;
+    assert!(plan(&e.resources, &rule).is_none());
+    e.resources.colony.rooms.get_mut(&1).expect("room").roofed = true;
+    e.resources.steward.owned.remove(0);
+    assert!(plan(&e.resources, &rule).is_none());
+}
+
+#[test]
+fn store_planner_places_real_boundaries_without_beds() {
+    sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+        .expect("bundled content");
+    let (mut e, mut rule) = fixture();
+    e.resources.colony.rooms.clear();
+    e.resources.colony.beds.clear();
+    e.resources.colony.trees.clear();
+    e.resources.content_state.tree_materials.clear();
+    e.resources.colony.nodes.clear();
+    let Action::House {
+        completion_role,
+        bed,
+        ..
+    } = &mut rule.action
+    else {
+        panic!("house");
+    };
+    *completion_role = Some(RoomRole::Storehouse);
+    let bed = *bed;
+    let commands = super::super::planning::plan(&e.world, &e.resources, &rule);
+    assert!(!commands.is_empty(), "Store must plan real construction");
+    assert!(commands.iter().all(|command| !matches!(command,
+        Command::PlaceBlueprint { kind, .. } if *kind == bed)));
+    for command in commands {
+        assert!(crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted);
+    }
+}

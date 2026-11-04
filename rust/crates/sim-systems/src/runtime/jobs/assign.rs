@@ -265,6 +265,7 @@ struct Ctx<'a> {
     hearth: &'a std::cell::OnceCell<Vec<(u32, u32)>>,
     /// The agent's nav region (M3, ADR 0021): only targets reachable from it are offered.
     region: u32,
+    agent: AgentId,
     /// The agent's practitioner bitset (M4; all bits without the knowledge rule).
     practice: u32,
 }
@@ -711,6 +712,11 @@ fn pick_work(
             })
         }
         WorkType::Haul => {
+            if let Some(job) =
+                super::field::pick(res, ctx.agent, ctx.practice, ctx.region, pos, radius, true)
+            {
+                return Some(job);
+            }
             // M5.5 (ADR 0032): items owed to a trading caravan first, carried to its spot.
             if let Some(c) = colony.neighbours.trading_caravan() {
                 let spot = c.spot.unwrap_or(c.pos);
@@ -764,6 +770,11 @@ fn pick_work(
                         }
                     }
                 }
+            }
+            if let Some(job) =
+                super::field::pick(res, ctx.agent, ctx.practice, ctx.region, pos, radius, false)
+            {
+                return Some(job);
             }
             let query = super::harvest::HarvestQuery {
                 practice: ctx.practice,
@@ -1144,6 +1155,7 @@ impl RuntimeSystem for JobAssignSystem {
         let Some(rule) = resources.rules.colony else {
             return;
         };
+        crate::runtime::cultivation::update(resources);
         let tick = resources.current_tick;
         if tick.is_multiple_of(60) {
             super::food_transfers::retry_stranded(world, resources);
@@ -1335,6 +1347,7 @@ impl RuntimeSystem for JobAssignSystem {
                     hearth: &hearth,
                     region: resources.nav.region_of(pos),
                     practice,
+                    agent: id,
                 };
                 let ex = exhausted.entry(ctx.region).or_default();
                 let found = if fuel_only {

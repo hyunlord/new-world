@@ -22,6 +22,13 @@ pub(super) fn discovery_materials(world: &World, policy: &FoodPlan) -> BTreeMap<
                 .map(|node| node.id),
         );
     }
+    if let Some(crop) = policy
+        .cultivation
+        .as_ref()
+        .and_then(|plan| sim_core::colony::content::installed_or_bundled().crop(plan.crop))
+    {
+        pending.extend(crop.knowledge);
+    }
     let mut seen = BTreeSet::new();
     let mut demand: BTreeMap<ItemKind, u32> = BTreeMap::new();
     while let Some(id) = pending.pop() {
@@ -170,7 +177,10 @@ pub(super) fn ingredient_deficits(
 }
 
 /// Assigned output already counts toward bills; its still-shelved input cannot count twice.
-fn unconsumed_craft_inputs(world: &World, res: &SimResources) -> BTreeMap<ItemKind, u64> {
+pub(super) fn unconsumed_craft_inputs(
+    world: &World,
+    res: &SimResources,
+) -> BTreeMap<ItemKind, u64> {
     let mut inputs: BTreeMap<ItemKind, u64> = BTreeMap::new();
     for (_, job) in world.query::<&Job>().iter() {
         let JobKind::Craft { workshop, bill, .. } = job.kind else {
@@ -193,4 +203,91 @@ fn unconsumed_craft_inputs(world: &World, res: &SimResources) -> BTreeMap<ItemKi
         }
     }
     inputs
+}
+
+/// Authored conversion producing the configured crop's physical sowing item.
+pub(super) fn seed_recipe(policy: &FoodPlan) -> Option<sim_core::colony::RecipeKind> {
+    let catalog = sim_core::colony::content::installed_or_bundled();
+    let crop = catalog.crop(policy.cultivation.as_ref()?.crop)?;
+    catalog.recipe_ids().find(|kind| {
+        kind.recipe()
+            .is_some_and(|recipe| recipe.output.0 == crop.seed_item)
+    })
+}
+
+/// Physical inputs held for one seed reserve, plus unresolved discovery material floors.
+pub(super) fn seed_inputs(
+    world: &World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    facts: &super::FoodSummary,
+) -> BTreeMap<ItemKind, u64> {
+    let Some((seed, target)) = super::seed_reserve(res, policy, facts) else {
+        return BTreeMap::new();
+    };
+    let mut reserved: BTreeMap<_, _> = discovery_materials(world, policy)
+        .into_iter()
+        .map(|(item, count)| (item, u64::from(count)))
+        .collect();
+    let Some(recipe) = seed_recipe(policy).and_then(|kind| kind.recipe()) else {
+        let amount = reserved.entry(seed).or_default();
+        *amount = amount.saturating_add(target);
+        return reserved;
+    };
+    let missing = target.saturating_sub(seed_count(world, res, seed));
+    let batches = missing.div_ceil(u64::from(recipe.output.1).max(1));
+    for &(item, count) in &recipe.inputs {
+        let amount = reserved.entry(item).or_default();
+        *amount = amount.saturating_add(batches.saturating_mul(u64::from(count)));
+    }
+    reserved
+}
+
+/// Physical pieces across every owner, including cultivation carriers and workshop shelves.
+pub(super) fn physical_pieces(world: &World, res: &SimResources, kind: ItemKind) -> u64 {
+    let ground = res
+        .colony
+        .ground_items
+        .values()
+        .filter(|stack| stack.kind == kind)
+        .map(|stack| u64::from(stack.count))
+        .sum::<u64>();
+    let carried = world
+        .query::<&sim_core::colony::Carry>()
+        .iter()
+        .filter(|(_, carry)| carry.kind == kind)
+        .map(|(_, carry)| u64::from(carry.count))
+        .sum::<u64>();
+    let stored = res
+        .colony
+        .workshops
+        .values()
+        .flat_map(|shop| shop.shelf.iter())
+        .chain(res.food.pots.values().flat_map(|pot| pot.contents.iter()))
+        .filter(|stack| stack.kind == kind)
+        .map(|stack| u64::from(stack.count))
+        .sum::<u64>();
+    ground.saturating_add(carried).saturating_add(stored)
+}
+
+/// Bootstrap count: physical seed plus each assigned conversion output exactly once.
+pub(super) fn seed_count(world: &World, res: &SimResources, seed: ItemKind) -> u64 {
+    let making = world
+        .query::<&Job>()
+        .iter()
+        .filter_map(|(_, job)| {
+            let JobKind::Craft { workshop, bill, .. } = job.kind else {
+                return None;
+            };
+            let recipe = res
+                .colony
+                .workshops
+                .get(&workshop)?
+                .bill(bill)?
+                .recipe
+                .recipe()?;
+            (recipe.output.0 == seed).then_some(u64::from(recipe.output.1))
+        })
+        .sum::<u64>();
+    physical_pieces(world, res, seed).saturating_add(making)
 }

@@ -8,6 +8,8 @@ fn ten_adult_cooking_fixture(recipes: &[&str]) -> (World, SimResources, FoodPlan
     for id in 8..17 {
         world.spawn((Agent { id }, Position::new(4, 4)));
     }
+    // This fixture isolates legacy daily cooking arithmetic; seed allocation has its own regressions.
+    policy.cultivation = None;
     policy.recipes = recipes
         .iter()
         .map(|name| RecipeKind::from_name(name).expect("recipe"))

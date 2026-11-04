@@ -17,6 +17,10 @@ enum OrderValue {
     Teach(TeachOrder),
     Quantities(Vec<u16>),
     Enabled(bool),
+    Field(
+        sim_core::colony::content::CropKind,
+        sim_core::colony::cultivation::FieldWork,
+    ),
 }
 #[derive(Default)]
 pub(crate) struct OrderSnapshot(
@@ -36,6 +40,14 @@ pub(crate) fn snapshot(world: &World, res: &SimResources) -> Option<OrderSnapsho
             },
             OrderValue::Present,
         );
+    }
+    for (&tile, field) in &res.cultivation.fields {
+        if field.active {
+            orders.insert(
+                MindOrderKey::Field { tile },
+                OrderValue::Field(field.crop, field.work),
+            );
+        }
     }
     for (entity, site) in world.query::<&ColonySite>().iter() {
         orders.insert(
@@ -194,6 +206,15 @@ fn origin(world: &World, res: &SimResources, job: Job) -> Option<MindFactSource>
             })
     };
     let key = match job.kind {
+        JobKind::TillField { tile }
+        | JobKind::SowField { tile, .. }
+        | JobKind::TendField { tile }
+        | JobKind::HarvestField { tile } => res
+            .cultivation
+            .fields
+            .get(&tile)
+            .filter(|field| field.active)
+            .map(|_| MindOrderKey::Field { tile }),
         JobKind::Chop { tree } => designation(tree),
         JobKind::Harvest { plant } => designation(plant),
         JobKind::Quarry { node } | JobKind::DigClay { node } => designation(node),

@@ -117,6 +117,13 @@ fn target_exists(
         })
     };
     match (job.kind, job.stage) {
+        (
+            JobKind::TillField { .. }
+            | JobKind::SowField { .. }
+            | JobKind::TendField { .. }
+            | JobKind::HarvestField { .. },
+            _,
+        ) => super::field::target_exists(res, id, job),
         (JobKind::Chop { tree }, _) => {
             colony.trees.contains_key(&tree) && colony.designations.contains_key(&tree)
         }
@@ -242,6 +249,10 @@ fn step(
         let until = tick + res.rules.calendar.days_to_ticks(days);
         res.colony.unreachable.insert((id, goal), until);
         cancel(world, res, entity, CancelReason::Unreachable);
+        return;
+    }
+    if super::field::tile(job.kind).is_some() {
+        super::field::execute::step(world, res, id, entity, job, pos);
         return;
     }
     // M5: hunting and dressing run in `hunt`.
@@ -379,7 +390,11 @@ fn step(
                 JobKind::Teach { .. }
                 | JobKind::Learn { .. }
                 | JobKind::Hunt { .. }
-                | JobKind::Equip { .. } => {}
+                | JobKind::Equip { .. }
+                | JobKind::TillField { .. }
+                | JobKind::SowField { .. }
+                | JobKind::TendField { .. }
+                | JobKind::HarvestField { .. } => {}
                 JobKind::Haul { from, .. }
                 | JobKind::Deliver { from, .. }
                 | JobKind::Supply { from, .. }
@@ -482,7 +497,11 @@ fn step(
                     crate::runtime::knowledge::used(world, res, entity, mask);
                 }
                 JobKind::Craft { workshop, bill, at } => {
-                    craft::finish_craft(world, res, id, entity, &job);
+                    if !craft::finish_craft(world, res, id, entity, &job) {
+                        job.stage = JobStage::Working { ticks_left: 0 };
+                        put_job(world, entity, job);
+                        return;
+                    }
                     // M3 (DECISIONS D13): the crafter stays at the bench for the
                     // bill's next craft when its inputs are already on the shelf.
                     if rule.space.is_some() && craft::next_ready(world, res, workshop, bill) {

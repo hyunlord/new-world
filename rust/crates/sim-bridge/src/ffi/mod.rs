@@ -20,6 +20,7 @@ pub mod card_targets;
 pub mod causal;
 pub mod chronicle;
 pub mod colony;
+pub mod cultivation;
 pub mod content;
 pub mod content_boot;
 pub mod diagnosis;

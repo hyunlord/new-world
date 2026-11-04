@@ -27,6 +27,8 @@ pub struct FoodSummary {
     pub groups: BTreeSet<String>,
     /// Living adult count.
     pub adults: u64,
+    /// All-member daily demand in thousandths before seasonal cold.
+    pub warm_daily_milli: u64,
     /// All-member daily demand in thousandths, including current cold.
     pub daily_milli: u64,
     /// Days until the current year's winter begins, zero during winter.
@@ -55,6 +57,7 @@ pub fn summary(world: &World, res: &SimResources, policy: &FoodPlan) -> FoodSumm
             facts.adults += 1;
             policy.adult_daily_milli
         };
+        facts.warm_daily_milli += u64::from(rate);
         let multiplier = if cold.is_some() {
             policy.cold_multiplier
         } else {

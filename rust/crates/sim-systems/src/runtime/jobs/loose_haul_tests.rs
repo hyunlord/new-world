@@ -60,6 +60,7 @@ fn run(
         hearth: &std::cell::OnceCell::new(),
         region: res.nav.region_of(pos),
         practice: u32::MAX,
+        agent: 0,
     };
     if frozen {
         frozen_loose_haul(res, &ctx, pos, ex, fuel)

@@ -20,6 +20,8 @@ use sim_engine::{
 };
 use std::collections::BTreeMap;
 
+mod cultivation;
+
 /// Fact reader function type (clippy type_complexity).
 type FactReaderBox<'a> = Box<dyn Fn(&str) -> Option<i64> + 'a>;
 
@@ -33,6 +35,15 @@ fn settlement_fact(world: &hecs::World, resources: &SimResources, fact_name: &st
     }
     let col = &resources.colony;
     match fact_name {
+        "field_no_farmer" | "field_no_seed" | "field_window_closed" | "field_soil_exhausted" => {
+            let facts = cultivation::collect(world, resources);
+            Some(match fact_name {
+                "field_no_farmer" => facts.no_farmer,
+                "field_no_seed" => facts.no_seed,
+                "field_window_closed" => facts.window_closed,
+                _ => facts.soil_exhausted,
+            })
+        }
         "food_stored" => {
             let stockpile_tiles: std::collections::BTreeSet<(u32, u32)> = col
                 .zones
@@ -564,7 +575,7 @@ impl RuntimeSystem for RequestsSystem {
     fn tick_offset(&self, _resources: &SimResources) -> u64 {
         8
     }
-    fn tick(&mut self, _world: &mut hecs::World, resources: &mut SimResources) {
+    fn tick(&mut self, world: &mut hecs::World, resources: &mut SimResources) {
         if resources.rules.colony.is_none() {
             return;
         }
@@ -617,6 +628,18 @@ impl RuntimeSystem for RequestsSystem {
                         let e = rule_counts.entry(idx).or_insert((0, *agent_id));
                         e.0 += 1;
                     }
+                }
+            }
+        }
+
+        let fields = cultivation::collect(world, resources);
+        if let Some(voice) = fields.seed_voice {
+            if let Some(indices) = request_data.fact_index.get("field_no_seed") {
+                for &idx in indices {
+                    let entry = rule_counts.entry(idx).or_insert((0, voice));
+                    entry.0 = entry
+                        .0
+                        .saturating_add(u32::try_from(fields.no_seed).unwrap_or(u32::MAX));
                 }
             }
         }

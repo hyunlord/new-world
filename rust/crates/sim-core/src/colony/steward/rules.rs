@@ -68,6 +68,9 @@ pub enum Action {
     Bills {
         /// Recipe and maintained output count.
         recipes: Vec<(RecipeKind, u16)>,
+        /// Optional seasonal policy; absent preserves the legacy reserve calculation.
+        #[serde(default)]
+        fuel: Option<FuelPlan>,
         /// Winter fuel recipe.
         winter_recipe: RecipeKind,
         /// Reserve days.
@@ -101,6 +104,17 @@ pub enum Action {
     },
     /// Demand-limited food gathering, cooking and winter preservation.
     FoodPlan(super::FoodPlan),
+}
+/// Seasonal fuel reserve; quantities remain authored independently of tool bills.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FuelPlan {
+    /// Rolling reserve before preparation begins.
+    pub warm_days: u16,
+    /// Zero-based season at which the full winter reserve starts.
+    pub prepare_season: u32,
+    /// Winter reserve multiplier in thousandths.
+    pub buffer_permille: u32,
 }
 /// One fixed-order rule.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -191,9 +205,15 @@ pub fn parse_rules(text: &str) -> Result<RuleFile, String> {
                     recipes,
                     winter_recipe,
                     days,
+                    fuel,
                 },
             ) => {
-                *days > 0
+                (*days > 0 || (!recipes.is_empty() && fuel.is_none()))
+                    && fuel.as_ref().is_none_or(|plan| {
+                        plan.warm_days > 0
+                            && plan.prepare_season < 4
+                            && plan.buffer_permille >= 1000
+                    })
                     && winter_recipe.recipe().is_some()
                     && recipes.iter().all(|(r, n)| *n > 0 && r.recipe().is_some())
             }

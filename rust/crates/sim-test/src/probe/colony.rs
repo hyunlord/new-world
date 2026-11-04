@@ -1490,6 +1490,37 @@ pub fn resolve(
                 .as_bool()
                 .ok_or("set_steward_extended needs on")?,
         }],
+        ("zone_field", None) => {
+            let (x0, y0, x1, y1) = rect(spec)?;
+            let name = spec["crop"].as_str().ok_or("zone_field needs crop")?;
+            let crop = sim_core::colony::content::installed_or_bundled()
+                .crop_by_name(name)
+                .ok_or_else(|| format!("unknown crop {name}"))?;
+            vec![Command::ZoneField {
+                min: (x0, y0),
+                max: (x1, y1),
+                crop,
+            }]
+        }
+        ("erase_field", None) => {
+            let (x0, y0, x1, y1) = rect(spec)?;
+            vec![Command::EraseField {
+                min: (x0, y0),
+                max: (x1, y1),
+            }]
+        }
+        ("set_field_work", None) => {
+            let mode = match spec["mode"].as_str() {
+                Some("auto") => sim_core::colony::cultivation::FieldWork::Auto,
+                Some("now") => sim_core::colony::cultivation::FieldWork::Now,
+                Some("paused") => sim_core::colony::cultivation::FieldWork::Paused,
+                _ => return Err("set_field_work needs auto, now or paused mode".into()),
+            };
+            vec![Command::SetFieldWork {
+                tile: (field(spec, "x")?, field(spec, "y")?),
+                mode,
+            }]
+        }
         ("set_steward", None) => vec![Command::SetSteward {
             on: spec["on"].as_bool().ok_or("set_steward needs on")?,
             scope: match spec["scope"].as_str().unwrap_or("all") {
@@ -1559,6 +1590,15 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         Command::Steward { .. } => return Value::Null,
         Command::SetStewardDefence { on } => json!({"on":on}),
         Command::SetStewardExtended { on } => json!({"on":on}),
+        Command::ZoneField { min, max, crop } => {
+            json!({"x0":min.0,"y0":min.1,"x1":max.0,"y1":max.1,"crop":sim_core::colony::content::installed_or_bundled().crop(*crop).map(|def|def.identity.id.as_str())})
+        }
+        Command::EraseField { min, max } => json!({"x0":min.0,"y0":min.1,"x1":max.0,"y1":max.1}),
+        Command::SetFieldWork { tile, mode } => json!({"x":tile.0,"y":tile.1,"mode":match mode {
+            sim_core::colony::cultivation::FieldWork::Auto => "auto",
+            sim_core::colony::cultivation::FieldWork::Now => "now",
+            sim_core::colony::cultivation::FieldWork::Paused => "paused",
+        }}),
         Command::DeployFoodPot { tile } => json!({"x": tile.0, "y": tile.1}),
         Command::SetSteward { on, scope } => {
             json!({"on": on, "scope": match scope { sim_core::colony::steward::StewardScope::All => "all", sim_core::colony::steward::StewardScope::Housing => "housing", sim_core::colony::steward::StewardScope::Food => "food" }})
@@ -2433,6 +2473,44 @@ mod tests {
         ] {
             assert!(resolve(&engine, &malformed, &mut Vec::new()).is_err());
         }
+    }
+
+    #[test]
+    fn farming_commands_round_trip_without_losing_modes_or_crop() {
+        use sim_core::colony::cultivation::FieldWork;
+        let engine = crate::scenes::colony_scene(0);
+        let crop = sim_core::colony::content::installed_or_bundled()
+            .crop_by_name("emmer")
+            .expect("bundled crop");
+        let mut commands = vec![
+            Command::ZoneField {
+                min: (2, 3),
+                max: (4, 5),
+                crop,
+            },
+            Command::EraseField {
+                min: (2, 3),
+                max: (4, 5),
+            },
+        ];
+        commands.extend(
+            [FieldWork::Auto, FieldWork::Now, FieldWork::Paused]
+                .into_iter()
+                .map(|mode| Command::SetFieldWork { tile: (2, 3), mode }),
+        );
+        for command in commands {
+            assert_eq!(
+                resolve(&engine, &command_json(360, &command), &mut Vec::new())
+                    .expect("field script"),
+                vec![command]
+            );
+        }
+        assert!(resolve(
+            &engine,
+            &json!({"cmd":"set_field_work","x":2,"y":3,"mode":"instant"}),
+            &mut Vec::new()
+        )
+        .is_err());
     }
 
     #[test]

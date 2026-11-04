@@ -158,6 +158,28 @@ pub fn run(args: &[String]) -> Result<(), String> {
 #[cfg(test)]
 mod cultivation_tests {
     #[test]
+    fn daily_projection_counts_only_loose_logs_and_preserves_food_categories() {
+        use sim_core::colony::{Carry, ItemKind, ItemSpec, ItemStack};
+        let mut res = sim_engine::SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        let mut world = hecs::World::new();
+        let logs = ItemSpec::raw(ItemKind::role("tree_output"), None);
+        res.colony
+            .ground_items
+            .insert((1, 1), ItemStack::of(logs, 7));
+        world.spawn((sim_core::components::Agent { id: 1 }, Carry::of(logs, 5)));
+        for (name, count) in [("berries", 2), ("wild_grain", 3), ("meat", 4)] {
+            res.food
+                .tallies
+                .harvested
+                .insert(ItemKind::from_name(name).unwrap(), count);
+        }
+        let row = super::super::metrics::daily(&world, &res);
+        assert_eq!(row.loose_logs, 7);
+        assert_eq!(row.harvested_edible_units, 10);
+        assert_eq!(row.harvested_convertible_units, 3);
+    }
+
+    #[test]
     fn summary_preserves_scaled_bounds_and_deduplicates_days_only() {
         let mut res = sim_engine::SimResources::new(8, 8, sim_core::MaterialRegistry::new());
         res.cultivation.eaten_by_year.insert(

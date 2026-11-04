@@ -120,6 +120,10 @@ pub fn catalog_to_dict(catalog: &Catalog) -> VarDictionary {
         knowledge.push(&row);
     }
     out.set("knowledge", knowledge);
+    out.set(
+        "crops",
+        super::cultivation::crop_rows_to_variant_array(catalog),
+    );
     // Material IDs intentionally retain their historical signed i32 namespace.
     let material_data = godot::classes::Json::parse_string(include_str!(
         "../../../../../assets/ui/content_presentation.json"

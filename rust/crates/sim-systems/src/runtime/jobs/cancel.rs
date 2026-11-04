@@ -22,7 +22,7 @@ pub fn release_all(res: &mut SimResources, agent: AgentId) {
     res.colony.reservations.retain(|_, holder| *holder != agent);
 }
 
-/// Drop the worker's `Carry` on its tile (7.4) and remove the component.
+/// Drop carried items; food and seeds retain their complete cargo if no placement fits.
 pub fn drop_carry(world: &mut World, res: &mut SimResources, entity: Entity) {
     let load = world
         .get::<&Carry>(entity)
@@ -30,7 +30,8 @@ pub fn drop_carry(world: &mut World, res: &mut SimResources, entity: Entity) {
         .map(|carry| *carry)
         .zip(world.get::<&Position>(entity).ok().map(|p| (p.x, p.y)));
     if let Some((carry, tile)) = load {
-        if carry.kind.definition().food.is_some() {
+        if carry.kind.definition().food.is_some() || super::food_transfers::durable_seed(carry.kind)
+        {
             super::food_transfers::drop(world, res, entity, tile);
             return;
         }
@@ -73,6 +74,7 @@ pub fn release_job(
     drop_carry(world, res, entity);
     if let Some(id) = agent_id(world, entity) {
         release_all(res, id);
+        res.cultivation.craft_origins.remove(&id);
     }
     if let Ok(job) = world.remove_one::<Job>(entity) {
         *res.colony.tallies.cancels.entry(reason).or_insert(0) += 1;
@@ -100,6 +102,7 @@ pub fn cancel(world: &mut World, res: &mut SimResources, entity: Entity, reason:
 pub fn finish(world: &mut World, res: &mut SimResources, entity: Entity) {
     if let Some(id) = agent_id(world, entity) {
         release_all(res, id);
+        res.cultivation.craft_origins.remove(&id);
     }
     if world.remove_one::<Job>(entity).is_ok() {
         res.colony.tallies.jobs_done += 1;
@@ -116,6 +119,7 @@ pub fn finish(world: &mut World, res: &mut SimResources, entity: Entity) {
 pub fn finish_in_place(world: &mut World, res: &mut SimResources, entity: Entity) {
     if let Some(id) = agent_id(world, entity) {
         release_all(res, id);
+        res.cultivation.craft_origins.remove(&id);
     }
     if world.remove_one::<Job>(entity).is_ok() {
         res.colony.tallies.jobs_done += 1;
@@ -131,6 +135,18 @@ pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
     }
     drop_carry(world, res, entity);
     crate::runtime::food::loss::lose_carried(world, res, entity);
+    let stranded_seed = world
+        .get::<&Carry>(entity)
+        .ok()
+        .map(|carry| *carry)
+        .filter(|carry| super::food_transfers::durable_seed(carry.kind));
+    if let Some(carry) = stranded_seed {
+        if world.remove_one::<Carry>(entity).is_ok() {
+            let count = u64::from(carry.count);
+            res.colony.item_ledger.consume(carry.kind, count);
+            res.cultivation.counters.seed_lost += count;
+        }
+    }
     if let Some(id) = agent_id(world, entity) {
         crate::runtime::food::evidence::clear_person(res, id);
     }
@@ -160,6 +176,7 @@ pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
     }
     if let Some(id) = agent_id(world, entity) {
         release_all(res, id);
+        res.cultivation.craft_origins.remove(&id);
     }
     if let Ok(job) = world.get::<&Job>(entity).map(|j| *j) {
         *res.colony

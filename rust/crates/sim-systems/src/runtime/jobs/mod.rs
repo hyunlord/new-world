@@ -22,6 +22,7 @@ mod craft_food;
 pub mod execute;
 pub mod food_storage;
 mod food_transfers;
+pub(crate) mod field;
 pub mod harvest;
 mod harvest_haul;
 pub mod hearth;

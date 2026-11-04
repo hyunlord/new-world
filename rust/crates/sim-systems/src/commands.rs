@@ -137,6 +137,15 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
         return CommandResult::rejected(RejectReason::NoColony);
     };
     match cmd {
+        Command::ZoneField { min, max, crop } => {
+            crate::runtime::cultivation::commands::zone(world, res, min, max, crop)
+        }
+        Command::EraseField { min, max } => {
+            crate::runtime::cultivation::commands::erase(world, res, min, max)
+        }
+        Command::SetFieldWork { tile, mode } => {
+            crate::runtime::cultivation::commands::work(world, res, tile, mode)
+        }
         Command::SetStewardDefence { on } => {
             res.steward.defence.enabled = on;
             CommandResult::ok(1)

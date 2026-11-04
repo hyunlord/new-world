@@ -11,6 +11,7 @@ fn reference(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             recipes,
             winter_recipe,
             days,
+            ..
         } => {
             let reserved_house = sim_core::colony::steward::rules()
                 .ok()
@@ -127,6 +128,12 @@ fn cached_and_lazy_bills_match_frozen_reference_in_generated_worlds() {
         .iter()
         .find(|rule| matches!(rule.action, Action::Bills { .. }))
         .expect("Bills rule");
+    let mut legacy_bills = bills.clone();
+    if let Action::Bills { days, fuel, .. } = &mut legacy_bills.action {
+        *days = 12;
+        *fuel = None;
+    }
+    let bills = &legacy_bills;
     let stockpile = rules
         .rules
         .iter()

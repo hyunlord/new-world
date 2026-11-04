@@ -259,16 +259,16 @@ fn wear_knife(
 
 /// Finish the craft `job` (a `JobKind::Craft`): draw its quality, create the
 /// output at the work tile, count the bill and train the crafter's skill by
-/// the ticks worked.
+/// the ticks worked. A blocked seed output returns false and retains the working job.
 pub fn finish_craft(
     world: &mut World,
     res: &mut SimResources,
     id: AgentId,
     entity: Entity,
     job: &Job,
-) {
+) -> bool {
     let JobKind::Craft { workshop, bill, at } = job.kind else {
-        return;
+        return true;
     };
     let Some(recipe) = res
         .colony
@@ -277,7 +277,7 @@ pub fn finish_craft(
         .and_then(|shop| shop.bill(bill))
         .and_then(|b| b.recipe.recipe())
     else {
-        return;
+        return true;
     };
     let level = level_of(world, entity, recipe.skill);
     let temperament = world.get::<&Temperament>(entity).ok().map(|t| *t);
@@ -308,6 +308,23 @@ pub fn finish_craft(
         material: job.material,
         quality,
     };
+    let seed =
+        kind.definition().food.is_none() && kind.definition().tags.iter().any(|tag| tag == "seed");
+    if seed {
+        let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
+        let placed = crate::runtime::food::items::new_batch(spec, n, day).and_then(|batch| {
+            crate::runtime::food::items::create_ground_batches(
+                res,
+                at,
+                &[batch],
+                day,
+                crate::runtime::food::items::FoodSource::Craft,
+            )
+        });
+        if placed.is_err() {
+            return false;
+        }
+    }
     let origin = res
         .cultivation
         .craft_origins
@@ -362,6 +379,8 @@ pub fn finish_craft(
         } else {
             res.colony.item_ledger.craft_end(&[(kind, n)]);
         }
+    } else if seed {
+        res.colony.item_ledger.craft_end(&[(kind, n)]);
     } else {
         res.colony.item_ledger.craft_end(&[(kind, n)]);
         put_items(res, at, spec, n);
@@ -387,5 +406,107 @@ pub fn finish_craft(
     train(world, entity, recipe.skill, ticks);
     if gated {
         crate::runtime::knowledge::used(world, res, entity, gate);
+    }
+    true
+}
+
+#[cfg(test)]
+mod seed_capacity_tests {
+    use super::*;
+    use crate::runtime::food::{self, items};
+    use sim_core::colony::food::{FoodOwner, FoodStackKey};
+    use sim_core::colony::{
+        Bill, BillMode, BlueprintKind, ItemStack, JobStage, RecipeKind, Workshop,
+    };
+    use sim_core::components::{Agent, Position};
+
+    #[test]
+    fn blocked_seed_output_retries_without_reconsuming_or_counting_a_craft() {
+        let mut world = World::new();
+        let mut res = SimResources::new(6, 6, sim_core::MaterialRegistry::new());
+        res.rules = sim_core::rules::WorldRules::colony(0);
+        res.ticks_per_day = res.rules.calendar.ticks_per_day;
+        let kind = RecipeKind::from_name("extract_emmer_seed").expect("seed recipe");
+        let recipe = kind.recipe().expect("recipe data");
+        let grain = ItemSpec::raw(recipe.inputs[0].0, None);
+        res.colony.workshops.insert(
+            1,
+            Workshop {
+                id: 1,
+                kind: BlueprintKind::WoodBench,
+                top_left: (2, 2),
+                size: (1, 1),
+                bills: vec![Bill {
+                    id: 1,
+                    recipe: kind,
+                    mode: BillMode::Make(1),
+                    done: 0,
+                    suspended: false,
+                    auto: false,
+                }],
+                shelf: Vec::new(),
+                active: Some(1),
+            },
+        );
+        items::create_ground(&mut res, (1, 1), grain, 2, 0, items::FoodSource::Harvest)
+            .expect("grain");
+        items::transfer(
+            &mut world,
+            &mut res,
+            FoodOwner::Ground((1, 1)),
+            FoodOwner::Shelf {
+                workshop: 1,
+                key: FoodStackKey::from(grain),
+            },
+            2,
+            0,
+        )
+        .expect("shelf");
+        let (_, origin) = super::super::craft_food::consume(&mut world, &mut res, 1, recipe)
+            .expect("consume once");
+        res.colony.item_ledger.craft_start(&recipe.inputs);
+        res.cultivation.craft_origins.insert(1, origin);
+        let job = Job {
+            kind: JobKind::Craft {
+                workshop: 1,
+                bill: 1,
+                at: (2, 3),
+            },
+            stage: JobStage::Working { ticks_left: 0 },
+            taken_at: 0,
+            amount: 0,
+            item: recipe.output.0,
+            material: None,
+            fetch: None,
+            best_distance: 0,
+            progress_tick: 0,
+        };
+        let entity = world.spawn((Agent { id: 1 }, Position::new(2, 3), job));
+        for y in 0..6 {
+            for x in 0..6 {
+                res.colony
+                    .ground_items
+                    .insert((x, y), ItemStack::of(ItemSpec::raw(ItemKind::Log, None), 1));
+                res.colony.item_ledger.create(ItemKind::Log, 1);
+            }
+        }
+        for _ in 0..2 {
+            assert!(!finish_craft(&mut world, &mut res, 1, entity, &job));
+            assert_eq!(res.colony.workshops[&1].bills[0].done, 0);
+            assert_eq!(res.colony.item_ledger.created_of(recipe.output.0), 0);
+            assert_eq!(res.colony.tallies.crafts_done, 0);
+            assert_eq!(res.food.tallies.craft_input_units, 2);
+            assert!(res.cultivation.craft_origins.contains_key(&1));
+        }
+        res.colony.ground_items.remove(&(5, 5));
+        res.colony.item_ledger.consume(ItemKind::Log, 1);
+        assert!(finish_craft(&mut world, &mut res, 1, entity, &job));
+        assert_eq!(res.colony.workshops[&1].bills[0].done, 1);
+        assert_eq!(res.colony.item_ledger.created_of(recipe.output.0), 2);
+        assert_eq!(res.colony.ground_items[&(5, 5)].count, 2);
+        assert_eq!(res.food.tallies.craft_input_units, 2);
+        assert_eq!(res.food.tallies.craft_output_units, 0);
+        assert!(!res.cultivation.craft_origins.contains_key(&1));
+        food::validate(&world, &res).expect("food input sink exact");
     }
 }

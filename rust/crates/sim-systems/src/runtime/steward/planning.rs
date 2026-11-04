@@ -126,9 +126,14 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
         } => {
             let have: u32 = items
                 .iter()
+                .filter(|kind| cap_log_margin.is_none() || kind.definition().fuel_units.is_none())
                 .map(|&k| maintain_count(world, res, k))
                 .sum::<u32>()
-                .saturating_add(crate::runtime::jobs::hearth::settlement_wood(res));
+                .saturating_add(if cap_log_margin.is_none() {
+                    crate::runtime::jobs::hearth::settlement_wood(res)
+                } else {
+                    0
+                });
             let marked: u32 = res
                 .colony
                 .trees
@@ -156,7 +161,10 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             // designating enough trees for the house.
             let target = if let Some(margin) = cap_log_margin {
                 let pending = pending_shelter_logs(world, res, items);
-                building_need.max(pending).saturating_add(*margin)
+                building_need
+                    .max(pending)
+                    .saturating_add(*margin)
+                    .saturating_add(fuel_input_need(world, res, items))
             } else {
                 days.saturating_mul(daily_fuel(res))
                     .saturating_add(building_need)
@@ -201,15 +209,29 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             recipes,
             winter_recipe,
             days,
+            fuel,
         } => {
             let mut profile = BillsProfile::new(res.current_tick);
             let mut reserved_house = None;
             let mut wanted = recipes.clone();
-            wanted.push((
-                *winter_recipe,
-                u16::try_from(u32::from(*days).saturating_mul(winter_daily_fuel(res)))
-                    .unwrap_or(u16::MAX),
-            ));
+            if *days > 0 {
+                let mut target = fuel_target(res, *winter_recipe, *days, fuel.as_ref());
+                if fuel.is_some() {
+                    if let Some(definition) = winter_recipe.recipe() {
+                        let counted = crate::runtime::jobs::bills::bill_count(
+                            world,
+                            res,
+                            definition.output.0,
+                        );
+                        target = counted.saturating_add(target.saturating_sub(fuel_supplied(
+                            world,
+                            res,
+                            *winter_recipe,
+                        )));
+                    }
+                }
+                wanted.push((*winter_recipe, u16::try_from(target).unwrap_or(u16::MAX)));
+            }
             profile.phase(1);
             let mut out = super::production::inputs(world, res, hearth, &wanted);
             profile.phase(0);
@@ -225,6 +247,9 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                     world,
                     knowledge::gates().recipe(recipe),
                 ) {
+                    continue;
+                }
+                if target == 0 {
                     continue;
                 }
                 if let Some((&id, shop)) = res
@@ -504,7 +529,7 @@ fn house(
         bed,
         max_beds,
         service_cells,
-        ..
+        completion_role,
     } = *action
     else {
         return HousePlan::default();
@@ -514,9 +539,14 @@ fn house(
     {
         return HousePlan::default();
     }
-    if [wall, door, bed].iter().any(|&kind| {
-        !crate::runtime::knowledge::anyone_practises(world, knowledge::gates().build(kind))
-    }) {
+    let store = completion_role == Some(sim_core::rooms::RoomRole::Storehouse);
+    if [wall, door, bed]
+        .iter()
+        .filter(|&&kind| !store || kind != bed)
+        .any(|&kind| {
+            !crate::runtime::knowledge::anyone_practises(world, knowledge::gates().build(kind))
+        })
+    {
         return HousePlan::default();
     }
     let covered = res
@@ -531,10 +561,20 @@ fn house(
                 .is_some_and(|room| super::housing::constructed(res, room))
         })
         .count() as u32;
-    let beds = (world.query::<&Agent>().iter().count() as u32)
-        .saturating_sub(covered)
-        .min(max_beds);
-    if beds == 0 {
+    let beds = if store {
+        0
+    } else {
+        (world.query::<&Agent>().iter().count() as u32)
+            .saturating_sub(covered)
+            .min(max_beds)
+    };
+    if (store
+        && res.colony.rooms.values().any(|room| {
+            room.role == sim_core::rooms::RoomRole::Storehouse
+                && super::housing::constructed(res, room)
+        }))
+        || (!store && beds == 0)
+    {
         return HousePlan::default();
     }
     let stock: Vec<_> = res.colony.zone_of_tile.keys().copied().collect();
@@ -925,6 +965,15 @@ fn teach(world: &World, res: &SimResources) -> Vec<Command> {
 /// Returns `(target, building_need, pending_shelter)` or `None` if the cap
 /// is not active (no `cap_log_margin`).
 pub fn wood_cap_target(world: &World, res: &SimResources) -> Option<(u32, u32, u32)> {
+    wood_budget_observation(world, res)
+        .map(|(target, building, pending, _, _)| (target, building, pending))
+}
+
+/// Actual log target, construction demand, pending shelter, margin and fuel-input logs.
+pub fn wood_budget_observation(
+    world: &World,
+    res: &SimResources,
+) -> Option<(u32, u32, u32, u32, u32)> {
     let data = sim_core::colony::steward::rules().ok()?;
     let rule = data.rules.iter().find(|r| {
         matches!(
@@ -954,8 +1003,12 @@ pub fn wood_cap_target(world: &World, res: &SimResources) -> Option<(u32, u32, u
         })
         .sum();
     let pending = pending_shelter_logs(world, res, items);
-    let target = building_need.max(pending).saturating_add(*margin);
-    Some((target, building_need, pending))
+    let fuel_logs = fuel_input_need(world, res, items);
+    let target = building_need
+        .max(pending)
+        .saturating_add(*margin)
+        .saturating_add(fuel_logs);
+    Some((target, building_need, pending, *margin, fuel_logs))
 }
 
 /// LOOP-CAL-9: estimate the log need for the house the steward is about to
@@ -1048,6 +1101,97 @@ fn pending_shelter_logs(
         .saturating_add(beds.saturating_mul(bed_cost))
 }
 
+fn fuel_target(
+    res: &SimResources,
+    recipe: sim_core::colony::RecipeKind,
+    days: u16,
+    policy: Option<&sim_core::colony::steward::FuelPlan>,
+) -> u32 {
+    let Some(policy) = policy else {
+        return u32::from(days).saturating_mul(winter_daily_fuel(res));
+    };
+    let preparing = crate::runtime::resource_regen::season_at(res)
+        .is_some_and(|(season, _)| season >= policy.prepare_season as usize);
+    let units = if preparing {
+        winter_daily_fuel(res)
+            .saturating_mul(u32::from(days))
+            .saturating_mul(policy.buffer_permille)
+            .div_ceil(1000)
+    } else {
+        daily_fuel(res).saturating_mul(u32::from(policy.warm_days))
+    };
+    let quantum = recipe
+        .recipe()
+        .map_or(1, |definition| u32::from(definition.output.1).max(1));
+    units.div_ceil(quantum).saturating_mul(quantum)
+}
+
+fn fuel_supplied(world: &World, res: &SimResources, recipe: sim_core::colony::RecipeKind) -> u32 {
+    let making: u32 = world
+        .query::<&sim_core::colony::Job>()
+        .iter()
+        .filter_map(|(_, job)| {
+            let sim_core::colony::JobKind::Craft { workshop, bill, .. } = job.kind else {
+                return None;
+            };
+            if !matches!(job.stage, sim_core::colony::JobStage::Working { .. }) {
+                return None;
+            }
+            let bill = res.colony.workshops.get(&workshop)?.bill(bill)?;
+            (bill.recipe == recipe).then(|| {
+                recipe
+                    .recipe()
+                    .map_or(0, |definition| u32::from(definition.output.1))
+            })
+        })
+        .sum();
+    crate::runtime::jobs::hearth::feedable_firewood(res)
+        .saturating_add(crate::runtime::jobs::hearth::settlement_wood(res))
+        .saturating_add(making)
+}
+
+fn fuel_input_need(world: &World, res: &SimResources, logs: &[sim_core::colony::ItemKind]) -> u32 {
+    let Ok(data) = sim_core::colony::steward::rules() else {
+        return 0;
+    };
+    data.rules
+        .iter()
+        .filter_map(|rule| {
+            let Action::Bills {
+                winter_recipe,
+                days,
+                fuel: Some(policy),
+                ..
+            } = &rule.action
+            else {
+                return None;
+            };
+            if !res.steward.scope.permits(rule.scope) || (rule.extended && !res.steward.extended) {
+                return None;
+            }
+            let recipe = winter_recipe.recipe()?;
+            if !crate::runtime::knowledge::anyone_practises(
+                world,
+                knowledge::gates().recipe(*winter_recipe),
+            ) {
+                return None;
+            }
+            let supplied = fuel_supplied(world, res, *winter_recipe);
+            let batches = fuel_target(res, *winter_recipe, *days, Some(policy))
+                .saturating_sub(supplied)
+                .div_ceil(u32::from(recipe.output.1).max(1));
+            Some(
+                recipe
+                    .inputs
+                    .iter()
+                    .filter(|(item, _)| logs.contains(item))
+                    .map(|(_, count)| batches.saturating_mul(u32::from(*count)))
+                    .sum::<u32>(),
+            )
+        })
+        .sum()
+}
+
 fn daily_fuel(res: &SimResources) -> u32 {
     use crate::runtime::settlement::firewood::{burn_hours, night_tick_at, winter_burn_per_hour};
     let per_hearth = res.rules.society.firewood.map_or(0, |rule| {
@@ -1075,6 +1219,56 @@ fn winter_daily_fuel(res: &SimResources) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn seasonal_fuel_rounds_real_recipe_batches_and_tools_have_no_fuel() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("content");
+        let mut res = SimResources::new(16, 16, sim_core::MaterialRegistry::new());
+        res.rules = sim_core::rules::WorldRules::colony(0);
+        res.ticks_per_day = res.rules.calendar.ticks_per_day;
+        res.rules.clock_offset_ticks = 0;
+        let data = sim_core::colony::steward::rules().expect("rules");
+        let tools = data.rules.iter().find(|rule| rule.id == 4).expect("tools");
+        assert!(!tools.extended && tools.grace_ticks.is_none());
+        let Action::Bills {
+            days,
+            fuel,
+            recipes,
+            ..
+        } = &tools.action
+        else {
+            panic!("tools bills");
+        };
+        assert_eq!(*days, 0);
+        assert!(fuel.is_none());
+        assert_eq!(recipes.len(), 2);
+        let fuel = data.rules.iter().find(|rule| rule.id == 9).expect("fuel");
+        let Action::Bills {
+            winter_recipe,
+            days,
+            fuel: Some(policy),
+            recipes,
+        } = &fuel.action
+        else {
+            panic!("fuel bills");
+        };
+        assert!(recipes.is_empty());
+        res.current_tick = 6 * res.ticks_per_day;
+        let quantum = u32::from(winter_recipe.recipe().expect("recipe").output.1);
+        assert_eq!(quantum, 4);
+        assert_eq!(fuel_target(&res, *winter_recipe, *days, Some(policy)), 296);
+        res.current_tick = 0;
+        let warm = daily_fuel(&res) * 3;
+        assert_eq!(
+            fuel_target(&res, *winter_recipe, *days, Some(policy)),
+            warm.div_ceil(4) * 4
+        );
+        assert_eq!(
+            fuel_target(&res, *winter_recipe, 12, None),
+            winter_daily_fuel(&res) * 12
+        );
+    }
+
     #[test]
     fn data_only_stockpile_variant_changes_the_actual_ordinary_order() {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
@@ -1108,7 +1302,7 @@ mod rule_coverage {
     };
     use sim_core::components::{Inventory, ResourceKind};
     #[test]
-    fn all_six_rules_have_a_positive_and_negative_fixture() {
+    fn all_authored_rules_have_a_positive_and_negative_fixture() {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
             .expect("bundled content");
         for rule in &sim_core::colony::steward::rules().expect("rules").rules {
@@ -1202,13 +1396,32 @@ mod rule_coverage {
                         );
                     }
                 }
-                Action::Wood { .. } => {
-                    for settlement in engine.resources.settlements.values_mut() {
-                        settlement.stockpile.insert(ResourceKind::Wood, u32::MAX);
-                    }
+                Action::Wood { items, .. } => {
+                    let kind = items[0];
+                    let tile = hearth_tiles(&engine.resources)[0];
+                    engine.resources.colony.ground_items.insert(
+                        tile,
+                        sim_core::colony::ItemStack::of(
+                            sim_core::colony::ItemSpec::raw(kind, None),
+                            1000,
+                        ),
+                    );
                 }
-                Action::House { bed, .. } => {
-                    engine.resources.colony.space_sites.insert((1, 1), *bed);
+                Action::House {
+                    bed,
+                    completion_role,
+                    ..
+                } => {
+                    if *completion_role == Some(sim_core::rooms::RoomRole::Storehouse) {
+                        for &(_, entity) in &people {
+                            engine
+                                .world
+                                .insert_one(entity, Knowledge::default())
+                                .expect("no construction practitioner");
+                        }
+                    } else {
+                        engine.resources.colony.space_sites.insert((1, 1), *bed);
+                    }
                 }
                 Action::Bills { .. } => {
                     for &(_, entity) in &people {
@@ -1238,6 +1451,24 @@ mod rule_coverage {
                             .world
                             .insert_one(entity, Knowledge::default())
                             .expect("no food production knowledge");
+                    }
+                    // Field zoning/storage are useful even before a practitioner exists.
+                    // Accept those bounded plans, then require an actually settled negative.
+                    for _ in 0..32 {
+                        let pending = plan(&engine.world, &engine.resources, rule);
+                        if pending.is_empty() {
+                            break;
+                        }
+                        for command in pending {
+                            assert!(
+                                crate::commands::apply_command(
+                                    &mut engine.world,
+                                    &mut engine.resources,
+                                    command
+                                )
+                                .accepted
+                            );
+                        }
                     }
                 }
                 Action::Teach => {
