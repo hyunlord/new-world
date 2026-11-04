@@ -1,4 +1,4 @@
-//! Observation-only receipts at real food/job boundaries; no scans or decisions.
+//! Observation-only receipts at real food/job boundaries; no policy decisions.
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::food_evidence::{
     AcquisitionEpisode, AcquisitionReason, AcquisitionReceipt, FlowCounters, FlowInterval,
@@ -103,3 +103,56 @@ pub fn death_parent(res: &mut SimResources, agent: u64) -> Option<u32> {
 #[cfg(test)]
 #[path = "evidence_tests.rs"]
 mod tests;
+
+/// Observe the same person's need and actual actionable food at daily expiry.
+pub(super) fn hungry_at_expiry(
+    world: &hecs::World,
+    res: &SimResources,
+    owner: sim_core::colony::food::FoodOwner,
+    choices: &super::choice::FoodChoiceIndex,
+) -> Option<sim_core::components::SettlementId> {
+    use sim_core::colony::{food::FoodOwner, Carry};
+    use sim_core::components::{Agent, AgentState, BodyHealth, Hunger, Position, TargetKind};
+    let sid = match owner {
+        FoodOwner::Ground(tile) => super::reserves::owner_at(res, tile),
+        FoodOwner::Shelf { workshop, .. } => res
+            .colony
+            .workshops
+            .get(&workshop)
+            .and_then(|shop| super::reserves::owner_at(res, shop.work_tile())),
+        FoodOwner::Pot { id, .. } => res
+            .food
+            .pots
+            .get(&id)
+            .and_then(|pot| super::reserves::owner_at(res, pot.tile)),
+        FoodOwner::Carried(agent) => res
+            .settlements
+            .iter()
+            .find(|(_, settlement)| settlement.member_agents.contains(&agent))
+            .map(|(&id, _)| id),
+    }?;
+    let settlement = res.settlements.get(&sid)?;
+    world
+        .query::<(
+            &Agent,
+            &Position,
+            &Hunger,
+            &BodyHealth,
+            &AgentState,
+            Option<&Carry>,
+        )>()
+        .iter()
+        .any(|(_, (agent, pos, hunger, health, state, carry))| {
+            settlement.member_agents.contains(&agent.id)
+                && !health.is_dead()
+                && !matches!(
+                    state,
+                    AgentState::Consuming {
+                        target: TargetKind::Sleep
+                    }
+                )
+                && hunger.value > crate::runtime::agent_actions::needs::HUNGER_THRESHOLD
+                && !choices.available_to(res, (pos.x, pos.y), agent.id, carry.copied())
+        })
+        .then_some(sid)
+}

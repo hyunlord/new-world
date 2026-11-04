@@ -117,6 +117,7 @@ pub fn run(args: &[String]) -> Result<(), String> {
         "invariant_checks":watch.invariant_checks, "violation_count":watch.violations, "observed_meals":watch.observed_meals,
         "inputs":{"steward":true,"defence":true,"story":"on","neighbours":"on","player_orders":false},
         "final_tallies":engine.resources.food.tallies,
+        "cultivation":super::metrics::cultivation_summary(&engine.resources),
         "r2_spoilage":{"spoil_moments":watch.spoil_moments,"spoil_moments_hungry":watch.spoil_moments_hungry,
             "placed_covered_units":watch.placed_covered,"placed_open_with_covered_room_units":watch.placed_open_with_room,
             "placed_open_without_covered_room_units":watch.placed_open_without_room},
@@ -152,4 +153,36 @@ pub fn run(args: &[String]) -> Result<(), String> {
         ));
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod cultivation_tests {
+    #[test]
+    fn summary_preserves_scaled_bounds_and_deduplicates_days_only() {
+        let mut res = sim_engine::SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        res.cultivation.eaten_by_year.insert(
+            2,
+            sim_core::colony::cultivation::EatenTotals {
+                units: 4,
+                field_lower: 1_000_000,
+                field_upper: 2_000_000,
+            },
+        );
+        res.cultivation.expiry_hunger_days.insert((3, 1), 2);
+        res.cultivation.expiry_hunger_days.insert((3, 2), 5);
+        let value = super::super::metrics::cultivation_summary(&res);
+        assert_eq!(value["field_fraction_scale"], 1_000_000);
+        assert_eq!(
+            value["eaten_by_calendar_year"]["2"]["field_lower"],
+            1_000_000
+        );
+        assert_eq!(value["expiry_hunger_distinct_days"], 1);
+        assert_eq!(
+            value["expiry_hunger_day_settlements"]
+                .as_array()
+                .unwrap()
+                .len(),
+            2
+        );
+    }
 }

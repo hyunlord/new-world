@@ -63,7 +63,7 @@ pub fn lasting_units(
         .sum()
 }
 
-fn owner_at(res: &SimResources, tile: (u32, u32)) -> Option<SettlementId> {
+pub(super) fn owner_at(res: &SimResources, tile: (u32, u32)) -> Option<SettlementId> {
     let region = res.nav.region_of(tile);
     if region == 0 {
         return None;

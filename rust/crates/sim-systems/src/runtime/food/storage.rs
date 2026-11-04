@@ -105,9 +105,22 @@ pub fn spoil_day(world: &mut World, res: &mut SimResources, day: u32) -> Result<
     }
     let owners: Vec<_> = res.food.ages.keys().copied().collect();
     let mut pieces = 0;
+    let mut choices = super::choice::FoodChoiceIndex::default();
+    choices.refresh(res);
     for owner in owners {
         if remaining_days(world, res, owner, day)? == 0 {
+            let hungry = super::evidence::hungry_at_expiry(world, res, owner, &choices);
+            let before = res.food.tallies.spoiled_units;
             pieces += u64::from(expire_owner(world, res, owner)?);
+            if let Some(sid) = hungry {
+                let units = res.food.tallies.spoiled_units - before;
+                if units > 0 {
+                    *res.cultivation
+                        .expiry_hunger_days
+                        .entry((day, sid))
+                        .or_default() += units;
+                }
+            }
         }
     }
     Ok(pieces)

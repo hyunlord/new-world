@@ -27,6 +27,14 @@ fn recorded_day(res: &SimResources, tick: u64) -> u32 {
 }
 
 pub(super) fn validate(agents: &BTreeSet<AgentId>, res: &SimResources) -> Result<(), String> {
+    if res
+        .cultivation
+        .expiry_hunger_days
+        .iter()
+        .any(|(&(day, sid), &units)| day > super::day(res) || sid == 0 || units == 0)
+    {
+        return Err("invalid settlement expiry hunger day".into());
+    }
     let evidence = &res.food.evidence;
     if evidence.recent.len() > 4 {
         return Err("food flow history exceeds bound".into());

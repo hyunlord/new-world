@@ -205,3 +205,32 @@ pub(super) fn daily(world: &World, res: &SimResources) -> Daily {
     }
     snapshot
 }
+
+/// Compact persisted measurements; scaled field bounds are not nominal units.
+pub(super) fn cultivation_summary(res: &SimResources) -> serde_json::Value {
+    let state = &res.cultivation;
+    let expiry: Vec<_> = state
+        .expiry_hunger_days
+        .iter()
+        .map(|(&(day, settlement), &units)| {
+            serde_json::json!({
+                "day":day, "settlement":settlement, "expired_units":units
+            })
+        })
+        .collect();
+    let fields: Vec<_> = state
+        .fields
+        .iter()
+        .map(|(&tile, field)| serde_json::json!({"tile":tile, "field":field}))
+        .collect();
+    serde_json::json!({
+        "field_fraction_scale":sim_core::colony::cultivation::OriginShare::SCALE,
+        "eaten_by_calendar_year":state.eaten_by_year,
+        "field_totals":state.counters,
+        "fields":fields,
+        "expiry_hunger_day_settlements":expiry,
+        "expiry_hunger_distinct_days":state.expiry_hunger_days.keys()
+            .map(|&(day, _)| day).collect::<std::collections::BTreeSet<_>>().len(),
+        "expiry_hunger_scope":"actual daily expiry; same living awake settlement member above seek threshold without reachable edible food; zero/zero remains diagnostic"
+    })
+}
