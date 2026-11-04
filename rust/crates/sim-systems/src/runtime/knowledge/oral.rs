@@ -25,11 +25,16 @@
 //! Prefer the pair's oldest last use; equal ages use keyed slot 0x1_0003.
 //! Both are stamped as using it, without gaining proficiency. This lets an
 //! expert revisit difficult knowledge with an oral learner without promoting
-//! that learner (M6b S1-CAL-3). Every
+//! that learner (M6b S1-CAL-3). Among feasible pairs, prefer the teller's
+//! oldest unused, decaying topic beyond the existing grace period. That
+//! topic also takes precedence in rehearsal and ordinary telling; all
+//! non-overdue choices retain their original keyed order. Hearth lore and
+//! entries protected by their decay floor do not need this preference.
+//! This is local conversation policy, not a forecast of colony-wide loss. Every
 //! gathered holder of fire keeping is stamped as using it (the hearth lore),
 //! and a teller who practises storytelling as using that.
 use hecs::World;
-use sim_core::colony::knowledge::{defs, ids_of, Lore, Source};
+use sim_core::colony::knowledge::{defs, ids_of, Knowledge, Lore, Source};
 use sim_core::rng::{keyed_below, STREAM_KNOWLEDGE};
 use sim_engine::{RuntimeSystem, SimResources};
 
@@ -88,6 +93,15 @@ impl RuntimeSystem for OralTransmissionSystem {
         let gates = sim_core::colony::knowledge::gates();
         let hearth_lore = gates.lore(Lore::Hearth);
         let story = gates.oral();
+        let today = sim_core::colony::knowledge::day_of(tick);
+        let overdue = |known: &Knowledge, node: u8| {
+            let entry = known.get(node)?;
+            (sim_core::colony::knowledge::bit(node) & hearth_lore == 0
+                && u64::from(today.saturating_sub(entry.last_used)) > rule.unused_days
+                && rule.decay_of(entry.source()) > 0
+                && rule.floor_of(entry.source()) < d.threshold(node))
+            .then_some(entry.last_used)
+        };
         // The evening's snapshot: every gathered person's knowledge before tonight.
         let before: Vec<_> = here.iter().map(|p| knowledge_of(world, p.entity)).collect();
         let mut after = before.clone();
@@ -99,11 +113,24 @@ impl RuntimeSystem for OralTransmissionSystem {
             if !listener.adult && listener.years < rule.learner_min_years {
                 continue;
             }
-            let tellers: Vec<usize> = (0..here.len())
+            let mut tellers: Vec<usize> = (0..here.len())
                 .filter(|&i| i != li && here[i].adult)
                 .collect();
             if tellers.is_empty() {
                 continue;
+            }
+            let oldest_topic = |i: usize| {
+                ids_of(before[i].practice())
+                    .filter(|&node| {
+                        (!before[li].practises(node)
+                            && before[li].proficiency(node) < rule.oral_gain)
+                            || before[li].proficiency(node) >= rule.oral_gain.min(d.threshold(node))
+                    })
+                    .filter_map(|node| overdue(&before[i], node))
+                    .min()
+            };
+            if let Some(oldest) = tellers.iter().filter_map(|&i| oldest_topic(i)).min() {
+                tellers.retain(|&i| oldest_topic(i) == Some(oldest));
             }
             let pick = keyed_below(
                 seed,
@@ -132,7 +159,13 @@ impl RuntimeSystem for OralTransmissionSystem {
                             .map_or(u16::MAX, |entry| entry.last_used),
                     )
             };
-            if let Some(oldest) = shared.iter().map(last_use).min() {
+            if let Some(oldest) = shared
+                .iter()
+                .filter_map(|&node| overdue(teller, node))
+                .min()
+            {
+                shared.retain(|&node| overdue(teller, node) == Some(oldest));
+            } else if let Some(oldest) = shared.iter().map(last_use).min() {
                 shared.retain(|node| last_use(node) == oldest);
             }
             if !shared.is_empty() {
@@ -173,7 +206,7 @@ impl RuntimeSystem for OralTransmissionSystem {
                     after[ti].touch(id, tick);
                 }
             }
-            let mut order: Vec<(u64, u8)> = candidates
+            let mut order: Vec<_> = candidates
                 .iter()
                 .map(|c| {
                     let rank = sim_core::rng::keyed_u64(
@@ -184,7 +217,11 @@ impl RuntimeSystem for OralTransmissionSystem {
                         0x1_0200 + u32::from(*c),
                         0,
                     );
-                    (rank, *c)
+                    let priority = match overdue(teller, *c) {
+                        Some(last_used) => (false, last_used, rank),
+                        None => (true, 0, rank),
+                    };
+                    (priority, *c)
                 })
                 .collect();
             order.sort_unstable();
@@ -331,6 +368,297 @@ mod tests {
                 .last_used,
             0
         );
+        assert_eq!(res.colony.tallies.oral_rehearsed, 0);
+    }
+
+    fn certain_telling(res: &mut SimResources) {
+        let rule = res
+            .rules
+            .colony
+            .as_mut()
+            .expect("colony")
+            .knowledge
+            .as_mut()
+            .expect("knowledge");
+        rule.oral_chance_permille = 1000;
+        rule.storytelling_bonus_permille = 0;
+    }
+
+    fn recent_topic_first_seed(res: &SimResources, listener: &Person, old: u8, recent: u8) -> u64 {
+        (0..1000)
+            .find(|&seed| {
+                let rank = |node| {
+                    sim_core::rng::keyed_u64(
+                        seed,
+                        STREAM_KNOWLEDGE,
+                        listener.key,
+                        res.current_tick,
+                        0x1_0200 + u32::from(node),
+                        0,
+                    )
+                };
+                rank(recent) < rank(old)
+            })
+            .expect("a seed whose ordinary topic order prefers recent knowledge")
+    }
+
+    #[test]
+    fn overdue_topic_precedes_a_recent_success_without_extra_learning() {
+        // Given: the old topic would lose to a successful recent topic under the original draw.
+        let (mut world, mut res, entities) = pair();
+        certain_telling(&mut res);
+        let old = defs().id_of("pot_firing").expect("pot");
+        let recent = defs().id_of("pressure_flaking").expect("pressure");
+        store(
+            &mut world,
+            entities[0],
+            Knowledge::from_entries(vec![
+                KnowledgeEntry::new(old, Source::Discovered, 400, 0),
+                KnowledgeEntry::new(recent, Source::Discovered, 500, 9),
+            ]),
+        );
+        store(&mut world, entities[1], Knowledge::default());
+        res.world_seed = recent_topic_first_seed(&res, &people(&world, &res)[1], old, recent);
+        // When: the same real pair talks once.
+        OralTransmissionSystem.tick(&mut world, &mut res);
+        // Then: one ordinary gain, not a new practitioner or command.
+        let listener = knowledge_of(&world, entities[1]);
+        assert_eq!(listener.proficiency(old), 350);
+        assert_eq!(listener.proficiency(recent), 0);
+        assert!(!listener.practises(old));
+        assert_eq!(res.colony.tallies.oral_learned, 1);
+        assert!(res.colony.command_log.is_empty());
+    }
+
+    #[test]
+    fn overdue_teller_is_preferred_but_recent_tellers_keep_the_original_draw() {
+        for last_used in [0, 9] {
+            // Given: the original keyed teller is safe; the other teller may be overdue.
+            let (mut world, mut res, entities) = pair();
+            certain_telling(&mut res);
+            let old = defs().id_of("pot_firing").expect("pot");
+            let recent = defs().id_of("pressure_flaking").expect("pressure");
+            store(
+                &mut world,
+                entities[0],
+                Knowledge::from_entries(vec![KnowledgeEntry::new(
+                    old,
+                    Source::Discovered,
+                    400,
+                    last_used,
+                )]),
+            );
+            store(&mut world, entities[1], Knowledge::default());
+            let pos = *world.get::<&Position>(entities[0]).expect("position");
+            world.spawn((
+                sim_core::components::Agent { id: 1000 },
+                pos,
+                Knowledge::from_entries(vec![KnowledgeEntry::new(
+                    recent,
+                    Source::Discovered,
+                    500,
+                    9,
+                )]),
+            ));
+            let listener = &people(&world, &res)[1];
+            res.world_seed = (0..1000)
+                .find(|&seed| {
+                    keyed_below(
+                        seed,
+                        STREAM_KNOWLEDGE,
+                        listener.key,
+                        res.current_tick,
+                        0x1_0000,
+                        0,
+                        2,
+                    ) == 1
+                })
+                .expect("safe teller draw");
+            // When: each listener still chooses only one real teller.
+            OralTransmissionSystem.tick(&mut world, &mut res);
+            // Then: priority applies only to overdue knowledge; the no-overdue draw is exact.
+            let known = knowledge_of(&world, entities[1]);
+            assert_eq!(known.proficiency(old), if last_used == 0 { 350 } else { 0 });
+            assert_eq!(
+                known.proficiency(recent),
+                if last_used == 0 { 0 } else { 350 }
+            );
+            assert!(res.colony.command_log.is_empty());
+        }
+    }
+
+    #[test]
+    fn overdue_rehearsal_uses_the_experts_age_without_promoting_a_350_learner() {
+        // Given: the listener's older safe memory would distract original pair-min selection.
+        let (mut world, mut res, entities) = pair();
+        let old = defs().id_of("pot_firing").expect("pot");
+        let recent = defs().id_of("pressure_flaking").expect("pressure");
+        store(
+            &mut world,
+            entities[0],
+            Knowledge::from_entries(vec![
+                KnowledgeEntry::new(old, Source::Discovered, 400, 1),
+                KnowledgeEntry::new(recent, Source::Discovered, 500, 9),
+            ]),
+        );
+        store(
+            &mut world,
+            entities[1],
+            Knowledge::from_entries(vec![
+                KnowledgeEntry::new(old, Source::Oral, 350, 8),
+                KnowledgeEntry::new(recent, Source::Oral, 350, 0),
+            ]),
+        );
+        // When: the informed listener rehearses with the expert.
+        OralTransmissionSystem.tick(&mut world, &mut res);
+        // Then: only the overdue expert topic is refreshed, with no proficiency grant.
+        for &entity in &entities {
+            assert_eq!(
+                knowledge_of(&world, entity)
+                    .get(old)
+                    .expect("old")
+                    .last_used,
+                10
+            );
+        }
+        assert_eq!(
+            knowledge_of(&world, entities[0])
+                .get(recent)
+                .expect("recent")
+                .last_used,
+            9
+        );
+        assert_eq!(knowledge_of(&world, entities[1]).proficiency(old), 350);
+        assert_eq!(res.colony.tallies.oral_learned, 0);
+        assert_eq!(res.colony.tallies.oral_rehearsed, 1);
+        assert!(res.colony.command_log.is_empty());
+    }
+
+    #[test]
+    fn overdue_priority_excludes_protected_lore_and_the_exact_grace_boundary() {
+        for case in 0..4 {
+            // Given: ordinary ordering prefers recent knowledge over a nonurgent old topic.
+            let (mut world, mut res, entities) = pair();
+            certain_telling(&mut res);
+            let old = defs()
+                .id_of(if case == 2 {
+                    "fire_keeping"
+                } else {
+                    "pot_firing"
+                })
+                .expect("old");
+            let recent = defs().id_of("pressure_flaking").expect("pressure");
+            let rule = res
+                .rules
+                .colony
+                .as_mut()
+                .expect("colony")
+                .knowledge
+                .as_mut()
+                .expect("knowledge");
+            if case == 0 {
+                rule.decay[Source::Seeded.table_index()] = 0;
+            }
+            if case == 1 {
+                rule.floor[Source::Seeded.table_index()] = defs().threshold(old);
+            }
+            store(
+                &mut world,
+                entities[0],
+                Knowledge::from_entries(vec![
+                    KnowledgeEntry::new(old, Source::Seeded, 500, if case == 3 { 4 } else { 0 }),
+                    KnowledgeEntry::new(recent, Source::Discovered, 500, 9),
+                ]),
+            );
+            store(&mut world, entities[1], Knowledge::default());
+            res.world_seed = recent_topic_first_seed(&res, &people(&world, &res)[1], old, recent);
+            // When: zero decay, protected floor, automatic hearth use or grace applies.
+            OralTransmissionSystem.tick(&mut world, &mut res);
+            // Then: the old keyed learning result remains unchanged.
+            assert_eq!(
+                knowledge_of(&world, entities[1]).proficiency(recent),
+                350,
+                "case={case}"
+            );
+            assert_eq!(
+                knowledge_of(&world, entities[1]).proficiency(old),
+                0,
+                "case={case}"
+            );
+        }
+    }
+
+    #[test]
+    fn overdue_failed_telling_uses_real_expertise_without_granting_knowledge() {
+        // Given: the real pair can discuss the overdue topic, but no learning roll succeeds.
+        let (mut world, mut res, entities) = pair();
+        let rule = res
+            .rules
+            .colony
+            .as_mut()
+            .expect("colony")
+            .knowledge
+            .as_mut()
+            .expect("knowledge");
+        rule.oral_chance_permille = 0;
+        rule.storytelling_bonus_permille = 0;
+        let node = defs().id_of("pot_firing").expect("pot");
+        store(
+            &mut world,
+            entities[0],
+            Knowledge::from_entries(vec![KnowledgeEntry::new(node, Source::Discovered, 400, 0)]),
+        );
+        store(&mut world, entities[1], Knowledge::default());
+        // When: the expert actually attempts the unchanged zero-chance telling.
+        OralTransmissionSystem.tick(&mut world, &mut res);
+        // Then: use is recorded, but no proficiency or extra learning is fabricated.
+        assert_eq!(
+            knowledge_of(&world, entities[0])
+                .get(node)
+                .expect("old")
+                .last_used,
+            10
+        );
+        assert_eq!(knowledge_of(&world, entities[1]).proficiency(node), 0);
+        assert_eq!(res.colony.tallies.oral_tellings, 1);
+        assert_eq!(res.colony.tallies.oral_learned, 0);
+        assert_eq!(res.colony.tallies.oral_rehearsed, 0);
+        assert!(res.colony.command_log.is_empty());
+    }
+
+    #[test]
+    fn overdue_remote_expert_does_not_receive_free_use() {
+        // Given: the sole expert is outside the actual gathering.
+        let (mut world, mut res, entities) = pair();
+        let node = defs().id_of("pot_firing").expect("pot");
+        store(
+            &mut world,
+            entities[0],
+            Knowledge::from_entries(vec![KnowledgeEntry::new(node, Source::Discovered, 400, 0)]),
+        );
+        store(&mut world, entities[1], Knowledge::default());
+        *world.get::<&mut Position>(entities[0]).expect("position") = Position::new(0, 0);
+        let person = people(&world, &res)
+            .into_iter()
+            .find(|p| p.entity == entities[0])
+            .expect("expert");
+        assert!(!gathered(
+            &res,
+            &crate::runtime::jobs::hearth::hearth_tiles(&res),
+            rule(&res).expect("rule").gather_radius,
+            &person
+        ));
+        // When: the remaining listener has no real teller.
+        OralTransmissionSystem.tick(&mut world, &mut res);
+        // Then: remote expertise does not refresh or produce learning.
+        assert_eq!(
+            knowledge_of(&world, entities[0])
+                .get(node)
+                .expect("old")
+                .last_used,
+            0
+        );
+        assert_eq!(res.colony.tallies.oral_learned, 0);
         assert_eq!(res.colony.tallies.oral_rehearsed, 0);
     }
 

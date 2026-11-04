@@ -148,6 +148,116 @@ fn steward_created_food_bill_updates_its_initial_target_from_current_demand() {
 mod procurement_tests;
 
 #[test]
+fn satisfied_seed_reserve_keeps_grain_cooking_replenishable() {
+    use sim_core::colony::{ItemKind, ItemSpec, ItemStack};
+    let (world, mut res, mut policy, _) = fixture(true);
+    seed_reserve_meals(&mut res);
+    let recipe = RecipeKind::from_name("porridge").expect("recipe");
+    policy.recipes = vec![recipe];
+    let grain = ItemKind::from_name("wild_grain").expect("grain");
+    let seed = ItemKind::from_name("emmer_seed").expect("durable seed");
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        (2, 2),
+        ItemSpec::raw(grain, None),
+        6,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("fresh physical grain");
+    res.colony
+        .ground_items
+        .insert((2, 3), ItemStack::of(ItemSpec::raw(seed, None), 4));
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(super::seed_reserve(&res, &policy, &facts), Some((seed, 4)));
+    assert_eq!(super::dependencies::seed_count(&world, &res, seed), 4);
+    assert!(super::dependencies::discovery_materials(&world, &policy).is_empty());
+    assert_eq!(
+        super::dependencies::seed_inputs(&world, &res, &policy, &facts)
+            .get(&grain)
+            .copied()
+            .unwrap_or(0),
+        0
+    );
+    assert!(facts.usable_units.saturating_mul(1000) >= facts.daily_milli);
+    let commands = super::cooking::plan(&world, &res, &policy, &facts);
+    assert!(
+        commands.contains(&Command::AddBill {
+            workshop: 1,
+            recipe,
+            mode: BillMode::Maintain(2),
+        }),
+        "a satisfied physical seed reserve must not impose a finite cooking allowance: {commands:?}"
+    );
+}
+
+#[test]
+fn cooking_credit_matches_target_when_other_recipes_lack_inputs() {
+    use sim_core::colony::{ItemKind, ItemSpec, ItemStack};
+    let (mut world, mut res, mut policy, _) = fixture(true);
+    let known = world
+        .query::<&Knowledge>()
+        .iter()
+        .next()
+        .expect("founder")
+        .1
+        .clone();
+    for id in 8..17 {
+        world.spawn((Agent { id }, Position::new(4, 4), known.clone()));
+    }
+    res.fires.insert(1, sim_engine::FireState { lit: true });
+    let porridge = RecipeKind::from_name("porridge").expect("porridge");
+    let roots = RecipeKind::from_name("roasted_roots").expect("roasted roots");
+    let grain = ItemKind::from_name("wild_grain").expect("grain");
+    let seed = ItemKind::from_name("emmer_seed").expect("durable seed");
+    policy.recipes = vec![porridge, roots];
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        (2, 2),
+        ItemSpec::raw(grain, None),
+        16,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("fresh physical grain");
+    res.colony
+        .ground_items
+        .insert((2, 3), ItemStack::of(ItemSpec::raw(seed, None), 34));
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(facts.daily_milli, 24_000);
+    assert_eq!(super::seed_reserve(&res, &policy, &facts), Some((seed, 34)));
+    let add = Command::AddBill {
+        workshop: 1,
+        recipe: porridge,
+        mode: BillMode::Maintain(24),
+    };
+    assert!(super::cooking::plan(&world, &res, &policy, &facts).contains(&add));
+    assert!(
+        crate::commands::apply_and_log(
+            &mut world,
+            &mut res,
+            Command::Steward {
+                rule: 8,
+                command: Box::new(add),
+            },
+            0,
+        )
+        .accepted
+    );
+    let mut supplied_only = policy.clone();
+    supplied_only.recipes = vec![porridge];
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &supplied_only, &facts),
+        24
+    );
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        24,
+        "an unavailable recipe must not dilute the actual accepted cooking target"
+    );
+}
+
+#[test]
 fn reserved_seed_cooking_is_finite_and_does_not_reopen_after_completion() {
     let (mut world, mut res, mut policy, _) = fixture(true);
     seed_reserve_meals(&mut res);

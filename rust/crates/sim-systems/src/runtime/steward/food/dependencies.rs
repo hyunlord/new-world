@@ -240,6 +240,9 @@ pub(super) fn seed_inputs(
         return reserved;
     };
     let missing = target.saturating_sub(seed_count(world, res, seed));
+    if missing == 0 {
+        return reserved;
+    }
     let batches = missing.div_ceil(u64::from(recipe.output.1).max(1));
     for &(item, count) in &recipe.inputs {
         let amount = reserved.entry(item).or_default();

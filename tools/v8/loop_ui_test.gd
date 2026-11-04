@@ -238,9 +238,14 @@ func _test_chapters_data() -> void:
 		return
 	var chapters: Array = parsed.get("chapters", [])
 	_assert(chapters.size() == 5, "has 5 chapters")
-	# Chapter 4 is locked.
+	# Farming is available; clothing remains a required later-stage condition.
 	if chapters.size() >= 4:
-		_assert(bool(chapters[3].get("locked", false)), "chapter 4 is locked")
+		_assert(not bool(chapters[3].get("locked", true)), "chapter 4 farming is unlocked")
+		var facts: Array[String] = []
+		for condition: Dictionary in chapters[3].get("conditions", []):
+			facts.append(str(condition.get("fact", "")))
+		_assert(facts == ["first_field_sown", "first_field_harvest", "first_woven_clothing"],
+			"chapter 4 requires sowing, harvesting and clothing")
 
 
 ## Test 8: chapter condition check logic.

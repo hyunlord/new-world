@@ -203,6 +203,44 @@ pub(super) fn take_recipe_input(
     requested - needed
 }
 
+fn available_recipes(
+    world: &World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    seed_reserve: &std::collections::BTreeMap<sim_core::colony::ItemKind, u64>,
+) -> Vec<RecipeKind> {
+    let inputs = cooking_inputs(world, res);
+    let mut available = Vec::new();
+    for &kind in &policy.recipes {
+        let Some(recipe) = kind.recipe() else {
+            continue;
+        };
+        let assigned = assigned_crafts(world, res, kind);
+        if recipe.food_requirements.duration_days > 0 {
+            continue;
+        }
+        if !crate::runtime::knowledge::anyone_practises(world, knowledge::gates().recipe(kind)) {
+            continue;
+        }
+        let usable = res.colony.workshops.values().any(|shop| {
+            recipe.supports_workshop(shop.kind)
+                && (assigned > 0
+                    || recipe.inputs.iter().all(|(item, count)| {
+                        input_count(&inputs, shop.id, *item)
+                            .saturating_sub(seed_reserve.get(item).copied().unwrap_or(0))
+                            >= u64::from(*count)
+                    }))
+                && has_practitioner(world, res, recipe, |practice| {
+                    crate::runtime::jobs::food_recipe_supplyable(res, shop, recipe, practice)
+                })
+        });
+        if usable || assigned > 0 {
+            available.push(kind);
+        }
+    }
+    available
+}
+
 /// Net new edible units backed by active bills and uncommitted physical inputs.
 pub(super) fn convertible_immediate(
     world: &World,
@@ -211,8 +249,16 @@ pub(super) fn convertible_immediate(
     facts: &FoodSummary,
 ) -> u64 {
     let mut inputs = free_inputs(world, res);
-    let reserved = super::dependencies::seed_inputs(world, res, policy, facts);
+    let mut reserved = super::dependencies::seed_inputs(world, res, policy, facts);
     let emergency = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
+    if emergency {
+        for (item, count) in &mut reserved {
+            if item.definition().food.is_some() {
+                *count = 0;
+            }
+        }
+    }
+    let available = available_recipes(world, res, policy, &reserved);
     let mut deductions = if emergency {
         std::collections::BTreeMap::new()
     } else {
@@ -225,14 +271,14 @@ pub(super) fn convertible_immediate(
         *deduction -= taken;
     }
     let mut credited = 0_u64;
-    for &kind in &policy.recipes {
+    for &kind in &available {
         let Some(recipe) = kind.recipe() else {
             continue;
         };
         if recipe.food_requirements.duration_days > 0 {
             continue;
         }
-        let target = u64::from(daily_target(policy, facts, policy.recipes.len(), kind));
+        let target = u64::from(daily_target(policy, facts, available.len(), kind));
         let made = u64::from(crate::runtime::jobs::bills::bill_count(
             world,
             res,
@@ -329,35 +375,7 @@ pub(super) fn plan(
             bootstrap_recipes.push((kind, u16::try_from(target).unwrap_or(u16::MAX)));
         }
     }
-    let inputs = cooking_inputs(world, res);
-    let mut available = Vec::new();
-    for &kind in &policy.recipes {
-        let Some(recipe) = kind.recipe() else {
-            continue;
-        };
-        let assigned = assigned_crafts(world, res, kind);
-        if recipe.food_requirements.duration_days > 0 {
-            continue;
-        }
-        if !crate::runtime::knowledge::anyone_practises(world, knowledge::gates().recipe(kind)) {
-            continue;
-        }
-        let usable = res.colony.workshops.values().any(|shop| {
-            recipe.supports_workshop(shop.kind)
-                && (assigned > 0
-                    || recipe.inputs.iter().all(|(item, count)| {
-                        input_count(&inputs, shop.id, *item)
-                            .saturating_sub(seed_reserve.get(item).copied().unwrap_or(0))
-                            >= u64::from(*count)
-                    }))
-                && has_practitioner(world, res, recipe, |practice| {
-                    crate::runtime::jobs::food_recipe_supplyable(res, shop, recipe, practice)
-                })
-        });
-        if usable || assigned > 0 {
-            available.push(kind);
-        }
-    }
+    let available = available_recipes(world, res, policy, &seed_reserve);
     let mut wanted = bootstrap_recipes.clone();
     for &kind in &policy.recipes {
         let Some(recipe) = kind.recipe() else {

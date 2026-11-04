@@ -1,6 +1,6 @@
 # M6b 보고서
 
-Current Stage1 runtime state (2026-11-04): calibration01 gameplay **FAIL**, despite all8 process exits0. Four worlds extinct; KnowledgeLost101 versus BASE1; year3 field-intake target0/8. Root cause investigation and minimal policy repairs ongoing; held-out1520–1551 unused. Actual Godot import twice and strict check exit0:83scripts,76FFIcalls, no script/parse errors. Rendered interaction remains separately pending. Details: S1_DESIGN calibration01 and external raw cohort.
+Current Stage1 runtime state (2026-11-04): calibration07 gameplay **FAIL**, despite all8 process exits0. Survival8/8; KnowledgeLost6 versus BASE1; year3 field-intake target0/8; food-overage streak criterion8/8. Both owner-confirmed bars remain unchanged. P13 repairs passed638system/17knowledge/2data tests and Clippy; strict baseline identity08 and docs15 passed. Held-out1520–1551 unused; final natural UI/cards, performance, full gate and publication remain pending. Earlier failed rounds below are retained evidence, not current status.
 
 ## 현재 상태 — 2026-11-04 낮 작업
 
@@ -1000,3 +1000,19 @@ seed7 저장의 실제 품목 코드를 확인했다:4=돌날,5=돌도끼,8=생�
 수정안 unit22는 실제 종료0이다: 시스템630PASS/1기존ignore, 지식17PASS, 데이터2PASS, fmt와 workspace all-target Clippy 경고0. 혼합 재고 도구 회귀 red02는 수정 전 Maintain4≠0으로 실제 실패했으며, red01의 잘못된 Store fixture 실패는 의미적 증거에서 제외했다. 용기 FormPot/FirePot, 플레이어 소유·정지 보호, 실제 선택 작업장 선반, 간접 지붕의 최소/최대 방 크기와 외부 연결 대조군을 유지한다. build14·identity07·docs14는 진행 중이며 이 단위 검증만으로 게임 기준이나 게시 성공을 주장하지 않는다. 이번 패치의 tools 변경은0, Stage1 누적net475줄이다.
 
 build14의 release probe/perf·debug bridge와 identity07은 완료됐다. BASE228,748값 차이0·한쪽 경로0,64연대기19,683항목 및64원시 파일 동일,결정성0–3 PASS다. 최초 docs14는 경로 오타로 실패했고 원본 로그를 보존했다. 올바른 경로의 docs14-r2는20:23KST 실제 종료0·docs PASS다. 검증한 Rust patch SHA2560a6bcb1675f444e1cc5877e96bd1f45cd06ee2664c1790cf457a62936fde8ce5와 현재 diff가 같으며 보정07 Mac probe a61bd7eb을 고정했다. 보정07 게임 결과·held-out·게시 gate는 아직 없다.
+
+### Stage1 보정07 — 생존 회복, 밭 섭취는 여전히 실패
+
+15741836c의 DGX 고정 probe41022b89는8세계×96일을 모두 실제 종료0으로 마쳤다(systemd terminal inactive/dead, Resultsuccess, ExecMainStatus0, COHORT_EXIT_0). 원시 디렉터리64,148,830바이트이며 Mac으로의 동기화도 종료0이다. 동일 소스 Mac probea61bd7eb의 seed0 summary/events/chronicle 세 파일은 DGX와 바이트 동일하다. 생존8/8,세계별 최종 인구13/13/14/13/11/13/14/13,밭30%0/8,KnowledgeLost6 대 BASE1,#675조건 일수0인 세계8/8이다. 생존 개선을 전체 수용 성공으로 바꾸어 말하지 않는다. held-out은 미사용이다.
+
+실제 UI p12-ui-test01은202PASS/1FAIL(과거4장 잠금 assertion), 명세에 맞춘 기존 검사 수정 후 test02는204PASS/0FAIL·종료0이며 GDScript strict/76FFI도 통과했다. 자연 밭 카드·최종 이미지 리뷰·전체 게이트는 아직 별도다.
+
+조리 예약0 회귀는 실제 Make1≠Maintain2로 실패했고 수정 후 기존 조리 회귀28개가 모두 통과했다. p12 자연 day60 저장 재실행은96일 최종 지문271a1126cbcfc993-8a5d8d2a4d562b07가 m6a와 같고 읽기는 시각·원본 저장을 바꾸지 않았다. 실제 종자66/필요40인데 죽 Make2·done1이다. 모두 수면 중이고1회 여유가 있어 이 시점에서 조리 중단 인과는 입증하지 않았다. 첫 저장은 --steward/--defence를 빠뜨려 INVALID로 보존·제외했다.
+
+대화 정책은 추가 전 회귀2PASS/3FAIL 실제 종료101을 보존했다. 기존 모임의 미사용 주제 우선순위와 실패한 실제 전수 시도의 무증가 경계를 구현한 뒤 unit23은 시스템637PASS/1기존ignore·지식17·데이터2·fmt·전체 Clippy로 실제 종료0이다. 이는 국소 정책 검증이며 KnowledgeLost 수용 기준이나 새 보정 성공의 증거는 아니다. 실행 가능한 recipe와 전체 recipe를 혼용한 조리 credit 불일치는 별도 작은 회귀로 확인 중이다.
+
+Stage1 tools 실제 차분을 Stage0 중단 SHAfd2f6d9f와 비교했다: 기존6파일539추가/59삭제(net480), 새 tools 파일0. gate.sh19/15,loop_ui_test.gd80/3,mux2_text_capture.gd143/12,read_gate_checks.py83/5,soak.sh52/24,test_read_gate.py162/0(각 추가/삭제). 이는 Stage0 잔여696줄과 별도이며 원시 실험은 외부에 유지한다.20:43KST Stage1 외부 폴더는2.4GiB,Mac 여유372GiB였다.
+
+조리 credit 분모 회귀는 실제12≠24로 실패했고, 기존 가용성 판정을 계획과 credit에서 공유한 뒤 unit24가 실제 종료0으로 완료됐다: 시스템638PASS/1기존ignore, 지식17PASS, 데이터2PASS, fmt 및 workspace all-target Clippy 경고0. 원래 조달 eligible 집합과 실제 유한 입력·수동 보호는 유지한다. build15·identity08·docs15가 진행 중이며 이 결과만으로 보정08이나 게시 성공을 주장하지 않는다.
+
+build15·identity08·docs15는21:01KST wrapper실제 종료0으로 완료됐다. BASE228,748값 차이0·한쪽 경로0,64연대기19,683항목과64원시 파일 동일,결정성0–3 PASS다. Rust diff가 검증 시작 patch0407d572a04e238ba2707039c23f162bd72dd85d3a6af6f2ee27d06a477cdb00와 바이트 동일하다. 보정08 Mac probe baa81170455cba74bb1f19d8463177572512583bfb57bf16d3cb1ff9ab77ad07를 별도 고정했다. 다음 보정과 held-out·게시 검증은 아직 미실행이다.
