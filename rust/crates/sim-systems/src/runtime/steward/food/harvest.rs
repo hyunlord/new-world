@@ -24,7 +24,10 @@ pub(super) fn plan(
     let (pending_immediate, pending_winter) = pending_output(world, res, policy, facts);
     let mut immediate_gap = immediate
         .saturating_sub(facts.usable_units)
-        .saturating_sub(pending_immediate);
+        .saturating_sub(pending_immediate)
+        .saturating_sub(super::cooking::convertible_immediate(
+            world, res, policy, facts,
+        ));
     let mut winter_gap = reserve
         .saturating_sub(facts.winter_units)
         .saturating_sub(pending_winter);

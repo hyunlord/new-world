@@ -225,3 +225,35 @@ fn store_planner_places_real_boundaries_without_beds() {
         assert!(crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted);
     }
 }
+
+#[test]
+fn inferred_matching_role_still_commits_owned_house_completion_once() {
+    let (mut engine, rule) = fixture();
+    engine
+        .resources
+        .colony
+        .rooms
+        .get_mut(&1)
+        .expect("room")
+        .role = RoomRole::Bedroom;
+    assert!(engine.resources.colony.room_overrides.is_empty());
+    let command = plan(&engine.resources, &rule).expect("inferred role is not committed intent");
+    assert_eq!(
+        command,
+        Command::SetRoomRole {
+            room: 1,
+            role: Some(RoomRole::Bedroom)
+        }
+    );
+    assert!(
+        crate::commands::apply_command(&mut engine.world, &mut engine.resources, command).accepted
+    );
+    assert_eq!(
+        engine.resources.colony.room_overrides.get(&1),
+        Some(&RoomRole::Bedroom)
+    );
+    assert!(
+        plan(&engine.resources, &rule).is_none(),
+        "do not issue repeated no-op completion"
+    );
+}

@@ -68,6 +68,8 @@ pub(in crate::runtime) type Rival = (AgentId, SettlementId, u64, u16, u16);
 #[derive(Default)]
 pub(in crate::runtime) struct EffectState {
     pub food_version: u64,
+    pub harvest_budget:
+        Option<std::sync::Arc<std::sync::Mutex<super::super::harvest_food::HarvestBudget>>>,
     pub completed_meals: Vec<AgentId>,
     pub claims_version: u64,
     pub catchment: u32,

@@ -149,3 +149,110 @@ fn stock_harvest_rejects_storage_with_no_compatible_room() {
         .get::<&Job>(entity)
         .is_ok_and(|job| matches!(job.kind, JobKind::Harvest { .. })));
 }
+
+#[test]
+fn steward_immediate_budget_caps_proactive_harvest_but_off_keeps_legacy_target() {
+    for enabled in [false, true] {
+        let (mut world, mut res, entity) = fixture();
+        res.steward.enabled = enabled;
+        res.steward.scope = sim_core::colony::steward::StewardScope::Food;
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            (6, 6),
+            sim_core::colony::ItemSpec::raw(
+                sim_core::colony::ItemKind::from_name("roots").expect("roots"),
+                None,
+            ),
+            3,
+            0,
+            crate::runtime::food::items::FoodSource::Debug,
+        )
+        .expect("four edible units exceed the one-adult unroofed target");
+        mind().try_tick(&mut world, &mut res).expect("decision");
+        let harvesting = world
+            .get::<&Job>(entity)
+            .is_ok_and(|job| matches!(job.kind, JobKind::Harvest { .. }));
+        assert_eq!(
+            harvesting, !enabled,
+            "only steward food scope replaces the legacy stock target"
+        );
+    }
+}
+
+#[test]
+fn steward_budget_preserves_hunger_acquisition_when_accepted_output_is_pending() {
+    let (mut world, mut res, entity) = fixture();
+    res.steward.enabled = true;
+    res.steward.scope = sim_core::colony::steward::StewardScope::Food;
+    crate::runtime::food::items::take(
+        &mut world,
+        &mut res,
+        sim_core::colony::food::FoodOwner::Ground((6, 6)),
+        1,
+        0,
+    )
+    .expect("remove meal");
+    res.colony
+        .designations
+        .insert((3, 2), sim_core::colony::Designation::Harvest);
+    world.get::<&mut Hunger>(entity).expect("hunger").value = 60.0;
+    mind()
+        .try_tick(&mut world, &mut res)
+        .expect("urgent decision");
+    assert!(world
+        .get::<&Job>(entity)
+        .is_ok_and(|job| matches!(job.kind, JobKind::Harvest { plant: (2, 2) })));
+}
+
+#[test]
+fn steward_budget_admits_only_one_of_two_same_tick_harvesters() {
+    use sim_core::components::{
+        Agent, Inventory, Lineage, Position, Sleep, Social, Temperament, Thirst,
+    };
+    let (mut world, mut res, _) = fixture();
+    res.steward.enabled = true;
+    res.steward.scope = sim_core::colony::steward::StewardScope::Food;
+    world.spawn((
+        Agent { id: 8 },
+        Position::new(3, 2),
+        AgentState::Idle,
+        Hunger::new(10.0, 0.05),
+        Thirst::new(0.0, 0.0),
+        Sleep::new(0.0, 0.0),
+        Social::new(0.0, 0.0),
+        Inventory::default(),
+        Lineage { key: 8, births: 0 },
+        Temperament::from_axes([500; 4]),
+        crate::runtime::agent::MovementRng::new(8),
+    ));
+    res.settlements
+        .get_mut(&1)
+        .expect("settlement")
+        .add_member_agent(8);
+    mind()
+        .try_tick(&mut world, &mut res)
+        .expect("two-person decision");
+    assert_eq!(
+        world
+            .query::<&Job>()
+            .iter()
+            .filter(|(_, job)| matches!(job.kind, JobKind::Harvest { .. }))
+            .count(),
+        1
+    );
+}
+
+#[test]
+fn steward_budget_does_not_double_credit_designated_running_harvest() {
+    let (mut world, mut res, entity) = fixture();
+    res.steward.enabled = true;
+    res.steward.scope = sim_core::colony::steward::StewardScope::Food;
+    world.spawn((sim_core::components::Agent { id: 8 },));
+    super::harvest_stock_tests::ready_harvest(&mut world, &mut res, entity);
+    res.food.plants.get_mut(&(2, 2)).expect("plant").units_left = 2;
+    let budget = super::harvest_food::HarvestBudget::capture(&world, &res).expect("budget");
+    assert!(
+        budget.permits(&res, (3, 2)),
+        "target5 - stored1 - unique output2 still leaves2; double credit would close it"
+    );
+}

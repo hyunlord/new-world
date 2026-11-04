@@ -20,9 +20,9 @@ pub mod cancel;
 pub mod craft;
 mod craft_food;
 pub mod execute;
+pub(crate) mod field;
 pub mod food_storage;
 mod food_transfers;
-pub(crate) mod field;
 pub mod harvest;
 mod harvest_haul;
 pub mod hearth;
@@ -43,7 +43,8 @@ pub use assign::{JobAssignSystem, JOB_ASSIGN_PRIORITY};
 pub use bills::{BillSystem, BILL_PRIORITY};
 pub use cancel::{cancel, finish, on_death, release_job};
 pub(crate) use craft_food::{
-    heat_needed as cooking_heat_needed, supplyable as food_recipe_supplyable,
+    heat_needed as cooking_heat_needed, permitted as food_recipe_permitted,
+    supplyable as food_recipe_supplyable,
 };
 pub use execute::{JobExecuteSystem, JOB_EXECUTE_PRIORITY};
 pub use hearth::{HearthFeedSystem, HEARTH_FEED_PRIORITY};

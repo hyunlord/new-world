@@ -2,7 +2,7 @@
 use hecs::World;
 use sim_core::colony::food::PlantState;
 use sim_core::colony::steward::{Action, FoodPlan};
-use sim_core::colony::{Command, ItemKind, ItemSpec};
+use sim_core::colony::{Command, ItemKind, ItemSpec, RecipeKind};
 use sim_core::components::{Agent, Position, Settlement};
 use sim_core::rules::WorldRules;
 use sim_engine::SimResources;
@@ -249,13 +249,13 @@ fn full_wild_food_store_still_accepts_replacement_fields_once() {
     let (mut world, mut res, policy) = food_cap_fixture(5, false);
     let facts = super::summary(&world, &res, &policy);
     assert_eq!(facts.usable_units, 5);
-    let commands = super::field_orders(&res, &policy, &facts);
+    let commands = super::field_orders(&world, &res, &policy, &facts);
     assert_eq!(commands.len(), 2, "one adult needs ceil(64.8*0.3/12) tiles");
     for command in commands {
         assert!(crate::commands::apply_command(&mut world, &mut res, command).accepted);
     }
     assert_eq!(res.cultivation.fields.len(), 2);
-    assert!(super::field_orders(&res, &policy, &facts).is_empty());
+    assert!(super::field_orders(&world, &res, &policy, &facts).is_empty());
 }
 
 #[test]
@@ -300,7 +300,12 @@ fn cooking_shares_the_raw_food_reserve_without_double_counting_cooked_stock() {
         let (world, res, policy) = food_cap_fixture(raw, false);
         let facts = super::summary(&world, &res, &policy);
         assert_eq!(
-            super::cooking::daily_target(&policy, &facts, 1, output),
+            super::cooking::daily_target(
+                &policy,
+                &facts,
+                1,
+                RecipeKind::from_name("porridge").expect("recipe")
+            ),
             cooked_target
         );
     }
@@ -318,7 +323,12 @@ fn cooking_shares_the_raw_food_reserve_without_double_counting_cooked_stock() {
     assert_eq!(facts.usable_units, 3);
     assert_eq!(facts.cooked_units, 3);
     assert_eq!(
-        super::cooking::daily_target(&policy, &facts, 1, output),
+        super::cooking::daily_target(
+            &policy,
+            &facts,
+            1,
+            RecipeKind::from_name("porridge").expect("recipe")
+        ),
         3,
         "existing cooked portions remain part of Maintain, not raw-stock credit"
     );

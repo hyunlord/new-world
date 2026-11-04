@@ -19,6 +19,17 @@ pub fn sowing_window(res: &SimResources, crop: CropKind) -> bool {
     })
 }
 
+/// Land retained by a field designation or an established crop, even after erasure.
+pub(crate) fn occupies(res: &SimResources, tile: (u32, u32)) -> bool {
+    res.cultivation.fields.get(&tile).is_some_and(|field| {
+        field.active
+            || matches!(
+                field.phase,
+                FieldPhase::Sown { .. } | FieldPhase::Growing { .. } | FieldPhase::Ripe { .. }
+            )
+    })
+}
+
 /// Runs once per elapsed calendar day, including erased and paused fields.
 pub fn update(res: &mut SimResources) {
     if res.cultivation.fields.is_empty() {

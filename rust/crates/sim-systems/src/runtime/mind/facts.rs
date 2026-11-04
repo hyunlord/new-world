@@ -462,7 +462,12 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
         r.rules.agent.social_seek.is_some()
     ))),
     fact!("stock_shortfall", Bool, |p, c, _r, _n| Ok(i64::from(
-        c.target_scope(p.agent)?.stock_shortfall
+        c.harvest_budget
+            .as_ref()
+            .map_or(c.target_scope(p.agent)?.stock_shortfall, |budget| budget
+                .lock()
+                .expect("harvest budget")
+                .shortfall())
     ))),
     // R2-1A: colony winter stocking may displace this adult's held ordinary work.
     fact!("winter_stock_duty", Bool, |p, c, _r, _n| Ok(i64::from(
@@ -1210,12 +1215,21 @@ fn edible_plant(p: &PersonSnapshot, c: &TickContext, r: &SimResources) -> Option
             return candidate;
         }
     }
+    let emergency = p
+        .hunger
+        .is_some_and(|hunger| hunger > f64::from(needs::HUNGER_THRESHOLD))
+        && c.target_scope(p.agent)
+            .is_ok_and(|scope| !scope.food_available);
+    let budget = c
+        .harvest_budget
+        .as_ref()
+        .map(|budget| budget.lock().expect("harvest budget"));
     let mut index = c.harvest_food.borrow_mut();
     let (candidate, no_ripe) = index
         .get_or_insert_with(|| {
             std::sync::Arc::new(super::harvest_food::PlantCandidates::capture(r))
         })
-        .nearest_observed(p, r);
+        .nearest_budgeted(p, r, if emergency { None } else { budget.as_deref() });
     *c.plant_query_observation.borrow_mut() = Some((p.agent, no_ripe));
     *c.plant_answer.borrow_mut() = Some((p.agent, versions, candidate, no_ripe));
     candidate

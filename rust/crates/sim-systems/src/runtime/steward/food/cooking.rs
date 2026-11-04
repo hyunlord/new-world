@@ -11,7 +11,7 @@ pub(super) fn daily_target(
     policy: &FoodPlan,
     facts: &FoodSummary,
     recipe_count: usize,
-    output: sim_core::colony::ItemKind,
+    kind: RecipeKind,
 ) -> u16 {
     let total = facts
         .daily_milli
@@ -24,7 +24,24 @@ pub(super) fn daily_target(
     // Maintain targets already include finished and assigned cooked output.
     // Credit only raw edible stock here, avoiding a second subtraction of meals.
     let raw = facts.usable_units.saturating_sub(facts.cooked_units);
-    let total = total.min(reserve.saturating_sub(raw));
+    let Some(recipe) = kind.recipe() else {
+        return 0;
+    };
+    let output = recipe.output.0;
+    let output_units = u64::from(recipe.output.1) * edible_units(output, false);
+    let consumed_units: u64 = recipe
+        .inputs
+        .iter()
+        .map(|(item, count)| u64::from(*count) * edible_units(*item, true))
+        .sum();
+    let net = output_units.saturating_sub(consumed_units);
+    let headroom = reserve.saturating_sub(raw);
+    let capacity = if net == 0 {
+        total
+    } else {
+        headroom.saturating_mul(output_units) / net
+    };
+    let total = total.min(capacity);
     let share = total.div_ceil(u64::try_from(recipe_count).unwrap_or(u64::MAX).max(1));
     let units = output
         .definition()
@@ -34,6 +51,110 @@ pub(super) fn daily_target(
     u16::try_from(share.div_ceil(u64::from(units))).unwrap_or(u16::MAX)
 }
 
+fn edible_units(item: sim_core::colony::ItemKind, raw_only: bool) -> u64 {
+    item.definition()
+        .food
+        .as_ref()
+        .filter(|food| !raw_only || food.raw_edible)
+        .map_or(0, |food| u64::from(food.units))
+}
+
+/// Net new edible units backed by active bills and uncommitted physical inputs.
+pub(super) fn convertible_immediate(
+    world: &World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    facts: &FoodSummary,
+) -> u64 {
+    let mut inputs = facts.pieces.clone();
+    let reserved = super::dependencies::seed_inputs(world, res, policy, facts);
+    let committed = super::dependencies::unconsumed_craft_inputs(world, res);
+    let emergency = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
+    for (item, count) in &mut inputs {
+        let reserve = if emergency {
+            0
+        } else {
+            reserved.get(item).copied().unwrap_or(0)
+        };
+        *count = count
+            .saturating_sub(reserve)
+            .saturating_sub(committed.get(item).copied().unwrap_or(0));
+    }
+    let practice = world
+        .query::<&Knowledge>()
+        .iter()
+        .fold(0, |mask, (_, knowledge)| mask | knowledge.practice());
+    let mut credited = 0_u64;
+    for &kind in &policy.recipes {
+        let Some(recipe) = kind.recipe() else {
+            continue;
+        };
+        if recipe.food_requirements.duration_days > 0
+            || !crate::runtime::knowledge::anyone_practises(world, knowledge::gates().recipe(kind))
+        {
+            continue;
+        }
+        let target = u64::from(daily_target(policy, facts, policy.recipes.len(), kind));
+        let made = u64::from(crate::runtime::jobs::bills::bill_count(
+            world,
+            res,
+            recipe.output.0,
+        ));
+        let desired = target
+            .saturating_sub(made)
+            .div_ceil(u64::from(recipe.output.1).max(1));
+        let mut batches = 0_u64;
+        for (id, shop) in &res.colony.workshops {
+            if !recipe.supports_workshop(shop.kind)
+                || !crate::runtime::jobs::food_recipe_permitted(res, shop, recipe, practice)
+                || res
+                    .steward
+                    .vetoed(&Target::Bill(*id, kind.code()), res.current_tick)
+            {
+                continue;
+            }
+            for bill in shop
+                .bills
+                .iter()
+                .filter(|bill| bill.recipe == kind && !bill.suspended)
+            {
+                if !(bill.auto || steward_owns_recipe(res, *id, kind))
+                    || super::super::production::player_edited_bill(res, *id, bill.id)
+                {
+                    continue;
+                }
+                let remaining = match bill.mode {
+                    BillMode::Make(_) => u64::from(bill.remaining().unwrap_or(0))
+                        .saturating_sub(u64::from(assigned_crafts(world, res, kind))),
+                    BillMode::Maintain(count) => u64::from(count)
+                        .saturating_sub(made)
+                        .div_ceil(u64::from(recipe.output.1).max(1)),
+                };
+                batches = batches.saturating_add(remaining);
+            }
+        }
+        batches = batches.min(desired);
+        for (item, count) in &recipe.inputs {
+            batches =
+                batches.min(inputs.get(item).copied().unwrap_or(0) / u64::from(*count).max(1));
+        }
+        let consumed: u64 = recipe
+            .inputs
+            .iter()
+            .map(|(item, count)| u64::from(*count) * edible_units(*item, true))
+            .sum();
+        let net = (u64::from(recipe.output.1) * edible_units(recipe.output.0, false))
+            .saturating_sub(consumed);
+        for (item, count) in &recipe.inputs {
+            if let Some(available) = inputs.get_mut(item) {
+                *available = available.saturating_sub(batches * u64::from(*count));
+            }
+        }
+        credited = credited.saturating_add(batches * net);
+    }
+    credited
+}
+
 pub(super) fn plan(
     world: &World,
     res: &SimResources,
@@ -41,11 +162,31 @@ pub(super) fn plan(
     facts: &FoodSummary,
 ) -> Vec<Command> {
     let preservation = super::preservation::budget(world, res, policy, facts);
-    let seed_reserve = super::dependencies::seed_inputs(world, res, policy, facts);
+    let mut seed_reserve = super::dependencies::seed_inputs(world, res, policy, facts);
+    let emergency = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
+    if emergency {
+        // Grain is not raw-edible: protecting future seed must not forbid today's meal.
+        for (item, reserved) in &mut seed_reserve {
+            if item.definition().food.is_some() {
+                *reserved = 0;
+            }
+        }
+    }
     let bootstrap = super::dependencies::seed_recipe(policy);
     let mut bootstrap_recipes = policy.vessel_recipes.clone();
     if let Some(kind) = bootstrap {
         if let Some((_, target)) = super::seed_reserve(res, policy, facts) {
+            let competing_food_input = kind.recipe().is_some_and(|recipe| {
+                recipe
+                    .inputs
+                    .iter()
+                    .any(|(item, _)| item.definition().food.is_some())
+            });
+            let target = if emergency && competing_food_input {
+                0
+            } else {
+                target
+            };
             bootstrap_recipes.push((kind, u16::try_from(target).unwrap_or(u16::MAX)));
         }
     }
@@ -95,7 +236,7 @@ pub(super) fn plan(
         let target = if recipe.food_requirements.duration_days > 0 {
             preservation.targets.get(&kind).copied().unwrap_or(0)
         } else if available.contains(&kind) {
-            daily_target(policy, facts, available.len(), recipe.output.0)
+            daily_target(policy, facts, available.len(), kind)
         } else {
             0
         };
@@ -105,11 +246,16 @@ pub(super) fn plan(
         .first()
         .copied()
         .unwrap_or((0, 0));
+    let material_recipes: Vec<_> = bootstrap_recipes
+        .iter()
+        .copied()
+        .filter(|(kind, target)| Some(*kind) != bootstrap || *target > 0)
+        .collect();
     let mut commands = super::super::production::inputs_with_discovery(
         world,
         res,
         hearth,
-        &bootstrap_recipes,
+        &material_recipes,
         super::dependencies::discovery_materials(world, policy),
     );
     let committed = super::dependencies::unconsumed_craft_inputs(world, res);
@@ -311,6 +457,7 @@ fn assigned_crafts(world: &World, res: &SimResources, kind: RecipeKind) -> u64 {
 
 fn workshop(world: &World, res: &SimResources, kind: RecipeKind) -> Option<Command> {
     let recipe = kind.recipe()?;
+    let size = recipe.workshop.plan(&res.rules.colony?).0;
     if world
         .query::<&ColonySite>()
         .iter()
@@ -345,7 +492,14 @@ fn workshop(world: &World, res: &SimResources, kind: RecipeKind) -> Option<Comma
                 if res.steward.vetoed(&Target::Tile(x, y), res.current_tick) {
                     continue;
                 }
-                if crate::commands::camp_reaches(res, (x, y))
+                let work = sim_core::colony::workshop::work_tile_of((x, y), size);
+                let occupied = crate::runtime::cultivation::occupies(res, work)
+                    || (y..y.saturating_add(size.1)).any(|fy| {
+                        (x..x.saturating_add(size.0))
+                            .any(|fx| crate::runtime::cultivation::occupies(res, (fx, fy)))
+                    });
+                if !occupied
+                    && crate::commands::camp_reaches(res, (x, y))
                     && crate::commands::check_blueprint(res, recipe.workshop, x, y).is_ok()
                 {
                     return Some(Command::PlaceBlueprint {

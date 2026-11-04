@@ -117,3 +117,96 @@ fn planned_house_has_complete_constructed_cardinal_boundary() {
         }
     }
 }
+
+#[test]
+fn cultivation_avoids_future_house_and_accepted_site_work_tiles() {
+    let (mut engine, _, hearth) = fixture();
+    engine.resources.food.plants.clear();
+    let reserved = super::reserved_house_tiles(&engine.world, &engine.resources, hearth);
+    assert!(!reserved.is_empty());
+    let rules = sim_core::colony::steward::rules().expect("rules");
+    let policy = rules
+        .rules
+        .iter()
+        .find_map(|rule| match &rule.action {
+            Action::FoodPlan(policy) => Some(policy),
+            _ => None,
+        })
+        .expect("food policy");
+    let fields = |world: &hecs::World, res: &sim_engine::SimResources| {
+        crate::runtime::steward::food::plan(world, res, policy)
+            .into_iter()
+            .filter_map(|command| {
+                if let Command::ZoneField { min, .. } = command {
+                    Some(min)
+                } else {
+                    None
+                }
+            })
+            .collect::<Vec<_>>()
+    };
+    let initial = fields(&engine.world, &engine.resources);
+    assert!(
+        !initial.is_empty(),
+        "unrelated outdoor ground remains available"
+    );
+    assert!(initial.iter().all(|tile| !reserved.contains(tile)));
+    let occupied = initial[0];
+    engine.world.spawn((ColonySite {
+        kind: sim_core::colony::BlueprintKind::WoodBench,
+        top_left: occupied,
+        size: (1, 1),
+    },));
+    let work = initial[1];
+    engine
+        .resources
+        .colony
+        .site_work_tiles
+        .insert(occupied, work);
+    let remaining = fields(&engine.world, &engine.resources);
+    assert!(!remaining.is_empty());
+    assert!(remaining
+        .iter()
+        .all(|tile| !reserved.contains(tile) && *tile != occupied && *tile != work));
+}
+
+#[test]
+fn later_house_envelope_preserves_active_and_erased_established_fields() {
+    use sim_core::colony::cultivation::{FieldPhase, FieldTile, FieldWork};
+    for (active, phase) in [
+        (true, FieldPhase::Untilled),
+        (false, FieldPhase::Sown { planted_day: 0 }),
+    ] {
+        let (mut engine, action, hearth) = fixture();
+        let before = house(&engine.world, &engine.resources, hearth, &action, true);
+        let tile = *before
+            .reserved
+            .iter()
+            .next()
+            .expect("initial house footprint");
+        let crop = sim_core::colony::content::installed_or_bundled()
+            .crop_by_name("emmer")
+            .expect("crop");
+        engine.resources.cultivation.fields.insert(
+            tile,
+            FieldTile {
+                owner: 1,
+                crop,
+                phase,
+                active,
+                work: FieldWork::Auto,
+                tended: false,
+            },
+        );
+        let after = house(&engine.world, &engine.resources, hearth, &action, true);
+        assert!(
+            !after.reserved.is_empty(),
+            "another house site remains possible"
+        );
+        assert!(
+            !after.reserved.contains(&tile),
+            "actual next planned envelope must avoid retained field land"
+        );
+        assert_eq!(engine.resources.cultivation.fields[&tile].phase, phase);
+    }
+}

@@ -16,7 +16,7 @@ pub use summary::{summary, winter_need, FoodSummary};
 /// Plan normal replayable commands from one current food snapshot.
 pub fn plan(world: &World, res: &SimResources, policy: &FoodPlan) -> Vec<Command> {
     let facts = summary(world, res, policy);
-    let mut commands = field_orders(res, policy, &facts);
+    let mut commands = field_orders(world, res, policy, &facts);
     commands.extend(storage::plan(res, policy, &facts));
     let roofed_store = res.colony.rooms.values().any(|room| {
         room.role == sim_core::rooms::RoomRole::Storehouse && super::housing::constructed(res, room)
@@ -48,7 +48,8 @@ pub fn plan(world: &World, res: &SimResources, policy: &FoodPlan) -> Vec<Command
     commands
 }
 
-/// Effective harvest snapshot and (immediate, durable, pending immediate, pending durable) units.
+/// Effective harvest snapshot and (immediate, durable, credited immediate, pending durable) units.
+/// Immediate credit includes pending output and executable net cooking conversion.
 pub fn budget_observation(
     world: &World,
     res: &SimResources,
@@ -70,6 +71,8 @@ pub fn budget_observation(
     }
     let (immediate, durable) = harvest::targets(&policy, &facts);
     let (pending_immediate, pending_durable) = harvest::pending_output(world, res, &policy, &facts);
+    let pending_immediate = pending_immediate
+        .saturating_add(cooking::convertible_immediate(world, res, &policy, &facts));
     Some((
         facts,
         (immediate, durable, pending_immediate, pending_durable),
@@ -103,7 +106,12 @@ fn seed_reserve(
     ))
 }
 
-fn field_orders(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -> Vec<Command> {
+fn field_orders(
+    world: &World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    facts: &FoodSummary,
+) -> Vec<Command> {
     let Some(plan) = &policy.cultivation else {
         return Vec::new();
     };
@@ -141,6 +149,12 @@ fn field_orders(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -> V
     if needed == 0 {
         return Vec::new();
     }
+    let mut reserved = super::planning::reserved_house_tiles(world, res, hearth);
+    for (_, site) in world.query::<&sim_core::colony::ColonySite>().iter() {
+        reserved.extend(site.tiles());
+    }
+    reserved.extend(res.colony.site_work_tiles.values().copied());
+    reserved.extend(res.colony.workshops.values().map(|shop| shop.work_tile()));
     let mut tiles = Vec::new();
     for y in 0..res.tile_grid.height {
         for x in 0..res.tile_grid.width {
@@ -149,6 +163,7 @@ fn field_orders(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -> V
                     &sim_core::colony::steward::Target::Tile(x, y),
                     res.current_tick,
                 )
+                && !reserved.contains(&(x, y))
                 && crate::runtime::cultivation::commands::zoneable(res, (x, y))
             {
                 tiles.push((x, y));

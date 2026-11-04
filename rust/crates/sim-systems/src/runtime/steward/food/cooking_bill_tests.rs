@@ -138,9 +138,9 @@ fn steward_created_food_bill_updates_its_initial_target_from_current_demand() {
         commands.contains(&Command::SetBillMode {
             workshop: 1,
             bill,
-            mode: BillMode::Maintain(1)
+            mode: BillMode::Maintain(3)
         }),
-        "four raw units leave one cooked slot within the five-unit reserve; commands={commands:?}"
+        "consuming two raw roots for three meals leaves five edible units; commands={commands:?}"
     );
 }
 
@@ -150,6 +150,7 @@ mod procurement_tests;
 #[test]
 fn reserved_seed_cooking_is_finite_and_does_not_reopen_after_completion() {
     let (mut world, mut res, mut policy, _) = fixture(true);
+    seed_reserve_meals(&mut res);
     let recipe = RecipeKind::from_name("porridge").expect("recipe");
     policy.recipes = vec![recipe];
     assert!(
@@ -298,6 +299,7 @@ fn reserved_seed_cooking_is_finite_and_does_not_reopen_after_completion() {
 #[test]
 fn seed_cooking_recipes_share_one_surplus_allocation() {
     let (world, mut res, mut policy, _) = fixture(true);
+    seed_reserve_meals(&mut res);
     let fruit = RecipeKind::from_name("fruit_porridge").expect("fruit recipe");
     let plain = RecipeKind::from_name("porridge").expect("plain recipe");
     policy.recipes = vec![fruit, plain];
@@ -333,6 +335,7 @@ fn seed_cooking_recipes_share_one_surplus_allocation() {
 #[test]
 fn seed_bootstrap_has_a_finite_physical_input_budget_and_stops_at_reserve() {
     let (mut world, mut res, policy, _) = fixture(true);
+    seed_reserve_meals(&mut res);
     let recipe = super::dependencies::seed_recipe(&policy).expect("seed conversion");
     let def = recipe.recipe().expect("recipe");
     res.colony.workshops.insert(
@@ -442,4 +445,217 @@ fn seed_bootstrap_has_a_finite_physical_input_budget_and_stops_at_reserve() {
         bill,
         suspended: true
     }));
+}
+
+fn seed_reserve_meals(res: &mut SimResources) {
+    crate::runtime::food::items::create_ground(
+        res,
+        (3, 2),
+        sim_core::colony::ItemSpec::raw(
+            sim_core::colony::ItemKind::from_name("roots").expect("roots"),
+            None,
+        ),
+        3,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("non-emergency physical meals");
+}
+
+#[test]
+fn emergency_cooking_spends_bootstrap_grain_before_people_starve() {
+    let (mut world, mut res, mut policy, _) = fixture(true);
+    let cultivation = knowledge::id("cultivation").expect("authored cultivation");
+    let known = Knowledge::from_entries(
+        knowledge::defs()
+            .nodes
+            .iter()
+            .filter(|node| node.id != cultivation)
+            .map(|node| KnowledgeEntry::new(node.id, Source::Oral, 1000, 0))
+            .collect(),
+    );
+    let first = world.query::<&Agent>().iter().next().expect("person").0;
+    world
+        .insert_one(first, known.clone())
+        .expect("pending cultivation discovery");
+    for id in 8..17 {
+        world.spawn((Agent { id }, Position::new(4, 4), known.clone()));
+    }
+    let porridge = RecipeKind::from_name("porridge").expect("porridge");
+    policy.recipes = vec![porridge];
+    let grain = sim_core::colony::ItemKind::from_name("wild_grain").expect("grain");
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        (2, 2),
+        sim_core::colony::ItemSpec::raw(grain, None),
+        36,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("real grain stock");
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(facts.usable_units, 0);
+    assert_eq!(
+        super::dependencies::seed_inputs(&world, &res, &policy, &facts).get(&grain),
+        Some(&36)
+    );
+    let commands = super::cooking::plan(&world, &res, &policy, &facts);
+    assert!(
+        commands.contains(&Command::AddBill {
+            workshop: 1,
+            recipe: porridge,
+            mode: BillMode::Make(8)
+        }),
+        "one daily budget of24 portions must be cookable from reserved grain: {commands:?}"
+    );
+    let seed_recipe = super::dependencies::seed_recipe(&policy).expect("seed recipe");
+    assert!(
+        !commands.iter().any(
+            |command| matches!(command, Command::AddBill { recipe, .. } if *recipe == seed_recipe)
+        ),
+        "new seed extraction cannot compete with emergency meals"
+    );
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        0,
+        "a proposed bill is not executable food"
+    );
+    assert!(
+        crate::commands::apply_and_log(
+            &mut world,
+            &mut res,
+            Command::Steward {
+                rule: 8,
+                command: Box::new(Command::AddBill {
+                    workshop: 1,
+                    recipe: porridge,
+                    mode: BillMode::Make(8),
+                }),
+            },
+            0
+        )
+        .accepted
+    );
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        0,
+        "an accepted bill without actual heat cannot displace forage"
+    );
+    res.fires.insert(1, sim_engine::FireState { lit: true });
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        24,
+        "physical grain and the accepted finite bill displace twenty-four future forage units"
+    );
+}
+
+#[test]
+fn executable_cooking_credit_counts_only_net_food_and_respects_suspension() {
+    let (world, mut res, policy, _) = fixture(true);
+    res.fires.insert(1, sim_engine::FireState { lit: true });
+    let roots = sim_core::colony::ItemKind::from_name("roots").expect("roots");
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        (2, 2),
+        sim_core::colony::ItemSpec::raw(roots, None),
+        2,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("physical ingredients");
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        1,
+        "two raw units are already counted; converting them to three adds only one"
+    );
+    res.fires.get_mut(&1).expect("hearth").lit = false;
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        0,
+        "supplyable ingredients without actual heat are not executable food"
+    );
+    res.fires.get_mut(&1).expect("hearth").lit = true;
+    res.colony.workshops.get_mut(&1).expect("shop").bills[0].suspended = true;
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        0,
+        "paused bills are not future food"
+    );
+    res.colony.workshops.get_mut(&1).expect("shop").bills[0].suspended = false;
+    let duplicate = res.colony.workshops[&1].bills[0].clone();
+    res.colony
+        .workshops
+        .get_mut(&1)
+        .expect("shop")
+        .bills
+        .push(duplicate);
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        1,
+        "multiple bills cannot duplicate their shared physical ingredients"
+    );
+}
+
+#[test]
+fn executable_cooking_credit_waits_for_the_required_pot_to_arrive() {
+    use sim_core::colony::{ItemKind, ItemSpec, ItemStack};
+    let (mut world, mut res, mut policy, _) = fixture(true);
+    res.fires.insert(1, sim_engine::FireState { lit: true });
+    let stew = RecipeKind::from_name("stew").expect("stew");
+    policy.recipes = vec![stew];
+    for (tile, name) in [((2, 2), "meat"), ((2, 3), "roots")] {
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            tile,
+            ItemSpec::raw(ItemKind::from_name(name).expect("input"), None),
+            1,
+            0,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("physical input");
+    }
+    assert!(
+        crate::commands::apply_and_log(
+            &mut world,
+            &mut res,
+            Command::Steward {
+                rule: 8,
+                command: Box::new(Command::AddBill {
+                    workshop: 1,
+                    recipe: stew,
+                    mode: BillMode::Make(1)
+                }),
+            },
+            0
+        )
+        .accepted
+    );
+    let pot = ItemKind::all()
+        .find(|kind| kind.definition().pot_capacity > 0)
+        .expect("vessel");
+    res.colony
+        .ground_items
+        .insert((3, 3), ItemStack::of(ItemSpec::raw(pot, None), 1));
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        0,
+        "a reachable vessel is only supplyable, not yet executable"
+    );
+    let vessel = res
+        .colony
+        .ground_items
+        .remove(&(3, 3))
+        .expect("real vessel");
+    res.colony
+        .workshops
+        .get_mut(&1)
+        .expect("shop")
+        .shelf
+        .push(vessel);
+    assert!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts) > 0,
+        "the same ingredients become executable only with the local pot and lit hearth"
+    );
 }

@@ -153,7 +153,7 @@ fn rule_data_accepts_a_new_identity_without_code_changes() {
         .replace("base_cells: 6", "base_cells: 7");
     let data = parse_rules(&changed).expect("data-only rule variant");
     assert_eq!(data.rules[0].id, 71);
-    assert_eq!(data.rules.len(), 8);
+    assert_eq!(data.rules.len(), 9);
     let mut expected = parse_rules(text).expect("bundled rules");
     expected.rules[0].id = 71;
     expected.rules[0].action = sim_core::colony::steward::Action::Stockpile {
@@ -364,7 +364,10 @@ fn assert_completed_bed_assignment(engine: &mut sim_engine::SimEngine) {
             .any(|record| matches!(&record.command,
         Command::Steward { command, .. } if matches!(**command,Command::SetRoomRole{..}))
                 && record.result.accepted),
-        "ordinary House role completion"
+        "ordinary House role completion; tick={} rooms={:?} overrides={:?}",
+        engine.current_tick(),
+        engine.resources.colony.rooms,
+        engine.resources.colony.room_overrides
     );
     assert_eq!(
         engine.resources.bed_of.len(),
@@ -494,9 +497,9 @@ fn assert_role_completion_replay_and_player_intent(
     }
 }
 
-/// D-minus1 restores immediate BASE production; experimental rule9 stays out.
+/// Stage 1 keeps survival tools immediate and separates seasonal fuel production.
 #[test]
-fn base_production_rule_fires_immediately_without_experimental_rule() {
+fn tools_rule_fires_immediately_without_grace() {
     let mut engine = sim_test::colony_engine(0);
     submit(
         &mut engine,
@@ -509,7 +512,7 @@ fn base_production_rule_fires_immediately_without_experimental_rule() {
     for _ in 0..360 {
         engine.tick();
     }
-    // BASE rule4 covers tools and production without a grace window.
+    // Rule 4 covers tools without a grace window.
     let production_fired = engine
         .resources
         .colony
@@ -518,16 +521,30 @@ fn base_production_rule_fires_immediately_without_experimental_rule() {
         .any(|r| matches!(&r.command, Command::Steward { rule, .. } if *rule == 4));
     assert!(
         production_fired,
-        "BASE production must fire within the first steward interval"
+        "tools production must fire within the first steward interval"
     );
-    let experimental_fired = engine
-        .resources
-        .colony
-        .command_log
+}
+
+#[test]
+fn teaching_is_player_requested_while_legacy_rule_remains_readable() {
+    use sim_core::colony::steward::{rules, Action, Condition};
+
+    let _engine = sim_test::colony_engine(0);
+    let current = rules().expect("bundled policy");
+    assert!(current.rules.iter().all(|rule| {
+        rule.id != 6
+            && rule.condition != Condition::KnowledgeRisk
+            && !matches!(rule.action, Action::Teach)
+    }));
+
+    // Removing default automation must not remove the retained rule schema or IDs.
+    let legacy = parse_rules(include_str!("fixtures/m6b_base_steward.ron"))
+        .expect("published BASE policy remains readable");
+    let teaching = legacy
+        .rules
         .iter()
-        .any(|r| matches!(&r.command, Command::Steward { rule, .. } if *rule == 9));
-    assert!(
-        !experimental_fired,
-        "experimental tools policy is retained in code, not enabled by default"
-    );
+        .find(|rule| rule.id == 6)
+        .expect("historical teaching rule");
+    assert_eq!(teaching.condition, Condition::KnowledgeRisk);
+    assert_eq!(teaching.action, Action::Teach);
 }

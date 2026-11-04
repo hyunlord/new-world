@@ -173,6 +173,7 @@ pub(super) fn plan(res: &SimResources, policy: &FoodPlan, facts: &FoodSummary) -
         {
             let tile = (x, y);
             if res.colony.zone_of_tile.contains_key(&tile)
+                || crate::runtime::cultivation::occupies(res, tile)
                 || res.colony.ground_items.contains_key(&tile)
                 || res.colony.designations.contains_key(&tile)
                 || res

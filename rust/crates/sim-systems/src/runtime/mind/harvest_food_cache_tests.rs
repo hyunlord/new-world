@@ -137,3 +137,34 @@ fn navigation_revision_repartitions_opened_and_closed_regions() {
         nearest(&fresh, &world, &res)
     );
 }
+
+#[test]
+fn steward_harvest_budget_credits_a_tile_once_and_stops_queued_overcommit() {
+    let (world, mut res) = fixture((1, 1), &[(1, 2), (2, 2)]);
+    res.steward.enabled = true;
+    res.steward.scope = sim_core::colony::steward::StewardScope::Food;
+    let mut budget = harvest_food::HarvestBudget::capture(&world, &res).unwrap();
+    assert!(budget.permits(&res, (1, 2)));
+    budget.commit(&res, (1, 2));
+    assert!(
+        !budget.permits(&res, (2, 2)),
+        "five roots fill one adult's immediate target"
+    );
+    assert!(
+        budget.permits(&res, (1, 2)),
+        "already accepted work may finish"
+    );
+    let after = budget.shortfall();
+    budget.commit(&res, (1, 2));
+    assert_eq!(budget.shortfall(), after);
+    res.colony
+        .designations
+        .insert((1, 2), sim_core::colony::Designation::Harvest);
+    let captured = harvest_food::HarvestBudget::capture(&world, &res).unwrap();
+    assert!(
+        !captured.permits(&res, (2, 2)),
+        "queued designation already occupies budget"
+    );
+    res.steward.enabled = false;
+    assert!(harvest_food::HarvestBudget::capture(&world, &res).is_none());
+}

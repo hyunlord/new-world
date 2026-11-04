@@ -20,6 +20,22 @@ type Tile = (u32, u32);
 fn distance(a: Tile, b: Tile) -> u32 {
     a.0.abs_diff(b.0).max(a.1.abs_diff(b.1))
 }
+pub(super) fn reserved_house_tiles(
+    world: &World,
+    res: &SimResources,
+    hearth: Tile,
+) -> BTreeSet<Tile> {
+    sim_core::colony::steward::rules()
+        .ok()
+        .and_then(|data| {
+            data.rules.iter().find(|rule| {
+                matches!(rule.action, Action::House { .. }) && res.steward.scope.permits(rule.scope)
+            })
+        })
+        .map(|rule| house(world, res, hearth, &rule.action, true).reserved)
+        .unwrap_or_default()
+}
+
 fn interior_tiles(res: &SimResources) -> Vec<Tile> {
     (1..res.tile_grid.height.saturating_sub(1))
         .flat_map(|y| (1..res.tile_grid.width.saturating_sub(1)).map(move |x| (x, y)))
@@ -249,22 +265,40 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                 ) {
                     continue;
                 }
-                if target == 0 {
-                    continue;
-                }
                 if let Some((&id, shop)) = res
                     .colony
                     .workshops
                     .iter()
                     .find(|(_, s)| def.supports_workshop(s.kind))
                 {
-                    if shop.bills.iter().any(|b| {
-                        b.recipe == recipe
-                            && (!b.auto || super::production::player_edited_bill(res, id, b.id))
-                    }) || res
+                    if res
                         .steward
                         .vetoed(&Target::Bill(id, recipe.code()), res.current_tick)
                     {
+                        continue;
+                    }
+                    if let Some(bill) = shop.bills.iter().find(|bill| bill.recipe == recipe) {
+                        let owned = res.steward.owned.iter().any(|owned| {
+                            matches!(&owned.command, Command::AddBill { workshop, recipe: kind, .. }
+                                if *workshop == id && *kind == recipe)
+                        });
+                        if !(bill.auto || owned)
+                            || bill.suspended
+                            || super::production::player_edited_bill(res, id, bill.id)
+                        {
+                            continue;
+                        }
+                        let mode = BillMode::Maintain(target);
+                        if bill.mode != mode {
+                            out.push(Command::SetBillMode {
+                                workshop: id,
+                                bill: bill.id,
+                                mode,
+                            });
+                        }
+                        continue;
+                    }
+                    if target == 0 {
                         continue;
                     }
                     out.push(Command::AddBill {
@@ -272,26 +306,17 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                         recipe,
                         mode: BillMode::Maintain(target),
                     });
-                } else if !world
-                    .query::<&ColonySite>()
-                    .iter()
-                    .any(|(_, s)| def.supports_workshop(s.kind))
+                } else if target > 0
+                    && !world
+                        .query::<&ColonySite>()
+                        .iter()
+                        .any(|(_, s)| def.supports_workshop(s.kind))
                     && pending.insert(def.workshop)
                 {
                     profile.attempt();
                     profile.phase(2);
-                    let reserved_house = reserved_house.get_or_insert_with(|| {
-                        sim_core::colony::steward::rules()
-                            .ok()
-                            .and_then(|data| {
-                                data.rules.iter().find(|rule| {
-                                    matches!(rule.action, Action::House { .. })
-                                        && res.steward.scope.permits(rule.scope)
-                                })
-                            })
-                            .map(|rule| house(world, res, hearth, &rule.action, true).reserved)
-                            .unwrap_or_default()
-                    });
+                    let reserved_house = reserved_house
+                        .get_or_insert_with(|| reserved_house_tiles(world, res, hearth));
                     profile.phase(3);
                     let footprint_size = res.rules.colony.map(|rule| def.workshop.plan(&rule).0);
                     let locations = if footprint_size.is_some() {
@@ -312,7 +337,16 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                                     (t.0..t.0 + size.0).all(|x| !reserved_house.contains(&(x, y)))
                                 })
                         });
-                        avoids_house && permitted(res, t) && {
+                        let avoids_fields = footprint_size.is_some_and(|size| {
+                            !crate::runtime::cultivation::occupies(
+                                res,
+                                sim_core::colony::workshop::work_tile_of(t, size),
+                            ) && (t.1..t.1 + size.1).all(|y| {
+                                (t.0..t.0 + size.0)
+                                    .all(|x| !crate::runtime::cultivation::occupies(res, (x, y)))
+                            })
+                        });
+                        avoids_house && avoids_fields && permitted(res, t) && {
                             profile.check();
                             check_blueprint(res, def.workshop, t.0, t.1).is_ok()
                         }
@@ -669,6 +703,11 @@ fn house(
     for (x, y, width, height) in locations {
         profile.visit();
         if x + width + 2 >= res.tile_grid.width || y + height + 2 >= res.tile_grid.height {
+            continue;
+        }
+        if (y..=y + height + 1).any(|yy| {
+            (x..=x + width + 1).any(|xx| crate::runtime::cultivation::occupies(res, (xx, yy)))
+        }) {
             continue;
         }
         let centre = (x + width.div_ceil(2), y + height.div_ceil(2));
@@ -1930,3 +1969,7 @@ impl Drop for BillsProfile {
         eprintln!("MUX2_BILLS_PROFILE {{\"tick\":{},\"total_ns\":{},\"other_ns\":{},\"inputs_ns\":{},\"reserve_ns\":{},\"generation_ns\":{},\"ranking_ns\":{},\"search_ns\":{},\"attempts\":{},\"candidates\":{},\"visited\":{},\"blueprint_checks\":{}}}", sample.tick, total, sample.times[0], sample.times[1], sample.times[2], sample.times[3], sample.times[4], sample.times[5], sample.attempts, sample.candidates, sample.visited, sample.checks);
     }
 }
+
+#[cfg(test)]
+#[path = "fuel_bill_tests.rs"]
+mod fuel_bill_tests;

@@ -99,6 +99,21 @@ pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
     if sim_core::colony::knowledge::gates().designation(Designation::Harvest) & !practice != 0 {
         return Ok(EffectStatus::Finished);
     }
+    let emergency = c
+        .world
+        .get::<&sim_core::components::Hunger>(c.entity)
+        .is_ok_and(|hunger| hunger.value > crate::runtime::agent_actions::needs::HUNGER_THRESHOLD)
+        && !c.availability.food;
+    if !emergency
+        && c.effects.harvest_budget.as_ref().is_some_and(|budget| {
+            !budget
+                .lock()
+                .expect("harvest budget")
+                .permits(c.resources, tile)
+        })
+    {
+        return Ok(EffectStatus::Finished);
+    }
     if previous.is_some() {
         let carry = c
             .world
@@ -156,6 +171,12 @@ pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
                 kind: Designation::Harvest.code(),
             },
         );
+    }
+    if let Some(budget) = &c.effects.harvest_budget {
+        budget
+            .lock()
+            .expect("harvest budget")
+            .commit(c.resources, tile);
     }
     crate::runtime::jobs::cancel::reserve(c.resources, ReserveKey::Plant(tile), c.agent);
     c.resources.colony.tallies.jobs_taken += 1;

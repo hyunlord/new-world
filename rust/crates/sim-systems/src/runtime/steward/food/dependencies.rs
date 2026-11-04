@@ -143,7 +143,7 @@ pub(super) fn ingredient_deficits(
     }
     let mut immediate: BTreeMap<ItemKind, u64> = BTreeMap::new();
     for recipe in &eligible {
-        let target = super::cooking::daily_target(policy, facts, eligible.len(), recipe.output.0);
+        let target = super::cooking::daily_target(policy, facts, eligible.len(), recipe.id);
         // Use the bill's own count, including assigned crafts and pending output.
         let made = crate::runtime::jobs::bills::bill_count(world, res, recipe.output.0);
         let batches = u64::from(u32::from(target).saturating_sub(made))

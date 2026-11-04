@@ -449,7 +449,7 @@ pub struct RunningMetadata {
 
 /// Whether the steward's food plan runs (on, scope All or Food). It already plans the colony's
 /// winter stores, so R2-1's fallback for unplanned colonies stays off (R2-1C).
-fn steward_plans_food(resources: &SimResources) -> bool {
+pub(super) fn steward_plans_food(resources: &SimResources) -> bool {
     resources.steward.enabled
         && matches!(
             resources.steward.scope,
@@ -634,6 +634,7 @@ pub struct TickContext {
     gather_cache: RefCell<BTreeMap<GatherCacheKey, GatherCacheValue>>,
     food_index: RefCell<FoodIndex>,
     pub(super) harvest_food: RefCell<Option<Arc<super::harvest_food::PlantCandidates>>>,
+    pub(super) harvest_budget: Option<Arc<std::sync::Mutex<super::harvest_food::HarvestBudget>>>,
     /// Last actual plant query in the current decision visit; no retained per-person cache.
     pub(super) plant_query_observation: RefCell<Option<(AgentId, bool)>>,
     /// R2-3: whether any reachable storage in a nav region has room for a food kind today, keyed
@@ -838,6 +839,8 @@ impl TickContext {
             gather_cache: RefCell::new(BTreeMap::new()),
             physical_food: RefCell::default(),
             harvest_food: RefCell::default(),
+            harvest_budget: super::harvest_food::HarvestBudget::capture(world, resources)
+                .map(|budget| Arc::new(std::sync::Mutex::new(budget))),
             plant_query_observation: RefCell::default(),
             storage_room: RefCell::default(),
             plant_answer: RefCell::default(),
@@ -902,6 +905,7 @@ impl TickContext {
                         .rules
                         .agent
                         .forage
+                        .filter(|_| self.harvest_budget.is_none())
                         .and(resources.rules.society.stock_target)
                         .map(|rule| rule.hoard_cap_factor * target);
                     // R2-1B: the winter part counts only food that lasts through winter. A
@@ -924,7 +928,12 @@ impl TickContext {
                     } else {
                         0.0
                     };
-                    let deficit = base.max(winter);
+                    let deficit = self.harvest_budget.as_ref().map_or_else(
+                        || base.max(winter),
+                        |budget| {
+                            f64::from(u8::from(budget.lock().expect("harvest budget").shortfall()))
+                        },
+                    );
                     (sid, (stored > 0, in_hand, deficit > 0.0, cap, deficit))
                 })
                 .collect();

@@ -76,7 +76,9 @@ pub(super) fn plan(res: &SimResources, rule: &Rule) -> Option<Command> {
         })
         .collect();
     for room in res.colony.rooms.values() {
-        if !super::housing::constructed(res, room) || room.role == role {
+        if !super::housing::constructed(res, room)
+            || res.colony.room_overrides.get(&room.id) == Some(&role)
+        {
             continue;
         }
         let finished: Vec<_> = room

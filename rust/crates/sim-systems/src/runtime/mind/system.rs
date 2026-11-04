@@ -152,6 +152,7 @@ impl ColonyMindSystem {
             Some(&effects.forage_plans),
         )
         .map_err(failure)?;
+        effects.harvest_budget.clone_from(&context.harvest_budget);
         *context.harvest_food.borrow_mut() = Some(self.harvest_food.snapshot(resources));
         let mut pending: Vec<_> = context.rows().iter().map(|row| row.agent).collect();
         let mut completed = BTreeSet::new();
