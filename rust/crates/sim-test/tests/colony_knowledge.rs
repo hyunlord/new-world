@@ -890,6 +890,30 @@ fn era_progress_follows_marker_practitioners_and_tops_out_at_642() {
         1,
         "신석기 전환기: 신석기 시대 is out of reach in M4"
     );
+    // Keep the old-marker control, then exercise the new data-defined marker.
+    let now = engine.current_tick();
+    for entity in &adults {
+        let mut known = (*engine
+            .world
+            .get::<&Knowledge>(*entity)
+            .expect("adult knowledge"))
+        .clone();
+        known.set(id("cultivation"), 600, Source::Discovered, now);
+        engine
+            .world
+            .insert_one(*entity, known)
+            .expect("cultivation practitioner");
+    }
+    run_until(&mut engine, 240, |engine| {
+        engine.resources.colony.tech.states[usize::from(id("cultivation"))].practitioners
+            == u16::try_from(adults.len()).expect("adult count")
+    });
+    let farming_top = engine.resources.colony.tech.progress_permille;
+    assert!(
+        farming_top > 643,
+        "farming must lift the actual aggregate ceiling"
+    );
+    assert_eq!(farming_top, 857);
 }
 
 /// Goal 3.5 / §8: at least 3 clay banks lie within 24 tiles of the camp on at

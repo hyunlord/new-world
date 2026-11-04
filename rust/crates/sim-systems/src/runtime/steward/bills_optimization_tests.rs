@@ -397,3 +397,250 @@ fn bills_order_preserves_real_validation_prefix_and_independent_nav_stats() {
         }
     }
 }
+
+fn tool_progression_fixture(player_basic: bool) -> (sim_engine::SimEngine, Rule, u32, u32) {
+    use sim_core::colony::{
+        knowledge::{KnowledgeEntry, Source},
+        RecipeKind, Workshop,
+    };
+    let mut e = crate::worldgen::build_world_with(
+        &crate::worldgen::WorldGenConfig::colony(1),
+        sim_core::rules::WorldRules::colony(1),
+    );
+    let fine = RecipeKind::from_name("knap_fine_blade").expect("fine");
+    let basic = RecipeKind::from_name("knap_blade").expect("basic");
+    let pressure = knowledge::defs()
+        .id_of("pressure_flaking")
+        .expect("pressure");
+    let mut rule = sim_core::colony::steward::rules()
+        .expect("rules")
+        .rules
+        .iter()
+        .find(|rule| rule.id == 4)
+        .expect("tools")
+        .clone();
+    let Action::Bills {
+        recipes,
+        days,
+        fuel,
+        ..
+    } = &mut rule.action
+    else {
+        panic!("Bills")
+    };
+    *recipes = vec![(fine, 4), (basic, 4)];
+    *days = 0;
+    *fuel = None;
+    let entities: Vec<_> = e
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(entity, _)| entity)
+        .collect();
+    let known = Knowledge::from_entries(
+        knowledge::defs()
+            .nodes
+            .iter()
+            .filter(|node| node.id != pressure)
+            .map(|node| KnowledgeEntry::new(node.id, Source::Seeded, 1000, 0))
+            .collect(),
+    );
+    for &entity in &entities {
+        e.world
+            .insert_one(entity, known.clone())
+            .expect("knowledge");
+    }
+    let shop = 900;
+    let at = hearth_tiles(&e.resources)[0];
+    e.resources.colony.workshops.insert(
+        shop,
+        Workshop {
+            id: shop,
+            kind: basic.recipe().expect("recipe").workshop,
+            top_left: at,
+            size: (1, 1),
+            bills: Vec::new(),
+            shelf: Vec::new(),
+            active: None,
+        },
+    );
+    let add = Command::AddBill {
+        workshop: shop,
+        recipe: basic,
+        mode: BillMode::Maintain(4),
+    };
+    let command = if player_basic {
+        add
+    } else {
+        Command::Steward {
+            rule: rule.id,
+            command: Box::new(add),
+        }
+    };
+    assert!(crate::commands::apply_and_log(&mut e.world, &mut e.resources, command, 0).accepted);
+    assert!(!plan(&e.world, &e.resources, &rule)
+        .iter()
+        .any(|command| matches!(command, Command::AddBill { recipe, .. } if *recipe == fine)));
+    e.world
+        .get::<&mut Knowledge>(entities[0])
+        .expect("holder")
+        .raise_to(pressure, 500, Source::Discovered, 0);
+    let additions = plan(&e.world, &e.resources, &rule);
+    let add_fine = additions.into_iter().find(|command|
+        matches!(command, Command::AddBill { workshop, recipe, .. } if *workshop == shop && *recipe == fine))
+        .expect("fine admitted after discovery");
+    assert!(
+        crate::commands::apply_and_log(
+            &mut e.world,
+            &mut e.resources,
+            Command::Steward {
+                rule: rule.id,
+                command: Box::new(add_fine)
+            },
+            1
+        )
+        .accepted
+    );
+    let bills = &e.resources.colony.workshops[&shop].bills;
+    assert_eq!(
+        bills.iter().map(|bill| bill.recipe).collect::<Vec<_>>(),
+        vec![basic, fine]
+    );
+    let fine_id = bills[1].id;
+    (e, rule, shop, fine_id)
+}
+
+#[test]
+fn tool_progression_reconciles_owned_order_after_delayed_discovery() {
+    let (mut e, rule, shop, fine) = tool_progression_fixture(false);
+    let before = e.resources.colony.workshops[&shop].bills.clone();
+    let promotion = Command::MoveBill {
+        workshop: shop,
+        bill: fine,
+        up: true,
+    };
+    let commands = plan(&e.world, &e.resources, &rule);
+    assert!(
+        commands.contains(&promotion),
+        "missing authored preference: {commands:?}"
+    );
+    assert!(
+        crate::commands::apply_and_log(
+            &mut e.world,
+            &mut e.resources,
+            Command::Steward {
+                rule: rule.id,
+                command: Box::new(promotion)
+            },
+            2
+        )
+        .accepted
+    );
+    let after = &e.resources.colony.workshops[&shop].bills;
+    assert_eq!(
+        after,
+        &vec![before[1], before[0]],
+        "move retains bill identities and all counters"
+    );
+    assert!(!plan(&e.world, &e.resources, &rule)
+        .iter()
+        .any(|command| matches!(command, Command::MoveBill { .. })));
+}
+
+#[test]
+fn tool_progression_preserves_both_neighbours_manual_order_and_vetoes() {
+    for edit_fine in [false, true] {
+        let (mut e, rule, shop, fine) = tool_progression_fixture(false);
+        let basic = e.resources.colony.workshops[&shop].bills[0].id;
+        for up in [true, false] {
+            let (bill, up) = if edit_fine { (fine, up) } else { (basic, !up) };
+            assert!(
+                crate::commands::apply_and_log(
+                    &mut e.world,
+                    &mut e.resources,
+                    Command::MoveBill {
+                        workshop: shop,
+                        bill,
+                        up
+                    },
+                    2
+                )
+                .accepted
+            );
+        }
+        assert!(!plan(&e.world, &e.resources, &rule)
+            .iter()
+            .any(|command| matches!(command, Command::MoveBill { .. })));
+    }
+    for veto_fine in [false, true] {
+        let (mut e, rule, shop, _) = tool_progression_fixture(false);
+        let recipe = e.resources.colony.workshops[&shop].bills[usize::from(veto_fine)].recipe;
+        e.resources
+            .steward
+            .vetoes
+            .insert(Target::Bill(shop, recipe.code()), 1000);
+        assert!(!plan(&e.world, &e.resources, &rule)
+            .iter()
+            .any(|command| matches!(command, Command::MoveBill { .. })));
+    }
+    let (e, rule, _, _) = tool_progression_fixture(true);
+    assert!(!plan(&e.world, &e.resources, &rule)
+        .iter()
+        .any(|command| matches!(command, Command::MoveBill { .. })));
+}
+
+#[test]
+fn tool_progression_leaves_inflight_work_and_suspended_bills_untouched() {
+    use sim_core::colony::{ItemKind, Job, JobKind, JobStage};
+    for selected in 0..3 {
+        let (mut e, rule, shop, fine) = tool_progression_fixture(false);
+        let basic = e.resources.colony.workshops[&shop].bills[0].id;
+        let at = e.resources.colony.workshops[&shop].work_tile();
+        let kind = match selected {
+            0 => JobKind::Craft {
+                workshop: shop,
+                bill: basic,
+                at,
+            },
+            1 => JobKind::Craft {
+                workshop: shop,
+                bill: fine,
+                at,
+            },
+            _ => JobKind::Supply {
+                workshop: shop,
+                from: at,
+                to: at,
+            },
+        };
+        let job = Job {
+            kind,
+            stage: JobStage::Working { ticks_left: 30 },
+            taken_at: 0,
+            amount: 1,
+            item: ItemKind::from_name("flint").expect("flint"),
+            material: None,
+            fetch: None,
+            best_distance: 0,
+            progress_tick: 0,
+        };
+        let entity = e.world.spawn((job,));
+        assert!(!plan(&e.world, &e.resources, &rule)
+            .iter()
+            .any(|command| matches!(command, Command::MoveBill { .. })));
+        assert_eq!(*e.world.get::<&Job>(entity).expect("still working"), job);
+    }
+    for index in 0..2 {
+        let (mut e, rule, shop, _) = tool_progression_fixture(false);
+        e.resources
+            .colony
+            .workshops
+            .get_mut(&shop)
+            .expect("shop")
+            .bills[index]
+            .suspended = true;
+        assert!(!plan(&e.world, &e.resources, &rule)
+            .iter()
+            .any(|command| matches!(command, Command::MoveBill { .. })));
+    }
+}

@@ -376,6 +376,10 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                     }
                 }
             }
+            let preference: Vec<_> = recipes.iter().map(|(recipe, _)| *recipe).collect();
+            if let Some(command) = super::production::preferred_bill_move(world, res, &preference) {
+                out.push(command);
+            }
             out
         }
         Action::Hunt {
@@ -1283,6 +1287,7 @@ fn winter_daily_fuel(res: &SimResources) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use sim_core::colony::RecipeKind;
     #[test]
     fn seasonal_fuel_rounds_real_recipe_batches_and_tools_have_no_fuel() {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
@@ -1305,7 +1310,14 @@ mod tests {
         };
         assert_eq!(*days, 0);
         assert!(fuel.is_none());
-        assert_eq!(recipes.len(), 2);
+        assert_eq!(
+            recipes,
+            &vec![
+                (RecipeKind::HaftAxe, 2),
+                (RecipeKind::KnapFineBlade, 4),
+                (RecipeKind::KnapBlade, 4),
+            ]
+        );
         let fuel = data.rules.iter().find(|rule| rule.id == 9).expect("fuel");
         let Action::Bills {
             winter_recipe,

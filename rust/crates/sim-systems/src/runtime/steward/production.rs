@@ -223,6 +223,72 @@ pub(super) fn player_edited_bill(res: &SimResources, workshop: u32, bill: u32) -
     })
 }
 
+/// Restore one adjacent authored preference without replacing bills or interrupting work.
+pub(super) fn preferred_bill_move(
+    world: &World,
+    res: &SimResources,
+    recipes: &[RecipeKind],
+) -> Option<Command> {
+    use sim_core::colony::{Job, JobKind};
+    for (&workshop, shop) in &res.colony.workshops {
+        for pair in shop.bills.windows(2) {
+            let (earlier, later) = (&pair[0], &pair[1]);
+            let Some(earlier_rank) = recipes.iter().position(|recipe| *recipe == earlier.recipe)
+            else {
+                continue;
+            };
+            let Some(later_rank) = recipes.iter().position(|recipe| *recipe == later.recipe) else {
+                continue;
+            };
+            if later_rank >= earlier_rank {
+                continue;
+            }
+            let owner = |bill: &sim_core::colony::Bill| {
+                if bill.suspended
+                    || player_edited_bill(res, workshop, bill.id)
+                    || res.steward.vetoed(
+                        &Target::Bill(workshop, bill.recipe.code()),
+                        res.current_tick,
+                    ) || res.colony.command_log.iter().any(|record| {
+                    record.result.accepted
+                        && matches!(record.command, Command::AddBill { workshop: id, recipe, .. }
+                                if id == workshop && recipe == bill.recipe)
+                }) {
+                    return None;
+                }
+                res.steward.owned.iter().find_map(|order| {
+                    matches!(order.command, Command::AddBill { workshop: id, recipe, .. }
+                        if id == workshop && recipe == bill.recipe)
+                    .then_some(order.rule)
+                })
+            };
+            let Some(source) = owner(earlier) else {
+                continue;
+            };
+            if owner(later) != Some(source) {
+                continue;
+            }
+            let busy = world.query::<&Job>().iter().any(|(_, job)| match job.kind {
+                JobKind::Supply { workshop: id, .. } => id == workshop,
+                JobKind::Craft {
+                    workshop: id, bill, ..
+                } => id == workshop && (bill == earlier.id || bill == later.id),
+                _ => false,
+            }) || res.food.pending_drying.iter().any(|batch| {
+                batch.workshop == workshop && (batch.bill == earlier.id || batch.bill == later.id)
+            });
+            if !busy {
+                return Some(Command::MoveBill {
+                    workshop,
+                    bill: later.id,
+                    up: true,
+                });
+            }
+        }
+    }
+    None
+}
+
 #[cfg(test)]
 #[path = "production_optimization_tests.rs"]
 mod optimization_tests;

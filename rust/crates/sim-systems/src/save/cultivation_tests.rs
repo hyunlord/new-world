@@ -176,3 +176,176 @@ fn full_save_roundtrip_preserves_physical_origin_and_work_in_progress() {
         .any(|(_, (agent, job))| agent.id == 7
             && matches!(job.stage, JobStage::Working { ticks_left: 12 })));
 }
+
+#[test]
+fn inflight_sowing_roundtrip_continues_once_with_nonempty_fields_and_soil() {
+    use sim_core::colony::content::installed_or_bundled;
+    use sim_core::colony::{Carry, ItemSpec, Job, JobKind, JobStage};
+    use sim_core::components::{Agent, AgentState, Position, SeekTarget, Settlement, TargetKind};
+    use sim_engine::RuntimeSystem;
+    let mut engine = SimEngine::new(8, 8, MaterialRegistry::new());
+    engine.resources.rules = sim_core::rules::WorldRules::colony(0);
+    engine.resources.rules.clock_offset_ticks = 0;
+    engine
+        .resources
+        .rules
+        .colony
+        .as_mut()
+        .expect("colony")
+        .knowledge = None;
+    engine
+        .resources
+        .nav
+        .install(sim_core::nav::CostMap::new(8, 8));
+    let crop = installed_or_bundled().crop_by_name("emmer").expect("crop");
+    let def = installed_or_bundled().crop(crop).expect("definition");
+    let mut home = Settlement::new_with_id(1, 0);
+    home.member_agents.insert(7);
+    engine.resources.settlements.insert(1, home);
+    for (tile, phase, active, work) in [
+        ((2, 2), FieldPhase::Tilled, true, FieldWork::Now),
+        (
+            (3, 3),
+            FieldPhase::Sown { planted_day: 0 },
+            false,
+            FieldWork::Paused,
+        ),
+    ] {
+        engine.resources.cultivation.fields.insert(
+            tile,
+            FieldTile {
+                owner: 1,
+                crop,
+                phase,
+                active,
+                work,
+                tended: true,
+            },
+        );
+        engine.resources.cultivation.fertility.insert(tile, 650);
+    }
+    crate::runtime::food::items::create_ground(
+        &mut engine.resources,
+        (1, 1),
+        ItemSpec::raw(def.seed_item, None),
+        def.seeds_per_tile,
+        0,
+        crate::runtime::food::items::FoodSource::Debug,
+    )
+    .expect("physical seed");
+    let job = Job {
+        kind: JobKind::SowField {
+            tile: (2, 2),
+            from: (1, 1),
+        },
+        stage: JobStage::ToSource,
+        taken_at: 0,
+        amount: def.seeds_per_tile,
+        item: def.seed_item,
+        material: None,
+        fetch: None,
+        best_distance: 0,
+        progress_tick: 0,
+    };
+    for key in job.keys() {
+        engine.resources.colony.reservations.insert(key, 7);
+    }
+    let entity = engine.world.spawn((
+        Agent { id: 7 },
+        Position::new(1, 1),
+        job,
+        AgentState::Seeking {
+            target: TargetKind::Job,
+        },
+        SeekTarget::new((1, 1)),
+    ));
+    let mut executor = crate::runtime::jobs::JobExecuteSystem::new();
+    executor.tick(&mut engine.world, &mut engine.resources);
+    assert_eq!(
+        engine
+            .world
+            .get::<&Carry>(entity)
+            .expect("seed cargo")
+            .count,
+        def.seeds_per_tile
+    );
+    engine
+        .world
+        .insert_one(entity, Position::new(2, 2))
+        .expect("fixture arrival");
+    engine.resources.current_tick += 1;
+    executor.tick(&mut engine.world, &mut engine.resources);
+    assert_eq!(
+        engine.world.get::<&Job>(entity).expect("sow work").stage,
+        JobStage::Working {
+            ticks_left: def.sow_ticks
+        }
+    );
+    assert_eq!(engine.resources.cultivation.counters.sowings, 0);
+    let before = engine.resources.cultivation.clone();
+    let before_ledger = engine.resources.colony.item_ledger.clone();
+    let bytes = save(&mut engine).expect("nonempty fields and in-flight sow save");
+    let mut loaded = load_with(&bytes, |_| {}).expect("load in-flight sow");
+    assert_eq!(loaded.resources.cultivation, before);
+    assert_eq!(loaded.resources.colony.item_ledger, before_ledger);
+    assert!(loaded.world.query::<(&Agent, &Carry, &Job)>().iter().any(
+        |(_, (agent, carry, job))| agent.id == 7
+            && carry.count == def.seeds_per_tile
+            && job.stage
+                == JobStage::Working {
+                    ticks_left: def.sow_ticks
+                }
+    ));
+    for candidate in [&mut engine, &mut loaded] {
+        let mut executor = crate::runtime::jobs::JobExecuteSystem::new();
+        for _ in 0..def.sow_ticks {
+            candidate.resources.current_tick += 1;
+            executor.tick(&mut candidate.world, &mut candidate.resources);
+        }
+        assert_eq!(
+            candidate.resources.cultivation.fields[&(2, 2)].phase,
+            FieldPhase::Sown { planted_day: 0 }
+        );
+        assert_eq!(candidate.resources.cultivation.counters.sowings, 1);
+        assert_eq!(
+            candidate.resources.cultivation.counters.seed_units_sown[&crop],
+            u64::from(def.seeds_per_tile)
+        );
+        assert_eq!(candidate.resources.cultivation.fertility[&(2, 2)], 650);
+        assert_eq!(
+            candidate.resources.cultivation.fields[&(3, 3)],
+            before.fields[&(3, 3)]
+        );
+        assert!(candidate.world.query::<&Carry>().iter().next().is_none());
+        assert!(candidate.world.query::<&Job>().iter().next().is_none());
+        assert_eq!(
+            candidate
+                .resources
+                .colony
+                .item_ledger
+                .consumed
+                .get(&def.seed_item)
+                .copied()
+                .unwrap_or(0),
+            before_ledger
+                .consumed
+                .get(&def.seed_item)
+                .copied()
+                .unwrap_or(0)
+                + u64::from(def.seeds_per_tile)
+        );
+        let ledger = candidate.resources.colony.item_ledger.clone();
+        candidate.resources.current_tick += 1;
+        executor.tick(&mut candidate.world, &mut candidate.resources);
+        assert_eq!(
+            candidate.resources.colony.item_ledger, ledger,
+            "no second seed debit"
+        );
+        assert_eq!(candidate.resources.cultivation.counters.sowings, 1);
+    }
+    assert_eq!(engine.resources.cultivation, loaded.resources.cultivation);
+    assert_eq!(
+        engine.resources.colony.item_ledger,
+        loaded.resources.colony.item_ledger
+    );
+}

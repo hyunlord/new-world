@@ -382,6 +382,11 @@ pub(super) fn plan(
             }
         }
     }
+    if let Some(command) =
+        super::super::production::preferred_bill_move(world, res, &policy.recipes)
+    {
+        commands.push(command);
+    }
     commands
 }
 

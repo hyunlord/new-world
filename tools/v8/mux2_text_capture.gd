@@ -11,6 +11,7 @@ var inventory: Array[Dictionary] = []
 var causal_histories: Array[Dictionary] = []
 var failures: int = 0
 var field_observation: Dictionary = {}
+var field_observations: Array[Dictionary] = []
 func _init() -> void:
 	call_deferred("run")
 func frames(n: int = 5) -> void:
@@ -169,13 +170,17 @@ func verify_explanation(tile: Vector2i, source: String) -> void:
 		var label: Label = main.get_node("UI/OrderBar").get("_toast")
 		var expected: String = str(root.get_node("Locale").call("ltr","MUX_WHY_EMPTY"))
 		check(source+" empty why shows actual toast",toast.visible and label.text.replace("\u2060", "") == expected)
-func capture_field(world: Node) -> void:
+func capture_field(world: Node, scale: float, requested_phase: int = -1) -> void:
 	var rows: Array[Dictionary] = preload("res://scripts/ui/field_facts.gd").rows(world)
+	if requested_phase >= 0:
+		rows = rows.filter(func(row: Dictionary) -> bool: return bool(row["active"]) and int(row["phase"]) == requested_phase)
+		rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["x"]) < int(b["x"]) or (int(a["x"]) == int(b["x"]) and int(a["y"]) < int(b["y"])))
+		check("requested field phase %d exists" % requested_phase, not rows.is_empty())
 	if rows.is_empty():
 		return
 	var field: Dictionary = rows[0]
 	for row: Dictionary in rows:
-		if bool(row["active"]) and int(row["phase"]) > 0:
+		if requested_phase < 0 and bool(row["active"]) and int(row["phase"]) > 0:
 			field = row
 			break
 	var tile := Vector2i(int(field["x"]), int(field["y"]))
@@ -188,7 +193,7 @@ func capture_field(world: Node) -> void:
 	camera.reset_smoothing()
 	camera.force_update_scroll()
 	await frames(10)
-	var tag: String = "field-phase-%d-ko-1_0" % int(field["phase"])
+	var tag: String = "field-phase-%d-ko-%s" % [int(field["phase"]), "1_0" if scale == 1.0 else "1_25"]
 	await capture(tag + "-map")
 	# A tile corner avoids the farmer sprite; selection still traverses real map input.
 	var point: Vector2 = root.get_canvas_transform() * (View.tile_to_world(tile) + Vector2(8, 8))
@@ -199,8 +204,11 @@ func capture_field(world: Node) -> void:
 	check("field map click opens selected inspector", panel.is_visible_in_tree() and panel.get("_tile") == tile)
 	if panel.is_visible_in_tree() and panel.get("_tile") == tile:
 		var label: Label = panel.get("_text") as Label
-		field_observation = {"shot": tag, "field": field, "tick": SimReads.read(world, "get_time_snapshot").get("tick", -1), "inspector_text": label.text}
-		check("field inspector uses requested scale", panel.scale.is_equal_approx(Vector2.ONE))
+		var observation: Dictionary = {"scale": scale, "shot": tag, "field": field, "tick": SimReads.read(world, "get_time_snapshot").get("tick", -1), "inspector_text": label.text}
+		field_observations.append(observation)
+		if field_observation.is_empty():
+			field_observation = observation
+		check("field inspector uses requested scale", panel.scale.is_equal_approx(Vector2.ONE * scale))
 		await capture(tag + "-inspector")
 		await click(panel.get("_close") as Control)
 		check("field inspector closes through UI", not panel.is_visible_in_tree())
@@ -222,6 +230,13 @@ func run() -> void:
 	main.get_node("Camera2D").call("set_paused",true)
 	root.get_node("Locale").call("set_language","ko")
 	var arguments: PackedStringArray = OS.get_cmdline_user_args()
+	var requested_phase: int = -1
+	if arguments.size() > 1:
+		if arguments.size() != 3 or arguments[1] != "--field-phase" or not arguments[2].is_valid_int() or int(arguments[2]) < 0 or int(arguments[2]) > 6:
+			check("usage: SAVE [--field-phase 0..6]", false)
+			quit(1)
+			return
+		requested_phase = int(arguments[2])
 	if arguments.size() > 0:
 		check("load real save",bool(SimReads.mutate(world,"load_world",[arguments[0]])))
 	await frames(15)
@@ -229,8 +244,8 @@ func run() -> void:
 		hud.get("store").set_value("ui_scale",scale)
 		var suffix: String = str(scale).replace(".","_")
 		await capture("hud-"+suffix)
-		if scale == 1.0 and not arguments.is_empty():
-			await capture_field(world)
+		if not arguments.is_empty():
+			await capture_field(world,scale,requested_phase)
 		var hover := InputEventMouseMotion.new()
 		hover.position = (hud.get_node("Actions/WhyButton") as Control).get_global_rect().get_center()
 		Input.parse_input_event(hover)
@@ -350,6 +365,6 @@ func run() -> void:
 	var file: FileAccess = FileAccess.open(out.path_join("text-nodes.json"),FileAccess.WRITE)
 	check("inventory writable",file != null)
 	if file != null:
-		file.store_string(JSON.stringify({"nodes":inventory,"causal_histories":causal_histories,"field_observation":field_observation,"failures":failures,"renderer":DisplayServer.get_name()},"\t"))
+		file.store_string(JSON.stringify({"nodes":inventory,"causal_histories":causal_histories,"field_observation":field_observation,"field_observations":field_observations,"failures":failures,"renderer":DisplayServer.get_name()},"\t"))
 	print("MUX2_TEXT_DONE failures=%d nodes=%d" % [failures,inventory.size()])
 	quit(1 if failures else 0)

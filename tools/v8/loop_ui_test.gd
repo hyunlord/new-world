@@ -1,6 +1,6 @@
 # tools/v8/loop_ui_test.gd — M-LOOP headless tests for the presentation items.
 #   Each test can fail: the name says which bug would still pass it.
-# usage: $GODOT_BIN --headless --path . --script res://tools/v8/loop_ui_test.gd
+# usage: $GODOT_BIN --headless --path . --script res://tools/v8/loop_ui_test.gd [-- --field-saves SOWABLE_SAVE RIPE_SAVE]
 extends SceneTree
 
 var _pass: int = 0
@@ -117,6 +117,12 @@ func _run() -> void:
 	_test_recommend_tools_low()
 	_test_recommend_idle_adults()
 	_test_recommend_wolves()
+
+	var arguments: PackedStringArray = OS.get_cmdline_user_args()
+	if not arguments.is_empty():
+		_assert(arguments.size() == 3 and arguments[0] == "--field-saves", "field arguments: --field-saves SOWABLE_SAVE RIPE_SAVE")
+		if arguments.size() == 3 and arguments[0] == "--field-saves":
+			_test_field_card_transitions(main, world, arguments)
 
 	print("LOOP_UI_TEST_DONE pass=%d fail=%d" % [_pass, _fail])
 	quit(1 if _fail > 0 else 0)
@@ -1063,3 +1069,69 @@ func _test_knowledge_card_steward_teaching(main: Node) -> void:
 		"no order: teach shown, leave hidden (%s)" % str(visible_none))
 	var leave_index: int = int(card_panel.call("_steward_option", opts, ordered))
 	_assert(str((opts[leave_index] as Dictionary)["text_key"]) == "LOOP_CARD_KNOWLEDGE_RISK_LEAVE", "steward-first recommendation is 그대로 두기")
+
+
+## Optional natural-save coverage: actual authored cards, no injected fields or active cards.
+func _test_field_card_transitions(main: Node, world: Node, arguments: PackedStringArray) -> void:
+	const FieldFacts = preload("res://scripts/ui/field_facts.gd")
+	var panel: Node = main.find_child("CardPanel", true, false)
+	_assert(panel != null, "field CardPanel exists")
+	if panel == null:
+		return
+	world.set_process(false)
+	world.call("set_sim_speed", 0.0)
+	for kind_index: int in 2:
+		var kind: String = ["sowing_window", "harvest_ready"][kind_index]
+		for mode: String in ["now", "paused", "auto"]:
+			var label: String = "field card %s -> %s" % [kind, mode]
+			var loaded: bool = bool(SimReads.mutate(world, "load_world", [arguments[kind_index + 1]]))
+			_assert(loaded, label + " loads natural save")
+			if not loaded:
+				continue
+			var target: Dictionary = FieldFacts.target(world, kind)
+			_assert(not target.is_empty(), label + " has eligible real target")
+			if target.is_empty():
+				continue
+			var tile := Vector2i(int(target["x"]), int(target["y"]))
+			var prior: String = "paused" if mode == "auto" else "auto"
+			var setup: Dictionary = SimReads.mutate(world, "cmd_set_field_work", [tile.x, tile.y, prior])
+			_assert(bool(setup.get("accepted", false)), label + " ordinary prior-mode setup accepted")
+			if not bool(setup.get("accepted", false)):
+				continue
+			var tick: int = int(SimReads.read(world, "get_time_snapshot").get("tick", -1))
+			panel.set("_last_tick", tick)
+			panel.call("_poll_triggers")
+			var active: Dictionary = panel.get("_active")
+			_assert(active.has(kind), label + " real trigger opens exact card")
+			if not active.has(kind):
+				continue
+			var card: Dictionary = active[kind]
+			var trigger: Dictionary = card.get("trigger_data", {})
+			_assert(int(trigger.get("x", -1)) == tile.x and int(trigger.get("y", -1)) == tile.y, label + " target matches actual field")
+			var definition: Dictionary = card.get("def", {})
+			var options: Array = definition.get("options", [])
+			var selected: int = -1
+			for index: int in options.size():
+				if str(options[index].get("command", "")) == "cmd_set_field_work" and str(options[index].get("params", "")) == mode:
+					selected = index
+			_assert(selected >= 0 and str(definition.get("default", "")) == "none", label + " authored option and no automatic expiry")
+			if selected < 0:
+				continue
+			var before: int = int(world.call("get_command_log", 9223372036854775807).get("total", -1))
+			var receipts_before: int = (panel.call("command_results") as Array).size()
+			var skipped_before: int = (panel.call("skipped_results") as Array).size()
+			panel.call("answer_card", kind, selected)
+			var log: Dictionary = world.call("get_command_log", before)
+			var kinds: PackedStringArray = log.get("kinds", PackedStringArray())
+			var accepted: PackedByteArray = log.get("accepted", PackedByteArray())
+			var ticks: PackedInt64Array = log.get("ticks", PackedInt64Array())
+			_assert(int(log.get("total", -1)) == before + 1 and kinds == PackedStringArray(["set_field_work"]) and accepted == PackedByteArray([1]) and ticks == PackedInt64Array([tick]), label + " exactly one native accepted command at same tick")
+			var receipts: Array = panel.call("command_results")
+			_assert(receipts.size() == receipts_before + 1 and (panel.call("skipped_results") as Array).size() == skipped_before, label + " one receipt and no skipped answer")
+			if receipts.size() == receipts_before + 1:
+				var receipt: Dictionary = receipts.back()
+				_assert(bool(receipt.get("accepted", false)) and int(receipt.get("log_index", -1)) == before and str(receipt.get("log_kind", "")) == "set_field_work", label + " receipt matches native log")
+			var after: Dictionary = FieldFacts.at(world, tile)
+			_assert(str(after.get("mode", "")) == mode and after.get("phase") == target.get("phase") and after.get("crop") == target.get("crop"), label + " mode changed without phase/crop mutation")
+			_assert(int(SimReads.read(world, "get_time_snapshot").get("tick", -1)) == tick, label + " no simulation advance")
+			_assert(not (panel.call("active_ids") as PackedStringArray).has(kind), label + " accepted answer closes exact card")

@@ -883,3 +883,93 @@ fn executable_cooking_credit_requires_one_practitioner_for_both_recipe_gates() {
         0
     );
 }
+
+fn delayed_grain_bill(steward_roots: bool) -> (World, SimResources, FoodPlan, u32, u32) {
+    let (mut world, mut res, mut policy, roots_bill) = fixture(steward_roots);
+    let porridge = RecipeKind::from_name("porridge").expect("porridge");
+    let roots = RecipeKind::from_name("roasted_roots").expect("roots recipe");
+    policy.recipes = vec![porridge, roots];
+    policy.cultivation = None;
+    res.fires.insert(1, sim_engine::FireState { lit: true });
+    for (name, tile) in [("roots", (2, 2)), ("wild_grain", (2, 3))] {
+        let item = sim_core::colony::ItemKind::from_name(name).expect("input item");
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            tile,
+            sim_core::colony::ItemSpec::raw(item, None),
+            4,
+            0,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("physical recipe inputs");
+    }
+    assert!(
+        crate::commands::apply_and_log(
+            &mut world,
+            &mut res,
+            Command::Steward {
+                rule: 8,
+                command: Box::new(Command::AddBill {
+                    workshop: 1,
+                    recipe: porridge,
+                    mode: BillMode::Make(3),
+                }),
+            },
+            1,
+        )
+        .accepted
+    );
+    let bills = &res.colony.workshops[&1].bills;
+    assert_eq!(
+        bills.iter().map(|bill| bill.recipe).collect::<Vec<_>>(),
+        vec![roots, porridge]
+    );
+    let porridge_bill = bills[1].id;
+    (world, res, policy, roots_bill, porridge_bill)
+}
+
+#[test]
+fn delayed_grain_food_bill_follows_authored_priority() {
+    let (world, res, policy, _, porridge_bill) = delayed_grain_bill(true);
+    let facts = super::summary(&world, &res, &policy);
+    let commands = super::cooking::plan(&world, &res, &policy, &facts);
+    assert!(
+        commands.contains(&Command::MoveBill {
+            workshop: 1,
+            bill: porridge_bill,
+            up: true,
+        }),
+        "late available grain must follow authored priority; commands={commands:?}"
+    );
+}
+
+#[test]
+fn delayed_grain_food_bill_preserves_player_bill_order() {
+    let (world, res, policy, _, _) = delayed_grain_bill(false);
+    let facts = super::summary(&world, &res, &policy);
+    assert!(!super::cooking::plan(&world, &res, &policy, &facts)
+        .iter()
+        .any(|command| matches!(command, Command::MoveBill { .. })));
+}
+
+#[test]
+fn delayed_grain_food_bill_preserves_player_edited_order() {
+    let (mut world, mut res, policy, roots_bill, _) = delayed_grain_bill(true);
+    assert!(
+        crate::commands::apply_and_log(
+            &mut world,
+            &mut res,
+            Command::SetBillMode {
+                workshop: 1,
+                bill: roots_bill,
+                mode: BillMode::Maintain(7)
+            },
+            2,
+        )
+        .accepted
+    );
+    let facts = super::summary(&world, &res, &policy);
+    assert!(!super::cooking::plan(&world, &res, &policy, &facts)
+        .iter()
+        .any(|command| matches!(command, Command::MoveBill { .. })));
+}
