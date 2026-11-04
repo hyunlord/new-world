@@ -972,3 +972,15 @@ Current additional UI verification uses existing files only: mux2_text_capture.g
 A proposed ordinary-haul-before-harvest explanation was withdrawn on source reread: only carcass recovery precedes harvest; ordinary loose haul/restock follow it. No source change used that incorrect hypothesis. Seed7 snapshots also contain14/21empty zoned cells atdays12/16, so raw capacity absence is not established.
 
 Identity05, docs12 and field-capture-strict01 completed18:53KST, actual wrapperexit0. Strict BASE32×120days:228748shared values/0differences/0one-sided paths;64chronicles/19683entries and64raw files equal; determinism0–3PASS. Frozen Rust patch79da95b4 unchanged. Both modified GDScripts parse/warnings clean and76FFI calls match exports. This is baseline/static validation, not final UI/card acceptance or calibration05 gameplay success.
+
+### Stage1 보정05 — 기준 유지, 전달 조건 결함 재현
+
+고정 d529e471a/probe222fda5b,8세계×96일이 모두 종료0(root13194),invariant0,원시68,483,523바이트다. 생존7/8,2년차 이전 파종6/8,3년차 밭 섭취30%는0/8(최고24.115451%). KnowledgeLost41 대 BASE1,세계별 허용3/8이며 #675는 seed4의 day7에1일·4단위로 악화됐다. seed7은 day20–21 전원 아사해 이전 보정보다 최종 멸종이3,792틱 빨라졌다. 개선된 곡물 조리량만으로 동결하지 않는다. 전체 표는 외부 calibration-05/RESULT.md에 보존했고 held-out은 미사용이다.
+
+기존 구현에 추가한 실제 전달 회귀는 supply-freshness-red01:1PASS/2FAIL, cooking-portability-red01:0PASS/1FAIL,각cargo종료101이다. 오래된 Store 곡물의 공급 수량2≠0,신선한 대안 대신 오래된 재고 선택,실제 Carried 전달이 Expired인 곡물의 음식 credit3≠0을 확인했다. 신선한 실제 전달과 비식량 대조군은 통과했다. 수정 후 결과와 최종 게임 수용 여부는 아직 미확인이다.
+
+독립 리뷰는 새 작업장별 입력 계산에서 Craft 예약을 다른 작업장 선반에서 차감할 수 있는 결함을 발견했다. 실제 예약 작업장 선반에서만 차감하도록 수정하고 두 작업장 회귀를 추가했으며 재리뷰에서 해당 지적을 해소했다. unit20은621통과/1실패/1기존ignore: 실패는 물리 입력 없이 summary.pieces만 채운 과거 가용성 fixture였다. 원래 수치 assertion을 유지하고 실제 곡물·열매를 넣는 fixture로 바꿨다. unit21은622시스템·17지식·2데이터 테스트,fmt 및 전체-target Clippy 경고0으로 종료0이다. frozen Rust patch3899f617; build13/identity06 진행 중이다.
+
+p10 자연 seed2의 저녁 tick66990/66991 저장을 기존 bridge getter로 읽었다(root52901 종료0). 두 읽기 모두 시각·원본 저장 바이트가 불변이며96일 최종 지문0ebcf30f911234ab-3e07282f20ba52cf가 보정05와 같다. 전문가1은 화덕 반경 안에 있었지만 pot_firing412/마지막사용54720이 그 저녁 갱신되지 않았고, 다른 주민 중 복습 조건350을 만족하는 사람도 없었다. 모임 부재나 시도 후 확률 실패라는 설명은 이 한 시점에서 배제된다. 정확한 대화 상대·후보 순서는 미관측이므로 새 구술 정책의 성공을 주장하지 않는다. 외부 일회성 읽기 스크립트는 기존 get_agent_knowledge 호출로82→85줄이며 이전 원본도 보존했다.
+
+build13·identity06·docs13이19:26KST 실제 종료0으로 완료됐다. BASE32×120일228,748값 차이0·한쪽만 있는 경로0,64연대기19,683항목·64원시 파일 동일,시드0–3 결정성 PASS다. 기존 정규화 제외 목록은 그대로다. Rust patch3899f617이 검증 내내 같았고 다음 보정용 probe03989b75를 별도 고정했다. 새 tools 파일/변경0이며 Stage1 tools 누적net475줄은 유지한다. 보정06·held-out·최종 UI/카드/성능/전체 gate·게시 결과는 아직 없다.

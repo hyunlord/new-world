@@ -973,3 +973,243 @@ fn delayed_grain_food_bill_preserves_player_edited_order() {
         .iter()
         .any(|command| matches!(command, Command::MoveBill { .. })));
 }
+
+#[test]
+fn executable_cooking_credit_excludes_store_grain_that_cannot_be_carried() {
+    use crate::runtime::food::{self, items};
+    use sim_core::colony::food::FoodOwner;
+    use sim_core::colony::{ItemKind, ItemSpec};
+
+    for born_day in [13, 0] {
+        let (mut world, mut res, mut policy, _) = fixture(true);
+        res.rules.clock_offset_ticks = 0;
+        res.ticks_per_day = res.rules.calendar.ticks_per_day;
+        res.current_tick = 13 * res.ticks_per_day;
+        let day = food::day(&res);
+        assert_eq!(day, 13);
+        let porridge = RecipeKind::from_name("porridge").expect("porridge");
+        let grain = ItemKind::from_name("wild_grain").expect("grain");
+        policy.recipes = vec![porridge];
+        policy.cultivation = None;
+        res.fires.insert(1, sim_engine::FireState { lit: true });
+        res.colony.rooms.insert(
+            90,
+            sim_core::rooms::Room {
+                id: 90,
+                tiles: std::collections::BTreeSet::from([(2, 2)]),
+                doors: std::collections::BTreeSet::new(),
+                roofed: true,
+                role: sim_core::rooms::RoomRole::Storehouse,
+                dug: false,
+            },
+        );
+        res.colony.room_of_tile.insert((2, 2), 90);
+        items::create_ground(
+            &mut res,
+            (2, 2),
+            ItemSpec::raw(grain, None),
+            4,
+            born_day,
+            items::FoodSource::Harvest,
+        )
+        .expect("fresh in actual storage class");
+        assert!(
+            crate::commands::apply_and_log(
+                &mut world,
+                &mut res,
+                Command::Steward {
+                    rule: 8,
+                    command: Box::new(Command::AddBill {
+                        workshop: 1,
+                        recipe: porridge,
+                        mode: BillMode::Make(2),
+                    })
+                },
+                0,
+            )
+            .accepted
+        );
+        let bill = res.colony.workshops[&1]
+            .bills
+            .iter()
+            .find(|bill| bill.recipe == porridge)
+            .expect("accepted bill")
+            .id;
+        res.colony.workshops.get_mut(&1).expect("shop").active = Some(bill);
+        let owner = FoodOwner::Ground((2, 2));
+        assert!(
+            food::storage::remaining_days(&world, &res, owner, day)
+                .expect("stored grain freshness")
+                > 0
+        );
+        let facts = super::summary(&world, &res, &policy);
+        assert_eq!(
+            facts.pieces.get(&grain),
+            Some(&4),
+            "physical stock is retained"
+        );
+        let credit = super::cooking::convertible_immediate(&world, &res, &policy, &facts);
+        if born_day == day {
+            assert!(credit > 0, "fresh transferable input backs real conversion");
+            assert_eq!(
+                items::transfer(&mut world, &mut res, owner, FoodOwner::Carried(7), 2, day),
+                Ok(2)
+            );
+        } else {
+            assert_eq!(
+                items::transfer(&mut world, &mut res, owner, FoodOwner::Carried(7), 2, day),
+                Err(items::FoodError::Expired)
+            );
+            assert_eq!(res.colony.ground_items[&(2, 2)].count, 4);
+            assert_eq!(
+                credit, 0,
+                "stored but uncarryable grain cannot displace food harvest"
+            );
+        }
+    }
+}
+
+#[test]
+fn executable_cooking_credit_keeps_local_shelf_but_not_another_shops_shelf() {
+    use crate::runtime::food::{self, items};
+    use sim_core::colony::food::{FoodOwner, FoodStackKey};
+    for local in [true, false] {
+        let (mut world, mut res, mut policy, _, _) = delayed_grain_bill(true);
+        policy.recipes = vec![RecipeKind::from_name("porridge").expect("porridge")];
+        res.rules.clock_offset_ticks = 0;
+        res.ticks_per_day = res.rules.calendar.ticks_per_day;
+        let id = if local { 1 } else { 2 };
+        if !local {
+            let mut other = res.colony.workshops[&1].clone();
+            other.id = id;
+            other.top_left = (5, 5);
+            other.bills.clear();
+            other.active = None;
+            res.colony.workshops.insert(id, other);
+        }
+        let tile = res.colony.workshops[&id].work_tile();
+        res.colony.rooms.insert(
+            90,
+            sim_core::rooms::Room {
+                id: 90,
+                tiles: std::collections::BTreeSet::from([tile]),
+                doors: std::collections::BTreeSet::new(),
+                roofed: true,
+                role: sim_core::rooms::RoomRole::Storehouse,
+                dug: false,
+            },
+        );
+        res.colony.room_of_tile.insert(tile, 90);
+        let stack = res.colony.ground_items[&(2, 3)];
+        let owner = FoodOwner::Shelf {
+            workshop: id,
+            key: FoodStackKey::from(stack.spec()),
+        };
+        items::transfer(&mut world, &mut res, FoodOwner::Ground((2, 3)), owner, 4, 0)
+            .expect("actual fresh supply to shelf");
+        res.current_tick = 13 * res.ticks_per_day;
+        assert!(
+            food::storage::remaining_days(&world, &res, owner, 13).expect("shelf remains fresh")
+                > 0
+        );
+        assert!(!food::storage::portable(&res, owner, stack));
+        let facts = super::summary(&world, &res, &policy);
+        let credit = super::cooking::convertible_immediate(&world, &res, &policy, &facts);
+        if local {
+            assert!(credit > 0, "shelved inputs can be cooked without carrying");
+        } else {
+            assert_eq!(credit, 0, "another shop's shelf cannot feed this bill");
+        }
+    }
+}
+
+#[test]
+fn executable_cooking_credit_debits_committed_inputs_from_the_actual_workshop() {
+    use crate::runtime::food::items;
+    use sim_core::colony::food::{FoodOwner, FoodStackKey};
+    use sim_core::colony::{Job, JobKind, JobStage};
+    let (mut world, mut res, mut policy, _, _) = delayed_grain_bill(true);
+    let porridge = RecipeKind::from_name("porridge").expect("porridge");
+    policy.recipes = vec![porridge];
+    for id in 8..18 {
+        world.spawn((Agent { id }, Position::new(4, 4)));
+    }
+    let mut second = res.colony.workshops[&1].clone();
+    second.id = 2;
+    second.top_left = (5, 5);
+    second.bills.clear();
+    second.active = None;
+    res.colony.workshops.insert(2, second);
+    // Only shop 2 has a porridge bill; shop 1's shelf is not a transferable pool.
+    res.colony
+        .workshops
+        .get_mut(&1)
+        .expect("first shop")
+        .bills
+        .retain(|bill| bill.recipe != porridge);
+    assert!(
+        crate::commands::apply_and_log(
+            &mut world,
+            &mut res,
+            Command::Steward {
+                rule: 8,
+                command: Box::new(Command::AddBill {
+                    workshop: 2,
+                    recipe: porridge,
+                    mode: BillMode::Maintain(24),
+                })
+            },
+            2
+        )
+        .accepted
+    );
+    let bill = res.colony.workshops[&2].bills[0].id;
+    let stack = res.colony.ground_items[&(2, 3)];
+    for workshop in [1, 2] {
+        items::transfer(
+            &mut world,
+            &mut res,
+            FoodOwner::Ground((2, 3)),
+            FoodOwner::Shelf {
+                workshop,
+                key: FoodStackKey::from(stack.spec()),
+            },
+            2,
+            0,
+        )
+        .expect("actual supplied grain");
+    }
+    res.fires.insert(2, sim_engine::FireState { lit: true });
+    let worker = world
+        .query::<&Agent>()
+        .iter()
+        .find(|(_, agent)| agent.id == 7)
+        .expect("qualified worker")
+        .0;
+    world
+        .insert_one(
+            worker,
+            Job {
+                kind: JobKind::Craft {
+                    workshop: 2,
+                    bill,
+                    at: res.colony.workshops[&2].work_tile(),
+                },
+                stage: JobStage::ToSource,
+                taken_at: 0,
+                amount: 0,
+                item: porridge.recipe().expect("recipe").output.0,
+                material: None,
+                fetch: None,
+                best_distance: 0,
+                progress_tick: 0,
+            },
+        )
+        .expect("actual assigned craft");
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!(
+        super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+        0,
+        "shop 2's grain is already committed; shop 1 cannot replace that debit"
+    );
+}

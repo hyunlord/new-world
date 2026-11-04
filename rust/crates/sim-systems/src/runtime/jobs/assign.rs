@@ -139,6 +139,8 @@ enum Search {
     ShortSite,
     Stocked(ItemKind),
     AnyStack(ItemKind),
+    SupplyStocked(ItemKind),
+    SupplyStack(ItemKind),
     PotStock(ItemKind),
     ReadySite,
     MarkedTree,
@@ -175,6 +177,8 @@ struct Exhausted {
     clay: Memo,
     stocked: BTreeMap<ItemKind, Memo>,
     any_stack: BTreeMap<ItemKind, Memo>,
+    supply_stocked: BTreeMap<ItemKind, Memo>,
+    supply_stack: BTreeMap<ItemKind, Memo>,
     pot_stock: BTreeMap<ItemKind, Memo>,
     open_cell: BTreeMap<ItemSpec, Memo>,
     /// M6a harvest designations, per (nav region, practitioner bits): both change what passes
@@ -199,6 +203,8 @@ impl Exhausted {
             Search::ClayMark => &mut self.clay,
             Search::Stocked(kind) => self.stocked.entry(kind).or_default(),
             Search::AnyStack(kind) => self.any_stack.entry(kind).or_default(),
+            Search::SupplyStocked(kind) => self.supply_stocked.entry(kind).or_default(),
+            Search::SupplyStack(kind) => self.supply_stack.entry(kind).or_default(),
             Search::PotStock(kind) => self.pot_stock.entry(kind).or_default(),
             Search::OpenCell(spec) => self.open_cell.entry(spec).or_default(),
         }
@@ -310,6 +316,16 @@ fn pick_work(
     };
     match work {
         WorkType::Craft | WorkType::Split => {
+            let supply_stack = |tile, kind, zoned| {
+                stack_of(tile, kind, zoned)
+                    && colony.ground_items.get(&tile).is_some_and(|stack| {
+                        crate::runtime::food::storage::portable(
+                            res,
+                            sim_core::colony::food::FoodOwner::Ground(tile),
+                            *stack,
+                        )
+                    })
+            };
             // Workshops whose active bill is of this work type, nearest work tile
             // first (ties `(y, x)`, then id); workshops are few, so a sorted list
             // stands in for an index.
@@ -385,16 +401,16 @@ fn pick_work(
                         &index.ground,
                         pos,
                         radius,
-                        ex.memo(Search::Stocked(kind)),
-                        |t, _| stack_of(t, Some(kind), Some(true)),
+                        ex.memo(Search::SupplyStocked(kind)),
+                        |t, _| supply_stack(t, Some(kind), Some(true)),
                     );
                     let source = stocked.or_else(|| {
                         search(
                             &index.ground,
                             pos,
                             radius,
-                            ex.memo(Search::AnyStack(kind)),
-                            |t, _| stack_of(t, Some(kind), None),
+                            ex.memo(Search::SupplyStack(kind)),
+                            |t, _| supply_stack(t, Some(kind), None),
                         )
                     });
                     let source = source.or_else(|| {
@@ -429,16 +445,16 @@ fn pick_work(
                                 &index.ground,
                                 pos,
                                 radius,
-                                ex.memo(Search::Stocked(alternative)),
-                                |t, _| stack_of(t, Some(alternative), Some(true)),
+                                ex.memo(Search::SupplyStocked(alternative)),
+                                |t, _| supply_stack(t, Some(alternative), Some(true)),
                             );
                             let found = stocked.or_else(|| {
                                 search(
                                     &index.ground,
                                     pos,
                                     radius,
-                                    ex.memo(Search::AnyStack(alternative)),
-                                    |t, _| stack_of(t, Some(alternative), None),
+                                    ex.memo(Search::SupplyStack(alternative)),
+                                    |t, _| supply_stack(t, Some(alternative), None),
                                 )
                             });
                             if found.is_some() {
@@ -1559,6 +1575,11 @@ mod item_memo_tests {
         assert!(memo.memo(Search::Stocked(ItemKind::Log)).empty);
         assert_eq!(memo.stocked.len(), 2);
         assert_eq!(memo.any_stack.len(), 1);
+        let grain = ItemKind::from_name("wild_grain").expect("grain");
+        memo.memo(Search::SupplyStocked(grain)).empty = true;
+        memo.memo(Search::SupplyStack(grain)).empty = true;
+        assert!(!memo.memo(Search::Stocked(grain)).empty);
+        assert!(!memo.memo(Search::AnyStack(grain)).empty);
     }
 }
 

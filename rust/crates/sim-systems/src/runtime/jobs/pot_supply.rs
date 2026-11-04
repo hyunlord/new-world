@@ -1,25 +1,8 @@
 //! Physical pot ingredients available to ordinary, reserved Supply jobs.
-use sim_core::colony::content::FoodStorageClass;
+use crate::runtime::food::storage::portable;
 use sim_core::colony::food::{FoodOwner, FoodStackKey};
 use sim_core::colony::{ItemKind, ItemStack, ReserveKey};
 use sim_engine::SimResources;
-
-/// Mirror existing transfer admission: the source must be fresh in Pot and
-/// the unchanged birth day must also be fresh in Ground (the carrying class).
-/// This does not grant a new lifetime when removing preserved food from a pot.
-fn portable(res: &SimResources, owner: FoodOwner, stack: ItemStack) -> bool {
-    let Some(food) = &stack.kind.definition().food else {
-        return false;
-    };
-    let Some(age) = res.food.ages.get(&owner) else {
-        return false;
-    };
-    let day = crate::runtime::food::day(res);
-    stack.count > 0
-        && age.born_day <= day
-        && age.remaining(day, food.lifetime_days(FoodStorageClass::Pot)) > 0
-        && age.remaining(day, food.lifetime_days(FoodStorageClass::Ground)) > 0
-}
 
 /// Stable contents ordering independent of insertion order and prior merges.
 pub(super) fn in_pot(

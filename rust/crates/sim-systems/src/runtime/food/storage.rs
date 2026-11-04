@@ -4,6 +4,7 @@ pub use super::pots::{deploy_pot, remove_pot};
 use hecs::World;
 use sim_core::colony::content::FoodStorageClass;
 use sim_core::colony::food::FoodOwner;
+use sim_core::colony::ItemStack;
 use sim_core::rooms::RoomRole;
 use sim_engine::SimResources;
 
@@ -37,6 +38,24 @@ pub fn class(res: &SimResources, owner: FoodOwner) -> FoodStorageClass {
     } else {
         FoodStorageClass::Ground
     }
+}
+
+/// Whether the original stack age is fresh at its source and while carried.
+/// Carrying uses Ground lifetime; leaving protected storage never resets age.
+pub fn portable(res: &SimResources, owner: FoodOwner, stack: ItemStack) -> bool {
+    if stack.count == 0 {
+        return false;
+    }
+    let Some(food) = &stack.kind.definition().food else {
+        return true;
+    };
+    let Some(age) = res.food.ages.get(&owner) else {
+        return false;
+    };
+    let day = super::day(res);
+    age.born_day <= day
+        && age.remaining(day, food.lifetime_days(class(res, owner))) > 0
+        && age.remaining(day, food.lifetime_days(FoodStorageClass::Ground)) > 0
 }
 
 /// Complete days remaining, requiring the original age rather than inventing freshness.

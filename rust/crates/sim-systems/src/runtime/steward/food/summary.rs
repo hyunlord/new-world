@@ -123,7 +123,11 @@ pub fn summary(world: &World, res: &SimResources, policy: &FoodPlan) -> FoodSumm
     facts
 }
 
-fn reachable(positions: &BTreeMap<u64, (u32, u32)>, res: &SimResources, owner: FoodOwner) -> bool {
+pub(super) fn reachable(
+    positions: &BTreeMap<u64, (u32, u32)>,
+    res: &SimResources,
+    owner: FoodOwner,
+) -> bool {
     let tile = match owner {
         FoodOwner::Ground(tile) => Some(tile),
         FoodOwner::Shelf { workshop, .. } => res

@@ -125,13 +125,30 @@ fn cooking_procurement_counts_pending_output_without_reusing_its_inputs() {
 #[test]
 fn cooking_procurement_and_available_bills_share_the_same_daily_budget() {
     // Given two capable recipes, then enough current inputs to activate both.
-    let (world, res, policy) = ten_adult_cooking_fixture(&["porridge", "fruit_porridge"]);
-    let mut facts = super::super::summary(&world, &res, &policy);
+    let (world, mut res, policy) = ten_adult_cooking_fixture(&["porridge", "fruit_porridge"]);
     let grain = sim_core::colony::ItemKind::from_name("wild_grain").expect("grain");
     let berries = sim_core::colony::ItemKind::from_name("berries").expect("berries");
-    facts.pieces.insert(grain, 5);
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        (2, 2),
+        sim_core::colony::ItemSpec::raw(grain, None),
+        5,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("physical portable grain");
+    let facts = super::super::summary(&world, &res, &policy);
     let before = super::super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
-    facts.pieces.insert(berries, 1);
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        (2, 3),
+        sim_core::colony::ItemSpec::raw(berries, None),
+        1,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .expect("physical portable berries");
+    let facts = super::super::summary(&world, &res, &policy);
     // When both bills become available, procurement still shares the same 24 portions.
     let demand = super::super::dependencies::ingredient_deficits(&world, &res, &policy, &facts);
     let commands = super::super::cooking::plan(&world, &res, &policy, &facts);

@@ -135,7 +135,13 @@ pub fn available(res: &SimResources, kind: ItemKind) -> u32 {
     c.ground_items
         .iter()
         .filter(|(tile, stack)| {
-            stack.kind == kind && !c.reservations.contains_key(&ReserveKey::Stack(**tile))
+            stack.kind == kind
+                && !c.reservations.contains_key(&ReserveKey::Stack(**tile))
+                && crate::runtime::food::storage::portable(
+                    res,
+                    sim_core::colony::food::FoodOwner::Ground(**tile),
+                    **stack,
+                )
         })
         .map(|(_, stack)| u32::from(stack.count))
         .sum::<u32>()

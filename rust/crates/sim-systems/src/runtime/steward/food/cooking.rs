@@ -80,6 +80,59 @@ fn edible_units(item: sim_core::colony::ItemKind, raw_only: bool) -> u64 {
         .map_or(0, |food| u64::from(food.units))
 }
 
+// None is portable public stock; Some(shop) is fresh input already on that shelf.
+type CookingInputs = std::collections::BTreeMap<(Option<u32>, sim_core::colony::ItemKind), u64>;
+
+fn cooking_inputs(world: &World, res: &SimResources) -> CookingInputs {
+    use crate::runtime::food::{items, storage};
+    use sim_core::colony::food::FoodOwner;
+    use sim_core::components::{Agent, Position};
+    let positions = world
+        .query::<(&Agent, &Position)>()
+        .iter()
+        .map(|(_, (agent, position))| (agent.id, (position.x, position.y)))
+        .collect();
+    let day = crate::runtime::food::day(res);
+    let mut inputs = CookingInputs::new();
+    for owner in res.food.ages.keys().copied() {
+        let Some(stack) = items::stack(world, res, owner) else {
+            continue;
+        };
+        if !super::summary::reachable(&positions, res, owner)
+            || !storage::remaining_days(world, res, owner, day).is_ok_and(|left| left > 0)
+        {
+            continue;
+        }
+        let local = match owner {
+            FoodOwner::Shelf { workshop, .. } => Some(workshop),
+            _ if storage::portable(res, owner, stack) => None,
+            _ => continue,
+        };
+        *inputs.entry((local, stack.kind)).or_default() += u64::from(stack.count);
+    }
+    inputs
+}
+
+fn input_count(inputs: &CookingInputs, shop: u32, item: sim_core::colony::ItemKind) -> u64 {
+    inputs.get(&(None, item)).copied().unwrap_or(0)
+        + inputs.get(&(Some(shop), item)).copied().unwrap_or(0)
+}
+
+fn consume_inputs(
+    inputs: &mut CookingInputs,
+    shop: u32,
+    item: sim_core::colony::ItemKind,
+    mut count: u64,
+) {
+    for key in [(Some(shop), item), (None, item)] {
+        if let Some(available) = inputs.get_mut(&key) {
+            let taken = (*available).min(count);
+            *available -= taken;
+            count -= taken;
+        }
+    }
+}
+
 /// Net new edible units backed by active bills and uncommitted physical inputs.
 pub(super) fn convertible_immediate(
     world: &World,
@@ -87,19 +140,41 @@ pub(super) fn convertible_immediate(
     policy: &FoodPlan,
     facts: &FoodSummary,
 ) -> u64 {
-    let mut inputs = facts.pieces.clone();
+    let mut inputs = cooking_inputs(world, res);
     let reserved = super::dependencies::seed_inputs(world, res, policy, facts);
-    let committed = super::dependencies::unconsumed_craft_inputs(world, res);
-    let emergency = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
-    for (item, count) in &mut inputs {
-        let reserve = if emergency {
-            0
-        } else {
-            reserved.get(item).copied().unwrap_or(0)
+    for (_, job) in world.query::<&Job>().iter() {
+        let JobKind::Craft { workshop, bill, .. } = job.kind else {
+            continue;
         };
-        *count = count
-            .saturating_sub(reserve)
-            .saturating_sub(committed.get(item).copied().unwrap_or(0));
+        if !matches!(job.stage, sim_core::colony::JobStage::ToSource) {
+            continue;
+        }
+        let Some(recipe) = res
+            .colony
+            .workshops
+            .get(&workshop)
+            .and_then(|shop| shop.bill(bill))
+            .and_then(|bill| bill.recipe.recipe())
+        else {
+            continue;
+        };
+        for (item, count) in &recipe.inputs {
+            if let Some(available) = inputs.get_mut(&(Some(workshop), *item)) {
+                *available = available.saturating_sub(u64::from(*count));
+            }
+        }
+    }
+    let emergency = facts.usable_units.saturating_mul(1000) < facts.daily_milli;
+    let mut deductions = if emergency {
+        std::collections::BTreeMap::new()
+    } else {
+        reserved
+    };
+    for ((_, item), count) in &mut inputs {
+        let deduction = deductions.entry(*item).or_default();
+        let taken = (*count).min(*deduction);
+        *count -= taken;
+        *deduction -= taken;
     }
     let mut credited = 0_u64;
     for &kind in &policy.recipes {
@@ -118,7 +193,7 @@ pub(super) fn convertible_immediate(
         let desired = target
             .saturating_sub(made)
             .div_ceil(u64::from(recipe.output.1).max(1));
-        let mut batches = 0_u64;
+        let mut remaining_desired = desired;
         for (id, shop) in &res.colony.workshops {
             if !recipe.supports_workshop(shop.kind)
                 || !has_practitioner(world, res, recipe, |practice| {
@@ -130,6 +205,7 @@ pub(super) fn convertible_immediate(
             {
                 continue;
             }
+            let mut batches = 0_u64;
             for bill in shop
                 .bills
                 .iter()
@@ -149,25 +225,23 @@ pub(super) fn convertible_immediate(
                 };
                 batches = batches.saturating_add(remaining);
             }
-        }
-        batches = batches.min(desired);
-        for (item, count) in &recipe.inputs {
-            batches =
-                batches.min(inputs.get(item).copied().unwrap_or(0) / u64::from(*count).max(1));
-        }
-        let consumed: u64 = recipe
-            .inputs
-            .iter()
-            .map(|(item, count)| u64::from(*count) * edible_units(*item, true))
-            .sum();
-        let net = (u64::from(recipe.output.1) * edible_units(recipe.output.0, false))
-            .saturating_sub(consumed);
-        for (item, count) in &recipe.inputs {
-            if let Some(available) = inputs.get_mut(item) {
-                *available = available.saturating_sub(batches * u64::from(*count));
+            batches = batches.min(remaining_desired);
+            for (item, count) in &recipe.inputs {
+                batches = batches.min(input_count(&inputs, *id, *item) / u64::from(*count).max(1));
             }
+            let consumed: u64 = recipe
+                .inputs
+                .iter()
+                .map(|(item, count)| u64::from(*count) * edible_units(*item, true))
+                .sum();
+            let net = (u64::from(recipe.output.1) * edible_units(recipe.output.0, false))
+                .saturating_sub(consumed);
+            for (item, count) in &recipe.inputs {
+                consume_inputs(&mut inputs, *id, *item, batches * u64::from(*count));
+            }
+            credited = credited.saturating_add(batches * net);
+            remaining_desired -= batches;
         }
-        credited = credited.saturating_add(batches * net);
     }
     credited
 }
@@ -207,26 +281,13 @@ pub(super) fn plan(
             bootstrap_recipes.push((kind, u16::try_from(target).unwrap_or(u16::MAX)));
         }
     }
+    let inputs = cooking_inputs(world, res);
     let mut available = Vec::new();
     for &kind in &policy.recipes {
         let Some(recipe) = kind.recipe() else {
             continue;
         };
         let assigned = assigned_crafts(world, res, kind);
-        if assigned == 0
-            && !recipe.inputs.iter().all(|(item, count)| {
-                let reserved = seed_reserve.get(item).copied().unwrap_or(0);
-                facts
-                    .pieces
-                    .get(item)
-                    .copied()
-                    .unwrap_or(0)
-                    .saturating_sub(reserved)
-                    >= u64::from(*count)
-            })
-        {
-            continue;
-        }
         if recipe.food_requirements.duration_days > 0 {
             continue;
         }
@@ -235,6 +296,12 @@ pub(super) fn plan(
         }
         let usable = res.colony.workshops.values().any(|shop| {
             recipe.supports_workshop(shop.kind)
+                && (assigned > 0
+                    || recipe.inputs.iter().all(|(item, count)| {
+                        input_count(&inputs, shop.id, *item)
+                            .saturating_sub(seed_reserve.get(item).copied().unwrap_or(0))
+                            >= u64::from(*count)
+                    }))
                 && has_practitioner(world, res, recipe, |practice| {
                     crate::runtime::jobs::food_recipe_supplyable(res, shop, recipe, practice)
                 })

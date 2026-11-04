@@ -315,3 +315,9 @@ Cal04 remains FAIL; retain30%field intake,6day oversupply and all knowledge/cold
 Advanced tool use is a real knowledge-maintenance path: pressure_flaking gates fine-blade crafting, while current default basic blades never use it. Prefer authored fine blades when qualified, with ordinary basic fallback and shared four-blade physical Maintain count. Delayed discovery requires existing owned-bill order reconciliation; data-only insertion would leave basic first. No autoTeach, free practice, decay floor or proficiency grant. Alternative tool recipes may request up to8finite flint inputs; this is not an8blade output target. Preserve manual and in-flight work boundaries and measure actual knowledge outcomes.
 
 Cal04 qualifies #675 as a discriminating non-regression check: BASE0days throughout, candidate1day each in seeds3/4 (16/4expired units). Adopt candidate qualifying days≤pairedBASE per world before held-out freeze; current candidate fails. Keep unit and day denominators distinct. Original calibration01–03zero/zero diagnostic verdicts remain historical.
+
+## S1-CAL-7 — 운반 가능한 입력만 조리 가능량에 포함
+
+보정05는 실행 성공·게임 기준 실패다. 밭 섭취30%는0/8, KnowledgeLost41 대 BASE1이며 기준을 유지한다. 저장고의 곡물은24일 보존되지만 운반 상태는12일 수명을 사용한다. 기존 Supply 후보/수량은 이 차이를 검사하지 않아 오래된 지정 재고가 신선한 비지정 재고를 가리고, 조리 예산은 실제 운반이 거절되는 곡물을 즉시 음식으로 인정했다. supply-freshness-red01은1통과2실패, cooking-portability-red01은 잘못된3단위 credit으로 실패했다.
+
+원래 생일·저장 수명·물리 재고는 보존한다. 실제 전달 조건을 공통으로 사용해 공급 선택과 실행 가능한 조리 입력을 고친다. 해당 작업장의 선반에서 바로 조리 가능한 입력은 불필요한 운반 조건으로 배제하지 않는다. 이 재현은 구현 결함의 증거이며 보정05의 모든 곡물 손실·아사 원인이라는 주장은 아니다. 균등 recipe 목표는 소비 후 보충되는 재고 목표이므로 ‘배분량×12일’을 처리량 상한으로 해석하지 않는다.
