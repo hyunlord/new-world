@@ -95,7 +95,11 @@ fn cooking_consumes_fresh_shelf_inputs_once_and_passive_output_waits_for_due_tic
         .unwrap();
     let roots = recipe.inputs[0].0;
     let spec = ItemSpec::raw(roots, None);
-    items::create_ground(&mut res, (2, 2), spec, 2, 0, items::FoodSource::Harvest).unwrap();
+    let mut field = items::new_batch(spec, 1, 0).unwrap();
+    field.origin = sim_core::colony::cultivation::OriginShare::FIELD;
+    items::create_ground_batches(&mut res, (2, 2), &[field], 0, items::FoodSource::Harvest)
+        .unwrap();
+    items::create_ground(&mut res, (2, 2), spec, 1, 0, items::FoodSource::Harvest).unwrap();
     res.colony.workshops.insert(
         1,
         Workshop {
@@ -114,22 +118,31 @@ fn cooking_consumes_fresh_shelf_inputs_once_and_passive_output_waits_for_due_tic
     };
     items::transfer(&mut world, &mut res, FoodOwner::Ground((2, 2)), owner, 2, 1).unwrap();
     res.current_tick = res.ticks_per_day;
-    super::craft_food::consume(&mut world, &mut res, 1, recipe).unwrap();
+    let (_, origin) = super::craft_food::consume(&mut world, &mut res, 1, recipe).unwrap();
+    assert_eq!(
+        origin,
+        sim_core::colony::cultivation::OriginShare {
+            lower: 500_000,
+            upper: 500_000
+        }
+    );
     res.colony.item_ledger.craft_start(&recipe.inputs);
     assert_eq!(res.food.tallies.craft_input_units, 2);
     assert!(!res.food.ages.contains_key(&owner));
     assert!(res.colony.workshops[&1].shelf.is_empty());
     let due_tick = res.current_tick + res.ticks_per_day;
-    res.food
-        .pending_drying
-        .push(sim_core::colony::food::DryingBatch {
+    food::origin::push_drying(
+        &mut res,
+        sim_core::colony::food::DryingBatch {
             workshop: 1,
             bill: 1,
             tile: (4, 5),
             output: ItemSpec::raw(recipe.output.0, None),
             count: recipe.output.1,
             due_tick,
-        });
+        },
+        origin,
+    );
     food::drying::advance(&mut res).unwrap();
     assert_eq!(res.food.tallies.craft_output_units, 0);
     assert_eq!(res.food.pending_drying.len(), 1);
@@ -139,6 +152,8 @@ fn cooking_consumes_fresh_shelf_inputs_once_and_passive_output_waits_for_due_tic
     assert_eq!(res.food.tallies.craft_output_units, 3);
     assert_eq!(res.colony.item_ledger.created_of(recipe.output.0), 3);
     assert!(res.food.pending_drying.is_empty());
+    assert!(res.cultivation.drying_origins.is_empty());
+    assert_eq!(food::origin::share(&res, FoodOwner::Ground((4, 5))), origin);
     food::drying::advance(&mut res).unwrap();
     assert_eq!(res.colony.item_ledger.created_of(recipe.output.0), 3);
     food::validate(&world, &res).unwrap();

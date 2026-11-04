@@ -21,7 +21,9 @@ pub fn relocate_ground(
         let owner = FoodOwner::Ground(tile);
         let physical = stack(world, res, owner).ok_or(FoodError::MissingOwner)?;
         let age = super::owners::age(res, owner, physical.spec(), day)?;
-        batches.push(new_batch(physical.spec(), physical.count, age.born_day)?);
+        let mut batch = new_batch(physical.spec(), physical.count, age.born_day)?;
+        batch.origin = super::origin::share(res, owner);
+        batches.push(batch);
     }
     let plan = super::ground::plan(res, destination, &batches, day)?;
     for (&tile, batch) in tiles.iter().zip(&batches) {

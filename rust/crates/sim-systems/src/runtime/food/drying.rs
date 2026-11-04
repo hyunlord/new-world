@@ -18,7 +18,13 @@ pub fn advance(res: &mut SimResources) -> Result<(), FoodError> {
             batch.due_tick,
         ))
         .map_err(|_| FoodError::Invalid)?;
-        let output = items::new_batch(batch.output, batch.count, born_day)?;
+        let mut output = items::new_batch(batch.output, batch.count, born_day)?;
+        output.origin = res
+            .cultivation
+            .drying_origins
+            .get(index)
+            .copied()
+            .unwrap_or_default();
         let food = batch
             .output
             .kind
@@ -50,6 +56,9 @@ pub fn advance(res: &mut SimResources) -> Result<(), FoodError> {
             }
         }
         res.food.pending_drying.remove(index);
+        if index < res.cultivation.drying_origins.len() {
+            res.cultivation.drying_origins.remove(index);
+        }
         res.food.touch();
     }
     Ok(())

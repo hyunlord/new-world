@@ -171,6 +171,9 @@ pub(super) fn set(
             set_contents(contents, key, spec, count);
         }
     }
+    if count == 0 {
+        res.cultivation.food_origins.remove(&owner);
+    }
     res.colony.touch(false);
     Ok(())
 }

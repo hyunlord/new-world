@@ -1,4 +1,4 @@
-//! Pending output promises retain due-day freshness across retries and format14 saves.
+//! Pending output promises retain due-day freshness and field origin across retries and versioned saves.
 use sim_core::colony::food::{DryingBatch, FoodOwner};
 use sim_core::colony::{BlueprintKind, ItemKind, ItemSpec, Workshop};
 use sim_core::rules::WorldRules;
@@ -24,19 +24,24 @@ fn scene(item: &str, due_day: u64) -> SimEngine {
             active: None,
         },
     );
-    res.food.pending_drying.push(DryingBatch {
-        workshop: 1,
-        bill: 1,
-        tile: (2, 3),
-        output: ItemSpec::raw(ItemKind::from_name(item).unwrap(), None),
-        count: 3,
-        due_tick: due_day * res.ticks_per_day,
-    });
+    let due_tick = due_day * res.ticks_per_day;
+    food::origin::push_drying(
+        res,
+        DryingBatch {
+            workshop: 1,
+            bill: 1,
+            tile: (2, 3),
+            output: ItemSpec::raw(ItemKind::from_name(item).unwrap(), None),
+            count: 3,
+            due_tick,
+        },
+        sim_core::colony::cultivation::OriginShare::FIELD,
+    );
     engine
 }
 
 #[test]
-fn blocked_cooked_output_keeps_due_age_after_format14_roundtrip() {
+fn blocked_cooked_output_keeps_due_age_and_origin_after_roundtrip() {
     let mut engine = scene("roasted_roots", 0);
     engine
         .resources
@@ -52,6 +57,7 @@ fn blocked_cooked_output_keeps_due_age_after_format14_roundtrip() {
     );
     let mut loaded = save::load_with(&bytes, |_| {}).unwrap();
     assert_eq!(engine.resources.food, loaded.resources.food);
+    assert_eq!(engine.resources.cultivation, loaded.resources.cultivation);
     for state in [&mut engine, &mut loaded] {
         state.resources.current_tick = state.resources.ticks_per_day;
         state
@@ -78,6 +84,7 @@ fn blocked_cooked_output_keeps_due_age_after_format14_roundtrip() {
         food::validate(&state.world, &state.resources).unwrap();
     }
     assert_eq!(engine.resources.food, loaded.resources.food);
+    assert_eq!(engine.resources.cultivation, loaded.resources.cultivation);
 }
 
 #[test]

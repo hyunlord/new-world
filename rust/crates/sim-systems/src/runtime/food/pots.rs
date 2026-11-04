@@ -53,6 +53,7 @@ pub fn remove_pot(
         spec: pot.vessel,
         count: 1,
         age: FoodAge { born_day: day },
+        origin: Default::default(),
     }];
     let mut expired = Vec::new();
     for stack in &pot.contents {
@@ -73,6 +74,7 @@ pub fn remove_pot(
                 spec: stack.spec(),
                 count: stack.count,
                 age,
+                origin: super::origin::share(res, owner),
             });
         }
     }
@@ -83,6 +85,9 @@ pub fn remove_pot(
     }
     super::ground::apply(res, &plan);
     res.food.ages.retain(
+        |owner, _| !matches!(owner, FoodOwner::Pot { id: owner_id, .. } if *owner_id == id),
+    );
+    res.cultivation.food_origins.retain(
         |owner, _| !matches!(owner, FoodOwner::Pot { id: owner_id, .. } if *owner_id == id),
     );
     res.food.pots.remove(&id);

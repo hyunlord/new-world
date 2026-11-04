@@ -14,6 +14,7 @@ pub mod items;
 pub mod loss;
 pub mod meals;
 pub mod migration;
+pub mod origin;
 mod owners;
 mod placement;
 pub mod plants;

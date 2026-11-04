@@ -100,6 +100,20 @@ pub(super) fn plan(
 
 pub(super) fn apply(res: &mut SimResources, plan: &[(Tile, FoodBatch)]) {
     for &(tile, batch) in plan {
+        let before = res
+            .colony
+            .ground_items
+            .get(&tile)
+            .map_or(0, |stack| stack.count);
+        if batch.spec.kind.definition().food.is_some() {
+            super::origin::merge(
+                res,
+                FoodOwner::Ground(tile),
+                before,
+                batch.origin,
+                batch.count,
+            );
+        }
         res.colony
             .ground_items
             .entry(tile)

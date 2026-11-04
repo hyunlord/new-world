@@ -15,6 +15,8 @@ pub struct FoodBatch {
     pub count: u16,
     /// Earliest production day; irrelevant for nonfood items.
     pub age: FoodAge,
+    /// Bounded proportional contribution of cultivated food.
+    pub origin: sim_core::colony::cultivation::OriginShare,
 }
 
 /// A failed operation leaves the physical source unchanged.
@@ -66,6 +68,7 @@ pub fn new_batch(spec: ItemSpec, count: u16, born_day: u32) -> Result<FoodBatch,
         spec,
         count,
         age: FoodAge { born_day },
+        origin: Default::default(),
     })
 }
 
@@ -92,6 +95,7 @@ pub fn take(
     if count == 0 {
         return Err(FoodError::Invalid);
     }
+    let origin = super::origin::share(res, owner);
     super::owners::set(world, res, owner, physical.spec(), physical.count - count)?;
     if physical.count == count {
         res.food.ages.remove(&owner);
@@ -101,6 +105,7 @@ pub fn take(
         spec: physical.spec(),
         count,
         age,
+        origin,
     })
 }
 
@@ -131,6 +136,15 @@ pub fn put(
             .entry(owner)
             .and_modify(|age| *age = age.merged(batch.age))
             .or_insert(batch.age);
+    }
+    if batch.spec.kind.definition().food.is_some() {
+        super::origin::merge(
+            res,
+            owner,
+            current.map_or(0, |stack| stack.count),
+            batch.origin,
+            batch.count,
+        );
     }
     super::events::stored(res, owner, batch.spec.kind, batch.count);
     res.food.touch();
@@ -187,7 +201,8 @@ pub fn drop_ground(
         Err(FoodError::Expired) => return super::storage::expire_count(world, res, from, count),
         Err(error) => return Err(error),
     };
-    let batch = new_batch(physical.spec(), count.min(physical.count), age.born_day)?;
+    let mut batch = new_batch(physical.spec(), count.min(physical.count), age.born_day)?;
+    batch.origin = super::origin::share(res, from);
     let plan = super::ground::plan(res, tile, &[batch], day)?;
     take(world, res, from, batch.count, day)?;
     super::ground::apply(res, &plan);

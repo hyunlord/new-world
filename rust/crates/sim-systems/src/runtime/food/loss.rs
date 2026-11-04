@@ -25,6 +25,7 @@ pub fn lose_carried(world: &mut World, res: &mut SimResources, entity: Entity) {
         return;
     }
     res.food.ages.remove(&FoodOwner::Carried(id));
+    res.cultivation.food_origins.remove(&FoodOwner::Carried(id));
     let count = u64::from(carry.count);
     res.colony.item_ledger.consume(carry.kind, count);
     *res.food.tallies.lost.entry(carry.kind).or_default() += count;

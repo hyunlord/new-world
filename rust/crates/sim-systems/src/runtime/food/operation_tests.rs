@@ -180,3 +180,127 @@ fn packed_map_harvest_failure_survives_generic_cancel_into_hunger_chain() {
         "actual failed harvest must be reachable, not replaced by UNKNOWN"
     );
 }
+
+#[test]
+fn field_food_mixing_survives_carry_and_only_actual_meals_count() {
+    use sim_core::colony::cultivation::OriginShare;
+    let (mut world, mut res, entity) = scene();
+    let day = 48;
+    res.current_tick = u64::from(day) * res.ticks_per_day;
+    let kind = ItemKind::from_name("berries").expect("edible plant");
+    let spec = ItemSpec::raw(kind, None);
+    let mut field = items::new_batch(spec, 2, day).expect("field harvest");
+    field.origin = OriginShare::FIELD;
+    items::create_ground_batches(&mut res, (2, 2), &[field], day, items::FoodSource::Harvest)
+        .expect("place field harvest");
+    items::create_ground(&mut res, (2, 2), spec, 1, day, items::FoodSource::Harvest)
+        .expect("merge wild harvest");
+    assert!(res.cultivation.eaten_by_year.is_empty());
+    let mixed = super::origin::share(&res, FoodOwner::Ground((2, 2)));
+    assert_eq!(
+        mixed,
+        OriginShare {
+            lower: 666_666,
+            upper: 666_667
+        }
+    );
+    items::transfer(
+        &mut world,
+        &mut res,
+        FoodOwner::Ground((2, 2)),
+        FoodOwner::Carried(7),
+        3,
+        day,
+    )
+    .expect("carry mixed food");
+    assert!(!res
+        .cultivation
+        .food_origins
+        .contains_key(&FoodOwner::Ground((2, 2))));
+    assert_eq!(super::origin::share(&res, FoodOwner::Carried(7)), mixed);
+    items::drop_ground(&mut world, &mut res, FoodOwner::Carried(7), (3, 2), 3, day)
+        .expect("drop preserves field fraction");
+    assert!(!res
+        .cultivation
+        .food_origins
+        .contains_key(&FoodOwner::Carried(7)));
+    assert_eq!(super::origin::share(&res, FoodOwner::Ground((3, 2))), mixed);
+    for _ in 0..3 {
+        meals::consume(&mut world, &mut res, entity, FoodOwner::Ground((3, 2)), day)
+            .expect("actual meal");
+    }
+    let eaten = &res.cultivation.eaten_by_year[&2];
+    assert_eq!(eaten.units, 3);
+    assert!(eaten.field_lower <= 2 * u64::from(OriginShare::SCALE));
+    assert!(eaten.field_upper >= 2 * u64::from(OriginShare::SCALE));
+    assert_eq!(eaten.field_upper - eaten.field_lower, 3);
+    assert!(res.cultivation.food_origins.is_empty());
+    super::validate(&world, &res).expect("physical and food ledger remain exact");
+}
+
+#[test]
+fn expiring_field_food_does_not_count_as_intake_or_leave_origin() {
+    use sim_core::colony::cultivation::OriginShare;
+    let (mut world, mut res, _) = scene();
+    let kind = ItemKind::from_name("berries").expect("edible plant");
+    let mut field = items::new_batch(ItemSpec::raw(kind, None), 2, 0).expect("field batch");
+    field.origin = OriginShare::FIELD;
+    items::create_ground_batches(&mut res, (2, 2), &[field], 0, items::FoodSource::Harvest)
+        .expect("place field harvest");
+    super::storage::expire_owner(&mut world, &mut res, FoodOwner::Ground((2, 2))).expect("expiry");
+    assert!(res.cultivation.food_origins.is_empty());
+    assert!(res.cultivation.eaten_by_year.is_empty());
+    assert_eq!(res.food.tallies.spoiled_units, 2);
+    super::validate(&world, &res).expect("expiry balance");
+}
+
+#[test]
+fn blocked_field_food_drop_retains_physical_cargo_and_origin() {
+    use sim_core::colony::cultivation::OriginShare;
+    let (mut world, mut res, _) = scene();
+    let kind = ItemKind::from_name("berries").expect("edible plant");
+    let mut batch = items::new_batch(ItemSpec::raw(kind, None), 1, 0).expect("field batch");
+    batch.origin = OriginShare::FIELD;
+    items::create_ground_batches(&mut res, (2, 2), &[batch], 0, items::FoodSource::Harvest)
+        .expect("field harvest");
+    items::transfer(
+        &mut world,
+        &mut res,
+        FoodOwner::Ground((2, 2)),
+        FoodOwner::Carried(7),
+        1,
+        0,
+    )
+    .expect("pick up");
+    let wood = ItemKind::from_name("firewood").expect("incompatible stack");
+    let count = crate::runtime::jobs::items::stack_max(&res, wood);
+    for y in 0..8 {
+        for x in 0..8 {
+            items::create_ground(
+                &mut res,
+                (x, y),
+                ItemSpec::raw(wood, None),
+                count,
+                0,
+                items::FoodSource::Debug,
+            )
+            .expect("fill map");
+        }
+    }
+    assert_eq!(
+        items::drop_ground(&mut world, &mut res, FoodOwner::Carried(7), (2, 2), 1, 0),
+        Err(items::FoodError::NoCapacity)
+    );
+    assert_eq!(
+        items::stack(&world, &res, FoodOwner::Carried(7))
+            .expect("cargo retained")
+            .count,
+        1
+    );
+    assert_eq!(
+        super::origin::share(&res, FoodOwner::Carried(7)),
+        OriginShare::FIELD
+    );
+    assert!(res.cultivation.eaten_by_year.is_empty());
+    super::validate(&world, &res).expect("failed placement changes no balance");
+}

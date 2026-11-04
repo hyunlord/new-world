@@ -127,7 +127,10 @@ pub(super) fn consume(
     res: &mut SimResources,
     workshop: u32,
     recipe: &Recipe,
-) -> Option<Option<sim_core::material::MaterialId>> {
+) -> Option<(
+    Option<sim_core::material::MaterialId>,
+    sim_core::colony::cultivation::OriginShare,
+)> {
     let shop = res.colony.workshops.get(&workshop)?;
     let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).ok()?;
     let mut plan = Vec::new();
@@ -158,12 +161,16 @@ pub(super) fn consume(
             return None;
         }
     }
+    let mut origins = Vec::new();
     for (owner, count) in plan {
         // Admission above sees the same exclusively borrowed physical state.
         let batch = items::take(world, res, owner, count, day).ok()?;
+        if let Some(food) = &batch.spec.kind.definition().food {
+            origins.push((batch.origin, u64::from(batch.count) * u64::from(food.units)));
+        }
         items::book_craft_input(res, batch);
     }
-    Some(material)
+    Some((material, crate::runtime::food::origin::weighted(origins)))
 }
 
 /// Prepared colony cooking requests real heat; a future supply order alone does not.

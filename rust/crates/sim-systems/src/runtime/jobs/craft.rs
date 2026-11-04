@@ -116,7 +116,12 @@ pub fn start(
     {
         return None;
     }
-    let material = super::craft_food::consume(world, res, workshop, recipe)?;
+    let agent = world.get::<&sim_core::components::Agent>(entity).ok()?.id;
+    let (material, origin) = super::craft_food::consume(world, res, workshop, recipe)?;
+    res.cultivation.craft_origins.remove(&agent);
+    if origin.upper > 0 {
+        res.cultivation.craft_origins.insert(agent, origin);
+    }
     res.colony.item_ledger.craft_start(&recipe.inputs);
     res.colony.touch(false);
     if let Some(cutter) = cutter {
@@ -303,44 +308,56 @@ pub fn finish_craft(
         material: job.material,
         quality,
     };
+    let origin = res
+        .cultivation
+        .craft_origins
+        .remove(&id)
+        .unwrap_or_default();
     if recipe.food_requirements.duration_days > 0 {
-        res.food
-            .pending_drying
-            .push(sim_core::colony::food::DryingBatch {
+        let due_tick = res.current_tick.saturating_add(
+            res.rules
+                .calendar
+                .days_to_ticks(u64::from(recipe.food_requirements.duration_days)),
+        );
+        crate::runtime::food::origin::push_drying(
+            res,
+            sim_core::colony::food::DryingBatch {
                 workshop,
                 bill,
                 tile: at,
                 output: spec,
                 count: n,
-                due_tick: res.current_tick.saturating_add(
-                    res.rules
-                        .calendar
-                        .days_to_ticks(u64::from(recipe.food_requirements.duration_days)),
-                ),
-            });
+                due_tick,
+            },
+            origin,
+        );
         res.food.touch();
     } else if kind.definition().food.is_some() {
         let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
-        if crate::runtime::food::items::create_ground(
-            res,
-            at,
-            spec,
-            n,
-            day,
-            crate::runtime::food::items::FoodSource::Craft,
-        )
-        .is_err()
-        {
-            res.food
-                .pending_drying
-                .push(sim_core::colony::food::DryingBatch {
+        let placed = crate::runtime::food::items::new_batch(spec, n, day).and_then(|mut batch| {
+            batch.origin = origin;
+            crate::runtime::food::items::create_ground_batches(
+                res,
+                at,
+                &[batch],
+                day,
+                crate::runtime::food::items::FoodSource::Craft,
+            )
+        });
+        if placed.is_err() {
+            let due_tick = res.current_tick;
+            crate::runtime::food::origin::push_drying(
+                res,
+                sim_core::colony::food::DryingBatch {
                     workshop,
                     bill,
                     tile: at,
                     output: spec,
                     count: n,
-                    due_tick: res.current_tick,
-                });
+                    due_tick,
+                },
+                origin,
+            );
             res.food.touch();
         } else {
             res.colony.item_ledger.craft_end(&[(kind, n)]);

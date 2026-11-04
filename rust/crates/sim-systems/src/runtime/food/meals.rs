@@ -96,6 +96,7 @@ pub fn consume(
     tally.cooked_meals += u64::from(food.cooked);
     tally.relief_tenths += relief_tenths;
     tally.wasted_tenths += nominal_tenths.saturating_sub(relief_tenths);
+    super::origin::eaten(res, day, u64::from(food.units), batch.origin);
     res.tallies.meals_eaten += 1;
     res.tallies.ground_meals += u64::from(matches!(owner, FoodOwner::Ground(_)));
     let history = res.food.meals.entry(agent).or_default();

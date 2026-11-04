@@ -102,6 +102,21 @@ pub fn validate(world: &World, res: &SimResources) -> Result<(), String> {
             ages.difference(&owners).collect::<Vec<_>>()
         ));
     }
+    for (owner, origin) in &res.cultivation.food_origins {
+        if !owners.contains(owner)
+            || origin.lower > origin.upper
+            || origin.upper > sim_core::colony::cultivation::OriginShare::SCALE
+        {
+            return Err(format!("invalid field-food origin for {owner:?}"));
+        }
+    }
+    for totals in res.cultivation.eaten_by_year.values() {
+        let ceiling = u128::from(totals.units)
+            * u128::from(sim_core::colony::cultivation::OriginShare::SCALE);
+        if totals.field_lower > totals.field_upper || u128::from(totals.field_upper) > ceiling {
+            return Err("invalid cultivated-food intake bounds".into());
+        }
+    }
     for batch in &res.food.pending_drying {
         if batch.count == 0 || batch.output.kind.definition().food.is_none() {
             return Err("invalid pending drying output".into());
@@ -132,7 +147,8 @@ pub fn validate(world: &World, res: &SimResources) -> Result<(), String> {
         + u128::from(t.spoiled_units)
         + u128::from(t.lost_units)
         + u128::from(t.craft_input_units)
-        + u128::from(t.traded_out_units);
+        + u128::from(t.traded_out_units)
+        + u128::from(res.cultivation.counters.seeded_food_units);
     if incoming != outgoing {
         return Err(format!("food units ledger: incoming {incoming}, outgoing+present {outgoing}, present {present}"));
     }
