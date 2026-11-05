@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-05 — M6b Stage1 게시 후보 `a0ec36d1`: 농경·물리적 씨앗·토양, 생산 제한과 기존 땔감 주문 실행, 명시적 가르침을 구현. 보정26·일반 안전성34/34·BASE 동일성22차(228748값 차이0)·고정 카드 검사는 PASS; held-out·최종 gate·게시는 미완료이며 밭 아트는 [#687](https://github.com/hyunlord/new-world/issues/687)에 이월. [보고서](v8/m6b/M6B_REPORT.md), [ADR0058](decisions/0058-physical-cultivation-and-bounded-stewardship.md).
+
 - 2026-11-04 — M6b Stage0 중단·미게시(D-S0-1..4). 추가 도구408파일88,383줄을2파일696줄로 축소하고 게시된 M-LOOP/M-READ gate로 복귀했다. 상대 KnowledgeLost·생존 계약29테스트 PASS, 전체 generic gate/고의결함 증명 미완료는 [#685](https://github.com/hyunlord/new-world/issues/685)에 이월. Stage1 농경·#684로 전환하며 원래 실패와 raw는 보존한다.
 
 - 2026-10-30 — M6a R1: owner11:20KST의2회 수리 보정 후 동결. P26 `9b6644579` 전체42/48 PASS·25/30/39/40/41/45FAIL; soak기아·KnowledgeLost0이나 신선부패3/32·성능4항목·거래0·가시성16/60·빈토스트·stall캡처오류가 남음. waiver미사용·미게시·#670–673OPEN, P27문서전용NOT_FULL_GATED. [보고서](v8/m6a/M6A_REPORT.md).

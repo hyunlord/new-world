@@ -193,24 +193,28 @@ func capture_field(world: Node, scale: float, requested_phase: int = -1) -> void
 	camera.reset_smoothing()
 	camera.force_update_scroll()
 	await frames(10)
-	# Keep the selected field in the open left map area, outside the decision cards.
+	# Keep visible helper/story panels intact; use the first unobstructed map point.
 	var corner: Vector2 = View.tile_to_world(tile) + Vector2(8, 8)
 	var point: Vector2 = root.get_canvas_transform() * corner
-	var target: Vector2 = root.get_visible_rect().size * Vector2(0.25, 0.70)
-	camera.position += root.get_canvas_transform().affine_inverse().basis_xform(point - target)
-	camera.reset_smoothing()
-	camera.force_update_scroll()
-	await frames(10)
+	var hovered: Control = null
+	for fraction: Vector2 in [Vector2(0.25, 0.70), Vector2(0.35, 0.45)]:
+		var target: Vector2 = root.get_visible_rect().size * fraction
+		camera.position += root.get_canvas_transform().affine_inverse().basis_xform(point - target)
+		camera.reset_smoothing()
+		camera.force_update_scroll()
+		await frames(10)
+		# A tile corner avoids the farmer sprite; selection still traverses real map input.
+		point = root.get_canvas_transform() * corner
+		root.warp_mouse(point)
+		var motion := InputEventMouseMotion.new()
+		motion.position = point
+		Input.parse_input_event(motion)
+		await frames(2)
+		hovered = root.gui_get_hovered_control()
+		if root.get_visible_rect().has_point(point) and hovered == null:
+			break
 	var tag: String = "field-phase-%d-ko-%s" % [int(field["phase"]), "1_0" if scale == 1.0 else "1_25"]
 	await capture(tag + "-map")
-	# A tile corner avoids the farmer sprite; selection still traverses real map input.
-	point = root.get_canvas_transform() * corner
-	root.warp_mouse(point)
-	var motion := InputEventMouseMotion.new()
-	motion.position = point
-	Input.parse_input_event(motion)
-	await frames(2)
-	var hovered: Control = root.gui_get_hovered_control()
 	print("MUX2_FIELD_HIT " + JSON.stringify({"scale": scale, "point": str(point), "hovered": str(hovered.get_path()) if hovered != null else ""}))
 	var exposed: bool = root.get_visible_rect().has_point(point) and hovered == null
 	check("field map click is unobstructed", exposed)

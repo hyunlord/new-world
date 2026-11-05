@@ -157,6 +157,7 @@ func _run() -> void:
 	_test_observer_future(main, world)
 	_test_card_route_contracts(main, world, cards)
 	_test_typed_visitors_and_trade()
+	await _test_card_clock(main, world, cards)
 	if "--all-card-fixtures" in OS.get_cmdline_user_args():
 		await _all_card_fixtures(main, world, cards)
 	else:
@@ -777,3 +778,60 @@ func _test_cards_output_write() -> void:
 	_check(JSON.parse_string(FileAccess.get_file_as_string(path)) == payload, "written card result round-trips exactly")
 	_check(not CardsRun.write_result_file(directory, payload), "card result write rejects directory target")
 	_check(not CardsRun.write_result_file(path.path_join("child.json"), payload), "card result write rejects parent that is a file")
+
+
+func _test_card_clock(main: Node, world: Node, cards: Node) -> void:
+	var alerts: Node = cards.call("_get_alerts_panel")
+	var reads: Node = main.get_node("SimReads")
+	var world_processing: bool = world.is_processing()
+	var alerts_processing: bool = alerts.is_processing()
+	var cards_processing: bool = cards.is_processing()
+	world.set_process(false)
+	alerts.set_process(false)
+	cards.set_process(false)
+	var runs: Array[Dictionary] = []
+	for delayed: bool in [false, true]:
+		reads.call("mutate_raw", "reset_world", [0])
+		world.call("set_sim_speed", 0.0)
+		await process_frame
+		await process_frame
+		SimReads.mutate(world, "cmd_set_steward", [false, 0])
+		_check(not alerts.is_processing() and not cards.is_processing(), "card clock reset retains explicit scheduling")
+		var evaluator: RefCounted = alerts.get("evaluator")
+		evaluator.set("_elapsed", 0.0)
+		evaluator.set("_matches", {})
+		var timeline: Array[Dictionary] = []
+		for hour: int in range(1, 4):
+			reads.call("mutate_raw", "advance_ticks", [60])
+			await process_frame
+			if delayed:
+				await create_timer(0.6).timeout
+			var fresh: RefCounted = load("res://scripts/ui/mux/alert_evaluator.gd").new()
+			fresh.call("load_registry")
+			fresh.call("evaluate", alerts.call("_read_facts"))
+			_check(CardsRun.poll_checkpoint(alerts, cards), "card checkpoint has valid facts")
+			_check(evaluator.get("_matches") == fresh.get("_matches"), "card checkpoint refreshes real alerts with zero elapsed time")
+			_check(int(cards.get("_last_tick")) == hour * 60, "card checkpoint owns exact simulated clock")
+			var active_before: Dictionary = cards.get("_active").duplicate(true)
+			CardsRun.poll_checkpoint(alerts, cards)
+			_check(cards.get("_active") == active_before, "same-tick checkpoint does not double poll hysteresis or expiry")
+			if hour == 1:
+				_check(bool(fresh.get("_matches").has("food_low")), "live seed fixture has an alert-triggered food card")
+				_check(bool(cards.get("_active").has("need_food")), "fresh alert opens real food card")
+				if cards.get("_active").has("need_food"):
+					var card: Dictionary = cards.get("_active")["need_food"]
+					cards.call("answer_card", "need_food", cards.call("_effective_recommended", card["def"], card["trigger_data"]))
+			timeline.append({"tick": world.call("get_time_snapshot"), "commands": world.call("get_command_log", 0), "cards": cards.get("_active").duplicate(true)})
+		runs.append({"timeline": timeline, "receipts": cards.call("command_results").duplicate(true)})
+	_check(not runs[0]["receipts"].is_empty(), "clock parity includes a real card command")
+	if not runs[0]["receipts"].is_empty():
+		_check(bool(runs[0]["receipts"][0].get("accepted", false)), "clock parity includes an accepted native command")
+	_check(runs[0] == runs[1], "fast and delayed frames preserve actual card and native command timeline")
+	reads.call("mutate_raw", "reset_world", [0])
+	world.call("set_sim_speed", 0.0)
+	await process_frame
+	await process_frame
+	SimReads.mutate(world, "cmd_set_steward", [true, 0])
+	world.set_process(world_processing)
+	alerts.set_process(alerts_processing)
+	cards.set_process(cards_processing)

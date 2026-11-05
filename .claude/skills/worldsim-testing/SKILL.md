@@ -315,3 +315,8 @@ Emitting a known `why:index` directly proves the handler, not that a player can 
 ### Benchmark arm metadata is not executable authentication
 
 A globally exported candidate SHA can label a correctly authenticated BASE executable as the candidate. Supply each arm's full product SHA in its subprocess environment and explicit CLI metadata, then reject a mismatched summary. Keep binary digests and source/build receipts as independent evidence; a correct label alone proves no build identity. Preserve interleaved order and the exact admitted load triplet. Sources: `tools/v8/read_gate_checks.py`; `tools/v8/test_read_gate.py`; M6b D-minus1-bench-provenance.
+
+
+### Accelerated UI comparisons need an explicit observer clock
+
+Two rendered frames do not guarantee that a wall-clock-throttled alert evaluator has refreshed. A runner that advances whole simulation hours must disable autonomous processing of the tested alert/card panels, refresh their real adapted facts at each declared checkpoint, and invoke the real card process once. Otherwise machine speed changes recommended commands and duplicate polls advance hysteresis. Prove this with a real alert-triggered card, an accepted native command, identical fast/delayed frame timelines and same-tick idempotence; bridge-triggered cards alone do not prove alert freshness. Preserve the original failed run and nonmatching replay, then requalify the full unchanged acceptance bars. Retain already-read chronology needed to diagnose deaths without inventing a causal command link. Sources: `tools/v8/loop_cards_run.gd`; `tools/v8/m6b_presentation_test.gd`; M6b S1-GATE-6/7.

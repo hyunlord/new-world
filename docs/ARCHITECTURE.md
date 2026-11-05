@@ -359,7 +359,7 @@ worldgen (colony.rs: nodes, material table)
    ▼                                                        ▼                  ▼
 orders (commands.rs): DesignateQuarry · DesignateChop · AddStockpile · PlaceBlueprint(workshop) · AddBill … · SetWorkPriority
    ▼
-JobAssignSystem 124 — passes by priority level (1..4), within a pass fuel-only Haul first at the worker's own Haul priority, then WorkType order Craft > Build > Quarry > Chop > Split > Haul (higher priorities and Haul=0 still win; M1 unchanged)
+JobAssignSystem 124 — passes by priority level (1..4), within a pass fuel-only Haul first at the worker's own Haul priority, then Craft > urgent fuel bill work / eligible edible Harvest > Build > Quarry > Chop > Split > Haul (only enabled work at its own numeric priority; M1 unchanged)
    │  Craft: Supply (inputs → shelf), Craft (at the work tile)        ◄── BillSystem 123 (hourly): active bill per workshop
    │  Build: Deliver (per material line), Build                       Quarry: Quarry (batch of 4)
    │  Chop: Chop (+ axe stop: Tool)                                   Split: the firewood bill's Craft, else Gather (deadwood)
@@ -803,10 +803,18 @@ state is `#[serde(skip)]` and excluded from gameplay hashes and identity compari
 Stage −1 presentation reads native snapshots through SimReads. Current state qualifies task-purpose counts; assignments alone do not imply work or learning progress. `snapshots_invalidated` drops plaque tick guards without a reentrant read, allowing the next normal frame to reflect paused commands. Expiry defaults to no action; founder-role display is passive and only explicit player role selection dispatches priorities. See ADR0056 and the M6b report for behavior identity evidence and remaining attribution limits.
 
 
-### M6b Stage 1 cultivation (implementation under validation)
+### M6b Stage 1 cultivation (release candidate; publication gated)
 
 `rust/crates/sim-core/src/colony/content/defs/crop.rs` defines open crop content loaded from `data/colony/crops.ron`; `colony/cultivation.rs` owns fields, soil, work modes and bounded intake counters. `runtime/cultivation/` handles validated zone commands and daily lifecycle, called from the existing job assignment path. `runtime/jobs/field.rs` and its execution module reuse physical seed ownership, navigation, stable reservations and the existing Haul priority. The mind order key is appended, retaining old encodings.
 
 Food-origin fractions travel through `runtime/food/origin.rs` and the existing atomic ownership/recipe operations. Only `food/meals.rs` books eaten units; sowing has its own conservation sink. `save/legacy_cultivation_v15.rs` freezes the prior body while the current format16 appends cultivation state. This avoids adding positional fields to historical FoodState or ColonyState payloads.
 
 `rust/crates/sim-bridge/src/ffi/cultivation.rs` exposes field/crop columns and explicit zone/erase/work commands. `scripts/world/colony/field_layer.gd` draws read-only phase state; `scripts/ui/panels/field_panel.gd` and `scripts/ui/field_facts.gd` provide ordinary command controls and card facts. The existing diagnosis/request providers use the same native physical field facts. No presentation timer advances crops or sends an expiry command. See [ADR 0058](decisions/0058-physical-cultivation-and-bounded-stewardship.md) and the [Stage 1 design](v8/m6b/S1_DESIGN.md); publication remains gated.
+
+Stage 1 admission shares an edible reserve budget between accepted durable wild harvest and presently executable grain cooking. The autonomous foraging path uses that same physical commitment accounting. Seasonal durable reserves and immediate meals retain distinct eligibility; a cancelled reservation is not food supply. Steward planning uses annual adult/child consumption and an initial replacement share to size fields, then applies seed availability and the 1.25× area ceiling. Food production, construction logs and fuel conversion have separate physical bounds.
+
+Assignment keeps priority levels 1–4 authoritative. Within a level, an urgent existing fuel bill can obtain its ordinary Supply/Craft work after Craft and before Build even with stewardship OFF or a scope excluding fuel. This is execution of an already-active bill, not new planning: active-bill order, remaining/maintain bounds, knowledge, reservations and disabled priorities still apply. Urgency creates neither a gathering command nor a target and does not cancel active jobs. Food admission retains its own stewardship scope. Survival tool production remains immediate; teaching requires an explicit player/card order.
+
+Natural oral transmission ranks feasible local topics by their integer time to practitioner-threshold loss under existing source decay, grace and hourly cadence. Actual use today removes urgency; protected lore and source floors retain ordinary handling. The gathering, pairing, one-lesson/rehearsal limits, gains and decay remain unchanged. This ranking adds no proficiency grant and does not inspect colony-wide sole holders. Water selection uses reachable route costs, and owned job routes remain stable; the idle gathering return path does not interrupt active work.
+
+Field cards, diagnosis, chapters and curated chronicle entries read the same native field facts; they do not simulate growth. Code-rendered field phases are functional presentation pending dedicated [field art (#687)](https://github.com/hyunlord/new-world/issues/687). Weaving and room-temperature systems remain later-stage work. Runtime candidate `a0ec36d1` has calibration-26, ordinary relative-safety and baseline-identity evidence; final UI acceptance, held-out validation, full gate and publication are tracked separately in the [release report](v8/m6b/M6B_REPORT.md).

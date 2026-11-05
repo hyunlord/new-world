@@ -1,16 +1,23 @@
 # Changelog
 
-## M6b Stage 1 — in progress, 2026-11-04 (not published)
+## M6b Stage 1 — release candidate, 2026-11-05 (publication conditional)
 
 ### Added
-- Data-defined emmer/flax crops, physical seed and field jobs, persistent soil and crop failure causes; explicit field controls and read-only state presentation.
+- Data-defined emmer/flax crops, physical seed and field jobs, persistent soil and crop failure causes; explicit field controls, cards, diagnosis, chronicle and chapter facts.
 - Format16 cultivation tail with exact published format15 migration, bounded cultivated-food intake fractions and separate seed consumption accounting.
 - Actual expiry-time hungry-member predicate, projected through the existing M6a summary for paired BASE/candidate validation.
+- Read-only field phase rendering; dedicated crop/field art remains planned in [#687](https://github.com/hyunlord/new-world/issues/687). Weaving and room-temperature simulation belong to later stages.
 
 ### Changed
-- Bound proactive food and seed-consuming cooking commitments, separate fuel conversion from construction logs, and plan a real roofed Storehouse.
-- Compare a bounded shortlist of affordable home sites by actual hearth route cost while preserving clearing caps and complete-shell access.
-- Base initial field area on measured wild production, annual seasonal consumption and a replacement share; calibration and held-out acceptance remain pending.
+- Bound proactive food and seed-consuming cooking commitments, separate fuel conversion from construction logs, and plan a real roofed Storehouse. Durable wild harvest shares edible headroom with accepted output and executable grain cooking, including autonomous gathering.
+- Compare affordable home sites by actual hearth route cost; preserve clearing caps and complete-shell access. Use reachable water routes and retain owned navigation through work; blocked evening idle routes can return to gathering.
+- Plan initial field area from annual seasonal consumption and a replacement share, constrained by physical seed and a 1.25× planned-area ceiling.
+- Execute urgent existing fuel bills regardless of steward planning mode or scope, preserving numeric work priorities, bill bounds, knowledge and active jobs. This creates no new bill or gathering order.
+- Prioritize local conversational topics by existing decay deadlines within actual evening gatherings; retain learning/rehearsal limits, gains and decay. Teaching remains an explicit player/card command; expiry sends none. Survival tool production retains its immediate path.
+
+### Validation checkpoint
+- Runtime candidate `a0ec36d1`: calibration-26 PASS, ordinary relative-safety fixtures 34/34 PASS, strict baseline identity run22 PASS (228,748 values, zero differences). Fixed-card validation: 16 paired runs, 14 kinds and 18 command routes PASS, with zero rejected commands.
+- Natural UI acceptance, held-out seeds 1520–1551, the final full gate and publication are not claimed by this checkpoint. See [the release report](docs/v8/m6b/M6B_REPORT.md) for their current state and retained failures.
 
 ## M6b Stage 0 — stopped, 2026-11-04 (not published)
 

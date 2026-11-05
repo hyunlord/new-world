@@ -54,6 +54,15 @@ func _run() -> void:
 		quit(1)
 		return
 
+	var cards: Node = main.find_child("CardPanel", true, false)
+	var alerts: Node = main.find_child("Alerts", true, false)
+	if cards == null or alerts == null:
+		_write_result({"error": "missing CardPanel or Alerts"})
+		quit(1)
+		return
+	# The harness clock, not wall time or render frames, owns these observers.
+	cards.set_process(false)
+	alerts.set_process(false)
 	world.set_process(false)
 	world.call("set_sim_speed", 0.0)
 	for _i: int in 10:
@@ -119,7 +128,7 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 	var answer_log: Array[Dictionary] = []
 	var answer_attempts: Array[Dictionary] = []
 	# Advance tick by tick, checking cards at intervals.
-	# In headless mode, directly call _poll_triggers since _process timer doesn't fire.
+	# First authoritative checkpoint is tick 60, then once per simulation hour.
 	@warning_ignore("integer_division")
 	var intervals: int = TOTAL_TICKS / CARD_CHECK_INTERVAL
 	var card_kinds_seen: Dictionary = {}
@@ -131,10 +140,9 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 		if ((interval + 1) * CARD_CHECK_INTERVAL) % 1440 == 0:
 			var actual_tick: int = int((world.call("get_time_snapshot") as Dictionary).get("tick", -1))
 			print("CARDS_PROGRESS " + JSON.stringify({"seed": seed_val, "mode": "answer" if answer_cards else "no_answer", "tick": actual_tick, "requested_tick": (interval + 1) * CARD_CHECK_INTERVAL, "total_ticks": TOTAL_TICKS}))
-		# Directly trigger card polling (headless mode bypasses the delta timer).
-		if card_panel != null and card_panel.has_method("_poll_triggers"):
-			card_panel.call("_poll_triggers")
-			card_panel.call("_check_expiry")
+		if not poll_checkpoint(card_panel.call("_get_alerts_panel"), card_panel):
+			_validation_failures += 1
+			return {"seed": seed_val, "alive": 0, "deaths": 0, "validation_failures": 1, "clock_valid": false, "error": "invalid checkpoint facts"}
 		# Check for open cards.
 		if card_panel == null or not card_panel.has_method("active_ids"):
 			continue
@@ -263,6 +271,7 @@ func _run_seed(main: Node, world: Node, reads: Node, seed_val: int, answer_cards
 		"answer_attempts": answer_attempts,
 		"knowledge_lost": lost_rows.size() if bool(chronicle_evidence.get("complete", false)) else null,
 		"knowledge_lost_rows": lost_rows,
+		"chronicle_rows": chronicle_evidence.get("rows", []),
 		"chronicle_coverage": {"complete": chronicle_evidence.get("complete", false), "total": chronicle_evidence.get("total", -1), "read_count": (chronicle_evidence.get("rows", []) as Array).size()},
 		"evidence_limitations": ["Native command log has no source field; synchronous answer window is attribution evidence, not native Player metadata.", "Chronicle delta is temporal evidence only; no causal command identifier joins the two logs.", "KnowledgeLost count is diagnostic; no acceptance threshold is inferred from this run."],
 	}
@@ -531,3 +540,11 @@ static func match_native_receipts(receipts: Array, native: Dictionary, start: in
 		else:
 			unmatched.append(i)
 	return {"native_shape_valid": valid, "matched": matched.size(), "unmatched_receipt_indices": unmatched, "unmatched_native_count": kinds.size() - matched.size(), "complete": valid and unmatched.is_empty() and matched.size() == kinds.size()}
+
+
+## One harness checkpoint; the real card process owns hourly gating and expiry.
+static func poll_checkpoint(alerts: Node, cards: Node) -> bool:
+	if not bool(alerts.call("refresh_from_facts", alerts.call("_read_facts"))):
+		return false
+	cards.call("_process", 0.0)
+	return true

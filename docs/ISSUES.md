@@ -431,3 +431,10 @@ M-UX2 게시 시점의 332개 고유 이슈: fixed197 / open103 / deferred30 / w
 | ISS-361 | M-LOOP 집사 범위·상한·가르침 held-out 실패 | LOOP-HELDOUT-FINAL1680–1711, R1 승인 무효 | sim | open | [#684](https://github.com/hyunlord/new-world/issues/684), Stage1: 통나무·땔감·식량 상한, 도구 전용 생존 규칙, 가르침 카드. 프레젠테이션 게시가 이 실패를 고친 것은 아님 | docs/v8/loop/LOOP_REPORT.md; docs/v8/m6b/M6B_DECISIONS.md D-minus1 |
 
 Stage −1 게시 뒤 중복·다음 빈 ISS를 재확인하고 위 제목의 #684를 생성·readback했다. #650/#663은 이미 닫혀 있었으며 새로 닫은 것으로 집계하지 않는다. 실제 URL과 확정 ISS는 외부 `minus1/steward-issue-publication.json`에 먼저 보존했다. 이 문서 갱신은 Stage0 게시를 뜻하지 않는다.
+
+
+## M6b Stage1 아트 후속
+
+| ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
+|---|---|---|---|---|---|---|
+| M6B-ART-1 | 밀·아마 밭 단계가 코드로 그린 자리표시자 | 농경 구현은 실제 경운·성장·익음·그루터기 상태를 표시하지만 정식 작물 그림 없음 | art | open | [#687](https://github.com/hyunlord/new-world/issues/687): 기존 route I·resolver에 맞는 상태별 그림, KO1.0/1.25 실제 화면 검증. 그림 생성은 이번 범위 아님. 게시 때 다음 빈 ISS 확정 | docs/v8/m6b/S1_DESIGN.md; a0ec36d1 |
