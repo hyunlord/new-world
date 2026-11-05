@@ -759,6 +759,9 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
     fact!("water_available", Bool, |_p, c, _r, _n| Ok(i64::from(
         c.availability.water
     ))),
+    fact!("water_target_available", Bool, |p, _c, r, _n| Ok(
+        i64::from(targets::water_target(r, p.agent, &p.position, p.state, None).is_some())
+    )),
     fact!("sleep_available", Bool, |_p, c, _r, _n| Ok(i64::from(
         c.availability.sleep
     ))),

@@ -3633,5 +3633,23 @@
             tags: ["port", "idle_fallback"], name_key: "MIND_BEHAVIOUR_WANDER",
             every_ticks: 1, target: None,
         ),
+        (
+            id: "saturated_thirst_food_walk", band: "critical", behaviour: "drink",
+            when: [
+                (fact: "fleeing", op: "not"),
+                (fact: "drafted", op: "not"),
+                (fact: "seeking", op: "has"),
+                (fact: "target_food", op: "has"),
+                (fact: "critical_preemption_enabled", op: "has"),
+                (fact: "thirst_actionable", op: "has"),
+                (fact: "thirst_tenths", op: ">=", value: Some(1000)),
+                (fact: "hunger_tenths", op: "<", value: Some(1000)),
+                (fact: "water_target_available", op: "has"),
+            ],
+            score: (constant: 8000000000, terms: []),
+            hysteresis: 0, life_stages: ["adult", "child", "elder"],
+            tags: ["survival"], name_key: "MIND_BEHAVIOUR_URGENT_DRINK",
+            every_ticks: 1, target: Some("water"),
+        ),
     ],
 )

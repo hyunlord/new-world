@@ -413,3 +413,213 @@ fn colony_water_binding_coordinator_retains_walk_then_reselects_on_navigation_ch
         (thirst - 30.0).max(0.0)
     );
 }
+
+fn food_walk_saturation_scene() -> (
+    hecs::World,
+    sim_engine::SimResources,
+    hecs::Entity,
+    ColonyMindSystem,
+) {
+    use crate::runtime::food::items::{self, FoodSource};
+    use sim_core::colony::{ItemKind, ItemSpec};
+    use sim_core::components::{Hunger, Inventory, Lineage, Thirst};
+
+    let mut world = hecs::World::new();
+    let person = world.spawn((
+        Agent { id: 7 },
+        Position::new(2, 2),
+        AgentState::Idle,
+        Hunger::new(87.0, 0.0),
+        Thirst::new(20.0, 0.0),
+        Inventory::default(),
+        Lineage { key: 7, births: 0 },
+        crate::runtime::agent::MovementRng::new(7),
+    ));
+    let mut r = sim_engine::SimResources::new(16, 8, sim_core::MaterialRegistry::new());
+    r.rules = WorldRules::colony(0);
+    r.rules.agent.move_interval_ticks = 1;
+    r.nav.install(sim_core::nav::CostMap::new(16, 8));
+    r.water_tiles.insert((2, 3), 2);
+    items::create_ground(
+        &mut r,
+        (13, 2),
+        ItemSpec::raw(ItemKind::from_name("roots").unwrap(), None),
+        2,
+        0,
+        FoodSource::Harvest,
+    )
+    .unwrap();
+    let program =
+        MindProgram::load(include_str!("../../../../sim-core/data/colony/mind.ron")).unwrap();
+    let mut mind = ColonyMindSystem::new(program);
+    mind.try_tick(&mut world, &mut r).unwrap();
+    assert_eq!(
+        *world.get::<&AgentState>(person).unwrap(),
+        AgentState::Seeking {
+            target: TargetKind::Food
+        }
+    );
+    assert_eq!(world.get::<&SeekTarget>(person).unwrap().tile, (13, 2));
+    let path = r.nav.path((2, 2), (13, 2)).unwrap();
+    assert_eq!(path.len(), 11);
+    r.nav.paths.insert(
+        7,
+        sim_core::nav::AgentPath::new((13, 2), r.nav.version, (2, 2), path.to_vec(), 0),
+    );
+    (world, r, person, mind)
+}
+
+#[test]
+fn saturated_thirst_interrupts_food_walk_before_merely_critical_hunger() {
+    use sim_core::components::{BodyHealth, Thirst};
+    let (mut world, mut r, person, mut mind) = food_walk_saturation_scene();
+    world
+        .insert_one(
+            person,
+            BodyHealth {
+                hp: 1.58,
+                max_hp: 100.0,
+            },
+        )
+        .unwrap();
+    // Unsaturated thirst preserves the existing hunger-first choice and route.
+    world.get::<&mut Thirst>(person).unwrap().value = 99.0;
+    r.current_tick = 1;
+    mind.try_tick(&mut world, &mut r).unwrap();
+    assert_eq!(world.get::<&SeekTarget>(person).unwrap().tile, (13, 2));
+    assert_eq!(r.nav.paths[&7].goal, (13, 2));
+
+    // This intentionally specifies a new saturation boundary, not legacy policy parity.
+    world.get::<&mut Thirst>(person).unwrap().value = 100.0;
+    r.current_tick = 2;
+    mind.try_tick(&mut world, &mut r).unwrap();
+    assert_eq!(
+        *world.get::<&AgentState>(person).unwrap(),
+        AgentState::Seeking {
+            target: TargetKind::Water
+        }
+    );
+    assert_eq!(world.get::<&SeekTarget>(person).unwrap().tile, (2, 3));
+    crate::runtime::agent::AgentMovementSystem::new().tick(&mut world, &mut r);
+    assert_eq!(
+        *world.get::<&Position>(person).unwrap(),
+        Position::new(2, 3)
+    );
+    assert_eq!(r.nav.paths[&7].goal, (2, 3));
+    for tick in 3..=4 {
+        r.current_tick = tick;
+        mind.try_tick(&mut world, &mut r).unwrap();
+        crate::runtime::survival::StarvationSystem::new().tick(&mut world, &mut r);
+    }
+    assert_eq!(r.water_tiles[&(2, 3)], 1);
+    assert_eq!(world.get::<&Thirst>(person).unwrap().value, 70.0);
+    assert_eq!(r.food.tallies.meals, 0);
+    assert_eq!(r.colony.ground_items[&(13, 2)].count, 2);
+    for tick in 5..=15 {
+        r.current_tick = tick;
+        crate::runtime::agent::AgentMovementSystem::new().tick(&mut world, &mut r);
+        mind.try_tick(&mut world, &mut r).unwrap();
+        crate::runtime::survival::StarvationSystem::new().tick(&mut world, &mut r);
+    }
+    assert!(world.get::<&BodyHealth>(person).unwrap().hp > 0.0);
+    assert_eq!(r.tallies.deaths_dehydration, 0);
+}
+
+#[test]
+fn saturated_thirst_keeps_baseline_food_walk_priority() {
+    use sim_core::components::{Hunger, Thirst};
+    let mut world = hecs::World::new();
+    let person = world.spawn((
+        Agent { id: 7 },
+        Position::new(2, 2),
+        AgentState::Seeking {
+            target: TargetKind::Food,
+        },
+        SeekTarget { tile: (13, 2) },
+        Hunger::new(87.0, 0.0),
+        Thirst::new(100.0, 0.0),
+    ));
+    let mut r = sim_engine::SimResources::new(16, 8, sim_core::MaterialRegistry::new());
+    r.rules = WorldRules::baseline(0);
+    r.food_tiles.insert((13, 2), 2);
+    r.water_tiles.insert((2, 3), 2);
+    crate::runtime::baseline::decision::AgentDecisionSystem::new().tick(&mut world, &mut r);
+    assert_eq!(
+        *world.get::<&AgentState>(person).unwrap(),
+        AgentState::Seeking {
+            target: TargetKind::Food
+        }
+    );
+    assert_eq!(world.get::<&SeekTarget>(person).unwrap().tile, (13, 2));
+    assert_eq!(r.water_tiles[&(2, 3)], 2);
+}
+
+#[test]
+fn saturated_thirst_food_walk_guard_preserves_ineligible_cases() {
+    use sim_core::components::{Hunger, Thirst};
+    for case in [
+        "empty",
+        "blocked",
+        "disconnected",
+        "both_saturated",
+        "consuming",
+        "disabled",
+    ] {
+        let (mut world, mut r, person, mut mind) = food_walk_saturation_scene();
+        world.get::<&mut Thirst>(person).unwrap().value = 100.0;
+        match case {
+            "empty" => r.water_tiles.clear(),
+            "blocked" => {
+                r.nav.set_cost((2, 3), 0);
+            }
+            "disconnected" => {
+                r.water_tiles.clear();
+                r.water_tiles.insert((2, 6), 2);
+                for x in 0..16 {
+                    r.nav.set_cost((x, 4), 0);
+                }
+            }
+            "both_saturated" => world.get::<&mut Hunger>(person).unwrap().value = 100.0,
+            "consuming" => {
+                *world.get::<&mut Position>(person).unwrap() = Position::new(13, 2);
+                *world.get::<&mut AgentState>(person).unwrap() = AgentState::Consuming {
+                    target: TargetKind::Food,
+                };
+            }
+            "disabled" => r.rules.agent.critical_preemption = None,
+            _ => unreachable!(),
+        }
+        r.current_tick = 1;
+        mind.try_tick(&mut world, &mut r).unwrap();
+        assert_ne!(
+            *world.get::<&AgentState>(person).unwrap(),
+            AgentState::Seeking {
+                target: TargetKind::Water
+            },
+            "{case}"
+        );
+        if case == "consuming" {
+            assert_eq!(r.food.tallies.meals, 1);
+        } else {
+            assert_eq!(
+                world.get::<&SeekTarget>(person).unwrap().tile,
+                (13, 2),
+                "{case}"
+            );
+        }
+        if matches!(case, "empty" | "blocked" | "disconnected") {
+            for tick in 2..=16 {
+                r.current_tick = tick;
+                crate::runtime::agent::AgentMovementSystem::new().tick(&mut world, &mut r);
+                mind.try_tick(&mut world, &mut r).unwrap();
+                if r.food.tallies.meals > 0 {
+                    break;
+                }
+            }
+            assert_eq!(
+                r.food.tallies.meals, 1,
+                "valid food journey must finish: {case}"
+            );
+        }
+    }
+}
