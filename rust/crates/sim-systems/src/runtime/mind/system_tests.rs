@@ -389,4 +389,27 @@ fn colony_water_binding_coordinator_retains_walk_then_reselects_on_navigation_ch
         (2, 3),
         "movement replaces the old water route"
     );
+    r.water_tiles.insert((2, 3), 2);
+    r.current_tick += 1;
+    system.try_tick(&mut world, &mut r).unwrap();
+    assert_eq!(
+        *world.get::<&AgentState>(person).unwrap(),
+        AgentState::Consuming {
+            target: TargetKind::Water
+        }
+    );
+    let thirst = world
+        .get::<&sim_core::components::Thirst>(person)
+        .unwrap()
+        .value;
+    r.current_tick += 1;
+    system.try_tick(&mut world, &mut r).unwrap();
+    assert_eq!(r.water_tiles.get(&(2, 3)), Some(&1));
+    assert_eq!(
+        world
+            .get::<&sim_core::components::Thirst>(person)
+            .unwrap()
+            .value,
+        (thirst - 30.0).max(0.0)
+    );
 }

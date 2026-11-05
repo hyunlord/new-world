@@ -150,14 +150,24 @@ impl CostMap {
             (0, 1),
             (1, 1),
         ];
+        let origin_passable = self.passable(t);
         D.iter().filter_map(move |&(dx, dy)| {
             let nx = i64::from(t.0) + dx;
             let ny = i64::from(t.1) + dy;
-            if nx < 0 || ny < 0 {
+            if nx < 0 || ny < 0 || nx >= i64::from(self.width) || ny >= i64::from(self.height) {
                 return None;
             }
             let n = (nx as u32, ny as u32);
-            self.can_step(t, n).then_some(n)
+            let index = (n.1 as usize) * (self.width as usize) + n.0 as usize;
+            if self.cost[index] == IMPASSABLE
+                || (dx != 0
+                    && dy != 0
+                    && origin_passable
+                    && (!self.passable((n.0, t.1)) || !self.passable((t.0, n.1))))
+            {
+                return None;
+            }
+            Some(n)
         })
     }
 }
@@ -210,7 +220,12 @@ impl Regions {
     }
 }
 
-/// Reusable A* scratch arrays, stamped per search so nothing is cleared.
+/// Preserve the frontier's lexicographic `(f, h, y, x)` order in one key.
+const fn search_key(f: u32, h: u32, y: u32, x: u32) -> u128 {
+    ((f as u128) << 96) | ((h as u128) << 64) | ((y as u128) << 32) | x as u128
+}
+
+/// Reusable A* frontier and scratch arrays, stamped per search.
 #[derive(Debug, Clone, Default)]
 struct Scratch {
     stamp: Vec<u32>,
@@ -218,6 +233,7 @@ struct Scratch {
     g: Vec<u32>,
     parent: Vec<u32>,
     generation: u32,
+    open: BinaryHeap<Reverse<u128>>,
 }
 
 /// The path memo of one `version`.
@@ -503,6 +519,8 @@ impl NavState {
 
     /// Plain A* (no memo, no region test). `None` if the search exhausts.
     fn search(&self, from: Tile, to: Tile) -> Option<Vec<Tile>> {
+        let mut s = self.scratch.borrow_mut();
+        s.open.clear();
         let map = &self.map;
         let w = map.width as usize;
         let n = map.cost.len();
@@ -527,7 +545,6 @@ impl NavState {
         if is_goal(from) {
             return Some(Vec::new());
         }
-        let mut s = self.scratch.borrow_mut();
         if s.stamp.len() != n {
             *s = Scratch {
                 stamp: vec![0; n],
@@ -535,6 +552,7 @@ impl NavState {
                 g: vec![0; n],
                 parent: vec![0; n],
                 generation: 0,
+                open: BinaryHeap::new(),
             };
         }
         s.generation = s.generation.wrapping_add(1);
@@ -544,14 +562,16 @@ impl NavState {
             s.generation = 1;
         }
         let gen = s.generation;
-        let mut open: BinaryHeap<Reverse<(u32, u32, u32, u32)>> = BinaryHeap::new();
         s.stamp[start] = gen;
         s.g[start] = 0;
         s.parent[start] = start as u32;
-        open.push(Reverse((h(from), h(from), from.1, from.0)));
+        s.open
+            .push(Reverse(search_key(h(from), h(from), from.1, from.0)));
         let mut expanded = 0u64;
         let mut reached: Option<usize> = None;
-        while let Some(Reverse((_, _, y, x))) = open.pop() {
+        while let Some(Reverse(key)) = s.open.pop() {
+            let x = key as u32;
+            let y = (key >> 32) as u32;
             let t = (x, y);
             let i = (y as usize) * w + (x as usize);
             if s.closed[i] == gen {
@@ -575,10 +595,11 @@ impl NavState {
                     s.g[j] = g;
                     s.parent[j] = i as u32;
                     let hn = h(nb);
-                    open.push(Reverse((g + hn, hn, nb.1, nb.0)));
+                    s.open.push(Reverse(search_key(g + hn, hn, nb.1, nb.0)));
                 }
             }
         }
+        s.open.clear();
         self.stats.borrow_mut().expanded += expanded;
         let mut at = reached?;
         let mut out = Vec::new();
@@ -626,6 +647,211 @@ mod tests {
             at = s;
         }
         total
+    }
+
+    #[test]
+    fn neighbours_match_original_order_and_step_rules() {
+        let reference = |map: &CostMap, t: Tile| {
+            let mut result = Vec::new();
+            for dy in -1i64..=1 {
+                for dx in -1i64..=1 {
+                    if dx == 0 && dy == 0 {
+                        continue;
+                    }
+                    let x = i64::from(t.0) + dx;
+                    let y = i64::from(t.1) + dy;
+                    if x >= 0 && y >= 0 {
+                        let next = (x as u32, y as u32);
+                        if map.can_step(t, next) {
+                            result.push(next);
+                        }
+                    }
+                }
+            }
+            result
+        };
+        for (width, height) in [(0, 0), (0, 3), (3, 0), (1, 1), (1, 3), (3, 1), (3, 3)] {
+            for mask in 0u32..(1 << (width * height)) {
+                let mut map = CostMap::new(width, height);
+                for (i, cost) in map.cost.iter_mut().enumerate() {
+                    *cost = if mask & (1 << i) == 0 {
+                        IMPASSABLE
+                    } else {
+                        [COST_PLAIN, COST_DOOR, COST_BANK, u8::MAX][i % 4]
+                    };
+                }
+                let origins = (0..=height)
+                    .flat_map(|y| (0..=width).map(move |x| (x, y)))
+                    .chain([(u32::MAX, 0), (0, u32::MAX), (u32::MAX, u32::MAX)]);
+                for from in origins {
+                    assert_eq!(
+                        map.steps_from(from).collect::<Vec<_>>(),
+                        reference(&map, from),
+                        "{width}x{height}, mask={mask}, from={from:?}"
+                    );
+                }
+            }
+        }
+    }
+
+    // Frozen pre-optimization tuple frontier; independent allocation per query.
+    fn original_tuple_search(map: &CostMap, from: Tile, to: Tile) -> Option<Vec<Tile>> {
+        let w = map.width as usize;
+        let n = map.cost.len();
+        let start = map.index(from)?;
+        let goal_open = map.passable(to);
+        let is_goal = |t: Tile| {
+            if goal_open {
+                t == to
+            } else {
+                chebyshev(t, to) == 1
+            }
+        };
+        let h = |t: Tile| {
+            let d = octile(t, to);
+            if goal_open {
+                d
+            } else {
+                d.saturating_sub(14)
+            }
+        };
+        if is_goal(from) {
+            return Some(Vec::new());
+        }
+        let mut stamp = vec![false; n];
+        let mut closed = vec![false; n];
+        let mut costs = vec![0; n];
+        let mut parent = vec![0; n];
+        let mut open: BinaryHeap<Reverse<(u32, u32, u32, u32)>> = BinaryHeap::new();
+        stamp[start] = true;
+        costs[start] = 0;
+        parent[start] = start as u32;
+        open.push(Reverse((h(from), h(from), from.1, from.0)));
+        let mut reached: Option<usize> = None;
+        while let Some(Reverse((_, _, y, x))) = open.pop() {
+            let t = (x, y);
+            let i = (y as usize) * w + (x as usize);
+            if closed[i] {
+                continue;
+            }
+            closed[i] = true;
+            if is_goal(t) {
+                reached = Some(i);
+                break;
+            }
+            let gi = costs[i];
+            for nb in map.steps_from(t) {
+                let j = (nb.1 as usize) * w + (nb.0 as usize);
+                if closed[j] {
+                    continue;
+                }
+                let g = gi + map.step_cost(t, nb);
+                if !stamp[j] || g < costs[j] {
+                    stamp[j] = true;
+                    costs[j] = g;
+                    parent[j] = i as u32;
+                    let hn = h(nb);
+                    open.push(Reverse((g + hn, hn, nb.1, nb.0)));
+                }
+            }
+        }
+        let mut at = reached?;
+        let mut out = Vec::new();
+        while at != start {
+            out.push(((at % w) as u32, (at / w) as u32));
+            at = parent[at] as usize;
+        }
+        out.reverse();
+        Some(out)
+    }
+
+    #[test]
+    fn packed_search_keys_preserve_tuple_order_and_coordinates() {
+        let values = [0, 1, u32::MAX / 2, u32::MAX - 1, u32::MAX];
+        let mut tuples = BinaryHeap::new();
+        let mut packed = BinaryHeap::new();
+        for f in values {
+            for h in values {
+                for y in values {
+                    for x in values {
+                        let key = search_key(f, h, y, x);
+                        assert_eq!(
+                            (
+                                (key >> 96) as u32,
+                                (key >> 64) as u32,
+                                (key >> 32) as u32,
+                                key as u32
+                            ),
+                            (f, h, y, x)
+                        );
+                        // Duplicate priorities must have the same pop behavior too.
+                        for _ in 0..2 {
+                            tuples.push(Reverse((f, h, y, x)));
+                            packed.push(Reverse(key));
+                        }
+                    }
+                }
+            }
+        }
+        while let Some(Reverse((f, h, y, x))) = tuples.pop() {
+            assert_eq!(packed.pop(), Some(Reverse(search_key(f, h, y, x))));
+        }
+        assert!(packed.is_empty());
+    }
+
+    #[test]
+    fn search_frontier_reuses_capacity_without_retaining_entries() {
+        let mut n = nav(&[".....", ".....", "....."]);
+        assert!(n.search((0, 0), (1, 1)).is_some());
+        let capacity = n.scratch.borrow().open.capacity();
+        assert!(capacity > 0);
+        assert!(n.scratch.borrow().open.is_empty());
+        assert_eq!(n.search((0, 0), (0, 0)), Some(Vec::new()));
+        assert!(n.scratch.borrow().open.is_empty());
+        assert_eq!(n.scratch.borrow().open.capacity(), capacity);
+        assert!(n.search((u32::MAX, 0), (1, 1)).is_none());
+        assert!(n.scratch.borrow().open.is_empty());
+        n.install(map_of(&[".#.", ".#.", ".#."]));
+        assert!(n.search((0, 0), (2, 2)).is_none());
+        assert!(n.scratch.borrow().open.is_empty());
+    }
+
+    #[test]
+    fn searches_preserve_original_tuple_heap_paths() {
+        let mut n = NavState::default();
+        for rows in [
+            &[".....", ".....", ".....", ".....", "....."][..],
+            &["..D..", ".###.", ".....", ".#.#.", "....."][..],
+            &[".#...", ".#.D.", ".#.#.", "...#.", "####."][..],
+            &[".#.", "###", ".#."][..],
+            &[".", "D", ".", "#", "."][..],
+        ] {
+            n.install(map_of(rows));
+            for round in 0..3 {
+                if round == 1 {
+                    n.set_cost((0, 0), COST_BANK);
+                    n.scratch.borrow_mut().generation = u32::MAX;
+                } else if round == 2 {
+                    n.set_cost((0, 0), IMPASSABLE);
+                }
+                for fy in 0..n.map.height {
+                    for fx in 0..n.map.width {
+                        for ty in 0..n.map.height {
+                            for tx in 0..n.map.width {
+                                let from = (fx, fy);
+                                let to = (tx, ty);
+                                assert_eq!(
+                                    n.search(from, to),
+                                    original_tuple_search(&n.map, from, to),
+                                    "round={round}, from={from:?}, to={to:?}"
+                                );
+                                assert!(n.scratch.borrow().open.is_empty());
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     #[test]

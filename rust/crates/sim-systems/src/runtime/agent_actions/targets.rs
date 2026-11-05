@@ -93,14 +93,18 @@ pub(in crate::runtime) fn water_target(
     if region == 0 {
         return None;
     }
+    if available(&here) {
+        return Some(here);
+    }
     // Authored navigation costs are at least the plain cost used by octile.
     // This is a lower bound, not a fixed shortlist: equal-cost ties still run.
     let mut candidates: Vec<_> = resources
         .water_tiles
-        .keys()
-        .copied()
-        .filter(|tile| available(tile) && nav.region_of(*tile) == region)
-        .map(|tile| (sim_core::nav::octile(here, tile), tile))
+        .iter()
+        .filter(|(tile, amount)| {
+            **amount > 0 && nav.passable(**tile) && nav.region_of(**tile) == region
+        })
+        .map(|(&tile, _)| (sim_core::nav::octile(here, tile), tile))
         .collect();
     candidates.sort_unstable();
     let mut best: Option<(u64, sim_core::nav::Tile)> = None;
@@ -341,6 +345,114 @@ mod tests {
     }
 
     #[test]
+    fn water_route_binding_matches_original_fresh_selection() {
+        let original = |r: &sim_engine::SimResources, here| {
+            let region = r.nav.region_of(here);
+            if region == 0 {
+                return None;
+            }
+            let mut candidates: Vec<_> = r
+                .water_tiles
+                .keys()
+                .copied()
+                .filter(|tile| {
+                    r.water_tiles.get(tile).is_some_and(|n| *n > 0)
+                        && r.nav.passable(*tile)
+                        && r.nav.region_of(*tile) == region
+                })
+                .map(|tile| (sim_core::nav::octile(here, tile), tile))
+                .collect();
+            candidates.sort_unstable();
+            let mut best: Option<(u64, sim_core::nav::Tile)> = None;
+            for (lower, tile) in candidates {
+                if best.is_some_and(|(cost, _)| u64::from(lower) > cost) {
+                    break;
+                }
+                if let Some(path) = r.nav.path(here, tile) {
+                    let mut at = here;
+                    let cost = path
+                        .iter()
+                        .map(|next| {
+                            let cost = u64::from(r.nav.map().step_cost(at, *next));
+                            at = *next;
+                            cost
+                        })
+                        .sum();
+                    if best.is_none_or(|old| (cost, tile) < old) {
+                        best = Some((cost, tile));
+                    }
+                }
+            }
+            best.map(|(_, tile)| tile)
+        };
+        for mask in 0u32..64 {
+            let mut r = water_scene();
+            let mut map = sim_core::nav::CostMap::new(4, 4);
+            for i in 0..16 {
+                let tile = (i % 4, i / 4);
+                map.set(
+                    tile,
+                    if mask & (1 << (i % 6)) == 0 {
+                        sim_core::nav::IMPASSABLE
+                    } else {
+                        [
+                            sim_core::nav::COST_PLAIN,
+                            sim_core::nav::COST_DOOR,
+                            sim_core::nav::COST_BANK,
+                        ][i as usize % 3]
+                    },
+                );
+                r.water_tiles.insert(tile, if i % 3 == 0 { 0 } else { 255 });
+            }
+            r.water_tiles.insert((9, 9), 255);
+            r.nav.install(map);
+            for y in 0..4 {
+                for x in 0..4 {
+                    assert_eq!(
+                        water_target(
+                            &r,
+                            7,
+                            &Position::new(x, y),
+                            sim_core::components::AgentState::Idle,
+                            None
+                        ),
+                        original(&r, (x, y)),
+                        "mask={mask}, origin=({x},{y})"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn water_route_binding_at_current_source_needs_no_path_requests() {
+        use sim_core::components::{AgentState, TargetKind};
+        let mut r = water_scene();
+        r.water_tiles.extend([((2, 2), 3), ((2, 3), 255)]);
+        assert_ne!(r.nav.region_of((2, 2)), 0);
+        let before = *r.nav.stats.borrow();
+        for _ in 0..10 {
+            assert_eq!(
+                water_target(
+                    &r,
+                    7,
+                    &Position::new(2, 2),
+                    AgentState::Consuming {
+                        target: TargetKind::Water
+                    },
+                    None
+                ),
+                Some((2, 2))
+            );
+        }
+        assert_eq!(
+            *r.nav.stats.borrow(),
+            before,
+            "zero-cost source needs no path query"
+        );
+    }
+
+    #[test]
     fn water_route_binding_retains_owned_walk_without_new_path_queries() {
         use sim_core::components::{AgentState, TargetKind};
         let mut r = water_scene();
@@ -355,6 +467,7 @@ mod tests {
             target: TargetKind::Water,
         };
         let before = *r.nav.stats.borrow();
+        r.water_tiles.insert((2, 2), 1);
         for _ in 0..10 {
             assert_eq!(
                 water_target(&r, 7, &Position::new(2, 2), seeking, Some(goal)),
@@ -362,6 +475,7 @@ mod tests {
             );
         }
         assert_eq!(*r.nav.stats.borrow(), before);
+        r.water_tiles.remove(&(2, 2));
         // Save/load discards derived memo/map, not the owned path or its progress.
         let bytes = bincode::serialize(&r.nav).unwrap();
         let map = r.nav.map().clone();

@@ -1,70 +1,70 @@
 {
   "schema_version": 1,
   "base_commit": "2f6993009ddb600e9249c28f9768a1a5252c8821",
-  "behavior_commit": "a0ec36d1dd0171ed2bde3b5dadebe846ec346f2d",
+  "behavior_commit": "eb5b54d5d88a9b1afab8afb24eacc3da24c8a103",
   "status": "ADOPTED_FOR_NEXT_GATE_NOT_FINAL_GATE_PASS",
   "scope": "Intentional colony fixture changes only. Baseline is never declared and remains strict. These scopes do not assert isolated causality for every trajectory difference.",
   "acceptance": "Each fixture/world retains candidate KnowledgeLost <= paired BASE and survivors >= max(0, paired BASE - 2), with existing scenario, ledger and reservation checks. Both F10 arms must independently pass. No new normalizer exclusions.",
   "fixtures": [
     {
       "fixture_id": "determinism",
-      "behavior_commit": "a0ec36d1dd0171ed2bde3b5dadebe846ec346f2d",
+      "behavior_commit": "eb5b54d5d88a9b1afab8afb24eacc3da24c8a103",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture."
+      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1)."
     },
     {
       "fixture_id": "soak",
-      "behavior_commit": "a0ec36d1dd0171ed2bde3b5dadebe846ec346f2d",
+      "behavior_commit": "eb5b54d5d88a9b1afab8afb24eacc3da24c8a103",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture."
+      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1)."
     },
     {
       "fixture_id": "story",
-      "behavior_commit": "a0ec36d1dd0171ed2bde3b5dadebe846ec346f2d",
+      "behavior_commit": "eb5b54d5d88a9b1afab8afb24eacc3da24c8a103",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture."
+      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1)."
     },
     {
       "fixture_id": "neighbours",
-      "behavior_commit": "a0ec36d1dd0171ed2bde3b5dadebe846ec346f2d",
+      "behavior_commit": "eb5b54d5d88a9b1afab8afb24eacc3da24c8a103",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture."
+      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1)."
     },
     {
       "fixture_id": "steward",
-      "behavior_commit": "a0ec36d1dd0171ed2bde3b5dadebe846ec346f2d",
+      "behavior_commit": "eb5b54d5d88a9b1afab8afb24eacc3da24c8a103",
       "steward": "on",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Enabled steward policy additionally changes fields/crops/seeds/soil, production caps, tools-only survival, physical cooking/preservation/raw-harvest capacity allocation, winter food/storage forecasts, grain discovery floor, actual-yield/whole-physical-wood housing budgets, prospective shell access and bounded home commute choice, and scoped edible-harvest/fuel planning."
+      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Enabled steward policy additionally changes fields/crops/seeds/soil, production caps, tools-only survival, physical cooking/preservation/raw-harvest capacity allocation, winter food/storage forecasts, grain discovery floor, actual-yield/whole-physical-wood housing budgets, prospective shell access and bounded home commute choice, and scoped edible-harvest/fuel planning. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1)."
     },
     {
       "fixture_id": "m6a_steward",
-      "behavior_commit": "a0ec36d1dd0171ed2bde3b5dadebe846ec346f2d",
+      "behavior_commit": "eb5b54d5d88a9b1afab8afb24eacc3da24c8a103",
       "steward": "on",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Enabled steward policy additionally changes fields/crops/seeds/soil, production caps, tools-only survival, physical cooking/preservation/raw-harvest capacity allocation, winter food/storage forecasts, grain discovery floor, actual-yield/whole-physical-wood housing budgets, prospective shell access and bounded home commute choice, and scoped edible-harvest/fuel planning."
+      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Enabled steward policy additionally changes fields/crops/seeds/soil, production caps, tools-only survival, physical cooking/preservation/raw-harvest capacity allocation, winter food/storage forecasts, grain discovery floor, actual-yield/whole-physical-wood housing budgets, prospective shell access and bounded home commute choice, and scoped edible-harvest/fuel planning. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1)."
     },
     {
       "fixture_id": "colony_u",
-      "behavior_commit": "a0ec36d1dd0171ed2bde3b5dadebe846ec346f2d",
+      "behavior_commit": "eb5b54d5d88a9b1afab8afb24eacc3da24c8a103",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture."
+      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1)."
     },
     {
       "fixture_id": "colony_soak",
-      "behavior_commit": "a0ec36d1dd0171ed2bde3b5dadebe846ec346f2d",
+      "behavior_commit": "eb5b54d5d88a9b1afab8afb24eacc3da24c8a103",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture."
+      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1)."
     },
     {
       "fixture_id": "knowledge",
-      "behavior_commit": "a0ec36d1dd0171ed2bde3b5dadebe846ec346f2d",
+      "behavior_commit": "eb5b54d5d88a9b1afab8afb24eacc3da24c8a103",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. This four-day F10 fixture retains both-arm scenario assertions; it does not claim exercise of the superseded greater-than-six-day overdue priority."
+      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. This four-day F10 fixture retains both-arm scenario assertions; it does not claim exercise of the superseded greater-than-six-day overdue priority. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1)."
     },
     {
       "fixture_id": "soak_economy",
-      "behavior_commit": "a0ec36d1dd0171ed2bde3b5dadebe846ec346f2d",
+      "behavior_commit": "eb5b54d5d88a9b1afab8afb24eacc3da24c8a103",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture."
+      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1)."
     }
   ]
 }

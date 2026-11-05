@@ -24,6 +24,10 @@ median 0.2773 ms (repeats 0.2859 / 0.2773 / 0.2747), p99 0.611 ms, p99.9
 1.875 ms (repeats 1.875 / 2.002 / 1.550 — the spread is why tails are noise);
 `stress --rules game_v26` mean 0.4105 ms.
 
+## Retained M-READ gate override
+
+When READ_GATE_CONFIG is active, READ_DECISIONS D13 step25 is the acceptance contract: three interleaved repeats, each scene's median mean AND median p99 at most1.10 of pinned BASE, plus every C3 ceiling. The historical report-only/no-tail-failure guidance below describes perf.sh and does not waive this gate. Keep all failed attempts. Profile existing tail samples before changing code; for navigation optimizations compare complete old/new path vectors and deterministic scene outcomes before interpreting timing.
+
 ## Reading the numbers
 
 1. The mean is the statistic. Three repeats give a usable median of means.

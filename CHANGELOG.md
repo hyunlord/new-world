@@ -10,6 +10,7 @@
 
 ### Changed
 - Bound proactive food and seed-consuming cooking commitments, separate fuel conversion from construction logs, and plan a real roofed Storehouse. Durable wild harvest shares edible headroom with accepted output and executable grain cooking, including autonomous gathering.
+- Preserve exact navigation and Water-target choices while avoiding redundant neighbor checks, repeated at-source searches and per-search frontier allocation; packed frontier keys retain the original priority order.
 - Compare affordable home sites by actual hearth route cost; preserve clearing caps and complete-shell access. Use reachable water routes and retain owned navigation through work; blocked evening idle routes can return to gathering.
 - Plan initial field area from annual seasonal consumption and a replacement share, constrained by physical seed and a 1.25× planned-area ceiling.
 - Execute urgent existing fuel bills regardless of steward planning mode or scope, preserving numeric work priorities, bill bounds, knowledge and active jobs. This creates no new bill or gathering order.
@@ -20,7 +21,7 @@
 
 ### Validation checkpoint
 - Runtime candidate `a0ec36d1`: calibration-26 PASS, ordinary relative-safety fixtures 34/34 PASS, strict baseline identity run22 PASS (228,748 values, zero differences). Fixed-card validation: 16 paired runs, 14 kinds and 18 command routes PASS, with zero rejected commands.
-- Frozen held-out 1520–1551 completed but failed cold (27/30 exposed) and logs (27/32; required 28). No publication. Independent food-access regression repair passes full systems and baseline identity23; its new calibration and ordinary qualification remain pending. See [the release report](docs/v8/m6b/M6B_REPORT.md).
+- Frozen held-out 1520–1551 completed but failed cold (27/30 exposed) and logs (27/32; required 28). No publication. Independent food-access repair p34 passes calibration27, ordinary34, baseline identity23 and paired cards. Three failed performance preflights remain preserved; the subsequent exact-choice navigation/Water optimization passes the unchanged paired six-scene performance gate. Baseline identity24, ordinary34 and calibration28 pass; all24 natural summary/events/chronicle files are byte-identical to calibration27. Final16-world cards and14-kind/18-route checks also pass; complete card results equal p34. Fresh1616–1647 is registered before execution; held-out and publication gate remain pending. See [the release report](docs/v8/m6b/M6B_REPORT.md).
 
 ## M6b Stage 0 — stopped, 2026-11-04 (not published)
 

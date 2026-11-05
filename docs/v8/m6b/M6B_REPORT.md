@@ -1,8 +1,11 @@
 # M6b 보고서
 
+**성능·재보정 PASS, 아직 게시 아님 (15:42).** 기존 p34 동작을 유지하는 경로·물 선택 최적화가 여섯 장면의 평균/p99 및 메모리 기준을 통과했다(root88782). 앞선 성능 실패 세 번은 보존한다. baseline identity24와 일반34세계 안전성 PASS, 일반10개 fixture는 p34와 예외 없이 동일하다. 자연 보정28도 기존 기준을 통과하고 이전 보정27의 요약·이벤트·연대기24개 파일과 바이트 단위로 같다(root30273 종료0). 카드16세계도 종료0이며 응답군 사망1대 무응답0으로 개별·합계 +1 기준 PASS, 전송63건 모두 수락·거절0이다. 전체 카드 결과 JSON은 p34와 예외 없이 같다. 새 held-out 1616–1647을 등록했으며 아직 열지 않았다.
+
+
 **held-out 01 FAIL, Stage1 미게시 (2026-11-05 13:22).** 고정 후보 `33d0a7fac8d595ea13ba8ad22918ee7d520996ee`의 1520–1551, 96일, BASE·부패 관측 BASE·후보 96실행이 모두 종료0으로 완료됐다. 전체 독립 집계에서 생존 세계는 후보29/32·BASE28/32, 3년차 밭 식량30%는30/32다. 그러나 실제 한파 노출30세계 중1520·1535·1540에서 장작0이 각각11520·1980·2880틱이므로 엄격한 한파 기준 FAIL이다. 세 세계의 최종 멸종을 이유로 이미 고정한 노출 분모에서 제외하지 않는다. 목재 day5·24 상한도27/32로 요구28/32에 미달한다(day24 실패5세계, day5는32/32). 겨울 생존29/32, 첫 파종31/32, 채택 식량 초과29/32, KnowledgeLost31/32·합계71≤BASE95+3, #675 32/32, 원장32/32는 PASS다. 전체 BASE 관측 보존은32/32로 기존19필드가 동일하고 부패2필드만 추가되며 이벤트·연대기 bytes가 같다. 독립 검토도 두 실패를 확인했다. 이 후보의 full gate·게시는 진행하지 않는다. 원본과 실패를 보존하고 이 seed 집합은 재보정에 쓰지 않는다.
 
-**독립 음식 접근 회귀 수정:** 실제 벽 청사진 아래의 음식을 선택·식사 가능으로 표시하던 두 조건을 실제 섭취의 통행 가능 조건과 맞췄다. 완성된 회귀는 수정 전2실패·수정 후2통과이며 실제 이동·섭취1개와 재고 보존을 확인한다. 전체 시스템711·codec2·통합15통과, 기존 ignored1, fmt·workspace Clippy와 독립 검토 PASS다. baseline identity23은228748값 차이0, 연대기64개19683항목·원시64파일 일치, 결정성0–3 PASS이며 문서 검사도 종료0이다. 도구 추가0줄, 기존 테스트 순증123줄이다. 이 수정이 자연 세계 생존이나 목재 기준을 해결했다는 증거는 아직 없으며 보정27과 일반 fixture를 재검증한다.
+**독립 음식 접근 회귀 수정:** 실제 벽 청사진 아래의 음식을 선택·식사 가능으로 표시하던 두 조건을 실제 섭취의 통행 가능 조건과 맞췄다. 완성된 회귀는 수정 전2실패·수정 후2통과이며 실제 이동·섭취1개와 재고 보존을 확인한다. 전체 시스템711·codec2·통합15통과, 기존 ignored1, fmt·workspace Clippy와 독립 검토 PASS다. baseline identity23은228748값 차이0, 연대기64개19683항목·원시64파일 일치, 결정성0–3 PASS이며 문서 검사도 종료0이다. 도구 추가0줄, 기존 테스트 순증123줄이다. 보정27은 기존 기준 PASS(밭6/8, 다른 세계 기준8/8, 한파 노출7/7, KnowledgeLost합계1≤BASE1+3)이며 생존 수·사망은 이전과 같다. 일반 fixture34/34와 F10BASE·후보각8/8, baseline 엄격 일치도 통과했다. p34 카드 재검증은16세계×48일, 사망1대0으로 두 +1 기준 PASS, 전송63건 모두 수락·거절0·응답1357건이다. 별도14종·18경로도 PASS이고 debug bridge 복구를 확인했다. 새 held-out·전체 gate는 아직 통과하지 않았으며 첫 held-out 실패를 대체하지 않는다.
 
 **최종 카드 재검증 PASS, Stage1 미게시.** 실제 알림/카드 시간을 고친 전체16세계×48일 비교가 종료0이다(69684). 응답 사망1명·무응답0명으로 시드별 및 전체 +1 기준을 만족했고, 전송 명령67개·거절0건이다. 응답1362건, 자연 관찰12종·응답10종이며 storage는 자연 관찰되지 않았다. 별도 실제 전체 종류 검증은14종·18경로 PASS다. 이 카드 검증 당시 후보의 held-out1520–1551은 위와 같이 실패했으므로 전체 gate·게시를 보류한다.
 
@@ -1140,3 +1143,9 @@ p17 검증: 시스템647PASS/기존ignore1, fmt/Clippy, release/debug빌드, BAS
 주택 벌목이 일반 목재 상한을 우회하는 실제 실패를 재현하고, 기존 순서에서 상한에 맞는 대체 부지를 찾도록 수정했다. 주택 계획34시험 PASS. 요리는 실제 재료를 먼저 배정한 뒤 남은 예산만 조달에 쓰며, 아직 없는 식재료는 기존 재고처럼 차감하지 않는다. 식량62시험 PASS; 식량 생산 코드 net12줄 감소, tools 추가0. 미래 건조 식량 때문에 당장 필요한 요리가 막히는 긴급 상황도 보호한다. 전체 시스템·BASE 동일성·재보정12는 아직 진행 중이며 게시/held-out 완료가 아니다.
 
 p18 통합 검증 마감: 시스템651PASS/기존ignore1, fmt·Clippy·빌드·BASEidentity12·docs actual0. 기준선228748항목 차이0,64chronicles/19683entries·64raw·결정성0–3 PASS. 재보정12의8실행은 종료했지만 전체 기준 집계는 진행 중이다. seed0 밭섭취127/554로 미달이며, 실제170곡물은20%할인 후에도168식량을 만들 수 있어 필요167을 넘는다. 기준을 유지하고 보존 생산과 현재 곡물 요리의 공간 경쟁을 추적한다. held-out·게시 미완료.
+
+
+P34 performance preflight FAIL (root54828): scripted200 p99 median994→1283µs,1.291 exceeds retained1.10. Mean1.099 passes narrowly; other five scenes pass. Existing profiles and paired diagnostic-only Mac samples localize path computation cost. No fresh held-out opened and no publication authorized by the current qualification. Evidence: /Users/rexxa/work/m6b-data/stage1/calibration-27/perf-preflight/.
+
+
+Optimization qualification update: baseline identity24 actual0 (228748values/64chronicles/64raw samples/determinism), ordinary34 actual0 and independent all10fixture P34-head equality without colony masks. Existing3Rustfiles +375/−12 net363: production prefixes25, testtails338; tools0. Cal28 is still running, first0–2summaries/events/chronicles byte-identical to cal27 with no masks. These partial natural results are not a fullcohort or heldout verdict.
