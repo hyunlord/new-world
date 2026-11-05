@@ -15,6 +15,8 @@
 //! it (M1 rules) each person in `AgentId` order takes the first work type with a
 //! target. Economy rounds first recover loose fuel at the worker's hauling
 //! priority, so equal-priority production cannot leave usable fuel stranded.
+//! An existing active fuel bill also precedes equal-priority construction when
+//! physical night fuel is short, regardless of who planned it or steward mode.
 //! Targets lie within
 //! `job_scan_radius` (Chebyshev), nearest first, ties by `(y, x)` (goal 7.2),
 //! found through the spatial index (`SimResources.spatial`, M1.5 goal 6.2).
@@ -180,23 +182,12 @@ enum Admission {
 }
 
 fn urgent_fuel_bill(resources: &SimResources) -> bool {
-    if !resources.steward.enabled {
-        return false;
-    }
     let Some(tonight) = prospective_fuel_need(resources) else {
         return false;
     };
-    let Ok(data) = sim_core::colony::steward::rules() else {
-        return false;
-    };
-    data.rules.iter().any(|rule| {
-        resources.steward.scope.permits(rule.scope)
-            && (!rule.extended || resources.steward.extended)
-            && matches!(
-                rule.action,
-                sim_core::colony::steward::Action::Bills { fuel: Some(_), .. }
-            )
-    }) && super::hearth::night_fuel_shortfall(resources, tonight)
+    // Planning permission does not suspend existing bills. The urgent round
+    // still requires an active fuel bill and cannot admit gather fallback.
+    super::hearth::night_fuel_shortfall(resources, tonight)
 }
 
 /// Whether reserve gathering can yield to an admitted urgent food harvest.

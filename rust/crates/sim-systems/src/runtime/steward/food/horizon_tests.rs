@@ -82,19 +82,19 @@ fn winter_horizon_harvest_accepts_same_expiry_boundary_as_stored_food() {
             next_regrow_day: u32::MAX,
         },
     );
-    let mut facts = super::summary(&world, &res, &policy);
-    facts.usable_units = 1000;
-    facts.groups.extend(
-        ItemKind::from_name("roots")
-            .expect("roots")
-            .definition()
-            .food
-            .as_ref()
-            .expect("food")
-            .groups
-            .iter()
-            .cloned(),
-    );
+    crate::runtime::food::items::create_ground(
+        &mut res,
+        (7, 7),
+        ItemSpec::raw(ItemKind::from_name("roots").unwrap(), None),
+        5,
+        13,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .unwrap();
+    let facts = super::summary(&world, &res, &policy);
+    assert_eq!((facts.usable_units, facts.winter_units), (5, 0));
+    assert!(facts.usable_units >= super::harvest::targets(&policy, &facts).0);
+    assert!(super::cooking::food_headroom(&world, &res, &policy, &facts) > 0);
     let commands = super::harvest::plan(&world, &res, &policy, &facts);
     assert!(
         commands
@@ -501,4 +501,163 @@ fn nonfood_seed_bootstrap_harvest_has_no_edible_credit_and_stops_with_physical_i
         super::harvest::plan(&world, &res, &policy, &after).is_empty(),
         "physical stalks end bootstrap harvesting"
     );
+}
+
+#[test]
+fn durable_wild_harvest_keeps_capacity_for_executable_grain() {
+    use sim_core::colony::knowledge::{self, Knowledge, KnowledgeEntry, Source};
+    use sim_core::colony::{Bill, BillMode, Workshop};
+    for stored in [213u16, 211, 203] {
+        let (mut world, mut res, mut policy) = fixture();
+        for id in 2..=10 {
+            world.spawn((Agent { id }, Position::new(8, 8)));
+        }
+        let person = world.query::<&Agent>().iter().next().unwrap().0;
+        world
+            .insert_one(
+                person,
+                Knowledge::from_entries(
+                    knowledge::defs()
+                        .nodes
+                        .iter()
+                        .map(|n| KnowledgeEntry::new(n.id, Source::Oral, 1000, 0))
+                        .collect(),
+                ),
+            )
+            .unwrap();
+        res.rules.colony.as_mut().unwrap().knowledge = None;
+        res.fires.insert(1, sim_engine::FireState { lit: true });
+        policy.cultivation = None;
+        let recipe = RecipeKind::from_name("porridge").unwrap();
+        policy.recipes = vec![recipe];
+        res.colony.workshops.insert(
+            1,
+            Workshop {
+                id: 1,
+                kind: recipe.recipe().unwrap().workshop,
+                top_left: (8, 8),
+                size: (1, 1),
+                bills: vec![Bill {
+                    id: 1,
+                    recipe,
+                    mode: BillMode::Maintain(3),
+                    done: 0,
+                    suspended: false,
+                    auto: true,
+                }],
+                shelf: vec![],
+                active: Some(1),
+            },
+        );
+        let roots = ItemKind::from_name("roots").unwrap();
+        for i in 0..8u16 {
+            let count = stored.saturating_sub(i * 30).min(30);
+            if count > 0 {
+                crate::runtime::food::items::create_ground(
+                    &mut res,
+                    (u32::from(i), 2),
+                    ItemSpec::raw(roots, None),
+                    count,
+                    14,
+                    crate::runtime::food::items::FoodSource::Harvest,
+                )
+                .unwrap();
+            }
+        }
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            (6, 7),
+            ItemSpec::raw(ItemKind::from_name("wild_grain").unwrap(), None),
+            2,
+            14,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .unwrap();
+        let species = sim_core::colony::content::installed_or_bundled()
+            .plant_by_name("hazel")
+            .unwrap();
+        for tile in [(9, 8), (10, 8)] {
+            res.food.plants.insert(
+                tile,
+                PlantState {
+                    species,
+                    units_left: 8,
+                    next_regrow_day: u32::MAX,
+                },
+            );
+            assert!(crate::runtime::food::plants::harvestable(&res, tile));
+        }
+        let facts = super::summary(&world, &res, &policy);
+        assert_eq!(
+            (facts.usable_units, facts.winter_units),
+            (u64::from(stored), 0)
+        );
+        assert_eq!(super::harvest::targets(&policy, &facts).1, 216);
+        assert_eq!(
+            super::cooking::convertible_immediate(&world, &res, &policy, &facts),
+            3
+        );
+        let commands = super::harvest::plan(&world, &res, &policy, &facts);
+        assert_eq!(
+            commands.len(),
+            match stored {
+                213 => 0,
+                211 => 1,
+                _ => 2,
+            },
+            "stored{stored}: {commands:?}"
+        );
+        if stored == 203 {
+            let job = sim_core::colony::Job {
+                kind: sim_core::colony::JobKind::Harvest { plant: (9, 8) },
+                stage: sim_core::colony::JobStage::Working { ticks_left: 1 },
+                taken_at: res.current_tick,
+                amount: 8,
+                item: ItemKind::from_name("hazelnuts").unwrap(),
+                material: None,
+                fetch: None,
+                best_distance: 0,
+                progress_tick: res.current_tick,
+            };
+            world.insert_one(person, job).unwrap();
+            for marked in [false, true] {
+                if marked {
+                    res.colony
+                        .designations
+                        .insert((9, 8), sim_core::colony::Designation::Harvest);
+                }
+                let commands = super::harvest::plan(&world, &res, &policy, &facts);
+                assert_eq!(
+                    commands.len(),
+                    1,
+                    "capacity10 minus accepted8 leaves2, once; marked={marked}: {commands:?}"
+                );
+                assert!(matches!(
+                    commands[0],
+                    Command::DesignateHarvest { x0: 10, y0: 8, .. }
+                ));
+            }
+            res.colony.designations.clear();
+            let plant = res.food.plants.remove(&(9, 8)).unwrap();
+            res.food.plants.insert((15, 8), plant);
+            res.food.plants.insert(
+                (11, 8),
+                PlantState {
+                    species,
+                    units_left: 8,
+                    next_regrow_day: u32::MAX,
+                },
+            );
+            world
+                .get::<&mut sim_core::colony::Job>(person)
+                .unwrap()
+                .kind = sim_core::colony::JobKind::Harvest { plant: (15, 8) };
+            policy.forage_radius = 5;
+            assert_eq!(
+                super::harvest::plan(&world, &res, &policy, &facts).len(),
+                1,
+                "outside-radius accepted work still uses shared capacity"
+            );
+        }
+    }
 }

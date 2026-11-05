@@ -22,12 +22,12 @@ pub(super) fn plan(
     };
     let (immediate, reserve) = targets(policy, facts);
     let (pending_immediate, pending_winter) = pending_output(world, res, policy, facts);
+    let convertible = super::cooking::convertible_immediate(world, res, policy, facts);
+    let mut capacity = super::harvest_capacity(world, res, policy, facts, convertible);
     let mut immediate_gap = immediate
         .saturating_sub(facts.usable_units)
         .saturating_sub(pending_immediate)
-        .saturating_sub(super::cooking::convertible_immediate(
-            world, res, policy, facts,
-        ));
+        .saturating_sub(convertible);
     let mut winter_gap = reserve
         .saturating_sub(facts.winter_units)
         .saturating_sub(pending_winter);
@@ -55,6 +55,17 @@ pub(super) fn plan(
         };
         *missing = missing.saturating_sub(physical);
     }
+    let mut accepted: std::collections::BTreeSet<_> = res
+        .colony
+        .designations
+        .iter()
+        .filter_map(|(&tile, mark)| (*mark == Designation::Harvest).then_some(tile))
+        .collect();
+    for (_, job) in world.query::<&sim_core::colony::Job>().iter() {
+        if let sim_core::colony::JobKind::Harvest { plant } = job.kind {
+            accepted.insert(plant);
+        }
+    }
     let mut candidates = Vec::new();
     for (&tile, plant) in &res.food.plants {
         if plant.units_left == 0 || !crate::runtime::food::plants::harvestable(res, tile) {
@@ -64,9 +75,7 @@ pub(super) fn plan(
             continue;
         };
         let food = def.yield_item.definition().food.as_ref();
-        if distance(tile, hearth) > policy.forage_radius
-            || !crate::commands::camp_reaches(res, tile)
-        {
+        if !crate::commands::camp_reaches(res, tile) {
             continue;
         }
         let units = u64::from(plant.units_left) * food.map_or(0, |food| u64::from(food.units));
@@ -79,7 +88,7 @@ pub(super) fn plan(
                     policy.winter_keep_days,
                 )
         });
-        if res.colony.designations.get(&tile) == Some(&Designation::Harvest) {
+        if accepted.contains(&tile) {
             if let Some(missing) = seed_need.get_mut(&def.yield_item) {
                 *missing = missing.saturating_sub(u64::from(plant.units_left));
             }
@@ -87,6 +96,7 @@ pub(super) fn plan(
                 *missing = missing.saturating_sub(u64::from(plant.units_left));
             }
             if edible {
+                capacity = capacity.saturating_sub(units);
                 immediate_gap = immediate_gap.saturating_sub(units);
             }
             if durable {
@@ -94,7 +104,8 @@ pub(super) fn plan(
             }
             continue;
         }
-        if res.colony.designations.contains_key(&tile)
+        if distance(tile, hearth) > policy.forage_radius
+            || res.colony.designations.contains_key(&tile)
             || res
                 .steward
                 .vetoed(&Target::Tile(tile.0, tile.1), res.current_tick)
@@ -136,6 +147,9 @@ pub(super) fn plan(
         if immediate_gap == 0 && winter_gap == 0 && !seed_needed {
             continue;
         }
+        if edible && immediate_gap == 0 && capacity == 0 && !seed_needed {
+            continue;
+        }
         let diversity = immediate_gap > 0
             && !urgent
             && food.is_some_and(|food| {
@@ -165,6 +179,7 @@ pub(super) fn plan(
             *missing = missing.saturating_sub(u64::from(plant.units_left));
         }
         if edible {
+            capacity = capacity.saturating_sub(units);
             immediate_gap = immediate_gap.saturating_sub(units);
         }
         if durable {

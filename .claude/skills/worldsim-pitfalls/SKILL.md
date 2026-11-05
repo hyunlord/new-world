@@ -185,3 +185,7 @@ Exact numeric observation changes may invalidate a successful predicate path wit
 
 ### Resource route binding and continuation (M6b, 2026-11-05)
 A reachable geometrically near source can require a much longer walk than another source. Confirm actual path costs before blaming cache corruption. Retain valid saved paths: NavState serializes paths even though its derived map/memo is rebuilt. Test the actual coordinator and continuation effect as well as the selector; a computed new target has no effect if the continuing action never attaches it. Include every component required by the real movement query in such fixtures. Source: `docs/v8/m6b/M6B_DECISIONS.md` S1-CAL-28; `runtime/mind/system_tests.rs`; `runtime/agent_actions/targets.rs`.
+
+
+### Scripted probe continuation and clock boundaries (M6b, 2026-11-05)
+A saved engine does not own future recurring commands injected by the probe script runner. Engine-only continuation can diverge even when save/load itself is correct. Use the original full-script runner for causal traces, or replay the complete command schedule, and compare original normalized outcomes before accepting the trace. Keep invalid runs as evidence. Daily labels include the clock offset: derive an exact snapshot tick from the real boundary rather than assuming day×DAY_TICKS. The p31 story chronicle placed first exposure death28620 before a mistakenly described predeath snapshot28800. Source: M6B_DECISIONS S1-GATE-4/5.

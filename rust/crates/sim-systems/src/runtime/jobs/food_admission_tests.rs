@@ -387,9 +387,67 @@ fn urgent_fuel_bill_wins_equal_priority_construction() {
 }
 
 #[test]
-fn urgent_fuel_bill_respects_stored_cover_off_disabled_and_higher_build() {
-    for control in 0..4 {
+fn urgent_fuel_executes_existing_bills_independently_of_steward_planning() {
+    use sim_core::colony::{knowledge, steward::StewardScope, BillMode, Command};
+    for enabled in [false, true] {
+        for scope in [StewardScope::All, StewardScope::Housing, StewardScope::Food] {
+            for supplied in [false, true] {
+                for auto in [false, true] {
+                    let (mut world, mut res, person) = fuel_build_scene(supplied);
+                    res.rules.colony.as_mut().unwrap().knowledge =
+                        Some(sim_core::rules::KnowledgeRule::M4);
+                    let gates = knowledge::gates().recipe(res.colony.workshops[&1].bills[0].recipe);
+                    assert_ne!(gates, 0);
+                    let known = knowledge::Knowledge::from_entries(
+                        knowledge::ids_of(gates)
+                            .map(|id| {
+                                knowledge::KnowledgeEntry::new(
+                                    id,
+                                    knowledge::Source::Seeded,
+                                    1000,
+                                    0,
+                                )
+                            })
+                            .collect(),
+                    );
+                    world.insert_one(person, known).unwrap();
+                    let bill = &mut res.colony.workshops.get_mut(&1).unwrap().bills[0];
+                    bill.auto = auto;
+                    bill.mode = BillMode::Maintain(40);
+                    let bills = res.colony.workshops[&1].bills.clone();
+                    assert!(
+                        crate::commands::apply_command(
+                            &mut world,
+                            &mut res,
+                            Command::SetSteward { on: enabled, scope },
+                        )
+                        .accepted
+                    );
+                    assert_eq!(res.colony.workshops[&1].bills, bills);
+                    let commands = res.colony.command_log.len();
+                    JobAssignSystem::new().tick(&mut world, &mut res);
+                    let job = *world.get::<&Job>(person).unwrap();
+                    assert!(
+                        matches!(job.kind, JobKind::Craft { workshop: 1, .. }) == supplied
+                            && matches!(job.kind, JobKind::Supply { workshop: 1, .. }) != supplied,
+                        "enabled={enabled} scope={scope:?} supplied={supplied} auto={auto}: {job:?}"
+                    );
+                    assert_eq!(res.colony.workshops[&1].bills, bills);
+                    assert_eq!(res.colony.command_log.len(), commands);
+                    assert_eq!(res.colony.reservations.len(), job.keys().len());
+                    JobAssignSystem::new().tick(&mut world, &mut res);
+                    assert_eq!(*world.get::<&Job>(person).unwrap(), job);
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn urgent_fuel_bill_respects_stored_cover_disabled_and_higher_build() {
+    for control in 0..3 {
         let (mut world, mut res, person) = fuel_build_scene(false);
+        res.steward.enabled = false;
         match control {
             0 => {
                 res.settlements
@@ -398,8 +456,7 @@ fn urgent_fuel_bill_respects_stored_cover_off_disabled_and_higher_build() {
                     .stockpile
                     .insert(sim_core::components::ResourceKind::Wood, 1000);
             }
-            1 => res.steward.enabled = false,
-            2 => {
+            1 => {
                 world.get::<&mut WorkPriorities>(person).unwrap().levels
                     [WorkType::Split.code() as usize] = 0
             }
@@ -416,6 +473,77 @@ fn urgent_fuel_bill_respects_stored_cover_off_disabled_and_higher_build() {
             ),
             "control={control}"
         );
+    }
+}
+
+#[test]
+fn urgent_fuel_off_keeps_bill_limits_and_knowledge_gates() {
+    use sim_core::colony::{BillMode, Command, ItemStack};
+    for control in [
+        "suspended",
+        "make_zero",
+        "make_done",
+        "maintain_zero",
+        "full",
+        "inactive",
+        "unknown",
+    ] {
+        let (mut world, mut res, person) = fuel_build_scene(true);
+        res.steward.enabled = false;
+        world.get::<&mut WorkPriorities>(person).unwrap().levels[WorkType::Haul.code() as usize] =
+            0;
+        match control {
+            "suspended" => assert!(
+                crate::commands::apply_command(
+                    &mut world,
+                    &mut res,
+                    Command::SetBillSuspended {
+                        workshop: 1,
+                        bill: 1,
+                        suspended: true
+                    },
+                )
+                .accepted
+            ),
+            "make_zero" => {
+                res.colony.workshops.get_mut(&1).unwrap().bills[0].mode = BillMode::Make(0)
+            }
+            "make_done" => {
+                let bill = &mut res.colony.workshops.get_mut(&1).unwrap().bills[0];
+                bill.mode = BillMode::Make(1);
+                bill.done = 1;
+            }
+            "maintain_zero" => {
+                res.colony.workshops.get_mut(&1).unwrap().bills[0].mode = BillMode::Maintain(0)
+            }
+            "full" => {
+                let bill = &mut res.colony.workshops.get_mut(&1).unwrap().bills[0];
+                bill.mode = BillMode::Maintain(1);
+                let fuel = bill.recipe.recipe().unwrap().output.0;
+                res.colony
+                    .ground_items
+                    .insert((0, 0), ItemStack::of(ItemSpec::raw(fuel, None), 1));
+                res.colony.touch(false);
+            }
+            "inactive" => res.colony.workshops.get_mut(&1).unwrap().active = None,
+            "unknown" => {
+                res.rules.colony.as_mut().unwrap().knowledge =
+                    Some(sim_core::rules::KnowledgeRule::M4)
+            }
+            _ => unreachable!(),
+        }
+        let bills = res.colony.workshops[&1].bills.clone();
+        let commands = res.colony.command_log.len();
+        JobAssignSystem::new().tick(&mut world, &mut res);
+        assert!(
+            matches!(
+                world.get::<&Job>(person).unwrap().kind,
+                JobKind::Deliver { site: (5, 5), .. }
+            ),
+            "{control}"
+        );
+        assert_eq!(res.colony.workshops[&1].bills, bills);
+        assert_eq!(res.colony.command_log.len(), commands);
     }
 }
 
@@ -1015,6 +1143,18 @@ fn winter_forecast_first_morning_uses_winter_rate_without_changing_booked_night(
 fn urgent_fuel_prefetch_overlaps_committed_craft() {
     let (mut world, mut res, crafter) = fuel_build_scene(true);
     JobAssignSystem::new().tick(&mut world, &mut res);
+    // Stopping planning preserves the authorized bill and its active craft.
+    assert!(
+        crate::commands::apply_command(
+            &mut world,
+            &mut res,
+            sim_core::colony::Command::SetSteward {
+                on: false,
+                scope: sim_core::colony::steward::StewardScope::All,
+            },
+        )
+        .accepted
+    );
     assert!(matches!(
         world.get::<&Job>(crafter).unwrap().kind,
         JobKind::Craft {
@@ -1112,9 +1252,9 @@ fn urgent_fuel_prefetch_bounds_remaining_work_and_incoming_inputs() {
 }
 
 #[test]
-fn urgent_fuel_prefetch_requires_urgent_enabled_bill() {
+fn urgent_fuel_prefetch_requires_urgent_active_bill_and_space() {
     use sim_core::colony::Command;
-    for control in 0..4 {
+    for control in 0..3 {
         let (mut world, mut res, crafter) = fuel_build_scene(true);
         JobAssignSystem::new().tick(&mut world, &mut res);
         assert!(matches!(
@@ -1129,8 +1269,7 @@ fn urgent_fuel_prefetch_requires_urgent_enabled_bill() {
                     .stockpile
                     .insert(sim_core::components::ResourceKind::Wood, 1000);
             }
-            1 => res.steward.enabled = false,
-            2 => res.rules.colony.as_mut().unwrap().space = None,
+            1 => res.rules.colony.as_mut().unwrap().space = None,
             _ => {
                 assert!(
                     crate::commands::apply_command(

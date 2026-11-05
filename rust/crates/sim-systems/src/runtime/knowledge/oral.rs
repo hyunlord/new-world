@@ -26,11 +26,10 @@
 //! Both are stamped as using it, without gaining proficiency. This lets an
 //! expert revisit difficult knowledge with an oral learner without promoting
 //! that learner (M6b S1-CAL-3). Among feasible pairs, prefer the teller's
-//! oldest unused, decaying topic beyond the existing grace period. That
-//! topic also takes precedence in rehearsal and ordinary telling; all
-//! non-overdue choices retain their original keyed order. Hearth lore and
-//! entries protected by their decay floor do not need this preference.
-//! Actual use by an earlier pair removes overdue priority for later pairs,
+//! earliest practitioner-loss deadline if unused, including its grace period.
+//! Apply that same deadline to rehearsal and telling, retaining keyed ties.
+//! Hearth lore and entries protected by their decay floor need no preference.
+//! Actual use today removes deadline priority for later pairs,
 //! but teller practice and receiving eligibility still use the evening snapshot.
 //! This is local conversation policy, not a forecast of colony-wide loss. Every
 //! gathered holder of fire keeping is stamped as using it (the hearth lore),
@@ -55,6 +54,42 @@ pub fn gathered(res: &SimResources, hearths: &[(u32, u32)], radius: u32, p: &Per
         .iter()
         .any(|h| crate::runtime::jobs::items::chebyshev(*h, p.pos) <= radius)
         || crate::runtime::rooms::roofed_as(res, p.pos, sim_core::rooms::RoomRole::Hall)
+}
+
+/// No-further-use threshold crossing; oral runs before same-tick decay.
+fn decay_deadline(
+    known: &Knowledge,
+    used: &Knowledge,
+    node: u8,
+    tick: u64,
+    rule: &sim_core::rules::KnowledgeRule,
+) -> Option<u64> {
+    use sim_core::colony::knowledge::{bit, day_of, gates, DAY_TICKS};
+    let entry = known.get(node)?;
+    let threshold = defs().threshold(node);
+    let rate = u64::from(rule.decay_of(entry.source()));
+    let last_used = used.get(node).map_or(entry.last_used, |e| e.last_used);
+    if entry.proficiency < threshold
+        || rate == 0
+        || rule.decay_interval == 0
+        || rule.floor_of(entry.source()) >= threshold
+        || bit(node) & gates().lore(Lore::Hearth) != 0
+        || last_used == day_of(tick)
+    {
+        return None;
+    }
+    let onset_day = u64::from(last_used)
+        .checked_add(rule.unused_days)?
+        .checked_add(1)?;
+    if onset_day > u64::from(u16::MAX) {
+        return None;
+    }
+    let start = tick.max(onset_day.checked_mul(DAY_TICKS)?);
+    let first = start
+        .div_ceil(rule.decay_interval)
+        .checked_mul(rule.decay_interval)?;
+    let steps = u64::from(entry.proficiency - threshold) / rate + 1;
+    first.checked_add((steps - 1).checked_mul(rule.decay_interval)?)
 }
 
 impl RuntimeSystem for OralTransmissionSystem {
@@ -95,17 +130,8 @@ impl RuntimeSystem for OralTransmissionSystem {
         let gates = sim_core::colony::knowledge::gates();
         let hearth_lore = gates.lore(Lore::Hearth);
         let story = gates.oral();
-        let today = sim_core::colony::knowledge::day_of(tick);
-        let overdue = |known: &Knowledge, used: &Knowledge, node: u8| {
-            let entry = known.get(node)?;
-            let last_used = used
-                .get(node)
-                .map_or(entry.last_used, |used| used.last_used);
-            (sim_core::colony::knowledge::bit(node) & hearth_lore == 0
-                && u64::from(today.saturating_sub(last_used)) > rule.unused_days
-                && rule.decay_of(entry.source()) > 0
-                && rule.floor_of(entry.source()) < d.threshold(node))
-            .then_some(last_used)
+        let deadline = |known: &Knowledge, used: &Knowledge, node: u8| {
+            decay_deadline(known, used, node, tick, &rule)
         };
         // The evening's snapshot: every gathered person's knowledge before tonight.
         let before: Vec<_> = here.iter().map(|p| knowledge_of(world, p.entity)).collect();
@@ -131,7 +157,7 @@ impl RuntimeSystem for OralTransmissionSystem {
                             && before[li].proficiency(node) < rule.oral_gain)
                             || before[li].proficiency(node) >= rule.oral_gain.min(d.threshold(node))
                     })
-                    .filter_map(|node| overdue(&before[i], &after[i], node))
+                    .filter_map(|node| deadline(&before[i], &after[i], node))
                     .min()
             };
             if let Some(oldest) = tellers.iter().filter_map(|&i| oldest_topic(i)).min() {
@@ -166,10 +192,10 @@ impl RuntimeSystem for OralTransmissionSystem {
             };
             if let Some(oldest) = shared
                 .iter()
-                .filter_map(|&node| overdue(teller, &after[ti], node))
+                .filter_map(|&node| deadline(teller, &after[ti], node))
                 .min()
             {
-                shared.retain(|&node| overdue(teller, &after[ti], node) == Some(oldest));
+                shared.retain(|&node| deadline(teller, &after[ti], node) == Some(oldest));
             } else if let Some(oldest) = shared.iter().map(last_use).min() {
                 shared.retain(|node| last_use(node) == oldest);
             }
@@ -222,8 +248,8 @@ impl RuntimeSystem for OralTransmissionSystem {
                         0x1_0200 + u32::from(*c),
                         0,
                     );
-                    let priority = match overdue(teller, &after[ti], *c) {
-                        Some(last_used) => (false, last_used, rank),
+                    let priority = match deadline(teller, &after[ti], *c) {
+                        Some(due) => (false, due, rank),
                         None => (true, 0, rank),
                     };
                     (priority, *c)
@@ -331,10 +357,11 @@ mod tests {
     }
 
     #[test]
-    fn rehearsal_prefers_old_use_and_does_not_refresh_every_known_node() {
+    fn rehearsal_advances_deadlines_once_per_pair_without_refreshing_every_node() {
         let (mut world, mut res, entities) = pair();
         let old = defs().id_of("pot_firing").expect("pot firing");
         let recent = defs().id_of("hut_building").expect("hut building");
+        let later = defs().id_of("pressure_flaking").unwrap();
         for &entity in &entities {
             store(
                 &mut world,
@@ -342,6 +369,7 @@ mod tests {
                 Knowledge::from_entries(vec![
                     KnowledgeEntry::new(old, Source::Oral, 500, 0),
                     KnowledgeEntry::new(recent, Source::Oral, 500, 9),
+                    KnowledgeEntry::new(later, Source::Oral, 1000, 9),
                 ]),
             );
         }
@@ -349,7 +377,10 @@ mod tests {
         for entity in entities {
             let known = knowledge_of(&world, entity);
             assert_eq!(known.get(old).expect("old").last_used, 10);
-            assert_eq!(known.get(recent).expect("recent").last_used, 9);
+            assert_eq!(known.get(recent).expect("recent").last_used, 10);
+            assert_eq!(known.get(later).unwrap().last_used, 9);
+            assert_eq!(known.proficiency(recent), 500);
+            assert_eq!(known.proficiency(later), 1000);
             assert_eq!(known.proficiency(old), 500);
         }
         assert_eq!(res.colony.tallies.oral_rehearsed, 2);
@@ -408,6 +439,131 @@ mod tests {
     }
 
     #[test]
+    fn deadline_matches_source_rate_grace_and_pending_decay_cadence() {
+        let (_, res, _) = pair();
+        let mut rule = rule(&res).unwrap();
+        let node = defs().id_of("stone_walling").unwrap();
+        let known = |p, source, last| {
+            Knowledge::from_entries(vec![KnowledgeEntry::new(node, source, p, last)])
+        };
+        let k = known(500, Source::Discovered, 24);
+        assert_eq!(decay_deadline(&k, &k, node, 41070, &rule), Some(50640));
+        let pot_margin = known(514, Source::Discovered, 24);
+        assert_eq!(
+            decay_deadline(&pot_margin, &pot_margin, node, 41070, &rule),
+            Some(51480)
+        );
+        rule.decay[Source::Oral.table_index()] = 2;
+        let faster = known(500, Source::Oral, 24);
+        assert_eq!(
+            decay_deadline(&faster, &faster, node, 41070, &rule),
+            Some(47640)
+        );
+        let edge = known(400, Source::Discovered, 24);
+        assert_eq!(
+            decay_deadline(&edge, &edge, node, 44640, &rule),
+            Some(44640)
+        );
+        assert_eq!(
+            decay_deadline(&edge, &edge, node, 44641, &rule),
+            Some(44700)
+        );
+        let below = known(399, Source::Discovered, 24);
+        assert_eq!(decay_deadline(&below, &below, node, 41070, &rule), None);
+        let mut used = k.clone();
+        used.touch(node, 41070);
+        assert_eq!(decay_deadline(&k, &used, node, 41070, &rule), None);
+        rule.decay_interval = 0;
+        assert_eq!(decay_deadline(&k, &k, node, 41070, &rule), None);
+    }
+
+    #[test]
+    fn predicted_threshold_deadline_matches_real_pending_decay() {
+        use super::super::decay::KnowledgeDecaySystem;
+        let (mut world, mut res, entities) = pair();
+        let node = defs().id_of("stone_walling").unwrap();
+        let k =
+            Knowledge::from_entries(vec![KnowledgeEntry::new(node, Source::Discovered, 400, 24)]);
+        let due = decay_deadline(&k, &k, node, 41070, &rule(&res).unwrap()).unwrap();
+        store(&mut world, entities[0], k);
+        world
+            .insert_one(entities[0], sim_core::components::AgentState::Idle)
+            .unwrap();
+        assert!(OralTransmissionSystem.priority() < KnowledgeDecaySystem.priority());
+        res.current_tick = due - KnowledgeDecaySystem.tick_interval();
+        KnowledgeDecaySystem.tick(&mut world, &mut res);
+        assert_eq!(knowledge_of(&world, entities[0]).proficiency(node), 400);
+        res.current_tick = due;
+        let before = knowledge_of(&world, entities[0]);
+        assert_eq!(
+            decay_deadline(&before, &before, node, due, &rule(&res).unwrap()),
+            Some(due)
+        );
+        KnowledgeDecaySystem.tick(&mut world, &mut res);
+        let after = knowledge_of(&world, entities[0]);
+        assert_eq!(after.proficiency(node), 399);
+        assert!(!after.practises(node));
+    }
+
+    #[test]
+    fn deadline_respects_saturated_days_and_checked_tick_arithmetic() {
+        let (_, res, _) = pair();
+        let mut rule = rule(&res).unwrap();
+        let node = defs().id_of("stone_walling").unwrap();
+        let known = |last| {
+            Knowledge::from_entries(vec![KnowledgeEntry::new(
+                node,
+                Source::Discovered,
+                400,
+                last,
+            )])
+        };
+        let beyond = known(u16::MAX - 6);
+        let tick = u64::from(u16::MAX) * 1440;
+        assert_eq!(decay_deadline(&beyond, &beyond, node, tick, &rule), None);
+        let final_day = known(u16::MAX - 7);
+        assert_eq!(
+            decay_deadline(&final_day, &final_day, node, tick, &rule),
+            Some(tick)
+        );
+        assert_eq!(
+            decay_deadline(&final_day, &final_day, node, u64::MAX, &rule),
+            None
+        );
+        rule.unused_days = u64::MAX;
+        assert_eq!(
+            decay_deadline(&final_day, &final_day, node, tick, &rule),
+            None
+        );
+    }
+
+    #[test]
+    fn pregrace_deadline_precedes_a_successful_competing_topic() {
+        let (mut world, mut res, entities) = pair();
+        certain_telling(&mut res);
+        res.current_tick = 28 * 1440 + 750;
+        let old = defs().id_of("stone_walling").unwrap();
+        let recent = defs().id_of("food_drying").unwrap();
+        store(
+            &mut world,
+            entities[0],
+            Knowledge::from_entries(vec![
+                KnowledgeEntry::new(old, Source::Discovered, 500, 24),
+                KnowledgeEntry::new(recent, Source::Discovered, 650, 27),
+            ]),
+        );
+        store(&mut world, entities[1], Knowledge::default());
+        res.world_seed = recent_topic_first_seed(&res, &people(&world, &res)[1], old, recent);
+        OralTransmissionSystem.tick(&mut world, &mut res);
+        let listener = knowledge_of(&world, entities[1]);
+        assert_eq!(listener.proficiency(old), 350);
+        assert_eq!(listener.proficiency(recent), 0);
+        assert!(!listener.practises(old));
+        assert_eq!(res.colony.tallies.oral_learned, 1);
+        assert!(res.colony.command_log.is_empty());
+    }
+
+    #[test]
     fn overdue_topic_precedes_a_recent_success_without_extra_learning() {
         // Given: the old topic would lose to a successful recent topic under the original draw.
         let (mut world, mut res, entities) = pair();
@@ -436,11 +592,15 @@ mod tests {
     }
 
     #[test]
-    fn overdue_teller_is_preferred_but_recent_tellers_keep_the_original_draw() {
+    fn deadline_teller_is_preferred_but_equal_deadlines_keep_the_original_draw() {
         for last_used in [0, 9] {
-            // Given: the original keyed teller is safe; the other teller may be overdue.
+            // Given: the empty listener speaks first, before either teller is refreshed.
             let (mut world, mut res, entities) = pair();
             certain_telling(&mut res);
+            world
+                .get::<&mut sim_core::components::Agent>(entities[0])
+                .unwrap()
+                .id = 100;
             let old = defs().id_of("pot_firing").expect("pot");
             let recent = defs().id_of("pressure_flaking").expect("pressure");
             store(
@@ -461,11 +621,11 @@ mod tests {
                 Knowledge::from_entries(vec![KnowledgeEntry::new(
                     recent,
                     Source::Discovered,
-                    500,
+                    if last_used == 9 { 400 } else { 500 },
                     9,
                 )]),
             ));
-            let listener = &people(&world, &res)[1];
+            let listener = &people(&world, &res)[0];
             res.world_seed = (0..1000)
                 .find(|&seed| {
                     keyed_below(
@@ -481,7 +641,7 @@ mod tests {
                 .expect("safe teller draw");
             // When: each listener still chooses only one real teller.
             OralTransmissionSystem.tick(&mut world, &mut res);
-            // Then: priority applies only to overdue knowledge; the no-overdue draw is exact.
+            // Then: earlier deadline wins; equal deadlines preserve the original keyed draw.
             let known = knowledge_of(&world, entities[1]);
             assert_eq!(known.proficiency(old), if last_used == 0 { 350 } else { 0 });
             assert_eq!(
@@ -540,7 +700,7 @@ mod tests {
     }
 
     #[test]
-    fn overdue_priority_excludes_protected_lore_and_the_exact_grace_boundary() {
+    fn deadline_excludes_protected_lore_but_includes_the_exact_grace_boundary() {
         for case in 0..4 {
             // Given: ordinary ordering prefers recent knowledge over a nonurgent old topic.
             let (mut world, mut res, entities) = pair();
@@ -577,17 +737,17 @@ mod tests {
             );
             store(&mut world, entities[1], Knowledge::default());
             res.world_seed = recent_topic_first_seed(&res, &people(&world, &res)[1], old, recent);
-            // When: zero decay, protected floor, automatic hearth use or grace applies.
+            // When: protected cases remain excluded; exact grace now has a finite deadline.
             OralTransmissionSystem.tick(&mut world, &mut res);
-            // Then: the old keyed learning result remains unchanged.
+            // Then: S1-CAL-35 intentionally prioritizes the exact-grace case only.
             assert_eq!(
                 knowledge_of(&world, entities[1]).proficiency(recent),
-                350,
+                if case == 3 { 0 } else { 350 },
                 "case={case}"
             );
             assert_eq!(
                 knowledge_of(&world, entities[1]).proficiency(old),
-                0,
+                if case == 3 { 350 } else { 0 },
                 "case={case}"
             );
         }

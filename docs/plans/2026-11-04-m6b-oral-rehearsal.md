@@ -18,3 +18,9 @@ Restoring automatic Teach contradicts the adopted player-card scope. Raising pro
 4. Build, strict baseline identity, commit/review push, then calibration03 on0–7 with prior failures preserved. This change must satisfy ordinary BASE-relative fixture safety and held-out bars before publication; no success is implied by unit tests.
 
 Owner goal explicitly directs deciding/recording/continuing without another approval handoff. This design does not relax any acceptance threshold or spend held-out seeds.
+
+## Follow-up S1-CAL-35 (2026-11-05)
+
+The exact p30 neighbour trace validates one scarce legal conversation before the six-day grace expires; existing overdue-only priority does not cover it. Replace only that priority with the documented integer no-further-use threshold deadline in M6B_DECISIONS S1-CAL-35. Keep the existing real-pair and learning/rehearsal bounds. This is an intentional local social-policy change; no broader job schedule or automatic teaching.
+
+Execution: add pre-grace and source/cadence boundary regressions in existing oral.rs and retain RED; implement the shared priority; retain/update policy assertions explicitly; independent review, focused/full tests and builds; exact ordinary safety and calibration; strict BASE identity before combined p30/p31 commit and publication qualification. External raw evidence stays in m6b-data.

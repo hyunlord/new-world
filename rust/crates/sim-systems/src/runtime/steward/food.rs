@@ -54,6 +54,15 @@ pub fn budget_observation(
     world: &World,
     res: &SimResources,
 ) -> Option<(FoodSummary, (u64, u64, u64, u64))> {
+    harvest_budget_observation(world, res).map(|(facts, targets, _)| (facts, targets))
+}
+
+type FoodBudgetTargets = (u64, u64, u64, u64);
+
+pub(crate) fn harvest_budget_observation(
+    world: &World,
+    res: &SimResources,
+) -> Option<(FoodSummary, FoodBudgetTargets, u64)> {
     let data = sim_core::colony::steward::rules().ok()?;
     let mut policy = data.rules.iter().find_map(|rule| match &rule.action {
         sim_core::colony::steward::Action::FoodPlan(policy) => Some(policy.clone()),
@@ -71,12 +80,25 @@ pub fn budget_observation(
     }
     let (immediate, durable) = harvest::targets(&policy, &facts);
     let (pending_immediate, pending_durable) = harvest::pending_output(world, res, &policy, &facts);
-    let pending_immediate = pending_immediate
-        .saturating_add(cooking::convertible_immediate(world, res, &policy, &facts));
+    let convertible = cooking::convertible_immediate(world, res, &policy, &facts);
+    let capacity = harvest_capacity(world, res, &policy, &facts, convertible);
+    let pending_immediate = pending_immediate.saturating_add(convertible);
     Some((
         facts,
         (immediate, durable, pending_immediate, pending_durable),
+        capacity,
     ))
+}
+
+/// Space for new edible harvest after accepted output and executable physical cooking.
+fn harvest_capacity(
+    world: &World,
+    res: &SimResources,
+    policy: &FoodPlan,
+    facts: &FoodSummary,
+    convertible: u64,
+) -> u64 {
+    cooking::food_headroom(world, res, policy, facts).saturating_sub(convertible)
 }
 
 fn seed_reserve(

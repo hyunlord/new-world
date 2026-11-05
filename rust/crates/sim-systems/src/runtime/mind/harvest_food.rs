@@ -174,6 +174,7 @@ pub(super) fn eligible(res: &SimResources, tile: (u32, u32)) -> bool {
 pub(in crate::runtime) struct HarvestBudget {
     immediate: u64,
     durable: u64,
+    capacity: u64,
     winter_horizon: u32,
     credited: std::collections::BTreeSet<(u32, u32)>,
 }
@@ -183,8 +184,8 @@ impl HarvestBudget {
         if !super::context::steward_plans_food(res) {
             return None;
         }
-        let (facts, (immediate, durable, pending, pending_durable)) =
-            crate::runtime::steward::food::budget_observation(world, res)?;
+        let (facts, (immediate, durable, pending, pending_durable), capacity) =
+            crate::runtime::steward::food::harvest_budget_observation(world, res)?;
         let rules = sim_core::colony::steward::rules().ok()?;
         let keep = rules.rules.iter().find_map(|rule| match &rule.action {
             sim_core::colony::steward::Action::FoodPlan(policy) => Some(policy.winter_keep_days),
@@ -197,6 +198,7 @@ impl HarvestBudget {
             durable: durable
                 .saturating_sub(facts.winter_units)
                 .saturating_sub(pending_durable),
+            capacity,
             winter_horizon: facts.winter_in.saturating_add(keep),
             credited: std::collections::BTreeSet::new(),
         };
@@ -213,7 +215,7 @@ impl HarvestBudget {
         Some(budget)
     }
     pub(super) fn shortfall(&self) -> bool {
-        self.immediate > 0 || self.durable > 0
+        self.immediate > 0 || self.durable > 0 && self.capacity > 0
     }
     /// Pending commitments limit new orders, but unassigned accepted work still needs labour.
     pub(super) fn work_needed(&self, res: &SimResources) -> bool {
@@ -241,7 +243,9 @@ impl HarvestBudget {
     pub(super) fn permits(&self, res: &SimResources, tile: (u32, u32)) -> bool {
         let (units, durable) = self.output(res, tile);
         units > 0
-            && (self.credited.contains(&tile) || self.immediate > 0 || durable && self.durable > 0)
+            && (self.credited.contains(&tile)
+                || self.immediate > 0
+                || durable && self.durable > 0 && self.capacity > 0)
     }
     pub(super) fn commit(&mut self, res: &SimResources, tile: (u32, u32)) {
         if !crate::runtime::food::plants::harvestable(res, tile)
@@ -251,6 +255,7 @@ impl HarvestBudget {
             return;
         }
         let (units, durable) = self.output(res, tile);
+        self.capacity = self.capacity.saturating_sub(units);
         self.immediate = self.immediate.saturating_sub(units);
         if durable {
             self.durable = self.durable.saturating_sub(units);
@@ -282,6 +287,7 @@ mod budget_tests {
         let mut budget = HarvestBudget {
             immediate: 0,
             durable: 10,
+            capacity: 10,
             winter_horizon: 100,
             credited: std::collections::BTreeSet::new(),
         };
@@ -290,5 +296,116 @@ mod budget_tests {
         assert!(budget.permits(&res, (1, 1)));
         budget.commit(&res, (1, 1));
         assert_eq!((budget.immediate, budget.durable), (0, 10));
+    }
+    #[test]
+    fn shared_capacity_limits_durable_work_but_keeps_accepted_and_immediate_work() {
+        let mut res = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        res.rules = sim_core::rules::WorldRules::colony(0);
+        res.rules.clock_offset_ticks = 0;
+        res.ticks_per_day = res.rules.calendar.ticks_per_day;
+        res.current_tick = 14 * res.ticks_per_day;
+        let nuts = installed_or_bundled().plant_by_name("hazel").unwrap();
+        let roots = installed_or_bundled().plant_by_name("wild_root").unwrap();
+        for (tile, species) in [((1, 1), nuts), ((2, 1), nuts), ((3, 1), roots)] {
+            res.food.plants.insert(
+                tile,
+                sim_core::colony::food::PlantState {
+                    species,
+                    units_left: 8,
+                    next_regrow_day: 0,
+                },
+            );
+        }
+        let mut budget = HarvestBudget {
+            immediate: 0,
+            durable: 216,
+            capacity: 2,
+            winter_horizon: 11,
+            credited: Default::default(),
+        };
+        assert!(budget.permits(&res, (1, 1)));
+        budget.commit(&res, (1, 1));
+        assert_eq!(budget.capacity, 0);
+        assert!(!budget.permits(&res, (2, 1)), "one positive quantum only");
+        assert!(
+            budget.permits(&res, (1, 1)),
+            "accepted work remains executable"
+        );
+        budget.commit(&res, (1, 1));
+        assert_eq!(budget.durable, 208, "accepted tile credited once");
+        assert!(!budget.shortfall());
+        assert!(budget.work_needed(&res));
+        budget.immediate = 1;
+        assert!(
+            budget.permits(&res, (3, 1)),
+            "immediate food path remains available"
+        );
+        budget.capacity = 2;
+        budget.commit(&res, (3, 1));
+        assert_eq!(
+            budget.capacity, 0,
+            "non-durable output also consumes shared capacity"
+        );
+        assert_eq!(budget.durable, 208, "root does not fill winter reserve");
+        assert!(!budget.permits(&res, (2, 1)));
+    }
+
+    #[test]
+    fn capture_limits_new_durable_output_at_full_physical_capacity() {
+        use sim_core::colony::{ItemKind, ItemSpec};
+        use sim_core::components::{Agent, Position};
+        let mut world = hecs::World::new();
+        world.spawn((Agent { id: 1 }, Position::new(1, 1)));
+        let mut res = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        res.rules = sim_core::rules::WorldRules::colony(0);
+        res.rules.clock_offset_ticks = 0;
+        res.current_tick = 14 * res.ticks_per_day;
+        res.steward.enabled = true;
+        res.steward.scope = sim_core::colony::steward::StewardScope::Food;
+        for tile in [(2, 3), (4, 3), (3, 2), (3, 4)] {
+            let i = res.tile_grid.idx(tile.0, tile.1);
+            res.tile_grid.wall_material[i] = Some(sim_core::colony::materials::OAK);
+        }
+        let door = res.tile_grid.idx(2, 3);
+        res.tile_grid.set_door(door, true);
+        res.colony.rooms.insert(
+            1,
+            sim_core::rooms::Room {
+                id: 1,
+                tiles: std::collections::BTreeSet::from([(3, 3)]),
+                doors: std::collections::BTreeSet::from([(2, 3)]),
+                roofed: true,
+                role: sim_core::rooms::RoomRole::Storehouse,
+                dug: false,
+            },
+        );
+        crate::runtime::food::items::create_ground(
+            &mut res,
+            (1, 2),
+            ItemSpec::raw(ItemKind::from_name("roots").unwrap(), None),
+            22,
+            14,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .unwrap();
+        let species = installed_or_bundled().plant_by_name("hazel").unwrap();
+        res.food.plants.insert(
+            (1, 3),
+            sim_core::colony::food::PlantState {
+                species,
+                units_left: 8,
+                next_regrow_day: 0,
+            },
+        );
+        let budget = HarvestBudget::capture(&world, &res).unwrap();
+        assert!(budget.durable > 0);
+        assert_eq!(budget.capacity, 0);
+        assert!(!budget.permits(&res, (1, 3)));
+        res.colony.designations.insert((1, 3), Designation::Harvest);
+        let budget = HarvestBudget::capture(&world, &res).unwrap();
+        assert!(budget.permits(&res, (1, 3)));
+        assert!(budget.work_needed(&res));
+        res.steward.enabled = false;
+        assert!(HarvestBudget::capture(&world, &res).is_none());
     }
 }
