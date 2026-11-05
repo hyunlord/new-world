@@ -140,7 +140,7 @@ pub(super) fn candidate(
             continue;
         }
         if let Some((tile, owner)) = index.nearest(res, kind, origin, u32::MAX, |_, tile| {
-            res.nav.reachable(origin, tile)
+            res.nav.passable(tile) && res.nav.reachable(origin, tile)
         }) {
             consider(kind, tile, owner);
         }
@@ -263,5 +263,112 @@ mod tests {
             target(&context, &res).unwrap().food,
             Some(FoodOwner::Ground((2, 2)))
         );
+    }
+
+    fn food_under_wall_site() -> (World, SimResources, hecs::Entity) {
+        use sim_core::colony::{BlueprintKind, Command};
+        use sim_core::components::{Hunger, Inventory, Lineage};
+        let (mut world, mut res) = scene();
+        let entity = world.query::<&Agent>().iter().next().unwrap().0;
+        world
+            .insert(
+                entity,
+                (
+                    Hunger::new(90.0, 0.0),
+                    Inventory::default(),
+                    Lineage { key: 1, births: 0 },
+                    crate::runtime::agent::MovementRng::new(1),
+                ),
+            )
+            .unwrap();
+        items::create_ground(
+            &mut res,
+            (3, 2),
+            ItemSpec::raw(ItemKind::from_name("roots").unwrap(), None),
+            2,
+            0,
+            FoodSource::Harvest,
+        )
+        .unwrap();
+        let result = crate::commands::apply_command(
+            &mut world,
+            &mut res,
+            Command::PlaceBlueprint {
+                kind: BlueprintKind::LogWall,
+                x: 3,
+                y: 2,
+            },
+        );
+        assert!(
+            result.accepted,
+            "real wall site must be legal over loose food: {result:?}"
+        );
+        assert!(!res.nav.passable((3, 2)));
+        assert!(
+            res.nav.reachable((2, 2), (3, 2)),
+            "adjacent construction access is not edible-tile access"
+        );
+        (world, res, entity)
+    }
+
+    #[test]
+    fn food_wall_site_does_not_mask_farther_edible_owner() {
+        use super::super::{ColonyMindSystem, MindProgram};
+        use sim_engine::RuntimeSystem;
+        let (mut world, mut res, entity) = food_under_wall_site();
+        let farther = (5, 2);
+        items::create_ground(
+            &mut res,
+            farther,
+            ItemSpec::raw(ItemKind::from_name("roots").unwrap(), None),
+            2,
+            0,
+            FoodSource::Harvest,
+        )
+        .unwrap();
+        let context = TickContext::capture(&world, &res).unwrap();
+        assert_eq!(
+            target(&context, &res).unwrap().food,
+            Some(FoodOwner::Ground(farther))
+        );
+        let policy = r#"(schema_version:1,bands:["critical","duty","need","work","leisure","idle"],nodes:[
+            (id:"eat",band:"need",behaviour:"eat",target:Some("food"),when:[(fact:"hungry",op:"has"),(fact:"food_available",op:"has")],score:(constant:1,terms:[]),hysteresis:0,life_stages:["adult"],tags:[],name_key:"EAT"),
+            (id:"idle",band:"idle",behaviour:"wander",when:[(fact:"idle",op:"has")],score:(constant:0,terms:[]),hysteresis:0,every_ticks:1,life_stages:["adult","child","elder"],tags:[],name_key:"IDLE")])"#;
+        let mut mind = ColonyMindSystem::new(MindProgram::load(policy).unwrap());
+        let mut movement = crate::runtime::agent::AgentMovementSystem::new();
+        res.rules.agent.move_interval_ticks = 1;
+        for tick in 0..16 {
+            res.current_tick = tick;
+            mind.try_tick(&mut world, &mut res).unwrap();
+            movement.tick(&mut world, &mut res);
+            if res.food.tallies.meals > 0 {
+                break;
+            }
+        }
+        assert_eq!(
+            res.food.tallies.meals, 1,
+            "real lifecycle consumes accessible food"
+        );
+        assert_eq!(
+            *world.get::<&Position>(entity).unwrap(),
+            Position::new(5, 2)
+        );
+        assert_eq!(res.colony.ground_items[&(3, 2)].count, 2);
+        assert_eq!(res.colony.ground_items[&farther].count, 1);
+    }
+
+    #[test]
+    fn food_wall_site_alone_is_not_actionable_hunger() {
+        let (world, res, _) = food_under_wall_site();
+        let context = TickContext::capture(&world, &res).unwrap();
+        let provider = super::super::facts::BUILTIN_PROVIDERS
+            .iter()
+            .find(|p| p.name == "hunger_actionable")
+            .unwrap();
+        assert_eq!(
+            (provider.read)(context.row(1).unwrap(), &context, &res, provider.name).unwrap(),
+            0
+        );
+        assert!(target(&context, &res).is_none());
     }
 }

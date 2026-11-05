@@ -15,9 +15,12 @@
 - Execute urgent existing fuel bills regardless of steward planning mode or scope, preserving numeric work priorities, bill bounds, knowledge and active jobs. This creates no new bill or gathering order.
 - Prioritize local conversational topics by existing decay deadlines within actual evening gatherings; retain learning/rehearsal limits, gains and decay. Teaching remains an explicit player/card command; expiry sends none. Survival tool production retains its immediate path.
 
+### Fixed
+- Require a passable public food-owner tile for availability and fresh target binding, matching real meal execution; adjacent construction access cannot make food under a wall site actionable or hide a farther edible stack.
+
 ### Validation checkpoint
 - Runtime candidate `a0ec36d1`: calibration-26 PASS, ordinary relative-safety fixtures 34/34 PASS, strict baseline identity run22 PASS (228,748 values, zero differences). Fixed-card validation: 16 paired runs, 14 kinds and 18 command routes PASS, with zero rejected commands.
-- Natural UI acceptance, held-out seeds 1520–1551, the final full gate and publication are not claimed by this checkpoint. See [the release report](docs/v8/m6b/M6B_REPORT.md) for their current state and retained failures.
+- Frozen held-out 1520–1551 completed but failed cold (27/30 exposed) and logs (27/32; required 28). No publication. Independent food-access regression repair passes full systems and baseline identity23; its new calibration and ordinary qualification remain pending. See [the release report](docs/v8/m6b/M6B_REPORT.md).
 
 ## M6b Stage 0 — stopped, 2026-11-04 (not published)
 

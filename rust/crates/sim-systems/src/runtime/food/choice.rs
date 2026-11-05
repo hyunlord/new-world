@@ -78,9 +78,9 @@ impl FoodChoiceIndex {
         let region = res.nav.region_of(origin);
         // Availability needs any live reachable owner, not a ranked destination.
         self.kinds.iter().any(|(&kind, index)| {
-            index
-                .within_square(origin, u32::MAX)
-                .any(|&(tile, owner)| edible(res, owner, kind) && res.nav.reaches(region, tile))
+            index.within_square(origin, u32::MAX).any(|&(tile, owner)| {
+                edible(res, owner, kind) && res.nav.passable(tile) && res.nav.reaches(region, tile)
+            })
         })
     }
 

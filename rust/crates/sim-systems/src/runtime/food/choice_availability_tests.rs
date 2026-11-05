@@ -3,7 +3,7 @@ use super::*;
 use sim_core::colony::food::{FoodAge, PotStore};
 use sim_core::colony::{Carry, ItemSpec, ItemStack};
 
-// Frozen original boolean path: nearest is deliberately retained as the oracle.
+// Ranked selection oracle: public meals require standing on the owner tile.
 fn reference(
     index: &FoodChoiceIndex,
     res: &SimResources,
@@ -32,7 +32,7 @@ fn reference(
     index.kinds().any(|kind| {
         index
             .nearest(res, kind, origin, u32::MAX, |_, tile| {
-                res.nav.reachable(origin, tile)
+                res.nav.passable(tile) && res.nav.reachable(origin, tile)
             })
             .is_some()
     })
@@ -130,7 +130,7 @@ fn availability_matches_nearest_presence_across_live_ground_and_navigation_chang
 }
 
 #[test]
-fn availability_preserves_pot_keys_and_adjacent_impassable_goal_semantics() {
+fn availability_preserves_pot_keys_but_requires_passable_public_owner() {
     let mut res = scene();
     let roots = spec("roots");
     let owner = FoodOwner::Pot {
@@ -149,7 +149,23 @@ fn availability_preserves_pot_keys_and_adjacent_impassable_goal_semantics() {
     let mut index = FoodChoiceIndex::default();
     index.refresh(&res);
     res.nav.set_cost((2, 2), 0);
-    // Existing availability permits reaching an impassable goal's neighbour.
+    // Construction can work beside an impassable goal, but meals require its tile.
+    // Correct the old adjacency oracle to the existing execution contract.
+    assert!(!index.available_to(&res, (3, 2), 8, None));
+    assert!(
+        edible(&res, owner, roots.kind),
+        "physical food remains fresh"
+    );
+    check(&index, &res);
+    res.food
+        .ages
+        .insert(FoodOwner::Carried(8), FoodAge { born_day: 0 });
+    assert!(
+        index.available_to(&res, (2, 2), 8, Some(Carry::of(roots, 1))),
+        "own carried meal does not require a public tile"
+    );
+    // Navigation changes are live; no item-index rebuild is required.
+    res.nav.set_cost((2, 2), sim_core::nav::COST_PLAIN);
     assert!(index.available_to(&res, (3, 2), 8, None));
     check(&index, &res);
     res.food.pots.get_mut(&1).unwrap().contents.clear();
