@@ -330,7 +330,10 @@ func _card(row: Dictionary, tech: Dictionary) -> Button:
 		gauge.show_percentage = false
 		gauge.custom_minimum_size.y = GAP
 		lines.add_child(gauge)
-		card.custom_minimum_size.y = CARD_SIZE.y + 32
+		var fit_content: Callable = func() -> void:
+			card.custom_minimum_size.y = maxf(CARD_SIZE.y, lines.get_combined_minimum_size().y + lines.offset_top - lines.offset_bottom)
+		lines.minimum_size_changed.connect(fit_content)
+		fit_content.call_deferred()
 	return card
 
 

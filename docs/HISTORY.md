@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-07 — M6b Stage3 개발 후보 `f24a7d124`는 smoke 안전 기준 FAIL(7세계 전멸, KnowledgeLost163/허용2)로 중단·미게시. 작업 소유권·지붕 예약 결함 수정 뒤에도 실제 최단 경로의 지속 노출과 열 수급에서 붕괴를 확인했다. 수치를 조정해 통과시키지 않고 실패와 부분 장면 증거를 보존한다. 게시본은 Stage2 `90544f1f9`다([보고서](v8/m6b/M6B_REPORT.md)).
+
 - 2026-11-07 — M6b Stage2 직조 `90544f1f9`를 wip→main 게시했다. 실제 아마→착용 사슬·12장/마우스 선택, 전체49/49 gate(기존 step41 예외)·identity·smoke·C3 PASS. 전용 아트#689 OPEN, Stage3 온도·집 단계04:02:56 시작([보고서](v8/m6b/M6B_REPORT.md)).
 
 - 2026-11-06 — M6b Stage2 직조 후보: 실제 아마 수확부터 두 의복 착용·저장 재개까지 완료하고12장 캡처·실제 주민 클릭을 확인했다. baseline identity·8세계 smoke PASS, 전체 gate와 게시 대기. 전용 아트는 #689([보고서](v8/m6b/M6B_REPORT.md), [ADR0059](decisions/0059-authored-weaving-and-physical-apparel.md)).

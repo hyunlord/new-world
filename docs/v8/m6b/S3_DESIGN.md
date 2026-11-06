@@ -26,6 +26,14 @@ The closed winter equilibrium before rounding is154; snap equilibrium104. A held
 
 Current construction starting costs for the reference5×5outer shell are15log walls plus one door:31logs/630base workticks. Two bedrolls add2logs/20ticks. Nine packed floors nominally add135workticks and no items. Actual command eligibility and occupied fixture footprints determine which floor cells can be laid; the scripted scene must use legal construction and the native floor-coverage denominator, not inject finished rooms.
 
+## Observed open-air cost and design limitation
+
+The original room arithmetic did not establish survival during ordinary trips or open-air sleep. With the authored winter night−50 and felt threshold50, bare/hide/linen/fur felt values are−50/−30/−20/0: all remain Cold. At the warmest ordinary winter hour, outdoor10 plus linen30 is40, still below50; fur50 gives60. These are direct arithmetic results, not new protection targets or a permission to tune.
+
+The exact seed3 trace on `f24a7d124` establishes a food-to-refuge shortest path costing524, about51steps at3ticks/step (roughly153game minutes). Three first-death residents are Cold180/180observed minutes before tick33480. Once their hunger is below50, measured hourly damage is6.295/6.130/6.110HP; a three-hour fully exposed interval costs18.885/18.390/18.330HP before any healing. The existing ExposureClock blocks healing in the marked hour plus two hours, and healing also requires both needs below50. Neither pathfinding nor duplicate damage explains this loss. Some fully paid rooms also remain Cold under their actual envelope/traffic load.
+
+This initial design fails the mandatory collapse floor (smoke-04: seven extinctions, KnowledgeLost163 versus BASE0/ceiling2). Room reference arithmetic is insufficient to accept the complete model. No heat, damage, insulation, healing, safety threshold or outcome target has been changed to force acceptance. See S3-REVIEW-1; the feature remains unpublished.
+
 ## Dwelling and visibility
 
 Authored stages require a roof and bed, then complete eligible floor coverage, then paid current warmth, then one adult-day of reachable stored food within8navigation tiles. Upgrades are immediate. Continuous deficiency waits2880ticks before downgrade; recovery clears that timer. Physical roof loss removes shelter immediately. Mood values10/20/30/40permille are initial stage effects; one resident receives one effect from their actual dwelling.
@@ -38,4 +46,4 @@ Existing room/person inspectors, room overlay, dwelling marker, diagnosis, chron
 
 The real scripted scene constructs around the physical primary hearth, pays actual fuel, observes warm/Cold and dwelling transitions, opens a door by movement, exhausts fuel, cools, recovers and continues identically through save/load. Capture the visible steps, causal diagnosis, chronicle and era gauges in the actual game. Explicit starting raw supplies and knowledge are disclosed; heat, payments and stages are never injected.
 
-Retain determinism, baseline identity, replay, ledger, no panics, tests/Clippy, data-only content proofs and absolute C3 ceilings. Paired seeds0–7×48days use published Stage2 as BASE: no new extinction where BASE survives, KnowledgeLost total≤2×BASE+2. Full gate and the existing step41 waiver apply. No held-out1584–1615,95%comfort target, improvement bar or balancing loop is run. Current implementation and all Stage3 acceptance results remain pending.
+Retain determinism, baseline identity, replay, ledger, no panics, tests/Clippy, data-only content proofs and absolute C3 ceilings. Paired seeds0–7×48days use published Stage2 as BASE: no new extinction where BASE survives, KnowledgeLost total≤2×BASE+2. Full gate and the existing step41 waiver apply. No held-out1584–1615,95%comfort target, improvement bar or balancing loop is run. Stage3 acceptance is incomplete: smoke-04 FAIL and full scripted scene FAIL; baseline identity PASS. Full gate/C3 are NOT_RUN. The current implementation remains unpublished.

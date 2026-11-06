@@ -200,3 +200,7 @@ A recovery action that waits for full health must permit the existing healing pr
 
 ### Assignment precedes recovery policy (M6b, 2026-11-07)
 A correct mind guard cannot preserve Activity if an earlier job assignment changes the agent to Seeking(Job) and routine initialization clears Activity before facts are read. Reproduce the actual JobAssign→mind boundary. Protect an owned recovery before reservations are committed, including teaching/dressing side paths; permit only the specific physical fuel-service job during a deficit. Rejecting jobs after assignment produces reservation churn and hides the ownership defect. Source: M6B_DECISIONS S3-INTEGRATION-5; `runtime/mind/refuge_job_tests.rs`.
+
+
+### Actual-click capture ownership (M6b, 2026-11-07)
+A correct resident hitbox does not guarantee resident selection: visitor picking can open a trade popup first, and that popup intercepts later clicks. Diagnose actual picked IDs, visible foreground controls and command/tick neutrality before changing coordinates or using an inspector fallback. Close transient UI through normal Escape input before retrying, and record the selected ID; a drafted resident banner does not identify the inspector subject. Do not claim a same-person thermal trajectory from different selected IDs. Source: `tools/v8/capture.gd`; M6B_REPORT Stage3 partial-ui-03.

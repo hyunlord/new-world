@@ -1,13 +1,14 @@
 # Changelog
 
-## M6b Stage 3 — in progress, 2026-11-07 (not published)
+## M6b Stage 3 — safety blocked, 2026-11-07 (not published)
 
 ### Added
 - Authored integer room temperature, physical fuel-payment receipts, passage-driven door loss, clothing insulation and dwelling stages with saved downgrade delays. Native diagnosis, overlay, chronicle and ko/en inspectors expose these values.
-- Colony format18 thermal sidecar with exact format17 migration; baseline retains format17. Starting tunables are listed in BALANCE_DEBT. Full gate, smoke and end-to-end acceptance remain pending.
+- Colony format18 thermal sidecar with exact format17 migration; baseline retains format17. Starting tunables are listed in BALANCE_DEBT. Smoke-04 FAIL (seven extinctions, KnowledgeLost163 against BASE0/ceiling2); complete end-to-end and full-gate acceptance are absent.
 
 ### Changed
-- Dwelling floor coverage excludes permanent footprints and work tiles that ordinary floor commands cannot build on. Existing RoomSystem integrates heat; no extra heater, fuel withdrawal or autonomous housing policy is added.
+- Technology marker cards fit their actual wrapped content; capture closes transient panels through normal input and records actual selected residents. This does not establish complete Stage3 acceptance.
+- Dwelling floor coverage excludes permanent footprints and work tiles that ordinary floor commands cannot build on. Existing RoomSystem integrates heat without an extra heater or duplicate fuel withdrawal. Existing steward housing now encloses the physical primary hearth and reserves its complete future roof footprint; recovery ownership survives ordinary job assignment.
 
 ## M6b Stage 2 — published 90544f1f9, 2026-11-07
 

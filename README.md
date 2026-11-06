@@ -15,6 +15,8 @@
 
 **Stage2 게시 완료 (`90544f1f9`, 2026-11-07):** 실제 아마 수확→침지→방적→직조→재단→착용, 저장 재개·baseline identity·8세계 생존 smoke와 전체49/49 gate를 통과했다(step41 엄격50ms FAIL/기존 예외 PASS). 실제12장과 마우스 선택을 확인했다. 전용 직조 아트는 [#689](https://github.com/hyunlord/new-world/issues/689)에 남기며 Stage3 온도·집 단계를 시작했다.
 
+**Stage3 온도·집 단계는 미게시입니다.** 개발 후보의 안전 smoke에서7세계가 전멸했고 KnowledgeLost163(허용2)이 발생했습니다. WIP는 `v8/m6b-review`에 보존하며, `v8/main`의 Stage2 게시본을 유지합니다. 전체 장면과 최종 gate를 통과했다는 뜻이 아닙니다.
+
 [현재 게시 화면 — Stage2](docs/images/m6b_stage2_contact_sheet.png)은 아마 수확부터 실제 착용까지, 의복 카드·진단·첫 제작 기록을 게임 캡처로 보여 준다. 화면 판독과 실행 검증의 범위는 보고서에 기록했다. [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [M-UX2.1 기록](docs/v8/mux2_1/MUX21_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).
 
 먼저 ‘지금 할 일’에서 현재 작업과 올해 목표를 읽고, 카드의 조건을 확인한 뒤 선택한다. 중요한 연대기에서 사건과 기록된 원인을 확인한다. 창립자 역할 표시는 명령을 보내지 않으며 P의 역할을 직접 선택하면 그 주민의 작업 우선순위가 바뀐다.

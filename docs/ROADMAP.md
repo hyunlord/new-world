@@ -1,6 +1,6 @@
 # 로드맵 (V8)
 
-> **2026-11-07 Stage2 게시 완료:** `90544f1f9` wip→main 원격 확인, 전체49/49 gate·identity·smoke·C3 PASS(step41 엄격50ms FAIL/기존 예외 PASS). 직조 전체 사슬·실제12장·마우스 선택을 확인했다. Stage3 온도·집 단계04:02:56KST 시작, 11/08 04:02:56 한도. [보고서](v8/m6b/M6B_REPORT.md).
+> **2026-11-07 Stage2 게시 완료:** `90544f1f9` wip→main 원격 확인, 전체49/49 gate·identity·smoke·C3 PASS(step41 엄격50ms FAIL/기존 예외 PASS). 직조 전체 사슬·실제12장·마우스 선택을 확인했다. Stage3 온도·집 단계는 안전 검증 FAIL로 중단·미게시(7세계 전멸, KnowledgeLost163/허용2). [보고서](v8/m6b/M6B_REPORT.md).
 
 > **M6b Stage −1 게시:** [2f6993009](https://github.com/hyunlord/new-world/commit/2f6993009ddb600e9249c28f9768a1a5252c8821), 2026-11-02. M-LOOP 프레젠테이션을 BASE 집사 동작으로 제공한다. 집사 동작 개선은 [ISS-361/#684](https://github.com/hyunlord/new-world/issues/684), M6b Stage1로 이월했다. 이 SHA가 BASE0이며 p8 사전 검증과 최종 D 증거는 [보고서](v8/m6b/M6B_REPORT.md)에서 구분한다. Stage0는 중단·미게시(#685)이며 기존 gate로 Stage1을 진행한다.
 
@@ -64,7 +64,7 @@
 | 2 · M6a 먹을 것 사슬 | 야생 식물 데이터·계절, 먹을 것 물건, 요리, 다양성, 썩음·보존, 겨울 준비 | 열매를 따고 굽고 말려 겨울을 난다 | **미완료·수용 FAIL·미게시** (2026-10-30): 생존29<30·조리24<26, #671 OPEN; 동결 유지, 추가 튜닝 없음. 이야기 비교 완료·gate1 43/48(5 FAIL), gate2 44/48(4 FAIL); soak #672·가시성 #673 OPEN. [보고](v8/m6a/M6A_REPORT.md) |
 | 2.5 · M-READ 읽기 | 상태 진단 틀, 왜 안 하나 기록, 요청 첫 판, 지금 할 일 하나 + 지도 표시, 연대기 묶기, 30초 진단 시험 | 화면만 보고 굶주림과 저장 부족의 원인을 찾는다 | **완료·게시** (`71e7ad86`): 30초 진단 M-READ 6/6·BASE 4/6, 동일성 PASS, 콜로니 보존 6/6 MATCH, bench ≤ ×1.03 |
 | 2.75 · M-LOOP 프레젠테이션 / M6b Stage −1 | BASE 집사 동작, 카드·장·지금 할 일·연대기·역할 표시 | 현재 작업·올해 목표·선택·최근 사건 | **게시 완료** (`2f6993009`, 2026-11-02): BASE 집사 동작으로 프레젠테이션 제공; 집사 개선은 Stage1·#684로 이월. Stage0 중단·미게시(#685), 기존 gate로 Stage1 진행 ([보고서](v8/m6b/M6B_REPORT.md)) |
-| 3 · M6b 농경·직조·온도 | 밭과 씨앗, 아마 → 천 → 옷, 방 온도와 재료 단열 | 첫 밭, 첫 천 옷, 따뜻한 집 | **Stage1 농경 `16dc9120d`·Stage2 직조 `90544f1f9` 게시**. Stage2 전체49/49·기존 step41 예외, 실제 사슬·identity·smoke·C3 PASS. 집사 원시 미달 #688·전용 아트 #687/#689 유지. Stage3 온도·집 단계 시작 |
+| 3 · M6b 농경·직조·온도 | 밭과 씨앗, 아마 → 천 → 옷, 방 온도와 재료 단열 | 첫 밭, 첫 천 옷, 따뜻한 집 | **Stage1 농경 `16dc9120d`·Stage2 직조 `90544f1f9` 게시**. Stage2 전체49/49·기존 step41 예외, 실제 사슬·identity·smoke·C3 PASS. 집사 원시 미달 #688·전용 아트 #687/#689 유지. Stage3 온도·집 단계 안전 검증 FAIL·중단·미게시 |
 | 3.5 · M-GROW 자라는 마을 | 구역으로 자라는 정착지, 닳은 길, 집 단계·마당, 상태별 건물 모습, 시대 재료 물결, 삶의 흔적, 평판과 이주 | 마을이 스스로 자라고 일상과 변화가 화면에 보인다 | 2026-11-04 오너 승인·대기, M6b 다음/M7 앞 ([#686](https://github.com/hyunlord/new-world/issues/686)) |
 | 4 · M7 마음 | 생각·기억·호감, 성격 파생·선호, 기분 수정자 데이터화, 생각에서 나오는 요청, 노드 정리(157 → 행동 단위), 원인 사슬 깊이 | 왜 슬픈가에 원인 있는 생각, 저장 부족에서 나오는 창고 요청 | 대기 |
 | 5 · M8 사회 | 관계 형성, 결혼·분가, 지도자, 의례, 아이 학습, 인구 상한 40 → 100 | 가계가 이어지고 가족·지도자·의례가 사회를 만든다 | 대기; 평판·이주는 M-GROW로 이동(#686/#653) |
@@ -73,7 +73,7 @@
 | 8 · M11 규모 | 100 → 1,000명, 상세 LOD, 1,000명 ½× 60 FPS(#637) | 이웃이 실제 정착지가 된다 | 대기 |
 | 사이사이 UX·아트 후보 | 오너 플레이 뒤 UX, 작물·옷·북쪽 방향·노인(구역·건물 성장 범위는 M-GROW) | 패스별 오너 플레이 또는 캡처에서 확인 | 후보 — 진단 오버레이·UI 디자인 시스템·이야기꾼 강도 설정은 v2 §6 |
 
-**다음:** 게시된 Stage2 `90544f1f9`를 BASE2로 Stage3 온도·집 단계 → M-GROW 자라는 마을(#686) → M7–M11로 진행한다(Stage0 중단·#685). Stage3는 D-FEATURE-FIRST에 따라 실제 게임의 전체 사슬·기술 안전성·smoke를 검증하며 held-out·보정 반복은 하지 않는다. 밭 전용 아트는 [#687](https://github.com/hyunlord/new-world/issues/687), 집사 잔여는 [#688](https://github.com/hyunlord/new-world/issues/688)에 남긴다. 순서는 [깊이 로드맵 v2](v8/DEPTH_ROADMAP.md) §5–6, 과거 실패와 미해결 부채는 해당 보고서·[이슈 원장](ISSUES.md)에 보존한다.
+**다음:** 게시된 Stage2 `90544f1f9`는 유지한다. Stage3의 안전 실패를 해결하기 전 게시나 M-GROW 진행을 주장하지 않는다. 예정 순서는 Stage3 온도·집 단계 → M-GROW 자라는 마을(#686) → M7–M11로 진행한다(Stage0 중단·#685). Stage3는 D-FEATURE-FIRST에 따라 실제 게임의 전체 사슬·기술 안전성·smoke를 검증하며 held-out·보정 반복은 하지 않는다. 밭 전용 아트는 [#687](https://github.com/hyunlord/new-world/issues/687), 집사 잔여는 [#688](https://github.com/hyunlord/new-world/issues/688)에 남긴다. 순서는 [깊이 로드맵 v2](v8/DEPTH_ROADMAP.md) §5–6, 과거 실패와 미해결 부채는 해당 보고서·[이슈 원장](ISSUES.md)에 보존한다.
 | V8-PLAY2 실행 확인 | 실행기 안전성·M-ART2.1 조작 안내 | 창 입력·전체 gate | 검증 기록: `docs/v8/play2/PLAY2_REPORT.md`; 바탕화면 연결은 오너 작업 |
 
 <details><summary>D22 이전 M-UX2.1 행 (당시 기록 보존)</summary>

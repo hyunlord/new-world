@@ -1,9 +1,15 @@
 //! Genuine production scene: ordinary construction and paid fuel make a warm dwelling.
-//! Explicit winter start, knowledge and raw supplies are scenario setup, not discovery.
+//! Autumn setup gives88 real hours to build and tailor before winter. Starting20cloth
+//! is a disclosed Stage2 product; garments are physically tailored and worn.
+//! Winter arrives through ordinary ticks, never a clock jump.
 //! WORLDSIM_THERMAL_SCENE_OUT optionally exports real milestone saves outside the repo.
 use sim_core::colony::knowledge::{self, Knowledge, KnowledgeEntry, Source};
-use sim_core::colony::{BillMode, BlueprintKind, Command, ItemKind, ItemSpec, RecipeKind};
-use sim_core::components::{Agent, Cold, Position, ResourceKind};
+use sim_core::colony::people::Apparel;
+use sim_core::colony::{
+    BillMode, BlueprintKind, Command, ItemKind, ItemSpec, Job, JobKind, RecipeKind, WorkPriorities,
+    WorkType,
+};
+use sim_core::components::{Agent, Child, Cold, Position, ResourceKind};
 use sim_engine::SimEngine;
 use sim_systems::commands::submit;
 use sim_systems::runtime::food::items::{create_ground, FoodSource};
@@ -78,16 +84,38 @@ fn until(e: &mut SimEngine, deadline: u64, label: &str, ready: impl Fn(&SimEngin
     }
     assert!(
         ready(e),
-        "missing {label} at tick{}; thermal={:?}; workshops={:?}",
+        "missing {label} at tick{}; thermal={:?}; workshops={:?}; ground={:?}; workforce={:?}",
         e.current_tick(),
         e.resources.thermal,
-        e.resources.colony.workshops
+        e.resources.colony.workshops,
+        ItemKind::all()
+            .map(|kind| (kind, e.resources.colony.ground_total(kind)))
+            .filter(|(_, count)| *count > 0)
+            .collect::<Vec<_>>(),
+        e.world
+            .query::<(&Agent, &Position, Option<&Job>, Option<&WorkPriorities>)>()
+            .iter()
+            .map(|(_, (agent, pos, job, priorities))| (
+                agent.id,
+                (pos.x, pos.y),
+                job.cloned(),
+                priorities.copied()
+            ))
+            .collect::<Vec<_>>()
     );
 }
 
 fn continuity(e: &mut SimEngine) {
+    continuity_with_commands(e, &[]);
+}
+
+fn continuity_with_commands(e: &mut SimEngine, orders: &[Command]) {
     let bytes = sim_systems::save::save(e).expect("partial thermal save");
     let mut resumed = sim_systems::save::load(&bytes).expect("partial thermal load");
+    for order in orders {
+        command(e, order.clone());
+        command(&mut resumed, order.clone());
+    }
     for _ in 0..120 {
         e.tick();
         resumed.tick();
@@ -100,10 +128,14 @@ fn continuity(e: &mut SimEngine) {
 }
 
 #[test]
-fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
-    // Given: full registered game world, explicit winter and knowledgeable founders.
+fn production_scene_prepares_in_autumn_then_tests_winter_heat_and_dwelling_recovery() {
+    // Given: full registered game world, autumn day3 08:00 and knowledgeable founders.
     let mut e = sim_test::colony_engine(0);
-    e.resources.rules.clock_offset_ticks = 18 * DAY + 480;
+    e.resources.rules.clock_offset_ticks = 14 * DAY + 480;
+    let winter_start = 3 * u64::from(e.resources.rules.season_days()) * e.resources.ticks_per_day;
+    let winter_tick = winter_start
+        .checked_sub(e.resources.rules.clock_offset_ticks)
+        .expect("scene starts before the calendar's winter boundary");
     let entries: Vec<_> = knowledge::defs()
         .nodes
         .iter()
@@ -140,12 +172,6 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
         .min_by_key(|s| s.settlement_id)
         .expect("primary settlement")
         .formation_tile;
-    assert!(thermal::outdoor_temperature(&e.resources).is_some_and(|t| t < 50));
-    assert!(
-        e.world.query::<&Cold>().iter().count() > 0,
-        "actual outdoor Cold"
-    );
-    checkpoint(&mut e, "00-outside", home);
     let stock = (home.0 + 4, home.1 - 7);
     command(
         &mut e,
@@ -156,14 +182,23 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
             y1: stock.1 + 3,
         },
     );
-    for (name, count) in [("log", 120), ("stone", 10), ("hazelnuts", 200)] {
+    let born_day = u32::try_from(sim_systems::runtime::resource_regen::day_index(
+        &e.resources,
+    ))
+    .expect("actual starting food day");
+    for (name, count) in [
+        ("log", 120),
+        ("stone", 10),
+        ("hazelnuts", 200),
+        ("linen_cloth", 20),
+    ] {
         let kind = ItemKind::from_name(name).expect("raw scene content");
         create_ground(
             &mut e.resources,
             stock,
             ItemSpec::raw(kind, None),
             count,
-            18,
+            born_day,
             FoodSource::Debug,
         )
         .expect("accounted raw stores");
@@ -283,13 +318,18 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
         BlueprintKind::from_name("wood_bench").expect("bench"),
         bench,
     );
-    until(&mut e, 2 * DAY, "constructed bench", |e| {
-        e.resources
-            .colony
-            .workshops
-            .values()
-            .any(|s| s.top_left == bench)
-    });
+    until(
+        &mut e,
+        (2 * DAY).min(winter_tick),
+        "constructed bench",
+        |e| {
+            e.resources
+                .colony
+                .workshops
+                .values()
+                .any(|s| s.top_left == bench)
+        },
+    );
     let shop = e
         .resources
         .colony
@@ -314,9 +354,12 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
             },
         );
     }
-    until(&mut e, 2 * DAY, "constructed enclosure", |e| {
-        room_at(&e.resources, home).is_some_and(|r| r.roofed)
-    });
+    until(
+        &mut e,
+        (2 * DAY).min(winter_tick),
+        "constructed enclosure",
+        |e| room_at(&e.resources, home).is_some_and(|r| r.roofed),
+    );
     let floors: Vec<_> = room_at(&e.resources, home)
         .expect("built room")
         .tiles
@@ -336,16 +379,155 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
     for &tile in &floors {
         place(&mut e, BlueprintKind::PackedFloor, tile);
     }
-    until(&mut e, 3 * DAY, "ordinary packed floors", |e| {
-        floors.iter().all(|&(x, y)| {
-            e.resources.tile_grid.floor_material[e.resources.tile_grid.idx(x, y)].is_some()
-        })
-    });
+    until(
+        &mut e,
+        (3 * DAY).min(winter_tick),
+        "ordinary packed floors",
+        |e| {
+            floors.iter().all(|&(x, y)| {
+                e.resources.tile_grid.floor_material[e.resources.tile_grid.idx(x, y)].is_some()
+            })
+        },
+    );
     place(&mut e, BlueprintKind::Bedroll, bed);
-    until(&mut e, 3 * DAY, "actual bed", |e| {
+    until(&mut e, (3 * DAY).min(winter_tick), "actual bed", |e| {
         e.resources.colony.beds.contains_key(&bed)
     });
-    checkpoint(&mut e, "01-built", home);
+    // Stage2 product input:20cloth ->10tunics,1200 authored craft ticks.
+    // Loom adds4logs/90work; retain the thermal room's existing geometry.
+    let loom_kind = BlueprintKind::from_name("loom").expect("loom");
+    let mut loom_tiles: Vec<_> = (home.1.saturating_sub(12)..=home.1 + 12)
+        .flat_map(|y| (home.0.saturating_sub(12)..=home.0 + 12).map(move |x| (x, y)))
+        .collect();
+    loom_tiles.sort_by_key(|&(x, y)| (x.abs_diff(home.0).max(y.abs_diff(home.1)), y, x));
+    let loom = loom_tiles
+        .into_iter()
+        .find(|&tile| {
+            room_at(&e.resources, tile).is_none()
+                && sim_systems::commands::camp_reaches(&e.resources, tile)
+                && sim_systems::commands::check_blueprint(&e.resources, loom_kind, tile.0, tile.1)
+                    .is_ok()
+        })
+        .expect("legal loom outside the unchanged thermal room");
+    place(&mut e, loom_kind, loom);
+    until(&mut e, winter_tick, "ordinary loom construction", |e| {
+        e.resources
+            .colony
+            .workshops
+            .values()
+            .any(|s| s.top_left == loom)
+    });
+    let loom_id = e
+        .resources
+        .colony
+        .workshops
+        .values()
+        .find(|s| s.top_left == loom)
+        .expect("built loom")
+        .id;
+    command(
+        &mut e,
+        Command::AddStockpile {
+            x0: stock.0,
+            y0: stock.1,
+            x1: stock.0 + 5,
+            y1: stock.1 + 5,
+        },
+    );
+    command(
+        &mut e,
+        Command::AddBill {
+            workshop: loom_id,
+            recipe: RecipeKind::from_name("make_linen_tunic").expect("tailoring"),
+            mode: BillMode::Make(10),
+        },
+    );
+    command(&mut e, Command::SetDressOrder { on: true });
+    let tunic = ItemKind::from_name("linen_tunic").expect("tunic");
+    until(
+        &mut e,
+        winter_tick,
+        "ten physical tunics and clothed surviving founders",
+        |e| {
+            assert!(
+                e.world.get::<&Agent>(people[0].1).is_ok(),
+                "original observer survives preparation"
+            );
+            e.resources
+                .colony
+                .item_ledger
+                .created
+                .get(&tunic)
+                .copied()
+                .unwrap_or(0)
+                == 10
+                && people.iter().all(|&(_, entity)| {
+                    e.world.get::<&Agent>(entity).is_err()
+                        || e.world
+                            .get::<&Apparel>(entity)
+                            .is_ok_and(|a| a.top.item() == tunic)
+                })
+        },
+    );
+    println!(
+        "THERMAL_LINEN_PREP tick={} loom={loom:?} created=10 living={}",
+        e.current_tick(),
+        e.world.query::<&Agent>().iter().count()
+    );
+    assert!(
+        e.resources.current_tick < winter_tick,
+        "ordinary house completes before winter"
+    );
+    checkpoint(&mut e, "00-built-autumn", home);
+    let (person, entity) = people[0];
+    until(
+        &mut e,
+        winter_tick + 1,
+        "winter arrives through real calendar ticks",
+        |e| {
+            assert!(
+                e.world.get::<&Agent>(entity).is_ok(),
+                "original observer survives autumn preparation"
+            );
+            sim_systems::runtime::resource_regen::season_at(&e.resources)
+                .is_some_and(|(season, _)| season == 3)
+        },
+    );
+    command(
+        &mut e,
+        Command::SetDrafted {
+            agent: person,
+            drafted: true,
+        },
+    );
+    let outside = (door.0, door.1 + 1);
+    command(
+        &mut e,
+        Command::DraftMove {
+            agent: person,
+            x: outside.0,
+            y: outside.1,
+        },
+    );
+    until(
+        &mut e,
+        winter_tick + DAY,
+        "same observer physically cold outside in winter",
+        |e| {
+            assert!(
+                e.world.get::<&Agent>(entity).is_ok(),
+                "original observer remains alive"
+            );
+            e.world
+                .get::<&Position>(entity)
+                .is_ok_and(|p| (p.x, p.y) == outside)
+                && room_at(&e.resources, outside).is_none()
+                && e.world.get::<&Cold>(entity).is_ok()
+                && thermal::place_temperature(&e.resources, outside)
+                    == thermal::outdoor_temperature(&e.resources)
+        },
+    );
+    checkpoint(&mut e, "01-outside-winter", home);
     command(
         &mut e,
         Command::AddBill {
@@ -359,14 +541,6 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
         .last()
         .expect("scene fuel bill")
         .id;
-    let (person, entity) = people[0];
-    command(
-        &mut e,
-        Command::SetDrafted {
-            agent: person,
-            drafted: true,
-        },
-    );
     command(
         &mut e,
         Command::DraftMove {
@@ -375,7 +549,7 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
             y: bed.1,
         },
     );
-    until(&mut e, 4 * DAY, "paid warmth and dwelling upgrade", |e| {
+    until(&mut e, 6 * DAY, "paid warmth and dwelling upgrade", |e| {
         thermal::dwelling_view(&e.world, &e.resources, bed).is_some_and(|v| {
             v.floor_coverage_permille == 1000
                 && v.paid_heat
@@ -404,7 +578,7 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
             y: door.1 + 1,
         },
     );
-    until(&mut e, 4 * DAY, "actual door passage", |e| {
+    until(&mut e, 6 * DAY, "actual door passage", |e| {
         e.resources
             .thermal
             .as_ref()
@@ -431,11 +605,77 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
             suspended: true,
         },
     );
+    // Suspended bills still allow automatic deadwood gathering. The player also
+    // disables Split, leaving existing loads, hauling and survival needs intact.
+    let mut split_priorities: Vec<_> = e
+        .world
+        .query::<(&Agent, Option<&Child>, Option<&WorkPriorities>)>()
+        .iter()
+        .filter(|(_, (_, child, _))| child.is_none())
+        .map(|(entity, (agent, _, priorities))| {
+            (
+                agent.id,
+                entity,
+                priorities.map_or(3, |p| p.level(WorkType::Split)),
+            )
+        })
+        .collect();
+    split_priorities.sort_by_key(|(id, _, _)| *id);
+    for &(agent, _, level) in &split_priorities {
+        if level != 0 {
+            command(
+                &mut e,
+                Command::SetWorkPriority {
+                    agent,
+                    work: WorkType::Split,
+                    level: 0,
+                },
+            );
+        }
+    }
+    let existing_gatherers: std::collections::BTreeSet<_> = e
+        .world
+        .query::<(&Agent, &Job)>()
+        .iter()
+        .filter(|(_, (_, job))| matches!(job.kind, JobKind::Gather { .. }))
+        .map(|(_, (agent, _))| agent.id)
+        .collect();
+    let gathers_drained = std::cell::Cell::new(existing_gatherers.is_empty());
     until(
         &mut e,
-        5 * DAY,
+        7 * DAY,
         "physical fuel exhaustion and cooling",
         |e| {
+            for &(_, entity, _) in &split_priorities {
+                if e.world.get::<&Agent>(entity).is_ok() {
+                    assert_eq!(
+                        e.world
+                            .get::<&WorkPriorities>(entity)
+                            .expect("disabled Split")
+                            .level(WorkType::Split),
+                        0
+                    );
+                }
+            }
+            let mut gathering = 0;
+            for (_, (agent, job)) in e.world.query::<(&Agent, &Job)>().iter() {
+                if matches!(job.kind, JobKind::Gather { .. }) {
+                    assert!(
+                        existing_gatherers.contains(&agent.id),
+                        "new gatherer after Split disabled"
+                    );
+                    gathering += 1;
+                }
+            }
+            if gathers_drained.get() {
+                assert_eq!(
+                    gathering, 0,
+                    "gathering restarted after existing jobs drained"
+                );
+            }
+            if gathering == 0 {
+                gathers_drained.set(true);
+            }
             assert!(
                 e.world.get::<&Agent>(entity).is_ok(),
                 "scene observer died tick{} record={:?}; living={}; people={:?}",
@@ -471,24 +711,47 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
         },
     );
     checkpoint(&mut e, "04-cold", home);
-    continuity(&mut e);
-    command(
-        &mut e,
-        Command::SetBillMode {
-            workshop: shop,
-            bill,
-            mode: BillMode::Make(6),
-        },
+    // Resume fuel immediately in both cold-save arms, then compare 120 real ticks.
+    let mut refuel_orders = Vec::new();
+    for &(agent, entity, level) in &split_priorities {
+        if level != 0 && e.world.get::<&Agent>(entity).is_ok() {
+            refuel_orders.push(Command::SetWorkPriority {
+                agent,
+                work: WorkType::Split,
+                level,
+            });
+        }
+    }
+    refuel_orders.push(Command::SetBillMode {
+        workshop: shop,
+        bill,
+        mode: BillMode::Make(6),
+    });
+    refuel_orders.push(Command::SetBillSuspended {
+        workshop: shop,
+        bill,
+        suspended: false,
+    });
+    continuity_with_commands(&mut e, &refuel_orders);
+    assert!(
+        e.world.get::<&Agent>(entity).is_ok(),
+        "observer died during refueled cold continuity at{}: {:?}",
+        e.current_tick(),
+        e.resources.chronicle.person(person)
     );
-    command(
-        &mut e,
-        Command::SetBillSuspended {
-            workshop: shop,
-            bill,
-            suspended: false,
-        },
-    );
-    until(&mut e, 6 * DAY, "physical refuel recovery", |e| {
+    until(&mut e, 8 * DAY, "physical refuel recovery", |e| {
+        assert!(
+            e.world.get::<&Agent>(entity).is_ok(),
+            "observer died during refuel at{}: {:?}; living={}; ground={:?}; workshops={:?}",
+            e.current_tick(),
+            e.resources.chronicle.person(person),
+            e.world.query::<&Agent>().iter().count(),
+            ItemKind::all()
+                .map(|kind| (kind, e.resources.colony.ground_total(kind)))
+                .filter(|(_, count)| *count > 0)
+                .collect::<Vec<_>>(),
+            e.resources.colony.workshops
+        );
         thermal::dwelling_view(&e.world, &e.resources, bed)
             .is_some_and(|v| v.paid_heat && v.warm_occupants)
             && e.world.get::<&Cold>(entity).is_err()
@@ -660,7 +923,7 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
             "earned stage persists before authored deadline"
         );
         assert_eq!(view.deficiency_deadline, Some(deadline));
-        if e.resources.current_tick % 60 == 0 && view.paid_heat {
+        if e.resources.current_tick.is_multiple_of(60) && view.paid_heat {
             paid_hours += 1;
         }
         e.tick();

@@ -2139,7 +2139,7 @@ func _thermal_shots(main: Node, world: Node, camera: Camera2D) -> void:
 	camera.set_process(false)
 	for language: String in ["ko", "en"]:
 		root.get_node("Locale").call("set_language", language)
-		for milestone: String in ["00-outside", "01-built", "02-warmed", "03-door", "04-cold", "05-refueled", "06-floor-pending", "07-downgraded", "08-restored"]:
+		for milestone: String in ["00-built-autumn", "01-outside-winter", "02-warmed", "03-door", "04-cold", "05-refueled", "06-floor-pending", "07-downgraded", "08-restored"]:
 			var path: String = _thermal_saves.path_join(milestone + ".wsave")
 			if not bool(reads.call("mutate_raw", "load_world", [path])):
 				push_error("capture: failed genuine thermal save " + path)
@@ -2160,7 +2160,8 @@ func _thermal_shots(main: Node, world: Node, camera: Camera2D) -> void:
 				await _key(KEY_R)
 			var ids: PackedInt32Array = rooms.get("ids", PackedInt32Array())
 			var detail: Dictionary = {}
-			if milestone != "00-outside":
+			var selected_person: int = -1
+			if milestone != "01-outside-winter":
 				if ids.is_empty():
 					push_error("capture: completed house has no real room")
 					quit(1)
@@ -2173,6 +2174,7 @@ func _thermal_shots(main: Node, world: Node, camera: Camera2D) -> void:
 					return
 				var mapped: Dictionary = _rooms_of(world)
 				for tile: Vector2i in mapped[room_id]["cells"]:
+					await _key(KEY_ESCAPE)
 					await _click(_screen_of(tile))
 					if int(panel.call("current_room")) == room_id:
 						break
@@ -2191,27 +2193,38 @@ func _thermal_shots(main: Node, world: Node, camera: Camera2D) -> void:
 			else:
 				var agents: Dictionary = world.call("get_agent_snapshot")
 				var people: PackedInt64Array = agents.get("agent_ids", PackedInt64Array())
-				if people.is_empty() or not await _click_person(main, world, camera, people[0], _zoom):
+				for person: int in people:
+					await _key(KEY_ESCAPE)
+					if await _click_person(main, world, camera, person, _zoom):
+						selected_person = person
+						break
+				if selected_person < 0:
 					push_error("capture: outdoor person cannot be selected")
 					quit(1)
 					return
 			await _wait(15)
 			await _save(language + "-" + milestone + ".png")
-			notes.append({"source": path, "language": language, "tick": tick, "rooms": rooms, "detail": detail, "diagnosis": world.call("get_settlement_diagnosis")})
+			notes.append({"source": path, "language": language, "tick": tick, "rooms": rooms, "detail": detail, "diagnosis": world.call("get_settlement_diagnosis"), "selected_agent": selected_person})
 			if milestone in ["02-warmed", "04-cold"]:
 				panel.call("close")
 				var agents: Dictionary = world.call("get_agent_snapshot")
 				var people: PackedInt64Array = agents.get("agent_ids", PackedInt64Array())
-				if people.is_empty() or not await _click_person(main, world, camera, people[0], _zoom):
+				for person: int in people:
+					await _key(KEY_ESCAPE)
+					if await _click_person(main, world, camera, person, _zoom):
+						selected_person = person
+						break
+				if selected_person < 0:
 					quit(1)
 					return
 				var scroll: ScrollContainer = inspector.get("_scroll") as ScrollContainer
 				scroll.ensure_control_visible(inspector.get("_top_label") as Control)
 				await _wait(10)
 				await _save(language + "-" + milestone + "-felt.png")
-				notes.append({"agent": people[0], "thermal": world.call("get_agent_m5", people[0]), "shown": inspector.call("m5_lines")})
+				notes.append({"agent": selected_person, "thermal": world.call("get_agent_m5", selected_person), "shown": inspector.call("m5_lines")})
 			if milestone == "08-restored":
 				panel.call("close")
+				await _key(KEY_ESCAPE)
 				await _key(KEY_T)
 				await _wait(10)
 				await _save(language + "-06-era.png")

@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "base_commit": "90544f1f9270cb6c72906eef93ad9171442d5e54",
-  "behavior_commit": "01db54413f4393295f6500edac1a2fc7ba1e0ad3",
+  "behavior_commit": "f24a7d12432f59b80d06df904600845e6fd57706",
   "status": "STAGE3_WIP_CHECKPOINT_NOT_QUALIFIED",
-  "scope": "Intentional Stage3 colony changes. The behavior pin is a WIP review checkpoint; later integration edits and qualification are pending. Baseline is never declared and remains strict.",
+  "scope": "Intentional Stage3 colony changes at the evaluated WIP behavior. Smoke-04 FAIL: seven new extinctions, KnowledgeLost163 versus BASE0/ceiling2. Not qualified for publication. Baseline is never declared and remains strict.",
   "acceptance": "D-FEATURE-FIRST: baseline and undeclared fixtures remain strict; declared colony fixtures retain determinism, exact ledger/reservations and functional scenario checks. Paired smoke seeds0-7 x48days stewardON/noorders: no new extinction where BASE survives; total KnowledgeLost <= 2*BASE+2. No heldout, improvement bars, or new normalizer exclusions.",
   "fixtures": [
     {
