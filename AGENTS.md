@@ -39,6 +39,8 @@ manifest ids in the gate).
 - A bar that scores 0/8 on the first calibration round is a suspected specification defect: stop, report the mechanism, and get the bar confirmed or withdrawn before freezing and spending a held-out set (owner decision O-2, 2026-10-31).
 - Held-out seed register: 1200–1231 M-UX2; 1232–1263 M-CORE; 1264–1295 M-CORE P-3d; 1296–1327 M6a. Allocate subsequent passes 32 seeds at a time from 1328 and record the allocation before evaluation. Calibrate on seeds 0–7 for at most four logged rounds; freeze before held-out and never tune on its results.
 
+Owner decision D-S1-3 (2026-11-06): improvement bars that paired BASE fails worse do not block publication when every BASE-relative safety bar (survival, KnowledgeLost, accounting, identity) passes. Preserve both measurements and open an issue; do not weaken safety bars or tune/retry held-out near misses. Stage2 and Stage3 each have 24 hours from their actual start; if safety cannot pass within that budget, stop that stage unpublished. The prior overall 48-hour stop is superseded by this continuation decision.
+
 ## Staging and the working tree
 
 - Stage explicit paths only (`git add path …`), never `git add -A` / `git add .`.

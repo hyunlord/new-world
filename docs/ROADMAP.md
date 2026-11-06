@@ -1,5 +1,7 @@
 # 로드맵 (V8)
 
+> **2026-11-06 오너 수용:** M6b Stage1 heldout03의 평가 동작을 수용했다. 통나무·한파 개선 막대의 원시 미달과 BASE 비교를 이슈로 남기며 안전성 기준은 유지한다. 다중 화덕 수정은 Stage2로 분리했다. 기존 전체 gate 통과 뒤 게시한다. Stage2·3는 각각 시작 후24시간 한도다. [결정·상태](v8/m6b/M6B_DECISIONS.md).
+
 > **M6b Stage −1 게시:** [2f6993009](https://github.com/hyunlord/new-world/commit/2f6993009ddb600e9249c28f9768a1a5252c8821), 2026-11-02. M-LOOP 프레젠테이션을 BASE 집사 동작으로 제공한다. 집사 동작 개선은 [ISS-361/#684](https://github.com/hyunlord/new-world/issues/684), M6b Stage1로 이월했다. 이 SHA가 BASE0이며 p8 사전 검증과 최종 D 증거는 [보고서](v8/m6b/M6B_REPORT.md)에서 구분한다. Stage0는 중단·미게시(#685)이며 기존 gate로 Stage1을 진행한다.
 
 <details>

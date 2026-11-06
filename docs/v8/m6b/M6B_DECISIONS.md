@@ -1137,3 +1137,20 @@ DGX setup failures remain separate: r1 exits127 because service PATH lacks Cargo
 ### S1-CAL45 동작 고정
 
 동작 커밋 `acb31be40745ca6f47897051609feb2d91296540`에 기존10개 fixture 선언을 고정한다. 다중 화덕의 nominal winter 합계가 current demand와 max 비교 전에 적용된다. OFF의 파생 목재 예산도 달라질 수 있으나 OFF 자동 명령을 추가하지 않는다. 새 mask·수용 기준·도구는 없다. 사전 검증 바이너리는 b3+동일한 동결 소스 패치에서 빌드했으며 이 커밋 SHA로 빌드했다고 소급 주장하지 않는다. 다음 전체 게이트는 포함 문서 커밋의 정확한 HEAD로 실행한다.
+
+
+## D-S1-3 — 2026-11-06 owner publication acceptance and continuation (dated disambiguation)
+
+This is the owner's latest publication decision, relayed by the planner/root on2026-11-06. The identifier D-S1-3 duplicates the earlier2026-11-05 night-restriction decision: preserve that earlier entry unchanged and cite this decision with its date/title. This entry governs publication acceptance and continuation, not a retroactive change to measured results.
+
+The owner ACCEPTS heldout03 for Stage1 publication. Raw frozen predicates remain FAIL: logs27/32 versus28 required and strict cold29/30 exposed versus30 required. All original evidence, spent1648–1679 and other safety criteria remain unchanged. Owner acceptance is not a claim that these numerical predicates passed or that cal45 repaired them. Additional BASE-relative log comparison is pending independent arithmetic review; no result is inferred here.
+
+Publish the heldout-tested a4572b09c4388837ae44f5605504d2468a675497/b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb behavior, plus nonbehavior test/documentation/gate-wiring corrections. The acb31be40 planning.rs two-hearth change belongs to Stage2, not this Stage1 publication. Root will restore planning.rs from b3e8a5e64, return fixture behavior pins to b0bfd8b84, and preserve cbe3586c3ececcf8be51551f68ffa5c46c516125 on v8/m6b-stage2-deferred. These are planned integration actions until verified, not claims of completed writes.
+
+The cbe3586c3 gate was stopped for this owner decision: supervisor actual241/native−15, retained as INTERRUPTED, not PASS. Run Stage1 full gate once with the owner's step41 waiver explicitly recorded; do not turn the waived step into an executed PASS. No new Stage1 held-out or repair/calibration loops. Preserve other safety requirements and the adopted scoped performance declaration. Publish only the specified behavior through the authorized gate/publication sequence.
+
+The previous48hour/13:16KST stop is superseded. Continue after Stage1 publication into Stage2 and then Stage3, each with24hours under the new owner decision. Do not use the earlier final-hard-stop draft as the current disposition; do not mark the overall goal complete while later stages remain.
+
+### D-S1-3 복원 확인 — 2026-11-06
+
+`planning.rs`를 평가 소스 a4572b09c와 동일한 b3e8a5e64 blob으로 복원했다. Rust/scripts/assets/tools/project.godot 전체 차이는0ab75279d의 테스트3파일뿐이며 제품·데이터·게이트 동작 차이는 없다. fixture11개 SHA참조(상위1+항목10)를 b0bfd8b84로 복원했다. acb31be40의 생산1줄+회귀56줄 및 cbe3586c3의 해당 선언은 `v8/m6b-stage2-deferred`에 보존하고 Stage1에서는 제외한다. Stage2 시작 시 해당 수정만 재적용·평가한다. 원래 cbe 게이트는 오너 결정으로 중단(native−15/launcher241), PASS가 아니다. 새 전체 게이트의 기존 READ step41 예외는 완전한 두 zoom, 각50ms초과 최대2프레임·60ms초과0을 실제 검사한다. BASE 한파25/29 대 후보29/30, 후보 실패1664는 양쪽 멸종이며 원시 실패는 유지한다. 통나무 BASE는 기존 출력에 필드가 없어 UNKNOWN이며 동작 보존 추가 관측으로 수치를 확보한다.

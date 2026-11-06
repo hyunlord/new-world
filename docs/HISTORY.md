@@ -1,5 +1,6 @@
 # WorldSim 역사
 
+- 2026-11-06 — 오너 D-S1-3로 heldout03의 농경·BASE 상대 안전성을 수용하고 집사 개선 막대 미달은 잔여 이슈로 분리했다. 게시 후보는 평가 동작 `b0bfd8b84`이며, 후속 다중 화덕 수정 `acb31be40`은 Stage2로 이월한다. 전체 gate·게시는 대기([결정](v8/m6b/M6B_DECISIONS.md)).
 - 2026-11-06 — M6b Stage1 세 번째 held-out1648–1679도 통나무·한파 FAIL로 미게시. 별도 소스 검토에서 다중 화덕의 겨울 비축량 누락을 확인해 계산1줄과 회귀 시험으로 수정했다. 기존 실패와 baseline 동일성35·새 사전 검증을 구분하며 최종 전체 gate·새 held-out은 아직 통과하지 않았다([보고서](v8/m6b/M6B_REPORT.md)).
 
 - 2026-11-05 — M6b Stage1 게시 후보 `a0ec36d1`: 농경·물리적 씨앗·토양, 생산 제한과 기존 땔감 주문 실행, 명시적 가르침을 구현. 보정26·일반 안전성34/34·BASE 동일성22차(228748값 차이0)·고정 카드 검사는 PASS; held-out·최종 gate·게시는 미완료이며 밭 아트는 [#687](https://github.com/hyunlord/new-world/issues/687)에 이월. [보고서](v8/m6b/M6B_REPORT.md), [ADR0058](decisions/0058-physical-cultivation-and-bounded-stewardship.md).
