@@ -84,6 +84,8 @@ fn workshops_list_bills_in_order_and_commands_parse_names() {
             (15, "fruit_porridge", 11),
             (16, "dry_meat", 12),
             (17, "dry_berries", 12),
+            (18, "extract_flax_seed", 2),
+            (19, "extract_emmer_seed", 2),
         ]
     );
     // A workshop and its site appear in the overlay as nothing else.

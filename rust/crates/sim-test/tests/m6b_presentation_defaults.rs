@@ -17,12 +17,22 @@ fn stage1_policy_changes_are_explicit_against_published_base() {
         current.rules.iter().map(|r| r.id).collect::<Vec<_>>(),
         vec![1, 2, 3, 4, 5, 7, 9, 10, 8]
     );
-    for id in [1, 3, 5, 7] {
+    for id in [1, 3, 5] {
         assert_eq!(
             current.rules.iter().find(|r| r.id == id),
             base.rules.iter().find(|r| r.id == id)
         );
     }
+    let mut defence = base.rules.iter().find(|r| r.id == 7).unwrap().clone();
+    let Action::Defence {
+        protect_residents, ..
+    } = &mut defence.action
+    else {
+        panic!("BASE rule 7 remains defence");
+    };
+    assert!(!*protect_residents);
+    *protect_residents = true;
+    assert_eq!(current.rules.iter().find(|r| r.id == 7), Some(&defence));
     assert!(base
         .rules
         .iter()
@@ -48,7 +58,7 @@ fn stage1_policy_changes_are_explicit_against_published_base() {
     );
     assert!(
         matches!(&current.rules[3].action, Action::Bills { recipes, days: 0, fuel: None, .. }
-        if recipes == &[(sim_core::colony::RecipeKind::HaftAxe, 2), (sim_core::colony::RecipeKind::KnapBlade, 4)])
+        if recipes == &[(sim_core::colony::RecipeKind::HaftAxe, 2), (sim_core::colony::RecipeKind::KnapFineBlade, 4), (sim_core::colony::RecipeKind::KnapBlade, 4)])
     );
     assert!(
         matches!(&current.rules[6].action, Action::Bills { recipes, fuel: Some(_), .. } if recipes.is_empty())
@@ -64,7 +74,22 @@ fn stage1_policy_changes_are_explicit_against_published_base() {
         panic!("food planning remains rule 8");
     };
     assert!(food.cultivation.take().is_some());
-    assert_eq!(Action::FoodPlan(food), base.rules[7].action);
+    let Action::FoodPlan(mut expected_food) = base.rules[7].action.clone() else {
+        panic!("BASE rule 8 remains food planning");
+    };
+    expected_food.recipes = [
+        "porridge",
+        "fruit_porridge",
+        "stew",
+        "roast_meat",
+        "roasted_roots",
+        "dry_meat",
+        "dry_berries",
+    ]
+    .into_iter()
+    .map(|name| sim_core::colony::RecipeKind::from_name(name).expect("bundled food recipe"))
+    .collect();
+    assert_eq!(food, expected_food);
 }
 
 #[test]
