@@ -1,68 +1,68 @@
 {
   "schema_version": 1,
   "base_commit": "16dc9120decbd9f6d7f851b2b90e16de7c891182",
-  "behavior_commit": "PENDING_STAGE2_FREEZE",
-  "status": "STAGE2_DRAFT_NOT_GATE_PASS",
+  "behavior_commit": "448f660164f8ac3663402549931af7742395ca1b",
+  "status": "STAGE2_QUALIFIED_SOURCE_FULL_GATE_PENDING",
   "scope": "Intentional colony fixture changes only. Baseline is never declared and remains strict. These scopes do not assert isolated causality for every trajectory difference.",
   "acceptance": "D-FEATURE-FIRST: baseline and undeclared fixtures remain strict; declared colony fixtures retain determinism, exact ledger/reservations and functional scenario checks. Paired smoke seeds0-7 x48days stewardON/noorders: no new extinction where BASE survives; total KnowledgeLost <= 2*BASE+2. No heldout, improvement bars, or new normalizer exclusions.",
   "fixtures": [
     {
       "fixture_id": "determinism",
-      "behavior_commit": "PENDING_STAGE2_FREEZE",
+      "behavior_commit": "448f660164f8ac3663402549931af7742395ca1b",
       "steward": "off",
       "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "soak",
-      "behavior_commit": "PENDING_STAGE2_FREEZE",
+      "behavior_commit": "448f660164f8ac3663402549931af7742395ca1b",
       "steward": "off",
       "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "story",
-      "behavior_commit": "PENDING_STAGE2_FREEZE",
+      "behavior_commit": "448f660164f8ac3663402549931af7742395ca1b",
       "steward": "off",
       "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "neighbours",
-      "behavior_commit": "PENDING_STAGE2_FREEZE",
+      "behavior_commit": "448f660164f8ac3663402549931af7742395ca1b",
       "steward": "off",
       "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "steward",
-      "behavior_commit": "PENDING_STAGE2_FREEZE",
+      "behavior_commit": "448f660164f8ac3663402549931af7742395ca1b",
       "steward": "on",
       "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference. Deferred multi-hearth winter fuel floor from acb31be40 is included and evaluated only here, after Stage1 publication."
     },
     {
       "fixture_id": "m6a_steward",
-      "behavior_commit": "PENDING_STAGE2_FREEZE",
+      "behavior_commit": "448f660164f8ac3663402549931af7742395ca1b",
       "steward": "on",
       "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference. Deferred multi-hearth winter fuel floor from acb31be40 is included and evaluated only here, after Stage1 publication."
     },
     {
       "fixture_id": "colony_u",
-      "behavior_commit": "PENDING_STAGE2_FREEZE",
+      "behavior_commit": "448f660164f8ac3663402549931af7742395ca1b",
       "steward": "off",
       "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "colony_soak",
-      "behavior_commit": "PENDING_STAGE2_FREEZE",
+      "behavior_commit": "448f660164f8ac3663402549931af7742395ca1b",
       "steward": "off",
       "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "knowledge",
-      "behavior_commit": "PENDING_STAGE2_FREEZE",
+      "behavior_commit": "448f660164f8ac3663402549931af7742395ca1b",
       "steward": "off",
       "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "soak_economy",
-      "behavior_commit": "PENDING_STAGE2_FREEZE",
+      "behavior_commit": "448f660164f8ac3663402549931af7742395ca1b",
       "steward": "off",
       "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     }
