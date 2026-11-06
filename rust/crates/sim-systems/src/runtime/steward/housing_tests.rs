@@ -823,3 +823,87 @@ fn untouched_initial_world_can_plan_primary_hearth_refuge() {
         "initial refuge cannot issue ordinary work: {blocked:?}"
     );
 }
+
+#[test]
+fn future_refuge_reserves_secondary_roof_components_from_fields() {
+    sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+        .unwrap();
+    let mut engine = crate::worldgen::build_world_with(
+        &crate::worldgen::WorldGenConfig::colony(5),
+        sim_core::rules::WorldRules::colony(5),
+    );
+    crate::commands::submit(
+        &mut engine,
+        Command::SetSteward {
+            on: true,
+            scope: sim_core::colony::steward::StewardScope::All,
+        },
+    );
+    engine.tick();
+    let res = &engine.resources;
+    let hearth = hearth_tiles(res)[0];
+    let pending = super::future_house(&engine.world, res, hearth);
+    assert!(!pending.reserved.is_empty());
+    let max = res.rules.colony.unwrap().space.unwrap().room_max_tiles;
+    // This cell lies outside the selected primary room, but the exact shell
+    // closes its secondary component. Existing fields must still veto it.
+    assert!(super::roofs_outdoor_fields(
+        res,
+        &pending.reserved,
+        &[(102, 101)],
+        max
+    ));
+    assert!(pending.covered.contains(&(102, 101)));
+    let mut missing = Vec::new();
+    for y in hearth.1 - 12..=hearth.1 + 12 {
+        for x in hearth.0 - 12..=hearth.0 + 12 {
+            let tile = (x, y);
+            if !pending.covered.contains(&tile)
+                && crate::runtime::cultivation::commands::zoneable(res, tile)
+                && super::roofs_outdoor_fields(res, &pending.reserved, &[tile], max)
+            {
+                missing.push(tile);
+            }
+        }
+    }
+    assert!(
+        missing.is_empty(),
+        "future refuge roofs unreserved cultivable tiles: {missing:?}"
+    );
+}
+
+#[test]
+fn natural_seed5_completes_primary_refuge_without_field_conflict() {
+    sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+        .unwrap();
+    let mut engine = crate::worldgen::build_world_with(
+        &crate::worldgen::WorldGenConfig::colony(5),
+        sim_core::rules::WorldRules::colony(5),
+    );
+    assert!(
+        crate::commands::submit(
+            &mut engine,
+            Command::SetSteward {
+                on: true,
+                scope: sim_core::colony::steward::StewardScope::All
+            }
+        )
+        .accepted
+    );
+    let hearth = hearth_tiles(&engine.resources)[0];
+    for _ in 0..10 * engine.resources.ticks_per_day {
+        engine.tick();
+        if super::super::housing::hearth_is_sheltered(&engine.resources, hearth, 9) {
+            assert!(engine.resources.colony.command_log.iter().any(|record|matches!(&record.command,Command::Steward{rule:3,command} if matches!(**command,Command::PlaceBlueprint{..}))&&record.result.accepted));
+            assert!(
+                crate::runtime::jobs::invariants::check(&engine.world, &engine.resources).is_ok()
+            );
+            eprintln!(
+                "natural seed5 refuge completed tick={}",
+                engine.resources.current_tick
+            );
+            return;
+        }
+    }
+    panic!("natural seed5 must complete primary refuge by day10");
+}

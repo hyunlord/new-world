@@ -663,34 +663,42 @@ fn roofs_outdoor_fields(
     fields: &[Tile],
     max: u32,
 ) -> bool {
+    fields
+        .iter()
+        .copied()
+        .any(|start| newly_enclosed_component(res, boundary, start, max).is_some())
+}
+
+fn newly_enclosed_component(
+    res: &SimResources,
+    boundary: &BTreeSet<Tile>,
+    start: Tile,
+    max: u32,
+) -> Option<BTreeSet<Tile>> {
     let grid = &res.tile_grid;
-    fields.iter().copied().any(|start| {
-        if boundary.contains(&start) || crate::runtime::rooms::bounds(res, start) {
-            return false;
+    if boundary.contains(&start) || crate::runtime::rooms::bounds(res, start) {
+        return None;
+    }
+    let mut seen = BTreeSet::from([start]);
+    let mut queue = std::collections::VecDeque::from([start]);
+    let mut touches_new_wall = false;
+    while let Some((x, y)) = queue.pop_front() {
+        if x == 0 || y == 0 || x + 1 == grid.width || y + 1 == grid.height {
+            return None;
         }
-        let mut seen = BTreeSet::from([start]);
-        let mut queue = std::collections::VecDeque::from([start]);
-        let mut touches_new_wall = false;
-        while let Some((x, y)) = queue.pop_front() {
-            if x == 0 || y == 0 || x + 1 == grid.width || y + 1 == grid.height {
-                return false;
-            }
-            for tile in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)] {
-                if boundary.contains(&tile) {
-                    touches_new_wall = true;
-                } else if !crate::runtime::rooms::bounds(res, tile) && seen.insert(tile) {
-                    if seen.len() > max as usize {
-                        return false;
-                    }
-                    queue.push_back(tile);
+        for tile in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)] {
+            if boundary.contains(&tile) {
+                touches_new_wall = true;
+            } else if !crate::runtime::rooms::bounds(res, tile) && seen.insert(tile) {
+                if seen.len() > max as usize {
+                    return None;
                 }
+                queue.push_back(tile);
             }
         }
-        // Protect even sub-minimum pockets: partial construction can first close
-        // a larger roofed region before the final dividing wall is completed.
-        // A new wall supplies the built criterion; no door or dug soil is needed.
-        touches_new_wall
-    })
+    }
+    // Protect sub-minimum pockets too, exactly as the outdoor-field guard does.
+    touches_new_wall.then_some(seen)
 }
 
 fn house(
@@ -1198,7 +1206,7 @@ fn house(
             .copied()
             .chain(free.iter().copied().take(beds as usize))
             .collect();
-        let covered = boundary
+        let mut covered: BTreeSet<_> = boundary
             .iter()
             .copied()
             .chain(room.tiles.iter().copied().map(local))
@@ -1334,6 +1342,20 @@ fn house(
             }
             commands
         };
+        // Joining natural or built boundaries can roof additional components
+        // outside the selected room. Reserve those same cells that would make
+        // the outdoor-field guard reject this shell after fields are planted.
+        for &(x, y) in &boundary {
+            for tile in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)] {
+                if !covered.contains(&tile) {
+                    if let Some(component) =
+                        newly_enclosed_component(res, &boundary, tile, space.room_max_tiles)
+                    {
+                        covered.extend(component);
+                    }
+                }
+            }
+        }
         let candidate = HousePlan {
             commands,
             reserved,
