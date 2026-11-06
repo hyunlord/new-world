@@ -51,7 +51,7 @@
       "conditions": [
         {"id": "field_sown", "fact": "first_field_sown", "text_key": "S1_FIRST_SOWN"},
         {"id": "field_harvest", "fact": "first_field_harvest", "text_key": "S1_FIRST_HARVEST"},
-        {"id": "cloth", "fact": "first_woven_clothing", "text_key": "S1_CLOTH_LATER"}
+        {"id": "cloth", "fact": "first_woven_clothing", "text_key": "S2_FIRST_CLOTHING"}
       ],
       "locked": false,
       "locked_text_key": "LOOP_CH4_LOCKED",

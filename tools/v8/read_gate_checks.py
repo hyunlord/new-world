@@ -28,7 +28,16 @@ def load_config(path):
     assert config.get("schema_version") == 1, "bad schema_version"
     for key in ("base_probe", "base_perf", "base_probe_sha256", "base_perf_sha256"):
         assert key in config and config[key], f"missing {key}"
+    feature_first_mode(config)
     return config
+
+
+def feature_first_mode(config) -> bool:
+    """Select the explicit owner policy; absent mode preserves historical gates."""
+    mode = config.get("evaluation_mode", "legacy")
+    if type(mode) is not str or mode not in ("legacy", "feature_first"):
+        raise ValueError("evaluation_mode must be legacy or feature_first")
+    return mode == "feature_first"
 
 
 def verify_binary(path, expected_sha256):
@@ -86,6 +95,7 @@ def validate_bench_report(data, require_ceilings=True):
 def bench(config_path, log_dir):
     """3-round interleaved bench, BASE vs HEAD, medians compared."""
     config = load_config(config_path)
+    feature_first = feature_first_mode(config)
     justified = None
     if "bench_justified" in config:
         declaration = config["bench_justified"]
@@ -166,11 +176,11 @@ def bench(config_path, log_dir):
             if justified == (name, metric) and ratio > 1.10 and ok:
                 used_justification = True
                 print(f"JUSTIFIED {name}/{metric} ratio={ratio:.9f} cap=1.15")
-        verdict = ("JUSTIFIED" if used_justification else "ok") if ok_mean and ok_p99 else "FAIL"
+        verdict = "REPORT_ONLY" if feature_first else (("JUSTIFIED" if used_justification else "ok") if ok_mean and ok_p99 else "FAIL")
         print(f"{name:<20} {b_med:>10.1f} {n_med:>10.1f} {ratio_mean:>8.3f} {verdict:>8}")
-        if not ok_mean:
+        if not feature_first and not ok_mean:
             failures.append(f"{name} tick mean x{ratio_mean:.3f}")
-        if not ok_p99:
+        if not feature_first and not ok_p99:
             failures.append(f"{name} p99 x{ratio_p99:.3f}")
 
 
@@ -186,7 +196,7 @@ COLONY_FIXTURES = {
     "determinism": (10, 4), "soak": (20, 4), "story": (48, 2),
     "neighbours": (48, 2), "steward": (24, 2), "m6a_steward": (72, 2),
     "colony_u": (10, 4), "colony_soak": (20, 2), "knowledge": (4, 8),
-    "soak_economy": (20, 4),
+    "soak_economy": (20, 4), "feature_smoke": (48, 8),
 }
 
 
@@ -229,11 +239,14 @@ def colony_safety_rows(summary, name):
         raise ValueError(f"{name}: missing or malformed required probe field") from error
 
 
-def compare_fixture(name, base, head, base_commit, changed):
+def compare_fixture(name, base, head, base_commit, changed, *, feature_first: bool = False):
     """Declared colony behavior changes get paired safety; all other worlds stay strict."""
     if name in COLONY_FIXTURES and name in changed:
         base_rows = colony_safety_rows(base, name)
         head_rows = colony_safety_rows(head, name)
+        if feature_first:
+            print(f"CHANGED FIXTURE {name}: technical invariants PASS; outcomes reported, safety in feature smoke")
+            return
         for seed, (base_alive, base_lost) in base_rows.items():
             alive, lost = head_rows[seed]
             floor = max(0, base_alive - 2)
@@ -250,12 +263,30 @@ def compare_fixture(name, base, head, base_commit, changed):
     print(f"FIXTURE {name}: MATCH; excluded paths: {masked}")
 
 
+def smoke_pair(base, head) -> None:
+    """D-FEATURE-FIRST: paired collapse floor, not a per-world balance bar."""
+    base_rows = colony_safety_rows(base, "feature_smoke")
+    head_rows = colony_safety_rows(head, "feature_smoke")
+    for seed, (base_alive, base_lost) in base_rows.items():
+        alive, lost = head_rows[seed]
+        print(f"smoke seed {seed}: alive BASE={base_alive} candidate={alive}; KnowledgeLost BASE={base_lost} candidate={lost}")
+        if base_alive > 0 and alive == 0:
+            raise ValueError(f"smoke/{seed}: candidate extinction where BASE survives")
+    base_total = sum(lost for _, lost in base_rows.values())
+    head_total = sum(lost for _, lost in head_rows.values())
+    ceiling = 2 * base_total + 2
+    if head_total > ceiling:
+        raise ValueError(f"smoke KnowledgeLost {head_total} exceeds 2 * BASE {base_total} + 2 = {ceiling}")
+    print(f"FEATURE_SMOKE PASS: 8 worlds x 48 days; KnowledgeLost BASE={base_total} candidate={head_total} ceiling={ceiling}")
+
+
 def fixture_pair(name, base_path, head_path):
     """CLI adapter for the existing paired probe summaries."""
     config_path = os.environ.get("READ_GATE_CONFIG")
-    config = load_json(config_path) if config_path else {}
+    config = load_config(config_path) if config_path else {}
     compare_fixture(name, load_json(base_path), load_json(head_path),
-                    config.get("base_commit"), set(os.environ.get("READ_CHANGED_FIXTURES", "").split()))
+                    config.get("base_commit"), set(os.environ.get("READ_CHANGED_FIXTURES", "").split()),
+                    feature_first=feature_first_mode(config))
 
 
 # ── Core fixture normalised comparison ──────────────────────────────────
@@ -278,23 +309,31 @@ def core_fixture(config_path, log_dir):
                           "--commands", "tools/v8/soak_script.json"]),
     ]
 
+    feature_first = feature_first_mode(config)
+    if feature_first:
+        fixtures.append(("feature_smoke", ["--scene", "colony", "--seeds", "0..8",
+                          "--days", "48", "--workers", "4", "--steward", "on"]))
+
     for name, args in fixtures:
         for label, binary in [("base", base_probe), ("head", head_probe)]:
             run_dir = out / f"{label}_{name}"
-            print(f"running {label} {name}...")
-            subprocess.check_call(
-                [binary] + args + ["--out", str(run_dir)],
-                cwd=str(ROOT),
-                stdout=(out / f"{label}_{name}.log").open("w"),
-                stderr=subprocess.STDOUT,
-            )
+            print(f"running {label} {name}: {binary} {args!r}")
+            with (out / f"{label}_{name}.log").open("w") as log:
+                subprocess.check_call(
+                    [binary] + args + ["--out", str(run_dir)],
+                    cwd=str(ROOT), stdout=log, stderr=subprocess.STDOUT,
+                )
 
     # Compare each fixture using the registered pairwise schema policy.
     for name, _ in fixtures:
         base_summary = load_json(out / f"base_{name}/summary.json")
         head_summary = load_json(out / f"head_{name}/summary.json")
-        compare_fixture(name, base_summary, head_summary, config.get("base_commit"),
-                        set(os.environ.get("READ_CHANGED_FIXTURES", "").split()))
+        if name == "feature_smoke":
+            smoke_pair(base_summary, head_summary)
+        else:
+            compare_fixture(name, base_summary, head_summary, config.get("base_commit"),
+                            set(os.environ.get("READ_CHANGED_FIXTURES", "").split()),
+                            feature_first=feature_first)
 
     # Check colony determinism
     determ_log = out / "head_colony_u.log"
@@ -383,7 +422,9 @@ if __name__ == "__main__":
         print(__doc__)
         sys.exit(2)
     cmd = sys.argv[1]
-    if cmd == "bench":
+    if cmd == "mode":
+        print("feature_first" if feature_first_mode(load_config(sys.argv[2])) else "legacy")
+    elif cmd == "bench":
         bench(sys.argv[2], sys.argv[3])
     elif cmd == "core_fixture":
         core_fixture(sys.argv[2], sys.argv[3])

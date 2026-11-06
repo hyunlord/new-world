@@ -163,6 +163,36 @@ pub struct WorldSave {
 }
 
 impl WorldSave {
+    /// Upgrade only the known pre-format17 physical component columns in place.
+    pub(super) fn migrate_items_v16(&mut self) -> Result<(), String> {
+        use sim_core::colony::legacy_items_v16::{ApparelV16, CarryV16, ToolV16};
+        fn convert<Old: DeserializeOwned, New: From<Old> + Serialize>(
+            bytes: &[u8],
+        ) -> Result<Vec<u8>, String> {
+            let old: Vec<Old> = super::decode(bytes)?;
+            super::encode(&old.into_iter().map(New::from).collect::<Vec<_>>())
+        }
+        for archetype in &mut self.archetypes {
+            if archetype.types.len() != archetype.columns.len() {
+                return Err("legacy archetype columns and types differ".into());
+            }
+            for (&index, bytes) in archetype.types.iter().zip(&mut archetype.columns) {
+                let name = self
+                    .components
+                    .get(usize::from(index))
+                    .ok_or_else(|| "legacy component index out of range".to_owned())?;
+                match name.as_str() {
+                    "Carry" => *bytes = convert::<CarryV16, Carry>(bytes)?,
+                    "Tool" => *bytes = convert::<ToolV16, Tool>(bytes)?,
+                    "Apparel" => {
+                        *bytes = convert::<ApparelV16, sim_core::colony::people::Apparel>(bytes)?
+                    }
+                    _ => {}
+                }
+            }
+        }
+        Ok(())
+    }
     /// Number of free ids in the saved allocator (ids a later spawn reuses).
     pub fn free_len(&self) -> usize {
         self.free.len()
@@ -251,6 +281,37 @@ pub fn capture(world: &World) -> Result<WorldSave, String> {
         meta_len,
         free,
     })
+}
+
+/// Test fixture writer: preserve the historical physical column wire layout explicitly.
+#[cfg(test)]
+pub(super) fn capture_items_v16(world: &World) -> Result<WorldSave, String> {
+    use sim_core::colony::legacy_items_v16::{ApparelV16, CarryV16, ToolV16};
+    fn convert<New: DeserializeOwned, Old: TryFrom<New, Error = &'static str> + Serialize>(
+        bytes: &[u8],
+    ) -> Result<Vec<u8>, String> {
+        let values: Vec<New> = super::decode(bytes)?;
+        let old = values
+            .into_iter()
+            .map(Old::try_from)
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(str::to_owned)?;
+        super::encode(&old)
+    }
+    let mut saved = capture(world)?;
+    for archetype in &mut saved.archetypes {
+        for (&index, bytes) in archetype.types.iter().zip(&mut archetype.columns) {
+            match saved.components[usize::from(index)].as_str() {
+                "Carry" => *bytes = convert::<Carry, CarryV16>(bytes)?,
+                "Tool" => *bytes = convert::<Tool, ToolV16>(bytes)?,
+                "Apparel" => {
+                    *bytes = convert::<sim_core::colony::people::Apparel, ApparelV16>(bytes)?
+                }
+                _ => {}
+            }
+        }
+    }
+    Ok(saved)
 }
 
 /// An entity's generation (the high 32 bits of `Entity::to_bits`).

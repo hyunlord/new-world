@@ -233,6 +233,8 @@ func _check_bridge_trigger(read_name: String) -> bool:
 	if read_name in ["sowing_window", "harvest_ready"]:
 		return not preload("res://scripts/ui/field_facts.gd").target(_world, read_name).is_empty()
 	match read_name:
+		"cloth_short":
+			return bool(SimReads.read(_world, "get_settlement_diagnosis").get("cloth_short", false))
 		"tools_below_need":
 			var tool_codes: PackedInt64Array = PackedInt64Array()
 			for definition: Dictionary in _card_defs:
@@ -547,6 +549,11 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> Var
 	var trigger_data: Dictionary = card.get("trigger_data", {})
 	var result: Variant = null
 	match command:
+		"cmd_set_dress_order":
+			var requested: bool = bool(option.get("params", true))
+			if bool(SimReads.read(_world, "get_story").get("dress_order", true)) == requested:
+				return {"accepted": false, "skipped": true, "reason": "nothing"}
+			result = SimReads.mutate(_world, command, [requested])
 		"cmd_set_field_work":
 			var tile := Vector2i(int(trigger_data.get("x", -1)), int(trigger_data.get("y", -1)))
 			var current: Dictionary = preload("res://scripts/ui/field_facts.gd").at(_world, tile)
@@ -965,6 +972,8 @@ func _effective_recommended(card_def: Dictionary, trigger_data: Dictionary) -> i
 	if _steward_on() and card_id in STEWARD_COVERED_CARDS:
 		return _steward_option(options, trigger_data)
 	match card_id:
+		"cloth_short":
+			return 2 if bool(SimReads.read(_world, "get_story").get("dress_order", true)) else 0
 		"migrants":
 			var migrant_count: int = int(trigger_data.get("count", 0))
 			var shortage: String = _migrant_shortage(migrant_count, int(trigger_data.get("wave_id", -1)))
@@ -1113,6 +1122,8 @@ func _option_hidden(opt: Dictionary, trigger_data: Dictionary = {}) -> bool:
 				return not bool(_world.get_card_harvest_target().get("found", false))
 	# Hide hunt zone when wolves are near (seed 6 fix: hunters die to wolves).
 	var cmd: String = str(opt.get("command", ""))
+	if cmd == "cmd_set_dress_order":
+		return bool(SimReads.read(_world, "get_story").get("dress_order", true)) == bool(opt.get("params", true))
 	if cmd == "cmd_add_hunt_zone" and _alert_active("wolves_approaching"):
 		return true
 	return false

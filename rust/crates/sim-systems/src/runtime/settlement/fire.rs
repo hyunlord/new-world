@@ -1,16 +1,16 @@
 //! FireSystem: burns stockpile wood in each hearth at night and marks members `Cold` (with exposure damage) when the fire is out on a winter night.
 //!
-//! Priority: 147 · Interval: 60 ticks · Gate: `WorldRules.society.firewood`
+//! Priority: 147 · Interval: 60 ticks · Gate: firewood for fire/cold; colony for finite clothing wear.
 //! Reads: `Agent`, `Founding`, `PorterTrip`, `Child`, `Elder`, `Hardiness`, `Hunger`, `Position`, `AgentState`, `Apparel`, `Lineage` (M5); `SimResources.settlements`, `rules`, `world_seed`, `colony.rooms` (M3), `colony.story` (M5)
-//! Writes: `Cold`, `ExposureClock`, `BodyHealth`; `SimResources.fires`, `settlements` (stockpile wood), `tallies`, `colony.story` (snap cost, touched), `causal_log` (M5); deaths via `despawn_agent`
+//! Writes: `Cold`, `ExposureClock`, `BodyHealth`, finite `Apparel`; colony item ledger on wear expiry; `SimResources.fires`, `settlements` (stockpile wood), `tallies`, `colony.story` (snap cost, touched), `causal_log` (M5); deaths via `despawn_agent`
 //! Events: tally `cold_member_hours`; on death `CausalEvent::AgentDied`, chronicle `Died`/`Widowed`, tally `deaths_exposure`
 //!
 //! Revitalize Pass 5 — `FireSystem` (priority 147, every 60 ticks).
 //!
 //! The hearth burns wood from the settlement stockpile through the night and
 //! marks members `Cold` on winter nights when it is out. Under
-//! `SocietyRules::firewood` only; without the rule the system returns at once,
-//! so legacy, v8, v9 and v10 worlds are untouched.
+//! `SocietyRules::firewood` gates those effects; finite clothing wear runs only
+//! in colony worlds. Legacy clothing has no finite lifetime and is unchanged.
 //!
 //! Each run (hourly, because the 480-tick clock offset is a multiple of 60):
 //! - inside the burn window every settlement, in id order, withdraws
@@ -113,6 +113,7 @@ impl RuntimeSystem for FireSystem {
     }
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
+        wear_clothing(world, resources);
         let Some(rule) = resources.rules.society.firewood else {
             return;
         };
@@ -384,6 +385,37 @@ pub fn exposure_damage(
         damage *= 1.0 + rule.hunger_weight * excess;
     }
     damage
+}
+
+/// Consume one worn hour in stable person order; stored and legacy garments do not age.
+fn wear_clothing(world: &mut World, res: &mut SimResources) {
+    use sim_core::colony::people::Apparel;
+    if res.rules.colony.is_none() || res.current_tick == 0 {
+        return;
+    }
+    let mut worn: Vec<_> = world
+        .query::<(&Agent, &Apparel)>()
+        .iter()
+        .filter(|(_, (_, apparel))| apparel.wear_remaining_hours.is_some())
+        .map(|(entity, (agent, _))| (agent.id, entity))
+        .collect();
+    worn.sort_by_key(|(id, _)| *id);
+    for (_, entity) in worn {
+        let expired = if let Ok(mut apparel) = world.get::<&mut Apparel>(entity) {
+            apparel.wear_remaining_hours = apparel
+                .wear_remaining_hours
+                .map(|hours| hours.saturating_sub(1));
+            (apparel.wear_remaining_hours == Some(0)).then_some(apparel.top.item())
+        } else {
+            None
+        };
+        if let Some(kind) = expired {
+            let _ = world.remove_one::<Apparel>(entity);
+            res.colony.item_ledger.consume(kind, 1);
+            res.colony.wildlife.version += 1;
+            res.colony.touch(false);
+        }
+    }
 }
 
 #[cfg(test)]

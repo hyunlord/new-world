@@ -450,7 +450,8 @@ mod tests {
             .blueprints()
             .map(|d| d.identity.code)
             .collect();
-        assert_eq!(codes, vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+        assert_eq!(&codes[..13], &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+        assert_eq!(&codes[13..], &[13, 14]);
         let space: Vec<bool> = super::super::content::installed_or_bundled()
             .blueprints()
             .map(|d| {
@@ -460,12 +461,13 @@ mod tests {
             })
             .collect();
         assert_eq!(
-            space,
-            vec![
+            &space[..13],
+            &[
                 false, false, false, false, true, true, true, true, true, false, false, false,
                 false
             ]
         );
+        assert_eq!(&space[13..], &[false, false]);
         assert!(MaterialNeeds::none().complete());
         assert_eq!(MaterialNeeds::none().needed_total(), 0);
         let mut needs = MaterialNeeds::pair((ItemKind::Log, 6), (ItemKind::Stone, 2));

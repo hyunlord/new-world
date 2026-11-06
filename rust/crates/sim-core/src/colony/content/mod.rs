@@ -288,3 +288,6 @@ impl Catalog {
 
 #[cfg(test)]
 mod crop_tests;
+
+#[cfg(test)]
+mod weaving_tests;

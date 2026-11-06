@@ -97,6 +97,8 @@ extends SceneTree
 ## The world scale of the colony view (scripts/world/colony/view.gd `TILE`; 64 since M-ART2).
 const TILE: float = 64.0
 const OverlaySuffix = preload("res://scripts/world/colony/overlay_layer.gd")
+const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
+const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 const Mart2Shots = preload("res://tools/v8/mart2_shots.gd")
@@ -112,6 +114,7 @@ var _m5_set: bool = false
 var _m55_set: bool = false
 var _m5_shots: PackedStringArray = PackedStringArray(["1", "2", "3", "4", "5", "6", "7", "8"])
 var _load: String = ""
+var _weaving_saves: String = ""
 var _record: Dictionary = {}
 var _mart2_set: bool = false
 var _mart2_saves: Dictionary = {}
@@ -142,6 +145,8 @@ func _init() -> void:
 				_out = args[i + 1]
 		elif args[i] == "--m5-shots" and i + 1 < args.size():
 			_m5_shots = args[i + 1].split(",")
+		elif args[i] == "--weaving-set" and i + 1 < args.size():
+			_weaving_saves = args[i + 1]
 		elif args[i] == "--load" and i + 1 < args.size():
 			_load = args[i + 1]
 		elif args[i] == "--mart2-set":
@@ -168,6 +173,9 @@ func _run() -> void:
 		quit(1)
 		return
 	world.set("process_mode", Node.PROCESS_MODE_DISABLED)
+	if not _weaving_saves.is_empty():
+		await _weaving_shots(main, world, camera)
+		return
 	if _m1_set:
 		await _m1_shots(main, world, camera)
 		return
@@ -1314,7 +1322,11 @@ func _click_person(main: Node, world: Node, camera: Camera2D, agent: int, zoom: 
 	if frame:
 		await _near(camera, at["tile"], zoom)
 		at = _person_at(main, world, agent)
-	await _click(root.get_canvas_transform() * ((at["drawn"] as Vector2) + Vector2(8, 8)))
+	var agents: Node = main.get_node("ColonyView/AgentLayer")
+	var hit: Rect2 = agents.call("drawn_rect", int(at["bits"]))
+	if not hit.has_area():
+		return false
+	await _click(root.get_canvas_transform() * hit.get_center())
 	await _wait(5)
 	var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
 	return inspector != null and (inspector as Control).visible and int(inspector.get("_selected_person")) == agent
@@ -1969,3 +1981,142 @@ func _m55_eureka(world: Node, camera: Camera2D, chronicle: Node, hearth: Vector2
 		push_error("capture: m55_05 no Eureka entry by day 60; the shot shows the whole feed")
 	await _save("m55_05_eureka_chronicle.png")
 	await _key(KEY_C)
+
+
+## Observe real production milestones exported by weaving_chain.rs; never advance or order.
+func _weaving_shots(main: Node, world: Node, camera: Camera2D) -> void:
+	var settings: Node = main.find_child("Settings", true, false)
+	if settings == null or main.find_child("CardPanel", true, false) == null or main.find_child("Goals", true, false) == null:
+		push_error("capture: weaving requires shipped MuxHud Settings, CardPanel and Goals")
+		quit(1)
+		return
+	root.get_node("Locale").call("set_language", "ko")
+	settings.call("_scale_selected", 1)
+	var reads: Node = main.get_node("SimReads")
+	var panel: Node = main.get_node("UI/WorkshopPanel")
+	var notes: Array[Dictionary] = []
+	var milestones: Array[String] = ["00-start", "01-workshops", "02-harvested", "03-retted", "04-spun", "05-woven", "06-tailored", "07-worn"]
+	for milestone: String in milestones:
+		var path: String = _weaving_saves.path_join(milestone + ".wsave")
+		if not bool(reads.call("mutate_raw", "load_world", [path])):
+			push_error("capture: failed real weaving save " + path)
+			quit(1)
+			return
+		var tick: int = _now(world)
+		var commands: Dictionary = world.call("get_command_log", 0)
+		for _i: int in 20:
+			await process_frame
+		var shops: Dictionary = world.call("get_workshops")
+		var ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
+		var xs: PackedInt32Array = shops.get("xs", PackedInt32Array())
+		var ys: PackedInt32Array = shops.get("ys", PackedInt32Array())
+		var kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
+		var wanted: String = "retting_pit" if milestone in ["01-workshops", "02-harvested", "03-retted"] else "loom"
+		var selected: int = -1
+		var wanted_code: int = EconomyText.build_code(wanted)
+		for i: int in ids.size():
+			if i < kinds.size() and kinds[i] == wanted_code:
+				selected = i
+				break
+		var centre: Vector2 = Vector2(_hearth(world))
+		if selected >= 0:
+			centre = Vector2(xs[selected], ys[selected])
+			panel.call("display_workshop", ids[selected])
+		_frame(camera, centre, _zoom)
+		for _i: int in 20:
+			await process_frame
+		var products: Dictionary = {"02-harvested": "flax_stalks", "03-retted": "flax_fibre", "04-spun": "linen_thread", "05-woven": "linen_cloth", "06-tailored": "linen_tunic"}
+		var overlay: Dictionary = world.call("get_colony_overlay")
+		if products.has(milestone):
+			var item_kinds: PackedInt64Array = overlay.get("item_kinds", PackedInt64Array())
+			var item_xs: PackedInt32Array = overlay.get("item_xs", PackedInt32Array())
+			var item_ys: PackedInt32Array = overlay.get("item_ys", PackedInt32Array())
+			var product: int = EconomyText.item_code(products[milestone])
+			var index: int = item_kinds.find(product)
+			if index >= 0:
+				var tile := Vector2i(item_xs[index], item_ys[index])
+				_frame(camera, Vector2(tile), _zoom)
+				await _wait(5)
+				Input.warp_mouse(_screen_of(tile))
+				await _motion(_screen_of(tile))
+				await _wait(10)
+		if milestone == "07-worn":
+			panel.call("close")
+			var snapshot: Dictionary = world.call("get_agent_snapshot")
+			var tops: PackedByteArray = snapshot.get("tops", PackedByteArray())
+			var people: PackedInt64Array = snapshot.get("agent_ids", PackedInt64Array())
+			for i: int in mini(tops.size(), people.size()):
+				if tops[i] in [3, 4]:
+					var clicked: bool = await _click_person(main, world, camera, people[i], 3.0)
+					var inspector: Node = main.get_node("UI/AgentInspectorPanel")
+					if not clicked or not (inspector as Control).is_visible_in_tree() or int(inspector.get("_selected_person")) != people[i]:
+						push_error("capture: real worn-person inspector selection failed")
+						quit(1)
+						return
+					notes.append({"agent": people[i], "mouse_selection": clicked, "display_source": "mouse_click"})
+					var label: Label = inspector.get("_top_label") as Label
+					var scroll: ScrollContainer = inspector.get("_scroll") as ScrollContainer
+					scroll.ensure_control_visible(label)
+					await _wait(10)
+					break
+		await _save(milestone + ".png")
+		if _now(world) != tick or world.call("get_command_log", 0) != commands or not FileAccess.file_exists(_out.path_join(milestone + ".png")):
+			push_error("capture: weaving observation changed state or failed image " + milestone)
+			quit(1)
+			return
+		notes.append({"source": path, "tick": tick, "workshops": shops, "diagnosis": world.call("get_settlement_diagnosis"), "agents": world.call("get_agent_snapshot"), "command_log": commands, "overlay": overlay})
+	# All four extra views use the final real save; only player-visible panel navigation.
+	var final_tick: int = _now(world)
+	var final_commands: Dictionary = world.call("get_command_log", 0)
+	main.get_node("UI/AgentInspectorPanel").call("close")
+	Input.warp_mouse(Vector2(1919, 1079))
+	await _motion(Vector2(1919, 1079))
+	var cards: Node = main.find_child("CardPanel", true, false)
+	var goals: Node = main.find_child("Goals", true, false)
+	var chronicle: Node = main.get_node("UI/ChroniclePanel")
+	var tech: Node = main.get_node("UI/TechPanel")
+	panel.call("close")
+	await _wait(10)
+	await _save("08-card.png")
+	notes.append({"shot": "08-card.png", "cards": cards.get("_active"), "diagnosis": world.call("get_settlement_diagnosis")})
+	panel.call("close")
+	chronicle.call("toggle_visible")
+	chronicle.call("set_filter", 5)
+	chronicle.call("set_person_only", false)
+	await _wait(10)
+	var feed: Array = chronicle.get("_entries")
+	var textile_rows: Array[Dictionary] = []
+	for row: Dictionary in feed:
+		if int(row.get("kind", -1)) in [57, 58]:
+			textile_rows.append(row)
+	var body: RichTextLabel = chronicle.get("_body") as RichTextLabel
+	body.scroll_to_line(0)
+	var chronicle_note: Dictionary = {"next": chronicle.get("_next"), "total": chronicle.get("_total"), "textile_rows": textile_rows, "displayed_text": body.get_parsed_text()}
+	print("WEAVING_CHRONICLE ", JSON.stringify(chronicle_note))
+	notes.append({"shot": "09-chronicle.png", "chronicle": chronicle_note})
+	await _save("09-chronicle.png")
+	chronicle.call("toggle_visible")
+	goals.call("toggle_panel")
+	await _wait(10)
+	await _save("10-chapter-era.png")
+	goals.call("toggle_panel")
+	tech.call("toggle_visible")
+	tech.call("select_node", KnowledgeText.node_id("weaving"))
+	await _wait(10)
+	await _save("11-weaving-marker.png")
+	notes.append({"shot": "11-weaving-marker.png", "tech": tech.call("detail"), "tick": final_tick, "language": "ko", "ui_scale": 1.0})
+	for filename: String in ["08-card.png", "09-chronicle.png", "10-chapter-era.png", "11-weaving-marker.png"]:
+		if not FileAccess.file_exists(_out.path_join(filename)):
+			quit(1)
+			return
+	if _now(world) != final_tick or world.call("get_command_log", 0) != final_commands:
+		push_error("capture: weaving panel navigation changed simulation")
+		quit(1)
+		return
+	var file: FileAccess = FileAccess.open(_out.path_join("weaving.json"), FileAccess.WRITE)
+	if file == null:
+		quit(1)
+		return
+	file.store_string(JSON.stringify(notes, "\t"))
+	print("CAPTURE_WEAVING_DONE shots=12")
+	quit(0)

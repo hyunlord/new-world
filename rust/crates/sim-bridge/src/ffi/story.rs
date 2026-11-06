@@ -404,6 +404,10 @@ pub struct AgentM5View {
     pub top_cold_permille: u32,
     /// Display day the top was put on (−1 without one).
     pub top_since: i64,
+    /// Exact authored item code, -1 without clothing.
+    pub top_item: i64,
+    /// Worn hours remaining, -1 for unlimited legacy clothing or no clothing.
+    pub wear_remaining_hours: i64,
     /// Whether drafted.
     pub drafted: bool,
     /// The draft order: 0 hold, 1 move, 2 attack an animal, 3 attack a person (−1 not drafted).
@@ -475,6 +479,10 @@ pub fn collect_agent_m5(world: &hecs::World, res: &SimResources, agent_id: i64) 
         top: apparel.map_or(0, |a| a.top.code()),
         top_cold_permille: apparel.map_or(1000, |a| a.top.cold_permille()),
         top_since: apparel.map_or(-1, |a| i64::from(a.since_day)),
+        top_item: apparel.map_or(-1, |a| i64::from(a.top.item().code())),
+        wear_remaining_hours: apparel
+            .and_then(|a| a.wear_remaining_hours)
+            .map_or(-1, i64::from),
         drafted: drafted.is_some(),
         draft_order: order,
         draft_x: dx,
@@ -512,6 +520,8 @@ pub(super) fn agent_m5_to_dict(v: &AgentM5View) -> VarDictionary {
     d.set("top", i64::from(v.top));
     d.set("top_cold_permille", i64::from(v.top_cold_permille));
     d.set("top_since", v.top_since);
+    d.set("top_item", v.top_item);
+    d.set("wear_remaining_hours", v.wear_remaining_hours);
     d.set("drafted", v.drafted);
     d.set("draft_order", v.draft_order);
     d.set("draft_x", v.draft_x);

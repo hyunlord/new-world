@@ -12,7 +12,7 @@ struct FrozenFoodV13 {
     /// Exactly one age for every physical food owner.
     ages: BTreeMap<FoodOwner, FoodAge>,
     /// Real deployed pot vessels and their contents.
-    pots: BTreeMap<u32, PotStore>,
+    pots: BTreeMap<u32, legacy_food_v16::PotStoreV16>,
     /// Next pot ID; allocation starts at one.
     next_pot_id: u32,
     /// Bounded per-person meal and group histories.
@@ -26,7 +26,7 @@ struct FrozenFoodV13 {
     /// Mutation generation for pure derived readers.
     version: u64,
     /// Passive preservation batches; outputs are not yet physical items.
-    pending_drying: Vec<DryingBatch>,
+    pending_drying: Vec<legacy_food_v16::DryingBatchV16>,
     /// Plan observations keyed by their actual chronicle entry index.
     winter_plans: BTreeMap<u32, WinterPlanEvidence>,
 }
@@ -34,7 +34,7 @@ struct FrozenFoodV13 {
 #[derive(Serialize, Deserialize)]
 struct FrozenBodyV13 {
     current_tick: u64,
-    resources: SimResources,
+    resources: sim_engine::legacy_v7::LegacySimResourcesV16,
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
     steward: legacy_steward_v14::LegacyStewardStateV14,
@@ -49,12 +49,12 @@ fn baseline13() -> Vec<u8> {
     let mut engine = SimEngine::new(4, 4, MaterialRegistry::new());
     let body = FrozenBodyV13 {
         current_tick: engine.current_tick(),
-        world: world::capture(&engine.world).unwrap(),
+        world: world::capture_items_v16(&engine.world).unwrap(),
         systems: engine.system_states().unwrap(),
         steward: std::mem::take(&mut engine.resources.steward).into(),
         content_state: std::mem::take(&mut engine.resources.content_state),
         mind: std::mem::take(&mut engine.resources.mind),
-        resources: engine.resources,
+        resources: engine.resources.try_into().expect("historical resources"),
         food: Default::default(),
     };
     let envelope = Envelope {
@@ -137,12 +137,40 @@ fn authenticated_original13_fixtures_keep_all_physical_food_and_system_slots() {
         let mut loaded = load(&bytes).unwrap();
         assert_eq!(loaded.resources.food.evidence, Default::default());
         // Same field order and bytes for EVERY old physical/tally/history field.
-        let new_food = encode(&loaded.resources.food).unwrap();
+        let projected = legacy_food_v16::FoodStateV16::try_from(loaded.resources.food.clone())
+            .expect("migration must leave every historical item condition inert");
+        let new_food = encode(&projected).unwrap();
         let mut expected = old_food;
         expected.extend(encode(&loaded.resources.food.evidence).unwrap());
         assert_eq!(new_food, expected, "format13 physical state was remigrated");
         assert_eq!(loaded.current_tick(), original.current_tick);
-        assert_eq!(loaded.system_states().unwrap(), original.systems);
+        let mut expected_systems = original.systems;
+        let presentation_slot = expected_systems
+            .iter()
+            .position(|(name, _)| name == "InfluenceVisualizationSystem")
+            .expect("original visualization slot");
+        expected_systems.splice(
+            presentation_slot..presentation_slot,
+            [
+                ("DiagnosisSystem".to_owned(), Vec::new()),
+                ("RequestsSystem".to_owned(), Vec::new()),
+            ],
+        );
+        assert_eq!(loaded.system_states().unwrap(), expected_systems);
+        assert_eq!(
+            encode(&loaded.resources.mind).unwrap(),
+            encode(&original.mind).unwrap()
+        );
+        let source = original
+            .mind
+            .policy_source
+            .as_deref()
+            .expect("original policy");
+        let history = original.mind.history.as_ref().expect("original history");
+        assert!(
+            crate::runtime::mind::MindProgram::load_saved(&format!("{source}\n"), history).is_err(),
+            "changed source must not inherit historical revision"
+        );
         crate::runtime::food::evidence::observe_day(&mut loaded.resources);
         assert_ne!(loaded.resources.food.evidence, Default::default());
         let current = save(&mut loaded).unwrap();
@@ -153,5 +181,8 @@ fn authenticated_original13_fixtures_keep_all_physical_food_and_system_slots() {
             loaded.resources.food.evidence
         );
         assert_eq!(save(&mut again).unwrap(), current);
+        loaded.tick();
+        again.tick();
+        assert_eq!(save(&mut again).unwrap(), save(&mut loaded).unwrap());
     }
 }

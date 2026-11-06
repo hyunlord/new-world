@@ -456,5 +456,48 @@
             stack_rule: None, carry_rule: None, value: 1, made_by: None, clue_nodes: [],
             chop: None, weapon: None, cutter: None, food: None, fuel_units: None, apparel: None,
         ),
+        // Starting textile capacities/value and garment wear/cold/comfort; see BALANCE_DEBT.md.
+        (
+            identity: (code: 32, id: "flax_fibre", name_key: "ITEM_FLAX_FIBRE", serde_name: "FlaxFibre", serde_aliases: [], resolver_aliases: []),
+            category: "material", material_format_key: "", tags: ["textile"], stack_max: 30, carry: 10,
+            stack_rule: None, carry_rule: None, value: 2, made_by: None, clue_nodes: [],
+            chop: None, weapon: None, cutter: None, tool_capabilities: [],
+            food: None, fuel_units: None, apparel: None,
+        ),
+        (
+            identity: (code: 33, id: "linen_thread", name_key: "ITEM_LINEN_THREAD", serde_name: "LinenThread", serde_aliases: [], resolver_aliases: []),
+            category: "material", material_format_key: "", tags: ["textile"], stack_max: 30, carry: 10,
+            stack_rule: None, carry_rule: None, value: 2, made_by: None, clue_nodes: [],
+            chop: None, weapon: None, cutter: None, tool_capabilities: [],
+            food: None, fuel_units: None, apparel: None,
+        ),
+        (
+            identity: (code: 34, id: "linen_cloth", name_key: "ITEM_LINEN_CLOTH", serde_name: "LinenCloth", serde_aliases: [], resolver_aliases: []),
+            category: "material", material_format_key: "", tags: ["textile", "woven_cloth"], stack_max: 30, carry: 10,
+            stack_rule: None, carry_rule: None, value: 4, made_by: None, clue_nodes: [],
+            chop: None, weapon: None, cutter: None, tool_capabilities: [],
+            food: None, fuel_units: None, apparel: None,
+        ),
+        (
+            identity: (code: 35, id: "hand_spindle", name_key: "ITEM_HAND_SPINDLE", serde_name: "HandSpindle", serde_aliases: [], resolver_aliases: []),
+            category: "tool", material_format_key: "", tags: ["textile"], stack_max: 10, carry: 2,
+            stack_rule: None, carry_rule: None, value: 3, made_by: None, clue_nodes: [],
+            chop: None, weapon: None, cutter: None, tool_capabilities: ["spindle"],
+            food: None, fuel_units: None, apparel: None,
+        ),
+        (
+            identity: (code: 36, id: "linen_tunic", name_key: "ITEM_LINEN_TUNIC", serde_name: "LinenTunic", serde_aliases: [], resolver_aliases: []),
+            category: "apparel", material_format_key: "", tags: ["textile", "woven_tunic"], stack_max: 1, carry: 1,
+            stack_rule: None, carry_rule: None, value: 8, made_by: None, clue_nodes: [],
+            chop: None, weapon: None, cutter: None, tool_capabilities: [],
+            food: None, fuel_units: None, apparel: Some((legacy_top_code: 3, warmth_rank: 1, cold_permille: 600, cold_snap_work_immune: false, wear_days: Some(48), comfort_permille: 20)),
+        ),
+        (
+            identity: (code: 37, id: "linen_wrap", name_key: "ITEM_LINEN_WRAP", serde_name: "LinenWrap", serde_aliases: [], resolver_aliases: []),
+            category: "apparel", material_format_key: "", tags: ["textile"], stack_max: 1, carry: 1,
+            stack_rule: None, carry_rule: None, value: 4, made_by: None, clue_nodes: [],
+            chop: None, weapon: None, cutter: None, tool_capabilities: [],
+            food: None, fuel_units: None, apparel: Some((legacy_top_code: 4, warmth_rank: 1, cold_permille: 700, cold_snap_work_immune: false, wear_days: Some(24), comfort_permille: 10)),
+        ),
     ],
 )

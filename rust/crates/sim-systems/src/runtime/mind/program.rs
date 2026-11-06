@@ -48,11 +48,50 @@ impl MindProgram {
         Self::compile(Cow::Owned(source.to_owned()))
     }
 
+    /// Restore only a schema whose complete dictionary and packed history verify.
+    pub(crate) fn load_saved(
+        source: &str,
+        history: &sim_core::colony::mind_records::MindHistory,
+    ) -> Result<Self, MindProgramError> {
+        let current = Self::load(source)?;
+        if history.check_policy(&current.policy).is_ok() {
+            return Ok(current);
+        }
+        let historical = Self::compile_schema(Cow::Owned(source.to_owned()), true)?;
+        history
+            .check_policy(&historical.policy)
+            .map_err(|error| MindProgramError(error.to_string()))?;
+        Ok(historical)
+    }
+
     fn compile(source: Cow<'static, str>) -> Result<Self, MindProgramError> {
+        Self::compile_schema(source, false)
+    }
+
+    fn compile_schema(
+        source: Cow<'static, str>,
+        format13_schema: bool,
+    ) -> Result<Self, MindProgramError> {
         let registry = ProviderRegistry::new(BUILTIN_PROVIDERS)
             .map_err(|error| MindProgramError(error.to_string()))?;
+        let mut facts = registry.schema();
+        if format13_schema {
+            // dba478e54/e2ba280f3: these five registrations did not yet exist.
+            // Revision hashing includes unused registrations; never rewrite a
+            // saved dictionary or accept a hash without its complete history.
+            facts.retain(|fact| {
+                !matches!(
+                    fact.name.as_str(),
+                    "harvest_window"
+                        | "job_food_transport"
+                        | "harvest_storage_available"
+                        | "winter_stock_duty"
+                        | "water_target_available"
+                )
+            });
+        }
         let schema = MindRegistrySchema {
-            facts: registry.schema(),
+            facts,
             behaviours: behaviours::registry_schema(),
         };
         let policy =

@@ -108,11 +108,11 @@ fn format_eleven_migrates_empty_mind_and_registration_sees_saved_rules() {
     engine.resources.rules.clock_offset_ticks = 123;
     let old = LegacyBodyV11 {
         current_tick: 0,
-        world: world::capture(&engine.world).expect("world"),
+        world: world::capture_items_v16(&engine.world).expect("world"),
         systems: vec![],
         steward: Default::default(),
         content_state: Default::default(),
-        resources: engine.resources,
+        resources: engine.resources.try_into().expect("legacy resources"),
     };
     let envelope = Envelope {
         revision: sim_core::colony::content::installed()
@@ -149,6 +149,7 @@ fn invalid_saved_policy_is_rejected_before_registration() {
         mind: &body.mind,
         food: &body.food,
         cultivation: &body.cultivation,
+        processing: &body.processing,
     })
     .expect("malformed fixture");
     let mut corrupt = MAGIC.to_vec();
@@ -172,7 +173,11 @@ fn typed_fact_origin_event_appends_wire_discriminant_seventeen() {
 
 fn provenance_engine() -> SimEngine {
     let mut engine = engine_with_history();
-    engine.resources.current_tick = 20;
+    // Keep the engine boundary consistent with the historical records below.
+    for _ in 0..=20 {
+        engine.tick();
+    }
+    assert_eq!(engine.resources.current_tick, 20);
     engine
         .resources
         .next_event_id
@@ -382,13 +387,14 @@ fn switch_fixture(register: fn(&mut SimEngine)) -> SimEngine {
 }
 
 fn switch_v11_bytes(engine: &mut SimEngine) -> Vec<u8> {
-    let resources = std::mem::replace(
+    let mut resources = std::mem::replace(
         &mut engine.resources,
         SimEngine::new(1, 1, MaterialRegistry::new()).resources,
     );
+    let content_state = std::mem::take(&mut resources.content_state);
     let mut old = LegacyBodyV11 {
         current_tick: engine.current_tick(),
-        world: world::capture(&engine.world).unwrap(),
+        world: world::capture_items_v16(&engine.world).unwrap(),
         systems: engine
             .system_states()
             .unwrap()
@@ -397,10 +403,10 @@ fn switch_v11_bytes(engine: &mut SimEngine) -> Vec<u8> {
             .collect(),
         steward: Default::default(),
         content_state: Default::default(),
-        resources,
+        resources: resources.try_into().expect("legacy resources"),
     };
     old.steward = std::mem::take(&mut old.resources.steward).into();
-    old.content_state = std::mem::take(&mut old.resources.content_state);
+    old.content_state = content_state;
     let envelope = Envelope {
         revision: sim_core::colony::content::installed()
             .unwrap()
@@ -578,4 +584,38 @@ fn switch_preswitch_v12_colony_with_empty_mind_migrates_legacy_slot() {
     assert!(loaded.resources.mind.history.is_some());
     loaded.tick();
     assert_eq!(loaded.current_tick(), 4);
+}
+
+#[test]
+fn accepted_order_can_save_at_next_tick_boundary_without_advancing_clock() {
+    use sim_core::colony::{mind_job_origins::MindOrderKey, Command};
+    let mut engine = switch_fixture(crate::register_colony_mind_runtime_systems);
+    engine.tick();
+    let boundary = engine.current_tick();
+    let last_tick = engine.resources.current_tick;
+    assert_eq!(boundary, last_tick + 1);
+    assert!(crate::commands::submit(&mut engine, Command::SetDressOrder { on: false }).accepted);
+    assert!(engine
+        .resources
+        .mind
+        .order_origins
+        .contains_key(&MindOrderKey::Dress));
+    let bytes = save(&mut engine).expect("accepted next-boundary order must save immediately");
+    assert_eq!(engine.resources.current_tick, last_tick);
+    let mut corrupt: Envelope = decode(&bytes[12..]).unwrap();
+    let mut body: Body = decode(&corrupt.payload).unwrap();
+    body.resources.colony.command_log.last_mut().unwrap().tick = boundary + 1;
+    corrupt.payload = encode(&body).unwrap();
+    let mut malformed = bytes[..12].to_vec();
+    malformed.extend(encode(&corrupt).unwrap());
+    assert!(matches!(load(&malformed), Err(SaveError::Decode(_))));
+    let mut loaded = load_with(&bytes, crate::register_colony_mind_runtime_systems).unwrap();
+    assert_eq!(loaded.resources.current_tick, last_tick);
+    assert_eq!(save(&mut loaded).unwrap(), bytes);
+    engine.tick();
+    loaded.tick();
+    assert_eq!(save(&mut loaded).unwrap(), save(&mut engine).unwrap());
+    let future = loaded.current_tick() + 1;
+    loaded.resources.colony.command_log.last_mut().unwrap().tick = future;
+    assert!(save(&mut loaded).is_err());
 }

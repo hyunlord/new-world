@@ -22,6 +22,7 @@ const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const ItemIcons = preload("res://scripts/ui/item_icons.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
+const DiagnosisText = preload("res://scripts/ui/panels/diagnosis_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const WAIT: Color = Color("e05a48")
 const PANEL_SIZE: Vector2 = Vector2(640, 700)
@@ -34,6 +35,8 @@ var _locale: Node = null
 var _shop: int = -1
 var _key: int = 0
 var _title: Label
+var _food_why: Button
+var _diagnosis: Label
 var _shelf: Label
 var _bills: VBoxContainer
 var _add: Button
@@ -69,7 +72,12 @@ func _ready() -> void:
 	_shelf.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_shelf.add_theme_color_override("font_color", MUTED)
 	column.add_child(_shelf)
-	column.add_child(_button("FoodWhy", _loc("M6A_FOOD_WHY"), _open_food))
+	_diagnosis = Label.new()
+	_diagnosis.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_diagnosis.add_theme_color_override("font_color", MUTED)
+	column.add_child(_diagnosis)
+	_food_why = _button("FoodWhy", _loc("M6A_FOOD_WHY"), _open_food)
+	column.add_child(_food_why)
 	var scroll: ScrollContainer = ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -148,6 +156,18 @@ func _refresh() -> void:
 	var shelf: Array[Dictionary] = _shelf_of(shops, row)
 	var kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
 	var kind: int = kinds[row] if row < kinds.size() else -1
+	var textile_workshop: bool = false
+	_food_why.visible = false
+	for recipe: Dictionary in EconomyText.Content.rows("recipes"):
+		if not recipe.get("compatible_workshops", PackedInt64Array()).has(kind):
+			continue
+		var output: Dictionary = EconomyText.Content.row("items", int(recipe.get("output_code", -1)))
+		_food_why.visible = _food_why.visible or str(output.get("category", "")) == "food"
+		textile_workshop = textile_workshop or output.get("tags", PackedStringArray()).has("textile")
+	var diagnosis: Dictionary = SimReads.read(_world_sim, "get_settlement_diagnosis")
+	var textile_check: int = DiagnosisText.request_check(diagnosis, PackedStringArray(["textile"]))
+	_diagnosis.text = DiagnosisText.chain_text(diagnosis, textile_check, _locale)
+	_diagnosis.visible = textile_workshop and not _diagnosis.text.is_empty()
 	_waits = SimReads.read(_world_sim, "get_knowledge_waits")
 	var key: int = hash([bills, shelf, kind, Chronicle.language(_locale), _waits])
 	if key == _key:

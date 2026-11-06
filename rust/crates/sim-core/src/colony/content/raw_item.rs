@@ -19,6 +19,8 @@ pub(super) struct ItemRaw {
     pub chop: Option<ChopRaw>,
     pub weapon: Option<WeaponDef>,
     pub cutter: Option<CutterDef>,
+    #[serde(default)]
+    pub tool_capabilities: Vec<String>,
     pub food: Option<FoodDef>,
     #[serde(default)]
     pub pot_capacity: u16,

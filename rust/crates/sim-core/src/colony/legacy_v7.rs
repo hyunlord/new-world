@@ -2,8 +2,8 @@
 use super::*;
 
 /// Historical colony state with byte-sized touched pressure codes.
-#[derive(serde::Deserialize)]
-pub struct LegacyColonyState {
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct LegacyColonyState<S = story::legacy_v7::LegacyStoryteller> {
     /// Standing trees by tile.
     pub trees: BTreeMap<(u32, u32), Tree>,
     /// Resource nodes (boulders, flint outcrops) by tile (M2).
@@ -14,7 +14,7 @@ pub struct LegacyColonyState {
     pub materials: ColonyMaterials,
     /// Finished workshops by id (M2).
     #[serde(default)]
-    pub workshops: BTreeMap<WorkshopId, Workshop>,
+    pub workshops: BTreeMap<WorkshopId, legacy_items_v16::WorkshopV16>,
     /// Next workshop id (from 1).
     #[serde(default)]
     pub next_workshop_id: WorkshopId,
@@ -63,7 +63,7 @@ pub struct LegacyColonyState {
     /// Bumped whenever a tree is added or removed (renderers rebuild on change).
     pub trees_version: u64,
     /// Ground stacks, one per tile.
-    pub ground_items: BTreeMap<(u32, u32), ItemStack>,
+    pub ground_items: BTreeMap<(u32, u32), legacy_items_v16::ItemStackV16>,
     /// Zones by id.
     pub zones: BTreeMap<ZoneId, Zone>,
     /// The zone each zoned tile belongs to.
@@ -95,7 +95,7 @@ pub struct LegacyColonyState {
     pub next_teach_id: u32,
     /// M5 (ADR 0027): the storyteller — planned, active and past pressures.
     #[serde(default)]
-    pub story: story::legacy_v7::LegacyStoryteller,
+    pub story: S,
     /// M5 (ADR 0028): animals, hunt marks and zones, meat lots.
     #[serde(default)]
     pub wildlife: wildlife::Wildlife,
@@ -123,13 +123,17 @@ pub struct LegacyColonyState {
     /// fingerprint or summary includes it.
     pub release_counts: BTreeMap<JobReleaseKey, u64>,
 }
-impl From<LegacyColonyState> for ColonyState {
-    fn from(old: LegacyColonyState) -> Self {
+impl<S: Into<story::Storyteller>> From<LegacyColonyState<S>> for ColonyState {
+    fn from(old: LegacyColonyState<S>) -> Self {
         Self {
             trees: old.trees,
             nodes: old.nodes,
             materials: old.materials,
-            workshops: old.workshops,
+            workshops: old
+                .workshops
+                .into_iter()
+                .map(|(id, shop)| (id, shop.into()))
+                .collect(),
             next_workshop_id: old.next_workshop_id,
             next_bill_id: old.next_bill_id,
             site_work_tiles: old.site_work_tiles,
@@ -144,7 +148,11 @@ impl From<LegacyColonyState> for ColonyState {
             rooms_version: old.rooms_version,
             unreachable: old.unreachable,
             trees_version: old.trees_version,
-            ground_items: old.ground_items,
+            ground_items: old
+                .ground_items
+                .into_iter()
+                .map(|(tile, stack)| (tile, stack.into()))
+                .collect(),
             zones: old.zones,
             zone_of_tile: old.zone_of_tile,
             next_zone_id: old.next_zone_id,
@@ -168,5 +176,65 @@ impl From<LegacyColonyState> for ColonyState {
             neighbours: old.neighbours,
             release_counts: old.release_counts,
         }
+    }
+}
+
+/// Published formats9–16 use the widened storyteller and the old physical leaves.
+pub type LegacyColonyStateV16 = LegacyColonyState<story::Storyteller>;
+
+impl TryFrom<ColonyState> for LegacyColonyStateV16 {
+    type Error = &'static str;
+    fn try_from(old: ColonyState) -> Result<Self, Self::Error> {
+        Ok(Self {
+            trees: old.trees,
+            nodes: old.nodes,
+            materials: old.materials,
+            workshops: old
+                .workshops
+                .into_iter()
+                .map(|(key, value)| value.try_into().map(|value| (key, value)))
+                .collect::<Result<_, _>>()?,
+            next_workshop_id: old.next_workshop_id,
+            next_bill_id: old.next_bill_id,
+            site_work_tiles: old.site_work_tiles,
+            space_sites: old.space_sites,
+            beds: old.beds,
+            rooms: old.rooms,
+            room_of_tile: old.room_of_tile,
+            next_room_id: old.next_room_id,
+            room_overrides: old.room_overrides,
+            rooms_announced: old.rooms_announced,
+            rooms_dirty: old.rooms_dirty,
+            rooms_version: old.rooms_version,
+            unreachable: old.unreachable,
+            trees_version: old.trees_version,
+            ground_items: old
+                .ground_items
+                .into_iter()
+                .map(|(key, value)| value.try_into().map(|value| (key, value)))
+                .collect::<Result<_, _>>()?,
+            zones: old.zones,
+            zone_of_tile: old.zone_of_tile,
+            next_zone_id: old.next_zone_id,
+            designations: old.designations,
+            occupied: old.occupied,
+            reservations: old.reservations,
+            command_log: old.command_log,
+            item_ledger: old.item_ledger,
+            overlay_version: old.overlay_version,
+            tallies: old.tallies,
+            tech: old.tech,
+            teach_orders: old.teach_orders,
+            next_teach_id: old.next_teach_id,
+            story: old.story,
+            wildlife: old.wildlife,
+            mood_tallies: old.mood_tallies,
+            bonds: old.bonds,
+            knife_wear: old.knife_wear,
+            dress_off: old.dress_off,
+            fights: old.fights,
+            neighbours: old.neighbours,
+            release_counts: old.release_counts,
+        })
     }
 }

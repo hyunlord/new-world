@@ -10,6 +10,8 @@ uniform sampler2D mask_tex : filter_nearest;
 uniform bool has_mask = false;
 uniform vec3 skin_delta = vec3(0.0);
 uniform vec3 hair_delta = vec3(0.0);
+// Authored placeholder clothing shift; zero preserves legacy pixels.
+uniform vec3 clothing_delta = vec3(0.0);
 uniform vec4 outline_color = vec4(0.0);
 uniform float outline_px = 1.0;
 
@@ -53,6 +55,8 @@ void fragment() {
 				c.rgb = lab_to_rgb(lab + skin_delta);
 			} else if (m.g > 0.5) {
 				c.rgb = lab_to_rgb(lab + hair_delta);
+			} else if (dot(clothing_delta, clothing_delta) > 0.0) {
+				c.rgb = lab_to_rgb(lab + clothing_delta);
 			}
 		}
 	}

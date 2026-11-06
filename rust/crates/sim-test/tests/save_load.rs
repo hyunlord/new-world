@@ -6,6 +6,8 @@
 //! tick 360) the way the colony probe does: resolve against the engine at the
 //! entry's tick, `commands::submit`, then tick.
 
+mod colony_support;
+
 use sim_engine::SimEngine;
 use sim_systems::save::{self, SaveError, FORMAT_VERSION};
 use sim_test::probe::colony::{colony_fingerprint, load_script, resolve, ScriptEntry};

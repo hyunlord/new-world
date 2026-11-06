@@ -7,7 +7,15 @@ use sim_core::colony::mind_records::MindFactSource;
 use sim_engine::SimResources;
 use std::collections::BTreeSet;
 
+#[cfg(test)]
 pub(super) fn validate(resources: &mut SimResources) -> Result<(), String> {
+    validate_at_boundary(resources, resources.current_tick)
+}
+
+pub(super) fn validate_at_boundary(
+    resources: &mut SimResources,
+    command_boundary: u64,
+) -> Result<(), String> {
     let state = &resources.mind;
     let Some(source) = state.policy_source.as_deref() else {
         if !state.running.is_empty()
@@ -41,30 +49,27 @@ pub(super) fn validate(resources: &mut SimResources) -> Result<(), String> {
         }
     }
     for &source in state.order_origins.values() {
-        validate_source_at(resources, source, resources.current_tick)?;
+        validate_pending_source(resources, source, command_boundary)?;
     }
     for origin in state.job_origins.values() {
         if origin.taken_at > resources.current_tick {
             return Err("mind job assignment is in future".into());
         }
         // A command may retarget an existing job after its original taken_at.
-        validate_source_at(resources, origin.source, resources.current_tick)?;
+        validate_pending_source(resources, origin.source, command_boundary)?;
     }
     for origin in state.draft_origins.values() {
         if origin.since > resources.current_tick {
             return Err("mind draft identity is in future".into());
         }
-        validate_source_at(resources, origin.source, resources.current_tick)?;
+        validate_pending_source(resources, origin.source, command_boundary)?;
     }
-    let program = MindProgram::load(source).map_err(|error| error.to_string())?;
-    let policy = &program.policy;
     let history = state
         .history
         .as_ref()
         .ok_or("mind policy requires history dictionary")?;
-    history
-        .check_policy(policy)
-        .map_err(|error| error.to_string())?;
+    let program = MindProgram::load_saved(source, history).map_err(|error| error.to_string())?;
+    let policy = &program.policy;
     for choice in state.running.values() {
         if choice.revision != policy.revision() || policy.node(choice.node).is_none() {
             return Err("mind running choice does not match saved policy".into());
@@ -145,4 +150,25 @@ fn validate_source_at(
         return Err("mind provenance predates its source or is in future".into());
     }
     Ok(())
+}
+
+// Accepted commands are stamped before the engine's next tick. Only their
+// pending references may use that boundary; emitted facts retain last-tick bounds.
+fn validate_pending_source(
+    resources: &SimResources,
+    source: MindFactSource,
+    command_boundary: u64,
+) -> Result<(), String> {
+    if let MindFactSource::Command(index) = source {
+        let valid = usize::try_from(index)
+            .ok()
+            .and_then(|index| resources.colony.command_log.get(index))
+            .is_some_and(|record| record.result.accepted && record.tick <= command_boundary);
+        if !valid {
+            return Err("pending mind command missing, rejected or beyond save boundary".into());
+        }
+        Ok(())
+    } else {
+        validate_source_at(resources, source, resources.current_tick)
+    }
 }

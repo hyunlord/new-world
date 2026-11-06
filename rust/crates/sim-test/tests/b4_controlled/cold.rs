@@ -32,7 +32,16 @@ pub fn sample(seed: u64, tick: u64, top: Option<Top>, rows: &mut Vec<ColdRow>) {
         if let Some(top) = top {
             engine
                 .world
-                .insert_one(entity, Apparel { top, since_day: 0 })
+                .insert_one(
+                    entity,
+                    Apparel {
+                        top,
+                        since_day: 0,
+                        material: None,
+                        quality: 50,
+                        wear_remaining_hours: None,
+                    },
+                )
                 .expect("apparel");
         }
         assert!(settlement.add_member_agent(id));
@@ -58,6 +67,7 @@ pub fn sample(seed: u64, tick: u64, top: Option<Top>, rows: &mut Vec<ColdRow>) {
         None => ("none", 1000),
         Some(Top::HideWrap) => ("hide_wrap", 700),
         Some(Top::FurCloak) => ("fur_cloak", 500),
+        Some(Top::Authored(_)) => panic!("historical B4 fixture requires a legacy garment"),
     };
     assert_eq!(top.map_or(1000, Top::cold_permille), p);
     assert_eq!(engine.resources.settlements[&1].member_agents.len(), 8);

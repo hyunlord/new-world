@@ -38,6 +38,20 @@ pub(super) fn resolve(r: RecipeRaw, c: &Catalog) -> Result<RecipeDef, CatalogErr
         ));
     }
     let output = (item(&r.output.0)?, r.output.1);
+    if let Some(process) = &r.process {
+        if process.duration_days == 0
+            || process.capacity == 0
+            || r.food_requirements.duration_days != 0
+            || c.item(output.0)
+                .is_some_and(|definition| definition.food.is_some())
+            || inputs.iter().any(|(kind, _)| {
+                c.item(*kind)
+                    .is_some_and(|definition| definition.food.is_some())
+            })
+        {
+            return Err(CatalogError::new(context, "nonfood process requires positive duration/capacity and exclusively nonfood ownership"));
+        }
+    }
     if r.food_requirements.duration_days > 0
         && c.item(output.0)
             .is_none_or(|definition| definition.food.is_none())
@@ -74,17 +88,20 @@ pub(super) fn resolve(r: RecipeRaw, c: &Catalog) -> Result<RecipeDef, CatalogErr
     let tool = r
         .tool
         .map(|t| {
-            if t.capability != "cutter" || t.count != 1 || !t.reusable {
+            if t.capability.trim().is_empty() || t.count != 1 || !t.reusable {
                 return Err(CatalogError::new(
                     context,
-                    "only reusable cutter count1 is supported",
+                    "only a named reusable tool count1 is supported",
                 ));
             }
             let preferred_item = item(&t.preferred_item)?;
-            if c.item(preferred_item).is_none_or(|d| d.cutter.is_none()) {
+            if c.item(preferred_item).is_none_or(|d| {
+                !(d.tool_capabilities.contains(&t.capability)
+                    || t.capability == "cutter" && d.cutter.is_some())
+            }) {
                 return Err(CatalogError::new(
                     context,
-                    "preferred tool lacks cutter capability",
+                    "preferred tool lacks required capability",
                 ));
             }
             Ok(RecipeToolDef {
@@ -110,6 +127,7 @@ pub(super) fn resolve(r: RecipeRaw, c: &Catalog) -> Result<RecipeDef, CatalogErr
         quality_add: r.quality_add,
         material_term: r.material_term,
         tool,
+        process: r.process,
         food_requirements: FoodRecipeRequirements {
             requires_lit_hearth: r.food_requirements.requires_lit_hearth,
             knowledge_any: Vec::new(),

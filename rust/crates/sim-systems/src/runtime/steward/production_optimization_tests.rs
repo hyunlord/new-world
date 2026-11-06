@@ -185,6 +185,7 @@ fn prepared_inputs_match_frozen_commands_across_navigation_and_supply_states() {
                                 count: u16::MAX,
                                 quality: 50,
                                 material: None,
+                                wear_remaining_hours: None,
                             },
                         );
                         e.world.spawn((MaterialNeeds::single(kind, 120),));
@@ -278,6 +279,7 @@ fn inputs_preserve_independent_dirty_nav_cache_effects() {
                             count: 100,
                             quality: 50,
                             material: None,
+                            wear_remaining_hours: None,
                         },
                     );
                 }

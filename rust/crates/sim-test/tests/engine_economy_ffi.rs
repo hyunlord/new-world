@@ -162,6 +162,7 @@ fn priorities_and_one_persons_economy() {
         kind: ItemKind::StoneAxe,
         material: Some(sim_core::colony::materials::FLINT),
         quality: 41,
+        wear_remaining_hours: None,
     };
     let _ = engine
         .world

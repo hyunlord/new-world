@@ -1,70 +1,70 @@
 {
   "schema_version": 1,
-  "base_commit": "2f6993009ddb600e9249c28f9768a1a5252c8821",
-  "behavior_commit": "b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb",
-  "status": "ADOPTED_FOR_NEXT_GATE_NOT_FINAL_GATE_PASS",
+  "base_commit": "16dc9120decbd9f6d7f851b2b90e16de7c891182",
+  "behavior_commit": "PENDING_STAGE2_FREEZE",
+  "status": "STAGE2_DRAFT_NOT_GATE_PASS",
   "scope": "Intentional colony fixture changes only. Baseline is never declared and remains strict. These scopes do not assert isolated causality for every trajectory difference.",
-  "acceptance": "Each fixture/world retains candidate KnowledgeLost <= paired BASE and survivors >= max(0, paired BASE - 2), with existing scenario, ledger and reservation checks. Both F10 arms must independently pass. No new normalizer exclusions.",
+  "acceptance": "D-FEATURE-FIRST: baseline and undeclared fixtures remain strict; declared colony fixtures retain determinism, exact ledger/reservations and functional scenario checks. Paired smoke seeds0-7 x48days stewardON/noorders: no new extinction where BASE survives; total KnowledgeLost <= 2*BASE+2. No heldout, improvement bars, or new normalizer exclusions.",
   "fixtures": [
     {
       "fixture_id": "determinism",
-      "behavior_commit": "b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb",
+      "behavior_commit": "PENDING_STAGE2_FREEZE",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1). S1-CAL-39 intentionally permits a saturated-thirst food journey to switch to physically reachable water while hunger remains below saturation, including steward OFF; already-consuming food, absent water and baseline policy are unchanged. S1-CAL-40 applies the existing eight-tick continuation cadence to three physical-food observations, including steward OFF: ordinary opportunities can wait up to seven ticks while critical/finish checks and execution remain per tick."
+      "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "soak",
-      "behavior_commit": "b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb",
+      "behavior_commit": "PENDING_STAGE2_FREEZE",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1). S1-CAL-39 intentionally permits a saturated-thirst food journey to switch to physically reachable water while hunger remains below saturation, including steward OFF; already-consuming food, absent water and baseline policy are unchanged. S1-CAL-40 applies the existing eight-tick continuation cadence to three physical-food observations, including steward OFF: ordinary opportunities can wait up to seven ticks while critical/finish checks and execution remain per tick."
+      "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "story",
-      "behavior_commit": "b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb",
+      "behavior_commit": "PENDING_STAGE2_FREEZE",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1). S1-CAL-39 intentionally permits a saturated-thirst food journey to switch to physically reachable water while hunger remains below saturation, including steward OFF; already-consuming food, absent water and baseline policy are unchanged. S1-CAL-40 applies the existing eight-tick continuation cadence to three physical-food observations, including steward OFF: ordinary opportunities can wait up to seven ticks while critical/finish checks and execution remain per tick."
+      "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "neighbours",
-      "behavior_commit": "b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb",
+      "behavior_commit": "PENDING_STAGE2_FREEZE",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1). S1-CAL-39 intentionally permits a saturated-thirst food journey to switch to physically reachable water while hunger remains below saturation, including steward OFF; already-consuming food, absent water and baseline policy are unchanged. S1-CAL-40 applies the existing eight-tick continuation cadence to three physical-food observations, including steward OFF: ordinary opportunities can wait up to seven ticks while critical/finish checks and execution remain per tick."
+      "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "steward",
-      "behavior_commit": "b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb",
+      "behavior_commit": "PENDING_STAGE2_FREEZE",
       "steward": "on",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Enabled steward policy additionally changes fields/crops/seeds/soil, production caps, tools-only survival, physical cooking/preservation/raw-harvest capacity allocation, winter food/storage forecasts, grain discovery floor, actual-yield/whole-physical-wood housing budgets, prospective shell access and bounded home commute choice, and scoped edible-harvest/fuel planning. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1). S1-CAL-39 intentionally permits a saturated-thirst food journey to switch to physically reachable water while hunger remains below saturation, including steward OFF; already-consuming food, absent water and baseline policy are unchanged. S1-CAL-40 applies the existing eight-tick continuation cadence to three physical-food observations, including steward OFF: ordinary opportunities can wait up to seven ticks while critical/finish checks and execution remain per tick. S1-CAL-41 enables the authored selected-pack resident alarm: living undrafted outdoor residents within the existing flee radius can prevent quiet retirement or reopen that pack; manual veto and one-response semantics remain. This is not a guarantee of protection from every simultaneous pack."
+      "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference. Deferred multi-hearth winter fuel floor from acb31be40 is included and evaluated only here, after Stage1 publication."
     },
     {
       "fixture_id": "m6a_steward",
-      "behavior_commit": "b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb",
+      "behavior_commit": "PENDING_STAGE2_FREEZE",
       "steward": "on",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Enabled steward policy additionally changes fields/crops/seeds/soil, production caps, tools-only survival, physical cooking/preservation/raw-harvest capacity allocation, winter food/storage forecasts, grain discovery floor, actual-yield/whole-physical-wood housing budgets, prospective shell access and bounded home commute choice, and scoped edible-harvest/fuel planning. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1). S1-CAL-39 intentionally permits a saturated-thirst food journey to switch to physically reachable water while hunger remains below saturation, including steward OFF; already-consuming food, absent water and baseline policy are unchanged. S1-CAL-40 applies the existing eight-tick continuation cadence to three physical-food observations, including steward OFF: ordinary opportunities can wait up to seven ticks while critical/finish checks and execution remain per tick. S1-CAL-41 enables the authored selected-pack resident alarm: living undrafted outdoor residents within the existing flee radius can prevent quiet retirement or reopen that pack; manual veto and one-response semantics remain. This is not a guarantee of protection from every simultaneous pack."
+      "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference. Deferred multi-hearth winter fuel floor from acb31be40 is included and evaluated only here, after Stage1 publication."
     },
     {
       "fixture_id": "colony_u",
-      "behavior_commit": "b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb",
+      "behavior_commit": "PENDING_STAGE2_FREEZE",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1). S1-CAL-39 intentionally permits a saturated-thirst food journey to switch to physically reachable water while hunger remains below saturation, including steward OFF; already-consuming food, absent water and baseline policy are unchanged. S1-CAL-40 applies the existing eight-tick continuation cadence to three physical-food observations, including steward OFF: ordinary opportunities can wait up to seven ticks while critical/finish checks and execution remain per tick."
+      "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "colony_soak",
-      "behavior_commit": "b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb",
+      "behavior_commit": "PENDING_STAGE2_FREEZE",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1). S1-CAL-39 intentionally permits a saturated-thirst food journey to switch to physically reachable water while hunger remains below saturation, including steward OFF; already-consuming food, absent water and baseline policy are unchanged. S1-CAL-40 applies the existing eight-tick continuation cadence to three physical-food observations, including steward OFF: ordinary opportunities can wait up to seven ticks while critical/finish checks and execution remain per tick."
+      "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "knowledge",
-      "behavior_commit": "b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb",
+      "behavior_commit": "PENDING_STAGE2_FREEZE",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. This four-day F10 fixture retains both-arm scenario assertions; it does not claim exercise of the superseded greater-than-six-day overdue priority. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1). S1-CAL-39 intentionally permits a saturated-thirst food journey to switch to physically reachable water while hunger remains below saturation, including steward OFF; already-consuming food, absent water and baseline policy are unchanged. S1-CAL-40 applies the existing eight-tick continuation cadence to three physical-food observations, including steward OFF: ordinary opportunities can wait up to seven ticks while critical/finish checks and execution remain per tick."
+      "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     },
     {
       "fixture_id": "soak_economy",
-      "behavior_commit": "b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb",
+      "behavior_commit": "PENDING_STAGE2_FREEZE",
       "steward": "off",
-      "reason": "Colony-wide cooking practice and bounded oral transmission, now prioritized by projected decay deadline; blocked evening home-tether routing and reachable-route water binding; existing active fuel-bill urgency and bounded committed-craft prefetch, including steward OFF. Additive observer/catalog fields remain compared without new masks. Steward planning, farming and cap activation are not attributed to this OFF fixture. Public-food availability and fresh target selection require a passable owner tile, matching actual meal execution; adjacent construction access cannot mask farther edible food (S1-REPAIR-1). S1-CAL-39 intentionally permits a saturated-thirst food journey to switch to physically reachable water while hunger remains below saturation, including steward OFF; already-consuming food, absent water and baseline policy are unchanged. S1-CAL-40 applies the existing eight-tick continuation cadence to three physical-food observations, including steward OFF: ordinary opportunities can wait up to seven ticks while critical/finish checks and execution remain per tick."
+      "reason": "Stage2 authored weaving catalog and knowledge extension, physical passive processing and condition-preserving apparel. Appended content may change colony catalog/knowledge observations; this declaration does not claim every fixture exercises weaving or isolate each trajectory difference."
     }
   ]
 }

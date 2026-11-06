@@ -145,7 +145,21 @@ fn spawn(
         res.colony.item_ledger.create(kind, 1);
         let since_day =
             crate::runtime::resource_regen::day_index(res).min(u64::from(u16::MAX)) as u16;
-        let _ = world.insert_one(entity, Apparel { top, since_day });
+        let _ = world.insert_one(
+            entity,
+            Apparel {
+                top,
+                since_day,
+                material: None,
+                quality: sim_core::colony::RAW_QUALITY,
+                wear_remaining_hours: kind
+                    .definition()
+                    .apparel
+                    .as_ref()
+                    .and_then(|apparel| apparel.wear_days)
+                    .map(|days| days.saturating_mul(24)),
+            },
+        );
     }
     crate::runtime::chronicle_log::ensure_entity(world, res, id, entity);
     (id, entity)

@@ -293,5 +293,26 @@
             material: FirstDelivered(fallback: "oak"), style_id: "drying_rack",
             render_wall_code: None, completion_policy: Authoritative, initial_bill: None,
         ),
+        // Starting textile workshops: one dry work footprint and a reachable south work tile.
+        (
+            identity: (code: 13, id: "retting_pit", name_key: "BUILDING_RETTING_PIT", serde_name: "RettingPit", serde_aliases: [], resolver_aliases: []),
+            placeable: true, menu_order: 12, shortcut_slot: -1,
+            footprint: (1, 1), footprint_rule: None,
+            needs: [(item: "stone", count: 2, count_rule: None)], work: 30, work_rule: None,
+            placement: Structure, completion: Workshop, workshop_tags: ["retting"],
+            requires_economy: true, requires_knowledge: true, requires_space: false,
+            planned_nav: Unchanged, material: FirstDelivered(fallback: "oak"), style_id: "retting_pit",
+            render_wall_code: None, completion_policy: Authoritative, initial_bill: None,
+        ),
+        (
+            identity: (code: 14, id: "loom", name_key: "BUILDING_LOOM", serde_name: "Loom", serde_aliases: [], resolver_aliases: []),
+            placeable: true, menu_order: 13, shortcut_slot: -1,
+            footprint: (1, 1), footprint_rule: None,
+            needs: [(item: "log", count: 4, count_rule: None)], work: 90, work_rule: None,
+            placement: Structure, completion: Workshop, workshop_tags: ["weaving"],
+            requires_economy: true, requires_knowledge: true, requires_space: false,
+            planned_nav: Unchanged, material: FirstDelivered(fallback: "oak"), style_id: "loom",
+            render_wall_code: None, completion_policy: Authoritative, initial_bill: None,
+        ),
     ],
 )

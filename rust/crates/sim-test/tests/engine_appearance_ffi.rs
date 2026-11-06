@@ -245,6 +245,9 @@ fn a_person_without_sex_counts_as_male_and_tops_follow_apparel() {
         Apparel {
             top: Top::FurCloak,
             since_day: 0,
+            material: None,
+            quality: 50,
+            wear_remaining_hours: None,
         },
     ));
     let rows = by_id(&collect_appearance(&world));

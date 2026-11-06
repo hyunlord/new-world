@@ -108,12 +108,14 @@ class BenchRatioTest(unittest.TestCase):
 
 
 class BenchJustifiedTest(unittest.TestCase):
-    def dispatch(self, declaration, ratio=1.15, metric="tick_mean_us", scene="n2000", ceiling="PASS"):
+    def dispatch(self, declaration, ratio=1.15, metric="tick_mean_us", scene="n2000", ceiling="PASS", feature_first=False):
         import io
         import tempfile
         from contextlib import redirect_stdout
         from unittest.mock import patch
         config = {"base_perf": "/base", "base_perf_sha256": "a" * 64, "base_commit": "a" * 40}
+        if feature_first:
+            config["evaluation_mode"] = "feature_first"
         if declaration != "ABSENT":
             config["bench_justified"] = declaration
         reports = []
@@ -446,7 +448,7 @@ class RelativeColonyFixtureTest(unittest.TestCase):
 
 
 class PairedEconomySoakTest(unittest.TestCase):
-    def run_soak(self, paired, *, idle=False, extra_loss=False, deaths=True):
+    def run_soak(self, paired, *, idle=False, extra_loss=False, deaths=True, feature_first=False):
         import hashlib
         import os
         import subprocess
@@ -481,7 +483,8 @@ class PairedEconomySoakTest(unittest.TestCase):
             config = root / "config.json"
             config.write_text(json.dumps({"schema_version": 1, "base_probe": str(probes[0]),
                 "base_probe_sha256": hashlib.sha256(probes[0].read_bytes()).hexdigest(),
-                "base_perf": "unused", "base_perf_sha256": "unused"}))
+                "base_perf": "unused", "base_perf_sha256": "unused",
+                "evaluation_mode": "feature_first" if feature_first else "legacy"}))
             env = dict(os.environ, READ_GATE_CONFIG=str(config),
                        READ_CHANGED_FIXTURES="soak_economy" if paired else "")
             command = ["bash", str(Path(__file__).with_name("soak.sh")),
@@ -503,10 +506,149 @@ class PairedEconomySoakTest(unittest.TestCase):
         self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
         self.assertIn("BASE-relative", run.stdout)
 
+    def test_feature_first_soak_reports_losses_but_rejects_idle_colony(self):
+        run = self.run_soak(True, extra_loss=True, feature_first=True)
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertIn("safety in feature smoke", run.stdout)
+        run = self.run_soak(True, idle=True, feature_first=True)
+        self.assertNotEqual(run.returncode, 0, run.stdout + run.stderr)
+
     def test_paired_path_still_rejects_idle_colony_and_extra_loss(self):
         for flags in ({"idle": True}, {"extra_loss": True}):
             run = self.run_soak(True, **flags)
             self.assertNotEqual(run.returncode, 0, run.stdout + run.stderr)
+
+
+class FeatureFirstTest(unittest.TestCase):
+    @staticmethod
+    def smoke(alive=10, losses=0):
+        rows = RelativeColonyFixtureTest.summary("knowledge", alive, losses)
+        rows["days"] = 48
+        for row in rows["seeds"]:
+            row["days"] = 48
+        return rows
+
+    def test_explicit_mode_rejects_unknown_values(self):
+        import tempfile
+        config = {"schema_version": 1, "base_probe": "base", "base_perf": "perf",
+                  "base_probe_sha256": "hash", "base_perf_sha256": "hash"}
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "config.json"
+            for mode in (None, True, {}, [], "feature-first", ""):
+                with self.subTest(mode=mode), self.assertRaises(ValueError):
+                    path.write_text(json.dumps(dict(config, evaluation_mode=mode)))
+                    read_gate_checks.load_config(path)
+            for mode in ("legacy", "feature_first"):
+                path.write_text(json.dumps(dict(config, evaluation_mode=mode)))
+                self.assertEqual(read_gate_checks.load_config(path)["evaluation_mode"], mode)
+
+    def test_ratios_are_advisory_but_ceilings_still_block(self):
+        helper = BenchJustifiedTest()
+        self.assertIn("REPORT_ONLY", helper.dispatch("ABSENT", ratio=3, feature_first=True))
+        with self.assertRaisesRegex(ValueError, "bench ceiling"):
+            helper.dispatch("ABSENT", ratio=3, ceiling="FAIL", feature_first=True)
+
+    def test_smoke_extinction_and_total_loss_boundaries(self):
+        for base_alive, new_alive, accepted in ((1, 0, False), (0, 0, True), (10, 1, True)):
+            base, candidate = self.smoke(base_alive), self.smoke(new_alive)
+            with self.subTest(base=base_alive, new=new_alive):
+                if accepted:
+                    read_gate_checks.smoke_pair(base, candidate)
+                else:
+                    with self.assertRaisesRegex(ValueError, "extinction"):
+                        read_gate_checks.smoke_pair(base, candidate)
+        base, candidate = self.smoke(losses=1), self.smoke()
+        candidate["seeds"][0]["m4"]["lost"] = [[i, "node", 1] for i in range(18)]
+        read_gate_checks.smoke_pair(base, candidate)  # 18 == 2 * 8 + 2, concentrated in one seed.
+        candidate["seeds"][0]["m4"]["lost"].append([20, "node", 1])
+        with self.assertRaisesRegex(ValueError, "KnowledgeLost"):
+            read_gate_checks.smoke_pair(base, candidate)
+
+    def test_zero_base_loss_allows_two_total_not_two_per_seed(self):
+        base, candidate = self.smoke(), self.smoke()
+        for row in candidate["seeds"][:2]:
+            row["m4"]["lost"] = [[1, "node", 1]]
+        read_gate_checks.smoke_pair(base, candidate)
+        candidate["seeds"][2]["m4"]["lost"] = [[1, "node", 1]]
+        with self.assertRaisesRegex(ValueError, "KnowledgeLost"):
+            read_gate_checks.smoke_pair(base, candidate)
+
+    def test_smoke_rejects_incomplete_or_corrupt_evidence(self):
+        changes = [lambda s: s["seeds"].pop(),
+                   lambda s: s["seeds"].append(s["seeds"][0]),
+                   lambda s: s["seeds"][0].update(seed=8),
+                   lambda s: s.update(days=47),
+                   lambda s: s["seeds"][0].update(days=47),
+                   lambda s: s["seeds"][0].update(alive_end=True),
+                   lambda s: s["seeds"][0]["m4"].update(lost=[[999999, "node", 1]]),
+                   lambda s: s["seeds"][0].update(ledger_violation_ticks=1),
+                   lambda s: s["seeds"][0].update(reservation_violation_ticks=1)]
+        for change in changes:
+            for arm in (0, 1):
+                pair = [self.smoke(), self.smoke()]
+                change(pair[arm])
+                with self.subTest(change=change, arm=arm), self.assertRaises(ValueError):
+                    read_gate_checks.smoke_pair(*pair)
+
+    def test_only_declared_colony_outcomes_are_nonblocking(self):
+        base = RelativeColonyFixtureTest.summary()
+        candidate = RelativeColonyFixtureTest.summary(alive=1, losses=20)
+        read_gate_checks.compare_fixture("story", base, candidate, None, {"story"}, feature_first=True)
+        for name, declared in (("baseline", {"baseline"}), ("story", set())):
+            with self.subTest(name=name), self.assertRaisesRegex(ValueError, "MISMATCH"):
+                read_gate_checks.compare_fixture(name, base, candidate, None, declared, feature_first=True)
+        candidate["seeds"][0]["ledger_violation_ticks"] = 1
+        with self.assertRaisesRegex(ValueError, "ledger"):
+            read_gate_checks.compare_fixture("story", base, candidate, None, {"story"}, feature_first=True)
+
+    def test_smoke_runner_uses_fixed_on_no_orders_pair(self):
+        import tempfile
+        from unittest.mock import patch
+        config = {"base_probe": "/base", "base_probe_sha256": "hash", "evaluation_mode": "feature_first"}
+        with (tempfile.TemporaryDirectory() as folder,
+              patch.object(read_gate_checks, "load_config", return_value=config),
+              patch.object(read_gate_checks, "verify_binary"),
+              patch.object(read_gate_checks.Path, "exists", return_value=True),
+              patch.object(read_gate_checks.subprocess, "check_call") as run,
+              patch.object(read_gate_checks, "load_json", return_value=self.smoke()),
+              patch.object(read_gate_checks, "compare_fixture"),
+              patch.object(read_gate_checks, "smoke_pair") as compare,
+              patch.object(read_gate_checks.Path, "read_text", return_value="DETERMINISM PASS")):
+            read_gate_checks.core_fixture("unused", folder)
+            smoke_calls = [c.args[0] for c in run.call_args_list if "0..8" in c.args[0]]
+            self.assertEqual(len(smoke_calls), 2)
+            self.assertEqual([c[0] for c in smoke_calls], ["/base", str(read_gate_checks.ROOT / "rust/target/release/worldsim_probe")])
+            for command in smoke_calls:
+                self.assertEqual(command[command.index("--days") + 1], "48")
+                self.assertEqual(command[command.index("--steward") + 1], "on")
+                self.assertNotIn("--commands", command)
+            compare.assert_called_once()
+
+    def test_neighbours_keeps_functional_and_accounting_checks(self):
+        import importlib.util
+        import tempfile
+        source = read_gate_checks.ROOT / "docs/v8/m5_5/m55_score.py"
+        spec = importlib.util.spec_from_file_location("m55_score", source)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "summary.json"
+            summary = RelativeColonyFixtureTest.summary(alive=1, losses=2)
+            for row in summary["seeds"]:
+                row.update(deaths={}, first_violation=None, m55={"population": {"start": 10}, "neighbours": {
+                    "list": [{"edge": 0}, {"edge": 1}], "traded_out": {}, "tallies": {"trades": 1},
+                    "waves": [{"id": 1, "arrived": 9 * 1440, "answer": "Accepted"},
+                              {"id": 2, "arrived": 22 * 1440, "answer": "Accepted"}]}})
+            path.write_text(json.dumps(summary))
+            self.assertEqual(module.main(["--neighbours", str(path), "--feature-first"]), 0)
+            self.assertEqual(module.main(["--neighbours", str(path)]), 1)
+            summary["seeds"][0]["m55"]["neighbours"]["tallies"]["trades"] = 0
+            path.write_text(json.dumps(summary))
+            self.assertEqual(module.main(["--neighbours", str(path), "--feature-first"]), 1)
+            summary["seeds"][0]["m55"]["neighbours"]["tallies"]["trades"] = 1
+            summary["seeds"][0]["ledger_violation_ticks"] = 1
+            path.write_text(json.dumps(summary))
+            self.assertEqual(module.main(["--neighbours", str(path), "--feature-first"]), 1)
 
 if __name__ == "__main__":
     unittest.main()

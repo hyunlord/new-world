@@ -785,11 +785,11 @@ pub fn equip_step(
         cancel(world, res, entity, CancelReason::TargetGone);
         return;
     };
-    let (taken, _) = take_items(res, from, top.item(), 1);
+    let (taken, spec) = take_items(res, from, top.item(), 1);
     if taken == 1 {
-        let old = world.get::<&Apparel>(entity).ok().map(|a| a.top);
+        let old = world.get::<&Apparel>(entity).ok().map(|a| a.spec());
         if let Some(old) = old {
-            put_items(res, pos, ItemSpec::raw(old.item(), None), 1);
+            put_items(res, pos, old, 1);
         }
         let day = crate::runtime::resource_regen::day_index(res).min(u64::from(u16::MAX)) as u16;
         let _ = world.insert_one(
@@ -797,6 +797,9 @@ pub fn equip_step(
             Apparel {
                 top,
                 since_day: day,
+                material: spec.material,
+                quality: spec.quality,
+                wear_remaining_hours: spec.wear_remaining_hours,
             },
         );
         res.colony.wildlife.version += 1;

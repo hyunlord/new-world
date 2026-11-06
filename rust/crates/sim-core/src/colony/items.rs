@@ -66,6 +66,8 @@ pub struct ItemSpec {
     pub material: Option<MaterialId>,
     /// Quality 0–100 (50 for raw materials).
     pub quality: u8,
+    /// Exact remaining worn hours; None is inert legacy/non-garment state.
+    pub wear_remaining_hours: Option<u32>,
 }
 
 impl ItemSpec {
@@ -75,6 +77,7 @@ impl ItemSpec {
             kind,
             material,
             quality: RAW_QUALITY,
+            wear_remaining_hours: None,
         }
     }
 
@@ -83,6 +86,7 @@ impl ItemSpec {
         self.kind == other.kind
             && self.material == other.material
             && quality_bucket(self.quality) == quality_bucket(other.quality)
+            && self.wear_remaining_hours == other.wear_remaining_hours
     }
 }
 
@@ -98,6 +102,8 @@ pub struct ItemStack {
     pub quality: u8,
     /// The material, if any.
     pub material: Option<MaterialId>,
+    /// Exact remaining worn hours, preserved across physical ownership.
+    pub wear_remaining_hours: Option<u32>,
 }
 
 impl ItemStack {
@@ -108,6 +114,7 @@ impl ItemStack {
             count,
             quality: spec.quality,
             material: spec.material,
+            wear_remaining_hours: spec.wear_remaining_hours,
         }
     }
 
@@ -117,6 +124,7 @@ impl ItemStack {
             kind: self.kind,
             material: self.material,
             quality: self.quality,
+            wear_remaining_hours: self.wear_remaining_hours,
         }
     }
 
@@ -143,6 +151,8 @@ pub struct Carry {
     pub quality: u8,
     /// Material of the carried items.
     pub material: Option<MaterialId>,
+    /// Exact remaining worn hours, preserved across physical ownership.
+    pub wear_remaining_hours: Option<u32>,
 }
 
 impl Carry {
@@ -153,6 +163,7 @@ impl Carry {
             count,
             quality: spec.quality,
             material: spec.material,
+            wear_remaining_hours: spec.wear_remaining_hours,
         }
     }
 
@@ -162,6 +173,7 @@ impl Carry {
             kind: self.kind,
             material: self.material,
             quality: self.quality,
+            wear_remaining_hours: self.wear_remaining_hours,
         }
     }
 }
@@ -362,7 +374,8 @@ mod tests {
             (3, 3)
         );
         let codes: Vec<u32> = ItemKind::all().map(|k| k.code()).collect();
-        assert_eq!(codes, (0..32).collect::<Vec<_>>());
+        assert_eq!(&codes[..32], &(0..32).collect::<Vec<_>>());
+        assert_eq!(codes, (0..38).collect::<Vec<_>>());
         let historical = [
             ItemKind::Log,
             ItemKind::Firewood,
@@ -397,6 +410,7 @@ mod tests {
             kind: ItemKind::FlintBlade,
             material: None,
             quality: 41,
+            wear_remaining_hours: None,
         };
         let b = ItemSpec { quality: 49, ..a };
         let c = ItemSpec { quality: 50, ..a };
@@ -408,5 +422,25 @@ mod tests {
         // (41·3 + 49·1) / 4 = 43.
         assert_eq!((stack.count, stack.quality), (4, 43));
         assert_eq!(quality_bucket(stack.quality), quality_bucket(41));
+    }
+    #[test]
+    fn exact_garment_wear_survives_stack_and_carry_without_merging_different_wear() {
+        // Given a physical garment with finite remaining wear.
+        let fresh = ItemSpec {
+            wear_remaining_hours: Some(48 * 24),
+            ..ItemSpec::raw(ItemKind::HideWrap, None)
+        };
+        let worn = ItemSpec {
+            wear_remaining_hours: Some(47 * 24),
+            ..fresh
+        };
+        // When physical ownership changes or merging is considered.
+        let stack = ItemStack::of(worn, 1);
+        let carried = Carry::of(stack.spec(), 1);
+        // Then wear is exact and cannot be averaged with a fresher garment.
+        assert_eq!(carried.spec(), worn);
+        assert!(!fresh.merges_with(&worn));
+        assert!(!fresh.merges_with(&ItemSpec::raw(ItemKind::HideWrap, None)));
+        assert!(worn.merges_with(&carried.spec()));
     }
 }

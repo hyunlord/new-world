@@ -54,6 +54,7 @@ fn timed_chop(with_axe: Option<u8>) -> (u32, SimEngine, hecs::Entity) {
             kind: ItemKind::StoneAxe,
             material: None,
             quality: q,
+            wear_remaining_hours: None,
         };
         drop_items(&mut engine, (6, 5), axe, 1);
     }

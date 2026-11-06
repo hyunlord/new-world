@@ -1088,6 +1088,7 @@ fn a_ground_axe_breaks_after_120_chops() {
             kind: ItemKind::GroundAxe,
             material: None,
             quality: 50,
+            wear_remaining_hours: None,
         },
         1,
     );

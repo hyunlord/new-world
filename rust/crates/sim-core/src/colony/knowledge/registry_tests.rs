@@ -54,15 +54,20 @@ fn appended_nodes_keep_base_indices_and_use_the_last_bit() {
     assert_eq!(base.id_of("cooking"), Some(24));
     assert_eq!(base.id_of("grain_parching"), Some(25));
     assert_eq!(base.id_of("food_drying"), Some(26));
-    let merged = merge_sources(BUNDLED, &extension(4)).expect("merge");
+    // Retain the predecessor 28-node prefix to exercise all four extension bits.
+    let cutoff = BUNDLED
+        .find("(id: \"spinning\"")
+        .expect("first textile node");
+    let predecessor = format!("{}])", &BUNDLED[..cutoff]);
+    let merged = merge_sources(&predecessor, &extension(4)).expect("merge");
     let defs = parse_with_catalog(&merged, &catalog).expect("32 nodes");
-    assert_eq!(&defs.nodes[..28], base.nodes.as_slice());
+    assert_eq!(&defs.nodes[..28], &base.nodes[..28]);
     assert_eq!(defs.nodes.len(), MAX_NODES);
     assert_eq!(defs.id_of("extension_3"), Some(31));
     let masks = gates_with_catalog(&defs, &catalog).expect("masks");
     let recipe = catalog.recipe_by_name("knap_blade").expect("recipe");
     assert_eq!(masks.recipe(recipe), bit(3) | 0xf000_0000);
-    assert!(merge_sources(BUNDLED, &extension(5)).is_err());
+    assert!(merge_sources(&predecessor, &extension(5)).is_err());
 }
 
 #[test]
@@ -138,7 +143,7 @@ fn uninstalled_child() {
     }
     assert!(crate::colony::content::installed().is_err());
     let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("pure catalog");
-    assert_eq!(catalog.knowledge_defs().nodes.len(), 28);
+    assert_eq!(catalog.knowledge_defs().nodes.len(), 31);
     assert!(crate::colony::content::installed().is_err());
     assert!(ron::from_str::<Knowledge>("(entries: [], practice: 0)").is_err());
     assert!(

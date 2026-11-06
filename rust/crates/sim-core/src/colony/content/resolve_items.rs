@@ -20,10 +20,20 @@ pub(super) fn resolve(raw: ItemRaw, c: &Catalog) -> Result<ItemDef, CatalogError
             || raw.chop.is_some()
             || raw.weapon.is_some()
             || raw.cutter.is_some()
+            || !raw.tool_capabilities.is_empty()
             || raw.pot_capacity > 0)
     {
         return Err(CatalogError::new(context,
             "food cannot also provide fuel, apparel, tool, weapon or pot capabilities: those ownership paths do not preserve food ages"));
+    }
+    let mut capabilities = std::collections::BTreeSet::new();
+    if raw.tool_capabilities.iter().any(|capability| {
+        capability.trim().is_empty() || capability == "cutter" || !capabilities.insert(capability)
+    }) {
+        return Err(CatalogError::new(
+            context,
+            "tool capabilities must be unique, nonempty and distinct from cutter",
+        ));
     }
     let chop = raw
         .chop
@@ -110,10 +120,14 @@ pub(super) fn resolve(raw: ItemRaw, c: &Catalog) -> Result<ItemDef, CatalogError
         }
     }
     if let Some(r) = &raw.apparel {
-        if !(1..=2).contains(&r.legacy_top_code) || r.cold_permille > 1000 {
+        if r.legacy_top_code == 0
+            || r.cold_permille > 1000
+            || r.wear_days == Some(0)
+            || !(-1000..=1000).contains(&r.comfort_permille)
+        {
             return Err(CatalogError::new(
                 context,
-                "unsupported legacy top code/cold permille",
+                "invalid apparel top code, cold, wear or comfort",
             ));
         }
     }
@@ -132,6 +146,7 @@ pub(super) fn resolve(raw: ItemRaw, c: &Catalog) -> Result<ItemDef, CatalogError
         chop,
         weapon: raw.weapon,
         cutter: raw.cutter,
+        tool_capabilities: raw.tool_capabilities,
         food: raw.food,
         pot_capacity: raw.pot_capacity,
         fuel_units: raw.fuel_units,

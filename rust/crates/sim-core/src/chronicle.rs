@@ -176,11 +176,15 @@ pub enum ChronicleKind {
     FirstHarvest = 55,
     /// Established crop lost; cause 0 = winter frost, value = crop code.
     CropFailure = 56,
+    /// First physically committed woven cloth; value = item code.
+    FirstCloth = 57,
+    /// First physically committed woven tunic; value = item code.
+    FirstTunic = 58,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 57] = [
+    pub const ALL: [ChronicleKind; 59] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -238,6 +242,8 @@ impl ChronicleKind {
         Self::FirstField,
         Self::FirstHarvest,
         Self::CropFailure,
+        Self::FirstCloth,
+        Self::FirstTunic,
     ];
 
     /// Stable numeric discriminant.
@@ -305,6 +311,8 @@ impl ChronicleKind {
             Self::FirstField => "first_field",
             Self::FirstHarvest => "first_harvest",
             Self::CropFailure => "crop_failure",
+            Self::FirstCloth => "first_cloth",
+            Self::FirstTunic => "first_tunic",
         }
     }
 }
@@ -764,10 +772,12 @@ mod tests {
         assert_eq!(ChronicleKind::FirstField.as_u8(), 54);
         assert_eq!(ChronicleKind::FirstHarvest.as_u8(), 55);
         assert_eq!(ChronicleKind::CropFailure.as_u8(), 56);
-        assert_eq!(ChronicleKind::ALL.len(), 57);
+        assert_eq!(ChronicleKind::FirstCloth.as_u8(), 57);
+        assert_eq!(ChronicleKind::FirstTunic.as_u8(), 58);
+        assert_eq!(ChronicleKind::ALL.len(), 59);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 57);
+        assert_eq!(names.len(), 59);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

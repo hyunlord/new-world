@@ -30,6 +30,7 @@ pub mod hunt;
 pub mod invariants;
 pub mod items;
 mod pot_supply;
+pub mod processing;
 pub mod space;
 pub mod teach;
 
@@ -105,3 +106,6 @@ mod pot_ingredient_tests;
 
 #[cfg(test)]
 mod cooking_heat_tests;
+
+#[cfg(test)]
+mod processing_tests;

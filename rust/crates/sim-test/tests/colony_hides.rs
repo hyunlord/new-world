@@ -161,7 +161,16 @@ fn a_worn_top_spares_its_wearer_cold_hours_at_its_permille() {
         }
         let _ = engine.world.remove_one::<Apparel>(e);
         if let Some(top) = top {
-            let _ = engine.world.insert_one(e, Apparel { top, since_day: 0 });
+            let _ = engine.world.insert_one(
+                e,
+                Apparel {
+                    top,
+                    since_day: 0,
+                    material: None,
+                    quality: 50,
+                    wear_remaining_hours: None,
+                },
+            );
         }
         if let Ok(mut h) = engine.world.get::<&mut sim_core::components::BodyHealth>(e) {
             h.hp = 100.0;
@@ -191,7 +200,16 @@ fn a_worn_top_spares_its_wearer_cold_hours_at_its_permille() {
     assert!(n >= 400, "{n} cold hours to sample");
     let (_, bare_loss) = hour(&mut engine, None, hours[0]);
     assert!(bare_loss > 0.0, "the cold bites a bare person");
-    for (top, permille) in [(Top::HideWrap, 700u64), (Top::FurCloak, 500)] {
+    let linen_tunic =
+        Top::of_item(ItemKind::from_name("linen_tunic").expect("tunic")).expect("tunic top");
+    let linen_wrap =
+        Top::of_item(ItemKind::from_name("linen_wrap").expect("wrap")).expect("wrap top");
+    for (top, permille) in [
+        (Top::HideWrap, 700u64),
+        (Top::FurCloak, 500),
+        (linen_tunic, 600),
+        (linen_wrap, 700),
+    ] {
         let mut cold = 0u64;
         for &t in &hours {
             let (c, lost) = hour(&mut engine, Some(top), t);
@@ -326,5 +344,73 @@ fn an_m55_knife_breaks_after_4_uses_and_a_wrap_takes_one_cured_hide() {
         (wraps.created, cured.consumed),
         (3, 3),
         "one cured hide a wrap"
+    );
+}
+
+#[test]
+fn dressing_pause_is_respected_and_linen_does_not_replace_better_fur() {
+    let (mut engine, _) = hide_world();
+    let person = engine
+        .world
+        .query::<&Hardiness>()
+        .iter()
+        .next()
+        .expect("person")
+        .0;
+    let fur = Apparel {
+        top: Top::FurCloak,
+        since_day: 0,
+        material: None,
+        quality: 81,
+        wear_remaining_hours: None,
+    };
+    engine.world.insert_one(person, fur).expect("fur");
+    engine
+        .resources
+        .colony
+        .item_ledger
+        .create(ItemKind::FurCloak, 1);
+    let tunic = ItemKind::from_name("linen_tunic").expect("tunic");
+    let mut spec = raw(tunic);
+    spec.wear_remaining_hours = Some(77);
+    drop_items(&mut engine, (20, 20), spec, 2);
+    assert!(submit(&mut engine, Command::SetDressOrder { on: false }).accepted);
+    for _ in 0..600 {
+        tick_checked(&mut engine);
+    }
+    assert_eq!(
+        engine.world.query::<&Apparel>().iter().count(),
+        1,
+        "paused order dresses nobody"
+    );
+    assert_eq!(
+        *engine.world.get::<&Apparel>(person).expect("fur remains"),
+        fur
+    );
+    assert!(submit(&mut engine, Command::SetDressOrder { on: true }).accepted);
+    assert!(
+        run_until(&mut engine, 3000, |e| e
+            .world
+            .query::<&Apparel>()
+            .iter()
+            .count()
+            == 3)
+            < 3000
+    );
+    assert_eq!(
+        *engine
+            .world
+            .get::<&Apparel>(person)
+            .expect("fur remains better"),
+        fur
+    );
+    assert!(
+        engine
+            .world
+            .query::<&Apparel>()
+            .iter()
+            .filter(|(_, a)| a.top.item() == tunic)
+            .all(|(_, a)| a.wear_remaining_hours == Some(77)),
+        "equip never refreshes condition"
     );
 }

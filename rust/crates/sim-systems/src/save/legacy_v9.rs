@@ -32,7 +32,7 @@ impl From<LegacyContentStateV9> for ContentState {
 #[derive(Deserialize)]
 pub(super) struct LegacyBodyV9 {
     pub current_tick: u64,
-    pub resources: SimResources,
+    pub resources: sim_engine::legacy_v7::LegacySimResourcesV16,
     pub world: super::world::WorldSave,
     pub systems: Vec<(String, Vec<u8>)>,
     pub steward: super::legacy_steward::LegacyStewardState,

@@ -121,6 +121,8 @@ func update_facts(facts: Dictionary) -> void:
 		var fields: Dictionary = SimReads.read(world, "get_field_tiles")
 		_facts["first_field_sown"] = int(fields.get("sowings", 0)) > 0
 		_facts["first_field_harvest"] = int(fields.get("harvests", 0)) > 0
+	if world != null:
+		_facts["first_woven_clothing"] = bool(SimReads.read(world, "get_settlement_diagnosis").get("first_woven_clothing", false))
 	_check_completion()
 	_refresh()
 

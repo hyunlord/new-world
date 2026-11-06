@@ -62,13 +62,13 @@ impl From<StewardState> for LegacyStewardStateV14 {
 #[derive(Serialize, Deserialize)]
 pub(super) struct LegacyBodyV14 {
     pub(super) current_tick: u64,
-    pub(super) resources: sim_engine::SimResources,
+    pub(super) resources: sim_engine::legacy_v7::LegacySimResourcesV16,
     pub(super) world: super::world::WorldSave,
     pub(super) systems: Vec<(String, Vec<u8>)>,
     pub(super) steward: LegacyStewardStateV14,
     pub(super) content_state: sim_core::colony::content_state::ContentState,
     pub(super) mind: sim_core::colony::mind_state::MindState,
-    pub(super) food: sim_core::colony::food::FoodState,
+    pub(super) food: super::legacy_food_v16::FoodStateV16,
 }
 
 pub(super) fn decode_published_v14(payload: &[u8]) -> Result<super::Body, super::SaveError> {
@@ -82,14 +82,15 @@ pub(super) fn decode_published_v14(payload: &[u8]) -> Result<super::Body, super:
     let old: LegacyBodyV14 = super::decode(payload).map_err(super::SaveError::Decode)?;
     Ok(super::Body {
         current_tick: old.current_tick,
-        resources: old.resources,
+        resources: old.resources.into(),
         world: old.world,
         systems: old.systems,
         steward: old.steward.into(),
         content_state: old.content_state,
         mind: old.mind,
-        food: old.food,
+        food: old.food.into(),
         cultivation: Default::default(),
+        processing: Default::default(),
     })
 }
 
@@ -108,13 +109,15 @@ mod tests {
         let expected = engine.resources.steward.clone();
         let old = LegacyBodyV14 {
             current_tick: 360,
-            world: super::super::world::capture(&engine.world).expect("world"),
+            world: super::super::world::capture_items_v16(&engine.world).expect("world"),
             systems: vec![],
             steward: std::mem::take(&mut engine.resources.steward).into(),
             content_state: std::mem::take(&mut engine.resources.content_state),
             mind: std::mem::take(&mut engine.resources.mind),
-            food: std::mem::take(&mut engine.resources.food),
-            resources: engine.resources,
+            food: std::mem::take(&mut engine.resources.food)
+                .try_into()
+                .expect("legacy food"),
+            resources: engine.resources.try_into().expect("legacy resources"),
         };
         let bytes = super::super::encode(&old).expect("historical wire fixture");
         // When the version-specific reader migrates it.
@@ -134,13 +137,15 @@ mod tests {
         let mut engine = sim_engine::SimEngine::new(4, 4, sim_core::MaterialRegistry::new());
         let old = super::super::legacy_cultivation_v15::LegacyBodyV15 {
             current_tick: engine.current_tick(),
-            world: super::super::world::capture(&engine.world).expect("world"),
+            world: super::super::world::capture_items_v16(&engine.world).expect("world"),
             systems: engine.system_states().expect("systems"),
             steward: std::mem::take(&mut engine.resources.steward),
             content_state: std::mem::take(&mut engine.resources.content_state),
             mind: std::mem::take(&mut engine.resources.mind),
-            food: std::mem::take(&mut engine.resources.food),
-            resources: engine.resources,
+            food: std::mem::take(&mut engine.resources.food)
+                .try_into()
+                .expect("legacy food"),
+            resources: engine.resources.try_into().expect("legacy resources"),
         };
         let envelope = super::super::Envelope {
             revision: sim_core::colony::content::installed()

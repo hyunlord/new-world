@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
+Schema version: 14 — M6b Stage2 appends physical apparel/wear and weaving diagnosis facts (implementation in progress). Version 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
 
 History: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
@@ -1085,11 +1085,13 @@ A carcass is not an animal: a kill drops meat and a hide as ground items (`get_c
 | `band` | int | as `mood_bands` in `get_agent_snapshot` |
 | `target` | int | the value the mood moves toward now, -1 without a mood |
 | `modifier_codes` | PackedInt32Array | the modifiers in force, `Modifier::code`, largest magnitude first, then code |
-| `modifier_names` | PackedStringArray | their names (`slept_roofed`, `slept_outside`, `fed`, `hungry`, `thirsty`, `cold`, `quarrelled`, `learned`, `discovered`, `grief`, `sick`, `crafted`, `drafted`, `pressure`) |
+| `modifier_names` | PackedStringArray | their names (`slept_roofed`, `slept_outside`, `fed`, `hungry`, `thirsty`, `cold`, `quarrelled`, `learned`, `discovered`, `grief`, `sick`, `crafted`, `drafted`, `pressure`, `clothing_comfort` [code16]) |
 | `modifier_values` | PackedInt32Array | their weights after temperament |
 | `top` | int | as `tops` in `get_agent_snapshot` |
 | `top_cold_permille` | int | the chance ‰ a cold hour bites the wearer (1,000 loincloth, 700 hide wrap, 500 fur cloak): "추위 −30 %" |
 | `top_since` | int | display day the top was put on, -1 none |
+| `top_item` | int | Authored physical apparel item code; -1 without apparel |
+| `wear_remaining_hours` | int | Remaining worn hours for finite apparel; -1 for no apparel or unlimited wear |
 | `drafted` | bool | drafted |
 | `draft_order` | int | 0 hold, 1 move, 2 attack an animal, 3 attack a person, -1 not drafted |
 | `draft_x` | int | the move's tile x, or the attack's target id; -1 none |
@@ -1744,11 +1746,13 @@ the owner feed by data but reachable through actual causal parents in Why.
 
 ### `get_settlement_diagnosis` (no arguments)
 
-Cached hourly settlement diagnosis. Returns a dictionary with parallel arrays:
+Cached hourly settlement diagnosis, with current read-only weaving facts and appended cause lines. Returns a dictionary with parallel arrays:
 
 | key | type | description |
 |---|---|---|
 | `tick` | `int` | Tick of last evaluation |
+| `first_woven_clothing` | `bool` | Crafted textile apparel exists in the physical craft ledger; chapter fact, not proof that everyone wears it |
+| `cloth_short` | `bool` | Textile work has begun and at least one adult lacks apparel; drives the explicit dress card and authored dependency diagnosis |
 | `check_ids` | `PackedStringArray` | Check id from diagnosis.ron |
 | `text_keys` | `PackedStringArray` | Locale text key |
 | `severities` | `PackedInt32Array` | 0=ok, 1=notice, 2=warning, 3=danger |
@@ -1960,3 +1964,5 @@ retaining established crops and soil; it does not refund seeds. Returns accepted
 SetFieldWork. Now prioritizes actual phase work under its normal physical prerequisites;
 paused suspends work; auto returns to ordinary scheduling. It never instantly seeds or harvests.
 Inactive/covered/stale card targets are skipped before dispatch. Returns accepted/count/reason.
+
+Stage2 appends chronicle kinds57 `FirstCloth` and58 `FirstTunic` after actual output placement. The generic textile-apparel event need not be a specific hardcoded tunic. The presentation translates these kinds in ko/en; it does not create outputs. Runtime validation is pending in `m6b/M6B_REPORT.md`.

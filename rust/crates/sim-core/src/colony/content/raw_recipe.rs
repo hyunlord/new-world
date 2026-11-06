@@ -17,6 +17,8 @@ pub(super) struct RecipeRaw {
     pub material_term: MaterialTerm,
     pub tool: Option<RecipeToolRaw>,
     #[serde(default)]
+    pub process: Option<PassiveProcessDef>,
+    #[serde(default)]
     pub food_requirements: FoodRequirementsRaw,
     pub auto_bill_role: Option<String>,
 }

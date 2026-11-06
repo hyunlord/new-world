@@ -428,7 +428,7 @@ M-UX2 게시 시점의 332개 고유 이슈: fixed197 / open103 / deferred30 / w
 
 | ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
 |---|---|---|---|---|---|---|
-| ISS-361 | M-LOOP 집사 범위·상한·가르침 held-out 실패 | LOOP-HELDOUT-FINAL1680–1711, R1 승인 무효 | sim | open | [#684](https://github.com/hyunlord/new-world/issues/684), Stage1: 통나무·땔감·식량 상한, 도구 전용 생존 규칙, 가르침 카드. 프레젠테이션 게시가 이 실패를 고친 것은 아님 | docs/v8/loop/LOOP_REPORT.md; docs/v8/m6b/M6B_DECISIONS.md D-minus1 |
+| ISS-361 | M-LOOP 집사 범위·상한·가르침 held-out 실패 | LOOP-HELDOUT-FINAL1680–1711, R1 승인 무효 | sim | open | [#684](https://github.com/hyunlord/new-world/issues/684), Stage1 `16dc9120d`에 상한·도구 전용 생존 규칙·가르침 카드 게시. 원시 통나무·한파 미달과 다중 화덕 결함은 #688/ISS-363으로 추적, 우산 이슈는 OPEN 유지 | docs/v8/loop/LOOP_REPORT.md; docs/v8/m6b/M6B_DECISIONS.md D-minus1 |
 
 Stage −1 게시 뒤 중복·다음 빈 ISS를 재확인하고 위 제목의 #684를 생성·readback했다. #650/#663은 이미 닫혀 있었으며 새로 닫은 것으로 집계하지 않는다. 실제 URL과 확정 ISS는 외부 `minus1/steward-issue-publication.json`에 먼저 보존했다. 이 문서 갱신은 Stage0 게시를 뜻하지 않는다.
 
@@ -437,4 +437,19 @@ Stage −1 게시 뒤 중복·다음 빈 ISS를 재확인하고 위 제목의 #6
 
 | ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
 |---|---|---|---|---|---|---|
-| M6B-ART-1 | 밀·아마 밭 단계가 코드로 그린 자리표시자 | 농경 구현은 실제 경운·성장·익음·그루터기 상태를 표시하지만 정식 작물 그림 없음 | art | open | [#687](https://github.com/hyunlord/new-world/issues/687): 기존 route I·resolver에 맞는 상태별 그림, KO1.0/1.25 실제 화면 검증. 그림 생성은 이번 범위 아님. 게시 때 다음 빈 ISS 확정 | docs/v8/m6b/S1_DESIGN.md; a0ec36d1 |
+| ISS-362 | 밀·아마 밭 단계가 코드로 그린 자리표시자 | 농경 구현은 실제 경운·성장·익음·그루터기 상태를 표시하지만 정식 작물 그림 없음 | art | open | [#687](https://github.com/hyunlord/new-world/issues/687): 기존 route I·resolver에 맞는 상태별 그림, KO1.0/1.25 실제 화면 검증. 그림 생성은 이번 범위 아님. Stage1 게시 뒤 ISS-362 확정 | docs/v8/m6b/S1_DESIGN.md; a0ec36d1 |
+
+
+## M6b Stage1 게시 후 집사 잔여
+
+| ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
+|---|---|---|---|---|---|---|
+| ISS-363 | 통나무 개선 막대 미달·한파 땔감 및 다중 화덕 비축 누락 | heldout03: 통나무 후보27/32 대 BASE 투영0/32(기준28); day5 BASE0/32·후보32/32, day24 BASE24/32·후보27/32. 한파 후보29/30노출 대 BASE25/29노출, 실패1664는 양쪽 멸종 | sim | open | [#688](https://github.com/hyunlord/new-world/issues/688): 원시 실패 보존, `acb31be40` 다중 화덕 수정은 Stage2에서 평가. BASE에는 cap이 없어 후보 고정 정책의 읽기 전용 투영값임 | M6B_REPORT.md; D-S1-3(2026-11-06); v8/m6b-stage2-deferred |
+
+2026-11-06 Stage1 `16dc9120d` 게시 후 [#674](https://github.com/hyunlord/new-world/issues/674)·[#675](https://github.com/hyunlord/new-world/issues/675)는 CLOSED 확인. #675의 BASE 대비 비악화32/32, BASE5일 대 후보1일이며 후보1일은 양쪽 멸종1664에 남는다(0일로 주장하지 않음). #684/#687/#688은 OPEN 유지. 닫기 본문은 외부 `stage1/owner-acceptance-03/close-674.md`, `close-675.md`에 보존한다.
+
+## M6b Stage2 직조 아트 후속
+
+| ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
+|---|---|---|---|---|---|---|
+| M6B-ART-2 | 직조 물품·작업장·착용 실루엣이 범주 대체 그림 | 실제 사슬 캡처는 있으나 전용 아트 미제공; 의복은 기존 실루엣과 데이터 색조 | art | open | [#689](https://github.com/hyunlord/new-world/issues/689): route I·resolver 경로의 전용 아트와 실제 화면 검증 | ADR0059; M6B_REPORT.md |

@@ -17,8 +17,8 @@
 // Difficulty of discoverable nodes is not in the goal table: chosen in M4 DECISIONS D9.
 (
     schema_version: 1,
-    // Neolithic markers that M4 does not have yet; they count in the era progress denominator (goal 3.4).
-    absent_markers: [("weaving", 2)],
+    // Weaving now supplies its original weight through actual practiced knowledge.
+    absent_markers: [],
     knowledge: [
         (id: "fire_keeping", lane: "survival", era: "paleolithic", threshold: 300, prereqs: [], difficulty: 1,
          discover: [], gates: [Lore("hearth")], marker_weight: 0, seed: All, name_key: "KNOWLEDGE_FIRE_KEEPING"),
@@ -99,5 +99,19 @@
         (id: "cultivation", lane: "survival", era: "neolithic", threshold: 300,
          prereqs: ["foraging", "grain_parching"], difficulty: 1, discover: [Stockpile("wild_grain", 2)],
          gates: [], marker_weight: 3, seed: None, name_key: "KNOWLEDGE_CULTIVATION"),
+        // Starting discovery conditions/thresholds; no natural-adoption outcome target.
+        // Combine fibre preparation and spinning to retain bit31 for selected-pack extensions.
+        (id: "spinning", lane: "craft", era: "neolithic", threshold: 300,
+         prereqs: ["cultivation"], difficulty: 1, discover: [Stockpile("flax_stalks", 2)],
+         gates: [Workshop("retting_pit"), Recipe("ret_flax"), Recipe("make_hand_spindle"), Recipe("spin_thread")], marker_weight: 0,
+         seed: None, name_key: "KNOWLEDGE_SPINNING"),
+        (id: "weaving", lane: "craft", era: "neolithic", threshold: 300,
+         prereqs: ["spinning"], difficulty: 1, discover: [Stockpile("linen_thread", 2)],
+         gates: [Workshop("loom"), Recipe("weave_cloth")], marker_weight: 2,
+         seed: None, name_key: "KNOWLEDGE_WEAVING"),
+        (id: "tailoring", lane: "craft", era: "neolithic", threshold: 300,
+         prereqs: ["weaving"], difficulty: 1, discover: [Stockpile("linen_cloth", 1)],
+         gates: [Recipe("make_linen_tunic"), Recipe("make_linen_wrap")], marker_weight: 0,
+         seed: None, name_key: "KNOWLEDGE_TAILORING"),
     ],
 )

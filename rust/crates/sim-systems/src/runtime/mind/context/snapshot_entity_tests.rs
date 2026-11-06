@@ -210,6 +210,7 @@ fn sparse_and_full_capture_match_oracle_including_memory_bits() {
                     count: 2,
                     quality: 1,
                     material: None,
+                    wear_remaining_hours: None,
                 },
                 Job {
                     kind: JobKind::Chop { tree: (3, 3) },

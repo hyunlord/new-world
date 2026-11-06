@@ -116,10 +116,10 @@ impl Recipe {
     /// Whether this item supplies the recipe's reusable tool capability.
     pub fn tool_matches(&self, kind: ItemKind) -> bool {
         self.tool.as_ref().is_some_and(|tool| {
-            tool.capability == "cutter"
-                && installed_or_bundled()
-                    .item(kind)
-                    .is_some_and(|item| item.cutter.is_some())
+            installed_or_bundled().item(kind).is_some_and(|item| {
+                (tool.capability == "cutter" && item.cutter.is_some())
+                    || item.tool_capabilities.contains(&tool.capability)
+            })
         })
     }
 
@@ -274,8 +274,8 @@ mod tests {
     #[test]
     fn the_recipe_file_parses_to_the_goal_table() {
         let table = recipes();
-        // M2's three, M4's four, M5's four, M6a's seven, two cultivation seed extraction recipes.
-        assert_eq!(table.len(), 20);
+        // M2 three, M4 four, M5 four, M6a seven, cultivation two, textiles six.
+        assert_eq!(table.len(), 26);
         let knap = RecipeKind::KnapBlade.recipe().cloned();
         let knap = knap.expect("registered blade");
         assert_eq!(knap.id, RecipeKind::KnapBlade);

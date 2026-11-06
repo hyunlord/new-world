@@ -34,6 +34,8 @@ pub struct ItemDef {
     pub weapon: Option<WeaponDef>,
     /// Cutter.
     pub cutter: Option<CutterDef>,
+    /// Reusable workshop capabilities, independent of cutting and knife wear.
+    pub tool_capabilities: Vec<String>,
     /// Food.
     pub food: Option<FoodDef>,
     /// Number of food pieces held by one physical vessel.
@@ -105,4 +107,10 @@ pub struct ApparelDef {
     pub cold_permille: u32,
     /// Cold snap work immune.
     pub cold_snap_work_immune: bool,
+    /// Worn simulation days before expiry; absent preserves legacy durability.
+    #[serde(default)]
+    pub wear_days: Option<u32>,
+    /// Additive mood target contribution while worn; legacy clothing is inert.
+    #[serde(default)]
+    pub comfort_permille: i32,
 }

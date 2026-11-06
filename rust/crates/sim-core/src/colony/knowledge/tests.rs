@@ -4,9 +4,9 @@ use crate::colony::{BlueprintKind, Designation, ItemKind, RecipeKind};
 const KNOWLEDGE_RON: &str = include_str!("../../../data/colony/knowledge.ron");
 
 #[test]
-fn the_map_parses_to_28_nodes_with_an_acyclic_prereq_graph() {
+fn the_map_parses_to_31_nodes_with_an_acyclic_prereq_graph() {
     let d = defs();
-    assert_eq!(d.nodes.len(), 28);
+    assert_eq!(d.nodes.len(), 31);
     assert!(d.nodes.len() <= MAX_NODES);
     // Every prereq points at another node, and the graph has no cycle
     // (a depth-first search from each node never revisits its path).
@@ -45,10 +45,10 @@ fn the_map_parses_to_28_nodes_with_an_acyclic_prereq_graph() {
             vec![Cond::Stockpile(ItemKind::RawPot, 2)]
         ))
     );
-    // Markers 3 + 3 + 2 + 1 + cultivation 3 present; weaving 2 absent: 14.
+    // Markers 3 + 3 + 2 + 1 + cultivation 3 + weaving 2 are present: 14.
     assert_eq!(d.marker_total(), 14);
     let present: u32 = d.nodes.iter().map(|n| u32::from(n.marker_weight)).sum();
-    assert_eq!(present, 12);
+    assert_eq!(present, 14);
     assert!(parse_defs("(schema_version: 2, absent_markers: [], knowledge: [])").is_none());
     let bad = KNOWLEDGE_RON.replace("Recipe(\"haft_axe\")", "Recipe(\"bronze\")");
     assert!(parse_defs(&bad).is_none());

@@ -112,6 +112,22 @@ pub fn put_items(
     filled
 }
 
+/// Put an entire output down, or retain it with its current owner when the map is full.
+/// The preflight uses the same capacity predicate as placement and mutates nothing.
+pub fn try_put_items(res: &mut SimResources, tile: (u32, u32), spec: ItemSpec, n: u16) -> bool {
+    let mut needed = u32::from(n);
+    for y in 0..res.tile_grid.height {
+        for x in 0..res.tile_grid.width {
+            needed = needed.saturating_sub(u32::from(room_on(res, (x, y), spec)));
+            if needed == 0 {
+                put_items(res, tile, spec, n);
+                return true;
+            }
+        }
+    }
+    false
+}
+
 /// One pass of [`put_items`], only onto tiles of `region` when given; returns
 /// the tiles filled and the items still left.
 fn put_items_in(

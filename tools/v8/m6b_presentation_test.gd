@@ -81,6 +81,11 @@ func _run() -> void:
 	SimReads.mutate(world, "cmd_set_steward", [true, 0])
 	var panel: Node = main.find_child("PriorityPanel", true, false)
 	var cards: Node = main.find_child("CardPanel", true, false)
+	if "--weaving-card-tests" in OS.get_cmdline_user_args():
+		_test_weaving_card(cards, world)
+		print("WEAVING_CARD_DONE failed=%d" % _failed)
+		quit(0 if _failed == 0 else 1)
+		return
 	if "--scoped-regressions" in OS.get_cmdline_user_args():
 		_test_stale_teach_cancel(cards, world)
 		_test_ambiguous_role(panel, world)
@@ -835,3 +840,29 @@ func _test_card_clock(main: Node, world: Node, cards: Node) -> void:
 	world.set_process(world_processing)
 	alerts.set_process(alerts_processing)
 	cards.set_process(cards_processing)
+
+
+## The new authored card reaches real native commands only on explicit answers.
+func _test_weaving_card(cards: Node, world: Node) -> void:
+	var definition: Dictionary = {}
+	for row: Dictionary in cards.get("_card_defs"):
+		if str(row.get("id", "")) == "cloth_short":
+			definition = row
+	_check(not definition.is_empty(), "cloth_short definition is loaded")
+	if definition.is_empty():
+		return
+	var before: int = int(world.call("get_command_log", 9223372036854775807).get("total", -1))
+	cards.set("_active", {"cloth_short": {"def": definition, "trigger_data": {}}})
+	cards.call("_rebuild_ui")
+	cards.call("answer_card", "cloth_short", 2)
+	cards.set("_active", {"cloth_short": {"def": definition, "trigger_data": {}}})
+	cards.call("_expire_card", "cloth_short")
+	_check(int(world.call("get_command_log", 9223372036854775807).get("total", -1)) == before, "cloth render, later and expiry issue zero commands")
+	for selected: int in [1, 0]:
+		cards.set("_active", {"cloth_short": {"def": definition, "trigger_data": {}}})
+		before = int(world.call("get_command_log", 9223372036854775807).get("total", -1))
+		cards.call("answer_card", "cloth_short", selected)
+		var log: Dictionary = world.call("get_command_log", before)
+		_check(log.get("kinds", PackedStringArray()) == PackedStringArray(["SetDressOrder"]), "cloth answer sends exactly SetDressOrder")
+		_check(log.get("accepted", PackedByteArray()) == PackedByteArray([1]), "cloth answer has zero rejected commands")
+		_check(bool(SimReads.read(world, "get_story").get("dress_order", false)) == (selected == 0), "cloth answer applies selected standing order")

@@ -57,6 +57,33 @@ pub fn settlement_diagnosis_to_dict(engine: &SimEngine) -> VarDictionary {
             chains_arr.push(&Variant::from(chain_list));
         }
     }
+    let weaving = collect_weaving_diagnosis(engine);
+    dict.set("first_woven_clothing", weaving.first_clothing);
+    dict.set("cloth_short", weaving.cloth_short);
+    if weaving.cloth_short {
+        check_ids.push("weaving_clothes");
+        text_keys.push("S2_DIAG_CLOTHES");
+        severities.push(1);
+        let mut tags = VarArray::new();
+        tags.push(&Variant::from("textile"));
+        tags_arr.push(&Variant::from(tags));
+        params_arr.push(&Variant::from(VarDictionary::new()));
+        let mut chain = VarArray::new();
+        for (key, parameter, value) in weaving.chain {
+            let mut link = VarDictionary::new();
+            link.set("subject_kind", 0);
+            link.set("check_id", "weaving_supply");
+            link.set("text_key", key);
+            link.set("severity", 1);
+            let mut params = VarDictionary::new();
+            if !parameter.is_empty() {
+                params.set(parameter, GString::from(value.as_str()));
+            }
+            link.set("params", params);
+            chain.push(&Variant::from(link));
+        }
+        chains_arr.push(&Variant::from(chain));
+    }
     dict.set("check_ids", check_ids);
     dict.set("text_keys", text_keys);
     dict.set("severities", severities);
@@ -483,4 +510,305 @@ pub fn current_task_to_dict(engine: &SimEngine) -> VarDictionary {
         }
     }
     dict
+}
+
+/// Read-only clothing progress and the first missing physical input chain.
+#[derive(Debug, Default, PartialEq, Eq)]
+pub struct WeavingDiagnosis {
+    /// A textile garment has actually been crafted, not merely researched.
+    pub first_clothing: bool,
+    /// Adults still lack clothing after textile work has begun.
+    pub cloth_short: bool,
+    /// Localized cause key, localized parameter name, and content name key.
+    pub chain: Vec<(&'static str, &'static str, String)>,
+}
+
+/// Reuse authored recipe dependencies without creating orders or cached sim state.
+pub fn collect_weaving_diagnosis(engine: &SimEngine) -> WeavingDiagnosis {
+    use sim_core::colony::people::Apparel;
+    use sim_core::colony::{Carry, ItemKind, Tool};
+    use sim_core::components::{Agent, Child};
+    use std::collections::BTreeMap;
+    let res = &engine.resources;
+    if res.rules.colony.is_none() {
+        return WeavingDiagnosis::default();
+    }
+    let textile = |kind: ItemKind| kind.definition().tags.iter().any(|tag| tag == "textile");
+    let first_clothing =
+        res.colony.item_ledger.crafted.iter().any(|(kind, count)| {
+            *count > 0 && textile(*kind) && kind.definition().apparel.is_some()
+        });
+    let started = res
+        .colony
+        .item_ledger
+        .crafted
+        .iter()
+        .any(|(kind, count)| *count > 0 && textile(*kind))
+        || !res.processing.pending.is_empty();
+    let unclothed = engine
+        .world
+        .query::<(&Agent, Option<&Child>, Option<&Apparel>)>()
+        .iter()
+        .any(|(_, (_, child, apparel))| child.is_none() && apparel.is_none());
+    let mut out = WeavingDiagnosis {
+        first_clothing,
+        cloth_short: started && unclothed,
+        chain: Vec::new(),
+    };
+    if !out.cloth_short {
+        return out;
+    }
+    let mut counts: BTreeMap<ItemKind, u32> = BTreeMap::new();
+    for stack in res.colony.ground_items.values().chain(
+        res.colony
+            .workshops
+            .values()
+            .flat_map(|shop| shop.shelf.iter()),
+    ) {
+        *counts.entry(stack.kind).or_default() += u32::from(stack.count);
+    }
+    for (_, carry) in engine.world.query::<&Carry>().iter() {
+        *counts.entry(carry.kind).or_default() += u32::from(carry.count);
+    }
+    for (_, tool) in engine.world.query::<&Tool>().iter() {
+        *counts.entry(tool.item.kind).or_default() += 1;
+    }
+    if counts
+        .iter()
+        .any(|(kind, count)| *count > 0 && kind.definition().apparel.is_some())
+    {
+        out.chain.push((
+            if res.colony.dress_off {
+                "S2_DIAG_DRESS_PAUSED"
+            } else if res.colony.ground_items.iter().any(|(tile, stack)| {
+                stack.count > 0
+                    && stack.kind.definition().apparel.is_some()
+                    && res.colony.zone_of_tile.contains_key(tile)
+                    && !res
+                        .colony
+                        .reservations
+                        .contains_key(&sim_core::colony::ReserveKey::Stack(*tile))
+            }) {
+                "S2_DIAG_DRESS_READY"
+            } else {
+                "S2_DIAG_DRESS_STORAGE"
+            },
+            "",
+            String::new(),
+        ));
+        return out;
+    }
+    let Some(mut wanted) =
+        ItemKind::all().find(|kind| textile(*kind) && kind.definition().apparel.is_some())
+    else {
+        return out;
+    };
+    let catalog = sim_core::colony::content::installed_or_bundled();
+    let mut seen = std::collections::BTreeSet::new();
+    while seen.insert(wanted) && seen.len() <= 6 {
+        if let Some(batch) = res
+            .processing
+            .pending
+            .iter()
+            .find(|batch| batch.output.kind == wanted)
+        {
+            let wet = res
+                .colony
+                .workshops
+                .get(&batch.workshop)
+                .is_some_and(|shop| {
+                    !batch.requires_river
+                        || sim_systems::runtime::jobs::processing::wet(res, shop.top_left)
+                });
+            let key = if batch.remaining_ticks == 0 {
+                "S2_DIAG_OUTPUT"
+            } else if !wet {
+                "S2_DIAG_DRY"
+            } else {
+                "S2_DIAG_RETTING"
+            };
+            out.chain.push((key, "", String::new()));
+            break;
+        }
+        let Some(recipe) = catalog
+            .recipe_definitions()
+            .iter()
+            .find(|recipe| recipe.output.0 == wanted)
+        else {
+            out.chain.push((
+                "S2_DIAG_GATHER",
+                "item_key",
+                wanted.definition().identity.name_key.clone(),
+            ));
+            break;
+        };
+        if let Some((missing, _)) = recipe
+            .inputs
+            .iter()
+            .find(|(kind, need)| counts.get(kind).copied().unwrap_or(0) < u32::from(*need))
+        {
+            out.chain.push((
+                "S2_DIAG_INPUT",
+                "item_key",
+                missing.definition().identity.name_key.clone(),
+            ));
+            wanted = *missing;
+            continue;
+        }
+        let Some(shop) = res
+            .colony
+            .workshops
+            .values()
+            .find(|shop| recipe.supports_workshop(shop.kind))
+        else {
+            out.chain.push((
+                "S2_DIAG_WORKSHOP",
+                "workshop_key",
+                recipe.workshop.definition().identity.name_key.clone(),
+            ));
+            break;
+        };
+        if recipe
+            .process
+            .as_ref()
+            .is_some_and(|process| process.requires_river)
+            && !sim_systems::runtime::jobs::processing::wet(res, shop.top_left)
+        {
+            out.chain.push(("S2_DIAG_DRY", "", String::new()));
+        } else if let Some(tool) = recipe
+            .tool
+            .as_ref()
+            .filter(|_| recipe.shelf_tool(shop).is_none())
+        {
+            out.chain.push((
+                "S2_DIAG_TOOL",
+                "tool_key",
+                tool.preferred_item.definition().identity.name_key.clone(),
+            ));
+        } else if sim_systems::runtime::jobs::processing::pending_count(res, shop.id) > 0 {
+            let blocked = res
+                .processing
+                .pending
+                .iter()
+                .any(|batch| batch.workshop == shop.id && batch.remaining_ticks == 0);
+            out.chain.push((
+                if blocked {
+                    "S2_DIAG_OUTPUT"
+                } else {
+                    "S2_DIAG_RETTING"
+                },
+                "",
+                String::new(),
+            ));
+        } else {
+            out.chain.push((
+                "S2_DIAG_BILL",
+                "workshop_key",
+                shop.kind.definition().identity.name_key.clone(),
+            ));
+        }
+        break;
+    }
+    out
+}
+
+#[cfg(test)]
+mod weaving_tests {
+    use super::*;
+    use sim_core::colony::{ItemKind, ItemSpec, ItemStack};
+
+    fn engine() -> SimEngine {
+        let mut engine = SimEngine::new(4, 4, sim_core::MaterialRegistry::new());
+        engine.resources.rules = sim_core::rules::WorldRules::colony(0);
+        engine.spawn_agent(1, 1);
+        engine
+    }
+
+    #[test]
+    fn chapter_requires_real_crafted_garment_and_wrap_counts() {
+        let mut engine = engine();
+        let wrap = ItemKind::from_name("linen_wrap").expect("authored wrap");
+        engine
+            .resources
+            .colony
+            .ground_items
+            .insert((2, 2), ItemStack::of(ItemSpec::raw(wrap, None), 1));
+        assert!(!collect_weaving_diagnosis(&engine).first_clothing);
+        engine.resources.colony.item_ledger.crafted.insert(wrap, 1);
+        let before = engine.resources.colony.item_ledger.clone();
+        let view = collect_weaving_diagnosis(&engine);
+        assert!(view.first_clothing && view.cloth_short);
+        assert_eq!(view.chain[0].0, "S2_DIAG_DRESS_STORAGE");
+        assert_eq!(engine.resources.colony.item_ledger, before);
+        engine.resources.colony.dress_off = true;
+        assert_eq!(
+            collect_weaving_diagnosis(&engine).chain[0].0,
+            "S2_DIAG_DRESS_PAUSED"
+        );
+    }
+
+    #[test]
+    fn dressing_diagnosis_requires_unreserved_stockpile_clothing_without_mutation() {
+        let mut engine = engine();
+        let wrap = ItemKind::from_name("linen_wrap").expect("authored wrap");
+        let tile = (2, 2);
+        engine.resources.colony.item_ledger.crafted.insert(wrap, 1);
+        engine
+            .resources
+            .colony
+            .ground_items
+            .insert(tile, ItemStack::of(ItemSpec::raw(wrap, None), 1));
+        for (zoned, reserved, paused, expected) in [
+            (false, false, false, "S2_DIAG_DRESS_STORAGE"),
+            (true, false, false, "S2_DIAG_DRESS_READY"),
+            (true, true, false, "S2_DIAG_DRESS_STORAGE"),
+            (true, true, true, "S2_DIAG_DRESS_PAUSED"),
+        ] {
+            if zoned {
+                engine.resources.colony.zone_of_tile.insert(tile, 0);
+            }
+            if reserved {
+                engine
+                    .resources
+                    .colony
+                    .reservations
+                    .insert(sim_core::colony::ReserveKey::Stack(tile), 0);
+            }
+            engine.resources.colony.dress_off = paused;
+            let before = ron::to_string(&engine.resources.colony).expect("colony state");
+            assert_eq!(collect_weaving_diagnosis(&engine).chain[0].0, expected);
+            assert_eq!(ron::to_string(&engine.resources.colony).unwrap(), before);
+            assert!(engine.resources.colony.command_log.is_empty());
+        }
+    }
+
+    #[test]
+    fn missing_inputs_follow_the_authored_physical_chain() {
+        let mut engine = engine();
+        let cloth = ItemKind::from_name("linen_cloth").expect("authored cloth");
+        engine.resources.colony.item_ledger.crafted.insert(cloth, 1);
+        let view = collect_weaving_diagnosis(&engine);
+        assert!(!view.first_clothing);
+        assert!(view.cloth_short);
+        let keys: Vec<&str> = view.chain.iter().map(|entry| entry.2.as_str()).collect();
+        assert_eq!(
+            keys,
+            [
+                "ITEM_LINEN_CLOTH",
+                "ITEM_LINEN_THREAD",
+                "ITEM_FLAX_FIBRE",
+                "ITEM_FLAX_STALKS",
+                "ITEM_FLAX_STALKS"
+            ]
+        );
+    }
+
+    #[test]
+    fn baseline_has_no_clothing_card_or_chapter_completion() {
+        let engine = SimEngine::new(4, 4, sim_core::MaterialRegistry::new());
+        assert_eq!(
+            collect_weaving_diagnosis(&engine),
+            WeavingDiagnosis::default()
+        );
+    }
 }

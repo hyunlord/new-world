@@ -40,7 +40,18 @@ pub(super) fn accepts(revision: &str, catalog: &Catalog) -> Result<bool, SaveErr
     if bundled.revision() != catalog.revision() {
         return Ok(false);
     }
-    let same = ids::ITEMS.iter().all(|row| {
+    let same = identities_preserved(catalog);
+    if !same {
+        return Err(SaveError::Decode(
+            "pre-cultivation catalog identities changed without a migration map".into(),
+        ));
+    }
+    Ok(true)
+}
+
+/// Published identity prefix shared by subsequent narrow save migrations.
+pub(super) fn identities_preserved(catalog: &Catalog) -> bool {
+    ids::ITEMS.iter().all(|row| {
         catalog
             .item_by_code(row.code)
             .is_some_and(|item| same_identity(row, &item.identity))
@@ -70,13 +81,7 @@ pub(super) fn accepts(revision: &str, catalog: &Catalog) -> Result<bool, SaveErr
             .nodes
             .iter()
             .any(|node| u32::from(node.id) == *code && node.name == *id)
-    });
-    if !same {
-        return Err(SaveError::Decode(
-            "pre-cultivation catalog identities changed without a migration map".into(),
-        ));
-    }
-    Ok(true)
+    })
 }
 
 #[cfg(test)]

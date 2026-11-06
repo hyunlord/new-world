@@ -22,10 +22,10 @@ const Names = preload("res://scripts/ui/person_names.gd")
 
 const MODIFIER_KEYS: Array[String] = ["M5_MOD_SLEPT_ROOFED", "M5_MOD_SLEPT_OUTSIDE", "M5_MOD_FED", "M5_MOD_HUNGRY", "M5_MOD_THIRSTY",
 	"M5_MOD_COLD", "M5_MOD_QUARRELLED", "M5_MOD_LEARNED", "M5_MOD_DISCOVERED", "M5_MOD_GRIEF", "M5_MOD_SICK", "M5_MOD_CRAFTED",
-	"M5_MOD_DRAFTED", "M5_MOD_PRESSURE", "M6A_MOD_VARIED", "M6A_MOD_MONOTONOUS"]
+	"M5_MOD_DRAFTED", "M5_MOD_PRESSURE", "M6A_MOD_VARIED", "M6A_MOD_MONOTONOUS", "S2_MOD_CLOTHING_COMFORT"]
 ## Modifier names as the bridge gives them (`modifier_names`), in code order.
 const MODIFIER_NAMES: Array[String] = ["slept_roofed", "slept_outside", "fed", "hungry", "thirsty", "cold", "quarrelled", "learned",
-	"discovered", "grief", "sick", "crafted", "drafted", "pressure", "food_varied", "food_monotonous"]
+	"discovered", "grief", "sick", "crafted", "drafted", "pressure", "food_varied", "food_monotonous", "clothing_comfort"]
 ## `Modifier::code` of the relation cause (no mood modifier: the pair's bad blood).
 const RELATION_CODE: int = 100
 const RELATION_KEY: String = "M5_MOD_RELATION"
@@ -36,7 +36,7 @@ const BAND_KEYS: Array[String] = ["M5_MOOD_NONE", "M5_MOOD_LOW", "M5_MOOD_NORMAL
 const BAND_TINTS: Array[Color] = [Color.WHITE, Color(0.55, 0.72, 1.3), Color.WHITE, Color(1.3, 1.18, 0.5), Color(1.45, 0.42, 0.38)]
 ## The band colours for text (the inspector's mood line, the legend).
 const BAND_COLORS: Array[Color] = [Color("c8b89a"), Color("8cb4f0"), Color("f2e6c8"), Color("f0d860"), Color("f07060")]
-const TOP_KEYS: Array[String] = ["M5_TOP_LOINCLOTH", "M5_TOP_HIDE_WRAP", "M5_TOP_FUR_CLOAK"]
+const TOP_KEYS: Array[String] = ["M5_TOP_LOINCLOTH", "M5_TOP_HIDE_WRAP", "M5_TOP_FUR_CLOAK", "ITEM_LINEN_TUNIC", "ITEM_LINEN_WRAP"]
 const ANIMAL_STATE_KEYS: Array[String] = ["M5_ANIMAL_WANDER", "M5_ANIMAL_FLEE", "M5_ANIMAL_REST", "M5_ANIMAL_HUNT", "M5_ANIMAL_ATTACK",
 	"M5_ANIMAL_RETREAT"]
 ## Historical fixture aliases only; live consumers read registered capabilities.
@@ -151,12 +151,16 @@ static func mood_line(locale: Node, m5: Dictionary) -> String:
 ## "옷: 가죽 랩 (추위 −30 %)" (−(1000 − top_cold_permille) / 10 %); the loincloth has no percentage.
 static func apparel_line(locale: Node, m5: Dictionary) -> String:
 	var code: int = int(m5.get("top", 0))
+	var item: int = int(m5.get("top_item", -1))
+	var name: String = EconomyText.item(locale, item) if item >= 0 else top(locale, code)
+	var remaining: int = int(m5.get("wear_remaining_hours", -1))
+	var wear: String = "" if remaining < 0 else trf(locale, "S2_WEAR_HOURS", {"hours": remaining})
 	var permille: int = int(m5.get("top_cold_permille", 1000))
 	if code <= 0 or permille >= 1000:
-		return trf(locale, "M5_INSPECT_TOP_PLAIN_FMT", {"top": top(locale, code)})
+		return trf(locale, "M5_INSPECT_TOP_PLAIN_FMT", {"top": name}) + wear
 	@warning_ignore("integer_division")
 	var percent: int = (1000 - permille) / 10
-	return trf(locale, "M5_INSPECT_TOP_FMT", {"top": top(locale, code), "percent": percent})
+	return trf(locale, "M5_INSPECT_TOP_FMT", {"top": name, "percent": percent}) + wear
 
 
 ## The draft order as words: "대기", "(40, 52)로 이동", "늑대 공격" / "카토 공격" (`target` = the attack's id, `x`/`y`

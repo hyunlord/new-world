@@ -32,6 +32,18 @@ pub struct RecipeToolDef {
     pub reusable: bool,
 }
 
+/// Nonfood processing that continues only during qualifying simulation time.
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PassiveProcessDef {
+    /// Qualifying days required after active work finishes.
+    pub duration_days: u32,
+    /// Pending batches, including outputs waiting for placement, per workshop.
+    pub capacity: u16,
+    /// Whether a cardinal river neighbour is required to advance processing.
+    pub requires_river: bool,
+}
+
 /// Validated RecipeDef metadata.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RecipeDef {
@@ -61,6 +73,8 @@ pub struct RecipeDef {
     pub material_term: MaterialTerm,
     /// Tool.
     pub tool: Option<RecipeToolDef>,
+    /// Optional nonfood passive process; absent is the historical active craft.
+    pub process: Option<PassiveProcessDef>,
     /// Food preparation constraints, already resolved to practice bits.
     pub food_requirements: FoodRecipeRequirements,
     /// Auto bill role.

@@ -107,7 +107,14 @@ pub fn maintain_count(world: &World, res: &SimResources, kind: ItemKind) -> u32 
             .sum();
         return ground + carried + stored + making + pending;
     }
-    ground + carried + making + pending
+    let processing: u32 = res
+        .processing
+        .pending
+        .iter()
+        .filter(|batch| batch.output.kind == kind)
+        .map(|batch| u32::from(batch.count))
+        .sum();
+    ground + carried + making + pending + processing
 }
 
 /// The count a `Maintain` bill compares with its target. Food uses all of
@@ -181,7 +188,10 @@ pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize
     let Some(recipe) = bill.recipe.recipe() else {
         return false;
     };
-    if bill.suspended || !recipe.supports_workshop(shop.kind) {
+    if bill.suspended
+        || !recipe.supports_workshop(shop.kind)
+        || !super::processing::permitted(res, shop, recipe)
+    {
         return false;
     }
     let food_allowed = if crate::runtime::knowledge::rule(res).is_some() {

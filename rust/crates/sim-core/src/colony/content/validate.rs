@@ -108,7 +108,16 @@ pub(super) fn roles(c: &Catalog) -> Result<(), CatalogError> {
                 "food cannot fill a nonfood resource/equipment role: its raw ownership path has no food ages"));
         }
     }
+    let mut top_codes = BTreeSet::new();
     for item in c.items() {
+        if let Some(apparel) = &item.apparel {
+            if !top_codes.insert(apparel.legacy_top_code) {
+                return Err(CatalogError::new(
+                    &item.identity.id,
+                    "duplicate apparel top code",
+                ));
+            }
+        }
         if let Some((kind, _)) = item.chop.as_ref().and_then(|chop| chop.break_return) {
             if c.item(kind).is_some_and(|output| output.food.is_some()) {
                 return Err(CatalogError::new(

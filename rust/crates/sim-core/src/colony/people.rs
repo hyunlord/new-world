@@ -15,14 +15,21 @@ pub enum Top {
     HideWrap,
     /// A cloak of wolf fur (droppable 8.5).
     FurCloak,
+    /// Other validated apparel from the content registry.
+    Authored(super::ItemKind),
 }
 
 impl Top {
     /// Stable code for the snapshot's apparel column (0 = loincloth).
-    pub const fn code(self) -> u8 {
+    pub fn code(self) -> u8 {
         match self {
             Self::HideWrap => 1,
             Self::FurCloak => 2,
+            Self::Authored(kind) => kind
+                .definition()
+                .apparel
+                .as_ref()
+                .map_or(0, |a| a.legacy_top_code),
         }
     }
 
@@ -38,6 +45,9 @@ impl Top {
 
     /// The unique item represented by this legacy saved apparel slot.
     pub fn item(self) -> super::ItemKind {
+        if let Self::Authored(kind) = self {
+            return kind;
+        }
         super::ItemKind::all()
             .find(|kind| {
                 kind.definition()
@@ -53,7 +63,8 @@ impl Top {
         match kind.definition().apparel.as_ref()?.legacy_top_code {
             1 => Some(Self::HideWrap),
             2 => Some(Self::FurCloak),
-            _ => None,
+            3..=u8::MAX => Some(Self::Authored(kind)),
+            0 => None,
         }
     }
 
@@ -83,6 +94,24 @@ pub struct Apparel {
     pub top: Top,
     /// The display day it was put on.
     pub since_day: u16,
+    /// Material of the physical worn garment.
+    pub material: Option<crate::material::MaterialId>,
+    /// Exact physical quality, retained when removed.
+    pub quality: u8,
+    /// Exact remaining worn hours; None preserves unlimited legacy clothing.
+    pub wear_remaining_hours: Option<u32>,
+}
+
+impl Apparel {
+    /// Reproduce the worn physical item without resetting quality or wear.
+    pub fn spec(self) -> super::ItemSpec {
+        super::ItemSpec {
+            kind: self.top.item(),
+            material: self.material,
+            quality: self.quality,
+            wear_remaining_hours: self.wear_remaining_hours,
+        }
+    }
 }
 
 /// What a drafted person was told to do (M5 drafting, ADR 0028).
@@ -156,11 +185,13 @@ pub enum Modifier {
     FoodVaried,
     /// Exactly one ingredient group eaten in the trailing three days (−40).
     FoodMonotonous,
+    /// Authored comfort from the currently worn physical garment.
+    ClothingComfort,
 }
 
 impl Modifier {
     /// Every modifier in code order.
-    pub const ALL: [Self; 16] = [
+    pub const ALL: [Self; 17] = [
         Self::SleptRoofed,
         Self::SleptOutside,
         Self::Fed,
@@ -177,6 +208,7 @@ impl Modifier {
         Self::Pressure,
         Self::FoodVaried,
         Self::FoodMonotonous,
+        Self::ClothingComfort,
     ];
 
     /// Stable code (the chronicle's cause table, the bridge).
@@ -203,6 +235,7 @@ impl Modifier {
             Self::Pressure => "pressure",
             Self::FoodVaried => "food_varied",
             Self::FoodMonotonous => "food_monotonous",
+            Self::ClothingComfort => "clothing_comfort",
         }
     }
 
@@ -230,6 +263,7 @@ impl Modifier {
             Self::Pressure => -40,
             Self::FoodVaried => 60,
             Self::FoodMonotonous => -40,
+            Self::ClothingComfort => 0,
         }
     }
 

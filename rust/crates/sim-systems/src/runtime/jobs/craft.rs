@@ -16,8 +16,6 @@ use sim_core::colony::{BillId, ItemKind, ItemSpec, Job, JobKind, SkillKind, Skil
 use sim_core::components::{AgentId, Temperament};
 use sim_engine::SimResources;
 
-use super::items::put_items;
-
 /// The level of `skill` of `entity` (0 without `Skills`).
 pub fn level_of(world: &World, entity: Entity, skill: SkillKind) -> u8 {
     world
@@ -63,6 +61,7 @@ pub(super) fn can_continue(world: &World, res: &SimResources, entity: Entity, jo
         u32::MAX
     };
     super::craft_food::permitted(res, shop, recipe, practice)
+        && super::processing::permitted(res, shop, recipe)
 }
 
 /// Start a craft at the work tile: take one craft's inputs off the shelf,
@@ -102,7 +101,9 @@ pub fn start(
     } else {
         u32::MAX
     };
-    if !super::craft_food::permitted(res, shop, recipe, practice) {
+    if !super::craft_food::permitted(res, shop, recipe, practice)
+        || !super::processing::permitted(res, shop, recipe)
+    {
         return None;
     }
     let cutter = recipe.shelf_tool(shop);
@@ -164,7 +165,10 @@ pub fn next_ready(world: &World, res: &SimResources, workshop: WorkshopId, bill:
     let Some(recipe) = found.recipe.recipe() else {
         return false;
     };
-    if found.remaining() == Some(0) || !recipe.supports_workshop(shop.kind) {
+    if found.remaining() == Some(0)
+        || !recipe.supports_workshop(shop.kind)
+        || !super::processing::permitted(res, shop, recipe)
+    {
         return false;
     }
     if let sim_core::colony::BillMode::Maintain(n) = found.mode {
@@ -307,6 +311,12 @@ pub fn finish_craft(
         kind,
         material: job.material,
         quality,
+        wear_remaining_hours: kind
+            .definition()
+            .apparel
+            .as_ref()
+            .and_then(|apparel| apparel.wear_days)
+            .map(|days| days.saturating_mul(24)),
     };
     let seed =
         kind.definition().food.is_none() && kind.definition().tags.iter().any(|tag| tag == "seed");
@@ -325,12 +335,31 @@ pub fn finish_craft(
             return false;
         }
     }
+    let physical_output = !seed && kind.definition().food.is_none() && recipe.process.is_none();
+    if physical_output && !super::items::try_put_items(res, at, spec, n) {
+        return false;
+    }
     let origin = res
         .cultivation
         .craft_origins
         .remove(&id)
         .unwrap_or_default();
-    if recipe.food_requirements.duration_days > 0 {
+    if let Some(process) = &recipe.process {
+        res.processing
+            .pending
+            .push(sim_core::colony::processing::PassiveBatch {
+                workshop,
+                bill,
+                tile: at,
+                output: spec,
+                count: n,
+                remaining_ticks: res
+                    .rules
+                    .calendar
+                    .days_to_ticks(u64::from(process.duration_days)),
+                requires_river: process.requires_river,
+            });
+    } else if recipe.food_requirements.duration_days > 0 {
         let due_tick = res.current_tick.saturating_add(
             res.rules
                 .calendar
@@ -383,7 +412,7 @@ pub fn finish_craft(
         res.colony.item_ledger.craft_end(&[(kind, n)]);
     } else {
         res.colony.item_ledger.craft_end(&[(kind, n)]);
-        put_items(res, at, spec, n);
+        note_woven_output(res, kind, n, Some(id));
     }
     if let Some(found) = res
         .colony
@@ -410,6 +439,42 @@ pub fn finish_craft(
         crate::runtime::knowledge::used(world, res, entity, gate | auxiliary);
     }
     true
+}
+
+/// Record the first committed output in each authored woven milestone family.
+pub(crate) fn note_woven_output(
+    res: &mut SimResources,
+    kind: ItemKind,
+    count: u16,
+    subject: Option<AgentId>,
+) {
+    use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+    for (tag, event) in [
+        ("woven_cloth", ChronicleKind::FirstCloth),
+        ("woven_tunic", ChronicleKind::FirstTunic),
+    ] {
+        if !kind
+            .definition()
+            .tags
+            .iter()
+            .any(|candidate| candidate == tag)
+            || res.colony.item_ledger.crafted_of(kind) != u64::from(count)
+            || res
+                .chronicle
+                .entries()
+                .iter()
+                .any(|entry| entry.kind == event)
+        {
+            continue;
+        }
+        let mut entry = ChronicleEntry::new(res.current_tick, event)
+            .cause(kind.code())
+            .value(i64::from(count));
+        if let Some(person) = subject {
+            entry = entry.subject(person);
+        }
+        res.chronicle.push(entry);
+    }
 }
 
 #[cfg(test)]

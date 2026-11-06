@@ -42,6 +42,7 @@ fn optional_fields(world: &mut World, entity: Entity) {
                     count: 2,
                     quality: 1,
                     material: None,
+                    wear_remaining_hours: None,
                 },
                 Drafted {
                     since: 0,

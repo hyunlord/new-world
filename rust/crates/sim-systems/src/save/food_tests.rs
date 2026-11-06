@@ -9,12 +9,12 @@ fn legacy12_baseline() -> Vec<u8> {
     let mut engine = SimEngine::new(4, 4, MaterialRegistry::new());
     let old = LegacyBodyV12 {
         current_tick: engine.current_tick(),
-        world: world::capture(&engine.world).expect("world"),
+        world: world::capture_items_v16(&engine.world).expect("world"),
         systems: engine.system_states().expect("systems"),
         steward: std::mem::take(&mut engine.resources.steward).into(),
         content_state: std::mem::take(&mut engine.resources.content_state),
         mind: std::mem::take(&mut engine.resources.mind),
-        resources: engine.resources,
+        resources: engine.resources.try_into().expect("legacy resources"),
     };
     let envelope = Envelope {
         revision: "catalog-v1-fnv1a64:1e4d7fded25139b4:45408".into(),

@@ -6,7 +6,7 @@ use std::collections::BTreeMap;
 #[derive(Serialize, Deserialize)]
 pub(super) struct LegacyBodyV13 {
     pub(super) current_tick: u64,
-    pub(super) resources: SimResources,
+    pub(super) resources: sim_engine::legacy_v7::LegacySimResourcesV16,
     pub(super) world: world::WorldSave,
     pub(super) systems: Vec<(String, Vec<u8>)>,
     pub(super) steward: super::legacy_steward_v14::LegacyStewardStateV14,
@@ -24,7 +24,7 @@ pub(super) struct LegacyFoodStateV13 {
     /// Exactly one age for every physical food owner.
     pub(super) ages: BTreeMap<FoodOwner, FoodAge>,
     /// Real deployed pot vessels and their contents.
-    pub(super) pots: BTreeMap<u32, PotStore>,
+    pub(super) pots: BTreeMap<u32, super::legacy_food_v16::PotStoreV16>,
     /// Next pot ID; allocation starts at one.
     pub(super) next_pot_id: u32,
     /// Bounded per-person meal and group histories.
@@ -38,7 +38,7 @@ pub(super) struct LegacyFoodStateV13 {
     /// Mutation generation for pure derived readers.
     pub(super) version: u64,
     /// Passive preservation batches; outputs are not yet physical items.
-    pub(super) pending_drying: Vec<DryingBatch>,
+    pub(super) pending_drying: Vec<super::legacy_food_v16::DryingBatchV16>,
     /// Plan observations keyed by their actual chronicle entry index.
     pub(super) winter_plans: BTreeMap<u32, WinterPlanEvidence>,
 }
@@ -49,14 +49,18 @@ impl From<LegacyFoodStateV13> for FoodState {
             active_targets: old.active_targets,
             plants: old.plants,
             ages: old.ages,
-            pots: old.pots,
+            pots: old
+                .pots
+                .into_iter()
+                .map(|(id, pot)| (id, pot.into()))
+                .collect(),
             next_pot_id: old.next_pot_id,
             meals: old.meals,
             last_daily_day: old.last_daily_day,
             tallies: old.tallies,
             firsts: old.firsts,
             version: old.version,
-            pending_drying: old.pending_drying,
+            pending_drying: old.pending_drying.into_iter().map(Into::into).collect(),
             winter_plans: old.winter_plans,
             evidence: Default::default(),
         }
@@ -67,7 +71,7 @@ impl From<LegacyBodyV13> for Body {
     fn from(old: LegacyBodyV13) -> Self {
         Self {
             current_tick: old.current_tick,
-            resources: old.resources,
+            resources: old.resources.into(),
             world: old.world,
             systems: old.systems,
             steward: old.steward.into(),
@@ -75,6 +79,7 @@ impl From<LegacyBodyV13> for Body {
             mind: old.mind,
             food: old.food.into(),
             cultivation: Default::default(),
+            processing: Default::default(),
         }
     }
 }

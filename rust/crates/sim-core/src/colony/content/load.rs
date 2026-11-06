@@ -83,12 +83,6 @@ pub(super) fn build(
     if extension.contains_key("items.ron") {
         let extra: ItemFile = parse(&extension, "items.ron")?;
         schema(extra.schema_version, "items")?;
-        if extra.items.iter().any(|d| d.apparel.is_some()) {
-            return Err(CatalogError::new(
-                "items",
-                "novel apparel identity is not supported by saved legacy mechanics",
-            ));
-        }
         append_roles(&mut items.roles, extra.roles)?;
         items.items.extend(extra.items);
     }

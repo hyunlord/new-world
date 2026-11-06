@@ -254,6 +254,40 @@
       "tags": [
         "farming"
       ]
+    },
+    {
+      "id": "cloth_short",
+      "trigger": {
+        "kind": "bridge",
+        "read": "cloth_short"
+      },
+      "title_key": "S2_CARD_CLOTH",
+      "body_key": "S2_CARD_CLOTH_BODY",
+      "options": [
+        {
+          "text_key": "S2_DRESS_ON",
+          "command": "cmd_set_dress_order",
+          "params": true,
+          "recommended": true
+        },
+        {
+          "text_key": "S2_DRESS_PAUSE",
+          "command": "cmd_set_dress_order",
+          "params": false,
+          "recommended": false
+        },
+        {
+          "text_key": "S2_LATER",
+          "command": "none",
+          "recommended": false
+        }
+      ],
+      "default": "none",
+      "expires_hours": 12,
+      "priority": 5,
+      "tags": [
+        "textile"
+      ]
     }
   ]
 }

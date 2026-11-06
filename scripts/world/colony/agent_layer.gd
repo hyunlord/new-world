@@ -154,6 +154,7 @@ class Person:
 	var selected: bool = false
 	var sick: bool = false
 	var fleeing: bool = false
+	var top_code: int = -1
 	var top_colour: Color = Color.WHITE
 	var outline: Color = Color(0, 0, 0, 0)
 	var readable: bool = false
@@ -285,6 +286,7 @@ func _set_appearance(person: Person, look: int, variant: int, elder: bool) -> vo
 	if person.look == look and person.variant == variant and person.elder == elder:
 		return
 	person.look = look
+	person.top_code = -1
 	person.variant = variant
 	person.elder = elder
 	var row: Dictionary = ArtData.look(look)
@@ -306,6 +308,25 @@ func _set_appearance(person: Person, look: int, variant: int, elder: bool) -> vo
 	person.mat.set_shader_parameter("skin_delta", Vector3(float(skin[0]), float(skin[1]), float(skin[2])))
 	person.mat.set_shader_parameter("hair_delta", hair_delta)
 	person.pose = ""
+
+
+## Data-owned clothing tint, with legacy looks and skin/hair pixels preserved.
+func _set_clothing(person: Person, code: int) -> void:
+	if person.top_code == code:
+		return
+	person.top_code = code
+	var palette: Dictionary = ArtData.param("people.clothing_by_top", {})
+	var target: Variant = palette.get(str(code), null)
+	var shift := Vector3.ZERO
+	var base_colour: Variant = _top_colours.get(person.frames, null)
+	person.top_colour = Color8(int(base_colour[0]), int(base_colour[1]), int(base_colour[2])) if base_colour is Array and base_colour.size() == 3 else Color(0.6, 0.45, 0.3)
+	if target is Array and target.size() == 3:
+		var colour := Color8(int(target[0]), int(target[1]), int(target[2]))
+		var source: Variant = _top_colours.get(person.frames, null)
+		if source is Array and source.size() == 3:
+			shift = Tone.rgb_to_lab(Vector3(colour.r, colour.g, colour.b)) - Tone.rgb_to_lab(Vector3(float(source[0]), float(source[1]), float(source[2])) / 255.0)
+		person.top_colour = colour
+	person.mat.set_shader_parameter("clothing_delta", shift)
 
 
 func _set_frame(person: Person, pose: String, bob: int) -> void:
@@ -375,6 +396,7 @@ func _update(delta: float) -> void:
 		_half_rim_px = clampf(float(ArtData.param("people.half_rim_px", 1)), 0.0, 2.0)
 		_half_overlap_alpha = clampf(float(ArtData.param("people.half_overlap_alpha", 0.8)), 0.5, 1.0)
 		for person: Person in _persons.values():
+			person.top_code = -1
 			person.shadow.texture = _shadow_tex
 			person.outline = Color(-1, -1, -1, -1)
 			person.mat.set_shader_parameter("outline_px", _outline_px)
@@ -395,6 +417,7 @@ func _update(delta: float) -> void:
 	var sick: PackedByteArray = snap.get("sick", PackedByteArray())
 	var bands: PackedByteArray = snap.get("mood_bands", PackedByteArray())
 	var fleeing: PackedByteArray = snap.get("fleeing", PackedByteArray())
+	var tops: PackedByteArray = snap.get("tops", PackedByteArray())
 	var looks: PackedInt32Array = snap.get("look_ids", PackedInt32Array())
 	var variants: PackedByteArray = snap.get("variants", PackedByteArray())
 	var n: int = mini(mini(bits.size(), ids.size()), mini(xs.size(), ys.size()))
@@ -438,6 +461,7 @@ func _update(delta: float) -> void:
 		var look: int = looks[i] if i < looks.size() else posmod(ids[i], maxi(1, ArtData.look_count()))
 		var variant: int = int(variants[i]) if i < variants.size() else posmod(ids[i], 6)
 		_set_appearance(person, look, variant, stage == 2)
+		_set_clothing(person, int(tops[i]) if i < tops.size() else 0)
 		var asleep: bool = i < states.size() and i < targets.size() and states[i] == STATE_CONSUMING and targets[i] == TARGET_SLEEP
 		var moving: bool = person.elapsed < person.duration
 		var carrying: bool = not asleep and i < carries.size() and carries[i] > 0

@@ -9,13 +9,15 @@ fn format15_migrates_empty_fields_and_format16_retains_erased_soil() {
     let mut engine = SimEngine::new(4, 4, MaterialRegistry::new());
     let old = legacy_cultivation_v15::LegacyBodyV15 {
         current_tick: engine.current_tick(),
-        world: world::capture(&engine.world).expect("world"),
+        world: world::capture_items_v16(&engine.world).expect("world"),
         systems: engine.system_states().expect("systems"),
         steward: std::mem::take(&mut engine.resources.steward),
         content_state: std::mem::take(&mut engine.resources.content_state),
         mind: std::mem::take(&mut engine.resources.mind),
-        food: std::mem::take(&mut engine.resources.food),
-        resources: engine.resources,
+        food: std::mem::take(&mut engine.resources.food)
+            .try_into()
+            .expect("legacy food"),
+        resources: engine.resources.try_into().expect("legacy resources"),
     };
     let envelope = Envelope {
         revision: "catalog-v1-fnv1a64:242eb9f976d38fe8:63794".into(),

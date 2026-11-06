@@ -3,8 +3,12 @@
 use super::*;
 
 /// Resources decoded using the exact published format6/7 field order.
-#[derive(serde::Deserialize)]
-pub struct LegacySimResources<C = sim_core::chronicle::legacy_v7::LegacyChronicle> {
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct LegacySimResources<
+    C = sim_core::chronicle::legacy_v7::LegacyChronicle,
+    L = sim_core::causal::storage::legacy_v7::LegacyCausalLogStorage,
+    S = sim_core::colony::legacy_v7::LegacyColonyState,
+> {
     /// Construction-time policy; default preserves every legacy behavior.
     pub rules: WorldRules,
     /// Generation seed; legacy fixtures use zero.
@@ -75,7 +79,7 @@ pub struct LegacySimResources<C = sim_core::chronicle::legacy_v7::LegacyChronicl
     /// `InfluenceChanged` records once per drained dirty region per
     /// channel. Consumed by the "왜?" UI (Week 6) to attribute
     /// influence-grid state to the events that produced it.
-    pub causal_log: sim_core::causal::storage::legacy_v7::LegacyCausalLogStorage,
+    pub causal_log: L,
 
     /// Monotonic source of [`EventId`]s for the causal log
     /// (V7 Phase 3-β / P3β-1). Allocated once per recorded event via
@@ -289,7 +293,7 @@ pub struct LegacySimResources<C = sim_core::chronicle::legacy_v7::LegacyChronicl
     /// M1 colony: trees, ground items, zones, designations, footprints,
     /// reservations, the command log and the item ledger. Empty without
     /// `rules.colony` (the baseline world never fills it).
-    pub colony: sim_core::colony::legacy_v7::LegacyColonyState,
+    pub colony: S,
 
     /// M1.5 births that are due (`BirthRule::Fertility`): `FertilitySystem`
     /// queues them, `SettlementSystem` spawns them on the next tick. Always
@@ -313,8 +317,13 @@ pub struct LegacySimResources<C = sim_core::chronicle::legacy_v7::LegacyChronicl
     pub nav: sim_core::nav::NavState,
 }
 
-impl<C: Into<sim_core::chronicle::Chronicle>> From<LegacySimResources<C>> for SimResources {
-    fn from(old: LegacySimResources<C>) -> Self {
+impl<C, L, S> From<LegacySimResources<C, L, S>> for SimResources
+where
+    C: Into<sim_core::chronicle::Chronicle>,
+    L: Into<CausalLogStorage>,
+    S: Into<sim_core::colony::ColonyState>,
+{
+    fn from(old: LegacySimResources<C, L, S>) -> Self {
         Self {
             rules: old.rules,
             world_seed: old.world_seed,
@@ -383,6 +392,7 @@ impl<C: Into<sim_core::chronicle::Chronicle>> From<LegacySimResources<C>> for Si
             mind: Default::default(),
             food: Default::default(),
             cultivation: Default::default(),
+            processing: Default::default(),
             food_supply_cache: Default::default(),
             fatal_animal_attacks: Vec::new(),
             diagnosis_cache: Default::default(),
@@ -394,3 +404,81 @@ impl<C: Into<sim_core::chronicle::Chronicle>> From<LegacySimResources<C>> for Si
 /// Format8 resource layout differs only in Chronicle entry cause width.
 pub type LegacySimResourcesV8 =
     LegacySimResources<sim_core::chronicle::legacy_v7::LegacyChronicleV8>;
+
+/// Formats9–16 share resource field order, with widened causal/chronicle/story identities.
+pub type LegacySimResourcesV16 = LegacySimResources<
+    sim_core::chronicle::Chronicle,
+    CausalLogStorage,
+    sim_core::colony::legacy_v7::LegacyColonyStateV16,
+>;
+
+impl TryFrom<SimResources> for LegacySimResourcesV16 {
+    type Error = &'static str;
+    fn try_from(old: SimResources) -> Result<Self, Self::Error> {
+        Ok(Self {
+            rules: old.rules,
+            world_seed: old.world_seed,
+            building_kinds: old.building_kinds,
+            site_owner: old.site_owner,
+            building_owner: old.building_owner,
+            bed_of: old.bed_of,
+            shelter_plan_skips: old.shelter_plan_skips,
+            food_regen_acc: old.food_regen_acc,
+            wood_tiles: old.wood_tiles,
+            wood_source_max: old.wood_source_max,
+            wood_regen_acc: old.wood_regen_acc,
+            wood_winter_acc: old.wood_winter_acc,
+            wood_winter_cursor: old.wood_winter_cursor,
+            fires: old.fires,
+            haulers: old.haulers,
+            social_chase_since: old.social_chase_since,
+            social_retry_after: old.social_retry_after,
+            tile_grid: old.tile_grid,
+            influence_grid: old.influence_grid,
+            material_registry: old.material_registry,
+            material_blocking_cache: old.material_blocking_cache,
+            current_tick: old.current_tick,
+            steward: old.steward,
+            building_event_queue: old.building_event_queue,
+            causal_log: old.causal_log,
+            next_event_id: old.next_event_id,
+            next_agent_id: old.next_agent_id,
+            food_tiles: old.food_tiles,
+            water_tiles: old.water_tiles,
+            sleep_tiles: old.sleep_tiles,
+            food_source_max: old.food_source_max,
+            water_source_max: old.water_source_max,
+            sleep_source_max: old.sleep_source_max,
+            relationships: old.relationships,
+            interaction_progress: old.interaction_progress,
+            combat_pairs: old.combat_pairs,
+            combat_progress: old.combat_progress,
+            time_of_day: old.time_of_day,
+            ticks_per_day: old.ticks_per_day,
+            settlements: old.settlements,
+            next_settlement_id: old.next_settlement_id,
+            building_registry: old.building_registry,
+            recent_deaths: old.recent_deaths,
+            tallies: old.tallies,
+            noise_fork: old.noise_fork,
+            world_variety: old.world_variety,
+            worldgen_report: old.worldgen_report,
+            wild_regions: old.wild_regions,
+            wood_spot_area: old.wood_spot_area,
+            wood_area_acc: old.wood_area_acc,
+            wood_area_cursor: old.wood_area_cursor,
+            wood_area_floor_acc: old.wood_area_floor_acc,
+            wood_area_floor_sep: old.wood_area_floor_sep,
+            retired_hearths: old.retired_hearths,
+            fission_log: old.fission_log,
+            dissolutions: old.dissolutions,
+            fission_checks: old.fission_checks,
+            chronicle: old.chronicle,
+            settlement_relations: old.settlement_relations,
+            colony: old.colony.try_into()?,
+            due_births: old.due_births,
+            spatial: old.spatial,
+            nav: old.nav,
+        })
+    }
+}

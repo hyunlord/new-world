@@ -35,12 +35,15 @@ mod food_catalog;
 #[cfg(test)]
 mod food_tests;
 mod legacy_food_v13;
+mod legacy_food_v16;
 mod legacy_steward;
 mod legacy_steward_v14;
 mod legacy_v9;
+mod legacy_weaving_v16;
 #[cfg(test)]
 mod mind_tests;
 mod mind_validation;
+mod weaving_validation;
 pub mod world;
 
 #[cfg(test)]
@@ -63,7 +66,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6 through 14 are migrated. Bump it
+/// Save format version; historical versions 6 through 16 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -80,7 +83,9 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 13 = independently persisted seasonal plants and physical food ownership.
 /// 14 = persisted food-pressure, meal-source and starvation causal evidence.
 /// 15 = explicit extended steward mode and grace-window bookkeeping.
-pub const FORMAT_VERSION: u32 = 16;
+/// 16 = cultivation fields and physical crop-origin accounting.
+/// 17 = exact physical garment wear and pending nonfood processing.
+pub const FORMAT_VERSION: u32 = 17;
 mod cultivation_catalog;
 mod cultivation_validation;
 mod legacy_cultivation_v15;
@@ -158,6 +163,7 @@ struct BodyRef<'a> {
     mind: &'a sim_core::colony::mind_state::MindState,
     food: &'a sim_core::colony::food::FoodState,
     cultivation: &'a sim_core::colony::cultivation::CultivationState,
+    processing: &'a sim_core::colony::processing::ProcessingState,
 }
 
 /// The body after the header, as read (same fields, same order).
@@ -218,6 +224,7 @@ struct Envelope {
 }
 
 /// Current body decoded only after the envelope's catalog revision matches.
+#[cfg_attr(test, derive(Serialize))]
 #[derive(Deserialize)]
 struct Body {
     current_tick: u64,
@@ -229,13 +236,14 @@ struct Body {
     mind: sim_core::colony::mind_state::MindState,
     food: sim_core::colony::food::FoodState,
     cultivation: sim_core::colony::cultivation::CultivationState,
+    processing: sim_core::colony::processing::ProcessingState,
 }
 
 /// Exact format12 body, before independently persisted food state.
 #[derive(Serialize, Deserialize)]
 struct LegacyBodyV12 {
     current_tick: u64,
-    resources: SimResources,
+    resources: sim_engine::legacy_v7::LegacySimResourcesV16,
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
     steward: legacy_steward_v14::LegacyStewardStateV14,
@@ -247,7 +255,7 @@ struct LegacyBodyV12 {
 #[derive(Serialize, Deserialize)]
 struct LegacyBodyV11 {
     current_tick: u64,
-    resources: SimResources,
+    resources: sim_engine::legacy_v7::LegacySimResourcesV16,
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
     steward: legacy_steward_v14::LegacyStewardStateV14,
@@ -258,7 +266,7 @@ struct LegacyBodyV11 {
 #[derive(Deserialize)]
 struct LegacyBodyV10 {
     current_tick: u64,
-    resources: SimResources,
+    resources: sim_engine::legacy_v7::LegacySimResourcesV16,
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
     steward: legacy_steward::LegacyStewardState,
@@ -272,10 +280,13 @@ struct LegacyBodyV10 {
 /// module docs). On error the engine may hold reserved ids and must be
 /// discarded or reloaded.
 pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
-    mind_validation::validate(&mut engine.resources).map_err(SaveError::Encode)?;
+    let command_boundary = engine.current_tick();
+    mind_validation::validate_at_boundary(&mut engine.resources, command_boundary)
+        .map_err(SaveError::Encode)?;
     crate::runtime::food::validate(&engine.world, &engine.resources).map_err(SaveError::Encode)?;
     cultivation_validation::validate(&engine.world, &engine.resources)
         .map_err(SaveError::Encode)?;
+    weaving_validation::validate(&engine.resources).map_err(SaveError::Encode)?;
     let world = world::capture(&engine.world).map_err(SaveError::World)?;
     let systems = engine.system_states().map_err(SaveError::Systems)?;
     let body = BodyRef {
@@ -288,6 +299,7 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         mind: &engine.resources.mind,
         food: &engine.resources.food,
         cultivation: &engine.resources.cultivation,
+        processing: &engine.resources.processing,
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
@@ -334,6 +346,8 @@ pub fn load_with(
     let legacy_v13 = version == Some(13u32.to_le_bytes().as_slice());
     let legacy_v15 = version == Some(15u32.to_le_bytes().as_slice());
     let legacy_v14 = version == Some(14u32.to_le_bytes().as_slice());
+    let legacy_v16 = version == Some(16u32.to_le_bytes().as_slice());
+    let legacy_items = version != Some(FORMAT_VERSION.to_le_bytes().as_slice());
     // Format13 already owns physical food and its FoodDailySystem slot.
     let legacy_food =
         legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10 || legacy_v11 || legacy_v12;
@@ -353,6 +367,7 @@ pub fn load_with(
             mind: Default::default(),
             food: Default::default(),
             cultivation: Default::default(),
+            processing: Default::default(),
         }
     } else if legacy_v7 {
         let old: LegacyBodyV7 = decode(encoded).map_err(SaveError::Decode)?;
@@ -366,6 +381,7 @@ pub fn load_with(
             mind: Default::default(),
             food: Default::default(),
             cultivation: Default::default(),
+            processing: Default::default(),
         }
     } else {
         let envelope: Envelope = decode(encoded).map_err(SaveError::Decode)?;
@@ -389,6 +405,7 @@ pub fn load_with(
                 mind: Default::default(),
                 food: Default::default(),
                 cultivation: Default::default(),
+                processing: Default::default(),
             }
         } else if legacy_v9 {
             if envelope.revision != legacy_v9::REVISION {
@@ -401,7 +418,7 @@ pub fn load_with(
                 decode(&envelope.payload).map_err(SaveError::Decode)?;
             Body {
                 current_tick: old.current_tick,
-                resources: old.resources,
+                resources: old.resources.into(),
                 world: old.world,
                 systems: old.systems,
                 steward: old.steward.into(),
@@ -409,12 +426,15 @@ pub fn load_with(
                 mind: Default::default(),
                 food: Default::default(),
                 cultivation: Default::default(),
+                processing: Default::default(),
             }
         } else {
             if envelope.revision != catalog.revision()
                 && !(legacy_food && food_catalog::accepts(&envelope.revision, catalog)?)
                 && !((legacy_v13 || legacy_v14 || legacy_v15)
                     && cultivation_catalog::accepts(&envelope.revision, catalog)?)
+                && !(legacy_v16
+                    && legacy_weaving_v16::accepts_catalog(&envelope.revision, catalog)?)
             {
                 return Err(SaveError::Decode(format!(
                     "save content revision {} does not match installed {}",
@@ -426,7 +446,7 @@ pub fn load_with(
                 let old: LegacyBodyV10 = decode(&envelope.payload).map_err(SaveError::Decode)?;
                 Body {
                     current_tick: old.current_tick,
-                    resources: old.resources,
+                    resources: old.resources.into(),
                     world: old.world,
                     systems: old.systems,
                     steward: old.steward.into(),
@@ -434,12 +454,13 @@ pub fn load_with(
                     mind: Default::default(),
                     food: Default::default(),
                     cultivation: Default::default(),
+                    processing: Default::default(),
                 }
             } else if legacy_v11 {
                 let old: LegacyBodyV11 = decode(&envelope.payload).map_err(SaveError::Decode)?;
                 Body {
                     current_tick: old.current_tick,
-                    resources: old.resources,
+                    resources: old.resources.into(),
                     world: old.world,
                     systems: old.systems,
                     steward: old.steward.into(),
@@ -447,12 +468,13 @@ pub fn load_with(
                     mind: Default::default(),
                     food: Default::default(),
                     cultivation: Default::default(),
+                    processing: Default::default(),
                 }
             } else if legacy_v12 {
                 let old: LegacyBodyV12 = decode(&envelope.payload).map_err(SaveError::Decode)?;
                 Body {
                     current_tick: old.current_tick,
-                    resources: old.resources,
+                    resources: old.resources.into(),
                     world: old.world,
                     systems: old.systems,
                     steward: old.steward.into(),
@@ -460,11 +482,14 @@ pub fn load_with(
                     mind: old.mind,
                     food: Default::default(),
                     cultivation: Default::default(),
+                    processing: Default::default(),
                 }
             } else if legacy_v13 {
                 let old: legacy_food_v13::LegacyBodyV13 =
                     decode(&envelope.payload).map_err(SaveError::Decode)?;
                 old.into()
+            } else if legacy_v16 {
+                legacy_weaving_v16::decode_body(&envelope.payload)?
             } else if legacy_v15 {
                 legacy_cultivation_v15::decode_body(&envelope.payload)?
             } else if legacy_v14 {
@@ -480,6 +505,7 @@ pub fn load_with(
     resources.mind = body.mind;
     resources.food = body.food;
     resources.cultivation = body.cultivation;
+    resources.processing = body.processing;
     if legacy
         || legacy_v7
         || legacy_v8
@@ -496,16 +522,21 @@ pub fn load_with(
             .drying_origins
             .resize(resources.food.pending_drying.len(), Default::default());
     }
-    mind_validation::validate(&mut resources).map_err(SaveError::Decode)?;
+    mind_validation::validate_at_boundary(&mut resources, body.current_tick)
+        .map_err(SaveError::Decode)?;
     if legacy || legacy_v7 || legacy_v8 || legacy_v9 {
         legacy_v9::migrate_trees(&mut resources).map_err(SaveError::Decode)?;
     }
     content_validation::validate(&resources).map_err(SaveError::Decode)?;
+    weaving_validation::validate(&resources).map_err(SaveError::Decode)?;
     resources.material_blocking_cache = MaterialBlockingCache::build(&resources.material_registry);
     // M3: the colony's cost map is derived (not saved); build it now so a
     // command applied before the first tick sees the same regions as an
     // uninterrupted run (code review M-1).
     crate::runtime::nav::ensure(&mut resources);
+    if legacy_items {
+        body.world.migrate_items_v16().map_err(SaveError::World)?;
+    }
     let mut world = world::build(&body.world).map_err(SaveError::World)?;
     if legacy_food && resources.rules.colony.is_some() {
         crate::runtime::food::migration::migrate_legacy(&mut world, &mut resources)
@@ -657,6 +688,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 13
         && found != 14
         && found != 15
+        && found != 16
     {
         return Err(SaveError::Version {
             found,
@@ -798,3 +830,6 @@ mod tests {
 
 #[cfg(test)]
 mod cultivation_tests;
+
+#[cfg(test)]
+mod weaving_tests;

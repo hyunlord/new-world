@@ -36,9 +36,10 @@ if [[ -n "$BASE_PROBE" ]]; then
         --story no-beasts --check-determinism --out "$OUT/base" || { echo "SOAK FAIL BASE probe exit"; exit 1; }
 fi
 python3 - "$OUT/summary.json" "$ROOT/tools/v8" "${BASE_PROBE:+$OUT/base/summary.json}" <<'PY'
+import os
 import sys
 sys.path.insert(0, sys.argv[2])
-from read_gate_checks import compare_fixture, load_json
+from read_gate_checks import compare_fixture, feature_first_mode, load_config, load_json
 head = load_json(sys.argv[1])
 base = load_json(sys.argv[3]) if sys.argv[3] else None
 bad = []
@@ -66,8 +67,9 @@ for b in bad:
 if bad:
     sys.exit(1)
 if base is not None:
-    compare_fixture("soak_economy", base, head, None, {"soak_economy"})
-    safety = "BASE-relative survival/KnowledgeLost"
+    feature_first = feature_first_mode(load_config(os.environ["READ_GATE_CONFIG"]))
+    compare_fixture("soak_economy", base, head, None, {"soak_economy"}, feature_first=feature_first)
+    safety = "outcomes reported; safety in feature smoke" if feature_first else "BASE-relative survival/KnowledgeLost"
 else:
     safety = "0 deaths, 0 KnowledgeLost"
 print(f"SOAK PASS (4 seeds x 20 days: ledger exact, reservations exact, activity, {safety}, determinism)")

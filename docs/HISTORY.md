@@ -1,5 +1,9 @@
 # WorldSim 역사
 
+- 2026-11-06 — M6b Stage2 직조 후보: 실제 아마 수확부터 두 의복 착용·저장 재개까지 완료하고12장 캡처·실제 주민 클릭을 확인했다. baseline identity·8세계 smoke PASS, 전체 gate와 게시 대기. 전용 아트는 #689([보고서](v8/m6b/M6B_REPORT.md), [ADR0059](decisions/0059-authored-weaving-and-physical-apparel.md)).
+
+- 2026-11-06 — M6b Stage1 `16dc9120d`를 v8/wip→v8/main에 게시하고 원격 SHA를 확인했다. 농경·생산 제한·명시적 가르침, 전체 gate49/49·exit0(step41 엄격50ms FAIL/기존 예외 PASS), debug/release 각3076PASS·13ignored, baseline 동일성·C3 PASS. 집사 미달은 #688 OPEN에 보존, #674/#675 CLOSED. Stage2 직조를20:59:12KST에 시작했다([보고서](v8/m6b/M6B_REPORT.md)).
+
 - 2026-11-04 — 오너 승인 #686: M-GROW 자라는 마을을 M6b 뒤·M7 앞의 3.5 패스로 확정했다. 구역 성장·닳은 길·집과 마당·상태별 건물·재료 물결·삶의 흔적을 다루고 평판과 이주(#653)는 M8에서 옮겼다. 구역 성장 건설·평판 이주 외 표현은 시뮬레이션 읽기 전용이다. 구현 완료를 뜻하지 않는다.
 
 - 2026-11-06 — 오너 D-S1-3로 heldout03의 농경·BASE 상대 안전성을 수용하고 집사 개선 막대 미달은 잔여 이슈로 분리했다. 게시 후보는 평가 동작 `b0bfd8b84`이며, 후속 다중 화덕 수정 `acb31be40`은 Stage2로 이월한다. 계산 최적화 후보의 baseline과10개 colony fixture는 동일성 PASS이며 새 전체 gate·게시는 대기([결정](v8/m6b/M6B_DECISIONS.md)).

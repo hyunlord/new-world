@@ -308,6 +308,7 @@ fn incompatible_meat_quality_bucket_is_not_a_fallback_merge_target() {
         kind: meat(),
         material: None,
         quality: 10,
+        wear_remaining_hours: None,
     };
     assert!(!spec.merges_with(&ItemSpec::raw(meat(), None)));
     drop_items(&mut f.engine, blocked, spec, 1);

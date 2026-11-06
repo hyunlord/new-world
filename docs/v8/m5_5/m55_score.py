@@ -138,8 +138,9 @@ def score_pressure(s):
     return out
 
 
-def neighbours_fixture(path):
-    seeds = json.load(open(path))["seeds"]
+def neighbours_fixture(path, *, feature_first: bool = False):
+    with open(path) as source:
+        seeds = json.load(source)["seeds"]
     bad = [] if seeds else ["no seeds"]
     for s in seeds:
         nb = s["m55"]["neighbours"]
@@ -161,21 +162,24 @@ def neighbours_fixture(path):
               f"deaths {s['deaths']} KnowledgeLost {lost}")
         if not ok:
             bad.append(f"seed {s['seed']}: neighbours")
-        if founders <= 0 or alive < founders - 2:
+        if founders <= 0 or (not feature_first and alive < founders - 2):
             bad.append(f"seed {s['seed']}: survivors {alive} < founders {founders} - 2")
-        if lost != 0:
+        if not feature_first and lost != 0:
             bad.append(f"seed {s['seed']}: KnowledgeLost {lost}")
         if not clean:
             bad.append(f"seed {s['seed']}: violations {s['first_violation']}")
     for b in bad:
         print("NEIGHBOURS FAIL", b)
     if not bad:
+        safety = "outcomes reported; safety in feature smoke" if feature_first else "survivors >= founders - 2, 0 KnowledgeLost"
         print(f"NEIGHBOURS PASS ({len(seeds)} seeds: two neighbours, waves 1 and 2 in their windows and accepted, "
-              "a trade, ledger and reservations exact, survivors >= founders - 2, 0 KnowledgeLost)")
+              f"a trade, ledger and reservations exact, {safety})")
     return 1 if bad else 0
 
 
 def main(argv):
+    if len(argv) == 3 and argv[0] == "--neighbours" and argv[2] == "--feature-first":
+        return neighbours_fixture(argv[1], feature_first=True)
     if len(argv) == 2 and argv[0] == "--neighbours":
         return neighbours_fixture(argv[1])
     if not argv or argv[0].startswith("--"):

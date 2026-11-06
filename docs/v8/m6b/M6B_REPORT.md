@@ -1,8 +1,45 @@
 # M6b 보고서
 
+## Stage2 기술 검증 진행 — 2026-11-06 22:14 KST, 미게시
+
+`stage2/scene-r4.log`의 실제 production runtime 시험1개 PASS(74.91초). seed0의 실제 두 밭에서 수확→불리기→실잣기→직조→재봉→착용을 완료했다. 단계 tick은 시작2, 작업장196, 수확7162, 불리기10118, 실10232, 천10358, 옷16389, 두 옷 착용20539다. 이후120틱의 저장/불러오기 연속 결과도 중단 없는 full save와 동일했다. 아마 줄기·섬유·실·천·방추·옷을 주입하지 않았다. 초기 원재료는 통나무40·돌10·야생곡물200·아마씨4이며 물리적 생성 회계를 거쳤다. 창립자 전원에게 설치된 지식 proficiency1000을 초기 부여한 **시연 조건**으로, 자연 발견 성공률이나 무명령 smoke의 증거는 아니다.
+
+Steward OFF, Dress OFF/ON, 작업장·밭·생산 bill과 창고4×4→6×6 확장은 기록된 정상 명령이다. r3의 옷 미착용은16개 창고 칸이 곡물·음식·땔감으로 찬 결과였다. 실제 확장·운반으로 해결했으며 Dress나 수치를 조정하지 않았다. r1 초기화 전 정착지 가정, r2 명령 직후 저장 경계, r3 창고 실패와 진단은 외부에 보존한다. `stage2/WEAVING_SCENE.md`에 소스 SHA·8단계 save SHA가 있다. save 자체는 캡처 입력이며, 후속 실제 창 캡처는 아래 r4 기록으로 따로 확인했다.
+
+추가 native 증거: 의복9 PASS, 처리5/data-only4 PASS, 원본 format16 두 파일 PASS. 원본 format13의 최초 policy mismatch FAIL은 보존했으며, 정확한 이전 정책 사전 복원 후 실제 두 파일의 물리 상태·mind bytes·재저장/재개가 PASS(`save-original13-05.log`). 현재 저장 suite63 PASS/외부2ignored(`save-tests-04.log`). core의 오래된 콘텐츠 개수 기대값3개를 기존 prefix 검증을 유지해 갱신했고 core unit509 및 integration 전부 PASS, systems746 PASS/2ignored, bridge59 PASS다. 전체 타깃 Clippy·debug bridge·release probe/perf 빌드는 종료0(`native-integration-04.log`). 앞선 fmt/Clippy 실패 로그도 보존한다.
+
+Godot import와 strict83파일/76 FFI 호출 PASS. 실제 의복 카드8검사 PASS, 표시·나중에·만료는0명령, 두 명시적 답변은 각각 SetDressOrder1개/거절0개다(`weaving-cards-01.log`). 첫 실제 캡처는 재단까지7장 후 착용자 클릭 선택 실패로 종료1했다. 후속 `captures-r4.log`는 `CAPTURE_WEAVING_DONE shots=12`로 완료했으며 실제 창12장에 사슬8단계·카드·연대기·장/시대·직조 표지를 담았다. 05의 진단, 09의 첫 아마 웃옷 연대기 문구가 실제로 보인다. r4는 보조 검사창 경로를 사용했으며 클릭 PASS가 아니다. 후속 r5는 잘못된 캡처 클릭 좌표를 실제 hitbox 중심으로 수정하고 fallback을 제거한 뒤12장 완료·주민1 `mouse_selection=true`를 확인했다. 실제 의복과 남은 착용1152시간이 보인다. 오너 수동 플레이 판정은 아니다.
+
+`identity-01.log`는228748공유값 차이0·단측경로0, 연대기64파일19683항목 동일, 원시64파일 동일, seeds0–3 결정성 PASS다(기존 normalizer 사용). `smoke-01/RESULT.txt`의 seeds0–7×48일·steward ON·무명령 비교도 PASS: BASE/후보 생존 배열은 모두 `[10,12,11,13,10,13,11,14]`, KnowledgeLost 총합0/0으로 허용2 이하. 시연의 지식 초기 부여 조건과 이 무명령 smoke는 별도다. 원본13은 두 진짜 파일의 strict149 schema와 현행 정책 선택·1틱 연속 검증을 포함해 PASS이며 최초 실패는 보존한다. `native-integration-04.log`의 fmt·전체 타깃 Clippy·debug bridge·release build도 PASS다.
+
+남은 게시 증거: 최종 전체 workspace tests·command replay·C3·full gate와 정확한 소스 게시. 사전 workspace 전체 검사는 게시 gate와의 중복을 피하려고 종료130으로 중단했으며 PASS로 집계하지 않는다(`workspace-debug-01-abort.json`). **full gate/게시 NOT_RUN**이며 개별 사전 검증을 전체 PASS로 합치지 않는다. 도구 순증은 현재371줄(capture151, card test31, gate/tests189), 문서 아래 score 변경4줄은 별도다. 최종 diff에서 재집계한다. 새 framework나 held-out/밸런스 반복은 도입하지 않는다. 아래 구현 체크포인트는 실행 전 역사 기록이다.
+
+## Stage2 구현 체크포인트 — IN_PROGRESS, 미게시
+
+BASE1=`16dc9120d`, 시작2026-11-06 20:59:12KST, 한도11/07 20:59:12KST. 코드에는 데이터로 정의한 아마 불리기→실잣기→직조→재봉과 물리적 방추·옷, 시대 표지, 처리 중/출력 대기 배치, 착용 중 마모·보온·편안함이 추가되어 있다. format17은 별도 processing tail을 저장하며 format16의 frozen body/물리 component와 정확한 predecessor catalog를 명시적으로 이행한다. 새 content family의 data-only 시험, 처리·착용·저장 시험은 작성되어 있으나 이 체크포인트의 native 실행 증거는 아직 없다.
+
+표현은 `top_item`/`wear_remaining_hours`, `first_woven_clothing`/`cloth_short`, 명시적 입기 카드1종(만료 none), 진단 원인 사슬, 연대기57/58·기분 modifier16, ko/en 문구와 외형 경로를 사용한다. 캡처나 시뮬레이션 완료를 확인한 것으로 읽지 않는다. [ADR0059](../../decisions/0059-authored-weaving-and-physical-apparel.md), [BALANCE_DEBT](../BALANCE_DEBT.md)에 설계와 초기 수치를 기록했다.
+
+Stage1에서 제외한 `acb31be40`은 production 겨울 화덕 연료 계산과 해당 회귀시험57줄만 Stage2에 재적용했다. 이후 다른 행동 수정은 가져오지 않았으며 새 직조 기능과 함께 검증한다. 게이트 변경의 동기는 D-FEATURE-FIRST와 기존 held-out/개선 막대의 충돌이다. 새 framework 없이 기존5파일 순증193줄, 그중 feature-first gate/시험 순증189줄이다. 보고된 gate Python47 PASS와 별개로 **native tests·Clippy·baseline identity·save/replay·48일 smoke·실제 전체 사슬/캡처·C3·full gate는 NOT_RUN**이다. 밸런스 보정이나 held-out 소비는 하지 않는다.
+
+## Stage1 실제 게시 — 2026-11-06 20:58 KST
+
+**PUBLISHED `16dc9120decbd9f6d7f851b2b90e16de7c891182`.** BASE0 `2f6993009`에서 `v8/wip` → `v8/main` 순서로 fast-forward했고20:58:23KST에 양쪽 원격 SHA를 확인했다. 아래 사전 검증·ca21 실패는 이전 체크포인트로 보존한다. 이 게시 후 문서 갱신은 다음 Stage2 gate에 포함할 기록이며, 문서 변경을 포함한 새 SHA가 Stage1 gate를 통과했다는 뜻이 아니다.
+
+- 최종 전체 gate: `stage1/gate-attempts/s1-owner-16dc9120d/fullgate/gate.txt`, 18:17:59–20:55:32KST, **49/49 단계 exit0**, gate/launcher0, binding errors `[]`. debug/release 각각3076 PASS·13ignored, Python588 PASS.
+- step41: **엄격50ms FAIL / 기존 예외 PASS**. zoom1.0 초과 프레임56.445ms, zoom0.5는57.929ms로 각1개이고60ms 초과0. 두 zoom의 캡처·계측 모두 완료했다. 원시 실패를 무조건 PASS로 바꾸지 않는다.
+- 동일성: 기준선228748값 차이0, 연대기64파일19683항목·원시64파일 동일(기존 normalizer), 시드0–3 결정성 PASS. 수용된 동작에 대한 최적화 검증은10 fixtures/34세계의 summary·churn20파일을 **제외 키 없이 바이트 동일**하게 확인했다. 최종 Rust 패치는 검증한 패치 SHA256 `3a50d3927e31b56c7c477112f82d3f0bf68f91bc2e20ecc294a3e8e9753099cb`와 같다.
+- 성능: BASE/후보를3회 교차 측정, 각 시작 부하7.74/6.37,6.63/4.72,4.01/3.02. C3 시간·메모리 전부 PASS. 평균 비율 n200×0.921, n1000×0.817, n2000×1.069, script×0.991, side64×0.880, wolves×0.759. [성능 장부](../../perf/PERF_LEDGER.md)에 `M6b-S1-BASE0-quiet`와 `M6b-S1-published` 각6행을 추가했다. 기존 raw의 파일명만 round별로 구분해 복사하고 기존 `bench-summarise`의 중앙값 규칙으로3 timed repeats/scene 및 build-only RSS 표본을 합쳤다. 새 측정은 없으며 요약은 외부 `stage1/owner-acceptance-03/ledger-publication`에 둔다.
+- heldout03는 D-S1-3 오너 ACCEPTED이며 원시 개선 막대는 아래 수치 그대로다. 농경29/32·28/32·31/32·31/32, 생존31/32=BASE31/32, KnowledgeLost21 대 BASE35, 회계·중립성 PASS. 통나무27/32 대 BASE 투영0/32, 한파29/30 대 BASE25/29의 잔여는 #688 OPEN. 후속 동작 `acb31be40`은 Stage1에서 제외하고 `v8/m6b-stage2-deferred`에 보존했다.
+- #674/#675 CLOSED 확인. #675는 세계별 BASE 비악화32/32, BASE5일 대 후보1일(양쪽 멸종1664)이며0일이 아니다. #684/#687/#688 OPEN, 각각 ISS-361/362/363으로 추적한다. 원격 게시 영수증은 외부 `stage1/owner-acceptance-03/publication.json`이다.
+
+**Stage2 시작:** 2026-11-06 20:59:12KST, `v8/m6b-stage2`, BASE1=위 게시 SHA. 종료 한도2026-11-07 20:59:12KST. D-FEATURE-FIRST로 직조 전체 사슬·게임 캡처·기술 안전성·48일 smoke를 먼저 검증한다. 1552–1615는 미사용이며 held-out·보정 반복은 하지 않는다. 이후 Stage3 온도·집 단계, M-GROW 순서를 유지한다. 실제 시작/바이너리 해시는 외부 `stage2/START.json`에 기록했다.
+
+## 이전 검증 체크포인트
+
 **프레임 수리 사전 검증 (2026-11-06):** 임시 계측을 제거한 후보의10개 colony fixture,34세계가 ca21의 수용된 동작과 완전히 일치한다. `determinism/soak/story/neighbours/steward/m6a_steward/colony_u/colony_soak/knowledge/soak_economy`의 summary·churn20파일은 제외 키 없이 바이트 동일하며 결정성 영수증도 PASS다. 전체 Clippy·release/debug bridge 빌드·문서 검사를 통과했다. 기준선 동일성도228748값 차이0, 연대기64파일19683항목·원시64파일 동일, 시드0–3 결정성 PASS다. 임시 세부 계측 제거 후 같은 조건의 프레임 진단은 BASE321.319/129.582ms 대 후보57.531/50.640ms(두 실행 ADMITTED·완료)다. 이는 zoom1의120초 진단이며 전체 gate·게시 증거가 아니다. 새 전체 gate/게시는 아직 남았다. 근거는 외부 `stage1/owner-acceptance-03/final-exact-parity/results.json`이다.
 
-**현재 gate — FAIL 종료 (2026-11-06 15:53 KST).** 실제 실행 HEAD는 `ca21bd887cff0ff59819a000019a41410565d287`다. 단계16·33은 soil 스키마 오탐,42는 baseline 회귀시험의 colony 모듈 위치,41은 프레임 지연으로 실패했다. 나머지 실행 단계는 PASS다. debug3071/release3069시험, 기준선228748항목·64원시파일 동일성, 저장/replay, 교차 성능3회와 모든 colony 비교를 통과했다. 프레임 지연은 zoom1.0의321.109/131.282ms와 zoom0.5의329.555/129.260ms로 기존 예외의60ms 상한을 넘었다. 같은 tick361/721에서 StewardSystem이 각각 약310/114ms,317/115ms를 차지했다. 실패 원본을 보존하며 검사 수정·시험 이동·동작 동일 계산 최적화의 후속 검증과 게시가 남았다.
+**이전 ca21 gate — FAIL 종료 (2026-11-06 15:53 KST).** 실제 실행 HEAD는 `ca21bd887cff0ff59819a000019a41410565d287`다. 단계16·33은 soil 스키마 오탐,42는 baseline 회귀시험의 colony 모듈 위치,41은 프레임 지연으로 실패했다. 나머지 실행 단계는 PASS다. debug3071/release3069시험, 기준선228748항목·64원시파일 동일성, 저장/replay, 교차 성능3회와 모든 colony 비교를 통과했다. 프레임 지연은 zoom1.0의321.109/131.282ms와 zoom0.5의329.555/129.260ms로 기존 예외의60ms 상한을 넘었다. 같은 tick361/721에서 StewardSystem이 각각 약310/114ms,317/115ms를 차지했다. 실패 원본을 보존하며 검사 수정·시험 이동·동작 동일 계산 최적화의 후속 검증과 게시가 남았다.
 
 **held-out03 오너 수용 ACCEPTED — D-S1-3 (2026-11-06 게시 결정).** 원시 통나무27/32(필수28)·한파29/30노출(필수30)은 FAIL로 보존한다. 같은 시드 BASE 비교는 투영 통나무0/32 대 후보27/32, 한파25/29 대 후보29/30이다. BASE의 실제 통나무 cap은 N/A이며 후보 고정 정책을 BASE 물리 상태에 읽기 전용으로 적용한 투영 예산이다. day5/day24 각각 BASE0/32·24/32, 후보32/32·27/32다. 추가 BASE 관측32시드의 원본 구간57373이벤트·800 after-expiry 항목·18841연대기 항목 중립성과96파일 해시를 확인했다. 후보 held-out 재실행은 없으며 안전 기준·원본 기록·소모1648–1679는 유지한다. 한파 실패1664는 양쪽 멸종이며 멸종 뒤 틱도 제외하지 않았다. 잔여는 [#688](https://github.com/hyunlord/new-world/issues/688) OPEN에 기록했다.
 
@@ -73,7 +110,7 @@ Mac 사전 검증 root70652는 진행 중이다. 실제 완료된 항목은 core
 
 원래 카드 실행의 합계3 대0 FAIL과 재현 불일치는 보존한다. 알림은 실제 시간0.5초마다 갱신되지만 시험은 게임60틱마다 오래된 알림을 읽고 카드를 중복 처리하던 결함을 수정했다. 시험만 수정해 실제 최신 알림과 실제 카드 처리를 시간당1회 실행한다. 실제 수락 명령을 포함한 빠른/지연 프레임 회귀 등287검사(44394종료0)와 독립 소스 검토를 통과했다. 디버그 전체 종류 실행의300초 TIMEOUT124도 보존한다. 릴리스 재검증 후 원래 debug bridge SHA256을 복구했다. 게임 정책과 사망 기준은 바꾸지 않았다.
 
-**최종 자연 밭 화면 PASS:** 실제 seed0 저장34584/36000/40286/40287에서 경운·성장·익음·수확 후 상태를 읽고, 두 배율의 실제 클릭→상태창→닫기를 검증했다. 최종84221은 네 실행 모두 종료0·실패0, 저장 hash 불변과 debug bridge 복구를 확인했다. 파종/수확 카드292검사, 두 배율 첫10분14400틱 캡처도 종료0이다. 새 이미지 전용 검토자는 “씨앗을 심을 때 카드 → 밀 자라는 중 상세창 → 수확할 때”를 식별했다. 정지 화면으로 실제 수확 동작을 단정하지 않았고 큰 상세창이 지도 일부를 가리는 한계를 남겼다. [현재 후보 화면](../../images/m6b_stage1_contact_sheet.png)은 실제 캡처6장이다. 이전 가림 실패는 외부 natural-fields에 보존했다.
+**최종 자연 밭 화면 PASS:** 실제 seed0 저장34584/36000/40286/40287에서 경운·성장·익음·수확 후 상태를 읽고, 두 배율의 실제 클릭→상태창→닫기를 검증했다. 최종84221은 네 실행 모두 종료0·실패0, 저장 hash 불변과 debug bridge 복구를 확인했다. 파종/수확 카드292검사, 두 배율 첫10분14400틱 캡처도 종료0이다. 새 이미지 전용 검토자는 “씨앗을 심을 때 카드 → 밀 자라는 중 상세창 → 수확할 때”를 식별했다. 정지 화면으로 실제 수확 동작을 단정하지 않았고 큰 상세창이 지도 일부를 가리는 한계를 남겼다. [현재 후보 화면](https://github.com/hyunlord/new-world/blob/16dc9120decbd9f6d7f851b2b90e16de7c891182/docs/images/m6b_stage1_contact_sheet.png)은 실제 캡처6장이다. 이전 가림 실패는 외부 natural-fields에 보존했다.
 
 **p32 일반·보정·동일성 검증:** p32의 story·neighbours4세계는 BASE 상대 안전성 PASS다. story seed1은 생존9명·KnowledgeLost2로 BASE2명·2건을 만족하며, neighbours는 BASE와 같은18/22명·손실0이다. 원장·예약 위반0이고 실제 실행10980은 종료0이다. 일반 전체78426은 종료0으로34세계 상대 안전성, CORE baseline 일치, BASE·후보 F10각8/8을 통과했다. 보정26도 밭6/8·한파 노출7/7·KnowledgeLost합계2≤4 등 채택 기준을 통과했다. 전체 baseline 동일성22는228748값 차이0·누락0, 연대기64·원시64·결정성0–3과 docs가 모두 통과했다(31028종료0). 최종 카드와 실제 화면은 위 재검증에서 통과했고 held-out1520–1551·전체 gate·게시는 아직 미완료다.
 

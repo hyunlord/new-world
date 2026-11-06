@@ -964,6 +964,7 @@ impl RuntimeSystem for JobExecuteSystem {
         let Some(rule) = resources.rules.colony else {
             return;
         };
+        super::processing::advance(resources);
         let mut rows: Vec<(AgentId, Entity, Job)> = world
             .query::<(&Agent, &Job)>()
             .iter()

@@ -1,6 +1,18 @@
 # Changelog
 
-## M6b Stage 1 — development candidate, 2026-11-06 (not published)
+## M6b Stage 2 — in progress, 2026-11-06 (not published)
+
+### Added
+- Authored retting, spinning, weaving and tailoring chain, physical spindle/tool capabilities, linen apparel and a weaving era marker. `recipes.ron` passive-process metadata controls qualifying wet time and capacity; all starting tunables are tracked in `docs/v8/BALANCE_DEBT.md`.
+- Persisted `ProcessingState` with ordered workshop-owned batches; outputs enter the ledger only on actual placement. Format17 saves append processing and retain finite garment wear across physical owners, with explicit frozen format16 readers and predecessor catalog admission.
+- Read-only weaving diagnosis/chapter facts, a single explicit dress-order card (expiry does nothing), Korean/English chronicle and clothing text, physical top/wear inspector reads and authored appearance routes. Chronicle codes57/58 and clothing-comfort modifier16 are appended.
+- Authored data-only, pending-process, physical wear and save migration tests. These are implementation, not executed proof at this checkpoint; native tests, full in-game chain/captures, identity, smoke, C3 and full gate remain NOT_RUN.
+
+### Changed
+- Reapply only `acb31be40`'s production winter-fuel floor per physical hearth and its regression test (57lines) from deferred Stage2 history; it was excluded from published Stage1.
+- Adapt the existing gate to D-FEATURE-FIRST technical/C3/smoke requirements instead of obsolete held-out/improvement bars. Existing files only, five-file net193lines including the feature-first gate change/tests net189; motivating conflict and Python47 PASS are recorded in the M6b report. No new gate framework.
+
+## M6b Stage 1 — published 16dc9120d, 2026-11-06
 
 ### Added
 - Data-defined emmer/flax crops, physical seed and field jobs, persistent soil and crop failure causes; explicit field controls, cards, diagnosis, chronicle and chapter facts.
@@ -21,7 +33,8 @@
 - Reduce repeated house-preview navigation, placement checks and geometry work while retaining candidate order, route choices, commands and live navigation statistics; strict frozen-fixture parity is required before adoption.
 - Require a passable public food-owner tile for availability and fresh target binding, matching real meal execution; adjacent construction access cannot make food under a wall site actionable or hide a farther edible stack.
 
-### Validation checkpoint
+### Publication and earlier validation checkpoints
+- Published exact SHA `16dc9120decbd9f6d7f851b2b90e16de7c891182` through wip then main. Final49/49 gate exit0; step41 strict50ms FAIL, existing waiver PASS (56.445/57.929ms); debug/release each3076PASS,13ignored; baseline and C3 PASS. The following checkpoints remain historical, not current publication status.
 - Owner decision D-S1-3 (2026-11-06) accepts frozen1648–1679 behavior b0bfd8b84/a4572b09c, retaining raw improvement misses (logs27/32; cold29/30 exposed) and all BASE-relative safety requirements. BASE comparison and the remaining steward defects are tracked separately. The later multi-hearth winter-floor repair acb31be40 is deferred to Stage2, excluded from this publish candidate. Full gate and publication remain pending.
 - Goal section0 permits a documented performance remainder up to1.15. M6b Stage1 accepts only n200_script tick_p99_us up to1.15; every other scene/metric remains limited to1.10 and all absolute C3/RSS ceilings remain mandatory.
 - Cal43's fixed three-pair Mac comparison at load1<8 measured script p99 1009→1149us (1.138751), preserving the original1.10 FAIL. Script mean515.259→530.564us (1.0297) and n2000 mean1.0898 pass1.10. Both script arms retain200 residents; jobs taken1052→1443 and completed797→1037 describe the changed workload, not a population normalization or isolated causal explanation of the tail. The accepted tradeoff retains the qualified farming/food/survival behavior after exact navigation, snapshot, memory, roster and social-lookup optimizations; new held-out and full-gate evidence remain required. This allowance is capped, scene/metric-specific and must be evidenced by the actual gate; supplemental DGX cal39 script1.161806 remains FAIL and is not covered.

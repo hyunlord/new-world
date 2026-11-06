@@ -313,6 +313,7 @@ pub fn trade(
                     kind: goods.kind,
                     material: None,
                     quality: goods.quality,
+                    wear_remaining_hours: None,
                 },
                 count,
                 day,

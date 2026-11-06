@@ -343,7 +343,13 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
 pub fn register_colony_mind_runtime_systems(engine: &mut SimEngine) {
     register_runtime_systems_with_decision(engine, |engine| {
         let program = match engine.resources.mind.policy_source.as_deref() {
-            Some(source) => runtime::mind::MindProgram::load(source),
+            Some(source) => engine
+                .resources
+                .mind
+                .history
+                .as_ref()
+                .ok_or_else(|| runtime::mind::MindProgramError("saved mind lacks history".into()))
+                .and_then(|history| runtime::mind::MindProgram::load_saved(source, history)),
             None => runtime::mind::MindProgram::load_static(include_str!(
                 "../../sim-core/data/colony/mind.ron"
             )),

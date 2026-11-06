@@ -108,7 +108,11 @@ static func _resolve_text(locale: Node, key: String, params: Variant) -> String:
 	if key.is_empty():
 		return ""
 	if locale != null and locale.has_method("trf") and params is Dictionary and not (params as Dictionary).is_empty():
-		var result: String = str(locale.call("trf", key, params))
+		var localized: Dictionary = (params as Dictionary).duplicate()
+		for field: String in ["item", "workshop", "tool"]:
+			if localized.has(field + "_key"):
+				localized[field] = _loc(locale, str(localized[field + "_key"]))
+		var result: String = str(locale.call("trf", key, localized))
 		return KoreanText.words(result) if result != key else _loc(locale, key)
 	return _loc(locale, key)
 

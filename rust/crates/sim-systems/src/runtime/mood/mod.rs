@@ -1,7 +1,7 @@
 //! MoodSystem: moves each person's mood toward the target its modifiers set, notes the night's sleep and cold, and starts breakdowns.
 //!
 //! Priority: 172 (`MOOD_PRIORITY`). Interval: 60 ticks, offset 7. Gate: `ColonyRule::mood`.
-//! Reads: `Agent`, `Child`, `Life`, `AgentState`, `Position`, `Cold`, `Hunger`, `Thirst`, `Sick`, `Drafted`, `Temperament`; `SimResources.colony` (rooms, story), `rules` (mood, calendar, clock offset)
+//! Reads: `Agent`, `Child`, `Life`, `AgentState`, `Position`, `Cold`, `Hunger`, `Thirst`, `Sick`, `Drafted`, `Temperament`, `Apparel`; `SimResources.colony` (rooms, story), `rules` (mood, calendar, clock offset)
 //! Writes: `Mood` (inserted for adults and children of 10 years or more; value, nights, breakdown), `Job` (cancelled at a breakdown); `SimResources.colony` (reservations), `chronicle`
 //! Events: chronicle `Breakdown` (the three largest negative modifiers; cause table → the largest)
 //!
@@ -156,6 +156,8 @@ pub struct Facts {
     pub pressure: bool,
     /// Actual ingredient groups eaten in the last three days; zero gives no diet thought.
     pub food_groups: usize,
+    /// Authored comfort of the currently worn physical top, zero without clothing.
+    pub clothing_comfort: i32,
     /// The day fields of the mood.
     pub mood: Option<Mood>,
     /// Today.
@@ -276,6 +278,9 @@ pub fn modifiers(f: &Facts) -> Vec<(Modifier, i32)> {
         3.. => push(Modifier::FoodVaried),
         _ => {}
     }
+    if f.clothing_comfort != 0 {
+        out.push((Modifier::ClothingComfort, f.clothing_comfort));
+    }
     out
 }
 
@@ -324,6 +329,11 @@ pub fn facts_of(world: &World, res: &SimResources, entity: Entity) -> Facts {
             .map_or(0, |history| {
                 history.groups_in(res.current_tick, res.rules.calendar.days_to_ticks(3))
             }),
+        clothing_comfort: world
+            .get::<&sim_core::colony::people::Apparel>(entity)
+            .ok()
+            .and_then(|apparel| apparel.top.item().definition().apparel.as_ref())
+            .map_or(0, |apparel| apparel.comfort_permille),
         mood,
         day,
         ha: t.map_or(500, |t| t.ha),

@@ -99,6 +99,10 @@ export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-8}"
 SUMMARY="$LOG/gate.txt"
 { echo "head $(git rev-parse HEAD)"; echo "dirty $(git status --porcelain --untracked-files=no | grep -v '^ M .gitignore$' | wc -l | tr -d ' ')"; echo "started $(date '+%Y-%m-%d %H:%M:%S %Z')"; } > "$SUMMARY"
 status=0
+READ_EVALUATION_MODE=legacy
+if [[ -n "${READ_GATE_CONFIG:-}" ]]; then
+    READ_EVALUATION_MODE="$(python3 tools/v8/read_gate_checks.py mode "$READ_GATE_CONFIG")" || exit 1
+fi
 if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     bash tools/v8/m6a_gate_checks.sh preflight "$LOG" || exit 1
 fi
@@ -236,7 +240,7 @@ grep -E '^STORY' "$LOG/story.log" | sed 's/^/   /' >> "$SUMMARY"
 # M5.5 (goal §11): the neighbours fixture — two worlds × 48 days with neighbours on, every wave accepted, the blade
 # trade at every caravan: waves 1 and 2 in their windows and accepted, at least one trade, ledger exact (with traded
 # in and out) and reservations exact every tick.
-step 30 neighbours bash -c 'rust/target/release/worldsim_probe --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$0/neighbours" > /dev/null && python3 docs/v8/m5_5/m55_score.py --neighbours "$0/neighbours/summary.json"' "$LOG"
+step 30 neighbours bash -c 'args=(); [[ "$1" == feature_first ]] && args+=(--feature-first); rust/target/release/worldsim_probe --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$0/neighbours" > /dev/null && python3 docs/v8/m5_5/m55_score.py --neighbours "$0/neighbours/summary.json" "${args[@]}"' "$LOG" "$READ_EVALUATION_MODE"
 grep -E '^NEIGHBOURS' "$LOG/neighbours.log" | sed 's/^/   /' >> "$SUMMARY"
 # M-ART2 (goal §11): the imported art, the material resolver, the extensibility grep and the renderer tests.
 step 31 art_manifest python3 tools/v8/art_import.py --verify

@@ -163,15 +163,10 @@ pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
     let worn = world
         .get::<&sim_core::colony::people::Apparel>(entity)
         .ok()
-        .map(|a| a.top)
+        .map(|a| a.spec())
         .zip(world.get::<&Position>(entity).ok().map(|p| (p.x, p.y)));
-    if let Some((top, tile)) = worn {
-        put_items(
-            res,
-            tile,
-            sim_core::colony::ItemSpec::raw(top.item(), None),
-            1,
-        );
+    if let Some((spec, tile)) = worn {
+        put_items(res, tile, spec, 1);
         let _ = world.remove_one::<sim_core::colony::people::Apparel>(entity);
     }
     if let Some(id) = agent_id(world, entity) {

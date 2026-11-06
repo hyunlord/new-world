@@ -1192,3 +1192,40 @@ S1-STALL-1 strict fixture result: after removing temporary fine profiling and th
 - Final unprofiled baseline identity: 228748 shared values with zero differences; 64 chronicles (19683 entries) and 64 raw samples equal under the existing identity normalizer; determinism seeds0–3 PASS. Evidence: external `stage1/owner-acceptance-03/final-identity.log`. This does not replace the new full gate.
 
 Final diagnostic (temporary fine instrumentation removed, existing gate coarse profiling retained in both arms): old321.319/129.582ms, candidate57.531/50.640ms, both ADMITTED and diagnostic_complete. Evidence: external `stage1/owner-acceptance-03/final-unprofiled-diagnostic`. This is zoom1/120seconds only; the committed candidate still requires the complete two-zoom/full publication gate.
+
+
+## S1-PUBLISHED — D-S1-3 실행 완료 (2026-11-06 20:58 KST)
+
+게시 SHA는 `16dc9120decbd9f6d7f851b2b90e16de7c891182`다. BASE0 `2f6993009`에서 wip→main fast-forward 후 양쪽 원격 SHA를 확인했다. 최종 전체 gate49/49·exit0, launcher0, binding errors[]이며 debug/release 각각3076PASS·13ignored, Python588PASS다. 기준선228748값 차이0·연대기64파일19683항목·원시64파일 동일, C3 교차3회 시간·메모리 PASS. 시작 부하는 BASE/후보7.74/6.37,6.63/4.72,4.01/3.02다. step41 엄격50ms는 FAIL이나 기존 예외는 PASS: zoom1.0 56.445ms, zoom0.5 57.929ms 각1프레임, 60ms 초과0, 두 실행 모두 완료했다.
+
+heldout03 오너 수용과 원시 통나무27/32·한파29/30 FAIL은 함께 보존한다. 통나무는 BASE 투영0/32(실제 cap 없음; 후보 고정 정책의 읽기 전용 투영), day5 BASE0/후보32, day24 BASE24/후보27; 한파 BASE25/29 대 후보29/30, 실패1664는 양쪽 멸종이다. #688 OPEN에 양쪽 수치와 다중 화덕 결함을 남겼다. #674/#675 CLOSED 확인, #684 OPEN 유지. #675는 BASE5일/후보1일, 세계별 비악화32/32이며 후보0일로 바꾸지 않는다.
+
+게시 동작은 b0/a457 수용 동작과 fixture 동일한 계산 최적화다. 10fixtures/34세계20파일이 제외 없이 byte-identical이며 게시 Rust patch SHA256은 `3a50d3927e31b56c7c477112f82d3f0bf68f91bc2e20ecc294a3e8e9753099cb`다. 평가 뒤 행동 수정 목록은 `acb31be40` 다중 화덕 겨울 연료량1줄과 회귀시험이며 Stage1에 넣지 않았다. `v8/m6b-stage2-deferred`에 보존하고 Stage2에서 재적용·평가한다. 이전 ca21 실패·cbe 중단·모든 소모 시드는 그대로 유지한다.
+
+원본은 외부 `stage1/gate-attempts/s1-owner-16dc9120d` 및 `stage1/owner-acceptance-03/publication.json`이다. 게시 후 이 문서 갱신은 Stage2의 다음 gate에 포함한다. Stage1의 측정 소스를 바꾸거나 새 문서 SHA를 이미 검증된 SHA로 주장하지 않는다. 성능 장부는 기존 raw를 기존 summariser로 합친 장면당3회 중앙값으로 기록했으며 새 측정·새 도구는 없다.
+
+## S2-START — 2026-11-06 20:59:12 KST
+
+Stage2 branch `v8/m6b-stage2`, BASE1=`16dc9120decbd9f6d7f851b2b90e16de7c891182`, 종료 한도2026-11-07 20:59:12KST. 실제 시작은 외부 `stage2/START.json`에 기록했다. D-FEATURE-FIRST에 따라 직조 사슬·시대 표지·카드 하나·진단/연대기·각 단계 캡처를 작게 완성하고 기술 안전성 및 seeds0–7/48일 smoke를 검증한다. 보정·held-out·개선 막대 수리 반복은 하지 않으며1552–1615는 UNUSED다. 안전 기준을 예산 안에 충족하지 못하면 미게시 중단·보고·대기한다. 이후 Stage3 온도·집 단계도 같은 규칙을 따른다.
+
+
+## S2-IMPLEMENTATION — 검증 전 체크포인트 (2026-11-06)
+
+[ADR0059](../../decisions/0059-authored-weaving-and-physical-apparel.md)에 데이터 기반 직조·물리적 의복·processing 저장 결정을 기록한다. format17과 frozen format16 이행, 물리적 소유자별 마모 보존, 작성된 data-only/처리/착용/save 시험은 구현 중이며 아직 native PASS가 아니다. 상태·수치는 [BALANCE_DEBT](../BALANCE_DEBT.md)에 두고 결과 맞춤 수치 보정은 하지 않는다. `top_item`/`wear_remaining_hours`, `first_woven_clothing`/`cloth_short`, 연대기57/58·modifier16과 명시적 입기 카드/ko/en은 읽기 표면이다. 실제 전체 사슬·각 단계 캡처·smoke·identity·최종 gate가 게시 전 남아 있다.
+
+이월 목록에서 `acb31be40` production 다중 화덕 겨울 연료 계산과 회귀시험57줄만 재적용했다. 다른 사후 행동 수정은 가져오지 않았다. 기존 gate의 폐지된 개선/held-out 막대와 D-FEATURE-FIRST 충돌 때문에 최소 gate wiring을 바꿨다(기존5파일 순증193줄, feature-first gate/시험189줄 포함, 새 framework0). gate Python47 PASS만 보고되었으며 native·게임·C3·전체 gate는 NOT_RUN이다. 이 기록은 Stage2 게시를 뜻하지 않는다.
+
+### S2-KNOWLEDGE-CAPACITY — preserve the required data-only extension
+
+Initial textile content used all32knowledge bits (28predecessor+4new), leaving no slot for the existing required extension-pack test_hide_craft node. Consolidate fibre preparation and spinning under one authored spinning node; weaving and tailoring remain separate. The bundled map now has31nodes, preserves predecessor indices0–27, and leaves bit31 for the existing extension proof. Retting and spinning remain distinct physical recipes; the new knowledge discovery reads raw stalks to avoid a prerequisite deadlock. This corrects a content-capacity design defect, not a world-outcome adjustment. Do not widen saved masks or remove the extension-family gate. Marker denominator stays14 and actual weaving weight2. Validation pending integrated core/data-only tests.
+
+### S2-HISTORICAL-POLICY — original format13 registry compatibility (2026-11-06)
+
+The genuine M6a format13 fixtures exposed a pre-existing rejection: policy revision hashing includes unused provider registrations, and five providers were appended after those saves. Stage1 full-gate logs explicitly ignored this external-fixture test. Restore by compiling the saved source against the current schema first, then the exact original149-provider schema if needed; require the complete dictionary and packed history to validate in either case. Never rewrite stored policy/history or accept only a hash. Runtime registration and save validation use the same selector. Authenticated originals retain exact mind/physical data, only the existing two empty M-READ observer slots are inserted, and current resave/load plus one-tick continuation are byte-identical (`stage2/save-original13-05.log`). Tampered source is rejected; current save suite63PASS (`save-tests-04.log`). This is save compatibility, not new-world policy or balance tuning.
+
+
+## S2-CAPTURE-PICK — 2026-11-06
+
+Actual r4 wearer selection failed because the capture clicked `drawn_position + (8,8)`, four world pixels left of the standing person hit rectangle. Use the existing production `drawn_rect(bits).get_center()` in the existing capture helper. Remove the direct-inspector fallback from the weaving scene; actual mouse selection and the selected person ID must pass before the worn shot is accepted. Earlier r4 images remain authentic display evidence but not click acceptance. Re-capture is pending at this record. This is a capture-only correction, not a simulation or production picking change. Dedicated textile art remains #689; current sprites use the existing category fallback and authored tint.
+
+S2-CAPTURE-PICK validation: r5 completes12 real screenshots with `mouse_selection=true`, actual resident1, no direct-inspector fallback; strict capture script/76FFI PASS. Contact sheet now uses r5. Earlier r1/r4 failures remain preserved. Existing skill-table rows were integrated into the original Lessons tables after the docs checker rejected duplicate table headings; no checker relaxation.
