@@ -1133,3 +1133,7 @@ DGX setup failures remain separate: r1 exits127 because service PATH lacks Cargo
 ### S1-CAL45 최종 사전 검증 (2026-11-06 13:00 KST)
 
 카드 root2423 실제0 및 독립 `calibration-45/final-cards/REVIEW.md` PASS: 14종·18경로, 16세계, 답변1366개, 명령62수락/0거절. D-S1-1 시드별·합계 사망0대0으로 모두 충족한다. DGX release 집중시험 root88054 실제0·3PASS, 최종 문서 검사 root21574 실제0. 모든 사전 검증 실행은 종료했다. fresh held-out NOT_RUN, 기존 held-out03 FAIL 유지; 전체 gate PASS나 게시를 선언하지 않는다. 생산1줄·회귀시험56줄, 추가 도구0줄이다.
+
+### S1-CAL45 동작 고정
+
+동작 커밋 `acb31be40745ca6f47897051609feb2d91296540`에 기존10개 fixture 선언을 고정한다. 다중 화덕의 nominal winter 합계가 current demand와 max 비교 전에 적용된다. OFF의 파생 목재 예산도 달라질 수 있으나 OFF 자동 명령을 추가하지 않는다. 새 mask·수용 기준·도구는 없다. 사전 검증 바이너리는 b3+동일한 동결 소스 패치에서 빌드했으며 이 커밋 SHA로 빌드했다고 소급 주장하지 않는다. 다음 전체 게이트는 포함 문서 커밋의 정확한 HEAD로 실행한다.
