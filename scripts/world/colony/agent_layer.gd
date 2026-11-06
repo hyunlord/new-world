@@ -267,6 +267,7 @@ func _make_person(bits: int, agent_id: int, tile: Vector2i) -> Person:
 	person.body.centered = false
 	person.mat = ShaderMaterial.new()
 	person.mat.shader = VARIANT_SHADER
+	person.mat.set_shader_parameter("clothing_delta", Vector3.ZERO)
 	person.mat.set_shader_parameter("outline_px", _outline_px)
 	person.body.material = person.mat
 	person.add_child(person.body)
@@ -319,7 +320,8 @@ func _set_clothing(person: Person, code: int) -> void:
 	var target: Variant = palette.get(str(code), null)
 	var shift := Vector3.ZERO
 	var base_colour: Variant = _top_colours.get(person.frames, null)
-	person.top_colour = Color8(int(base_colour[0]), int(base_colour[1]), int(base_colour[2])) if base_colour is Array and base_colour.size() == 3 else Color(0.6, 0.45, 0.3)
+	if base_colour is Array and base_colour.size() == 3:
+		person.top_colour = Color8(int(base_colour[0]), int(base_colour[1]), int(base_colour[2]))
 	if target is Array and target.size() == 3:
 		var colour := Color8(int(target[0]), int(target[1]), int(target[2]))
 		var source: Variant = _top_colours.get(person.frames, null)

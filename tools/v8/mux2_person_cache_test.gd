@@ -100,7 +100,7 @@ func _state(person: Agents.Person) -> Dictionary:
 	result["body_color"] = person.body.self_modulate
 	result["body_z"] = [person.body.z_index, person.body.z_as_relative]
 	result["shader"] = person.mat.shader.code
-	for key: String in ["skin_delta", "hair_delta", "mask_tex", "has_mask", "outline_color", "outline_px"]:
+	for key: String in ["skin_delta", "hair_delta", "clothing_delta", "mask_tex", "has_mask", "outline_color", "outline_px"]:
 		result[key] = person.mat.get_shader_parameter(key)
 	return result
 

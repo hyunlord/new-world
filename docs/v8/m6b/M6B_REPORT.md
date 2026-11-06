@@ -1,6 +1,6 @@
 # M6b 보고서
 
-## Stage2 게시 후보 — 2026-11-06, 전체 gate 대기
+## Stage2 게시 후보 — 2026-11-07, 첫 전체 gate FAIL·수리 검증 중
 
 기능 소스는 `448f660164f8ac3663402549931af7742395ca1b`이며 최종 문서 핀 후 전체 gate를 실행한다. 통과한 실제 최종 SHA만 v8/wip → v8/main에 게시하고 외부 영수증으로 확인한다. 이 문서는 완료 전 게시를 주장하지 않는다.
 
@@ -14,7 +14,7 @@ Godot import와 strict83파일/76 FFI 호출 PASS. 실제 의복 카드8검사 P
 
 `identity-01.log`는228748공유값 차이0·단측경로0, 연대기64파일19683항목 동일, 원시64파일 동일, seeds0–3 결정성 PASS다(기존 normalizer 사용). `smoke-01/RESULT.txt`의 seeds0–7×48일·steward ON·무명령 비교도 PASS: BASE/후보 생존 배열은 모두 `[10,12,11,13,10,13,11,14]`, KnowledgeLost 총합0/0으로 허용2 이하. 시연의 지식 초기 부여 조건과 이 무명령 smoke는 별도다. 원본13은 두 진짜 파일의 strict149 schema와 현행 정책 선택·1틱 연속 검증을 포함해 PASS이며 최초 실패는 보존한다. `native-integration-04.log`의 fmt·전체 타깃 Clippy·debug bridge·release build도 PASS다.
 
-남은 게시 증거: 최종 전체 workspace tests·command replay·C3·full gate와 정확한 소스 게시. 사전 workspace 전체 검사는 게시 gate와의 중복을 피하려고 종료130으로 중단했으며 PASS로 집계하지 않는다(`workspace-debug-01-abort.json`). **full gate/게시 NOT_RUN**이며 개별 사전 검증을 전체 PASS로 합치지 않는다. 도구 순증은 현재371줄(capture151, card test31, gate/tests189), 문서 아래 score 변경4줄은 별도다. 최종 diff에서 재집계한다. 새 framework나 held-out/밸런스 반복은 도입하지 않는다. 아래 구현 체크포인트는 실행 전 역사 기록이다.
+첫 전체 gate `c68d09183`는 2026-11-07 01:08:42KST 실제 종료1, 45/49 단계 PASS다. 실패는4/5의 새 recipe20–25 누락 기대값,37의 frozen v9 테스트 oracle이 현행 자원 구조를 읽던 오류,38의 F12 결손 frame 색 보존 회귀다. 생산 simulation 변경 없이 기존 prefix·이행 필드·렌더 참조 단언을 유지해 수정하고 재검증한다. 원본 실패는 `stage2/gate-attempts/s2-c68d09183`에 보존한다. 기준선228748값·64연대기·64raw 동일, command replay, Python597, smoke 생존 배열 및 KL0/0, C3 시간·메모리는 이 gate에서 PASS다. 측정 시작 load1은7.03/6.56,5.11/3.89,3.27/3.12였으며 교차3회를 완료했다. step41 strict50ms FAIL/기존 waiver PASS(57.990,50.176,59.444ms;60ms 초과0). 수리 후 debug/release recipe 검사·진짜9개 저장 이행·원본Hformat9 PASS. F12 확장 비교의 명시적0/미설정null 차이는 shared material 초기값을 명시해 해결했으며 원래 참조는 그대로다. 실제182/182검사·strict2파일/76FFI PASS(`repair-focused-01`, `repair-person-02`); 첫28실패·진단을 보존했다. 남은 게시 증거는 수정 후보의 전체 gate와 정확한 소스 게시다. 사전 workspace 전체 검사는 게시 gate와의 중복을 피하려고 종료130으로 중단했으며 PASS로 집계하지 않는다(`workspace-debug-01-abort.json`). **첫 full gate FAIL / 게시 NOT_RUN**이며 부분 PASS를 전체 PASS로 합치지 않는다. 도구 순증은 현재371줄(capture151, card test31, gate/tests189), 문서 아래 score 변경4줄은 별도다. 최종 diff에서 재집계한다. 새 framework나 held-out/밸런스 반복은 도입하지 않는다. 아래 구현 체크포인트는 실행 전 역사 기록이다.
 
 ## Stage2 구현 체크포인트 — IN_PROGRESS, 미게시
 

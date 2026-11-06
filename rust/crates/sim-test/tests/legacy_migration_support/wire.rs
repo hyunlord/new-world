@@ -8,7 +8,7 @@ use sim_core::colony::{
 };
 use sim_core::components::AgentId;
 use sim_engine::{
-    legacy_v7::{LegacySimResources, LegacySimResourcesV8},
+    legacy_v7::{LegacySimResources, LegacySimResourcesV16, LegacySimResourcesV8},
     SimResources,
 };
 use sim_systems::save::{self, world::WorldSave};
@@ -30,7 +30,7 @@ type Body8 = (
 );
 type Body9 = (
     u64,
-    SimResources,
+    LegacySimResourcesV16,
     WorldSave,
     Systems,
     OldSteward,
@@ -131,7 +131,7 @@ pub fn read(bytes: &[u8], version: u32) -> Expected {
             let (tick, resources, _, _, steward, (completed, workshop_cutters, illness_origins)): Body9 = save::decode(&envelope.payload).expect("frozen v9 body");
             Expected {
                 tick,
-                resources,
+                resources: resources.into(),
                 steward: Some(steward),
                 content: ContentState {
                     completed,
