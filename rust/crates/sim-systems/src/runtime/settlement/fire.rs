@@ -119,6 +119,7 @@ impl RuntimeSystem for FireSystem {
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         wear_clothing(world, resources);
+        crate::runtime::thermal::initialize(resources);
         let Some(rule) = resources.rules.society.firewood else {
             return;
         };
@@ -143,19 +144,22 @@ impl RuntimeSystem for FireSystem {
             let cooking = !burning
                 && resources.rules.colony.is_some()
                 && crate::runtime::jobs::cooking_heat_needed(world, resources, *sid);
-            let normal = if cooking {
+            let heating = !burning
+                && crate::runtime::settlement::firewood::room_heat_needed(world, resources, *sid);
+            let daytime = cooking || heating;
+            let normal = if daytime {
                 u32::from(crate::runtime::settlement::firewood::winter_burn_per_hour(
                     resources, &rule, now,
                 ))
             } else {
                 night_normal
             };
-            let per_hour = if cooking {
-                effective_burn_per_hour(resources, normal)
+            let per_hour = if daytime {
+                crate::runtime::settlement::firewood::daytime_service_rate(resources)
             } else {
                 night_cost
             };
-            let attempted = burning || cooking && per_hour > 0;
+            let attempted = burning || daytime && per_hour > 0;
             let payment = if attempted {
                 resources.settlements.get_mut(sid).map(|settlement| {
                     (
@@ -192,7 +196,6 @@ impl RuntimeSystem for FireSystem {
             }
         }
         resources.fires = fires;
-        crate::runtime::thermal::initialize(resources);
         if resources.thermal.is_some() {
             return;
         }

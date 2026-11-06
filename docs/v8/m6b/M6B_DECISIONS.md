@@ -1249,3 +1249,25 @@ Stage3 `v8/m6b-stage3` 시작2026-11-07 04:02:56KST, 종료한도11/08 04:02:56K
 ## D-WIP-REVIEW — owner continuation decision, 2026-11-07
 
 Commit and push work in progress to v8/m6b-review at least every2–3hours while continuing execution. WIP commits are permitted and do not imply a passing gate. Never stop or restart active work for these checkpoints. v8/main still moves only after the full publication gate. First Stage3 checkpoint includes genuine predecessor preservation, thermal/core/save implementation, native runtime and presentation work; integration, actual thermal scene/captures, smoke and full gate remain pending.
+
+
+## S3-INTEGRATION-1 — physical heating service is incomplete, 2026-11-07
+
+This is an implementation/design correction under D-FEATURE-FIRST, not an owner waiver or a balance round. `stage3/smoke-01` seeds0–7×48days/stewardON/noorders: BASE alive `[10,12,11,13,10,13,11,14]`, candidate `[0,0,0,0,0,0,0,0]`; BASE KnowledgeLost0, candidate191 (perseed25,24,24,24,22,21,25,26; allowed2). Safety **FAIL**, candidate unpublished. Raw inputs, hashes, both arms and comparator failure remain external. Scene-r7 independently records eight Exposure deaths bytick1560 from a winter08:00 construction start; replacing its observer would conceal the failure.
+
+Inspection found no duplicate exposure charge: new hourly room exposure replaces the old colony path. The feature instead omitted three connected services: existing houses prioritize stock coverage and need not enclose the primary hearth; authored mind policy never acts on its existing Cold fact; daytime payment is admitted only for cooking, so an occupied cold room cannot request heating. Cold winter workers therefore receive real damage without an operational refuge.
+
+Correct those missing simulation connections using existing mechanisms: data-authored primary-hearth enclosure through ordinary House/PlaceBlueprint permissions, authored need behavior with real movement into physically warm/heatable refuge and ordinary job cleanup, and occupied cold-room demand through the existing single positive fuel withdrawal. Account for the service window in physical fuel forecasting. Preserve critical food/water/combat control, fuel work and recovery hysteresis; do not fake warmth, health, shelter, fuel, or immunity. All new tunables remain authored/commented and enter BALANCE_DEBT. Heat coefficients, exposure rates, smoke thresholds and seeds are unchanged.
+
+This supersedes the initial self-imposed “no autonomous heating objective” implementation limit in ADR0060/S3_DESIGN because that limit left the feature disconnected. It does not authorize outcome tuning or a safety waiver. Focused mechanical tests precede a fresh existing smoke; no new gate/observer layer is needed.
+
+Refuge placement diagnosis: seed4 has a river bend and stockzone x100–103/y90–93; every all-constructed rectangular shell containing hearth97,93 failed. A diagnostic-only stock removal yielded a legal3×4interior, proving the conflict; production does not remove that zone. Optional refuge planning may reuse authoritative natural boundaries and selects the actual primary-containing component with minimum9interior tiles and a legal built door, preserving terrain, stock and structures. Ordinary bedroom construction remains unchanged. Temporary rejection/map probes are removed after evidence capture; no new tool file or observer layer remains. Actual placement/heat/smoke results are still required.
+
+The focused seed4 placement regression now passes with12 actual primary-room interior tiles and16 ordinary construction orders (`refuge-integration-01.log`), while preserving terrain/stock/structures. This is placement proof only. The same run exposes8 older steward fixture failures (119PASS/8FAIL) that require separating old bedroom expectations from the new refuge objective and retaining actual bundled-rule coverage; fresh smoke is not yet run.
+
+
+## S3-COMPAT-1 — preserve historical policy with its thermal behavior
+
+Genuine format17 saves retain exact historical mind source, dictionary and causal history. Those policies have no refuge lifecycle. Activating numeric exposure while preserving that policy would create a new hazard with no authored response; rewriting the policy would invalidate its historical revision bindings.
+
+Derive a nonserialized activation capability from the already-validated MindProgram registry classification during registration: Current enables numeric thermal, known Format17/Format13 retain the legacy colony Fire/Cold path. Do not infer age from absent node names: current custom policies may deliberately omit refuge. No stored policy/history bytes, baseline format17 bytes or current format18 thermal state are rewritten. Legacy loaded games therefore retain their prior thermal behavior; an explicit history-preserving policy upgrade remains future work. New games use all Stage3 features and still must pass the unchanged smoke. Tests must cover exact old source/history, save18 reload and continuation, current-policy activation and baseline bytes.

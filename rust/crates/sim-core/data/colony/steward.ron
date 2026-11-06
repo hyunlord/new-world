@@ -1,7 +1,10 @@
 (schema_version: 1, rules: [
  (id: 1, label: "MUX_STEWARD_RULE_1", scope: All, cooldown: 1440, condition: NoStockpile, action: Stockpile(base_cells: 6, divisor: 2)),
  (id: 2, label: "MUX_STEWARD_RULE_2", scope: All, cooldown: 360, condition: WoodDeficit, action: Wood(items: [Log], days: 12, camp_radius: 4, batch: 32, cap_log_margin: Some(20))),
- (id: 3, label: "MUX_STEWARD_RULE_3", scope: Housing, cooldown: 1440, condition: Unsheltered, action: House(wall: LogWall, door: Door, bed: Bedroll, max_beds: 16, service_cells: 8, completion_role: Some(Bedroom))),
+ // Search from a 3x3 interior for the smallest legal primary-hearth refuge.
+ // Larger rectangles retain existing shelters; the existing room_max_tiles bounds the search.
+ // This is construction demand, not free heat; existing wall, door, clearance and material costs apply.
+ (id: 3, label: "MUX_STEWARD_RULE_3", scope: Housing, cooldown: 1440, condition: Unsheltered, action: House(wall: LogWall, door: Door, bed: Bedroll, hearth_refuge_width: Some(3), max_beds: 16, service_cells: 8, completion_role: Some(Bedroom))),
  (id: 4, label: "MUX_STEWARD_RULE_4", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [(HaftAxe, 2), (KnapFineBlade, 4), (KnapBlade, 4)], winter_recipe: SplitFirewood, days: 0), extended: false, grace_ticks: None),
  (id: 5, label: "MUX_STEWARD_RULE_5", scope: Food, cooldown: 1440, condition: FoodDeficit, action: Hunt(item: Meat, animal: Deer, knowledge: "tracking", days: 3, radius: 5)),
  (id: 7, label: "MUX_STEWARD_RULE_7", scope: All, cooldown: 1, condition: ThreatApproaching, action: Defence(max_defenders: 4, min_hp: 50, release_tiles: 24, release_ticks: 60, protect_residents: true)),

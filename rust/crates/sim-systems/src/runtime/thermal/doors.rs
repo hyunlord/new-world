@@ -19,6 +19,7 @@ pub fn note_door_passage(res: &mut SimResources, tile: Tile, tick: u64) {
     if !res.tile_grid.is_door(res.tile_grid.idx(tile.0, tile.1)) {
         return;
     }
+    super::initialize(res);
     let Some(state) = res.thermal.as_mut() else {
         return;
     };

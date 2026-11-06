@@ -1,12 +1,21 @@
 # Changelog
 
-## M6b Stage 2 — in progress, 2026-11-06 (not published)
+## M6b Stage 3 — in progress, 2026-11-07 (not published)
+
+### Added
+- Authored integer room temperature, physical fuel-payment receipts, passage-driven door loss, clothing insulation and dwelling stages with saved downgrade delays. Native diagnosis, overlay, chronicle and ko/en inspectors expose these values.
+- Colony format18 thermal sidecar with exact format17 migration; baseline retains format17. Starting tunables are listed in BALANCE_DEBT. Full gate, smoke and end-to-end acceptance remain pending.
+
+### Changed
+- Dwelling floor coverage excludes permanent footprints and work tiles that ordinary floor commands cannot build on. Existing RoomSystem integrates heat; no extra heater, fuel withdrawal or autonomous housing policy is added.
+
+## M6b Stage 2 — published 90544f1f9, 2026-11-07
 
 ### Added
 - Authored retting, spinning, weaving and tailoring chain, physical spindle/tool capabilities, linen apparel and a weaving era marker. `recipes.ron` passive-process metadata controls qualifying wet time and capacity; all starting tunables are tracked in `docs/v8/BALANCE_DEBT.md`.
 - Persisted `ProcessingState` with ordered workshop-owned batches; outputs enter the ledger only on actual placement. Format17 saves append processing and retain finite garment wear across physical owners, with explicit frozen format16 readers and predecessor catalog admission.
 - Read-only weaving diagnosis/chapter facts, a single explicit dress-order card (expiry does nothing), Korean/English chronicle and clothing text, physical top/wear inspector reads and authored appearance routes. Chronicle codes57/58 and clothing-comfort modifier16 are appended.
-- Authored data-only, pending-process, physical wear and save migration tests. These are implementation, not executed proof at this checkpoint; native tests, full in-game chain/captures, identity, smoke, C3 and full gate remain NOT_RUN.
+- Authored data-only, pending-process, physical wear and save migration tests. Published candidate passed49/49 gate steps with the existing step41 waiver, real flax-to-worn scene and captures, baseline identity and paired smoke (KnowledgeLost0/0). The earlier failed candidate and strict50ms failure remain preserved in the release report.
 
 ### Changed
 - Reapply only `acb31be40`'s production winter-fuel floor per physical hearth and its regression test (57lines) from deferred Stage2 history; it was excluded from published Stage1.

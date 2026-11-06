@@ -23,7 +23,15 @@ fn fixture() -> (sim_engine::SimEngine, Action, Tile) {
         position.x = hearth.0;
         position.y = hearth.1;
     }
-    (engine, rules.rules[2].action.clone(), hearth)
+    let mut action = rules.rules[2].action.clone();
+    if let Action::House {
+        hearth_refuge_width,
+        ..
+    } = &mut action
+    {
+        *hearth_refuge_width = None;
+    }
+    (engine, action, hearth)
 }
 
 #[test]
@@ -157,7 +165,10 @@ fn planned_roof(res: &SimResources, action: &Action, commands: &[Command]) -> BT
 
 #[test]
 fn cultivation_avoids_future_house_and_accepted_site_work_tiles() {
-    let (mut engine, action, hearth) = fixture();
+    let (mut engine, _, hearth) = fixture();
+    let action = sim_core::colony::steward::rules().expect("rules").rules[2]
+        .action
+        .clone();
     engine.resources.food.plants.clear();
     let proposed = house(&engine.world, &engine.resources, hearth, &action, false);
     let reserved = planned_roof(&engine.resources, &action, &proposed.commands);
@@ -518,4 +529,255 @@ fn indirect_field_roof_uses_room_size_and_open_boundary_semantics() {
         &[(20, 20)],
         space.room_max_tiles,
     ));
+}
+
+#[test]
+fn covered_beds_elsewhere_do_not_suppress_primary_hearth_refuge() {
+    let (mut engine, mut action, hearth) = fixture();
+    let count = engine.world.query::<&Agent>().iter().count() as u32;
+    let tiles: BTreeSet<_> = (2..2 + count).map(|x| (x, 2)).collect();
+    assert!(!tiles.contains(&hearth));
+    engine.resources.colony.beds.clear();
+    for &tile in &tiles {
+        engine
+            .resources
+            .colony
+            .beds
+            .insert(tile, sim_core::colony::materials::OAK);
+        engine.resources.colony.room_of_tile.insert(tile, 999);
+    }
+    for tile in (1..=count + 2)
+        .flat_map(|x| [(x, 1), (x, 3)])
+        .chain([(1, 2), (count + 2, 2)])
+    {
+        let i = engine.resources.tile_grid.idx(tile.0, tile.1);
+        engine.resources.tile_grid.wall_material[i] = Some(sim_core::colony::materials::OAK);
+    }
+    let door = engine.resources.tile_grid.idx(1, 2);
+    engine.resources.tile_grid.set_door(door, true);
+    engine.resources.colony.rooms.insert(
+        999,
+        Room {
+            id: 999,
+            tiles,
+            doors: [(1, 2)].into_iter().collect(),
+            roofed: true,
+            role: RoomRole::Bedroom,
+            dug: false,
+        },
+    );
+    assert!(
+        house(&engine.world, &engine.resources, hearth, &action, false)
+            .commands
+            .is_empty()
+    );
+    let Action::House {
+        hearth_refuge_width,
+        bed,
+        ..
+    } = &mut action
+    else {
+        unreachable!()
+    };
+    *hearth_refuge_width = Some(3);
+    let bed = *bed;
+    let ready = house(&engine.world, &engine.resources, hearth, &action, false);
+    assert!(!ready.commands.is_empty());
+    let Action::House { door, .. } = action else {
+        unreachable!()
+    };
+    let boundary: BTreeSet<_> = ready
+        .commands
+        .iter()
+        .filter_map(|command| match command {
+            Command::PlaceBlueprint { x, y, .. } => Some((*x, *y)),
+            _ => None,
+        })
+        .collect();
+    let doors: BTreeSet<_> = ready
+        .commands
+        .iter()
+        .filter_map(|command| match command {
+            Command::PlaceBlueprint { kind, x, y } if *kind == door => Some((*x, *y)),
+            _ => None,
+        })
+        .collect();
+    let detected = sim_core::rooms::detect(
+        engine.resources.tile_grid.width,
+        engine.resources.tile_grid.height,
+        2,
+        120,
+        |tile| boundary.contains(&tile) || crate::runtime::rooms::bounds(&engine.resources, tile),
+        |tile| doors.contains(&tile),
+        |tile| boundary.contains(&tile),
+    );
+    let refuge = detected
+        .iter()
+        .find(|room| room.tiles.contains(&hearth))
+        .expect("actual primary component");
+    assert!(refuge.tiles.len() >= 9 && refuge.built && !refuge.doors.is_empty());
+    assert!(
+        refuge
+            .tiles
+            .iter()
+            .any(|&(x, y)| [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+                .into_iter()
+                .any(|tile| !boundary.contains(&tile)
+                    && crate::runtime::rooms::bounds(&engine.resources, tile))),
+        "fixture retains a natural boundary instead of deleting terrain"
+    );
+    eprintln!("primary-hearth refuge regression: {} actual interior tiles, {} ordinary construction orders", refuge.tiles.len(), ready.commands.len());
+    let terrain = engine.resources.tile_grid.terrain_type.clone();
+    let stock = engine.resources.colony.zone_of_tile.clone();
+    let buildings = engine.resources.building_kinds.clone();
+    assert!(planned_roof(&engine.resources, &action, &ready.commands).contains(&hearth));
+    assert!(!ready.commands.iter().any(|command| matches!(command,
+        Command::PlaceBlueprint { kind, .. } if *kind == bed)));
+    for command in ready.commands {
+        assert!(
+            crate::commands::apply_command(&mut engine.world, &mut engine.resources, command)
+                .accepted
+        );
+    }
+    assert_eq!(engine.resources.tile_grid.terrain_type, terrain);
+    assert_eq!(engine.resources.colony.zone_of_tile, stock);
+    assert_eq!(engine.resources.building_kinds, buildings);
+}
+
+#[test]
+fn primary_hearth_refuge_requires_existing_construction_knowledge() {
+    let (engine, mut action, hearth) = fixture();
+    let Action::House {
+        hearth_refuge_width,
+        ..
+    } = &mut action
+    else {
+        unreachable!()
+    };
+    *hearth_refuge_width = Some(3);
+    for (_, knowledge) in engine.world.query::<&mut Knowledge>().iter() {
+        *knowledge = Default::default();
+    }
+    assert!(
+        house(&engine.world, &engine.resources, hearth, &action, false)
+            .commands
+            .is_empty()
+    );
+}
+
+#[test]
+fn untouched_initial_world_can_plan_primary_hearth_refuge() {
+    sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+        .expect("content");
+    let rules = sim_core::colony::steward::rules().expect("rules");
+    let mut blocked = Vec::new();
+    for seed in [0, 4] {
+        let mut engine = crate::worldgen::build_world_with(
+            &crate::worldgen::WorldGenConfig::colony(seed),
+            sim_core::rules::WorldRules::colony(seed),
+        );
+        assert!(
+            crate::commands::submit(
+                &mut engine,
+                Command::SetSteward {
+                    on: true,
+                    scope: sim_core::colony::steward::StewardScope::All,
+                }
+            )
+            .accepted
+        );
+        for command in plan(&engine.world, &engine.resources, &rules.rules[0]) {
+            assert!(
+                crate::commands::apply_command(&mut engine.world, &mut engine.resources, command)
+                    .accepted
+            );
+        }
+        let trees: BTreeSet<_> = engine.resources.colony.trees.keys().copied().collect();
+        let nodes: BTreeSet<_> = engine.resources.colony.nodes.keys().copied().collect();
+        let stock = engine.resources.colony.zone_of_tile.clone();
+        let hearth = hearth_tiles(&engine.resources)[0];
+        let pending = house(
+            &engine.world,
+            &engine.resources,
+            hearth,
+            &rules.rules[2].action,
+            false,
+        );
+        let commands = plan(&engine.world, &engine.resources, &rules.rules[2]);
+        let waiting = commands.is_empty();
+        eprintln!(
+            "untouched plan seed={seed} reserved={} covered={}",
+            pending.reserved.len(),
+            pending.covered.len()
+        );
+        eprintln!(
+            "untouched refuge seed={seed} trees={} nodes={} commands={commands:?}",
+            trees.len(),
+            nodes.len()
+        );
+        for command in commands {
+            assert!(
+                crate::commands::apply_command(&mut engine.world, &mut engine.resources, command)
+                    .accepted
+            );
+        }
+        assert_eq!(
+            engine
+                .resources
+                .colony
+                .trees
+                .keys()
+                .copied()
+                .collect::<BTreeSet<_>>(),
+            trees
+        );
+        assert_eq!(
+            engine
+                .resources
+                .colony
+                .nodes
+                .keys()
+                .copied()
+                .collect::<BTreeSet<_>>(),
+            nodes
+        );
+        assert_eq!(engine.resources.colony.zone_of_tile, stock);
+        if waiting {
+            if pending.reserved.is_empty() {
+                blocked.push(seed);
+                continue;
+            }
+            // A person can occupy the chosen wall at tick zero. Preserve that
+            // geometry and let actual movement and the ordinary steward run.
+            for _ in 0..=360 {
+                engine.tick();
+                if engine
+                    .resources
+                    .steward
+                    .owned
+                    .iter()
+                    .any(|order| order.rule == rules.rules[2].id)
+                {
+                    break;
+                }
+            }
+            let issued = engine
+                .resources
+                .steward
+                .owned
+                .iter()
+                .any(|order| order.rule == rules.rules[2].id);
+            eprintln!(
+                "untouched delayed work seed={seed} tick={} accepted={issued}",
+                engine.current_tick()
+            );
+            if !issued {
+                blocked.push(seed);
+            }
+        }
+    }
+    assert!(
+        blocked.is_empty(),
+        "initial refuge cannot issue ordinary work: {blocked:?}"
+    );
 }

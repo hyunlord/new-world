@@ -56,6 +56,9 @@ pub enum Action {
         door: BlueprintKind,
         /// Bed kind.
         bed: BlueprintKind,
+        /// Optional minimum interior width for a primary-hearth refuge, before bed demand.
+        #[serde(default)]
+        hearth_refuge_width: Option<u32>,
         /// Beds per room cap.
         max_beds: u32,
         /// Free interior cells retained for work and circulation.
@@ -193,6 +196,7 @@ pub fn parse_rules(text: &str) -> Result<RuleFile, String> {
                     bed,
                     max_beds,
                     service_cells,
+                    hearth_refuge_width,
                     ..
                 },
             ) => {
@@ -201,6 +205,7 @@ pub fn parse_rules(text: &str) -> Result<RuleFile, String> {
                     && bed.is_space()
                     && *max_beds > 0
                     && *service_cells <= 64
+                    && hearth_refuge_width.is_none_or(|width| (2..=8).contains(&width))
             }
             (
                 Condition::Production,

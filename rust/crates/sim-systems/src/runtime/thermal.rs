@@ -16,6 +16,10 @@ pub use dwelling::{dwelling_view, DwellingView};
 
 /// Activate authored thermal behavior only for the colony.
 pub fn initialize(res: &mut SimResources) {
+    if !res.thermal_enabled {
+        res.thermal = None;
+        return;
+    }
     if res.rules.colony.is_some() && res.thermal.is_none() {
         res.thermal = Some(ThermalState::new(
             sim_core::colony::content::installed_or_bundled()

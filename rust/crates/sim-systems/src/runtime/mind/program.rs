@@ -34,10 +34,26 @@ pub struct MindProgram {
     pub providers: ProviderPlan,
     effects: Vec<&'static BehaviourEntry>,
     running_revision: MindRevision,
+    registry_version: RegistryVersion,
     running_metadata: Vec<[Arc<RunningMetadata>; 2]>,
 }
 
+#[derive(Clone, Copy)]
+enum RegistryVersion {
+    Current,
+    Format17,
+    Format13,
+}
+
 impl MindProgram {
+    /// Thermal activation follows the verified registry, never policy text matching.
+    pub(crate) fn enables_numeric_thermal(&self) -> bool {
+        match self.registry_version {
+            RegistryVersion::Current => true,
+            RegistryVersion::Format17 | RegistryVersion::Format13 => false,
+        }
+    }
+
     /// Compile policy supplied from static program data.
     pub fn load_static(source: &'static str) -> Result<Self, MindProgramError> {
         Self::compile(Cow::Borrowed(source))
@@ -57,7 +73,13 @@ impl MindProgram {
         if history.check_policy(&current.policy).is_ok() {
             return Ok(current);
         }
-        let historical = Self::compile_schema(Cow::Owned(source.to_owned()), true)?;
+        let predecessor =
+            Self::compile_schema(Cow::Owned(source.to_owned()), RegistryVersion::Format17)?;
+        if history.check_policy(&predecessor.policy).is_ok() {
+            return Ok(predecessor);
+        }
+        let historical =
+            Self::compile_schema(Cow::Owned(source.to_owned()), RegistryVersion::Format13)?;
         history
             .check_policy(&historical.policy)
             .map_err(|error| MindProgramError(error.to_string()))?;
@@ -65,17 +87,32 @@ impl MindProgram {
     }
 
     fn compile(source: Cow<'static, str>) -> Result<Self, MindProgramError> {
-        Self::compile_schema(source, false)
+        Self::compile_schema(source, RegistryVersion::Current)
     }
 
     fn compile_schema(
         source: Cow<'static, str>,
-        format13_schema: bool,
+        version: RegistryVersion,
     ) -> Result<Self, MindProgramError> {
         let registry = ProviderRegistry::new(BUILTIN_PROVIDERS)
             .map_err(|error| MindProgramError(error.to_string()))?;
         let mut facts = registry.schema();
-        if format13_schema {
+        let mut behaviour_schema = behaviours::registry_schema();
+        if !matches!(version, RegistryVersion::Current) {
+            // Published Stage2 dictionaries predate these thermal registrations.
+            // Filter the exact additions, then require the complete saved hash/history.
+            facts.retain(|fact| {
+                !matches!(
+                    fact.name.as_str(),
+                    "warm_refuge_available"
+                        | "warm_refuge_active"
+                        | "job_fuel_service"
+                        | "health_full"
+                )
+            });
+            behaviour_schema.retain(|behaviour| behaviour.name != "warm_refuge");
+        }
+        if matches!(version, RegistryVersion::Format13) {
             // dba478e54/e2ba280f3: these five registrations did not yet exist.
             // Revision hashing includes unused registrations; never rewrite a
             // saved dictionary or accept a hash without its complete history.
@@ -92,7 +129,7 @@ impl MindProgram {
         }
         let schema = MindRegistrySchema {
             facts,
-            behaviours: behaviours::registry_schema(),
+            behaviours: behaviour_schema,
         };
         let policy =
             mind::compile(&source, &schema).map_err(|error| MindProgramError(error.to_string()))?;
@@ -137,6 +174,7 @@ impl MindProgram {
             providers,
             effects,
             running_revision,
+            registry_version: version,
             running_metadata,
         })
     }

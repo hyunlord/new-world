@@ -2,7 +2,7 @@
 //!
 //! Priority: 120 · Interval: 1 tick (acts every `rules.agent.move_interval_ticks`) · Gate: none
 //! Reads: `AgentState`, `SeekTarget`, `Agent`, `Child`, `Elder`, `Inventory`, `Lineage`, `Founding`, `Temperament`, `PorterTrip`, `Activity`; `SimResources.settlements`, `tile_grid`, `rules`, `nav` (colony), `food_tiles`, `water_tiles`, `sleep_tiles`, `bed_of`
-//! Writes: `Position`, `MovementRng`, `SeekTarget` (colony: an unreachable need target moves to the nearest reachable one); `SimResources.haulers`, `nav` (paths, blocked goals, the map when missing)
+//! Writes: `Position`, `MovementRng`, `SeekTarget` (colony: an unreachable need target moves to the nearest reachable one); `SimResources.haulers`, `nav` (paths, blocked goals, the map when missing), colony thermal door passage interval unions after accepted moves
 //! Events: none
 //!
 //! M3 (ADR 0021, colony only): a seeking agent and a hauler walking home

@@ -2,7 +2,7 @@
 use hecs::World;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::people::Apparel;
-use sim_core::colony::thermal::{DwellingStageDef, DwellingThermal};
+use sim_core::colony::thermal::DwellingStageDef;
 use sim_core::components::{Agent, Child, Position};
 use sim_core::rooms::Tile;
 use sim_engine::SimResources;
@@ -171,10 +171,7 @@ pub(super) fn update(world: &World, res: &mut SimResources) {
             id.and_then(|id| thermal.rules.stages.iter().find(|s| s.id == id))
                 .map_or(0, |s| u32::from(s.rank) + 1)
         };
-        let history = thermal
-            .dwellings
-            .entry(bed)
-            .or_insert_with(DwellingThermal::default);
+        let history = thermal.dwellings.entry(bed).or_default();
         if rank(view.candidate) >= rank(history.stage) {
             if rank(view.candidate) > rank(history.stage) {
                 improved.push((bed, view.candidate));

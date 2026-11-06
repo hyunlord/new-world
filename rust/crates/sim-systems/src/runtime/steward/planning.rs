@@ -708,6 +708,7 @@ fn house(
         max_beds,
         service_cells,
         completion_role,
+        hearth_refuge_width,
     } = *action
     else {
         return HousePlan::default();
@@ -727,6 +728,14 @@ fn house(
     {
         return HousePlan::default();
     }
+    let refuge_width = hearth_refuge_width.filter(|&width| {
+        !store && !super::housing::hearth_is_sheltered(res, hearth, width * width)
+    });
+    let service_cells = if refuge_width.is_some() {
+        0
+    } else {
+        service_cells
+    };
     let covered = res
         .colony
         .beds
@@ -739,7 +748,7 @@ fn house(
                 .is_some_and(|room| super::housing::constructed(res, room))
         })
         .count() as u32;
-    let beds = if store {
+    let beds = if store || refuge_width.is_some() {
         0
     } else {
         (world.query::<&Agent>().iter().count() as u32)
@@ -751,14 +760,18 @@ fn house(
             room.role == sim_core::rooms::RoomRole::Storehouse
                 && super::housing::constructed(res, room)
         }))
-        || (!store && beds == 0)
+        || (!store && beds == 0 && refuge_width.is_none())
     {
         return HousePlan::default();
     }
     let stock: Vec<_> = res.colony.zone_of_tile.keys().copied().collect();
-    let area = beds
-        .saturating_add(service_cells)
-        .saturating_add((stock.len() as u32).min(beds.saturating_add(service_cells)));
+    let area = refuge_width.map_or_else(
+        || {
+            beds.saturating_add(service_cells)
+                .saturating_add((stock.len() as u32).min(beds.saturating_add(service_cells)))
+        },
+        |width| width * width,
+    );
     let mut width = 1u32;
     while width.saturating_mul(width) < area {
         width += 1;
@@ -845,9 +858,24 @@ fn house(
     };
     profile.phase(2);
     let mut local_origins = BTreeSet::new();
-    // Adjacent aspect ratios search around service anchors; the original ratio retains its global fallback.
-    for candidate_width in [width.saturating_sub(1).max(2), width, width + 1] {
-        for anchor in stock.iter().copied().chain(std::iter::once(hearth)) {
+    // Refuge shells must accommodate existing legal stockpiles and shelters.
+    // Enumerate bounded rectangles around the hearth; ordinary housing retains
+    // its established adjacent-ratio search around service anchors.
+    let candidate_widths: Vec<_> = match refuge_width {
+        Some(minimum) => (minimum..=space.room_max_tiles / minimum).collect(),
+        None => vec![width.saturating_sub(1).max(2), width, width + 1],
+    };
+    let anchors: Vec<_> = if refuge_width.is_some() {
+        vec![hearth]
+    } else {
+        stock
+            .iter()
+            .copied()
+            .chain(std::iter::once(hearth))
+            .collect()
+    };
+    for candidate_width in candidate_widths {
+        for anchor in anchors.iter().copied() {
             for y in anchor
                 .1
                 .saturating_sub(space.room_max_tiles / candidate_width)
@@ -861,18 +889,24 @@ fn house(
     }
     let mut locations = Vec::new();
     for ((x, y, width), is_local) in house_origins(res, width, &local_origins) {
+        if refuge_width.is_some_and(|required| width < required) {
+            continue;
+        }
         let minimum_height = area.div_ceil(width).max(2);
         if x + width + 2 >= res.tile_grid.width {
             continue;
         }
-        for height in minimum_height..=space.room_max_tiles / width {
+        for height in minimum_height.max(refuge_width.unwrap_or(2))..=space.room_max_tiles / width {
+            if refuge_width.is_some() && !inside(hearth, x, y, width, height) {
+                continue;
+            }
             if y + height + 2 >= res.tile_grid.height {
                 break;
             }
             if free_cells(x, y, width, height) >= (beds + service_cells) as usize {
                 locations.push((x, y, width, height));
                 // Only bounded service-anchor origins explore alternative envelopes.
-                if !is_local {
+                if !is_local && refuge_width.is_none() {
                     break;
                 }
             }
@@ -908,7 +942,16 @@ fn house(
             ))
         })
     });
-    let locations = house_locations(locations, &stock_capacity, stride, hearth);
+    let mut locations = house_locations(locations, &stock_capacity, stride, hearth);
+    let mut refuge_locations = refuge_width.map(|_| {
+        let mut ordered: Vec<_> = locations.by_ref().collect();
+        ordered.sort_by_key(|&(_, _, width, height)| width * height);
+        ordered.into_iter()
+    });
+    let locations = std::iter::from_fn(move || match refuge_locations.as_mut() {
+        Some(ordered) => ordered.next(),
+        None => locations.next(),
+    });
     profile.phase(4);
     let camp_radius = sim_core::colony::steward::rules()
         .ok()
@@ -935,6 +978,7 @@ fn house(
         .collect();
     let shortlist = !store && clearing_budget.is_some();
     let mut first_valid: Option<usize> = None;
+    let mut refuge_area = None;
     let mut scored = 0;
     let mut best: Option<(u32, HousePlan)> = None;
     // Original-map accessibility is unchanged across candidate shells in this call.
@@ -956,6 +1000,9 @@ fn house(
         permission[i] == 2
     };
     for (index, (x, y, width, height)) in locations.into_iter().enumerate() {
+        if refuge_area.is_some_and(|area| width * height > area) {
+            break;
+        }
         // Bound both expensive scores and all additional candidate visits.
         if first_valid.is_some_and(|first| index > first + 256) || scored == 16 {
             break;
@@ -1034,8 +1081,8 @@ fn house(
                 let tile = (xx, yy);
                 let facts = tile_facts(tile);
                 if facts & BOUNDS != 0 {
-                    // Reuse constructed walls, but never substitute terrain for a house wall.
-                    if facts & WALL == 0 {
+                    // Refuge heat uses existing natural boundaries; sleeping houses require constructed walls.
+                    if refuge_width.is_none() && facts & WALL == 0 {
                         valid = false;
                         break;
                     }
@@ -1044,7 +1091,9 @@ fn house(
                 let tree = facts & TREE != 0;
                 if tree {
                     if !can_chop
-                        || distance(tile, hearth) <= camp_radius
+                        // The gather-radius policy protects unsolicited logging;
+                        // an authored refuge can request paid clearance of its chosen footprint.
+                        || (refuge_width.is_none() && distance(tile, hearth) <= camp_radius)
                         || !permitted_tile(tile)
                         || res
                             .colony
@@ -1065,9 +1114,14 @@ fn house(
                     }
                     border.push(Command::PlaceBlueprint { kind, x: xx, y: yy });
                 } else {
-                    if facts & (NODE | WALL) != 0 {
+                    if facts & WALL != 0 || (refuge_width.is_none() && facts & NODE != 0) {
                         valid = false;
                         break;
+                    }
+                    // Retain resource nodes as physical obstacles in a heat refuge;
+                    // the complete future navigation check below still owns access.
+                    if refuge_width.is_some() && facts & NODE != 0 {
+                        continue;
                     }
                     // Existing storage and finished structures remain untouched inside the shell.
                     if facts & OCCUPIED != 0 {
@@ -1108,7 +1162,7 @@ fn house(
             |tile| local(tile) == door_tile,
             |tile| boundary.contains(&local(tile)),
         );
-        if rooms.len() != 1 {
+        if refuge_width.is_none() && rooms.len() != 1 {
             continue;
         }
         let enclosed_stock: Vec<_> = stock
@@ -1118,6 +1172,10 @@ fn house(
             .collect();
         let Some(room) = rooms.into_iter().find(|room| {
             room.built
+                && refuge_width.is_none_or(|minimum| {
+                    room.tiles.contains(&(hearth.0 - x, hearth.1 - y))
+                        && room.tiles.len() >= (minimum * minimum) as usize
+                })
                 && !room.doors.is_empty()
                 && enclosed_stock
                     .iter()
@@ -1285,6 +1343,9 @@ fn house(
             return candidate;
         }
         first_valid.get_or_insert(index);
+        if refuge_width.is_some() {
+            refuge_area = Some(width * height);
+        }
         scored += 1;
         // Equal route costs retain the original stable housing order.
         if best.as_ref().is_none_or(|(cost, _)| score < *cost) {
@@ -1435,6 +1496,7 @@ fn pending_shelter_logs(
         bed,
         max_beds,
         service_cells,
+        hearth_refuge_width,
         ..
     } = rule.action
     else {
@@ -1453,15 +1515,27 @@ fn pending_shelter_logs(
                 .is_some_and(|room| super::housing::constructed(res, room))
         })
         .count() as u32;
+    let refuge_width = hearth_tiles(res).first().and_then(|&hearth| {
+        hearth_refuge_width
+            .filter(|&width| !super::housing::hearth_is_sheltered(res, hearth, width * width))
+    });
     let agents = world.query::<&Agent>().iter().count() as u32;
-    let beds = agents.saturating_sub(covered).min(max_beds);
-    if beds == 0 {
+    let beds = if refuge_width.is_some() {
+        0
+    } else {
+        agents.saturating_sub(covered).min(max_beds)
+    };
+    if beds == 0 && refuge_width.is_none() {
         return 0;
     }
     let stock = res.colony.zone_of_tile.len() as u32;
-    let area = beds
-        .saturating_add(service_cells)
-        .saturating_add(stock.min(beds.saturating_add(service_cells)));
+    let area = refuge_width.map_or_else(
+        || {
+            beds.saturating_add(service_cells)
+                .saturating_add(stock.min(beds.saturating_add(service_cells)))
+        },
+        |width| width * width,
+    );
     let mut width = 1u32;
     while width.saturating_mul(width) < area {
         width += 1;
@@ -1583,14 +1657,16 @@ fn fuel_input_need(world: &World, res: &SimResources, logs: &[sim_core::colony::
 }
 
 fn daily_fuel(res: &SimResources) -> u32 {
-    use crate::runtime::settlement::firewood::{burn_hours, night_tick_at, winter_burn_per_hour};
+    use crate::runtime::settlement::firewood::{
+        heating_hours, night_tick_at, winter_burn_per_hour,
+    };
     let per_hearth = res.rules.society.firewood.map_or(0, |rule| {
         u32::from(winter_burn_per_hour(
             res,
             &rule,
             night_tick_at(res, &rule, res.current_tick),
         ))
-        .saturating_mul(burn_hours(&rule))
+        .saturating_mul(heating_hours(res, &rule))
     });
     crate::runtime::settlement::fire::effective_burn_per_hour(res, per_hearth)
         .saturating_mul(res.settlements.len().max(1) as u32)
@@ -1601,7 +1677,9 @@ fn winter_daily_fuel(res: &SimResources) -> u32 {
         .firewood
         .map_or(0, |rule| {
             u32::from(rule.burn_per_hour[3])
-                .saturating_mul(crate::runtime::settlement::firewood::burn_hours(&rule))
+                .saturating_mul(crate::runtime::settlement::firewood::heating_hours(
+                    res, &rule,
+                ))
                 .saturating_mul(res.settlements.len().max(1) as u32)
         })
         .max(daily_fuel(res))
@@ -1769,6 +1847,8 @@ mod rule_coverage {
                 sim_core::rules::WorldRules::colony(29),
             );
             let mut settlement = sim_core::components::Settlement::new_with_id(999, 0);
+            settlement.formation_tile =
+                crate::worldgen::colony::hearth(&engine.resources).expect("actual primary hearth");
             settlement.member_agents = engine
                 .world
                 .query::<&Agent>()
@@ -1942,6 +2022,20 @@ mod rule_coverage {
 #[cfg(test)]
 mod shared_home_tests {
     use super::*;
+    fn sleeping_house_rules() -> sim_core::colony::steward::RuleFile {
+        let mut data = sim_core::colony::steward::rules().expect("rules").clone();
+        for rule in &mut data.rules {
+            if let Action::House {
+                hearth_refuge_width,
+                ..
+            } = &mut rule.action
+            {
+                *hearth_refuge_width = None;
+            }
+        }
+        data
+    }
+
     #[test]
     fn compact_shared_geometry_waits_for_people_then_issues_ordinary_orders() {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
@@ -1965,7 +2059,7 @@ mod shared_home_tests {
                     e.resources.colony.nodes.remove(&(x, y));
                 }
             }
-            let rules = sim_core::colony::steward::rules().expect("rules");
+            let rules = sleeping_house_rules();
             for c in plan(&e.world, &e.resources, &rules.rules[0]) {
                 assert!(crate::commands::apply_command(&mut e.world, &mut e.resources, c).accepted);
             }
@@ -2121,7 +2215,7 @@ mod shared_home_tests {
             &crate::worldgen::WorldGenConfig::colony(29),
             sim_core::rules::WorldRules::colony(29),
         );
-        let rules = sim_core::colony::steward::rules().expect("rules");
+        let rules = sleeping_house_rules();
         for command in plan(&engine.world, &engine.resources, &rules.rules[0]) {
             assert!(
                 crate::commands::apply_command(&mut engine.world, &mut engine.resources, command)
@@ -2237,7 +2331,7 @@ mod shared_home_tests {
         }
         let nav = crate::runtime::nav::build(&engine.resources);
         engine.resources.nav.install(nav);
-        let rules = sim_core::colony::steward::rules().expect("rules");
+        let rules = sleeping_house_rules();
         let stock = plan(&engine.world, &engine.resources, &rules.rules[0]);
         for cmd in stock {
             assert!(

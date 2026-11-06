@@ -25,6 +25,80 @@ pub fn burn_hours(rule: &FirewoodRule) -> u32 {
     (end + MINUTES_PER_DAY - start) % MINUTES_PER_DAY / 60
 }
 
+/// Physical roofed room served by a settlement's existing primary hearth.
+pub fn primary_hearth_room(
+    resources: &SimResources,
+    owner: SettlementId,
+) -> Option<&sim_core::rooms::Room> {
+    resources.rules.colony?;
+    let tile = resources.settlements.get(&owner)?.formation_tile;
+    if resources.building_kinds.get(&tile) != Some(&sim_core::components::BuildingKind::Hearth) {
+        return None;
+    }
+    crate::runtime::rooms::room_at(resources, tile).filter(|room| room.roofed)
+}
+
+/// Fuel-service hours to provision when a physical primary room can request daytime heat.
+/// This forecasts available service, not assumed occupancy or an additional heater.
+pub fn heating_hours(resources: &SimResources, rule: &FirewoodRule) -> u32 {
+    if resources
+        .settlements
+        .keys()
+        .any(|owner| primary_hearth_room(resources, *owner).is_some())
+    {
+        24
+    } else {
+        burn_hours(rule)
+    }
+}
+
+/// Existing positive daytime cooking/heating rate including active pressure cost.
+pub fn daytime_service_rate(resources: &SimResources) -> u32 {
+    resources.rules.society.firewood.map_or(0, |rule| {
+        crate::runtime::settlement::fire::effective_burn_per_hour(
+            resources,
+            u32::from(winter_burn_per_hour(
+                resources,
+                &rule,
+                resources.current_tick,
+            )),
+        )
+    })
+}
+
+/// Exact current-hour primary service rate, including the existing booked night draw.
+pub fn current_service_rate(resources: &SimResources) -> u32 {
+    resources.rules.society.firewood.map_or(0, |rule| {
+        if clock_in_window(resources, rule.burn_start_minute, rule.burn_end_minute) {
+            crate::runtime::settlement::fire::effective_burn_per_hour(
+                resources,
+                night_rate(resources, &rule, resources.current_tick),
+            )
+        } else {
+            daytime_service_rate(resources)
+        }
+    })
+}
+
+/// An actual occupant in a cold primary-hearth room requests the existing fuel service.
+pub fn room_heat_needed(world: &World, resources: &SimResources, owner: SettlementId) -> bool {
+    let Some(room) = primary_hearth_room(resources, owner) else {
+        return false;
+    };
+    let Some(thermal) = resources.thermal.as_ref() else {
+        return false;
+    };
+    let Some(tile) = room.tiles.first().copied() else {
+        return false;
+    };
+    crate::runtime::thermal::place_temperature(resources, tile)
+        .is_some_and(|temperature| temperature < thermal.rules.cold_threshold_d10)
+        && world
+            .query::<(&Agent, &sim_core::components::Position)>()
+            .iter()
+            .any(|(_, (_, position))| room.tiles.contains(&(position.x, position.y)))
+}
+
 /// Index into `burn_per_hour`: the current season, or 0 without seasons.
 pub fn burn_season(resources: &SimResources) -> usize {
     season_at(resources).map_or(0, |(season, _)| season.min(3))

@@ -12,7 +12,7 @@ use std::sync::Arc;
 
 use hecs::{Entity, World};
 use sim_core::colony::mind::{CompiledMind, LifeStage, RunningChoice};
-use sim_core::colony::people::{Drafted, Fleeing, Mood, Sick};
+use sim_core::colony::people::{Apparel, Drafted, Fleeing, Mood, Sick};
 use sim_core::colony::{Carry, Job, WorkPriorities, WorkType};
 use sim_core::components::{
     Activity, ActivityRest, Agent, AgentId, AgentState, BodyHealth, Child, Cold, Elder, Founding,
@@ -135,6 +135,10 @@ pub struct PersonSnapshot {
     pub mood: Option<Mood>,
     /// Native body health, absent when BodyHealth is absent.
     pub hp: Option<f64>,
+    /// Actual full-health boundary for recovery, independent of species maximum.
+    pub health_full: bool,
+    /// Physical worn apparel for native felt-temperature target queries.
+    pub apparel: Option<Apparel>,
     /// Current routine reservation, refreshed from the lifecycle transaction before selection.
     pub activity: Option<Activity>,
     /// Captured pause between routine activities.
@@ -242,6 +246,10 @@ impl PersonSnapshot {
             sick: entity_ref.get::<&Sick>().is_some(),
             mood: entity_ref.get::<&Mood>().map(|v| *v),
             hp: entity_ref.get::<&BodyHealth>().map(|v| v.hp),
+            health_full: entity_ref
+                .get::<&BodyHealth>()
+                .is_none_or(|v| v.hp >= v.max_hp),
+            apparel: entity_ref.get::<&Apparel>().map(|v| *v),
             activity: entity_ref.get::<&Activity>().map(|v| *v),
             activity_rest: entity_ref.get::<&ActivityRest>().map(|v| *v),
             lineage: entity_ref
@@ -262,7 +270,7 @@ impl PersonSnapshot {
         let (
             (position, state, child, elder, hunger, thirst, sleep, social),
             (temperament, inventory, carry, job, drafted, fleeing, cold, sick),
-            (mood, health, activity, rest, memory, lineage, priorities),
+            (mood, health, activity, rest, memory, lineage, priorities, apparel),
         ) = world
             .query_one_mut::<(
                 (
@@ -293,6 +301,7 @@ impl PersonSnapshot {
                     Option<&sim_core::components::Memory>,
                     Option<&sim_core::components::Lineage>,
                     Option<&WorkPriorities>,
+                    Option<&Apparel>,
                 ),
             )>(entity)
             .map_err(|_| ContextError::MissingComponent {
@@ -338,6 +347,8 @@ impl PersonSnapshot {
             sick: sick.is_some(),
             mood: mood.copied(),
             hp: health.map(|v| v.hp),
+            health_full: health.is_none_or(|v| v.hp >= v.max_hp),
+            apparel: apparel.copied(),
             activity: activity.copied(),
             activity_rest: rest.copied(),
             lineage: lineage.map(|v| v.key),
@@ -688,6 +699,7 @@ impl TickContext {
             Option<&'a Carry>,
             Option<&'a BodyHealth>,
             Option<&'a WorkPriorities>,
+            Option<&'a Apparel>,
         );
         type Secondary<'a> = (
             Option<&'a Child>,
@@ -717,6 +729,7 @@ impl TickContext {
             carry,
             health,
             priorities,
+            apparel,
         ): Primary<'_>| PersonSnapshot {
             agent: agent.id,
             entity,
@@ -734,6 +747,8 @@ impl TickContext {
             haul_enabled: priorities.is_none_or(|p| p.level(WorkType::Haul) > 0),
             carry: carry.copied(),
             hp: health.map(|v| v.hp),
+            health_full: health.is_none_or(|v| v.hp >= v.max_hp),
+            apparel: apparel.copied(),
             drafted: false,
             fleeing: None,
             cold: false,
@@ -1448,7 +1463,19 @@ impl TickContext {
     ) -> Result<(), ContextError> {
         let index = self.row_index(agent)?;
         self.row_refresh_states[index].primary_pending = false;
-        let (position, state, child, elder, drafted, fleeing, activity, rest) = world
+        let (
+            position,
+            state,
+            child,
+            elder,
+            drafted,
+            fleeing,
+            activity,
+            rest,
+            cold,
+            health,
+            apparel,
+        ) = world
             .query_one_mut::<(
                 Option<&Position>,
                 Option<&AgentState>,
@@ -1458,6 +1485,9 @@ impl TickContext {
                 Option<&Fleeing>,
                 Option<&Activity>,
                 Option<&ActivityRest>,
+                Option<&Cold>,
+                Option<&BodyHealth>,
+                Option<&Apparel>,
             )>(self.rows[index].entity)
             .map_err(|_| ContextError::UnknownAgent(agent))?;
         self.invalidate(Domain::Person)?;
@@ -1482,6 +1512,9 @@ impl TickContext {
         row.fleeing = fleeing.copied();
         row.activity = activity.copied();
         row.activity_rest = rest.copied();
+        row.cold = cold.is_some();
+        row.health_full = health.is_none_or(|h| h.hp >= h.max_hp);
+        row.apparel = apparel.copied();
         Ok(())
     }
     /// Refresh the complete current person, including memory, before full selection.
@@ -1519,7 +1552,7 @@ impl TickContext {
     ) -> Result<(), ContextError> {
         let index = self.row_index(agent)?;
         self.row_refresh_states[index].primary_pending = false;
-        let (cold, sick, mood, health, memory, lineage, activity) = world
+        let (cold, sick, mood, health, memory, lineage, activity, apparel) = world
             .query_one_mut::<(
                 Option<&Cold>,
                 Option<&Sick>,
@@ -1528,6 +1561,7 @@ impl TickContext {
                 Option<&sim_core::components::Memory>,
                 Option<&sim_core::components::Lineage>,
                 Option<&Activity>,
+                Option<&Apparel>,
             )>(self.rows[index].entity)
             .map_err(|_| ContextError::MissingComponent {
                 agent,
@@ -1540,8 +1574,10 @@ impl TickContext {
         let sick = sick.is_some();
         let mood = mood.copied();
         let hp = health.map(|value| value.hp);
+        let health_full = health.is_none_or(|value| value.hp >= value.max_hp);
         let lineage = lineage.map(|value| value.key);
         let activity = activity.copied();
+        let apparel = apparel.copied();
         let memory_entries = memory.map(|value| value.entries.len());
         self.invalidate(Domain::Person)?;
         let row = &mut self.rows[index];
@@ -1549,6 +1585,8 @@ impl TickContext {
         row.sick = sick;
         row.mood = mood;
         row.hp = hp;
+        row.health_full = health_full;
+        row.apparel = apparel;
         row.lineage = lineage;
         row.activity = activity;
         row.memory_weights = memory_weights;

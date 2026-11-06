@@ -312,6 +312,10 @@ pub struct FatalAnimalAttack {
     pub kind: sim_core::colony::wildlife::AnimalKind,
 }
 
+fn thermal_enabled_by_default() -> bool {
+    true
+}
+
 /// Shared world state owned by the engine.
 ///
 /// `hecs` enforces single-writer semantics on the [`World`]; this struct
@@ -395,6 +399,9 @@ pub struct SimResources {
     /// Nonfood passive production, persisted in the explicit format17 tail.
     #[serde(skip)]
     pub processing: sim_core::colony::processing::ProcessingState,
+    /// Derived policy capability; historical minds retain legacy Fire/Cold behavior.
+    #[serde(skip, default = "thermal_enabled_by_default")]
+    pub thermal_enabled: bool,
     /// Colony thermal state is saved only in the explicit format18 tail.
     #[serde(skip)]
     pub thermal: Option<sim_core::colony::thermal::ThermalState>,
@@ -894,6 +901,7 @@ impl SimResources {
             cultivation: Default::default(),
             processing: Default::default(),
             thermal: None,
+            thermal_enabled: true,
             food_supply_cache: Default::default(),
             fatal_animal_attacks: Vec::new(),
             building_event_queue: VecDeque::new(),

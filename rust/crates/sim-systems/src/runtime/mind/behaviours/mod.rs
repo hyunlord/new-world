@@ -7,6 +7,7 @@ mod needs;
 mod owned;
 mod postpass;
 mod prepare;
+mod refuge;
 mod routine;
 mod settle;
 mod social;
@@ -338,6 +339,13 @@ pub(in crate::runtime) static REGISTRY: &[BehaviourEntry] = &[
         routine::continue_running,
         routine::finish,
         ActivityKind::SitByFire
+    ),
+    entry!(LifecycleBinding::Rest;
+        "warm_refuge",
+        &["warm_refuge"],
+        owned::rest_start,
+        refuge::continue_running,
+        owned::rest_finish
     ),
 ];
 

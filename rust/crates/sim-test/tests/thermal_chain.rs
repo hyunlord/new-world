@@ -22,6 +22,21 @@ fn command(e: &mut SimEngine, command: Command) {
 }
 
 fn place(e: &mut SimEngine, kind: BlueprintKind, tile: Tile) {
+    if kind.is_space()
+        && sim_systems::commands::check_space(
+            &e.resources,
+            &std::collections::BTreeSet::new(),
+            kind,
+            tile,
+        )
+        .is_err()
+    {
+        println!("SITE_BLOCK tile={tile:?} kind={kind:?} tree={} node={:?} occupied={:?} building={:?} work={:?}",
+            e.resources.colony.trees.contains_key(&tile), e.resources.colony.nodes.get(&tile),
+            e.resources.colony.occupied.get(&tile), e.resources.building_kinds.get(&tile),
+            e.resources.colony.workshops.values().filter(|s| s.work_tile()==tile).collect::<Vec<_>>());
+    }
+
     command(
         e,
         Command::PlaceBlueprint {
@@ -153,12 +168,103 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
         )
         .expect("accounted raw stores");
     }
-    let bed = (home.0 - 1, home.1 - 1);
-    let door = (home.0, home.1 + 2);
+    // Clear the building perimeter by actual player movement; walls cannot cover people.
+    for &(agent, _) in &people {
+        command(
+            &mut e,
+            Command::SetDrafted {
+                agent,
+                drafted: true,
+            },
+        );
+        command(
+            &mut e,
+            Command::DraftMove {
+                agent,
+                x: stock.0,
+                y: stock.1,
+            },
+        );
+    }
+    until(
+        &mut e,
+        DAY,
+        "founders physically clear the building site",
+        |e| {
+            people.iter().all(|&(_, entity)| {
+                e.world
+                    .get::<&Position>(entity)
+                    .is_ok_and(|p| (p.x, p.y) == stock)
+            })
+        },
+    );
+    for &(agent, _) in &people {
+        command(
+            &mut e,
+            Command::SetDrafted {
+                agent,
+                drafted: false,
+            },
+        );
+    }
+    let mut shapes: Vec<_> = (5..=9_u32)
+        .flat_map(|h| (5..=9_u32).map(move |w| (w, h)))
+        .collect();
+    shapes.sort_by_key(|&(w, h)| (w * h, h, w));
+    let mut selected = None;
+    'geometry: for (width, height) in shapes {
+        for dy in 1..height - 1 {
+            for dx in 1..width - 1 {
+                let (left, top) = (home.0 - dx, home.1 - dy);
+                let (right, bottom) = (left + width - 1, top + height - 1);
+                let legal = (top..=bottom).all(|y| {
+                    (left..=right).all(|x| {
+                        if x != left && x != right && y != top && y != bottom {
+                            return true;
+                        }
+                        let kind = if (x, y) == (home.0, bottom) {
+                            BlueprintKind::Door
+                        } else {
+                            BlueprintKind::LogWall
+                        };
+                        sim_systems::commands::check_space(
+                            &e.resources,
+                            &std::collections::BTreeSet::new(),
+                            kind,
+                            (x, y),
+                        )
+                        .is_ok()
+                    })
+                });
+                if legal {
+                    selected = Some(((left, top), (right, bottom)));
+                    break 'geometry;
+                }
+            }
+        }
+    }
+    let (origin, end) = selected
+        .expect("smallest legal enclosure around the actual hearth and existing structures");
+    let door = (home.0, end.1);
+    let bed = (origin.1 + 1..end.1)
+        .flat_map(|y| (origin.0 + 1..end.0).map(move |x| (x, y)))
+        .find(|&tile| {
+            sim_systems::commands::check_space(
+                &e.resources,
+                &std::collections::BTreeSet::new(),
+                BlueprintKind::Bedroll,
+                tile,
+            )
+            .is_ok()
+        })
+        .expect("buildable bed within the legal shell");
+    println!(
+        "THERMAL_GEOMETRY home={home:?} origin={origin:?} end={end:?} door={door:?} bed={bed:?}"
+    );
     // When: normal construction orders create an enclosure around the actual hearth.
-    for y in home.1 - 2..=home.1 + 2 {
-        for x in home.0 - 2..=home.0 + 2 {
-            if x == home.0 - 2 || x == home.0 + 2 || y == home.1 - 2 || y == home.1 + 2 {
+    for y in origin.1..=end.1 {
+        for x in origin.0..=end.0 {
+            if x == origin.0 || x == end.0 || y == origin.1 || y == end.1 {
                 place(
                     &mut e,
                     if (x, y) == door {
@@ -177,13 +283,39 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
         BlueprintKind::from_name("wood_bench").expect("bench"),
         bench,
     );
-    until(&mut e, 2 * DAY, "constructed enclosure and bench", |e| {
+    until(&mut e, 2 * DAY, "constructed bench", |e| {
+        e.resources
+            .colony
+            .workshops
+            .values()
+            .any(|s| s.top_left == bench)
+    });
+    let shop = e
+        .resources
+        .colony
+        .workshops
+        .values()
+        .find(|s| s.top_left == bench)
+        .expect("bench")
+        .id;
+    // Auto-bills are suspended through their public command before the bounded scene bill.
+    let old: Vec<_> = e.resources.colony.workshops[&shop]
+        .bills
+        .iter()
+        .map(|b| b.id)
+        .collect();
+    for bill in old {
+        command(
+            &mut e,
+            Command::SetBillSuspended {
+                workshop: shop,
+                bill,
+                suspended: true,
+            },
+        );
+    }
+    until(&mut e, 2 * DAY, "constructed enclosure", |e| {
         room_at(&e.resources, home).is_some_and(|r| r.roofed)
-            && e.resources
-                .colony
-                .workshops
-                .values()
-                .any(|s| s.top_left == bench)
     });
     let floors: Vec<_> = room_at(&e.resources, home)
         .expect("built room")
@@ -214,30 +346,6 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
         e.resources.colony.beds.contains_key(&bed)
     });
     checkpoint(&mut e, "01-built", home);
-    let shop = e
-        .resources
-        .colony
-        .workshops
-        .values()
-        .find(|s| s.top_left == bench)
-        .expect("bench")
-        .id;
-    // Auto-bills are suspended through their public command before the bounded scene bill.
-    let old: Vec<_> = e.resources.colony.workshops[&shop]
-        .bills
-        .iter()
-        .map(|b| b.id)
-        .collect();
-    for bill in old {
-        command(
-            &mut e,
-            Command::SetBillSuspended {
-                workshop: shop,
-                bill,
-                suspended: true,
-            },
-        );
-    }
     command(
         &mut e,
         Command::AddBill {
@@ -328,6 +436,29 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
         5 * DAY,
         "physical fuel exhaustion and cooling",
         |e| {
+            assert!(
+                e.world.get::<&Agent>(entity).is_ok(),
+                "scene observer died tick{} record={:?}; living={}; people={:?}",
+                e.current_tick(),
+                e.resources.chronicle.person(person),
+                e.world.query::<&Agent>().iter().count(),
+                e.resources.chronicle.people().collect::<Vec<_>>()
+            );
+            if e.current_tick() % 60 == 1 {
+                println!(
+                    "COOL_DIAG tick={} wood={:?} dwelling={:?} cold={} person={:?} alive={}",
+                    e.current_tick(),
+                    e.resources
+                        .settlements
+                        .values()
+                        .map(|s| s.stockpile.get(&ResourceKind::Wood))
+                        .collect::<Vec<_>>(),
+                    thermal::dwelling_view(&e.world, &e.resources, bed),
+                    e.world.get::<&Cold>(entity).is_ok(),
+                    e.world.get::<&Position>(entity).ok().map(|p| (p.x, p.y)),
+                    e.world.get::<&Agent>(entity).is_ok()
+                );
+            }
             e.resources
                 .settlements
                 .values()

@@ -1,6 +1,22 @@
 //! Frozen pre-optimization housing oracle and exact preparation equivalence checks.
 use super::*;
 
+// This frozen oracle covers the pre-refuge House profile; the optional demand
+// has separate physical-enclosure regressions in housing_tests.
+fn legacy_rules() -> sim_core::colony::steward::RuleFile {
+    let mut data = sim_core::colony::steward::rules().expect("rules").clone();
+    for rule in &mut data.rules {
+        if let Action::House {
+            hearth_refuge_width,
+            ..
+        } = &mut rule.action
+        {
+            *hearth_refuge_width = None;
+        }
+    }
+    data
+}
+
 fn reference_house(
     world: &World,
     res: &SimResources,
@@ -457,7 +473,7 @@ fn engine(seed: u64) -> sim_engine::SimEngine {
 fn house_preparation_matches_every_capacity_cell_origin_and_ranking_key() {
     sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
         .expect("content");
-    let data = sim_core::colony::steward::rules().expect("rules");
+    let data = legacy_rules();
     let rule = data
         .rules
         .iter()
@@ -605,7 +621,7 @@ fn house_preparation_matches_every_capacity_cell_origin_and_ranking_key() {
 fn optimized_house_commands_and_reservations_match_frozen_reference() {
     sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
         .expect("content");
-    let data = sim_core::colony::steward::rules().expect("rules");
+    let data = legacy_rules();
     let rule = data
         .rules
         .iter()
@@ -829,7 +845,7 @@ fn house_order_preserves_full_stable_sequence_and_search_prefixes() {
 fn house_order_preserves_occupied_reservations_and_independent_nav_stats() {
     sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
         .expect("content");
-    let data = sim_core::colony::steward::rules().expect("rules");
+    let data = legacy_rules();
     let action = &data
         .rules
         .iter()
@@ -924,7 +940,7 @@ fn capped_wood_counts_logs_in_transit_and_on_shelves_once() {
     use sim_core::colony::{Carry, ItemSpec, ItemStack, Job, JobKind, JobStage, Workshop};
     for owner in 0..5 {
         let mut e = engine(29);
-        let data = sim_core::colony::steward::rules().expect("rules");
+        let data = legacy_rules();
         let wood = data
             .rules
             .iter()
@@ -1026,7 +1042,7 @@ fn capped_wood_counts_logs_in_transit_and_on_shelves_once() {
 #[test]
 fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
     let mut e = engine(29);
-    let data = sim_core::colony::steward::rules().expect("rules");
+    let data = legacy_rules();
     let home = data
         .rules
         .iter()
@@ -1259,6 +1275,64 @@ fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
     }
 }
 
+// These regressions measure the explicit legacy sleeping-house objective.
+// Ordinary orders and real engine ticks perform any required harvesting; the
+// bundled refuge policy is disabled only while the fixture advances that work.
+fn ready_legacy_sleeping_house(e: &mut sim_engine::SimEngine) -> HousePlan {
+    let data = legacy_rules();
+    let home = data
+        .rules
+        .iter()
+        .find(|r| matches!(r.action, Action::House { .. }))
+        .unwrap();
+    for rule in data
+        .rules
+        .iter()
+        .filter(|r| matches!(r.action, Action::Stockpile { .. } | Action::Wood { .. }))
+    {
+        for command in plan(&e.world, &e.resources, rule) {
+            assert!(crate::commands::submit(e, command).accepted);
+        }
+    }
+    for _ in 0..1440 {
+        crate::runtime::nav::ensure(&mut e.resources);
+        let hearth = hearth_tiles(&e.resources)[0];
+        let ready = house(&e.world, &e.resources, hearth, &home.action, false);
+        if ready
+            .commands
+            .iter()
+            .any(|c| matches!(c, Command::PlaceBlueprint { .. }))
+        {
+            return ready;
+        }
+        for command in ready.commands {
+            assert!(crate::commands::submit(e, command).accepted);
+        }
+        assert!(
+            crate::commands::submit(
+                e,
+                Command::SetSteward {
+                    on: false,
+                    scope: sim_core::colony::steward::StewardScope::All
+                }
+            )
+            .accepted
+        );
+        e.tick();
+        assert!(
+            crate::commands::submit(
+                e,
+                Command::SetSteward {
+                    on: true,
+                    scope: sim_core::colony::steward::StewardScope::All
+                }
+            )
+            .accepted
+        );
+    }
+    panic!("legacy house never reached ordinary construction after actual harvest");
+}
+
 #[test]
 fn capped_seed5_house_preserves_post_shell_access() {
     let mut e = engine(5);
@@ -1272,9 +1346,12 @@ fn capped_seed5_house_preserves_post_shell_access() {
         assert!(crate::commands::submit(&mut e, command).accepted);
     }
     let hearth = hearth_tiles(&e.resources)[0];
-    e.tick();
+    for command in ready_legacy_sleeping_house(&mut e).commands {
+        assert!(crate::commands::submit(&mut e, command).accepted);
+    }
+    crate::runtime::nav::ensure(&mut e.resources);
     let sites = crate::runtime::jobs::items::colony_sites(&e.world);
-    let data = sim_core::colony::steward::rules().expect("rules");
+    let data = legacy_rules();
     let (bed, door) = data
         .rules
         .iter()
@@ -1315,7 +1392,10 @@ fn capped_seed5_house_avoids_long_camp_detour() {
         .accepted
     );
     let hearth = hearth_tiles(&e.resources)[0];
-    e.tick();
+    for command in ready_legacy_sleeping_house(&mut e).commands {
+        assert!(crate::commands::submit(&mut e, command).accepted);
+    }
+    crate::runtime::nav::ensure(&mut e.resources);
     let bed = sim_core::colony::steward::rules()
         .expect("rules")
         .rules
@@ -1364,19 +1444,8 @@ fn capped_house_commute_choice_keeps_occupied_reservations() {
         )
         .accepted
     );
-    crate::runtime::nav::ensure(&mut e.resources);
-    let data = sim_core::colony::steward::rules().expect("rules");
-    for rule in data
-        .rules
-        .iter()
-        .filter(|r| matches!(r.action, Action::Stockpile { .. } | Action::Wood { .. }))
-    {
-        for command in plan(&e.world, &e.resources, rule) {
-            assert!(
-                crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted
-            );
-        }
-    }
+    let ready = ready_legacy_sleeping_house(&mut e);
+    let data = legacy_rules();
     let action = &data
         .rules
         .iter()
@@ -1385,7 +1454,6 @@ fn capped_house_commute_choice_keeps_occupied_reservations() {
         .action;
     let hearth = hearth_tiles(&e.resources)[0];
     let before = *e.resources.nav.stats.borrow();
-    let ready = house(&e.world, &e.resources, hearth, action, false);
     let repeat = house(&e.world, &e.resources, hearth, action, false);
     assert_eq!(ready.commands, repeat.commands);
     assert_eq!(ready.reserved, repeat.reserved);

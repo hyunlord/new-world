@@ -355,6 +355,10 @@ pub fn register_colony_mind_runtime_systems(engine: &mut SimEngine) {
             )),
         }
         .unwrap_or_else(|error| panic!("colony mind registration: invalid policy: {error}"));
+        engine.resources.thermal_enabled = program.enables_numeric_thermal();
+        if !engine.resources.thermal_enabled {
+            engine.resources.thermal = None;
+        }
         let mut mind = runtime::mind::ColonyMindSystem::new(program);
         mind.initialize(&mut engine.resources)
             .unwrap_or_else(|error| {

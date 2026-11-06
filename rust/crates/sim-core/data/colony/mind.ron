@@ -5,6 +5,32 @@
     schema_version: 1,
     bands: ["critical", "duty", "need", "work", "leisure", "idle"],
     nodes: [
+        // Full-health recovery hysteresis; 750 reuses the existing critical need boundary.
+        (id: "warm_refuge_enter", band: "critical", behaviour: "warm_refuge", target: Some("warm_refuge"),
+         when: [(fact: "cold", op: "has"),
+                (fact: "health_full", op: "not"),
+                (fact: "warm_refuge_available", op: "has"),
+                (fact: "job_fuel_service", op: "not"),
+                (fact: "fleeing", op: "not"), (fact: "drafted", op: "not"),
+                (fact: "hunger_tenths", op: "<", value: Some(750)),
+                (fact: "thirst_tenths", op: "<", value: Some(750))],
+         score: (constant: 1000, terms: []), hysteresis: 0,
+         life_stages: ["adult", "child", "elder"], tags: ["thermal_recovery"],
+         name_key: "MIND_BEHAVIOUR_REST", every_ticks: 1),
+
+        // Full-health recovery hysteresis; 750 reuses the existing critical need boundary.
+        (id: "warm_refuge_recover", band: "critical", behaviour: "warm_refuge", target: Some("warm_refuge"),
+         when: [(fact: "warm_refuge_active", op: "has"),
+                (fact: "health_full", op: "not"),
+                (fact: "warm_refuge_available", op: "has"),
+                (fact: "job_fuel_service", op: "not"),
+                (fact: "fleeing", op: "not"), (fact: "drafted", op: "not"),
+                (fact: "hunger_tenths", op: "<", value: Some(750)),
+                (fact: "thirst_tenths", op: "<", value: Some(750))],
+         score: (constant: 1000, terms: []), hysteresis: 0,
+         life_stages: ["adult", "child", "elder"], tags: ["thermal_recovery"],
+         name_key: "MIND_BEHAVIOUR_REST", every_ticks: 1),
+
         (
             id: "stock_forage_idle", band: "work", behaviour: "harvest_food",
             when: [

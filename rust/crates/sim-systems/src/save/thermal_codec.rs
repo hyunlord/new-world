@@ -123,7 +123,14 @@ pub(super) fn validate(res: &SimResources, tick: u64) -> Result<(), String> {
             return Err("invalid saved door interval".into());
         }
     }
-    for receipt in state.paid_hearths.values() {
+    for (owner, receipt) in &state.paid_hearths {
+        if res
+            .settlements
+            .get(owner)
+            .is_some_and(|home| home.formation_tile != receipt.tile)
+        {
+            return Err("paid heat receipt does not match its owner hearth".into());
+        }
         if receipt.tick > tick || receipt.debited_wood > receipt.requested_wood {
             return Err("invalid paid heat receipt".into());
         }

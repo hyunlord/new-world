@@ -1,5 +1,16 @@
 # M6b 보고서
 
+## Stage3 구현 체크포인트 — 2026-11-07, 미게시
+
+**현재 안전 검증 FAIL:** `stage3/smoke-01`에서 BASE 생존 `[10,12,11,13,10,13,11,14]` 대 후보 `[0,0,0,0,0,0,0,0]`, KnowledgeLost0 대191(허용2)이다. 미게시 상태로 S3-INTEGRATION-1의 실제 피난 공간·이동 행동·낮 연료 지급 연결을 구현 중이며, 열량·피해량이나 안전 기준은 바꾸지 않는다. 아래 집중 테스트는 이 연결 수정 전 체크포인트다.
+
+BASE2는 아래 실제 게시 Stage2다. `e0d044f15` WIP를04:22:42KST에 `v8/m6b-review`로 push/readback했다. 이후 수정은 계속 진행 중이며 D-WIP-REVIEW에 따라2–3시간마다 갱신한다. `v8/main`은 전체 gate 통과 전 이동하지 않는다.
+
+- 열·문·주거·데이터 선택 focused10개, 기존 방5개, 문 interval1개, 저장/tamper4개 PASS(`stage3/runtime-tests-04.log`, `runtime-doors-01.log`, `runtime-save-01.log`). 진짜 format17 선행 저장 증거는 별도 `predecessor17`와 `save-genuine1.log`에 보존한다. 전체 Clippy·identity·smoke·gate는 아직 완료되지 않았다.
+- 실제 장면 r5/r6은 기존 Shelter를 보존한5×6외곽/12칸 실내를 정상 건설했다. tick737 건설,901 실제 연료 지급 난방(실내5.3°C/외기−5.0°C),913 실제 문 통과와120틱 저장 연속을 확인했다. 이후 무지급 냉각과 주거2단계 하락도 관측했지만, 지정 관찰자가 연료 소진 전에 사망해 전체 장면은 **FAIL**이다. 원인 추적 중이며 완주·생존·캡처 PASS로 표현하지 않는다.
+- 고정5×5벽은 초기 Shelter와 충돌했다. 정상 건설 가능성만으로 최소 합법 외곽을 고르도록 시연 명령을 고쳤고 기존 구조물·열량·노출 수치를 바꾸지 않았다. 과거 r1–r6 실패를 외부 보존한다.
+
+
 ## Stage2 실제 게시 — 2026-11-07 04:02:56 KST
 
 **PUBLISHED `90544f1f9270cb6c72906eef93ad9171442d5e54`.** BASE1 `16dc9120d`에서 v8/wip→v8/main에 fast-forward하고 양쪽 원격 SHA를 확인했다(`stage2/publication.json`). 최종 gate `stage2/gate-attempts/s2-90544f1f9`는04:00:54KST **49/49 exit0**으로 끝났으며 postrun binding은 config_bound/source_unchanged/all_exit_zero=true다. debug3102·release3100 PASS, 각각14ignored, Python597 PASS. 아래 c68 실패·수리·사전 검증은 당시 기록으로 보존한다.

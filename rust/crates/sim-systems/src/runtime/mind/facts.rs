@@ -906,6 +906,18 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
     fact!("recallable_combat", Bool, |p, _c, _r, _n| Ok(i64::from(
         p.memory_causes[5].is_some()
     ))),
+    fact!("health_full", Bool, |p, _c, _r, _n| Ok(i64::from(
+        p.health_full
+    ))),
+    fact!("warm_refuge_active", Bool, |p, _c, _r, _n| Ok(i64::from(
+        super::refuge::active(p)
+    ))),
+    fact!("warm_refuge_available", Bool, |p, c, r, _n| Ok(i64::from(
+        super::refuge::target(p, c, r).is_some()
+    ))),
+    fact!("job_fuel_service", Bool, |p, _c, r, _n| Ok(i64::from(
+        super::refuge::fuel_job(p, r)
+    ))),
 ];
 
 /// Validated function registry; binding resolves names once, outside the tick loop.
@@ -1328,6 +1340,13 @@ pub fn resolve_target(
                 filter,
             ));
         }
+    }
+    if name == "warm_refuge" {
+        return Ok(super::refuge::target(
+            context.row(agent)?,
+            context,
+            resources,
+        ));
     }
     if name == "edible_plant" {
         return Ok(edible_plant(context.row(agent)?, context, resources));
@@ -1801,7 +1820,10 @@ pub fn prepare_context(
 pub(super) fn continuation_supported(name: &str) -> bool {
     matches!(
         name,
-        "stock_hoard_order"
+        "cold"
+            | "health_full"
+            | "warm_refuge_active"
+            | "stock_hoard_order"
             | "social_partner_present"
             | "social_chase_expired"
             | "idle"

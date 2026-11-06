@@ -63,6 +63,11 @@ impl PersonSnapshot {
             drafted: world.get::<&Drafted>(entity).is_ok(),
             fleeing: world.get::<&Fleeing>(entity).ok().map(|v| *v),
             cold: world.get::<&Cold>(entity).is_ok(),
+            health_full: world
+                .get::<&BodyHealth>(entity)
+                .ok()
+                .is_none_or(|v| v.hp >= v.max_hp),
+            apparel: world.get::<&Apparel>(entity).ok().map(|v| *v),
             sick: world.get::<&Sick>(entity).is_ok(),
             mood: world.get::<&Mood>(entity).ok().map(|v| *v),
             hp: world.get::<&BodyHealth>(entity).ok().map(|v| v.hp),
@@ -98,6 +103,8 @@ fn assert_snapshot(actual: &PersonSnapshot, expected: &PersonSnapshot) {
         drafted,
         fleeing,
         cold,
+        health_full,
+        apparel,
         sick,
         mood,
         activity,

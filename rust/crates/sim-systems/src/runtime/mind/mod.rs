@@ -9,6 +9,7 @@ mod harvest_food;
 pub(crate) mod job_origins;
 mod program;
 pub(crate) mod record;
+mod refuge;
 pub(in crate::runtime) mod scheduling;
 #[cfg(feature = "mind_shadow")]
 pub mod shadow;
@@ -38,3 +39,6 @@ mod harvest_stock_boundary_tests;
 mod harvest_admission_tests;
 #[cfg(test)]
 mod winter_stock_duty_tests;
+
+#[cfg(test)]
+mod refuge_tests;
