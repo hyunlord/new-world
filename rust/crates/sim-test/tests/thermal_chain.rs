@@ -494,6 +494,233 @@ fn production_scene_builds_heats_crosses_cools_and_refuels_a_dwelling() {
             && e.world.get::<&Cold>(entity).is_err()
     });
     checkpoint(&mut e, "05-refueled", home);
+    command(
+        &mut e,
+        Command::SetBillMode {
+            workshop: shop,
+            bill,
+            mode: BillMode::Maintain(24),
+        },
+    );
+    command(
+        &mut e,
+        Command::SetDrafted {
+            agent: person,
+            drafted: false,
+        },
+    );
+    let stable_deadline = e.current_tick() + DAY;
+    until(
+        &mut e,
+        stable_deadline,
+        "stable earned dwelling before floor removal",
+        |e| {
+            assert!(
+                e.world.get::<&Agent>(entity).is_ok(),
+                "same observer survives normal needs"
+            );
+            thermal::dwelling_view(&e.world, &e.resources, bed).is_some_and(|v| {
+                v.stage.is_some_and(|stage| stage >= 3)
+                    && v.candidate == v.stage
+                    && v.deficiency_deadline.is_none()
+                    && v.paid_heat
+                    && v.warm_occupants
+            })
+        },
+    );
+    let earned = thermal::dwelling_view(&e.world, &e.resources, bed)
+        .expect("dwelling")
+        .stage;
+    let room_id = room_at(&e.resources, bed).expect("physical room").id;
+    let improvements_before = e
+        .resources
+        .chronicle
+        .entries()
+        .iter()
+        .filter(|event| {
+            event.kind == sim_core::chronicle::ChronicleKind::DwellingImproved
+                && event.value == i64::from(room_id)
+        })
+        .count();
+    let removed = floors
+        .iter()
+        .copied()
+        .find(|&tile| {
+            tile != bed
+                && sim_systems::runtime::jobs::space::built_at(&e.resources, tile)
+                    == Some(BlueprintKind::PackedFloor)
+        })
+        .expect("eligible floor with no bed or structure above it");
+    command(
+        &mut e,
+        Command::DesignateDeconstruct {
+            x0: removed.0,
+            y0: removed.1,
+            x1: removed.0,
+            y1: removed.1,
+        },
+    );
+    let removal_deadline = e.current_tick() + DAY;
+    let removed_index = e.resources.tile_grid.idx(removed.0, removed.1);
+    while e.resources.tile_grid.floor_material[removed_index].is_some() {
+        assert!(
+            e.current_tick() < removal_deadline,
+            "ordinary floor deconstruction completes"
+        );
+        assert!(
+            e.world.get::<&Agent>(entity).is_ok(),
+            "same observer survives before floor removal"
+        );
+        let view =
+            thermal::dwelling_view(&e.world, &e.resources, bed).expect("dwelling before removal");
+        assert!(view.roofed && e.resources.colony.beds.contains_key(&bed));
+        assert_eq!(view.floor_coverage_permille, 1000);
+        assert_eq!(
+            view.stage, earned,
+            "earned stage stable before actual floor removal"
+        );
+        assert_eq!(
+            view.candidate, earned,
+            "no earlier fuel, occupancy or food deficiency"
+        );
+        assert_eq!(
+            view.deficiency_deadline, None,
+            "no mixed-cause pending downgrade before removal"
+        );
+        assert_eq!(
+            e.resources.thermal.as_ref().expect("thermal").dwellings[&bed].deficient_since_tick,
+            None,
+            "deconstruction cannot inherit an existing timer"
+        );
+        e.tick();
+    }
+    let removed_tick = e.resources.current_tick;
+    let view = thermal::dwelling_view(&e.world, &e.resources, bed).expect("dwelling after removal");
+    assert_eq!(view.reason, "floor");
+    assert_eq!(view.candidate, Some(1));
+    assert_eq!(
+        view.stage, earned,
+        "floor removal starts a delay, not an immediate downgrade"
+    );
+    let state = e.resources.thermal.as_ref().expect("thermal");
+    let since = state.dwellings[&bed]
+        .deficient_since_tick
+        .expect("actual deficiency began");
+    assert_eq!(
+        since, removed_tick,
+        "the newly started timer matches the first actual floor disappearance tick"
+    );
+    println!("THERMAL_FLOOR_REMOVED tick={removed_tick} since={since} prior_deficiency=none");
+    let delay = state
+        .rules
+        .stages
+        .iter()
+        .find(|stage| Some(stage.id) == earned)
+        .expect("earned authored stage")
+        .downgrade_delay_ticks;
+    let deadline = since + delay;
+    assert!(
+        e.resources.current_tick < deadline,
+        "downgrade is actually delayed"
+    );
+    // Save a real partially elapsed deficiency; never edit its timer or earned stage.
+    e.tick();
+    checkpoint(&mut e, "06-floor-pending", home);
+    let partial = sim_systems::save::save(&mut e).expect("partial deficiency save");
+    let mut resumed = sim_systems::save::load(&partial).expect("partial deficiency load");
+    let mut paid_hours = 0;
+    let mut min_fuel = u32::MAX;
+    while e.resources.current_tick < deadline {
+        let fuel = e
+            .resources
+            .settlements
+            .values()
+            .map(|s| s.stockpile.get(&ResourceKind::Wood).copied().unwrap_or(0))
+            .sum::<u32>()
+            + sim_systems::runtime::jobs::hearth::feedable_firewood(&e.resources);
+        min_fuel = min_fuel.min(fuel);
+        assert!(
+            fuel > 0,
+            "ordinary sustained production keeps physical fuel available"
+        );
+        assert!(
+            e.world.get::<&Agent>(entity).is_ok(),
+            "same observer survives floor deficiency"
+        );
+        assert!(e.resources.colony.beds.contains_key(&bed));
+        assert!(e.resources.tile_grid.floor_material
+            [e.resources.tile_grid.idx(removed.0, removed.1)]
+        .is_none());
+        let view = thermal::dwelling_view(&e.world, &e.resources, bed).expect("physical dwelling");
+        assert!(view.roofed && view.floor_coverage_permille < 1000);
+        assert_eq!(view.reason, "floor");
+        assert_eq!(view.candidate, Some(1));
+        assert_eq!(
+            view.stage, earned,
+            "earned stage persists before authored deadline"
+        );
+        assert_eq!(view.deficiency_deadline, Some(deadline));
+        if e.resources.current_tick % 60 == 0 && view.paid_heat {
+            paid_hours += 1;
+        }
+        e.tick();
+        resumed.tick();
+    }
+    let downgraded =
+        thermal::dwelling_view(&e.world, &e.resources, bed).expect("downgraded dwelling");
+    assert_eq!(
+        downgraded.stage,
+        Some(1),
+        "actual downgrade at authored deadline"
+    );
+    assert_eq!(downgraded.deficiency_deadline, None);
+    assert!(
+        e.world.get::<&Agent>(entity).is_ok(),
+        "observer alive at downgrade"
+    );
+    assert_eq!(
+        sim_systems::save::save(&mut e).expect("continued deficiency"),
+        sim_systems::save::save(&mut resumed).expect("resumed deficiency")
+    );
+    println!(
+        "THERMAL_DOWNGRADE since={since} delay={delay} deadline={deadline} paid_hours={paid_hours} min_fuel={min_fuel}"
+    );
+    checkpoint(&mut e, "07-downgraded", home);
+    place(&mut e, BlueprintKind::PackedFloor, removed);
+    let restore_deadline = e.current_tick() + DAY;
+    until(
+        &mut e,
+        restore_deadline,
+        "ordinary floor rebuilding and actual stage recovery",
+        |e| {
+            assert!(
+                e.world.get::<&Agent>(entity).is_ok(),
+                "same observer survives recovery"
+            );
+            thermal::dwelling_view(&e.world, &e.resources, bed).is_some_and(|v| {
+                v.stage.is_some_and(|stage| stage >= 3)
+                    && v.floor_coverage_permille == 1000
+                    && v.deficiency_deadline.is_none()
+                    && v.paid_heat
+                    && v.warm_occupants
+            })
+        },
+    );
+    assert!(
+        e.resources
+            .chronicle
+            .entries()
+            .iter()
+            .filter(
+                |event| event.kind == sim_core::chronicle::ChronicleKind::DwellingImproved
+                    && event.value == i64::from(room_id)
+            )
+            .count()
+            > improvements_before,
+        "restoring this dwelling emits a new genuine improvement chronicle"
+    );
+    checkpoint(&mut e, "08-restored", home);
+
     assert!(
         e.resources
             .chronicle

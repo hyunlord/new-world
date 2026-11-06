@@ -1,7 +1,7 @@
 //! Physical refuge facts: real heat/fuel, reachable room tiles and existing seats.
 use super::context::{PersonSnapshot, TargetCandidate, TickContext};
 use crate::runtime::{settlement::firewood, thermal};
-use sim_core::colony::JobKind;
+use sim_core::colony::{Carry, JobKind};
 use sim_core::components::{ActivityKind, ResourceKind};
 use sim_engine::SimResources;
 
@@ -32,13 +32,22 @@ pub(super) fn needs_ready(person: &PersonSnapshot) -> bool {
 }
 
 pub(super) fn fuel_job(person: &PersonSnapshot, res: &SimResources) -> bool {
-    let Some(job) = person.job else {
-        return false;
-    };
+    person
+        .job
+        .is_some_and(|job| fuel_service_job(person.agent, job.kind, person.carry, res))
+}
+
+/// The assignment boundary uses the same exact physical fuel exception as mind.
+pub(crate) fn fuel_service_job(
+    agent: sim_core::components::AgentId,
+    kind: JobKind,
+    carry: Option<Carry>,
+    res: &SimResources,
+) -> bool {
     let Some(settlement) = res
         .settlements
         .values()
-        .find(|s| s.member_agents.contains(&person.agent))
+        .find(|s| s.member_agents.contains(&agent))
     else {
         return false;
     };
@@ -54,7 +63,7 @@ pub(super) fn fuel_job(person: &PersonSnapshot, res: &SimResources) -> bool {
         return false;
     }
 
-    match job.kind {
+    match kind {
         JobKind::Gather { .. } => true,
         JobKind::Chop { tree } => res
             .colony
@@ -89,8 +98,7 @@ pub(super) fn fuel_job(person: &PersonSnapshot, res: &SimResources) -> bool {
                     .any(|bill| {
                         bill.recipe.recipe().is_some_and(|recipe| {
                             recipe.output.0.definition().fuel_units.is_some()
-                                && person
-                                    .carry
+                                && carry
                                     .map(|carry| carry.kind)
                                     .or_else(|| {
                                         res.colony.ground_items.get(&from).map(|item| item.kind)
@@ -103,9 +111,7 @@ pub(super) fn fuel_job(person: &PersonSnapshot, res: &SimResources) -> bool {
             })
         }
         JobKind::Haul { from, .. } => {
-            person
-                .carry
-                .is_some_and(|carry| carry.kind.definition().fuel_units.is_some())
+            carry.is_some_and(|carry| carry.kind.definition().fuel_units.is_some())
                 || res
                     .colony
                     .ground_items
@@ -171,4 +177,104 @@ pub(super) fn target(
             agent: None,
             food: None,
         })
+}
+
+/// A real injured recovery owner must survive assignment before routine cleanup.
+pub(crate) fn protects_assignment(
+    world: &hecs::World,
+    res: &SimResources,
+    entity: hecs::Entity,
+    agent: sim_core::components::AgentId,
+) -> bool {
+    use sim_core::colony::people::{Apparel, Drafted, Fleeing};
+    use sim_core::components::{
+        Activity, AgentState, BodyHealth, Hunger, Position, TargetKind, Thirst,
+    };
+    let Some(thermal) = res.thermal.as_ref() else {
+        return false;
+    };
+    let Some(choice) = res
+        .mind
+        .running
+        .get(&agent)
+        .filter(|choice| !choice.finished)
+    else {
+        return false;
+    };
+    if res
+        .mind
+        .history
+        .as_ref()
+        .and_then(|history| history.dictionary().node_label(choice.node.index()))
+        .is_none_or(|node| node.behaviour != "warm_refuge")
+        || world.get::<&Drafted>(entity).is_ok()
+        || world.get::<&Fleeing>(entity).is_ok()
+        || !world
+            .get::<&BodyHealth>(entity)
+            .is_ok_and(|health| health.hp < health.max_hp)
+        || !world.get::<&AgentState>(entity).is_ok_and(|state| {
+            matches!(
+                *state,
+                AgentState::Seeking {
+                    target: TargetKind::Activity
+                } | AgentState::Consuming {
+                    target: TargetKind::Activity
+                }
+            )
+        })
+    {
+        return false;
+    }
+    let urgent = res
+        .rules
+        .agent
+        .critical_preemption
+        .unwrap_or(crate::runtime::agent_actions::needs::CRITICAL_NEED);
+    if world
+        .get::<&Hunger>(entity)
+        .is_ok_and(|h| f64::from(h.value) >= urgent)
+        || world
+            .get::<&Thirst>(entity)
+            .is_ok_and(|t| t.value >= urgent)
+    {
+        return false;
+    }
+    let Ok(activity) = world.get::<&Activity>(entity) else {
+        return false;
+    };
+    let Ok(position) = world.get::<&Position>(entity) else {
+        return false;
+    };
+    if activity.kind != ActivityKind::SitByFire
+        || !res.nav.reachable((position.x, position.y), activity.place)
+    {
+        return false;
+    }
+    let Some(room) = res
+        .colony
+        .room_of_tile
+        .get(&activity.place)
+        .and_then(|id| res.colony.rooms.get(id))
+        .filter(|room| room.roofed)
+    else {
+        return false;
+    };
+    let apparel = world.get::<&Apparel>(entity).ok();
+    if thermal::felt_temperature(res, apparel.as_deref(), activity.place)
+        .is_some_and(|felt| felt >= thermal.rules.cold_threshold_d10)
+    {
+        return true;
+    }
+    let rate = firewood::current_service_rate(res);
+    res.settlements.iter().any(|(&sid, settlement)| {
+        settlement.member_agents.contains(&agent)
+            && rate > 0
+            && settlement
+                .stockpile
+                .get(&ResourceKind::Wood)
+                .copied()
+                .unwrap_or(0)
+                >= rate
+            && firewood::primary_hearth_room(res, sid).is_some_and(|primary| primary.id == room.id)
+    })
 }

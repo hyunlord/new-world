@@ -516,3 +516,6 @@ fn refuge_recovery_missing_need_source_does_not_transfer_to_leisure() {
         before
     );
 }
+
+#[path = "refuge_job_tests.rs"]
+mod job_admission;

@@ -1,7 +1,7 @@
 //! JobAssignSystem: gives available colonists a job — by work type: Craft > Build (deliver, then build) > Quarry > Chop > Split > Haul.
 //!
 //! Priority: 124 (`JOB_ASSIGN_PRIORITY`). Interval: 1 tick. Gate: `WorldRules.colony`.
-//! Reads: `Agent`, `Position`, `AgentState`, `Job`, `Child`, `PorterTrip`, `Hunger`, `Thirst`, `Sleep`, `Temperament`; `SimResources.colony` (trees, designations, ground items, zones, reservations, footprints), `combat_pairs`, `rules.colony`; colony sites (`ColonySite`, `MaterialNeeds`, `ConstructionSite`)
+//! Reads: `Agent`, `Position`, `AgentState`, `Activity`, `BodyHealth`, `Apparel`, `Job`, `Child`, `PorterTrip`, `Hunger`, `Thirst`, `Sleep`, `Temperament`; `SimResources.colony` (trees, designations, ground items, zones, reservations, footprints), `combat_pairs`, `rules.colony`, `mind` running ownership and `thermal`; colony sites (`ColonySite`, `MaterialNeeds`, `ConstructionSite`)
 //! Writes: `Job`, `SeekTarget`, `AgentState` (`Seeking { Job }`); `SimResources.colony.reservations`, `colony.tallies`, `spatial.colony` (rebuilt when the overlay changed)
 //! Events: none
 //!
@@ -1393,6 +1393,17 @@ impl RuntimeSystem for JobAssignSystem {
         // claim a reservation that the decision pass will immediately release.
         self.food.refresh(resources);
         let needy = |e: Entity| needy(world, resources, e, &self.food);
+        let recovering: std::collections::BTreeSet<_> = world
+            .query::<(&Agent, &sim_core::components::Activity)>()
+            .iter()
+            .filter(|(entity, (agent, activity))| {
+                activity.kind == sim_core::components::ActivityKind::SitByFire
+                    && crate::runtime::mind::refuge_protects_assignment(
+                        world, resources, *entity, agent.id,
+                    )
+            })
+            .map(|(_, (agent, _))| agent.id)
+            .collect();
         let mut available: Vec<Row> = world
             .query::<(
                 &Agent,
@@ -1517,12 +1528,17 @@ impl RuntimeSystem for JobAssignSystem {
         let mut assigned: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
         // M4: today's apprenticeship sessions first (both partners must be free).
         if let Some(k) = knowledge_rule {
+            assigned.extend(recovering.iter().copied());
             super::teach::assign(world, resources, &k, &mut assigned, &mut taken, &self.food);
+            assigned.retain(|agent| !recovering.contains(agent));
         }
         // M5 (ADR 0029): the dressing pass, hourly while "everyone in hides" is on.
         if rule.wildlife.is_some() && !resources.colony.dress_off && tick.is_multiple_of(60) {
-            let free: Vec<(AgentId, Entity, (u32, u32))> =
-                available.iter().map(|row| (row.0, row.1, row.2)).collect();
+            let free: Vec<(AgentId, Entity, (u32, u32))> = available
+                .iter()
+                .filter(|row| !recovering.contains(&row.0))
+                .map(|row| (row.0, row.1, row.2))
+                .collect();
             super::hunt::dress(world, resources, &free, &mut assigned, &mut taken);
         }
         // The skills of the crafts on offer (active bills of work type Craft), for the craft round's order.
@@ -1647,6 +1663,11 @@ impl RuntimeSystem for JobAssignSystem {
                 let Some((kind, amount, item)) = found else {
                     continue;
                 };
+                if recovering.contains(&id)
+                    && !crate::runtime::mind::fuel_service_job(id, kind, None, resources)
+                {
+                    continue;
+                }
                 // M3: a target this person found unreachable lately is skipped.
                 if resources
                     .colony

@@ -10,6 +10,7 @@ pub(crate) mod job_origins;
 mod program;
 pub(crate) mod record;
 mod refuge;
+pub(crate) use refuge::{fuel_service_job, protects_assignment as refuge_protects_assignment};
 pub(in crate::runtime) mod scheduling;
 #[cfg(feature = "mind_shadow")]
 pub mod shadow;

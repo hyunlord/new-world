@@ -196,3 +196,7 @@ A fixed shell around a production hearth can intersect initial shelters even aft
 
 ### Recovery prerequisites and activity ownership (M6b, 2026-11-07)
 A recovery action that waits for full health must permit the existing healing prerequisites: compare its hunger/thirst guards with the actual survival system before attributing slow recovery to thermal balance. Ordinary need completion clears Activity, so test warm injured resumption after real consumption and movement, not merely an available destination. Sharing ActivityKind with leisure does not establish lifecycle ownership; use validated running-behaviour metadata to prevent an unrelated continuation from finishing recovery and starting with an incompatible target. Keep fresh food ages aligned with the simulation clock offset in these regressions. Source: M6B_DECISIONS S3-INTEGRATION-3; `runtime/mind/refuge_tests.rs`.
+
+
+### Assignment precedes recovery policy (M6b, 2026-11-07)
+A correct mind guard cannot preserve Activity if an earlier job assignment changes the agent to Seeking(Job) and routine initialization clears Activity before facts are read. Reproduce the actual JobAssign→mind boundary. Protect an owned recovery before reservations are committed, including teaching/dressing side paths; permit only the specific physical fuel-service job during a deficit. Rejecting jobs after assignment produces reservation churn and hides the ownership defect. Source: M6B_DECISIONS S3-INTEGRATION-5; `runtime/mind/refuge_job_tests.rs`.

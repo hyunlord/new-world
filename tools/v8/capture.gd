@@ -2133,14 +2133,13 @@ func _thermal_shots(main: Node, world: Node, camera: Camera2D) -> void:
 	var reads: Node = main.get_node("SimReads")
 	var panel: Node = main.get_node("UI/RoomPanel")
 	var inspector: Node = main.get_node("UI/AgentInspectorPanel")
-	var tech: Node = main.get_node("UI/TechPanel")
 	var chronicle: Node = main.get_node("UI/ChroniclePanel")
 	var layer: CanvasItem = main.get_node("ColonyView/OverlayLayer/Rooms") as CanvasItem
 	var notes: Array[Dictionary] = []
 	camera.set_process(false)
 	for language: String in ["ko", "en"]:
 		root.get_node("Locale").call("set_language", language)
-		for milestone: String in ["00-outside", "01-built", "02-warmed", "03-door", "04-cold", "05-refueled"]:
+		for milestone: String in ["00-outside", "01-built", "02-warmed", "03-door", "04-cold", "05-refueled", "06-floor-pending", "07-downgraded", "08-restored"]:
 			var path: String = _thermal_saves.path_join(milestone + ".wsave")
 			if not bool(reads.call("mutate_raw", "load_world", [path])):
 				push_error("capture: failed genuine thermal save " + path)
@@ -2157,7 +2156,8 @@ func _thermal_shots(main: Node, world: Node, camera: Camera2D) -> void:
 				quit(1)
 				return
 			_frame(camera, Vector2(_hearth(world)), _zoom)
-			layer.call("set_shown", true)
+			if not bool(layer.call("is_shown")):
+				await _key(KEY_R)
 			var ids: PackedInt32Array = rooms.get("ids", PackedInt32Array())
 			var detail: Dictionary = {}
 			if milestone != "00-outside":
@@ -2165,11 +2165,27 @@ func _thermal_shots(main: Node, world: Node, camera: Camera2D) -> void:
 					push_error("capture: completed house has no real room")
 					quit(1)
 					return
-				panel.call("display_room", ids[0])
+				var room_id: int = int(layer.call("room_at", _hearth(world)))
+				var index: int = ids.find(room_id)
+				if index < 0:
+					push_error("capture: native overlay has no room at actual hearth")
+					quit(1)
+					return
+				var mapped: Dictionary = _rooms_of(world)
+				for tile: Vector2i in mapped[room_id]["cells"]:
+					await _click(_screen_of(tile))
+					if int(panel.call("current_room")) == room_id:
+						break
+				if int(panel.call("current_room")) != room_id:
+					push_error("capture: real room click did not open the mapped hearth room")
+					quit(1)
+					return
 				await _wait(10)
 				detail = panel.call("detail")
-				if not detail.has("temperature_d10"):
-					push_error("capture: room panel has no native temperature")
+				var temperatures: PackedInt32Array = rooms.get("temperature_d10s", PackedInt32Array())
+				var drawn: Dictionary = layer.call("room", room_id)
+				if index >= temperatures.size() or not detail.has("temperature_d10") or int(detail.get("id", -1)) != room_id or int(detail["temperature_d10"]) != temperatures[index] or int(drawn.get("temperature_d10", -99999)) != temperatures[index]:
+					push_error("capture: actual hearth room/overlay/detail temperature mismatch")
 					quit(1)
 					return
 			else:
@@ -2194,18 +2210,18 @@ func _thermal_shots(main: Node, world: Node, camera: Camera2D) -> void:
 				await _wait(10)
 				await _save(language + "-" + milestone + "-felt.png")
 				notes.append({"agent": people[0], "thermal": world.call("get_agent_m5", people[0]), "shown": inspector.call("m5_lines")})
-			if milestone == "05-refueled":
+			if milestone == "08-restored":
 				panel.call("close")
-				tech.call("toggle_visible")
+				await _key(KEY_T)
 				await _wait(10)
 				await _save(language + "-06-era.png")
-				tech.call("toggle_visible")
-				chronicle.call("toggle_visible")
+				await _key(KEY_T)
+				await _key(KEY_C)
 				chronicle.call("set_filter", 5)
 				chronicle.call("set_person_only", false)
 				await _wait(10)
 				await _save(language + "-07-chronicle.png")
-				chronicle.call("toggle_visible")
+				await _key(KEY_C)
 			if _now(world) != tick or world.call("get_command_log", 0) != commands:
 				push_error("capture: thermal observation changed simulation")
 				quit(1)
@@ -2215,5 +2231,5 @@ func _thermal_shots(main: Node, world: Node, camera: Camera2D) -> void:
 		quit(1)
 		return
 	file.store_string(JSON.stringify(notes, "\t"))
-	print("CAPTURE_THERMAL_DONE shots=20")
+	print("CAPTURE_THERMAL_DONE shots=26")
 	quit(0)
