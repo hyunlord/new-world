@@ -1,5 +1,19 @@
 # M6b 보고서
 
+## Stage2 실제 게시 — 2026-11-07 04:02:56 KST
+
+**PUBLISHED `90544f1f9270cb6c72906eef93ad9171442d5e54`.** BASE1 `16dc9120d`에서 v8/wip→v8/main에 fast-forward하고 양쪽 원격 SHA를 확인했다(`stage2/publication.json`). 최종 gate `stage2/gate-attempts/s2-90544f1f9`는04:00:54KST **49/49 exit0**으로 끝났으며 postrun binding은 config_bound/source_unchanged/all_exit_zero=true다. debug3102·release3100 PASS, 각각14ignored, Python597 PASS. 아래 c68 실패·수리·사전 검증은 당시 기록으로 보존한다.
+
+- 최종 baseline identity228748값 차이0, 연대기64파일19683항목·원시64파일 동일, seeds0–3 결정성 PASS. 저장/command replay·회계·기술 gate 통과. 최종 smoke의 seeds0–7×48일·집사 ON·무명령 생존 배열은 BASE/후보 모두 `[10,12,11,13,10,13,11,14]`, KnowledgeLost0/0(허용2)이다.
+- C3 시간·메모리 PASS, BASE/후보 교차3회 시작 load1은6.90/7.49,5.15/5.07,4.55/4.05다. 기존 raw를 수정 없이 round별 파일명으로 합쳐 기존 summariser의 중앙값·장면별3회로 [성능 장부](../../perf/PERF_LEDGER.md)에 quiet BASE1/게시 후보 각6행을 기록했다. 새 측정은 없으며 요약은 외부 `stage2/ledger-publication`에 둔다.
+- step41 **엄격50ms FAIL / 기존 waiver PASS**: 초과57.826·50.271·59.891ms,60ms 초과0. 예외를 엄격 기준 PASS로 바꾸지 않는다.
+- 실제 scene-r4의 수확→침지→방적→직조→재단→착용 및120틱 저장 연속 PASS. captures-r5 실제12장·주민 mouse_selection=true, 진단·카드·첫 제작 연대기·직조 표지 확인. 초기 전 지식 시연 조건은 자연 발견이나 밸런스 증거가 아니며, 오너 수동 플레이 판정도 아니다. 전용 직조 아트는 [#689](https://github.com/hyunlord/new-world/issues/689)/ISS-364 OPEN이다.
+- Stage2 도구 순증371줄(capture151+cards31+gate/tests189), 새 도구 파일0; 문서 경로 score.py4줄은 별도. 첫 c68의45/49·exit1과 F12/fixture 수리 로그는 유지한다. 원시 미달 #688과 #684를 자동으로 닫지 않는다.
+
+이 문서 변경은 **게시 후 Stage3에 포함할 기록**이며 새 문서 SHA가 Stage2 gate를 이미 통과했다는 주장이 아니다. Stage3는 `v8/m6b-stage3`, BASE2=`90544f1f9270cb6c72906eef93ad9171442d5e54`, 시작2026-11-07 04:02:56KST·한도11/08 04:02:56KST(`stage3/START.json`). 온도·집 단계의 시작만 기록하며 구현·검증 완료를 주장하지 않는다. D-FEATURE-FIRST와1584–1615 미사용을 유지한다.
+
+## 이전 Stage2 게시 후보 체크포인트
+
 ## Stage2 게시 후보 — 2026-11-07, 첫 전체 gate FAIL·수리 검증 중
 
 기능 소스는 `448f660164f8ac3663402549931af7742395ca1b`이며 최종 문서 핀 후 전체 gate를 실행한다. 통과한 실제 최종 SHA만 v8/wip → v8/main에 게시하고 외부 영수증으로 확인한다. 이 문서는 완료 전 게시를 주장하지 않는다.

@@ -444,7 +444,7 @@ Stage −1 게시 뒤 중복·다음 빈 ISS를 재확인하고 위 제목의 #6
 
 | ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
 |---|---|---|---|---|---|---|
-| ISS-363 | 통나무 개선 막대 미달·한파 땔감 및 다중 화덕 비축 누락 | heldout03: 통나무 후보27/32 대 BASE 투영0/32(기준28); day5 BASE0/32·후보32/32, day24 BASE24/32·후보27/32. 한파 후보29/30노출 대 BASE25/29노출, 실패1664는 양쪽 멸종 | sim | open | [#688](https://github.com/hyunlord/new-world/issues/688): 원시 실패 보존, `acb31be40` 다중 화덕 수정은 Stage2에서 평가. BASE에는 cap이 없어 후보 고정 정책의 읽기 전용 투영값임 | M6B_REPORT.md; D-S1-3(2026-11-06); v8/m6b-stage2-deferred |
+| ISS-363 | 통나무 개선 막대 미달·한파 땔감 및 다중 화덕 비축 누락 | heldout03: 통나무 후보27/32 대 BASE 투영0/32(기준28); day5 BASE0/32·후보32/32, day24 BASE24/32·후보27/32. 한파 후보29/30노출 대 BASE25/29노출, 실패1664는 양쪽 멸종 | sim | open | [#688](https://github.com/hyunlord/new-world/issues/688): 원시 실패 보존, `acb31be40` 다중 화덕 수정은 Stage2 `90544f1f9`에 포함·smoke 검증; 과거 개선 막대는 재평가하지 않음. BASE에는 cap이 없어 후보 고정 정책의 읽기 전용 투영값임 | M6B_REPORT.md; D-S1-3(2026-11-06); v8/m6b-stage2-deferred |
 
 2026-11-06 Stage1 `16dc9120d` 게시 후 [#674](https://github.com/hyunlord/new-world/issues/674)·[#675](https://github.com/hyunlord/new-world/issues/675)는 CLOSED 확인. #675의 BASE 대비 비악화32/32, BASE5일 대 후보1일이며 후보1일은 양쪽 멸종1664에 남는다(0일로 주장하지 않음). #684/#687/#688은 OPEN 유지. 닫기 본문은 외부 `stage1/owner-acceptance-03/close-674.md`, `close-675.md`에 보존한다.
 
@@ -452,4 +452,4 @@ Stage −1 게시 뒤 중복·다음 빈 ISS를 재확인하고 위 제목의 #6
 
 | ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
 |---|---|---|---|---|---|---|
-| M6B-ART-2 | 직조 물품·작업장·착용 실루엣이 범주 대체 그림 | 실제 사슬 캡처는 있으나 전용 아트 미제공; 의복은 기존 실루엣과 데이터 색조 | art | open | [#689](https://github.com/hyunlord/new-world/issues/689): route I·resolver 경로의 전용 아트와 실제 화면 검증 | ADR0059; M6B_REPORT.md |
+| ISS-364 | 직조 물품·작업장·착용 실루엣이 범주 대체 그림 | 실제 사슬 캡처는 있으나 전용 아트 미제공; 의복은 기존 실루엣과 데이터 색조 | art | open | [#689](https://github.com/hyunlord/new-world/issues/689): route I·resolver 경로의 전용 아트와 실제 화면 검증 | ADR0059; M6B_REPORT.md |

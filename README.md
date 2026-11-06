@@ -11,11 +11,11 @@
 
 > 현재 정착지는 방과 창고, 제작·작업 우선순위, 기술 전승, 징집, 이주민·교역을 갖춘 정착지다. 기본 확대는 1×이고 64px 타일과 채택된 사람·자연 아트를 쓴다. 아래의 첫 플레이 순서와 전체 조작표로 시작한다.
 
-**M6b Stage1 게시 완료 (`16dc9120d`, 2026-11-06):** 밭·씨앗·토양, 실제 식사까지 이어지는 농산물, 식량·통나무·땔감 생산 제한과 명시적 가르침 카드를 구현했다. heldout03의 농경·BASE 상대 안전성은 오너가 수용했다(D-S1-3). 집사 개선 미달은 양쪽 수치와 함께 #688에 보존했다. 전체 gate49/49·exit0이며 step41은 엄격50ms FAIL/기존 예외 PASS로 구분한다. 직조와 방 온도는 다음 단계이고, 밭 전용 아트는 [#687](https://github.com/hyunlord/new-world/issues/687)에 남아 있다. [검증·게시 상태와 이전 실패](docs/v8/m6b/M6B_REPORT.md).
+**M6b Stage1 게시 완료 (`16dc9120d`, 2026-11-06):** 밭·씨앗·토양, 실제 식사까지 이어지는 농산물, 식량·통나무·땔감 생산 제한과 명시적 가르침 카드를 구현했다. heldout03의 농경·BASE 상대 안전성은 오너가 수용했다(D-S1-3). 집사 개선 미달은 양쪽 수치와 함께 #688에 보존했다. 전체 gate49/49·exit0이며 step41은 엄격50ms FAIL/기존 예외 PASS로 구분한다. 방 온도는 다음 단계이고, 밭 전용 아트는 [#687](https://github.com/hyunlord/new-world/issues/687)에 남아 있다. [검증·게시 상태와 이전 실패](docs/v8/m6b/M6B_REPORT.md).
 
-**Stage2 게시 후보:** 실제 아마 수확 → 침지 → 방적 → 직조 → 재단 → 착용 사슬과 저장 재개를 확인했다. baseline identity와 8개 세계 생존 smoke는 통과했고, 전체 게시 gate는 대기 중이다. 게시판은 위 Stage1이다.
+**Stage2 게시 완료 (`90544f1f9`, 2026-11-07):** 실제 아마 수확→침지→방적→직조→재단→착용, 저장 재개·baseline identity·8세계 생존 smoke와 전체49/49 gate를 통과했다(step41 엄격50ms FAIL/기존 예외 PASS). 실제12장과 마우스 선택을 확인했다. 전용 직조 아트는 [#689](https://github.com/hyunlord/new-world/issues/689)에 남기며 Stage3 온도·집 단계를 시작했다.
 
-[현재 후보 화면 — Stage2](docs/images/m6b_stage2_contact_sheet.png)은 아마 수확부터 실제 착용까지, 의복 카드·진단·첫 제작 기록을 게임 캡처로 보여 준다. 화면 판독과 실행 검증의 범위는 보고서에 기록했다. [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [M-UX2.1 기록](docs/v8/mux2_1/MUX21_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).
+[현재 게시 화면 — Stage2](docs/images/m6b_stage2_contact_sheet.png)은 아마 수확부터 실제 착용까지, 의복 카드·진단·첫 제작 기록을 게임 캡처로 보여 준다. 화면 판독과 실행 검증의 범위는 보고서에 기록했다. [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [M-UX2.1 기록](docs/v8/mux2_1/MUX21_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).
 
 먼저 ‘지금 할 일’에서 현재 작업과 올해 목표를 읽고, 카드의 조건을 확인한 뒤 선택한다. 중요한 연대기에서 사건과 기록된 원인을 확인한다. 창립자 역할 표시는 명령을 보내지 않으며 P의 역할을 직접 선택하면 그 주민의 작업 우선순위가 바뀐다.
 

@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-07 — M6b Stage2 직조 `90544f1f9`를 wip→main 게시했다. 실제 아마→착용 사슬·12장/마우스 선택, 전체49/49 gate(기존 step41 예외)·identity·smoke·C3 PASS. 전용 아트#689 OPEN, Stage3 온도·집 단계04:02:56 시작([보고서](v8/m6b/M6B_REPORT.md)).
+
 - 2026-11-06 — M6b Stage2 직조 후보: 실제 아마 수확부터 두 의복 착용·저장 재개까지 완료하고12장 캡처·실제 주민 클릭을 확인했다. baseline identity·8세계 smoke PASS, 전체 gate와 게시 대기. 전용 아트는 #689([보고서](v8/m6b/M6B_REPORT.md), [ADR0059](decisions/0059-authored-weaving-and-physical-apparel.md)).
 
 - 2026-11-06 — M6b Stage1 `16dc9120d`를 v8/wip→v8/main에 게시하고 원격 SHA를 확인했다. 농경·생산 제한·명시적 가르침, 전체 gate49/49·exit0(step41 엄격50ms FAIL/기존 예외 PASS), debug/release 각3076PASS·13ignored, baseline 동일성·C3 PASS. 집사 미달은 #688 OPEN에 보존, #674/#675 CLOSED. Stage2 직조를20:59:12KST에 시작했다([보고서](v8/m6b/M6B_REPORT.md)).

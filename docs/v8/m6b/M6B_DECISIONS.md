@@ -1236,3 +1236,12 @@ S2-CAPTURE-PICK validation: r5 completes12 real screenshots with `mouse_selectio
 Preserve the c68d09183 full-gate failure (45/49, exit1). Repair only the observed technical failures: append recipe20–25 to the existing exact-prefix FFI expectation; decode the genuine v9 oracle with frozen LegacySimResourcesV16 before converting to current resources; retain the prior person colour when an F12 reload names a missing frame. Keep the frozen renderer reference and add clothing_delta to its full uniform comparison. No simulation or balance change, no new tooling file; existing tooling net0 for these repairs. Re-run focused tests then the full gate on a new immutable candidate. Identity, smoke and C3 passing in the failed gate do not authorize publication.
 
 Focused validation: debug/release economy suites, genuine nine-file migration and original H-format9 tests PASS (`repair-focused-01`). The first extended shader comparison exposed explicit zero versus unset-null for clothing_delta (28 failures); preserve the diagnostic. Initialize the shared material's existing neutral shader value explicitly, keeping exact uniform comparisons and the frozen reference unchanged. Gate-exact person oracle182/182 and strict2files/76FFI PASS (`repair-person-02`). No simulation code changed. Successor full gate remains pending.
+
+
+## S2-PUBLISHED / S3-START — 2026-11-07 04:02:56 KST
+
+Stage2 `90544f1f9270cb6c72906eef93ad9171442d5e54`를 BASE1 `16dc9120d`에서 wip→main fast-forward하고 양쪽 원격 SHA를 확인했다. 외부 `stage2/publication.json`, `stage2/gate-attempts/s2-90544f1f9/postrun-binding.json`에 실제 게시·동일 소스/config binding을 기록했다. 최종49/49 exit0, debug3102/release3100 PASS·각14ignored, Python597 PASS. baseline228748차이0·연대기64/19683항목·raw64동일, 최종smoke8세계 생존 BASE/후보 `[10,12,11,13,10,13,11,14]`·KnowledgeLost0/0(허용2), C3시간/메모리PASS. 교차3회 입장 load1 BASE/후보6.90/7.49,5.15/5.07,4.55/4.05. step41 strict50ms FAIL이나 기존 waiver PASS(57.826/50.271/59.891ms;60ms초과0).
+
+실제 직조 전체 사슬·저장 연속과 captures-r5의12장/실제 mouse_selection=true를 확인했다. 최초c68 전체gate FAIL45/49와 수리 기록, earlier mouse fallback은 그대로 보존한다. 전용 아트#689는 ISS-364 OPEN. Stage2 tools순증371줄·새파일0, 문서score.py4줄별도. postpublish 문서와 장부는 Stage3에서 다음 gate를 받으며 게시 SHA를 다시 쓰지 않는다.
+
+Stage3 `v8/m6b-stage3` 시작2026-11-07 04:02:56KST, 종료한도11/08 04:02:56KST, BASE2=위 게시 SHA. 외부 `stage3/START.json`에 보존한 시작/바이너리 기록이며 온도·집 구현 완료의 주장이 아니다. D-FEATURE-FIRST 기술/기능/smoke 기준과 예산 안전중단 규칙을 유지한다.1584–1615는 UNUSED다.
