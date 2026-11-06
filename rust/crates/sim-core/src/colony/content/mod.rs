@@ -40,6 +40,7 @@ use std::collections::{BTreeMap, BTreeSet};
 /// Fully validated, immutable selected definitions and derived knowledge data.
 #[derive(Debug)]
 pub struct Catalog {
+    thermal_rules: super::thermal::ThermalRules,
     flora: FloraCatalog,
     crops: Vec<CropDef>,
     crop_index: Index,
@@ -261,6 +262,10 @@ impl Catalog {
     /// Exact historical wall projection membership from data.
     pub fn historical_stone_wall_material(&self, id: MaterialId) -> bool {
         self.historical_stone_materials.contains(&id)
+    }
+    /// Validated selected colony thermal profile, with its own persisted revision.
+    pub fn thermal_rules(&self) -> &super::thermal::ThermalRules {
+        &self.thermal_rules
     }
     /// Selected content revision, independent of filesystem staging paths.
     pub fn revision(&self) -> &str {

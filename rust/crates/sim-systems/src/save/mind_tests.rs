@@ -137,23 +137,11 @@ fn invalid_saved_policy_is_rejected_before_registration() {
     let mut engine = engine_with_history();
     let bytes = save(&mut engine).expect("valid save");
     let mut envelope: Envelope = decode(read_header(&bytes).expect("header")).expect("envelope");
-    let mut body: Body = decode(&envelope.payload).expect("body");
+    let (mut body, thermal) = thermal_codec::decode_test(&envelope.payload).expect("body");
     body.mind.policy_source = Some(SOURCE.replace("hunger", "unknown_fact"));
-    envelope.payload = encode(&BodyRef {
-        current_tick: body.current_tick,
-        resources: &body.resources,
-        world: &body.world,
-        systems: &body.systems,
-        steward: &body.steward,
-        content_state: &body.content_state,
-        mind: &body.mind,
-        food: &body.food,
-        cultivation: &body.cultivation,
-        processing: &body.processing,
-    })
-    .expect("malformed fixture");
+    envelope.payload = thermal_codec::encode_test(&body, &thermal).expect("malformed fixture");
     let mut corrupt = MAGIC.to_vec();
-    corrupt.extend_from_slice(&FORMAT_VERSION.to_le_bytes());
+    corrupt.extend_from_slice(&bytes[8..12]);
     corrupt.extend(encode(&envelope).expect("envelope"));
     let mut registered = false;
     let result = load_with(&corrupt, |_| registered = true);
@@ -603,9 +591,9 @@ fn accepted_order_can_save_at_next_tick_boundary_without_advancing_clock() {
     let bytes = save(&mut engine).expect("accepted next-boundary order must save immediately");
     assert_eq!(engine.resources.current_tick, last_tick);
     let mut corrupt: Envelope = decode(&bytes[12..]).unwrap();
-    let mut body: Body = decode(&corrupt.payload).unwrap();
+    let (mut body, thermal) = thermal_codec::decode_test(&corrupt.payload).unwrap();
     body.resources.colony.command_log.last_mut().unwrap().tick = boundary + 1;
-    corrupt.payload = encode(&body).unwrap();
+    corrupt.payload = thermal_codec::encode_test(&body, &thermal).unwrap();
     let mut malformed = bytes[..12].to_vec();
     malformed.extend(encode(&corrupt).unwrap());
     assert!(matches!(load(&malformed), Err(SaveError::Decode(_))));

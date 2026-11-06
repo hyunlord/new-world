@@ -163,7 +163,7 @@ func refresh() -> void:
 	_role_label.text = _loc("UI_ROOM_ROLE")
 	var choice: int = ROLE_CHOICES.find(str(_detail.get("role_name", ""))) if bool(_detail.get("overridden", false)) else 0
 	_role.select(maxi(0, choice))
-	var info: Dictionary = {"roofed": bool(_detail.get("roofed", false)), "dug": bool(_detail.get("dug", false))}
+	var info: Dictionary = {"roofed": bool(_detail.get("roofed", false)), "dug": bool(_detail.get("dug", false)), "thermal_active": bool(_detail.get("thermal_active", false))}
 	var beds: int = int(_detail.get("beds", 0))
 	var doors: int = int(_detail.get("doors", 0))
 	var lines: Array[String] = [
@@ -173,6 +173,26 @@ func refresh() -> void:
 		EconomyText.trf(_locale, "UI_ROOM_COVERED_FMT", {"count": int(_detail.get("covered", 0))}),
 		EconomyText.trf(_locale, "UI_ROOM_SLEEPERS_FMT", {"count": int(_detail.get("sleepers", 0))}),
 	]
+	if bool(_detail.get("thermal_active", false)):
+		lines.append(EconomyText.trf(_locale, "S3_ROOM_TEMPERATURE", {
+			"inside": "%.1f" % (float(_detail.get("temperature_d10", 0)) / 10.0),
+			"outside": "%.1f" % (float(_detail.get("outdoor_d10", 0)) / 10.0),
+			"doors": int(_detail.get("open_doors", 0)),
+			"heat": _loc("S3_HEAT_PAID" if bool(_detail.get("paid_heat", false)) else "S3_HEAT_UNPAID")}))
+		var dwelling_lines: Array[String] = []
+		for dwelling: Dictionary in _detail.get("dwellings", []):
+			var stage_key: String = str(dwelling.get("label_key", ""))
+			var stage: String = _loc(stage_key) if not stage_key.is_empty() else _loc("S3_DWELLING_NONE")
+			var reason: String = _loc("S3_DWELLING_" + str(dwelling.get("reason", "ready")).to_upper())
+			var line: String = EconomyText.trf(_locale, "S3_DWELLING_LINE", {"stage": stage, "reason": reason})
+			var candidate_key: String = str(dwelling.get("candidate_key", ""))
+			if candidate_key != stage_key:
+				line += " · " + EconomyText.trf(_locale, "S3_DWELLING_CANDIDATE", {"stage": _loc(candidate_key) if not candidate_key.is_empty() else _loc("S3_DWELLING_NONE")})
+			if int(dwelling.get("deficiency_deadline", -1)) >= 0:
+				line += " · " + EconomyText.trf(_locale, "S3_DWELLING_DEADLINE", {"tick": int(dwelling.get("deficiency_deadline", -1))})
+			if line not in dwelling_lines:
+				dwelling_lines.append(line)
+		lines.append_array(dwelling_lines)
 	_lines.text = KoreanText.words("\n".join(lines))
 	_why.text = KoreanText.words(why_line(role_code, info, beds, _locale))
 	# M-READ: show room diagnosis from get_subject_diagnosis("room", room_id).
@@ -190,6 +210,8 @@ func refresh() -> void:
 static func why_line(role_code: int, info: Dictionary, beds: int, locale: Node) -> String:
 	var parts: Array[String] = []
 	for key: String in effect_keys(role_code, bool(info.get("roofed", false)) or bool(info.get("dug", false))):
+		if key == "UI_ROOM_EFFECT_COLD" and bool(info.get("thermal_active", false)):
+			continue
 		parts.append(EconomyText.ltr(locale, key))
 	return EconomyText.trf(locale, "UI_ROOM_WHY_FMT", {"role": EconomyText.role(locale, role_code),
 		"roof": RoomLayer.roof_text(info, locale), "beds": beds, "effect": " · ".join(parts)})

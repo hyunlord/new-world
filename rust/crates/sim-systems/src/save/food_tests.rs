@@ -33,7 +33,7 @@ fn pre_food_baseline_has_empty_sidecar_and_format14_roundtrip() {
     assert_eq!(loaded.resources.food, FoodState::default());
     assert!(loaded.system_names().is_empty());
     let current = save(&mut loaded).expect("format14");
-    assert_eq!(&current[8..12], &FORMAT_VERSION.to_le_bytes());
+    assert_eq!(&current[8..12], &17u32.to_le_bytes());
     let mut again = load_with(&current, |_| {}).expect("format14 reload");
     assert_eq!(save(&mut again).expect("stable bytes"), current);
 }

@@ -158,6 +158,8 @@ pub struct Facts {
     pub food_groups: usize,
     /// Authored comfort of the currently worn physical top, zero without clothing.
     pub clothing_comfort: i32,
+    /// Authored stage of the actual assigned usable dwelling.
+    pub dwelling_comfort: i32,
     /// The day fields of the mood.
     pub mood: Option<Mood>,
     /// Today.
@@ -278,6 +280,9 @@ pub fn modifiers(f: &Facts) -> Vec<(Modifier, i32)> {
         3.. => push(Modifier::FoodVaried),
         _ => {}
     }
+    if f.dwelling_comfort != 0 {
+        out.push((Modifier::Dwelling, f.dwelling_comfort));
+    }
     if f.clothing_comfort != 0 {
         out.push((Modifier::ClothingComfort, f.clothing_comfort));
     }
@@ -329,6 +334,12 @@ pub fn facts_of(world: &World, res: &SimResources, entity: Entity) -> Facts {
             .map_or(0, |history| {
                 history.groups_in(res.current_tick, res.rules.calendar.days_to_ticks(3))
             }),
+        dwelling_comfort: world
+            .get::<&Agent>(entity)
+            .ok()
+            .and_then(|a| res.bed_of.get(&a.id))
+            .and_then(|bed| crate::runtime::thermal::dwelling_view(world, res, *bed))
+            .map_or(0, |v| v.mood_permille),
         clothing_comfort: world
             .get::<&sim_core::colony::people::Apparel>(entity)
             .ok()

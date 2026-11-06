@@ -187,11 +187,13 @@ pub enum Modifier {
     FoodMonotonous,
     /// Authored comfort from the currently worn physical garment.
     ClothingComfort,
+    /// Authored dwelling stage effect (bounded M7 debt).
+    Dwelling,
 }
 
 impl Modifier {
     /// Every modifier in code order.
-    pub const ALL: [Self; 17] = [
+    pub const ALL: [Self; 18] = [
         Self::SleptRoofed,
         Self::SleptOutside,
         Self::Fed,
@@ -209,6 +211,7 @@ impl Modifier {
         Self::FoodVaried,
         Self::FoodMonotonous,
         Self::ClothingComfort,
+        Self::Dwelling,
     ];
 
     /// Stable code (the chronicle's cause table, the bridge).
@@ -236,6 +239,7 @@ impl Modifier {
             Self::FoodVaried => "food_varied",
             Self::FoodMonotonous => "food_monotonous",
             Self::ClothingComfort => "clothing_comfort",
+            Self::Dwelling => "dwelling",
         }
     }
 
@@ -263,7 +267,7 @@ impl Modifier {
             Self::Pressure => -40,
             Self::FoodVaried => 60,
             Self::FoodMonotonous => -40,
-            Self::ClothingComfort => 0,
+            Self::ClothingComfort | Self::Dwelling => 0,
         }
     }
 

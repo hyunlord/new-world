@@ -32,7 +32,7 @@ const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 const FEED_PATH: String = "res://assets/ui/chronicle_feed.json"
 const GROUPING_PATH: String = "res://assets/ui/chronicle_grouping.json"
 const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
-	38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 54, 55, 56, 57, 58]
+	38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 54, 55, 56, 57, 58, 59]
 ## M5: the kind groups of the filter (0 = all): 압력, 사냥·늑대, 다툼·기분, 지식, 삶 (every other notable kind).
 const FILTER_KEYS: Array[String] = ["M5_FILTER_ALL", "M5_FILTER_PRESSURE", "M5_FILTER_HUNT", "M5_FILTER_MOOD", "M5_FILTER_KNOWLEDGE", "M5_FILTER_LIFE"]
 const FILTER_KINDS: Array = [[], [29, 30, 36, 37], [31, 34, 35], [19, 32, 33], [24, 25, 26, 27, 28, 44], []]
@@ -244,6 +244,8 @@ func add_presentation_entry(text: String) -> void:
 		_refresh()
 
 func _refresh() -> void:
+	if _world != null:
+		Chronicle.dwelling_labels = SimReads.read(_world, "get_story").get("dwelling_labels", {})
 	_language = Chronicle.language(_locale)
 	if _world != null and _world.has_method("get_neighbours"):
 		NeighbourText.observe(SimReads.read(_world, "get_neighbours"))

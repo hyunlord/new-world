@@ -94,6 +94,8 @@ pub struct StoryView {
     pub sick: u32,
     /// Whether the standing order "모두 가죽 옷" is on.
     pub dress_order: bool,
+    /// Saved authored dwelling identities and localized labels.
+    pub dwelling_labels: Vec<(u16, String)>,
     /// `Storyteller::version`-like change counter: pressures begun + ended.
     pub version: u64,
 }
@@ -169,6 +171,13 @@ pub fn collect_story(world: &hecs::World, res: &SimResources) -> StoryView {
         wolves_y: wy,
         sick: world.query::<&Sick>().iter().count() as u32,
         dress_order: !res.colony.dress_off,
+        dwelling_labels: res.thermal.as_ref().map_or_else(Vec::new, |t| {
+            t.rules
+                .stages
+                .iter()
+                .map(|s| (s.id, s.label_key.clone()))
+                .collect()
+        }),
         version: (s.history.len() + s.active.len()) as u64,
     }
 }
@@ -177,6 +186,11 @@ pub fn collect_story(world: &hecs::World, res: &SimResources) -> StoryView {
 pub(super) fn story_to_dict(v: &StoryView) -> VarDictionary {
     let mut d = VarDictionary::new();
     d.set("on", v.on);
+    let mut labels = VarDictionary::new();
+    for (id, key) in &v.dwelling_labels {
+        labels.set(i64::from(*id), GString::from(key.as_str()));
+    }
+    d.set("dwelling_labels", labels);
     let kinds: Vec<i64> = v.active.iter().map(|p| i64::from(p.kind)).collect();
     let names: Vec<GString> = v
         .active
@@ -408,6 +422,14 @@ pub struct AgentM5View {
     pub top_item: i64,
     /// Worn hours remaining, -1 for unlimited legacy clothing or no clothing.
     pub wear_remaining_hours: i64,
+    /// Native temperatures in tenths of a degree; absent in baseline.
+    pub outdoor_d10: Option<i32>,
+    /// Temperature at the person's actual tile.
+    pub place_d10: Option<i32>,
+    /// Temperature after native apparel insulation.
+    pub felt_d10: Option<i32>,
+    /// Authored cold threshold.
+    pub cold_threshold_d10: i32,
     /// Whether drafted.
     pub drafted: bool,
     /// The draft order: 0 hold, 1 move, 2 attack an animal, 3 attack a person (−1 not drafted).
@@ -458,6 +480,7 @@ pub fn collect_agent_m5(world: &hecs::World, res: &SimResources, agent_id: i64) 
     };
     modifiers.sort_by_key(|(m, v)| (std::cmp::Reverse(v.abs()), m.code()));
     let apparel = world.get::<&Apparel>(entity).ok().map(|a| *a);
+    let position = world.get::<&Position>(entity).ok().map(|p| (p.x, p.y));
     let drafted = world.get::<&Drafted>(entity).ok().map(|d| *d);
     let (order, dx, dy) = match drafted.map(|d| d.order) {
         None => (-1, -1, -1),
@@ -483,6 +506,16 @@ pub fn collect_agent_m5(world: &hecs::World, res: &SimResources, agent_id: i64) 
         wear_remaining_hours: apparel
             .and_then(|a| a.wear_remaining_hours)
             .map_or(-1, i64::from),
+        outdoor_d10: sim_systems::runtime::thermal::outdoor_temperature(res),
+        place_d10: position
+            .and_then(|tile| sim_systems::runtime::thermal::place_temperature(res, tile)),
+        felt_d10: position.and_then(|tile| {
+            sim_systems::runtime::thermal::felt_temperature(res, apparel.as_ref(), tile)
+        }),
+        cold_threshold_d10: res
+            .thermal
+            .as_ref()
+            .map_or(0, |t| t.rules.cold_threshold_d10),
         drafted: drafted.is_some(),
         draft_order: order,
         draft_x: dx,
@@ -522,6 +555,11 @@ pub(super) fn agent_m5_to_dict(v: &AgentM5View) -> VarDictionary {
     d.set("top_since", v.top_since);
     d.set("top_item", v.top_item);
     d.set("wear_remaining_hours", v.wear_remaining_hours);
+    d.set("thermal_active", v.outdoor_d10.is_some());
+    d.set("outdoor_d10", v.outdoor_d10.unwrap_or(0));
+    d.set("place_d10", v.place_d10.unwrap_or(0));
+    d.set("felt_d10", v.felt_d10.unwrap_or(0));
+    d.set("cold_threshold_d10", v.cold_threshold_d10);
     d.set("drafted", v.drafted);
     d.set("draft_order", v.draft_order);
     d.set("draft_x", v.draft_x);

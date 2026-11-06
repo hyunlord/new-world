@@ -171,6 +171,32 @@ fn space_orders_preview_and_reads_follow_the_colony() {
     assert_eq!(row.centre, (x + 2, y + 2));
     let detail = collect_room_detail(&engine.world, &engine.resources, i64::from(row.id));
     assert!(detail.found);
+    // Stage3 observers expose native thermal facts without changing simulation state.
+    let state_before = engine.resources.thermal.clone();
+    let tick_before = engine.resources.current_tick;
+    assert_eq!(
+        rooms.outdoor_d10,
+        sim_systems::runtime::thermal::outdoor_temperature(&engine.resources)
+    );
+    assert_eq!(
+        row.temperature_d10,
+        sim_systems::runtime::thermal::place_temperature(&engine.resources, row.centre)
+    );
+    assert_eq!(detail.dwellings.len(), 2);
+    for dwelling in &detail.dwellings {
+        let native = sim_systems::runtime::thermal::dwelling_view(
+            &engine.world,
+            &engine.resources,
+            dwelling.bed,
+        )
+        .expect("native dwelling");
+        assert_eq!(dwelling.reason, native.reason);
+        assert_eq!(dwelling.label_key, native.label_key.unwrap_or_default());
+        assert_eq!(dwelling.paid_heat, native.paid_heat);
+        assert_eq!(dwelling.deficiency_deadline, native.deficiency_deadline);
+    }
+    assert_eq!(engine.resources.thermal, state_before);
+    assert_eq!(engine.resources.current_tick, tick_before);
     assert!(!collect_room_detail(&engine.world, &engine.resources, 999).found);
     // The override through the bridge.
     let set = submit_space(
@@ -210,7 +236,10 @@ fn the_baseline_has_no_built_space_or_rooms() {
     let engine = sim_test::baseline_engine(0);
     let space = collect_space(&engine.resources);
     assert!(space.walls.is_empty() && space.floors.is_empty() && space.beds.is_empty());
-    assert!(collect_rooms(&engine.resources).rows.is_empty());
+    let rooms = collect_rooms(&engine.resources);
+    assert!(rooms.rows.is_empty());
+    assert!(rooms.outdoor_d10.is_none());
+    assert_eq!(rooms.thermal_version, 0);
 }
 
 /// Every sim-core material file's id → category name, read from disk here (independent of the bridge's

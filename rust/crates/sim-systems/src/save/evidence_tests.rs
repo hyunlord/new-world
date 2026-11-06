@@ -76,7 +76,7 @@ fn format13_baseline_migrates_only_empty_evidence_and_writes14() {
     assert_eq!(engine.resources.food, FoodState::default());
     assert!(engine.system_names().is_empty());
     let bytes = save(&mut engine).unwrap();
-    assert_eq!(&bytes[8..12], &FORMAT_VERSION.to_le_bytes());
+    assert_eq!(&bytes[8..12], &17u32.to_le_bytes());
     let mut again = load_with(&bytes, |_| {}).unwrap();
     assert_eq!(save(&mut again).unwrap(), bytes);
 }

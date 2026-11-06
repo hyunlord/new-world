@@ -1245,3 +1245,7 @@ Stage2 `90544f1f9270cb6c72906eef93ad9171442d5e54`를 BASE1 `16dc9120d`에서 wip
 실제 직조 전체 사슬·저장 연속과 captures-r5의12장/실제 mouse_selection=true를 확인했다. 최초c68 전체gate FAIL45/49와 수리 기록, earlier mouse fallback은 그대로 보존한다. 전용 아트#689는 ISS-364 OPEN. Stage2 tools순증371줄·새파일0, 문서score.py4줄별도. postpublish 문서와 장부는 Stage3에서 다음 gate를 받으며 게시 SHA를 다시 쓰지 않는다.
 
 Stage3 `v8/m6b-stage3` 시작2026-11-07 04:02:56KST, 종료한도11/08 04:02:56KST, BASE2=위 게시 SHA. 외부 `stage3/START.json`에 보존한 시작/바이너리 기록이며 온도·집 구현 완료의 주장이 아니다. D-FEATURE-FIRST 기술/기능/smoke 기준과 예산 안전중단 규칙을 유지한다.1584–1615는 UNUSED다.
+
+## D-WIP-REVIEW — owner continuation decision, 2026-11-07
+
+Commit and push work in progress to v8/m6b-review at least every2–3hours while continuing execution. WIP commits are permitted and do not imply a passing gate. Never stop or restart active work for these checkpoints. v8/main still moves only after the full publication gate. First Stage3 checkpoint includes genuine predecessor preservation, thermal/core/save implementation, native runtime and presentation work; integration, actual thermal scene/captures, smoke and full gate remain pending.

@@ -30,6 +30,7 @@ pub mod neighbours;
 mod orders;
 pub mod people;
 pub mod processing;
+pub mod thermal;
 pub mod requests;
 pub mod skills;
 pub mod steward;

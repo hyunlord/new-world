@@ -119,6 +119,8 @@ pub struct ColonyVersions {
     pub overlay: u64,
     /// `colony.rooms_version` (M3).
     pub rooms: u64,
+    /// Native thermal observer change counter, zero when inactive.
+    pub thermal: u64,
 }
 
 /// The colony change counters (cheap; poll every frame).
@@ -127,6 +129,10 @@ pub fn collect_colony_versions(resources: &SimResources) -> ColonyVersions {
         trees: resources.colony.trees_version,
         overlay: resources.colony.overlay_version,
         rooms: resources.colony.rooms_version,
+        thermal: resources
+            .thermal
+            .as_ref()
+            .map_or(0, |state| state.view_version),
     }
 }
 
@@ -135,6 +141,7 @@ pub(super) fn versions_to_dict(v: ColonyVersions) -> VarDictionary {
     dict.set("trees_version", v.trees as i64);
     dict.set("overlay_version", v.overlay as i64);
     dict.set("rooms_version", v.rooms as i64);
+    dict.set("thermal_version", v.thermal as i64);
     dict
 }
 

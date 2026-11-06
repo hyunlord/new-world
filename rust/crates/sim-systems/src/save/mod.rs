@@ -85,10 +85,12 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 15 = explicit extended steward mode and grace-window bookkeeping.
 /// 16 = cultivation fields and physical crop-origin accounting.
 /// 17 = exact physical garment wear and pending nonfood processing.
-pub const FORMAT_VERSION: u32 = 17;
+/// 18 = colony thermal tail; baseline continues writing exact format17.
+pub const FORMAT_VERSION: u32 = 18;
 mod cultivation_catalog;
 mod cultivation_validation;
 mod legacy_cultivation_v15;
+mod thermal_codec;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;
@@ -287,6 +289,7 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
     cultivation_validation::validate(&engine.world, &engine.resources)
         .map_err(SaveError::Encode)?;
     weaving_validation::validate(&engine.resources).map_err(SaveError::Encode)?;
+    thermal_codec::validate(&engine.resources, command_boundary).map_err(SaveError::Encode)?;
     let world = world::capture(&engine.world).map_err(SaveError::World)?;
     let systems = engine.system_states().map_err(SaveError::Systems)?;
     let body = BodyRef {
@@ -303,12 +306,23 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
-    out.extend_from_slice(&FORMAT_VERSION.to_le_bytes());
+    let colony = engine.resources.rules.colony.is_some();
+    let version = if colony { FORMAT_VERSION } else { 17 };
+    out.extend_from_slice(&version.to_le_bytes());
+    let payload = if colony {
+        encode(&thermal_codec::BodyRefV18 {
+            body,
+            thermal: &engine.resources.thermal,
+        })
+    } else {
+        encode(&body)
+    }
+    .map_err(SaveError::Encode)?;
     let catalog = sim_core::colony::content::installed()
         .map_err(|error| SaveError::Encode(error.to_string()))?;
     let envelope = Envelope {
         revision: catalog.revision().to_owned(),
-        payload: encode(&body).map_err(SaveError::Encode)?,
+        payload,
     };
     out.extend_from_slice(&encode(&envelope).map_err(SaveError::Encode)?);
     engine.world = world::build(&world).map_err(SaveError::World)?;
@@ -347,7 +361,9 @@ pub fn load_with(
     let legacy_v15 = version == Some(15u32.to_le_bytes().as_slice());
     let legacy_v14 = version == Some(14u32.to_le_bytes().as_slice());
     let legacy_v16 = version == Some(16u32.to_le_bytes().as_slice());
-    let legacy_items = version != Some(FORMAT_VERSION.to_le_bytes().as_slice());
+    let legacy_items = (6u32..=16).any(|v| version == Some(v.to_le_bytes().as_slice()));
+    let thermal_v18 = version == Some(18u32.to_le_bytes().as_slice());
+    let mut saved_thermal = None;
     // Format13 already owns physical food and its FoodDailySystem slot.
     let legacy_food =
         legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10 || legacy_v11 || legacy_v12;
@@ -494,7 +510,13 @@ pub fn load_with(
                 legacy_cultivation_v15::decode_body(&envelope.payload)?
             } else if legacy_v14 {
                 legacy_steward_v14::decode_published_v14(&envelope.payload)?
+            } else if thermal_v18 {
+                let old: thermal_codec::BodyV18 =
+                    decode(&envelope.payload).map_err(SaveError::Decode)?;
+                saved_thermal = old.thermal;
+                old.body
             } else {
+                // Exact format17 prefix; no pre17 item-column conversion.
                 decode(&envelope.payload).map_err(SaveError::Decode)?
             }
         }
@@ -506,6 +528,11 @@ pub fn load_with(
     resources.food = body.food;
     resources.cultivation = body.cultivation;
     resources.processing = body.processing;
+    resources.thermal = saved_thermal;
+    if !thermal_v18 {
+        thermal_codec::migrate(&mut resources, body.current_tick)?;
+    }
+    thermal_codec::validate(&resources, body.current_tick).map_err(SaveError::Decode)?;
     if legacy
         || legacy_v7
         || legacy_v8
@@ -689,6 +716,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 14
         && found != 15
         && found != 16
+        && found != 17
     {
         return Err(SaveError::Version {
             found,
@@ -833,3 +861,6 @@ mod cultivation_tests;
 
 #[cfg(test)]
 mod weaving_tests;
+
+#[cfg(test)]
+mod thermal_tests;

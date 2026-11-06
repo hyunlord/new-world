@@ -212,7 +212,7 @@ fn each_role_is_recognized_and_an_override_sticks() {
 }
 
 #[test]
-fn sleepers_under_a_roof_take_no_night_cold() {
+fn unheated_roof_no_longer_exempts_sleepers_from_numeric_cold() {
     let mut engine = sim_test::colony_engine(2);
     for _ in 0..10 {
         engine.tick();
@@ -257,13 +257,14 @@ fn sleepers_under_a_roof_take_no_night_cold() {
     engine.resources.current_tick = night;
     let mut fire = sim_systems::runtime::settlement::FireSystem::new();
     fire.tick(&mut engine.world, &mut engine.resources);
+    sim_systems::runtime::thermal::update_after_rooms(&mut engine.world, &mut engine.resources);
     assert!(
         engine.world.get::<&Cold>(b).is_ok(),
         "the sleeper outside is cold"
     );
     assert!(
-        engine.world.get::<&Cold>(a).is_err(),
-        "the sleeper under the roof is not"
+        engine.world.get::<&Cold>(a).is_ok(),
+        "an unheated roof has no binary cold exemption"
     );
 }
 

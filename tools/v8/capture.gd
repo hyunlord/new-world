@@ -115,6 +115,7 @@ var _m55_set: bool = false
 var _m5_shots: PackedStringArray = PackedStringArray(["1", "2", "3", "4", "5", "6", "7", "8"])
 var _load: String = ""
 var _weaving_saves: String = ""
+var _thermal_saves: String = ""
 var _record: Dictionary = {}
 var _mart2_set: bool = false
 var _mart2_saves: Dictionary = {}
@@ -145,6 +146,8 @@ func _init() -> void:
 				_out = args[i + 1]
 		elif args[i] == "--m5-shots" and i + 1 < args.size():
 			_m5_shots = args[i + 1].split(",")
+		elif args[i] == "--thermal-set" and i + 1 < args.size():
+			_thermal_saves = args[i + 1]
 		elif args[i] == "--weaving-set" and i + 1 < args.size():
 			_weaving_saves = args[i + 1]
 		elif args[i] == "--load" and i + 1 < args.size():
@@ -173,6 +176,9 @@ func _run() -> void:
 		quit(1)
 		return
 	world.set("process_mode", Node.PROCESS_MODE_DISABLED)
+	if not _thermal_saves.is_empty():
+		await _thermal_shots(main, world, camera)
+		return
 	if not _weaving_saves.is_empty():
 		await _weaving_shots(main, world, camera)
 		return
@@ -2119,4 +2125,95 @@ func _weaving_shots(main: Node, world: Node, camera: Camera2D) -> void:
 		return
 	file.store_string(JSON.stringify(notes, "\t"))
 	print("CAPTURE_WEAVING_DONE shots=12")
+	quit(0)
+
+
+## Observe thermal_chain.rs saves; getters: get_rooms, get_room_detail, diagnosis, chronicle.
+func _thermal_shots(main: Node, world: Node, camera: Camera2D) -> void:
+	var reads: Node = main.get_node("SimReads")
+	var panel: Node = main.get_node("UI/RoomPanel")
+	var inspector: Node = main.get_node("UI/AgentInspectorPanel")
+	var tech: Node = main.get_node("UI/TechPanel")
+	var chronicle: Node = main.get_node("UI/ChroniclePanel")
+	var layer: CanvasItem = main.get_node("ColonyView/OverlayLayer/Rooms") as CanvasItem
+	var notes: Array[Dictionary] = []
+	camera.set_process(false)
+	for language: String in ["ko", "en"]:
+		root.get_node("Locale").call("set_language", language)
+		for milestone: String in ["00-outside", "01-built", "02-warmed", "03-door", "04-cold", "05-refueled"]:
+			var path: String = _thermal_saves.path_join(milestone + ".wsave")
+			if not bool(reads.call("mutate_raw", "load_world", [path])):
+				push_error("capture: failed genuine thermal save " + path)
+				quit(1)
+				return
+			var tick: int = _now(world)
+			var commands: Dictionary = world.call("get_command_log", 0)
+			panel.call("close")
+			inspector.call("close")
+			await _wait(20)
+			var rooms: Dictionary = world.call("get_rooms")
+			if not bool(rooms.get("thermal_active", false)):
+				push_error("capture: native thermal view missing")
+				quit(1)
+				return
+			_frame(camera, Vector2(_hearth(world)), _zoom)
+			layer.call("set_shown", true)
+			var ids: PackedInt32Array = rooms.get("ids", PackedInt32Array())
+			var detail: Dictionary = {}
+			if milestone != "00-outside":
+				if ids.is_empty():
+					push_error("capture: completed house has no real room")
+					quit(1)
+					return
+				panel.call("display_room", ids[0])
+				await _wait(10)
+				detail = panel.call("detail")
+				if not detail.has("temperature_d10"):
+					push_error("capture: room panel has no native temperature")
+					quit(1)
+					return
+			else:
+				var agents: Dictionary = world.call("get_agent_snapshot")
+				var people: PackedInt64Array = agents.get("agent_ids", PackedInt64Array())
+				if people.is_empty() or not await _click_person(main, world, camera, people[0], _zoom):
+					push_error("capture: outdoor person cannot be selected")
+					quit(1)
+					return
+			await _wait(15)
+			await _save(language + "-" + milestone + ".png")
+			notes.append({"source": path, "language": language, "tick": tick, "rooms": rooms, "detail": detail, "diagnosis": world.call("get_settlement_diagnosis")})
+			if milestone in ["02-warmed", "04-cold"]:
+				panel.call("close")
+				var agents: Dictionary = world.call("get_agent_snapshot")
+				var people: PackedInt64Array = agents.get("agent_ids", PackedInt64Array())
+				if people.is_empty() or not await _click_person(main, world, camera, people[0], _zoom):
+					quit(1)
+					return
+				var scroll: ScrollContainer = inspector.get("_scroll") as ScrollContainer
+				scroll.ensure_control_visible(inspector.get("_top_label") as Control)
+				await _wait(10)
+				await _save(language + "-" + milestone + "-felt.png")
+				notes.append({"agent": people[0], "thermal": world.call("get_agent_m5", people[0]), "shown": inspector.call("m5_lines")})
+			if milestone == "05-refueled":
+				panel.call("close")
+				tech.call("toggle_visible")
+				await _wait(10)
+				await _save(language + "-06-era.png")
+				tech.call("toggle_visible")
+				chronicle.call("toggle_visible")
+				chronicle.call("set_filter", 5)
+				chronicle.call("set_person_only", false)
+				await _wait(10)
+				await _save(language + "-07-chronicle.png")
+				chronicle.call("toggle_visible")
+			if _now(world) != tick or world.call("get_command_log", 0) != commands:
+				push_error("capture: thermal observation changed simulation")
+				quit(1)
+				return
+	var file: FileAccess = FileAccess.open(_out.path_join("thermal.json"), FileAccess.WRITE)
+	if file == null:
+		quit(1)
+		return
+	file.store_string(JSON.stringify(notes, "\t"))
+	print("CAPTURE_THERMAL_DONE shots=20")
 	quit(0)

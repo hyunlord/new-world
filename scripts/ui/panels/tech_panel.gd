@@ -312,6 +312,25 @@ func _card(row: Dictionary, tech: Dictionary) -> Button:
 	count_label.name = "Count"
 	count_label.add_theme_color_override("font_color", colour if code != 4 else MUTED)
 	lines.add_child(count_label)
+	if int(row["marker"]) > 0:
+		var index: int = (tech.get("ids", PackedInt64Array()) as PackedInt64Array).find(id)
+		var coverage: PackedInt64Array = tech.get("coverage_permille", PackedInt64Array())
+		var conditions: PackedInt64Array = tech.get("conditions_met", PackedInt64Array())
+		var value: int = int(coverage[index]) if index >= 0 and index < coverage.size() else 0
+		var met: bool = index >= 0 and index < conditions.size() and conditions[index] != 0
+		var marker_label: Label = _cell_label(KnowledgeText.trf(_locale, "S3_MARKER_COVERAGE", {"value": value, "condition": _loc("S3_CONDITION_MET" if met else "S3_CONDITION_UNMET")}))
+		marker_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		marker_label.custom_minimum_size.x = CARD_SIZE.x - 16
+		marker_label.theme_type_variation = &"SmallNumber"
+		lines.add_child(marker_label)
+		var gauge: ProgressBar = ProgressBar.new()
+		gauge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		gauge.max_value = 1000
+		gauge.value = value
+		gauge.show_percentage = false
+		gauge.custom_minimum_size.y = GAP
+		lines.add_child(gauge)
+		card.custom_minimum_size.y = CARD_SIZE.y + 32
 	return card
 
 
@@ -389,6 +408,8 @@ func _fill_detail(tech: Dictionary) -> void:
 	if int(_detail_read.get("marker_weight", 0)) > 0:
 		lane_era += " · " + KnowledgeText.trf(_locale, "M4_TECH_MARKER_FMT", {"weight": int(_detail_read.get("marker_weight", 0))})
 	_add_line(lane_era, MUTED)
+	if int(_detail_read.get("marker_weight", 0)) > 0:
+		_add_line(KnowledgeText.trf(_locale, "S3_MARKER_EXPLANATION", {"value": int(_detail_read.get("coverage_permille", 0)), "total": int(tech.get("marker_total_weight", 0))}), MUTED)
 	_neighbour_info()
 	_holders(tech)
 	_learners()

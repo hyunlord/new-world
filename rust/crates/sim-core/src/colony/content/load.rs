@@ -145,7 +145,10 @@ pub(super) fn build(
         }
     }
     let flora = load_flora::build(&base, &extension, &base_materials, &materials)?;
+    let thermal_source = sources::text(&selected, "thermal.ron")?.to_owned();
     let mut catalog = Catalog {
+        thermal_rules: super::super::thermal::ThermalRules::unresolved(&thermal_source)
+            .map_err(|e| CatalogError::new("thermal", e))?,
         flora,
         crops: Vec::new(),
         crop_index: Index::default(),
@@ -253,5 +256,12 @@ pub(super) fn build(
     validate::knowledge_refs(&catalog)?;
     load_plants::load(&mut catalog, &base, &extension)?;
     load_crops::load(&mut catalog, &base, &extension)?;
+    catalog.thermal_rules = super::super::thermal::ThermalRules::from_source(
+        &thermal_source,
+        &catalog,
+        &super::super::materials::embedded_definitions()
+            .map_err(|e| CatalogError::new("thermal materials", e))?,
+    )
+    .map_err(|e| CatalogError::new("thermal", e))?;
     Ok(catalog)
 }

@@ -22,10 +22,10 @@ const Names = preload("res://scripts/ui/person_names.gd")
 
 const MODIFIER_KEYS: Array[String] = ["M5_MOD_SLEPT_ROOFED", "M5_MOD_SLEPT_OUTSIDE", "M5_MOD_FED", "M5_MOD_HUNGRY", "M5_MOD_THIRSTY",
 	"M5_MOD_COLD", "M5_MOD_QUARRELLED", "M5_MOD_LEARNED", "M5_MOD_DISCOVERED", "M5_MOD_GRIEF", "M5_MOD_SICK", "M5_MOD_CRAFTED",
-	"M5_MOD_DRAFTED", "M5_MOD_PRESSURE", "M6A_MOD_VARIED", "M6A_MOD_MONOTONOUS", "S2_MOD_CLOTHING_COMFORT"]
+	"M5_MOD_DRAFTED", "M5_MOD_PRESSURE", "M6A_MOD_VARIED", "M6A_MOD_MONOTONOUS", "S2_MOD_CLOTHING_COMFORT", "S3_MOD_DWELLING"]
 ## Modifier names as the bridge gives them (`modifier_names`), in code order.
 const MODIFIER_NAMES: Array[String] = ["slept_roofed", "slept_outside", "fed", "hungry", "thirsty", "cold", "quarrelled", "learned",
-	"discovered", "grief", "sick", "crafted", "drafted", "pressure", "food_varied", "food_monotonous", "clothing_comfort"]
+	"discovered", "grief", "sick", "crafted", "drafted", "pressure", "food_varied", "food_monotonous", "clothing_comfort", "dwelling"]
 ## `Modifier::code` of the relation cause (no mood modifier: the pair's bad blood).
 const RELATION_CODE: int = 100
 const RELATION_KEY: String = "M5_MOD_RELATION"
@@ -155,6 +155,11 @@ static func apparel_line(locale: Node, m5: Dictionary) -> String:
 	var name: String = EconomyText.item(locale, item) if item >= 0 else top(locale, code)
 	var remaining: int = int(m5.get("wear_remaining_hours", -1))
 	var wear: String = "" if remaining < 0 else trf(locale, "S2_WEAR_HOURS", {"hours": remaining})
+	if bool(m5.get("thermal_active", false)):
+		return trf(locale, "M5_INSPECT_TOP_PLAIN_FMT", {"top": name}) + wear + "\n" + trf(locale, "S3_PERSON_TEMPERATURE", {
+			"outside": "%.1f" % (float(m5.get("outdoor_d10", 0)) / 10.0),
+			"place": "%.1f" % (float(m5.get("place_d10", 0)) / 10.0),
+			"felt": "%.1f" % (float(m5.get("felt_d10", 0)) / 10.0)})
 	var permille: int = int(m5.get("top_cold_permille", 1000))
 	if code <= 0 or permille >= 1000:
 		return trf(locale, "M5_INSPECT_TOP_PLAIN_FMT", {"top": name}) + wear

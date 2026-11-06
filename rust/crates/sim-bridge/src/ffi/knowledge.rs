@@ -60,6 +60,8 @@ pub struct TechRow {
     pub holders: u16,
     /// Era-marker weight (0 = not a marker).
     pub marker_weight: u16,
+    /// Native practitioner coverage, matching aggregate era arithmetic.
+    pub coverage_permille: u16,
     /// Prerequisite node ids.
     pub prereqs: Vec<u8>,
     /// The first named person (`AgentId`; the one holder of an at-risk node), −1 when none.
@@ -119,6 +121,11 @@ pub fn collect_tech(world: &hecs::World, res: &SimResources) -> TechView {
                 practitioners: s.practitioners,
                 holders: s.holders,
                 marker_weight: n.marker_weight,
+                coverage_permille: if tech.adults == 0 {
+                    0
+                } else {
+                    (u32::from(s.practitioners) * 1000 / u32::from(tech.adults)).min(1000) as u16
+                },
                 prereqs: n.prereqs.clone(),
                 first_name: s.names.first().map_or(-1, |id| *id as i64),
                 conditions_met: open & knowledge::bit(n.id) != 0,
@@ -581,6 +588,7 @@ pub(super) fn tech_to_dict(v: &TechView) -> VarDictionary {
     d.set("progress", i64::from(v.progress));
     d.set("era", i64::from(v.era));
     d.set("adults", i64::from(v.adults));
+    d.set("marker_total_weight", i64::from(defs().marker_total()));
     d.set("at_risk", i64::from(v.at_risk));
     let n = &v.nodes;
     d.set("ids", int_col(n.iter().map(|r| i64::from(r.id))));
@@ -598,6 +606,10 @@ pub(super) fn tech_to_dict(v: &TechView) -> VarDictionary {
         int_col(n.iter().map(|r| i64::from(r.practitioners))),
     );
     d.set("holders", int_col(n.iter().map(|r| i64::from(r.holders))));
+    d.set(
+        "coverage_permille",
+        int_col(n.iter().map(|r| i64::from(r.coverage_permille))),
+    );
     d.set(
         "marker_weights",
         int_col(n.iter().map(|r| i64::from(r.marker_weight))),
@@ -631,6 +643,7 @@ pub(super) fn tech_node_to_dict(v: &TechNodeView) -> VarDictionary {
     d.set("name", GString::from(v.row.name.as_str()));
     d.set("name_key", GString::from(v.row.name_key.as_str()));
     d.set("status", i64::from(v.row.status));
+    d.set("coverage_permille", i64::from(v.row.coverage_permille));
     d.set("threshold", i64::from(v.row.threshold));
     d.set("practitioners", i64::from(v.row.practitioners));
     d.set("holders", i64::from(v.row.holders));

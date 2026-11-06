@@ -1,8 +1,8 @@
-//! FireSystem: burns stockpile wood in each hearth at night and marks members `Cold` (with exposure damage) when the fire is out on a winter night.
+//! FireSystem: withdraws hearth fuel once, records colony paid heat and wears clothing; baseline retains fire-based Cold/exposure.
 //!
 //! Priority: 147 · Interval: 60 ticks · Gate: firewood for fire/cold; colony for finite clothing wear.
 //! Reads: `Agent`, `Founding`, `PorterTrip`, `Child`, `Elder`, `Hardiness`, `Hunger`, `Position`, `AgentState`, `Apparel`, `Lineage` (M5); `SimResources.settlements`, `rules`, `world_seed`, `colony.rooms` (M3), `colony.story` (M5)
-//! Writes: `Cold`, `ExposureClock`, `BodyHealth`, finite `Apparel`; colony item ledger on wear expiry; `SimResources.fires`, `settlements` (stockpile wood), `tallies`, `colony.story` (snap cost, touched), `causal_log` (M5); deaths via `despawn_agent`
+//! Writes: colony thermal paid-hearth receipts; baseline `Cold`, `ExposureClock`, `BodyHealth`, finite `Apparel`; colony item ledger on wear expiry; `SimResources.fires`, `settlements` (stockpile wood), `tallies`, `colony.story` (snap cost, touched), `causal_log` (M5); deaths via `despawn_agent`
 //! Events: tally `cold_member_hours`; on death `CausalEvent::AgentDied`, chronicle `Died`/`Widowed`, tally `deaths_exposure`
 //!
 //! Revitalize Pass 5 — `FireSystem` (priority 147, every 60 ticks).
@@ -54,6 +54,11 @@
 //! each cold person gets one `PressureCause` event per snap. A worn hide wrap or
 //! fur cloak spares its wearer a cold hour with chance 1,000 − its
 //! `Top::cold_permille` (one keyed roll an hour, `STREAM_APPAREL`; ADR 0029).
+//!
+//! Stage3 colony: retain one actual Wood withdrawal and emit its positive/full
+//! paid-hearth receipt. The RoomSystem152 post-hook owns numeric Cold/exposure;
+//! baseline retains the historical roof/apparel path below. Stage2 garment wear
+//! still runs once here at the hourly cadence, independently of thermal refresh.
 //!
 //! (The rain rule acted only on intervention rain, removed in V8-0 with its
 //! `rain_wet_burn` field; `rain_soak_permille` remains in the rules data.)
@@ -150,13 +155,32 @@ impl RuntimeSystem for FireSystem {
             } else {
                 night_cost
             };
-            let lit = (burning || cooking && per_hour > 0)
-                && resources
-                    .settlements
-                    .get_mut(sid)
-                    .is_some_and(|settlement| {
-                        settlement.withdraw(ResourceKind::Wood, per_hour) == per_hour
-                    });
+            let attempted = burning || cooking && per_hour > 0;
+            let payment = if attempted {
+                resources.settlements.get_mut(sid).map(|settlement| {
+                    (
+                        settlement.formation_tile,
+                        settlement.withdraw(ResourceKind::Wood, per_hour),
+                    )
+                })
+            } else {
+                None
+            };
+            let lit = payment.is_some_and(|(_, paid)| paid == per_hour);
+            if resources.rules.colony.is_some() {
+                if let Some((tile, debited_wood)) = payment {
+                    crate::runtime::thermal::record_paid_heat(
+                        resources,
+                        *sid,
+                        sim_core::colony::thermal::PaidHeat {
+                            tick: now,
+                            tile,
+                            requested_wood: per_hour,
+                            debited_wood,
+                        },
+                    );
+                }
+            }
             fires.insert(*sid, FireState { lit });
             if let Some(snap) = snap.filter(|_| lit) {
                 crate::runtime::story::add_cost(
@@ -168,6 +192,10 @@ impl RuntimeSystem for FireSystem {
             }
         }
         resources.fires = fires;
+        crate::runtime::thermal::initialize(resources);
+        if resources.thermal.is_some() {
+            return;
+        }
 
         let cold_night = resources.rules.seasons.is_some()
             && season == WINTER
@@ -280,7 +308,7 @@ impl RuntimeSystem for FireSystem {
 /// Pass 11 (exposure v2): the damage is [`exposure_damage`] — the stage's
 /// rate times the hardiness factor (with `use_hardiness`) times the hunger
 /// factor (with `hunger_weight`). With v16's values both factors are 1.
-fn expose(
+pub(crate) fn expose(
     world: &mut World,
     resources: &mut SimResources,
     rule: &ExposureRule,
@@ -323,7 +351,7 @@ fn expose(
             .get::<&Position>(entity)
             .map_or((0, 0), |p| (p.x, p.y));
         if let Some(snap) = snap {
-            if !crate::runtime::rooms::roofed(resources, pos) {
+            if resources.thermal.is_none() && !crate::runtime::rooms::roofed(resources, pos) {
                 damage = damage * f64::from(snap.rule.snap_exposure_permille) / 1000.0;
             }
             crate::runtime::story::note_cause(resources, id, pos, snap.kind, 0);

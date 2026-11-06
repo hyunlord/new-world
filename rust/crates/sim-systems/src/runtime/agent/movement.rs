@@ -384,6 +384,7 @@ impl RuntimeSystem for AgentMovementSystem {
                 })
         };
         let mut walking: BTreeSet<AgentId> = BTreeSet::new();
+        let mut passages = BTreeSet::new();
         for (
             _,
             (
@@ -482,6 +483,10 @@ impl RuntimeSystem for AgentMovementSystem {
                         );
                         let to = (nx as u32, ny as u32);
                         if !colony || to == (pos.x, pos.y) || nav.can_step((pos.x, pos.y), to) {
+                            if colony && (pos.x, pos.y) != to {
+                                passages.insert((pos.x, pos.y));
+                                passages.insert(to);
+                            }
                             pos.x = to.0;
                             pos.y = to.1;
                         }
@@ -536,6 +541,10 @@ impl RuntimeSystem for AgentMovementSystem {
                                 }
                             }
                         }
+                        if colony && (pos.x, pos.y) != to {
+                            passages.insert((pos.x, pos.y));
+                            passages.insert(to);
+                        }
                         pos.x = to.0;
                         pos.y = to.1;
                     } else if let Some(target) = seek {
@@ -547,6 +556,10 @@ impl RuntimeSystem for AgentMovementSystem {
                             (pos.y as i64 + dy).clamp(0, max_y) as u32,
                         );
                         if !colony || to == (pos.x, pos.y) || nav.can_step((pos.x, pos.y), to) {
+                            if colony && (pos.x, pos.y) != to {
+                                passages.insert((pos.x, pos.y));
+                                passages.insert(to);
+                            }
                             pos.x = to.0;
                             pos.y = to.1;
                         }
@@ -603,6 +616,10 @@ impl RuntimeSystem for AgentMovementSystem {
                         if colony {
                             let to = path_step(nav, agent.id, (pos.x, pos.y), anchor, tick);
                             walking.insert(agent.id);
+                            if colony && (pos.x, pos.y) != to {
+                                passages.insert((pos.x, pos.y));
+                                passages.insert(to);
+                            }
                             pos.x = to.0;
                             pos.y = to.1;
                         } else {
@@ -724,6 +741,10 @@ impl RuntimeSystem for AgentMovementSystem {
                     continue;
                 }
             }
+            if colony && (pos.x, pos.y) != to {
+                passages.insert((pos.x, pos.y));
+                passages.insert(to);
+            }
             pos.x = to.0;
             pos.y = to.1;
         }
@@ -734,6 +755,9 @@ impl RuntimeSystem for AgentMovementSystem {
             resources.haulers.remove(&id);
         }
         resources.haulers.extend(haul_steps);
+        for tile in passages {
+            crate::runtime::thermal::note_door_passage(resources, tile, tick);
+        }
     }
 }
 

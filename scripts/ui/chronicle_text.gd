@@ -32,8 +32,9 @@ const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 ## MindChoice (47) records only entry into the critical band; its node slot is not a display name.
-const LAST_KIND: int = 58
+const LAST_KIND: int = 59
 static var steward_labels: Dictionary = {}
+static var dwelling_labels: Dictionary = {}
 static var food_chronicle: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
 const COLUMNS: Array[String] = ["tick", "kind", "subject", "other", "third", "settlement", "settlement2", "cause", "value",
@@ -166,6 +167,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		53: return food_operation_sentence(row.get("food_evidence", {}), locale)
 		57: return loc(locale, "S2_CHRON_CLOTH")
 		58: return loc(locale, "S2_CHRON_TUNIC")
+		59: return loc(locale, "S3_CHRON_DWELLING").format({"room": value, "stage": loc(locale, str(dwelling_labels.get(cause, "UI_UNKNOWN")))})
 		54, 55, 56:
 			var crop: Dictionary = preload("res://scripts/ui/content_context.gd").row("crops", value)
 			var key: String = ["S1_CHRON_SOWN", "S1_CHRON_HARVEST", "S1_CHRON_FROST"][kind - 54]

@@ -48,3 +48,5 @@ pub use agent_actions::targets::{
 };
 
 pub mod cultivation;
+
+pub mod thermal;

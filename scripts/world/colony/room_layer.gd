@@ -31,6 +31,7 @@ signal toggled(shown: bool)
 
 var _world_sim: Node = null
 var _version: int = -1
+var _thermal_version: int = -1
 var _font: Font = null
 var _labels: Node2D = null
 ## Room id -> {id, role, overridden, tiles, beds, roofed, dug, doors, centre}.
@@ -60,6 +61,7 @@ func _ready() -> void:
 
 func _on_world_reset() -> void:
 	_version = -1
+	_thermal_version = -1
 	_rooms.clear()
 	_tile_room.clear()
 
@@ -73,9 +75,11 @@ func _process(_delta: float) -> void:
 		_labels.queue_redraw()
 	var versions: Dictionary = SimReads.read(_world_sim, "get_colony_versions")
 	var version: int = int(versions.get("rooms_version", 0))
-	if version == _version:
+	var thermal_version: int = int(versions.get("thermal_version", 0))
+	if version == _version and thermal_version == _thermal_version:
 		return
 	_version = version
+	_thermal_version = thermal_version
 	_index(SimReads.read(_world_sim, "get_rooms"))
 	queue_redraw()
 	_labels.queue_redraw()
@@ -131,11 +135,17 @@ func _index(snap: Dictionary) -> void:
 	var roofed: PackedByteArray = snap.get("roofed", PackedByteArray())
 	var dug: PackedByteArray = snap.get("dug", PackedByteArray())
 	var doors: PackedInt32Array = snap.get("doors", PackedInt32Array())
+	var temperatures: PackedInt32Array = snap.get("temperature_d10s", PackedInt32Array())
+	var stages: Array = snap.get("dwelling_labels", [])
 	var cxs: PackedInt32Array = snap.get("centre_xs", PackedInt32Array())
 	var cys: PackedInt32Array = snap.get("centre_ys", PackedInt32Array())
 	for i: int in mini(ids.size(), mini(roles.size(), tiles.size())):
 		_rooms[ids[i]] = {
 			"id": ids[i],
+			"thermal_active": bool(snap.get("thermal_active", false)),
+			"temperature_d10": temperatures[i] if i < temperatures.size() else 0,
+			"cold_threshold_d10": int(snap.get("cold_threshold_d10", 0)),
+			"dwelling_labels": stages[i] if i < stages.size() else PackedStringArray(),
 			"role": clampi(roles[i], 0, ROLE_COLORS.size() - 1),
 			"overridden": i < overridden.size() and overridden[i] != 0,
 			"tiles": tiles[i],
@@ -161,6 +171,10 @@ static func label_text(info: Dictionary, locale: Node) -> String:
 	var text: String = EconomyText.trf(locale, "UI_ROOM_LABEL_FMT" if beds > 0 else "UI_ROOM_LABEL_NOBED_FMT", params)
 	if bool(info.get("overridden", false)):
 		text += " " + EconomyText.ltr(locale, "UI_ROOM_OVERRIDE")
+	if bool(info.get("thermal_active", false)):
+		text += " · %.1f°C" % (float(info.get("temperature_d10", 0)) / 10.0)
+		for key: String in info.get("dwelling_labels", PackedStringArray()):
+			text += " · " + EconomyText.ltr(locale, key)
 	return text
 
 
@@ -177,6 +191,8 @@ func _draw() -> void:
 		var id: int = int(_tile_room[cell])
 		var info: Dictionary = _rooms.get(id, {})
 		var colour: Color = ROLE_COLORS[int(info.get("role", 0))]
+		if bool(info.get("thermal_active", false)):
+			colour = ROLE_COLORS[1] if int(info.get("temperature_d10", 0)) < int(info.get("cold_threshold_d10", 0)) else ROLE_COLORS[4]
 		var origin: Vector2 = View.tile_to_world(cell)
 		draw_rect(Rect2(origin, tile_size), colour)
 		var edge: Color = Color(colour, 0.85)

@@ -40,7 +40,8 @@ pub fn read_selection(path: &Path) -> Result<BootSelection, CatalogError> {
     for (logical, relative) in descriptor.sources {
         if !matches!(
             logical.as_str(),
-            "items"
+            "thermal"
+                | "items"
                 | "blueprints"
                 | "recipes"
                 | "knowledge"

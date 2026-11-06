@@ -1,9 +1,13 @@
 //! RoomSystem: finds the colony's rooms and gives each a role (M3, ADR 0023).
 //!
 //! Priority: 152 (`ROOM_PRIORITY`). Interval: 1 tick (detects when a wall, door or dug tile changed — `colony.rooms_dirty` — and re-reads the roles every `SpaceRule::room_interval_ticks`). Gate: `WorldRules.colony.space`.
-//! Reads: `Agent`, `Position`; `SimResources.tile_grid`, `building_kinds`, `settlements`, `colony` (beds, zones, occupied, room overrides)
-//! Writes: `SimResources.colony` (rooms, room_of_tile, next_room_id, rooms_announced, rooms_dirty, rooms_version); chronicle
-//! Events: chronicle `RoomFormed` (once per room id)
+//! Reads: `Agent`, `Position`, `Apparel`, `Child`, `Hunger`, `BodyHealth`; `SimResources.tile_grid`, `building_kinds`, `settlements`, `colony` (beds, zones, occupied, room overrides, physical food), paid hearth receipts, authored thermal rules
+//! Writes: `SimResources.colony` (rooms, room_of_tile, next_room_id, rooms_announced, rooms_dirty, rooms_version), thermal temperatures/door intervals/bed-stage hysteresis, per-tick `Cold`, hourly exposure/deaths/cold-hour tallies; chronicle
+//! Events: chronicle `RoomFormed` (once per room id), `DwellingImproved`; exposure deaths through existing survival accounting
+//!
+//! Colony thermal integration follows geometry once per 60-tick boundary. Hunger130
+//! consumes the prior committed Cold at that boundary; per-tick felt refresh never
+//! repeats heat, fuel payment, garment wear or exposure. No new system slot.
 //!
 //! Detection is `sim_core::rooms::detect` over the tile grid: walls, doors,
 //! undug hill, water and mountain bound a room (a wall's construction site
@@ -241,6 +245,7 @@ impl RuntimeSystem for RoomSystem {
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         let Some(space) = resources.rules.colony.and_then(|r| r.space) else {
+            crate::runtime::thermal::update_after_rooms(world, resources);
             return;
         };
         if resources.colony.rooms_dirty {
@@ -252,6 +257,7 @@ impl RuntimeSystem for RoomSystem {
         {
             assign_roles(world, resources);
         }
+        crate::runtime::thermal::update_after_rooms(world, resources);
     }
 }
 

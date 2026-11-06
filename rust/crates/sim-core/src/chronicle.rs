@@ -180,11 +180,13 @@ pub enum ChronicleKind {
     FirstCloth = 57,
     /// First physically committed woven tunic; value = item code.
     FirstTunic = 58,
+    /// Earned a higher physical dwelling stage; cause = stage, value = room.
+    DwellingImproved = 59,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 59] = [
+    pub const ALL: [ChronicleKind; 60] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -244,6 +246,7 @@ impl ChronicleKind {
         Self::CropFailure,
         Self::FirstCloth,
         Self::FirstTunic,
+        Self::DwellingImproved,
     ];
 
     /// Stable numeric discriminant.
@@ -313,6 +316,7 @@ impl ChronicleKind {
             Self::CropFailure => "crop_failure",
             Self::FirstCloth => "first_cloth",
             Self::FirstTunic => "first_tunic",
+            Self::DwellingImproved => "dwelling_improved",
         }
     }
 }

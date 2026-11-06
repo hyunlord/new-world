@@ -699,6 +699,13 @@ frame.
 | `overlay_version` | int | `colony.overlay_version`, bumped when marks, zones, stacks or sites change |
 | `rooms_version` | int | M3: `colony.rooms_version`, bumped when the rooms or their roles change |
 
+Stage3 additions (nested DTO keys are listed with their owning getter):
+
+| key | type | meaning |
+|---|---|---|
+| `thermal_version` | int | Native thermal observer change counter |
+
+
 ### `get_trees`
 `collect_tree_snapshot(&SimResources)` → `trees_to_dict` (`ffi/colony.rs`). Every standing tree in `(x, y)` order (sorted by
 x, then y). Stumps are not in the simulation: `tree_layer.gd` (and the text renderer's `StumpTracker`) derive them
@@ -797,6 +804,18 @@ layer when `version` moves.
 | `tile_ys` | PackedInt32Array | room tile y |
 | `tile_rooms` | PackedInt32Array | the tile's room id |
 
+Stage3 additions (nested DTO keys are listed with their owning getter):
+
+| key | type | meaning |
+|---|---|---|
+| `thermal_active` | bool | Native thermal sidecar active; false in baseline |
+| `outdoor_d10` | int | Authored current outdoor temperature, tenths °C |
+| `cold_threshold_d10` | int | Authored felt-temperature cold threshold, tenths °C |
+| `thermal_version` | int | Native thermal observer change counter |
+| `temperature_d10s` | PackedInt32Array | Native place temperatures aligned with room ids, tenths °C |
+| `dwelling_labels` | Array[PackedStringArray] | Distinct earned authored stage localization keys per room |
+
+
 ### `get_room_detail`
 `collect_room_detail(&World, &SimResources, i64) -> RoomDetail` → `room_detail_to_dict` (`ffi/space.rs`). Argument:
 the room id. Not in `SimReads.GETTERS` (it takes an argument).
@@ -816,6 +835,28 @@ the room id. Not in `SimReads.GETTERS` (it takes an argument).
 | `items` | int | items lying on its tiles |
 | `covered` | int | of them, under a storehouse roof |
 | `sleepers` | int | people asleep in it now |
+
+Stage3 additions (nested DTO keys are listed with their owning getter):
+
+| key | type | meaning |
+|---|---|---|
+| `thermal_active` | bool | Native thermal sidecar active; false in baseline |
+| `outdoor_d10` | int | Authored current outdoor temperature, tenths °C |
+| `cold_threshold_d10` | int | Authored felt-temperature cold threshold, tenths °C |
+| `temperature_d10` | int | Native room temperature, tenths °C |
+| `paid_heat` | bool | Positive primary-hearth fuel fully paid this hour |
+| `open_doors` | int | Currently open physical border doors |
+| `dwellings` | Array[Dictionary] | Native bed-anchored dwelling views; nested keys below |
+| `bed_x` | int | Dwelling bed x |
+| `bed_y` | int | Dwelling bed y |
+| `label_key` | String | Earned authored stage localization key, empty when none |
+| `candidate_key` | String | Currently qualifying authored stage key, empty when none |
+| `reason` | String | Native physical blocker or ready |
+| `deficiency_deadline` | int | Continuous deficiency reassessment tick; -1 absent |
+| `floor_coverage_permille` | int | Actual room floor coverage |
+| `warm_occupants` | bool | Actual occupants present and all warm |
+| `nearby_food` | bool | Reachable stored food meets native condition |
+
 
 ### `get_place_preview`
 `collect_place_preview(&World, &SimResources, &str, (i32, i32, i32, i32), i64) -> PlacePreview` → `preview_to_dict`
@@ -937,6 +978,14 @@ colony rules without `ColonyRule::knowledge`. Node ids are `KnowledgeId` (the in
 | `prereq_from` | PackedInt64Array | prerequisite edge: the prerequisite node |
 | `prereq_to` | PackedInt64Array | prerequisite edge: the node that needs it |
 
+Stage3 additions (nested DTO keys are listed with their owning getter):
+
+| key | type | meaning |
+|---|---|---|
+| `coverage_permille` | PackedInt64Array | Native adult practitioner coverage aligned with node ids |
+| `marker_total_weight` | int | Authored era denominator including absent markers |
+
+
 ### `get_tech_node`
 `collect_tech_node(&World, &SimResources, i64) -> TechNodeView` → `tech_node_to_dict` (`ffi/knowledge.rs`). Argument:
 the node id. Not in `SimReads.GETTERS` (it takes an argument). People in `AgentId` order.
@@ -966,6 +1015,13 @@ the node id. Not in `SimReads.GETTERS` (it takes an argument). People in `AgentI
 | `cond_met` | PackedInt64Array | 1 = the condition holds now |
 | `gate_kinds` | PackedInt64Array | what it gates: 0 recipe, 1 blueprint, 2 workshop, 3 designation, 4 channel, 5 lore |
 | `gate_names` | PackedStringArray | recipe, blueprint, designation, channel or lore name |
+
+Stage3 additions (nested DTO keys are listed with their owning getter):
+
+| key | type | meaning |
+|---|---|---|
+| `coverage_permille` | int | Selected node native adult practitioner coverage |
+
 
 ### `get_agent_knowledge`
 `collect_agent_knowledge(&World, &SimResources, i64) -> AgentKnowledgeView` → `agent_knowledge_to_dict`
@@ -1050,6 +1106,13 @@ columns) and the banner's numbers.
 | `dress_order` | bool | the standing order "모두 가죽 옷" is on |
 | `version` | int | pressures begun + ended (changes when the banner should) |
 
+Stage3 additions (nested DTO keys are listed with their owning getter):
+
+| key | type | meaning |
+|---|---|---|
+| `dwelling_labels` | Dictionary[int,String] | Saved authored stage id to localization key |
+
+
 ### `get_animals`
 `collect_animals(&SimResources) -> AnimalRows` → `animals_to_dict`. Animals by `AnimalId` (at most 12 deer and 4
 wolves) and the hunt zones.
@@ -1100,6 +1163,17 @@ A carcass is not an animal: a kill drops meat and a hide as ground items (`get_c
 | `fleeing` | bool | M5.5: running from a wolf (`Fleeing`; the inspector's "도망 중: 늑대") |
 | `sick_ticks_left` | int | ticks until the illness passes, 0 when not sick |
 | `hp` | int | hit points 0–100 |
+
+Stage3 additions (nested DTO keys are listed with their owning getter):
+
+| key | type | meaning |
+|---|---|---|
+| `thermal_active` | bool | Native thermal sidecar active; false in baseline |
+| `outdoor_d10` | int | Authored current outdoor temperature, tenths °C |
+| `cold_threshold_d10` | int | Authored felt-temperature cold threshold, tenths °C |
+| `place_d10` | int | Temperature at the actual person tile, tenths °C |
+| `felt_d10` | int | Native place temperature plus worn insulation, tenths °C |
+
 
 ### `get_drafted`
 `collect_drafted(&World, &SimResources) -> DraftedRows` → `drafted_to_dict`. Drafted people by `AgentId` (the HUD's
@@ -1542,6 +1616,20 @@ winter-shortage and expiry-fraction predicates remain in `assets/ui/alerts.json`
 | `y` | int | real settlement formation tile y for alert navigation |
 
 
+Stage3 additions (nested DTO keys are listed with their owning getter):
+
+| key | type | meaning |
+|---|---|---|
+| `thermal_active` | bool | Native thermal sidecar active; false in baseline |
+| `outdoor_d10` | int | Authored current outdoor temperature, tenths °C |
+| `cold_threshold_d10` | int | Authored felt-temperature cold threshold, tenths °C |
+| `thermal_version` | int | Native thermal observer change counter |
+| `temperature_d10s` | PackedInt32Array | Native place temperatures aligned with room ids, tenths °C |
+| `dwelling_labels` | Array[PackedStringArray] | Distinct earned authored stage localization keys per room |
+| `coverage_permille` | PackedInt64Array | Native adult practitioner coverage aligned with node ids |
+| `marker_total_weight` | int | Authored era denominator including absent markers |
+
+
 ### `get_steward`
 `collect_steward(&SimResources) -> StewardView` (`ffi/steward.rs`). Persisted mode and accepted-order
 provenance, never inferred task completion. Rules are loaded from data; missing rule data yields empty labels.
@@ -1966,3 +2054,37 @@ paused suspends work; auto returns to ordinary scheduling. It never instantly se
 Inactive/covered/stale card targets are skipped before dispatch. Returns accepted/count/reason.
 
 Stage2 appends chronicle kinds57 `FirstCloth` and58 `FirstTunic` after actual output placement. The generic textile-apparel event need not be a specific hardcoded tunic. The presentation translates these kinds in ko/en; it does not create outputs. Runtime validation is pending in `m6b/M6B_REPORT.md`.
+
+
+### M6b Stage3 thermal and era observer additions
+
+These are pure projections of colony native state. No getter advances time, pays fuel,
+sets a door or evaluates a UI-side heat equation. Baseline has `thermal_active=false`.
+Temperatures are signed integer tenths of °C; numeric zero is meaningful only when active.
+
+- `get_colony_versions.thermal_version`: monotonic observer invalidation while running;
+  loading/resetting a world invalidates the UI independently of its initial value.
+- `get_rooms`: `thermal_active` (bool), `thermal_version` (int), `outdoor_d10`
+  and `cold_threshold_d10` (int); `temperature_d10s` (PackedInt32Array, aligned with
+  ids), `dwelling_labels` (Array of PackedStringArray, aligned with ids, distinct
+  earned authored stage localization keys). Existing tile geometry is authoritative.
+- `get_room_detail`: `thermal_active`, `outdoor_d10`, `temperature_d10`,
+  `cold_threshold_d10`, `paid_heat` (fully paid positive primary-hearth receipt this
+  hour), `open_doors` (current physical door states), and `dwellings` (Array of Dictionary).
+  Each dwelling has `bed_x`, `bed_y`, `label_key` (earned; empty when none),
+  `candidate_key` (currently satisfied; empty when none), `reason` (native first
+  unmet physical condition: roof/beds/floor/fuel/warmth/food/ready),
+  `deficiency_deadline` (tick, -1 absent), `roofed`, `floor_coverage_permille`,
+  `paid_heat`, `warm_occupants`, `nearby_food`. Conditions are evaluated by the
+  same native helper used by dwelling progression/mood, not by GDScript.
+- `get_agent_m5`: `thermal_active`, `outdoor_d10`, `place_d10`, `felt_d10`,
+  `cold_threshold_d10`. Place is the person's actual tile; felt includes actual
+  worn apparel insulation from the saved thermal rules.
+- `get_story.dwelling_labels`: Dictionary of authored integer stage id to
+  localization key. Chronicle kind 59 (`dwelling_improved`) uses `cause` = stage id,
+  `value` = room id. Mood modifier 17 is `dwelling`. All earlier codes are unchanged.
+- `get_tech`: `coverage_permille` (PackedInt64Array aligned with ids, native adult
+  practitioner coverage capped at 1000), `marker_total_weight` (int, authored sum).
+  `get_tech_node.coverage_permille` is the same selected node value. Existing
+  `conditions_met` and detailed `cond_met` retain their discovery-condition meaning;
+  discovery readiness and practitioner coverage are displayed separately.

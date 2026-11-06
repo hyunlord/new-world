@@ -1,0 +1,31 @@
+// Stage3 initial game units; balance debt, not natural-world outcome targets.
+// Profile resolves actual saved material/item identities; resolved values persist in save18.
+(
+    schema_version: 1,
+    rules: (
+        // Deci-degrees: winter base -30 plus night swing -20 gives reference -50.
+        season_outdoor_d10: (120, 220, 100, -30),
+        hour_offset_d10: (-20,-20,-20,-20,-20,-20,-10,0,10,20,30,40,40,40,30,20,10,0,-10,-20,-20,-20,-20,-20),
+        // Snap adds another -50 deci-degrees; Cold compares felt against50.
+        cold_snap_offset_d10: -50, cold_threshold_d10: 50,
+        // Integer game heat/capacity units per interior tile, not physical watts.
+        capacity_per_tile: 750, roof_floor_loss_per_tile: 100,
+        // Door loss per hour, passage duration in simulation ticks.
+        closed_door_loss: 250, open_door_loss: 9000, door_passage_ticks: 2,
+        // Heat per positively paid hour, and per physical occupant.
+        paid_hearth_heat: 450000, adult_body_heat: 4500, child_body_heat: 2500,
+        // Explicit loss for enclosing nonconstructed terrain edges.
+        natural_boundary_loss: 300,
+        // Delay is elapsed simulation ticks; mood is additive permille. Food is adult-days within navigation distance.
+        stages: [
+            (id: 1, label_key: "THERMAL_SHELTERED", rank: 1, min_beds: 1, floor_coverage_permille: 0, requires_paid_heat: false, requires_warm_occupants: false, nearby_food_adult_days: 0, food_nav_distance: 8, downgrade_delay_ticks: 2880, mood_permille: 10),
+            (id: 2, label_key: "THERMAL_SETTLED", rank: 2, min_beds: 1, floor_coverage_permille: 1000, requires_paid_heat: false, requires_warm_occupants: false, nearby_food_adult_days: 0, food_nav_distance: 8, downgrade_delay_ticks: 2880, mood_permille: 20),
+            (id: 3, label_key: "THERMAL_WARMED", rank: 3, min_beds: 1, floor_coverage_permille: 1000, requires_paid_heat: true, requires_warm_occupants: true, nearby_food_adult_days: 0, food_nav_distance: 8, downgrade_delay_ticks: 2880, mood_permille: 30),
+            (id: 4, label_key: "THERMAL_PROVISIONED", rank: 4, min_beds: 1, floor_coverage_permille: 1000, requires_paid_heat: true, requires_warm_occupants: true, nearby_food_adult_days: 1, food_nav_distance: 8, downgrade_delay_ticks: 2880, mood_permille: 40),
+        ],
+    ),
+    // Saved real material IDs resolve these names; insulation0..999 yields edge loss1000-I.
+    materials: [("oak",900),("pine",880),("birch",870),("granite",700),("limestone",750),("flint",650),("chert",650)],
+    // Additive felt deci-degrees, independent of historical cold probability and wear.
+    apparel: [("hide_wrap",20),("fur_cloak",50),("linen_tunic",30),("linen_wrap",20)],
+)

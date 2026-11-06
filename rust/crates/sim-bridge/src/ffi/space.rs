@@ -394,6 +394,10 @@ pub struct RoomRow {
     pub doors: u32,
     /// The tile nearest the mean of its tiles (for the label), `(y, x)` tie.
     pub centre: (u32, u32),
+    /// Authoritative cached room temperature; absent when thermal is inactive.
+    pub temperature_d10: Option<i32>,
+    /// Earned authored dwelling labels for actual beds in this room.
+    pub dwelling_labels: Vec<String>,
 }
 
 /// The colony's rooms (`collect_rooms`): rows by id, and each room tile with its id.
@@ -401,6 +405,12 @@ pub struct RoomRow {
 pub struct RoomsView {
     /// `colony.rooms_version`.
     pub version: u64,
+    /// Native thermal observer invalidation counter.
+    pub thermal_version: u64,
+    /// Current native outdoor temperature, tenths of a degree.
+    pub outdoor_d10: Option<i32>,
+    /// Authored cold threshold, tenths of a degree.
+    pub cold_threshold_d10: i32,
     /// Rooms in id order.
     pub rows: Vec<RoomRow>,
     /// Room tiles in `(x, y)` order with their room id.
@@ -435,11 +445,33 @@ pub fn collect_rooms(res: &SimResources) -> RoomsView {
                 dug: r.dug,
                 doors: r.doors.len() as u32,
                 centre,
+                temperature_d10: sim_systems::runtime::thermal::place_temperature(res, centre),
+                dwelling_labels: res.thermal.as_ref().map_or_else(Vec::new, |thermal| {
+                    thermal
+                        .dwellings
+                        .iter()
+                        .filter(|(tile, _)| r.tiles.contains(tile))
+                        .filter_map(|(_, dwelling)| dwelling.stage)
+                        .filter_map(|stage| thermal.rules.stages.iter().find(|def| def.id == stage))
+                        .map(|def| def.label_key.clone())
+                        .collect::<BTreeSet<_>>()
+                        .into_iter()
+                        .collect()
+                }),
             }
         })
         .collect();
     RoomsView {
         version: c.rooms_version,
+        thermal_version: res
+            .thermal
+            .as_ref()
+            .map_or(0, |thermal| thermal.view_version),
+        outdoor_d10: sim_systems::runtime::thermal::outdoor_temperature(res),
+        cold_threshold_d10: res
+            .thermal
+            .as_ref()
+            .map_or(0, |thermal| thermal.rules.cold_threshold_d10),
         rows,
         tiles: c.room_of_tile.iter().map(|(t, id)| (*t, *id)).collect(),
     }
@@ -448,6 +480,30 @@ pub fn collect_rooms(res: &SimResources) -> RoomsView {
 pub(super) fn rooms_to_dict(v: &RoomsView) -> VarDictionary {
     let mut dict = VarDictionary::new();
     dict.set("version", v.version as i64);
+    dict.set("thermal_active", v.outdoor_d10.is_some());
+    dict.set("thermal_version", v.thermal_version as i64);
+    dict.set("outdoor_d10", v.outdoor_d10.unwrap_or(0));
+    dict.set("cold_threshold_d10", v.cold_threshold_d10);
+    let temperatures: Vec<i32> = v
+        .rows
+        .iter()
+        .map(|row| row.temperature_d10.unwrap_or(0))
+        .collect();
+    dict.set(
+        "temperature_d10s",
+        PackedInt32Array::from(temperatures.as_slice()),
+    );
+    let mut stages = Array::<PackedStringArray>::new();
+    for row in &v.rows {
+        let labels: Vec<GString> = row
+            .dwelling_labels
+            .iter()
+            .map(|key| GString::from(key.as_str()))
+            .collect();
+        stages.push(&PackedStringArray::from(labels.as_slice()));
+    }
+    dict.set("dwelling_labels", stages);
+
     dict.set("ids", int_col(v.rows.iter().map(|r| r.id)));
     dict.set(
         "roles",
@@ -489,6 +545,41 @@ pub struct RoomDetail {
     pub covered: u32,
     /// People asleep in it now.
     pub sleepers: u32,
+    /// Current native outdoor temperature, tenths of a degree.
+    pub outdoor_d10: Option<i32>,
+    /// Authored cold threshold, tenths of a degree.
+    pub cold_threshold_d10: i32,
+    /// Whether the current primary-hearth heat is fully paid.
+    pub paid_heat: bool,
+    /// Physical doors currently open on the room boundary.
+    pub open_doors: u32,
+    /// Native dwelling predicates for actual beds in this room.
+    pub dwellings: Vec<DwellingDetail>,
+}
+
+/// Read-only dwelling facts from the native progression helper.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct DwellingDetail {
+    /// Actual bed anchor tile.
+    pub bed: (u32, u32),
+    /// Earned authored stage localization key, empty when none.
+    pub label_key: String,
+    /// Currently qualifying authored stage localization key.
+    pub candidate_key: String,
+    /// Native first unmet physical condition, or ready.
+    pub reason: String,
+    /// Tick at which uninterrupted deficiency permits downgrade.
+    pub deficiency_deadline: Option<u64>,
+    /// Whether the bed has an actual roofed room.
+    pub roofed: bool,
+    /// Native actual floor coverage.
+    pub floor_coverage_permille: u16,
+    /// Whether the current primary-hearth heat is fully paid.
+    pub paid_heat: bool,
+    /// Whether actual occupants are present and all warm.
+    pub warm_occupants: bool,
+    /// Whether reachable stored food meets the native condition.
+    pub nearby_food: bool,
 }
 
 /// One room's panel (`found: false` when there is no such room).
@@ -527,12 +618,56 @@ pub fn collect_room_detail(world: &hecs::World, res: &SimResources, room: i64) -
                 )
         })
         .count() as u32;
+    let thermal = res.thermal.as_ref();
+    let dwellings = res
+        .colony
+        .beds
+        .keys()
+        .filter(|tile| r.tiles.contains(tile))
+        .filter_map(|tile| {
+            sim_systems::runtime::thermal::dwelling_view(world, res, *tile).map(|view| {
+                DwellingDetail {
+                    bed: *tile,
+                    label_key: view.label_key.unwrap_or_default(),
+                    candidate_key: thermal
+                        .and_then(|t| {
+                            t.rules
+                                .stages
+                                .iter()
+                                .find(|stage| Some(stage.id) == view.candidate)
+                        })
+                        .map_or_else(String::new, |stage| stage.label_key.clone()),
+                    reason: view.reason.to_string(),
+                    deficiency_deadline: view.deficiency_deadline,
+                    roofed: view.roofed,
+                    floor_coverage_permille: view.floor_coverage_permille,
+                    paid_heat: view.paid_heat,
+                    warm_occupants: view.warm_occupants,
+                    nearby_food: view.nearby_food,
+                }
+            })
+        })
+        .collect();
     RoomDetail {
         found: true,
         row,
         items,
         covered,
         sleepers,
+        outdoor_d10: sim_systems::runtime::thermal::outdoor_temperature(res),
+        cold_threshold_d10: thermal.map_or(0, |t| t.rules.cold_threshold_d10),
+        paid_heat: sim_systems::runtime::thermal::room_paid(res, r.id),
+        open_doors: thermal.map_or(0, |t| {
+            r.doors
+                .iter()
+                .filter(|tile| {
+                    t.doors.get(tile).is_some_and(|door| {
+                        door.held_open || door.open_until_tick > res.current_tick
+                    })
+                })
+                .count() as u32
+        }),
+        dwellings,
     }
 }
 
@@ -558,5 +693,35 @@ pub(super) fn room_detail_to_dict(d: &RoomDetail) -> VarDictionary {
     dict.set("items", i64::from(d.items));
     dict.set("covered", i64::from(d.covered));
     dict.set("sleepers", i64::from(d.sleepers));
+    dict.set("thermal_active", d.outdoor_d10.is_some());
+    dict.set("outdoor_d10", d.outdoor_d10.unwrap_or(0));
+    dict.set(
+        "temperature_d10",
+        row.as_ref().and_then(|r| r.temperature_d10).unwrap_or(0),
+    );
+    dict.set("cold_threshold_d10", d.cold_threshold_d10);
+    dict.set("paid_heat", d.paid_heat);
+    dict.set("open_doors", d.open_doors);
+    let mut dwellings = Array::<VarDictionary>::new();
+    for view in &d.dwellings {
+        let mut entry = VarDictionary::new();
+        entry.set("bed_x", view.bed.0);
+        entry.set("bed_y", view.bed.1);
+        entry.set("label_key", view.label_key.as_str());
+        entry.set("candidate_key", view.candidate_key.as_str());
+        entry.set("reason", view.reason.as_str());
+        entry.set(
+            "deficiency_deadline",
+            view.deficiency_deadline.map_or(-1, |tick| tick as i64),
+        );
+        entry.set("roofed", view.roofed);
+        entry.set("floor_coverage_permille", view.floor_coverage_permille);
+        entry.set("paid_heat", view.paid_heat);
+        entry.set("warm_occupants", view.warm_occupants);
+        entry.set("nearby_food", view.nearby_food);
+        dwellings.push(&entry);
+    }
+    dict.set("dwellings", dwellings);
+
     dict
 }

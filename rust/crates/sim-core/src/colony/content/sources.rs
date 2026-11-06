@@ -23,6 +23,10 @@ impl RawSources {
             sources: [
                 ("crops.ron", include_str!("../../../data/colony/crops.ron")),
                 (
+                    "thermal.ron",
+                    include_str!("../../../data/colony/thermal.ron"),
+                ),
+                (
                     "plants.ron",
                     include_str!("../../../data/colony/plants.ron"),
                 ),
@@ -63,7 +67,8 @@ impl RawSources {
             let name = normalize(&source.name).to_owned();
             if !matches!(
                 name.as_str(),
-                "items.ron"
+                "thermal.ron"
+                    | "items.ron"
                     | "blueprints.ron"
                     | "recipes.ron"
                     | "knowledge.ron"
@@ -91,6 +96,7 @@ impl RawSources {
 pub(super) fn normalize(name: &str) -> &str {
     match name {
         "items" => "items.ron",
+        "thermal" => "thermal.ron",
         "blueprints" => "blueprints.ron",
         "recipes" => "recipes.ron",
         "knowledge" => "knowledge.ron",
@@ -130,6 +136,11 @@ pub(super) fn revision(
     ] {
         feed(label);
         for (name, bytes) in map {
+            // Colony thermal values have their own resolved, saved revision.
+            // Including them here would change historical baseline envelope bytes.
+            if name == "thermal.ron" {
+                continue;
+            }
             feed(&u64::try_from(name.len()).unwrap_or(u64::MAX).to_le_bytes());
             feed(name.as_bytes());
             feed(&u64::try_from(bytes.len()).unwrap_or(u64::MAX).to_le_bytes());
