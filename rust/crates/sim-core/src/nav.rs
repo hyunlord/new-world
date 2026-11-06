@@ -23,8 +23,11 @@
 //! behaviour. Derived parts (map, regions, memo, scratch, stats) are not saved.
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
+#[cfg(test)]
 use std::cmp::Reverse;
-use std::collections::{BTreeMap, BinaryHeap, VecDeque};
+#[cfg(test)]
+use std::collections::BinaryHeap;
+use std::collections::{BTreeMap, VecDeque};
 use std::sync::Arc;
 
 use crate::components::AgentId;
@@ -233,7 +236,75 @@ struct Scratch {
     g: Vec<u32>,
     parent: Vec<u32>,
     generation: u32,
-    open: BinaryHeap<Reverse<u128>>,
+    open: Vec<u128>,
+    open_positions: Vec<usize>,
+    #[cfg(test)]
+    expanded_trace: Vec<Tile>,
+}
+
+impl Scratch {
+    fn swap_open(&mut self, a: usize, b: usize, width: usize) {
+        self.open.swap(a, b);
+        for at in [a, b] {
+            let key = self.open[at];
+            let cell = ((key >> 32) as u32 as usize) * width + key as u32 as usize;
+            self.open_positions[cell] = at;
+        }
+    }
+
+    fn push_open(&mut self, key: u128, cell: usize, present: bool, width: usize) {
+        let mut at = if present {
+            let at = self.open_positions[cell];
+            // Old duplicate entries retain the smallest historical priority, even
+            // when unchanged wrapping arithmetic makes the newest key larger.
+            if key >= self.open[at] {
+                return;
+            }
+            self.open[at] = key;
+            at
+        } else {
+            let at = self.open.len();
+            self.open.push(key);
+            self.open_positions[cell] = at;
+            at
+        };
+        while at > 0 {
+            let parent = (at - 1) / 2;
+            if self.open[parent] <= self.open[at] {
+                break;
+            }
+            self.swap_open(parent, at, width);
+            at = parent;
+        }
+    }
+
+    fn pop_open(&mut self, width: usize) -> Option<u128> {
+        let first = *self.open.first()?;
+        let last = self.open.pop()?;
+        if !self.open.is_empty() {
+            self.open[0] = last;
+            let cell = ((last >> 32) as u32 as usize) * width + last as u32 as usize;
+            self.open_positions[cell] = 0;
+            let mut at = 0_usize;
+            while let Some(left) = at.checked_mul(2).and_then(|n| n.checked_add(1)) {
+                if left >= self.open.len() {
+                    break;
+                }
+                let right = left + 1;
+                let child = if right < self.open.len() && self.open[right] < self.open[left] {
+                    right
+                } else {
+                    left
+                };
+                if self.open[at] <= self.open[child] {
+                    break;
+                }
+                self.swap_open(at, child, width);
+                at = child;
+            }
+        }
+        Some(first)
+    }
 }
 
 /// The path memo of one `version`.
@@ -521,6 +592,8 @@ impl NavState {
     fn search(&self, from: Tile, to: Tile) -> Option<Vec<Tile>> {
         let mut s = self.scratch.borrow_mut();
         s.open.clear();
+        #[cfg(test)]
+        s.expanded_trace.clear();
         let map = &self.map;
         let w = map.width as usize;
         let n = map.cost.len();
@@ -552,7 +625,10 @@ impl NavState {
                 g: vec![0; n],
                 parent: vec![0; n],
                 generation: 0,
-                open: BinaryHeap::new(),
+                open: Vec::new(),
+                open_positions: vec![0; n],
+                #[cfg(test)]
+                expanded_trace: Vec::new(),
             };
         }
         s.generation = s.generation.wrapping_add(1);
@@ -565,11 +641,15 @@ impl NavState {
         s.stamp[start] = gen;
         s.g[start] = 0;
         s.parent[start] = start as u32;
-        s.open
-            .push(Reverse(search_key(h(from), h(from), from.1, from.0)));
+        s.push_open(
+            search_key(h(from), h(from), from.1, from.0),
+            start,
+            false,
+            w,
+        );
         let mut expanded = 0u64;
         let mut reached: Option<usize> = None;
-        while let Some(Reverse(key)) = s.open.pop() {
+        while let Some(key) = s.pop_open(w) {
             let x = key as u32;
             let y = (key >> 32) as u32;
             let t = (x, y);
@@ -579,6 +659,8 @@ impl NavState {
             }
             s.closed[i] = gen;
             expanded += 1;
+            #[cfg(test)]
+            s.expanded_trace.push(t);
             if is_goal(t) {
                 reached = Some(i);
                 break;
@@ -591,11 +673,12 @@ impl NavState {
                 }
                 let g = gi + map.step_cost(t, nb);
                 if s.stamp[j] != gen || g < s.g[j] {
+                    let present = s.stamp[j] == gen;
                     s.stamp[j] = gen;
                     s.g[j] = g;
                     s.parent[j] = i as u32;
                     let hn = h(nb);
-                    s.open.push(Reverse(search_key(g + hn, hn, nb.1, nb.0)));
+                    s.push_open(search_key(g + hn, hn, nb.1, nb.0), j, present, w);
                 }
             }
         }
@@ -695,7 +778,12 @@ mod tests {
     }
 
     // Frozen pre-optimization tuple frontier; independent allocation per query.
-    fn original_tuple_search(map: &CostMap, from: Tile, to: Tile) -> Option<Vec<Tile>> {
+    fn original_tuple_search(
+        map: &CostMap,
+        from: Tile,
+        to: Tile,
+        trace: &mut Vec<Tile>,
+    ) -> Option<Vec<Tile>> {
         let w = map.width as usize;
         let n = map.cost.len();
         let start = map.index(from)?;
@@ -735,6 +823,7 @@ mod tests {
                 continue;
             }
             closed[i] = true;
+            trace.push(t);
             if is_goal(t) {
                 reached = Some(i);
                 break;
@@ -763,6 +852,52 @@ mod tests {
         }
         out.reverse();
         Some(out)
+    }
+
+    fn frontier_minima_under_test(updates: &[(u32, u32)]) -> Vec<u128> {
+        let mut scratch = Scratch {
+            open_positions: vec![0; 4],
+            ..Scratch::default()
+        };
+        let mut present = [false; 4];
+        for &(node, g) in updates {
+            let cell = node as usize;
+            scratch.push_open(
+                search_key(g.wrapping_add(1), 1, 0, node),
+                cell,
+                present[cell],
+                4,
+            );
+            present[cell] = true;
+        }
+        let mut result = Vec::new();
+        while let Some(key) = scratch.pop_open(4) {
+            result.push(key);
+        }
+        result
+    }
+
+    #[test]
+    fn frontier_retains_smallest_historical_key_even_when_latest_sum_wraps_up() {
+        // For node 0 strict lower-g rediscovery increases wrapped f: 0 -> MAX.
+        // Old search expands from the smallest historical key with latest g/parent.
+        let updates = [
+            (0, u32::MAX),
+            (1, 20),
+            (2, 10),
+            (3, 5),
+            (1, 3),
+            (2, 2),
+            (0, u32::MAX - 1),
+            (3, 1),
+        ];
+        let expected = vec![
+            search_key(0, 1, 0, 0),
+            search_key(2, 1, 0, 3),
+            search_key(3, 1, 0, 2),
+            search_key(4, 1, 0, 1),
+        ];
+        assert_eq!(frontier_minima_under_test(&updates), expected);
     }
 
     #[test]
@@ -840,10 +975,19 @@ mod tests {
                             for tx in 0..n.map.width {
                                 let from = (fx, fy);
                                 let to = (tx, ty);
+                                let mut expected_trace = Vec::new();
+                                let expected =
+                                    original_tuple_search(&n.map, from, to, &mut expected_trace);
+                                let before = n.stats.borrow().expanded;
                                 assert_eq!(
                                     n.search(from, to),
-                                    original_tuple_search(&n.map, from, to),
+                                    expected,
                                     "round={round}, from={from:?}, to={to:?}"
+                                );
+                                assert_eq!(n.scratch.borrow().expanded_trace, expected_trace);
+                                assert_eq!(
+                                    n.stats.borrow().expanded - before,
+                                    expected_trace.len() as u64
                                 );
                                 assert!(n.scratch.borrow().open.is_empty());
                             }

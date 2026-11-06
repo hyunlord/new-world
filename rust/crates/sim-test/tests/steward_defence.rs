@@ -965,3 +965,266 @@ fn free_farther_spear_prevents_downgrading_a_constrained_defender_to_an_axe() {
         Some((24, 24))
     );
 }
+
+#[test]
+fn selected_retired_pack_near_outdoor_resident_rearms_without_replacing_defenders() {
+    let mut engine = armed_colony();
+    incoming(&mut engine);
+    let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).unwrap();
+    let far = (hearth.0 + 35, hearth.1);
+    for (_, (_, p)) in engine
+        .world
+        .query_mut::<(&sim_core::components::Agent, &mut Position)>()
+    {
+        p.x = hearth.0;
+        p.y = hearth.1;
+    }
+    for a in engine
+        .resources
+        .colony
+        .wildlife
+        .animals
+        .values_mut()
+        .filter(|a| a.pack.is_some())
+    {
+        a.pos = far;
+    }
+    defence_tick(&mut engine, 10);
+    defence_tick(&mut engine, 70);
+    assert!(engine.resources.steward.defence.owned_ids.is_empty());
+    defence_tick(&mut engine, 71);
+    assert!(
+        engine.resources.steward.defence.owned_ids.is_empty(),
+        "distant Hunt alone stays retired"
+    );
+    let (victim, e) = adults(&engine)[0];
+    {
+        let mut p = engine.world.get::<&mut Position>(e).unwrap();
+        p.x = far.0;
+        p.y = far.1 + 9;
+    }
+    engine.world.get::<&mut BodyHealth>(e).unwrap().hp = 40.0;
+    defence_tick(&mut engine, 72);
+    assert!(
+        engine.resources.steward.defence.owned_ids.is_empty(),
+        "outside authored flee range"
+    );
+    engine.world.get::<&mut Position>(e).unwrap().y = far.1 + 8;
+    defence_tick(&mut engine, 72);
+    assert_eq!(
+        engine.resources.steward.defence.owned_ids.len(),
+        4,
+        "outdoor resident proximity reopens selected pack response"
+    );
+    assert!(!engine.resources.steward.defence.owned_ids.contains(&victim));
+    let defender = *engine
+        .resources
+        .steward
+        .defence
+        .owned_ids
+        .iter()
+        .next()
+        .unwrap();
+    assert!(
+        submit(
+            &mut engine,
+            Command::SetDrafted {
+                agent: defender,
+                drafted: false
+            }
+        )
+        .accepted
+    );
+    defence_tick(&mut engine, 73);
+    assert_eq!(
+        engine.resources.steward.defence.owned_ids.len(),
+        3,
+        "ongoing alarm must not refill the response"
+    );
+    defence_tick(&mut engine, 140);
+    assert_eq!(
+        engine.resources.steward.defence.owned_ids.len(),
+        3,
+        "alarm prevents quiet timeout"
+    );
+    let hungry = *engine
+        .resources
+        .steward
+        .defence
+        .owned_ids
+        .iter()
+        .next()
+        .unwrap();
+    let hungry_entity = adults(&engine)
+        .into_iter()
+        .find(|(id, _)| *id == hungry)
+        .unwrap()
+        .1;
+    engine
+        .world
+        .get::<&mut sim_core::components::Hunger>(hungry_entity)
+        .unwrap()
+        .value = 100.0;
+    {
+        use sim_engine::RuntimeSystem;
+        sim_systems::runtime::wildlife::DraftSystem.tick(&mut engine.world, &mut engine.resources);
+    }
+    defence_tick(&mut engine, 140);
+    assert_eq!(
+        engine.resources.steward.defence.owned_ids.len(),
+        2,
+        "ongoing alarm respects need undraft"
+    );
+    {
+        let mut p = engine.world.get::<&mut Position>(e).unwrap();
+        p.x = hearth.0;
+        p.y = hearth.1;
+    }
+    defence_tick(&mut engine, 141);
+    defence_tick(&mut engine, 200);
+    assert_eq!(engine.resources.steward.defence.owned_ids.len(), 2);
+    defence_tick(&mut engine, 201);
+    assert!(engine.resources.steward.defence.owned_ids.is_empty());
+}
+
+#[test]
+fn resident_alarm_ignores_dead_drafted_roofed_and_unselected_pack_targets() {
+    use sim_core::colony::wildlife::{AnimalState, Fighter};
+    let mut engine = armed_colony();
+    incoming(&mut engine);
+    let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).unwrap();
+    let far = (hearth.0 + 35, hearth.1);
+    for (_, (_, p)) in engine
+        .world
+        .query_mut::<(&sim_core::components::Agent, &mut Position)>()
+    {
+        p.x = hearth.0;
+        p.y = hearth.1;
+    }
+    for a in engine
+        .resources
+        .colony
+        .wildlife
+        .animals
+        .values_mut()
+        .filter(|a| a.pack.is_some())
+    {
+        a.pos = far;
+    }
+    defence_tick(&mut engine, 10);
+    defence_tick(&mut engine, 70);
+    let (id, e) = adults(&engine)[0];
+    let tile = (far.0, far.1 + 1);
+    {
+        let mut p = engine.world.get::<&mut Position>(e).unwrap();
+        p.x = tile.0;
+        p.y = tile.1;
+    }
+    engine.world.get::<&mut BodyHealth>(e).unwrap().hp = 0.0;
+    defence_tick(&mut engine, 71);
+    assert!(engine.resources.steward.defence.owned_ids.is_empty());
+    engine.world.get::<&mut BodyHealth>(e).unwrap().hp = 40.0;
+    assert!(
+        submit(
+            &mut engine,
+            Command::SetDrafted {
+                agent: id,
+                drafted: true
+            }
+        )
+        .accepted
+    );
+    defence_tick(&mut engine, 72);
+    assert!(engine.resources.steward.defence.owned_ids.is_empty());
+    assert!(
+        submit(
+            &mut engine,
+            Command::SetDrafted {
+                agent: id,
+                drafted: false
+            }
+        )
+        .accepted
+    );
+    engine.resources.colony.rooms.insert(
+        999,
+        sim_core::rooms::Room {
+            id: 999,
+            tiles: std::collections::BTreeSet::from([tile]),
+            doors: Default::default(),
+            roofed: true,
+            role: sim_core::rooms::RoomRole::Unassigned,
+            dug: false,
+        },
+    );
+    engine.resources.colony.room_of_tile.insert(tile, 999);
+    defence_tick(&mut engine, 73);
+    assert!(engine.resources.steward.defence.owned_ids.is_empty());
+    engine.resources.colony.room_of_tile.remove(&tile);
+    engine.resources.colony.rooms.remove(&999);
+    // A nearby higher-ID pack must not reopen the still-selected distant lower pack.
+    for a in engine
+        .resources
+        .colony
+        .wildlife
+        .animals
+        .values_mut()
+        .filter(|a| a.pack == Some(42))
+    {
+        a.pos = (far.0, far.1 + 20);
+        a.state = AnimalState::Attack { target: 99999 };
+    }
+    sim_systems::runtime::wildlife::spawn_pack(&mut engine.resources, far, 1, 43);
+    defence_tick(&mut engine, 74);
+    assert!(engine.resources.steward.defence.owned_ids.is_empty());
+    // Bring only the selected pack within its authored resident alarm range.
+    for a in engine
+        .resources
+        .colony
+        .wildlife
+        .animals
+        .values_mut()
+        .filter(|a| a.pack == Some(42))
+    {
+        a.pos = (far.0, far.1 + 2);
+    }
+    defence_tick(&mut engine, 75);
+    assert_eq!(engine.resources.steward.defence.owned_ids.len(), 4);
+    for (_, (_, draft)) in engine
+        .world
+        .query::<(&sim_core::components::Agent, &Drafted)>()
+        .iter()
+    {
+        if let DraftOrder::Attack(Fighter::Animal(target)) = draft.order {
+            assert_eq!(
+                engine.resources.colony.wildlife.animals[&target].pack,
+                Some(42)
+            );
+        } else {
+            panic!("resident alarm must issue selected-pack attack");
+        }
+    }
+    for a in engine
+        .resources
+        .colony
+        .wildlife
+        .animals
+        .values_mut()
+        .filter(|a| a.pack == Some(42))
+    {
+        a.state = AnimalState::Retreat;
+    }
+    // All threatening packs retreat: owned defenders release immediately.
+    for a in engine
+        .resources
+        .colony
+        .wildlife
+        .animals
+        .values_mut()
+        .filter(|a| a.pack == Some(43))
+    {
+        a.state = AnimalState::Retreat;
+    }
+    defence_tick(&mut engine, 76);
+    assert!(engine.resources.steward.defence.owned_ids.is_empty());
+}

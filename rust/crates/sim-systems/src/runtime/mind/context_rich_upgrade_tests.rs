@@ -438,3 +438,87 @@ fn upgrade_preserves_guard_and_full_selector_witnesses() {
         );
     }
 }
+
+#[test]
+fn routine_result_reuse_matches_full_second_refresh_and_lineage_fallback() {
+    use crate::runtime::agent_actions::routine::{PlacesCache, RoutineTick};
+    for with_routine in [false, true] {
+        for remove_lineage in [false, true] {
+            for deferred_end in [false, true] {
+                let mut world = World::new();
+                let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+                resources.rules = sim_core::rules::WorldRules::colony(7);
+                resources.current_tick = 600;
+                let entity = world.spawn((
+                    Agent { id: 7 },
+                    Position::new(1, 1),
+                    AgentState::Seeking {
+                        target: sim_core::components::TargetKind::Activity,
+                    },
+                    Lineage { key: 7, births: 0 },
+                    Activity {
+                        kind: sim_core::components::ActivityKind::Explore,
+                        settlement: 1,
+                        place: (2, 2),
+                        chosen_tick: 0,
+                        arrived_tick: None,
+                        until_tick: Some(600),
+                    },
+                ));
+                let mut rule = resources.rules.agent.routine.unwrap();
+                rule.day_start_minute = 0;
+                rule.day_end_minute = 1440;
+                rule.end_stagger = None;
+                let mut routine =
+                    RoutineTick::new(&mut world, &resources, rule, PlacesCache::default());
+                routine.prepare_preview_places(&resources);
+                if deferred_end {
+                    routine.end(7, entity, false, None);
+                }
+                let routine = with_routine.then_some(&routine);
+                let mut old = TickContext::capture_continuation(&world, &resources).unwrap();
+                let mut new = TickContext::capture_continuation(&world, &resources).unwrap();
+                // A real live change precedes both light refreshes; only rich upgrade reads lineage.
+                if remove_lineage {
+                    world.remove_one::<Lineage>(entity).unwrap();
+                }
+                for context in [&mut old, &mut new] {
+                    context
+                        .set_target_scope(
+                            7,
+                            TargetScope {
+                                settlement: Some(1),
+                                ..TargetScope::default()
+                            },
+                        )
+                        .unwrap();
+                    context
+                        .refresh_continuation_exclusive(&mut world, 7)
+                        .unwrap();
+                }
+                facts::refresh_routine_lifecycle(&mut old, routine, 7).unwrap();
+                let previous =
+                    facts::refresh_routine_lifecycle_reusing(&mut new, routine, 7, None).unwrap();
+                assert_contexts_equal(&old, &new);
+                assert_eq!(
+                    new.derived(7, "routine_admission").unwrap(),
+                    i64::from(with_routine)
+                );
+                old.upgrade_continuation_exclusive(&mut world, 7).unwrap();
+                new.upgrade_continuation_exclusive(&mut world, 7).unwrap();
+                facts::refresh_routine_lifecycle(&mut old, routine, 7).unwrap();
+                facts::refresh_routine_lifecycle_reusing(&mut new, routine, 7, Some(previous))
+                    .unwrap();
+                assert_contexts_equal(&old, &new);
+                assert_eq!(
+                    new.derived(7, "routine_admission").unwrap(),
+                    i64::from(with_routine && !remove_lineage)
+                );
+                assert_eq!(
+                    new.derived(7, "activity_deadline_reached").unwrap(),
+                    i64::from(with_routine && !deferred_end)
+                );
+            }
+        }
+    }
+}

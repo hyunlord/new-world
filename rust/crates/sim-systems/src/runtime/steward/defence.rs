@@ -50,7 +50,7 @@ impl RuntimeSystem for StewardDefenceSystem {
         1
     }
     fn tick(&mut self, world: &mut World, res: &mut SimResources) {
-        let Some(_) = crate::runtime::wildlife::rule(res) else {
+        let Some(wildlife) = crate::runtime::wildlife::rule(res) else {
             return;
         };
         let Ok(data) = rules() else {
@@ -68,6 +68,7 @@ impl RuntimeSystem for StewardDefenceSystem {
             min_hp,
             release_tiles,
             release_ticks,
+            protect_residents,
         } = rule.action
         else {
             return;
@@ -95,9 +96,32 @@ impl RuntimeSystem for StewardDefenceSystem {
             .filter_map(|(id, _)| res.colony.wildlife.animals.get(id).and_then(|a| a.pack))
             .min()
             .or_else(|| threats.first().map(|(id, _)| *id));
+        let selected_pack = |id: u32| {
+            res.colony
+                .wildlife
+                .animals
+                .get(&id)
+                .is_some_and(|a| Some(a.pack.unwrap_or(a.id)) == pack)
+        };
+        let resident_alarm = protect_residents
+            && pack.is_some()
+            && world
+                .query::<(&Agent, &Position, &BodyHealth, Option<&Drafted>)>()
+                .iter()
+                .any(|(_, (_, pos, hp, draft))| {
+                    hp.hp.is_finite()
+                        && !hp.is_dead()
+                        && draft.is_none()
+                        && threats.iter().any(|(id, at)| {
+                            selected_pack(*id)
+                                && chebyshev((pos.x, pos.y), *at) <= wildlife.flee_tiles
+                        })
+                        && !crate::runtime::rooms::roofed(res, (pos.x, pos.y))
+                });
         let near = threats
             .iter()
-            .any(|(_, pos)| chebyshev(*pos, hearth) <= release_tiles);
+            .any(|(_, pos)| chebyshev(*pos, hearth) <= release_tiles)
+            || resident_alarm;
         if near && pack.is_some() && pack == res.steward.defence.retired_pack {
             res.steward.defence.responded_pack = None;
         }
@@ -222,6 +246,15 @@ impl RuntimeSystem for StewardDefenceSystem {
             for (agent, pos, order) in rows {
                 if let Some((animal, _)) = threats
                     .iter()
+                    .filter(|(id, _)| {
+                        !resident_alarm
+                            || res
+                                .colony
+                                .wildlife
+                                .animals
+                                .get(id)
+                                .is_some_and(|a| Some(a.pack.unwrap_or(a.id)) == pack)
+                    })
                     .min_by_key(|(id, at)| (chebyshev(pos, *at), *id))
                 {
                     if order != DraftOrder::Attack(Fighter::Animal(*animal)) {

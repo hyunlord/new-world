@@ -18,7 +18,7 @@
 //!    are held back from decay so that Phase 3 reinforcement applies to the
 //!    pre-decay salience, satisfying the locked A9 formula
 //!    `(sal_before + REINFORCEMENT_BOOST).min(1.0)` with 1e-9 tolerance.
-//! 2. **Encoding pass** — scan every per-tile causal log for events whose
+//! 2. **Encoding pass** — apply entries collected from causal events whose
 //!    `tick == resources.current_tick`. For each event with an `AgentId`
 //!    actor (or two, for social events), resolve the actor's entity via
 //!    a single up-front `AgentId → Entity` map, then insert a new
@@ -93,39 +93,50 @@ impl RuntimeSystem for MemorySystem {
             .as_ref()
             .map(|history| history.dictionary());
 
-        // Phase 0: Collect (AgentId, EventId) pairs for MemoryRecalled
-        // events emitted in this tick by AgentDecisionSystem (priority 125).
-        // These entries are exempted from decay below so the reinforcement
-        // formula `(sal_before + REINFORCEMENT_BOOST).min(1.0)` is exact.
+        // Resolve actors once; collect both event roles in tile/FIFO order before
+        // mutating Memory. Decoding a current MindChoice serves both roles.
+        let mut id_to_entity: HashMap<AgentId, Entity> =
+            HashMap::with_capacity(world.query::<&Agent>().iter().len());
+        for (entity, agent) in world.query::<&Agent>().iter() {
+            id_to_entity.insert(agent.id, entity);
+        }
         let mut recalled: Vec<(AgentId, EventId)> = Vec::new();
+        let mut to_insert: Vec<(Entity, MemoryEntry)> = Vec::new();
         for (_tile_idx, log) in resources.causal_log.iter() {
             for event in log.iter() {
                 if event.tick() != current_tick {
                     continue;
                 }
-                if let CausalEvent::MemoryRecalled {
-                    agent,
-                    recalled_event,
-                    ..
-                } = event
-                {
-                    recalled.push((*agent, *recalled_event));
-                } else if let CausalEvent::MindChoice { choice } = event {
-                    if let Some(decoded) =
-                        dictionary.and_then(|dictionary| choice.decode_display(dictionary).ok())
-                    {
-                        if let Some(id) = recalled_mind_event(&decoded) {
-                            recalled.push((decoded.agent, id));
+                let classified = match event {
+                    CausalEvent::MemoryRecalled {
+                        agent,
+                        recalled_event,
+                        ..
+                    } => {
+                        recalled.push((*agent, *recalled_event));
+                        None
+                    }
+                    CausalEvent::MindChoice { choice } => dictionary
+                        .and_then(|dictionary| choice.decode_display(dictionary).ok())
+                        .and_then(|decoded| {
+                            if let Some(id) = recalled_mind_event(&decoded) {
+                                recalled.push((decoded.agent, id));
+                            }
+                            classify_mind_choice(&decoded)
+                        }),
+                    _ => classify_event(event, &resources.causal_log, dictionary),
+                };
+                if let Some((arm, salience, valence, agents)) = classified {
+                    for agent_id in agents {
+                        if let Some(entity) = id_to_entity.get(&agent_id).copied() {
+                            to_insert.push((
+                                entity,
+                                MemoryEntry::new(event.id(), current_tick, valence, salience, arm),
+                            ));
                         }
                     }
                 }
             }
-        }
-
-        // Build AgentId → Entity map once — shared by phases 1, 2, 3.
-        let mut id_to_entity: HashMap<AgentId, Entity> = HashMap::new();
-        for (entity, agent) in world.query::<&Agent>().iter() {
-            id_to_entity.insert(agent.id, entity);
         }
 
         // Phase 1: Selective decay — skip recalled entries. Per spec
@@ -139,30 +150,6 @@ impl RuntimeSystem for MemorySystem {
                     .any(|(aid, eid)| *aid == agent.id && *eid == entry.event_id);
                 if !is_recalled {
                     entry.salience = (entry.salience - DECAY_RATE).max(0.0);
-                }
-            }
-        }
-
-        // Phase 2: Encoding pass. Collect (entity, MemoryEntry) tuples
-        // first so the borrow on causal_log is released before mutating
-        // Memory components.
-        let mut to_insert: Vec<(Entity, MemoryEntry)> = Vec::new();
-        for (_tile_idx, log) in resources.causal_log.iter() {
-            for event in log.iter() {
-                if event.tick() != current_tick {
-                    continue;
-                }
-                if let Some((arm, salience, valence, agents)) =
-                    classify_event(event, &resources.causal_log, dictionary)
-                {
-                    for agent_id in agents {
-                        if let Some(entity) = id_to_entity.get(&agent_id).copied() {
-                            to_insert.push((
-                                entity,
-                                MemoryEntry::new(event.id(), current_tick, valence, salience, arm),
-                            ));
-                        }
-                    }
                 }
             }
         }
@@ -215,13 +202,7 @@ fn classify_event(
     match event {
         CausalEvent::MindChoice { choice } => {
             let decoded = choice.decode_display(dictionary?).ok()?;
-            if decoded.selected.labels.finish.is_some()
-                || !decoded.selected.labels.tags.iter().any(|tag| tag == "natural")
-                || decoded.selected.labels.tags.iter().any(|tag| tag == "memory") {
-                return None;
-            }
-            let (arm, salience, valence) = mind_memory_mapping(decoded.selected.labels.behaviour)?;
-            Some((arm, salience, valence, vec![decoded.agent]))
+            classify_mind_choice(&decoded)
         }
         CausalEvent::AgentDecision { agent, reason, .. } => match reason {
             DecisionReason::HungerThresholdBreach => Some((MemoryArm::Hunger, 0.4, -0.3, vec![*agent])),
@@ -287,6 +268,29 @@ fn classify_event(
     }
 }
 
+fn classify_mind_choice(
+    decoded: &MindChoiceDisplay<'_>,
+) -> Option<(MemoryArm, f64, f64, Vec<AgentId>)> {
+    if decoded.selected.labels.finish.is_some()
+        || !decoded
+            .selected
+            .labels
+            .tags
+            .iter()
+            .any(|tag| tag == "natural")
+        || decoded
+            .selected
+            .labels
+            .tags
+            .iter()
+            .any(|tag| tag == "memory")
+    {
+        return None;
+    }
+    let (arm, salience, valence) = mind_memory_mapping(decoded.selected.labels.behaviour)?;
+    Some((arm, salience, valence, vec![decoded.agent]))
+}
+
 fn decision_actor(
     event: &CausalEvent,
     dictionary: Option<&MindRecordDictionary>,
@@ -335,6 +339,100 @@ fn recalled_mind_event(choice: &MindChoiceDisplay<'_>) -> Option<EventId> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn collection_preserves_duplicate_recall_and_new_entry_reinforcement() {
+        let mut engine =
+            sim_engine::SimEngine::new(4, 4, sim_core::material::MaterialRegistry::new());
+        let entity = engine.spawn_agent(0, 0);
+        let agent = engine.world.get::<&Agent>(entity).expect("agent").id;
+        let mut memory = Memory::new();
+        memory.insert(MemoryEntry::new(1, 0, -0.3, 0.4, MemoryArm::Hunger));
+        memory.insert(MemoryEntry::new(2, 0, -0.3, 0.4, MemoryArm::Hunger));
+        engine.world.insert_one(entity, memory).expect("memory");
+        engine.resources.current_tick = 5;
+        for (id, recalled_event) in [(10, 1), (11, 1), (12, 3)] {
+            engine.resources.causal_log.push(
+                0,
+                CausalEvent::MemoryRecalled {
+                    id,
+                    parent: None,
+                    agent,
+                    recalled_event,
+                    triggered_by: sim_core::causal::MemoryRecallTrigger::CascadeBias,
+                    tick: 5,
+                },
+            );
+        }
+        engine.resources.causal_log.push(
+            1,
+            CausalEvent::AgentDecision {
+                id: 3,
+                parent: None,
+                agent,
+                position: (1, 0),
+                reason: DecisionReason::HungerThresholdBreach,
+                tick: 5,
+            },
+        );
+        MemorySystem.tick(&mut engine.world, &mut engine.resources);
+        let actual = engine.world.get::<&Memory>(entity).expect("memory");
+        let mut expected = Memory::new();
+        expected.insert(MemoryEntry::new(
+            1,
+            0,
+            -0.3,
+            (0.4 + 0.1) + 0.1,
+            MemoryArm::Hunger,
+        ));
+        expected.insert(MemoryEntry::new(2, 0, -0.3, 0.4 - 0.001, MemoryArm::Hunger));
+        expected.insert(MemoryEntry::new(3, 5, -0.3, 0.4 + 0.1, MemoryArm::Hunger));
+        expected.entries[0].reinforcement_count = 2;
+        expected.entries[2].reinforcement_count = 1;
+        assert_eq!(*actual, expected);
+    }
+
+    #[test]
+    fn collection_preserves_tile_fifo_eviction_and_nonsuffix_current_events() {
+        let mut engine =
+            sim_engine::SimEngine::new(4, 4, sim_core::material::MaterialRegistry::new());
+        let entity = engine.spawn_agent(0, 0);
+        let agent = engine.world.get::<&Agent>(entity).expect("agent").id;
+        let mut memory = Memory::new();
+        for id in 0..32 {
+            memory.insert(MemoryEntry::new(id, 0, 0.0, 0.9, MemoryArm::Social));
+        }
+        engine.world.insert_one(entity, memory).expect("memory");
+        engine.resources.current_tick = 5;
+        // Push the later tile first; neither global ID order nor tick suffix is valid.
+        for (tile, id, tick) in [(2, 90, 5), (1, 100, 5), (1, 101, 4), (1, 99, 5)] {
+            engine.resources.causal_log.push(
+                tile,
+                CausalEvent::AgentDecision {
+                    id,
+                    parent: None,
+                    agent,
+                    position: (tile, 0),
+                    reason: DecisionReason::HungerThresholdBreach,
+                    tick,
+                },
+            );
+        }
+        MemorySystem.tick(&mut engine.world, &mut engine.resources);
+        let actual = engine.world.get::<&Memory>(entity).expect("memory");
+        assert_eq!(actual.entries.len(), 32);
+        // Each fresh low-salience entry evicts its predecessor before the next insertion.
+        assert_eq!(
+            actual.entries[0],
+            MemoryEntry::new(90, 5, -0.3, 0.4, MemoryArm::Hunger)
+        );
+        for (index, entry) in actual.entries.iter().enumerate().skip(1) {
+            assert_eq!(
+                *entry,
+                MemoryEntry::new(index as u64, 0, 0.0, 0.9 - 0.001, MemoryArm::Social)
+            );
+        }
+    }
 
     fn mind_fixture(tag: &str) -> (CausalEvent, MindRecordDictionary) {
         use sim_core::colony::mind::{

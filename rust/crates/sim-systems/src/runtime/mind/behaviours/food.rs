@@ -66,9 +66,9 @@ pub(super) fn advance(c: &mut EffectContext<'_>) -> EffectResult {
                 return finish(c);
             }
             c.effects.completed_meals.push(c.agent);
-            c.effects.dirty.insert(EffectDomain::FoodSources);
-            c.effects.dirty.insert(EffectDomain::Needs);
-            c.effects.dirty.insert(EffectDomain::Targets);
+            c.effects.mark_dirty(EffectDomain::FoodSources);
+            c.effects.mark_dirty(EffectDomain::Needs);
+            c.effects.mark_dirty(EffectDomain::Targets);
             // One physical piece completes one action, preserving the Idle boundary.
             // Further hunger is reconsidered by authored policy on the next tick.
             finish(c)

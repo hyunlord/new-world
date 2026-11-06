@@ -115,3 +115,57 @@ fn cached_previews_recheck_eligibility_without_reserving_or_drawing() {
     assert!(tick.pending.is_empty());
     assert!(tick.occupancy.is_empty());
 }
+
+#[test]
+fn members_of_matches_ordered_entry_oracle_across_membership_permutations() {
+    use sim_core::components::{AgentId, Settlement};
+    use std::collections::BTreeMap;
+
+    fn reference(resources: &SimResources) -> BTreeMap<AgentId, SettlementId> {
+        let mut members = BTreeMap::new();
+        let mut settlements: Vec<_> = resources.settlements.iter().collect();
+        settlements.sort_by_key(|(id, _)| **id);
+        for (&sid, settlement) in settlements {
+            for &id in &settlement.member_agents {
+                members.entry(id).or_insert(sid);
+            }
+        }
+        members
+    }
+
+    let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+    assert_eq!(super::super::members_of(&resources), reference(&resources));
+    let rosters = [
+        (SettlementId::MAX, vec![AgentId::MAX, 42, 8]),
+        (7, vec![42, 8, 1]),
+        (0, vec![AgentId::MAX, 42, 0]),
+        (11, vec![]),
+    ];
+    for rotation in 0..rosters.len() {
+        for reverse in [false, true] {
+            resources.settlements.clear();
+            let mut order: Vec<_> = (0..rosters.len()).collect();
+            order.rotate_left(rotation);
+            if reverse {
+                order.reverse();
+            }
+            for index in order {
+                let (sid, agents) = &rosters[index];
+                let mut settlement = Settlement::new_with_id(*sid, 0);
+                let mut agents = agents.clone();
+                if reverse {
+                    agents.reverse();
+                }
+                settlement.member_agents.extend(agents);
+                resources.settlements.insert(*sid, settlement);
+                assert_eq!(super::super::members_of(&resources), reference(&resources));
+            }
+            assert_eq!(
+                super::super::members_of(&resources),
+                [(0, 0), (1, 7), (8, 7), (42, 0), (AgentId::MAX, 0)]
+                    .into_iter()
+                    .collect()
+            );
+        }
+    }
+}

@@ -674,73 +674,148 @@ impl TickContext {
         initial_claims: Option<BTreeMap<(u32, u32), u32>>,
         initial_stock: Option<&BTreeMap<SettlementId, ForagePlan>>,
     ) -> Result<Self, ContextError> {
-        // Two bulk ECS passes avoid a component lookup per field per person.
-        let mut rows: Vec<PersonSnapshot> = world
-            .query::<(
-                &Agent,
-                &Position,
-                &AgentState,
-                Option<&Hunger>,
-                Option<&Thirst>,
-                Option<&Sleep>,
-                Option<&Social>,
-                Option<&Temperament>,
-                Option<&Inventory>,
-                Option<&Job>,
-                Option<&Carry>,
-                Option<&BodyHealth>,
-                Option<&WorkPriorities>,
-            )>()
-            .iter()
-            .map(
-                |(
-                    entity,
-                    (
-                        agent,
-                        position,
-                        state,
-                        hunger,
-                        thirst,
-                        sleep,
-                        social,
-                        temperament,
-                        inventory,
-                        job,
-                        carry,
-                        health,
-                        priorities,
-                    ),
-                )| PersonSnapshot {
-                    agent: agent.id,
-                    entity,
-                    position: *position,
-                    state: *state,
-                    life_stage: LifeStage::Adult,
-                    hunger: hunger.map(|v| f64::from(v.value)),
-                    thirst: thirst.map(|v| v.value),
-                    fatigue: sleep.map(|v| v.fatigue),
-                    social: social.map(|v| v.loneliness),
-                    temperament: temperament.copied(),
-                    inventory_total: inventory.map(|v| v.total()),
-                    inventory_food: inventory.map(|v| v.get(ResourceKind::Food)),
-                    job: job.copied(),
-                    haul_enabled: priorities.is_none_or(|p| p.level(WorkType::Haul) > 0),
-                    carry: carry.copied(),
-                    hp: health.map(|v| v.hp),
-                    drafted: false,
-                    fleeing: None,
-                    cold: false,
-                    sick: false,
-                    mood: None,
-                    activity: None,
-                    activity_rest: None,
-                    memory_entries: None,
-                    lineage: None,
-                    memory_weights: [0.0; 6],
-                    memory_causes: [None; 6],
-                },
-            )
-            .collect();
+        type Primary<'a> = (
+            &'a Agent,
+            &'a Position,
+            &'a AgentState,
+            Option<&'a Hunger>,
+            Option<&'a Thirst>,
+            Option<&'a Sleep>,
+            Option<&'a Social>,
+            Option<&'a Temperament>,
+            Option<&'a Inventory>,
+            Option<&'a Job>,
+            Option<&'a Carry>,
+            Option<&'a BodyHealth>,
+            Option<&'a WorkPriorities>,
+        );
+        type Secondary<'a> = (
+            Option<&'a Child>,
+            Option<&'a Elder>,
+            Option<&'a Drafted>,
+            Option<&'a Fleeing>,
+            Option<&'a Cold>,
+            Option<&'a Sick>,
+            Option<&'a Mood>,
+            Option<&'a Activity>,
+            Option<&'a ActivityRest>,
+            Option<&'a sim_core::components::Memory>,
+            Option<&'a sim_core::components::Lineage>,
+        );
+        let primary = |entity,
+                       (
+            agent,
+            position,
+            state,
+            hunger,
+            thirst,
+            sleep,
+            social,
+            temperament,
+            inventory,
+            job,
+            carry,
+            health,
+            priorities,
+        ): Primary<'_>| PersonSnapshot {
+            agent: agent.id,
+            entity,
+            position: *position,
+            state: *state,
+            life_stage: LifeStage::Adult,
+            hunger: hunger.map(|v| f64::from(v.value)),
+            thirst: thirst.map(|v| v.value),
+            fatigue: sleep.map(|v| v.fatigue),
+            social: social.map(|v| v.loneliness),
+            temperament: temperament.copied(),
+            inventory_total: inventory.map(|v| v.total()),
+            inventory_food: inventory.map(|v| v.get(ResourceKind::Food)),
+            job: job.copied(),
+            haul_enabled: priorities.is_none_or(|p| p.level(WorkType::Haul) > 0),
+            carry: carry.copied(),
+            hp: health.map(|v| v.hp),
+            drafted: false,
+            fleeing: None,
+            cold: false,
+            sick: false,
+            mood: None,
+            activity: None,
+            activity_rest: None,
+            memory_entries: None,
+            lineage: None,
+            memory_weights: [0.0; 6],
+            memory_causes: [None; 6],
+        };
+        let secondary = |row: &mut PersonSnapshot,
+                         (
+            child,
+            elder,
+            drafted,
+            fleeing,
+            cold,
+            sick,
+            mood,
+            activity,
+            rest,
+            memory,
+            lineage,
+        ): Secondary<'_>| {
+            row.life_stage = if child.is_some() {
+                LifeStage::Child
+            } else if elder.is_some() {
+                LifeStage::Elder
+            } else {
+                LifeStage::Adult
+            };
+            row.drafted = drafted.is_some();
+            row.fleeing = fleeing.copied();
+            row.cold = cold.is_some();
+            row.sick = sick.is_some();
+            row.mood = mood.copied();
+            row.activity = activity.copied();
+            row.activity_rest = rest.copied();
+            row.memory_entries = memory.map(|v| v.entries.len());
+            row.lineage = lineage.map(|v| v.key);
+            if let Some(memory) = memory {
+                if rich {
+                    (row.memory_weights, row.memory_causes) =
+                        memory_values(memory, resources.current_tick);
+                } else {
+                    // Frozen social-peer eligibility needs this one contributor at tick start.
+                    // Other memory columns remain inaccessible until the full row is refreshed.
+                    row.memory_causes[4] =
+                        crate::runtime::agent_actions::memory_bias::top_contributor_entry(
+                            memory,
+                            crate::runtime::agent_actions::memory_bias::CascadeArm::Social,
+                            resources.current_tick,
+                        );
+                }
+            }
+        };
+        // Fresh query lengths sum archetype metadata, without visiting each entity.
+        // An incomplete Agent can alias a captured ID: preserve the old second pass then.
+        let complete = world.query::<&Agent>().iter().len()
+            == world
+                .query::<(&Agent, &Position, &AgentState)>()
+                .iter()
+                .len();
+        let mut rows: Vec<PersonSnapshot> = if complete {
+            world
+                .query::<(Primary<'_>, Secondary<'_>)>()
+                .iter()
+                .map(|(entity, (fields, metadata))| {
+                    let mut row = primary(entity, fields);
+                    secondary(&mut row, metadata);
+                    row
+                })
+                .collect()
+        } else {
+            world
+                .query::<Primary<'_>>()
+                .iter()
+                .map(|(entity, fields)| primary(entity, fields))
+                .collect()
+        };
         order_person_rows(&mut rows)?;
         let mut row_refresh_states = vec![
             RowRefreshState {
@@ -749,75 +824,15 @@ impl TickContext {
             };
             rows.len()
         ];
-        for (
-            entity,
-            (
-                agent,
-                child,
-                elder,
-                drafted,
-                fleeing,
-                cold,
-                sick,
-                mood,
-                activity,
-                rest,
-                memory,
-                lineage,
-            ),
-        ) in world
-            .query::<(
-                &Agent,
-                Option<&Child>,
-                Option<&Elder>,
-                Option<&Drafted>,
-                Option<&Fleeing>,
-                Option<&Cold>,
-                Option<&Sick>,
-                Option<&Mood>,
-                Option<&Activity>,
-                Option<&ActivityRest>,
-                Option<&sim_core::components::Memory>,
-                Option<&sim_core::components::Lineage>,
-            )>()
-            .iter()
-        {
-            if let Ok(index) = rows.binary_search_by_key(&agent.id, |row| row.agent) {
-                let row = &mut rows[index];
-                // Preserve all captured values; aliases only revoke the fast refresh.
-                if entity != row.entity {
-                    row_refresh_states[index].primary_pending = false;
-                }
-                row.life_stage = if child.is_some() {
-                    LifeStage::Child
-                } else if elder.is_some() {
-                    LifeStage::Elder
-                } else {
-                    LifeStage::Adult
-                };
-                row.drafted = drafted.is_some();
-                row.fleeing = fleeing.copied();
-                row.cold = cold.is_some();
-                row.sick = sick.is_some();
-                row.mood = mood.copied();
-                row.activity = activity.copied();
-                row.activity_rest = rest.copied();
-                row.memory_entries = memory.map(|v| v.entries.len());
-                row.lineage = lineage.map(|v| v.key);
-                if let Some(memory) = memory {
-                    if rich {
-                        (row.memory_weights, row.memory_causes) =
-                            memory_values(memory, resources.current_tick);
-                    } else {
-                        // Frozen social-peer eligibility needs this one contributor at tick start.
-                        // Other memory columns remain inaccessible until the full row is refreshed.
-                        row.memory_causes[4] =
-                            crate::runtime::agent_actions::memory_bias::top_contributor_entry(
-                                memory,
-                                crate::runtime::agent_actions::memory_bias::CascadeArm::Social,
-                                resources.current_tick,
-                            );
+        if !complete {
+            for (entity, (agent, metadata)) in world.query::<(&Agent, Secondary<'_>)>().iter() {
+                if let Ok(index) = rows.binary_search_by_key(&agent.id, |row| row.agent) {
+                    let row = &mut rows[index];
+                    // Preserve all captured values; aliases only revoke the fast refresh.
+                    if entity != row.entity {
+                        row_refresh_states[index].primary_pending = false;
                     }
+                    secondary(row, metadata);
                 }
             }
         }

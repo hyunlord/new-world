@@ -147,6 +147,7 @@ fn eligibility<R: FactReader>(
     row: &mut R,
     key: EvalKey,
     incumbent: bool,
+    true_prefix: usize,
     scratch: &mut EvalScratch,
 ) -> Result<Eligibility, R::Error> {
     if node.stages & row.life_stage().bit() == 0 {
@@ -161,7 +162,7 @@ fn eligibility<R: FactReader>(
             return Ok(Eligibility::Structural);
         }
     }
-    for (depth, predicate) in node.predicates.iter().enumerate() {
+    for (depth, predicate) in node.predicates.iter().enumerate().skip(true_prefix) {
         let cached = if R::STABLE_READS {
             scratch.predicates[predicate.cache_index]
         } else {
@@ -169,14 +170,15 @@ fn eligibility<R: FactReader>(
         };
         let matches = if cached & PREDICATE_VALID != 0 {
             let matches = cached & PREDICATE_MATCH != 0;
-            let roles = predicate_roles(matches, incumbent);
-            if cached & roles != roles {
+            // VALID already includes the ordinary matched/rejected role.
+            let role = WitnessRole::IncumbentPredicate.bit();
+            if incumbent && cached & role == 0 {
                 // VALID is published only after record() installs the witness slot.
                 // Neither slots nor witness order change until clear() resets both.
                 let index = scratch.slots[predicate.fact.index()]
                     .ok_or(MindEvalError::InvalidIndex("cached predicate witness"))?;
-                scratch.witnesses[index].roles |= roles;
-                scratch.predicates[predicate.cache_index] = cached | roles;
+                scratch.witnesses[index].roles |= role;
+                scratch.predicates[predicate.cache_index] = cached | role;
             }
             matches
         } else {
@@ -205,7 +207,7 @@ fn eligible<R: FactReader>(
     scratch: &mut EvalScratch,
 ) -> Result<bool, R::Error> {
     Ok(matches!(
-        eligibility(node, row, key, incumbent, scratch)?,
+        eligibility(node, row, key, incumbent, 0, scratch)?,
         Eligibility::Eligible
     ))
 }
@@ -290,11 +292,20 @@ pub fn choose_with_reader<R: FactReader>(
             .filter(|old| !old.finished)
             .and_then(|old| band.binary_search(&old.node).ok());
         let mut position_in_band = 0;
+        let mut true_prefix = 0;
         while position_in_band < band.len() {
             let id = band[position_in_band];
             let node = &policy.nodes[id.index()];
             let incumbent = incumbent_position == Some(position_in_band);
-            let eligibility = eligibility(node, row, key, incumbent, scratch)?;
+            // Incumbents still visit every predicate to merge their witness role.
+            let eligibility = eligibility(
+                node,
+                row,
+                key,
+                incumbent,
+                if incumbent { 0 } else { true_prefix },
+                scratch,
+            )?;
             let mut next = position_in_band + 1;
             if R::STABLE_READS {
                 if let Eligibility::Rejected(depth) = eligibility {
@@ -311,6 +322,19 @@ pub fn choose_with_reader<R: FactReader>(
                     }
                 }
             }
+            true_prefix = if R::STABLE_READS && next < band.len() {
+                let proved = match eligibility {
+                    Eligibility::Eligible => node.predicates.len(),
+                    Eligibility::Rejected(depth) => depth,
+                    Eligibility::Structural => 0,
+                };
+                let offset = policy.node_predicate_offsets[id.index()];
+                // Nested prefix groups have non-increasing exclusive ends.
+                // Use the actual post-clamp destination, including intervening nodes.
+                policy.false_prefix_end[offset..offset + proved].partition_point(|end| *end > next)
+            } else {
+                0
+            };
             position_in_band = next;
             // Record rejected non-structural nodes for why-not presentation.
             // This is a pure side-effect on scratch; it never affects selection.

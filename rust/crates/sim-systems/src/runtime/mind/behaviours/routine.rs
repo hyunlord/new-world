@@ -23,7 +23,7 @@ pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
         tile,
         c.resources,
     );
-    c.effects.dirty.insert(EffectDomain::RoutineOccupancy);
+    c.effects.mark_dirty(EffectDomain::RoutineOccupancy);
     if started {
         c.set_state(AgentState::Seeking {
             target: TargetKind::Activity,
@@ -61,7 +61,7 @@ pub(super) fn continue_running(c: &mut EffectContext<'_>) -> EffectResult {
         temperament.as_ref(),
     ) {
         routine.end_selected_node(c.agent, c.entity, completed, c.node_random_key);
-        c.effects.dirty.insert(EffectDomain::RoutineOccupancy);
+        c.effects.mark_dirty(EffectDomain::RoutineOccupancy);
         return super::needs::finish(c);
     }
     match state {
@@ -70,7 +70,7 @@ pub(super) fn continue_running(c: &mut EffectContext<'_>) -> EffectResult {
         } => {
             if (c.position.x, c.position.y) == activity.place {
                 routine.arrive(c.agent, c.entity, temperament.as_ref());
-                c.effects.dirty.insert(EffectDomain::RoutineOccupancy);
+                c.effects.mark_dirty(EffectDomain::RoutineOccupancy);
                 c.set_state(AgentState::Consuming {
                     target: TargetKind::Activity,
                 })?;
@@ -96,7 +96,7 @@ pub(super) fn finish(c: &mut EffectContext<'_>) -> EffectResult {
             }
             FinishReason::Interrupted => routine.interrupt(c.agent, c.entity),
         }
-        c.effects.dirty.insert(EffectDomain::RoutineOccupancy);
+        c.effects.mark_dirty(EffectDomain::RoutineOccupancy);
     }
     super::needs::finish(c)
 }
@@ -127,6 +127,6 @@ pub(super) fn no_place(c: &mut EffectContext<'_>) -> EffectResult {
             temperament.as_ref(),
             c.node_random_key,
         );
-    c.effects.dirty.insert(EffectDomain::RoutineOccupancy);
+    c.effects.mark_dirty(EffectDomain::RoutineOccupancy);
     super::needs::finish(c)
 }

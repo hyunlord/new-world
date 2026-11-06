@@ -8,13 +8,15 @@ use sim_core::rules::WorldRules;
 
 const POLICY: &str = r#"(
  schema_version:1, bands:["critical","duty","need","work","leisure","idle"], nodes:[
+ (id:"critical_meal",band:"critical",behaviour:"eat",target:Some("food"),when:[(fact:"food_cooked_available",op:"has"),(fact:"food_novel_available",op:"has"),(fact:"food_cooked_novel_available",op:"has"),(fact:"hunger",op:">=",value:Some(90000))],score:(constant:100,terms:[]),hysteresis:0,life_stages:["adult","child","elder"],tags:[],name_key:"CRITICAL"),
  (id:"eat_now",band:"need",behaviour:"eat",target:Some("food"),when:[(fact:"hunger",op:">",value:Some(50000))],score:(constant:100,terms:[]),hysteresis:0,life_stages:["adult","child","elder"],tags:[],name_key:"EAT"),
  (id:"keep_sleep",band:"need",behaviour:"sleep",target:Some("sleep"),when:[(fact:"target_sleep",op:"has")],score:(constant:0,terms:[]),hysteresis:0,life_stages:["adult","child","elder"],tags:[],name_key:"SLEEP"),
  (id:"idle",band:"idle",behaviour:"wander",when:[(fact:"hunger",op:">=",value:Some(0))],score:(constant:0,terms:[]),hysteresis:0,life_stages:["adult","child","elder"],tags:[],name_key:"IDLE")])"#;
 
 #[test]
 fn retained_tick_still_consumes_and_phase_tick_reconsiders_without_fabricated_record() {
-    for (tick, retained) in [(1, true), (7, false)] {
+    for (tick, critical) in (1..=8).flat_map(|tick| [(tick, false), (tick, true)]) {
+        let retained = tick % 8 != 7 && !critical;
         let program = MindProgram::load(POLICY).expect("policy");
         let policy = program.policy.clone();
         let node = policy.node_id("keep_sleep").expect("sleep");
@@ -25,7 +27,7 @@ fn retained_tick_still_consumes_and_phase_tick_reconsiders_without_fabricated_re
             AgentState::Consuming {
                 target: TargetKind::Sleep,
             },
-            Hunger::new(60.0, 0.0),
+            Hunger::new(if critical { 90.0 } else { 60.0 }, 0.0),
             Thirst::new(10.0, 0.0),
             Sleep::new(90.0, 0.0),
         ));
@@ -39,7 +41,7 @@ fn retained_tick_still_consumes_and_phase_tick_reconsiders_without_fabricated_re
             &mut resources,
             (2, 2),
             sim_core::colony::ItemSpec::raw(
-                sim_core::colony::ItemKind::from_name("berries").expect("food"),
+                sim_core::colony::ItemKind::from_name("porridge").expect("food"),
                 None,
             ),
             10,
@@ -79,7 +81,8 @@ fn retained_tick_still_consumes_and_phase_tick_reconsiders_without_fabricated_re
         resources
             .next_event_id
             .store(2, std::sync::atomic::Ordering::Relaxed);
-        ColonyMindSystem::new(program)
+        let mut system = ColonyMindSystem::new(program);
+        system
             .try_tick(&mut world, &mut resources)
             .expect("actual tick");
         let running = resources.mind.running[&7];
@@ -106,7 +109,12 @@ fn retained_tick_still_consumes_and_phase_tick_reconsiders_without_fabricated_re
                 1
             );
         } else {
-            assert_eq!(running.node, policy.node_id("eat_now").expect("eat"));
+            assert_eq!(
+                running.node,
+                policy
+                    .node_id(if critical { "critical_meal" } else { "eat_now" })
+                    .expect("eat")
+            );
             assert_eq!(
                 world.get::<&SeekTarget>(entity).expect("food target").tile,
                 (2, 2)
@@ -128,6 +136,20 @@ fn retained_tick_still_consumes_and_phase_tick_reconsiders_without_fabricated_re
                     .len(),
                 2
             );
+        }
+        if critical {
+            // At the selected physical owner, the continuing real eat lifecycle
+            // must consume even between full-selection phases.
+            *world.get::<&mut Position>(entity).expect("position") = Position::new(2, 2);
+            *world.get::<&mut AgentState>(entity).expect("state") = AgentState::Consuming {
+                target: TargetKind::Food,
+            };
+            resources.current_tick += 1;
+            system
+                .try_tick(&mut world, &mut resources)
+                .expect("consume");
+            assert_eq!(resources.food.tallies.meals, 1, "phase={tick}");
+            assert!(world.get::<&Hunger>(entity).expect("hunger").value < 90.0);
         }
     }
 }

@@ -35,7 +35,7 @@ pub(super) fn job_finish(c: &mut EffectContext<'_>) -> EffectResult {
         && c.world.get::<&Job>(c.entity).is_ok()
     {
         c.effects.job_releases.push(c.entity);
-        c.effects.dirty.insert(EffectDomain::Jobs);
+        c.effects.mark_dirty(EffectDomain::Jobs);
     }
     Ok(EffectStatus::Finished)
 }
@@ -78,7 +78,7 @@ pub(super) fn rest_start(c: &mut EffectContext<'_>) -> EffectResult {
                 // or after another person's reservation fills the hearth.
                 return super::needs::finish(c);
             }
-            c.effects.dirty.insert(EffectDomain::RoutineOccupancy);
+            c.effects.mark_dirty(EffectDomain::RoutineOccupancy);
             c.set_state(AgentState::Seeking {
                 target: sim_core::components::TargetKind::Activity,
             })?;

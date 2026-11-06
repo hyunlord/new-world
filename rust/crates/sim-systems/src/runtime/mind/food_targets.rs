@@ -110,13 +110,7 @@ pub(super) fn candidate(
         }
     }
     let mut best = None;
-    let mut consider = |kind: sim_core::colony::ItemKind, tile: (u32, u32), owner: FoodOwner| {
-        let Some(food) = &kind.definition().food else {
-            return;
-        };
-        if !filter.accepts(food, person, res) {
-            return;
-        }
+    let mut consider = |food: &FoodDef, tile: (u32, u32), owner: FoodOwner| {
         let distance = origin.0.abs_diff(tile.0).max(origin.1.abs_diff(tile.1));
         // Nearest wins within the authored capability; item preference is a
         // data-defined tie breaker, followed by stable tile and owner identity.
@@ -142,7 +136,7 @@ pub(super) fn candidate(
         if let Some((tile, owner)) = index.nearest(res, kind, origin, u32::MAX, |_, tile| {
             res.nav.passable(tile) && res.nav.reachable(origin, tile)
         }) {
-            consider(kind, tile, owner);
+            consider(def, tile, owner);
         }
     }
     if let Some(carry) = person.carry {
@@ -164,7 +158,11 @@ pub(super) fn candidate(
                     })
                 })
         {
-            consider(carry.kind, origin, owner);
+            if let Some(def) = &carry.kind.definition().food {
+                if filter.accepts(def, person, res) {
+                    consider(def, origin, owner);
+                }
+            }
         }
     }
     best.map(|(_, target)| target)
@@ -209,6 +207,48 @@ mod tests {
             res,
             FoodFilter::Any,
         )
+    }
+
+    #[test]
+    fn fresh_carried_food_still_obeys_cooked_and_novel_filters() {
+        for name in ["roots", "porridge"] {
+            let (mut world, mut res) = scene();
+            create(&mut res, name);
+            items::transfer(
+                &mut world,
+                &mut res,
+                FoodOwner::Ground((2, 2)),
+                FoodOwner::Carried(1),
+                1,
+                0,
+            )
+            .unwrap();
+            res.food
+                .meals
+                .entry(1)
+                .or_default()
+                .last_group_tick
+                .insert("grain".into(), 0);
+            let context = TickContext::capture(&world, &res).unwrap();
+            for (filter, available) in [
+                (FoodFilter::Any, true),
+                (FoodFilter::Cooked, name == "porridge"),
+                (FoodFilter::Novel, name == "roots"),
+                (FoodFilter::CookedNovel, false),
+            ] {
+                let selected = candidate(
+                    &context.physical_food.borrow(),
+                    context.row(1).unwrap(),
+                    &res,
+                    filter,
+                );
+                assert_eq!(
+                    selected.map(|target| target.food),
+                    available.then_some(Some(FoodOwner::Carried(1))),
+                    "{name}"
+                );
+            }
+        }
     }
 
     #[test]

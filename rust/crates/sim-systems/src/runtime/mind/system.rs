@@ -160,7 +160,7 @@ impl ColonyMindSystem {
         loop {
             for agent in pending {
                 // A completed consumption/activity keeps the historical one-tick Idle boundary.
-                if completed.contains(&agent) {
+                if replay_visit && completed.contains(&agent) {
                     continue;
                 }
                 *context.plant_query_observation.borrow_mut() = None;
@@ -286,7 +286,9 @@ impl ColonyMindSystem {
         context
             .set_program_running(agent, prior, &self.program)
             .map_err(failure)?;
-        facts::refresh_routine_lifecycle(context, routine.as_ref(), agent).map_err(failure)?;
+        let lifecycle =
+            facts::refresh_routine_lifecycle_reusing(context, routine.as_ref(), agent, None)
+                .map_err(failure)?;
         let proposed = self.diagnostics.as_mut().and_then(|diagnostics| {
             diagnostics.observe(
                 &self.program,
@@ -339,7 +341,13 @@ impl ColonyMindSystem {
             context
                 .upgrade_continuation_exclusive(world, agent)
                 .map_err(failure)?;
-            facts::refresh_routine_lifecycle(context, routine.as_ref(), agent).map_err(failure)?;
+            facts::refresh_routine_lifecycle_reusing(
+                context,
+                routine.as_ref(),
+                agent,
+                Some(lifecycle),
+            )
+            .map_err(failure)?;
             let mut row = self
                 .program
                 .providers
@@ -543,18 +551,7 @@ impl ColonyMindSystem {
                 }
             }
         }
-        let cause = if retained.is_some() {
-            prior_cause
-        } else {
-            cause.or_else(|| {
-                resources
-                    .mind
-                    .history
-                    .as_ref()
-                    .and_then(|history| history.latest(agent))
-                    .map(|choice| choice.id())
-            })
-        };
+        let cause = cause.or(prior_cause);
         let previous = prior
             .filter(|choice| !choice.finished)
             .map(|choice| self.program.effect(choice.node))
@@ -593,7 +590,7 @@ impl ColonyMindSystem {
             if person.activity.is_some() {
                 if let Some(transaction) = call.routine.as_deref_mut() {
                     transaction.interrupt(agent, call.entity);
-                    call.effects.dirty.insert(EffectDomain::RoutineOccupancy);
+                    call.effects.mark_dirty(EffectDomain::RoutineOccupancy);
                 }
             }
             call.resources.social_chase_since.remove(&agent);
@@ -661,14 +658,15 @@ impl ColonyMindSystem {
             return Err(failure("explicit finish action did not finish lifecycle"));
         }
         let finished = status == EffectStatus::Finished;
-        call.resources.mind.running.insert(
-            agent,
-            RunningChoice {
-                revision: self.program.policy.revision(),
-                node: node.id,
-                finished,
-            },
-        );
+        let next = RunningChoice {
+            revision: self.program.policy.revision(),
+            node: node.id,
+            finished,
+        };
+        // Recording a reselected finished node temporarily installs unfinished state.
+        if finished || prior != Some(next) {
+            call.resources.mind.running.insert(agent, next);
+        }
         if finished {
             completed.insert(agent);
         }
@@ -698,38 +696,43 @@ fn invalidate(
     effects: &mut EffectState,
     resources: &SimResources,
 ) -> Result<(), MindTickError> {
-    let dirty = std::mem::take(&mut effects.dirty);
-    let mut food_invalidated = false;
-    for domain in dirty.iter().copied() {
-        match domain {
-            EffectDomain::Needs | EffectDomain::Targets | EffectDomain::Relations => {
-                context.invalidate(Domain::Person)
-            }
-            EffectDomain::FoodSources | EffectDomain::FoodTile(_) => {
-                if food_invalidated {
-                    continue;
+    let mut dirty = std::mem::take(&mut effects.dirty);
+    let result = (|| {
+        let mut food_invalidated = false;
+        for domain in dirty.iter().copied() {
+            match domain {
+                EffectDomain::Needs | EffectDomain::Targets | EffectDomain::Relations => {
+                    context.invalidate(Domain::Person)
                 }
-                food_invalidated = true;
-                if dirty.contains(&EffectDomain::FoodSources) {
-                    context.invalidate(Domain::FoodSources)
-                } else {
-                    context.invalidate_food_tiles(
-                        resources,
-                        dirty.iter().filter_map(|domain| match domain {
-                            EffectDomain::FoodTile(tile) => Some(*tile),
-                            _ => None,
-                        }),
-                    )
+                EffectDomain::FoodSources | EffectDomain::FoodTile(_) => {
+                    if food_invalidated {
+                        continue;
+                    }
+                    food_invalidated = true;
+                    if dirty.contains(&EffectDomain::FoodSources) {
+                        context.invalidate(Domain::FoodSources)
+                    } else {
+                        context.invalidate_food_tiles(
+                            resources,
+                            dirty.iter().filter_map(|domain| match domain {
+                                EffectDomain::FoodTile(tile) => Some(*tile),
+                                _ => None,
+                            }),
+                        )
+                    }
                 }
+                EffectDomain::Claims => context.replace_claims(effects.claims.clone()),
+                EffectDomain::RoutineOccupancy => context.invalidate(Domain::RoutineOccupancy),
+                EffectDomain::Invitations => context.invalidate(Domain::Invitations),
+                EffectDomain::Jobs => context.invalidate(Domain::Jobs),
             }
-            EffectDomain::Claims => context.replace_claims(effects.claims.clone()),
-            EffectDomain::RoutineOccupancy => context.invalidate(Domain::RoutineOccupancy),
-            EffectDomain::Invitations => context.invalidate(Domain::Invitations),
-            EffectDomain::Jobs => context.invalidate(Domain::Jobs),
+            .map_err(failure)?;
         }
-        .map_err(failure)?;
-    }
-    Ok(())
+        Ok(())
+    })();
+    dirty.clear();
+    effects.dirty = dirty;
+    result
 }
 
 impl RuntimeSystem for ColonyMindSystem {

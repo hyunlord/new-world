@@ -1449,19 +1449,49 @@ fn forage_candidate(
         }))
 }
 
+#[derive(Clone, Copy)]
+pub(super) struct RoutineLifecycle {
+    lineage: Option<u64>,
+    admission: bool,
+    invited: bool,
+    deadline: bool,
+}
+
 /// Pure observations of the one real lifecycle transaction. Parent prepares its
 /// places cache once before this call; shadow never constructs or mutates it.
+#[cfg(any(test, feature = "mind_shadow"))]
 pub(in crate::runtime) fn refresh_routine_lifecycle(
     context: &mut TickContext,
     routine: Option<&crate::runtime::agent_actions::routine::RoutineTick>,
     agent: AgentId,
 ) -> Result<(), FactError> {
+    refresh_routine_lifecycle_reusing(context, routine, agent, None).map(|_| ())
+}
+
+/// Reuse only within one person invocation, across its rich upgrade, with the
+/// same immutable RoutineTick, position, state, temperament and target scope.
+pub(super) fn refresh_routine_lifecycle_reusing(
+    context: &mut TickContext,
+    routine: Option<&crate::runtime::agent_actions::routine::RoutineTick>,
+    agent: AgentId,
+    previous: Option<RoutineLifecycle>,
+) -> Result<RoutineLifecycle, FactError> {
     if routine.is_some_and(|r| !r.preview_ready()) {
         return Err(missing(agent, "routine_preview_prepared"));
     }
     context.set_activity_snapshot(agent, routine.and_then(|r| r.activity(agent)))?;
     let p = context.row(agent)?;
     let member = context.target_scope(agent)?.settlement;
+    if let Some(previous) = previous.filter(|value| value.lineage == p.lineage) {
+        context.set_routine_lifecycle(
+            agent,
+            previous.admission,
+            previous.invited,
+            previous.deadline,
+        )?;
+        return Ok(previous);
+    }
+    let lineage = p.lineage;
     let deadline = routine
         .and_then(|r| {
             r.deadline(
@@ -1479,7 +1509,12 @@ pub(in crate::runtime) fn refresh_routine_lifecycle(
         routine.is_some_and(|r| r.can_enter(agent, p.lineage, member, p.temperament.as_ref()));
     let invited = routine.is_some_and(|r| r.invitation_pending(agent));
     context.set_routine_lifecycle(agent, admission, invited, deadline)?;
-    Ok(())
+    Ok(RoutineLifecycle {
+        lineage,
+        admission,
+        invited,
+        deadline,
+    })
 }
 
 #[derive(Clone, Copy)]
@@ -1672,7 +1707,8 @@ pub fn prepare_social_snapshot(
         })
         .map(|(_, site)| (site.position.x, site.position.y))
         .collect();
-    let mut peers: BTreeMap<(u32, u32), [SocialPeers; 3]> = BTreeMap::new();
+    let mut peers: std::collections::HashMap<(u32, u32), [SocialPeers; 3]> =
+        std::collections::HashMap::with_capacity(context.rows().len());
     let routine = resources.rules.agent.routine.is_some();
     for person in context.rows() {
         let available = person.life_stage != LifeStage::Child
@@ -1823,6 +1859,9 @@ pub(super) fn continuation_supported(name: &str) -> bool {
             | "thirst_critical_order"
             | "fatigue_critical_order"
             | "food_available"
+            | "food_cooked_available"
+            | "food_novel_available"
+            | "food_cooked_novel_available"
             | "water_available"
             | "sleep_available"
             | "camp_stocked"

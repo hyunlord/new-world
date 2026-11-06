@@ -70,15 +70,14 @@ pub(in crate::runtime) struct RoutineTick {
 /// settlement listing a person wins). The decision system's `member_of` is
 /// this same map whenever the firewood or forage rule built it.
 pub(in crate::runtime) fn members_of(resources: &SimResources) -> BTreeMap<AgentId, SettlementId> {
-    let mut members = BTreeMap::new();
-    let mut settlements: Vec<_> = resources.settlements.iter().collect();
-    settlements.sort_by_key(|(id, _)| **id);
-    for (&sid, settlement) in settlements {
-        for &id in &settlement.member_agents {
-            members.entry(id).or_insert(sid);
-        }
-    }
-    members
+    let mut members: Vec<_> = resources
+        .settlements
+        .iter()
+        .flat_map(|(&sid, settlement)| settlement.member_agents.iter().map(move |&id| (id, sid)))
+        .collect();
+    members.sort_unstable();
+    members.dedup_by_key(|(id, _)| *id);
+    members.into_iter().collect()
 }
 
 impl RoutineTick {

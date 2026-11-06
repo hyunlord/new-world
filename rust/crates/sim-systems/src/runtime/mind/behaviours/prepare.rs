@@ -14,7 +14,7 @@ impl EffectState {
     pub(in crate::runtime) fn prepare(world: &World, resources: &mut SimResources) -> Self {
         let all_members = members_of(resources);
         let mut state = Self {
-            members: all_members.clone(),
+            members: all_members,
             catchment: catchment_radius(resources),
             ..Self::default()
         };
@@ -43,7 +43,8 @@ impl EffectState {
                 {
                     continue;
                 }
-                if let Some(home) = all_members
+                if let Some(home) = state
+                    .members
                     .get(&agent.id)
                     .and_then(|sid| resources.settlements.get(sid))
                     .map(|s| s.formation_tile)

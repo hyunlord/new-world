@@ -267,3 +267,169 @@ mod food_retention_tests;
 
 #[path = "food_invalidation_tests.rs"]
 mod food_invalidation_tests;
+
+#[test]
+fn consuming_optional_needs_and_missing_state_preserve_effect_boundaries() {
+    for kind in [TargetKind::Water, TargetKind::Sleep] {
+        for has_state in [false, true] {
+            let mut world = World::new();
+            let entity = world.spawn((Agent { id: 1 },));
+            if has_state {
+                world
+                    .insert_one(entity, AgentState::Consuming { target: kind })
+                    .unwrap();
+            }
+            let mut resources = SimResources::new(8, 8, MaterialRegistry::new());
+            resources.water_tiles.insert((2, 2), 2);
+            resources.sleep_tiles.insert((2, 2), 2);
+            let mut effects = EffectState::default();
+            let mut c = context(
+                &mut world,
+                &mut resources,
+                &mut effects,
+                entity,
+                ActionTarget::Tile((2, 2)),
+            );
+            let result = if kind == TargetKind::Water {
+                needs::drink_continue(&mut c)
+            } else {
+                needs::sleep_continue(&mut c)
+            };
+            if has_state {
+                assert_eq!(result, Ok(EffectStatus::Finished));
+                assert_eq!(c.state(), Ok(AgentState::Idle));
+                assert!(c.effects.dirty.contains(&EffectDomain::Needs));
+                assert!(c.effects.dirty.contains(&EffectDomain::Targets));
+            } else {
+                assert_eq!(result, Err(EffectError::MissingState));
+                assert!(c.effects.dirty.is_empty());
+            }
+            assert_eq!(
+                c.resources.water_tiles.get(&(2, 2)),
+                Some(&(2 - u8::from(has_state && kind == TargetKind::Water)))
+            );
+            assert_eq!(
+                c.resources.sleep_tiles.get(&(2, 2)),
+                Some(&(2 - u8::from(has_state && kind == TargetKind::Sleep)))
+            );
+            assert!(c.effects.seek_set.is_empty());
+            assert!(c.effects.seek_clear.is_empty());
+            assert!(c.effects.completed_meals.is_empty());
+        }
+    }
+}
+
+#[test]
+fn local_home_matches_old_tree_preparation_and_exclusions() {
+    use sim_core::components::{Founding, PorterKind, PorterStage, PorterTrip, Settlement};
+    use sim_core::rules::WorldRules;
+    use std::collections::BTreeMap;
+
+    for local in [false, true] {
+        for relations in [false, true] {
+            for reverse in [false, true] {
+                let mut resources = SimResources::new(16, 16, MaterialRegistry::new());
+                resources.rules = WorldRules::baseline(0);
+                assert!(resources.rules.society.relations.is_some());
+                resources.rules.agent.local_food_availability = local;
+                if !relations {
+                    resources.rules.society.relations = None;
+                }
+                for (sid, home) in [(8, (8, 8)), (3, (3, 3))] {
+                    let mut settlement = Settlement::new_with_id(sid, 0);
+                    settlement.formation_tile = home;
+                    settlement.member_agents.extend([1, 2, 3, 4, 5]);
+                    resources.settlements.insert(sid, settlement);
+                }
+                let mut world = World::new();
+                let mut rows = vec![
+                    (1, 0),
+                    (2, 1),
+                    (3, 2),
+                    (4, 1),
+                    (4, 0),
+                    (5, 2),
+                    (5, 0),
+                    (6, 0),
+                ];
+                if reverse {
+                    rows.reverse();
+                }
+                for (id, kind) in rows {
+                    let entity = world.spawn((Agent { id },));
+                    if kind == 1 {
+                        world
+                            .insert_one(
+                                entity,
+                                Founding {
+                                    site: (1, 1),
+                                    fission_id: 1,
+                                    leader: id,
+                                    since_tick: 0,
+                                },
+                            )
+                            .unwrap();
+                    } else if kind == 2 {
+                        world
+                            .insert_one(
+                                entity,
+                                PorterTrip {
+                                    from: 3,
+                                    to: 8,
+                                    kind: PorterKind::Food,
+                                    amount: 1,
+                                    stage: PorterStage::Outbound,
+                                    depart_tick: 0,
+                                },
+                            )
+                            .unwrap();
+                    }
+                }
+                // Frozen old membership/preparation, independent of members_of and map type.
+                let mut members = BTreeMap::new();
+                let mut settlements: Vec<_> = resources.settlements.iter().collect();
+                settlements.sort_by_key(|(id, _)| **id);
+                for (&sid, settlement) in settlements {
+                    for &id in &settlement.member_agents {
+                        members.entry(id).or_insert(sid);
+                    }
+                }
+                let mut expected = BTreeMap::new();
+                if local {
+                    for (_, (agent, founder, porter)) in world
+                        .query::<(&Agent, Option<&Founding>, Option<&PorterTrip>)>()
+                        .iter()
+                    {
+                        if founder.is_some() || (relations && porter.is_some()) {
+                            continue;
+                        }
+                        if let Some(home) = members
+                            .get(&agent.id)
+                            .and_then(|sid| resources.settlements.get(sid))
+                            .map(|settlement| settlement.formation_tile)
+                        {
+                            expected.insert(agent.id, home);
+                        }
+                    }
+                }
+                let mut effects = EffectState::prepare(&world, &mut resources);
+                effects.avoid_of.insert(3, vec![(9, 9)]);
+                assert_eq!(effects.local_home.len(), expected.len());
+                for id in 0..=7 {
+                    assert_eq!(effects.local_home.get(&id), expected.get(&id));
+                    let avoid: &[(u32, u32)] =
+                        if expected.contains_key(&id) && effects.members.get(&id) == Some(&3) {
+                            &[(9, 9)]
+                        } else {
+                            &[]
+                        };
+                    assert_eq!(effects.gather_avoid(id), avoid);
+                }
+                assert_eq!(expected.get(&2), None);
+                assert_eq!(expected.get(&6), None);
+                assert_eq!(expected.get(&4), local.then_some(&(3, 3)));
+                assert_eq!(expected.get(&3), (local && !relations).then_some(&(3, 3)));
+            }
+        }
+    }
+}

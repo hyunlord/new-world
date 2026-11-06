@@ -4,12 +4,24 @@ use super::*;
 #[test]
 fn save_reload_before_off_phase_and_phase_preserves_subsequent_world_and_choice_bytes() {
     use sim_engine::SimEngine;
-    for cut in [1, 7] {
+    for cut in 1..=8 {
         let mut original = SimEngine::new(8, 8, sim_core::MaterialRegistry::new());
         original.resources.rules = WorldRules::colony(0);
         original.resources.rules.agent.routine = None;
         original.resources.rules.agent.night_rest = None;
-        original.resources.food_tiles.insert((2, 2), 10);
+        crate::runtime::nav::ensure(&mut original.resources);
+        crate::runtime::food::items::create_ground(
+            &mut original.resources,
+            (2, 2),
+            sim_core::colony::ItemSpec::raw(
+                sim_core::colony::ItemKind::from_name("porridge").expect("porridge"),
+                None,
+            ),
+            10,
+            0,
+            crate::runtime::food::items::FoodSource::Harvest,
+        )
+        .expect("physical food");
         let entity = original.world.spawn((
             Agent { id: 7 },
             Position::new(1, 1),
@@ -32,6 +44,7 @@ fn save_reload_before_off_phase_and_phase_preserves_subsequent_world_and_choice_
         let mut restored =
             crate::save::load_with(&bytes, |_| {}).expect("restore without runtime registrations");
         let mut restored_system = ColonyMindSystem::new(MindProgram::load(POLICY).expect("policy"));
+        let due = cut + (7 + 8 - cut % 8) % 8;
         for tick in cut..cut + 9 {
             original.resources.current_tick = tick;
             restored.resources.current_tick = tick;
@@ -41,6 +54,21 @@ fn save_reload_before_off_phase_and_phase_preserves_subsequent_world_and_choice_
             restored_system
                 .try_tick(&mut restored.world, &mut restored.resources)
                 .expect("restored");
+            if tick <= due {
+                let latest = original
+                    .resources
+                    .mind
+                    .history
+                    .as_ref()
+                    .expect("history")
+                    .latest(7)
+                    .expect("choice");
+                assert_eq!(
+                    latest.tick(),
+                    if tick < due { 0 } else { due },
+                    "ordinary opportunity waits only for phase: cut={cut} tick={tick} due={due}"
+                );
+            }
             assert_eq!(
                 crate::save::save(&mut original).expect("original bytes"),
                 crate::save::save(&mut restored).expect("restored bytes"),

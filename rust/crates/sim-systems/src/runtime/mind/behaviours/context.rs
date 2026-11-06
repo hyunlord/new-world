@@ -73,7 +73,7 @@ pub(in crate::runtime) struct EffectState {
     pub completed_meals: Vec<AgentId>,
     pub claims_version: u64,
     pub catchment: u32,
-    pub local_home: BTreeMap<AgentId, (u32, u32)>,
+    pub local_home: HashMap<AgentId, (u32, u32)>,
     pub forage_plans: BTreeMap<SettlementId, crate::runtime::agent_actions::forage::ForagePlan>,
     pub avoid_of: BTreeMap<SettlementId, Vec<(u32, u32)>>,
     pub previous_jobs: HashMap<Entity, AgentState>,
@@ -91,7 +91,7 @@ pub(in crate::runtime) struct EffectState {
     pub seek_idle: Vec<Entity>,
     /// Process after per-person decisions, in the same phase as old job settlement.
     pub job_releases: Vec<Entity>,
-    pub dirty: BTreeSet<EffectDomain>,
+    pub dirty: Vec<EffectDomain>,
 }
 
 /// Borrowed lifecycle inputs supplied by the coordinator after pure selection.
@@ -118,6 +118,14 @@ pub(in crate::runtime) struct EffectContext<'a> {
     /// The selected data node explicitly finishes this lifecycle, rather than a switch.
     pub authored_completion: bool,
 }
+impl EffectState {
+    pub fn mark_dirty(&mut self, domain: EffectDomain) {
+        if let Err(index) = self.dirty.binary_search(&domain) {
+            self.dirty.insert(index, domain);
+        }
+    }
+}
+
 impl EffectContext<'_> {
     pub fn state(&self) -> Result<AgentState, EffectError> {
         self.world
@@ -130,7 +138,7 @@ impl EffectContext<'_> {
             .world
             .get::<&mut AgentState>(self.entity)
             .map_err(|_| EffectError::MissingState)? = value;
-        self.effects.dirty.insert(EffectDomain::Needs);
+        self.effects.mark_dirty(EffectDomain::Needs);
         Ok(())
     }
     pub fn tile_target(&self) -> Result<(u32, u32), EffectError> {
@@ -144,10 +152,10 @@ impl EffectContext<'_> {
     }
     pub fn attach(&mut self, tile: (u32, u32)) {
         self.effects.seek_set.push((self.entity, tile));
-        self.effects.dirty.insert(EffectDomain::Targets);
+        self.effects.mark_dirty(EffectDomain::Targets);
     }
     pub fn clear(&mut self) {
         self.effects.seek_clear.push(self.entity);
-        self.effects.dirty.insert(EffectDomain::Targets);
+        self.effects.mark_dirty(EffectDomain::Targets);
     }
 }

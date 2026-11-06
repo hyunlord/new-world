@@ -59,20 +59,19 @@ fn advance(c: &mut EffectContext<'_>, kind: TargetKind) -> EffectResult {
             Ok(EffectStatus::Running)
         }
         AgentState::Consuming { target } if target == kind => {
-            let mut state = c
-                .world
-                .get::<&mut AgentState>(c.entity)
-                .map_err(|_| EffectError::MissingState)?;
-            match kind {
+            let finished = match kind {
                 TargetKind::Food => {
+                    let (state, need) = c
+                        .world
+                        .query_one_mut::<(&mut AgentState, Option<&mut Hunger>)>(c.entity)
+                        .map_err(|_| EffectError::MissingState)?;
                     let before_meals = c.resources.tallies.meals_eaten;
                     let before_missing = c.resources.tallies.meals_without_food;
-                    let mut need = c.world.get::<&mut Hunger>(c.entity).ok();
                     consume::consume_food(
                         c.resources,
                         key,
-                        &mut state,
-                        need.as_deref_mut(),
+                        state,
+                        need,
                         &mut c.effects.food_version,
                     );
                     if c.resources.tallies.meals_eaten > before_meals
@@ -80,26 +79,38 @@ fn advance(c: &mut EffectContext<'_>, kind: TargetKind) -> EffectResult {
                     {
                         c.effects.completed_meals.push(c.agent);
                     }
-                    c.effects.dirty.insert(EffectDomain::FoodTile(key));
+                    c.effects.mark_dirty(EffectDomain::FoodTile(key));
+                    *state == AgentState::Idle
                 }
                 TargetKind::Water => {
-                    let mut need = c.world.get::<&mut Thirst>(c.entity).ok();
-                    consume::consume_water(c.resources, key, &mut state, need.as_deref_mut());
+                    let (state, need) = c
+                        .world
+                        .query_one_mut::<(&mut AgentState, Option<&mut Thirst>)>(c.entity)
+                        .map_err(|_| EffectError::MissingState)?;
+                    consume::consume_water(c.resources, key, state, need);
+                    *state == AgentState::Idle
                 }
                 TargetKind::Sleep => {
-                    let hunger = c.world.get::<&Hunger>(c.entity).ok();
-                    let thirst = c.world.get::<&Thirst>(c.entity).ok();
-                    let mut sleep = c.world.get::<&mut Sleep>(c.entity).ok();
+                    let (state, hunger, thirst, sleep) = c
+                        .world
+                        .query_one_mut::<(
+                            &mut AgentState,
+                            Option<&Hunger>,
+                            Option<&Thirst>,
+                            Option<&mut Sleep>,
+                        )>(c.entity)
+                        .map_err(|_| EffectError::MissingState)?;
                     consume::consume_sleep(
                         c.resources,
                         key,
-                        &mut state,
-                        hunger.as_deref(),
-                        thirst.as_deref(),
-                        sleep.as_deref_mut(),
+                        state,
+                        hunger,
+                        thirst,
+                        sleep,
                         c.night_rest,
                         c.availability,
                     );
+                    *state == AgentState::Idle
                 }
                 TargetKind::GatherFood
                 | TargetKind::GatherWood
@@ -107,10 +118,10 @@ fn advance(c: &mut EffectContext<'_>, kind: TargetKind) -> EffectResult {
                 | TargetKind::Agent(_)
                 | TargetKind::Activity
                 | TargetKind::Job => return Err(EffectError::WrongTarget),
-            }
-            c.effects.dirty.insert(EffectDomain::Needs);
-            c.effects.dirty.insert(EffectDomain::Targets);
-            Ok(if *state == AgentState::Idle {
+            };
+            c.effects.mark_dirty(EffectDomain::Needs);
+            c.effects.mark_dirty(EffectDomain::Targets);
+            Ok(if finished {
                 EffectStatus::Finished
             } else {
                 EffectStatus::Running

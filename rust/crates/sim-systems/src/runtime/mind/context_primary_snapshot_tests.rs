@@ -357,3 +357,53 @@ fn duplicate_captured_ids_still_fail_before_metadata_is_used() {
         TickContext::capture_continuation_with_claims(&world, &resources, BTreeMap::new(), None);
     assert!(matches!(result, Err(ContextError::DuplicateAgent(7))));
 }
+
+#[test]
+fn bulk_capture_matches_independent_entity_rows_rich_and_lean() {
+    for rich in [false, true] {
+        for reverse in [false, true] {
+            let mut world = World::new();
+            for id in if reverse { [91, 7, 2] } else { [2, 7, 91] } {
+                let entity = world.spawn((Agent { id }, Position::new(1, 1), AgentState::Idle));
+                if id != 7 {
+                    enrich(&mut world, entity);
+                }
+                if id == 91 {
+                    world.remove_one::<Child>(entity).unwrap();
+                    world
+                        .insert_one(entity, WorkPriorities::defaults(true))
+                        .unwrap();
+                }
+            }
+            let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+            resources.current_tick = 37;
+            let actual = TickContext::capture_with_memory(
+                &world,
+                &resources,
+                rich,
+                Some(BTreeMap::new()),
+                None,
+            )
+            .unwrap();
+            assert_eq!(
+                actual.rows.iter().map(|row| row.agent).collect::<Vec<_>>(),
+                [2, 7, 91]
+            );
+            for row in &actual.rows {
+                let mut expected =
+                    PersonSnapshot::capture(&world, row.entity, row.agent, 37).unwrap();
+                if !rich {
+                    expected.memory_weights = [0.0; 6];
+                    let social = expected.memory_causes[4];
+                    expected.memory_causes = [None; 6];
+                    expected.memory_causes[4] = social;
+                }
+                assert_rows_equal(row, &expected);
+            }
+            assert!(actual
+                .row_refresh_states
+                .iter()
+                .all(|state| { state.rich == rich && state.primary_pending != rich }));
+        }
+    }
+}

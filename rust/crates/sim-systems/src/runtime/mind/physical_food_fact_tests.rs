@@ -143,3 +143,85 @@ fn colony_food_facts_require_edibility_and_age_but_carry_still_takes_space() {
     assert_eq!(read(&context, &res, "inventory_food"), 0);
     assert_eq!(read(&context, &res, "stock_in_hand"), 5);
 }
+
+#[test]
+fn physical_food_continuation_reads_live_lean_and_rich_observations() {
+    use sim_core::colony::mind::GuardRead;
+    let (mut world, mut res) = fixture();
+    let program = crate::runtime::mind::MindProgram::load(include_str!(
+        "../../../../sim-core/data/colony/mind.ron"
+    ))
+    .expect("shipped policy");
+    let cooked = ItemSpec::raw(ItemKind::from_name("porridge").expect("porridge"), None);
+    items::create_ground(&mut res, (3, 2), cooked, 2, 0, FoodSource::Harvest).expect("cooked");
+    let entity = world.query::<&Agent>().iter().next().expect("agent").0;
+    for case in 0..7 {
+        match case {
+            1 => {
+                res.food
+                    .meals
+                    .entry(7)
+                    .or_default()
+                    .last_group_tick
+                    .insert("grain".into(), 0);
+            }
+            2 => {
+                res.nav.set_cost((3, 2), sim_core::nav::IMPASSABLE);
+            }
+            3 => {
+                res.nav.set_cost((3, 2), 10);
+            }
+            4 => {
+                *world.get::<&mut AgentState>(entity).expect("state") = AgentState::Seeking {
+                    target: sim_core::components::TargetKind::Food,
+                };
+                res.food.active_targets.insert(7, FoodOwner::Carried(7));
+            }
+            5 => {
+                res.current_tick = 4 * res.ticks_per_day;
+                res.food.active_targets.remove(&7);
+                *world.get::<&mut AgentState>(entity).expect("state") = AgentState::Idle;
+            }
+            _ => {}
+        }
+        let rich = prepare_context(&world, &res).expect("rich");
+        let lean = prepare_continuation_context(&world, &res).expect("lean");
+        if case == 6 {
+            // A prior actor may deplete a captured public owner during this phase.
+            items::take(&mut world, &mut res, FoodOwner::Ground((2, 2)), 5, 4)
+                .expect("deplete roots");
+            items::take(&mut world, &mut res, FoodOwner::Carried(7), 2, 4).expect("deplete carry");
+        }
+        let before = bincode::serialize(&res.food).expect("food bytes");
+        for (name, expected) in [
+            (
+                "food_cooked_available",
+                i64::from(matches!(case, 0 | 1 | 3)),
+            ),
+            ("food_novel_available", i64::from(case != 6)),
+            ("food_cooked_novel_available", i64::from(case == 0)),
+        ] {
+            let actual = read(&rich, &res, name);
+            assert_eq!(actual, expected, "case={case} {name}");
+            assert_eq!(read(&lean, &res, name), actual, "lean case={case} {name}");
+            assert_eq!(
+                program
+                    .providers
+                    .continuation_read(
+                        program.policy.fact_id(name).expect("fact"),
+                        lean.row(7).expect("person"),
+                        &lean,
+                        &res
+                    )
+                    .expect("continuation"),
+                GuardRead::Value(actual),
+                "case={case} {name}"
+            );
+        }
+        assert_eq!(
+            bincode::serialize(&res.food).expect("after"),
+            before,
+            "pure case={case}"
+        );
+    }
+}

@@ -210,3 +210,91 @@ fn runtime_admission_failure_invalidates_success_without_bypassing_live_checks()
         assert_eq!(gate.hits, 0);
     }
 }
+
+#[test]
+fn physical_food_guard_cache_rechecks_live_history_depletion_and_navigation() {
+    let source = SOURCE.replace("nodes:[", r#"nodes:[
+(id:"critical_food",band:"critical",behaviour:"eat",target:Some("food"),when:[(fact:"food_cooked_available",op:"has"),(fact:"food_novel_available",op:"has"),(fact:"food_cooked_novel_available",op:"has"),(fact:"hunger",op:">=",value:Some(90000))],score:(constant:100,terms:[]),hysteresis:0,life_stages:["adult","child","elder"],tags:[],name_key:"FOOD"),"#);
+    let program = MindProgram::load(&source).unwrap();
+    let mut world = World::new();
+    let entity = spawn(&mut world, 7);
+    let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+    resources.rules = sim_core::rules::WorldRules::colony(0);
+    resources.nav.install(sim_core::nav::CostMap::new(8, 8));
+    crate::runtime::food::items::create_ground(
+        &mut resources,
+        (2, 2),
+        sim_core::colony::ItemSpec::raw(
+            sim_core::colony::ItemKind::from_name("porridge").unwrap(),
+            None,
+        ),
+        2,
+        0,
+        crate::runtime::food::items::FoodSource::Harvest,
+    )
+    .unwrap();
+    let mut gate = ContinuationGate::new(&program.policy);
+    for tick in 0..7 {
+        resources.current_tick = tick;
+        match tick {
+            2 => {
+                resources
+                    .food
+                    .meals
+                    .entry(7)
+                    .or_default()
+                    .last_group_tick
+                    .insert("grain".into(), tick);
+            }
+            3 => {
+                resources.food.meals.clear();
+                world.get::<&mut Hunger>(entity).unwrap().value = 90.0;
+            }
+            4 => {
+                world.get::<&mut Hunger>(entity).unwrap().value = 10.0;
+                resources.nav.set_cost((2, 2), sim_core::nav::IMPASSABLE);
+            }
+            5 => {
+                resources.nav.set_cost((2, 2), sim_core::nav::COST_PLAIN);
+            }
+            6 => {
+                crate::runtime::food::items::take(
+                    &mut world,
+                    &mut resources,
+                    sim_core::colony::food::FoodOwner::Ground((2, 2)),
+                    2,
+                    0,
+                )
+                .unwrap();
+            }
+            _ => {}
+        }
+        if tick == 3 {
+            let context = facts::prepare_continuation_context(&world, &resources).unwrap();
+            assert_eq!(
+                gate.evaluate(
+                    &program,
+                    &context,
+                    &resources,
+                    7,
+                    Some(RunningChoice {
+                        revision: program.policy.revision(),
+                        node: program.policy.node_id("idle").unwrap(),
+                        finished: false
+                    }),
+                    evidence()
+                )
+                .unwrap(),
+                GuardOutcome::FullEvaluation {
+                    reason: sim_core::colony::mind::GuardWake::UrgentEligible
+                },
+                "warmed false-to-true food guard wakes on this exact off-phase tick"
+            );
+        }
+        compare(&mut gate, &program, &world, &resources, 7);
+    }
+    assert!(
+        gate.hits > 0,
+        "actually exercises warmed continuation cache"
+    );
+}

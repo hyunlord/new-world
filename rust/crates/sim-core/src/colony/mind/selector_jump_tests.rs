@@ -92,10 +92,15 @@ fn jumps_preserve_full_result_roles_reads_and_structural_calls() {
         "(fact: \"available\", op: \"has\")",
         "(fact: \"need\", op: \">=\", value: Some(0))",
         "(fact: \"cold\", op: \"not\")",
+        "(fact: \"need\", op: \">=\", value: Some(-1))",
+        "(fact: \"need\", op: \">=\", value: Some(-2))",
+        "(fact: \"need\", op: \">=\", value: Some(-3))",
+        "(fact: \"need\", op: \">=\", value: Some(-4))",
+        "(fact: \"need\", op: \">=\", value: Some(-5))",
     ];
     let mut scratch = EvalScratch::default();
     let mut old = EvalScratch::default();
-    for length in 0..=3 {
+    for length in 0..=terms.len() {
         let prefix = terms[..length].join(",");
         let mut nodes = vec![];
         for index in 0..6 {
@@ -111,6 +116,18 @@ fn jumps_preserve_full_result_roles_reads_and_structural_calls() {
                 },
             ));
         }
+        let tail = "(fact: \"hearth_lit\", op: \"has\")";
+        nodes.push(custom(
+            "new_tail",
+            "leisure",
+            &if prefix.is_empty() {
+                tail.to_owned()
+            } else {
+                format!("{prefix},{tail}")
+            },
+            1,
+            "[\"adult\"]",
+        ));
         nodes.push(custom("short", "leisure", terms[0], 1, "[\"adult\"]"));
         nodes.push(custom(
             "reordered",
@@ -129,6 +146,7 @@ fn jumps_preserve_full_result_roles_reads_and_structural_calls() {
                     .map(|f| match f.name.as_str() {
                         "available" => bits & 1,
                         "cold" => (bits >> 1) & 1,
+                        "hearth_lit" => 1,
                         "need" => {
                             if bits & 4 == 0 {
                                 -1
@@ -193,12 +211,14 @@ fn jumps_preserve_full_result_roles_reads_and_structural_calls() {
 }
 #[test]
 fn compiled_jump_destinations_are_exact_contiguous_prefix_boundaries() {
+    let prefix = "(fact: \"available\", op: \"has\"),(fact: \"need\", op: \">=\", value: Some(0)),(fact: \"cold\", op: \"not\")";
+    let changed = prefix.replace("op: \"not\"", "op: \"has\"");
     let p = compile(
         &policy(&[
-            node("a", "need", 0, "", 0),
-            node("b", "need", 0, "", 0),
-            node("c", "need", 0, "", 0).replace("op: \"has\"", "op: \"not\""),
-            node("d", "need", 0, "", 0),
+            custom("a", "need", prefix, 1, "[\"adult\"]"),
+            custom("b", "need", prefix, 1, "[\"adult\"]"),
+            custom("c", "need", &changed, 1, "[\"adult\"]"),
+            custom("d", "need", prefix, 1, "[\"adult\"]"),
         ]),
         &schema(),
     )
@@ -206,6 +226,27 @@ fn compiled_jump_destinations_are_exact_contiguous_prefix_boundaries() {
     for band in &p.bands {
         for (position, id) in band.iter().enumerate() {
             let predicates = &p.nodes[id.index()].predicates;
+            let offset = p.node_predicate_offsets[id.index()];
+            let ends = &p.false_prefix_end[offset..offset + predicates.len()];
+            assert!(ends.windows(2).all(|pair| pair[0] >= pair[1]));
+            for next in position + 1..band.len() {
+                let shared = (position + 1..=next)
+                    .map(|index| {
+                        predicates
+                            .iter()
+                            .zip(&p.nodes[band[index].index()].predicates)
+                            .take_while(|(a, b)| a.cache_index == b.cache_index)
+                            .count()
+                    })
+                    .min()
+                    .unwrap();
+                for proved in 0..=predicates.len() {
+                    assert_eq!(
+                        ends[..proved].partition_point(|end| *end > next),
+                        proved.min(shared)
+                    );
+                }
+            }
             for depth in 0..predicates.len() {
                 let prefix = &predicates[..=depth];
                 let end = (position + 1..band.len())
@@ -223,6 +264,57 @@ fn compiled_jump_destinations_are_exact_contiguous_prefix_boundaries() {
                     end
                 );
             }
+        }
+    }
+}
+
+#[test]
+fn true_prefix_keeps_absolute_rejections_cap_order_and_clears_reused_scratch() {
+    let nodes: Vec<_> = (0..20).map(|index| custom(&format!("reject_{index}"), "need",
+        &format!("(fact: \"available\", op: \"has\"),(fact: \"need\", op: \">=\", value: Some(0)),(fact: \"other\", op: \">=\", value: Some({}))", index + 1),
+        1, "[\"adult\"]")).collect();
+    let p = compile(&policy(&nodes), &schema()).unwrap();
+    let mut scratch = EvalScratch::default();
+    for value in [0, 100, 0] {
+        let mut reader = Reader::<true> {
+            policy: &p,
+            tick: 0,
+            values: p
+                .facts()
+                .iter()
+                .map(|f| if f.name == "other" { value } else { 1 })
+                .collect(),
+            fail: None,
+            reads: vec![],
+            stages: RefCell::new(vec![]),
+            changing_stage: false,
+        };
+        let selected = choose_with_reader(&p, &mut reader, None, key(0), &mut scratch).unwrap();
+        if value == 0 {
+            assert_eq!(scratch.rejected.len(), REJECTED_CAP);
+            for (index, rejected) in scratch.rejected.iter().enumerate() {
+                assert_eq!(
+                    rejected.node,
+                    p.node_id(&format!("reject_{index}")).unwrap()
+                );
+                assert_eq!(rejected.depth, 2);
+                assert_eq!(rejected.fact, p.fact_id("other").unwrap());
+                assert_eq!(rejected.op_str, ">=");
+                assert_eq!(rejected.threshold, index as i64 + 1);
+                assert_eq!(rejected.actual, 0);
+            }
+            let blocked = scratch.blocked_candidates(selected.selected.band);
+            assert_eq!(blocked.len(), 2);
+            for (index, blocked) in blocked.iter().enumerate() {
+                assert_eq!(blocked.node, p.node_id(&format!("reject_{index}")).unwrap());
+                assert_eq!(blocked.predicate_depth, 2);
+                assert_eq!(blocked.threshold, index as i64 + 1);
+            }
+        } else {
+            assert!(scratch.rejected.is_empty());
+            assert!(scratch
+                .blocked_candidates(selected.selected.band)
+                .is_empty());
         }
     }
 }

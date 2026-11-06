@@ -101,6 +101,9 @@ pub enum Action {
         release_tiles: u32,
         /// Consecutive quiet ticks before release.
         release_ticks: u64,
+        /// Also protect living outdoor residents near the selected predator pack.
+        #[serde(default)]
+        protect_residents: bool,
     },
     /// Demand-limited food gathering, cooking and winter preservation.
     FoodPlan(super::FoodPlan),
@@ -232,6 +235,7 @@ pub fn parse_rules(text: &str) -> Result<RuleFile, String> {
                     min_hp,
                     release_tiles,
                     release_ticks,
+                    ..
                 },
             ) => {
                 *max_defenders > 0
@@ -259,4 +263,34 @@ pub fn rules() -> Result<&'static RuleFile, &'static str> {
         .get_or_init(|| parse_rules(include_str!("../../../data/colony/steward.ron")))
         .as_ref()
         .map_err(String::as_str)
+}
+
+#[cfg(test)]
+mod resident_protection_tests {
+    use super::Action;
+
+    #[test]
+    fn legacy_defence_ron_keeps_resident_protection_off() {
+        let legacy = "Defence(max_defenders:4,min_hp:50,release_tiles:24,release_ticks:60)";
+        let omitted: Action = ron::from_str(legacy).unwrap();
+        let explicit: Action =
+            ron::from_str(&legacy.replace("60)", "60,protect_residents:false)")).unwrap();
+        assert_eq!(omitted, explicit);
+        assert!(matches!(
+            omitted,
+            Action::Defence {
+                protect_residents: false,
+                ..
+            }
+        ));
+        let enabled: Action =
+            ron::from_str(&legacy.replace("60)", "60,protect_residents:true)")).unwrap();
+        assert!(matches!(
+            enabled,
+            Action::Defence {
+                protect_residents: true,
+                ..
+            }
+        ));
+    }
 }

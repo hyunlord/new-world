@@ -42,7 +42,7 @@ pub(super) fn forage_start(c: &mut EffectContext<'_>) -> EffectResult {
     *c.effects.claims.entry(tile).or_default() += 1;
     c.effects.claims_version += 1;
     c.effects.forage_targets.insert(c.entity, tile);
-    c.effects.dirty.insert(EffectDomain::Claims);
+    c.effects.mark_dirty(EffectDomain::Claims);
     c.resources.tallies.forage_trips += 1;
     Ok(result)
 }
@@ -77,8 +77,8 @@ pub(super) fn continue_running(c: &mut EffectContext<'_>) -> EffectResult {
 
 fn consume(c: &mut EffectContext<'_>) -> EffectResult {
     let key = (c.position.x, c.position.y);
-    c.effects.dirty.insert(EffectDomain::FoodTile(key));
-    c.effects.dirty.insert(EffectDomain::Needs);
+    c.effects.mark_dirty(EffectDomain::FoodTile(key));
+    c.effects.mark_dirty(EffectDomain::Needs);
     let resources = &mut *c.resources;
     let tick = resources.current_tick;
     let agent = c
@@ -94,7 +94,7 @@ fn consume(c: &mut EffectContext<'_>) -> EffectResult {
     let temperament_guard = c.world.get::<&Temperament>(c.entity).ok();
     let temperament = temperament_guard.as_deref();
     let relations_rule = resources.rules.society.relations;
-    c.effects.dirty.insert(EffectDomain::Relations);
+    c.effects.mark_dirty(EffectDomain::Relations);
     let member_of = &c.effects.members;
     let forage_spots = &c.effects.forage_spots;
     let quarrelled = &mut c.effects.quarrelled;

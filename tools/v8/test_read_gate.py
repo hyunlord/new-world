@@ -106,6 +106,80 @@ class BenchRatioTest(unittest.TestCase):
             read_gate_checks.check_bench_ratio(0.0, 50.0)
 
 
+
+class BenchJustifiedTest(unittest.TestCase):
+    def dispatch(self, declaration, ratio=1.15, metric="tick_mean_us", scene="n2000", ceiling="PASS"):
+        import io
+        import tempfile
+        from contextlib import redirect_stdout
+        from unittest.mock import patch
+        config = {"base_perf": "/base", "base_perf_sha256": "a" * 64, "base_commit": "a" * 40}
+        if declaration != "ABSENT":
+            config["bench_justified"] = declaration
+        reports = []
+        for arm in ("base", "new") * 3:
+            report = {"commit": ("a" if arm == "base" else "b") * 40,
+                      "scenes": [{"label": name, "tick_mean_us": 100.0, "tick_p99_us": 100.0}
+                                 for name in sorted(read_gate_checks.BENCH_SCENES)],
+                      "ceilings": {key: ceiling for key in read_gate_checks.BENCH_CEILINGS}}
+            if arm == "new":
+                next(row for row in report["scenes"] if row["label"] == scene)[metric] = round(100.0 * ratio, 9)
+            reports.append(report)
+        output = io.StringIO()
+        with (tempfile.TemporaryDirectory() as folder,
+              patch.object(read_gate_checks, "ROOT", Path(folder)),
+              patch.object(read_gate_checks, "load_config", return_value=config),
+              patch.object(read_gate_checks, "verify_binary"),
+              patch.object(read_gate_checks.Path, "exists", return_value=True),
+              patch.object(read_gate_checks, "wait_for_load", return_value=(1.0, 2.0, 3.0)),
+              patch.object(read_gate_checks.subprocess, "check_output", return_value="b" * 40),
+              patch.object(read_gate_checks.subprocess, "check_call") as run,
+              patch.object(read_gate_checks, "load_json", side_effect=reports),
+              redirect_stdout(output)):
+            (Path(folder) / "CHANGELOG.md").write_text("Measured survival policy remainder.\n")
+            try:
+                read_gate_checks.bench("unused", folder)
+            except ValueError:
+                if ceiling != "FAIL":
+                    run.assert_not_called()
+                raise
+            self.assertEqual(run.call_count, 6)
+        return output.getvalue()
+
+    def declaration(self, **changes):
+        return {"scene": "n2000", "metric": "tick_mean_us",
+                "quote": "Measured survival policy remainder.", **changes}
+
+    def test_default_and_single_metric_limits_through_real_dispatch(self):
+        for declaration, ratio, metric, scene in (
+            ("ABSENT", 1.15, "tick_mean_us", "n2000"),
+            (self.declaration(), 1.150001, "tick_mean_us", "n2000"),
+            (self.declaration(), 1.11, "tick_p99_us", "n2000"),
+            (self.declaration(), 1.11, "tick_mean_us", "n200"),
+        ):
+            with self.subTest(declaration=declaration, ratio=ratio, metric=metric, scene=scene):
+                with self.assertRaises(SystemExit):
+                    self.dispatch(declaration, ratio, metric, scene)
+        self.assertIn("JUSTIFIED n2000/tick_mean_us", self.dispatch(self.declaration()))
+        self.assertNotIn("JUSTIFIED", self.dispatch(self.declaration(), 1.10))
+        self.assertIn("READ_BENCH PASS", self.dispatch("ABSENT", 1.10))
+        self.assertIn("JUSTIFIED n2000/tick_p99_us",
+                      self.dispatch(self.declaration(metric="tick_p99_us"), metric="tick_p99_us"))
+
+    def test_invalid_declaration_rejects_before_any_measurement(self):
+        for declaration in (None, False, [], {}, self.declaration(extra="x"),
+                            self.declaration(scene="unknown"), self.declaration(metric="rss"),
+                            self.declaration(quote=""), self.declaration(quote="  "),
+                            self.declaration(quote="absent quote"), self.declaration(quote=1),
+                            self.declaration(scene=[]), self.declaration(metric=True)):
+            with self.subTest(declaration=declaration), self.assertRaises(ValueError):
+                self.dispatch(declaration)
+
+    def test_justification_does_not_override_absolute_or_memory_ceilings(self):
+        with self.assertRaisesRegex(ValueError, "bench ceiling"):
+            self.dispatch(self.declaration(), ceiling="FAIL")
+
+
 class StallWaiverTest(unittest.TestCase):
     def test_all_under_50_passes(self):
         ok, count, mx = read_gate_checks.check_stall_frames([30.0, 40.0, 49.9])

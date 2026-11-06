@@ -140,28 +140,30 @@ impl RuntimeSystem for OralTransmissionSystem {
         let mut learned = 0u64;
         let mut listeners: Vec<hecs::Entity> = Vec::new();
         let mut rehearsed = 0u64;
+        // The old listener filter is total: p>=gain satisfies its second arm;
+        // below gain, either not practising or p>=threshold satisfies an arm.
+        // Eligibility stays frozen in before; only last-use changes within tonight.
+        let oldest_topic = |i: usize, used: &Knowledge| {
+            ids_of(before[i].practice())
+                .filter_map(|node| deadline(&before[i], used, node))
+                .min()
+        };
+        let mut ranks: Vec<_> = (0..here.len())
+            .map(|i| oldest_topic(i, &after[i]))
+            .collect();
         for (li, listener) in here.iter().enumerate() {
             if !listener.adult && listener.years < rule.learner_min_years {
                 continue;
             }
-            let mut tellers: Vec<usize> = (0..here.len())
+            let mut tellers: Vec<_> = (0..here.len())
                 .filter(|&i| i != li && here[i].adult)
+                .map(|i| (i, ranks[i]))
                 .collect();
             if tellers.is_empty() {
                 continue;
             }
-            let oldest_topic = |i: usize| {
-                ids_of(before[i].practice())
-                    .filter(|&node| {
-                        (!before[li].practises(node)
-                            && before[li].proficiency(node) < rule.oral_gain)
-                            || before[li].proficiency(node) >= rule.oral_gain.min(d.threshold(node))
-                    })
-                    .filter_map(|node| deadline(&before[i], &after[i], node))
-                    .min()
-            };
-            if let Some(oldest) = tellers.iter().filter_map(|&i| oldest_topic(i)).min() {
-                tellers.retain(|&i| oldest_topic(i) == Some(oldest));
+            if let Some(oldest) = tellers.iter().filter_map(|(_, due)| *due).min() {
+                tellers.retain(|(_, due)| *due == Some(oldest));
             }
             let pick = keyed_below(
                 seed,
@@ -172,7 +174,7 @@ impl RuntimeSystem for OralTransmissionSystem {
                 0,
                 tellers.len() as u64,
             );
-            let ti = tellers[pick as usize];
+            let ti = tellers[pick as usize].0;
             let teller = &before[ti];
             // Rehearsal uses existing understanding, never grants proficiency.
             let mut shared: Vec<u8> = ids_of(teller.practice())
@@ -220,6 +222,9 @@ impl RuntimeSystem for OralTransmissionSystem {
                 .filter(|c| after[li].proficiency(*c) < rule.oral_gain)
                 .collect();
             if candidates.is_empty() {
+                for i in [li, ti] {
+                    ranks[i] = oldest_topic(i, &after[i]);
+                }
                 continue;
             }
             told += 1;
@@ -274,6 +279,9 @@ impl RuntimeSystem for OralTransmissionSystem {
                     listeners.push(here[li].entity);
                     break;
                 }
+            }
+            for i in [li, ti] {
+                ranks[i] = oldest_topic(i, &after[i]);
             }
         }
         // The hearth lore: everyone gathered who holds fire keeping uses it tonight.
@@ -591,6 +599,246 @@ mod tests {
         assert!(res.colony.command_log.is_empty());
     }
 
+    // Frozen pre-optimization two-pass teller selector, independently kept for the oracle.
+    fn old_teller_choices(
+        here: &[Person],
+        before: &[Knowledge],
+        after: &[Knowledge],
+        li: usize,
+        tick: u64,
+        rule: &sim_core::rules::KnowledgeRule,
+    ) -> Vec<usize> {
+        let mut tellers: Vec<_> = (0..here.len())
+            .filter(|&i| i != li && here[i].adult)
+            .collect();
+        let oldest_topic = |i: usize| {
+            ids_of(before[i].practice())
+                .filter(|&node| {
+                    (!before[li].practises(node) && before[li].proficiency(node) < rule.oral_gain)
+                        || before[li].proficiency(node)
+                            >= rule.oral_gain.min(defs().threshold(node))
+                })
+                .filter_map(|node| decay_deadline(&before[i], &after[i], node, tick, rule))
+                .min()
+        };
+        if let Some(oldest) = tellers.iter().filter_map(|&i| oldest_topic(i)).min() {
+            tellers.retain(|&i| oldest_topic(i) == Some(oldest));
+        }
+        tellers
+    }
+
+    #[test]
+    fn listener_topic_filter_is_total_at_gain_and_threshold_boundaries() {
+        for node in 0..32 {
+            let threshold = defs().threshold(node);
+            for gain in [
+                0,
+                1,
+                threshold.saturating_sub(1),
+                threshold,
+                threshold.saturating_add(1),
+                1000,
+                u16::MAX,
+            ] {
+                for proficiency in [
+                    0,
+                    1,
+                    threshold.saturating_sub(1),
+                    threshold,
+                    threshold.saturating_add(1),
+                    gain.saturating_sub(1),
+                    gain,
+                    1000,
+                ] {
+                    let mut knowledge = Knowledge::default();
+                    knowledge.set(node, proficiency, Source::Oral, 0);
+                    let bytes = bincode::serialize(&knowledge).unwrap();
+                    let loaded: Knowledge = bincode::deserialize(&bytes).unwrap();
+                    for listener in [&knowledge, &loaded, &Knowledge::default()] {
+                        let p = listener.proficiency(node);
+                        assert!(
+                            (!listener.practises(node) && p < gain) || p >= gain.min(threshold),
+                            "node={node} p={p} gain={gain} threshold={threshold}"
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn rehearsal_empty_telling_refreshes_both_participants_before_next_pair() {
+        let (mut world, mut res, entities) = pair();
+        certain_telling(&mut res);
+        let shared = defs().id_of("pot_firing").unwrap();
+        let other = defs().id_of("pressure_flaking").unwrap();
+        for &entity in &entities {
+            store(
+                &mut world,
+                entity,
+                Knowledge::from_entries(vec![KnowledgeEntry::new(
+                    shared,
+                    Source::Discovered,
+                    400,
+                    0,
+                )]),
+            );
+        }
+        let pos = *world.get::<&Position>(entities[0]).unwrap();
+        world.spawn((
+            sim_core::components::Agent { id: 1000 },
+            pos,
+            Knowledge::from_entries(vec![KnowledgeEntry::new(other, Source::Discovered, 400, 0)]),
+        ));
+        let here = people(&world, &res);
+        let before: Vec<_> = here
+            .iter()
+            .map(|p| knowledge_of(&world, p.entity))
+            .collect();
+        let choices = old_teller_choices(
+            &here,
+            &before,
+            &before,
+            0,
+            res.current_tick,
+            &rule(&res).unwrap(),
+        );
+        assert_eq!(choices, vec![1, 2]);
+        res.world_seed = (0..1000)
+            .find(|&seed| {
+                keyed_below(
+                    seed,
+                    STREAM_KNOWLEDGE,
+                    here[0].key,
+                    res.current_tick,
+                    0x1_0000,
+                    0,
+                    2,
+                ) == 0
+            })
+            .unwrap();
+        let mut after = before.clone();
+        after[0].touch(shared, res.current_tick);
+        after[1].touch(shared, res.current_tick);
+        assert_eq!(
+            old_teller_choices(
+                &here,
+                &before,
+                &after,
+                1,
+                res.current_tick,
+                &rule(&res).unwrap()
+            ),
+            vec![2]
+        );
+        OralTransmissionSystem.tick(&mut world, &mut res);
+        let first = knowledge_of(&world, entities[0]);
+        let second = knowledge_of(&world, entities[1]);
+        assert_eq!(first.get(shared).unwrap().last_used, 10);
+        assert_eq!(second.get(shared).unwrap().last_used, 10);
+        assert_eq!(first.proficiency(other), 0);
+        assert_eq!(second.proficiency(other), 350);
+        assert!(res.colony.command_log.is_empty());
+    }
+
+    #[test]
+    fn teller_choice_matches_frozen_two_pass_oracle() {
+        let topics = [
+            defs().id_of("pot_firing").unwrap(),
+            defs().id_of("pressure_flaking").unwrap(),
+        ];
+        for days in [[0, 9], [0, 0], [10, 10]] {
+            for informed in [false, true] {
+                for seed in 0..8 {
+                    let (mut world, mut res, entities) = pair();
+                    certain_telling(&mut res);
+                    res.world_seed = seed;
+                    world
+                        .get::<&mut sim_core::components::Agent>(entities[1])
+                        .unwrap()
+                        .id = 100;
+                    store(
+                        &mut world,
+                        entities[0],
+                        if informed {
+                            Knowledge::from_entries(vec![KnowledgeEntry::new(
+                                topics[0],
+                                Source::Oral,
+                                350,
+                                0,
+                            )])
+                        } else {
+                            Knowledge::default()
+                        },
+                    );
+                    store(
+                        &mut world,
+                        entities[1],
+                        Knowledge::from_entries(vec![KnowledgeEntry::new(
+                            topics[0],
+                            Source::Discovered,
+                            400,
+                            days[0],
+                        )]),
+                    );
+                    let pos = *world.get::<&Position>(entities[0]).unwrap();
+                    world.spawn((
+                        sim_core::components::Agent { id: 1000 },
+                        pos,
+                        Knowledge::from_entries(vec![KnowledgeEntry::new(
+                            topics[1],
+                            Source::Discovered,
+                            400,
+                            days[1],
+                        )]),
+                    ));
+                    let here = people(&world, &res);
+                    assert_eq!(here[0].entity, entities[0]);
+                    let before: Vec<_> = here
+                        .iter()
+                        .map(|p| knowledge_of(&world, p.entity))
+                        .collect();
+                    let choices = old_teller_choices(
+                        &here,
+                        &before,
+                        &before,
+                        0,
+                        res.current_tick,
+                        &rule(&res).unwrap(),
+                    );
+                    assert_eq!(choices, if days == [0, 9] { vec![1] } else { vec![1, 2] });
+                    let pick = keyed_below(
+                        seed,
+                        STREAM_KNOWLEDGE,
+                        here[0].key,
+                        res.current_tick,
+                        0x1_0000,
+                        0,
+                        choices.len() as u64,
+                    );
+                    let selected = choices[pick as usize] - 1;
+                    OralTransmissionSystem.tick(&mut world, &mut res);
+                    let known = knowledge_of(&world, entities[0]);
+                    for (i, &topic) in topics.iter().enumerate() {
+                        assert_eq!(
+                            known.proficiency(topic),
+                            if i == selected || (informed && i == 0) {
+                                350
+                            } else {
+                                0
+                            }
+                        );
+                        if let Some(entry) = known.get(topic) {
+                            assert_eq!(entry.last_used, if i == selected { 10 } else { 0 });
+                        }
+                    }
+                    assert!(!known.practises(topics[0]) && !known.practises(topics[1]));
+                    assert!(res.colony.command_log.is_empty());
+                }
+            }
+        }
+    }
+
     #[test]
     fn deadline_teller_is_preferred_but_equal_deadlines_keep_the_original_draw() {
         for last_used in [0, 9] {
@@ -782,6 +1030,44 @@ mod tests {
                 ))
             })
             .collect();
+        // Frozen selector recomputes against after, while eligibility remains the snapshot.
+        let here = people(&world, &res);
+        let before: Vec<_> = here
+            .iter()
+            .map(|p| knowledge_of(&world, p.entity))
+            .collect();
+        let first_choices = old_teller_choices(
+            &here,
+            &before,
+            &before,
+            0,
+            res.current_tick,
+            &rule(&res).unwrap(),
+        );
+        assert_eq!(first_choices, vec![2, 3]);
+        let first_pick = keyed_below(
+            res.world_seed,
+            STREAM_KNOWLEDGE,
+            here[0].key,
+            res.current_tick,
+            0x1_0000,
+            0,
+            first_choices.len() as u64,
+        );
+        assert_eq!(first_choices[first_pick as usize], 2);
+        let mut after_first = before.clone();
+        after_first[2].touch(first, res.current_tick);
+        assert_eq!(
+            old_teller_choices(
+                &here,
+                &before,
+                &after_first,
+                1,
+                res.current_tick,
+                &rule(&res).unwrap()
+            ),
+            vec![3]
+        );
         // When: actual use in the first pair removes its topic's overdue priority.
         OralTransmissionSystem.tick(&mut world, &mut res);
         // Then: the second listener hears the other expert, without extra gains or promotion.

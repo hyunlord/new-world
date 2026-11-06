@@ -134,7 +134,7 @@ pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
             {
                 return Ok(EffectStatus::Finished);
             }
-            c.effects.dirty.insert(EffectDomain::FoodSources);
+            c.effects.mark_dirty(EffectDomain::FoodSources);
         }
         crate::runtime::jobs::cancel::cancel(
             c.world,
@@ -189,7 +189,7 @@ pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
     // postpass discards provisional resource attaches for Job states.
     c.effects.seek_clear.retain(|entity| *entity != c.entity);
     c.effects.seek_idle.retain(|entity| *entity != c.entity);
-    c.effects.dirty.insert(EffectDomain::Jobs);
+    c.effects.mark_dirty(EffectDomain::Jobs);
     Ok(EffectStatus::Running)
 }
 

@@ -26,8 +26,8 @@ pub(super) fn start(c: &mut EffectContext<'_>) -> EffectResult {
     }
     if let Some(routine) = c.routine.as_deref_mut() {
         routine.invite(peer, c.world);
-        c.effects.dirty.insert(EffectDomain::Invitations);
-        c.effects.dirty.insert(EffectDomain::RoutineOccupancy);
+        c.effects.mark_dirty(EffectDomain::Invitations);
+        c.effects.mark_dirty(EffectDomain::RoutineOccupancy);
     }
     c.attach(tile);
     Ok(EffectStatus::Running)

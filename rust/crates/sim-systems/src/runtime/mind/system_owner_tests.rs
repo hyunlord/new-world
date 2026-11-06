@@ -506,3 +506,74 @@ fn externally_idled_prior_job_choice_keeps_retained_job_when_switching_to_food()
     );
     assert!(resources.colony.release_counts.is_empty());
 }
+
+#[test]
+fn same_finished_choice_finishes_again_after_record_and_keeps_unfinished_continuation() {
+    const FINISH: &str = r#"(schema_version:1,bands:["critical","duty","need","work","leisure","idle"],nodes:[
+      (id:"finish_food",band:"need",behaviour:"eat",finish:Some("interrupted"),when:[(fact:"consuming",op:"has"),(fact:"target_food",op:"has")],score:(constant:10,terms:[]),hysteresis:0,life_stages:["adult","child","elder"],tags:[],name_key:"FINISH"),
+      (id:"idle",band:"idle",behaviour:"wander",when:[],score:(constant:0,terms:[(fact:"hunger",weight_permille:1)]),hysteresis:0,life_stages:["adult","child","elder"],tags:[],name_key:"IDLE")])"#;
+    let (_, mut world, mut resources, person) = fixture(20.0);
+    let program = MindProgram::load(FINISH).expect("finish policy");
+    let finish = program.policy.node_id("finish_food").expect("finish node");
+    let idle = program.policy.node_id("idle").expect("idle node");
+    let mut system = ColonyMindSystem::new(program);
+    for iteration in 0..2 {
+        // A second real consumption is interrupted by the same authored finish node.
+        *world.get::<&mut AgentState>(person).expect("state") = AgentState::Consuming {
+            target: TargetKind::Food,
+        };
+        resources.current_tick = iteration;
+        system
+            .try_tick(&mut world, &mut resources)
+            .expect("finish effect");
+        assert_eq!(resources.mind.running[&7].node, finish);
+        assert!(resources.mind.running[&7].finished);
+        assert_eq!(
+            *world.get::<&AgentState>(person).expect("state"),
+            AgentState::Idle
+        );
+        assert_eq!(world.get::<&Hunger>(person).expect("hunger").value, 20.0);
+        assert_eq!(
+            resources
+                .mind
+                .history
+                .as_ref()
+                .expect("history")
+                .records(7)
+                .expect("records")
+                .len(),
+            iteration as usize + 1
+        );
+    }
+    resources.current_tick += 1;
+    system
+        .try_tick(&mut world, &mut resources)
+        .expect("new idle choice");
+    let running = resources.mind.running[&7];
+    assert_eq!(running.node, idle);
+    assert!(!running.finished);
+    let records = resources
+        .mind
+        .history
+        .as_ref()
+        .expect("history")
+        .records(7)
+        .expect("records")
+        .len();
+    resources.current_tick += 1;
+    system
+        .try_tick(&mut world, &mut resources)
+        .expect("retained idle choice");
+    assert_eq!(resources.mind.running[&7], running);
+    assert_eq!(
+        resources
+            .mind
+            .history
+            .as_ref()
+            .expect("history")
+            .records(7)
+            .expect("records")
+            .len(),
+        records
+    );
+}

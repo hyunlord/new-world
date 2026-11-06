@@ -358,33 +358,26 @@ impl SettlementSystem {
         agent_positions: &HashMap<AgentId, (u32, u32)>,
         removed: &mut Vec<(AgentId, SettlementId)>,
     ) {
-        // Build agent → rosters map in sorted (settlement, member) order.
-        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
-        settlement_ids.sort_unstable();
-        let mut memberships: HashMap<AgentId, Vec<SettlementId>> = HashMap::new();
-        for sid in &settlement_ids {
-            if let Some(settlement) = resources.settlements.get(sid) {
-                let mut members: Vec<AgentId> = settlement.member_agents.iter().copied().collect();
-                members.sort_unstable();
-                for aid in members {
-                    memberships.entry(aid).or_default().push(*sid);
-                }
-            }
-        }
-
-        // Resolve only genuine double-membership, in sorted agent order.
-        let mut multi: Vec<(AgentId, Vec<SettlementId>)> = memberships
-            .into_iter()
-            .filter(|(_, rosters)| rosters.len() > 1)
+        // One ordered list avoids a separate allocation for every singleton roster.
+        let mut memberships: Vec<(AgentId, SettlementId)> = resources
+            .settlements
+            .iter()
+            .flat_map(|(&sid, settlement)| {
+                settlement.member_agents.iter().map(move |&aid| (aid, sid))
+            })
             .collect();
-        multi.sort_unstable_by_key(|(aid, _)| *aid);
+        memberships.sort_unstable();
 
-        for (aid, rosters) in multi {
+        for rosters in memberships.chunk_by(|left, right| left.0 == right.0) {
+            if rosters.len() < 2 {
+                continue;
+            }
+            let aid = rosters[0].0;
             let pos = match agent_positions.get(&aid).copied() {
                 Some(p) => p,
                 None => continue, // dead agent already dropped by retain; defensive
             };
-            let keeper = rosters.iter().copied().min_by_key(|sid| {
+            let keeper = rosters.iter().map(|&(_, sid)| sid).min_by_key(|sid| {
                 let ft = resources
                     .settlements
                     .get(sid)
@@ -393,7 +386,7 @@ impl SettlementSystem {
                 (manhattan(ft, pos), *sid)
             });
             if let Some(keep) = keeper {
-                for sid in rosters {
+                for &(_, sid) in rosters {
                     if sid != keep {
                         if let Some(settlement) = resources.settlements.get_mut(&sid) {
                             // Pass 19: removals are noted for the chronicle diff.
@@ -1439,6 +1432,166 @@ mod tests {
     use super::*;
     use sim_core::material::MaterialRegistry;
     use sim_engine::SimEngine;
+
+    // Frozen pre-optimization algorithm: retain map/group allocation and ordering.
+    fn original_resolve_exclusivity(
+        resources: &mut SimResources,
+        agent_positions: &HashMap<AgentId, (u32, u32)>,
+        removed: &mut Vec<(AgentId, SettlementId)>,
+    ) {
+        // Build agent → rosters map in sorted (settlement, member) order.
+        let mut settlement_ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+        settlement_ids.sort_unstable();
+        let mut memberships: HashMap<AgentId, Vec<SettlementId>> = HashMap::new();
+        for sid in &settlement_ids {
+            if let Some(settlement) = resources.settlements.get(sid) {
+                let mut members: Vec<AgentId> = settlement.member_agents.iter().copied().collect();
+                members.sort_unstable();
+                for aid in members {
+                    memberships.entry(aid).or_default().push(*sid);
+                }
+            }
+        }
+
+        // Resolve only genuine double-membership, in sorted agent order.
+        let mut multi: Vec<(AgentId, Vec<SettlementId>)> = memberships
+            .into_iter()
+            .filter(|(_, rosters)| rosters.len() > 1)
+            .collect();
+        multi.sort_unstable_by_key(|(aid, _)| *aid);
+
+        for (aid, rosters) in multi {
+            let pos = match agent_positions.get(&aid).copied() {
+                Some(p) => p,
+                None => continue, // dead agent already dropped by retain; defensive
+            };
+            let keeper = rosters.iter().copied().min_by_key(|sid| {
+                let ft = resources
+                    .settlements
+                    .get(sid)
+                    .map(|s| s.formation_tile)
+                    .unwrap_or((0, 0));
+                (manhattan(ft, pos), *sid)
+            });
+            if let Some(keep) = keeper {
+                for sid in rosters {
+                    if sid != keep {
+                        if let Some(settlement) = resources.settlements.get_mut(&sid) {
+                            // Pass 19: removals are noted for the chronicle diff.
+                            if settlement.remove_member_agent(aid) {
+                                removed.push((aid, sid));
+                            }
+                            // Pass 11 measurement (display only, every version).
+                            resources.tallies.exclusivity_moves += 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Recompute live-member counts AFTER exclusivity resolution.
+        for settlement in resources.settlements.values_mut() {
+            settlement.population_stats.current = settlement.member_agents.len() as u32;
+        }
+    }
+
+    #[test]
+    fn exclusivity_matches_original_rosters_and_resource_state() {
+        // Six bits enumerate every membership of two agents across three rosters.
+        for mask in 0_u32..64 {
+            for reverse in [false, true] {
+                for extreme in [false, true] {
+                    let mut actual = SimResources::new(8, 8, MaterialRegistry::new());
+                    let mut expected = SimResources::new(8, 8, MaterialRegistry::new());
+                    let mut ids = vec![3_u32, 7, 11];
+                    if reverse {
+                        ids.reverse();
+                    }
+                    for sid in ids {
+                        let slot = match sid {
+                            3 => 0,
+                            7 => 1,
+                            _ => 2,
+                        };
+                        let mut settlement = Settlement::new_with_id(sid, 100 + u64::from(sid));
+                        settlement.formation_tile = (slot * 4, 0);
+                        settlement.population_stats.current = 999;
+                        settlement.population_stats.total_births = sid;
+                        settlement.population_stats.total_deaths = 2;
+                        settlement.parent = Some(99);
+                        settlement.fission_pressure = 17;
+                        settlement.fission_threshold = 29;
+                        let mut members = vec![30, 40]; // Missing position and off-map position.
+                        for agent in 0..2_u32 {
+                            if mask & (1 << (slot * 2 + agent)) != 0 {
+                                members.push(u64::from(agent + 1));
+                            }
+                        }
+                        if sid == 7 {
+                            members.push(50);
+                        } // Singleton remains untouched.
+                        if reverse {
+                            members.reverse();
+                        }
+                        for aid in members {
+                            settlement.member_agents.insert(aid);
+                        }
+                        actual.settlements.insert(sid, settlement.clone());
+                        expected.settlements.insert(sid, settlement);
+                    }
+                    // Also exercise unconditional recount on an empty roster.
+                    let mut empty = Settlement::new_with_id(90, 77);
+                    empty.population_stats.current = 123;
+                    actual.settlements.insert(90, empty.clone());
+                    expected.settlements.insert(90, empty);
+                    let far = if extreme {
+                        (u32::MAX, u32::MAX)
+                    } else {
+                        (100, 100)
+                    };
+                    let positions =
+                        HashMap::from([(1, (2, 0)), (2, (6, 0)), (40, far), (50, (4, 0))]);
+                    actual.tallies.exclusivity_moves = 5;
+                    expected.tallies.exclusivity_moves = 5;
+                    let mut actual_removed = vec![(900, 91)];
+                    let mut expected_removed = actual_removed.clone();
+                    original_resolve_exclusivity(&mut expected, &positions, &mut expected_removed);
+                    SettlementSystem::new().resolve_exclusivity(
+                        &mut actual,
+                        &positions,
+                        &mut actual_removed,
+                    );
+                    assert_eq!(
+                        actual.settlements, expected.settlements,
+                        "mask={mask}, reverse={reverse}, extreme={extreme}"
+                    );
+                    assert_eq!(actual_removed, expected_removed);
+                    assert_eq!(
+                        actual.tallies.exclusivity_moves,
+                        expected.tallies.exclusivity_moves
+                    );
+                    assert_eq!(actual_removed[0], (900, 91));
+                    for settlement in actual.settlements.values() {
+                        assert_eq!(
+                            settlement.population_stats.current,
+                            settlement.member_agents.len() as u32
+                        );
+                    }
+                    assert!(actual
+                        .settlements
+                        .values()
+                        .filter(|s| s.settlement_id != 90)
+                        .all(|s| s.member_agents.contains(&30)));
+                }
+            }
+        }
+        let mut empty = SimResources::new(8, 8, MaterialRegistry::new());
+        let mut removed = vec![(900, 91)];
+        SettlementSystem::new().resolve_exclusivity(&mut empty, &HashMap::new(), &mut removed);
+        assert!(empty.settlements.is_empty());
+        assert_eq!(removed, vec![(900, 91)]);
+        assert_eq!(empty.tallies.exclusivity_moves, 0);
+    }
 
     #[test]
     fn hearth_first_formation_is_opt_in() {

@@ -86,6 +86,20 @@ def validate_bench_report(data, require_ceilings=True):
 def bench(config_path, log_dir):
     """3-round interleaved bench, BASE vs HEAD, medians compared."""
     config = load_config(config_path)
+    justified = None
+    if "bench_justified" in config:
+        declaration = config["bench_justified"]
+        if (not isinstance(declaration, dict)
+                or set(declaration) != {"scene", "metric", "quote"}
+                or any(not isinstance(value, str) for value in declaration.values())):
+            raise ValueError("bench_justified requires exactly scene, metric, quote strings")
+        scene, metric, quote = (declaration[key] for key in ("scene", "metric", "quote"))
+        if scene not in BENCH_SCENES or metric not in ("tick_mean_us", "tick_p99_us"):
+            raise ValueError("bench_justified has an unknown scene or metric")
+        if not quote.strip() or quote not in (ROOT / "CHANGELOG.md").read_text():
+            raise ValueError("bench_justified requires a nonempty exact CHANGELOG quote")
+        justified = (scene, metric)
+        print(f"bench justification: {scene}/{metric} cap=1.15 CHANGELOG quote={quote!r}")
     verify_binary(config["base_perf"], config["base_perf_sha256"])
     base_commit = config.get("base_commit")
     head_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
@@ -140,11 +154,19 @@ def bench(config_path, log_dir):
         np_ = sorted(scenes[name]["new_p99"])
         b_med = bm[len(bm) // 2]
         n_med = nm[len(nm) // 2]
-        ok_mean, ratio_mean = check_bench_ratio(b_med, n_med)
+        ok_mean, ratio_mean = check_bench_ratio(
+            b_med, n_med, 1.15 if justified == (name, "tick_mean_us") else 1.10)
         b_p99 = bp[len(bp) // 2]
         n_p99 = np_[len(np_) // 2]
-        ok_p99, ratio_p99 = check_bench_ratio(b_p99, n_p99)
-        verdict = "ok" if ok_mean and ok_p99 else "FAIL"
+        ok_p99, ratio_p99 = check_bench_ratio(
+            b_p99, n_p99, 1.15 if justified == (name, "tick_p99_us") else 1.10)
+        used_justification = False
+        for metric, ratio, ok in (("tick_mean_us", ratio_mean, ok_mean),
+                                  ("tick_p99_us", ratio_p99, ok_p99)):
+            if justified == (name, metric) and ratio > 1.10 and ok:
+                used_justification = True
+                print(f"JUSTIFIED {name}/{metric} ratio={ratio:.9f} cap=1.15")
+        verdict = ("JUSTIFIED" if used_justification else "ok") if ok_mean and ok_p99 else "FAIL"
         print(f"{name:<20} {b_med:>10.1f} {n_med:>10.1f} {ratio_mean:>8.3f} {verdict:>8}")
         if not ok_mean:
             failures.append(f"{name} tick mean x{ratio_mean:.3f}")
