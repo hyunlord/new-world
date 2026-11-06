@@ -490,6 +490,47 @@ fn house_preparation_matches_every_capacity_cell_origin_and_ranking_key() {
                     .steward
                     .vetoes
                     .insert(Target::Tile(hearth.0 + 2, hearth.1 + 2), 100);
+                let now = e.resources.current_tick;
+                e.resources
+                    .steward
+                    .vetoes
+                    .insert(Target::Tile(hearth.0 + 3, hearth.1 + 2), now);
+                e.resources
+                    .steward
+                    .vetoes
+                    .insert(Target::Teach(0, 0), now + 1);
+                e.resources
+                    .steward
+                    .vetoes
+                    .insert(Target::Tile(u32::MAX, u32::MAX), now + 1);
+                let (&tile, &zone) = e
+                    .resources
+                    .colony
+                    .zone_of_tile
+                    .iter()
+                    .next()
+                    .expect("stock tile");
+                e.resources
+                    .colony
+                    .zone_of_tile
+                    .insert((u32::MAX, u32::MAX), zone);
+                e.resources
+                    .steward
+                    .vetoes
+                    .insert(Target::Tile(tile.0, tile.1), now + 1);
+                let work = e
+                    .resources
+                    .colony
+                    .workshops
+                    .values()
+                    .next()
+                    .expect("workshop")
+                    .work_tile();
+                e.resources.colony.zone_of_tile.insert(work, zone);
+                e.resources
+                    .steward
+                    .vetoes
+                    .insert(Target::Tile(work.0, work.1), now + 1);
             }
             if phase == 3 {
                 let camp = crate::worldgen::colony::hearth(&e.resources).expect("camp");
@@ -516,8 +557,11 @@ fn house_preparation_matches_every_capacity_cell_origin_and_ranking_key() {
                     .map(|(x, y)| (x, y, width))
                     .collect();
                 assert_eq!(
-                    house_origins(&e.resources, width),
-                    expected,
+                    house_origins(&e.resources, width, &BTreeSet::new()).collect::<Vec<_>>(),
+                    expected
+                        .iter()
+                        .map(|&origin| (origin, false))
+                        .collect::<Vec<_>>(),
                     "origins seed={seed} phase={phase}"
                 );
                 for (x, y, _) in expected {
@@ -1364,4 +1408,86 @@ fn capped_house_commute_choice_keeps_occupied_reservations() {
         assert_eq!(blocked.covered, ready.covered);
     }
     assert_eq!(*e.resources.nav.stats.borrow(), before);
+}
+
+#[test]
+fn merged_house_origins_preserve_full_sorted_union() {
+    let e = engine(0);
+    for width in [2, 4, 6] {
+        for entries in [
+            vec![],
+            vec![(1, 1, width), (1, 1, width), (2, 2, width)],
+            vec![(1, 1, width - 1), (1, 1, width + 1), (2, 1, width)],
+            vec![
+                (0, 0, 0),
+                (u32::MAX, 0, width),
+                (0, u32::MAX, width),
+                (u32::MAX, u32::MAX, u32::MAX),
+            ],
+        ] {
+            let local: BTreeSet<_> = entries.into_iter().collect();
+            let expected: BTreeSet<_> = (1..e.resources.tile_grid.width.saturating_sub(1))
+                .flat_map(|x| {
+                    (1..e.resources.tile_grid.height.saturating_sub(1)).map(move |y| (x, y, width))
+                })
+                .chain(local.iter().copied())
+                .collect();
+            assert_eq!(
+                house_origins(&e.resources, width, &local).collect::<Vec<_>>(),
+                expected
+                    .into_iter()
+                    .map(|origin| (origin, local.contains(&origin)))
+                    .collect::<Vec<_>>()
+            );
+        }
+    }
+}
+
+#[test]
+fn item_capacity_predicate_matches_original_expression_on_every_cell() {
+    use crate::runtime::jobs::items::{has_wall, terrain};
+    use sim_core::{MaterialId, TerrainType};
+    for seed in [0, 6] {
+        let mut e = engine(seed);
+        crate::runtime::nav::ensure(&mut e.resources);
+        // Deliberately leave the cached navigation map stale after these mutations.
+        for (x, terrain_type) in [
+            (1, TerrainType::River),
+            (2, TerrainType::Mountain),
+            (3, TerrainType::Hill),
+            (4, TerrainType::Hill),
+        ] {
+            let i = e.resources.tile_grid.idx(x, 1);
+            e.resources.tile_grid.terrain_type[i] = terrain_type;
+            e.resources.tile_grid.set_ford(i, x == 1);
+            e.resources.tile_grid.set_dug(i, x == 4);
+        }
+        for x in [5, 6] {
+            let i = e.resources.tile_grid.idx(x, 1);
+            e.resources.tile_grid.terrain_type[i] = TerrainType::Plain;
+            e.resources.tile_grid.wall_material[i] = Some(MaterialId::from_str_hash("oak"));
+            e.resources.tile_grid.set_door(i, x == 6);
+        }
+        for baseline in [false, true] {
+            if baseline {
+                e.resources.rules.colony = None;
+            }
+            let res = &e.resources;
+            for tile in (0..res.tile_grid.width)
+                .flat_map(|x| (0..res.tile_grid.height).map(move |y| (x, y)))
+                .chain([(u32::MAX, 0), (0, u32::MAX), (u32::MAX, u32::MAX)])
+            {
+                let expected = matches!(terrain(res, tile), Some(t) if t != TerrainType::River && t != TerrainType::Mountain)
+                    && !res.building_kinds.contains_key(&tile)
+                    && !res.colony.occupied.contains_key(&tile)
+                    && (res.rules.colony.is_none()
+                        || (crate::runtime::nav::passable(res, tile) && !has_wall(res, tile)));
+                assert_eq!(
+                    can_hold_items(res, tile),
+                    expected,
+                    "seed={seed} baseline={baseline} tile={tile:?}"
+                );
+            }
+        }
+    }
 }

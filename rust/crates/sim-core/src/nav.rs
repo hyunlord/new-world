@@ -524,6 +524,140 @@ impl NavState {
         r != 0 && self.goal_regions(to).contains(&r)
     }
 
+    /// Preserve input order while filtering preview targets, without changing caches or stats.
+    pub fn preview_reachable_tiles(
+        &self,
+        from: Tile,
+        tiles: impl IntoIterator<Item = Tile>,
+    ) -> Vec<Tile> {
+        if !self.map.passable(from) {
+            return Vec::new();
+        }
+        let cached = self.regions.borrow();
+        let local;
+        let labels =
+            if cached.version == Some(self.version) && cached.labels.len() == self.map.cost.len() {
+                &cached.labels
+            } else {
+                local = Regions::compute(&self.map);
+                &local
+            };
+        let label = |tile| self.map.index(tile).map_or(0, |i| labels[i]);
+        let region = label(from);
+        tiles
+            .into_iter()
+            .filter(|&to| {
+                if self.map.passable(to) {
+                    return label(to) == region;
+                }
+                for dy in -1i64..=1 {
+                    for dx in -1i64..=1 {
+                        let (nx, ny) = (i64::from(to.0) + dx, i64::from(to.1) + dy);
+                        if (dx, dy) != (0, 0)
+                            && nx >= 0
+                            && ny >= 0
+                            && label((nx as u32, ny as u32)) == region
+                        {
+                            return true;
+                        }
+                    }
+                }
+                false
+            })
+            .collect()
+    }
+
+    /// Reachability for disposable previews, stopping when all goals are reached.
+    /// Does not populate region/path caches or update navigation statistics.
+    pub fn preview_reaches_all(&self, from: Tile, goals: impl IntoIterator<Item = Tile>) -> bool {
+        if !self.map.passable(from) {
+            return false;
+        }
+        let goals: std::collections::BTreeSet<_> = goals.into_iter().collect();
+        let mut remaining = goals.len();
+        if remaining == 0 {
+            return true;
+        }
+        let map = &self.map;
+        const SEEN: u8 = 1;
+        const TARGET: u8 = 2;
+        let mut flags = vec![0u8; map.cost.len()];
+        let mut targets = std::collections::BTreeMap::<usize, Vec<usize>>::new();
+        for (id, goal) in goals.into_iter().enumerate() {
+            let mut associated = false;
+            let mut associate = |tile| {
+                if let Some(i) = map.index(tile).filter(|&i| map.cost[i] != IMPASSABLE) {
+                    targets.entry(i).or_default().push(id);
+                    flags[i] |= TARGET;
+                    associated = true;
+                }
+            };
+            if map.passable(goal) {
+                associate(goal);
+            } else {
+                // Match reaches' forward neighbour casts, including MAX + 1 -> 0.
+                for dy in -1i64..=1 {
+                    for dx in -1i64..=1 {
+                        let (nx, ny) = (i64::from(goal.0) + dx, i64::from(goal.1) + dy);
+                        if (dx, dy) != (0, 0) && nx >= 0 && ny >= 0 {
+                            associate((nx as u32, ny as u32));
+                        }
+                    }
+                }
+            }
+            if !associated {
+                return false;
+            }
+        }
+        let mut fulfilled = vec![false; remaining];
+        let width = map.width as usize;
+        let start = (from.1 as usize) * width + from.0 as usize;
+        let mut queue = VecDeque::from([start]);
+        flags[start] |= SEEN;
+        while let Some(i) = queue.pop_front() {
+            let x = i % width;
+            if flags[i] & TARGET != 0 {
+                for &id in &targets[&i] {
+                    if !fulfilled[id] {
+                        fulfilled[id] = true;
+                        remaining -= 1;
+                    }
+                }
+            }
+            if remaining == 0 {
+                return true;
+            }
+            let mut visit = |j: usize| {
+                if flags[j] & SEEN == 0 && map.cost[j] != IMPASSABLE {
+                    flags[j] |= SEEN;
+                    queue.push_back(j);
+                }
+            };
+            if i >= width {
+                visit(i - width);
+            }
+            if x > 0 {
+                visit(i - 1);
+            }
+            if x + 1 < width {
+                visit(i + 1);
+            }
+            if i + width < map.cost.len() {
+                visit(i + width);
+            }
+        }
+        false
+    }
+
+    /// Exact path for disposable previews without a whole-map region precheck.
+    /// Search statistics are local to this state; normal path/memo contracts are unchanged.
+    pub fn preview_path(&self, from: Tile, to: Tile) -> Option<Arc<Vec<Tile>>> {
+        if !self.map.passable(from) || !self.map.passable(to) {
+            return self.path(from, to);
+        }
+        self.search(from, to).map(Arc::new)
+    }
+
     /// Whether `pos` counts as at `goal`: on it, or 8-adjacent to an impassable goal.
     pub fn arrived(&self, pos: Tile, goal: Tile) -> bool {
         pos == goal || (self.is_built() && chebyshev(pos, goal) == 1 && !self.map.passable(goal))

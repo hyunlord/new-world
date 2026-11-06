@@ -70,29 +70,28 @@ fn bills_locations(
     let mut ranked = footprint_size.map(|size| {
         let decorated: Vec<_> = locations
             .by_ref()
-            .enumerate()
-            .map(|(ordinal, (x, y))| {
+            .map(|(x, y)| {
                 let key = {
                     let work = sim_core::colony::workshop::work_tile_of((x, y), size);
+                    let work_distance = distance(work, hearth);
                     let usable = res.colony.zone_of_tile.contains_key(&work)
-                        || distance(work, hearth)
-                            <= crate::runtime::jobs::hearth::HEARTH_PILE_REACH;
+                        || work_distance <= crate::runtime::jobs::hearth::HEARTH_PILE_REACH;
                     (
                         !usable,
                         !crate::runtime::rooms::roofed(res, work),
-                        distance(work, hearth),
+                        work_distance,
                         distance((x, y), hearth),
                         y,
                         x,
                     )
                 };
-                Reverse((key, ordinal, (x, y)))
+                Reverse(key)
             })
             .collect();
         std::collections::BinaryHeap::from(decorated)
     });
     std::iter::from_fn(move || match ranked.as_mut() {
-        Some(heap) => heap.pop().map(|Reverse((_, _, tile))| tile),
+        Some(heap) => heap.pop().map(|Reverse((_, _, _, _, y, x))| (x, y)),
         None => locations.next(),
     })
 }
@@ -507,7 +506,10 @@ fn house_capacity(
     let mut capacity = vec![0usize; size];
     let mut stock_capacity = vec![0usize; size];
     let floor = bed.definition().completion == sim_core::colony::content::CompletionCategory::Floor;
-    let mut blocked = vec![false; res.tile_grid.len()];
+    const BLOCKED: u8 = 1;
+    const STOCKED: u8 = 2;
+    const VETOED: u8 = 4;
+    let mut flags = vec![0u8; res.tile_grid.len()];
     // With no people, cleared trees, and can_hold_items below, these are exactly
     // the remaining placement-preview blockers. Only Work reservations block.
     for tile in res
@@ -522,9 +524,23 @@ fn house_capacity(
             _ => None,
         }))
         .chain(res.colony.beds.keys().copied().filter(|_| !floor))
+        .chain(res.building_kinds.keys().copied())
+        .chain(res.colony.occupied.keys().copied())
     {
         if tile.0 < res.tile_grid.width && tile.1 < res.tile_grid.height {
-            blocked[res.tile_grid.idx(tile.0, tile.1)] = true;
+            flags[res.tile_grid.idx(tile.0, tile.1)] |= BLOCKED;
+        }
+    }
+    for &(x, y) in res.colony.zone_of_tile.keys() {
+        if x < res.tile_grid.width && y < res.tile_grid.height {
+            flags[res.tile_grid.idx(x, y)] |= STOCKED;
+        }
+    }
+    for (target, &until) in &res.steward.vetoes {
+        if let Target::Tile(x, y) = *target {
+            if res.current_tick < until && x < res.tile_grid.width && y < res.tile_grid.height {
+                flags[res.tile_grid.idx(x, y)] |= VETOED;
+            }
         }
     }
     // Exactly camp_reaches' invariant gate; use the building hearth, not the settlement anchor.
@@ -540,15 +556,13 @@ fn house_capacity(
         let mut stock_row = 0usize;
         for xx in 0..res.tile_grid.width {
             let tile = (xx, yy);
-            let stocked = res.colony.zone_of_tile.contains_key(&tile);
-            stock_row += usize::from(stocked);
+            let tile_flags = flags[res.tile_grid.idx(xx, yy)];
+            stock_row += usize::from(tile_flags & STOCKED != 0);
             row += usize::from(
-                !stocked
-                    && !blocked[res.tile_grid.idx(xx, yy)]
+                tile_flags == 0
                     && (!floor
                         || res.tile_grid.floor_material[res.tile_grid.idx(xx, yy)].is_none())
-                    && can_hold_items(res, tile)
-                    && !res.steward.vetoed(&Target::Tile(xx, yy), res.current_tick)
+                    && crate::runtime::jobs::items::unoccupied_tile_can_hold_items(res, tile)
                     && camp_region.is_none_or(|region| res.nav.reaches(region, tile)),
             );
             let i = (yy as usize + 1) * stride + xx as usize + 1;
@@ -576,10 +590,28 @@ fn rectangle_count(
         - prefix[bottom * stride + left]
 }
 
-fn house_origins(res: &SimResources, width: u32) -> BTreeSet<(u32, u32, u32)> {
-    (1..res.tile_grid.width.saturating_sub(1))
-        .flat_map(|x| (1..res.tile_grid.height.saturating_sub(1)).map(move |y| (x, y, width)))
-        .collect()
+fn house_origins<'a>(
+    res: &'a SimResources,
+    width: u32,
+    local: &'a BTreeSet<(u32, u32, u32)>,
+) -> impl Iterator<Item = ((u32, u32, u32), bool)> + 'a {
+    let mut global = (1..res.tile_grid.width.saturating_sub(1))
+        .flat_map(move |x| (1..res.tile_grid.height.saturating_sub(1)).map(move |y| (x, y, width)))
+        .peekable();
+    let mut local = local.iter().copied().peekable();
+    std::iter::from_fn(move || match (global.peek(), local.peek()) {
+        (Some(a), Some(b)) => match a.cmp(b) {
+            std::cmp::Ordering::Less => global.next().map(|origin| (origin, false)),
+            std::cmp::Ordering::Greater => local.next().map(|origin| (origin, true)),
+            std::cmp::Ordering::Equal => {
+                local.next();
+                global.next().map(|origin| (origin, true))
+            }
+        },
+        (Some(_), None) => global.next().map(|origin| (origin, false)),
+        (None, Some(_)) => local.next().map(|origin| (origin, true)),
+        (None, None) => None,
+    })
 }
 
 type HouseRank = (Reverse<usize>, bool, u32, u32, u32, u32, u32);
@@ -744,6 +776,63 @@ fn house(
         .map(|(_, pos)| (pos.x, pos.y))
         .collect();
     let people = BTreeSet::new();
+    let mut placement = Vec::<u8>::new();
+    // Per-call, pure placement checks: wall, door and bed have separate known/value bits.
+    let mut placeable = |slot: usize, tile: Tile| {
+        let grid = &res.tile_grid;
+        if tile.0 >= grid.width || tile.1 >= grid.height {
+            return false;
+        }
+        if placement.is_empty() {
+            placement.resize(grid.terrain_type.len(), 0);
+        }
+        let i = grid.idx(tile.0, tile.1);
+        let known = 1u8 << (slot * 2);
+        let value = known << 1;
+        if placement[i] & known == 0 {
+            let valid = crate::commands::check_space_after_tree_clear(
+                res,
+                &people,
+                [wall, door, bed][slot],
+                tile,
+                res.colony.trees.contains_key(&tile),
+            )
+            .is_ok();
+            placement[i] |= known | if valid { value } else { 0 };
+        }
+        placement[i] & value != 0
+    };
+    const KNOWN: u16 = 1;
+    const BOUNDS: u16 = 2;
+    const WALL: u16 = 4;
+    const TREE: u16 = 8;
+    const NODE: u16 = 16;
+    const OCCUPIED: u16 = 32;
+    const HOLDS_ITEMS: u16 = 64;
+    const STOCK: u16 = 128;
+    let mut geometry = Vec::<u16>::new();
+    let mut tile_facts = |tile: Tile| {
+        let grid = &res.tile_grid;
+        if geometry.is_empty() {
+            geometry.resize(grid.len(), 0);
+        }
+        // Candidate envelopes were checked in bounds before their tiles are visited.
+        let i = grid.idx(tile.0, tile.1);
+        if geometry[i] & KNOWN == 0 {
+            geometry[i] = KNOWN
+                | (u16::from(crate::runtime::rooms::bounds(res, tile)) * BOUNDS)
+                | (u16::from(crate::runtime::jobs::items::has_wall(res, tile)) * WALL)
+                | (u16::from(res.colony.trees.contains_key(&tile)) * TREE)
+                | (u16::from(res.colony.nodes.contains_key(&tile)) * NODE)
+                | (u16::from(
+                    crate::runtime::jobs::items::under_building(res, tile)
+                        || res.colony.beds.contains_key(&tile),
+                ) * OCCUPIED)
+                | (u16::from(can_hold_items(res, tile)) * HOLDS_ITEMS)
+                | (u16::from(res.colony.zone_of_tile.contains_key(&tile)) * STOCK);
+        }
+        geometry[i]
+    };
     let inside = |tile: Tile, x: u32, y: u32, width: u32, height: u32| {
         tile.0 > x && tile.0 <= x + width && tile.1 > y && tile.1 <= y + height
     };
@@ -756,7 +845,6 @@ fn house(
     };
     profile.phase(2);
     let mut local_origins = BTreeSet::new();
-    let mut origins = house_origins(res, width);
     // Adjacent aspect ratios search around service anchors; the original ratio retains its global fallback.
     for candidate_width in [width.saturating_sub(1).max(2), width, width + 1] {
         for anchor in stock.iter().copied().chain(std::iter::once(hearth)) {
@@ -766,35 +854,30 @@ fn house(
                 .max(1)..anchor.1
             {
                 for x in anchor.0.saturating_sub(candidate_width).max(1)..anchor.0 {
-                    origins.insert((x, y, candidate_width));
                     local_origins.insert((x, y, candidate_width));
                 }
             }
         }
     }
-    let locations: Vec<_> = origins
-        .into_iter()
-        .flat_map(|(x, y, width)| {
-            let mut heights = Vec::new();
-            let minimum_height = area.div_ceil(width).max(2);
-            if x + width + 2 >= res.tile_grid.width {
-                return heights;
+    let mut locations = Vec::new();
+    for ((x, y, width), is_local) in house_origins(res, width, &local_origins) {
+        let minimum_height = area.div_ceil(width).max(2);
+        if x + width + 2 >= res.tile_grid.width {
+            continue;
+        }
+        for height in minimum_height..=space.room_max_tiles / width {
+            if y + height + 2 >= res.tile_grid.height {
+                break;
             }
-            for height in minimum_height..=space.room_max_tiles / width {
-                if y + height + 2 >= res.tile_grid.height {
+            if free_cells(x, y, width, height) >= (beds + service_cells) as usize {
+                locations.push((x, y, width, height));
+                // Only bounded service-anchor origins explore alternative envelopes.
+                if !is_local {
                     break;
                 }
-                if free_cells(x, y, width, height) >= (beds + service_cells) as usize {
-                    heights.push((x, y, width, height));
-                    // Only bounded service-anchor origins explore alternative envelopes.
-                    if !local_origins.contains(&(x, y, width)) {
-                        break;
-                    }
-                }
             }
-            heights
-        })
-        .collect();
+        }
+    }
     profile.phase(3);
     profile.candidates(locations.len());
     // Only an enabled capped Wood policy admits new housing-clearance production.
@@ -854,6 +937,24 @@ fn house(
     let mut first_valid: Option<usize> = None;
     let mut scored = 0;
     let mut best: Option<(u32, HousePlan)> = None;
+    // Original-map accessibility is unchanged across candidate shells in this call.
+    let mut original_access: Option<Vec<Tile>> = None;
+    let mut permission = Vec::<u8>::new();
+    // Keep the first real query (including nav-cache warming), then reuse it in this call.
+    let mut permitted_tile = |tile: Tile| {
+        let grid = &res.tile_grid;
+        if tile.0 >= grid.width || tile.1 >= grid.height {
+            return permitted(res, tile);
+        }
+        if permission.is_empty() {
+            permission.resize(grid.len(), 0);
+        }
+        let i = grid.idx(tile.0, tile.1);
+        if permission[i] == 0 {
+            permission[i] = if permitted(res, tile) { 2 } else { 1 };
+        }
+        permission[i] == 2
+    };
     for (index, (x, y, width, height)) in locations.into_iter().enumerate() {
         // Bound both expensive scores and all additional candidate visits.
         if first_valid.is_some_and(|first| index > first + 256) || scored == 16 {
@@ -917,17 +1018,10 @@ fn house(
             } else {
                 (tile.0, tile.1 + 1)
             };
-            permitted(res, tile)
+            permitted_tile(tile)
                 && crate::runtime::nav::passable(res, outside)
-                && permitted(res, outside)
-                && crate::commands::check_space_after_tree_clear(
-                    res,
-                    &people,
-                    door,
-                    tile,
-                    res.colony.trees.contains_key(&tile),
-                )
-                .is_ok()
+                && permitted_tile(outside)
+                && placeable(1, tile)
         }) else {
             continue;
         };
@@ -938,19 +1032,20 @@ fn house(
         for yy in y..=y + height + 1 {
             for xx in x..=x + width + 1 {
                 let tile = (xx, yy);
-                if crate::runtime::rooms::bounds(res, tile) {
+                let facts = tile_facts(tile);
+                if facts & BOUNDS != 0 {
                     // Reuse constructed walls, but never substitute terrain for a house wall.
-                    if res.tile_grid.wall_material[res.tile_grid.idx(xx, yy)].is_none() {
+                    if facts & WALL == 0 {
                         valid = false;
                         break;
                     }
                     continue;
                 }
-                let tree = res.colony.trees.contains_key(&tile);
+                let tree = facts & TREE != 0;
                 if tree {
                     if !can_chop
                         || distance(tile, hearth) <= camp_radius
-                        || !permitted(res, tile)
+                        || !permitted_tile(tile)
                         || res
                             .colony
                             .designations
@@ -964,39 +1059,25 @@ fn house(
                 }
                 if xx == x || xx == x + width + 1 || yy == y || yy == y + height + 1 {
                     let kind = if tile == door_tile { door } else { wall };
-                    if !permitted(res, tile)
-                        || crate::commands::check_space_after_tree_clear(
-                            res, &people, kind, tile, tree,
-                        )
-                        .is_err()
-                    {
+                    if !permitted_tile(tile) || !placeable(usize::from(tile == door_tile), tile) {
                         valid = false;
                         break;
                     }
                     border.push(Command::PlaceBlueprint { kind, x: xx, y: yy });
                 } else {
-                    if res.colony.nodes.contains_key(&tile)
-                        || crate::runtime::jobs::items::has_wall(res, tile)
-                    {
+                    if facts & (NODE | WALL) != 0 {
                         valid = false;
                         break;
                     }
                     // Existing storage and finished structures remain untouched inside the shell.
-                    if crate::runtime::jobs::items::under_building(res, tile)
-                        || res.colony.beds.contains_key(&tile)
-                    {
+                    if facts & OCCUPIED != 0 {
                         continue;
                     }
-                    if !can_hold_items(res, tile) || !permitted(res, tile) {
+                    if facts & HOLDS_ITEMS == 0 || !permitted_tile(tile) {
                         valid = false;
                         break;
                     }
-                    if !res.colony.zone_of_tile.contains_key(&tile)
-                        && crate::commands::check_space_after_tree_clear(
-                            res, &people, bed, tile, tree,
-                        )
-                        .is_ok()
-                    {
+                    if facts & STOCK == 0 && placeable(2, tile) {
                         free.push(tile);
                     }
                 }
@@ -1107,15 +1188,22 @@ fn house(
         } else {
             crate::runtime::nav::build(res)
         });
-        let camp_region = future_nav.region_of(hearth);
-        let access: Vec<_> = actual_people
-            .iter()
-            .copied()
-            .chain(res.colony.workshops.values().map(|shop| shop.work_tile()))
-            .chain(res.colony.site_work_tiles.values().copied())
-            .chain(stock.iter().copied())
-            .filter(|&tile| future_nav.reaches(camp_region, tile))
-            .collect();
+        let access = original_access.get_or_insert_with(|| {
+            let original_nav = if res.nav.is_built() {
+                &res.nav
+            } else {
+                &future_nav
+            };
+            original_nav.preview_reachable_tiles(
+                hearth,
+                actual_people
+                    .iter()
+                    .copied()
+                    .chain(res.colony.workshops.values().map(|shop| shop.work_tile()))
+                    .chain(res.colony.site_work_tiles.values().copied())
+                    .chain(stock.iter().copied()),
+            )
+        });
         for command in &border {
             if let Command::PlaceBlueprint { kind, x, y } = command {
                 use sim_core::colony::content::PlannedNav;
@@ -1127,19 +1215,18 @@ fn house(
                 future_nav.set_cost((*x, *y), cost);
             }
         }
-        let future_region = future_nav.region_of(hearth);
-        if future_region == 0
-            || boundary
+        if !future_nav.preview_reaches_all(
+            hearth,
+            boundary
                 .iter()
                 .copied()
                 .chain(room.tiles.iter().copied().map(local))
-                .chain(access)
-                .any(|tile| !future_nav.reaches(future_region, tile))
-        {
+                .chain(access.iter().copied()),
+        ) {
             continue;
         }
         let score = if shortlist {
-            let Some(path) = future_nav.path(door_tile, hearth) else {
+            let Some(path) = future_nav.preview_path(door_tile, hearth) else {
                 continue;
             };
             let mut previous = door_tile;

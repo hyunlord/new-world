@@ -37,12 +37,16 @@ pub fn under_building(res: &SimResources, tile: (u32, u32)) -> bool {
 /// not under a building or site; in the colony (M3) also passable and not a
 /// wall or door, so a spill never lands where no one can walk.
 pub fn can_hold_items(res: &SimResources, tile: (u32, u32)) -> bool {
+    !under_building(res, tile) && unoccupied_tile_can_hold_items(res, tile)
+}
+
+/// Item terrain/access predicate for callers that have already excluded buildings and sites.
+pub(crate) fn unoccupied_tile_can_hold_items(res: &SimResources, tile: (u32, u32)) -> bool {
     matches!(
         terrain(res, tile),
         Some(t) if t != TerrainType::River && t != TerrainType::Mountain
-    ) && !under_building(res, tile)
-        && (res.rules.colony.is_none()
-            || (crate::runtime::nav::passable(res, tile) && !has_wall(res, tile)))
+    ) && (res.rules.colony.is_none()
+        || (crate::runtime::nav::passable(res, tile) && !has_wall(res, tile)))
 }
 
 /// Whether `tile` carries a wall or a door (M3).

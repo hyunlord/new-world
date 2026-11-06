@@ -18,6 +18,7 @@
 - Prioritize local conversational topics by existing decay deadlines within actual evening gatherings; retain learning/rehearsal limits, gains and decay. Teaching remains an explicit player/card command; expiry sends none. Survival tool production retains its immediate path.
 
 ### Fixed
+- Reduce repeated house-preview navigation, placement checks and geometry work while retaining candidate order, route choices, commands and live navigation statistics; strict frozen-fixture parity is required before adoption.
 - Require a passable public food-owner tile for availability and fresh target binding, matching real meal execution; adjacent construction access cannot make food under a wall site actionable or hide a farther edible stack.
 
 ### Validation checkpoint

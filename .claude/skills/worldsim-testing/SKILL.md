@@ -325,3 +325,8 @@ Two rendered frames do not guarantee that a wall-clock-throttled alert evaluator
 ### Isolated native builds need their compile-time repository inputs
 
 A Rust-only mirror may omit files referenced by multiline include_str calls outside rust/. Copy the exact required docs/assets and verify their content; do not "fix" secondary type errors caused by a missing include. Noninteractive services also need an explicit Cargo executable and the repository toolchain alias. Preserve failed setup logs separately and distinguish passing focused tests from a later failed release build. Sources: `rust/crates/sim-systems/src/lib.rs`; `rust/crates/sim-bridge/src/ffi/content.rs`; `docs/v8/m6b/M6B_DECISIONS.md` S1-CAL-45.
+
+### Disposable house previews (M6b Stage1)
+- Profile the actual delayed frame before changing policy: repeated whole-map region builds and overlapping geometry checks dominated ticks361/721. Call-local reuse may reduce computation, but candidate order, visit/score bounds, blocked/off-map goal semantics and final occupancy checks remain part of behavior.
+- Keep frozen candidate-order/path/command oracles and live navigation-stat controls. A read-only preview may reuse valid derived labels or compute local labels; it must not warm or mutate the live cache accidentally. Require exact whole-fixture equality and baseline identity before claiming preservation.
+- A 120-second one-zoom diagnostic is not step41 acceptance. Retain admission failures and unsuccessful trials, remove temporary instrumentation, then gate the committed candidate with both zooms and the unchanged waiver.
