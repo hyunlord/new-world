@@ -713,12 +713,17 @@ fn house(
     else {
         return HousePlan::default();
     };
+    let store = completion_role == Some(sim_core::rooms::RoomRole::Storehouse);
+    let refuge_width = hearth_refuge_width.filter(|&width| {
+        !store && !super::housing::hearth_is_sheltered(res, hearth, width * width)
+    });
     if !res.colony.space_sites.is_empty()
-        || (!reserve_only && world.query::<&ColonySite>().iter().next().is_some())
+        || (!reserve_only
+            && refuge_width.is_none()
+            && world.query::<&ColonySite>().iter().next().is_some())
     {
         return HousePlan::default();
     }
-    let store = completion_role == Some(sim_core::rooms::RoomRole::Storehouse);
     if [wall, door, bed]
         .iter()
         .filter(|&&kind| !store || kind != bed)
@@ -728,9 +733,6 @@ fn house(
     {
         return HousePlan::default();
     }
-    let refuge_width = hearth_refuge_width.filter(|&width| {
-        !store && !super::housing::hearth_is_sheltered(res, hearth, width * width)
-    });
     let service_cells = if refuge_width.is_some() {
         0
     } else {
@@ -1091,9 +1093,7 @@ fn house(
                 let tree = facts & TREE != 0;
                 if tree {
                     if !can_chop
-                        // The gather-radius policy protects unsolicited logging;
-                        // an authored refuge can request paid clearance of its chosen footprint.
-                        || (refuge_width.is_none() && distance(tile, hearth) <= camp_radius)
+                        || distance(tile, hearth) <= camp_radius
                         || !permitted_tile(tile)
                         || res
                             .colony
@@ -1915,7 +1915,25 @@ mod rule_coverage {
                 }
                 _ => {}
             }
-            let commands = plan(&engine.world, &engine.resources, rule);
+            let mut commands = plan(&engine.world, &engine.resources, rule);
+            if matches!(
+                rule.action,
+                Action::House {
+                    hearth_refuge_width: Some(_),
+                    ..
+                }
+            ) {
+                // A primary-hearth shell can initially contain people on its
+                // future wall. Use real movement within the authored retry
+                // horizon; never move people or bypass placement to satisfy coverage.
+                for _ in 0..rule.cooldown {
+                    if !commands.is_empty() {
+                        break;
+                    }
+                    engine.tick();
+                    commands = plan(&engine.world, &engine.resources, rule);
+                }
+            }
             assert!(!commands.is_empty(), "positive rule {}", rule.id);
             match &rule.action {
                 Action::Defence { .. } => continue,

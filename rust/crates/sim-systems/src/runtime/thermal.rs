@@ -76,6 +76,17 @@ pub fn place_temperature(res: &SimResources, tile: Tile) -> Option<i32> {
     outdoor_temperature(res)
 }
 
+/// Predict this hourly room integration without mutating state or charging fuel.
+/// `excluded_owner` omits that owner's existing receipt when deciding its heat demand.
+pub fn preview_room_temperature(
+    world: &World,
+    res: &SimResources,
+    room: u32,
+    excluded_owner: Option<SettlementId>,
+) -> Option<i32> {
+    heat::preview(world, res, room, excluded_owner)
+}
+
 /// Native felt temperature; worn condition remains owned by hourly apparel wear.
 pub fn felt_temperature(res: &SimResources, apparel: Option<&Apparel>, tile: Tile) -> Option<i32> {
     let state = res.thermal.as_ref()?;

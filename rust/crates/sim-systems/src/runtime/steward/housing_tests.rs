@@ -749,7 +749,22 @@ fn untouched_initial_world_can_plan_primary_hearth_refuge() {
             }
             // A person can occupy the chosen wall at tick zero. Preserve that
             // geometry and let actual movement and the ordinary steward run.
-            for _ in 0..=360 {
+            let interval = sim_engine::RuntimeSystem::tick_interval(&super::super::StewardSystem);
+            for _ in 0..=interval {
+                let pending_workshops: Vec<_> = engine
+                    .world
+                    .query::<&ColonySite>()
+                    .iter()
+                    .filter_map(|(entity, site)| {
+                        engine
+                            .resources
+                            .colony
+                            .site_work_tiles
+                            .get(&site.centre())
+                            .copied()
+                            .map(|work| (entity, *site, work))
+                    })
+                    .collect();
                 engine.tick();
                 if engine
                     .resources
@@ -758,6 +773,33 @@ fn untouched_initial_world_can_plan_primary_hearth_refuge() {
                     .iter()
                     .any(|order| order.rule == rules.rules[2].id)
                 {
+                    assert!(
+                        !pending_workshops.is_empty(),
+                        "pending workshop fixture must be exercised"
+                    );
+                    for (entity, site, work) in pending_workshops {
+                        if let Ok(current) = engine.world.get::<&ColonySite>(entity) {
+                            assert_eq!(
+                                *current, site,
+                                "refuge preserves pending workshop footprint"
+                            );
+                        } else {
+                            assert!(
+                                engine
+                                    .resources
+                                    .colony
+                                    .workshops
+                                    .values()
+                                    .any(|shop| shop.kind == site.kind
+                                        && shop.top_left == site.top_left),
+                                "site may only finish normally"
+                            );
+                        }
+                        assert!(
+                            engine.resources.nav.path(hearth, work).is_some(),
+                            "pending workshop remains accessible"
+                        );
+                    }
                     break;
                 }
             }

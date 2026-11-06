@@ -88,15 +88,26 @@ pub fn room_heat_needed(world: &World, resources: &SimResources, owner: Settleme
     let Some(thermal) = resources.thermal.as_ref() else {
         return false;
     };
-    let Some(tile) = room.tiles.first().copied() else {
+    let Some(temperature) =
+        crate::runtime::thermal::preview_room_temperature(world, resources, room.id, Some(owner))
+    else {
         return false;
     };
-    crate::runtime::thermal::place_temperature(resources, tile)
-        .is_some_and(|temperature| temperature < thermal.rules.cold_threshold_d10)
-        && world
-            .query::<(&Agent, &sim_core::components::Position)>()
-            .iter()
-            .any(|(_, (_, position))| room.tiles.contains(&(position.x, position.y)))
+    world
+        .query::<(
+            &Agent,
+            &sim_core::components::Position,
+            Option<&sim_core::colony::people::Apparel>,
+        )>()
+        .iter()
+        .any(|(_, (_, position, apparel))| {
+            let insulation = apparel
+                .and_then(|a| thermal.rules.apparel_insulation_d10.get(&a.top.item()))
+                .copied()
+                .unwrap_or(0);
+            room.tiles.contains(&(position.x, position.y))
+                && temperature + insulation < thermal.rules.cold_threshold_d10
+        })
 }
 
 /// Index into `burn_per_hour`: the current season, or 0 without seasons.

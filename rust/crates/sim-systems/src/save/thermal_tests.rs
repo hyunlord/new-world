@@ -249,7 +249,6 @@ fn current_custom_policy_keeps_numeric_thermal_through_registration_and_reload()
     }
 }
 
-
 #[test]
 fn disabled_thermal_activation_discards_stale_numeric_state() {
     let mut engine = SimEngine::new(8, 8, MaterialRegistry::new());

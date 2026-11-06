@@ -6,6 +6,7 @@
 
 BASE2는 아래 실제 게시 Stage2다. `e0d044f15` WIP를04:22:42KST에 `v8/m6b-review`로 push/readback했다. 이후 수정은 계속 진행 중이며 D-WIP-REVIEW에 따라2–3시간마다 갱신한다. `v8/main`은 전체 gate 통과 전 이동하지 않는다.
 
+- 연결 수정 중간 검증: mind217·steward128·저장 호환6개 및 원본17 검증 PASS. 초기0/4세계에서 실제 이동 뒤 tick361 피난 공간 명령을 수락했다. 남은 난방 예측 수정과 최종 통합 재검증, 새 smoke는 아직 완료되지 않았다.
 - 열·문·주거·데이터 선택 focused10개, 기존 방5개, 문 interval1개, 저장/tamper4개 PASS(`stage3/runtime-tests-04.log`, `runtime-doors-01.log`, `runtime-save-01.log`). 진짜 format17 선행 저장 증거는 별도 `predecessor17`와 `save-genuine1.log`에 보존한다. 전체 Clippy·identity·smoke·gate는 아직 완료되지 않았다.
 - 실제 장면 r5/r6은 기존 Shelter를 보존한5×6외곽/12칸 실내를 정상 건설했다. tick737 건설,901 실제 연료 지급 난방(실내5.3°C/외기−5.0°C),913 실제 문 통과와120틱 저장 연속을 확인했다. 이후 무지급 냉각과 주거2단계 하락도 관측했지만, 지정 관찰자가 연료 소진 전에 사망해 전체 장면은 **FAIL**이다. 원인 추적 중이며 완주·생존·캡처 PASS로 표현하지 않는다.
 - 고정5×5벽은 초기 Shelter와 충돌했다. 정상 건설 가능성만으로 최소 합법 외곽을 고르도록 시연 명령을 고쳤고 기존 구조물·열량·노출 수치를 바꾸지 않았다. 과거 r1–r6 실패를 외부 보존한다.

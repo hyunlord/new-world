@@ -60,10 +60,11 @@ fn loss(res: &SimResources, state: &ThermalState, tiles: &std::collections::BTre
             }
             let index = res.tile_grid.idx(nx, ny);
             total += if res.tile_grid.is_door(index) {
-                let open = state
-                    .doors
-                    .get(&tile)
-                    .map_or(0, |door| door.open_ticks_in_hour.min(60));
+                let open = state.doors.get(&tile).map_or(0, |door| {
+                    let mut projected = door.clone();
+                    super::doors::account(&mut projected, res.current_tick);
+                    projected.open_ticks_in_hour.min(60)
+                });
                 i64::from(rules.closed_door_loss)
                     + (i64::from(rules.open_door_loss - rules.closed_door_loss) * i64::from(open)
                         + 59)
@@ -85,7 +86,7 @@ fn loss(res: &SimResources, state: &ThermalState, tiles: &std::collections::BTre
     total
 }
 
-pub(super) fn integrate(world: &World, res: &SimResources, state: &mut ThermalState, outdoor: i32) {
+fn body_heat(world: &World, res: &SimResources, state: &ThermalState) -> BTreeMap<u32, i64> {
     let mut bodies: BTreeMap<u32, i64> = BTreeMap::new();
     for (_, (_, pos, child)) in world.query::<(&Agent, &Position, Option<&Child>)>().iter() {
         if let Some(room) = res.colony.room_of_tile.get(&(pos.x, pos.y)) {
@@ -96,42 +97,92 @@ pub(super) fn integrate(world: &World, res: &SimResources, state: &mut ThermalSt
             });
         }
     }
-    let mut temperatures = Vec::new();
-    for (&id, room) in &state.rooms {
-        let capacity =
-            i64::from(state.rules.capacity_per_tile) * i64::try_from(room.tiles.len()).unwrap_or(0);
-        let conductance = loss(res, state, &room.tiles);
-        let heaters = state
-            .paid_hearths
-            .values()
-            .filter(|paid| {
-                paid.tick == res.current_tick
-                    && paid.requested_wood > 0
-                    && paid.debited_wood == paid.requested_wood
-                    && room.tiles.contains(&paid.tile)
-                    && res.building_kinds.get(&paid.tile)
-                        == Some(&sim_core::components::BuildingKind::Hearth)
-            })
-            .map(|paid| paid.tile)
-            .collect::<std::collections::BTreeSet<_>>()
-            .len();
-        let heat = i64::from(state.rules.paid_hearth_heat) * i64::try_from(heaters).unwrap_or(0)
-            + bodies.get(&id).copied().unwrap_or(0);
-        let numerator = capacity
-            .checked_mul(i64::from(room.temperature_d10))
-            .and_then(|v| {
-                conductance
-                    .checked_mul(i64::from(outdoor))
-                    .and_then(|o| v.checked_add(o))
-            })
-            .and_then(|v| v.checked_add(heat));
-        if let Some(value) = numerator
-            .and_then(|n| n.checked_div_euclid(capacity + conductance))
-            .and_then(|n| i32::try_from(n).ok())
-        {
-            temperatures.push((id, value));
+    bodies
+}
+
+fn next_temperature(
+    res: &SimResources,
+    state: &ThermalState,
+    room: &RoomThermal,
+    outdoor: i32,
+    bodies: i64,
+    excluded_owner: Option<SettlementId>,
+) -> Option<i32> {
+    let capacity =
+        i64::from(state.rules.capacity_per_tile) * i64::try_from(room.tiles.len()).unwrap_or(0);
+    let conductance = loss(res, state, &room.tiles);
+    let heaters = state
+        .paid_hearths
+        .iter()
+        .filter(|(owner, paid)| {
+            Some(**owner) != excluded_owner
+                && paid.tick == res.current_tick
+                && paid.requested_wood > 0
+                && paid.debited_wood == paid.requested_wood
+                && room.tiles.contains(&paid.tile)
+                && res.building_kinds.get(&paid.tile)
+                    == Some(&sim_core::components::BuildingKind::Hearth)
+        })
+        .map(|(_, paid)| paid.tile)
+        .collect::<std::collections::BTreeSet<_>>()
+        .len();
+    let heat =
+        i64::from(state.rules.paid_hearth_heat) * i64::try_from(heaters).unwrap_or(0) + bodies;
+    let numerator = capacity
+        .checked_mul(i64::from(room.temperature_d10))
+        .and_then(|v| {
+            conductance
+                .checked_mul(i64::from(outdoor))
+                .and_then(|o| v.checked_add(o))
+        })
+        .and_then(|v| v.checked_add(heat));
+    numerator
+        .and_then(|n| n.checked_div_euclid(capacity + conductance))
+        .and_then(|n| i32::try_from(n).ok())
+}
+
+pub(super) fn preview(
+    world: &World,
+    res: &SimResources,
+    id: u32,
+    excluded_owner: Option<SettlementId>,
+) -> Option<i32> {
+    let state = res.thermal.as_ref()?;
+    let geometry = res.colony.rooms.get(&id).filter(|room| room.roofed)?;
+    let outdoor = super::outdoor_temperature(res)?;
+    let remapped;
+    let room = match state
+        .rooms
+        .get(&id)
+        .filter(|old| old.tiles == geometry.tiles)
+    {
+        Some(room) => room,
+        None => {
+            remapped = remap(res, state, outdoor);
+            remapped.get(&id)?
         }
-    }
+    };
+    let bodies = body_heat(world, res, state).get(&id).copied().unwrap_or(0);
+    next_temperature(res, state, room, outdoor, bodies, excluded_owner)
+}
+
+pub(super) fn integrate(world: &World, res: &SimResources, state: &mut ThermalState, outdoor: i32) {
+    let bodies = body_heat(world, res, state);
+    let temperatures: Vec<_> = state
+        .rooms
+        .iter()
+        .filter_map(|(&id, room)| {
+            next_temperature(
+                res,
+                state,
+                room,
+                outdoor,
+                bodies.get(&id).copied().unwrap_or(0),
+                None,
+            )
+            .map(|value| (id, value))
+        })
+        .collect();
     for (id, value) in temperatures {
         if let Some(room) = state.rooms.get_mut(&id) {
             room.temperature_d10 = value;

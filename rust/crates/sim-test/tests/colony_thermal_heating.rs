@@ -27,8 +27,9 @@ fn cold_room() -> (SimEngine, SettlementId, hecs::Entity, (u32, u32)) {
     let (_, person) = adults(&engine)[0];
     *engine.world.get::<&mut Position>(person).expect("position") = Position::new(tile.0, tile.1);
     engine.resources.rules.clock_offset_ticks = 0;
-    engine.resources.current_tick = 720;
+    engine.resources.current_tick = 21 * 1440 + 719;
     thermal::update_after_rooms(&mut engine.world, &mut engine.resources);
+    engine.resources.current_tick = 21 * 1440 + 720;
     let room = engine.resources.colony.room_of_tile[&tile];
     let state = engine.resources.thermal.as_mut().expect("thermal");
     state.rooms.get_mut(&room).expect("room").temperature_d10 = state.rules.cold_threshold_d10 - 1;
@@ -64,7 +65,7 @@ fn occupied_cold_room_pays_one_positive_daytime_charge() {
         .expect("thermal")
         .paid_hearths[&sid];
     assert_eq!((receipt.requested_wood, receipt.debited_wood), (rate, rate));
-    assert_eq!(receipt.tick, 720);
+    assert_eq!(receipt.tick, engine.resources.current_tick);
     assert_eq!(
         engine.resources.colony.item_ledger, ledger,
         "buffer fuel was already booked by existing transfer"
@@ -86,7 +87,7 @@ fn empty_warm_unroofed_or_nonprimary_room_does_not_request_heat() {
             1 => {
                 let state = engine.resources.thermal.as_mut().expect("thermal");
                 state.rooms.get_mut(&room).expect("room").temperature_d10 =
-                    state.rules.cold_threshold_d10;
+                    state.rules.cold_threshold_d10 + 1000;
             }
             2 => {
                 engine
@@ -239,3 +240,6 @@ fn baseline_has_no_physical_room_heating_service() {
     FireSystem::new().tick(&mut engine.world, &mut engine.resources);
     assert_eq!(wood(&engine, sid), before);
 }
+
+#[path = "colony_thermal_heating/preview.rs"]
+mod preview;

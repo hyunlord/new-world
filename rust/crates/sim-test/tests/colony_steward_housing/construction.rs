@@ -34,7 +34,7 @@ fn terrain_obstruction_still_builds_physical_beds_for_all_by_day10() {
     construction(true);
 }
 #[test]
-fn flatland_home_roofs_existing_stock_and_hearth() {
+fn flatland_rooms_roof_all_existing_stock_and_primary_hearth() {
     construction(false);
 }
 
@@ -142,21 +142,29 @@ fn construction(terrain: bool) {
         failure_state(&engine)
     );
     if !terrain {
-        assert!(
+        // The primary-hearth refuge and later sleeping/storage rooms may have
+        // separate roofs; every original coverage obligation remains physical.
+        let covered = |tile: &(u32, u32)| {
             engine
                 .resources
                 .colony
                 .rooms
                 .values()
-                .any(|room| physically_built(&engine, room)
-                    && room.tiles.contains(&hearth)
-                    && engine
-                        .resources
-                        .colony
-                        .zone_of_tile
-                        .keys()
-                        .all(|tile| room.tiles.contains(tile))),
-            "flatland shared home must retain all stock and hearth roofing"
+                .any(|room| physically_built(&engine, room) && room.tiles.contains(tile))
+        };
+        let uncovered_stock: Vec<_> = engine
+            .resources
+            .colony
+            .zone_of_tile
+            .keys()
+            .filter(|tile| !covered(tile))
+            .copied()
+            .collect();
+        assert!(
+            covered(&hearth) && uncovered_stock.is_empty(),
+            "flatland rooms must physically roof all stock and primary hearth: hearth_roofed={} uncovered_stock={uncovered_stock:?}\n{}",
+            covered(&hearth),
+            failure_state(&engine)
         );
     }
     assert!(engine.resources.colony.command_log.iter().filter(|record| matches!(&record.command,
