@@ -526,35 +526,6 @@ fn saturated_thirst_interrupts_food_walk_before_merely_critical_hunger() {
 }
 
 #[test]
-fn saturated_thirst_keeps_baseline_food_walk_priority() {
-    use sim_core::components::{Hunger, Thirst};
-    let mut world = hecs::World::new();
-    let person = world.spawn((
-        Agent { id: 7 },
-        Position::new(2, 2),
-        AgentState::Seeking {
-            target: TargetKind::Food,
-        },
-        SeekTarget { tile: (13, 2) },
-        Hunger::new(87.0, 0.0),
-        Thirst::new(100.0, 0.0),
-    ));
-    let mut r = sim_engine::SimResources::new(16, 8, sim_core::MaterialRegistry::new());
-    r.rules = WorldRules::baseline(0);
-    r.food_tiles.insert((13, 2), 2);
-    r.water_tiles.insert((2, 3), 2);
-    crate::runtime::baseline::decision::AgentDecisionSystem::new().tick(&mut world, &mut r);
-    assert_eq!(
-        *world.get::<&AgentState>(person).unwrap(),
-        AgentState::Seeking {
-            target: TargetKind::Food
-        }
-    );
-    assert_eq!(world.get::<&SeekTarget>(person).unwrap().tile, (13, 2));
-    assert_eq!(r.water_tiles[&(2, 3)], 2);
-}
-
-#[test]
 fn saturated_thirst_food_walk_guard_preserves_ineligible_cases() {
     use sim_core::components::{Hunger, Thirst};
     for case in [

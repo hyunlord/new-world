@@ -1,12 +1,14 @@
 # M6b 보고서
 
-**복원 확인:** 평가 소스 a4572b09c 대비 실행 코드·데이터 차이0, 테스트 계약3파일만 후속 변경이다. 다중 화덕 수정은 `v8/m6b-stage2-deferred`로 분리했다. BASE 한파25/29 대 후보29/30; 통나무 BASE 집계는 추가 관측 전 UNKNOWN이다. 기존 전체 gate 실행 대기.
+**현재 gate — FAIL 종료 (2026-11-06 15:53 KST).** 실제 실행 HEAD는 `ca21bd887cff0ff59819a000019a41410565d287`다. 단계16·33은 soil 스키마 오탐,42는 baseline 회귀시험의 colony 모듈 위치,41은 프레임 지연으로 실패했다. 나머지 실행 단계는 PASS다. debug3071/release3069시험, 기준선228748항목·64원시파일 동일성, 저장/replay, 교차 성능3회와 모든 colony 비교를 통과했다. 프레임 지연은 zoom1.0의321.109/131.282ms와 zoom0.5의329.555/129.260ms로 기존 예외의60ms 상한을 넘었다. 같은 tick361/721에서 StewardSystem이 각각 약310/114ms,317/115ms를 차지했다. 실패 원본을 보존하며 검사 수정·시험 이동·동작 동일 계산 최적화의 후속 검증과 게시가 남았다.
 
-**최신 오너 결정 — held-out03 게시 수용 ACCEPTED (2026-11-06, D-S1-3 날짜/제목 구분).** 기존 야간 제한 해제 D-S1-3은 보존하고, 이번 동명 결정은 게시 수용·계속 작업 결정으로 구분한다. 원래 held-out 수치는 여전히 FAIL이다: 느슨한 통나무27/32(필수28), 한파 장작 never-zero29/30노출(필수30). 오너가 이 결과를 Stage1 게시에 수용한 것이며 수치 PASS나 결함 해결로 다시 쓰지 않는다. 안전 기준과 원본 기록·소모 시드1648–1679는 유지한다. 추가 BASE 통나무 비교는 독립 산수 감사 전이므로 결과를 추정하지 않는다.
+**held-out03 오너 수용 ACCEPTED — D-S1-3 (2026-11-06 게시 결정).** 원시 통나무27/32(필수28)·한파29/30노출(필수30)은 FAIL로 보존한다. 같은 시드 BASE 비교는 투영 통나무0/32 대 후보27/32, 한파25/29 대 후보29/30이다. BASE의 실제 통나무 cap은 N/A이며 후보 고정 정책을 BASE 물리 상태에 읽기 전용으로 적용한 투영 예산이다. day5/day24 각각 BASE0/32·24/32, 후보32/32·27/32다. 추가 BASE 관측32시드의 원본 구간57373이벤트·800 after-expiry 항목·18841연대기 항목 중립성과96파일 해시를 확인했다. 후보 held-out 재실행은 없으며 안전 기준·원본 기록·소모1648–1679는 유지한다. 한파 실패1664는 양쪽 멸종이며 멸종 뒤 틱도 제외하지 않았다. 잔여는 [#688](https://github.com/hyunlord/new-world/issues/688) OPEN에 기록했다.
 
-게시 대상 동작은 held-out을 실행한 `a4572b09c4388837ae44f5605504d2468a675497`/`b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb`와 비동작 테스트·문서·gate 연결 수정이다. `acb31be40`의 planning.rs 두 화덕 수정은 Stage2로 이월한다. root가 planning.rs를 b3에서 복원하고 fixture 동작 핀을 b0로 돌리며 `cbe3586c3ececcf8be51551f68ffa5c46c516125`를 `v8/m6b-stage2-deferred`에 보존할 예정이다. 완료 전에는 이 계획을 실제 복원·push 결과로 주장하지 않는다.
+**복원된 게시 대상:** held-out 평가 동작 `a4572b09c4388837ae44f5605504d2468a675497`/`b0bfd8b84c289a59b6c05b55b0e2e9cc42708bdb` 대비 실행 코드·데이터 차이0, 테스트 계약·위치와 검사·문서만 후속 변경이다. fixture 동작 핀은 b0이며 다중 화덕 수정 `acb31be40`은 `v8/m6b-stage2-deferred`로 분리하여 Stage2에서 평가한다. 이전 cbe 게이트는 오너 결정으로 supervisor241/native−15 중단한 기록이며 PASS가 아니다. 기존 야간 제한 해제 D-S1-3(2026-11-05)과 게시 결정의 날짜를 구분한다.
 
-진행하던 cbe 전체 게이트는 오너 결정으로 supervisor241/native−15 중단했으며 PASS가 아니다. Stage1은 오너 step41 waiver를 명시한 전체 게이트1회를 진행하고, 새 Stage1 held-out·수정 보정 루프는 열지 않는다. 생략 승인된 단계는 실행 PASS로 표시하지 않는다. 이전48시간/13:16 종료는 이번 결정으로 대체됐고 Stage1 게시 후 Stage2·Stage3 각각24시간으로 계속한다. 아직 Stage1 게시·최종 게이트 완료를 주장하지 않는다. 아래 기록은 당시 결과/결정이며 이번 결정과 충돌하는 종료·재시도 지시는 과거 이력이다.
+**도구 줄 수:** Stage0 중단 `fd2f6d9f` 대비 ca21의 기존8개 tools 파일은795추가/81삭제, 순증714줄이다. 실제16·33 실패로 수정한 기존 `test_mart2_extensibility.py`는54추가/1삭제, 순증53줄이며 현재9개 파일 누계767줄(714+53)이다. 새 도구 파일은 없다. Stage0 잔존696줄은 별도다. BASE 추가 관측/시험의 외부 소스526줄(중복200·고유326)은 저장소 도구0줄이며 위 누계에 섞지 않는다.
+
+Stage1의 전체 gate1회·step41 예외 판정과 게시 결과는 실제 완료 증거로 확정한다. 새 Stage1 held-out·수정 보정 루프는 열지 않는다. 후속 Stage2+는 D-FEATURE-FIRST(2026-11-06 13:20)의 기능·기술 안전성 중심 규칙을 따르며 아래 당시 결과·진행·중단 문구는 역사 기록이다.
 
 **최신 상태 — 보정43 성능 재검증 FAIL, 보정44 격리 검증 중 (2026-11-06).** 보정43의 첫 엄격 비교 root81761은 script p99×1.138751 한 항목으로 FAIL이었다. S1-PERF-9는 기존 목표의 정당화 경로를 `n200_script/tick_p99_us≤1.15`에만 채택했다. CHANGELOG의 정확한 근거 문장은 “Goal section0 permits a documented performance remainder up to1.15. M6b Stage1 accepts only n200_script tick_p99_us up to1.15; every other scene/metric remains limited to1.10 and all absolute C3/RSS ceilings remain mandatory.”다. 기존 checker/시험의 순증96줄·38시험 PASS로 이 범위와 상한을 검증했으며 원본 FAIL은 그대로 보존한다.
 

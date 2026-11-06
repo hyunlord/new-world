@@ -23,13 +23,23 @@ agent-facing docs are English (`docs/ARCHITECTURE.md`, `docs/decisions/*`,
 
 ## Pass coordination (depth roadmap v2 §7)
 
-- Owner override 2026-11-05: no night restriction remains. Keep caffeinate running; timing admission, interleaving and the single measuring job rule below still apply. See M6B_DECISIONS D-S1-3.
+- Owner override 2026-11-05: no night restriction remains. Keep caffeinate running; timing admission, interleaving and the single measuring job rule below still apply. See M6B_DECISIONS D-S1-3 (2026-11-05, night restriction lifted; distinct from the 2026-11-06 publication decision).
 
 - Only one performance measurement job may run on this Mac at a time; overlapping measurements are both invalid. Admit each repetition at 1-minute load < 8 and interleave old/new binaries in the same session.
 - Use pass-local temporary issue IDs (for example M6A-1) before publication; at publication assign the next free ISS numbers after checking the current ledger.
 - Preserve both sides of documentation conflicts; stop and report code/data conflicts. A red gate means diagnose, fix and re-run; stop for code/data conflicts, an unfixable identity failure or the pass time limit.
-- A bar that scores 0/8 on the first calibration round is a suspected specification defect: stop, report the mechanism, and get the bar confirmed or withdrawn before freezing and spending a held-out set (owner decision O-2, 2026-10-31).
-- Held-out seed register: 1200–1231 M-UX2; 1232–1263 M-CORE; 1264–1295 M-CORE P-3d; 1296–1327 M6a. Allocate subsequent passes 32 seeds at a time from 1328 and record the allocation before evaluation. Calibrate on seeds 0–7 for at most four logged rounds; freeze before held-out and never tune on its results.
+- Historical rule (superseded for Stage2+ by D-FEATURE-FIRST below): a bar that scores 0/8 on the first calibration round is a suspected specification defect: stop, report the mechanism, and get the bar confirmed or withdrawn before freezing and spending a held-out set (owner decision O-2, 2026-10-31).
+- Historical evaluation rule/register (superseded for Stage2+ by D-FEATURE-FIRST below): 1200–1231 M-UX2; 1232–1263 M-CORE; 1264–1295 M-CORE P-3d; 1296–1327 M6a. Allocate subsequent passes 32 seeds at a time from 1328 and record the allocation before evaluation. Calibrate on seeds 0–7 for at most four logged rounds; freeze before held-out and never tune on its results.
+
+## Feature-first override — Stage2 onward (D-FEATURE-FIRST, 2026-11-06 13:20 KST)
+
+This owner decision supersedes conflicting O-2/calibration/held-out, arithmetic-derived improvement gates, BASE-relative performance publication bars and prior Stage2/3 time-budget wording for Stage2/3 and every later pass. Original goals and historical decisions/results remain unchanged; Stage1 still follows dated D-S1-3 (2026-11-06 publication acceptance), distinct from D-S1-3 (2026-11-05 night restriction lifted).
+
+- Retain technical blockers: determinism, byte-identical baseline, save/load roundtrip, command replay, exact ledger, no panics, tests/Clippy, and C3 time/memory ceilings. Performance ratios may be reported, but do not add a relative-performance tuning prerequisite beyond these ceilings.
+- Require a real scripted end-to-end game scene, captures at each step and a completion assertion, data-only tests per new content family, Korean/English text, feature diagnosis and chronicle. Weaving must physically harvest → ret → spin → weave → tailor → wear; do not inject intermediate outputs.
+- Run paired smoke seeds 0–7 × 48 days, steward ON, no orders. No candidate seed may be extinct when its paired BASE survives; total candidate KnowledgeLost must be ≤ 2 × BASE total + 2. Report both arms and exact configuration. Stage2 BASE is published Stage1; Stage3 BASE is published Stage2. This is a collapse floor, not balance acceptance.
+- Do not run held-out evaluation, calibration rounds, improvement-gate tuning or outcome-directed tuning until a balance pass; do not consume 1552–1583 or 1584–1615 under the superseded evaluation. Starting arithmetic is design guidance only. Keep every tunable in commented data and create/update the planned `docs/v8/BALANCE_DEBT.md` with feature, tunable, current value, intended effect and suspected issue; this instruction does not claim that file already exists.
+- Develop with focused tests, Clippy, identity and smoke; run one full publication gate with the existing step41 waiver. Technical failures remain failures. Publish at least every 24 working hours; if safety prevents publication within the budget, preserve the prior stop-unpublished/report/wait obligation. Combine adjacent feature work only when faster. New tooling requires an actual motivating failure and its line count in the report; add no observer/audit layers. Continue weaving, then temperature/house stages; send a Korean notice after each publication.
 
 ## Procedures
 

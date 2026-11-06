@@ -11,7 +11,8 @@
 The only UI schema exceptions are firewood DTO reads on the story receiver in
 story_text, learning_facts and ui_facts_adapter (including raw["story"] reads and
 row.merge DTO output keys in the adapter), and the meat locale parameter key
-in chronicle_text's StoryText.content_phrase call. Comparisons remain forbidden.
+in chronicle_text's StoryText.content_phrase call; and the exact field fertility DTO
+output and S1_FIELD_DETAIL/S1_FIELD_REQUIREMENTS parameter contexts. Comparisons remain forbidden.
 Both checks are shown to fail on a planted line (test_*_catches_*).
 """
 from __future__ import annotations
@@ -165,6 +166,30 @@ def schema_key(path: Path, tokens: list[Token], index: int, value: str) -> bool:
         line = [token.value for token in tokens[:index] if token.line == tokens[index].line]
         return (line[:5] == ["return", "StoryText", ".", "content_phrase", "("]
                 and before[-1:] in (["{"], [","]))
+    if value == "soil":
+        line = [token.value for token in tokens if token.line == tokens[index].line]
+        at = sum(token.line == tokens[index].line for token in tokens[:index])
+        tail = line[at + 1:]
+        boundary = line[at - 1:at] in (["{"], [","])
+        if relative == "scripts/ui/field_facts.gd":
+            return (line[:5] == ["result", ".", "append", "(", "{"] and boundary
+                    and tail[:5] == [":", "soil", "[", "i", "]"]
+                    and tail[5:6] in ([","], ["}"]))
+        if relative == "scripts/ui/panels/field_panel.gd":
+            detail = line[:10] == ["_text", ".", "text", "=", "_tr", "(",
+                                   '"S1_FIELD_DETAIL"', ")", ".", "format"]
+            requirements = line[:13] == ["_text", ".", "text", "+", "=", '"\\n"',
+                                        "+", "_tr", "(", '"S1_FIELD_REQUIREMENTS"',
+                                        ")", ".", "format"]
+            if detail:
+                return (boundary and tail[:5] == [":", "row", "[", '"soil"', "]"]
+                        and tail[5:6] in ([","], ["}"])
+                        or line[at - 3:at] == [":", "row", "["]
+                        and tail[:1] == ["]"] and tail[1:2] in ([","], ["}"]))
+            if requirements:
+                return (boundary and tail[:8] == [":", "definition", ".", "get", "(",
+                                                  '"min_fertility"', ",", "0"]
+                        and tail[8:9] == [")"] and tail[9:10] in ([","], ["}"]))
     return False
 
 
@@ -295,6 +320,34 @@ class ExtensibilityGrepTest(unittest.TestCase):
                              and ast.literal_eval(token.value) in {"firewood", "meat"})
                 value = ast.literal_eval(tokens[index].value)
                 self.assertEqual(schema_key(ROOT / relative, tokens, index, value), expected)
+
+    def test_soil_schema_contexts_are_narrow(self) -> None:
+        dto = 'result.append({"soil": soil[i]})'
+        detail = '_text.text = _tr("S1_FIELD_DETAIL").format({"soil": row["soil"]})'
+        requirements = '_text.text += "\\n" + _tr("S1_FIELD_REQUIREMENTS").format({"soil": definition.get("min_fertility", 0)})'
+        cases = [("scripts/ui/field_facts.gd", dto, True),
+                 ("scripts/ui/panels/field_panel.gd", detail, True),
+                 ("scripts/ui/panels/field_panel.gd", requirements, True)]
+        for path, source, _ in list(cases):
+            cases.extend([(path, 'kind == "soil"', False),
+                          ("scripts/world/view.gd", source, False)])
+        cases.extend([
+            ("scripts/ui/field_facts.gd", dto.replace("result", "other"), False),
+            ("scripts/ui/field_facts.gd", dto.replace("soil[i]", 'kind == "soil"'), False),
+            ("scripts/ui/panels/field_panel.gd", detail.replace("row[", "other["), False),
+            ("scripts/ui/panels/field_panel.gd", detail.replace("S1_FIELD_DETAIL", "OTHER"), False),
+            ("scripts/ui/panels/field_panel.gd", requirements.replace("definition.get", "other.get"), False),
+            ("scripts/ui/panels/field_panel.gd", requirements.replace("min_fertility", "kind"), False),
+            ("scripts/ui/panels/field_panel.gd", detail.replace('row["soil"]', 'row["soil"] == kind'), False),
+        ])
+        for relative, source, expected in cases:
+            with self.subTest(path=relative, source=source):
+                tokens, _ = scan(source)
+                indices = [i for i, token in enumerate(tokens)
+                           if token.kind == "string" and ast.literal_eval(token.value) == "soil"]
+                self.assertTrue(indices)
+                for index in indices:
+                    self.assertEqual(schema_key(ROOT / relative, tokens, index, "soil"), expected)
 
     def test_renderer_scope_includes_ui_and_shaders(self) -> None:
         files = renderer_files()

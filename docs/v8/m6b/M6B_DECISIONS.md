@@ -1154,3 +1154,26 @@ The previous48hour/13:16KST stop is superseded. Continue after Stage1 publicatio
 ### D-S1-3 복원 확인 — 2026-11-06
 
 `planning.rs`를 평가 소스 a4572b09c와 동일한 b3e8a5e64 blob으로 복원했다. Rust/scripts/assets/tools/project.godot 전체 차이는0ab75279d의 테스트3파일뿐이며 제품·데이터·게이트 동작 차이는 없다. fixture11개 SHA참조(상위1+항목10)를 b0bfd8b84로 복원했다. acb31be40의 생산1줄+회귀56줄 및 cbe3586c3의 해당 선언은 `v8/m6b-stage2-deferred`에 보존하고 Stage1에서는 제외한다. Stage2 시작 시 해당 수정만 재적용·평가한다. 원래 cbe 게이트는 오너 결정으로 중단(native−15/launcher241), PASS가 아니다. 새 전체 게이트의 기존 READ step41 예외는 완전한 두 zoom, 각50ms초과 최대2프레임·60ms초과0을 실제 검사한다. BASE 한파25/29 대 후보29/30, 후보 실패1664는 양쪽 멸종이며 원시 실패는 유지한다. 통나무 BASE는 기존 출력에 필드가 없어 UNKNOWN이며 동작 보존 추가 관측으로 수치를 확보한다.
+
+
+## D-FEATURE-FIRST — 2026-11-06 13:20 KST
+
+Owner decision, applies to Stage2/3 and every later pass. Stage1 publication remains governed by dated D-S1-3. Build working features and simulation first; balance separately. This replaces conflicting evaluation parts of the original goal and earlier plans.
+
+Publication blockers retained: determinism; byte-identical baseline; save/load roundtrip; command replay; exact ledger; no panics; tests/Clippy; C3 time and memory ceilings; a real scripted end-to-end game scene with each-step captures and a completion assertion; data-only tests per new content family; Korean/English text; feature diagnosis and chronicle. For weaving, harvest→ret→spin→weave→tailor→wear must execute physically, rather than injecting intermediate outputs.
+
+Smoke survival floor: paired seeds0–7,48days, stewardON,noorders. No candidate seed may be extinct if BASE survives that seed; total candidate KnowledgeLost≤2×BASE total+2. This detects collapse, not balance. Stage2 BASE is publishedStage1, Stage3 BASE is publishedStage2. Report exact configurations and both arms.
+
+Heldout evaluation, calibration rounds, arithmetic-derived improvement gates and tuning loops are removed until a balance pass. Do not consume1552–1583/1584–1615 under the superseded evaluation. Starting arithmetic remains design guidance only. Every tunable belongs in commented data and docs/v8/BALANCE_DEBT.md: feature,tunable,current value,intended effect,suspected issue. No outcome-directed tuning.
+
+Development uses focused tests,Clippy,identity,smoke; one full publication gate, with the existing step41waiver. A genuine technical failure remains a failure, not an improvement waiver. Publish at least every24workinghours; combining adjacent feature work is allowed only if faster. New tooling requires an actual motivating failure and line count in the report. No new observer/audit layers. Continue weaving then temperature/house stages; Korean notice after each publication.
+
+
+Scope clarification: this supersedes conflicting O-2, earlier held-out/calibration and BASE-relative performance publication prerequisites for Stage2 onward; C3 time/memory ceilings and technical invariants remain mandatory. Relative performance measurements may be reported without an outcome-directed tuning loop. The 24workinghour publication cadence replaces conflicting clock wording, not the safety-stop obligation: if safety prevents publication within the budget, stop unpublished, report and wait as previously required; technical failures cannot be relabeled as acceptance. BALANCE_DEBT.md is a required future artifact, not asserted to exist by this decision. Preserve the immutable goal and all Stage1 raw FAIL/owner ACCEPTED and actual gate outcomes. D-S1-3 (2026-11-05) refers to lifting the night restriction; D-S1-3 (2026-11-06) refers to Stage1 publication acceptance.
+
+
+### S1 publication gate ca21 — 2026-11-06
+
+The immutable full gate ended status1 at15:53:54KST. Steps16/33 incorrectly classified soil DTO/locale keys as content branches; restrict the exemption to exact field DTO/locale contexts and retain negative controls. Step42 found a baseline-only regression under colony mind tests; move the unchanged test to baseline tests, without weakening the isolation scanner. Integrated Python588, focused schema11, moved regression1 and registration4 tests pass. Tooling net+53lines in the existing checker; no new file.
+
+Step41 is a genuine technical failure outside the existing waiver: zoom1.0 frames321.109/131.282ms and zoom0.5 frames329.555/129.260ms. Native StewardSystem dominates at ticks361/721, with repeated house candidate navigation work. Do not alter simulation policy, candidate ordering, the frozen held-out acceptance, or the waiver. A computation-only optimization requires exact fixture parity before adoption. All other executed gate steps passed, including baseline byte identity, saved/replayed state, all colony fixture safety checks and admitted interleaved C3 benchmark. No publication is claimed for ca21. Evidence remains external under stage1/gate-attempts/s1-owner-ca21bd887 and stage1/owner-acceptance-03.
