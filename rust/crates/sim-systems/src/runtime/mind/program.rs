@@ -106,6 +106,9 @@ impl MindProgram {
                     fact.name.as_str(),
                     "warm_refuge_available"
                         | "warm_refuge_active"
+                        | "warm_refuge_here"
+                        | "warm_refuge_owned"
+                        | "recovery_needs_ready"
                         | "job_fuel_service"
                         | "health_full"
                 )

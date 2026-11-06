@@ -8,7 +8,9 @@
         // Full-health recovery hysteresis; 750 reuses the existing critical need boundary.
         (id: "warm_refuge_enter", band: "critical", behaviour: "warm_refuge", target: Some("warm_refuge"),
          when: [(fact: "cold", op: "has"),
+                (fact: "warm_refuge_owned", op: "not"),
                 (fact: "health_full", op: "not"),
+                (fact: "target_food", op: "not"), (fact: "target_water", op: "not"),
                 (fact: "warm_refuge_available", op: "has"),
                 (fact: "job_fuel_service", op: "not"),
                 (fact: "fleeing", op: "not"), (fact: "drafted", op: "not"),
@@ -18,15 +20,38 @@
          life_stages: ["adult", "child", "elder"], tags: ["thermal_recovery"],
          name_key: "MIND_BEHAVIOUR_REST", every_ticks: 1),
 
-        // Full-health recovery hysteresis; 750 reuses the existing critical need boundary.
+        // Recovery must permit the food/water prerequisites of existing natural healing.
         (id: "warm_refuge_recover", band: "critical", behaviour: "warm_refuge", target: Some("warm_refuge"),
          when: [(fact: "warm_refuge_active", op: "has"),
+                (fact: "recovery_needs_ready", op: "has"),
                 (fact: "health_full", op: "not"),
+                (fact: "target_food", op: "not"), (fact: "target_water", op: "not"),
                 (fact: "warm_refuge_available", op: "has"),
                 (fact: "job_fuel_service", op: "not"),
                 (fact: "fleeing", op: "not"), (fact: "drafted", op: "not"),
                 (fact: "hunger_tenths", op: "<", value: Some(750)),
                 (fact: "thirst_tenths", op: "<", value: Some(750))],
+         score: (constant: 1000, terms: []), hysteresis: 0,
+         life_stages: ["adult", "child", "elder"], tags: ["thermal_recovery"],
+         name_key: "MIND_BEHAVIOUR_REST", every_ticks: 1),
+
+        // An unavailable need source is not permission to transfer a recovery seat to leisure.
+        (id: "warm_refuge_wait", band: "critical", behaviour: "warm_refuge", target: Some("warm_refuge"),
+         when: [(fact: "warm_refuge_owned", op: "has"), (fact: "warm_refuge_active", op: "has"),
+                (fact: "health_full", op: "not"), (fact: "warm_refuge_available", op: "has"),
+                (fact: "hunger_actionable", op: "not"), (fact: "thirst_actionable", op: "not"),
+                (fact: "job_fuel_service", op: "not"),
+                (fact: "fleeing", op: "not"), (fact: "drafted", op: "not")],
+         score: (constant: 1000, terms: []), hysteresis: 0,
+         life_stages: ["adult", "child", "elder"], tags: ["thermal_recovery"],
+         name_key: "MIND_BEHAVIOUR_REST", every_ticks: 1),
+
+        // Need completion clears Activity; a warm injured resident need not get cold again.
+        (id: "warm_refuge_resume", band: "critical", behaviour: "warm_refuge", target: Some("warm_refuge"),
+         when: [(fact: "idle", op: "has"), (fact: "warm_refuge_here", op: "has"),
+                (fact: "health_full", op: "not"), (fact: "recovery_needs_ready", op: "has"),
+                (fact: "warm_refuge_available", op: "has"), (fact: "job_fuel_service", op: "not"),
+                (fact: "fleeing", op: "not"), (fact: "drafted", op: "not")],
          score: (constant: 1000, terms: []), hysteresis: 0,
          life_stages: ["adult", "child", "elder"], tags: ["thermal_recovery"],
          name_key: "MIND_BEHAVIOUR_REST", every_ticks: 1),
@@ -3602,6 +3627,7 @@
         (
             id: "continue_routine_sit_by_fire", band: "leisure", behaviour: "routine_sit_by_fire",
             when: [
+                (fact: "warm_refuge_owned", op: "not"),
                 (fact: "fleeing", op: "not", value: None),
                 (fact: "drafted", op: "not", value: None),
                 (fact: "activity_active", op: "has", value: None),

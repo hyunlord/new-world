@@ -918,6 +918,16 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
     fact!("job_fuel_service", Bool, |p, _c, r, _n| Ok(i64::from(
         super::refuge::fuel_job(p, r)
     ))),
+    fact!("warm_refuge_here", Bool, |p, _c, r, _n| Ok(i64::from(
+        super::refuge::here(p, r)
+    ))),
+    fact!("recovery_needs_ready", Bool, |p, _c, _r, _n| Ok(i64::from(
+        super::refuge::needs_ready(p)
+    ))),
+    fact!("warm_refuge_owned", Bool, |p, c, _r, _n| Ok(i64::from(
+        c.running(p.agent)?
+            .is_some_and(|running| !running.finished && running.behaviour == "warm_refuge")
+    ))),
 ];
 
 /// Validated function registry; binding resolves names once, outside the tick loop.
@@ -1823,6 +1833,8 @@ pub(super) fn continuation_supported(name: &str) -> bool {
         "cold"
             | "health_full"
             | "warm_refuge_active"
+            | "warm_refuge_owned"
+            | "recovery_needs_ready"
             | "stock_hoard_order"
             | "social_partner_present"
             | "social_chase_expired"

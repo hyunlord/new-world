@@ -11,6 +11,26 @@ pub(super) fn active(person: &PersonSnapshot) -> bool {
         .is_some_and(|a| a.kind == ActivityKind::SitByFire)
 }
 
+pub(super) fn here(person: &PersonSnapshot, res: &SimResources) -> bool {
+    let Some(thermal) = res.thermal.as_ref() else {
+        return false;
+    };
+    let tile = (person.position.x, person.position.y);
+    res.colony
+        .room_of_tile
+        .get(&tile)
+        .and_then(|room| res.colony.rooms.get(room))
+        .is_some_and(|room| room.roofed)
+        && thermal::felt_temperature(res, person.apparel.as_ref(), tile)
+            .is_some_and(|felt| felt >= thermal.rules.cold_threshold_d10)
+}
+
+pub(super) fn needs_ready(person: &PersonSnapshot) -> bool {
+    let ceiling = crate::runtime::survival::SAFE_NEED_CEILING;
+    person.hunger.is_none_or(|hunger| hunger < ceiling)
+        && person.thirst.is_none_or(|thirst| thirst < ceiling)
+}
+
 pub(super) fn fuel_job(person: &PersonSnapshot, res: &SimResources) -> bool {
     let Some(job) = person.job else {
         return false;
