@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-06 — M6b Stage1 세 번째 held-out1648–1679도 통나무·한파 FAIL로 미게시. 별도 소스 검토에서 다중 화덕의 겨울 비축량 누락을 확인해 계산1줄과 회귀 시험으로 수정했다. 기존 실패와 baseline 동일성35·새 사전 검증을 구분하며 최종 전체 gate·새 held-out은 아직 통과하지 않았다([보고서](v8/m6b/M6B_REPORT.md)).
+
 - 2026-11-05 — M6b Stage1 게시 후보 `a0ec36d1`: 농경·물리적 씨앗·토양, 생산 제한과 기존 땔감 주문 실행, 명시적 가르침을 구현. 보정26·일반 안전성34/34·BASE 동일성22차(228748값 차이0)·고정 카드 검사는 PASS; held-out·최종 gate·게시는 미완료이며 밭 아트는 [#687](https://github.com/hyunlord/new-world/issues/687)에 이월. [보고서](v8/m6b/M6B_REPORT.md), [ADR0058](decisions/0058-physical-cultivation-and-bounded-stewardship.md).
 
 - 2026-11-04 — M6b Stage0 중단·미게시(D-S0-1..4). 추가 도구408파일88,383줄을2파일696줄로 축소하고 게시된 M-LOOP/M-READ gate로 복귀했다. 상대 KnowledgeLost·생존 계약29테스트 PASS, 전체 generic gate/고의결함 증명 미완료는 [#685](https://github.com/hyunlord/new-world/issues/685)에 이월. Stage1 농경·#684로 전환하며 원래 실패와 raw는 보존한다.

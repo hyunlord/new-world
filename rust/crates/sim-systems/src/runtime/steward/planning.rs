@@ -1515,6 +1515,7 @@ fn winter_daily_fuel(res: &SimResources) -> u32 {
         .map_or(0, |rule| {
             u32::from(rule.burn_per_hour[3])
                 .saturating_mul(crate::runtime::settlement::firewood::burn_hours(&rule))
+                .saturating_mul(res.settlements.len().max(1) as u32)
         })
         .max(daily_fuel(res))
 }
@@ -1523,6 +1524,62 @@ fn winter_daily_fuel(res: &SimResources) -> u32 {
 mod tests {
     use super::*;
     use sim_core::colony::RecipeKind;
+    #[test]
+    fn winter_reserve_counts_each_hearth_before_comparing_current_demand() {
+        sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+            .expect("content");
+        let mut res = SimResources::new(16, 16, sim_core::MaterialRegistry::new());
+        res.rules = sim_core::rules::WorldRules::colony(0);
+        res.ticks_per_day = res.rules.calendar.ticks_per_day;
+        res.rules.clock_offset_ticks = 0;
+        res.current_tick = 7 * res.ticks_per_day + res.ticks_per_day / 2;
+        let data = sim_core::colony::steward::rules().expect("rules");
+        let Action::Bills {
+            winter_recipe,
+            days,
+            fuel: Some(policy),
+            ..
+        } = &data
+            .rules
+            .iter()
+            .find(|rule| rule.id == 9)
+            .expect("fuel")
+            .action
+        else {
+            panic!("fuel bills");
+        };
+        for (hearths, expected_target) in [(0u32, 296), (1, 296), (2, 588), (3, 880)] {
+            res.settlements.clear();
+            for id in 0..hearths {
+                res.settlements
+                    .insert(id, sim_core::components::Settlement::new_with_id(id, 0));
+            }
+            let count = hearths.max(1);
+            assert_eq!(daily_fuel(&res), 13 * count, "summer, hearths={hearths}");
+            assert_eq!(
+                winter_daily_fuel(&res),
+                39 * count,
+                "nominal winter, hearths={hearths}"
+            );
+            assert_eq!(
+                fuel_target(&res, *winter_recipe, *days, Some(policy)),
+                expected_target,
+                "rounded physical fuel, hearths={hearths}"
+            );
+        }
+        // Current demand already includes every hearth. Do not scale the max again.
+        res.rules
+            .society
+            .firewood
+            .as_mut()
+            .expect("firewood")
+            .burn_per_hour[1] = 5;
+        assert_eq!(daily_fuel(&res), 195);
+        assert_eq!(winter_daily_fuel(&res), 195);
+        res.rules.society.firewood = None;
+        assert_eq!(winter_daily_fuel(&res), 0);
+    }
+
     #[test]
     fn seasonal_fuel_rounds_real_recipe_batches_and_tools_have_no_fuel() {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)

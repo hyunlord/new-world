@@ -18,6 +18,8 @@ Count field intake only at completed meals. Carry outward-rounded integer fracti
 
 Correct #675 at the real daily expiry boundary: the same living settlement member must be awake, above the actual seek threshold, and lack actionable reachable edible food. Compare an instrumented BASE whose existing outputs remain identical before adopting a discriminatory bar. Zero/zero is diagnostic. Reuse the existing M6a summary for these concrete metrics; no new observer or receipt hierarchy is introduced.
 
+The nominal winter fuel floor is per physical settlement hearth, summed before comparison with current demand (which is already summed). S1-CAL-45 corrects the missing multiplier: nominal39 per hearth gives78 for two, and the existing six-day1250permille reserve rounds to588 fuel. Empty/single-hearth legacy behavior, reserve parameters and save layouts stay unchanged; this is an accounting correction, not a new cap or held-out exception.
+
 ## Alternatives considered
 
 - Add crops only when wild food is insufficient: rejected because measured gross wild supply would suppress adoption.

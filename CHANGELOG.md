@@ -1,6 +1,6 @@
 # Changelog
 
-## M6b Stage 1 — release candidate, 2026-11-05 (publication conditional)
+## M6b Stage 1 — development candidate, 2026-11-06 (not published)
 
 ### Added
 - Data-defined emmer/flax crops, physical seed and field jobs, persistent soil and crop failure causes; explicit field controls, cards, diagnosis, chronicle and chapter facts.
@@ -18,9 +18,11 @@
 - Prioritize local conversational topics by existing decay deadlines within actual evening gatherings; retain learning/rehearsal limits, gains and decay. Teaching remains an explicit player/card command; expiry sends none. Survival tool production retains its immediate path.
 
 ### Fixed
+- Count every physical settlement hearth in the nominal winter fuel floor before comparing already-summed current demand: two summer hearths reserve588 rather than296 firewood; single-hearth behavior and saved layouts are unchanged.
 - Require a passable public food-owner tile for availability and fresh target binding, matching real meal execution; adjacent construction access cannot make food under a wall site actionable or hide a farther edible stack.
 
 ### Validation checkpoint
+- Frozen1648–1679 also fails acceptance: logs27/32 and cold29/30 exposed; all other frozen bars pass. These seeds remain spent. A separate source-proven multi-hearth accounting repair passes its original-failing regression, current preflight, fixed performance and baseline identity35; remaining qualification and a fresh held-out are not implied.
 - Goal section0 permits a documented performance remainder up to1.15. M6b Stage1 accepts only n200_script tick_p99_us up to1.15; every other scene/metric remains limited to1.10 and all absolute C3/RSS ceilings remain mandatory.
 - Cal43's fixed three-pair Mac comparison at load1<8 measured script p99 1009→1149us (1.138751), preserving the original1.10 FAIL. Script mean515.259→530.564us (1.0297) and n2000 mean1.0898 pass1.10. Both script arms retain200 residents; jobs taken1052→1443 and completed797→1037 describe the changed workload, not a population normalization or isolated causal explanation of the tail. The accepted tradeoff retains the qualified farming/food/survival behavior after exact navigation, snapshot, memory, roster and social-lookup optimizations; new held-out and full-gate evidence remain required. This allowance is capped, scene/metric-specific and must be evidenced by the actual gate; supplemental DGX cal39 script1.161806 remains FAIL and is not covered.
 - Runtime candidate `a0ec36d1`: calibration-26 PASS, ordinary relative-safety fixtures 34/34 PASS, strict baseline identity run22 PASS (228,748 values, zero differences). Fixed-card validation: 16 paired runs, 14 kinds and 18 command routes PASS, with zero rejected commands.
