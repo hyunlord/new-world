@@ -1,5 +1,17 @@
 # M6b 보고서
 
+## M6b 종료 — D-S3-STOP (2026-11-07 14:05 KST)
+
+오너 결정으로 **M6b는 Stage2 게시본 `90544f1f9270cb6c72906eef93ad9171442d5e54`에서 완료**한다. Stage2는 실제 전체 gate49/49·종료0 후11/07 04:02:56KST에 wip→main 게시했으며, 실제 직조 사슬·저장 연속·baseline identity·smoke·C3를 통과했다(기존 step41 예외 적용). 원본 게시 증거는 외부 `stage2/publication.json` 및 `stage2/gate-attempts/s2-90544f1f9`에 보존한다. 아래 게시 후보 기록은 당시 이력이다.
+
+### Stage3 취소 — 미게시
+
+온도 모델은 **취소**하며 고치기·수치 조정·재시도를 하지 않는다. WIP는 `v8/m6b-review`의 `4f2a21150aeafc626acb2cee3af714c3ed8f401d`에 그대로 둔다. seeds0–7·48일·집사 ON·무명령 smoke에서 BASE 생존 `[10,12,11,13,10,13,11,14]`, 후보 `[0,0,0,0,10,0,0,0]`; KnowledgeLost는 BASE `[0,0,0,0,0,0,0,0]`, 후보 `[24,21,23,25,0,21,23,26]`(총163/허용2)이다. 피해 결합으로7/8세계가 붕괴했고 전체 시연도 실패했다. 이는 수용이나 안전 기준 완화가 아니다.
+
+집 단계 [#665](https://github.com/hyunlord/new-world/issues/665)·시대 게이지 [#668](https://github.com/hyunlord/new-world/issues/668)는 **M-SPINE**으로 이동한다. 체감 온도 모델은 [CONTENT_DEBT](../CONTENT_DEBT.md)와 [#691](https://github.com/hyunlord/new-world/issues/691)에 남기고 M-GROW 또는 M-BAL에서 재연결한다. 열 모델 코드·데이터는 게시본에 연결하지 않는다.
+
+이번 종료 게시물은 Stage2를 부모로 하는 **문서 전용 변경**이다. D-S3-STOP에 따라 docs 검사만 수행하고 전체 gate·열 실험은 실행하지 않는다. 최종 원격 SHA는 게시 후 종료 메시지와 외부 `closeout-d-s3-stop` 영수증에 기록한다.
+
 ## Stage2 게시 후보 — 2026-11-07, 첫 전체 gate FAIL·수리 검증 중
 
 기능 소스는 `448f660164f8ac3663402549931af7742395ca1b`이며 최종 문서 핀 후 전체 gate를 실행한다. 통과한 실제 최종 SHA만 v8/wip → v8/main에 게시하고 외부 영수증으로 확인한다. 이 문서는 완료 전 게시를 주장하지 않는다.
