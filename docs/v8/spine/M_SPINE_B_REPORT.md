@@ -78,6 +78,28 @@ DEBUG에서 실제 이름이 기록된19개 FAIL을 확인해 **ABORTED**했다.
 `ABORTED_DEBUG_FAILURE.json`, `test_debug.log`, `gate.txt`를 보존한다.
 전체 단계 완료나49PASS가 아니며 crash detector red도 아니다. Inert 전환은0회다.
 
+B2 전체 게이트(`fullgate-b-attempt2`, `d575f90bab835e35aac62126abc40260790a932f`)는
+1–15단계가 실제 exit0이었다. DEBUG3177/0FAIL/14ignored,
+RELEASE도 exit0/0FAIL/14ignored이며 원본 요약은 `passed inf`다.
+두 bootstrap 자식 결과행의 stdout 교차 출력이 원인으로, 온전한 행3175와
+분리된 자식1+1을 합한 복원 집계3177을 외부 영수증에 기록했다.
+이는 고유 테스트 수 주장이 아니며 원본을 수정하지 않았다. baseline228748값
+차이0·단측0, 연대기64파일19683항목·raw64파일 일치와 결정론도 통과했다.
+16단계 Python597검사 중 `test_no_sixteen_pixel_tile_literal`1개가 실제 실패했다.
+새 overlay의 절대 anchor와 미사용 preview 기본값이 원인이며 테스트를 완화하지 않았다.
+검증된 root 소유8프로세스만 종료해 외부 종료-15/셸241과
+`ABORTED_PYTHON_UNITTEST_FAILURE.json`을 남겼다. B2 전체 통과·게시·crash red가 아니다.
+후속3GDScript 변경은 실제 texture 크기로 anchor를 계산해32×32의16,28을
+유지하고, 읽지 않는 tile_pixels 선언과 유일 setter를 제거한다.
+새 SHA의 전체 게이트와 새 native 실행은 대기하며 기존 통과를 이어붙이지 않는다.
+수정 후 Python 전체597검사 PASS73.958초·GDScript86파일/FFI79호출 PASS,
+문서 검사 PASS를 확인했다. 독립 읽기전용3파일 검토에서 P1/P2는 없었다.
+
+최종 d575 native의 실제 assertions는 **1895=852+852+82+109**다.
+앞선1897은 extension receipt2행을 포함한 행 수였고 검사 수 표현을 정정한다.
+4case exit0·0FAIL/0GAP/콘솔 오류0·PNG90장과 정확한 실행 전후 pins는 유지한다.
+기존1897 표기는 해당 역사적 집계이며 새 SHA의 성공으로 소급하지 않는다.
+
 후속 수정은 Rust7파일에 한정했다. m6a apple/hut fixture는 선언 비용 합을
 사용하도록 고쳐 해당 시험8PASS를 확인했다. synthetic v11은 당시 없던
 BuildingTemplateSystem을 제외하고 허용된 결정 시스템 이름 변환 외 slot bytes를

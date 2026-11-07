@@ -9,7 +9,6 @@ var template_rotation: int = 0
 var anchor: Vector2i = Vector2i.ZERO
 var footprint: Vector2i = Vector2i.ONE
 var preview: Dictionary = {}
-var tile_pixels: float = 16.0
 var _world: Node
 var _query: Array[Variant] = []
 var _draw_scale: float = 0.0

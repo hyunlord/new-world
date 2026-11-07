@@ -249,7 +249,7 @@ func _stack_texture(id: String, copies: int, kind: int = -1) -> Array:
 	var out: Array = [null, Vector2i.ZERO]
 	var procedural: bool = kind >= 0 and ItemIcons.uses_placeholder(kind)
 	var texture: Texture2D = ItemIcons.texture_of(kind) if procedural else ArtData.texture(id)
-	var anchor: Vector2i = Vector2i(16, 28) if procedural else ArtData.anchor(id)
+	var anchor: Vector2i = Vector2i(floori(texture.get_width() * 0.5), texture.get_height() - 4) if procedural and texture != null else ArtData.anchor(id)
 	if copies <= 1:
 		out = [texture, anchor]
 	else:

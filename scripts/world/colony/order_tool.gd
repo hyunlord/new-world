@@ -146,7 +146,6 @@ func _ready() -> void:
 	_template_preview = TemplatePreview.new()
 	_template_preview.name = "TemplatePreview"
 	_template_preview.scale = Vector2.ONE * View.TILE
-	_template_preview.set("tile_pixels", float(View.TILE))
 	add_child(_template_preview)
 	_template_preview.call("configure", _world_sim)
 	_template_preview.hide()
