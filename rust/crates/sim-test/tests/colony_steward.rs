@@ -76,7 +76,13 @@ fn player_cancellation_blocks_the_rule_for_two_days_and_scope_is_saved() {
                 if *rule == order.0
                     && matches!(**command, Command::AddStockpile { .. }))
     }));
-    assert!(!engine.resources.colony.command_log.iter().any(|r| matches!(&r.command,Command::Steward{command,..} if matches!(**command,Command::PlaceBlueprint{kind:sim_core::colony::BlueprintKind::Bedroll,..}))));
+    assert!(!engine.resources.colony.command_log.iter().any(|r| matches!(&r.command,
+        Command::Steward { command, .. } if match &**command {
+            Command::PlaceBlueprint { kind: sim_core::colony::BlueprintKind::Bedroll, .. } => true,
+            Command::BuildTemplate { id, .. } => sim_core::colony::content::installed_or_bundled()
+                .building_templates().get(id).is_some_and(|template| template.category == sim_core::colony::building_template::BuildingCategory::Dwelling),
+            _ => false,
+        })), "Food scope must not request either legacy beds or template dwellings");
     let bytes = sim_systems::save::save(&mut engine).expect("save");
     let mut loaded = sim_systems::save::load(&bytes).expect("load");
     assert_eq!(engine.resources.steward, loaded.resources.steward);
@@ -355,20 +361,7 @@ fn assert_completed_bed_assignment(engine: &mut sim_engine::SimEngine) {
     for _ in 0..1440 {
         engine.tick();
     }
-    assert!(
-        engine
-            .resources
-            .colony
-            .command_log
-            .iter()
-            .any(|record| matches!(&record.command,
-        Command::Steward { command, .. } if matches!(**command,Command::SetRoomRole{..}))
-                && record.result.accepted),
-        "ordinary House role completion; tick={} rooms={:?} overrides={:?}",
-        engine.current_tick(),
-        engine.resources.colony.rooms,
-        engine.resources.colony.room_overrides
-    );
+    assert_template_completions(engine);
     assert_eq!(
         engine.resources.bed_of.len(),
         engine
@@ -377,24 +370,94 @@ fn assert_completed_bed_assignment(engine: &mut sim_engine::SimEngine) {
             .iter()
             .count()
     );
-    assert!(
-        engine
+    let capacities = construction::physical_capacity(engine);
+    let mut assigned = std::collections::BTreeMap::new();
+    for (_, agent) in engine.world.query::<&sim_core::components::Agent>().iter() {
+        let tile = engine
             .resources
             .bed_of
-            .values()
-            .all(|&tile| sim_systems::runtime::rooms::roofed_as(
-                &engine.resources,
-                tile,
-                sim_core::rooms::RoomRole::Bedroom
-            )),
-        "actual BedAssignmentSystem prefers the enclosed beds"
-    );
+            .get(&agent.id)
+            .expect("each living agent has a bed");
+        *assigned.entry(*tile).or_insert(0usize) += 1;
+    }
+    for (tile, count) in assigned {
+        assert!(capacities.get(&tile).is_some_and(|capacity| count <= *capacity),
+            "assignment {tile:?} count={count} must fit a physically intact reachable Hut or enclosed bedroom bed: {capacities:?}");
+    }
     println!(
-        "D27 role proof: tick={} assigned_roofed_bedroom_beds={}",
+        "physical housing proof: tick={} assigned={} capacities={capacities:?}",
         engine.current_tick(),
         engine.resources.bed_of.len()
     );
     assert_role_completion_replay_and_player_intent(engine, &baseline, start);
+}
+
+fn assert_template_completions(engine: &sim_engine::SimEngine) {
+    use sim_core::{
+        chronicle::{CauseRef, ChronicleKind},
+        colony::{content::installed_or_bundled, BuildingStatus},
+    };
+    let catalog = installed_or_bundled().building_templates();
+    let completed: Vec<_> = engine
+        .resources
+        .colony
+        .buildings
+        .sites
+        .values()
+        .filter(|site| {
+            site.status == BuildingStatus::Complete
+                && catalog.get(&site.template).is_some_and(|template| {
+                    template.category
+                        == sim_core::colony::building_template::BuildingCategory::Dwelling
+                })
+        })
+        .collect();
+    assert!(
+        !completed.is_empty(),
+        "real template construction must finish"
+    );
+    for site in completed {
+        assert!(sim_systems::runtime::building_templates::is_intact(
+            &engine.resources,
+            site
+        ));
+        let index = site.completion_entry.expect("completion chronicle");
+        let entry = engine
+            .resources
+            .chronicle
+            .entry(index)
+            .expect("retained completion");
+        assert_eq!(entry.kind, ChronicleKind::BuildingComplete);
+        assert_eq!(
+            entry.value,
+            catalog
+                .buildings
+                .iter()
+                .position(|template| template.id == site.template)
+                .expect("known template") as i64
+        );
+        let expected = CauseRef::Building {
+            site: site.id,
+            record: site.source_record,
+            origin: site.cause,
+        };
+        assert_eq!(engine.resources.chronicle.cause_of(index), Some(expected));
+        assert_eq!(
+            engine
+                .resources
+                .chronicle
+                .causes()
+                .filter(|(_, cause)| *cause == expected)
+                .count(),
+            1,
+            "one completion per site generation"
+        );
+        let source = &engine.resources.colony.command_log[site.source_record as usize];
+        assert!(
+            source.result.accepted
+                && matches!(&source.command, Command::Steward { rule: 3, command } if matches!(&**command, Command::BuildTemplate { id, .. } if *id == site.template))
+        );
+    }
 }
 
 fn assert_role_completion_replay_and_player_intent(
@@ -436,24 +499,10 @@ fn assert_role_completion_replay_and_player_intent(
         sim_systems::save::save(engine).expect("live"),
         sim_systems::save::save(&mut replay).expect("replay")
     );
-    assert_eq!(engine.resources.colony.command_log.iter().filter(|r| matches!(&r.command,Command::Steward{command,..} if matches!(**command,Command::SetRoomRole{..}))).count(),1,"completion is not duplicated");
-    for scope in [StewardScope::Food, StewardScope::Housing] {
-        let mut gated = sim_systems::save::load(baseline).expect("gated baseline");
-        assert!(submit(&mut gated, Command::SetSteward { on: true, scope }).accepted);
-        if scope == StewardScope::Housing {
-            gated.resources.steward.cooldowns.insert(3, start + 1440);
-        }
-        for _ in 0..1440 {
-            gated.tick();
-        }
-        assert!(!gated.resources.colony.command_log.iter().any(|r| matches!(&r.command,Command::Steward{command,..} if matches!(**command,Command::SetRoomRole{..}))),"scope or cooldown gates completion");
-        if scope == StewardScope::Housing {
-            for _ in 0..360 {
-                gated.tick();
-            }
-            assert!(gated.resources.colony.command_log.iter().any(|r| matches!(&r.command,Command::Steward{command,..} if matches!(**command,Command::SetRoomRole{..}))));
-        }
-    }
+    assert_template_completions(engine);
+    assert_template_completions(&replay);
+    // Legacy role-completion scope/cooldown dispatch is independently covered by
+    // completion_tests::legacy_role_completion_dispatch_respects_scope_and_cooldown.
     use sim_core::rooms::RoomRole;
     for (role, clear_after) in [
         (None, false),
@@ -473,11 +522,13 @@ fn assert_role_completion_replay_and_player_intent(
             .accepted
         );
         let room = *manual.resources.colony.rooms.keys().next().expect("room");
+        let intent_tick = manual.current_tick();
         let result = submit(&mut manual, Command::SetRoomRole { room, role });
         assert!(result.accepted || result.reason == Some(sim_core::colony::RejectReason::Nothing));
         if clear_after {
             assert!(submit(&mut manual, Command::SetRoomRole { room, role: None }).accepted);
         }
+        let expected_overrides = manual.resources.colony.room_overrides.clone();
         let bytes = sim_systems::save::save(&mut manual).expect("manual save");
         let mut restored = sim_systems::save::load(&bytes).expect("manual load");
         assert!(
@@ -493,7 +544,20 @@ fn assert_role_completion_replay_and_player_intent(
         for _ in 0..1440 {
             restored.tick();
         }
-        assert!(!restored.resources.colony.command_log.iter().any(|r|matches!(&r.command,Command::Steward{command,..} if matches!(**command,Command::SetRoomRole{..}))),"manual role including Auto persists");
+        assert_eq!(
+            restored.resources.colony.room_overrides, expected_overrides,
+            "saved player override including cleared Auto survives stewardship"
+        );
+        let actual = &restored.resources.colony.rooms[&room];
+        let expected_role = if clear_after { None } else { role }
+            .unwrap_or_else(|| sim_systems::runtime::rooms::auto_role(&restored.resources, actual));
+        assert_eq!(
+            actual.role, expected_role,
+            "actual room honors saved explicit or Auto role"
+        );
+        assert!(!restored.resources.colony.command_log.iter().any(|r| r.tick >= intent_tick && matches!(&r.command,
+            Command::Steward { command, .. } if matches!(**command, Command::SetRoomRole { room: target, .. } if target == room))),
+            "steward must not overwrite the player's selected Room after explicit or Auto intent");
     }
 }
 

@@ -419,3 +419,53 @@ fn shared_wall_store_requires_current_physical_steward_ownership() {
         "ownership alone is not a physical enclosure"
     );
 }
+
+#[test]
+fn legacy_role_completion_dispatch_respects_scope_and_cooldown() {
+    use sim_core::colony::steward::StewardScope;
+    use sim_engine::RuntimeSystem;
+    for scope in [StewardScope::Food, StewardScope::Housing] {
+        let (mut engine, rule) = fixture();
+        assert!(
+            crate::commands::apply_and_log(
+                &mut engine.world,
+                &mut engine.resources,
+                Command::SetSteward { on: true, scope },
+                0
+            )
+            .accepted
+        );
+        let deadline = engine.resources.ticks_per_day;
+        engine.resources.steward.cooldowns.insert(rule.id, deadline);
+        let mut system = super::super::StewardSystem;
+        for tick in [0, deadline - 1] {
+            engine.resources.current_tick = tick;
+            system.tick(&mut engine.world, &mut engine.resources);
+            assert_eq!(engine.resources.colony.rooms[&1].role, RoomRole::Workshop);
+        }
+        engine.resources.current_tick = deadline;
+        system.tick(&mut engine.world, &mut engine.resources);
+        let count = |engine: &sim_engine::SimEngine| {
+            engine.resources.colony.command_log.iter().filter(|r|
+            r.result.accepted && matches!(&r.command, Command::Steward { rule: id, command } if *id == rule.id && matches!(**command, Command::SetRoomRole { room: 1, role: Some(RoomRole::Bedroom) }))).count()
+        };
+        if scope == StewardScope::Housing {
+            assert_eq!(engine.resources.colony.rooms[&1].role, RoomRole::Bedroom);
+            assert_eq!(
+                count(&engine),
+                1,
+                "real dispatch resumes at the cooldown boundary"
+            );
+            engine.resources.current_tick += system.tick_interval();
+            system.tick(&mut engine.world, &mut engine.resources);
+            assert_eq!(count(&engine), 1, "completion is committed exactly once");
+        } else {
+            assert_eq!(engine.resources.colony.rooms[&1].role, RoomRole::Workshop);
+            assert_eq!(
+                count(&engine),
+                0,
+                "Food never dispatches housing role completion"
+            );
+        }
+    }
+}

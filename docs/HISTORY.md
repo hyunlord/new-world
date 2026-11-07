@@ -1,6 +1,6 @@
 # WorldSim 역사
 
-- 2026-11-08 — M-SPINE-b 검증 진행 중, 미게시. 기존 조각 기반 건물 템플릿·물리 완료/원인·format19·주거 구역/집사 선택·건물 패널·자리표시 아트를 통합했다. 이전 사슬8·b50 네이티브 검사는 통과했다. b 전체 게이트1의 DEBUG19실패로 새 경로의 fixture와 건설 중 영역 예약을 수정했고, systems774·집사50 검사 및 clippy는 통과했다. 사슬9 재현도 PASS234.52초이며 새 고정 SHA 전체 게이트·크래시·FF 게시는 대기다. 마일스톤 #13 전체 완료가 아니다.
+- 2026-11-08 — M-SPINE-b 검증 진행 중, 미게시. 기존 조각 기반 건물 템플릿·물리 완료/원인·format19·주거 구역/집사 선택·건물 패널·자리표시 아트를 통합했다. 이전 사슬8·b50 네이티브 검사는 통과했다. b 전체 게이트1의 DEBUG19실패로 새 경로의 fixture와 건설 중 영역 예약을 수정했고, systems774·집사50 검사 및 clippy는 통과했다. 사슬9 PASS234.52초와 b4d191 네이티브1897검사·실제17/18→19 재검증도 통과했다. 기존 Room-only 주거 시험 실패를 보존하고 실제 Hut+Room 배정·원stock/hearth·원인·player intent 회귀를 정비해12PASS/0FAIL/기존1ignored를 확인했다. 이전 전원Room-bedroll/stock-hearth단일지붕 보장과 달라졌음을 보고한다. 새 고정 SHA 전체 게이트·크래시·FF 게시는 대기다. 마일스톤 #13 전체 완료가 아니다.
 
 - 2026-11-08 01:01:16KST — M-SPINE-a `c467c0a36466ec86419ae66bfb702e37c2566b30`을 v8/wip→v8/main 순서로 fast-forward 게시했다. 시대·기술 카탈로그, 회색 콘텐츠와 format18 마이그레이션을 제공한다. 5차 전체49/49 PASS·exit0(기존 step41 면제만 사용), DEBUG3119PASS/RELEASE 원본카운터3118PASS·각0FAIL/14ignored. RELEASE 차이는 증명된 stdout interleave이며 원본을 보정하지 않았다. 앞선 중단·실패와 시도3 보호 경로 접근/HEAD 변경 사고를 [a 보고서](v8/spine/M_SPINE_A_REPORT.md)에 보존한다. [ADR0060](decisions/0060-content-spine.md); 이전 Stage2 시트는 Git 이력 `68beae3a:docs/images/m6b_stage2_contact_sheet.png`, a 원본 시트는 Git 이력 `c467c0a3:docs/images/m_spine_a_contact_sheet.png`에 보존하고 [a+b 화면 모음](images/m_spine_contact_sheet.png)에 실제 네이티브 b 캡처를 함께 실었다. 화면 모음은 b 게이트나 게시 완료를 뜻하지 않는다.
 

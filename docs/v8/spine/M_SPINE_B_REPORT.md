@@ -92,7 +92,44 @@ selector/실제 BuildTemplate 검증을 분리했다. production에서는 Pendin
 **774PASS/0FAIL/2ignored·17.97초**, clippy **PASS·12.85초**, fmt **PASS**다.
 이는 전체 gate를 대체하지 않는다. 새 runtime의 사슬9는 `scene/chain-attempt9`에서
 **PASS·exit0·234.52초**이며, 새 최종 소스의 native/전체 gate/crash/paired 성능/FF는
-**PENDING**이다. 아래 초기·네이티브·이전 저장 성공을 이 수정 소스에 소급하지 않는다.
+**PENDING**였으며, 이후 b4d191에서 아래 재검증을 완료했다. 초기·조상 증거를
+새 소스에 소급하지 않고 각 재실행 영수증으로 구분한다.
+
+검토 HEAD `b4d191f3fc82a0e397eaac5ce4a89a379880e8c4`는2026-11-08
+02:44KST에 review로 게시했다. `b-native-frozen-b4d191/native-qa-summary.json`의
+실제4case는 **1897PASS/0FAIL/0GAP/콘솔 오류0·PNG90장**, 실행 전후
+HEAD·source pins 동일이다. 사슬9 입력에 연결한 현재 runtime 증거이며
+b50/r4/r5 조상 성공과 구분한다. 실제17/18→19도 이 HEAD에서 재검증 PASS다
+(`b-frozen-b4d191-build-save-receipt.json`). 이후 진행 중인 테스트 전용 수정은
+이 pin에 포함되지 않는다. **새 최종 head와 전체 B2 게이트는 아직 NOT_RUN**이며
+b main/FF·crash detector·paired 성능은 미완료다.
+
+기존 flatland 집중 시험은 실제 **0PASS/1FAIL·71.16초·exit101**이다
+(`b-old-housing-flatland-preflight.log`). day10 Room-only 집계는 bed4/people10으로
+이전 조건을 충족하지 못했고 실제 Hut은 별도로 미집계되었다. single Room의
+stock16 조건도 불가능했다. 테스트3파일만 새 계약의 독립 물리 증거로 정비했다.
+기한10일·seed29·재료·production은 바꾸지 않았다. Hut의 등록/전체 점유 발자국/
+접근·정원과 실제 Room bed를 검사하고, **day10 판정 전에** 주민 전원의 bed_of
+위치·중심별 정원 상한을 확인한다. 원래 stock 구역 ID/정확한 타일과 hearth의
+종류/소유자/점유를 보존하고 실제 template Room·완료 원인/명령·정확히1회를 검증한다.
+기존의 **전원 enclosed Room bedroll·stock/hearth 단일 지붕** 보장을 유지한 것으로
+표시하지 않는다. 현재 계약은 실제 Hut과 enclosed bedroom을 함께 사용한다.
+
+`b-housing-integration3.log`는11PASS/1FAIL/기존1ignored·142.11초로 보존한다.
+플레이어가 지정한 방 외의 정상 역할 완료까지 금지한 전역 assertion이 실패했다.
+지정 Room의 명령 이후 쓰기를 금지하고 저장 override map과 실제 explicit/Auto
+role equality를 유지했다. 기한 뒤 검사가 기한 내 잘못된 배정을 숨길 수 있던
+정적 P2도 day10 predicate의 실제 배정·정원 검증으로 해소했다. 독립 검토는
+`b-old-housing-contract-review.md`에 최종3파일 해시와 잔여 확정 P1/P2 없음으로 기록한다.
+
+최종 `b-housing-integration4.log`는 **12PASS/0FAIL/기존1ignored·161.67초·exit0**다.
+평지 t7410/장애물 t6492에서 각각 살아 있는10명 전원이 실제 주거에 배정됐다
+(기한 t14400). 정확한 save/replay와 player intent 검증도 통과했다. 기존
+SetRoomRole의 실제 StewardSystem Food/Housing·cooldown 만료·중복 금지는
+`b-housing-dispatch1.log`의 별도 회귀 **1PASS·1.01초**로 유지한다.
+최종 fmt check와 workspace all-targets clippy -D warnings도 exit0으로 통과했다
+(`b-housing-fmt1.log`, `b-housing-clippy1.log`, clippy3.62초). 새 커밋 전체 B2 결과는
+별도 최종 영수증을 요구한다.
 
 초기 개발 스냅샷 core529 PASS, 집중 runtime14 PASS, Rust 데이터 전용 확장
 PASS는 최종 SHA 전체 통과를 뜻하지 않는다. 실제 import에서 발견한 rotation
@@ -124,7 +161,10 @@ strict-first-receipt.json}`. API/schema 정적 문서는 별도 검사이며 실
   `b-final-predecessor-save-receipt.json`, `b-final-save17.log`, `b-final-save18.log`이며
   fingerprint는 앞선 값과 동일하다. 아직 커밋 전 source hash에 결합된 결과로,
   최종 게시 SHA의 gate 증거로 소급하지 않는다. 이후 전체 발자국 예약 runtime
-  수정 전 증거이므로 새 소스의 저장 검증도 별도로 필요하다.
+  수정 전 증거다. 이후 b4d191에서 실제17/18→19 각각1440tick 이어하기·
+  byte-identical twin·roundtrip을 재검증해 PASS했다. 원본은
+  `b-frozen-b4d191-build-save-receipt.json`, `b-frozen-b4d191-save{17,18}.log`이며
+  이후 테스트 전용 수정의 최종 head 검증으로 소급하지 않는다.
 - 선택 팩의 실제 일반 BuildTemplate·Inert 거절·debt·저장 읽기는
   `b-extension-rust-first.log`의 Rust 시험 PASS. 네이티브 선택 팩 검사는
   아래 r4에서84검사·0FAIL을 확인했으며 별도 시각 제한은 함께 기록한다.
@@ -185,6 +225,20 @@ strict-first-receipt.json}`. API/schema 정적 문서는 별도 검사이며 실
   원본에 source SHA와 PNG SHA가 있다. root가 실제 PNG를 독립 열람해
   읽을 수 있는 두 줄 caption과 불투명 배경을 확인하고 이 gallery를 수용했다.
   이 예비 시각 수용은 최종 전체 gate/출판이나 모든 제약 충족 선언이 아니다.
+
+- b4d191 실제 native는 `b-native-frozen-b4d191/` 아래 chain-1920/chain-1440
+  각852PASS·PNG40장, extension84PASS·PNG5장, gallery109PASS(67spine 모두PASS)·
+  PNG5장으로 총1897PASS·90장이다. 각 exit0·console errors0·fixture gap0,
+  source pins 전후 동일이며 사슬9 저장을 입력으로 썼다. 각 실행 전 load1은8미만,
+  실제120frame pacing 관측은 약120FPS다. 이 짧은 관측을 장기/paired 성능으로
+  확대하지 않는다. 1920의 창/PNG/종료 viewport는1920×1080, 1440은
+  **창1440×900·PNG1440×810·종료 viewport1080×607**이다.
+- root는 b4d191의 실제 `chain-1920/capture/ko_04upgraded_source.png`와
+  `gallery/capture/spine-placeholder-gallery.png`를 직접 열었다. 돌집 tier3와
+  명령 원인, 물리 지붕/재료, no-world/synthetic 표기, 읽히는 두 줄 label과
+  불투명 배경·구분되는 도형/tint/glyph/회색 빗금을 확인했다. 독립 시각 검토는
+  `b-root-visual-review-b4d191.json`에 PNG SHA와 함께 남겼다. 이 범위의 시각
+  확인은 전체 B2 gate 통과나 이후 테스트 수정 head의 검증이 아니다.
 
 - [a+b 화면 모음](../../images/m_spine_contact_sheet.png)은 a 게시 c467의 tech
   ko/en 일반·Inert4장과 r4/chain-1920의00..04 native 그룹/원인5장,
@@ -259,8 +313,11 @@ native driver501, 기존 gallery positive additions142줄을 포함한다. 이�
   예약 runtime 수정 전 조상 증거다. B1 전체 게이트는 실제 DEBUG19FAIL 뒤
   ABORTED이며 완료가 아니다. focused4의49PASS/1FAIL도 보존한다. 수정 후
   systems-lib774PASS/집중50PASS/clippy/fmt PASS와 별도로 사슬9도 PASS·exit0·234.52초다.
-  새 최종 소스의 동일성·결정론·전체 저장/tests·네이티브·크래시·paired 성능·
-  전체 게이트·FF 게시는 **PENDING/미완료**다.
+  b4d191의 사슬9 연계 native1897PASS와 실제17/18→19 재검증 PASS는 별도
+  현재 runtime 증거다. 이후 테스트 전용 수정의 새 최종 head/전체 B2는
+  **NOT_RUN**이다. 최초 flatland0PASS/1FAIL과 integration3의11PASS/1FAIL을
+  보존하며 최종 integration4는12PASS/0FAIL/기존1ignored다. 크래시·paired
+  성능·전체 게이트 완료·FF 게시는 **PENDING/미완료**다.
   초기 focused/core/이전 저장/사슬 성공은 최종 통합 head 검증을 대신하지 않는다.
 - connected 업그레이드는 log4×4→stone4×4만이다. hut3×3을4×4로 확장하지
   않으며 해당 upgrade edge는 없다. workshop/drying4×4는 기존2×1 station과

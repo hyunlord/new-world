@@ -1,7 +1,10 @@
 //! Real ordinary construction checks for physical homes with and without a terrain obstruction.
 use super::*;
 
-fn physically_built(engine: &sim_engine::SimEngine, room: &sim_core::rooms::Room) -> bool {
+pub(super) fn physically_built(
+    engine: &sim_engine::SimEngine,
+    room: &sim_core::rooms::Room,
+) -> bool {
     let grid = &engine.resources.tile_grid;
     if !room.roofed || room.dug || room.tiles.is_empty() || room.doors.is_empty() {
         return false;
@@ -29,12 +32,72 @@ fn physically_built(engine: &sim_engine::SimEngine, room: &sim_core::rooms::Room
     door
 }
 
+/// Physical registrations and all occupied Hut tiles are checked independently of planner coverage.
+pub(super) fn physical_capacity(
+    engine: &sim_engine::SimEngine,
+) -> std::collections::BTreeMap<(u32, u32), usize> {
+    use sim_core::{colony::Occupant, components::BuildingKind, rooms::RoomRole};
+    let res = &engine.resources;
+    let rule = res.rules.colony.expect("colony");
+    let mut capacity = std::collections::BTreeMap::new();
+    for (&centre, kind) in &res.building_kinds {
+        if *kind != BuildingKind::Hut {
+            continue;
+        }
+        let owner = res
+            .building_owner
+            .get(&centre)
+            .expect("completed hut owner");
+        let settlement = res.settlements.get(owner).expect("live hut settlement");
+        let (w, h) = rule.hut_footprint;
+        let x0 = centre.0.checked_sub(w / 2).expect("hut x bounds");
+        let y0 = centre.1.checked_sub(h / 2).expect("hut y bounds");
+        assert!(
+            (y0..y0 + h).all(|y| (x0..x0 + w).all(|x| x < res.tile_grid.width
+                && y < res.tile_grid.height
+                && res.colony.occupied.get(&(x, y)) == Some(&Occupant::Hut(centre)))),
+            "hut must retain its entire physical footprint"
+        );
+        if res.nav.reachable(settlement.formation_tile, centre) {
+            capacity.insert(
+                centre,
+                usize::try_from(rule.hut_beds).expect("hut capacity fits usize"),
+            );
+        }
+    }
+    for room in res
+        .colony
+        .rooms
+        .values()
+        .filter(|room| physically_built(engine, room) && room.role == RoomRole::Bedroom)
+    {
+        for &tile in room
+            .tiles
+            .iter()
+            .filter(|tile| res.colony.beds.contains_key(tile))
+        {
+            if res
+                .settlements
+                .values()
+                .any(|s| res.nav.reachable(s.formation_tile, tile))
+            {
+                assert_eq!(
+                    capacity.insert(tile, 1),
+                    None,
+                    "bed cannot overlap hut capacity"
+                );
+            }
+        }
+    }
+    capacity
+}
+
 #[test]
-fn terrain_obstruction_still_builds_physical_beds_for_all_by_day10() {
+fn terrain_obstruction_still_builds_physical_housing_for_all_by_day10() {
     construction(true);
 }
 #[test]
-fn flatland_home_roofs_existing_stock_and_hearth() {
+fn flatland_templates_preserve_existing_stock_and_hearth() {
     construction(false);
 }
 
@@ -80,6 +143,11 @@ fn construction(terrain: bool) {
         )
         .accepted
     );
+    let original_zones = engine.resources.colony.zones.clone();
+    let original_zone_tiles = engine.resources.colony.zone_of_tile.clone();
+    let hearth_kind = engine.resources.building_kinds.get(&hearth).copied();
+    let hearth_owner = engine.resources.building_owner.get(&hearth).copied();
+    let hearth_occupant = engine.resources.colony.occupied.get(&hearth).copied();
     assert!(
         submit(
             &mut engine,
@@ -115,53 +183,107 @@ fn construction(terrain: bool) {
         {
             first_death = Some(failure_state(&engine));
         }
-        let beds = engine
+        let capacity = physical_capacity(&engine);
+        let beds: usize = capacity.values().sum();
+        let assignments_fit = engine
             .resources
-            .colony
-            .rooms
+            .bed_of
             .values()
-            .filter(|room| physically_built(&engine, room))
-            .flat_map(|room| room.tiles.iter())
-            .filter(|tile| engine.resources.colony.beds.contains_key(tile))
-            .count();
+            .all(|tile| capacity.contains_key(tile))
+            && capacity.iter().all(|(tile, limit)| {
+                engine
+                    .resources
+                    .bed_of
+                    .values()
+                    .filter(|bed| *bed == tile)
+                    .count()
+                    <= *limit
+            });
         let people = engine
             .world
             .query::<&sim_core::components::Agent>()
             .iter()
             .count();
-        housed = people > 0 && beds >= people;
+        housed = people > 0
+            && beds >= people
+            && assignments_fit
+            && engine.resources.bed_of.len() == people
+            && engine
+                .world
+                .query::<&sim_core::components::Agent>()
+                .iter()
+                .all(|(_, agent)| engine.resources.bed_of.contains_key(&agent.id))
+            && engine
+                .resources
+                .colony
+                .rooms
+                .values()
+                .any(|room| physically_built(&engine, room) && room.dwelling_kind.is_some());
         if housed {
             break;
         }
     }
     assert!(
         housed,
-        "physical beds for every living person by day10 terrain={terrain}\nFIRST_HUNGER_GT80:\n{}\nFIRST_DEATH:\n{}\nFINAL:\n{}",
+        "physical Hut/Room housing for every living person by day10 terrain={terrain}\nFIRST_HUNGER_GT80:\n{}\nFIRST_DEATH:\n{}\nFINAL:\n{}",
         first_hungry.as_deref().unwrap_or("not observed"),
         first_death.as_deref().unwrap_or("not observed"),
         failure_state(&engine)
     );
-    if !terrain {
-        assert!(
-            engine
-                .resources
-                .colony
-                .rooms
-                .values()
-                .any(|room| physically_built(&engine, room)
-                    && room.tiles.contains(&hearth)
-                    && engine
-                        .resources
-                        .colony
-                        .zone_of_tile
-                        .keys()
-                        .all(|tile| room.tiles.contains(tile))),
-            "flatland shared home must retain all stock and hearth roofing"
+    println!(
+        "day10 physical assignment proof: terrain={terrain} tick={} assigned={} capacity={:?}",
+        engine.current_tick(),
+        engine.resources.bed_of.len(),
+        physical_capacity(&engine)
+    );
+    // Authored homes may use real Huts as well as enclosed bedroom beds. The old
+    // single shared stock/hearth roof and Room-bedroll-only guarantees no longer apply.
+    for (id, zone) in &original_zones {
+        assert_eq!(
+            engine.resources.colony.zones.get(id),
+            Some(zone),
+            "original stock zone identity and exact tiles survive"
         );
     }
-    assert!(engine.resources.colony.command_log.iter().filter(|record| matches!(&record.command,
-        Command::Steward { rule: 3, command } if matches!(**command, Command::PlaceBlueprint { .. })))
-        .all(|record| record.result.accepted));
+    for (tile, id) in original_zone_tiles {
+        assert_eq!(engine.resources.colony.zone_of_tile.get(&tile), Some(&id));
+    }
+    assert_eq!(
+        engine.resources.building_kinds.get(&hearth).copied(),
+        hearth_kind
+    );
+    assert_eq!(
+        engine.resources.building_owner.get(&hearth).copied(),
+        hearth_owner
+    );
+    assert_eq!(
+        engine.resources.colony.occupied.get(&hearth).copied(),
+        hearth_occupant
+    );
+    let requests: Vec<_> = engine
+        .resources
+        .colony
+        .command_log
+        .iter()
+        .filter(|record| {
+            matches!(&record.command,
+        Command::Steward { rule: 3, command } if matches!(**command, Command::BuildTemplate { .. }))
+        })
+        .collect();
+    assert!(
+        !requests.is_empty(),
+        "actual template dwelling requests must occur"
+    );
+    assert!(requests.iter().all(|record| record.result.accepted));
+    assert!(
+        engine
+            .resources
+            .colony
+            .rooms
+            .values()
+            .any(|room| physically_built(&engine, room) && room.dwelling_kind.is_some()),
+        "a completed template has a real nonempty enclosed Room"
+    );
     assert!(
         sim_systems::runtime::jobs::invariants::check(&engine.world, &engine.resources).is_ok()
     );
