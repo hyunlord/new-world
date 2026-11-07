@@ -92,6 +92,8 @@ fn workshops_list_bills_in_order_and_commands_parse_names() {
             (23, "make_linen_tunic", 14),
             (24, "make_linen_wrap", 14),
             (25, "make_hand_spindle", 2),
+            // M-SPINE: cordage uses the existing wood bench.
+            (26, "twist_cord", 2),
         ]
     );
     // A workshop and its site appear in the overlay as nothing else.

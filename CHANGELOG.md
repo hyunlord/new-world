@@ -10,6 +10,7 @@
 
 ### Changed
 - Keep selected-pack locale additions inside the strict strings table; the existing scene test now checks and captures the extra lane, grey card and debt in both languages.
+- Extend the ordered economy bridge recipe expectation with appended cordage, retaining every historical recipe code and workshop mapping.
 - Era coverage denominators use authored nodes within each era instead of absent-marker weights; all existing marker weights remain unchanged. No balance tuning or thermal model wiring.
 
 ## M6b Stage 2 — in progress, 2026-11-06 (not published)

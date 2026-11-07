@@ -210,3 +210,6 @@ Selected-pack locale JSON admits exactly `schema_version` and `strings`; put new
 keys inside `strings`. Rust catalogue tests do not exercise this presentation
 guard. Run the existing fresh-process scene test and inspect the extra lane, grey
 card and debt in both languages before freezing the publication gate.
+When appending authored recipes, run the existing economy bridge collector test:
+its exact ordered table intentionally pins every historical code and workshop.
+Append the new expected row rather than weakening the table to a prefix check.
