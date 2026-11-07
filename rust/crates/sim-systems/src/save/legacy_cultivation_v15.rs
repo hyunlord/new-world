@@ -24,5 +24,6 @@ pub(super) fn decode_body(payload: &[u8]) -> Result<super::Body, super::SaveErro
         food: old.food.into(),
         cultivation: Default::default(),
         processing: Default::default(),
+        buildings: Default::default(),
     })
 }

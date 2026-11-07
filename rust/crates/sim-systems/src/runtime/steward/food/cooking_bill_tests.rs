@@ -1509,6 +1509,7 @@ fn executable_cooking_credit_excludes_store_grain_that_cannot_be_carried() {
         res.colony.rooms.insert(
             90,
             sim_core::rooms::Room {
+                dwelling_kind: None,
                 id: 90,
                 tiles: std::collections::BTreeSet::from([(2, 2)]),
                 doors: std::collections::BTreeSet::new(),
@@ -1605,6 +1606,7 @@ fn executable_cooking_credit_keeps_local_shelf_but_not_another_shops_shelf() {
         res.colony.rooms.insert(
             90,
             sim_core::rooms::Room {
+                dwelling_kind: None,
                 id: 90,
                 tiles: std::collections::BTreeSet::from([tile]),
                 doors: std::collections::BTreeSet::new(),
@@ -1770,6 +1772,7 @@ fn owned_vessel_target_counts_physical_pots_waiting_outside_store() {
                 res.colony.rooms.insert(
                     90,
                     sim_core::rooms::Room {
+                        dwelling_kind: None,
                         id: 90,
                         tiles: std::collections::BTreeSet::from([(4, 4)]),
                         doors: std::collections::BTreeSet::new(),

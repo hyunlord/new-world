@@ -10,7 +10,11 @@
 //! Rectangles are inclusive corners in any order, clipped to the map; a
 //! rectangle wholly outside the map is `OutOfMap`, and a valid one that
 //! changes nothing is `Nothing`.
+#[path = "commands/housing_zones.rs"]
+mod housing_zones;
+
 use hecs::{Entity, World};
+use sim_core::colony::building_site::BuildCause;
 use sim_core::colony::content::CompletionCategory;
 use sim_core::colony::skills::LOWEST_PRIORITY;
 use sim_core::colony::workshop::work_tile_of;
@@ -97,6 +101,11 @@ pub fn apply_command(world: &mut World, res: &mut SimResources, cmd: Command) ->
 }
 
 fn apply_at(world: &mut World, res: &mut SimResources, cmd: Command, tick: u64) -> CommandResult {
+    let reconcile = match &cmd {
+        Command::CancelArea { .. } => true,
+        Command::Steward { command, .. } => matches!(command.as_ref(), Command::CancelArea { .. }),
+        _ => false,
+    };
     let source = matches!(cmd, Command::Steward { .. });
     let protection = if source {
         None
@@ -114,8 +123,11 @@ fn apply_at(world: &mut World, res: &mut SimResources, cmd: Command, tick: u64) 
             _ => None,
         }
     };
-    let result = apply_inner(world, res, cmd);
+    let result = apply_inner(world, res, cmd, tick);
     if result.accepted {
+        if reconcile {
+            crate::runtime::building_templates::advance(world, res);
+        }
         if let Some(agent) = manual {
             res.steward.defence.owned_ids.remove(&agent);
             res.steward
@@ -132,7 +144,12 @@ fn apply_at(world: &mut World, res: &mut SimResources, cmd: Command, tick: u64) 
     result
 }
 
-fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> CommandResult {
+fn apply_inner(
+    world: &mut World,
+    res: &mut SimResources,
+    cmd: Command,
+    tick: u64,
+) -> CommandResult {
     let Some(rule) = res.rules.colony else {
         return CommandResult::rejected(RejectReason::NoColony);
     };
@@ -170,12 +187,66 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
                 return CommandResult::rejected(RejectReason::Unknown);
             }
             let targets = crate::runtime::steward::lifecycle::targets(res, &command);
-            let result = apply_inner(world, res, (*command).clone());
+            let result = match command.as_ref() {
+                Command::BuildTemplate {
+                    id,
+                    anchor,
+                    rotation,
+                    station,
+                } => crate::runtime::building_templates::commands::build_at(
+                    world,
+                    res,
+                    id,
+                    *anchor,
+                    *rotation,
+                    station.as_deref(),
+                    BuildCause::Steward(u32::from(rule)),
+                    tick,
+                ),
+                Command::UpgradeBuilding { site } => {
+                    crate::runtime::building_templates::upgrade::upgrade_at(
+                        world,
+                        res,
+                        *site,
+                        BuildCause::Steward(u32::from(rule)),
+                        tick,
+                    )
+                }
+                _ => apply_inner(world, res, (*command).clone(), tick),
+            };
             if result.accepted {
                 crate::runtime::steward::lifecycle::accepted(world, res, rule, *command, targets);
             }
             result
         }
+        Command::BuildTemplate {
+            id,
+            anchor,
+            rotation,
+            station,
+        } => crate::runtime::building_templates::commands::build_at(
+            world,
+            res,
+            &id,
+            anchor,
+            rotation,
+            station.as_deref(),
+            BuildCause::Command,
+            tick,
+        ),
+        Command::UpgradeBuilding { site } => {
+            crate::runtime::building_templates::upgrade::upgrade_at(
+                world,
+                res,
+                site,
+                BuildCause::Command,
+                tick,
+            )
+        }
+        Command::AddHousingZone { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
+            None => CommandResult::rejected(RejectReason::OutOfMap),
+            Some(tiles) => counted(housing_zones::add_housing_zone(res, &tiles)),
+        },
         Command::DesignateChop { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
             None => CommandResult::rejected(RejectReason::OutOfMap),
             Some(tiles) => marked(designate(res, &tiles)),
@@ -1034,6 +1105,7 @@ fn add_stockpile(res: &mut SimResources, tiles: &[Tile]) -> usize {
 }
 
 fn remove_zone_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usize {
+    let housing_removed = housing_zones::remove_housing_area(res, tiles);
     let mut removed: BTreeSet<Tile> = BTreeSet::new();
     for tile in tiles {
         if let Some(id) = res.colony.zone_of_tile.remove(tile) {
@@ -1054,6 +1126,7 @@ fn remove_zone_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -
     if !removed.is_empty() {
         res.colony.touch(false);
     }
+    removed.extend(housing_removed);
     removed.len()
 }
 
@@ -1091,17 +1164,7 @@ pub fn check_blueprint(
     x: u32,
     y: u32,
 ) -> Result<(), RejectReason> {
-    let Some(rule) = res.rules.colony else {
-        return Err(RejectReason::NoColony);
-    };
-    let definition = kind.definition();
-    if !definition.placeable
-        || (definition.requires_economy && rule.economy.is_none())
-        || (definition.requires_knowledge && rule.knowledge.is_none())
-        || (definition.requires_space && rule.space.is_none())
-    {
-        return Err(RejectReason::NotYet);
-    }
+    check_placement_capability(res, kind)?;
     let site = footprint(res, kind, x, y)?;
     let tiles = site.tiles();
     if tiles
@@ -1301,7 +1364,7 @@ pub(crate) fn check_space_after_tree_clear(
 }
 
 /// Every agent's tile.
-fn people_tiles(world: &World) -> BTreeSet<Tile> {
+pub(crate) fn people_tiles(world: &World) -> BTreeSet<Tile> {
     world
         .query::<&Position>()
         .iter()
@@ -1319,13 +1382,8 @@ fn place_space(
     kind: BlueprintKind,
     tiles: Vec<Tile>,
 ) -> CommandResult {
-    let definition = kind.definition();
-    if rule.space.is_none()
-        || rule.economy.is_none()
-        || !definition.placeable
-        || (definition.requires_knowledge && rule.knowledge.is_none())
-    {
-        return CommandResult::rejected(RejectReason::NotYet);
+    if let Err(reason) = check_placement_capability(res, kind) {
+        return CommandResult::rejected(reason);
     }
     let people = people_tiles(world);
     let (_, needs, progress) = kind.plan(rule);
@@ -1404,4 +1462,120 @@ fn designate_space(res: &mut SimResources, tiles: &[Tile], mark: Designation) ->
     }
     res.colony.touch(false);
     CommandResult::ok(count as u32)
+}
+
+/// Shared actual placement admission; reuse in place_space and check_blueprint before geometry.
+pub(crate) fn check_placement_capability(
+    res: &SimResources,
+    kind: BlueprintKind,
+) -> Result<(), RejectReason> {
+    let rule = res.rules.colony.ok_or(RejectReason::NoColony)?;
+    let definition = kind.definition();
+    if !definition.placeable
+        || ((kind.is_space() || definition.requires_economy) && rule.economy.is_none())
+        || ((kind.is_space() || definition.requires_space) && rule.space.is_none())
+        || (definition.requires_knowledge && rule.knowledge.is_none())
+    {
+        return Err(RejectReason::NotYet);
+    }
+    Ok(())
+}
+
+/// Internal physical expansion preserves the top-level template command as provenance.
+pub(crate) fn apply_template_piece(
+    world: &mut World,
+    res: &mut SimResources,
+    command: Command,
+) -> CommandResult {
+    let tick = res.current_tick;
+    apply_inner(world, res, command, tick)
+}
+
+/// Validate an entire wall replacement batch before any designation or version changes.
+pub(crate) fn designate_template_walls(res: &mut SimResources, tiles: &[Tile]) -> CommandResult {
+    if let Err(reason) = check_template_walls(res, tiles) {
+        return CommandResult::rejected(reason);
+    }
+    designate_space(res, tiles, Designation::Deconstruct)
+}
+
+/// Read-only whole-batch validation; no tick or job can interleave its execution.
+pub(crate) fn check_template_walls(res: &SimResources, tiles: &[Tile]) -> Result<(), RejectReason> {
+    if res.rules.colony.and_then(|rule| rule.space).is_none() {
+        return Err(RejectReason::NotYet);
+    }
+    if tiles.is_empty() {
+        return Err(RejectReason::Nothing);
+    }
+    let unique: BTreeSet<_> = tiles.iter().copied().collect();
+    if unique.len() != tiles.len()
+        || tiles.iter().any(|tile| {
+            res.colony.designations.contains_key(tile)
+                || crate::runtime::jobs::space::completed_at(
+                    res,
+                    *tile,
+                    sim_core::colony::content_state::CompletedLayer::Wall,
+                )
+                .is_none()
+                || crate::runtime::jobs::space::built_at(res, *tile).is_none_or(|kind| {
+                    crate::runtime::jobs::space::completion_layer(kind)
+                        != sim_core::colony::content_state::CompletedLayer::Wall
+                })
+        })
+    {
+        return Err(RejectReason::Blocked);
+    }
+    Ok(())
+}
+
+/// Materialize exact storage cells through existing stockpile grouping without a second command log.
+pub(crate) fn add_template_stockpile(
+    res: &mut SimResources,
+    tiles: &[Tile],
+) -> Result<(), RejectReason> {
+    if res.rules.colony.is_none() {
+        return Err(RejectReason::NoColony);
+    }
+    if tiles.is_empty() || tiles.iter().any(|tile| !can_hold_items(res, *tile)) {
+        return Err(RejectReason::Blocked);
+    }
+    let mut fresh: BTreeSet<_> = tiles
+        .iter()
+        .copied()
+        .filter(|tile| !res.colony.zone_of_tile.contains_key(tile))
+        .collect();
+    let mut groups = 0u32;
+    while let Some(start) = fresh.pop_first() {
+        groups = groups.checked_add(1).ok_or(RejectReason::Unknown)?;
+        let mut frontier = vec![start];
+        while let Some((x, y)) = frontier.pop() {
+            for tile in [
+                (x.wrapping_sub(1), y),
+                (x.saturating_add(1), y),
+                (x, y.wrapping_sub(1)),
+                (x, y.saturating_add(1)),
+            ] {
+                if fresh.remove(&tile) {
+                    frontier.push(tile);
+                }
+            }
+        }
+    }
+    if groups > 0 {
+        res.colony
+            .next_zone_id
+            .checked_add(groups)
+            .ok_or(RejectReason::Unknown)?;
+        if res
+            .colony
+            .zones
+            .keys()
+            .chain(res.colony.buildings.housing_zones.keys())
+            .any(|&id| id >= res.colony.next_zone_id)
+        {
+            return Err(RejectReason::Unknown);
+        }
+    }
+    add_stockpile(res, tiles);
+    Ok(())
 }

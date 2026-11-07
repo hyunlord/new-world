@@ -1366,6 +1366,10 @@ pub fn resolve(
             let (x0, y0, x1, y1) = rect(spec)?;
             vec![Command::AddStockpile { x0, y0, x1, y1 }]
         }
+        ("add_housing_zone", None) => {
+            let (x0, y0, x1, y1) = rect(spec)?;
+            vec![Command::AddHousingZone { x0, y0, x1, y1 }]
+        }
         ("remove_zone_area", None) => {
             let (x0, y0, x1, y1) = rect(spec)?;
             vec![Command::RemoveZoneArea { x0, y0, x1, y1 }]
@@ -1388,6 +1392,27 @@ pub fn resolve(
                 y: field(spec, "y")?,
             }]
         }
+        ("build_template", None) => vec![Command::BuildTemplate {
+            id: spec["id"]
+                .as_str()
+                .ok_or("build_template needs id")?
+                .to_owned(),
+            anchor: (field(spec, "x")?, field(spec, "y")?),
+            rotation: u8::try_from(
+                spec["rotation"]
+                    .as_u64()
+                    .ok_or("build_template needs rotation")?,
+            )
+            .map_err(|_| "invalid rotation")?,
+            station: match &spec["station"] {
+                Value::Null => None,
+                Value::String(station) => Some(station.clone()),
+                _ => return Err("build_template station must be a string or null".into()),
+            },
+        }],
+        ("upgrade_building", None) => vec![Command::UpgradeBuilding {
+            site: field(spec, "site")?,
+        }],
         ("add_bill", None) => vec![Command::AddBill {
             workshop: field(spec, "workshop")?,
             recipe: RecipeKind::from_name(spec["recipe"].as_str().unwrap_or(""))
@@ -1611,6 +1636,7 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         | Command::DesignateClay { x0, y0, x1, y1 }
         | Command::CancelArea { x0, y0, x1, y1 }
         | Command::AddStockpile { x0, y0, x1, y1 }
+        | Command::AddHousingZone { x0, y0, x1, y1 }
         | Command::AddHuntZone { x0, y0, x1, y1 }
         | Command::CancelHunt { x0, y0, x1, y1 }
         | Command::RemoveZoneArea { x0, y0, x1, y1 } => {
@@ -1633,6 +1659,15 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
             json!({"tiles": tiles.iter().map(|t| json!([t.0, t.1])).collect::<Vec<_>>()})
         }
         Command::PlaceBlueprint { kind, x, y } => json!({"kind": kind.name(), "x": x, "y": y}),
+        Command::BuildTemplate {
+            id,
+            anchor,
+            rotation,
+            station,
+        } => {
+            json!({"id": id, "x": anchor.0, "y": anchor.1, "rotation": rotation, "station": station})
+        }
+        Command::UpgradeBuilding { site } => json!({"site": site}),
         Command::SetDrafted { agent, drafted } => json!({"agent": agent, "drafted": drafted}),
         Command::AddBill {
             workshop,
@@ -2470,6 +2505,67 @@ mod tests {
         for malformed in [
             json!({"cmd": "designate_harvest", "x0": 2, "y0": 3, "x1": 5}),
             json!({"cmd": "deploy_food_pot", "x": 11}),
+        ] {
+            assert!(resolve(&engine, &malformed, &mut Vec::new()).is_err());
+        }
+    }
+
+    #[test]
+    fn building_commands_round_trip_with_player_and_steward_provenance() {
+        let engine = crate::scenes::colony_scene(0);
+        let mut commands = vec![
+            Command::UpgradeBuilding { site: u32::MAX },
+            Command::AddHousingZone {
+                x0: 2,
+                y0: 3,
+                x1: 11,
+                y1: 17,
+            },
+        ];
+        for station in [None, Some("wood_bench".to_owned()), Some(String::new())] {
+            commands.push(Command::BuildTemplate {
+                id: "workshop_shed".to_owned(),
+                anchor: (19, 23),
+                rotation: 3,
+                station,
+            });
+        }
+        for command in commands {
+            for cmd in [
+                command.clone(),
+                Command::Steward {
+                    rule: 8,
+                    command: Box::new(command),
+                },
+            ] {
+                let json = command_json(360, &cmd);
+                assert_eq!(json["tick"], 360);
+                assert_eq!(
+                    resolve(&engine, &json, &mut Vec::new()).expect("building command"),
+                    vec![cmd]
+                );
+            }
+        }
+        let without_station = json!({
+            "cmd": "build_template", "id": "log_house", "x": 19, "y": 23, "rotation": 0
+        });
+        assert_eq!(
+            resolve(&engine, &without_station, &mut Vec::new()).unwrap(),
+            vec![Command::BuildTemplate {
+                id: "log_house".to_owned(),
+                anchor: (19, 23),
+                rotation: 0,
+                station: None,
+            }]
+        );
+        for malformed in [
+            json!({"cmd": "build_template", "x": 19, "y": 23, "rotation": 0}),
+            json!({"cmd": "build_template", "id": "log_house", "x": 19, "rotation": 0}),
+            json!({"cmd": "build_template", "id": "log_house", "x": 19, "y": 23}),
+            json!({"cmd": "build_template", "id": "log_house", "x": 19, "y": 23, "rotation": 256}),
+            json!({"cmd": "build_template", "id": "log_house", "x": 19, "y": 23, "rotation": 0, "station": 2}),
+            json!({"cmd": "upgrade_building"}),
+            json!({"cmd": "add_housing_zone", "x0": 2, "y0": 3, "x1": 11}),
         ] {
             assert!(resolve(&engine, &malformed, &mut Vec::new()).is_err());
         }

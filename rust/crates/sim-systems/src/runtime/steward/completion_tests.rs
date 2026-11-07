@@ -26,6 +26,7 @@ fn fixture() -> (sim_engine::SimEngine, Rule) {
     e.resources.colony.rooms.insert(
         1,
         Room {
+            dwelling_kind: None,
             id: 1,
             tiles: BTreeSet::from([(10, 10)]),
             doors: BTreeSet::from([(10, 9)]),

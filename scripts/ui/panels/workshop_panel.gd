@@ -313,7 +313,7 @@ func _fill_recipes(kind: int) -> void:
 		any = true
 		var text: String = "%s → %s ×%d" % [EconomyText.recipe(_locale, codes[i]), EconomyText.item(_locale, outputs[i]), amounts[i]]
 		var recipe: Button = _button("Recipe_%s" % names[i], text, _add_bill.bind(names[i]))
-		recipe.icon = ArtData.texture(ItemIcons.asset_of(outputs[i]))
+		recipe.icon = ItemIcons.texture_of(outputs[i])
 		recipe.expand_icon = false
 		recipe.add_theme_constant_override("icon_max_width", 32)
 		recipe.set_meta("item_kind", outputs[i])

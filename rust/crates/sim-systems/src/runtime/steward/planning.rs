@@ -16,6 +16,13 @@ mod house_preparation_tests;
 #[cfg(test)]
 #[path = "housing_tests.rs"]
 mod housing_tests;
+#[path = "template_housing.rs"]
+mod template_housing;
+#[cfg(test)]
+#[path = "template_housing_tests.rs"]
+mod template_housing_tests;
+#[path = "template_selection.rs"]
+mod template_selection;
 type Tile = (u32, u32);
 fn distance(a: Tile, b: Tile) -> u32 {
     a.0.abs_diff(b.0).max(a.1.abs_diff(b.1))
@@ -700,6 +707,41 @@ fn house(
     action: &Action,
     reserve_only: bool,
 ) -> HousePlan {
+    let Action::House {
+        completion_role, ..
+    } = *action
+    else {
+        return HousePlan::default();
+    };
+    if completion_role == Some(sim_core::rooms::RoomRole::Storehouse) {
+        return house_geometry(world, res, hearth, action, reserve_only, None);
+    }
+    if template_housing::pending(res) {
+        return HousePlan::default();
+    }
+    let catalog = sim_core::colony::content::installed_or_bundled();
+    // Try every legal envelope for a tier before falling back to the next tier.
+    for template in template_selection::ranked(world, res, catalog) {
+        let plan = if let Some(action) = template_housing::ring_action(template, action) {
+            house_geometry(world, res, hearth, &action, reserve_only, Some(template))
+        } else {
+            template_housing::anchor_house(world, res, hearth, template, reserve_only)
+        };
+        if !plan.reserved.is_empty() {
+            return plan;
+        }
+    }
+    HousePlan::default()
+}
+
+fn house_geometry(
+    world: &World,
+    res: &SimResources,
+    hearth: Tile,
+    action: &Action,
+    reserve_only: bool,
+    template: Option<&sim_core::colony::building_template::BuildingTemplate>,
+) -> HousePlan {
     let mut profile = super::house_profile::HouseProfile::new(res.current_tick, reserve_only);
     let Action::House {
         wall,
@@ -727,18 +769,7 @@ fn house(
     {
         return HousePlan::default();
     }
-    let covered = res
-        .colony
-        .beds
-        .keys()
-        .filter(|tile| {
-            res.colony
-                .room_of_tile
-                .get(tile)
-                .and_then(|id| res.colony.rooms.get(id))
-                .is_some_and(|room| super::housing::constructed(res, room))
-        })
-        .count() as u32;
+    let covered = template_housing::covered(res);
     let beds = if store {
         0
     } else {
@@ -766,7 +797,21 @@ fn house(
     let Some(space) = res.rules.colony.and_then(|rule| rule.space) else {
         return HousePlan::default();
     };
-    let minimum_height = area.div_ceil(width).max(2);
+    let fixed = template
+        .and_then(|template| {
+            Some((
+                template.footprint.0.checked_sub(2)?,
+                template.footprint.1.checked_sub(2)?,
+            ))
+        })
+        .filter(|(w, h)| *w > 0 && *h > 0);
+    if template.is_some() && fixed.is_none() {
+        return HousePlan::default();
+    }
+    if let Some((fixed_width, _)) = fixed {
+        width = fixed_width;
+    }
+    let minimum_height = fixed.map_or_else(|| area.div_ceil(width).max(2), |(_, height)| height);
     if width.saturating_mul(minimum_height) > space.room_max_tiles {
         return HousePlan::default();
     }
@@ -846,7 +891,12 @@ fn house(
     profile.phase(2);
     let mut local_origins = BTreeSet::new();
     // Adjacent aspect ratios search around service anchors; the original ratio retains its global fallback.
-    for candidate_width in [width.saturating_sub(1).max(2), width, width + 1] {
+    let candidate_widths = if fixed.is_some() {
+        vec![width]
+    } else {
+        vec![width.saturating_sub(1).max(2), width, width + 1]
+    };
+    for candidate_width in candidate_widths {
         for anchor in stock.iter().copied().chain(std::iter::once(hearth)) {
             for y in anchor
                 .1
@@ -861,13 +911,21 @@ fn house(
     }
     let mut locations = Vec::new();
     for ((x, y, width), is_local) in house_origins(res, width, &local_origins) {
-        let minimum_height = area.div_ceil(width).max(2);
+        let minimum_height =
+            fixed.map_or_else(|| area.div_ceil(width).max(2), |(_, height)| height);
         if x + width + 2 >= res.tile_grid.width {
             continue;
         }
-        for height in minimum_height..=space.room_max_tiles / width {
+        for height in
+            minimum_height..=fixed.map_or(space.room_max_tiles / width, |(_, height)| height)
+        {
             if y + height + 2 >= res.tile_grid.height {
                 break;
+            }
+            if template.is_some()
+                && !template_selection::inside_housing(res, (x, y), (width + 2, height + 2))
+            {
+                continue;
             }
             if free_cells(x, y, width, height) >= (beds + service_cells) as usize {
                 locations.push((x, y, width, height));
@@ -1008,6 +1066,12 @@ fn house(
         } else {
             openings.sort_by_key(|&tile| (distance(tile, preferred_door), tile.1, tile.0));
         }
+        let rotations = template.map_or_else(Vec::new, |template| {
+            template_housing::rotations(template, (x, y), (width + 2, height + 2))
+        });
+        if template.is_some() {
+            openings.retain(|tile| rotations.iter().any(|(door, _)| door == tile));
+        }
         let Some(door_tile) = openings.into_iter().find(|&tile| {
             let outside = if tile.0 == x {
                 (x - 1, tile.1)
@@ -1024,6 +1088,17 @@ fn house(
                 && placeable(1, tile)
         }) else {
             continue;
+        };
+        let rotation = rotations
+            .iter()
+            .find_map(|(door, rotation)| (*door == door_tile).then_some(*rotation))
+            .unwrap_or(0);
+        let expanded = match template {
+            Some(template) => match template_housing::expanded(template, rotation) {
+                Some(plan) => Some(plan),
+                None => continue,
+            },
+            None => None,
         };
         let mut clearing = Vec::new();
         let mut border = Vec::new();
@@ -1089,6 +1164,12 @@ fn house(
         if !valid || free.len() < (beds + service_cells) as usize {
             continue;
         }
+        if expanded
+            .as_ref()
+            .is_some_and(|plan| !template_housing::preview(res, &people, plan, (x, y)))
+        {
+            continue;
+        }
         let boundary: BTreeSet<_> = border
             .iter()
             .filter_map(|command| match command {
@@ -1135,7 +1216,7 @@ fn house(
         }
         free.retain(|tile| room.tiles.contains(&(tile.0 - x, tile.1 - y)));
         free.sort_by_key(|&tile| (Reverse(distance(tile, hearth)), tile.1, tile.0));
-        let reserved: BTreeSet<_> = boundary
+        let mut reserved: BTreeSet<_> = boundary
             .iter()
             .copied()
             .chain(free.iter().copied().take(beds as usize))
@@ -1145,6 +1226,9 @@ fn house(
             .copied()
             .chain(room.tiles.iter().copied().map(local))
             .collect();
+        if let Some(plan) = &expanded {
+            reserved = template_housing::piece_tiles(plan, (x, y));
+        }
         if let Some((items, committed, building, pending, margin, fuel)) = clearing_budget {
             let added: u32 = clearing
                 .iter()
@@ -1161,7 +1245,7 @@ fn house(
                         .map(|need| u32::from(need.count))
                         .sum::<u32>()
                 };
-                let cost = border
+                let mut cost = border
                     .iter()
                     .filter_map(|command| match command {
                         Command::PlaceBlueprint { kind, .. } => Some(log_cost(*kind)),
@@ -1169,6 +1253,16 @@ fn house(
                     })
                     .sum::<u32>()
                     .saturating_add(log_cost(bed).saturating_mul(beds));
+                if let Some(plan) = &expanded {
+                    let Ok(costs) = template_selection::costs(res, plan) else {
+                        continue;
+                    };
+                    cost = costs
+                        .iter()
+                        .filter(|(item, _)| items.contains(item))
+                        .map(|(_, count)| *count)
+                        .sum();
+                }
                 let demand = if store {
                     building.max(pending).saturating_add(cost)
                 } else {
@@ -1273,6 +1367,18 @@ fn house(
                 _ => false,
             }) {
                 commands.clear();
+            }
+            if let (Some(template), Some(plan)) = (template, expanded.as_ref()) {
+                if !template_housing::preview(res, &actual_people, plan, (x, y)) {
+                    commands.clear();
+                } else if !commands.is_empty() {
+                    commands = vec![Command::BuildTemplate {
+                        id: template.id.clone(),
+                        anchor: (x, y),
+                        rotation,
+                        station: None,
+                    }];
+                }
             }
             commands
         };
@@ -1416,7 +1522,7 @@ fn pending_shelter_logs(
     use sim_core::colony::BlueprintKind;
     // If a house site is already being cleared/built, blueprints will appear
     // and building_need covers them.
-    if !res.colony.space_sites.is_empty() {
+    if !res.colony.space_sites.is_empty() || template_housing::pending(res) {
         return 0;
     }
     let Ok(data) = rules() else {
@@ -1441,23 +1547,16 @@ fn pending_shelter_logs(
         return 0;
     };
     // Count beds in constructed rooms (same as the house function).
-    let covered = res
-        .colony
-        .beds
-        .keys()
-        .filter(|tile| {
-            res.colony
-                .room_of_tile
-                .get(tile)
-                .and_then(|id| res.colony.rooms.get(id))
-                .is_some_and(|room| super::housing::constructed(res, room))
-        })
-        .count() as u32;
+    let covered = template_housing::covered(res);
     let agents = world.query::<&Agent>().iter().count() as u32;
     let beds = agents.saturating_sub(covered).min(max_beds);
     if beds == 0 {
         return 0;
     }
+    if let Some(exact) = template_selection::pending_logs(world, res, log_items) {
+        return exact;
+    }
+    // Nothing affordable yet: preserve the original estimator to drive acquisition.
     let stock = res.colony.zone_of_tile.len() as u32;
     let area = beds
         .saturating_add(service_cells)

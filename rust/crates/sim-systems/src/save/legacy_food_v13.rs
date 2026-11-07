@@ -80,6 +80,7 @@ impl From<LegacyBodyV13> for Body {
             food: old.food.into(),
             cultivation: Default::default(),
             processing: Default::default(),
+            buildings: Default::default(),
         }
     }
 }

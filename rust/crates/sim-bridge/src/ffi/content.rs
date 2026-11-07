@@ -168,6 +168,14 @@ pub fn catalog_to_dict(catalog: &Catalog) -> VarDictionary {
     }
     out.set("lanes", lanes);
     out.set(
+        "building_zones",
+        super::building_templates::zone_rows(catalog),
+    );
+    out.set(
+        "buildings",
+        super::building_templates::catalog_rows(catalog),
+    );
+    out.set(
         "crops",
         super::cultivation::crop_rows_to_variant_array(catalog),
     );

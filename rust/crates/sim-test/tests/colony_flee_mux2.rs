@@ -32,6 +32,7 @@ fn roof(engine: &mut SimEngine, id: u32, tile: (u32, u32)) {
     engine.resources.colony.rooms.insert(
         id,
         Room {
+            dwelling_kind: None,
             id,
             tiles: BTreeSet::from([tile]),
             doors: BTreeSet::new(),

@@ -60,6 +60,7 @@ const MUTATORS: Array[String] = [
 	# M1 orders (ADR 0012): each returns {accepted, count, reason}.
 	"cmd_designate_chop", "cmd_designate_chop_tiles", "cmd_cancel_area",
 	"cmd_add_stockpile", "cmd_remove_zone_area", "cmd_place_blueprint",
+	"cmd_build_template", "cmd_upgrade_building", "cmd_add_housing_zone",
 	# M2 orders (quarry, bills, work priorities): each returns {accepted, count, reason}.
 	"cmd_designate_quarry", "cmd_add_bill", "cmd_remove_bill", "cmd_set_bill_mode", "cmd_move_bill",
 	"cmd_set_bill_suspended", "cmd_set_work_priority",

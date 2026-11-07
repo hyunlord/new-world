@@ -186,6 +186,7 @@ pub(super) fn build(
         revision,
         knowledge_defs: KnowledgeDefs::default(),
         knowledge_gates: Gates::default(),
+        building_templates: TemplateCatalog::default(),
     };
     catalog.items = items
         .items
@@ -265,5 +266,15 @@ pub(super) fn build(
     validate::knowledge_refs(&catalog)?;
     load_plants::load(&mut catalog, &base, &extension)?;
     load_crops::load(&mut catalog, &base, &extension)?;
+    let building_extension = extension
+        .contains_key("buildings.ron")
+        .then(|| sources::text(&extension, "buildings.ron"))
+        .transpose()?;
+    catalog.building_templates = TemplateCatalog::parse(
+        sources::text(&base, "buildings.ron")?,
+        building_extension,
+        &catalog,
+    )
+    .map_err(|error| CatalogError::new("buildings", error))?;
     Ok(catalog)
 }

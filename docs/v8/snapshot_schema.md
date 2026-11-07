@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 15 — M-SPINE-a adds data-authored era/lane catalogues, tech status/debt and per-era progress. Version 14 — M6b Stage2 appends physical apparel/wear and weaving diagnosis facts (implementation in progress). Version 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
+Schema version: 16 — M-SPINE-b adds template catalogue/zone definitions, physical site/options and placement/cause reads, housing overlay, assigned-bed template home and command revision. Implementation integrated; b runtime validation pending. Version 15 — M-SPINE-a adds data-authored era/lane catalogues, tech status/debt and per-era progress. Version 14 — M6b Stage2 appends physical apparel/wear and weaving diagnosis facts (implementation in progress). Version 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
 
 History: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
@@ -13,7 +13,7 @@ two views built on the same collectors must agree (ADR 0016, clause C2). The sec
 Checked by `python3 tools/v8/check_docs_helpers.py schema` (`tools/v8/check_docs.sh` check 10): every `get_*`
 method found by `tools/v8/bridge_api.py` has a `### get_x` section here, and the first table column of that section
 names exactly the keys the getter sets (its own `dict.set("k", …)` calls plus those of the `*_to_dict` /
-`*_to_variant_array` builders it calls). An absent or extra getter or key fails. The extractor unions literal keys from followed builders, including nested dictionaries; it does not prove nesting, runtime presence, value types, or keys loaded from JSON. Tables below distinguish their actual scopes; nested coverage requires separate validation.
+`*_to_variant_array` builders it calls). An absent or extra getter or key fails. The extractor unions literal keys from followed builders, including nested dictionaries; it does not prove nesting, runtime presence, value types, or keys loaded from JSON. Tables below distinguish their actual scopes; nested coverage requires separate validation. M-SPINE-b helpers named `append_snapshot`, `preview`, `cause`, `catalog_rows`, `zone_rows`, `art`, `requirements` and `append_template_home` are not followed by that naming-based extractor. Their actual keys are documented in explicit fourth-level scope sections below from direct source inspection; the static checker does not validate those helper tables.
 
 ## Conventions
 
@@ -132,6 +132,38 @@ Additional nested crop-row fields (under `crops`, not top-level):
 | `frost_sensitive` | bool | winter destroys established crop |
 | `fertility_cost` | int | depletion per committed harvest |
 | `fallow_recovery_per_day` | int | daily fertility recovery while fallow |
+
+| `buildings` | Array[Dictionary] | authored-order immutable building template rows; code is catalogue ordinal within the pinned revision |
+| `building_zones` | Array[Dictionary] | authored-order automatic-growth definitions; housing Connected, storage/workshop Inert; these are not physical zone instances |
+
+#### Building catalogue helper rows (direct source contract)
+
+`building_catalog.rs` projects selected immutable definitions; `building_templates::art`
+adds presentation metadata. Unresolved Inert knowledge/material references are omitted
+from resolved-code arrays, while debt remains visible. Ordinary storage/workshop
+buildings are independent from their reserved automatic-growth zone definitions.
+
+| key | type | scope and meaning |
+|---|---|---|
+| `code` | int | building row: zero-based immutable template ordinal; not BuildingSite/BuildingId |
+| `id` | String | building or zone row: authored canonical id |
+| `name_key` | String | building or zone localized name key |
+| `category` | String | building: dwelling/storage/workshop/utility/civic/trade |
+| `tier` | int | building ladder tier |
+| `debt` | String | building/zone missing behavior, empty when absent |
+| `width` | int | building unrotated exterior footprint width |
+| `height` | int | building unrotated exterior footprint height |
+| `stations` | PackedStringArray | building station alternatives, first is omitted-command default |
+| `requires_knowledge` | PackedInt64Array | building resolved required KnowledgeIds |
+| `upgrade_from` | String | previous template id, empty absent |
+| `upgrade_to` | String | next template id, empty absent |
+| `materials` | Array[Dictionary] | default building plan physical costs; each row item:int code and need:int count |
+| `connected` | bool | building: Connected status |
+| `era_id` | String | building: authored era id |
+| `art_roof` | String | building: round/angular |
+| `art_tint_material` | String | building: material registry name for existing tint pipeline |
+| `art_icon` | String | building: authored glyph id |
+| `status` | String | zone: Connected/Inert; only Connected housing routes to placement |
 
 ## Clock and world
 
@@ -597,6 +629,53 @@ Every registered building, sorted by BuildingId. Buildings register on tick 1 (t
 | `ys` | PackedInt32Array | tile y |
 | `kinds` | PackedByteArray | `BuildingKind::code`: 0 hearth, 1 shelter, 2 stockpile marker (V7), 3 hut |
 
+#### Template snapshot helper fields
+
+`building_templates::append_snapshot` adds the following outer arrays, preserving
+all legacy packed columns above. Sites follow persistent site-id order; cancelled
+and completed provenance remains inspectable. Options follow template declaration
+order then authored station order. These ids do not join the legacy `ids` column.
+
+| key | type | scope and meaning |
+|---|---|---|
+| `template_options` | Array[Dictionary] | outer: one option per template/station alternative |
+| `template_sites` | Array[Dictionary] | outer: retained persistent aggregate building sites |
+| `id` | String or int | option: authored template id; site: numeric persistent BuildingSite id |
+| `station` | String | option choice or persisted site selection, empty no station |
+| `known` | bool | option: Connected and every required knowledge present |
+| `affordable` | bool | option: Connected and actual uncommitted physical inputs cover selected plan |
+| `missing_knowledge` | PackedInt64Array | option: missing resolved KnowledgeIds; unresolved Inert names are not fabricated codes |
+| `requirements` | Array[Dictionary] | option physical costs: item:int code, have:int uncommitted count, need:int count |
+| `reason_key` | String | option BUILD_LOCK_INERT/KNOWLEDGE/MATERIALS or empty; this is not tile placement admission |
+| `template_id` | String | site selected template id |
+| `rotation` | int | site clockwise quarter turns 0..3 |
+| `x` | int | site anchor/top-left x, not centre |
+| `y` | int | site anchor/top-left y |
+| `width` | int | site actual rotated exterior footprint width |
+| `height` | int | site actual rotated exterior footprint height |
+| `status` | String | site building/complete/cancelled |
+| `complete` | bool | site aggregate Complete status; physical intactness is a separate read |
+| `is_intact` | bool | site Complete with every exact physical completion witness still present |
+| `completed_pieces` | int | site pieces with Complete phase |
+| `total_pieces` | int | site plan piece count |
+| `cause` | String | site command/zone/steward |
+| `cause_id` | int | site zone/steward id; -1 direct command |
+| `source_record` | int | site current generation's accepted command-log index |
+| `completion_entry` | int | site current generation's completion chronicle index, -1 unfinished |
+| `placed_tick` | int | site current generation start tick |
+| `upgrade_to` | String | authored next template id, empty absent |
+| `upgrade_reason` | String | runtime upgrade rejection name, empty admitted; may be absent for missing template |
+| `upgrade_available` | bool | pure runtime upgrade admission and actual changed-piece affordability |
+| `upgrade_reason_key` | String | localized Inert/knowledge/material gate when applicable; otherwise use upgrade_reason |
+| `connected` | bool | current template Connected, false missing definition |
+| `era_id` | String | current template era; present when definition resolves |
+| `art_roof` | String | round/angular roof; present when definition resolves |
+| `art_tint_material` | String | material registry tint name |
+| `art_icon` | String | glyph id |
+
+Active roofs use existing site wash. Opaque completed roofs additionally require
+`is_intact`; cancelled/damaged sites do not create phantom finished buildings.
+
 ### `get_construction_snapshot`
 `collect_construction_snapshot(&World) -> Vec<ConstructionSnapshotRow>` → `construction_rows_to_dict`
 (`ffi/snapshot.rs`). Every `ConstructionSite` entity, in hecs query order.
@@ -711,6 +790,8 @@ frame.
 | `overlay_version` | int | `colony.overlay_version`, bumped when marks, zones, stacks or sites change |
 | `rooms_version` | int | M3: `colony.rooms_version`, bumped when the rooms or their roles change |
 
+| `command_revision` | int | current command-log length, including rejected logged commands; pair with simulation tick to invalidate pure template previews |
+
 ### `get_trees`
 `collect_tree_snapshot(&SimResources)` → `trees_to_dict` (`ffi/colony.rs`). Every standing tree in `(x, y)` order (sorted by
 x, then y). Stumps are not in the simulation: `tree_layer.gd` (and the text renderer's `StumpTracker`) derive them
@@ -756,6 +837,10 @@ tile; M2 adds resource nodes by tile.
 | `site_progress` | PackedInt32Array | work done |
 | `site_required` | PackedInt32Array | work needed |
 | `item_covered` | PackedInt32Array | M3: 1 = the ground stack (same rows as `item_xs`) lies under a storehouse roof |
+
+| `housing_zone_ids` | PackedInt64Array | shared zone id per designated housing tile; aligned with housing xs/ys, globally sorted (y,x,id); separate from stockpiles |
+| `housing_zone_xs` | PackedInt32Array | housing tile x; checked conversion; existing overlay version invalidates this group |
+| `housing_zone_ys` | PackedInt32Array | housing tile y; conversion failure warns and returns all three housing arrays empty |
 
 ## Built space and rooms (M3)
 
@@ -917,6 +1002,20 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 | `bed_room` | int | M3: the bed's room id, -1 when the bed is not in a room |
 | `bed_room_role` | int | M3: that room's `RoomRole::code`, -1 none |
 | `bed_roofed` | bool | M3: that room is roofed |
+
+#### Assigned-bed template-home helper fields
+
+`home_housing::append_template_home` appends these three keys even for absent people.
+The authoritative association starts at `res.bed_of[AgentId]`, then an intact
+completed template room or exact occupied-Hut/physical-piece membership. Current
+person position, settlement membership and proximity do not establish ownership.
+`get_agent_detail` retains its existing nine-key identity contract.
+
+| key | type | meaning |
+|---|---|---|
+| `dwelling_kind` | String | assigned-bed template id; empty absent or no authoritative template association |
+| `dwelling_name_key` | String | selected template localized name key; empty absent |
+| `dwelling_site_id` | int | persistent BuildingSite id, -1 absent; not catalogue ordinal or ECS bits |
 
 ## Knowledge (M4)
 
@@ -1155,8 +1254,8 @@ of the entry: one row per link, from the entry itself to its first cause (`mood:
 | key | type | meaning |
 |---|---|---|
 | `found` | bool | the entry exists |
-| `links` | PackedInt32Array | 0 a chronicle entry, 1 a mood modifier, 2 a pressure |
-| `codes` | PackedInt64Array | the entry index (0), `Modifier::code` (1; 100 = the relation) or `PressureKind::code` (2) |
+| `links` | PackedInt32Array | 0 a chronicle entry, 1 a mood modifier, 2 a pressure, 3 building provenance |
+| `codes` | PackedInt64Array | the entry index (0), `Modifier::code` (1; 100 = the relation), `PressureKind::code` (2), or -1 for building link3; use aligned building columns |
 | `ticks` | PackedInt64Array | an entry's tick, -1 otherwise |
 | `kinds` | PackedInt32Array | an entry's `ChronicleKind::as_u8`, -1 otherwise |
 | `subjects` | PackedInt64Array | an entry's subject `AgentId`, -1 otherwise |
@@ -1171,6 +1270,11 @@ M6a historical food metadata (same number of rows as the corresponding index/lin
 | `food_daily_milli` | PackedInt64Array | historical winter-plan daily demand in thousandths; -1 absent, 0 zero demand; aligned with `links`; only link0 uses its actual `codes` Chronicle index |
 | `food_evidence` | Array[Dictionary] | immutable food operation receipt aligned with `links`; empty dictionary when absent or on non-entry Why links; see M6a immutable food operation evidence below |
 
+
+| `building_sites` | PackedInt64Array | link3 persistent BuildingSite id; -1 for other links |
+| `building_records` | PackedInt64Array | link3 accepted command-log record for that generation; -1 otherwise |
+| `building_cause_kinds` | PackedInt32Array | link3 immutable origin: 0 command, 1 housing zone, 2 steward; -1 otherwise |
+| `building_cause_ids` | PackedInt64Array | link3 zone/steward id; -1 for direct command or other links |
 
 ### `get_year_summary`
 `get_year_summary(year)`: `collect_year_summary(&SimResources, i64) -> YearSummary` → `year_summary_to_dict`. Year
@@ -2014,3 +2118,78 @@ Inactive/covered/stale card targets are skipped before dispatch. Returns accepte
 Stage2 appends chronicle kinds57 `FirstCloth` and58 `FirstTunic` after actual output placement. The generic textile-apparel event need not be a specific hardcoded tunic. The presentation translates these kinds in ko/en; it does not create outputs. Runtime validation is pending in `m6b/M6B_REPORT.md`.
 
 M-SPINE-a appends chronicle kind59 `EraChanged`: `value` is the catalogue era order; `cause` is 0 (unreached), 1 (transition), or 2 (reached). Presentation resolves the era name through the installed era catalogue and the transition suffix through localization.
+
+## M-SPINE-b placement and provenance
+
+### `get_build_template_preview`
+`get_build_template_preview(id: String, x: int, y: int, rotation: int, station: String) -> Dictionary`
+forwards to `building_templates::preview`. Empty station selects the authored first
+station. This pure read never allocates ids, logs commands or starts jobs. Placement
+admission and physical affordability are separate: an accepted player order may wait
+for materials. Inert templates cannot expand or place. No runtime evidence is implied.
+
+#### Preview helper fields
+
+| key | type | scope and meaning |
+|---|---|---|
+| `accepted` | bool | outer: runtime placement/gate preview succeeded |
+| `affordable` | bool | outer: selected plan's actual physical requirements currently covered |
+| `reason` | String | outer runtime rejection name, empty admitted; piece runtime checker rejection |
+| `reason_key` | String | outer localized Inert/knowledge/material reason, empty absent |
+| `rotation` | int | outer requested quarter turns |
+| `width` | int | outer rotated footprint width, 0 until valid definition/rotation; piece physical width |
+| `height` | int | outer rotated footprint height, 0 until valid definition/rotation; piece physical height |
+| `pieces` | Array[Dictionary] | outer authored-order expanded geometry; can be inspected despite rejection |
+| `kind` | String | piece existing blueprint name |
+| `x` | int | piece physical top-left x |
+| `y` | int | piece physical top-left y |
+| `ok` | bool | piece existing checker admission against current world; not aggregate completion or sequential scheduling |
+
+### `get_building_cause`
+`get_building_cause(site: int, record: int) -> Dictionary` resolves an exact persistent
+site/generation pair. Historical completions use immutable Chronicle BuildingComplete60
+value (selected template ordinal) and Building cause (site/record/origin), so upgrade
+cannot relabel a former house or cause. Current unfinished generation may resolve its
+own matching source record. Invalid identity/witness returns only `valid: false`.
+
+#### Cause helper fields
+
+| key | type | meaning |
+|---|---|---|
+| `valid` | bool | exact accepted source and template/generation witness found |
+| `site` | int | persistent BuildingSite id |
+| `record` | int | accepted top-level command-log index |
+| `template_id` | String | immutable completed generation or exact current template id |
+| `name_key` | String | that template localized name key |
+| `tier` | int | that template tier |
+| `command_key` | String | BUILD_CAUSE_ORDER_BUILD or BUILD_CAUSE_ORDER_UPGRADE |
+| `tick` | int | accepted source command tick |
+| `x` | int | original build anchor x; retained build witness supplies upgrade pose |
+| `y` | int | original build anchor y |
+| `rotation` | int | build rotation |
+| `completion_entry` | int | historical completion chronicle index, -1 current-only witness |
+| `cause` | String | immutable command/zone/steward origin |
+| `cause_kind` | String | same origin label for Why presentation |
+| `cause_id` | int | zone/steward id, -1 direct command |
+
+### `cmd_build_template`
+`cmd_build_template(id: String, x: int, y: int, rotation: int, station: String) -> Dictionary`
+submits one logged BuildTemplate command. Empty station uses the authored default;
+rotation0..3; physical piece jobs complete through existing callbacks. Returns
+accepted/count/reason using the existing command-result DTO.
+
+### `cmd_upgrade_building`
+`cmd_upgrade_building(site: int) -> Dictionary` submits UpgradeBuilding by persistent
+site id. Existing connected log4×4→stone4×4 preserves footprint; hut3×3 does not
+expand. Returns accepted/count/reason; a queued order is not physical completion.
+
+### `cmd_add_housing_zone`
+`cmd_add_housing_zone(x0: int, y0: int, x1: int, y1: int) -> Dictionary` clips the
+inclusive rectangle through the existing logged command path. Housing uses the
+existing zone allocator but a separate tile index from stockpiles. Reserved Inert
+storage/workshop growth definitions cannot emit this command. Returns accepted/count/reason.
+
+BuildingComplete60 `value` is the immutable completed template catalogue ordinal;
+`cause` is0 command,1 housing zone,2 steward request. Why link3 adds the aligned
+building site/record/origin columns above. Actual completion remains physical;
+reads and UI formatting do not create construction or rewrite history.

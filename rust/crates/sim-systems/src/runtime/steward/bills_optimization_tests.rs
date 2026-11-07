@@ -211,6 +211,7 @@ fn direct_workshop_candidates_preserve_the_complete_previous_order() {
         e.resources.colony.rooms.insert(
             999,
             sim_core::rooms::Room {
+                dwelling_kind: None,
                 id: 999,
                 tiles: BTreeSet::from([home]),
                 doors: BTreeSet::new(),
@@ -685,6 +686,7 @@ fn outside_axe_target_fixture(player: bool) -> (sim_engine::SimEngine, Rule, u32
     e.resources.colony.rooms.insert(
         990,
         sim_core::rooms::Room {
+            dwelling_kind: None,
             id: 990,
             tiles: BTreeSet::from([home]),
             doors: BTreeSet::new(),

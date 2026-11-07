@@ -619,10 +619,18 @@ pub(super) fn drafted_to_dict(r: &DraftedRows) -> VarDictionary {
 pub struct WhyRows {
     /// Whether the entry exists.
     pub found: bool,
-    /// Link kind: 0 a chronicle entry, 1 a mood modifier, 2 a pressure.
+    /// Link kind: 0 a chronicle entry, 1 a mood modifier, 2 a pressure, 3 a building generation.
     pub link: Vec<i32>,
     /// The entry index (link 0), `Modifier::code` (1, 100 = the relation) or `PressureKind::code` (2).
     pub code: Vec<i64>,
+    /// Persisted building site IDs for link3, otherwise −1; aligned with every link.
+    pub building_sites: Vec<i64>,
+    /// Persisted command records for link3, otherwise −1; never chronicle entry IDs.
+    pub building_records: Vec<i64>,
+    /// Immutable building origins: Command0 / Zone1 / Steward2, otherwise −1.
+    pub building_cause_kinds: Vec<i32>,
+    /// Immutable zone/request IDs, otherwise −1 (also −1 for Command).
+    pub building_cause_ids: Vec<i64>,
     /// For an entry link: its tick, else −1.
     pub tick: Vec<i64>,
     /// For an entry link: `ChronicleKind::as_u8`, else −1.
@@ -650,11 +658,29 @@ pub fn collect_chronicle_why(chronicle: &Chronicle, index: i64) -> WhyRows {
         ..WhyRows::default()
     };
     for link in mood::why_chain(chronicle, i) {
-        let (kind, code, entry) = match link {
-            Link::Entry(e) => (0, i64::from(e), chronicle.entry(e)),
-            Link::Modifier(c) => (1, i64::from(c), None),
-            Link::Pressure(c) => (2, i64::from(c), None),
+        let (kind, code, entry, building) = match link {
+            Link::Entry(e) => (0, i64::from(e), chronicle.entry(e), None),
+            Link::Modifier(c) => (1, i64::from(c), None, None),
+            Link::Pressure(c) => (2, i64::from(c), None, None),
+            Link::Building {
+                site,
+                record,
+                origin,
+            } => (3, -1, None, Some((site, record, origin))),
         };
+        let (site, record, origin_kind, origin_id) =
+            building.map_or((-1, -1, -1, -1), |(site, record, origin)| {
+                let (kind, id) = match origin {
+                    sim_core::colony::BuildCause::Command => (0, -1),
+                    sim_core::colony::BuildCause::Zone(id) => (1, i64::from(id)),
+                    sim_core::colony::BuildCause::Steward(id) => (2, i64::from(id)),
+                };
+                (i64::from(site), i64::from(record), kind, id)
+            });
+        out.building_sites.push(site);
+        out.building_records.push(record);
+        out.building_cause_kinds.push(origin_kind);
+        out.building_cause_ids.push(origin_id);
         out.link.push(kind);
         out.code.push(code);
         out.tick
@@ -683,6 +709,22 @@ pub(super) fn why_to_dict(r: &WhyRows) -> VarDictionary {
     d.set("found", r.found);
     d.set("links", PackedInt32Array::from(r.link.as_slice()));
     d.set("codes", PackedInt64Array::from(r.code.as_slice()));
+    d.set(
+        "building_sites",
+        PackedInt64Array::from(r.building_sites.as_slice()),
+    );
+    d.set(
+        "building_records",
+        PackedInt64Array::from(r.building_records.as_slice()),
+    );
+    d.set(
+        "building_cause_kinds",
+        PackedInt32Array::from(r.building_cause_kinds.as_slice()),
+    );
+    d.set(
+        "building_cause_ids",
+        PackedInt64Array::from(r.building_cause_ids.as_slice()),
+    );
     d.set("ticks", PackedInt64Array::from(r.tick.as_slice()));
     d.set("kinds", PackedInt32Array::from(r.kind.as_slice()));
     d.set("subjects", PackedInt64Array::from(r.subject.as_slice()));
@@ -693,12 +735,14 @@ pub(super) fn why_to_dict(r: &WhyRows) -> VarDictionary {
 }
 
 /// The link of entry `index` for the chronicle panel's "→" line: (link kind −1
-/// none / 0 entry / 1 modifier / 2 pressure, the linked entry index or −1, the
+/// none / 0 entry / 1 modifier / 2 pressure / 3 building, the linked entry index or −1, the
 /// modifier or pressure code or −1).
 pub fn cause_link(chronicle: &Chronicle, index: u32) -> (i32, i64, i64) {
     match chronicle.cause_of(index) {
         None => (-1, -1, -1),
         Some(CauseRef::Entry(e)) => (0, i64::from(e), -1),
+        // Building IDs stay in dedicated WhyRows columns; neither is an entry/code.
+        Some(CauseRef::Building { .. }) => (3, -1, -1),
         Some(CauseRef::Modifier { code, entry }) => {
             (1, entry.map_or(-1, i64::from), i64::from(code))
         }
@@ -946,3 +990,7 @@ pub fn modifier_name(code: u8) -> &'static str {
     }
     Modifier::from_code(code).map_or("", Modifier::name)
 }
+
+#[cfg(test)]
+#[path = "story_building_tests.rs"]
+mod building_provenance_tests;

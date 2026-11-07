@@ -243,6 +243,7 @@ fn store_grain_fixture(fresh: bool) -> (World, SimResources, hecs::Entity) {
     res.colony.rooms.insert(
         90,
         sim_core::rooms::Room {
+            dwelling_kind: None,
             id: 90,
             tiles: std::collections::BTreeSet::from([(2, 2)]),
             doors: std::collections::BTreeSet::new(),

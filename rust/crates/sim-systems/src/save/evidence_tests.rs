@@ -145,6 +145,16 @@ fn authenticated_original13_fixtures_keep_all_physical_food_and_system_slots() {
         assert_eq!(new_food, expected, "format13 physical state was remigrated");
         assert_eq!(loaded.current_tick(), original.current_tick);
         let mut expected_systems = original.systems;
+        if loaded.resources.rules.colony.is_some() {
+            let room_slot = expected_systems
+                .iter()
+                .position(|(name, _)| name == "RoomSystem")
+                .expect("original room slot");
+            expected_systems.insert(
+                room_slot + 1,
+                ("BuildingTemplateSystem".to_owned(), Vec::new()),
+            );
+        }
         let presentation_slot = expected_systems
             .iter()
             .position(|(name, _)| name == "InfluenceVisualizationSystem")

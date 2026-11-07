@@ -9,7 +9,7 @@ fn run() -> Result<(), String> {
     let mut args = std::env::args().skip(1);
     let path = args
         .next()
-        .ok_or("usage: spine_save_check <format17-save> [ticks]")?;
+        .ok_or("usage: spine_save_check <format17-or18-save> [ticks]")?;
     let ticks: u64 = args.next().map_or(Ok(1440), |value| {
         value.parse().map_err(|e| format!("ticks: {e}"))
     })?;
@@ -17,20 +17,33 @@ fn run() -> Result<(), String> {
         return Err("unexpected argument".into());
     }
     let bytes = std::fs::read(&path).map_err(|e| format!("{path}: {e}"))?;
-    if bytes.get(8..12) != Some(17u32.to_le_bytes().as_slice()) {
-        return Err("fixture must be a genuine format17 save".into());
+    let source_version = u32::from_le_bytes(
+        bytes
+            .get(8..12)
+            .ok_or("truncated fixture")?
+            .try_into()
+            .map_err(|_| "invalid header")?,
+    );
+    if !matches!(source_version, 17 | 18) {
+        return Err("fixture must be genuine format17 or18".into());
     }
     bootstrap(BootSelection::Bundled).map_err(|e| e.to_string())?;
     let mut migrated = save::load(&bytes).map_err(|e| e.to_string())?;
-    if !migrated.resources.colony.tech.era_progress.is_empty()
-        || migrated.resources.colony.tech.current_era != (0, 0)
-        || migrated
-            .world
-            .query::<&Skills>()
-            .iter()
-            .any(|(_, skills)| skills.completed.iter().any(|count| *count != 0))
+    if source_version == 17
+        && (!migrated.resources.colony.tech.era_progress.is_empty()
+            || migrated.resources.colony.tech.current_era != (0, 0)
+            || migrated
+                .world
+                .query::<&Skills>()
+                .iter()
+                .any(|(_, skills)| skills.completed.iter().any(|count| *count != 0)))
     {
         return Err("migration invented era measurements or completed-job history".into());
+    }
+    if !migrated.resources.colony.buildings.sites.is_empty()
+        || !migrated.resources.colony.buildings.housing_zones.is_empty()
+    {
+        return Err("predecessor migration invented building provenance".into());
     }
     let current = save::save(&mut migrated).map_err(|e| e.to_string())?;
     if current.get(8..12) != Some(save::FORMAT_VERSION.to_le_bytes().as_slice()) {
@@ -54,7 +67,7 @@ fn run() -> Result<(), String> {
     println!(
         "{}",
         serde_json::json!({
-            "result": "PASS", "fixture": path, "source_version": 17,
+            "result": "PASS", "fixture": path, "source_version": source_version,
             "current_version": save::FORMAT_VERSION, "ticks": ticks,
             "current_tick": migrated.current_tick(),
             "era_progress": migrated.resources.colony.tech.era_progress,

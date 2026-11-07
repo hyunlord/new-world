@@ -30,6 +30,7 @@ extends Node2D
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
+const ItemIcons = preload("res://scripts/ui/item_icons.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
 const FONT_PATH: String = "res://assets/fonts/galmuri/Galmuri11.ttf"
@@ -62,6 +63,9 @@ var _nodes: Dictionary = {}
 ## Tile -> the most items seen in that node (its "full" for the depleted look).
 var _node_max: Dictionary = {}
 var _hover: Vector2i = Vector2i(-1, -1)
+## Real housing designation tiles, separate from stockpile zone membership.
+var _housing_zones: Dictionary = {}
+var _selected_housing_zone: int = -1
 var _zoom: float = 1.0
 ## Tiles of M3 space sites (their label shows under the mouse).
 var _space_sites: Dictionary = {}
@@ -103,6 +107,8 @@ func _ready() -> void:
 
 
 func _on_world_reset() -> void:
+	_housing_zones.clear()
+	_selected_housing_zone = -1
 	_version = -1
 	_node_max.clear()
 	for s: Node in _sprites.values():
@@ -127,6 +133,7 @@ func _process(_delta: float) -> void:
 	if version != _version:
 		_version = version
 		_overlay = SimReads.read(_world_sim, "get_colony_overlay")
+		_index_housing_zones()
 		_index_stacks()
 		_sync_things()
 		_ground.queue_redraw()
@@ -141,7 +148,8 @@ func _process(_delta: float) -> void:
 	var hover: Vector2i = View.world_to_tile(get_global_mouse_position())
 	if hover != _hover:
 		var redraw: bool = _stacks.has(hover) or _stacks.has(_hover) or _nodes.has(hover) or _nodes.has(_hover) \
-			or _space_sites.has(hover) or _space_sites.has(_hover)
+			or _space_sites.has(hover) or _space_sites.has(_hover) \
+			or _housing_zones.has(hover) or _housing_zones.has(_hover)
 		_hover = hover
 		if redraw:
 			queue_redraw()
@@ -155,6 +163,32 @@ func stack_count() -> int:
 ## Number of resource nodes currently drawn (for tests and tools).
 func node_count() -> int:
 	return _nodes.size()
+
+
+func _index_housing_zones() -> void:
+	_housing_zones.clear()
+	var ids: PackedInt64Array = _overlay.get("housing_zone_ids", PackedInt64Array())
+	var xs: PackedInt32Array = _overlay.get("housing_zone_xs", PackedInt32Array())
+	var ys: PackedInt32Array = _overlay.get("housing_zone_ys", PackedInt32Array())
+	for i: int in mini(ids.size(), mini(xs.size(), ys.size())):
+		if ids[i] >= 0: _housing_zones[Vector2i(xs[i], ys[i])] = ids[i]
+	if not _housing_zones.values().has(_selected_housing_zone):
+		_selected_housing_zone = -1
+
+
+## Input can select an authoritative housing designation after higher-priority object hits.
+func housing_zone_at(tile: Vector2i) -> int:
+	return int(_housing_zones.get(tile, -1))
+
+
+func set_selected_housing_zone(id: int) -> void:
+	_selected_housing_zone = id if _housing_zones.values().has(id) else -1
+	if _ground != null: _ground.queue_redraw()
+	queue_redraw()
+
+
+func selected_housing_zone() -> int:
+	return _selected_housing_zone
 
 
 func _index_stacks() -> void:
@@ -208,15 +242,18 @@ static func stack_look(kind: int, count: int) -> Array:
 
 
 ## The texture and anchor of `copies` copies of item `id` at the stack layout offsets (cached).
-func _stack_texture(id: String, copies: int) -> Array:
-	var key: String = "%s|%d" % [id, copies]
+func _stack_texture(id: String, copies: int, kind: int = -1) -> Array:
+	var key: String = "%s|%d|%d" % [id, copies, kind]
 	if _stack_tex.has(key):
 		return _stack_tex[key]
 	var out: Array = [null, Vector2i.ZERO]
+	var procedural: bool = kind >= 0 and ItemIcons.uses_placeholder(kind)
+	var texture: Texture2D = ItemIcons.texture_of(kind) if procedural else ArtData.texture(id)
+	var anchor: Vector2i = Vector2i(16, 28) if procedural else ArtData.anchor(id)
 	if copies <= 1:
-		out = [ArtData.texture(id), ArtData.anchor(id)]
+		out = [texture, anchor]
 	else:
-		var src: Image = ArtData.image(id)
+		var src: Image = texture.get_image() if procedural and texture != null else ArtData.image(id)
 		var layout: Array = (ArtData.bindings().get("items", {}) as Dictionary).get("stack_layout", [[0, 0]])
 		if src != null:
 			var offs: Array[Vector2i] = []
@@ -231,7 +268,7 @@ func _stack_texture(id: String, copies: int) -> Array:
 			var img: Image = Image.create(src.get_width() + hi.x - lo.x, src.get_height() + hi.y - lo.y, false, Image.FORMAT_RGBA8)
 			for o: Vector2i in offs:
 				img.blend_rect(src, Rect2i(Vector2i.ZERO, src.get_size()), o - lo)
-			out = [ImageTexture.create_from_image(img), ArtData.anchor(id) - lo]
+			out = [ImageTexture.create_from_image(img), anchor - lo]
 	_stack_tex[key] = out
 	return out
 
@@ -287,9 +324,9 @@ func _sync_things() -> void:
 			wanted["i%d_%d" % [t.x, t.y]] = [ArtData.texture(dead), ArtData.anchor(dead), View.base_point(t) - Vector2(0, 1), dead]
 			continue
 		var look: Array = stack_look(kind, int(stack["count"]))
-		var tex: Array = _stack_texture(str(look[0]), int(look[1]))
+		var tex: Array = _stack_texture(str(look[0]), int(look[1]), kind)
 		if tex[0] != null:
-			wanted["i%d_%d" % [t.x, t.y]] = [tex[0], tex[1], View.base_point(t) - Vector2(0, 1), "%s|%d" % look]
+			wanted["i%d_%d" % [t.x, t.y]] = [tex[0], tex[1], View.base_point(t) - Vector2(0, 1), "%s|%d|%d" % [look[0], look[1], kind]]
 	for t: Vector2i in _nodes.keys():
 		if not _in_window(t):
 			continue
@@ -447,9 +484,32 @@ func _draw_ground() -> void:
 		if open_s and open_e:
 			_ground.draw_rect(Rect2(o + Vector2(t - tick_px, t - w), Vector2(tick_px, w)), tick)
 			_ground.draw_rect(Rect2(o + Vector2(t - w, t - tick_px), Vector2(w, tick_px)), tick)
+	_draw_housing_zones(tint, tick)
 	for g: Array in _floor_ghosts:
 		if g[1] != null:
 			_ground.draw_texture(g[1], g[0])
+
+
+## Housing uses the existing zone palette with continuous outer boundaries (stockpiles use corners).
+## Filled rect strips avoid the native backend's invisible one-pixel line primitive.
+func _draw_housing_zones(tint: Color, tick: Color) -> void:
+	for cell: Vector2i in _housing_zones.keys():
+		var id: int = int(_housing_zones[cell])
+		var origin: Vector2 = View.tile_to_world(cell)
+		_ground.draw_rect(Rect2(origin, Vector2(TILE, TILE)), tint)
+		var boundary: Color = tick
+		var width: float = 2.0
+		if id == _selected_housing_zone:
+			boundary.a = 1.0
+			width = 4.0
+		if housing_zone_at(cell + Vector2i.UP) != id:
+			_ground.draw_rect(Rect2(origin, Vector2(TILE, width)), boundary)
+		if housing_zone_at(cell + Vector2i.DOWN) != id:
+			_ground.draw_rect(Rect2(origin + Vector2(0, TILE - width), Vector2(TILE, width)), boundary)
+		if housing_zone_at(cell + Vector2i.LEFT) != id:
+			_ground.draw_rect(Rect2(origin, Vector2(width, TILE)), boundary)
+		if housing_zone_at(cell + Vector2i.RIGHT) != id:
+			_ground.draw_rect(Rect2(origin + Vector2(TILE - width, 0), Vector2(width, TILE)), boundary)
 
 
 ## Designations as ink marks on a pale disc at the tile's top-right.
@@ -524,6 +584,7 @@ func _draw() -> void:
 		draw_label(self, _font, text, Vector2(rect.position.x + rect.size.x * 0.5, rect.position.y - 4), _zoom)
 	# The hovered stack's name, count and quality; else the hovered node.
 	var at: Vector2 = View.tile_to_world(_hover) + Vector2(TILE * 0.5, -2)
+	var housing_label: String = EconomyText.ltr(locale, "ZONE_HOUSING") if housing_zone_at(_hover) >= 0 else ""
 	if _stacks.has(_hover) and _font != null:
 		var stack: Dictionary = _stacks[_hover]
 		var kind: int = int(stack["kind"])
@@ -531,12 +592,15 @@ func _draw() -> void:
 		if kind > 0:
 			text = EconomyText.stack(locale, kind, "", int(stack["count"]), int(stack["quality"]))
 		text += room_suffix(_rooms, _hover, bool(stack.get("covered", false)), locale)
+		if not housing_label.is_empty(): text += " · " + housing_label
 		draw_label(self, _font, text, at, _zoom)
 	elif _nodes.has(_hover) and _font != null:
 		var node: Dictionary = _nodes[_hover]
 		var row: Dictionary = ArtData.binding("nodes", int(node["kind"]))
 		draw_label(self, _font, EconomyText.trf(locale, "UI_NODE_LEFT_FMT", {"name": EconomyText.ltr(locale, str(row.get("name_key", "UI_UNKNOWN"))),
-			"item": EconomyText.item(locale, int(row.get("yields", -1))), "left": int(node["left"])}), at, _zoom)
+			"item": EconomyText.item(locale, int(row.get("yields", -1))), "left": int(node["left"])}) + (" · " + housing_label if not housing_label.is_empty() else ""), at, _zoom)
+	elif not housing_label.is_empty() and _font != null:
+		draw_label(self, _font, housing_label, at, _zoom)
 
 
 ## M3: " · 방: 창고 2" for a tile inside a room of `rooms` (room_layer.gd), plus " · 지붕 아래" when `covered`; "" outside.

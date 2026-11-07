@@ -37,6 +37,7 @@
 extends Node2D
 
 const View = preload("res://scripts/world/colony/view.gd")
+const TemplatePreview = preload("res://scripts/world/colony/template_preview.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
@@ -47,7 +48,7 @@ const DRAFT_KEY: Key = KEY_D
 
 ## BUILD places the blueprint kind `build_kind` (M1's HUT mode, same code 3); M3 adds DIG (7) and DECONSTRUCT (8);
 ## M4 adds CLAY (9, clay pits); M5 HUNT (10, click a deer) and HUNT_ZONE (11, a hunt zone rectangle).
-enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT, CLAY, HUNT, HUNT_ZONE, HARVEST, FIELD, ERASE_FIELD }
+enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT, CLAY, HUNT, HUNT_ZONE, HARVEST, FIELD, ERASE_FIELD, HOUSING }
 ## `get_place_preview` shapes: one tile, line, hollow rectangle, filled rectangle.
 const SHAPE_TILE: int = 0
 const SHAPE_LINE: int = 1
@@ -55,6 +56,7 @@ const SHAPE_HOLLOW: int = 2
 const SHAPE_FILLED: int = 3
 
 const AREA_COMMANDS: Dictionary = {
+	Mode.HOUSING: "cmd_add_housing_zone",
 	Mode.FIELD: "cmd_zone_field",
 	Mode.ERASE_FIELD: "cmd_erase_field",
 	Mode.HARVEST: "cmd_designate_harvest",
@@ -69,6 +71,7 @@ const AREA_COMMANDS: Dictionary = {
 	Mode.HUNT_ZONE: "cmd_add_hunt_zone",
 }
 const RECT_COLORS: Dictionary = {
+	Mode.HOUSING: Color(0.85, 0.72, 0.38, 0.9),
 	Mode.FIELD: Color(0.65, 0.82, 0.40, 0.9),
 	Mode.ERASE_FIELD: Color(0.9, 0.5, 0.35, 0.9),
 	Mode.HARVEST: Color(0.65, 0.82, 0.40, 0.9),
@@ -84,6 +87,7 @@ const RECT_COLORS: Dictionary = {
 }
 # The accepted-order toast per command ({count} = trees, tiles, blueprints or cancelled orders).
 const TOAST_KEYS: Dictionary = {
+	"cmd_add_housing_zone": "BUILD_HOUSING_ORDERED",
 	"cmd_zone_field": "S1_FIELD_ORDERED",
 	"cmd_erase_field": "S1_FIELD_ERASED",
 	"cmd_designate_harvest": "M6A_TOAST_HARVEST",
@@ -114,6 +118,9 @@ var mode: int = Mode.NONE
 ## The blueprint kind the build mode places ("hut", "knapping_spot", "wood_bench", "drying_rack").
 var build_kind: String = "hut"
 var _world_sim: Node = null
+var _template_preview: Node2D
+var _hover_screen: Vector2 = Vector2.ZERO
+var _has_template_cursor: bool = false
 var _dragging: bool = false
 var _drag_from: Vector2i = Vector2i.ZERO
 var _drag_to: Vector2i = Vector2i.ZERO
@@ -136,10 +143,72 @@ func _ready() -> void:
 	z_index = 7
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
+	_template_preview = TemplatePreview.new()
+	_template_preview.name = "TemplatePreview"
+	_template_preview.scale = Vector2.ONE * View.TILE
+	_template_preview.set("tile_pixels", float(View.TILE))
+	add_child(_template_preview)
+	_template_preview.call("configure", _world_sim)
+	_template_preview.hide()
+	if _world_sim != null:
+		_world_sim.connect("world_reset", _reset_template_input)
+
+
+func _reset_template_input() -> void:
+	_has_template_cursor = false
+	set_mode(Mode.NONE)
+
+
+func template_active() -> bool:
+	return _template_preview != null and bool(_template_preview.call("active"))
+
+
+func set_template(row: Dictionary, station: String) -> void:
+	set_mode(Mode.BUILD)
+	_template_preview.call("begin", row, station)
+	_refresh_template()
+	mode_changed.emit(mode)
+
+
+func rotate_template() -> void:
+	if template_active():
+		_template_preview.call("rotate_clockwise")
+		_refresh_template()
+
+
+func _refresh_template() -> void:
+	if not template_active() or not _has_template_cursor:
+		return
+	var time: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
+	var versions: Dictionary = SimReads.read(_world_sim, "get_colony_versions")
+	# Required additive bridge field: append-only production command_log.len(), never overlay_version.
+	_template_preview.call("track", _hover, int(time["tick"]), int(versions["command_revision"]))
+
+
+func _process(_delta: float) -> void:
+	if template_active():
+		_template_preview.visible = _has_template_cursor and get_viewport().gui_get_hovered_control() == null
+		if _template_preview.visible:
+			_track(_hover_screen)
+
+
+func selected_housing_zone() -> int:
+	var overlay: Node = get_node_or_null("../OverlayLayer")
+	return int(overlay.call("selected_housing_zone")) if overlay != null else -1
+
+
+func _clear_housing_selection() -> void:
+	var overlay: Node = get_node_or_null("../OverlayLayer")
+	if overlay != null and int(overlay.call("selected_housing_zone")) >= 0:
+		overlay.call("set_selected_housing_zone", -1)
+		mode_changed.emit(mode)
 
 
 ## Enter `new_mode` (Mode.NONE leaves any mode).
 func set_mode(new_mode: int) -> void:
+	if template_active():
+		_template_preview.call("cancel")
+	_clear_housing_selection()
 	why_selecting = false
 	mode = new_mode
 	_dragging = false
@@ -160,6 +229,8 @@ func set_build(kind_name: String) -> void:
 
 ## The footprint of the current build kind.
 func build_size() -> Vector2i:
+	if template_active():
+		return _template_preview.call("rotated_size")
 	var code: int = EconomyText.build_code(build_kind)
 	return EconomyText.build_kind(code)["size"] if code >= 0 else Vector2i.ONE
 
@@ -167,6 +238,8 @@ func build_size() -> Vector2i:
 ## The footprint's top-left when the cursor is on `tile` (the cursor sits on the footprint's centre, left of it
 ## for an even width).
 func build_origin(tile: Vector2i) -> Vector2i:
+	if template_active():
+		return _template_preview.call("cursor_origin", tile)
 	var size: Vector2i = build_size()
 	@warning_ignore("integer_division")
 	return tile - Vector2i((size.x - 1) / 2, (size.y - 1) / 2)
@@ -174,6 +247,12 @@ func build_origin(tile: Vector2i) -> Vector2i:
 
 ## Place the current build kind with the cursor on `tile` (also used by tools); returns the result.
 func place_at(tile: Vector2i) -> Dictionary:
+	if template_active():
+		_hover = tile
+		_refresh_template()
+		var result: Dictionary = _template_preview.call("place")
+		_finish("cmd_build_template", result)
+		return _last_result
 	var origin: Vector2i = build_origin(tile)
 	_send("cmd_place_blueprint", [build_kind, origin.x, origin.y])
 	return _last_result
@@ -181,6 +260,8 @@ func place_at(tile: Vector2i) -> Dictionary:
 
 ## M3: how the current build kind is placed: "wall" / "floor" (drag) or "" (one click, or not a space kind).
 func build_drag() -> String:
+	if template_active():
+		return ""
 	return EconomyText.drag_of(EconomyText.build_code(build_kind))
 
 
@@ -419,6 +500,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif key.keycode == KEY_ESCAPE and mode != Mode.NONE:
 			set_mode(Mode.NONE)
 			get_viewport().set_input_as_handled()
+		elif key.keycode == KEY_ESCAPE and selected_housing_zone() >= 0:
+			_clear_housing_selection()
+			mode_changed.emit(mode)
+			get_viewport().set_input_as_handled()
 		elif key.keycode == DRAFT_KEY and not toggle_draft_selected().is_empty():
 			get_viewport().set_input_as_handled()
 	if event is InputEventKey and (event as InputEventKey).keycode == KEY_SHIFT and not event.is_echo():
@@ -466,9 +551,12 @@ func _set_shift(on: bool) -> void:
 
 
 func _track(screen: Vector2) -> void:
+	_hover_screen = screen
+	_has_template_cursor = true
 	_hover_world = get_canvas_transform().affine_inverse() * screen
 	var tile: Vector2i = View.world_to_tile(_hover_world)
 	if tile == _hover:
+		_refresh_template()
 		return
 	_hover = tile
 	if _dragging:
@@ -541,6 +629,10 @@ func _finish(command: String, result: Dictionary, preview_read: Dictionary = {},
 
 
 func _refresh_ghost() -> void:
+	if template_active():
+		_refresh_template()
+		queue_redraw()
+		return
 	if _world_sim == null:
 		return
 	if EconomyText.is_space(EconomyText.build_code(build_kind)):
@@ -598,6 +690,7 @@ func _click(tile: Vector2i) -> void:
 
 ## The no-mode click at world position `world_pos` on `tile` (also used by tools).
 func click_world(world_pos: Vector2, tile: Vector2i) -> void:
+	_clear_housing_selection()
 	var visitors: Node = get_node_or_null("../VisitorLayer")
 	if visitors != null:
 		var caravan: int = int(visitors.call("caravan_at", world_pos))
@@ -640,6 +733,20 @@ func click_world(world_pos: Vector2, tile: Vector2i) -> void:
 	if not preload("res://scripts/ui/field_facts.gd").at(_world_sim, tile).is_empty():
 		field_selected.emit(tile)
 		return
+	var build_panel: Node = get_node_or_null("/root/Main/UI/BuildPanel")
+	for value: Variant in SimReads.read(_world_sim, "get_building_snapshot").get("template_sites", []):
+		if value is not Dictionary or str(value.get("status", "")) == "cancelled":
+			continue
+		var site: Dictionary = value
+		if build_panel != null and Rect2i(int(site["x"]), int(site["y"]), int(site["width"]), int(site["height"])).has_point(tile):
+			build_panel.call("open_site", int(site["id"]))
+			return
+	var housing: Node = get_node_or_null("../OverlayLayer")
+	var zone: int = int(housing.call("housing_zone_at", tile)) if housing != null else -1
+	if zone >= 0:
+		housing.call("set_selected_housing_zone", zone)
+		mode_changed.emit(mode)
+		return
 	# M-READ: clicking a stockpile zone tile or hearth tile opens the causal panel with diagnosis.
 	var panel: Node = get_node_or_null("/root/Main/UI/CausalPanel")
 	if panel != null and _world_sim.has_method("get_subject_diagnosis"):
@@ -680,6 +787,8 @@ func click_world(world_pos: Vector2, tile: Vector2i) -> void:
 
 func _draw() -> void:
 	var line: float = 2.0 / maxf(0.25, get_viewport().get_canvas_transform().x.x)
+	if template_active():
+		return # Tile-scaled child draws the authoritative template envelope and pieces.
 	if mode == Mode.BUILD and EconomyText.is_space(EconomyText.build_code(build_kind)):
 		_draw_preview(line)
 	elif mode == Mode.BUILD:

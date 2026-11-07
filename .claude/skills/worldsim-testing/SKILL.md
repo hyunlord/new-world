@@ -332,3 +332,7 @@ A Rust-only mirror may omit files referenced by multiline include_str calls outs
 - Profile the actual delayed frame before changing policy: repeated whole-map region builds and overlapping geometry checks dominated ticks361/721. Call-local reuse may reduce computation, but candidate order, visit/score bounds, blocked/off-map goal semantics and final occupancy checks remain part of behavior.
 - Keep frozen candidate-order/path/command oracles and live navigation-stat controls. A read-only preview may reuse valid derived labels or compute local labels; it must not warm or mutate the live cache accidentally. Require exact whole-fixture equality and baseline identity before claiming preservation.
 - A 120-second one-zoom diagnostic is not step41 acceptance. Retain admission failures and unsuccessful trials, remove temporary instrumentation, then gate the committed candidate with both zooms and the unchanged waiver.
+
+### Colony fixtures at tick zero (M-SPINE)
+
+A newly generated colony has a hearth before settlement formation. Locate the initial camp with `worldgen::colony::hearth`, and select steward rules from their actual scope/action instead of assuming a historical optional completion role. Both assumptions failed the first integrated spine tests. Sources: `rust/crates/sim-test/tests/spine_support/mod.rs`; `rust/crates/sim-test/tests/spine_provenance.rs`.

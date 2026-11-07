@@ -82,6 +82,7 @@ fn known_system_additions_preserve_registration_order() {
             steward: true,
             defence: true,
             food: true,
+            buildings: false,
             diagnosis: true,
         },
     )
@@ -94,6 +95,7 @@ fn known_system_additions_preserve_registration_order() {
             steward: false,
             defence: false,
             food: true,
+            buildings: false,
             diagnosis: true,
         }
     )

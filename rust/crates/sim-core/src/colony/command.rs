@@ -380,6 +380,34 @@ pub enum Command {
         /// Accepted scheduling preference.
         mode: super::cultivation::FieldWork,
     },
+    /// Queue an authored template using existing physical blueprint jobs.
+    BuildTemplate {
+        /// Data-defined building template identity.
+        id: String,
+        /// Top-left of the rotated footprint.
+        anchor: (u32, u32),
+        /// Clockwise quarter turns, zero through three.
+        rotation: u8,
+        /// Selected authored station, or the template default.
+        #[serde(default)]
+        station: Option<String>,
+    },
+    /// Replace a completed template with its authored next generation.
+    UpgradeBuilding {
+        /// Persistent site identity, independent of its transient physical jobs.
+        site: u32,
+    },
+    /// Add an inclusive housing rectangle using the shared zone allocator.
+    AddHousingZone {
+        /// First inclusive corner x.
+        x0: u32,
+        /// First inclusive corner y.
+        y0: u32,
+        /// Opposite inclusive corner x.
+        x1: u32,
+        /// Opposite inclusive corner y.
+        y1: u32,
+    },
 }
 
 impl Command {
@@ -429,6 +457,9 @@ impl Command {
             Self::ZoneField { .. } => "zone_field",
             Self::EraseField { .. } => "erase_field",
             Self::SetFieldWork { .. } => "set_field_work",
+            Self::BuildTemplate { .. } => "build_template",
+            Self::UpgradeBuilding { .. } => "upgrade_building",
+            Self::AddHousingZone { .. } => "add_housing_zone",
         }
     }
 }

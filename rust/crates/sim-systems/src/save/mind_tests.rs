@@ -150,6 +150,7 @@ fn invalid_saved_policy_is_rejected_before_registration() {
         food: &body.food,
         cultivation: &body.cultivation,
         processing: &body.processing,
+        buildings: &body.buildings,
     })
     .expect("malformed fixture");
     let mut corrupt = MAGIC.to_vec();

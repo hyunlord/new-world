@@ -1,0 +1,13 @@
+// Data-only templates; no simulation or bridge content-name branch.
+(schema_version:1,buildings:[
+(id:"test_mudbrick_screen",name_key:"EXT_BUILDING_SCREEN",era:"paleolithic",category:Utility,tier:1,
+ footprint:(1,1),pieces:[(kind:"test_mudbrick_wall",at:Anchor)],stations:[],requires_knowledge:[],
+ materials:{"clay":2},function:(beds:0,storage:None,workshop_tags:[],warmth:Roofed),
+ upgrade_from:None,upgrade_to:None,zone_kind:None,status:Connected,debt:None,
+ art:(roof:Round,tint_material:"clay",icon:"grain")),
+(id:"test_future_tower",name_key:"EXT_BUILDING_TOWER",era:"iron",category:Utility,tier:4,
+ footprint:(3,3),pieces:[(kind:"future_fixture_tower_body",at:Anchor)],stations:[],requires_knowledge:["future_fixture_tower"],
+ materials:{},function:(beds:0,storage:None,workshop_tags:[],warmth:Roofed),
+ upgrade_from:None,upgrade_to:None,zone_kind:None,status:Inert,
+ debt:Some("C3: fixture tower structure and lookout behavior deliberately unwired"),
+ art:(roof:Angular,tint_material:"granite",icon:"book"))])

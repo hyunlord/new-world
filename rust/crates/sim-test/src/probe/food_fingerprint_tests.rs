@@ -144,6 +144,7 @@ fn full_sidecar_and_each_physical_owner_change_both_probe_fingerprints() {
         engine.resources.colony.rooms.insert(
             1,
             Room {
+                dwelling_kind: None,
                 id: 1,
                 tiles: BTreeSet::from([(1, 1)]),
                 doors: BTreeSet::new(),

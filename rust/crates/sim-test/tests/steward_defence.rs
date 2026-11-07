@@ -1149,6 +1149,7 @@ fn resident_alarm_ignores_dead_drafted_roofed_and_unselected_pack_targets() {
     engine.resources.colony.rooms.insert(
         999,
         sim_core::rooms::Room {
+            dwelling_kind: None,
             id: 999,
             tiles: std::collections::BTreeSet::from([tile]),
             doors: Default::default(),

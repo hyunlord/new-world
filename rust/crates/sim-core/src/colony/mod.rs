@@ -9,6 +9,8 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+pub mod building_site;
+pub mod building_template;
 mod command;
 pub mod content;
 pub mod content_state;
@@ -39,6 +41,11 @@ pub mod values;
 pub mod wildlife;
 pub mod workshop;
 
+pub use building_site::{
+    BuildCause, BuildingPiece, BuildingSite, BuildingSiteId, BuildingState, BuildingStatus,
+    PiecePhase,
+};
+pub use building_template::{BuildingCategory, BuildingTemplate, TemplateCatalog};
 pub use command::{Command, CommandRecord, CommandResult, RejectReason};
 pub use items::{
     quality_bucket, Carry, ItemKind, ItemLedger, ItemSpec, ItemStack, Tool, RAW_QUALITY,
@@ -168,6 +175,9 @@ impl ColonyTallies {
 /// All colony state kept beside the ECS world (`SimResources::colony`).
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ColonyState {
+    /// Template provenance and housing zones; persisted by the versioned save overlay.
+    #[serde(skip)]
+    pub buildings: BuildingState,
     /// Standing trees by tile.
     pub trees: BTreeMap<(u32, u32), Tree>,
     /// Resource nodes (boulders, flint outcrops) by tile (M2).

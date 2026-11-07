@@ -1,6 +1,8 @@
 # WorldSim 역사
 
-- 2026-11-07 M-SPINE-a 후보: 시대·기술 카탈로그와 format18 이전 저장 마이그레이션을 추가했다. 기술 지도의 이전 Stage2 시트는 Git 이력 `68beae3a:docs/images/m6b_stage2_contact_sheet.png`에 보존하고 [현재 시트](images/m_spine_a_contact_sheet.png)로 교체했다. 구현 결정은 [ADR0060](decisions/0060-content-spine.md). 게시 완료 기록은 게이트 후 남긴다.
+- 2026-11-08 — M-SPINE-b 구현 통합 진행 중(IN_PROGRESS/NOT_RUN), 미게시. 기존 조각 기반 건물 템플릿·물리 완료/원인·format19·주거 구역/집사 선택·건물 패널·자리표시 아트를 통합했다. 사슬·저장·화면·크래시·전체 게이트는 b 증거 대기이며 마일스톤 #13 전체 완료가 아니다.
+
+- 2026-11-08 01:01:16KST — M-SPINE-a `c467c0a36466ec86419ae66bfb702e37c2566b30`을 v8/wip→v8/main 순서로 fast-forward 게시했다. 시대·기술 카탈로그, 회색 콘텐츠와 format18 마이그레이션을 제공한다. 5차 전체49/49 PASS·exit0(기존 step41 면제만 사용), DEBUG3119PASS/RELEASE 원본카운터3118PASS·각0FAIL/14ignored. RELEASE 차이는 증명된 stdout interleave이며 원본을 보정하지 않았다. 앞선 중단·실패와 시도3 보호 경로 접근/HEAD 변경 사고를 [a 보고서](v8/spine/M_SPINE_A_REPORT.md)에 보존한다. [ADR0060](decisions/0060-content-spine.md); 이전 Stage2 시트는 Git 이력 `68beae3a:docs/images/m6b_stage2_contact_sheet.png`, [a 시트](images/m_spine_a_contact_sheet.png)는 최종 b 통합 큐레이션 전까지 유지한다.
 
 - 2026-11-06 — M6b Stage2 직조 후보: 실제 아마 수확부터 두 의복 착용·저장 재개까지 완료하고12장 캡처·실제 주민 클릭을 확인했다. baseline identity·8세계 smoke PASS, 전체 gate와 게시 대기. 전용 아트는 #689([보고서](v8/m6b/M6B_REPORT.md), [ADR0059](decisions/0059-authored-weaving-and-physical-apparel.md)).
 

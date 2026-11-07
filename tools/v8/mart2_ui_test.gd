@@ -19,6 +19,7 @@ extends SceneTree
 const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const ItemIcons = preload("res://scripts/ui/item_icons.gd")
+const SpineContent = preload("res://scripts/ui/content_context.gd")
 const Daylight = preload("res://scripts/world/daylight_controller.gd")
 const AgentLayer = preload("res://scripts/world/colony/agent_layer.gd")
 const MIN_CHECKS: int = 25
@@ -128,6 +129,8 @@ func _run() -> void:
 		await _zoom_and_lod()
 		await _params_reload()
 		await _icons()
+		if OS.get_cmdline_user_args().has("--spine-gallery"):
+			await _spine_gallery()
 		await _preview()
 		await _night(_arg("--night"))
 	var enough: bool = _checks >= MIN_CHECKS
@@ -329,7 +332,7 @@ func _icons() -> void:
 		for n: Node in panel.find_children("Recipe_*", "Button", true, false):
 			total += 1
 			var b: Button = n
-			if b.icon != null and b.icon == ArtData.texture(ItemIcons.asset_of(int(b.get_meta("item_kind", -1)))):
+			if b.icon != null and b.icon == ItemIcons.texture_of(int(b.get_meta("item_kind", -1))):
 				with_item += 1
 		_check("workshop_recipe_icons", total > 0 and with_item == total, "%d of %d recipe buttons carry their output's icon" % [with_item, total])
 		panel.call("close")
@@ -534,3 +537,137 @@ func _silhouette(img: Image, person: Node) -> Dictionary:
 
 func _lum(c: Color) -> float:
 	return 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b
+
+
+# Opt-in renderer fixtures only; actual crafted cord/sites belong to the separate world chain.
+func _spine_gallery() -> void:
+	var native: bool = DisplayServer.get_name() != "headless"
+	_check("spine_gallery_native_output", native and not _shots.is_empty(), "native display and --shots required")
+	if not native or _shots.is_empty(): return
+	var start_checks: int = _checks
+	var start_failures: int = _failures
+	var receipt: Dictionary = {"classification": "renderer fixtures, NOT actual world completion", "cells": [], "registry_revision": SpineContent.revision(), "display": DisplayServer.get_name(), "rendering_method": RenderingServer.get_current_rendering_method(), "window_size": [DisplayServer.window_get_size().x, DisplayServer.window_get_size().y], "viewport_size": [root.get_visible_rect().size.x, root.get_visible_rect().size.y]}
+	var layer: CanvasLayer = CanvasLayer.new()
+	layer.layer = 120
+	root.add_child(layer)
+	var panel: PanelContainer = PanelContainer.new()
+	panel.theme = load("res://assets/ui/worldsim_theme.tres")
+	panel.position = Vector2(16, 16)
+	layer.add_child(panel)
+	var box: VBoxContainer = VBoxContainer.new()
+	panel.add_child(box)
+	var heading: Label = Label.new()
+	heading.text = "M-SPINE renderer fixtures · no world placement · ore/ingot synthetic"
+	box.add_child(heading)
+	var grid: GridContainer = GridContainer.new()
+	grid.columns = 8
+	box.add_child(grid)
+	var shapes: Array[String] = ["lump", "rod", "blade", "vessel", "cloth", "grain", "ore", "ingot"]
+	var shape_hashes: Dictionary = {}
+	for material: String in ["oak", "birch"]:
+		var hashes: Dictionary = {}
+		for shape: String in shapes:
+			var row: Dictionary = {}
+			for item: Dictionary in SpineContent.rows("items"):
+				if str(item.get("art_shape", "")) == shape:
+					row = item.duplicate(true)
+					break
+			var provenance: String = "tint variant of " + str(row.get("id", "synthetic absent selector"))
+			row["art_shape"] = shape
+			row["art_tint_material"] = material
+			var texture: Texture2D = ItemIcons.item_texture(row)
+			var digest: String = _spine_texture_hash(texture)
+			hashes[digest] = true
+			if material == "oak": shape_hashes[shape] = digest
+			else: _check("spine_tint_" + shape, digest != shape_hashes[shape], material)
+			_spine_gallery_cell(grid, shape + " / " + material, texture, provenance, receipt)
+		_check("spine_eight_shapes_" + material, hashes.size() == 8 and not hashes.has(""), str(hashes.size()))
+	for id: String in ["cord", "basket", "sling", "bone_needle", "fish"]:
+		var code: int = SpineContent.code("items", id)
+		var row: Dictionary = SpineContent.row("items", code)
+		var texture: Texture2D = ItemIcons.texture_of(code)
+		_check("spine_actual_item_" + id, row.get("id") == id and row.has("art_shape") and row.has("art_tint_material") and texture == ItemIcons.item_texture(row) and not _spine_texture_hash(texture).is_empty(), str(row))
+		_spine_gallery_cell(grid, id, texture, "exact catalogue row via texture_of", receipt)
+	var glyphs: Dictionary = {"bed": "log_house", "store": "storehouse", "anvil": "workshop_shed", "pot": "well", "loom": "drying_shed", "fire": "smokehouse", "horn": "pen", "grain": "granary", "book": "shrine", "coin": "trading_post"}
+	var glyph_hashes: Dictionary = {}
+	var inert_row: Dictionary = {}
+	for glyph: String in glyphs:
+		var row: Dictionary = SpineContent.row("buildings", SpineContent.code("buildings", glyphs[glyph]))
+		_check("spine_actual_glyph_" + glyph, not row.is_empty() and row.get("art_icon") == glyph, str(row.get("id", "missing")))
+		_spine_gallery_cell(grid, glyph + " / " + str(row.get("id", "missing")), ItemIcons.building_texture(row, Vector2i(64, 64), true), "exact catalogue preview, NOT world", receipt)
+		var normalized: Dictionary = row.duplicate(true)
+		normalized.merge({"connected": true, "art_roof": "round", "art_tint_material": "oak", "era_id": "paleolithic"}, true)
+		glyph_hashes[_spine_texture_hash(ItemIcons.building_texture(normalized, Vector2i(64, 64)))] = true
+		if not bool(row.get("connected", false)) and not row.is_empty(): inert_row = row
+	_check("spine_ten_glyphs_distinct", glyph_hashes.size() == 10 and not glyph_hashes.has(""), "normalized roof/tint for glyph-only distinction")
+	var roof_hashes: Dictionary = {}
+	for roof: String in ["round", "angular"]:
+		var row: Dictionary = inert_row.duplicate(true)
+		row.merge({"connected": true, "art_roof": roof}, true)
+		var texture: Texture2D = ItemIcons.building_texture(row, Vector2i(64, 64))
+		roof_hashes[_spine_texture_hash(texture)] = true
+		_spine_gallery_cell(grid, roof, texture, "roof-selector fixture from catalogue metadata", receipt)
+	_check("spine_roofs_distinct", roof_hashes.size() == 2 and not roof_hashes.has(""), "Round/Angular")
+	_check("spine_inert_exists", not inert_row.is_empty(), str(inert_row.get("id", "missing")))
+	_check("spine_inert_nonworld", ItemIcons.building_texture(inert_row, Vector2i(64, 64)) == null, "no world texture/placement for Inert")
+	var inert: Texture2D = ItemIcons.building_texture(inert_row, Vector2i(64, 64), true)
+	var connected: Dictionary = inert_row.duplicate(true)
+	connected["connected"] = true
+	var opaque: Texture2D = ItemIcons.building_texture(connected, Vector2i(64, 64))
+	var clipped: bool = inert != null and opaque != null
+	var half: bool = clipped
+	var changed: int = 0
+	if clipped:
+		var image: Image = inert.get_image()
+		var solid: Image = opaque.get_image()
+		for y: int in image.get_height():
+			for x: int in image.get_width():
+				var color: Color = image.get_pixel(x, y)
+				var reference: Color = solid.get_pixel(x, y)
+				if reference.a == 0.0: clipped = clipped and color.a == 0.0
+				else:
+					half = half and absf(color.a - 0.5) <= 1.0 / 255.0
+					if Vector3(color.r, color.g, color.b).distance_to(Vector3(reference.r, reference.g, reference.b)) > 0.01: changed += 1
+	_check("spine_inert_clipped_half_hatch", clipped and half and changed > 0, "%d hatch pixels; alpha0.5 within RGBA8 precision" % changed)
+	_spine_gallery_cell(grid, "Inert50% hatch", inert, "exact catalogue Inert preview, NOT world", receipt)
+	await _frames(3)
+	_check("spine_gallery_fits", root.get_visible_rect().encloses(panel.get_global_rect()), str(panel.get_global_rect()))
+	await _shot("spine-placeholder-gallery.png")
+	receipt["checks"] = _checks - start_checks
+	receipt["failures"] = _failures - start_failures
+	receipt["source_sha256"] = {"harness": FileAccess.get_sha256("res://tools/v8/mart2_ui_test.gd"), "renderer": FileAccess.get_sha256("res://scripts/ui/item_icons.gd"), "glyphs": FileAccess.get_sha256("res://assets/ui/glyphs.json")}
+	receipt["png_sha256"] = FileAccess.get_sha256(_shots.path_join("spine-placeholder-gallery.png"))
+	var file: FileAccess = FileAccess.open(_shots.path_join("spine-placeholder-gallery.json"), FileAccess.WRITE)
+	_check("spine_gallery_receipt", file != null and not str(receipt["png_sha256"]).is_empty(), _shots)
+	if file != null:
+		file.store_string(JSON.stringify(receipt, "\t"))
+		file.close()
+	layer.queue_free()
+	await _frames(3)
+
+
+func _spine_gallery_cell(grid: GridContainer, title: String, texture: Texture2D, provenance: String, receipt: Dictionary) -> void:
+	var box: VBoxContainer = VBoxContainer.new()
+	box.custom_minimum_size = Vector2(140, 104)
+	grid.add_child(box)
+	var label: Label = Label.new()
+	label.text = title
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	box.add_child(label)
+	var rect: TextureRect = TextureRect.new()
+	rect.texture = texture
+	rect.custom_minimum_size = Vector2(64, 64)
+	rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	box.add_child(rect)
+	var digest: String = _spine_texture_hash(texture)
+	_check("spine_cell_" + title, not digest.is_empty(), provenance)
+	receipt["cells"].append({"title": title, "classification": provenance, "rgba_hex_sha256": digest})
+
+
+func _spine_texture_hash(texture: Texture2D) -> String:
+	if texture == null: return ""
+	var image: Image = texture.get_image()
+	if image == null or image.is_empty() or not image.get_used_rect().has_area(): return ""
+	return image.get_data().hex_encode().sha256_text()

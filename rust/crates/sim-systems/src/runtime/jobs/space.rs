@@ -165,6 +165,7 @@ pub fn complete_site(world: &mut World, res: &mut SimResources, entity: Entity) 
         CompletionCategory::Dwelling | CompletionCategory::Workshop => return,
     }
     record_completion(res, tile, site.kind);
+    crate::runtime::building_templates::observe_completion(res, &site);
     res.colony.tallies.space_built += 1;
     let _ = world.despawn(entity);
     changed(res, tile);

@@ -217,6 +217,8 @@ pub(in crate::ffi) fn food_why_to_dict(rows: &WhyRows, res: &SimResources) -> Va
             }
         })
         .collect();
+    // Extend the complete base dictionary: aligned building link namespaces and
+    // immutable origins survive this food-specific wrapper unchanged.
     let mut result = crate::ffi::story::why_to_dict(rows);
     result.set(
         "food_daily_milli",
@@ -267,10 +269,15 @@ mod evidence_tests {
     #[test]
     fn food_evidence_identity_never_treats_modifier_codes_as_entries() {
         let rows = WhyRows {
-            link: vec![0, 1, 2, 0],
-            code: vec![19, 19, 19, -1],
+            link: vec![0, 1, 2, 3, 0],
+            code: vec![19, 19, 19, 19, -1],
+            building_sites: vec![-1, -1, -1, 8, -1],
+            building_records: vec![-1, -1, -1, 19, -1],
             ..WhyRows::default()
         };
-        assert_eq!(evidence_indexes(&rows), vec![Some(19), None, None, None]);
+        assert_eq!(
+            evidence_indexes(&rows),
+            vec![Some(19), None, None, None, None]
+        );
     }
 }

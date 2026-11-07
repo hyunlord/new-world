@@ -182,11 +182,13 @@ pub enum ChronicleKind {
     FirstTunic = 58,
     /// M-SPINE: value = authored era order (resolves to era id); cause = state 0/1/2.
     EraChanged = 59,
+    /// M-SPINE: value = immutable completed template catalogue ordinal.
+    BuildingComplete = 60,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 60] = [
+    pub const ALL: [ChronicleKind; 61] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -247,6 +249,7 @@ impl ChronicleKind {
         Self::FirstCloth,
         Self::FirstTunic,
         Self::EraChanged,
+        Self::BuildingComplete,
     ];
 
     /// Stable numeric discriminant.
@@ -317,6 +320,7 @@ impl ChronicleKind {
             Self::FirstCloth => "first_cloth",
             Self::FirstTunic => "first_tunic",
             Self::EraChanged => "era_changed",
+            Self::BuildingComplete => "building_complete",
         }
     }
 }
@@ -516,6 +520,15 @@ pub enum CauseRef {
         code: u8,
         /// The sample's index (`Chronicle::sample`).
         sample: u32,
+    },
+    /// Immutable building generation and command origin behind its completion.
+    Building {
+        /// Persistent template site identity.
+        site: u32,
+        /// Command-log record that created this completed generation.
+        record: u32,
+        /// Original player, housing-zone or steward request identity.
+        origin: crate::colony::BuildCause,
     },
 }
 
@@ -778,10 +791,16 @@ mod tests {
         assert_eq!(ChronicleKind::CropFailure.as_u8(), 56);
         assert_eq!(ChronicleKind::FirstCloth.as_u8(), 57);
         assert_eq!(ChronicleKind::FirstTunic.as_u8(), 58);
-        assert_eq!(ChronicleKind::ALL.len(), 60);
+        assert_eq!(ChronicleKind::EraChanged.as_u8(), 59);
+        assert_eq!(ChronicleKind::BuildingComplete.as_u8(), 60);
+        assert_eq!(
+            ChronicleKind::BuildingComplete.as_str(),
+            "building_complete"
+        );
+        assert_eq!(ChronicleKind::ALL.len(), 61);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 60);
+        assert_eq!(names.len(), 61);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

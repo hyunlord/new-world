@@ -28,12 +28,14 @@
 //! wrote (the same code path as [`load`]). The engine after a save is
 //! therefore the loaded engine; the round-trip tests prove it ticks the same.
 
+mod building_validation;
 mod content_validation;
 #[cfg(test)]
 mod evidence_tests;
 mod food_catalog;
 #[cfg(test)]
 mod food_tests;
+mod legacy_buildings_v18;
 mod legacy_food_v13;
 mod legacy_food_v16;
 mod legacy_spine_v17;
@@ -67,7 +69,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6 through 17 are migrated. Bump it
+/// Save format version; historical versions 6 through 18 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -87,7 +89,8 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 16 = cultivation fields and physical crop-origin accounting.
 /// 17 = exact physical garment wear and pending nonfood processing.
 /// 18 = data-driven eras, full-width knowledge masks and completed-job practice.
-pub const FORMAT_VERSION: u32 = 18;
+/// 19 = persisted template building sites, selected stations and housing zones.
+pub const FORMAT_VERSION: u32 = 19;
 mod cultivation_catalog;
 mod cultivation_validation;
 mod legacy_cultivation_v15;
@@ -166,6 +169,7 @@ struct BodyRef<'a> {
     food: &'a sim_core::colony::food::FoodState,
     cultivation: &'a sim_core::colony::cultivation::CultivationState,
     processing: &'a sim_core::colony::processing::ProcessingState,
+    buildings: &'a sim_core::colony::building_site::BuildingState,
 }
 
 /// The body after the header, as read (same fields, same order).
@@ -239,6 +243,7 @@ struct Body {
     food: sim_core::colony::food::FoodState,
     cultivation: sim_core::colony::cultivation::CultivationState,
     processing: sim_core::colony::processing::ProcessingState,
+    buildings: sim_core::colony::building_site::BuildingState,
 }
 
 /// Exact format12 body, before independently persisted food state.
@@ -282,7 +287,14 @@ struct LegacyBodyV10 {
 /// module docs). On error the engine may hold reserved ids and must be
 /// discarded or reloaded.
 pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
+    building_validation::validate(&engine.resources.colony.buildings).map_err(SaveError::Encode)?;
     let command_boundary = engine.current_tick();
+    crate::runtime::building_templates::validate_state_at_boundary(
+        &engine.world,
+        &engine.resources,
+        command_boundary,
+    )
+    .map_err(SaveError::Encode)?;
     mind_validation::validate_at_boundary(&mut engine.resources, command_boundary)
         .map_err(SaveError::Encode)?;
     crate::runtime::food::validate(&engine.world, &engine.resources).map_err(SaveError::Encode)?;
@@ -302,6 +314,7 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         food: &engine.resources.food,
         cultivation: &engine.resources.cultivation,
         processing: &engine.resources.processing,
+        buildings: &engine.resources.colony.buildings,
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
@@ -350,8 +363,11 @@ pub fn load_with(
     let legacy_v14 = version == Some(14u32.to_le_bytes().as_slice());
     let legacy_v16 = version == Some(16u32.to_le_bytes().as_slice());
     let legacy_v17 = version == Some(17u32.to_le_bytes().as_slice());
-    let legacy_spine = version != Some(FORMAT_VERSION.to_le_bytes().as_slice());
-    let legacy_items = legacy_spine && !legacy_v17;
+    let source_version =
+        u32::from_le_bytes(bytes[8..12].try_into().map_err(|_| SaveError::NotASave)?);
+    let legacy_v18 = source_version == 18;
+    let legacy_spine = source_version < 18;
+    let legacy_items = source_version < 17;
     // Format13 already owns physical food and its FoodDailySystem slot.
     let legacy_food =
         legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10 || legacy_v11 || legacy_v12;
@@ -372,6 +388,7 @@ pub fn load_with(
             food: Default::default(),
             cultivation: Default::default(),
             processing: Default::default(),
+            buildings: Default::default(),
         }
     } else if legacy_v7 {
         let old: LegacyBodyV7 = decode(encoded).map_err(SaveError::Decode)?;
@@ -386,6 +403,7 @@ pub fn load_with(
             food: Default::default(),
             cultivation: Default::default(),
             processing: Default::default(),
+            buildings: Default::default(),
         }
     } else {
         let envelope: Envelope = decode(encoded).map_err(SaveError::Decode)?;
@@ -410,6 +428,7 @@ pub fn load_with(
                 food: Default::default(),
                 cultivation: Default::default(),
                 processing: Default::default(),
+                buildings: Default::default(),
             }
         } else if legacy_v9 {
             if envelope.revision != legacy_v9::REVISION {
@@ -431,6 +450,7 @@ pub fn load_with(
                 food: Default::default(),
                 cultivation: Default::default(),
                 processing: Default::default(),
+                buildings: Default::default(),
             }
         } else {
             if envelope.revision != catalog.revision()
@@ -440,6 +460,8 @@ pub fn load_with(
                 && !(legacy_v16
                     && legacy_weaving_v16::accepts_catalog(&envelope.revision, catalog)?)
                 && !(legacy_v17 && legacy_spine_v17::accepts_catalog(&envelope.revision, catalog)?)
+                && !(legacy_v18
+                    && legacy_buildings_v18::accepts_catalog(&envelope.revision, catalog)?)
             {
                 return Err(SaveError::Decode(format!(
                     "save content revision {} does not match installed {}",
@@ -460,6 +482,7 @@ pub fn load_with(
                     food: Default::default(),
                     cultivation: Default::default(),
                     processing: Default::default(),
+                    buildings: Default::default(),
                 }
             } else if legacy_v11 {
                 let old: LegacyBodyV11 = decode(&envelope.payload).map_err(SaveError::Decode)?;
@@ -474,6 +497,7 @@ pub fn load_with(
                     food: Default::default(),
                     cultivation: Default::default(),
                     processing: Default::default(),
+                    buildings: Default::default(),
                 }
             } else if legacy_v12 {
                 let old: LegacyBodyV12 = decode(&envelope.payload).map_err(SaveError::Decode)?;
@@ -488,11 +512,14 @@ pub fn load_with(
                     food: Default::default(),
                     cultivation: Default::default(),
                     processing: Default::default(),
+                    buildings: Default::default(),
                 }
             } else if legacy_v13 {
                 let old: legacy_food_v13::LegacyBodyV13 =
                     decode(&envelope.payload).map_err(SaveError::Decode)?;
                 old.into()
+            } else if legacy_v18 {
+                legacy_buildings_v18::decode_body(&envelope.payload)?
             } else if legacy_v17 {
                 legacy_spine_v17::decode_body(&envelope.payload)?
             } else if legacy_v16 {
@@ -513,6 +540,8 @@ pub fn load_with(
     resources.food = body.food;
     resources.cultivation = body.cultivation;
     resources.processing = body.processing;
+    resources.colony.buildings = body.buildings;
+    building_validation::validate(&resources.colony.buildings).map_err(SaveError::Decode)?;
     if legacy
         || legacy_v7
         || legacy_v8
@@ -561,6 +590,13 @@ pub fn load_with(
     crate::runtime::food::validate(&world, &resources).map_err(SaveError::Decode)?;
     cultivation_validation::validate(&world, &resources).map_err(SaveError::Decode)?;
     content_validation::validate_illness(&resources, &world).map_err(SaveError::Decode)?;
+    crate::runtime::building_templates::validate_state_at_boundary(
+        &world,
+        &resources,
+        body.current_tick,
+    )
+    .map_err(SaveError::Decode)?;
+    crate::runtime::building_templates::associate_rooms(&mut resources);
     let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
     let legacy_colony_brain =
         resources.rules.colony.is_some() && resources.mind.policy_source.is_none();
@@ -576,6 +612,7 @@ pub fn load_with(
             steward: legacy,
             defence: legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10,
             food: legacy_food && resources.rules.colony.is_some(),
+            buildings: source_version <= 18 && resources.rules.colony.is_some(),
             diagnosis: true, // M-READ: always add presentation-only systems
         },
     )?;
@@ -594,6 +631,8 @@ struct LegacySystemAdditions {
     steward: bool,
     defence: bool,
     food: bool,
+    /// Known colony-only building slot introduced in format19.
+    buildings: bool,
     /// M-READ: presentation-only diagnosis and requests systems (no saved state).
     diagnosis: bool,
 }
@@ -610,6 +649,7 @@ fn insert_legacy_systems(
             "StewardSystem" => additions.steward,
             "StewardDefenceSystem" => additions.defence,
             "FoodDailySystem" => additions.food,
+            "BuildingTemplateSystem" => additions.buildings,
             "DiagnosisSystem" | "RequestsSystem" => additions.diagnosis,
             _ => false,
         };
@@ -700,6 +740,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 15
         && found != 16
         && found != 17
+        && found != 18
     {
         return Err(SaveError::Version {
             found,

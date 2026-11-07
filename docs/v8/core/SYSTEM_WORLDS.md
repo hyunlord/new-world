@@ -48,6 +48,7 @@ Validation status: **NOT_RUN** for the production switch; parent-owned focused v
 | RelationsSystem | 149 | 1 | yes | yes |
 | FertilitySystem | 150 | 1440 | yes | yes |
 | RoomSystem | 152 | 1 | yes | yes |
+| BuildingTemplateSystem | 153 | 1 | no | yes |
 | OralTransmissionSystem | 160 | 1440 | yes | yes |
 | ObservationSystem | 161 | 30 | yes | yes |
 | KnowledgeDecaySystem | 162 | 60 | yes | yes |

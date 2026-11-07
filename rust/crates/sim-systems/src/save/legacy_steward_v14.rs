@@ -91,6 +91,7 @@ pub(super) fn decode_published_v14(payload: &[u8]) -> Result<super::Body, super:
         food: old.food.into(),
         cultivation: Default::default(),
         processing: Default::default(),
+        buildings: Default::default(),
     })
 }
 

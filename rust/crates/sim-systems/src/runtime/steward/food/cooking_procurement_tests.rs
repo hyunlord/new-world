@@ -231,6 +231,7 @@ fn cooking_procurement_requests_fresh_grain_when_stored_grain_is_not_portable() 
         res.colony.rooms.insert(
             90,
             sim_core::rooms::Room {
+                dwelling_kind: None,
                 id: 90,
                 tiles: std::collections::BTreeSet::from([(2, 2)]),
                 doors: std::collections::BTreeSet::new(),
@@ -308,6 +309,7 @@ fn cooking_procurement_uses_aged_local_shelf_only_at_a_compatible_workshop() {
         res.colony.rooms.insert(
             90,
             sim_core::rooms::Room {
+                dwelling_kind: None,
                 id: 90,
                 tiles: std::collections::BTreeSet::from([tile]),
                 doors: std::collections::BTreeSet::new(),

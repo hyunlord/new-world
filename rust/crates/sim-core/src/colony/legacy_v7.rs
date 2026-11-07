@@ -138,6 +138,7 @@ where
 {
     fn from(old: LegacyColonyState<S, I, W>) -> Self {
         Self {
+            buildings: Default::default(),
             trees: old.trees,
             nodes: old.nodes,
             materials: old.materials,

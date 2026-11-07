@@ -209,20 +209,21 @@ Reads/writes come from each file's `//!` header.
 | 36 | `RelationsSystem` | 149 | 1 | `rust/crates/sim-systems/src/runtime/settlement/relations.rs` | `Agent`, `Position`, `AgentState`, `Hunger`, `Temperament`, `Child`, `Elder`, `Founding`; `SimResources.settlements`, `rules` | `PorterTrip`, `Inventory`, `AgentState`, `SeekTarget`; `SimResources.settlement_relations`, `settlements` (stockpiles), `chronicle`, `tallies` |
 | 37 | `FertilitySystem` | 150 | 1440 | `rust/crates/sim-systems/src/runtime/agent/fertility.rs` | `Agent`, `Sex`, `Kin`, `Life`, `Lineage`, `Child`, `Pregnant`, `Hunger`, `Thirst`, `BodyHealth`; `SimResources.settlements`, `rules.society.birth`, `rules.calendar`, `rules.clock_offset_ticks`, `world_seed` | `Pregnant` (inserted at a conception, removed when due); `SimResources.due_births` |
 | 38 | `RoomSystem` | 152 | 1 | `rust/crates/sim-systems/src/runtime/rooms.rs` | `Agent`, `Position`; `SimResources.tile_grid`, `building_kinds`, `settlements`, `colony` (beds, zones, occupied, room overrides) | `SimResources.colony` (rooms, room_of_tile, next_room_id, rooms_announced, rooms_dirty, rooms_version); chronicle |
-| 39 | `OralTransmissionSystem` | 160 | 1440 | `rust/crates/sim-systems/src/runtime/knowledge/oral.rs` | `Agent`, `Position`, `Child`, `Lineage`, `Life`, `Knowledge`; `SimResources.colony` (rooms), `settlements` (hearths), `rules`, `world_seed` | `Knowledge` (listeners' new entries; fire keeping and storytelling stamped used); `SimResources.colony.tallies` |
-| 40 | `ObservationSystem` | 161 | 30 | `rust/crates/sim-systems/src/runtime/knowledge/observe.rs` | `Agent`, `Position`, `AgentState`, `Job`, `Knowledge`; `SimResources.colony` (workshops and bills, sites), `rules` | `Knowledge` (`observed`, `Source::Observed` entries); `SimResources.colony.tallies` (observed) |
-| 41 | `KnowledgeDecaySystem` | 162 | 60 | `rust/crates/sim-systems/src/runtime/knowledge/decay.rs` | `Agent`, `AgentState`, `Knowledge`; `rules` (knowledge, calendar), `current_tick` | `Knowledge` (proficiency, entries at 0 removed, lore stamped used); `SimResources.colony.tallies` (forgotten) |
-| 42 | `DiscoverySystem` | 163 | 240 | `rust/crates/sim-systems/src/runtime/knowledge/discover.rs` | `Agent`, `Child`, `Lineage`, `Temperament`, `Knowledge`, `Skills`; `SimResources.colony` (ground items, zones, resource nodes, item ledger), `settlements` (hearths), `rules` (neighbours: eureka), `world_seed` | `Knowledge` (a discovered node at `discovery_gain` ‰, `Source::Discovered`); `SimResources.colony.tallies` (discoveries), `colony.neighbours.tallies` (eurekas), `chronicle` |
-| 43 | `TechAggregateSystem` | 164 | 240 | `rust/crates/sim-systems/src/runtime/knowledge/aggregate.rs` | `Agent`, `Child`, `Knowledge`; `rules` (knowledge, calendar), `current_tick` | `SimResources.colony.tech` (states, era progress, version), `chronicle` |
-| 44 | `StorytellerSystem` | 170 | 1440 | `rust/crates/sim-systems/src/runtime/story/mod.rs` | `Agent`, `Child`, `Sick`, `Lineage`; `SimResources.colony` (story, ground items, zones, rooms, beds), `bed_of`, `tallies` (deaths), `rules` (story, calendar, seasons), `world_seed` | `Sick` (inserted, removed); `SimResources.colony.story` (planned, active, history, version), `chronicle`, `causal_log` |
-| 45 | `AnimalSystem` | 171 | 3 | `rust/crates/sim-systems/src/runtime/wildlife/mod.rs` | `Agent`, `Position`, `Drafted`, `Tool`; `SimResources.colony` (wildlife, story, rooms, zones, ground items), `nav`, `tile_grid`, `settlements`, `building_kinds`, `rules`, `world_seed` | `SimResources.colony` (wildlife: animals, meat lots, tallies; fights; ground items, item ledger; story via `story::end_pressure`), `settlements` (food), `spatial.agents` |
-| 46 | `MoodSystem` | 172 | 60 | `rust/crates/sim-systems/src/runtime/mood/mod.rs` | `Agent`, `Child`, `Life`, `AgentState`, `Position`, `Cold`, `Hunger`, `Thirst`, `Sick`, `Drafted`, `Temperament`, `Apparel`; `SimResources.colony` (rooms, story), `rules` (mood, calendar, clock offset) | `Mood` (inserted for adults and children of 10 years or more; value, nights, breakdown), `Job` (cancelled at a breakdown); `SimResources.colony` (reservations), `chronicle` |
-| 47 | `QuarrelSystem` | 173 | 6 | `rust/crates/sim-systems/src/runtime/mood/quarrel.rs` | `Agent`, `Position`, `AgentState`, `Mood`, `Kin`, `Lineage`, `Temperament`, `Drafted`; `SimResources.colony` (bonds, story), `relationships` (hostility), `rules`, `world_seed` | `Mood` (value, quarrel day); `SimResources.colony` (bonds, fights), `relationships` (hostility), `chronicle` |
-| 48 | `NeighbourSystem` | 174 | 1440 | `rust/crates/sim-systems/src/runtime/neighbours/mod.rs` | `Agent`, `Knowledge`; `SimResources.colony` (neighbours, story, ground items, zones), `settlements` (food), `nav`, `tile_grid`, `building_kinds` (the hearth), `rules`, `world_seed` | `SimResources.colony.neighbours` (list, waves, caravans, plans, tallies, version) |
-| 49 | `VisitorSystem` | 175 | 3 | `rust/crates/sim-systems/src/runtime/neighbours/visitors.rs` | `SimResources.colony.neighbours`, `nav`, `building_kinds` (the hearth), `rules` | ECS people (a wave accepted on its way joins on arrival, `join::accept`); `SimResources.colony.neighbours` (waves, caravans: position, path, state, answer; neighbours' attitude and last contact; tallies, version), `chronicle` |
-| 50 | `DiagnosisSystem` | 250 | 60 | `rust/crates/sim-systems/src/runtime/diagnosis.rs` | World (Settlement), SimResources (colony, fires, current_tick, rules) | SimResources.diagnosis_cache, SimResources.requests_cache (presentation only) |
-| 51 | `RequestsSystem` | 251 | 60 | `rust/crates/sim-systems/src/runtime/diagnosis.rs` | World (Settlement), SimResources (colony, fires, current_tick, rules) | SimResources.diagnosis_cache, SimResources.requests_cache (presentation only) |
-| 52 | `InfluenceVisualizationSystem` | 1000 | 6 | `rust/crates/sim-systems/src/runtime/influence/visualization.rs` | `SimResources.influence_grid` (current Warmth and Danger buffers), `current_tick` | its own `VisualizationDigest` (no world or resource state) |
+| 39 | `BuildingTemplateSystem` | 153 | 1 | `rust/crates/sim-systems/src/runtime/building_templates/system.rs` | physical construction sites, completed piece identities, rooms, command log. | building sites, room template associations, stockpile zones, chronicle. |
+| 40 | `OralTransmissionSystem` | 160 | 1440 | `rust/crates/sim-systems/src/runtime/knowledge/oral.rs` | `Agent`, `Position`, `Child`, `Lineage`, `Life`, `Knowledge`; `SimResources.colony` (rooms), `settlements` (hearths), `rules`, `world_seed` | `Knowledge` (listeners' new entries; fire keeping and storytelling stamped used); `SimResources.colony.tallies` |
+| 41 | `ObservationSystem` | 161 | 30 | `rust/crates/sim-systems/src/runtime/knowledge/observe.rs` | `Agent`, `Position`, `AgentState`, `Job`, `Knowledge`; `SimResources.colony` (workshops and bills, sites), `rules` | `Knowledge` (`observed`, `Source::Observed` entries); `SimResources.colony.tallies` (observed) |
+| 42 | `KnowledgeDecaySystem` | 162 | 60 | `rust/crates/sim-systems/src/runtime/knowledge/decay.rs` | `Agent`, `AgentState`, `Knowledge`; `rules` (knowledge, calendar), `current_tick` | `Knowledge` (proficiency, entries at 0 removed, lore stamped used); `SimResources.colony.tallies` (forgotten) |
+| 43 | `DiscoverySystem` | 163 | 240 | `rust/crates/sim-systems/src/runtime/knowledge/discover.rs` | `Agent`, `Child`, `Lineage`, `Temperament`, `Knowledge`, `Skills`; `SimResources.colony` (ground items, zones, resource nodes, item ledger), `settlements` (hearths), `rules` (neighbours: eureka), `world_seed` | `Knowledge` (a discovered node at `discovery_gain` ‰, `Source::Discovered`); `SimResources.colony.tallies` (discoveries), `colony.neighbours.tallies` (eurekas), `chronicle` |
+| 44 | `TechAggregateSystem` | 164 | 240 | `rust/crates/sim-systems/src/runtime/knowledge/aggregate.rs` | `Agent`, `Child`, `Knowledge`; `rules` (knowledge, calendar), `current_tick` | `SimResources.colony.tech` (states, era progress, version), `chronicle` |
+| 45 | `StorytellerSystem` | 170 | 1440 | `rust/crates/sim-systems/src/runtime/story/mod.rs` | `Agent`, `Child`, `Sick`, `Lineage`; `SimResources.colony` (story, ground items, zones, rooms, beds), `bed_of`, `tallies` (deaths), `rules` (story, calendar, seasons), `world_seed` | `Sick` (inserted, removed); `SimResources.colony.story` (planned, active, history, version), `chronicle`, `causal_log` |
+| 46 | `AnimalSystem` | 171 | 3 | `rust/crates/sim-systems/src/runtime/wildlife/mod.rs` | `Agent`, `Position`, `Drafted`, `Tool`; `SimResources.colony` (wildlife, story, rooms, zones, ground items), `nav`, `tile_grid`, `settlements`, `building_kinds`, `rules`, `world_seed` | `SimResources.colony` (wildlife: animals, meat lots, tallies; fights; ground items, item ledger; story via `story::end_pressure`), `settlements` (food), `spatial.agents` |
+| 47 | `MoodSystem` | 172 | 60 | `rust/crates/sim-systems/src/runtime/mood/mod.rs` | `Agent`, `Child`, `Life`, `AgentState`, `Position`, `Cold`, `Hunger`, `Thirst`, `Sick`, `Drafted`, `Temperament`, `Apparel`; `SimResources.colony` (rooms, story), `rules` (mood, calendar, clock offset) | `Mood` (inserted for adults and children of 10 years or more; value, nights, breakdown), `Job` (cancelled at a breakdown); `SimResources.colony` (reservations), `chronicle` |
+| 48 | `QuarrelSystem` | 173 | 6 | `rust/crates/sim-systems/src/runtime/mood/quarrel.rs` | `Agent`, `Position`, `AgentState`, `Mood`, `Kin`, `Lineage`, `Temperament`, `Drafted`; `SimResources.colony` (bonds, story), `relationships` (hostility), `rules`, `world_seed` | `Mood` (value, quarrel day); `SimResources.colony` (bonds, fights), `relationships` (hostility), `chronicle` |
+| 49 | `NeighbourSystem` | 174 | 1440 | `rust/crates/sim-systems/src/runtime/neighbours/mod.rs` | `Agent`, `Knowledge`; `SimResources.colony` (neighbours, story, ground items, zones), `settlements` (food), `nav`, `tile_grid`, `building_kinds` (the hearth), `rules`, `world_seed` | `SimResources.colony.neighbours` (list, waves, caravans, plans, tallies, version) |
+| 50 | `VisitorSystem` | 175 | 3 | `rust/crates/sim-systems/src/runtime/neighbours/visitors.rs` | `SimResources.colony.neighbours`, `nav`, `building_kinds` (the hearth), `rules` | ECS people (a wave accepted on its way joins on arrival, `join::accept`); `SimResources.colony.neighbours` (waves, caravans: position, path, state, answer; neighbours' attitude and last contact; tallies, version), `chronicle` |
+| 51 | `DiagnosisSystem` | 250 | 60 | `rust/crates/sim-systems/src/runtime/diagnosis.rs` | World (Settlement), SimResources (colony, fires, current_tick, rules) | SimResources.diagnosis_cache, SimResources.requests_cache (presentation only) |
+| 52 | `RequestsSystem` | 251 | 60 | `rust/crates/sim-systems/src/runtime/diagnosis.rs` | World (Settlement), SimResources (colony, fires, current_tick, rules) | SimResources.diagnosis_cache, SimResources.requests_cache (presentation only) |
+| 53 | `InfluenceVisualizationSystem` | 1000 | 6 | `rust/crates/sim-systems/src/runtime/influence/visualization.rs` | `SimResources.influence_grid` (current Warmth and Danger buffers), `current_tick` | its own `VisualizationDigest` (no world or resource state) |
 
 <!-- system-table:end -->
 
@@ -848,4 +849,32 @@ knowledge, skill and aggregate layouts through
 debt and prerequisite highlighting. The generated section of
 `docs/v8/CONTENT_DEBT.md` comes from
 `rust/crates/sim-core/src/colony/content_debt.rs`; manual historical debt remains.
-Template construction belongs to the next M-SPINE publication.
+
+
+## M-SPINE building templates (integration draft; evidence pending)
+
+`colony/building_template.rs` loads `buildings.ron` into the selected catalogue.
+Connected templates expand into validated existing blueprint pieces, retaining
+physical costs, station alternatives, work tiles and deterministic authored order.
+Inert templates remain preview/debt entries and cannot create physical sites.
+
+`sim-systems/src/runtime/building_templates/` owns persistent template sites,
+ordinary piece activation, physical completion callbacks, cancellation, storage
+hooks and same-footprint upgrades. BuildingComplete60 stores an immutable template
+ordinal and a Building cause carrying site, accepted command record and origin;
+old completion lines do not resolve through a site's upgraded current template.
+`BuildingTemplateSystem` is a colony-only saved system after room recognition.
+
+Format19 appends building state as a sidecar, preserving historical nested wire
+layouts. Load validates restored physical/provenance state before deriving room
+associations and returning the engine. Housing uses a separate zone map; steward
+selection ranks known Connected affordable dwellings by descending tier and id,
+using physical availability after outstanding commitments. Assigned beds, rather
+than current person positions, establish home associations. Only log house to
+stone house has a connected upgrade edge; both retain a 4×4 footprint.
+
+Placeholder item and building art consumes catalogue shape/tint/glyph metadata.
+Actual roofs require persisted site state and completed physical intactness;
+Inert half-alpha hatching belongs only to previews. See
+[ADR 0061](decisions/0061-physical-building-templates.md). These are integration
+design notes: b runtime, save, native visual and publication evidence is pending.

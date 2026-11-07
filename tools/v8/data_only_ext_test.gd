@@ -118,6 +118,7 @@ func _run() -> void:
 		next.pressed.emit()
 	_check("added lesson advances", hud.helper.current_id() != "test_pack_lesson")
 	await _check_spine(main, world)
+	await _check_building_extension(main, world)
 	_finish()
 
 func _check_spine(main: Node, world: Node) -> void:
@@ -159,6 +160,112 @@ func _check_spine(main: Node, world: Node) -> void:
 			await RenderingServer.frame_post_draw
 			_check("selected spine capture " + language, root.get_texture().get_image().save_png(_out.path_join("spine-extension-" + language + ".png")) == OK)
 		panel.call("close")
+
+func _building_click(button: Button) -> void:
+	var ancestor: Node = button.get_parent()
+	while ancestor != null:
+		if ancestor is ScrollContainer:
+			ancestor.ensure_control_visible(button)
+			await process_frame
+			await process_frame
+		ancestor = ancestor.get_parent()
+	for pressed: bool in [true, false]:
+		var event := InputEventMouseButton.new()
+		event.position = root.get_final_transform() * button.get_global_rect().get_center()
+		event.button_index = MOUSE_BUTTON_LEFT
+		event.pressed = pressed
+		Input.parse_input_event(event)
+		await process_frame
+	await process_frame
+
+func _check_building_extension(main: Node, world: Node) -> void:
+	var definitions: Array = world.call("get_content_catalog").get("buildings", [])
+	var connected: Dictionary = {}
+	var inert: Dictionary = {}
+	for row: Dictionary in definitions:
+		if str(row.get("id", "")) == "test_mudbrick_screen": connected = row
+		elif str(row.get("id", "")) == "test_future_tower": inert = row
+	_check("selected Connected building metadata", not connected.is_empty() and bool(connected.get("connected", false)) and int(connected.get("width", 0)) == 1 and str(connected.get("art_roof", "")).to_lower() == "round" and connected.get("art_tint_material") == "clay" and connected.get("art_icon") == "grain")
+	_check("selected Inert building metadata", not inert.is_empty() and not bool(inert.get("connected", true)) and not str(inert.get("debt", "")).is_empty() and str(inert.get("art_roof", "")).to_lower() == "angular")
+	if connected.is_empty() or inert.is_empty(): return
+	var snapshot: Dictionary = world.call("get_building_snapshot")
+	var option: Dictionary = {}
+	for row: Dictionary in snapshot.get("template_options", []):
+		if str(row.get("id", "")) == str(connected["id"]): option = row; break
+	_check("selected Connected authoritative option known", bool(option.get("known", false)))
+	var requirements: Array = option.get("requirements", [])
+	_check("selected Connected existing two-clay cost", requirements.size() == 1 and int(requirements[0].get("item", -1)) == Content.code("items", "clay") and int(requirements[0].get("need", 0)) == 2)
+	_rows.append({"check": "selected Connected physical supply observation", "requirements": requirements, "affordable": option.get("affordable", false)})
+	var info: Dictionary = world.call("get_world_info")
+	var preview: Dictionary = {}
+	for y: int in range(0, mini(32, int(info["height"])), 2):
+		for x: int in range(0, mini(32, int(info["width"])), 2):
+			var candidate: Dictionary = world.call("get_build_template_preview", str(connected["id"]), x, y, 0, "")
+			if bool(candidate.get("accepted", false)): preview = candidate; break
+		if not preview.is_empty(): break
+	var pieces: Array = preview.get("pieces", [])
+	_check("selected Connected direct authoritative preview", bool(preview.get("accepted", false)) and pieces.size() == 1 and str(pieces[0].get("kind", "")) == "test_mudbrick_wall")
+	var rejected: Dictionary = world.call("get_build_template_preview", str(inert["id"]), 0, 0, 0, "")
+	_check("selected Inert direct preview rejects", not bool(rejected.get("accepted", true)))
+	var panel: Control = main.get_node_or_null("UI/BuildPanel") as Control
+	if panel == null:
+		panel = (load("res://scripts/ui/panels/build_panel.gd") as GDScript).new() as Control
+		panel.name = "BuildPanel"
+		main.get_node("UI").add_child(panel)
+	await process_frame
+	var locale: Node = root.get_node("Locale")
+	for language: String in ["ko", "en"]:
+		locale.call("set_language", language)
+		panel.call("open")
+		await process_frame
+		await process_frame
+		var groups: Array = panel.get("_groups")
+		_check("selected building catalogue rows " + language, groups.size() == 3 and groups[1].get_child_count() + groups[2].get_child_count() == definitions.size())
+		for i: int in mini(3, groups.size()):
+			var heading: Label = groups[i].get_parent().get_child(groups[i].get_index() - 1) as Label
+			_check("selected localized building group " + language + str(i), heading != null and heading.text == str(locale.call("ltr", ["BUILD_GROUP_BUILT", "BUILD_GROUP_AVAILABLE", "BUILD_GROUP_NEXT"][i])))
+		var card: Button = panel.find_child("Template_" + str(inert["id"]), true, false) as Button
+		var screen: Button = panel.find_child("Template_" + str(connected["id"]), true, false) as Button
+		_check("selected building real localized controls " + language, card != null and screen != null and card.text.contains(str(locale.call("ltr", inert["name_key"]))) and screen.text.contains(str(locale.call("ltr", connected["name_key"]))))
+		if card == null: continue
+		_check("selected Inert grey control " + language, card.get_theme_color("font_color") == Color("807970") and card.icon != null)
+		if card.icon != null:
+			var image: Image = card.icon.get_image()
+			if image != null: _check_building_hatch(image, language)
+			elif DisplayServer.get_name() != "headless": _check("native selected building texture readable", false)
+			else: _rows.append({"check": "selected building texture pixels", "status": "NOT_RUN_HEADLESS"})
+		if DisplayServer.get_name() != "headless":
+			await _building_click(card)
+		else:
+			panel.call("_select", str(inert["id"]), -1)
+		var place: Button = panel.get("_place") as Button
+		_check("selected Inert debt and disabled action " + language, place.disabled and str((panel.get("_gate") as Label).text).contains(str(inert["debt"])))
+		if DisplayServer.get_name() != "headless":
+			var log: Dictionary = world.call("get_command_log", 0)
+			var sites: Array = world.call("get_building_snapshot").get("template_sites", [])
+			await _building_click(place)
+			_check("native selected Inert cannot order or allocate " + language, world.call("get_command_log", 0) == log and world.call("get_building_snapshot").get("template_sites", []) == sites)
+			await RenderingServer.frame_post_draw
+			_check("selected building native capture " + language, root.get_texture().get_image().save_png(_out.path_join("building-extension-" + language + ".png")) == OK)
+		else:
+			_rows.append({"check": "native selected building click/capture " + language, "status": "NOT_RUN_HEADLESS"})
+		panel.hide()
+
+func _check_building_hatch(image: Image, language: String) -> void:
+	var positive: int = 0
+	var wrong_alpha: int = 0
+	var stripe_colors: Dictionary = {}
+	var other_colors: Dictionary = {}
+	for y: int in image.get_height():
+		for x: int in image.get_width():
+			var color: Color = image.get_pixel(x, y)
+			if color.a <= 0.0: continue
+			positive += 1
+			if absf(color.a - 0.5) > 1.0 / 255.0: wrong_alpha += 1
+			if (x + y) % 8 < 2: stripe_colors[color.to_html(false)] = true
+			else: other_colors[color.to_html(false)] = true
+	_check("selected actual Inert texture half alpha " + language, positive > 0 and wrong_alpha == 0)
+	_check("selected actual Inert diagonal hatch pixels " + language, stripe_colors.size() == 1 and other_colors.size() >= 2)
 
 func _check_alert_label_fit(button: Button, alert: Dictionary) -> void:
 	var font: Font = button.get_theme_font("font")

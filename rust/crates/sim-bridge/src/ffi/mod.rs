@@ -16,6 +16,7 @@
 
 pub mod activity;
 pub mod appearance;
+pub mod building_templates;
 pub mod card_targets;
 pub mod causal;
 pub mod chronicle;
@@ -28,6 +29,7 @@ pub mod economy;
 pub mod engine_build;
 pub mod family;
 pub mod food;
+pub mod home_housing;
 pub mod knowledge;
 pub mod material_category;
 pub mod mind;

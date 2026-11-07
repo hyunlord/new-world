@@ -27,6 +27,7 @@ mod tests;
 mod validate;
 mod validate_ecology;
 
+use super::building_template::TemplateCatalog;
 use super::knowledge::{Gates, KnowledgeDefs};
 use crate::material::MaterialId;
 pub use boot::{bootstrap, installed, installed_or_bundled, BootSelection};
@@ -68,6 +69,7 @@ pub struct Catalog {
     revision: String,
     knowledge_defs: KnowledgeDefs,
     knowledge_gates: Gates,
+    building_templates: TemplateCatalog,
 }
 macro_rules! family_access {
     ($id:ident,$def:ident,$field:ident,$index:ident,$one:ident,$code:ident,$name:ident,$serde:ident,$required:ident,$iter:ident,$ids:ident) => {
@@ -279,6 +281,10 @@ impl Catalog {
     /// Definitions derived from the same selected catalogue.
     pub fn knowledge_defs(&self) -> &KnowledgeDefs {
         &self.knowledge_defs
+    }
+    /// Validated authored-order templates from the same locally selected catalogue.
+    pub fn building_templates(&self) -> &TemplateCatalog {
+        &self.building_templates
     }
     /// Gate masks derived only after local family resolution.
     pub fn knowledge_gates(&self) -> &Gates {

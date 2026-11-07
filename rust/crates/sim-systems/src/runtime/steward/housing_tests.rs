@@ -47,6 +47,7 @@ fn natural_enclosure_beds_do_not_clear_physical_housing_deficit() {
     engine.resources.colony.rooms.insert(
         999,
         Room {
+            dwelling_kind: None,
             id: 999,
             tiles,
             doors: BTreeSet::from([(2, 1)]),

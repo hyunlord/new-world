@@ -131,6 +131,7 @@ var _selected_entity_bits: int = -1
 var _bar_headers: Array[Label] = []
 const SettlementSelection = preload("res://scripts/core/settlement_selection.gd")
 var _village_label: Label
+var _dwelling_label: Label
 var _vbox: VBoxContainer
 var _label_id: Label
 var _porter_status: Label
@@ -250,6 +251,8 @@ func _ready() -> void:
 	_label_age = _make_label("")
 	_label_age.visible = false
 	_village_label = _make_label("")
+	_dwelling_label = _make_label("")
+	_dwelling_label.name = "Dwelling"
 	_label_pos = _make_label("")
 	_why_button = Button.new()
 	_why_button.name = "Why"
@@ -771,6 +774,7 @@ func _refresh_economy(agent_id: int) -> void:
 	if _world_sim == null or not _world_sim.has_method("get_agent_economy"):
 		_tool_label.hide()
 		_bed_label.hide()
+		_dwelling_label.hide()
 		_skills_heading.hide()
 		_skills_label.hide()
 		return
@@ -783,9 +787,14 @@ func _refresh_economy(agent_id: int) -> void:
 	if not bool(_economy.get("found", false)):
 		_tool_label.hide()
 		_bed_label.hide()
+		_dwelling_label.hide()
 		_skills_heading.hide()
 		_skills_label.hide()
 		return
+	var dwelling_key: String = str(_economy.get("dwelling_name_key", ""))
+	var dwelling_name: String = _loc(dwelling_key) if not dwelling_key.is_empty() else _loc("INSPECTOR_HOME_NONE")
+	_dwelling_label.text = _loc("INSPECTOR_HOME_FMT").format({"name": dwelling_name})
+	_dwelling_label.show()
 	var carry_kind: int = int(_economy.get("carry_kind", -1))
 	if carry_kind >= 0:
 		_carried_label.text = "%s: %s" % [_loc("UI_INSPECT_CARRYING"), EconomyText.stack(_locale, carry_kind,

@@ -139,6 +139,24 @@ fn validate_source_at(
                 entry: Some(index), ..
             },
         ) => resources.chronicle.entry(index).map(|entry| entry.tick),
+        MindFactSource::Chronicle(cause @ CauseRef::Building { record, .. }) => {
+            // validate_source already verified the command/site and exact immutable
+            // completion witness. A fact cannot predate that completion, even when
+            // its build command was accepted earlier.
+            let command_tick = usize::try_from(record)
+                .ok()
+                .and_then(|index| resources.colony.command_log.get(index))
+                .map(|record| record.tick);
+            resources
+                .chronicle
+                .causes()
+                .filter(|(_, candidate)| *candidate == cause)
+                .filter_map(|(index, _)| resources.chronicle.entry(index))
+                .filter(|entry| entry.kind == sim_core::chronicle::ChronicleKind::BuildingComplete)
+                .map(|entry| entry.tick)
+                .filter(|tick| command_tick.is_some_and(|command_tick| command_tick <= *tick))
+                .min()
+        }
         MindFactSource::Chronicle(CauseRef::Sample { sample, .. }) => {
             resources.chronicle.sample(sample).map(|sample| sample.tick)
         }

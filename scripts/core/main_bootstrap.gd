@@ -23,6 +23,25 @@ func _enter_tree() -> void:
 	boot_ok = true
 
 
+# Gameplay children are ready before the root; keep bridge preflight in _enter_tree unchanged.
+func _ready() -> void:
+	if not boot_ok:
+		return
+	var panel: Control = preload("res://scripts/ui/panels/build_panel.gd").new()
+	panel.name = "BuildPanel"
+	get_node("UI").add_child(panel)
+	panel.connect("template_chosen", Callable(get_node("ColonyView/OrderTool"), "set_template"))
+	panel.connect("housing_requested", Callable(get_node("UI/OrderBar"), "select_mode").bind(15))
+	panel.connect("source_requested", _open_building_source)
+
+
+func _open_building_source(site: int, record: int) -> void:
+	var why: Node = get_node_or_null("UI/WhyPanel")
+	if why != null:
+		(get_node("UI/BuildPanel") as Control).hide()
+		why.call("open_building", site, record)
+
+
 func _fail(message: String) -> void:
 	boot_error = message
 	for child: Node in get_children():

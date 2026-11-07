@@ -4,8 +4,10 @@ func WorldSimNode.bootstrap_catalog
 func WorldSimNode.can_place_blueprint
 func WorldSimNode.cmd_accept_migrants
 func WorldSimNode.cmd_add_bill
+func WorldSimNode.cmd_add_housing_zone
 func WorldSimNode.cmd_add_hunt_zone
 func WorldSimNode.cmd_add_stockpile
+func WorldSimNode.cmd_build_template
 func WorldSimNode.cmd_cancel_area
 func WorldSimNode.cmd_cancel_hunt
 func WorldSimNode.cmd_cancel_teach
@@ -41,6 +43,7 @@ func WorldSimNode.cmd_set_steward_extended
 func WorldSimNode.cmd_set_work_priority
 func WorldSimNode.cmd_trade
 func WorldSimNode.cmd_undraft_all
+func WorldSimNode.cmd_upgrade_building
 func WorldSimNode.cmd_zone_field
 func WorldSimNode.create
 func WorldSimNode.get_activity_snapshot
@@ -55,6 +58,8 @@ func WorldSimNode.get_agent_mind
 func WorldSimNode.get_agent_snapshot
 func WorldSimNode.get_agent_temperament
 func WorldSimNode.get_animals
+func WorldSimNode.get_build_template_preview
+func WorldSimNode.get_building_cause
 func WorldSimNode.get_building_snapshot
 func WorldSimNode.get_caravan
 func WorldSimNode.get_card_chop_target

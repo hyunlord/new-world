@@ -14,6 +14,8 @@
     "EXT_LESSON_BODY": "Move the camera to complete this added lesson.",
     "EXT_LESSON_STEWARD": "Manual camera action",
     "EXT_INERT_SPINE": "Fixture pending",
-    "EXT_LANE": "Fixture lane"
+    "EXT_LANE": "Fixture lane",
+    "EXT_BUILDING_SCREEN": "Fixture mudbrick screen",
+    "EXT_BUILDING_TOWER": "Fixture future tower"
   }
 }

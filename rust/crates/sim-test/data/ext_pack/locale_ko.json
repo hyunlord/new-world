@@ -14,6 +14,8 @@
     "EXT_LESSON_BODY": "카메라를 움직여 새 안내를 완료하세요.",
     "EXT_LESSON_STEWARD": "카메라 직접 이동",
     "EXT_INERT_SPINE": "시험 준비 중",
-    "EXT_LANE": "시험 레인"
+    "EXT_LANE": "시험 레인",
+    "EXT_BUILDING_SCREEN": "시험 흙벽돌 가림벽",
+    "EXT_BUILDING_TOWER": "시험 망루"
   }
 }

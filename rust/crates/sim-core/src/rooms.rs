@@ -96,6 +96,9 @@ pub struct Room {
     pub role: RoomRole,
     /// Whether any of its tiles is dug out of a hill.
     pub dug: bool,
+    /// Authored template association, rederived from physical pieces after load.
+    #[serde(skip)]
+    pub dwelling_kind: Option<String>,
 }
 
 impl Room {
@@ -349,6 +352,7 @@ mod tests {
                 (
                     id,
                     Room {
+                        dwelling_kind: None,
                         id,
                         tiles: f.tiles,
                         doors: f.doors,
@@ -389,6 +393,7 @@ mod tests {
                 (
                     id,
                     Room {
+                        dwelling_kind: None,
                         id,
                         tiles: f.tiles,
                         doors: f.doors,

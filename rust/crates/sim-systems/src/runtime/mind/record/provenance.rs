@@ -20,6 +20,11 @@ pub fn validate_source(
             .and_then(|i| resources.colony.command_log.get(i))
             .is_some_and(|record| record.result.accepted && record.tick <= tick),
         MindFactSource::Chronicle(cause) => match cause {
+            CauseRef::Building {
+                site,
+                record,
+                origin,
+            } => building_source_valid(resources, site, record, origin),
             CauseRef::Entry(index)
             | CauseRef::Modifier {
                 entry: Some(index), ..
@@ -52,6 +57,59 @@ pub fn validate_source(
         ))
     }
 }
+// Site identity persists across upgrades; generation provenance comes from the
+// immutable completion witness, never the site's mutable source_record/cause.
+fn building_source_valid(
+    resources: &SimResources,
+    site: u32,
+    record: u32,
+    origin: sim_core::colony::BuildCause,
+) -> bool {
+    use sim_core::colony::{BuildCause, Command};
+    let Some(source) = usize::try_from(record)
+        .ok()
+        .and_then(|index| resources.colony.command_log.get(index))
+    else {
+        return false;
+    };
+    if !source.result.accepted
+        || source.tick > resources.current_tick
+        || !resources.colony.buildings.sites.contains_key(&site)
+    {
+        return false;
+    }
+    let (request, steward) = match &source.command {
+        Command::Steward { rule, command } => (command.as_ref(), Some(u32::from(*rule))),
+        command => (command, None),
+    };
+    let origin_matches = match origin {
+        BuildCause::Command => steward.is_none(),
+        BuildCause::Steward(rule) => steward == Some(rule),
+        // Zone membership may later be erased. The exact historical completion
+        // snapshot below is authoritative; only a Steward request becomes Zone.
+        BuildCause::Zone(_) => steward.is_some(),
+    };
+    if !origin_matches
+        || !(matches!(request, Command::BuildTemplate { .. })
+            || matches!(request, Command::UpgradeBuilding { site: target } if *target == site))
+    {
+        return false;
+    }
+    let cause = CauseRef::Building {
+        site,
+        record,
+        origin,
+    };
+    resources.chronicle.causes().any(|(index, candidate)| {
+        candidate == cause
+            && resources.chronicle.entry(index).is_some_and(|entry| {
+                entry.kind == ChronicleKind::BuildingComplete
+                    && source.tick <= entry.tick
+                    && entry.tick <= resources.current_tick
+            })
+    })
+}
+
 /// Durable chronicle ancestry behind a real source; command-only roots have no fabricated entry.
 pub fn source_cause(resources: &SimResources, cause: FactCause) -> Option<CauseRef> {
     match cause {
@@ -219,4 +277,85 @@ pub fn remember_completed_meal(
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod building_source_tests {
+    use super::*;
+    use sim_core::chronicle::ChronicleEntry;
+    use sim_core::colony::building_site::{BuildingSite, BuildingStatus};
+    use sim_core::colony::{BuildCause, Command, CommandRecord, CommandResult};
+
+    fn fixture() -> (SimResources, MindFactSource) {
+        let mut resources = SimResources::new(4, 4, sim_core::MaterialRegistry::new());
+        resources.current_tick = 10;
+        resources.colony.command_log.push(CommandRecord {
+            tick: 1,
+            command: Command::Steward {
+                rule: 17,
+                command: Box::new(Command::BuildTemplate {
+                    id: "log_house".into(),
+                    anchor: (0, 0),
+                    rotation: 0,
+                    station: None,
+                }),
+            },
+            result: CommandResult::ok(1),
+        });
+        // The same retained identity has since upgraded. Validation must not
+        // overwrite the earlier generation's Zone/request snapshot with this state.
+        resources.colony.buildings.sites.insert(
+            7,
+            BuildingSite {
+                id: 7,
+                template: "stone_house".into(),
+                station: None,
+                anchor: (0, 0),
+                rotation: 0,
+                footprint: (4, 4),
+                pieces: Vec::new(),
+                cause: BuildCause::Command,
+                source_record: 99,
+                placed_tick: 8,
+                status: BuildingStatus::Complete,
+                completion_entry: None,
+            },
+        );
+        let cause = CauseRef::Building {
+            site: 7,
+            record: 0,
+            origin: BuildCause::Zone(41),
+        };
+        resources.chronicle.push_caused(
+            ChronicleEntry::new(3, ChronicleKind::BuildingComplete),
+            Some(cause),
+        );
+        (resources, MindFactSource::Chronicle(cause))
+    }
+
+    #[test]
+    fn earlier_generation_survives_upgrade_and_zone_erasure() {
+        let (resources, source) = fixture();
+        assert!(resources.colony.buildings.housing_zones.is_empty());
+        assert!(validate_source(&resources, source).is_ok());
+    }
+
+    #[test]
+    fn source_requires_accepted_build_command_retained_site_and_real_completion() {
+        let (mut resources, source) = fixture();
+        resources.colony.command_log[0].result.accepted = false;
+        assert!(validate_source(&resources, source).is_err());
+        resources.colony.command_log[0].result.accepted = true;
+        resources.colony.command_log[0].command = Command::SetStewardExtended { on: true };
+        assert!(validate_source(&resources, source).is_err());
+        let (mut resources, source) = fixture();
+        resources.colony.buildings.sites.remove(&7);
+        assert!(validate_source(&resources, source).is_err());
+        let (mut resources, source) = fixture();
+        resources.chronicle = Default::default();
+        assert!(validate_source(&resources, source).is_err());
+        let (mut resources, source) = fixture();
+        resources.colony.command_log[0].tick = 4;
+        assert!(validate_source(&resources, source).is_err());
+    }
 }

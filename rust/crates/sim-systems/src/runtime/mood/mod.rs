@@ -556,6 +556,7 @@ pub fn check_cause(
     };
     match chronicle.cause_of(index) {
         None => Err("no cause"),
+        Some(CauseRef::Building { .. }) => Err("a building order is not a quarrel cause"),
         Some(CauseRef::Entry(e)) => entry_ok(e, Expect::Any),
         Some(CauseRef::Modifier {
             code,
@@ -602,6 +603,15 @@ pub enum Link {
     Modifier(u8),
     /// A pressure (`PressureKind::code`).
     Pressure(u32),
+    /// Building provenance ends in the command namespace, not a chronicle index.
+    Building {
+        /// Persistent site identity.
+        site: u32,
+        /// Actual command-log record for this completed generation.
+        record: u32,
+        /// Immutable original request identity.
+        origin: sim_core::colony::BuildCause,
+    },
 }
 
 /// The "why?" chain of chronicle entry `index`: the entry, then its cause, the
@@ -614,6 +624,19 @@ pub fn why_chain(chronicle: &sim_core::chronicle::Chronicle, index: u32) -> Vec<
         let next = match chronicle.cause_of(at) {
             None => break,
             Some(CauseRef::Entry(e)) => Some(e),
+            Some(CauseRef::Building {
+                site,
+                record,
+                origin,
+            }) => {
+                out.push(Link::Building {
+                    site,
+                    record,
+                    origin,
+                });
+                // Command records cannot be followed using Chronicle::entry.
+                None
+            }
             Some(CauseRef::Pressure { kind, entry }) => {
                 out.push(Link::Pressure(kind));
                 entry
@@ -1046,5 +1069,56 @@ mod tests {
             },
         );
         assert!(check_cause(&c, q, window).is_err());
+    }
+}
+
+#[cfg(test)]
+mod building_cause_tests {
+    use super::*;
+    use sim_core::chronicle::{Chronicle, ChronicleEntry};
+    use sim_core::colony::BuildCause;
+
+    #[test]
+    fn building_link_preserves_namespaces_and_origin_snapshot() {
+        let mut chronicle = Chronicle::new();
+        let index = chronicle.push_caused(
+            ChronicleEntry::new(2, ChronicleKind::BuildingComplete),
+            Some(CauseRef::Building {
+                site: 7,
+                record: 0,
+                origin: BuildCause::Zone(41),
+            }),
+        );
+        assert_eq!(index, 0);
+        assert_eq!(
+            why_chain(&chronicle, index),
+            vec![
+                Link::Entry(0),
+                Link::Building {
+                    site: 7,
+                    record: 0,
+                    origin: BuildCause::Zone(41)
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn building_provenance_does_not_invent_a_quarrel_ancestor() {
+        let mut chronicle = Chronicle::new();
+        let index = chronicle.push_caused(
+            ChronicleEntry::new(2, ChronicleKind::Quarrel)
+                .subject(7)
+                .other(Some(8)),
+            Some(CauseRef::Building {
+                site: 7,
+                record: 0,
+                origin: BuildCause::Command,
+            }),
+        );
+        assert_eq!(
+            check_cause(&chronicle, index, 10),
+            Err("a building order is not a quarrel cause")
+        );
     }
 }

@@ -6,6 +6,7 @@ use sim_core::rooms::RoomRole;
 fn house() -> (SimEngine, Room) {
     let mut engine = SimEngine::new(8, 8, sim_core::MaterialRegistry::new());
     let room = Room {
+        dwelling_kind: None,
         id: 1,
         tiles: BTreeSet::from([(2, 2), (3, 2)]),
         doors: BTreeSet::from([(2, 1)]),

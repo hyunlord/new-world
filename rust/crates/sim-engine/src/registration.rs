@@ -201,6 +201,10 @@ pub const SYSTEM_REGISTRATIONS: &[SystemRegistration] = &[
         worlds: SystemWorlds::Both,
     },
     SystemRegistration {
+        name: "BuildingTemplateSystem",
+        worlds: SystemWorlds::Colony,
+    },
+    SystemRegistration {
         name: "OralTransmissionSystem",
         worlds: SystemWorlds::Both,
     },

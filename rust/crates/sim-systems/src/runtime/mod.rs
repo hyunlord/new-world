@@ -13,6 +13,7 @@
 pub mod agent;
 pub mod agent_actions;
 pub mod baseline;
+pub mod building_templates;
 pub(crate) mod chronicle_log;
 pub mod combat;
 pub mod construction;

@@ -420,7 +420,81 @@ impl WorldSimNode {
     /// Read real buildings ordered by their stable simulation building ids.
     #[func]
     fn get_building_snapshot(&self) -> VarDictionary {
-        building_rows_to_dict(&collect_building_snapshot(&self.engine.resources))
+        let mut out = building_rows_to_dict(&collect_building_snapshot(&self.engine.resources));
+        super::building_templates::append_snapshot(&self.engine, &mut out);
+        out
+    }
+
+    /// Read the exact ordered placement plan without allocating or submitting commands.
+    #[func]
+    fn get_build_template_preview(
+        &self,
+        id: GString,
+        x: i32,
+        y: i32,
+        rotation: i64,
+        station: GString,
+    ) -> VarDictionary {
+        super::building_templates::preview(
+            &self.engine,
+            &id.to_string(),
+            x,
+            y,
+            rotation,
+            &station.to_string(),
+        )
+    }
+
+    /// Resolve a saved building generation, including historical completions after upgrades.
+    #[func]
+    fn get_building_cause(&self, site: i64, record: i64) -> VarDictionary {
+        super::building_templates::cause(
+            &self.engine.resources,
+            self.engine.current_tick(),
+            site,
+            record,
+        )
+    }
+
+    /// Submit one top-level template order; physical pieces retain that single cause.
+    #[func]
+    fn cmd_build_template(
+        &mut self,
+        id: GString,
+        x: i32,
+        y: i32,
+        rotation: i64,
+        station: GString,
+    ) -> VarDictionary {
+        result_to_dict(super::building_templates::submit_build(
+            &mut self.engine,
+            &id.to_string(),
+            x,
+            y,
+            rotation,
+            &station.to_string(),
+        ))
+    }
+
+    /// Upgrade the authored target of one persisted building site.
+    #[func]
+    fn cmd_upgrade_building(&mut self, site: i64) -> VarDictionary {
+        result_to_dict(super::building_templates::submit_upgrade(
+            &mut self.engine,
+            site,
+        ))
+    }
+
+    /// Designate an inclusive housing rectangle through the existing command log.
+    #[func]
+    fn cmd_add_housing_zone(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(super::building_templates::submit_housing(
+            &mut self.engine,
+            x0,
+            y0,
+            x1,
+            y1,
+        ))
     }
 
     /// Advance a bounded number of deterministic ticks for capture tooling.
@@ -1364,10 +1438,18 @@ impl WorldSimNode {
     /// delivered/progress/required}` (sites by footprint top-left).
     #[func]
     fn get_colony_overlay(&self) -> VarDictionary {
-        overlay_to_dict(&collect_colony_overlay(
+        let mut out = overlay_to_dict(&collect_colony_overlay(
             &self.engine.world,
             &self.engine.resources,
-        ))
+        ));
+        let housing = super::home_housing::collect_housing_tiles(&self.engine.resources);
+        if let Err(error) = super::home_housing::append_housing_tiles(&mut out, &housing) {
+            godot_error!("WorldSim housing overlay: {error}");
+            out.set("housing_zone_ids", PackedInt64Array::new());
+            out.set("housing_zone_xs", PackedInt32Array::new());
+            out.set("housing_zone_ys", PackedInt32Array::new());
+        }
+        out
     }
 
     /// V7 Phase 14-γ FFI — single-agent detail dictionary for the click

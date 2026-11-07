@@ -308,9 +308,13 @@ impl RuntimeSystem for ConstructionSystem {
                     .collect();
                 builders.sort_unstable();
                 match site.kind.definition().completion {
-                    CompletionCategory::Workshop => complete_workshop(resources, site, needs),
+                    CompletionCategory::Workshop => {
+                        complete_workshop(resources, site, needs);
+                        crate::runtime::building_templates::observe_completion(resources, &site);
+                    }
                     CompletionCategory::Dwelling => {
-                        complete_hut(world, resources, site, needs, &builders, tick)
+                        complete_hut(world, resources, site, needs, &builders, tick);
+                        crate::runtime::building_templates::observe_completion(resources, &site);
                     }
                     CompletionCategory::Wall
                     | CompletionCategory::Door

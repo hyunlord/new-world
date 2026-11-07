@@ -7,6 +7,7 @@
 //! collectors: [`collect_workshops`] (workshop id order, bills in list order),
 //! [`collect_work_priorities`] (adults in `AgentId` order), [`collect_recipes`]
 //! (recipe code order) and [`collect_agent_economy`] (one person by `AgentId`).
+use super::home_housing::{append_template_home, collect_template_home, TemplateHome};
 use godot::prelude::*;
 use sim_core::colony::skills::tier;
 use sim_core::colony::{
@@ -393,6 +394,8 @@ pub struct AgentEconomyRow {
     pub bed: Option<(u32, u32)>,
     /// M3: the bed's room: `(RoomId, RoomRole::code, roofed)`.
     pub bed_room: Option<(u32, u8, bool)>,
+    /// Intact template associated with the actual assigned bed, if any.
+    pub template_home: Option<TemplateHome>,
 }
 
 fn material_name(resources: &SimResources, spec: ItemSpec) -> String {
@@ -436,6 +439,11 @@ pub fn collect_agent_economy(
         let room = sim_systems::runtime::rooms::room_at(resources, bed)?;
         Some((room.id, room.role.code(), room.roofed))
     });
+    row.template_home = collect_template_home(
+        resources,
+        sim_core::colony::content::installed_or_bundled(),
+        agent,
+    );
     Some(row)
 }
 
@@ -478,6 +486,7 @@ pub(super) fn agent_economy_to_dict(row: Option<AgentEconomyRow>) -> VarDictiona
     dict.set("bed_room", rid);
     dict.set("bed_room_role", rrole);
     dict.set("bed_roofed", rroof);
+    append_template_home(&mut dict, row.template_home.as_ref());
     dict.set("carry_kind", ck);
     dict.set("carry_count", cn);
     dict.set("carry_quality", cq);

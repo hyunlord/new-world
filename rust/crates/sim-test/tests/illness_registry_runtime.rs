@@ -83,6 +83,7 @@ fn novel_illness_retains_origin_across_spread_end_save_recovery_and_death() {
     engine.resources.colony.rooms.insert(
         1,
         Room {
+            dwelling_kind: None,
             id: 1,
             tiles: BTreeSet::from([(2, 2), (3, 2), (4, 2)]),
             doors: BTreeSet::new(),

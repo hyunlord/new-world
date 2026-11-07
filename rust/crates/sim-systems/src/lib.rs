@@ -426,6 +426,11 @@ pub fn register_job_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::jobs::JobExecuteSystem::new()));
     engine.register_system(Box::new(runtime::jobs::HearthFeedSystem::new()));
     engine.register_system(Box::new(runtime::rooms::RoomSystem::new()));
+    if engine.resources.rules.colony.is_some() {
+        engine.register_system(Box::new(
+            runtime::building_templates::BuildingTemplateSystem,
+        ));
+    }
     register_knowledge_systems(engine);
 }
 

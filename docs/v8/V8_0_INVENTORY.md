@@ -213,6 +213,15 @@ Abbreviations:
 
 | file | verdict | subject | scenes/constructors used | reason | fns to delete or adapt |
 |---|---|---|---|---|---|
+| spine_chain.rs | KEEP | M-SPINE physical templates | `colony_engine(0)` | real-job template construction, housing growth, upgrade and save continuation | — |
+| spine_capabilities.rs | KEEP | M-SPINE physical templates | `colony_engine(0)` | disabled physical capability rejection without mutation | — |
+| spine_commands.rs | KEEP | M-SPINE physical templates | `colony_engine(0)` | invalid plans and cancellation preserve physical ledger and provenance | — |
+| spine_housing.rs | KEEP | M-SPINE physical templates | `colony_engine(0)` | housing erase uses shared zone ids without stockpile aliasing | — |
+| spine_people.rs | KEEP | M-SPINE physical templates | `colony_engine(0)` | person collisions use identical preview and placement admission | — |
+| spine_provenance.rs | KEEP | M-SPINE physical templates | `colony_engine(0)` | player and steward zone/request command origins remain distinct | — |
+| spine_storage.rs | KEEP | M-SPINE physical templates | `colony_engine(0)` | storehouse interior and existing stockpile identity persist | — |
+| spine_validation.rs | KEEP | M-SPINE physical templates | `colony_engine(0)` | malformed or forged saved template state is rejected | — |
+| spine_wrapped_cancel.rs | KEEP | M-SPINE physical templates | `colony_engine(0)` | wrapped cancellation cannot adopt independent replacement provenance | — |
 | harness_a15_controlled_determinism.rs | KEEP-TRIM | AgentDecisionSystem migrant-tag determinism, lockstep twins | `new`+reg, boot, scar | engine determinism on default rules; one fn reads `.harness/` | delete `harness_a15_baseline_registry_consistency` (reads `.harness/baseline/known_failures.txt`, L512-513) |
 | harness_art_p9_sim_reads.rs | DELETE | GDScript `SimReads` routing scanner | — (T: scripts/**, `reset_world_stress`, `apply_intervention`) | UI source text; references deleted bridge funcs | all |
 | harness_b1_zoom_default_raise.rs | DELETE | camera ZOOM constants | — (T: `camera_controller.gd`, docs/art) | UI source text | all |
@@ -572,9 +581,9 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `DESIGN.md` | KEEP | M-UX interface design system: theme, layout and interaction guidance | DESIGN.md; docs/v8/mux/MUX_GOAL.md |
 | `README.md` | KEEP | rewritten in Korean + English (9.1) | goal 9.1 |
 | `addons/` | DELETE | harness MCP addon; project.godot has no [editor_plugins] section, nothing loads it | grep editor_plugins project.godot → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `assets/` | MIXED | files inside: 174 ASK, 690 DELETE, 1083 KEEP; see the file/exception rows. Directory rule: asset root | git ls-files at b1ca032f |
+| `assets/` | MIXED | files inside: 174 ASK, 690 DELETE, 1090 KEEP; see the file/exception rows. Directory rule: asset root | git ls-files at b1ca032f |
 | `assets/art/` | MIXED | files inside: 646 DELETE, 19 KEEP; see the file/exception rows. Directory rule: runtime art root | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `assets/art/atlas/` | MIXED | files inside: 1 DELETE, 9 KEEP; see the file/exception rows. Directory rule: runtime atlas pages + region maps loaded by art_sprite_library.gd / carry_load_layer.gd | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `assets/art/atlas/` | MIXED | files inside: 1 DELETE, 9 KEEP; see the file/exception rows. Directory rule: world_0.png remains live through bindings.ui_icons; other atlas metadata/pages/region maps retain V8-0 provenance protection (former art_sprite_library.gd / carry_load_layer.gd readers) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/atlas/region_atlas.json` | DELETE | atlas pipeline metadata; nothing at runtime reads it | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/direction/` | DELETE | V7 art direction references | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/art/manifest.json` | DELETE | art pipeline manifest; not read at runtime | tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -921,12 +930,13 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `assets/v8art/people/portraits/child_M_loincloth_long_tied/` | KEEP | asset root | git ls-files at b1ca032f |
 | `assets/v8art/people/portraits/child_M_loincloth_short/` | KEEP | asset root | git ls-files at b1ca032f |
 | `assets/v8art/structures/` | KEEP | asset root | git ls-files at b1ca032f |
-| `docs/` | MIXED | files inside: 17280 DELETE, 177 KEEP; see the file/exception rows. Directory rule: docs root | git ls-files at b1ca032f |
+| `docs/` | MIXED | files inside: 17281 DELETE, 259 KEEP; see the file/exception rows. Directory rule: docs root | git ls-files at b1ca032f |
 | `docs/.gitkeep` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
 | `docs/ARCHITECTURE.md` | KEEP | new (9.5) | goal 9.5 |
 | `docs/CHANGELOG.md` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
 | `docs/HISTORY.md` | KEEP | new (9.4) | goal 9.4 |
 | `docs/ISSUES.md` | KEEP | docs root | git ls-files at b1ca032f |
+| `docs/LESSONS.md` | KEEP | docs root | git ls-files at b1ca032f |
 | `docs/ROADMAP.md` | KEEP | new (9.3) | goal 9.3 |
 | `docs/VISION.md` | KEEP | new (9.2) | goal 9.2 |
 | `docs/analysis/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
@@ -968,6 +978,8 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `docs/sprite_session_handoff_wildlife_a4.md` | DELETE | pre-decided (6.3); CHANGELOG harvested into HISTORY (pre-V7 paragraph) | goal 6.3 |
 | `docs/traits/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/v8/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/core/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/loop/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/m1/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/m1_5/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/m1art/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
@@ -976,13 +988,19 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `docs/v8/m4/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/m5/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/m5_5/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/m6a/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/m6b/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/m_art2/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/m_art2_1/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/mux/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/mux2/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/mux2_1/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/p3/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/play/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/play2/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/read/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/v8/review/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
+| `docs/v8/spine/` | KEEP | V8-0 goal, direction, decisions, inventory, report | goal 0.1 |
 | `docs/worldmodel/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `docs/worldmodel/sample/` | DELETE | pre-decided (6.3); harvested into docs/v8/harvest → HISTORY/skills; index in docs/archive/INDEX.md | goal 6.3, 6.4 |
 | `hooks/` | DELETE | V7 git pre-commit harness hook | goal 6.3 |
@@ -996,20 +1014,37 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `localization/key_owners.json` | DELETE | duplicate-key owner policy; the generator treats a missing file as no policy, and the pruned category JSONs carry no duplicates | tools/localization_compile.py _load_key_owners; scratch dry run (Part 1) |
 | `localization/ko/` | KEEP | runtime pipeline: manifest.json, compiled/*.json, category JSONs (keys pruned to the kept UI, 7.4) | scripts/core/locale.gd; tools/v8/locale_keys.py |
 | `project.godot` | KEEP | Godot project root | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `rust/` | MIXED | files inside: 2 ASK, 62 DELETE, 584 KEEP, 38 KEEP-ADAPT, 19 KEEP-TRIM, 1 MOVE→rust/crates/sim-core/src/rules/mod.rs, 103 TRIAGE; see the file/exception rows. Directory rule: Rust workspace | git ls-files at b1ca032f |
+| `rust/` | MIXED | files inside: 2 ASK, 62 DELETE, 922 KEEP, 38 KEEP-ADAPT, 19 KEEP-TRIM, 1 MOVE→rust/crates/sim-core/src/rules/mod.rs, 143 TRIAGE; see the file/exception rows. Directory rule: Rust workspace | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/activity.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/appearance.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/art_kernels.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/building_catalog.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/building_cause.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/building_preview.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/building_snapshot.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/building_templates.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/card_targets.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/causal.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/chronicle.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/colony.rs` | KEEP | M1 bridge orders and colony reads | M1 goal 6.5 |
 | `rust/crates/sim-bridge/src/ffi/content.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/content_boot.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/cultivation.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/diagnosis.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/economy.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/engine_build.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/family.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/food/chronicle.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/food/marshal.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/food/mod.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/food/person.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/food/plants.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/food/stacks.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/food/summary.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/home_housing.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/knowledge.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/material_category.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/mind.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/mod.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/neighbours.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/node.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
@@ -1018,10 +1053,12 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-bridge/src/ffi/relations.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/save.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/snapshot.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/snapshot/food_tests.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/snapshot/resources.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/space.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/steward.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/story.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
+| `rust/crates/sim-bridge/src/ffi/story_building_tests.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/ui_facts/economy.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/ui_facts/marshal.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
 | `rust/crates/sim-bridge/src/ffi/ui_facts/mod.rs` | KEEP | GDExtension bridge | git ls-files at b1ca032f |
@@ -1045,13 +1082,22 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/causal/storage/legacy_v7.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/chronicle.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/chronicle/legacy_v7.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
+| `rust/crates/sim-core/src/colony/building_site.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/building_template.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/building_template/catalogue.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/building_template/geometry.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/building_template/tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/command.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/boot.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/content/crop_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/animal.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/blueprint.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/content/defs/crop.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/flora.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/content/defs/food.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/item.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/mod.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/content/defs/plant.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/pressure.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/recipe.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/defs/resolve.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
@@ -1063,8 +1109,10 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/colony/content/ids.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/index.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/load.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/content/load_crops.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/load_ecology.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/load_flora.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/content/load_plants.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/mod.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/raw_blueprint.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/raw_item.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
@@ -1077,7 +1125,14 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/colony/content/tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/validate.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content/validate_ecology.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/content/weaving_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/content_debt.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/content_state.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/cultivation.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/diagnosis.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/eras.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/food.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/food_evidence.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/items.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/job.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/knowledge.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
@@ -1086,15 +1141,56 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/colony/knowledge/gate_masks.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/knowledge/parse.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/knowledge/registry_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/knowledge/spine_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/knowledge/tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/knowledge/types.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/legacy_items_v16.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/legacy_v7.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/materials.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/compile.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_cache.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_cache_equivalence_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_cache_lifecycle_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_cache_scratch_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_cache_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_cadence_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_carry_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_jump_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_partitions.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_prefix_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_reference.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/continuation_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/error.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/facts.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/mod.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/model.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/raw.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/select.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/selection.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/selection_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/selector_jump_reference.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/selector_jump_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/stream_tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind/tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind_job_origins.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind_records.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind_records/codec.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind_records/dictionary.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind_records/display.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind_records/history.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind_records/reader.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind_records/source.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind_records/tests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/mind_state.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/mod.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/neighbours.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/orders.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/people.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/processing.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/requests.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/skills.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
+| `rust/crates/sim-core/src/colony/steward/food_plan.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/steward/mod.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/steward/rules.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
 | `rust/crates/sim-core/src/colony/steward/state.rs` | KEEP | M1 colony data: items, orders, commands, jobs, the colony rule | M1 goal 6.1; DECISIONS D8 |
@@ -1154,6 +1250,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/material/registry.rs` | KEEP | material data model (not live; kept for M2) | goal 6.3 |
 | `rust/crates/sim-core/src/material/terrain.rs` | KEEP | material data model (not live; kept for M2) | goal 6.3 |
 | `rust/crates/sim-core/src/nav.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
+| `rust/crates/sim-core/src/nav_regions_tests.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/rng.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/rooms.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/rules.rs` | MOVE→rust/crates/sim-core/src/rules/mod.rs (+ baseline.rs, one file per sub-rule struct) | 8.1 | goal 8.1 |
@@ -1170,14 +1267,20 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-core/src/rules/wildlife.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/save_serde.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/spatial.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
+| `rust/crates/sim-core/src/spatial_square_tests.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/tile/grid.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/tile/mod.rs` | KEEP | reached by the live engine/bridge (every pub module has users in sim-systems/sim-engine/sim-bridge) | Part 1 symbol scan $DATA/rust_module_refs.txt |
 | `rust/crates/sim-core/src/variety.rs` | KEEP | live: WorldVariety::draw_v18 feeds game_v26 rules/worldgen | rules.rs game_v20; worldgen game_v18 |
+| `rust/crates/sim-engine/src/food_supply_cache.rs` | KEEP | tick loop, resources, RuntimeSystem trait | git ls-files at b1ca032f |
 | `rust/crates/sim-engine/src/intervention.rs` | DELETE | god hand (7.2) | goal 7.2 |
 | `rust/crates/sim-engine/src/legacy_v7.rs` | KEEP | tick loop, resources, RuntimeSystem trait | git ls-files at b1ca032f |
 | `rust/crates/sim-engine/src/lib.rs` | KEEP | tick loop, resources, RuntimeSystem trait | git ls-files at b1ca032f |
+| `rust/crates/sim-engine/src/registration.rs` | KEEP | tick loop, resources, RuntimeSystem trait | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/commands.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/commands/housing_zones.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/lib.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/mind_observer.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/perf_arms.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/runtime/agent/aging.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/agent/beds.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/agent/fertility.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
@@ -1186,40 +1289,111 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/runtime/agent/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/agent/movement.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/agent/pairing.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/consume.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/forage.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/memory_bias.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/needs.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/routine/lifecycle.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/routine/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/routine/places.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/routine/preview.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/routine/preview_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/routine/selected.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/targets.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/agent_actions/wood.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/baseline/decision/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/baseline/decision/system.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/baseline/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/building_templates/association.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/building_templates/commands.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/building_templates/history_validation.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/building_templates/materials.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/building_templates/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/building_templates/preview.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/building_templates/storage.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/building_templates/system.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/building_templates/upgrade.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/building_templates/upgrade_plan.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/building_templates/validation.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/chronicle_log.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/combat/combat_system.rs` | ASK | registered (priority 137) but changed no outcome in the base ablation (seeds 0-3, 120 days); M5 animal threats / drafting may reuse it | V8_0_INVENTORY.md 2.3; $DATA/ablation |
 | `rust/crates/sim-systems/src/runtime/combat/mod.rs` | ASK | registered (priority 137) but changed no outcome in the base ablation (seeds 0-3, 120 days); M5 animal threats / drafting may reuse it | V8_0_INVENTORY.md 2.3; $DATA/ablation |
 | `rust/crates/sim-systems/src/runtime/construction/construction_system.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/construction/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/cultivation/commands.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/cultivation/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/cultivation/tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/decision/agent_decision.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
-| `rust/crates/sim-systems/src/runtime/decision/consume.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
-| `rust/crates/sim-systems/src/runtime/decision/forage.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
-| `rust/crates/sim-systems/src/runtime/decision/memory_bias.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/decision/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
-| `rust/crates/sim-systems/src/runtime/decision/needs.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/decision/routine/lifecycle.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/decision/routine/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/decision/routine/places.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
-| `rust/crates/sim-systems/src/runtime/decision/system.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
-| `rust/crates/sim-systems/src/runtime/decision/targets.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
-| `rust/crates/sim-systems/src/runtime/decision/wood.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/diagnosis.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/diagnosis/cultivation.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/choice.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/choice_availability_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/drying.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/events.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/evidence.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/evidence_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/evidence_validation.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/evidence_validation_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/ground.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/items.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/loss.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/meals.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/migration.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/migration/physical.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/migration/porters.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/migration/reserves.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/operation_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/origin.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/owners.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/placement.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/plants.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/pots.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/reserves.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/storage.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/food/validation.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/influence/agent_sample.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/influence/building_stamp.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/influence/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/influence/update.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/influence/visualization.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/intervention.rs` | DELETE | god hand (7.2) | goal 7.2 |
+| `rust/crates/sim-systems/src/runtime/jobs/age_arrival_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/age_haul_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/assign.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/bills.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/cancel.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/cooking_heat_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/craft.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/craft_food.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/execute.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/field.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/field/execute.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/field/execute/tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/food_admission_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/food_job_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/food_storage.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/food_transfers.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/harvest.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/harvest_encoding_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/harvest_haul.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/hearth.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/hunt.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/hunt_food_loss_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/invariants.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/items.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/loose_haul_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/mod.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
-| `rust/crates/sim-systems/src/runtime/jobs/seam.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/pot_ingredient_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/pot_supply.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/pot_supply_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/processing.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
+| `rust/crates/sim-systems/src/runtime/jobs/processing_tests.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/space.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/jobs/teach.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/runtime/knowledge/aggregate.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
@@ -1231,6 +1405,80 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/runtime/knowledge/seed.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/memory/memory_system.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/memory/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/context.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/food.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/food_invalidation_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/food_retention_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/gather.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/gather_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/harvest_food.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/needs.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/owned.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/postpass.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/postpass_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/prepare.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/routine.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/settle.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/social.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/behaviours/tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context/dependency_sum_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context/food_index_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context/memory_values_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context/overlay_slot_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context/snapshot_entity_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context_full_refresh_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context_index_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context_lazy_food_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context_optimization_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context_primary_snapshot_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context_refresh_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context_rich_upgrade_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context_row_order_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context_running_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/context_scope_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/continuation_cache_runtime_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/continuation_runtime.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/continuation_runtime_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/continuation_save_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/fact_binding_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/facts.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/food_index_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/food_targets.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/harvest_admission_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/harvest_food.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/harvest_food_cache_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/harvest_food_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/harvest_stock_boundary_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/harvest_stock_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/job_origins.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/meal_admission_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/physical_food_fact_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/primary_refresh_system_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/primary_snapshot_system_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/program.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/program_source_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/record.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/record/draft.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/record/memory.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/record/provenance.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/record/tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/record/types.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/scheduling.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/scheduling_counts.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/scheduling_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/shadow/compare.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/shadow/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/social_bucket_reference.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/social_bucket_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/system.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/system/food_invalidation_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/system_owner_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/system_rest_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/system_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/mind/winter_stock_duty_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/mood/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/mood/quarrel.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
@@ -1250,7 +1498,9 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/runtime/settlement/fire.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/settlement/firewood.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/settlement/fission.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/settlement/fission/migration.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/settlement/food_economy.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/settlement/food_supply.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/settlement/housing.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/settlement/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/settlement/relations.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
@@ -1260,41 +1510,108 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-systems/src/runtime/settlement/stockpile_deposit.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/social/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/social/social_interaction_system.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/arming.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/arming/matching.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/bills_optimization_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/steward/completion.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/completion_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/defence.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/cooking.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/cooking_bill_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/cooking_procurement_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/dependencies.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/harvest.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/horizon_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/observe.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/preservation.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/preservation_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/storage.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/storage_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/food/summary.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/fuel_bill_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/house_preparation_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/house_profile.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/housing.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/housing_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/steward/lifecycle.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/steward/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/steward/planning.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/steward/production.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/production_optimization_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/production_profile.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/template_housing.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/template_housing_tests.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/runtime/steward/template_selection.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/story/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/survival/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/wildlife/draft.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/wildlife/fight.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/wildlife/flee.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
 | `rust/crates/sim-systems/src/runtime/wildlife/mod.rs` | KEEP | registered in register_default_runtime_systems (live engine) or used by a registered system | rust/crates/sim-systems/src/lib.rs register_default_runtime_systems |
+| `rust/crates/sim-systems/src/save/building_save_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/building_validation.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/content_validation.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/cultivation_catalog.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/cultivation_catalog_ids.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/cultivation_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/cultivation_validation.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/evidence_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/food_catalog.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/food_catalog_ids.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/food_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_buildings_v18.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_codec_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_cultivation_v15.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_food_v13.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_food_v16.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_id_codec_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_pressure_codec_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_spine_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_spine_v17.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_steward.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_steward_v14.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/legacy_v9.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/legacy_weaving_v16.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/mind_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/mind_validation.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/mod.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/weaving_tests.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
+| `rust/crates/sim-systems/src/save/weaving_validation.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/save/world.rs` | KEEP | sim-systems crate root | git ls-files at b1ca032f |
 | `rust/crates/sim-systems/src/subprofile.rs` | KEEP | feature-gated timing scopes used by worldsim_perf --features subprofile | rust/crates/sim-test/Cargo.toml [features] |
 | `rust/crates/sim-systems/src/worldgen/camp.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-systems/src/worldgen/colony.rs` | KEEP | M1 commands, colony worldgen and the job layer | M1 goal 6.3, 7, 8.1; ADR 0012, 0013 |
 | `rust/crates/sim-systems/src/worldgen/mod.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-systems/src/worldgen/noise.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
+| `rust/crates/sim-systems/src/worldgen/plants.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-systems/src/worldgen/terrain.rs` | KEEP | live world generation (build_world_with); old game_vNN configs removed in 8.1 | goal 8.1 |
 | `rust/crates/sim-test/benches/phase2_benchmarks.rs` | DELETE | V7 Criterion harness for the Phase 2 influence hard gate; nothing runs it, and VISION §5 keeps one perf check (tools/v8/perf.sh) | diff review round 1 F3; DECISIONS D31 |
 | `rust/crates/sim-test/src/alloc.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/arm_profile.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/bench.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/bench_admission_tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/bin/content_debt.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/bin/spine_save_check.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/bin/worldsim_perf.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/bin/worldsim_probe.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/bin/worldsim_systems.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/bin/worldsim_wm.rs` | DELETE | world-model recorder binary | goal 3.2 |
 | `rust/crates/sim-test/src/content_boot.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/lib.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/m6a/cli.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/m6a/data_only.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/m6a/metrics.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/m6a/mod.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/m6a/observer.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/mind_coverage.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/mind_coverage_tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/mind_memory.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/mind_memory_tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/mind_shadow.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/nav_bench.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/perf.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/perf_food_tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/ablation.rs` | DELETE | ablation/bisection scenes of past passes | goal 6.3 |
 | `rust/crates/sim-test/src/probe/adult_work.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/agent_trace.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
@@ -1324,13 +1641,19 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/src/probe/family_trace_tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/fingerprint.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/fission_settlements.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/food_fingerprint.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/food_fingerprint_tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/knowledge.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/long_run.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/m5.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/m55.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/meals_firewood.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/metrics.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/mind_fingerprint.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/mind_fingerprint_tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/mod.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/mux2.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/probe/mux2/tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/night_burn.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/pass10.rs` | KEEP | computes blocks of the probe summary/raw rows that identity compares (6.3 lists probe/pass*.rs for deletion, but deleting them would change the summary); renamed by content in 8.2 | src/probe/runner.rs, summary.rs; DECISIONS D9 |
 | `rust/crates/sim-test/src/probe/pass11.rs` | KEEP | computes blocks of the probe summary/raw rows that identity compares (6.3 lists probe/pass*.rs for deletion, but deleting them would change the summary); renamed by content in 8.2 | src/probe/runner.rs, summary.rs; DECISIONS D9 |
@@ -1364,6 +1687,14 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/src/probe/winter_severity.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/probe/wood_work.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/scenes.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/story_diagnostics/capture.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/story_diagnostics/cli.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/story_diagnostics/mod.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/story_diagnostics/tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/story_yield/cli.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/story_yield/metric.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/story_yield/mod.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
+| `rust/crates/sim-test/src/story_yield/tests.rs` | KEEP | test crate: probe, perf, scenes (reduced in 8.1) | goal 7.7 |
 | `rust/crates/sim-test/src/subprofile_report.rs` | KEEP | worldsim_perf --features subprofile report (perf tooling, not pass-only) | src/perf.rs:306 |
 | `rust/crates/sim-test/src/worldmodel/digest.rs` | DELETE | world-model research (lives on codex/worldmodel-2026-10) | goal 3.2 |
 | `rust/crates/sim-test/src/worldmodel/export.rs` | DELETE | world-model research (lives on codex/worldmodel-2026-10) | goal 3.2 |
@@ -1421,6 +1752,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/tests/colony_commands.rs` | KEEP | M1 tests (Parts 1-3) | M1 goal 6.6, 7.8, 8.5 |
 | `rust/crates/sim-test/tests/colony_demography.rs` | KEEP | M1 tests (Parts 1-3) | M1 goal 6.6, 7.8, 8.5 |
 | `rust/crates/sim-test/tests/colony_firewood.rs` | KEEP | M1 tests (Parts 1-3) | M1 goal 6.6, 7.8, 8.5 |
+| `rust/crates/sim-test/tests/colony_flee_mux2.rs` | KEEP | M1 tests (Parts 1-3) | M1 goal 6.6, 7.8, 8.5 |
 | `rust/crates/sim-test/tests/colony_hides.rs` | KEEP | M1 tests (Parts 1-3) | M1 goal 6.6, 7.8, 8.5 |
 | `rust/crates/sim-test/tests/colony_items.rs` | KEEP | M1 tests (Parts 1-3) | M1 goal 6.6, 7.8, 8.5 |
 | `rust/crates/sim-test/tests/colony_jobs.rs` | KEEP | M1 tests (Parts 1-3) | M1 goal 6.6, 7.8, 8.5 |
@@ -1439,10 +1771,12 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/tests/content_registry_migration.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/data_only_ext.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/determinism.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/diagnosis_bench.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_appearance_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_ascii.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_bridge_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_bridge_postverify.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_card_targets_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_causal_chain.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_causal_events.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_causal_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
@@ -1452,6 +1786,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/tests/engine_influence_channels.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_influence_pipeline.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_knowledge_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/engine_mind_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_neighbours_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_rng.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/engine_space_ffi.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
@@ -1462,6 +1797,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/tests/engine_worldgen.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/family_households.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/family_support/mod.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/fixtures/m6b_base_steward.ron` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/harness_a15_controlled_determinism.rs` | KEEP-TRIM | engine determinism on default rules; one fn reads `.harness/` | V8_0_INVENTORY.md section 3.1 (test triage) |
 | `rust/crates/sim-test/tests/harness_art_p9_sim_reads.rs` | DELETE | UI source text; references deleted bridge funcs | V8_0_INVENTORY.md section 3.1 (test triage) |
 | `rust/crates/sim-test/tests/harness_b1_zoom_default_raise.rs` | DELETE | UI source text | V8_0_INVENTORY.md section 3.1 (test triage) |
@@ -1614,6 +1950,30 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/tests/harness_t7_9_a_scaffold.rs` | KEEP-TRIM | engine behaviour | V8_0_INVENTORY.md section 3.1 (test triage) |
 | `rust/crates/sim-test/tests/harness_t7_9_b_render_mechanism.rs` | DELETE | source text only | V8_0_INVENTORY.md section 3.1 (test triage) |
 | `rust/crates/sim-test/tests/illness_registry_runtime.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/legacy_migration_current.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/legacy_migration_support/inventory.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/legacy_migration_support/wire.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_food_data_only.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_food_economy.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_food_events.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_food_migration.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_food_mind.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_food_save.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_food_steward.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_food_storage.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_hunger_admission.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_legacy_food_retirement.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_legacy_supply.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_needs_preemption.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_pending_food.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_plants.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_stale_food.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6a_winter_plan_evidence.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6b_presentation_defaults.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/m6b_steward_save_migration.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/mind_shadow_retired.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/mux2_firewood.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/mux2_fuel_sleep.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/predator_registry_runtime.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/recipe_registry_runtime.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/relations_caps.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
@@ -1643,13 +2003,34 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `rust/crates/sim-test/tests/settlement_stockpile.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/settlement_system.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/settlement_village.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/spine_capabilities.rs` | KEEP | disabled physical capability rejection without mutation | V8_0_INVENTORY.md section 3.1 (test triage) |
+| `rust/crates/sim-test/tests/spine_chain.rs` | KEEP | real-job template construction, housing growth, upgrade and save continuation | V8_0_INVENTORY.md section 3.1 (test triage) |
+| `rust/crates/sim-test/tests/spine_commands.rs` | KEEP | invalid plans and cancellation preserve physical ledger and provenance | V8_0_INVENTORY.md section 3.1 (test triage) |
+| `rust/crates/sim-test/tests/spine_content.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/spine_housing.rs` | KEEP | housing erase uses shared zone ids without stockpile aliasing | V8_0_INVENTORY.md section 3.1 (test triage) |
+| `rust/crates/sim-test/tests/spine_knowledge.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/spine_people.rs` | KEEP | person collisions use identical preview and placement admission | V8_0_INVENTORY.md section 3.1 (test triage) |
+| `rust/crates/sim-test/tests/spine_provenance.rs` | KEEP | player and steward zone/request command origins remain distinct | V8_0_INVENTORY.md section 3.1 (test triage) |
+| `rust/crates/sim-test/tests/spine_stages/history.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/spine_stages/mod.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/spine_storage.rs` | KEEP | storehouse interior and existing stockpile identity persist | V8_0_INVENTORY.md section 3.1 (test triage) |
+| `rust/crates/sim-test/tests/spine_support/mod.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/spine_support/ui_fixture.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/spine_support/ui_motion.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/spine_validation.rs` | KEEP | malformed or forged saved template state is rejected | V8_0_INVENTORY.md section 3.1 (test triage) |
+| `rust/crates/sim-test/tests/spine_wrapped_cancel.rs` | KEEP | wrapped cancellation cannot adopt independent replacement provenance | V8_0_INVENTORY.md section 3.1 (test triage) |
 | `rust/crates/sim-test/tests/steward_cancel_footprint.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/steward_defence.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/steward_defence_fingerprint.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/steward_defence_migration.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `rust/crates/sim-test/tests/tree_snapshot.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/weaving_apparel.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
+| `rust/crates/sim-test/tests/weaving_chain.rs` | TRIAGE | see section 3.1 | V8_0_INVENTORY.md section 3.1 |
 | `scenes/` | MIXED | files inside: 2 DELETE, 1 KEEP; see the file/exception rows. Directory rule: scene root | git ls-files at b1ca032f |
 | `scenes/main.tscn` | KEEP | main scene; deleted UI nodes removed (7.3) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scenes/test/art_calibration.tscn` | DELETE | art calibration scene / Godot test code (6.3) | goal 6.3 |
 | `scenes/ui/god_hand_panel.tscn` | DELETE | god-hand panel scene (7.2) | goal 7.2 |
-| `scripts/` | MIXED | files inside: 270 DELETE, 139 KEEP; see the file/exception rows. Directory rule: GDScript root | git ls-files at b1ca032f |
+| `scripts/` | MIXED | files inside: 282 DELETE, 159 KEEP; see the file/exception rows. Directory rule: GDScript root | git ls-files at b1ca032f |
 | `scripts/core/locale.gd` | KEEP | Locale autoload (7.3 keep set) | goal 7.3; project.godot [autoload] |
 | `scripts/core/locale.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/core/main_bootstrap.gd` | KEEP | GDScript root | git ls-files at b1ca032f |
@@ -1895,6 +2276,8 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/ui/art_season_tint.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/art_sprite_library.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/art_walker_p13b.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/building_cause_text.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/building_cause_text.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/building_renderer.gd` | KEEP | 7.3 keep set | goal 7.3 |
 | `scripts/ui/camera_controller.gd` | KEEP | 7.3 keep set | goal 7.3 |
 | `scripts/ui/camp_seats.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -1909,6 +2292,10 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/ui/death_viz_renderer.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/economy_text.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/economy_text.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
+| `scripts/ui/field_facts.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/field_facts.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
+| `scripts/ui/food_text.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/food_text.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/founding_group_renderer.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/hud/hud_topbar.gd` | KEEP | hud_topbar.gd (7.3 keep set; moved from scripts/ui/panels/ in 8.7) | goal 7.3, 8.7 |
 | `scripts/ui/hud/hud_topbar.gd.uid` | KEEP | hud_topbar.gd (7.3 keep set; moved from scripts/ui/panels/ in 8.7) | goal 7.3, 8.7 |
@@ -1925,12 +2312,16 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/ui/mux/alert_evaluator.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/mux/alerts_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/mux/alerts_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
+| `scripts/ui/mux/card_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/mux/card_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/mux/controls_catalog.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/mux/controls_catalog.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/mux/goals_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/mux/goals_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/mux/help_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/mux/help_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
+| `scripts/ui/mux/korean_text.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/mux/korean_text.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/mux/learning_facts.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/mux/learning_facts.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/mux/learning_helper.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -1962,14 +2353,24 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/ui/panels/agent_inspector_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/art_ui.gd` | KEEP | shared panel styling used by every kept panel (dependency) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/art_ui.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
+| `scripts/ui/panels/build_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/panels/build_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/causal_panel.gd` | KEEP | 7.3 keep set | goal 7.3 |
 | `scripts/ui/panels/causal_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/chronicle_panel.gd` | KEEP | 7.3 keep set | goal 7.3 |
 | `scripts/ui/panels/chronicle_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
+| `scripts/ui/panels/current_activity_text.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/panels/current_activity_text.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
+| `scripts/ui/panels/diagnosis_text.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/panels/diagnosis_text.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/feed_food_ledger.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/panels/field_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/panels/field_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/god_hand_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/hud_status_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/hud_topbar.gd` | KEEP | 7.3 keep set | goal 7.3 |
+| `scripts/ui/panels/item_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/panels/item_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/migrant_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/migrant_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/neighbours_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -1980,6 +2381,8 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/ui/panels/priority_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/room_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/room_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
+| `scripts/ui/panels/task_plaque.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/panels/task_plaque.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/teach_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/teach_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/tech_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
@@ -1990,6 +2393,8 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/ui/panels/why_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/panels/workshop_panel.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/panels/workshop_panel.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
+| `scripts/ui/panels/world_marker.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `scripts/ui/panels/world_marker.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
 | `scripts/ui/person_activity_tooltip_p13.gd` | DELETE | UI outside the 7.3 keep set (overlays, badges, god hand, status/summary panels, LOD controller) | goal 7.3; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/person_names.gd` | KEEP | transitive dependency of the 7.3 keep set (M1 replaces where it draws V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/ui/person_names.gd.uid` | KEEP | GDScript root | git ls-files at b1ca032f |
@@ -2027,8 +2432,6 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/world/art/wall_baker.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/art_hash.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/art_hash.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/art_sprite_library.gd` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `scripts/world/art_sprite_library.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/camera_controller.gd` | KEEP | 7.3 keep set (moved from scripts/ui/ in 8.7) | goal 7.3, 8.7 |
 | `scripts/world/camera_controller.gd.uid` | KEEP | renderer helpers kept as dependencies of the 7.3 keep set (moved from scripts/ui/ in 8.7; M1 replaces where they draw V7 presentation) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `scripts/world/colony/agent_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
@@ -2037,16 +2440,26 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `scripts/world/colony/animal_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/building_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/building_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/field_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/field_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/ground_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/ground_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/lit_warm_representatives.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/lit_warm_representatives.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/lod_markers.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/lod_markers.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/marker_layout.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/marker_layout.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/order_tool.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/order_tool.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/overlay_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/overlay_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/plant_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/plant_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/room_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/room_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/template_preview.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
+| `scripts/world/colony/template_preview.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/tree_layer.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/tree_layer.gd.uid` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
 | `scripts/world/colony/view.gd` | KEEP | M1 colony view: terrain, trees, buildings, order overlay, people, order tool | M1 goal 9.4; DECISIONS D25 |
@@ -2077,12 +2490,12 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `shaders/terrain_desaturate.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/tree_season.gdshader` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/tree_season.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `shaders/villager_ramp.gdshader` | KEEP | palette-ramp shader used by art_sprite_library.gd (people colours; VISION §5 keeps palette swap) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
+| `shaders/villager_ramp.gdshader` | KEEP | preserved palette-ramp shader (formerly used by art_sprite_library.gd; VISION §5 keeps palette swap; MUX C removes only the unused script) | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `shaders/villager_ramp.gdshader.uid` | DELETE | not referenced by the kept scripts/scenes | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `sim_bridge.gdextension` | KEEP | GDExtension manifest loading libsim_bridge | tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `sim_bridge.gdextension.uid` | KEEP | the extension's committed Godot UID (M1 5.3) | M1 DECISIONS D3 |
 | `stats/` | DELETE | pre-V7 stat definition JSON; nothing in rust/ or reachable GDScript reads it | grep -rn 'stats/' rust scripts → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
-| `tools/` | MIXED | files inside: 891 DELETE, 111 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
+| `tools/` | MIXED | files inside: 891 DELETE, 299 KEEP, 1 MOVE→tools/v8/gdscript_strict_check.sh, 1 MOVE→tools/v8/run_bounded.sh; see the file/exception rows. Directory rule: tools root | git ls-files at b1ca032f |
 | `tools/.gdignore` | KEEP | keeps Godot from importing tools/ | git ls-files at b1ca032f |
 | `tools/art/gen_terrain_atlas.py` | DELETE | one-off art script (6.3) | goal 6.3 |
 | `tools/art_pipeline/README.md` | DELETE | art production pipeline (generation ledgers, boards, packers) | goal 6.3 |
@@ -2987,20 +3400,57 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/compare_chronicles.py` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/compare_summaries.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/contact_sheet.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_arm_report.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_equivalence.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_gate_checks.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_p3d_fixture_schema.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_p3d_fixtures.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_p3d_host_check.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_p3d_successor.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_p7_acceptance.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_p7_admission.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_p7_bench.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_p7_ledger.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_p7_perf.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_p7_publication.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_perf.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_perf_check.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_score.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_shadow_freeze.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_shadow_successor.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_shadow_test_migration.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_story_check.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_ui_successor.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_ui_successor_history.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_ui_successor_perf.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_ui_successor_perf_validate.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_ui_successor_prepare.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/core_why_check.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/data_only_ext.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/data_only_ext_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/data_only_ext_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/fixtures/data_only_wall.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/fixtures/m6a_plant_art.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/fixtures/mux2_badge_grid_reference.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/fixtures/mux2_badge_local_reference.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/fixtures/mux2_extent_owner_reference.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/fixtures/mux2_person_cache_reference.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/flora_parity_fixture.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gate.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gd_reach.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/gdscript_strict_check.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/generic_gate.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/godot_bin.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/identity.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/identity_removed_keys.txt` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/inventory.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/locale_keys.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/locale_prune.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/loop_cards_run.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/loop_first10_capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/loop_frame_timing.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/loop_score.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/loop_ui_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/m1_gui_test.gd` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/m2_u_script.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/m2_ui_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3015,6 +3465,55 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/m5_u_nodraft_script.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/m5_u_script.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/m5_ui_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_actions_visibility_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_actions_visibility_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_base72.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_base72_entry.rs` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_causal.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_data_only.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_evidence.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_gate.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_gate_art.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_gate_checks.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_gate_evidence.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_gate_history.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_gate_source.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_gate_story.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_observer_successor.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_perf.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_perf_config.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_perf_validate.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_plant_art_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_plant_art_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_protocol.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_r1_stall.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_r1_stall_capture.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_run.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_score.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6a_ui_capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_alert_layout_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_alert_layout_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_card_layout_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_chronicle_groups_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_chronicle_groups_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_current_activity_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_current_activity_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_density_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_foreground_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_input_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_key_help_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_locale_refresh_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_locale_refresh_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_migrant_recommendation_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_presentation_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_priority_header_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_priority_header_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_story_layout_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_story_layout_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_toast_layout_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_toast_layout_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_trade_availability_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/m6b_trade_card_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mart21_shots.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mart21_trees_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mart2_chunk_hashes.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3025,6 +3524,53 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/mart2_people_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mart2_shots.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mart2_ui_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux21_fps.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux21_layout_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux21_play_capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux21_profile.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux21_toast_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux21_why_locale_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_badge_aggregate_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_badge_extent_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_badge_grid_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_badge_index_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_badge_local_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_badge_packing_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_bake_receipt_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_building_render_warm_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_building_warm_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_camp_framing_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_camp_framing_test.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_coincident_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_extent_owner_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_gate_checks.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_gate_fixtures.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_gate_inputs.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_gate_lock.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_gate_oracle_log.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_gate_receipts.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_gate_stall.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_gate_telemetry.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_gate_testdata.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_gate_visual.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_marker_layout_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_newborn_capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_overlap_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_people_state_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_perf_monitor.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_person_cache_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_rebake_supplement.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_render_profile.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_score.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_stall_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_text_capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_visibility_metrics.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_visibility_provenance.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_visibility_saves.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_visibility_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_visibility_validator_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_wall_cache_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/mux2_why_input_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux_active_perf.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux_alerts_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/mux_camera_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3043,6 +3589,12 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/mux_ui_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/perf.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/perf_summary.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/read_diag_capture.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/read_gate_checks.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/read_normalise.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/read_q1_commands.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/read_summary_normalise.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/read_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/renderer_agreement.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/renderer_agreement.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/resolver_parity.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3057,6 +3609,8 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/smoke_base_counts.txt` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/soak.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/soak_script.json` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/spine_build_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/spine_tech_test.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/system_table.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_art_import.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_art_masks.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
@@ -3065,12 +3619,59 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `tools/v8/test_bridge_api.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_compare_chronicles.py` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/test_contact_sheet.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_arm_report.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_chronicle.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_equivalence.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_mind_ui.gd` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_mind_ui.gd.uid` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_p3d_fixtures.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_p3d_host_check.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_p3d_successor.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_p7_acceptance.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_p7_admission.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_p7_bench.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_p7_gate_stop.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_p7_ledger.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_p7_publication.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_perf_check.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_score.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_seed_protocol.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_shadow_freeze.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_shadow_successor.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_shadow_successor_lock.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_shadow_test_migration.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_story_check.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_ui_successor.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_ui_successor_dispatch.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_ui_successor_perf.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_core_why_check.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_gd_reach.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_generic_gate_contract.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_locale_trf.gd` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
+| `tools/v8/test_m6a_base72.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_m6a_causal.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_m6a_gate.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_m6a_gate_lane_fd.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_m6a_observer_successor.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_m6a_perf.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_m6a_protocol.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_m6a_r1_stall.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_m6a_r1_stall_capture.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_m6a_run.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_m6a_score.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_mart2_extensibility.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_mux2_evidence_error.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_mux2_gate_attribution.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_mux2_gate_fixtures.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_mux2_gate_lock.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_mux2_gate_receipts.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_mux2_gate_stall_command.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_mux2_score.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_mux_safety.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_mux_score.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_play.sh` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_read_gate.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
+| `tools/v8/test_read_normalisation.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/test_schema_docs.py` | KEEP | V8-0 tooling (identity, gate, inventory, reachability, docs checks) | goal 4.1, 6.1, 11.1 |
 | `tools/v8/u_script.json` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |
 | `tools/v8/v7_ui_deleted.txt` | KEEP | M1 tooling (screen check, chronicle comparison, tile sheet, GUI test, trf test, U-script) | M1 goal 5.1, 9.2, 9.7, 9.8, 10.1; DECISIONS D21 |

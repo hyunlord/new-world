@@ -176,6 +176,7 @@ pub fn detect_rooms(world: &World, res: &mut SimResources) {
         rooms.insert(
             id,
             Room {
+                dwelling_kind: None,
                 id,
                 tiles: f.tiles,
                 doors: f.doors,

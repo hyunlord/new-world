@@ -268,6 +268,7 @@ fn wave_roofed_capacity_excludes_disconnected_beds_and_fails_closed() {
         res.colony.rooms.insert(
             id,
             Room {
+                dwelling_kind: None,
                 id,
                 tiles: [bed].into(),
                 doors: [(bed.0, bed.1 - 1)].into(),

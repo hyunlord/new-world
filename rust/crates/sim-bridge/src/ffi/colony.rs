@@ -113,6 +113,8 @@ pub(super) fn result_to_dict(result: CommandResult) -> VarDictionary {
 /// Change counters of the colony layers.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ColonyVersions {
+    /// Appended command records; paired with sim tick for preview invalidation.
+    pub command_revision: u64,
     /// `colony.trees_version`.
     pub trees: u64,
     /// `colony.overlay_version`.
@@ -124,6 +126,7 @@ pub struct ColonyVersions {
 /// The colony change counters (cheap; poll every frame).
 pub fn collect_colony_versions(resources: &SimResources) -> ColonyVersions {
     ColonyVersions {
+        command_revision: resources.colony.command_log.len() as u64,
         trees: resources.colony.trees_version,
         overlay: resources.colony.overlay_version,
         rooms: resources.colony.rooms_version,
@@ -132,6 +135,7 @@ pub fn collect_colony_versions(resources: &SimResources) -> ColonyVersions {
 
 pub(super) fn versions_to_dict(v: ColonyVersions) -> VarDictionary {
     let mut dict = VarDictionary::new();
+    dict.set("command_revision", v.command_revision as i64);
     dict.set("trees_version", v.trees as i64);
     dict.set("overlay_version", v.overlay as i64);
     dict.set("rooms_version", v.rooms as i64);

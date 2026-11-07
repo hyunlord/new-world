@@ -91,6 +91,7 @@ fn storage_requires_a_real_zone_and_a_real_roofed_storehouse() {
     res.colony.rooms.insert(
         1,
         sim_core::rooms::Room {
+            dwelling_kind: None,
             id: 1,
             tiles: BTreeSet::from([tile]),
             doors: BTreeSet::new(),

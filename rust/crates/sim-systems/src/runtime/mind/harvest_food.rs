@@ -371,6 +371,7 @@ mod budget_tests {
         res.colony.rooms.insert(
             1,
             sim_core::rooms::Room {
+                dwelling_kind: None,
                 id: 1,
                 tiles: std::collections::BTreeSet::from([(3, 3)]),
                 doors: std::collections::BTreeSet::from([(2, 3)]),

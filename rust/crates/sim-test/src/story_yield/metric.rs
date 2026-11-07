@@ -47,6 +47,12 @@ fn trace(chronicle: &Chronicle, start: u32) -> Chain {
         kinds.push(format!("entry:{}", entry.kind.as_str()));
         let (next, edge_kind) = match chronicle.cause_of(cursor) {
             None => return Chain::Complete { depth, kinds },
+            Some(CauseRef::Building { .. }) => {
+                // This API has Chronicle only, not command_log or BuildingState.
+                // Keep the verified prefix unresolved; do not invent a root or
+                // follow a command-record number as a chronicle entry index.
+                return Chain::Missing { depth, kinds };
+            }
             Some(CauseRef::Entry(index)) => (Some(index), Some("entry_link".into())),
             Some(CauseRef::Pressure { kind, entry }) => (entry, Some(format!("pressure:{kind}"))),
             Some(CauseRef::Modifier { code, entry }) => (entry, Some(format!("modifier:{code}"))),
@@ -90,6 +96,7 @@ fn trace(chronicle: &Chronicle, start: u32) -> Chain {
 /// termination markers. A root and an unresolved path with identical verified
 /// kinds deduplicate; a longer observed path is distinct from its prefix.
 /// An uncaused entry or a sample without an entry link is a root.
+/// Building command provenance remains unresolved in this Chronicle-only metric.
 pub fn measure(
     chronicle: &Chronicle,
     end_tick: u64,
@@ -155,4 +162,28 @@ pub fn measure(
         reports.push(report);
     }
     Ok(reports)
+}
+
+#[cfg(test)]
+mod building_cause_tests {
+    use super::*;
+    use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
+    use sim_core::colony::BuildCause;
+
+    #[test]
+    fn command_record_zero_is_neither_a_chronicle_cycle_nor_an_uncaused_root() {
+        let mut chronicle = Chronicle::new();
+        chronicle.push_caused(
+            ChronicleEntry::new(1, ChronicleKind::BuildingComplete),
+            Some(CauseRef::Building {
+                site: 7,
+                record: 0,
+                origin: BuildCause::Command,
+            }),
+        );
+        let report = measure(&chronicle, 10, 10).expect("window");
+        assert_eq!(report[0].missing_chains, 1);
+        assert_eq!(report[0].cyclic_chains, 0);
+        assert_eq!(report[0].deep_entries, 0);
+    }
 }

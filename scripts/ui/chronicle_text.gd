@@ -29,10 +29,11 @@ const Names = preload("res://scripts/ui/person_names.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
+const Content = preload("res://scripts/ui/content_context.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 ## MindChoice (47) records only entry into the critical band; its node slot is not a display name.
-const LAST_KIND: int = 59
+const LAST_KIND: int = 60
 static var steward_labels: Dictionary = {}
 static var food_chronicle: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
@@ -171,6 +172,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 			if cause == 1:
 				era_name = loc(locale, "ERA_TRANSITION_FMT").format({"era": era_name})
 			return loc(locale, "CHRONICLE_ERA_CHANGED_FMT").format({"era": era_name})
+		60: return building_complete_sentence(row, locale)
 		54, 55, 56:
 			var crop: Dictionary = preload("res://scripts/ui/content_context.gd").row("crops", value)
 			var key: String = ["S1_CHRON_SOWN", "S1_CHRON_HARVEST", "S1_CHRON_FROST"][kind - 54]
@@ -178,6 +180,26 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 				key = "S1_CHRON_COVERED" if cause == 1 else "S1_CHRON_FAILED"
 			return loc(locale, key).format({"crop": loc(locale, str(crop.get("name_key", "UI_UNKNOWN")))})
 	return ""
+
+
+## Kind 60 pins the completed template ordinal and cause, even after upgrade or demolition.
+static func building_complete_sentence(row: Dictionary, locale: Node) -> String:
+	var template: Dictionary = Content.row("buildings", int(row.get("value", -1)))
+	if template.is_empty():
+		return loc(locale, "UI_UNKNOWN")
+	var cause_key: String = "UI_UNKNOWN"
+	match int(row.get("cause", -1)):
+		0: cause_key = "BUILD_CAUSE_COMMAND"
+		1: cause_key = "BUILD_CAUSE_ZONE"
+		2: cause_key = "BUILD_CAUSE_STEWARD"
+	var building_name: String = loc(locale, str(template.get("name_key", "UI_UNKNOWN")))
+	var message: String = loc(locale, "CHRONICLE_BUILDING_COMPLETE")
+	# The authored Korean pattern preserves the brief; select one particle exactly once.
+	if language(locale) == "ko":
+		message = message.replace("{building}을(를)", "{building}")
+		building_name = KnowledgeText.with_object(locale, building_name)
+	var line: String = message.format({"building": building_name, "cause": loc(locale, cause_key)})
+	return line + " · " + loc(locale, "BUILD_TIER").format({"tier": int(template.get("tier", 0))})
 
 
 ## M5 kinds 29–37 and the M5 quarrel (19, cause ≥ 1) as BBCode sentences with person links.
@@ -276,6 +298,8 @@ static func why_lines(read: Dictionary, locale: Node, info: Dictionary) -> Array
 	var causes: PackedInt64Array = read.get("causes", PackedInt64Array())
 	var values: PackedInt64Array = read.get("values", PackedInt64Array())
 	var food_daily: PackedInt64Array = read.get("food_daily_milli", PackedInt64Array())
+	var building_sites: PackedInt64Array = read.get("building_sites", PackedInt64Array())
+	var building_records: PackedInt64Array = read.get("building_records", PackedInt64Array())
 	for i: int in links.size():
 		var text: String = ""
 		match links[i]:
@@ -290,6 +314,11 @@ static func why_lines(read: Dictionary, locale: Node, info: Dictionary) -> Array
 					text = loc(locale, "UI_UNKNOWN")
 			1: text = LocaleScript.format_text(loc(locale, "M5_WHY_MODIFIER_FMT"), {"name": StoryText.modifier(locale, int(codes[i]) if i < codes.size() else -1)})
 			2: text = LocaleScript.format_text(loc(locale, "M5_WHY_PRESSURE_FMT"), {"name": StoryText.pressure(locale, int(codes[i]) if i < codes.size() else -1)})
+			3:
+				if i < building_sites.size() and i < building_records.size() and building_sites[i] >= 0 and building_records[i] >= 0:
+					text = "[url=building:%d:%d][color=#e8c46e]%s[/color][/url]" % [building_sites[i], building_records[i], loc(locale, "BUILD_SOURCE")]
+				else:
+					text = loc(locale, "BUILD_CAUSE_UNAVAILABLE")
 			_: text = loc(locale, "UI_UNKNOWN")
 		out.append(text if i == 0 else "→ " + text)
 	return out

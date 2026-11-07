@@ -59,5 +59,29 @@ pub fn render(catalog: &Catalog) -> String {
             );
         }
     }
+    for template in &catalog.building_templates().buildings {
+        if template.status == ContentStatus::Inert {
+            row(
+                &mut out,
+                &template.id,
+                "template",
+                &template.era,
+                "building",
+                template.debt.as_deref(),
+            );
+        }
+    }
+    for zone in catalog.building_templates().zone_kinds() {
+        if zone.status == ContentStatus::Inert {
+            row(
+                &mut out,
+                &zone.id,
+                "zone",
+                "",
+                "building",
+                zone.debt.as_deref(),
+            );
+        }
+    }
     out
 }

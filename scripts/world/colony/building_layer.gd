@@ -24,7 +24,11 @@ const View = preload("res://scripts/world/colony/view.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const LitWarm = preload("res://scripts/world/colony/lit_warm_representatives.gd")
 const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
+const PlaceholderArt = preload("res://scripts/ui/item_icons.gd")
 const TILE: int = View.TILE
+
+## Authoritative template-site sprites, separate from legacy component sprite pooling.
+var _template_sprites: Dictionary = {}
 
 var _world_sim: Node = null
 var _world: Node2D = null
@@ -100,6 +104,8 @@ func _on_world_reset() -> void:
 
 
 func _clear() -> void:
+	for sprite: Node in _template_sprites.values(): sprite.queue_free()
+	_template_sprites.clear()
 	for s: Node in _sprites.values():
 		s.queue_free()
 	_sprites.clear()
@@ -147,7 +153,7 @@ func _process_body(_delta: float) -> void:
 	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
 	var space_version: int = int(space.get("version", 0))
-	var key: int = hash([snap.get("xs"), snap.get("ys"), snap.get("kinds"), shops.get("kinds"), shops.get("xs"), shops.get("ys"),
+	var key: int = hash([snap.get("xs"), snap.get("ys"), snap.get("kinds"), snap.get("template_sites", []), shops.get("kinds"), shops.get("xs"), shops.get("ys"),
 		shops.get("bill_active"), settlements.get("fire_lit"), space_version])
 	if key != _key:
 		_key = key
@@ -449,6 +455,7 @@ func _rebuild_body(snap: Dictionary, shops: Dictionary, settlements: Dictionary,
 		+ (space.get("ford_xs", PackedInt32Array()) as PackedInt32Array).size()
 	_sync(wanted)
 	_build_huts(huts)
+	_sync_template_sites(snap.get("template_sites", []))
 
 
 ## Workshop row indices with an active bill.
@@ -652,3 +659,49 @@ func workshop_count() -> int:
 ## The hearth's fire frame (the M-ART2 hearth has one lit frame; kept for tools): always 0.
 func fire_frame() -> int:
 	return 0
+
+
+## Metadata comes only from actual persisted sites, including completed ones. Never catalogue rows.
+## The bridge supplies top-left anchors and already-rotated footprint bounds; no ID-based geometry.
+func _sync_template_sites(rows: Array) -> void:
+	var wanted: Dictionary = {}
+	for value: Variant in rows:
+		if not value is Dictionary: continue
+		var row: Dictionary = value
+		if not bool(row.get("connected", false)): continue
+		if not row.has("id"): continue
+		var status: String = str(row.get("status", ""))
+		if status == "cancelled": continue
+		if status == "complete" and not bool(row.get("is_intact", false)): continue
+		var site_id: String = str(row["id"])
+		var footprint: Vector2i = Vector2i(int(row.get("width", 0)), int(row.get("height", 0)))
+		var texture: Texture2D = PlaceholderArt.building_texture(row, footprint * TILE)
+		if texture == null: continue
+		var anchor: Vector2i = Vector2i(int(row.get("x", 0)), int(row.get("y", 0)))
+		wanted[site_id] = true
+		var sprite: Sprite2D = _template_sprites.get(site_id)
+		if sprite == null:
+			sprite = Sprite2D.new()
+			sprite.name = "TemplateRoof"
+			sprite.centered = false
+			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			sprite.set_meta("template_site_id", site_id)
+			_world.add_child(sprite)
+			_template_sprites[site_id] = sprite
+		sprite.texture = texture
+		# Same physical base as the existing workshop pipeline, preserving y-sort identity.
+		sprite.position = SiteGhost.footprint_base(anchor, footprint).round()
+		sprite.offset = Vector2(-footprint.x * TILE * 0.5, -footprint.y * TILE + TILE / 3.0)
+		# Construction is translucent; actual pieces below remain the completion source.
+		var wash: float = clampf(float(ArtData.param("sites.wash_alpha", 0.25)), 0.0, 1.0)
+		sprite.modulate = Color(1.0, 1.0, 1.0, wash) if status == "building" else Color.WHITE
+		sprite.set_meta("complete", status == "complete")
+	for site_id: String in _template_sprites.keys():
+		if not wanted.has(site_id):
+			(_template_sprites[site_id] as Node).queue_free()
+			_template_sprites.erase(site_id)
+
+
+## A build-panel thumbnail may show unavailable content, without creating a world node or command.
+static func template_preview_texture(row: Dictionary, pixels: Vector2i) -> Texture2D:
+	return PlaceholderArt.building_texture(row, pixels, true)

@@ -569,4 +569,171 @@ fn spine_extension() {
     assert_eq!(view.lanes.last().expect("extension lane").id, "ext_lane");
     assert!(view.nodes.iter().any(|n| n.name == "test_inert_spine"));
     assert!(sim_core::colony::content_debt::render(catalog).contains("test_inert_spine"));
+    spine_template_extension(catalog);
+}
+
+fn register_spine_jobs(engine: &mut SimEngine) {
+    register_jobs(engine);
+    engine.register_system(Box::new(
+        sim_systems::runtime::building_templates::BuildingTemplateSystem,
+    ));
+}
+
+fn spine_template_extension(catalog: &content::Catalog) {
+    use sim_core::colony::building_site::{BuildingStatus, PiecePhase};
+    use sim_core::colony::building_template::{material_cost, RoofShape};
+    use sim_core::colony::knowledge::ContentStatus;
+    use sim_core::colony::RejectReason;
+    use sim_systems::runtime::building_templates;
+
+    // Given the same real selected catalogue in this fresh child process.
+    let screen = catalog
+        .building_templates()
+        .get("test_mudbrick_screen")
+        .expect("selected connected template");
+    let tower = catalog
+        .building_templates()
+        .get("test_future_tower")
+        .expect("selected inert template");
+    let wall = BlueprintKind::checked(WALL).expect("selected physical blueprint");
+    assert_eq!(screen.status, ContentStatus::Connected);
+    assert_eq!(screen.art.roof, RoofShape::Round);
+    assert_eq!(screen.art.tint_material, "clay");
+    assert_eq!(screen.art.icon, "grain");
+    for rotation in 0..4 {
+        let plan = screen
+            .expand(catalog, None, rotation)
+            .expect("physical plan");
+        assert_eq!(plan.len(), 1);
+        assert_eq!(
+            (plan[0].kind, plan[0].offset, plan[0].size),
+            (wall, (0, 0), (1, 1))
+        );
+        assert_eq!(
+            material_cost(&plan, catalog).expect("physical costs"),
+            screen.materials
+        );
+    }
+    assert_eq!(screen.materials.get("clay"), Some(&2));
+    assert_eq!(tower.status, ContentStatus::Inert);
+    assert_eq!(tower.art.roof, RoofShape::Angular);
+    assert_eq!(tower.art.tint_material, "granite");
+    assert_eq!(tower.art.icon, "book");
+    assert!(tower
+        .debt
+        .as_deref()
+        .is_some_and(|debt| !debt.trim().is_empty()));
+    assert!(
+        tower.expand(catalog, None, 0).is_err(),
+        "inert is not a physical plan"
+    );
+    let debt = sim_core::colony::content_debt::render(catalog);
+    assert!(debt.contains("test_future_tower"));
+    assert!(debt.contains(tower.debt.as_deref().expect("inert debt")));
+
+    // A one-wall utility needs physical jobs and template scheduling, not a fake room or full AI.
+    let mut engine = job_world_m2(32, 32);
+    engine.resources.rules.colony = Some(ColonyRule::M4);
+    engine.register_system(Box::new(building_templates::BuildingTemplateSystem));
+    worker(&mut engine, 6, 6);
+    drop_items(
+        &mut engine,
+        (19, 20),
+        ItemSpec::raw(ItemKind::Clay, None),
+        2,
+    );
+
+    // Inert admission is pure, then the real command rejects without allocating work.
+    let state = save::encode(&engine.resources.colony.buildings).expect("template state");
+    let physical = save::encode(&engine.resources.content_state).expect("physical identities");
+    let sites = sim_systems::runtime::jobs::items::colony_sites(&engine.world).len();
+    let ledger = save::encode(&engine.resources.colony.item_ledger).expect("ledger");
+    assert_eq!(
+        building_templates::commands::preview(
+            &engine.world,
+            &engine.resources,
+            &tower.id,
+            (17, 17),
+            0,
+            None,
+        ),
+        Err(RejectReason::NotYet),
+    );
+    let rejected = submit(
+        &mut engine,
+        Command::BuildTemplate {
+            id: tower.id.clone(),
+            anchor: (17, 17),
+            rotation: 0,
+            station: None,
+        },
+    );
+    assert!(!rejected.accepted);
+    assert_eq!(rejected.reason, Some(RejectReason::NotYet));
+    assert_eq!(
+        save::encode(&engine.resources.colony.buildings).expect("template state"),
+        state
+    );
+    assert_eq!(
+        save::encode(&engine.resources.content_state).expect("physical identities"),
+        physical
+    );
+    assert_eq!(
+        save::encode(&engine.resources.colony.item_ledger).expect("ledger"),
+        ledger
+    );
+    assert_eq!(
+        sim_systems::runtime::jobs::items::colony_sites(&engine.world).len(),
+        sites
+    );
+
+    // When the ordinary command queues the authored physical wall, jobs deliver and build it.
+    let site_id = engine.resources.colony.buildings.next_site_id;
+    let placed = submit(
+        &mut engine,
+        Command::BuildTemplate {
+            id: screen.id.clone(),
+            anchor: (17, 17),
+            rotation: 0,
+            station: None,
+        },
+    );
+    assert!(placed.accepted, "{placed:?}");
+    assert_eq!(
+        engine.resources.colony.buildings.sites[&site_id].status,
+        BuildingStatus::Building
+    );
+    assert!(
+        run_until(&mut engine, 3000, |engine| {
+            engine.resources.colony.buildings.sites[&site_id].status == BuildingStatus::Complete
+        }) < 3000
+    );
+    let site = &engine.resources.colony.buildings.sites[&site_id];
+    assert_eq!(site.template, screen.id);
+    assert_eq!(site.pieces.len(), 1);
+    assert_eq!(site.pieces[0].kind, wall);
+    assert_eq!(site.pieces[0].phase, PiecePhase::Complete);
+    assert!(site.completion_entry.is_some());
+    assert!(building_templates::is_intact(&engine.resources, site));
+    let key = ((17, 17), CompletedLayer::Wall);
+    let completed = &engine.resources.content_state.completed[&key];
+    assert_eq!(completed.blueprint, wall);
+    assert_eq!(completed.style_id, "test_mudbrick");
+    assert!(sim_systems::runtime::jobs::items::colony_sites(&engine.world).is_empty());
+
+    // Then persisted template strings and the actual extended blueprint identity survive reload.
+    let bytes = save::save(&mut engine).expect("save data-only template completion");
+    let restored = save::load_with(&bytes, register_spine_jobs).expect("reload selected template");
+    let site = &restored.resources.colony.buildings.sites[&site_id];
+    assert_eq!(site.template, screen.id);
+    assert_eq!(site.status, BuildingStatus::Complete);
+    assert!(building_templates::is_intact(&restored.resources, site));
+    assert_eq!(
+        restored.resources.content_state.completed[&key].blueprint,
+        wall
+    );
+    assert_eq!(
+        restored.resources.content_state.completed[&key].style_id,
+        "test_mudbrick"
+    );
 }

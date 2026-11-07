@@ -1,6 +1,20 @@
 # Changelog
 
-## M-SPINE-a — candidate, 2026-11-07
+## M-SPINE-b — implementation IN_PROGRESS, 2026-11-08 (not published)
+
+### Added
+- Data-defined building templates over existing pieces: six Connected and sixteen Inert; housing growth Connected and reserved storage/workshop growth Inert with debt. Build/upgrade commands retain persistent site, piece and command-origin provenance.
+- Format19 building sidecar and predecessor readers, assigned-bed home reads, housing zones and material-aware steward template selection; build panel groups, cause text and data-driven roof/material/glyph and item-shape placeholders.
+- Authored construction-chain, data-only extension, negative provenance and native preview/gallery checks. These are implementation only: b compile/runtime/save/visual/crash/full-gate verification is NOT_RUN and b is not published.
+
+### Changed
+- Reuse existing physical blueprint costs, piece jobs, completion callbacks and storage; activate overlapping floor/furnishing layers in authored order. Connected upgrades preserve footprints (4×4 log→stone); the3×3 hut is not expanded.
+- Reserve persistent aggregate/piece provenance ids because legacy construction is keyed by tile/ECS; housing reuses the existing zone allocator. Generated debt includes reserved templates and growth zones. Milestone13 remains incomplete pending b verification and publication.
+
+### Removed
+- None.
+
+## M-SPINE-a — published c467c0a36, 2026-11-08
 
 ### Added
 - Authored four-era thresholds and ten lanes, per-era weighted coverage, knowledge tier/status/debt and completed-job Practice discovery. Wider practitioner masks preserve the historical node prefix.
@@ -12,6 +26,12 @@
 - Keep selected-pack locale additions inside the strict strings table; the existing scene test now checks and captures the extra lane, grey card and debt in both languages.
 - Extend the ordered economy bridge recipe expectation with appended cordage, retaining every historical recipe code and workshop mapping.
 - Era coverage denominators use authored nodes within each era instead of absent-marker weights; all existing marker weights remain unchanged. No balance tuning or thermal model wiring.
+
+### Removed
+- The fixed643‰ progress cap and the two-era-only technology-map layout; authored node weights are unchanged.
+
+### Publication
+- Published exact `c467c0a36466ec86419ae66bfb702e37c2566b30` at2026-11-08 01:01:16KST through fast-forward `v8/wip` → `v8/main`. Full attempt5 gate49/49 PASS, exit0, using only the existing step41 waiver. DEBUG3119PASS; RELEASE raw counter3118PASS (proven interleaved child summary, retained unchanged); both0FAIL/14ignored. Earlier aborts/failures and the attempt3 protected-path incident remain disclosed in the [a report](docs/v8/spine/M_SPINE_A_REPORT.md).
 
 ## M6b Stage 2 — in progress, 2026-11-06 (not published)
 

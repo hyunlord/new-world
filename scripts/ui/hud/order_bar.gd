@@ -59,6 +59,7 @@ const HUNT_ZONE_MODE: int = 11
 const HARVEST_MODE: int = 12
 const FIELD_MODE: int = 13
 const ERASE_FIELD_MODE: int = 14
+const HOUSING_MODE: int = 15
 const DIG_MENU: Array[Dictionary] = [
 	{"mode": QUARRY_MODE, "key": "UI_ORDER_QUARRY", "hotkey": KEY_1, "icon": "icon_quarry"},
 	{"mode": CLAY_MODE, "key": "UI_ORDER_CLAY", "hotkey": KEY_2, "icon": "icon_dig"},
@@ -67,9 +68,10 @@ const DIG_MENU: Array[Dictionary] = [
 	{"mode": HARVEST_MODE, "key": "M6A_ORDER_HARVEST", "hotkey": KEY_5, "icon": "icon_chop", "hint": "UI_ORDER_HINT_AREA"},
 	{"mode": FIELD_MODE, "key": "S1_FIELD_TOOL", "hotkey": KEY_6, "icon": "icon_chop", "hint": "UI_ORDER_HINT_AREA"},
 	{"mode": ERASE_FIELD_MODE, "key": "S1_ERASE_TOOL", "hotkey": KEY_7, "icon": "icon_remove", "hint": "UI_ORDER_HINT_AREA"},
+	{"mode": HOUSING_MODE, "key": "ZONE_HOUSING", "hotkey": KEY_8, "icon": "icon_stockpile", "hint": "UI_ORDER_HINT_AREA"},
 ]
 ## The modes of the F7 submenu (the F7 button stays pressed in any of them).
-const DIG_MODES: Array[int] = [QUARRY_MODE, CLAY_MODE, HUNT_MODE, HUNT_ZONE_MODE, HARVEST_MODE, FIELD_MODE, ERASE_FIELD_MODE]
+const DIG_MODES: Array[int] = [QUARRY_MODE, CLAY_MODE, HUNT_MODE, HUNT_ZONE_MODE, HARVEST_MODE, FIELD_MODE, ERASE_FIELD_MODE, HOUSING_MODE]
 const BAR_BOTTOM: float = 1080.0 - 12.0
 const ACTIVE: Color = Color("e8c46e")
 const TOAST_SECONDS: float = 2.0
@@ -97,6 +99,7 @@ var _world_sim: Node = null
 var _last_save: String = ""
 var _menu: PanelContainer
 var _menu_buttons: Array[Button] = []
+var _templates_button: Button
 var _bar: PanelContainer
 var _rooms_button: Button
 var _rooms: Node = null
@@ -197,6 +200,7 @@ func _on_language_changed(_language: String) -> void:
 	for i: int in _dig_buttons.size():
 		_dig_buttons[i].text = "%d %s" % [i + 1, _loc(str(DIG_MENU[i]["key"]))]
 	_rooms_button.text = _loc("UI_ROOMS_TOGGLE")
+	_templates_button.text = _loc("UI_ORDER_BUILD") + " · " + _loc("BUILD_GROUP_AVAILABLE")
 	_refresh_tooltips()
 	_on_mode_changed(current_mode())
 	_menu.size = Vector2.ZERO
@@ -259,6 +263,13 @@ func _build_menu() -> void:
 		scroll.add_child(column)
 	else:
 		_menu.add_child(column)
+	_templates_button = Button.new()
+	_templates_button.name = "BuildTemplates"
+	_templates_button.focus_mode = Control.FOCUS_ALL
+	_templates_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_templates_button.text = _loc("UI_ORDER_BUILD") + " · " + _loc("BUILD_GROUP_AVAILABLE")
+	_templates_button.pressed.connect(open_templates)
+	column.add_child(_templates_button)
 	for i: int in EconomyText.menu_order().size():
 		var kind: Dictionary = EconomyText.build_kind(EconomyText.menu_order()[i])
 		var button: Button = Button.new()
@@ -271,6 +282,15 @@ func _build_menu() -> void:
 		column.add_child(button)
 		_menu_buttons.append(button)
 	_menu.visible = false
+
+
+func open_templates() -> void:
+	close_build_menu()
+	close_dig_menu()
+	select_mode(0)
+	var panel: Node = get_node_or_null("../BuildPanel")
+	if panel != null:
+		panel.call("open")
 
 
 ## M4: the F7 submenu (1 채석, 2 점토 캐기), above the F7 button.
@@ -467,7 +487,13 @@ func _on_mode_changed(mode: int) -> void:
 		_hint.text = _loc("UI_ORDER_HINT_CLAY")
 	elif mode == QUARRY_MODE and dig_menu_open():
 		_hint.text = _loc("UI_ORDER_HINT_DIG_MENU")
-	if mode == BUILD_MODE and _tool != null:
+	if mode == HOUSING_MODE:
+		_hint.text = _loc("ZONE_HOUSING") + " · " + _loc("UI_ORDER_HINT_AREA")
+	if mode == 0 and _tool != null and int(_tool.call("selected_housing_zone")) >= 0:
+		_hint.text = _loc("ZONE_HOUSING")
+	if mode == BUILD_MODE and _tool != null and bool(_tool.call("template_active")):
+		_hint.text = _loc("BUILD_ROTATE_HINT")
+	elif mode == BUILD_MODE and _tool != null:
 		var code: int = EconomyText.build_code(str(_tool.get("build_kind")))
 		_hint.text = build_hint(_locale, code)
 	elif mode == 0 and build_menu_open():
@@ -589,7 +615,7 @@ func _refresh_key_help() -> void:
 	if _hint == null:
 		return
 	# Compact idle help leaves every action button in place; active tools keep their instructions.
-	_hint.visible = _key_help_expanded or current_mode() != 0 or build_menu_open() or dig_menu_open()
+	_hint.visible = _key_help_expanded or current_mode() != 0 or build_menu_open() or dig_menu_open() or (_tool != null and int(_tool.call("selected_housing_zone")) >= 0)
 	_place_bar.call_deferred()
 
 
@@ -597,6 +623,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
 	var key: InputEventKey = event
+	if key.keycode == KEY_R and _tool != null and bool(_tool.call("template_active")):
+		_tool.call("rotate_template")
+		get_viewport().set_input_as_handled()
+		return
 	if build_menu_open():
 		var slot: int = MENU_KEYS.find(key.keycode)
 		var index: int = -1

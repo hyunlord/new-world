@@ -12,6 +12,7 @@ const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
+const BuildingCauseText = preload("res://scripts/ui/building_cause_text.gd")
 const PANEL_RECT: Rect2 = Rect2(648, 300, 880, 360)
 
 var _world: Node = null
@@ -75,9 +76,27 @@ func open(index: int) -> bool:
 	var shown: Array[String] = _lines.duplicate()
 	if shown.size() <= 1:
 		shown.append(Chronicle.loc(_locale, "M5_WHY_NONE"))
+	_body.bbcode_enabled = true
 	_body.text = "\n\n".join(shown)
 	visible = true
 	return true
+
+
+## Exact persisted source record; record is NOT a chronicle-entry index.
+func open_building(site: int, record: int) -> bool:
+	if _world == null:
+		return false
+	var raw: Variant = _world.call("get_building_cause", site, record)
+	var read: Dictionary = raw if raw is Dictionary else {}
+	_index = -1
+	var info: Dictionary = SimReads.read(_world, "get_world_info")
+	_lines = BuildingCauseText.lines(read, _locale, info)
+	_title.text = Chronicle.loc(_locale, "BUILD_SOURCE")
+	_close.text = Chronicle.loc(_locale, "UI_CLOSE")
+	_body.bbcode_enabled = false
+	_body.text = "\n\n".join(_lines)
+	visible = true
+	return bool(read.get("valid", false))
 
 
 func close() -> void:
@@ -107,6 +126,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _follow_link(meta: Variant) -> void:
+	var parts: PackedStringArray = str(meta).split(":")
+	if parts.size() == 3 and parts[0] == "building":
+		if parts[1].is_valid_int() and parts[2].is_valid_int():
+			open_building(int(parts[1]), int(parts[2]))
+		return
 	var inspector: Node = get_node_or_null("../AgentInspectorPanel")
 	if inspector != null:
 		inspector.call("_follow_link", meta)
