@@ -72,7 +72,7 @@ pub fn collect_neighbours(world: &hecs::World, res: &SimResources) -> Neighbours
         .nodes
         .iter()
         .filter(|n| n.era == Era::Neolithic)
-        .fold(0u32, |m, n| m | bit(n.id));
+        .fold(0u64, |m, n| m | bit(n.id));
     let mut list = nb.list.clone();
     list.sort_by_key(|n| n.id);
     NeighboursView {
@@ -89,7 +89,8 @@ pub fn collect_neighbours(world: &hecs::World, res: &SimResources) -> Neighbours
                     n.population,
                     n.attitude,
                     n.last_contact_day.map_or(-1, i64::from),
-                    i64::from(n.known & neo),
+                    // Godot ints carry the full mask bit pattern, including knowledge id63.
+                    (n.known & neo) as i64,
                 )
             })
             .collect(),

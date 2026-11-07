@@ -290,5 +290,13 @@
             work_ticks: 30, skill: "woodwork", work: "craft", quality_add: 0, material_term: None,
             tool: None, auto_bill_role: None,
         ),
+        // Existing flax_stalks supplies the brief's flax straw; no bark item/mechanic is introduced.
+        (
+            identity: (code: 26, id: "twist_cord", name_key: "RECIPE_TWIST_CORD", serde_name: "TwistCord", serde_aliases: [], resolver_aliases: []),
+            workshop: "wood_bench", workshop_tags: ["woodworking"],
+            inputs: [("flax_stalks", 2)], output: ("cord", 1),
+            work_ticks: 30, skill: "woodwork", work: "craft", quality_add: 0, material_term: None,
+            tool: None, auto_bill_role: None,
+        ),
     ],
 )

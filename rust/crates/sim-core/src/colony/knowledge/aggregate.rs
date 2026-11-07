@@ -72,6 +72,12 @@ pub struct TechAggregate {
     pub adults: u16,
     /// Bumped whenever a state or the progress changes.
     pub version: u64,
+    /// Per-era coverage, indexed by authored era order.
+    #[serde(default)]
+    pub era_progress: Vec<u16>,
+    /// Current era order and state (0 none, 1 transition, 2 era proper).
+    #[serde(default)]
+    pub current_era: (u8, u8),
 }
 
 impl TechAggregate {
@@ -86,13 +92,17 @@ impl TechAggregate {
 
 /// The era label of `progress` ‰ (goal 3.4): 0 구석기 (< 250), 1 신석기 전환기
 /// (250–749), 2 신석기 시대 (≥ 750).
-pub const fn era_label(progress: u16) -> u8 {
-    if progress < 250 {
-        0
-    } else if progress < 750 {
+pub fn era_label(progress: u16) -> u8 {
+    let eras = &super::defs().eras;
+    let Some(next) = eras.eras.get(1) else {
+        return 0;
+    };
+    if progress >= next.era_permille {
+        2
+    } else if progress >= next.transition_permille {
         1
     } else {
-        2
+        0
     }
 }
 

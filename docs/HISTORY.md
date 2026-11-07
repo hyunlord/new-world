@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-07 M-SPINE-a 후보: 시대·기술 카탈로그와 format18 이전 저장 마이그레이션을 추가했다. 기술 지도의 이전 Stage2 시트는 Git 이력 `68beae3a:docs/images/m6b_stage2_contact_sheet.png`에 보존하고 [현재 시트](images/m_spine_a_contact_sheet.png)로 교체했다. 구현 결정은 [ADR0060](decisions/0060-content-spine.md). 게시 완료 기록은 게이트 후 남긴다.
+
 - 2026-11-06 — M6b Stage2 직조 후보: 실제 아마 수확부터 두 의복 착용·저장 재개까지 완료하고12장 캡처·실제 주민 클릭을 확인했다. baseline identity·8세계 smoke PASS, 전체 gate와 게시 대기. 전용 아트는 #689([보고서](v8/m6b/M6B_REPORT.md), [ADR0059](decisions/0059-authored-weaving-and-physical-apparel.md)).
 
 - 2026-11-06 — M6b Stage1 `16dc9120d`를 v8/wip→v8/main에 게시하고 원격 SHA를 확인했다. 농경·생산 제한·명시적 가르침, 전체 gate49/49·exit0(step41 엄격50ms FAIL/기존 예외 PASS), debug/release 각3076PASS·13ignored, baseline 동일성·C3 PASS. 집사 미달은 #688 OPEN에 보존, #674/#675 CLOSED. Stage2 직조를20:59:12KST에 시작했다([보고서](v8/m6b/M6B_REPORT.md)).

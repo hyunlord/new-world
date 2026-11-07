@@ -36,6 +36,7 @@ mod food_catalog;
 mod food_tests;
 mod legacy_food_v13;
 mod legacy_food_v16;
+mod legacy_spine_v17;
 mod legacy_steward;
 mod legacy_steward_v14;
 mod legacy_v9;
@@ -66,7 +67,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6 through 16 are migrated. Bump it
+/// Save format version; historical versions 6 through 17 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -85,7 +86,8 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 15 = explicit extended steward mode and grace-window bookkeeping.
 /// 16 = cultivation fields and physical crop-origin accounting.
 /// 17 = exact physical garment wear and pending nonfood processing.
-pub const FORMAT_VERSION: u32 = 17;
+/// 18 = data-driven eras, full-width knowledge masks and completed-job practice.
+pub const FORMAT_VERSION: u32 = 18;
 mod cultivation_catalog;
 mod cultivation_validation;
 mod legacy_cultivation_v15;
@@ -347,7 +349,9 @@ pub fn load_with(
     let legacy_v15 = version == Some(15u32.to_le_bytes().as_slice());
     let legacy_v14 = version == Some(14u32.to_le_bytes().as_slice());
     let legacy_v16 = version == Some(16u32.to_le_bytes().as_slice());
-    let legacy_items = version != Some(FORMAT_VERSION.to_le_bytes().as_slice());
+    let legacy_v17 = version == Some(17u32.to_le_bytes().as_slice());
+    let legacy_spine = version != Some(FORMAT_VERSION.to_le_bytes().as_slice());
+    let legacy_items = legacy_spine && !legacy_v17;
     // Format13 already owns physical food and its FoodDailySystem slot.
     let legacy_food =
         legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10 || legacy_v11 || legacy_v12;
@@ -435,6 +439,7 @@ pub fn load_with(
                     && cultivation_catalog::accepts(&envelope.revision, catalog)?)
                 && !(legacy_v16
                     && legacy_weaving_v16::accepts_catalog(&envelope.revision, catalog)?)
+                && !(legacy_v17 && legacy_spine_v17::accepts_catalog(&envelope.revision, catalog)?)
             {
                 return Err(SaveError::Decode(format!(
                     "save content revision {} does not match installed {}",
@@ -488,6 +493,8 @@ pub fn load_with(
                 let old: legacy_food_v13::LegacyBodyV13 =
                     decode(&envelope.payload).map_err(SaveError::Decode)?;
                 old.into()
+            } else if legacy_v17 {
+                legacy_spine_v17::decode_body(&envelope.payload)?
             } else if legacy_v16 {
                 legacy_weaving_v16::decode_body(&envelope.payload)?
             } else if legacy_v15 {
@@ -536,6 +543,9 @@ pub fn load_with(
     crate::runtime::nav::ensure(&mut resources);
     if legacy_items {
         body.world.migrate_items_v16().map_err(SaveError::World)?;
+    }
+    if legacy_spine {
+        body.world.migrate_spine_v17().map_err(SaveError::World)?;
     }
     let mut world = world::build(&body.world).map_err(SaveError::World)?;
     if legacy_food && resources.rules.colony.is_some() {
@@ -689,6 +699,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 14
         && found != 15
         && found != 16
+        && found != 17
     {
         return Err(SaveError::Version {
             found,

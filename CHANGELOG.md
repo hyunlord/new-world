@@ -1,5 +1,16 @@
 # Changelog
 
+## M-SPINE-a — candidate, 2026-11-07
+
+### Added
+- Authored four-era thresholds and ten lanes, per-era weighted coverage, knowledge tier/status/debt and completed-job Practice discovery. Wider practitioner masks preserve the historical node prefix.
+- Twelve paleolithic nodes, five metadata-only items, flax-stalk cord production and the spear gate; unsupported behaviors remain visible Inert content with generated debt.
+- Read-only four-column technology map, era gauges, grey pending cards with debt and prerequisite-chain highlighting; selected-pack era/lane/node extension proof.
+- Format18 predecessor migration and generated-content debt consistency checks. Real ko/en technology-map captures pass at1920×1080 and1440×900 windows; paired8×48-day smoke has no extinction or KnowledgeLost. Exact-head gate and release benchmark results are recorded separately in the external publication receipt.
+
+### Changed
+- Era coverage denominators use authored nodes within each era instead of absent-marker weights; all existing marker weights remain unchanged. No balance tuning or thermal model wiring.
+
 ## M6b Stage 2 — in progress, 2026-11-06 (not published)
 
 ### Added

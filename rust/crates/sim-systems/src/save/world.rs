@@ -163,6 +163,27 @@ pub struct WorldSave {
 }
 
 impl WorldSave {
+    /// Upgrade knowledge and skills columns before format18 typed decoding.
+    pub(super) fn migrate_spine_v17(&mut self) -> Result<(), String> {
+        for archetype in &mut self.archetypes {
+            if archetype.types.len() != archetype.columns.len() {
+                return Err("legacy archetype columns and types differ".into());
+            }
+            for (&index, bytes) in archetype.types.iter().zip(&mut archetype.columns) {
+                let name = self
+                    .components
+                    .get(usize::from(index))
+                    .ok_or_else(|| "legacy component index out of range".to_owned())?;
+                match name.as_str() {
+                    "Knowledge" => *bytes = super::legacy_spine_v17::knowledge_column(bytes)?,
+                    "Skills" => *bytes = super::legacy_spine_v17::skills_column(bytes)?,
+                    _ => {}
+                }
+            }
+        }
+        Ok(())
+    }
+
     /// Upgrade only the known pre-format17 physical component columns in place.
     pub(super) fn migrate_items_v16(&mut self) -> Result<(), String> {
         use sim_core::colony::legacy_items_v16::{ApparelV16, CarryV16, ToolV16};
@@ -302,6 +323,8 @@ pub(super) fn capture_items_v16(world: &World) -> Result<WorldSave, String> {
     for archetype in &mut saved.archetypes {
         for (&index, bytes) in archetype.types.iter().zip(&mut archetype.columns) {
             match saved.components[usize::from(index)].as_str() {
+                "Knowledge" => *bytes = super::legacy_spine_v17::old_knowledge_column(bytes)?,
+                "Skills" => *bytes = super::legacy_spine_v17::old_skills_column(bytes)?,
                 "Carry" => *bytes = convert::<Carry, CarryV16>(bytes)?,
                 "Tool" => *bytes = convert::<Tool, ToolV16>(bytes)?,
                 "Apparel" => {

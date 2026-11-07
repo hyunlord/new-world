@@ -44,7 +44,11 @@ pub fn seed_founders(engine: &mut SimEngine) {
     let mut prof: Vec<u16> = vec![0; founders.len() * nodes];
     let practises =
         |prof: &[u16], i: usize, id: u8| prof[i * nodes + usize::from(id)] >= d.threshold(id);
-    for node in &d.nodes {
+    for node in d
+        .nodes
+        .iter()
+        .filter(|node| node.status == sim_core::colony::knowledge::ContentStatus::Connected)
+    {
         let col = usize::from(node.id);
         match node.seed {
             Seeding::Nobody => {}

@@ -62,8 +62,8 @@ fn daylight_supply_can_plan_heat_without_claiming_execution_permission() {
     let (_world, res) = fixture(0);
     let shop = &res.colony.workshops[&1];
     let recipe = shop.bills[0].recipe.recipe().expect("recipe");
-    assert!(super::craft_food::supplyable(&res, shop, recipe, u32::MAX));
-    assert!(!super::craft_food::permitted(&res, shop, recipe, u32::MAX));
+    assert!(super::craft_food::supplyable(&res, shop, recipe, u64::MAX));
+    assert!(!super::craft_food::permitted(&res, shop, recipe, u64::MAX));
 }
 
 #[test]
@@ -93,7 +93,7 @@ fn daylight_unsatisfied_ready_cooking_bill_burns_actual_fuel() {
         &res,
         shop,
         shop.bills[0].recipe.recipe().expect("recipe"),
-        u32::MAX
+        u64::MAX
     ));
     let person = world.spawn((Agent { id: 7 },));
     let mut job = craft_job(&res);
@@ -129,7 +129,7 @@ fn daylight_zero_fuel_paused_and_fulfilled_bills_do_not_create_fire() {
             &res,
             shop,
             shop.bills[0].recipe.recipe().expect("recipe"),
-            u32::MAX
+            u64::MAX
         ));
         if state == 0 {
             let person = world.spawn((Agent { id: 7 },));

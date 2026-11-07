@@ -35,7 +35,7 @@ pub(super) fn collect(world: &hecs::World, res: &SimResources) -> Facts {
                 if rule.knowledge.is_some() {
                     knowledge.map_or(0, Knowledge::practice)
                 } else {
-                    u32::MAX
+                    u64::MAX
                 },
             )
         })

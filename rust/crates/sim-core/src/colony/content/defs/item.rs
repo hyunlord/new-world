@@ -10,6 +10,16 @@ pub struct ItemDef {
     pub identity: IdentityDef,
     /// Category.
     pub category: String,
+    /// Data-authored shape and material tint for code-drawn placeholders.
+    pub art: ItemArt,
+    /// Whether authored behaviour is wired into the game.
+    pub status: crate::colony::knowledge::ContentStatus,
+    /// Missing behaviour and planned pass for inert content.
+    pub debt: Option<String>,
+    /// Era metadata for the generated content-debt ledger.
+    pub era: String,
+    /// Lane metadata for the generated content-debt ledger.
+    pub lane: String,
     /// Existing material-dependent localized label, or empty.
     pub material_format_key: String,
     /// Tags.
@@ -113,4 +123,70 @@ pub struct ApparelDef {
     /// Additive mood target contribution while worn; legacy clothing is inert.
     #[serde(default)]
     pub comfort_permille: i32,
+}
+
+/// Eight renderer shapes shared by all data-authored item kinds.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+pub enum ItemShape {
+    /// An irregular resource lump.
+    Lump,
+    /// A long narrow rod.
+    Rod,
+    /// A pointed blade.
+    Blade,
+    /// An open container.
+    Vessel,
+    /// A folded sheet or fibre.
+    Cloth,
+    /// A cluster of small grains.
+    Grain,
+    /// A mineral cluster.
+    Ore,
+    /// A rectangular metal bar.
+    Ingot,
+}
+
+impl ItemShape {
+    /// Renderer-facing stable selector, independent of item names.
+    pub const fn name(self) -> &'static str {
+        match self {
+            Self::Lump => "lump",
+            Self::Rod => "rod",
+            Self::Blade => "blade",
+            Self::Vessel => "vessel",
+            Self::Cloth => "cloth",
+            Self::Grain => "grain",
+            Self::Ore => "ore",
+            Self::Ingot => "ingot",
+        }
+    }
+}
+
+/// Shape and material identity for asset-free item drawing.
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ItemArt {
+    /// Geometry selected from the eight supported category shapes.
+    pub shape: ItemShape,
+    /// Material registry id used to resolve a display colour.
+    pub tint_material: String,
+}
+
+impl ItemArt {
+    /// Category fallback keeps unknown data-authored kinds visible.
+    pub fn for_category(category: &str) -> Self {
+        let shape = match category {
+            "tool" | "weapon" => ItemShape::Blade,
+            "apparel" | "textile" => ItemShape::Cloth,
+            "food" | "seed" => ItemShape::Grain,
+            "vessel" => ItemShape::Vessel,
+            "ore" => ItemShape::Ore,
+            "ingot" => ItemShape::Ingot,
+            _ => ItemShape::Lump,
+        };
+        Self {
+            shape,
+            tint_material: "oak".into(),
+        }
+    }
 }

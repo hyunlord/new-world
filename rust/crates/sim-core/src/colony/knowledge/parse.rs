@@ -18,6 +18,7 @@ enum CondRaw {
     Skill(String, u8),
     Knows(String, u16),
     ClayBankNear(u32),
+    Practice { job_kind: String, count: u32 },
 }
 
 #[derive(Deserialize, Serialize)]
@@ -43,6 +44,12 @@ struct NodeRaw {
     id: String,
     lane: String,
     era: String,
+    #[serde(default = "default_tier")]
+    tier: u8,
+    #[serde(default)]
+    status: ContentStatus,
+    #[serde(default)]
+    debt: Option<String>,
     threshold: u16,
     prereqs: Vec<String>,
     difficulty: u8,
@@ -51,6 +58,10 @@ struct NodeRaw {
     marker_weight: u16,
     seed: SeedRaw,
     name_key: String,
+}
+
+fn default_tier() -> u8 {
+    1
 }
 
 fn designation_from_name(name: &str) -> Option<Designation> {
@@ -69,7 +80,7 @@ fn designation_from_name(name: &str) -> Option<Designation> {
 fn raw_file(text: &str) -> Result<FileRaw, String> {
     let file: FileRaw = ron::from_str(text).map_err(|e| format!("knowledge.ron: {e}"))?;
     if file.schema_version != 1 || file.knowledge.len() > MAX_NODES {
-        return Err("knowledge.ron: expected schema 1 and at most 32 nodes".into());
+        return Err("knowledge.ron: expected schema 1 and at most 64 nodes".into());
     }
     Ok(file)
 }
@@ -81,7 +92,7 @@ pub(crate) fn merge_sources(base: &str, extension: &str) -> Result<String, Strin
     base.knowledge.extend(extension.knowledge);
     base.absent_markers.extend(extension.absent_markers);
     if base.knowledge.len() > MAX_NODES {
-        return Err("knowledge.ron: appended map exceeds 32 nodes".into());
+        return Err("knowledge.ron: appended map exceeds 64 nodes".into());
     }
     ron::to_string(&base).map_err(|e| format!("knowledge.ron merge: {e}"))
 }
@@ -92,6 +103,9 @@ pub(crate) fn parse_with_catalog(text: &str, catalog: &Catalog) -> Result<Knowle
     if file.knowledge.is_empty() {
         return Err("knowledge.ron: the selected map must contain nodes".into());
     }
+    let eras = crate::colony::eras::EraCatalog::parse(
+        catalog.source_text("eras.ron").map_err(|e| e.to_string())?,
+    )?;
     let names: Vec<&str> = file.knowledge.iter().map(|n| n.id.as_str()).collect();
     let id_of = |name: &str| -> Result<KnowledgeId, String> {
         names
@@ -107,6 +121,9 @@ pub(crate) fn parse_with_catalog(text: &str, catalog: &Catalog) -> Result<Knowle
             || raw.threshold == 0
             || raw.threshold > 1000
             || !(1..=3).contains(&raw.difficulty)
+            || !(1..=4).contains(&raw.tier)
+            || (matches!(raw.seed, SeedRaw::None) && raw.discover.is_empty())
+            || (raw.status == ContentStatus::Inert && raw.debt.as_deref().is_none_or(str::is_empty))
         {
             return Err(format!(
                 "knowledge.ron: invalid or duplicate node {}",
@@ -131,12 +148,23 @@ pub(crate) fn parse_with_catalog(text: &str, catalog: &Catalog) -> Result<Knowle
                     ),
                     CondRaw::Knows(node, p) => Cond::Knows(id_of(node)?, *p),
                     CondRaw::ClayBankNear(d) => Cond::ClayBankNear(*d),
+                    CondRaw::Practice { job_kind, count } => {
+                        if *count == 0 {
+                            return Err("Practice count must be positive".into());
+                        }
+                        Cond::Practice(
+                            crate::colony::JobKind::code_for_name(job_kind)
+                                .ok_or_else(|| format!("unknown practice job {job_kind}"))?,
+                            *count,
+                        )
+                    }
                 })
             })
             .collect::<Result<Vec<_>, String>>()?;
         let gates = raw
             .gates
             .iter()
+            .filter(|_| raw.status == ContentStatus::Connected)
             .map(|gate| {
                 Ok(match gate {
                     GateRaw::Recipe(name) => Gate::Recipe(
@@ -149,11 +177,17 @@ pub(crate) fn parse_with_catalog(text: &str, catalog: &Catalog) -> Result<Knowle
                             .blueprint_by_name(name)
                             .ok_or_else(|| format!("unknown blueprint {name}"))?,
                     ),
-                    GateRaw::Workshop(name) => Gate::Workshop(
-                        catalog
+                    GateRaw::Workshop(name) => {
+                        let id = catalog
                             .blueprint_by_name(name)
-                            .ok_or_else(|| format!("unknown workshop {name}"))?,
-                    ),
+                            .ok_or_else(|| format!("unknown workshop {name}"))?;
+                        if !catalog.blueprint(id).is_some_and(|def| {
+                            def.completion == crate::colony::content::CompletionCategory::Workshop
+                        }) {
+                            return Err(format!("blueprint {name} is not a workshop"));
+                        }
+                        Gate::Workshop(id)
+                    }
                     GateRaw::Designation(name) => Gate::Designation(
                         designation_from_name(name)
                             .ok_or_else(|| format!("unknown designation {name}"))?,
@@ -175,8 +209,27 @@ pub(crate) fn parse_with_catalog(text: &str, catalog: &Catalog) -> Result<Knowle
         nodes.push(KnowledgeDef {
             id: u8::try_from(i).map_err(|e| e.to_string())?,
             name: raw.id.clone(),
-            lane: Lane::from_name(&raw.lane).ok_or_else(|| format!("unknown lane {}", raw.lane))?,
-            era: Era::from_name(&raw.era).ok_or_else(|| format!("unknown era {}", raw.era))?,
+            lane: Lane(
+                eras.lane_order(&raw.lane)
+                    .ok_or_else(|| format!("unknown lane {}", raw.lane))?,
+            ),
+            era: Era(eras
+                .eras
+                .iter()
+                .find(|era| era.id == raw.era)
+                .map(|era| era.order)
+                .ok_or_else(|| format!("unknown era {}", raw.era))?),
+            tier: raw.tier,
+            status: raw.status,
+            debt: raw.debt.clone(),
+            inert_gates: if raw.status == ContentStatus::Inert {
+                raw.gates
+                    .iter()
+                    .map(|g| ron::to_string(g).map_err(|e| e.to_string()))
+                    .collect::<Result<_, _>>()?
+            } else {
+                Vec::new()
+            },
             threshold: raw.threshold,
             prereqs: raw
                 .prereqs
@@ -196,6 +249,7 @@ pub(crate) fn parse_with_catalog(text: &str, catalog: &Catalog) -> Result<Knowle
         });
     }
     let defs = KnowledgeDefs {
+        eras,
         nodes,
         absent_markers: file.absent_markers,
     };
@@ -204,7 +258,7 @@ pub(crate) fn parse_with_catalog(text: &str, catalog: &Catalog) -> Result<Knowle
 }
 
 fn validate_graph(defs: &KnowledgeDefs) -> Result<(), String> {
-    let mut complete = 0u32;
+    let mut complete = 0u64;
     while complete.count_ones() < u32::try_from(defs.nodes.len()).unwrap_or(u32::MAX) {
         let before = complete;
         for node in &defs.nodes {

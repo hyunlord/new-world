@@ -58,7 +58,7 @@ pub struct CraftEvent {
     pub temperament_present: bool,
     pub persistence: Option<u16>,
     pub knowledge_enabled: bool,
-    pub gate_mask: u32,
+    pub gate_mask: u64,
     pub gating_nodes: Vec<GatingNode>,
     pub recipe_quality_add: i32,
     pub material_term: MaterialTerm,

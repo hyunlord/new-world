@@ -21,6 +21,7 @@ impl RawSources {
     pub fn bundled() -> Self {
         Self {
             sources: [
+                ("eras.ron", include_str!("../../../data/colony/eras.ron")),
                 ("crops.ron", include_str!("../../../data/colony/crops.ron")),
                 (
                     "plants.ron",
@@ -63,7 +64,8 @@ impl RawSources {
             let name = normalize(&source.name).to_owned();
             if !matches!(
                 name.as_str(),
-                "items.ron"
+                "eras.ron"
+                    | "items.ron"
                     | "blueprints.ron"
                     | "recipes.ron"
                     | "knowledge.ron"
@@ -90,6 +92,7 @@ impl RawSources {
 }
 pub(super) fn normalize(name: &str) -> &str {
     match name {
+        "eras" => "eras.ron",
         "items" => "items.ron",
         "blueprints" => "blueprints.ron",
         "recipes" => "recipes.ron",

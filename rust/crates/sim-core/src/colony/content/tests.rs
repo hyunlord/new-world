@@ -7,7 +7,7 @@ fn bundled_catalogue_is_local_and_code_ordered() {
         Catalog::from_sources(RawSources::bundled(), None).expect("valid bundled catalog");
     assert_eq!(
         catalog.items().map(|d| d.identity.code).collect::<Vec<_>>(),
-        (0..38).collect::<Vec<_>>()
+        (0..43).collect::<Vec<_>>()
     );
     assert_eq!(
         catalog.item_by_name("flax_seed").map(|kind| kind.code()),
@@ -20,7 +20,7 @@ fn bundled_catalogue_is_local_and_code_ordered() {
         Some(18)
     );
     assert_eq!(catalog.blueprints().count(), 15);
-    assert_eq!(catalog.recipes().count(), 26);
+    assert_eq!(catalog.recipes().count(), 27);
     assert_eq!(catalog.item_by_name("firewood").map(|k| k.code()), Some(1));
     assert_eq!(
         catalog.item_by_serde_name("Firewood").map(|k| k.code()),
@@ -167,9 +167,9 @@ fn high_sparse_codes_and_revision_inputs_are_deterministic() {
         }],
     };
     let extended = Catalog::from_sources(base, Some(extension)).expect("sparse extension");
-    assert_eq!(extended.items().count(), 39);
+    assert_eq!(extended.items().count(), 44);
     assert_eq!(
-        extended.items().take(38).collect::<Vec<_>>(),
+        extended.items().take(43).collect::<Vec<_>>(),
         first.items().collect::<Vec<_>>()
     );
     assert_eq!(
@@ -205,4 +205,55 @@ fn invalid_extension_cannot_hide_behind_category_fallback() {
             .expect_err("invalid extension");
         assert!(error.to_string().contains(expected), "{error}");
     }
+}
+
+#[test]
+fn spine_items_keep_unwired_capabilities_inert_and_art_explicit() {
+    // Given the bundled data, all five authored additions have stable codes.
+    let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("catalogue");
+    // When the new item family is resolved, metadata cannot install new mechanics.
+    for (code, name, shape, connected) in [
+        (38, "cord", ItemShape::Rod, true),
+        (39, "basket", ItemShape::Vessel, false),
+        (40, "sling", ItemShape::Cloth, false),
+        (41, "bone_needle", ItemShape::Rod, false),
+        (42, "fish", ItemShape::Lump, false),
+    ] {
+        let item = catalog.item_by_code(code).expect("authored item");
+        // Then the catalogue retains the display data and explicit inert debt.
+        assert_eq!(item.identity.id, name);
+        assert_eq!(item.art.shape, shape);
+        assert_eq!(
+            item.status == crate::colony::knowledge::ContentStatus::Connected,
+            connected
+        );
+        assert_eq!(item.debt.is_none(), connected);
+        assert!(item.food.is_none() && item.weapon.is_none() && item.apparel.is_none());
+    }
+}
+
+#[test]
+fn spine_cord_recipe_uses_real_flax_and_workbench_without_new_mechanics() {
+    // Given the selected bundled catalogue.
+    let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("catalogue");
+    // When its newly authored cord recipe is resolved.
+    let kind = catalog.recipe_by_name("twist_cord").expect("cord recipe");
+    let recipe = catalog.recipe(kind).expect("resolved cord recipe");
+    // Then two existing flax stalks yield one cord at the existing wood bench.
+    assert_eq!(
+        recipe.inputs,
+        vec![(catalog.item_by_name("flax_stalks").expect("flax"), 2)]
+    );
+    assert_eq!(
+        recipe.output,
+        (catalog.item_by_name("cord").expect("cord"), 1)
+    );
+    assert_eq!(
+        recipe.workshop,
+        catalog.blueprint_by_name("wood_bench").expect("bench")
+    );
+    assert!(
+        catalog.recipe_by_name("weave_basket").is_none(),
+        "inert basket recipe must not become ungated"
+    );
 }

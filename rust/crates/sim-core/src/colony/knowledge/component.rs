@@ -1,11 +1,12 @@
-//! Personal knowledge entries and cached practitioner bits; saved layout is unchanged.
+//! Personal knowledge entries and full-width cached practitioner bits.
 use super::{bit, day_of, defs, KnowledgeDefs, KnowledgeId, Source};
 use serde::{Deserialize, Serialize};
 
-/// One thing a person knows (goal 3.2). 6 bytes (M4 DECISIONS D10: the last
+/// One thing a person knows (goal 3.2). Historical fields remain in order; an
+/// appended high-id byte permits the expanded authored map. The last
 /// use is kept as a day index, which is all forgetting and the aggregate read;
 /// the node id and the source share a byte; the part gained by observation is
-/// kept in 5 ‰ steps, the size of one observation gain).
+/// kept in 5 ‰ steps, the size of one observation gain.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct KnowledgeEntry {
     /// The day index (tick / 1,440) it was last used (or gained).
@@ -16,6 +17,9 @@ pub struct KnowledgeEntry {
     tag: u8,
     /// The part gained by observation only, in 5 ‰ steps.
     observed5: u8,
+    /// High node-id bits, additive to the historical packed tag.
+    #[serde(default)]
+    high_id: u8,
 }
 
 impl KnowledgeEntry {
@@ -26,12 +30,13 @@ impl KnowledgeEntry {
             proficiency,
             tag: (id & 31) | (source.code() << 5),
             observed5: 0,
+            high_id: id >> 5,
         }
     }
 
     /// The node.
     pub const fn id(&self) -> KnowledgeId {
-        self.tag & 31
+        (self.tag & 31) | (self.high_id << 5)
     }
 
     /// How it was gained.
@@ -60,7 +65,7 @@ impl KnowledgeEntry {
 #[serde(try_from = "SavedKnowledge")]
 pub struct Knowledge {
     entries: Box<[KnowledgeEntry]>,
-    practice: u32,
+    practice: u64,
 }
 
 /// The saved form of [`Knowledge`] (the same fields).
@@ -68,7 +73,7 @@ pub struct Knowledge {
 struct SavedKnowledge {
     entries: Vec<KnowledgeEntry>,
     #[serde(rename = "practice")]
-    _practice: u32,
+    _practice: u64,
 }
 
 impl TryFrom<SavedKnowledge> for Knowledge {
@@ -103,12 +108,12 @@ impl Knowledge {
     }
 
     /// The practitioner bitset (bit `i` = at or above node `i`'s threshold).
-    pub const fn practice(&self) -> u32 {
+    pub const fn practice(&self) -> u64 {
         self.practice
     }
 
     /// Whether the person practises every node of `mask`.
-    pub const fn practises_all(&self, mask: u32) -> bool {
+    pub const fn practises_all(&self, mask: u64) -> bool {
         self.practice & mask == mask
     }
 
@@ -201,7 +206,7 @@ impl Knowledge {
 
     /// A completed gated job (goal 3.2): every node of `mask` the person holds
     /// gains `gain` ‰ and is stamped used at `tick`.
-    pub fn use_mask(&mut self, mask: u32, gain: u16, tick: u64) {
+    pub fn use_mask(&mut self, mask: u64, gain: u16, tick: u64) {
         for e in self.entries.iter_mut().filter(|e| mask & bit(e.id()) != 0) {
             e.proficiency = e.proficiency.saturating_add(gain).min(1000);
             e.last_used = day_of(tick);

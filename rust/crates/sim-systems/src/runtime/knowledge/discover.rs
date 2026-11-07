@@ -76,22 +76,29 @@ pub fn holds(world: &World, res: &SimResources, cond: Cond) -> bool {
             .iter()
             .any(|(_, k)| k.proficiency(id) >= p),
         Cond::ClayBankNear(d) => clay_bank_near(res, d),
+        Cond::Practice(code, count) => world.query::<&Skills>().iter().any(|(_, skills)| {
+            skills
+                .completed
+                .get(usize::from(code))
+                .is_some_and(|done| *done >= count)
+        }),
     }
 }
 
 /// The nodes whose discovery conditions all hold now (bit `i` = node `i`;
 /// a node without conditions is never set: it is not discovered).
-pub fn conditions(world: &World, res: &SimResources) -> u32 {
+pub fn conditions(world: &World, res: &SimResources) -> u64 {
     conditions_with(world, res, 0)
 }
 
 /// [`conditions`] where the nodes of `clues` (M5.5 eureka) count their stockpile conditions as met.
-pub fn conditions_with(world: &World, res: &SimResources, clues: u32) -> u32 {
+pub fn conditions_with(world: &World, res: &SimResources, clues: u64) -> u64 {
     defs()
         .nodes
         .iter()
         .filter(|n| {
-            !n.discover.is_empty()
+            n.status == sim_core::colony::knowledge::ContentStatus::Connected
+                && !n.discover.is_empty()
                 && n.discover.iter().all(|c| {
                     (clues & bit(n.id) != 0 && matches!(c, Cond::Stockpile(..)))
                         || holds(world, res, *c)

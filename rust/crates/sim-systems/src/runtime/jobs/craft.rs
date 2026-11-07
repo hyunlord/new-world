@@ -58,7 +58,7 @@ pub(super) fn can_continue(world: &World, res: &SimResources, entity: Entity, jo
             .get::<&sim_core::colony::knowledge::Knowledge>(entity)
             .map_or(0, |knowledge| knowledge.practice())
     } else {
-        u32::MAX
+        u64::MAX
     };
     super::craft_food::permitted(res, shop, recipe, practice)
         && super::processing::permitted(res, shop, recipe)
@@ -99,7 +99,7 @@ pub fn start(
             .get::<&sim_core::colony::knowledge::Knowledge>(entity)
             .map_or(0, |k| k.practice())
     } else {
-        u32::MAX
+        u64::MAX
     };
     if !super::craft_food::permitted(res, shop, recipe, practice)
         || !super::processing::permitted(res, shop, recipe)

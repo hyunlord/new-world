@@ -14,6 +14,13 @@ pub fn catalog_to_dict(catalog: &Catalog) -> VarDictionary {
         let mut row = identity(&def.identity);
         row.set("category", def.category.as_str());
         row.set("material_format_key", def.material_format_key.as_str());
+        row.set("art_shape", def.art.shape.name());
+        row.set("art_tint_material", def.art.tint_material.as_str());
+        row.set(
+            "connected",
+            def.status == sim_core::colony::knowledge::ContentStatus::Connected,
+        );
+        row.set("debt", def.debt.as_deref().unwrap_or(""));
         row.set(
             "hunting_tool",
             def.cutter.is_some()
@@ -116,10 +123,50 @@ pub fn catalog_to_dict(catalog: &Catalog) -> VarDictionary {
         row.set("code", i64::from(def.id));
         row.set("id", def.name.as_str());
         row.set("name_key", def.name_key.as_str());
-        row.set("lane", def.lane.name());
+        let lane = catalog
+            .knowledge_defs()
+            .eras
+            .lanes
+            .get(usize::from(def.lane.code()));
+        row.set("lane", lane.map(|l| l.id.as_str()).unwrap_or(""));
+        let era = catalog
+            .knowledge_defs()
+            .eras
+            .eras
+            .get(usize::from(def.era.code()));
+        row.set("era", era.map(|e| e.id.as_str()).unwrap_or(""));
+        row.set("tier", i64::from(def.tier));
+        row.set(
+            "connected",
+            def.status == sim_core::colony::knowledge::ContentStatus::Connected,
+        );
+        row.set("debt", def.debt.as_deref().unwrap_or(""));
         knowledge.push(&row);
     }
     out.set("knowledge", knowledge);
+    let mut eras: Array<VarDictionary> = Array::new();
+    for def in &catalog.knowledge_defs().eras.eras {
+        let mut row = VarDictionary::new();
+        row.set("id", def.id.as_str());
+        row.set("name_key", def.name_key.as_str());
+        row.set("code", i64::from(def.order));
+        row.set("order", i64::from(def.order));
+        row.set("transition_permille", i64::from(def.transition_permille));
+        row.set("era_permille", i64::from(def.era_permille));
+        row.set("chapter", def.chapter.as_str());
+        eras.push(&row);
+    }
+    out.set("eras", eras);
+    let mut lanes: Array<VarDictionary> = Array::new();
+    for def in &catalog.knowledge_defs().eras.lanes {
+        let mut row = VarDictionary::new();
+        row.set("id", def.id.as_str());
+        row.set("name_key", def.name_key.as_str());
+        row.set("code", i64::from(def.order));
+        row.set("order", i64::from(def.order));
+        lanes.push(&row);
+    }
+    out.set("lanes", lanes);
     out.set(
         "crops",
         super::cultivation::crop_rows_to_variant_array(catalog),

@@ -9,12 +9,12 @@ use crate::colony::{BlueprintKind, Designation, RecipeKind};
 /// Practitioner masks for recipes, construction, designations and channels.
 #[derive(Clone, Default, PartialEq, Eq)]
 pub struct Gates {
-    recipe: BTreeMap<u32, u32>,
-    build: BTreeMap<u32, u32>,
-    designation: Vec<u32>,
-    apprenticeship: u32,
-    oral: u32,
-    lore: [u32; 3],
+    recipe: BTreeMap<u32, u64>,
+    build: BTreeMap<u32, u64>,
+    designation: Vec<u64>,
+    apprenticeship: u64,
+    oral: u64,
+    lore: [u64; 3],
 }
 
 impl fmt::Debug for Gates {
@@ -34,7 +34,7 @@ impl fmt::Debug for Gates {
 /// Validate family membership and derive masks without reading installed state.
 pub(crate) fn gates_with_catalog(defs: &KnowledgeDefs, catalog: &Catalog) -> Result<Gates, String> {
     if defs.nodes.len() > MAX_NODES {
-        return Err("knowledge gates: more than 32 nodes".into());
+        return Err("knowledge gates: more than 64 nodes".into());
     }
     let mut masks = Gates {
         recipe: catalog.recipes().map(|r| (r.identity.code, 0)).collect(),
@@ -45,6 +45,9 @@ pub(crate) fn gates_with_catalog(defs: &KnowledgeDefs, catalog: &Catalog) -> Res
     for (index, node) in defs.nodes.iter().enumerate() {
         if usize::from(node.id) != index {
             return Err("knowledge gates: node ids must retain authored index order".into());
+        }
+        if node.status == super::ContentStatus::Inert {
+            continue;
         }
         let mask = bit(node.id);
         for gate in &node.gates {
@@ -81,17 +84,17 @@ pub(crate) fn gates_with_catalog(defs: &KnowledgeDefs, catalog: &Catalog) -> Res
 
 impl Gates {
     /// Required nodes for a registered recipe; foreign-catalog IDs require every bit.
-    pub fn recipe(&self, recipe: RecipeKind) -> u32 {
-        self.recipe.get(&recipe.code()).copied().unwrap_or(u32::MAX)
+    pub fn recipe(&self, recipe: RecipeKind) -> u64 {
+        self.recipe.get(&recipe.code()).copied().unwrap_or(u64::MAX)
     }
 
     /// Required nodes for a registered blueprint or workshop.
-    pub fn build(&self, kind: BlueprintKind) -> u32 {
-        self.build.get(&kind.code()).copied().unwrap_or(u32::MAX)
+    pub fn build(&self, kind: BlueprintKind) -> u64 {
+        self.build.get(&kind.code()).copied().unwrap_or(u64::MAX)
     }
 
     /// Nodes gating work on a designation.
-    pub fn designation(&self, d: Designation) -> u32 {
+    pub fn designation(&self, d: Designation) -> u64 {
         self.designation
             .get(usize::from(d.code()))
             .copied()
@@ -99,17 +102,17 @@ impl Gates {
     }
 
     /// Required nodes for teaching at full fidelity.
-    pub const fn apprenticeship(&self) -> u32 {
+    pub const fn apprenticeship(&self) -> u64 {
         self.apprenticeship
     }
 
     /// Required nodes for improved evening telling.
-    pub const fn oral(&self) -> u32 {
+    pub const fn oral(&self) -> u64 {
         self.oral
     }
 
     /// Nodes standing for everyday lore.
-    pub const fn lore(&self, lore: Lore) -> u32 {
+    pub const fn lore(&self, lore: Lore) -> u64 {
         self.lore[lore as usize]
     }
 }

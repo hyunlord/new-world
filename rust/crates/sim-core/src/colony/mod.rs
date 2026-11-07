@@ -14,6 +14,7 @@ pub mod content;
 pub mod content_state;
 pub mod cultivation;
 pub mod diagnosis;
+pub mod eras;
 pub mod food;
 pub mod food_evidence;
 mod items;
@@ -314,3 +315,6 @@ impl ColonyState {
             .sum()
     }
 }
+
+/// Generated authored-content debt ledger.
+pub mod content_debt;

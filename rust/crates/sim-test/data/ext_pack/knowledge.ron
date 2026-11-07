@@ -1,3 +1,4 @@
 (schema_version:1,absent_markers:[],knowledge:[(
 id:"test_hide_craft",lane:"craft",era:"paleolithic",threshold:100,prereqs:[],difficulty:1,
-discover:[],gates:[Recipe("test_hide_recipe")],marker_weight:0,seed:None,name_key:"EXT_KNOWLEDGE")])
+discover:[Stockpile("test_hide",1)],gates:[Recipe("test_hide_recipe")],marker_weight:0,seed:None,name_key:"EXT_KNOWLEDGE"),
+(id:"test_inert_spine", lane:"ext_lane", era:"iron", tier:4, status:Inert, debt:Some("C3: fixture behavior deliberately unwired"), threshold:500, prereqs:[], difficulty:1, discover:[Practice(job_kind:"craft",count:1)], gates:[Recipe("future_fixture_recipe")], marker_weight:0, seed:None, name_key:"EXT_INERT_SPINE")])

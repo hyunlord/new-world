@@ -1,8 +1,8 @@
 # knowledge_text.gd: the M4 knowledge codes as player text (static helpers shared by the HUD, the tech map (T), the
 #   teach dialog (K), the inspector's 지식 tab, the chronicle, the workshop panel and the "why?" panel).
 # Maps node ids to their registry name keys (the selected knowledge catalog from
-#   file order; a get_tech read's `name_keys` wins when the caller has one), lanes (0 survival … 5 social), eras
-#   (columns 0 paleolithic / 1 neolithic; labels 0 구석기, 1 신석기 전환기, 2 신석기 시대), tech statuses (0 unknown,
+#   file order; a get_tech read's `name_keys` wins when the caller has one), data-authored lanes and eras,
+#   tech statuses (0 unknown,
 #   1 at risk, 2 known, 3 stable, 4 lost) with their card colours, sources (0 seeded 전승, 1 discovered 발견, 2 oral 구전,
 #   3 observed 관찰, 4 apprenticed 도제), entry states (0 숙련, 1 배우는 중, 2 잊어 감), discovery conditions, gates and
 #   the "기다리는 중: … 아는 사람이 없음" line (get_knowledge_waits). Korean object/subject particles (을/를, 이/가) are
@@ -31,7 +31,7 @@ const DESIGNATION_KEYS: Dictionary = {"chop": "UI_ORDER_CHOP", "quarry": "UI_ORD
 	"hunt": "M5_ORDER_HUNT"}
 const CHANNEL_KEYS: Dictionary = {"apprenticeship": "M4_CHANNEL_APPRENTICESHIP", "oral": "M4_CHANNEL_ORAL"}
 const LORE_KEYS: Dictionary = {"hearth": "M4_LORE_HEARTH", "forage": "M4_LORE_FORAGE", "water": "M4_LORE_WATER"}
-## Lanes and era columns as the bridge codes them.
+## Legacy fixture dimensions; runtime map dimensions come from the catalogue.
 const LANES: int = 6
 const ERAS: int = 2
 
@@ -66,11 +66,30 @@ static func node_id(node_id_name: String) -> int:
 	return Content.code("knowledge", node_id_name)
 
 
-static func lane(locale: Node, code: int) -> String:
+static func catalogue(tech: Dictionary, family: String) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var rows: Variant = tech.get(family, [])
+	if rows is Array:
+		for row: Variant in rows:
+			if row is Dictionary:
+				out.append(row)
+	return out
+
+
+static func lane(locale: Node, code: int, tech: Dictionary = {}) -> String:
+	for row: Dictionary in catalogue(tech, "lanes"):
+		if int(row.get("order", -1)) == code:
+			return ltr(locale, str(row.get("name_key", "UI_UNKNOWN")))
 	return ltr(locale, LANE_KEYS[code]) if code >= 0 and code < LANE_KEYS.size() else ltr(locale, "UI_UNKNOWN")
 
 
-static func era_column(locale: Node, code: int) -> String:
+static func era_column(locale: Node, code: int, tech: Dictionary = {}) -> String:
+	var era_rows: Array[Dictionary] = catalogue(tech, "eras")
+	if era_rows.is_empty():
+		era_rows = Content.rows("eras")
+	for row: Dictionary in era_rows:
+		if int(row.get("order", -1)) == code:
+			return ltr(locale, str(row.get("name_key", "UI_UNKNOWN")))
 	return ltr(locale, ERA_COLUMN_KEYS[code]) if code >= 0 and code < ERA_COLUMN_KEYS.size() else ltr(locale, "UI_UNKNOWN")
 
 
@@ -100,6 +119,18 @@ static func state_color(code: int) -> Color:
 
 ## The HUD era line "신석기 전환기 31 %" from a get_tech read (era label code, progress ‰ shown as whole percent).
 static func era_line(locale: Node, tech: Dictionary) -> String:
+	var eras: Array[Dictionary] = catalogue(tech, "eras")
+	if not eras.is_empty():
+		var order: int = int(tech.get("current_era_order", 0))
+		for era: Dictionary in eras:
+			if int(era.get("order", -1)) != order:
+				continue
+			var era_name: String = ltr(locale, str(era.get("name_key", "UI_UNKNOWN")))
+			if int(tech.get("current_era_state", 0)) == 1:
+				era_name = trf(locale, "ERA_TRANSITION_FMT", {"era": era_name})
+			@warning_ignore("integer_division")
+			var era_percent: int = int(era.get("progress", 0)) / 10
+			return trf(locale, "M4_HUD_ERA_FMT", {"era": era_name, "percent": era_percent})
 	@warning_ignore("integer_division")
 	var percent: int = maxi(0, int(tech.get("progress", 0))) / 10
 	return trf(locale, "M4_HUD_ERA_FMT", {"era": era_label(locale, int(tech.get("era", 0))), "percent": percent})
@@ -156,6 +187,7 @@ static func condition(locale: Node, node: Dictionary, i: int) -> String:
 			var percent: int = amount / 10
 			return trf(locale, COND_KEYS[2], {"node": with_object(locale, node_name(locale, node_id(name))), "percent": percent})
 		3: return trf(locale, COND_KEYS[3], {"amount": amount})
+		4: return trf(locale, "TECH_COND_PRACTICE_FMT", {"skill": EconomyText.work(locale, name), "amount": amount})
 	return ltr(locale, "UI_UNKNOWN")
 
 
@@ -229,8 +261,15 @@ static func tile_wait(read: Dictionary, overlay: Dictionary, tile: Vector2i) -> 
 static func nodes(tech: Dictionary) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var ids: PackedInt64Array = tech.get("ids", PackedInt64Array())
-	var lanes: PackedInt64Array = tech.get("lanes", PackedInt64Array())
-	var eras: PackedInt64Array = tech.get("eras", PackedInt64Array())
+	var lanes: PackedInt64Array = tech.get("node_lanes", PackedInt64Array())
+	var eras: PackedInt64Array = tech.get("node_eras", PackedInt64Array())
+	if not tech.has("node_lanes") and tech.get("lanes") is PackedInt64Array:
+		lanes = tech["lanes"]
+	if not tech.has("node_eras") and tech.get("eras") is PackedInt64Array:
+		eras = tech["eras"]
+	var connected: PackedInt64Array = tech.get("connected", PackedInt64Array())
+	var debts: PackedStringArray = tech.get("debts", PackedStringArray())
+	var tiers: PackedInt64Array = tech.get("tiers", PackedInt64Array())
 	var statuses: PackedInt64Array = tech.get("statuses", PackedInt64Array())
 	var practitioners: PackedInt64Array = tech.get("practitioners", PackedInt64Array())
 	var holders: PackedInt64Array = tech.get("holders", PackedInt64Array())
@@ -242,7 +281,10 @@ static func nodes(tech: Dictionary) -> Array[Dictionary]:
 	for i: int in n:
 		out.append({"id": int(ids[i]), "lane": int(lanes[i]), "era": int(eras[i]), "status": int(statuses[i]),
 			"practitioners": int(practitioners[i]), "holders": int(holders[i]), "marker": int(markers[i]),
-			"first": int(firsts[i]), "threshold": int(thresholds[i])})
+			"first": int(firsts[i]), "threshold": int(thresholds[i]),
+			"connected": connected[i] != 0 if i < connected.size() else true,
+			"debt": debts[i] if i < debts.size() else "",
+			"tier": int(tiers[i]) if i < tiers.size() else 1})
 	return out
 
 

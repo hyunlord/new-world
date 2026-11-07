@@ -352,7 +352,7 @@ struct Exhausted {
     open_cell: BTreeMap<ItemSpec, Memo>,
     /// M6a harvest designations, per (nav region, practitioner bits): both change what passes
     /// `harvest::pick`'s predicate, so neither may share another key's "empty" (R2-3).
-    harvest: BTreeMap<(u32, u32), Memo>,
+    harvest: BTreeMap<(u32, u64), Memo>,
 }
 
 impl Exhausted {
@@ -442,7 +442,7 @@ struct Ctx<'a> {
     region: u32,
     agent: AgentId,
     /// The agent's practitioner bitset (M4; all bits without the knowledge rule).
-    practice: u32,
+    practice: u64,
 }
 
 /// A picked job: kind, amount, item.
@@ -1385,7 +1385,7 @@ impl RuntimeSystem for JobAssignSystem {
             WorkPriorities,
             bool,
             Skills,
-            u32,
+            u64,
         );
         let knowledge_rule = rule.knowledge;
         let gating = knowledge_rule.is_some();
@@ -1433,7 +1433,7 @@ impl RuntimeSystem for JobAssignSystem {
                     let practice = if gating {
                         knowledge.map_or(0, |k| k.practice())
                     } else {
-                        u32::MAX
+                        u64::MAX
                     };
                     (
                         agent.id,

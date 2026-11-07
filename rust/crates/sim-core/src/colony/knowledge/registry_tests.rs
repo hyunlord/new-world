@@ -59,15 +59,15 @@ fn appended_nodes_keep_base_indices_and_use_the_last_bit() {
         .find("(id: \"spinning\"")
         .expect("first textile node");
     let predecessor = format!("{}])", &BUNDLED[..cutoff]);
-    let merged = merge_sources(&predecessor, &extension(4)).expect("merge");
-    let defs = parse_with_catalog(&merged, &catalog).expect("32 nodes");
+    let merged = merge_sources(&predecessor, &extension(36)).expect("merge");
+    let defs = parse_with_catalog(&merged, &catalog).expect("64 nodes");
     assert_eq!(&defs.nodes[..28], &base.nodes[..28]);
     assert_eq!(defs.nodes.len(), MAX_NODES);
-    assert_eq!(defs.id_of("extension_3"), Some(31));
+    assert_eq!(defs.id_of("extension_35"), Some(63));
     let masks = gates_with_catalog(&defs, &catalog).expect("masks");
     let recipe = catalog.recipe_by_name("knap_blade").expect("recipe");
-    assert_eq!(masks.recipe(recipe), bit(3) | 0xf000_0000);
-    assert!(merge_sources(&predecessor, &extension(5)).is_err());
+    assert_eq!(masks.recipe(recipe), bit(3) | (u64::MAX << 28));
+    assert!(merge_sources(&predecessor, &extension(37)).is_err());
 }
 
 #[test]
@@ -93,7 +93,7 @@ fn unknown_references_duplicate_nodes_and_cycles_reject() {
         assert!(parse_with_catalog(&malformed, &catalog).is_err());
     }
     let duplicate = merge_sources(BUNDLED, BUNDLED);
-    assert!(duplicate.is_err(), "54 nodes cannot alias the 32-bit map");
+    assert!(duplicate.is_err(), "86 nodes exceed the 64-bit map");
 }
 
 #[test]
@@ -143,7 +143,7 @@ fn uninstalled_child() {
     }
     assert!(crate::colony::content::installed().is_err());
     let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("pure catalog");
-    assert_eq!(catalog.knowledge_defs().nodes.len(), 31);
+    assert_eq!(catalog.knowledge_defs().nodes.len(), 43);
     assert!(crate::colony::content::installed().is_err());
     assert!(ron::from_str::<Knowledge>("(entries: [], practice: 0)").is_err());
     assert!(

@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 14 — M6b Stage2 appends physical apparel/wear and weaving diagnosis facts (implementation in progress). Version 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
+Schema version: 15 — M-SPINE-a adds data-authored era/lane catalogues, tech status/debt and per-era progress. Version 14 — M6b Stage2 appends physical apparel/wear and weaving diagnosis facts (implementation in progress). Version 13 — M6a adds plant, meal and physical-food storage reads plus harvest designation. Version 12 — M-CORE adds the read-only `get_agent_mind` choice and reason view. Version 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
 
 History: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
@@ -69,6 +69,8 @@ Top-level fields:
 | `plants` | Array[Dictionary] | plant identity and harvest-output metadata |
 | `crops` | Array[Dictionary] | cultivation definitions; identical rows to get_crop_defs |
 | `knowledge` | Array[Dictionary] | knowledge node metadata |
+| `eras` | Array[Dictionary] | era metadata from the selected knowledge catalogue, in order |
+| `lanes` | Array[Dictionary] | lane metadata from the selected knowledge catalogue, in order |
 | `materials` | Array[Dictionary] | bundled material presentation metadata; JSON rows contain id, name_key, category, raw_id |
 
 Nested fields (the literal-key checker flattens these into the same union; they are **not** top-level fields):
@@ -102,6 +104,16 @@ Nested fields (the literal-key checker flattens these into the same union; they 
 | `work_ticks` | int | recipe authored work ticks |
 | `skill_code` | int | recipe mechanical skill code |
 | `lane` | String | knowledge node lane name |
+| `era` | String | authored knowledge era id |
+| `tier` | int | authored knowledge tier (1–4) |
+| `connected` | bool | authored item or knowledge definition is Connected |
+| `debt` | String | missing behaviour for authored Inert content |
+| `art_shape` | String | item placeholder silhouette category |
+| `art_tint_material` | String | item placeholder material tint id |
+| `order` | int | era or lane display order (also exported as code) |
+| `transition_permille` | int | era transition threshold ‰ |
+| `era_permille` | int | era threshold ‰ |
+| `chapter` | String | era narrative chapter metadata |
 
 Additional nested crop-row fields (under `crops`, not top-level):
 
@@ -918,15 +930,22 @@ colony rules without `ColonyRule::knowledge`. Node ids are `KnowledgeId` (the in
 | key | type | meaning |
 |---|---|---|
 | `version` | int | `TechAggregate::version` (bumped when a state or the progress changes) |
-| `progress` | int | era progress ‰ (Σ weight · coverage / Σ weight, absent markers included; ceiling 643) |
+| `progress` | int | compatibility neolithic progress ‰; per-era weighted coverage excludes absent markers (0–1000) |
 | `era` | int | era label: 0 구석기 (< 250), 1 신석기 전환기 (250–749), 2 신석기 시대 (≥ 750) |
 | `adults` | int | adults counted at the last aggregate |
 | `at_risk` | int | nodes with exactly one holder (the HUD badge) |
 | `ids` | PackedInt64Array | node id |
 | `names` | PackedStringArray | stable node name (`knowledge.ron` id) |
 | `name_keys` | PackedStringArray | locale key of the node's name |
-| `lanes` | PackedInt64Array | `Lane::code`: 0 survival, 1 craft, 2 build, 3 mine, 4 pottery, 5 social |
-| `eras` | PackedInt64Array | `Era::code`: 0 paleolithic, 1 neolithic |
+| `node_lanes` | PackedInt64Array | per-node authored lane order (bundled 0–9); replaces the old packed `lanes` column |
+| `node_eras` | PackedInt64Array | per-node era order: 0 paleolithic, 1 neolithic, 2 bronze, 3 iron; replaces the old packed `eras` column |
+| `tiers` | PackedInt64Array | authored node tier (1–4) |
+| `connected` | PackedInt64Array | 1 Connected, 0 Inert; independent of learned `statuses` |
+| `debts` | PackedStringArray | missing behaviour and planned pass for inert nodes |
+| `eras` | Array[Dictionary] | era columns in order: `id`, `name_key`, `order`, `progress` ‰, `transition_permille`, `era_permille`, `state` (0 unreached, 1 transition, 2 era) |
+| `lanes` | Array[Dictionary] | lane rows in order: `id`, `name_key`, `order`; enumerate rows even when cells have no nodes |
+| `current_era_order` | int | highest reached era or transition's catalogue order |
+| `current_era_state` | int | 0 none, 1 transition, 2 era |
 | `thresholds` | PackedInt64Array | practitioner threshold ‰ |
 | `statuses` | PackedInt64Array | `TechStatus::code`: 0 unknown, 1 at risk, 2 known, 3 stable, 4 lost |
 | `practitioners` | PackedInt64Array | adults at threshold who used it (or gained it) in the last 6 days |
@@ -936,6 +955,17 @@ colony rules without `ColonyRule::knowledge`. Node ids are `KnowledgeId` (the in
 | `conditions_met` | PackedInt64Array | 1 = every discovery condition holds now |
 | `prereq_from` | PackedInt64Array | prerequisite edge: the prerequisite node |
 | `prereq_to` | PackedInt64Array | prerequisite edge: the node that needs it |
+
+Nested era/lane row fields (under `eras` and/or `lanes`, not root keys):
+
+| key | type | meaning |
+|---|---|---|
+| `id` | String | stable era/lane identifier |
+| `name_key` | String | localized era/lane name key |
+| `order` | int | authored display order |
+| `transition_permille` | int | era transition threshold ‰ |
+| `era_permille` | int | reached-era threshold ‰ |
+| `state` | int | era state: 0 unreached, 1 transition, 2 reached |
 
 ### `get_tech_node`
 `collect_tech_node(&World, &SimResources, i64) -> TechNodeView` → `tech_node_to_dict` (`ffi/knowledge.rs`). Argument:
@@ -953,6 +983,9 @@ the node id. Not in `SimReads.GETTERS` (it takes an argument). People in `AgentI
 | `holders` | int | holders |
 | `lane` | int | `Lane::code` |
 | `era` | int | `Era::code` |
+| `tier` | int | authored node tier (1–4) |
+| `connected` | bool | true Connected, false Inert; inert nodes cannot be taught |
+| `debt` | String | missing behaviour and planned pass for authored inert nodes |
 | `marker_weight` | int | era-marker weight |
 | `prereqs` | PackedInt64Array | prerequisite node ids |
 | `holder_ids` | PackedInt64Array | `AgentId` of each holder |
@@ -960,9 +993,9 @@ the node id. Not in `SimReads.GETTERS` (it takes an argument). People in `AgentI
 | `holder_instruction` | PackedInt64Array | 1 = the holder knows instruction (teaches at full fidelity) |
 | `learner_ids` | PackedInt64Array | `AgentId` of each person who could learn it (adults and children of 10+ years below the threshold) |
 | `learner_proficiency` | PackedInt64Array | their proficiency ‰ (0 = none) |
-| `cond_kinds` | PackedInt64Array | discovery condition: 0 stockpile, 1 skill, 2 knows, 3 clay bank near |
-| `cond_names` | PackedStringArray | item, skill or node name (empty for a clay bank) |
-| `cond_amounts` | PackedInt64Array | items, skill level, ‰, or tiles |
+| `cond_kinds` | PackedInt64Array | discovery condition: 0 stockpile, 1 skill, 2 knows, 3 clay bank near, 4 completed jobs |
+| `cond_names` | PackedStringArray | item, skill, node or job-kind name (empty for a clay bank) |
+| `cond_amounts` | PackedInt64Array | items, skill level, ‰, tiles, or completed-job count |
 | `cond_met` | PackedInt64Array | 1 = the condition holds now |
 | `gate_kinds` | PackedInt64Array | what it gates: 0 recipe, 1 blueprint, 2 workshop, 3 designation, 4 channel, 5 lore |
 | `gate_names` | PackedStringArray | recipe, blueprint, designation, channel or lore name |
@@ -1417,6 +1450,19 @@ The static checker compares the union of literal keys, including nested builders
 
 | key | nested path(s); full contract above |
 |---|---|
+| `connected` | `tech.connected` |
+| `current_era_order` | `tech.current_era_order` |
+| `current_era_state` | `tech.current_era_state` |
+| `debts` | `tech.debts` |
+| `era_permille` | `tech.eras[].era_permille` |
+| `id` | `tech.eras[].id`, `tech.lanes[].id` |
+| `name_key` | `tech.eras[].name_key`, `tech.lanes[].name_key` |
+| `node_eras` | `tech.node_eras` |
+| `node_lanes` | `tech.node_lanes` |
+| `order` | `tech.eras[].order`, `tech.lanes[].order` |
+| `state` | `tech.eras[].state` |
+| `tiers` | `tech.tiers` |
+| `transition_permille` | `tech.eras[].transition_permille` |
 | `a` | `waits.a` |
 | `adults` | `tech.adults` |
 | `at_risk` | `tech.at_risk` |
@@ -1966,3 +2012,5 @@ paused suspends work; auto returns to ordinary scheduling. It never instantly se
 Inactive/covered/stale card targets are skipped before dispatch. Returns accepted/count/reason.
 
 Stage2 appends chronicle kinds57 `FirstCloth` and58 `FirstTunic` after actual output placement. The generic textile-apparel event need not be a specific hardcoded tunic. The presentation translates these kinds in ko/en; it does not create outputs. Runtime validation is pending in `m6b/M6B_REPORT.md`.
+
+M-SPINE-a appends chronicle kind59 `EraChanged`: `value` is the catalogue era order; `cause` is 0 (unreached), 1 (transition), or 2 (reached). Presentation resolves the era name through the installed era catalogue and the transition suffix through localization.

@@ -140,13 +140,13 @@ fn harvest_respects_reservation_and_creates_each_yield_exactly_once() {
     res.colony.touch(false);
     let mut index = HarvestIndex::default();
     let query = HarvestQuery {
-        practice: u32::MAX,
+        practice: u64::MAX,
         region,
         pos: tile,
         radius: 0,
     };
     let job = harvest::pick(res, &mut index, query).expect("ripe marked plant");
-    assert_eq!(harvest::work_ticks(res, tile, u32::MAX), 40);
+    assert_eq!(harvest::work_ticks(res, tile, u64::MAX), 40);
     assert_eq!(harvest::work_ticks(res, tile, 0), 60);
     res.colony.reservations.insert(ReserveKey::Plant(tile), 999);
     assert!(harvest::pick(res, &mut index, query).is_none());

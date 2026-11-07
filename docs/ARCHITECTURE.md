@@ -828,3 +828,24 @@ The content definitions in `sim-core/src/colony/content/defs/{item,recipe}.rs` c
 Physical item specs, stacks, carries, tools and apparel retain optional remaining wear hours; only worn finite clothing consumes lifetime, and worn-out items use the existing conservation sink. Authored clothing comfort enters the real mood target as appended modifier16. Format17 in `sim-systems/src/save/mod.rs` appends processing and uses frozen `legacy_weaving_v16.rs`, `legacy_food_v16.rs` and `sim-core/src/colony/legacy_items_v16.rs` to migrate predecessor bodies/components with empty pending processing and historical unlimited wear. Catalog admission is limited to the exact published predecessor revision and preserved identities; arbitrary mismatches are rejected.
 
 `ffi/story.rs` exposes physical `top_item` and `wear_remaining_hours`; `ffi/diagnosis.rs` exposes `first_woven_clothing` and `cloth_short` and walks authored input dependencies without issuing orders. Existing cards/chapters and ko/en text consume those reads. The cloth-short card only sends an explicit selected dress order, with no-command expiry. Chronicle57/58 originate on actual textile output. `agent_layer.gd` and `person_variant.gdshader` consume authored appearance. All paths here are implementation facts; end-to-end gameplay, captures, native tests, baseline identity and smoke remain unverified at this checkpoint. See [ADR0059](decisions/0059-authored-weaving-and-physical-apparel.md).
+
+## M-SPINE content spine (2026-11-07)
+
+`rust/crates/sim-core/data/colony/eras.ron` defines the selected catalogue's era
+and lane registry. The era registry validates contiguous order and aliases;
+knowledge aggregation computes per-era weighted coverage, permits regression
+and emits era-change chronicle entries. Inert knowledge remains visible but
+is excluded from discovery, runtime gate masks, founder seeds and migrant gifts.
+
+Personal knowledge keeps the historical packed low-id/source byte with additive
+high-id bits; practitioner masks are 64 bits. Skills count actual job completions
+for Practice origins independently of XP. Save format18 migrates historical
+knowledge, skill and aggregate layouts through
+`rust/crates/sim-systems/src/save/legacy_spine_v17.rs`.
+
+`get_tech` projects catalogue era/lane rows with per-era progress and thresholds.
+`scripts/ui/panels/tech_panel.gd` draws the dynamic grid, grey pending cards,
+debt and prerequisite highlighting. The generated section of
+`docs/v8/CONTENT_DEBT.md` comes from
+`rust/crates/sim-core/src/colony/content_debt.rs`; manual historical debt remains.
+Template construction belongs to the next M-SPINE publication.

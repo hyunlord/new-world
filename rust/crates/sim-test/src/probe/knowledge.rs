@@ -57,7 +57,7 @@ fn stalled(engine: &SimEngine) -> bool {
     let res = &engine.resources;
     let c = &res.colony;
     let g = gates();
-    let known_once = |mask: u32| {
+    let known_once = |mask: u64| {
         knowledge::ids_of(mask).any(|id| {
             c.tech
                 .states
@@ -65,7 +65,7 @@ fn stalled(engine: &SimEngine) -> bool {
                 .is_some_and(|s| s.status != TechStatus::Unknown)
         })
     };
-    let missing = |mask: u32| {
+    let missing = |mask: u64| {
         mask != 0
             && known_once(mask)
             && !sim_systems::runtime::knowledge::anyone_practises(&engine.world, mask)

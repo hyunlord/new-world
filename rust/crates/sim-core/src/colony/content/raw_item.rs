@@ -7,6 +7,16 @@ use serde::Deserialize;
 pub(super) struct ItemRaw {
     pub identity: IdentityDef,
     pub category: String,
+    #[serde(default, deserialize_with = "deserialize_art")]
+    pub art: Option<ItemArt>,
+    #[serde(default)]
+    pub status: crate::colony::knowledge::ContentStatus,
+    #[serde(default)]
+    pub debt: Option<String>,
+    #[serde(default)]
+    pub era: String,
+    #[serde(default)]
+    pub lane: String,
     pub material_format_key: String,
     pub tags: Vec<String>,
     pub stack_max: u16,
@@ -36,4 +46,11 @@ pub(super) struct ChopRaw {
     pub wear_default: u32,
     pub break_return: Option<(String, u16)>,
     pub preserve_return_material: bool,
+}
+
+// Optional authored metadata is omitted for category defaults, or a plain art record when present.
+fn deserialize_art<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<ItemArt>, D::Error> {
+    ItemArt::deserialize(deserializer).map(Some)
 }

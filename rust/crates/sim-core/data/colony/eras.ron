@@ -1,0 +1,22 @@
+(
+    schema_version: 1,
+    eras: [
+        (id: "paleolithic", name_key: "ERA_PALEOLITHIC", order: 0, transition_permille: 0, era_permille: 0, chapter: "ch1"),
+        (id: "neolithic", name_key: "ERA_NEOLITHIC", order: 1, transition_permille: 250, era_permille: 750, chapter: "ch4"),
+        (id: "bronze", name_key: "ERA_BRONZE", order: 2, transition_permille: 250, era_permille: 750, chapter: "ch6"),
+        (id: "iron", name_key: "ERA_IRON", order: 3, transition_permille: 250, era_permille: 750, chapter: "ch8"),
+    ],
+    lanes: [
+        (id: "food", name_key: "LANE_FOOD", order: 0),
+        (id: "animals", name_key: "LANE_ANIMALS", order: 1),
+        (id: "farming", name_key: "LANE_FARMING", order: 2),
+        (id: "tools", name_key: "LANE_TOOLS", order: 3),
+        (id: "building", name_key: "LANE_BUILDING", order: 4),
+        (id: "heat", name_key: "LANE_HEAT", order: 5),
+        (id: "textile", name_key: "LANE_TEXTILE", order: 6),
+        (id: "society", name_key: "LANE_SOCIETY", order: 7),
+        (id: "record", name_key: "LANE_RECORD", order: 8),
+        (id: "trade", name_key: "LANE_TRADE", order: 9),
+    ],
+    lane_aliases: {"survival": "food", "craft": "tools", "build": "building", "mine": "tools", "pottery": "heat", "social": "society"},
+)

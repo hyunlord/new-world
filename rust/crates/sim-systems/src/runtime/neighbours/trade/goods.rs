@@ -10,16 +10,27 @@ use sim_core::rules::{GoodsEntry, GoodsPolicy, NeighbourRule};
 use sim_engine::SimResources;
 
 /// All variable eligibility inputs at the instant goods are generated.
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy)]
 pub struct GoodsInputs {
     /// Knowledge practiced by the source neighbour.
-    pub known: u32,
+    pub known: u64,
     /// Historical all-Knowledge practice mask, used only by legacy policy.
-    pub legacy_practice: u32,
+    pub legacy_practice: u64,
     /// Current live adult practitioner counts by knowledge ID.
-    pub practitioners: [u32; 32],
+    pub practitioners: [u32; sim_core::colony::knowledge::MAX_NODES],
     /// Actual stored era progress at generation.
     pub progress_permille: u16,
+}
+
+impl Default for GoodsInputs {
+    fn default() -> Self {
+        Self {
+            known: 0,
+            legacy_practice: 0,
+            practitioners: [0; sim_core::colony::knowledge::MAX_NODES],
+            progress_permille: 0,
+        }
+    }
 }
 
 /// One eligible authored row; duplicates and order remain significant.
@@ -34,7 +45,7 @@ pub struct WeightedGoods {
 }
 
 /// Count current adult holders whose proficiency and inclusive day recency meet the rules.
-pub fn generation_inputs(world: &World, res: &SimResources, known: u32) -> GoodsInputs {
+pub fn generation_inputs(world: &World, res: &SimResources, known: u64) -> GoodsInputs {
     let mut inputs = GoodsInputs {
         known,
         legacy_practice: super::colony_practice(world),
@@ -53,8 +64,9 @@ pub fn generation_inputs(world: &World, res: &SimResources, known: u32) -> Goods
             if entry.proficiency >= defs.threshold(entry.id())
                 && u64::from(today.saturating_sub(entry.last_used)) <= window
             {
-                let count = &mut inputs.practitioners[usize::from(entry.id())];
-                *count = count.saturating_add(1);
+                if let Some(count) = inputs.practitioners.get_mut(usize::from(entry.id())) {
+                    *count = count.saturating_add(1);
+                }
             }
         }
     }
@@ -161,7 +173,7 @@ pub fn draw_goods(seed: u64, rule: &NeighbourRule, id: u32, table: &[WeightedGoo
 }
 
 /// Legacy pure entry point: absent policy uses the saved rule's historical weights.
-pub fn goods(seed: u64, rule: &NeighbourRule, id: u32, known: u32, practice: u32) -> Vec<Goods> {
+pub fn goods(seed: u64, rule: &NeighbourRule, id: u32, known: u64, practice: u64) -> Vec<Goods> {
     let catalog = sim_core::colony::content::installed_or_bundled();
     let entries = sim_core::rules::neighbour_data().map_or(&[][..], |data| data.goods.as_slice());
     let inputs = GoodsInputs {

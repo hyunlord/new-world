@@ -60,10 +60,11 @@ fn selected_pack_child() {
     match case.as_str() {
         "base_before" | "base_after" => bundled_pack(),
         "duplicate" | "malformed" | "missing" | "overflow" => invalid_pack(&case),
-        "craft_build_learn" | "pressure" | "animal" => {
+        "craft_build_learn" | "pressure" | "animal" | "spine" => {
             sim_test::content_boot::from_environment().expect("real host selected-pack bootstrap");
             match case.as_str() {
                 "craft_build_learn" => craft_build_learn(),
+                "spine" => spine_extension(),
                 "pressure" => pressure(),
                 "animal" => animal(),
                 _ => unreachable!(),
@@ -531,4 +532,41 @@ fn animal() {
             ),
         "ordinary hunt retains species identity"
     );
+}
+
+#[test]
+fn spine_data_only_extension() {
+    // Given an external authored pack, isolated from the bundled catalogue.
+    let mut child = std::process::Command::new(std::env::current_exe().expect("test executable"));
+    // When ordinary host bootstrap selects it.
+    let status = child
+        .args(["--exact", "selected_pack_child", "--nocapture"])
+        .env(CHILD, "spine")
+        .env("WORLDSIM_CONTENT_PACK", pack())
+        .status()
+        .expect("spawn fixture");
+    // Then the live bridge exposes the additional lane and grey node.
+    assert!(status.success(), "spine external data pack rejected");
+}
+
+fn spine_extension() {
+    let catalog = content::installed().expect("selected pack");
+    let defs = catalog.knowledge_defs();
+    let node = defs
+        .nodes
+        .iter()
+        .find(|n| n.name == "test_inert_spine")
+        .expect("inert node");
+    assert_eq!(node.status, knowledge::ContentStatus::Inert);
+    assert!(
+        node.gates.is_empty(),
+        "unresolved inert gates never affect jobs"
+    );
+    let engine = sim_test::colony_engine(0);
+    let view = sim_bridge::ffi::knowledge::collect_tech(&engine.world, &engine.resources);
+    assert_eq!(view.eras.len(), 4);
+    assert_eq!(view.lanes.len(), 11);
+    assert_eq!(view.lanes.last().expect("extension lane").id, "ext_lane");
+    assert!(view.nodes.iter().any(|n| n.name == "test_inert_spine"));
+    assert!(sim_core::colony::content_debt::render(catalog).contains("test_inert_spine"));
 }

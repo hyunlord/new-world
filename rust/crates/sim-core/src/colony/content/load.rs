@@ -127,6 +127,18 @@ pub(super) fn build(
     let recipe_index = Index::build("recipes", recipes.recipes.iter().map(|d| &d.identity))?;
     let mut selected = base.clone();
     selected.extend(extension.clone());
+    if extension.contains_key("eras.ron") {
+        let mut eras = crate::colony::eras::EraCatalog::parse(sources::text(&base, "eras.ron")?)
+            .map_err(|e| CatalogError::new("eras", e))?;
+        eras.append(sources::text(&extension, "eras.ron")?)
+            .map_err(|e| CatalogError::new("eras", e))?;
+        selected.insert(
+            "eras.ron".into(),
+            ron::to_string(&eras)
+                .map_err(|e| CatalogError::new("eras", e.to_string()))?
+                .into_bytes(),
+        );
+    }
     if extension.contains_key("knowledge.ron") {
         let merged = super::super::knowledge::merge_sources(
             sources::text(&base, "knowledge.ron")?,

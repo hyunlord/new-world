@@ -26,6 +26,21 @@ pub(super) fn resolve(raw: ItemRaw, c: &Catalog) -> Result<ItemDef, CatalogError
         return Err(CatalogError::new(context,
             "food cannot also provide fuel, apparel, tool, weapon or pot capabilities: those ownership paths do not preserve food ages"));
     }
+    if raw.status == crate::colony::knowledge::ContentStatus::Inert
+        && raw
+            .debt
+            .as_deref()
+            .is_none_or(|text| text.trim().is_empty())
+    {
+        return Err(CatalogError::new(
+            context,
+            "inert item requires nonempty debt",
+        ));
+    }
+    let art = raw
+        .art
+        .unwrap_or_else(|| ItemArt::for_category(&raw.category));
+    validate::material(c, &art.tint_material)?;
     let mut capabilities = std::collections::BTreeSet::new();
     if raw.tool_capabilities.iter().any(|capability| {
         capability.trim().is_empty() || capability == "cutter" || !capabilities.insert(capability)
@@ -134,6 +149,11 @@ pub(super) fn resolve(raw: ItemRaw, c: &Catalog) -> Result<ItemDef, CatalogError
     Ok(ItemDef {
         identity: raw.identity,
         category: raw.category,
+        art,
+        status: raw.status,
+        debt: raw.debt,
+        era: raw.era,
+        lane: raw.lane,
         material_format_key: raw.material_format_key,
         tags: raw.tags,
         stack_max: raw.stack_max,

@@ -69,7 +69,7 @@ pub struct Neighbour {
     /// Its attitude toward the colony, 0–100 (starts 40–60).
     pub attitude: u8,
     /// The knowledge nodes it knows (bit `i` = node `i`).
-    pub known: u32,
+    pub known: u64,
     /// The display day of the last contact (a wave or a caravan reached the hearth), if any.
     pub last_contact_day: Option<u32>,
 }

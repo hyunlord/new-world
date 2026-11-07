@@ -2,12 +2,12 @@
 # Purpose: boot res://scenes/main.tscn with the clock paused (Space); the HUD era line reads "구석기 n %" (get_tech
 #   `progress` ‰ / 10; 2 % at the start: the founders' timber-wall practitioners count), the badge
 #   "⚠ 기술 위험 2" (get_tech at_risk) and the warning line names the first at-risk node; T opens the tech map with
-#   24 cards, the doorway card (node 10) in status 1 (위험); a click on it shows the detail (one holder, learners,
+#   every authored card, the doorway card (node 10) in status 1 (위험); a click on it shows the detail (one holder, learners,
 #   gates) and its 가르치기 button opens the teach dialog (K) on node 10, whose 명령 sends cmd_order_teach (accepted;
 #   the open order is listed in get_teach_orders and in the dialog); K closes and reopens it; the inspector's 지식
 #   tab lists a person's knowledge (no raw key) and, for the teacher, the lesson line once the lesson is assigned;
 #   chronicle kinds 24–28 and the loss toast text are not raw keys (ko and en); F7 opens the submenu and 2 enters
-#   the clay-pit mode (and marks the nearest clay bank); the build menu has 11 entries (0 토기대, - 갈돌); the
+#   the clay-pit mode (and marks the nearest clay bank); the build menu matches the authored catalogue (0 토기대, - 갈돌); the
 #   hearth stays drawn and its fire_pot workshop opens the workshop panel, where a fire_pot bill shows "기다리는 중:
 #   토기 굽기를 아는 사람이 없음"; a stone-wall site's "why?" panel shows its wait line; the priority table has the
 #   Pottery column.
@@ -20,6 +20,7 @@ extends SceneTree
 
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
+const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const KEY_RE: String = "[A-Z][A-Z0-9]*(_[A-Z0-9]+)+"
 const DOORWAY: int = 10
 const POT_FIRING: int = 19
@@ -99,12 +100,21 @@ func _run() -> void:
 	var tech: Dictionary = SimReads.read(_world, "get_tech")
 	var at_risk: int = int(tech.get("at_risk", -1))
 	# HUD: era line, badge, warning line.
-	# The founders' two timber-wall practitioners already count (marker weight 2): progress 28 ‰ shows as "구석기 2 %".
+	# M-SPINE: the HUD follows the current data era's own progress, without absent markers.
+	var current_order: int = int(tech.get("current_era_order", 0))
+	var current_era: Dictionary = {}
+	for era_row: Dictionary in KnowledgeText.catalogue(tech, "eras"):
+		if int(era_row.get("order", -1)) == current_order:
+			current_era = era_row
+	_check("hud_era_catalogue", not current_era.is_empty())
 	@warning_ignore("integer_division")
-	var percent: int = int(tech.get("progress", 0)) / 10
-	var era_want: String = str(_locale.call("trf", "M4_HUD_ERA_FMT", {"era": _locale.call("ltr", "M4_ERA_PALEOLITHIC"), "percent": percent}))
+	var percent: int = int(current_era.get("progress", 0)) / 10
+	var era_name: String = str(_locale.call("ltr", current_era.get("name_key", "UI_UNKNOWN")))
+	if int(tech.get("current_era_state", 0)) == 1:
+		era_name = str(_locale.call("trf", "ERA_TRANSITION_FMT", {"era": era_name}))
+	var era_want: String = str(_locale.call("trf", "M4_HUD_ERA_FMT", {"era": era_name, "percent": percent}))
 	var era: String = str(hud.call("era_text"))
-	_check("hud_era_line", era == era_want and _readable(era), "'%s' (want '%s', progress %d era %d)" % [era, era_want, int(tech.get("progress", -1)), int(tech.get("era", -1))])
+	_check("hud_era_line", era == era_want and _readable(era), "'%s' (want '%s')" % [era, era_want])
 	var badge: String = str(hud.call("risk_text"))
 	_check("hud_badge", at_risk == 2 and badge.contains("2") and _readable(badge), "'%s' at_risk %d" % [badge, at_risk])
 	var warning: String = str(hud.call("warning_text"))
@@ -129,7 +139,7 @@ func _run() -> void:
 		if tech_panel.call("card", id) != null:
 			cards += 1
 	var door_card: Button = tech_panel.call("card", DOORWAY)
-	_check("t_opens_map", (tech_panel as Control).visible and cards == 24, "visible %s cards %d" % [(tech_panel as Control).visible, cards])
+	_check("t_opens_map", (tech_panel as Control).visible and cards == KnowledgeText.node_count() and cards >= 43, "visible %s cards %d" % [(tech_panel as Control).visible, cards])
 	_check("doorway_card_at_risk", door_card != null and int(door_card.get_meta("status", -1)) == 1, "status %s" % (str(door_card.get_meta("status", -1)) if door_card != null else "no card"))
 	var card_texts: Array[String] = []
 	for label: Node in (tech_panel as Control).find_children("*", "Label", true, false):
@@ -179,6 +189,8 @@ func _run() -> void:
 	await _key(KEY_K)
 	_check("k_toggles", closed and (teach_panel as Control).visible and int(teach_panel.call("current_node")) == DOORWAY, "node %d" % int(teach_panel.call("current_node")))
 	await _key(KEY_K)
+	if not (tech_panel as Control).visible:
+		await _key(KEY_T)
 	await _key(KEY_T)
 	_check("t_closes", not (tech_panel as Control).visible)
 	# Run a little so the lesson is assigned, then the inspector's 지식 tab for the teacher.
@@ -206,13 +218,13 @@ func _run() -> void:
 	var door_line: String = KnowledgeText.node_name(_locale, DOORWAY)
 	var has_door: bool = false
 	for text: String in lines:
-		if text.begins_with(door_line):
+		if str(text).replace("\u2060", "").begins_with(door_line):
 			has_door = true
 	_check("inspector_doorway_entry", has_door, door_line)
 	print("M4_UI INFO teacher lesson: role %d partner %d node %d" % [int(read.get("lesson_role", -1)), int(read.get("lesson_partner", -1)), int(read.get("lesson_node", -1))])
 	if int(read.get("lesson_role", -1)) >= 0:
 		var lesson: String = str(lines[0]) if not lines.is_empty() else ""
-		_check("inspector_lesson_line", _readable(lesson) and lesson.contains(door_line), "'%s'" % lesson)
+		_check("inspector_lesson_line", _readable(lesson) and lesson.replace("\u2060", "").contains(door_line), "'%s'" % lesson)
 	inspector.call("select_tab", 0)
 	inspector.call("close")
 	# Chronicle kinds 24–28 (ko and en) and the loss toast text.
@@ -271,10 +283,10 @@ func _run() -> void:
 		_check("clay_mark_toast", _readable(toast.text), "'%s'" % toast.text)
 	await _key(KEY_ESCAPE)
 	await _key(KEY_ESCAPE)
-	# F3: eleven entries, 0 = pottery bench, - = grinding stone.
+	# F3: every catalogue menu entry, 0 = pottery bench, - = grinding stone.
 	await _key(KEY_F3)
 	var menu_buttons: Array = bar.get("_menu_buttons")
-	var menu_ok: bool = bool(bar.call("build_menu_open")) and menu_buttons.size() == 11
+	var menu_ok: bool = bool(bar.call("build_menu_open")) and menu_buttons.size() == EconomyText.menu_order().size() and menu_buttons.size() >= 11
 	await _key(KEY_0)
 	var bench: String = str(tool.get("build_kind"))
 	await _key(KEY_F3)
@@ -288,7 +300,7 @@ func _run() -> void:
 	_check("hearth_drawn", int(buildings.call("hearth_count")) >= 1, "hearths drawn %d" % int(buildings.call("hearth_count")))
 	var shops: Dictionary = SimReads.read(_world, "get_workshops")
 	var shop_ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
-	var shop_kinds: PackedInt32Array = shops.get("kinds", PackedInt32Array())
+	var shop_kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
 	var fire_shop: int = -1
 	for i: int in mini(shop_ids.size(), shop_kinds.size()):
 		if shop_kinds[i] == 11:
@@ -319,7 +331,7 @@ func _run() -> void:
 	causal.call("display_history", [], site.x, site.y)
 	var why: Label = (causal as Control).find_child("Wait", true, false) as Label
 	var want_why: String = KnowledgeText.wait_line(_locale, 13)
-	_check("site_why_line", bool(placed.get("accepted", false)) and why != null and why.text == want_why, "site %s %s why '%s' (want '%s')" % [site, placed, why.text if why != null else "", want_why])
+	_check("site_why_line", bool(placed.get("accepted", false)) and why != null and why.text.replace("\u2060", "") == want_why, "site %s %s why '%s' (want '%s')" % [site, placed, why.text if why != null else "", want_why])
 	# P: the priority table's Pottery column.
 	await _key(KEY_P)
 	await _frames(2)

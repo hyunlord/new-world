@@ -99,8 +99,8 @@ fn alternate_tool_apparel_and_process_require_only_authored_data() {
         Catalog::from_sources(RawSources::bundled(), Some(sources)).expect("data-only extension");
     // Then both identity and mechanics come from the selected data.
     let recipe = catalog.recipe_by_code(1000).expect("alternate recipe");
-    assert_eq!(catalog.knowledge_defs().id_of("reed_combing"), Some(31));
-    assert_eq!(catalog.knowledge_defs().nodes.len(), 32);
+    assert_eq!(catalog.knowledge_defs().id_of("reed_combing"), Some(43));
+    assert_eq!(catalog.knowledge_defs().nodes.len(), 44);
     assert_eq!(
         recipe.tool.as_ref().map(|tool| tool.capability.as_str()),
         Some("combing")
@@ -199,7 +199,7 @@ fn legacy_metadata_stays_inert_and_era_denominator_is_preserved() {
         .filter(|recipe| recipe.identity.code < 20)
         .all(|recipe| recipe.process.is_none()));
     let knowledge = catalog.knowledge_defs();
-    assert_eq!(knowledge.nodes.len(), 31);
+    assert_eq!(knowledge.nodes.len(), 43);
     assert_eq!(knowledge.id_of("cultivation"), Some(27));
     assert_eq!(knowledge.id_of("spinning"), Some(28));
     assert_eq!(knowledge.id_of("weaving"), Some(29));

@@ -412,7 +412,18 @@ pub type LegacySimResourcesV16 = LegacySimResources<
     sim_core::colony::legacy_v7::LegacyColonyStateV16,
 >;
 
-impl TryFrom<SimResources> for LegacySimResourcesV16 {
+/// Format17 adds finite physical garment wear within the frozen colony fields.
+pub type LegacySimResourcesV17 = LegacySimResources<
+    sim_core::chronicle::Chronicle,
+    CausalLogStorage,
+    sim_core::colony::legacy_v7::LegacyColonyStateV17,
+>;
+
+impl<S> TryFrom<SimResources>
+    for LegacySimResources<sim_core::chronicle::Chronicle, CausalLogStorage, S>
+where
+    S: TryFrom<sim_core::colony::ColonyState, Error = &'static str>,
+{
     type Error = &'static str;
     fn try_from(old: SimResources) -> Result<Self, Self::Error> {
         Ok(Self {

@@ -81,17 +81,23 @@ pub fn neolithic() -> Vec<u8> {
     defs()
         .nodes
         .iter()
-        .filter(|n| n.era == Era::Neolithic)
+        .filter(|n| {
+            n.era == Era::Neolithic
+                && n.status == sim_core::colony::knowledge::ContentStatus::Connected
+        })
         .map(|n| n.id)
         .collect()
 }
 
 /// The bits of every Paleolithic node.
-pub fn paleolithic_mask() -> u32 {
+pub fn paleolithic_mask() -> u64 {
     defs()
         .nodes
         .iter()
-        .filter(|n| n.era == Era::Paleolithic)
+        .filter(|n| {
+            n.era == Era::Paleolithic
+                && n.status == sim_core::colony::knowledge::ContentStatus::Connected
+        })
         .fold(0, |m, n| m | bit(n.id))
 }
 
@@ -311,17 +317,20 @@ pub fn migrants(
             let key = keyed_u64(seed, STREAM_NEIGHBOURS, 0x4D49_4752, u64::from(wave), i, 0);
             let draw = |slot: u32, (lo, hi): (u64, u64)| span(seed, key, 0, slot, (lo, hi));
             let mut knowledge = Vec::new();
-            for node in d.nodes.iter().filter(|node| n.known & bit(node.id) != 0) {
+            for node in d.nodes.iter().filter(|node| {
+                n.known & bit(node.id) != 0
+                    && node.status == sim_core::colony::knowledge::ContentStatus::Connected
+            }) {
                 let s = 0x100 + u32::from(node.id);
-                let p = match node.era {
-                    Era::Paleolithic => draw(
+                let p = match node.era.code() {
+                    0 => draw(
                         s,
                         (
                             u64::from(rule.paleo_permille.0),
                             u64::from(rule.paleo_permille.1),
                         ),
                     ),
-                    Era::Neolithic => {
+                    _ => {
                         if draw(s + 0x40, (0, 999)) >= u64::from(rule.neo_chance_permille) {
                             continue;
                         }

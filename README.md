@@ -15,7 +15,7 @@
 
 **Stage2 게시 후보:** 실제 아마 수확 → 침지 → 방적 → 직조 → 재단 → 착용 사슬과 저장 재개를 확인했다. baseline identity와 8개 세계 생존 smoke는 통과했고, 전체 게시 gate는 대기 중이다. 게시판은 위 Stage1이다.
 
-[현재 후보 화면 — Stage2](docs/images/m6b_stage2_contact_sheet.png)은 아마 수확부터 실제 착용까지, 의복 카드·진단·첫 제작 기록을 게임 캡처로 보여 준다. 화면 판독과 실행 검증의 범위는 보고서에 기록했다. [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [M-UX2.1 기록](docs/v8/mux2_1/MUX21_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).
+[현재 후보 화면 — M-SPINE-a](docs/images/m_spine_a_contact_sheet.png)은 네 시대·열 레인 기술 지도와 시대별 게이지, 회색 준비 중 항목·미연결 이유를 한국어와 영어 실제 창 캡처로 보여 준다. 게시 게이트는 별도 검증하며, 화면은 현재 후보의 렌더링 증거다. [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [M-UX2.1 기록](docs/v8/mux2_1/MUX21_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).
 
 먼저 ‘지금 할 일’에서 현재 작업과 올해 목표를 읽고, 카드의 조건을 확인한 뒤 선택한다. 중요한 연대기에서 사건과 기록된 원인을 확인한다. 창립자 역할 표시는 명령을 보내지 않으며 P의 역할을 직접 선택하면 그 주민의 작업 우선순위가 바뀐다.
 

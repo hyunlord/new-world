@@ -58,7 +58,7 @@ impl HarvestIndex {
 #[derive(Debug, Clone, Copy)]
 pub struct HarvestQuery {
     /// Cached knowledge-practitioner bits.
-    pub practice: u32,
+    pub practice: u64,
     /// Current navigation component.
     pub region: u32,
     /// Current standing tile.
@@ -144,18 +144,18 @@ fn pick_filtered(
 }
 
 /// Knowledge whose actual use speeds this species' harvest.
-pub fn knowledge_mask(res: &SimResources, tile: (u32, u32)) -> u32 {
+pub fn knowledge_mask(res: &SimResources, tile: (u32, u32)) -> u64 {
     res.food
         .plants
         .get(&tile)
         .and_then(|plant| installed_or_bundled().plant(plant.species))
         .and_then(|def| def.knowledge)
-        .and_then(|code| 1u32.checked_shl(u32::from(code)))
+        .and_then(|code| 1u64.checked_shl(u32::from(code)))
         .unwrap_or(0)
 }
 
 /// Authored work duration, with a practitioner's authored knowledge speed.
-pub fn work_ticks(res: &SimResources, tile: (u32, u32), practice: u32) -> u32 {
+pub fn work_ticks(res: &SimResources, tile: (u32, u32), practice: u64) -> u32 {
     let Some(def) = res
         .food
         .plants

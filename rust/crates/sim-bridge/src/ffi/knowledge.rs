@@ -12,7 +12,8 @@
 //! its empty form in the baseline world and under rules without knowledge.
 use godot::prelude::*;
 use sim_core::colony::knowledge::{
-    self, defs, era_label, gates, Cond, Gate, Knowledge, KnowledgeId, Lore, TechStatus,
+    self, defs, era_label, gates, Cond, ContentStatus, Gate, Knowledge, KnowledgeId, Lore,
+    TechStatus,
 };
 use sim_core::colony::{Command, CommandResult, Designation, Job, JobKind};
 use sim_core::components::{Agent, AgentId, Child, Life};
@@ -35,6 +36,42 @@ pub struct TechView {
     pub at_risk: u32,
     /// One row per node, in id order.
     pub nodes: Vec<TechRow>,
+    /// Data-authored era columns, in display order.
+    pub eras: Vec<TechEraRow>,
+    /// Data-authored lane rows, in display order.
+    pub lanes: Vec<TechLaneRow>,
+    /// Current era order and state (0 none, 1 transition, 2 era).
+    pub current_era: (u8, u8),
+}
+
+/// One data-authored era column of the technology map.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TechEraRow {
+    /// Stable catalogue identifier.
+    pub id: String,
+    /// Localisation key of the display name.
+    pub name_key: String,
+    /// Stable display order.
+    pub order: u8,
+    /// Weighted coverage within this era, in permille.
+    pub progress: u16,
+    /// Transition threshold in permille.
+    pub transition_permille: u16,
+    /// Era threshold in permille.
+    pub era_permille: u16,
+    /// 0 unreached, 1 transition, 2 era.
+    pub state: u8,
+}
+
+/// One data-authored technology lane.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TechLaneRow {
+    /// Stable catalogue identifier.
+    pub id: String,
+    /// Localisation key of the display name.
+    pub name_key: String,
+    /// Stable display order.
+    pub order: u8,
 }
 
 /// One node of the tech map.
@@ -46,9 +83,9 @@ pub struct TechRow {
     pub name: String,
     /// Locale key of its name.
     pub name_key: String,
-    /// `Lane::code` (0 survival … 5 social).
+    /// Data-authored lane order (`Lane::code`).
     pub lane: u8,
-    /// `Era::code` (0 paleolithic, 1 neolithic).
+    /// Data-authored era order (`Era::code`).
     pub era: u8,
     /// Threshold ‰.
     pub threshold: u16,
@@ -66,6 +103,12 @@ pub struct TechRow {
     pub first_name: i64,
     /// Whether every discovery condition holds now (false for nodes never discovered).
     pub conditions_met: bool,
+    /// Authored tier (1–4).
+    pub tier: u8,
+    /// True when authored content has runtime connections.
+    pub connected: bool,
+    /// Missing behaviour for authored inert content.
+    pub debt: String,
 }
 
 fn lore_name(l: Lore) -> &'static str {
@@ -122,6 +165,9 @@ pub fn collect_tech(world: &hecs::World, res: &SimResources) -> TechView {
                 prereqs: n.prereqs.clone(),
                 first_name: s.names.first().map_or(-1, |id| *id as i64),
                 conditions_met: open & knowledge::bit(n.id) != 0,
+                tier: n.tier,
+                connected: n.status == ContentStatus::Connected,
+                debt: n.debt.clone().unwrap_or_default(),
             }
         })
         .collect();
@@ -132,6 +178,44 @@ pub fn collect_tech(world: &hecs::World, res: &SimResources) -> TechView {
         adults: tech.adults,
         at_risk: tech.at_risk() as u32,
         nodes,
+        eras: defs()
+            .eras
+            .eras
+            .iter()
+            .map(|era| {
+                let progress = tech
+                    .era_progress
+                    .get(usize::from(era.order))
+                    .copied()
+                    .unwrap_or(0);
+                TechEraRow {
+                    id: era.id.clone(),
+                    name_key: era.name_key.clone(),
+                    order: era.order,
+                    progress,
+                    transition_permille: era.transition_permille,
+                    era_permille: era.era_permille,
+                    state: if progress >= era.era_permille {
+                        2
+                    } else if progress >= era.transition_permille {
+                        1
+                    } else {
+                        0
+                    },
+                }
+            })
+            .collect(),
+        lanes: defs()
+            .eras
+            .lanes
+            .iter()
+            .map(|lane| TechLaneRow {
+                id: lane.id.clone(),
+                name_key: lane.name_key.clone(),
+                order: lane.order,
+            })
+            .collect(),
+        current_era: tech.current_era,
     }
 }
 
@@ -159,7 +243,7 @@ pub struct TechNodeView {
     pub learners: Vec<NodePerson>,
     /// Discovery conditions: `(kind, name, amount, met)`; kind 0 stockpile
     /// (name = item), 1 skill (name = skill, amount = level), 2 knows (name =
-    /// node, amount = ‰), 3 clay bank near (amount = tiles).
+    /// node, amount = ‰), 3 clay bank near (amount = tiles), 4 completed jobs (amount = count).
     pub conditions: Vec<(u8, String, i64, bool)>,
     /// Gates: `(kind, name)`; kind 0 recipe, 1 blueprint, 2 workshop, 3 designation, 4 channel, 5 lore.
     pub gates: Vec<(u8, String)>,
@@ -221,6 +305,16 @@ pub fn collect_tech_node(world: &hecs::World, res: &SimResources, node: i64) -> 
                     met,
                 ),
                 Cond::ClayBankNear(d) => (3, String::new(), i64::from(d), met),
+                Cond::Practice(job, count) => (
+                    4,
+                    JobKind::NAMES
+                        .get(usize::from(job))
+                        .copied()
+                        .unwrap_or("unknown")
+                        .to_string(),
+                    i64::from(count),
+                    met,
+                ),
             }
         })
         .collect();
@@ -413,13 +507,13 @@ pub fn collect_knowledge_waits(world: &hecs::World, res: &SimResources) -> Vec<W
     if !enabled(res) {
         return Vec::new();
     }
-    let practised: u32 = world
+    let practised: u64 = world
         .query::<&Knowledge>()
         .without::<&Child>()
         .iter()
         .fold(0, |m, (_, k)| m | k.practice());
     // A gate is open when one adult practises all of it; for the line, the first node no adult practises.
-    let blocked = |mask: u32| -> Option<u8> {
+    let blocked = |mask: u64| -> Option<u8> {
         if mask == 0 || sim_systems::runtime::knowledge::anyone_practises(world, mask) {
             return None;
         }
@@ -586,8 +680,44 @@ pub(super) fn tech_to_dict(v: &TechView) -> VarDictionary {
     d.set("ids", int_col(n.iter().map(|r| i64::from(r.id))));
     d.set("names", str_col(n.iter().map(|r| r.name.as_str())));
     d.set("name_keys", str_col(n.iter().map(|r| r.name_key.as_str())));
-    d.set("lanes", int_col(n.iter().map(|r| i64::from(r.lane))));
-    d.set("eras", int_col(n.iter().map(|r| i64::from(r.era))));
+    d.set("node_lanes", int_col(n.iter().map(|r| i64::from(r.lane))));
+    d.set("node_eras", int_col(n.iter().map(|r| i64::from(r.era))));
+    d.set("tiers", int_col(n.iter().map(|r| i64::from(r.tier))));
+    d.set(
+        "connected",
+        int_col(n.iter().map(|r| i64::from(r.connected))),
+    );
+    d.set("debts", str_col(n.iter().map(|r| r.debt.as_str())));
+    d.set("current_era_order", i64::from(v.current_era.0));
+    d.set("current_era_state", i64::from(v.current_era.1));
+    let eras: Array<VarDictionary> = v
+        .eras
+        .iter()
+        .map(|era| {
+            let mut row = VarDictionary::new();
+            row.set("id", GString::from(era.id.as_str()));
+            row.set("name_key", GString::from(era.name_key.as_str()));
+            row.set("order", i64::from(era.order));
+            row.set("progress", i64::from(era.progress));
+            row.set("transition_permille", i64::from(era.transition_permille));
+            row.set("era_permille", i64::from(era.era_permille));
+            row.set("state", i64::from(era.state));
+            row
+        })
+        .collect();
+    d.set("eras", eras);
+    let lanes: Array<VarDictionary> = v
+        .lanes
+        .iter()
+        .map(|lane| {
+            let mut row = VarDictionary::new();
+            row.set("id", GString::from(lane.id.as_str()));
+            row.set("name_key", GString::from(lane.name_key.as_str()));
+            row.set("order", i64::from(lane.order));
+            row
+        })
+        .collect();
+    d.set("lanes", lanes);
     d.set(
         "thresholds",
         int_col(n.iter().map(|r| i64::from(r.threshold))),
@@ -636,6 +766,9 @@ pub(super) fn tech_node_to_dict(v: &TechNodeView) -> VarDictionary {
     d.set("holders", i64::from(v.row.holders));
     d.set("lane", i64::from(v.row.lane));
     d.set("era", i64::from(v.row.era));
+    d.set("tier", i64::from(v.row.tier));
+    d.set("connected", v.row.connected);
+    d.set("debt", GString::from(v.row.debt.as_str()));
     d.set("marker_weight", i64::from(v.row.marker_weight));
     d.set(
         "prereqs",

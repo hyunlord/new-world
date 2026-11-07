@@ -3,91 +3,75 @@ use super::KnowledgeId;
 use crate::colony::{BlueprintKind, Designation, ItemKind, RecipeKind, SkillKind};
 use serde::{Deserialize, Serialize};
 
-/// A knowledge lane (the tech map's rows).
+/// A lane index in the selected data registry. Legacy constants remain aliases.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub enum Lane {
-    /// Fire, food, water, tracking.
-    Survival,
-    /// Stone and wood crafts.
-    Craft,
-    /// Building.
-    Build,
-    /// Quarrying and digging.
-    Mine,
-    /// Clay and pots.
-    Pottery,
-    /// Teaching and telling.
-    Social,
+pub struct Lane(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl Lane {
+    /// Legacy survival lane, now food.
+    pub const Survival: Self = Self(0);
+    /// Legacy craft lane, now tools.
+    pub const Craft: Self = Self(3);
+    /// Legacy building lane.
+    pub const Build: Self = Self(4);
+    /// Legacy mining lane, now tools.
+    pub const Mine: Self = Self(3);
+    /// Legacy pottery lane, now heat.
+    pub const Pottery: Self = Self(5);
+    /// Legacy social lane, now society.
+    pub const Social: Self = Self(7);
+    /// The ten bundled lanes; renderers enumerate `KnowledgeDefs::eras.lanes` instead.
+    pub const ALL: [Self; 10] = [
+        Self(0),
+        Self(1),
+        Self(2),
+        Self(3),
+        Self(4),
+        Self(5),
+        Self(6),
+        Self(7),
+        Self(8),
+        Self(9),
+    ];
+    /// Registry display index.
+    pub const fn code(self) -> u8 {
+        self.0
+    }
+    /// Canonical name from selected data.
+    pub fn name(self) -> &'static str {
+        super::defs()
+            .eras
+            .lanes
+            .get(usize::from(self.0))
+            .map_or("unknown", |l| l.id.as_str())
+    }
+    /// Resolve against the selected lane registry and its legacy aliases.
+    pub fn from_name(name: &str) -> Option<Self> {
+        super::defs().eras.lane_order(name).map(Self)
+    }
 }
 
-impl Lane {
-    /// Every lane in display order.
-    pub const ALL: [Self; 6] = [
-        Self::Survival,
-        Self::Craft,
-        Self::Build,
-        Self::Mine,
-        Self::Pottery,
-        Self::Social,
-    ];
-
-    /// Stable code (0 survival … 5 social).
-    pub const fn code(self) -> u8 {
-        match self {
-            Self::Survival => 0,
-            Self::Craft => 1,
-            Self::Build => 2,
-            Self::Mine => 3,
-            Self::Pottery => 4,
-            Self::Social => 5,
-        }
-    }
-
-    /// Stable lowercase name (`knowledge.ron`).
+/// Whether authored content has runtime behaviour wired.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ContentStatus {
+    /// Runtime targets must all resolve and participate in simulation.
+    #[default]
+    Connected,
+    /// Authored, visible and recorded as debt; never enables behaviour.
+    Inert,
+}
+impl ContentStatus {
+    /// Stable bridge spelling.
     pub const fn name(self) -> &'static str {
         match self {
-            Self::Survival => "survival",
-            Self::Craft => "craft",
-            Self::Build => "build",
-            Self::Mine => "mine",
-            Self::Pottery => "pottery",
-            Self::Social => "social",
-        }
-    }
-
-    /// Parse [`Self::name`].
-    pub fn from_name(name: &str) -> Option<Self> {
-        Self::ALL.into_iter().find(|l| l.name() == name)
-    }
-}
-
-/// The era a node belongs to (the tech map's columns).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub enum Era {
-    /// The Old Stone Age.
-    Paleolithic,
-    /// The New Stone Age.
-    Neolithic,
-}
-
-impl Era {
-    /// Stable code (0 paleolithic, 1 neolithic).
-    pub const fn code(self) -> u8 {
-        match self {
-            Self::Paleolithic => 0,
-            Self::Neolithic => 1,
-        }
-    }
-
-    /// Parse the `knowledge.ron` name.
-    pub fn from_name(name: &str) -> Option<Self> {
-        match name {
-            "paleolithic" => Some(Self::Paleolithic),
-            "neolithic" => Some(Self::Neolithic),
-            _ => None,
+            Self::Connected => "Connected",
+            Self::Inert => "Inert",
         }
     }
 }
+
+pub use crate::colony::eras::Era;
 
 /// How a person came by an entry (goal 3.2); sets its forgetting rate and floor.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -174,6 +158,8 @@ pub enum Cond {
     Knows(KnowledgeId, u16),
     /// A clay bank lies within this Chebyshev distance of the camp hearth.
     ClayBankNear(u32),
+    /// Someone completed this many jobs of the authored work type.
+    Practice(u8, u32),
 }
 
 /// The apprenticeship and oral channels a node may unlock.
@@ -235,6 +221,14 @@ pub struct KnowledgeDef {
     pub lane: Lane,
     /// Era.
     pub era: Era,
+    /// Authored progression tier, 1–4.
+    pub tier: u8,
+    /// Whether runtime behaviour is wired.
+    pub status: ContentStatus,
+    /// Missing behaviour and planned content pass, for the generated ledger.
+    pub debt: Option<String>,
+    /// Authored gates retained for inert debt, including unresolved targets.
+    pub inert_gates: Vec<String>,
     /// Proficiency ‰ at which a person is a practitioner.
     pub threshold: u16,
     /// Nodes a discoverer must practise first.
@@ -256,6 +250,8 @@ pub struct KnowledgeDef {
 /// The parsed knowledge map.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct KnowledgeDefs {
+    /// The selected era ladder and lane registry.
+    pub eras: crate::colony::eras::EraCatalog,
     /// Every node in id order.
     pub nodes: Vec<KnowledgeDef>,
     /// Era markers M4 does not have yet, by name and weight (they count in the denominator).
@@ -281,7 +277,8 @@ impl KnowledgeDefs {
         self.get(id).map_or(1000, |n| n.threshold)
     }
 
-    /// The total marker weight, absent markers included (the era denominator).
+    /// Legacy authored marker total including historical absent-marker metadata.
+    /// Era progress uses only present markers grouped by their authored era.
     pub fn marker_total(&self) -> u32 {
         self.nodes
             .iter()

@@ -180,11 +180,13 @@ pub enum ChronicleKind {
     FirstCloth = 57,
     /// First physically committed woven tunic; value = item code.
     FirstTunic = 58,
+    /// M-SPINE: value = authored era order (resolves to era id); cause = state 0/1/2.
+    EraChanged = 59,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 59] = [
+    pub const ALL: [ChronicleKind; 60] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -244,6 +246,7 @@ impl ChronicleKind {
         Self::CropFailure,
         Self::FirstCloth,
         Self::FirstTunic,
+        Self::EraChanged,
     ];
 
     /// Stable numeric discriminant.
@@ -313,6 +316,7 @@ impl ChronicleKind {
             Self::CropFailure => "crop_failure",
             Self::FirstCloth => "first_cloth",
             Self::FirstTunic => "first_tunic",
+            Self::EraChanged => "era_changed",
         }
     }
 }
@@ -774,10 +778,10 @@ mod tests {
         assert_eq!(ChronicleKind::CropFailure.as_u8(), 56);
         assert_eq!(ChronicleKind::FirstCloth.as_u8(), 57);
         assert_eq!(ChronicleKind::FirstTunic.as_u8(), 58);
-        assert_eq!(ChronicleKind::ALL.len(), 59);
+        assert_eq!(ChronicleKind::ALL.len(), 60);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 59);
+        assert_eq!(names.len(), 60);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

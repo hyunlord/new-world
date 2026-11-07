@@ -275,7 +275,7 @@ mod tests {
     fn the_recipe_file_parses_to_the_goal_table() {
         let table = recipes();
         // M2 three, M4 four, M5 four, M6a seven, cultivation two, textiles six.
-        assert_eq!(table.len(), 26);
+        assert_eq!(table.len(), 27);
         let knap = RecipeKind::KnapBlade.recipe().cloned();
         let knap = knap.expect("registered blade");
         assert_eq!(knap.id, RecipeKind::KnapBlade);

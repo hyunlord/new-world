@@ -1,5 +1,7 @@
 # 로드맵 (V8)
 
+> **M-SPINE 진행 중 (2026-11-07):** 마일스톤 #13. 시대·기술 스키마·회색 콘텐츠를 먼저 게시하고, 건물 템플릿·원인이 남는 건설·패널을 두 번째로 게시한다. 콘텐츠 기준은 [바이블](v8/CONTENT_BIBLE.md)과 [로드맵 v3](v8/DEPTH_ROADMAP.md). 게이트·실행 캡처·게시 SHA는 검증 후 별도 보고한다.
+
 > **2026-11-06 Stage1 게시 완료:** `16dc9120d`를 `v8/wip` → `v8/main`에 fast-forward하고 양쪽 원격 SHA를 확인했다. 전체 gate49/49·exit0(step41 엄격50ms FAIL, 기존 예외 PASS). 농경과 생산 제한·가르침을 제공하며 통나무·한파 잔여는 #688에 양쪽 수치를 보존한다. Stage2 직조는20:59:12KST 시작, 11/07 20:59:12까지 게시 또는 안전성 미달 중단한다. [보고서](v8/m6b/M6B_REPORT.md).
 
 > **M6b Stage −1 게시:** [2f6993009](https://github.com/hyunlord/new-world/commit/2f6993009ddb600e9249c28f9768a1a5252c8821), 2026-11-02. M-LOOP 프레젠테이션을 BASE 집사 동작으로 제공한다. 집사 동작 개선은 [ISS-361/#684](https://github.com/hyunlord/new-world/issues/684), M6b Stage1로 이월했다. 이 SHA가 BASE0이며 p8 사전 검증과 최종 D 증거는 [보고서](v8/m6b/M6B_REPORT.md)에서 구분한다. Stage0는 중단·미게시(#685)이며 기존 gate로 Stage1을 진행한다.

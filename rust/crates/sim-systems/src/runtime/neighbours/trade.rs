@@ -42,7 +42,7 @@ pub fn producing_nodes(kind: ItemKind) -> Vec<u8> {
 }
 
 /// The nodes some living colonist practises (bit `i` = node `i`).
-pub fn colony_practice(world: &World) -> u32 {
+pub fn colony_practice(world: &World) -> u64 {
     world
         .query::<&Knowledge>()
         .iter()
@@ -279,7 +279,7 @@ pub const fn balanced(rule: &NeighbourRule, give: u64, take: u64) -> bool {
 /// the colony practises now (the unknown artifacts bought are counted, F8).
 pub fn trade(
     res: &mut SimResources,
-    practice: u32,
+    practice: u64,
     caravan: u32,
     give: &[((u32, u32), u16)],
     take: &[(u16, u16)],

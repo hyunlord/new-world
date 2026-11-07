@@ -15,9 +15,8 @@
 //! `KnowledgeLost` with the last named holder. `names` keeps up to five
 //! practitioners (holders when none practise) by `AgentId`.
 //!
-//! Era progress ‰ = Σ over markers of weight × min(1000, 1000 × practitioners
-//! / adults), divided by the total marker weight including the markers M4 does
-//! not have (farming 3, weaving 2): its ceiling is 9 / 14 ≈ 643 ‰.
+//! Each era's progress divides living adult coverage by its authored marker weights.
+//! Empty eras stay at zero; unavailable markers do not add a hidden denominator.
 use hecs::World;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::knowledge::{defs, Knowledge, TechAggregate, TechState, TechStatus};
@@ -59,7 +58,8 @@ pub fn compute(
     };
     out.states.clear();
     let mut events = Vec::new();
-    let mut weighted = 0u64;
+    let mut weighted = vec![0u64; d.eras.eras.len()];
+    let mut totals = vec![0u64; d.eras.eras.len()];
     for node in &d.nodes {
         let mut holders = Vec::new();
         let mut practitioners = Vec::new();
@@ -117,9 +117,17 @@ pub fn compute(
             }
             events.push(entry);
         }
-        if node.marker_weight > 0 && adults > 0 {
-            let coverage = (1000 * practitioners.len() as u64 / u64::from(adults)).min(1000);
-            weighted += u64::from(node.marker_weight) * coverage;
+        if node.marker_weight > 0 {
+            let order = usize::from(node.era.code());
+            if order < totals.len() {
+                let weight = u64::from(node.marker_weight);
+                totals[order] += weight;
+                if adults > 0 {
+                    let coverage =
+                        (1000 * practitioners.len() as u64 / u64::from(adults)).min(1000);
+                    weighted[order] += weight * coverage;
+                }
+            }
         }
         out.states.push(TechState {
             practitioners: u16::try_from(practitioners.len()).unwrap_or(u16::MAX),
@@ -133,11 +141,26 @@ pub fn compute(
             names,
         });
     }
-    let total = u64::from(d.marker_total().max(1));
-    out.progress_permille = u16::try_from(weighted / total).unwrap_or(1000);
+    out.era_progress = weighted
+        .iter()
+        .zip(&totals)
+        .map(|(weight, total)| u16::try_from(weight / total.max(&1)).unwrap_or(1000))
+        .collect();
+    out.current_era = d.eras.current(&out.era_progress);
+    // The historical scalar remains the first post-founder era's progress.
+    out.progress_permille = out.era_progress.get(1).copied().unwrap_or(0);
+    if out.current_era != prev.current_era {
+        events.push(
+            ChronicleEntry::new(tick, ChronicleKind::EraChanged)
+                .cause(u32::from(out.current_era.1))
+                .value(i64::from(out.current_era.0)),
+        );
+    }
     if out.states != prev.states
         || out.progress_permille != prev.progress_permille
         || out.adults != prev.adults
+        || out.era_progress != prev.era_progress
+        || out.current_era != prev.current_era
     {
         out.version = prev.version + 1;
     }

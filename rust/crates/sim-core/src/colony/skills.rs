@@ -92,9 +92,18 @@ pub struct Skill {
 pub struct Skills {
     /// One entry per skill (M4: 7, pottery last; M5: 8, hunting last).
     pub entries: [Skill; SkillKind::ALL.len()],
+    /// Actually finished jobs by stable `JobKind::code`, used by discovery origins.
+    #[serde(default)]
+    pub completed: [u32; super::JobKind::NAMES.len()],
 }
 
 impl Skills {
+    /// Record one real completion, independently of work-tick experience.
+    pub fn complete(&mut self, kind: super::JobKind) {
+        let count = &mut self.completed[usize::from(kind.code())];
+        *count = count.saturating_add(1);
+    }
+
     /// The skill `kind`.
     pub fn get(&self, kind: SkillKind) -> Skill {
         self.entries[kind.code() as usize]

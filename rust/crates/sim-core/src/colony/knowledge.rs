@@ -29,8 +29,8 @@ pub use types::*;
 /// A node of the knowledge map: its index in `knowledge.ron` (file order).
 pub type KnowledgeId = u8;
 
-/// Most nodes the map may hold (the practitioner bitset is a `u32`).
-pub const MAX_NODES: usize = 32;
+/// Most nodes the map may hold (the practitioner bitset is a `u64`).
+pub const MAX_NODES: usize = 64;
 
 /// The quality ceiling of a craft by proficiency decile (goal 3.2): the VISION's
 /// `0.3 + 0.7·p²` shape as an integer table, index `proficiency / 100`.
@@ -47,6 +47,12 @@ pub fn parse_defs(text: &str) -> Option<KnowledgeDefs> {
     parse_with_catalog(text, super::content::installed_or_bundled()).ok()
 }
 
+/// Validate authored nodes against an already resolved content catalogue.
+/// Returns diagnostics for unknown conditions, prerequisites, or connected gates.
+pub fn validate(text: &str, catalog: &super::content::Catalog) -> Result<KnowledgeDefs, String> {
+    parse_with_catalog(text, catalog)
+}
+
 /// The selected immutable catalog's knowledge definitions.
 pub fn defs() -> &'static KnowledgeDefs {
     super::content::installed_or_bundled().knowledge_defs()
@@ -58,8 +64,11 @@ pub fn id(name: &str) -> Option<KnowledgeId> {
 }
 
 /// The bit of node `id` in a practitioner bitset.
-pub const fn bit(id: KnowledgeId) -> u32 {
-    1u32 << (id as u32 & 31)
+pub const fn bit(id: KnowledgeId) -> u64 {
+    match 1u64.checked_shl(id as u32) {
+        Some(mask) => mask,
+        None => 0,
+    }
 }
 
 /// The selected immutable catalog's derived gate masks.
@@ -68,8 +77,8 @@ pub fn gates() -> &'static Gates {
 }
 
 /// The ids set in `mask`, ascending.
-pub fn ids_of(mask: u32) -> impl Iterator<Item = KnowledgeId> {
-    (0..32u8).filter(move |i| mask & bit(*i) != 0)
+pub fn ids_of(mask: u64) -> impl Iterator<Item = KnowledgeId> {
+    (0..64u8).filter(move |i| mask & bit(*i) != 0)
 }
 
 /// Ticks per day of the knowledge clock (1 tick = 1 minute in every world).
@@ -82,5 +91,7 @@ pub fn day_of(tick: u64) -> u16 {
 
 #[cfg(test)]
 mod registry_tests;
+#[cfg(test)]
+mod spine_tests;
 #[cfg(test)]
 mod tests;

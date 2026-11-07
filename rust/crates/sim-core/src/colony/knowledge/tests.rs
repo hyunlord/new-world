@@ -4,9 +4,9 @@ use crate::colony::{BlueprintKind, Designation, ItemKind, RecipeKind};
 const KNOWLEDGE_RON: &str = include_str!("../../../data/colony/knowledge.ron");
 
 #[test]
-fn the_map_parses_to_31_nodes_with_an_acyclic_prereq_graph() {
+fn the_map_parses_to_43_nodes_with_an_acyclic_prereq_graph() {
     let d = defs();
-    assert_eq!(d.nodes.len(), 31);
+    assert_eq!(d.nodes.len(), 43);
     assert!(d.nodes.len() <= MAX_NODES);
     // Every prereq points at another node, and the graph has no cycle
     // (a depth-first search from each node never revisits its path).
@@ -116,7 +116,7 @@ fn entries_stay_sorted_and_the_bitset_follows_the_thresholds() {
         "a seeded entry stops at its floor"
     );
     assert_eq!(k.entries().len(), k.entries().iter().count());
-    assert_eq!(std::mem::size_of::<KnowledgeEntry>(), 6);
+    assert_eq!(std::mem::size_of::<KnowledgeEntry>(), 8);
     assert!(std::mem::size_of::<Knowledge>() <= 24);
     // Observation stops at its cap.
     assert!(k.observe(knap, 5, 250, 900));
@@ -212,7 +212,7 @@ fn quality_caps_and_era_labels_follow_their_tables() {
         (17, Source::Migrant, 500)
     );
     let lanes: Vec<u8> = Lane::ALL.iter().map(|l| l.code()).collect();
-    assert_eq!(lanes, vec![0, 1, 2, 3, 4, 5]);
+    assert_eq!(lanes, vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 }
 
 #[test]

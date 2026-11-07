@@ -190,3 +190,18 @@ A reachable geometrically near source can require a much longer walk than anothe
 
 ### Scripted probe continuation and clock boundaries (M6b, 2026-11-05)
 A saved engine does not own future recurring commands injected by the probe script runner. Engine-only continuation can diverge even when save/load itself is correct. Use the original full-script runner for causal traces, or replay the complete command schedule, and compare original normalized outcomes before accepting the trace. Keep invalid runs as evidence. Daily labels include the clock offset: derive an exact snapshot tick from the real boundary rather than assuming day×DAY_TICKS. The p31 story chronicle placed first exposure death28620 before a mistakenly described predeath snapshot28800. Source: M6B_DECISIONS S1-GATE-4/5.
+
+### Catalogue bootstrap and visible overlays (M-SPINE, 2026-11-07)
+Resolve era/lane ids against the catalogue under construction, not the installed
+process-global registry: a name helper can recursively bootstrap before install.
+A RON `Option<Art>` field does not accept the brief's plain `art:(...)` syntax
+without a matching deserializer; exercise authored syntax, not only omitted
+defaults. Preserve nested historical Knowledge/Skills/aggregate wire types when
+bumping a bincode body; a real old binary's save is stronger than a current
+writer pretending to emit the old format. UI metadata saying “hatched” is not
+rendering evidence: the callback existence and nonzero geometry do not prove visible strokes. In the
+actual M-SPINE window, identical 1px strokes disappeared while 2px strokes
+rendered at unchanged alpha; an opaque rectangle isolated this from clipping.
+Inspect exact card pixels and retain controlled failed/passing captures. Source:
+`docs/decisions/0060-content-spine.md`; `spine_save_check.rs`;
+`tools/v8/spine_tech_test.gd`.

@@ -1,6 +1,6 @@
 # tech_panel.gd (UI/TechPanel, created by hud_topbar.gd beside itself): the M4 tech map, toggled with T and opened by
 #   the HUD's "⚠ 기술 위험 N" badge (goal 9.2).
-# Lanes as rows (생존 · 제작 · 건설 · 채굴 · 토기 · 사회, get_tech `lanes` 0–5), eras as columns (구석기 | 신석기), each
+# Data-authored lanes as rows and eras as columns (M-SPINE: 10 × 4), each
 #   node a card: its name, its practitioners ("3명") and ◆ with the marker weight for an era marker, bordered in its
 #   status colour (미지 grey, 위험 red, 알려짐 yellow, 안정 green, 소실 a black border on a darker card). Prerequisite
 #   edges (`prereq_from` → `prereq_to`) are lines drawn under the cards. A click on a card shows its detail on the
@@ -30,10 +30,9 @@ const EUREKA_GLYPH: String = "★"
 const EUREKA: Color = Color("f0c040")
 const RUMOUR: Color = Color("a8c8f0")
 const PANEL_RECT: Rect2 = Rect2(12, 124, 1896, 830)
-const CARD_SIZE: Vector2 = Vector2(196, 64)
-const CARDS_PER_ROW: int = 3
-const LANE_WIDTH: int = 120
-const DETAIL_WIDTH: int = 440
+const CARD_SIZE: Vector2 = Vector2(264, 88)
+const LANE_WIDTH: int = 160
+const DETAIL_WIDTH: int = 392
 const GAP: int = 8
 const MUTED: Color = Color("c8b89a")
 const TEXT: Color = Color("f2e6c8")
@@ -52,9 +51,14 @@ var _hint: Label
 var _close: Button
 var _legend: HBoxContainer
 var _canvas: MarginContainer
+var _headers: GridContainer
+var _map_scroll: ScrollContainer
+var _jump: OptionButton
+var _lane_labels: Dictionary = {}
 var _grid: GridContainer
 var _cards: Dictionary = {}
 var _edges: Array[Vector2i] = []
+var _chain: Dictionary = {}
 var _key: int = 0
 var _selected: int = -1
 var _detail: VBoxContainer
@@ -109,21 +113,37 @@ func _ready() -> void:
 	eureka.name = "EurekaLegend"
 	eureka.add_theme_color_override("font_color", EUREKA)
 	_legend.add_child(eureka)
+	var inert_legend: Label = Label.new()
+	inert_legend.name = "InertLegend"
+	inert_legend.add_theme_color_override("font_color", MUTED)
+	_legend.add_child(inert_legend)
 	var body: HBoxContainer = HBoxContainer.new()
 	body.add_theme_constant_override("separation", 16)
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	column.add_child(body)
+	var map_column: VBoxContainer = VBoxContainer.new()
+	map_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body.add_child(map_column)
+	_jump = OptionButton.new()
+	_jump.name = "LaneJump"
+	_jump.item_selected.connect(_jump_lane)
+	map_column.add_child(_jump)
+	_headers = GridContainer.new()
+	_headers.name = "EraHeaders"
+	_headers.add_theme_constant_override("h_separation", 16)
+	map_column.add_child(_headers)
 	var map_scroll: ScrollContainer = ScrollContainer.new()
+	_map_scroll = map_scroll
 	map_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	map_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	map_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	body.add_child(map_scroll)
+	map_column.add_child(map_scroll)
 	_canvas = MarginContainer.new()
 	_canvas.name = "Map"
 	_canvas.draw.connect(_draw_edges)
 	map_scroll.add_child(_canvas)
 	_grid = GridContainer.new()
-	_grid.columns = 1 + KnowledgeText.ERAS
+	_grid.columns = 1
 	_grid.add_theme_constant_override("h_separation", 16)
 	_grid.add_theme_constant_override("v_separation", 12)
 	_canvas.add_child(_grid)
@@ -134,6 +154,7 @@ func _ready() -> void:
 	body.add_child(detail_scroll)
 	_detail = VBoxContainer.new()
 	_detail.name = "Detail"
+	_detail.custom_minimum_size.x = DETAIL_WIDTH - 16
 	_detail.add_theme_constant_override("separation", 6)
 	_detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail_scroll.add_child(_detail)
@@ -195,7 +216,8 @@ func _refresh() -> void:
 	var neighbours: Dictionary = _neighbours()
 	var key: int = hash([tech.get("statuses", PackedInt64Array()), tech.get("practitioners", PackedInt64Array()),
 		tech.get("holders", PackedInt64Array()), KnowledgeText.language(_locale), neighbours.get("clue_nodes", PackedInt32Array()),
-		neighbours.get("rumoured", PackedInt64Array())])
+		neighbours.get("rumoured", PackedInt64Array()), tech.get("version", 0), tech.get("eras", []),
+		tech.get("lanes", []), tech.get("connected", PackedInt64Array()), tech.get("debts", PackedStringArray())])
 	if key != _key:
 		_key = key
 		_rebuild(tech)
@@ -217,39 +239,121 @@ func _rebuild(tech: Dictionary) -> void:
 		swatch.text = ("□ " if code == 4 else "■ ") + KnowledgeText.status(_locale, code)
 	(_legend.get_child(KnowledgeText.STATUS_KEYS.size()) as Label).text = "◆ " + _loc("M4_TECH_MARKER_LEGEND")
 	(_legend.get_child(KnowledgeText.STATUS_KEYS.size() + 1) as Label).text = EUREKA_GLYPH + " " + _loc("M55_TECH_EUREKA_LEGEND")
+	(_legend.get_child(KnowledgeText.STATUS_KEYS.size() + 2) as Label).text = "▧ " + _loc("TECH_STATUS_INERT")
+	for child: Node in _headers.get_children():
+		_headers.remove_child(child)
+		child.queue_free()
+	var jump_lane_id: int = _jump.get_selected_id()
+	_jump.clear()
+	_lane_labels.clear()
 	for child: Node in _grid.get_children():
 		_grid.remove_child(child)
 		child.queue_free()
 	_cards.clear()
-	_grid.add_child(_cell_label(""))
-	for era: int in KnowledgeText.ERAS:
-		var head: Label = _cell_label(KnowledgeText.era_column(_locale, era))
-		head.theme_type_variation = &"Heading"
-		_grid.add_child(head)
+	var eras: Array[Dictionary] = KnowledgeText.catalogue(tech, "eras")
+	var lanes: Array[Dictionary] = KnowledgeText.catalogue(tech, "lanes")
+	_grid.columns = 1 + eras.size()
+	_headers.columns = _grid.columns
+	var corner: Label = _cell_label("")
+	corner.custom_minimum_size.x = LANE_WIDTH
+	_headers.add_child(corner)
+	for era: Dictionary in eras:
+		_headers.add_child(_era_header(era))
 	var rows: Array[Dictionary] = KnowledgeText.nodes(tech)
-	for lane: int in KnowledgeText.LANES:
-		var lane_label: Label = _cell_label(KnowledgeText.lane(_locale, lane))
+	for lane: Dictionary in lanes:
+		var lane_order: int = int(lane.get("order", 0))
+		var lane_label: Label = _cell_label(_loc(str(lane.get("name_key", "UI_UNKNOWN"))))
 		lane_label.custom_minimum_size.x = LANE_WIDTH
+		lane_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lane_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		_grid.add_child(lane_label)
-		for era: int in KnowledgeText.ERAS:
-			var cell: HFlowContainer = HFlowContainer.new()
-			cell.name = "Cell_%d_%d" % [lane, era]
-			cell.add_theme_constant_override("h_separation", GAP)
-			cell.add_theme_constant_override("v_separation", GAP)
-			cell.custom_minimum_size.x = CARDS_PER_ROW * CARD_SIZE.x + (CARDS_PER_ROW - 1) * GAP
+		_lane_labels[lane_order] = lane_label
+		_jump.add_item(lane_label.text, lane_order)
+		for era: Dictionary in eras:
+			var era_order: int = int(era.get("order", 0))
+			var cell: PanelContainer = PanelContainer.new()
+			cell.name = "Cell_%d_%d" % [lane_order, era_order]
+			cell.custom_minimum_size = Vector2(CARD_SIZE.x, 188)
+			var boundary: StyleBoxFlat = StyleBoxFlat.new()
+			boundary.bg_color = Color(CARD_BG, 0.3)
+			boundary.border_color = Color(MUTED, 0.15)
+			boundary.set_border_width_all(1)
+			cell.add_theme_stylebox_override("panel", boundary)
 			_grid.add_child(cell)
+			var stack_scroll: ScrollContainer = ScrollContainer.new()
+			stack_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+			cell.add_child(stack_scroll)
+			var stack: VBoxContainer = VBoxContainer.new()
+			stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			stack.add_theme_constant_override("separation", GAP)
+			stack_scroll.add_child(stack)
 			for row: Dictionary in rows:
-				if int(row["lane"]) == lane and int(row["era"]) == era:
-					var card: Button = _card(row, tech)
-					cell.add_child(card)
-					_cards[int(row["id"])] = card
+				if int(row["lane"]) == lane_order and int(row["era"]) == era_order:
+					var node_card: Button = _card(row, tech)
+					node_card.custom_minimum_size.x = CARD_SIZE.x - 16
+					stack.add_child(node_card)
+					_cards[int(row["id"])] = node_card
+	_jump.select(maxi(0, _jump.get_item_index(jump_lane_id)))
 	_edges.clear()
 	var froms: PackedInt64Array = tech.get("prereq_from", PackedInt64Array())
 	var tos: PackedInt64Array = tech.get("prereq_to", PackedInt64Array())
 	for i: int in mini(froms.size(), tos.size()):
 		_edges.append(Vector2i(int(froms[i]), int(tos[i])))
+	_update_chain()
 	_canvas.queue_redraw()
+
+
+## Catalogue thresholds are marked independently; adding an era needs no UI code.
+func _era_header(era: Dictionary) -> VBoxContainer:
+	var column: VBoxContainer = VBoxContainer.new()
+	column.name = "Era_%s" % str(era.get("id", ""))
+	column.custom_minimum_size.x = CARD_SIZE.x
+	column.add_theme_constant_override("separation", GAP)
+	var title: Label = _cell_label(_loc(str(era.get("name_key", "UI_UNKNOWN"))))
+	title.theme_type_variation = &"Heading"
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	column.add_child(title)
+	var progress: int = int(era.get("progress", 0))
+	var value: Label = _cell_label("%d ‰" % progress)
+	value.name = "Progress"
+	value.theme_type_variation = &"SmallNumber"
+	column.add_child(value)
+	var transition: int = int(era.get("transition_permille", 0))
+	var reached: int = int(era.get("era_permille", 0))
+	var bar: ProgressBar = ArtUI.proficiency_bar(progress, reached, int(CARD_SIZE.x))
+	bar.name = "EraGauge"
+	bar.tooltip_text = "%d ‰ / %d ‰" % [transition, reached]
+	bar.mouse_filter = Control.MOUSE_FILTER_PASS
+	var mark: ColorRect = ColorRect.new()
+	mark.name = "TransitionThreshold"
+	mark.color = MUTED
+	mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	mark.anchor_left = float(transition) / 1000.0
+	mark.anchor_right = mark.anchor_left
+	mark.anchor_bottom = 1.0
+	mark.offset_left = -1.0
+	mark.offset_right = 1.0
+	mark.offset_top = -2.0
+	mark.offset_bottom = 2.0
+	bar.add_child(mark)
+	column.add_child(bar)
+	return column
+
+
+func reset_overview() -> void:
+	_map_scroll.scroll_vertical = 0
+	_map_scroll.scroll_horizontal = 0
+	_jump.select(0)
+	for cell: Node in _grid.get_children():
+		if cell is PanelContainer:
+			(cell.get_child(0) as ScrollContainer).scroll_vertical = 0
+
+
+func _jump_lane(index: int) -> void:
+	var lane_id: int = _jump.get_item_id(index)
+	var label: Control = _lane_labels.get(lane_id)
+	if label != null:
+		_map_scroll.ensure_control_visible(label)
 
 
 func _cell_label(text: String) -> Label:
@@ -263,20 +367,31 @@ func _cell_label(text: String) -> Label:
 func _card(row: Dictionary, tech: Dictionary) -> Button:
 	var id: int = int(row["id"])
 	var code: int = int(row["status"])
+	var inert: bool = not bool(row.get("connected", true))
 	var card: Button = Button.new()
 	card.name = "Card_%d" % id
 	card.set_meta("status", code)
+	card.set_meta("inert", inert)
 	card.focus_mode = Control.FOCUS_NONE
 	card.toggle_mode = true
 	card.button_pressed = id == _selected
 	card.custom_minimum_size = CARD_SIZE
-	card.tooltip_text = "%s · %s" % [KnowledgeText.node_name(_locale, id, tech), KnowledgeText.status(_locale, code)]
+	card.tooltip_text = "%s · %s" % [KnowledgeText.node_name(_locale, id, tech),
+		_loc("TECH_STATUS_INERT") if inert else KnowledgeText.status(_locale, code)]
+	if inert:
+		card.tooltip_text += "\n" + str(row.get("debt", ""))
+		var hatch: Control = Control.new()
+		hatch.name = "Hatch"
+		hatch.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		hatch.set_anchors_preset(Control.PRESET_FULL_RECT)
+		hatch.draw.connect(_draw_hatch.bind(hatch))
+		card.add_child(hatch)
 	PanelTooltips.attach(card, "tech")
 	card.pressed.connect(select_node.bind(id))
-	var colour: Color = KnowledgeText.status_color(code)
+	var colour: Color = MUTED if inert else KnowledgeText.status_color(code)
 	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:
 		var box: StyleBoxFlat = StyleBoxFlat.new()
-		box.bg_color = LOST_BG if code == 4 else CARD_BG
+		box.bg_color = LOST_BG if code == 4 or inert else CARD_BG
 		if state == "hover" or state == "hover_pressed":
 			box.bg_color = box.bg_color.lightened(0.08)
 		box.border_color = colour
@@ -299,9 +414,11 @@ func _card(row: Dictionary, tech: Dictionary) -> Button:
 	var name_label: Label = _cell_label(KnowledgeText.node_name(_locale, id, tech))
 	name_label.name = "Name"
 	name_label.add_theme_color_override("font_color", MUTED if code == 0 or code == 4 else TEXT)
-	name_label.clip_text = true
+	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	name_label.custom_minimum_size.y = 48
+	name_label.max_lines_visible = 2
 	lines.add_child(name_label)
-	var sub: String = KnowledgeText.trf(_locale, "M4_TECH_PRACTITIONERS_FMT", {"count": int(row["practitioners"])})
+	var sub: String = _loc("TECH_STATUS_INERT") if inert else KnowledgeText.trf(_locale, "M4_TECH_PRACTITIONERS_FMT", {"count": int(row["practitioners"])})
 	if int(row["marker"]) > 0:
 		sub += "  ◆%d" % int(row["marker"])
 	var clue: bool = NeighbourText.clue_item(_neighbours(), id) >= 0
@@ -328,11 +445,57 @@ func _draw_edges() -> void:
 	for edge: Vector2i in _edges:
 		var a: Button = _cards.get(edge.x, null)
 		var b: Button = _cards.get(edge.y, null)
-		if a == null or b == null or not a.is_visible_in_tree() or not b.is_visible_in_tree():
+		if a == null or b == null or not _card_on_screen(a) or not _card_on_screen(b):
 			continue
 		var from: Vector2 = a.get_global_rect().get_center() - origin
 		var to: Vector2 = b.get_global_rect().get_center() - origin
-		_canvas.draw_line(from, to, EDGE, 2.0)
+		var highlighted: bool = _chain.has(edge.x) and _chain.has(edge.y)
+		if not highlighted:
+			continue
+		_canvas.draw_line(from, to, EUREKA, 3.0)
+
+
+func _card_on_screen(node_card: Button) -> bool:
+	if not node_card.is_visible_in_tree():
+		return false
+	var centre: Vector2 = node_card.get_global_rect().get_center()
+	var ancestor: Node = node_card.get_parent()
+	while ancestor != null:
+		if ancestor is ScrollContainer and not ancestor.get_global_rect().has_point(centre):
+			return false
+		ancestor = ancestor.get_parent()
+	return true
+
+
+## Hatching stays beneath the readable name and status label.
+func _draw_hatch(node_card: Control) -> void:
+	var bounds: Rect2 = Rect2(Vector2(4, 4), node_card.size - Vector2(8, 8))
+	var ink: Color = Color(MUTED, 0.12)
+	var offset: float = -bounds.size.y
+	while offset < bounds.size.x:
+		var from: Vector2 = Vector2(maxf(offset, 0.0), maxf(-offset, 0.0))
+		var to: Vector2 = Vector2(minf(offset + bounds.size.y, bounds.size.x), minf(bounds.size.y, bounds.size.x - offset))
+		node_card.draw_line(bounds.position + from, bounds.position + to, ink, 2.0)
+		offset += 12.0
+
+
+## Walk all ancestors once, preserving data-owned ids and prerequisite links.
+func _update_chain() -> void:
+	_chain.clear()
+	if _selected >= 0:
+		var pending: Array[int] = [_selected]
+		while not pending.is_empty():
+			var node_id: int = pending.pop_back()
+			if _chain.has(node_id):
+				continue
+			_chain[node_id] = true
+			for edge: Vector2i in _edges:
+				if edge.y == node_id:
+					pending.append(edge.x)
+	for card_id: int in _cards:
+		var node_card: Button = _cards[card_id]
+		node_card.modulate = Color(1, 1, 1, 1.0 if _selected < 0 or _chain.has(card_id) else 0.5)
+	_canvas.queue_redraw()
 
 
 ## Show node `id`'s detail (a card's click; also used by tools).
@@ -340,6 +503,7 @@ func select_node(id: int) -> void:
 	_selected = id
 	for card_id: int in _cards.keys():
 		(_cards[card_id] as Button).set_pressed_no_signal(card_id == id)
+	_update_chain()
 	_detail_key = []
 	if visible:
 		_refresh()
@@ -384,11 +548,17 @@ func _fill_detail(tech: Dictionary) -> void:
 	_add_line(KnowledgeText.trf(_locale, "M4_TECH_STATUS_FMT", {"status": KnowledgeText.status(_locale, code),
 		"threshold": threshold_percent, "holders": int(_detail_read.get("holders", 0)),
 		"practitioners": int(_detail_read.get("practitioners", 0))}), KnowledgeText.status_color(code) if code != 4 else MUTED)
-	var lane_era: String = KnowledgeText.trf(_locale, "M4_TECH_LANE_ERA_FMT", {"lane": KnowledgeText.lane(_locale, int(_detail_read.get("lane", 0))),
-		"era": KnowledgeText.era_column(_locale, int(_detail_read.get("era", 0)))})
+	var lane_era: String = KnowledgeText.trf(_locale, "M4_TECH_LANE_ERA_FMT", {"lane": KnowledgeText.lane(_locale, int(_detail_read.get("lane", 0)), tech),
+		"era": KnowledgeText.era_column(_locale, int(_detail_read.get("era", 0)), tech)})
 	if int(_detail_read.get("marker_weight", 0)) > 0:
 		lane_era += " · " + KnowledgeText.trf(_locale, "M4_TECH_MARKER_FMT", {"weight": int(_detail_read.get("marker_weight", 0))})
 	_add_line(lane_era, MUTED)
+	if not bool(_detail_read.get("connected", true)):
+		_add_line(_loc("TECH_STATUS_INERT"), MUTED)
+		_add_line(str(_detail_read.get("debt", "")), MUTED)
+		_conditions()
+		_gates()
+		return
 	_neighbour_info()
 	_holders(tech)
 	_learners()
@@ -428,7 +598,7 @@ func _add_line(text: String, colour: Color) -> Label:
 	var label: Label = Label.new()
 	label.text = text
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.custom_minimum_size.x = DETAIL_WIDTH - 24
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label.add_theme_color_override("font_color", colour)
 	_detail.add_child(label)
 	return label

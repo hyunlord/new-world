@@ -109,11 +109,11 @@ pub fn update(res: &mut SimResources) {
 mod tests;
 
 /// The exact practitioner gate used by field assignment and completion.
-pub fn knowledge_mask(crop: CropKind) -> u32 {
+pub fn knowledge_mask(crop: CropKind) -> u64 {
     installed_or_bundled()
         .crop(crop)
         .and_then(|def| def.knowledge)
-        .map_or(0, |code| 1u32.checked_shl(u32::from(code)).unwrap_or(0))
+        .map_or(0, |code| 1u64.checked_shl(u32::from(code)).unwrap_or(0))
 }
 /// Ownership is the same nearest-home rule used when designating fields.
 pub fn seed_belongs_to(

@@ -34,7 +34,7 @@ fn two_neighbours_on_different_edges_are_drawn_from_the_seed() {
         .nodes
         .iter()
         .filter(|n| n.lane == sim_core::colony::knowledge::Lane::Pottery)
-        .fold(0u32, |m, n| m | knowledge::bit(n.id));
+        .fold(0u64, |m, n| m | knowledge::bit(n.id));
     let rule = NeighbourRule::m5_5().expect("neighbours.ron");
     let neo: Vec<u8> = neighbours::neolithic();
     let mut pottery_worlds = 0;
@@ -164,7 +164,7 @@ fn wave_one_arrives_in_its_window_and_an_accepted_wave_joins_with_its_knowledge(
             let def = d.get(entry.id()).expect("node");
             match def.era {
                 Era::Paleolithic => assert!((450..=700).contains(&entry.proficiency)),
-                Era::Neolithic => {
+                _ => {
                     assert!((420..=650).contains(&entry.proficiency));
                     practitioners += usize::from(entry.proficiency >= def.threshold);
                 }

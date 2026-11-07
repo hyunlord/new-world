@@ -104,7 +104,8 @@ pub fn finish(world: &mut World, res: &mut SimResources, entity: Entity) {
         release_all(res, id);
         res.cultivation.craft_origins.remove(&id);
     }
-    if world.remove_one::<Job>(entity).is_ok() {
+    if let Ok(job) = world.remove_one::<Job>(entity) {
+        record_completion(world, entity, job.kind);
         res.colony.tallies.jobs_done += 1;
     }
     if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
@@ -121,9 +122,19 @@ pub fn finish_in_place(world: &mut World, res: &mut SimResources, entity: Entity
         release_all(res, id);
         res.cultivation.craft_origins.remove(&id);
     }
-    if world.remove_one::<Job>(entity).is_ok() {
+    if let Ok(job) = world.remove_one::<Job>(entity) {
+        record_completion(world, entity, job.kind);
         res.colony.tallies.jobs_done += 1;
     }
+}
+
+fn record_completion(world: &mut World, entity: Entity, kind: JobKind) {
+    let mut skills = world
+        .get::<&sim_core::colony::Skills>(entity)
+        .map(|s| *s)
+        .unwrap_or_default();
+    skills.complete(kind);
+    let _ = world.insert_one(entity, skills);
 }
 
 /// The despawn path (7.5, "the agent died"): drop the load and the tool

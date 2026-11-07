@@ -229,6 +229,42 @@ pub enum JobKind {
 }
 
 impl JobKind {
+    /// Stable job names indexed by [`Self::code`]; index zero means no job.
+    pub const NAMES: [&'static str; 23] = [
+        "none",
+        "chop",
+        "haul",
+        "deliver",
+        "build",
+        "quarry",
+        "supply",
+        "craft",
+        "gather",
+        "dig",
+        "deconstruct",
+        "clear",
+        "dig_clay",
+        "teach",
+        "learn",
+        "hunt",
+        "equip",
+        "trade",
+        "harvest",
+        "till_field",
+        "sow_field",
+        "tend_field",
+        "harvest_field",
+    ];
+
+    /// Resolve a named completed-job condition to the existing stable job code.
+    pub fn code_for_name(name: &str) -> Option<u8> {
+        Self::NAMES
+            .iter()
+            .position(|n| *n == name)
+            .filter(|i| *i > 0)
+            .and_then(|i| u8::try_from(i).ok())
+    }
+
     /// Stable code for the bridge's job column (0 is "no job").
     pub const fn code(self) -> u8 {
         match self {

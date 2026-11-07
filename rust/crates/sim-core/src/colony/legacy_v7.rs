@@ -1,9 +1,16 @@
-//! Frozen pre-format9 colony wire layout; only nested storyteller is widened.
+//! Frozen colony field order through format17, with versioned nested physical leaves.
 use super::*;
 
 /// Historical colony state with byte-sized touched pressure codes.
 #[derive(serde::Serialize, serde::Deserialize)]
-pub struct LegacyColonyState<S = story::legacy_v7::LegacyStoryteller> {
+#[serde(bound(
+    deserialize = "S: serde::Deserialize<'de> + Default, I: serde::Deserialize<'de>, W: serde::Deserialize<'de>"
+))]
+pub struct LegacyColonyState<
+    S = story::legacy_v7::LegacyStoryteller,
+    I = legacy_items_v16::ItemStackV16,
+    W = legacy_items_v16::WorkshopV16,
+> {
     /// Standing trees by tile.
     pub trees: BTreeMap<(u32, u32), Tree>,
     /// Resource nodes (boulders, flint outcrops) by tile (M2).
@@ -14,7 +21,7 @@ pub struct LegacyColonyState<S = story::legacy_v7::LegacyStoryteller> {
     pub materials: ColonyMaterials,
     /// Finished workshops by id (M2).
     #[serde(default)]
-    pub workshops: BTreeMap<WorkshopId, legacy_items_v16::WorkshopV16>,
+    pub workshops: BTreeMap<WorkshopId, W>,
     /// Next workshop id (from 1).
     #[serde(default)]
     pub next_workshop_id: WorkshopId,
@@ -63,7 +70,7 @@ pub struct LegacyColonyState<S = story::legacy_v7::LegacyStoryteller> {
     /// Bumped whenever a tree is added or removed (renderers rebuild on change).
     pub trees_version: u64,
     /// Ground stacks, one per tile.
-    pub ground_items: BTreeMap<(u32, u32), legacy_items_v16::ItemStackV16>,
+    pub ground_items: BTreeMap<(u32, u32), I>,
     /// Zones by id.
     pub zones: BTreeMap<ZoneId, Zone>,
     /// The zone each zoned tile belongs to.
@@ -86,7 +93,7 @@ pub struct LegacyColonyState<S = story::legacy_v7::LegacyStoryteller> {
     pub tallies: ColonyTallies,
     /// M4 (ADR 0026): the settlement's technology (`TechAggregateSystem`).
     #[serde(default)]
-    pub tech: knowledge::TechAggregate,
+    pub tech: LegacyTechAggregate,
     /// M4 (goal 3.3): open apprenticeship orders in id order.
     #[serde(default)]
     pub teach_orders: Vec<knowledge::TeachOrder>,
@@ -123,8 +130,13 @@ pub struct LegacyColonyState<S = story::legacy_v7::LegacyStoryteller> {
     /// fingerprint or summary includes it.
     pub release_counts: BTreeMap<JobReleaseKey, u64>,
 }
-impl<S: Into<story::Storyteller>> From<LegacyColonyState<S>> for ColonyState {
-    fn from(old: LegacyColonyState<S>) -> Self {
+impl<S, I, W> From<LegacyColonyState<S, I, W>> for ColonyState
+where
+    S: Into<story::Storyteller>,
+    I: Into<ItemStack>,
+    W: Into<Workshop>,
+{
+    fn from(old: LegacyColonyState<S, I, W>) -> Self {
         Self {
             trees: old.trees,
             nodes: old.nodes,
@@ -163,7 +175,7 @@ impl<S: Into<story::Storyteller>> From<LegacyColonyState<S>> for ColonyState {
             item_ledger: old.item_ledger,
             overlay_version: old.overlay_version,
             tallies: old.tallies,
-            tech: old.tech,
+            tech: old.tech.into(),
             teach_orders: old.teach_orders,
             next_teach_id: old.next_teach_id,
             story: old.story.into(),
@@ -182,7 +194,14 @@ impl<S: Into<story::Storyteller>> From<LegacyColonyState<S>> for ColonyState {
 /// Published formats9–16 use the widened storyteller and the old physical leaves.
 pub type LegacyColonyStateV16 = LegacyColonyState<story::Storyteller>;
 
-impl TryFrom<ColonyState> for LegacyColonyStateV16 {
+/// Format17 retained the same colony field order with physical garment wear.
+pub type LegacyColonyStateV17 = LegacyColonyState<story::Storyteller, ItemStack, Workshop>;
+
+impl<I, W> TryFrom<ColonyState> for LegacyColonyState<story::Storyteller, I, W>
+where
+    I: TryFrom<ItemStack>,
+    W: TryFrom<Workshop>,
+{
     type Error = &'static str;
     fn try_from(old: ColonyState) -> Result<Self, Self::Error> {
         Ok(Self {
@@ -192,7 +211,12 @@ impl TryFrom<ColonyState> for LegacyColonyStateV16 {
             workshops: old
                 .workshops
                 .into_iter()
-                .map(|(key, value)| value.try_into().map(|value| (key, value)))
+                .map(|(key, value)| {
+                    value
+                        .try_into()
+                        .map(|value| (key, value))
+                        .map_err(|_| "physical item cannot be represented by legacy save")
+                })
                 .collect::<Result<_, _>>()?,
             next_workshop_id: old.next_workshop_id,
             next_bill_id: old.next_bill_id,
@@ -211,7 +235,12 @@ impl TryFrom<ColonyState> for LegacyColonyStateV16 {
             ground_items: old
                 .ground_items
                 .into_iter()
-                .map(|(key, value)| value.try_into().map(|value| (key, value)))
+                .map(|(key, value)| {
+                    value
+                        .try_into()
+                        .map(|value| (key, value))
+                        .map_err(|_| "physical item cannot be represented by legacy save")
+                })
                 .collect::<Result<_, _>>()?,
             zones: old.zones,
             zone_of_tile: old.zone_of_tile,
@@ -223,7 +252,7 @@ impl TryFrom<ColonyState> for LegacyColonyStateV16 {
             item_ledger: old.item_ledger,
             overlay_version: old.overlay_version,
             tallies: old.tallies,
-            tech: old.tech,
+            tech: old.tech.into(),
             teach_orders: old.teach_orders,
             next_teach_id: old.next_teach_id,
             story: old.story,
@@ -236,5 +265,40 @@ impl TryFrom<ColonyState> for LegacyColonyStateV16 {
             neighbours: old.neighbours,
             release_counts: old.release_counts,
         })
+    }
+}
+
+/// Exact technology aggregate through format17, before era vectors.
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+pub struct LegacyTechAggregate {
+    /// Node aggregates in historical id order.
+    pub states: Vec<knowledge::TechState>,
+    /// Historical combined progress.
+    pub progress_permille: u16,
+    /// Adult census.
+    pub adults: u16,
+    /// Renderer revision.
+    pub version: u64,
+}
+impl From<LegacyTechAggregate> for knowledge::TechAggregate {
+    fn from(old: LegacyTechAggregate) -> Self {
+        Self {
+            states: old.states,
+            progress_permille: old.progress_permille,
+            adults: old.adults,
+            version: old.version,
+            era_progress: Vec::new(),
+            current_era: (0, 0),
+        }
+    }
+}
+impl From<knowledge::TechAggregate> for LegacyTechAggregate {
+    fn from(current: knowledge::TechAggregate) -> Self {
+        Self {
+            states: current.states,
+            progress_permille: current.progress_permille,
+            adults: current.adults,
+            version: current.version,
+        }
     }
 }

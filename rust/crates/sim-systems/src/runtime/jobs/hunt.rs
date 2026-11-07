@@ -63,7 +63,7 @@ fn put_job(world: &mut World, entity: Entity, job: Job) {
 /// `(animal, its tile)`.
 pub fn pick(
     res: &SimResources,
-    practice: u32,
+    practice: u64,
     region: u32,
     pos: (u32, u32),
     radius: u32,
