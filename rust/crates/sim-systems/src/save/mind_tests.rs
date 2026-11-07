@@ -400,7 +400,13 @@ fn switch_v11_bytes(engine: &mut SimEngine) -> Vec<u8> {
             .system_states()
             .unwrap()
             .into_iter()
-            .filter(|entry| entry.0 != "FoodDailySystem")
+            // Neither known additive slot existed in the v11 registration contract.
+            .filter(|entry| {
+                !matches!(
+                    entry.0.as_str(),
+                    "FoodDailySystem" | "BuildingTemplateSystem"
+                )
+            })
             .collect(),
         steward: Default::default(),
         content_state: Default::default(),
@@ -458,7 +464,31 @@ fn switch_v11_colony_migrates_only_the_legacy_decision_slot() {
     }
     let tick = engine.current_tick();
     let bytes = switch_v11_bytes(&mut engine);
+    let envelope: Envelope = decode(read_header(&bytes).unwrap()).unwrap();
+    let old: LegacyBodyV11 = decode(&envelope.payload).unwrap();
+    assert!(!old.systems.iter().any(|(name, _)| {
+        matches!(name.as_str(), "FoodDailySystem" | "BuildingTemplateSystem")
+    }));
+    let retained: Vec<_> = old
+        .systems
+        .into_iter()
+        .map(|(name, state)| {
+            let name = if name == "AgentDecisionSystem" {
+                "ColonyMindSystem".to_owned()
+            } else {
+                name
+            };
+            (name, state)
+        })
+        .collect();
     let mut loaded = load(&bytes).unwrap();
+    let restored: Vec<_> = loaded
+        .system_states()
+        .unwrap()
+        .into_iter()
+        .filter(|(name, _)| !matches!(name.as_str(), "FoodDailySystem" | "BuildingTemplateSystem"))
+        .collect();
+    assert_eq!(restored, retained, "all original slot bytes stay exact");
     assert_eq!(loaded.current_tick(), tick);
     assert!(loaded.system_names().contains(&"ColonyMindSystem"));
     assert!(!loaded.system_names().contains(&"AgentDecisionSystem"));

@@ -24,6 +24,21 @@ pub(super) fn covered(res: &SimResources) -> u32 {
     room_beds.saturating_add(huts.saturating_mul(res.rules.colony.map_or(0, |rule| rule.hut_beds)))
 }
 
+/// Keep the complete declared envelope reserved while physical layers activate in sequence.
+pub(super) fn pending_tiles(res: &SimResources) -> BTreeSet<Tile> {
+    res.colony
+        .buildings
+        .sites
+        .values()
+        .filter(|site| site.status == sim_core::colony::building_site::BuildingStatus::Building)
+        .flat_map(|site| {
+            (site.anchor.1..site.anchor.1 + site.footprint.1).flat_map(move |y| {
+                (site.anchor.0..site.anchor.0 + site.footprint.0).map(move |x| (x, y))
+            })
+        })
+        .collect()
+}
+
 pub(super) fn pending(res: &SimResources) -> bool {
     res.colony
         .buildings

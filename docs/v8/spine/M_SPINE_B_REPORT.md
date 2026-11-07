@@ -69,14 +69,37 @@ RELEASE interleave 증거와 원본을 유지한다. [a 보고서](M_SPINE_A_REP
 
 **b main 미게시.** 검토용 HEAD `0f5b8f501a831434b2f272bc314796467044a9d4`
 (`0f5b8f501`)를2026-11-08 01:44KST에 review로 게시했다. 이는 b의
-v8/wip→v8/main 게시가 아니다. 전체 게이트 NOT_RUN, b 면제 적용 결과 없음.
+v8/wip→v8/main 게시가 아니다. 이후 동결 `b50c6bef2eb23d2597c1a7c1cd36881a0e55e99f`의
+네이티브1897검사 PASS는 아래 runtime 수정 전 **조상 소스 증거**다. b 면제 적용 결과는 없다.
+
+B1 전체 게이트(`fullgate-b-attempt1`)는 초기3단계(fmt/bridge build/import) PASS 뒤
+DEBUG에서 실제 이름이 기록된19개 FAIL을 확인해 **ABORTED**했다. root 소유
+5개 프로세스를 종료했고 실제 exit-15 완료 영수증과
+`ABORTED_DEBUG_FAILURE.json`, `test_debug.log`, `gate.txt`를 보존한다.
+전체 단계 완료나49PASS가 아니며 crash detector red도 아니다. Inert 전환은0회다.
+
+후속 수정은 Rust7파일에 한정했다. m6a apple/hut fixture는 선언 비용 합을
+사용하도록 고쳐 해당 시험8PASS를 확인했다. synthetic v11은 당시 없던
+BuildingTemplateSystem을 제외하고 허용된 결정 시스템 이름 변환 외 slot bytes를
+정확히 유지한다. steward17실패는 동결 legacy geometry 검증과 새 authored
+selector/실제 BuildTemplate 검증을 분리했다. production에서는 Pending site의
+**전체 발자국 예약**이 일반 CancelArea까지 유지되도록 실제 결함을 수정했다.
+`b-debug-steward-review.md`, `b-debug-fix-review.md`의 독립 정적 검토에서
+정확한 목재 target 약화 P2는 RESOLVED다. 집중5차는50PASS/0FAIL·7.05초이며,
+중간 집중4차의 잘못된 기대49PASS/1FAIL도 원본에 남긴다.
+
+현재 수정 소스의 안정 검사(`b-debug-stable-checks.json`)는 systems-lib
+**774PASS/0FAIL/2ignored·17.97초**, clippy **PASS·12.85초**, fmt **PASS**다.
+이는 전체 gate를 대체하지 않는다. 새 runtime의 사슬9는 `scene/chain-attempt9`에서
+**PASS·exit0·234.52초**이며, 새 최종 소스의 native/전체 gate/crash/paired 성능/FF는
+**PENDING**이다. 아래 초기·네이티브·이전 저장 성공을 이 수정 소스에 소급하지 않는다.
+
 초기 개발 스냅샷 core529 PASS, 집중 runtime14 PASS, Rust 데이터 전용 확장
 PASS는 최종 SHA 전체 통과를 뜻하지 않는다. 실제 import에서 발견한 rotation
 이름 충돌을 수정한 후 기존 strict 검사89파일·79FFI 호출 PASS를 확인했다.
 `b-native-qa-r4/native-qa-summary.json` 기준 네이티브 사슬 두 경우와
 선택 팩 검사는 통과했고, r5 gallery는109검사·0FAIL 및 독립 시각 확인을
-통과했다. r4 gallery3FAIL/미수용은 아래에 보존한다. 이 결과도 미커밋 개발
-소스의 예비 결과이며 최종 head/full gate PASS가 아니다.
+통과했다. r4 gallery3FAIL/미수용은 아래에 보존한다. 이 결과도 runtime 수정 전 조상 스냅샷의 예비 결과이며 최종 head/full gate PASS가 아니다.
 
 clippy r2는 test initializer만 수정한 뒤13.60초 PASS(`b-final-clippy-r2.log`).
 독립 `b-final-added-lines-audit.{json,md}`는 추가 production panic 계열 호출0을
@@ -100,7 +123,8 @@ strict-first-receipt.json}`. API/schema 정적 문서는 별도 검사이며 실
   이어하기·byte-identical twin·roundtrip PASS를 확인했다. 원본은
   `b-final-predecessor-save-receipt.json`, `b-final-save17.log`, `b-final-save18.log`이며
   fingerprint는 앞선 값과 동일하다. 아직 커밋 전 source hash에 결합된 결과로,
-  최종 게시 SHA의 gate 증거로 소급하지 않는다.
+  최종 게시 SHA의 gate 증거로 소급하지 않는다. 이후 전체 발자국 예약 runtime
+  수정 전 증거이므로 새 소스의 저장 검증도 별도로 필요하다.
 - 선택 팩의 실제 일반 BuildTemplate·Inert 거절·debt·저장 읽기는
   `b-extension-rust-first.log`의 Rust 시험 PASS. 네이티브 선택 팩 검사는
   아래 r4에서84검사·0FAIL을 확인했으며 별도 시각 제한은 함께 기록한다.
@@ -130,6 +154,9 @@ strict-first-receipt.json}`. API/schema 정적 문서는 별도 검사이며 실
   앞선 시도들의 유효00..04 증거를 유지한다. 이 결과는 **현재 WIP와 미커밋
   fixture 소스의 예비 성공**이며 review HEAD 또는 최종 head 전체 증거가 아니다.
   저장 단계의 성공을 네이티브 PNG/시각 수용으로 표시하지 않는다.
+- 새 예약 runtime의 `scene/chain-attempt9`는 실제 PASS·exit0·234.52초다.
+  attempt8 및 아래 네이티브1897검사 성공은 조상 소스 증거로 보존하고
+  새 최종 소스의 전체 게이트 성공으로 표시하지 않는다.
 - 일시정지 명령 경계의 원인 조회 결함 수정 후 회귀2개 PASS:
   `scene/chain-attempt5/{bridge-tests.log,bridge-tests-receipt.json}`.
   과거 완료는 실제 실행 완료 증거를 요구하고, 현재 일시정지 명령은 실제
@@ -175,7 +202,8 @@ strict-first-receipt.json}`. API/schema 정적 문서는 별도 검사이며 실
 **b NOT_RUN.** BASE/후보 생존 배열, KnowledgeLost 배열, 새 전멸 여부 및
 Inert로 되돌린 항목은 아직 없다. a의 seeds0–7×48일 PASS를 b 결과로 옮기지
 않는다. b 실제 검증 후 원본 경로와 비교를 채우며, red이면 문제 항목을
-한 번 Inert 처리하는 brief 규칙을 따른다. 수리 반복·held-out·보정·수치 튜닝은 없다.
+한 번 Inert 처리하는 brief 규칙을 따른다. B1 DEBUG 중단은 crash red가 아니며
+Inert 전환0회다. 수리 반복·held-out·보정·수치 튜닝은 없다.
 
 ### CONTENT_DEBT 항목 수
 
@@ -196,7 +224,8 @@ storehouse/workshop 건설과 별개다. 기존 M6b 수동 debt는 유지한다.
 **3000/3000줄·여유0줄(정확히 상한)**이다. chain275/stages243/support182와
 native driver501, 기존 gallery positive additions142줄을 포함한다. 이전
 2984/2995 및 gallery 수정 전2985/2996은 역사적 관측이며 현재 수치가 아니다.
-추가 변경 시 재집계해야 한다. 외부 준비 코드도 면제 없이 포함했다.
+추가 변경 시 재집계해야 한다. B1 후속7개 Rust 수정은 unit/production 소스이며
+새 도구가 아니므로 위 strict3000 집계는 동일하다. 외부 준비 코드도 면제 없이 포함했다.
 
 - 공유 debt renderer87+실행기24: 기존 authored debt의 문서 불일치를 검출/
   재생성하는 경로. a의 실제 불일치 검증과 같은 기존 도구를 확장했다.
@@ -226,10 +255,12 @@ native driver501, 기존 gallery positive additions142줄을 포함한다. 이�
 - 사슬 attempt8은 개발 스냅샷에서 PASS했지만 시도1..7의 실패/진단 중단은
   유지한다. 미커밋 fixture를 포함하므로 최종 head 증거로 소급하지 않는다.
   r4 사슬/선택 팩 및 r5 gallery 검사·독립 시각 수용과 r4 gallery3FAIL/
-  당시 시각 미수용을 구분한다. clippy r2 PASS도 현재 개발 소스 결과다.
-  이전17/18 저장 최종 재검사는 통과했지만 b의 나머지 최종 동일성·결정론·
-  전체 저장/tests·크래시·paired 성능·전체 게이트·
-  FF 게시 **NOT_RUN/미완료**다.
+  당시 시각 미수용을 구분한다. 이 네이티브1897검사와 clippy r2/이전 저장 성공은
+  예약 runtime 수정 전 조상 증거다. B1 전체 게이트는 실제 DEBUG19FAIL 뒤
+  ABORTED이며 완료가 아니다. focused4의49PASS/1FAIL도 보존한다. 수정 후
+  systems-lib774PASS/집중50PASS/clippy/fmt PASS와 별도로 사슬9도 PASS·exit0·234.52초다.
+  새 최종 소스의 동일성·결정론·전체 저장/tests·네이티브·크래시·paired 성능·
+  전체 게이트·FF 게시는 **PENDING/미완료**다.
   초기 focused/core/이전 저장/사슬 성공은 최종 통합 head 검증을 대신하지 않는다.
 - connected 업그레이드는 log4×4→stone4×4만이다. hut3×3을4×4로 확장하지
   않으며 해당 upgrade edge는 없다. workshop/drying4×4는 기존2×1 station과
@@ -251,3 +282,8 @@ native driver501, 기존 gallery positive additions142줄을 포함한다. 이�
 - 최종 b SHA/49단계 결과·크래시 배열·성능·최종 head에 결합한 PNG/시각
   근거·게시 영수증은 검증 뒤 채운다. 현재 예비 통과나 정확한 도구 상한이
   모든 제약 충족을 뜻하지 않는다. 현 문서는 WIP이며 게시 완료 보고로 사용하지 않는다.
+
+사슬9 재실행은 실제 exit0·1PASS·234.52초이며 00=269, 01=409,
+02=494, 05끈=9125, 03구역=14864, 업그레이드 준비=23552, 04=30502다.
+실행 전후 production/fixture 해시 일치, 7개 저장의 사슬8 대비 바이트 비교는
+`scene/chain8-9-state-comparison.json`에 보존했다. 최종 고정 SHA 게이트는 대기다.

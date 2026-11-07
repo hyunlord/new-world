@@ -222,6 +222,19 @@ fn perishable_construction_needs_fail_explicitly_without_blocking_material_exten
         "{}food: None,\n)])",
         APPLE_ITEM.split("food: Some").next().expect("fixture")
     );
+    // The template's informative sum must follow its deliberately changed hut piece.
+    let mut sources = sources;
+    let buildings = sources
+        .sources
+        .iter_mut()
+        .find(|source| source.name == "buildings.ron")
+        .expect("building templates");
+    let text = String::from_utf8(buildings.bytes.clone()).expect("template utf8");
+    let original = "materials: {\"log\": 12}";
+    assert!(text.contains(original), "hut material fixture must match");
+    buildings.bytes = text
+        .replacen(original, "materials: {\"apple\": 12}", 1)
+        .into_bytes();
     let c = Catalog::from_sources(sources, Some(extension(&material))).expect("nonfood extension");
     assert_eq!(c.blueprints().count(), catalog().blueprints().count());
     assert_eq!(

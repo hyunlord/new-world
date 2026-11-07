@@ -1,6 +1,17 @@
 //! Frozen pre-optimization housing oracle and exact preparation equivalence checks.
 use super::*;
 
+// Keep the frozen variable-envelope optimization oracle independent of template ranking.
+fn legacy_house(
+    world: &World,
+    res: &SimResources,
+    hearth: Tile,
+    action: &Action,
+    reserve: bool,
+) -> HousePlan {
+    house_geometry(world, res, hearth, action, reserve, None)
+}
+
 fn reference_house(
     world: &World,
     res: &SimResources,
@@ -639,7 +650,7 @@ fn optimized_house_commands_and_reservations_match_frozen_reference() {
             for reserve_only in [false, true] {
                 let old =
                     reference_house(&e.world, &e.resources, hearth, &rule.action, reserve_only);
-                let new = house(&e.world, &e.resources, hearth, &rule.action, reserve_only);
+                let new = legacy_house(&e.world, &e.resources, hearth, &rule.action, reserve_only);
                 assert_eq!(
                     new.commands, old.commands,
                     "commands seed={seed} phase={phase} reserve={reserve_only}"
@@ -893,7 +904,7 @@ fn house_order_preserves_occupied_reservations_and_independent_nav_stats() {
                 *e.resources.nav.stats.borrow_mut() = sim_core::nav::NavStats::default();
                 let before = *e.resources.nav.stats.borrow();
                 let result = if optimized {
-                    house(&e.world, &e.resources, hearth, action, reserve_only)
+                    legacy_house(&e.world, &e.resources, hearth, action, reserve_only)
                 } else {
                     reference_house(&e.world, &e.resources, hearth, action, reserve_only)
                 };
@@ -940,7 +951,8 @@ fn capped_wood_counts_logs_in_transit_and_on_shelves_once() {
             !plan(&e.world, &e.resources, wood).is_empty(),
             "shortage must still request wood"
         );
-        let (target, _, _, _, _) = wood_budget_observation(&e.world, &e.resources).expect("target");
+        let (target, building, pending, margin, fuel) =
+            wood_budget_observation(&e.world, &e.resources).expect("target");
         let count = u16::try_from(target).expect("small fixture");
         let spec = ItemSpec::raw(log, None);
         match owner {
@@ -996,11 +1008,36 @@ fn capped_wood_counts_logs_in_transit_and_on_shelves_once() {
                 );
             }
         }
+        let catalog = sim_core::colony::content::installed_or_bundled();
+        // Only unreserved ground stock admits a new template. Cargo and shelves
+        // still count toward the acquisition cap but cannot fund a fresh house.
+        let authored_logs = if owner == 0 {
+            catalog
+                .building_templates()
+                .get("log_house")
+                .expect("authored log house")
+                .materials
+                .iter()
+                .filter(|(name, _)| {
+                    catalog
+                        .item_by_name(name)
+                        .is_some_and(|kind| items.contains(&kind))
+                })
+                .map(|(_, count)| *count)
+                .sum()
+        } else {
+            pending
+        };
         assert_eq!(
-            wood_budget_observation(&e.world, &e.resources)
-                .expect("target")
-                .0,
-            target
+            wood_budget_observation(&e.world, &e.resources),
+            Some((
+                building.max(authored_logs) + margin + fuel,
+                building,
+                authored_logs,
+                margin,
+                fuel,
+            )),
+            "owner={owner}: exact funded authored demand retains building, margin and fuel"
         );
         assert!(
             plan(&e.world, &e.resources, wood).is_empty(),
@@ -1131,7 +1168,7 @@ fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
         ),
         "old candidate should clear {tree_tile:?}"
     );
-    let selected = house(&e.world, &e.resources, hearth, &home.action, false);
+    let selected = legacy_house(&e.world, &e.resources, hearth, &home.action, false);
     assert!(
         !selected.commands.is_empty(),
         "tree-free candidate remains available"
@@ -1145,13 +1182,13 @@ fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
         selected.commands
     );
     assert!(!selected.covered.contains(&tree_tile));
-    let preview = house(&e.world, &e.resources, hearth, &home.action, true);
+    let preview = legacy_house(&e.world, &e.resources, hearth, &home.action, true);
     assert_eq!(preview.reserved, selected.reserved);
     assert_eq!(preview.covered, selected.covered);
     // The cap boundary is independent of the intentional commute ranking change.
     let original_tree_tile = tree_tile;
     e.resources.colony.trees.remove(&tree_tile);
-    let clean = house(&e.world, &e.resources, hearth, &home.action, false);
+    let clean = legacy_house(&e.world, &e.resources, hearth, &home.action, false);
     let tree_tile = clean
         .commands
         .iter()
@@ -1208,7 +1245,7 @@ fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
         after_fuel, fuel,
         "stock change must not change executable fuel inputs"
     );
-    let exact = house(&e.world, &e.resources, hearth, &home.action, false);
+    let exact = legacy_house(&e.world, &e.resources, hearth, &home.action, false);
     assert!(exact
         .commands
         .iter()
@@ -1219,7 +1256,7 @@ fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
         .get_mut(&tree_tile)
         .expect("tree")
         .logs = 4;
-    let excess = house(&e.world, &e.resources, hearth, &home.action, false);
+    let excess = legacy_house(&e.world, &e.resources, hearth, &home.action, false);
     assert!(
         !excess.covered.contains(&tree_tile),
         "one log beyond headroom must choose another site"
@@ -1234,7 +1271,7 @@ fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
         .colony
         .designations
         .insert(tree_tile, sim_core::colony::Designation::Chop);
-    let waiting = house(&e.world, &e.resources, hearth, &home.action, false);
+    let waiting = legacy_house(&e.world, &e.resources, hearth, &home.action, false);
     assert_eq!(
         waiting.reserved, clean.reserved,
         "already accepted clearance adds no yield twice"
@@ -1243,7 +1280,7 @@ fn capped_house_skips_new_clearing_when_valid_tree_free_site_exists() {
     e.resources.colony.designations.remove(&tree_tile);
     e.resources.steward.enabled = false;
     assert_eq!(
-        house(&e.world, &e.resources, hearth, &home.action, false).reserved,
+        legacy_house(&e.world, &e.resources, hearth, &home.action, false).reserved,
         uncapped.reserved,
         "inactive cap preserves original candidate choice"
     );
@@ -1272,7 +1309,27 @@ fn capped_seed5_house_preserves_post_shell_access() {
         assert!(crate::commands::submit(&mut e, command).accepted);
     }
     let hearth = hearth_tiles(&e.resources)[0];
-    e.tick();
+    let data = sim_core::colony::steward::rules().expect("rules");
+    for rule in data
+        .rules
+        .iter()
+        .filter(|rule| matches!(rule.action, Action::Stockpile { .. } | Action::Wood { .. }))
+    {
+        for command in plan(&e.world, &e.resources, rule) {
+            assert!(
+                crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted
+            );
+        }
+    }
+    let home = data
+        .rules
+        .iter()
+        .find(|rule| matches!(rule.action, Action::House { .. }))
+        .expect("home");
+    for command in legacy_house(&e.world, &e.resources, hearth, &home.action, false).commands {
+        assert!(crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted);
+    }
+    crate::runtime::nav::ensure(&mut e.resources);
     let sites = crate::runtime::jobs::items::colony_sites(&e.world);
     let data = sim_core::colony::steward::rules().expect("rules");
     let (bed, door) = data
@@ -1315,7 +1372,27 @@ fn capped_seed5_house_avoids_long_camp_detour() {
         .accepted
     );
     let hearth = hearth_tiles(&e.resources)[0];
-    e.tick();
+    let data = sim_core::colony::steward::rules().expect("rules");
+    for rule in data
+        .rules
+        .iter()
+        .filter(|rule| matches!(rule.action, Action::Stockpile { .. } | Action::Wood { .. }))
+    {
+        for command in plan(&e.world, &e.resources, rule) {
+            assert!(
+                crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted
+            );
+        }
+    }
+    let home = data
+        .rules
+        .iter()
+        .find(|rule| matches!(rule.action, Action::House { .. }))
+        .expect("home");
+    for command in legacy_house(&e.world, &e.resources, hearth, &home.action, false).commands {
+        assert!(crate::commands::apply_command(&mut e.world, &mut e.resources, command).accepted);
+    }
+    crate::runtime::nav::ensure(&mut e.resources);
     let bed = sim_core::colony::steward::rules()
         .expect("rules")
         .rules
@@ -1385,8 +1462,8 @@ fn capped_house_commute_choice_keeps_occupied_reservations() {
         .action;
     let hearth = hearth_tiles(&e.resources)[0];
     let before = *e.resources.nav.stats.borrow();
-    let ready = house(&e.world, &e.resources, hearth, action, false);
-    let repeat = house(&e.world, &e.resources, hearth, action, false);
+    let ready = legacy_house(&e.world, &e.resources, hearth, action, false);
+    let repeat = legacy_house(&e.world, &e.resources, hearth, action, false);
     assert_eq!(ready.commands, repeat.commands);
     assert_eq!(ready.reserved, repeat.reserved);
     let wall = ready
@@ -1402,7 +1479,7 @@ fn capped_house_commute_choice_keeps_occupied_reservations() {
         position.y = wall.1;
     }
     for reserve_only in [false, true] {
-        let blocked = house(&e.world, &e.resources, hearth, action, reserve_only);
+        let blocked = legacy_house(&e.world, &e.resources, hearth, action, reserve_only);
         assert!(blocked.commands.is_empty());
         assert_eq!(blocked.reserved, ready.reserved);
         assert_eq!(blocked.covered, ready.covered);

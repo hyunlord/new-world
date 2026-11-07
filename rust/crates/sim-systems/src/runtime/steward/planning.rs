@@ -32,7 +32,9 @@ pub(super) fn reserved_house_tiles(
     res: &SimResources,
     hearth: Tile,
 ) -> BTreeSet<Tile> {
-    future_house(world, res, hearth).reserved
+    let mut tiles = future_house(world, res, hearth).reserved;
+    tiles.extend(template_housing::pending_tiles(res));
+    tiles
 }
 
 /// Future roof and boundary excluded from fields; workshop reservations remain separate.
@@ -41,7 +43,9 @@ pub(super) fn reserved_field_house_tiles(
     res: &SimResources,
     hearth: Tile,
 ) -> BTreeSet<Tile> {
-    future_house(world, res, hearth).covered
+    let mut tiles = future_house(world, res, hearth).covered;
+    tiles.extend(template_housing::pending_tiles(res));
+    tiles
 }
 
 fn future_house(world: &World, res: &SimResources, hearth: Tile) -> HousePlan {
@@ -1893,6 +1897,15 @@ mod rule_coverage {
                     .insert_one(entity, all.clone())
                     .expect("knowledge");
             }
+            if matches!(
+                rule.action,
+                Action::House {
+                    completion_role: Some(sim_core::rooms::RoomRole::Bedroom),
+                    ..
+                }
+            ) {
+                fund_template_fixture(&mut engine);
+            }
             match &rule.action {
                 Action::Defence { .. } => continue,
                 Action::Hunt { animal, .. } => {
@@ -2041,6 +2054,24 @@ mod rule_coverage {
 #[cfg(test)]
 mod shared_home_tests {
     use super::*;
+    // These regressions pin the retained variable-envelope geometry, not template choice.
+    fn house(
+        world: &World,
+        res: &SimResources,
+        hearth: Tile,
+        action: &Action,
+        reserve: bool,
+    ) -> HousePlan {
+        house_geometry(world, res, hearth, action, reserve, None)
+    }
+    fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
+        if matches!(rule.action, Action::House { .. }) {
+            house(world, res, hearth_tiles(res)[0], &rule.action, false).commands
+        } else {
+            super::plan(world, res, rule)
+        }
+    }
+
     #[test]
     fn compact_shared_geometry_waits_for_people_then_issues_ordinary_orders() {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
@@ -2488,3 +2519,60 @@ impl Drop for BillsProfile {
 #[cfg(test)]
 #[path = "fuel_bill_tests.rs"]
 mod fuel_bill_tests;
+
+#[cfg(test)]
+fn fund_template_fixture(engine: &mut sim_engine::SimEngine) {
+    let people: Vec<_> = engine
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(entity, _)| entity)
+        .collect();
+    for entity in people {
+        let mut known = Knowledge::default();
+        for node in &knowledge::defs().nodes {
+            known.set(node.id, 1000, knowledge::Source::Seeded, 0);
+        }
+        engine
+            .world
+            .insert_one(entity, known)
+            .expect("fixture knowledge");
+    }
+    let tile = hearth_tiles(&engine.resources)[0];
+    engine.resources.colony.ground_items.insert(
+        tile,
+        sim_core::colony::ItemStack::of(
+            sim_core::colony::ItemSpec::raw(sim_core::colony::ItemKind::Log, None),
+            50,
+        ),
+    );
+}
+
+#[cfg(test)]
+fn physical_template_commands(commands: &[Command]) -> Vec<Command> {
+    let catalog = sim_core::colony::content::installed_or_bundled();
+    commands
+        .iter()
+        .flat_map(|command| match command {
+            Command::BuildTemplate {
+                id,
+                anchor,
+                rotation,
+                station,
+            } => catalog
+                .building_templates()
+                .get(id)
+                .expect("planned template")
+                .expand(catalog, station.as_deref(), *rotation)
+                .expect("planned pieces")
+                .into_iter()
+                .map(|piece| Command::PlaceBlueprint {
+                    kind: piece.kind,
+                    x: anchor.0 + piece.offset.0,
+                    y: anchor.1 + piece.offset.1,
+                })
+                .collect(),
+            command => vec![command.clone()],
+        })
+        .collect()
+}

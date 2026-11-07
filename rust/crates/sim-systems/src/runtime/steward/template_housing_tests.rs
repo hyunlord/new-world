@@ -299,3 +299,66 @@ fn ranked_candidates_are_connected_known_and_stably_ordered() {
         .iter()
         .all(|template| template.requires_knowledge.is_empty()));
 }
+
+#[test]
+fn accepted_template_keeps_full_pending_reservation_until_player_cancellation() {
+    let (mut engine, action, hearth, anchor) = fixture();
+    supply(&mut engine, ItemKind::Log, 50);
+    zone(&mut engine, anchor, (4, 4));
+    let planned = house(&engine.world, &engine.resources, hearth, &action, false);
+    assert!(
+        matches!(planned.commands.as_slice(), [Command::BuildTemplate { id, .. }] if id == "log_house")
+    );
+    for command in planned.commands {
+        assert!(crate::commands::submit(&mut engine, command).accepted);
+    }
+    let site = engine
+        .resources
+        .colony
+        .buildings
+        .sites
+        .values()
+        .next()
+        .expect("accepted template");
+    assert!(site
+        .pieces
+        .iter()
+        .any(|piece| piece.phase == sim_core::colony::building_site::PiecePhase::Pending));
+    let expected: BTreeSet<_> = (anchor.1..anchor.1 + 4)
+        .flat_map(|y| (anchor.0..anchor.0 + 4).map(move |x| (x, y)))
+        .collect();
+    assert_eq!(template_housing::pending_tiles(&engine.resources), expected);
+    assert!(expected.is_subset(&reserved_house_tiles(
+        &engine.world,
+        &engine.resources,
+        hearth
+    )));
+    assert!(expected.is_subset(&reserved_field_house_tiles(
+        &engine.world,
+        &engine.resources,
+        hearth
+    )));
+    assert!(
+        crate::commands::submit(
+            &mut engine,
+            Command::CancelArea {
+                x0: anchor.0,
+                y0: anchor.1,
+                x1: anchor.0 + 3,
+                y1: anchor.1 + 3,
+            }
+        )
+        .accepted
+    );
+    assert!(
+        template_housing::pending_tiles(&engine.resources).is_empty(),
+        "ordinary cancellation releases deferred layers"
+    );
+    assert!(engine
+        .resources
+        .colony
+        .buildings
+        .sites
+        .values()
+        .all(|site| site.completion_entry.is_none()));
+}
