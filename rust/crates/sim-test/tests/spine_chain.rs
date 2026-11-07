@@ -133,9 +133,10 @@ fn spine_chain_log_house() {
         count,
         "load must not re-emit completion"
     );
+    // Prove cord before bulk quarry orders can starve this auxiliary Haul task.
+    cord_world(&mut engine);
     let grown = stages::grow_housing_zone(&mut engine);
     stages::upgrade_house(&mut engine, grown);
-    cord_world(&mut engine);
 }
 
 fn cord_world(e: &mut sim_engine::SimEngine) {
@@ -218,7 +219,10 @@ fn cord_world(e: &mut sim_engine::SimEngine) {
                 && sim_systems::commands::camp_reaches(&e.resources, **tile)
         })
         .map(|(&tile, _)| tile)
+        .min_by_key(|&tile| (items::chebyshev(tile, camp(e)), tile.1, tile.0))
+        .into_iter()
         .collect();
+    println!("SPINE_CORD_QUARRY targets={nodes:?} camp={:?}", camp(e));
     for (x, y) in nodes {
         command(
             e,

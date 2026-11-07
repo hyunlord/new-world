@@ -10,6 +10,22 @@ use sim_engine::SimEngine;
 pub fn grow_housing_zone(engine: &mut SimEngine) -> u32 {
     harvest_logs(engine);
     let rules = sim_core::colony::steward::rules().expect("validated steward rules");
+    // Housing also enables All: establish its stockpile before choosing an envelope.
+    let storage = rules
+        .rules
+        .iter()
+        .find(|r| {
+            matches!(
+                r.action,
+                sim_core::colony::steward::Action::Stockpile { .. }
+            )
+        })
+        .expect("ordinary stockpile rule");
+    for order in
+        sim_systems::runtime::steward::planning::plan(&engine.world, &engine.resources, storage)
+    {
+        command(engine, order);
+    }
     let rule = rules
         .rules
         .iter()

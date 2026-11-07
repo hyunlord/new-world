@@ -32,8 +32,8 @@ func _init() -> void:
 			if parts.size() == 2: _size = Vector2i(int(parts[0]), int(parts[1]))
 	_run.call_deferred()
 
-func _check(label: String, ok: bool) -> void:
-	_rows.append({"check": label, "passed": ok})
+func _check(label: String, ok: bool, observed: Dictionary = {}) -> void:
+	_rows.append({"check": label, "passed": ok, "observed": observed})
 	print("SPINE_BUILD %s %s" % ["PASS" if ok else "FAIL", label])
 	if not ok: _failures += 1
 
@@ -60,6 +60,7 @@ func _point(logical: Vector2, click: bool = true) -> void:
 	motion.position = point
 	Input.parse_input_event(motion)
 	await process_frame
+	_rows.append({"native_pointer": str(point), "hovered_path": str(root.gui_get_hovered_control().get_path()) if root.gui_get_hovered_control() != null else "", "click": click})
 	if not click: return
 	for pressed: bool in [true, false]:
 		var event := InputEventMouseButton.new()
@@ -217,7 +218,7 @@ func _inert(language: String) -> void:
 	var inert_card: Button = _panel.find_child("Template_" + str(inert["id"]), true, false) as Button
 	_check("grey actual inert placeholder", inert_card != null and inert_card.icon != null and inert_card.get_theme_color("font_color") == Color("807970"))
 	var place: Button = _panel.get("_place") as Button
-	_check("inert action disabled and debt", place.disabled and str((_panel.get("_gate") as Label).text).contains(str(inert["debt"])))
+	_check("inert action disabled and debt", place.disabled and str((_panel.get("_gate") as Label).text).contains(str(inert["debt"])), {"selected": _panel.get("_selected"), "gate": (_panel.get("_gate") as Label).text, "debt": inert["debt"], "disabled": place.disabled, "card_rect": str(inert_card.get_global_rect()) if inert_card != null else "", "mouse": str(root.get_mouse_position()), "panel_rect": str(_panel.get_global_rect())})
 	_check("inert card remains inspectable without placement", _panel.visible and not bool(_tool.call("template_active")))
 	await _click(place)
 	_check("native inert action cannot submit", _world.call("get_command_log", 0) == before)
@@ -228,7 +229,7 @@ func _inert(language: String) -> void:
 		await _frames()
 		_fixed_labels(translated)
 		_check("same panel locale preserves selection", selected == [_panel.get("_selected"), _panel.get("_site"), _panel.get("_station")])
-		_check("same panel locale preserves inert lock and debt", place.disabled and str((_panel.get("_gate") as Label).text).contains(str(inert["debt"])))
+		_check("same panel locale preserves inert lock and debt", place.disabled and str((_panel.get("_gate") as Label).text).contains(str(inert["debt"])), {"selected": _panel.get("_selected"), "gate": (_panel.get("_gate") as Label).text, "debt": inert["debt"], "disabled": place.disabled, "locale": translated})
 	await _capture(language + "_inert")
 
 func _fixed_labels(language: String) -> void:
@@ -258,7 +259,7 @@ func _completed(language: String, stage: String) -> void:
 	await _click(_panel.get("_why") as Button)
 	var why: Control = _main.get_node("UI/WhyPanel") as Control
 	var cause: Dictionary = _world.call("get_building_cause", int(site["id"]), int(site["source_record"]))
-	_check("native source opens exact building cause", bool(cause.get("valid", false)) and why.visible and str(why.call("plain_text")).contains(str(_locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")))))
+	_check("native source opens exact building cause", bool(cause.get("valid", false)) and why.visible and str(why.call("plain_text")).replace("\u2060", "").contains(str(_locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")))), {"cause": cause, "visible": why.visible, "body": (why.get("_body") as RichTextLabel).text, "plain": why.call("plain_text"), "bbcode": (why.get("_body") as RichTextLabel).bbcode_enabled, "expected": _locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")), "locale": _locale.get("_current_lang")})
 	await _capture(language + "_" + stage + "_source")
 	why.call("close")
 	_panel.call("open_site", int(site["id"]))
@@ -312,7 +313,7 @@ func _history(language: String) -> void:
 		await _frames()
 		# Native click on the last why-chain line; assert outcome, never emit meta_clicked.
 		await _point(body.global_position + Vector2(80, body.get_line_offset(maxi(0, body.get_line_count() - 1)) + 12))
-		_check("native historical source link", not body.bbcode_enabled and str(why.call("plain_text")).contains(str(_locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")))))
+		_check("native historical source link", not body.bbcode_enabled and str(why.call("plain_text")).replace("\u2060", "").contains(str(_locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")))), {"cause": cause, "visible": why.visible, "body": body.text, "plain": why.call("plain_text"), "bbcode": body.bbcode_enabled, "expected": _locale.call("ltr", cause.get("name_key", "UI_UNKNOWN")), "locale": _locale.get("_current_lang")})
 		await _capture(language + "_historical_source")
 		why.call("close")
 
@@ -324,7 +325,7 @@ func _home(language: String) -> void:
 	var inspector: Control = _main.get_node("UI/AgentInspectorPanel") as Control
 	inspector.call("display_agent", detail)
 	await _frames()
-	_check("actual assigned-bed home name", str(economy.get("dwelling_kind", "")) != "" and str((inspector.get("_dwelling_label") as Label).text).contains(str(_locale.call("ltr", economy["dwelling_name_key"]))))
+	_check("actual assigned-bed home name", str(economy.get("dwelling_kind", "")) != "" and str((inspector.get("_dwelling_label") as Label).text).replace("\u2060", "").contains(str(_locale.call("ltr", economy["dwelling_name_key"]))), {"economy": economy, "text": (inspector.get("_dwelling_label") as Label).text, "expected": _locale.call("ltr", economy.get("dwelling_name_key", "UI_UNKNOWN")), "locale": _locale.get("_current_lang")})
 	await _capture(language + "_home")
 	inspector.call("close")
 

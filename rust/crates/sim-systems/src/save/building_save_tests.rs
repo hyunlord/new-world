@@ -135,8 +135,10 @@ fn building_sidecar_does_not_enter_nested_resources_wire() {
 #[test]
 fn stale_building_counter_is_rejected_without_repair() {
     bootstrap();
-    let mut state = BuildingState::default();
-    state.next_piece_id = u32::MAX;
+    let state = BuildingState {
+        next_piece_id: u32::MAX,
+        ..BuildingState::default()
+    };
     assert!(state.next_piece_after(1).is_none());
 }
 

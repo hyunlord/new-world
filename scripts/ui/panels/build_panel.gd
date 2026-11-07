@@ -19,6 +19,7 @@ var _heading: Label
 var _housing: Button
 var _zone_controls: HFlowContainer
 var _zone_buttons: Array[Button] = []
+var _scroll: ScrollContainer
 var _close: Button
 var _last_result: Dictionary = {}
 var _detail: VBoxContainer
@@ -40,6 +41,9 @@ var _signature: String = ""
 
 func _ready() -> void:
 	theme = preload("res://assets/ui/worldsim_theme.tres")
+	var backdrop: StyleBoxFlat = get_theme_stylebox("panel").duplicate()
+	backdrop.bg_color.a = 1.0
+	add_theme_stylebox_override("panel", backdrop)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_world = get_node("/root/Main/WorldSim")
 	_locale = get_node_or_null("/root/Locale")
@@ -65,6 +69,7 @@ func _ready() -> void:
 	body.add_theme_constant_override("separation", 12)
 	column.add_child(body)
 	var scroll := ScrollContainer.new()
+	_scroll = scroll
 	scroll.custom_minimum_size = Vector2(496, 560)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	body.add_child(scroll)
@@ -181,6 +186,7 @@ func open() -> void:
 			_catalog.append(value)
 	_signature = ""
 	_refresh()
+	_scroll.scroll_vertical = 0
 	position = (get_viewport_rect().size - Vector2(920, 672)) * 0.5
 	show()
 
@@ -262,7 +268,7 @@ func _rebuild_lists() -> void:
 		if str(site.get("status", "")) != "complete":
 			continue
 		var row: Dictionary = _definition(str(site.get("template_id", "")))
-		var button: Button = _card(row, "%s · %s" % [site.get("completed_pieces", 0), site.get("total_pieces", 0)])
+		var button: Button = _card(row, _tr("BUILD_TIER").format({"tier": row.get("tier", 0)}))
 		button.pressed.connect(_select.bind(str(site.get("template_id", "")), int(site["id"])))
 		_groups[0].add_child(button)
 	for row: Dictionary in _catalog:
@@ -290,10 +296,12 @@ func _choose_card(id: String) -> void:
 func _card(row: Dictionary, suffix: String) -> Button:
 	var button := Button.new()
 	button.text = "%s · %s" % [_tr(str(row.get("name_key", "UI_UNKNOWN"))), suffix]
+	if not bool(row.get("connected", false)):
+		button.text += " · " + _tr("BUILD_LOCK_INERT")
 	button.custom_minimum_size = Vector2(472, 64)
 	button.icon = ItemIcons.building_texture(row, Vector2i(48, 40), true)
 	button.expand_icon = true
-	button.icon_max_width = 48
+	button.add_theme_constant_override("icon_max_width", 48)
 	button.set_meta("template_id", str(row.get("id", "")))
 	return button
 

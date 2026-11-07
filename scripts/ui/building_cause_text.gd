@@ -1,4 +1,4 @@
-# EXTERNAL DRAFT. All identity/provenance fields must come from get_building_cause.
+# Building identity/provenance fields come from get_building_cause.
 extends RefCounted
 
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")

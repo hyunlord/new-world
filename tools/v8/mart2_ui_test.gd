@@ -255,7 +255,7 @@ func _zoom_and_lod() -> void:
 	await _motion(centre)
 	for z: Array in [[0.5, "½×"], [0.25, "¼×"]]:
 		await _button(centre, MOUSE_BUTTON_WHEEL_DOWN, true)
-		await _frames(4)
+		await create_timer(0.2).timeout
 		_check("wheel_out_to_%s" % str(z[1]), absf(_camera.zoom.x - float(z[0])) < 0.001 and str(hud.call("zoom_text")).contains(str(z[1])), "zoom %.2f, '%s'" % [_camera.zoom.x, hud.call("zoom_text")])
 		var counts: Array = markers.call("counts")
 		var marker_mode: bool = float(z[0]) == 0.25
@@ -270,10 +270,10 @@ func _zoom_and_lod() -> void:
 	await _frames(4)
 	_check("keys_in_to_2x", absf(_camera.zoom.x - 2.0) < 0.001 and str(hud.call("zoom_text")).contains("2×") and not bool(_agents.call("lod_active")) and int((markers.call("counts") as Array)[0]) == 0, "zoom %.2f '%s' lod %s" % [_camera.zoom.x, hud.call("zoom_text"), _agents.call("lod_active")])
 	await _key(KEY_MINUS)
-	await _frames(3)
+	await create_timer(0.2).timeout
 	_check("minus_steps_out", absf(_camera.zoom.x - 1.0) < 0.001, "zoom %.2f" % _camera.zoom.x)
-	var label: Control = hud.find_child("Zoom", true, false) as Control
-	_check("zoom_label_in_top_bar", label != null and label.is_visible_in_tree() and label.get_global_rect().position.y < 160.0, "rect %s" % (label.get_global_rect() if label != null else Rect2()))
+	var label: Control = _main.get_node("UI/MuxHud/MapDock/MapControls").get("_zoom_label") as Control
+	_check("zoom_label_in_map_controls", label != null and label.is_visible_in_tree() and root.get_visible_rect().encloses(label.get_global_rect()) and str(label.get("text")) == "1×", "rect %s" % (label.get_global_rect() if label != null else Rect2()))
 
 
 func _params_reload() -> void:
@@ -544,14 +544,15 @@ func _spine_gallery() -> void:
 	var native: bool = DisplayServer.get_name() != "headless"
 	_check("spine_gallery_native_output", native and not _shots.is_empty(), "native display and --shots required")
 	if not native or _shots.is_empty(): return
-	var start_checks: int = _checks
-	var start_failures: int = _failures
-	var receipt: Dictionary = {"classification": "renderer fixtures, NOT actual world completion", "cells": [], "registry_revision": SpineContent.revision(), "display": DisplayServer.get_name(), "rendering_method": RenderingServer.get_current_rendering_method(), "window_size": [DisplayServer.window_get_size().x, DisplayServer.window_get_size().y], "viewport_size": [root.get_visible_rect().size.x, root.get_visible_rect().size.y]}
+	var receipt: Dictionary = {"checks": _checks, "failures": _failures, "classification": "renderer fixtures, NOT actual world completion", "cells": [], "registry_revision": SpineContent.revision(), "display": DisplayServer.get_name(), "rendering_method": RenderingServer.get_current_rendering_method(), "window_size": [DisplayServer.window_get_size().x, DisplayServer.window_get_size().y], "viewport_size": [root.get_visible_rect().size.x, root.get_visible_rect().size.y]}
 	var layer: CanvasLayer = CanvasLayer.new()
 	layer.layer = 120
 	root.add_child(layer)
 	var panel: PanelContainer = PanelContainer.new()
 	panel.theme = load("res://assets/ui/worldsim_theme.tres")
+	var backdrop: StyleBoxFlat = panel.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
+	backdrop.bg_color.a = 1.0
+	panel.add_theme_stylebox_override("panel", backdrop)
 	panel.position = Vector2(16, 16)
 	layer.add_child(panel)
 	var box: VBoxContainer = VBoxContainer.new()
@@ -560,7 +561,7 @@ func _spine_gallery() -> void:
 	heading.text = "M-SPINE renderer fixtures · no world placement · ore/ingot synthetic"
 	box.add_child(heading)
 	var grid: GridContainer = GridContainer.new()
-	grid.columns = 8
+	grid.columns = 6
 	box.add_child(grid)
 	var shapes: Array[String] = ["lump", "rod", "blade", "vessel", "cloth", "grain", "ore", "ingot"]
 	var shape_hashes: Dictionary = {}
@@ -595,8 +596,7 @@ func _spine_gallery() -> void:
 		var row: Dictionary = SpineContent.row("buildings", SpineContent.code("buildings", glyphs[glyph]))
 		_check("spine_actual_glyph_" + glyph, not row.is_empty() and row.get("art_icon") == glyph, str(row.get("id", "missing")))
 		_spine_gallery_cell(grid, glyph + " / " + str(row.get("id", "missing")), ItemIcons.building_texture(row, Vector2i(64, 64), true), "exact catalogue preview, NOT world", receipt)
-		var normalized: Dictionary = row.duplicate(true)
-		normalized.merge({"connected": true, "art_roof": "round", "art_tint_material": "oak", "era_id": "paleolithic"}, true)
+		var normalized: Dictionary = row.merged({"connected": true, "art_roof": "round", "art_tint_material": "oak", "era_id": "paleolithic"}, true)
 		glyph_hashes[_spine_texture_hash(ItemIcons.building_texture(normalized, Vector2i(64, 64)))] = true
 		if not bool(row.get("connected", false)) and not row.is_empty(): inert_row = row
 	_check("spine_ten_glyphs_distinct", glyph_hashes.size() == 10 and not glyph_hashes.has(""), "normalized roof/tint for glyph-only distinction")
@@ -633,8 +633,8 @@ func _spine_gallery() -> void:
 	await _frames(3)
 	_check("spine_gallery_fits", root.get_visible_rect().encloses(panel.get_global_rect()), str(panel.get_global_rect()))
 	await _shot("spine-placeholder-gallery.png")
-	receipt["checks"] = _checks - start_checks
-	receipt["failures"] = _failures - start_failures
+	receipt["checks"] = _checks - int(receipt["checks"])
+	receipt["failures"] = _failures - int(receipt["failures"])
 	receipt["source_sha256"] = {"harness": FileAccess.get_sha256("res://tools/v8/mart2_ui_test.gd"), "renderer": FileAccess.get_sha256("res://scripts/ui/item_icons.gd"), "glyphs": FileAccess.get_sha256("res://assets/ui/glyphs.json")}
 	receipt["png_sha256"] = FileAccess.get_sha256(_shots.path_join("spine-placeholder-gallery.png"))
 	var file: FileAccess = FileAccess.open(_shots.path_join("spine-placeholder-gallery.json"), FileAccess.WRITE)
@@ -648,18 +648,18 @@ func _spine_gallery() -> void:
 
 func _spine_gallery_cell(grid: GridContainer, title: String, texture: Texture2D, provenance: String, receipt: Dictionary) -> void:
 	var box: VBoxContainer = VBoxContainer.new()
-	box.custom_minimum_size = Vector2(140, 104)
+	box.custom_minimum_size = Vector2(178, 128)
 	grid.add_child(box)
 	var label: Label = Label.new()
-	label.text = title
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.text = title.replace(" / ", "\n").replace("_", " ")
+	label.custom_minimum_size.y = 56
+	label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	box.add_child(label)
 	var rect: TextureRect = TextureRect.new()
 	rect.texture = texture
 	rect.custom_minimum_size = Vector2(64, 64)
 	rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	box.add_child(rect)
 	var digest: String = _spine_texture_hash(texture)
 	_check("spine_cell_" + title, not digest.is_empty(), provenance)
