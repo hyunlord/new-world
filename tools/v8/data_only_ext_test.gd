@@ -11,6 +11,7 @@ const Content = preload("res://scripts/ui/content_context.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Resolver = preload("res://scripts/world/art/material_resolver.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
+const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const PresentationBootstrap = preload("res://scripts/core/presentation_bootstrap.gd")
 var _rows: Array[Dictionary] = []
 var _failures: int = 0
@@ -116,7 +117,48 @@ func _run() -> void:
 	if next != null:
 		next.pressed.emit()
 	_check("added lesson advances", hud.helper.current_id() != "test_pack_lesson")
+	await _check_spine(main, world)
 	_finish()
+
+func _check_spine(main: Node, world: Node) -> void:
+	var locale: Node = root.get_node("Locale")
+	var tech: Dictionary = world.call("get_tech")
+	var lanes: Array[Dictionary] = KnowledgeText.catalogue(tech, "lanes")
+	_check("selected spine lane DTO", lanes.any(func(row: Dictionary) -> bool: return str(row.get("id", "")) == "ext_lane"))
+	var node_id: int = KnowledgeText.node_id("test_inert_spine")
+	_check("selected spine inert node DTO", node_id >= 0)
+	var panel: Control = main.get_node("UI/TechPanel") as Control
+	for language: String in ["ko", "en"]:
+		locale.call("set_language", language)
+		_check("selected spine locale " + language, str(locale.call("ltr", "EXT_LANE")) != "EXT_LANE" and str(locale.call("ltr", "EXT_INERT_SPINE")) != "EXT_INERT_SPINE")
+		panel.call("open")
+		await process_frame
+		await process_frame
+		var labels: Dictionary = panel.get("_lane_labels")
+		var cards: Dictionary = panel.get("_cards")
+		_check("selected spine lane rendered " + language, labels.has(10) and str((labels[10] as Label).text) == str(locale.call("ltr", "EXT_LANE")))
+		_check("selected spine card rendered " + language, cards.has(node_id))
+		if cards.has(node_id):
+			var card: Button = cards[node_id]
+			_check("selected spine grey localized card " + language, str((card.find_child("Name", true, false) as Label).text) == str(locale.call("ltr", "EXT_INERT_SPINE")) and bool(card.get_meta("inert", false)) and card.get_node_or_null("Hatch") != null)
+			(card.get_parent().get_parent() as ScrollContainer).ensure_control_visible(card)
+			(panel.get("_map_scroll") as ScrollContainer).ensure_control_visible(card)
+			card.pressed.emit()
+			await process_frame
+			await process_frame
+			var jump: OptionButton = panel.get("_jump")
+			jump.select(jump.get_item_index(10))
+			panel.call("_jump_lane", jump.selected)
+			await process_frame
+			await process_frame
+			var scroll: ScrollContainer = panel.get("_map_scroll")
+			scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
+			await process_frame
+			_check("selected spine debt detail " + language, str((panel.get("_detail_read") as Dictionary).get("debt", "")).contains("fixture behavior deliberately unwired"))
+		if DisplayServer.get_name() != "headless":
+			await RenderingServer.frame_post_draw
+			_check("selected spine capture " + language, root.get_texture().get_image().save_png(_out.path_join("spine-extension-" + language + ".png")) == OK)
+		panel.call("close")
 
 func _check_alert_label_fit(button: Button, alert: Dictionary) -> void:
 	var font: Font = button.get_theme_font("font")

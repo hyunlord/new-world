@@ -9,6 +9,7 @@
 - Format18 predecessor migration and generated-content debt consistency checks. Real ko/en technology-map captures pass at1920×1080 and1440×900 windows; paired8×48-day smoke has no extinction or KnowledgeLost. Exact-head gate and release benchmark results are recorded separately in the external publication receipt.
 
 ### Changed
+- Keep selected-pack locale additions inside the strict strings table; the existing scene test now checks and captures the extra lane, grey card and debt in both languages.
 - Era coverage denominators use authored nodes within each era instead of absent-marker weights; all existing marker weights remain unchanged. No balance tuning or thermal model wiring.
 
 ## M6b Stage 2 — in progress, 2026-11-06 (not published)

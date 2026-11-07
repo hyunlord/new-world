@@ -205,3 +205,8 @@ rendered at unchanged alpha; an opaque rectangle isolated this from clipping.
 Inspect exact card pixels and retain controlled failed/passing captures. Source:
 `docs/decisions/0060-content-spine.md`; `spine_save_check.rs`;
 `tools/v8/spine_tech_test.gd`.
+
+Selected-pack locale JSON admits exactly `schema_version` and `strings`; put new
+keys inside `strings`. Rust catalogue tests do not exercise this presentation
+guard. Run the existing fresh-process scene test and inspect the extra lane, grey
+card and debt in both languages before freezing the publication gate.
