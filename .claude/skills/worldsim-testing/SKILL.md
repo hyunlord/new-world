@@ -356,3 +356,5 @@ must offer a safe roof route at the scheduled flight tick, including the worker'
 preceding job movement; keep a real job to prove cancellation. Never extend a
 deadline or retune predator data to hide interference. Sources: `colony_jobs.rs`,
 `colony_wildlife.rs` under `rust/crates/sim-test/tests/`; `docs/v8/BALANCE_DEBT.md`.
+
+| 2026-11-08 | A feature-first fixture unexpectedly compared changed fingerprints to BASE | The external runner comma-joined READ_CHANGED_FIXTURES while the checker uses whitespace splitting | Assert and print the exact parsed fixture list against the frozen configuration before launch; preserve the failing run | `docs/v8/c1/C1_DECISIONS.md` D9; `tools/v8/read_gate_checks.py` |

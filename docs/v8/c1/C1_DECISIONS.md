@@ -118,3 +118,30 @@ pre-change template9/house12 tests passed; after the change template10/house12
 passed, including exact original-algorithm comparison for square, rectangular,
 custom-door, missing-door and invalid templates. This proves the focused contract,
 not the full identity or frame ceiling; both remain required in the next gate.
+
+## D9 — D-C1-1 distinguishes draw-only stalls from the fixed house search
+
+The second gate preserved the native template-search improvement, but step41
+recorded an83.751ms frame at zoom0.5, tick1946 with zero simulation ticks.
+Its process-to-pre-draw interval was4926µs and pre-to-post-draw78646µs.
+At that frame building sprite creation/free/texture-request counts were zero,
+terrain bake/compose/upload counts were zero, and nearby draw/node/object counts
+were unchanged. The previous building texture request was over12seconds earlier.
+No image was captured at the hitch. Existing counters do not exhaustively cover
+procedural textures, font glyphs or driver activity, so its root cause is unknown.
+
+The bounded resource investigation found no new imported C1 art bindings.
+New grazers reuse category fallback frames and are hidden at half-scale; plants
+share existing phase textures. Item/template procedural caches are outside the
+manifest-only warmup, but there is no evidence they first appeared at the hitch.
+D-C1-1 authorizes extending the existing warmup only for an attributable resource;
+no speculative renderer change or threshold adjustment is made.
+
+A2 step28 was a launcher defect: comma-joined READ_CHANGED_FIXTURES was read by a
+whitespace parser. The external launcher now derives the same ten-name space
+list and asserts/prints exact equality with the frozen config before launch.
+A3 must run from step1 with external PLAY_ROOT/PLAY_DATA. Step46 must pass.
+Only if step41 alone fails with an unattributed draw-only hitch may one isolated
+same-binary rerun qualify under D-C1-1; a second failure stops the pass. Retain
+both runs and, if that exception is used, record the debt and planner issue note.
+Historical A1/A2 failures and the prior literal §5 stop remain preserved.

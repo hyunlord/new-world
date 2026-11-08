@@ -13,6 +13,8 @@
 - Authored garment codes resolve to the existing wrap silhouette and individual palettes; the workshop storage explanation refreshes on language change.
 - Following the first gate's frame-ceiling failure, reuse immutable template rotations within each steward house search; retain candidate order and live occupancy checks. Focused equivalence tests pass; full identity and frame acceptance remain pending.
 
+- Preserve A2 draw-only stall evidence separately from the repaired native house search; D-C1-1 requires a fresh full gate and permits only one conditional same-binary stall rerun. Correct the external fixture-list delimiter with a pre-launch assertion.
+
 ### Removed
 - The64-node authored knowledge capacity limit. No content family is removed.
 
