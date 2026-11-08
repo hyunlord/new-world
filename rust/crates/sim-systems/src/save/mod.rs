@@ -39,6 +39,7 @@ mod legacy_buildings_v18;
 mod legacy_food_v13;
 mod legacy_food_v16;
 mod legacy_knowledge_v19;
+mod legacy_livestock_v20;
 mod legacy_spine_v17;
 mod legacy_steward;
 mod legacy_steward_v14;
@@ -70,7 +71,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6 through 19 are migrated. Bump it
+/// Save format version; historical versions 6 through 20 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -92,7 +93,8 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 18 = data-driven eras, full-width knowledge masks and completed-job practice.
 /// 19 = persisted template building sites, selected stations and housing zones.
 /// 20 = 128-node practitioner and neighbour masks (lower-word varints unchanged).
-pub const FORMAT_VERSION: u32 = 20;
+/// 21 = livestock sidecar, immutable event witnesses and 26 completed-job counters.
+pub const FORMAT_VERSION: u32 = 21;
 mod cultivation_catalog;
 mod cultivation_validation;
 mod legacy_cultivation_v15;
@@ -172,6 +174,7 @@ struct BodyRef<'a> {
     cultivation: &'a sim_core::colony::cultivation::CultivationState,
     processing: &'a sim_core::colony::processing::ProcessingState,
     buildings: &'a sim_core::colony::building_site::BuildingState,
+    livestock: &'a sim_core::colony::livestock::LivestockState,
 }
 
 /// The body after the header, as read (same fields, same order).
@@ -246,6 +249,7 @@ struct Body {
     cultivation: sim_core::colony::cultivation::CultivationState,
     processing: sim_core::colony::processing::ProcessingState,
     buildings: sim_core::colony::building_site::BuildingState,
+    livestock: sim_core::colony::livestock::LivestockState,
 }
 
 /// Exact format12 body, before independently persisted food state.
@@ -303,6 +307,12 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
     cultivation_validation::validate(&engine.world, &engine.resources)
         .map_err(SaveError::Encode)?;
     weaving_validation::validate(&engine.resources).map_err(SaveError::Encode)?;
+    crate::runtime::livestock::validate_state_at_boundary(
+        &engine.world,
+        &engine.resources,
+        command_boundary,
+    )
+    .map_err(SaveError::Encode)?;
     let world = world::capture(&engine.world).map_err(SaveError::World)?;
     let systems = engine.system_states().map_err(SaveError::Systems)?;
     let body = BodyRef {
@@ -317,6 +327,7 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         cultivation: &engine.resources.cultivation,
         processing: &engine.resources.processing,
         buildings: &engine.resources.colony.buildings,
+        livestock: &engine.resources.livestock,
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
@@ -369,6 +380,7 @@ pub fn load_with(
         u32::from_le_bytes(bytes[8..12].try_into().map_err(|_| SaveError::NotASave)?);
     let legacy_v18 = source_version == 18;
     let legacy_v19 = source_version == 19;
+    let legacy_v20 = source_version == 20;
     let legacy_spine = source_version < 18;
     let legacy_items = source_version < 17;
     // Format13 already owns physical food and its FoodDailySystem slot.
@@ -392,6 +404,7 @@ pub fn load_with(
             cultivation: Default::default(),
             processing: Default::default(),
             buildings: Default::default(),
+            livestock: Default::default(),
         }
     } else if legacy_v7 {
         let old: LegacyBodyV7 = decode(encoded).map_err(SaveError::Decode)?;
@@ -407,6 +420,7 @@ pub fn load_with(
             cultivation: Default::default(),
             processing: Default::default(),
             buildings: Default::default(),
+            livestock: Default::default(),
         }
     } else {
         let envelope: Envelope = decode(encoded).map_err(SaveError::Decode)?;
@@ -432,6 +446,7 @@ pub fn load_with(
                 cultivation: Default::default(),
                 processing: Default::default(),
                 buildings: Default::default(),
+                livestock: Default::default(),
             }
         } else if legacy_v9 {
             if envelope.revision != legacy_v9::REVISION {
@@ -454,20 +469,29 @@ pub fn load_with(
                 cultivation: Default::default(),
                 processing: Default::default(),
                 buildings: Default::default(),
+                livestock: Default::default(),
             }
         } else {
-            if envelope.revision != catalog.revision()
-                && !(legacy_food && food_catalog::accepts(&envelope.revision, catalog)?)
-                && !((legacy_v13 || legacy_v14 || legacy_v15)
-                    && cultivation_catalog::accepts(&envelope.revision, catalog)?)
-                && !(legacy_v16
-                    && legacy_weaving_v16::accepts_catalog(&envelope.revision, catalog)?)
-                && !(legacy_v17 && legacy_spine_v17::accepts_catalog(&envelope.revision, catalog)?)
-                && !(legacy_v18
-                    && legacy_buildings_v18::accepts_catalog(&envelope.revision, catalog)?)
-                && !(legacy_v19
-                    && legacy_knowledge_v19::accepts_catalog(&envelope.revision, catalog)?)
-            {
+            // These predecessors receive schema/system migrations only after
+            // their exact published revision and identity prefixes authenticate.
+            // A current revision on an old header does not identify an old body.
+            let catalog_accepted = if legacy_v20 {
+                legacy_livestock_v20::accepts_catalog(&envelope.revision, catalog)?
+            } else if legacy_v19 {
+                legacy_knowledge_v19::accepts_catalog(&envelope.revision, catalog)?
+            } else {
+                envelope.revision == catalog.revision()
+                    || (legacy_food && food_catalog::accepts(&envelope.revision, catalog)?)
+                    || ((legacy_v13 || legacy_v14 || legacy_v15)
+                        && cultivation_catalog::accepts(&envelope.revision, catalog)?)
+                    || (legacy_v16
+                        && legacy_weaving_v16::accepts_catalog(&envelope.revision, catalog)?)
+                    || (legacy_v17
+                        && legacy_spine_v17::accepts_catalog(&envelope.revision, catalog)?)
+                    || (legacy_v18
+                        && legacy_buildings_v18::accepts_catalog(&envelope.revision, catalog)?)
+            };
+            if !catalog_accepted {
                 return Err(SaveError::Decode(format!(
                     "save content revision {} does not match installed {}",
                     envelope.revision,
@@ -488,6 +512,7 @@ pub fn load_with(
                     cultivation: Default::default(),
                     processing: Default::default(),
                     buildings: Default::default(),
+                    livestock: Default::default(),
                 }
             } else if legacy_v11 {
                 let old: LegacyBodyV11 = decode(&envelope.payload).map_err(SaveError::Decode)?;
@@ -503,6 +528,7 @@ pub fn load_with(
                     cultivation: Default::default(),
                     processing: Default::default(),
                     buildings: Default::default(),
+                    livestock: Default::default(),
                 }
             } else if legacy_v12 {
                 let old: LegacyBodyV12 = decode(&envelope.payload).map_err(SaveError::Decode)?;
@@ -518,11 +544,14 @@ pub fn load_with(
                     cultivation: Default::default(),
                     processing: Default::default(),
                     buildings: Default::default(),
+                    livestock: Default::default(),
                 }
             } else if legacy_v13 {
                 let old: legacy_food_v13::LegacyBodyV13 =
                     decode(&envelope.payload).map_err(SaveError::Decode)?;
                 old.into()
+            } else if legacy_v19 || legacy_v20 {
+                legacy_livestock_v20::decode_body(&envelope.payload)?
             } else if legacy_v18 {
                 legacy_buildings_v18::decode_body(&envelope.payload)?
             } else if legacy_v17 {
@@ -546,6 +575,7 @@ pub fn load_with(
     resources.cultivation = body.cultivation;
     resources.processing = body.processing;
     resources.colony.buildings = body.buildings;
+    resources.livestock = body.livestock;
     building_validation::validate(&resources.colony.buildings).map_err(SaveError::Decode)?;
     if legacy
         || legacy_v7
@@ -581,6 +611,11 @@ pub fn load_with(
     if legacy_spine {
         body.world.migrate_spine_v17().map_err(SaveError::World)?;
     }
+    if (18..=20).contains(&source_version) {
+        body.world
+            .migrate_livestock_skills_v20()
+            .map_err(SaveError::World)?;
+    }
     let mut world = world::build(&body.world).map_err(SaveError::World)?;
     if legacy_food && resources.rules.colony.is_some() {
         crate::runtime::food::migration::migrate_legacy(&mut world, &mut resources)
@@ -601,6 +636,8 @@ pub fn load_with(
         body.current_tick,
     )
     .map_err(SaveError::Decode)?;
+    crate::runtime::livestock::validate_state_at_boundary(&world, &resources, body.current_tick)
+        .map_err(SaveError::Decode)?;
     crate::runtime::building_templates::associate_rooms(&mut resources);
     let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
     let legacy_colony_brain =
@@ -618,6 +655,7 @@ pub fn load_with(
             defence: legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10,
             food: legacy_food && resources.rules.colony.is_some(),
             buildings: source_version <= 18 && resources.rules.colony.is_some(),
+            livestock: source_version <= 20 && resources.rules.colony.is_some(),
             diagnosis: true, // M-READ: always add presentation-only systems
         },
     )?;
@@ -638,6 +676,8 @@ struct LegacySystemAdditions {
     food: bool,
     /// Known colony-only building slot introduced in format19.
     buildings: bool,
+    /// Authenticated predecessor colony-only slot introduced in format21.
+    livestock: bool,
     /// M-READ: presentation-only diagnosis and requests systems (no saved state).
     diagnosis: bool,
 }
@@ -655,6 +695,7 @@ fn insert_legacy_systems(
             "StewardDefenceSystem" => additions.defence,
             "FoodDailySystem" => additions.food,
             "BuildingTemplateSystem" => additions.buildings,
+            "LivestockSystem" => additions.livestock,
             "DiagnosisSystem" | "RequestsSystem" => additions.diagnosis,
             _ => false,
         };
@@ -747,6 +788,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 17
         && found != 18
         && found != 19
+        && found != 20
     {
         return Err(SaveError::Version {
             found,

@@ -59,6 +59,11 @@ pub(super) fn durable_seed(kind: ItemKind) -> bool {
     kind.definition().food.is_none() && kind.definition().tags.iter().any(|tag| tag == "seed")
 }
 
+/// Durable seed or selected domestication tool, including stranded cancelled cargo.
+pub(super) fn durable_cargo(kind: ItemKind) -> bool {
+    durable_seed(kind) || super::livestock::capture_tool(kind)
+}
+
 /// Drop food or seeds atomically; failure retains the complete carried stack.
 pub(super) fn drop(world: &mut World, res: &mut SimResources, entity: Entity, tile: (u32, u32)) {
     let Some(id) = world.get::<&Agent>(entity).ok().map(|a| a.id) else {
@@ -75,7 +80,7 @@ pub(super) fn retry_stranded(world: &mut World, res: &mut SimResources) {
         .without::<&sim_core::colony::Job>()
         .iter()
         .filter(|(_, (_, _, carry))| {
-            carry.kind.definition().food.is_some() || durable_seed(carry.kind)
+            carry.kind.definition().food.is_some() || durable_cargo(carry.kind)
         })
         .map(|(entity, (agent, position, _))| (agent.id, entity, (position.x, position.y)))
         .collect();

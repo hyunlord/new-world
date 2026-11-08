@@ -24,6 +24,8 @@ mod job;
 pub mod knowledge;
 pub mod legacy_items_v16;
 pub mod legacy_v7;
+pub mod livestock;
+pub mod livestock_demographics;
 pub mod materials;
 pub mod mind;
 pub mod mind_job_origins;

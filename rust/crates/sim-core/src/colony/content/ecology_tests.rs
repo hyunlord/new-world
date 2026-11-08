@@ -249,3 +249,120 @@ fn ecology_id_child() {
     assert!(PressureKind::checked(u32::MAX).is_err());
     assert!(AnimalKind::checked(u32::MAX).is_err());
 }
+
+#[test]
+fn tameable_data_only_species_resolves_renamed_products_and_category_art() {
+    let animals = include_str!("../../../../sim-test/data/ext_pack/animals.ron");
+    let items = include_str!("../../../../sim-test/data/ext_pack/items.ron")
+        .replace("made_by:Some(\"test_hide_craft\")", "made_by:None")
+        .replace("clue_nodes:[\"test_hide_craft\"]", "clue_nodes:[]");
+    let extension = RawSources {
+        sources: vec![
+            NamedSource {
+                name: "animals.ron".into(),
+                bytes: animals.as_bytes().to_vec(),
+            },
+            NamedSource {
+                name: "items.ron".into(),
+                bytes: items.into_bytes(),
+            },
+        ],
+    };
+    let catalog =
+        Catalog::from_sources(RawSources::bundled(), Some(extension)).expect("data-only tameable");
+    let animal = catalog
+        .animal_by_code(4_294_967_293)
+        .expect("extension species");
+    let policy = animal.tameable.as_ref().expect("tameable exposed");
+    assert_eq!(animal.identity.id, "test_grazer");
+    assert_eq!(
+        policy.products.hide.0,
+        catalog.item_by_name("test_hide").expect("renamed product")
+    );
+    assert_eq!(policy.products.hide.1, 1);
+    assert_eq!(animal.art.shape, ItemShape::Cloth);
+    assert_eq!(animal.art.tint_material, "limestone");
+    let old_species = catalog.animal_by_code(1).expect("old species");
+    assert!(old_species.tameable.is_none());
+    assert_eq!(old_species.art, ItemArt::for_category("animal"));
+}
+
+#[test]
+fn tameable_rejects_bad_tools_products_knowledge_jobs_and_numeric_policy() {
+    for (old, new, expected) in [
+        (
+            "capture_tool: Some(\"cord\")",
+            "capture_tool: Some(\"missing\")",
+            "unknown livestock item",
+        ),
+        (
+            "capture_tool: Some(\"cord\")",
+            "capture_tool: Some(\"milk\")",
+            "food capability mismatch",
+        ),
+        (
+            "meat: (\"meat\", 3)",
+            "meat: (\"missing\", 3)",
+            "unknown livestock item",
+        ),
+        (
+            "meat: (\"meat\", 3)",
+            "meat: (\"cord\", 3)",
+            "food capability mismatch",
+        ),
+        (
+            "hide: (\"goat_hide\", 1)",
+            "hide: (\"milk\", 1)",
+            "food capability mismatch",
+        ),
+        (
+            "capture_knowledge: \"animal_taming\"",
+            "capture_knowledge: \"missing\"",
+            "unknown livestock knowledge",
+        ),
+        (
+            "requires_knowledge: \"dairy\"",
+            "requires_knowledge: \"missing\"",
+            "unknown livestock knowledge",
+        ),
+        (
+            "capture_job: \"capture\"",
+            "capture_job: \"hunt\"",
+            "unsupported livestock job selector",
+        ),
+        (
+            "capture_success_permille: 700",
+            "capture_success_permille: 1001",
+            "invalid tameable policy",
+        ),
+        (
+            "initial_age_days: (0, 29)",
+            "initial_age_days: (29, 0)",
+            "invalid tameable policy",
+        ),
+        (
+            "kid_age_days: 30",
+            "kid_age_days: 1800",
+            "invalid tameable policy",
+        ),
+        (
+            "grass_regrow_days: 1",
+            "grass_regrow_days: 0",
+            "positive mechanic value required",
+        ),
+        (
+            "milk_work_ticks: 45",
+            "milk_work_ticks: 0",
+            "positive mechanic value required",
+        ),
+        (
+            "item: \"milk\", every_days: 1",
+            "item: \"milk\", every_days: 0",
+            "positive mechanic value required",
+        ),
+    ] {
+        let error = Catalog::from_sources(altered("animals.ron", old, new), None)
+            .expect_err("reject bad tameable");
+        assert!(error.to_string().contains(expected), "{old}: {error}");
+    }
+}

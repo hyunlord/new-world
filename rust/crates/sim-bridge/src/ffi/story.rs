@@ -279,6 +279,14 @@ pub struct AnimalRows {
     pub marked: Vec<u8>,
     /// Hunt zones `[x0, y0, x1, y1]` flattened, in the order they were added.
     pub zones: Vec<i32>,
+    /// Optional domestic policy; non-tameable age/female use -1.
+    pub tameable: Vec<u8>,
+    /// Pure capture demographic age, or -1 for a non-tameable animal.
+    pub age_days: Vec<i64>,
+    /// Pure capture demographic sex, or -1 for a non-tameable animal.
+    pub female: Vec<i64>,
+    /// Biological kid eligibility only; jobs additionally require tool, knowledge and pen.
+    pub capturable: Vec<u8>,
     /// `Wildlife::version` (cheap change check).
     pub version: u64,
 }
@@ -311,6 +319,29 @@ pub fn collect_animals(res: &SimResources) -> AnimalRows {
         out.state.push(i32::from(a.state.code()));
         out.huntable.push(u8::from(w.huntable(a)));
         out.marked.push(u8::from(w.marks.contains(&a.id)));
+        let demographics = def.tameable.as_ref().map(|policy| {
+            sim_core::colony::livestock_demographics::wild_demographics(
+                res.world_seed,
+                a,
+                policy,
+                res.current_tick,
+                res.ticks_per_day,
+            )
+        });
+        out.tameable.push(u8::from(def.tameable.is_some()));
+        out.age_days
+            .push(demographics.as_ref().map_or(-1, |v| i64::from(v.age_days)));
+        out.female.push(
+            demographics
+                .as_ref()
+                .map_or(-1, |v| i64::from(v.sex.female)),
+        );
+        out.capturable.push(u8::from(
+            def.tameable
+                .as_ref()
+                .zip(demographics.as_ref())
+                .is_some_and(|(p, d)| d.age_days < p.kid_age_days),
+        ));
     }
     for &(x0, y0, x1, y1) in &w.zones {
         for v in [x0, y0, x1, y1] {
@@ -342,6 +373,10 @@ pub(super) fn animals_to_dict(r: &AnimalRows) -> VarDictionary {
     d.set("huntable", PackedByteArray::from(r.huntable.as_slice()));
     d.set("marked", PackedByteArray::from(r.marked.as_slice()));
     d.set("zones", PackedInt32Array::from(r.zones.as_slice()));
+    d.set("tameable", PackedByteArray::from(r.tameable.as_slice()));
+    d.set("age_days", PackedInt64Array::from(r.age_days.as_slice()));
+    d.set("female", PackedInt64Array::from(r.female.as_slice()));
+    d.set("capturable", PackedByteArray::from(r.capturable.as_slice()));
     d.set("version", i64::try_from(r.version).unwrap_or(i64::MAX));
     d
 }
@@ -623,9 +658,9 @@ pub(super) fn drafted_to_dict(r: &DraftedRows) -> VarDictionary {
 pub struct WhyRows {
     /// Whether the entry exists.
     pub found: bool,
-    /// Link kind: 0 a chronicle entry, 1 a mood modifier, 2 a pressure, 3 a building generation.
+    /// Link kind: 0 entry, 1 modifier, 2 pressure, 3 building, 4 terminal livestock evidence.
     pub link: Vec<i32>,
-    /// The entry index (link 0), `Modifier::code` (1, 100 = the relation) or `PressureKind::code` (2).
+    /// Entry index (0), modifier (1), pressure (2), or immutable livestock witness index (4).
     pub code: Vec<i64>,
     /// Persisted building site IDs for link3, otherwise −1; aligned with every link.
     pub building_sites: Vec<i64>,
@@ -664,6 +699,7 @@ pub fn collect_chronicle_why(chronicle: &Chronicle, index: i64) -> WhyRows {
     for link in mood::why_chain(chronicle, i) {
         let (kind, code, entry, building) = match link {
             Link::Entry(e) => (0, i64::from(e), chronicle.entry(e), None),
+            Link::Livestock { witness } => (4, i64::from(witness), None, None),
             Link::Modifier(c) => (1, i64::from(c), None, None),
             Link::Pressure(c) => (2, i64::from(c), None, None),
             Link::Building {
@@ -739,7 +775,7 @@ pub(super) fn why_to_dict(r: &WhyRows) -> VarDictionary {
 }
 
 /// The link of entry `index` for the chronicle panel's "→" line: (link kind −1
-/// none / 0 entry / 1 modifier / 2 pressure / 3 building, the linked entry index or −1, the
+/// none / 0 entry / 1 modifier / 2 pressure / 3 building / 4 livestock witness, the linked entry index or −1, the
 /// modifier or pressure code or −1).
 pub fn cause_link(chronicle: &Chronicle, index: u32) -> (i32, i64, i64) {
     match chronicle.cause_of(index) {
@@ -747,6 +783,7 @@ pub fn cause_link(chronicle: &Chronicle, index: u32) -> (i32, i64, i64) {
         Some(CauseRef::Entry(e)) => (0, i64::from(e), -1),
         // Building IDs stay in dedicated WhyRows columns; neither is an entry/code.
         Some(CauseRef::Building { .. }) => (3, -1, -1),
+        Some(CauseRef::Livestock { witness }) => (4, -1, i64::from(witness)),
         Some(CauseRef::Modifier { code, entry }) => {
             (1, entry.map_or(-1, i64::from), i64::from(code))
         }

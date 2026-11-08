@@ -3369,6 +3369,20 @@
             tags: ["port", "continuation"], name_key: "MIND_BEHAVIOUR_SOCIALISE",
             every_ticks: 1, target: Some("social_current_peer"),
         ),
+        // The existing job owner executes capture/milk; this node only names its authored work band.
+        (
+            id: "job_livestock", band: "work", behaviour: "do_job",
+            when: [
+                (fact: "fleeing", op: "not", value: None),
+                (fact: "drafted", op: "not", value: None),
+                (fact: "job_owned_state", op: "has", value: None),
+                (fact: "job_livestock", op: "has", value: None),
+            ],
+            score: (constant: 0, terms: []),
+            hysteresis: 0, life_stages: ["adult", "elder"],
+            tags: ["livestock", "job_continue"], name_key: "MIND_LIVESTOCK_WORK",
+            every_ticks: 1, target: Some("job"),
+        ),
         (
             id: "job_continue", band: "work", behaviour: "do_job",
             when: [

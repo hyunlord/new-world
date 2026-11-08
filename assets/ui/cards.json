@@ -291,7 +291,7 @@
     },
     {
       "id": "first_kid",
-      "enabled": false,
+      "enabled": true,
       "trigger": {
         "kind": "bridge",
         "read": "first_livestock_kid"

@@ -1496,6 +1496,12 @@ pub fn resolve(
                 .as_u64()
                 .ok_or("draft_attack_person needs target")?,
         }],
+        ("designate_capture", None) => vec![Command::DesignateCapture {
+            animal: field(spec, "animal")?,
+        }],
+        ("designate_slaughter", None) => vec![Command::DesignateSlaughter {
+            animal: field(spec, "animal")?,
+        }],
         ("designate_hunt", None) => vec![Command::DesignateHunt {
             animal: field(spec, "animal")?,
         }],
@@ -1645,7 +1651,9 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         Command::DraftMove { agent, x, y } => json!({"agent": agent, "x": x, "y": y}),
         Command::DraftAttack { agent, animal } => json!({"agent": agent, "animal": animal}),
         Command::DraftAttackPerson { agent, target } => json!({"agent": agent, "target": target}),
-        Command::DesignateHunt { animal } => json!({"animal": animal}),
+        Command::DesignateHunt { animal }
+        | Command::DesignateCapture { animal }
+        | Command::DesignateSlaughter { animal } => json!({"animal": animal}),
         Command::SetDressOrder { on } => json!({"on": on}),
         Command::AcceptMigrants { wave } | Command::DeclineMigrants { wave } => {
             json!({"wave": wave})

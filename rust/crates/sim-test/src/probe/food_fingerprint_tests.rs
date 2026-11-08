@@ -84,6 +84,8 @@ fn baseline_stream_is_untouched_even_with_accidentally_populated_sidecar() {
     assert_eq!(hash, 0x1234_5678);
     let before = crate::probe::fingerprint(&engine);
     engine.resources.food.tallies.meals = 999;
+    engine.resources.livestock.next_id = 999;
+    engine.resources.livestock.last_advanced_day = Some(123);
     engine.resources.food.ages.clear();
     engine.resources.food.pots.clear();
     assert_eq!(crate::probe::fingerprint(&engine), before);
@@ -183,4 +185,69 @@ fn malformed_carrier_cannot_silently_disappear_from_the_food_digest() {
     let mut engine = fixture();
     engine.world.spawn((Agent { id: 1 }, Carry::of(food(), 1)));
     assert!(append(&mut 0, &engine).is_err());
+}
+
+#[test]
+fn livestock_clocks_attempts_origins_and_witnesses_change_both_fingerprints() {
+    use sim_core::colony::content::AnimalKind;
+    use sim_core::colony::livestock::*;
+    changed(|engine| engine.resources.livestock.next_id = 2);
+    changed(|engine| engine.resources.livestock.last_advanced_day = Some(2));
+    changed(|engine| {
+        engine
+            .resources
+            .livestock
+            .grass
+            .insert((1, 1), GrassState { next_regrow_day: 3 });
+    });
+    changed(|engine| {
+        engine.resources.livestock.capture_attempts.insert(
+            7,
+            CaptureAttempt {
+                completed_attempts: 2,
+                not_before_day: 3,
+            },
+        );
+    });
+    changed(|engine| {
+        engine.resources.livestock.capture_orders.insert(
+            7,
+            LivestockOrderCause {
+                source_record: 8,
+                steward_rule: Some(2),
+            },
+        );
+    });
+    changed(|engine| {
+        engine.resources.livestock.slaughter_orders.insert(
+            1,
+            LivestockOrderCause {
+                source_record: 9,
+                steward_rule: None,
+            },
+        );
+    });
+    changed(|engine| engine.resources.livestock.first_capture = Some(1));
+    changed(|engine| engine.resources.livestock.first_kid_id = Some(2));
+    changed(|engine| {
+        engine.resources.livestock.witnesses.insert(
+            9,
+            LivestockEventWitness {
+                livestock: 1,
+                species: AnimalKind::role("default_grazer"),
+                pen_site: 3,
+                event: LivestockEvent::Died {
+                    reason: LivestockDeathReason::Starvation,
+                },
+            },
+        );
+    });
+    changed(|engine| {
+        engine
+            .resources
+            .livestock
+            .lost_capture_tools
+            .insert(food().kind, 1);
+    });
+    changed(|engine| engine.resources.livestock.version = 1);
 }

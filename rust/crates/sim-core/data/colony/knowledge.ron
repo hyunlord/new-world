@@ -166,22 +166,22 @@
         // C1 starting design values, not adoption/balance targets: practitioners at 300 permille,
         // ordinary discovery difficulty 1, advanced difficulty 2, 2-3 finished jobs and physical inputs.
         // Historical entries remain an unchanged index prefix. New nodes never seed normal worlds.
-        // Pen construction is connected; capture is the C1-b driver. Tracking/cordage replace inert traps.
+        // Physical capture uses tracking/cordage rather than the separate future trap mechanic.
         (id: "animal_taming", lane: "animals", era: "neolithic", tier: 1, status: Connected,
-         debt: Some("C1-b: pen construction is connected; capture and livestock ownership are not active in C1-a."),
+         debt: None,
          threshold: 300, prereqs: ["tracking", "cordage"], difficulty: 1,
          discover: [Practice(job_kind: "hunt", count: 2), Stockpile("cord", 1)], gates: [], marker_weight: 2,
          seed: None, name_key: "KNOWLEDGE_ANIMAL_TAMING"),
-        (id: "herding", lane: "animals", era: "neolithic", tier: 2, status: Inert,
-         debt: Some("C1-b: livestock grazing, breeding and milk collection are not active in C1-a."),
+        (id: "herding", lane: "animals", era: "neolithic", tier: 2, status: Connected,
+         debt: None,
          threshold: 300, prereqs: ["animal_taming"], difficulty: 1,
-         discover: [Knows("animal_taming", 300), Stockpile("hay", 3)], gates: [], marker_weight: 0,
+         discover: [Knows("animal_taming", 300), Practice(job_kind: "capture", count: 1)], gates: [], marker_weight: 0,
          seed: None, name_key: "KNOWLEDGE_HERDING"),
-        // Milk itself is the dairy discovery witness; pottery knowledge enables fermentation.
+        // Successful capture and real fired-pot practice precede milk; no circular milk-stock discovery.
         (id: "dairy", lane: "food", era: "neolithic", tier: 3, status: Connected,
-         debt: Some("C1-b: cheese recipe is connected; livestock milk supply and milk-based natural discovery are not available in C1-a."),
-         threshold: 300, prereqs: ["pot_firing"], difficulty: 2,
-         discover: [Practice(job_kind: "craft", count: 3), Stockpile("milk", 2)],
+         debt: None,
+         threshold: 300, prereqs: ["animal_taming", "pot_firing"], difficulty: 2,
+         discover: [Practice(job_kind: "capture", count: 1), Knows("pot_firing", 400)],
          gates: [Recipe("ferment_milk")], marker_weight: 0, seed: None, name_key: "KNOWLEDGE_DAIRY"),
         (id: "dog_taming", lane: "animals", era: "neolithic", tier: 1, status: Inert,
          debt: Some("C2: companion dogs and their hunting/guarding effects require a dedicated driver."),

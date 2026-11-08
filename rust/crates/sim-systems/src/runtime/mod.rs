@@ -22,6 +22,7 @@ pub mod food;
 pub mod influence;
 pub mod jobs;
 pub mod knowledge;
+pub mod livestock;
 pub mod memory;
 pub mod mind;
 pub mod mood;

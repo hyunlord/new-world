@@ -9,6 +9,56 @@ use sim_engine::SimResources;
 /// Targets of ordinary commands, captured before mutation.
 pub fn targets(res: &SimResources, cmd: &Command) -> Vec<Target> {
     match cmd {
+        Command::DesignateCapture { animal } => res
+            .colony
+            .wildlife
+            .animals
+            .get(animal)
+            .map(|source| vec![Target::Tile(source.pos.0, source.pos.1)])
+            .unwrap_or_default(),
+        Command::DesignateSlaughter { animal } => res
+            .livestock
+            .animals
+            .get(animal)
+            .and_then(|animal| {
+                crate::runtime::livestock::pen_layout(res, animal.pen_site)
+                    .ok()
+                    .and_then(|pen| pen.gates.first().copied())
+                    .or_else(|| {
+                        res.colony
+                            .buildings
+                            .sites
+                            .get(&animal.pen_site)
+                            .map(|site| site.anchor)
+                    })
+            })
+            .map(|tile| vec![Target::Tile(tile.0, tile.1)])
+            .unwrap_or_default(),
+        Command::BuildTemplate {
+            id,
+            anchor,
+            rotation,
+            ..
+        } => sim_core::colony::content::installed_or_bundled()
+            .building_templates()
+            .get(id)
+            .and_then(|template| template.rotated_footprint(*rotation).ok())
+            .filter(|size| {
+                anchor
+                    .0
+                    .checked_add(size.0)
+                    .is_some_and(|right| right <= res.tile_grid.width)
+                    && anchor
+                        .1
+                        .checked_add(size.1)
+                        .is_some_and(|bottom| bottom <= res.tile_grid.height)
+            })
+            .map(|size| {
+                (anchor.1..anchor.1 + size.1)
+                    .flat_map(|y| (anchor.0..anchor.0 + size.0).map(move |x| Target::Tile(x, y)))
+                    .collect()
+            })
+            .unwrap_or_default(),
         Command::DeployFoodPot { tile: (x, y) } => vec![Target::Tile(*x, *y)],
         Command::DesignateChopTiles { tiles } => {
             tiles.iter().map(|&(x, y)| Target::Tile(x, y)).collect()

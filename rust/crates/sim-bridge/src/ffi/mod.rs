@@ -31,6 +31,7 @@ pub mod family;
 pub mod food;
 pub mod home_housing;
 pub mod knowledge;
+pub mod livestock;
 pub mod material_category;
 pub mod mind;
 pub mod neighbours;

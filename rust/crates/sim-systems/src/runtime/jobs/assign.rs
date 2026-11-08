@@ -898,8 +898,34 @@ fn pick_work(
             })
         }
         // M5 (ADR 0028): the nearest huntable deer (a tracking practitioner only).
-        WorkType::Hunt => super::hunt::pick(res, ctx.practice, ctx.region, pos, radius)
-            .map(|(animal, _)| (JobKind::Hunt { animal }, 0, ItemKind::role("grazer_meat"))),
+        WorkType::Hunt => {
+            if let Some(o) =
+                super::livestock::pick_slaughter(res, ctx.practice, ctx.region, pos, radius)
+            {
+                return Some((
+                    JobKind::Slaughter {
+                        animal: o.animal,
+                        at: o.gate,
+                    },
+                    0,
+                    ItemKind::role("default_placeholder"),
+                ));
+            }
+            if let Some(o) =
+                super::livestock::pick_capture(res, ctx.practice, ctx.region, pos, radius)
+            {
+                return Some((
+                    JobKind::Capture {
+                        animal: o.wild,
+                        pen: o.pen,
+                    },
+                    0,
+                    ItemKind::role("default_placeholder"),
+                ));
+            }
+            super::hunt::pick(res, ctx.practice, ctx.region, pos, radius)
+                .map(|(animal, _)| (JobKind::Hunt { animal }, 0, ItemKind::role("grazer_meat")))
+        }
         WorkType::Chop => {
             // The nearest marked tree no one has taken.
             let choppable = |tile: (u32, u32)| {
@@ -923,6 +949,17 @@ fn pick_work(
             })
         }
         WorkType::Haul => {
+            if let Some(o) = super::livestock::pick_milk(res, ctx.practice, ctx.region, pos, radius)
+            {
+                return Some((
+                    JobKind::Milk {
+                        animal: o.animal,
+                        at: o.gate,
+                    },
+                    0,
+                    ItemKind::role("default_placeholder"),
+                ));
+            }
             if let Some(job) =
                 super::field::pick(res, ctx.agent, ctx.practice, ctx.region, pos, radius, true)
             {
@@ -1647,6 +1684,45 @@ impl RuntimeSystem for JobAssignSystem {
                 let Some((kind, amount, item)) = found else {
                     continue;
                 };
+                // Livestock uses the shared revalidating admission used by mind callers.
+                let livestock_offer = match kind {
+                    JobKind::Capture { .. } => super::livestock::pick_capture(
+                        resources,
+                        practice,
+                        resources.nav.region_of(pos),
+                        pos,
+                        rule.job_scan_radius,
+                    )
+                    .map(super::livestock::Offer::Capture),
+                    JobKind::Milk { .. } => super::livestock::pick_milk(
+                        resources,
+                        practice,
+                        resources.nav.region_of(pos),
+                        pos,
+                        rule.job_scan_radius,
+                    )
+                    .map(super::livestock::Offer::Milk),
+                    JobKind::Slaughter { .. } => super::livestock::pick_slaughter(
+                        resources,
+                        practice,
+                        resources.nav.region_of(pos),
+                        pos,
+                        rule.job_scan_radius,
+                    )
+                    .map(super::livestock::Offer::Slaughter),
+                    _ => None,
+                };
+                if matches!(
+                    kind,
+                    JobKind::Capture { .. } | JobKind::Milk { .. } | JobKind::Slaughter { .. }
+                ) {
+                    if livestock_offer.is_some_and(|offer| {
+                        super::livestock::start(world, resources, entity, offer)
+                    }) {
+                        assigned.insert(id);
+                    }
+                    continue;
+                }
                 // M3: a target this person found unreachable lately is skipped.
                 if resources
                     .colony

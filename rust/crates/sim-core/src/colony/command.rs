@@ -408,6 +408,16 @@ pub enum Command {
         /// Opposite inclusive corner y.
         y1: u32,
     },
+    /// Order a wild kid captured into a completed pen.
+    DesignateCapture {
+        /// Original wild animal identity.
+        animal: u32,
+    },
+    /// Explicitly order this livestock animal slaughtered.
+    DesignateSlaughter {
+        /// Domesticated animal identity.
+        animal: u32,
+    },
 }
 
 impl Command {
@@ -460,6 +470,8 @@ impl Command {
             Self::BuildTemplate { .. } => "build_template",
             Self::UpgradeBuilding { .. } => "upgrade_building",
             Self::AddHousingZone { .. } => "add_housing_zone",
+            Self::DesignateCapture { .. } => "designate_capture",
+            Self::DesignateSlaughter { .. } => "designate_slaughter",
         }
     }
 }

@@ -9,6 +9,7 @@ pub mod food;
 mod house_profile;
 mod housing;
 pub mod lifecycle;
+mod livestock;
 pub mod planning;
 mod production;
 use hecs::World;

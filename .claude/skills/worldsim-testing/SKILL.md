@@ -358,3 +358,20 @@ deadline or retune predator data to hide interference. Sources: `colony_jobs.rs`
 `colony_wildlife.rs` under `rust/crates/sim-test/tests/`; `docs/v8/BALANCE_DEBT.md`.
 
 | 2026-11-08 | A feature-first fixture unexpectedly compared changed fingerprints to BASE | The external runner comma-joined READ_CHANGED_FIXTURES while the checker uses whitespace splitting | Assert and print the exact parsed fixture list against the frozen configuration before launch; preserve the failing run | `docs/v8/c1/C1_DECISIONS.md` D9; `tools/v8/read_gate_checks.py` |
+
+### Historical mind dictionaries require their exact registry
+
+Appending an unused fact still changes the compiled mind dictionary/revision.
+Reconstruct each explicitly supported historical registration set and require its
+complete saved dictionary and revision to match. For C1's immediate predecessor,
+retain the five existing food facts (`harvest_window`, `job_food_transport`,
+`harvest_storage_available`, `winter_stock_duty`, `water_target_available`) and
+exclude only `job_livestock`; the older format13 set is a separate case. Do not
+fall back by removing all later facts or accepting an unknown revision.
+
+Use genuine predecessor-written saves, including populated history, old counters
+and upper mask bits; then check resave and deterministic twin continuation. A
+current-writer fixture cannot establish historical decoding. Preserve the actual
+failed load separately from repair and later validation. Sources:
+`rust/crates/sim-systems/src/runtime/mind/program.rs`;
+`docs/v8/c1/C1_DECISIONS.md` D13; external `b-genuine20-tests-2.log`.

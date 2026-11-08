@@ -156,5 +156,43 @@ pub(super) fn knowledge_refs(c: &Catalog) -> Result<(), CatalogError> {
             }
         }
     }
+    for animal in c.animals() {
+        let Some(policy) = &animal.tameable else {
+            continue;
+        };
+        if crate::colony::JobKind::code_for_name(&policy.capture_job) != Some(23) {
+            return Err(CatalogError::new(
+                &animal.identity.id,
+                "unsupported livestock job selector",
+            ));
+        }
+        for name in std::iter::once(&policy.capture_knowledge).chain(
+            policy
+                .products
+                .milk
+                .iter()
+                .chain(&policy.products.wool)
+                .map(|p| &p.requires_knowledge),
+        ) {
+            let node = c
+                .knowledge_defs
+                .id_of(name)
+                .and_then(|id| c.knowledge_defs.get(id))
+                .ok_or_else(|| {
+                    CatalogError::new(
+                        &animal.identity.id,
+                        format!("unknown livestock knowledge {name}"),
+                    )
+                })?;
+            if animal.status == crate::colony::knowledge::ContentStatus::Connected
+                && node.status != crate::colony::knowledge::ContentStatus::Connected
+            {
+                return Err(CatalogError::new(
+                    &animal.identity.id,
+                    "connected tameable requires connected knowledge",
+                ));
+            }
+        }
+    }
     Ok(())
 }

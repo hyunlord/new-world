@@ -2,8 +2,9 @@
 //!
 //! `cancel` is the one way a job ends early: it drops any carried load on the
 //! worker's tile (merge and spill), releases every reservation the worker
-//! holds, removes `Job` and `Carry`, and sets the worker `Idle` without a
-//! `SeekTarget`. The decision seam uses `release_job`, which leaves the state
+//! holds, removes `Job`, and sets the worker `Idle` without a
+//! `SeekTarget`. Food and durable cargo retain `Carry` until atomic placement fits.
+//! The decision seam uses `release_job`, which leaves the state
 //! and `SeekTarget` to the decision system.
 use hecs::{Entity, World};
 use sim_core::colony::{CancelReason, Carry, Job, JobKind, JobStage, ReserveKey, Tool};
@@ -22,7 +23,7 @@ pub fn release_all(res: &mut SimResources, agent: AgentId) {
     res.colony.reservations.retain(|_, holder| *holder != agent);
 }
 
-/// Drop carried items; food and seeds retain their complete cargo if no placement fits.
+/// Drop carried items; food and durable cargo remain carried if no placement fits.
 pub fn drop_carry(world: &mut World, res: &mut SimResources, entity: Entity) {
     let load = world
         .get::<&Carry>(entity)
@@ -30,7 +31,8 @@ pub fn drop_carry(world: &mut World, res: &mut SimResources, entity: Entity) {
         .map(|carry| *carry)
         .zip(world.get::<&Position>(entity).ok().map(|p| (p.x, p.y)));
     if let Some((carry, tile)) = load {
-        if carry.kind.definition().food.is_some() || super::food_transfers::durable_seed(carry.kind)
+        if carry.kind.definition().food.is_some()
+            || super::food_transfers::durable_cargo(carry.kind)
         {
             super::food_transfers::drop(world, res, entity, tile);
             return;
@@ -146,16 +148,25 @@ pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
     }
     drop_carry(world, res, entity);
     crate::runtime::food::loss::lose_carried(world, res, entity);
-    let stranded_seed = world
+    let stranded = world
         .get::<&Carry>(entity)
         .ok()
         .map(|carry| *carry)
-        .filter(|carry| super::food_transfers::durable_seed(carry.kind));
-    if let Some(carry) = stranded_seed {
+        .filter(|carry| super::food_transfers::durable_cargo(carry.kind));
+    if let Some(carry) = stranded {
         if world.remove_one::<Carry>(entity).is_ok() {
             let count = u64::from(carry.count);
             res.colony.item_ledger.consume(carry.kind, count);
-            res.cultivation.counters.seed_lost += count;
+            if super::food_transfers::durable_seed(carry.kind) {
+                res.cultivation.counters.seed_lost += count;
+            }
+            if super::livestock::capture_tool(carry.kind) {
+                *res.livestock
+                    .lost_capture_tools
+                    .entry(carry.kind)
+                    .or_default() += count;
+                res.livestock.touch();
+            }
         }
     }
     if let Some(id) = agent_id(world, entity) {

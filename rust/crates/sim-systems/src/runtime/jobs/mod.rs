@@ -29,6 +29,7 @@ pub mod hearth;
 pub mod hunt;
 pub mod invariants;
 pub mod items;
+pub mod livestock;
 mod pot_supply;
 pub mod processing;
 pub mod space;

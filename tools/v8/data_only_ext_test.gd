@@ -11,6 +11,7 @@ const Content = preload("res://scripts/ui/content_context.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Resolver = preload("res://scripts/world/art/material_resolver.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
+const Icons = preload("res://scripts/ui/item_icons.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const PresentationBootstrap = preload("res://scripts/core/presentation_bootstrap.gd")
 var _rows: Array[Dictionary] = []
@@ -58,6 +59,10 @@ func _run() -> void:
 	for entry: Array in [["items", 65537, "test_hide"], ["recipes", 65538, "test_hide_recipe"], ["blueprints", 65539, "test_mudbrick_wall"], ["pressures", 4294967294, "test_cold"], ["animals", 4294967293, "test_grazer"]]:
 		var row: Dictionary = Content.row(str(entry[0]), int(entry[1]))
 		_check("selected DTO " + str(entry[0]), str(row.get("id", "")) == str(entry[2]) and int(row.get("code", -1)) == int(entry[1]))
+	var selected_animal: Dictionary = Content.row("animals", 4294967293)
+	_check("selected animal domestic policy exposed", bool(selected_animal.get("tameable", false)))
+	_check("selected animal art selectors exposed", selected_animal.get("art_shape") == "cloth" and selected_animal.get("art_tint_material") == "limestone")
+	_check("selected domestic art uses shared renderer texture", Icons.item_texture(selected_animal) != null)
 	_check("selected knowledge DTO", dto.get("knowledge", []).any(func(row: Dictionary) -> bool: return str(row.get("id", "")) == "test_hide_craft"))
 	_check("localized full-width pressure", StoryText.pressure(root.get_node("Locale"), 4294967294) != "" and not StoryText.pressure(root.get_node("Locale"), 4294967294).contains("4294967294"))
 	_check("localized full-width animal", StoryText.animal(root.get_node("Locale"), 4294967293) != "" and not StoryText.animal(root.get_node("Locale"), 4294967293).contains("4294967293"))

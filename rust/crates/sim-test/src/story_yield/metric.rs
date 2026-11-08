@@ -47,7 +47,7 @@ fn trace(chronicle: &Chronicle, start: u32) -> Chain {
         kinds.push(format!("entry:{}", entry.kind.as_str()));
         let (next, edge_kind) = match chronicle.cause_of(cursor) {
             None => return Chain::Complete { depth, kinds },
-            Some(CauseRef::Building { .. }) => {
+            Some(CauseRef::Building { .. } | CauseRef::Livestock { .. }) => {
                 // This API has Chronicle only, not command_log or BuildingState.
                 // Keep the verified prefix unresolved; do not invent a root or
                 // follow a command-record number as a chronicle entry index.

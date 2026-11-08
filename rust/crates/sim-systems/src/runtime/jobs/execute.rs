@@ -186,6 +186,9 @@ fn target_exists(
         // Apprenticeship: `teach::step` checks the order and the partner.
         (JobKind::Teach { .. } | JobKind::Learn { .. }, _) => true,
         // M5: the hunted deer is alive; the top is still on its stack.
+        (JobKind::Capture { .. } | JobKind::Milk { .. } | JobKind::Slaughter { .. }, _) => {
+            super::livestock::target_exists(res, id, job)
+        }
         (JobKind::Hunt { animal }, _) => colony.wildlife.animals.contains_key(&animal),
         (JobKind::Equip { from }, JobStage::ToSource) => {
             colony.ground_items.get(&from).is_some_and(|s| {
@@ -238,7 +241,8 @@ fn step(
     };
     // M3: the move could not find a way to this stage's goal.
     let goal = match job.stage {
-        JobStage::ToSource => Some(job.fetch.unwrap_or(job.kind.source())),
+        JobStage::ToSource => super::livestock::target_tile(res, &job)
+            .or(Some(job.fetch.unwrap_or(job.kind.source()))),
         JobStage::ToDest => job.kind.dest(),
         JobStage::Working { .. } => None,
     };
@@ -253,6 +257,13 @@ fn step(
     }
     if super::field::tile(job.kind).is_some() {
         super::field::execute::step(world, res, id, entity, job, pos);
+        return;
+    }
+    if matches!(
+        job.kind,
+        JobKind::Capture { .. } | JobKind::Milk { .. } | JobKind::Slaughter { .. }
+    ) {
+        super::livestock::step(world, res, id, entity, job, pos);
         return;
     }
     // M5: hunting and dressing run in `hunt`.
@@ -394,7 +405,10 @@ fn step(
                 | JobKind::TillField { .. }
                 | JobKind::SowField { .. }
                 | JobKind::TendField { .. }
-                | JobKind::HarvestField { .. } => {}
+                | JobKind::HarvestField { .. }
+                | JobKind::Capture { .. }
+                | JobKind::Milk { .. }
+                | JobKind::Slaughter { .. } => {}
                 JobKind::Haul { from, .. }
                 | JobKind::Deliver { from, .. }
                 | JobKind::Supply { from, .. }

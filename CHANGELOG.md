@@ -1,17 +1,32 @@
 # Changelog
 
-## C1-a — implementation IN_PROGRESS, 2026-11-08 (not published)
+## C1-b — implemented, verification IN_PROGRESS, 2026-11-09 (not published)
+
+### Added
+- Data-driven livestock sidecar, ordinary capture/milk/slaughter jobs, physical pen feeding, biological age, breeding and typed immutable event causes. One colony-only system reuses existing work, reservations and atomic product placement.
+- Live pen rendering, forage diagnosis, capture-triggered chapter5 and a pinned first-kid Keep/Slaughter card, with Korean/English text and selected-pack species coverage.
+
+### Changed
+- Preserve the original d30 paired-smoke BASE and the single wild-boar Inert switch. Starting biological and work values are authored before outcomes.
+- Format21 appends livestock and three Skills counters; exact authenticated19/20 readers retain historical counters, buildings, knowledge and mind dictionaries. Three genuine published-a20 fixtures and the original BASE19 save pass focused continuation checks.
+- Focused core/system/bridge suites, all-target Clippy, data-only extension and bilingual tech/recipe native checks pass. The physical goat chain, six domestic-animal native checkpoints and full publication gate remain pending.
+- Rebind a renderer's local snapshot on world reset instead of clearing the recursively frozen SimReads dictionary; preserve the native run that exposed the engine error despite a zero harness failure count.
+
+### Removed
+- None.
+
+## C1-a — published 094fea092, 2026-11-09
 
 ### Added
 - Climate/terrain/elevation origins for wild species, five seasonal crops with physical seed sources and imported seed goods; neolithic recipe, item and knowledge data.
 - Grain-specific storage, buildable pen, oven house and smokehouse over ordinary physical piece jobs; staged livestock chapter/card and ko/en labels.
-- Origin, catalogue, real crafting, building, extension and prior-save tests; focused execution and bilingual native captures pass, with the final publication gate pending.
+- Origin, catalogue, real crafting, building, extension and prior-save tests; focused execution and bilingual native captures pass; exact-head A3 full49/49 passed.
 
 ### Changed
 - Expand knowledge masks to128 bits while preserving historical node ordinals and validating actual format19 saves. Missing efficiency/healing/social effects remain explicit debt.
 - Open fence enclosures do not grant roof shelter or draw an opaque template roof. No balance calibration or held-out evaluation.
 - Authored garment codes resolve to the existing wrap silhouette and individual palettes; the workshop storage explanation refreshes on language change.
-- Following the first gate's frame-ceiling failure, reuse immutable template rotations within each steward house search; retain candidate order and live occupancy checks. Focused equivalence tests pass; full identity and frame acceptance remain pending.
+- Following the first gate's frame-ceiling failure, reuse immutable template rotations within each steward house search; retain candidate order and live occupancy checks. Focused equivalence and A1/A3 retained summary/churn comparisons pass; full baseline identity and existing step41 waiver pass in A3.
 
 - Preserve A2 draw-only stall evidence separately from the repaired native house search; D-C1-1 requires a fresh full gate and permits only one conditional same-binary stall rerun. Correct the external fixture-list delimiter with a pre-launch assertion.
 

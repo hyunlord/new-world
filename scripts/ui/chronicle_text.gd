@@ -33,7 +33,7 @@ const Content = preload("res://scripts/ui/content_context.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 ## MindChoice (47) records only entry into the critical band; its node slot is not a display name.
-const LAST_KIND: int = 60
+const LAST_KIND: int = 65
 static var steward_labels: Dictionary = {}
 static var food_chronicle: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
@@ -64,6 +64,8 @@ static func rows(packed: Dictionary) -> Array[Dictionary]:
 			row[key] = int(column[index]) if index < column.size() else -1
 		var metadata: Array = packed.get("food_evidence", [])
 		row["food_evidence"] = metadata[index] if index < metadata.size() and metadata[index] is Dictionary else {}
+		var livestock: Array = packed.get("livestock_evidence", [])
+		row["livestock_evidence"] = livestock[index] if index < livestock.size() and livestock[index] is Dictionary else {}
 		result.append(row)
 	return result
 
@@ -173,6 +175,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 				era_name = loc(locale, "ERA_TRANSITION_FMT").format({"era": era_name})
 			return loc(locale, "CHRONICLE_ERA_CHANGED_FMT").format({"era": era_name})
 		60: return building_complete_sentence(row, locale)
+		61, 62, 63, 64, 65: return livestock_sentence(row.get("livestock_evidence", {}), locale)
 		54, 55, 56:
 			var crop: Dictionary = preload("res://scripts/ui/content_context.gd").row("crops", value)
 			var key: String = ["S1_CHRON_SOWN", "S1_CHRON_HARVEST", "S1_CHRON_FROST"][kind - 54]
@@ -309,6 +312,8 @@ static func why_lines(read: Dictionary, locale: Node, info: Dictionary) -> Array
 					"settlement": -1, "settlement2": -1, "cause": causes[i] if i < causes.size() else -1, "value": values[i] if i < values.size() else 0, "food_daily_milli": food_daily[i] if i < food_daily.size() else -1}
 				var metadata: Array = read.get("food_evidence", [])
 				row["food_evidence"] = metadata[i] if i < metadata.size() and metadata[i] is Dictionary else {}
+				var livestock: Array = read.get("livestock_evidence", [])
+				row["livestock_evidence"] = livestock[i] if i < livestock.size() and livestock[i] is Dictionary else {}
 				text = line(row, -1, locale, info, true)
 				if text.is_empty():
 					text = loc(locale, "UI_UNKNOWN")
@@ -319,6 +324,9 @@ static func why_lines(read: Dictionary, locale: Node, info: Dictionary) -> Array
 					text = "[url=building:%d:%d][color=#e8c46e]%s[/color][/url]" % [building_sites[i], building_records[i], loc(locale, "BUILD_SOURCE")]
 				else:
 					text = loc(locale, "BUILD_CAUSE_UNAVAILABLE")
+			4:
+				var livestock: Array = read.get("livestock_evidence", [])
+				text = livestock_cause(livestock[i] if i < livestock.size() and livestock[i] is Dictionary else {}, locale)
 			_: text = loc(locale, "UI_UNKNOWN")
 		out.append(text if i == 0 else "→ " + text)
 	return out
@@ -442,3 +450,30 @@ static func food_operation_sentence(evidence: Dictionary, locale: Node) -> Strin
 	var owner: Dictionary = evidence.get("owner", {})
 	values["owner"] = loc(locale, str(food_chronicle.get("owners", {}).get(str(owner.get("kind", "")), "M6A_EVIDENCE_MISSING")))
 	return loc(locale, key).format(values)
+
+
+## Typed immutable animal evidence: no AgentId aliases or live-source lookups.
+static func livestock_sentence(evidence: Dictionary, locale: Node) -> String:
+	if evidence.is_empty(): return loc(locale, "UI_UNKNOWN")
+	var event: String = str(evidence.get("event", ""))
+	var keys: Dictionary = {"captured": "C1_CHRON_CAPTURE", "born": "C1_CHRON_BORN", "milk": "C1_CHRON_MILK", "slaughter": "C1_CHRON_SLAUGHTER", "died": "C1_CHRON_DIED"}
+	var species: Dictionary = Content.row("animals", int(evidence.get("species", -1)))
+	var animal: String = loc(locale, str(species.get("name_key", "UI_UNKNOWN")))
+	if event == "slaughter": animal = KnowledgeText.with_object(locale, animal)
+	elif event == "died": animal = KnowledgeText.with_subject(locale, animal)
+	var text: String = loc(locale, str(keys.get(event, "UI_UNKNOWN"))).format({"animal": animal, "id": int(evidence.get("livestock", -1))})
+	return text
+
+
+static func livestock_cause(evidence: Dictionary, locale: Node) -> String:
+	if evidence.is_empty(): return loc(locale, "UI_UNKNOWN")
+	var event: String = str(evidence.get("event", ""))
+	if event in ["captured", "milk"]:
+		return loc(locale, "C1_WHY_KNOWLEDGE_PEN").format({"knowledge": KnowledgeText.node_name(locale, int(evidence.get("knowledge", -1))), "pen": int(evidence.get("pen_site", -1)), "proficiency": int(evidence.get("proficiency", 0)), "required": int(evidence.get("required", 0))})
+	if event == "born":
+		return loc(locale, "C1_WHY_PARENTS").format({"mother": int(evidence.get("mother", -1)), "father": int(evidence.get("father", -1)), "pen": int(evidence.get("pen_site", -1))})
+	if event == "slaughter":
+		return loc(locale, "C1_WHY_STEWARD" if int(evidence.get("steward_rule", -1)) >= 0 else "C1_WHY_COMMAND").format({"record": int(evidence.get("source_record", -1))})
+	if event == "died":
+		return loc(locale, "C1_WHY_STARVATION" if str(evidence.get("reason", "")) == "starvation" else "C1_WHY_OLD_AGE")
+	return loc(locale, "UI_UNKNOWN")

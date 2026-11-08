@@ -22,6 +22,8 @@ pub enum Condition {
     KnowledgeRisk,
     /// Predators are approaching the colony.
     ThreatApproaching,
+    /// A practitioner can prepare a pen or designate a wild kid for capture.
+    Livestock,
 }
 /// Ordinary-order planning mechanics; all content choices reside in this data.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -107,6 +109,8 @@ pub enum Action {
     },
     /// Demand-limited food gathering, cooking and winter preservation.
     FoodPlan(super::FoodPlan),
+    /// Request a capacity-bearing template, then ordinary capture orders.
+    Livestock,
 }
 /// Seasonal fuel reserve; quantities remain authored independently of tool bills.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -227,6 +231,7 @@ pub fn parse_rules(text: &str) -> Result<RuleFile, String> {
                 },
             ) => crate::colony::knowledge::id(knowledge).is_some() && *days > 0,
             (Condition::KnowledgeRisk, Action::Teach) => true,
+            (Condition::Livestock, Action::Livestock) => true,
             (Condition::FoodDeficit, Action::FoodPlan(plan)) => plan.valid(),
             (
                 Condition::ThreatApproaching,

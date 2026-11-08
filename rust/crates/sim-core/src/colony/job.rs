@@ -226,11 +226,32 @@ pub enum JobKind {
         /// Ripe field work tile.
         tile: (u32, u32),
     },
+    /// Capture a wild kid into a physically completed pen.
+    Capture {
+        /// Original wild identity.
+        animal: u32,
+        /// Completed physical pen identity.
+        pen: u32,
+    },
+    /// Collect a ready animal's authored milk at its pen gate.
+    Milk {
+        /// Domesticated animal identity.
+        animal: u32,
+        /// Admitted pen gate work tile.
+        at: (u32, u32),
+    },
+    /// Carry out a recorded slaughter order at the pen gate.
+    Slaughter {
+        /// Domesticated animal identity.
+        animal: u32,
+        /// Admitted pen gate work tile.
+        at: (u32, u32),
+    },
 }
 
 impl JobKind {
     /// Stable job names indexed by [`Self::code`]; index zero means no job.
-    pub const NAMES: [&'static str; 23] = [
+    pub const NAMES: [&'static str; 26] = [
         "none",
         "chop",
         "haul",
@@ -254,6 +275,9 @@ impl JobKind {
         "sow_field",
         "tend_field",
         "harvest_field",
+        "capture",
+        "milk",
+        "slaughter",
     ];
 
     /// Resolve a named completed-job condition to the existing stable job code.
@@ -290,6 +314,9 @@ impl JobKind {
             Self::TendField { .. } => 21,
             Self::SowField { .. } => 20,
             Self::TillField { .. } => 19,
+            Self::Capture { .. } => 23,
+            Self::Milk { .. } => 24,
+            Self::Slaughter { .. } => 25,
         }
     }
 
@@ -318,6 +345,9 @@ impl JobKind {
             Self::TendField { .. } => "tend_field",
             Self::SowField { .. } => "sow_field",
             Self::TillField { .. } => "till_field",
+            Self::Capture { .. } => "capture",
+            Self::Milk { .. } => "milk",
+            Self::Slaughter { .. } => "slaughter",
         }
     }
 
@@ -334,7 +364,8 @@ impl JobKind {
             Self::Deconstruct { .. } | Self::Clear { .. } => WorkType::Build,
             Self::DigClay { .. } => WorkType::Mine,
             Self::Teach { .. } | Self::Learn { .. } => WorkType::Craft,
-            Self::Hunt { .. } => WorkType::Hunt,
+            Self::Hunt { .. } | Self::Capture { .. } | Self::Slaughter { .. } => WorkType::Hunt,
+            Self::Milk { .. } => WorkType::Haul,
             Self::Equip { .. } => WorkType::Haul,
             Self::Trade { .. } => WorkType::Haul,
             Self::Harvest { .. }
@@ -360,7 +391,8 @@ impl JobKind {
             Self::DigClay { node } => node,
             Self::Teach { at, .. } | Self::Learn { at, .. } => at,
             // The deer moves: the job layer walks to its current tile.
-            Self::Hunt { .. } => (u32::MAX, u32::MAX),
+            Self::Hunt { .. } | Self::Capture { .. } => (u32::MAX, u32::MAX),
+            Self::Milk { at, .. } | Self::Slaughter { at, .. } => at,
             Self::Equip { from } => from,
             Self::Trade { from, .. } => from,
             Self::Harvest { plant } => plant,
@@ -395,7 +427,10 @@ impl JobKind {
             | Self::TillField { .. }
             | Self::TendField { .. }
             | Self::HarvestField { .. }
-            | Self::Equip { .. } => None,
+            | Self::Equip { .. }
+            | Self::Capture { .. }
+            | Self::Milk { .. }
+            | Self::Slaughter { .. } => None,
         }
     }
 }
@@ -479,6 +514,16 @@ impl Job {
                 }
                 _ => vec![ReserveKey::Animal(animal)],
             },
+            (JobKind::Capture { animal, pen }, _) => {
+                let mut keys = vec![ReserveKey::Animal(animal), ReserveKey::PenCapture(pen)];
+                if let Some(from) = self.fetch {
+                    keys.push(ReserveKey::Stack(from));
+                }
+                keys
+            }
+            (JobKind::Milk { animal, .. } | JobKind::Slaughter { animal, .. }, _) => {
+                vec![ReserveKey::Livestock(animal)]
+            }
             (JobKind::Equip { from }, JobStage::ToSource) => vec![ReserveKey::Stack(from)],
             (JobKind::Equip { .. }, _) => Vec::new(),
             (JobKind::Trade { from, .. }, JobStage::ToSource) => vec![ReserveKey::Stack(from)],
@@ -522,6 +567,96 @@ pub enum CancelReason {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn livestock_codes_append_without_changing_the_public_prefix() {
+        assert_eq!(
+            &JobKind::NAMES[..23],
+            &[
+                "none",
+                "chop",
+                "haul",
+                "deliver",
+                "build",
+                "quarry",
+                "supply",
+                "craft",
+                "gather",
+                "dig",
+                "deconstruct",
+                "clear",
+                "dig_clay",
+                "teach",
+                "learn",
+                "hunt",
+                "equip",
+                "trade",
+                "harvest",
+                "till_field",
+                "sow_field",
+                "tend_field",
+                "harvest_field",
+            ]
+        );
+        for (kind, name, code, work) in [
+            (
+                JobKind::Capture { animal: 9, pen: 4 },
+                "capture",
+                23,
+                WorkType::Hunt,
+            ),
+            (
+                JobKind::Milk {
+                    animal: 9,
+                    at: (2, 3),
+                },
+                "milk",
+                24,
+                WorkType::Haul,
+            ),
+            (
+                JobKind::Slaughter {
+                    animal: 9,
+                    at: (2, 3),
+                },
+                "slaughter",
+                25,
+                WorkType::Hunt,
+            ),
+        ] {
+            assert_eq!((kind.name(), kind.code(), kind.work()), (name, code, work));
+            assert_eq!(JobKind::code_for_name(name), Some(code));
+            let mut job = Job {
+                kind,
+                stage: JobStage::ToSource,
+                taken_at: 0,
+                amount: 1,
+                item: ItemKind::Log,
+                material: None,
+                fetch: Some((5, 6)),
+                best_distance: 1,
+                progress_tick: 0,
+            };
+            if code == 23 {
+                assert_eq!(
+                    job.keys(),
+                    vec![
+                        ReserveKey::Animal(9),
+                        ReserveKey::PenCapture(4),
+                        ReserveKey::Stack((5, 6))
+                    ]
+                );
+                job.fetch = None;
+                job.stage = JobStage::Working { ticks_left: 5 };
+                assert_eq!(
+                    job.keys(),
+                    vec![ReserveKey::Animal(9), ReserveKey::PenCapture(4)]
+                );
+            } else {
+                assert_eq!(job.keys(), vec![ReserveKey::Livestock(9)]);
+            }
+        }
+    }
 
     #[test]
     fn keys_follow_the_stage() {

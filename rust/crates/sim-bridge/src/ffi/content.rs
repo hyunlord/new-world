@@ -106,6 +106,9 @@ pub fn catalog_to_dict(catalog: &Catalog) -> VarDictionary {
         row.set("mechanic", animal_mechanic(def.mechanic));
         row.set("huntable", def.huntable);
         row.set("hp", i64::from(def.hp.value));
+        row.set("art_shape", def.art.shape.name());
+        row.set("art_tint_material", def.art.tint_material.as_str());
+        row.set("tameable", def.tameable.is_some());
         animals.push(&row);
     }
     out.set("animals", animals);

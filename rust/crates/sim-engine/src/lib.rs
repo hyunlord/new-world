@@ -395,6 +395,9 @@ pub struct SimResources {
     /// Nonfood passive production, persisted in the explicit format17 tail.
     #[serde(skip)]
     pub processing: sim_core::colony::processing::ProcessingState,
+    /// Owned animals and immutable facts, persisted in the explicit format21 tail.
+    #[serde(skip)]
+    pub livestock: sim_core::colony::livestock::LivestockState,
     /// Pure seasonal supply cache; rebuilt after load and navigation changes.
     #[serde(skip, default)]
     pub food_supply_cache: std::cell::RefCell<food_supply_cache::FoodSupplyCache>,
@@ -890,6 +893,7 @@ impl SimResources {
             food: Default::default(),
             cultivation: Default::default(),
             processing: Default::default(),
+            livestock: Default::default(),
             food_supply_cache: Default::default(),
             fatal_animal_attacks: Vec::new(),
             building_event_queue: VecDeque::new(),

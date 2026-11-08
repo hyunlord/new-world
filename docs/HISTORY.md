@@ -395,3 +395,5 @@
 - 2026-11-02 — M6b 인수 결정 D-minus1: M-LOOP 미게시·실패 및 LOOP-R1 무효를 보존하고, BASE 집사 동작으로 프레젠테이션을 분리 검증했다. 같은 날 [2f6993009](https://github.com/hyunlord/new-world/commit/2f6993009ddb600e9249c28f9768a1a5252c8821)를 전체 gate03·후속 감사v3 뒤 wip→main fast-forward로 게시했다. BASE0는 이 SHA이고 실험 집사 작업은 Stage1·[ISS-361/#684](https://github.com/hyunlord/new-world/issues/684)로 옮겼다. 이전 실패와 strict stall 원시 실패는 보존한다([결정](v8/m6b/M6B_DECISIONS.md), [보고](v8/m6b/M6B_REPORT.md)).
 
 - 2026-11-02 — M6b Stage −1 최종 문서를 준비했다(p8 `3f21c8f7` 사전 검증). BASE 집사 동작과 LOOP 실패·R1 무효, p1–p7 실패를 보존한다. 이 문서 커밋의 전체 gate·원격 확인이 게시 조건이다([보고서](v8/m6b/M6B_REPORT.md)).
+
+- 2026-11-09 — C1-a 원산지·신석기 콘텐츠를 `094fea092`로 게시했다. A3 전체49/49 PASS, 기존 step41 면제, 원본 BASE 동일성·저장·명령 재생·생존 하한 통과. D-C1-1 재개와 A1/A2 실패 증거를 보존한다. C1-b 가축 사슬은 이어서 구현한다([보고](v8/c1/C1_REPORT.md)).

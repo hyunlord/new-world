@@ -506,6 +506,42 @@ fn animal() {
     assert_eq!(rows.hp[index], 1);
     assert_eq!(rows.huntable[index], 1);
     assert_eq!(rows.marked[index], 1);
+    let selected = kind.definition();
+    let policy = selected
+        .tameable
+        .as_ref()
+        .expect("selected tameable policy");
+    assert_eq!(selected.art.shape.name(), "cloth");
+    assert_eq!(selected.art.tint_material, "limestone");
+    assert_eq!(policy.capture_knowledge, "animal_taming");
+    assert_eq!(policy.capture_tool.map(|tool| tool.name()), Some("cord"));
+    assert_eq!(
+        policy.products.hide.0, item,
+        "selected domestic output is not bundled hide"
+    );
+    assert_eq!(policy.graze_tiles_per_head, 3);
+    let animal = &engine.resources.colony.wildlife.animals[&id];
+    let profile = sim_core::colony::livestock_demographics::wild_demographics(
+        engine.resources.world_seed,
+        animal,
+        policy,
+        engine.resources.current_tick,
+        engine.resources.ticks_per_day,
+    );
+    assert_eq!(rows.tameable[index], 1);
+    assert_eq!(rows.age_days[index], i64::from(profile.age_days));
+    assert_eq!(rows.female[index], i64::from(profile.sex.female));
+    assert!(
+        profile.age_days < policy.kid_age_days,
+        "ordinary spawn starts as a real biological kid"
+    );
+    assert_eq!(rows.capturable[index], 1);
+    let wildlife_before_read = engine.resources.colony.wildlife.clone();
+    assert_eq!(sim_bridge::ffi::collect_animals(&engine.resources), rows);
+    assert_eq!(
+        engine.resources.colony.wildlife, wildlife_before_read,
+        "selected demographic reads never alter wild state"
+    );
     assert!(
         run_until(&mut engine, 4000, |e| !e
             .resources

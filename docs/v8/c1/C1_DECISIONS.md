@@ -145,3 +145,91 @@ Only if step41 alone fails with an unattributed draw-only hitch may one isolated
 same-binary rerun qualify under D-C1-1; a second failure stops the pass. Retain
 both runs and, if that exception is used, record the debt and planner issue note.
 Historical A1/A2 failures and the prior literal §5 stop remain preserved.
+
+## D10 — C1-a publication is a separate completed boundary
+
+A3 completed49/49 PASS, status0, with the existing step41 waiver and no isolated
+rerun. At2026-11-09 02:41:59 KST, `v8/wip` and `v8/main` both fast-forwarded to
+`094fea092f467a7c82764165ad0d2f9e74b806e3`. The external
+`C1-a-publication.json` records both remote results. This closes the pending A
+publication statements above; it does not erase A1/A2 or establish any B result.
+
+## D11 — Livestock content selects mechanics; pens supply physical capacity
+
+C1-b selects capture knowledge, age/sex eligibility, products, tool costs and art
+through tameable animal data and existing categories. No animal-name branch or
+new content enum is required; renamed data-only content must exercise the same
+mechanics. The generic steward requests a known template with
+`livestock_capacity`, then designates an eligible wild kid through ordinary
+commands. It neither names a pen template nor grants knowledge or supplies.
+
+A completed pen requires its actual fence/door layout. Capacity6 and9 physical
+grazing cells are distinct: the fixed regrowth/feed values support3 heads per day
+without stored fodder. Daily order is regrowth, stable-ID feeding, hunger/readiness,
+deaths, then births. Capture, milk and explicit slaughter use actual workers,
+tools and atomic physical output placement. Authored values are starting design
+values recorded in BALANCE_DEBT, not outcome-tuned acceptance targets. This B
+decision supersedes D3's staged dairy debt: discovery uses actual capture practice
+and pot-firing knowledge, avoiding a prerequisite on its own milk output.
+
+## D12 — Livestock terminal facts have immutable typed witnesses
+
+Captured, born, milked, slaughtered and died events retain typed witnesses keyed
+by their actual Chronicle append index. `CauseRef::Livestock` and its matching
+link validate that witness, event and tick rather than forming an Entry self-loop.
+Capture/slaughter intent provenance requires the exact accepted command target
+and steward wrapper; automatic milking uses the animal's actual creation event.
+Birth/death do not invent human workers or command origins. This preserves the
+distinction between an accepted request and a completed physical outcome.
+
+## D13 — Preserve genuine format20 state and exact historical mind registries
+
+The B wire boundary is format21: append the livestock tail while preserving the
+frozen format20 body's field order. Skills completion counters widen23→26 by
+appending three slots; old counters and upper knowledge-mask bits must survive
+without a second conversion. The published A executable produced genuine
+ordinary/rich format20 files; the frozen A3 visibility run supplied a third
+completed-building save, with hashes in `published-a-legacy20/receipt.json`;
+current-writer fixtures cannot substitute for those inputs.
+
+The genuine rich-save test exposed a real historical mind-loader failure:
+`unknown fact "job_food_transport"` (`b-genuine20-tests-2.log`,0 passed/1 failed).
+Adding even an unused fact changes the compiled dictionary/revision. The
+immediate predecessor must retain `harvest_window`, `job_food_transport`,
+`harvest_storage_available`, `winter_stock_duty` and `water_target_available`,
+excluding only the newly appended `job_livestock`. The older format13 registry
+is a separate explicit case. Every admitted schema must still match the complete
+saved dictionary and revision; unknown schemas remain errors. The explicit
+pre-livestock reconstruction passed all three genuine fixtures, byte-stable21
+resave and60-tick twins (`b-genuine20-tests-4.log`,1 PASS); the full systems lib
+suite passed813 tests (`b-systems-lib-tests-2.log`). These focused results do not
+claim the B publication gate or end-to-end chain passed.
+
+## D14 — Fix the natural source before executing the physical chain
+
+The B scene fixes its source by the first qualifying seed in0..63: reachable open
+highland within40 with at least20 cells, natural opposite-sex goat kids, and clay
+within24. Source admission precedes outcomes; no age slack, replacement spawn,
+RNG edit or intermediate supply is added after observing the chain. Only the
+declared animal-taming knowledge goes to the two adult founders. Clay, fire,
+pots, flax, cordage and pen materials follow ordinary physical work.
+
+The bounded scene must show pen, capture, two adults, birth, subsequent fresh milk
+and explicit slaughter/meat/hide, with a mid-chain save/twin continuation and full
+command replay. These are required assertions, not completed results in this
+decision record. B chain, full gate and publication remain unclaimed here.
+
+The first admission fixed seed5 and sources10/11; source profiles and hashes are
+retained in `b-chain-admission-lock.json`. Run1 stopped on a redundant priority
+command; run2 built the real pen but the original sources matured before capture.
+Ordinary workflow repair removes automatic bill contention, schedules physical
+collection/crafting/building and captures the earlier-expiring source first.
+The same source set, age/sex, authored odds and biological clocks remain fixed.
+
+Run3 exposed the existing batch-job accounting: two physical products on one
+`Make(2)` bill complete one Craft job, so they cannot prove two completed Craft
+jobs. Run4 used two ordinary `Make(1)` bills and proved both completions, but
+later preparation outlasted the original sources and a stale person reference
+failed after a natural death. These failed scenes remain preserved. They are
+workflow failures, not a reason to weaken discovery, grant cord, replace sources
+or change their age. Final chain success remains pending.

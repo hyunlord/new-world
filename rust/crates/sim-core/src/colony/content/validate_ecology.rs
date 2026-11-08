@@ -19,6 +19,36 @@ fn number(v: &RuleU32, allowed: &[&str], context: &str) -> Result<(), CatalogErr
 }
 pub(super) fn animal(a: &AnimalDef<String>) -> Result<(), CatalogError> {
     let ctx = &a.identity.id;
+    if let Some(policy) = &a.tameable {
+        if a.mechanic != AnimalMechanic::Grazer
+            || policy.capture_success_permille > 1000
+            || policy.initial_age_days.0 > policy.initial_age_days.1
+            || policy.initial_age_days.1 >= policy.max_age_days
+            || policy.kid_age_days >= policy.max_age_days
+        {
+            return Err(CatalogError::new(ctx, "invalid tameable policy"));
+        }
+        for value in [
+            policy.capture_range_tiles,
+            policy.capture_work_ticks,
+            policy.capture_retry_days,
+            policy.kid_age_days,
+            policy.breeding_interval_days,
+            policy.max_age_days,
+            policy.graze_tiles_per_head,
+            policy.starvation_days,
+            policy.grass_regrow_days,
+            policy.milk_work_ticks,
+            policy.slaughter_work_ticks,
+            u32::from(policy.products.meat.1),
+            u32::from(policy.products.hide.1),
+        ] {
+            positive(u64::from(value), ctx)?;
+        }
+        for product in policy.products.milk.iter().chain(&policy.products.wool) {
+            positive(u64::from(product.every_days), ctx)?;
+        }
+    }
     if a.status == crate::colony::knowledge::ContentStatus::Inert
         && a.debt.as_deref().is_none_or(|debt| debt.trim().is_empty())
     {

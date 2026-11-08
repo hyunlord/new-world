@@ -132,6 +132,7 @@ fn validate_source_at(
             .map(|record| record.tick),
         MindFactSource::Chronicle(
             CauseRef::Entry(index)
+            | CauseRef::Livestock { witness: index }
             | CauseRef::Pressure {
                 entry: Some(index), ..
             }

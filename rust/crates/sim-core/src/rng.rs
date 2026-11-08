@@ -95,6 +95,9 @@ pub const STREAM_ROUTINE_PLACE: u64 = 0x5254_4E50_4C41_4345;
 pub const STREAM_ROUTINE_PLAY: u64 = 0x5254_4E50_4C41_595F;
 /// Family sex identity; lineage subject and fixed tick, slot and replicate zero.
 pub const STREAM_SEX: u64 = 0x5345_585F_4944_454E;
+/// Livestock ("LIVESTOK"): immutable wild sex/initial age slots0/1,
+/// completed capture attempt slot2, and newborn sex slot3. No stream state.
+pub const STREAM_LIVESTOCK: u64 = 0x4C49_5645_5354_4F4B;
 
 /// Quarrels (Pass 20, `game_v25`): whether a forage dispute between two
 /// villages' foragers becomes a quarrel, subject = the lineage key of the

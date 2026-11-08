@@ -401,6 +401,10 @@ pub enum ReserveKey {
     Plant((u32, u32)),
     /// Exclusive work on a cultivated tile.
     Field((u32, u32)),
+    /// One in-flight capture into a physical pen.
+    PenCapture(u32),
+    /// Exclusive work on one domesticated animal.
+    Livestock(u32),
 }
 
 impl ReserveKey {
@@ -418,7 +422,7 @@ impl ReserveKey {
             | Self::Plant(t)
             | Self::Field(t) => t,
             // Not a tile: an animal moves (off the map, so it blocks no placement).
-            Self::Animal(id) => (u32::MAX, id),
+            Self::Animal(id) | Self::PenCapture(id) | Self::Livestock(id) => (u32::MAX, id),
         }
     }
 }

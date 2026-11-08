@@ -81,6 +81,7 @@ impl From<LegacyBodyV13> for Body {
             cultivation: Default::default(),
             processing: Default::default(),
             buildings: Default::default(),
+            livestock: Default::default(),
         }
     }
 }

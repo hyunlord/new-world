@@ -350,6 +350,14 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
         p.job
             .is_some_and(|job| matches!(job.kind, JobKind::Harvest { .. }))
     ))),
+    // Boolean observation only; the authored work band owns priority and lifecycle selection.
+    fact!("job_livestock", Bool, |p, _c, r, _n| Ok(i64::from(
+        r.rules.colony.is_some()
+            && p.job.is_some_and(|job| matches!(
+                job.kind,
+                JobKind::Capture { .. } | JobKind::Milk { .. }
+            ))
+    ))),
     fact!("craft_working", Bool, |p, _c, r, _n| Ok(i64::from(
         r.rules.colony.is_some_and(|rule| rule.economy.is_some())
             && p.job
@@ -682,13 +690,18 @@ pub const BUILTIN_PROVIDERS: &[FactProvider] = &[
     fact!("job_to_dest", Bool, |p, _c, _r, _n| Ok(i64::from(
         p.job.is_some_and(|j| matches!(j.stage, JobStage::ToDest))
     ))),
-    fact!("job_distance", Signed, |p, _c, _r, n| {
+    fact!("job_distance", Signed, |p, _c, r, n| {
         let Some(job) = p.job else {
             return Ok(i64::MAX);
         };
+        let moving_source = matches!(job.kind, JobKind::Capture { .. })
+            .then(|| crate::runtime::jobs::livestock::target_tile(r, &job))
+            .flatten();
         let goal = match job.stage {
-            JobStage::ToSource => job.fetch.unwrap_or_else(|| job.kind.source()),
-            JobStage::Working { .. } => job.kind.source(),
+            JobStage::ToSource => {
+                moving_source.unwrap_or_else(|| job.fetch.unwrap_or_else(|| job.kind.source()))
+            }
+            JobStage::Working { .. } => moving_source.unwrap_or_else(|| job.kind.source()),
             JobStage::ToDest => job.kind.dest().ok_or_else(|| missing(p.agent, n))?,
         };
         Ok(i64::from(
@@ -1382,10 +1395,20 @@ pub fn resolve_target(
             &[Domain::Person, Domain::Threats],
         ),
         "job" => (
-            person.job.and_then(|job| match job.stage {
-                JobStage::ToSource => Some(job.fetch.unwrap_or_else(|| job.kind.source())),
-                JobStage::Working { .. } => Some(job.kind.source()),
-                JobStage::ToDest => job.kind.dest(),
+            person.job.and_then(|job| {
+                let moving_source = matches!(job.kind, JobKind::Capture { .. })
+                    .then(|| crate::runtime::jobs::livestock::target_tile(resources, &job))
+                    .flatten();
+                match job.stage {
+                    JobStage::ToSource => Some(
+                        moving_source
+                            .unwrap_or_else(|| job.fetch.unwrap_or_else(|| job.kind.source())),
+                    ),
+                    JobStage::Working { .. } => {
+                        Some(moving_source.unwrap_or_else(|| job.kind.source()))
+                    }
+                    JobStage::ToDest => job.kind.dest(),
+                }
             }),
             &[Domain::Person, Domain::Jobs],
         ),
@@ -1829,6 +1852,7 @@ pub(super) fn continuation_supported(name: &str) -> bool {
             | "job_destination_distance"
             | "craft_working"
             | "job_harvesting"
+            | "job_livestock"
             | "worker"
             | "hunger"
             | "thirst"
@@ -2485,6 +2509,172 @@ mod tests {
         );
         assert!(node.target.is_none());
     }
+    #[test]
+    fn capture_job_fact_and_target_follow_tool_fetch_then_live_moving_source() {
+        use sim_core::colony::wildlife::{Animal, AnimalKind, AnimalState};
+        use sim_core::colony::{ItemKind, Job, JobKind, JobStage};
+        let mut resources = SimResources::new(16, 16, sim_core::MaterialRegistry::new());
+        resources.rules = sim_core::rules::WorldRules::colony(0);
+        let kind = AnimalKind::all()
+            .find(|a| a.definition().tameable.is_some())
+            .expect("tameable");
+        resources.colony.wildlife.animals.insert(
+            4,
+            Animal {
+                id: 4,
+                kind,
+                hp: 30,
+                state: AnimalState::Wander,
+                pos: (7, 8),
+                pack: None,
+                born_tick: 0,
+                path: Vec::new(),
+                goal: None,
+                home: Some((7, 8)),
+            },
+        );
+        let mut world = hecs::World::new();
+        let entity = world.spawn((
+            Agent { id: 7 },
+            Position::new(1, 1),
+            AgentState::Seeking {
+                target: TargetKind::Job,
+            },
+        ));
+        let provider = BUILTIN_PROVIDERS
+            .iter()
+            .find(|p| p.name == "job_distance")
+            .expect("fact");
+        for (fetch, stage, source, expected_tile, expected_distance) in [
+            (Some((3, 4)), JobStage::ToSource, (7, 8), (3, 4), 3),
+            (None, JobStage::ToSource, (7, 8), (7, 8), 7),
+            (
+                None,
+                JobStage::Working { ticks_left: 20 },
+                (9, 10),
+                (9, 10),
+                9,
+            ),
+        ] {
+            resources
+                .colony
+                .wildlife
+                .animals
+                .get_mut(&4)
+                .expect("animal")
+                .pos = source;
+            world
+                .insert_one(
+                    entity,
+                    Job {
+                        kind: JobKind::Capture { animal: 4, pen: 2 },
+                        stage,
+                        taken_at: 0,
+                        amount: 1,
+                        item: ItemKind::Log,
+                        material: None,
+                        fetch,
+                        best_distance: 0,
+                        progress_tick: 0,
+                    },
+                )
+                .expect("job");
+            let mut context = prepare_context(&world, &resources).expect("context");
+            assert_eq!(
+                (provider.read)(
+                    context.row(7).expect("person"),
+                    &context,
+                    &resources,
+                    provider.name
+                )
+                .expect("distance"),
+                expected_distance
+            );
+            assert_eq!(
+                resolve_target(&mut context, &resources, 7, "job")
+                    .expect("resolved target")
+                    .expect("actual target")
+                    .tile,
+                expected_tile
+            );
+        }
+    }
+
+    #[test]
+    fn livestock_fact_reads_actual_owned_job_and_authored_work_band() {
+        use sim_core::colony::{ItemKind, Job, JobKind, JobStage};
+        let provider = BUILTIN_PROVIDERS
+            .iter()
+            .find(|p| p.name == "job_livestock")
+            .expect("fact");
+        for (kind, expected) in [
+            (JobKind::Capture { animal: 4, pen: 2 }, 1),
+            (
+                JobKind::Milk {
+                    animal: 4,
+                    at: (3, 3),
+                },
+                1,
+            ),
+            (JobKind::Chop { tree: (3, 3) }, 0),
+        ] {
+            for colony in [false, true] {
+                let mut world = hecs::World::new();
+                world.spawn((
+                    Agent { id: 7 },
+                    Position::new(1, 1),
+                    AgentState::Seeking {
+                        target: TargetKind::Job,
+                    },
+                    Job {
+                        kind,
+                        stage: JobStage::ToSource,
+                        taken_at: 0,
+                        amount: 0,
+                        item: ItemKind::Log,
+                        material: None,
+                        fetch: None,
+                        best_distance: 0,
+                        progress_tick: 0,
+                    },
+                ));
+                let mut resources = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+                if colony {
+                    resources.rules = sim_core::rules::WorldRules::colony(0);
+                }
+                let context = prepare_context(&world, &resources).expect("context");
+                assert_eq!(
+                    (provider.read)(
+                        context.row(7).expect("person"),
+                        &context,
+                        &resources,
+                        provider.name
+                    )
+                    .expect("fact"),
+                    if colony { expected } else { 0 }
+                );
+            }
+        }
+        assert_eq!(
+            selected_node(
+                LifeStage::Adult,
+                &[
+                    ("job_owned_state", 1),
+                    ("job_livestock", 1),
+                    ("hunger_excess_tenths", 150)
+                ]
+            ),
+            "job_livestock"
+        );
+        assert_eq!(
+            selected_node(
+                LifeStage::Adult,
+                &[("job_owned_state", 1), ("hunger_excess_tenths", 150)]
+            ),
+            "job_continue"
+        );
+    }
+
     #[test]
     fn construction_job_ownership_matches_legacy_hold_independent_of_occupancy() {
         use sim_core::colony::{ItemKind, Job, JobKind, JobStage, Occupant};

@@ -83,6 +83,7 @@ fn known_system_additions_preserve_registration_order() {
             defence: true,
             food: true,
             buildings: false,
+            livestock: false,
             diagnosis: true,
         },
     )
@@ -96,6 +97,7 @@ fn known_system_additions_preserve_registration_order() {
             defence: false,
             food: true,
             buildings: false,
+            livestock: false,
             diagnosis: true,
         }
     )

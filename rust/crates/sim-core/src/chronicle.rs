@@ -184,11 +184,21 @@ pub enum ChronicleKind {
     EraChanged = 59,
     /// M-SPINE: value = immutable completed template catalogue ordinal.
     BuildingComplete = 60,
+    /// A wild kid was physically captured into a completed pen.
+    LivestockCaptured = 61,
+    /// An actual same-species adult pair produced a kid.
+    LivestockBorn = 62,
+    /// Milk was physically placed after successful work.
+    LivestockMilk = 63,
+    /// An explicit order produced meat and hide.
+    LivestockSlaughtered = 64,
+    /// A livestock animal died of its recorded biological cause.
+    LivestockDied = 65,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 61] = [
+    pub const ALL: [ChronicleKind; 66] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -250,6 +260,11 @@ impl ChronicleKind {
         Self::FirstTunic,
         Self::EraChanged,
         Self::BuildingComplete,
+        Self::LivestockCaptured,
+        Self::LivestockBorn,
+        Self::LivestockMilk,
+        Self::LivestockSlaughtered,
+        Self::LivestockDied,
     ];
 
     /// Stable numeric discriminant.
@@ -321,6 +336,11 @@ impl ChronicleKind {
             Self::FirstTunic => "first_tunic",
             Self::EraChanged => "era_changed",
             Self::BuildingComplete => "building_complete",
+            Self::LivestockCaptured => "livestock_captured",
+            Self::LivestockBorn => "livestock_born",
+            Self::LivestockMilk => "livestock_milk",
+            Self::LivestockSlaughtered => "livestock_slaughtered",
+            Self::LivestockDied => "livestock_died",
         }
     }
 }
@@ -529,6 +549,11 @@ pub enum CauseRef {
         record: u32,
         /// Original player, housing-zone or steward request identity.
         origin: crate::colony::BuildCause,
+    },
+    /// Immutable livestock evidence, in the livestock witness namespace.
+    Livestock {
+        /// Exact chronicle append index whose typed facts are retained in the sidecar.
+        witness: u32,
     },
 }
 
@@ -797,10 +822,15 @@ mod tests {
             ChronicleKind::BuildingComplete.as_str(),
             "building_complete"
         );
-        assert_eq!(ChronicleKind::ALL.len(), 61);
+        assert_eq!(ChronicleKind::LivestockCaptured.as_u8(), 61);
+        assert_eq!(ChronicleKind::LivestockBorn.as_u8(), 62);
+        assert_eq!(ChronicleKind::LivestockMilk.as_u8(), 63);
+        assert_eq!(ChronicleKind::LivestockSlaughtered.as_u8(), 64);
+        assert_eq!(ChronicleKind::LivestockDied.as_u8(), 65);
+        assert_eq!(ChronicleKind::ALL.len(), 66);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 61);
+        assert_eq!(names.len(), 66);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

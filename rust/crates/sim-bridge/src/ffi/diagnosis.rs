@@ -84,6 +84,33 @@ pub fn settlement_diagnosis_to_dict(engine: &SimEngine) -> VarDictionary {
         }
         chains_arr.push(&Variant::from(chain));
     }
+    for pen in super::livestock::collect_livestock(&engine.resources).pens {
+        if pen.count == 0
+            || (pen.intact
+                && pen.grass_needed <= pen.grass_tiles as u64
+                && pen.count <= usize::from(pen.capacity))
+        {
+            continue;
+        }
+        check_ids.push(&GString::from(
+            format!("livestock_pen_{}", pen.site).as_str(),
+        ));
+        text_keys.push(if pen.intact {
+            "C1_DIAG_PEN_CROWDED"
+        } else {
+            "C1_DIAG_PEN_BROKEN"
+        });
+        severities.push(2);
+        let mut tags = VarArray::new();
+        tags.push(&Variant::from("livestock"));
+        tags_arr.push(&Variant::from(tags));
+        let mut params = VarDictionary::new();
+        params.set("count", pen.count as i64);
+        params.set("tiles", pen.grass_tiles as i64);
+        params.set("site", i64::from(pen.site));
+        params_arr.push(&Variant::from(params));
+        chains_arr.push(&Variant::from(VarArray::new()));
+    }
     dict.set("check_ids", check_ids);
     dict.set("text_keys", text_keys);
     dict.set("severities", severities);

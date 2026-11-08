@@ -72,6 +72,10 @@ pub(in crate::ffi) fn ui_facts_to_dict(v: &UiFacts) -> VarDictionary {
     let mut d = VarDictionary::new();
     d.set("schema_version", 1);
     d.set("enabled", v.enabled);
+    d.set(
+        "livestock",
+        super::super::livestock::livestock_to_dict(&v.livestock),
+    );
     d.set("tick", tick(v.tick));
     d.set("day", tick(v.day));
     d.set("ticks_per_day", tick(v.ticks_per_day));

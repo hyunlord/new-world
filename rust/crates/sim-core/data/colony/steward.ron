@@ -8,4 +8,6 @@
  (id: 9, label: "MUX_STEWARD_RULE_9", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [], winter_recipe: SplitFirewood, days: 6, fuel: Some((warm_days: 3, prepare_season: 1, buffer_permille: 1250)))),
  (id: 10, label: "MUX_STEWARD_RULE_10", scope: Food, cooldown: 1440, condition: Unsheltered, action: House(wall: LogWall, door: Door, bed: Bedroll, max_beds: 16, service_cells: 8, completion_role: Some(Storehouse))),
  (id: 8, label: "M6A_STEWARD_FOOD", scope: Food, cooldown: 360, condition: FoodDeficit, action: FoodPlan((cultivation: Some((crop: Emmer, replacement_permille: 300, net_units_per_tile: 12, area_cap_permille: 1250, batch: 4)), adult_daily_milli: 2400, child_daily_milli: 1440, cold_multiplier: 1500, reserve_days: 2, reserve_start_day: 8, winter_season: 3, forage_radius: 16, harvest_batch: 16, cooked_days_milli: 1000, recipes: [Porridge, FruitPorridge, Stew, RoastMeat, RoastedRoots, DryMeat, DryBerries], vessel_recipes: [(FormPot, 2), (FirePot, 2)], winter_keep_days: 6))),
+ // C1-b starting admission cadence, not a balance target; source range/lifecycle remain in animals.ron.
+ (id: 11, label: "C1_STEWARD_LIVESTOCK", scope: Food, cooldown: 360, condition: Livestock, action: Livestock),
 ])

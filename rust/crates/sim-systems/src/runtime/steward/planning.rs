@@ -187,6 +187,7 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
     let adults = world.query::<&Agent>().without::<&Child>().iter().count() as u32;
     match &rule.action {
         Action::FoodPlan(policy) => super::food::plan(world, res, policy),
+        Action::Livestock => super::livestock::plan(world, res),
         Action::Defence { .. } => Vec::new(),
         Action::Stockpile {
             base_cells,
@@ -2040,6 +2041,14 @@ mod rule_coverage {
                 }
                 Action::Teach => {
                     engine.resources.colony.tech.states[0].status = TechStatus::Stable;
+                }
+                Action::Livestock => {
+                    for &(_, entity) in &people {
+                        engine
+                            .world
+                            .insert_one(entity, Knowledge::default())
+                            .expect("no capture knowledge");
+                    }
                 }
             }
             assert!(

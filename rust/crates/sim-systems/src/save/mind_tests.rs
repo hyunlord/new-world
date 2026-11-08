@@ -151,6 +151,7 @@ fn invalid_saved_policy_is_rejected_before_registration() {
         cultivation: &body.cultivation,
         processing: &body.processing,
         buildings: &body.buildings,
+        livestock: &body.livestock,
     })
     .expect("malformed fixture");
     let mut corrupt = MAGIC.to_vec();
@@ -400,11 +401,11 @@ fn switch_v11_bytes(engine: &mut SimEngine) -> Vec<u8> {
             .system_states()
             .unwrap()
             .into_iter()
-            // Neither known additive slot existed in the v11 registration contract.
+            // None of these later colony slots existed in the v11 contract.
             .filter(|entry| {
                 !matches!(
                     entry.0.as_str(),
-                    "FoodDailySystem" | "BuildingTemplateSystem"
+                    "FoodDailySystem" | "BuildingTemplateSystem" | "LivestockSystem"
                 )
             })
             .collect(),
@@ -467,7 +468,10 @@ fn switch_v11_colony_migrates_only_the_legacy_decision_slot() {
     let envelope: Envelope = decode(read_header(&bytes).unwrap()).unwrap();
     let old: LegacyBodyV11 = decode(&envelope.payload).unwrap();
     assert!(!old.systems.iter().any(|(name, _)| {
-        matches!(name.as_str(), "FoodDailySystem" | "BuildingTemplateSystem")
+        matches!(
+            name.as_str(),
+            "FoodDailySystem" | "BuildingTemplateSystem" | "LivestockSystem"
+        )
     }));
     let retained: Vec<_> = old
         .systems
@@ -486,9 +490,24 @@ fn switch_v11_colony_migrates_only_the_legacy_decision_slot() {
         .system_states()
         .unwrap()
         .into_iter()
-        .filter(|(name, _)| !matches!(name.as_str(), "FoodDailySystem" | "BuildingTemplateSystem"))
+        .filter(|(name, _)| {
+            !matches!(
+                name.as_str(),
+                "FoodDailySystem" | "BuildingTemplateSystem" | "LivestockSystem"
+            )
+        })
         .collect();
     assert_eq!(restored, retained, "all original slot bytes stay exact");
+    assert_eq!(
+        loaded
+            .system_states()
+            .unwrap()
+            .iter()
+            .filter(|(name, _)| name == "LivestockSystem")
+            .count(),
+        1,
+        "one authenticated later livestock slot is inserted"
+    );
     assert_eq!(loaded.current_tick(), tick);
     assert!(loaded.system_names().contains(&"ColonyMindSystem"));
     assert!(!loaded.system_names().contains(&"AgentDecisionSystem"));

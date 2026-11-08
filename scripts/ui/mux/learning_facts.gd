@@ -17,6 +17,7 @@ static func from_snapshots(bulk: Dictionary, overlay: Dictionary, steward: Dicti
 		deaths += int(tallies.get(key, 0))
 	var facts: Dictionary = {
 		"births": int(tallies.get("births", 0)),
+		"first_livestock_captured": int(bulk.get("livestock", {}).get("first_capture", -1)) >= 0,
 		"deaths": deaths,
 		"tech_at_risk": int(tech.get("at_risk", 0)),
 		"stockpile_exists": not storage.get("zones", []).is_empty(),

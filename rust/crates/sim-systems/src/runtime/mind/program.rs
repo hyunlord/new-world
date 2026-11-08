@@ -13,6 +13,16 @@ use sim_core::components::AgentId;
 use super::behaviours::{self, BehaviourEntry};
 use super::facts::{ProviderPlan, ProviderRegistry, BUILTIN_PROVIDERS};
 
+const PRE_LIVESTOCK_EXCLUDED_FACTS: &[&str] = &["job_livestock"];
+const FORMAT13_EXCLUDED_FACTS: &[&str] = &[
+    "harvest_window",
+    "job_food_transport",
+    "harvest_storage_available",
+    "winter_stock_duty",
+    "water_target_available",
+    "job_livestock",
+];
+
 /// Policy preparation fails explicitly before an executor can choose or mutate.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MindProgramError(pub String);
@@ -57,7 +67,15 @@ impl MindProgram {
         if history.check_policy(&current.policy).is_ok() {
             return Ok(current);
         }
-        let historical = Self::compile_schema(Cow::Owned(source.to_owned()), true)?;
+        // Published-a20 used the complete food registry but predates livestock.
+        // An unused new registration still changes the policy revision/dictionary.
+        let before_livestock =
+            Self::compile_schema(Cow::Owned(source.to_owned()), PRE_LIVESTOCK_EXCLUDED_FACTS)?;
+        if history.check_policy(&before_livestock.policy).is_ok() {
+            return Ok(before_livestock);
+        }
+        let historical =
+            Self::compile_schema(Cow::Owned(source.to_owned()), FORMAT13_EXCLUDED_FACTS)?;
         history
             .check_policy(&historical.policy)
             .map_err(|error| MindProgramError(error.to_string()))?;
@@ -65,31 +83,19 @@ impl MindProgram {
     }
 
     fn compile(source: Cow<'static, str>) -> Result<Self, MindProgramError> {
-        Self::compile_schema(source, false)
+        Self::compile_schema(source, &[])
     }
 
     fn compile_schema(
         source: Cow<'static, str>,
-        format13_schema: bool,
+        excluded_facts: &[&str],
     ) -> Result<Self, MindProgramError> {
         let registry = ProviderRegistry::new(BUILTIN_PROVIDERS)
             .map_err(|error| MindProgramError(error.to_string()))?;
         let mut facts = registry.schema();
-        if format13_schema {
-            // dba478e54/e2ba280f3: these five registrations did not yet exist.
-            // Revision hashing includes unused registrations; never rewrite a
-            // saved dictionary or accept a hash without its complete history.
-            facts.retain(|fact| {
-                !matches!(
-                    fact.name.as_str(),
-                    "harvest_window"
-                        | "job_food_transport"
-                        | "harvest_storage_available"
-                        | "winter_stock_duty"
-                        | "water_target_available"
-                )
-            });
-        }
+        // Reconstruct only explicit historical registration sets; the complete
+        // saved dictionary and source-derived revision must still match history.
+        facts.retain(|fact| !excluded_facts.contains(&fact.name.as_str()));
         let schema = MindRegistrySchema {
             facts,
             behaviours: behaviours::registry_schema(),

@@ -47,6 +47,13 @@ The host freezes `WORLDSIM_CONTENT_PACK` once, validates selected presentation a
 that selection before engine construction. Empty/invalid explicit selection fails; absent selection uses bundled data.
 
 ### `get_content_catalog`
+
+C1-b additive nested fields:
+
+| key | type | meaning |
+|---|---|---|
+| `tameable` | PackedByteArray / bool | Selected domestic policy exists (nested animal row / content row). |
+
 `WorldSimNode.get_content_catalog() -> Dictionary`, backed by `content::catalog_to_dict(&Catalog)`.
 Each call returns a fresh projection of installed definitions; an unavailable catalogue yields an empty dictionary.
 Identity codes are unsigned u32 represented losslessly as Godot int, not array positions. Items, blueprints and
@@ -459,6 +466,33 @@ iteration order (a hash map: sort before relying on order).
 | `p` | int | temperament P, permille |
 
 ### `get_person_chronicle`
+
+C1-b additive nested fields:
+
+| key | type | meaning |
+|---|---|---|
+| `attempt` | int | Committed keyed capture attempt. |
+| `count` | int | Nested pen population or committed milk yield quantity. |
+| `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
+| `event` | String | Livestock event tag: captured/born/milk/slaughter/died. |
+| `father` | int | Immutable domestic father identity. |
+| `knowledge` | int | Committed capture/milk knowledge registry code. |
+| `livestock` | int | Domestic identity; never an AgentId. |
+| `livestock_evidence` | Array[Dictionary] | Aligned immutable event evidence; empty dictionary for unrelated rows. |
+| `mother` | int | Immutable domestic mother identity. |
+| `next` | int | Shared paginated builder only; omitted by nonpaged read. |
+| `pen_site` | int | Immutable event source pen identity. |
+| `product` | int | Committed milk item registry code. |
+| `products` | PackedInt64Array | Committed slaughter item registry codes. |
+| `proficiency` | int | Actual proficiency when work committed. |
+| `reason` | String | Natural death reason: starvation or old_age. |
+| `required` | int | Required capture/milk proficiency threshold. |
+| `source_record` | int | Accepted top-level source command record. |
+| `species` | int | Selected animal registry code. |
+| `steward_rule` | int | Actual steward rule; -1 denotes player command. |
+| `total` | int | Shared paginated builder only; omitted by nonpaged read. |
+| `wild` | int | Original wild animal identity at capture. |
+
 `get_person_chronicle(agent_id)`: `collect_person_chronicle(&Chronicle, agent_id) -> ChronicleRows` →
 `food_chronicle_rows_to_dict(rows, false, res)` (`ffi/food/chronicle.rs`). Every entry naming the person, in chronicle order (append order).
 
@@ -488,6 +522,33 @@ M6a historical food metadata (same number of rows as the corresponding index/lin
 
 
 ### `get_settlement_chronicle`
+
+C1-b additive nested fields:
+
+| key | type | meaning |
+|---|---|---|
+| `attempt` | int | Committed keyed capture attempt. |
+| `count` | int | Nested pen population or committed milk yield quantity. |
+| `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
+| `event` | String | Livestock event tag: captured/born/milk/slaughter/died. |
+| `father` | int | Immutable domestic father identity. |
+| `knowledge` | int | Committed capture/milk knowledge registry code. |
+| `livestock` | int | Domestic identity; never an AgentId. |
+| `livestock_evidence` | Array[Dictionary] | Aligned immutable event evidence; empty dictionary for unrelated rows. |
+| `mother` | int | Immutable domestic mother identity. |
+| `next` | int | Shared paginated builder only; omitted by nonpaged read. |
+| `pen_site` | int | Immutable event source pen identity. |
+| `product` | int | Committed milk item registry code. |
+| `products` | PackedInt64Array | Committed slaughter item registry codes. |
+| `proficiency` | int | Actual proficiency when work committed. |
+| `reason` | String | Natural death reason: starvation or old_age. |
+| `required` | int | Required capture/milk proficiency threshold. |
+| `source_record` | int | Accepted top-level source command record. |
+| `species` | int | Selected animal registry code. |
+| `steward_rule` | int | Actual steward rule; -1 denotes player command. |
+| `total` | int | Shared paginated builder only; omitted by nonpaged read. |
+| `wild` | int | Original wild animal identity at capture. |
+
 `get_settlement_chronicle(settlement_id)`: `collect_settlement_chronicle` → `food_chronicle_rows_to_dict(rows, false, res)`
 (`ffi/food/chronicle.rs`). Every entry naming the settlement; the same columns as `get_person_chronicle`.
 
@@ -517,6 +578,31 @@ M6a historical food metadata (same number of rows as the corresponding index/lin
 
 
 ### `get_chronicle_since`
+
+C1-b additive nested fields:
+
+| key | type | meaning |
+|---|---|---|
+| `attempt` | int | Committed keyed capture attempt. |
+| `count` | int | Nested pen population or committed milk yield quantity. |
+| `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
+| `event` | String | Livestock event tag: captured/born/milk/slaughter/died. |
+| `father` | int | Immutable domestic father identity. |
+| `knowledge` | int | Committed capture/milk knowledge registry code. |
+| `livestock` | int | Domestic identity; never an AgentId. |
+| `livestock_evidence` | Array[Dictionary] | Aligned immutable event evidence; empty dictionary for unrelated rows. |
+| `mother` | int | Immutable domestic mother identity. |
+| `pen_site` | int | Immutable event source pen identity. |
+| `product` | int | Committed milk item registry code. |
+| `products` | PackedInt64Array | Committed slaughter item registry codes. |
+| `proficiency` | int | Actual proficiency when work committed. |
+| `reason` | String | Natural death reason: starvation or old_age. |
+| `required` | int | Required capture/milk proficiency threshold. |
+| `source_record` | int | Accepted top-level source command record. |
+| `species` | int | Selected animal registry code. |
+| `steward_rule` | int | Actual steward rule; -1 denotes player command. |
+| `wild` | int | Original wild animal identity at capture. |
+
 `get_chronicle_since(start, max)`: `collect_chronicle_since(&Chronicle, start, max)` → `food_chronicle_rows_to_dict(rows, true, res)`
 (`ffi/food/chronicle.rs`). Entries from index `start`, at most `max` (clamped to 1–512), the same columns plus paging.
 
@@ -1203,6 +1289,10 @@ wolves) and the hunt zones.
 | `states` | PackedInt32Array | `AnimalState::code`: 0 wander, 1 flee, 2 rest, 3 hunt, 4 attack, 5 retreat |
 | `huntable` | PackedByteArray | 1 when a hunt-capable animal is marked or inside a hunt zone |
 | `marked` | PackedByteArray | 1 when an animal carries a hunt mark of its own |
+| `tameable` | PackedByteArray | species has an authored domestication policy |
+| `age_days` | PackedInt64Array | same pure biological-age projection as capture; -1 without policy |
+| `female` | PackedInt64Array | immutable keyed wild sex, 0 male/1 female; -1 without policy |
+| `capturable` | PackedByteArray | biological kid eligibility only; commands/jobs also validate knowledge, tool, range and physical pen |
 | `zones` | PackedInt32Array | hunt zones as `x0, y0, x1, y1` quadruples, in the order they were added |
 | `version` | int | `Wildlife::version` |
 
@@ -1250,13 +1340,38 @@ list).
 | `ticks` | PackedInt64Array | ticks since drafted |
 
 ### `get_chronicle_why`
+
+C1-b additive nested fields:
+
+| key | type | meaning |
+|---|---|---|
+| `attempt` | int | Committed keyed capture attempt. |
+| `count` | int | Nested pen population or committed milk yield quantity. |
+| `counts` | PackedInt64Array | Slaughter quantities aligned with products. |
+| `event` | String | Livestock event tag: captured/born/milk/slaughter/died. |
+| `father` | int | Immutable domestic father identity. |
+| `knowledge` | int | Committed capture/milk knowledge registry code. |
+| `livestock` | int | Domestic identity; never an AgentId. |
+| `livestock_evidence` | Array[Dictionary] | Aligned immutable event evidence; empty dictionary for unrelated rows. |
+| `mother` | int | Immutable domestic mother identity. |
+| `pen_site` | int | Immutable event source pen identity. |
+| `product` | int | Committed milk item registry code. |
+| `products` | PackedInt64Array | Committed slaughter item registry codes. |
+| `proficiency` | int | Actual proficiency when work committed. |
+| `reason` | String | Natural death reason: starvation or old_age. |
+| `required` | int | Required capture/milk proficiency threshold. |
+| `source_record` | int | Accepted top-level source command record. |
+| `species` | int | Selected animal registry code. |
+| `steward_rule` | int | Actual steward rule; -1 denotes player command. |
+| `wild` | int | Original wild animal identity at capture. |
+
 `get_chronicle_why(index)`: `collect_chronicle_why(&Chronicle, i64) -> WhyRows` → `why_to_dict`. The "→ 왜?" chain
 of the entry: one row per link, from the entry itself to its first cause (`mood::why_chain`, at most 8 links).
 
 | key | type | meaning |
 |---|---|---|
 | `found` | bool | the entry exists |
-| `links` | PackedInt32Array | 0 a chronicle entry, 1 a mood modifier, 2 a pressure, 3 building provenance |
+| `links` | PackedInt32Array | 0 a chronicle entry, 1 a mood modifier, 2 a pressure, 3 building provenance, 4 immutable livestock witness |
 | `codes` | PackedInt64Array | the entry index (0), `Modifier::code` (1; 100 = the relation), `PressureKind::code` (2), or -1 for building link3; use aligned building columns |
 | `ticks` | PackedInt64Array | an entry's tick, -1 otherwise |
 | `kinds` | PackedInt32Array | an entry's `ChronicleKind::as_u8`, -1 otherwise |
@@ -1431,6 +1546,30 @@ reasons add `not_drafted`), the M5.5 orders `cmd_accept_migrants(wave)`, `cmd_de
 ## M-UX bulk UI facts and steward
 
 ### `get_ui_facts`
+
+C1-b additive nested fields:
+
+| key | type | meaning |
+|---|---|---|
+| `age_days` | PackedInt64Array | Nested animal row current pure whole-day age; -1 non-tameable wild animal. |
+| `available_grass` | int | Nested pen row currently regrown grazeable cells. |
+| `capacity` | int | Nested pen row authored occupancy limit. |
+| `capturable` | PackedByteArray / bool | Nested wildlife row biological kid eligibility. |
+| `count` | int | Nested pen population or committed milk yield quantity. |
+| `female` | PackedInt64Array | Nested animal row biological sex; -1 non-tameable wild animal. |
+| `first_capture` | int | Nested livestock row first capture chronicle entry; -1 absent. |
+| `first_kid_id` | int | Nested livestock row pinned first newborn identity; -1 absent. |
+| `grass_needed` | int | Nested pen row summed authored daily grazing need. |
+| `grass_tiles` | int | Nested pen row physical grazeable interior area. |
+| `hunger_days` | PackedInt64Array | Nested livestock row consecutive forage failure days. |
+| `intact` | bool | Nested pen row complete closed physical enclosure. |
+| `milk_ready` | PackedInt64Array | Nested livestock row current milk eligibility. |
+| `overstocked` | bool | Nested pen row population exceeds capacity or sustainable grazing area. |
+| `pen_sites` | PackedInt64Array | Nested livestock row real physical pen identities. |
+| `pens` | Array[Dictionary] | Nested livestock row physical pen facts. |
+| `site` | int | Nested pen/diagnosis physical site identity. |
+| `tameable` | PackedByteArray / bool | Selected domestic policy exists (nested animal row / content row). |
+
 `collect_ui_facts(&World, &SimResources) -> UiFacts` (`ffi/ui_facts/mod.rs`), marshalled by
 `ffi/ui_facts/marshal.rs`. This is a read-only bulk observer: it does not advance systems, refresh mutable
 simulation caches, consume RNG, or issue orders. `schema_version` is this getter's local format version,
@@ -1452,6 +1591,7 @@ empty fact tables. UI thresholds and content classification are not embedded in 
 | `taught_count` | int | durable completed-teaching count |
 | `wolves_spawned` | int | durable spawned count, not current nearby animals |
 | `migrant_waves_arrived` | int | accepted + declined + unanswered + currently waiting waves |
+| `livestock` | Dictionary | same immutable projection as get_livestock, including persistent first_capture and first_kid_id |
 | `first_winter_all_alive` | bool | a seasonal first calendar year has ended with no recorded death during that year; later deaths do not revoke it |
 | `people` | Dictionary | living people; columns below, ascending AgentId |
 | `settlements` | Dictionary | stock and authoritative needs; ascending SettlementId |
@@ -1900,6 +2040,15 @@ the owner feed by data but reachable through actual causal parents in Why.
 
 ### `get_settlement_diagnosis` (no arguments)
 
+C1-b additive nested fields:
+
+| key | type | meaning |
+|---|---|---|
+| `count` | int | Nested pen population or committed milk yield quantity. |
+| `site` | int | Nested pen/diagnosis physical site identity. |
+| `tiles` | int | Diagnosis parameter physical grazeable cells, distinct from available forage. |
+
+
 Cached hourly settlement diagnosis, with current read-only weaving facts and appended cause lines. Returns a dictionary with parallel arrays:
 
 | key | type | description |
@@ -2197,3 +2346,44 @@ BuildingComplete60 `value` is the immutable completed template catalogue ordinal
 `cause` is0 command,1 housing zone,2 steward request. Why link3 adds the aligned
 building site/record/origin columns above. Actual completion remains physical;
 reads and UI formatting do not create construction or rewrite history.
+
+
+### `get_livestock`
+
+C1-b additive nested fields:
+
+| key | type | meaning |
+|---|---|---|
+| `available_grass` | int | Nested pen row currently regrown grazeable cells. |
+| `capacity` | int | Nested pen row authored occupancy limit. |
+| `count` | int | Nested pen population or committed milk yield quantity. |
+| `grass_needed` | int | Nested pen row summed authored daily grazing need. |
+| `grass_tiles` | int | Nested pen row physical grazeable interior area. |
+| `intact` | bool | Nested pen row complete closed physical enclosure. |
+| `overstocked` | bool | Nested pen row population exceeds capacity or sustainable grazing area. |
+| `site` | int | Nested pen/diagnosis physical site identity. |
+
+`collect_livestock(&SimResources) -> LivestockRows` → `livestock_to_dict`. Separate LivestockId namespace; reads never consume random state or change animal clocks. Empty baseline.
+
+| key | type | meaning |
+|---|---|---|
+| `schema_version` | int | 1 |
+| `enabled` | bool | colony mechanics enabled |
+| `tick` | int | current completed tick |
+| `version` | int | saved livestock state version |
+| `first_capture` | int | persistent first capture chronicle entry, -1 absent; retained after removal |
+| `first_kid_id` | int | persistent first born LivestockId, -1 absent; cards never retarget |
+| `ids` | PackedInt64Array | domestic LivestockIds ascending |
+| `kinds` | PackedInt64Array | registered animal species codes |
+| `pen_sites` | PackedInt64Array | actual physical building-site provenance |
+| `age_days` | PackedInt64Array | phase-preserving biological whole-day age |
+| `female` | PackedInt64Array | 1 female, 0 male |
+| `hunger_days` | PackedInt64Array | consecutive daily feeding failures |
+| `milk_ready` | PackedInt64Array | 1 when actual milk output is ready |
+| `xs` | PackedInt64Array | stable display tile within actual pen interior |
+| `ys` | PackedInt64Array | stable display tile within actual pen interior |
+| `pens` | Array[Dictionary] | site/capacity/count/grass_tiles/available_grass/grass_needed/intact/overstocked; physical grazing area is distinct from today's remaining forage |
+
+`cmd_designate_capture(wild AnimalId)` and `cmd_slaughter_livestock(LivestockId)` use checked u32 IDs and ordinary recorded native commands, returning accepted/count/reason. They never mutate animal state directly.
+
+Animal content rows append `art_shape`, `art_tint_material` and `tameable`; all shapes/tints come from selected data. Chronicle page/person/settlement reads append aligned `livestock_evidence` dictionaries; Why reads append the same metadata for entry links and terminal link4. Link4 `codes` is a witness index, never a recursive Entry link. The immutable evidence records species/livestock/pen plus event-specific source wild and attempt, actual knowledge/proficiency/threshold, real command/steward provenance, parent IDs, physical product quantities, or natural-death reason. Empty dictionary means no livestock event. It survives source removal and save/load. Chronicle kinds append61 capture,62 birth,63 milk,64 slaughter,65 death; human subject fields retain AgentId semantics.

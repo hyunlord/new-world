@@ -1189,6 +1189,29 @@ impl WorldSimNode {
         animals_to_dict(&collect_animals(&self.engine.resources))
     }
 
+    /// C1: real domestic animals and physical pen/forage facts (LivestockId namespace).
+    #[func]
+    fn get_livestock(&self) -> VarDictionary {
+        super::livestock::livestock_to_dict(&super::livestock::collect_livestock(
+            &self.engine.resources,
+        ))
+    }
+
+    /// C1: designate a real wild kid for ordinary physical capture.
+    #[func]
+    fn cmd_designate_capture(&mut self, animal: i64) -> VarDictionary {
+        result_to_dict(super::livestock::submit_capture(&mut self.engine, animal))
+    }
+
+    /// C1: designate the exact domestic animal for ordinary slaughter.
+    #[func]
+    fn cmd_slaughter_livestock(&mut self, livestock: i64) -> VarDictionary {
+        result_to_dict(super::livestock::submit_slaughter(
+            &mut self.engine,
+            livestock,
+        ))
+    }
+
     /// M5: person `agent_id`'s mood (value, band, target, modifiers largest
     /// first), apparel, draft order and illness.
     #[func]
@@ -1209,7 +1232,7 @@ impl WorldSimNode {
     /// M5: chronicle entry `index`'s "→ 왜?" chain (links from the entry to its first cause).
     #[func]
     fn get_chronicle_why(&self, index: i64) -> VarDictionary {
-        super::food::food_why_to_dict(
+        super::livestock::livestock_why_to_dict(
             &collect_chronicle_why(&self.engine.resources.chronicle, index),
             &self.engine.resources,
         )
@@ -1535,7 +1558,7 @@ impl WorldSimNode {
     /// cause, value}` packed columns (ids -1 when absent).
     #[func]
     fn get_person_chronicle(&self, agent_id: i64) -> VarDictionary {
-        super::food::food_chronicle_rows_to_dict(
+        super::livestock::livestock_chronicle_rows_to_dict(
             collect_person_chronicle(&self.engine.resources.chronicle, agent_id),
             false,
             &self.engine.resources,
@@ -1546,7 +1569,7 @@ impl WorldSimNode {
     /// `get_person_chronicle`).
     #[func]
     fn get_settlement_chronicle(&self, settlement_id: i64) -> VarDictionary {
-        super::food::food_chronicle_rows_to_dict(
+        super::livestock::livestock_chronicle_rows_to_dict(
             collect_settlement_chronicle(&self.engine.resources.chronicle, settlement_id),
             false,
             &self.engine.resources,
@@ -1557,7 +1580,7 @@ impl WorldSimNode {
     /// (clamped to 1..=512), same shape plus `next` and `total`.
     #[func]
     fn get_chronicle_since(&self, start: i64, max: i64) -> VarDictionary {
-        super::food::food_chronicle_rows_to_dict(
+        super::livestock::livestock_chronicle_rows_to_dict(
             collect_chronicle_since(&self.engine.resources.chronicle, start, max),
             true,
             &self.engine.resources,

@@ -29,6 +29,12 @@ pub struct AnimalDef<I = ItemKind> {
     /// Optional independent wild population; absent retains legacy role seeding.
     #[serde(default)]
     pub population: Option<WildPopulation>,
+    /// Optional domestication policy; absent species remain purely wild.
+    #[serde(default)]
+    pub tameable: Option<TameableDef<I>>,
+    /// Data-selected placeholder geometry and tint, with a category fallback.
+    #[serde(default = "animal_art_default")]
+    pub art: super::ItemArt,
     /// Mechanic.
     pub mechanic: AnimalMechanic,
     /// Huntable.
@@ -115,4 +121,74 @@ pub struct HideLoot<I = ItemKind> {
     pub count: u16,
     /// Enabled.
     pub enabled: RuleBool,
+}
+
+fn animal_art_default() -> super::ItemArt {
+    super::ItemArt::for_category("animal")
+}
+
+/// Data-only policy interpreted by the capture jobs and single livestock system.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct TameableDef<I = ItemKind> {
+    /// Connected knowledge needed by the capturing worker.
+    pub capture_knowledge: String,
+    /// One physical tool consumed only on a successful capture.
+    pub capture_tool: Option<I>,
+    /// Registered capture mechanic selector.
+    pub capture_job: String,
+    /// Maximum capture search distance in tiles.
+    pub capture_range_tiles: u32,
+    /// Successful or failed capture work duration.
+    pub capture_work_ticks: u32,
+    /// Chance per completed, persisted capture attempt.
+    pub capture_success_permille: u16,
+    /// Whole days before another completed attempt may be made.
+    pub capture_retry_days: u32,
+    /// Inclusive keyed biological age at wild appearance.
+    pub initial_age_days: (u32, u32),
+    /// First adult age; only younger wild animals may be captured.
+    pub kid_age_days: u32,
+    /// Minimum interval since capture or the mother's last committed birth.
+    pub breeding_interval_days: u32,
+    /// Natural lifespan in whole days.
+    pub max_age_days: u32,
+    /// Distinct forage cells consumed per head at each daily feeding.
+    pub graze_tiles_per_head: u32,
+    /// Consecutive failed feedings causing starvation.
+    pub starvation_days: u32,
+    /// Whole days between consuming and regenerating a forage cell.
+    pub grass_regrow_days: u32,
+    /// Work duration for a physical milk yield.
+    pub milk_work_ticks: u32,
+    /// Work duration for an explicitly ordered slaughter.
+    pub slaughter_work_ticks: u32,
+    /// Generic catalogue-referenced products.
+    pub products: LivestockProducts<I>,
+}
+
+/// Outputs of generic livestock mechanics, independent of species names.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LivestockProducts<I = ItemKind> {
+    /// One milk item per committed recurring yield.
+    pub milk: Option<RecurringProduct<I>>,
+    /// Reserved recurring wool policy; absent until its processing pass.
+    pub wool: Option<RecurringProduct<I>>,
+    /// Food output of a slaughter.
+    pub meat: (I, u16),
+    /// Durable hide output of a slaughter.
+    pub hide: (I, u16),
+}
+
+/// A single physical recurring output and its real knowledge requirement.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RecurringProduct<I = ItemKind> {
+    /// Catalogue item identity.
+    pub item: I,
+    /// Whole-day interval after a successful output.
+    pub every_days: u32,
+    /// Connected practitioner knowledge required at commit.
+    pub requires_knowledge: String,
 }

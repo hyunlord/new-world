@@ -12,6 +12,7 @@ const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 var _failures: int = 0
 var _out: String = ""
 var _c1_save: String = ""
+var _c1_resave: String = ""
 var _window_size: Vector2i = Vector2i.ZERO
 var _main: Node
 var _panel: Control
@@ -26,6 +27,8 @@ func _init() -> void:
 			_out = args[i + 1]
 		if args[i] == "--c1-save":
 			_c1_save = args[i + 1]
+		if args[i] == "--c1-resave":
+			_c1_resave = args[i + 1]
 		if args[i] == "--window-size":
 			var dimensions: PackedStringArray = args[i + 1].split("x")
 			if dimensions.size() == 2:
@@ -281,6 +284,11 @@ func _capture_c1(world: Node) -> void:
 	var loaded: bool = bool(SimReads.mutate(world, "load_world", [_c1_save]))
 	_check("c1_real_save_loaded", loaded)
 	if not loaded: return
+	if not _c1_resave.is_empty():
+		var valid_resave: bool = _c1_resave.is_absolute_path() and not _c1_resave.begins_with(ProjectSettings.globalize_path("res://")) and not FileAccess.file_exists(_c1_resave)
+		_check("c1_resave_external_new", valid_resave)
+		if valid_resave:
+			_check("c1_published_bridge_resave", bool(SimReads.mutate(world, "save_world", [_c1_resave])))
 	_main.get_node("Camera2D").call("set_paused", true)
 	await _frames()
 	var build: Control = _main.get_node("UI/BuildPanel") as Control

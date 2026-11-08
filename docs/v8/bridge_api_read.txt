@@ -12,6 +12,7 @@ func WorldSimNode.cmd_cancel_area
 func WorldSimNode.cmd_cancel_hunt
 func WorldSimNode.cmd_cancel_teach
 func WorldSimNode.cmd_decline_migrants
+func WorldSimNode.cmd_designate_capture
 func WorldSimNode.cmd_designate_chop
 func WorldSimNode.cmd_designate_chop_tiles
 func WorldSimNode.cmd_designate_clay
@@ -41,6 +42,7 @@ func WorldSimNode.cmd_set_steward
 func WorldSimNode.cmd_set_steward_defence
 func WorldSimNode.cmd_set_steward_extended
 func WorldSimNode.cmd_set_work_priority
+func WorldSimNode.cmd_slaughter_livestock
 func WorldSimNode.cmd_trade
 func WorldSimNode.cmd_undraft_all
 func WorldSimNode.cmd_upgrade_building
@@ -79,6 +81,7 @@ func WorldSimNode.get_event_chain
 func WorldSimNode.get_field_tiles
 func WorldSimNode.get_influence_overlay
 func WorldSimNode.get_knowledge_waits
+func WorldSimNode.get_livestock
 func WorldSimNode.get_neighbours
 func WorldSimNode.get_person
 func WorldSimNode.get_person_chronicle

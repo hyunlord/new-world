@@ -20,6 +20,25 @@ pub fn validate_source(
             .and_then(|i| resources.colony.command_log.get(i))
             .is_some_and(|record| record.result.accepted && record.tick <= tick),
         MindFactSource::Chronicle(cause) => match cause {
+            CauseRef::Livestock { witness } => resources
+                .livestock
+                .witnesses
+                .get(&witness)
+                .is_some_and(|facts| {
+                    use sim_core::colony::livestock::LivestockEvent;
+                    let kind = match facts.event {
+                        LivestockEvent::Captured { .. } => ChronicleKind::LivestockCaptured,
+                        LivestockEvent::Born { .. } => ChronicleKind::LivestockBorn,
+                        LivestockEvent::Milk { .. } => ChronicleKind::LivestockMilk,
+                        LivestockEvent::Slaughter { .. } => ChronicleKind::LivestockSlaughtered,
+                        LivestockEvent::Died { .. } => ChronicleKind::LivestockDied,
+                    };
+                    resources.chronicle.cause_of(witness) == Some(cause)
+                        && resources
+                            .chronicle
+                            .entry(witness)
+                            .is_some_and(|entry| entry.tick <= tick && entry.kind == kind)
+                }),
             CauseRef::Building {
                 site,
                 record,
@@ -184,7 +203,11 @@ pub fn automatic_origins(
                 .copied()?;
             let priority = if matches!(
                 name,
-                "has_job" | "job_stage" | "craft_working" | "job_destination_distance"
+                "has_job"
+                    | "job_stage"
+                    | "craft_working"
+                    | "job_destination_distance"
+                    | "job_livestock"
             ) {
                 CausePriority::Job
             } else if name.starts_with("hunger")
@@ -233,6 +256,7 @@ pub fn assigned_job_origins(
                     | "job_to_source"
                     | "job_to_dest"
                     | "job_distance"
+                    | "job_livestock"
             )
             .then_some(FactOrigin {
                 fact: witness.fact,

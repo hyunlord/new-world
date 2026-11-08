@@ -39,6 +39,7 @@ pub(super) fn append(hash: &mut u64, engine: &SimEngine) -> Result<(), String> {
         HashWriter(hash),
         &(
             &engine.resources.food,
+            &engine.resources.livestock,
             &colony.ground_items,
             &colony.workshops,
             &colony.zones,

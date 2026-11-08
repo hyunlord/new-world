@@ -195,6 +195,37 @@ fn site_key(world: &World, tile: (u32, u32), footprint: bool) -> Option<MindOrde
         })
 }
 
+// Livestock already retains exact accepted intent; do not duplicate it in MindOrderKey.
+fn livestock_order_source(
+    res: &SimResources,
+    cause: sim_core::colony::livestock::LivestockOrderCause,
+    animal: u32,
+    slaughter: bool,
+    at: u64,
+) -> Option<MindFactSource> {
+    use sim_core::colony::Command;
+    let record = res
+        .colony
+        .command_log
+        .get(usize::try_from(cause.source_record).ok()?)?;
+    if !record.result.accepted || record.tick > at {
+        return None;
+    }
+    let command = match (&record.command, cause.steward_rule) {
+        (Command::Steward { rule, command }, Some(expected)) if *rule == expected => {
+            command.as_ref()
+        }
+        (Command::Steward { .. }, _) | (_, Some(_)) => return None,
+        (command, None) => command,
+    };
+    let matches = match command {
+        Command::DesignateCapture { animal: target } => !slaughter && *target == animal,
+        Command::DesignateSlaughter { animal: target } => slaughter && *target == animal,
+        _ => false,
+    };
+    matches.then_some(MindFactSource::Command(u64::from(cause.source_record)))
+}
+
 fn origin(world: &World, res: &SimResources, job: Job) -> Option<MindFactSource> {
     let designation = |tile| {
         res.colony
@@ -206,6 +237,48 @@ fn origin(world: &World, res: &SimResources, job: Job) -> Option<MindFactSource>
             })
     };
     let key = match job.kind {
+        JobKind::Capture { animal, .. } => {
+            return livestock_order_source(
+                res,
+                *res.livestock.capture_orders.get(&animal)?,
+                animal,
+                false,
+                job.taken_at,
+            )
+        }
+        JobKind::Slaughter { animal, .. } => {
+            return livestock_order_source(
+                res,
+                *res.livestock.slaughter_orders.get(&animal)?,
+                animal,
+                true,
+                job.taken_at,
+            )
+        }
+        JobKind::Milk { animal, .. } => {
+            use sim_core::chronicle::CauseRef;
+            use sim_core::colony::livestock::LivestockEvent;
+            let animal = res.livestock.animals.get(&animal)?;
+            let witness = res.livestock.witnesses.get(&animal.creation_entry)?;
+            let cause = CauseRef::Livestock {
+                witness: animal.creation_entry,
+            };
+            if witness.livestock != animal.id
+                || witness.species != animal.species
+                || !matches!(
+                    witness.event,
+                    LivestockEvent::Captured { .. } | LivestockEvent::Born { .. }
+                )
+                || res.chronicle.cause_of(animal.creation_entry) != Some(cause)
+                || res
+                    .chronicle
+                    .entry(animal.creation_entry)
+                    .is_none_or(|entry| entry.tick > job.taken_at)
+            {
+                return None;
+            }
+            return Some(MindFactSource::Chronicle(cause));
+        }
         JobKind::TillField { tile }
         | JobKind::SowField { tile, .. }
         | JobKind::TendField { tile }
@@ -310,6 +383,50 @@ mod tests {
             BTreeMap::new(),
         )
     }
+    #[test]
+    fn livestock_intent_origin_checks_exact_accepted_record_target_and_wrapper() {
+        use sim_core::colony::livestock::LivestockOrderCause;
+        use sim_core::colony::{Command, CommandRecord, CommandResult};
+        let mut res = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        res.colony.command_log.push(CommandRecord {
+            tick: 10,
+            command: Command::Steward {
+                rule: 11,
+                command: Box::new(Command::DesignateCapture { animal: 7 }),
+            },
+            result: CommandResult::ok(1),
+        });
+        let mut cause = LivestockOrderCause {
+            source_record: 0,
+            steward_rule: Some(11),
+        };
+        assert_eq!(
+            livestock_order_source(&res, cause, 7, false, 10),
+            Some(MindFactSource::Command(0))
+        );
+        assert_eq!(livestock_order_source(&res, cause, 8, false, 10), None);
+        assert_eq!(livestock_order_source(&res, cause, 7, true, 10), None);
+        assert_eq!(livestock_order_source(&res, cause, 7, false, 9), None);
+        cause.steward_rule = None;
+        assert_eq!(livestock_order_source(&res, cause, 7, false, 10), None);
+        cause.steward_rule = Some(12);
+        assert_eq!(livestock_order_source(&res, cause, 7, false, 10), None);
+        cause.steward_rule = Some(11);
+        res.colony.command_log[0].result.accepted = false;
+        assert_eq!(livestock_order_source(&res, cause, 7, false, 10), None);
+        res.colony.command_log[0] = CommandRecord {
+            tick: 12,
+            command: Command::DesignateSlaughter { animal: 7 },
+            result: CommandResult::ok(1),
+        };
+        cause.steward_rule = None;
+        assert_eq!(
+            livestock_order_source(&res, cause, 7, true, 12),
+            Some(MindFactSource::Command(0))
+        );
+        assert_eq!(livestock_order_source(&res, cause, 7, false, 12), None);
+    }
+
     #[test]
     fn cancelled_then_recreated_key_gets_new_command() {
         let key = MindOrderKey::Designation {

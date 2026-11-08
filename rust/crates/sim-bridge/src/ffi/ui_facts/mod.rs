@@ -64,6 +64,8 @@ pub struct UiFacts {
     pub neighbours: neighbours::NeighboursView,
     /// Existing animal facts with raw kind and state codes.
     pub animals: story::AnimalRows,
+    /// Domestic animals and physical pen facts, separate from wild IDs.
+    pub livestock: super::livestock::LivestockRows,
     /// Existing rooms with raw role codes.
     pub rooms: space::RoomsView,
     /// Existing pressure and hearth accounting facts.
@@ -127,6 +129,7 @@ pub fn collect_ui_facts(world: &hecs::World, res: &SimResources) -> UiFacts {
     out.waits.sort_by_key(|r| (r.kind, r.a, r.b, r.node));
     out.neighbours = neighbours::collect_neighbours(world, res);
     out.animals = story::collect_animals(res);
+    out.livestock = super::livestock::collect_livestock(res);
     out.rooms = space::collect_rooms(res);
     out.story = story::collect_story(world, res);
     out.workshops = super::economy::collect_workshops(res);

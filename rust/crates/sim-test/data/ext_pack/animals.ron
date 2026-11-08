@@ -1,5 +1,17 @@
 (schema_version:1,roles:{},animals:[(
 identity:(code:4294967293,id:"test_grazer",name_key:"EXT_ANIMAL",serde_name:"TestGrazer",serde_aliases:[],resolver_aliases:[]),
+art:(shape:Cloth,tint_material:"limestone"),
+    // C1-b starting design; no outcome tuning. Range40, work60, chance700/1000, retry1d.
+    // Initial biological age0..29, adulthood30d, breeding20d, lifespan1800d.
+    // Feed3cells/head/day, starvation3unfed days, regrowth1d; milk45/slaughter90ticks.
+    // Milk is one physical item/day; wool processing remains C2 debt.
+    tameable: Some((capture_knowledge: "animal_taming", capture_tool: Some("cord"), capture_job: "capture",
+        capture_range_tiles: 40, capture_work_ticks: 60, capture_success_permille: 700, capture_retry_days: 1,
+        initial_age_days: (0, 29), kid_age_days: 30, breeding_interval_days: 20, max_age_days: 1800,
+        graze_tiles_per_head: 3, starvation_days: 3, grass_regrow_days: 1, milk_work_ticks: 45, slaughter_work_ticks: 90,
+        products: (milk: Some((item: "milk", every_days: 1, requires_knowledge: "dairy")), wool: None,
+            meat: ("meat", 3), hide: ("test_hide", 1)))),
+
 category:"grazer",mechanic:Grazer,huntable:true,hp:(value:1,rule:None),
 grazer:Some((flee:(value:false,rule:None),flee_tiles:(value:6,rule:None),flee_speed:(value:1,rule:None),
 flee_steps:(value:1,rule:None),rest_steps:(value:40,rule:None),home_tiles:(value:1,rule:None),min_hearth_distance:(value:0,rule:None))),

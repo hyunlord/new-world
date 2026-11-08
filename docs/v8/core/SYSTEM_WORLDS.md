@@ -60,6 +60,7 @@ Validation status: **NOT_RUN** for the production switch; parent-owned focused v
 | QuarrelSystem | 173 | 6 | yes | yes |
 | NeighbourSystem | 174 | 1440 | yes | yes |
 | VisitorSystem | 175 | 3 | yes | yes |
+| LivestockSystem | 176 | 60 | no | yes |
 | DiagnosisSystem | 250 | 60 | yes | yes |
 | RequestsSystem | 251 | 60 | yes | yes |
 | InfluenceVisualizationSystem | 1000 | 6 | yes | yes |

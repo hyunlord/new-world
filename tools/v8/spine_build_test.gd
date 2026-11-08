@@ -8,6 +8,7 @@ const ItemIcons = preload("res://scripts/ui/item_icons.gd")
 const STAGES: Array[String] = ["00placed", "01half", "02complete", "03zonegrown", "04upgraded"]
 var _out: String = ""
 var _saves: String = ""
+var _livestock_saves: bool = false
 var _size := Vector2i.ZERO
 var _main: Node
 var _world: Node
@@ -27,6 +28,9 @@ func _init() -> void:
 	for i: int in args.size() - 1:
 		if args[i] == "--out": _out = args[i + 1]
 		elif args[i] == "--saves": _saves = args[i + 1]
+		elif args[i] == "--livestock-saves":
+			_saves = args[i + 1]
+			_livestock_saves = true
 		elif args[i] == "--window-size":
 			var parts: PackedStringArray = args[i + 1].split("x")
 			if parts.size() == 2: _size = Vector2i(int(parts[0]), int(parts[1]))
@@ -112,6 +116,10 @@ func _run() -> void:
 	_panel = _main.get_node_or_null("UI/BuildPanel") as Control
 	_check("integrated actual BuildPanel exists", _panel != null)
 	if _panel == null: _finish(); return
+	if _livestock_saves:
+		await _livestock()
+		_finish()
+		return
 	_option_unit_decision()
 	_camera.call("set_paused", true)
 	for language: String in ["ko", "en"]:
@@ -499,3 +507,104 @@ func _finish() -> void:
 		if file != null: file.store_string(JSON.stringify({"failures": _failures, "fixture_gaps": _gaps, "complete": _failures == 0 and _gaps == 0, "checks": _rows, "pacing": _pacing, "window_size": [DisplayServer.window_get_size().x, DisplayServer.window_get_size().y], "requested_window_size": [_size.x, _size.y], "screen_size": [DisplayServer.screen_get_size().x, DisplayServer.screen_get_size().y], "viewport_size": [root.get_texture().get_width(), root.get_texture().get_height()], "display": DisplayServer.get_name()}, "\t"))
 	print("SPINE_BUILD_DONE failures=%d fixture_gaps=%d" % [_failures, _gaps])
 	quit(1 if _failures > 0 else (2 if _gaps > 0 else 0))
+
+# C1-b: inspect actual chain checkpoints through the ordinary loader and native controls.
+func _livestock() -> void:
+	var stages: Array[String] = ["00-pen-placed", "01-capture", "02-two-adults", "03-kid", "04-milk", "05-slaughter"]
+	var renderer: Node = _main.get_node("ColonyView/LivestockLayer")
+	var goals: Control = _main.get_node("UI/MuxHud/Goals") as Control
+	var cards: Control = _main.get_node("UI/MuxHud/CardPanel") as Control
+	for language: String in ["ko", "en"]:
+		_locale.call("set_language", language)
+		for stage: String in stages:
+			if not (await _load(stage)): continue
+			var manifest: Dictionary = _manifests[stage]
+			var ui: Dictionary = manifest.get("ui", {})
+			var read: Dictionary = SimReads.read(_world, "get_livestock")
+			var ids: PackedInt64Array = read.get("ids", PackedInt64Array())
+			var expected: Array = ui.get("livestock", [])
+			var observed_ids: Array[int] = []
+			for row: Dictionary in expected: observed_ids.append(int(row["id"]))
+			_check(stage + " exact loaded seed and living identities", int(_world.call("get_world_info").get("seed", -1)) == int(manifest["seed"]) and Array(ids) == observed_ids, {"expected": observed_ids, "actual": Array(ids)})
+			_check(stage + " first kid stays pinned", int(read.get("first_kid_id", -1)) == int(ui.get("first_kid", -1) if ui.get("first_kid") != null else -1))
+			var pen: int = int(manifest["selected_site"])
+			var found: bool = false
+			for actual: Dictionary in read.get("pens", []):
+				if int(actual["site"]) == pen:
+					found = true
+					_check(stage + " real pen area and occupancy", bool(actual["intact"]) == (stage != stages[0]) and int(actual["count"]) == ids.size() and int(actual["available_grass"]) <= int(actual["grass_tiles"]), actual)
+			_check(stage + " actual pen retained", found)
+			_check(stage + " renderer draws all actual animals", int(renderer.call("counts").get("livestock", -1)) == ids.size())
+			var anchor: Array = ui.get("pen_anchor", [])
+			_check(stage + " actual pen framing supplied", anchor.size() == 2)
+			if anchor.size() != 2: continue
+			_camera.position = View.tile_centre(Vector2i(int(anchor[0]) + 2, int(anchor[1]) + 2))
+			_camera.zoom = Vector2(2, 2)
+			_camera.force_update_scroll()
+			await _frames()
+			_panel.hide()
+			goals.hide()
+			if ids.size() > 0:
+				var xs: PackedInt64Array = read["xs"]
+				var ys: PackedInt64Array = read["ys"]
+				await _tile(Vector2i(xs[0], ys[0]), false)
+			await _capture(language + "_" + stage)
+			var before: Dictionary = _world.call("get_command_log", 0)
+			var current_chapter: int = int(goals.call("current_chapter"))
+			var has_capture: bool = int(read.get("first_capture", -1)) >= 0
+			_check(stage + " capture fact controls chapter availability", (goals.call("available_chapters") as Array).has(4) == has_capture)
+			if has_capture:
+				await _key(KEY_G)
+				_check("native chapter panel opened", goals.visible)
+				_check("real chapter five selection", bool(goals.call("select_chapter", 4)) and str(goals.call("displayed_chapter").get("id", "")) == "pens_and_livestock")
+				_check("chapter selection never skips prior goals", int(goals.call("current_chapter")) == current_chapter)
+				await _capture(language + "_" + stage + "_chapter")
+				goals.hide()
+			_check(stage + " read-only inspection no commands", _world.call("get_command_log", 0) == before)
+			for event: String in ["capture", "birth", "milk", "slaughter"]:
+				var entry: int = int(ui.get(event + "_entry", -1) if ui.get(event + "_entry") != null else -1)
+				if entry < 0: continue
+				var why_read: Dictionary = _world.call("get_chronicle_why", entry)
+				var evidence: Array = why_read.get("livestock_evidence", [])
+				_check(stage + " typed terminal " + event, why_read.get("links", PackedInt32Array()) == PackedInt32Array([0, 4]) and evidence.size() == 2 and not (evidence[-1] as Dictionary).is_empty())
+				var why: Control = _main.get_node("UI/WhyPanel") as Control
+				_check(stage + " real Why " + event, bool(why.call("open", entry)))
+				var plain: String = str(why.call("plain_text"))
+				_check(stage + " localized Why " + event, not plain.contains("C1_") and not plain.contains(str(_locale.call("ltr", "UI_UNKNOWN"))), {"text": plain})
+				if stage == "05-slaughter": await _capture(language + "_removed_" + event + "_why")
+				why.call("close")
+			if stage == "03-kid":
+				await _livestock_card(cards, language, stage)
+			elif stage == "05-slaughter":
+				_check("removed first kid card does not retarget", not bool(cards.call("_check_bridge_trigger", "first_livestock_kid")) and not (cards.get("_active") as Dictionary).has("first_kid"))
+			_check(stage + " inspection remains paused at exact checkpoint", int(_world.call("get_time_snapshot")["tick"]) == int(manifest["tick"]))
+
+func _livestock_card(cards: Control, language: String, stage: String) -> void:
+	var read: Dictionary = SimReads.read(_world, "get_livestock")
+	var first: int = int(read.get("first_kid_id", -1))
+	var active: Dictionary = cards.get("_active")
+	_check("real first kid produces pinned decision card", active.has("first_kid") and int(active.get("first_kid", {}).get("trigger_data", {}).get("livestock_id", -1)) == first)
+	if not active.has("first_kid"): return
+	await _capture(language + "_first_kid_card")
+	var before: Dictionary = _world.call("get_command_log", 0)
+	await _click(_livestock_button(cards, "C1_CARD_FIRST_KID_KEEP"))
+	_check("native Keep is command-free and retains kid", _world.call("get_command_log", 0) == before and SimReads.read(_world, "get_livestock").get("ids", PackedInt64Array()).has(first) and not (cards.get("_active") as Dictionary).has("first_kid"))
+	if not (await _load(stage)): return
+	# Exercise the actual expiry decision seam; no clock or world state is fabricated.
+	before = _world.call("get_command_log", 0)
+	cards.call("_expire_card", "first_kid")
+	_check("expiry is command-free", _world.call("get_command_log", 0) == before and SimReads.read(_world, "get_livestock").get("ids", PackedInt64Array()).has(first))
+	if not (await _load(stage)): return
+	var start: int = int(_world.call("get_command_log", 9223372036854775807).get("total", -1))
+	await _click(_livestock_button(cards, "C1_CARD_FIRST_KID_SLAUGHTER"))
+	var delta: Dictionary = _world.call("get_command_log", start)
+	_check("native Slaughter one accepted ordinary command", int(delta.get("total", -1)) == start + 1 and delta.get("kinds") == PackedStringArray(["DesignateSlaughter"]) and delta.get("accepted") == PackedByteArray([1]), delta)
+	_check("job command preserves animal until execution", SimReads.read(_world, "get_livestock").get("ids", PackedInt64Array()).has(first))
+	# The next checkpoint is the independently committed ordinary-job result.
+
+func _livestock_button(cards: Control, key: String) -> Button:
+	var text: String = str(_locale.call("ltr", key))
+	for node: Node in cards.find_children("*", "Button", true, false):
+		var button: Button = node as Button
+		if button.text.begins_with(text): return button
+	return null

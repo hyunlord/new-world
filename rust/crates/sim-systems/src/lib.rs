@@ -388,6 +388,9 @@ fn register_runtime_systems_with_decision(engine: &mut SimEngine, decision: fn(&
     register_fire_systems(engine);
     register_job_systems(engine);
     register_story_systems(engine);
+    if engine.resources.rules.colony.is_some() {
+        engine.register_system(Box::new(runtime::livestock::LivestockSystem::new()));
+    }
     register_diagnosis_systems(engine);
 }
 

@@ -221,9 +221,10 @@ Reads/writes come from each file's `//!` header.
 | 48 | `QuarrelSystem` | 173 | 6 | `rust/crates/sim-systems/src/runtime/mood/quarrel.rs` | `Agent`, `Position`, `AgentState`, `Mood`, `Kin`, `Lineage`, `Temperament`, `Drafted`; `SimResources.colony` (bonds, story), `relationships` (hostility), `rules`, `world_seed` | `Mood` (value, quarrel day); `SimResources.colony` (bonds, fights), `relationships` (hostility), `chronicle` |
 | 49 | `NeighbourSystem` | 174 | 1440 | `rust/crates/sim-systems/src/runtime/neighbours/mod.rs` | `Agent`, `Knowledge`; `SimResources.colony` (neighbours, story, ground items, zones), `settlements` (food), `nav`, `tile_grid`, `building_kinds` (the hearth), `rules`, `world_seed` | `SimResources.colony.neighbours` (list, waves, caravans, plans, tallies, version) |
 | 50 | `VisitorSystem` | 175 | 3 | `rust/crates/sim-systems/src/runtime/neighbours/visitors.rs` | `SimResources.colony.neighbours`, `nav`, `building_kinds` (the hearth), `rules` | ECS people (a wave accepted on its way joins on arrival, `join::accept`); `SimResources.colony.neighbours` (waves, caravans: position, path, state, answer; neighbours' attitude and last contact; tallies, version), `chronicle` |
-| 51 | `DiagnosisSystem` | 250 | 60 | `rust/crates/sim-systems/src/runtime/diagnosis.rs` | World (Settlement), SimResources (colony, fires, current_tick, rules) | SimResources.diagnosis_cache, SimResources.requests_cache (presentation only) |
-| 52 | `RequestsSystem` | 251 | 60 | `rust/crates/sim-systems/src/runtime/diagnosis.rs` | World (Settlement), SimResources (colony, fires, current_tick, rules) | SimResources.diagnosis_cache, SimResources.requests_cache (presentation only) |
-| 53 | `InfluenceVisualizationSystem` | 1000 | 6 | `rust/crates/sim-systems/src/runtime/influence/visualization.rs` | `SimResources.influence_grid` (current Warmth and Danger buffers), `current_tick` | its own `VisualizationDigest` (no world or resource state) |
+| 51 | `LivestockSystem` | 176 | 60 | `rust/crates/sim-systems/src/runtime/livestock/mod.rs` | authored tameable policy, actual pen pieces, clock, canonical jobs/reservations. | livestock sidecar, cancelled target jobs, immutable chronicle witnesses. |
+| 52 | `DiagnosisSystem` | 250 | 60 | `rust/crates/sim-systems/src/runtime/diagnosis.rs` | World (Settlement), SimResources (colony, fires, current_tick, rules) | SimResources.diagnosis_cache, SimResources.requests_cache (presentation only) |
+| 53 | `RequestsSystem` | 251 | 60 | `rust/crates/sim-systems/src/runtime/diagnosis.rs` | World (Settlement), SimResources (colony, fires, current_tick, rules) | SimResources.diagnosis_cache, SimResources.requests_cache (presentation only) |
+| 54 | `InfluenceVisualizationSystem` | 1000 | 6 | `rust/crates/sim-systems/src/runtime/influence/visualization.rs` | `SimResources.influence_grid` (current Warmth and Danger buffers), `current_tick` | its own `VisualizationDigest` (no world or resource state) |
 
 <!-- system-table:end -->
 
@@ -895,4 +896,13 @@ enclosures confer no roof, including before aggregate template association.
 Grain store admission and authored granary food lifetimes reuse physical rooms,
 stockpiles and the existing spoil clock. Partial Connected content debt remains
 in the generated ledger. C1-a connects the buildable pen; livestock execution
-and its saved state belong to C1-b. See [ADR 0062](decisions/0062-neolithic-origins-and-livestock.md).
+and its saved state are added by C1-b. The colony-only `LivestockSystem` runs at
+priority176 every60 ticks. Ordered sidecar IDs represent domestic animals without
+allocating human ECS identities. Capture, milk and slaughter use ordinary job
+assignment, physical cargo, reservations and atomic product creation; immutable
+typed witnesses retain their real command, knowledge, pen and parent causes.
+Format21 appends this sidecar to the frozen format20 body and appends three
+Skills counters. Authenticated predecessor19/20 files retain their exact prior
+mind registry before the new system slot is inserted. `get_livestock` drives the
+placeholder pen renderer, chapter5, first-kid card and physical forage diagnosis.
+See [ADR 0062](decisions/0062-neolithic-origins-and-livestock.md).

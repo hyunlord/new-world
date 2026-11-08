@@ -202,3 +202,9 @@ GitHub 등록 첫 두 번은 실제#513/#514가 생성됐지만 즉시 목록에
 ## 27. 조용한 진입과 짧은 tail 비교만으로 원인을 확정하지 않는다 — ISS314
 
 C gate2는 부하6.23으로 진입하고7.00으로 종료했지만 두 p99 기준에 실패했다. 인접 단계의 부하8.06을 그 실패의 원인으로 전용하지 않는다. 원본35/36 실패와 고정 여섯 교차 실행을 모두 보존하고, 첫 비교의10.48 부하·서로 다른 빌드 정체성·tail 변동을 명시한다. 진단은 전체 gate나 원인 증명이 아니다. 기준·장부를 바꾸지 않고 최종 문서 HEAD의 새 전체 gate를 별도로 기록한다. 설치 규칙: [Bounded benchmark diagnosis](../.claude/skills/worldsim-testing/SKILL.md#bounded-benchmark-diagnosis); 근거: [C gate2 진단](v8/mux/C_GATE2_DIAGNOSTIC.md).
+
+## 28. 이전 mind 정책은 당시의 정확한 fact 등록 집합으로 읽는다 — C1-b
+
+게시된 C1-a 실행 파일이 만든 실제 format20 rich 저장을 B에서 읽자 `job_food_transport` 미등록 오류가 났다. 새 `job_livestock` fact는 옛 정책에서 쓰지 않아도 컴파일 사전과 revision을 바꾼다. 오래된 format13 등록 집합으로 곧바로 되돌리면 직전 버전에 이미 있던 다섯 fact까지 제거한다. 직전 집합은 `harvest_window`, `job_food_transport`, `harvest_storage_available`, `winter_stock_duty`, `water_target_available`를 유지하고 새 fact만 제외해야 한다. 저장된 전체 사전·revision 검증은 그대로 요구한다.
+
+실패 원본 `b-genuine20-tests-2.log`를 보존한다. 정확한 직전 집합 복원 후 실제20 저장 세 개의 읽기·21 바이트 재저장·60틱 twin 시험이 통과했다(`b-genuine20-tests-4.log`,1 PASS). 이 집중 검증을 B chain/gate/게시 완료로 바꾸지 않는다. 현재 writer가 만든 대용 fixture로 과거 호환을 입증하지 않는다. 근거: [C1 D13](v8/c1/C1_DECISIONS.md#d13--preserve-genuine-format20-state-and-exact-historical-mind-registries); 예방 규칙: [Historical mind dictionaries](../.claude/skills/worldsim-testing/SKILL.md#historical-mind-dictionaries-require-their-exact-registry).

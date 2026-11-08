@@ -70,7 +70,8 @@
           "text_key": "C1_CH5_COND_CAPTURE"
         }
       ],
-      "locked": true,
+      "locked": false,
+      "unlock_fact": "first_livestock_captured",
       "locked_text_key": "C1_CH5_LOCKED",
       "reward_text_key": "C1_CH5_REWARD",
       "next_preview_key": "C1_CH5_NEXT"

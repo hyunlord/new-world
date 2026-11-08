@@ -18,6 +18,8 @@ var chapters: Array[Dictionary] = []
 var goals: Array[Dictionary] = []
 var _facts: Dictionary = {}
 var _current_index: int = 0
+var _view_index: int = -1
+var _chapter_picker: OptionButton
 var _completed_chapters: PackedStringArray = PackedStringArray()
 var _title: Label
 var _chapter_title: Label
@@ -52,6 +54,12 @@ func _ready() -> void:
 	_close = Button.new()
 	_close.pressed.connect(hide)
 	row.add_child(_close)
+	_chapter_picker = OptionButton.new()
+	_chapter_picker.name = "AvailableChapters"
+	_chapter_picker.item_selected.connect(func(index: int) -> void:
+		_view_index = _chapter_picker.get_item_id(index)
+		_refresh())
+	_column.add_child(_chapter_picker)
 	_chapter_title = Label.new()
 	_chapter_title.add_theme_color_override("font_color", Color("e8c46e"))
 	_chapter_title.autowrap_mode = TextServer.AUTOWRAP_WORD
@@ -204,11 +212,35 @@ func _condition_met(cond: Dictionary) -> bool:
 	return false
 
 
+## Presentation-only selection; it never completes or skips the sequential chapter.
+func available_chapters() -> Array[int]:
+	var result: Array[int] = []
+	for i: int in chapters.size():
+		var fact: String = str(chapters[i].get("unlock_fact", ""))
+		if i <= _current_index or (not fact.is_empty() and bool(_facts.get(fact, false))):
+			result.append(i)
+	return result
+
+
+func select_chapter(index: int) -> bool:
+	if not available_chapters().has(index):
+		return false
+	_view_index = index
+	_refresh()
+	return true
+
+
+func displayed_chapter() -> Dictionary:
+	if _view_index >= 0 and available_chapters().has(_view_index):
+		return chapters[_view_index]
+	return current_chapter_data()
+
+
 func _check_completion() -> void:
 	# Advance through completed chapters.
 	while _current_index < chapters.size():
 		var chapter: Dictionary = chapters[_current_index]
-		if bool(chapter.get("locked", false)):
+		if bool(chapter.get("locked", false)) or (chapter.has("unlock_fact") and not bool(_facts.get(str(chapter["unlock_fact"]), false))):
 			break
 		var conditions: Array = chapter.get("conditions", [])
 		var all_met: bool = true
@@ -233,8 +265,15 @@ func _refresh() -> void:
 	_title.text = _loc("LOOP_CHAPTER_PANEL_TITLE")
 	_close.text = _loc("MUX_CLOSE")
 	_close.tooltip_text = "Esc"
-	# Show the current chapter.
-	var chapter: Dictionary = current_chapter_data()
+	_chapter_picker.clear()
+	var options: Array[int] = available_chapters()
+	var viewing: int = _view_index if options.has(_view_index) else _current_index
+	for i: int in options:
+		_chapter_picker.add_item(_loc(str(chapters[i].get("title_key", ""))), i)
+		if i == viewing: _chapter_picker.select(_chapter_picker.item_count - 1)
+	_chapter_picker.visible = options.size() > 1
+	# The plaque still uses current_chapter_data; only this panel can browse unlocked chapters.
+	var chapter: Dictionary = displayed_chapter()
 	if chapter.is_empty():
 		_chapter_title.text = _loc("LOOP_CHAPTER_PANEL_TITLE")
 		return

@@ -286,6 +286,10 @@ func _draw() -> void:
 	var hps: PackedInt32Array = _read.get("hps", PackedInt32Array())
 	var text: String = StoryText.trf(locale, "M5_ANIMAL_HOVER_FMT", {"animal": StoryText.animal(locale, hovered.kind),
 		"state": StoryText.animal_state(locale, states[i] if i < states.size() else -1), "hp": hps[i] if i < hps.size() else 0})
+	var ages: PackedInt64Array = _read.get("age_days", PackedInt64Array())
+	var sexes: PackedInt64Array = _read.get("female", PackedInt64Array())
+	if i < ages.size() and i < sexes.size() and ages[i] >= 0:
+		text += " · " + StoryText.trf(locale, "C1_WILD_AGE", {"age": ages[i], "sex": StoryText.ltr(locale, "C1_SEX_FEMALE" if sexes[i] != 0 else "C1_SEX_MALE")})
 	var top: float = _drawn_rect(hovered).position.y
 	OverlayLayer.draw_label(self, _font, text, Vector2(hovered.position.x + TILE * 0.5, top - 2), _zoom)
 

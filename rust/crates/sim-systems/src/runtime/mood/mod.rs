@@ -557,6 +557,7 @@ pub fn check_cause(
     match chronicle.cause_of(index) {
         None => Err("no cause"),
         Some(CauseRef::Building { .. }) => Err("a building order is not a quarrel cause"),
+        Some(CauseRef::Livestock { .. }) => Err("livestock evidence is not a quarrel cause"),
         Some(CauseRef::Entry(e)) => entry_ok(e, Expect::Any),
         Some(CauseRef::Modifier {
             code,
@@ -612,6 +613,11 @@ pub enum Link {
         /// Immutable original request identity.
         origin: sim_core::colony::BuildCause,
     },
+    /// Immutable livestock evidence is a terminal fact, not a recursive entry edge.
+    Livestock {
+        /// Index in the livestock state's immutable witness map.
+        witness: u32,
+    },
 }
 
 /// The "why?" chain of chronicle entry `index`: the entry, then its cause, the
@@ -624,6 +630,10 @@ pub fn why_chain(chronicle: &sim_core::chronicle::Chronicle, index: u32) -> Vec<
         let next = match chronicle.cause_of(at) {
             None => break,
             Some(CauseRef::Entry(e)) => Some(e),
+            Some(CauseRef::Livestock { witness }) => {
+                out.push(Link::Livestock { witness });
+                None
+            }
             Some(CauseRef::Building {
                 site,
                 record,
@@ -660,6 +670,20 @@ pub fn why_chain(chronicle: &sim_core::chronicle::Chronicle, index: u32) -> Vec<
         }
     }
     out
+}
+
+#[cfg(test)]
+#[test]
+fn livestock_witness_is_terminal_even_when_its_index_matches_the_entry() {
+    let mut chronicle = sim_core::chronicle::Chronicle::new();
+    chronicle.push_caused(
+        sim_core::chronicle::ChronicleEntry::new(1, ChronicleKind::LivestockCaptured),
+        Some(CauseRef::Livestock { witness: 0 }),
+    );
+    assert_eq!(
+        why_chain(&chronicle, 0),
+        vec![Link::Entry(0), Link::Livestock { witness: 0 }]
+    );
 }
 
 /// Whether the clock is in the night window (20:00–06:00).

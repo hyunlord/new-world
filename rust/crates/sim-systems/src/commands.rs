@@ -93,14 +93,20 @@ fn counted(count: usize) -> CommandResult {
 /// see [`submit`].
 pub fn apply_command(world: &mut World, res: &mut SimResources, cmd: Command) -> CommandResult {
     let before = crate::runtime::mind::job_origins::snapshot(world, res);
-    let result = apply_at(world, res, cmd, res.current_tick);
+    let result = apply_at(world, res, cmd, res.current_tick, false);
     if result.accepted {
         crate::runtime::mind::job_origins::applied(world, res, before, None);
     }
     result
 }
 
-fn apply_at(world: &mut World, res: &mut SimResources, cmd: Command, tick: u64) -> CommandResult {
+fn apply_at(
+    world: &mut World,
+    res: &mut SimResources,
+    cmd: Command,
+    tick: u64,
+    logged: bool,
+) -> CommandResult {
     let reconcile = match &cmd {
         Command::CancelArea { .. } => true,
         Command::Steward { command, .. } => matches!(command.as_ref(), Command::CancelArea { .. }),
@@ -123,7 +129,7 @@ fn apply_at(world: &mut World, res: &mut SimResources, cmd: Command, tick: u64) 
             _ => None,
         }
     };
-    let result = apply_inner(world, res, cmd, tick);
+    let result = apply_inner(world, res, cmd, tick, logged);
     if result.accepted {
         if reconcile {
             crate::runtime::building_templates::advance(world, res);
@@ -149,6 +155,7 @@ fn apply_inner(
     res: &mut SimResources,
     cmd: Command,
     tick: u64,
+    logged: bool,
 ) -> CommandResult {
     let Some(rule) = res.rules.colony else {
         return CommandResult::rejected(RejectReason::NoColony);
@@ -212,7 +219,15 @@ fn apply_inner(
                         tick,
                     )
                 }
-                _ => apply_inner(world, res, (*command).clone(), tick),
+                Command::DesignateCapture { .. } | Command::DesignateSlaughter { .. } => {
+                    crate::runtime::jobs::livestock::designate(
+                        res,
+                        command.as_ref(),
+                        logged,
+                        Some(rule),
+                    )
+                }
+                _ => apply_inner(world, res, (*command).clone(), tick, logged),
             };
             if result.accepted {
                 crate::runtime::steward::lifecycle::accepted(world, res, rule, *command, targets);
@@ -568,6 +583,9 @@ fn apply_inner(
                 ),
             )
         }
+        command @ (Command::DesignateCapture { .. } | Command::DesignateSlaughter { .. }) => {
+            crate::runtime::jobs::livestock::designate(res, &command, logged, None)
+        }
         Command::DesignateHunt { animal } => {
             let w = &mut res.colony.wildlife;
             match w.animals.get(&animal) {
@@ -872,7 +890,7 @@ pub(crate) fn apply_and_log(
     tick: u64,
 ) -> CommandResult {
     let before = crate::runtime::mind::job_origins::snapshot(world, res);
-    let result = apply_at(world, res, cmd.clone(), tick);
+    let result = apply_at(world, res, cmd.clone(), tick, true);
     let index = res.colony.command_log.len() as u64;
     res.colony.command_log.push(CommandRecord {
         tick,
@@ -992,6 +1010,7 @@ fn cancel_jobs_where(world: &mut World, res: &mut SimResources, hit: impl Fn(&Jo
 
 fn cancel_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usize {
     let area: BTreeSet<Tile> = tiles.iter().copied().collect();
+    let livestock_removed = crate::runtime::jobs::livestock::cancel_area(world, res, &area);
     // Chop marks.
     let marks: Vec<Tile> = res
         .colony
@@ -1045,7 +1064,7 @@ fn cancel_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usi
     if !marks.is_empty() || !sites.is_empty() {
         res.colony.touch(false);
     }
-    marks.len() + sites.len()
+    marks.len() + sites.len() + livestock_removed
 }
 
 /// Whether `tile` may become a stockpile cell (M3: only where items may lie,
@@ -1488,7 +1507,7 @@ pub(crate) fn apply_template_piece(
     command: Command,
 ) -> CommandResult {
     let tick = res.current_tick;
-    apply_inner(world, res, command, tick)
+    apply_inner(world, res, command, tick, false)
 }
 
 /// Validate an entire wall replacement batch before any designation or version changes.

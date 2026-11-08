@@ -64,3 +64,32 @@ as debt. Publication requires the committed candidate's full technical gate.
 
 Owner C1 GOAL.md, milestone14, CONTENT_BIBLE §§4.2/4.5, ADR0060/0061;
 `docs/v8/c1/C1_DECISIONS.md` and `docs/v8/c1/C1_REPORT.md`.
+
+## C1-b implementation contract (2026-11-09; validation pending)
+
+Livestock uses one colony-only system (priority176, interval60), a saved ordered
+sidecar and existing job reservations. Capture carries a selected physical tool
+and consumes it only after a successful keyed attempt; cancelled travel never
+rolls. Wild age/sex are immutable keyed profiles, with elapsed whole-day phase
+preserved on conversion. Species, knowledge and product identities are registry
+data. Feed uses distinct eligible physical pen cells in stable order; broken
+enclosures remain valid save states with stopped feeding and diagnosis.
+
+Milk and slaughter use the existing atomic mixed-output placement plan before
+readiness or source removal. Immutable typed witnesses terminate Why chains in
+the livestock namespace, preserving source/parent/knowledge/real command causes
+after targets disappear. Birth and natural death invent no player commands.
+The first kid remains pinned for the decision card after removal. Chapter5
+visibility reads the durable first-capture fact without completing older goals.
+
+Format21 appends the sidecar and freezes genuine format20 outer layout. The
+Skills23-counter column requires a separate18..20 migration into26 counters;
+pre18 adapters already construct the current column. Genuine published-a20
+ordinary and rich saves were retained before format edits. Predecessor system
+slot insertion is restricted to authenticated <=20 colony saves, preserving the
+baseline registry and rejecting damaged current lists.
+
+All biological/work values were fixed in commented data before chain outcomes.
+The real scene may seed only animal_taming to two founders; materials, other
+knowledge, capture, offspring and products must come from ordinary mechanisms.
+These decisions record intended implementation, not completed verification.

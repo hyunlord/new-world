@@ -233,6 +233,9 @@ func _check_bridge_trigger(read_name: String) -> bool:
 	if read_name in ["sowing_window", "harvest_ready"]:
 		return not preload("res://scripts/ui/field_facts.gd").target(_world, read_name).is_empty()
 	match read_name:
+		"first_livestock_kid":
+			var stock: Dictionary = SimReads.read(_world, "get_livestock")
+			return int(stock.get("first_kid_id", -1)) >= 0 and stock.get("ids", PackedInt64Array()).has(int(stock.get("first_kid_id", -1)))
 		"cloth_short":
 			return bool(SimReads.read(_world, "get_settlement_diagnosis").get("cloth_short", false))
 		"tools_below_need":
@@ -305,6 +308,9 @@ func _collect_trigger_data(card_def: Dictionary) -> Dictionary:
 	var kind: String = str(trigger.get("kind", ""))
 	var lang: String = _current_lang()
 	var card_id: String = str(card_def.get("id", ""))
+	if card_id == "first_kid":
+		data["livestock_id"] = int(SimReads.read(_world, "get_livestock").get("first_kid_id", -1))
+		return data
 	if card_id in ["sowing_window", "harvest_ready"]:
 		data = preload("res://scripts/ui/field_facts.gd").target(_world, card_id)
 		return data
@@ -549,6 +555,12 @@ func _send_command(command: String, option: Dictionary, card: Dictionary) -> Var
 	var trigger_data: Dictionary = card.get("trigger_data", {})
 	var result: Variant = null
 	match command:
+		"cmd_slaughter_livestock":
+			var stock: Dictionary = SimReads.read(_world, "get_livestock")
+			var target: int = int(trigger_data.get("livestock_id", -1))
+			if target < 0 or int(stock.get("first_kid_id", -2)) != target or not stock.get("ids", PackedInt64Array()).has(target):
+				return {"accepted": false, "skipped": true, "reason": "first_kid_gone"}
+			result = SimReads.mutate(_world, "cmd_slaughter_livestock", [target])
 		"cmd_set_dress_order":
 			var requested: bool = bool(option.get("params", true))
 			if bool(SimReads.read(_world, "get_story").get("dress_order", true)) == requested:

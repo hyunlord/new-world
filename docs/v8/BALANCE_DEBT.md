@@ -215,3 +215,22 @@ The paired48-day colony smoke used seeds0–7, steward ON and no player orders. 
 | Candidate before fallback | [10,10,11,14,10,0,13,10] | [0,0,0,0,0,25,0,0] |
 
 The completed candidate is RED: seed5 is extinct while BASE retains13 people; total KnowledgeLost25 exceeds2×BASE0+2. Root identified resident-boar labour disruption followed by starvation and applied the GOAL§5 single allowed content fallback: `wild_boar` becomes Inert with explicit M-BAL debt. Its population, habitat, damage, chase, timing and loot values above remain unchanged and authored but inactive. This is the authorized content deactivation, not numerical outcome tuning. The red result remains evidence; this note does not claim a post-fallback smoke pass. No calibration, held-out evaluation or repair loop is authorized by this result. Publication still requires the technical gate and issue/report handling owned by the root executor.
+
+
+## C1-b livestock starting policy (fixed before chain/smoke outcomes)
+
+These are design values authored in `animals.ron`, not acceptance thresholds or tuned outcomes. Existing wild populations, respawn and origins remain unchanged; wild_boar stays Inert under ISS364. Wool collection/processing remains C2 debt; hay supplementation remains M-BAL debt.
+
+| Feature | Tunable/current value | Intended effect | Suspected issue |
+| --- | --- | --- | --- |
+| Tameable sources | goat/sheep/reindeer, Grazer policy; initial keyed age 0..29 days; kid/adult boundary30 | Copy natural age/sex and accept only existing wild kids | Source window and natural replenishment unbalanced; no scene age/sex override |
+| Capture | range40tiles; work60ticks; success700permille; retry1day; one selected physical tool consumed on success only | Practitioner walks to real source and commits one logged capture | Travel time, tether cost and retry throughput unbalanced |
+| Pen | authored hard capacity6; living forage3distinct interior tiles/head/day; one unit/cell; regrow1day | Separate hard capacity from physical forage support | A 5×5 enclosure has9interior cells, supporting3daily fed heads; overstock and damaged fences diagnose rather than gain free feed |
+| Feeding/death | starvation after3unfed days; max age1800days; stable-ID daily feeding | Deterministic competition and physical natural death | No fodder supplement or transport mechanic this pass |
+| Breeding | opposite-sex same-species adults; interval20days from capture/previous birth; free hard capacity; both fed | Real kid with immutable parent witnesses | No new20day delay after adulthood; population/feed pressure unbalanced |
+| Milk | adult fed female; interval1day; work45ticks; one authored milk item; dairy practitioner | Physical milk commit at real gate; readiness retained on blocked output | No lactation/supplementary feed mechanic; production/spoilage balance deferred |
+| Slaughter | explicit logged intent; work90ticks; selected meat3+hide1 atomically | Durable cause plus exact mixed-output ledger | Meat/hide value and labour balance deferred |
+| Dairy discovery | one completed capture plus pot_firing400; prerequisites animal_taming+pot_firing; threshold300, difficulty2 unchanged | Break circular discovery that formerly required unavailable milk stock | Ordinary fired-pot practice and diffusion must maintain knowledge; no dairy grant |
+| Herding discovery | animal_taming300 plus one completed capture; threshold300, difficulty1 unchanged | Natural learning after actual capture; connected grazing/breeding | Knowledge social/adoption balance deferred |
+| Steward livestock | authored rule11, Food scope,360tick successful-action cooldown | Ordinary pen request followed by ordinary capture designation | Never a second job scheduler; path/source/tool/knowledge admission shared with jobs |
+| Colony mind | one work-band livestock owner node, score0/hysteresis0/everytick; existing do_job lifecycle | Explain capture/milk ownership without replacing needs priority | Needs and duty bands retain their authored precedence |
