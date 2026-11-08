@@ -444,3 +444,22 @@ the appended Food/Livestock rule, and retain the full mutated-vs-bundled equalit
 and historical BASE ids1..8. Align the existing ordinary-rule allowlist with11
 without claiming it caused the observed B1 failure. Other knowledge/debt, skills
 and job count assertions remain compatible; no product values change.
+
+## D27 — D-C1-2: current fixture expectations and mandatory pre-gate tests
+
+Planner D-C1-2 (2026-11-09 08:40 KST) authorizes resumption after the
+letter-correct B2 stop. Preserve B1/B2 and the stop reports. The intentional
+authored rule11 was missing from engine_ui_facts' exact current labels vector;
+append its id/key without weakening the full ordered comparison. Independent
+exhaustive tests/tools review found no other current enumeration to change.
+Preserve genuine BASE rules1..8 and narrow single-rule causal fixtures.
+
+There is no product, data, balance or gate-threshold change. The new standing
+rule is recorded in AGENTS.md and worldsim-testing: commit/freeze first, then
+pass the gate's full workspace debug invocation and all-targets Clippy before
+starting any full gate. A preflight-catchable full-gate failure counts against
+that rule rather than the repeated-product-defect stop. Record exact source
+bindings and actual results, never a promised success. B3 starts from step1
+with external PLAY_ROOT/PLAY_DATA and the asserted whitespace fixture list;
+D-C1-1's conditional draw-only step41 handling now applies to B3 by D-C1-2.
+Keep native screenshots during the run and restart the owned caffeinate.

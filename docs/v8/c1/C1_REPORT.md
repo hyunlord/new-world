@@ -28,9 +28,9 @@ BASE 생존 [10,12,11,14,10,13,12,14], 후보 [10,13,11,14,10,12,12,12]; Knowled
 ### 확인된 제한사항·후속
 C1-b에서 포획→성체 쌍→출생→젖→도축 및 실제 원인·저장·카드·렌더링을 연결한다. 젖 발견의 순환 조건은 B에서 실제 포획 Practice와 토기 지식으로 연결한다. 양모 가공은 C2, 도구 효율·바구니 운반 등은 명시된 후속 부채다. 멧돼지는 Inert 유지. A2 draw-only hitch 원인은 미확정이다. C1-a에서 새 enum·생산 unwrap·시뮬레이션 직접 UI 쓰기·수치 튜닝은 도입하지 않았다. 변경 파일 전체는 게시 커밋 diff로 확인할 수 있다.
 
-## C1-b 구현·검증 보고 — 전체 게이트 전
+## C1-b D-C1-2 재개 보고 — 동결 사전 검증 전
 
-**물리 사슬 run18 PASS. 네이티브 여섯 장면299검사/오류0 PASS. B 크래시 감지 PASS. 전체 gate·벤치·게시 PENDING.** seed5에서 실제 우리→포획→성체 암수→출생→젖→도축을 tick80749에 마쳤다(절대 기한86400). 중간 저장 왕복, 이후 명령을 함께 보낸 twin, 전체384명령 replay가 통과했다. 이는 사슬 시험의 성공이며 아직 C1-b 게시 성공은 아니다.
+**C1-a 게시 완료, C1-b 미게시.** D-C1-2가 B2 중단 후 재개를 승인했다. 규칙11을 빠뜨린 시험 기대 목록을 엄격한 전체 비교를 유지하여 갱신했다. 제품·콘텐츠 데이터·수치·게이트 임계값 변경은 없다. 동결 HEAD의 전체 workspace debug와 Clippy가 모두 통과해야 B3 전체 gate를 시작하며, 최종 결과·게시 SHA는 실제 외부 영수증에 기록한다.
 
 ### 구현 의도 / 구현 내용 / 구현 방법 / 기능 설명
 
@@ -42,9 +42,13 @@ C1-b에서 포획→성체 쌍→출생→젖→도축 및 실제 원인·저장
 
 ### 게시 SHA와 게이트 결과 (단계 수, 면제·재실행, PLAY_ROOT 외부 지정)
 
-B 게시 SHA와 완료된 full gate 결과는 **PENDING**이다. B1(`062505d30`)은 steps1–3 PASS 뒤 디버그 통합 시험의 집사 규칙 개수 expected9/actual10 오류를 확인해 중단했다. child 실패를 parent가 전달한 하나의 원인이며 한 번의 게이트 시도다. 정확한 소유 PID/부모/시작/cwd를 확인한5개 프로세스만 종료했고, 3081소스·설정·러너 불변을 검증해 ABORTED.json과 부분 사슬을 보존했다. 같은 오래된 개수·ID 목록을 쓰는 통합 시험3곳을 수정하고 새11번의 Food/Livestock 조건·동작을 명시적으로 검증한다. 기존 부트 전 거부·역사 BASE·전체 필드 비교는 유지한다. 제품 코드는 그대로이며 부트6·데이터변형1·기본값2 시험을 각각 debug/release에서 통과했고 Clippy·문서도 재통과했다. 새 B2 전체 게이트를 처음부터 수행한다. bridge 재빌드·네이티브 검증은 완료했고 동결 gate를 수행한다. `PLAY_ROOT=/Users/rexxa/work/c1-data/play-root`, `PLAY_DATA=/Users/rexxa/work/c1-data/play-data` 외부 지정을 유지한다. B 단계 수·step41 면제·재실행 여부는 실제 gate 뒤 기록한다.
+**C1-b 게시와 B3 결과는 PENDING**이다. 현재 main/wip은 게시 A `094fea092f467a7c82764165ad0d2f9e74b806e3`다. D-C1-2는 B1/B2의 오래된 기대값 실패를 제품 결함 수리 반복과 구분하고 재개를 승인했다. `engine_ui_facts.rs`의 labels 전체 기대 목록에 `(11, "C1_STEWARD_LIVESTOCK")`을 추가했다. 전체 ordered 비교·유효/무효 scope·명령 수·상태 assertions를 그대로 유지했다. 독립 전수 점검은 현재 count/ID 목록에11이 이미 반영된 다른 시험들과 실제 과거 BASE1..8·단일 규칙 도구 fixture를 구분했다. 추가 제품 변경은 없다.
 
-직전 게시 A는 `094fea092f467a7c82764165ad0d2f9e74b806e3`이다. A3 전체49/49 PASS, 기존 step41 면제, isolated 재실행 없이2026-11-09 02:41:59 KST에 v8/wip→v8/main FF와 원격 일치를 확인했다(`C1-a-publication.json`). A 결과를 B 결과로 재사용하지 않는다.
+B1 `062505d30511df79325b903289f9155c379013a1`은 recipe_registry actual10/expected9, B2 `4c4642553fe3a10ac6c31a2b87dcf435aa2dcce1`은 현재 labels에서11 누락으로 실패했다. 각각 첫3단계 PASS 뒤 debug 부분 RED/ABORTED이며 전체 gate가 아니다. B2는 소유 프로세스만 TERM하여 exit143/잔여0, 소스3081핀·설정·러너 불변을 검증했다. 두 실패와 중단 보고는 `fullgate-b-attempt{1,2}/ABORTED.json`, `STOP-B2-20261109-superseded-D-C1-2.json`, `C1-b-stop-report-20261109-D-C1-2.md`에 보존한다. 당시 중단을 성공으로 바꾸지 않는다.
+
+새 상시 규칙은 AGENTS.md와 worldsim-testing에 기록했다. 커밋하고 동결한 동일 HEAD에서 `cargo test --workspace --no-fail-fast -- --test-threads=8` 및 `cargo clippy --workspace --all-targets -- -D warnings`를 실제 모두 통과한 뒤 B3를 step1부터 실행한다. 사전 debug가 잡을 실패를 가진 full gate는 이 새 규칙 위반이며 §5 제품 결함 반복으로 세지 않는다. 사전 검증과 B3는 아직 실행 전이다. 외부 `PLAY_ROOT=/Users/rexxa/work/c1-data/play-root`, `PLAY_DATA=/Users/rexxa/work/c1-data/play-data`, 정확한 whitespace fixture 목록을 유지한다. D-C1-2가 지정한 D-C1-1의 조건부 draw-only step41 절차를 적용하되 기존 면제·임계값을 바꾸지 않는다. 새 caffeinate를 실행했다. 누락 labels 회귀 시험은 `d2-targeted-steward-labels.log`에서 1 PASS/0 FAIL이며 fmt·diff·문서 검사도 통과했다.
+
+A3 전체49/49 PASS(기존 step41 면제)와 `094fea092`의 v8/wip→v8/main FF는 `C1-a-publication.json`에 있다. 그 녹색 게이트의 실제 BASE/후보 장부12행을 이번 문서 커밋에서 `docs/perf/PERF_LEDGER.md`에도 기록했다. B 측정으로 재사용하지 않는다. B3 종료와 원격 게시의 실제 사실은 외부 `C1-b-report.md` 및 게시 영수증에 기록하며, 검사 중인 커밋을 고쳐 자신의 미래 결과를 주장하지 않는다.
 
 ### 사슬 시험·데이터 전용 시험·origin 시험 결과, 캡처 경로
 
@@ -59,11 +63,17 @@ B 게시 SHA와 완료된 full gate 결과는 **PENDING**이다. B1(`062505d30`)
 | 04-milk | 79948 /55일 | 출생 후 새 젖1 생산, dairy500 작업자, witness1062 |
 | 05-slaughter | 80749 /56일 | 일반 주문의 새끼3 도축, 고기+3·염소가죽+1, witness1079; 실제 가축2 잔존 |
 
+B2 전체 게이트 step4에서도 같은 사슬이 debug 1 PASS/0 FAIL(3022.92초)로 완료됐다. `scene/chain-96077-1794170097550107000/complete.json`은 같은 여섯 tick과384명령 전체 replay·future twin·중간 작업 저장 왕복 true를 기록한다. B2 나머지 전체 게이트는 중단되어 NOT_RUN이며, 새 B3 검증을 기다린다.
+
 모든 단계의 장부·예약 invariant가 passed다. 사슬의 실제 Chronicle에는 Died가 없었다. 자연 점토36, 생토기13, 구운 토기1과 젖1의 생산 장부도 남았다. dairy는 tick78720에 실제 발견됐다. 화면 캡처가 아닌 저장·manifest만으로 그리기 성공을 주장하지 않는다. 여섯 저장을 실제 게임 창1920×1080에서 읽은 native2는 ko/en299검사 PASS/실패0/engine0/script0/exit0이며32PNG를 보존했다. 실제 Keep·만료·Slaughter와 제거된 대상의 typed Why가 통과했다. 경로는 같은 scene 디렉터리의 native-1920-run2/receipt.json이다. native1의 한글 U+2060 버튼 조회4실패와 HUD 가림은 D25의 검사/캡처 수정 후 통과했으며 원본을 보존했다. 앞선 기술/건설/조리법 네이티브 검증은 `b-progress-native-3/receipt.json`의413 PASS, engine/script 오류0이며 대표 화면은 `screens/0330_livestock_tech_connected.png`다. 최종 B native와 구별한다.
+
+B2 게이트의 현재 브리지로 실제 창 검증을 한 번 더 수행했다(`native-frozen-0553/receipt.json`): ko/en299 PASS, 실패/engine/script0, exit0,32PNG다. 원래 B2 시작 영수증은 이전 native2 브리지5ec216 값을 보유했으나 step2가 선택한 현재 dev artifact는24f46a3이다. 05:24:38 파일 생성·05:28:43 gate build 로그, 소스3081개 불변과 현재 실제 네이티브 통과를 `b2-bridge-binding-correction.json`에 기록하고 원래 영수증도 보존했다. 원래 BASE와 후보 probe/perf 해시는 그대로다. 이번 실제 한글1920×1080 도축 원인 화면은 `screens/0553_slaughter_cause.png`다.
+
+B2 디버그 사슬이 완료한 실제 여섯 저장도 별도로 실제 창에 불러와 검증했다(`scene/chain-96077-1794170097550107000/native-gate-0652/receipt.json`): ko/en299 PASS, 실패/engine/script0, exit0,32PNG이며 실제 현재 브리지는24f46a3이다. 작업 중 한글 가족·5장 화면은 `screens/0652_gate_goat_family.png`, `screens/0652_gate_chapter5.png`에 보존했다. D-C1-2 재개 후에도 실제 창299 PASS/오류0/32PNG를 새로 확인했다(`native-d2-0843/receipt.json`). 새 한글 가족·도축 원인 화면은 `screens/0841_d2_goat_family.png`, `screens/0841_d2_slaughter_cause.png`다.
 
 앞서 완료한 집중 검증은 core lib541 PASS, systems lib813 PASS/ignore3, bridge lib67 PASS, 가축26 PASS/ignore1, 생활주기7 PASS, genuine A20 별도 시험1 PASS(최근 `b-genuine20-tests-5.log`), genuine BASE19→21/60tick PASS다. genuine20은 실제 세 입력의 기존 카운터·상위 mask·물리 상태·등록 slot·byte-stable21 재저장·60tick twin을 검사했다. 원본은 `b-core-tests-3.log`, `b-systems-lib-tests-2.log`, `b-bridge-tests-1.log`, `b-livestock-tests-2.log`, `b-lifecycle-tests-1.log`, `b-genuine19-base-1.log`다. 겹치는 시험 수를 합산하지 않는다.
 
-데이터 전용 확장은 `b-data-only-ext-1.log`의 상위 Rust3 PASS와 seven-family simulation/selected-scene UI PASS다. 이름을 바꾼 tameable 종과 wild-source 작물을 데이터로 노출한다. origin/knowledge/recipe 시험은 A3에서 PASS했으며 B 최종 gate 재검증은 남았다. 집중 Clippy·docs·GDScript87파일/FFI81호출은 통과했고, 당시 대상 생산 Rust unwrap audit 발견0이다. 이 기록은 이후 변경을 포함한 동결 최종 gate를 대신하지 않는다.
+데이터 전용 확장은 `b-data-only-ext-1.log`의 상위 Rust3 PASS와 seven-family simulation/selected-scene UI PASS다. 이름을 바꾼 tameable 종과 wild-source 작물을 데이터로 노출한다. origin5·knowledge3·recipe3 시험은 B2 debug에서도 PASS했다. B2 전체 gate는 미완료였으며 이 부분 통과를 B3 게시 검증으로 대체하지 않는다. 집중 Clippy·docs·GDScript87파일/FFI81호출은 통과했고, 당시 대상 생산 Rust unwrap audit 발견0이다. 이 기록은 이후 변경을 포함한 동결 최종 gate를 대신하지 않는다.
 
 실패한 run1–17의 로그·산출 디렉터리·만료 저장·임시 진단은 보존한다. no-op 명령, 배치 Craft 완료 수 오인, 초기 kid 만료, 자연 사망 뒤 참조, OFF 장면의 실제 전투/탈수 붕괴, manifest tuple-key 직렬화, 실제 출력 공간·명령/작업자/필요·수면 문제를 각각 구분했다. run17 trace는 staged actor1이 Harvest/Haul을 하고 실제 Capture는0이 맡아 수면으로 취소된 사실을 입증했다. run18은 staged actor의 일반 Haul 우선순위0 지정·성공 뒤2 복원으로 경쟁 작업을 막았다. 임시 trace는 제품 트리에서 제거하고 원본은 외부에 보존했다.
 
@@ -73,7 +83,7 @@ seed는 첫 사전 조건 통과 seed5(고지403칸·clay·자연 암수 kid)에
 
 B paired 크래시 감지는 **PASS**다 (`crash-head-b1/receipt.json`, 2026-11-09 05:04 KST). BASE는 최초 `d30dbfc5b8c6d68973e1c13fdd291741db892998`와 보존된 원래 바이너리이며 게시 A로 바꾸지 않는다. 양측 seeds0–7×48일, steward ON·주문 없음으로 측정했다. BASE 생존 [10,12,11,14,10,13,12,14], B 후보 [10,13,11,14,10,12,12,12]. KnowledgeLost 양측 [0,0,0,0,0,0,0,0], 후보 장부·예약 위반0, BASE 생존 시 후보 멸종0이다. 실제 BASE19→21/60tick 재검증도 b-genuine19-base-2.log에서 PASS다.
 
-참고인 A3의 BASE 생존은 `[10,12,11,14,10,13,12,14]`, A 후보는 `[10,13,11,14,10,12,12,12]`, 양측 KnowledgeLost는 `[0,0,0,0,0,0,0,0]`이었다. B도 독립 실행에서 같은 생존·손실 배열을 재현했다. 허용된 한 번의 wild_boar Inert 전환은 A에서 이미 사용했고 유지한다(ISS364, https://github.com/hyunlord/new-world/issues/694). 추가 전환·held-out·calibration·결과 지향 수치 튜닝은 없다. N1000 tick before/after 벤치와 B 성능 장부도 **PENDING**이다.
+참고인 A3의 BASE 생존은 `[10,12,11,14,10,13,12,14]`, A 후보는 `[10,13,11,14,10,12,12,12]`, 양측 KnowledgeLost는 `[0,0,0,0,0,0,0,0]`이었다. B도 독립 실행에서 같은 생존·손실 배열을 재현했다. 허용된 한 번의 wild_boar Inert 전환은 A에서 이미 사용했고 유지한다(ISS364, https://github.com/hyunlord/new-world/issues/694). 추가 전환·held-out·calibration·결과 지향 수치 튜닝은 없다. B2의 N1000 벤치는 NOT_RUN이었다. 새 B3의 N1000 before/after와 B 성능 장부는 PENDING이며, A 장부를 B 측정으로 재사용하지 않는다.
 
 ### 콘텐츠 수: 기술 Connected/Inert, 아이템, 조리법, 건물, 작물, 야생종, 가축
 
@@ -81,12 +91,14 @@ B paired 크래시 감지는 **PASS**다 (`crash-head-b1/receipt.json`, 2026-11-
 
 ### CONTENT_DEBT 항목 수, BALANCE_DEBT 추가 행
 
-현재 `CONTENT_DEBT.md`는 머리/구분선을 제외한63행이다. C1-b 연결과 남은 wool/C2 부채를 구분한다. `BALANCE_DEBT.md` C1-b starting policy는11행(source, capture, pen, feeding/death, breeding, milk, slaughter, dairy, herding, steward, mind)이며 모든 수치는 설계 시작값이다. 최종 gate 전에 생성 문서와 현재 데이터를 다시 일치시켜야 한다.
+현재 `CONTENT_DEBT.md`는 머리/구분선을 제외한63행이다. C1-b 연결과 남은 wool/C2 부채를 구분한다. `BALANCE_DEBT.md` C1-b starting policy는11행(source, capture, pen, feeding/death, breeding, milk, slaughter, dairy, herding, steward, mind)이며 모든 수치는 설계 시작값이다. 집중 docs 검사 `b-docs-check-4.log`는 PASS였고, B2 전체 gate의 문서 단계는 NOT_RUN이다. D-C1-2 재개에서도 데이터나 수치를 바꾸지 않았다.
 
 ### 새 도구 줄 수와 그 이유
 
-보수적 도구 누적은 **1992줄/상한2000줄**이다. A390 + 기존 runner scene export1 + old-save native8 + 가축 native112 + selected native5 + selected Rust36 + 실제 사슬1427 + 기존 개인 필요 helper 재노출2 + colony probe9 + food fingerprint1 + story registry-count migration1이다. 파일별 실제 재집계는 c1-data/tooling-count-b-final-preflight.json에 있다. 실제 동기는 genuine 이전 저장 검증, 실제 화면 연결, 필수 사슬·저장/twin/replay, 새 상태의 기존 결정성 검증이다. 임시35줄 재생 진단과18줄 소유자 추적은 제거했고 원본·실패는 외부 보존했다. 새 observer framework·의존성은 없다. A 기능 통합 시험1269줄 및 일반 기능 단위/회귀 시험은 구별한다.
+보수적 도구 누적은 **1992줄/상한2000줄**이다. A390 + 기존 runner scene export1 + old-save native8 + 가축 native112 + selected native5 + selected Rust36 + 실제 사슬1427 + 기존 개인 필요 helper 재노출2 + colony probe9 + food fingerprint1 + story registry-count migration1이다. 동결 HEAD와 최초 BASE의 `git diff --numstat` 및 외부 runner 실제32줄을 다시 센 파일별22항목 영수증은 `c1-data/tooling-count-b-frozen-4c4642553.json`이다. 이전 `tooling-count-b-final-preflight.json`은 범주별 잠정 기록으로 보존한다. 실제 동기는 genuine 이전 저장 검증, 실제 화면 연결, 필수 사슬·저장/twin/replay, 새 상태의 기존 결정성 검증이다. 임시35줄 재생 진단과18줄 소유자 추적은 제거했고 원본·실패는 외부 보존했다. 새 observer framework·의존성은 없다. A 기능 통합 시험1269줄 및 일반 기능 단위/회귀 시험은 구별한다.
 
 ### 확인된 제한사항·후속 (C2로 넘기는 것)
 
-물리 사슬, 실제 여섯 저장의 ko/en299검사·원인·5장·첫 새끼 카드와 B paired 크래시 감지는 통과했다. 최종 identity/결정성/저장/장부/예약·C3를 포함한 동결 전체 gate, N1000 벤치·장부·게시가 남았다. 아직 최종 게시를 주장하지 않는다. 양모 수거·방적·옷은 C2, 저장 건초 보충·도구 효율·바구니 운반·사육 산출 균형은 기록된 후속 부채다. wild_boar는 Inert 유지다. A2 draw-only hitch 원인은 UNKNOWN이며 A1/A2와 run1–17 및 native1 실패를 통과 결과로 지우지 않는다.
+물리 사슬·실제 화면·paired 크래시 감지는 앞선 실제 실행에서 통과했지만 B는 아직 미게시다. 새 동결 HEAD의 전체 workspace debug·Clippy 사전 조건, B3 전체 gate·N1000 장부·게시가 남았다. 별도 집중 저장 시험과 사슬 replay 성공을 최종 게시 bar로 대체하지 않는다. B1/B2와 당시 §5 중단은 보존하고 D-C1-2의 재개·새 상시 규칙을 구분한다.
+
+양모 수거·방적·옷은 C2, 저장 건초 보충·도구 효율·바구니 운반·사육 산출 균형은 후속 부채다. wild_boar는 허용된 한 번의 Inert 전환을 유지한다. A2 draw-only hitch 원인은 UNKNOWN이며 실패·중단 원본을 보존한다. 모든 신규 수치는 원래 data starting policy 그대로이고 결과 지향 튜닝은 없다.

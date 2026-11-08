@@ -84,6 +84,8 @@ Codex reads the same skills through `.agents/skills/<name>` (symlinks).
 
 ## The gate
 
+Standing pre-gate rule (D-C1-2, 2026-11-09): on the committed, frozen HEAD, first pass `cargo test --workspace --no-fail-fast -- --test-threads=8` and `cargo clippy --workspace --all-targets -- -D warnings` from `rust/`. Launch the full gate only after both pass. A full-gate failure that this preflight would catch is a violation of this rule, not a §5 repeated-product-defect stop.
+
 ```bash
 bash tools/v8/gate.sh <log_dir>        # 36 steps; every step except perf and nav_bench must pass
 ```

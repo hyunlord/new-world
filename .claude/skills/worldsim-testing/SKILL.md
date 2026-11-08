@@ -20,7 +20,7 @@ headless specifics in `worldsim-godot`.
 - **Don't** take a green structural test suite as proof that the game works. *Reason:* tests that read source text, run on `WorldRules::default()` (which switched 8 of V7's 28 systems off), or set the fixture value themselves stay green while the live loop is broken.
 
 ### Gate and determinism
-- **Do** run the gate (`tools/v8/gate.sh <log_dir>`) on one committed head with nothing edited, built or committed while it runs. *Reason:* a gate whose steps saw different trees tested no commit.
+- **Do** first pass `cargo test --workspace --no-fail-fast -- --test-threads=8` and `cargo clippy --workspace --all-targets -- -D warnings` from `rust/` on the committed frozen HEAD, then run the full gate with nothing edited, built or committed while it runs. *Reason:* C1 B1/B2 exposed stale rule11 fixture expectations; D-C1-2 requires the complete debug preflight before every gate. A preflight-catchable red gate violates this standing rule rather than §5; a mixed-tree gate tests no commit.
 - **Do** keep raw probe and gate data outside the repository (identity refuses an output dir inside it). *Reason:* raw outputs are gigabytes; commit summaries only.
 - **Do** check determinism with the probe's `--check-determinism` and with in-test twins (two engines, same seed, lockstep, compare `sim_test::probe::fingerprint`). Extend the twin when you add state. *Reason:* twins only cover the state they compare.
 - **Do** treat probe seed ranges as half-open (`--seeds 0..32` = seeds 0–31). *Reason:* `rust/crates/sim-test/src/probe/args.rs` parses `a..b` half-open; `a..b` with b inclusive silently drops a seed.
