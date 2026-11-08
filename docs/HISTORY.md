@@ -1,5 +1,7 @@
 # WorldSim 역사
 
+- 2026-11-08 — M-SPINE-b 전체 게이트3 `437f9b6`은 실제49단계 중48PASS/1FAIL(exit1)이었다. step41의 첫 바닥 tick565에서 지면 준비357–373ms로377/396ms 프레임이 발생했다. 지면 변환 결과 캐시·데이터 기반 기본 바닥 사전 준비로 픽셀/인덱스/게임 수치를 유지했다. 실제 렌더134검사·strict86/FFI79 통과, 같은300초×2줌 재검사는 기존 면제 PASS(60ms 초과0), 해당 준비5.6ms다. 필수 계측 변수를 누락한 별도 실행은 INVALID_ACCEPTANCE로 보존한다. 크래시8×48일은 양쪽 KnowledgeLost0·새 전멸0; Inert 전환0. 새 SHA의 전체 게이트·게시는 대기다.
+
 - 2026-11-08 — M-SPINE-b 전체 게이트2 `d575f90`은 DEBUG·RELEASE·baseline identity 등15단계 통과 뒤 Python597개 중 renderer의 고정16px 검사1실패로 중단했다. 미사용 preview 속성/설정을 제거하고 아이템 anchor를 실제 texture 크기로 계산해 기존32×32 위치를 유지했다. 원본과 RELEASE 교차 출력 계수기 `inf`를 보존한다. 최종 native 수치는1895 assertions+비검사 receipt2행이며1897 assertions가 아니다. 새 고정 SHA 전체 게이트·게시는 대기다.
 
 - 2026-11-08 — M-SPINE-b 검증 진행 중, 미게시. 기존 조각 기반 건물 템플릿·물리 완료/원인·format19·주거 구역/집사 선택·건물 패널·자리표시 아트를 통합했다. 이전 사슬8·b50 네이티브 검사는 통과했다. b 전체 게이트1의 DEBUG19실패로 새 경로의 fixture와 건설 중 영역 예약을 수정했고, systems774·집사50 검사 및 clippy는 통과했다. 사슬9 PASS234.52초와 b4d191 네이티브1897검사·실제17/18→19 재검증도 통과했다. 기존 Room-only 주거 시험 실패를 보존하고 실제 Hut+Room 배정·원stock/hearth·원인·player intent 회귀를 정비해12PASS/0FAIL/기존1ignored를 확인했다. 이전 전원Room-bedroll/stock-hearth단일지붕 보장과 달라졌음을 보고한다. 새 고정 SHA 전체 게이트·크래시·FF 게시는 대기다. 마일스톤 #13 전체 완료가 아니다.

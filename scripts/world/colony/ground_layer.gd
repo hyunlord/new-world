@@ -98,6 +98,9 @@ var _problems: Array[String] = []
 var _grounds_dirty: bool = false
 var _tone_report: Array[Dictionary] = []
 var _last_cap: Dictionary = {}
+var _prepared_grounds: Dictionary[String, Dictionary] = {}
+var _prepared_tone: String = ""
+var _prepared_params_version: int = -1
 ## Keep each baked chunk's full image (tests read them with chunk_image); off in the game to save memory.
 var keep_images: bool = false
 ## The texture resolution factor in use (1, 2, 4) and the factor each cached chunk was textured at.
@@ -325,6 +328,7 @@ func _process_ground(_delta: float) -> void:
 
 
 func _configure() -> void:
+	_prepared_grounds.clear()
 	_baker.configure(ArtData.param("ground", {}), ArtData.param("water", {}), ArtData.param("hill", {}), ArtData.param("trees", {}))
 	_canopy_cache.clear()
 	_canopy_season = ""
@@ -420,18 +424,27 @@ func _prepare_grounds() -> void:
 
 
 func _prepare_grounds_body() -> void:
+	var tone_key: String = _tone if not _tone.is_empty() else "day"
+	if _prepared_tone != tone_key or _prepared_params_version != ArtData.params_version():
+		_prepared_grounds.clear()
+		_prepared_tone = tone_key
+		_prepared_params_version = ArtData.params_version()
 	var period: int = int(ArtData.param("ground.texture_period_px", 128))
 	var tone: Dictionary = ArtData.param("ground.tone", {})
 	var season: Dictionary = ArtData.param("season", {})
 	var person_std: float = float((ArtData.manifest().get("tone_reference", {}) as Dictionary).get("person_luminance_std", 0.17))
+	# Prepare authored default floors at load, without changing the map's ground-index order.
+	for style: Dictionary in _resolver.styles:
+		if str(style.get("kind", "")) == "floor":
+			_prepared_ground(_floor_ground_id(_resolver.resolve(str(style.get("id", "")), "", "", "floor")), period, tone, season, person_std)
 	var images: Array[Image] = []
 	_tone_report.clear()
 	_ground_means.clear()
 	for id: String in ground_ids:
-		var prepared: Image = _ground_image(id, period, tone, season, person_std)
-		images.append(prepared)
-		_ground_means.append(Tone.mean_rgb(prepared, 3))
-		_tone_report.append({"id": id, "passed": _last_cap.get("passed", false), "after": _last_cap.get("after", {})})
+		var prepared: Dictionary = _prepared_ground(id, period, tone, season, person_std)
+		images.append(prepared["image"])
+		_ground_means.append(prepared["mean"])
+		_tone_report.append(prepared["report"])
 	_baker.set_grounds(images)
 	var water: Image = ArtData.image(str(ArtData.bindings().get("terrain", {}).get("water", "")))
 	if water != null:
@@ -444,6 +457,13 @@ func _prepare_grounds_body() -> void:
 			if rgb.size() == 3:
 				_material.set_shader_parameter("water_colour", Vector3(float(rgb[0]), float(rgb[1]), float(rgb[2])))
 			_material.set_shader_parameter("water_map_tint_strength", float(ArtData.param("water.map_mode_tint_strength", 0.3)))
+
+
+func _prepared_ground(id: String, period: int, tone: Dictionary, season: Dictionary, person_std: float) -> Dictionary:
+	if not _prepared_grounds.has(id):
+		var image: Image = _ground_image(id, period, tone, season, person_std)
+		_prepared_grounds[id] = {"image": image, "mean": Tone.mean_rgb(image, 3), "report": {"id": id, "passed": _last_cap.get("passed", false), "after": _last_cap.get("after", {})}}
+	return _prepared_grounds[id]
 
 
 ## The weakest channel of the full-night multiplier: a luminance difference shrinks at most by this factor at night.
@@ -521,6 +541,7 @@ func water_lifts() -> Dictionary:
 ## Re-prepare the grounds under tone `name` ("day", "winter", "drought") and rebake the cache (tests and captures).
 func force_tone(name: String) -> void:
 	_tone = name
+	_prepared_grounds.clear()
 	_prepare_grounds()
 	_space_full = true
 	_apply_space(SimReads.read(_world_sim, "get_space"))
@@ -747,9 +768,13 @@ func _floor_grounds(space: Dictionary, dug: Dictionary) -> Dictionary:
 			continue
 		var mat: Variant = (mats[i] & 0xFFFFFFFF) if i < mats.size() and mats[i] != -1 else ""
 		var r: Dictionary = _resolver.resolve(style, mat, cats[i] if i < cats.size() else "", "floor")
-		var tint: Dictionary = r.get("tint", {})
-		out[t] = "floor:%s:%s:%s:%s" % [str((r.get("textures", {}) as Dictionary).get("floor", "")), str(tint.get("dL", 0)), str(tint.get("da", 0)), str(tint.get("db", 0))]
+		out[t] = _floor_ground_id(r)
 	return out
+
+
+func _floor_ground_id(resolved: Dictionary) -> String:
+	var tint: Dictionary = resolved.get("tint", {})
+	return "floor:%s:%s:%s:%s" % [str((resolved.get("textures", {}) as Dictionary).get("floor", "")), str(tint.get("dL", 0)), str(tint.get("da", 0)), str(tint.get("db", 0))]
 
 
 ## Wall and door tiles → texture sets (resolved and prepared once per set key).
