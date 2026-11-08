@@ -1,5 +1,5 @@
 //! Stage 1 policy changes retain historical defaults and inert presentation machinery.
-use sim_core::colony::steward::{parse_rules, rules, Action, StewardScope};
+use sim_core::colony::steward::{parse_rules, rules, Action, Condition, StewardScope};
 use sim_core::colony::Command;
 use sim_systems::commands::submit;
 
@@ -15,8 +15,13 @@ fn stage1_policy_changes_are_explicit_against_published_base() {
     );
     assert_eq!(
         current.rules.iter().map(|r| r.id).collect::<Vec<_>>(),
-        vec![1, 2, 3, 4, 5, 7, 9, 10, 8]
+        vec![1, 2, 3, 4, 5, 7, 9, 10, 8, 11]
     );
+    let livestock = current.rules.last().expect("new ordinary livestock rule");
+    assert_eq!(livestock.id, 11);
+    assert_eq!(livestock.scope, StewardScope::Food);
+    assert!(matches!(livestock.condition, Condition::Livestock));
+    assert!(matches!(livestock.action, Action::Livestock));
     for id in [1, 3, 5] {
         assert_eq!(
             current.rules.iter().find(|r| r.id == id),
@@ -126,5 +131,5 @@ fn default_steward_does_not_accumulate_experimental_grace_state() {
     assert!(!rules_fired.is_empty());
     assert!(rules_fired
         .iter()
-        .all(|rule| [1, 2, 3, 4, 5, 7, 8, 9, 10].contains(rule)));
+        .all(|rule| [1, 2, 3, 4, 5, 7, 8, 9, 10, 11].contains(rule)));
 }

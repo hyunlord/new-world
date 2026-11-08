@@ -159,7 +159,7 @@ fn rule_data_accepts_a_new_identity_without_code_changes() {
         .replace("base_cells: 6", "base_cells: 7");
     let data = parse_rules(&changed).expect("data-only rule variant");
     assert_eq!(data.rules[0].id, 71);
-    assert_eq!(data.rules.len(), 9);
+    assert_eq!(data.rules.len(), 10);
     let mut expected = parse_rules(text).expect("bundled rules");
     expected.rules[0].id = 71;
     expected.rules[0].action = sim_core::colony::steward::Action::Stockpile {

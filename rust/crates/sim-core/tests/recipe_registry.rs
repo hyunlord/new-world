@@ -187,9 +187,16 @@ fn steward_rule_boot_child() {
         "typed rule parsing must not initialize the catalog"
     );
     content::bootstrap(content::BootSelection::Bundled).expect("explicit boot");
-    assert_eq!(steward::rules().expect("rules after boot").rules.len(), 9);
-    assert_eq!(
-        steward::parse_rules(text).expect("typed rules").rules.len(),
-        9
-    );
+    let typed = steward::parse_rules(text).expect("typed rules");
+    for loaded in [steward::rules().expect("rules after boot"), &typed] {
+        assert_eq!(loaded.rules.len(), 10);
+        let livestock = loaded
+            .rules
+            .iter()
+            .find(|rule| rule.id == 11)
+            .expect("livestock rule");
+        assert_eq!(livestock.scope, steward::StewardScope::Food);
+        assert!(matches!(livestock.condition, steward::Condition::Livestock));
+        assert!(matches!(livestock.action, steward::Action::Livestock));
+    }
 }

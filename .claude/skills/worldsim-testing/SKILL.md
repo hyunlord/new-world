@@ -396,4 +396,4 @@ is not a completed attempt; replay the actual mid-work save to distinguish needs
 chase and chance. Include personal sleep windows (Temperament), not just global
 bedtime or hunger/thirst. Record the actual job owner, not only the staged person.
 Source: C1 decisions D18–D20; retained run12/13 and interruption replay3.
-Native Korean labels can contain U+2060 shaping characters: normalize lookup text; capture-only visibility must respect the HUD owner (use restored modulation). Source: `docs/v8/c1/C1_DECISIONS.md` D25; `tools/v8/spine_build_test.gd`.
+Native Korean labels can contain U+2060 shaping characters: normalize lookup text; capture-only visibility must respect the HUD owner (use restored modulation). Source: `docs/v8/c1/C1_DECISIONS.md` D25; `tools/v8/spine_build_test.gd`. When adding an ordinary data rule, audit current-data counts and id lists across integration fixtures too (D26).

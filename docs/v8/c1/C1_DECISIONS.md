@@ -422,3 +422,25 @@ an empty dark panel in the physical capture. Temporarily modulate alpha0 for
 the physical image and restore the exact original Color; do not compete with
 visibility ownership or mutate card/simulation state. Actual card captures and
 ordinary clicks remain visible and required. No product workaround is needed.
+
+## D26 — Repair a stale bundled-rule assertion before restarting the full gate
+
+B1 frozen062505d30 passed steps1–3, then recipe_registry's isolated boot child
+expected9 rules after successful explicit boot while C1's authored rule11 makes10.
+The parent status assertion propagates that one root failure. Preserve all
+preboot rejection/non-poisoning checks; assert10 for cached and typed loads and
+positively verify rule11 Food/Livestock condition/action. No product data changes.
+
+B1 was stopped during debug tests after root-cause confirmation, preserving raw
+logs and partial debugchain as incomplete. Before TERM, verify all five exact
+owned process-group members' PID/parent/start/cwd; afterward prove all gone and
+3081 source pins/config/runner unchanged. ABORTED.json records one failed attempt,
+not a complete gate. Focused debug/release checks precede fresh full B2 from1.
+
+The exhaustive integration-fixture scan also found the same authored-rule
+addition missing from colony_steward's data-only count and the presentation
+defaults' current-id sequence. Update those two expectations, positively verify
+the appended Food/Livestock rule, and retain the full mutated-vs-bundled equality
+and historical BASE ids1..8. Align the existing ordinary-rule allowlist with11
+without claiming it caused the observed B1 failure. Other knowledge/debt, skills
+and job count assertions remain compatible; no product values change.

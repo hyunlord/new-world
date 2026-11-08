@@ -12,6 +12,8 @@
 - Focused core/system/bridge suites, all-target Clippy, data-only extension and bilingual tech/recipe native checks pass. The physical goat chain passes seed5 within60days with mid-work roundtrip/twins/full command replay; all six native checkpoints and actual Korean/English controls pass299 checks/error0. The frozen full publication gate remains pending.
 - Rebind a renderer's local snapshot on world reset instead of clearing the recursively frozen SimReads dictionary; preserve the native run that exposed the engine error despite a zero harness failure count.
 
+- Align integration fixtures with ordinary livestock rule11 while preserving preboot rejection, frozen historical ids and complete data-field comparison; retain the aborted first B gate.
+
 ### Removed
 - None.
 

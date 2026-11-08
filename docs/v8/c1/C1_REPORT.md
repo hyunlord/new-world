@@ -42,7 +42,7 @@ C1-b에서 포획→성체 쌍→출생→젖→도축 및 실제 원인·저장
 
 ### 게시 SHA와 게이트 결과 (단계 수, 면제·재실행, PLAY_ROOT 외부 지정)
 
-B 게시 SHA와 full gate 결과는 **PENDING**이다. bridge 재빌드·네이티브 검증은 완료했고 동결 gate를 수행한다. `PLAY_ROOT=/Users/rexxa/work/c1-data/play-root`, `PLAY_DATA=/Users/rexxa/work/c1-data/play-data` 외부 지정을 유지한다. B 단계 수·step41 면제·재실행 여부는 실제 gate 뒤 기록한다.
+B 게시 SHA와 완료된 full gate 결과는 **PENDING**이다. B1(`062505d30`)은 steps1–3 PASS 뒤 디버그 통합 시험의 집사 규칙 개수 expected9/actual10 오류를 확인해 중단했다. child 실패를 parent가 전달한 하나의 원인이며 한 번의 게이트 시도다. 정확한 소유 PID/부모/시작/cwd를 확인한5개 프로세스만 종료했고, 3081소스·설정·러너 불변을 검증해 ABORTED.json과 부분 사슬을 보존했다. 같은 오래된 개수·ID 목록을 쓰는 통합 시험3곳을 수정하고 새11번의 Food/Livestock 조건·동작을 명시적으로 검증한다. 기존 부트 전 거부·역사 BASE·전체 필드 비교는 유지한다. 제품 코드는 그대로이며 부트6·데이터변형1·기본값2 시험을 각각 debug/release에서 통과했고 Clippy·문서도 재통과했다. 새 B2 전체 게이트를 처음부터 수행한다. bridge 재빌드·네이티브 검증은 완료했고 동결 gate를 수행한다. `PLAY_ROOT=/Users/rexxa/work/c1-data/play-root`, `PLAY_DATA=/Users/rexxa/work/c1-data/play-data` 외부 지정을 유지한다. B 단계 수·step41 면제·재실행 여부는 실제 gate 뒤 기록한다.
 
 직전 게시 A는 `094fea092f467a7c82764165ad0d2f9e74b806e3`이다. A3 전체49/49 PASS, 기존 step41 면제, isolated 재실행 없이2026-11-09 02:41:59 KST에 v8/wip→v8/main FF와 원격 일치를 확인했다(`C1-a-publication.json`). A 결과를 B 결과로 재사용하지 않는다.
 
