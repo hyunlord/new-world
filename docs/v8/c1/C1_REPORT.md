@@ -30,7 +30,7 @@ C1-b에서 포획→성체 쌍→출생→젖→도축 및 실제 원인·저장
 
 ## C1-b 구현·검증 보고 — 전체 게이트 전
 
-**물리 사슬 run18 PASS. 네이티브 여섯 장면299검사/오류0 PASS. 전체 gate·B 크래시 감지·벤치·게시 PENDING.** seed5에서 실제 우리→포획→성체 암수→출생→젖→도축을 tick80749에 마쳤다(절대 기한86400). 중간 저장 왕복, 이후 명령을 함께 보낸 twin, 전체384명령 replay가 통과했다. 이는 사슬 시험의 성공이며 아직 C1-b 게시 성공은 아니다.
+**물리 사슬 run18 PASS. 네이티브 여섯 장면299검사/오류0 PASS. B 크래시 감지 PASS. 전체 gate·벤치·게시 PENDING.** seed5에서 실제 우리→포획→성체 암수→출생→젖→도축을 tick80749에 마쳤다(절대 기한86400). 중간 저장 왕복, 이후 명령을 함께 보낸 twin, 전체384명령 replay가 통과했다. 이는 사슬 시험의 성공이며 아직 C1-b 게시 성공은 아니다.
 
 ### 구현 의도 / 구현 내용 / 구현 방법 / 기능 설명
 
@@ -71,7 +71,7 @@ seed는 첫 사전 조건 통과 seed5(고지403칸·clay·자연 암수 kid)에
 
 ### 크래시 감지 (BASE vs 후보 생존 배열, KnowledgeLost, Inert 항목)
 
-B paired 크래시 감지는 **PENDING**이다. BASE는 최초 `d30dbfc5b8c6d68973e1c13fdd291741db892998`와 보존된 원래 바이너리이며 게시 A로 바꾸지 않는다. 양측 seeds0–7×48일, steward ON·주문 없음으로 측정해야 한다. B 생존·KnowledgeLost 배열은 아직 없다.
+B paired 크래시 감지는 **PASS**다 (`crash-head-b1/receipt.json`, 2026-11-09 05:04 KST). BASE는 최초 `d30dbfc5b8c6d68973e1c13fdd291741db892998`와 보존된 원래 바이너리이며 게시 A로 바꾸지 않는다. 양측 seeds0–7×48일, steward ON·주문 없음으로 측정해야 한다. BASE 생존 [10,12,11,14,10,13,12,14], B 후보 [10,13,11,14,10,12,12,12]. KnowledgeLost 양측 [0,0,0,0,0,0,0,0], 후보 장부·예약 위반0, BASE 생존 시 후보 멸종0이다. 실제 BASE19→21/60tick 재검증도 b-genuine19-base-2.log에서 PASS다.
 
 참고인 A3의 BASE 생존은 `[10,12,11,14,10,13,12,14]`, A 후보는 `[10,13,11,14,10,12,12,12]`, 양측 KnowledgeLost는 `[0,0,0,0,0,0,0,0]`이었다. 이는 B 수치가 아니다. 허용된 한 번의 wild_boar Inert 전환은 A에서 이미 사용했고 유지한다(ISS364, https://github.com/hyunlord/new-world/issues/694). 추가 전환·held-out·calibration·결과 지향 수치 튜닝은 없다. N1000 tick before/after 벤치와 B 성능 장부도 **PENDING**이다.
 
