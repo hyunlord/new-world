@@ -42,7 +42,7 @@ C1-b에서 포획→성체 쌍→출생→젖→도축 및 실제 원인·저장
 
 ### 게시 SHA와 게이트 결과 (단계 수, 면제·재실행, PLAY_ROOT 외부 지정)
 
-B 게시 SHA와 full gate 결과는 **PENDING**이다. 최종 bridge 재빌드·네이티브 검증을 거쳐 gate를 수행해야 한다. `PLAY_ROOT=/Users/rexxa/work/c1-data/play-root`, `PLAY_DATA=/Users/rexxa/work/c1-data/play-data` 외부 지정을 유지한다. B 단계 수·step41 면제·재실행 여부는 실제 gate 뒤 기록한다.
+B 게시 SHA와 full gate 결과는 **PENDING**이다. bridge 재빌드·네이티브 검증은 완료했고 동결 gate를 수행한다. `PLAY_ROOT=/Users/rexxa/work/c1-data/play-root`, `PLAY_DATA=/Users/rexxa/work/c1-data/play-data` 외부 지정을 유지한다. B 단계 수·step41 면제·재실행 여부는 실제 gate 뒤 기록한다.
 
 직전 게시 A는 `094fea092f467a7c82764165ad0d2f9e74b806e3`이다. A3 전체49/49 PASS, 기존 step41 면제, isolated 재실행 없이2026-11-09 02:41:59 KST에 v8/wip→v8/main FF와 원격 일치를 확인했다(`C1-a-publication.json`). A 결과를 B 결과로 재사용하지 않는다.
 
@@ -71,9 +71,9 @@ seed는 첫 사전 조건 통과 seed5(고지403칸·clay·자연 암수 kid)에
 
 ### 크래시 감지 (BASE vs 후보 생존 배열, KnowledgeLost, Inert 항목)
 
-B paired 크래시 감지는 **PASS**다 (`crash-head-b1/receipt.json`, 2026-11-09 05:04 KST). BASE는 최초 `d30dbfc5b8c6d68973e1c13fdd291741db892998`와 보존된 원래 바이너리이며 게시 A로 바꾸지 않는다. 양측 seeds0–7×48일, steward ON·주문 없음으로 측정해야 한다. BASE 생존 [10,12,11,14,10,13,12,14], B 후보 [10,13,11,14,10,12,12,12]. KnowledgeLost 양측 [0,0,0,0,0,0,0,0], 후보 장부·예약 위반0, BASE 생존 시 후보 멸종0이다. 실제 BASE19→21/60tick 재검증도 b-genuine19-base-2.log에서 PASS다.
+B paired 크래시 감지는 **PASS**다 (`crash-head-b1/receipt.json`, 2026-11-09 05:04 KST). BASE는 최초 `d30dbfc5b8c6d68973e1c13fdd291741db892998`와 보존된 원래 바이너리이며 게시 A로 바꾸지 않는다. 양측 seeds0–7×48일, steward ON·주문 없음으로 측정했다. BASE 생존 [10,12,11,14,10,13,12,14], B 후보 [10,13,11,14,10,12,12,12]. KnowledgeLost 양측 [0,0,0,0,0,0,0,0], 후보 장부·예약 위반0, BASE 생존 시 후보 멸종0이다. 실제 BASE19→21/60tick 재검증도 b-genuine19-base-2.log에서 PASS다.
 
-참고인 A3의 BASE 생존은 `[10,12,11,14,10,13,12,14]`, A 후보는 `[10,13,11,14,10,12,12,12]`, 양측 KnowledgeLost는 `[0,0,0,0,0,0,0,0]`이었다. 이는 B 수치가 아니다. 허용된 한 번의 wild_boar Inert 전환은 A에서 이미 사용했고 유지한다(ISS364, https://github.com/hyunlord/new-world/issues/694). 추가 전환·held-out·calibration·결과 지향 수치 튜닝은 없다. N1000 tick before/after 벤치와 B 성능 장부도 **PENDING**이다.
+참고인 A3의 BASE 생존은 `[10,12,11,14,10,13,12,14]`, A 후보는 `[10,13,11,14,10,12,12,12]`, 양측 KnowledgeLost는 `[0,0,0,0,0,0,0,0]`이었다. B도 독립 실행에서 같은 생존·손실 배열을 재현했다. 허용된 한 번의 wild_boar Inert 전환은 A에서 이미 사용했고 유지한다(ISS364, https://github.com/hyunlord/new-world/issues/694). 추가 전환·held-out·calibration·결과 지향 수치 튜닝은 없다. N1000 tick before/after 벤치와 B 성능 장부도 **PENDING**이다.
 
 ### 콘텐츠 수: 기술 Connected/Inert, 아이템, 조리법, 건물, 작물, 야생종, 가축
 
@@ -85,8 +85,8 @@ B paired 크래시 감지는 **PASS**다 (`crash-head-b1/receipt.json`, 2026-11-
 
 ### 새 도구 줄 수와 그 이유
 
-현재 전달된 보수적 누적은 **1992줄/상한2000줄(잠정, 최종 재집계 필요)**이다. 게시 A 누적390줄, 실제 외부 runner 산출 환경1줄, 기존 spine_tech의 old-save load/capture, 기존 spine_build의 실제 가축 UI, selected Rust/native 데이터 전용 경로와 새 chain harness를 포함한다. 실제 필요한 동기는 genuine 이전 저장 검증, 실제 화면 연결, 필수 사슬·저장/twin/replay 및 발견된 실패의 재현이다. 새 chain은 도구 집계에 포함하고, 임시 진단 제거 전 최고치와 실패 원본을 보존한다. 게시 A에서 따로 공개한 기존 기능 통합 시험1269줄은 구별한다. 최종 파일별 줄 수·합계는 최종 소스에서 확정하며 추정 세부 합계를 쓰지 않는다.
+보수적 도구 누적은 **1992줄/상한2000줄**이다. A390 + 기존 runner scene export1 + old-save native8 + 가축 native112 + selected native5 + selected Rust36 + 실제 사슬1427 + 기존 개인 필요 helper 재노출2 + colony probe9 + food fingerprint1 + story registry-count migration1이다. 파일별 실제 재집계는 c1-data/tooling-count-b-final-preflight.json에 있다. 실제 동기는 genuine 이전 저장 검증, 실제 화면 연결, 필수 사슬·저장/twin/replay, 새 상태의 기존 결정성 검증이다. 임시35줄 재생 진단과18줄 소유자 추적은 제거했고 원본·실패는 외부 보존했다. 새 observer framework·의존성은 없다. A 기능 통합 시험1269줄 및 일반 기능 단위/회귀 시험은 구별한다.
 
 ### 확인된 제한사항·후속 (C2로 넘기는 것)
 
-물리 사슬은 통과했지만 실제 여섯 화면과 ko/en 원인·5장·첫 새끼 카드의 네이티브 검증, 최종 identity/결정성/저장/장부/예약·C3를 포함한 전체 gate, B paired 크래시 감지, N1000 벤치·장부·게시가 남았다. 아직 최종 완료/게시를 주장하지 않는다. 양모 수거·방적·옷은 C2, 저장 건초 보충·도구 효율·바구니 운반·사육 산출 균형은 기록된 후속 부채다. wild_boar는 Inert 유지다. A2 draw-only hitch의 원인은 UNKNOWN이며 A1/A2와 run1–17 실패를 run18 통과로 지우지 않는다.
+물리 사슬, 실제 여섯 저장의 ko/en299검사·원인·5장·첫 새끼 카드와 B paired 크래시 감지는 통과했다. 최종 identity/결정성/저장/장부/예약·C3를 포함한 동결 전체 gate, N1000 벤치·장부·게시가 남았다. 아직 최종 게시를 주장하지 않는다. 양모 수거·방적·옷은 C2, 저장 건초 보충·도구 효율·바구니 운반·사육 산출 균형은 기록된 후속 부채다. wild_boar는 Inert 유지다. A2 draw-only hitch 원인은 UNKNOWN이며 A1/A2와 run1–17 및 native1 실패를 통과 결과로 지우지 않는다.
