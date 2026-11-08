@@ -1,5 +1,5 @@
 (schema_version:1,roles:{},items:[(
-identity:(code:65550,id:"apple",name_key:"ITEM_FIXTURE_APPLE",serde_name:"FixtureApple",serde_aliases:[],resolver_aliases:[]),
+identity:(code:65550,id:"test_apple",name_key:"ITEM_FIXTURE_APPLE",serde_name:"FixtureApple",serde_aliases:[],resolver_aliases:[]),
 category:"food",material_format_key:"",tags:["food","fruit"],stack_max:25,carry:10,
 stack_rule:None,carry_rule:None,value:2,made_by:None,clue_nodes:[],
 chop:None,weapon:None,cutter:None,fuel_units:None,apparel:None,

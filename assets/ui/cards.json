@@ -288,6 +288,35 @@
       "tags": [
         "textile"
       ]
+    },
+    {
+      "id": "first_kid",
+      "enabled": false,
+      "trigger": {
+        "kind": "bridge",
+        "read": "first_livestock_kid"
+      },
+      "title_key": "C1_CARD_FIRST_KID",
+      "body_key": "C1_CARD_FIRST_KID_BODY",
+      "options": [
+        {
+          "text_key": "C1_CARD_FIRST_KID_KEEP",
+          "command": "none",
+          "recommended": true
+        },
+        {
+          "text_key": "C1_CARD_FIRST_KID_SLAUGHTER",
+          "command": "cmd_slaughter_livestock",
+          "params": "livestock_id",
+          "recommended": false
+        }
+      ],
+      "default": "none",
+      "expires_hours": 24,
+      "priority": 5,
+      "tags": [
+        "livestock"
+      ]
     }
   ]
 }

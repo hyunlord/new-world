@@ -35,7 +35,7 @@ fn missing_knowledge_can_plan_a_vessel_but_execution_waits_for_its_arrival() {
     assert_eq!(craft_food::pot_need(&res, &shop, &recipe, 0), Some(pot));
     assert!(craft_food::supplyable(&res, &shop, &recipe, 0));
     assert!(!craft_food::permitted(&res, &shop, &recipe, 0));
-    let practiced = 1_u64 << recipe.food_requirements.knowledge_any[0];
+    let practiced = 1_u128 << recipe.food_requirements.knowledge_any[0];
     assert_eq!(craft_food::pot_need(&res, &shop, &recipe, practiced), None);
     assert!(craft_food::permitted(&res, &shop, &recipe, practiced));
     shop.shelf

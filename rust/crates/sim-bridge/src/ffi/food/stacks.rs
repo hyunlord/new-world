@@ -50,6 +50,7 @@ pub fn collect_tile_food(
                 FoodStorageClass::Ground => "ground",
                 FoodStorageClass::Stockpile => "stockpile",
                 FoodStorageClass::RoofedStore => "roofed_store",
+                FoodStorageClass::Granary => "granary",
                 FoodStorageClass::Pot => "pot",
             };
             Some(FoodStackView {

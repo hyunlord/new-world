@@ -47,6 +47,7 @@ use crate::runtime::jobs::items::chebyshev;
 pub mod draft;
 pub mod fight;
 pub mod flee;
+mod origins;
 
 pub use draft::{DraftSystem, DRAFT_PRIORITY};
 pub use flee::{FleeSystem, FLEE_PRIORITY};
@@ -82,6 +83,11 @@ fn deer_places(res: &SimResources, rule: &WildlifeRule, hearth: (u32, u32)) -> V
             let t = (x, y);
             if terrain(res, t) == Some(TerrainType::Forest)
                 && deer_ground(res, rule, hearth, t)
+                && origins::admits(
+                    res,
+                    &AnimalKind::role("default_grazer").definition().origin,
+                    t,
+                )
                 && res.nav.reaches(region, t)
                 && !res.colony.trees.contains_key(&t)
             {
@@ -119,7 +125,9 @@ fn new_animal(
             born_tick: res.current_tick,
             path: Vec::new(),
             goal: None,
-            home: (kind.mechanic() == AnimalMechanic::Grazer).then_some(pos),
+            home: (kind.mechanic() == AnimalMechanic::Grazer
+                || kind.definition().population.is_some())
+            .then_some(pos),
         },
     );
     w.version += 1;
@@ -196,6 +204,9 @@ fn validate_spawn(
         return Err(SpawnError::InvalidPack);
     }
     if !res.nav.passable(at) || res.nav.region_of(at) == 0 {
+        return Err(SpawnError::InvalidGround);
+    }
+    if !origins::admits(res, &def.origin, at) {
         return Err(SpawnError::InvalidGround);
     }
     if def.mechanic == AnimalMechanic::Grazer
@@ -323,13 +334,23 @@ fn deer_births(res: &mut SimResources, rule: &WildlifeRule, hearth: (u32, u32)) 
         return;
     }
     let cap = res.colony.wildlife.deer_cap;
-    let deer = res.colony.wildlife.deer().count() as u32;
+    let deer = res
+        .colony
+        .wildlife
+        .deer()
+        .filter(|a| a.kind == AnimalKind::role("default_grazer"))
+        .count() as u32;
     if deer < cap && day >= res.colony.wildlife.last_deer_day + rule.deer_respawn_days {
         res.colony.wildlife.last_deer_day = day;
         let all = deer_places(res, rule, hearth);
         if !all.is_empty() {
-            let homes: Vec<(u32, u32)> =
-                res.colony.wildlife.deer().filter_map(|a| a.home).collect();
+            let homes: Vec<(u32, u32)> = res
+                .colony
+                .wildlife
+                .deer()
+                .filter(|a| a.kind == AnimalKind::role("default_grazer"))
+                .filter_map(|a| a.home)
+                .collect();
             let centre = (!homes.is_empty()).then(|| {
                 homes[keyed_below(
                     seed,
@@ -436,7 +457,10 @@ fn deer_steps(
             .filter(|(_, p, _)| chebyshev(*p, a.pos) <= rule.deer_flee_tiles)
             .min_by_key(|(pid, p, _)| (chebyshev(*p, a.pos), *pid))
             .map(|(_, p, _)| *p);
-        let ok = |t: (u32, u32)| deer_ground(res, rule, hearth, t);
+        let ok = |t: (u32, u32)| {
+            deer_ground(res, rule, hearth, t)
+                && origins::admits(res, &a.kind.definition().origin, t)
+        };
         let (mut pos, mut state) = (a.pos, a.state);
         match (a.state, near) {
             (AnimalState::Wander, Some(_)) if rule.deer_flee => {
@@ -552,6 +576,7 @@ fn wolf_walk(res: &mut SimResources, id: u32, goal: (u32, u32)) {
     } else {
         Some(path.remove(0))
     };
+    let next = next.filter(|n| origins::admits(res, &a.kind.definition().origin, *n));
     if let Some(a) = res.colony.wildlife.animals.get_mut(&id) {
         if stale {
             a.goal = Some(goal);
@@ -588,26 +613,35 @@ fn wolf_steps(
                         .filter(|_| i % 2 == 1)
                         .unwrap_or(edge);
                     if let Some(pack) = p.kind.definition().pack.as_ref() {
-                        let hp = pack.animal.definition().hp.wildlife(rule);
-                        new_animal(res, pack.animal, hp, at, Some(p.start_day));
+                        if origins::admits(res, &pack.animal.definition().origin, at) {
+                            let hp = pack.animal.definition().hp.wildlife(rule);
+                            new_animal(res, pack.animal, hp, at, Some(p.start_day));
+                            res.colony.wildlife.tallies.wolves_spawned += 1;
+                        }
                     }
-                    res.colony.wildlife.tallies.wolves_spawned += 1;
                 }
             }
         }
     }
     let wolves: Vec<u32> = res.colony.wildlife.wolves().map(|a| a.id).collect();
-    if wolves.is_empty() {
+    let pack_alive = res
+        .colony
+        .wildlife
+        .wolves()
+        .filter(|a| a.pack.is_some() || a.kind.definition().population.is_none())
+        .count() as u32;
+    if pack_alive == 0 {
         if let Some(p) = beasts.filter(|p| res.colony.wildlife.pack_day == Some(p.start_day)) {
             crate::runtime::story::end_pressure(res, p.kind);
         }
+    }
+    if wolves.is_empty() {
         return;
     }
     let tick = res.current_tick;
     let day_ticks = res.rules.calendar.days_to_ticks(1);
     let size = res.colony.wildlife.pack_size.max(1);
-    let alive = wolves.len() as u32;
-    let routed = alive * 2 <= size;
+    let routed = pack_alive * 2 <= size;
     // The pack's edge, found when it came; searched again (the whole map) only when it can no longer be reached.
     let region = res.nav.region_of(hearth);
     let edge = match res.colony.wildlife.pack_edge {
@@ -630,14 +664,16 @@ fn wolf_steps(
         };
         let projected = a.kind.definition().resolve_rule(rule);
         let rule = &projected;
-        let overstayed = tick.saturating_sub(a.born_tick) >= u64::from(story_days) * day_ticks;
+        let resident = a.pack.is_none() && a.kind.definition().population.is_some();
+        let overstayed =
+            !resident && tick.saturating_sub(a.born_tick) >= u64::from(story_days) * day_ticks;
         if overstayed
             || (a.state == AnimalState::Retreat && edge.is_some_and(|e| chebyshev(e, a.pos) <= 1))
         {
             leave(res, id);
             continue;
         }
-        if routed || a.state == AnimalState::Retreat {
+        if (!resident && routed) || a.state == AnimalState::Retreat {
             fight::drop_fights_of(res, Fighter::Animal(id));
             if let Some(w) = res.colony.wildlife.animals.get_mut(&id) {
                 w.state = AnimalState::Retreat;
@@ -724,7 +760,11 @@ fn wolf_steps(
             }
             None => {
                 fight::drop_fights_of_attacker(res, Fighter::Animal(id));
-                wolf_walk(res, id, hearth);
+                if resident {
+                    origins::resident_wander(res, a.kind, id, a.pos);
+                } else {
+                    wolf_walk(res, id, hearth);
+                }
             }
         }
     }
@@ -902,7 +942,9 @@ impl RuntimeSystem for AnimalSystem {
         crate::runtime::nav::ensure(res);
         let tick = res.current_tick;
         if tick.is_multiple_of(res.ticks_per_day.max(1)) || !res.colony.wildlife.seeded {
+            let initial = !res.colony.wildlife.seeded;
             deer_births(res, &rule, hearth);
+            origins::births(res, &rule, hearth, initial);
         }
         let folk = people(world, res);
         deer_steps(res, &rule, hearth, &folk);

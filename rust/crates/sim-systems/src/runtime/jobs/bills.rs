@@ -203,7 +203,7 @@ pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize
                 super::craft_food::supplyable(res, shop, recipe, knowledge.practice())
             })
     } else {
-        super::craft_food::supplyable(res, shop, recipe, u64::MAX)
+        super::craft_food::supplyable(res, shop, recipe, u128::MAX)
     };
     if !food_allowed {
         return false;

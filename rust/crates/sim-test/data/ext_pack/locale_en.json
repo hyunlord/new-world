@@ -16,6 +16,8 @@
     "EXT_INERT_SPINE": "Fixture pending",
     "EXT_LANE": "Fixture lane",
     "EXT_BUILDING_SCREEN": "Fixture mudbrick screen",
-    "EXT_BUILDING_TOWER": "Fixture future tower"
+    "EXT_BUILDING_TOWER": "Fixture future tower",
+    "EXT_PLANT_PULSE": "Test wild pulse",
+    "EXT_CROP_PULSE": "Test pulse"
   }
 }

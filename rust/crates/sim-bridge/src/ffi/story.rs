@@ -80,13 +80,13 @@ pub struct StoryView {
     pub firewood: u64,
     /// One night's burn at a cold snap's rate (the banner's "하루 N 필요").
     pub firewood_day_need: u64,
-    /// Wolves on the map.
+    /// Predator pack members on the map; resident predators are not a pressure.
     pub wolves: u32,
     /// The present pack's size (0 when no pack came).
     pub pack_size: u32,
     /// Actual pressure identity associated with the pack banner, -1 when unavailable.
     pub pack_kind: i64,
-    /// The mean tile of the wolves on the map (−1 without wolves): the banner's pulse.
+    /// The mean tile of pack members (−1 without a pack): the banner's pulse.
     pub wolves_x: i32,
     /// See `wolves_x`.
     pub wolves_y: i32,
@@ -130,7 +130,11 @@ pub fn collect_story(world: &hecs::World, res: &SimResources) -> StoryView {
         })
         .collect();
     let w = &res.colony.wildlife;
-    let wolves: Vec<(u32, u32)> = w.wolves().map(|a| a.pos).collect();
+    let wolves: Vec<(u32, u32)> = w
+        .wolves()
+        .filter(|a| a.pack.is_some())
+        .map(|a| a.pos)
+        .collect();
     let n = wolves.len() as u64;
     let (wx, wy) = if n == 0 {
         (-1, -1)

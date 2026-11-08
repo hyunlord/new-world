@@ -57,7 +57,7 @@ fn stalled(engine: &SimEngine) -> bool {
     let res = &engine.resources;
     let c = &res.colony;
     let g = gates();
-    let known_once = |mask: u64| {
+    let known_once = |mask: u128| {
         knowledge::ids_of(mask).any(|id| {
             c.tech
                 .states
@@ -65,7 +65,7 @@ fn stalled(engine: &SimEngine) -> bool {
                 .is_some_and(|s| s.status != TechStatus::Unknown)
         })
     };
-    let missing = |mask: u64| {
+    let missing = |mask: u128| {
         mask != 0
             && known_once(mask)
             && !sim_systems::runtime::knowledge::anyone_practises(&engine.world, mask)
@@ -149,7 +149,8 @@ impl KnowledgeWatch {
             .iter()
             .map(|s| json!([s.practitioners, s.holders, s.status.code()]))
             .collect();
-        self.daily.push(json!({
+        let conditions = sim_systems::runtime::knowledge::discover::conditions(&engine.world, res);
+        let mut daily = json!({
             "day": (now + 1) / DAY,
             "nodes": nodes,
             "progress": tech.progress_permille,
@@ -163,8 +164,13 @@ impl KnowledgeWatch {
             "raw_pots": res.colony.item_ledger.crafted_of(ItemKind::RawPot),
             "clay": res.colony.item_ledger.created_of(ItemKind::Clay),
             "ground_axes": res.colony.item_ledger.crafted_of(ItemKind::GroundAxe),
-            "conditions": sim_systems::runtime::knowledge::discover::conditions(&engine.world, res),
-        }));
+            "conditions": conditions as u64,
+        });
+        let conditions_high = (conditions >> 64) as u64;
+        if conditions_high != 0 {
+            daily["conditions_high"] = json!(conditions_high);
+        }
+        self.daily.push(daily);
     }
 
     /// The `m4` block (see the module header).
@@ -223,5 +229,47 @@ impl KnowledgeWatch {
             "status_end": res.colony.tech.states.iter().map(|s| s.status.code()).collect::<Vec<_>>(),
             "node_names": defs().nodes.iter().map(|n| n.name.clone()).collect::<Vec<_>>(),
         })
+    }
+}
+
+#[cfg(test)]
+mod c1_json_tests {
+    use super::*;
+    use sim_core::colony::{ItemSpec, ItemStack};
+
+    #[test]
+    fn c1_probe_knowledge_daily_report_preserves_high_discovery_conditions() {
+        let mut engine = crate::colony_engine(0);
+        engine.resources.current_tick = DAY - 1;
+        engine.resources.colony.ground_items.clear();
+        let mut watch = KnowledgeWatch::new();
+        watch.after_tick(&engine);
+        let low_report = watch.report(&engine);
+        assert!(low_report["daily"][0].get("conditions_high").is_none());
+
+        let hide_working = knowledge::id("hide_working").expect("base knowledge");
+        let leather = knowledge::id("leather_armor").expect("upper-word node");
+        assert!(leather >= 64);
+        let mut personal = Knowledge::default();
+        personal.set(hide_working, 1000, knowledge::Source::Seeded, 0);
+        engine.world.spawn((personal,));
+        engine.resources.colony.zone_of_tile.insert((2, 2), 1);
+        engine.resources.colony.ground_items.insert(
+            (2, 2),
+            ItemStack::of(ItemSpec::raw(ItemKind::Hide, None), 3),
+        );
+        let expected =
+            sim_systems::runtime::knowledge::discover::conditions(&engine.world, &engine.resources);
+        assert!(expected > u128::from(u64::MAX));
+        assert_ne!(expected & knowledge::bit(leather), 0);
+        watch.after_tick(&engine);
+        let report = watch.report(&engine);
+        let sampled = &report["daily"][1];
+        let reconstructed = u128::from(sampled["conditions"].as_u64().expect("low word"))
+            | (u128::from(sampled["conditions_high"].as_u64().expect("high word")) << 64);
+        assert_eq!(reconstructed, expected);
+        let bytes = serde_json::to_vec(&report).expect("complete sampled report JSON");
+        let reloaded: Value = serde_json::from_slice(&bytes).expect("JSON readback");
+        assert_eq!(reloaded, report);
     }
 }

@@ -68,7 +68,9 @@ pub fn stack_max(res: &SimResources, kind: ItemKind) -> u16 {
 /// Room for `spec` on `tile` (0 when the tile cannot hold items or holds a
 /// stack that `spec` does not merge with).
 pub fn room_on(res: &SimResources, tile: (u32, u32), spec: ItemSpec) -> u16 {
-    if !can_hold_items(res, tile) {
+    if !can_hold_items(res, tile)
+        || !crate::runtime::building_templates::storage::accepts(res, tile, spec.kind)
+    {
         return 0;
     }
     let max = stack_max(res, spec.kind);

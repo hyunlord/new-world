@@ -9,12 +9,12 @@ use crate::colony::{BlueprintKind, Designation, RecipeKind};
 /// Practitioner masks for recipes, construction, designations and channels.
 #[derive(Clone, Default, PartialEq, Eq)]
 pub struct Gates {
-    recipe: BTreeMap<u32, u64>,
-    build: BTreeMap<u32, u64>,
-    designation: Vec<u64>,
-    apprenticeship: u64,
-    oral: u64,
-    lore: [u64; 3],
+    recipe: BTreeMap<u32, u128>,
+    build: BTreeMap<u32, u128>,
+    designation: Vec<u128>,
+    apprenticeship: u128,
+    oral: u128,
+    lore: [u128; 3],
 }
 
 impl fmt::Debug for Gates {
@@ -34,7 +34,7 @@ impl fmt::Debug for Gates {
 /// Validate family membership and derive masks without reading installed state.
 pub(crate) fn gates_with_catalog(defs: &KnowledgeDefs, catalog: &Catalog) -> Result<Gates, String> {
     if defs.nodes.len() > MAX_NODES {
-        return Err("knowledge gates: more than 64 nodes".into());
+        return Err("knowledge gates: more than 128 nodes".into());
     }
     let mut masks = Gates {
         recipe: catalog.recipes().map(|r| (r.identity.code, 0)).collect(),
@@ -84,17 +84,20 @@ pub(crate) fn gates_with_catalog(defs: &KnowledgeDefs, catalog: &Catalog) -> Res
 
 impl Gates {
     /// Required nodes for a registered recipe; foreign-catalog IDs require every bit.
-    pub fn recipe(&self, recipe: RecipeKind) -> u64 {
-        self.recipe.get(&recipe.code()).copied().unwrap_or(u64::MAX)
+    pub fn recipe(&self, recipe: RecipeKind) -> u128 {
+        self.recipe
+            .get(&recipe.code())
+            .copied()
+            .unwrap_or(u128::MAX)
     }
 
     /// Required nodes for a registered blueprint or workshop.
-    pub fn build(&self, kind: BlueprintKind) -> u64 {
-        self.build.get(&kind.code()).copied().unwrap_or(u64::MAX)
+    pub fn build(&self, kind: BlueprintKind) -> u128 {
+        self.build.get(&kind.code()).copied().unwrap_or(u128::MAX)
     }
 
     /// Nodes gating work on a designation.
-    pub fn designation(&self, d: Designation) -> u64 {
+    pub fn designation(&self, d: Designation) -> u128 {
         self.designation
             .get(usize::from(d.code()))
             .copied()
@@ -102,17 +105,17 @@ impl Gates {
     }
 
     /// Required nodes for teaching at full fidelity.
-    pub const fn apprenticeship(&self) -> u64 {
+    pub const fn apprenticeship(&self) -> u128 {
         self.apprenticeship
     }
 
     /// Required nodes for improved evening telling.
-    pub const fn oral(&self) -> u64 {
+    pub const fn oral(&self) -> u128 {
         self.oral
     }
 
     /// Nodes standing for everyday lore.
-    pub const fn lore(&self, lore: Lore) -> u64 {
+    pub const fn lore(&self, lore: Lore) -> u128 {
         self.lore[lore as usize]
     }
 }

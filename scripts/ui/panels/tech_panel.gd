@@ -216,7 +216,7 @@ func _refresh() -> void:
 	var neighbours: Dictionary = _neighbours()
 	var key: int = hash([tech.get("statuses", PackedInt64Array()), tech.get("practitioners", PackedInt64Array()),
 		tech.get("holders", PackedInt64Array()), KnowledgeText.language(_locale), neighbours.get("clue_nodes", PackedInt32Array()),
-		neighbours.get("rumoured", PackedInt64Array()), tech.get("version", 0), tech.get("eras", []),
+		neighbours.get("rumoured", PackedInt64Array()), neighbours.get("rumoured_high", PackedInt64Array()), tech.get("version", 0), tech.get("eras", []),
 		tech.get("lanes", []), tech.get("connected", PackedInt64Array()), tech.get("debts", PackedStringArray())])
 	if key != _key:
 		_key = key

@@ -839,10 +839,13 @@ and emits era-change chronicle entries. Inert knowledge remains visible but
 is excluded from discovery, runtime gate masks, founder seeds and migrant gifts.
 
 Personal knowledge keeps the historical packed low-id/source byte with additive
-high-id bits; practitioner masks are 64 bits. Skills count actual job completions
+high-id bits; practitioner and neighbour masks are 128 bits. Skills count actual job completions
 for Practice origins independently of XP. Save format18 migrates historical
 knowledge, skill and aggregate layouts through
 `rust/crates/sim-systems/src/save/legacy_spine_v17.rs`.
+Format20 admits the authenticated predecessor format19 catalogue through
+`rust/crates/sim-systems/src/save/legacy_knowledge_v19.rs`; lower-word varint
+encodings remain unchanged. The bridge exposes neighbour rumours as two 64-bit columns.
 
 `get_tech` projects catalogue era/lane rows with per-era progress and thresholds.
 `scripts/ui/panels/tech_panel.gd` draws the dynamic grid, grey pending cards,
@@ -851,7 +854,7 @@ debt and prerequisite highlighting. The generated section of
 `rust/crates/sim-core/src/colony/content_debt.rs`; manual historical debt remains.
 
 
-## M-SPINE building templates (integration draft; evidence pending)
+## M-SPINE building templates
 
 `colony/building_template.rs` loads `buildings.ron` into the selected catalogue.
 Connected templates expand into validated existing blueprint pieces, retaining
@@ -876,5 +879,20 @@ stone house has a connected upgrade edge; both retain a 4×4 footprint.
 Placeholder item and building art consumes catalogue shape/tint/glyph metadata.
 Actual roofs require persisted site state and completed physical intactness;
 Inert half-alpha hatching belongs only to previews. See
-[ADR 0061](decisions/0061-physical-building-templates.md). These are integration
-design notes: b runtime, save, native visual and publication evidence is pending.
+[ADR 0061](decisions/0061-physical-building-templates.md). M-SPINE-b was published
+at `d30dbfc5b8c6d68973e1c13fdd291741db892998`; C1 uses that immutable predecessor.
+
+## C1 origins and neolithic content
+
+`colony/content/defs/origin.rs` resolves climate, current terrain and elevation
+admission. Worldgen plants and the existing wildlife system use the seed-derived
+climate when optional measurement metadata is absent. New wild populations use
+their own keyed stream and data-authored resident behaviour. Crops resolve a
+wild source; actual harvesting/seed-saving or trade supplies physical seeds.
+
+Fences carry explicit livestock-blocking and roof-support capabilities. Open
+enclosures confer no roof, including before aggregate template association.
+Grain store admission and authored granary food lifetimes reuse physical rooms,
+stockpiles and the existing spoil clock. Partial Connected content debt remains
+in the generated ledger. C1-a connects the buildable pen; livestock execution
+and its saved state belong to C1-b. See [ADR 0062](decisions/0062-neolithic-origins-and-livestock.md).

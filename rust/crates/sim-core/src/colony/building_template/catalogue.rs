@@ -95,10 +95,10 @@ impl TemplateCatalog {
                 .function
                 .storage
                 .as_deref()
-                .is_some_and(|selector| selector != "all")
+                .is_some_and(|selector| selector != "all" && selector != "grain")
             {
                 return Err(format!(
-                    "building {}: unsupported storage selector (expected all or None)",
+                    "building {}: unsupported storage selector (expected all, grain or None)",
                     template.id
                 ));
             }

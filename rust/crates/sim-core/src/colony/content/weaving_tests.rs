@@ -69,7 +69,7 @@ const ITEMS: &str = r#"(schema_version: 1, roles: {}, items: [
      category: "apparel", material_format_key: "", tags: [], stack_max: 1, carry: 1,
      stack_rule: None, carry_rule: None, value: 1, made_by: None, clue_nodes: [],
      chop: None, weapon: None, cutter: None, food: None, fuel_units: None,
-     apparel: Some((legacy_top_code: 5, warmth_rank: 1, cold_permille: 800,
+     apparel: Some((legacy_top_code: 7, warmth_rank: 1, cold_permille: 800,
                    cold_snap_work_immune: false, wear_days: Some(12), comfort_permille: 7))),
 ])"#;
 
@@ -99,8 +99,8 @@ fn alternate_tool_apparel_and_process_require_only_authored_data() {
         Catalog::from_sources(RawSources::bundled(), Some(sources)).expect("data-only extension");
     // Then both identity and mechanics come from the selected data.
     let recipe = catalog.recipe_by_code(1000).expect("alternate recipe");
-    assert_eq!(catalog.knowledge_defs().id_of("reed_combing"), Some(43));
-    assert_eq!(catalog.knowledge_defs().nodes.len(), 44);
+    assert_eq!(catalog.knowledge_defs().id_of("reed_combing"), Some(82));
+    assert_eq!(catalog.knowledge_defs().nodes.len(), 83);
     assert_eq!(
         recipe.tool.as_ref().map(|tool| tool.capability.as_str()),
         Some("combing")
@@ -122,7 +122,7 @@ fn alternate_tool_apparel_and_process_require_only_authored_data() {
             top.wear_days,
             top.comfort_permille
         )),
-        Some((5, Some(12), 7))
+        Some((7, Some(12), 7))
     );
 }
 
@@ -131,7 +131,7 @@ fn ambiguous_or_unsupported_physical_metadata_is_rejected() {
     // Given valid extension data with one deliberately malformed field per case.
     let mutations = [
         (
-            ITEMS.replace("legacy_top_code: 5", "legacy_top_code: 1"),
+            ITEMS.replace("legacy_top_code: 7", "legacy_top_code: 1"),
             RECIPES.into(),
         ),
         (ITEMS.replace("Some(12)", "Some(0)"), RECIPES.into()),
@@ -179,7 +179,7 @@ fn ambiguous_or_unsupported_physical_metadata_is_rejected() {
 }
 
 #[test]
-fn legacy_metadata_stays_inert_and_era_denominator_is_preserved() {
+fn legacy_metadata_stays_inert_and_historical_marker_weight_is_preserved() {
     // Given the bundled catalogue with unchanged historical definitions.
     let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("catalog");
     // When historical garments and recipes are read.
@@ -199,7 +199,7 @@ fn legacy_metadata_stays_inert_and_era_denominator_is_preserved() {
         .filter(|recipe| recipe.identity.code < 20)
         .all(|recipe| recipe.process.is_none()));
     let knowledge = catalog.knowledge_defs();
-    assert_eq!(knowledge.nodes.len(), 43);
+    assert_eq!(knowledge.nodes.len(), 82);
     assert_eq!(knowledge.id_of("cultivation"), Some(27));
     assert_eq!(knowledge.id_of("spinning"), Some(28));
     assert_eq!(knowledge.id_of("weaving"), Some(29));
@@ -223,8 +223,17 @@ fn legacy_metadata_stays_inert_and_era_denominator_is_preserved() {
         knowledge
             .nodes
             .iter()
+            .take(43)
             .map(|node| u32::from(node.marker_weight))
             .sum::<u32>(),
         14
+    );
+    assert_eq!(
+        knowledge
+            .nodes
+            .iter()
+            .map(|node| u32::from(node.marker_weight))
+            .sum::<u32>(),
+        16
     );
 }

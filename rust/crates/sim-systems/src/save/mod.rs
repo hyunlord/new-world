@@ -38,6 +38,7 @@ mod food_tests;
 mod legacy_buildings_v18;
 mod legacy_food_v13;
 mod legacy_food_v16;
+mod legacy_knowledge_v19;
 mod legacy_spine_v17;
 mod legacy_steward;
 mod legacy_steward_v14;
@@ -69,7 +70,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6 through 18 are migrated. Bump it
+/// Save format version; historical versions 6 through 19 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -90,7 +91,8 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 17 = exact physical garment wear and pending nonfood processing.
 /// 18 = data-driven eras, full-width knowledge masks and completed-job practice.
 /// 19 = persisted template building sites, selected stations and housing zones.
-pub const FORMAT_VERSION: u32 = 19;
+/// 20 = 128-node practitioner and neighbour masks (lower-word varints unchanged).
+pub const FORMAT_VERSION: u32 = 20;
 mod cultivation_catalog;
 mod cultivation_validation;
 mod legacy_cultivation_v15;
@@ -366,6 +368,7 @@ pub fn load_with(
     let source_version =
         u32::from_le_bytes(bytes[8..12].try_into().map_err(|_| SaveError::NotASave)?);
     let legacy_v18 = source_version == 18;
+    let legacy_v19 = source_version == 19;
     let legacy_spine = source_version < 18;
     let legacy_items = source_version < 17;
     // Format13 already owns physical food and its FoodDailySystem slot.
@@ -462,6 +465,8 @@ pub fn load_with(
                 && !(legacy_v17 && legacy_spine_v17::accepts_catalog(&envelope.revision, catalog)?)
                 && !(legacy_v18
                     && legacy_buildings_v18::accepts_catalog(&envelope.revision, catalog)?)
+                && !(legacy_v19
+                    && legacy_knowledge_v19::accepts_catalog(&envelope.revision, catalog)?)
             {
                 return Err(SaveError::Decode(format!(
                     "save content revision {} does not match installed {}",
@@ -741,6 +746,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
         && found != 16
         && found != 17
         && found != 18
+        && found != 19
     {
         return Err(SaveError::Version {
             found,

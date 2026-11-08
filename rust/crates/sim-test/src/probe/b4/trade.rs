@@ -46,7 +46,11 @@ pub struct CaravanGeneration {
     pub executed_tick: u64,
     pub policy: Policy,
     pub neighbour_known_mask: u64,
+    #[serde(skip_serializing_if = "super::types::zero_word")]
+    pub neighbour_known_mask_high: u64,
     pub old_all_knowledge_practice_mask: u64,
+    #[serde(skip_serializing_if = "super::types::zero_word")]
+    pub old_all_knowledge_practice_mask_high: u64,
     pub tech_progress_permille: u16,
     pub practice_days: u64,
     pub practitioner_rows: Vec<PractitionerRow>,
@@ -220,8 +224,10 @@ pub fn capture(e: &SimEngine, id: u32, config: &Config) -> Result<CaravanGenerat
         neighbour_id: c.neighbour,
         executed_tick: r.current_tick,
         policy: config.manifest.policy,
-        neighbour_known_mask: known,
-        old_all_knowledge_practice_mask: practice,
+        neighbour_known_mask: known as u64,
+        neighbour_known_mask_high: (known >> 64) as u64,
+        old_all_knowledge_practice_mask: practice as u64,
+        old_all_knowledge_practice_mask_high: (practice >> 64) as u64,
         tech_progress_permille: r.colony.tech.progress_permille,
         practice_days: window,
         practitioner_rows: counts,
@@ -229,4 +235,43 @@ pub fn capture(e: &SimEngine, id: u32, config: &Config) -> Result<CaravanGenerat
         eligible_rows: eligible,
         initial_goods: goods_rows(&c.goods),
     })
+}
+
+#[cfg(test)]
+mod c1_json_tests {
+    use super::*;
+    #[test]
+    fn c1_probe_trade_mask_json_preserves_both_words() {
+        let mut row = CaravanGeneration {
+            caravan_id: 1,
+            neighbour_id: 0,
+            executed_tick: 0,
+            policy: Policy::Old3_1,
+            neighbour_known_mask: u64::MAX,
+            neighbour_known_mask_high: 0,
+            old_all_knowledge_practice_mask: u64::MAX,
+            old_all_knowledge_practice_mask_high: 0,
+            tech_progress_permille: 0,
+            practice_days: 1,
+            practitioner_rows: vec![],
+            practitioner_inputs: vec![],
+            eligible_rows: vec![],
+            initial_goods: vec![],
+        };
+        let low = serde_json::to_value(&row).expect("legacy JSON");
+        assert!(low.get("neighbour_known_mask_high").is_none());
+        assert!(low.get("old_all_knowledge_practice_mask_high").is_none());
+        row.neighbour_known_mask_high = (1_u64 << 63) | 1;
+        row.old_all_knowledge_practice_mask_high = u64::MAX;
+        let json = serde_json::to_value(&row).expect("full-width JSON");
+        assert_eq!(json["neighbour_known_mask"].as_u64(), Some(u64::MAX));
+        assert_eq!(
+            json["neighbour_known_mask_high"].as_u64(),
+            Some((1_u64 << 63) | 1)
+        );
+        assert_eq!(
+            json["old_all_knowledge_practice_mask_high"].as_u64(),
+            Some(u64::MAX)
+        );
+    }
 }

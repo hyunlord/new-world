@@ -1,4 +1,5 @@
 //! Room identity follows actual completed template interiors, including non-dwellings.
+use sim_core::colony::building_template::ShelterKind;
 use sim_core::colony::content::installed_or_bundled;
 use sim_engine::SimResources;
 
@@ -12,9 +13,9 @@ pub fn associate_rooms(res: &mut SimResources) {
         if !super::is_intact(res, site) {
             continue;
         }
-        if catalog.building_templates().get(&site.template).is_none() {
+        let Some(template) = catalog.building_templates().get(&site.template) else {
             continue;
-        }
+        };
         for room in res.colony.rooms.values_mut() {
             if !room.tiles.is_empty()
                 && room.tiles.iter().all(|tile| {
@@ -35,6 +36,9 @@ pub fn associate_rooms(res: &mut SimResources) {
                 })
             {
                 room.dwelling_kind = Some(site.template.clone());
+                if template.function.warmth == ShelterKind::Open {
+                    room.roofed = false;
+                }
             }
         }
     }

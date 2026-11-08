@@ -19,7 +19,7 @@ fn ecology_base_codes_schedule_and_per_world_overrides_are_exact() {
     let c = Catalog::from_sources(RawSources::bundled(), None).expect("catalog");
     assert_eq!(
         c.animals().map(|d| d.identity.code).collect::<Vec<_>>(),
-        vec![0, 1]
+        vec![0, 1, 2, 3, 4, 5]
     );
     assert_eq!(
         c.pressures().map(|d| d.identity.code).collect::<Vec<_>>(),

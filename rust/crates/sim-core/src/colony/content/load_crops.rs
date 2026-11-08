@@ -22,6 +22,8 @@ struct CropRaw {
     identity: IdentityDef,
     category: String,
     tags: Vec<String>,
+    #[serde(default)]
+    wild_source: Option<String>,
     seed_item: String,
     seeds_per_tile: u16,
     yields: Vec<YieldRaw>,
@@ -82,6 +84,15 @@ fn resolve(raw: CropRaw, catalog: &Catalog) -> Result<CropDef, CatalogError> {
     let seed_item = catalog
         .item_by_name(&raw.seed_item)
         .ok_or_else(|| error("unknown seed item"))?;
+    let wild_source = raw
+        .wild_source
+        .as_deref()
+        .map(|id| {
+            catalog
+                .plant_by_name(id)
+                .ok_or_else(|| error("unknown wild crop source"))
+        })
+        .transpose()?;
     let mut seen = BTreeSet::new();
     let yields = raw
         .yields
@@ -113,6 +124,7 @@ fn resolve(raw: CropRaw, catalog: &Catalog) -> Result<CropDef, CatalogError> {
         identity: raw.identity,
         category: raw.category,
         tags: raw.tags,
+        wild_source,
         seed_item,
         seeds_per_tile: raw.seeds_per_tile,
         yields,

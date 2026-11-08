@@ -159,6 +159,7 @@ buildings are independent from their reserved automatic-growth zone definitions.
 | `upgrade_to` | String | next template id, empty absent |
 | `materials` | Array[Dictionary] | default building plan physical costs; each row item:int code and need:int count |
 | `connected` | bool | building: Connected status |
+| `roofed` | bool | building: authored shelter is enclosed; Open templates retain physical pieces without a world roof overlay |
 | `era_id` | String | building: authored era id |
 | `art_roof` | String | building: round/angular |
 | `art_tint_material` | String | building: material registry name for existing tint pipeline |
@@ -668,6 +669,7 @@ order then authored station order. These ids do not join the legacy `ids` column
 | `upgrade_available` | bool | pure runtime upgrade admission and actual changed-piece affordability |
 | `upgrade_reason_key` | String | localized Inert/knowledge/material gate when applicable; otherwise use upgrade_reason |
 | `connected` | bool | current template Connected, false missing definition |
+| `roofed` | bool | current template has enclosed shelter; false suppresses aggregate world roof overlays |
 | `era_id` | String | current template era; present when definition resolves |
 | `art_roof` | String | round/angular roof; present when definition resolves |
 | `art_tint_material` | String | material registry tint name |
@@ -1327,7 +1329,8 @@ caravans by number (the gone ones stay), clues by node id. In `SimReads.GETTERS`
 | `populations` | PackedInt32Array | its people |
 | `attitudes` | PackedInt32Array | attitude toward the colony 0–100 |
 | `last_contact` | PackedInt32Array | display day of the last wave or caravan at the hearth, -1 none |
-| `rumoured` | PackedInt64Array | bitmask of the Neolithic nodes it knows (bit = `KnowledgeId`) |
+| `rumoured` | PackedInt64Array | low64 bits of Neolithic knowledge (ids0–63; signed bit pattern) |
+| `rumoured_high` | PackedInt64Array | high64 bits of Neolithic knowledge (ids64–127; signed bit pattern) |
 | `wave_ids` | PackedInt32Array | wave number (1, 2, …) |
 | `wave_neighbours` | PackedInt32Array | its neighbour id |
 | `wave_states` | PackedInt32Array | 0 walking in, 1 waiting at the hearth, 2 leaving, 3 gone |
@@ -1641,6 +1644,7 @@ The static checker compares the union of literal keys, including nested builders
 | `roles` | `rooms.roles` |
 | `roofed` | `rooms.roofed` |
 | `rumoured` | `neighbours.rumoured` |
+| `rumoured_high` | `neighbours.rumoured_high` |
 | `shelf_counts` | `workshops.shelf_counts` |
 | `shelf_kinds` | `workshops.shelf_kinds` |
 | `shelf_shops` | `workshops.shelf_shops` |

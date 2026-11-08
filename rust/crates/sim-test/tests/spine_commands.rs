@@ -30,7 +30,7 @@ fn spine_invalid_and_inert_templates_do_not_allocate_or_place() {
 
     for (id, anchor, rotation, station, expected) in [
         ("missing_template", (1, 1), 0, None, RejectReason::Unknown),
-        ("granary", (1, 1), 0, None, RejectReason::NotYet),
+        ("well", (1, 1), 0, None, RejectReason::NotYet),
         ("log_house", (u32::MAX, 1), 0, None, RejectReason::OutOfMap),
         ("log_house", (1, 1), 4, None, RejectReason::Unknown),
         (

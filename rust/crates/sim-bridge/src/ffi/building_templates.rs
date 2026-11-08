@@ -1,7 +1,9 @@
-//! Additive M-SPINE-b bridge draft. NOT_COMPILED/NOT_RUN; see INTEGRATION.md.
+//! Read-only building template presentation and recorded template commands.
 use godot::prelude::*;
 use sim_core::colony::building_site::{BuildCause, BuildingSite, BuildingStatus, PiecePhase};
-use sim_core::colony::building_template::{BuildingCategory, BuildingTemplate, RoofShape};
+use sim_core::colony::building_template::{
+    BuildingCategory, BuildingTemplate, RoofShape, ShelterKind,
+};
 use sim_core::colony::content::{installed_or_bundled, Catalog};
 use sim_core::colony::knowledge::ContentStatus;
 use sim_core::colony::{Command, CommandResult, ItemKind, RejectReason};
@@ -38,6 +40,7 @@ pub(super) fn origin(row: &mut VarDictionary, cause: BuildCause) {
 }
 pub(super) fn art(row: &mut VarDictionary, template: &BuildingTemplate) {
     row.set("connected", connected(template));
+    row.set("roofed", template.function.warmth != ShelterKind::Open);
     row.set("era_id", template.era.as_str());
     row.set(
         "art_roof",

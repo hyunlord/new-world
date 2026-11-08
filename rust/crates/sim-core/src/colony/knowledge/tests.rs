@@ -4,9 +4,15 @@ use crate::colony::{BlueprintKind, Designation, ItemKind, RecipeKind};
 const KNOWLEDGE_RON: &str = include_str!("../../../data/colony/knowledge.ron");
 
 #[test]
-fn the_map_parses_to_43_nodes_with_an_acyclic_prereq_graph() {
+fn the_map_parses_to_82_nodes_with_an_acyclic_prereq_graph() {
     let d = defs();
-    assert_eq!(d.nodes.len(), 43);
+    assert_eq!(d.nodes.len(), 82);
+    assert_eq!(
+        d.nodes[42].name, "weather_lore",
+        "historical prefix remains stable"
+    );
+    assert_eq!(d.nodes[43].name, "animal_taming");
+    assert_eq!(d.nodes[81].name, "bone_setting");
     assert!(d.nodes.len() <= MAX_NODES);
     // Every prereq points at another node, and the graph has no cycle
     // (a depth-first search from each node never revisits its path).
@@ -45,10 +51,10 @@ fn the_map_parses_to_43_nodes_with_an_acyclic_prereq_graph() {
             vec![Cond::Stockpile(ItemKind::RawPot, 2)]
         ))
     );
-    // Markers 3 + 3 + 2 + 1 + cultivation 3 + weaving 2 are present: 14.
-    assert_eq!(d.marker_total(), 14);
+    // Historical markers total14; the connected C1 pen adds animal_taming weight2.
+    assert_eq!(d.marker_total(), 16);
     let present: u32 = d.nodes.iter().map(|n| u32::from(n.marker_weight)).sum();
-    assert_eq!(present, 14);
+    assert_eq!(present, 16);
     assert!(parse_defs("(schema_version: 2, absent_markers: [], knowledge: [])").is_none());
     let bad = KNOWLEDGE_RON.replace("Recipe(\"haft_axe\")", "Recipe(\"bronze\")");
     assert!(parse_defs(&bad).is_none());
@@ -117,7 +123,8 @@ fn entries_stay_sorted_and_the_bitset_follows_the_thresholds() {
     );
     assert_eq!(k.entries().len(), k.entries().iter().count());
     assert_eq!(std::mem::size_of::<KnowledgeEntry>(), 8);
-    assert!(std::mem::size_of::<Knowledge>() <= 24);
+    // A boxed-slice fat pointer (16 bytes) plus the C1 128-bit mask (16 bytes).
+    assert_eq!(std::mem::size_of::<Knowledge>(), 32);
     // Observation stops at its cap.
     assert!(k.observe(knap, 5, 250, 900));
     for _ in 0..100 {
@@ -142,6 +149,45 @@ fn a_load_rebuilds_the_bitset_from_the_entries() {
     let loaded: Knowledge = ron::from_str(&tampered).expect("load");
     assert_eq!(loaded.practice(), bit(knap));
     assert_eq!(loaded, k);
+}
+
+#[test]
+fn a_load_rebuilds_high_practitioner_bits_without_aliasing_low_nodes() {
+    let low = 0;
+    let high = 64;
+    let highest_authored = 81;
+    assert_eq!(defs().get(high).expect("high node").name, "thatch");
+    assert_eq!(
+        defs().get(highest_authored).expect("last node").name,
+        "bone_setting"
+    );
+    let mut k = Knowledge::default();
+    k.set(highest_authored, 600, Source::Oral, 0);
+    k.set(low, 600, Source::Seeded, 0);
+    k.set(high, 600, Source::Observed, 0);
+    let expected = bit(low) | bit(high) | bit(highest_authored);
+    assert_eq!(k.practice(), expected);
+    assert_eq!(
+        k.entries()
+            .iter()
+            .map(KnowledgeEntry::id)
+            .collect::<Vec<_>>(),
+        [low, high, highest_authored]
+    );
+    let text = ron::to_string(&k).expect("save full-width knowledge");
+    let loaded: Knowledge = ron::from_str(&text).expect("load full-width knowledge");
+    assert_eq!(loaded, k);
+    // Corrupt both saved words. Entries, not either cached word, determine the result.
+    let saved_mask = format!("practice:({},{})", expected as u64, (expected >> 64) as u64);
+    let tampered = text.replace(&saved_mask, "practice:(0,0)");
+    assert_ne!(tampered, text, "both mask words were present in RON");
+    let rebuilt: Knowledge = ron::from_str(&tampered).expect("rebuild full-width knowledge");
+    assert_eq!(rebuilt.practice(), expected);
+    assert_eq!(rebuilt, k);
+    assert!(
+        !rebuilt.practises(highest_authored - 64),
+        "high node never aliases its low-word offset"
+    );
 }
 
 #[test]
@@ -236,6 +282,15 @@ fn cultivation_is_discovered_not_seeded_and_replaces_the_farming_marker() {
             id("grain_parching").expect("grain")
         ]
     );
-    assert_eq!(d.marker_total(), 14);
+    assert_eq!(d.marker_total(), 16);
+    assert_eq!(
+        d.nodes
+            .iter()
+            .filter(|node| node.name != "animal_taming")
+            .map(|node| u32::from(node.marker_weight))
+            .sum::<u32>(),
+        14,
+        "C1 adds the taming marker without changing historical weights"
+    );
     assert!(!d.absent_markers.iter().any(|(name, _)| name == "farming"));
 }

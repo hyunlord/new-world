@@ -157,6 +157,7 @@ func _refresh() -> void:
 	var kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
 	var kind: int = kinds[row] if row < kinds.size() else -1
 	var textile_workshop: bool = false
+	_food_why.text = _loc("M6A_FOOD_WHY")
 	_food_why.visible = false
 	for recipe: Dictionary in EconomyText.Content.rows("recipes"):
 		if not recipe.get("compatible_workshops", PackedInt64Array()).has(kind):

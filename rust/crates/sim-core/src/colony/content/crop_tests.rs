@@ -2,13 +2,27 @@ use super::*;
 #[test]
 fn third_crop_requires_only_data_and_rejects_unknown_physical_seed() {
     let source = include_str!("../../../data/colony/crops.ron");
-    let extension = source
-        .replace("code: 0", "code: 20")
-        .replace("code: 1", "code: 21")
-        .replace("id: \"emmer\"", "id: \"third_grain\"")
-        .replace("id: \"flax\"", "id: \"third_fibre\"")
-        .replace("serde_name: \"Emmer\"", "serde_name: \"ThirdGrain\"")
-        .replace("serde_name: \"Flax\"", "serde_name: \"ThirdFibre\"");
+    let mut extension = source.to_owned();
+    for (code, name, replacement, serde_name, serde_replacement) in [
+        (0, "emmer", "third_grain", "Emmer", "ThirdGrain"),
+        (1, "flax", "third_fibre", "Flax", "ThirdFibre"),
+        (2, "barley", "third_barley", "Barley", "ThirdBarley"),
+        (3, "rye", "third_rye", "Rye", "ThirdRye"),
+        (4, "lentil", "third_lentil", "Lentil", "ThirdLentil"),
+        (5, "pea", "third_pea", "Pea", "ThirdPea"),
+        (6, "millet", "third_millet", "Millet", "ThirdMillet"),
+    ] {
+        extension = extension
+            .replace(&format!("code: {code},"), &format!("code: {},", code + 20))
+            .replace(
+                &format!("id: \"{name}\""),
+                &format!("id: \"{replacement}\""),
+            )
+            .replace(
+                &format!("serde_name: \"{serde_name}\""),
+                &format!("serde_name: \"{serde_replacement}\""),
+            );
+    }
     let build = |text: &str| {
         Catalog::from_sources(
             RawSources::bundled(),
@@ -26,7 +40,7 @@ fn third_crop_requires_only_data_and_rejects_unknown_physical_seed() {
         .expect("crop");
     assert_eq!(third.seeds_per_tile, 2);
     assert_eq!(third.yields[0].count, 10);
-    assert_eq!(catalog.crops().len(), 4);
+    assert_eq!(catalog.crops().len(), 14);
     assert!(
         build(&extension.replace("seed_item: \"emmer_seed\"", "seed_item: \"absent_seed\""))
             .is_err()

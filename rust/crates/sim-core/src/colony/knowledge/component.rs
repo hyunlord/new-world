@@ -65,15 +65,19 @@ impl KnowledgeEntry {
 #[serde(try_from = "SavedKnowledge")]
 pub struct Knowledge {
     entries: Box<[KnowledgeEntry]>,
-    practice: u64,
+    #[serde(serialize_with = "super::mask_serde::serialize")]
+    practice: u128,
 }
 
 /// The saved form of [`Knowledge`] (the same fields).
 #[derive(Deserialize)]
 struct SavedKnowledge {
     entries: Vec<KnowledgeEntry>,
-    #[serde(rename = "practice")]
-    _practice: u64,
+    #[serde(
+        rename = "practice",
+        deserialize_with = "super::mask_serde::deserialize"
+    )]
+    _practice: u128,
 }
 
 impl TryFrom<SavedKnowledge> for Knowledge {
@@ -108,12 +112,12 @@ impl Knowledge {
     }
 
     /// The practitioner bitset (bit `i` = at or above node `i`'s threshold).
-    pub const fn practice(&self) -> u64 {
+    pub const fn practice(&self) -> u128 {
         self.practice
     }
 
     /// Whether the person practises every node of `mask`.
-    pub const fn practises_all(&self, mask: u64) -> bool {
+    pub const fn practises_all(&self, mask: u128) -> bool {
         self.practice & mask == mask
     }
 
@@ -206,7 +210,7 @@ impl Knowledge {
 
     /// A completed gated job (goal 3.2): every node of `mask` the person holds
     /// gains `gain` ‰ and is stamped used at `tick`.
-    pub fn use_mask(&mut self, mask: u64, gain: u16, tick: u64) {
+    pub fn use_mask(&mut self, mask: u128, gain: u16, tick: u64) {
         for e in self.entries.iter_mut().filter(|e| mask & bit(e.id()) != 0) {
             e.proficiency = e.proficiency.saturating_add(gain).min(1000);
             e.last_used = day_of(tick);

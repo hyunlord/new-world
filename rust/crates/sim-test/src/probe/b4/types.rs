@@ -59,6 +59,8 @@ pub struct CraftEvent {
     pub persistence: Option<u16>,
     pub knowledge_enabled: bool,
     pub gate_mask: u64,
+    #[serde(skip_serializing_if = "zero_word")]
+    pub gate_mask_high: u64,
     pub gating_nodes: Vec<GatingNode>,
     pub recipe_quality_add: i32,
     pub material_term: MaterialTerm,
@@ -124,4 +126,8 @@ pub struct Conservation {
     pub reservation_violation_ticks: u64,
     pub unresolved_start_count: u64,
     pub unresolved_terminal_count: u64,
+}
+
+pub(super) fn zero_word(value: &u64) -> bool {
+    *value == 0
 }

@@ -126,6 +126,10 @@ pub struct BlueprintDef {
     pub requires_space: bool,
     /// Planned nav.
     pub planned_nav: PlannedNav,
+    /// People may pass a barrier while captive animals remain enclosed.
+    pub blocks_livestock: bool,
+    /// Whether a completed boundary piece can support an enclosed room's roof.
+    pub supports_roof: bool,
     /// Material.
     pub material: CompletionMaterial,
     /// Style id.

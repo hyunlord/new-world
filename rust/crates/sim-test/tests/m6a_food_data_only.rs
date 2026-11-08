@@ -59,13 +59,27 @@ fn third_crop_runs_real_field_jobs_in_an_isolated_catalog_process() {
     use sim_core::colony::{Command, ItemSpec, Job, JobKind, JobStage};
     use sim_core::components::{Agent, AgentState, Position, SeekTarget, Settlement, TargetKind};
     use sim_engine::RuntimeSystem;
-    let extension = include_str!("../../sim-core/data/colony/crops.ron")
-        .replace("code: 0", "code: 20")
-        .replace("code: 1", "code: 21")
-        .replace("id: \"emmer\"", "id: \"third_grain\"")
-        .replace("id: \"flax\"", "id: \"third_fibre\"")
-        .replace("serde_name: \"Emmer\"", "serde_name: \"ThirdGrain\"")
-        .replace("serde_name: \"Flax\"", "serde_name: \"ThirdFibre\"");
+    let mut extension = include_str!("../../sim-core/data/colony/crops.ron").to_owned();
+    for (code, name, replacement, serde_name, serde_replacement) in [
+        (0, "emmer", "third_grain", "Emmer", "ThirdGrain"),
+        (1, "flax", "third_fibre", "Flax", "ThirdFibre"),
+        (2, "barley", "third_barley", "Barley", "ThirdBarley"),
+        (3, "rye", "third_rye", "Rye", "ThirdRye"),
+        (4, "lentil", "third_lentil", "Lentil", "ThirdLentil"),
+        (5, "pea", "third_pea", "Pea", "ThirdPea"),
+        (6, "millet", "third_millet", "Millet", "ThirdMillet"),
+    ] {
+        extension = extension
+            .replace(&format!("code: {code},"), &format!("code: {},", code + 20))
+            .replace(
+                &format!("id: \"{name}\""),
+                &format!("id: \"{replacement}\""),
+            )
+            .replace(
+                &format!("serde_name: \"{serde_name}\""),
+                &format!("serde_name: \"{serde_replacement}\""),
+            );
+    }
     let catalog = bootstrap(BootSelection::Explicit {
         request_id: "third-crop-job-test".into(),
         sources: RawSources {

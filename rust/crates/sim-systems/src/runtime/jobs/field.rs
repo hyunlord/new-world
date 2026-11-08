@@ -69,7 +69,7 @@ pub(super) fn target_exists(res: &SimResources, id: AgentId, job: &Job) -> bool 
 pub(super) fn pick(
     res: &SimResources,
     id: AgentId,
-    practice: u64,
+    practice: u128,
     region: u32,
     pos: (u32, u32),
     radius: u32,

@@ -74,6 +74,20 @@ class ArtImportTest(unittest.TestCase):
             assert found is not None
             names = re.findall(r'"([^"]+)"', found.group(1))
             self.assertEqual(names, grid[axis], axis)
+        # Authored garments must not silently fall back to the unclothed silhouette.
+        tops = re.search(r"top_codes:\s*\{([^}]+)\}", ron)
+        self.assertIsNotNone(tops)
+        assert tops is not None
+        mapping = {int(code): int(top) for code, top in re.findall(r"(\d+):\s*(\d+)", tops.group(1))}
+        items = (ROOT / "rust/crates/sim-core/data/colony/items.ron").read_text()
+        palette = json.loads((OUT / "render_params.json").read_text())["people"]["clothing_by_top"]
+        for code in map(int, re.findall(r"legacy_top_code:\s*(\d+)", items)):
+            self.assertIn(code, mapping, f"apparel top {code} has no silhouette")
+            self.assertIn(mapping[code], range(len(grid["tops"])))
+            if code >= len(grid["tops"]):
+                self.assertIn(str(code), palette, f"apparel top {code} has no clothing tint")
+                self.assertEqual(len(palette[str(code)]), 3)
+                self.assertTrue(all(type(channel) is int and 0 <= channel <= 255 for channel in palette[str(code)]))
         manifest = json.loads((OUT / "manifest.json").read_text())
         n = len(grid["sexes"]) * len(grid["tops"]) * len(grid["hairs"])
         self.assertEqual(len(manifest["looks"]), len(grid["ages"]) * n)

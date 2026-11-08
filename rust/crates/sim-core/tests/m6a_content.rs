@@ -79,7 +79,32 @@ fn food_storage_and_cooking_are_data_capabilities() {
 #[test]
 fn seasonal_species_preserve_frozen_supply_and_category_fallback() {
     let c = catalog();
-    assert_eq!(c.plants().count(), 5);
+    let mut ids: Vec<_> = c
+        .plants()
+        .map(|p| (p.identity.code, p.identity.id.as_str()))
+        .collect();
+    ids.sort_by_key(|(code, _)| *code);
+    assert_eq!(
+        &ids[..5],
+        &[
+            (0, "berry_bush"),
+            (1, "hazel"),
+            (2, "wild_flax"),
+            (3, "wild_grain"),
+            (4, "wild_root")
+        ]
+    );
+    assert_eq!(
+        &ids[5..],
+        &[
+            (5, "wild_barley"),
+            (6, "wild_rye"),
+            (7, "wild_lentil"),
+            (8, "wild_pea"),
+            (9, "wild_millet"),
+            (10, "wild_apple")
+        ]
+    );
     let root = c.plant_by_name("wild_root").expect("root");
     let def = c.plant(root).expect("definition");
     assert_eq!(
@@ -105,7 +130,7 @@ fn seasonal_species_preserve_frozen_supply_and_category_fallback() {
 }
 
 const APPLE_ITEM: &str = r#"(schema_version: 1, items: [(
-    identity: (code: 1001, id: "apple", name_key: "ITEM_APPLE", serde_name: "Apple", serde_aliases: [], resolver_aliases: []),
+    identity: (code: 1001, id: "test_apple", name_key: "ITEM_APPLE", serde_name: "TestApple", serde_aliases: [], resolver_aliases: []),
     category: "food", material_format_key: "", tags: ["food"], stack_max: 30, carry: 10,
     stack_rule: None, carry_rule: None, value: 2, made_by: None, clue_nodes: [],
     chop: None, weapon: None, cutter: None, fuel_units: None, apparel: None,
@@ -113,11 +138,11 @@ const APPLE_ITEM: &str = r#"(schema_version: 1, items: [(
         groups: ["fruit"], storage_spoil_days: Some((ground: 3, stockpile: 5, roofed_store: 7, pot: 10)))),
 )])"#;
 const APPLE_PLANT: &str = r#"(schema_version: 1, plants: [(
-    identity: (code: 1001, id: "wild_apple", name_key: "PLANT_WILD_APPLE", serde_name: "WildApple", serde_aliases: [], resolver_aliases: []),
+    identity: (code: 1001, id: "test_wild_apple", name_key: "PLANT_WILD_APPLE", serde_name: "TestWildApple", serde_aliases: [], resolver_aliases: []),
     category: "bush", tags: ["bush"],
     placement: (terrains: [plain, forest], elevation: (0, 255), weight: 3, density_permille: 200),
     phases: [Growing, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
-    yield: (item: "apple", units: 4, regrow_days: 2), harvest_ticks: 60,
+    yield: (item: "test_apple", units: 4, regrow_days: 2), harvest_ticks: 60,
     knowledge: Some("foraging"), knowledge_speed_permille: 1500,
 )])"#;
 
@@ -137,11 +162,11 @@ fn data_only_food_and_species_resolve_without_global_installation() {
     };
     let c = Catalog::from_sources(RawSources::bundled(), Some(extension)).expect("data extension");
     let plant = c
-        .plant(c.plant_by_name("wild_apple").expect("apple plant"))
+        .plant(c.plant_by_name("test_wild_apple").expect("apple plant"))
         .expect("definition");
     assert_eq!(
         plant.yield_item,
-        c.item_by_name("apple").expect("apple item")
+        c.item_by_name("test_apple").expect("apple item")
     );
     assert!(
         c.item(plant.yield_item)
@@ -152,7 +177,7 @@ fn data_only_food_and_species_resolve_without_global_installation() {
             .raw_edible
     );
     assert_eq!(plant.identity.code, 1001);
-    assert_eq!(c.plants().count(), 6);
+    assert_eq!(c.plants().count(), catalog().plants().count() + 1);
 }
 
 #[test]
@@ -204,7 +229,7 @@ fn perishable_construction_needs_fail_explicitly_without_blocking_material_exten
     let sources = replace_source(
         "blueprints.ron",
         NEED,
-        &NEED.replace("\"log\"", "\"apple\""),
+        &NEED.replace("\"log\"", "\"test_apple\""),
     );
     let extension = |item: &str| RawSources {
         sources: vec![NamedSource {
@@ -233,13 +258,13 @@ fn perishable_construction_needs_fail_explicitly_without_blocking_material_exten
     let original = "materials: {\"log\": 12}";
     assert!(text.contains(original), "hut material fixture must match");
     buildings.bytes = text
-        .replacen(original, "materials: {\"apple\": 12}", 1)
+        .replacen(original, "materials: {\"test_apple\": 12}", 1)
         .into_bytes();
     let c = Catalog::from_sources(sources, Some(extension(&material))).expect("nonfood extension");
     assert_eq!(c.blueprints().count(), catalog().blueprints().count());
     assert_eq!(
         c.blueprint_by_code(0).expect("hut").needs[0].item,
-        c.item_by_name("apple").expect("extension material")
+        c.item_by_name("test_apple").expect("extension material")
     );
 }
 
@@ -375,7 +400,7 @@ fn duplicate_resolved_recipe_inputs_and_nonfood_drying_are_rejected() {
     let sources = replace_source(
         "recipes.ron",
         "output: (\"dried_meat\", 2)",
-        "output: (\"apple\", 2)",
+        "output: (\"test_apple\", 2)",
     );
     let extension = RawSources {
         sources: vec![NamedSource {
@@ -388,6 +413,9 @@ fn duplicate_resolved_recipe_inputs_and_nonfood_drying_are_rejected() {
     let dry = c
         .recipe(c.recipe_by_name("dry_meat").expect("dry recipe"))
         .expect("definition");
-    assert_eq!(dry.output.0, c.item_by_name("apple").expect("novel food"));
+    assert_eq!(
+        dry.output.0,
+        c.item_by_name("test_apple").expect("novel food")
+    );
     assert_eq!(dry.food_requirements.duration_days, 2);
 }

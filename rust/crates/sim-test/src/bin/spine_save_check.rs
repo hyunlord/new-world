@@ -1,4 +1,4 @@
-//! Exercise a genuine published format17 save through migration and deterministic continuation.
+//! Exercise a genuine published format17–19 save through migration and deterministic continuation.
 use sim_core::colony::content::{bootstrap, BootSelection};
 use sim_core::colony::Skills;
 use sim_systems::save;
@@ -9,7 +9,7 @@ fn run() -> Result<(), String> {
     let mut args = std::env::args().skip(1);
     let path = args
         .next()
-        .ok_or("usage: spine_save_check <format17-or18-save> [ticks]")?;
+        .ok_or("usage: spine_save_check <format17-or18-or19-save> [ticks]")?;
     let ticks: u64 = args.next().map_or(Ok(1440), |value| {
         value.parse().map_err(|e| format!("ticks: {e}"))
     })?;
@@ -24,8 +24,8 @@ fn run() -> Result<(), String> {
             .try_into()
             .map_err(|_| "invalid header")?,
     );
-    if !matches!(source_version, 17 | 18) {
-        return Err("fixture must be genuine format17 or18".into());
+    if !matches!(source_version, 17..=19) {
+        return Err("fixture must be genuine format17,18 or19".into());
     }
     bootstrap(BootSelection::Bundled).map_err(|e| e.to_string())?;
     let mut migrated = save::load(&bytes).map_err(|e| e.to_string())?;
@@ -40,8 +40,9 @@ fn run() -> Result<(), String> {
     {
         return Err("migration invented era measurements or completed-job history".into());
     }
-    if !migrated.resources.colony.buildings.sites.is_empty()
-        || !migrated.resources.colony.buildings.housing_zones.is_empty()
+    if source_version < 19
+        && (!migrated.resources.colony.buildings.sites.is_empty()
+            || !migrated.resources.colony.buildings.housing_zones.is_empty())
     {
         return Err("predecessor migration invented building provenance".into());
     }

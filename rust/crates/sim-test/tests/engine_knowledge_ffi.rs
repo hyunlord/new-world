@@ -69,8 +69,10 @@ fn the_tech_view_lists_every_node_in_id_order_with_the_aggregate() {
         tech.at_risk as usize, at_risk,
         "the badge counts the at-risk rows"
     );
-    // Two of ten founders know timber walls (weight 2 of 14): 2/10 × 2/14 = 28 ‰.
-    assert_eq!(tech.progress, 28);
+    // Two of ten founders know timber walls (weight2 of16 including unseeded taming):25 permille.
+    assert_eq!(defs().marker_total(), 16);
+    assert_eq!(tech.nodes.len(), 82);
+    assert_eq!(tech.progress, 25);
     let door = &tech.nodes[usize::from(id("doorway"))];
     assert_eq!((door.status, door.holders), (TechStatus::AtRisk.code(), 1));
     assert!(door.first_name >= 0, "the holder is named");

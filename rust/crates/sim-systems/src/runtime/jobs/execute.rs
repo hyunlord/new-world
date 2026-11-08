@@ -321,7 +321,7 @@ fn step(
                             .get::<&sim_core::colony::knowledge::Knowledge>(entity)
                             .map_or(0, |k| k.practice())
                     } else {
-                        u64::MAX
+                        u128::MAX
                     };
                     let ticks = super::harvest::work_ticks(res, plant, practice);
                     let ticks =

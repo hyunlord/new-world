@@ -236,7 +236,7 @@ mod tests {
         assert_eq!(d.one_neighbour_knows, ["pot_firing"]);
         assert_eq!(d.migrant_top.as_deref(), Some("hide_wrap"));
         assert_eq!(d.goods.iter().filter(|g| g.tag == "lacked").count(), 6);
-        assert_eq!(d.goods.iter().filter(|g| g.tag == "staple").count(), 5);
+        assert_eq!(d.goods.iter().filter(|g| g.tag == "staple").count(), 10);
         assert!(
             parse_data("(schema_version: 1)").is_none(),
             "a file without a rule is refused"

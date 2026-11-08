@@ -19,6 +19,24 @@ fn number(v: &RuleU32, allowed: &[&str], context: &str) -> Result<(), CatalogErr
 }
 pub(super) fn animal(a: &AnimalDef<String>) -> Result<(), CatalogError> {
     let ctx = &a.identity.id;
+    if a.status == crate::colony::knowledge::ContentStatus::Inert
+        && a.debt.as_deref().is_none_or(|debt| debt.trim().is_empty())
+    {
+        return Err(CatalogError::new(ctx, "inert animal needs debt"));
+    }
+    if !a.origin.valid()
+        || a.population.as_ref().is_some_and(|p| {
+            p.initial.0 == 0
+                || p.initial.0 > p.initial.1
+                || p.respawn_days == 0
+                || p.herd_tiles == 0
+        })
+    {
+        return Err(CatalogError::new(
+            ctx,
+            "invalid species origin or population",
+        ));
+    }
     let (category, hp_rule) = match a.mechanic {
         AnimalMechanic::Grazer => ("grazer", "deer_hp"),
         AnimalMechanic::Predator => ("predator", "wolf_hp"),
@@ -26,7 +44,6 @@ pub(super) fn animal(a: &AnimalDef<String>) -> Result<(), CatalogError> {
     if a.category != category
         || a.grazer.is_some() != (a.mechanic == AnimalMechanic::Grazer)
         || a.predator.is_some() != (a.mechanic == AnimalMechanic::Predator)
-        || (a.huntable && a.mechanic == AnimalMechanic::Predator)
     {
         return Err(CatalogError::new(
             ctx,

@@ -90,7 +90,7 @@ pub struct Room {
     pub tiles: BTreeSet<Tile>,
     /// Door tiles on its border.
     pub doors: BTreeSet<Tile>,
-    /// Roofed (M3: every enclosed room of at most the room maximum).
+    /// Roofed within the room maximum when every physical boundary supports a roof.
     pub roofed: bool,
     /// Its role (the override when one is set, else the automatic one).
     pub role: RoomRole,

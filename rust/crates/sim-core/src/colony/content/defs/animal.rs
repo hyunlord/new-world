@@ -15,8 +15,20 @@ pub enum AnimalMechanic {
 pub struct AnimalDef<I = ItemKind> {
     /// Identity.
     pub identity: IdentityDef,
+    /// Whether natural population behavior is enabled.
+    #[serde(default)]
+    pub status: crate::colony::knowledge::ContentStatus,
+    /// Disabled behavior and owning follow-up pass.
+    #[serde(default)]
+    pub debt: Option<String>,
     /// Category.
     pub category: String,
+    /// Climate and terrain in which the wild species originates.
+    #[serde(default)]
+    pub origin: super::SpeciesOrigin,
+    /// Optional independent wild population; absent retains legacy role seeding.
+    #[serde(default)]
+    pub population: Option<WildPopulation>,
     /// Mechanic.
     pub mechanic: AnimalMechanic,
     /// Huntable.
@@ -48,6 +60,17 @@ pub struct GrazerDef {
     pub home_tiles: RuleU32,
     /// Min hearth distance.
     pub min_hearth_distance: RuleU32,
+}
+/// Data-only wild population policy interpreted by the existing animal system.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct WildPopulation {
+    /// Inclusive initial population range; also the stable per-world cap.
+    pub initial: (u32, u32),
+    /// Days between one-head replenishments below that cap.
+    pub respawn_days: u32,
+    /// Radius around the selected herd centre for initial placement and births.
+    pub herd_tiles: u32,
 }
 /// Validated PredatorDef metadata.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Deserialize)]

@@ -24,6 +24,17 @@ pub(super) fn resolve(r: BlueprintRaw, c: &Catalog) -> Result<BlueprintDef, Cata
     {
         return Err(CatalogError::new(context, "invalid menu/shortcut metadata"));
     }
+    if r.blocks_livestock
+        && !matches!(
+            r.completion,
+            CompletionCategory::Wall | CompletionCategory::Door
+        )
+    {
+        return Err(CatalogError::new(
+            context,
+            "livestock barrier requires a wall layer",
+        ));
+    }
     match r.completion {
         CompletionCategory::Wall | CompletionCategory::Door => {
             if r.render_wall_code.is_none_or(|code| code > 2) {
@@ -109,6 +120,8 @@ pub(super) fn resolve(r: BlueprintRaw, c: &Catalog) -> Result<BlueprintDef, Cata
         requires_knowledge: r.requires_knowledge,
         requires_space: r.requires_space,
         planned_nav: r.planned_nav,
+        blocks_livestock: r.blocks_livestock,
+        supports_roof: r.supports_roof,
         material: r.material,
         style_id: r.style_id,
         render_wall_code: r.render_wall_code,

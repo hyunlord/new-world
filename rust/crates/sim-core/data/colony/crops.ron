@@ -3,7 +3,7 @@
     crops: [
         (
             identity: (code: 0, id: "emmer", name_key: "CROP_EMMER", serde_name: "Emmer", serde_aliases: [], resolver_aliases: []),
-            category: "grain", tags: [],
+            category: "grain", tags: [], wild_source: Some("wild_grain"),
             seed_item: "emmer_seed", seeds_per_tile: 2, yields: [(item: "wild_grain", count: 10), (item: "emmer_seed", count: 2)],
             frost_sensitive: true, sow_windows: [(season: 0, start_day: 0, end_day_exclusive: 3)], growth_days: 4,
             till_ticks: 60, sow_ticks: 30, tend_ticks: 30, harvest_ticks: 60,
@@ -12,12 +12,67 @@
         ),
         (
             identity: (code: 1, id: "flax", name_key: "CROP_FLAX", serde_name: "Flax", serde_aliases: [], resolver_aliases: []),
-            category: "fibre", tags: [],
+            category: "fibre", tags: [], wild_source: Some("wild_flax"),
             seed_item: "flax_seed", seeds_per_tile: 2, yields: [(item: "flax_stalks", count: 6), (item: "flax_seed", count: 4)],
             frost_sensitive: true, sow_windows: [(season: 0, start_day: 0, end_day_exclusive: 3)], growth_days: 5,
             till_ticks: 60, sow_ticks: 30, tend_ticks: 30, harvest_ticks: 60,
             untended_yield_permille: 750, initial_fertility: 1000, min_fertility: 400,
             fertility_cost: 200, fallow_recovery_per_day: 10, knowledge: Some("cultivation"),
+        ),
+        // C1 seed-saving is physical: wild harvest -> seed extraction recipe -> sowing.
+        // Starting crop values mirror emmer; fertility and yield remain M-BAL debt.
+        (
+            identity: (code: 2, id: "barley", name_key: "CROP_BARLEY", serde_name: "Barley", serde_aliases: [], resolver_aliases: []),
+            category: "grain", tags: [], wild_source: Some("wild_barley"),
+            seed_item: "barley_seed", seeds_per_tile: 2, yields: [(item: "barley", count: 10), (item: "barley_seed", count: 2)],
+            frost_sensitive: true, sow_windows: [(season: 0, start_day: 0, end_day_exclusive: 3)], growth_days: 4,
+            till_ticks: 60, sow_ticks: 30, tend_ticks: 30, harvest_ticks: 60,
+            untended_yield_permille: 750, initial_fertility: 1000, min_fertility: 400,
+            fertility_cost: 200, fallow_recovery_per_day: 10, knowledge: Some("barley"),
+        ),
+        // C1 seed-saving is physical: wild harvest -> seed extraction recipe -> sowing.
+        // Starting crop values mirror emmer; fertility and yield remain M-BAL debt.
+        (
+            identity: (code: 3, id: "rye", name_key: "CROP_RYE", serde_name: "Rye", serde_aliases: [], resolver_aliases: []),
+            category: "grain", tags: [], wild_source: Some("wild_rye"),
+            seed_item: "rye_seed", seeds_per_tile: 2, yields: [(item: "rye", count: 10), (item: "rye_seed", count: 2)],
+            frost_sensitive: false, sow_windows: [(season: 0, start_day: 0, end_day_exclusive: 3)], growth_days: 4,
+            till_ticks: 60, sow_ticks: 30, tend_ticks: 30, harvest_ticks: 60,
+            untended_yield_permille: 750, initial_fertility: 1000, min_fertility: 400,
+            fertility_cost: 200, fallow_recovery_per_day: 10, knowledge: Some("rye"),
+        ),
+        // C1 seed-saving is physical: wild harvest -> seed extraction recipe -> sowing.
+        // Starting crop values mirror emmer; fertility and yield remain M-BAL debt.
+        (
+            identity: (code: 4, id: "lentil", name_key: "CROP_LENTIL", serde_name: "Lentil", serde_aliases: [], resolver_aliases: []),
+            category: "grain", tags: [], wild_source: Some("wild_lentil"),
+            seed_item: "lentil_seed", seeds_per_tile: 2, yields: [(item: "lentil", count: 10), (item: "lentil_seed", count: 2)],
+            frost_sensitive: true, sow_windows: [(season: 0, start_day: 0, end_day_exclusive: 3)], growth_days: 4,
+            till_ticks: 60, sow_ticks: 30, tend_ticks: 30, harvest_ticks: 60,
+            untended_yield_permille: 750, initial_fertility: 1000, min_fertility: 400,
+            fertility_cost: 200, fallow_recovery_per_day: 10, knowledge: Some("lentil"),
+        ),
+        // C1 seed-saving is physical: wild harvest -> seed extraction recipe -> sowing.
+        // Starting crop values mirror emmer; fertility and yield remain M-BAL debt.
+        (
+            identity: (code: 5, id: "pea", name_key: "CROP_PEA", serde_name: "Pea", serde_aliases: [], resolver_aliases: []),
+            category: "grain", tags: [], wild_source: Some("wild_pea"),
+            seed_item: "pea_seed", seeds_per_tile: 2, yields: [(item: "pea", count: 10), (item: "pea_seed", count: 2)],
+            frost_sensitive: true, sow_windows: [(season: 0, start_day: 0, end_day_exclusive: 3)], growth_days: 4,
+            till_ticks: 60, sow_ticks: 30, tend_ticks: 30, harvest_ticks: 60,
+            untended_yield_permille: 750, initial_fertility: 1000, min_fertility: 400,
+            fertility_cost: 200, fallow_recovery_per_day: 10, knowledge: Some("pea"),
+        ),
+        // C1 seed-saving is physical: wild harvest -> seed extraction recipe -> sowing.
+        // Starting crop values mirror emmer; fertility and yield remain M-BAL debt.
+        (
+            identity: (code: 6, id: "millet", name_key: "CROP_MILLET", serde_name: "Millet", serde_aliases: [], resolver_aliases: []),
+            category: "grain", tags: [], wild_source: Some("wild_millet"),
+            seed_item: "millet_seed", seeds_per_tile: 2, yields: [(item: "millet", count: 10), (item: "millet_seed", count: 2)],
+            frost_sensitive: true, sow_windows: [(season: 0, start_day: 0, end_day_exclusive: 3)], growth_days: 4,
+            till_ticks: 60, sow_ticks: 30, tend_ticks: 30, harvest_ticks: 60,
+            untended_yield_permille: 750, initial_fertility: 1000, min_fertility: 400,
+            fertility_cost: 200, fallow_recovery_per_day: 10, knowledge: Some("millet"),
         ),
     ],
 )

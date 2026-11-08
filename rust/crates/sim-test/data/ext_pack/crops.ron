@@ -1,0 +1,11 @@
+// Reuses physical lentil seeds, adding only crop and source identities.
+(schema_version: 1, crops: [(
+    identity: (code: 65551, id: "test_pulse", name_key: "EXT_CROP_PULSE", serde_name: "TestPulse", serde_aliases: [], resolver_aliases: []),
+    category: "grain", tags: [], wild_source: Some("test_wild_pulse"),
+    seed_item: "lentil_seed", seeds_per_tile: 2,
+    yields: [(item: "lentil", count: 10), (item: "lentil_seed", count: 2)],
+    frost_sensitive: true, sow_windows: [(season: 0, start_day: 0, end_day_exclusive: 3)], growth_days: 4,
+    till_ticks: 60, sow_ticks: 30, tend_ticks: 30, harvest_ticks: 60,
+    untended_yield_permille: 750, initial_fertility: 1000, min_fertility: 400,
+    fertility_cost: 200, fallow_recovery_per_day: 10, knowledge: Some("lentil"),
+)])

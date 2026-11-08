@@ -257,9 +257,7 @@ impl M55Watch {
             .collect();
         json!({
             "neighbours": {
-                "list": nb.list.iter().map(|n| json!({"id": n.id, "edge": n.edge.name(), "distance_days": n.distance_days,
-                    "population": n.population, "attitude": n.attitude, "known": n.known,
-                    "last_contact_day": n.last_contact_day})).collect::<Vec<_>>(),
+                "list": nb.list.iter().map(neighbour_json).collect::<Vec<_>>(),
                 "waves": waves, "caravans": caravans,
                 "tallies": serde_json::to_value(nb.tallies).unwrap_or(Value::Null),
                 "eurekas": eurekas, "discoveries": discoveries,
@@ -277,5 +275,42 @@ impl M55Watch {
             "population": {"start": self.start_people, "end": people, "most": self.most_people,
                 "fewest_after_day1": self.fewest_people},
         })
+    }
+}
+
+fn neighbour_json(n: &sim_core::colony::neighbours::Neighbour) -> Value {
+    let mut row = json!({"id": n.id, "edge": n.edge.name(), "distance_days": n.distance_days,
+        "population": n.population, "attitude": n.attitude, "known": n.known as u64,
+        "last_contact_day": n.last_contact_day});
+    let high = (n.known >> 64) as u64;
+    if high != 0 {
+        row["known_high"] = json!(high);
+    }
+    row
+}
+
+#[cfg(test)]
+mod c1_json_tests {
+    use super::*;
+    #[test]
+    fn c1_probe_neighbour_mask_json_preserves_both_words() {
+        use sim_core::colony::neighbours::{Edge, Neighbour};
+        let mut neighbour = Neighbour {
+            id: 0,
+            name_key: 0,
+            edge: Edge::from_code(0),
+            distance_days: 1,
+            population: 1,
+            attitude: 50,
+            known: u128::from(u64::MAX),
+            last_contact_day: None,
+        };
+        let low = neighbour_json(&neighbour);
+        assert_eq!(low["known"].as_u64(), Some(u64::MAX));
+        assert!(low.get("known_high").is_none());
+        neighbour.known |= (1_u128 << 64) | (1_u128 << 127);
+        let high = neighbour_json(&neighbour);
+        assert_eq!(high["known"].as_u64(), Some(u64::MAX));
+        assert_eq!(high["known_high"].as_u64(), Some((1_u64 << 63) | 1));
     }
 }

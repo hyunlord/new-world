@@ -1,0 +1,34 @@
+[
+  {
+    "file": "/Users/rexxa/work/c1-data/ui-a4/tech_ko_neolithic_lane0_node52.png",
+    "caption": "신석기 음식 지식 · 한국어"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/ui-a4/tech_en_neolithic_lane1_node47.png",
+    "caption": "가축 지식과 준비 중 카드 · 영어"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/ui-a4/c1_build_granary_ko.png",
+    "caption": "곡식 창고 · 실제 재료 조건"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/ui-a4/c1_build_pen_en.png",
+    "caption": "우리 · C1-a는 건설 템플릿"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/ui-a4/c1_build_smokehouse_ko.png",
+    "caption": "훈제집 · 물리 작업 자리"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/ui-a4/c1_build_oven_house_en.png",
+    "caption": "화덕집 · 건설 패널"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/ui-a4/c1_recipe_bake_bread_ko.png",
+    "caption": "실제 화덕의 빵 조리법"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/ui-a4/c1_recipe_ferment_milk_en.png",
+    "caption": "토기대의 맥주와 치즈 조리법"
+  }
+]

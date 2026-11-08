@@ -447,6 +447,10 @@ fn jobs_children_never_work() {
 #[test]
 fn hut_sleeps_four() {
     let mut engine = sim_test::colony_engine(2);
+    // Isolate construction and sleeping from resident-predator flight; needs and jobs stay live.
+    if let Some(colony) = engine.resources.rules.colony.as_mut() {
+        colony.wildlife = None;
+    }
     let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
     let spot = (3..24)
         .flat_map(|dy| (0..10).map(move |dx| (hearth.0 + dx, hearth.1 + dy)))

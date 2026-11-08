@@ -90,7 +90,7 @@ pub fn neolithic() -> Vec<u8> {
 }
 
 /// The bits of every Paleolithic node.
-pub fn paleolithic_mask() -> u64 {
+pub fn paleolithic_mask() -> u128 {
     defs()
         .nodes
         .iter()

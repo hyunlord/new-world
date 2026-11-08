@@ -12,7 +12,7 @@ fn family() -> (Catalog, TemplateCatalog) {
 }
 
 #[test]
-fn spine_templates_resolve_six_connected_and_keep_sixteen_future_buildings_visible() {
+fn c1_templates_resolve_ten_connected_and_keep_thirteen_future_buildings_visible() {
     // Given the bundled template family, including future missing blueprint identities.
     let (_, templates) = family();
     // When its explicit connection states are counted.
@@ -26,8 +26,8 @@ fn spine_templates_resolve_six_connected_and_keep_sixteen_future_buildings_visib
         .iter()
         .filter(|t| t.status == ContentStatus::Inert)
         .count();
-    // Then only six are actionable; all sixteen grey templates retain their explanation.
-    assert_eq!((connected, inert), (6, 16));
+    // C1 connects three reserved plans and appends the oven house; remaining grey plans retain debt.
+    assert_eq!((connected, inert), (10, 13));
     assert!(templates
         .buildings
         .iter()
@@ -448,4 +448,85 @@ fn spine_invalid_zone_rows_and_connected_zone_references_are_rejected() {
     assert!(TemplateCatalog::parse(DATA, Some(duplicate), &catalog)
         .expect_err("duplicate across sources")
         .contains("duplicate identity"));
+}
+
+#[test]
+fn c1_templates_keep_physical_costs_station_access_and_open_pen_capacity() {
+    let (catalog, templates) = family();
+    for id in ["granary", "pen", "smokehouse", "oven_house"] {
+        let template = templates.get(id).expect("C1 template");
+        assert_eq!(template.status, ContentStatus::Connected, "{id}");
+        for rotation in 0..4 {
+            let plan = template
+                .expand(&catalog, None, rotation)
+                .expect("physical plan");
+            assert_eq!(
+                material_cost(&plan, &catalog).expect("cost"),
+                template.materials
+            );
+        }
+    }
+    let pen = templates.get("pen").expect("pen");
+    assert_eq!(pen.function.livestock_capacity, 6);
+    assert_eq!(pen.function.warmth, ShelterKind::Open);
+    let plan = pen.expand(&catalog, None, 0).expect("pen plan");
+    let fence = catalog.blueprint_by_name("fence").expect("fence");
+    assert_eq!(plan.iter().filter(|piece| piece.kind == fence).count(), 15);
+    let fence = catalog.blueprint(fence).expect("fence definition");
+    assert_eq!(fence.footprint, (1, 1));
+    assert_eq!(fence.planned_nav, crate::colony::content::PlannedNav::Door);
+    assert!(fence.blocks_livestock);
+    assert!(!fence.supports_roof);
+    for (template, station, tag) in [
+        ("smokehouse", "smoking_rack", "smoking"),
+        ("oven_house", "clay_oven", "baking"),
+    ] {
+        let template = templates.get(template).expect("station house");
+        let plan = template.expand(&catalog, None, 0).expect("station plan");
+        let last = plan.last().expect("station");
+        assert_eq!(
+            last.kind,
+            catalog.blueprint_by_name(station).expect("station id")
+        );
+        assert_eq!(
+            catalog
+                .blueprint(last.kind)
+                .expect("station definition")
+                .workshop_tags,
+            [tag]
+        );
+        assert!(last.offset.1 + last.size.1 + 1 < template.footprint.1);
+    }
+}
+
+#[test]
+fn c1_granary_storage_lifetime_is_authored_and_does_not_protect_other_groups() {
+    use crate::colony::content::FoodStorageClass;
+    let (catalog, _) = family();
+    let grain = catalog
+        .item(catalog.item_by_name("wild_grain").expect("grain"))
+        .expect("grain item")
+        .food
+        .as_ref()
+        .expect("food");
+    assert_eq!(
+        grain.lifetime_days(FoodStorageClass::Granary),
+        2 * grain.lifetime_days(FoodStorageClass::RoofedStore)
+    );
+    let mut non_grain = grain.clone();
+    non_grain.groups = vec!["fruit".to_owned()];
+    assert_eq!(
+        non_grain.lifetime_days(FoodStorageClass::Granary),
+        non_grain.lifetime_days(FoodStorageClass::RoofedStore)
+    );
+    let mut historical = grain.clone();
+    historical
+        .storage_spoil_days
+        .as_mut()
+        .expect("storage")
+        .granary = None;
+    assert_eq!(
+        historical.lifetime_days(FoodStorageClass::Granary),
+        historical.lifetime_days(FoodStorageClass::RoofedStore)
+    );
 }

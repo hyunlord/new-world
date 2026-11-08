@@ -134,11 +134,16 @@ mod tests {
         assert_eq!(pot.clue_nodes, ["clay_prep", "pot_forming", "pot_firing"]);
         let log = item_data(ItemKind::Log).expect("log");
         assert!(log.made_by.is_none() && log.clue_nodes.is_empty());
-        // What a kill leaves is tagged "carcass": meat, hide and a wolf's hide, nothing else.
+        // Historical carcass identities remain ordered; C1 appends goat hide.
         let carcass: Vec<ItemKind> = ItemKind::all().filter(|k| has_tag(*k, "carcass")).collect();
         assert_eq!(
             carcass,
-            [ItemKind::Hide, ItemKind::Meat, ItemKind::WolfHide]
+            [
+                ItemKind::Hide,
+                ItemKind::Meat,
+                ItemKind::WolfHide,
+                ItemKind::from_name("goat_hide").expect("C1 goat hide")
+            ]
         );
     }
 }

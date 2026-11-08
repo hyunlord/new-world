@@ -31,6 +31,8 @@ pub struct CropDef {
     pub category: String,
     /// Data-authored capability tags.
     pub tags: Vec<String>,
+    /// Wild plant from which physical seed stock can originate.
+    pub wild_source: Option<super::super::ids::PlantKind>,
     /// Physical input item consumed by sowing.
     pub seed_item: ItemKind,
     /// Physical input pieces required per sowing.

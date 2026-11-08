@@ -54,7 +54,7 @@ fn spine_high_node_identity_does_not_alias_a_seeded_entry() {
     // Then masks and personal-entry lookup keep the nodes independent.
     assert_eq!(bit(3) & bit(35), 0);
     assert_eq!(ids_of(bit(3) | bit(35)).collect::<Vec<_>>(), [3, 35]);
-    assert_eq!(bit(64), 0, "foreign ids never wrap onto a live node");
+    assert_eq!(bit(128), 0, "foreign ids never wrap onto a live node");
 }
 
 #[test]
@@ -77,4 +77,20 @@ fn spine_eras_from_data() {
     // Then legacy names resolve through data to the canonical lanes.
     assert_eq!(eras.lane_order("craft"), eras.lane_order("tools"));
     assert_eq!(eras.lane_order("mine"), eras.lane_order("tools"));
+}
+
+#[test]
+fn c1_high_node_cache_and_entry_ids_survive_every_word_boundary() {
+    let ids = [0, 31, 32, 63, 64, 95, 96, 127];
+    let entries = ids
+        .iter()
+        .map(|&id| KnowledgeEntry::new(id, Source::Migrant, 1000, 17))
+        .collect();
+    let knowledge = Knowledge::from_entries(entries);
+    assert_eq!(ids_of(knowledge.practice()).collect::<Vec<_>>(), ids);
+    for id in ids {
+        assert_eq!(knowledge.get(id).expect("independent entry").id(), id);
+        assert!(knowledge.practises(id));
+    }
+    assert_eq!(bit(128), 0);
 }

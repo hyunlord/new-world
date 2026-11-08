@@ -1,5 +1,7 @@
 # 로드맵 (V8)
 
+> **C1 #14 — 구현 진행 중 (2026-11-08):** BASE `d30dbfc5b`에서 `v8/c1`로 시작했다. 원산지·신석기 콘텐츠 C1-a를 먼저 검증·게시하고, 가축 사슬 C1-b를 이어서 게시한다. 아직 두 게시 모두 미완료다. [현재 보고](v8/c1/C1_REPORT.md), [결정](v8/c1/C1_DECISIONS.md). 아래 M-SPINE의 게시 전 상태는 역사적 기록이며, 실제 b 게시 완료는 외부 `spine-data/M-SPINE-b-final-report.md`와 원격 BASE로 확인했다.
+
 > **M-SPINE #13 — a 게시 완료 / b 진행 중 (2026-11-08):** a는 `c467c0a36466ec86419ae66bfb702e37c2566b30`, 01:01:16KST에 v8/wip→v8/main fast-forward 게시. 시대·열 레인·지식 스키마·회색 콘텐츠·format18, 전체49/49 PASS(기존 step41 면제), 원본 RELEASE3118/DEBUG3119를 [a 보고서](v8/spine/M_SPINE_A_REPORT.md)에 기록했다. b 건물 템플릿·원인이 남는 물리 건설·주거/집사·패널·자리표시 아트는 구현 통합 IN_PROGRESS, 검증 NOT_RUN·미게시다. 사슬 캡처·데이터 전용 확장·저장/동일성·크래시·전체 게이트 후 두 번째 게시가 필요하며 #13 전체 완료가 아니다. 콘텐츠 기준은 [바이블](v8/CONTENT_BIBLE.md)과 [로드맵 v3](v8/DEPTH_ROADMAP.md).
 
 > **2026-11-06 Stage1 게시 완료:** `16dc9120d`를 `v8/wip` → `v8/main`에 fast-forward하고 양쪽 원격 SHA를 확인했다. 전체 gate49/49·exit0(step41 엄격50ms FAIL, 기존 예외 PASS). 농경과 생산 제한·가르침을 제공하며 통나무·한파 잔여는 #688에 양쪽 수치를 보존한다. Stage2 직조는20:59:12KST 시작, 11/07 20:59:12까지 게시 또는 안전성 미달 중단한다. [보고서](v8/m6b/M6B_REPORT.md).

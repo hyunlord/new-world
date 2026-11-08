@@ -1,0 +1,46 @@
+// M6a frozen candidate v2; placement and yields derived before calibration.
+(
+    schema_version: 1,
+    plants: [
+        (
+            identity: (code: 0, id: "berry_bush", name_key: "PLANT_BERRY_BUSH", serde_name: "BerryBush", serde_aliases: [], resolver_aliases: []),
+            category: "bush", tags: ["bush"],
+            placement: (terrains: [plain, forest], elevation: (0, 255), weight: 3, density_permille: 200),
+            phases: [Growing, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
+            yield: (item: "berries", units: 4, regrow_days: 2),
+            harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+        ),
+        (
+            identity: (code: 1, id: "hazel", name_key: "PLANT_HAZEL", serde_name: "Hazel", serde_aliases: [], resolver_aliases: []),
+            category: "shrub", tags: ["shrub"],
+            placement: (terrains: [plain, forest], elevation: (0, 255), weight: 2, density_permille: 200),
+            phases: [Growing, Growing, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
+            yield: (item: "hazelnuts", units: 8, regrow_days: 0),
+            harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+        ),
+        (
+            identity: (code: 2, id: "wild_flax", name_key: "PLANT_WILD_FLAX", serde_name: "WildFlax", serde_aliases: [], resolver_aliases: []),
+            category: "herb", tags: ["herb"],
+            placement: (terrains: [plain, forest], elevation: (0, 255), weight: 1, density_permille: 200),
+            phases: [Growing, Ripe, Spent, Dormant], ripe_start_day: 0, ripe_end_day: None,
+            yield: (item: "flax_stalks", units: 4, regrow_days: 0),
+            harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+        ),
+        (
+            identity: (code: 3, id: "wild_grain", name_key: "PLANT_WILD_GRAIN", serde_name: "WildGrain", serde_aliases: [], resolver_aliases: []),
+            category: "grass", tags: ["grass"],
+            placement: (terrains: [plain, forest], elevation: (0, 255), weight: 3, density_permille: 200),
+            phases: [Growing, Ripe, Spent, Dormant], ripe_start_day: 3, ripe_end_day: None,
+            yield: (item: "wild_grain", units: 6, regrow_days: 0),
+            harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+        ),
+        (
+            identity: (code: 4, id: "wild_root", name_key: "PLANT_WILD_ROOT", serde_name: "WildRoot", serde_aliases: [], resolver_aliases: []),
+            category: "root", tags: ["root"],
+            placement: (terrains: [plain, forest], elevation: (0, 255), weight: 4, density_permille: 200),
+            phases: [Ripe, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
+            yield: (item: "roots", units: 5, regrow_days: 2),
+            harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+        ),
+    ],
+)

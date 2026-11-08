@@ -669,6 +669,7 @@ func _sync_template_sites(rows: Array) -> void:
 		if not value is Dictionary: continue
 		var row: Dictionary = value
 		if not bool(row.get("connected", false)): continue
+		if not bool(row.get("roofed", true)): continue
 		if not row.has("id"): continue
 		var status: String = str(row.get("status", ""))
 		if status == "cancelled": continue

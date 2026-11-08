@@ -45,7 +45,11 @@ pub(super) fn animal(c: &Catalog, raw: AnimalDef<String>) -> Result<AnimalDef, C
         .transpose()?;
     Ok(AnimalDef {
         identity: raw.identity,
+        status: raw.status,
+        debt: raw.debt,
         category: raw.category,
+        origin: raw.origin,
+        population: raw.population,
         mechanic: raw.mechanic,
         huntable: raw.huntable,
         hp: raw.hp,

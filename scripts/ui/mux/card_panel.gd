@@ -76,7 +76,7 @@ func _load_registry() -> void:
 	_clear_polls_needed = int(_registry.get("clear_polls", DEFAULT_CLEAR_POLLS))
 	_card_defs.clear()
 	for card: Variant in _registry.get("cards", []):
-		if card is Dictionary and not bool(card.get("test_only", false)):
+		if card is Dictionary and bool(card.get("enabled", true)) and not bool(card.get("test_only", false)):
 			_card_defs.append(card)
 	_card_defs.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return int(a.get("priority", 99)) < int(b.get("priority", 99)))

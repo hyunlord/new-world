@@ -32,5 +32,9 @@
 	"BUILDING_CHIEF_HALL": "Chief hall",
 	"BUILDING_TRADING_POST": "Trading post",
 	"BUILDING_MARKET": "Market",
-	"BUILDING_WAREHOUSE": "Warehouse"
+	"BUILDING_WAREHOUSE": "Warehouse",
+	"BUILDING_FENCE": "Fence",
+	"BUILDING_CLAY_OVEN": "Clay oven",
+	"BUILDING_SMOKING_RACK": "Smoking rack",
+	"BUILDING_OVEN_HOUSE": "Oven house"
 }

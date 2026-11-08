@@ -69,7 +69,7 @@ impl RuntimeSystem for KnowledgeDecaySystem {
                 k.touch(id, tick);
             }
             let held = k.practice();
-            let seeded: u64 = k
+            let seeded: u128 = k
                 .entries()
                 .iter()
                 .filter(|e| e.source() == Source::Seeded)

@@ -2,11 +2,16 @@
 # four-era, grey-content and prerequisite-chain UI coverage. No simulation writes.
 # Bridge methods: get_tech/get_tech_node/get_time_snapshot; simulation runs at normal 1x speed.
 # Run with external WORLDSIM_TEST_SETTINGS_DIR and -- --out /absolute/evidence/dir.
+# Optional --c1-save loads an external real crafting save for template/station captures.
+# Additional bridge methods: load_world, get_workshops via SimReads.
 extends SceneTree
 
 const Text = preload("res://scripts/ui/knowledge_text.gd")
+const Content = preload("res://scripts/ui/content_context.gd")
+const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 var _failures: int = 0
 var _out: String = ""
+var _c1_save: String = ""
 var _window_size: Vector2i = Vector2i.ZERO
 var _main: Node
 var _panel: Control
@@ -19,6 +24,8 @@ func _init() -> void:
 	for i: int in args.size() - 1:
 		if args[i] == "--out":
 			_out = args[i + 1]
+		if args[i] == "--c1-save":
+			_c1_save = args[i + 1]
 		if args[i] == "--window-size":
 			var dimensions: PackedStringArray = args[i + 1].split("x")
 			if dimensions.size() == 2:
@@ -65,6 +72,52 @@ func _click(button: Button) -> void:
 	await _frames()
 
 
+## Nested lane/cell scrolling means an overview cannot prove every authored card is visible.
+func _card_fully_visible(card: Control) -> bool:
+	if card == null or not card.is_visible_in_tree(): return false
+	var bounds: Rect2 = card.get_global_rect()
+	if not root.get_visible_rect().encloses(bounds): return false
+	var ancestor: Node = card.get_parent()
+	while ancestor != null:
+		if ancestor is Control and ancestor.clip_contents:
+			if not ancestor.get_global_rect().encloses(bounds): return false
+		ancestor = ancestor.get_parent()
+	return true
+
+
+func _capture_neolithic(language: String, rows: Array[Dictionary], lanes: Array[Dictionary], eras: Array[Dictionary]) -> void:
+	var era_order: int = -1
+	for era: Dictionary in eras:
+		if str(era.get("id", "")) == "neolithic": era_order = int(era["order"])
+	_check("neolithic_era_" + language, era_order >= 0)
+	if era_order < 0: return
+	var covered: Array[int] = []
+	var expected: int = 0
+	for row: Dictionary in rows:
+		if int(row["era"]) == era_order: expected += 1
+	_main.get_node("Camera2D").call("set_paused", true)
+	for lane: Dictionary in lanes:
+		for row: Dictionary in rows:
+			var id: int = int(row["id"])
+			if int(row["era"]) != era_order or int(row["lane"]) != int(lane["order"]) or covered.has(id): continue
+			var card: Control = _panel.call("card", id) as Control
+			if card != null:
+				var ancestor: Node = card.get_parent()
+				while ancestor != null:
+					if ancestor is ScrollContainer:
+						ancestor.ensure_control_visible(card)
+						await _frames(2)
+					ancestor = ancestor.get_parent()
+			_check("neolithic_visible_%s_%d" % [language, id], _card_fully_visible(card))
+			await _capture("tech_%s_neolithic_lane%d_node%d" % [language, int(lane["order"]), id])
+			for visible_row: Dictionary in rows:
+				var visible_id: int = int(visible_row["id"])
+				if int(visible_row["era"]) == era_order and not covered.has(visible_id) and _card_fully_visible(_panel.call("card", visible_id) as Control):
+					covered.append(visible_id)
+	_check("neolithic_all_%d_cards_captured_%s" % [expected, language], covered.size() == expected)
+	_main.get_node("Camera2D").call("set_paused", false)
+
+
 func _observe_frames(language: String, context: String) -> void:
 	await process_frame
 	var world: Node = _main.get_node("WorldSim")
@@ -103,6 +156,12 @@ func _capture(name: String) -> void:
 
 
 func _run() -> void:
+	var boundary_mask: int = 1 << 63
+	_check("rumour_nodes_128bit_boundary", NeighbourText.rumoured_nodes(boundary_mask, boundary_mask | 1) == [63, 64, 127])
+	var neighbour_read: Dictionary = {"ids": PackedInt32Array([1]), "rumoured": PackedInt64Array([boundary_mask]), "rumoured_high": PackedInt64Array([boundary_mask | 1])}
+	for node_id: int in [63, 64, 127]:
+		_check("rumour_holder_boundary_%d" % node_id, NeighbourText.rumour_holders(neighbour_read, node_id) == [1])
+	_check("rumour_holder_outside_width", NeighbourText.rumour_holders(neighbour_read, 128).is_empty())
 	_check("real_window_required", DisplayServer.get_name() != "headless")
 	if DisplayServer.get_name() == "headless":
 		_finish()
@@ -143,7 +202,7 @@ func _run() -> void:
 	var rows: Array[Dictionary] = Text.nodes(tech)
 	_check("four_eras", eras.size() == 4)
 	_check("ten_lanes", lanes.size() == 10)
-	_check("authored_nodes", rows.size() == 43)
+	_check("authored_nodes", rows.size() == 82)
 	var inert: int = -1
 	for row: Dictionary in rows:
 		if not bool(row.get("connected", true)):
@@ -175,6 +234,7 @@ func _run() -> void:
 		await _frames()
 		await _observe_frames(language, "tech_open")
 		await _capture("tech_" + language)
+		await _capture_neolithic(language, rows, lanes, eras)
 		var button: Button = _panel.call("card", inert)
 		_check("inert_hatch_" + language, button != null and bool(button.get_meta("inert", false)) and button.get_node_or_null("Hatch") != null)
 		if button != null:
@@ -209,7 +269,60 @@ func _run() -> void:
 		await _key(KEY_T)
 		_check("close_" + language, not _panel.visible)
 		await _observe_frames(language, "tech_closed")
+	if not _c1_save.is_empty():
+		await _capture_c1(world)
 	_finish()
+
+
+## C1's actual save supplies constructed stations; no renderer-only objects or simulated production.
+func _capture_c1(world: Node) -> void:
+	_check("c1_external_save", _c1_save.is_absolute_path() and not _c1_save.begins_with(ProjectSettings.globalize_path("res://")))
+	if not _c1_save.is_absolute_path(): return
+	var loaded: bool = bool(SimReads.mutate(world, "load_world", [_c1_save]))
+	_check("c1_real_save_loaded", loaded)
+	if not loaded: return
+	_main.get_node("Camera2D").call("set_paused", true)
+	await _frames()
+	var build: Control = _main.get_node("UI/BuildPanel") as Control
+	var workshop: Control = _main.get_node("UI/WorkshopPanel") as Control
+	var shops: Dictionary = SimReads.read(world, "get_workshops")
+	var ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
+	var kinds: PackedInt64Array = shops.get("kinds", PackedInt64Array())
+	for language: String in ["ko", "en"]:
+		_locale.call("set_language", language)
+		build.call("open")
+		await _frames()
+		for building_id: String in ["granary", "pen", "smokehouse", "oven_house"]:
+			var card: Button = build.find_child("Template_" + building_id, true, false) as Button
+			_check("c1_build_card_" + building_id + "_" + language, card != null)
+			if card == null: continue
+			await _click(card)
+			_check("c1_build_selected_" + building_id + "_" + language, str(build.get("_selected")) == building_id)
+			await _capture("c1_build_" + building_id + "_" + language)
+		build.hide()
+		for recipe_id: String in ["bake_bread", "brew_beer", "ferment_milk"]:
+			var recipe: Dictionary = Content.row("recipes", Content.code("recipes", recipe_id))
+			var compatible: PackedInt64Array = recipe.get("compatible_workshops", PackedInt64Array())
+			var selected: int = -1
+			for i: int in mini(ids.size(), kinds.size()):
+				if compatible.has(kinds[i]):
+					selected = ids[i]
+					break
+			_check("c1_physical_station_" + recipe_id + "_" + language, selected >= 0)
+			if selected < 0: continue
+			workshop.call("display_workshop", selected)
+			await _frames()
+			var food_why: Button = workshop.get("_food_why") as Button
+			_check("c1_food_why_locale_" + recipe_id + "_" + language, food_why != null and food_why.text == str(_locale.call("ltr", "M6A_FOOD_WHY")))
+			await _click(workshop.get("_add") as Button)
+			var choices: VBoxContainer = workshop.get("_recipes") as VBoxContainer
+			var button: Button = choices.get_node_or_null("Recipe_" + recipe_id) as Button
+			var label: String = str(_locale.call("ltr", str(recipe.get("name_key", ""))))
+			_check("c1_visible_recipe_" + recipe_id + "_" + language, button != null and button.is_visible_in_tree() and button.text.contains(label))
+			if button != null:
+				_check("c1_recipe_in_viewport_" + recipe_id + "_" + language, root.get_visible_rect().encloses(button.get_global_rect()))
+			await _capture("c1_recipe_" + recipe_id + "_" + language)
+			workshop.call("close")
 
 
 func _finish() -> void:

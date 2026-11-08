@@ -21,7 +21,7 @@ fn content_debt_matches_data() {
 }
 
 #[test]
-fn content_debt_covers_each_inert_template_once_in_authored_order() {
+fn content_debt_covers_each_authored_template_debt_once_in_order() {
     use sim_core::colony::knowledge::ContentStatus;
     let catalog = Catalog::from_sources(RawSources::bundled(), None).expect("valid bundled data");
     let generated = sim_core::colony::content_debt::render(&catalog);
@@ -29,22 +29,28 @@ fn content_debt_covers_each_inert_template_once_in_authored_order() {
         .lines()
         .filter(|line| line.contains(" | template | "))
         .collect();
-    let inert: Vec<_> = catalog
+    let indebted: Vec<_> = catalog
         .building_templates()
         .buildings
         .iter()
-        .filter(|template| template.status == ContentStatus::Inert)
+        .filter(|template| {
+            template.status == ContentStatus::Inert
+                || template
+                    .debt
+                    .as_deref()
+                    .is_some_and(|debt| !debt.trim().is_empty())
+        })
         .collect();
     assert!(
-        !inert.is_empty(),
+        !indebted.is_empty(),
         "bundled future templates are intentionally authored"
     );
     assert_eq!(
         template_rows.len(),
-        inert.len(),
+        indebted.len(),
         "no missing or duplicate template row"
     );
-    for (line, template) in template_rows.iter().zip(inert) {
+    for (line, template) in template_rows.iter().zip(indebted) {
         let prefix = format!(
             "| {} | template | {} | building | ",
             template.id, template.era
@@ -53,7 +59,15 @@ fn content_debt_covers_each_inert_template_once_in_authored_order() {
             line.starts_with(&prefix),
             "authored template order/era/lane: {line}"
         );
-        let debt = template.debt.as_deref().expect("validated inert debt");
+        let status = match template.status {
+            ContentStatus::Connected => "Connected",
+            ContentStatus::Inert => "Inert",
+        };
+        assert!(
+            line.contains(&format!(" | {status} | ")),
+            "template status: {line}"
+        );
+        let debt = template.debt.as_deref().expect("authored template debt");
         let escaped = debt.replace('|', "\\|").replace(['\n', '\r'], " ");
         assert!(
             line.contains(&escaped),
@@ -67,10 +81,10 @@ fn content_debt_covers_each_inert_template_once_in_authored_order() {
         );
     }
     for template in &catalog.building_templates().buildings {
-        if template.status == ContentStatus::Connected {
+        if template.status == ContentStatus::Connected && template.debt.is_none() {
             assert!(
                 !generated.contains(&format!("| {} | template | ", template.id)),
-                "connected template is not debt: {}",
+                "debt-free connected template has no debt row: {}",
                 template.id,
             );
         }

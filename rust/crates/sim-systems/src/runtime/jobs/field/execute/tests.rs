@@ -133,15 +133,17 @@ fn automatic_fallow_tilling_waits_for_window_but_now_is_explicit() {
     r.current_tick = r.ticks_per_day * 6;
     let region = r.nav.region_of((2, 2));
     assert!(
-        crate::runtime::jobs::field::pick(&r, 7, u64::MAX, region, (2, 2), 10, false).is_none()
+        crate::runtime::jobs::field::pick(&r, 7, u128::MAX, region, (2, 2), 10, false).is_none()
     );
     r.cultivation.fields.get_mut(&(2, 2)).unwrap().work = FieldWork::Now;
     assert!(matches!(
-        crate::runtime::jobs::field::pick(&r, 7, u64::MAX, region, (2, 2), 10, true),
+        crate::runtime::jobs::field::pick(&r, 7, u128::MAX, region, (2, 2), 10, true),
         Some((JobKind::TillField { .. }, _, _))
     ));
     r.cultivation.fields.get_mut(&(2, 2)).unwrap().phase = FieldPhase::Tilled;
-    assert!(crate::runtime::jobs::field::pick(&r, 7, u64::MAX, region, (2, 2), 10, true).is_none());
+    assert!(
+        crate::runtime::jobs::field::pick(&r, 7, u128::MAX, region, (2, 2), 10, true).is_none()
+    );
 }
 
 #[test]
@@ -180,7 +182,7 @@ fn seed_fact_counts_reserved_home_seed_but_not_other_settlement_seed() {
     );
     let region = r.nav.region_of((2, 2));
     assert!(
-        crate::runtime::jobs::field::pick(&r, 7, u64::MAX, region, (2, 2), 10, false).is_none()
+        crate::runtime::jobs::field::pick(&r, 7, u128::MAX, region, (2, 2), 10, false).is_none()
     );
 }
 

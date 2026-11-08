@@ -89,7 +89,21 @@ fn placement_matches_frozen_reachable_radius16_census() {
         [30, 12, 24, 31, 12],
         [51, 13, 30, 34, 8],
     ];
-    let catalog = installed_or_bundled();
+    // Freeze the original five-species input, not post-C1 outcomes. Omitted origin
+    // must reproduce the historical census while new content changes real worlds.
+    let mut sources = sim_core::colony::content::RawSources::bundled();
+    for source in &mut sources.sources {
+        let frozen = match source.name.as_str() {
+            "plants.ron" => Some(include_str!("../data/m6a_origin_baseline/plants.ron")),
+            "crops.ron" => Some(include_str!("../data/m6a_origin_baseline/crops.ron")),
+            _ => None,
+        };
+        if let Some(frozen) = frozen {
+            source.bytes = frozen.as_bytes().to_vec();
+        }
+    }
+    let catalog =
+        sim_core::colony::content::Catalog::from_sources(sources, None).expect("frozen plants");
     let species = [
         "berry_bush",
         "hazel",
@@ -99,7 +113,10 @@ fn placement_matches_frozen_reachable_radius16_census() {
     ]
     .map(|name| catalog.plant_by_name(name).expect("species"));
     for (seed, counts) in expected.into_iter().enumerate() {
-        let engine = sim_test::colony_engine(seed as u64);
+        let mut engine = sim_test::colony_engine(seed as u64);
+        engine.resources.food.plants.clear();
+        sim_systems::worldgen::plants::populate_with_catalog(&mut engine.resources, &catalog)
+            .expect("historical five-species population");
         let res = &engine.resources;
         let camp = sim_systems::worldgen::colony::hearth(res).expect("hearth");
         let region = res.nav.region_of(camp);
@@ -140,13 +157,13 @@ fn harvest_respects_reservation_and_creates_each_yield_exactly_once() {
     res.colony.touch(false);
     let mut index = HarvestIndex::default();
     let query = HarvestQuery {
-        practice: u64::MAX,
+        practice: u128::MAX,
         region,
         pos: tile,
         radius: 0,
     };
     let job = harvest::pick(res, &mut index, query).expect("ripe marked plant");
-    assert_eq!(harvest::work_ticks(res, tile, u64::MAX), 40);
+    assert_eq!(harvest::work_ticks(res, tile, u128::MAX), 40);
     assert_eq!(harvest::work_ticks(res, tile, 0), 60);
     res.colony.reservations.insert(ReserveKey::Plant(tile), 999);
     assert!(harvest::pick(res, &mut index, query).is_none());

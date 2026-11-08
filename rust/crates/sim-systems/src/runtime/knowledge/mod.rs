@@ -103,13 +103,13 @@ pub fn store(world: &mut World, entity: Entity, knowledge: Knowledge) {
 }
 
 /// The practitioner bitset of `entity` (0 without the component).
-pub fn practice_of(world: &World, entity: Entity) -> u64 {
+pub fn practice_of(world: &World, entity: Entity) -> u128 {
     world.get::<&Knowledge>(entity).map_or(0, |k| k.practice())
 }
 
 /// A completed gated job (goal 3.2): every node of `mask` the worker holds
 /// gains the rule's `use_gain` ‰ and is stamped used. Nothing without the rule.
-pub fn used(world: &mut World, res: &SimResources, entity: Entity, mask: u64) {
+pub fn used(world: &mut World, res: &SimResources, entity: Entity, mask: u128) {
     let Some(rule) = rule(res) else {
         return;
     };
@@ -125,7 +125,7 @@ pub fn used(world: &mut World, res: &SimResources, entity: Entity, mask: u64) {
 
 /// The lowest proficiency among the nodes of `mask` the worker holds (the
 /// craft's quality cap reads it; 1000 for an empty mask).
-pub fn proficiency_of(world: &World, entity: Entity, mask: u64) -> u16 {
+pub fn proficiency_of(world: &World, entity: Entity, mask: u128) -> u16 {
     let k = world.get::<&Knowledge>(entity).ok();
     sim_core::colony::knowledge::ids_of(mask)
         .map(|id| k.as_ref().map_or(0, |k| k.proficiency(id)))
@@ -146,7 +146,7 @@ pub fn open_to_any_builder(world: &World, res: &SimResources, entity: Entity) ->
 }
 
 /// Whether some living adult practises every node of `mask` (a gated order can run).
-pub fn anyone_practises(world: &World, mask: u64) -> bool {
+pub fn anyone_practises(world: &World, mask: u128) -> bool {
     if mask == 0 {
         return true;
     }

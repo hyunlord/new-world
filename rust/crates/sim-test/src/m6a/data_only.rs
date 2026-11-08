@@ -12,9 +12,9 @@ pub fn run_data_only(args: &[String]) -> Result<(), String> {
     let out = super::cli::output_dir(&args["--out"])?;
     let catalog = installed_or_bundled();
     let species = catalog
-        .plant_by_name("wild_apple")
-        .ok_or("selected pack lacks wild_apple")?;
-    let item = ItemKind::from_name("apple").ok_or("selected pack lacks apple")?;
+        .plant_by_name("test_wild_apple")
+        .ok_or("selected pack lacks test_wild_apple")?;
+    let item = ItemKind::from_name("test_apple").ok_or("selected pack lacks test_apple")?;
     let def = catalog
         .plant(species)
         .ok_or("selected species unresolved")?;

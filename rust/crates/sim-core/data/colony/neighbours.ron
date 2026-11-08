@@ -79,5 +79,12 @@
         (item: "clay", tag: "staple", count: (2, 6)),
         (item: "hide", tag: "staple", count: (2, 6)),
         (item: "firewood", tag: "staple", count: (2, 6)),
+        // C1: physical seed imports permit crops absent from local wild origins.
+        // Two to six seeds reuse staple stack sizes; balance is deferred to M-BAL.
+        (item: "barley_seed", tag: "staple", count: (2, 6)),
+        (item: "rye_seed", tag: "staple", count: (2, 6)),
+        (item: "lentil_seed", tag: "staple", count: (2, 6)),
+        (item: "pea_seed", tag: "staple", count: (2, 6)),
+        (item: "millet_seed", tag: "staple", count: (2, 6)),
     ],
 )

@@ -54,7 +54,7 @@ pub(super) fn accepts_catalog(revision: &str, catalog: &Catalog) -> Result<bool,
     Ok(true)
 }
 
-fn identities_preserved(catalog: &Catalog) -> bool {
+pub(super) fn identities_preserved(catalog: &Catalog) -> bool {
     const NO_ALIASES: &[&str] = &[];
     [
         (0, "log", "Log", NO_ALIASES, NO_ALIASES),

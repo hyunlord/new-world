@@ -40,6 +40,8 @@ pub struct PlantDef {
     pub category: String,
     /// Authored capability and presentation tags.
     pub tags: Vec<String>,
+    /// Physical source habitat in the world's climate and ground.
+    pub origin: super::SpeciesOrigin,
     /// Deterministic world generation distribution.
     pub placement: PlantPlacement,
     /// Spring, summer, autumn and winter phases.

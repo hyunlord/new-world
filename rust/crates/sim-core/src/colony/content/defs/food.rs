@@ -10,6 +10,8 @@ pub enum FoodStorageClass {
     Stockpile,
     /// Food inside an actual roofed storeroom.
     RoofedStore,
+    /// Grain in a completed, intact grain storage template.
+    Granary,
     /// Food contained in a finite-capacity physical vessel.
     Pot,
 }
@@ -24,6 +26,9 @@ pub struct FoodStorageDays {
     pub stockpile: u32,
     /// Roofed storeroom lifetime.
     pub roofed_store: u32,
+    /// Grain storage lifetime; absent preserves the ordinary roofed-store policy.
+    #[serde(default)]
+    pub granary: Option<u32>,
     /// Pot lifetime.
     pub pot: u32,
 }
@@ -72,6 +77,13 @@ impl FoodDef {
             FoodStorageClass::Ground => days.ground,
             FoodStorageClass::Stockpile => days.stockpile,
             FoodStorageClass::RoofedStore => days.roofed_store,
+            FoodStorageClass::Granary => {
+                if self.groups.iter().any(|group| group == "grain") {
+                    days.granary.unwrap_or(days.roofed_store)
+                } else {
+                    days.roofed_store
+                }
+            }
             FoodStorageClass::Pot => days.pot,
         }
     }

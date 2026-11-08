@@ -124,9 +124,9 @@ pub(super) fn resolve(raw: ItemRaw, c: &Catalog) -> Result<ItemDef, CatalogError
                 .collect::<std::collections::BTreeSet<_>>()
                 .len()
                 != r.groups.len()
-            || r.storage_spoil_days
-                .as_ref()
-                .is_some_and(|d| [d.ground, d.stockpile, d.roofed_store, d.pot].contains(&0))
+            || r.storage_spoil_days.as_ref().is_some_and(|d| {
+                [d.ground, d.stockpile, d.roofed_store, d.pot].contains(&0) || d.granary == Some(0)
+            })
         {
             return Err(CatalogError::new(
                 context,

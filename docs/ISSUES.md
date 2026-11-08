@@ -453,3 +453,9 @@ Stage −1 게시 뒤 중복·다음 빈 ISS를 재확인하고 위 제목의 #6
 | ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
 |---|---|---|---|---|---|---|
 | M6B-ART-2 | 직조 물품·작업장·착용 실루엣이 범주 대체 그림 | 실제 사슬 캡처는 있으나 전용 아트 미제공; 의복은 기존 실루엣과 데이터 색조 | art | open | [#689](https://github.com/hyunlord/new-world/issues/689): route I·resolver 경로의 전용 아트와 실제 화면 검증 | ADR0059; M6B_REPORT.md |
+
+## C1 상주 포식자 보류
+
+| ID | 문제 | 근거 | 분류 | 상태 | 다음 작업 | 출처 |
+|---|---|---|---|---|---|---|
+| ISS-364 | 상주 멧돼지 반복 피신·노동 방해와 후보 시드5 전멸 | BASE 생존13 대 후보0·KnowledgeLost25; 별도 시드2 포식자 분리 진단에서 공사92/240→완공282틱 | balance | open | [#694](https://github.com/hyunlord/new-world/issues/694): GOAL §5의 한 번 Inert 전환 후 smoke PASS; C1-1을 게시 동결 시 ISS-364로 배정, 재활성화는 후속 균형 패스 | C1_REPORT; crash-head-a2; hut-trace-a2/hut-isolation-a3 |

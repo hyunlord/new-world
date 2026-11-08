@@ -1,5 +1,20 @@
 # Changelog
 
+## C1-a — implementation IN_PROGRESS, 2026-11-08 (not published)
+
+### Added
+- Climate/terrain/elevation origins for wild species, five seasonal crops with physical seed sources and imported seed goods; neolithic recipe, item and knowledge data.
+- Grain-specific storage, buildable pen, oven house and smokehouse over ordinary physical piece jobs; staged livestock chapter/card and ko/en labels.
+- Origin, catalogue, real crafting, building, extension and prior-save tests; focused execution and bilingual native captures pass, with the final publication gate pending.
+
+### Changed
+- Expand knowledge masks to128 bits while preserving historical node ordinals and validating actual format19 saves. Missing efficiency/healing/social effects remain explicit debt.
+- Open fence enclosures do not grant roof shelter or draw an opaque template roof. No balance calibration or held-out evaluation.
+- Authored garment codes resolve to the existing wrap silhouette and individual palettes; the workshop storage explanation refreshes on language change.
+
+### Removed
+- The64-node authored knowledge capacity limit. No content family is removed.
+
 ## M-SPINE-b — implementation IN_PROGRESS, 2026-11-08 (not published)
 
 ### Added

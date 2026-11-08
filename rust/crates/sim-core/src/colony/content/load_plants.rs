@@ -17,6 +17,8 @@ struct PlantRaw {
     identity: IdentityDef,
     category: String,
     tags: Vec<String>,
+    #[serde(default)]
+    origin: super::SpeciesOrigin,
     placement: PlantPlacement,
     phases: Vec<PlantPhase>,
     ripe_start_day: u32,
@@ -45,7 +47,8 @@ fn parse(map: &BTreeMap<String, Vec<u8>>) -> Result<Vec<PlantRaw>, CatalogError>
 fn resolve(raw: PlantRaw, catalog: &Catalog) -> Result<PlantDef, CatalogError> {
     let context = &raw.identity.id;
     let error = |message| CatalogError::new(context, message);
-    if raw.category.is_empty()
+    if !raw.origin.valid()
+        || raw.category.is_empty()
         || raw.tags.iter().any(String::is_empty)
         || raw.tags.iter().collect::<BTreeSet<_>>().len() != raw.tags.len()
         || raw.placement.terrains.is_empty()
@@ -91,6 +94,7 @@ fn resolve(raw: PlantRaw, catalog: &Catalog) -> Result<PlantDef, CatalogError> {
         identity: raw.identity,
         category: raw.category,
         tags: raw.tags,
+        origin: raw.origin,
         placement: raw.placement,
         phases,
         ripe_start_day: raw.ripe_start_day,

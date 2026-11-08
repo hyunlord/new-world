@@ -60,7 +60,11 @@ fn deer_live_in_reachable_forest_far_from_the_hearth_and_are_born_again() {
         animals.tick(&mut engine.world, &mut engine.resources);
         let h = hearth(&engine);
         let w = &engine.resources.colony.wildlife;
-        let deer: Vec<_> = w.deer().cloned().collect();
+        let deer: Vec<_> = w
+            .deer()
+            .filter(|a| a.kind == AnimalKind::role("default_grazer"))
+            .cloned()
+            .collect();
         assert!(
             (6..=12).contains(&deer.len()),
             "seed {seed}: {} deer",
@@ -98,7 +102,13 @@ fn deer_live_in_reachable_forest_far_from_the_hearth_and_are_born_again() {
             engine.resources.current_tick = day * 1_440;
             animals.tick(&mut engine.world, &mut engine.resources);
             assert_eq!(
-                engine.resources.colony.wildlife.deer().count(),
+                engine
+                    .resources
+                    .colony
+                    .wildlife
+                    .deer()
+                    .filter(|a| a.kind == AnimalKind::role("default_grazer"))
+                    .count(),
                 expect,
                 "seed {seed} day {day}"
             );
@@ -621,6 +631,30 @@ fn an_undrafted_person_near_a_wolf_runs_for_a_roofed_room_and_a_drafted_one_stan
     for _ in 0..10 {
         engine.tick();
     }
+    // This is a one-wolf refuge fixture. C1 resident boars already made the
+    // runner flee during setup (diagnostic: from22, since3); remove those
+    // independent threats and end their stale flight before arranging the scene.
+    let predators: Vec<_> = engine
+        .resources
+        .colony
+        .wildlife
+        .wolves()
+        .map(|a| a.id)
+        .collect();
+    for id in predators {
+        wildlife::fight::drop_fights_of(&mut engine.resources, Fighter::Animal(id));
+        engine.resources.colony.wildlife.animals.remove(&id);
+    }
+    let fleeing: Vec<_> = engine
+        .world
+        .query::<&Fleeing>()
+        .iter()
+        .map(|(e, _)| e)
+        .collect();
+    for entity in fleeing {
+        wildlife::flee::end_flight(&mut engine.world, entity);
+    }
+    assert!(wildlife::flee::threats(&engine.resources).is_empty());
     let at = open_area(&engine, 7, 7);
     let inside = walled_box(&mut engine, at, 7, 7, true);
     detect(&mut engine);
@@ -631,7 +665,7 @@ fn an_undrafted_person_near_a_wolf_runs_for_a_roofed_room_and_a_drafted_one_stan
         "the box is a roofed room"
     );
     let people = adults(&engine);
-    let (_, runner) = people[0];
+    let (runner_id, runner) = people[0];
     let (soldier_id, soldier) = people[1];
     let start = (at.0 + 3, at.1 + 9);
     place(&mut engine, runner, start);
@@ -652,10 +686,69 @@ fn an_undrafted_person_near_a_wolf_runs_for_a_roofed_room_and_a_drafted_one_stan
     );
     let wolf_at = (start.0, start.1 + 7);
     wildlife::spawn_pack(&mut engine.resources, wolf_at, 1, 0);
+    // Hold a real gather job on the safe side of the fixture. Otherwise the
+    // colony's fresh firewood plan sends the runner away before FleeSystem's
+    // first scheduled tick, invalidating the room's travel-time precondition.
+    let refuge = wildlife::flee::refuge(
+        &engine.world,
+        &engine.resources,
+        start,
+        wolf_at,
+        wildlife::rule(&engine.resources)
+            .expect("wildlife")
+            .flee_tiles,
+    );
+    assert!(
+        inside.contains(&refuge),
+        "fixture must offer a safe roof route"
+    );
+    sim_systems::runtime::jobs::cancel::cancel(
+        &mut engine.world,
+        &mut engine.resources,
+        runner,
+        sim_core::colony::CancelReason::TargetGone,
+    );
+    engine.resources.wood_tiles.insert(refuge, 1);
+    let job = Job {
+        kind: sim_core::colony::JobKind::Gather {
+            spot: refuge,
+            to: hearth(&engine),
+        },
+        stage: sim_core::colony::JobStage::ToSource,
+        taken_at: engine.resources.current_tick,
+        amount: 0,
+        item: ItemKind::Firewood,
+        material: None,
+        fetch: None,
+        best_distance: sim_core::nav::chebyshev(start, refuge),
+        progress_tick: engine.resources.current_tick,
+    };
+    for key in job.keys() {
+        engine.resources.colony.reservations.insert(key, runner_id);
+    }
+    engine
+        .world
+        .insert(
+            runner,
+            (
+                job,
+                AgentState::Seeking {
+                    target: TargetKind::Job,
+                },
+                sim_core::components::SeekTarget::new(refuge),
+            ),
+        )
+        .expect("controlled gather job");
     let d0 = start.0.abs_diff(wolf_at.0).max(start.1.abs_diff(wolf_at.1));
     let mut fled_at = None;
     for k in 1..=30u64 {
         tick_checked(&mut engine);
+        if k == 1 {
+            assert!(
+                engine.world.get::<&Job>(runner).is_ok(),
+                "real job held before flight"
+            );
+        }
         if fled_at.is_none() && engine.world.get::<&Fleeing>(runner).is_ok() {
             fled_at = Some(k);
         }

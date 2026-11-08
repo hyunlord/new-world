@@ -507,13 +507,13 @@ pub fn collect_knowledge_waits(world: &hecs::World, res: &SimResources) -> Vec<W
     if !enabled(res) {
         return Vec::new();
     }
-    let practised: u64 = world
+    let practised: u128 = world
         .query::<&Knowledge>()
         .without::<&Child>()
         .iter()
         .fold(0, |m, (_, k)| m | k.practice());
     // A gate is open when one adult practises all of it; for the line, the first node no adult practises.
-    let blocked = |mask: u64| -> Option<u8> {
+    let blocked = |mask: u128| -> Option<u8> {
         if mask == 0 || sim_systems::runtime::knowledge::anyone_practises(world, mask) {
             return None;
         }

@@ -21,12 +21,20 @@ pub(super) struct BlueprintRaw {
     pub requires_knowledge: bool,
     pub requires_space: bool,
     pub planned_nav: PlannedNav,
+    #[serde(default)]
+    pub blocks_livestock: bool,
+    #[serde(default = "default_supports_roof")]
+    pub supports_roof: bool,
     pub material: CompletionMaterial,
     pub style_id: String,
     /// Legacy packed wall render category, when applicable.
     pub render_wall_code: Option<u8>,
     pub completion_policy: CompletionPolicy,
     pub initial_bill: Option<InitialBillRaw>,
+}
+
+const fn default_supports_roof() -> bool {
+    true
 }
 
 #[derive(Debug, Clone, Deserialize)]

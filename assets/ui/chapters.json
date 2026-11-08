@@ -59,8 +59,25 @@
       "next_preview_key": "LOOP_CH4_NEXT"
     },
     {
-      "id": "neolithic_village",
+      "id": "pens_and_livestock",
       "number": 5,
+      "title_key": "C1_CH5_TITLE",
+      "year_hint_key": "C1_CH5_YEAR",
+      "conditions": [
+        {
+          "id": "captured",
+          "fact": "first_livestock_captured",
+          "text_key": "C1_CH5_COND_CAPTURE"
+        }
+      ],
+      "locked": true,
+      "locked_text_key": "C1_CH5_LOCKED",
+      "reward_text_key": "C1_CH5_REWARD",
+      "next_preview_key": "C1_CH5_NEXT"
+    },
+    {
+      "id": "neolithic_village",
+      "number": 6,
       "title_key": "LOOP_CH5_TITLE",
       "year_hint_key": "LOOP_CH5_YEAR",
       "conditions": [

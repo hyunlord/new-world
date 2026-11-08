@@ -69,7 +69,8 @@ pub struct Neighbour {
     /// Its attitude toward the colony, 0–100 (starts 40–60).
     pub attitude: u8,
     /// The knowledge nodes it knows (bit `i` = node `i`).
-    pub known: u64,
+    #[serde(with = "super::knowledge::mask_serde")]
+    pub known: u128,
     /// The display day of the last contact (a wave or a caravan reached the hearth), if any.
     pub last_contact_day: Option<u32>,
 }

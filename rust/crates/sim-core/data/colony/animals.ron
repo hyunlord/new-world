@@ -2,6 +2,7 @@
 (schema_version: 1, roles: {"default_grazer":"deer", "default_predator":"wolf"}, animals: [
 (
     identity: (code: 0, id: "wolf", name_key: "M5_ANIMAL_WOLF", serde_name: "Wolf", serde_aliases: [], resolver_aliases: []),
+    origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest, mountain, hill, river, coast, desert, tundra, swamp, cave], elevation: None),
     category: "predator",
     mechanic: Predator,
     huntable: false,
@@ -24,6 +25,7 @@
 ),
 (
     identity: (code: 1, id: "deer", name_key: "M5_ANIMAL_DEER", serde_name: "Deer", serde_aliases: [], resolver_aliases: []),
+    origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest, mountain, hill, river, coast, desert, tundra, swamp, cave], elevation: None),
     category: "grazer",
     mechanic: Grazer,
     huntable: true,
@@ -50,5 +52,51 @@
     enabled: (value: true, rule: None),
 )),
 ),
-)
+),
+// C1 initial herd 2–4; one replacement every 8 days, radius12. Starting design, M-BAL debt.
+(
+    identity: (code: 2, id: "wild_goat", name_key: "ANIMAL_WILD_GOAT", serde_name: "WildGoat", serde_aliases: [], resolver_aliases: []),
+    category: "grazer", mechanic: Grazer, huntable: true,
+    origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest], elevation: Some((160, 255))),
+    population: Some((initial: (2, 4), respawn_days: 8, herd_tiles: 12)),
+    hp: (value: 30, rule: None),
+    grazer: Some((flee: (value: true, rule: None), flee_tiles: (value: 6, rule: None), flee_speed: (value: 2, rule: None), flee_steps: (value: 4, rule: None), rest_steps: (value: 40, rule: None), home_tiles: (value: 12, rule: None), min_hearth_distance: (value: 20, rule: None))),
+    predator: None,
+    loot: (meat: Some((item: "meat", with_cutter: (value: 3, rule: None), without_cutter: (value: 2, rule: None))), hide: Some((item: "goat_hide", count: 1, enabled: (value: true, rule: None)))),
+),
+// C1 initial herd 2–4; one replacement every 8 days, radius12. Starting design, M-BAL debt.
+(
+    identity: (code: 3, id: "wild_sheep", name_key: "ANIMAL_WILD_SHEEP", serde_name: "WildSheep", serde_aliases: [], resolver_aliases: []),
+    category: "grazer", mechanic: Grazer, huntable: true,
+    origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest], elevation: Some((160, 255))),
+    population: Some((initial: (2, 4), respawn_days: 8, herd_tiles: 12)),
+    hp: (value: 30, rule: None),
+    grazer: Some((flee: (value: true, rule: None), flee_tiles: (value: 6, rule: None), flee_speed: (value: 2, rule: None), flee_steps: (value: 4, rule: None), rest_steps: (value: 40, rule: None), home_tiles: (value: 12, rule: None), min_hearth_distance: (value: 20, rule: None))),
+    predator: None,
+    loot: (meat: Some((item: "meat", with_cutter: (value: 3, rule: None), without_cutter: (value: 2, rule: None))), hide: Some((item: "hide", count: 1, enabled: (value: true, rule: None)))),
+),
+// C1 initial herd 2–4; one replacement every 8 days, radius12. Starting design, M-BAL debt.
+(
+    identity: (code: 4, id: "wild_boar", name_key: "ANIMAL_WILD_BOAR", serde_name: "WildBoar", serde_aliases: [], resolver_aliases: []),
+    // C1 crash detector one allowed Inert switch: seed5 collapse; numbers retained.
+    status: Inert, debt: Some("M-BAL: crash detector seed5 starvation after resident-boar labour disruption; disabled by the one allowed fallback."),
+    category: "predator", mechanic: Predator, huntable: true,
+    origin: (climate: [Mild, Neutral], terrain: [forest], elevation: None),
+    population: Some((initial: (2, 4), respawn_days: 8, herd_tiles: 12)),
+    hp: (value: 30, rule: None),
+    grazer: None,
+    predator: Some((sight: (value: 3, rule: None), damage: (value: 2, rule: None), chase_tiles: (value: 1, rule: None), hit_ticks: (value: 30, rule: None))),
+    loot: (meat: Some((item: "meat", with_cutter: (value: 3, rule: None), without_cutter: (value: 2, rule: None))), hide: Some((item: "hide", count: 1, enabled: (value: true, rule: None)))),
+),
+// C1 initial herd 2–4; one replacement every 8 days, radius12. Starting design, M-BAL debt.
+(
+    identity: (code: 5, id: "reindeer", name_key: "ANIMAL_REINDEER", serde_name: "Reindeer", serde_aliases: [], resolver_aliases: []),
+    category: "grazer", mechanic: Grazer, huntable: true,
+    origin: (climate: [Harsh], terrain: [plain], elevation: None),
+    population: Some((initial: (2, 4), respawn_days: 8, herd_tiles: 12)),
+    hp: (value: 30, rule: None),
+    grazer: Some((flee: (value: true, rule: None), flee_tiles: (value: 6, rule: None), flee_speed: (value: 2, rule: None), flee_steps: (value: 4, rule: None), rest_steps: (value: 40, rule: None), home_tiles: (value: 12, rule: None), min_hearth_distance: (value: 20, rule: None))),
+    predator: None,
+    loot: (meat: Some((item: "meat", with_cutter: (value: 3, rule: None), without_cutter: (value: 2, rule: None))), hide: Some((item: "hide", count: 1, enabled: (value: true, rule: None)))),
+),
 ])

@@ -228,7 +228,7 @@ func _test_cards_data() -> void:
 			_assert(int(card.get("expires_hours", 99)) <= 24, str(card["id"]) + " expires <= 24h")
 
 
-## Test 7: chapters.json parses and has 5 chapters.
+## Test 7: chapters retain their order around the staged livestock chapter.
 func _test_chapters_data() -> void:
 	print("Test 7: chapters.json data")
 	var text: String = FileAccess.get_file_as_string("res://assets/ui/chapters.json")
@@ -237,7 +237,11 @@ func _test_chapters_data() -> void:
 	if not parsed is Dictionary:
 		return
 	var chapters: Array = parsed.get("chapters", [])
-	_assert(chapters.size() == 5, "has 5 chapters")
+	_assert(chapters.size() == 6, "has 6 chapters")
+	if chapters.size() >= 6:
+		_assert(str(chapters[4].get("id", "")) == "pens_and_livestock", "chapter 5 is livestock")
+		_assert(chapters[4].get("conditions", [])[0].get("fact", "") == "first_livestock_captured", "livestock chapter requires a real capture")
+		_assert(str(chapters[5].get("id", "")) == "neolithic_village", "neolithic village milestone remains after livestock")
 	# Farming is available; clothing remains a required later-stage condition.
 	if chapters.size() >= 4:
 		_assert(not bool(chapters[3].get("locked", true)), "chapter 4 farming is unlocked")

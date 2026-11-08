@@ -68,7 +68,15 @@ fn wolves_show_in_the_story_and_the_animals_with_their_mean_tile() {
         "the herd is placed on the first steps: {}",
         deer.id.len()
     );
-    assert!(deer.kind.iter().all(|k| *k == 1), "deer only");
+    let grazer = sim_core::colony::wildlife::AnimalKind::role("default_grazer");
+    assert!(
+        deer.kind
+            .iter()
+            .filter(|k| **k == i64::from(grazer.code()))
+            .count()
+            >= 6,
+        "the historical deer herd remains present beside new resident species"
+    );
     assert!(deer.id.windows(2).all(|w| w[0] < w[1]), "by AnimalId");
     let h = hearth(&engine);
     let at = (h.0 + 30, h.1);
@@ -202,13 +210,19 @@ fn chronicle_rows_carry_their_index_and_the_why_link() {
         }
     }
     let ended = ended.expect("a pressure ends within 30 days") as i64;
-    let page = collect_chronicle_since(&engine.resources.chronicle, 0, 512);
+    // Chronicle indices are global; each bridge page holds at most512 rows.
+    let start = (ended / 512) * 512;
+    let page = collect_chronicle_since(&engine.resources.chronicle, start, 512);
     assert_eq!(
         page.index,
-        (0..page.tick.len() as i64).collect::<Vec<_>>(),
-        "indices in order"
+        (start..start + page.tick.len() as i64).collect::<Vec<_>>(),
+        "global indices in page order"
     );
-    let i = usize::try_from(ended).expect("index");
+    let i = page
+        .index
+        .iter()
+        .position(|index| *index == ended)
+        .expect("ended entry in its page");
     assert_eq!(page.link[i], 0, "PressureEnded links to an entry");
     let began = page.link_entry[i];
     assert_eq!(
@@ -287,5 +301,58 @@ fn the_teach_suggestion_is_the_most_novelty_seeking_non_practitioner() {
     assert_eq!(
         collect_teach_suggestion(&engine.world, teacher as i64, 250),
         -1
+    );
+}
+
+#[test]
+fn resident_predators_do_not_count_or_shift_the_pack_banner() {
+    let seed = (0..64)
+        .find(|seed| sim_core::variety::WorldVariety::draw(*seed).climate == 0)
+        .expect("Mild world admits resident boars");
+    let mut engine = sim_test::colony_engine(seed);
+    for _ in 0..3 {
+        engine.tick();
+    }
+    // Explicit fixture spawn exercises resident-vs-pack presentation even when
+    // crash-detector Inert status disables the species' natural population.
+    let boar = sim_core::colony::content::installed_or_bundled()
+        .animal_by_name("wild_boar")
+        .expect("boar definition");
+    let mut resident = None;
+    for y in 0..engine.resources.tile_grid.height {
+        for x in 0..engine.resources.tile_grid.width {
+            if let Ok(id) = wildlife::spawn_animal(&mut engine.resources, boar, (x, y), None) {
+                resident = Some(id);
+                break;
+            }
+        }
+        if resident.is_some() {
+            break;
+        }
+    }
+    let resident = resident.expect("fixture boar on admitted habitat");
+    let before = collect_story(&engine.world, &engine.resources);
+    assert_eq!(
+        (before.wolves, before.wolves_x, before.wolves_y),
+        (0, -1, -1)
+    );
+    let h = hearth(&engine);
+    let at = (h.0 + 30, h.1);
+    let pack = wildlife::spawn_pack(&mut engine.resources, at, 3, 1);
+    assert_eq!(pack.len(), 3);
+    let after = collect_story(&engine.world, &engine.resources);
+    assert_eq!(
+        (
+            after.wolves,
+            after.pack_size,
+            after.wolves_x,
+            after.wolves_y
+        ),
+        (3, 3, at.0 as i32, at.1 as i32)
+    );
+    let visible = collect_animals(&engine.resources);
+    assert!(
+        visible.id.contains(&i64::from(resident)),
+        "resident animals remain visible independently of the pack banner"
     );
 }

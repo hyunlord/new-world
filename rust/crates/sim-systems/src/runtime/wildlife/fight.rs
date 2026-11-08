@@ -120,16 +120,25 @@ fn hit_person(
     let Some((e, _)) = person(world, id) else {
         return;
     };
-    if let Fighter::Animal(_) = attacker {
-        let pressure = crate::runtime::story::active_mechanic(res, PressureMechanic::Pack)
-            .map_or_else(|| PressureKind::role("pack_default"), |active| active.kind);
+    if let Fighter::Animal(animal) = attacker {
+        let pack_attack = res
+            .colony
+            .wildlife
+            .animals
+            .get(&animal)
+            .is_some_and(|a| a.pack.is_some() || a.kind.definition().population.is_none());
         let t = &mut res.colony.wildlife.tallies;
         t.bites += 1;
         t.bite_damage += u64::from(damage);
-        if !res.colony.story.touched.contains(&(pressure.code(), id, 1)) {
-            res.colony.wildlife.tallies.bitten += 1;
+        // Resident predators are physical wildlife, not a storyteller pressure.
+        if pack_attack {
+            let pressure = crate::runtime::story::active_mechanic(res, PressureMechanic::Pack)
+                .map_or_else(|| PressureKind::role("pack_default"), |active| active.kind);
+            if !res.colony.story.touched.contains(&(pressure.code(), id, 1)) {
+                res.colony.wildlife.tallies.bitten += 1;
+            }
+            crate::runtime::story::note_cause(res, id, pos, pressure, 1);
         }
-        crate::runtime::story::note_cause(res, id, pos, pressure, 1);
     }
     let dead = match world.get::<&mut BodyHealth>(e) {
         Ok(mut h) => {
@@ -189,6 +198,7 @@ fn hit_animal(
         return;
     }
     let (kind, pos) = (a.kind, a.pos);
+    let pack_animal = a.pack.is_some() || kind.definition().population.is_none();
     res.colony.wildlife.animals.remove(&id);
     res.colony.wildlife.marks.remove(&id);
     drop_fights_of(res, Fighter::Animal(id));
@@ -209,7 +219,11 @@ fn hit_animal(
             }
             let pressure = crate::runtime::story::active_mechanic(res, PressureMechanic::Pack)
                 .map_or_else(|| PressureKind::role("pack_default"), |active| active.kind);
-            let cause = crate::runtime::story::cause_ref(res, pressure);
+            let cause = if pack_animal {
+                crate::runtime::story::cause_ref(res, pressure)
+            } else {
+                None
+            };
             res.chronicle.push_caused(entry, cause);
         }
         AnimalMechanic::Grazer => {

@@ -141,6 +141,8 @@ pub const STREAM_STORY: u64 = 0x5354_4F52_5954_454C;
 /// M5: hunting rolls and animal movement (`"WILDLIFE"`; subject = a hunter's
 /// lineage key or an animal id, slot = the animal or the step).
 pub const STREAM_WILDLIFE: u64 = 0x5749_4C44_4C49_4645;
+/// C1 wild species populations, keyed by stable catalogue species identity.
+pub const STREAM_SPECIES_ORIGIN: u64 = 0x4F52_4947_494E_5331;
 
 /// M5: quarrels (`"QUARRELS"`; subject = the pair's lower lineage key, slot = the other's).
 pub const STREAM_QUARREL: u64 = 0x5155_4152_5245_4C53;
@@ -160,7 +162,7 @@ pub const STREAM_PLANTS: u64 = 0x504C_414E_5453_5631;
 pub const STREAM_FOOD_SICK: u64 = 0x464F_4F44_5349_434B;
 
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 41] = [
+pub const STREAMS: [u64; 42] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -196,6 +198,7 @@ pub const STREAMS: [u64; 41] = [
     STREAM_CLAY,
     STREAM_STORY,
     STREAM_WILDLIFE,
+    STREAM_SPECIES_ORIGIN,
     STREAM_QUARREL,
     STREAM_APPAREL,
     STREAM_NEIGHBOURS,

@@ -16,6 +16,8 @@
     "EXT_INERT_SPINE": "시험 준비 중",
     "EXT_LANE": "시험 레인",
     "EXT_BUILDING_SCREEN": "시험 흙벽돌 가림벽",
-    "EXT_BUILDING_TOWER": "시험 망루"
+    "EXT_BUILDING_TOWER": "시험 망루",
+    "EXT_PLANT_PULSE": "시험 야생 콩",
+    "EXT_CROP_PULSE": "시험 콩"
   }
 }

@@ -36,6 +36,15 @@ pub fn populate_with_catalog(res: &mut SimResources, catalog: &Catalog) -> Resul
                     .contains(&res.tile_grid.terrain_type[index])
                     && (placement.elevation.0..=placement.elevation.1)
                         .contains(&res.tile_grid.elevation[index])
+                    && def.origin.admits(
+                        res.world_variety
+                            .unwrap_or_else(|| {
+                                sim_core::variety::WorldVariety::draw(res.world_seed)
+                            })
+                            .climate,
+                        res.tile_grid.terrain_type[index],
+                        res.tile_grid.elevation[index],
+                    )
             };
             let (weight, density_sum) = species.iter().copied().filter(eligible).fold(
                 (0u64, 0u64),

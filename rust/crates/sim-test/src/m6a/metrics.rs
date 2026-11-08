@@ -174,6 +174,7 @@ pub(super) fn daily(world: &World, res: &SimResources) -> Daily {
             FoodStorageClass::Ground => continue,
             FoodStorageClass::Stockpile => "stockpile",
             FoodStorageClass::RoofedStore => "roofed_store",
+            FoodStorageClass::Granary => "granary",
             FoodStorageClass::Pot => "pot",
         };
         let tile = match owner {

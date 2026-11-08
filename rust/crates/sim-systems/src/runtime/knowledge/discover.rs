@@ -87,12 +87,12 @@ pub fn holds(world: &World, res: &SimResources, cond: Cond) -> bool {
 
 /// The nodes whose discovery conditions all hold now (bit `i` = node `i`;
 /// a node without conditions is never set: it is not discovered).
-pub fn conditions(world: &World, res: &SimResources) -> u64 {
+pub fn conditions(world: &World, res: &SimResources) -> u128 {
     conditions_with(world, res, 0)
 }
 
 /// [`conditions`] where the nodes of `clues` (M5.5 eureka) count their stockpile conditions as met.
-pub fn conditions_with(world: &World, res: &SimResources, clues: u64) -> u64 {
+pub fn conditions_with(world: &World, res: &SimResources, clues: u128) -> u128 {
     defs()
         .nodes
         .iter()

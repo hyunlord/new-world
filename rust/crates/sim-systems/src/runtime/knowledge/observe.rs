@@ -29,7 +29,7 @@ pub const OBSERVATION_PRIORITY: u32 = 161;
 pub struct ObservationSystem;
 
 /// The gate mask of `job` (0 for ungated work).
-pub fn job_gate(world: &World, res: &SimResources, job: &Job) -> u64 {
+pub fn job_gate(world: &World, res: &SimResources, job: &Job) -> u128 {
     let g = gates();
     match job.kind {
         JobKind::Craft { workshop, bill, .. } => res
@@ -84,7 +84,7 @@ impl RuntimeSystem for ObservationSystem {
         }
         workers.sort_by_key(|w| w.0);
         // Practitioners at gated work: (tile, gate).
-        let mut shown: Vec<((u32, u32), u64)> = Vec::new();
+        let mut shown: Vec<((u32, u32), u128)> = Vec::new();
         for (_, entity, tile, working) in &workers {
             if !working {
                 continue;
@@ -101,7 +101,7 @@ impl RuntimeSystem for ObservationSystem {
         let d = defs();
         let mut gained = 0u64;
         for (_, entity, tile, _) in &workers {
-            let mut mask = 0u64;
+            let mut mask = 0u128;
             for (at, gate) in &shown {
                 if at != tile
                     && crate::runtime::jobs::items::chebyshev(*at, *tile) <= rule.observation_radius

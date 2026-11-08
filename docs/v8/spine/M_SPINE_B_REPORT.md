@@ -282,7 +282,7 @@ strict-first-receipt.json}`. API/schema 정적 문서는 별도 검사이며 실
   `b-root-visual-review-b4d191.json`에 PNG SHA와 함께 남겼다. 이 범위의 시각
   확인은 전체 B2 gate 통과나 이후 테스트 수정 head의 검증이 아니다.
 
-- [a+b 화면 모음](../../images/m_spine_contact_sheet.png)은 a 게시 c467의 tech
+- [a+b 화면 모음](https://github.com/hyunlord/new-world/blob/d30dbfc5b8c6d68973e1c13fdd291741db892998/docs/images/m_spine_contact_sheet.png)은 a 게시 c467의 tech
   ko/en 일반·Inert4장과 r4/chain-1920의00..04 native 그룹/원인5장,
   실제 cord pile1장,ko/en 회전 미리보기2장으로 총12장이다. 각 원본1920×1080을
   기존 `contact_sheet.py`로 모았으며 gallery는 제외했다. 그룹/원인 패널이

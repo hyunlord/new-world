@@ -27,6 +27,7 @@ fn candidate() -> CraftEvent {
         persistence: Some(599),
         knowledge_enabled: true,
         gate_mask: 1,
+        gate_mask_high: 0,
         gating_nodes: vec![GatingNode {
             node_id: 0,
             entry_present: true,
@@ -429,4 +430,17 @@ fn trader_policy_metadata_requires_exact_authored_policy() {
             "{changed:?}"
         );
     }
+}
+
+#[test]
+fn c1_probe_craft_mask_json_preserves_both_words() {
+    let mut row = candidate();
+    let old = serde_json::to_value(&row).expect("legacy JSON");
+    assert_eq!(old["gate_mask"], 1);
+    assert!(old.get("gate_mask_high").is_none());
+    row.gate_mask = u64::MAX;
+    row.gate_mask_high = (1_u64 << 63) | 1;
+    let json = serde_json::to_value(&row).expect("full-width JSON");
+    assert_eq!(json["gate_mask"].as_u64(), Some(u64::MAX));
+    assert_eq!(json["gate_mask_high"].as_u64(), Some((1_u64 << 63) | 1));
 }

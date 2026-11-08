@@ -59,7 +59,7 @@ fn run(
         gather_short: &std::cell::Cell::new(None),
         hearth: &std::cell::OnceCell::new(),
         region: res.nav.region_of(pos),
-        practice: u64::MAX,
+        practice: u128::MAX,
         agent: 0,
     };
     if frozen {

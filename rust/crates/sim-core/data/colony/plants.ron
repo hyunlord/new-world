@@ -5,6 +5,7 @@
         (
             identity: (code: 0, id: "berry_bush", name_key: "PLANT_BERRY_BUSH", serde_name: "BerryBush", serde_aliases: [], resolver_aliases: []),
             category: "bush", tags: ["bush"],
+            origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest], elevation: None),
             placement: (terrains: [plain, forest], elevation: (0, 255), weight: 3, density_permille: 200),
             phases: [Growing, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
             yield: (item: "berries", units: 4, regrow_days: 2),
@@ -13,6 +14,7 @@
         (
             identity: (code: 1, id: "hazel", name_key: "PLANT_HAZEL", serde_name: "Hazel", serde_aliases: [], resolver_aliases: []),
             category: "shrub", tags: ["shrub"],
+            origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest], elevation: None),
             placement: (terrains: [plain, forest], elevation: (0, 255), weight: 2, density_permille: 200),
             phases: [Growing, Growing, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
             yield: (item: "hazelnuts", units: 8, regrow_days: 0),
@@ -21,6 +23,7 @@
         (
             identity: (code: 2, id: "wild_flax", name_key: "PLANT_WILD_FLAX", serde_name: "WildFlax", serde_aliases: [], resolver_aliases: []),
             category: "herb", tags: ["herb"],
+            origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest], elevation: None),
             placement: (terrains: [plain, forest], elevation: (0, 255), weight: 1, density_permille: 200),
             phases: [Growing, Ripe, Spent, Dormant], ripe_start_day: 0, ripe_end_day: None,
             yield: (item: "flax_stalks", units: 4, regrow_days: 0),
@@ -29,6 +32,7 @@
         (
             identity: (code: 3, id: "wild_grain", name_key: "PLANT_WILD_GRAIN", serde_name: "WildGrain", serde_aliases: [], resolver_aliases: []),
             category: "grass", tags: ["grass"],
+            origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest], elevation: None),
             placement: (terrains: [plain, forest], elevation: (0, 255), weight: 3, density_permille: 200),
             phases: [Growing, Ripe, Spent, Dormant], ripe_start_day: 3, ripe_end_day: None,
             yield: (item: "wild_grain", units: 6, regrow_days: 0),
@@ -37,9 +41,70 @@
         (
             identity: (code: 4, id: "wild_root", name_key: "PLANT_WILD_ROOT", serde_name: "WildRoot", serde_aliases: [], resolver_aliases: []),
             category: "root", tags: ["root"],
+            origin: (climate: [Mild, Neutral, Harsh], terrain: [plain, forest], elevation: None),
             placement: (terrains: [plain, forest], elevation: (0, 255), weight: 4, density_permille: 200),
             phases: [Ripe, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
             yield: (item: "roots", units: 5, regrow_days: 2),
+            harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+        ),
+        // C1 starting content values: one share, 200 permille; M-BAL owns balancing.
+        (
+            identity: (code: 5, id: "wild_barley", name_key: "PLANT_WILD_BARLEY", serde_name: "WildBarley", serde_aliases: [], resolver_aliases: []),
+            category: "grass", tags: ["grass"],
+            origin: (climate: [Mild, Neutral, Harsh], terrain: [plain], elevation: None),
+            placement: (terrains: [plain], elevation: (0, 255), weight: 1, density_permille: 200),
+            phases: [Growing, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
+            yield: (item: "barley", units: 6, regrow_days: 0),
+            harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+        ),
+        // C1 starting content values: one share, 200 permille; M-BAL owns balancing.
+        (
+            identity: (code: 6, id: "wild_rye", name_key: "PLANT_WILD_RYE", serde_name: "WildRye", serde_aliases: [], resolver_aliases: []),
+            category: "grass", tags: ["grass"],
+            origin: (climate: [Neutral, Harsh], terrain: [plain], elevation: Some((160, 255))),
+            placement: (terrains: [plain], elevation: (0, 255), weight: 1, density_permille: 200),
+            phases: [Growing, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
+            yield: (item: "rye", units: 6, regrow_days: 0),
+            harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+        ),
+        // C1 starting content values: one share, 200 permille; M-BAL owns balancing.
+        (
+            identity: (code: 7, id: "wild_lentil", name_key: "PLANT_WILD_LENTIL", serde_name: "WildLentil", serde_aliases: [], resolver_aliases: []),
+            category: "herb", tags: ["herb"],
+            origin: (climate: [Mild, Neutral], terrain: [plain], elevation: None),
+            placement: (terrains: [plain], elevation: (0, 255), weight: 1, density_permille: 200),
+            phases: [Growing, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
+            yield: (item: "lentil", units: 6, regrow_days: 0),
+            harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+        ),
+        // C1 starting content values: one share, 200 permille; M-BAL owns balancing.
+        (
+            identity: (code: 8, id: "wild_pea", name_key: "PLANT_WILD_PEA", serde_name: "WildPea", serde_aliases: [], resolver_aliases: []),
+            category: "herb", tags: ["herb"],
+            origin: (climate: [Mild, Neutral], terrain: [plain], elevation: None),
+            placement: (terrains: [plain], elevation: (0, 255), weight: 1, density_permille: 200),
+            phases: [Growing, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
+            yield: (item: "pea", units: 6, regrow_days: 0),
+            harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+        ),
+        // C1 starting content values: one share, 200 permille; M-BAL owns balancing.
+        (
+            identity: (code: 9, id: "wild_millet", name_key: "PLANT_WILD_MILLET", serde_name: "WildMillet", serde_aliases: [], resolver_aliases: []),
+            category: "grass", tags: ["grass"],
+            origin: (climate: [Mild], terrain: [plain], elevation: None),
+            placement: (terrains: [plain], elevation: (0, 255), weight: 1, density_permille: 200),
+            phases: [Growing, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
+            yield: (item: "millet", units: 6, regrow_days: 0),
+            harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+        ),
+        // C1 starting content values: one share, 200 permille; M-BAL owns balancing.
+        (
+            identity: (code: 10, id: "wild_apple", name_key: "PLANT_WILD_APPLE", serde_name: "WildApple", serde_aliases: [], resolver_aliases: []),
+            category: "shrub", tags: ["shrub"],
+            origin: (climate: [Neutral, Harsh], terrain: [forest], elevation: None),
+            placement: (terrains: [forest], elevation: (0, 255), weight: 1, density_permille: 200),
+            phases: [Growing, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
+            yield: (item: "apple", units: 6, regrow_days: 0),
             harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
         ),
     ],

@@ -11,7 +11,7 @@ pub(super) fn has_practitioner(
     world: &World,
     res: &SimResources,
     recipe: &sim_core::colony::workshop::Recipe,
-    accepts: impl Fn(u64) -> bool,
+    accepts: impl Fn(u128) -> bool,
 ) -> bool {
     let gated = crate::runtime::knowledge::rule(res).is_some();
     let primary = knowledge::gates().recipe(recipe.id);
@@ -23,7 +23,7 @@ pub(super) fn has_practitioner(
             let practice = if gated {
                 known.map_or(0, |known| known.practice())
             } else {
-                u64::MAX
+                u128::MAX
             };
             primary & !practice == 0 && accepts(practice)
         })

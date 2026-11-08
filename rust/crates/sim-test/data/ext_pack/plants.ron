@@ -1,0 +1,10 @@
+// A ninth family proves a new wild crop source is entirely authored data.
+(schema_version: 1, plants: [(
+    identity: (code: 65551, id: "test_wild_pulse", name_key: "EXT_PLANT_PULSE", serde_name: "TestWildPulse", serde_aliases: [], resolver_aliases: []),
+    category: "herb", tags: ["herb"],
+    origin: (climate: [Mild, Neutral], terrain: [plain], elevation: None),
+    placement: (terrains: [plain], elevation: (0, 255), weight: 1, density_permille: 200),
+    phases: [Growing, Ripe, Ripe, Dormant], ripe_start_day: 0, ripe_end_day: None,
+    yield: (item: "lentil", units: 6, regrow_days: 0),
+    harvest_ticks: 60, knowledge: Some("foraging"), knowledge_speed_permille: 1500,
+)])

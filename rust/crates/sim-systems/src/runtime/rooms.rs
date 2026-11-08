@@ -11,7 +11,7 @@
 //! `room_min_tiles..=room_max_tiles` tiles that does not touch the map edge
 //! and that the colony made — a built wall or door on its border, or a dug
 //! tile inside (natural pockets ringed by hills are not rooms);
-//! every such room is roofed (the enclosure is the roof; M3 has no roof item),
+//! such rooms are roofed unless an authored boundary piece cannot support a roof,
 //! and a room with a dug tile is `dug`. Ids survive re-detection
 //! (`sim_core::rooms::assign_ids`); an override follows its id and is dropped
 //! when the room is gone.
@@ -161,6 +161,23 @@ pub fn detect_rooms(world: &World, res: &mut SimResources) {
     let mut rooms: BTreeMap<RoomId, Room> = BTreeMap::new();
     let mut room_of_tile = BTreeMap::new();
     for (id, f) in ids {
+        let roofed = f.tiles.iter().all(|&(x, y)| {
+            [
+                (x.saturating_sub(1), y),
+                (x.saturating_add(1), y),
+                (x, y.saturating_sub(1)),
+                (x, y.saturating_add(1)),
+            ]
+            .into_iter()
+            .all(|tile| {
+                crate::runtime::jobs::space::completed_at(
+                    res,
+                    tile,
+                    sim_core::colony::content_state::CompletedLayer::Wall,
+                )
+                .is_none_or(|kind| kind.definition().supports_roof)
+            })
+        });
         let dug = f
             .tiles
             .iter()
@@ -180,7 +197,7 @@ pub fn detect_rooms(world: &World, res: &mut SimResources) {
                 id,
                 tiles: f.tiles,
                 doors: f.doors,
-                roofed: true,
+                roofed,
                 role,
                 dug,
             },

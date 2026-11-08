@@ -739,8 +739,8 @@ fn tech(engine: &SimEngine, name: &str) -> (u8, u16, u16) {
 
 /// Goal §8: the aggregate of a seeded colony at tick 0 — the doorway and hide
 /// scraping at risk (one holder each), knapping stable (3 practitioners), the
-/// badge 2, and the era progress = timber walls' 2 of 10 adults × weight 2 / 14
-/// = 28 ‰ (DECISIONS D12: the table seeds a Neolithic marker).
+/// badge 2, and the era progress = timber walls' 2 of 10 adults × weight 2 / 16
+/// = 25 ‰ (DECISIONS D12: the table seeds a Neolithic marker).
 #[test]
 fn the_aggregate_of_a_fresh_colony_matches_its_seeding() {
     for seed in [0u64, 3, 6] {
@@ -753,7 +753,18 @@ fn the_aggregate_of_a_fresh_colony_matches_its_seeding() {
         let t = &engine.resources.colony.tech;
         assert_eq!(t.at_risk(), 2, "seed {seed}");
         assert_eq!(t.adults, 10);
-        assert_eq!(t.progress_permille, (2 * 200 / 14) as u16);
+        assert_eq!(knowledge::defs().marker_total(), 16);
+        assert_eq!(t.progress_permille, 25);
+        assert_eq!(t.states.len(), 82);
+        assert_eq!(knowledge::defs().nodes[42].name, "weather_lore");
+        for node in &knowledge::defs().nodes[43..] {
+            assert_eq!(
+                tech(&engine, &node.name),
+                (0, 0, 0),
+                "new node is unseeded: {} / seed {seed}",
+                node.name
+            );
+        }
     }
 }
 
@@ -830,10 +841,10 @@ fn losing_the_only_door_maker_loses_doors() {
 }
 
 /// Goal §8: era progress rises when people practise the markers, and its
-/// ceiling with every adult practising every present marker is
-/// (3 + 3 + 2 + 1) × 1000 / 14 = 642 ‰ (farming and weaving absent).
+/// the historical four-marker control reaches9/16, then cultivation3,
+/// weaving2 and C1 taming2 raise the complete authored coverage to1000 permille.
 #[test]
-fn era_progress_follows_marker_practitioners_and_tops_out_at_642() {
+fn era_progress_preserves_historical_markers_and_reaches_full_c1_coverage() {
     let mut engine = sim_test::colony_engine(2);
     tick_checked(&mut engine);
     let start = engine.resources.colony.tech.progress_permille;
@@ -861,8 +872,8 @@ fn era_progress_follows_marker_practitioners_and_tops_out_at_642() {
     });
     let mid = engine.resources.colony.tech.progress_permille;
     // Timber walls' 2 of 10 (weight 2) and 4 of 10 adults on two weight-3 markers:
-    // ⌊(2 × 200 + 3 × 400 + 3 × 400) / 14⌋ = 200 (the start was ⌊400 / 14⌋ = 28).
-    assert_eq!((start, mid), (28, 200));
+    // ⌊(2 × 200 + 3 × 400 + 3 × 400) / 16⌋ = 175 (start: 400 / 16 = 25).
+    assert_eq!((start, mid), (25, 175));
     let now = engine.current_tick();
     for e in &adults {
         let mut k = engine
@@ -884,11 +895,11 @@ fn era_progress_follows_marker_practitioners_and_tops_out_at_642() {
         e.resources.colony.tech.progress_permille > mid
     });
     let top = engine.resources.colony.tech.progress_permille;
-    assert_eq!(top, 642);
+    assert_eq!(top, 562);
     assert_eq!(
         knowledge::era_label(top),
         1,
-        "신석기 전환기: 신석기 시대 is out of reach in M4"
+        "four historical markers alone remain in transition"
     );
     // Keep the old-marker control, then exercise the new data-defined marker.
     let now = engine.current_tick();
@@ -910,10 +921,38 @@ fn era_progress_follows_marker_practitioners_and_tops_out_at_642() {
     });
     let farming_top = engine.resources.colony.tech.progress_permille;
     assert!(
-        farming_top > 643,
+        farming_top > top,
         "farming must lift the actual aggregate ceiling"
     );
-    assert_eq!(farming_top, 857);
+    assert_eq!(farming_top, 750);
+    // The existing weaving marker and appended taming marker each supply2/16.
+    for (node, expected) in [("weaving", 875), ("animal_taming", 1000)] {
+        let now = engine.current_tick();
+        for entity in &adults {
+            let mut known = (*engine
+                .world
+                .get::<&Knowledge>(*entity)
+                .expect("adult knowledge"))
+            .clone();
+            known.set(id(node), 600, Source::Discovered, now);
+            engine
+                .world
+                .insert_one(*entity, known)
+                .expect("marker practitioner");
+        }
+        run_until(&mut engine, 240, |engine| {
+            engine.resources.colony.tech.states[usize::from(id(node))].practitioners
+                == u16::try_from(adults.len()).expect("adult count")
+        });
+        assert_eq!(
+            engine.resources.colony.tech.progress_permille, expected,
+            "marker {node}"
+        );
+    }
+    assert_eq!(
+        knowledge::era_label(engine.resources.colony.tech.progress_permille),
+        2
+    );
 }
 
 /// Goal 3.5 / §8: at least 3 clay banks lie within 24 tiles of the camp on at

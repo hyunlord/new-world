@@ -27,7 +27,11 @@ pub fn class(res: &SimResources, owner: FoodOwner) -> FoodStorageClass {
         .values()
         .any(|room| room.roofed && room.role == RoomRole::Storehouse && room.tiles.contains(&tile))
     {
-        FoodStorageClass::RoofedStore
+        if crate::runtime::building_templates::storage::selector(res, tile) == Some("grain") {
+            FoodStorageClass::Granary
+        } else {
+            FoodStorageClass::RoofedStore
+        }
     } else if res
         .colony
         .zones

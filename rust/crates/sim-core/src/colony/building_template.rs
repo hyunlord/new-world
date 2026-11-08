@@ -102,6 +102,9 @@ pub struct BuildingFunction {
     pub beds: u16,
     /// Optional stockpile item filter, using existing stockpile semantics.
     pub storage: Option<String>,
+    /// Maximum captive animals; zero leaves the template outside livestock selection.
+    #[serde(default)]
+    pub livestock_capacity: u16,
     /// Existing station tags.
     pub workshop_tags: Vec<String>,
     /// Existing shelter capability.

@@ -7,12 +7,12 @@ use sim_core::colony::Workshop;
 use sim_engine::SimResources;
 
 /// Auxiliary recipe knowledge actually supplied by the crafter, excluding pot-only admission.
-pub(super) fn practiced_requirements(recipe: &Recipe, practice: u64) -> u64 {
+pub(super) fn practiced_requirements(recipe: &Recipe, practice: u128) -> u128 {
     recipe
         .food_requirements
         .knowledge_any
         .iter()
-        .fold(0, |mask, code| mask | (practice & (1_u64 << code)))
+        .fold(0, |mask, code| mask | (practice & (1_u128 << code)))
 }
 
 fn local_pot(res: &SimResources, shop: &Workshop) -> bool {
@@ -33,14 +33,14 @@ pub(super) fn pot_need(
     res: &SimResources,
     shop: &Workshop,
     recipe: &Recipe,
-    practice: u64,
+    practice: u128,
 ) -> Option<sim_core::colony::ItemKind> {
     let requirements = &recipe.food_requirements;
     let knows = requirements.knowledge_any.is_empty()
         || requirements
             .knowledge_any
             .iter()
-            .any(|code| practice & (1_u64 << code) != 0);
+            .any(|code| practice & (1_u128 << code) != 0);
     let needed = requirements.requires_pot || (requirements.pot_alternative && !knows);
     if !needed || local_pot(res, shop) {
         return None;
@@ -74,7 +74,7 @@ pub(crate) fn supplyable(
     res: &SimResources,
     shop: &Workshop,
     recipe: &Recipe,
-    practice: u64,
+    practice: u128,
 ) -> bool {
     requirements(
         res,
@@ -91,7 +91,7 @@ pub(crate) fn permitted(
     res: &SimResources,
     shop: &Workshop,
     recipe: &Recipe,
-    practice: u64,
+    practice: u128,
 ) -> bool {
     requirements(res, shop, recipe, practice, local_pot(res, shop), true)
 }
@@ -100,7 +100,7 @@ fn requirements(
     res: &SimResources,
     shop: &Workshop,
     recipe: &Recipe,
-    practice: u64,
+    practice: u128,
     pot: bool,
     require_heat: bool,
 ) -> bool {
@@ -126,7 +126,7 @@ fn requirements(
         || requirements
             .knowledge_any
             .iter()
-            .any(|code| practice & (1_u64 << code) != 0)
+            .any(|code| practice & (1_u128 << code) != 0)
         || (requirements.pot_alternative && pot)
 }
 
@@ -216,7 +216,7 @@ pub(crate) fn heat_needed(
                 world.query::<&sim_core::colony::knowledge::Knowledge>()
                     .without::<&sim_core::components::Child>().iter().any(|(_, k)| ready(k.practice()))
                     && crate::runtime::knowledge::anyone_practises(world, sim_core::colony::knowledge::gates().recipe(recipe.id))
-            } else { ready(u64::MAX) };
+            } else { ready(u128::MAX) };
             if !knows { return false; }
             let tool = recipe.shelf_tool(shop);
             if recipe.tool.is_some() && tool.is_none() { return false; }

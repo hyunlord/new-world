@@ -34,7 +34,7 @@ fn two_neighbours_on_different_edges_are_drawn_from_the_seed() {
         .nodes
         .iter()
         .filter(|n| n.lane == sim_core::colony::knowledge::Lane::Pottery)
-        .fold(0u64, |m, n| m | knowledge::bit(n.id));
+        .fold(0u128, |m, n| m | knowledge::bit(n.id));
     let rule = NeighbourRule::m5_5().expect("neighbours.ron");
     let neo: Vec<u8> = neighbours::neolithic();
     let mut pottery_worlds = 0;

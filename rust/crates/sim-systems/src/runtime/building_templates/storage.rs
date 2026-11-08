@@ -17,7 +17,7 @@ pub fn complete(
         .ok_or(RejectReason::Unknown)?;
     match template.function.storage.as_deref() {
         None => return Ok(()),
-        Some("all") => {}
+        Some("all" | "grain") => {}
         Some(_) => return Err(RejectReason::Unknown),
     }
     let right = site
@@ -55,4 +55,25 @@ pub fn complete(
     crate::commands::add_template_stockpile(res, &tiles)?;
     crate::runtime::rooms::assign_roles(world, res);
     Ok(())
+}
+
+/// Authored filter of a physical room associated with a completed template.
+pub fn selector(res: &SimResources, tile: (u32, u32)) -> Option<&'static str> {
+    let room = crate::runtime::rooms::room_at(res, tile)?;
+    let template = installed_or_bundled()
+        .building_templates()
+        .get(room.dwelling_kind.as_deref()?)?;
+    template.function.storage.as_deref()
+}
+
+/// A specialized stockpile accepts its nutritional group; ordinary cells accept all items.
+pub fn accepts(res: &SimResources, tile: (u32, u32), kind: sim_core::colony::ItemKind) -> bool {
+    match selector(res, tile) {
+        None | Some("all") => true,
+        Some(group) => kind
+            .definition()
+            .food
+            .as_ref()
+            .is_some_and(|food| food.groups.iter().any(|candidate| candidate == group)),
+    }
 }

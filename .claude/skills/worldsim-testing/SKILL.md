@@ -336,3 +336,23 @@ A Rust-only mirror may omit files referenced by multiline include_str calls outs
 ### Colony fixtures at tick zero (M-SPINE)
 
 A newly generated colony has a hearth before settlement formation. Locate the initial camp with `worldgen::colony::hearth`, and select steward rules from their actual scope/action instead of assuming a historical optional completion role. Both assumptions failed the first integrated spine tests. Sources: `rust/crates/sim-test/tests/spine_support/mod.rs`; `rust/crates/sim-test/tests/spine_provenance.rs`.
+
+### Content capacity and genuine predecessor saves (C1)
+
+When appended data exceeds a bit-mask word, audit runtime consumers, saved nested
+fields, test DTOs and signed bridge columns together. Preserve prior ordinals and
+prove wire compatibility at every integer encoding boundary and with an actual
+predecessor-produced save, then compare resave bytes and deterministic continuation.
+A current-writer fixture alone cannot prove historical decoding. Sources:
+`rust/crates/sim-systems/src/save/legacy_knowledge_v19.rs`;
+`rust/crates/sim-test/src/bin/spine_save_check.rs`; `docs/v8/c1/C1_DECISIONS.md`.
+
+### Resident wildlife and controlled regression fixtures (C1)
+
+New resident predators can invalidate an old construction or single-wolf setup
+before its first assertion. Preserve the natural failure, trace actual flight/work
+ticks, and isolate threats only in the narrowly controlled fixture. A flight test
+must offer a safe roof route at the scheduled flight tick, including the worker's
+preceding job movement; keep a real job to prove cancellation. Never extend a
+deadline or retune predator data to hide interference. Sources: `colony_jobs.rs`,
+`colony_wildlife.rs` under `rust/crates/sim-test/tests/`; `docs/v8/BALANCE_DEBT.md`.
