@@ -1,34 +1,42 @@
 [
   {
     "file": "/Users/rexxa/work/c1-data/ui-a4/tech_ko_neolithic_lane0_node52.png",
-    "caption": "신석기 음식 지식 · 한국어"
-  },
-  {
-    "file": "/Users/rexxa/work/c1-data/ui-a4/tech_en_neolithic_lane1_node47.png",
-    "caption": "가축 지식과 준비 중 카드 · 영어"
-  },
-  {
-    "file": "/Users/rexxa/work/c1-data/ui-a4/c1_build_granary_ko.png",
-    "caption": "곡식 창고 · 실제 재료 조건"
-  },
-  {
-    "file": "/Users/rexxa/work/c1-data/ui-a4/c1_build_pen_en.png",
-    "caption": "우리 · C1-a는 건설 템플릿"
-  },
-  {
-    "file": "/Users/rexxa/work/c1-data/ui-a4/c1_build_smokehouse_ko.png",
-    "caption": "훈제집 · 물리 작업 자리"
-  },
-  {
-    "file": "/Users/rexxa/work/c1-data/ui-a4/c1_build_oven_house_en.png",
-    "caption": "화덕집 · 건설 패널"
-  },
-  {
-    "file": "/Users/rexxa/work/c1-data/ui-a4/c1_recipe_bake_bread_ko.png",
-    "caption": "실제 화덕의 빵 조리법"
+    "caption": "신석기 지식 · 실제 기술 지도"
   },
   {
     "file": "/Users/rexxa/work/c1-data/ui-a4/c1_recipe_ferment_milk_en.png",
-    "caption": "토기대의 맥주와 치즈 조리법"
+    "caption": "맥주·치즈 · 실제 토기 작업대"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/scene/chain-67989-1794167617256211000/native-1920-run2/ko_00-pen-placed.png",
+    "caption": "우리 배치 · 실제 재료와 건설"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/scene/chain-67989-1794167617256211000/native-1920-run2/ko_01-capture.png",
+    "caption": "자연 야생 새끼를 실제 포획"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/scene/chain-67989-1794167617256211000/native-1920-run2/ko_02-two-adults.png",
+    "caption": "같은 우리 · 성체 암수 두 마리"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/scene/chain-67989-1794167617256211000/native-1920-run2/ko_03-kid.png",
+    "caption": "실제 출생 · 염소 가족 세 마리"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/scene/chain-67989-1794167617256211000/native-1920-run2/ko_first_kid_card.png",
+    "caption": "첫 새끼 결정 · 기르기 또는 도축"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/scene/chain-67989-1794167617256211000/native-1920-run2/ko_04-milk.png",
+    "caption": "젖 생산 · 물리 착유 완료"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/scene/chain-67989-1794167617256211000/native-1920-run2/ko_05-slaughter.png",
+    "caption": "도축 완료 · 고기와 가죽 산출"
+  },
+  {
+    "file": "/Users/rexxa/work/c1-data/scene/chain-67989-1794167617256211000/native-1920-run2/en_removed_slaughter_why.png",
+    "caption": "대상이 사라져도 남는 실제 원인"
   }
 ]

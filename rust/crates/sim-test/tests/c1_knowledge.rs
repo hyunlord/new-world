@@ -145,8 +145,7 @@ fn c1_partial_content_debt_keeps_connected_effects_distinct_from_inert() {
     for (id, kind, status, pass) in [
         ("hoe", "knowledge", "Connected", "M-BAL"),
         ("hoe", "item", "Connected", "M-BAL"),
-        ("animal_taming", "knowledge", "Connected", "C1-b"),
-        ("dairy", "knowledge", "Connected", "C1-b"),
+        ("wool", "item", "Connected", "C2"),
         ("barter", "knowledge", "Inert", "M7"),
         ("herbalism", "knowledge", "Inert", "M9"),
         ("wild_boar", "animal", "Inert", "M-BAL"),
@@ -180,4 +179,17 @@ fn c1_partial_content_debt_keeps_connected_effects_distinct_from_inert() {
             .any(|line| line.starts_with("| querns | knowledge | ")),
         "fully connected querns recipes has no fabricated debt"
     );
+    for (id, kind) in [
+        ("animal_taming", "knowledge"),
+        ("dairy", "knowledge"),
+        ("herding", "knowledge"),
+        ("milk", "item"),
+        ("pen", "template"),
+    ] {
+        let prefix = format!("| {id} | {kind} | ");
+        assert!(
+            !rendered.lines().any(|line| line.starts_with(&prefix)),
+            "fully connected content has no fabricated debt: {kind}/{id}"
+        );
+    }
 }

@@ -233,3 +233,192 @@ later preparation outlasted the original sources and a stale person reference
 failed after a natural death. These failed scenes remain preserved. They are
 workflow failures, not a reason to weaken discovery, grant cord, replace sources
 or change their age. Final chain success remains pending.
+
+## D15 — Natural source recruitment in the fixed world
+
+Before run7, correct D14's executor-added requirement to capture the initial
+IDs10/11. GOAL requires a physical wild-kid source in the admitted world and a
+birth within60 days; it does not require those initial IDs. Runs1–6 remain
+counterexamples to that stricter fixture, with their original source lock and
+expired-preparation save preserved. Seed5, all authored values, keyed traits,
+the two declared taming grants and the absolute60-day deadline stay unchanged.
+
+Prospectively use ordinary adult-goat hunting during physical preparation,
+starting after the two real benches are built, as a real food/source-management
+workflow. Hunt only animals whose actual current age is already adult; never
+remove a kid because of sex, age or a failed capture roll. Existing habitat/cap
+replenishment may then create one real wild appearance on its unchanged eight-day
+boundary. Record actual IDs, appearance ticks and projected biological traits;
+an appearance tick does not establish wild birth or parentage.
+
+Once the real pen and cords exist, select the first currently eligible
+opposite-sex pair in stable ID order, record it before capture, and keep that
+pair through both real jobs. No future traits or rolls are inspected, no seed is
+reselected, and no spawn, age, item, knowledge or RNG state is injected. Existing
+save/load twins and full command replay must reproduce the actual hunting,
+population replacement, captures and products. This is a prospective scripted
+game workflow; its completion remains unproven until the required assertions run.
+
+## D16 — Use ordinary steward defence in the physical game scene
+
+Before run8, turn the steward ON with the existing Housing scope after the fixed
+seed5 admission at tick12. The previous OFF setting was executor-authored, not a
+GOAL requirement. Run7 lost ten people to recorded combat deaths and one to
+dehydration, and no one survived beyond tick49872; the real pen made progress
+while about99 logs remained. Its failed save and timeline remain preserved.
+
+Housing includes existing shared All support (defence, weapon/fuel/wood bills
+and stockpiles) and housing rules, while excluding Food rules including automatic
+livestock capture. This is ordinary player configuration, not defence-only scope
+or a guarantee of survival. Needs, weather, story, combat, seed, authored values,
+D15 wild-source workflow, the two taming grants and absolute60-day deadline stay
+unchanged. Record the exact state and all ordinary command envelopes. Replay
+uses the existing steward replay/pending source-phase mechanism so automation is
+not submitted twice. No weapon, food, knowledge, animal or building is granted.
+
+## D17 — Bind each real kid when its ordinary capture is ordered
+
+Before run11, remove the executor-added demand that both wild kids coexist
+before either capture. GOAL requires two real captures and an adult pair, not
+simultaneous wild availability. Run10 completed the physical pen at tick26272
+and observed a female kid17 at day18, then a male kid22 at day32, but waited
+until tick80641 for a simultaneous pair31/40. One actual capture committed at
+80995; the second capture and birth could not finish within absolute60days.
+That failed run, witnesses and actual save remain preserved.
+
+Prospectively select the first currently eligible natural kid by stable ID once
+the real pen and cords exist; bind that source before its first capture order.
+After success, select and bind the first currently eligible opposite-sex kid
+by the same rule before the second order. Selection uses only current observed
+traits, never future traits or rolls. Keep each bound source across failed
+attempts; do not replace it based on capture outcomes. No seed, demographic,
+number, grant, deadline or hazard changes. D15 adult-only hunting and D16 ordinary
+Housing support remain. This is sequential physical play, with per-source
+evidence, save twins and full command replay; success is not yet asserted.
+
+## D18 — Stage the second real capture through ordinary movement
+
+Run11 bound actual source26 (source22 was another snapshot row), ordered it at
+46081 and reached its expiry48960 with no completed attempt. Camp distance is
+not capture admission: production tests the actual worker and real tool. The
+retained manifest lacks worker position, so it cannot prove a particular
+worker-distance rejection throughout that interval. One actual Cord remains at
+91,86, within21 tiles of source26's initial81,65 position.
+
+Before run12, script the second capture's ordinary staging: select the first
+current living adult tamer by stable ID and a real reachable, unreserved,
+stockpiled selected tool near the bound kid using the existing nearest-stack
+resolver. Draft, walk to that actual stack, observe actual arrival, and undraft.
+Record actual positions and the existing pure capture offer after release, then
+continue the same frozen source's ordinary job and expiry checks. Do not treat
+the movement command as arrival or manufacture a job. Drafting may require
+real arming or release under critical needs; these remain ordinary failures.
+No seed, source, age, odds, supplies, deadline, hazard or biology changes. This
+is a bounded game workflow and admission investigation, not a promised result.
+
+## D19 — Resume ordinary movement only after real need recovery
+
+Run12 chronicle proves tamer0 was auto-undrafted at tick46126 (cause2),
+46ticks after the movement order. The script kept waiting for arrival after
+losing its movement order; no second capture order was submitted. Hunger vs
+thirst was not recorded separately, so that distinction remains unknown.
+Before run13, use the existing actionable-need predicate to wait for normal
+food/water recovery, issue the same ordinary move, and observe either canonical
+nav arrival or actual auto-undraft. On interruption repeat only after real
+needs recover, keeping the same tamer, tool waypoint and frozen source26.
+Add actual position, hunger, thirst and draft state to the existing manifest.
+No product numbers, grants, hazards or deadline changes. Run12 remains failed.
+
+## D20 — Respect actual personal sleep and needs at arrival
+
+Targeted replay of run13's genuine mid-capture save proves Working60 at46813,
+Working30 at46843 and SeekingSleep/job removed at46847, while the wild source
+remains resting. Hunger45.33/thirst42.76 are not critical; no chance roll occurred.
+Keep that replay log and diagnostic source externally, then remove the temporary
+ignored inspector from the publication tree. This is the cleanup plan: preserve
+its evidence, retain the ordinary chain assertion, remove only the completed
+one-off inspector, then rerun the same physical scene.
+
+Before run14, check actual Sleep as well as Hunger/Thirst with the existing
+personal bedtime helper (including Temperament). Re-export that pure helper and
+its existing daytime threshold rather than duplicate or approximate its policy.
+Release movement after actual arrival; if any normal need is now actionable,
+let ordinary relief/rest finish and walk back before the same designation.
+Record actual working-state metadata beside the existing mid-capture save.
+No runtime need precedence, numeric value, source, grant or deadline changes.
+This cannot promise against a future bedtime; any later interruption remains
+real evidence. The one-off diagnostic peaked at total1999tool lines, then was
+removed from active tooling after identifying the actual cancellation.
+
+## D21 — Finish a real sleep episode before the long excursion
+
+Run14's actual mid-save confirms worker0 owned Capture26 with fatigue25.614;
+its ready-now check still crossed personal bedtime during work. Keep this
+failed state and D20's warning. Before run15, let the same worker perform and
+finish an actual ordinary sleep episode, then retain D20's real needs/arrival
+checks and ordinary orders. Keep source26, biological expiry, odds and all
+world parameters. This changes a player's preparation, not sleep precedence.
+
+Cleanup plan: remove the completed D18 pure-offer console diagnostic and its
+Option plumbing; actual source/order manifests and the real Working checkpoint
+already retain the physical evidence. The earlier offer log remains external.
+No assertion, source binding, ordinary command or runtime behavior is removed.
+Run the unchanged physical completion assertions again before claiming success.
+
+## D22 — Use a currently available practitioner, not an executor-fixed person
+
+Run15's mandatory worker0 sleep excursion expired source26 during preparation.
+Its preserved pre-selection day32 snapshot shows0 thirsty71.40 while1 has
+hunger38.98/thirst36.40/fatigue8.03. Both are actual admitted founders. Requiring
+worker0 regardless of current availability was an executor-added restriction,
+not GOAL's two-founder grant or the actual ordinary job admission.
+
+Before run16, keep the frozen wild source and choose the first current adult
+practitioner in stableID order who satisfies the existing actual personal-needs
+predicate. Wait normally if none exists. Bind that actual operator before orders;
+do not reselect after a capture outcome. Remove D21's forced overnight wait,
+retain real movement/needs checks, ordinary work, expiry and all assertions.
+No numeric balance, trait, source, roll, supplies, hazard or deadline changes.
+
+## D23 — Observe the actual post-release executor before another workflow change
+
+Run16 moved selected ready practitioner1 and issued Capture26 at46612, but no
+Working stage occurred before expiry. The actual cord was picked up and dropped
+at89,84. Daily snapshots cannot identify the cancellation or actual executor.
+The independent architecture review rejects another speculative needs/priority
+change without the first post-release states. Before run17, retain exactly D22
+commands and add a temporary targeted30-tick trace of actual practitioners'
+position/state/job/needs only while waiting for that second Working stage.
+This is observation, not an alternative policy or numerical adjustment. Remove
+the completed trace after diagnosis; preserve raw logs. No success is claimed.
+
+## D24 — Assign the staged operator through ordinary work priorities
+
+Run17's unchanged D22 command trace proves staged practitioner1 took Pea Harvest
+at46612 (the exact release/order tick), then Lentil Harvest46666 and Haul46714.
+Actual Capture26 belonged to0 at46772, still fetching the cord at46830, then
+SeekingSleep/noJob46860. No Working stage or capture roll occurred. The trace
+does not prove a transient Capture by1 between observations.
+
+The independent architecture audit identifies the existing physical-forage
+admission guard: Haul0 rejects that competing harvest. Before run18, issue the
+ordinary SetWorkPriority Haul0 only for the staged actor once it arrives ready,
+and restore its existing Haul2 after success. Remove the completed temporary
+18-line trace, retaining run17 raw evidence. Needs, source26, age, deadline,
+knowledge, odds, policies and runtime remain unchanged. This is scene operator
+assignment, not numeric outcome tuning; full-chain success remains pending.
+
+## D25 — Respect Korean text shaping and the HUD visibility owner in native proof
+
+Native chain run1 loaded all six actual saves, rendered the animals, localized
+typed causes and passed English Keep/expiry/Slaughter, but four Korean click
+assertions failed: button lookup compared raw Locale text to shaped text with
+U+2060. Normalize that existing shaping character in the harness lookup, as
+other existing native checks already do. Retain the failing run, exit1/error0.
+
+The attempted capture-only cards.hide emitted visibility_changed, whose
+existing HUD foreground owner immediately showed active cards again, leaving
+an empty dark panel in the physical capture. Temporarily modulate alpha0 for
+the physical image and restore the exact original Color; do not compete with
+visibility ownership or mutate card/simulation state. Actual card captures and
+ordinary clicks remain visible and required. No product workaround is needed.

@@ -14,5 +14,6 @@ pub(crate) mod targets;
 pub(crate) mod wood;
 
 pub use needs::{
-    actionable_need_with_fatigue_threshold, clock_in_window, fatigue_threshold_at, NeedAvailability,
+    actionable_need_with_fatigue_threshold, clock_in_window, fatigue_threshold_at,
+    person_night_rest, NeedAvailability, FATIGUE_THRESHOLD,
 };

@@ -56,13 +56,13 @@
      function: (beds: 0, storage: Some("grain"), workshop_tags: [], warmth: Roofed),
      upgrade_from: None, upgrade_to: None, zone_kind: None,
      status: Connected, debt: None, art: (roof: Round, tint_material: "oak", icon: "grain")),
-    // Six heads is starting design guidance; C1-b supplies capture, grazing and breeding.
+    // Six heads is starting design guidance; capture, grazing and breeding use this physical pen.
     (id: "pen", name_key: "BUILDING_PEN", era: "neolithic", category: Utility, tier: 1,
      footprint: (5, 5), pieces: [(kind: "fence", at: Ring), (kind: "door", at: Edge(South))],
      stations: [], requires_knowledge: ["animal_taming", "fence"], materials: {"log": 16},
      function: (beds: 0, storage: None, livestock_capacity: 6, workshop_tags: [], warmth: Open),
      upgrade_from: None, upgrade_to: None, zone_kind: None,
-     status: Connected, debt: Some("C1-b: captive livestock, feed and breeding follow the buildable pen."), art: (roof: Round, tint_material: "oak", icon: "horn")),
+     status: Connected, debt: None, art: (roof: Round, tint_material: "oak", icon: "horn")),
     (id: "well", name_key: "BUILDING_WELL", era: "neolithic", category: Utility, tier: 2,
      footprint: (3, 3), pieces: [(kind: "well_body", at: Anchor)],
      stations: [], requires_knowledge: ["digging", "stone_walling"], materials: {},

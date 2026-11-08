@@ -9,7 +9,7 @@
 ### Changed
 - Preserve the original d30 paired-smoke BASE and the single wild-boar Inert switch. Starting biological and work values are authored before outcomes.
 - Format21 appends livestock and three Skills counters; exact authenticated19/20 readers retain historical counters, buildings, knowledge and mind dictionaries. Three genuine published-a20 fixtures and the original BASE19 save pass focused continuation checks.
-- Focused core/system/bridge suites, all-target Clippy, data-only extension and bilingual tech/recipe native checks pass. The physical goat chain, six domestic-animal native checkpoints and full publication gate remain pending.
+- Focused core/system/bridge suites, all-target Clippy, data-only extension and bilingual tech/recipe native checks pass. The physical goat chain passes seed5 within60days with mid-work roundtrip/twins/full command replay; all six native checkpoints and actual Korean/English controls pass299 checks/error0. The frozen full publication gate remains pending.
 - Rebind a renderer's local snapshot on world reset instead of clearing the recursively frozen SimReads dictionary; preserve the native run that exposed the engine error despite a zero harness failure count.
 
 ### Removed

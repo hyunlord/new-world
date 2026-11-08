@@ -548,7 +548,10 @@ func _livestock() -> void:
 				var xs: PackedInt64Array = read["xs"]
 				var ys: PackedInt64Array = read["ys"]
 				await _tile(Vector2i(xs[0], ys[0]), false)
+			var cards_color: Color = cards.modulate
+			cards.modulate = Color(cards_color, 0.0)
 			await _capture(language + "_" + stage)
+			cards.modulate = cards_color
 			var before: Dictionary = _world.call("get_command_log", 0)
 			var current_chapter: int = int(goals.call("current_chapter"))
 			var has_capture: bool = int(read.get("first_capture", -1)) >= 0
@@ -606,5 +609,5 @@ func _livestock_button(cards: Control, key: String) -> Button:
 	var text: String = str(_locale.call("ltr", key))
 	for node: Node in cards.find_children("*", "Button", true, false):
 		var button: Button = node as Button
-		if button.text.begins_with(text): return button
+		if button.text.replace("\u2060", "").begins_with(text): return button
 	return null

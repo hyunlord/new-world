@@ -375,3 +375,25 @@ current-writer fixture cannot establish historical decoding. Preserve the actual
 failed load separately from repair and later validation. Sources:
 `rust/crates/sim-systems/src/runtime/mind/program.rs`;
 `docs/v8/c1/C1_DECISIONS.md` D13; external `b-genuine20-tests-2.log`.
+
+### Physical scene constraints and ordinary support
+
+Keep authored biological values and source evidence fixed, but distinguish the
+goal's requirements from extra fixture restrictions. C1's initial-ID lock and
+simultaneous-wild-pair wait were executor additions; both delayed otherwise
+ordinary sequential capture. Correct such restrictions prospectively, preserve
+failed runs, and bind each actual source before its command without selecting
+again after a failed roll. Record ordinary steward scope and replay automated
+commands at their existing source phase. For physical harvest output capacity,
+mirror production's optional source region: a reachable blocked endpoint can
+have region0 while adjacent passable output cells have a nonzero region.
+Sources: `docs/v8/c1/C1_DECISIONS.md` D14–D17;
+`rust/crates/sim-test/tests/c1_chain_goat.rs`; external `b-chain-run-10.log`.
+
+A move order does not survive critical-need auto-undraft: observe actual draft
+state, let normal needs resolve, then reissue the ordinary order. Capture Working
+is not a completed attempt; replay the actual mid-work save to distinguish needs,
+chase and chance. Include personal sleep windows (Temperament), not just global
+bedtime or hunger/thirst. Record the actual job owner, not only the staged person.
+Source: C1 decisions D18–D20; retained run12/13 and interruption replay3.
+Native Korean labels can contain U+2060 shaping characters: normalize lookup text; capture-only visibility must respect the HUD owner (use restored modulation). Source: `docs/v8/c1/C1_DECISIONS.md` D25; `tools/v8/spine_build_test.gd`.

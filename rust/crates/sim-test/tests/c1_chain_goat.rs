@@ -10,11 +10,12 @@ use sim_core::colony::content::{installed_or_bundled, AnimalKind};
 use sim_core::colony::knowledge::{self, Source};
 use sim_core::colony::livestock::{current_age, LivestockEvent};
 use sim_core::colony::livestock_demographics::wild_demographics;
+use sim_core::colony::people::Drafted;
 use sim_core::colony::{
     BillMode, BlueprintKind, Command, ItemKind, Job, JobKind, JobStage, NodeKind, RecipeKind,
     Skills, WorkPriorities, WorkType,
 };
-use sim_core::components::{AgentId, BodyHealth, Elder};
+use sim_core::components::{AgentId, BodyHealth, Elder, Hunger, Sleep, Temperament, Thirst};
 use sim_core::material::TerrainType;
 use sim_engine::SimEngine;
 use sim_systems::commands::{check_blueprint, submit};
@@ -51,7 +52,7 @@ fn document(path: &Path, value: Value) {
 fn output() -> PathBuf {
     let base = std::env::var_os("WORLDSIM_C1_SCENE_OUT")
         .map(PathBuf::from)
-        .unwrap_or_else(|| PathBuf::from("/Users/rexxa/work/c1-data/scene"));
+        .unwrap_or_else(|| std::env::temp_dir().join("worldsim-c1-scene"));
     assert!(base.is_absolute(), "external absolute scene path");
     std::fs::create_dir_all(&base).expect("external scene root");
     let repository = Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -234,7 +235,7 @@ fn admit(out: &Path) -> (SimEngine, [u32; 2], usize, Value) {
         println!("C1_ADMISSION seed={seed} habitat={habitat} clay={clay} pair={pair:?} accepted={accepted}");
         if accepted {
             let pair = pair.expect("admitted pair");
-            // Run1 admitted this source before any chain outcome; reruns may not replace it.
+            // Preserve run1 admission and seed; D15 permits ordinary natural-source succession.
             assert_eq!(
                 (seed, pair),
                 (5, [10, 11]),
@@ -244,7 +245,7 @@ fn admit(out: &Path) -> (SimEngine, [u32; 2], usize, Value) {
                 &out.join("source-binding.json"),
                 json!({"seed":seed,"pair":pair,
                 "first_admission_evidence":"/Users/rexxa/work/c1-data/scene/chain-41172-1794161240877036000/seed-admission-05.json",
-                "binding":"first actual admission, retained across every chain rerun"}),
+                "binding":"initial admission counterexample retained; actual capture sources follow prospective D15 and sequential D17"}),
             );
             return (e, pair, habitat, initialization);
         }
@@ -256,7 +257,9 @@ struct Scene {
     e: SimEngine,
     twin: Option<SimEngine>,
     out: PathBuf,
-    pair: [u32; 2],
+    initial_pair: [u32; 2],
+    capture_sources: Vec<u32>,
+    hunting: bool,
     habitat: usize,
     initialization: Value,
     pen: Option<u32>,
@@ -480,6 +483,38 @@ impl Scene {
             self.e.current_tick() < self.limit(),
             "absolute60day deadline"
         );
+        if self.hunting && self.e.resources.livestock.animals.len() < 2 {
+            let goat = installed_or_bundled()
+                .animal_by_name("wild_goat")
+                .expect("goat");
+            let policy = goat.definition().tameable.as_ref().expect("goat policy");
+            let mature: Vec<_> = self
+                .e
+                .resources
+                .colony
+                .wildlife
+                .animals
+                .values()
+                .filter(|a| {
+                    a.kind == goat && !self.e.resources.colony.wildlife.marks.contains(&a.id)
+                })
+                .filter(|a| {
+                    wild_demographics(
+                        self.e.resources.world_seed,
+                        a,
+                        policy,
+                        self.e.current_tick(),
+                        self.e.resources.ticks_per_day,
+                    )
+                    .age_days
+                        >= policy.kid_age_days
+                })
+                .map(|a| a.id)
+                .collect();
+            for animal in mature {
+                self.send(Command::DesignateHunt { animal });
+            }
+        }
         if self.e.current_tick().is_multiple_of(240) {
             self.lessons();
             self.pottery();
@@ -511,10 +546,10 @@ impl Scene {
     fn until(&mut self, label: &str, ready: impl Fn(&SimEngine) -> bool) {
         println!("C1_WAIT {label} tick={}", self.e.current_tick());
         while self.e.current_tick() < self.limit() && !ready(&self.e) {
-            if self.e.resources.livestock.animals.is_empty() {
-                let expired = self.pair.iter().any(|id| {
+            if !self.capture_sources.is_empty() {
+                let expired = self.capture_sources.iter().any(|id| {
                     let Some(a) = self.e.resources.colony.wildlife.animals.get(id) else {
-                        return true;
+                        return false; // A successfully captured frozen target is no longer wild.
                     };
                     let policy = a
                         .kind
@@ -547,6 +582,11 @@ impl Scene {
                 }
             }
             self.tick();
+        }
+        if !ready(&self.e) {
+            let bytes = sim_systems::save::save(&mut self.e).expect("actual deadline world save");
+            fresh(&self.out.join("failed-deadline.wsave"), &bytes);
+            document(&self.out.join("failed-deadline.json"), self.manifest(label));
         }
         assert!(
             ready(&self.e),
@@ -608,8 +648,10 @@ impl Scene {
         });
         json!({"label":label,"seed":self.e.resources.world_seed,"tick":self.e.current_tick(),
             "display_day":sim_systems::runtime::resource_regen::day_index(&self.e.resources),"absolute_deadline":self.limit(),
-            "habitat_tiles":self.habitat,"admitted_pair":self.pair,"source_profiles":source_rows(&self.e,goat),
-            "initializer":self.initialization,"pen":self.pen,"selected_site":self.pen,
+            "habitat_tiles":self.habitat,"initial_admission_pair":self.initial_pair,"actual_capture_pair":self.capture_sources,
+            "source_policy":"D15 mature-only hunting/natural replacement; D17 bind each current kid sequentially by stable ID, second opposite-sex; born_tick is appearance, not biological birth", "source_profiles":source_rows(&self.e,goat),
+            "initializer":self.initialization,"steward":{"enabled":self.e.resources.steward.enabled,
+                "scope":self.e.resources.steward.scope,"defence_enabled":self.e.resources.steward.defence.enabled},"pen":self.pen,"selected_site":self.pen,
             "livestock":{"animals":animals,"grass":grass,"witnesses":self.e.resources.livestock.witnesses,
                 "first_capture":self.e.resources.livestock.first_capture,"first_kid_id":self.e.resources.livestock.first_kid_id,
                 "capture_attempts":self.e.resources.livestock.capture_attempts},
@@ -622,6 +664,10 @@ impl Scene {
             "ground_items":self.e.resources.colony.ground_items.iter().map(|(tile,stack)|json!({"tile":tile,"stack":stack})).collect::<Vec<_>>(),
             "chronicle":self.e.resources.chronicle.entries(),"knowledge":people(&self.e.world,&self.e.resources).into_iter()
                 .map(|p|json!({"id":p.id,"ns":p.ns,"adult":p.adult,"knowledge":knowledge_of(&self.e.world,p.entity),
+                    "position":p.pos,"hunger":self.e.world.get::<&Hunger>(p.entity).ok().map(|v|v.value),
+                    "thirst":self.e.world.get::<&Thirst>(p.entity).ok().map(|v|v.value),
+                    "drafted":self.e.world.get::<&Drafted>(p.entity).ok().map(|v|*v),
+                    "sleep":self.e.world.get::<&Sleep>(p.entity).ok().map(|v|*v),
                     "skills":self.e.world.get::<&Skills>(p.entity).ok().map(|s|*s),
                     "priorities":self.e.world.get::<&WorkPriorities>(p.entity).ok().map(|v|*v),
                     "job":self.e.world.get::<&Job>(p.entity).ok().map(|v|*v)})).collect::<Vec<_>>(),
@@ -658,6 +704,39 @@ impl Scene {
     }
 }
 
+fn travel_ready(e: &SimEngine, entity: hecs::Entity) -> bool {
+    use sim_systems::runtime::agent_actions as needs;
+    let hunger = e.world.get::<&Hunger>(entity).ok();
+    let thirst = e.world.get::<&Thirst>(entity).ok();
+    let sleep = e.world.get::<&Sleep>(entity).ok();
+    let temperament = e.world.get::<&Temperament>(entity).ok();
+    let day_tick = (e.resources.ticks_per_day != 0).then(|| {
+        e.resources
+            .current_tick
+            .saturating_add(e.resources.rules.clock_offset_ticks)
+            % e.resources.ticks_per_day
+    });
+    let threshold = needs::person_night_rest(
+        e.resources.rules.agent.night_rest,
+        e.resources.rules.agent.temperament,
+        temperament.as_deref(),
+        day_tick,
+    )
+    .map_or(needs::FATIGUE_THRESHOLD, |rule| rule.fatigue_threshold);
+    needs::actionable_need_with_fatigue_threshold(
+        hunger.as_deref(),
+        thirst.as_deref(),
+        sleep.as_deref(),
+        needs::NeedAvailability {
+            food: true,
+            water: true,
+            sleep: true,
+        },
+        threshold,
+    )
+    .is_none()
+}
+
 fn prioritize(s: &mut Scene, agent: AgentId, work: WorkType, level: u8) {
     let person = people(&s.e.world, &s.e.resources)
         .into_iter()
@@ -680,7 +759,9 @@ fn c1_chain_goat() {
         e,
         twin: None,
         out,
-        pair,
+        initial_pair: pair,
+        capture_sources: Vec::new(),
+        hunting: false,
         habitat,
         initialization,
         pen: None,
@@ -689,6 +770,11 @@ fn c1_chain_goat() {
         forming_ordered: false,
         next_firing: 0,
     };
+    // D16: ordinary live-game defence and housing support; Food livestock orders stay off.
+    s.send(Command::SetSteward {
+        on: true,
+        scope: sim_core::colony::steward::StewardScope::Housing,
+    });
     let adults: Vec<_> = people(&s.e.world, &s.e.resources)
         .into_iter()
         .filter(|p| p.adult)
@@ -768,6 +854,15 @@ fn c1_chain_goat() {
             .iter()
             .any(|(_, k)| k.completed[4] >= 2)
     });
+    s.hunting = true;
+    for person in people(&s.e.world, &s.e.resources)
+        .into_iter()
+        .filter(|p| p.adult)
+    {
+        if knowledge_of(&s.e.world, person.entity).practises(node("tracking")) {
+            prioritize(&mut s, person.id, WorkType::Hunt, 1);
+        }
+    }
     // Consecutive crafts on one bill stay in one Job; separate real bills give
     // the same worker two completed jobs for the authored cordage prerequisite.
     for count in 1..=2 {
@@ -830,15 +925,20 @@ fn c1_chain_goat() {
         tiles
     };
     s.until("naturally ripe first-summer flax", |e| !ripe(e).is_empty());
+    s.checkpoint("flax-ready");
     // Independent real plants let ordinary free haulers harvest concurrently.
     for (x, y) in ripe(&s.e) {
         let r = &s.e.resources;
         let spec = sim_core::colony::ItemSpec::raw(item("flax_stalks"), None);
-        let region = r.nav.region_of((x, y));
+        let passable = r.nav.passable((x, y));
+        let region = (r.nav.is_built() && passable)
+            .then(|| r.nav.region_of((x, y)))
+            .filter(|region| *region != 0);
+        println!("C1_FLAX_SOURCE tile={x},{y} region={region:?} passable={passable}");
         let mut available: Vec<_> = (0..r.tile_grid.height)
             .flat_map(|iy| (0..r.tile_grid.width).map(move |ix| (ix, iy)))
             .filter(|&t| {
-                r.nav.region_of(t) == region
+                region.is_none_or(|region| r.nav.region_of(t) == region)
                     && sim_systems::runtime::jobs::items::room_on(r, t, spec) > 0
             })
             .collect();
@@ -985,34 +1085,49 @@ fn c1_chain_goat() {
             prioritize(&mut s, person.id, WorkType::Build, 3);
         }
     }
-    let mut capture_order = pair;
-    capture_order.sort_by_key(|id| {
-        let animal = &s.e.resources.colony.wildlife.animals[id];
-        let policy = animal
-            .kind
-            .definition()
-            .tameable
-            .as_ref()
-            .expect("capture policy");
-        let profile = wild_demographics(
-            s.e.resources.world_seed,
-            animal,
-            policy,
-            s.e.resources.current_tick,
-            s.e.resources.ticks_per_day,
-        );
-        (
-            profile.last_age_tick
-                + u64::from(policy.kid_age_days.saturating_sub(profile.age_days))
-                    * s.e.resources.ticks_per_day,
-            *id,
-        )
-    });
-    document(
-        &s.out.join("capture-order.json"),
-        json!({"bound_pair":pair,"capture_order":capture_order,"rule":"earliest actual kid expiry, then stable ID"}),
-    );
-    for (index, wild) in capture_order.into_iter().enumerate() {
+    let current_source = |e: &SimEngine, first_sex: Option<bool>| {
+        let goat = installed_or_bundled()
+            .animal_by_name("wild_goat")
+            .expect("goat");
+        let mut kids: Vec<_> = source_rows(e, goat)
+            .into_iter()
+            .filter(|row| {
+                row["kid"].as_bool() == Some(true)
+                    && row["reachable"].as_bool() == Some(true)
+                    && first_sex.is_none_or(|sex| row["female"].as_bool() != Some(sex))
+                    && row["distance"].as_u64().is_some_and(|d| {
+                        d <= u64::from(
+                            goat.definition()
+                                .tameable
+                                .as_ref()
+                                .expect("policy")
+                                .capture_range_tiles,
+                        )
+                    })
+            })
+            .map(|row| u32::try_from(row["id"].as_u64().expect("actual ID")).expect("wild ID"))
+            .collect();
+        kids.sort_unstable();
+        kids.first().copied()
+    };
+    let mut first_sex = None;
+    for index in 0..2 {
+        s.until("current natural kid for sequential capture", |e| {
+            current_source(e, first_sex).is_some()
+        });
+        let wild = current_source(&s.e, first_sex).expect("current natural kid");
+        s.capture_sources.push(wild); // Freeze before dispatch; never replace a failed target.
+        if index == 1 {
+            document(
+                &s.out.join("actual-capture-pair.json"),
+                s.manifest("D17 sequential pair frozen before second capture"),
+            );
+            document(
+                &s.out.join("capture-order.json"),
+                json!({"bound_pair":s.capture_sources,"capture_order":s.capture_sources,
+                    "rule":"D17 stable first current kid; after success stable first current opposite-sex kid"}),
+            );
+        }
         let source =
             s.e.resources
                 .colony
@@ -1034,14 +1149,86 @@ fn c1_chain_goat() {
             s.e.resources.current_tick,
             s.e.resources.ticks_per_day,
         );
+        if index == 0 {
+            first_sex = Some(p.sex.female);
+        } else {
+            assert_ne!(first_sex, Some(p.sex.female));
+        }
         document(
             &s.out.join(format!("capture-source-{index}.json")),
-            json!({"source":wild,"profile_age":p.age_days,"female":p.sex.female,"tick":s.e.current_tick(),"all_sources":source_rows(&s.e,source.kind)}),
+            json!({"source":wild,"appearance_tick":source.born_tick,"appearance_is_not_biological_birth":true,"profile_age":p.age_days,"female":p.sex.female,"tick":s.e.current_tick(),"all_sources":source_rows(&s.e,source.kind)}),
         );
         assert!(
             p.age_days < policy.kid_age_days,
             "accepted source expired during ordinary preparation; do not replace seed/age"
         );
+        let mut staged_tamer = None;
+        if index == 1 {
+            s.until("current ready adult capture practitioner", |e| {
+                people(&e.world, &e.resources).into_iter().any(|person| {
+                    person.adult
+                        && travel_ready(e, person.entity)
+                        && knowledge_of(&e.world, person.entity)
+                            .practises(node(&policy.capture_knowledge))
+                })
+            });
+            let tamer = people(&s.e.world, &s.e.resources)
+                .into_iter()
+                .filter(|person| {
+                    person.adult
+                        && travel_ready(&s.e, person.entity)
+                        && knowledge_of(&s.e.world, person.entity)
+                            .practises(node(&policy.capture_knowledge))
+                })
+                .min_by_key(|person| person.id)
+                .expect("current adult capture practitioner");
+            let tool = policy.capture_tool.expect("physical capture tool");
+            let at = sim_systems::runtime::jobs::hunt::nearest_stack(
+                &s.e.resources,
+                source.pos,
+                policy.capture_range_tiles,
+                &[tool],
+                true,
+            )
+            .expect("real reachable stockpiled capture tool near bound source");
+            loop {
+                s.until(
+                    "ordinary hunger/thirst/sleep recovery before movement",
+                    |e| travel_ready(e, tamer.entity),
+                );
+                s.send(Command::SetDrafted {
+                    agent: tamer.id,
+                    drafted: true,
+                });
+                s.send(Command::DraftMove {
+                    agent: tamer.id,
+                    x: at.0,
+                    y: at.1,
+                });
+                s.until("ordinary walk or critical-need release", |e| {
+                    people(&e.world, &e.resources).into_iter().any(|person| {
+                        person.id == tamer.id
+                            && (e.resources.nav.arrived(person.pos, at)
+                                || e.world.get::<&Drafted>(person.entity).is_err())
+                    })
+                });
+                let person = people(&s.e.world, &s.e.resources)
+                    .into_iter()
+                    .find(|person| person.id == tamer.id)
+                    .expect("same living tamer");
+                s.send(Command::SetDrafted {
+                    agent: tamer.id,
+                    drafted: false,
+                });
+                if s.e.resources.nav.arrived(person.pos, at) && travel_ready(&s.e, tamer.entity) {
+                    // Ordinary assignment: keep stock-foraging from taking the staged tamer.
+                    prioritize(&mut s, tamer.id, WorkType::Haul, 0);
+                    staged_tamer = Some(tamer.id);
+                    break;
+                }
+                // Let real needs resolve after any interrupted or unfinished excursion.
+            }
+        }
         let consumed = s.e.resources.colony.item_ledger.consumed_of(item("cord"));
         s.send(Command::DesignateCapture { animal: wild });
         if index == 1 {
@@ -1052,6 +1239,10 @@ fn c1_chain_goat() {
                 })
             });
             s.twin();
+            document(
+                &s.out.join("mid-second-capture.json"),
+                s.manifest("actual second capture Working"),
+            );
         }
         s.until("successful natural capture", |e| {
             e.resources
@@ -1060,6 +1251,9 @@ fn c1_chain_goat() {
                 .values()
                 .any(|w| matches!(w.event,LivestockEvent::Captured{wild:id,..}if id==wild))
         });
+        if let Some(agent) = staged_tamer {
+            prioritize(&mut s, agent, WorkType::Haul, 2);
+        }
         let witness =
             s.e.resources
                 .livestock
@@ -1189,14 +1383,20 @@ fn c1_chain_goat() {
     let log = s.e.resources.colony.command_log.clone();
     let final_tick = s.e.current_tick();
     let (mut replay, _) = initialize(s.e.resources.world_seed);
+    replay.resources.steward.replay = true;
     let mut next = 0;
     for tick in 0..=final_tick {
         while next < log.len() && log[next].tick == tick {
-            assert_eq!(
-                submit(&mut replay, log[next].command.clone()),
-                log[next].result,
-                "full replay command {next}"
-            );
+            let command = log[next].command.clone();
+            if matches!(command, Command::Steward { .. }) {
+                replay.resources.steward.pending.push((tick, command));
+            } else {
+                assert_eq!(
+                    submit(&mut replay, command),
+                    log[next].result,
+                    "full replay command {next}"
+                );
+            }
             next += 1;
         }
         if tick < final_tick {
@@ -1204,6 +1404,8 @@ fn c1_chain_goat() {
         }
     }
     assert_eq!(next, log.len());
+    assert!(replay.resources.steward.pending.is_empty());
+    replay.resources.steward.replay = false;
     assert_eq!(replay.resources.colony.command_log, log);
     invariants::check(&replay.world, &replay.resources).expect("full replay physical invariants");
     assert_eq!(

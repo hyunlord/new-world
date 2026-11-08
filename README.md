@@ -15,7 +15,7 @@
 
 **Stage2 게시 후보:** 실제 아마 수확 → 침지 → 방적 → 직조 → 재단 → 착용 사슬과 저장 재개를 확인했다. baseline identity와 8개 세계 생존 smoke는 통과했고, 전체 게시 gate는 대기 중이다. 게시판은 위 Stage1이다.
 
-[C1-a 화면 모음](docs/images/c1_contact_sheet.png)은 실제 창에서 확인한 한·영 신석기 지식, 곡식 창고·우리·훈제집·화덕집 패널, 빵·맥주·치즈 조리법8장을 묶었다. C1-a의 우리는 건설만 가능하며 가축 사슬은 C1-b에서 연결한다. 화면과 실제 제작·장부 검증을 구분하며, 게시 상태는 [C1 보고](docs/v8/c1/C1_REPORT.md)에 기록한다. [M-SPINE 기록](docs/v8/spine/M_SPINE_B_REPORT.md), [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).
+[C1 화면 모음](docs/images/c1_contact_sheet.png)은 실제 한·영 기술·조리법과 우리 배치→포획→성체 쌍→출생→착유→도축, 첫 새끼 카드·원인 설명10장을 묶었다. 가축 화면은 같은 시드5의 실제 사슬 저장을 게임 창에서 읽은 결과다. C1-a는 게시됐으며 C1-b의 전체 게이트·게시 증거는 [C1 보고](docs/v8/c1/C1_REPORT.md)에 기록한다. [M-SPINE 기록](docs/v8/spine/M_SPINE_B_REPORT.md), [M6a 기록](docs/v8/m6a/M6A_REPORT.md), [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png).
 
 먼저 ‘지금 할 일’에서 현재 작업과 올해 목표를 읽고, 카드의 조건을 확인한 뒤 선택한다. 중요한 연대기에서 사건과 기록된 원인을 확인한다. 창립자 역할 표시는 명령을 보내지 않으며 P의 역할을 직접 선택하면 그 주민의 작업 우선순위가 바뀐다.
 

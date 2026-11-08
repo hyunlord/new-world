@@ -575,7 +575,7 @@
             stack_rule: None, carry_rule: None, value: 3, made_by: None, clue_nodes: ["dairy"],
             chop: None, weapon: None, cutter: None, fuel_units: None, apparel: None,
             food: Some((units: 1, units_rule: None, spoil_days: 1, spoil_rule: None, groups: ["dairy"], raw_edible: true, cooked: false, preference: 0, storage_spoil_days: Some((ground: 1, stockpile: 2, roofed_store: 3, pot: 4)), sick_permille: 0)),
-            era: "neolithic", lane: "food", status: Connected, debt: Some("C1-b: livestock milking source is not connected; milk is an authored food and cheese recipe input."),
+            era: "neolithic", lane: "food", status: Connected, debt: None,
             art: (shape: Vessel, tint_material: "limestone"),
         ),
         (
@@ -788,7 +788,7 @@
             category: "material", material_format_key: "", tags: ["fiber", "textile"], stack_max: 30, carry: 10,
             stack_rule: None, carry_rule: None, value: 3, made_by: None, clue_nodes: [],
             chop: None, weapon: None, cutter: None, food: None, fuel_units: None, apparel: None,
-            era: "neolithic", lane: "textile", status: Connected, debt: Some("C1-b: sheep wool production is not connected; C2: wool spinning and woollen garments."),
+            era: "neolithic", lane: "textile", status: Connected, debt: Some("C2: sheep wool production, wool spinning and woollen garments are not connected."),
             art: (shape: Cloth, tint_material: "limestone"),
         ),
     ],

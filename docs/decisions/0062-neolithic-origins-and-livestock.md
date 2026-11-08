@@ -93,3 +93,13 @@ All biological/work values were fixed in commented data before chain outcomes.
 The real scene may seed only animal_taming to two founders; materials, other
 knowledge, capture, offspring and products must come from ordinary mechanisms.
 These decisions record intended implementation, not completed verification.
+
+### Focused verification evidence before publication freeze
+
+The actual seed5 scene completed all six physical stages at tick80749 under
+the absolute86400 deadline, with mid-work save/twins and full384-command replay.
+The native1920x1080 Korean/English six-save proof passed299 checks with zero
+engine/script errors. D14–D25 retain failed scene and native evidence and
+prospective ordinary-command corrections; no biological/odds/outcome tuning.
+The final frozen full gate and remote landing are separate publication receipts
+in external c1-data, not implied by these focused results.
