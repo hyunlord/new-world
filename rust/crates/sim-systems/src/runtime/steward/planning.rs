@@ -1017,6 +1017,7 @@ fn house_geometry(
         }
         permission[i] == 2
     };
+    let template_geometry = template.map(template_housing::TemplateGeometry::new);
     for (index, (x, y, width, height)) in locations.into_iter().enumerate() {
         // Bound both expensive scores and all additional candidate visits.
         if first_valid.is_some_and(|first| index > first + 256) || scored == 16 {
@@ -1070,9 +1071,11 @@ fn house_geometry(
         } else {
             openings.sort_by_key(|&tile| (distance(tile, preferred_door), tile.1, tile.0));
         }
-        let rotations = template.map_or_else(Vec::new, |template| {
-            template_housing::rotations(template, (x, y), (width + 2, height + 2))
-        });
+        let rotations = template_geometry
+            .as_ref()
+            .map_or_else(Vec::new, |geometry| {
+                geometry.rotations((x, y), (width + 2, height + 2))
+            });
         if template.is_some() {
             openings.retain(|tile| rotations.iter().any(|(door, _)| door == tile));
         }
@@ -1097,8 +1100,8 @@ fn house_geometry(
             .iter()
             .find_map(|(door, rotation)| (*door == door_tile).then_some(*rotation))
             .unwrap_or(0);
-        let expanded = match template {
-            Some(template) => match template_housing::expanded(template, rotation) {
+        let expanded = match template_geometry.as_ref() {
+            Some(geometry) => match geometry.expanded(rotation) {
                 Some(plan) => Some(plan),
                 None => continue,
             },
@@ -1168,10 +1171,7 @@ fn house_geometry(
         if !valid || free.len() < (beds + service_cells) as usize {
             continue;
         }
-        if expanded
-            .as_ref()
-            .is_some_and(|plan| !template_housing::preview(res, &people, plan, (x, y)))
-        {
+        if expanded.is_some_and(|plan| !template_housing::preview(res, &people, plan, (x, y))) {
             continue;
         }
         let boundary: BTreeSet<_> = border
@@ -1230,7 +1230,7 @@ fn house_geometry(
             .copied()
             .chain(room.tiles.iter().copied().map(local))
             .collect();
-        if let Some(plan) = &expanded {
+        if let Some(plan) = expanded {
             reserved = template_housing::piece_tiles(plan, (x, y));
         }
         if let Some((items, committed, building, pending, margin, fuel)) = clearing_budget {
@@ -1257,7 +1257,7 @@ fn house_geometry(
                     })
                     .sum::<u32>()
                     .saturating_add(log_cost(bed).saturating_mul(beds));
-                if let Some(plan) = &expanded {
+                if let Some(plan) = expanded {
                     let Ok(costs) = template_selection::costs(res, plan) else {
                         continue;
                     };
@@ -1372,7 +1372,7 @@ fn house_geometry(
             }) {
                 commands.clear();
             }
-            if let (Some(template), Some(plan)) = (template, expanded.as_ref()) {
+            if let (Some(template), Some(plan)) = (template, expanded) {
                 if !template_housing::preview(res, &actual_people, plan, (x, y)) {
                     commands.clear();
                 } else if !commands.is_empty() {

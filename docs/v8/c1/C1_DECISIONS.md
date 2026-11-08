@@ -56,7 +56,7 @@ current C1 worlds are independently tested for their actual regional content.
 Widening internal masks also requires JSON to expose low/high words rather than
 serialize a u128 number through serde_json::Value. Zero high words are omitted
 from historical probe rows. These are implementation corrections, not outcome
-tuning. Failed focused logs remain in c1-data/logs; no full gate has yet run.
+tuning. Failed focused logs remain in c1-data/logs; the later full gate is recorded below.
 
 ## Integration review: regional seed clues and staged dairy debt
 
@@ -87,3 +87,34 @@ Post-switch `crash-head-a3` completed exit0: alive `[10,13,11,14,10,12,12,12]`,
 KnowledgeLost all zero. The paired collapse floor passed without any further
 item switch or numerical change. Exact binary and summary hashes are in its
 external receipt. Full frozen-source publication verification remains required.
+
+## D8 — Preserve the first full gate failures
+
+Frozen e0578430641a8c3ada03b81f53a67ef27f5b9c9e completed its first full gate
+with47/49 steps passing. Step41 exceeded the existing60ms post-warmup ceiling
+once at zoom1.0:61.646ms, displayed tick361. StewardSystem consumed33.286ms
+of37.063ms native processing; this does not account for the entire frame.
+Repeated template expansion inside the measured house-search path is a bounded
+optimization candidate. Its timing benefit is not yet established; preserve
+candidate order, visit/score bounds, geometry, occupancy and navigation behavior.
+No threshold, waiver, authored quantity or simulation policy changes are allowed.
+
+Step46's Why EN run failed7 checks and completed49 of the expected64 checks.
+The missing visible minimap caused15 checks to be skipped; an open priority panel
+obscured map input and the observed language was Korean. The initiating cause
+remains unproven. One unchanged isolated EN/KO reproduction passed64 checks each
+with correct language. This is non-reproduction, not a fix or replacement for the
+failed full gate. Do not reduce coverage, hide the obstruction or invent an
+external-input explanation. Both original failures remain counted under GOAL §5.
+
+External evidence: fullgate-a-attempt1, stall-a1-failure-extract.json,
+stall-a1-diagnosis.md and why-a1-diagnostic. Postrun binding confirmed all3058
+source pins and the gate configuration unchanged. Original executable hashes
+are retained in a1-frozen-bin for behavior comparisons. Publication remains pending.
+
+The follow-up implementation caches four immutable rotated plans and their first
+door offsets once per house-planning call, borrowing the selected plan. Existing
+pre-change template9/house12 tests passed; after the change template10/house12
+passed, including exact original-algorithm comparison for square, rectangular,
+custom-door, missing-door and invalid templates. This proves the focused contract,
+not the full identity or frame ceiling; both remain required in the next gate.

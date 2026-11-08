@@ -86,23 +86,55 @@ pub(super) fn ring_action(template: &BuildingTemplate, original: &Action) -> Opt
     })
 }
 
-pub(super) fn rotations(template: &BuildingTemplate, anchor: Tile, size: Tile) -> Vec<(Tile, u8)> {
-    let catalog = installed_or_bundled();
-    (0..4)
-        .filter_map(|rotation| {
-            if template.rotated_footprint(rotation).ok()? != size {
-                return None;
-            }
-            let plan = template.expand(catalog, None, rotation).ok()?;
-            let door = plan
-                .iter()
-                .find(|piece| piece.kind.definition().completion == CompletionCategory::Door)?;
-            Some((
-                (anchor.0 + door.offset.0, anchor.1 + door.offset.1),
-                rotation,
-            ))
-        })
-        .collect()
+// Immutable geometry belongs to one planning call; occupancy and navigation stay live.
+pub(super) struct TemplateGeometry {
+    rotations: [Option<RotationGeometry>; 4],
+}
+
+struct RotationGeometry {
+    size: Tile,
+    plan: Vec<PlannedPiece>,
+    door: Option<Tile>,
+}
+
+impl TemplateGeometry {
+    pub(super) fn new(template: &BuildingTemplate) -> Self {
+        let catalog = installed_or_bundled();
+        Self {
+            rotations: std::array::from_fn(|index| {
+                let rotation = index as u8;
+                let size = template.rotated_footprint(rotation).ok()?;
+                let plan = template.expand(catalog, None, rotation).ok()?;
+                let door = plan
+                    .iter()
+                    .find(|piece| piece.kind.definition().completion == CompletionCategory::Door)
+                    .map(|piece| piece.offset);
+                Some(RotationGeometry { size, plan, door })
+            }),
+        }
+    }
+
+    pub(super) fn rotations(&self, anchor: Tile, size: Tile) -> Vec<(Tile, u8)> {
+        self.rotations
+            .iter()
+            .enumerate()
+            .filter_map(|(rotation, geometry)| {
+                let geometry = geometry.as_ref()?;
+                if geometry.size != size {
+                    return None;
+                }
+                let door = geometry.door?;
+                Some(((anchor.0 + door.0, anchor.1 + door.1), rotation as u8))
+            })
+            .collect()
+    }
+
+    pub(super) fn expanded(&self, rotation: u8) -> Option<&[PlannedPiece]> {
+        self.rotations
+            .get(usize::from(rotation))?
+            .as_ref()
+            .map(|geometry| geometry.plan.as_slice())
+    }
 }
 
 pub(super) fn expanded(template: &BuildingTemplate, rotation: u8) -> Option<Vec<PlannedPiece>> {

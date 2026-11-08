@@ -362,3 +362,112 @@ fn accepted_template_keeps_full_pending_reservation_until_player_cancellation() 
         .values()
         .all(|site| site.completion_entry.is_none()));
 }
+
+#[test]
+fn call_local_template_geometry_matches_original_expansion_and_door_order() {
+    use sim_core::colony::building_template::{BuildingTemplate, Direction, PieceAt};
+    use sim_core::colony::content::{installed_or_bundled, CompletionCategory};
+
+    // Frozen pre-cache algorithm: expansion occurs only after the size match.
+    fn original_rotations(
+        template: &BuildingTemplate,
+        anchor: Tile,
+        size: Tile,
+    ) -> Vec<(Tile, u8)> {
+        (0..4)
+            .filter_map(|rotation| {
+                if template.rotated_footprint(rotation).ok()? != size {
+                    return None;
+                }
+                let plan = template
+                    .expand(installed_or_bundled(), None, rotation)
+                    .ok()?;
+                let door = plan
+                    .iter()
+                    .find(|piece| piece.kind.definition().completion == CompletionCategory::Door)?;
+                Some((
+                    (anchor.0 + door.offset.0, anchor.1 + door.offset.1),
+                    rotation,
+                ))
+            })
+            .collect()
+    }
+
+    let catalog = installed_or_bundled();
+    let square = catalog
+        .building_templates()
+        .buildings
+        .iter()
+        .find(|template| template.id == "log_house")
+        .expect("square dwelling")
+        .clone();
+    let mut rectangle = square.clone();
+    rectangle.footprint = (5, 4);
+    let mut custom = rectangle.clone();
+    custom.id = "test_custom_geometry".into();
+    let door_kind = square
+        .expand(catalog, None, 0)
+        .expect("valid square")
+        .into_iter()
+        .find(|piece| piece.kind.definition().completion == CompletionCategory::Door)
+        .expect("door")
+        .kind
+        .definition()
+        .identity
+        .id
+        .clone();
+    for piece in &mut custom.pieces {
+        if piece.kind == door_kind {
+            piece.at = PieceAt::Edge(Direction::East);
+        }
+    }
+    let mut two_doors = custom.clone();
+    let mut second_door = custom
+        .pieces
+        .iter()
+        .find(|piece| piece.kind == door_kind)
+        .expect("authored door")
+        .clone();
+    second_door.at = PieceAt::Edge(Direction::North);
+    two_doors.pieces.push(second_door);
+    let mut no_door = custom.clone();
+    no_door.pieces.retain(|piece| piece.kind != door_kind);
+    let mut bad_piece = square.clone();
+    bad_piece.pieces[0].kind = "missing_test_blueprint".into();
+    let mut bad_size = square.clone();
+    bad_size.footprint = (0, 4);
+    for (case, template) in [
+        square, rectangle, custom, two_doors, no_door, bad_piece, bad_size,
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let cached = template_housing::TemplateGeometry::new(&template);
+        for rotation in 0..=4 {
+            let original = template.expand(catalog, None, rotation);
+            if case < 5 && rotation < 4 {
+                assert!(
+                    original.is_ok(),
+                    "case {case}, rotation {rotation}: {original:?}"
+                );
+            }
+            if case >= 5 || rotation == 4 {
+                assert!(original.is_err(), "invalid geometry must remain rejected");
+            }
+            assert_eq!(
+                cached.expanded(rotation),
+                original.ok().as_deref(),
+                "exact piece order/offset/size, case {case}, rotation {rotation}"
+            );
+        }
+        for anchor in [(0, 0), (7, 11), (100, 40)] {
+            for size in [(4, 4), (5, 4), (4, 5), (2, 2)] {
+                assert_eq!(
+                    cached.rotations(anchor, size),
+                    original_rotations(&template, anchor, size),
+                    "door order/offset/failure, case {case}, anchor {anchor:?}, size {size:?}"
+                );
+            }
+        }
+    }
+}
