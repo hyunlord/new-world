@@ -1,0 +1,216 @@
+{
+  "record": {
+    "id": "wheat_harvested",
+    "lane": "crops_grain",
+    "era": "neolithic",
+    "attempt": 3,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-6c947bcc-4c79-4e5b-8e9c-dfa37bb77815.png",
+    "prompt": "Use case stylized-concept, one transparent crop sprite. Reference1 is established stubble style. Generate EMMER WHEAT harvested state: seven small bundles of SHORT BLUNT cut thin straw stalks in two shallow staggered rows. Same illustrated WorldSim ink and calm local colour. Attached thin broken grass blades only, no tree leaves, no weeds. All straw is MUTED EVEN MID-TAN with subdued upper-left light, minimal tonal fluctuation: simple closed fine sepia contour and one quiet slightly darker right-side plane. Cut faces are pale tan, not bright cream. No mottled highlights, grainy paper or deep gradients. A crisp low flat silhouette target10px tall and max44px wide, one64px tile; adult56px. Standing front3/4 at20degrees down. No ground/soil/shadow/aura/text/border. True alpha zero outside physical stalks; subtle texture only inside solid anatomy. Full object centered with generous transparent margins. References2+3 locked palette/medium, never copy ground.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-6a15621e-ff32-4c62-9675-3c3e978adf34.png",
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 10,
+    "projection_family": "crop",
+    "height_band": [
+      8,
+      12
+    ],
+    "height_band_reason": "New crop stage harvested: 10px target versus adult56px; field group fits one64px tile.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "plants",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:35:00.896Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/crops_grain/raw/wheat_harvested_try3.png",
+  "raw_sha256": "449e1aeec62489b523aba4ba1dadcd1fc231898c079b4909d2378389d5d9af34",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-6a15621e-ff32-4c62-9675-3c3e978adf34.png",
+      "sha256": "23857cf2980ba436a0d87d45a0d86f03549690d608491992a3285efbf117113e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/crops_grain/normalized/wheat_harvested_try3.png",
+  "normalized_sha256": "9fb8e8950576602a677f8d599fd4983acdf862a8c5d9b24c2a5c1ff56acd7b3d",
+  "size": [
+    35,
+    18
+  ],
+  "anchor": [
+    17,
+    13
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (192, 356, 1250, 751)",
+    "uniform Lanczos scale: 0.02557544757033248",
+    "transparent 4px padding; source-canvas anchor: (17, 13)"
+  ],
+  "projection": {
+    "family": "crop",
+    "anchor": [
+      17,
+      13
+    ],
+    "height_band": [
+      8,
+      12
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 107,
+    "base_row": 13,
+    "base_error": 0,
+    "height": 10,
+    "gradient_x": -2.8609808219178072,
+    "gradient_y": -4.410646153846157,
+    "light_angle_degrees": 237.03040267391654,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/crops_grain/raw/wheat_harvested_try3.png",
+    "sha256": "449e1aeec62489b523aba4ba1dadcd1fc231898c079b4909d2378389d5d9af34",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.2586111111111111,
+      "saturation_q25": 0.5501997457105704,
+      "saturation_q75": 0.5792332518656476,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01574861162198911,
+      "foreground_pixels": 10451
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    84,
+    1378,
+    1011
+  ],
+  "raw_opaque_bbox": [
+    194,
+    358,
+    1248,
+    749
+  ],
+  "raw_faint_far_ratio": 0.004152147564578441,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_orchard independent executor",
+    "evidence": [
+      "checks/grain_final_review_board.png",
+      "Actual raw RGBA sources viewed directly and composited on opaque dark green",
+      "Normalized native1x and nearest2x alongside RouteI adult56px",
+      "Locked props/scene references and adopted berry_bush_full"
+    ],
+    "assets": [
+      {
+        "id": "wheat_harvested",
+        "attempt": 3,
+        "score": 94,
+        "differences": [
+          "Very small stubble groups become compact marks at native scale, consistent with the declared 10px harvested stage."
+        ],
+        "reasoning": "Seven low tufts of cut tan stalks with exposed cut ends and sparse narrow dry blades read harvested wheat. Quiet ochre wash, fine sepia contours and lighter upper-left cuts fit the plant set; no retained ears or background patch.",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true,
+        "suggestions": [],
+        "raw_sha256": "449e1aeec62489b523aba4ba1dadcd1fc231898c079b4909d2378389d5d9af34",
+        "normalized_sha256": "9fb8e8950576602a677f8d599fd4983acdf862a8c5d9b24c2a5c1ff56acd7b3d"
+      },
+      {
+        "id": "flax_seedling",
+        "attempt": 3,
+        "score": 91,
+        "differences": [
+          "Foliage is warmer and more yellow-olive than the cereal seedlings; lower-right olive planes retain the living-plant reading."
+        ],
+        "reasoning": "Short unbranched shoots have paired low cotyledons and smooth narrow pointed true leaves, without flowers or seed capsules. At 13px opaque height they read young seedlings beside the 56px adult; leaf silhouettes remain distinct from grass stubble and the warm sage wash stays within the locked earth palette.",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true,
+        "suggestions": [],
+        "raw_sha256": "997e0bf6de7bc26fb380eca47081eaeac72fea970f8505dfafc75c4803858169",
+        "normalized_sha256": "7ca187a9d387d8b6589e66262ad15d54ed9e9a7bb1cd4fd912874cebdfff8e05"
+      },
+      {
+        "id": "millet_harvested",
+        "attempt": 2,
+        "score": 93,
+        "differences": [
+          "Broader drooping residual leaves produce a denser stubble silhouette than wheat, consistent with the millet family."
+        ],
+        "reasoning": "Short cut stalks with visible ends and remaining broad arching dry blades clearly indicate a harvested millet patch; no ripe panicles remain. Clean silhouette, restrained tan-olive wash and upper-left highlights remain coherent at 1x and 2x.",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true,
+        "suggestions": [],
+        "raw_sha256": "4a76c1102022415e734387ca9d170e681c62bfdb77f36fc4bd66b8f4770be01b",
+        "normalized_sha256": "71eaac2ad200954ca70b4d5e9361201f10ae8a933ee0479c6e6fc8c333f22e95"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "wheat_harvested",
+  "adopted_path": "art/style05/struct/a2/crops_grain/wheat_harvested.png",
+  "review_asset_id": "wheat_harvested",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/grain_final_independent_review.json",
+  "review_sha256": "14290de1494d50f65f489a3582173b7e4cfa76ae3a440d332b81aebab8dcc0b4"
+}

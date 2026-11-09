@@ -1,0 +1,201 @@
+{
+  "record": {
+    "id": "pen_fence_damaged",
+    "lane": "neolithic",
+    "era": "neolithic",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-6367fbed-4829-4f36-873d-192c947ced22.png",
+    "prompt": "Use case: precise-object-edit. Firstimage is widenedstraightfence EDIT TARGET, otherimages lockedstyleanchors. Preserve EXACT fulloutlinewidth,height,bothpostlocations,postthickness,ropeknots,toprail,bottomrail. Change ONLY middlehorizontalrail: break it incenter into two attachedsplinteredends separated bysmalltransparentgap about6% oftotalwidth. Postsremainpixelidentical so repeatingpanels shareendpoints. Do not shortenrails or move supports. Retain finewarmcharcoal irregularinkandquietearthwash,upperleftlight. Truealpha0 emptyspace, no paintedbackgroundhaze,ground,debris or labels.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-0d5f75c7-311b-4752-8748-12e92e5ca40b.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 39,
+    "projection_family": "pen_fence",
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_reason": "Same original raw and frozen38..42px pen-fence band. Root selected uniform39px export after64px repeat review: post-center pitch64.5px versus66px at40px, improving joins while preserving approximately40px uprights beside56px adult. No nonuniform scaling or alpha edits. Original40px record and export archived in geometry_v1.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:39:44.663Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/neolithic/raw/pen_fence_damaged_try2.png",
+  "raw_sha256": "a7821ad9920dc49b76da6e8a40860b5be9e04b494fbb7ce2ffe645a15226b6b5",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-0d5f75c7-311b-4752-8748-12e92e5ca40b.png",
+      "sha256": "7fb47a3887aaacb4bd101860fa98ed63adbbf14e1a172df6152c3e7314a882cd"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/pen_fence_damaged_try2.png",
+  "normalized_sha256": "e827eb2791c9e978c0ca9eb5f7c5342f0dd6f6bd2e857172fd1c325faca61123",
+  "size": [
+    81,
+    47
+  ],
+  "anchor": [
+    40,
+    42
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (14, 69, 1587, 914)",
+    "uniform Lanczos scale: 0.04637336504161712",
+    "transparent 4px padding; source-canvas anchor: (40, 42)"
+  ],
+  "projection": {
+    "family": "pen_fence",
+    "anchor": [
+      40,
+      42
+    ],
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1249,
+    "base_row": 42,
+    "base_error": 0,
+    "height": 39,
+    "gradient_x": -2.478504362703165,
+    "gradient_y": -5.029667928098391,
+    "light_angle_degrees": 243.76698520086293,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/neolithic/raw/pen_fence_damaged_try2.png",
+    "sha256": "a7821ad9920dc49b76da6e8a40860b5be9e04b494fbb7ce2ffe645a15226b6b5",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2517345522814464,
+      "saturation_q25": 0.4250782573074303,
+      "saturation_q75": 0.48402515847166366,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.018978635519167775,
+      "foreground_pixels": 15653
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    13,
+    9,
+    1591,
+    963
+  ],
+  "raw_opaque_bbox": [
+    16,
+    71,
+    1585,
+    912
+  ],
+  "raw_faint_far_ratio": 0.0010033567131878598,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_grain independent reviewer",
+    "evidence": [
+      "checks/neolithic_fence_canonical39_audit.json",
+      "checks/neolithic_fence_corrective_independent_review.json",
+      "neolithic/geometry_probe/fence_compare_1x.png",
+      "neolithic/geometry_probe/fence_compare_2x.png"
+    ],
+    "scope": "Canonical39px export acceptance addendum; prior reviews remain unchanged. NS3 remains rejected.",
+    "assets": [
+      {
+        "id": "pen_fence_straight",
+        "attempt": 3,
+        "target_height": 39,
+        "reviewed_png": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/pen_fence_straight_try3.png",
+        "reviewed_sha256": "93da3ddc08dfbab136a16d1c6ff842563d930bb2845e8b042b7632d546e416e5",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "geometry_correct": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Canonical PNG encoding differs from prior probe; decoded RGBA has zero differing channel values."
+        ],
+        "suggestions": [],
+        "reasoning": "Canonical39px file is pixel-identical to independently approved39px probe,81x47 with anchor40,42. Original raw SHA matches archived40px result and current sidecar. Independent normalization recreates exact pixels. Fresh projection base,height and upper-left lighting checks pass with unchanged38..42band. Prior visual/material/repeat judgment therefore applies to this exact canonical SHA."
+      },
+      {
+        "id": "pen_fence_damaged",
+        "attempt": 2,
+        "target_height": 39,
+        "reviewed_png": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/pen_fence_damaged_try2.png",
+        "reviewed_sha256": "e827eb2791c9e978c0ca9eb5f7c5342f0dd6f6bd2e857172fd1c325faca61123",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "geometry_correct": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Canonical PNG encoding differs from prior probe; decoded RGBA has zero differing channel values."
+        ],
+        "suggestions": [],
+        "reasoning": "Canonical39px file is pixel-identical to independently approved39px probe,81x47 with anchor40,42. Original raw SHA matches archived40px result and current sidecar. Independent normalization recreates exact pixels. Fresh projection base,height and upper-left lighting checks pass with unchanged38..42band. Prior visual/material/repeat judgment therefore applies to this exact canonical SHA."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "pen_fence_damaged",
+  "adopted_path": "art/style05/struct/a2/neolithic/pen_fence_damaged.png",
+  "review_asset_id": "pen_fence_damaged",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/neolithic_fence_canonical39_independent_review.json",
+  "review_sha256": "eb1af3204e495eb450c867848bf295f707b344f128060d8bb8a03a40a7d54db0"
+}

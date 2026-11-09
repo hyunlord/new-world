@@ -3,12 +3,12 @@
     "id": "casting_bench_working",
     "lane": "bronze",
     "era": "bronze",
-    "attempt": 1,
-    "raw": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-da18ff4e-a36c-45d8-970a-83a0eed16ae8.png",
-    "prompt": "Use case: precise-object-edit. IMAGE1 is edit target. Other images are locked INK/MATERIAL references only. Preserve target geometry, camera, proportions, palette, clean alpha and major contour; change only the requested state. Keep entire table, mould and crucible exactly fixed. Fill the axe-shaped mould cavity with one dull reddish copper cast axe head, add one small bronze ingot beside the crucible. No other changes. WorldSim style05 ink-and-tone BRONZE AGE game sprite. Fine controlled sepia/brown-black pen line over quiet restrained earth-colour wash. Outer contour weight twice secondary line (2:1). One broad light tone on upper-left faces, one darker lower/right shadow tone, subtle local pigment variation only. Three short crack groups per dominant stone/clay body, three broken grain lines per main plank/pole, five curved weave bands per straw surface. One small group of three parallel / hatch marks only where needed. Sparse surface marks; NO all-over hatching, stippling, granular texture or speckled wash. Upper-left daylight. Standing front three-quarter about20degrees down, substantial front face, shallow compressed top; grid-aligned square geometry, never isometric diamond. Adult56px for scale. One isolated object only, full silhouette and generous perfectly transparent margins. Outside object every pixel ALPHA ZERO, no shadow, glow, aura, haze, colored veil, ground patch, blur or backdrop; inside transparent gaps also alpha zero. No labels/text/frames/people/modern fittings/iron. No 3D rendering or pixel art.",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-dff940f8-19aa-48ab-a45c-60f9fe6aa988.png",
+    "prompt": "Use case: precise-object-edit. IMAGE1 is edit target. Other images are locked INK/MATERIAL references only. Preserve target geometry, camera, proportions, palette, clean alpha and major contour; change only the requested state. Surgical MATERIAL fix ONLY: erase all branchingcrack decorations from copper axehead and small goldbronze ingot. Metal is smooth dull solidmetal, gentle warmcopper/bronze wash plus singlequietedgehighlight, no cracks, symbols, letters or engravings. Keep claymould/cruciblecracks and tabletopwoodgrain unchanged. Keep allpositions, silhouette,camera, palette,36pxheight. WorldSim style05 ink-and-tone BRONZE AGE game sprite. Fine controlled sepia/brown-black pen line over quiet restrained earth-colour wash. Outer contour weight twice secondary line (2:1). One broad light tone on upper-left faces, one darker lower/right shadow tone, subtle local pigment variation only. Apply material-specific marks ONLY: stone/clay may have three short crack groups; WOOD has three thin broken longitudinal grain lines, never branched surface cracks; STRAW has five curved parallel weave bands, never cracks. Smooth metal has NO cracks. One small group of three parallel / hatch marks only where needed. Sparse surface marks; NO all-over hatching, stippling, granular texture or speckled wash. Upper-left daylight. Standing front three-quarter about20degrees down, substantial front face, shallow compressed top; grid-aligned square geometry, never isometric diamond. Adult56px for scale. One isolated object only, full silhouette and generous perfectly transparent margins. Outside object every pixel ALPHA ZERO, no shadow, glow, aura, haze, colored veil, ground patch, blur or backdrop; inside transparent gaps also alpha zero. No labels/text/frames/people/modern fittings/iron. No 3D rendering or pixel art.",
     "subject": "one rough timber casting table on four squat legs; shallow top bearing one split stone axe mould holding a dull copper axe head, a clay crucible and one small bronze ingot, no loose tools on ground, no fire",
     "references": [
-      "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-77a33cd6-399d-4d7d-842c-f8ee1deba396.png",
+      "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-da18ff4e-a36c-45d8-970a-83a0eed16ae8.png",
       "art/style05/anchors/props.png",
       "art/style05/anchors/scene.png"
     ],
@@ -23,14 +23,14 @@
     "style_family": "buildings",
     "generation_id": null,
     "seed": null,
-    "generated_at": "2026-11-09T23:10:14.880Z"
+    "generated_at": "2026-11-09T23:31:40.417Z"
   },
-  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_working_try1.png",
-  "raw_sha256": "c9345a4e8caba62e558c8093415ea2b89e90a3b6f219f10076cd442078f888a6",
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_working_try2.png",
+  "raw_sha256": "16b4053f350c3e571cdc078b4cf97075d8d9e22116433db136231069ba20228c",
   "references": [
     {
-      "path": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-77a33cd6-399d-4d7d-842c-f8ee1deba396.png",
-      "sha256": "b4a41c1a1f819f8d5c9f1b3773cce1522761511a10423efa750a5910eed46319"
+      "path": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-da18ff4e-a36c-45d8-970a-83a0eed16ae8.png",
+      "sha256": "c9345a4e8caba62e558c8093415ea2b89e90a3b6f219f10076cd442078f888a6"
     },
     {
       "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
@@ -42,8 +42,8 @@
     }
   ],
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
-  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/normalized/casting_bench_working_try1.png",
-  "normalized_sha256": "979c8726f89957672419afd0d4f50803fa16fd7f0ea156e43baac778fe6b40fb",
+  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/normalized/casting_bench_working_try2.png",
+  "normalized_sha256": "a6d0129921da55fff2c852e79a7488dc92caa77fd65421821690dfc1384871de",
   "size": [
     69,
     44
@@ -54,8 +54,8 @@
   ],
   "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
   "operations": [
-    "alpha>=128 bounds plus 2px fringe crop: (358, 137, 1412, 758)",
-    "uniform Lanczos scale: 0.05834683954619125",
+    "alpha>=128 bounds plus 2px fringe crop: (358, 136, 1412, 760)",
+    "uniform Lanczos scale: 0.05806451612903226",
     "transparent 4px padding; source-canvas anchor: (34, 39)"
   ],
   "projection": {
@@ -69,32 +69,32 @@
       40
     ],
     "height_band_override": false,
-    "opaque_pixels": 1432,
+    "opaque_pixels": 1430,
     "base_row": 39,
     "base_error": 0,
     "height": 36,
-    "gradient_x": -1.0643597968069665,
-    "gradient_y": -1.028181419166057,
-    "light_angle_degrees": 224.00950010859162,
+    "gradient_x": -0.9402156862745099,
+    "gradient_y": -1.0339478388278391,
+    "light_angle_degrees": 227.71832935536864,
     "base_passed": true,
     "height_passed": true,
     "light_passed": true,
     "passed": true
   },
   "judge_v2": {
-    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_working_try1.png",
-    "sha256": "c9345a4e8caba62e558c8093415ea2b89e90a3b6f219f10076cd442078f888a6",
+    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_working_try2.png",
+    "sha256": "16b4053f350c3e571cdc078b4cf97075d8d9e22116433db136231069ba20228c",
     "family": "buildings",
     "metrics": {
-      "edge_density": 0.2524023062139654,
-      "saturation_q25": 0.4844411782956387,
-      "saturation_q75": 0.5728237918881272,
+      "edge_density": 0.2508082354942998,
+      "saturation_q25": 0.4666766648505462,
+      "saturation_q75": 0.5571326975351871,
       "stroke_q25": 2.0,
       "stroke_q50": 2.8284271247461903,
       "stroke_q75": 4.0,
       "stroke_q90": 6.0,
-      "wash_flatness": 0.009567362128908437,
-      "foreground_pixels": 25094
+      "wash_flatness": 0.008900141204493095,
+      "foreground_pixels": 25204
     },
     "numeric_checks": {
       "edge_density": true,
@@ -115,18 +115,18 @@
   "raw_alpha_max": 255,
   "clipped_at_raw_border": false,
   "raw_nonzero_bbox": [
-    120,
-    0,
-    1736,
-    871
+    251,
+    17,
+    1593,
+    782
   ],
   "raw_opaque_bbox": [
     360,
-    139,
+    138,
     1410,
-    756
+    758
   ],
-  "raw_faint_far_ratio": 0.0013322718110613074,
+  "raw_faint_far_ratio": 0.0007388235620069219,
   "review_flags": [
     "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
   ],
@@ -135,51 +135,17 @@
   "failures": [],
   "review": {
     "reviewer": "crops_grain independent reviewer",
-    "evidence": "bronze/actual_rgba_review.png: actual saved raw RGBA on dark and pale backing, normalized 1x and2x",
+    "evidence": [
+      "checks/bronze_last_review_1.png",
+      "checks/bronze_last_review_2.png"
+    ],
     "assets": [
       {
-        "id": "charcoal_clamp_idle",
-        "attempt": 3,
-        "medium": 4,
-        "line": 4,
-        "light": 5,
-        "palette": 5,
-        "semantic_correct": true,
-        "alpha_clean": true,
-        "score": 92,
-        "verdict": "pass",
-        "category_match": true,
-        "differences": [
-          "Revised normalized canvas106x64/body56px now gives mound a roughly100px span versus56px adult; reads as two-tile charcoal production mound.",
-          "Controlled mottled earth is somewhat denser than adopted hearth but remains coherent at1x."
-        ],
-        "suggestions": [],
-        "reasoning": "Earth-covered log clamp with vent and exposed feed logs reads correctly; width and adult-height body now resolve prior2x2 geometry concern. Actual RGBA dark and pale composites show no halo."
-      },
-      {
         "id": "casting_bench_working",
-        "attempt": 1,
-        "medium": 4,
-        "line": 4,
-        "light": 4,
-        "palette": 5,
-        "semantic_correct": true,
-        "alpha_clean": true,
-        "score": 92,
-        "verdict": "pass",
-        "category_match": true,
-        "differences": [
-          "Slightly more symmetric front view than adopted woodworking bench; still visible top plane and controlled perspective."
-        ],
-        "suggestions": [],
-        "reasoning": "Rope-tied wood bench, crucible and filled mold identify active casting, coherent with existing STRUCT pottery/work benches. Fine ink and restrained warm pigment hold at1x/2x. No exterior alpha contamination."
-      },
-      {
-        "id": "bee_skep_active",
         "attempt": 2,
         "medium": 4,
         "line": 4,
-        "light": 5,
+        "light": 4,
         "palette": 5,
         "semantic_correct": true,
         "alpha_clean": true,
@@ -187,14 +153,51 @@
         "verdict": "pass",
         "category_match": true,
         "differences": [
-          "Woven fibre marks replace prior clay-like cracked patterns."
+          "Direct try1/try2 comparison confirms branching cracks removed from copper axehead and small metal ingot; clay crucible texture and wood grain remain.",
+          "This replacement review supersedes my earlier permissive working1 verdict on metal texture."
         ],
         "suggestions": [],
-        "reasoning": "Coiled woven straw with bindings reads as skep, small entrance bee signals active. Upper-left light, compact volume and restrained ochre match style. Clean saved RGBA."
+        "reasoning": "Exact pair keeps silhouette, camera, scale and palette. Smooth metal now has a readable quiet surface appropriate to a casting bench; saved RGBA and1x/2x are clean."
       },
       {
-        "id": "bee_skep_empty",
+        "id": "shrine_intact",
         "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Rough upright standing stone and supported stone offering slab with two clay bowls give a legible early shrine. Compressed top planes, stone cracks and upper-left light fit STRUCT. Clean saved RGBA."
+      },
+      {
+        "id": "shrine_damaged",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 90,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Damage is restrained: chipped upright summit, broken offering bowl rim and chipped slab edge; main shrine scale persists."
+        ],
+        "suggestions": [
+          "If gameplay later needs stronger damage signaling at distant zoom, add a separate rubble or repair indicator."
+        ],
+        "reasoning": "Paired geometry is preserved and damaged material is plausible. Broken bowl lip and upright summit are visible at1x/2x, with no unsupported or floating components. Clean alpha."
+      },
+      {
+        "id": "olive_press_empty",
+        "attempt": 2,
         "medium": 4,
         "line": 4,
         "light": 5,
@@ -205,10 +208,10 @@
         "verdict": "pass",
         "category_match": true,
         "differences": [
-          "Open top and side lid visibly distinguish empty state."
+          "Empty platen sits low and beam rests near bottom of right U-shaped guide."
         ],
         "suggestions": [],
-        "reasoning": "Consistent coiled-fibre material and base with active variant, empty dark opening and no bees. Silhouette and state distinction remain clear at1x; no saved-file halo."
+        "reasoning": "Visible left pivot anchors lever; vertical rod connects underside of beam to central platen over stone basin, and hanging weight beyond right guide supplies downward lever force. In empty resting state the guide can act as a lower stop; a loaded stack would lift platen/beam into guide travel. No floating linkage or disconnected load path. Restrained wood, rope and stone treatment remains clear at1x/2x; clean saved RGBA."
       }
     ]
   },
@@ -216,6 +219,6 @@
   "adopted_id": "casting_bench_working",
   "adopted_path": "art/style05/struct/a2/bronze/casting_bench_working.png",
   "review_asset_id": "casting_bench_working",
-  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_geometry_independent_review.json",
-  "review_sha256": "5418aeae3e37cc7c6a47b8356e1ae7ff78493d53136f679baff315780efb4fee"
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_last_independent_review.json",
+  "review_sha256": "39ba5d3f9fadeb9e9631a0dc17b71f9a0ace83cb6614f173e765f97858bdcb09"
 }

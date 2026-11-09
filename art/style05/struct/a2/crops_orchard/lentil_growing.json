@@ -1,0 +1,273 @@
+{
+  "record": {
+    "id": "lentil_growing",
+    "lane": "crops_orchard",
+    "era": "neolithic",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-d42b21c4-3f81-437f-b7df-03fd9b624c9e.png",
+    "prompt": "Use case: stylized-concept. ONE isolated WorldSim style05 game crop sprite on genuine transparent alpha. References ground and scene are ONLY ink/earth-wash/lighting anchors, berry bush controls quiet game-scale line/wash, Route I controls the standing front THREE-QUARTER camera about 20 degrees down (not overhead). Fine controlled warm dark-brown ink contours, outer-to-secondary weight 2:1, broad restrained sage/olive green wash, clear darker lower/right shadow wash, bright upper-left daylight. Selective detail only: 3 leaf-vein accents per foliage clump and one group of 3 parallel / shadow hatches, no dense crosshatching, no photoreal/3D/pixel art. Strong botanical silhouette readable at 64px world tile. ENTIRE plant(s) centered with generous transparent margin; all spaces alpha-zero; no soil island, ground patch, cast shadow puddle, pot, backdrop, labels, text, border, haze or halo. No modern or metal fittings. Large source for uniform downsample. SUBJECT: Last image is edit target growing lentil patch, no pods. Strengthen all selected warm dark-brown contours and chosen midribs to exactly match ripe lentil reference ink clarity; outer contour2x secondary, crisp strong ink rather than faint line. Preserve same five-plant layout, leaf anatomy and18px height. Give lower-right leaf surfaces calm darker sage wash. No more texture or hatch marks. TRANSPARENCY CRITICAL: outside the actual plant, stakes and rope, every pixel must have ALPHA ZERO. No colored haze, aura, glow, diffuse wash, backdrop, ground or soft shadow anywhere. The watercolor texture exists only INSIDE opaque plant surfaces. No outer blur. Clean cutout with a fine antialias edge only.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png",
+      "art/flora/sprites/berry_bush_full.png",
+      "art/character/boards/route_i_sheet_1x.png",
+      "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-d410f2b4-b301-4096-960f-54b98f7a21ed.png"
+    ],
+    "target_height": 18,
+    "projection_family": "crop",
+    "height_band": [
+      16,
+      20
+    ],
+    "height_band_reason": "Predeclared 18px lentil growing stage relative to24px mature lentil and56px adult.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "plants",
+    "generation_id": "exec-d42b21c4-3f81-437f-b7df-03fd9b624c9e",
+    "seed": null,
+    "generated_at": "2026-11-09T23:30:27.280Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/crops_orchard/raw/lentil_growing_try2.png",
+  "raw_sha256": "8bf133c0cdf932df5a1df48630cacfe7f0a08e435f28b97b3b0b7190ee9c631d",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/flora/sprites/berry_bush_full.png",
+      "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    },
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-d410f2b4-b301-4096-960f-54b98f7a21ed.png",
+      "sha256": "a2d8944d50506b8116a4d3523ed74cab5db8b68a8614c074e81c5ba1811a992c"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/crops_orchard/normalized/lentil_growing_try2.png",
+  "normalized_sha256": "d4ce71506007b97a4d00be4153ae8720476e1397a478f041d709b74623b14888",
+  "size": [
+    37,
+    26
+  ],
+  "anchor": [
+    18,
+    20
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (136, 133, 1387, 925)",
+    "uniform Lanczos scale: 0.02284263959390863",
+    "transparent 4px padding; source-canvas anchor: (18, 20)"
+  ],
+  "projection": {
+    "family": "crop",
+    "anchor": [
+      18,
+      20
+    ],
+    "height_band": [
+      16,
+      20
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 234,
+    "base_row": 20,
+    "base_error": 0,
+    "height": 17,
+    "gradient_x": -3.46247191011236,
+    "gradient_y": -7.87848,
+    "light_angle_degrees": 246.27524289964774,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/crops_orchard/raw/lentil_growing_try2.png",
+    "sha256": "8bf133c0cdf932df5a1df48630cacfe7f0a08e435f28b97b3b0b7190ee9c631d",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.16319659785594046,
+      "saturation_q25": 0.5932328186063898,
+      "saturation_q75": 0.7075836756267099,
+      "stroke_q25": 2.0,
+      "stroke_q50": 4.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.024273942216114477,
+      "foreground_pixels": 17503
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    19,
+    29,
+    1522,
+    1000
+  ],
+  "raw_opaque_bbox": [
+    138,
+    135,
+    1385,
+    923
+  ],
+  "raw_faint_far_ratio": 0.0011814638594058006,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_grain independent reviewer",
+    "evidence": [
+      "checks/orchard_final_sheet_1.png",
+      "checks/orchard_final_sheet_2.png",
+      "checks/orchard_final_sheet_3.png",
+      "checks/orchard_final_sheet_4.png",
+      "checks/orchard_final_sheet_5.png"
+    ],
+    "reference_context": [
+      "art/style05/anchors/scene.png",
+      "art/style05/env/plants/reeds.png",
+      "art/style05/env/plants/berry_full.png",
+      "art/character/route_i/adult_M_loincloth_long_tied/E/idle.png"
+    ],
+    "assets": [
+      {
+        "id": "lentil_growing",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Slender stems and small paired oval leaflets give a readable lentil field group, without mature pods. Clear silhouette at1x. Inspected actual raw RGBA on dark/pale backings and normalized1x/2x with adult reference; no visible halo, clipped anatomy or ground patch."
+      },
+      {
+        "id": "lentil_harvested",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 90,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Five short cut lentil stems with residual small paired leaves read as harvested state. Tiny silhouette remains visible without clutter. Inspected actual raw RGBA on dark/pale backings and normalized1x/2x with adult reference; no visible halo, clipped anatomy or ground patch."
+      },
+      {
+        "id": "pea_growing",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Rounded stipules, climbing stems and curling tendrils read as pea; no mature pods, coherent stage distinction. Inspected actual raw RGBA on dark/pale backings and normalized1x/2x with adult reference; no visible halo, clipped anatomy or ground patch."
+      },
+      {
+        "id": "pea_harvested",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 90,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Low cut stems and remaining rounded pea foliage read as harvested field state while staying distinct from seedling through blunt cuts. Inspected actual raw RGBA on dark/pale backings and normalized1x/2x with adult reference; no visible halo, clipped anatomy or ground patch."
+      },
+      {
+        "id": "pea_ripe",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Prominent elongated pea pods with visible seed bulges, rounded foliage and curls make the species and ripe state immediately legible. Inspected actual raw RGBA on dark/pale backings and normalized1x/2x with adult reference; no visible halo, clipped anatomy or ground patch."
+      },
+      {
+        "id": "pea_seedling",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Rounded paired seedling foliage and emerging central shoot read as pea starts, with low height and sparse arrangement. Inspected actual raw RGBA on dark/pale backings and normalized1x/2x with adult reference; no visible halo, clipped anatomy or ground patch."
+      }
+    ],
+    "selection_source": {
+      "path": "/Users/rexxa/work/art-batch/A2/checks/orchard_final_independent_review.json",
+      "sha256": "a9dc747f116ced6a034d5636e27b7d2a90b20dd2dec88d5d6c5865dd230d7bef"
+    }
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "lentil_growing",
+  "adopted_path": "art/style05/struct/a2/crops_orchard/lentil_growing.png",
+  "review_asset_id": "lentil_growing",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/orchard_final_new_independent_review.json",
+  "review_sha256": "02a93a4945dd6baa4c0a571c25661d2fa26737e99935eeef96a14557ea6e186c"
+}

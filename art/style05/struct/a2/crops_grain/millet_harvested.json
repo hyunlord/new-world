@@ -1,0 +1,216 @@
+{
+  "record": {
+    "id": "millet_harvested",
+    "lane": "crops_grain",
+    "era": "neolithic",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-46e85576-1bf5-4632-a7ee-c011638cea8b.png",
+    "prompt": "Keep reference1 exact millet stubble arrangement, with broad strap leaves and blunt cut stems. Repaint only overly mottled pigment as quiet solid straw and olive planes, thin ink edges and subtle paper grain INSIDE anatomy. Left upper faces lighter, right lower faces darker. No loose broad tree leaves, no weeds. Reference1 is edit target. References2+3 locked style. Solid crisp plant silhouette, like a die-cut sticker WITHOUT ANY STICKER BORDER; subject ends at inked contour; outside empty alpha0; texture ONLY inside opaque plant anatomy. REFERENCE1 is same crop at maturity; keep planting arrangement and botanical identity, change ONLY to requested growth stage. References2 and3 locked style. Use case: stylized-concept. One isolated transparent PNG game sprite.  BROOMCORN MILLET, just harvested field stubble, seven small clumps of SHORT CUT stalk bases, a few broken ochre leaves, no tall stems, no grain heads, no loose sheaves or piles. Cut straw ends clearly blunt and uneven. Target opaque height10px, width44px. Keep ALL spaces between the actual plants perfectly alpha zero. ZERO paint outside the physical leaves, stems and seed heads. The entire background is transparent. WorldSim illustrated ink-and-tone: match attached ground and scene references for fine brown-black outlines, restrained natural olive and straw pigments and upper-left light; do not copy their ground. Match reeds reference at final size. Standing front three-quarter at20 degrees down. Outer contour twice secondary stroke width; three short vein marks per leaf clump, sparse detail. Bright upper-left leaves, darker lower-right leaves. No ground, shadows, border, text or scenery. Full plants centered with ample clear margins. Compact field group in two shallow staggered rows, max52px width in64px tile; adult56px. Need all upper and lower plant tips stout enough to survive downscale; avoid long single-pixel outliers. Broad calm pigment planes, not airbrush gradients or cloudy wash.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-b972da39-aebd-477d-9be1-a70758be3858.png",
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 10,
+    "projection_family": "crop",
+    "height_band": [
+      8,
+      12
+    ],
+    "height_band_reason": "New crop stage harvested: 10px target versus adult56px; field group fits one64px tile.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "plants",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:30:03.110Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/crops_grain/raw/millet_harvested_try2.png",
+  "raw_sha256": "4a76c1102022415e734387ca9d170e681c62bfdb77f36fc4bd66b8f4770be01b",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-b972da39-aebd-477d-9be1-a70758be3858.png",
+      "sha256": "0ca98e272123f438d18079baba0abb8f864d31f23ecb5097a1a5054b56c2fd02"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/crops_grain/normalized/millet_harvested_try2.png",
+  "normalized_sha256": "71eaac2ad200954ca70b4d5e9361201f10ae8a933ee0479c6e6fc8c333f22e95",
+  "size": [
+    32,
+    18
+  ],
+  "anchor": [
+    16,
+    13
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (73, 388, 1237, 879)",
+    "uniform Lanczos scale: 0.02053388090349076",
+    "transparent 4px padding; source-canvas anchor: (16, 13)"
+  ],
+  "projection": {
+    "family": "crop",
+    "anchor": [
+      16,
+      13
+    ],
+    "height_band": [
+      8,
+      12
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 145,
+    "base_row": 13,
+    "base_error": 0,
+    "height": 10,
+    "gradient_x": -2.8580790322580634,
+    "gradient_y": -5.967856637168142,
+    "light_angle_degrees": 244.4096735156009,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/crops_grain/raw/millet_harvested_try2.png",
+    "sha256": "4a76c1102022415e734387ca9d170e681c62bfdb77f36fc4bd66b8f4770be01b",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.22540913006029284,
+      "saturation_q25": 0.5518836133486906,
+      "saturation_q75": 0.6143365323373922,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.029423817501963784,
+      "foreground_pixels": 15496
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    49,
+    56,
+    1294,
+    1045
+  ],
+  "raw_opaque_bbox": [
+    75,
+    390,
+    1235,
+    877
+  ],
+  "raw_faint_far_ratio": 0.0007028482357942468,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_orchard independent executor",
+    "evidence": [
+      "checks/grain_final_review_board.png",
+      "Actual raw RGBA sources viewed directly and composited on opaque dark green",
+      "Normalized native1x and nearest2x alongside RouteI adult56px",
+      "Locked props/scene references and adopted berry_bush_full"
+    ],
+    "assets": [
+      {
+        "id": "wheat_harvested",
+        "attempt": 3,
+        "score": 94,
+        "differences": [
+          "Very small stubble groups become compact marks at native scale, consistent with the declared 10px harvested stage."
+        ],
+        "reasoning": "Seven low tufts of cut tan stalks with exposed cut ends and sparse narrow dry blades read harvested wheat. Quiet ochre wash, fine sepia contours and lighter upper-left cuts fit the plant set; no retained ears or background patch.",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true,
+        "suggestions": [],
+        "raw_sha256": "449e1aeec62489b523aba4ba1dadcd1fc231898c079b4909d2378389d5d9af34",
+        "normalized_sha256": "9fb8e8950576602a677f8d599fd4983acdf862a8c5d9b24c2a5c1ff56acd7b3d"
+      },
+      {
+        "id": "flax_seedling",
+        "attempt": 3,
+        "score": 91,
+        "differences": [
+          "Foliage is warmer and more yellow-olive than the cereal seedlings; lower-right olive planes retain the living-plant reading."
+        ],
+        "reasoning": "Short unbranched shoots have paired low cotyledons and smooth narrow pointed true leaves, without flowers or seed capsules. At 13px opaque height they read young seedlings beside the 56px adult; leaf silhouettes remain distinct from grass stubble and the warm sage wash stays within the locked earth palette.",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true,
+        "suggestions": [],
+        "raw_sha256": "997e0bf6de7bc26fb380eca47081eaeac72fea970f8505dfafc75c4803858169",
+        "normalized_sha256": "7ca187a9d387d8b6589e66262ad15d54ed9e9a7bb1cd4fd912874cebdfff8e05"
+      },
+      {
+        "id": "millet_harvested",
+        "attempt": 2,
+        "score": 93,
+        "differences": [
+          "Broader drooping residual leaves produce a denser stubble silhouette than wheat, consistent with the millet family."
+        ],
+        "reasoning": "Short cut stalks with visible ends and remaining broad arching dry blades clearly indicate a harvested millet patch; no ripe panicles remain. Clean silhouette, restrained tan-olive wash and upper-left highlights remain coherent at 1x and 2x.",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true,
+        "suggestions": [],
+        "raw_sha256": "4a76c1102022415e734387ca9d170e681c62bfdb77f36fc4bd66b8f4770be01b",
+        "normalized_sha256": "71eaac2ad200954ca70b4d5e9361201f10ae8a933ee0479c6e6fc8c333f22e95"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "millet_harvested",
+  "adopted_path": "art/style05/struct/a2/crops_grain/millet_harvested.png",
+  "review_asset_id": "millet_harvested",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/grain_final_independent_review.json",
+  "review_sha256": "14290de1494d50f65f489a3582173b7e4cfa76ae3a440d332b81aebab8dcc0b4"
+}

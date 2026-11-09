@@ -1,0 +1,327 @@
+{
+  "record": {
+    "id": "reservoir_empty",
+    "lane": "iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-59303727-090a-43a1-83c2-353f02f3eae1.png",
+    "prompt": "Use case: stylized-concept. A single isolated WorldSim style05 iron-age game asset, hand-inked natural-history plate with restrained earth tone washes. REFERENCES: props.png/hut.png and scene.png control ink medium, materials, palette and upper-left daylight; route_i_sheet_1x.png and adopted struct reference control low standing camera and game scale only. Ground plane is orthogonal plan geometry; all standing elements FRONT THREE-QUARTER, approximately20 degrees down, substantial visible front, shallow compressed top; never isometric diamond. Upper-left light clearly brightens top/left; right/lower faces have a distinct darker quiet wash. Warm sepia-charcoal outer ink contour; internal marks exactly half contour weight (2:1). Wood:3 broken longitudinal marks per main timber. Stone:3 crack/facet groups per dominant stone. Clay:3 short crack groups per major clay surface. A single group of3 fine parallel / hatch marks on a shadow plane; broad quiet wash, no dense all-over hatching or speckled phototexture. ROOFS OMITTED entirely, interiors visible. Produce a large source that reduces cleanly to64px world tiles and a56px adult. No people, labels, lettering, UI, border, checkerboard, scenery, floating ground island, shadow puddle, haze, glow or halo. Entire asset inside frame with generous truly alpha-zero transparent margins, true RGBA. No photorealism,3D render, pixel art, modern object or classical/medieval ornament.\nSUBJECT: Empty early iron rectangular stone-lined reservoir, exact orthographic square128x128px footprint2x2tiles. Architectural TOP-DOWN basin: both side rims perfectly vertical and parallel, front/back perfectly horizontal, no convergence, no isometric diamond. Low roughstone rim20px physicalheight, with only small front-face cheat on south edge. Empty muted dry clay basin floor and three stone steps inside right. No water,roof,terrain island. Whole silhouette128px square. Grey limestone with3 restrained crack groups; subdued upper-left light, not dense texture.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/hut.png",
+      "art/style05/anchors/scene.png",
+      "art/character/boards/route_i_sheet_1x.png",
+      "art/style05/struct/door_stone_closed.png"
+    ],
+    "target_height": 128,
+    "projection_family": "reservoir",
+    "height_band": [
+      126,
+      130
+    ],
+    "height_band_reason": "New reservoir family; target 128px whole silhouette for 2x2 64px tiles, 56px adult scale; houses include visible floor depth and 60px walls.",
+    "footprint": [
+      2.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:29:03.155Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/iron/raw/reservoir_empty_try1.png",
+  "raw_sha256": "38aef14e3b8e0528ccdba3b4c4dfacdf551fae6566128ce66057002b068de225",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/door_stone_closed.png",
+      "sha256": "c2d826fc188468823bb90351b312a96990aca4e5b8faa58ca3f5c672303c6f3b"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/iron/normalized/reservoir_empty_try1.png",
+  "normalized_sha256": "595e5e7ee4183d2da9581ad1b915107bceac020c818e647c253230c20ac8de94",
+  "size": [
+    137,
+    137
+  ],
+  "anchor": [
+    68,
+    132
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (121, 119, 1129, 1122)",
+    "uniform Lanczos scale: 0.12812812812812813",
+    "transparent 4px padding; source-canvas anchor: (68, 132)"
+  ],
+  "projection": {
+    "family": "reservoir",
+    "anchor": [
+      68,
+      132
+    ],
+    "height_band": [
+      126,
+      130
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 15941,
+    "base_row": 132,
+    "base_error": 0,
+    "height": 129,
+    "gradient_x": -0.18829009180120287,
+    "gradient_y": -0.3697682344749003,
+    "light_angle_degrees": 243.01430024553272,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/iron/raw/reservoir_empty_try1.png",
+    "sha256": "38aef14e3b8e0528ccdba3b4c4dfacdf551fae6566128ce66057002b068de225",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.18143729235200734,
+      "saturation_q25": 0.31090079457908076,
+      "saturation_q75": 0.5098591341557908,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.009275781598262912,
+      "foreground_pixels": 63057
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    25,
+    1240,
+    1254
+  ],
+  "raw_opaque_bbox": [
+    123,
+    121,
+    1127,
+    1120
+  ],
+  "raw_faint_far_ratio": 0.0029891188350059253,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "root independent of generating lane",
+    "method": "Visual inspection of actual RGBA composites and fixed game scale exports; compare ink contours, restrained material marks, upper-left lighting, family state geometry and existing STRUCT references. Numeric results remain independent.",
+    "evidence": [
+      "neolithic/final_states_alpha_sheet.png",
+      "neolithic/geometry_final_alpha_sheet.png",
+      "iron/reviews/reservoir_mill_1x2x.png",
+      "iron/reviews/working_states_1x2x.png"
+    ],
+    "assets": [
+      {
+        "id": "pen_gate_open",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Matching closed gate post heights and upright posts preserve the opening. Rotated narrow gate leaf and rope hinge read clearly. Actual saved alpha is clean.",
+        "raw_sha256": "32dcb105caa886ed692f56e6330df705443f4e180654d1772a42e83cd6a0c101",
+        "normalized_sha256": "7f04247300ef144662652c810aa702291d3b8a83adbc781716ff67db2f361090"
+      },
+      {
+        "id": "ritual_site_empty",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Orthogonal ground circle of rough standing stones and central offering slab retains the adopted occupied variant footprint; no offerings clearly distinguishes empty state.",
+        "raw_sha256": "ba1d5e6379724dc2bfe83242d31ce32f7b028855579065545db59f2d9e45936c",
+        "normalized_sha256": "683c1599ff96abbd8477bd63d976d15ee23d3477aab4813281f8dcfaea746edb"
+      },
+      {
+        "id": "windbreak_damaged",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "reasoning": "Two clear holes in undyed hide distinguish damage, while timber stake scale and restrained contour/rope treatment match the intact shelter.",
+        "raw_sha256": "68da8baf46d910d0fd297bbc298870a1a93829e4ba7cb2847247a299bcec4c5d",
+        "normalized_sha256": "a5d48b3eaf0db259dfa879c0a143aa26179b5afb8e530975630eca181878fecb"
+      },
+      {
+        "id": "fish_weir_empty",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "reasoning": "Woven shallow V wings converge into a cylindrical basket trap; three quarter standing stakes sit on a readable ground plane. Revised88px export makes poles plausible beside56px adult.",
+        "raw_sha256": "e4f533bc699e1ee5d95f78d1ffc2c65426f0773d8ba91e18235b0fb0cac9d1f9",
+        "normalized_sha256": "eb89f63f826892e9fbd968b941f8819034049379634965661f317703866bc5f2"
+      },
+      {
+        "id": "fish_weir_catch",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "reasoning": "Basket retains fish in the same woven trap geometry.88px whole export preserves adult-relative upright height and2x2 ground occupancy; clean alpha.",
+        "raw_sha256": "62236bddc70129b3ce54f7e18350b6a10b46f7dc4e37624b98dd791de237eec6",
+        "normalized_sha256": "a8077b33f55a183f7d388c840c8d4b72bc17be99be377fccb2a31e09267631a5"
+      },
+      {
+        "id": "megalith_fallen",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Long rough fallen monolith has restrained stone facets, sparse moss and three-mark hatch groups.100px width and40px height are plausible next to the standing84px stone; saved alpha is clean.",
+        "raw_sha256": "2e00f12e36c9263e9789676c3f82a50ac29178432a691774d0d7cc23e73aed90",
+        "normalized_sha256": "fe95640efcb8940a6a89824f310756f5994dc03a6d095849e28738320801b4c7"
+      },
+      {
+        "id": "reservoir_empty",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Parallel orthogonal basin edges and shallow south-facing stone lip preserve2x2 ground geometry. Steps and dry clay bottom clearly express an empty reservoir, cleanly separated from surroundings.",
+        "raw_sha256": "38aef14e3b8e0528ccdba3b4c4dfacdf551fae6566128ce66057002b068de225",
+        "normalized_sha256": "595e5e7ee4183d2da9581ad1b915107bceac020c818e647c253230c20ac8de94"
+      },
+      {
+        "id": "waterwheel_idle",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Timber paddles, spokes, axle and braced support legs read as standalone waterwheel machinery. Broken grain strokes and quiet timber wash match adopted wood. Separate wheel and millstone placement still requires runtime mechanical linkage.",
+        "raw_sha256": "6ecb1122075a606ef33786387b74ef1a240a28b946ad37cc5b0a385d3a0aaa9b",
+        "normalized_sha256": "8b07636feb60b5aa8d617675f6e764c83fb617be10fdafc8c1ccbe9275070b2c"
+      },
+      {
+        "id": "watermill_millstones_idle",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Twin rough grinding stones, supported vertical spindle, peg gear and empty tray establish mill machinery. Visible frame joints and separate stone/wood washes are credible at game scale.",
+        "raw_sha256": "6c2ca5ed8245e57403fdfb78000baf1c46b204c7b1e058fc95e48f9b38c83b5f",
+        "normalized_sha256": "75bbf9faadbd82f33f030b8cc2202b17b9a2512daff05255e6d81d664da50993"
+      },
+      {
+        "id": "watermill_millstones_working",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Grain in the feed eye and flour in the front tray distinguish operation without changing machine footprint or frame geometry. Projection and clean source alpha match the idle state.",
+        "raw_sha256": "5b830cc5f965b9f23056d115cd673fe8874b943da8dc03492a5ae80f2ed4e25e",
+        "normalized_sha256": "42311aefb7dbb60b838c03e5280d4fbcdb3d236c0819af61333294f6013a7f5a"
+      },
+      {
+        "id": "watchtower_damaged",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 90,
+        "verdict": "pass",
+        "reasoning": "Broken rear parapet rail and chipped upper masonry mark restrained damage while the adult-height entrance and ladder remain consistent with the accepted intact tower. No roof or unsupported masonry.",
+        "raw_sha256": "e977f92e7445da31c3d439bb6d71c0b1f7a4521668132cc4786182c6a40e6c54",
+        "normalized_sha256": "a7f37cbcb47205d01b80126846e285eed9093e76e43420fdbb1f15ca07c6e387"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "reservoir_empty",
+  "adopted_path": "art/style05/struct/a2/iron/reservoir_empty.png",
+  "review_asset_id": "reservoir_empty",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/final_props_independent_review.json",
+  "review_sha256": "5a07a6b5b1180c6d6d00c4d625a0b523f21621a29bd2a6e7a08f82e1f20b45ee"
+}

@@ -1,0 +1,199 @@
+{
+  "record": {
+    "id": "aqueduct_damaged",
+    "lane": "iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-2cce935c-1800-4cc1-99d5-644d339b5842.png",
+    "prompt": "Use case: precise-object-edit. Image1 TARGET. Preserve exact compact2support aqueduct silhouette, camera, footprint,60pxheight, stonecracks and lighting. Damagedstate: small central notch in front trough wall, water nearly drained showing dark trough floor, one fine crack in right support; keep endpoints and supports unchanged. No rubble outside footprint, no spilling water, no landscape. Fine earthy ink wash and true transparent background.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-2d45c320-ef22-4dff-8e47-846cb8914fd3.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 60,
+    "projection_family": "aqueduct",
+    "height_band": [
+      58,
+      62
+    ],
+    "height_band_reason": "New aqueduct family; target 60px whole silhouette for 2x1 64px tiles, 56px adult scale; houses include visible floor depth and 60px walls.",
+    "footprint": [
+      2.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:41:28.071Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/iron/raw/aqueduct_damaged_try1.png",
+  "raw_sha256": "973c6e56104a62f2d7469e9aaeeba67953f9376908bf71c857d71e9657a67296",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-2d45c320-ef22-4dff-8e47-846cb8914fd3.png",
+      "sha256": "6f261390f07f4bcb87e1db739960221d1f41bf1799b516ba0457ddd8c96bd05e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/iron/normalized/aqueduct_damaged_try1.png",
+  "normalized_sha256": "fbf6c5d8969a54faebfbdf250497df0d5de1882031015994f24818092611199c",
+  "size": [
+    141,
+    68
+  ],
+  "anchor": [
+    70,
+    63
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (266, 181, 1447, 716)",
+    "uniform Lanczos scale: 0.11299435028248588",
+    "transparent 4px padding; source-canvas anchor: (70, 63)"
+  ],
+  "projection": {
+    "family": "aqueduct",
+    "anchor": [
+      70,
+      63
+    ],
+    "height_band": [
+      58,
+      62
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 5740,
+    "base_row": 63,
+    "base_error": 0,
+    "height": 60,
+    "gradient_x": -0.11789799822852076,
+    "gradient_y": -0.6881458608975513,
+    "light_angle_degrees": 260.2780724014127,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/iron/raw/aqueduct_damaged_try1.png",
+    "sha256": "973c6e56104a62f2d7469e9aaeeba67953f9376908bf71c857d71e9657a67296",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.23575233691828323,
+      "saturation_q25": 0.3878804240151153,
+      "saturation_q75": 0.5174246116246297,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 6.0,
+      "wash_flatness": 0.014248231862180494,
+      "foreground_pixels": 21464
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    3,
+    1666,
+    869
+  ],
+  "raw_opaque_bbox": [
+    268,
+    183,
+    1445,
+    714
+  ],
+  "raw_faint_far_ratio": 0.0015374073915464005,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "root independent of generating lane",
+    "evidence": [
+      "checks/iron_raw_review_234215.png",
+      "checks/iron_raw_review_234219.png"
+    ],
+    "assets": [
+      {
+        "id": "waterwheel_working",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Natural broken timber grain and quiet shade restored after the over-smooth try2. Damp lower paddles cue operation while axle, paddles and braced frame preserve idle-state geometry; saved RGBA clean.",
+        "raw_sha256": "b2be33e7901340b4f5a05a710d3e20556a57d600cdfa58c2d736375aa18e94bc",
+        "normalized_sha256": "35e3dfb8feecd44da8eb6b8c45a0444d7a75e310b33a913b405e49d535352761"
+      },
+      {
+        "id": "reservoir_full",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Muted green water remains inside the same parallel stone rim and partly submerges steps. Top-down square footprint and shallow front face match dry state. Clean alpha and restrained stone texture.",
+        "raw_sha256": "620acc14dc655e9d3264a8caef38e9efe09de426ca023662c0e9c3a625feef8d",
+        "normalized_sha256": "92599b82af03c3834fb25683e97e808f75e4c352064a9f162268a59a32a657e9"
+      },
+      {
+        "id": "aqueduct_damaged",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "reasoning": "Chipped channel edge and split stone blocks express local damage while two supports and the shallow trough preserve the accepted134px span. Discrete span candidate; continuous aqueduct topology remains later runtime work.",
+        "raw_sha256": "973c6e56104a62f2d7469e9aaeeba67953f9376908bf71c857d71e9657a67296",
+        "normalized_sha256": "fbf6c5d8969a54faebfbdf250497df0d5de1882031015994f24818092611199c"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "aqueduct_damaged",
+  "adopted_path": "art/style05/struct/a2/iron/aqueduct_damaged.png",
+  "review_asset_id": "aqueduct_damaged",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/iron_final_machinery_independent_review.json",
+  "review_sha256": "dd3c85784d3a7b9c7a34939f1cff0f777ad394501a10716e5611e6d5be1b7ed1"
+}

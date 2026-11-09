@@ -1,0 +1,195 @@
+{
+  "record": {
+    "id": "potter_kiln_firing",
+    "lane": "neolithic",
+    "era": "neolithic",
+    "attempt": 3,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-d46eb14e-08a9-418b-879b-c1a8dfacab82.png",
+    "prompt": "Use case: precise-object-edit. Firstimage target; next locked style anchors. Preserve kiln silhouette,48pxscale, pots, fire and all componentpositions. The smoothclay surface needs slightly more visible handmade INK TEXTURE, not newcomponents: maintain three existing maincrackgroups but give each 3–4short finer uneven branches; include about15 tiny scattered irregular dark pores onlitclay, and3groups of short parallel shadowhatches onright/lowerclay. More materialdefinition with restrained smallmarks over quiet continuous paleearthwash. Upperleftlight, darkrightplane. Keep pores andcracks fine and subtle; no giantpebbles or whiteflakes, no supports or metal. True transparentbackground with no glow.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-d71bdd5e-958f-44be-b6f8-3a0d93c04954.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 48,
+    "projection_family": "potter_kiln",
+    "height_band": [
+      46,
+      50
+    ],
+    "height_band_reason": "Same declared variant potter_kiln geometry 48px at56pxadultscale.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:34:19.342Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/neolithic/raw/potter_kiln_firing_try3.png",
+  "raw_sha256": "89d7e80f51dba17ff2bac73b2915d209c590fcbab8cd98cebdcb4629a75164a7",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-d71bdd5e-958f-44be-b6f8-3a0d93c04954.png",
+      "sha256": "3d4999bb53be6d2639b5c4889ceba61550d958929c4ea127512cd25c0f888cb7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/potter_kiln_firing_try3.png",
+  "normalized_sha256": "f5a84bfb6733abd5b8781a85879d332de0984c89d3c2810bcf94e110cc6dd135",
+  "size": [
+    55,
+    56
+  ],
+  "anchor": [
+    27,
+    51
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (156, 124, 1131, 1115)",
+    "uniform Lanczos scale: 0.0486322188449848",
+    "transparent 4px padding; source-canvas anchor: (27, 51)"
+  ],
+  "projection": {
+    "family": "potter_kiln",
+    "anchor": [
+      27,
+      51
+    ],
+    "height_band": [
+      46,
+      50
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1591,
+    "base_row": 51,
+    "base_error": 0,
+    "height": 48,
+    "gradient_x": -1.2497011017498376,
+    "gradient_y": -0.4199522020725391,
+    "light_angle_degrees": 198.57451674014712,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/neolithic/raw/potter_kiln_firing_try3.png",
+    "sha256": "89d7e80f51dba17ff2bac73b2915d209c590fcbab8cd98cebdcb4629a75164a7",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.1500531061444939,
+      "saturation_q25": 0.48217114499162284,
+      "saturation_q75": 0.570398752774194,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.011900336954343425,
+      "foreground_pixels": 45736
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    41,
+    37,
+    1275,
+    1215
+  ],
+  "raw_opaque_bbox": [
+    158,
+    126,
+    1129,
+    1113
+  ],
+  "raw_faint_far_ratio": 0.0018574141903553226,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_grain independent reviewer",
+    "evidence": [
+      "checks/neolithic_corrective_raw_1.png",
+      "neolithic/corrective_alpha_sheet.png",
+      "art/style05/struct/pottery_bench.png",
+      "art/style05/struct/woodworking_bench.png",
+      "art/style05/struct/hearth_unlit.png"
+    ],
+    "assets": [
+      {
+        "id": "loom_loaded",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Direct try1/try2 comparison: smooth cylindrical poles now have longitudinal grain, irregular grain breaks and less uniform woody surface.",
+          "Round log construction remains, appropriate to an early loom; fine grain is clearer at2x than1x."
+        ],
+        "suggestions": [],
+        "reasoning": "Corrective wood treatment removes the plain toy-rod appearance enough to match the rough wood vocabulary of pottery and woodworking benches. Woven cloth, warp lines and suspended weights remain distinct at56px height. Camera, upper-left light and restrained tan palette consistent. Actual saved raw RGBA on dark/pale backing and1x/2x show clean alpha."
+      },
+      {
+        "id": "potter_kiln_firing",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Rounded clay surface is quieter than the rough stone hearth, consistent with plastered clay construction."
+        ],
+        "suggestions": [],
+        "reasoning": "Open crown vent, arched fire chamber, pottery and contained orange flame identify firing pottery kiln. Fine clay cracks and coil marks stay restrained, with lit upper-left body and darker lower-right opening.48px body is credible beside56px adult and adopted pottery bench. Saved RGBA has no background glow, and firing state reads clearly at1x/2x."
+      }
+    ],
+    "pending": "Fence variants are reviewed separately after root-requested39px uniform geometry probe; no fence verdict in this file."
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "potter_kiln_firing",
+  "adopted_path": "art/style05/struct/a2/neolithic/potter_kiln_firing.png",
+  "review_asset_id": "potter_kiln_firing",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/neolithic_corrective_independent_review.json",
+  "review_sha256": "18c810031a855897f9b9d94913847093e92db32bcdb388397451a0b241249cd2"
+}

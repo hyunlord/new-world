@@ -1,0 +1,463 @@
+{
+  "reviewer": "root integrating independent rooms code review and geometry audit",
+  "status": "GEOMETRY_REVIEWED_DATA_ONLY",
+  "recipe_sha256": "e360bae6400eb96fc25c08520de723bb85e5539d8e6034c11074978062be7e4c",
+  "evidence_directory": "/Users/rexxa/work/art-batch/A2/rooms",
+  "independent_code_review": "/Users/rexxa/work/art-batch/A2/checks/rooms_code_review.md",
+  "resolved_findings": [
+    "Pin legacy_walls.py constants/origin implementation in every manifest; regression test and identical preview hash proof recorded."
+  ],
+  "review_scope": [
+    "All seven room contact pages inspected; forty roofless recipes reuse adopted material components.",
+    "Exact64px grid,60px upright wall, published prop anchors, floor-before-standing order, all source/layer hashes verified.",
+    "Thirty-seven prop layers retain identical decoded source RGBA."
+  ],
+  "limitations": [
+    "These are derived layout recipes, not forty newly generated or runtime-imported sprites.",
+    "Existing north/south wall top surfaces retain the inherited compositor appearance and64px ground-depth extent.",
+    "Runtime depth sorting, collisions, room recognition, water placement and mechanical transmission require integration and play validation.",
+    "Flattened previews are for review only; import must retain individual layers."
+  ],
+  "recipes": [
+    {
+      "id": "cart_shed_empty",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "d621bbad01f71bbfcd65066c2181ad60eb01e3ab7ec4b5f31d17b8faa5e461e5",
+      "preview_sha256": "646e59ed6036f5ec3c8eede455d2db2beaea86dd568c7f7647def2035fa0c452",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 22
+    },
+    {
+      "id": "cart_shed_occupied",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "e0fb131c0468d07db8d58048f0e5b41ae28045f1f954fa9aa2f52865b3f617b6",
+      "preview_sha256": "453695ef288fb31748949b5b591ce9d17ee6f6e752cd2ba7e84a841ced30e714",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 23
+    },
+    {
+      "id": "chief_hall_damaged",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "e2d56456360bdb04015f67d111bc9bf1e7d084776a7ee5d7d65d114cbc18df3c",
+      "preview_sha256": "34ffac6bb0384ee571d2712f8eafdf01b3ca88dbd482eae9d1240867e74054f5",
+      "footprint": [
+        5,
+        4
+      ],
+      "layers": 36
+    },
+    {
+      "id": "chief_hall_intact",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "b4b7610489c83039094a7c7b96571b44a98904c2ed2e0e0562886dfcbbbe21f7",
+      "preview_sha256": "3951ebd25badd4c6dfb6c1b9941c355109b8f4d16baa2479ddd9aaeda45d1292",
+      "footprint": [
+        5,
+        4
+      ],
+      "layers": 36
+    },
+    {
+      "id": "granary_empty",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "cbe871a862f8717a39728ccc870369503bd5d13d806bc6b58fb7cfd2d880be9a",
+      "preview_sha256": "7c23830544127a1a7a6594bf1a46cee28cae823f952b6670c488c6415d8f33d4",
+      "footprint": [
+        3,
+        3
+      ],
+      "layers": 18
+    },
+    {
+      "id": "granary_full",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "0f2c13ee54b90b0189fde4e3c0f8d3424c080ddc2721e86bad7fc49676c16188",
+      "preview_sha256": "84e58759d4c586460d449a82417141e542df24397d51f3fa6dd253470ce41e93",
+      "footprint": [
+        3,
+        3
+      ],
+      "layers": 18
+    },
+    {
+      "id": "log_house_damaged",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "35bdd7b48dfe339a4de8162771e6330e377319730d860f040e747f456624d275",
+      "preview_sha256": "a3b326bf87c224e874c3a4b2757687c99e3585acd4a57ddbd2b9e371081c9d2a",
+      "footprint": [
+        3,
+        3
+      ],
+      "layers": 18
+    },
+    {
+      "id": "log_house_intact",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "83632cd0a41aa22c89cd8777bd0b03c6aed5348140355151eeb40f1b745ece0d",
+      "preview_sha256": "9f3932cd677140891d658f7b733f4d13ce2b4262ad5ac948b3cb402089366909",
+      "footprint": [
+        3,
+        3
+      ],
+      "layers": 18
+    },
+    {
+      "id": "market_empty",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "df51f14fa56e0bdeddbe0c9e211da88d4149de1c36e956d62265067e1919dd04",
+      "preview_sha256": "e4e3a7b778fbaf8d97fa7dfec25f807407f92ec4d3e17d5dd66686d935a01ad9",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 22
+    },
+    {
+      "id": "market_stocked",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "f8cdf40172a3c7cfddc224f14966b3ec8fc0e84b6823739c3837d6df475fb3bc",
+      "preview_sha256": "c21adcc4de203bdff9c2653264d7e99d85c11551576f2309d6fc867230c66498",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 24
+    },
+    {
+      "id": "mudbrick_house_damaged",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "3c183c22f7bb7ad24c8e7d567f4e03f675053d2523cef79fbd36c71d25882d80",
+      "preview_sha256": "914e87400860f535324139644365446287fe981e9046b741c897eea7987c0cd9",
+      "footprint": [
+        3,
+        3
+      ],
+      "layers": 18
+    },
+    {
+      "id": "mudbrick_house_intact",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "1f06066f1c699d11f86d82b348cb7fc78400de7da372f176394ffb953d99be94",
+      "preview_sha256": "b35069a754ea97f2abaf48a35421c4ab11c1893ea7bb7f61b245dec5a2f4e882",
+      "footprint": [
+        3,
+        3
+      ],
+      "layers": 18
+    },
+    {
+      "id": "palisade_gatehouse_closed",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "10fae31f6ca7566fa6ebc3c8ee64b3ad12b41fc87bde489adb3f5d6dd830ebd7",
+      "preview_sha256": "12b26145fa68a1232100990b7bd76a55f78bc97995f54e204fb11deb73dadcd2",
+      "footprint": [
+        3,
+        3
+      ],
+      "layers": 17
+    },
+    {
+      "id": "palisade_gatehouse_open",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "046ef7e6c231b6b2a3c6feff081bd55d4492f1cc550e7a2d4e922fcf5b850c05",
+      "preview_sha256": "0734115d8d2f1a43afd03e08509e9d01fd6c97d0a31fb052cd11f9321c61806c",
+      "footprint": [
+        3,
+        3
+      ],
+      "layers": 17
+    },
+    {
+      "id": "school_empty",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "0cc1f708f7d35cd215cbc4fdc3de0cc97884aeb659b4991552e8d7a9f74d469c",
+      "preview_sha256": "27d7d01374b2c933e8130b1e93ae1d55d166134d8683b343c57a612ec78b3e60",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 22
+    },
+    {
+      "id": "school_furnished",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "ed3d5c6c5bc8306f1cd5456c9042211eb8a7c16ddf393074a25f46eaa128b18b",
+      "preview_sha256": "8603062da8b97ec4ca8d7f9b86815fc32d6beeaab3b3b23a388a3bb49b8460a7",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 23
+    },
+    {
+      "id": "stone_house_damaged",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "11d6b61fce40582b26015583590760f57120003b0098c0adb689dcb802beaf29",
+      "preview_sha256": "17cd839196b317de4856c645735d8436c00ee801035d033b5745d52218076319",
+      "footprint": [
+        3,
+        3
+      ],
+      "layers": 18
+    },
+    {
+      "id": "stone_house_intact",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "660e9a2600e0342ea2bef1a6c55a12410eed2bb5c47ed10c1da533e9cd46dcc5",
+      "preview_sha256": "f2bdf825487237a2dc6773ae0564a1225786e6533e8e028bc36448b2720ca547",
+      "footprint": [
+        3,
+        3
+      ],
+      "layers": 18
+    },
+    {
+      "id": "stone_storehouse_empty",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "eb87a7e3d28a5b2e100ea53b495de25ec369873dcc0d2a2ed9d2d9f4285dc4d5",
+      "preview_sha256": "3648dcfe8e209168501b1ec49d795fe2676712517a1b416139bb656ccd16bf99",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 22
+    },
+    {
+      "id": "stone_storehouse_full",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "aa88c69dee8b306a03a76859a91275cd2659d8d65b724320de58860d049b18ee",
+      "preview_sha256": "b7642fa0ad30be3bdb2848dccac7e892fd547d2f6a97fe18b34bf70c7bebac80",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 24
+    },
+    {
+      "id": "storehouse_empty",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "c73fd0bc6bda94e7be643b31f80b0ac173d17362aaf12348c89a919413fb6854",
+      "preview_sha256": "646e59ed6036f5ec3c8eede455d2db2beaea86dd568c7f7647def2035fa0c452",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 22
+    },
+    {
+      "id": "storehouse_full",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "8b8911cb63d6c993d199c8cc44152555aa731ea7f6804ac04ff386d61344bcfd",
+      "preview_sha256": "216811e8d6885fe437f82623e7283cea58d6fda8e0dd3351f47f8f34f5a8b2f8",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 24
+    },
+    {
+      "id": "temple_damaged",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "6dd769e3ff487f8c47fa8fc2db18ea06d176ff39565cd4beb979c00c633fbebc",
+      "preview_sha256": "9d848d9b97ede0455d84f44da449b788f21d39c7b2102a8dcc09e0c3319c0d8c",
+      "footprint": [
+        5,
+        4
+      ],
+      "layers": 35
+    },
+    {
+      "id": "temple_intact",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "fdd5883e727a8af03de063d41ba160a810dfcc9e746fe8a27c8b74e8b3c8a819",
+      "preview_sha256": "89016ecca650a671f1d467d5c26ab78f700bba486e253695365ace390aa89df9",
+      "footprint": [
+        5,
+        4
+      ],
+      "layers": 35
+    },
+    {
+      "id": "town_wall_drystone_corner",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "f805236c05de8d1112c0f84de9bd8848d55486ab6b53c87ec1d9c669e03f8ca4",
+      "preview_sha256": "002a9262eeafae33fcb74b87edea23994114c8203b6b590401c1d8d16bf09b8a",
+      "footprint": [
+        2,
+        2
+      ],
+      "layers": 3
+    },
+    {
+      "id": "town_wall_drystone_damaged",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "464cf37550af93948d6e815802a222eff6b3b41972c9c9fa1181ead2b65fbbc2",
+      "preview_sha256": "ef29bba88360aabd8225ebf626b6b85fc1ce6be10540c6a61876b800d455ec30",
+      "footprint": [
+        3,
+        1
+      ],
+      "layers": 3
+    },
+    {
+      "id": "town_wall_drystone_end",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "3179c91bcc0807949c6ad73d6f6e3bb2d14b7f2c1f695c0d76bd4240a78c52ad",
+      "preview_sha256": "83a0ebeb7abe50d932ccdd5f9c3cc0fc849e9e09b52834d9840202c4d2c88da5",
+      "footprint": [
+        1,
+        1
+      ],
+      "layers": 1
+    },
+    {
+      "id": "town_wall_drystone_ew",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "ee2f399eca65b594437cdb0241f90cee38f2e4a76a53e6b247efc756cab178e4",
+      "preview_sha256": "adb314a7cf985c5a2bc0b54f51d82981a68e1e80fe7d932435b9b2f896b96827",
+      "footprint": [
+        3,
+        1
+      ],
+      "layers": 3
+    },
+    {
+      "id": "town_wall_drystone_ns",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "b729401bbf85217a754978c936eca2a4289afeab272a509b0b44b2bb78383415",
+      "preview_sha256": "67a44a6670499e97ac5bfa1ce46f487f57415a040b76b7826105f9986a175dca",
+      "footprint": [
+        1,
+        3
+      ],
+      "layers": 3
+    },
+    {
+      "id": "town_wall_fired_brick_corner",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "560306209f77f892f2cb750f5ee05c42cd64b471bb97700ea1a41b410374bf6a",
+      "preview_sha256": "95745ed06f6d1237a1ce49aaf1e33f65bea8b476c9dd3cdf5da146a8fcc78e96",
+      "footprint": [
+        2,
+        2
+      ],
+      "layers": 3
+    },
+    {
+      "id": "town_wall_fired_brick_damaged",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "95852789b38b7cf211046701a464171df1e914762e1ed33d8e14f284bbee8f69",
+      "preview_sha256": "6ef1f807952d8a332271ed916bb9aad379c180829bf17ea4ae2729cbef4a19b1",
+      "footprint": [
+        3,
+        1
+      ],
+      "layers": 3
+    },
+    {
+      "id": "town_wall_fired_brick_end",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "a91dfe9935b1b118987a47f463827aa8be521d2433aafc5a0446c10a4995b96b",
+      "preview_sha256": "a6fdeb214c02adbe985fc55b7ec386dc978b147486bb44c2c786e4f7994ce773",
+      "footprint": [
+        1,
+        1
+      ],
+      "layers": 1
+    },
+    {
+      "id": "town_wall_fired_brick_ew",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "b9f5def8bce33a2e69273652297ec4155de3f0c0b71a9e7aa7d949c58ee1f7d0",
+      "preview_sha256": "bd0f554ddc3aa27f62570ce30940e79d863fa768040ec49c82cdb748c824821c",
+      "footprint": [
+        3,
+        1
+      ],
+      "layers": 3
+    },
+    {
+      "id": "town_wall_fired_brick_ns",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "8c1a3ccf99f529bc00043bd3ea03d9599d4c590ed8484f94553b83f4ebaf260f",
+      "preview_sha256": "7f40fa88d76a138d0db477aa9df4298be013c5b69538b46256d91b007b633dd5",
+      "footprint": [
+        1,
+        3
+      ],
+      "layers": 3
+    },
+    {
+      "id": "trading_post_empty",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "6c7424a529388a7d3bd75d9dc8fa43472bbe9bc4bd3620a25870fc1282affb0b",
+      "preview_sha256": "27d7d01374b2c933e8130b1e93ae1d55d166134d8683b343c57a612ec78b3e60",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 22
+    },
+    {
+      "id": "trading_post_stocked",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "4794651d558f3535b4c384c5f74ae369c8253cc7905f81bbb977ac152567ecdd",
+      "preview_sha256": "503b12fc76764bb86c5a1b160155fbf73a23d8c0927ad7dfea7d665cdc5e6bea",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 24
+    },
+    {
+      "id": "warehouse_empty",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "470a11971a2b4b8b639375c6c4c8ba01a2880557a1556522c0fd6e07c56e5e14",
+      "preview_sha256": "e4e3a7b778fbaf8d97fa7dfec25f807407f92ec4d3e17d5dd66686d935a01ad9",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 22
+    },
+    {
+      "id": "warehouse_full",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "4259c2a4a6e58b8e1faa1f80fb5fb1186cc74bf1b7589e4f3ee5691d19b7b45d",
+      "preview_sha256": "fba7ce6b0738415278045059aabe5ea7d56ea26b280bc18cb4edd8c713377bcc",
+      "footprint": [
+        4,
+        3
+      ],
+      "layers": 24
+    },
+    {
+      "id": "watermill_idle",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "bc2cf2e16bf005636999bf08b334e385f20ac2cf835aa1fe916b13d9ff015942",
+      "preview_sha256": "14b071844e27f53809c98bd42c4e78ebb2427456cfba68d17137994b416214e6",
+      "footprint": [
+        5,
+        4
+      ],
+      "layers": 35
+    },
+    {
+      "id": "watermill_working",
+      "status": "GEOMETRY_REVIEWED_RECIPE_NOT_IMPORTED",
+      "manifest_sha256": "635ddb08f2c75b79ccb4a47a4b840009408fd8462c2a508aee8bf31f4a9e3646",
+      "preview_sha256": "22f412b43170d1216c3e075688bd1780f159cd46680892de41e8ac2086c17048",
+      "footprint": [
+        5,
+        4
+      ],
+      "layers": 35
+    }
+  ]
+}

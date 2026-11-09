@@ -3,23 +3,22 @@
     "id": "pen_fence_straight",
     "lane": "neolithic",
     "era": "neolithic",
-    "attempt": 2,
-    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-024c6684-d036-492c-b3cc-e0791baeb1dc.png",
-    "prompt": "Use case: precise-object-edit. Edit the FIRST image only. Preserve its exact object geometry, camera, number of rails/posts, rope attachments and silhouette. Remove every halo, glow, haze, brown backdrop or colored veil outside the physical wood and rope; EVERY background pixel including rail gaps must be actual ALPHA ZERO. Fine antialias edge only. The other three images are locked WorldSim style05 references. Correct surface rendering to match their fine ink and restrained QUIET low-contrast tone wash. Reduce patchy watercolor contrast: broad even muted ochre-brown base with small gentle bark variations and a clear soft right/lower shadow plane. Do not paint giant alternating pale/dark bark flakes. Keep thin warm charcoal contours, outer-to-secondary width2:1, three broken longitudinal grain marks per main timber, three parallel / hatches at a single shaded spot, not on every joint. Upper-left illumination, top/left lighter, right/bottom darker. Do not crop, add props, add ground, add cast shadows or change structure. No text. Actual transparent RGBA, fully transparent holes.",
+    "attempt": 3,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-0d5f75c7-311b-4752-8748-12e92e5ca40b.png",
+    "prompt": "Use case: precise-object-edit. First image target. Keep originalwoodpostHEIGHT,postTHICKNESS andshape. Increase only distance between the2uprightposts and extend the3horizontalrails accordingly, yielding precise wholeopaque silhouette aspect WIDTH66 : HEIGHT40 (1.65wide per1high). Atgame size40pxtall,the panel must be66pxwide so adjacentpanels connect on64pxgrid. Posttops andbases remain atsameline; one straightEAST-WESTpanel. No rotation, no extra posts, no thinnerposts, no camera change. Preserve fine warmcharcoal irregularoutline, three brokenlongitudinal woodgrainmarks, restrainedquietbrownwash,upperleftlight. Truealpha0 margins/gaps, no haze, no ground or shadow.",
     "subject": null,
     "references": [
-      "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-afdb508d-f143-44d2-9e7d-7b25440110d0.png",
+      "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-024c6684-d036-492c-b3cc-e0791baeb1dc.png",
       "art/style05/anchors/props.png",
-      "art/style05/anchors/scene.png",
-      "art/character/boards/route_i_sheet_1x.png"
+      "art/style05/anchors/scene.png"
     ],
-    "target_height": 40,
+    "target_height": 39,
     "projection_family": "pen_fence",
     "height_band": [
       38,
       42
     ],
-    "height_band_reason": "New waist-height animal-pen rail family;40px versus56px adult.",
+    "height_band_reason": "Same original raw and frozen38..42px pen-fence band. Root selected uniform39px export after64px repeat review: post-center pitch64.5px versus66px at40px, improving joins while preserving approximately40px uprights beside56px adult. No nonuniform scaling or alpha edits. Original40px record and export archived in geometry_v1.",
     "footprint": [
       1.0,
       1.0
@@ -27,14 +26,14 @@
     "style_family": "buildings",
     "generation_id": null,
     "seed": null,
-    "generated_at": "2026-11-09T23:06:23.540Z"
+    "generated_at": "2026-11-09T23:36:54.252Z"
   },
-  "raw_preserved": "/Users/rexxa/work/art-batch/A2/neolithic/raw/pen_fence_straight_try2.png",
-  "raw_sha256": "dddcffb1047c165c0bb8ae0ac3e7dc3bc6c961aca60d564775fda7ee51f688e9",
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/neolithic/raw/pen_fence_straight_try3.png",
+  "raw_sha256": "7fb47a3887aaacb4bd101860fa98ed63adbbf14e1a172df6152c3e7314a882cd",
   "references": [
     {
-      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-afdb508d-f143-44d2-9e7d-7b25440110d0.png",
-      "sha256": "a458554038dd94de8211eef8c3bb2c6c49c56175e02228df0244d12a7c231749"
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-024c6684-d036-492c-b3cc-e0791baeb1dc.png",
+      "sha256": "dddcffb1047c165c0bb8ae0ac3e7dc3bc6c961aca60d564775fda7ee51f688e9"
     },
     {
       "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
@@ -43,66 +42,62 @@
     {
       "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
       "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
-    },
-    {
-      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
-      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
     }
   ],
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
-  "normalized": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/pen_fence_straight_try2.png",
-  "normalized_sha256": "1450bea0733ae1d1958dfa0dbbc413c48439e25a43ee34d115a2883f900b6ad8",
+  "normalized": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/pen_fence_straight_try3.png",
+  "normalized_sha256": "93da3ddc08dfbab136a16d1c6ff842563d930bb2845e8b042b7632d546e416e5",
   "size": [
-    65,
-    48
+    81,
+    47
   ],
   "anchor": [
-    32,
-    43
+    40,
+    42
   ],
   "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
   "operations": [
-    "alpha>=128 bounds plus 2px fringe crop: (136, 83, 1373, 962)",
-    "uniform Lanczos scale: 0.045714285714285714",
-    "transparent 4px padding; source-canvas anchor: (32, 43)"
+    "alpha>=128 bounds plus 2px fringe crop: (15, 71, 1595, 914)",
+    "uniform Lanczos scale: 0.04648390941597139",
+    "transparent 4px padding; source-canvas anchor: (40, 42)"
   ],
   "projection": {
     "family": "pen_fence",
     "anchor": [
-      32,
-      43
+      40,
+      42
     ],
     "height_band": [
       38,
       42
     ],
     "height_band_override": true,
-    "opaque_pixels": 1089,
-    "base_row": 43,
+    "opaque_pixels": 1253,
+    "base_row": 42,
     "base_error": 0,
-    "height": 40,
-    "gradient_x": -2.3859743589743587,
-    "gradient_y": -8.17241733615222,
-    "light_angle_degrees": 253.72459556872025,
+    "height": 39,
+    "gradient_x": -2.376093141405588,
+    "gradient_y": -7.50981641509434,
+    "light_angle_degrees": 252.4427172449512,
     "base_passed": true,
     "height_passed": true,
     "light_passed": true,
     "passed": true
   },
   "judge_v2": {
-    "candidate": "/Users/rexxa/work/art-batch/A2/neolithic/raw/pen_fence_straight_try2.png",
-    "sha256": "dddcffb1047c165c0bb8ae0ac3e7dc3bc6c961aca60d564775fda7ee51f688e9",
+    "candidate": "/Users/rexxa/work/art-batch/A2/neolithic/raw/pen_fence_straight_try3.png",
+    "sha256": "7fb47a3887aaacb4bd101860fa98ed63adbbf14e1a172df6152c3e7314a882cd",
     "family": "buildings",
     "metrics": {
-      "edge_density": 0.2476221183298404,
-      "saturation_q25": 0.43017998717176015,
-      "saturation_q75": 0.4698660601750895,
+      "edge_density": 0.24595871673713007,
+      "saturation_q25": 0.4281805533708218,
+      "saturation_q75": 0.47366768281152627,
       "stroke_q25": 2.0,
       "stroke_q50": 2.0,
-      "stroke_q75": 4.0,
+      "stroke_q75": 2.8284271247461903,
       "stroke_q90": 4.0,
-      "wash_flatness": 0.016702482175797284,
-      "foreground_pixels": 22097
+      "wash_flatness": 0.017668189749156245,
+      "foreground_pixels": 15456
     },
     "numeric_checks": {
       "edge_density": true,
@@ -123,18 +118,18 @@
   "raw_alpha_max": 255,
   "clipped_at_raw_border": false,
   "raw_nonzero_bbox": [
-    0,
-    0,
-    1520,
-    1024
+    12,
+    7,
+    1596,
+    977
   ],
   "raw_opaque_bbox": [
-    138,
-    85,
-    1371,
-    960
+    17,
+    73,
+    1593,
+    912
   ],
-  "raw_faint_far_ratio": 0.02516309412861137,
+  "raw_faint_far_ratio": 0.0004551581674631935,
   "review_flags": [
     "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
   ],
@@ -142,199 +137,58 @@
   "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
   "failures": [],
   "review": {
-    "reviewer": "root independent of generating agent",
-    "method": "Native model visual inspection of actual raw RGBA on dark composite, fixed uniform2x export sheet beside adult and adopted structure references; raw style compared with locked props/scene. Numeric readiness remains a separate requirement. Review sheets may resize raw only for layout; source files unchanged.",
-    "sheet": "/Users/rexxa/work/art-batch/A2/checks/neolithic_raw_review.png",
+    "reviewer": "crops_grain independent reviewer",
+    "evidence": [
+      "checks/neolithic_fence_canonical39_audit.json",
+      "checks/neolithic_fence_corrective_independent_review.json",
+      "neolithic/geometry_probe/fence_compare_1x.png",
+      "neolithic/geometry_probe/fence_compare_2x.png"
+    ],
+    "scope": "Canonical39px export acceptance addendum; prior reviews remain unchanged. NS3 remains rejected.",
     "assets": [
       {
         "id": "pen_fence_straight",
+        "attempt": 3,
+        "target_height": 39,
+        "reviewed_png": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/pen_fence_straight_try3.png",
+        "reviewed_sha256": "93da3ddc08dfbab136a16d1c6ff842563d930bb2845e8b042b7632d546e416e5",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "geometry_correct": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Canonical PNG encoding differs from prior probe; decoded RGBA has zero differing channel values."
+        ],
+        "suggestions": [],
+        "reasoning": "Canonical39px file is pixel-identical to independently approved39px probe,81x47 with anchor40,42. Original raw SHA matches archived40px result and current sidecar. Independent normalization recreates exact pixels. Fresh projection base,height and upper-left lighting checks pass with unchanged38..42band. Prior visual/material/repeat judgment therefore applies to this exact canonical SHA."
+      },
+      {
+        "id": "pen_fence_damaged",
         "attempt": 2,
+        "target_height": 39,
+        "reviewed_png": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/pen_fence_damaged_try2.png",
+        "reviewed_sha256": "e827eb2791c9e978c0ca9eb5f7c5342f0dd6f6bd2e857172fd1c325faca61123",
         "medium": 4,
         "line": 4,
-        "light": 4,
-        "palette": 4,
-        "score": 92,
-        "reasoning": "Rope-bound timber rails retain restrained grain and quiet wash. 57px opaque width and40px posts fit one64px tile and sit below adult shoulder. Clean repeat ends will need topology placement at import.",
+        "light": 5,
+        "palette": 5,
         "semantic_correct": true,
         "alpha_clean": true,
-        "verdict": "pass",
-        "raw_sha256": "dddcffb1047c165c0bb8ae0ac3e7dc3bc6c961aca60d564775fda7ee51f688e9",
-        "normalized_sha256": "1450bea0733ae1d1958dfa0dbbc413c48439e25a43ee34d115a2883f900b6ad8",
-        "footprint_reading": [
-          1.0,
-          1.0
-        ]
-      },
-      {
-        "id": "pen_fence_corner",
-        "attempt": 2,
-        "medium": 4,
-        "line": 4,
-        "light": 4,
-        "palette": 4,
-        "score": 86,
-        "reasoning": "Material and alpha are sound, but the north-south arm angles diagonally in ground space. Regenerate an orthogonal corner, with40px post height separately preserved.",
-        "semantic_correct": false,
-        "alpha_clean": true,
-        "verdict": "revise",
-        "raw_sha256": "acbf71f07ae5cf3512abc05c67efba1f0f496651878a5cdcf488c51d12323297",
-        "normalized_sha256": "017241c0c2ac872fa5c7d600776d95f3622e2a8c597ca26c536444841428da1e",
-        "footprint_reading": [
-          1.0,
-          1.0
-        ]
-      },
-      {
-        "id": "pen_gate_closed",
-        "attempt": 2,
-        "medium": 4,
-        "line": 4,
-        "light": 4,
-        "palette": 4,
-        "score": 92,
-        "reasoning": "Rope hinges and diagonal timber brace read as a premetal gate.60px wall-height gate and modest horizontal overhang are appropriate beside the adult reference.",
-        "semantic_correct": true,
-        "alpha_clean": true,
-        "verdict": "pass",
-        "raw_sha256": "0e79bb3e27bb2fb1a30939658640651c32ab87d67954584d2e04230a17573faa",
-        "normalized_sha256": "1023719e46a811c48caefb878b1347075bfe1f233e8d580adc2d7538c59cbb92",
-        "footprint_reading": [
-          1.0,
-          1.0
-        ]
-      },
-      {
-        "id": "smokehouse_idle",
-        "attempt": 1,
-        "medium": 4,
-        "line": 4,
-        "light": 4,
-        "palette": 4,
-        "score": 92,
-        "reasoning": "Open roofless smoke frame, hanging loops and cold hearth establish function.89px body span across2x2 occupancy is credible, and restrained wicker texture matches wood anchors.",
-        "semantic_correct": true,
-        "alpha_clean": true,
-        "verdict": "pass",
-        "raw_sha256": "c5908866d9308ec66fe74cd354affc205644e43266855a65cfd8efb37c861b65",
-        "normalized_sha256": "4902a850caed3a2f0dbc7708b27b0f613debde151ae642347e00e9315caf1c3d",
-        "footprint_reading": [
-          2.0,
-          2.0
-        ]
-      },
-      {
-        "id": "well",
-        "attempt": 1,
-        "medium": 4,
-        "line": 4,
-        "light": 4,
-        "palette": 4,
-        "score": 93,
-        "reasoning": "Stone ring, wood frame and woven bucket distinguish a premetal well.56px span fits one tile;52px overall frame remains close to adult height.",
-        "semantic_correct": true,
-        "alpha_clean": true,
-        "verdict": "pass",
-        "raw_sha256": "89f1b19d3ccb6909b6d73ef837660b53a468c1c30501c9118a5bde1190f1eced",
-        "normalized_sha256": "aac1827c268a79d761f161073f08f7dc6f7d0e03fe39e2569d98cf03998799a3",
-        "footprint_reading": [
-          1.0,
-          1.0
-        ]
-      },
-      {
-        "id": "megalith",
-        "attempt": 1,
-        "medium": 4,
-        "line": 4,
-        "light": 4,
-        "palette": 4,
-        "score": 94,
-        "reasoning": "Irregular monolith silhouette, limited crack groups and small moss washes preserve stone identity.84px height is deliberately taller than56px adult; narrow single-tile base is credible.",
-        "semantic_correct": true,
-        "alpha_clean": true,
-        "verdict": "pass",
-        "raw_sha256": "9fe07751e53ddfd99232eb8f780e32bcc7da6f1b6ba4ee7db89c50bc64724054",
-        "normalized_sha256": "5ff6065d2a6588cdb184b6f87ebc2f40d1632a152946b4c564717252b0190d23",
-        "footprint_reading": [
-          1.0,
-          1.0
-        ]
-      },
-      {
-        "id": "ritual_site",
-        "attempt": 1,
-        "medium": 4,
-        "line": 4,
-        "light": 4,
-        "palette": 4,
-        "score": 84,
-        "reasoning": "Stone circle and altar semantics are clear, but47px opaque span is too small for declared2x2 footprint. Re-export at a declared occupancy scale and rereview.",
-        "semantic_correct": false,
-        "alpha_clean": true,
-        "verdict": "revise",
-        "raw_sha256": "fb8cd0dd74efcb0fcbc0d4cc21e585b8599b544a1dc6cee77f06433573283aaa",
-        "normalized_sha256": "50c28ec45192543a83971f7927a902bdb79980cce82c23f555973062098ffcab",
-        "footprint_reading": [
-          2.0,
-          2.0
-        ]
-      },
-      {
-        "id": "bread_oven_unlit",
-        "attempt": 1,
-        "medium": 4,
-        "line": 4,
-        "light": 4,
-        "palette": 4,
-        "score": 92,
-        "reasoning": "Low domed clay oven, dark mouth and quiet stone threshold read clearly beside hearth and bench.32px height fits a kneeling-scale oven within one tile.",
-        "semantic_correct": true,
-        "alpha_clean": true,
-        "verdict": "pass",
-        "raw_sha256": "6d64314ee6f1199777cb1afa724370a601f9e2c429ef12bf585c592688a5d36a",
-        "normalized_sha256": "37a38b65f87013417b4e68c9473dfde5311b9bb565b1aa8ff63041f6608cef3f",
-        "footprint_reading": [
-          1.0,
-          1.0
-        ]
-      },
-      {
-        "id": "windbreak",
-        "attempt": 1,
-        "medium": 4,
-        "line": 4,
-        "light": 4,
-        "palette": 4,
+        "geometry_correct": true,
         "score": 91,
-        "reasoning": "Undyed hide between three timber stakes is era honest, with open bottom and discreet folds.88px span fits the2x1 footprint and48px height is plausible beside adult.",
-        "semantic_correct": true,
-        "alpha_clean": true,
         "verdict": "pass",
-        "raw_sha256": "c025dd584d10f5dfc423bb71a1c6d7deeb91f3aaeceb61489d138d2d84124c31",
-        "normalized_sha256": "955cd58d9f3891c4c651a7a7bc2fb69da0a735e38f86679f2f24742ed01f8da9",
-        "footprint_reading": [
-          2.0,
-          1.0
-        ]
-      },
-      {
-        "id": "trap_set",
-        "attempt": 1,
-        "medium": 4,
-        "line": 4,
-        "light": 4,
-        "palette": 4,
-        "score": 91,
-        "reasoning": "Open-mouth wicker trap has a readable woven silhouette and restrained marks.24px height keeps it below knee scale; a sprung counterpart should close this same aperture.",
-        "semantic_correct": true,
-        "alpha_clean": true,
-        "verdict": "pass",
-        "raw_sha256": "4fd67e88f42a8389b2860accb9b9556d36396bd64e8381c5ca2d77c2ae83e329",
-        "normalized_sha256": "f3f56836a57a5ebb6d3a5bae2d4d984beeeb7299618e792e0e06fe8def5d574e",
-        "footprint_reading": [
-          1.0,
-          1.0
-        ]
+        "category_match": true,
+        "differences": [
+          "Canonical PNG encoding differs from prior probe; decoded RGBA has zero differing channel values."
+        ],
+        "suggestions": [],
+        "reasoning": "Canonical39px file is pixel-identical to independently approved39px probe,81x47 with anchor40,42. Original raw SHA matches archived40px result and current sidecar. Independent normalization recreates exact pixels. Fresh projection base,height and upper-left lighting checks pass with unchanged38..42band. Prior visual/material/repeat judgment therefore applies to this exact canonical SHA."
       }
     ]
   },
@@ -342,6 +196,6 @@
   "adopted_id": "pen_fence_straight",
   "adopted_path": "art/style05/struct/a2/neolithic/pen_fence_straight.png",
   "review_asset_id": "pen_fence_straight",
-  "review_file": "/Users/rexxa/work/art-batch/A2/checks/neolithic_root_independent_review.json",
-  "review_sha256": "8adee95bd02f0ecb25aa7ccaae8577d75a3440ba0595d6dd02727b31f07d650e"
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/neolithic_fence_canonical39_independent_review.json",
+  "review_sha256": "eb1af3204e495eb450c867848bf295f707b344f128060d8bb8a03a40a7d54db0"
 }

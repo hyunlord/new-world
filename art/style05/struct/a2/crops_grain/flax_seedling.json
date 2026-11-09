@@ -1,0 +1,221 @@
+{
+  "record": {
+    "id": "flax_seedling",
+    "lane": "crops_grain",
+    "era": "neolithic",
+    "attempt": 3,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-1f68c5b7-461c-4374-9e06-bb6e95fccfe4.png",
+    "prompt": "Use case precise object edit. Reference1 botanical structure to retain: seven flax seedlings with opposite cotyledons and FOUR narrow lanceolate true leaves per shoot. Reference2 shows desired crisp illustrated pen definition. References3+4 locked WorldSim medium. Reinterpret as a COMPACT connected planting cluster with the seven shoot bases in two shallow staggered rows, enough foliage overlap to read as one cultivated patch. Botanical leaves stay length4to5timeswidth. Fine dark sepia outer contour twice secondary line width. Each visible leaf has a strongly legible DARK INNER MIDRIB and one short secondary ink accent, every stem one slender darker longitudinal side line. Distinct branch-junction lines, no global hatching. Dark line separates warm pale-sage upper-left plane and muted olive lower-right plane; gently varied colour INSIDE anatomy. Crisp upper-left daylight. Target opaque height14px and field width<=52px, adult56px. Frontthree-quarter20degrees down. True transparent alpha0 outside plants, clear transparent gaps, no shadow/soil/aura/text/border. Full subject centered, generous transparent margins.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-eac6732f-4638-4bd6-8b7c-81f12235f7dd.png",
+      "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-e88c8e70-3f3b-4490-aca8-1d9374228d8d.png",
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 14,
+    "projection_family": "crop",
+    "height_band": [
+      12,
+      16
+    ],
+    "height_band_reason": "New crop stage seedling: 14px target versus adult56px; field group fits one64px tile.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "plants",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:35:01.416Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/crops_grain/raw/flax_seedling_try3.png",
+  "raw_sha256": "997e0bf6de7bc26fb380eca47081eaeac72fea970f8505dfafc75c4803858169",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-eac6732f-4638-4bd6-8b7c-81f12235f7dd.png",
+      "sha256": "f785de71a16ef60dabf51fe5b13a9e21897618360d0741296d96a58930b017b3"
+    },
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-e88c8e70-3f3b-4490-aca8-1d9374228d8d.png",
+      "sha256": "62bc4e98552148d3038b5b3a4ba06147c4f738f4073247681d2787ecd829aaa2"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/crops_grain/normalized/flax_seedling_try3.png",
+  "normalized_sha256": "7ca187a9d387d8b6589e66262ad15d54ed9e9a7bb1cd4fd912874cebdfff8e05",
+  "size": [
+    30,
+    22
+  ],
+  "anchor": [
+    15,
+    16
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (297, 40, 1454, 783)",
+    "uniform Lanczos scale: 0.018944519621109608",
+    "transparent 4px padding; source-canvas anchor: (15, 16)"
+  ],
+  "projection": {
+    "family": "crop",
+    "anchor": [
+      15,
+      16
+    ],
+    "height_band": [
+      12,
+      16
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 113,
+    "base_row": 16,
+    "base_error": 0,
+    "height": 13,
+    "gradient_x": -2.3437787878787883,
+    "gradient_y": -1.4707076923076934,
+    "light_angle_degrees": 212.10803440767427,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/crops_grain/raw/flax_seedling_try3.png",
+    "sha256": "997e0bf6de7bc26fb380eca47081eaeac72fea970f8505dfafc75c4803858169",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.20080506037952847,
+      "saturation_q25": 0.5201368712757919,
+      "saturation_q75": 0.6271797353878346,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.029695175195743717,
+      "foreground_pixels": 14213
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    27,
+    8,
+    1760,
+    887
+  ],
+  "raw_opaque_bbox": [
+    299,
+    42,
+    1452,
+    781
+  ],
+  "raw_faint_far_ratio": 0.008035260879445836,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_orchard independent executor",
+    "evidence": [
+      "checks/grain_final_review_board.png",
+      "Actual raw RGBA sources viewed directly and composited on opaque dark green",
+      "Normalized native1x and nearest2x alongside RouteI adult56px",
+      "Locked props/scene references and adopted berry_bush_full"
+    ],
+    "assets": [
+      {
+        "id": "wheat_harvested",
+        "attempt": 3,
+        "score": 94,
+        "differences": [
+          "Very small stubble groups become compact marks at native scale, consistent with the declared 10px harvested stage."
+        ],
+        "reasoning": "Seven low tufts of cut tan stalks with exposed cut ends and sparse narrow dry blades read harvested wheat. Quiet ochre wash, fine sepia contours and lighter upper-left cuts fit the plant set; no retained ears or background patch.",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true,
+        "suggestions": [],
+        "raw_sha256": "449e1aeec62489b523aba4ba1dadcd1fc231898c079b4909d2378389d5d9af34",
+        "normalized_sha256": "9fb8e8950576602a677f8d599fd4983acdf862a8c5d9b24c2a5c1ff56acd7b3d"
+      },
+      {
+        "id": "flax_seedling",
+        "attempt": 3,
+        "score": 91,
+        "differences": [
+          "Foliage is warmer and more yellow-olive than the cereal seedlings; lower-right olive planes retain the living-plant reading."
+        ],
+        "reasoning": "Short unbranched shoots have paired low cotyledons and smooth narrow pointed true leaves, without flowers or seed capsules. At 13px opaque height they read young seedlings beside the 56px adult; leaf silhouettes remain distinct from grass stubble and the warm sage wash stays within the locked earth palette.",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true,
+        "suggestions": [],
+        "raw_sha256": "997e0bf6de7bc26fb380eca47081eaeac72fea970f8505dfafc75c4803858169",
+        "normalized_sha256": "7ca187a9d387d8b6589e66262ad15d54ed9e9a7bb1cd4fd912874cebdfff8e05"
+      },
+      {
+        "id": "millet_harvested",
+        "attempt": 2,
+        "score": 93,
+        "differences": [
+          "Broader drooping residual leaves produce a denser stubble silhouette than wheat, consistent with the millet family."
+        ],
+        "reasoning": "Short cut stalks with visible ends and remaining broad arching dry blades clearly indicate a harvested millet patch; no ripe panicles remain. Clean silhouette, restrained tan-olive wash and upper-left highlights remain coherent at 1x and 2x.",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true,
+        "suggestions": [],
+        "raw_sha256": "4a76c1102022415e734387ca9d170e681c62bfdb77f36fc4bd66b8f4770be01b",
+        "normalized_sha256": "71eaac2ad200954ca70b4d5e9361201f10ae8a933ee0479c6e6fc8c333f22e95"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "flax_seedling",
+  "adopted_path": "art/style05/struct/a2/crops_grain/flax_seedling.png",
+  "review_asset_id": "flax_seedling",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/grain_final_independent_review.json",
+  "review_sha256": "14290de1494d50f65f489a3582173b7e4cfa76ae3a440d332b81aebab8dcc0b4"
+}

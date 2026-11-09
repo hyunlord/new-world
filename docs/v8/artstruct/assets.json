@@ -853,15 +853,15 @@
     {
       "id": "pen_fence_straight",
       "path": "art/style05/struct/a2/neolithic/pen_fence_straight.png",
-      "width": 65,
-      "height": 48,
+      "width": 81,
+      "height": 47,
       "footprint": [
         1.0,
         1.0
       ],
       "anchor": [
-        32,
-        43
+        40,
+        42
       ],
       "count_buckets": [],
       "family": "buildings",
@@ -1950,6 +1950,737 @@
       "anchor": [
         32,
         55
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "oats_growing",
+      "path": "art/style05/struct/a2/crops_grain/oats_growing.png",
+      "width": 41,
+      "height": 36,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        20,
+        31
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "oats_seedling",
+      "path": "art/style05/struct/a2/crops_grain/oats_seedling.png",
+      "width": 48,
+      "height": 22,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        24,
+        17
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "oats_harvested",
+      "path": "art/style05/struct/a2/crops_grain/oats_harvested.png",
+      "width": 26,
+      "height": 18,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        13,
+        13
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "rye_growing",
+      "path": "art/style05/struct/a2/crops_grain/rye_growing.png",
+      "width": 38,
+      "height": 36,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        19,
+        31
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "wheat_seedling",
+      "path": "art/style05/struct/a2/crops_grain/wheat_seedling.png",
+      "width": 51,
+      "height": 22,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        25,
+        17
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "barley_growing",
+      "path": "art/style05/struct/a2/crops_grain/barley_growing.png",
+      "width": 52,
+      "height": 36,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        26,
+        31
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "wheat_growing",
+      "path": "art/style05/struct/a2/crops_grain/wheat_growing.png",
+      "width": 51,
+      "height": 36,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        25,
+        31
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "wheat_ripe",
+      "path": "art/style05/struct/a2/crops_grain/wheat_ripe.png",
+      "width": 53,
+      "height": 48,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        26,
+        43
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "apple_fruiting",
+      "path": "art/style05/struct/a2/crops_orchard/apple_fruiting.png",
+      "width": 151,
+      "height": 153,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        75,
+        148
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "apple_leafy",
+      "path": "art/style05/struct/a2/crops_orchard/apple_leafy.png",
+      "width": 150,
+      "height": 153,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        75,
+        148
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "apple_sapling",
+      "path": "art/style05/struct/a2/crops_orchard/apple_sapling.png",
+      "width": 58,
+      "height": 72,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        29,
+        67
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "apple_bare",
+      "path": "art/style05/struct/a2/crops_orchard/apple_bare.png",
+      "width": 151,
+      "height": 153,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        75,
+        148
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "olive_leafy",
+      "path": "art/style05/struct/a2/crops_orchard/olive_leafy.png",
+      "width": 155,
+      "height": 153,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        77,
+        148
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "olive_sapling",
+      "path": "art/style05/struct/a2/crops_orchard/olive_sapling.png",
+      "width": 60,
+      "height": 72,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        30,
+        67
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "hemp_harvested",
+      "path": "art/style05/struct/a2/crops_orchard/hemp_harvested.png",
+      "width": 33,
+      "height": 16,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        16,
+        11
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "lentil_ripe",
+      "path": "art/style05/struct/a2/crops_orchard/lentil_ripe.png",
+      "width": 52,
+      "height": 32,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        26,
+        27
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "lentil_seedling",
+      "path": "art/style05/struct/a2/crops_orchard/lentil_seedling.png",
+      "width": 32,
+      "height": 16,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        16,
+        10
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "lentil_growing",
+      "path": "art/style05/struct/a2/crops_orchard/lentil_growing.png",
+      "width": 37,
+      "height": 26,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        18,
+        20
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "lentil_harvested",
+      "path": "art/style05/struct/a2/crops_orchard/lentil_harvested.png",
+      "width": 32,
+      "height": 14,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        16,
+        9
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "pea_growing",
+      "path": "art/style05/struct/a2/crops_orchard/pea_growing.png",
+      "width": 48,
+      "height": 34,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        24,
+        29
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "pea_harvested",
+      "path": "art/style05/struct/a2/crops_orchard/pea_harvested.png",
+      "width": 28,
+      "height": 16,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        14,
+        11
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "pea_ripe",
+      "path": "art/style05/struct/a2/crops_orchard/pea_ripe.png",
+      "width": 66,
+      "height": 44,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        33,
+        39
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "pea_seedling",
+      "path": "art/style05/struct/a2/crops_orchard/pea_seedling.png",
+      "width": 24,
+      "height": 18,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        12,
+        13
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "pen_gate_open",
+      "path": "art/style05/struct/a2/neolithic/pen_gate_open.png",
+      "width": 79,
+      "height": 68,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        39,
+        63
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "ritual_site_empty",
+      "path": "art/style05/struct/a2/neolithic/ritual_site_empty.png",
+      "width": 107,
+      "height": 92,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        53,
+        87
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "windbreak_damaged",
+      "path": "art/style05/struct/a2/neolithic/windbreak_damaged.png",
+      "width": 96,
+      "height": 56,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        48,
+        51
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "fish_weir_empty",
+      "path": "art/style05/struct/a2/neolithic/fish_weir_empty.png",
+      "width": 106,
+      "height": 96,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        53,
+        91
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "fish_weir_catch",
+      "path": "art/style05/struct/a2/neolithic/fish_weir_catch.png",
+      "width": 106,
+      "height": 96,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        53,
+        91
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "megalith_fallen",
+      "path": "art/style05/struct/a2/neolithic/megalith_fallen.png",
+      "width": 108,
+      "height": 48,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        54,
+        43
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "reservoir_empty",
+      "path": "art/style05/struct/a2/iron/reservoir_empty.png",
+      "width": 137,
+      "height": 137,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        68,
+        132
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "waterwheel_idle",
+      "path": "art/style05/struct/a2/iron/waterwheel_idle.png",
+      "width": 75,
+      "height": 104,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        37,
+        99
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "watermill_millstones_idle",
+      "path": "art/style05/struct/a2/iron/watermill_millstones_idle.png",
+      "width": 62,
+      "height": 62,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        31,
+        57
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "watermill_millstones_working",
+      "path": "art/style05/struct/a2/iron/watermill_millstones_working.png",
+      "width": 62,
+      "height": 62,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        31,
+        57
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "watchtower_damaged",
+      "path": "art/style05/struct/a2/iron/watchtower_damaged.png",
+      "width": 87,
+      "height": 136,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        43,
+        131
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "wheat_harvested",
+      "path": "art/style05/struct/a2/crops_grain/wheat_harvested.png",
+      "width": 35,
+      "height": 18,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        17,
+        13
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "flax_seedling",
+      "path": "art/style05/struct/a2/crops_grain/flax_seedling.png",
+      "width": 30,
+      "height": 22,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        15,
+        16
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "millet_harvested",
+      "path": "art/style05/struct/a2/crops_grain/millet_harvested.png",
+      "width": 32,
+      "height": 18,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        16,
+        13
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "loom_loaded",
+      "path": "art/style05/struct/a2/neolithic/loom_loaded.png",
+      "width": 87,
+      "height": 64,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        43,
+        59
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "potter_kiln_firing",
+      "path": "art/style05/struct/a2/neolithic/potter_kiln_firing.png",
+      "width": 55,
+      "height": 56,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        27,
+        51
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "waterwheel_working",
+      "path": "art/style05/struct/a2/iron/waterwheel_working.png",
+      "width": 75,
+      "height": 104,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        37,
+        99
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "reservoir_full",
+      "path": "art/style05/struct/a2/iron/reservoir_full.png",
+      "width": 137,
+      "height": 137,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        68,
+        132
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "aqueduct_damaged",
+      "path": "art/style05/struct/a2/iron/aqueduct_damaged.png",
+      "width": 141,
+      "height": 68,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        70,
+        63
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "pen_fence_damaged",
+      "path": "art/style05/struct/a2/neolithic/pen_fence_damaged.png",
+      "width": 81,
+      "height": 47,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        40,
+        42
       ],
       "count_buckets": [],
       "family": "buildings",

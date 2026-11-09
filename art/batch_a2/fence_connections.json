@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "status": "DATA_ONLY_NOT_RUNTIME_APPLIED",
+  "placement_revision": "CORRECTED_CANONICAL39_SOURCE_BINDING",
+  "tile_spacing_px": 64,
+  "anchor_policy": "Use every source published anchor unchanged; world origin=world base-anchor. The following are placement offsets, never source-anchor edits.",
+  "measurement_threshold_alpha": 128,
+  "sources": {
+    "palisade_ew": {
+      "path": "art/style05/struct/a2/bronze/palisade_ew.png",
+      "sha256": "ef20ea34c508e4f9c9abdeb7fa3c06c9f2482777b5f8a855c16add6339bb5449",
+      "sidecar_sha256": "557bba8c1bb49872733b16f7f0d1f396a75f51826a7f760d5aa2fdbebba745e1",
+      "size": [
+        78,
+        68
+      ],
+      "anchor": [
+        39,
+        63
+      ],
+      "alpha_ge_128_bbox": [
+        4,
+        4,
+        74,
+        64
+      ],
+      "bbox_relative_to_anchor": [
+        -35,
+        -59,
+        35,
+        1
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "target_height": 60,
+      "attempt": 1
+    },
+    "palisade_end": {
+      "path": "art/style05/struct/a2/bronze/palisade_end.png",
+      "sha256": "efa013a70eda7441ff351bff91031404e0f120a8af559ff892724af7eef5ec88",
+      "sidecar_sha256": "1d9d4f8d51e65612434cba278f9df8e368c7e73c4caf43bc5b3ea29a9681f6c5",
+      "size": [
+        43,
+        68
+      ],
+      "anchor": [
+        21,
+        63
+      ],
+      "alpha_ge_128_bbox": [
+        4,
+        4,
+        39,
+        64
+      ],
+      "bbox_relative_to_anchor": [
+        -17,
+        -59,
+        18,
+        1
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "target_height": 60,
+      "attempt": 1
+    },
+    "pen_fence_straight": {
+      "path": "art/style05/struct/a2/neolithic/pen_fence_straight.png",
+      "sha256": "93da3ddc08dfbab136a16d1c6ff842563d930bb2845e8b042b7632d546e416e5",
+      "sidecar_sha256": "8e42485f8814f392078e1948be9321eaa05af7bafee885c91fe194c7a696f0c6",
+      "size": [
+        81,
+        47
+      ],
+      "anchor": [
+        40,
+        42
+      ],
+      "alpha_ge_128_bbox": [
+        4,
+        4,
+        77,
+        43
+      ],
+      "bbox_relative_to_anchor": [
+        -36,
+        -38,
+        37,
+        1
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "target_height": 39,
+      "attempt": 3
+    },
+    "pen_fence_damaged": {
+      "path": "art/style05/struct/a2/neolithic/pen_fence_damaged.png",
+      "sha256": "e827eb2791c9e978c0ca9eb5f7c5342f0dd6f6bd2e857172fd1c325faca61123",
+      "sidecar_sha256": "70e0c31f46c146e45ef64127a947e2d3ea3d698b36fc558ab72ea2afb8020925",
+      "size": [
+        81,
+        47
+      ],
+      "anchor": [
+        40,
+        42
+      ],
+      "alpha_ge_128_bbox": [
+        4,
+        4,
+        77,
+        43
+      ],
+      "bbox_relative_to_anchor": [
+        -36,
+        -38,
+        37,
+        1
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "target_height": 39,
+      "attempt": 2
+    },
+    "pen_fence_end": {
+      "path": "art/style05/struct/a2/neolithic/pen_fence_end.png",
+      "sha256": "1ad4133fe7689ac0e58ede20d321674b1fe341fa12626158dd2521803eee8aed",
+      "sidecar_sha256": "d2e8f1413a02c7aa87427802cf94ef59a5b63436fe44a0e7c39c28d5648554a2",
+      "size": [
+        36,
+        48
+      ],
+      "anchor": [
+        18,
+        43
+      ],
+      "alpha_ge_128_bbox": [
+        4,
+        4,
+        32,
+        44
+      ],
+      "bbox_relative_to_anchor": [
+        -14,
+        -39,
+        14,
+        1
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "target_height": 40,
+      "attempt": 1
+    },
+    "pen_gate_closed": {
+      "path": "art/style05/struct/a2/neolithic/pen_gate_closed.png",
+      "sha256": "1023719e46a811c48caefb878b1347075bfe1f233e8d580adc2d7538c59cbb92",
+      "sidecar_sha256": "0105ddae87cf20ac36fa54f8295c820d345e0d3f25cdb2fddf52558861e4d82c",
+      "size": [
+        80,
+        68
+      ],
+      "anchor": [
+        40,
+        63
+      ],
+      "alpha_ge_128_bbox": [
+        4,
+        4,
+        76,
+        64
+      ],
+      "bbox_relative_to_anchor": [
+        -36,
+        -59,
+        36,
+        1
+      ],
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "target_height": 60,
+      "attempt": 2
+    }
+  },
+  "connections": [
+    {
+      "id": "palisade_east_terminal",
+      "panel": "palisade_ew",
+      "terminal": "palisade_end",
+      "direction": "east",
+      "neighbor_nominal_base_delta": [
+        64,
+        0
+      ],
+      "terminal_base_offset": [
+        -18,
+        0
+      ],
+      "terminal_base_delta": [
+        46,
+        0
+      ],
+      "overlap_x_relative_to_panel_base": [
+        29,
+        35
+      ],
+      "attachment": "Six-pixel overlap matches the verified EW-to-EW repeat. Paste terminal after the neighboring full panel."
+    },
+    {
+      "id": "palisade_west_terminal",
+      "panel": "palisade_ew",
+      "terminal": "palisade_end",
+      "direction": "west",
+      "neighbor_nominal_base_delta": [
+        -64,
+        0
+      ],
+      "terminal_base_offset": [
+        17,
+        0
+      ],
+      "terminal_base_delta": [
+        -47,
+        0
+      ],
+      "overlap_x_relative_to_panel_base": [
+        -35,
+        -29
+      ],
+      "attachment": "Six-pixel overlap; one-pixel offset asymmetry follows the terminal opaque bbox[-17,18). Paste terminal after the neighboring full panel."
+    },
+    {
+      "id": "pen_east_terminal",
+      "panel": "pen_fence_straight",
+      "terminal": "pen_fence_end",
+      "direction": "east",
+      "neighbor_nominal_base_delta": [
+        64,
+        0
+      ],
+      "terminal_base_offset": [
+        -21,
+        0
+      ],
+      "terminal_base_delta": [
+        43,
+        0
+      ],
+      "overlap_x_relative_to_panel_base": [
+        29,
+        37
+      ],
+      "attachment": "Canonical39px straight right post inner edge is x+29 on post-only scanlines; terminal free rail tips begin at anchor-relative x\u221214. Base delta43 aligns these at x+29, with8px opaque bbox overlap. Applies also to the matched39px damaged panel. Paste terminal after the full/damaged neighboring panel.",
+      "compatible_panels": [
+        "pen_fence_straight",
+        "pen_fence_damaged"
+      ]
+    }
+  ],
+  "repeat_notes": [
+    "Canonical straight attempt3 and damaged attempt2 use globally uniform39px height, within unchanged38..42 band; both now connect at64px centers.",
+    "Palisade full spans remain60px high and their verified6px overlap/terminal offsets are unchanged."
+  ],
+  "limitations": [
+    "pen_fence_end as supplied supports only an east terminal; a west terminal needs separately reviewed mirrored geometry or a separate asset.",
+    "All placement rules are hash-bound; a changed source requires re-verification.",
+    "Runtime placement, collision and import are not implemented or tested."
+  ],
+  "evidence": {
+    "original_failed_repeat_review": "/Users/rexxa/work/art-batch/A2/checks/fence_repeat_review.json",
+    "previous_connection_metadata": "/Users/rexxa/work/art-batch/A2/checks/fence_connections_v1_straight2.json",
+    "pitch_comparison": "/Users/rexxa/work/art-batch/A2/checks/fence_pitch_comparison.json",
+    "canonical39_independent_review": "/Users/rexxa/work/art-batch/A2/checks/neolithic_fence_canonical39_independent_review.json",
+    "final_contact": "/Users/rexxa/work/art-batch/A2/checks/fence_connections_final_contact.png",
+    "final_review": "/Users/rexxa/work/art-batch/A2/checks/fence_connections_final_review.json"
+  }
+}

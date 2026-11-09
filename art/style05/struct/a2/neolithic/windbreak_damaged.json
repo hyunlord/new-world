@@ -1,0 +1,322 @@
+{
+  "record": {
+    "id": "windbreak_damaged",
+    "lane": "neolithic",
+    "era": "paleolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-f7e0e25d-00c8-4444-b5ec-cf2bd6db475f.png",
+    "prompt": "Use case: precise-object-edit. Firstimage is EDIT TARGET, next images locked style references. Make the existing hide windbreak visibly damaged: two ragged tears through the stretched hide exposing transparent holes; loosen the right lower tie so a small ragged corner hangs down inside original bounding box. Preserve all three stakes, exact shape and size; no extra debris or ground. Match the source fine charcoal-brown ink and quiet earth wash, outerline2:inner1, lightupperleft, restrained materialmarks. Completely clear truealpha0 outside the inked silhouette and through openings. No colored haze, backdrop, border, lettering or people. Targetwholeheight48px at64pxtile/56pxadultscale.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-cc87bab0-f2bf-44d6-aed8-ff796fc2c5db.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 48,
+    "projection_family": "windbreak",
+    "height_band": [
+      46,
+      50
+    ],
+    "height_band_reason": "Predeclared variant windbreak height48px, footprint2x1 at64pxtile and56pxadult; Make the existing hide windbreak visibly damaged: two ragged tears through the stretched hide exposing transparent holes; loosen the right lower tie so a small ragged corner hangs down inside original bounding box. Preserve all three stakes, exact shape and size; no extra debris or ground.",
+    "footprint": [
+      2.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:30:56.613Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/neolithic/raw/windbreak_damaged_try1.png",
+  "raw_sha256": "68da8baf46d910d0fd297bbc298870a1a93829e4ba7cb2847247a299bcec4c5d",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-cc87bab0-f2bf-44d6-aed8-ff796fc2c5db.png",
+      "sha256": "c025dd584d10f5dfc423bb71a1c6d7deeb91f3aaeceb61489d138d2d84124c31"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/windbreak_damaged_try1.png",
+  "normalized_sha256": "a5d48b3eaf0db259dfa879c0a143aa26179b5afb8e530975630eca181878fecb",
+  "size": [
+    96,
+    56
+  ],
+  "anchor": [
+    48,
+    51
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (249, 102, 1511, 794)",
+    "uniform Lanczos scale: 0.06976744186046512",
+    "transparent 4px padding; source-canvas anchor: (48, 51)"
+  ],
+  "projection": {
+    "family": "windbreak",
+    "anchor": [
+      48,
+      51
+    ],
+    "height_band": [
+      46,
+      50
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 2514,
+    "base_row": 51,
+    "base_error": 0,
+    "height": 48,
+    "gradient_x": -1.3169764360587,
+    "gradient_y": -1.184803595317726,
+    "light_angle_degrees": 221.97578850653028,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/neolithic/raw/windbreak_damaged_try1.png",
+    "sha256": "68da8baf46d910d0fd297bbc298870a1a93829e4ba7cb2847247a299bcec4c5d",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.22848371318555522,
+      "saturation_q25": 0.39432156509685684,
+      "saturation_q75": 0.5046474550774264,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.009273144155270547,
+      "foreground_pixels": 21446
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    1774,
+    887
+  ],
+  "raw_opaque_bbox": [
+    251,
+    104,
+    1509,
+    792
+  ],
+  "raw_faint_far_ratio": 0.009473174580404533,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "root independent of generating lane",
+    "method": "Visual inspection of actual RGBA composites and fixed game scale exports; compare ink contours, restrained material marks, upper-left lighting, family state geometry and existing STRUCT references. Numeric results remain independent.",
+    "evidence": [
+      "neolithic/final_states_alpha_sheet.png",
+      "neolithic/geometry_final_alpha_sheet.png",
+      "iron/reviews/reservoir_mill_1x2x.png",
+      "iron/reviews/working_states_1x2x.png"
+    ],
+    "assets": [
+      {
+        "id": "pen_gate_open",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Matching closed gate post heights and upright posts preserve the opening. Rotated narrow gate leaf and rope hinge read clearly. Actual saved alpha is clean.",
+        "raw_sha256": "32dcb105caa886ed692f56e6330df705443f4e180654d1772a42e83cd6a0c101",
+        "normalized_sha256": "7f04247300ef144662652c810aa702291d3b8a83adbc781716ff67db2f361090"
+      },
+      {
+        "id": "ritual_site_empty",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Orthogonal ground circle of rough standing stones and central offering slab retains the adopted occupied variant footprint; no offerings clearly distinguishes empty state.",
+        "raw_sha256": "ba1d5e6379724dc2bfe83242d31ce32f7b028855579065545db59f2d9e45936c",
+        "normalized_sha256": "683c1599ff96abbd8477bd63d976d15ee23d3477aab4813281f8dcfaea746edb"
+      },
+      {
+        "id": "windbreak_damaged",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "reasoning": "Two clear holes in undyed hide distinguish damage, while timber stake scale and restrained contour/rope treatment match the intact shelter.",
+        "raw_sha256": "68da8baf46d910d0fd297bbc298870a1a93829e4ba7cb2847247a299bcec4c5d",
+        "normalized_sha256": "a5d48b3eaf0db259dfa879c0a143aa26179b5afb8e530975630eca181878fecb"
+      },
+      {
+        "id": "fish_weir_empty",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "reasoning": "Woven shallow V wings converge into a cylindrical basket trap; three quarter standing stakes sit on a readable ground plane. Revised88px export makes poles plausible beside56px adult.",
+        "raw_sha256": "e4f533bc699e1ee5d95f78d1ffc2c65426f0773d8ba91e18235b0fb0cac9d1f9",
+        "normalized_sha256": "eb89f63f826892e9fbd968b941f8819034049379634965661f317703866bc5f2"
+      },
+      {
+        "id": "fish_weir_catch",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "reasoning": "Basket retains fish in the same woven trap geometry.88px whole export preserves adult-relative upright height and2x2 ground occupancy; clean alpha.",
+        "raw_sha256": "62236bddc70129b3ce54f7e18350b6a10b46f7dc4e37624b98dd791de237eec6",
+        "normalized_sha256": "a8077b33f55a183f7d388c840c8d4b72bc17be99be377fccb2a31e09267631a5"
+      },
+      {
+        "id": "megalith_fallen",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Long rough fallen monolith has restrained stone facets, sparse moss and three-mark hatch groups.100px width and40px height are plausible next to the standing84px stone; saved alpha is clean.",
+        "raw_sha256": "2e00f12e36c9263e9789676c3f82a50ac29178432a691774d0d7cc23e73aed90",
+        "normalized_sha256": "fe95640efcb8940a6a89824f310756f5994dc03a6d095849e28738320801b4c7"
+      },
+      {
+        "id": "reservoir_empty",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Parallel orthogonal basin edges and shallow south-facing stone lip preserve2x2 ground geometry. Steps and dry clay bottom clearly express an empty reservoir, cleanly separated from surroundings.",
+        "raw_sha256": "38aef14e3b8e0528ccdba3b4c4dfacdf551fae6566128ce66057002b068de225",
+        "normalized_sha256": "595e5e7ee4183d2da9581ad1b915107bceac020c818e647c253230c20ac8de94"
+      },
+      {
+        "id": "waterwheel_idle",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Timber paddles, spokes, axle and braced support legs read as standalone waterwheel machinery. Broken grain strokes and quiet timber wash match adopted wood. Separate wheel and millstone placement still requires runtime mechanical linkage.",
+        "raw_sha256": "6ecb1122075a606ef33786387b74ef1a240a28b946ad37cc5b0a385d3a0aaa9b",
+        "normalized_sha256": "8b07636feb60b5aa8d617675f6e764c83fb617be10fdafc8c1ccbe9275070b2c"
+      },
+      {
+        "id": "watermill_millstones_idle",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Twin rough grinding stones, supported vertical spindle, peg gear and empty tray establish mill machinery. Visible frame joints and separate stone/wood washes are credible at game scale.",
+        "raw_sha256": "6c2ca5ed8245e57403fdfb78000baf1c46b204c7b1e058fc95e48f9b38c83b5f",
+        "normalized_sha256": "75bbf9faadbd82f33f030b8cc2202b17b9a2512daff05255e6d81d664da50993"
+      },
+      {
+        "id": "watermill_millstones_working",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Grain in the feed eye and flour in the front tray distinguish operation without changing machine footprint or frame geometry. Projection and clean source alpha match the idle state.",
+        "raw_sha256": "5b830cc5f965b9f23056d115cd673fe8874b943da8dc03492a5ae80f2ed4e25e",
+        "normalized_sha256": "42311aefb7dbb60b838c03e5280d4fbcdb3d236c0819af61333294f6013a7f5a"
+      },
+      {
+        "id": "watchtower_damaged",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 90,
+        "verdict": "pass",
+        "reasoning": "Broken rear parapet rail and chipped upper masonry mark restrained damage while the adult-height entrance and ladder remain consistent with the accepted intact tower. No roof or unsupported masonry.",
+        "raw_sha256": "e977f92e7445da31c3d439bb6d71c0b1f7a4521668132cc4786182c6a40e6c54",
+        "normalized_sha256": "a7f37cbcb47205d01b80126846e285eed9093e76e43420fdbb1f15ca07c6e387"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "windbreak_damaged",
+  "adopted_path": "art/style05/struct/a2/neolithic/windbreak_damaged.png",
+  "review_asset_id": "windbreak_damaged",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/final_props_independent_review.json",
+  "review_sha256": "5a07a6b5b1180c6d6d00c4d625a0b523f21621a29bd2a6e7a08f82e1f20b45ee"
+}

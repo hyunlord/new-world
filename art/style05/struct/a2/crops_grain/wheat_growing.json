@@ -1,0 +1,299 @@
+{
+  "record": {
+    "id": "wheat_growing",
+    "lane": "crops_grain",
+    "era": "neolithic",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-6e4fd42f-bbbe-4c57-a1f5-baae4ade4f63.png",
+    "prompt": "Precise botanical redraw of reference1: retain seven growing emmer wheat tillers and two-row arrangement, no seed heads. Make the highest leaves a little broader and sturdier with fully opaque folded tips; remove long wiry spike outliers. A solid folded central spear-leaf defines tallest point, so entire leafy body survives small-scale reduction. Calm pigment, bright upper-left and darker lower-right. Reference1 is exact subject. References2 and3 are locked WorldSim ink-and-tone references. Use case: stylized-concept. One isolated transparent PNG game sprite.  EMMER WHEAT, vegetative growing stage, seven half-grown plants with green foliage and NO mature seed heads. Botanical identity: upright compact tawny ears with paired husked spikelets and medium awns, narrow folded leaves. Upright leafy tillers, clearly taller and fuller than seedlings. Target opaque height28px, width48px. Keep ALL spaces between the actual plants perfectly alpha zero. ZERO paint outside the physical leaves, stems and seed heads. The entire background is transparent. WorldSim illustrated ink-and-tone: match attached ground and scene references for fine brown-black outlines, restrained natural olive and straw pigments and upper-left light; do not copy their ground. Match reeds reference at final size. Standing front three-quarter at20 degrees down. Outer contour twice secondary stroke width; three short vein marks per leaf clump, sparse detail. Bright upper-left leaves, darker lower-right leaves. No ground, shadows, border, text or scenery. Full plants centered with ample clear margins. Compact field group in two shallow staggered rows, max52px width in64px tile; adult56px. Need all upper and lower plant tips stout enough to survive downscale; avoid long single-pixel outliers. Broad calm pigment planes, not airbrush gradients or cloudy wash.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-20260e34-2017-4edb-a4dc-3486307a20cf.png",
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 28,
+    "projection_family": "crop",
+    "height_band": [
+      26,
+      30
+    ],
+    "height_band_reason": "New crop stage growing: 28px target versus adult56px; field group fits one64px tile.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "plants",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:26:03.753Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/crops_grain/raw/wheat_growing_try2.png",
+  "raw_sha256": "b1c1294311a725e0a374d408fec65980cfc755654cc02ce9573eb0eef5ba11e5",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-20260e34-2017-4edb-a4dc-3486307a20cf.png",
+      "sha256": "7bfaea1cf1c570a1545c248ef18d4683d86915c1d6585cb6609378ba2167127b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/crops_grain/normalized/wheat_growing_try2.png",
+  "normalized_sha256": "dc8ee5292e5b80a2693244f30ff68dc1e9708dbccd7db81088356b45f59a91c6",
+  "size": [
+    51,
+    36
+  ],
+  "anchor": [
+    25,
+    31
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (165, 104, 1340, 874)",
+    "uniform Lanczos scale: 0.03655352480417755",
+    "transparent 4px padding; source-canvas anchor: (25, 31)"
+  ],
+  "projection": {
+    "family": "crop",
+    "anchor": [
+      25,
+      31
+    ],
+    "height_band": [
+      26,
+      30
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 556,
+    "base_row": 31,
+    "base_error": 0,
+    "height": 27,
+    "gradient_x": -2.0771432494279174,
+    "gradient_y": -6.3834442352941165,
+    "light_angle_degrees": 251.9753514721056,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/crops_grain/raw/wheat_growing_try2.png",
+    "sha256": "b1c1294311a725e0a374d408fec65980cfc755654cc02ce9573eb0eef5ba11e5",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.2308026344358399,
+      "saturation_q25": 0.5674331886747264,
+      "saturation_q75": 0.6181813704032935,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.030485176920144453,
+      "foreground_pixels": 19615
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    9,
+    1522,
+    1024
+  ],
+  "raw_opaque_bbox": [
+    167,
+    106,
+    1338,
+    872
+  ],
+  "raw_faint_far_ratio": 0.0035169493017148208,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_orchard independent executor",
+    "evidence": [
+      "checks/grain_later_review_board.png",
+      "corresponding raw and normalized PNGs",
+      "locked ground/scene references and adopted berry_bush_full"
+    ],
+    "assets": [
+      {
+        "id": "oats_growing",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Growing state is early heading rather than strictly preheading; acceptable biological growth stage."
+        ],
+        "suggestions": [],
+        "reasoning": "Loose young drooping green panicles above narrow blade clumps identify an early heading oat state; pods still green, no ripe gold grain. Quiet1x silhouette and upper-left wash match plant set."
+      },
+      {
+        "id": "oats_seedling",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Seven sprouts rather than five in some other crop lanes; remains one compact tile field."
+        ],
+        "suggestions": [],
+        "reasoning": "Short narrow paired arching grass shoots without seedheads clearly read seedling crop; sparse clean silhouette and subdued sage/tan wash fit style."
+      },
+      {
+        "id": "oats_harvested",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 94,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "No soil patch or haze; small stage remains readable."
+        ],
+        "suggestions": [],
+        "reasoning": "Short tan cut stalk tufts with remaining drooping narrow blades read harvested grass stubble. Cut tops and gold-brown palette clearly separate from living seedlings."
+      },
+      {
+        "id": "rye_growing",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Less species-specific before seedheads, as expected for cereal vegetative stages."
+        ],
+        "suggestions": [],
+        "reasoning": "Tall slender upright green stems with narrow ascending blades and no seedheads read vegetative rye; lighter top-left blades and shaded lower-right planes match family."
+      },
+      {
+        "id": "wheat_seedling",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Species identity necessarily contextual at seedling scale."
+        ],
+        "suggestions": [],
+        "reasoning": "Very low narrow-blade grass shoots in two staggered rows read newly sprouted wheat; subdued sage wash and controlled outline are consistent."
+      },
+      {
+        "id": "barley_growing",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Denser foliage than wheat growing; still distinguishable as a broad-bladed growth stage."
+        ],
+        "suggestions": [],
+        "reasoning": "Dense broad arching grass blade clumps read established barley vegetative field, no ripe ears. Soft earth-sage palette and dark contour preserve clear clump rhythm at1x."
+      },
+      {
+        "id": "wheat_growing",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Good1x row spacing; no material style mismatch."
+        ],
+        "suggestions": [],
+        "reasoning": "Upright narrow leaf clumps arranged in clear field rows, no ears yet. Distinct height and density progression from seedlings, consistent warm brown ink and sage wash."
+      },
+      {
+        "id": "wheat_ripe",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 94,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Ear size is illustrative and prominent but intentional for1x readability."
+        ],
+        "suggestions": [],
+        "reasoning": "Heavy compact golden ears with short awns above narrow straw blades read ripe wheat. Strong silhouette separates from barley/oats form, upper-left light coherent."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "wheat_growing",
+  "adopted_path": "art/style05/struct/a2/crops_grain/wheat_growing.png",
+  "review_asset_id": "wheat_growing",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/grain_later_independent_review.json",
+  "review_sha256": "9378277dd1ee13a4f3e15df577552d74894edce1b61516fb7a9a1b753a4b12c0"
+}
