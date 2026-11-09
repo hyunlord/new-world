@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "id": "dried_meat",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "paleolithic",
+  "family": "food",
+  "catalogue_source": "Bible §4.1/current items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 25,
+    "sim": "DriedMeat"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "dried_meat",
+    "era": "paleolithic",
+    "attempt": 1,
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "prompt": "Use case: stylized-concept. Asset type: isolated WorldSim concept-05 item sprite. Match attached EXISTING ASSETS as style references only: warm brown-black delicate ink, translucent muted earth pigment wash, old natural-history field guide. Main contour and secondary mark widths ratio 2:1. At final 64px main contour about1px, secondary0.5px. Sparse lower-left to upper-right hatch groups, at most 2-3 groups of 2-3 lines per material face; no dense noise, no speckles. Materials have broad calm midtone planes, fine readable edges, no shiny highlights. Same front three-quarter camera about20 degrees down, upper-left light, narrow visible top surface. Exactly one isolated subject, naturally resting, full silhouette with generous transparent margin. Center subject at about70% image width. Actual transparent background, no ground, cast shadow, labels, text, numbers, border, scenery, detached flecks, photorealism, pixel art, or 3D render. Must remain distinguishable when scaled down to a64px canvas and32px viewing size. Subject: A compact bundle of four thin reddish-dark-brown jerky strips tied with a pale plant-fibre string, dry wrinkled edges and sparse long grain lines. No plate or rack. Clean isolated alpha edge, no halo.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:18:07.024Z",
+    "completed_at": "2026-11-09T23:18:34.054Z",
+    "raw": "/Users/rexxa/work/art-batch/A3/food/dried_meat_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e/exec-bcdbe7cd-f2b9-4625-902e-11f78dc49277.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e as /Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e/exec-bcdbe7cd-f2b9-4625-902e-11f78dc49277.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "status": "generated"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/food/dried_meat_try1.json",
+    "record_sha256": "a0fba4e160cb54554017fe26a93b88060e500bc1761fd0ea35441860cf0e6561",
+    "raw": "/Users/rexxa/work/art-batch/A3/food/dried_meat_try1.png",
+    "raw_sha256": "e59c85bb1e32897cdb773f8339baba40ffb23191d5f64f80e8e9ae41fd963c67",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/dried_meat_try1.json",
+    "candidate_sha256": "d0dc4ed6fe67959171e7474cee937ce394dc6c1076ec40a2d82a5ea0d1d9e9e6"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 393124,
+    "opaque_pixels": 382057,
+    "fringe_pixels": 11067,
+    "visible_bounds": [
+      25,
+      19,
+      1514,
+      1008
+    ],
+    "opaque_bounds": [
+      221,
+      209,
+      1302,
+      815
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/food/dried_meat_try1.png",
+    "sha256": "e59c85bb1e32897cdb773f8339baba40ffb23191d5f64f80e8e9ae41fd963c67",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.2402237402237402,
+      "saturation_q25": 0.5951030495137302,
+      "saturation_q75": 0.6449870647566399,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.009660260632395683,
+      "foreground_pixels": 21496
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "dried_meat",
+      "source": "art/style05/batch_a3/items/dried_meat.png",
+      "bucket": "1",
+      "sha256": "6110cc5aa1a2cfdbad1fb89041b9a14c19c7bd0051d2f97d271ca90c166087e6",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 779,
+          "opaque_pixels": 587,
+          "fringe_pixels": 192,
+          "visible_bounds": [
+            8,
+            17,
+            55,
+            46
+          ],
+          "opaque_bounds": [
+            11,
+            20,
+            53,
+            43
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            42
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 587,
+          "base_row": 42,
+          "base_error": 0,
+          "height": 23,
+          "gradient_x": -0.8341113475177305,
+          "gradient_y": -1.8046772643253235,
+          "light_angle_degrees": 245.19389439882048,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 42,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          -0.5,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "dried_meat_count_2_8",
+      "source": "art/style05/batch_a3/items/dried_meat_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "14ddef76b15c8adab560c147e1f098c1e885ac4ac6fadc472ecd805bae55f38a",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 957,
+          "opaque_pixels": 648,
+          "fringe_pixels": 309,
+          "visible_bounds": [
+            7,
+            13,
+            53,
+            51
+          ],
+          "opaque_bounds": [
+            10,
+            16,
+            51,
+            48
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            47
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 648,
+          "base_row": 47,
+          "base_error": 0,
+          "height": 32,
+          "gradient_x": -1.1565765472312701,
+          "gradient_y": -2.2805924006908462,
+          "light_angle_degrees": 243.10867249704972,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 41,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "dried_meat_count_9_plus",
+      "source": "art/style05/batch_a3/items/dried_meat_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "f2ecd43da979c7c46ee6fd9da246a6e0aac794bbb044acd91396f48b79f3e59e",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1695,
+          "opaque_pixels": 1067,
+          "fringe_pixels": 628,
+          "visible_bounds": [
+            4,
+            9,
+            59,
+            56
+          ],
+          "opaque_bounds": [
+            7,
+            12,
+            57,
+            54
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            53
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 1067,
+          "base_row": 53,
+          "base_error": 0,
+          "height": 42,
+          "gradient_x": -0.9766308316430021,
+          "gradient_y": -2.6781406835722157,
+          "light_angle_degrees": 249.96473151291764,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 50,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

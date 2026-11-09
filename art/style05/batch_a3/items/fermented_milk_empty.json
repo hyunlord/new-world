@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "id": "fermented_milk_empty",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "neolithic",
+  "family": "variants",
+  "catalogue_source": "Bible §4.2 explicit unlocks/list",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "empty",
+  "state_of": "fermented_milk",
+  "filled_source": "/Users/rexxa/work/art-batch/A3/food/fermented_milk_try1.png",
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "fermented_milk_empty",
+    "era": "neolithic",
+    "prompt": "Use case: precise-object-edit. The attached image is the exact EDIT TARGET. Make the EMPTY state of this same vessel. Preserve its precise outer silhouette, shape, proportions, position on canvas, handles, lip/rim, spout if any, decorations, exterior clay colour, surface ink marks, restrained pigment wash, camera and upper-left lighting. Remove all edible contents from inside the mouth so we see a dark empty inner clay basin, with a small unfilled bottom surface and clay interior wall. Remove any liquid drips, froth, food or contents outside the vessel too. Do not remove or add any vessel part. No other changes. Preserve transparent background and clear cutout edges. Do not introduce ground, cast shadows, glow, halo, labels, text, hands, props or scenery. Empty vessel only. Source state: fermented_milk filled; output state: empty.",
+    "refs": [
+      "/Users/rexxa/work/art-batch/A3/food/fermented_milk_try1.png"
+    ],
+    "started_at": "2026-11-09T23:17:51.988Z",
+    "completed_at": "2026-11-09T23:19:12.681Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483 as /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-660357e3-75ef-4a46-be15-0a4ebf6f3053.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "attempt": 1,
+    "state": "empty",
+    "state_of": "fermented_milk",
+    "filled_source": "/Users/rexxa/work/art-batch/A3/food/fermented_milk_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-660357e3-75ef-4a46-be15-0a4ebf6f3053.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/variants/fermented_milk_empty_try1_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/variants/fermented_milk_empty_try1_raw.png",
+    "raw_sha256": "5eebd8b910b1eb27f71ca6827b9f07caa79f31a16a6e9d466bf67b27394cc18a",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch/A3/food/fermented_milk_try1.png": "29dbb7edf61f4cbc1d6c90c40e78b2df68ffe2db38b98e3048e1a5eeeed0c030"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/variants/fermented_milk_empty_try1.json",
+    "record_sha256": "3d85bc885e380d792650a36b18673db1242eb85ace81498653a6811e791af7c9",
+    "raw": "/Users/rexxa/work/art-batch/A3/variants/fermented_milk_empty_try1_raw.png",
+    "raw_sha256": "5eebd8b910b1eb27f71ca6827b9f07caa79f31a16a6e9d466bf67b27394cc18a",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/fermented_milk_empty_try1.json",
+    "candidate_sha256": "c2cb3c9d03fc0167b163e3d7d53eb6875ab0c892ee46d489c3082de66b7650d0"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 314694,
+    "opaque_pixels": 304763,
+    "fringe_pixels": 9931,
+    "visible_bounds": [
+      0,
+      11,
+      1518,
+      1000
+    ],
+    "opaque_bounds": [
+      415,
+      218,
+      1105,
+      787
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/variants/fermented_milk_empty_try1_raw.png",
+    "sha256": "5eebd8b910b1eb27f71ca6827b9f07caa79f31a16a6e9d466bf67b27394cc18a",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.0956414676188131,
+      "saturation_q25": 0.582300181572594,
+      "saturation_q75": 0.70174356606196,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.008568787214432955,
+      "foreground_pixels": 41936
+    },
+    "numeric_checks": {
+      "edge_density": false,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "fermented_milk_empty",
+      "source": "art/style05/batch_a3/items/fermented_milk_empty.png",
+      "bucket": "1",
+      "sha256": "64a72c86f07c505ac29cd15001acb9a1822e7aef1ebd53766aae0ed0bdeb7284",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 582,
+          "opaque_pixels": 449,
+          "fringe_pixels": 133,
+          "visible_bounds": [
+            16,
+            18,
+            48,
+            45
+          ],
+          "opaque_bounds": [
+            19,
+            21,
+            45,
+            43
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            42
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 449,
+          "base_row": 42,
+          "base_error": 0,
+          "height": 22,
+          "gradient_x": -1.2860861826697891,
+          "gradient_y": -2.459647754137116,
+          "light_angle_degrees": 242.39609591757215,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 26,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "id": "wine_empty",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "variants",
+  "catalogue_source": "Bible §4.3 explicit named objects/unlocks",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "empty",
+  "state_of": "wine",
+  "filled_source": "/Users/rexxa/work/art-batch/A3/bronze/wine_try1_raw.png",
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "wine_empty",
+    "era": "bronze",
+    "prompt": "Use case: precise-object-edit. The attached image is the exact EDIT TARGET. Make the EMPTY state of this same vessel. Preserve its precise outer silhouette, shape, proportions, position on canvas, handles, lip/rim, spout if any, decorations, exterior clay colour, surface ink marks, restrained pigment wash, camera and upper-left lighting. Remove all edible contents from inside the mouth so we see a dark empty inner clay basin, with a small unfilled bottom surface and clay interior wall. Remove any liquid drips, froth, food or contents outside the vessel too. Do not remove or add any vessel part. No other changes. Preserve transparent background and clear cutout edges. Do not introduce ground, cast shadows, glow, halo, labels, text, hands, props or scenery. Empty vessel only. Source state: wine filled; output state: empty.",
+    "refs": [
+      "/Users/rexxa/work/art-batch/A3/bronze/wine_try1_raw.png"
+    ],
+    "started_at": "2026-11-09T23:17:51.988Z",
+    "completed_at": "2026-11-09T23:18:21.276Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483 as /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-5f0b3b68-7539-4b88-a8eb-b155a49723a1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "attempt": 1,
+    "state": "empty",
+    "state_of": "wine",
+    "filled_source": "/Users/rexxa/work/art-batch/A3/bronze/wine_try1_raw.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-5f0b3b68-7539-4b88-a8eb-b155a49723a1.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/variants/wine_empty_try1_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/variants/wine_empty_try1_raw.png",
+    "raw_sha256": "ea1c9577103c017a9086287e68e72ad9aa767e327e0099971cb0e54955a4c578",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch/A3/bronze/wine_try1_raw.png": "0b2d5f65e378cc4bf9da87eb91a75732b778a8da87646637e1f6dde66d715a53"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/variants/wine_empty_try1.json",
+    "record_sha256": "77fa304e0af92174fe45f3c9365e60e0ab73d47d49adf43fdcfea44ef5bd6ce2",
+    "raw": "/Users/rexxa/work/art-batch/A3/variants/wine_empty_try1_raw.png",
+    "raw_sha256": "ea1c9577103c017a9086287e68e72ad9aa767e327e0099971cb0e54955a4c578",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/wine_empty_try1.json",
+    "candidate_sha256": "d3809313d4a7a0dd1321437f4498258aa375eef124a74c1e531707ae473e4c06"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 474898,
+    "opaque_pixels": 465414,
+    "fringe_pixels": 9484,
+    "visible_bounds": [
+      81,
+      117,
+      1180,
+      1238
+    ],
+    "opaque_bounds": [
+      211,
+      226,
+      1041,
+      1007
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/variants/wine_empty_try1_raw.png",
+    "sha256": "ea1c9577103c017a9086287e68e72ad9aa767e327e0099971cb0e54955a4c578",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.10967454302273741,
+      "saturation_q25": 0.6590450013532677,
+      "saturation_q75": 0.7011901043364394,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.00865735855927388,
+      "foreground_pixels": 44302
+    },
+    "numeric_checks": {
+      "edge_density": false,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "wine_empty",
+      "source": "art/style05/batch_a3/items/wine_empty.png",
+      "bucket": "1",
+      "sha256": "4c845486ba4bf109592c757795eea7ffd043717a23114eeee11583d65e47594f",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1489,
+          "opaque_pixels": 1246,
+          "fringe_pixels": 243,
+          "visible_bounds": [
+            7,
+            6,
+            55,
+            52
+          ],
+          "opaque_bounds": [
+            10,
+            9,
+            53,
+            49
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            48
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 1246,
+          "base_row": 48,
+          "base_error": 0,
+          "height": 40,
+          "gradient_x": -0.7552848788638261,
+          "gradient_y": -1.404465497076023,
+          "light_angle_degrees": 241.7297963750554,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 43,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          -1.0,
+          -3.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

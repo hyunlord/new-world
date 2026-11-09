@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "id": "goat_hide",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "neolithic",
+  "family": "crop_items",
+  "catalogue_source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 70,
+    "sim": "GoatHide"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "goat_hide",
+    "era": "neolithic",
+    "attempt": 1,
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "prompt": "Use case: stylized-concept. Asset type: isolated WorldSim concept-05 item inventory sprite. Reference1 and reference2 show STYLE ONLY, do not copy scenery, text or other objects. Hand-ink natural-history illustration with fine warm brown-black contour and restrained muted earth pigment wash. Main contour to secondary line ratio 2:1. Sparse lower-left to upper-right hatching in groups of2-3, at most3 groups per material, no dense stippling. Broad calm midtone planes, delicate edge accents. Same front three-quarter view about20degrees down and light from upper left. Exactly one isolated item or coherent small cluster, full silhouette centred with ample transparent margin, designed to read at64px and32px. No ground, cast shadow, aura, vignette, text, letters, labels, numbers, modern packaging, metal, dyed fabric, watermark, scenery, pixel art, photorealism, 3D render. Transparent alpha zero outside object, object interior opaque. Subject: One small cream-and-warm-brown goat pelt spread flat, angular narrow four limb points and a small neck point, short coarse fur edge, visible irregular brown dorsal patch. No head, horns, living animal or leather garment. Clearly a raw goat hide.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:16:54.265Z",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/goat_hide_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-db882a52-1e96-439b-9050-b76cec8914f1.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589 as /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-db882a52-1e96-439b-9050-b76cec8914f1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "completed_at": "2026-11-09T23:18:30.572Z",
+    "status": "generated"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/crop_items/goat_hide_try1.json",
+    "record_sha256": "0939acbcff78e6c247a39e9b69cd7831980e8b440c1b15ffea5d3c7b0f7046e2",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/goat_hide_try1.png",
+    "raw_sha256": "1a504669e8e581de476dc9a81d880316d00eddabdcd7137e480fb8e4a72191a8",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/goat_hide_try1.json",
+    "candidate_sha256": "411d082c9ba514049cc2cfbd6a6b89e3a9e6044adc9c14f8fd8b98b3035a9df0"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 500579,
+    "opaque_pixels": 469007,
+    "fringe_pixels": 31572,
+    "visible_bounds": [
+      0,
+      19,
+      1300,
+      1199
+    ],
+    "opaque_bounds": [
+      158,
+      135,
+      1130,
+      1020
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/crop_items/goat_hide_try1.png",
+    "sha256": "1a504669e8e581de476dc9a81d880316d00eddabdcd7137e480fb8e4a72191a8",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.20171999077399586,
+      "saturation_q25": 0.29469781308932397,
+      "saturation_q75": 0.4548345248137146,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.020664746062870974,
+      "foreground_pixels": 32529
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "goat_hide",
+      "source": "art/style05/batch_a3/items/goat_hide.png",
+      "bucket": "1",
+      "sha256": "9f6cd3923663b7f2a103087284fd3f83639ec578a77fd651f2c39f35656a575d",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1241,
+          "opaque_pixels": 942,
+          "fringe_pixels": 299,
+          "visible_bounds": [
+            8,
+            8,
+            56,
+            52
+          ],
+          "opaque_bounds": [
+            10,
+            10,
+            53,
+            50
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            49
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 942,
+          "base_row": 49,
+          "base_error": 0,
+          "height": 40,
+          "gradient_x": 0.036247285067873405,
+          "gradient_y": -0.6898437641723355,
+          "light_angle_degrees": 273.0077945644028,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": false,
+          "passed": false
+        },
+        "width_px": 43,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          -2.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

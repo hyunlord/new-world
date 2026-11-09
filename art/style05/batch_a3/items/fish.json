@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "id": "fish",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "paleolithic",
+  "family": "food",
+  "catalogue_source": "Bible §4.1/current items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 42,
+    "sim": "Fish"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "fish",
+    "era": "paleolithic",
+    "attempt": 1,
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "prompt": "Use case: stylized-concept. Asset type: isolated WorldSim concept-05 item sprite. Match attached EXISTING ASSETS as style references only: warm brown-black delicate ink, translucent muted earth pigment wash, old natural-history field guide. Main contour and secondary mark widths ratio 2:1. At final 64px main contour about1px, secondary0.5px. Sparse lower-left to upper-right hatch groups, at most 2-3 groups of 2-3 lines per material face; no dense noise, no speckles. Materials have broad calm midtone planes, fine readable edges, no shiny highlights. Same front three-quarter camera about20 degrees down, upper-left light, narrow visible top surface. Exactly one isolated subject, naturally resting, full silhouette with generous transparent margin. Center subject at about70% image width. Actual transparent background, no ground, cast shadow, labels, text, numbers, border, scenery, detached flecks, photorealism, pixel art, or 3D render. Must remain distinguishable when scaled down to a64px canvas and32px viewing size. Subject: One whole freshwater fish lying on its side, pointed head at left and broad forked tail at right, muted silvery-grey and olive back, 3 short scale groups and simple eye. No hook, no plate, no water. Clean isolated alpha edge, no halo.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:12:51.822Z",
+    "completed_at": "2026-11-09T23:14:15.626Z",
+    "raw": "/Users/rexxa/work/art-batch/A3/food/fish_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e/exec-bd5b4e37-198a-49b9-b8db-57043566517d.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e as /Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e/exec-bd5b4e37-198a-49b9-b8db-57043566517d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "status": "generated"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/food/fish_try1.json",
+    "record_sha256": "7daaa57ae30fa6510371d7bbb7aeb70e0e54446e0a44ae907e8cac3f03ff68fc",
+    "raw": "/Users/rexxa/work/art-batch/A3/food/fish_try1.png",
+    "raw_sha256": "e915e2d6e7f66e0007fccba8ee0239de00800892f54b72b9a4d20daa93b10c06",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/fish_try1.json",
+    "candidate_sha256": "20a88d6df842a36ae1fcd3bdbbad3dd60b27f881db1f0e3dedaf18d343126ba1"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 283302,
+    "opaque_pixels": 268727,
+    "fringe_pixels": 14575,
+    "visible_bounds": [
+      25,
+      20,
+      1520,
+      1000
+    ],
+    "opaque_bounds": [
+      208,
+      301,
+      1359,
+      757
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/food/fish_try1.png",
+    "sha256": "e915e2d6e7f66e0007fccba8ee0239de00800892f54b72b9a4d20daa93b10c06",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.25765178123432014,
+      "saturation_q25": 0.2935783317517669,
+      "saturation_q75": 0.44371930464687515,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.011701131951204459,
+      "foreground_pixels": 13232
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "fish",
+      "source": "art/style05/batch_a3/items/fish.png",
+      "bucket": "1",
+      "sha256": "d2abfd489e4db67c73e25c92865e30598c0d6039aac786a6d4df138fa69743ba",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 598,
+          "opaque_pixels": 405,
+          "fringe_pixels": 193,
+          "visible_bounds": [
+            8,
+            21,
+            57,
+            44
+          ],
+          "opaque_bounds": [
+            10,
+            24,
+            55,
+            41
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            40
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 405,
+          "base_row": 40,
+          "base_error": 0,
+          "height": 17,
+          "gradient_x": 1.1865031578947367,
+          "gradient_y": 4.198947752808989,
+          "light_angle_degrees": 74.22121780380886,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": false,
+          "passed": false
+        },
+        "width_px": 45,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.5,
+          0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "fish_count_2_8",
+      "source": "art/style05/batch_a3/items/fish_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "85ab4e908a858ceeef0e611499add5c4a506944a37a7aaa9e7457ac90cb15052",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 807,
+          "opaque_pixels": 483,
+          "fringe_pixels": 324,
+          "visible_bounds": [
+            7,
+            16,
+            54,
+            50
+          ],
+          "opaque_bounds": [
+            10,
+            19,
+            52,
+            47
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            46
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 483,
+          "base_row": 46,
+          "base_error": 0,
+          "height": 28,
+          "gradient_x": 1.2555671981776768,
+          "gradient_y": 4.437703902439024,
+          "light_angle_degrees": 74.20210906342733,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": false,
+          "passed": false
+        },
+        "width_px": 42,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "fish_count_9_plus",
+      "source": "art/style05/batch_a3/items/fish_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "e4abe07c10096d0d382d80d82906b3c759a2b5b8bdcaee0a6c3aea7c9890c662",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1312,
+          "opaque_pixels": 721,
+          "fringe_pixels": 591,
+          "visible_bounds": [
+            4,
+            11,
+            60,
+            55
+          ],
+          "opaque_bounds": [
+            7,
+            14,
+            58,
+            53
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            52
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 721,
+          "base_row": 52,
+          "base_error": 0,
+          "height": 39,
+          "gradient_x": 1.1628824840764327,
+          "gradient_y": 9.041428622540252,
+          "light_angle_degrees": 82.67101816320645,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": false,
+          "passed": false
+        },
+        "width_px": 51,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

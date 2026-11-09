@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "id": "millet_seed",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "neolithic",
+  "family": "crop_items",
+  "catalogue_source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 68,
+    "sim": "MilletSeed"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "millet_seed",
+    "era": "neolithic",
+    "attempt": 1,
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "prompt": "Use case: stylized-concept. Asset type: isolated WorldSim concept-05 item inventory sprite. Reference1 and reference2 show STYLE ONLY, do not copy scenery, text or other objects. Hand-ink natural-history illustration with fine warm brown-black contour and restrained muted earth pigment wash. Main contour to secondary line ratio 2:1. Sparse lower-left to upper-right hatching in groups of2-3, at most3 groups per material, no dense stippling. Broad calm midtone planes, delicate edge accents. Same front three-quarter view about20degrees down and light from upper left. Exactly one isolated item or coherent small cluster, full silhouette centred with ample transparent margin, designed to read at64px and32px. No ground, cast shadow, aura, vignette, text, letters, labels, numbers, modern packaging, metal, dyed fabric, watermark, scenery, pixel art, photorealism, 3D render. Transparent alpha zero outside object, object interior opaque. Subject: A very small shallow plain clay seed cup containing a mound of tiny round pale golden millet beads. Fine small grains clearly round, no stalks. Simple coarse neolithic ceramic, no metal or decoration.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:15:09.192Z",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/millet_seed_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-4f66f767-e1c0-4108-8d01-8ede69328078.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589 as /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-4f66f767-e1c0-4108-8d01-8ede69328078.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "completed_at": "2026-11-09T23:16:08.307Z",
+    "status": "generated"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/crop_items/millet_seed_try1.json",
+    "record_sha256": "91b0f4b134e97b57c081e15d914bb9a8992a968f1e453f5fd049a26b5699f3b4",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/millet_seed_try1.png",
+    "raw_sha256": "3c5e288aadb84c6050e63fbd0458efc3472028e455fe083019e1d39ff0e9e54e",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/millet_seed_try1.json",
+    "candidate_sha256": "5d5d3463403bc03c96e5f131a491aeff7b66cb3b1be89cdac059d3e6d3d70716"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 371161,
+    "opaque_pixels": 282744,
+    "fringe_pixels": 88417,
+    "visible_bounds": [
+      0,
+      19,
+      1535,
+      1015
+    ],
+    "opaque_bounds": [
+      394,
+      258,
+      1131,
+      755
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/crop_items/millet_seed_try1.png",
+    "sha256": "3c5e288aadb84c6050e63fbd0458efc3472028e455fe083019e1d39ff0e9e54e",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.20593680760008498,
+      "saturation_q25": 0.5477855079933036,
+      "saturation_q75": 0.692981246638477,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.010546357219761588,
+      "foreground_pixels": 34184
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "millet_seed",
+      "source": "art/style05/batch_a3/items/millet_seed.png",
+      "bucket": "1",
+      "sha256": "97a0636f8387b793f6eadcc1374e165fa7554d57d023693d78b5dfeca01f222c",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 602,
+          "opaque_pixels": 407,
+          "fringe_pixels": 195,
+          "visible_bounds": [
+            12,
+            13,
+            48,
+            47
+          ],
+          "opaque_bounds": [
+            18,
+            22,
+            46,
+            41
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            40
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 407,
+          "base_row": 40,
+          "base_error": 0,
+          "height": 19,
+          "gradient_x": -1.8649123711340208,
+          "gradient_y": -3.900436411609498,
+          "light_angle_degrees": 244.44617692060942,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 28,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          -2.0,
+          -2.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "millet_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/millet_seed_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "9230475de796886df2d86e34f8e90849b5e1bfd9c25686f7c88b91cbf0a2a7f0",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 787,
+          "opaque_pixels": 496,
+          "fringe_pixels": 291,
+          "visible_bounds": [
+            11,
+            11,
+            49,
+            51
+          ],
+          "opaque_bounds": [
+            15,
+            18,
+            46,
+            47
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            46
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 496,
+          "base_row": 46,
+          "base_error": 0,
+          "height": 29,
+          "gradient_x": -2.327853961456103,
+          "gradient_y": -5.0689597315436234,
+          "light_angle_degrees": 245.33366105387552,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 31,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "millet_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/millet_seed_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "374bd4c4b9ad1069387d3caa57e52dbcad96a37babe8a3d2052a7ec1ed9e9a83",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1332,
+          "opaque_pixels": 756,
+          "fringe_pixels": 576,
+          "visible_bounds": [
+            8,
+            9,
+            56,
+            55
+          ],
+          "opaque_bounds": [
+            10,
+            13,
+            54,
+            53
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            52
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 756,
+          "base_row": 52,
+          "base_error": 0,
+          "height": 40,
+          "gradient_x": -3.072892011834319,
+          "gradient_y": -4.744933959311424,
+          "light_angle_degrees": 237.07228707229558,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 44,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "id": "roast_meat",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "paleolithic",
+  "family": "food",
+  "catalogue_source": "Bible §4.1/current items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 22,
+    "sim": "RoastMeat"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "roast_meat",
+    "era": "paleolithic",
+    "attempt": 1,
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "prompt": "Use case: stylized-concept. Asset type: isolated WorldSim concept-05 item sprite. Match attached EXISTING ASSETS as style references only: warm brown-black delicate ink, translucent muted earth pigment wash, old natural-history field guide. Main contour and secondary mark widths ratio 2:1. At final 64px main contour about1px, secondary0.5px. Sparse lower-left to upper-right hatch groups, at most 2-3 groups of 2-3 lines per material face; no dense noise, no speckles. Materials have broad calm midtone planes, fine readable edges, no shiny highlights. Same front three-quarter camera about20 degrees down, upper-left light, narrow visible top surface. Exactly one isolated subject, naturally resting, full silhouette with generous transparent margin. Center subject at about70% image width. Actual transparent background, no ground, cast shadow, labels, text, numbers, border, scenery, detached flecks, photorealism, pixel art, or 3D render. Must remain distinguishable when scaled down to a64px canvas and32px viewing size. Subject: One browned roasted meat cut with a pale bone at one end, dark brown cooked outside and caramel edge, no red raw interior, two small scorch marks. No plate, no flame. Clean isolated alpha edge, no halo.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:15:46.195Z",
+    "completed_at": "2026-11-09T23:16:14.602Z",
+    "raw": "/Users/rexxa/work/art-batch/A3/food/roast_meat_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e/exec-454c6a59-a50c-44d3-b842-bd6bdf50a905.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e as /Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e/exec-454c6a59-a50c-44d3-b842-bd6bdf50a905.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "status": "generated"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/food/roast_meat_try1.json",
+    "record_sha256": "9e7803f9ab585147ffc0a81892d24d57c07a99314a71f303f8afdce390f5fcd0",
+    "raw": "/Users/rexxa/work/art-batch/A3/food/roast_meat_try1.png",
+    "raw_sha256": "98a948e0f44f3d685d5a63c3263a2f5acd5aadf6ea24e011f2c388203a5539de",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/roast_meat_try1.json",
+    "candidate_sha256": "bd45656f40addd272f18154522b773b09d940441b375d421374e97599e5a4a38"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 382251,
+    "opaque_pixels": 336063,
+    "fringe_pixels": 46188,
+    "visible_bounds": [
+      0,
+      0,
+      1504,
+      990
+    ],
+    "opaque_bounds": [
+      234,
+      228,
+      1271,
+      760
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/food/roast_meat_try1.png",
+    "sha256": "98a948e0f44f3d685d5a63c3263a2f5acd5aadf6ea24e011f2c388203a5539de",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.24620897382633986,
+      "saturation_q25": 0.7065435648026297,
+      "saturation_q75": 0.7678919401961206,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.012053801666720362,
+      "foreground_pixels": 20432
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": false,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "roast_meat",
+      "source": "art/style05/batch_a3/items/roast_meat.png",
+      "bucket": "1",
+      "sha256": "fa789cf5aebcaff728b95e5688cd50b74447aabe1abbd7b2a061dab96e313897",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 680,
+          "opaque_pixels": 496,
+          "fringe_pixels": 184,
+          "visible_bounds": [
+            9,
+            18,
+            55,
+            45
+          ],
+          "opaque_bounds": [
+            12,
+            22,
+            52,
+            42
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            41
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 496,
+          "base_row": 41,
+          "base_error": 0,
+          "height": 20,
+          "gradient_x": 0.165752441613588,
+          "gradient_y": -3.22489649122807,
+          "light_angle_degrees": 272.9422853864637,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": false,
+          "passed": false
+        },
+        "width_px": 40,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "id": "olive",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "crop_items",
+  "catalogue_source": "Bible §4.5 crops",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "olive",
+    "era": "bronze",
+    "attempt": 1,
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "prompt": "Use case: stylized-concept. Asset type: isolated WorldSim concept-05 item inventory sprite. Reference1 and reference2 show STYLE ONLY, do not copy scenery, text or other objects. Hand-ink natural-history illustration with fine warm brown-black contour and restrained muted earth pigment wash. Main contour to secondary line ratio 2:1. Sparse lower-left to upper-right hatching in groups of2-3, at most3 groups per material, no dense stippling. Broad calm midtone planes, delicate edge accents. Same front three-quarter view about20degrees down and light from upper left. Exactly one isolated item or coherent small cluster, full silhouette centred with ample transparent margin, designed to read at64px and32px. No ground, cast shadow, aura, vignette, text, letters, labels, numbers, modern packaging, metal, dyed fabric, watermark, scenery, pixel art, photorealism, 3D render. Transparent alpha zero outside object, object interior opaque. Subject: A short harvested olive twig bearing five muted green and dark brown-purple olives with two narrow silvery olive leaves. Coherent compact item, recognisable smooth ovals, no oil bottle, no basket.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:19:18.003Z",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/olive_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-9dbca0ee-e583-4693-bb83-b25dfeb3647f.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589 as /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-9dbca0ee-e583-4693-bb83-b25dfeb3647f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "completed_at": "2026-11-09T23:19:46.128Z",
+    "status": "generated"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/crop_items/olive_try1.json",
+    "record_sha256": "2f00e283233ef3f41b2758bde87f4a3c9cce964d496a73fe3cb0629fbe9ddeaf",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/olive_try1.png",
+    "raw_sha256": "6c0385b829ec59a3c8d33f18161ef33cb68642372f28cd75659f99d0ee1c4f40",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/olive_try1.json",
+    "candidate_sha256": "b03bef1eb1be32bb322b7b8cb4338d2bac6fb9448b4af30f953540be970f3e10"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 372033,
+    "opaque_pixels": 349687,
+    "fringe_pixels": 22346,
+    "visible_bounds": [
+      65,
+      0,
+      1500,
+      1024
+    ],
+    "opaque_bounds": [
+      249,
+      169,
+      1242,
+      859
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/crop_items/olive_try1.png",
+    "sha256": "6c0385b829ec59a3c8d33f18161ef33cb68642372f28cd75659f99d0ee1c4f40",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.16994076999012833,
+      "saturation_q25": 0.35742884668802705,
+      "saturation_q75": 0.6175136656057139,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.025585016480897213,
+      "foreground_pixels": 23263
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "olive",
+      "source": "art/style05/batch_a3/items/olive.png",
+      "bucket": "1",
+      "sha256": "70460dab8f23ff718bf0ce1a87e3ec196fb65cbdee02a5965309985c768ec597",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 841,
+          "opaque_pixels": 571,
+          "fringe_pixels": 270,
+          "visible_bounds": [
+            8,
+            15,
+            53,
+            48
+          ],
+          "opaque_bounds": [
+            11,
+            18,
+            51,
+            45
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            44
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 571,
+          "base_row": 44,
+          "base_error": 0,
+          "height": 27,
+          "gradient_x": -3.2548071287128706,
+          "gradient_y": -3.391847580645161,
+          "light_angle_degrees": 226.18115466186254,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 40,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          -1.5,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "olive_count_2_8",
+      "source": "art/style05/batch_a3/items/olive_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "dfea68408095955b96d715896d50c6918d9b3e28da778b38bdfb4bd4676655a0",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1055,
+          "opaque_pixels": 684,
+          "fringe_pixels": 371,
+          "visible_bounds": [
+            7,
+            12,
+            52,
+            53
+          ],
+          "opaque_bounds": [
+            10,
+            15,
+            49,
+            50
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            49
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 684,
+          "base_row": 49,
+          "base_error": 0,
+          "height": 35,
+          "gradient_x": -3.4763976109215013,
+          "gradient_y": -2.954237671232877,
+          "light_angle_degrees": 220.3578352578613,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 39,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "olive_count_9_plus",
+      "source": "art/style05/batch_a3/items/olive_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "f55cdef6d94be2ff9bd49403de62a0922e37a4db6e562fa55a53780c602a4c21",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1864,
+          "opaque_pixels": 1097,
+          "fringe_pixels": 767,
+          "visible_bounds": [
+            4,
+            8,
+            59,
+            57
+          ],
+          "opaque_bounds": [
+            7,
+            11,
+            56,
+            55
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            54
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 1097,
+          "base_row": 54,
+          "base_error": 0,
+          "height": 44,
+          "gradient_x": -6.342034821428571,
+          "gradient_y": -6.478838628571428,
+          "light_angle_degrees": 225.61134550149714,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 49,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

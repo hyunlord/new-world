@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "id": "rye_seed",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "neolithic",
+  "family": "crop_items",
+  "catalogue_source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 62,
+    "sim": "RyeSeed"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "rye_seed",
+    "era": "neolithic",
+    "attempt": 1,
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "prompt": "Use case: stylized-concept. Asset type: isolated WorldSim concept-05 item inventory sprite. Reference1 and reference2 show STYLE ONLY, do not copy scenery, text or other objects. Hand-ink natural-history illustration with fine warm brown-black contour and restrained muted earth pigment wash. Main contour to secondary line ratio 2:1. Sparse lower-left to upper-right hatching in groups of2-3, at most3 groups per material, no dense stippling. Broad calm midtone planes, delicate edge accents. Same front three-quarter view about20degrees down and light from upper left. Exactly one isolated item or coherent small cluster, full silhouette centred with ample transparent margin, designed to read at64px and32px. No ground, cast shadow, aura, vignette, text, letters, labels, numbers, modern packaging, metal, dyed fabric, watermark, scenery, pixel art, photorealism, 3D render. Transparent alpha zero outside object, object interior opaque. Subject: A small shallow rough wooden seed cup filled with narrow elongated grey-tan rye seeds. A small coherent mound of spindle-shaped grains. No green plant or grain ears. No metal or marking.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:12:16.465Z",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/rye_seed_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-e6e2ff6e-61ef-4fce-ab4c-c9fe3983281a.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589 as /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-e6e2ff6e-61ef-4fce-ab4c-c9fe3983281a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "completed_at": "2026-11-09T23:12:44.176Z",
+    "status": "generated"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/crop_items/rye_seed_try1.json",
+    "record_sha256": "98b798c827e7efeebcd5b1eccef29fc7cd806898db8fb54a45f9d9c75c5924a3",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/rye_seed_try1.png",
+    "raw_sha256": "0ffaab9d90c0d5ca691a6a73af9277e9755bd8fa444f86b62114d1100964f7bc",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/rye_seed_try1.json",
+    "candidate_sha256": "636140214e9e3b36df9a28bce579363484c144371d02ad291865ecd8ebf418d8"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 313709,
+    "opaque_pixels": 305788,
+    "fringe_pixels": 7921,
+    "visible_bounds": [
+      0,
+      25,
+      1506,
+      1010
+    ],
+    "opaque_bounds": [
+      400,
+      228,
+      1115,
+      785
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/crop_items/rye_seed_try1.png",
+    "sha256": "0ffaab9d90c0d5ca691a6a73af9277e9755bd8fa444f86b62114d1100964f7bc",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.2531658955717118,
+      "saturation_q25": 0.4777202889591739,
+      "saturation_q75": 0.6004434091039794,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.014481038507781449,
+      "foreground_pixels": 39122
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "rye_seed",
+      "source": "art/style05/batch_a3/items/rye_seed.png",
+      "bucket": "1",
+      "sha256": "a7875796e9ef15f5b15d989f50487b8d29c95fd21e3fd6d89636b44500b32cfe",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 591,
+          "opaque_pixels": 452,
+          "fringe_pixels": 139,
+          "visible_bounds": [
+            16,
+            18,
+            49,
+            45
+          ],
+          "opaque_bounds": [
+            18,
+            21,
+            46,
+            42
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            41
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 452,
+          "base_row": 41,
+          "base_error": 0,
+          "height": 21,
+          "gradient_x": -1.943782366589327,
+          "gradient_y": -3.5847132075471695,
+          "light_angle_degrees": 241.53158732525003,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 28,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.5,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "rye_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/rye_seed_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "99cf1bcf699b382a33aa8fa9b3723d1e103b521d5abf792937b0e5dfedb4da7d",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 803,
+          "opaque_pixels": 567,
+          "fringe_pixels": 236,
+          "visible_bounds": [
+            12,
+            14,
+            49,
+            51
+          ],
+          "opaque_bounds": [
+            15,
+            17,
+            46,
+            48
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            47
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 567,
+          "base_row": 47,
+          "base_error": 0,
+          "height": 31,
+          "gradient_x": -2.926225515947467,
+          "gradient_y": -5.033471428571429,
+          "light_angle_degrees": 239.8282781177355,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 31,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "rye_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/rye_seed_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "af6ef06eca252887ccce693dd9b5772234e79945010854393a8e2c75c985d2dd",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1427,
+          "opaque_pixels": 855,
+          "fringe_pixels": 572,
+          "visible_bounds": [
+            8,
+            10,
+            56,
+            56
+          ],
+          "opaque_bounds": [
+            10,
+            12,
+            54,
+            53
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            52
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 855,
+          "base_row": 52,
+          "base_error": 0,
+          "height": 41,
+          "gradient_x": -3.2097953002610953,
+          "gradient_y": -5.83389647696477,
+          "light_angle_degrees": 241.18051881083565,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 44,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

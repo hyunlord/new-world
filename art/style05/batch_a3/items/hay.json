@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "id": "hay",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "neolithic",
+  "family": "crop_items",
+  "catalogue_source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 49,
+    "sim": "Hay"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "hay",
+    "era": "neolithic",
+    "attempt": 1,
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "prompt": "Use case: stylized-concept. Asset type: isolated WorldSim concept-05 item inventory sprite. Reference1 and reference2 show STYLE ONLY, do not copy scenery, text or other objects. Hand-ink natural-history illustration with fine warm brown-black contour and restrained muted earth pigment wash. Main contour to secondary line ratio 2:1. Sparse lower-left to upper-right hatching in groups of2-3, at most3 groups per material, no dense stippling. Broad calm midtone planes, delicate edge accents. Same front three-quarter view about20degrees down and light from upper left. Exactly one isolated item or coherent small cluster, full silhouette centred with ample transparent margin, designed to read at64px and32px. No ground, cast shadow, aura, vignette, text, letters, labels, numbers, modern packaging, metal, dyed fabric, watermark, scenery, pixel art, photorealism, 3D render. Transparent alpha zero outside object, object interior opaque. Subject: One compact harvested bundle of dry yellow-ochre grass hay, tied around its middle with a single raw straw rope. Frayed short grass tips and cut stems at two ends, just4-5 dominant grass contour lines, no wheat grain ears.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:15:09.192Z",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/hay_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-f5e993eb-52d5-4a3b-b11e-46824454ce8e.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589 as /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-f5e993eb-52d5-4a3b-b11e-46824454ce8e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "completed_at": "2026-11-09T23:16:36.074Z",
+    "status": "generated"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/crop_items/hay_try1.json",
+    "record_sha256": "8e4edb561fd7307711c4f76feb916cc702444ab0a4f43742e6a82ecd0a4fd181",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/hay_try1.png",
+    "raw_sha256": "57188aa164806b6205a5d1d66e89e258d9c612cf3858e286e4ce78cac8d5bfaa",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/hay_try1.json",
+    "candidate_sha256": "a74c5585fc4c3a45c4e71126b6f86aefab1ad323094d22d074a90c9da78d5a49"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 309187,
+    "opaque_pixels": 284567,
+    "fringe_pixels": 24620,
+    "visible_bounds": [
+      19,
+      19,
+      1522,
+      1000
+    ],
+    "opaque_bounds": [
+      278,
+      200,
+      1271,
+      827
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/crop_items/hay_try1.png",
+    "sha256": "57188aa164806b6205a5d1d66e89e258d9c612cf3858e286e4ce78cac8d5bfaa",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.26764275256222547,
+      "saturation_q25": 0.5912202800319972,
+      "saturation_q75": 0.6718299834723322,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.012743263932002246,
+      "foreground_pixels": 18972
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "hay",
+      "source": "art/style05/batch_a3/items/hay.png",
+      "bucket": "1",
+      "sha256": "9b3ce0526acbef8ac460466e36c3f5c01dd48958f882a659261197dae8546f12",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 620,
+          "opaque_pixels": 421,
+          "fringe_pixels": 199,
+          "visible_bounds": [
+            10,
+            18,
+            54,
+            46
+          ],
+          "opaque_bounds": [
+            13,
+            21,
+            50,
+            43
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            42
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 421,
+          "base_row": 42,
+          "base_error": 0,
+          "height": 22,
+          "gradient_x": -1.0450590909090904,
+          "gradient_y": -3.6864305263157906,
+          "light_angle_degrees": 254.17259923380738,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 37,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          0.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "hay_count_2_8",
+      "source": "art/style05/batch_a3/items/hay_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "22a944f89ff7167e1ebb6537fe5a2d871906b145e342df8e928fd3056fa96686",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 789,
+          "opaque_pixels": 471,
+          "fringe_pixels": 318,
+          "visible_bounds": [
+            9,
+            14,
+            52,
+            51
+          ],
+          "opaque_bounds": [
+            12,
+            17,
+            49,
+            48
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            47
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 471,
+          "base_row": 47,
+          "base_error": 0,
+          "height": 31,
+          "gradient_x": -1.522535616438356,
+          "gradient_y": -6.092130731707317,
+          "light_angle_degrees": 255.96815647761045,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 37,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "hay_count_9_plus",
+      "source": "art/style05/batch_a3/items/hay_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "9e4d0af0a74fc6efcb56419a0754051618c8b2b56f75f32aa3670c4857e87f9d",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1403,
+          "opaque_pixels": 779,
+          "fringe_pixels": 624,
+          "visible_bounds": [
+            5,
+            10,
+            59,
+            56
+          ],
+          "opaque_bounds": [
+            8,
+            13,
+            56,
+            54
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            53
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 779,
+          "base_row": 53,
+          "base_error": 0,
+          "height": 41,
+          "gradient_x": -2.4542115273775216,
+          "gradient_y": -10.246577215189873,
+          "light_angle_degrees": 256.53053094795933,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 48,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

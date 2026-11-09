@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "id": "pea",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "neolithic",
+  "family": "crop_items",
+  "catalogue_source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 65,
+    "sim": "Pea"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "pea",
+    "era": "neolithic",
+    "attempt": 1,
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "prompt": "Use case: stylized-concept. Asset type: isolated WorldSim concept-05 item inventory sprite. Reference1 and reference2 show STYLE ONLY, do not copy scenery, text or other objects. Hand-ink natural-history illustration with fine warm brown-black contour and restrained muted earth pigment wash. Main contour to secondary line ratio 2:1. Sparse lower-left to upper-right hatching in groups of2-3, at most3 groups per material, no dense stippling. Broad calm midtone planes, delicate edge accents. Same front three-quarter view about20degrees down and light from upper left. Exactly one isolated item or coherent small cluster, full silhouette centred with ample transparent margin, designed to read at64px and32px. No ground, cast shadow, aura, vignette, text, letters, labels, numbers, modern packaging, metal, dyed fabric, watermark, scenery, pixel art, photorealism, 3D render. Transparent alpha zero outside object, object interior opaque. Subject: Two freshly harvested muted-green pea pods, one split open showing a clear row of round pale-green peas, one closed curved pod crossing behind it. No basket, no growing plant, no plate.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:13:42.832Z",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/pea_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-b903ea41-135b-491e-862d-f8e4d5bb9221.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589 as /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-b903ea41-135b-491e-862d-f8e4d5bb9221.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "completed_at": "2026-11-09T23:14:31.580Z",
+    "status": "generated"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/crop_items/pea_try1.json",
+    "record_sha256": "56ea95cd17b32746f47929420de108e9b1e3461e124dbfbac16ec1adcd7c48ce",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/pea_try1.png",
+    "raw_sha256": "4cc4851104069e2d7a80c332dac27ab076ce354c91a2aa8a1fdae820ef452b05",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/pea_try1.json",
+    "candidate_sha256": "30fb4d7d24d25dd594749f35bdd19a67ee6308eb947e08cdcd316a9e1b3fdced"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 414744,
+    "opaque_pixels": 398271,
+    "fringe_pixels": 16473,
+    "visible_bounds": [
+      37,
+      25,
+      1504,
+      992
+    ],
+    "opaque_bounds": [
+      182,
+      112,
+      1355,
+      920
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/crop_items/pea_try1.png",
+    "sha256": "4cc4851104069e2d7a80c332dac27ab076ce354c91a2aa8a1fdae820ef452b05",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.19911297852474322,
+      "saturation_q25": 0.5149940502724315,
+      "saturation_q75": 0.5851546954733243,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.012037703936618193,
+      "foreground_pixels": 18935
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "pea",
+      "source": "art/style05/batch_a3/items/pea.png",
+      "bucket": "1",
+      "sha256": "812988df318efc7391c89df86e813b06a9d16fe817ec955ae01db62f9a4bf29b",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 883,
+          "opaque_pixels": 621,
+          "fringe_pixels": 262,
+          "visible_bounds": [
+            6,
+            14,
+            58,
+            51
+          ],
+          "opaque_bounds": [
+            9,
+            17,
+            55,
+            48
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            47
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 621,
+          "base_row": 47,
+          "base_error": 0,
+          "height": 31,
+          "gradient_x": -0.6120546086956522,
+          "gradient_y": -3.1440395683453235,
+          "light_angle_degrees": 258.9839293965476,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 46,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "pea_count_2_8",
+      "source": "art/style05/batch_a3/items/pea_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "3fe914e364d74ad4d4e639bc9dcc62f71d348e340a20b746253f7dacf0851cb0",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1084,
+          "opaque_pixels": 723,
+          "fringe_pixels": 361,
+          "visible_bounds": [
+            6,
+            11,
+            55,
+            54
+          ],
+          "opaque_bounds": [
+            9,
+            14,
+            52,
+            51
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            50
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 723,
+          "base_row": 50,
+          "base_error": 0,
+          "height": 37,
+          "gradient_x": -0.04748333333333303,
+          "gradient_y": -3.0620469291338583,
+          "light_angle_degrees": 269.111582343793,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 43,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "pea_count_9_plus",
+      "source": "art/style05/batch_a3/items/pea_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "6ac48401a03e0eaec57a364cffcd91ec02f5f2ad9fcc94640b8ce162a1d0b772",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1872,
+          "opaque_pixels": 1091,
+          "fringe_pixels": 781,
+          "visible_bounds": [
+            4,
+            8,
+            59,
+            58
+          ],
+          "opaque_bounds": [
+            6,
+            11,
+            58,
+            56
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            55
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 1091,
+          "base_row": 55,
+          "base_error": 0,
+          "height": 45,
+          "gradient_x": 1.5712452991452988,
+          "gradient_y": -3.558456884875847,
+          "light_angle_degrees": 293.82397254064074,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": false,
+          "passed": false
+        },
+        "width_px": 52,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

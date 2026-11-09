@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "id": "dried_berries",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "paleolithic",
+  "family": "food",
+  "catalogue_source": "Bible §4.1/current items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 26,
+    "sim": "DriedBerries"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "dried_berries",
+    "era": "paleolithic",
+    "attempt": 1,
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "prompt": "Use case: stylized-concept. Asset type: isolated WorldSim concept-05 item sprite. Match attached EXISTING ASSETS as style references only: warm brown-black delicate ink, translucent muted earth pigment wash, old natural-history field guide. Main contour and secondary mark widths ratio 2:1. At final 64px main contour about1px, secondary0.5px. Sparse lower-left to upper-right hatch groups, at most 2-3 groups of 2-3 lines per material face; no dense noise, no speckles. Materials have broad calm midtone planes, fine readable edges, no shiny highlights. Same front three-quarter camera about20 degrees down, upper-left light, narrow visible top surface. Exactly one isolated subject, naturally resting, full silhouette with generous transparent margin. Center subject at about70% image width. Actual transparent background, no ground, cast shadow, labels, text, numbers, border, scenery, detached flecks, photorealism, pixel art, or 3D render. Must remain distinguishable when scaled down to a64px canvas and32px viewing size. Subject: A low small cluster of dark muted burgundy dried berries, wrinkled shrivelled silhouettes, one attached tiny twig. No basket, no shiny fresh fruit. Clean isolated alpha edge, no halo.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:18:07.024Z",
+    "completed_at": "2026-11-09T23:19:27.727Z",
+    "raw": "/Users/rexxa/work/art-batch/A3/food/dried_berries_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e/exec-c6bb70bc-dcb5-4bcc-a988-6214802ae6e9.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e as /Users/rexxa/.codex/generated_images/01a1c289-ca5b-7440-9d9c-a42d6f7cc23e/exec-c6bb70bc-dcb5-4bcc-a988-6214802ae6e9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "status": "generated"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/food/dried_berries_try1.json",
+    "record_sha256": "c47e9ffc82ca369185c9d31164a4c3bf14513a5cf7ca1d6c5c741b07e6f27531",
+    "raw": "/Users/rexxa/work/art-batch/A3/food/dried_berries_try1.png",
+    "raw_sha256": "fb266522906b688ca6fcdc4b5c5df903dcb959204a8d76c8047724a051c82b42",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/dried_berries_try1.json",
+    "candidate_sha256": "ae58f6fc957fe3ad4a95635624d012afbd6fafa1afe5c2662aab10e455390d70"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 236086,
+    "opaque_pixels": 222458,
+    "fringe_pixels": 13628,
+    "visible_bounds": [
+      0,
+      15,
+      1508,
+      1006
+    ],
+    "opaque_bounds": [
+      386,
+      240,
+      1141,
+      764
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/food/dried_berries_try1.png",
+    "sha256": "fb266522906b688ca6fcdc4b5c5df903dcb959204a8d76c8047724a051c82b42",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.26266369110278326,
+      "saturation_q25": 0.46994280486888446,
+      "saturation_q75": 0.51267340861569,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.008484080617578816,
+      "foreground_pixels": 25627
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "dried_berries",
+      "source": "art/style05/batch_a3/items/dried_berries.png",
+      "bucket": "1",
+      "sha256": "926c8bce80137c3ed107d7d230683a8f835dea960036f8c6032890202e68b8a4",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 477,
+          "opaque_pixels": 332,
+          "fringe_pixels": 145,
+          "visible_bounds": [
+            15,
+            19,
+            49,
+            44
+          ],
+          "opaque_bounds": [
+            18,
+            22,
+            47,
+            42
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            41
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 332,
+          "base_row": 41,
+          "base_error": 0,
+          "height": 20,
+          "gradient_x": -1.1333774834437083,
+          "gradient_y": -3.183811486486486,
+          "light_angle_degrees": 250.40521932267393,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 29,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "dried_berries_count_2_8",
+      "source": "art/style05/batch_a3/items/dried_berries_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "8003fdea574f713bdf5bb873a2c47ac827de65656f3184cfd3ae3017ede0f616",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 673,
+          "opaque_pixels": 416,
+          "fringe_pixels": 257,
+          "visible_bounds": [
+            12,
+            15,
+            49,
+            50
+          ],
+          "opaque_bounds": [
+            15,
+            18,
+            47,
+            47
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            46
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 416,
+          "base_row": 46,
+          "base_error": 0,
+          "height": 29,
+          "gradient_x": -1.4284237467018468,
+          "gradient_y": -3.9937738161559886,
+          "light_angle_degrees": 250.31976709634478,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 32,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "dried_berries_count_9_plus",
+      "source": "art/style05/batch_a3/items/dried_berries_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "a6ebfb1b9ce41a0e45a63fda2386606646d29d5194997740539229c2588846ef",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1230,
+          "opaque_pixels": 630,
+          "fringe_pixels": 600,
+          "visible_bounds": [
+            8,
+            10,
+            57,
+            56
+          ],
+          "opaque_bounds": [
+            10,
+            13,
+            54,
+            53
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            52
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 630,
+          "base_row": 52,
+          "base_error": 0,
+          "height": 40,
+          "gradient_x": -1.6997479923518166,
+          "gradient_y": -5.211544646464647,
+          "light_angle_degrees": 251.93623628207678,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 44,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

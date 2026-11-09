@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "id": "lentil_seed",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "neolithic",
+  "family": "crop_items",
+  "catalogue_source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 64,
+    "sim": "LentilSeed"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "lentil_seed",
+    "era": "neolithic",
+    "attempt": 1,
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "prompt": "Use case: stylized-concept. Asset type: isolated WorldSim concept-05 item inventory sprite. Reference1 and reference2 show STYLE ONLY, do not copy scenery, text or other objects. Hand-ink natural-history illustration with fine warm brown-black contour and restrained muted earth pigment wash. Main contour to secondary line ratio 2:1. Sparse lower-left to upper-right hatching in groups of2-3, at most3 groups per material, no dense stippling. Broad calm midtone planes, delicate edge accents. Same front three-quarter view about20degrees down and light from upper left. Exactly one isolated item or coherent small cluster, full silhouette centred with ample transparent margin, designed to read at64px and32px. No ground, cast shadow, aura, vignette, text, letters, labels, numbers, modern packaging, metal, dyed fabric, watermark, scenery, pixel art, photorealism, 3D render. Transparent alpha zero outside object, object interior opaque. Subject: A shallow primitive handwoven grass seed basket filled with flat reddish-brown lentil discs, one pale dry lentil pod resting on the rim as a species cue. Compact sowing-seed container, no text or labels.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "started_at": "2026-11-09T23:12:16.465Z",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/lentil_seed_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-8d2770f9-2289-48d9-a80f-db2b535fb9a1.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589 as /Users/rexxa/.codex/generated_images/01a1c293-38ef-7000-88c6-dcf7c53ae589/exec-8d2770f9-2289-48d9-a80f-db2b535fb9a1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "completed_at": "2026-11-09T23:13:31.314Z",
+    "status": "generated"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/crop_items/lentil_seed_try1.json",
+    "record_sha256": "bd7cfe44d89ac31d1e1b801abe6039a7820dd1e38f6d9dd25f70247766769dca",
+    "raw": "/Users/rexxa/work/art-batch/A3/crop_items/lentil_seed_try1.png",
+    "raw_sha256": "0b2962d6bd8bc038643aa94f195e8171c80ec89d5f5f825ad3e6409526dc4ad5",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/lentil_seed_try1.json",
+    "candidate_sha256": "f6a1d5c0fef40ae752a64c7fceab46a72eadcae21cf352393e02fff144e180ae"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 531002,
+    "opaque_pixels": 475174,
+    "fringe_pixels": 55828,
+    "visible_bounds": [
+      0,
+      0,
+      1536,
+      1024
+    ],
+    "opaque_bounds": [
+      326,
+      153,
+      1217,
+      867
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/crop_items/lentil_seed_try1.png",
+    "sha256": "0b2962d6bd8bc038643aa94f195e8171c80ec89d5f5f825ad3e6409526dc4ad5",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.27539072847682117,
+      "saturation_q25": 0.586932325519955,
+      "saturation_q75": 0.7050689244683448,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.010909463632220446,
+      "foreground_pixels": 39209
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "lentil_seed",
+      "source": "art/style05/batch_a3/items/lentil_seed.png",
+      "bucket": "1",
+      "sha256": "3c114d1ce5e8bdf4a60a7963a8f6ea698a491fe7d1e0e98ba269c6446ce6944c",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 874,
+          "opaque_pixels": 681,
+          "fringe_pixels": 193,
+          "visible_bounds": [
+            3,
+            12,
+            56,
+            48
+          ],
+          "opaque_bounds": [
+            15,
+            18,
+            48,
+            45
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            44
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 681,
+          "base_row": 44,
+          "base_error": 0,
+          "height": 27,
+          "gradient_x": -1.0840006134969329,
+          "gradient_y": -2.511367801857585,
+          "light_angle_degrees": 246.65315922976498,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 33,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          -2.5,
+          -2.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "lentil_seed_count_2_8",
+      "source": "art/style05/batch_a3/items/lentil_seed_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "4ecb3e571fd466f77b4848cdc3684e6bbc5033ba9fc01ed22450ffeeaad50add",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1065,
+          "opaque_pixels": 808,
+          "fringe_pixels": 257,
+          "visible_bounds": [
+            5,
+            11,
+            53,
+            52
+          ],
+          "opaque_bounds": [
+            13,
+            15,
+            48,
+            50
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            49
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 808,
+          "base_row": 49,
+          "base_error": 0,
+          "height": 35,
+          "gradient_x": -1.6140279009126464,
+          "gradient_y": -2.7425618922470436,
+          "light_angle_degrees": 239.5227196631617,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 35,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "lentil_seed_count_9_plus",
+      "source": "art/style05/batch_a3/items/lentil_seed_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "2c11c2bae73303de0e3fa6be99d53a886dc2c140ba53a1ecb5b498754a7e733f",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1834,
+          "opaque_pixels": 1248,
+          "fringe_pixels": 586,
+          "visible_bounds": [
+            6,
+            8,
+            58,
+            57
+          ],
+          "opaque_bounds": [
+            9,
+            11,
+            55,
+            54
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            53
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 1248,
+          "base_row": 53,
+          "base_error": 0,
+          "height": 43,
+          "gradient_x": -2.105578774805867,
+          "gradient_y": -3.2474206222222226,
+          "light_angle_degrees": 237.04123035707875,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 46,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}
