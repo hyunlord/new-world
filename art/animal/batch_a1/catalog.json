@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "scope": "A1 animals",
+  "status": "PLANNED_NOT_ADOPTED",
+  "date": "2026-11-10",
+  "branch": "v8/art-batch-a1",
+  "evidence_root": "/Users/rexxa/work/art-batch/A1",
+  "source_documents": [
+    "/Users/rexxa/work/art-batch/BRIEF.md",
+    "/Users/rexxa/work/c2-data/GOAL.md",
+    "https://github.com/hyunlord/new-world/issues/690",
+    "https://github.com/hyunlord/new-world/issues/695"
+  ],
+  "required_set_count": 17,
+  "required_frame_count": 184,
+  "directions": ["S", "E"],
+  "base_poses": ["stand", "walk", "run", "graze", "dead"],
+  "upright_canvas_px": [96, 80],
+  "upright_anchor_px": [48, 72],
+  "dead_canvas_px": [96, 64],
+  "dead_anchor_px": [48, 56],
+  "world_tile_px": [64, 64],
+  "world_base_in_tile_px": [32, 43],
+  "normalization": "One manually measured S-stand shoulder-to-hoof scale for all upright poses and facings; dead uses declared body-length target.",
+  "size_status": "Proposed art production parameters, not measured biology or simulation balance; record reason before changing.",
+  "footprint_policy": "Measure and record visible and opaque alpha bounding boxes for each normalized frame; no invented collision footprint.",
+  "frame_semantics": "One key pose per direction; no multi-frame animation cycle claimed.",
+  "climate_meanings": {
+    "ordinary": "Bible circle: wild source present; ordinary climate modifier.",
+    "reduced": "Bible triangle: wild source present with reduced modifier; not forbidden.",
+    "absent": "Bible dash: wild source does not spawn in this climate.",
+    "null": "Source document does not specify; do not invent."
+  },
+  "era_semantics": "domestication_era labels the bible's livestock availability; it does not date wild-species first existence.",
+  "runtime_ids": "Not assigned by this art plan. Source labels are descriptive, not animals.ron IDs.",
+  "reference_policy": {
+    "required_style_paths": ["art/style05/anchors/person.png", "art/style05/anchors/scene.png"],
+    "herbivore_sheet": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+    "canine_sheet": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+    "record_actual_attachments_per_call": true,
+    "historical_animal_owner_approval_inferred": false
+  },
+  "adoption_policy": "All entries are pending until explicit structural and visual results are recorded in frame sidecars and the run ledger. Planned counts are not generated or adopted counts.",
+  "sets": [
+    {
+      "id": "cattle", "order": 1, "domestication_era": "bronze", "roles": ["domestic"],
+      "source_section": "690 §4.3 cattle; §4.5", "wild_source_label": "aurochs",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "reduced"}, "terrain": ["plain"],
+      "coat": "short_hide", "age": "adult", "shoulder_target_px": 40, "dead_length_target_px": 72,
+      "attack": false, "frame_count": 10, "adoption_status": "PENDING",
+      "silhouette_cues": ["heavy barrel body", "broad square muzzle", "short outward horns", "long tufted tail"]
+    },
+    {
+      "id": "aurochs", "order": 2, "domestication_era": null, "roles": ["wild_source"], "domestic_destination_label": "cattle",
+      "source_section": "690 §4.5; C2 §3.2", "wild_source_label": "aurochs",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "reduced"}, "terrain": ["plain"],
+      "coat": "short_hide", "age": "adult", "shoulder_target_px": 42, "dead_length_target_px": 76,
+      "attack": true, "attack_context": "wild", "frame_count": 12, "adoption_status": "PENDING",
+      "silhouette_cues": ["high heavy shoulders", "long outward-forward horns", "deep chest", "dark hide"]
+    },
+    {
+      "id": "sheep_fleeced", "order": 3, "domestication_era": "neolithic", "roles": ["domestic", "wild_source_body_reuse"],
+      "source_section": "690 §4.2; §4.3 wool_spinning; §4.5", "wild_source_label": "wild sheep",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "ordinary"}, "terrain": ["hill", "mountain"],
+      "coat": "fleece", "age": "adult", "shoulder_target_px": 28, "dead_length_target_px": 50,
+      "attack": true, "attack_context": "wild_source_role", "frame_count": 12, "adoption_status": "PENDING",
+      "silhouette_cues": ["rounded connected fleece mass", "short legs", "sheep muzzle", "broad attached horn form"]
+    },
+    {
+      "id": "sheep_shorn", "order": 4, "domestication_era": "neolithic", "roles": ["domestic"], "variant_of": "sheep_fleeced",
+      "source_section": "BRIEF A1 fleeced and shorn; 690 §4.3 wool_spinning", "wild_source_label": "wild sheep",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "ordinary"}, "terrain": ["hill", "mountain"],
+      "coat": "shorn_short_hide", "age": "adult", "shoulder_target_px": 28, "dead_length_target_px": 50,
+      "attack": false, "frame_count": 10, "adoption_status": "PENDING",
+      "silhouette_cues": ["same head and horn identity as fleeced sheep", "narrower exposed torso", "short even remaining coat"]
+    },
+    {
+      "id": "calf", "order": 5, "domestication_era": "bronze", "roles": ["domestic_young"], "adult_set": "cattle",
+      "source_section": "BRIEF A1 calf; 690 §4.3 cattle; C2 §3.5", "wild_source_label": "aurochs",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "reduced"}, "terrain": ["plain"],
+      "coat": "short_hide", "age": "young", "adult_scale_target": 0.6, "shoulder_target_px": 24, "dead_length_target_px": 43,
+      "attack": false, "frame_count": 10, "adoption_status": "PENDING",
+      "silhouette_cues": ["large head relative to body", "short bovine muzzle", "small horn buds", "small tufted tail"]
+    },
+    {
+      "id": "goat", "order": 6, "domestication_era": "neolithic", "roles": ["domestic", "wild_source_body_reuse"],
+      "source_section": "690 §4.2 animal_taming; §4.5", "wild_source_label": "wild goat",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "ordinary"}, "terrain": ["hill", "mountain"],
+      "coat": "short_hide", "age": "adult", "shoulder_target_px": 30, "dead_length_target_px": 52,
+      "attack": true, "attack_context": "wild_source_role", "frame_count": 12, "adoption_status": "PENDING",
+      "silhouette_cues": ["back-swept horns", "angular muzzle", "small beard", "upright short tail"]
+    },
+    {
+      "id": "kid", "order": 7, "domestication_era": "neolithic", "roles": ["domestic_young", "wild_capture_young"], "adult_set": "goat",
+      "source_section": "690 §4.2 animal_taming; BRIEF A1 kid; C2 §3.5", "wild_source_label": "wild goat",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "ordinary"}, "terrain": ["hill", "mountain"],
+      "coat": "short_hide", "age": "young", "adult_scale_target": 0.6, "shoulder_target_px": 18, "dead_length_target_px": 31,
+      "attack": false, "frame_count": 10, "adoption_status": "PENDING",
+      "silhouette_cues": ["large ears and head", "short muzzle", "tiny horn buds", "upright short tail"]
+    },
+    {
+      "id": "lamb", "order": 8, "domestication_era": "neolithic", "roles": ["domestic_young"], "adult_set": "sheep_fleeced",
+      "source_section": "BRIEF A1 lamb; 690 §4.2 sheep; C2 §3.5", "wild_source_label": "wild sheep",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "ordinary"}, "terrain": ["hill", "mountain"],
+      "coat": "fleece", "age": "young", "adult_scale_target": 0.6, "shoulder_target_px": 17, "dead_length_target_px": 30,
+      "attack": false, "frame_count": 10, "adoption_status": "PENDING",
+      "silhouette_cues": ["small rounded fleece body", "large soft ears", "short sheep muzzle", "immature horn area"]
+    },
+    {
+      "id": "wild_boar", "order": 9, "domestication_era": null, "roles": ["wild_source"], "domestic_destination_label": "pig",
+      "source_section": "690 §4.5", "wild_source_label": "wild boar",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "reduced"}, "terrain": ["forest", "swamp"],
+      "coat": "bristle", "age": "adult", "shoulder_target_px": 26, "dead_length_target_px": 56,
+      "attack": true, "attack_context": "wild", "frame_count": 12, "adoption_status": "PENDING",
+      "silhouette_cues": ["wedged long snout", "high bristled shoulder", "small attached tusks", "low heavy body"]
+    },
+    {
+      "id": "pig", "order": 10, "domestication_era": "neolithic", "roles": ["domestic"],
+      "source_section": "690 §4.2; §4.5", "wild_source_label": "wild boar",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "reduced"}, "terrain": ["forest", "swamp"],
+      "coat": "short_hide", "age": "adult", "shoulder_target_px": 24, "dead_length_target_px": 50,
+      "attack": false, "frame_count": 10, "adoption_status": "PENDING",
+      "silhouette_cues": ["rounded low barrel body", "blunt snout", "large ears", "small curled tail"]
+    },
+    {
+      "id": "piglet", "order": 11, "domestication_era": "neolithic", "roles": ["domestic_young", "wild_capture_young"], "adult_set": "pig",
+      "source_section": "690 §4.2 animal_taming captures goat and pig young; C2 §3.5", "wild_source_label": "wild boar",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "reduced"}, "terrain": ["forest", "swamp"],
+      "coat": "short_hide", "age": "young", "adult_scale_target": 0.6, "shoulder_target_px": 14, "dead_length_target_px": 30,
+      "attack": false, "frame_count": 10, "adoption_status": "PENDING",
+      "silhouette_cues": ["large ears relative to small body", "short blunt snout", "short legs", "small curled tail"]
+    },
+    {
+      "id": "reindeer", "order": 12, "domestication_era": "neolithic", "roles": ["domestic", "wild_source_body_reuse"],
+      "source_section": "690 §4.5", "wild_source_label": "reindeer",
+      "climate": {"mild": "absent", "normal": "absent", "harsh": "ordinary"}, "terrain": ["tundra"],
+      "coat": "short_hide", "age": "adult", "shoulder_target_px": 40, "dead_length_target_px": 68,
+      "attack": true, "attack_context": "wild_source_role", "frame_count": 12, "adoption_status": "PENDING",
+      "silhouette_cues": ["broad connected branching antlers", "pale neck bib", "stocky cervid body", "broad hooves"]
+    },
+    {
+      "id": "dog", "order": 13, "domestication_era": "neolithic", "roles": ["domestic"],
+      "source_section": "690 §4.2 dog_taming; §4.5", "wild_source_label": "wolf",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "ordinary"}, "terrain": ["any"],
+      "coat": "short_hide", "age": "adult", "shoulder_target_px": 26, "dead_length_target_px": 54,
+      "attack": false, "frame_count": 10, "adoption_status": "PENDING", "graze_alias": "head-down sniff or forage",
+      "silhouette_cues": ["primitive canine muzzle", "upright ears", "clear paws", "tail distinguishable from wolf reference"]
+    },
+    {
+      "id": "chicken", "order": 14, "domestication_era": "bronze", "roles": ["domestic"],
+      "source_section": "690 §4.5", "wild_source_label": "junglefowl",
+      "climate": {"mild": "ordinary", "normal": "reduced", "harsh": "absent"}, "terrain": ["forest"],
+      "coat": "feather_groups", "age": "adult", "shoulder_target_px": 16, "dead_length_target_px": 32,
+      "attack": false, "frame_count": 10, "adoption_status": "PENDING", "graze_alias": "peck",
+      "silhouette_cues": ["compact bird body", "short beak", "two connected legs", "raised fan tail"]
+    },
+    {
+      "id": "junglefowl", "order": 15, "domestication_era": null, "roles": ["wild_source"], "domestic_destination_label": "chicken",
+      "source_section": "690 §4.5", "wild_source_label": "junglefowl",
+      "climate": {"mild": "ordinary", "normal": "reduced", "harsh": "absent"}, "terrain": ["forest"],
+      "coat": "feather_groups", "age": "adult", "shoulder_target_px": 16, "dead_length_target_px": 32,
+      "attack": true, "attack_context": "wild", "frame_count": 12, "adoption_status": "PENDING", "graze_alias": "peck",
+      "silhouette_cues": ["slender wild bird body", "long arched tail", "clear beak and comb", "two connected legs"]
+    },
+    {
+      "id": "donkey", "order": 16, "domestication_era": "bronze", "roles": ["domestic_candidate"],
+      "source_section": "690 §4.3 cart names cattle and donkey; BRIEF A1", "wild_source_label": null,
+      "climate": {"mild": null, "normal": null, "harsh": null}, "terrain": null,
+      "coat": "short_hide", "age": "adult", "shoulder_target_px": 36, "dead_length_target_px": 64,
+      "attack": false, "frame_count": 10, "adoption_status": "PENDING",
+      "silhouette_cues": ["very long upright ears", "short upright mane", "pale muzzle", "thin tufted tail"],
+      "unresolved": "No donkey climate, terrain or wild-source row in the bible. Bronze is cart-use provenance, not a new authored unlock."
+    },
+    {
+      "id": "horse", "order": 17, "domestication_era": "iron", "roles": ["domestic", "wild_source_body_reuse"],
+      "source_section": "690 §4.4 horse; §4.5", "wild_source_label": "wild horse",
+      "climate": {"mild": "ordinary", "normal": "ordinary", "harsh": "reduced"}, "terrain": ["plain"],
+      "coat": "short_hide_and_mane", "age": "adult", "shoulder_target_px": 42, "dead_length_target_px": 76,
+      "attack": true, "attack_context": "wild_source_role", "frame_count": 12, "adoption_status": "PENDING",
+      "silhouette_cues": ["long equine head and neck", "defined mane", "long full tail", "single hooves"]
+    }
+  ],
+  "optional_after_required": [
+    {
+      "id": "reindeer_winter", "variant_of": "reindeer", "status": "OPTIONAL_NOT_REQUIRED",
+      "frame_count": 12, "attack": true, "shoulder_target_px": 40, "dead_length_target_px": 68,
+      "reason": "Seasonal coat exploration after required coverage; bible requires harsh-climate reindeer but no seasonal sprite set."
+    }
+  ],
+  "excluded_from_new_generation": [
+    {"label": "deer and wolf", "reason": "Existing animal references; no regeneration required by brief."},
+    {"label": "bees and hives", "reason": "Bible source is wild hive; A2 owns beehive/resource structures."},
+    {"label": "falconry bird", "reason": "Inert knowledge node names no required species."}
+  ]
+}

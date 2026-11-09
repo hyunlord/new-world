@@ -1,0 +1,1240 @@
+{
+  "spec": {
+    "species": "horse",
+    "attempt": 1,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.prompt.txt",
+    "shoulder_y": 246,
+    "hoof_y": 476,
+    "shoulder_target": 42,
+    "dead_length": 76,
+    "poses": [
+      "stand",
+      "walk",
+      "run",
+      "graze",
+      "dead"
+    ],
+    "references": [
+      "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": "/Users/rexxa/work/art-batch/A1/raw/horse/generation.json",
+    "landmark_note": "Manually read S/stand withers/back plane and lowest grounded hoof from 1536x1024 generated sheet; approx 2 source px uncertainty."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/horse/spec.json",
+  "spec_sha256": "f986cc4d9b7dbdac882fe983f5eaa5537d2843e0893462f5fb5201de2b824318",
+  "raw_sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4",
+  "prompt_text": "Use case: style-transfer. Transform the supplied deer sheet into another complete game animal sprite sheet, retaining the exact 2 rows by 5 columns, consistent scale, fine controlled sepia ink and restrained two-tone earth-colour washes. First image is layout/animal-style reference; person and scene are locked STYLE ONLY, never include their background. Actual transparent RGBA, no text, no labels, no grid, no ground, no shadow, no halo. Exactly TEN isolated whole figures with generous transparent gutters and margins, fully connected hooves/tail/horns. Top row SOUTH: front three-quarter 35degrees toward viewer LEFT from head-on, both chest and side visible. Lower row EAST: side three-quarter facing RIGHT. Same slightly elevated ~20degree camera, light upper left. Main contour twice interior line. Short hide: exactly3 small clusters of2-3 marks on shoulder/flank/haunch, diagonal upper-left to lower-right. Broad quiet washes, no all-over fur, not 3D or photorealism. Columns BOTH ROWS: 1 STAND,4 grounded hooves, alert; 2 WALK, obvious raised bent forehoof and opposite hind step; 3 RUN, airborne extended gallop, forelegs forward hindlegs back; 4 GRAZE, muzzle lowered completely to hoof level with bent neck, no grass; 5 DEAD, horizontal limp on side, legs sideways, eyes closed, no blood. Identical body size/proportions across upright poses. Designed to reduce to96x80frames; strong readable anatomy. SUBJECT: primitive wild HORSE, compact powerful dun/ochre body with darker dorsal stripe, dark brown short upright mane and full long tail, dark lower legs, single broad equine hooves, pale buff muzzle, strong rounded neck and long heavy horse head. Two short horse ears, no horns. Distinct stocky primitive horse anatomy, not a thin deer, no white blaze. Mane only3 groups of3 ink marks. Absolutely no tack, bridle, shoes, harness, saddle, accessories or rider. This horse is a pre-domestication wild source and later iron-age livestock by data.\n",
+  "prompt_sha256": "e3abcf56106ff50b02d32736ac210a6c28b5c21ced7c5ff4a24a8c464b9b5581",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": {
+    "path": "/Users/rexxa/work/art-batch/A1/raw/horse/generation.json",
+    "sha256": "99e051c8c89b78a3012de8f491098d9cb428a81afaa48abb9ef18bbe6ac507db"
+  },
+  "references": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "source_rgba_sha256": "edef8035fa3fcda4129698c93e19a4368a8567df4dfa25e17481148c6d792ecb",
+    "ownership_sha256": "9639f0c605af469dc7521a4910d25f9dafdcece462583f0b80ffbdb44cb2414b",
+    "visible_pixels": 582831,
+    "tied_visible_pixels": 42,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": [
+      {
+        "area": 2,
+        "box": [
+          105,
+          178,
+          106,
+          180
+        ],
+        "panel_indices": [
+          0
+        ],
+        "distance": 2.0,
+        "tied_panels": [
+          0
+        ]
+      },
+      {
+        "area": 3,
+        "box": [
+          404,
+          208,
+          406,
+          210
+        ],
+        "panel_indices": [
+          1
+        ],
+        "distance": 2.0,
+        "tied_panels": [
+          1
+        ]
+      },
+      {
+        "area": 1,
+        "box": [
+          407,
+          211,
+          408,
+          212
+        ],
+        "panel_indices": [
+          1
+        ],
+        "distance": 5.0,
+        "tied_panels": [
+          1
+        ]
+      }
+    ]
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.1826086956521739,
+  "landmark_note": "Manually read S/stand withers/back plane and lowest grounded hoof from 1536x1024 generated sheet; approx 2 source px uncertainty.",
+  "frames": [
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/horse/try1/S/stand.png",
+      "image_sha256": "9f0956fb79b0f4a9cccef72220fd5bbe9a4f42322cd6ebcf7c3891d561aa49f2",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/try1/S_stand.png",
+      "source_panel_sha256": "6e21d7aeec072be34baae87af521e3e7653fb2fa440cfca0b186bcfaa6b7700b",
+      "source_box": [
+        9,
+        8,
+        314,
+        536
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+      "raw_sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.prompt.txt",
+      "prompt_sha256": "e3abcf56106ff50b02d32736ac210a6c28b5c21ced7c5ff4a24a8c464b9b5581",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1826086956521739,
+      "upright_scale": 0.1826086956521739,
+      "normalization": {
+        "scaled_size": [
+          56,
+          96
+        ],
+        "trim_box": [
+          1,
+          28,
+          50,
+          86
+        ],
+        "placement": [
+          23,
+          15
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          -13
+        ],
+        "visible_pixels": 1541,
+        "rotation_degrees": 0,
+        "scale": 0.1826086956521739,
+        "discarded_pixels": 5,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1374,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 57,
+        "gradient_x": -0.991815112540193,
+        "gradient_y": -0.06273812070282639,
+        "light_angle_degrees": 183.61947157381394,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/horse/try1/S/walk.png",
+      "image_sha256": "a3c0e22e5dcbad039720166759cd6c5faaef1cc5c45e68c75d2c878be013d2e4",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/try1/S_walk.png",
+      "source_panel_sha256": "4ec1f40fa4486b19cc6a6e7e987913fb019f6389cdb1028f57679e597537a67c",
+      "source_box": [
+        205,
+        0,
+        580,
+        571
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+      "raw_sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.prompt.txt",
+      "prompt_sha256": "e3abcf56106ff50b02d32736ac210a6c28b5c21ced7c5ff4a24a8c464b9b5581",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1826086956521739,
+      "upright_scale": 0.1826086956521739,
+      "normalization": {
+        "scaled_size": [
+          68,
+          104
+        ],
+        "trim_box": [
+          16,
+          30,
+          65,
+          86
+        ],
+        "placement": [
+          23,
+          17
+        ],
+        "resized_to_canvas_offset": [
+          7,
+          -13
+        ],
+        "visible_pixels": 1438,
+        "rotation_degrees": 0,
+        "scale": 0.1826086956521739,
+        "discarded_pixels": 11,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1273,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 55,
+        "gradient_x": -1.4253852302345784,
+        "gradient_y": -0.21017840531561452,
+        "light_angle_degrees": 188.3880338027739,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/horse/try1/S/run.png",
+      "image_sha256": "3e33140af6bdc1d8bf7133aaf3724672376c769d3f08d7eea006c444dbcd1863",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/try1/S_run.png",
+      "source_panel_sha256": "4c95160c6edc82235debe8adaf18a4cd421b0ca3454ebd01318e87fc63e9301c",
+      "source_box": [
+        507,
+        9,
+        923,
+        554
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+      "raw_sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.prompt.txt",
+      "prompt_sha256": "e3abcf56106ff50b02d32736ac210a6c28b5c21ced7c5ff4a24a8c464b9b5581",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1826086956521739,
+      "upright_scale": 0.1826086956521739,
+      "normalization": {
+        "scaled_size": [
+          76,
+          100
+        ],
+        "trim_box": [
+          11,
+          31,
+          73,
+          78
+        ],
+        "placement": [
+          17,
+          26
+        ],
+        "resized_to_canvas_offset": [
+          6,
+          -5
+        ],
+        "visible_pixels": 1436,
+        "rotation_degrees": 0,
+        "scale": 0.1826086956521739,
+        "discarded_pixels": 15,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1257,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 46,
+        "gradient_x": -1.1753495246326706,
+        "gradient_y": 0.2867661192739836,
+        "light_angle_degrees": 166.288644889217,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "graze",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/horse/try1/S/graze.png",
+      "image_sha256": "21f94d2ee56df6deb8690acb88902753e1ef1036b0f772cf0b1cfa69a1c579d8",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/try1/S_graze.png",
+      "source_panel_sha256": "1d5d7cd4da984c1c537189aded61415a3f109c85fe22e112ab388084e848a5ee",
+      "source_box": [
+        875,
+        19,
+        1308,
+        578
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+      "raw_sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.prompt.txt",
+      "prompt_sha256": "e3abcf56106ff50b02d32736ac210a6c28b5c21ced7c5ff4a24a8c464b9b5581",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1826086956521739,
+      "upright_scale": 0.1826086956521739,
+      "normalization": {
+        "scaled_size": [
+          79,
+          102
+        ],
+        "trim_box": [
+          8,
+          38,
+          51,
+          85
+        ],
+        "placement": [
+          26,
+          26
+        ],
+        "resized_to_canvas_offset": [
+          18,
+          -12
+        ],
+        "visible_pixels": 1343,
+        "rotation_degrees": 0,
+        "scale": 0.1826086956521739,
+        "discarded_pixels": 12,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1197,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 45,
+        "gradient_x": -0.9360981651376149,
+        "gradient_y": -0.1993117132867133,
+        "light_angle_degrees": 192.01978672547926,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/horse/try1/S/dead.png",
+      "image_sha256": "7dacdadabf3db6f3a800a54d8fc824ffb95be184c92b99ae0242ec3266b58b16",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/try1/S_dead.png",
+      "source_panel_sha256": "f5461dbba5934635b210a73cf12e49c780cadfea3c629bb5ec22b92bdeb1743c",
+      "source_box": [
+        1143,
+        82,
+        1535,
+        640
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+      "raw_sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.prompt.txt",
+      "prompt_sha256": "e3abcf56106ff50b02d32736ac210a6c28b5c21ced7c5ff4a24a8c464b9b5581",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.22287390029325513,
+      "upright_scale": 0.1826086956521739,
+      "normalization": {
+        "scaled_size": [
+          87,
+          124
+        ],
+        "trim_box": [
+          5,
+          55,
+          82,
+          90
+        ],
+        "placement": [
+          9,
+          22
+        ],
+        "resized_to_canvas_offset": [
+          4,
+          -33
+        ],
+        "visible_pixels": 1740,
+        "rotation_degrees": 0,
+        "scale": 0.22287390029325513,
+        "discarded_pixels": 80,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1593,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 34,
+        "gradient_x": 0.04871223300970883,
+        "gradient_y": -0.6477267567567571,
+        "light_angle_degrees": 274.30082800717173,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/horse/try1/E/stand.png",
+      "image_sha256": "2f93b7749b960f465660602713b70c825bd8397ae7a011771c68da8162955549",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/try1/E_stand.png",
+      "source_panel_sha256": "46ce4e9c962f4c51503b17e25ff9746846a095b646a8ea0fe65094f5ae4b8864",
+      "source_box": [
+        0,
+        531,
+        356,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+      "raw_sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.prompt.txt",
+      "prompt_sha256": "e3abcf56106ff50b02d32736ac210a6c28b5c21ced7c5ff4a24a8c464b9b5581",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1826086956521739,
+      "upright_scale": 0.1826086956521739,
+      "normalization": {
+        "scaled_size": [
+          65,
+          90
+        ],
+        "trim_box": [
+          2,
+          13,
+          55,
+          68
+        ],
+        "placement": [
+          21,
+          18
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          5
+        ],
+        "visible_pixels": 1458,
+        "rotation_degrees": 0,
+        "scale": 0.1826086956521739,
+        "discarded_pixels": 3,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1277,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 55,
+        "gradient_x": 0.8379272255834052,
+        "gradient_y": 0.07770382059800605,
+        "light_angle_degrees": 5.298078838033501,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/horse/try1/E/walk.png",
+      "image_sha256": "f2648b22548f691017d1a32004175fa122c3c0b702d0fa746108a4a84ea49497",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/try1/E_walk.png",
+      "source_panel_sha256": "37525327eecd38785d540ac9e218ca14311d3d428a9ceb7978b09aa0b45f501e",
+      "source_box": [
+        255,
+        533,
+        664,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+      "raw_sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.prompt.txt",
+      "prompt_sha256": "e3abcf56106ff50b02d32736ac210a6c28b5c21ced7c5ff4a24a8c464b9b5581",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1826086956521739,
+      "upright_scale": 0.1826086956521739,
+      "normalization": {
+        "scaled_size": [
+          75,
+          90
+        ],
+        "trim_box": [
+          6,
+          13,
+          62,
+          66
+        ],
+        "placement": [
+          20,
+          20
+        ],
+        "resized_to_canvas_offset": [
+          14,
+          7
+        ],
+        "visible_pixels": 1460,
+        "rotation_degrees": 0,
+        "scale": 0.1826086956521739,
+        "discarded_pixels": 19,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1275,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 51,
+        "gradient_x": 0.9525499136442143,
+        "gradient_y": 0.041144295302013315,
+        "light_angle_degrees": 2.473287758288074,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/horse/try1/E/run.png",
+      "image_sha256": "30a745941680fe3039a81ed48d1bddda1e8c54e4d5a3b3c29647730a909a332b",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/try1/E_run.png",
+      "source_panel_sha256": "7be7133f23066fa11334e410d1367064e615714d0edee87a55ef3c4e995251f5",
+      "source_box": [
+        553,
+        513,
+        968,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+      "raw_sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.prompt.txt",
+      "prompt_sha256": "e3abcf56106ff50b02d32736ac210a6c28b5c21ced7c5ff4a24a8c464b9b5581",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1826086956521739,
+      "upright_scale": 0.1826086956521739,
+      "normalization": {
+        "scaled_size": [
+          76,
+          93
+        ],
+        "trim_box": [
+          2,
+          18,
+          68,
+          62
+        ],
+        "placement": [
+          15,
+          29
+        ],
+        "resized_to_canvas_offset": [
+          13,
+          11
+        ],
+        "visible_pixels": 1335,
+        "rotation_degrees": 0,
+        "scale": 0.1826086956521739,
+        "discarded_pixels": 69,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1177,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 43,
+        "gradient_x": 0.6895628676470587,
+        "gradient_y": -0.1456206703910615,
+        "light_angle_degrees": 348.0755795997844,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "graze",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/horse/try1/E/graze.png",
+      "image_sha256": "ee2a4d5e9137e36b7b35053660d71fcc8b2d23684300ba957459e4c1e0d11c88",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/try1/E_graze.png",
+      "source_panel_sha256": "8b0fa896669b59747e97cb7d1b4f4a070a70f29300b09db06eeba9a32e344b07",
+      "source_box": [
+        809,
+        579,
+        1232,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+      "raw_sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.prompt.txt",
+      "prompt_sha256": "e3abcf56106ff50b02d32736ac210a6c28b5c21ced7c5ff4a24a8c464b9b5581",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1826086956521739,
+      "upright_scale": 0.1826086956521739,
+      "normalization": {
+        "scaled_size": [
+          77,
+          81
+        ],
+        "trim_box": [
+          22,
+          17,
+          68,
+          60
+        ],
+        "placement": [
+          25,
+          30
+        ],
+        "resized_to_canvas_offset": [
+          3,
+          13
+        ],
+        "visible_pixels": 1309,
+        "rotation_degrees": 0,
+        "scale": 0.1826086956521739,
+        "discarded_pixels": 45,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1151,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 41,
+        "gradient_x": -0.11199576515880665,
+        "gradient_y": 0.14945651376146832,
+        "light_angle_degrees": 126.84618443936152,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/horse/try1/E/dead.png",
+      "image_sha256": "64eca350ed904ad72c2cba8e0f7496c3dddbfd1fa46b35141ab4a490e6bcc56f",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/try1/E_dead.png",
+      "source_panel_sha256": "6580c68f08c80071152772d4033fed372a5607f712b6f0bea87d24010d186bb7",
+      "source_box": [
+        1185,
+        628,
+        1526,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+      "raw_sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.prompt.txt",
+      "prompt_sha256": "e3abcf56106ff50b02d32736ac210a6c28b5c21ced7c5ff4a24a8c464b9b5581",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.2324159021406728,
+      "upright_scale": 0.1826086956521739,
+      "normalization": {
+        "scaled_size": [
+          79,
+          92
+        ],
+        "trim_box": [
+          1,
+          34,
+          78,
+          66
+        ],
+        "placement": [
+          9,
+          25
+        ],
+        "resized_to_canvas_offset": [
+          8,
+          -9
+        ],
+        "visible_pixels": 1643,
+        "rotation_degrees": 0,
+        "scale": 0.2324159021406728,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1510,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 32,
+        "gradient_x": 0.13192433173406437,
+        "gradient_y": -0.8538136812411855,
+        "light_angle_degrees": 278.7834182427915,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 10,
+  "contact_sheet": "art/animal/batch_a1/horse/try1/contact_sheet.png",
+  "contact_sheet_sha256": "a1d2a3db5ccb2f35f5f1357bd3aeaf606fb1efca846cc6940a2d926acff3e88f",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

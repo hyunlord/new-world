@@ -1,0 +1,112 @@
+{
+  "species": "donkey",
+  "facing": "E",
+  "pose": "graze",
+  "attempt": 1,
+  "image": "art/animal/batch_a1/donkey/try1/E/graze.png",
+  "image_sha256": "4f175d43f523a2ccb06244d39e60fcf1ea38c56a9ffde5847f4937fe5949ecb5",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/donkey/panels/try1/E_graze.png",
+  "source_panel_sha256": "677ba2b0867b9e4cea9fb9ef46ea2d8cf02c6f06a6a34f5c2155a3f8543c5084",
+  "source_box": [
+    796,
+    573,
+    1252,
+    1024
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/donkey/try1.png",
+  "raw_sha256": "4e700a9ad40ba1a535ad150649f3fc633d220a46b5a9c6c16c99a526d01de5b2",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/donkey/try1.prompt.txt",
+  "prompt_sha256": "e6472a8ab7d5b69c770b3750827a09b7de1d98e1988345c29615ceb748cc3829",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.15450643776824036,
+  "upright_scale": 0.15450643776824036,
+  "normalization": {
+    "scaled_size": [
+      70,
+      70
+    ],
+    "trim_box": [
+      19,
+      15,
+      60,
+      53
+    ],
+    "placement": [
+      27,
+      35
+    ],
+    "resized_to_canvas_offset": [
+      8,
+      20
+    ],
+    "visible_pixels": 1002,
+    "rotation_degrees": 0,
+    "scale": 0.15450643776824036,
+    "discarded_pixels": 60,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "donkey",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 864,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 37,
+    "gradient_x": -1.286588639365918,
+    "gradient_y": -0.26927095179233607,
+    "light_angle_degrees": 191.82084656475143,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

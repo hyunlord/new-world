@@ -1,0 +1,1188 @@
+{
+  "spec": {
+    "species": "calf",
+    "attempt": 1,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+    "shoulder_y": 238,
+    "hoof_y": 472,
+    "shoulder_target": 24,
+    "dead_length": 43,
+    "poses": [
+      "stand",
+      "walk",
+      "run",
+      "graze",
+      "dead"
+    ],
+    "references": [
+      "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": null,
+    "landmark_note": "Manually measured S/stand withers and hoof in source coordinates."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/calf/spec.json",
+  "spec_sha256": "37d1d95d776123700ecf17aa920476dadf83100ab0796f3727953bf59e1cad37",
+  "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+  "prompt_text": "Use case: style-transfer. Transform the deer sprite sheet reference into a complete juvenile primitive CATTLE CALF sprite sheet, preserving its ink-and-tone style and exact 2-row by 5-column pose layout. References: first deer sheet = layout/animal style; person and scene = locked style only, do not reproduce background. Exactly TEN separate complete cattle, same individual in all cells. Transparent RGBA landscape, generous transparent margins/gutters, no labels/text/grid/ground/cast shadows. Top row S front three-quarter, 35 degrees toward viewer LEFT from head-on; lower row E right-facing side three-quarter. Camera ~20 degrees down, upper-left light. Calf: warm russet young calf with oversized soft head, short cream-ringed muzzle, large ears, tiny rounded horn buds, short barrel belly, delicately sturdy slightly long legs and small hooves, thin tufted tail, no udder, no accessories. Recognizably juvenile rather than scaled adult. Same stock lineage as russet primitive cattle. Match natural-history pen and restrained two-tone ochre/umber wash. Main contour twice interior ink width. Short hide: only 3 clusters of 2-3 short hatching strokes on shoulder/flank/haunch, all descending upper-left to lower-right. Broad quiet planes; no dense fur. Five columns BOTH rows: STAND four grounded hooves head up; WALK one raised bent foreleg opposite hind step; RUN extended airborne gallop with forelegs forward hindlegs back; GRAZE muzzle at hoof level neck bent low; DEAD completely limp on side horizontally eyes closed legs sideways, no blood. Clear distinct action silhouettes and identical body size across all upright cells. Keep all horns/tails/hooves connected and inside own cell. This is a 96x80 game frame family; anatomy and silhouette must survive reduction. Actual alpha transparency, no colored backdrop.\n",
+  "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": null,
+  "references": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "source_rgba_sha256": "49501ff7186a47b569d9c775daa20eeb481d85b4349ec970074a8bc032e637c8",
+    "ownership_sha256": "6d3676f7b38f479a1bd427a7fc668306c9eaaec74511c3a8d98b14ac459889f1",
+    "visible_pixels": 535010,
+    "tied_visible_pixels": 13,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.10256410256410256,
+  "landmark_note": "Manually measured S/stand withers and hoof in source coordinates.",
+  "frames": [
+    {
+      "species": "calf",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/calf/try1/S/stand.png",
+      "image_sha256": "f4b4787f73bb0a5a847cc783b0934d8226a068cab9d300f7d7318e7363867f41",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/calf/panels/try1/S_stand.png",
+      "source_panel_sha256": "f873397a9ee7736ece8fa79eeb6254b4cffbe29b8ebd56c0afdabb18ae4470b1",
+      "source_box": [
+        13,
+        17,
+        298,
+        562
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+      "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+      "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.10256410256410256,
+      "upright_scale": 0.10256410256410256,
+      "normalization": {
+        "scaled_size": [
+          29,
+          56
+        ],
+        "trim_box": [
+          0,
+          17,
+          26,
+          47
+        ],
+        "placement": [
+          35,
+          43
+        ],
+        "resized_to_canvas_offset": [
+          35,
+          26
+        ],
+        "visible_pixels": 467,
+        "rotation_degrees": 0,
+        "scale": 0.10256410256410256,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "calf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 378,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 30,
+        "gradient_x": -3.0062518032786882,
+        "gradient_y": -0.9062480938416421,
+        "light_angle_degrees": 196.7756685868703,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "calf",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/calf/try1/S/walk.png",
+      "image_sha256": "fbc5e10443ff675b26c8a1c56cde7eaddc8f75bfc75104535150eeada1005c6a",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/calf/panels/try1/S_walk.png",
+      "source_panel_sha256": "0d2805035858adb7a25cd784ff5f38090f16680bd351acff25564c7b8ac4e0f4",
+      "source_box": [
+        214,
+        10,
+        588,
+        560
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+      "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+      "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.10256410256410256,
+      "upright_scale": 0.10256410256410256,
+      "normalization": {
+        "scaled_size": [
+          38,
+          56
+        ],
+        "trim_box": [
+          7,
+          18,
+          33,
+          47
+        ],
+        "placement": [
+          35,
+          44
+        ],
+        "resized_to_canvas_offset": [
+          28,
+          26
+        ],
+        "visible_pixels": 456,
+        "rotation_degrees": 0,
+        "scale": 0.10256410256410256,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "calf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 358,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 28,
+        "gradient_x": -2.54601228668942,
+        "gradient_y": -1.7697537974683535,
+        "light_angle_degrees": 214.80347719715948,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "calf",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/calf/try1/S/run.png",
+      "image_sha256": "e4e000da7fd77ccab8bd38e7e0cc1c735ce3594161b8ab41eab82628ce9b7701",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/calf/panels/try1/S_run.png",
+      "source_panel_sha256": "122161ed78fe12a02d7ad1f2055cafc55b4c75bd114e83a2317f3a0c0e064c5b",
+      "source_box": [
+        499,
+        9,
+        912,
+        522
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+      "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+      "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.10256410256410256,
+      "upright_scale": 0.10256410256410256,
+      "normalization": {
+        "scaled_size": [
+          42,
+          53
+        ],
+        "trim_box": [
+          6,
+          18,
+          41,
+          43
+        ],
+        "placement": [
+          30,
+          48
+        ],
+        "resized_to_canvas_offset": [
+          24,
+          30
+        ],
+        "visible_pixels": 438,
+        "rotation_degrees": 0,
+        "scale": 0.10256410256410256,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "calf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 364,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 24,
+        "gradient_x": -2.3666025477707007,
+        "gradient_y": -1.4965080906148862,
+        "light_angle_degrees": 212.30698871690862,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "calf",
+      "facing": "S",
+      "pose": "graze",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/calf/try1/S/graze.png",
+      "image_sha256": "5f0d4cd18d4a92d131ef50e4b83b197f8beb2c08a8207094454077c15d319f8a",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/calf/panels/try1/S_graze.png",
+      "source_panel_sha256": "8de72c7f0ba7b67a2a828574772f9013181100ed00f2f3f2950baef8e0ff9690",
+      "source_box": [
+        861,
+        39,
+        1282,
+        562
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+      "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+      "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.10256410256410256,
+      "upright_scale": 0.10256410256410256,
+      "normalization": {
+        "scaled_size": [
+          43,
+          54
+        ],
+        "trim_box": [
+          4,
+          18,
+          30,
+          45
+        ],
+        "placement": [
+          35,
+          46
+        ],
+        "resized_to_canvas_offset": [
+          31,
+          28
+        ],
+        "visible_pixels": 446,
+        "rotation_degrees": 0,
+        "scale": 0.10256410256410256,
+        "discarded_pixels": 2,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "calf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 358,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 25,
+        "gradient_x": -1.8933374149659872,
+        "gradient_y": -1.6280222222222223,
+        "light_angle_degrees": 220.6912173826986,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "calf",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/calf/try1/S/dead.png",
+      "image_sha256": "7fa2d584e983137e2532cec5e1843ae13dfe754c6c217c0f73cac8fd285c8b35",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/calf/panels/try1/S_dead.png",
+      "source_panel_sha256": "f7e7771e145c0cddb6f7d51420ca7605e5044b25b46733cceca4ae17b8609270",
+      "source_box": [
+        1149,
+        17,
+        1522,
+        622
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+      "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+      "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.12146892655367232,
+      "upright_scale": 0.10256410256410256,
+      "normalization": {
+        "scaled_size": [
+          45,
+          73
+        ],
+        "trim_box": [
+          1,
+          37,
+          44,
+          55
+        ],
+        "placement": [
+          26,
+          39
+        ],
+        "resized_to_canvas_offset": [
+          25,
+          2
+        ],
+        "visible_pixels": 497,
+        "rotation_degrees": 0,
+        "scale": 0.12146892655367232,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "calf",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 437,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 18,
+        "gradient_x": -0.5923844282238443,
+        "gradient_y": -1.829420779220778,
+        "light_angle_degrees": 252.05753712570217,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "calf",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/calf/try1/E/stand.png",
+      "image_sha256": "56ec568e076a8ad65ff95682587cc5da4ec7f4f87d8ed2aa1300b59dfcf1e4de",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/calf/panels/try1/E_stand.png",
+      "source_panel_sha256": "8bcb2ce15589d3096f8b8778934c34babb95ec19ceae44907e798796df6d409f",
+      "source_box": [
+        0,
+        535,
+        342,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+      "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+      "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.10256410256410256,
+      "upright_scale": 0.10256410256410256,
+      "normalization": {
+        "scaled_size": [
+          35,
+          50
+        ],
+        "trim_box": [
+          1,
+          7,
+          31,
+          38
+        ],
+        "placement": [
+          33,
+          42
+        ],
+        "resized_to_canvas_offset": [
+          32,
+          35
+        ],
+        "visible_pixels": 495,
+        "rotation_degrees": 0,
+        "scale": 0.10256410256410256,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "calf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 411,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 30,
+        "gradient_x": 2.853139710144928,
+        "gradient_y": -2.270412903225807,
+        "light_angle_degrees": 321.4886480672775,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "calf",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/calf/try1/E/walk.png",
+      "image_sha256": "d01438ae3ed876d92e268c8533ae9d69771085d77e39ac65f86f4113d0f429aa",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/calf/panels/try1/E_walk.png",
+      "source_panel_sha256": "8c97b742e973e6116ee4c2aba36adb6db7805d6fbf0bc1bf4697a1ac7ddc6c7a",
+      "source_box": [
+        259,
+        521,
+        650,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+      "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+      "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.10256410256410256,
+      "upright_scale": 0.10256410256410256,
+      "normalization": {
+        "scaled_size": [
+          40,
+          52
+        ],
+        "trim_box": [
+          2,
+          8,
+          34,
+          39
+        ],
+        "placement": [
+          32,
+          42
+        ],
+        "resized_to_canvas_offset": [
+          30,
+          34
+        ],
+        "visible_pixels": 518,
+        "rotation_degrees": 0,
+        "scale": 0.10256410256410256,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "calf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 409,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 29,
+        "gradient_x": 2.5643847507331383,
+        "gradient_y": -1.5881938888888885,
+        "light_angle_degrees": 328.228929871065,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "calf",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/calf/try1/E/run.png",
+      "image_sha256": "6372e498ed23b5d52ab5f43a29458518fbc833a3b0e031a365c7b02bef165d6d",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/calf/panels/try1/E_run.png",
+      "source_panel_sha256": "b39fe53ecbce98060878fbc2d1d8370c4dd1721a2480297c344108b4118cd809",
+      "source_box": [
+        538,
+        490,
+        946,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+      "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+      "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.10256410256410256,
+      "upright_scale": 0.10256410256410256,
+      "normalization": {
+        "scaled_size": [
+          42,
+          55
+        ],
+        "trim_box": [
+          1,
+          11,
+          39,
+          37
+        ],
+        "placement": [
+          29,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          28,
+          36
+        ],
+        "visible_pixels": 455,
+        "rotation_degrees": 0,
+        "scale": 0.10256410256410256,
+        "discarded_pixels": 11,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "calf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 368,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 24,
+        "gradient_x": 0.62014427244582,
+        "gradient_y": -0.6989909677419343,
+        "light_angle_degrees": 311.5794147964384,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "calf",
+      "facing": "E",
+      "pose": "graze",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/calf/try1/E/graze.png",
+      "image_sha256": "73960f95198bf90dd743383f531a70e78377747a6db77a80eb6e45c8d0076254",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/calf/panels/try1/E_graze.png",
+      "source_panel_sha256": "b59fb339ff4fea5df949c7299229df7d53abe55a8b0a0ada77fd90e45d257185",
+      "source_box": [
+        783,
+        567,
+        1214,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+      "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+      "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.10256410256410256,
+      "upright_scale": 0.10256410256410256,
+      "normalization": {
+        "scaled_size": [
+          44,
+          47
+        ],
+        "trim_box": [
+          14,
+          8,
+          39,
+          34
+        ],
+        "placement": [
+          35,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          39
+        ],
+        "visible_pixels": 453,
+        "rotation_degrees": 0,
+        "scale": 0.10256410256410256,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "calf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 368,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 25,
+        "gradient_x": -0.8412184818481844,
+        "gradient_y": -2.0766333333333327,
+        "light_angle_degrees": 247.947739180153,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "calf",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/calf/try1/E/dead.png",
+      "image_sha256": "4b4b1ecbf57aacfe57e85731be7093540194bf15b58077cb4d3414c4f81d7272",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/calf/panels/try1/E_dead.png",
+      "source_panel_sha256": "a0d6a5ac68c0a7850853ea58eedcd38adf59937f3265d52072b9b028be4aeaf2",
+      "source_box": [
+        1165,
+        603,
+        1532,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+      "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+      "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.125,
+      "upright_scale": 0.10256410256410256,
+      "normalization": {
+        "scaled_size": [
+          46,
+          53
+        ],
+        "trim_box": [
+          1,
+          19,
+          45,
+          37
+        ],
+        "placement": [
+          26,
+          39
+        ],
+        "resized_to_canvas_offset": [
+          25,
+          20
+        ],
+        "visible_pixels": 555,
+        "rotation_degrees": 0,
+        "scale": 0.125,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "calf",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 486,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 18,
+        "gradient_x": -0.31799251101321546,
+        "gradient_y": 0.3568208333333334,
+        "light_angle_degrees": 131.70686906538236,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 10,
+  "contact_sheet": "art/animal/batch_a1/calf/try1/contact_sheet.png",
+  "contact_sheet_sha256": "693bd32693658e9668ce76ee307358074c1999e833a3c626cd0ce02a6347c986",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}
