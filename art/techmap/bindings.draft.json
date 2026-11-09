@@ -1,6 +1,28 @@
 {
   "status": "DRAFT_NOT_APPLIED",
   "ui_knowledge": {
+    "animal_taming": {
+      "asset": "tech_animal_taming",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "annealing": {
+      "asset": "tech_annealing",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "beekeeping": {
       "asset": "tech_beekeeping",
       "canvas": [
@@ -12,8 +34,96 @@
         32
       ]
     },
+    "bronze_alloy": {
+      "asset": "tech_bronze_alloy",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "bronze_weapons": {
+      "asset": "tech_bronze_weapons",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "caravan": {
+      "asset": "tech_caravan",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "cart": {
+      "asset": "tech_cart",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "cattle": {
+      "asset": "tech_cattle",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "charcoal": {
       "asset": "tech_charcoal",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "chief_hall": {
+      "asset": "tech_chief_hall",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "chieftainship": {
+      "asset": "tech_chieftainship",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "clay_digging": {
+      "asset": "tech_clay_digging",
       "canvas": [
         64,
         64
@@ -56,8 +166,129 @@
         32
       ]
     },
+    "ditch": {
+      "asset": "tech_ditch",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "drum": {
+      "asset": "tech_drum",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "faience": {
+      "asset": "tech_faience",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "flax_retting": {
+      "asset": "tech_flax_retting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "flute": {
+      "asset": "tech_flute",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "glass_beads": {
+      "asset": "tech_glass_beads",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "herding": {
+      "asset": "tech_herding",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "irrigation": {
+      "asset": "tech_irrigation",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "lime_plaster": {
       "asset": "tech_lime_plaster",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "lost_wax": {
+      "asset": "tech_lost_wax",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "marriage_alliance": {
+      "asset": "tech_marriage_alliance",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "mask": {
+      "asset": "tech_mask",
       "canvas": [
         64,
         64
@@ -100,8 +331,217 @@
         32
       ]
     },
+    "palisade": {
+      "asset": "tech_palisade",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "plough": {
+      "asset": "tech_plough",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "pot_firing": {
+      "asset": "tech_pot_firing",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "pot_forming": {
+      "asset": "tech_pot_forming",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "prospecting": {
+      "asset": "tech_prospecting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "proto_writing": {
+      "asset": "tech_proto_writing",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "reed_boat": {
+      "asset": "tech_reed_boat",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "sail": {
+      "asset": "tech_sail",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "seal_stamp": {
+      "asset": "tech_seal_stamp",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "shrine": {
+      "asset": "tech_shrine",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "solar_calendar": {
+      "asset": "tech_solar_calendar",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "spinning": {
+      "asset": "tech_spinning",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "standard_weights": {
+      "asset": "tech_standard_weights",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "stone_grinding": {
+      "asset": "tech_stone_grinding",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "stone_masonry": {
       "asset": "tech_stone_masonry",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "stone_walling": {
+      "asset": "tech_stone_walling",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "surgery": {
+      "asset": "tech_surgery",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "tattoo": {
+      "asset": "tech_tattoo",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "terrace": {
+      "asset": "tech_terrace",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "timber_wall": {
+      "asset": "tech_timber_wall",
       "canvas": [
         64,
         64
@@ -122,8 +562,41 @@
         32
       ]
     },
+    "trading_post": {
+      "asset": "tech_trading_post",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "weaving": {
+      "asset": "tech_weaving",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "wheel": {
       "asset": "tech_wheel",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "wine": {
+      "asset": "tech_wine",
       "canvas": [
         64,
         64
@@ -156,11 +629,143 @@
         132,
         44
       ]
+    },
+    "iron": {
+      "asset": "era_iron",
+      "canvas": [
+        264,
+        88
+      ],
+      "anchor": [
+        132,
+        44
+      ]
+    },
+    "neolithic": {
+      "asset": "era_neolithic",
+      "canvas": [
+        264,
+        88
+      ],
+      "anchor": [
+        132,
+        44
+      ]
+    },
+    "paleolithic": {
+      "asset": "era_paleolithic",
+      "canvas": [
+        264,
+        88
+      ],
+      "anchor": [
+        132,
+        44
+      ]
     }
   },
   "ui_chapters": {
+    "becoming_a_town": {
+      "asset": "chapter_becoming_a_town",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ]
+    },
+    "bronze_village": {
+      "asset": "chapter_bronze_village",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ]
+    },
+    "fields_and_cloth": {
+      "asset": "chapter_fields_and_cloth",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ]
+    },
     "first_copper": {
       "asset": "chapter_first_copper",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ]
+    },
+    "homes_and_stores": {
+      "asset": "chapter_homes_and_stores",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ]
+    },
+    "iron_and_roads": {
+      "asset": "chapter_iron_and_roads",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ]
+    },
+    "neolithic_village": {
+      "asset": "chapter_neolithic_village",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ]
+    },
+    "pens_and_livestock": {
+      "asset": "chapter_pens_and_livestock",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ]
+    },
+    "pottery_and_migrants": {
+      "asset": "chapter_pottery_and_migrants",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ]
+    },
+    "survive_winter": {
+      "asset": "chapter_survive_winter",
       "canvas": [
         520,
         260

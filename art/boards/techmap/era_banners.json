@@ -1,5 +1,5 @@
 {
-  "family": "chapter",
+  "family": "banner",
   "inputs": [
     {
       "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/stone_axe_try1.png",
@@ -32,15 +32,30 @@
       "role": "reference"
     },
     {
-      "path": "art/style05/techmap/chapters/first_copper.png",
-      "sha256": "a749ddcf9ee3b8845ea27a2b5f092e726aa2bafbc3a0ce8301070f9f4d6c0c04",
+      "path": "art/style05/techmap/banners/bronze.png",
+      "sha256": "4996177bf7e22a95c7b8359ce6b6da33c9ae773091534bf6bdb048d52ae9cd32",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/banners/iron.png",
+      "sha256": "32602060b3c01950b826ee30c189bd8b0c34b093d242cf014c31cbedc646b385",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/banners/neolithic.png",
+      "sha256": "8c0907b8a774957893ba26d0b0ad13efc0919be12f6bacca03e1f9f07f6711a4",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/banners/paleolithic.png",
+      "sha256": "d31d1a2c2c87b1d58d4f816b063e5fb47066cca1cbf4265ad8c886ebad2a5e65",
       "role": "candidate"
     }
   ],
   "canvas": [
-    1100,
-    802
+    1168,
+    456
   ],
-  "sheet_sha256": "a0b5392c866a64b6bbcb79d5d059da7c0ec6402c1171687f387893f33873b03a",
+  "sheet_sha256": "f96342bb5b137d31e27bf48698ab2eebe0701686c859afee3dc309c8cc8a1048",
   "note": "Review composite only; source sprites are unchanged."
 }

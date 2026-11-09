@@ -1,5 +1,5 @@
 {
-  "family": "banner",
+  "family": "chapter",
   "inputs": [
     {
       "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/stone_axe_try1.png",
@@ -32,15 +32,35 @@
       "role": "reference"
     },
     {
-      "path": "art/style05/techmap/banners/bronze.png",
-      "sha256": "4996177bf7e22a95c7b8359ce6b6da33c9ae773091534bf6bdb048d52ae9cd32",
+      "path": "art/style05/techmap/chapters/first_copper.png",
+      "sha256": "a749ddcf9ee3b8845ea27a2b5f092e726aa2bafbc3a0ce8301070f9f4d6c0c04",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/chapters/bronze_village.png",
+      "sha256": "fcdc3131b74d9edf510c77d91765e5e6e8750d51faf5c406cd1f9a765cd71419",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/chapters/iron_and_roads.png",
+      "sha256": "c65ed3578802584f83b7662e5a25e803e0d56b1acc275e61960140d553ec4109",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/chapters/becoming_a_town.png",
+      "sha256": "d6b50da4210be3739b0b3b3a0c29385f358e3c8bcbce714f27bec3ab10f1b92b",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/chapters/neolithic_village.png",
+      "sha256": "de995223d0d539327ba42aae0f74f2953b71e1c0a65bf142d5b1c9f216df43f0",
       "role": "candidate"
     }
   ],
   "canvas": [
     1100,
-    456
+    1970
   ],
-  "sheet_sha256": "5dc0c212aeb6702866f937ba3163907f41bcc47719636bed68d14ff4e2db86e6",
+  "sheet_sha256": "1e037dd47abfe96eb2eeb70d9d32662dec27768e7e8f13c77bed10bdd236808a",
   "note": "Review composite only; source sprites are unchanged."
 }

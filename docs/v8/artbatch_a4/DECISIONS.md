@@ -6,7 +6,7 @@ Issue #690's named tables plus the 82 live C1 nodes yield 167 unique knowledge I
 
 ## A4-2 — UI illustrations have center anchors
 
-The imported game has no knowledge/banner/chapter bitmap family yet. Current tech cards are 264x88, era headers width264, chapter text width520. Candidate dimensions are64x64,264x88,520x260, with center anchors and null world footprint. World standing-sprite projection bands and tile seam instruments do not establish UI validity. C2/C3 must add UI consumers and preserve anchor metadata.
+The imported game has no knowledge/banner/chapter bitmap family yet. Current tech cards are 264x88, era headers width 264, chapter text width 520. Candidate dimensions are 64x64, 264x88, 520x260, with center anchors and null world footprint. World standing-sprite projection bands and tile seam instruments do not establish UI validity. C2/C3 must add UI consumers and preserve anchor metadata.
 
 ## A4-3 — Preserve source provenance and separate adoption stages
 
@@ -14,11 +14,11 @@ Art source candidates live under `art/style05/techmap/`; raw generations and QA 
 
 ## A4-4 — Resolve era and chapter conflicts visibly
 
-The brief prohibits pre-bronze metal and dyed cloth even though `dyeing` and `mud_brick` are authored neolithic. Represent their precursor process with raw pigment/undyed fiber and clay/mould. Completed brick architecture starts in bronze illustrations. Keep legacy `neolithic_village` separate from planned chapter6 `first_copper`; bind by semantic ID pending content reconciliation.
+The brief prohibits pre-bronze metal and dyed cloth even though `dyeing` and `mud_brick` are authored neolithic. Represent their precursor process with raw pigment/undyed fiber and clay/mould. Completed brick architecture starts in bronze illustrations. Keep legacy `neolithic_village` separate from planned chapter 6 `first_copper`; bind by semantic ID pending content reconciliation.
 
 ## A4-5 — Sparse UI family checks are explicit
 
-Legacy item numeric calibration is diagnostic for the new UI family, not secretly relaxed or reported green. Run its metrics, structural alpha/size/hash checks and an independent general-vision comparison. Require visual score90 and style axes>=4. Keep per-material mark budgets and contour/detail2:1 fixed; record any mismatch/rejection. No procedural repainting to manufacture passes.
+Legacy item numeric calibration is diagnostic for the new UI family, not secretly relaxed or reported green. Run its metrics, structural alpha/size/hash checks and an independent general-vision comparison. Require visual score 90 and style axes >=4. Keep per-material mark budgets and contour/detail 2:1 fixed; record any mismatch/rejection. No procedural repainting to manufacture passes.
 
 ## A4-6 — State changes reuse canonical subjects
 

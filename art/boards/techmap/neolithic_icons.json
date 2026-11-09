@@ -1,0 +1,91 @@
+{
+  "family": "icon",
+  "inputs": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/stone_axe_try1.png",
+      "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/ground_axe_try3.png",
+      "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/berry_basket_try1.png",
+      "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/clay_try3.png",
+      "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/firewood_try3.png",
+      "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/env1/items/clay_pot_empty.png",
+      "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "role": "reference"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/animal_taming.png",
+      "sha256": "4509d205698872a0b6293a38d874f56508567b0e8cbdfed0915737e407c00336",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/clay_digging.png",
+      "sha256": "21393511293d00609ff7ff2355dc4dee6cc8e1478e96b8cdb07023b3aba06829",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/herding.png",
+      "sha256": "d65cf887440e4c7328f4d3361c5183498c2a7c2f4ec8bac7bd3e94cbb772e488",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/pot_firing.png",
+      "sha256": "98845c1ea8d412ac8108ca2cdaf9ff63ec053c0d6aa2ff22f29c4a7a9b8815be",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/pot_forming.png",
+      "sha256": "366608d441d9e26e6b7c990fc5d2b2cb544667b1e78c6cf06a8b8a483f10fd33",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/spinning.png",
+      "sha256": "ebab51e24582961f6721c01d3830fa61acaa23d81986c9cee6f8e4ea5ec6af9e",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/stone_grinding.png",
+      "sha256": "4ffc7574485a20602724fc9f84ec1d47a1720adbf59890a88b201413295ab072",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/stone_walling.png",
+      "sha256": "a560a79e6c4724a51e7ae3da1fa1f7e6e70ff062bac17c2ea0c0eb40c90e5ea6",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/timber_wall.png",
+      "sha256": "ecd4ec28b6a31cf825e6d0d9c16e832c3dc0aee082868de57bc72062bcfb60d2",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/weaving.png",
+      "sha256": "e3115b8b7ac8c20ffd9bd36634fa265b198d3d6d935d243859082b2b2b168687",
+      "role": "candidate"
+    }
+  ],
+  "canvas": [
+    1140,
+    614
+  ],
+  "sheet_sha256": "b0f048afdbb3662bede2b7505ba887da275a15bda142b32cbdc3e80b78113113",
+  "note": "Review composite only; source sprites are unchanged."
+}

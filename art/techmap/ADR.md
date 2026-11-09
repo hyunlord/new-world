@@ -6,7 +6,7 @@ The content bible names four eras and concrete knowledge nodes, while the curren
 
 ## Decision
 
-Create the new family under `art/style05/techmap/`, with the catalogue and fixed production contract under `art/techmap/`. Use64px icons,264x88 era vignettes and520x260 chapter illustrations, transparent backgrounds and center anchors. Normalize mechanically without repainting. Keep exact raw provenance outside the repository and retain prompt/check/review summaries in the manifest. Generate the167 concretely named nodes rather than inventing IDs to satisfy an approximate target. Use semantic chapter IDs to preserve the legacy chapter6 conflict. Four knowledge states reuse canonical artwork through proposed UI treatments.
+Create the new family under `art/style05/techmap/`, with the catalogue and fixed production contract under `art/techmap/`. Use 64px icons, 264x88 era vignettes and 520x260 chapter illustrations, transparent backgrounds and center anchors. Normalize mechanically without repainting. Keep exact raw provenance outside the repository and retain prompt/check/review summaries in the manifest. Generate the 167 concretely named nodes rather than inventing IDs to satisfy an approximate target. Use semantic chapter IDs to preserve the legacy chapter 6 conflict. Four knowledge states reuse canonical artwork through proposed UI treatments.
 
 Candidate selection requires structural checks and independent visual comparison. The historical item numeric judge remains unchanged and its failures remain visible as diagnostics. General vision review is explicitly named; it is not the historical image-generation-model review. Candidate selection does not assert owner approval, UI integration or runtime verification.
 
@@ -14,7 +14,7 @@ Candidate selection requires structural checks and independent visual comparison
 
 - Reuse world item anchors and height bands: rejected because centered UI icons are not objects placed at world feet.
 - Add bitmap consumers or apply imports here: rejected because the brief assigns this work to C2/C3.
-- Invent additional technology IDs to reach190: rejected because the source tables do not name them.
+- Invent additional technology IDs to reach 190: rejected because the source tables do not name them.
 - Paint separate stable/unknown/inert assets: rejected because UI states should preserve subject identity and localization.
 - Recolor or sharpen generated art in code to clear checks: rejected because it conceals weak generations and drifts from original ink.
 

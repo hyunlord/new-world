@@ -32,13 +32,53 @@
       "role": "reference"
     },
     {
+      "path": "art/style05/techmap/icons/bronze/annealing.png",
+      "sha256": "2b479b1f62de9d16f3909b50b5fea7fd0c313dd176070be7582b68e39b18fc27",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/bronze/beekeeping.png",
       "sha256": "18ef0df6b358d8a2141213a44c93cffdcac5d8ad8b1dd5c30db475f75adc1b70",
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/bronze/bronze_alloy.png",
+      "sha256": "613492edc3e252a7412184abc141da05e5185b802919bf19297eead9e50fbc90",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/bronze_weapons.png",
+      "sha256": "0a4655ad0edf7b52137f9dcb2d3fe21ab07cefad4d07507b922a7e1d5b117e99",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/caravan.png",
+      "sha256": "636b08621b0b56947725b1a42112716f63893e914281f24a6d10efd78673dde5",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/cart.png",
+      "sha256": "b9e3136d880ac690111228700c36a61fdc655d5c20584a0f372db0a8c6e3d4a7",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/cattle.png",
+      "sha256": "ad4158848cc6ca87d768c074a82cad0d453af0e32c271e2df029f8da216dde40",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/bronze/charcoal.png",
       "sha256": "2c00655432b968d50c59a5bb6479110b373d43609d22e963e28f49ae07785b35",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/chief_hall.png",
+      "sha256": "921c417865746b8d64cc3475d2fe933858b95bd290cbef33e19f4d403ffaf4e9",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/chieftainship.png",
+      "sha256": "9208191010c4c7457b47328b3e2ea942cfbdc9d851baf959593a429122578c81",
       "role": "candidate"
     },
     {
@@ -57,8 +97,58 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/bronze/ditch.png",
+      "sha256": "783127ccec5194f965cbe8e2eb9bc52a182cffada3ec72bb9bececec63e328a8",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/drum.png",
+      "sha256": "fd692769983dda27fe48f9938cd8ddff8c8f3b66465a33afdad282f5c46aca1b",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/faience.png",
+      "sha256": "fdd54001586f9c8e064c6c378db7cfa3b9b13eaa5d5a0e9e99adb2b8e15e88c6",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/flax_retting.png",
+      "sha256": "f1d091169332f0cdd796fd369e094d5fdf2388b1128a22b399a0993d92735286",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/flute.png",
+      "sha256": "8a77a574ed83ee0152c7abb083108efa2cebb41e534a8313fdbc019882ad77ee",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/glass_beads.png",
+      "sha256": "1556efa3dddd0093ab295f7519c5f376058684650fc1432661732500b81830d3",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/irrigation.png",
+      "sha256": "980470bb21380706f3c47a4d7de0f443207c908553a5796cf4cddf6403b58ee8",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/bronze/lime_plaster.png",
       "sha256": "f1bbaf472cbc15108e7385b86e0cbb02b40813a225dc18f4ed2f55006cf95d26",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/lost_wax.png",
+      "sha256": "621119eb9ed1720fefd59ff22f2895c4a3f0e732df89faef801d353fb9710100",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/marriage_alliance.png",
+      "sha256": "a5cf8d79fb96dae5e8d03f0586377ea6e9bd41ba5ef13379730ff211647514d2",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/mask.png",
+      "sha256": "8d943f8bfb2ce87cf8737844f7d7f65e530f669a902b30123fca9c27e1636d59",
       "role": "candidate"
     },
     {
@@ -77,8 +167,73 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/bronze/palisade.png",
+      "sha256": "e1b665dc41b7fe0b815560d997a89ea9ab600e8d770f5bee09dc0e913a3040ff",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/plough.png",
+      "sha256": "903eb13fe5131ad5de89ab919b782edf31e896338945007440042909f2f53c57",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/prospecting.png",
+      "sha256": "b2eda53781598fc3a541b28946c63a8553930e6ac2541dc0c88036b305551922",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/proto_writing.png",
+      "sha256": "a183a090ab52d652db05bda6a02825e59dd026d811400e228756ded08213ecf3",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/reed_boat.png",
+      "sha256": "cfcacbc579c913235c8040db19664d5196b4fed7fb7593ff5c13ca7f00cc8963",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/sail.png",
+      "sha256": "7dc6808e137dd44fe1296d66d575633dac8d6fa55dfe939f44e82cdfe4d16030",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/seal_stamp.png",
+      "sha256": "75ccb849f979a6219abe28ac4a4cd1ab53bf3f6bf99a3c4ae17d4f60bfe6a163",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/shrine.png",
+      "sha256": "eb600cb555e009e38c93adb5f8fc13818112a448dfa96c6a6916e352bf0c72ef",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/solar_calendar.png",
+      "sha256": "e8ef1de0c41debb5f9a59335ddb17fb604c891f4c69ff9c36498c70fdb1ff4b4",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/standard_weights.png",
+      "sha256": "c296e68b5cc3ed4b45900cdd7a36630e47f8c2a1c934cd5b31cddf8f7de1cfee",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/bronze/stone_masonry.png",
       "sha256": "b1fc0259f255c6a82536ec513b1bd4d4b9d363d4ce987fd10286ab35e8ad7616",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/surgery.png",
+      "sha256": "9c2be2985db4bf35bf1850bb148d56aafadd091962a6e1a40073431383b2ea48",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/tattoo.png",
+      "sha256": "d2278f40a27aff93dee2b454bae66f6db4453bbbf1a7af36f4d96ea6c88e63c9",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/terrace.png",
+      "sha256": "947639503e78c80d7e820748335b48f67a784e567225f28e9c0698893bd2dba8",
       "role": "candidate"
     },
     {
@@ -87,8 +242,18 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/bronze/trading_post.png",
+      "sha256": "39e6a06106ec441a1f425e674249bf9be169e9812d2cfc5bc565bedd6c9fcbb7",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/bronze/wheel.png",
       "sha256": "15c52278aeed61b82e8db6802ca2d9155daef66b9850fcebce1233d250132a66",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/wine.png",
+      "sha256": "155e595d7414bb4eb74fff480a70fc8c498bb93c9285c41e83fa6b116424e469",
       "role": "candidate"
     },
     {
@@ -99,8 +264,8 @@
   ],
   "canvas": [
     1140,
-    812
+    2198
   ],
-  "sheet_sha256": "b70a0b894a9ae207f57c766c4cff5782acd0cb3dd6b4e32ab067e4d574ca0ee2",
+  "sheet_sha256": "226f420fe5d6840591743d0b4c19b21239eef27256a41d8462e0728660de460c",
   "note": "Review composite only; source sprites are unchanged."
 }
