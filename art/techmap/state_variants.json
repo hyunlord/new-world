@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "status": "draft_ui_treatments_not_applied",
+  "source": "content bible issue 690 section 6",
+  "canonical_art": "one transparent icon per knowledge id",
+  "states": {
+    "stable": {"treatment": "full color", "annotation": "none"},
+    "endangered": {"treatment": "full color", "annotation": "warning outline drawn by UI"},
+    "unknown": {"treatment": "dimmed by UI", "annotation": "none"},
+    "inert": {"treatment": "grayscale by UI", "annotation": "sparse diagonal hatch drawn by UI"}
+  },
+  "localization": "No baked text; KO and EN share every image.",
+  "not_applicable": ["seasonal", "damaged", "depleted", "filled_empty", "count_buckets"],
+  "reason": "Knowledge nodes, era headers and chapter illustrations are UI concepts, not changing world inventories."
+}

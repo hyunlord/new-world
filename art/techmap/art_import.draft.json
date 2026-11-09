@@ -1,0 +1,114 @@
+{
+  "status": "DRAFT_NOT_APPLIED",
+  "source_branch": "v8/art-batch-a4",
+  "source_commit": null,
+  "pinning_instruction": "Use the final remote-verified SHA in A4/REPORT.md.",
+  "managed_dirs_to_add": [
+    "ui"
+  ],
+  "files": [
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_beekeeping",
+      "source": "art/style05/techmap/icons/bronze/beekeeping.png",
+      "dest": "ui/knowledge/beekeeping.png"
+    },
+    {
+      "role": "ui_chapter_illustration",
+      "id": "chapter_first_copper",
+      "source": "art/style05/techmap/chapters/first_copper.png",
+      "dest": "ui/chapters/first_copper.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_charcoal",
+      "source": "art/style05/techmap/icons/bronze/charcoal.png",
+      "dest": "ui/knowledge/charcoal.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_cold_hammering",
+      "source": "art/style05/techmap/icons/bronze/cold_hammering.png",
+      "dest": "ui/knowledge/cold_hammering.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_composite_bow",
+      "source": "art/style05/techmap/icons/bronze/composite_bow.png",
+      "dest": "ui/knowledge/composite_bow.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_copper_smelting",
+      "source": "art/style05/techmap/icons/bronze/copper_smelting.png",
+      "dest": "ui/knowledge/copper_smelting.png"
+    },
+    {
+      "role": "ui_era_banner",
+      "id": "era_bronze",
+      "source": "art/style05/techmap/banners/bronze.png",
+      "dest": "ui/eras/bronze.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_lime_plaster",
+      "source": "art/style05/techmap/icons/bronze/lime_plaster.png",
+      "dest": "ui/knowledge/lime_plaster.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_mining",
+      "source": "art/style05/techmap/icons/bronze/mining.png",
+      "dest": "ui/knowledge/mining.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_mould_casting",
+      "source": "art/style05/techmap/icons/bronze/mould_casting.png",
+      "dest": "ui/knowledge/mould_casting.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_mud_brick_house",
+      "source": "art/style05/techmap/icons/bronze/mud_brick_house.png",
+      "dest": "ui/knowledge/mud_brick_house.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_stone_masonry",
+      "source": "art/style05/techmap/icons/bronze/stone_masonry.png",
+      "dest": "ui/knowledge/stone_masonry.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_tin_sourcing",
+      "source": "art/style05/techmap/icons/bronze/tin_sourcing.png",
+      "dest": "ui/knowledge/tin_sourcing.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_wheel",
+      "source": "art/style05/techmap/icons/bronze/wheel.png",
+      "dest": "ui/knowledge/wheel.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_wool_spinning",
+      "source": "art/style05/techmap/icons/bronze/wool_spinning.png",
+      "dest": "ui/knowledge/wool_spinning.png"
+    }
+  ],
+  "metadata_file": {
+    "role": "ui_art_metadata",
+    "id": "a4_ui_art_metadata",
+    "source": "art/techmap/manifest.json",
+    "dest": "ui/a4_manifest.json"
+  },
+  "required_consumer_work": [
+    "Read ui_knowledge/ui_eras/ui_chapters in UI panels.",
+    "Preserve center-anchor metadata.",
+    "Resolve legacy chapter6 versus planned first_copper by semantic ID.",
+    "Implement state treatments from art/techmap/state_variants.json.",
+    "Run importer and real-game visual checks in C2/C3."
+  ]
+}

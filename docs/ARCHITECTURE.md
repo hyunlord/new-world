@@ -272,3 +272,7 @@ calls. UI text goes through `Locale.ltr("KEY")`; keys live in
 `localization/<lang>/<category>.json` (the source) and are compiled into
 `localization/compiled/<lang>.json` (what the game loads) by
 `python3 tools/localization_compile.py --project-root .`.
+
+## Art-line UI candidates (A4)
+
+`art/techmap/` contains the knowledge catalogue, fixed style/canvas contract, alpha/size/hash checks, selection manifest and unapplied import/binding drafts. `art/style05/techmap/` contains reviewed transparent icon, era and chapter candidates. These are source art with UI center anchors, not world entities. Current game UI contracts were inspected separately at the pinned commit recorded in the manifest; this art branch does not install consumers or mutate simulation state.

@@ -5,6 +5,16 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## ART-BATCH A4 — 2026-11-10 (in progress)
+
+### Added
+- Knowledge-map illustration family: fixed ink-and-tone contract, concrete 167-node catalogue, transparent centered UI canvases, per-attempt provenance, independent visual review and explicit import/binding drafts (`art/techmap/`).
+- First reviewed bronze batch: 13 node icons, one era header and the first-copper chapter illustration (`art/style05/techmap/`). Coverage is recorded in `art/techmap/coverage.json`; production continues on `v8/art-batch-a4`.
+- Thin alpha/size/hash normalization checks and comparison sheets beside adopted art. Raw generations, rejects and review evidence remain outside the repository in `/Users/rexxa/work/art-batch/A4/`.
+
+### Changed
+- Documented UI-specific center anchors, the legacy chapter-6 mapping conflict and C2/C3 consumer work. Draft import rows are not applied to the game.
+
 ## M1-ART — 2026-10-21
 
 The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).

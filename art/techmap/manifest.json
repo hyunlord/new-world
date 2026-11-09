@@ -1,0 +1,3662 @@
+{
+  "schema_version": 1,
+  "branch": "v8/art-batch-a4",
+  "source_base_sha": "f182769fe06b1cb60105e4d0bf127b6524277838",
+  "source_ui_sha": "4a44336e7782f2b27615d942b5cd54dbfee89406",
+  "contract": "art/techmap/STYLE.md",
+  "review_mechanism": "independent general vision; not historical image-generation-model judge",
+  "assets": [
+    {
+      "id": "tech_beekeeping",
+      "logical_id": "beekeeping",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/beekeeping.png",
+      "sha256": "18ef0df6b358d8a2141213a44c93cffdcac5d8ad8b1dd5c30db475f75adc1b70",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "beekeeping",
+        "era": "bronze",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nNode: beekeeping. Era: bronze. Subject: A rounded coiled-straw beehive skep with one dark entrance hole and a single enlarged bee hovering beside it, tiny muted honey-yellow wax comb in foreground. No modern box hive or protective equipment. No iron or steel.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-3ea46a5f-7605-4c08-9985-c4febc37f92f.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/beekeeping-01.png",
+        "raw_sha256": "57b7aa752096d92101e07f0fe7f6958fdce169e1fc7251d70dd66582286284a6",
+        "reference_paths": [
+          "art/style05/anchors/props.png",
+          "art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:06:58.184Z",
+        "status": "generated_pending_review"
+      },
+      "attempts": [
+        {
+          "id": "beekeeping",
+          "era": "bronze",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nNode: beekeeping. Era: bronze. Subject: A rounded coiled-straw beehive skep with one dark entrance hole and a single enlarged bee hovering beside it, tiny muted honey-yellow wax comb in foreground. No modern box hive or protective equipment. No iron or steel.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-3ea46a5f-7605-4c08-9985-c4febc37f92f.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/beekeeping-01.png",
+          "raw_sha256": "57b7aa752096d92101e07f0fe7f6958fdce169e1fc7251d70dd66582286284a6",
+          "reference_paths": [
+            "art/style05/anchors/props.png",
+            "art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:06:58.184Z",
+          "status": "generated_pending_review"
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/beekeeping-01.png",
+          "sha256": "57b7aa752096d92101e07f0fe7f6958fdce169e1fc7251d70dd66582286284a6",
+          "canvas": [
+            1254,
+            1254
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            10,
+            1226,
+            1254
+          ],
+          "bbox16": [
+            127,
+            221,
+            1169,
+            1136
+          ],
+          "bbox128": [
+            128,
+            222,
+            1169,
+            1135
+          ],
+          "opaque_pixels": 528898,
+          "occupancy": 0.33633870815940825,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "57b7aa752096d92101e07f0fe7f6958fdce169e1fc7251d70dd66582286284a6",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/beekeeping-01.png",
+          "sha256": "18ef0df6b358d8a2141213a44c93cffdcac5d8ad8b1dd5c30db475f75adc1b70",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            6,
+            61,
+            57
+          ],
+          "bbox16": [
+            3,
+            6,
+            61,
+            57
+          ],
+          "bbox128": [
+            3,
+            6,
+            61,
+            57
+          ],
+          "opaque_pixels": 1626,
+          "occupancy": 0.39697265625,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          126,
+          220,
+          1171,
+          1137
+        ],
+        "scale": 0.05550239234449761,
+        "resized": [
+          58,
+          51
+        ],
+        "offset": [
+          3,
+          6
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 3202,
+        "discarded_alpha_max": 5,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/beekeeping-01.png",
+        "sha256": "57b7aa752096d92101e07f0fe7f6958fdce169e1fc7251d70dd66582286284a6",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.26353319272873355,
+          "saturation_q25": 0.5691392326262703,
+          "saturation_q75": 0.6707558204010287,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.019071786457043556,
+          "foreground_pixels": 32053
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "beekeeping",
+        "attempt": 1,
+        "raw_sha256": "57b7aa752096d92101e07f0fe7f6958fdce169e1fc7251d70dd66582286284a6",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/beekeeping-01.png",
+        "visual_verdict": {
+          "score": 95,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [],
+          "suggestions": [],
+          "reasoning": "The hive silhouette and oversized bee survive all three sizes, with controlled straw texture and a clear light-to-shadow hierarchy."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 5,
+          "palette": 4
+        },
+        "semantic_reading": "Coiled straw skep with bee and honeycomb",
+        "semantic_distinction": "Bee and comb identify managed beekeeping rather than a plain storage basket.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Straw skep and wax/honey, no modern box hive or protective gear."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "chapter_first_copper",
+      "logical_id": "first_copper",
+      "family": "chapter",
+      "era": "bronze",
+      "path": "art/style05/techmap/chapters/first_copper.png",
+      "sha256": "a749ddcf9ee3b8845ea27a2b5f092e726aa2bafbc3a0ce8301070f9f4d6c0c04",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "chapter_first_copper",
+        "era": "bronze",
+        "family": "chapter",
+        "subject": "Chapter 6 First Copper, 2:1 wide illustration intended for 520x260. Show the first successful copper smelting: left green copper-bearing stone and a small charcoal heap; center squat clay furnace with small amber fire in its open mouth; right an adult artisan in plain undyed linen crouches proudly beside a simple open clay ingot mould containing a fresh copper-red ingot on stone. Clearly a continuous causal arrangement from ore to fire to ingot, not a diagram with arrows. No iron tools, no steel, no modern machinery. No text.",
+        "attempt": 1,
+        "prompt": "WorldSim production illustration in the exact ink-and-tone language of the visible props, village scene and hut references: fine controlled brown-black ink, restrained earthy watercolor wash, strong silhouette contour twice interior line weight, broad base and shadow tone. Upper-left daylight; subtle shadows lower-right. Standing objects front three-quarter about 20 degrees down, ground from above. Selective details per material patch: three broken longitudinal wood strokes, three stone/clay cracks or facets, three reed/fiber strands, three hide/fur tufts; metals two rim highlights, no chrome. At most one three-stroke 45-degree hatch cluster per object. Sepia, ochre, bone, slate, muted sage; amber fire, warm terracotta copper, subdued golden brown bronze, charcoal iron. A carefully composed broad horizontal transparent cut-out vignette, no opaque rectangular backing, no frame, no labels or lettering, no watermark, no perspective horizon, no isometric grid, no photorealism, no 3D render, no pixel art, no flat vector clipart. No roofs on village buildings: show roofless cutaway wall rings where buildings occur. Entire artwork including figures and props comfortably inside canvas with transparent margins.  Leave a completely transparent border at least 10 percent of image width/height on ALL FOUR EDGES; the ground wash itself must taper before this border. Chapter 6 First Copper, 2:1 wide illustration intended for 520x260. Show the first successful copper smelting: left green copper-bearing stone and a small charcoal heap; center squat clay furnace with small amber fire in its open mouth; right an adult artisan in plain undyed linen crouches proudly beside a simple open clay ingot mould containing a fresh copper-red ingot on stone. Clearly a continuous causal arrangement from ore to fire to ingot, not a diagram with arrows. No iron tools, no steel, no modern machinery. No text.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-aefe-7c51-91db-c61c935b7524/exec-146599a6-5890-460b-ac03-a63d07a679cd.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/chapter_first_copper-01.png",
+        "raw_sha256": "32c938e30753154b516f81ebd9e9e8594d7cb3ab6b2757238f4e2a44e77a1f11",
+        "reference_paths": [
+          "art/style05/anchors/props.png",
+          "art/style05/anchors/scene.png",
+          "art/style05/anchors/hut.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:06:03.125Z",
+        "status": "generated_pending_review"
+      },
+      "attempts": [
+        {
+          "id": "chapter_first_copper",
+          "era": "bronze",
+          "family": "chapter",
+          "subject": "Chapter 6 First Copper, 2:1 wide illustration intended for 520x260. Show the first successful copper smelting: left green copper-bearing stone and a small charcoal heap; center squat clay furnace with small amber fire in its open mouth; right an adult artisan in plain undyed linen crouches proudly beside a simple open clay ingot mould containing a fresh copper-red ingot on stone. Clearly a continuous causal arrangement from ore to fire to ingot, not a diagram with arrows. No iron tools, no steel, no modern machinery. No text.",
+          "attempt": 1,
+          "prompt": "WorldSim production illustration in the exact ink-and-tone language of the visible props, village scene and hut references: fine controlled brown-black ink, restrained earthy watercolor wash, strong silhouette contour twice interior line weight, broad base and shadow tone. Upper-left daylight; subtle shadows lower-right. Standing objects front three-quarter about 20 degrees down, ground from above. Selective details per material patch: three broken longitudinal wood strokes, three stone/clay cracks or facets, three reed/fiber strands, three hide/fur tufts; metals two rim highlights, no chrome. At most one three-stroke 45-degree hatch cluster per object. Sepia, ochre, bone, slate, muted sage; amber fire, warm terracotta copper, subdued golden brown bronze, charcoal iron. A carefully composed broad horizontal transparent cut-out vignette, no opaque rectangular backing, no frame, no labels or lettering, no watermark, no perspective horizon, no isometric grid, no photorealism, no 3D render, no pixel art, no flat vector clipart. No roofs on village buildings: show roofless cutaway wall rings where buildings occur. Entire artwork including figures and props comfortably inside canvas with transparent margins.  Leave a completely transparent border at least 10 percent of image width/height on ALL FOUR EDGES; the ground wash itself must taper before this border. Chapter 6 First Copper, 2:1 wide illustration intended for 520x260. Show the first successful copper smelting: left green copper-bearing stone and a small charcoal heap; center squat clay furnace with small amber fire in its open mouth; right an adult artisan in plain undyed linen crouches proudly beside a simple open clay ingot mould containing a fresh copper-red ingot on stone. Clearly a continuous causal arrangement from ore to fire to ingot, not a diagram with arrows. No iron tools, no steel, no modern machinery. No text.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-aefe-7c51-91db-c61c935b7524/exec-146599a6-5890-460b-ac03-a63d07a679cd.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/chapter_first_copper-01.png",
+          "raw_sha256": "32c938e30753154b516f81ebd9e9e8594d7cb3ab6b2757238f4e2a44e77a1f11",
+          "reference_paths": [
+            "art/style05/anchors/props.png",
+            "art/style05/anchors/scene.png",
+            "art/style05/anchors/hut.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:06:03.125Z",
+          "status": "generated_pending_review"
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/chapter_first_copper-01.png",
+          "sha256": "32c938e30753154b516f81ebd9e9e8594d7cb3ab6b2757238f4e2a44e77a1f11",
+          "canvas": [
+            1774,
+            887
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            0,
+            1774,
+            887
+          ],
+          "bbox16": [
+            16,
+            94,
+            1766,
+            804
+          ],
+          "bbox128": [
+            18,
+            95,
+            1764,
+            803
+          ],
+          "opaque_pixels": 973543,
+          "occupancy": 0.6186968474863651,
+          "border_alpha_max": 3,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "32c938e30753154b516f81ebd9e9e8594d7cb3ab6b2757238f4e2a44e77a1f11",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/chapters/chapter_first_copper-01.png",
+          "sha256": "a749ddcf9ee3b8845ea27a2b5f092e726aa2bafbc3a0ce8301070f9f4d6c0c04",
+          "canvas": [
+            520,
+            260
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            2,
+            25,
+            518,
+            235
+          ],
+          "bbox16": [
+            2,
+            25,
+            518,
+            235
+          ],
+          "bbox128": [
+            2,
+            26,
+            517,
+            235
+          ],
+          "opaque_pixels": 84642,
+          "occupancy": 0.6260502958579882,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            520,
+            260
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          16,
+          93,
+          1766,
+          805
+        ],
+        "scale": 0.2948571428571429,
+        "resized": [
+          516,
+          210
+        ],
+        "offset": [
+          2,
+          25
+        ],
+        "anchor": [
+          260,
+          130
+        ],
+        "discarded_alpha_pixels": 16970,
+        "discarded_alpha_max": 5,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/chapter_first_copper-01.png",
+        "sha256": "32c938e30753154b516f81ebd9e9e8594d7cb3ab6b2757238f4e2a44e77a1f11",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.2603397531884133,
+          "saturation_q25": 0.42566716030238566,
+          "saturation_q75": 0.5419316065400359,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.009588413559734409,
+          "foreground_pixels": 20961
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_narrative.json",
+      "review": {
+        "id": "chapter_first_copper",
+        "attempt": 1,
+        "raw_sha256": "32c938e30753154b516f81ebd9e9e8594d7cb3ab6b2757238f4e2a44e77a1f11",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/chapters/chapter_first_copper-01.png",
+        "visual_verdict": {
+          "score": 93,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [
+            "Clay and bare ground are somewhat warmer and more uniform than the locked camp scene, while green copper ore, charcoal and bright copper output preserve material separation.",
+            "The illustration simplifies the reference scene's surface noise and uses a more prominent human face, appropriate to a chapter card rather than a world-map tile."
+          ],
+          "suggestions": [
+            "Retain this complete kneeling figure and clear ore-to-furnace-to-ingot reading as the composition reference for other chapter scenes.",
+            "Keep future bronze scenes equally restrained in background marks so the new material remains the focal point."
+          ],
+          "reasoning": "The ore, charcoal, furnace and copper ingot form a clear causal story at 520x260, with a complete, legible human figure. Brown ink, controlled wash, upper-left lighting and roofless construction remain coherent with the existing art."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 5,
+          "palette": 4
+        },
+        "semantic": "pass: first copper production is clear; furnace/fire and reddish ingot distinguish this from generic pottery",
+        "era": "pass: clay, copper, charcoal, hide and undyed clothing; no iron or modern machinery",
+        "projection": "pass for chapter illustration: front-three-quarter standing forms, visible upper surfaces, roofless wall rings, no horizon",
+        "legibility": "pass at native 520x260 on light and dark contact-sheet backgrounds; copper ingot, ore, charcoal and furnace remain distinct",
+        "mark_budget_review": "Selective cracks, material strokes and quiet broad washes fit the family target; exact integer mark counts are not asserted as measured results."
+      }
+    },
+    {
+      "id": "tech_charcoal",
+      "logical_id": "charcoal",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/charcoal.png",
+      "sha256": "2c00655432b968d50c59a5bb6479110b373d43609d22e963e28f49ae07785b35",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 2,
+      "generation": {
+        "id": "charcoal",
+        "era": "bronze",
+        "attempt": 2,
+        "subject": "ONLY ONE low earthen charcoal clamp dome, small open front reveals three black charred logs, one thin smoke curl. The mound alone. NO diagrams anywhere, NO process, NO arrows, NO duplicated mound or wood pile.",
+        "family": "icon",
+        "prompt": "Use case: stylized-concept. One WorldSim production knowledge-node icon. Fine controlled brown-black ink over restrained earthy watercolor wash, natural-history field guide matching the two visible WorldSim props and scene originals. Outer contour twice interior line weight; clear broad base and shadow tone. Upper-left daylight, lower-right shadows. Standing objects front three-quarter about 20 degrees down; flat diagrams above. Single compact silhouette or at most three meaningful objects, no horizon, no ground slab. Center subject within 78% of square canvas with transparent margins. Genuine transparent background. Strong legibility at 64,48,32px. Fixed selective detail budget per main material patch: wood three broken longitudinal strokes; stone/clay three cracks/facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlight strokes, no chrome. At most one shadow cluster of three short parallel 45-degree strokes per object. Sepia ink, ochre, bone, slate, muted sage; amber fire, copper terracotta, bronze subdued golden brown, iron charcoal gray. No text, labels, numerals, frame, badge, UI, watermark, photorealism, 3D, pixel art, flat vector art, dense stippling or modern items. CRITICAL COMPOSITION: Render ONLY the requested single compact icon, once. No inset, no diagrams, no alternate views, no process steps, no arrows, no duplicated objects along the top. All blank space stays completely transparent. Era: bronze. Subject: ONLY ONE low earthen charcoal clamp dome, small open front reveals three black charred logs, one thin smoke curl. The mound alone. NO diagrams anywhere, NO process, NO arrows, NO duplicated mound or wood pile.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-5253-7c42-b826-58fc97713969/exec-3fb70b77-8aba-4d64-8e8d-76c5928bc8cc.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/charcoal-02.png",
+        "raw_sha256": "74668fd6ca5e881b303cf238d41cb32f05be3b2a16d13c49008252eed47fb965",
+        "reference_paths": [
+          "/Users/rexxa/work/art-batch-a4/art/style05/anchors/props.png",
+          "/Users/rexxa/work/art-batch-a4/art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:08:16.065Z",
+        "status": "generated_pending_review",
+        "self_review": {
+          "verdict": "candidate_pass",
+          "subject": true,
+          "era_honesty": true,
+          "no_extra_insets": true,
+          "notes": "Clear subject, restrained earth wash, upper-left light, transparent surroundings; fresh family and small-scale review pending."
+        }
+      },
+      "attempts": [
+        {
+          "id": "charcoal",
+          "era": "bronze",
+          "subject": "Charcoal making: a compact low earthen charcoal clamp dome with a small opening revealing three black charred logs, one thin smoke curl. Recognizable carbonized split wood; no metal, no kiln chimney, no fire explosion.",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. One WorldSim production knowledge-node icon. Fine controlled brown-black ink over restrained earthy watercolor wash, natural-history field guide matching the two visible WorldSim props and scene originals. Outer contour twice interior line weight; clear broad base and shadow tone. Upper-left daylight, lower-right shadows. Standing objects front three-quarter about 20 degrees down; flat diagrams above. Single compact silhouette or at most three meaningful objects, no horizon, no ground slab. Center subject within 78% of square canvas with transparent margins. Genuine transparent background. Strong legibility at 64,48,32px. Fixed selective detail budget per main material patch: wood three broken longitudinal strokes; stone/clay three cracks/facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlight strokes, no chrome. At most one shadow cluster of three short parallel 45-degree strokes per object. Sepia ink, ochre, bone, slate, muted sage; amber fire, copper terracotta, bronze subdued golden brown, iron charcoal gray. No text, labels, numerals, frame, badge, UI, watermark, photorealism, 3D, pixel art, flat vector art, dense stippling or modern items. Era: bronze. Subject: Charcoal making: a compact low earthen charcoal clamp dome with a small opening revealing three black charred logs, one thin smoke curl. Recognizable carbonized split wood; no metal, no kiln chimney, no fire explosion.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-5253-7c42-b826-58fc97713969/exec-3a8d9889-4cb2-49c7-a477-f093ad48819d.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/charcoal-01.png",
+          "raw_sha256": "3dd1232802dac37a069199931efe4e4b9caec3112158345d994d3706f2fa833e",
+          "reference_paths": [
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/props.png",
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:05:50.461Z",
+          "status": "rejected",
+          "rejection_reason": "Unrequested inset diagrams break single-icon composition"
+        },
+        {
+          "id": "charcoal",
+          "era": "bronze",
+          "attempt": 2,
+          "subject": "ONLY ONE low earthen charcoal clamp dome, small open front reveals three black charred logs, one thin smoke curl. The mound alone. NO diagrams anywhere, NO process, NO arrows, NO duplicated mound or wood pile.",
+          "family": "icon",
+          "prompt": "Use case: stylized-concept. One WorldSim production knowledge-node icon. Fine controlled brown-black ink over restrained earthy watercolor wash, natural-history field guide matching the two visible WorldSim props and scene originals. Outer contour twice interior line weight; clear broad base and shadow tone. Upper-left daylight, lower-right shadows. Standing objects front three-quarter about 20 degrees down; flat diagrams above. Single compact silhouette or at most three meaningful objects, no horizon, no ground slab. Center subject within 78% of square canvas with transparent margins. Genuine transparent background. Strong legibility at 64,48,32px. Fixed selective detail budget per main material patch: wood three broken longitudinal strokes; stone/clay three cracks/facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlight strokes, no chrome. At most one shadow cluster of three short parallel 45-degree strokes per object. Sepia ink, ochre, bone, slate, muted sage; amber fire, copper terracotta, bronze subdued golden brown, iron charcoal gray. No text, labels, numerals, frame, badge, UI, watermark, photorealism, 3D, pixel art, flat vector art, dense stippling or modern items. CRITICAL COMPOSITION: Render ONLY the requested single compact icon, once. No inset, no diagrams, no alternate views, no process steps, no arrows, no duplicated objects along the top. All blank space stays completely transparent. Era: bronze. Subject: ONLY ONE low earthen charcoal clamp dome, small open front reveals three black charred logs, one thin smoke curl. The mound alone. NO diagrams anywhere, NO process, NO arrows, NO duplicated mound or wood pile.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-5253-7c42-b826-58fc97713969/exec-3fb70b77-8aba-4d64-8e8d-76c5928bc8cc.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/charcoal-02.png",
+          "raw_sha256": "74668fd6ca5e881b303cf238d41cb32f05be3b2a16d13c49008252eed47fb965",
+          "reference_paths": [
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/props.png",
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:08:16.065Z",
+          "status": "generated_pending_review",
+          "self_review": {
+            "verdict": "candidate_pass",
+            "subject": true,
+            "era_honesty": true,
+            "no_extra_insets": true,
+            "notes": "Clear subject, restrained earth wash, upper-left light, transparent surroundings; fresh family and small-scale review pending."
+          }
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/charcoal-02.png",
+          "sha256": "74668fd6ca5e881b303cf238d41cb32f05be3b2a16d13c49008252eed47fb965",
+          "canvas": [
+            1312,
+            1199
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            15,
+            1308,
+            1199
+          ],
+          "bbox16": [
+            85,
+            32,
+            1216,
+            1147
+          ],
+          "bbox128": [
+            86,
+            59,
+            1215,
+            1146
+          ],
+          "opaque_pixels": 629195,
+          "occupancy": 0.39997444516772107,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "74668fd6ca5e881b303cf238d41cb32f05be3b2a16d13c49008252eed47fb965",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/charcoal-02.png",
+          "sha256": "2c00655432b968d50c59a5bb6479110b373d43609d22e963e28f49ae07785b35",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            4,
+            61,
+            60
+          ],
+          "bbox16": [
+            3,
+            4,
+            61,
+            60
+          ],
+          "bbox128": [
+            3,
+            5,
+            61,
+            60
+          ],
+          "opaque_pixels": 1643,
+          "occupancy": 0.401123046875,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          84,
+          57,
+          1217,
+          1148
+        ],
+        "scale": 0.05119152691968226,
+        "resized": [
+          58,
+          56
+        ],
+        "offset": [
+          3,
+          4
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 2336,
+        "discarded_alpha_max": 123,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/charcoal-02.png",
+        "sha256": "74668fd6ca5e881b303cf238d41cb32f05be3b2a16d13c49008252eed47fb965",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.2133324589303866,
+          "saturation_q25": 0.6247397680629173,
+          "saturation_q75": 0.7112524574589868,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.007523076418065785,
+          "foreground_pixels": 32294
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "charcoal",
+        "attempt": 2,
+        "raw_sha256": "74668fd6ca5e881b303cf238d41cb32f05be3b2a16d13c49008252eed47fb965",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/charcoal-02.png",
+        "visual_verdict": {
+          "score": 92,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [
+            "At32px the smoke curl is delicate, but the dark log-filled mouth remains visible."
+          ],
+          "suggestions": [
+            "Retain the low mound and black wood cue in subsequent charcoal-related artwork; do not add a flame that would blur it with smelting."
+          ],
+          "reasoning": "The retry is a single compact icon without diagrams. Its low earthen silhouette and exposed charred wood communicate the production method while matching the copper furnace's material language."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic_reading": "Low earthen clamp with charred logs and a smoke curl",
+        "semantic_distinction": "Low mound, black log ends and smoke distinguish charcoal production from the taller lit copper furnace with receiving mould.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Earth, raw wood/reed cover and charred logs; no metal machinery."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "tech_cold_hammering",
+      "logical_id": "cold_hammering",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/cold_hammering.png",
+      "sha256": "7d18ea318c3d3f35b81c3b5d44b87f41ac91aaaec71974e8f7a60a978e9c5e16",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "cold_hammering",
+        "era": "bronze",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: stylized-concept. Asset: one WorldSim knowledge-node UI icon. Match the visible WorldSim props and scene reference originals: controlled fine brown-black ink over restrained earth watercolor wash, observed natural-history field-guide language. Outer contour twice interior line weight; broad base tone and a clear shadow tone. Upper-left daylight; lower-right shadow. Standing objects front three-quarter, about 20 degrees down, no horizon or ground slab. One compact motif, no more than three meaningful objects, centered within 78% of square canvas and uncropped with transparent margins. Readable at 64, 48 and 32 px. Selective material marks only: wood three broken longitudinal strokes; stone/clay three cracks or facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short parallel 45-degree shadow hatches per object. Sepia, ochre, bone, slate, muted sage palette; copper warm terracotta, bronze subdued golden brown, iron charcoal gray; amber fire only. Genuine transparent background. No text, labels, numbers, frame, badge, UI, watermark, modern shapes, photograph, 3D render, pixel art, flat vector clipart, dense stippling, or all-over hatching.\nSubject: Bronze Age cold hammering: one rounded stone hammer poised beside a short reddish copper awl lying on a flat stone anvil; a few flattened facets on copper convey hammer working. No fire, no modern steel hammer, no iron.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seeds",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-758a-7ce3-895e-d8676081571d/exec-0a1ac84f-d1ff-43fc-a7e4-5c8aafe37d82.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/cold_hammering-01.png",
+        "raw_sha256": "c82e51b7aeab7cd5907cdcd699d5d22248faff15c7c2f8c9438c16bb27ae7a07",
+        "reference_paths": [
+          "art/style05/anchors/props.png",
+          "art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:05:33.538Z",
+        "status": "generated_pending_review"
+      },
+      "attempts": [
+        {
+          "id": "cold_hammering",
+          "era": "bronze",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. Asset: one WorldSim knowledge-node UI icon. Match the visible WorldSim props and scene reference originals: controlled fine brown-black ink over restrained earth watercolor wash, observed natural-history field-guide language. Outer contour twice interior line weight; broad base tone and a clear shadow tone. Upper-left daylight; lower-right shadow. Standing objects front three-quarter, about 20 degrees down, no horizon or ground slab. One compact motif, no more than three meaningful objects, centered within 78% of square canvas and uncropped with transparent margins. Readable at 64, 48 and 32 px. Selective material marks only: wood three broken longitudinal strokes; stone/clay three cracks or facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short parallel 45-degree shadow hatches per object. Sepia, ochre, bone, slate, muted sage palette; copper warm terracotta, bronze subdued golden brown, iron charcoal gray; amber fire only. Genuine transparent background. No text, labels, numbers, frame, badge, UI, watermark, modern shapes, photograph, 3D render, pixel art, flat vector clipart, dense stippling, or all-over hatching.\nSubject: Bronze Age cold hammering: one rounded stone hammer poised beside a short reddish copper awl lying on a flat stone anvil; a few flattened facets on copper convey hammer working. No fire, no modern steel hammer, no iron.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seeds",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-758a-7ce3-895e-d8676081571d/exec-0a1ac84f-d1ff-43fc-a7e4-5c8aafe37d82.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/cold_hammering-01.png",
+          "raw_sha256": "c82e51b7aeab7cd5907cdcd699d5d22248faff15c7c2f8c9438c16bb27ae7a07",
+          "reference_paths": [
+            "art/style05/anchors/props.png",
+            "art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:05:33.538Z",
+          "status": "generated_pending_review"
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/cold_hammering-01.png",
+          "sha256": "c82e51b7aeab7cd5907cdcd699d5d22248faff15c7c2f8c9438c16bb27ae7a07",
+          "canvas": [
+            1254,
+            1254
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            15,
+            1253,
+            1254
+          ],
+          "bbox16": [
+            86,
+            140,
+            1147,
+            1140
+          ],
+          "bbox128": [
+            86,
+            141,
+            1146,
+            1139
+          ],
+          "opaque_pixels": 686840,
+          "occupancy": 0.4367777497971404,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "c82e51b7aeab7cd5907cdcd699d5d22248faff15c7c2f8c9438c16bb27ae7a07",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/cold_hammering-01.png",
+          "sha256": "7d18ea318c3d3f35b81c3b5d44b87f41ac91aaaec71974e8f7a60a978e9c5e16",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            4,
+            61,
+            59
+          ],
+          "bbox16": [
+            3,
+            4,
+            61,
+            59
+          ],
+          "bbox128": [
+            3,
+            4,
+            61,
+            59
+          ],
+          "opaque_pixels": 2058,
+          "occupancy": 0.50244140625,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          84,
+          139,
+          1148,
+          1141
+        ],
+        "scale": 0.05451127819548872,
+        "resized": [
+          58,
+          55
+        ],
+        "offset": [
+          3,
+          4
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 8863,
+        "discarded_alpha_max": 5,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/cold_hammering-01.png",
+        "sha256": "c82e51b7aeab7cd5907cdcd699d5d22248faff15c7c2f8c9438c16bb27ae7a07",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.17812778447507732,
+          "saturation_q25": 0.38185133575092833,
+          "saturation_q75": 0.5683670310576354,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.017596710929592647,
+          "foreground_pixels": 40060
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "cold_hammering",
+        "attempt": 1,
+        "raw_sha256": "c82e51b7aeab7cd5907cdcd699d5d22248faff15c7c2f8c9438c16bb27ae7a07",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/cold_hammering-01.png",
+        "visual_verdict": {
+          "score": 91,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [
+            "At32px the awl reduces to a copper strip, so the precise output type depends on the node label."
+          ],
+          "suggestions": [
+            "Keep this no-fire motif distinct from the future hot-forging icon."
+          ],
+          "reasoning": "Hammer, stone support and copper workpiece remain separate at target sizes, and their muted wash closely matches the adopted stone tool reference."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic_reading": "Stone hammer above a reddish copper awl on a stone anvil",
+        "semantic_distinction": "No fire or furnace; direct hammer-plus-copper workpiece separates cold working from smelting/casting.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Stone hammer, wood handle and copper workpiece; no iron hammer or modern anvil."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "tech_composite_bow",
+      "logical_id": "composite_bow",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/composite_bow.png",
+      "sha256": "e49176268c6e0c58c57354792962a6b515b4fe1ad116448b0e736a56b6183381",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "composite_bow",
+        "era": "bronze",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nOne compact object group only; no inset diagrams, explanatory panels, magical glow, or decorative sparkle.\nNode: composite_bow. Era: bronze. Subject: A short strongly recurved composite bow with visible cream horn backing, dark wood core and sinew bindings; one unstrung spare horn strip beside it to communicate layered construction. Clear curved silhouette, no modern archery fittings. No iron or steel.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-92926f8e-aa4e-4014-9905-8c1e6d4b6e5d.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/composite_bow-01.png",
+        "raw_sha256": "e73767afd95c5745021eb4db6b1dee48a356c3116b312b8dc624e5989230dac8",
+        "reference_paths": [
+          "art/style05/anchors/props.png",
+          "art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:08:53.080Z",
+        "status": "generated_pending_review"
+      },
+      "attempts": [
+        {
+          "id": "composite_bow",
+          "era": "bronze",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nOne compact object group only; no inset diagrams, explanatory panels, magical glow, or decorative sparkle.\nNode: composite_bow. Era: bronze. Subject: A short strongly recurved composite bow with visible cream horn backing, dark wood core and sinew bindings; one unstrung spare horn strip beside it to communicate layered construction. Clear curved silhouette, no modern archery fittings. No iron or steel.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-92926f8e-aa4e-4014-9905-8c1e6d4b6e5d.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/composite_bow-01.png",
+          "raw_sha256": "e73767afd95c5745021eb4db6b1dee48a356c3116b312b8dc624e5989230dac8",
+          "reference_paths": [
+            "art/style05/anchors/props.png",
+            "art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:08:53.080Z",
+          "status": "generated_pending_review"
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/composite_bow-01.png",
+          "sha256": "e73767afd95c5745021eb4db6b1dee48a356c3116b312b8dc624e5989230dac8",
+          "canvas": [
+            1254,
+            1254
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            23,
+            19,
+            1244,
+            1254
+          ],
+          "bbox16": [
+            135,
+            152,
+            1096,
+            1129
+          ],
+          "bbox128": [
+            136,
+            153,
+            1095,
+            1128
+          ],
+          "opaque_pixels": 218633,
+          "occupancy": 0.13903387946450146,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "e73767afd95c5745021eb4db6b1dee48a356c3116b312b8dc624e5989230dac8",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/composite_bow-01.png",
+          "sha256": "e49176268c6e0c58c57354792962a6b515b4fe1ad116448b0e736a56b6183381",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            3,
+            60,
+            61
+          ],
+          "bbox16": [
+            3,
+            3,
+            60,
+            61
+          ],
+          "bbox128": [
+            3,
+            3,
+            60,
+            61
+          ],
+          "opaque_pixels": 776,
+          "occupancy": 0.189453125,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          134,
+          151,
+          1097,
+          1130
+        ],
+        "scale": 0.059244126659857,
+        "resized": [
+          57,
+          58
+        ],
+        "offset": [
+          3,
+          3
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 16236,
+        "discarded_alpha_max": 4,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/composite_bow-01.png",
+        "sha256": "e73767afd95c5745021eb4db6b1dee48a356c3116b312b8dc624e5989230dac8",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.21830697369499302,
+          "saturation_q25": 0.3972636266631464,
+          "saturation_q75": 0.6337374059242138,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.040573183293853725,
+          "foreground_pixels": 15069
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "composite_bow",
+        "attempt": 1,
+        "raw_sha256": "e73767afd95c5745021eb4db6b1dee48a356c3116b312b8dc624e5989230dac8",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/composite_bow-01.png",
+        "visual_verdict": {
+          "score": 91,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [
+            "At32px it reads confidently as a bow, while the composite-specific backing relies on the contrasting pale strip and the label."
+          ],
+          "suggestions": [
+            "Compare with the eventual plain-bow icon and preserve the latter's simpler single-material silhouette."
+          ],
+          "reasoning": "The strongly curved silhouette survives small scale, and the attached pale backing makes the construction materially specific without excessive auxiliary objects."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic_reading": "Short recurved bow with pale horn backing and a separate horn strip",
+        "semantic_distinction": "Layered pale horn and dark wood plus spare horn distinguish composite construction from a plain wooden bow; the backing detail is clearest at48/64px.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Wood, horn, sinew bindings and cord; no modern archery sights, pulleys or metal fittings."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "tech_copper_smelting",
+      "logical_id": "copper_smelting",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/copper_smelting.png",
+      "sha256": "697026b1f5eba358948c22bd0402cf2b41f9488f673a35989a672a222ebde81a",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "copper_smelting",
+        "era": "bronze",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: stylized-concept. Create one production UI knowledge-node icon for WorldSim, node copper_smelting (first copper smelting), Bronze Age. A squat ochre clay furnace with a clearly open dark mouth, small amber fire at its base, a small copper-orange metal droplet emerging toward a plain open clay ingot mould. Single compact identifiable silhouette, not a scene. Match the two supplied WorldSim field-guide reference images' fine brown-black ink, controlled earthy wash, upper-left illumination, restrained olive/ochre/slate palette. Strong outer contour 2x finer inner lines; only 3 short crack marks on clay, 3 short parallel diagonal shadow hatch marks at 45 degrees, no dense stippling. Front three-quarter at 20 degrees above, no horizon, no ground slab. Keep subject within central 78% of a square canvas with transparent empty margins. Genuine transparent background. This is a 64px master UI icon and must read at 24px; broad clear forms, no tiny accessories. Metal is copper, no iron or steel, no modern machinery, no text, numerals, frame, badge, UI, watermark, photorealism, 3D, vector flat-fill or pixel art.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seeds",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28a-289d-7e30-b821-cd029d3012df/exec-e25e8886-a80e-47a3-8bb4-20cdbd282468.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/copper_smelting-01.png",
+        "references": [
+          "art/style05/anchors/props.png",
+          "art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-10",
+        "status": "generated_pending_review"
+      },
+      "attempts": [
+        {
+          "id": "copper_smelting",
+          "era": "bronze",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. Create one production UI knowledge-node icon for WorldSim, node copper_smelting (first copper smelting), Bronze Age. A squat ochre clay furnace with a clearly open dark mouth, small amber fire at its base, a small copper-orange metal droplet emerging toward a plain open clay ingot mould. Single compact identifiable silhouette, not a scene. Match the two supplied WorldSim field-guide reference images' fine brown-black ink, controlled earthy wash, upper-left illumination, restrained olive/ochre/slate palette. Strong outer contour 2x finer inner lines; only 3 short crack marks on clay, 3 short parallel diagonal shadow hatch marks at 45 degrees, no dense stippling. Front three-quarter at 20 degrees above, no horizon, no ground slab. Keep subject within central 78% of a square canvas with transparent empty margins. Genuine transparent background. This is a 64px master UI icon and must read at 24px; broad clear forms, no tiny accessories. Metal is copper, no iron or steel, no modern machinery, no text, numerals, frame, badge, UI, watermark, photorealism, 3D, vector flat-fill or pixel art.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seeds",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28a-289d-7e30-b821-cd029d3012df/exec-e25e8886-a80e-47a3-8bb4-20cdbd282468.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/copper_smelting-01.png",
+          "references": [
+            "art/style05/anchors/props.png",
+            "art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-10",
+          "status": "generated_pending_review"
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/copper_smelting-01.png",
+          "sha256": "64f6484c04a61f5831d83b63e81707680e89493d4794f1a5007f1134745ff0f9",
+          "canvas": [
+            1254,
+            1254
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            0,
+            1240,
+            1254
+          ],
+          "bbox16": [
+            121,
+            146,
+            1091,
+            1134
+          ],
+          "bbox128": [
+            122,
+            147,
+            1091,
+            1133
+          ],
+          "opaque_pixels": 641174,
+          "occupancy": 0.407737663718525,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/copper_smelting-01.png",
+          "sha256": "697026b1f5eba358948c22bd0402cf2b41f9488f673a35989a672a222ebde81a",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            3,
+            60,
+            61
+          ],
+          "bbox16": [
+            3,
+            3,
+            60,
+            61
+          ],
+          "bbox128": [
+            3,
+            3,
+            60,
+            61
+          ],
+          "opaque_pixels": 2201,
+          "occupancy": 0.537353515625,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          120,
+          145,
+          1093,
+          1135
+        ],
+        "scale": 0.05858585858585859,
+        "resized": [
+          57,
+          58
+        ],
+        "offset": [
+          3,
+          3
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 4643,
+        "discarded_alpha_max": 7,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/copper_smelting-01.png",
+        "sha256": "64f6484c04a61f5831d83b63e81707680e89493d4794f1a5007f1134745ff0f9",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.1392505025366134,
+          "saturation_q25": 0.653633532992641,
+          "saturation_q75": 0.7315974984097255,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.017558837425713476,
+          "foreground_pixels": 43290
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "copper_smelting",
+        "attempt": 1,
+        "raw_sha256": "64f6484c04a61f5831d83b63e81707680e89493d4794f1a5007f1134745ff0f9",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/copper_smelting-01.png",
+        "visual_verdict": {
+          "score": 91,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [
+            "Copper material specificity is weaker at32px than the furnace/heat reading."
+          ],
+          "suggestions": [
+            "Preserve the receiving tray and metal-flow cue when comparing against pot firing and oven."
+          ],
+          "reasoning": "The normalized icon retains the pilot's coherent ink/wash style, and the current batch confirms clear silhouette differences from charcoal and mould casting."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic_reading": "Clay furnace with fire, copper flow and receiving mould",
+        "semantic_distinction": "Taller furnace plus orange metal flow/receiving tray differ from charcoal's low mound and mould-casting's open two-part mould.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Clay and copper with amber fire, no iron or modern apparatus."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "era_bronze",
+      "logical_id": "bronze",
+      "family": "banner",
+      "era": "bronze",
+      "path": "art/style05/techmap/banners/bronze.png",
+      "sha256": "4996177bf7e22a95c7b8359ce6b6da33c9ae773091534bf6bdb048d52ae9cd32",
+      "canvas": [
+        264,
+        88
+      ],
+      "anchor": [
+        132,
+        44
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "era_bronze",
+        "era": "bronze",
+        "family": "banner",
+        "subject": "Bronze Age era header, 3:1 wide composition intended for 264x88. Left a small green copper outcrop and black charcoal pieces; center a squat clay smelter with a small amber glow and reddish copper ingot; right a clearly bronze axe leaned beside a wooden solid-disc wheel and low mud-brick wall. A single coherent sparse vignette, four readable silhouette groups, no people. Copper, bronze and tin only, no iron.",
+        "attempt": 1,
+        "prompt": "WorldSim production illustration in the exact ink-and-tone language of the visible props, village scene and hut references: fine controlled brown-black ink, restrained earthy watercolor wash, strong silhouette contour twice interior line weight, broad base and shadow tone. Upper-left daylight; subtle shadows lower-right. Standing objects front three-quarter about 20 degrees down, ground from above. Selective details per material patch: three broken longitudinal wood strokes, three stone/clay cracks or facets, three reed/fiber strands, three hide/fur tufts; metals two rim highlights, no chrome. At most one three-stroke 45-degree hatch cluster per object. Sepia, ochre, bone, slate, muted sage; amber fire, warm terracotta copper, subdued golden brown bronze, charcoal iron. A carefully composed broad horizontal transparent cut-out vignette, no opaque rectangular backing, no frame, no labels or lettering, no watermark, no perspective horizon, no isometric grid, no photorealism, no 3D render, no pixel art, no flat vector clipart. No roofs on village buildings: show roofless cutaway wall rings where buildings occur. Entire artwork including figures and props comfortably inside canvas with transparent margins. Bronze Age era header, 3:1 wide composition intended for 264x88. Left a small green copper outcrop and black charcoal pieces; center a squat clay smelter with a small amber glow and reddish copper ingot; right a clearly bronze axe leaned beside a wooden solid-disc wheel and low mud-brick wall. A single coherent sparse vignette, four readable silhouette groups, no people. Copper, bronze and tin only, no iron.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-aefe-7c51-91db-c61c935b7524/exec-e890af3d-7cf5-428d-95dc-0dcbdf8d583b.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/era_bronze-01.png",
+        "raw_sha256": "f389348f5e40aef3022d235fcd8408f3c04e33a9fd34160e488f47bbcfd6eda0",
+        "reference_paths": [
+          "art/style05/anchors/props.png",
+          "art/style05/anchors/scene.png",
+          "art/style05/anchors/hut.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:05:13.984Z",
+        "status": "generated_pending_review"
+      },
+      "attempts": [
+        {
+          "id": "era_bronze",
+          "era": "bronze",
+          "family": "banner",
+          "subject": "Bronze Age era header, 3:1 wide composition intended for 264x88. Left a small green copper outcrop and black charcoal pieces; center a squat clay smelter with a small amber glow and reddish copper ingot; right a clearly bronze axe leaned beside a wooden solid-disc wheel and low mud-brick wall. A single coherent sparse vignette, four readable silhouette groups, no people. Copper, bronze and tin only, no iron.",
+          "attempt": 1,
+          "prompt": "WorldSim production illustration in the exact ink-and-tone language of the visible props, village scene and hut references: fine controlled brown-black ink, restrained earthy watercolor wash, strong silhouette contour twice interior line weight, broad base and shadow tone. Upper-left daylight; subtle shadows lower-right. Standing objects front three-quarter about 20 degrees down, ground from above. Selective details per material patch: three broken longitudinal wood strokes, three stone/clay cracks or facets, three reed/fiber strands, three hide/fur tufts; metals two rim highlights, no chrome. At most one three-stroke 45-degree hatch cluster per object. Sepia, ochre, bone, slate, muted sage; amber fire, warm terracotta copper, subdued golden brown bronze, charcoal iron. A carefully composed broad horizontal transparent cut-out vignette, no opaque rectangular backing, no frame, no labels or lettering, no watermark, no perspective horizon, no isometric grid, no photorealism, no 3D render, no pixel art, no flat vector clipart. No roofs on village buildings: show roofless cutaway wall rings where buildings occur. Entire artwork including figures and props comfortably inside canvas with transparent margins. Bronze Age era header, 3:1 wide composition intended for 264x88. Left a small green copper outcrop and black charcoal pieces; center a squat clay smelter with a small amber glow and reddish copper ingot; right a clearly bronze axe leaned beside a wooden solid-disc wheel and low mud-brick wall. A single coherent sparse vignette, four readable silhouette groups, no people. Copper, bronze and tin only, no iron.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-aefe-7c51-91db-c61c935b7524/exec-e890af3d-7cf5-428d-95dc-0dcbdf8d583b.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/era_bronze-01.png",
+          "raw_sha256": "f389348f5e40aef3022d235fcd8408f3c04e33a9fd34160e488f47bbcfd6eda0",
+          "reference_paths": [
+            "art/style05/anchors/props.png",
+            "art/style05/anchors/scene.png",
+            "art/style05/anchors/hut.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:05:13.984Z",
+          "status": "generated_pending_review"
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/era_bronze-01.png",
+          "sha256": "f389348f5e40aef3022d235fcd8408f3c04e33a9fd34160e488f47bbcfd6eda0",
+          "canvas": [
+            2172,
+            724
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            19,
+            2172,
+            724
+          ],
+          "bbox16": [
+            1,
+            56,
+            2171,
+            684
+          ],
+          "bbox128": [
+            2,
+            56,
+            2169,
+            683
+          ],
+          "opaque_pixels": 1072610,
+          "occupancy": 0.6820927830855794,
+          "border_alpha_max": 14,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "f389348f5e40aef3022d235fcd8408f3c04e33a9fd34160e488f47bbcfd6eda0",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/banners/era_bronze-01.png",
+          "sha256": "4996177bf7e22a95c7b8359ce6b6da33c9ae773091534bf6bdb048d52ae9cd32",
+          "canvas": [
+            264,
+            88
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            2,
+            6,
+            262,
+            82
+          ],
+          "bbox16": [
+            2,
+            6,
+            262,
+            82
+          ],
+          "bbox128": [
+            3,
+            6,
+            261,
+            82
+          ],
+          "opaque_pixels": 15481,
+          "occupancy": 0.6663653581267218,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            264,
+            88
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          0,
+          54,
+          2171,
+          685
+        ],
+        "scale": 0.11976047904191617,
+        "resized": [
+          260,
+          76
+        ],
+        "offset": [
+          2,
+          6
+        ],
+        "anchor": [
+          132,
+          44
+        ],
+        "discarded_alpha_pixels": 1708,
+        "discarded_alpha_max": 14,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/era_bronze-01.png",
+        "sha256": "f389348f5e40aef3022d235fcd8408f3c04e33a9fd34160e488f47bbcfd6eda0",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.24981684981684982,
+          "saturation_q25": 0.45161497141806584,
+          "saturation_q75": 0.5854069584954822,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.01323591274648058,
+          "foreground_pixels": 14955
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_narrative.json",
+      "review": {
+        "id": "era_bronze",
+        "attempt": 1,
+        "raw_sha256": "f389348f5e40aef3022d235fcd8408f3c04e33a9fd34160e488f47bbcfd6eda0",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/banners/era_bronze-01.png",
+        "visual_verdict": {
+          "score": 91,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [
+            "The header compresses the reference's natural materials into larger quiet forms and warmer ochre clay, while retaining sepia ink and restrained texture.",
+            "At264x88 the small background wall rings become a secondary silhouette; ore, furnace, metal, wheel and axe remain the readable foreground story."
+          ],
+          "suggestions": [
+            "Keep the solid wheel, warm copper ingot and subdued bronze axe consistent with future bronze chapter art.",
+            "Preserve the header's current large foreground shapes; avoid adding more tiny decorative objects."
+          ],
+          "reasoning": "The bronze-era header reads as a compact progression from ore and charcoal through a furnace to metal tools and settlement construction. Its silhouette, material washes and upper-left light remain consistent at the intended264x88 size."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic": "pass: copper-bearing ore, charcoal, furnace, ingot, bronze axe, solid wheel and brick construction identify the era",
+        "era": "pass: bronze/copper and wooden wheel, no iron or modern items",
+        "projection": "pass for standalone header vignette: consistent front-three-quarter props and roofless wall rings, no horizon",
+        "legibility": "pass at native264x88; furnace/flame, wheel and axe remain separate recognizable shapes",
+        "mark_budget_review": "Broad quiet planes and small isolated detail clusters fit the intended header scale; exact integer mark counts are not asserted as measured results."
+      }
+    },
+    {
+      "id": "tech_lime_plaster",
+      "logical_id": "lime_plaster",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/lime_plaster.png",
+      "sha256": "f1bbaf472cbc15108e7385b86e0cbb02b40813a225dc18f4ed2f55006cf95d26",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "lime_plaster",
+        "era": "bronze",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: stylized-concept. Asset: one WorldSim knowledge-node UI icon. Match the visible WorldSim props and scene reference originals: controlled fine brown-black ink over restrained earth watercolor wash, observed natural-history field-guide language. Outer contour twice interior line weight; broad base tone and a clear shadow tone. Upper-left daylight; lower-right shadow. Standing objects front three-quarter, about 20 degrees down, no horizon or ground slab. One compact motif, no more than three meaningful objects, centered within 78% of square canvas and uncropped with transparent margins. Readable at 64, 48 and 32 px. Selective material marks only: wood three broken longitudinal strokes; stone/clay three cracks or facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short parallel 45-degree shadow hatches per object. Sepia, ochre, bone, slate, muted sage palette; copper warm terracotta, bronze subdued golden brown, iron charcoal gray; amber fire only. Genuine transparent background. No text, labels, numbers, frame, badge, UI, watermark, modern shapes, photograph, 3D render, pixel art, flat vector clipart, dense stippling, or all-over hatching.\nSubject: Bronze Age lime plastering: a small thick earth-brown mud-brick wall sample with one broad off-white lime plaster patch across its upper-left half; a simple wooden smoothing float rests diagonally against the wall. Clearly show brown masonry exposed beside smooth bone-white coating, primitive wood tool, no modern trowel or iron.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seeds",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-758a-7ce3-895e-d8676081571d/exec-bc6d9e31-e4c2-4838-ad55-470fc73c86a9.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/lime_plaster-01.png",
+        "raw_sha256": "902a9be4e9f81533a563ed7357b5817269337a602aa1492eaf48d58d68b9a0dd",
+        "reference_paths": [
+          "art/style05/anchors/props.png",
+          "art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:07:50.691Z",
+        "status": "generated_pending_review"
+      },
+      "attempts": [
+        {
+          "id": "lime_plaster",
+          "era": "bronze",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. Asset: one WorldSim knowledge-node UI icon. Match the visible WorldSim props and scene reference originals: controlled fine brown-black ink over restrained earth watercolor wash, observed natural-history field-guide language. Outer contour twice interior line weight; broad base tone and a clear shadow tone. Upper-left daylight; lower-right shadow. Standing objects front three-quarter, about 20 degrees down, no horizon or ground slab. One compact motif, no more than three meaningful objects, centered within 78% of square canvas and uncropped with transparent margins. Readable at 64, 48 and 32 px. Selective material marks only: wood three broken longitudinal strokes; stone/clay three cracks or facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short parallel 45-degree shadow hatches per object. Sepia, ochre, bone, slate, muted sage palette; copper warm terracotta, bronze subdued golden brown, iron charcoal gray; amber fire only. Genuine transparent background. No text, labels, numbers, frame, badge, UI, watermark, modern shapes, photograph, 3D render, pixel art, flat vector clipart, dense stippling, or all-over hatching.\nSubject: Bronze Age lime plastering: a small thick earth-brown mud-brick wall sample with one broad off-white lime plaster patch across its upper-left half; a simple wooden smoothing float rests diagonally against the wall. Clearly show brown masonry exposed beside smooth bone-white coating, primitive wood tool, no modern trowel or iron.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seeds",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-758a-7ce3-895e-d8676081571d/exec-bc6d9e31-e4c2-4838-ad55-470fc73c86a9.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/lime_plaster-01.png",
+          "raw_sha256": "902a9be4e9f81533a563ed7357b5817269337a602aa1492eaf48d58d68b9a0dd",
+          "reference_paths": [
+            "art/style05/anchors/props.png",
+            "art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:07:50.691Z",
+          "status": "generated_pending_review"
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/lime_plaster-01.png",
+          "sha256": "902a9be4e9f81533a563ed7357b5817269337a602aa1492eaf48d58d68b9a0dd",
+          "canvas": [
+            1312,
+            1199
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            13,
+            1296,
+            1199
+          ],
+          "bbox16": [
+            180,
+            142,
+            1104,
+            1064
+          ],
+          "bbox128": [
+            181,
+            143,
+            1103,
+            1063
+          ],
+          "opaque_pixels": 718700,
+          "occupancy": 0.45687208852905875,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "902a9be4e9f81533a563ed7357b5817269337a602aa1492eaf48d58d68b9a0dd",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/lime_plaster-01.png",
+          "sha256": "f1bbaf472cbc15108e7385b86e0cbb02b40813a225dc18f4ed2f55006cf95d26",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            3,
+            61,
+            61
+          ],
+          "bbox16": [
+            3,
+            3,
+            61,
+            61
+          ],
+          "bbox128": [
+            3,
+            3,
+            61,
+            61
+          ],
+          "opaque_pixels": 2832,
+          "occupancy": 0.69140625,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          179,
+          141,
+          1105,
+          1065
+        ],
+        "scale": 0.06263498920086392,
+        "resized": [
+          58,
+          58
+        ],
+        "offset": [
+          3,
+          3
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 3216,
+        "discarded_alpha_max": 4,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/lime_plaster-01.png",
+        "sha256": "902a9be4e9f81533a563ed7357b5817269337a602aa1492eaf48d58d68b9a0dd",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.16002018238899687,
+          "saturation_q25": 0.2245628017063852,
+          "saturation_q75": 0.5993065140798827,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.01925013509298153,
+          "foreground_pixels": 55300
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "lime_plaster",
+        "attempt": 1,
+        "raw_sha256": "902a9be4e9f81533a563ed7357b5817269337a602aa1492eaf48d58d68b9a0dd",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/lime_plaster-01.png",
+        "visual_verdict": {
+          "score": 94,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [],
+          "suggestions": [],
+          "reasoning": "The broad bone-white patch is legible at32px, making the finishing action clearer than any tiny tool detail would."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic_reading": "Mud-brick wall with broad white coating and wooden smoothing float",
+        "semantic_distinction": "Half-plastered white/brown contrast separates surface finishing from bare stone masonry and a whole mud-brick house.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Lime coating, mud brick and primitive wooden float; no metal modern trowel."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "tech_mining",
+      "logical_id": "mining",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/mining.png",
+      "sha256": "d969b040161f76f9b4d85d466abd9d81003e96ae082cc677088a1800e58a7f67",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "mining",
+        "era": "bronze",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nNode: mining. Era: bronze. Subject: A chunky gray rock with an unmistakable green copper-ore seam and a lashed stone-headed mining hammer leaning across it. Early surface ore extraction; wooden handle, stone hammer head, no iron pickaxe. No iron or steel.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-30510cc6-bbd8-4634-a48c-851d4b1064f0.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/mining-01.png",
+        "raw_sha256": "edc4cce8f8bf0778314ff85f68747903f914c08188d436b685bf926a84d31c1d",
+        "reference_paths": [
+          "art/style05/anchors/props.png",
+          "art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:05:40.022Z",
+        "status": "generated_pending_review"
+      },
+      "attempts": [
+        {
+          "id": "mining",
+          "era": "bronze",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nNode: mining. Era: bronze. Subject: A chunky gray rock with an unmistakable green copper-ore seam and a lashed stone-headed mining hammer leaning across it. Early surface ore extraction; wooden handle, stone hammer head, no iron pickaxe. No iron or steel.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-30510cc6-bbd8-4634-a48c-851d4b1064f0.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/mining-01.png",
+          "raw_sha256": "edc4cce8f8bf0778314ff85f68747903f914c08188d436b685bf926a84d31c1d",
+          "reference_paths": [
+            "art/style05/anchors/props.png",
+            "art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:05:40.022Z",
+          "status": "generated_pending_review"
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/mining-01.png",
+          "sha256": "edc4cce8f8bf0778314ff85f68747903f914c08188d436b685bf926a84d31c1d",
+          "canvas": [
+            1254,
+            1254
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            0,
+            1242,
+            1254
+          ],
+          "bbox16": [
+            186,
+            175,
+            1009,
+            1094
+          ],
+          "bbox128": [
+            187,
+            176,
+            1008,
+            1093
+          ],
+          "opaque_pixels": 486733,
+          "occupancy": 0.3095249905247387,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "edc4cce8f8bf0778314ff85f68747903f914c08188d436b685bf926a84d31c1d",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/mining-01.png",
+          "sha256": "d969b040161f76f9b4d85d466abd9d81003e96ae082cc677088a1800e58a7f67",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            6,
+            3,
+            58,
+            61
+          ],
+          "bbox16": [
+            6,
+            3,
+            58,
+            61
+          ],
+          "bbox128": [
+            6,
+            3,
+            58,
+            61
+          ],
+          "opaque_pixels": 1938,
+          "occupancy": 0.47314453125,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          185,
+          174,
+          1010,
+          1095
+        ],
+        "scale": 0.06297502714440825,
+        "resized": [
+          52,
+          58
+        ],
+        "offset": [
+          6,
+          3
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 27349,
+        "discarded_alpha_max": 4,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/mining-01.png",
+        "sha256": "edc4cce8f8bf0778314ff85f68747903f914c08188d436b685bf926a84d31c1d",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.23532667349254227,
+          "saturation_q25": 0.26241267824341896,
+          "saturation_q75": 0.4634652511580985,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.024821861828295967,
+          "foreground_pixels": 37903
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "mining",
+        "attempt": 1,
+        "raw_sha256": "edc4cce8f8bf0778314ff85f68747903f914c08188d436b685bf926a84d31c1d",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/mining-01.png",
+        "visual_verdict": {
+          "score": 94,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [],
+          "suggestions": [],
+          "reasoning": "The hammer's diagonal dominates the silhouette while the green seam clearly identifies the worked material. Stone, wood and cord match the adopted tool references."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic_reading": "Lashed stone mining hammer against green-veined ore rock",
+        "semantic_distinction": "Large extraction tool and mineral-bearing rock identify active mining rather than a standalone ore deposit.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Stone hammer with wood handle and fiber lashing; no iron pickaxe preceding iron technology."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "tech_mould_casting",
+      "logical_id": "mould_casting",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/mould_casting.png",
+      "sha256": "df87725a724a1ac2a25d7da7cb7e1aa2f3d105ddb1faa4c647696650fa5d6bc7",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "mould_casting",
+        "era": "bronze",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nNode: mould_casting. Era: bronze. Subject: An open two-part ochre clay axe-head mould, one half holding a simple warm reddish copper axe head, and one small clay pouring crucible tipped toward the mould. Clear casting process, no modern metal ladle, no iron. No iron or steel.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-803bef39-bae9-48aa-8e5c-5e9ef74eb3d1.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/mould_casting-01.png",
+        "raw_sha256": "5bd912e95267223f554de741091994e4e1bc38723a3cc9df210f12b1ac23a092",
+        "reference_paths": [
+          "art/style05/anchors/props.png",
+          "art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:06:16.927Z",
+        "status": "generated_pending_review"
+      },
+      "attempts": [
+        {
+          "id": "mould_casting",
+          "era": "bronze",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nNode: mould_casting. Era: bronze. Subject: An open two-part ochre clay axe-head mould, one half holding a simple warm reddish copper axe head, and one small clay pouring crucible tipped toward the mould. Clear casting process, no modern metal ladle, no iron. No iron or steel.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-803bef39-bae9-48aa-8e5c-5e9ef74eb3d1.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/mould_casting-01.png",
+          "raw_sha256": "5bd912e95267223f554de741091994e4e1bc38723a3cc9df210f12b1ac23a092",
+          "reference_paths": [
+            "art/style05/anchors/props.png",
+            "art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:06:16.927Z",
+          "status": "generated_pending_review"
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/mould_casting-01.png",
+          "sha256": "5bd912e95267223f554de741091994e4e1bc38723a3cc9df210f12b1ac23a092",
+          "canvas": [
+            1254,
+            1254
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            7,
+            1251,
+            1254
+          ],
+          "bbox16": [
+            86,
+            172,
+            1171,
+            1082
+          ],
+          "bbox128": [
+            87,
+            173,
+            1170,
+            1081
+          ],
+          "opaque_pixels": 592180,
+          "occupancy": 0.37658122397482763,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "5bd912e95267223f554de741091994e4e1bc38723a3cc9df210f12b1ac23a092",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/mould_casting-01.png",
+          "sha256": "df87725a724a1ac2a25d7da7cb7e1aa2f3d105ddb1faa4c647696650fa5d6bc7",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            7,
+            61,
+            56
+          ],
+          "bbox16": [
+            3,
+            7,
+            61,
+            56
+          ],
+          "bbox128": [
+            3,
+            7,
+            61,
+            56
+          ],
+          "opaque_pixels": 1700,
+          "occupancy": 0.4150390625,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          85,
+          171,
+          1172,
+          1083
+        ],
+        "scale": 0.05335786568537258,
+        "resized": [
+          58,
+          49
+        ],
+        "offset": [
+          3,
+          7
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 9165,
+        "discarded_alpha_max": 4,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/mould_casting-01.png",
+        "sha256": "5bd912e95267223f554de741091994e4e1bc38723a3cc9df210f12b1ac23a092",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.18038075768223344,
+          "saturation_q25": 0.6068491090410065,
+          "saturation_q75": 0.6846812024571944,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.023187717851445064,
+          "foreground_pixels": 33138
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "mould_casting",
+        "attempt": 1,
+        "raw_sha256": "5bd912e95267223f554de741091994e4e1bc38723a3cc9df210f12b1ac23a092",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/mould_casting-01.png",
+        "visual_verdict": {
+          "score": 93,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [
+            "The molten stream becomes a small bright connection at32px, but paired moulds remain clear."
+          ],
+          "suggestions": [],
+          "reasoning": "A compact three-object group retains the mould cavity and pouring action at48/64px and the characteristic open mould silhouette at32px."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic_reading": "Open two-part axe-head mould with tipped clay crucible pouring metal",
+        "semantic_distinction": "Recognizable axe cavity and paired mould halves distinguish shaping by casting from the closed furnace used for smelting.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Clay mould and crucible, copper-colored metal; no modern steel ladle."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "tech_mud_brick_house",
+      "logical_id": "mud_brick_house",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/mud_brick_house.png",
+      "sha256": "ccff3f3bf11bb27578330255809f37d5da427d16dcd2bad2381a8a1331bdb9af",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "mud_brick_house",
+        "era": "bronze",
+        "attempt": 1,
+        "subject": "ONLY ONE small roofless mud-brick house: a low rectangular ochre adobe wall enclosure with doorway on front, visible packed-earth interior and one plain woven sleeping mat. A compact house symbol with roof absent, no columns, no metal and no modern features.",
+        "family": "icon",
+        "prompt": "Use case: stylized-concept. One WorldSim production knowledge-node icon. Fine controlled brown-black ink over restrained earthy watercolor wash, natural-history field guide matching the two visible WorldSim props and scene originals. Outer contour twice interior line weight; clear broad base and shadow tone. Upper-left daylight, lower-right shadows. Standing objects front three-quarter about 20 degrees down; flat diagrams above. Single compact silhouette or at most three meaningful objects, no horizon, no ground slab. Center subject within 78% of square canvas with transparent margins. Genuine transparent background. Strong legibility at 64,48,32px. Fixed selective detail budget per main material patch: wood three broken longitudinal strokes; stone/clay three cracks/facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlight strokes, no chrome. At most one shadow cluster of three short parallel 45-degree strokes per object. Sepia ink, ochre, bone, slate, muted sage; amber fire, copper terracotta, bronze subdued golden brown, iron charcoal gray. No text, labels, numerals, frame, badge, UI, watermark, photorealism, 3D, pixel art, flat vector art, dense stippling or modern items. CRITICAL COMPOSITION: Render ONLY the requested single compact icon, once. No inset, no diagrams, no alternate views, no process steps, no arrows, no duplicated objects along the top. All blank space stays completely transparent. Era: bronze. Subject: ONLY ONE small roofless mud-brick house: a low rectangular ochre adobe wall enclosure with doorway on front, visible packed-earth interior and one plain woven sleeping mat. A compact house symbol with roof absent, no columns, no metal and no modern features.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-5253-7c42-b826-58fc97713969/exec-2e0b3e28-72bb-4a9d-a344-e3d079e6c673.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/mud_brick_house-01.png",
+        "raw_sha256": "bfefb23c105bbf9b0f5c20c94732d133c34a2611edddc9041bb097009124d1bc",
+        "reference_paths": [
+          "/Users/rexxa/work/art-batch-a4/art/style05/anchors/props.png",
+          "/Users/rexxa/work/art-batch-a4/art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:08:16.067Z",
+        "status": "generated_pending_review",
+        "self_review": {
+          "verdict": "candidate_pass",
+          "subject": true,
+          "era_honesty": true,
+          "no_extra_insets": true,
+          "notes": "Clear subject, restrained earth wash, upper-left light, transparent surroundings; fresh family and small-scale review pending."
+        }
+      },
+      "attempts": [
+        {
+          "id": "mud_brick_house",
+          "era": "bronze",
+          "attempt": 1,
+          "subject": "ONLY ONE small roofless mud-brick house: a low rectangular ochre adobe wall enclosure with doorway on front, visible packed-earth interior and one plain woven sleeping mat. A compact house symbol with roof absent, no columns, no metal and no modern features.",
+          "family": "icon",
+          "prompt": "Use case: stylized-concept. One WorldSim production knowledge-node icon. Fine controlled brown-black ink over restrained earthy watercolor wash, natural-history field guide matching the two visible WorldSim props and scene originals. Outer contour twice interior line weight; clear broad base and shadow tone. Upper-left daylight, lower-right shadows. Standing objects front three-quarter about 20 degrees down; flat diagrams above. Single compact silhouette or at most three meaningful objects, no horizon, no ground slab. Center subject within 78% of square canvas with transparent margins. Genuine transparent background. Strong legibility at 64,48,32px. Fixed selective detail budget per main material patch: wood three broken longitudinal strokes; stone/clay three cracks/facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlight strokes, no chrome. At most one shadow cluster of three short parallel 45-degree strokes per object. Sepia ink, ochre, bone, slate, muted sage; amber fire, copper terracotta, bronze subdued golden brown, iron charcoal gray. No text, labels, numerals, frame, badge, UI, watermark, photorealism, 3D, pixel art, flat vector art, dense stippling or modern items. CRITICAL COMPOSITION: Render ONLY the requested single compact icon, once. No inset, no diagrams, no alternate views, no process steps, no arrows, no duplicated objects along the top. All blank space stays completely transparent. Era: bronze. Subject: ONLY ONE small roofless mud-brick house: a low rectangular ochre adobe wall enclosure with doorway on front, visible packed-earth interior and one plain woven sleeping mat. A compact house symbol with roof absent, no columns, no metal and no modern features.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-5253-7c42-b826-58fc97713969/exec-2e0b3e28-72bb-4a9d-a344-e3d079e6c673.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/mud_brick_house-01.png",
+          "raw_sha256": "bfefb23c105bbf9b0f5c20c94732d133c34a2611edddc9041bb097009124d1bc",
+          "reference_paths": [
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/props.png",
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:08:16.067Z",
+          "status": "generated_pending_review",
+          "self_review": {
+            "verdict": "candidate_pass",
+            "subject": true,
+            "era_honesty": true,
+            "no_extra_insets": true,
+            "notes": "Clear subject, restrained earth wash, upper-left light, transparent surroundings; fresh family and small-scale review pending."
+          }
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/mud_brick_house-01.png",
+          "sha256": "bfefb23c105bbf9b0f5c20c94732d133c34a2611edddc9041bb097009124d1bc",
+          "canvas": [
+            1312,
+            1199
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            0,
+            1311,
+            1199
+          ],
+          "bbox16": [
+            80,
+            147,
+            1225,
+            1110
+          ],
+          "bbox128": [
+            81,
+            148,
+            1224,
+            1110
+          ],
+          "opaque_pixels": 810281,
+          "occupancy": 0.5150894291991294,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "bfefb23c105bbf9b0f5c20c94732d133c34a2611edddc9041bb097009124d1bc",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/mud_brick_house-01.png",
+          "sha256": "ccff3f3bf11bb27578330255809f37d5da427d16dcd2bad2381a8a1331bdb9af",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            7,
+            61,
+            56
+          ],
+          "bbox16": [
+            3,
+            7,
+            61,
+            56
+          ],
+          "bbox128": [
+            3,
+            7,
+            61,
+            56
+          ],
+          "opaque_pixels": 2082,
+          "occupancy": 0.50830078125,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          79,
+          146,
+          1226,
+          1112
+        ],
+        "scale": 0.05056669572798605,
+        "resized": [
+          58,
+          49
+        ],
+        "offset": [
+          3,
+          7
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 2424,
+        "discarded_alpha_max": 5,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/mud_brick_house-01.png",
+        "sha256": "bfefb23c105bbf9b0f5c20c94732d133c34a2611edddc9041bb097009124d1bc",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.1930733709594664,
+          "saturation_q25": 0.6532971053308957,
+          "saturation_q75": 0.7450381254460116,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.014729853715118537,
+          "foreground_pixels": 40553
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "mud_brick_house",
+        "attempt": 1,
+        "raw_sha256": "bfefb23c105bbf9b0f5c20c94732d133c34a2611edddc9041bb097009124d1bc",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/mud_brick_house-01.png",
+        "visual_verdict": {
+          "score": 94,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [
+            "At32px the sleeping mat is a warm interior patch rather than detailed weaving; doorway and enclosure remain readable."
+          ],
+          "suggestions": [],
+          "reasoning": "The clear wall ring and doorway preserve the project's roofless construction convention and retain a distinct house silhouette at all requested sizes."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic_reading": "Roofless rectangular mud-brick room with doorway and sleeping mat",
+        "semantic_distinction": "Enclosed inhabited room separates the house from the wall samples in lime plaster and stone masonry.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Adobe, packed earth and reed sleeping mat; no metal fixtures or dyed textiles."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "tech_stone_masonry",
+      "logical_id": "stone_masonry",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/stone_masonry.png",
+      "sha256": "b1fc0259f255c6a82536ec513b1bd4d4b9d363d4ce987fd10286ab35e8ad7616",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "stone_masonry",
+        "era": "bronze",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nOne compact object group only; no inset diagrams, explanatory panels, magical glow, or decorative sparkle.\nNode: stone_masonry. Era: bronze. Subject: A compact corner of carefully fitted rectangular gray stone blocks, three staggered courses, with one small wooden mallet beside it. Dressed masonry distinct from a loose rounded dry-stone wall. No iron. No iron or steel.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-e5e37371-34e8-4d77-920b-fb7b41eeda2e.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/stone_masonry-01.png",
+        "raw_sha256": "7806c6e255dc990f2f490bf66d12b6de76285874feb16941eda14f0defc6afbe",
+        "reference_paths": [
+          "art/style05/anchors/props.png",
+          "art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:08:59.892Z",
+        "status": "generated_pending_review"
+      },
+      "attempts": [
+        {
+          "id": "stone_masonry",
+          "era": "bronze",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nOne compact object group only; no inset diagrams, explanatory panels, magical glow, or decorative sparkle.\nNode: stone_masonry. Era: bronze. Subject: A compact corner of carefully fitted rectangular gray stone blocks, three staggered courses, with one small wooden mallet beside it. Dressed masonry distinct from a loose rounded dry-stone wall. No iron. No iron or steel.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-e5e37371-34e8-4d77-920b-fb7b41eeda2e.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/stone_masonry-01.png",
+          "raw_sha256": "7806c6e255dc990f2f490bf66d12b6de76285874feb16941eda14f0defc6afbe",
+          "reference_paths": [
+            "art/style05/anchors/props.png",
+            "art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:08:59.892Z",
+          "status": "generated_pending_review"
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/stone_masonry-01.png",
+          "sha256": "7806c6e255dc990f2f490bf66d12b6de76285874feb16941eda14f0defc6afbe",
+          "canvas": [
+            1254,
+            1254
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            18,
+            1253,
+            1254
+          ],
+          "bbox16": [
+            166,
+            253,
+            1080,
+            1051
+          ],
+          "bbox128": [
+            167,
+            253,
+            1079,
+            1051
+          ],
+          "opaque_pixels": 580842,
+          "occupancy": 0.36937112245598774,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "7806c6e255dc990f2f490bf66d12b6de76285874feb16941eda14f0defc6afbe",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/stone_masonry-01.png",
+          "sha256": "b1fc0259f255c6a82536ec513b1bd4d4b9d363d4ce987fd10286ab35e8ad7616",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            6,
+            61,
+            57
+          ],
+          "bbox16": [
+            3,
+            6,
+            61,
+            57
+          ],
+          "bbox128": [
+            3,
+            6,
+            61,
+            57
+          ],
+          "opaque_pixels": 2345,
+          "occupancy": 0.572509765625,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          165,
+          251,
+          1081,
+          1053
+        ],
+        "scale": 0.06331877729257641,
+        "resized": [
+          58,
+          51
+        ],
+        "offset": [
+          3,
+          6
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 6159,
+        "discarded_alpha_max": 3,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/stone_masonry-01.png",
+        "sha256": "7806c6e255dc990f2f490bf66d12b6de76285874feb16941eda14f0defc6afbe",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.16953356086461888,
+          "saturation_q25": 0.21624987011638303,
+          "saturation_q75": 0.3008308224864525,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.020344389757530223,
+          "foreground_pixels": 45775
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "stone_masonry",
+        "attempt": 1,
+        "raw_sha256": "7806c6e255dc990f2f490bf66d12b6de76285874feb16941eda14f0defc6afbe",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/stone_masonry-01.png",
+        "visual_verdict": {
+          "score": 94,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [],
+          "suggestions": [],
+          "reasoning": "Block joints and the corner silhouette are clear even at32px, while pale slate tones maintain material separation from the other construction icons."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic_reading": "Corner of staggered dressed stone blocks with wooden mallet",
+        "semantic_distinction": "Fitted gray block courses differ from orange adobe and irregular loose stone.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Dressed stone and wooden mallet; no iron accessory or modern concrete cue."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "tech_tin_sourcing",
+      "logical_id": "tin_sourcing",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/tin_sourcing.png",
+      "sha256": "2927470c2b63cdcc2e85ab451315b3858b695666e2a6fc79aad4c6600535c847",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "tin_sourcing",
+        "era": "bronze",
+        "subject": "Sourcing tin for bronze: a small open undyed hide trade pouch containing two pale dull silver-gray tin ingots, beside one dark cassiterite ore nugget. Distinguish tin from gold/copper, no coins, no steel or iron.",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: stylized-concept. One WorldSim production knowledge-node icon. Fine controlled brown-black ink over restrained earthy watercolor wash, natural-history field guide matching the two visible WorldSim props and scene originals. Outer contour twice interior line weight; clear broad base and shadow tone. Upper-left daylight, lower-right shadows. Standing objects front three-quarter about 20 degrees down; flat diagrams above. Single compact silhouette or at most three meaningful objects, no horizon, no ground slab. Center subject within 78% of square canvas with transparent margins. Genuine transparent background. Strong legibility at 64,48,32px. Fixed selective detail budget per main material patch: wood three broken longitudinal strokes; stone/clay three cracks/facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlight strokes, no chrome. At most one shadow cluster of three short parallel 45-degree strokes per object. Sepia ink, ochre, bone, slate, muted sage; amber fire, copper terracotta, bronze subdued golden brown, iron charcoal gray. No text, labels, numerals, frame, badge, UI, watermark, photorealism, 3D, pixel art, flat vector art, dense stippling or modern items. Era: bronze. Subject: Sourcing tin for bronze: a small open undyed hide trade pouch containing two pale dull silver-gray tin ingots, beside one dark cassiterite ore nugget. Distinguish tin from gold/copper, no coins, no steel or iron.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-5253-7c42-b826-58fc97713969/exec-9e2bb8d8-ce5a-451f-ad15-e16a03a2549b.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/tin_sourcing-01.png",
+        "raw_sha256": "e4efc7cf7dc7bf6805421f3ce3db7d9a84253c0e745878ead1a25e1b0bb88fc7",
+        "reference_paths": [
+          "/Users/rexxa/work/art-batch-a4/art/style05/anchors/props.png",
+          "/Users/rexxa/work/art-batch-a4/art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:05:50.462Z",
+        "status": "generated_pending_review",
+        "self_review": {
+          "verdict": "candidate_pass",
+          "subject": true,
+          "era_honesty": true,
+          "no_extra_insets": true,
+          "notes": "Clear subject, restrained earth wash, upper-left light, transparent surroundings; fresh family and small-scale review pending."
+        }
+      },
+      "attempts": [
+        {
+          "id": "tin_sourcing",
+          "era": "bronze",
+          "subject": "Sourcing tin for bronze: a small open undyed hide trade pouch containing two pale dull silver-gray tin ingots, beside one dark cassiterite ore nugget. Distinguish tin from gold/copper, no coins, no steel or iron.",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. One WorldSim production knowledge-node icon. Fine controlled brown-black ink over restrained earthy watercolor wash, natural-history field guide matching the two visible WorldSim props and scene originals. Outer contour twice interior line weight; clear broad base and shadow tone. Upper-left daylight, lower-right shadows. Standing objects front three-quarter about 20 degrees down; flat diagrams above. Single compact silhouette or at most three meaningful objects, no horizon, no ground slab. Center subject within 78% of square canvas with transparent margins. Genuine transparent background. Strong legibility at 64,48,32px. Fixed selective detail budget per main material patch: wood three broken longitudinal strokes; stone/clay three cracks/facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlight strokes, no chrome. At most one shadow cluster of three short parallel 45-degree strokes per object. Sepia ink, ochre, bone, slate, muted sage; amber fire, copper terracotta, bronze subdued golden brown, iron charcoal gray. No text, labels, numerals, frame, badge, UI, watermark, photorealism, 3D, pixel art, flat vector art, dense stippling or modern items. Era: bronze. Subject: Sourcing tin for bronze: a small open undyed hide trade pouch containing two pale dull silver-gray tin ingots, beside one dark cassiterite ore nugget. Distinguish tin from gold/copper, no coins, no steel or iron.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-5253-7c42-b826-58fc97713969/exec-9e2bb8d8-ce5a-451f-ad15-e16a03a2549b.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/tin_sourcing-01.png",
+          "raw_sha256": "e4efc7cf7dc7bf6805421f3ce3db7d9a84253c0e745878ead1a25e1b0bb88fc7",
+          "reference_paths": [
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/props.png",
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:05:50.462Z",
+          "status": "generated_pending_review",
+          "self_review": {
+            "verdict": "candidate_pass",
+            "subject": true,
+            "era_honesty": true,
+            "no_extra_insets": true,
+            "notes": "Clear subject, restrained earth wash, upper-left light, transparent surroundings; fresh family and small-scale review pending."
+          }
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/tin_sourcing-01.png",
+          "sha256": "e4efc7cf7dc7bf6805421f3ce3db7d9a84253c0e745878ead1a25e1b0bb88fc7",
+          "canvas": [
+            1254,
+            1254
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            9,
+            1246,
+            1254
+          ],
+          "bbox16": [
+            78,
+            92,
+            1136,
+            1165
+          ],
+          "bbox128": [
+            78,
+            93,
+            1133,
+            1165
+          ],
+          "opaque_pixels": 764265,
+          "occupancy": 0.48601413276558075,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "e4efc7cf7dc7bf6805421f3ce3db7d9a84253c0e745878ead1a25e1b0bb88fc7",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/tin_sourcing-01.png",
+          "sha256": "2927470c2b63cdcc2e85ab451315b3858b695666e2a6fc79aad4c6600535c847",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            3,
+            3,
+            60,
+            61
+          ],
+          "bbox16": [
+            3,
+            3,
+            60,
+            61
+          ],
+          "bbox128": [
+            3,
+            3,
+            58,
+            61
+          ],
+          "opaque_pixels": 2209,
+          "occupancy": 0.539306640625,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          76,
+          91,
+          1135,
+          1167
+        ],
+        "scale": 0.05390334572490706,
+        "resized": [
+          57,
+          58
+        ],
+        "offset": [
+          3,
+          3
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 15684,
+        "discarded_alpha_max": 35,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/tin_sourcing-01.png",
+        "sha256": "e4efc7cf7dc7bf6805421f3ce3db7d9a84253c0e745878ead1a25e1b0bb88fc7",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.22505761474937583,
+          "saturation_q25": 0.3940660933623862,
+          "saturation_q75": 0.6003900985479658,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.02213092273653715,
+          "foreground_pixels": 43611
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "tin_sourcing",
+        "attempt": 1,
+        "raw_sha256": "e4efc7cf7dc7bf6805421f3ce3db7d9a84253c0e745878ead1a25e1b0bb88fc7",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/tin_sourcing-01.png",
+        "visual_verdict": {
+          "score": 91,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [
+            "The exact metal cannot be identified blind from silver-gray alone; the picture supports a tin-supply label rather than replacing it."
+          ],
+          "suggestions": [
+            "Retain the pouch as the sourcing cue and avoid reusing this same pouch-plus-ingot composition for other metal technologies."
+          ],
+          "reasoning": "The silver-gray supply and dark ore remain visible at32px, with strong material separation and restrained metallic highlights rather than chrome rendering."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic_reading": "Hide trade pouch containing pale metal ingots, with dark ore beside it",
+        "semantic_distinction": "Pouch/trade container plus pale ingots and ore suggests sourcing a metal supply rather than producing copper; tin identity still requires the node label.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Undyed hide, cord, dull gray tin-like ingots and dark ore; no coins or modern equipment."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "tech_wheel",
+      "logical_id": "wheel",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/wheel.png",
+      "sha256": "15c52278aeed61b82e8db6802ca2d9155daef66b9850fcebce1233d250132a66",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 2,
+      "generation": {
+        "id": "wheel",
+        "era": "bronze",
+        "attempt": 2,
+        "subject": "ONLY ONE ancient solid wooden disk wheel made from three joined planks with thick central axle hole and short axle stub. ONE wheel alone, no diagrams, no smaller wheels, no side-view insets, no exploded views. No spokes, metal rim, nails or rubber.",
+        "family": "icon",
+        "prompt": "Use case: stylized-concept. One WorldSim production knowledge-node icon. Fine controlled brown-black ink over restrained earthy watercolor wash, natural-history field guide matching the two visible WorldSim props and scene originals. Outer contour twice interior line weight; clear broad base and shadow tone. Upper-left daylight, lower-right shadows. Standing objects front three-quarter about 20 degrees down; flat diagrams above. Single compact silhouette or at most three meaningful objects, no horizon, no ground slab. Center subject within 78% of square canvas with transparent margins. Genuine transparent background. Strong legibility at 64,48,32px. Fixed selective detail budget per main material patch: wood three broken longitudinal strokes; stone/clay three cracks/facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlight strokes, no chrome. At most one shadow cluster of three short parallel 45-degree strokes per object. Sepia ink, ochre, bone, slate, muted sage; amber fire, copper terracotta, bronze subdued golden brown, iron charcoal gray. No text, labels, numerals, frame, badge, UI, watermark, photorealism, 3D, pixel art, flat vector art, dense stippling or modern items. CRITICAL COMPOSITION: Render ONLY the requested single compact icon, once. No inset, no diagrams, no alternate views, no process steps, no arrows, no duplicated objects along the top. All blank space stays completely transparent. Era: bronze. Subject: ONLY ONE ancient solid wooden disk wheel made from three joined planks with thick central axle hole and short axle stub. ONE wheel alone, no diagrams, no smaller wheels, no side-view insets, no exploded views. No spokes, metal rim, nails or rubber.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-5253-7c42-b826-58fc97713969/exec-8793523a-517e-464f-aa3f-f02198179eaf.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/wheel-02.png",
+        "raw_sha256": "0c26e236418459c40b11930bc24c1e8176894fe875a616af59079b5998ebdd03",
+        "reference_paths": [
+          "/Users/rexxa/work/art-batch-a4/art/style05/anchors/props.png",
+          "/Users/rexxa/work/art-batch-a4/art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:08:16.065Z",
+        "status": "generated_pending_review",
+        "self_review": {
+          "verdict": "candidate_pass",
+          "subject": true,
+          "era_honesty": true,
+          "no_extra_insets": true,
+          "notes": "Clear subject, restrained earth wash, upper-left light, transparent surroundings; fresh family and small-scale review pending."
+        }
+      },
+      "attempts": [
+        {
+          "id": "wheel",
+          "era": "bronze",
+          "subject": "The first wheel: one ancient solid wooden disk wheel made from three joined planks, with thick central wooden axle hole and a short wooden axle stub. No spokes, metal rim, rubber, nails or machinery.",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. One WorldSim production knowledge-node icon. Fine controlled brown-black ink over restrained earthy watercolor wash, natural-history field guide matching the two visible WorldSim props and scene originals. Outer contour twice interior line weight; clear broad base and shadow tone. Upper-left daylight, lower-right shadows. Standing objects front three-quarter about 20 degrees down; flat diagrams above. Single compact silhouette or at most three meaningful objects, no horizon, no ground slab. Center subject within 78% of square canvas with transparent margins. Genuine transparent background. Strong legibility at 64,48,32px. Fixed selective detail budget per main material patch: wood three broken longitudinal strokes; stone/clay three cracks/facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlight strokes, no chrome. At most one shadow cluster of three short parallel 45-degree strokes per object. Sepia ink, ochre, bone, slate, muted sage; amber fire, copper terracotta, bronze subdued golden brown, iron charcoal gray. No text, labels, numerals, frame, badge, UI, watermark, photorealism, 3D, pixel art, flat vector art, dense stippling or modern items. Era: bronze. Subject: The first wheel: one ancient solid wooden disk wheel made from three joined planks, with thick central wooden axle hole and a short wooden axle stub. No spokes, metal rim, rubber, nails or machinery.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-5253-7c42-b826-58fc97713969/exec-cfb676dd-8084-4c60-9b80-26482a67f775.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/wheel-01.png",
+          "raw_sha256": "ed4ac2da1c11d09f5de6e412ae8ce4c1b6970cbab1b87a843cfce08f9dd728d4",
+          "reference_paths": [
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/props.png",
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:05:50.461Z",
+          "status": "rejected",
+          "rejection_reason": "Unrequested inset diagrams break single-icon composition"
+        },
+        {
+          "id": "wheel",
+          "era": "bronze",
+          "attempt": 2,
+          "subject": "ONLY ONE ancient solid wooden disk wheel made from three joined planks with thick central axle hole and short axle stub. ONE wheel alone, no diagrams, no smaller wheels, no side-view insets, no exploded views. No spokes, metal rim, nails or rubber.",
+          "family": "icon",
+          "prompt": "Use case: stylized-concept. One WorldSim production knowledge-node icon. Fine controlled brown-black ink over restrained earthy watercolor wash, natural-history field guide matching the two visible WorldSim props and scene originals. Outer contour twice interior line weight; clear broad base and shadow tone. Upper-left daylight, lower-right shadows. Standing objects front three-quarter about 20 degrees down; flat diagrams above. Single compact silhouette or at most three meaningful objects, no horizon, no ground slab. Center subject within 78% of square canvas with transparent margins. Genuine transparent background. Strong legibility at 64,48,32px. Fixed selective detail budget per main material patch: wood three broken longitudinal strokes; stone/clay three cracks/facets; fiber/reed three parallel strands; hide/fur three edge tufts; metal two rim highlight strokes, no chrome. At most one shadow cluster of three short parallel 45-degree strokes per object. Sepia ink, ochre, bone, slate, muted sage; amber fire, copper terracotta, bronze subdued golden brown, iron charcoal gray. No text, labels, numerals, frame, badge, UI, watermark, photorealism, 3D, pixel art, flat vector art, dense stippling or modern items. CRITICAL COMPOSITION: Render ONLY the requested single compact icon, once. No inset, no diagrams, no alternate views, no process steps, no arrows, no duplicated objects along the top. All blank space stays completely transparent. Era: bronze. Subject: ONLY ONE ancient solid wooden disk wheel made from three joined planks with thick central axle hole and short axle stub. ONE wheel alone, no diagrams, no smaller wheels, no side-view insets, no exploded views. No spokes, metal rim, nails or rubber.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-5253-7c42-b826-58fc97713969/exec-8793523a-517e-464f-aa3f-f02198179eaf.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/wheel-02.png",
+          "raw_sha256": "0c26e236418459c40b11930bc24c1e8176894fe875a616af59079b5998ebdd03",
+          "reference_paths": [
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/props.png",
+            "/Users/rexxa/work/art-batch-a4/art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:08:16.065Z",
+          "status": "generated_pending_review",
+          "self_review": {
+            "verdict": "candidate_pass",
+            "subject": true,
+            "era_honesty": true,
+            "no_extra_insets": true,
+            "notes": "Clear subject, restrained earth wash, upper-left light, transparent surroundings; fresh family and small-scale review pending."
+          }
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/wheel-02.png",
+          "sha256": "0c26e236418459c40b11930bc24c1e8176894fe875a616af59079b5998ebdd03",
+          "canvas": [
+            1254,
+            1254
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            0,
+            3,
+            1234,
+            1254
+          ],
+          "bbox16": [
+            172,
+            122,
+            1040,
+            1162
+          ],
+          "bbox128": [
+            173,
+            123,
+            1039,
+            1161
+          ],
+          "opaque_pixels": 710101,
+          "occupancy": 0.4515699681275103,
+          "border_alpha_max": 1,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "0c26e236418459c40b11930bc24c1e8176894fe875a616af59079b5998ebdd03",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/wheel-02.png",
+          "sha256": "15c52278aeed61b82e8db6802ca2d9155daef66b9850fcebce1233d250132a66",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            8,
+            3,
+            56,
+            61
+          ],
+          "bbox16": [
+            8,
+            3,
+            56,
+            61
+          ],
+          "bbox128": [
+            8,
+            3,
+            56,
+            61
+          ],
+          "opaque_pixels": 2186,
+          "occupancy": 0.53369140625,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          171,
+          121,
+          1041,
+          1163
+        ],
+        "scale": 0.05566218809980806,
+        "resized": [
+          48,
+          58
+        ],
+        "offset": [
+          8,
+          3
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 2402,
+        "discarded_alpha_max": 6,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/wheel-02.png",
+        "sha256": "0c26e236418459c40b11930bc24c1e8176894fe875a616af59079b5998ebdd03",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.22414786365818531,
+          "saturation_q25": 0.642832767025111,
+          "saturation_q75": 0.6893334057086767,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.008538972186875314,
+          "foreground_pixels": 43283
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "wheel",
+        "attempt": 2,
+        "raw_sha256": "0c26e236418459c40b11930bc24c1e8176894fe875a616af59079b5998ebdd03",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/wheel-02.png",
+        "visual_verdict": {
+          "score": 95,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [],
+          "suggestions": [],
+          "reasoning": "The retry has a clean singular silhouette and a central axle that survives32px, with sparse wood grain matching the rest of the family."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 5,
+          "palette": 4
+        },
+        "semantic_reading": "Single solid plank wheel with central axle stub",
+        "semantic_distinction": "Solid disc, plank joints and hub identify a wheel rather than a shield or coin; no extra diagnostic views remain.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Wooden solid wheel with no rubber tire, metal rim, nails or modern hub."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    },
+    {
+      "id": "tech_wool_spinning",
+      "logical_id": "wool_spinning",
+      "family": "icon",
+      "era": "bronze",
+      "path": "art/style05/techmap/icons/bronze/wool_spinning.png",
+      "sha256": "207ffbec9b3f9e697ee8f4afeb5a0bbc70d8711ea40a9ebbd25085a24e2536d3",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ],
+      "footprint": null,
+      "status": "selected_candidate_not_game_imported",
+      "selected_attempt": 1,
+      "generation": {
+        "id": "wool_spinning",
+        "era": "bronze",
+        "family": "icon",
+        "attempt": 1,
+        "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nOne compact object group only; no inset diagrams, explanatory panels, magical glow, or decorative sparkle.\nNode: wool_spinning. Era: bronze. Subject: A wooden drop spindle with a whorl, wound with undyed cream wool yarn, connected by one thread to a fluffy loose wool tuft. Simple large forms distinguishing wool from flax; no dyed fibers or machinery. No iron or steel.",
+        "backend": "built-in image_gen",
+        "seed": null,
+        "seed_note": "backend does not expose seed",
+        "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-d4f282a7-124a-49c6-b581-b77dcf5db5e9.png",
+        "raw_path": "/Users/rexxa/work/art-batch/A4/raw/wool_spinning-01.png",
+        "raw_sha256": "44f72f2115545fe95a24d195023304a1b3a121a1bafce8b0f07257fd8ca290da",
+        "reference_paths": [
+          "art/style05/anchors/props.png",
+          "art/style05/anchors/scene.png"
+        ],
+        "reference_delivery": "contextual view_image",
+        "generated_at": "2026-11-09T23:08:53.074Z",
+        "status": "generated_pending_review"
+      },
+      "attempts": [
+        {
+          "id": "wool_spinning",
+          "era": "bronze",
+          "family": "icon",
+          "attempt": 1,
+          "prompt": "Use case: stylized-concept. One production WorldSim knowledge-node icon. Match the visible original WorldSim references: fine controlled brown-black ink, restrained earthy watercolor wash, natural-history field-guide precision. Main contours twice the interior-line weight. Broad base tone plus distinct shadow tone, upper-left daylight, lower-right shadows. Standing objects front three-quarter viewed about 20 degrees down; no horizon or ground slab. Compact silhouette, at most three meaningful objects, entire subject centered within the middle 78% of a square canvas, genuine transparent background and generous empty margin. This is a 64px UI master; clear recognizable forms must survive 32px reduction. Selective material marks: wood three broken longitudinal strokes; stone or clay three cracks/facets; fiber three parallel strands; hide three edge tufts; metal two rim highlights, never chrome. At most one cluster of three short 45-degree parallel shadow hatch marks per object. Sepia ink, ochre, bone, slate, muted sage, amber fire; copper warm terracotta, bronze subdued golden brown, iron charcoal gray. No text, numbers, lettering, symbols resembling modern logos, badge, border, UI frame, watermark, photorealism, 3D rendering, pixel art, flat vector clipart, dense stippling or busy background.\nOne compact object group only; no inset diagrams, explanatory panels, magical glow, or decorative sparkle.\nNode: wool_spinning. Era: bronze. Subject: A wooden drop spindle with a whorl, wound with undyed cream wool yarn, connected by one thread to a fluffy loose wool tuft. Simple large forms distinguishing wool from flax; no dyed fibers or machinery. No iron or steel.",
+          "backend": "built-in image_gen",
+          "seed": null,
+          "seed_note": "backend does not expose seed",
+          "generation_artifact_path": "/Users/rexxa/.codex/generated_images/01a1c28d-9099-71b0-ae2b-25576a95d610/exec-d4f282a7-124a-49c6-b581-b77dcf5db5e9.png",
+          "raw_path": "/Users/rexxa/work/art-batch/A4/raw/wool_spinning-01.png",
+          "raw_sha256": "44f72f2115545fe95a24d195023304a1b3a121a1bafce8b0f07257fd8ca290da",
+          "reference_paths": [
+            "art/style05/anchors/props.png",
+            "art/style05/anchors/scene.png"
+          ],
+          "reference_delivery": "contextual view_image",
+          "generated_at": "2026-11-09T23:08:53.074Z",
+          "status": "generated_pending_review"
+        }
+      ],
+      "normalization": {
+        "raw": {
+          "path": "/Users/rexxa/work/art-batch/A4/raw/wool_spinning-01.png",
+          "sha256": "44f72f2115545fe95a24d195023304a1b3a121a1bafce8b0f07257fd8ca290da",
+          "canvas": [
+            1254,
+            1254
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            23,
+            23,
+            1253,
+            1238
+          ],
+          "bbox16": [
+            201,
+            105,
+            1079,
+            1167
+          ],
+          "bbox128": [
+            201,
+            106,
+            1077,
+            1166
+          ],
+          "opaque_pixels": 308508,
+          "occupancy": 0.1961875109696817,
+          "border_alpha_max": 0,
+          "expected_canvas": null,
+          "canvas_matches": true,
+          "expected_sha256": "44f72f2115545fe95a24d195023304a1b3a121a1bafce8b0f07257fd8ca290da",
+          "hash_matches": true,
+          "passed": true
+        },
+        "output": {
+          "path": "/Users/rexxa/work/art-batch/A4/normalized/icons/wool_spinning-01.png",
+          "sha256": "207ffbec9b3f9e697ee8f4afeb5a0bbc70d8711ea40a9ebbd25085a24e2536d3",
+          "canvas": [
+            64,
+            64
+          ],
+          "has_alpha": true,
+          "alpha_extrema": [
+            0,
+            255
+          ],
+          "bbox1": [
+            8,
+            3,
+            56,
+            61
+          ],
+          "bbox16": [
+            8,
+            3,
+            56,
+            61
+          ],
+          "bbox128": [
+            8,
+            3,
+            55,
+            61
+          ],
+          "opaque_pixels": 911,
+          "occupancy": 0.222412109375,
+          "border_alpha_max": 0,
+          "expected_canvas": [
+            64,
+            64
+          ],
+          "canvas_matches": true,
+          "expected_sha256": null,
+          "hash_matches": null,
+          "passed": true
+        },
+        "crop": [
+          199,
+          104,
+          1079,
+          1168
+        ],
+        "scale": 0.05451127819548872,
+        "resized": [
+          48,
+          58
+        ],
+        "offset": [
+          8,
+          3
+        ],
+        "anchor": [
+          32,
+          32
+        ],
+        "discarded_alpha_pixels": 4906,
+        "discarded_alpha_max": 5,
+        "footprint": null,
+        "operations": [
+          "preserve generated alpha; no repainting",
+          "alpha>=128 bounds plus 2px fringe; discarded fringe measured",
+          "uniform LANCZOS fit; integer raster rounding",
+          "center on transparent canvas"
+        ],
+        "status": "numeric_checked_visual_review_pending"
+      },
+      "legacy_item_numeric_diagnostic": {
+        "candidate": "/Users/rexxa/work/art-batch/A4/raw/wool_spinning-01.png",
+        "sha256": "44f72f2115545fe95a24d195023304a1b3a121a1bafce8b0f07257fd8ca290da",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.20624450307827616,
+          "saturation_q25": 0.3186329919169016,
+          "saturation_q75": 0.627279260907742,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.016312861467304395,
+          "foreground_pixels": 18026
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "review_file": "/Users/rexxa/work/art-batch/A4/reviews/bronze_icons1.json",
+      "review": {
+        "id": "wool_spinning",
+        "attempt": 1,
+        "raw_sha256": "44f72f2115545fe95a24d195023304a1b3a121a1bafce8b0f07257fd8ca290da",
+        "normalized_path": "/Users/rexxa/work/art-batch/A4/normalized/icons/wool_spinning-01.png",
+        "visual_verdict": {
+          "score": 93,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [
+            "The single connecting thread is delicate at32px, but spindle and fleece remain clear."
+          ],
+          "suggestions": [],
+          "reasoning": "The long spindle and soft wool tuft form an economical, legible composition with restrained fiber detail and consistent upper-left highlights."
+        },
+        "style_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "semantic_reading": "Wooden drop spindle wound with cream yarn beside fluffy wool",
+        "semantic_distinction": "Fluffy fleece and thick cream yarn distinguish wool spinning from flax fiber processing.",
+        "era_check": {
+          "verdict": "pass",
+          "reason": "Simple wooden spindle and undyed wool; no mechanical spinning wheel or dyed fabric."
+        },
+        "projection_check": "Front-three-quarter object presentation or appropriate flat object, coherent upper-left light, no horizon or isometric grid.",
+        "legibility_check": "Inspected32/48/64px on both light and dark backgrounds in the supplied contact sheet; limitations listed per asset.",
+        "mark_budget_check": "Selective material strokes and broad wash planes are visually consistent. No literal integer mark-count measurement is asserted.",
+        "owner_adoption": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "family": "icon",
+  "inputs": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/stone_axe_try1.png",
+      "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/ground_axe_try3.png",
+      "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/berry_basket_try1.png",
+      "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/clay_try3.png",
+      "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/firewood_try3.png",
+      "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/env1/items/clay_pot_empty.png",
+      "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "role": "reference"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/beekeeping.png",
+      "sha256": "18ef0df6b358d8a2141213a44c93cffdcac5d8ad8b1dd5c30db475f75adc1b70",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/charcoal.png",
+      "sha256": "2c00655432b968d50c59a5bb6479110b373d43609d22e963e28f49ae07785b35",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/cold_hammering.png",
+      "sha256": "7d18ea318c3d3f35b81c3b5d44b87f41ac91aaaec71974e8f7a60a978e9c5e16",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/composite_bow.png",
+      "sha256": "e49176268c6e0c58c57354792962a6b515b4fe1ad116448b0e736a56b6183381",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/copper_smelting.png",
+      "sha256": "697026b1f5eba358948c22bd0402cf2b41f9488f673a35989a672a222ebde81a",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/lime_plaster.png",
+      "sha256": "f1bbaf472cbc15108e7385b86e0cbb02b40813a225dc18f4ed2f55006cf95d26",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/mining.png",
+      "sha256": "d969b040161f76f9b4d85d466abd9d81003e96ae082cc677088a1800e58a7f67",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/mould_casting.png",
+      "sha256": "df87725a724a1ac2a25d7da7cb7e1aa2f3d105ddb1faa4c647696650fa5d6bc7",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/mud_brick_house.png",
+      "sha256": "ccff3f3bf11bb27578330255809f37d5da427d16dcd2bad2381a8a1331bdb9af",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/stone_masonry.png",
+      "sha256": "b1fc0259f255c6a82536ec513b1bd4d4b9d363d4ce987fd10286ab35e8ad7616",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/tin_sourcing.png",
+      "sha256": "2927470c2b63cdcc2e85ab451315b3858b695666e2a6fc79aad4c6600535c847",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/wheel.png",
+      "sha256": "15c52278aeed61b82e8db6802ca2d9155daef66b9850fcebce1233d250132a66",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/bronze/wool_spinning.png",
+      "sha256": "207ffbec9b3f9e697ee8f4afeb5a0bbc70d8711ea40a9ebbd25085a24e2536d3",
+      "role": "candidate"
+    }
+  ],
+  "canvas": [
+    1140,
+    812
+  ],
+  "sheet_sha256": "b70a0b894a9ae207f57c766c4cff5782acd0cb3dd6b4e32ab067e4d574ca0ee2",
+  "note": "Review composite only; source sprites are unchanged."
+}

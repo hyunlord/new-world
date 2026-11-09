@@ -1,0 +1,174 @@
+{
+  "status": "DRAFT_NOT_APPLIED",
+  "ui_knowledge": {
+    "beekeeping": {
+      "asset": "tech_beekeeping",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "charcoal": {
+      "asset": "tech_charcoal",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "cold_hammering": {
+      "asset": "tech_cold_hammering",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "composite_bow": {
+      "asset": "tech_composite_bow",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "copper_smelting": {
+      "asset": "tech_copper_smelting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "lime_plaster": {
+      "asset": "tech_lime_plaster",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "mining": {
+      "asset": "tech_mining",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "mould_casting": {
+      "asset": "tech_mould_casting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "mud_brick_house": {
+      "asset": "tech_mud_brick_house",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "stone_masonry": {
+      "asset": "tech_stone_masonry",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "tin_sourcing": {
+      "asset": "tech_tin_sourcing",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "wheel": {
+      "asset": "tech_wheel",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "wool_spinning": {
+      "asset": "tech_wool_spinning",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    }
+  },
+  "ui_eras": {
+    "bronze": {
+      "asset": "era_bronze",
+      "canvas": [
+        264,
+        88
+      ],
+      "anchor": [
+        132,
+        44
+      ]
+    }
+  },
+  "ui_chapters": {
+    "first_copper": {
+      "asset": "chapter_first_copper",
+      "canvas": [
+        520,
+        260
+      ],
+      "anchor": [
+        260,
+        130
+      ]
+    }
+  }
+}
