@@ -16,6 +16,7 @@ class GateStopTests(unittest.TestCase):
             script = function + '\nstatus=0\nstep "$1" "$2" bash -c "exit $3"\ntouch "$LOG/continued"\n'
             env = dict(os.environ, LOG=folder, SUMMARY=str(root / 'gate.txt'))
             env.pop('CORE_P7_RUN', None)
+            env.pop('C1_PREGATE_ONLY', None)
             if p7:
                 env['CORE_P7_RUN'] = folder
             result = subprocess.run(['bash', '-c', script, 'test', str(number), name, str(code)],

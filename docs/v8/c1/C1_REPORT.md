@@ -46,7 +46,9 @@ C1-b에서 포획→성체 쌍→출생→젖→도축 및 실제 원인·저장
 
 B1 `062505d30511df79325b903289f9155c379013a1`은 recipe_registry actual10/expected9, B2 `4c4642553fe3a10ac6c31a2b87dcf435aa2dcce1`은 현재 labels에서11 누락으로 실패했다. 각각 첫3단계 PASS 뒤 debug 부분 RED/ABORTED이며 전체 gate가 아니다. B2는 소유 프로세스만 TERM하여 exit143/잔여0, 소스3081핀·설정·러너 불변을 검증했다. 두 실패와 중단 보고는 `fullgate-b-attempt{1,2}/ABORTED.json`, `STOP-B2-20261109-superseded-D-C1-2.json`, `C1-b-stop-report-20261109-D-C1-2.md`에 보존한다. 당시 중단을 성공으로 바꾸지 않는다.
 
-D-C1-3 상시 사전 검증은 frozen HEAD의 전체 workspace debug, all-target Clippy, step33 및 <120초 비렌더링 항목(헤드리스 포함)이다. 기존 gate의 C1_PREGATE_ONLY 선택으로 같은 명령을 실행하고 외부 pregate-b4.txt에 기록한다. 이 partial summary는 게시 증거가 아니다. 필수4와 짧은 검사37개(6 포함)로 총38단계: 1/2/3/4/6/7/8/9/11/12/13/14/15/16/18/19/20/21/22/23/24/26/27/28/29/30/31/32/33/34/35/36/38/42/43/45/49/51. 5/10/17/25/37/44/50은 긴 실행, 39/40/41/46은 실제 렌더링으로 전체 gate에서 실행한다. 47/48은 READ 모드 적용 대상이 아니다. step27은 단일 측정 lane·BASE/후보 교차·매 진입 load1<8을 유지한다. 모두 녹색 뒤 해당 flag를 해제하고 B4를 step1부터 전체 재실행한다. 외부 PLAY_ROOT/PLAY_DATA와 정확한10개 공백 fixture 목록을 유지한다. D-C1-1의 조건부 step41 절차와 기존 임계값을 유지한다. 새 caffeinate를 실행했다. 전체 step 목록은 사전 검증 audit와 외부 최종 한국어 보고에 기록한다.
+D-C1-3 상시 사전 검증은 frozen HEAD의 전체 workspace debug, all-target Clippy, step33 및 <120초 비렌더링 항목(헤드리스 포함)이다. 기존 gate의 C1_PREGATE_ONLY 선택으로 같은 명령을 실행하고 외부 pregate-b4-r3.txt에 기록한다. 이 partial summary는 게시 증거가 아니다. 필수4와 짧은 검사37개(6 포함)로 총38단계: 1/2/3/4/6/7/8/9/11/12/13/14/15/16/18/19/20/21/22/23/24/26/27/28/29/30/31/32/33/34/35/36/38/42/43/45/49/51. 5/10/17/25/37/44/50은 긴 실행, 39/40/41/46은 실제 렌더링으로 전체 gate에서 실행한다. 47/48은 READ 모드 적용 대상이 아니다. step27은 단일 측정 lane·BASE/후보 교차·매 진입 load1<8을 유지한다. 모두 녹색 뒤 해당 flag를 해제하고 B4를 step1부터 전체 재실행한다. 외부 PLAY_ROOT/PLAY_DATA와 정확한10개 공백 fixture 목록을 유지한다. D-C1-1의 조건부 step41 절차와 기존 임계값을 유지한다. 새 caffeinate를 실행했다. 전체 step 목록은 사전 검증 audit와 외부 최종 한국어 보고에 기록한다.
+
+D-C1-3의 첫 사전 검증은 모델 전환으로 중단됐다. 같은 `253e05c65`에서 완료한 r2는 debug3228 PASS/0 FAIL/15ignored, Clippy와 step33을 포함해37/38단계가 통과했다. step16의 시험 도우미가 바깥 `C1_PREGATE_ONLY=1`을 상속해 의도된 step25 실패를 건너뛴 것이 유일한 실패다. 변수 유무만 바꾼 기존3시험으로 재현했고, 도우미에서 그 변수만 제거한다(D29). 원본 `pregate-b4-r2/RESULT.json`을 RED로 보존한다. 새 커밋의 r3 전체38단계가 모두 통과하기 전에는 B4를 시작하지 않는다. 이 사전 검증 실패를 전체 게이트의 반복 제품 결함으로 세지 않는다.
 
 A3 전체49/49 PASS(기존 step41 면제)와 `094fea092`의 v8/wip→v8/main FF는 `C1-a-publication.json`에 있다. 그 녹색 게이트의 실제 BASE/후보 장부12행을 이번 문서 커밋에서 `docs/perf/PERF_LEDGER.md`에도 기록했다. B 측정으로 재사용하지 않는다. B4 종료와 원격 게시의 실제 사실은 외부 `C1-b-report.md` 및 게시 영수증에 기록하며, 검사 중인 커밋을 고쳐 자신의 미래 결과를 주장하지 않는다.
 
@@ -95,7 +97,7 @@ B paired 크래시 감지는 **PASS**다 (`crash-head-b1/receipt.json`, 2026-11-
 
 ### 새 도구 줄 수와 그 이유
 
-보수적 도구 누적은 **1998줄/상한2000줄**이다. A390 + 기존 runner scene export1 + old-save native8 + 가축 native115 + selected native5 + selected Rust36 + 실제 사슬1427 + 기존 gate 재사용 preflight3 + 기존 개인 필요 helper 재노출2 + colony probe9 + food fingerprint1 + story registry-count migration1이다. 동결 HEAD와 최초 BASE의 `git diff --numstat` 및 외부 runner 실제32줄을 다시 센 파일별22항목 영수증은 `c1-data/tooling-count-b-frozen-4c4642553.json`이다. 이전 `tooling-count-b-final-preflight.json`은 범주별 잠정 기록으로 보존한다. 실제 동기는 genuine 이전 저장 검증, 실제 화면 연결, 필수 사슬·저장/twin/replay, 새 상태의 기존 결정성 검증이다. 임시35줄 재생 진단과18줄 소유자 추적은 제거했고 원본·실패는 외부 보존했다. 새 observer framework·의존성은 없다. A 기능 통합 시험1269줄 및 일반 기능 단위/회귀 시험은 구별한다.
+보수적 도구 누적은 **1999줄/상한2000줄**이다. A390 + 기존 runner scene export1 + old-save native8 + 가축 native115 + selected native5 + selected Rust36 + 실제 사슬1427 + 기존 gate 재사용 preflight3 + gate 시험 환경 격리1 + 기존 개인 필요 helper 재노출2 + colony probe9 + food fingerprint1 + story registry-count migration1이다. 동결 HEAD와 최초 BASE의 `git diff --numstat` 및 외부 runner 실제32줄을 다시 센 파일별24항목 영수증은 `c1-data/tooling-count-b4-env-frozen.json`이다. 이전 `tooling-count-b-final-preflight.json`은 범주별 잠정 기록으로 보존한다. 실제 동기는 genuine 이전 저장 검증, 실제 화면 연결, 필수 사슬·저장/twin/replay, 새 상태의 기존 결정성 검증이다. 임시35줄 재생 진단과18줄 소유자 추적은 제거했고 원본·실패는 외부 보존했다. 새 observer framework·의존성은 없다. A 기능 통합 시험1269줄 및 일반 기능 단위/회귀 시험은 구별한다.
 
 ### 확인된 제한사항·후속 (C2로 넘기는 것)
 

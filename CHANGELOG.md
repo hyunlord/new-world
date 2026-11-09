@@ -1,6 +1,6 @@
 # Changelog
 
-## C1-b — implemented, verification IN_PROGRESS, 2026-11-09 (not published)
+## C1-b — implemented, verification IN_PROGRESS, 2026-11-10 (not published)
 
 ### Added
 - Data-driven livestock sidecar, ordinary capture/milk/slaughter jobs, physical pen feeding, biological age, breeding and typed immutable event causes. One colony-only system reuses existing work, reservations and atomic product placement.
@@ -15,6 +15,7 @@
 - Align integration fixtures with ordinary livestock rule11 while preserving preboot rejection, frozen historical ids and complete data-field comparison; retain the aborted first B gate.
 
 - Derive livestock anchors and picking from actual shared sprite geometry; retain the current hit area and minimum-id overlap selection. D-C1-3 expands frozen prechecks to step33 and every fast non-render step; interrupted B3 remains incomplete.
+- Isolate the gate-function failure tests from an inherited preflight selector. The complete r2 preflight exposed the leak before B4; retain its red result and require a new frozen preflight after the one-line test fix.
 
 ### Removed
 - None.

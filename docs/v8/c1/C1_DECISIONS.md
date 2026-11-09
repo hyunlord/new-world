@@ -488,3 +488,19 @@ pregate-b4.txt; a red preflight never launches B4. Full B4 starts atstep1,
 with external PLAY paths and whitespace fixture assertion. Publish only a
 complete green B4 under D-C1-1's unchanged conditional step41 procedure.
 Actual results and fast-forwards belong in immutable external receipts.
+
+## D29 — isolate gate-function tests from the outer preflight mode
+
+The first D-C1-3 preflight was interrupted by the model switch. The complete
+r2 at253e05c65 passed37 of38 steps, including debug3228/0/15, Clippy and
+step33. Python step16 failed because GateStopTests copied the outer
+C1_PREGATE_ONLY=1 into its extracted production step() shell. Its deliberate
+step25 failure was skipped, returning0 instead of1. The same three tests
+reproduce one failure with the inherited flag and pass with it absent.
+
+Clear only that unrelated flag beside the existing CORE_P7_RUN clear in
+the test helper; its p7 argument still chooses the tested mode. Preserve all
+exit/continuation assertions and production gate behavior. One added tooling
+line makes1999/2000. Preserve r2 as a red precheck, not a publication gate or
+a repeated full-gate product defect. Commit the fix, rerun all38 prechecks
+on that frozen HEAD as r3, then start full B4 atstep1 only if all pass.
