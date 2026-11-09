@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "id": "hoe",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "neolithic",
+  "family": "tools_textiles",
+  "catalogue_source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 50,
+    "sim": "Hoe"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 2,
+  "generation": {
+    "id": "hoe",
+    "era": "neolithic",
+    "attempt": 2,
+    "prompt": "Use case: stylized-concept. Asset: ONE isolated WorldSim concept-05 inventory item, designed for 64px canvas and32px zoom. Input1 and input2 are STYLE references only; copy the delicate natural-history ink-and-tone language of the small existing items, not their scenery. Warm brown-black fine contours, main/detail line ratio2:1. Restrained translucent earth-pigment wash, calm broad midtone areas. At most2 shadow hatch groups of2-3 parallel lines slanting lower-left to upper-right; wood3-5 grain lines, cloth3-5 fold lines and2 small weave marks. No dense stipple, no all-over speckles, no gradients outside subject. Front three-quarter camera20degrees down, narrow visible top face, upper-left light. Natural resting object centered, full uncropped silhouette occupying70% canvas with generous margin. Genuine transparent alpha, opaque object interior, zero alpha outside the antialiased silhouette. No ground, shadow, glow, aura, vignette, scenery, labels, letters, border, watermark, pixel-art, photorealism or3D. Subject: A NEOLITHIC FARMING HOE with a long slender wooden pole, a small bent wooden elbow at its lower LEFT end, and a broad flat grey stone digging blade lashed to the elbow. The blade is TRANSVERSE to the pole, like the head of a garden hoe, NOT aligned in the plane of an axe. Show the WIDE shallow rectangular blade face almost facing the viewer, horizontal cutting edge along the bottom; its narrow neck bends upward into the pole which recedes to upper right. Obvious L-shaped farming-hoe silhouette, with very long slim handle and small low wide digging head. No pointed axe wedge, no chopping-axe blade, no metal.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "started_at": "2026-11-09T23:22:25.231Z",
+    "retry_reason": "hoe_try1 visually reads as axe",
+    "completed_at": "2026-11-09T23:23:06.725Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61 as /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-9b251c2c-7087-4ebf-a1e4-d00d70644591.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/hoe_try2.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-9b251c2c-7087-4ebf-a1e4-d00d70644591.png",
+    "status": "GENERATED_PENDING_PARENT_REVIEW",
+    "raw_sha256": "b1b7094e54b94f8828d525606f34c31cebfd529c304907a4a038c521fcf32f91",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/hoe_try2.json",
+    "record_sha256": "75770acd2c3c36cb0aacea2ddf19d33d11d4ab107fdddb2b17f34da9d8213f8b",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/hoe_try2.png",
+    "raw_sha256": "b1b7094e54b94f8828d525606f34c31cebfd529c304907a4a038c521fcf32f91",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/hoe_try2.json",
+    "candidate_sha256": "2fe3720fbebb9c087448c53a23b85d83dbb4c6a3ff987bd76f0fd77523bc92d1"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 115975,
+    "opaque_pixels": 103610,
+    "fringe_pixels": 12365,
+    "visible_bounds": [
+      65,
+      23,
+      1222,
+      1156
+    ],
+    "opaque_bounds": [
+      149,
+      167,
+      1140,
+      1102
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/tools_textiles/hoe_try2.png",
+    "sha256": "b1b7094e54b94f8828d525606f34c31cebfd529c304907a4a038c521fcf32f91",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.2496826835902085,
+      "saturation_q25": 0.32724523029983854,
+      "saturation_q75": 0.5304833425633402,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.015518068575800506,
+      "foreground_pixels": 6920
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "hoe",
+      "source": "art/style05/batch_a3/items/hoe.png",
+      "bucket": "1",
+      "sha256": "47e14e1a4382ccf90a1f1b605579e283754b3efd4e0ee6f7f3a35c47702c7c0c",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 509,
+          "opaque_pixels": 261,
+          "fringe_pixels": 248,
+          "visible_bounds": [
+            5,
+            8,
+            60,
+            60
+          ],
+          "opaque_bounds": [
+            7,
+            10,
+            57,
+            57
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            56
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 261,
+          "base_row": 56,
+          "base_error": 0,
+          "height": 47,
+          "gradient_x": -8.818409345794393,
+          "gradient_y": -8.483761809045225,
+          "light_angle_degrees": 223.89195980458206,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 50,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.5,
+          2.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

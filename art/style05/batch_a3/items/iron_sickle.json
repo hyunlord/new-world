@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "id": "iron_sickle",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "iron",
+  "family": "iron",
+  "catalogue_source": "Bible §4.4 explicit named unlocks/list",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "iron_sickle",
+    "era": "iron",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Asset type: WorldSim concept-05 ancient settlement item sprite, one isolated game asset, intended for a final 64x64 transparent tile.\nInput images are STYLE REFERENCES ONLY: first is the adopted item contact sheet, second is the concept-05 ink-and-tone props. Do not reproduce a sheet, labels, landscape, scenery or backgrounds.\nStyle: hand-drawn warm brown-black ink contour with restrained translucent pigment wash, natural-history game illustration. Main/secondary line width ratio 2:1. Sparse lower-left to upper-right parallel hatching only on shadow faces: metal 2-3 edge accents and 1-2 hatch groups, ore 3-5 facet seams and 2 hatch groups, wood 3-5 grain lines. No all-over stippling or tiny white speckles.\nPalette: quiet earth tones; iron dark neutral grey, wood ochre/umber; warm ink. No specular glare, chrome, neon, pixel art, vector icon, 3D rendering or photorealism.\nProjection: front three-quarter, about 20 degrees down, soft upper-left light, naturally resting object with narrow top face. Low wide silhouette, roughly twice as wide as high where object anatomy allows; all parts fully visible, centred, generous transparent margin.\nBackground: genuinely transparent alpha, no ground plane, no cast shadow, no halo, no glow, no backdrop or paper texture outside object. Absolutely no text, numbers, grid, border, watermark, labels or other objects.\nPreserve one coherent illustrated material language matching references. Keep the design simple enough to read at 32px.\nSubject: One early iron harvest sickle lying on its side: a modest smoothly hooked C-shaped dark-grey iron blade with a plain short brown wooden grip. The concave inner cutting edge is clearly visible. No saw teeth, no fantasy decoration, no modern plastic. Full blade and grip visible.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png"
+    ],
+    "started_at": "2026-11-09T23:08:50.141Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "inferred_proposal": false,
+    "completed_at": "2026-11-09T23:10:02.060Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c as /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-bd882008-f753-471f-9653-6bde4aa8ac66.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-bd882008-f753-471f-9653-6bde4aa8ac66.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_sickle_try1_raw.png",
+    "raw_sha256": "efc7b491b9859d067f357d7b42b5583522b534b1567ddd2c1fd476362735edda",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    "timestamp_semantics": "started_at is pre-call bound; completed_at is observed tool return; internal scheduling unavailable",
+    "raw_inspection": {
+      "size": [
+        1774,
+        887
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "nonzero_alpha_bbox": [
+        25,
+        9,
+        1742,
+        887
+      ]
+    },
+    "status": "GENERATED_PENDING_NORMALIZED_QA"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/iron/iron_sickle_try1.json",
+    "record_sha256": "f957f28e72de2d73d781d878882780581dcf070e20d14696131a3012365bfc36",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_sickle_try1_raw.png",
+    "raw_sha256": "efc7b491b9859d067f357d7b42b5583522b534b1567ddd2c1fd476362735edda",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/iron_sickle_try1.json",
+    "candidate_sha256": "4311ef87edbfabaf16059c382216d8ee0d6525501af690a1f3b966818ec04700"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 254112,
+    "opaque_pixels": 234535,
+    "fringe_pixels": 19577,
+    "visible_bounds": [
+      25,
+      9,
+      1742,
+      887
+    ],
+    "opaque_bounds": [
+      216,
+      182,
+      1559,
+      703
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/iron/iron_sickle_try1_raw.png",
+    "sha256": "efc7b491b9859d067f357d7b42b5583522b534b1567ddd2c1fd476362735edda",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.24057377049180328,
+      "saturation_q25": 0.3005116263985479,
+      "saturation_q75": 0.6001032101589461,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.013545167432359503,
+      "foreground_pixels": 8501
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "iron_sickle",
+      "source": "art/style05/batch_a3/items/iron_sickle.png",
+      "bucket": "1",
+      "sha256": "af7d85950085b070e4b542d1d6a4e1d76c678bd78c6b083e6b826adfc5d98d86",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 463,
+          "opaque_pixels": 271,
+          "fringe_pixels": 192,
+          "visible_bounds": [
+            7,
+            20,
+            58,
+            43
+          ],
+          "opaque_bounds": [
+            9,
+            23,
+            55,
+            41
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            40
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 271,
+          "base_row": 40,
+          "base_error": 0,
+          "height": 18,
+          "gradient_x": 2.39430452674897,
+          "gradient_y": -0.9471991111111113,
+          "light_angle_degrees": 338.415995253037,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": false,
+          "passed": false
+        },
+        "width_px": 46,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.5,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

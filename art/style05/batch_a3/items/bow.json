@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "id": "bow",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "neolithic",
+  "family": "tools_textiles",
+  "catalogue_source": "Bible §4.2/§4.5 and origin/v8/main items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 53,
+    "sim": "Bow"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "bow",
+    "era": "neolithic",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Asset: ONE isolated WorldSim concept-05 inventory item, designed for 64px canvas and32px zoom. Input1 and input2 are STYLE references only; copy the delicate natural-history ink-and-tone language of the small existing items, not their scenery. Warm brown-black fine contours, main/detail line ratio2:1. Restrained translucent earth-pigment wash, calm broad midtone areas. At most2 shadow hatch groups of2-3 parallel lines slanting lower-left to upper-right; wood3-5 grain lines, cloth3-5 fold lines and2 small weave marks. No dense stipple, no all-over speckles, no gradients outside subject. Front three-quarter camera20degrees down, narrow visible top face, upper-left light. Natural resting object centered, full uncropped silhouette occupying70% canvas with generous margin. Genuine transparent alpha, opaque object interior, zero alpha outside the antialiased silhouette. No ground, shadow, glow, aura, vignette, scenery, labels, letters, border, watermark, pixel-art, photorealism or3D. Subject: A simple prehistoric self bow of one curved dark honey-brown wooden stave, taut cream fibre string joining both tips, wrapped central grip. Gentle asymmetric D silhouette lying almost horizontal diagonally. No arrow, metal fittings, quiver, sights or modern mechanisms.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "started_at": "2026-11-09T23:09:46.774Z",
+    "completed_at": "2026-11-09T23:11:29.444Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61 as /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-6afa03e8-2b75-4d49-935d-c7dfe60b063b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/bow_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-6afa03e8-2b75-4d49-935d-c7dfe60b063b.png",
+    "status": "GENERATED_PENDING_PARENT_REVIEW",
+    "raw_sha256": "7e8039bc72ae337c7d9e065a65ea3c233b5a9e2aeaf096a65887c990d9ace33a",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/bow_try1.json",
+    "record_sha256": "65b73ba0ce619d1d13fcc0e64b2b86125ce1fc46775e6c504c79ebc5e47957f8",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/bow_try1.png",
+    "raw_sha256": "7e8039bc72ae337c7d9e065a65ea3c233b5a9e2aeaf096a65887c990d9ace33a",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/bow_try1.json",
+    "candidate_sha256": "19d8d5db28204c900c5d0a0fa96dc5ca7e4146292e52ebc40629652b3ab992e9"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 154122,
+    "opaque_pixels": 125888,
+    "fringe_pixels": 28234,
+    "visible_bounds": [
+      25,
+      30,
+      1514,
+      992
+    ],
+    "opaque_bounds": [
+      89,
+      240,
+      1449,
+      792
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/tools_textiles/bow_try1.png",
+    "sha256": "7e8039bc72ae337c7d9e065a65ea3c233b5a9e2aeaf096a65887c990d9ace33a",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.2103766879886283,
+      "saturation_q25": 0.48584262905586856,
+      "saturation_q75": 0.5727063779645344,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.022355590126312944,
+      "foreground_pixels": 4473
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "bow",
+      "source": "art/style05/batch_a3/items/bow.png",
+      "bucket": "1",
+      "sha256": "ae692f89dd99d12719c4ce43301e4aa00b940167b1ce5e8361a8af25bbc45df7",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 512,
+          "opaque_pixels": 166,
+          "fringe_pixels": 346,
+          "visible_bounds": [
+            3,
+            18,
+            61,
+            45
+          ],
+          "opaque_bounds": [
+            6,
+            21,
+            58,
+            42
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            41
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 166,
+          "base_row": 41,
+          "base_error": 0,
+          "height": 21,
+          "gradient_x": -5.954535766423358,
+          "gradient_y": -26.91226605504587,
+          "light_angle_degrees": 257.5238864241503,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 52,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "id": "iron_pickaxe",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "iron",
+  "family": "iron",
+  "catalogue_source": "Bible §4.4 says six tools/four weapons; proposed completion of unnamed two tools/one weapon",
+  "inferred_completion_candidate": true,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "iron_pickaxe",
+    "era": "iron",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Asset type: WorldSim concept-05 ancient settlement item sprite, one isolated game asset, intended for a final 64x64 transparent tile.\nInput images are STYLE REFERENCES ONLY: first is the adopted item contact sheet, second is the concept-05 ink-and-tone props. Do not reproduce a sheet, labels, landscape, scenery or backgrounds.\nStyle: hand-drawn warm brown-black ink contour with restrained translucent pigment wash, natural-history game illustration. Main/secondary line width ratio 2:1. Sparse lower-left to upper-right parallel hatching only on shadow faces: metal 2-3 edge accents and 1-2 hatch groups, ore 3-5 facet seams and 2 hatch groups, wood 3-5 grain lines. No all-over stippling or tiny white speckles.\nPalette: quiet earth tones; iron dark neutral grey, wood ochre/umber; warm ink. No specular glare, chrome, neon, pixel art, vector icon, 3D rendering or photorealism.\nProjection: front three-quarter, about 20 degrees down, soft upper-left light, naturally resting object with narrow top face. Low wide silhouette, roughly twice as wide as high where object anatomy allows; all parts fully visible, centred, generous transparent margin.\nBackground: genuinely transparent alpha, no ground plane, no cast shadow, no halo, no glow, no backdrop or paper texture outside object. Absolutely no text, numbers, grid, border, watermark, labels or other objects.\nPreserve one coherent illustrated material language matching references. Keep the design simple enough to read at 32px.\nSubject: One proposed early iron mining pickaxe lying on its side: straight short ochre-brown wooden haft with a narrow dark-grey iron head crossing the top, one pointed end and one blunt slightly flattened end. Entire tool visible, small practical head, no modern rubber grip, no decorative metal.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png"
+    ],
+    "started_at": "2026-11-09T23:13:07.570Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "inferred_proposal": true,
+    "completed_at": "2026-11-09T23:14:24.400Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c as /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-0a2c2d67-12b2-4d98-9203-baa996da2118.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-0a2c2d67-12b2-4d98-9203-baa996da2118.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_pickaxe_try1_raw.png",
+    "raw_sha256": "e0981bf4143a5b31c88fa78e784dbd4ac22ea13ec62de96e5d972458ef5f7b80",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    "timestamp_semantics": "started_at is pre-call bound; completed_at is observed tool return; internal scheduling unavailable",
+    "raw_inspection": {
+      "size": [
+        1774,
+        887
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "nonzero_alpha_bbox": [
+        227,
+        23,
+        1647,
+        863
+      ]
+    },
+    "status": "GENERATED_PENDING_NORMALIZED_QA"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/iron/iron_pickaxe_try1.json",
+    "record_sha256": "c7990184cbd87bdf2c008ae8a9c7b6abee782875455694d6405835dabd71b85c",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_pickaxe_try1_raw.png",
+    "raw_sha256": "e0981bf4143a5b31c88fa78e784dbd4ac22ea13ec62de96e5d972458ef5f7b80",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/iron_pickaxe_try1.json",
+    "candidate_sha256": "e5d68564fc4a1d9acc3c035256f93fe289c34ad8b6847279af7eff3a6223007a"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 129088,
+    "opaque_pixels": 121764,
+    "fringe_pixels": 7324,
+    "visible_bounds": [
+      227,
+      23,
+      1647,
+      863
+    ],
+    "opaque_bounds": [
+      495,
+      178,
+      1247,
+      709
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/iron/iron_pickaxe_try1_raw.png",
+    "sha256": "e0981bf4143a5b31c88fa78e784dbd4ac22ea13ec62de96e5d972458ef5f7b80",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.24966632645049855,
+      "saturation_q25": 0.35733836036181293,
+      "saturation_q75": 0.5810741707711605,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01709226001517186,
+      "foreground_pixels": 14128
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "iron_pickaxe",
+      "source": "art/style05/batch_a3/items/iron_pickaxe.png",
+      "bucket": "1",
+      "sha256": "daa88587a0f46494c7108e59d46031eb89566d55d0b632e15a8e22768915d2d4",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 359,
+          "opaque_pixels": 203,
+          "fringe_pixels": 156,
+          "visible_bounds": [
+            11,
+            19,
+            47,
+            45
+          ],
+          "opaque_bounds": [
+            14,
+            21,
+            45,
+            43
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            42
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 203,
+          "base_row": 42,
+          "base_error": 0,
+          "height": 22,
+          "gradient_x": -1.1102217142857143,
+          "gradient_y": -8.506390303030303,
+          "light_angle_degrees": 262.5640053982469,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 31,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          -3.0,
+          0.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "id": "iron_axe",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "iron",
+  "family": "iron",
+  "catalogue_source": "Bible §4.4 explicit named unlocks/list",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "iron_axe",
+    "era": "iron",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Asset type: WorldSim concept-05 ancient settlement item sprite, one isolated game asset, intended for a final 64x64 transparent tile.\nInput images are STYLE REFERENCES ONLY: first is the adopted item contact sheet, second is the concept-05 ink-and-tone props. Do not reproduce a sheet, labels, landscape, scenery or backgrounds.\nStyle: hand-drawn warm brown-black ink contour with restrained translucent pigment wash, natural-history game illustration. Main/secondary line width ratio 2:1. Sparse lower-left to upper-right parallel hatching only on shadow faces: metal 2-3 edge accents and 1-2 hatch groups, ore 3-5 facet seams and 2 hatch groups, wood 3-5 grain lines. No all-over stippling or tiny white speckles.\nPalette: quiet earth tones; iron dark neutral grey, wood ochre/umber; warm ink. No specular glare, chrome, neon, pixel art, vector icon, 3D rendering or photorealism.\nProjection: front three-quarter, about 20 degrees down, soft upper-left light, naturally resting object with narrow top face. Low wide silhouette, roughly twice as wide as high where object anatomy allows; all parts fully visible, centred, generous transparent margin.\nBackground: genuinely transparent alpha, no ground plane, no cast shadow, no halo, no glow, no backdrop or paper texture outside object. Absolutely no text, numbers, grid, border, watermark, labels or other objects.\nPreserve one coherent illustrated material language matching references. Keep the design simple enough to read at 32px.\nSubject: One early iron woodcutting axe lying on its side. Short rough unpainted wooden haft, a small dark-grey wedge-shaped iron axe head with broad cutting edge, securely socketed onto upper haft. Simple ancient tool, no fantasy ornament, no modern rubber, full haft visible.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png"
+    ],
+    "started_at": "2026-11-09T23:08:50.141Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "inferred_proposal": false,
+    "completed_at": "2026-11-09T23:09:11.424Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c as /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-df22fe7b-54d8-4d65-b65f-1655baae93a3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-df22fe7b-54d8-4d65-b65f-1655baae93a3.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_axe_try1_raw.png",
+    "raw_sha256": "1780d98b1e0b50ab28202831ba5f5a2249479e8447d14a80d5e3ea7d684a2b1e",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    "timestamp_semantics": "started_at is pre-call bound; completed_at is observed tool return; internal scheduling unavailable",
+    "raw_inspection": {
+      "size": [
+        1774,
+        887
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "nonzero_alpha_bbox": [
+        33,
+        23,
+        1718,
+        870
+      ]
+    },
+    "status": "GENERATED_PENDING_NORMALIZED_QA"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/iron/iron_axe_try1.json",
+    "record_sha256": "b48ea4e4faac8f9c1423c3e0a8dab2153d203ad61c6c8517eb64af6c0d5a0d3d",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_axe_try1_raw.png",
+    "raw_sha256": "1780d98b1e0b50ab28202831ba5f5a2249479e8447d14a80d5e3ea7d684a2b1e",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/iron_axe_try1.json",
+    "candidate_sha256": "292a19cbcbee92361aea97a2b9421bd6aa9f68eb77abc19273811e376d39a92f"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 306318,
+    "opaque_pixels": 293354,
+    "fringe_pixels": 12964,
+    "visible_bounds": [
+      33,
+      23,
+      1718,
+      870
+    ],
+    "opaque_bounds": [
+      208,
+      156,
+      1484,
+      713
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/iron/iron_axe_try1_raw.png",
+    "sha256": "1780d98b1e0b50ab28202831ba5f5a2249479e8447d14a80d5e3ea7d684a2b1e",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.2332737367083843,
+      "saturation_q25": 0.33777297157028585,
+      "saturation_q75": 0.6096757903456869,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.02010091847406908,
+      "foreground_pixels": 11831
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "iron_axe",
+      "source": "art/style05/batch_a3/items/iron_axe.png",
+      "bucket": "1",
+      "sha256": "015c86ea70ae0eccab90ad9193a463d60a25bc9f73072986bb11f53fa27f0878",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 538,
+          "opaque_pixels": 346,
+          "fringe_pixels": 192,
+          "visible_bounds": [
+            7,
+            19,
+            56,
+            43
+          ],
+          "opaque_bounds": [
+            9,
+            22,
+            53,
+            41
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            40
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 346,
+          "base_row": 40,
+          "base_error": 0,
+          "height": 19,
+          "gradient_x": -0.6288695924764892,
+          "gradient_y": -4.585794701986755,
+          "light_angle_degrees": 262.1914906649037,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 44,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          -0.5,
+          -1.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

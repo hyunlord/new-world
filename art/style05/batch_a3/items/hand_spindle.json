@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "id": "hand_spindle",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "tools_textiles",
+  "catalogue_source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 35,
+    "sim": "HandSpindle"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "hand_spindle",
+    "era": "bronze",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Asset: ONE isolated WorldSim concept-05 inventory item, designed for 64px canvas and32px zoom. Input1 and input2 are STYLE references only; copy the delicate natural-history ink-and-tone language of the small existing items, not their scenery. Warm brown-black fine contours, main/detail line ratio2:1. Restrained translucent earth-pigment wash, calm broad midtone areas. At most2 shadow hatch groups of2-3 parallel lines slanting lower-left to upper-right; wood3-5 grain lines, cloth3-5 fold lines and2 small weave marks. No dense stipple, no all-over speckles, no gradients outside subject. Front three-quarter camera20degrees down, narrow visible top face, upper-left light. Natural resting object centered, full uncropped silhouette occupying70% canvas with generous margin. Genuine transparent alpha, opaque object interior, zero alpha outside the antialiased silhouette. No ground, shadow, glow, aura, vignette, scenery, labels, letters, border, watermark, pixel-art, photorealism or3D. Subject: One ancient hand drop spindle: a tapered brown wooden rod passes through a small round clay whorl near its lower end, a compact winding of pale natural flax thread around the upper shaft, one short attached loose strand. Primitive wood and clay only, no metal, no modern spinning wheel.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "started_at": "2026-11-09T23:15:59.244Z",
+    "completed_at": "2026-11-09T23:17:51.488Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61 as /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-92d03de9-6b96-4586-91c4-68b31a8f4ff6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/hand_spindle_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-92d03de9-6b96-4586-91c4-68b31a8f4ff6.png",
+    "status": "GENERATED_PENDING_PARENT_REVIEW",
+    "raw_sha256": "b37bc49f5e9f12d9044df055542a7c15b86eef505119d78640680cb0caca5890",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/hand_spindle_try1.json",
+    "record_sha256": "d1f107cbba9a727b1ba6abc9d0af724cadd7b9eb96a17311c491f8534276c973",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/hand_spindle_try1.png",
+    "raw_sha256": "b37bc49f5e9f12d9044df055542a7c15b86eef505119d78640680cb0caca5890",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/hand_spindle_try1.json",
+    "candidate_sha256": "07ad4058a0e33421455c0832ad0fd8ac9aa6df350788ab0b491bd28e935578f1"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 109156,
+    "opaque_pixels": 95243,
+    "fringe_pixels": 13913,
+    "visible_bounds": [
+      0,
+      15,
+      1218,
+      1254
+    ],
+    "opaque_bounds": [
+      311,
+      150,
+      815,
+      1100
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/tools_textiles/hand_spindle_try1.png",
+    "sha256": "b37bc49f5e9f12d9044df055542a7c15b86eef505119d78640680cb0caca5890",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.2504443654461429,
+      "saturation_q25": 0.48664292728132436,
+      "saturation_q75": 0.6265944629521872,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.016170613552139192,
+      "foreground_pixels": 6927
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "hand_spindle",
+      "source": "art/style05/batch_a3/items/hand_spindle.png",
+      "bucket": "1",
+      "sha256": "5379cdf427c8a6e5361f9f40f80a46f812058d6d2b6d13145e0aba7736614281",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 421,
+          "opaque_pixels": 209,
+          "fringe_pixels": 212,
+          "visible_bounds": [
+            15,
+            7,
+            44,
+            56
+          ],
+          "opaque_bounds": [
+            18,
+            9,
+            41,
+            54
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            53
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 209,
+          "base_row": 53,
+          "base_error": 0,
+          "height": 45,
+          "gradient_x": 3.4882319018404906,
+          "gradient_y": -4.714734806629835,
+          "light_angle_degrees": 306.49616503494826,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": false,
+          "passed": false
+        },
+        "width_px": 23,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          -2.5,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

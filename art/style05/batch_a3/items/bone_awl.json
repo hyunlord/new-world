@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "id": "bone_awl",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "paleolithic",
+  "family": "misc",
+  "catalogue_source": "Bible §4.1 explicit unlocks/list",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "bone_awl",
+    "era": "paleolithic",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Create ONE isolated inventory item for WorldSim concept05. Reference image1 establishes fine ink/earth-wash technique; reference image2 shows the existing item family. Copy STYLE, not their subjects or labels. Warm brown-black delicate hand-ink contour and restrained translucent pigment wash; main contour:secondary line weight2:1. At final64px contour about1px, secondary0.5px. Calm broad material planes. Sparse hatch groups slanting lower-left to upper-right, maximum2 groups of2-3 short lines per face. No speckles or all-over noise. Restrained muted earth colours, not glossy or photorealistic. Front three-quarter view looking down about20degrees; upper-left light and narrow top face. One complete object resting naturally, centered, about70percent width of square image, generous margin. Real transparent background, no ground, cast shadow, lettering, border, tile, watermark, scenery, detached chips. Full uncropped silhouette readable at64px and32px. CRITICAL ALPHA: no glow, no vignette, no ambient aura, no smoke, no dusty surround. Alpha must be exactly zero immediately outside the crisp object edge, object interior opaque. These references show the ink treatment only; do not add any reference object. Subject: One pointed BONE AWL made from a naturally tapering cream animal bone, thick blunt slightly knobbly hand grip tapering to a long sharp point. Laid nearly horizontal, point right, no eye, no thread, no metal or wooden handle. Matte warm ivory with2 faint bone grooves.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/ground_axe.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/clay_pot_empty.png"
+    ],
+    "started_at": "2026-11-09T23:13:44.167Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "scope_note": "Explicit catalogue or brief item",
+    "completed_at": "2026-11-09T23:15:10.312Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7 as /Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7/exec-35e0dbb4-8edf-4a82-afd3-d1b6e42e45ac.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7/exec-35e0dbb4-8edf-4a82-afd3-d1b6e42e45ac.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/misc/bone_awl_try1_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/misc/bone_awl_try1_raw.png",
+    "raw_sha256": "1d7e9969165cae3f9c5bc2510ff4d7475b7dc38543f56a4516afdad8f2703315",
+    "status": "GENERATED_PENDING_NORMALIZED_REVIEW"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/misc/bone_awl_try1.json",
+    "record_sha256": "6ce33c7e8ecf5a33e644fe140ffdf1163ff4b190d61bb6503ca4832949b79ca2",
+    "raw": "/Users/rexxa/work/art-batch/A3/misc/bone_awl_try1_raw.png",
+    "raw_sha256": "1d7e9969165cae3f9c5bc2510ff4d7475b7dc38543f56a4516afdad8f2703315",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/bone_awl_try1.json",
+    "candidate_sha256": "7bbd1eaa77dcb1ce8c3c4b98572109abd8e4a71d8e15581163c2f71046123b4e"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 134715,
+    "opaque_pixels": 124090,
+    "fringe_pixels": 10625,
+    "visible_bounds": [
+      0,
+      17,
+      1240,
+      1254
+    ],
+    "opaque_bounds": [
+      124,
+      497,
+      1126,
+      786
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/misc/bone_awl_try1_raw.png",
+    "sha256": "1d7e9969165cae3f9c5bc2510ff4d7475b7dc38543f56a4516afdad8f2703315",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.1821661468670258,
+      "saturation_q25": 0.36804613322335183,
+      "saturation_q75": 0.4963001831244098,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01793285659025798,
+      "foreground_pixels": 8143
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "bone_awl",
+      "source": "art/style05/batch_a3/items/bone_awl.png",
+      "bucket": "1",
+      "sha256": "93f39ad3f232a43e27a377bfb7ad7de65ca3a5b8255576638e7bc7a5d9a8c13d",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 452,
+          "opaque_pixels": 265,
+          "fringe_pixels": 187,
+          "visible_bounds": [
+            6,
+            23,
+            58,
+            42
+          ],
+          "opaque_bounds": [
+            9,
+            26,
+            53,
+            39
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            38
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 265,
+          "base_row": 38,
+          "base_error": 0,
+          "height": 13,
+          "gradient_x": 1.2155490039840633,
+          "gradient_y": -9.712304072398188,
+          "light_angle_degrees": 277.1337928551874,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": false,
+          "passed": false
+        },
+        "width_px": 44,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "id": "linen_tunic",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "tools_textiles",
+  "catalogue_source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 36,
+    "sim": "LinenTunic"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 2,
+  "generation": {
+    "id": "linen_tunic",
+    "era": "bronze",
+    "attempt": 2,
+    "refs": [
+      "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try2_raw.png",
+      "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try1.png"
+    ],
+    "material": "Pale undyed flax LINEN, light warm ivory cream, slightly smoother than the wool shape guide, with sparse straight weave accents.",
+    "repair_reason": "Thick bound crewneck and inset sleeves of try1 conflict with corrected primitive woven tunic family.",
+    "prompt": "Use case: precise-object-edit. Image1 is the APPROVED ANCIENT TUNIC CONSTRUCTION and primary SHAPE GUIDE. Image2 is MATERIAL/COLOUR reference only, its modern T-shirt construction is rejected. Reproduce the long straight knee-length rectangular body, plain narrow slit/V neck, crude sparse side and shoulder stitching, simple boxy short sleeves, uneven hand-cut lower hem and tiny side slits from image1. Neck is a raw simple slit in the woven panel: no collar, binding, ribbing or rounded crewneck. Keep straight body sides, no fitted waist, no pockets, buttons, embroidery, belt or modern hems. MATERIAL: Pale undyed flax LINEN, light warm ivory cream, slightly smoother than the wool shape guide, with sparse straight weave accents. Preserve image1's thin warm ink, main/detail line ratio2:1, three to five quiet broad folds, at most two short weave-mark groups, soft upper-left light and slightly downward three-quarter view. Complete garment laid flat, all edges visible, same long silhouette and slit neck as image1. Keep gentle pigment wash on cloth only, no dense speckles. Actual transparent alpha; no ground, shadow, aura, glow, scenery, labels, text, mannequin or person. One garment only.",
+    "started_at": "2026-11-09T23:28:23.301Z",
+    "completed_at": "2026-11-09T23:29:26.467Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "previous_attempt": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try1.json",
+    "triggering_review": "/Users/rexxa/work/art-batch/A3/reviews/final_crops_tools.json",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483 as /Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-b58c6dc2-0286-4474-b78c-c80873d30984.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-a62f-7f50-93e5-183a70b4d483/exec-b58c6dc2-0286-4474-b78c-c80873d30984.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try2.png",
+    "path": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try2.png",
+    "status": "GENERATED_PENDING_ROOT_NORMALIZED_REVIEW",
+    "raw_sha256": "19b60f3541c7bd4a49909ee8f35b1ff13f1b9f20f0289f2744a98a5f6f8f7baf",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try2_raw.png": "8b65adc6e77fca98810b82eb6b0c11bc955c96141f8c4be8d0b0e6773ad5788f",
+      "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try1.png": "20154af587cccf75cf47156e8019c034d6cbe1e56222dacb2da58dd09c877d81"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try2.json",
+    "record_sha256": "9854a4dc7f2416afef628a4e0fcc16fd90741f9cff754c5a6903113ab71f5929",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try2.png",
+    "raw_sha256": "19b60f3541c7bd4a49909ee8f35b1ff13f1b9f20f0289f2744a98a5f6f8f7baf",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/linen_tunic_try2.json",
+    "candidate_sha256": "23d1a9c7778a0c132a2a081d7f9e52b64965b21e4d957443060ca347fbd38cc9"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 603048,
+    "opaque_pixels": 588255,
+    "fringe_pixels": 14793,
+    "visible_bounds": [
+      0,
+      3,
+      1514,
+      992
+    ],
+    "opaque_bounds": [
+      287,
+      57,
+      1246,
+      976
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try2.png",
+    "sha256": "19b60f3541c7bd4a49909ee8f35b1ff13f1b9f20f0289f2744a98a5f6f8f7baf",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.06042855712426154,
+      "saturation_q25": 0.195075123924912,
+      "saturation_q75": 0.22833177212682004,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.002249524372964649,
+      "foreground_pixels": 41866
+    },
+    "numeric_checks": {
+      "edge_density": false,
+      "saturation_q25": true,
+      "saturation_q75": false,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "linen_tunic",
+      "source": "art/style05/batch_a3/items/linen_tunic.png",
+      "bucket": "1",
+      "sha256": "0e78f87b36fce146a0e06a1cb3551e9fce48a4fab8b3982baa4649281777fe05",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1070,
+          "opaque_pixels": 866,
+          "fringe_pixels": 204,
+          "visible_bounds": [
+            11,
+            13,
+            53,
+            51
+          ],
+          "opaque_bounds": [
+            14,
+            15,
+            51,
+            50
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            49
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 866,
+          "base_row": 49,
+          "base_error": 0,
+          "height": 35,
+          "gradient_x": -0.2691344619105201,
+          "gradient_y": -0.4125149453219928,
+          "light_angle_degrees": 236.87862452774584,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 37,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          0.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

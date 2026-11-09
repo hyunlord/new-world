@@ -1,0 +1,375 @@
+{
+  "schema_version": 1,
+  "id": "iron_ingot",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "iron",
+  "family": "iron",
+  "catalogue_source": "Bible §4.4 + ART-BATCH brief explicit list",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "iron_ingot",
+    "era": "iron",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Asset type: WorldSim concept-05 ancient settlement item sprite, one isolated game asset, intended for a final 64x64 transparent tile.\nInput images are STYLE REFERENCES ONLY: first is the adopted item contact sheet, second is the concept-05 ink-and-tone props. Do not reproduce a sheet, labels, landscape, scenery or backgrounds.\nStyle: hand-drawn warm brown-black ink contour with restrained translucent pigment wash, natural-history game illustration. Main/secondary line width ratio 2:1. Sparse lower-left to upper-right parallel hatching only on shadow faces: metal 2-3 edge accents and 1-2 hatch groups, ore 3-5 facet seams and 2 hatch groups, wood 3-5 grain lines. No all-over stippling or tiny white speckles.\nPalette: quiet earth tones; iron dark neutral grey, wood ochre/umber; warm ink. No specular glare, chrome, neon, pixel art, vector icon, 3D rendering or photorealism.\nProjection: front three-quarter, about 20 degrees down, soft upper-left light, naturally resting object with narrow top face. Low wide silhouette, roughly twice as wide as high where object anatomy allows; all parts fully visible, centred, generous transparent margin.\nBackground: genuinely transparent alpha, no ground plane, no cast shadow, no halo, no glow, no backdrop or paper texture outside object. Absolutely no text, numbers, grid, border, watermark, labels or other objects.\nPreserve one coherent illustrated material language matching references. Keep the design simple enough to read at 32px.\nSubject: One simple early forged iron ingot: low elongated rectangular bar with gently uneven hammered edges and blunt ends, dark neutral grey. A visible narrow top face and a darker side face. No lettering, not modern machined steel, no shiny chrome.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png"
+    ],
+    "started_at": "2026-11-09T23:07:22.149Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "inferred_proposal": false,
+    "completed_at": "2026-11-09T23:08:36.446Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c as /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-cf90ce04-911a-4afa-9741-061dcb2d98ff.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-cf90ce04-911a-4afa-9741-061dcb2d98ff.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_ingot_try1_raw.png",
+    "raw_sha256": "f5605b4c8e79c6f2f6f7c9a97297622ef6fdf6bf3cfe97c4adf7612efc0f377e",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    "timestamp_semantics": "started_at is pre-call bound; completed_at is observed tool return; internal scheduling unavailable",
+    "raw_inspection": {
+      "size": [
+        1774,
+        887
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "nonzero_alpha_bbox": [
+        33,
+        52,
+        1744,
+        871
+      ]
+    },
+    "status": "GENERATED_PENDING_NORMALIZED_QA"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/iron/iron_ingot_try1.json",
+    "record_sha256": "64e035f2811d90d489f925ed3f3398cabf9777ed49bb23e5e25e5efbf27439de",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_ingot_try1_raw.png",
+    "raw_sha256": "f5605b4c8e79c6f2f6f7c9a97297622ef6fdf6bf3cfe97c4adf7612efc0f377e",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/iron_ingot_try1.json",
+    "candidate_sha256": "4a3a85cf3b091bd72d4dc597df29d7a97b99b285ac3093d9df99ea52523080fc"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 378869,
+    "opaque_pixels": 363209,
+    "fringe_pixels": 15660,
+    "visible_bounds": [
+      33,
+      52,
+      1744,
+      871
+    ],
+    "opaque_bounds": [
+      247,
+      290,
+      1528,
+      659
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/iron/iron_ingot_try1_raw.png",
+    "sha256": "f5605b4c8e79c6f2f6f7c9a97297622ef6fdf6bf3cfe97c4adf7612efc0f377e",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.19591230026012635,
+      "saturation_q25": 0.265671888666573,
+      "saturation_q75": 0.3506404433793221,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.013871717375647845,
+      "foreground_pixels": 14561
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "iron_ingot",
+      "source": "art/style05/batch_a3/items/iron_ingot.png",
+      "bucket": "1",
+      "sha256": "dd9fc20745e127e432c3845c2c09dcf075670dd3855cdb6021632711d0575953",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 586,
+          "opaque_pixels": 424,
+          "fringe_pixels": 162,
+          "visible_bounds": [
+            8,
+            24,
+            56,
+            41
+          ],
+          "opaque_bounds": [
+            10,
+            26,
+            54,
+            39
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            38
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 424,
+          "base_row": 38,
+          "base_error": 0,
+          "height": 13,
+          "gradient_x": -0.9392731707317072,
+          "gradient_y": -4.814219999999999,
+          "light_angle_degrees": 258.96005530897384,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 44,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "iron_ingot_count_2_8",
+      "source": "art/style05/batch_a3/items/iron_ingot_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "46b58ba0299c18e2190654506a6b72a185da9c74d9fd7e9aec07cfb33eeae2b2",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 785,
+          "opaque_pixels": 492,
+          "fringe_pixels": 293,
+          "visible_bounds": [
+            7,
+            18,
+            54,
+            48
+          ],
+          "opaque_bounds": [
+            10,
+            20,
+            51,
+            45
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            44
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 492,
+          "base_row": 44,
+          "base_error": 0,
+          "height": 25,
+          "gradient_x": -1.335324152542373,
+          "gradient_y": -8.630614657210401,
+          "light_angle_degrees": 261.2049635916024,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 41,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "iron_ingot_count_9_plus",
+      "source": "art/style05/batch_a3/items/iron_ingot_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "d53ce4a5caf3148bdf6d0451203e2c884676e0746245ee50bff1afddcec06e0c",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1340,
+          "opaque_pixels": 741,
+          "fringe_pixels": 599,
+          "visible_bounds": [
+            4,
+            12,
+            60,
+            54
+          ],
+          "opaque_bounds": [
+            7,
+            15,
+            57,
+            52
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            51
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 741,
+          "base_row": 51,
+          "base_error": 0,
+          "height": 37,
+          "gradient_x": -0.9301031161473082,
+          "gradient_y": -10.672855649241146,
+          "light_angle_degrees": 265.01945031712074,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 50,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,375 @@
+{
+  "schema_version": 1,
+  "id": "coin",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "iron",
+  "family": "iron",
+  "catalogue_source": "Bible §4.4 explicit named unlocks/list",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "coin",
+    "era": "iron",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Asset type: WorldSim concept-05 ancient settlement item sprite, one isolated game asset, intended for a final 64x64 transparent tile.\nInput images are STYLE REFERENCES ONLY: first is the adopted item contact sheet, second is the concept-05 ink-and-tone props. Do not reproduce a sheet, labels, landscape, scenery or backgrounds.\nStyle: hand-drawn warm brown-black ink contour with restrained translucent pigment wash, natural-history game illustration. Main/secondary line width ratio 2:1. Sparse lower-left to upper-right parallel hatching only on shadow faces: metal 2-3 edge accents and 1-2 hatch groups, ore 3-5 facet seams and 2 hatch groups, wood 3-5 grain lines. No all-over stippling or tiny white speckles.\nPalette: quiet earth tones; iron dark neutral grey, wood ochre/umber; warm ink. No specular glare, chrome, neon, pixel art, vector icon, 3D rendering or photorealism.\nProjection: front three-quarter, about 20 degrees down, soft upper-left light, naturally resting object with narrow top face. Low wide silhouette, roughly twice as wide as high where object anatomy allows; all parts fully visible, centred, generous transparent margin.\nBackground: genuinely transparent alpha, no ground plane, no cast shadow, no halo, no glow, no backdrop or paper texture outside object. Absolutely no text, numbers, grid, border, watermark, labels or other objects.\nPreserve one coherent illustrated material language matching references. Keep the design simple enough to read at 32px.\nSubject: One small ancient hand-struck bronze coin lying flat at slight perspective, muted dull ochre-brown, imperfect circular edge, a very simple incised grain-ear emblem with three broad marks. No letters, numerals, dates, modern currency sign, gold shine, border ornament or extra coins. Early Iron Age trade token appearance.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png"
+    ],
+    "started_at": "2026-11-09T23:11:42.434Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "inferred_proposal": false,
+    "completed_at": "2026-11-09T23:12:53.963Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c as /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-6c039615-5c59-4019-bedf-0f43f7555231.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-6c039615-5c59-4019-bedf-0f43f7555231.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/coin_try1_raw.png",
+    "raw_sha256": "8d3c67eb0bb6b782cee2d60220271e7a244ac563b2b3ee1e4b5b66729c126ad7",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    "timestamp_semantics": "started_at is pre-call bound; completed_at is observed tool return; internal scheduling unavailable",
+    "raw_inspection": {
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "nonzero_alpha_bbox": [
+        25,
+        23,
+        1468,
+        1000
+      ]
+    },
+    "status": "GENERATED_PENDING_NORMALIZED_QA"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/iron/coin_try1.json",
+    "record_sha256": "1b477e4768e5140fc73d811b9cbea9578a6cfb6e83ada0b4937c82a087653678",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/coin_try1_raw.png",
+    "raw_sha256": "8d3c67eb0bb6b782cee2d60220271e7a244ac563b2b3ee1e4b5b66729c126ad7",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/coin_try1.json",
+    "candidate_sha256": "ed3da4dda1bd8cf9e6aaaedae1ff53270916b7421e831e664203b0e02d80fecd"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 0,
+    "passed": true,
+    "visible_pixels": 314879,
+    "opaque_pixels": 308349,
+    "fringe_pixels": 6530,
+    "visible_bounds": [
+      25,
+      23,
+      1468,
+      1000
+    ],
+    "opaque_bounds": [
+      391,
+      261,
+      1149,
+      787
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/iron/coin_try1_raw.png",
+    "sha256": "8d3c67eb0bb6b782cee2d60220271e7a244ac563b2b3ee1e4b5b66729c126ad7",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.20097635572285613,
+      "saturation_q25": 0.5797865543077445,
+      "saturation_q75": 0.6369025245178037,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.009140307538872341,
+      "foreground_pixels": 35254
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "coin",
+      "source": "art/style05/batch_a3/items/coin.png",
+      "bucket": "1",
+      "sha256": "d0d6d47bc339e91c1d8e66e8260706d94377ae8e03b9dbedd1a36c642fa7ed58",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 642,
+          "opaque_pixels": 488,
+          "fringe_pixels": 154,
+          "visible_bounds": [
+            15,
+            19,
+            51,
+            45
+          ],
+          "opaque_bounds": [
+            18,
+            22,
+            48,
+            42
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            41
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 488,
+          "base_row": 41,
+          "base_error": 0,
+          "height": 20,
+          "gradient_x": -1.0417282051282053,
+          "gradient_y": -3.2210074235807857,
+          "light_angle_degrees": 252.07791655112933,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 30,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          1.0,
+          0.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "coin_count_2_8",
+      "source": "art/style05/batch_a3/items/coin_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "3e6575d339c77c327652fb37a85cd6c849762418d42567ccb4e558ffe3c0c4ee",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 839,
+          "opaque_pixels": 595,
+          "fringe_pixels": 244,
+          "visible_bounds": [
+            12,
+            14,
+            50,
+            51
+          ],
+          "opaque_bounds": [
+            15,
+            17,
+            48,
+            48
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            47
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 595,
+          "base_row": 47,
+          "base_error": 0,
+          "height": 31,
+          "gradient_x": -2.625265480427046,
+          "gradient_y": -5.8589623616236155,
+          "light_angle_degrees": 245.86395268377413,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 33,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "coin_count_9_plus",
+      "source": "art/style05/batch_a3/items/coin_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "98f675ad5913fb38e71238bcfbf28a230c586fbcdab4332255b33a04974605e1",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1456,
+          "opaque_pixels": 915,
+          "fringe_pixels": 541,
+          "visible_bounds": [
+            7,
+            10,
+            57,
+            56
+          ],
+          "opaque_bounds": [
+            10,
+            13,
+            55,
+            53
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            52
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 915,
+          "base_row": 52,
+          "base_error": 0,
+          "height": 40,
+          "gradient_x": -2.399139618138425,
+          "gradient_y": -7.174354177215189,
+          "light_angle_degrees": 251.50980926240663,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 45,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

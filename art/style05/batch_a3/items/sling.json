@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "id": "sling",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "paleolithic",
+  "family": "tools_textiles",
+  "catalogue_source": "Bible §4.1/current items.ron",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 40,
+    "sim": "Sling"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "sling",
+    "era": "paleolithic",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Asset: ONE isolated WorldSim concept-05 inventory item, designed for 64px canvas and32px zoom. Input1 and input2 are STYLE references only; copy the delicate natural-history ink-and-tone language of the small existing items, not their scenery. Warm brown-black fine contours, main/detail line ratio2:1. Restrained translucent earth-pigment wash, calm broad midtone areas. At most2 shadow hatch groups of2-3 parallel lines slanting lower-left to upper-right; wood3-5 grain lines, cloth3-5 fold lines and2 small weave marks. No dense stipple, no all-over speckles, no gradients outside subject. Front three-quarter camera20degrees down, narrow visible top face, upper-left light. Natural resting object centered, full uncropped silhouette occupying70% canvas with generous margin. Genuine transparent alpha, opaque object interior, zero alpha outside the antialiased silhouette. No ground, shadow, glow, aura, vignette, scenery, labels, letters, border, watermark, pixel-art, photorealism or3D. Subject: One primitive hunting sling lying flat: an oval dark tan leather pouch in center joined to two long twisted plant-fibre cords, one ending in a small finger loop, other a simple knot. Compact folded oval silhouette, visible two arms. No projectile, modern elastic or metal.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "started_at": "2026-11-09T23:20:34.305Z",
+    "completed_at": "2026-11-09T23:21:27.114Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61 as /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-5118c44d-6c96-4f1c-8d78-20c9580cd31c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/sling_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-5118c44d-6c96-4f1c-8d78-20c9580cd31c.png",
+    "status": "GENERATED_PENDING_PARENT_REVIEW",
+    "raw_sha256": "1412b4d973cc81ee7f0ebc1a3e74cf2b64c77a5d7124d5fdadf194d41e191480",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/sling_try1.json",
+    "record_sha256": "5f6345709f6ec8ec81456a675fd07341f04f4c214fecd7791ecc631a70cd7774",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/sling_try1.png",
+    "raw_sha256": "1412b4d973cc81ee7f0ebc1a3e74cf2b64c77a5d7124d5fdadf194d41e191480",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/sling_try1.json",
+    "candidate_sha256": "0c068d9842f9654ef3b755ed35f3ded08353f90acc2508fa657c2a9fcc1da66f"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 213863,
+    "opaque_pixels": 179628,
+    "fringe_pixels": 34235,
+    "visible_bounds": [
+      0,
+      19,
+      1514,
+      1008
+    ],
+    "opaque_bounds": [
+      248,
+      220,
+      1295,
+      796
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/tools_textiles/sling_try1.png",
+    "sha256": "1412b4d973cc81ee7f0ebc1a3e74cf2b64c77a5d7124d5fdadf194d41e191480",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.21731102135025968,
+      "saturation_q25": 0.561371576284175,
+      "saturation_q75": 0.6360643369766027,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.021576115100008734,
+      "foreground_pixels": 10739
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "sling",
+      "source": "art/style05/batch_a3/items/sling.png",
+      "bucket": "1",
+      "sha256": "798c6ae6b6f2707d9b029790d0fc71a6d7b9706bf850c838a66773b162ea21b3",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 516,
+          "opaque_pixels": 259,
+          "fringe_pixels": 257,
+          "visible_bounds": [
+            10,
+            18,
+            55,
+            46
+          ],
+          "opaque_bounds": [
+            13,
+            21,
+            53,
+            43
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            42
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 259,
+          "base_row": 42,
+          "base_error": 0,
+          "height": 22,
+          "gradient_x": -1.1348157407407404,
+          "gradient_y": -6.437189473684211,
+          "light_angle_degrees": 260.0020238111206,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 40,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.5,
+          0.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

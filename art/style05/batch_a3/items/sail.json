@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "id": "sail",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "misc",
+  "catalogue_source": "Bible §4.3 explicit named objects/unlocks",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "sail",
+    "era": "bronze",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Create ONE isolated inventory item for WorldSim concept05. Reference image1 establishes fine ink/earth-wash technique; reference image2 shows the existing item family. Copy STYLE, not their subjects or labels. Warm brown-black delicate hand-ink contour and restrained translucent pigment wash; main contour:secondary line weight2:1. At final64px contour about1px, secondary0.5px. Calm broad material planes. Sparse hatch groups slanting lower-left to upper-right, maximum2 groups of2-3 short lines per face. No speckles or all-over noise. Restrained muted earth colours, not glossy or photorealistic. Front three-quarter view looking down about20degrees; upper-left light and narrow top face. One complete object resting naturally, centered, about70percent width of square image, generous margin. Real transparent background, no ground, cast shadow, lettering, border, tile, watermark, scenery, detached chips. Full uncropped silhouette readable at64px and32px. CRITICAL ALPHA: no glow, no vignette, no ambient aura, no smoke, no dusty surround. Alpha must be exactly zero immediately outside the crisp object edge, object interior opaque. These references show the ink treatment only; do not add any reference object. Subject: One FOLDED SAIL of undyed flax canvas, a compact thick cream rectangular folded bundle with3 broad folds, tiny reinforced corner eyelets and one short rope tie lying attached across the bundle. No mast, ship, wind or scene. Ancient rough natural fibre, no white modern synthetic fabric, no metal eyelets.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/ground_axe.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/clay_pot_empty.png"
+    ],
+    "started_at": "2026-11-09T23:15:32.475Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "scope_note": "Explicit catalogue or brief item",
+    "completed_at": "2026-11-09T23:17:10.450Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7 as /Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7/exec-fb45dbde-164a-4571-a2ef-26d975e3201a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28b-86b5-77a2-b285-14a40355d5e7/exec-fb45dbde-164a-4571-a2ef-26d975e3201a.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/misc/sail_try1_raw.png",
+    "path": "/Users/rexxa/work/art-batch/A3/misc/sail_try1_raw.png",
+    "raw_sha256": "3c34c933609bcd0f72c0c44b271783d67007fd06cb13d493fa77d1f1343a0715",
+    "status": "GENERATED_PENDING_NORMALIZED_REVIEW"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/misc/sail_try1.json",
+    "record_sha256": "76463993f0c96c18b9d8be63c604f28cc48988d70a72e56ad4c2b26beef002f3",
+    "raw": "/Users/rexxa/work/art-batch/A3/misc/sail_try1_raw.png",
+    "raw_sha256": "3c34c933609bcd0f72c0c44b271783d67007fd06cb13d493fa77d1f1343a0715",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/sail_try1.json",
+    "candidate_sha256": "40d134a902b3a508f0ebe4d2b654bd32aa25be77b2dc9bf2ff54806361ea84eb"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 499741,
+    "opaque_pixels": 489617,
+    "fringe_pixels": 10124,
+    "visible_bounds": [
+      0,
+      24,
+      1232,
+      1222
+    ],
+    "opaque_bounds": [
+      147,
+      257,
+      1107,
+      1021
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/misc/sail_try1_raw.png",
+    "sha256": "3c34c933609bcd0f72c0c44b271783d67007fd06cb13d493fa77d1f1343a0715",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.17555932910298805,
+      "saturation_q25": 0.3703522676749712,
+      "saturation_q75": 0.48798531154799285,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.011313594917880932,
+      "foreground_pixels": 34863
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "sail",
+      "source": "art/style05/batch_a3/items/sail.png",
+      "bucket": "1",
+      "sha256": "042659b6f3981e4ceb89ce45078a1d89ce08173adc8a39a2ec91d2d3deb65e94",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1289,
+          "opaque_pixels": 1075,
+          "fringe_pixels": 214,
+          "visible_bounds": [
+            7,
+            12,
+            58,
+            53
+          ],
+          "opaque_bounds": [
+            10,
+            15,
+            55,
+            51
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            50
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 1075,
+          "base_row": 50,
+          "base_error": 0,
+          "height": 36,
+          "gradient_x": -0.11735341674687198,
+          "gradient_y": -1.4805692905733716,
+          "light_angle_degrees": 265.4680760623021,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 45,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.5,
+          0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

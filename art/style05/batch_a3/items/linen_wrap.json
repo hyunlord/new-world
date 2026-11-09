@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "id": "linen_wrap",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "tools_textiles",
+  "catalogue_source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 37,
+    "sim": "LinenWrap"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "linen_wrap",
+    "era": "bronze",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Asset: ONE isolated WorldSim concept-05 inventory item, designed for 64px canvas and32px zoom. Input1 and input2 are STYLE references only; copy the delicate natural-history ink-and-tone language of the small existing items, not their scenery. Warm brown-black fine contours, main/detail line ratio2:1. Restrained translucent earth-pigment wash, calm broad midtone areas. At most2 shadow hatch groups of2-3 parallel lines slanting lower-left to upper-right; wood3-5 grain lines, cloth3-5 fold lines and2 small weave marks. No dense stipple, no all-over speckles, no gradients outside subject. Front three-quarter camera20degrees down, narrow visible top face, upper-left light. Natural resting object centered, full uncropped silhouette occupying70% canvas with generous margin. Genuine transparent alpha, opaque object interior, zero alpha outside the antialiased silhouette. No ground, shadow, glow, aura, vignette, scenery, labels, letters, border, watermark, pixel-art, photorealism or3D. Subject: One undyed natural cream linen wrap garment folded into a triangular overlapping skirt with a tied waist cord and a single flap opening. Simple primitive wrapped clothing, distinguishable from the rectangular folded cloth and short-sleeved tunic. No person, mannequin, metal or dyed trim.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "started_at": "2026-11-09T23:15:59.244Z",
+    "completed_at": "2026-11-09T23:17:51.488Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61 as /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-30ee5279-8665-4d3c-af60-008f67223caa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_wrap_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-30ee5279-8665-4d3c-af60-008f67223caa.png",
+    "status": "GENERATED_PENDING_PARENT_REVIEW",
+    "raw_sha256": "ff1ec9a0daabe46264d1f8e992905021df2eb647e7b2ebba22b0da2ef530364f",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_wrap_try1.json",
+    "record_sha256": "2394e1e928c1106dc921b4502c3a6ff0cd76e77a52605aa2a2c407d78d529816",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_wrap_try1.png",
+    "raw_sha256": "ff1ec9a0daabe46264d1f8e992905021df2eb647e7b2ebba22b0da2ef530364f",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/linen_wrap_try1.json",
+    "candidate_sha256": "d32c1315df535a36fabaa46318bd4ffec44022e780ae9dcf21fd786b4716910e"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 490068,
+    "opaque_pixels": 479242,
+    "fringe_pixels": 10826,
+    "visible_bounds": [
+      0,
+      9,
+      1240,
+      1254
+    ],
+    "opaque_bounds": [
+      259,
+      159,
+      930,
+      1091
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_wrap_try1.png",
+    "sha256": "ff1ec9a0daabe46264d1f8e992905021df2eb647e7b2ebba22b0da2ef530364f",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.17550949714219732,
+      "saturation_q25": 0.2723642583883905,
+      "saturation_q75": 0.3768585872225228,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.007439172374882108,
+      "foreground_pixels": 36090
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "linen_wrap",
+      "source": "art/style05/batch_a3/items/linen_wrap.png",
+      "bucket": "1",
+      "sha256": "b7ab46054b0e781864fc8df84965da360d8a1883caf920d6118754468aac033f",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1266,
+          "opaque_pixels": 1045,
+          "fringe_pixels": 221,
+          "visible_bounds": [
+            13,
+            7,
+            49,
+            56
+          ],
+          "opaque_bounds": [
+            15,
+            10,
+            46,
+            53
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            52
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 1045,
+          "base_row": 52,
+          "base_error": 0,
+          "height": 43,
+          "gradient_x": -1.0568550898203593,
+          "gradient_y": 0.44701721068249245,
+          "light_angle_degrees": 157.07313209662405,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": false,
+          "passed": false
+        },
+        "width_px": 31,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          -1.0,
+          -0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

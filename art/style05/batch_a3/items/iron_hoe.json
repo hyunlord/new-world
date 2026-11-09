@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "id": "iron_hoe",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "iron",
+  "family": "iron",
+  "catalogue_source": "Bible §4.4 explicit named unlocks/list",
+  "inferred_completion_candidate": false,
+  "sim_identity": null,
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 2,
+  "generation": {
+    "id": "iron_hoe",
+    "era": "iron",
+    "attempt": 2,
+    "prompt": "Use case: stylized-concept. Asset type: WorldSim concept-05 ancient settlement item sprite, one isolated game asset, intended for a final 64x64 transparent tile.\nInput images are STYLE REFERENCES ONLY: first is the adopted item contact sheet, second is the concept-05 ink-and-tone props. Do not reproduce a sheet, labels, landscape, scenery or backgrounds.\nStyle: hand-drawn warm brown-black ink contour with restrained translucent pigment wash, natural-history game illustration. Main/secondary line width ratio 2:1. Sparse lower-left to upper-right parallel hatching only on shadow faces: metal 2-3 edge accents and 1-2 hatch groups, ore 3-5 facet seams and 2 hatch groups, wood 3-5 grain lines. No all-over stippling or tiny white speckles.\nPalette: quiet earth tones; iron dark neutral grey, wood ochre/umber; warm ink. No specular glare, chrome, neon, pixel art, vector icon, 3D rendering or photorealism.\nProjection: front three-quarter, about 20 degrees down, soft upper-left light, naturally resting object with narrow top face. Low wide silhouette, roughly twice as wide as high where object anatomy allows; all parts fully visible, centred, generous transparent margin.\nBackground: genuinely transparent alpha, no ground plane, no cast shadow, no halo, no glow, no backdrop or paper texture outside object. Absolutely no text, numbers, grid, border, watermark, labels or other objects.\nPreserve one coherent illustrated material language matching references. Keep the design simple enough to read at 32px.\nSubject: One early iron digging HOE laid low on its side. ANATOMY IS CRITICAL: the wooden haft runs diagonally from upper-right to lower-left and ends in a narrow dark iron gooseneck which bends downward a clear right angle, then turns into a wide shallow rectangular soil blade extending ACROSS the handle axis. Show the top plane of this broad transverse blade as a narrow trapezoid, with its straight cutting edge running horizontally left-right near the lower-left. The bent neck and the blade are visibly offset from the wooden handle, forming an unmistakable inverted L-like side profile. This is a farming hoe, not an axe: no axe wedge, no axe blade in the handle plane. One plain honey-brown wooden handle, one dark-grey bent iron head. Low wide composition, primitive practical tool, no modern rubber, no factory fittings.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png"
+    ],
+    "started_at": "2026-11-09T23:16:02.088Z",
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "inferred_proposal": false,
+    "previous_attempt": "iron_hoe_try1.json",
+    "repair_reason": "First attempt resembles axe; clarify transverse blade and bent neck.",
+    "completed_at": "2026-11-09T23:16:26.387Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c as /Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-fc29250f-afd6-4a6e-b56d-475e38ad6119.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c28a-5c32-7040-8d19-8ef36744f26c/exec-fc29250f-afd6-4a6e-b56d-475e38ad6119.png",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_hoe_try2_raw.png",
+    "raw_sha256": "25815805266338b4e1cf118ad703e69156cb8cec4172d28edd7e6549f71f3fbc",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f",
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    "raw_inspection": {
+      "size": [
+        1774,
+        887
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "nonzero_alpha_bbox": [
+        0,
+        19,
+        1774,
+        887
+      ]
+    },
+    "status": "GENERATED_PENDING_NORMALIZED_QA",
+    "timestamp_semantics": "started_at is pre-call bound; completed_at is observed tool return; internal scheduling unavailable"
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/iron/iron_hoe_try2.json",
+    "record_sha256": "592c22745b3049e08bfabe16708e359c920e259ca44b3348844c19657d92d44f",
+    "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_hoe_try2_raw.png",
+    "raw_sha256": "25815805266338b4e1cf118ad703e69156cb8cec4172d28edd7e6549f71f3fbc",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/iron_hoe_try2.json",
+    "candidate_sha256": "17824d931bde4de6069d63aafb890dc6a4663bcdec9de1905634cc7bae143624"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 247857,
+    "opaque_pixels": 233266,
+    "fringe_pixels": 14591,
+    "visible_bounds": [
+      0,
+      19,
+      1774,
+      887
+    ],
+    "opaque_bounds": [
+      64,
+      136,
+      1731,
+      815
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/iron/iron_hoe_try2_raw.png",
+    "sha256": "25815805266338b4e1cf118ad703e69156cb8cec4172d28edd7e6549f71f3fbc",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.21330541986508492,
+      "saturation_q25": 0.4513718427803136,
+      "saturation_q75": 0.6568434403316845,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.020955044246704517,
+      "foreground_pixels": 5500
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "iron_hoe",
+      "source": "art/style05/batch_a3/items/iron_hoe.png",
+      "bucket": "1",
+      "sha256": "95f96f1f9b0a49eb4da8b42a391b7ba0c63f14f4ee826c13fde0315de50b06ec",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 454,
+          "opaque_pixels": 252,
+          "fringe_pixels": 202,
+          "visible_bounds": [
+            3,
+            19,
+            61,
+            46
+          ],
+          "opaque_bounds": [
+            5,
+            22,
+            60,
+            44
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            43
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 252,
+          "base_row": 43,
+          "base_error": 0,
+          "height": 22,
+          "gradient_x": -2.746941739130435,
+          "gradient_y": -12.151005208333332,
+          "light_angle_degrees": 257.26143903745117,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 55,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          0.0,
+          0.5
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}

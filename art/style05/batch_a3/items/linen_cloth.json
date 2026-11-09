@@ -1,0 +1,359 @@
+{
+  "schema_version": 1,
+  "id": "linen_cloth",
+  "status": "ART_BRANCH_ADOPTED_NOT_GAME_IMPORTED",
+  "era": "bronze",
+  "family": "tools_textiles",
+  "catalogue_source": "Current items.ron; bronze art label follows newer ART-BATCH brief era rule",
+  "inferred_completion_candidate": false,
+  "sim_identity": {
+    "code": 34,
+    "sim": "LinenCloth"
+  },
+  "state": "base",
+  "state_of": null,
+  "filled_source": null,
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "selected_attempt": 1,
+  "generation": {
+    "id": "linen_cloth",
+    "era": "bronze",
+    "attempt": 1,
+    "prompt": "Use case: stylized-concept. Asset: ONE isolated WorldSim concept-05 inventory item, designed for 64px canvas and32px zoom. Input1 and input2 are STYLE references only; copy the delicate natural-history ink-and-tone language of the small existing items, not their scenery. Warm brown-black fine contours, main/detail line ratio2:1. Restrained translucent earth-pigment wash, calm broad midtone areas. At most2 shadow hatch groups of2-3 parallel lines slanting lower-left to upper-right; wood3-5 grain lines, cloth3-5 fold lines and2 small weave marks. No dense stipple, no all-over speckles, no gradients outside subject. Front three-quarter camera20degrees down, narrow visible top face, upper-left light. Natural resting object centered, full uncropped silhouette occupying70% canvas with generous margin. Genuine transparent alpha, opaque object interior, zero alpha outside the antialiased silhouette. No ground, shadow, glow, aura, vignette, scenery, labels, letters, border, watermark, pixel-art, photorealism or3D. Subject: One neatly folded rectangle of undyed natural linen cloth, pale warm cream, two overlapping folded layers with simple loose fringe along one edge, broad flat calm wash and only3fold lines,2small sparse weave-mark groups. No garment neck or sleeves, no dyed decoration.",
+    "refs": [
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png"
+    ],
+    "seed": null,
+    "tool": "image_gen__imagegen",
+    "started_at": "2026-11-09T23:13:52.561Z",
+    "completed_at": "2026-11-09T23:15:40.050Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61 as /Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-0ead6817-20fe-4fca-866d-9495bb881099.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_cloth_try1.png",
+    "source": "/Users/rexxa/.codex/generated_images/01a1c290-404f-76a0-8595-7d9540a32b61/exec-0ead6817-20fe-4fca-866d-9495bb881099.png",
+    "status": "GENERATED_PENDING_PARENT_REVIEW",
+    "raw_sha256": "81b7b10fd4bf3e9ce5c24e4fb65c98c297efda621527856e673c0277957a63b1",
+    "reference_sha256": {
+      "/Users/rexxa/work/art-batch-a3/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "/Users/rexxa/work/art-batch-a3/art/style05/env1/items/items_64px_keyed.png": "d51c80b1a9b6dc7747ddc36c7c451c54221e215a3c8ad8a2d58a48f8a4e84c5f"
+    }
+  },
+  "provenance": {
+    "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_cloth_try1.json",
+    "record_sha256": "95a138df04597b323758d3a1d94354f40a7948be10213d3e352ac5e86a5c805a",
+    "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_cloth_try1.png",
+    "raw_sha256": "81b7b10fd4bf3e9ce5c24e4fb65c98c297efda621527856e673c0277957a63b1",
+    "candidate": "/Users/rexxa/work/art-batch/A3/icon_candidates/linen_cloth_try1.json",
+    "candidate_sha256": "e98c0fce87b5843dfda562738c39018374319fbca7ec468934f56cae9bb11b0a"
+  },
+  "normalization": [
+    "ENV1 normalize: nonzero-alpha crop, proportional Lanczos fit to58",
+    "transparent 64x64 padding centered at item icon anchor(32,32)",
+    "ENV1 ordinal layouts:1/3/9 whole-icon copies at64/42/29px"
+  ],
+  "source_alpha": {
+    "has_alpha": true,
+    "has_transparency": true,
+    "has_subject": true,
+    "border_clear": true,
+    "border_alpha_max": 1,
+    "passed": true,
+    "visible_pixels": 422298,
+    "opaque_pixels": 362217,
+    "fringe_pixels": 60081,
+    "visible_bounds": [
+      0,
+      17,
+      1240,
+      1254
+    ],
+    "opaque_bounds": [
+      137,
+      321,
+      1068,
+      930
+    ]
+  },
+  "style_diagnostic": {
+    "candidate": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_cloth_try1.png",
+    "sha256": "81b7b10fd4bf3e9ce5c24e4fb65c98c297efda621527856e673c0277957a63b1",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.15321030372933486,
+      "saturation_q25": 0.24964981823322255,
+      "saturation_q75": 0.33813675705679547,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.004234830582688053,
+      "foreground_pixels": 27303
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "seam_check": "NOT_APPLICABLE_ISOLATED_ITEM",
+  "visual_decision": {
+    "verdict": "pass",
+    "reviewer": "/root",
+    "method": "label-visible 64px/32px comparison with six imported item references and actual-alpha review",
+    "evidence": "art/style05/batch_a3/review.json",
+    "numeric_failures_are_not_passes": true
+  },
+  "exports": [
+    {
+      "id": "linen_cloth",
+      "source": "art/style05/batch_a3/items/linen_cloth.png",
+      "bucket": "1",
+      "sha256": "a4908d4b647570a33af458c0cf54ba463b2245625bad7fbc12bcdd178c579f1c",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1058,
+          "opaque_pixels": 790,
+          "fringe_pixels": 268,
+          "visible_bounds": [
+            5,
+            15,
+            56,
+            53
+          ],
+          "opaque_bounds": [
+            10,
+            17,
+            53,
+            46
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            45
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 790,
+          "base_row": 45,
+          "base_error": 0,
+          "height": 29,
+          "gradient_x": -0.8152599999999998,
+          "gradient_y": -1.663721073825503,
+          "light_angle_degrees": 243.89412754529485,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 43,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": [
+          -1.5,
+          2.0
+        ],
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "linen_cloth_count_2_8",
+      "source": "art/style05/batch_a3/items/linen_cloth_count_2_8.png",
+      "bucket": "2_8",
+      "sha256": "802969080ddb701efcdc544e1875e4bf0b6ec87a7811df4b1f31be4f3e5f9d28",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1199,
+          "opaque_pixels": 905,
+          "fringe_pixels": 294,
+          "visible_bounds": [
+            6,
+            12,
+            53,
+            55
+          ],
+          "opaque_bounds": [
+            10,
+            14,
+            51,
+            50
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            49
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 905,
+          "base_row": 49,
+          "base_error": 0,
+          "height": 36,
+          "gradient_x": -0.9432583621683965,
+          "gradient_y": -2.2589190588235293,
+          "light_angle_degrees": 247.3360153387904,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 41,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    },
+    {
+      "id": "linen_cloth_count_9_plus",
+      "source": "art/style05/batch_a3/items/linen_cloth_count_9_plus.png",
+      "bucket": "9_plus",
+      "sha256": "2ab155665745a01a5515116566c6a3b6f7bd057b254a5b67042137fab0ad754e",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "checks": {
+        "canvas_px": [
+          64,
+          64
+        ],
+        "alpha": {
+          "has_alpha": true,
+          "has_transparency": true,
+          "has_subject": true,
+          "border_clear": true,
+          "border_alpha_max": 0,
+          "passed": true,
+          "visible_pixels": 1936,
+          "opaque_pixels": 1408,
+          "fringe_pixels": 528,
+          "visible_bounds": [
+            4,
+            8,
+            60,
+            57
+          ],
+          "opaque_bounds": [
+            7,
+            11,
+            57,
+            55
+          ]
+        },
+        "projection": {
+          "family": "item",
+          "anchor": [
+            32,
+            54
+          ],
+          "height_band": [
+            4,
+            58
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 1408,
+          "base_row": 54,
+          "base_error": 0,
+          "height": 44,
+          "gradient_x": -0.6535968539325843,
+          "gradient_y": -3.8876771293375394,
+          "light_angle_degrees": 260.45666936586673,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "width_px": 50,
+        "structural_pass": true,
+        "geometry_contract": "ENV1_CENTERED_ICON",
+        "center_offset_px": null,
+        "center_passed": true,
+        "safe_bounds_passed": true
+      }
+    }
+  ]
+}
