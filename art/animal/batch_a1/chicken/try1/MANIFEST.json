@@ -1,0 +1,1188 @@
+{
+  "spec": {
+    "species": "chicken",
+    "attempt": 1,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+    "shoulder_y": 244,
+    "hoof_y": 447,
+    "shoulder_target": 16,
+    "dead_length": 32,
+    "poses": [
+      "stand",
+      "walk",
+      "run",
+      "graze",
+      "dead"
+    ],
+    "references": [
+      "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": null,
+    "landmark_note": "Manually measured S/stand withers and hoof in source coordinates."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.spec.json",
+  "spec_sha256": "a478e5f3e6634d954541d93f58aa314e496b8384d1961b4e6074ebe76a8d6c81",
+  "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+  "prompt_text": "Use case: style-transfer. Transform animal reference sheet into a complete game sprite sheet of the bird described below. Preserve2rows x5columns with exactly TEN whole figures of same individual. Reference1 animal family style/layout only; references2person and3scene locked style only. Transparent1536x1024 RGBA with wide gutters, margins; no labels/grid/background/shadows/ground/nests/eggs. Top row SOUTH front three-quarter35degrees viewerLEFT, bottom row EAST side three-quarter facingRIGHT, ~20degrees down camera, upper-left light. Natural-history fine sepia-black ink, major contour2x interior, restrained two-tone earthy wash. Feather marks only3groups of3short strokes directed upper-left to lower-right, broad quiet feather planes, no dense hatching. Same body size each upright pose, two anatomically correct attached legs/feet, robust connected toes and beak surviving small sprite reduction. BOTH ROWS columns:1STAND both feet grounded head alert;2WALK one foot conspicuously lifted bent knee other grounded;3RUN legs far apart in strong stride, body leaning forward with wings held close, visually different from walk;4GRAZE/PECK head down beak touching foot level with rump raised, no food drawn;5DEAD completely limp lying horizontal on side, neck and head flat, legs limp out sideways, eyes closed as short lines, no blood, never sleeping upright. Will be reduced to small96x80game canvas. SUBJECT: Primitive domestic CHICKEN HEN, muted buff-ochre and russet plumage, rounded but lean natural body, short fanned tail, small muted brick-red comb and wattles, parchment yellow short beak and ochre feet. No large rooster tail, no white industrial breed, no decorative costume. Earliest bronze-age livestock. STRICT MARK BUDGET: use smooth UNTEXTURED wash planes, no all-over fur ticks, no stipple, grain, freckled texture or scratchy shading. Internal material marks are at most THREE small separated clusters of THREE strokes; leave90percent of coat completely quiet. The outline can have a few broad fur points but no comb-like fringe. This sparse style constraint overrides any dense texture visible in references. Main contour2:1 to inner anatomical lines; eyes and joints minimal.\n",
+  "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": null,
+  "references": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "source_rgba_sha256": "9b3944f10d0714c8634bf2d006c27344d7e2a5b9c5c93a085b103cfda1094370",
+    "ownership_sha256": "f3282d417fdecfe5a61b64dffafea57f0050abc8ba72b4fcd6e64d49e89a2ebb",
+    "visible_pixels": 366506,
+    "tied_visible_pixels": 4,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.07881773399014778,
+  "landmark_note": "Manually measured S/stand withers and hoof in source coordinates.",
+  "frames": [
+    {
+      "species": "chicken",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/chicken/try1/S/stand.png",
+      "image_sha256": "fe1571b30f7f57779a03762f6e08c93ba4a52ab7bc6fff952e0c01c5791b0959",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/chicken/panels/try1/S_stand.png",
+      "source_panel_sha256": "88022143dd12290b8c26b5bf3808599f3633e1fe462417f5a9f3da3016397710",
+      "source_box": [
+        25,
+        23,
+        284,
+        548
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+      "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+      "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07881773399014778,
+      "upright_scale": 0.07881773399014778,
+      "normalization": {
+        "scaled_size": [
+          20,
+          41
+        ],
+        "trim_box": [
+          0,
+          10,
+          17,
+          34
+        ],
+        "placement": [
+          39,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          39,
+          39
+        ],
+        "visible_pixels": 221,
+        "rotation_degrees": 0,
+        "scale": 0.07881773399014778,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "chicken",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 174,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 22,
+        "gradient_x": -0.9045544827586206,
+        "gradient_y": -0.4702394736842106,
+        "light_angle_degrees": 207.46800649602883,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "chicken",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/chicken/try1/S/walk.png",
+      "image_sha256": "edcdacd3fbf3466e1df3ad496cc5cd8e71eb0a24b6d764ed32f9b1ddbc0d8c5c",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/chicken/panels/try1/S_walk.png",
+      "source_panel_sha256": "da65f8b81ffe2b8685831f209f67a10618096802dd0fcf15aeccc52ea4c5ed24",
+      "source_box": [
+        225,
+        17,
+        554,
+        560
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+      "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+      "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07881773399014778,
+      "upright_scale": 0.07881773399014778,
+      "normalization": {
+        "scaled_size": [
+          26,
+          43
+        ],
+        "trim_box": [
+          6,
+          11,
+          24,
+          35
+        ],
+        "placement": [
+          39,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          33,
+          38
+        ],
+        "visible_pixels": 219,
+        "rotation_degrees": 0,
+        "scale": 0.07881773399014778,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "chicken",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 176,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 22,
+        "gradient_x": -1.4236232876712327,
+        "gradient_y": 1.2871539473684215,
+        "light_angle_degrees": 137.88202271140543,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "chicken",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/chicken/try1/S/run.png",
+      "image_sha256": "5ffc824bcad0110258c3683f6858f8c5e99f7a6782ca1512fa63d7ed11fbf98a",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/chicken/panels/try1/S_run.png",
+      "source_panel_sha256": "f1fc9f89654b9125eae5b27f4d4d65db010304dfd611383cc832e77fc9f0dbac",
+      "source_box": [
+        519,
+        19,
+        938,
+        543
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+      "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+      "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07881773399014778,
+      "upright_scale": 0.07881773399014778,
+      "normalization": {
+        "scaled_size": [
+          33,
+          41
+        ],
+        "trim_box": [
+          4,
+          13,
+          29,
+          32
+        ],
+        "placement": [
+          35,
+          54
+        ],
+        "resized_to_canvas_offset": [
+          31,
+          41
+        ],
+        "visible_pixels": 226,
+        "rotation_degrees": 0,
+        "scale": 0.07881773399014778,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "chicken",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 179,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 17,
+        "gradient_x": -1.1182948717948722,
+        "gradient_y": -0.20034594594594607,
+        "light_angle_degrees": 190.15696349111855,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "chicken",
+      "facing": "S",
+      "pose": "graze",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/chicken/try1/S/graze.png",
+      "image_sha256": "6d7b0355e271a6375a6a68a3d778ff0a06b88104adc2e957c5c193cae7c935f2",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/chicken/panels/try1/S_graze.png",
+      "source_panel_sha256": "ae78bc75a35fb8b8da2b49d5c7358bbf1942dfbd3e383abea73b05cbefb9901d",
+      "source_box": [
+        905,
+        41,
+        1290,
+        574
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+      "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+      "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07881773399014778,
+      "upright_scale": 0.07881773399014778,
+      "normalization": {
+        "scaled_size": [
+          30,
+          42
+        ],
+        "trim_box": [
+          1,
+          13,
+          18,
+          33
+        ],
+        "placement": [
+          39,
+          53
+        ],
+        "resized_to_canvas_offset": [
+          38,
+          40
+        ],
+        "visible_pixels": 202,
+        "rotation_degrees": 0,
+        "scale": 0.07881773399014778,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "chicken",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 160,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 18,
+        "gradient_x": 2.264392366412214,
+        "gradient_y": 0.9071314285714288,
+        "light_angle_degrees": 21.831384617209416,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "chicken",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/chicken/try1/S/dead.png",
+      "image_sha256": "60261785dd5d3bddeb503846e26b7ae57f4188b9ac0501f2ded46d58ae7690ae",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/chicken/panels/try1/S_dead.png",
+      "source_panel_sha256": "1e3957b4f96ed9e5ecf3a283f92281d09d19e17ae302dbf06483cc22d5230557",
+      "source_box": [
+        1114,
+        83,
+        1536,
+        626
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+      "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+      "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.0975609756097561,
+      "upright_scale": 0.07881773399014778,
+      "normalization": {
+        "scaled_size": [
+          41,
+          53
+        ],
+        "trim_box": [
+          5,
+          22,
+          38,
+          37
+        ],
+        "placement": [
+          31,
+          42
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          20
+        ],
+        "visible_pixels": 287,
+        "rotation_degrees": 0,
+        "scale": 0.0975609756097561,
+        "discarded_pixels": 4,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "chicken",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 237,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 13,
+        "gradient_x": -0.32434128440366994,
+        "gradient_y": 2.284984924623115,
+        "light_angle_degrees": 98.07885698984398,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "chicken",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/chicken/try1/E/stand.png",
+      "image_sha256": "57a5dadd631239a31464a375ba5e0c88d13142e07781c32eaa9cc1a3b56517e6",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/chicken/panels/try1/E_stand.png",
+      "source_panel_sha256": "fa728c4bf31f1b807e4565586a964bc677c55a61156bcc86ac88edda7969131d",
+      "source_box": [
+        0,
+        514,
+        336,
+        1006
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+      "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+      "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07881773399014778,
+      "upright_scale": 0.07881773399014778,
+      "normalization": {
+        "scaled_size": [
+          26,
+          39
+        ],
+        "trim_box": [
+          1,
+          8,
+          21,
+          30
+        ],
+        "placement": [
+          38,
+          51
+        ],
+        "resized_to_canvas_offset": [
+          37,
+          43
+        ],
+        "visible_pixels": 213,
+        "rotation_degrees": 0,
+        "scale": 0.07881773399014778,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "chicken",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 175,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 22,
+        "gradient_x": 1.8925054794520542,
+        "gradient_y": 0.7305855263157901,
+        "light_angle_degrees": 21.1086543307561,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "chicken",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/chicken/try1/E/walk.png",
+      "image_sha256": "bd536e3ef278984165368b0b0a5542462ca7dc25bda9b46b44a39a8e4812d435",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/chicken/panels/try1/E_walk.png",
+      "source_panel_sha256": "9c59c9ce98409a29ec70a3ca6b6f76c3c875a6d0500d68ffb7230f2f2070ac17",
+      "source_box": [
+        263,
+        516,
+        618,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+      "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+      "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07881773399014778,
+      "upright_scale": 0.07881773399014778,
+      "normalization": {
+        "scaled_size": [
+          28,
+          40
+        ],
+        "trim_box": [
+          3,
+          8,
+          23,
+          30
+        ],
+        "placement": [
+          38,
+          51
+        ],
+        "resized_to_canvas_offset": [
+          35,
+          43
+        ],
+        "visible_pixels": 210,
+        "rotation_degrees": 0,
+        "scale": 0.07881773399014778,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "chicken",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 171,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 21,
+        "gradient_x": -0.2062652777777775,
+        "gradient_y": 0.1726816326530606,
+        "light_angle_degrees": 140.06452758771798,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "chicken",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/chicken/try1/E/run.png",
+      "image_sha256": "81e6b88d16569b959f9dc52f37a50bba224297810394fe3b4472e1b850903b05",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/chicken/panels/try1/E_run.png",
+      "source_panel_sha256": "ab6043d1821a33441ff1958f52042fec7b9de6e021dd2cdc5227c16868c5c999",
+      "source_box": [
+        529,
+        521,
+        942,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+      "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+      "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07881773399014778,
+      "upright_scale": 0.07881773399014778,
+      "normalization": {
+        "scaled_size": [
+          33,
+          40
+        ],
+        "trim_box": [
+          2,
+          8,
+          29,
+          27
+        ],
+        "placement": [
+          34,
+          54
+        ],
+        "resized_to_canvas_offset": [
+          32,
+          46
+        ],
+        "visible_pixels": 227,
+        "rotation_degrees": 0,
+        "scale": 0.07881773399014778,
+        "discarded_pixels": 4,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "chicken",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 179,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 18,
+        "gradient_x": 1.1078535031847134,
+        "gradient_y": 1.9340248275862073,
+        "light_angle_degrees": 60.1949353757612,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "chicken",
+      "facing": "E",
+      "pose": "graze",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/chicken/try1/E/graze.png",
+      "image_sha256": "98886d875d5f256772324c0deee11f72bb98620825eab8acf6192b817fd07921",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/chicken/panels/try1/E_graze.png",
+      "source_panel_sha256": "957ccfa59c4a736b7b6bdcf7f47a0031124a23c077c97f1d40bab210b5d59272",
+      "source_box": [
+        877,
+        560,
+        1214,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+      "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+      "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07881773399014778,
+      "upright_scale": 0.07881773399014778,
+      "normalization": {
+        "scaled_size": [
+          27,
+          37
+        ],
+        "trim_box": [
+          4,
+          8,
+          23,
+          27
+        ],
+        "placement": [
+          38,
+          54
+        ],
+        "resized_to_canvas_offset": [
+          34,
+          46
+        ],
+        "visible_pixels": 217,
+        "rotation_degrees": 0,
+        "scale": 0.07881773399014778,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "chicken",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 174,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 17,
+        "gradient_x": -1.9571572413793108,
+        "gradient_y": 0.6201479999999998,
+        "light_angle_degrees": 162.4185901817012,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "chicken",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 1,
+      "image": "art/animal/batch_a1/chicken/try1/E/dead.png",
+      "image_sha256": "909b24edd4960c002d4c98b85f699508bb8ec565b268e4cb98ec7c5bad2fd504",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/chicken/panels/try1/E_dead.png",
+      "source_panel_sha256": "9b7c3c16811885ccb36db18a1e4726dbb5b8c8f381b5c79e4ed3eb99e6071f06",
+      "source_box": [
+        1179,
+        605,
+        1522,
+        1004
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+      "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+      "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1,
+      "upright_scale": 0.07881773399014778,
+      "normalization": {
+        "scaled_size": [
+          34,
+          40
+        ],
+        "trim_box": [
+          1,
+          15,
+          33,
+          30
+        ],
+        "placement": [
+          32,
+          42
+        ],
+        "resized_to_canvas_offset": [
+          31,
+          27
+        ],
+        "visible_pixels": 293,
+        "rotation_degrees": 0,
+        "scale": 0.1,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "chicken",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 243,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 13,
+        "gradient_x": -0.1301044247787608,
+        "gradient_y": 1.182870873786408,
+        "light_angle_degrees": 96.27675427036945,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 10,
+  "contact_sheet": "art/animal/batch_a1/chicken/try1/contact_sheet.png",
+  "contact_sheet_sha256": "79daba2a99f62473e1521a0200e70303a7cb64193637df053dc9ca9cc0dedc88",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

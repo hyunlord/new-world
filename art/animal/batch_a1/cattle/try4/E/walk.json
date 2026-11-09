@@ -1,0 +1,112 @@
+{
+  "species": "cattle",
+  "facing": "E",
+  "pose": "walk",
+  "attempt": 4,
+  "image": "art/animal/batch_a1/cattle/try4/E/walk.png",
+  "image_sha256": "b6caa41ac8d4452e310984472a5a11c19d419dd75eef0ca770f626df0c3bac7e",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/cattle/panels/try4/E_walk.png",
+  "source_panel_sha256": "8a0a85d2fd0709f843cd35943df4b687f5b0742a2f56dc7efcb8a5f62f149531",
+  "source_box": [
+    270,
+    539,
+    608,
+    952
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/cattle/try4.png",
+  "raw_sha256": "413dbe8aad5400e8ea9fde8516b0183584704b06f61d0b51d58e0f6a92f6aaa4",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/cattle/try4.prompt.txt",
+  "prompt_sha256": "52ed53ee77cb5c1d84c3d6fb6974fcf557f9bc0a88da1783eb4fb487178881f2",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/cattle/try3.png",
+      "sha256": "52bb2557c3d03113b46368245830b03d37d178c2d06d674a24fa699e363c313c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.1694915254237288,
+  "upright_scale": 0.1694915254237288,
+  "normalization": {
+    "scaled_size": [
+      57,
+      70
+    ],
+    "trim_box": [
+      0,
+      8,
+      52,
+      57
+    ],
+    "placement": [
+      22,
+      24
+    ],
+    "resized_to_canvas_offset": [
+      22,
+      16
+    ],
+    "visible_pixels": 1314,
+    "rotation_degrees": 0,
+    "scale": 0.1694915254237288,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "cattle",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1164,
+    "base_row": 72,
+    "base_error": 0,
+    "height": 48,
+    "gradient_x": 0.25516847103513746,
+    "gradient_y": -0.9380551977920889,
+    "light_angle_degrees": 285.21731953050937,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

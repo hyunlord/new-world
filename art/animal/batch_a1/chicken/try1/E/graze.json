@@ -1,0 +1,112 @@
+{
+  "species": "chicken",
+  "facing": "E",
+  "pose": "graze",
+  "attempt": 1,
+  "image": "art/animal/batch_a1/chicken/try1/E/graze.png",
+  "image_sha256": "98886d875d5f256772324c0deee11f72bb98620825eab8acf6192b817fd07921",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/chicken/panels/try1/E_graze.png",
+  "source_panel_sha256": "957ccfa59c4a736b7b6bdcf7f47a0031124a23c077c97f1d40bab210b5d59272",
+  "source_box": [
+    877,
+    560,
+    1214,
+    1024
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+  "raw_sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.prompt.txt",
+  "prompt_sha256": "da58a183dcb47adfef683a9742a036c5c150188f9683186e1404f7841048356c",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.07881773399014778,
+  "upright_scale": 0.07881773399014778,
+  "normalization": {
+    "scaled_size": [
+      27,
+      37
+    ],
+    "trim_box": [
+      4,
+      8,
+      23,
+      27
+    ],
+    "placement": [
+      38,
+      54
+    ],
+    "resized_to_canvas_offset": [
+      34,
+      46
+    ],
+    "visible_pixels": 217,
+    "rotation_degrees": 0,
+    "scale": 0.07881773399014778,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "chicken",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 174,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 17,
+    "gradient_x": -1.9571572413793108,
+    "gradient_y": 0.6201479999999998,
+    "light_angle_degrees": 162.4185901817012,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

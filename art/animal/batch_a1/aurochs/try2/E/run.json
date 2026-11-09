@@ -1,0 +1,112 @@
+{
+  "species": "aurochs",
+  "facing": "E",
+  "pose": "run",
+  "attempt": 2,
+  "image": "art/animal/batch_a1/aurochs/try2/E/run.png",
+  "image_sha256": "725f3239e56a0c533bab5934de82004b2c6c0244eda9b29ed660c591fdffdb6b",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/aurochs/panels/try2/E_run.png",
+  "source_panel_sha256": "20fba66eb055f8db9f77a94045ea6ee54405505188c523917a9f4c15edd20f13",
+  "source_box": [
+    515,
+    505,
+    904,
+    1005
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/aurochs/try2.png",
+  "raw_sha256": "a31c324901dc6f9c275eb9b8c758aedfa4165efce1a80bff5579a647e8fa5a71",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/aurochs/try2.prompt.txt",
+  "prompt_sha256": "8b2cd05bfd6d0e4359a0c2dc176bb5706bfeb9ca4ad96e746991304df8b8d8b8",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/aurochs/try1.png",
+      "sha256": "a34ff040f6105d068e0fe9cd7c86727ade12b49e1357ae6bade2f8d868a6fbc2"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.175,
+  "upright_scale": 0.175,
+  "normalization": {
+    "scaled_size": [
+      68,
+      88
+    ],
+    "trim_box": [
+      3,
+      14,
+      67,
+      58
+    ],
+    "placement": [
+      16,
+      29
+    ],
+    "resized_to_canvas_offset": [
+      13,
+      15
+    ],
+    "visible_pixels": 1235,
+    "rotation_degrees": 0,
+    "scale": 0.175,
+    "discarded_pixels": 53,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "aurochs",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1084,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 43,
+    "gradient_x": -0.2048205794205794,
+    "gradient_y": -3.7854917093142273,
+    "light_angle_degrees": 266.9029326090314,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}
