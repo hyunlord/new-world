@@ -545,6 +545,9 @@ func _livestock() -> void:
 			_panel.hide()
 			goals.hide()
 			if ids.size() > 0:
+				var livestock_body: Sprite2D = (renderer.get("_bodies") as Dictionary).get(ids[0])
+				_check(stage + " actual32px sprite rect", livestock_body != null and livestock_body.get_rect() == Rect2(-16, -32, 32, 32))
+				_check(stage + " actual sprite centre picks identity", livestock_body != null and int(renderer.call("livestock_at", livestock_body.to_global(livestock_body.get_rect().get_center()))) == ids[0])
 				var xs: PackedInt64Array = read["xs"]
 				var ys: PackedInt64Array = read["ys"]
 				await _tile(Vector2i(xs[0], ys[0]), false)

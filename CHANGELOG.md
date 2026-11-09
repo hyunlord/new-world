@@ -14,6 +14,8 @@
 
 - Align integration fixtures with ordinary livestock rule11 while preserving preboot rejection, frozen historical ids and complete data-field comparison; retain the aborted first B gate.
 
+- Derive livestock anchors and picking from actual shared sprite geometry; retain the current hit area and minimum-id overlap selection. D-C1-3 expands frozen prechecks to step33 and every fast non-render step; interrupted B3 remains incomplete.
+
 ### Removed
 - None.
 

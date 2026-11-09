@@ -463,3 +463,28 @@ bindings and actual results, never a promised success. B3 starts from step1
 with external PLAY_ROOT/PLAY_DATA and the asserted whitespace fixture list;
 D-C1-1's conditional draw-only step41 handling now applies to B3 by D-C1-2.
 Keep native screenshots during the run and restart the owned caffeinate.
+
+## D28 — D-C1-3: sprite geometry and expanded frozen prechecks
+
+B3 at702d57bd2 passed its mandatory debug3228/0/15 and Clippy prechecks.
+Its Python step16 and extensibility step33 caught the same two livestock
+renderer literals, a new cause distinct from B1/B2. A network failure killed
+the session at18:22 during step39; this is an environmental interruption,
+not a complete gate verdict. Preserve all partial outputs, never stitch them.
+
+Reuse the existing Icons.item_texture size for the sprite's bottom anchor
+and Sprite2D.get_rect/to_local for picking. Current32px sprites retain exactly
+Rect2(-16,-32,32,32); stable minimum-id overlap selection stays intact. The
+existing extensibility check already reproduces the defect; add only three
+lines to the existing native harness for actual geometry/centre identity.
+No content, simulation values, new dependency or acceptance threshold changes.
+
+D-C1-3 extends the frozen preflight to step33 and every <120s non-render
+step, including headless Godot. Reuse gate.sh's exact commands with a marked
+C1_PREGATE_ONLY mode, no new runner. It skips long/real-render steps and the
+unexecuted read-preservation footer only in preflight; the full gate is
+unchanged when the flag is unset. Record every actual exit in external
+pregate-b4.txt; a red preflight never launches B4. Full B4 starts atstep1,
+with external PLAY paths and whitespace fixture assertion. Publish only a
+complete green B4 under D-C1-1's unchanged conditional step41 procedure.
+Actual results and fast-forwards belong in immutable external receipts.

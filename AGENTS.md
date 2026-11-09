@@ -84,7 +84,7 @@ Codex reads the same skills through `.agents/skills/<name>` (symlinks).
 
 ## The gate
 
-Standing pre-gate rule (D-C1-2, 2026-11-09): on the committed, frozen HEAD, first pass `cargo test --workspace --no-fail-fast -- --test-threads=8` and `cargo clippy --workspace --all-targets -- -D warnings` from `rust/`. Launch the full gate only after both pass. A full-gate failure that this preflight would catch is a violation of this rule, not a §5 repeated-product-defect stop.
+Standing pre-gate rule (D-C1-2/D-C1-3, 2026-11-09): on the committed, frozen HEAD, first pass `cargo test --workspace --no-fail-fast -- --test-threads=8` and `cargo clippy --workspace --all-targets -- -D warnings` from `rust/`, step33 (`python3 -m unittest tools/v8/test_mart2_extensibility.py tools/v8/test_art_masks.py tools/v8/test_art_import.py`) and every other gate step taking <120s without a Godot render. `C1_PREGATE_ONLY=1` reuses those exact gate commands including headless checks; its marked partial summary is never a publication gate. Record all results in external `pregate-<attempt>.txt`. Launch the full gate from step1 only after every precheck passes; unset the partial-mode flag. A preflight-catchable failure violates this standing rule, not the repeated-product-defect stop. Network interruptions are environmental, not gate verdicts; rerun from step1 without stitching.
 
 ```bash
 bash tools/v8/gate.sh <log_dir>        # 36 steps; every step except perf and nav_bench must pass

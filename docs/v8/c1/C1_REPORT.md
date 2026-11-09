@@ -28,9 +28,9 @@ BASE 생존 [10,12,11,14,10,13,12,14], 후보 [10,13,11,14,10,12,12,12]; Knowled
 ### 확인된 제한사항·후속
 C1-b에서 포획→성체 쌍→출생→젖→도축 및 실제 원인·저장·카드·렌더링을 연결한다. 젖 발견의 순환 조건은 B에서 실제 포획 Practice와 토기 지식으로 연결한다. 양모 가공은 C2, 도구 효율·바구니 운반 등은 명시된 후속 부채다. 멧돼지는 Inert 유지. A2 draw-only hitch 원인은 미확정이다. C1-a에서 새 enum·생산 unwrap·시뮬레이션 직접 UI 쓰기·수치 튜닝은 도입하지 않았다. 변경 파일 전체는 게시 커밋 diff로 확인할 수 있다.
 
-## C1-b D-C1-2 재개 보고 — 동결 사전 검증 전
+## C1-b D-C1-3 재개 보고 — B4 게시 조건부
 
-**C1-a 게시 완료, C1-b 미게시.** D-C1-2가 B2 중단 후 재개를 승인했다. 규칙11을 빠뜨린 시험 기대 목록을 엄격한 전체 비교를 유지하여 갱신했다. 제품·콘텐츠 데이터·수치·게이트 임계값 변경은 없다. 동결 HEAD의 전체 workspace debug와 Clippy가 모두 통과해야 B3 전체 gate를 시작하며, 최종 결과·게시 SHA는 실제 외부 영수증에 기록한다.
+**C1-a 게시 완료, C1-b 미게시.** D-C1-3에 따라 B3의 16픽셀 리터럴을 실제 공유 텍스처 크기와 Sprite2D geometry로 대체했다. 기존 32×32 그림의 hit area와 최소 ID 선택을 유지한다. B3는 네트워크 중단으로 미완료이며 게시 판정이 아니다. 동결 사전 검증과 B4 전체 gate가 모두 녹색일 때만 게시한다. 최종 결과·실제 SHA·새 B4 스크린샷은 외부 C1-b-report.md/게시 영수증에 기록한다.
 
 ### 구현 의도 / 구현 내용 / 구현 방법 / 기능 설명
 
@@ -42,13 +42,13 @@ C1-b에서 포획→성체 쌍→출생→젖→도축 및 실제 원인·저장
 
 ### 게시 SHA와 게이트 결과 (단계 수, 면제·재실행, PLAY_ROOT 외부 지정)
 
-**C1-b 게시와 B3 결과는 PENDING**이다. 현재 main/wip은 게시 A `094fea092f467a7c82764165ad0d2f9e74b806e3`다. D-C1-2는 B1/B2의 오래된 기대값 실패를 제품 결함 수리 반복과 구분하고 재개를 승인했다. `engine_ui_facts.rs`의 labels 전체 기대 목록에 `(11, "C1_STEWARD_LIVESTOCK")`을 추가했다. 전체 ordered 비교·유효/무효 scope·명령 수·상태 assertions를 그대로 유지했다. 독립 전수 점검은 현재 count/ID 목록에11이 이미 반영된 다른 시험들과 실제 과거 BASE1..8·단일 규칙 도구 fixture를 구분했다. 추가 제품 변경은 없다.
+**C1-b 게시와 B4 결과는 PENDING**이다. main/wip은 게시 A `094fea092f467a7c82764165ad0d2f9e74b806e3`다. D-C1-2에서 규칙11 labels 전체 기대 목록을 수정했고, B3의 frozen precheck debug3228 PASS/0 FAIL/15ignored 및 Clippy exit0을 실제 확인했다. B3 debug/release 모두 outer3228 PASS/0 FAIL/15ignored, baseline identity 공통228748·차이0·chronicle64/19683 및 raw64 PASS였다. 그러나 step16/33이 같은 렌더러 리터럴 두 줄을 검출했다. 이는 B1/B2와 다른 원인이며 D-C1-3가 수정을 지시했다. 18:22 네트워크 연결 실패로 step39 중 중단되어 B3 전체 verdict는 없다. `fullgate-b-attempt3/INTERRUPTED-D-C1-3.json`과 모든 원본을 보존한다.
 
 B1 `062505d30511df79325b903289f9155c379013a1`은 recipe_registry actual10/expected9, B2 `4c4642553fe3a10ac6c31a2b87dcf435aa2dcce1`은 현재 labels에서11 누락으로 실패했다. 각각 첫3단계 PASS 뒤 debug 부분 RED/ABORTED이며 전체 gate가 아니다. B2는 소유 프로세스만 TERM하여 exit143/잔여0, 소스3081핀·설정·러너 불변을 검증했다. 두 실패와 중단 보고는 `fullgate-b-attempt{1,2}/ABORTED.json`, `STOP-B2-20261109-superseded-D-C1-2.json`, `C1-b-stop-report-20261109-D-C1-2.md`에 보존한다. 당시 중단을 성공으로 바꾸지 않는다.
 
-새 상시 규칙은 AGENTS.md와 worldsim-testing에 기록했다. 커밋하고 동결한 동일 HEAD에서 `cargo test --workspace --no-fail-fast -- --test-threads=8` 및 `cargo clippy --workspace --all-targets -- -D warnings`를 실제 모두 통과한 뒤 B3를 step1부터 실행한다. 사전 debug가 잡을 실패를 가진 full gate는 이 새 규칙 위반이며 §5 제품 결함 반복으로 세지 않는다. 사전 검증과 B3는 아직 실행 전이다. 외부 `PLAY_ROOT=/Users/rexxa/work/c1-data/play-root`, `PLAY_DATA=/Users/rexxa/work/c1-data/play-data`, 정확한 whitespace fixture 목록을 유지한다. D-C1-2가 지정한 D-C1-1의 조건부 draw-only step41 절차를 적용하되 기존 면제·임계값을 바꾸지 않는다. 새 caffeinate를 실행했다. 누락 labels 회귀 시험은 `d2-targeted-steward-labels.log`에서 1 PASS/0 FAIL이며 fmt·diff·문서 검사도 통과했다.
+D-C1-3 상시 사전 검증은 frozen HEAD의 전체 workspace debug, all-target Clippy, step33 및 <120초 비렌더링 항목(헤드리스 포함)이다. 기존 gate의 C1_PREGATE_ONLY 선택으로 같은 명령을 실행하고 외부 pregate-b4.txt에 기록한다. 이 partial summary는 게시 증거가 아니다. 필수4와 짧은 검사37개(6 포함)로 총38단계: 1/2/3/4/6/7/8/9/11/12/13/14/15/16/18/19/20/21/22/23/24/26/27/28/29/30/31/32/33/34/35/36/38/42/43/45/49/51. 5/10/17/25/37/44/50은 긴 실행, 39/40/41/46은 실제 렌더링으로 전체 gate에서 실행한다. 47/48은 READ 모드 적용 대상이 아니다. step27은 단일 측정 lane·BASE/후보 교차·매 진입 load1<8을 유지한다. 모두 녹색 뒤 해당 flag를 해제하고 B4를 step1부터 전체 재실행한다. 외부 PLAY_ROOT/PLAY_DATA와 정확한10개 공백 fixture 목록을 유지한다. D-C1-1의 조건부 step41 절차와 기존 임계값을 유지한다. 새 caffeinate를 실행했다. 전체 step 목록은 사전 검증 audit와 외부 최종 한국어 보고에 기록한다.
 
-A3 전체49/49 PASS(기존 step41 면제)와 `094fea092`의 v8/wip→v8/main FF는 `C1-a-publication.json`에 있다. 그 녹색 게이트의 실제 BASE/후보 장부12행을 이번 문서 커밋에서 `docs/perf/PERF_LEDGER.md`에도 기록했다. B 측정으로 재사용하지 않는다. B3 종료와 원격 게시의 실제 사실은 외부 `C1-b-report.md` 및 게시 영수증에 기록하며, 검사 중인 커밋을 고쳐 자신의 미래 결과를 주장하지 않는다.
+A3 전체49/49 PASS(기존 step41 면제)와 `094fea092`의 v8/wip→v8/main FF는 `C1-a-publication.json`에 있다. 그 녹색 게이트의 실제 BASE/후보 장부12행을 이번 문서 커밋에서 `docs/perf/PERF_LEDGER.md`에도 기록했다. B 측정으로 재사용하지 않는다. B4 종료와 원격 게시의 실제 사실은 외부 `C1-b-report.md` 및 게시 영수증에 기록하며, 검사 중인 커밋을 고쳐 자신의 미래 결과를 주장하지 않는다.
 
 ### 사슬 시험·데이터 전용 시험·origin 시험 결과, 캡처 경로
 
@@ -95,10 +95,10 @@ B paired 크래시 감지는 **PASS**다 (`crash-head-b1/receipt.json`, 2026-11-
 
 ### 새 도구 줄 수와 그 이유
 
-보수적 도구 누적은 **1992줄/상한2000줄**이다. A390 + 기존 runner scene export1 + old-save native8 + 가축 native112 + selected native5 + selected Rust36 + 실제 사슬1427 + 기존 개인 필요 helper 재노출2 + colony probe9 + food fingerprint1 + story registry-count migration1이다. 동결 HEAD와 최초 BASE의 `git diff --numstat` 및 외부 runner 실제32줄을 다시 센 파일별22항목 영수증은 `c1-data/tooling-count-b-frozen-4c4642553.json`이다. 이전 `tooling-count-b-final-preflight.json`은 범주별 잠정 기록으로 보존한다. 실제 동기는 genuine 이전 저장 검증, 실제 화면 연결, 필수 사슬·저장/twin/replay, 새 상태의 기존 결정성 검증이다. 임시35줄 재생 진단과18줄 소유자 추적은 제거했고 원본·실패는 외부 보존했다. 새 observer framework·의존성은 없다. A 기능 통합 시험1269줄 및 일반 기능 단위/회귀 시험은 구별한다.
+보수적 도구 누적은 **1998줄/상한2000줄**이다. A390 + 기존 runner scene export1 + old-save native8 + 가축 native115 + selected native5 + selected Rust36 + 실제 사슬1427 + 기존 gate 재사용 preflight3 + 기존 개인 필요 helper 재노출2 + colony probe9 + food fingerprint1 + story registry-count migration1이다. 동결 HEAD와 최초 BASE의 `git diff --numstat` 및 외부 runner 실제32줄을 다시 센 파일별22항목 영수증은 `c1-data/tooling-count-b-frozen-4c4642553.json`이다. 이전 `tooling-count-b-final-preflight.json`은 범주별 잠정 기록으로 보존한다. 실제 동기는 genuine 이전 저장 검증, 실제 화면 연결, 필수 사슬·저장/twin/replay, 새 상태의 기존 결정성 검증이다. 임시35줄 재생 진단과18줄 소유자 추적은 제거했고 원본·실패는 외부 보존했다. 새 observer framework·의존성은 없다. A 기능 통합 시험1269줄 및 일반 기능 단위/회귀 시험은 구별한다.
 
 ### 확인된 제한사항·후속 (C2로 넘기는 것)
 
-물리 사슬·실제 화면·paired 크래시 감지는 앞선 실제 실행에서 통과했지만 B는 아직 미게시다. 새 동결 HEAD의 전체 workspace debug·Clippy 사전 조건, B3 전체 gate·N1000 장부·게시가 남았다. 별도 집중 저장 시험과 사슬 replay 성공을 최종 게시 bar로 대체하지 않는다. B1/B2와 당시 §5 중단은 보존하고 D-C1-2의 재개·새 상시 규칙을 구분한다.
+물리 사슬·실제 화면·paired 크래시 감지는 앞선 실제 실행에서 통과했지만 B는 아직 미게시다. 새 동결 HEAD의 전체 workspace debug·Clippy 사전 조건, 확장 사전 검증·B4 전체 gate·N1000 장부·게시가 남았다. 별도 집중 저장 시험과 사슬 replay 성공을 최종 게시 bar로 대체하지 않는다. B1/B2와 당시 §5 중단은 보존하고 D-C1-2의 재개·새 상시 규칙을 구분한다.
 
 양모 수거·방적·옷은 C2, 저장 건초 보충·도구 효율·바구니 운반·사육 산출 균형은 후속 부채다. wild_boar는 허용된 한 번의 Inert 전환을 유지한다. A2 draw-only hitch 원인은 UNKNOWN이며 실패·중단 원본을 보존한다. 모든 신규 수치는 원래 data starting policy 그대로이고 결과 지향 튜닝은 없다.

@@ -99,6 +99,7 @@ export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-8}"
 SUMMARY="$LOG/gate.txt"
 { echo "head $(git rev-parse HEAD)"; echo "dirty $(git status --porcelain --untracked-files=no | grep -v '^ M .gitignore$' | wc -l | tr -d ' ')"; echo "started $(date '+%Y-%m-%d %H:%M:%S %Z')"; } > "$SUMMARY"
 status=0
+[[ "${C1_PREGATE_ONLY:-0}" == 1 ]] && echo "mode pregate-only; NOT a publication gate" >> "$SUMMARY"
 READ_EVALUATION_MODE=legacy
 if [[ -n "${READ_GATE_CONFIG:-}" ]]; then
     READ_EVALUATION_MODE="$(python3 tools/v8/read_gate_checks.py mode "$READ_GATE_CONFIG")" || exit 1
@@ -107,6 +108,7 @@ if [[ -n "${M6A_GATE_CONFIG:-}" ]]; then
     bash tools/v8/m6a_gate_checks.sh preflight "$LOG" || exit 1
 fi
 step() {
+    [[ "${C1_PREGATE_ONLY:-0}" != 1 || " 1 2 3 4 6 7 8 9 11 12 13 14 15 16 18 19 20 21 22 23 24 26 27 28 29 30 31 32 33 34 35 36 38 42 43 45 49 51 " == *" $1 "* ]] || { echo "PREGATE SKIP $1 $2" >> "$SUMMARY"; return 0; }
     local n="$1" name="$2"; shift 2
     local start end code
     start=$(date +%s)
@@ -338,7 +340,7 @@ step 50 read_preservation bash -c '
     grep -q "DETERMINISM PASS" "$OUT/head_determinism.txt" && grep -q "DETERMINISM PASS" "$OUT/base_determinism.txt" || { echo "colony determinism FAIL"; exit 1; }
     echo "READ_PRESERVATION PASS"
 ' "$LOG/read_preservation"
-grep -q 'READ_PRESERVATION PASS' "$LOG/read_preservation.log" || { echo "   read_preservation: FAIL" >> "$SUMMARY"; status=1; }
+[[ "${C1_PREGATE_ONLY:-0}" == 1 ]] || grep -q 'READ_PRESERVATION PASS' "$LOG/read_preservation.log" || { echo "   read_preservation: FAIL" >> "$SUMMARY"; status=1; }
 step 51 read_diagnosis_test bash -c '
     set -euo pipefail
     RESULT="docs/v8/read/read_30s_result.json"

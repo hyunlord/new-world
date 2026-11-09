@@ -79,7 +79,7 @@ func _refresh() -> void:
 			_bodies[ids[i]] = body
 		body.visible = not _lod
 		body.texture = Icons.item_texture(Content.row("animals", kinds[i]))
-		body.offset = Vector2(0, -16)
+		body.offset = Vector2(0, -body.texture.get_height() * 0.5)
 		body.position = View.base_point(Vector2i(xs[i], ys[i]))
 	queue_redraw()
 
@@ -118,7 +118,7 @@ func livestock_at(point: Vector2) -> int:
 	var best: int = -1
 	for id: int in _bodies:
 		var body: Sprite2D = _bodies[id]
-		if Rect2(body.position + Vector2(-16, -32), Vector2(32, 32)).has_point(point) and (best < 0 or id < best): best = id
+		if body.get_rect().has_point(body.to_local(point)) and (best < 0 or id < best): best = id
 	return best
 
 
