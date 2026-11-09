@@ -1,0 +1,116 @@
+{
+  "species": "lamb",
+  "facing": "E",
+  "pose": "dead",
+  "attempt": 2,
+  "image": "art/animal/batch_a1/lamb/try2/E/dead.png",
+  "image_sha256": "707b628f46a738b2d1fd278744810ba03d688a566720023aca3640b8944719b0",
+  "canvas_px": [
+    96,
+    64
+  ],
+  "anchor_px": [
+    48,
+    56
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/lamb/panels/try2/E_dead.png",
+  "source_panel_sha256": "b5d3df2c90eed0b2ac41c3197a0fb9d62229408ad7810ae37ed8d53419dfb928",
+  "source_box": [
+    1157,
+    609,
+    1524,
+    1004
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+  "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+  "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+      "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.08875739644970414,
+  "upright_scale": 0.07589285714285714,
+  "normalization": {
+    "scaled_size": [
+      33,
+      35
+    ],
+    "trim_box": [
+      1,
+      12,
+      33,
+      25
+    ],
+    "placement": [
+      32,
+      44
+    ],
+    "resized_to_canvas_offset": [
+      31,
+      32
+    ],
+    "visible_pixels": 290,
+    "rotation_degrees": 0,
+    "scale": 0.08875739644970414,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "lamb",
+    "anchor": [
+      48,
+      56
+    ],
+    "height_band": [
+      1,
+      56
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 247,
+    "base_row": 56,
+    "base_error": 0,
+    "height": 13,
+    "gradient_x": 0.4537025862068965,
+    "gradient_y": -8.17285925925926,
+    "light_angle_degrees": 273.17741788449257,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

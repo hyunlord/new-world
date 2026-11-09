@@ -1,0 +1,1236 @@
+{
+  "spec": {
+    "species": "lamb",
+    "attempt": 2,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+    "shoulder_y": 232,
+    "hoof_y": 456,
+    "shoulder_target": 17,
+    "dead_length": 30,
+    "poses": [
+      "stand",
+      "walk",
+      "run",
+      "graze",
+      "dead"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+      "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.generation.json",
+    "landmark_note": "Manual source S-stand shoulder/back plane and lowest hoof; estimates from displayed original. Same scale used all upright frames."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.spec.json",
+  "spec_sha256": "92798e0c175eae8275b7d912bd787930848712239410c018c5d2f3d713140d1c",
+  "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+  "prompt_text": "Use case: precise-object-edit. Edit ONLY the surface detailing in the FIRST image, the current lamb sprite sheet. Preserve ALL ten animals, exact 2 rows x5 columns layout, pose, body proportions, position, camera, colours, lighting and alpha. First reference = edit target; deer/person/scene = continuity references. Simplify fleece to exactly SEVEN broad connected scalloped lobes and TWO broad shadow patches on each visible torso. Delete all tiny curls, stipple, squiggles and fine hair strokes between these major lobes. Horn buds are smooth without rings. Quiet parchment cream wash and one dark shadow tone. Maintain rounded young anatomy. Main silhouette contour remains twice interior line width. Mark direction upper-left to lower-right. Same restrained natural-history ink and tone as reference deer; no plastic/cartoon/3D render. Do not redraw the poses or rescale individuals. Keep 35deg left S row and right E row. True alpha transparent background, no ground/shadow/text/grid. Do not add any small decorative marks. The primary goal is quiet LARGE planes with a FEW intentional marks, so count the requested marks rather than filling the body with texture.\n",
+  "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": {
+    "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.generation.json",
+    "sha256": "064306abcdb6fd9057b5cc7ba9d14dbd24d22b0dcb3cac9f751540f6818a944b"
+  },
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+      "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "source_rgba_sha256": "59eed2b7f83ebd455542e9655e665b239cc409b128fe0c781f8dc375a768cccb",
+    "ownership_sha256": "605b4fe59e17e91799670bb9eba192263f80fda1e7ba9c4e75dc0540ec14e290",
+    "visible_pixels": 422289,
+    "tied_visible_pixels": 1,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.07589285714285714,
+  "landmark_note": "Manual source S-stand shoulder/back plane and lowest hoof; estimates from displayed original. Same scale used all upright frames.",
+  "frames": [
+    {
+      "species": "lamb",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/lamb/try2/S/stand.png",
+      "image_sha256": "7ae5391fa05d80e3983ff63ccd00295ebffbb2ed57c2581c7cbcb9d7cd4516ab",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/lamb/panels/try2/S_stand.png",
+      "source_panel_sha256": "184ce78b0e33e6847b8aa11ba027f8c1565bc9589e83663c5383b7f1caa94d0f",
+      "source_box": [
+        20,
+        9,
+        256,
+        546
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+      "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+      "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+          "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07589285714285714,
+      "upright_scale": 0.07589285714285714,
+      "normalization": {
+        "scaled_size": [
+          18,
+          41
+        ],
+        "trim_box": [
+          0,
+          13,
+          18,
+          35
+        ],
+        "placement": [
+          39,
+          51
+        ],
+        "resized_to_canvas_offset": [
+          39,
+          38
+        ],
+        "visible_pixels": 261,
+        "rotation_degrees": 0,
+        "scale": 0.07589285714285714,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "lamb",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 204,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 20,
+        "gradient_x": 1.8648226190476191,
+        "gradient_y": -5.87201868131868,
+        "light_angle_degrees": 287.6186912386118,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "lamb",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/lamb/try2/S/walk.png",
+      "image_sha256": "e96ca360e3b1c7bdf415b4828899b6e361f8b9287f6f6cff88e8c1824b216b6e",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/lamb/panels/try2/S_walk.png",
+      "source_panel_sha256": "aa499793ca1208a5e3f172389e3eeba2f39cd30a7e849da1c6960220589e4b96",
+      "source_box": [
+        217,
+        0,
+        562,
+        554
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+      "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+      "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+          "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07589285714285714,
+      "upright_scale": 0.07589285714285714,
+      "normalization": {
+        "scaled_size": [
+          26,
+          42
+        ],
+        "trim_box": [
+          5,
+          14,
+          24,
+          35
+        ],
+        "placement": [
+          38,
+          52
+        ],
+        "resized_to_canvas_offset": [
+          33,
+          38
+        ],
+        "visible_pixels": 252,
+        "rotation_degrees": 0,
+        "scale": 0.07589285714285714,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "lamb",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 196,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 20,
+        "gradient_x": -0.43477391304347796,
+        "gradient_y": -6.81381520467836,
+        "light_angle_degrees": 266.3490372851226,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "lamb",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/lamb/try2/S/run.png",
+      "image_sha256": "1e2a1265a79bc832064bea2ddb775c3464bebdde1dd22d2d5334224a7d4d8084",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/lamb/panels/try2/S_run.png",
+      "source_panel_sha256": "87cd22ba122487a74ba487858a08750ab77602825b4b8d2f6c54aa257ee956af",
+      "source_box": [
+        502,
+        0,
+        896,
+        540
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+      "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+      "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+          "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07589285714285714,
+      "upright_scale": 0.07589285714285714,
+      "normalization": {
+        "scaled_size": [
+          30,
+          41
+        ],
+        "trim_box": [
+          5,
+          14,
+          29,
+          32
+        ],
+        "placement": [
+          36,
+          55
+        ],
+        "resized_to_canvas_offset": [
+          31,
+          41
+        ],
+        "visible_pixels": 248,
+        "rotation_degrees": 0,
+        "scale": 0.07589285714285714,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "lamb",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 199,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 17,
+        "gradient_x": 2.018047398843931,
+        "gradient_y": -8.807513095238097,
+        "light_angle_degrees": 282.9053009068494,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "lamb",
+      "facing": "S",
+      "pose": "graze",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/lamb/try2/S/graze.png",
+      "image_sha256": "83bfc8de770e49b94558ea99147fc739626e77c41d4ee161333dd4264283ce79",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/lamb/panels/try2/S_graze.png",
+      "source_panel_sha256": "e466ceaf671e9448d56339aca7f93843c2c13dd637f98150dcd8d79782c44361",
+      "source_box": [
+        875,
+        63,
+        1266,
+        558
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+      "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+      "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+          "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07589285714285714,
+      "upright_scale": 0.07589285714285714,
+      "normalization": {
+        "scaled_size": [
+          30,
+          38
+        ],
+        "trim_box": [
+          1,
+          12,
+          21,
+          31
+        ],
+        "placement": [
+          38,
+          54
+        ],
+        "resized_to_canvas_offset": [
+          37,
+          42
+        ],
+        "visible_pixels": 261,
+        "rotation_degrees": 0,
+        "scale": 0.07589285714285714,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "lamb",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 207,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 18,
+        "gradient_x": -1.2687151162790695,
+        "gradient_y": -8.417104812834223,
+        "light_angle_degrees": 261.42830056699205,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "lamb",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/lamb/try2/S/dead.png",
+      "image_sha256": "cca2335e60e2155d909df085a0a30fb130ff257adb72f2b4390822de5d478046",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/lamb/panels/try2/S_dead.png",
+      "source_panel_sha256": "9013b9747556eff17db1130c25453d22d2cb0f75f799e41e76439224094bf149",
+      "source_box": [
+        1151,
+        111,
+        1526,
+        608
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+      "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+      "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+          "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.09375,
+      "upright_scale": 0.07589285714285714,
+      "normalization": {
+        "scaled_size": [
+          35,
+          47
+        ],
+        "trim_box": [
+          2,
+          18,
+          33,
+          34
+        ],
+        "placement": [
+          32,
+          41
+        ],
+        "resized_to_canvas_offset": [
+          30,
+          23
+        ],
+        "visible_pixels": 318,
+        "rotation_degrees": 0,
+        "scale": 0.09375,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "lamb",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 275,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 15,
+        "gradient_x": -1.244803875968992,
+        "gradient_y": -5.820817142857142,
+        "light_angle_degrees": 257.9289053311947,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "lamb",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/lamb/try2/E/stand.png",
+      "image_sha256": "a21bb2ef27dfb7dc8ea1f8a5a08a3c3275dbee437eb60d38c4d0124ce82fc9ae",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/lamb/panels/try2/E_stand.png",
+      "source_panel_sha256": "34e0a246b85f6ee7f2da6656e809702e25f76a9c7903aff9920f68fecb70bacf",
+      "source_box": [
+        0,
+        533,
+        334,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+      "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+      "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+          "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07589285714285714,
+      "upright_scale": 0.07589285714285714,
+      "normalization": {
+        "scaled_size": [
+          25,
+          37
+        ],
+        "trim_box": [
+          2,
+          4,
+          21,
+          26
+        ],
+        "placement": [
+          38,
+          51
+        ],
+        "resized_to_canvas_offset": [
+          36,
+          47
+        ],
+        "visible_pixels": 265,
+        "rotation_degrees": 0,
+        "scale": 0.07589285714285714,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "lamb",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 216,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 21,
+        "gradient_x": -3.7291039106145263,
+        "gradient_y": -6.475938144329897,
+        "light_angle_degrees": 240.06494354207976,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "lamb",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/lamb/try2/E/walk.png",
+      "image_sha256": "1147acf190104286c89960cc71a077756b0cfae3869f250e4a182db6680ca2fd",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/lamb/panels/try2/E_walk.png",
+      "source_panel_sha256": "9f6248e57abf9ccc5f442bb4dab5f1d8ae75804a40e0dc08b6a7e42af915f255",
+      "source_box": [
+        253,
+        519,
+        634,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+      "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+      "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+          "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07589285714285714,
+      "upright_scale": 0.07589285714285714,
+      "normalization": {
+        "scaled_size": [
+          29,
+          38
+        ],
+        "trim_box": [
+          3,
+          5,
+          23,
+          27
+        ],
+        "placement": [
+          38,
+          51
+        ],
+        "resized_to_canvas_offset": [
+          35,
+          46
+        ],
+        "visible_pixels": 278,
+        "rotation_degrees": 0,
+        "scale": 0.07589285714285714,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "lamb",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 221,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 20,
+        "gradient_x": -2.1337934782608694,
+        "gradient_y": -5.7991813471502605,
+        "light_angle_degrees": 249.79904109796718,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "lamb",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/lamb/try2/E/run.png",
+      "image_sha256": "5322692f3c7117dd336e2ebcc8e75cca8cddc811c7509ad0dc456254a843b9a4",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/lamb/panels/try2/E_run.png",
+      "source_panel_sha256": "edd14fda90c487273235bcdee4b0dea164ded8df5fa39edad4925392b00ba8e7",
+      "source_box": [
+        535,
+        495,
+        946,
+        1006
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+      "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+      "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+          "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07589285714285714,
+      "upright_scale": 0.07589285714285714,
+      "normalization": {
+        "scaled_size": [
+          31,
+          39
+        ],
+        "trim_box": [
+          1,
+          7,
+          27,
+          26
+        ],
+        "placement": [
+          35,
+          54
+        ],
+        "resized_to_canvas_offset": [
+          34,
+          47
+        ],
+        "visible_pixels": 247,
+        "rotation_degrees": 0,
+        "scale": 0.07589285714285714,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "lamb",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 209,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 18,
+        "gradient_x": -1.3164978723404255,
+        "gradient_y": -6.7541624309392265,
+        "light_angle_degrees": 258.97039861514224,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "lamb",
+      "facing": "E",
+      "pose": "graze",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/lamb/try2/E/graze.png",
+      "image_sha256": "c9adaf891082290bb2f8ee2b89b7f27e94147a3946271f421b4540b107341184",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/lamb/panels/try2/E_graze.png",
+      "source_panel_sha256": "ea8428c7c04233c2536dfadbf85b09bdf667c0d056cd0eb34c70dae5bfe0ac12",
+      "source_box": [
+        815,
+        560,
+        1200,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+      "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+      "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+          "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07589285714285714,
+      "upright_scale": 0.07589285714285714,
+      "normalization": {
+        "scaled_size": [
+          29,
+          35
+        ],
+        "trim_box": [
+          7,
+          7,
+          27,
+          24
+        ],
+        "placement": [
+          38,
+          56
+        ],
+        "resized_to_canvas_offset": [
+          31,
+          49
+        ],
+        "visible_pixels": 244,
+        "rotation_degrees": 0,
+        "scale": 0.07589285714285714,
+        "discarded_pixels": 3,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "lamb",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 206,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 17,
+        "gradient_x": -0.9332181818181808,
+        "gradient_y": -5.273656521739131,
+        "light_angle_degrees": 259.9649132129164,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "lamb",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/lamb/try2/E/dead.png",
+      "image_sha256": "707b628f46a738b2d1fd278744810ba03d688a566720023aca3640b8944719b0",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/lamb/panels/try2/E_dead.png",
+      "source_panel_sha256": "b5d3df2c90eed0b2ac41c3197a0fb9d62229408ad7810ae37ed8d53419dfb928",
+      "source_box": [
+        1157,
+        609,
+        1524,
+        1004
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+      "raw_sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.prompt.txt",
+      "prompt_sha256": "7a90ca3ec6cc980dc89e389a7d4d34bffb64b4f89030242aed22d9244dfd0af7",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try1.png",
+          "sha256": "146af9591be6cb544586b37685479840f8dc8be9db252c58a0405ccc3d4715b0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.08875739644970414,
+      "upright_scale": 0.07589285714285714,
+      "normalization": {
+        "scaled_size": [
+          33,
+          35
+        ],
+        "trim_box": [
+          1,
+          12,
+          33,
+          25
+        ],
+        "placement": [
+          32,
+          44
+        ],
+        "resized_to_canvas_offset": [
+          31,
+          32
+        ],
+        "visible_pixels": 290,
+        "rotation_degrees": 0,
+        "scale": 0.08875739644970414,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "lamb",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 247,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 13,
+        "gradient_x": 0.4537025862068965,
+        "gradient_y": -8.17285925925926,
+        "light_angle_degrees": 273.17741788449257,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 10,
+  "contact_sheet": "art/animal/batch_a1/lamb/try2/contact_sheet.png",
+  "contact_sheet_sha256": "788249bc38db8db972e83296ada024e1f40e448b2d094695ae41de87e94e2d99",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

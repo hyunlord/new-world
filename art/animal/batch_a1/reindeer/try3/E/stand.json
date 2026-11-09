@@ -1,0 +1,112 @@
+{
+  "species": "reindeer",
+  "facing": "E",
+  "pose": "stand",
+  "attempt": 3,
+  "image": "art/animal/batch_a1/reindeer/try3/E/stand.png",
+  "image_sha256": "dbe6098b0609a1a05b1d55a914e10dcbfb66f3965dae5c4db7413726b11de435",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer/panels/try3/E_stand.png",
+  "source_panel_sha256": "2ddbdc0412ba4385669988c4a30baf706f20bdb54e86baaa4f7cdfd35fcb8d54",
+  "source_box": [
+    0,
+    533,
+    336,
+    1024
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+  "raw_sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.prompt.txt",
+  "prompt_sha256": "efd49e3814dc2628315e34b5e93ca5d07cbb837c14efde58ccc6052f4bae1ae2",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try2.png",
+      "sha256": "be4ffd8730295c132c72a75cbd50549063e8b2cb29980d6a457eed5df6eaa855"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.16806722689075632,
+  "upright_scale": 0.16806722689075632,
+  "normalization": {
+    "scaled_size": [
+      56,
+      83
+    ],
+    "trim_box": [
+      2,
+      7,
+      50,
+      64
+    ],
+    "placement": [
+      24,
+      16
+    ],
+    "resized_to_canvas_offset": [
+      22,
+      9
+    ],
+    "visible_pixels": 1381,
+    "rotation_degrees": 0,
+    "scale": 0.16806722689075632,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "reindeer",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1208,
+    "base_row": 72,
+    "base_error": 0,
+    "height": 57,
+    "gradient_x": 0.6651644444444446,
+    "gradient_y": -1.580348294434471,
+    "light_angle_degrees": 292.82609764486995,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

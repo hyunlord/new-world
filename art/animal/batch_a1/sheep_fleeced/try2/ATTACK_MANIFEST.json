@@ -1,0 +1,314 @@
+{
+  "spec": {
+    "species": "sheep_fleeced",
+    "attempt": 2,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.prompt.txt",
+    "shoulder_y": 111,
+    "hoof_y": 608,
+    "shoulder_target": 28,
+    "dead_length": 50,
+    "poses": [
+      "attack"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try1.png",
+      "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.generation.json",
+    "landmark_note": "Manual S attack shoulder-to-lowest braced hoof source span; independent from base sheet as attack pair source scale differs."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.spec.json",
+  "spec_sha256": "36f6d26f6161fd35e946b29a9ed51018db4a2bfd84eb95223190e93728a77c4b",
+  "raw_sha256": "f4f2d1b84bfda5dac3100a29440f47bbb063c35a2e2e86ffc1911b0f02968f09",
+  "prompt_text": "Use case: precise-object-edit. Edit only the surface details in first reference (TWO attack animals). Preserve exactly both poses, every outline position and body proportions. Second reference is accepted surface STYLE TARGET for same animal. Keep two columns one row, left S viewer-left3/4 right E facingright, lightupperleft20degree camera. Smooth horns with ZERO ring marks. Fleece has SEVEN large connected softly scalloped lobes, TWO shadow groups, no tiny spirals or fine fur texture. Quiet cream wash. Main contour should remain fine like original reference deer, twice interior line. Do NOT make a heavy cartoon outline. Genuine transparent RGBA; no background, labels, ground or cast shadow; no isolated pixels. Pose remains forceful low head-butt charge with braced forelegs and rear push, muzzle above hoof level, not grazing.\n",
+  "prompt_sha256": "78c6cea578fc29ca1211138ab834a3cd8e2bc5d822de582a504e2129d950d471",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": {
+    "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.generation.json",
+    "sha256": "0c8da8edae5e291a07cbd03974d440603f555537dcca4ffb431f23b33515eede"
+  },
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try1.png",
+      "sha256": "281fac162c94389f0a3c8dcfd527d958d81cde3808037bcebdd2263658d55541"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "max_gutter_alpha": 1,
+    "method": "unaltered rectangular crops across alpha<16 gutter; every RGBA pixel retained"
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.056338028169014086,
+  "landmark_note": "Manual S attack shoulder-to-lowest braced hoof source span; independent from base sheet as attack pair source scale differs.",
+  "frames": [
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "attack",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/S/attack.png",
+      "image_sha256": "4b319c14beb6c31e2b76ae7d4c5bb54538bf8b2db2811a7ea8932d7b186262f5",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/attack_try2/S_attack.png",
+      "source_panel_sha256": "972c515e9007f2e47fb9e34be75531de0b19f750460b1e244e1e1b71653ff32e",
+      "source_box": [
+        0,
+        0,
+        1086,
+        724
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.png",
+      "raw_sha256": "f4f2d1b84bfda5dac3100a29440f47bbb063c35a2e2e86ffc1911b0f02968f09",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.prompt.txt",
+      "prompt_sha256": "78c6cea578fc29ca1211138ab834a3cd8e2bc5d822de582a504e2129d950d471",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try1.png",
+          "sha256": "281fac162c94389f0a3c8dcfd527d958d81cde3808037bcebdd2263658d55541"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+          "sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.056338028169014086,
+      "upright_scale": 0.056338028169014086,
+      "normalization": {
+        "scaled_size": [
+          61,
+          41
+        ],
+        "trim_box": [
+          11,
+          5,
+          51,
+          37
+        ],
+        "placement": [
+          28,
+          41
+        ],
+        "resized_to_canvas_offset": [
+          17,
+          36
+        ],
+        "visible_pixels": 691,
+        "rotation_degrees": 0,
+        "scale": 0.056338028169014086,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 609,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 30,
+        "gradient_x": -0.6736600361663653,
+        "gradient_y": -6.726370250896057,
+        "light_angle_degrees": 264.2807791774601,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "attack",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/E/attack.png",
+      "image_sha256": "52fee2af1e9856aa7ccc12975b04ffd102e0093a906adadcef3389ce34bfab00",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/attack_try2/E_attack.png",
+      "source_panel_sha256": "1ebc5f5ade4c5e8ba1e51e3af85416512dd8d18b15ff709bb6fd5a45397a341d",
+      "source_box": [
+        1086,
+        0,
+        2172,
+        724
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.png",
+      "raw_sha256": "f4f2d1b84bfda5dac3100a29440f47bbb063c35a2e2e86ffc1911b0f02968f09",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.prompt.txt",
+      "prompt_sha256": "78c6cea578fc29ca1211138ab834a3cd8e2bc5d822de582a504e2129d950d471",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try1.png",
+          "sha256": "281fac162c94389f0a3c8dcfd527d958d81cde3808037bcebdd2263658d55541"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+          "sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.056338028169014086,
+      "upright_scale": 0.056338028169014086,
+      "normalization": {
+        "scaled_size": [
+          61,
+          41
+        ],
+        "trim_box": [
+          8,
+          7,
+          52,
+          36
+        ],
+        "placement": [
+          26,
+          44
+        ],
+        "resized_to_canvas_offset": [
+          18,
+          37
+        ],
+        "visible_pixels": 711,
+        "rotation_degrees": 0,
+        "scale": 0.056338028169014086,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 626,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 27,
+        "gradient_x": -1.2459711805555556,
+        "gradient_y": -7.3745539543058,
+        "light_angle_degrees": 260.410131231577,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 2,
+  "contact_sheet": "art/animal/batch_a1/sheep_fleeced/try2/attack_sheet.png",
+  "contact_sheet_sha256": "1806add1f5fd9d69594e94db0cb0a1e34dce185340b11db2086bd7a8df0ecf65",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

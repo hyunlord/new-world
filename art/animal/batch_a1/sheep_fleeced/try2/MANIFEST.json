@@ -1,0 +1,1236 @@
+{
+  "spec": {
+    "species": "sheep_fleeced",
+    "attempt": 2,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+    "shoulder_y": 224,
+    "hoof_y": 456,
+    "shoulder_target": 28,
+    "dead_length": 50,
+    "poses": [
+      "stand",
+      "walk",
+      "run",
+      "graze",
+      "dead"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+      "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.generation.json",
+    "landmark_note": "Manual source S-stand shoulder/back plane and lowest hoof; estimates from displayed original. Same scale used all upright frames."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.spec.json",
+  "spec_sha256": "606a24de7794971d1e6557f0a6a8d6c0aa4485fcc71efd135ca05687c2841620",
+  "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+  "prompt_text": "Use case: precise-object-edit. Edit ONLY the surface detailing in the FIRST image, the current sheep_fleeced sprite sheet. Preserve ALL ten animals, exact 2 rows x5 columns layout, pose, body proportions, position, camera, colours, lighting and alpha. First reference = edit target; deer/person/scene = continuity references. Make both horns completely smooth, with zero ring marks. Simplify fleece to exactly SEVEN broad connected scalloped lobes and TWO broad shadow patches on each visible torso. Remove all interior tiny curls, squiggles, short fur strokes and speckling. Keep main outer wool silhouette organic; broad calm cream wash inside. Main silhouette contour remains twice interior line width. Mark direction upper-left to lower-right. Same restrained natural-history ink and tone as reference deer; no plastic/cartoon/3D render. Do not redraw the poses or rescale individuals. Keep 35deg left S row and right E row. True alpha transparent background, no ground/shadow/text/grid. Do not add any small decorative marks. The primary goal is quiet LARGE planes with a FEW intentional marks, so count the requested marks rather than filling the body with texture.\n",
+  "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": {
+    "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.generation.json",
+    "sha256": "07eb3d5dfffeeb5aca80e461441a564ec8cf6660e28822ae277ded273b8459a9"
+  },
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+      "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "source_rgba_sha256": "5ab4dd45f174a11fd4a58cefd2d8494ff8c1a27e6e05cf2c785aef8f12d9216a",
+    "ownership_sha256": "930982240bac0d7333e233dd656ae93cc81a829de626c69d03dfee5dbdc85762",
+    "visible_pixels": 448267,
+    "tied_visible_pixels": 4,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.1206896551724138,
+  "landmark_note": "Manual source S-stand shoulder/back plane and lowest hoof; estimates from displayed original. Same scale used all upright frames.",
+  "frames": [
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/S/stand.png",
+      "image_sha256": "c37edf3365b118903719669282dc7b428622c2e177d8b1b9010315231fb99f0b",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/try2/S_stand.png",
+      "source_panel_sha256": "6e22570a219d1e92779697e6038c5f9037fcf2035a749b8283966f41a5295f6e",
+      "source_box": [
+        22,
+        9,
+        298,
+        538
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+      "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+          "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1206896551724138,
+      "upright_scale": 0.1206896551724138,
+      "normalization": {
+        "scaled_size": [
+          33,
+          64
+        ],
+        "trim_box": [
+          0,
+          20,
+          29,
+          55
+        ],
+        "placement": [
+          33,
+          38
+        ],
+        "resized_to_canvas_offset": [
+          33,
+          18
+        ],
+        "visible_pixels": 644,
+        "rotation_degrees": 0,
+        "scale": 0.1206896551724138,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 551,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 33,
+        "gradient_x": 0.18576448979591864,
+        "gradient_y": -3.1878177606177607,
+        "light_angle_degrees": 273.33503947836937,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/S/walk.png",
+      "image_sha256": "1656dd4497218c02b57efd7ab2cf065f75bfb9ae1b80176ff34df482874ba5e1",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/try2/S_walk.png",
+      "source_panel_sha256": "4b2efa9ef22d43315b8dd4d59b5b95a015fe744f16ea1bcd58a0f32ebe0c6eff",
+      "source_box": [
+        221,
+        8,
+        592,
+        522
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+      "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+          "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1206896551724138,
+      "upright_scale": 0.1206896551724138,
+      "normalization": {
+        "scaled_size": [
+          45,
+          62
+        ],
+        "trim_box": [
+          9,
+          21,
+          39,
+          54
+        ],
+        "placement": [
+          33,
+          40
+        ],
+        "resized_to_canvas_offset": [
+          24,
+          19
+        ],
+        "visible_pixels": 615,
+        "rotation_degrees": 0,
+        "scale": 0.1206896551724138,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 526,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 32,
+        "gradient_x": -0.46883519313304756,
+        "gradient_y": -3.675656673511293,
+        "light_angle_degrees": 262.7310930868798,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/S/run.png",
+      "image_sha256": "cb476c1f595c0f654148ec8a69a779198b4089d30526dd270f8a045facde0f89",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/try2/S_run.png",
+      "source_panel_sha256": "6f17167d591fd44a95d312aca8253e9e2997027e352968bff485069cf80e00d4",
+      "source_box": [
+        519,
+        0,
+        916,
+        536
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+      "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+          "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1206896551724138,
+      "upright_scale": 0.1206896551724138,
+      "normalization": {
+        "scaled_size": [
+          48,
+          65
+        ],
+        "trim_box": [
+          6,
+          23,
+          46,
+          51
+        ],
+        "placement": [
+          28,
+          45
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          22
+        ],
+        "visible_pixels": 629,
+        "rotation_degrees": 0,
+        "scale": 0.1206896551724138,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 551,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 27,
+        "gradient_x": -1.0363025844930416,
+        "gradient_y": -3.369819277108434,
+        "light_angle_degrees": 252.90604531718745,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "graze",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/S/graze.png",
+      "image_sha256": "f8ead0bfef5bf24f4015c6673fa45a26479bec2afa3c27e27a80df5efde7d0d8",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/try2/S_graze.png",
+      "source_panel_sha256": "57d50e35f6e6d1296e7ac25c55b9d29076b190c4a258254c57d8980b39b7bfe9",
+      "source_box": [
+        887,
+        15,
+        1238,
+        554
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+      "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+          "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1206896551724138,
+      "upright_scale": 0.1206896551724138,
+      "normalization": {
+        "scaled_size": [
+          42,
+          65
+        ],
+        "trim_box": [
+          3,
+          24,
+          33,
+          54
+        ],
+        "placement": [
+          33,
+          43
+        ],
+        "resized_to_canvas_offset": [
+          30,
+          19
+        ],
+        "visible_pixels": 595,
+        "rotation_degrees": 0,
+        "scale": 0.1206896551724138,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 524,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 29,
+        "gradient_x": 0.5347650319829422,
+        "gradient_y": -3.323035772357723,
+        "light_angle_degrees": 279.1420375914216,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/S/dead.png",
+      "image_sha256": "156194ac439f6e99b243e674c1cbe6173c29c953e361eb411cd60aa410c2d8e2",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/try2/S_dead.png",
+      "source_panel_sha256": "6dc551e951eeda6cd79bc2abccbeed4845211f1925d95f15bc4c7a6dc52ac84f",
+      "source_box": [
+        1155,
+        85,
+        1530,
+        618
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+      "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+          "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.15822784810126583,
+      "upright_scale": 0.1206896551724138,
+      "normalization": {
+        "scaled_size": [
+          59,
+          84
+        ],
+        "trim_box": [
+          5,
+          34,
+          55,
+          61
+        ],
+        "placement": [
+          23,
+          30
+        ],
+        "resized_to_canvas_offset": [
+          18,
+          -4
+        ],
+        "visible_pixels": 883,
+        "rotation_degrees": 0,
+        "scale": 0.15822784810126583,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 804,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 25,
+        "gradient_x": -0.5173265200517464,
+        "gradient_y": -2.081497297297298,
+        "light_angle_degrees": 256.04274329075884,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/E/stand.png",
+      "image_sha256": "4df3eb7fcdf1c6654966bba447a2206565224d0a241440a27cdb49ff51239719",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/try2/E_stand.png",
+      "source_panel_sha256": "456413c873d082ee8d4bf337263126e16f8cdf1fbdd052cc314c563d9d37d3a5",
+      "source_box": [
+        0,
+        521,
+        330,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+      "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+          "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1206896551724138,
+      "upright_scale": 0.1206896551724138,
+      "normalization": {
+        "scaled_size": [
+          40,
+          61
+        ],
+        "trim_box": [
+          2,
+          8,
+          34,
+          44
+        ],
+        "placement": [
+          32,
+          37
+        ],
+        "resized_to_canvas_offset": [
+          30,
+          29
+        ],
+        "visible_pixels": 699,
+        "rotation_degrees": 0,
+        "scale": 0.1206896551724138,
+        "discarded_pixels": 2,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 612,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 35,
+        "gradient_x": -0.7938007259528128,
+        "gradient_y": -2.7551659130434794,
+        "light_angle_degrees": 253.92759020483365,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/E/walk.png",
+      "image_sha256": "e297658060d897e8904abd4d434003bc8ea5ab85b7fa7d1a5708ad88fdd979ba",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/try2/E_walk.png",
+      "source_panel_sha256": "83ea8dcc828aaa49d31362646c6db9fe51240c007b38e84dee90d3e3fb72bab3",
+      "source_box": [
+        265,
+        516,
+        640,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+      "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+          "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1206896551724138,
+      "upright_scale": 0.1206896551724138,
+      "normalization": {
+        "scaled_size": [
+          45,
+          61
+        ],
+        "trim_box": [
+          3,
+          8,
+          36,
+          43
+        ],
+        "placement": [
+          31,
+          38
+        ],
+        "resized_to_canvas_offset": [
+          28,
+          30
+        ],
+        "visible_pixels": 685,
+        "rotation_degrees": 0,
+        "scale": 0.1206896551724138,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 592,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 34,
+        "gradient_x": 0.37866716981132087,
+        "gradient_y": -3.919831559633028,
+        "light_angle_degrees": 275.5178177225246,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/E/run.png",
+      "image_sha256": "aa5a13d865b95b6233bb1c65d43c399b28ff096ab4cc2cf101c39049d73d291a",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/try2/E_run.png",
+      "source_panel_sha256": "3cf42ab48add50fbc1fda3040ad456d34cbb1603f62ac9ac8c566e7af79efbc5",
+      "source_box": [
+        555,
+        500,
+        960,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+      "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+          "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1206896551724138,
+      "upright_scale": 0.1206896551724138,
+      "normalization": {
+        "scaled_size": [
+          49,
+          63
+        ],
+        "trim_box": [
+          0,
+          10,
+          43,
+          40
+        ],
+        "placement": [
+          26,
+          43
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          33
+        ],
+        "visible_pixels": 652,
+        "rotation_degrees": 0,
+        "scale": 0.1206896551724138,
+        "discarded_pixels": 17,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 560,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 29,
+        "gradient_x": 0.7341980620155039,
+        "gradient_y": -4.008180914512923,
+        "light_angle_degrees": 280.38007413916074,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "graze",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/E/graze.png",
+      "image_sha256": "e8911759c926c88eb4ad1bb0a35b43d3c9e41261b4236a1d351019a9bfe97e33",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/try2/E_graze.png",
+      "source_panel_sha256": "705634a892dd05c4aadd74e285031bfee3f307209e25936230dc987f97482e9f",
+      "source_box": [
+        833,
+        553,
+        1220,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+      "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+          "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.1206896551724138,
+      "upright_scale": 0.1206896551724138,
+      "normalization": {
+        "scaled_size": [
+          47,
+          57
+        ],
+        "trim_box": [
+          11,
+          11,
+          43,
+          40
+        ],
+        "placement": [
+          32,
+          44
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          33
+        ],
+        "visible_pixels": 626,
+        "rotation_degrees": 0,
+        "scale": 0.1206896551724138,
+        "discarded_pixels": 4,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 543,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 28,
+        "gradient_x": 0.7153913580246913,
+        "gradient_y": -3.0370241106719367,
+        "light_angle_degrees": 283.2547743573166,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/sheep_fleeced/try2/E/dead.png",
+      "image_sha256": "f05abd78c23d4756e1f81c931e2ef4855d7b145697ab101d2dcd1bce613a66c1",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/try2/E_dead.png",
+      "source_panel_sha256": "e9bd1a3527c9e4b201bcd6d3da41296969d740fcf8bb11c9f85b47a5c5de2920",
+      "source_box": [
+        1175,
+        603,
+        1535,
+        1000
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+      "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+          "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.15151515151515152,
+      "upright_scale": 0.1206896551724138,
+      "normalization": {
+        "scaled_size": [
+          55,
+          60
+        ],
+        "trim_box": [
+          2,
+          21,
+          53,
+          43
+        ],
+        "placement": [
+          22,
+          35
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          14
+        ],
+        "visible_pixels": 794,
+        "rotation_degrees": 0,
+        "scale": 0.15151515151515152,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "sheep_fleeced",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 713,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 21,
+        "gradient_x": 0.11675836972343528,
+        "gradient_y": -3.7689242748091596,
+        "light_angle_degrees": 271.7744116009795,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 10,
+  "contact_sheet": "art/animal/batch_a1/sheep_fleeced/try2/contact_sheet.png",
+  "contact_sheet_sha256": "1552fbe5d905ec2e037ea009c08c8e7a7745c2bb789636cb33f3247a55d3b372",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

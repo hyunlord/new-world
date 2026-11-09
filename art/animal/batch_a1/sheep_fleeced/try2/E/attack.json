@@ -1,0 +1,120 @@
+{
+  "species": "sheep_fleeced",
+  "facing": "E",
+  "pose": "attack",
+  "attempt": 2,
+  "image": "art/animal/batch_a1/sheep_fleeced/try2/E/attack.png",
+  "image_sha256": "52fee2af1e9856aa7ccc12975b04ffd102e0093a906adadcef3389ce34bfab00",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/attack_try2/E_attack.png",
+  "source_panel_sha256": "1ebc5f5ade4c5e8ba1e51e3af85416512dd8d18b15ff709bb6fd5a45397a341d",
+  "source_box": [
+    1086,
+    0,
+    2172,
+    724
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.png",
+  "raw_sha256": "f4f2d1b84bfda5dac3100a29440f47bbb063c35a2e2e86ffc1911b0f02968f09",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.prompt.txt",
+  "prompt_sha256": "78c6cea578fc29ca1211138ab834a3cd8e2bc5d822de582a504e2129d950d471",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try1.png",
+      "sha256": "281fac162c94389f0a3c8dcfd527d958d81cde3808037bcebdd2263658d55541"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+      "sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.056338028169014086,
+  "upright_scale": 0.056338028169014086,
+  "normalization": {
+    "scaled_size": [
+      61,
+      41
+    ],
+    "trim_box": [
+      8,
+      7,
+      52,
+      36
+    ],
+    "placement": [
+      26,
+      44
+    ],
+    "resized_to_canvas_offset": [
+      18,
+      37
+    ],
+    "visible_pixels": 711,
+    "rotation_degrees": 0,
+    "scale": 0.056338028169014086,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "sheep_fleeced",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 626,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 27,
+    "gradient_x": -1.2459711805555556,
+    "gradient_y": -7.3745539543058,
+    "light_angle_degrees": 260.410131231577,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

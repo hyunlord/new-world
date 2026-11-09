@@ -1,0 +1,301 @@
+{
+  "spec": {
+    "species": "reindeer_winter",
+    "attempt": 2,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/attack_try2.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/attack_try2.prompt.txt",
+    "shoulder_y": 143,
+    "hoof_y": 707,
+    "shoulder_target": 40,
+    "dead_length": 68,
+    "poses": [
+      "attack"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/reindeer/attack_try2.png",
+      "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/attack_try2.generation.json",
+    "landmark_note": "S/attack withers/back plane y143 to lowest grounded forehoof707; separate source resolution1983x793; preserves original attack layout."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/attack_try2.spec.json",
+  "spec_sha256": "586db0195cc7cb05c2b47b4e947fa2e16b78c355fdd05fa88c7218cba44bee34",
+  "raw_sha256": "f18d70f420ec2ac5340476f1306c74efe041ba1b72861b61fe8e6aa10cb6b952",
+  "prompt_text": "Use case: precise-object-edit. COLOR-ONLY EDIT of the FIRST image, this two-frame summer REINDEER ATTACK strip. Preserve every ink mark and all geometry exactly. Only replace the summer brown body wash with pale warm grey-taupe winter body and creamy parchment neck bib; keep dark muzzle/hooves. Same pale winter palette as second reference sheet, but do not copy any layout/pose from second reference. Every figure retains its EXACTLY THREE hatch clusters of THREE parallel strokes each; no added/deleted/crossed marks, no new fur detail. Keep existing antlers, charging thrust, legs, broad hooves, expressions, size and transparent margins unchanged. One row two columns, S front3/4 viewer-left then E right-facing, upper-left light, fine sepia contour2x secondary, restrained two-tone wash. Person/scene are style-only references. Actual transparent RGBA, no text, background, shadows, snow or props.\n",
+  "prompt_sha256": "8938de8260aff4632ea51a025aa7b9bedcc8d4abe95a9a8fe9f845ccb9a73574",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": {
+    "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/attack_try2.generation.json",
+    "sha256": "83a237d0b84eb677c7809b2a4b3839574effcd70a8341a28e576cff417f686f6"
+  },
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/attack_try2.png",
+      "sha256": "c646384432a57dc8cb0fa349512529a435f57214d7955711126e956f8de7d7d7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "max_gutter_alpha": 1,
+    "method": "unaltered rectangular crops across alpha<16 gutter; every RGBA pixel retained"
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.07092198581560284,
+  "landmark_note": "S/attack withers/back plane y143 to lowest grounded forehoof707; separate source resolution1983x793; preserves original attack layout.",
+  "frames": [
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "attack",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/reindeer_winter/try2/S/attack.png",
+      "image_sha256": "dba796bcef8c78ad16c9c970b05d217d095dc88c633ec0a00bb0a447b784a3eb",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/attack_try2/S_attack.png",
+      "source_panel_sha256": "cfa0aab2e0888cf046dc510202eae61212b25520cbbf6659d80003f1e136f492",
+      "source_box": [
+        0,
+        0,
+        991,
+        793
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/attack_try2.png",
+      "raw_sha256": "f18d70f420ec2ac5340476f1306c74efe041ba1b72861b61fe8e6aa10cb6b952",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/attack_try2.prompt.txt",
+      "prompt_sha256": "8938de8260aff4632ea51a025aa7b9bedcc8d4abe95a9a8fe9f845ccb9a73574",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/attack_try2.png",
+          "sha256": "c646384432a57dc8cb0fa349512529a435f57214d7955711126e956f8de7d7d7"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+          "sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07092198581560284,
+      "upright_scale": 0.07092198581560284,
+      "normalization": {
+        "scaled_size": [
+          70,
+          56
+        ],
+        "trim_box": [
+          5,
+          9,
+          65,
+          51
+        ],
+        "placement": [
+          18,
+          31
+        ],
+        "resized_to_canvas_offset": [
+          13,
+          22
+        ],
+        "visible_pixels": 1351,
+        "rotation_degrees": 0,
+        "scale": 0.07092198581560284,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1208,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 41,
+        "gradient_x": -0.2679201086956524,
+        "gradient_y": -1.8480712500000003,
+        "light_angle_degrees": 261.751137764687,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "attack",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/reindeer_winter/try2/E/attack.png",
+      "image_sha256": "d8f48b6d059e66db2729651ef6e9cf6e7528709c3166563fe2a40b624b51d33d",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/attack_try2/E_attack.png",
+      "source_panel_sha256": "0ec68525494b9bd5726b11aec9d411cc0344fadde3dc1f8eec145638230a0e38",
+      "source_box": [
+        991,
+        0,
+        1983,
+        793
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/attack_try2.png",
+      "raw_sha256": "f18d70f420ec2ac5340476f1306c74efe041ba1b72861b61fe8e6aa10cb6b952",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/attack_try2.prompt.txt",
+      "prompt_sha256": "8938de8260aff4632ea51a025aa7b9bedcc8d4abe95a9a8fe9f845ccb9a73574",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/attack_try2.png",
+          "sha256": "c646384432a57dc8cb0fa349512529a435f57214d7955711126e956f8de7d7d7"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+          "sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07092198581560284,
+      "upright_scale": 0.07092198581560284,
+      "normalization": {
+        "scaled_size": [
+          70,
+          56
+        ],
+        "trim_box": [
+          0,
+          12,
+          67,
+          50
+        ],
+        "placement": [
+          14,
+          35
+        ],
+        "resized_to_canvas_offset": [
+          14,
+          23
+        ],
+        "visible_pixels": 1440,
+        "rotation_degrees": 0,
+        "scale": 0.07092198581560284,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1279,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 36,
+        "gradient_x": 0.2360868755292128,
+        "gradient_y": -2.008066269165247,
+        "light_angle_degrees": 276.7054403656607,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 2,
+  "contact_sheet": "art/animal/batch_a1/reindeer_winter/try2/attack_sheet.png",
+  "contact_sheet_sha256": "d3a6f25f3304e658e6d8f332ecf27b464979d4b4f268d7fe187a15079452b015",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

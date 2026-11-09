@@ -1,0 +1,116 @@
+{
+  "species": "sheep_fleeced",
+  "facing": "E",
+  "pose": "walk",
+  "attempt": 2,
+  "image": "art/animal/batch_a1/sheep_fleeced/try2/E/walk.png",
+  "image_sha256": "e297658060d897e8904abd4d434003bc8ea5ab85b7fa7d1a5708ad88fdd979ba",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/panels/try2/E_walk.png",
+  "source_panel_sha256": "83ea8dcc828aaa49d31362646c6db9fe51240c007b38e84dee90d3e3fb72bab3",
+  "source_box": [
+    265,
+    516,
+    640,
+    1024
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+  "raw_sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.prompt.txt",
+  "prompt_sha256": "0b440bc28bf4b2e1646abd6d568bf7eaaf8c8bb3be9ac124037db3ed5f420831",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try1.png",
+      "sha256": "6ba326e807114f596b66c7bea3e722f92b9196b4e94b12bae494699586c53ba2"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.1206896551724138,
+  "upright_scale": 0.1206896551724138,
+  "normalization": {
+    "scaled_size": [
+      45,
+      61
+    ],
+    "trim_box": [
+      3,
+      8,
+      36,
+      43
+    ],
+    "placement": [
+      31,
+      38
+    ],
+    "resized_to_canvas_offset": [
+      28,
+      30
+    ],
+    "visible_pixels": 685,
+    "rotation_degrees": 0,
+    "scale": 0.1206896551724138,
+    "discarded_pixels": 1,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "sheep_fleeced",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 592,
+    "base_row": 72,
+    "base_error": 0,
+    "height": 34,
+    "gradient_x": 0.37866716981132087,
+    "gradient_y": -3.919831559633028,
+    "light_angle_degrees": 275.5178177225246,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

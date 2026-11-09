@@ -1,0 +1,1191 @@
+{
+  "spec": {
+    "species": "reindeer_winter",
+    "attempt": 3,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+    "shoulder_y": 244,
+    "hoof_y": 482,
+    "shoulder_target": 40,
+    "dead_length": 68,
+    "poses": [
+      "stand",
+      "walk",
+      "run",
+      "graze",
+      "dead"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.generation.json",
+    "landmark_note": "Same S/stand withers/back plane and hoof as source-layout-preserving edit, re-read at y244 to482."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.spec.json",
+  "spec_sha256": "e177378be34f494ecbdf604b24893869c674adcb584e6a8a495637af279add1b",
+  "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+  "prompt_text": "Use case: precise-object-edit. COLOR-ONLY EDIT of FIRST image. Do not redraw. Preserve every existing ink stroke, every hatch mark, outline, antler, hoof, face, all body geometry and all10 poses EXACTLY. Change ONLY brown body color to pale warm grey-taupe and make the already pale neck bib cream-parchment. This is winter pelage, same animal. NO new fur, NO new hatching, NO crossed strokes, NO chest marks, NO changed silhouette. Each animal already has exactly THREE clusters of THREE parallel diagonal ink strokes; preserve those exact3clusters unchanged and do not add/delete any. Preserve2rows5columns and exact layout, S top front3/4 viewer-left, E bottom right3/4, upper-left light, restrained two-tone wash. Second and third images person/scene are style only. Actual transparent RGBA. No snow, ground, shadow or text.\n",
+  "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": {
+    "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.generation.json",
+    "sha256": "dce245c0cb14f2f6cc8cc6ca1238d07fd1a19daa7ceee60e7ec2ddde17327438"
+  },
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+      "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "source_rgba_sha256": "a7b306807b1693a3af0c03dbbca057ad8f0ef745116babcc707363a2e3b26b8c",
+    "ownership_sha256": "aeea892526af536792b1d7baec09567e31d6e71fde6a7a9b90a92abfd20d14e1",
+    "visible_pixels": 545459,
+    "tied_visible_pixels": 22,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.16806722689075632,
+  "landmark_note": "Same S/stand withers/back plane and hoof as source-layout-preserving edit, re-read at y244 to482.",
+  "frames": [
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/reindeer_winter/try3/S/stand.png",
+      "image_sha256": "00e91b5b8bcf701f20096d5cd50f25ff0be58ee5f82759c42b2e4bf6eebecebc",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/try3/S_stand.png",
+      "source_panel_sha256": "205275783bba52862cdcae2fb7597f883aef4577a0805c51aa01b85279baea5b",
+      "source_box": [
+        0,
+        37,
+        300,
+        526
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+      "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+          "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.16806722689075632,
+      "upright_scale": 0.16806722689075632,
+      "normalization": {
+        "scaled_size": [
+          50,
+          82
+        ],
+        "trim_box": [
+          2,
+          16,
+          46,
+          76
+        ],
+        "placement": [
+          26,
+          13
+        ],
+        "resized_to_canvas_offset": [
+          24,
+          -3
+        ],
+        "visible_pixels": 1372,
+        "rotation_degrees": 0,
+        "scale": 0.16806722689075632,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1182,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 58,
+        "gradient_x": 1.1367527831094053,
+        "gradient_y": -1.3578560509554138,
+        "light_angle_degrees": 309.9349707213405,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/reindeer_winter/try3/S/walk.png",
+      "image_sha256": "096ad962f6de25b500a61d91ab5531eb7592b07a3e66a8ee9a63a049c9523222",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/try3/S_walk.png",
+      "source_panel_sha256": "b90db43e469ccaf4366a97883314849ab6901125b4feac02dea6612815969ae5",
+      "source_box": [
+        230,
+        48,
+        584,
+        553
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+      "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+          "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.16806722689075632,
+      "upright_scale": 0.16806722689075632,
+      "normalization": {
+        "scaled_size": [
+          59,
+          85
+        ],
+        "trim_box": [
+          11,
+          15,
+          54,
+          72
+        ],
+        "placement": [
+          26,
+          16
+        ],
+        "resized_to_canvas_offset": [
+          15,
+          1
+        ],
+        "visible_pixels": 1301,
+        "rotation_degrees": 0,
+        "scale": 0.16806722689075632,
+        "discarded_pixels": 6,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1119,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 57,
+        "gradient_x": -0.19913866396761146,
+        "gradient_y": -0.9355931972789118,
+        "light_angle_degrees": 257.98405251682715,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/reindeer_winter/try3/S/run.png",
+      "image_sha256": "83048b1f1d5afbda21375de7921d3a8ac7f27944f866bbc0ab6f8fd5aea172de",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/try3/S_run.png",
+      "source_panel_sha256": "c635bd3ba546d654e307dc73dd0ee13bb97b3d8f8f9db8153f9674d0c18df330",
+      "source_box": [
+        512,
+        25,
+        930,
+        534
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+      "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+          "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.16806722689075632,
+      "upright_scale": 0.16806722689075632,
+      "normalization": {
+        "scaled_size": [
+          70,
+          86
+        ],
+        "trim_box": [
+          9,
+          21,
+          66,
+          70
+        ],
+        "placement": [
+          19,
+          24
+        ],
+        "resized_to_canvas_offset": [
+          10,
+          3
+        ],
+        "visible_pixels": 1249,
+        "rotation_degrees": 0,
+        "scale": 0.16806722689075632,
+        "discarded_pixels": 3,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1092,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 48,
+        "gradient_x": -0.5853666329625884,
+        "gradient_y": -0.6141114488348537,
+        "light_angle_degrees": 226.37279829179874,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "graze",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/reindeer_winter/try3/S/graze.png",
+      "image_sha256": "8dc73d678987babde6d1021c9fcfa67ea51dc422c4aedf4e3237a88221a36fd9",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/try3/S_graze.png",
+      "source_panel_sha256": "24392a3d0a63ac1351d529426d51e5d1c887d364f8fc5d7fbd63a22379f456bf",
+      "source_box": [
+        877,
+        68,
+        1314,
+        589
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+      "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+          "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.16806722689075632,
+      "upright_scale": 0.16806722689075632,
+      "normalization": {
+        "scaled_size": [
+          73,
+          88
+        ],
+        "trim_box": [
+          5,
+          26,
+          46,
+          71
+        ],
+        "placement": [
+          27,
+          28
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          2
+        ],
+        "visible_pixels": 1183,
+        "rotation_degrees": 0,
+        "scale": 0.16806722689075632,
+        "discarded_pixels": 3,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1033,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 44,
+        "gradient_x": 0.2770704225352109,
+        "gradient_y": -0.20213059548254614,
+        "light_angle_degrees": 323.88820676609794,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/reindeer_winter/try3/S/dead.png",
+      "image_sha256": "b28c684305aae03e5a7970a73584d0862c4b64dd15d25bf109a3774e66d8058e",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/try3/S_dead.png",
+      "source_panel_sha256": "d6b498a22c7f1a7915a7d3cb64e5a21938fa07cefec109cc2e04f09db9065828",
+      "source_box": [
+        1164,
+        35,
+        1526,
+        640
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+      "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+          "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.20606060606060606,
+      "upright_scale": 0.16806722689075632,
+      "normalization": {
+        "scaled_size": [
+          75,
+          125
+        ],
+        "trim_box": [
+          2,
+          62,
+          71,
+          94
+        ],
+        "placement": [
+          13,
+          25
+        ],
+        "resized_to_canvas_offset": [
+          11,
+          -37
+        ],
+        "visible_pixels": 1453,
+        "rotation_degrees": 0,
+        "scale": 0.20606060606060606,
+        "discarded_pixels": 9,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1324,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 31,
+        "gradient_x": -0.5391172955974841,
+        "gradient_y": -0.4056621821164896,
+        "light_angle_degrees": 216.95986071269337,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/reindeer_winter/try3/E/stand.png",
+      "image_sha256": "60a0cca3805124f0b488c9a1fe9437e1041b6a0fdc92bc6f23ef4d1ba058f91f",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/try3/E_stand.png",
+      "source_panel_sha256": "fcbce08789cee64d1b0e4a658f54d3122ac661992dc50be63a3dbd229c612b26",
+      "source_box": [
+        0,
+        515,
+        362,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+      "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+          "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.16806722689075632,
+      "upright_scale": 0.16806722689075632,
+      "normalization": {
+        "scaled_size": [
+          61,
+          86
+        ],
+        "trim_box": [
+          2,
+          10,
+          50,
+          67
+        ],
+        "placement": [
+          24,
+          16
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          6
+        ],
+        "visible_pixels": 1401,
+        "rotation_degrees": 0,
+        "scale": 0.16806722689075632,
+        "discarded_pixels": 2,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1230,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 57,
+        "gradient_x": 0.4887189140271491,
+        "gradient_y": -1.1919898066783834,
+        "light_angle_degrees": 292.2937564484876,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/reindeer_winter/try3/E/walk.png",
+      "image_sha256": "bea660a790ee2a99a47c8ed235a3a1db8f9516731c402a2baa308ac5c543eb79",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/try3/E_walk.png",
+      "source_panel_sha256": "46b6cbdc4e042fab402f2a7d323622407a552205e5c0872d7ec40d617b87719b",
+      "source_box": [
+        257,
+        514,
+        654,
+        984
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+      "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+          "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.16806722689075632,
+      "upright_scale": 0.16806722689075632,
+      "normalization": {
+        "scaled_size": [
+          67,
+          79
+        ],
+        "trim_box": [
+          4,
+          10,
+          56,
+          65
+        ],
+        "placement": [
+          22,
+          18
+        ],
+        "resized_to_canvas_offset": [
+          18,
+          8
+        ],
+        "visible_pixels": 1372,
+        "rotation_degrees": 0,
+        "scale": 0.16806722689075632,
+        "discarded_pixels": 2,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1200,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 54,
+        "gradient_x": 0.5582217674418606,
+        "gradient_y": -1.327663281958296,
+        "light_angle_degrees": 292.8045296789941,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/reindeer_winter/try3/E/run.png",
+      "image_sha256": "276bf3fe8d603e3409337a19ba422d86950e6302b74eb861ce94638813c93c11",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/try3/E_run.png",
+      "source_panel_sha256": "b3f3e7a2fddf097c89144b18e94c7b48a610d0a8596ad03dab9a43037d0b7faa",
+      "source_box": [
+        557,
+        472,
+        954,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+      "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+          "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.16806722689075632,
+      "upright_scale": 0.16806722689075632,
+      "normalization": {
+        "scaled_size": [
+          67,
+          93
+        ],
+        "trim_box": [
+          0,
+          18,
+          61,
+          65
+        ],
+        "placement": [
+          17,
+          26
+        ],
+        "resized_to_canvas_offset": [
+          17,
+          8
+        ],
+        "visible_pixels": 1195,
+        "rotation_degrees": 0,
+        "scale": 0.16806722689075632,
+        "discarded_pixels": 9,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1031,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 46,
+        "gradient_x": 0.38355818373812023,
+        "gradient_y": -0.3876417204301067,
+        "light_angle_degrees": 314.696619216273,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "graze",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/reindeer_winter/try3/E/graze.png",
+      "image_sha256": "50c7633a38f054a045a560f3c40235a8b83d01deee6969e6918e0ad20bfe7973",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/try3/E_graze.png",
+      "source_panel_sha256": "03b285c64005397e109ffb182fc1dece8ed4adb895fa5dd49f6b772c4fb7c61c",
+      "source_box": [
+        777,
+        583,
+        1222,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+      "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+          "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.16806722689075632,
+      "upright_scale": 0.16806722689075632,
+      "normalization": {
+        "scaled_size": [
+          75,
+          74
+        ],
+        "trim_box": [
+          26,
+          15,
+          71,
+          56
+        ],
+        "placement": [
+          25,
+          32
+        ],
+        "resized_to_canvas_offset": [
+          -1,
+          17
+        ],
+        "visible_pixels": 1165,
+        "rotation_degrees": 0,
+        "scale": 0.16806722689075632,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1019,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 40,
+        "gradient_x": 0.18363179824561446,
+        "gradient_y": -0.3924795789473678,
+        "light_angle_degrees": 295.0737683027563,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/reindeer_winter/try3/E/dead.png",
+      "image_sha256": "2601324e08a2c3af82c35d348764bc59744c7aa6a3365df106c03fbcca10627e",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/try3/E_dead.png",
+      "source_panel_sha256": "785fcae82aeb8803ef52ec6da477a65d897b26d3345d7369abd891f2b082ab65",
+      "source_box": [
+        1195,
+        633,
+        1536,
+        1006
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+      "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+      "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+          "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.2085889570552147,
+      "upright_scale": 0.16806722689075632,
+      "normalization": {
+        "scaled_size": [
+          71,
+          78
+        ],
+        "trim_box": [
+          1,
+          31,
+          70,
+          59
+        ],
+        "placement": [
+          13,
+          29
+        ],
+        "resized_to_canvas_offset": [
+          12,
+          -2
+        ],
+        "visible_pixels": 1346,
+        "rotation_degrees": 0,
+        "scale": 0.2085889570552147,
+        "discarded_pixels": 2,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "reindeer_winter",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1233,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 28,
+        "gradient_x": -0.18931195928753194,
+        "gradient_y": -0.6028450087565671,
+        "light_angle_degrees": 252.56609998496202,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 10,
+  "contact_sheet": "art/animal/batch_a1/reindeer_winter/try3/contact_sheet.png",
+  "contact_sheet_sha256": "efc1f52d33871f90361bca16636e125303e5170b7e94c0f799d178468953080b",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}
