@@ -1,0 +1,10 @@
+lint.select = ["ALL"]
+# This art wrapper follows repository ownership rather than inventing copyright text.
+# D211/D212 select one consistent docstring convention; CLI status uses print.
+lint.ignore = ["CPY001", "D203", "D213", "T201", "COM812"]
+
+[lint.isort]
+known-first-party = ["art"]
+
+[lint.per-file-ignores]
+"test_*.py" = ["D103", "S101", "PLR2004"]
