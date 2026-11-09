@@ -27,6 +27,18 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_aqueduct",
+      "source": "art/style05/techmap/icons/iron/aqueduct.png",
+      "dest": "ui/knowledge/aqueduct.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_atlatl",
+      "source": "art/style05/techmap/icons/paleolithic/atlatl.png",
+      "dest": "ui/knowledge/atlatl.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_barley",
       "source": "art/style05/techmap/icons/neolithic/barley.png",
       "dest": "ui/knowledge/barley.png"
@@ -36,6 +48,12 @@
       "id": "tech_barter",
       "source": "art/style05/techmap/icons/neolithic/barter.png",
       "dest": "ui/knowledge/barter.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_basketry",
+      "source": "art/style05/techmap/icons/paleolithic/basketry.png",
+      "dest": "ui/knowledge/basketry.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -51,6 +69,12 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_bone_setting",
+      "source": "art/style05/techmap/icons/neolithic/bone_setting.png",
+      "dest": "ui/knowledge/bone_setting.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_bone_tools",
       "source": "art/style05/techmap/icons/paleolithic/bone_tools.png",
       "dest": "ui/knowledge/bone_tools.png"
@@ -63,6 +87,12 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_bridge",
+      "source": "art/style05/techmap/icons/iron/bridge.png",
+      "dest": "ui/knowledge/bridge.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_bronze_alloy",
       "source": "art/style05/techmap/icons/bronze/bronze_alloy.png",
       "dest": "ui/knowledge/bronze_alloy.png"
@@ -72,6 +102,12 @@
       "id": "tech_bronze_weapons",
       "source": "art/style05/techmap/icons/bronze/bronze_weapons.png",
       "dest": "ui/knowledge/bronze_weapons.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_bureaucracy",
+      "source": "art/style05/techmap/icons/iron/bureaucracy.png",
+      "dest": "ui/knowledge/bureaucracy.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -183,6 +219,12 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_codified_law",
+      "source": "art/style05/techmap/icons/iron/codified_law.png",
+      "dest": "ui/knowledge/codified_law.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_coinage",
       "source": "art/style05/techmap/icons/iron/coinage.png",
       "dest": "ui/knowledge/coinage.png"
@@ -210,6 +252,12 @@
       "id": "tech_copper_smelting",
       "source": "art/style05/techmap/icons/bronze/copper_smelting.png",
       "dest": "ui/knowledge/copper_smelting.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_cordage",
+      "source": "art/style05/techmap/icons/paleolithic/cordage.png",
+      "dest": "ui/knowledge/cordage.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -267,6 +315,12 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_dye_purple",
+      "source": "art/style05/techmap/icons/iron/dye_purple.png",
+      "dest": "ui/knowledge/dye_purple.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_dyeing",
       "source": "art/style05/techmap/icons/neolithic/dyeing.png",
       "dest": "ui/knowledge/dyeing.png"
@@ -306,6 +360,12 @@
       "id": "tech_faience",
       "source": "art/style05/techmap/icons/bronze/faience.png",
       "dest": "ui/knowledge/faience.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_falconry",
+      "source": "art/style05/techmap/icons/iron/falconry.png",
+      "dest": "ui/knowledge/falconry.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -357,6 +417,12 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_food_drying",
+      "source": "art/style05/techmap/icons/paleolithic/food_drying.png",
+      "dest": "ui/knowledge/food_drying.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_food_preservation",
       "source": "art/style05/techmap/icons/neolithic/food_preservation.png",
       "dest": "ui/knowledge/food_preservation.png"
@@ -381,9 +447,21 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_geometry",
+      "source": "art/style05/techmap/icons/iron/geometry.png",
+      "dest": "ui/knowledge/geometry.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_glass_beads",
       "source": "art/style05/techmap/icons/bronze/glass_beads.png",
       "dest": "ui/knowledge/glass_beads.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_grain_parching",
+      "source": "art/style05/techmap/icons/paleolithic/grain_parching.png",
+      "dest": "ui/knowledge/grain_parching.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -411,6 +489,18 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_hide_scraping",
+      "source": "art/style05/techmap/icons/paleolithic/hide_scraping.png",
+      "dest": "ui/knowledge/hide_scraping.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_hide_working",
+      "source": "art/style05/techmap/icons/paleolithic/hide_working.png",
+      "dest": "ui/knowledge/hide_working.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_hoe",
       "source": "art/style05/techmap/icons/neolithic/hoe.png",
       "dest": "ui/knowledge/hoe.png"
@@ -429,9 +519,27 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_instruction",
+      "source": "art/style05/techmap/icons/paleolithic/instruction.png",
+      "dest": "ui/knowledge/instruction.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_iron_plough",
+      "source": "art/style05/techmap/icons/iron/iron_plough.png",
+      "dest": "ui/knowledge/iron_plough.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_iron_smelting",
       "source": "art/style05/techmap/icons/iron/iron_smelting.png",
       "dest": "ui/knowledge/iron_smelting.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_iron_tools",
+      "source": "art/style05/techmap/icons/iron/iron_tools.png",
+      "dest": "ui/knowledge/iron_tools.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -483,6 +591,18 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_map_making",
+      "source": "art/style05/techmap/icons/iron/map_making.png",
+      "dest": "ui/knowledge/map_making.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_market",
+      "source": "art/style05/techmap/icons/iron/market.png",
+      "dest": "ui/knowledge/market.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_marriage_alliance",
       "source": "art/style05/techmap/icons/bronze/marriage_alliance.png",
       "dest": "ui/knowledge/marriage_alliance.png"
@@ -498,6 +618,12 @@
       "id": "tech_megalith",
       "source": "art/style05/techmap/icons/neolithic/megalith.png",
       "dest": "ui/knowledge/megalith.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_militia",
+      "source": "art/style05/techmap/icons/iron/militia.png",
+      "dest": "ui/knowledge/militia.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -528,6 +654,18 @@
       "id": "tech_mud_brick_house",
       "source": "art/style05/techmap/icons/bronze/mud_brick_house.png",
       "dest": "ui/knowledge/mud_brick_house.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_nut_processing",
+      "source": "art/style05/techmap/icons/paleolithic/nut_processing.png",
+      "dest": "ui/knowledge/nut_processing.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_ochre",
+      "source": "art/style05/techmap/icons/paleolithic/ochre.png",
+      "dest": "ui/knowledge/ochre.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -576,6 +714,12 @@
       "id": "tech_plough",
       "source": "art/style05/techmap/icons/bronze/plough.png",
       "dest": "ui/knowledge/plough.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_polytheism",
+      "source": "art/style05/techmap/icons/iron/polytheism.png",
+      "dest": "ui/knowledge/polytheism.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -633,6 +777,12 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_rotary_quern",
+      "source": "art/style05/techmap/icons/iron/rotary_quern.png",
+      "dest": "ui/knowledge/rotary_quern.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_rye",
       "source": "art/style05/techmap/icons/neolithic/rye.png",
       "dest": "ui/knowledge/rye.png"
@@ -642,6 +792,12 @@
       "id": "tech_sail",
       "source": "art/style05/techmap/icons/bronze/sail.png",
       "dest": "ui/knowledge/sail.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_school",
+      "source": "art/style05/techmap/icons/iron/school.png",
+      "dest": "ui/knowledge/school.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -657,6 +813,12 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_shield_wall",
+      "source": "art/style05/techmap/icons/iron/shield_wall.png",
+      "dest": "ui/knowledge/shield_wall.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_shrine",
       "source": "art/style05/techmap/icons/bronze/shrine.png",
       "dest": "ui/knowledge/shrine.png"
@@ -669,9 +831,33 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_siege_ladder",
+      "source": "art/style05/techmap/icons/iron/siege_ladder.png",
+      "dest": "ui/knowledge/siege_ladder.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_silk",
+      "source": "art/style05/techmap/icons/iron/silk.png",
+      "dest": "ui/knowledge/silk.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_sling",
+      "source": "art/style05/techmap/icons/paleolithic/sling.png",
+      "dest": "ui/knowledge/sling.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_solar_calendar",
       "source": "art/style05/techmap/icons/bronze/solar_calendar.png",
       "dest": "ui/knowledge/solar_calendar.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_spear",
+      "source": "art/style05/techmap/icons/paleolithic/spear.png",
+      "dest": "ui/knowledge/spear.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -699,6 +885,12 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_stone_house",
+      "source": "art/style05/techmap/icons/iron/stone_house.png",
+      "dest": "ui/knowledge/stone_house.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_stone_masonry",
       "source": "art/style05/techmap/icons/bronze/stone_masonry.png",
       "dest": "ui/knowledge/stone_masonry.png"
@@ -714,6 +906,18 @@
       "id": "tech_stone_walling",
       "source": "art/style05/techmap/icons/neolithic/stone_walling.png",
       "dest": "ui/knowledge/stone_walling.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_storytelling",
+      "source": "art/style05/techmap/icons/paleolithic/storytelling.png",
+      "dest": "ui/knowledge/storytelling.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_sundial",
+      "source": "art/style05/techmap/icons/iron/sundial.png",
+      "dest": "ui/knowledge/sundial.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -747,6 +951,18 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_taxation",
+      "source": "art/style05/techmap/icons/iron/taxation.png",
+      "dest": "ui/knowledge/taxation.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_temple",
+      "source": "art/style05/techmap/icons/iron/temple.png",
+      "dest": "ui/knowledge/temple.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_terrace",
       "source": "art/style05/techmap/icons/bronze/terrace.png",
       "dest": "ui/knowledge/terrace.png"
@@ -771,9 +987,33 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_tower",
+      "source": "art/style05/techmap/icons/iron/tower.png",
+      "dest": "ui/knowledge/tower.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_town_wall",
+      "source": "art/style05/techmap/icons/iron/town_wall.png",
+      "dest": "ui/knowledge/town_wall.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_tracking",
+      "source": "art/style05/techmap/icons/paleolithic/tracking.png",
+      "dest": "ui/knowledge/tracking.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_trading_post",
       "source": "art/style05/techmap/icons/bronze/trading_post.png",
       "dest": "ui/knowledge/trading_post.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_trapping",
+      "source": "art/style05/techmap/icons/paleolithic/trapping.png",
+      "dest": "ui/knowledge/trapping.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -783,15 +1023,39 @@
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_veterinary",
+      "source": "art/style05/techmap/icons/iron/veterinary.png",
+      "dest": "ui/knowledge/veterinary.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_warehouse",
+      "source": "art/style05/techmap/icons/iron/warehouse.png",
+      "dest": "ui/knowledge/warehouse.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_water_finding",
       "source": "art/style05/techmap/icons/paleolithic/water_finding.png",
       "dest": "ui/knowledge/water_finding.png"
     },
     {
       "role": "ui_knowledge_icon",
+      "id": "tech_watermill",
+      "source": "art/style05/techmap/icons/iron/watermill.png",
+      "dest": "ui/knowledge/watermill.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
       "id": "tech_wattle_daub",
       "source": "art/style05/techmap/icons/neolithic/wattle_daub.png",
       "dest": "ui/knowledge/wattle_daub.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_weather_lore",
+      "source": "art/style05/techmap/icons/paleolithic/weather_lore.png",
+      "dest": "ui/knowledge/weather_lore.png"
     },
     {
       "role": "ui_knowledge_icon",
@@ -822,6 +1086,12 @@
       "id": "tech_wool_spinning",
       "source": "art/style05/techmap/icons/bronze/wool_spinning.png",
       "dest": "ui/knowledge/wool_spinning.png"
+    },
+    {
+      "role": "ui_knowledge_icon",
+      "id": "tech_writing",
+      "source": "art/style05/techmap/icons/iron/writing.png",
+      "dest": "ui/knowledge/writing.png"
     }
   ],
   "metadata_file": {

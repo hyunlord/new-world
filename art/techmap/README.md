@@ -1,12 +1,13 @@
 # A4 tech-map, era and chapter candidates
 
-This family is produced on `v8/art-batch-a4` from the adopted art-line source. It is not imported into the game.
+The completed family contains 167 knowledge icons, four era banners and ten chapter illustrations, selected from 199 generated attempts. It is produced on `v8/art-batch-a4` from the adopted art-line source and is not imported into the game.
 
 - [STYLE.md](STYLE.md): fixed medium, mark budgets, 2:1 contour ratio, canvases, alpha and visual gates.
 - [catalogue.json](catalogue.json): 167 concrete knowledge IDs, four eras and ten chapter illustrations including legacy `neolithic_village`.
-- [coverage.json](coverage.json): exact selected/missing counts; incomplete production is explicit.
+- [coverage.json](coverage.json): complete 167-node, four-era and ten-chapter coverage.
 - [manifest.json](manifest.json): selected images, prompts, raw/generated provenance, normalization and independent review evidence.
 - [art_import.draft.json](art_import.draft.json), [bindings.draft.json](bindings.draft.json): unapplied rows. Pin the final remote-verified art SHA before importing.
+- Icon sheets: [bronze](../boards/techmap/bronze_icons.png), [neolithic](../boards/techmap/neolithic_icons.png), [iron](../boards/techmap/iron_icons.png), [paleolithic](../boards/techmap/paleolithic_icons.png).
 - [state_variants.json](state_variants.json): stable/endangered/unknown/inert UI treatments over canonical icons.
 - [ADR.md](ADR.md): decisions and integration boundaries.
 

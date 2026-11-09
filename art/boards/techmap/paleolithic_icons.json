@@ -32,6 +32,16 @@
       "role": "reference"
     },
     {
+      "path": "art/style05/techmap/icons/paleolithic/atlatl.png",
+      "sha256": "2ac324f1ea70404fadb7ccbc74816e20f7607359e6d9a303f2df99fc807da710",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/basketry.png",
+      "sha256": "96297de94f1e8ce5b2492f73d65ddd73c51eac1e3eb35cfd4c67737796ea85ae",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/paleolithic/bedding.png",
       "sha256": "d41fb01b139c3b7210399a8eb3c9add6741de286238e5b7ebbc52aac30e61f0e",
       "role": "candidate"
@@ -44,6 +54,11 @@
     {
       "path": "art/style05/techmap/icons/paleolithic/cooking.png",
       "sha256": "a8114a5a1528997c135384b341493a727cece650aaab46a2582b6c70af117437",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/cordage.png",
+      "sha256": "409f86d53894f676b2d828d25e1be1911364d97609e8485c16168f58cf5c40d8",
       "role": "candidate"
     },
     {
@@ -77,8 +92,18 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/paleolithic/food_drying.png",
+      "sha256": "6bedae457ebfab28868c4ee30ebb09ed1c9870178f6caef9d76e017b05d1f98f",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/paleolithic/foraging.png",
       "sha256": "f82d2a992d4c317a95f26c65be05600b2ce5579d1c4996f6f3d89817c115055a",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/grain_parching.png",
+      "sha256": "fc10f0a02e38dde1ec0d9b8031a9ae7854d115ef21e9b23403d4408e7686e8b2",
       "role": "candidate"
     },
     {
@@ -87,8 +112,33 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/paleolithic/hide_scraping.png",
+      "sha256": "9696bf90935d827f64fc987fd55293da291fc455dc38569274b8ce20ceb9eb80",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/hide_working.png",
+      "sha256": "0fb3d7ddbb99d92930b60626d8215ee322569799d6f58822a4f14e0c1e15ef32",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/paleolithic/hut_building.png",
       "sha256": "5f137e3e9b29ba0940a839aafa7156f8af4f077016b489a2e078de8b94568b25",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/instruction.png",
+      "sha256": "058fc8866e37f3dd328d4556714e30373ec443bbd09035d45906f747e016b08f",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/nut_processing.png",
+      "sha256": "af7e4484f2259e5a4b2595bef175491cf29215a7a4b3f9686780bddae811b095",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/ochre.png",
+      "sha256": "92c0b59dd0f4c6a3f8b0d98653a40cbda50909226caca2649762656d21541a9c",
       "role": "candidate"
     },
     {
@@ -102,20 +152,50 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/paleolithic/sling.png",
+      "sha256": "2150d3cdd369ff5786f335db63b0afe907430b16793af52b8ca062c04b933b00",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/spear.png",
+      "sha256": "4b1094795ca377548a283ae49d9eace01beeca5d05ebe6349607139f2fb64250",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/paleolithic/stone_quarrying.png",
       "sha256": "a4704b0b70e094523316d0cf40bade92a3e0e873089dca3ed09b6d664c596f0a",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/storytelling.png",
+      "sha256": "de5e707d2b0debdd8dcfeb3b999463b6a9de0e19948f2703ed7a68c5916b7b63",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/tracking.png",
+      "sha256": "4f39b85a4820778afee14aba1d950567b13362a8e29a757e7088aa289e1cb080",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/trapping.png",
+      "sha256": "768b1cb39fcd0921458efe7d122102dd2d80754c56188884307e8983e31ab6e1",
       "role": "candidate"
     },
     {
       "path": "art/style05/techmap/icons/paleolithic/water_finding.png",
       "sha256": "d0c84c8dcdfcc61fcac7a5cd0090c328689a89157a395ce81c59f7ea614d0b51",
       "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/weather_lore.png",
+      "sha256": "a458c4b0ef6f2753d4ee33448433d0c9be22632454d44be5c916cce7cadd6b36",
+      "role": "candidate"
     }
   ],
   "canvas": [
     1140,
-    1010
+    1604
   ],
-  "sheet_sha256": "90b7708feebce70f8d43e0de0dd080b3a6dd6e863d12d5fda04c095987dcbd8c",
+  "sheet_sha256": "2e4aba2398e80b1486d73b4c90c939de9421aa4c7cfe476e4b1fc01b0a9bef1d",
   "note": "Review composite only; source sprites are unchanged."
 }

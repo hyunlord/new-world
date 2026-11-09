@@ -32,7 +32,7 @@ Chapter assets use semantic IDs. Current chapter 6 `neolithic_village` conflicts
 
 ## Evidence and acceptance
 
-Each generation records exact prompt, actual artifact path, raw hash, attempt, tool, unavailable seed, reference delivery mechanism, and self-review. Raw files live outside this checkout at `/Users/rexxa/work/art-batch/A4/`. Built-in image generation receives the viewed originals in conversation context; records do not claim explicit reference-file attachments.
+Each generation records its exact prompt, actual artifact path, raw hash, attempt, tool, unavailable seed and reference delivery mechanism. Generator observations are kept in attempt records or the owning lane handoff; they are not a mandatory `self_review` field in every generation object. The manifest links those note sources and separately embeds an independent visual verdict for every selected asset. Raw files and generator handoffs live outside this checkout at `/Users/rexxa/work/art-batch/A4/`. Built-in image generation receives the viewed originals in conversation context; records do not claim explicit reference-file attachments.
 
 Adoption requires nonempty alpha, transparent margins, correct dimensions/hash/anchor, semantic and era review, and a separate visual reviewer comparing both existing art and the A4 family. Visual verdict threshold 90; medium/line/light/palette each at least 4/5. General vision review is named as such and is not relabelled as the historical image-generation-model judge.
 

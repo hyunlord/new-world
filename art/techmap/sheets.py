@@ -76,7 +76,7 @@ def main(arguments: list[str]) -> int:
     font = ImageFont.load_default(size=13)
     draw.text(
         (14, 10),
-        f"A4 {family}: file-level candidates; visual review required",
+        f"A4 {family}: source-art candidate comparison",
         fill=INK,
         font=font,
     )

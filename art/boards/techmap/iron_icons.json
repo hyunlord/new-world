@@ -32,8 +32,38 @@
       "role": "reference"
     },
     {
+      "path": "art/style05/techmap/icons/iron/aqueduct.png",
+      "sha256": "4ea3c84f81e8dc09dd8b5f2ae06636cacbd35f0b79f59170ff2ffa963837965a",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/bridge.png",
+      "sha256": "8b290c4549e02a68fcba76b3a8cc481aaddd14cc0b8b270be4fdd24a636dae54",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/bureaucracy.png",
+      "sha256": "c1f3756d5b6df71ca92840297da77fc2465e29f8a0bf6a07ab5611f741271ac0",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/codified_law.png",
+      "sha256": "7e9f48689beca4abbf02ceeec759075dbdb789c36231dea672365350fa6fbc67",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/iron/coinage.png",
       "sha256": "f437ba100c9d88ed3716feec950f2743b3c87d1b338d45d4361b48c0b5ef1494",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/dye_purple.png",
+      "sha256": "33065ed0e08eadaa35ab2039b1aad0efbafc5f86f6285da320399e5764bb3935",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/falconry.png",
+      "sha256": "d64e4cb406f30114b117df65533f67ba8fd1586aa281154207650cbdb472389c",
       "role": "candidate"
     },
     {
@@ -47,8 +77,18 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/iron/geometry.png",
+      "sha256": "d819872518c77aa6c57cbfcb8425070a26e4f4fc7789f8a342631f49d6b9d25d",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/iron/horse.png",
       "sha256": "7687b878fb0423e8baa4c473e451d2968dbe06e09360d0d072b8366b0c68f808",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/iron_plough.png",
+      "sha256": "f236265631e5222dd477b95ba7aa5099b612ba862ec2185b432293060824fcb1",
       "role": "candidate"
     },
     {
@@ -57,8 +97,28 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/iron/iron_tools.png",
+      "sha256": "72de5147d9064e673df4f902a4363c37aa10692203a7693cdecb6317e6bc5a27",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/iron/iron_weapons.png",
       "sha256": "34ce2a5fc27103535cae333b0ef5a938969ccaa201e1212c481b80c41da1cb4e",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/map_making.png",
+      "sha256": "cd3f092227a99c32261c7fd1d4438802efcddcebefc0d766051853eef5d56897",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/market.png",
+      "sha256": "56593430c59d8638af9c77cb74eecc0ebf512ec0191b9f90c34dac5568ccd894",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/militia.png",
+      "sha256": "23182824c665ae5a448b1a302112bb269e7dad569d7c0b1bcd01ed2763e24746",
       "role": "candidate"
     },
     {
@@ -67,20 +127,100 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/iron/polytheism.png",
+      "sha256": "72da3af886459390d48e769bf01f63e4252cb15200f4ef416a99dba6be5e26eb",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/iron/reservoir.png",
       "sha256": "33d16a26a1c03c3763aaee66c004c4a63c4a0d6dfb81ee2e013af67874887be7",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/rotary_quern.png",
+      "sha256": "2c8614533bedd302e98fa238c3b04379c884003da41426bab23a5d32b4f6ec73",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/school.png",
+      "sha256": "a732833e34c9ed77aebbe02d17a022411ed45d35776c4e6742b37352cf60cd84",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/shield_wall.png",
+      "sha256": "28490dfd335a02305f1b3460f2e95bf90a06cac49728db16859b286709ef6ce0",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/siege_ladder.png",
+      "sha256": "fe75c8ebeb376a9ad72b19a95732e216e6a9e98542291b967b12917f068618ba",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/silk.png",
+      "sha256": "51a2ee15d5431e4148c96e37df70373a92a328e82b6e66c2b4cd3530eab09b53",
       "role": "candidate"
     },
     {
       "path": "art/style05/techmap/icons/iron/steel_edge.png",
       "sha256": "496427f10bac94ef4a0fbd74596b06da5b00507592f7c37c64537e6e04b0a4cb",
       "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/stone_house.png",
+      "sha256": "9f4aa36bc16fbda8b9881865a833aa101586ffe14869407e8ef41fba002c747c",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/sundial.png",
+      "sha256": "2e508a854e0e8cb86d4d55eaf62ea9884753de19f33cd357af17aaedaa0fc15e",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/taxation.png",
+      "sha256": "32e14789f5b162e1ac7e03ed8801e7e9d4d3b1e8ec37e6ce0398e36d97edfc1f",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/temple.png",
+      "sha256": "6209b548882375eb45b78d4b9f8c621bdebbc881d27aaaad97490dfe55b82f5d",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/tower.png",
+      "sha256": "250f2c18ffcded9bc15b4c35ec0e1ab4394a41e42ea2bb832025ce634f8d2a80",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/town_wall.png",
+      "sha256": "662104aceeb76250df1717e0b5cd9a313f743ead1d585a10dd4a42cbeca952c5",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/veterinary.png",
+      "sha256": "397e2e0b9f676528fd989a36c4b753e1bd8347f1df835064cb3687ed967cdfaa",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/warehouse.png",
+      "sha256": "b94ee8c3767a55da5f0edbde4e40982c15a1a6b2fcebff7fea9200c493efcec0",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/watermill.png",
+      "sha256": "9ad430a684f25fee3954be220f6bb9c814e96143ba187d875808cc2040b25ebb",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/writing.png",
+      "sha256": "9e29cfd549244acfb409dcf4864532d48f959258b8fe6212d97b2c1f036e64a4",
+      "role": "candidate"
     }
   ],
   "canvas": [
     1140,
-    614
+    1802
   ],
-  "sheet_sha256": "586ea6a728ddeb656dc7541e982874ead0e75ab20d52d0b68d64fbe19c7439b1",
+  "sheet_sha256": "39e3af4c8e282335266bbaf5c41780b60487646bcd9ae15b7107220367f384b5",
   "note": "Review composite only; source sprites are unchanged."
 }

@@ -34,6 +34,28 @@
         32
       ]
     },
+    "aqueduct": {
+      "asset": "tech_aqueduct",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "atlatl": {
+      "asset": "tech_atlatl",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "barley": {
       "asset": "tech_barley",
       "canvas": [
@@ -47,6 +69,17 @@
     },
     "barter": {
       "asset": "tech_barter",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "basketry": {
+      "asset": "tech_basketry",
       "canvas": [
         64,
         64
@@ -78,6 +111,17 @@
         32
       ]
     },
+    "bone_setting": {
+      "asset": "tech_bone_setting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "bone_tools": {
       "asset": "tech_bone_tools",
       "canvas": [
@@ -100,6 +144,17 @@
         32
       ]
     },
+    "bridge": {
+      "asset": "tech_bridge",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "bronze_alloy": {
       "asset": "tech_bronze_alloy",
       "canvas": [
@@ -113,6 +168,17 @@
     },
     "bronze_weapons": {
       "asset": "tech_bronze_weapons",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "bureaucracy": {
+      "asset": "tech_bureaucracy",
       "canvas": [
         64,
         64
@@ -210,6 +276,17 @@
         32
       ]
     },
+    "codified_law": {
+      "asset": "tech_codified_law",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "coinage": {
       "asset": "tech_coinage",
       "canvas": [
@@ -256,6 +333,17 @@
     },
     "copper_smelting": {
       "asset": "tech_copper_smelting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "cordage": {
+      "asset": "tech_cordage",
       "canvas": [
         64,
         64
@@ -364,6 +452,17 @@
         32
       ]
     },
+    "dye_purple": {
+      "asset": "tech_dye_purple",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "dyeing": {
       "asset": "tech_dyeing",
       "canvas": [
@@ -388,6 +487,17 @@
     },
     "faience": {
       "asset": "tech_faience",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "falconry": {
+      "asset": "tech_falconry",
       "canvas": [
         64,
         64
@@ -485,6 +595,17 @@
         32
       ]
     },
+    "food_drying": {
+      "asset": "tech_food_drying",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "food_preservation": {
       "asset": "tech_food_preservation",
       "canvas": [
@@ -529,8 +650,30 @@
         32
       ]
     },
+    "geometry": {
+      "asset": "tech_geometry",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "glass_beads": {
       "asset": "tech_glass_beads",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "grain_parching": {
+      "asset": "tech_grain_parching",
       "canvas": [
         64,
         64
@@ -584,6 +727,28 @@
         32
       ]
     },
+    "hide_scraping": {
+      "asset": "tech_hide_scraping",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "hide_working": {
+      "asset": "tech_hide_working",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "hoe": {
       "asset": "tech_hoe",
       "canvas": [
@@ -617,8 +782,41 @@
         32
       ]
     },
+    "instruction": {
+      "asset": "tech_instruction",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "iron_plough": {
+      "asset": "tech_iron_plough",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "iron_smelting": {
       "asset": "tech_iron_smelting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "iron_tools": {
+      "asset": "tech_iron_tools",
       "canvas": [
         64,
         64
@@ -716,6 +914,28 @@
         32
       ]
     },
+    "map_making": {
+      "asset": "tech_map_making",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "market": {
+      "asset": "tech_market",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "marriage_alliance": {
       "asset": "tech_marriage_alliance",
       "canvas": [
@@ -740,6 +960,17 @@
     },
     "megalith": {
       "asset": "tech_megalith",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "militia": {
+      "asset": "tech_militia",
       "canvas": [
         64,
         64
@@ -795,6 +1026,28 @@
     },
     "mud_brick_house": {
       "asset": "tech_mud_brick_house",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "nut_processing": {
+      "asset": "tech_nut_processing",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "ochre": {
+      "asset": "tech_ochre",
       "canvas": [
         64,
         64
@@ -883,6 +1136,17 @@
     },
     "plough": {
       "asset": "tech_plough",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "polytheism": {
+      "asset": "tech_polytheism",
       "canvas": [
         64,
         64
@@ -991,6 +1255,17 @@
         32
       ]
     },
+    "rotary_quern": {
+      "asset": "tech_rotary_quern",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "rye": {
       "asset": "tech_rye",
       "canvas": [
@@ -1004,6 +1279,17 @@
     },
     "sail": {
       "asset": "tech_sail",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "school": {
+      "asset": "tech_school",
       "canvas": [
         64,
         64
@@ -1035,6 +1321,17 @@
         32
       ]
     },
+    "shield_wall": {
+      "asset": "tech_shield_wall",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "shrine": {
       "asset": "tech_shrine",
       "canvas": [
@@ -1057,8 +1354,52 @@
         32
       ]
     },
+    "siege_ladder": {
+      "asset": "tech_siege_ladder",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "silk": {
+      "asset": "tech_silk",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "sling": {
+      "asset": "tech_sling",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "solar_calendar": {
       "asset": "tech_solar_calendar",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "spear": {
+      "asset": "tech_spear",
       "canvas": [
         64,
         64
@@ -1112,6 +1453,17 @@
         32
       ]
     },
+    "stone_house": {
+      "asset": "tech_stone_house",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "stone_masonry": {
       "asset": "tech_stone_masonry",
       "canvas": [
@@ -1136,6 +1488,28 @@
     },
     "stone_walling": {
       "asset": "tech_stone_walling",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "storytelling": {
+      "asset": "tech_storytelling",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "sundial": {
+      "asset": "tech_sundial",
       "canvas": [
         64,
         64
@@ -1200,6 +1574,28 @@
         32
       ]
     },
+    "taxation": {
+      "asset": "tech_taxation",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "temple": {
+      "asset": "tech_temple",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "terrace": {
       "asset": "tech_terrace",
       "canvas": [
@@ -1244,8 +1640,52 @@
         32
       ]
     },
+    "tower": {
+      "asset": "tech_tower",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "town_wall": {
+      "asset": "tech_town_wall",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "tracking": {
+      "asset": "tech_tracking",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "trading_post": {
       "asset": "tech_trading_post",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "trapping": {
+      "asset": "tech_trapping",
       "canvas": [
         64,
         64
@@ -1266,6 +1706,28 @@
         32
       ]
     },
+    "veterinary": {
+      "asset": "tech_veterinary",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "warehouse": {
+      "asset": "tech_warehouse",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "water_finding": {
       "asset": "tech_water_finding",
       "canvas": [
@@ -1277,8 +1739,30 @@
         32
       ]
     },
+    "watermill": {
+      "asset": "tech_watermill",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "wattle_daub": {
       "asset": "tech_wattle_daub",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "weather_lore": {
+      "asset": "tech_weather_lore",
       "canvas": [
         64,
         64
@@ -1334,6 +1818,17 @@
     },
     "wool_spinning": {
       "asset": "tech_wool_spinning",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "writing": {
+      "asset": "tech_writing",
       "canvas": [
         64,
         64

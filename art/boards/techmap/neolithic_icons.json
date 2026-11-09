@@ -52,6 +52,11 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/neolithic/bone_setting.png",
+      "sha256": "c568e45208ef131b023b957bb8e1154c7f4921550afd0e64b9e00d361beca6e2",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/neolithic/bow.png",
       "sha256": "81fc3f9daea6b26c18947f508e690b78e4a459230319fde136b50f0302081582",
       "role": "candidate"
@@ -281,6 +286,6 @@
     1140,
     2198
   ],
-  "sheet_sha256": "cacb8e239c638c7372b338674c68a0145ed86e21cd6147342ebe313ac9910348",
+  "sheet_sha256": "cf0938a6c80a3d3cb66920e040ff0b05053304cc0f644bd9f105c3d472e4ab5e",
   "note": "Review composite only; source sprites are unchanged."
 }

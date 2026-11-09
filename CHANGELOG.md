@@ -5,15 +5,19 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
-## ART-BATCH A4 — 2026-11-10 (in progress)
+## ART-BATCH A4 — 2026-11-10
 
 ### Added
 - Knowledge-map illustration family: fixed ink-and-tone contract, concrete 167-node catalogue, transparent centered UI canvases, per-attempt provenance, independent visual review and explicit import/binding drafts (`art/techmap/`).
-- Reviewed candidates: 122 node icons (48 bronze, 49 neolithic, 9 iron, 16 paleolithic), all four era headers and all ten chapter illustrations (`art/style05/techmap/`). Coverage is recorded in `art/techmap/coverage.json`; production continues on `v8/art-batch-a4`.
+- Complete reviewed family: 167 node icons (48 bronze, 50 neolithic, 37 iron, 32 paleolithic), four era headers and ten chapter illustrations (`art/style05/techmap/`). Seven comparison sheets and complete coverage are recorded under `art/boards/techmap/` and `art/techmap/coverage.json`.
 - Thin alpha/size/hash normalization checks and comparison sheets beside adopted art. Raw generations, rejects and review evidence remain outside the repository in `/Users/rexxa/work/art-batch/A4/`.
 
 ### Changed
+- Added controlled 2x narrative-review evidence and explicit generator-note source links to the manifest.
 - Documented UI-specific center anchors, the legacy chapter-6 mapping conflict and C2/C3 consumer work. Draft import rows are not applied to the game.
+
+### Removed
+- Superseded the pilot bronze-banner and first-copper-only boards with complete era and chapter sheets. The pilot boards remain in art checkpoint `34aab08dd5354bb140ea04df260d5a8667d3928e`.
 
 ## M1-ART — 2026-10-21
 
