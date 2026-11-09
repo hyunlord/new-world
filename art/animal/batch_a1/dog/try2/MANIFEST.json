@@ -1,0 +1,1188 @@
+{
+  "spec": {
+    "species": "dog",
+    "attempt": 2,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.prompt.txt",
+    "shoulder_y": 240,
+    "hoof_y": 464,
+    "shoulder_target": 26,
+    "dead_length": 54,
+    "poses": [
+      "stand",
+      "walk",
+      "run",
+      "graze",
+      "dead"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": null,
+    "landmark_note": "Manually measured S/stand withers and hoof in source coordinates."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.spec.json",
+  "spec_sha256": "12d662c5a962c05bf60eefe6c41fb95fcd2cb2e16e05bc3b40fb659f7277e3a6",
+  "raw_sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e",
+  "prompt_text": "Use case: precise-object-edit. Keep this entire dog sprite sheet and transparent cutouts unchanged except tiny interior material marks. Erase existing hatching marks first. Then in EVERY ONE of the TEN animals draw exactly THREE distinct small widely spaced hatch clusters, each containing exactly TWO short parallel slash strokes: clusterA on the SHOULDER, clusterB in the CENTER OF THE FLANK, clusterC on the REAR HAUNCH. Three clusters means six strokes total per animal. Make all three clusters visible in stand, walk, run, head-down forage, and dead positions, BOTH rows. Do not substitute a fur tuft for any interior cluster. Each cluster occupies a small separate region, most body completely unmarked. No grain or extra ticks. Main contour is twice interior line thickness. Preserve exact body shape, all10poses,2row5col layout, colours, broad two-tone wash, projection, light, all connected anatomy. Nothing else changes. Additional person and scene references are locked style only. Actual alpha0 background and wide transparent gutters; no shadows/labels.\n",
+  "prompt_sha256": "27d75531569e1dbd1f5e80f5b1474242453c85a6a5c29d2c0eef20cc4a9936ca",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": null,
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+      "sha256": "980f13522f6bfc890611b0f6991acb1999d179c321896a6af92e68aa279fead1"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "source_rgba_sha256": "39747d7a7183fd345387b8714ab2bddbbd64ca99066cdbcfa520a130a617f9c4",
+    "ownership_sha256": "13c232dc97283822b147c299857a22b4a7fea565f26a8f6913418d7b87da3f76",
+    "visible_pixels": 441105,
+    "tied_visible_pixels": 11,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.11607142857142858,
+  "landmark_note": "Manually measured S/stand withers and hoof in source coordinates.",
+  "frames": [
+    {
+      "species": "dog",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/dog/try2/S/stand.png",
+      "image_sha256": "4b60111f9ee512731395e235276c760c88d3e87428429122bc8777cfa5863f11",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/dog/panels/try2/S_stand.png",
+      "source_panel_sha256": "bd13699cbb526eac99e57db28a118dbdbea64e948943b9fa4a16370b87dcf858",
+      "source_box": [
+        32,
+        8,
+        314,
+        522
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+      "raw_sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.prompt.txt",
+      "prompt_sha256": "27d75531569e1dbd1f5e80f5b1474242453c85a6a5c29d2c0eef20cc4a9936ca",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+          "sha256": "980f13522f6bfc890611b0f6991acb1999d179c321896a6af92e68aa279fead1"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.11607142857142858,
+      "upright_scale": 0.11607142857142858,
+      "normalization": {
+        "scaled_size": [
+          33,
+          60
+        ],
+        "trim_box": [
+          0,
+          17,
+          28,
+          54
+        ],
+        "placement": [
+          34,
+          36
+        ],
+        "resized_to_canvas_offset": [
+          34,
+          19
+        ],
+        "visible_pixels": 661,
+        "rotation_degrees": 0,
+        "scale": 0.11607142857142858,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "dog",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 552,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 36,
+        "gradient_x": -3.16136,
+        "gradient_y": -0.8047249027237359,
+        "light_angle_degrees": 194.2813524886378,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "dog",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/dog/try2/S/walk.png",
+      "image_sha256": "a9d01a5d707ffadeaa0a84b3de84ecddb916d87abcc62e47243663b4cb78a4b0",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/dog/panels/try2/S_walk.png",
+      "source_panel_sha256": "4258bc5327038546b2039ffd5ed7abfd0f9988af60d5c6ba47ac503d69870e79",
+      "source_box": [
+        249,
+        9,
+        582,
+        542
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+      "raw_sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.prompt.txt",
+      "prompt_sha256": "27d75531569e1dbd1f5e80f5b1474242453c85a6a5c29d2c0eef20cc4a9936ca",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+          "sha256": "980f13522f6bfc890611b0f6991acb1999d179c321896a6af92e68aa279fead1"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.11607142857142858,
+      "upright_scale": 0.11607142857142858,
+      "normalization": {
+        "scaled_size": [
+          39,
+          62
+        ],
+        "trim_box": [
+          7,
+          18,
+          36,
+          53
+        ],
+        "placement": [
+          33,
+          38
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          20
+        ],
+        "visible_pixels": 611,
+        "rotation_degrees": 0,
+        "scale": 0.11607142857142858,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "dog",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 527,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 34,
+        "gradient_x": -1.8646748898678411,
+        "gradient_y": -0.7948413223140499,
+        "light_angle_degrees": 203.08674222392682,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "dog",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/dog/try2/S/run.png",
+      "image_sha256": "3ecc47be7fb4e1f6d89c1289e7688da1295f642d8a57cabbef67c235e230c1f9",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/dog/panels/try2/S_run.png",
+      "source_panel_sha256": "d27be298ce7effb10f78d3cf80d16a0a43c09c34833b475204e647f2a7d92db9",
+      "source_box": [
+        557,
+        0,
+        936,
+        528
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+      "raw_sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.prompt.txt",
+      "prompt_sha256": "27d75531569e1dbd1f5e80f5b1474242453c85a6a5c29d2c0eef20cc4a9936ca",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+          "sha256": "980f13522f6bfc890611b0f6991acb1999d179c321896a6af92e68aa279fead1"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.11607142857142858,
+      "upright_scale": 0.11607142857142858,
+      "normalization": {
+        "scaled_size": [
+          44,
+          61
+        ],
+        "trim_box": [
+          2,
+          21,
+          41,
+          50
+        ],
+        "placement": [
+          28,
+          44
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          23
+        ],
+        "visible_pixels": 593,
+        "rotation_degrees": 0,
+        "scale": 0.11607142857142858,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "dog",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 505,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 28,
+        "gradient_x": -0.7129203579418346,
+        "gradient_y": 0.24988008849557314,
+        "light_angle_degrees": 160.68432867597295,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "dog",
+      "facing": "S",
+      "pose": "graze",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/dog/try2/S/graze.png",
+      "image_sha256": "ca1befe8147cab4cbd547aa8322d821b3436519302d3f038c3bc364922ab8d6b",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/dog/panels/try2/S_graze.png",
+      "source_panel_sha256": "1b83e127c9035954111971f0609a9eb30e1bf8e7053a840e6b88de5c1d86401e",
+      "source_box": [
+        905,
+        29,
+        1280,
+        494
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+      "raw_sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.prompt.txt",
+      "prompt_sha256": "27d75531569e1dbd1f5e80f5b1474242453c85a6a5c29d2c0eef20cc4a9936ca",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+          "sha256": "980f13522f6bfc890611b0f6991acb1999d179c321896a6af92e68aa279fead1"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.11607142857142858,
+      "upright_scale": 0.11607142857142858,
+      "normalization": {
+        "scaled_size": [
+          44,
+          54
+        ],
+        "trim_box": [
+          2,
+          17,
+          30,
+          51
+        ],
+        "placement": [
+          34,
+          39
+        ],
+        "resized_to_canvas_offset": [
+          32,
+          22
+        ],
+        "visible_pixels": 614,
+        "rotation_degrees": 0,
+        "scale": 0.11607142857142858,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "dog",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 522,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 33,
+        "gradient_x": -0.8602883516483518,
+        "gradient_y": -0.4764286885245902,
+        "light_angle_degrees": 208.97773492653866,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "dog",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/dog/try2/S/dead.png",
+      "image_sha256": "b865f160fd07a87df013c9747e6acc3cb87d19666ec0d21d3fc5dfc0dd6419df",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/dog/panels/try2/S_dead.png",
+      "source_panel_sha256": "2b479529dd5a553ce8934ae75971b0bb9864b88c88fc38a9c817babb5670ea61",
+      "source_box": [
+        1167,
+        133,
+        1516,
+        624
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+      "raw_sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.prompt.txt",
+      "prompt_sha256": "27d75531569e1dbd1f5e80f5b1474242453c85a6a5c29d2c0eef20cc4a9936ca",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+          "sha256": "980f13522f6bfc890611b0f6991acb1999d179c321896a6af92e68aa279fead1"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.16770186335403728,
+      "upright_scale": 0.11607142857142858,
+      "normalization": {
+        "scaled_size": [
+          59,
+          82
+        ],
+        "trim_box": [
+          2,
+          31,
+          58,
+          56
+        ],
+        "placement": [
+          20,
+          32
+        ],
+        "resized_to_canvas_offset": [
+          18,
+          1
+        ],
+        "visible_pixels": 940,
+        "rotation_degrees": 0,
+        "scale": 0.16770186335403728,
+        "discarded_pixels": 8,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "dog",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 843,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 23,
+        "gradient_x": -0.19263042944785277,
+        "gradient_y": -0.9744736979166676,
+        "light_angle_degrees": 258.8181378378183,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "dog",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/dog/try2/E/stand.png",
+      "image_sha256": "65dae888e79a170fae1ec0e722a227dad64ae793994ba5a62476eb915d9167a9",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/dog/panels/try2/E_stand.png",
+      "source_panel_sha256": "347981219374f4283c479cb2dfacafb049a7fa4ec558679eb18807577bfe875f",
+      "source_box": [
+        0,
+        515,
+        318,
+        976
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+      "raw_sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.prompt.txt",
+      "prompt_sha256": "27d75531569e1dbd1f5e80f5b1474242453c85a6a5c29d2c0eef20cc4a9936ca",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+          "sha256": "980f13522f6bfc890611b0f6991acb1999d179c321896a6af92e68aa279fead1"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.11607142857142858,
+      "upright_scale": 0.11607142857142858,
+      "normalization": {
+        "scaled_size": [
+          37,
+          54
+        ],
+        "trim_box": [
+          2,
+          6,
+          33,
+          43
+        ],
+        "placement": [
+          32,
+          36
+        ],
+        "resized_to_canvas_offset": [
+          30,
+          30
+        ],
+        "visible_pixels": 637,
+        "rotation_degrees": 0,
+        "scale": 0.11607142857142858,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "dog",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 536,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 35,
+        "gradient_x": -0.07526153846153869,
+        "gradient_y": -0.8984186234817805,
+        "light_angle_degrees": 265.21144861105836,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "dog",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/dog/try2/E/walk.png",
+      "image_sha256": "65744fc8b6ae79c0f888c205296d0db264db354ac171b0a8b6d19e92a1930b4e",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/dog/panels/try2/E_walk.png",
+      "source_panel_sha256": "64cb7598876912944676eb042cbabbecc40084d939575da86a312eeb6c78192f",
+      "source_box": [
+        287,
+        523,
+        622,
+        1006
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+      "raw_sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.prompt.txt",
+      "prompt_sha256": "27d75531569e1dbd1f5e80f5b1474242453c85a6a5c29d2c0eef20cc4a9936ca",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+          "sha256": "980f13522f6bfc890611b0f6991acb1999d179c321896a6af92e68aa279fead1"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.11607142857142858,
+      "upright_scale": 0.11607142857142858,
+      "normalization": {
+        "scaled_size": [
+          39,
+          56
+        ],
+        "trim_box": [
+          0,
+          5,
+          33,
+          40
+        ],
+        "placement": [
+          31,
+          38
+        ],
+        "resized_to_canvas_offset": [
+          31,
+          33
+        ],
+        "visible_pixels": 629,
+        "rotation_degrees": 0,
+        "scale": 0.11607142857142858,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "dog",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 535,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 34,
+        "gradient_x": -0.5790439655172424,
+        "gradient_y": -0.24069710743801695,
+        "light_angle_degrees": 202.57168837885206,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "dog",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/dog/try2/E/run.png",
+      "image_sha256": "af10055cef11efab5bf8eaba274379d6e2bb5d16d1b9d71833fe1191098dc605",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/dog/panels/try2/E_run.png",
+      "source_panel_sha256": "d8dabd8d2739d8588de6584f1e75dec3ae08a7941b883501f0a63a5e0925a83a",
+      "source_box": [
+        559,
+        493,
+        928,
+        1006
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+      "raw_sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.prompt.txt",
+      "prompt_sha256": "27d75531569e1dbd1f5e80f5b1474242453c85a6a5c29d2c0eef20cc4a9936ca",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+          "sha256": "980f13522f6bfc890611b0f6991acb1999d179c321896a6af92e68aa279fead1"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.11607142857142858,
+      "upright_scale": 0.11607142857142858,
+      "normalization": {
+        "scaled_size": [
+          43,
+          60
+        ],
+        "trim_box": [
+          0,
+          10,
+          42,
+          39
+        ],
+        "placement": [
+          27,
+          44
+        ],
+        "resized_to_canvas_offset": [
+          27,
+          34
+        ],
+        "visible_pixels": 556,
+        "rotation_degrees": 0,
+        "scale": 0.11607142857142858,
+        "discarded_pixels": 2,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "dog",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 482,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 29,
+        "gradient_x": 0.837925635103926,
+        "gradient_y": 1.4929365967365975,
+        "light_angle_degrees": 60.696244105368606,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "dog",
+      "facing": "E",
+      "pose": "graze",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/dog/try2/E/graze.png",
+      "image_sha256": "ae2862ce8a63c5b0fb49704ef23a8330cdce222999c60d65ffebe4ff8c26bf63",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/dog/panels/try2/E_graze.png",
+      "source_panel_sha256": "219e5b8c120fa0900f5acef9c46e70064d9ba00fa19a434b014e19be74bbb18f",
+      "source_box": [
+        817,
+        553,
+        1229,
+        1000
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+      "raw_sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.prompt.txt",
+      "prompt_sha256": "27d75531569e1dbd1f5e80f5b1474242453c85a6a5c29d2c0eef20cc4a9936ca",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+          "sha256": "980f13522f6bfc890611b0f6991acb1999d179c321896a6af92e68aa279fead1"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.11607142857142858,
+      "upright_scale": 0.11607142857142858,
+      "normalization": {
+        "scaled_size": [
+          48,
+          52
+        ],
+        "trim_box": [
+          13,
+          7,
+          42,
+          38
+        ],
+        "placement": [
+          33,
+          42
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          35
+        ],
+        "visible_pixels": 586,
+        "rotation_degrees": 0,
+        "scale": 0.11607142857142858,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "dog",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 498,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 30,
+        "gradient_x": -1.6466258660508073,
+        "gradient_y": -0.2990160869565211,
+        "light_angle_degrees": 190.29236886313947,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "dog",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/dog/try2/E/dead.png",
+      "image_sha256": "060069486221f4cd67383bdf20645fd62a606835972e4aea1fd45ed69557d1b0",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/dog/panels/try2/E_dead.png",
+      "source_panel_sha256": "d3f5b7adc899d29ad899ca260679a411c6fba04d655f872ca27cd4c6151c69ed",
+      "source_box": [
+        1181,
+        609,
+        1519,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+      "raw_sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.prompt.txt",
+      "prompt_sha256": "27d75531569e1dbd1f5e80f5b1474242453c85a6a5c29d2c0eef20cc4a9936ca",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try1.png",
+          "sha256": "980f13522f6bfc890611b0f6991acb1999d179c321896a6af92e68aa279fead1"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.16666666666666666,
+      "upright_scale": 0.11607142857142858,
+      "normalization": {
+        "scaled_size": [
+          56,
+          69
+        ],
+        "trim_box": [
+          2,
+          25,
+          56,
+          46
+        ],
+        "placement": [
+          21,
+          36
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          11
+        ],
+        "visible_pixels": 774,
+        "rotation_degrees": 0,
+        "scale": 0.16666666666666666,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "dog",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 693,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 19,
+        "gradient_x": -0.5245564296520422,
+        "gradient_y": -1.221850000000001,
+        "light_angle_degrees": 246.765509834507,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 10,
+  "contact_sheet": "art/animal/batch_a1/dog/try2/contact_sheet.png",
+  "contact_sheet_sha256": "2bfe0450fa7d0b6aed3e97616af3d2aa23deabda531af374d972a404755a2ffd",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

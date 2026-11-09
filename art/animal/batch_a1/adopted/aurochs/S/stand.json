@@ -1,0 +1,129 @@
+{
+  "species": "aurochs",
+  "facing": "S",
+  "pose": "stand",
+  "attempt": 2,
+  "image": "art/animal/batch_a1/adopted/aurochs/S/stand.png",
+  "image_sha256": "89404eb4fc9bb93ff6c97896d2e9a3a7d33c7a84c3272b14175d8bffef5ada4d",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/aurochs/panels/try2/S_stand.png",
+  "source_panel_sha256": "778548c4959a073601d9d68a01206acfc70818a9f9a7911be5a447f17c3740a3",
+  "source_box": [
+    0,
+    4,
+    291,
+    542
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/aurochs/try2.png",
+  "raw_sha256": "a31c324901dc6f9c275eb9b8c758aedfa4165efce1a80bff5579a647e8fa5a71",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/aurochs/try2.prompt.txt",
+  "prompt_sha256": "8b2cd05bfd6d0e4359a0c2dc176bb5706bfeb9ca4ad96e746991304df8b8d8b8",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/aurochs/try1.png",
+      "sha256": "a34ff040f6105d068e0fe9cd7c86727ade12b49e1357ae6bade2f8d868a6fbc2"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.175,
+  "upright_scale": 0.175,
+  "normalization": {
+    "scaled_size": [
+      51,
+      94
+    ],
+    "trim_box": [
+      1,
+      25,
+      49,
+      78
+    ],
+    "placement": [
+      24,
+      20
+    ],
+    "resized_to_canvas_offset": [
+      23,
+      -5
+    ],
+    "visible_pixels": 1339,
+    "rotation_degrees": 0,
+    "scale": 0.175,
+    "discarded_pixels": 1,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "aurochs",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1198,
+    "base_row": 72,
+    "base_error": 0,
+    "height": 52,
+    "gradient_x": -1.2982513438368863,
+    "gradient_y": -2.367874513274336,
+    "light_angle_degrees": 241.26505069136934,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "source_status": "CANDIDATE_PENDING_VISUAL_REVIEW",
+  "import_status": "PENDING",
+  "source_image": "art/animal/batch_a1/aurochs/try2/S/stand.png",
+  "source_sidecar": "art/animal/batch_a1/aurochs/try2/S/stand.json",
+  "source_sidecar_sha256": "ddd7269fcd3f5ba9d6d810d4a1a3da4692f60b8cea411b51d85fb49504bdd2bc",
+  "source_manifest": "art/animal/batch_a1/aurochs/try2/MANIFEST.json",
+  "source_manifest_sha256": "5da8a8acb1abd5d4cdc583a380f36b745da06d7d2d952f598a119122c062a4a8",
+  "selection": "/Users/rexxa/work/art-batch/A1/selection.json",
+  "selection_sha256": "26850ca9badfb050fa38b075c757eec783039808da0951cf1b59da5fef444805",
+  "review_status": "pass",
+  "review_evidence": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/reviews/bovines_round2.json",
+      "sha256": "0a7a45b90e734d7319f7baacb7a42addad6a0ca4557bcf2568b9da6eeed1025a"
+    }
+  ],
+  "reference_reuse": false
+}

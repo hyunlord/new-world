@@ -1,0 +1,133 @@
+{
+  "species": "reindeer_winter",
+  "facing": "E",
+  "pose": "stand",
+  "attempt": 3,
+  "image": "art/animal/batch_a1/adopted/reindeer_winter/E/stand.png",
+  "image_sha256": "60a0cca3805124f0b488c9a1fe9437e1041b6a0fdc92bc6f23ef4d1ba058f91f",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/panels/try3/E_stand.png",
+  "source_panel_sha256": "fcbce08789cee64d1b0e4a658f54d3122ac661992dc50be63a3dbd229c612b26",
+  "source_box": [
+    0,
+    515,
+    362,
+    1024
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+  "raw_sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.prompt.txt",
+  "prompt_sha256": "8990090731e6a0c1673a166900f6f4c48f12b8f9bafd9f84555a3c504e9c872a",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+      "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.16806722689075632,
+  "upright_scale": 0.16806722689075632,
+  "normalization": {
+    "scaled_size": [
+      61,
+      86
+    ],
+    "trim_box": [
+      2,
+      10,
+      50,
+      67
+    ],
+    "placement": [
+      24,
+      16
+    ],
+    "resized_to_canvas_offset": [
+      22,
+      6
+    ],
+    "visible_pixels": 1401,
+    "rotation_degrees": 0,
+    "scale": 0.16806722689075632,
+    "discarded_pixels": 2,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "reindeer_winter",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1230,
+    "base_row": 72,
+    "base_error": 0,
+    "height": 57,
+    "gradient_x": 0.4887189140271491,
+    "gradient_y": -1.1919898066783834,
+    "light_angle_degrees": 292.2937564484876,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "source_status": "CANDIDATE_PENDING_VISUAL_REVIEW",
+  "import_status": "PENDING",
+  "source_image": "art/animal/batch_a1/reindeer_winter/try3/E/stand.png",
+  "source_sidecar": "art/animal/batch_a1/reindeer_winter/try3/E/stand.json",
+  "source_sidecar_sha256": "ddf35f1322db459cabca6e006aebe42ba2db45ca6468a73c3f56fe1a4eeb3e83",
+  "source_manifest": "art/animal/batch_a1/reindeer_winter/try3/MANIFEST.json",
+  "source_manifest_sha256": "cc2ef90b0ed31b8bf86a86cfeb89d04dc0b39fa0e84466dd25f6e8b2ec6749d5",
+  "selection": "/Users/rexxa/work/art-batch/A1/selection.json",
+  "selection_sha256": "26850ca9badfb050fa38b075c757eec783039808da0951cf1b59da5fef444805",
+  "review_status": "pass",
+  "review_evidence": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/reviews/reindeer_round3.json",
+      "sha256": "29e304edd0711910c9546050af717900532e6f44044ba1a5746910cccdbd038b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/reviews/reindeer_attacks_round2.json",
+      "sha256": "ebd98b9cc7af3c63ea991ca37c36e8b72b3cfd088e416a9faf9932e6df0a952c"
+    }
+  ],
+  "reference_reuse": false
+}

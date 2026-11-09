@@ -1,0 +1,112 @@
+{
+  "species": "piglet",
+  "facing": "S",
+  "pose": "stand",
+  "attempt": 3,
+  "image": "art/animal/batch_a1/piglet/try3/S/stand.png",
+  "image_sha256": "09ee18988dfe0ece83596ea4e5cc99e2e2990ef84568cd9fc1b668142788ec65",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/piglet/panels/try3/S_stand.png",
+  "source_panel_sha256": "009ac5fb6a377bd7ce9eb3df81ac457575cd69db2f74c8d290afc38d5cbc612d",
+  "source_box": [
+    14,
+    38,
+    254,
+    508
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/piglet/try3.png",
+  "raw_sha256": "dd74166cccf6c58153512dfbdad62930e75fa7784f14fb5dce3672ed5c095495",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/piglet/try3.prompt.txt",
+  "prompt_sha256": "07e28f1d5e69c640ddb805875d9314ad1681712814a927f2c26300d41e49a454",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/piglet/try2.png",
+      "sha256": "417455ade5db56a190732f48f75fe40e72f60784ec5d5f1032a4c9375f39369a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.07407407407407407,
+  "upright_scale": 0.07407407407407407,
+  "normalization": {
+    "scaled_size": [
+      18,
+      35
+    ],
+    "trim_box": [
+      0,
+      12,
+      18,
+      31
+    ],
+    "placement": [
+      39,
+      54
+    ],
+    "resized_to_canvas_offset": [
+      39,
+      42
+    ],
+    "visible_pixels": 236,
+    "rotation_degrees": 0,
+    "scale": 0.07407407407407407,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "piglet",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 194,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 18,
+    "gradient_x": -0.8859853658536583,
+    "gradient_y": -2.3540445714285707,
+    "light_angle_degrees": 249.37530429025145,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

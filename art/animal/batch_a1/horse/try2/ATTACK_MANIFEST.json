@@ -1,0 +1,288 @@
+{
+  "spec": {
+    "species": "horse",
+    "attempt": 2,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try2.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try2.prompt.txt",
+    "shoulder_y": 338,
+    "hoof_y": 727,
+    "shoulder_target": 42,
+    "dead_length": 76,
+    "poses": [
+      "attack"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try1.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try2.generation.json",
+    "landmark_note": "Manually read S/attack withers/back plane and lowest grounded forehoof in separate attack source; source resolution differs from base sheet."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try2.spec.json",
+  "spec_sha256": "bd904b990d31e251bb9056d8750eafc617bae83d5ebe2b31f2fa3a9b7b1385e0",
+  "raw_sha256": "b5a505630014d8ad8b26de7209e2c5d0e494e2eabc7d2aeca6da42b70230c37c",
+  "prompt_text": "Use case: precise-object-edit.\nAsset type: two-pose whole-animal transparent sprite strip, WorldSim stone-age ink-and-tone family.\nInput images: Image1 is the edit target: the two defensive kicking dun horse sprites. Image2 and Image3 are locked ink-and-wash style references only.\nPrimary request: make ONE microscopic style correction to Image1. On the shoulder, middle flank and rump of EACH horse, replace every existing paired dash-and-dot hatch cluster with exactly THREE simple, continuous, unbroken short diagonal ink strokes, like ///. Each cluster contains only three strokes, not three pairs, no dots, no broken dashes, no companion flecks. Keep exactly three hide clusters per horse. Quiet clean wash around each cluster so isolated dark flecks do not look like additional marks.\nPreserve all remaining artwork: same dun primitive horse individual, same kick action with both hindlegs extended and forefeet supporting, same anatomy and sizes, same mane and tail, same single hooves, same left S view and right E view, same silhouettes, face direction, spacing, crop and generous empty transparent gutters. Preserve colors, restrained earth wash and upper-left light, brown-black outer contours about twice interior detail thickness.\nDo not add or remove body parts. No tack, horseshoes, ground, shadows, extra figures, typography, panels, borders. The background must remain true transparent RGBA alpha.\n",
+  "prompt_sha256": "3a7961d65a923129c9cbf75a2e307c0eee1752214d29e6852675bd5fe4253980",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": {
+    "path": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try2.generation.json",
+    "sha256": "82b6cf07277524bd82b0a28bbb07e06edec49f4162d681674d316953b62cf52d"
+  },
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try1.png",
+      "sha256": "32659c5349bc98a5bb0a6f6bc06902cfeb79c1b80a243c835cffff2e0ba0e6e7"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "max_gutter_alpha": 0,
+    "method": "unaltered rectangular crops across alpha<16 gutter; every RGBA pixel retained"
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.10796915167095116,
+  "landmark_note": "Manually read S/attack withers/back plane and lowest grounded forehoof in separate attack source; source resolution differs from base sheet.",
+  "frames": [
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "attack",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/horse/try2/S/attack.png",
+      "image_sha256": "e97e35b18cd18a27437c8b333dd8c82b29293f7eb26d39e855450cfc2700cbfc",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/attack_try2/S_attack.png",
+      "source_panel_sha256": "3bcadfbaaf57a69fb5592bdc47e8c22be44830fdb63a69273c8c05382e062561",
+      "source_box": [
+        0,
+        0,
+        941,
+        836
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try2.png",
+      "raw_sha256": "b5a505630014d8ad8b26de7209e2c5d0e494e2eabc7d2aeca6da42b70230c37c",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try2.prompt.txt",
+      "prompt_sha256": "3a7961d65a923129c9cbf75a2e307c0eee1752214d29e6852675bd5fe4253980",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try1.png",
+          "sha256": "32659c5349bc98a5bb0a6f6bc06902cfeb79c1b80a243c835cffff2e0ba0e6e7"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.10796915167095116,
+      "upright_scale": 0.10796915167095116,
+      "normalization": {
+        "scaled_size": [
+          102,
+          90
+        ],
+        "trim_box": [
+          13,
+          13,
+          86,
+          79
+        ],
+        "placement": [
+          11,
+          7
+        ],
+        "resized_to_canvas_offset": [
+          -2,
+          -6
+        ],
+        "visible_pixels": 1832,
+        "rotation_degrees": 0,
+        "scale": 0.10796915167095116,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1639,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 64,
+        "gradient_x": -1.0795826544021023,
+        "gradient_y": -0.38732539473684224,
+        "light_angle_degrees": 199.73662941029846,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "attack",
+      "attempt": 2,
+      "image": "art/animal/batch_a1/horse/try2/E/attack.png",
+      "image_sha256": "d3788649fddf634dd5e8e3eadce4504b3590369ad3dcf5c39fb9f637d1260de4",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/attack_try2/E_attack.png",
+      "source_panel_sha256": "2b853503d4748a9191168ec69f98514167227c483a5d0135576daaa54bcd7070",
+      "source_box": [
+        941,
+        0,
+        1882,
+        836
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try2.png",
+      "raw_sha256": "b5a505630014d8ad8b26de7209e2c5d0e494e2eabc7d2aeca6da42b70230c37c",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try2.prompt.txt",
+      "prompt_sha256": "3a7961d65a923129c9cbf75a2e307c0eee1752214d29e6852675bd5fe4253980",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try1.png",
+          "sha256": "32659c5349bc98a5bb0a6f6bc06902cfeb79c1b80a243c835cffff2e0ba0e6e7"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.10796915167095116,
+      "upright_scale": 0.10796915167095116,
+      "normalization": {
+        "scaled_size": [
+          102,
+          90
+        ],
+        "trim_box": [
+          5,
+          15,
+          91,
+          77
+        ],
+        "placement": [
+          5,
+          11
+        ],
+        "resized_to_canvas_offset": [
+          0,
+          -4
+        ],
+        "visible_pixels": 1978,
+        "rotation_degrees": 0,
+        "scale": 0.10796915167095116,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "horse",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 1745,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 60,
+        "gradient_x": 0.18350572307692317,
+        "gradient_y": -0.33056720698254366,
+        "light_angle_degrees": 299.03569710818283,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 2,
+  "contact_sheet": "art/animal/batch_a1/horse/try2/attack_sheet.png",
+  "contact_sheet_sha256": "d6361c83c154f4101c52c1a083cdc82acf082dbd177d48929e1b3382beed4316",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

@@ -1,0 +1,112 @@
+{
+  "species": "pig",
+  "facing": "E",
+  "pose": "graze",
+  "attempt": 4,
+  "image": "art/animal/batch_a1/pig/try4/E/graze.png",
+  "image_sha256": "6bee5842c5456db748235b38f172590f9b80aae3b3567c230fcf11618792a255",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/pig/panels/try4/E_graze.png",
+  "source_panel_sha256": "a17b8e22e0f614a26fcb2f8e4e10d962bf9678c2da668e3d35f2d3f7d9c9030b",
+  "source_box": [
+    833,
+    581,
+    1210,
+    1008
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/pig/try4.png",
+  "raw_sha256": "f70567538760a639000e50572f79769e9268bc7215e81d8c9aaf5f3a65d22b89",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/pig/try4.prompt.txt",
+  "prompt_sha256": "f7fe9e2052b463ffc8a8653ad5df9116697834ddc26627b1d08b66ea7e955b07",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/pig/try3.png",
+      "sha256": "21256913b62fc906b85ded9d2bdea6dc568d4ee9f210ec25d621108f68437e4c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.12060301507537688,
+  "upright_scale": 0.12060301507537688,
+  "normalization": {
+    "scaled_size": [
+      45,
+      51
+    ],
+    "trim_box": [
+      11,
+      12,
+      42,
+      39
+    ],
+    "placement": [
+      32,
+      46
+    ],
+    "resized_to_canvas_offset": [
+      21,
+      34
+    ],
+    "visible_pixels": 581,
+    "rotation_degrees": 0,
+    "scale": 0.12060301507537688,
+    "discarded_pixels": 3,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "pig",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 507,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 25,
+    "gradient_x": -2.3988431718061682,
+    "gradient_y": -3.2711919491525427,
+    "light_angle_degrees": 233.7465144906571,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

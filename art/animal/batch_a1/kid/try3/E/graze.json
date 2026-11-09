@@ -1,0 +1,116 @@
+{
+  "species": "kid",
+  "facing": "E",
+  "pose": "graze",
+  "attempt": 3,
+  "image": "art/animal/batch_a1/kid/try3/E/graze.png",
+  "image_sha256": "89dc234379c06bb097b4790c4834ffea3f8204ec46b3ebc0a2d14cb1b846f39b",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/E_graze.png",
+  "source_panel_sha256": "a1e6fe07af2e65f36018f3c68cb1c8d84de1c65db404e184142816224ca9bb34",
+  "source_box": [
+    831,
+    567,
+    1152,
+    1024
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+  "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+  "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+      "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.07659574468085106,
+  "upright_scale": 0.07659574468085106,
+  "normalization": {
+    "scaled_size": [
+      25,
+      35
+    ],
+    "trim_box": [
+      6,
+      7,
+      25,
+      26
+    ],
+    "placement": [
+      38,
+      54
+    ],
+    "resized_to_canvas_offset": [
+      32,
+      47
+    ],
+    "visible_pixels": 250,
+    "rotation_degrees": 0,
+    "scale": 0.07659574468085106,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "kid",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 194,
+    "base_row": 72,
+    "base_error": 0,
+    "height": 18,
+    "gradient_x": -5.033353459119496,
+    "gradient_y": -0.7787306358381492,
+    "light_angle_degrees": 188.79473447408205,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

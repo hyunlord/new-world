@@ -1,0 +1,129 @@
+{
+  "species": "pig",
+  "facing": "S",
+  "pose": "walk",
+  "attempt": 4,
+  "image": "art/animal/batch_a1/adopted/pig/S/walk.png",
+  "image_sha256": "e819fd7dae3abc0884a01473fd93637eee36815f9da23acfaf49646b68792cd2",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/pig/panels/try4/S_walk.png",
+  "source_panel_sha256": "ef0fce9151c6d8cadb2e387958816e24ee6d753460ba980a51a614b4559dd491",
+  "source_box": [
+    289,
+    21,
+    592,
+    552
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/pig/try4.png",
+  "raw_sha256": "f70567538760a639000e50572f79769e9268bc7215e81d8c9aaf5f3a65d22b89",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/pig/try4.prompt.txt",
+  "prompt_sha256": "f7fe9e2052b463ffc8a8653ad5df9116697834ddc26627b1d08b66ea7e955b07",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/pig/try3.png",
+      "sha256": "21256913b62fc906b85ded9d2bdea6dc568d4ee9f210ec25d621108f68437e4c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.12060301507537688,
+  "upright_scale": 0.12060301507537688,
+  "normalization": {
+    "scaled_size": [
+      37,
+      64
+    ],
+    "trim_box": [
+      1,
+      22,
+      32,
+      52
+    ],
+    "placement": [
+      32,
+      43
+    ],
+    "resized_to_canvas_offset": [
+      31,
+      21
+    ],
+    "visible_pixels": 599,
+    "rotation_degrees": 0,
+    "scale": 0.12060301507537688,
+    "discarded_pixels": 1,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "pig",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 525,
+    "base_row": 72,
+    "base_error": 0,
+    "height": 29,
+    "gradient_x": -0.19435983086680803,
+    "gradient_y": -3.3021258799171846,
+    "light_angle_degrees": 266.6315139697714,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "source_status": "CANDIDATE_PENDING_VISUAL_REVIEW",
+  "import_status": "PENDING",
+  "source_image": "art/animal/batch_a1/pig/try4/S/walk.png",
+  "source_sidecar": "art/animal/batch_a1/pig/try4/S/walk.json",
+  "source_sidecar_sha256": "fa7ee5a480f88f65f8dbafe9fbcbc07b0c85dec7392e2e4b865ae057c185cc46",
+  "source_manifest": "art/animal/batch_a1/pig/try4/MANIFEST.json",
+  "source_manifest_sha256": "77e90f9cb9a169af64f39f35edd4a20423061b8634a95e51a999befe7c4d0fa7",
+  "selection": "/Users/rexxa/work/art-batch/A1/selection.json",
+  "selection_sha256": "26850ca9badfb050fa38b075c757eec783039808da0951cf1b59da5fef444805",
+  "review_status": "pass",
+  "review_evidence": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/reviews/horse_dog_pigs_bases.json",
+      "sha256": "84a3ce236f63f59cf2e1373c2d115dc1fd46e7a9220b8db6187bbbbe89c34258"
+    }
+  ],
+  "reference_reuse": false
+}

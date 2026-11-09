@@ -1,0 +1,133 @@
+{
+  "species": "sheep_shorn",
+  "facing": "S",
+  "pose": "walk",
+  "attempt": 3,
+  "image": "art/animal/batch_a1/adopted/sheep_shorn/S/walk.png",
+  "image_sha256": "8107ea2563d39ae6b8df55f47233cc685c8d013d12dcf92c7ea09801cb64080e",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/sheep_shorn/panels/try3/S_walk.png",
+  "source_panel_sha256": "b92fb5a70d781dead8ac14a63cfc19aefa21b9deecfa94ee5b299b442125d7ee",
+  "source_box": [
+    225,
+    18,
+    556,
+    558
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/sheep_shorn/try3.png",
+  "raw_sha256": "b309fc269c949382f581f80a3c3d49ed4c94bc0a7560d7be5115285d37360d75",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/sheep_shorn/try3.prompt.txt",
+  "prompt_sha256": "30abdd7d80d22f54aa70620c3d9f154d3e58e1c3e3e1925facd48d88eb1ea993",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_shorn/try2.png",
+      "sha256": "91de2ba9c94113625f811de3b94cef9264e9add6eeac46f705e27b270130e96c"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.12903225806451613,
+  "upright_scale": 0.12903225806451613,
+  "normalization": {
+    "scaled_size": [
+      43,
+      70
+    ],
+    "trim_box": [
+      9,
+      21,
+      41,
+      57
+    ],
+    "placement": [
+      32,
+      37
+    ],
+    "resized_to_canvas_offset": [
+      23,
+      16
+    ],
+    "visible_pixels": 643,
+    "rotation_degrees": 0,
+    "scale": 0.12903225806451613,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "sheep_shorn",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 543,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 35,
+    "gradient_x": -1.1396527426160337,
+    "gradient_y": -3.3421863999999997,
+    "light_angle_degrees": 251.17112775561066,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "source_status": "CANDIDATE_PENDING_VISUAL_REVIEW",
+  "import_status": "PENDING",
+  "source_image": "art/animal/batch_a1/sheep_shorn/try3/S/walk.png",
+  "source_sidecar": "art/animal/batch_a1/sheep_shorn/try3/S/walk.json",
+  "source_sidecar_sha256": "7d3b048519c5da68ebaa7e22fc614b1bb1ae513e417c4f911670c0136332c572",
+  "source_manifest": "art/animal/batch_a1/sheep_shorn/try3/MANIFEST.json",
+  "source_manifest_sha256": "c7c97a1227a03a543670507393d4beb0543fbcd03649f78ca27ecb3c8da1102c",
+  "selection": "/Users/rexxa/work/art-batch/A1/selection.json",
+  "selection_sha256": "26850ca9badfb050fa38b075c757eec783039808da0951cf1b59da5fef444805",
+  "review_status": "pass",
+  "review_evidence": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/reviews/small_ruminants_round3.json",
+      "sha256": "8c73b0ff30c5e909801363bdb8c301a42ead7efa7cb568a98cdbe5859daf8d69"
+    }
+  ],
+  "reference_reuse": false
+}

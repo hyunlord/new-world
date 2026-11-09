@@ -1,0 +1,112 @@
+{
+  "species": "wild_boar",
+  "facing": "S",
+  "pose": "walk",
+  "attempt": 4,
+  "image": "art/animal/batch_a1/wild_boar/try4/S/walk.png",
+  "image_sha256": "ebefdbd9c56d075a52ae337dd0e2c278cd0462dd1c490d39c5be6eb18a688240",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/panels/try4/S_walk.png",
+  "source_panel_sha256": "5e7f954cb39304884bfafebbba8577d96a560bed9f1d42b1403bd5f04fe07aa0",
+  "source_box": [
+    277,
+    57,
+    552,
+    540
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/try4.png",
+  "raw_sha256": "3c5572099956200258549f8444c9bbaa69a342e1c5c079a21aefd77c16a3dec8",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/try4.prompt.txt",
+  "prompt_sha256": "d078646d682e212febc7c416da8b2ab647131cb1969f49f432ce42a560aa1332",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/try3.png",
+      "sha256": "cfd70cf8c88d60e0020943b208cf4616c423a39f5b659fc4d84ff277c1e219d4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.12745098039215685,
+  "upright_scale": 0.12745098039215685,
+  "normalization": {
+    "scaled_size": [
+      35,
+      62
+    ],
+    "trim_box": [
+      2,
+      17,
+      34,
+      49
+    ],
+    "placement": [
+      32,
+      41
+    ],
+    "resized_to_canvas_offset": [
+      30,
+      24
+    ],
+    "visible_pixels": 654,
+    "rotation_degrees": 0,
+    "scale": 0.12745098039215685,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "wild_boar",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 567,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 30,
+    "gradient_x": -1.447567123287671,
+    "gradient_y": -0.7606264367816092,
+    "light_angle_degrees": 207.71975228277813,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

@@ -1,0 +1,112 @@
+{
+  "species": "junglefowl",
+  "facing": "E",
+  "pose": "dead",
+  "attempt": 2,
+  "image": "art/animal/batch_a1/junglefowl/try2/E/dead.png",
+  "image_sha256": "523f73e9c148b307442428219955044d3265ef518c65819b70f4bc0cfa6a55f8",
+  "canvas_px": [
+    96,
+    64
+  ],
+  "anchor_px": [
+    48,
+    56
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/panels/try2/E_dead.png",
+  "source_panel_sha256": "e495ef9d20ef4e107fd6d4f48e5d9af3a7b6fc91b30d32e560eea2472ce067f4",
+  "source_box": [
+    1171,
+    611,
+    1530,
+    1024
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/try2.png",
+  "raw_sha256": "6ea736b1732addd8ae583825e01f3d4245b4b8c712a1911e92828796d7f792e4",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/try2.prompt.txt",
+  "prompt_sha256": "a8a3c29ec7b5edd5ea3eda3b1e21871f8add935d13563c39df60662e134ce929",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/try1.png",
+      "sha256": "353403100d8582be5f8c9e32e36f7e2720f3dfd55fb673b7592443421df1d6e9"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.09785932721712538,
+  "upright_scale": 0.07582938388625593,
+  "normalization": {
+    "scaled_size": [
+      35,
+      40
+    ],
+    "trim_box": [
+      1,
+      15,
+      34,
+      28
+    ],
+    "placement": [
+      31,
+      44
+    ],
+    "resized_to_canvas_offset": [
+      30,
+      29
+    ],
+    "visible_pixels": 282,
+    "rotation_degrees": 0,
+    "scale": 0.09785932721712538,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "junglefowl",
+    "anchor": [
+      48,
+      56
+    ],
+    "height_band": [
+      1,
+      56
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 230,
+    "base_row": 55,
+    "base_error": -1,
+    "height": 12,
+    "gradient_x": 1.4961207547169808,
+    "gradient_y": 0.2783515789473684,
+    "light_angle_degrees": 10.539314449249952,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

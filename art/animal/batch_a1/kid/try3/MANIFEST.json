@@ -1,0 +1,1236 @@
+{
+  "spec": {
+    "species": "kid",
+    "attempt": 3,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+    "shoulder_y": 232,
+    "hoof_y": 467,
+    "shoulder_target": 18,
+    "dead_length": 31,
+    "poses": [
+      "stand",
+      "walk",
+      "run",
+      "graze",
+      "dead"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+      "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.generation.json",
+    "landmark_note": "Manual S-stand/attack shoulder-to-lowest-hoof observation; targeted surface edit preserved pose landmarks. One uniform upright scale applies to all poses and facings."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.spec.json",
+  "spec_sha256": "dfea73fa9731782368a1865d3b9cd17e96470ee2bb9aef91b8e4fa4e75415291",
+  "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+  "prompt_text": "Use case: precise-object-edit. FIRST reference is edit target. Perform ONLY this small correction: Change TOP ROW ONLY: add exactly ONE small third cluster of TWO parallel short strokes on the visible SHOULDER of EACH of the5top-row animals. Thus each has exactly3spatially separated clusters across shoulder/mid-flank/haunch. Retain existing other2clusters. Tiny marks are half outline width and descend upper-left to lower-right. Bottomrow already3clusters: preserve it exactly. No additional hair or texture marks. Everything else must remain identical: dimensions, animal positions, body proportions, light upperleft, natural warm two-tone wash, facial identity, connected limbs, alpha transparency and camera. Main contour2xinterior width. Do not add horn rings or dense texture. Keep actual transparent RGBA, no ground/background/shadows/text/grid. Other attached references are unchanged style references.\n",
+  "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": {
+    "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.generation.json",
+    "sha256": "f64dff894b43376f7b7514d401f44612d5ce9671ad6a37058d410ec602c02725"
+  },
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+      "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "source_rgba_sha256": "355647c76811957e5ca284782777c69add04d3aed16fda9eb754bcd55b79da0f",
+    "ownership_sha256": "8b2fac4c7309b95489ee20969c2eb10847609709df34b8d73e790e7425bf2742",
+    "visible_pixels": 407195,
+    "tied_visible_pixels": 3,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.07659574468085106,
+  "landmark_note": "Manual S-stand/attack shoulder-to-lowest-hoof observation; targeted surface edit preserved pose landmarks. One uniform upright scale applies to all poses and facings.",
+  "frames": [
+    {
+      "species": "kid",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/kid/try3/S/stand.png",
+      "image_sha256": "9ed4856850fd922abe2383036292a91fa5307374e902740fd17c1b3b021032ad",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/S_stand.png",
+      "source_panel_sha256": "cbd936892fcca07e9b5025aae9827e7338087fb668aabef626e3e2135b9ba943",
+      "source_box": [
+        0,
+        14,
+        270,
+        486
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+      "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+      "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+          "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07659574468085106,
+      "upright_scale": 0.07659574468085106,
+      "normalization": {
+        "scaled_size": [
+          21,
+          36
+        ],
+        "trim_box": [
+          2,
+          12,
+          20,
+          35
+        ],
+        "placement": [
+          39,
+          50
+        ],
+        "resized_to_canvas_offset": [
+          37,
+          38
+        ],
+        "visible_pixels": 275,
+        "rotation_degrees": 0,
+        "scale": 0.07659574468085106,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "kid",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 204,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 23,
+        "gradient_x": -2.0831677419354833,
+        "gradient_y": -3.0820847457627125,
+        "light_angle_degrees": 235.94540951768778,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "kid",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/kid/try3/S/walk.png",
+      "image_sha256": "7adf9e2220c4ab05f887ddc6da1872ffe50cb66f57d4ddca790a33723c8e1e01",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/S_walk.png",
+      "source_panel_sha256": "4aaec05e693bb518a4316ffc58424f9deb858460489daadd4bcf0e04185d384b",
+      "source_box": [
+        217,
+        7,
+        554,
+        536
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+      "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+      "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+          "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07659574468085106,
+      "upright_scale": 0.07659574468085106,
+      "normalization": {
+        "scaled_size": [
+          26,
+          41
+        ],
+        "trim_box": [
+          5,
+          13,
+          25,
+          36
+        ],
+        "placement": [
+          38,
+          50
+        ],
+        "resized_to_canvas_offset": [
+          33,
+          37
+        ],
+        "visible_pixels": 273,
+        "rotation_degrees": 0,
+        "scale": 0.07659574468085106,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "kid",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 204,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 22,
+        "gradient_x": -1.6745871794871785,
+        "gradient_y": -2.2152983050847443,
+        "light_angle_degrees": 232.91365460411384,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "kid",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/kid/try3/S/run.png",
+      "image_sha256": "e91588aef5b7cdcb0e6eb84be489c046c6d7eb2be10d2dd46f6bea9ceb1a1667",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/S_run.png",
+      "source_panel_sha256": "a132f404bb5a77b8020322520bf16d7caf6ce87512c63092957d01a7a13303d1",
+      "source_box": [
+        511,
+        77,
+        902,
+        536
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+      "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+      "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+          "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07659574468085106,
+      "upright_scale": 0.07659574468085106,
+      "normalization": {
+        "scaled_size": [
+          30,
+          35
+        ],
+        "trim_box": [
+          3,
+          7,
+          29,
+          27
+        ],
+        "placement": [
+          35,
+          53
+        ],
+        "resized_to_canvas_offset": [
+          32,
+          46
+        ],
+        "visible_pixels": 256,
+        "rotation_degrees": 0,
+        "scale": 0.07659574468085106,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "kid",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 193,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 18,
+        "gradient_x": -1.077144871794872,
+        "gradient_y": -4.399630573248408,
+        "light_angle_degrees": 256.24309335965063,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "kid",
+      "facing": "S",
+      "pose": "graze",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/kid/try3/S/graze.png",
+      "image_sha256": "1bf821fb3a1a81a37a0084990b64f4117f1519bf858b25ad353893e414583490",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/S_graze.png",
+      "source_panel_sha256": "ac145d24a15b3823ee8fa71c254e591a58533aa5ada32c5a036ef12f9fe2c01f",
+      "source_box": [
+        863,
+        21,
+        1198,
+        575
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+      "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+      "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+          "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07659574468085106,
+      "upright_scale": 0.07659574468085106,
+      "normalization": {
+        "scaled_size": [
+          26,
+          42
+        ],
+        "trim_box": [
+          2,
+          13,
+          21,
+          34
+        ],
+        "placement": [
+          38,
+          52
+        ],
+        "resized_to_canvas_offset": [
+          36,
+          39
+        ],
+        "visible_pixels": 253,
+        "rotation_degrees": 0,
+        "scale": 0.07659574468085106,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "kid",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 201,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 20,
+        "gradient_x": -3.811710126582278,
+        "gradient_y": -2.9900474576271185,
+        "light_angle_degrees": 218.1119589724751,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "kid",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/kid/try3/S/dead.png",
+      "image_sha256": "d278f6da3dcb210882becf0b0f43c37f1bca783d3beeb217ce563b085289f696",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/S_dead.png",
+      "source_panel_sha256": "e0d705be60ba8efad788d43dc49c4a7d89b9e71daf159e729365ef730a7bec3f",
+      "source_box": [
+        1123,
+        151,
+        1535,
+        632
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+      "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+      "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+          "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.08781869688385269,
+      "upright_scale": 0.07659574468085106,
+      "normalization": {
+        "scaled_size": [
+          36,
+          42
+        ],
+        "trim_box": [
+          2,
+          14,
+          33,
+          29
+        ],
+        "placement": [
+          32,
+          42
+        ],
+        "resized_to_canvas_offset": [
+          30,
+          28
+        ],
+        "visible_pixels": 291,
+        "rotation_degrees": 0,
+        "scale": 0.08781869688385269,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "kid",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 237,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 13,
+        "gradient_x": -0.8626356164383565,
+        "gradient_y": -3.9777866666666664,
+        "light_angle_degrees": 257.76412117105986,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "kid",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/kid/try3/E/stand.png",
+      "image_sha256": "17494963dcb828ffedb981f0047e164b71c3ea577cc1a060c0d14d0afc01d7a2",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/E_stand.png",
+      "source_panel_sha256": "2731b95a9e55f7a8eaf64c7d3bb0f3b67814c081b9d9977bb24b782fe6f92fac",
+      "source_box": [
+        30,
+        551,
+        340,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+      "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+      "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+          "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07659574468085106,
+      "upright_scale": 0.07659574468085106,
+      "normalization": {
+        "scaled_size": [
+          24,
+          36
+        ],
+        "trim_box": [
+          0,
+          4,
+          20,
+          27
+        ],
+        "placement": [
+          38,
+          50
+        ],
+        "resized_to_canvas_offset": [
+          38,
+          46
+        ],
+        "visible_pixels": 272,
+        "rotation_degrees": 0,
+        "scale": 0.07659574468085106,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "kid",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 212,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 23,
+        "gradient_x": 0.536609580838323,
+        "gradient_y": -2.6344673913043475,
+        "light_angle_degrees": 281.51297117550513,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "kid",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/kid/try3/E/walk.png",
+      "image_sha256": "59c7b834a4c0e00a6f4077a868813bc9b416b3324f02ddfbc6a66b83af548dff",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/E_walk.png",
+      "source_panel_sha256": "78054aa02e6799613b30477cfb5ee3e8bde2d0514a7633c0f813674ac919c3d0",
+      "source_box": [
+        263,
+        533,
+        610,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+      "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+      "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+          "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07659574468085106,
+      "upright_scale": 0.07659574468085106,
+      "normalization": {
+        "scaled_size": [
+          27,
+          38
+        ],
+        "trim_box": [
+          2,
+          5,
+          23,
+          28
+        ],
+        "placement": [
+          37,
+          50
+        ],
+        "resized_to_canvas_offset": [
+          35,
+          45
+        ],
+        "visible_pixels": 272,
+        "rotation_degrees": 0,
+        "scale": 0.07659574468085106,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "kid",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 207,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 22,
+        "gradient_x": 1.7437975460122712,
+        "gradient_y": -4.125078409090907,
+        "light_angle_degrees": 292.91527597883885,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "kid",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/kid/try3/E/run.png",
+      "image_sha256": "ced26848cf3c4eba9d8ea6f982699d51fe4265c1152b4b56532b4ee4877dca1a",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/E_run.png",
+      "source_panel_sha256": "121675e29739b313f4e0d5fef21b0102753b47c09cbee162c6a2273ccd5a1ac6",
+      "source_box": [
+        547,
+        543,
+        926,
+        988
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+      "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+      "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+          "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07659574468085106,
+      "upright_scale": 0.07659574468085106,
+      "normalization": {
+        "scaled_size": [
+          29,
+          34
+        ],
+        "trim_box": [
+          0,
+          5,
+          26,
+          23
+        ],
+        "placement": [
+          35,
+          55
+        ],
+        "resized_to_canvas_offset": [
+          35,
+          50
+        ],
+        "visible_pixels": 223,
+        "rotation_degrees": 0,
+        "scale": 0.07659574468085106,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "kid",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 181,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 17,
+        "gradient_x": 0.09239350649350705,
+        "gradient_y": -5.189264827586206,
+        "light_angle_degrees": 271.0200286301741,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "kid",
+      "facing": "E",
+      "pose": "graze",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/kid/try3/E/graze.png",
+      "image_sha256": "89dc234379c06bb097b4790c4834ffea3f8204ec46b3ebc0a2d14cb1b846f39b",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/E_graze.png",
+      "source_panel_sha256": "a1e6fe07af2e65f36018f3c68cb1c8d84de1c65db404e184142816224ca9bb34",
+      "source_box": [
+        831,
+        567,
+        1152,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+      "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+      "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+          "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07659574468085106,
+      "upright_scale": 0.07659574468085106,
+      "normalization": {
+        "scaled_size": [
+          25,
+          35
+        ],
+        "trim_box": [
+          6,
+          7,
+          25,
+          26
+        ],
+        "placement": [
+          38,
+          54
+        ],
+        "resized_to_canvas_offset": [
+          32,
+          47
+        ],
+        "visible_pixels": 250,
+        "rotation_degrees": 0,
+        "scale": 0.07659574468085106,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "kid",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 194,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 18,
+        "gradient_x": -5.033353459119496,
+        "gradient_y": -0.7787306358381492,
+        "light_angle_degrees": 188.79473447408205,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "kid",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/kid/try3/E/dead.png",
+      "image_sha256": "e6d8fa256ea23a6ea0073fe3d95bcd60e68463b4dd9b57f4aedfdb4ec9efb8f9",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/E_dead.png",
+      "source_panel_sha256": "15498321044443f9c852988a1e30525e54f5951b2cd89462faa4fc8224b91650",
+      "source_box": [
+        1167,
+        633,
+        1530,
+        936
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+      "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+      "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+          "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.09281437125748503,
+      "upright_scale": 0.07659574468085106,
+      "normalization": {
+        "scaled_size": [
+          34,
+          28
+        ],
+        "trim_box": [
+          0,
+          12,
+          33,
+          26
+        ],
+        "placement": [
+          31,
+          43
+        ],
+        "resized_to_canvas_offset": [
+          31,
+          31
+        ],
+        "visible_pixels": 289,
+        "rotation_degrees": 0,
+        "scale": 0.09281437125748503,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "kid",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 242,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 13,
+        "gradient_x": 0.0789999999999997,
+        "gradient_y": -2.849263054187192,
+        "light_angle_degrees": 271.58820268194654,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 10,
+  "contact_sheet": "art/animal/batch_a1/kid/try3/contact_sheet.png",
+  "contact_sheet_sha256": "28b47f49ef0069b79245d6f72088bec6d65063817e5cf2188d0c8e4a2d243384",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

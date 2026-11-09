@@ -4,10 +4,13 @@
 # ///
 # How to run: python3 -m pytest art/animal/batch_a1/test_process.py
 """Exercise the two new failure boundaries without inventing new animal art."""
+from pathlib import Path
+
 import numpy as np
 import pytest
 from PIL import Image
 
+from art.animal.batch_a1 import check, process
 from art.animal.batch_a1.check import inspect_frame, split_attack
 
 
@@ -48,3 +51,55 @@ def test_empty_sprite_cannot_pass_alpha_or_anchor() -> None:
     # When checked, then a valid canvas is insufficient to pass.
     result = inspect_frame(source, False, 56)
     assert result.canvas and not result.alpha and not result.contact
+
+
+@pytest.fixture
+def attack_manifest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Create a complete synthetic pair in an isolated output root."""
+    root = tmp_path / "repo"
+    monkeypatch.setattr(check, "ROOT", root)
+    monkeypatch.setattr(process, "ROOT", root)
+    source = Image.new("RGBA", (100, 60))
+    source.paste((30, 40, 50, 255), (10, 10, 30, 50))
+    source.paste((60, 70, 80, 255), (60, 10, 80, 50))
+    raw = tmp_path / "source.png"
+    source.save(raw)
+    for species, special in (("deer", "graze"), ("wolf", "attack")):
+        for facing in ("S", "E"):
+            folder = root / "art/animal/polish" / species / "try2" / facing
+            folder.mkdir(parents=True)
+            for pose in ("stand", "walk", "run", special, "dead"):
+                source.save(folder / f"{pose}.png")
+    prompt = tmp_path / "prompt.txt"
+    _ = prompt.write_text("Synthetic geometry fixture, not candidate art.\n")
+    record = tmp_path / "generation.json"
+    _ = record.write_text('{"generation": "original"}\n')
+    spec = check.Spec(
+        species="fixture", attempt=1, raw=raw, prompt=prompt,
+        shoulder_y=10, hoof_y=50, shoulder_target=40, dead_length=56,
+        poses=("attack",), references=(raw,), generator_record=record,
+    )
+    spec_path = tmp_path / "spec.json"
+    _ = spec_path.write_text(spec.model_dump_json())
+    manifest = process.process(spec_path)
+    assert check.verify(manifest)
+    return manifest
+
+
+def test_generator_record_change_fails_verification(attack_manifest: Path) -> None:
+    # Given a valid manifest whose generator record matched at creation.
+    document = check.Manifest.model_validate_json(attack_manifest.read_text())
+    record = check.Spec.model_validate(document.spec).generator_record
+    assert record is not None
+    # When its recorded evidence changes, its original digest becomes stale.
+    _ = record.write_text('{"generation": "changed"}\n')
+    # Then verification must reject the changed provenance.
+    assert not check.verify(attack_manifest)
+
+
+def test_generator_record_is_optional(attack_manifest: Path) -> None:
+    # Given a valid manifest from a producer without generator evidence.
+    document = check.Manifest.model_validate_json(attack_manifest.read_text())
+    _ = attack_manifest.write_text(document.model_dump_json(exclude={"generator_record"}))
+    # When checked, then absence of this optional record remains supported.
+    assert check.verify(attack_manifest)

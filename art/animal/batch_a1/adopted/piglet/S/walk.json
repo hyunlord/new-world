@@ -1,0 +1,129 @@
+{
+  "species": "piglet",
+  "facing": "S",
+  "pose": "walk",
+  "attempt": 3,
+  "image": "art/animal/batch_a1/adopted/piglet/S/walk.png",
+  "image_sha256": "8203f80a58892918d9cc6ead5fe975e08aa87891899f7713bd5d7a62e7c49f59",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/piglet/panels/try3/S_walk.png",
+  "source_panel_sha256": "edcc7bef5a8a76e37916cb918350fd91deac6ed8876a26597b76393ae0aaff7d",
+  "source_box": [
+    265,
+    57,
+    578,
+    547
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/piglet/try3.png",
+  "raw_sha256": "dd74166cccf6c58153512dfbdad62930e75fa7784f14fb5dce3672ed5c095495",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/piglet/try3.prompt.txt",
+  "prompt_sha256": "07e28f1d5e69c640ddb805875d9314ad1681712814a927f2c26300d41e49a454",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/piglet/try2.png",
+      "sha256": "417455ade5db56a190732f48f75fe40e72f60784ec5d5f1032a4c9375f39369a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.07407407407407407,
+  "upright_scale": 0.07407407407407407,
+  "normalization": {
+    "scaled_size": [
+      23,
+      36
+    ],
+    "trim_box": [
+      1,
+      10,
+      20,
+      29
+    ],
+    "placement": [
+      38,
+      54
+    ],
+    "resized_to_canvas_offset": [
+      37,
+      44
+    ],
+    "visible_pixels": 230,
+    "rotation_degrees": 0,
+    "scale": 0.07407407407407407,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "piglet",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 190,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 17,
+    "gradient_x": 2.2111950000000005,
+    "gradient_y": -0.42220484848485007,
+    "light_angle_degrees": 349.19007850471326,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "source_status": "CANDIDATE_PENDING_VISUAL_REVIEW",
+  "import_status": "PENDING",
+  "source_image": "art/animal/batch_a1/piglet/try3/S/walk.png",
+  "source_sidecar": "art/animal/batch_a1/piglet/try3/S/walk.json",
+  "source_sidecar_sha256": "3d5e2514a9c548f24352f8a8acf0ae79f611df20da6f1e15ff60b590a7563ec9",
+  "source_manifest": "art/animal/batch_a1/piglet/try3/MANIFEST.json",
+  "source_manifest_sha256": "e4f559bfc0569621c49b62a9b1cff84ab3c3eb8640ea39c0eb492c9230c1decd",
+  "selection": "/Users/rexxa/work/art-batch/A1/selection.json",
+  "selection_sha256": "26850ca9badfb050fa38b075c757eec783039808da0951cf1b59da5fef444805",
+  "review_status": "pass",
+  "review_evidence": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/reviews/horse_dog_pigs_bases.json",
+      "sha256": "84a3ce236f63f59cf2e1373c2d115dc1fd46e7a9220b8db6187bbbbe89c34258"
+    }
+  ],
+  "reference_reuse": false
+}

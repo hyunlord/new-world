@@ -1,0 +1,4858 @@
+{
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "owner_adopted": false,
+  "import_status": "PENDING",
+  "selection": "/Users/rexxa/work/art-batch/A1/selection.json",
+  "selection_sha256": "26850ca9badfb050fa38b075c757eec783039808da0951cf1b59da5fef444805",
+  "review_status": "pass",
+  "frames": [
+    {
+      "species": "cattle",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/cattle/S/stand.png",
+      "image_sha256": "dce5b5462d8c2d4189a90a8429e9f7c272c963f7e9f8a28e0952b1d97c7be2e8",
+      "metadata": "art/animal/batch_a1/adopted/cattle/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "cattle",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/cattle/S/walk.png",
+      "image_sha256": "5da008a699e89754c80d2423c81339b6ce7fa33f8d1f38d77edfba5a19dd5421",
+      "metadata": "art/animal/batch_a1/adopted/cattle/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "cattle",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/cattle/S/run.png",
+      "image_sha256": "2bfd8958587168bdb00b1733b8c1bb3ddd8169a375f95970b2049dcf50dc4aa2",
+      "metadata": "art/animal/batch_a1/adopted/cattle/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "cattle",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/cattle/S/graze.png",
+      "image_sha256": "91c9f948d1aebda0e06c46f326b0ded74d5bfbcb67d6b5f39ab32ffb3b2763db",
+      "metadata": "art/animal/batch_a1/adopted/cattle/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "cattle",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/cattle/S/dead.png",
+      "image_sha256": "91b3eca68cacf2096b8dd240f747f2b21f8a0b974e0da01c6ae53ab2aaab5225",
+      "metadata": "art/animal/batch_a1/adopted/cattle/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "cattle",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/cattle/E/stand.png",
+      "image_sha256": "960c0952612255ebb41ba38246c35efc0447c8ef51fd2c67ef6784e8bffcc5b1",
+      "metadata": "art/animal/batch_a1/adopted/cattle/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "cattle",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/cattle/E/walk.png",
+      "image_sha256": "b6caa41ac8d4452e310984472a5a11c19d419dd75eef0ca770f626df0c3bac7e",
+      "metadata": "art/animal/batch_a1/adopted/cattle/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "cattle",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/cattle/E/run.png",
+      "image_sha256": "3deefae7d251fa6a20fb33aff69f44a71103ef30bd5135f9379d3ccf05485484",
+      "metadata": "art/animal/batch_a1/adopted/cattle/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "cattle",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/cattle/E/graze.png",
+      "image_sha256": "5dfcb8339725b879e8bc3b48db31f54a351efebcf2350715709f649ba6973742",
+      "metadata": "art/animal/batch_a1/adopted/cattle/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "cattle",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/cattle/E/dead.png",
+      "image_sha256": "893958dd15786175eedf1cd201faf33ac41441a7d5db6b0f6cc5a3815f852394",
+      "metadata": "art/animal/batch_a1/adopted/cattle/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/aurochs/S/stand.png",
+      "image_sha256": "89404eb4fc9bb93ff6c97896d2e9a3a7d33c7a84c3272b14175d8bffef5ada4d",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/aurochs/S/walk.png",
+      "image_sha256": "d2dbd4f2b5897a56c196a1a5e1e3749c3ef90eadc4c16e787613299e38a9abc3",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/aurochs/S/run.png",
+      "image_sha256": "427365edf8e90e14961ef531bd351db5ebf08b2342b3c8123c2b60827b711c69",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/aurochs/S/graze.png",
+      "image_sha256": "94e8deef5fa3e529e9da75505648c56570b574e55de4f9ca199c048477a2269e",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/aurochs/S/dead.png",
+      "image_sha256": "6445211cac6aea224c8029d8f96caec5dac2ce645b1a795ccd754b39c4610a7e",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/aurochs/E/stand.png",
+      "image_sha256": "0acf559acf361812a1e579710ea80e52b8b7e7a6aed8ea92773095ffc3fbff45",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/aurochs/E/walk.png",
+      "image_sha256": "a0e1d49c41d5b593569adfbeb59da2b2459924d4dba73301c758bc817ff31ef2",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/aurochs/E/run.png",
+      "image_sha256": "725f3239e56a0c533bab5934de82004b2c6c0244eda9b29ed660c591fdffdb6b",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/aurochs/E/graze.png",
+      "image_sha256": "10831293895c5959c621d7ec5d41e26e7e69ac7c9492fba5e5bccd75f931de58",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/aurochs/E/dead.png",
+      "image_sha256": "053d8c4c083256601d73fa72eb19b6d62cdf377dc56371fb0c8d4203eb9db1ec",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "S",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/aurochs/S/attack.png",
+      "image_sha256": "7e29d8be2d202cbe746c42cff8d6d47d2040be1d1fdb2b49876d5b27a7163d75",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/S/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "aurochs",
+      "facing": "E",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/aurochs/E/attack.png",
+      "image_sha256": "f750e254239b432d8c574f67cf158cb0bc651a1cebefde5c7259020196171077",
+      "metadata": "art/animal/batch_a1/adopted/aurochs/E/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/S/stand.png",
+      "image_sha256": "c37edf3365b118903719669282dc7b428622c2e177d8b1b9010315231fb99f0b",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/S/walk.png",
+      "image_sha256": "1656dd4497218c02b57efd7ab2cf065f75bfb9ae1b80176ff34df482874ba5e1",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/S/run.png",
+      "image_sha256": "cb476c1f595c0f654148ec8a69a779198b4089d30526dd270f8a045facde0f89",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/S/graze.png",
+      "image_sha256": "f8ead0bfef5bf24f4015c6673fa45a26479bec2afa3c27e27a80df5efde7d0d8",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/S/dead.png",
+      "image_sha256": "156194ac439f6e99b243e674c1cbe6173c29c953e361eb411cd60aa410c2d8e2",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/E/stand.png",
+      "image_sha256": "4df3eb7fcdf1c6654966bba447a2206565224d0a241440a27cdb49ff51239719",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/E/walk.png",
+      "image_sha256": "e297658060d897e8904abd4d434003bc8ea5ab85b7fa7d1a5708ad88fdd979ba",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/E/run.png",
+      "image_sha256": "aa5a13d865b95b6233bb1c65d43c399b28ff096ab4cc2cf101c39049d73d291a",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/E/graze.png",
+      "image_sha256": "e8911759c926c88eb4ad1bb0a35b43d3c9e41261b4236a1d351019a9bfe97e33",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/E/dead.png",
+      "image_sha256": "f05abd78c23d4756e1f81c931e2ef4855d7b145697ab101d2dcd1bce613a66c1",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "S",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/S/attack.png",
+      "image_sha256": "4b319c14beb6c31e2b76ae7d4c5bb54538bf8b2db2811a7ea8932d7b186262f5",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/S/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_fleeced",
+      "facing": "E",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/sheep_fleeced/E/attack.png",
+      "image_sha256": "52fee2af1e9856aa7ccc12975b04ffd102e0093a906adadcef3389ce34bfab00",
+      "metadata": "art/animal/batch_a1/adopted/sheep_fleeced/E/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_shorn",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/sheep_shorn/S/stand.png",
+      "image_sha256": "25ee2a7f3e0199f90369eed318abd56a4dbf5281789dce9a06389637c1b28b05",
+      "metadata": "art/animal/batch_a1/adopted/sheep_shorn/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_shorn",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/sheep_shorn/S/walk.png",
+      "image_sha256": "8107ea2563d39ae6b8df55f47233cc685c8d013d12dcf92c7ea09801cb64080e",
+      "metadata": "art/animal/batch_a1/adopted/sheep_shorn/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_shorn",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/sheep_shorn/S/run.png",
+      "image_sha256": "3e70f4eadf8b4ecd8b1696345b90d7a70228f40d297b9408f37c6837e0bb8c33",
+      "metadata": "art/animal/batch_a1/adopted/sheep_shorn/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_shorn",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/sheep_shorn/S/graze.png",
+      "image_sha256": "90cdc679a88ecd3cd39f763f752b7e80f9fa81fb670b6147da30145468d094b6",
+      "metadata": "art/animal/batch_a1/adopted/sheep_shorn/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_shorn",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/sheep_shorn/S/dead.png",
+      "image_sha256": "0e08a061570b8abe1e39e0791056aac017c33346e569b9cef93cc7e1379e6e17",
+      "metadata": "art/animal/batch_a1/adopted/sheep_shorn/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_shorn",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/sheep_shorn/E/stand.png",
+      "image_sha256": "8063e4852f84414f5d464155c61e145393ac9ce797d9d3fe90b89b0f7e9fb1c3",
+      "metadata": "art/animal/batch_a1/adopted/sheep_shorn/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_shorn",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/sheep_shorn/E/walk.png",
+      "image_sha256": "df11222250454b8ee1587d9172065aa1bd255fce3aa7060dc072685c7089a69e",
+      "metadata": "art/animal/batch_a1/adopted/sheep_shorn/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_shorn",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/sheep_shorn/E/run.png",
+      "image_sha256": "51fc76f4f7fefb58e9df9a801fad632bfb3eb4533f10fd7d14d61039656e750f",
+      "metadata": "art/animal/batch_a1/adopted/sheep_shorn/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_shorn",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/sheep_shorn/E/graze.png",
+      "image_sha256": "c5a1d74c173be29e27e10770f8fc0427295cb3a8a6a148cc9a07c599611104e1",
+      "metadata": "art/animal/batch_a1/adopted/sheep_shorn/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "sheep_shorn",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/sheep_shorn/E/dead.png",
+      "image_sha256": "007e6dd89693ee364561caf5cd20dd538357895a6e3769d95236f431f85f2ef0",
+      "metadata": "art/animal/batch_a1/adopted/sheep_shorn/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "calf",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/calf/S/stand.png",
+      "image_sha256": "f4b4787f73bb0a5a847cc783b0934d8226a068cab9d300f7d7318e7363867f41",
+      "metadata": "art/animal/batch_a1/adopted/calf/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "calf",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/calf/S/walk.png",
+      "image_sha256": "fbc5e10443ff675b26c8a1c56cde7eaddc8f75bfc75104535150eeada1005c6a",
+      "metadata": "art/animal/batch_a1/adopted/calf/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "calf",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/calf/S/run.png",
+      "image_sha256": "e4e000da7fd77ccab8bd38e7e0cc1c735ce3594161b8ab41eab82628ce9b7701",
+      "metadata": "art/animal/batch_a1/adopted/calf/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "calf",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/calf/S/graze.png",
+      "image_sha256": "5f0d4cd18d4a92d131ef50e4b83b197f8beb2c08a8207094454077c15d319f8a",
+      "metadata": "art/animal/batch_a1/adopted/calf/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "calf",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/calf/S/dead.png",
+      "image_sha256": "7fa2d584e983137e2532cec5e1843ae13dfe754c6c217c0f73cac8fd285c8b35",
+      "metadata": "art/animal/batch_a1/adopted/calf/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "calf",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/calf/E/stand.png",
+      "image_sha256": "56ec568e076a8ad65ff95682587cc5da4ec7f4f87d8ed2aa1300b59dfcf1e4de",
+      "metadata": "art/animal/batch_a1/adopted/calf/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "calf",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/calf/E/walk.png",
+      "image_sha256": "d01438ae3ed876d92e268c8533ae9d69771085d77e39ac65f86f4113d0f429aa",
+      "metadata": "art/animal/batch_a1/adopted/calf/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "calf",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/calf/E/run.png",
+      "image_sha256": "6372e498ed23b5d52ab5f43a29458518fbc833a3b0e031a365c7b02bef165d6d",
+      "metadata": "art/animal/batch_a1/adopted/calf/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "calf",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/calf/E/graze.png",
+      "image_sha256": "73960f95198bf90dd743383f531a70e78377747a6db77a80eb6e45c8d0076254",
+      "metadata": "art/animal/batch_a1/adopted/calf/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "calf",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/calf/E/dead.png",
+      "image_sha256": "4b4b1ecbf57aacfe57e85731be7093540194bf15b58077cb4d3414c4f81d7272",
+      "metadata": "art/animal/batch_a1/adopted/calf/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/goat/S/stand.png",
+      "image_sha256": "cf1eb9dc5a8041c4c7ca18c1f03e9abf3f25cd88e7efe99f0718584d7a30e84f",
+      "metadata": "art/animal/batch_a1/adopted/goat/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/goat/S/walk.png",
+      "image_sha256": "99a900467101934d1a6b6e06d77a1053f0f3907c858dbfa2fc6f34f7d162a808",
+      "metadata": "art/animal/batch_a1/adopted/goat/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/goat/S/run.png",
+      "image_sha256": "46869615d4e8143bd34cb4253ae20d2843b57a4a5bc1505c7e8b1d6528eba6b0",
+      "metadata": "art/animal/batch_a1/adopted/goat/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/goat/S/graze.png",
+      "image_sha256": "882fe6eb67d7d26ded15374fb9df68231d2c0694059d9d32c1ba678422b6dc34",
+      "metadata": "art/animal/batch_a1/adopted/goat/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/goat/S/dead.png",
+      "image_sha256": "76d704c4d3ac9afd26da17c8d235a828d184aaef661581fcd7b45fd59bf5a83b",
+      "metadata": "art/animal/batch_a1/adopted/goat/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/goat/E/stand.png",
+      "image_sha256": "94ea0d56a6bf79c2f8c8bc0274f6bfa740ddee03aef73eb35f6a500e327be5f9",
+      "metadata": "art/animal/batch_a1/adopted/goat/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/goat/E/walk.png",
+      "image_sha256": "c8bb5e1d831fdb043bac77846ccd592d7498df46473e61cdebcfff523dfbacc3",
+      "metadata": "art/animal/batch_a1/adopted/goat/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/goat/E/run.png",
+      "image_sha256": "2a09e8d1e661b6618ee81f7ea9c619a1c61b8050ee0f2716383ced81b2b5793d",
+      "metadata": "art/animal/batch_a1/adopted/goat/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/goat/E/graze.png",
+      "image_sha256": "e8686d0bc65091d3c25b6bb9f44ece3ea0ea5f0ee7be8387958a907953a9890d",
+      "metadata": "art/animal/batch_a1/adopted/goat/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/goat/E/dead.png",
+      "image_sha256": "85fed97fe3c689d71cfe0e15307f45418a5309589f248329f7fc7bccc977cbeb",
+      "metadata": "art/animal/batch_a1/adopted/goat/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/goat/S/attack.png",
+      "image_sha256": "7c3b0deab77c06248d8896723f14393c81bc1bf87d0aa8a93451696450492221",
+      "metadata": "art/animal/batch_a1/adopted/goat/S/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/goat/E/attack.png",
+      "image_sha256": "e690b406ecd88a79a8baef4b911a713d2bfada5ca26b9c831b510dbeefda78b9",
+      "metadata": "art/animal/batch_a1/adopted/goat/E/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "kid",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/kid/S/stand.png",
+      "image_sha256": "9ed4856850fd922abe2383036292a91fa5307374e902740fd17c1b3b021032ad",
+      "metadata": "art/animal/batch_a1/adopted/kid/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "kid",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/kid/S/walk.png",
+      "image_sha256": "7adf9e2220c4ab05f887ddc6da1872ffe50cb66f57d4ddca790a33723c8e1e01",
+      "metadata": "art/animal/batch_a1/adopted/kid/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "kid",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/kid/S/run.png",
+      "image_sha256": "e91588aef5b7cdcb0e6eb84be489c046c6d7eb2be10d2dd46f6bea9ceb1a1667",
+      "metadata": "art/animal/batch_a1/adopted/kid/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "kid",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/kid/S/graze.png",
+      "image_sha256": "1bf821fb3a1a81a37a0084990b64f4117f1519bf858b25ad353893e414583490",
+      "metadata": "art/animal/batch_a1/adopted/kid/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "kid",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/kid/S/dead.png",
+      "image_sha256": "d278f6da3dcb210882becf0b0f43c37f1bca783d3beeb217ce563b085289f696",
+      "metadata": "art/animal/batch_a1/adopted/kid/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "kid",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/kid/E/stand.png",
+      "image_sha256": "17494963dcb828ffedb981f0047e164b71c3ea577cc1a060c0d14d0afc01d7a2",
+      "metadata": "art/animal/batch_a1/adopted/kid/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "kid",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/kid/E/walk.png",
+      "image_sha256": "59c7b834a4c0e00a6f4077a868813bc9b416b3324f02ddfbc6a66b83af548dff",
+      "metadata": "art/animal/batch_a1/adopted/kid/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "kid",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/kid/E/run.png",
+      "image_sha256": "ced26848cf3c4eba9d8ea6f982699d51fe4265c1152b4b56532b4ee4877dca1a",
+      "metadata": "art/animal/batch_a1/adopted/kid/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "kid",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/kid/E/graze.png",
+      "image_sha256": "89dc234379c06bb097b4790c4834ffea3f8204ec46b3ebc0a2d14cb1b846f39b",
+      "metadata": "art/animal/batch_a1/adopted/kid/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "kid",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/kid/E/dead.png",
+      "image_sha256": "e6d8fa256ea23a6ea0073fe3d95bcd60e68463b4dd9b57f4aedfdb4ec9efb8f9",
+      "metadata": "art/animal/batch_a1/adopted/kid/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "lamb",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/lamb/S/stand.png",
+      "image_sha256": "7ae5391fa05d80e3983ff63ccd00295ebffbb2ed57c2581c7cbcb9d7cd4516ab",
+      "metadata": "art/animal/batch_a1/adopted/lamb/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "lamb",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/lamb/S/walk.png",
+      "image_sha256": "e96ca360e3b1c7bdf415b4828899b6e361f8b9287f6f6cff88e8c1824b216b6e",
+      "metadata": "art/animal/batch_a1/adopted/lamb/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "lamb",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/lamb/S/run.png",
+      "image_sha256": "1e2a1265a79bc832064bea2ddb775c3464bebdde1dd22d2d5334224a7d4d8084",
+      "metadata": "art/animal/batch_a1/adopted/lamb/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "lamb",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/lamb/S/graze.png",
+      "image_sha256": "83bfc8de770e49b94558ea99147fc739626e77c41d4ee161333dd4264283ce79",
+      "metadata": "art/animal/batch_a1/adopted/lamb/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "lamb",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/lamb/S/dead.png",
+      "image_sha256": "cca2335e60e2155d909df085a0a30fb130ff257adb72f2b4390822de5d478046",
+      "metadata": "art/animal/batch_a1/adopted/lamb/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "lamb",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/lamb/E/stand.png",
+      "image_sha256": "a21bb2ef27dfb7dc8ea1f8a5a08a3c3275dbee437eb60d38c4d0124ce82fc9ae",
+      "metadata": "art/animal/batch_a1/adopted/lamb/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "lamb",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/lamb/E/walk.png",
+      "image_sha256": "1147acf190104286c89960cc71a077756b0cfae3869f250e4a182db6680ca2fd",
+      "metadata": "art/animal/batch_a1/adopted/lamb/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "lamb",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/lamb/E/run.png",
+      "image_sha256": "5322692f3c7117dd336e2ebcc8e75cca8cddc811c7509ad0dc456254a843b9a4",
+      "metadata": "art/animal/batch_a1/adopted/lamb/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "lamb",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/lamb/E/graze.png",
+      "image_sha256": "c9adaf891082290bb2f8ee2b89b7f27e94147a3946271f421b4540b107341184",
+      "metadata": "art/animal/batch_a1/adopted/lamb/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "lamb",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/lamb/E/dead.png",
+      "image_sha256": "707b628f46a738b2d1fd278744810ba03d688a566720023aca3640b8944719b0",
+      "metadata": "art/animal/batch_a1/adopted/lamb/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/wild_boar/S/stand.png",
+      "image_sha256": "fd66f6b198ad54858390164b8ab310cb9161919f5ed3fd8dc8110f13d7f9d08c",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/wild_boar/S/walk.png",
+      "image_sha256": "ebefdbd9c56d075a52ae337dd0e2c278cd0462dd1c490d39c5be6eb18a688240",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/wild_boar/S/run.png",
+      "image_sha256": "5b902dc542b7e4f9a942d59e6f9a45605c2b6a62cb75ccd20a8c69e0454b08d4",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/wild_boar/S/graze.png",
+      "image_sha256": "5393fc6cbe6882c87fdbb95246044451a446a60b76e4833ad97b80387b5810fe",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/wild_boar/S/dead.png",
+      "image_sha256": "3b175512e0a14f9375c1534f5e79a89a6fa02eed0d13947d18418ba169c35984",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/wild_boar/E/stand.png",
+      "image_sha256": "886230aab874dc3ebf527e15753aff922c841e951bfad07d062ffe2b7312a608",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/wild_boar/E/walk.png",
+      "image_sha256": "a575eb3881de59ca422058cd0d937a73dccef9cb54b0c3df10d35196a8b243aa",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/wild_boar/E/run.png",
+      "image_sha256": "5cc12e1148750a48454050210c79905a9ad11b6c83dc07ef56fc739f22fa1925",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/wild_boar/E/graze.png",
+      "image_sha256": "c57c1959e51da29dfd49075c8a0e52ba53e33f4a5cfa864c735d8d9f4a470043",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/wild_boar/E/dead.png",
+      "image_sha256": "77d35945748aae7617677853b771e93bc121ced1ef0691a779e8f779e8e2dcb7",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "S",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/wild_boar/S/attack.png",
+      "image_sha256": "d2fd67b2643e22f22740483645c0a3e91b67a2d1bafde733451e0e3e795aa9b4",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/S/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "E",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/wild_boar/E/attack.png",
+      "image_sha256": "15b74b56d9db64e4fe28c51464b162d5d4ca97f6141944b64af397d55e706f67",
+      "metadata": "art/animal/batch_a1/adopted/wild_boar/E/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "pig",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/pig/S/stand.png",
+      "image_sha256": "e1ab73f4137db6608aa4bbcdb889e5192d926c3f671c1515157caf45b9c24e0f",
+      "metadata": "art/animal/batch_a1/adopted/pig/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "pig",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/pig/S/walk.png",
+      "image_sha256": "e819fd7dae3abc0884a01473fd93637eee36815f9da23acfaf49646b68792cd2",
+      "metadata": "art/animal/batch_a1/adopted/pig/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "pig",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/pig/S/run.png",
+      "image_sha256": "5d20ba19ed6ff81149b8a0a4163367a26af9ed8144df606b2a26703cf985c8ef",
+      "metadata": "art/animal/batch_a1/adopted/pig/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "pig",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/pig/S/graze.png",
+      "image_sha256": "bc7f0d65a57975490d5e0353e29670b728e849515a93afba96c839dd26530ac1",
+      "metadata": "art/animal/batch_a1/adopted/pig/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "pig",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/pig/S/dead.png",
+      "image_sha256": "c76d02073cc5bcca29589b5012d370cb2cff625a92592a887bfb3b657721381a",
+      "metadata": "art/animal/batch_a1/adopted/pig/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "pig",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/pig/E/stand.png",
+      "image_sha256": "877b6dd956f65999ad486be59d3e6510aad091822982d65c30c50073bb57edbe",
+      "metadata": "art/animal/batch_a1/adopted/pig/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "pig",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/pig/E/walk.png",
+      "image_sha256": "57fdb6d53779c60cb1afe77a8e4f9c8efc1034d0846de8ab9d95c73fa4a0c25d",
+      "metadata": "art/animal/batch_a1/adopted/pig/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "pig",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/pig/E/run.png",
+      "image_sha256": "039eeb3e0b66cb31b23c5c84d7d5baa289cc4f503a90c2d098589f7ef02530f7",
+      "metadata": "art/animal/batch_a1/adopted/pig/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "pig",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/pig/E/graze.png",
+      "image_sha256": "6bee5842c5456db748235b38f172590f9b80aae3b3567c230fcf11618792a255",
+      "metadata": "art/animal/batch_a1/adopted/pig/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "pig",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/pig/E/dead.png",
+      "image_sha256": "dcb833dec4e1822268eb78693e835455e8fe3cb8162ed0792405f87f89d562de",
+      "metadata": "art/animal/batch_a1/adopted/pig/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "piglet",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/piglet/S/stand.png",
+      "image_sha256": "09ee18988dfe0ece83596ea4e5cc99e2e2990ef84568cd9fc1b668142788ec65",
+      "metadata": "art/animal/batch_a1/adopted/piglet/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "piglet",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/piglet/S/walk.png",
+      "image_sha256": "8203f80a58892918d9cc6ead5fe975e08aa87891899f7713bd5d7a62e7c49f59",
+      "metadata": "art/animal/batch_a1/adopted/piglet/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "piglet",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/piglet/S/run.png",
+      "image_sha256": "29604963f91bfbca4c5363275453dc16766fa410ced7abd9c3d6e9e083e825c5",
+      "metadata": "art/animal/batch_a1/adopted/piglet/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "piglet",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/piglet/S/graze.png",
+      "image_sha256": "a4de65afe8f4720bc1ef4099a088ef826db4c383b6808827a86fe98ca69ab8e6",
+      "metadata": "art/animal/batch_a1/adopted/piglet/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "piglet",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/piglet/S/dead.png",
+      "image_sha256": "f04e881d1ad1441d398691d869b3d87083474918ceb360be4e3f38138613c767",
+      "metadata": "art/animal/batch_a1/adopted/piglet/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "piglet",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/piglet/E/stand.png",
+      "image_sha256": "517920d0fe4e68c7549aa80117b03f06ed49b978fc02069b75bf832bbbac728a",
+      "metadata": "art/animal/batch_a1/adopted/piglet/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "piglet",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/piglet/E/walk.png",
+      "image_sha256": "d25be6a8c2948ef50252524c1c327af51bbbf59925556c98a1c652b69a4fcc8c",
+      "metadata": "art/animal/batch_a1/adopted/piglet/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "piglet",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/piglet/E/run.png",
+      "image_sha256": "81c6df237a122fa3b58de97a882ccb543534bb1124e418fc7c1d00c5b4b72530",
+      "metadata": "art/animal/batch_a1/adopted/piglet/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "piglet",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/piglet/E/graze.png",
+      "image_sha256": "be19b2303cd00939740801436ab2c018f251faee9403f0fe602c608a4f873715",
+      "metadata": "art/animal/batch_a1/adopted/piglet/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "piglet",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/piglet/E/dead.png",
+      "image_sha256": "3324f9713bb77a04503dd39388f8e49074eeb829941f413a6b8cb0eb0a1944c9",
+      "metadata": "art/animal/batch_a1/adopted/piglet/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/reindeer/S/stand.png",
+      "image_sha256": "f093b48611eb39aa3702136a9f7cf1dd8c101343e3aa6d5c0a3b51a326e43cd0",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/reindeer/S/walk.png",
+      "image_sha256": "e038b3fa96935bae4e5f345d4f605b8d8ea2b8be727043448839d31f417114e2",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/reindeer/S/run.png",
+      "image_sha256": "bed5fe6a49dabc0061136445ee220f7476fe92c27749e709f61cb374a739aeca",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/reindeer/S/graze.png",
+      "image_sha256": "17c3346658f3b6ea17ba159a6b0745047cf3c65a6a35e21f898c9faa25d503bc",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/reindeer/S/dead.png",
+      "image_sha256": "bb14f454758d042f4e427e772efe679f068ad2ba5dfb23f60272348c9273cd30",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/reindeer/E/stand.png",
+      "image_sha256": "dbe6098b0609a1a05b1d55a914e10dcbfb66f3965dae5c4db7413726b11de435",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/reindeer/E/walk.png",
+      "image_sha256": "bd1ae6b3f3dbdecc2bf7489ed6e130e6674841079bada037e9ddfb085db8dcf2",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/reindeer/E/run.png",
+      "image_sha256": "b66da6a16a89e4df1ec1ff01d10ff1ad7b9dfa1e292f40d73f00583f6b30d79f",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/reindeer/E/graze.png",
+      "image_sha256": "681c4387ea5939524175a256e12903da5d501ada224bdee5b5628cc47b1644de",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/reindeer/E/dead.png",
+      "image_sha256": "b6fb865e61539be524962be29ce48181a3bf4242ef53f081669ec209bb91a924",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "S",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/reindeer/S/attack.png",
+      "image_sha256": "5c9d95420606cbe549f1059d86d9b3b146a1468933d66843a094bc6a285d98d6",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/S/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer",
+      "facing": "E",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/reindeer/E/attack.png",
+      "image_sha256": "96d58a0f4cac34341615e2461ebaf8df240ac61163731ab2ef6819620523ba1b",
+      "metadata": "art/animal/batch_a1/adopted/reindeer/E/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "dog",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/dog/S/stand.png",
+      "image_sha256": "4b60111f9ee512731395e235276c760c88d3e87428429122bc8777cfa5863f11",
+      "metadata": "art/animal/batch_a1/adopted/dog/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "dog",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/dog/S/walk.png",
+      "image_sha256": "a9d01a5d707ffadeaa0a84b3de84ecddb916d87abcc62e47243663b4cb78a4b0",
+      "metadata": "art/animal/batch_a1/adopted/dog/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "dog",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/dog/S/run.png",
+      "image_sha256": "3ecc47be7fb4e1f6d89c1289e7688da1295f642d8a57cabbef67c235e230c1f9",
+      "metadata": "art/animal/batch_a1/adopted/dog/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "dog",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/dog/S/graze.png",
+      "image_sha256": "ca1befe8147cab4cbd547aa8322d821b3436519302d3f038c3bc364922ab8d6b",
+      "metadata": "art/animal/batch_a1/adopted/dog/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "dog",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/dog/S/dead.png",
+      "image_sha256": "b865f160fd07a87df013c9747e6acc3cb87d19666ec0d21d3fc5dfc0dd6419df",
+      "metadata": "art/animal/batch_a1/adopted/dog/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "dog",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/dog/E/stand.png",
+      "image_sha256": "65dae888e79a170fae1ec0e722a227dad64ae793994ba5a62476eb915d9167a9",
+      "metadata": "art/animal/batch_a1/adopted/dog/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "dog",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/dog/E/walk.png",
+      "image_sha256": "65744fc8b6ae79c0f888c205296d0db264db354ac171b0a8b6d19e92a1930b4e",
+      "metadata": "art/animal/batch_a1/adopted/dog/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "dog",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/dog/E/run.png",
+      "image_sha256": "af10055cef11efab5bf8eaba274379d6e2bb5d16d1b9d71833fe1191098dc605",
+      "metadata": "art/animal/batch_a1/adopted/dog/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "dog",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/dog/E/graze.png",
+      "image_sha256": "ae2862ce8a63c5b0fb49704ef23a8330cdce222999c60d65ffebe4ff8c26bf63",
+      "metadata": "art/animal/batch_a1/adopted/dog/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "dog",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/dog/E/dead.png",
+      "image_sha256": "060069486221f4cd67383bdf20645fd62a606835972e4aea1fd45ed69557d1b0",
+      "metadata": "art/animal/batch_a1/adopted/dog/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "chicken",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/chicken/S/stand.png",
+      "image_sha256": "fe1571b30f7f57779a03762f6e08c93ba4a52ab7bc6fff952e0c01c5791b0959",
+      "metadata": "art/animal/batch_a1/adopted/chicken/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "chicken",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/chicken/S/walk.png",
+      "image_sha256": "edcdacd3fbf3466e1df3ad496cc5cd8e71eb0a24b6d764ed32f9b1ddbc0d8c5c",
+      "metadata": "art/animal/batch_a1/adopted/chicken/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "chicken",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/chicken/S/run.png",
+      "image_sha256": "5ffc824bcad0110258c3683f6858f8c5e99f7a6782ca1512fa63d7ed11fbf98a",
+      "metadata": "art/animal/batch_a1/adopted/chicken/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "chicken",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/chicken/S/graze.png",
+      "image_sha256": "6d7b0355e271a6375a6a68a3d778ff0a06b88104adc2e957c5c193cae7c935f2",
+      "metadata": "art/animal/batch_a1/adopted/chicken/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "chicken",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/chicken/S/dead.png",
+      "image_sha256": "60261785dd5d3bddeb503846e26b7ae57f4188b9ac0501f2ded46d58ae7690ae",
+      "metadata": "art/animal/batch_a1/adopted/chicken/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "chicken",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/chicken/E/stand.png",
+      "image_sha256": "57a5dadd631239a31464a375ba5e0c88d13142e07781c32eaa9cc1a3b56517e6",
+      "metadata": "art/animal/batch_a1/adopted/chicken/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "chicken",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/chicken/E/walk.png",
+      "image_sha256": "bd536e3ef278984165368b0b0a5542462ca7dc25bda9b46b44a39a8e4812d435",
+      "metadata": "art/animal/batch_a1/adopted/chicken/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "chicken",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/chicken/E/run.png",
+      "image_sha256": "81e6b88d16569b959f9dc52f37a50bba224297810394fe3b4472e1b850903b05",
+      "metadata": "art/animal/batch_a1/adopted/chicken/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "chicken",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/chicken/E/graze.png",
+      "image_sha256": "98886d875d5f256772324c0deee11f72bb98620825eab8acf6192b817fd07921",
+      "metadata": "art/animal/batch_a1/adopted/chicken/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "chicken",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/chicken/E/dead.png",
+      "image_sha256": "909b24edd4960c002d4c98b85f699508bb8ec565b268e4cb98ec7c5bad2fd504",
+      "metadata": "art/animal/batch_a1/adopted/chicken/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/junglefowl/S/stand.png",
+      "image_sha256": "c55a2a6ceadee34795fe1dd1cc9118cb01bb3008b88fd053b52264ce02c37bfa",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/junglefowl/S/walk.png",
+      "image_sha256": "ab42847117e8260ffd07e25163336e9251fecd5afd2fb615afa2750858d281dd",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/junglefowl/S/run.png",
+      "image_sha256": "4f5a68269eac8e8cf99789bc42effa2f4d968092e3d7e37c34fee3a2b44b4958",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/junglefowl/S/graze.png",
+      "image_sha256": "d44252d1ef116793ac1c44917cc70d187c1b217c75942823ee2eadafee32dcf2",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/junglefowl/S/dead.png",
+      "image_sha256": "344f30e9e29da6dc378740ce6f6649a83ac33b58fc41ac06b848fc4069989671",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/junglefowl/E/stand.png",
+      "image_sha256": "90daffedd7bca4df29e8087af9f6d0762a3e9af38b2363478cf70852a82e3f58",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/junglefowl/E/walk.png",
+      "image_sha256": "65454722a1233150399a5a534ab246d4c1d6bb6ce0e354b73f4d39ee578cac81",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/junglefowl/E/run.png",
+      "image_sha256": "29c969eb6d62c00d3b7b09368ed855f7d7571392360ed1db87955d10d26a6099",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/junglefowl/E/graze.png",
+      "image_sha256": "b3fe9d037f16fa96268e0ee2819db81b12a99fb5135c620367dfcf546ed6653b",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/junglefowl/E/dead.png",
+      "image_sha256": "523f73e9c148b307442428219955044d3265ef518c65819b70f4bc0cfa6a55f8",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "S",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/junglefowl/S/attack.png",
+      "image_sha256": "1e8130369fe31d320ac1b5951a318b5da0fbad4d868e214cdf574856b8ca6943",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/S/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "E",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/junglefowl/E/attack.png",
+      "image_sha256": "9e9b6d3de7ed7e76ae9f584e1f7a3ceaee02eb7fe8e56ab0c1de08e615f6eabe",
+      "metadata": "art/animal/batch_a1/adopted/junglefowl/E/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "donkey",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/donkey/S/stand.png",
+      "image_sha256": "f5eb008376a0cea33ca2523ede6754626af220f238d585b61fe0ae463d0df292",
+      "metadata": "art/animal/batch_a1/adopted/donkey/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "donkey",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/donkey/S/walk.png",
+      "image_sha256": "42f797d332d9095870b2f8db6b4bbd8bca32f97ab3843bbb0072bae0cf8906c8",
+      "metadata": "art/animal/batch_a1/adopted/donkey/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "donkey",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/donkey/S/run.png",
+      "image_sha256": "83563f2e35974034c0da9f106b11039bc010ed5d6faaaf6166716de0edad1883",
+      "metadata": "art/animal/batch_a1/adopted/donkey/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "donkey",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/donkey/S/graze.png",
+      "image_sha256": "212bee80cddd157240e2962b2b77a41d420ce3fb0a391aab760cd24ee6ef10b6",
+      "metadata": "art/animal/batch_a1/adopted/donkey/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "donkey",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/donkey/S/dead.png",
+      "image_sha256": "bc7bfc2b9421d2eaca4d7108daaf8cbc033b56885affbdb473aa3382c00df172",
+      "metadata": "art/animal/batch_a1/adopted/donkey/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "donkey",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/donkey/E/stand.png",
+      "image_sha256": "3a0483f35303255a92457b94976a225ff7ee3883fe03ead680279f5e182af91d",
+      "metadata": "art/animal/batch_a1/adopted/donkey/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "donkey",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/donkey/E/walk.png",
+      "image_sha256": "65c34d01f178731cfe78c0bc403dc14c5c20f5b7dac140b1abc78a214320fe75",
+      "metadata": "art/animal/batch_a1/adopted/donkey/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "donkey",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/donkey/E/run.png",
+      "image_sha256": "ed8c219f32a78ffbf8cafa803b938c68eb8cef9fe07a549cb73f0497f5ebf116",
+      "metadata": "art/animal/batch_a1/adopted/donkey/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "donkey",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/donkey/E/graze.png",
+      "image_sha256": "4f175d43f523a2ccb06244d39e60fcf1ea38c56a9ffde5847f4937fe5949ecb5",
+      "metadata": "art/animal/batch_a1/adopted/donkey/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "donkey",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/donkey/E/dead.png",
+      "image_sha256": "869556f696b7c5fee3821da84f3ff0776d3ba783b71b9e0a6538c1434b57ab40",
+      "metadata": "art/animal/batch_a1/adopted/donkey/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/horse/S/stand.png",
+      "image_sha256": "5392b911ae32b1a17891dfee70cedef68d2127ebeff79d7e2c1f35fb3b49c1e8",
+      "metadata": "art/animal/batch_a1/adopted/horse/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/horse/S/walk.png",
+      "image_sha256": "c41c1e4aff7655ca53f15145e84b001aa832e50a10cf7a1bf63fbd1a5c04baf4",
+      "metadata": "art/animal/batch_a1/adopted/horse/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/horse/S/run.png",
+      "image_sha256": "53afd513a513b437309c516b8303fa3142d00b2ad01ec6b582797c535d249621",
+      "metadata": "art/animal/batch_a1/adopted/horse/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/horse/S/graze.png",
+      "image_sha256": "bbf54b28ab7f97b73be1a58b0e0858757c067bb2471336d396b53761b9a70dab",
+      "metadata": "art/animal/batch_a1/adopted/horse/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/horse/S/dead.png",
+      "image_sha256": "e87b617b9b71a3d797ac4fb4ea65a409fe92a1fc17100de44556de208a4535dc",
+      "metadata": "art/animal/batch_a1/adopted/horse/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/horse/E/stand.png",
+      "image_sha256": "41d2e30d93ba6c2a25c643585100a5b7fe2a09f4fefc86d874c9d5edc68632ce",
+      "metadata": "art/animal/batch_a1/adopted/horse/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/horse/E/walk.png",
+      "image_sha256": "2a1b92d7a7952387694aa61a9973d5111d7134ae1df04e1326f8ab16a7529eef",
+      "metadata": "art/animal/batch_a1/adopted/horse/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/horse/E/run.png",
+      "image_sha256": "a61a6172adc715f2be46c21235e1a481c379b0c84ef8e363cba8b26be2773b23",
+      "metadata": "art/animal/batch_a1/adopted/horse/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/horse/E/graze.png",
+      "image_sha256": "82f3031cb6674a46ed582672fc907ae0394d547f560ad653868716ef73e377d7",
+      "metadata": "art/animal/batch_a1/adopted/horse/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/horse/E/dead.png",
+      "image_sha256": "07f28d254173c260d2f245dfbfaddc9437dce95b3e69cdffeedff5c62c711ee4",
+      "metadata": "art/animal/batch_a1/adopted/horse/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "S",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/horse/S/attack.png",
+      "image_sha256": "e97e35b18cd18a27437c8b333dd8c82b29293f7eb26d39e855450cfc2700cbfc",
+      "metadata": "art/animal/batch_a1/adopted/horse/S/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "horse",
+      "facing": "E",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/horse/E/attack.png",
+      "image_sha256": "d3788649fddf634dd5e8e3eadce4504b3590369ad3dcf5c39fb9f637d1260de4",
+      "metadata": "art/animal/batch_a1/adopted/horse/E/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/S/stand.png",
+      "image_sha256": "00e91b5b8bcf701f20096d5cd50f25ff0be58ee5f82759c42b2e4bf6eebecebc",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/S/walk.png",
+      "image_sha256": "096ad962f6de25b500a61d91ab5531eb7592b07a3e66a8ee9a63a049c9523222",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/S/run.png",
+      "image_sha256": "83048b1f1d5afbda21375de7921d3a8ac7f27944f866bbc0ab6f8fd5aea172de",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/S/graze.png",
+      "image_sha256": "8dc73d678987babde6d1021c9fcfa67ea51dc422c4aedf4e3237a88221a36fd9",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/S/dead.png",
+      "image_sha256": "b28c684305aae03e5a7970a73584d0862c4b64dd15d25bf109a3774e66d8058e",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/E/stand.png",
+      "image_sha256": "60a0cca3805124f0b488c9a1fe9437e1041b6a0fdc92bc6f23ef4d1ba058f91f",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/E/walk.png",
+      "image_sha256": "bea660a790ee2a99a47c8ed235a3a1db8f9516731c402a2baa308ac5c543eb79",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/E/run.png",
+      "image_sha256": "276bf3fe8d603e3409337a19ba422d86950e6302b74eb861ce94638813c93c11",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/E/graze.png",
+      "image_sha256": "50c7633a38f054a045a560f3c40235a8b83d01deee6969e6918e0ad20bfe7973",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/E/dead.png",
+      "image_sha256": "2601324e08a2c3af82c35d348764bc59744c7aa6a3365df106c03fbcca10627e",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "S",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/S/attack.png",
+      "image_sha256": "dba796bcef8c78ad16c9c970b05d217d095dc88c633ec0a00bb0a447b784a3eb",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/S/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "reindeer_winter",
+      "facing": "E",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/reindeer_winter/E/attack.png",
+      "image_sha256": "d8f48b6d059e66db2729651ef6e9cf6e7528709c3166563fe2a40b624b51d33d",
+      "metadata": "art/animal/batch_a1/adopted/reindeer_winter/E/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/wolf/S/stand.png",
+      "image_sha256": "ae15a6109060e0d439704e8ea263dd9b41a550ead0992962d48377fd35e8f33b",
+      "metadata": "art/animal/batch_a1/adopted/wolf/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/wolf/S/walk.png",
+      "image_sha256": "c52461c32cd91a6e7fc4aecd181bca58e7666a0a21e88b603a1256938bbb4a5c",
+      "metadata": "art/animal/batch_a1/adopted/wolf/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/wolf/S/run.png",
+      "image_sha256": "2b6053a9eab0887a04c72d9c35cfe65b99641d87332a93cf818422c9d8a64590",
+      "metadata": "art/animal/batch_a1/adopted/wolf/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/wolf/S/attack.png",
+      "image_sha256": "d1d04453cfd6c048b82e88583f7636163cbe84ccbaa3051450c8f053de8eb5ea",
+      "metadata": "art/animal/batch_a1/adopted/wolf/S/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/wolf/S/dead.png",
+      "image_sha256": "133255d7b9fb3eb745e713f1525c54fb4fa99733b5284c573e2ce8b1a413f0b2",
+      "metadata": "art/animal/batch_a1/adopted/wolf/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/wolf/E/stand.png",
+      "image_sha256": "bdf09c6d3d1d066847f7fadbd101dacf60a88de1751749ca48121ff35c3028de",
+      "metadata": "art/animal/batch_a1/adopted/wolf/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/wolf/E/walk.png",
+      "image_sha256": "8b745c94e54c397221a4b1e0233b593051e39a0bca53e61bf76f05e3a7ce2280",
+      "metadata": "art/animal/batch_a1/adopted/wolf/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/wolf/E/run.png",
+      "image_sha256": "4815d1a3c066d77a0abe008b6f44ecad1e5ce6c4b7bc4f3f8d94f5df1b24cf19",
+      "metadata": "art/animal/batch_a1/adopted/wolf/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "attack",
+      "image": "art/animal/batch_a1/adopted/wolf/E/attack.png",
+      "image_sha256": "9e55587872e7c896fe843dce8bef278db799a5f4739fe3f769353de63a3ef97e",
+      "metadata": "art/animal/batch_a1/adopted/wolf/E/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/wolf/E/dead.png",
+      "image_sha256": "285dca9606b4b92e3ac2c6fdb6877390cc5283bde02186f54b0c84649ac2bbd5",
+      "metadata": "art/animal/batch_a1/adopted/wolf/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/deer/S/stand.png",
+      "image_sha256": "de486ce9f8ac709dd38680f5f93b651ef4a4288ef7fd298ce3b1817e9cfba3e4",
+      "metadata": "art/animal/batch_a1/adopted/deer/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/deer/S/walk.png",
+      "image_sha256": "0d4407847048aa3823b2da5ad8ba5b380c79ab415d2856436b82be807218c8a6",
+      "metadata": "art/animal/batch_a1/adopted/deer/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/deer/S/run.png",
+      "image_sha256": "f9623fab1c4676961052c9ee2520fe2f6bd379c66af500b2bf5c114d192a9191",
+      "metadata": "art/animal/batch_a1/adopted/deer/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/deer/S/graze.png",
+      "image_sha256": "6ffb257785bd84796015651646c175da385461912a86f6a7b1fffcb812d93587",
+      "metadata": "art/animal/batch_a1/adopted/deer/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/deer/S/dead.png",
+      "image_sha256": "ef30c3f4ce82329d85f1f5ada8300369f2090c0599f85c5bad74da71771cb59e",
+      "metadata": "art/animal/batch_a1/adopted/deer/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/batch_a1/adopted/deer/E/stand.png",
+      "image_sha256": "df21582d5f2a68d778b8f8117740c3b155df74fcc316a2acda997e2f9eece702",
+      "metadata": "art/animal/batch_a1/adopted/deer/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/batch_a1/adopted/deer/E/walk.png",
+      "image_sha256": "238b45f140b6f9a06c0cc97491f3364685d2e8b85f77af4f24d565ecbac7b171",
+      "metadata": "art/animal/batch_a1/adopted/deer/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/batch_a1/adopted/deer/E/run.png",
+      "image_sha256": "bee267aa102094e2b935b2ce5b20b2e8cf2150acf03a7a94b2484cf1f9aa4da6",
+      "metadata": "art/animal/batch_a1/adopted/deer/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/batch_a1/adopted/deer/E/graze.png",
+      "image_sha256": "5e2ff684f838c326111ae62669c891294f1896d70b853f49d9b06db1cfc60f7a",
+      "metadata": "art/animal/batch_a1/adopted/deer/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/batch_a1/adopted/deer/E/dead.png",
+      "image_sha256": "0077b790b819c5f023055792036b64536e946d3e1ebba97c107858593fb0fe16",
+      "metadata": "art/animal/batch_a1/adopted/deer/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "structural_pass": true,
+      "status": "ACCEPTED_ART_CANDIDATE"
+    }
+  ],
+  "frame_count": 216,
+  "coverage": {
+    "required_sets": 17,
+    "required_frames": 184,
+    "required_selected_frames": 184,
+    "required_complete": true,
+    "optional_selected_frames": 12,
+    "existing_reference_frames": 20
+  },
+  "boards": [
+    {
+      "path": "art/animal/batch_a1/boards/aurochs.png",
+      "sha256": "39c6eb840d0dd81b5cfd557abd535765099629df1ab69e684fd04e1ce21ca420"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/calf.png",
+      "sha256": "06a9cc6458249de96b394056170f8c485145c079cddbe3b4b039eeb851ce449d"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/cattle.png",
+      "sha256": "88388cbf916da321f993b7f2061b0c088bfa7989de1d3af8af48e9f5c2c2aa14"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/chicken.png",
+      "sha256": "68b2acf3293d75b5bb3af947cb27bfe7496b8758e46ccbf1362e0c38da5b4e1d"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/dog.png",
+      "sha256": "4b4bc334fed90e268b894dc4f108c968e1d1405f7babc2980ed045b59cb22cfd"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/donkey.png",
+      "sha256": "c7eebd8c8d1ce27ca04e2ba514fbc91c1480babd46a675ec16254ce9697a20e3"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/goat.png",
+      "sha256": "19ad15fc83c17f89b3b49e3e90eaf4751ebb225e83d9f7337e12d5b82477d88b"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/horse.png",
+      "sha256": "89fa3205a1ae4320cea6b2e51513c91075abd677485231c8e479e1d4d5af8e91"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/junglefowl.png",
+      "sha256": "0a13ad6f296648b3ce8552138df164ddb3a9fef25352a09518f00cd6cd009e3e"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/kid.png",
+      "sha256": "512551202004c9e7fe5048317c21b797c5fb7be3520624971cd7046217557af1"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/lamb.png",
+      "sha256": "b400fc1a7bd6e2e24c40a10ac609435712b5cdac5f76f1367f50f6133ca688b3"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/pig.png",
+      "sha256": "fcc2c75c75987157a1dca7f7f76c0fdca19183dc29c868cf8117c64e24179f82"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/piglet.png",
+      "sha256": "0fc9ae91ade1fa30ad3f0d973368ce510417439e0abe3fdf18f775dfe3234f84"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/reindeer.png",
+      "sha256": "0a59491db4dacbc1524c5c1b9a6b3c282a6f76ec26102cd2a0c4c8fc878ad52c"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/reindeer_winter.png",
+      "sha256": "20ca8a244b5fafbdc147292d4ba7c2294107909f7462a6787e8fb177263c65eb"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/sheep_fleeced.png",
+      "sha256": "9799eb80165c0e7d1377d210b2c052acfcab1d003bb3388707c806099dda02db"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/sheep_shorn.png",
+      "sha256": "6eea5f2cdc1c55178749ba68f52a50d223faeac7db8aa5eeabd3bb3a9fd36d83"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/wild_boar.png",
+      "sha256": "4fd0ed432362a79cd71c4e85667e425ac2a07d66a7f9361f867b49812075c267"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/overview.png",
+      "sha256": "0ec205873dd6320c39fb3e364882bc19970331c822a8ea955f38b0f08cee2d26"
+    },
+    {
+      "path": "art/animal/batch_a1/boards/attacks.png",
+      "sha256": "4291a2fddf5aa8f20caed32ed1a9ec09450908b3d0bee95509aaf3fa799e2b39"
+    }
+  ],
+  "limitations": [
+    "One pose key per direction, not animation cycles",
+    "Game import and owner approval pending",
+    "Visual pass is root's recorded selection decision"
+  ]
+}

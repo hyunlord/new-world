@@ -1,0 +1,285 @@
+{
+  "spec": {
+    "species": "junglefowl",
+    "attempt": 102,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack2.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack2.prompt.txt",
+    "shoulder_y": 313,
+    "hoof_y": 690,
+    "shoulder_target": 16,
+    "dead_length": 32,
+    "poses": [
+      "attack"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack1.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": null,
+    "landmark_note": "Manually measured S/stand withers and hoof in source coordinates."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack2.spec.json",
+  "spec_sha256": "03e91f41cbc1c42bd5d90b651178d1a5f3d813e1366f0cc98bcd760b3e480b5d",
+  "raw_sha256": "ceef62b47b4254f55b4ebbf4116978e895e9952c359dfcdca25e29acba4b7a7a",
+  "prompt_text": "Use case: precise-object-edit. Edit first reference two-figure junglefowl attack sprite pair, making ONLY a small feather-mark count correction. Preserve the exact two figures, their silhouettes, raised-wing lunge poses, open beaks, legs, positions, size, muted ochre neck/rust wing/charcoal green-black body and tail, sepia contour weight, transparent gutters. One row TWO columns: S front3/4 on left and right-facing E3/4 on right. On EACH bird erase all small decorative texture strokes; draw EXACTLY THREE small feather-detail clusters: near raised wing has exactly THREE short thin continuous slash strokes, far raised wing has exactly THREE short thin continuous slash strokes, neck has exactly THREE short thin continuous slash strokes. Thus3+3+3=9 small strokes per bird. Each stroke is ONE continuous simple slash, no forks or broken segments. Do not add a fourth cluster. Leave all remaining large painted planes quiet. Keep broad anatomical feather divisions/outline and colors as-is. Supporting references2+3 are locked style, main sepia contour2x interior ink, restrained two-tone wash. True transparent RGBA alpha0 everywhere outside animals, no shadow, haze, backdrop, ground, text or labels.\n",
+  "prompt_sha256": "4e79599854c0616acc2433fdc582c7ced0121a2def38a46be5f037f736460efd",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": null,
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack1.png",
+      "sha256": "5f050f7d7daa3d5082a4adfc33c964107c1f8b311ce1eeb8a7baa4c873ecb9e0"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "max_gutter_alpha": 1,
+    "method": "unaltered rectangular crops across alpha<16 gutter; every RGBA pixel retained"
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.042440318302387266,
+  "landmark_note": "Manually measured S/stand withers and hoof in source coordinates.",
+  "frames": [
+    {
+      "species": "junglefowl",
+      "facing": "S",
+      "pose": "attack",
+      "attempt": 102,
+      "image": "art/animal/batch_a1/junglefowl/try102/S/attack.png",
+      "image_sha256": "1e8130369fe31d320ac1b5951a318b5da0fbad4d868e214cdf574856b8ca6943",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/panels/attack2/S_attack.png",
+      "source_panel_sha256": "a32d069e15ae2d25d0ea906a2e7f4d442616f74fec93ff238d16f12bb9b02f63",
+      "source_box": [
+        0,
+        0,
+        1086,
+        724
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack2.png",
+      "raw_sha256": "ceef62b47b4254f55b4ebbf4116978e895e9952c359dfcdca25e29acba4b7a7a",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack2.prompt.txt",
+      "prompt_sha256": "4e79599854c0616acc2433fdc582c7ced0121a2def38a46be5f037f736460efd",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack1.png",
+          "sha256": "5f050f7d7daa3d5082a4adfc33c964107c1f8b311ce1eeb8a7baa4c873ecb9e0"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.042440318302387266,
+      "upright_scale": 0.042440318302387266,
+      "normalization": {
+        "scaled_size": [
+          46,
+          31
+        ],
+        "trim_box": [
+          6,
+          0,
+          38,
+          31
+        ],
+        "placement": [
+          32,
+          42
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          42
+        ],
+        "visible_pixels": 626,
+        "rotation_degrees": 0,
+        "scale": 0.042440318302387266,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "junglefowl",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 519,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 29,
+        "gradient_x": -0.6796581196581193,
+        "gradient_y": -1.0179829694323146,
+        "light_angle_degrees": 236.27087528102925,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "junglefowl",
+      "facing": "E",
+      "pose": "attack",
+      "attempt": 102,
+      "image": "art/animal/batch_a1/junglefowl/try102/E/attack.png",
+      "image_sha256": "9e9b6d3de7ed7e76ae9f584e1f7a3ceaee02eb7fe8e56ab0c1de08e615f6eabe",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/panels/attack2/E_attack.png",
+      "source_panel_sha256": "b7b854c1be1c30b0c016f25a43c9d67b82472bc1a22ade025ff357b9bc641790",
+      "source_box": [
+        1086,
+        0,
+        2172,
+        724
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack2.png",
+      "raw_sha256": "ceef62b47b4254f55b4ebbf4116978e895e9952c359dfcdca25e29acba4b7a7a",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack2.prompt.txt",
+      "prompt_sha256": "4e79599854c0616acc2433fdc582c7ced0121a2def38a46be5f037f736460efd",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack1.png",
+          "sha256": "5f050f7d7daa3d5082a4adfc33c964107c1f8b311ce1eeb8a7baa4c873ecb9e0"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.042440318302387266,
+      "upright_scale": 0.042440318302387266,
+      "normalization": {
+        "scaled_size": [
+          46,
+          31
+        ],
+        "trim_box": [
+          3,
+          1,
+          40,
+          31
+        ],
+        "placement": [
+          29,
+          43
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          42
+        ],
+        "visible_pixels": 627,
+        "rotation_degrees": 0,
+        "scale": 0.042440318302387266,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "junglefowl",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 524,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 28,
+        "gradient_x": 0.7443593291404611,
+        "gradient_y": -1.4334144104803495,
+        "light_angle_degrees": 297.44245001713006,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 2,
+  "contact_sheet": "art/animal/batch_a1/junglefowl/try102/attack_sheet.png",
+  "contact_sheet_sha256": "6bf4556ef479ab32a5dc0125777533845c6caf33d8c948b2b3df2eb7070e37e9",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

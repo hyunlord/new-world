@@ -134,6 +134,7 @@ class Manifest(BaseModel):
     raw_sha256: str
     prompt_sha256: str
     references: tuple[Reference, ...]
+    generator_record: Reference | None = None
     ownership: dict[str, JsonValue]
     frames: tuple[Frame, ...]
     frame_count: int
@@ -149,10 +150,11 @@ def verify(path: Path) -> bool:
     document = Manifest.model_validate_json(path.read_text())
     spec = Spec.model_validate(document.spec)
     failures: list[str] = []
+    references = document.references + ((document.generator_record,) if document.generator_record is not None else ())
     for source, expected in ((document.spec_path, document.spec_sha256), (spec.raw, document.raw_sha256),
                              (spec.prompt, document.prompt_sha256),
                              (ROOT / document.contact_sheet, document.contact_sheet_sha256),
-                             *((ref.path, ref.sha256) for ref in document.references)):
+                             *((ref.path, ref.sha256) for ref in references)):
         if digest(source) != expected:
             failures.append(f"hash mismatch: {source}")
     expected_grid = {(f, p) for f in ("S", "E") for p in spec.poses}

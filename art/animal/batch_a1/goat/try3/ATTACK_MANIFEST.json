@@ -1,0 +1,301 @@
+{
+  "spec": {
+    "species": "goat",
+    "attempt": 3,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try3.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try3.prompt.txt",
+    "shoulder_y": 175,
+    "hoof_y": 569,
+    "shoulder_target": 30,
+    "dead_length": 52,
+    "poses": [
+      "attack"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try2.png",
+      "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try3.generation.json",
+    "landmark_note": "Manual S-stand/attack shoulder-to-lowest-hoof observation; targeted surface edit preserved pose landmarks. One uniform upright scale applies to all poses and facings."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try3.spec.json",
+  "spec_sha256": "c8d70a32add0e5202cba81b0b4790257f4e9a1c7cceb762d8494f9e4426eeb3a",
+  "raw_sha256": "d0ccfc7047e92c1013f22a79763bf4adee8ec401521de9f0946ec6d4b63924f7",
+  "prompt_text": "Use case: precise-object-edit. FIRST reference is edit target. Perform ONLY this small correction: Keep all SIX clusters(three per goat) in exactly same positions and same2-stroke count. Make these12interior strokes MUCH FINER: each HALF the width of animal outer contour, brown-black. Current interior strokes are too thick/dark. Do not alter body contour, anatomy, horn shape or add any new marks. Preserve two-column attack pose layout exactly. Everything else must remain identical: dimensions, animal positions, body proportions, light upperleft, natural warm two-tone wash, facial identity, connected limbs, alpha transparency and camera. Main contour2xinterior width. Do not add horn rings or dense texture. Keep actual transparent RGBA, no ground/background/shadows/text/grid. Other attached references are unchanged style references.\n",
+  "prompt_sha256": "082c6fc3fc1c35419434954ff63ac53e98b2352b3fcb5f055c73834fd0b22224",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": {
+    "path": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try3.generation.json",
+    "sha256": "34a4f8340fd10cb817deea5b9bf9fb2db2d2567c84befff2f30d11dc66ac3f59"
+  },
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try2.png",
+      "sha256": "4b81b2e949629e2b03a27befcebf571def8987d8f48db7d13b4f166081545101"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "max_gutter_alpha": 0,
+    "method": "unaltered rectangular crops across alpha<16 gutter; every RGBA pixel retained"
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.07614213197969544,
+  "landmark_note": "Manual S-stand/attack shoulder-to-lowest-hoof observation; targeted surface edit preserved pose landmarks. One uniform upright scale applies to all poses and facings.",
+  "frames": [
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "attack",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/goat/try3/S/attack.png",
+      "image_sha256": "7c3b0deab77c06248d8896723f14393c81bc1bf87d0aa8a93451696450492221",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/attack_try3/S_attack.png",
+      "source_panel_sha256": "7b45475e6351e7179d231510bcc991e548b8b6906a760fbe31d34254ba897269",
+      "source_box": [
+        0,
+        0,
+        1086,
+        724
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try3.png",
+      "raw_sha256": "d0ccfc7047e92c1013f22a79763bf4adee8ec401521de9f0946ec6d4b63924f7",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try3.prompt.txt",
+      "prompt_sha256": "082c6fc3fc1c35419434954ff63ac53e98b2352b3fcb5f055c73834fd0b22224",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try2.png",
+          "sha256": "4b81b2e949629e2b03a27befcebf571def8987d8f48db7d13b4f166081545101"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07614213197969544,
+      "upright_scale": 0.07614213197969544,
+      "normalization": {
+        "scaled_size": [
+          83,
+          55
+        ],
+        "trim_box": [
+          10,
+          11,
+          64,
+          46
+        ],
+        "placement": [
+          21,
+          38
+        ],
+        "resized_to_canvas_offset": [
+          11,
+          27
+        ],
+        "visible_pixels": 1029,
+        "rotation_degrees": 0,
+        "scale": 0.07614213197969544,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 900,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 35,
+        "gradient_x": -1.5178851485148512,
+        "gradient_y": -1.386815911872705,
+        "light_angle_degrees": 222.4163869852803,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "attack",
+      "attempt": 3,
+      "image": "art/animal/batch_a1/goat/try3/E/attack.png",
+      "image_sha256": "e690b406ecd88a79a8baef4b911a713d2bfada5ca26b9c831b510dbeefda78b9",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/attack_try3/E_attack.png",
+      "source_panel_sha256": "429256bf0c6831e4a2972e3516abf2932c7c6ee7335eb0cd8a52e08f4a765672",
+      "source_box": [
+        1086,
+        0,
+        2172,
+        724
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try3.png",
+      "raw_sha256": "d0ccfc7047e92c1013f22a79763bf4adee8ec401521de9f0946ec6d4b63924f7",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try3.prompt.txt",
+      "prompt_sha256": "082c6fc3fc1c35419434954ff63ac53e98b2352b3fcb5f055c73834fd0b22224",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try2.png",
+          "sha256": "4b81b2e949629e2b03a27befcebf571def8987d8f48db7d13b4f166081545101"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.07614213197969544,
+      "upright_scale": 0.07614213197969544,
+      "normalization": {
+        "scaled_size": [
+          83,
+          55
+        ],
+        "trim_box": [
+          11,
+          12,
+          74,
+          46
+        ],
+        "placement": [
+          16,
+          39
+        ],
+        "resized_to_canvas_offset": [
+          5,
+          27
+        ],
+        "visible_pixels": 1144,
+        "rotation_degrees": 0,
+        "scale": 0.07614213197969544,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 993,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 32,
+        "gradient_x": 0.8975574094401754,
+        "gradient_y": -1.9760878103837471,
+        "light_angle_degrees": 294.4279892667215,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 2,
+  "contact_sheet": "art/animal/batch_a1/goat/try3/attack_sheet.png",
+  "contact_sheet_sha256": "40c588ae536f4ae7a1bd4bda3386148bf56fa7ba3e9965471e6ea49340c2cf1a",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

@@ -1,0 +1,625 @@
+{
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "date": "2026-11-10",
+  "branch": "v8/art-batch-a1",
+  "generation_calls": 62,
+  "generated_frame_slots": 492,
+  "accepted_new_frames": 196,
+  "rejected_frame_slots": 296,
+  "preserved_reference_frames": 20,
+  "import_frame_count": 216,
+  "new_appearance_sets": 18,
+  "import_appearance_sets": 20,
+  "count_note": "Generated/rejected counts are requested pose cells per raw output, including malformed rejected sheets; accepted counts are verified actual PNG frames. One base sheet is 10 cells, one attack pair is 2.",
+  "raw_evidence": "/Users/rexxa/work/art-batch/A1/raw",
+  "selection": {
+    "path": "/Users/rexxa/work/art-batch/A1/selection.json",
+    "sha256": "26850ca9badfb050fa38b075c757eec783039808da0951cf1b59da5fef444805"
+  },
+  "families": [
+    {
+      "species": "cattle",
+      "generation_calls": 4,
+      "generated_frame_slots": 40,
+      "accepted_frames": 10,
+      "rejected_frame_slots": 30,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/cattle/try4.png",
+          "sha256": "413dbe8aad5400e8ea9fde8516b0183584704b06f61d0b51d58e0f6a92f6aaa4"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/cattle/try4/MANIFEST.json",
+          "sha256": "bf50d8ab7eb751f88300f4c3ee47652fd514b8d4dfef5efc2234525e44a2ea50"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "cattle",
+          "score": 91,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/bovines_round2.json",
+          "sha256": "0a7a45b90e734d7319f7baacb7a42addad6a0ca4557bcf2568b9da6eeed1025a"
+        }
+      ]
+    },
+    {
+      "species": "aurochs",
+      "generation_calls": 4,
+      "generated_frame_slots": 24,
+      "accepted_frames": 12,
+      "rejected_frame_slots": 12,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/aurochs/attack2.png",
+          "sha256": "2bb830ef896d6ed0db93404fdb7f05d21ae006b70b63177b4f89862bef17a0f2"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/aurochs/try2.png",
+          "sha256": "a31c324901dc6f9c275eb9b8c758aedfa4165efce1a80bff5579a647e8fa5a71"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/aurochs/try2/MANIFEST.json",
+          "sha256": "5da8a8acb1abd5d4cdc583a380f36b745da06d7d2d952f598a119122c062a4a8"
+        },
+        {
+          "path": "art/animal/batch_a1/aurochs/try2/ATTACK_MANIFEST.json",
+          "sha256": "381f587412000467ea126284f991b557abaf8a292e7dae237ab49844d8d78755"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "aurochs",
+          "score": 93,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/bovines_round2.json",
+          "sha256": "0a7a45b90e734d7319f7baacb7a42addad6a0ca4557bcf2568b9da6eeed1025a"
+        },
+        {
+          "species_or_pose": "aurochs_attack",
+          "score": 93,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/bovines_round2.json",
+          "sha256": "0a7a45b90e734d7319f7baacb7a42addad6a0ca4557bcf2568b9da6eeed1025a"
+        }
+      ]
+    },
+    {
+      "species": "sheep_fleeced",
+      "generation_calls": 4,
+      "generated_frame_slots": 24,
+      "accepted_frames": 12,
+      "rejected_frame_slots": 12,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/attack_try2.png",
+          "sha256": "f4f2d1b84bfda5dac3100a29440f47bbb063c35a2e2e86ffc1911b0f02968f09"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_fleeced/try2.png",
+          "sha256": "35fed42bd995f41ec90aaf9b044414f2095a679c8786514e98e3e78c4858f6f1"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/sheep_fleeced/try2/MANIFEST.json",
+          "sha256": "c2644a52e0dece062ad3e1cd51ea8e6a222fd1f760f13fd648355f0aecf7a10f"
+        },
+        {
+          "path": "art/animal/batch_a1/sheep_fleeced/try2/ATTACK_MANIFEST.json",
+          "sha256": "7f13b7a3f3572cbf8f4513e9643386ec42e6c4cf4e0837e686b2260849714106"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "sheep_fleeced",
+          "score": 91,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/small_ruminants_round2.json",
+          "sha256": "56c20a0bf1c0fe0547e135bb282785c3e281308cd4232b45e080be312c0c2eee"
+        },
+        {
+          "species_or_pose": "sheep_fleeced_attack",
+          "score": 91,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/small_ruminants_round2.json",
+          "sha256": "56c20a0bf1c0fe0547e135bb282785c3e281308cd4232b45e080be312c0c2eee"
+        }
+      ]
+    },
+    {
+      "species": "sheep_shorn",
+      "generation_calls": 3,
+      "generated_frame_slots": 30,
+      "accepted_frames": 10,
+      "rejected_frame_slots": 20,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/sheep_shorn/try3.png",
+          "sha256": "b309fc269c949382f581f80a3c3d49ed4c94bc0a7560d7be5115285d37360d75"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/sheep_shorn/try3/MANIFEST.json",
+          "sha256": "c7c97a1227a03a543670507393d4beb0543fbcd03649f78ca27ecb3c8da1102c"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "sheep_shorn",
+          "score": 92,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/small_ruminants_round3.json",
+          "sha256": "8c73b0ff30c5e909801363bdb8c301a42ead7efa7cb568a98cdbe5859daf8d69"
+        }
+      ]
+    },
+    {
+      "species": "calf",
+      "generation_calls": 1,
+      "generated_frame_slots": 10,
+      "accepted_frames": 10,
+      "rejected_frame_slots": 0,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+          "sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/calf/try1/MANIFEST.json",
+          "sha256": "11629640370108914a61b53db19f3ba4441b80b424595e704b966cdb38e05f11"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "calf",
+          "score": 93,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/first_bovines.json",
+          "sha256": "931c7edcbe37feab3b46248a17072229a5023d013872606122e99673f9801cec"
+        }
+      ]
+    },
+    {
+      "species": "goat",
+      "generation_calls": 7,
+      "generated_frame_slots": 46,
+      "accepted_frames": 12,
+      "rejected_frame_slots": 34,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/attack_try3.png",
+          "sha256": "d0ccfc7047e92c1013f22a79763bf4adee8ec401521de9f0946ec6d4b63924f7"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+          "sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/goat/try4/MANIFEST.json",
+          "sha256": "2e27f74f90dc4779f6e7701b4bd27fc5d991125ad79a58b11c6a6219389e3f5b"
+        },
+        {
+          "path": "art/animal/batch_a1/goat/try3/ATTACK_MANIFEST.json",
+          "sha256": "3cf346b8877cf753ff48ff47fb1b2c043982a32621806dbfef7160c0e023fab5"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "goat",
+          "score": 92,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/goat_round4.json",
+          "sha256": "1aa9cc00f22243441bdfb90175bc2ed0a92a3c8c74a3d6567a78d93b1e22fb89"
+        },
+        {
+          "species_or_pose": "goat_attack",
+          "score": 92,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/small_ruminants_round3.json",
+          "sha256": "8c73b0ff30c5e909801363bdb8c301a42ead7efa7cb568a98cdbe5859daf8d69"
+        }
+      ]
+    },
+    {
+      "species": "kid",
+      "generation_calls": 3,
+      "generated_frame_slots": 30,
+      "accepted_frames": 10,
+      "rejected_frame_slots": 20,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+          "sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/kid/try3/MANIFEST.json",
+          "sha256": "e61580c51db48fd82cfc168b9c874fac7ed0eee07692a97e4ec4d0d184db855b"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "kid",
+          "score": 90,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/small_ruminants_round3.json",
+          "sha256": "8c73b0ff30c5e909801363bdb8c301a42ead7efa7cb568a98cdbe5859daf8d69"
+        }
+      ]
+    },
+    {
+      "species": "lamb",
+      "generation_calls": 2,
+      "generated_frame_slots": 20,
+      "accepted_frames": 10,
+      "rejected_frame_slots": 10,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/lamb/try2.png",
+          "sha256": "e1dab791e95a634f8fe3c3c8676c65d3a736e585c6c8e56687cd2fbaa51dde36"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/lamb/try2/MANIFEST.json",
+          "sha256": "191e232f553541f8f8c52e7d01dc548eec8f1883b0280db87002200bdab18357"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "lamb",
+          "score": 91,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/small_ruminants_round2.json",
+          "sha256": "56c20a0bf1c0fe0547e135bb282785c3e281308cd4232b45e080be312c0c2eee"
+        }
+      ]
+    },
+    {
+      "species": "wild_boar",
+      "generation_calls": 5,
+      "generated_frame_slots": 42,
+      "accepted_frames": 12,
+      "rejected_frame_slots": 30,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/attack1.png",
+          "sha256": "ad09a8b9dab05e5f73346b3b7a6f8a7e3d06ce6c5b479f048734939a46c9308d"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/try4.png",
+          "sha256": "3c5572099956200258549f8444c9bbaa69a342e1c5c079a21aefd77c16a3dec8"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/wild_boar/try4/MANIFEST.json",
+          "sha256": "b6660c284549bcfcb3bb54b882e82aa4738bbd5226711ad509140cfb50be26ee"
+        },
+        {
+          "path": "art/animal/batch_a1/wild_boar/try101/ATTACK_MANIFEST.json",
+          "sha256": "90a89d5276cb32a9fdaa99c1a49fa5ddf18002ada59a7c0c607ef7da0af535f0"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "wild_boar",
+          "score": 91,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/horse_dog_pigs_bases.json",
+          "sha256": "84a3ce236f63f59cf2e1373c2d115dc1fd46e7a9220b8db6187bbbbe89c34258"
+        },
+        {
+          "species_or_pose": "wild_boar_attack",
+          "score": 91,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/wild_boar_attack_round1.json",
+          "sha256": "b0dbf32ab412b6b948888c775790dbe1c112e3b90f02243a777b855cfa578507"
+        }
+      ]
+    },
+    {
+      "species": "pig",
+      "generation_calls": 4,
+      "generated_frame_slots": 40,
+      "accepted_frames": 10,
+      "rejected_frame_slots": 30,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/pig/try4.png",
+          "sha256": "f70567538760a639000e50572f79769e9268bc7215e81d8c9aaf5f3a65d22b89"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/pig/try4/MANIFEST.json",
+          "sha256": "77e90f9cb9a169af64f39f35edd4a20423061b8634a95e51a999befe7c4d0fa7"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "pig",
+          "score": 90,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/horse_dog_pigs_bases.json",
+          "sha256": "84a3ce236f63f59cf2e1373c2d115dc1fd46e7a9220b8db6187bbbbe89c34258"
+        }
+      ]
+    },
+    {
+      "species": "piglet",
+      "generation_calls": 3,
+      "generated_frame_slots": 30,
+      "accepted_frames": 10,
+      "rejected_frame_slots": 20,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/piglet/try3.png",
+          "sha256": "dd74166cccf6c58153512dfbdad62930e75fa7784f14fb5dce3672ed5c095495"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/piglet/try3/MANIFEST.json",
+          "sha256": "e4f559bfc0569621c49b62a9b1cff84ab3c3eb8640ea39c0eb492c9230c1decd"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "piglet",
+          "score": 91,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/horse_dog_pigs_bases.json",
+          "sha256": "84a3ce236f63f59cf2e1373c2d115dc1fd46e7a9220b8db6187bbbbe89c34258"
+        }
+      ]
+    },
+    {
+      "species": "reindeer",
+      "generation_calls": 5,
+      "generated_frame_slots": 34,
+      "accepted_frames": 12,
+      "rejected_frame_slots": 22,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/attack_try2.png",
+          "sha256": "c646384432a57dc8cb0fa349512529a435f57214d7955711126e956f8de7d7d7"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer/try3.png",
+          "sha256": "52442db444a3bde531c493b2acf9dcb8a92d2538b7fd3b7cd297a46ce1f6131f"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/reindeer/try3/MANIFEST.json",
+          "sha256": "7adb9dde569f8de3eb7acada1afeb1915e30821ce56f6037c69262d15ef8d5bc"
+        },
+        {
+          "path": "art/animal/batch_a1/reindeer/try2/ATTACK_MANIFEST.json",
+          "sha256": "9cf914851d30ad9bca223c33ab97129de1d17d8582e649bcf32fbac76e40320e"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "reindeer",
+          "score": 91,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/reindeer_round3.json",
+          "sha256": "29e304edd0711910c9546050af717900532e6f44044ba1a5746910cccdbd038b"
+        },
+        {
+          "species_or_pose": "reindeer_attack",
+          "score": 90,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/reindeer_attacks_round2.json",
+          "sha256": "ebd98b9cc7af3c63ea991ca37c36e8b72b3cfd088e416a9faf9932e6df0a952c"
+        }
+      ]
+    },
+    {
+      "species": "dog",
+      "generation_calls": 2,
+      "generated_frame_slots": 20,
+      "accepted_frames": 10,
+      "rejected_frame_slots": 10,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/dog/try2.png",
+          "sha256": "03e98370c23e6a2c954ce7ec9b4b1355a295936df28a9741bb5c1dd002e3b69e"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/dog/try2/MANIFEST.json",
+          "sha256": "607ae87e6c214b3e61e1319e080fc8895a2882f172ebed79c0f8fafa0e36e90a"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "dog",
+          "score": 93,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/horse_dog_pigs_bases.json",
+          "sha256": "84a3ce236f63f59cf2e1373c2d115dc1fd46e7a9220b8db6187bbbbe89c34258"
+        }
+      ]
+    },
+    {
+      "species": "chicken",
+      "generation_calls": 1,
+      "generated_frame_slots": 10,
+      "accepted_frames": 10,
+      "rejected_frame_slots": 0,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/chicken/try1.png",
+          "sha256": "e99bc744c62ee40cc3ac8a611dc5bdac8758d6d50be0cca2f083569975a38704"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/chicken/try1/MANIFEST.json",
+          "sha256": "fad64852c97a2a8205e4b20971d786c36abaeedfc9c8745d8de87a30e8c7d0fa"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "chicken",
+          "score": 92,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/dog_chicken_round1.json",
+          "sha256": "90f7121fae20b1e9856d246ba502d412dbabdf1d5adad0145e422c4bb4ee455a"
+        }
+      ]
+    },
+    {
+      "species": "junglefowl",
+      "generation_calls": 4,
+      "generated_frame_slots": 24,
+      "accepted_frames": 12,
+      "rejected_frame_slots": 12,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/attack2.png",
+          "sha256": "ceef62b47b4254f55b4ebbf4116978e895e9952c359dfcdca25e29acba4b7a7a"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/junglefowl/try2.png",
+          "sha256": "6ea736b1732addd8ae583825e01f3d4245b4b8c712a1911e92828796d7f792e4"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/junglefowl/try2/MANIFEST.json",
+          "sha256": "fab0a614fbaa88b30e22b68225bfc3e874c140978b6b6032efe8dfc1f708ab2b"
+        },
+        {
+          "path": "art/animal/batch_a1/junglefowl/try102/ATTACK_MANIFEST.json",
+          "sha256": "9f688f22fd65926809134cc8ada96dc3e82323b208841edb92fa60fe444adce2"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "junglefowl",
+          "score": 92,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/junglefowl_round2.json",
+          "sha256": "0dbe78442c395879dc06d7f1a2778263e8bded65ea697d9feb7476899db653e3"
+        },
+        {
+          "species_or_pose": "junglefowl_attack",
+          "score": 92,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/junglefowl_round2.json",
+          "sha256": "0dbe78442c395879dc06d7f1a2778263e8bded65ea697d9feb7476899db653e3"
+        }
+      ]
+    },
+    {
+      "species": "donkey",
+      "generation_calls": 1,
+      "generated_frame_slots": 10,
+      "accepted_frames": 10,
+      "rejected_frame_slots": 0,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/donkey/try1.png",
+          "sha256": "4e700a9ad40ba1a535ad150649f3fc633d220a46b5a9c6c16c99a526d01de5b2"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/donkey/try1/MANIFEST.json",
+          "sha256": "d29e1507287bc21bf17d9ad6f9f3ef9ca773a63050023d6bb10824ca53994971"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "donkey",
+          "score": 94,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/equids_reindeer_round1.json",
+          "sha256": "4bfb501c275cba0130d33f09d58a0da39df28ea6b10219d4800482420bf591c9"
+        }
+      ]
+    },
+    {
+      "species": "horse",
+      "generation_calls": 4,
+      "generated_frame_slots": 24,
+      "accepted_frames": 12,
+      "rejected_frame_slots": 12,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/horse/attack_try2.png",
+          "sha256": "b5a505630014d8ad8b26de7209e2c5d0e494e2eabc7d2aeca6da42b70230c37c"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/horse/try2.png",
+          "sha256": "0a4250e44ba06886f33ed64724094d75b914231b6872f3efb5e9f24dc2260c04"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/horse/try2/MANIFEST.json",
+          "sha256": "6e144cb79c28e6e961806427816310d15390105d7460a4cbbab2ee4d879d36b8"
+        },
+        {
+          "path": "art/animal/batch_a1/horse/try2/ATTACK_MANIFEST.json",
+          "sha256": "f52f8d75215093aa2bddb76bb1cac515121f0323466a6560b330f0baf6c18d6d"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "horse",
+          "score": 92,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/horse_dog_pigs_bases.json",
+          "sha256": "84a3ce236f63f59cf2e1373c2d115dc1fd46e7a9220b8db6187bbbbe89c34258"
+        },
+        {
+          "species_or_pose": "horse_attack",
+          "score": 91,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/horse_attack_round2.json",
+          "sha256": "895302a2ad11fd39f1f25ad1420ce7db325893c4995275fb7dbd65edcd4abfae"
+        }
+      ]
+    },
+    {
+      "species": "reindeer_winter",
+      "generation_calls": 5,
+      "generated_frame_slots": 34,
+      "accepted_frames": 12,
+      "rejected_frame_slots": 22,
+      "accepted_raws": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/attack_try2.png",
+          "sha256": "f18d70f420ec2ac5340476f1306c74efe041ba1b72861b61fe8e6aa10cb6b952"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/reindeer_winter/try3.png",
+          "sha256": "8f0c7432d4b7f5b4d6796291ceda2312797b7f0da42c45acef90c8452b41debb"
+        }
+      ],
+      "source_manifests": [
+        {
+          "path": "art/animal/batch_a1/reindeer_winter/try3/MANIFEST.json",
+          "sha256": "cc2ef90b0ed31b8bf86a86cfeb89d04dc0b39fa0e84466dd25f6e8b2ec6749d5"
+        },
+        {
+          "path": "art/animal/batch_a1/reindeer_winter/try2/ATTACK_MANIFEST.json",
+          "sha256": "7f87ebb3acda2c544b138dcb85eb8e4ec2a125a65ba99714530d559ecf28d93c"
+        }
+      ],
+      "visual_reviews": [
+        {
+          "species_or_pose": "reindeer_winter",
+          "score": 91,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/reindeer_round3.json",
+          "sha256": "29e304edd0711910c9546050af717900532e6f44044ba1a5746910cccdbd038b"
+        },
+        {
+          "species_or_pose": "reindeer_winter_attack",
+          "score": 90,
+          "path": "/Users/rexxa/work/art-batch/A1/reviews/reindeer_attacks_round2.json",
+          "sha256": "ebd98b9cc7af3c63ea991ca37c36e8b72b3cfd088e416a9faf9932e6df0a952c"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "path": "/Users/rexxa/work/art-batch/A1/records/final-delivery-check.json",
+    "sha256": "c326d60e7eda0829642010aba524a45d7e38b3c749915ab6d8371d0ace1995cf"
+  },
+  "owner_adopted": false,
+  "import_status": "PENDING_C2_C3"
+}

@@ -1,0 +1,112 @@
+{
+  "species": "horse",
+  "facing": "E",
+  "pose": "stand",
+  "attempt": 2,
+  "image": "art/animal/batch_a1/horse/try2/E/stand.png",
+  "image_sha256": "41d2e30d93ba6c2a25c643585100a5b7fe2a09f4fefc86d874c9d5edc68632ce",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/horse/panels/try2/E_stand.png",
+  "source_panel_sha256": "63e2a9eefe6c9afd145c15d71ba7ae7fbb8879c2575165fa09afc2218cd99824",
+  "source_box": [
+    0,
+    551,
+    352,
+    1001
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/horse/try2.png",
+  "raw_sha256": "0a4250e44ba06886f33ed64724094d75b914231b6872f3efb5e9f24dc2260c04",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/horse/try2.prompt.txt",
+  "prompt_sha256": "cfc5cc7338eb7fe525141f2c95fc45bc0a5cf964883564bf712707aa561b5f24",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/horse/try1.png",
+      "sha256": "9a6f31b4b03a76b381f32f57c969380fe5195a383d8230b9079f80bf5d44dfd4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.1826086956521739,
+  "upright_scale": 0.1826086956521739,
+  "normalization": {
+    "scaled_size": [
+      64,
+      82
+    ],
+    "trim_box": [
+      2,
+      8,
+      55,
+      65
+    ],
+    "placement": [
+      21,
+      16
+    ],
+    "resized_to_canvas_offset": [
+      19,
+      8
+    ],
+    "visible_pixels": 1487,
+    "rotation_degrees": 0,
+    "scale": 0.1826086956521739,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "horse",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1319,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 55,
+    "gradient_x": 0.22731719532554268,
+    "gradient_y": 0.06167477982385961,
+    "light_angle_degrees": 15.179826903607514,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": false,
+    "passed": false
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

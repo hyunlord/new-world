@@ -1,0 +1,133 @@
+{
+  "species": "kid",
+  "facing": "S",
+  "pose": "stand",
+  "attempt": 3,
+  "image": "art/animal/batch_a1/adopted/kid/S/stand.png",
+  "image_sha256": "9ed4856850fd922abe2383036292a91fa5307374e902740fd17c1b3b021032ad",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/kid/panels/try3/S_stand.png",
+  "source_panel_sha256": "cbd936892fcca07e9b5025aae9827e7338087fb668aabef626e3e2135b9ba943",
+  "source_box": [
+    0,
+    14,
+    270,
+    486
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.png",
+  "raw_sha256": "9cec44442ed75b7eaeda299102bfda226c2d5dc4946c583ac8fdb8865d4a95ff",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/kid/try3.prompt.txt",
+  "prompt_sha256": "f89c947bf97a2deccf4f3ddb003ddcf47c9585781a71f9d0ac871a963fa3bb01",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/kid/try2.png",
+      "sha256": "3225f1245dfdb23e3a1d069ef3ca05c475b6d01c06e2e9eed80dd2b49641d931"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.07659574468085106,
+  "upright_scale": 0.07659574468085106,
+  "normalization": {
+    "scaled_size": [
+      21,
+      36
+    ],
+    "trim_box": [
+      2,
+      12,
+      20,
+      35
+    ],
+    "placement": [
+      39,
+      50
+    ],
+    "resized_to_canvas_offset": [
+      37,
+      38
+    ],
+    "visible_pixels": 275,
+    "rotation_degrees": 0,
+    "scale": 0.07659574468085106,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "kid",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 204,
+    "base_row": 72,
+    "base_error": 0,
+    "height": 23,
+    "gradient_x": -2.0831677419354833,
+    "gradient_y": -3.0820847457627125,
+    "light_angle_degrees": 235.94540951768778,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "source_status": "CANDIDATE_PENDING_VISUAL_REVIEW",
+  "import_status": "PENDING",
+  "source_image": "art/animal/batch_a1/kid/try3/S/stand.png",
+  "source_sidecar": "art/animal/batch_a1/kid/try3/S/stand.json",
+  "source_sidecar_sha256": "f04dc6ce8fc0cac444f8b2f5e65f7c001dc58714850fdb5c8d4bd72cb30f4972",
+  "source_manifest": "art/animal/batch_a1/kid/try3/MANIFEST.json",
+  "source_manifest_sha256": "e61580c51db48fd82cfc168b9c874fac7ed0eee07692a97e4ec4d0d184db855b",
+  "selection": "/Users/rexxa/work/art-batch/A1/selection.json",
+  "selection_sha256": "26850ca9badfb050fa38b075c757eec783039808da0951cf1b59da5fef444805",
+  "review_status": "pass",
+  "review_evidence": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/reviews/small_ruminants_round3.json",
+      "sha256": "8c73b0ff30c5e909801363bdb8c301a42ead7efa7cb568a98cdbe5859daf8d69"
+    }
+  ],
+  "reference_reuse": false
+}

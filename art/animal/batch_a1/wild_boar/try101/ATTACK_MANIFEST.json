@@ -1,0 +1,285 @@
+{
+  "spec": {
+    "species": "wild_boar",
+    "attempt": 101,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/attack1.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/attack1.prompt.txt",
+    "shoulder_y": 351,
+    "hoof_y": 760,
+    "shoulder_target": 26,
+    "dead_length": 56,
+    "poses": [
+      "attack"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/wild_boar/try4.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": null,
+    "landmark_note": "Manually measured S/stand withers and hoof in source coordinates."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/attack1.spec.json",
+  "spec_sha256": "866f9fae139db6b640ad885e9a0a738a5624151231a6c601ef945abd95be58c1",
+  "raw_sha256": "ad09a8b9dab05e5f73346b3b7a6f8a7e3d06ce6c5b479f048734939a46c9308d",
+  "prompt_text": "Use case: precise-object-edit. Using first reference as exact WILD BOAR individual/style, create ONLY TWO whole-figure ATTACK sprites, ONE row TWO equal columns. LEFT SOUTH front3/4 rotated35degrees viewerLEFT; RIGHT EAST right-facing3/4;20degrees elevated camera, upper-left light. Wide transparent gutters/margins, landscape1536x1024 RGBA. Both boars same body scale. ATTACK unmistakable low CHARGING TUSK THRUST: head lowered horizontally forward, nose thrust toward target, tusks prominently forward, shoulder hump high, forelegs braced wide partly bent, hindlegs pushing. Not airborne running and not muzzle-down grazing. Preserve reference stocky boar shoulders, angular long snout and attached robust tusks. Exactly4legs, every hoof attached. Warm muted umber/ochre two-tone wash,3broad bristle groups on ridge, exactly3 continuous bristle strokes in each group, contour2x innerink. THREE small widely spaced internal hatch clusters per animal: shoulder, midflank, haunch, EACH EXACTLY TWO short diagonal slash strokes. Six hatch strokes total per animal,90percent body quiet. No dense texture, no grain. Person/scene refs style only. Background alpha0 everywhere outside animals, no shadow/ground/haze/text.\n",
+  "prompt_sha256": "1401e19d8cc53915aaea8e71051923cb4ff55ed374d91e079540edc0febd7dd3",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": null,
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/try4.png",
+      "sha256": "3c5572099956200258549f8444c9bbaa69a342e1c5c079a21aefd77c16a3dec8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "max_gutter_alpha": 1,
+    "method": "unaltered rectangular crops across alpha<16 gutter; every RGBA pixel retained"
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.06356968215158924,
+  "landmark_note": "Manually measured S/stand withers and hoof in source coordinates.",
+  "frames": [
+    {
+      "species": "wild_boar",
+      "facing": "S",
+      "pose": "attack",
+      "attempt": 101,
+      "image": "art/animal/batch_a1/wild_boar/try101/S/attack.png",
+      "image_sha256": "d2fd67b2643e22f22740483645c0a3e91b67a2d1bafde733451e0e3e795aa9b4",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/panels/attack1/S_attack.png",
+      "source_panel_sha256": "bf9bb19012375306c834f7e2a7420cdd5bfd1c79a3e45f2af4d44ca2cbc65d26",
+      "source_box": [
+        0,
+        0,
+        768,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/attack1.png",
+      "raw_sha256": "ad09a8b9dab05e5f73346b3b7a6f8a7e3d06ce6c5b479f048734939a46c9308d",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/attack1.prompt.txt",
+      "prompt_sha256": "1401e19d8cc53915aaea8e71051923cb4ff55ed374d91e079540edc0febd7dd3",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/try4.png",
+          "sha256": "3c5572099956200258549f8444c9bbaa69a342e1c5c079a21aefd77c16a3dec8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.06356968215158924,
+      "upright_scale": 0.06356968215158924,
+      "normalization": {
+        "scaled_size": [
+          49,
+          65
+        ],
+        "trim_box": [
+          4,
+          20,
+          44,
+          49
+        ],
+        "placement": [
+          28,
+          44
+        ],
+        "resized_to_canvas_offset": [
+          24,
+          24
+        ],
+        "visible_pixels": 659,
+        "rotation_degrees": 0,
+        "scale": 0.06356968215158924,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "wild_boar",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 576,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 28,
+        "gradient_x": 0.06476920152091266,
+        "gradient_y": -0.9066795454545444,
+        "light_angle_degrees": 274.0860177060876,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "wild_boar",
+      "facing": "E",
+      "pose": "attack",
+      "attempt": 101,
+      "image": "art/animal/batch_a1/wild_boar/try101/E/attack.png",
+      "image_sha256": "15b74b56d9db64e4fe28c51464b162d5d4ca97f6141944b64af397d55e706f67",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/panels/attack1/E_attack.png",
+      "source_panel_sha256": "953c5a7d64efb4b298b7b133f9420988fdcc32ec50a2f106539728998174206b",
+      "source_box": [
+        768,
+        0,
+        1536,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/attack1.png",
+      "raw_sha256": "ad09a8b9dab05e5f73346b3b7a6f8a7e3d06ce6c5b479f048734939a46c9308d",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/attack1.prompt.txt",
+      "prompt_sha256": "1401e19d8cc53915aaea8e71051923cb4ff55ed374d91e079540edc0febd7dd3",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/wild_boar/try4.png",
+          "sha256": "3c5572099956200258549f8444c9bbaa69a342e1c5c079a21aefd77c16a3dec8"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.06356968215158924,
+      "upright_scale": 0.06356968215158924,
+      "normalization": {
+        "scaled_size": [
+          49,
+          65
+        ],
+        "trim_box": [
+          0,
+          20,
+          45,
+          49
+        ],
+        "placement": [
+          25,
+          44
+        ],
+        "resized_to_canvas_offset": [
+          25,
+          24
+        ],
+        "visible_pixels": 679,
+        "rotation_degrees": 0,
+        "scale": 0.06356968215158924,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "wild_boar",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 595,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 27,
+        "gradient_x": 0.10289067641681872,
+        "gradient_y": -0.7107408502772643,
+        "light_angle_degrees": 278.23722143232663,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 2,
+  "contact_sheet": "art/animal/batch_a1/wild_boar/try101/attack_sheet.png",
+  "contact_sheet_sha256": "c90119c973de326ff36b14255acb25cd61ee4ade172f6138f7e3bb690780371c",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

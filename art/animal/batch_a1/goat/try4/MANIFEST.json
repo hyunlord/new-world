@@ -1,0 +1,1236 @@
+{
+  "spec": {
+    "species": "goat",
+    "attempt": 4,
+    "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+    "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.prompt.txt",
+    "shoulder_y": 231,
+    "hoof_y": 470,
+    "shoulder_target": 30,
+    "dead_length": 52,
+    "poses": [
+      "stand",
+      "walk",
+      "run",
+      "graze",
+      "dead"
+    ],
+    "references": [
+      "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+      "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png"
+    ],
+    "seed": null,
+    "generator_record": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.generation.json",
+    "landmark_note": "Manual S-stand withers/back plane y231 to lowest hoof y470; interior-only targeted edit preserved source landmarks. One uniform upright scale all poses."
+  },
+  "spec_path": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.spec.json",
+  "spec_sha256": "b10b68dd324d1d0a3a57f168ca6e3b2bdf6840a433d629496388167dd3a2a6e2",
+  "raw_sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e",
+  "prompt_text": "Use case: precise-object-edit\nEdit target: image1 goat ten-pose sheet. Images2,3,4 are locked deer/person/scene style references.\nCHANGE ONLY THE TORSO HATCH MARKS on the ten goats in image1. There are exactly THREE clusters of TWO short parallel marks on each visible body (shoulder, flank, haunch). Keep all sixty marks at precisely their current positions and lengths, but reduce their ink width to exactly HALF the width of each goat's main body contour. The existing pairs are too dark and thick. Make each interior stroke delicate, light brown-black and visibly subordinate to the outline. Do not strengthen or redraw the outline: its current fine natural-history weight is already correct. Do not change outlines, anatomy, silhouette, pose, horns, hooves, face, proportions, position, size, cream belly, restrained ochre wash, upper-left lighting, layout, blank gutters, or transparency. Preserve all ten figures in two rows of five, with the current exact facings. No ground, shadows, text, borders or added details. True transparent alpha background. This is a narrowly targeted interior-ink thinning edit.\n",
+  "prompt_sha256": "1ca74af3996affb590cc0abcf168b6dedb8b3c8f2685aeda4ae137aee300575d",
+  "seed": null,
+  "seed_note": "null means generator did not expose a seed",
+  "generator_record": {
+    "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.generation.json",
+    "sha256": "8fcdee59016e5936534fe3e9c966fdac450ff3d04e30aa300f5432a1a80e247c"
+  },
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+      "sha256": "f445daae1bc81a53eb2705b94b7e6ee7e27116b69a91ddad5e253f2ea7ba64ec"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "ownership": {
+    "source_rgba_sha256": "faf0404b31a2db892547c97ca8357e3ada6a38ced6dc5e01be17f8fbd7ceb952",
+    "ownership_sha256": "21a5fd002b8b8e4ae5d614746c038885a59aa10d55c9c7efccc26bc2639f4c2f",
+    "visible_pixels": 391161,
+    "tied_visible_pixels": 3,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "source_opaque_border_pixels": 0,
+  "upright_scale": 0.12552301255230125,
+  "landmark_note": "Manual S-stand withers/back plane y231 to lowest hoof y470; interior-only targeted edit preserved source landmarks. One uniform upright scale all poses.",
+  "frames": [
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 4,
+      "image": "art/animal/batch_a1/goat/try4/S/stand.png",
+      "image_sha256": "cf1eb9dc5a8041c4c7ca18c1f03e9abf3f25cd88e7efe99f0718584d7a30e84f",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/try4/S_stand.png",
+      "source_panel_sha256": "2da003714382d4c8e0b9b15d81c78d46631c9ec2e4b0320517ef867093a114cb",
+      "source_box": [
+        0,
+        61,
+        266,
+        524
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+      "raw_sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.prompt.txt",
+      "prompt_sha256": "1ca74af3996affb590cc0abcf168b6dedb8b3c8f2685aeda4ae137aee300575d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+          "sha256": "f445daae1bc81a53eb2705b94b7e6ee7e27116b69a91ddad5e253f2ea7ba64ec"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.12552301255230125,
+      "upright_scale": 0.12552301255230125,
+      "normalization": {
+        "scaled_size": [
+          33,
+          58
+        ],
+        "trim_box": [
+          4,
+          11,
+          33,
+          52
+        ],
+        "placement": [
+          33,
+          32
+        ],
+        "resized_to_canvas_offset": [
+          29,
+          21
+        ],
+        "visible_pixels": 619,
+        "rotation_degrees": 0,
+        "scale": 0.12552301255230125,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 505,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 39,
+        "gradient_x": -2.608558333333333,
+        "gradient_y": -2.6524070484581492,
+        "light_angle_degrees": 225.477533676464,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 4,
+      "image": "art/animal/batch_a1/goat/try4/S/walk.png",
+      "image_sha256": "99a900467101934d1a6b6e06d77a1053f0f3907c858dbfa2fc6f34f7d162a808",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/try4/S_walk.png",
+      "source_panel_sha256": "5b409abc8aeed41912f364289c1fed05a3eb68e1ac35de36bfe7c101395c13af",
+      "source_box": [
+        289,
+        67,
+        544,
+        526
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+      "raw_sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.prompt.txt",
+      "prompt_sha256": "1ca74af3996affb590cc0abcf168b6dedb8b3c8f2685aeda4ae137aee300575d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+          "sha256": "f445daae1bc81a53eb2705b94b7e6ee7e27116b69a91ddad5e253f2ea7ba64ec"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.12552301255230125,
+      "upright_scale": 0.12552301255230125,
+      "normalization": {
+        "scaled_size": [
+          32,
+          58
+        ],
+        "trim_box": [
+          0,
+          10,
+          32,
+          51
+        ],
+        "placement": [
+          32,
+          32
+        ],
+        "resized_to_canvas_offset": [
+          32,
+          22
+        ],
+        "visible_pixels": 629,
+        "rotation_degrees": 0,
+        "scale": 0.12552301255230125,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 505,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -3.4114047846889948,
+        "gradient_y": -3.225457906458797,
+        "light_angle_degrees": 223.39514760700825,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 4,
+      "image": "art/animal/batch_a1/goat/try4/S/run.png",
+      "image_sha256": "46869615d4e8143bd34cb4253ae20d2843b57a4a5bc1505c7e8b1d6528eba6b0",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/try4/S_run.png",
+      "source_panel_sha256": "d2567389eb6be238d92bfd56aa554f8def3be1e1ba6f91842fb541091f08b60a",
+      "source_box": [
+        559,
+        21,
+        903,
+        466
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+      "raw_sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.prompt.txt",
+      "prompt_sha256": "1ca74af3996affb590cc0abcf168b6dedb8b3c8f2685aeda4ae137aee300575d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+          "sha256": "f445daae1bc81a53eb2705b94b7e6ee7e27116b69a91ddad5e253f2ea7ba64ec"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.12552301255230125,
+      "upright_scale": 0.12552301255230125,
+      "normalization": {
+        "scaled_size": [
+          43,
+          56
+        ],
+        "trim_box": [
+          1,
+          17,
+          42,
+          52
+        ],
+        "placement": [
+          27,
+          38
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          21
+        ],
+        "visible_pixels": 606,
+        "rotation_degrees": 0,
+        "scale": 0.12552301255230125,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 504,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 33,
+        "gradient_x": -2.4496551724137934,
+        "gradient_y": -2.321003686635945,
+        "light_angle_degrees": 223.45526555007507,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "graze",
+      "attempt": 4,
+      "image": "art/animal/batch_a1/goat/try4/S/graze.png",
+      "image_sha256": "882fe6eb67d7d26ded15374fb9df68231d2c0694059d9d32c1ba678422b6dc34",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/try4/S_graze.png",
+      "source_panel_sha256": "7b3835ee8fb26adb950d7e7afa95724f815039a8b952625a923d5f6744bba7c7",
+      "source_box": [
+        871,
+        87,
+        1242,
+        571
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+      "raw_sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.prompt.txt",
+      "prompt_sha256": "1ca74af3996affb590cc0abcf168b6dedb8b3c8f2685aeda4ae137aee300575d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+          "sha256": "f445daae1bc81a53eb2705b94b7e6ee7e27116b69a91ddad5e253f2ea7ba64ec"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.12552301255230125,
+      "upright_scale": 0.12552301255230125,
+      "normalization": {
+        "scaled_size": [
+          47,
+          61
+        ],
+        "trim_box": [
+          4,
+          15,
+          33,
+          50
+        ],
+        "placement": [
+          33,
+          38
+        ],
+        "resized_to_canvas_offset": [
+          29,
+          23
+        ],
+        "visible_pixels": 572,
+        "rotation_degrees": 0,
+        "scale": 0.12552301255230125,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 468,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 33,
+        "gradient_x": -2.3386538071065988,
+        "gradient_y": -2.8252898617511524,
+        "light_angle_degrees": 230.38350017148903,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "goat",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 4,
+      "image": "art/animal/batch_a1/goat/try4/S/dead.png",
+      "image_sha256": "76d704c4d3ac9afd26da17c8d235a828d184aaef661581fcd7b45fd59bf5a83b",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/try4/S_dead.png",
+      "source_panel_sha256": "2897071c7d949395a9f21856c6a2e159b869af32f6260c21c0170f5a7bd0d6a4",
+      "source_box": [
+        1153,
+        55,
+        1504,
+        620
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+      "raw_sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.prompt.txt",
+      "prompt_sha256": "1ca74af3996affb590cc0abcf168b6dedb8b3c8f2685aeda4ae137aee300575d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+          "sha256": "f445daae1bc81a53eb2705b94b7e6ee7e27116b69a91ddad5e253f2ea7ba64ec"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.15522388059701492,
+      "upright_scale": 0.12552301255230125,
+      "normalization": {
+        "scaled_size": [
+          54,
+          88
+        ],
+        "trim_box": [
+          1,
+          41,
+          54,
+          67
+        ],
+        "placement": [
+          21,
+          31
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          -10
+        ],
+        "visible_pixels": 803,
+        "rotation_degrees": 0,
+        "scale": 0.15522388059701492,
+        "discarded_pixels": 2,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 690,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 25,
+        "gradient_x": -0.47048043478260876,
+        "gradient_y": -1.6741638436482078,
+        "light_angle_degrees": 254.30335571972128,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 4,
+      "image": "art/animal/batch_a1/goat/try4/E/stand.png",
+      "image_sha256": "94ea0d56a6bf79c2f8c8bc0274f6bfa740ddee03aef73eb35f6a500e327be5f9",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/try4/E_stand.png",
+      "source_panel_sha256": "d4f241dd83d9531af0e354477ebac12b9e73787b339447d26f9586077fa06dc9",
+      "source_box": [
+        17,
+        543,
+        340,
+        986
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+      "raw_sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.prompt.txt",
+      "prompt_sha256": "1ca74af3996affb590cc0abcf168b6dedb8b3c8f2685aeda4ae137aee300575d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+          "sha256": "f445daae1bc81a53eb2705b94b7e6ee7e27116b69a91ddad5e253f2ea7ba64ec"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.12552301255230125,
+      "upright_scale": 0.12552301255230125,
+      "normalization": {
+        "scaled_size": [
+          41,
+          56
+        ],
+        "trim_box": [
+          1,
+          6,
+          35,
+          46
+        ],
+        "placement": [
+          31,
+          33
+        ],
+        "resized_to_canvas_offset": [
+          30,
+          27
+        ],
+        "visible_pixels": 634,
+        "rotation_degrees": 0,
+        "scale": 0.12552301255230125,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 526,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 39,
+        "gradient_x": -1.4641051918735888,
+        "gradient_y": -2.7434008456659615,
+        "light_angle_degrees": 241.9119371266592,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 4,
+      "image": "art/animal/batch_a1/goat/try4/E/walk.png",
+      "image_sha256": "c8bb5e1d831fdb043bac77846ccd592d7498df46473e61cdebcfff523dfbacc3",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/try4/E_walk.png",
+      "source_panel_sha256": "8b4cf0a09a21159924fe2c2462d4377c8dd95daccec4fced35aa0a3d39058cd0",
+      "source_box": [
+        264,
+        527,
+        633,
+        936
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+      "raw_sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.prompt.txt",
+      "prompt_sha256": "1ca74af3996affb590cc0abcf168b6dedb8b3c8f2685aeda4ae137aee300575d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+          "sha256": "f445daae1bc81a53eb2705b94b7e6ee7e27116b69a91ddad5e253f2ea7ba64ec"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.12552301255230125,
+      "upright_scale": 0.12552301255230125,
+      "normalization": {
+        "scaled_size": [
+          46,
+          51
+        ],
+        "trim_box": [
+          4,
+          8,
+          39,
+          46
+        ],
+        "placement": [
+          30,
+          35
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          27
+        ],
+        "visible_pixels": 612,
+        "rotation_degrees": 0,
+        "scale": 0.12552301255230125,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 484,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 37,
+        "gradient_x": -0.603387096774193,
+        "gradient_y": -2.386442452830189,
+        "light_angle_degrees": 255.81073377809565,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 4,
+      "image": "art/animal/batch_a1/goat/try4/E/run.png",
+      "image_sha256": "2a09e8d1e661b6618ee81f7ea9c619a1c61b8050ee0f2716383ced81b2b5793d",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/try4/E_run.png",
+      "source_panel_sha256": "6c8da7c16f7582f325a5c3c3d50a6c7fcaf16f2ef0b72bd84cf397070c6290ee",
+      "source_box": [
+        561,
+        495,
+        910,
+        990
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+      "raw_sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.prompt.txt",
+      "prompt_sha256": "1ca74af3996affb590cc0abcf168b6dedb8b3c8f2685aeda4ae137aee300575d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+          "sha256": "f445daae1bc81a53eb2705b94b7e6ee7e27116b69a91ddad5e253f2ea7ba64ec"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.12552301255230125,
+      "upright_scale": 0.12552301255230125,
+      "normalization": {
+        "scaled_size": [
+          44,
+          62
+        ],
+        "trim_box": [
+          0,
+          12,
+          43,
+          45
+        ],
+        "placement": [
+          26,
+          40
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          28
+        ],
+        "visible_pixels": 574,
+        "rotation_degrees": 0,
+        "scale": 0.12552301255230125,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 468,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 32,
+        "gradient_x": 1.0403965770171153,
+        "gradient_y": -1.65359494949495,
+        "light_angle_degrees": 302.1769766997892,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "graze",
+      "attempt": 4,
+      "image": "art/animal/batch_a1/goat/try4/E/graze.png",
+      "image_sha256": "e8686d0bc65091d3c25b6bb9f44ece3ea0ea5f0ee7be8387958a907953a9890d",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/try4/E_graze.png",
+      "source_panel_sha256": "545fe2ae942b10079bfd29bd139fc2ed6c7eaff582f2f1e5b97fc8b6885900e7",
+      "source_box": [
+        895,
+        571,
+        1210,
+        924
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+      "raw_sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.prompt.txt",
+      "prompt_sha256": "1ca74af3996affb590cc0abcf168b6dedb8b3c8f2685aeda4ae137aee300575d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+          "sha256": "f445daae1bc81a53eb2705b94b7e6ee7e27116b69a91ddad5e253f2ea7ba64ec"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.12552301255230125,
+      "upright_scale": 0.12552301255230125,
+      "normalization": {
+        "scaled_size": [
+          40,
+          44
+        ],
+        "trim_box": [
+          3,
+          11,
+          37,
+          43
+        ],
+        "placement": [
+          31,
+          41
+        ],
+        "resized_to_canvas_offset": [
+          28,
+          30
+        ],
+        "visible_pixels": 604,
+        "rotation_degrees": 0,
+        "scale": 0.12552301255230125,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          1,
+          72
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 498,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 31,
+        "gradient_x": -2.8827937649880107,
+        "gradient_y": -2.889943736263736,
+        "light_angle_degrees": 225.0709651128544,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    },
+    {
+      "species": "goat",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 4,
+      "image": "art/animal/batch_a1/goat/try4/E/dead.png",
+      "image_sha256": "85fed97fe3c689d71cfe0e15307f45418a5309589f248329f7fc7bccc977cbeb",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "footprint_tiles": [
+        1,
+        1
+      ],
+      "source_panel": "/Users/rexxa/work/art-batch/A1/raw/goat/panels/try4/E_dead.png",
+      "source_panel_sha256": "b7760c5fc5f72dfac53c20ad12868f721f4e21ff635b98598cf2e1645ff3c124",
+      "source_box": [
+        1183,
+        661,
+        1517,
+        956
+      ],
+      "raw": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.png",
+      "raw_sha256": "90f1557dd03c57b72e19801ee65771d3706f83ea1ac07dd722ec714097e67d9e",
+      "prompt": "/Users/rexxa/work/art-batch/A1/raw/goat/try4.prompt.txt",
+      "prompt_sha256": "1ca74af3996affb590cc0abcf168b6dedb8b3c8f2685aeda4ae137aee300575d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/art-batch/A1/raw/goat/try3.png",
+          "sha256": "f445daae1bc81a53eb2705b94b7e6ee7e27116b69a91ddad5e253f2ea7ba64ec"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "scale": 0.16199376947040497,
+      "upright_scale": 0.12552301255230125,
+      "normalization": {
+        "scaled_size": [
+          54,
+          48
+        ],
+        "trim_box": [
+          1,
+          18,
+          54,
+          41
+        ],
+        "placement": [
+          21,
+          34
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          16
+        ],
+        "visible_pixels": 779,
+        "rotation_degrees": 0,
+        "scale": 0.16199376947040497,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "alpha": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "structural_pass": true,
+      "projection_report_only": {
+        "family": "goat",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          1,
+          56
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 674,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 22,
+        "gradient_x": 0.4023612698412695,
+        "gradient_y": -1.4729430463576159,
+        "light_angle_degrees": 285.2786328498187,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+      "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+    }
+  ],
+  "structural_pass": true,
+  "frame_count": 10,
+  "contact_sheet": "art/animal/batch_a1/goat/try4/contact_sheet.png",
+  "contact_sheet_sha256": "f69f85adc9434d32141699f315491925a1a7a0788075feaf06f8d135f216e701",
+  "status": "CANDIDATE_PENDING_VISUAL_REVIEW"
+}

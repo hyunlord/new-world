@@ -1,0 +1,129 @@
+{
+  "species": "calf",
+  "facing": "S",
+  "pose": "walk",
+  "attempt": 1,
+  "image": "art/animal/batch_a1/adopted/calf/S/walk.png",
+  "image_sha256": "fbc5e10443ff675b26c8a1c56cde7eaddc8f75bfc75104535150eeada1005c6a",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/calf/panels/try1/S_walk.png",
+  "source_panel_sha256": "0d2805035858adb7a25cd784ff5f38090f16680bd351acff25564c7b8ac4e0f4",
+  "source_box": [
+    214,
+    10,
+    588,
+    560
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.png",
+  "raw_sha256": "ef82f8b82e6e216bb8640481c6bb76078893ca43e3b69db068bea3f4271d9307",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/calf/try1.prompt.txt",
+  "prompt_sha256": "01e95a2b0b1e83bdf2b7fe7f73661682f86924b6b55c89dfd16d5c206302d9ad",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.10256410256410256,
+  "upright_scale": 0.10256410256410256,
+  "normalization": {
+    "scaled_size": [
+      38,
+      56
+    ],
+    "trim_box": [
+      7,
+      18,
+      33,
+      47
+    ],
+    "placement": [
+      35,
+      44
+    ],
+    "resized_to_canvas_offset": [
+      28,
+      26
+    ],
+    "visible_pixels": 456,
+    "rotation_degrees": 0,
+    "scale": 0.10256410256410256,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "calf",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 358,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 28,
+    "gradient_x": -2.54601228668942,
+    "gradient_y": -1.7697537974683535,
+    "light_angle_degrees": 214.80347719715948,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "source_status": "CANDIDATE_PENDING_VISUAL_REVIEW",
+  "import_status": "PENDING",
+  "source_image": "art/animal/batch_a1/calf/try1/S/walk.png",
+  "source_sidecar": "art/animal/batch_a1/calf/try1/S/walk.json",
+  "source_sidecar_sha256": "51e30d611ad3f3a2387d73a223e977450d421032d086ab8b96e86984e4abd443",
+  "source_manifest": "art/animal/batch_a1/calf/try1/MANIFEST.json",
+  "source_manifest_sha256": "11629640370108914a61b53db19f3ba4441b80b424595e704b966cdb38e05f11",
+  "selection": "/Users/rexxa/work/art-batch/A1/selection.json",
+  "selection_sha256": "26850ca9badfb050fa38b075c757eec783039808da0951cf1b59da5fef444805",
+  "review_status": "pass",
+  "review_evidence": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/reviews/first_bovines.json",
+      "sha256": "931c7edcbe37feab3b46248a17072229a5023d013872606122e99673f9801cec"
+    }
+  ],
+  "reference_reuse": false
+}

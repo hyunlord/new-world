@@ -1,0 +1,129 @@
+{
+  "species": "aurochs",
+  "facing": "S",
+  "pose": "attack",
+  "attempt": 2,
+  "image": "art/animal/batch_a1/adopted/aurochs/S/attack.png",
+  "image_sha256": "7e29d8be2d202cbe746c42cff8d6d47d2040be1d1fdb2b49876d5b27a7163d75",
+  "canvas_px": [
+    96,
+    80
+  ],
+  "anchor_px": [
+    48,
+    72
+  ],
+  "footprint_tiles": [
+    1,
+    1
+  ],
+  "source_panel": "/Users/rexxa/work/art-batch/A1/raw/aurochs/panels/attack2/S_attack.png",
+  "source_panel_sha256": "292759d99afcb49f4872bd0f4c6ea2176d98e76740dd7e2a749645c807b82407",
+  "source_box": [
+    0,
+    0,
+    887,
+    887
+  ],
+  "raw": "/Users/rexxa/work/art-batch/A1/raw/aurochs/attack2.png",
+  "raw_sha256": "2bb830ef896d6ed0db93404fdb7f05d21ae006b70b63177b4f89862bef17a0f2",
+  "prompt": "/Users/rexxa/work/art-batch/A1/raw/aurochs/attack2.prompt.txt",
+  "prompt_sha256": "0518a13c119e1e80fad3404f2077adfc8198482d6833418c74146176494b7147",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/raw/aurochs/attack1.png",
+      "sha256": "c6d42907f5176a0cd5025c103acaecb4d5ffa373e40ed6b820e7e8fa772fde8c"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/person.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a1/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "scale": 0.0782122905027933,
+  "upright_scale": 0.0782122905027933,
+  "normalization": {
+    "scaled_size": [
+      69,
+      69
+    ],
+    "trim_box": [
+      4,
+      14,
+      64,
+      58
+    ],
+    "placement": [
+      18,
+      29
+    ],
+    "resized_to_canvas_offset": [
+      14,
+      15
+    ],
+    "visible_pixels": 1360,
+    "rotation_degrees": 0,
+    "scale": 0.0782122905027933,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "alpha": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "structural_pass": true,
+  "projection_report_only": {
+    "family": "aurochs",
+    "anchor": [
+      48,
+      72
+    ],
+    "height_band": [
+      1,
+      72
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1229,
+    "base_row": 71,
+    "base_error": -1,
+    "height": 42,
+    "gradient_x": -0.7682102112676056,
+    "gradient_y": -2.3752010489510487,
+    "light_angle_degrees": 252.0772597951914,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_note": "Canvas-extent height band only; gradient cannot prove camera angle or anatomical shoulder height.",
+  "status": "ACCEPTED_ART_CANDIDATE",
+  "source_status": "CANDIDATE_PENDING_VISUAL_REVIEW",
+  "import_status": "PENDING",
+  "source_image": "art/animal/batch_a1/aurochs/try2/S/attack.png",
+  "source_sidecar": "art/animal/batch_a1/aurochs/try2/S/attack.json",
+  "source_sidecar_sha256": "463ceb056ae63137aff88877683e933469c2a831b8898858959537591a9191cb",
+  "source_manifest": "art/animal/batch_a1/aurochs/try2/ATTACK_MANIFEST.json",
+  "source_manifest_sha256": "381f587412000467ea126284f991b557abaf8a292e7dae237ab49844d8d78755",
+  "selection": "/Users/rexxa/work/art-batch/A1/selection.json",
+  "selection_sha256": "26850ca9badfb050fa38b075c757eec783039808da0951cf1b59da5fef444805",
+  "review_status": "pass",
+  "review_evidence": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A1/reviews/bovines_round2.json",
+      "sha256": "0a7a45b90e734d7319f7baacb7a42addad6a0ca4557bcf2568b9da6eeed1025a"
+    }
+  ],
+  "reference_reuse": false
+}
