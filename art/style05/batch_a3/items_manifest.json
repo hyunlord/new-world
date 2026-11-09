@@ -1,0 +1,2860 @@
+{
+  "schema_version": 1,
+  "status": "DRAFT_GEOMETRY_ADAPTER_ROOT_SELECTION_CONFIRMED",
+  "about": "Copy to art/style05/batch_a3/items_manifest.json on the art branch after adoption checks. The unchanged importer reads assets[id].canvas_px/anchor_px. Legacy geometry is retained exactly; new item geometry is the 64px icon contract. Full generation/adoption provenance remains in A3 sidecars and manifests.",
+  "legacy_source": {
+    "commit": "f182769fe06b1cb60105e4d0bf127b6524277838",
+    "path": "docs/v8/artenv1/items_manifest.json"
+  },
+  "assets": [
+    {
+      "id": "firewood",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "ground_axe",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "spear",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "cured_hide",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hide_wrap",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "fur_cloak",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wolf_hide",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "clay",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "raw_pot",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "clay_pot_empty",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "clay_pot_filled",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "meat",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flint_nodule",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "log_pile_small",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ]
+    },
+    {
+      "id": "log_pile_medium",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ]
+    },
+    {
+      "id": "log_pile_large",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ]
+    },
+    {
+      "id": "stone_pile",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ]
+    },
+    {
+      "id": "flint_pile",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ]
+    },
+    {
+      "id": "flint_blade",
+      "canvas_px": [
+        48,
+        48
+      ],
+      "anchor_px": [
+        24.0,
+        24.0
+      ]
+    },
+    {
+      "id": "stone_axe",
+      "canvas_px": [
+        48,
+        48
+      ],
+      "anchor_px": [
+        24.0,
+        24.0
+      ]
+    },
+    {
+      "id": "hide",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ]
+    },
+    {
+      "id": "berry_basket",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ]
+    },
+    {
+      "id": "charcoal",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "charcoal_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "charcoal_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "copper_ore",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "copper_ore_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "copper_ore_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "tin_ore",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "tin_ore_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "tin_ore_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "copper_ingot",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "copper_ingot_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "copper_ingot_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "tin_ingot",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "tin_ingot_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "tin_ingot_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bronze_ingot",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bronze_ingot_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bronze_ingot_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "clay_mould",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "clay_mould_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "clay_mould_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "mud_brick",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "mud_brick_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "mud_brick_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "lime",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "lime_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "lime_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "copper_awl",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "copper_needle",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "copper_axe",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bronze_axe",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bronze_sickle",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bronze_hoe",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bronze_spear",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bronze_dagger",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "honey",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "honey_empty",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "beeswax",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "beeswax_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "beeswax_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wool",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wool_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wool_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wool_yarn",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wool_yarn_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wool_yarn_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wool_tunic",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wheel",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "seal",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "tablet",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "glass_bead",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "glass_bead_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "glass_bead_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flour",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flour_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flour_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bread",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bread_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bread_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "beer",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "beer_empty",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "milk",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "milk_empty",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "cheese",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "cheese_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "cheese_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "smoked_meat",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "smoked_meat_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "smoked_meat_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hoe",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "sickle",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "adze",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bow",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "arrow",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "leather_armor",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "herbs",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "herbs_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "herbs_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "poultice",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "barley",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "barley_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "barley_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "barley_seed",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "barley_seed_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "barley_seed_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "rye",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "rye_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "rye_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "rye_seed",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "rye_seed_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "rye_seed_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "lentil",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "lentil_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "lentil_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "lentil_seed",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "lentil_seed_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "lentil_seed_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "pea",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "pea_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "pea_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "pea_seed",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "pea_seed_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "pea_seed_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "millet",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "millet_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "millet_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "millet_seed",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "millet_seed_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "millet_seed_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "apple",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "apple_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "apple_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hay",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hay_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hay_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "goat_hide",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "butter",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "butter_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "butter_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "salt",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "salt_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "salt_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "fermented_milk",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "fermented_milk_empty",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "fermented_vegetables",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "fermented_vegetables_empty",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "tally_stick",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "dugout_canoe",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wild_grain",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wild_grain_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wild_grain_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "emmer_seed",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "emmer_seed_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "emmer_seed_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flax_seed",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flax_seed_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flax_seed_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flax_stalks",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flax_stalks_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flax_stalks_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flax_fibre",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flax_fibre_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flax_fibre_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "linen_thread",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "linen_thread_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "linen_thread_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "linen_cloth",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "linen_cloth_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "linen_cloth_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hand_spindle",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "linen_tunic",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "linen_wrap",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "dyed_tunic",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "cord",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "basket",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "sling",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bone_needle",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "fish",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "fish_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "fish_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hazelnuts",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hazelnuts_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hazelnuts_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "roots",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "roots_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "roots_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "roast_meat",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "porridge",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "stew",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "dried_meat",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "dried_meat_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "dried_meat_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "dried_berries",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "dried_berries_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "dried_berries_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "roasted_roots",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "roasted_roots_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "roasted_roots_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "fruit_porridge",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "atlatl",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bone_awl",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_ore",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_ore_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_ore_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_bloom",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_bloom_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_bloom_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_ingot",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_ingot_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_ingot_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_axe",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_hoe",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_sickle",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_saw",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_sword",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_helmet",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "coin",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "coin_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "coin_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "record_book",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "composite_bow",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "cart",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "plough",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "reed_boat",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "sail",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wine",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "wine_empty",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "olive_oil",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "olive_oil_empty",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "faience",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "drum",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "flute",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "ritual_mask",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "grape",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "grape_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "grape_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "olive",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "olive_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "olive_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hemp",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hemp_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "hemp_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "oats",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "oats_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "oats_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_plough",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "silk",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "silk_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "silk_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "purple_cloth",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "purple_cloth_count_2_8",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "purple_cloth_count_9_plus",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "map",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "bronze_sword",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_pickaxe",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_chisel",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    },
+    {
+      "id": "iron_shield",
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ]
+    }
+  ]
+}

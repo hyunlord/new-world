@@ -1,0 +1,3285 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "scope": "Selected art only:127 logical assets/237 PNGs. Two family identities remain withheld.",
+  "differences": [
+    "Thin implements, seed varieties and subtle vessel fill colors need labels at32px.",
+    "Numeric style and lighting failures remain recorded; fish/goat-hide lighting direction is indeterminate."
+  ],
+  "suggestions": [
+    "Import with the merged item geometry adapter.",
+    "Keep future IDs and empty-state selection pending until C2/C3 data implementation."
+  ],
+  "reasoning": "Root reviewed final64/32 sheets beside six imported references, actual-alpha composites, targeted corrections and independent semantic reviews. Selected silhouettes/materials/period details are coherent; unresolved weak spear and steel edge were withheld.",
+  "method": "Label-visible review; no blind recognition or automated exact mark-count claim.",
+  "counts": {
+    "generated": 146,
+    "adopted_logical": 127,
+    "adopted_pngs": 237,
+    "rejected": 12,
+    "alternates": 7,
+    "count_families": 55,
+    "empty_states": 7,
+    "withheld": 2
+  },
+  "subfamilies": {
+    "food": {
+      "generated": 27,
+      "adopted": 23,
+      "alternate": 3,
+      "rejected": 1
+    },
+    "metal": {
+      "generated": 16,
+      "adopted": 15,
+      "rejected": 1
+    },
+    "bronze": {
+      "generated": 20,
+      "alternate": 4,
+      "adopted": 15,
+      "rejected": 1
+    },
+    "iron": {
+      "generated": 20,
+      "adopted": 15,
+      "rejected": 5
+    },
+    "tools_textiles": {
+      "generated": 23,
+      "adopted": 20,
+      "rejected": 3
+    },
+    "crop_items": {
+      "generated": 18,
+      "adopted": 18
+    },
+    "misc": {
+      "generated": 15,
+      "adopted": 14,
+      "rejected": 1
+    },
+    "variants": {
+      "generated": 7,
+      "adopted": 7
+    }
+  },
+  "withheld": [
+    {
+      "id": "iron_spear",
+      "reason": "Defining iron head lost at32px; replacement request blocked by image service; no replacement output."
+    },
+    {
+      "id": "steel_edge",
+      "reason": "Chipped/flaked shape reads as stone rather than forged steel; replacement request blocked by image service; no replacement output."
+    }
+  ],
+  "numeric_style": {
+    "passed": 79,
+    "total": 127,
+    "calibration_unchanged": true
+  },
+  "projection": {
+    "single_passed": 114,
+    "single_total": 127,
+    "export_passed": 215,
+    "export_total": 237,
+    "numeric_failures_are_not_passes": true
+  },
+  "sources": [
+    {
+      "path": "/Users/rexxa/work/art-batch/A3/reviews/independent_noniron.json",
+      "sha256": "2117a16b343a646174e543c76226a42427e8e9520ce1de9064e07faba9cae808"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch/A3/reviews/independent_metal_iron.json",
+      "sha256": "59adba097ff851850e0979be308b7b99bd211f7c7f1748cdcf5a43185c124d71"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch/A3/reviews/final_food_misc_variants.json",
+      "sha256": "e9a530edffa3803644e67826409ca311f42dcae382e3e8766d9a9b50d426f401"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch/A3/reviews/final_crops_tools.json",
+      "sha256": "eccd15e84e20ff34bc092a20689f44e20a172bbb65d60f013c69fe7f61769619"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch/A3/reviews/numeric_reference_baseline.json",
+      "sha256": "b97c40bf7ae13880b66e649ded2cf3436c297f982cffdeada0f092128410305b"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch/A3/reviews/projection_visual_resolution.json",
+      "sha256": "534c1ed93a302673ed7f67ab19be4f7b85e359e2c9014c39472498e8850c55e3"
+    }
+  ],
+  "records": [
+    {
+      "id": "beer",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/beer_try1.json",
+      "record_sha256": "8d4f94811822ab09651ee19530d4d31347ffab6a2e8d0865e6f54e45287c2679",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/beer_try1.png",
+      "raw_sha256": "752cde03c81be34865db2e2d87e8ecceae9a43984a42a1f52cdf2129a8147892"
+    },
+    {
+      "id": "bread",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/bread_try1.json",
+      "record_sha256": "65baecc88ad0803877e045eae3ca3b63a8296e1351dbdad031fbfd994b1404e9",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/bread_try1.png",
+      "raw_sha256": "7970d5e25f30d59f0a92db79e93b076b6bcd37c944412e60e9141020ce291c24"
+    },
+    {
+      "id": "bread",
+      "attempt": 2,
+      "family": "food",
+      "decision": "alternate",
+      "reason": "Valid alternate; earlier alpha-preview concern was superseded by actual-alpha inspection.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/bread_try2.json",
+      "record_sha256": "42b7c0d706e79a9f8dcf3ca96b30c1f2ed60c794f4775ff3cdda4d3a03a402b5",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/bread_try2.png",
+      "raw_sha256": "ac19d8fd8cd31f1042389a1bc1ec6d814b96b9dcd8d6f90116f717fba04a7c7e"
+    },
+    {
+      "id": "butter",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/butter_try1.json",
+      "record_sha256": "a216626f1c9c8052df4a23b362227d3383fa2f33a9eedb020de3c168bb7f3361",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/butter_try1.png",
+      "raw_sha256": "6301bd043687d2114c38064be9096a8c322bb94c82ff7e214dc2a00115f6fe3f"
+    },
+    {
+      "id": "cheese",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/cheese_try1.json",
+      "record_sha256": "01c227f060594bace61bcfbd86b473ab376464db342f1aee9f54df3c8fdc8225",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/cheese_try1.png",
+      "raw_sha256": "8785b20793a1624c57db37577b05413626f875a6559de0308f35d513da70550c"
+    },
+    {
+      "id": "dried_berries",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/dried_berries_try1.json",
+      "record_sha256": "c47e9ffc82ca369185c9d31164a4c3bf14513a5cf7ca1d6c5c741b07e6f27531",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/dried_berries_try1.png",
+      "raw_sha256": "fb266522906b688ca6fcdc4b5c5df903dcb959204a8d76c8047724a051c82b42"
+    },
+    {
+      "id": "dried_meat",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/dried_meat_try1.json",
+      "record_sha256": "a0fba4e160cb54554017fe26a93b88060e500bc1761fd0ea35441860cf0e6561",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/dried_meat_try1.png",
+      "raw_sha256": "e59c85bb1e32897cdb773f8339baba40ffb23191d5f64f80e8e9ae41fd963c67"
+    },
+    {
+      "id": "fermented_milk",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/fermented_milk_try1.json",
+      "record_sha256": "f6ed53474e172eb102d3af94cf17ac1da8e74715f33c68520d51d0ecb6ff135d",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/fermented_milk_try1.png",
+      "raw_sha256": "29dbb7edf61f4cbc1d6c90c40e78b2df68ffe2db38b98e3048e1a5eeeed0c030"
+    },
+    {
+      "id": "fermented_vegetables",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/fermented_vegetables_try1.json",
+      "record_sha256": "d41b5bd51f8e26bcee53c115e8d832d2de085ea2cad99af32e9773d91e6a2577",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/fermented_vegetables_try1.png",
+      "raw_sha256": "717c4b72dbe07e5041fa8ef2226100e78ef4ce33edc2916ef45f8ec6b23ec311"
+    },
+    {
+      "id": "fish",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/fish_try1.json",
+      "record_sha256": "7daaa57ae30fa6510371d7bbb7aeb70e0e54446e0a44ae907e8cac3f03ff68fc",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/fish_try1.png",
+      "raw_sha256": "e915e2d6e7f66e0007fccba8ee0239de00800892f54b72b9a4d20daa93b10c06"
+    },
+    {
+      "id": "flour",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/flour_try1.json",
+      "record_sha256": "95c4bb8a5e9db0b792633b8b7c2fd307b34af76f26ca7d26c0c61d55291a2972",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/flour_try1.png",
+      "raw_sha256": "ef5e47ee8a1cf04c56b20d8d529097ab08749c642315ff6e39cb90223517369d"
+    },
+    {
+      "id": "flour",
+      "attempt": 2,
+      "family": "food",
+      "decision": "alternate",
+      "reason": "Valid alternate; earlier alpha-preview concern was superseded by actual-alpha inspection.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/flour_try2.json",
+      "record_sha256": "f5e7d324bee9553960b9f7443119b3e14a9c4eaaf9f11f96e7745c7ced7840a0",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/flour_try2.png",
+      "raw_sha256": "7aa349de44506eb16ea04a43f540fab35a544b307256853689d8dfa28069e13d"
+    },
+    {
+      "id": "fruit_porridge",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/fruit_porridge_try1.json",
+      "record_sha256": "1b7ad5cbfefb44c534d9a5ef8b452256240eb27afbf2fd46dc62ada06cc89d6b",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/fruit_porridge_try1.png",
+      "raw_sha256": "504a3acf99128c297d3b19273fd33a0eedb895ed38df0491871e025e6de4429d"
+    },
+    {
+      "id": "wild_grain",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/grain_try1.json",
+      "record_sha256": "d1397935a4fa4f31fabd8987c8cc64bfac74d89f20a7fd2237a4875aafedd76f",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/grain_try1.png",
+      "raw_sha256": "1656c13dbd452b24fdaf9291952256206906bbc7d98aa9eb4aae5e5810551764"
+    },
+    {
+      "id": "wild_grain",
+      "attempt": 2,
+      "family": "food",
+      "decision": "alternate",
+      "reason": "Valid alternate; earlier alpha-preview concern was superseded by actual-alpha inspection.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/grain_try2.json",
+      "record_sha256": "4b1d19f7d470e0a602bb4ada086da46c6cdd0a69baace1b490a1cd6be067974c",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/grain_try2.png",
+      "raw_sha256": "549774f94c19c926b4d4c6fbf66e3271913d8ca44823e0d9aac8321242885752"
+    },
+    {
+      "id": "hazelnuts",
+      "attempt": 1,
+      "family": "food",
+      "decision": "rejected",
+      "reason": "Acorn-like scaly caps instead of bare hazelnut shells.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/hazelnuts_try1.json",
+      "record_sha256": "9929519ebbc777739fb927597f0aed34642deb616a93310907ebdfe4483ac010",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/hazelnuts_try1.png",
+      "raw_sha256": "80694d42f50f3e51f79560fab8b7af62105d089a07894b2799a582f2dee3e80c"
+    },
+    {
+      "id": "hazelnuts",
+      "attempt": 2,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/hazelnuts_try2.json",
+      "record_sha256": "99800c93cbb258e8910c8672c6508d240acbc1e5b8b2233304cfde0ff88856f1",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/hazelnuts_try2.png",
+      "raw_sha256": "7d1cde4acb02fc0ec89c8161ded328ffa27b41285b337338983c816d4b645c8e"
+    },
+    {
+      "id": "herbs",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/herbs_try1.json",
+      "record_sha256": "59f0cab4effd272ae9ceb06dab2c5618594827b317a4151a024cfe160faf0c72",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/herbs_try1.png",
+      "raw_sha256": "11c4fc10b9e89075c063d45af8550be59ab489747d3849653a5693e669029b66"
+    },
+    {
+      "id": "milk",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/milk_try1.json",
+      "record_sha256": "d2db3ecbc0b537a5ac7b6470e5a61482bda119372d289530c4eb4e82b0f7f707",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/milk_try1.png",
+      "raw_sha256": "53f21045b575006fca3841da6aa8ea858af7a081ff7f7c29eb3518d055e11d99"
+    },
+    {
+      "id": "porridge",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/porridge_try1.json",
+      "record_sha256": "c8c91f8024012172d120da672808b5681885fd77bb6c8f8581efb612120b3678",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/porridge_try1.png",
+      "raw_sha256": "04bf8c429fff6c0c87a57c80615cbf5b675c8928292251e95fd5aefe2c3d4669"
+    },
+    {
+      "id": "poultice",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/poultice_try1.json",
+      "record_sha256": "f344ffc8efbde1ebb59ecae726db2573b8119bea823b3b03363ab26f77c43ebe",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/poultice_try1.png",
+      "raw_sha256": "d3fe0384a2a555e67596d159e3a99f5e2db0e000931b9f3580ad08d738f23b25"
+    },
+    {
+      "id": "roast_meat",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/roast_meat_try1.json",
+      "record_sha256": "9e7803f9ab585147ffc0a81892d24d57c07a99314a71f303f8afdce390f5fcd0",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/roast_meat_try1.png",
+      "raw_sha256": "98a948e0f44f3d685d5a63c3263a2f5acd5aadf6ea24e011f2c388203a5539de"
+    },
+    {
+      "id": "roasted_roots",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/roasted_roots_try1.json",
+      "record_sha256": "600e43d0aaf98df11070b1753bec516b6c22457abf35a5fc00960d4d4a8dc2fd",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/roasted_roots_try1.png",
+      "raw_sha256": "be0561c1030823c9a9f3426f718263e7dbed916d7529f54ea0ded04fa433ebd8"
+    },
+    {
+      "id": "roots",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/roots_try1.json",
+      "record_sha256": "c04517ac3ad2e0969a7641ebff6a8554e846737dcea09cafd99ad7501bb3e74f",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/roots_try1.png",
+      "raw_sha256": "facf55769556ed1305bc4e2dae033f2823db482b7f801f4d7066e5facd5a9b90"
+    },
+    {
+      "id": "salt",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/salt_try1.json",
+      "record_sha256": "515743376132e2d0c04f38f295b9afc15155443d5a668db5cca48610389089a6",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/salt_try1.png",
+      "raw_sha256": "7fa0fac983b4e3e67d4e7307e204b78b47e323e198c5565c40b614c080367eb1"
+    },
+    {
+      "id": "smoked_meat",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/smoked_meat_try1.json",
+      "record_sha256": "3ffb56181105baaf600428c64c0745a1e62eb11e0a4caa68f6e1f8c91aff17c6",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/smoked_meat_try1.png",
+      "raw_sha256": "1e51b2938f80fb52e8e338a9b499e0db88e3a9a6fadf74bdf85eea70a95c594b"
+    },
+    {
+      "id": "stew",
+      "attempt": 1,
+      "family": "food",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/food/stew_try1.json",
+      "record_sha256": "7229cf45ad2cb14a0f3a29e307694a01581b72546cdb4101a7a6b6c28e3322e8",
+      "raw": "/Users/rexxa/work/art-batch/A3/food/stew_try1.png",
+      "raw_sha256": "b15c94c3ac8cdb23e60d6aca4b9b487f3b854989bb22827a5a261c4d354e2c6d"
+    },
+    {
+      "id": "bronze_axe",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/bronze_axe_try1.json",
+      "record_sha256": "840c1035f845ed6a265f1e860a4001adc61d453420f84baab4dcc6ff371b8e36",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_axe_try1_raw.png",
+      "raw_sha256": "dde4dfdd54b9c387ef951eef16219747c8b1b6e0e1d2c72202a957d4ff4a1a68"
+    },
+    {
+      "id": "bronze_dagger",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/bronze_dagger_try1.json",
+      "record_sha256": "742d40a5724d5c9e3fdc31229ea071df3485a1de1507712ae0205ecd0af9e119",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_dagger_try1_raw.png",
+      "raw_sha256": "a34069f5e01769d8cf825bc99b858a2c05e92666257928dce54ffe42cad5d38a"
+    },
+    {
+      "id": "bronze_hoe",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "rejected",
+      "reason": "Axe-like head rather than transverse hoe blade.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/bronze_hoe_try1.json",
+      "record_sha256": "042aa431d0a929dd88b8ae2a4699ae8c7fd6c26b62adb725d46de7ae52d94f0a",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_hoe_try1_raw.png",
+      "raw_sha256": "8e9eb3a2b399b7e807c28cdc0dac0ab121a5710f5548836a3baf271289f439b0"
+    },
+    {
+      "id": "bronze_hoe",
+      "attempt": 2,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/bronze_hoe_try2.json",
+      "record_sha256": "04cc2f800dc9dfe127e47fffc1e9e69e7ee5d35ad9f6cf0f81e17119a3a73dc1",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_hoe_try2_raw.png",
+      "raw_sha256": "002c3243a4835516870dcea67f6c93d514aaef3446a295256aa6e9dc62857a51"
+    },
+    {
+      "id": "bronze_ingot",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/bronze_ingot_try1.json",
+      "record_sha256": "c3357916c82528339e25f1da96530d127f47e5eb25d29b1c08c312c0d8fdb31b",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_ingot_try1_raw.png",
+      "raw_sha256": "77c8e8a7fb201262b40739820c1f4b2171710b78b282525795a39b94bcc9c705"
+    },
+    {
+      "id": "bronze_sickle",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/bronze_sickle_try1.json",
+      "record_sha256": "0285fdfcbf223276775573c4a3771302dba12da24c9aa71cc49b65eb57c8be9f",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_sickle_try1_raw.png",
+      "raw_sha256": "a8be16bd7b83c210dbb2e60fbda134c962a0791bd655cd2902e72da086f5a9e3"
+    },
+    {
+      "id": "bronze_spear",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/bronze_spear_try1.json",
+      "record_sha256": "a72685b7169f8cf318294986c01038ecb975276d37e1f1d7e865ccf65744f2a2",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/bronze_spear_try1_raw.png",
+      "raw_sha256": "fc0087dcca883b57b8865877a4a85ca877cf8f62531ca3bb2c0dd6b210690cff"
+    },
+    {
+      "id": "charcoal",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/charcoal_try1.json",
+      "record_sha256": "baf6cb3b74c0de38c36f887ff4deb9c6544d61ada47bf90aa81af1c5b2b19154",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/charcoal_try1_raw.png",
+      "raw_sha256": "5053ca547bd0d9106bbce65dd6e7a2421ed8f9ddc5aa660c3f1193c04d07af7e"
+    },
+    {
+      "id": "clay_mould",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/clay_mould_try1.json",
+      "record_sha256": "191d16afd347771503a7fbbbd535fe3da4a83f6493ea25d9a9590d310e57ed17",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/clay_mould_try1_raw.png",
+      "raw_sha256": "b030e27ca5017e28140a357e60bda720db456fda2d6ce75c4c177c5670d1c50c"
+    },
+    {
+      "id": "copper_awl",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/copper_awl_try1.json",
+      "record_sha256": "a703b762381798931c2f89ce103563630902310786e4ff82fc452f217ca6b3ff",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/copper_awl_try1_raw.png",
+      "raw_sha256": "758a72e215f3967b71f110c8119ad350a566f8e0d1580835a030823fd46e9252"
+    },
+    {
+      "id": "copper_axe",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/copper_axe_try1.json",
+      "record_sha256": "c5e2a040c57ec57117650893388d71ecfd33fe824ee995acf8ae12c485d74720",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/copper_axe_try1_raw.png",
+      "raw_sha256": "aeae6c0a3bd64f815bbd4827a8d46d19fe300c3eb2adf1fe3616d1c22a20c90b"
+    },
+    {
+      "id": "copper_ingot",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/copper_ingot_try1.json",
+      "record_sha256": "65a3b4db21abd072c2ce4fae501f34480088375b9688305716b0a49c51d1f2a4",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/copper_ingot_try1_raw.png",
+      "raw_sha256": "8ae0cc868ffcd68c458a6e90129530804b77c672b7754e8592e6362fec09615c"
+    },
+    {
+      "id": "copper_needle",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/copper_needle_try1.json",
+      "record_sha256": "7e0a4049f02d8f19f17ddf772eb2728d553b8084af4d74a5b2d518e2157645d1",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/copper_needle_try1_raw.png",
+      "raw_sha256": "a89bf9018d5581d58bd251a5883e736baebf425a4a5956c39de4fd02a98b8244"
+    },
+    {
+      "id": "copper_ore",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/copper_ore_try1.json",
+      "record_sha256": "acbd78e238a48b7fd1356233af65e7d0fe287c6560c64ff8712a3953d0951b50",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/copper_ore_try1_raw.png",
+      "raw_sha256": "87a8c99ac4f1425a236737a3a1524ab5de9a884af33e0366fbbdba5515b90f05"
+    },
+    {
+      "id": "tin_ingot",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/tin_ingot_try1.json",
+      "record_sha256": "1706de670039eceb0487cb33b3c0bf6a74807110ef5d3d0cea47d1fbfc2bcde1",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/tin_ingot_try1_raw.png",
+      "raw_sha256": "6f71d81481c60e37f58aa70128d8552b66b11e332d90138d23a31719ef3b819c"
+    },
+    {
+      "id": "tin_ore",
+      "attempt": 1,
+      "family": "metal",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/metal/tin_ore_try1.json",
+      "record_sha256": "7e5e9d1c6907fa2612c531d2fdac7935eeabe512c4b7920db20e067fef13de0d",
+      "raw": "/Users/rexxa/work/art-batch/A3/metal/tin_ore_try1_raw.png",
+      "raw_sha256": "2b7645da1baa9120942bebde45087f81ef41e781adce5748fbe277978d143c96"
+    },
+    {
+      "id": "beeswax",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "alternate",
+      "reason": "Valid alternate; earlier alpha-preview concern was superseded by actual-alpha inspection.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/beeswax_try1.json",
+      "record_sha256": "ef63f319d450bbb4a7473de89b51aaa63f672b7bc4c20a9bd68a4412bc175510",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/beeswax_try1_raw.png",
+      "raw_sha256": "d68a7a6afdc63af4684baa146c602d0104abbb68c7aa347d63bfdb71538a9ce8"
+    },
+    {
+      "id": "beeswax",
+      "attempt": 2,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/beeswax_try2.json",
+      "record_sha256": "35932edd52abfbda51df3bacc2684da43ef7ad170fdbd590e52bd4b9cea3319b",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/beeswax_try2_raw.png",
+      "raw_sha256": "9bdddca5ff9d0c1887d2927544c0066d62f786c01f0aeaa7fc74450c31573c35"
+    },
+    {
+      "id": "cart",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/cart_try1.json",
+      "record_sha256": "5f881e08f3310c31fe49f3e86cf296a1741934dfafa0e7f2a7dbc250e106d423",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/cart_try1_raw.png",
+      "raw_sha256": "b87343d0876d870fef4a2821a13ce7e5e1441294e644111baac286faa4d9e370"
+    },
+    {
+      "id": "composite_bow",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/composite_bow_try1.json",
+      "record_sha256": "5fe77a9ed8cd6ab13c86620e574666b041ed7579d57f7864559f666badf775c1",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/composite_bow_try1_raw.png",
+      "raw_sha256": "9f6facca8944ce3be58f1b555af30a1e36ec7d49b43a75f8b3e651b8bbad1078"
+    },
+    {
+      "id": "glass_bead",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/glass_bead_try1.json",
+      "record_sha256": "468152274f8a14db35172e47207646b821c0317bfa13cf57c9c477fa6fda9a72",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/glass_bead_try1_raw.png",
+      "raw_sha256": "416f1ee82dd309fa792f086a5548d79b2532e329dcedc256170a7ba0658ab1df"
+    },
+    {
+      "id": "honey",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/honey_try1.json",
+      "record_sha256": "833958e6bd7772bd87b129d9fe783206355b9450f07a840e6f2b860dcdb99fba",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/honey_try1_raw.png",
+      "raw_sha256": "8d6cfc5dc35480729393fb5e3e615580d9f97c1f23743a8496f57a144b3f176d"
+    },
+    {
+      "id": "lime",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/lime_try1.json",
+      "record_sha256": "07352403f58dea0ac79278ea97aafdd9829f74dddc02cc07571152694f29c75d",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/lime_try1_raw.png",
+      "raw_sha256": "dc298735b4578d81320317405ffd23cfd81f2a7e05bf29209ea7682b0b931db1"
+    },
+    {
+      "id": "mud_brick",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/mud_brick_try1.json",
+      "record_sha256": "a8e3bcffe252f43ad42403b9d66d97d5143b79267d3a978318433c3b9d1dfca3",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/mud_brick_try1_raw.png",
+      "raw_sha256": "f3c98fd8ea43560ab3b37da5e91db8254e335010e4c199f19f8c57c9f56c12df"
+    },
+    {
+      "id": "olive_oil",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/olive_oil_try1.json",
+      "record_sha256": "56d239228c05e52c506972a171fe08c5f226ff51f2a30666e719c4a2ab33c36a",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/olive_oil_try1_raw.png",
+      "raw_sha256": "660d66c11b7d44f7aef2dfeb8d2324b3eb382627e9394051e4f0898f50d28285"
+    },
+    {
+      "id": "seal",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/seal_try1.json",
+      "record_sha256": "849aa636ffb3ab0d534978f1f95837f343ada4fa446c109b9c93f5844f1c3ece",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/seal_try1_raw.png",
+      "raw_sha256": "8dd412e51ed36085fa49890daa1d98a11d485e6bb75e5912cd3f046ccec42ba2"
+    },
+    {
+      "id": "tablet",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/tablet_try1.json",
+      "record_sha256": "64f5418a6538ec582c85a4faf0348a060e0aefc71e6ffda35fb9331699083943",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/tablet_try1_raw.png",
+      "raw_sha256": "bca32974b56e993259cdb599c86c3eaacc0c3bd3833ae73ce1bdc356f99b2404"
+    },
+    {
+      "id": "wheel",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/wheel_try1.json",
+      "record_sha256": "58d9f26faaa3a6398dfbd50945794bdd7e46de2564330d7fd7d5f37159de2d24",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/wheel_try1_raw.png",
+      "raw_sha256": "d0e2320e438743f435b979e8d568a468ea7b309fc06183500660f7786e7d09cd"
+    },
+    {
+      "id": "wine",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/wine_try1.json",
+      "record_sha256": "d3a54120c1ed63b49833b787e919056286f4e8ee898357133f90ee97e509caaf",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/wine_try1_raw.png",
+      "raw_sha256": "0b2d5f65e378cc4bf9da87eb91a75732b778a8da87646637e1f6dde66d715a53"
+    },
+    {
+      "id": "wool",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "alternate",
+      "reason": "Valid alternate; earlier alpha-preview concern was superseded by actual-alpha inspection.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/wool_try1.json",
+      "record_sha256": "e2c693f11f1d99b1641c609a6116476066188a5ca316a74a46e18ea6bb401b3c",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/wool_try1_raw.png",
+      "raw_sha256": "7b9ccba41beea44f288d2094c606a5e5e5070ef29187099669096167e2ccd5f0"
+    },
+    {
+      "id": "wool",
+      "attempt": 2,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/wool_try2.json",
+      "record_sha256": "b9ec7d1598b16a5fe2e4784b0eddc647e7bd19b940b761d5c126ff86496db544",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/wool_try2_raw.png",
+      "raw_sha256": "330f4db320e87c9545083674a5ef7178985994a00e8ef3fa1cf4dff7e6e4808f"
+    },
+    {
+      "id": "wool",
+      "attempt": 3,
+      "family": "bronze",
+      "decision": "alternate",
+      "reason": "Valid alternate; earlier alpha-preview concern was superseded by actual-alpha inspection.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/wool_try3.json",
+      "record_sha256": "26aeb09e4fc40de04415607552a21d6c907ca8d66eda065e36cb7edd7ca059ae",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/wool_try3_raw.png",
+      "raw_sha256": "52f4dc6051b4db2a215c7cb27301913a4ecbffb19e391af7489aa0e710637444"
+    },
+    {
+      "id": "wool_tunic",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "rejected",
+      "reason": "Modern short T-shirt and ribbed neckline.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try1.json",
+      "record_sha256": "82a1468c890dcf30736c08b222b773b0582c90b58ded207589d78a28465c967a",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try1_raw.png",
+      "raw_sha256": "3afb51b07d757d5b678478b5d59805c8fffc1484fd741e1c138eb7b72400747d"
+    },
+    {
+      "id": "wool_tunic",
+      "attempt": 2,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try2.json",
+      "record_sha256": "0f36954419718bca0110e92b310641d81275630328d7d7ee74ebd5003f09a41f",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/wool_tunic_try2_raw.png",
+      "raw_sha256": "8b65adc6e77fca98810b82eb6b0c11bc955c96141f8c4be8d0b0e6773ad5788f"
+    },
+    {
+      "id": "wool_yarn",
+      "attempt": 1,
+      "family": "bronze",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/wool_yarn_try1.json",
+      "record_sha256": "e076cffdd6684920b9434f9210b9cacd3531c0caff51200ec8fbca84894c3ffa",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/wool_yarn_try1_raw.png",
+      "raw_sha256": "d4eb5e355a306332b190280bab4796bd06aa5cde60acb0dc215661a215889b89"
+    },
+    {
+      "id": "wool_yarn",
+      "attempt": 2,
+      "family": "bronze",
+      "decision": "alternate",
+      "reason": "Valid alternate; earlier alpha-preview concern was superseded by actual-alpha inspection.",
+      "record": "/Users/rexxa/work/art-batch/A3/bronze/wool_yarn_try2.json",
+      "record_sha256": "a0716883fe83bbb819cdcd686ff558b304e778f90bda91b61a7d29a683b14839",
+      "raw": "/Users/rexxa/work/art-batch/A3/bronze/wool_yarn_try2_raw.png",
+      "raw_sha256": "0baf9cb12b4b9070d92fee2e33440e25c5e7483af5bafc47c5963607b944400d"
+    },
+    {
+      "id": "coin",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/coin_try1.json",
+      "record_sha256": "1b477e4768e5140fc73d811b9cbea9578a6cfb6e83ada0b4937c82a087653678",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/coin_try1_raw.png",
+      "raw_sha256": "8d3c67eb0bb6b782cee2d60220271e7a244ac563b2b3ee1e4b5b66729c126ad7"
+    },
+    {
+      "id": "iron_axe",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_axe_try1.json",
+      "record_sha256": "b48ea4e4faac8f9c1423c3e0a8dab2153d203ad61c6c8517eb64af6c0d5a0d3d",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_axe_try1_raw.png",
+      "raw_sha256": "1780d98b1e0b50ab28202831ba5f5a2249479e8447d14a80d5e3ea7d684a2b1e"
+    },
+    {
+      "id": "iron_bloom",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_bloom_try1.json",
+      "record_sha256": "d3d12ca0b9f558e086fac93d4d7af5dc8f2f4a9f58063cece203b0bcc5a1d106",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_bloom_try1_raw.png",
+      "raw_sha256": "8cc6d8fa8f9b04544a97c53e0fd5ba5f6ed7a1c38860f7d1405e6bf28b176ef0"
+    },
+    {
+      "id": "iron_chisel",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_chisel_try1.json",
+      "record_sha256": "f0dd6b29ee0fe58052fd7fad5d8703ece8d45edf1f673d1f5a2a45b187b92cb2",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_chisel_try1_raw.png",
+      "raw_sha256": "6823ce70bb8fdc44c072383e12f78c9862c7a021030b25b7a390719157feb589"
+    },
+    {
+      "id": "iron_helmet",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_helmet_try1.json",
+      "record_sha256": "13c85a02e07005a196f900c4f1fbc4b062fbfec3bc037cdac99217538190e1a2",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_helmet_try1_raw.png",
+      "raw_sha256": "bbe87b2ec59c00b5c2ff1642bf986a691cb312cfc1a755426267b84ef764470f"
+    },
+    {
+      "id": "iron_hoe",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "rejected",
+      "reason": "Axe-like head rather than transverse hoe blade.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_hoe_try1.json",
+      "record_sha256": "e5f0a52531a0958a0318363e5a8302cf4e1437d282bf6eb5de731f5af6e62e07",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_hoe_try1_raw.png",
+      "raw_sha256": "b81a6ce1827a38aefcbe16d0122f22d12ed02b798988249745b528c3e6f3971e"
+    },
+    {
+      "id": "iron_hoe",
+      "attempt": 2,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_hoe_try2.json",
+      "record_sha256": "592c22745b3049e08bfabe16708e359c920e259ca44b3348844c19657d92d44f",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_hoe_try2_raw.png",
+      "raw_sha256": "25815805266338b4e1cf118ad703e69156cb8cec4172d28edd7e6549f71f3fbc"
+    },
+    {
+      "id": "iron_ingot",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_ingot_try1.json",
+      "record_sha256": "64e035f2811d90d489f925ed3f3398cabf9777ed49bb23e5e25e5efbf27439de",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_ingot_try1_raw.png",
+      "raw_sha256": "f5605b4c8e79c6f2f6f7c9a97297622ef6fdf6bf3cfe97c4adf7612efc0f377e"
+    },
+    {
+      "id": "iron_ore",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_ore_try1.json",
+      "record_sha256": "60cdbe75659d3c8600d8673cefa63f93833d02861865ef1b52c777bba565c460",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_ore_try1_raw.png",
+      "raw_sha256": "a2843db0c740f92dffa08d5c537f3a50e539aae7c18baa75ac2142f6cda61e76"
+    },
+    {
+      "id": "iron_pickaxe",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_pickaxe_try1.json",
+      "record_sha256": "c7990184cbd87bdf2c008ae8a9c7b6abee782875455694d6405835dabd71b85c",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_pickaxe_try1_raw.png",
+      "raw_sha256": "e0981bf4143a5b31c88fa78e784dbd4ac22ea13ec62de96e5d972458ef5f7b80"
+    },
+    {
+      "id": "iron_plough",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "rejected",
+      "reason": "Defining iron share disappears at32px.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_plough_try1.json",
+      "record_sha256": "948ba32b4c332240d41ebeb69e3676320f6a1ebc02f78b5314ad69c77177904a",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_plough_try1_raw.png",
+      "raw_sha256": "dc5c42c14ba3c1497d7a33f6b0daeb3c1b7858d1ad2bca972493bbc5870c6b0e"
+    },
+    {
+      "id": "iron_plough",
+      "attempt": 2,
+      "family": "iron",
+      "decision": "rejected",
+      "reason": "Faint-alpha crop leaves share too small at32px.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_plough_try2.json",
+      "record_sha256": "3e326ca9d18408d794afaa4432dec56894aee3ba268544cac2c3acbe8d41fb35",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_plough_try2_raw.png",
+      "raw_sha256": "f8f03e3af25a2af26ea586d8abb9f84138c54369179e3656806e26ba1e70c961"
+    },
+    {
+      "id": "iron_plough",
+      "attempt": 3,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_plough_try3.json",
+      "record_sha256": "aa6a34d90a807062e2b34a7967b8a730063cccb7d30dd2a75fdaeb6848605f71",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_plough_try3_raw.png",
+      "raw_sha256": "7aceaa25c0f62650c55feba9f658047787df9ad80c0835aee36e29aa9dfe58ef"
+    },
+    {
+      "id": "iron_saw",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_saw_try1.json",
+      "record_sha256": "0db5a1e7c38bb458345f7833470a7c27df8521bb82739c40224b0f78ab440126",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_saw_try1_raw.png",
+      "raw_sha256": "81e01525936748464a4046b65058b397c4a8d5af25dc9ad5420d5810d197db6d"
+    },
+    {
+      "id": "iron_shield",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_shield_try1.json",
+      "record_sha256": "ff7a5f2000467d1e14aec9e626dde86a7b20fd5e852d3dd34579d0c4bc1eca1a",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_shield_try1_raw.png",
+      "raw_sha256": "3aff6a37070e2d56be6dca4d8af0a0ffc8a59b10140508cf6f73567b7baf6175"
+    },
+    {
+      "id": "iron_sickle",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_sickle_try1.json",
+      "record_sha256": "f957f28e72de2d73d781d878882780581dcf070e20d14696131a3012365bfc36",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_sickle_try1_raw.png",
+      "raw_sha256": "efc7b491b9859d067f357d7b42b5583522b534b1567ddd2c1fd476362735edda"
+    },
+    {
+      "id": "iron_spear",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "rejected",
+      "reason": "Defining iron head disappears at32px; repair blocked.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_spear_try1.json",
+      "record_sha256": "103c52326de24ded0dda82683223e40a09930313af4c189c8fb1d89b651ac6eb",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_spear_try1_raw.png",
+      "raw_sha256": "d3f6b6f2baeb9df67a19ddaddedff60fdf4dd8954250a114911c807747c1d5bc"
+    },
+    {
+      "id": "iron_sword",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/iron_sword_try1.json",
+      "record_sha256": "44b38dc957fb77c4ee6ac9c86e9f45ad93272414be2e75d81cb88fab3a6ea807",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/iron_sword_try1_raw.png",
+      "raw_sha256": "51f6dfc71cd8c08a1c8b587d45e0f43f572a3ae29a566d16e61b18963428822e"
+    },
+    {
+      "id": "record_book",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/record_book_try1.json",
+      "record_sha256": "1fe0c09bbfd0e0b498d3fc787887f1867e684b46ff4f4cb738665ad156c097a1",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/record_book_try1_raw.png",
+      "raw_sha256": "6a11e59a5cb1784811d11fac84c64119c5dcc6b108ba3b3614075d9953a8d316"
+    },
+    {
+      "id": "steel_edge",
+      "attempt": 1,
+      "family": "iron",
+      "decision": "rejected",
+      "reason": "Flaked stone appearance; repair blocked.",
+      "record": "/Users/rexxa/work/art-batch/A3/iron/steel_edge_try1.json",
+      "record_sha256": "439d6192e56c669311c5edc6559908ec1261a4e5d9c5bf85b0289c1429bffffd",
+      "raw": "/Users/rexxa/work/art-batch/A3/iron/steel_edge_try1_raw.png",
+      "raw_sha256": "13f9d130af7a0d4767c27c82d4ddc14b5a158e6f9b90a500e14105e12eec4fe3"
+    },
+    {
+      "id": "adze",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/adze_try1.json",
+      "record_sha256": "22cc95e2d8dd219a99346193764281e87388dc10c47bfa539784d41d5f11c778",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/adze_try1.png",
+      "raw_sha256": "c4782693f3b9bf21b9e5aea2b4436284c1daa97ba74811e2807251933af9150d"
+    },
+    {
+      "id": "arrow",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/arrow_try1.json",
+      "record_sha256": "4be7f92d9b42fd25ec794087dc925ac01443af67930741e5e195ca72e2d98263",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/arrow_try1.png",
+      "raw_sha256": "636ee950b3320df004880127e7a2ec31ed604cc5c6a16354f6bd4de456216dc3"
+    },
+    {
+      "id": "basket",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/basket_try1.json",
+      "record_sha256": "565d9ff0f98747e80f3069b3803a4bf80cce252734682f717086c2353708fb25",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/basket_try1.png",
+      "raw_sha256": "9150ffb798ef6163cfe84f5e92e8e5d02459067f9cc96c53e2e13c5871c74ad0"
+    },
+    {
+      "id": "bone_needle",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/bone_needle_try1.json",
+      "record_sha256": "3ff327337eafeff36895ff52aef4c15e031c89015f928984afd5b8a14f2a775b",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/bone_needle_try1.png",
+      "raw_sha256": "10ebf7c21195fdb3917f09f9a23a818eac744b5d0a0706cc0200810ee04cf94d"
+    },
+    {
+      "id": "bow",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/bow_try1.json",
+      "record_sha256": "65b73ba0ce619d1d13fcc0e64b2b86125ce1fc46775e6c504c79ebc5e47957f8",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/bow_try1.png",
+      "raw_sha256": "7e8039bc72ae337c7d9e065a65ea3c233b5a9e2aeaf096a65887c990d9ace33a"
+    },
+    {
+      "id": "cord",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/cord_try1.json",
+      "record_sha256": "136f1accd1f46fe4de5e2b27fc8ac7024055fc5760a37d5a89da521e70a562ab",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/cord_try1.png",
+      "raw_sha256": "545dca42da4364b3181bb114815f1411bc2defb5d96faaf768277638ba08f215"
+    },
+    {
+      "id": "dugout_canoe",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/dugout_canoe_try1.json",
+      "record_sha256": "34483853d16e1b8feab956361e87a974db0bb4222a199213b8c5baead737f5c9",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/dugout_canoe_try1.png",
+      "raw_sha256": "7e44f487208a881987ae16ea7f2094f4962bf6f452581438cb0644632e58d0d2"
+    },
+    {
+      "id": "dyed_tunic",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "rejected",
+      "reason": "Modern T-shirt proportions and bound crewneck.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/dyed_tunic_try1.json",
+      "record_sha256": "a3c1b0ee6bd6cb8b4d7ffab94df4aaec9bcc0de89f549f9d6fe907cb6eb64430",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/dyed_tunic_try1.png",
+      "raw_sha256": "4b30e4fa912aad7c1866e0539125452d3676f5b7afab64ceee27da0e4ff244a6"
+    },
+    {
+      "id": "dyed_tunic",
+      "attempt": 2,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/dyed_tunic_try2.json",
+      "record_sha256": "feb99a42d67a8cf0c6fbd29fa4237ea9a5deb55d2ae4d995af9f618b63cc9f11",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/dyed_tunic_try2.png",
+      "raw_sha256": "3bfcc33ece7572736790a806fc982deb8a9eb926f772bbd2e3bc427a63d21fa5"
+    },
+    {
+      "id": "flax_fibre",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/flax_fibre_try1.json",
+      "record_sha256": "bbfd2322bfc261bb30429d339d6042cbf858b4de423e8f795747d79d4a4f4352",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/flax_fibre_try1.png",
+      "raw_sha256": "bc7b07af32f6feedb7dfc4d2dbf2dd64e11549be2162976d1e8afd03b167722f"
+    },
+    {
+      "id": "flax_stalks",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/flax_stalks_try1.json",
+      "record_sha256": "153d8c743a4a731c318c34ea94a7df7006e80da4a583dd8d5527a262fcf9bf8c",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/flax_stalks_try1.png",
+      "raw_sha256": "f8264b0b05a2960819f6a08e5db56eb0c13b4e52a7fcc7e50ce5aa5b67d45765"
+    },
+    {
+      "id": "hand_spindle",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/hand_spindle_try1.json",
+      "record_sha256": "d1f107cbba9a727b1ba6abc9d0af724cadd7b9eb96a17311c491f8534276c973",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/hand_spindle_try1.png",
+      "raw_sha256": "b37bc49f5e9f12d9044df055542a7c15b86eef505119d78640680cb0caca5890"
+    },
+    {
+      "id": "hoe",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "rejected",
+      "reason": "Axe-like head rather than transverse hoe blade.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/hoe_try1.json",
+      "record_sha256": "3f6de0c7ed29866f846c22b816a019c430c445d75c4626190e98861420576ee0",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/hoe_try1.png",
+      "raw_sha256": "2ca973a90661d3212789e45f67a7f12ba90fb45abb49aba767ee256403d09503"
+    },
+    {
+      "id": "hoe",
+      "attempt": 2,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/hoe_try2.json",
+      "record_sha256": "75770acd2c3c36cb0aacea2ddf19d33d11d4ab107fdddb2b17f34da9d8213f8b",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/hoe_try2.png",
+      "raw_sha256": "b1b7094e54b94f8828d525606f34c31cebfd529c304907a4a038c521fcf32f91"
+    },
+    {
+      "id": "leather_armor",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/leather_armor_try1.json",
+      "record_sha256": "9cae280d256e2cbdf874717924d504ada6fb9e0e141d93d7db5803b3c19d668f",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/leather_armor_try1.png",
+      "raw_sha256": "2fae16886272b3611cac4c6ee90c1563723fe98547a14bef4cfbe45b48878000"
+    },
+    {
+      "id": "linen_cloth",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_cloth_try1.json",
+      "record_sha256": "95a138df04597b323758d3a1d94354f40a7948be10213d3e352ac5e86a5c805a",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_cloth_try1.png",
+      "raw_sha256": "81b7b10fd4bf3e9ce5c24e4fb65c98c297efda621527856e673c0277957a63b1"
+    },
+    {
+      "id": "linen_thread",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_thread_try1.json",
+      "record_sha256": "e3d8b6b38ccf6d06b6a362ccb233108ee8c2558e8edd49acaf02a3dbd9fbd3af",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_thread_try1.png",
+      "raw_sha256": "04a44f2de6ac0c8dc31e0ab40341ce27bc79b91be80c386064f8fb6d324d7424"
+    },
+    {
+      "id": "linen_tunic",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "rejected",
+      "reason": "Bound crewneck inconsistent with selected ancient slit-neck garments.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try1.json",
+      "record_sha256": "1ce0350ff518e288defec7705de8fc9c3c68c9bb5e7655b9f58e295864525cb4",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try1.png",
+      "raw_sha256": "20154af587cccf75cf47156e8019c034d6cbe1e56222dacb2da58dd09c877d81"
+    },
+    {
+      "id": "linen_tunic",
+      "attempt": 2,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try2.json",
+      "record_sha256": "9854a4dc7f2416afef628a4e0fcc16fd90741f9cff754c5a6903113ab71f5929",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_tunic_try2.png",
+      "raw_sha256": "19b60f3541c7bd4a49909ee8f35b1ff13f1b9f20f0289f2744a98a5f6f8f7baf"
+    },
+    {
+      "id": "linen_wrap",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_wrap_try1.json",
+      "record_sha256": "2394e1e928c1106dc921b4502c3a6ff0cd76e77a52605aa2a2c407d78d529816",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/linen_wrap_try1.png",
+      "raw_sha256": "ff1ec9a0daabe46264d1f8e992905021df2eb647e7b2ebba22b0da2ef530364f"
+    },
+    {
+      "id": "sickle",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/sickle_try1.json",
+      "record_sha256": "7f984699b75f125739910d0b6b6d18bab4cf51381b0b473af2d7f7b8e4fcf40b",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/sickle_try1.png",
+      "raw_sha256": "72c5e91b4d11e0835c42a355112563719d325d825612c4ea4eb67e3877e7b5b7"
+    },
+    {
+      "id": "sling",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/sling_try1.json",
+      "record_sha256": "5f6345709f6ec8ec81456a675fd07341f04f4c214fecd7791ecc631a70cd7774",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/sling_try1.png",
+      "raw_sha256": "1412b4d973cc81ee7f0ebc1a3e74cf2b64c77a5d7124d5fdadf194d41e191480"
+    },
+    {
+      "id": "tally_stick",
+      "attempt": 1,
+      "family": "tools_textiles",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/tools_textiles/tally_stick_try1.json",
+      "record_sha256": "d152ac39347b6b187a69768243f097da0883aefe4317ef5b4e5345307833fac7",
+      "raw": "/Users/rexxa/work/art-batch/A3/tools_textiles/tally_stick_try1.png",
+      "raw_sha256": "4ce53af805cd6e6b955f500483e4a2e4d620f7641c7652a48c13a00d3f0e49d7"
+    },
+    {
+      "id": "apple",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/apple_try1.json",
+      "record_sha256": "ca56ee9e90594291d847bd46d93c898a0bee90c7c48070820ed599ad0621a982",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/apple_try1.png",
+      "raw_sha256": "735281e1b1c38ca3a1a3f2dc17b801b070385c3b4af99e068aca9aca545bfd67"
+    },
+    {
+      "id": "barley_seed",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/barley_seed_try1.json",
+      "record_sha256": "d6060fdbf6c7bc70bce884aba4cc2975b505ca7c2709c14f594c4602d9ba79cb",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/barley_seed_try1.png",
+      "raw_sha256": "6c4a01900d98b4da31fd996298b9e2cc7587f9fb8d373a82903af208eb508d18"
+    },
+    {
+      "id": "barley",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/barley_try1.json",
+      "record_sha256": "66aa242084f8b3851a284fff024f6fc1a8a80b8cd11903af5a10441e683ab5f2",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/barley_try1.png",
+      "raw_sha256": "ac7b4851486502f443b1f3c99dec178bd34845344719956f90418c93fb264d4f"
+    },
+    {
+      "id": "emmer_seed",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/emmer_seed_try1.json",
+      "record_sha256": "9a15be29424ec22debce748e17ff0ee51ec7f6fe2cca687fb163eee1d0f2bda9",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/emmer_seed_try1.png",
+      "raw_sha256": "32837b32e5482cbb4b1e33e91027cc7ca7499ac1a22b5ddabff13c65c14b907f"
+    },
+    {
+      "id": "flax_seed",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/flax_seed_try1.json",
+      "record_sha256": "211267ba2002a0cbb67d3ed569ca50572a3d6371717967d5424e20e985428b88",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/flax_seed_try1.png",
+      "raw_sha256": "e8b7b33d1cf5c58c685874c185b649530c88367d09849e7ba755cc31c8c7080f"
+    },
+    {
+      "id": "goat_hide",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/goat_hide_try1.json",
+      "record_sha256": "0939acbcff78e6c247a39e9b69cd7831980e8b440c1b15ffea5d3c7b0f7046e2",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/goat_hide_try1.png",
+      "raw_sha256": "1a504669e8e581de476dc9a81d880316d00eddabdcd7137e480fb8e4a72191a8"
+    },
+    {
+      "id": "grape",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/grape_try1.json",
+      "record_sha256": "ecf4841f85d747797fcc4a43b7bb93c0c800f977a382aca07f23233728834808",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/grape_try1.png",
+      "raw_sha256": "94edc3512e7edc83f04a6c6f0d2d3643666cd6d8e1bd768a928b4470bc61b451"
+    },
+    {
+      "id": "hay",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/hay_try1.json",
+      "record_sha256": "8e4edb561fd7307711c4f76feb916cc702444ab0a4f43742e6a82ecd0a4fd181",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/hay_try1.png",
+      "raw_sha256": "57188aa164806b6205a5d1d66e89e258d9c612cf3858e286e4ce78cac8d5bfaa"
+    },
+    {
+      "id": "lentil_seed",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/lentil_seed_try1.json",
+      "record_sha256": "bd7cfe44d89ac31d1e1b801abe6039a7820dd1e38f6d9dd25f70247766769dca",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/lentil_seed_try1.png",
+      "raw_sha256": "0b2962d6bd8bc038643aa94f195e8171c80ec89d5f5f825ad3e6409526dc4ad5"
+    },
+    {
+      "id": "lentil",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/lentil_try1.json",
+      "record_sha256": "803eae0b6f52de31f0417af54f19d5d05b764f84c8bad6acbd35456ead673b5c",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/lentil_try1.png",
+      "raw_sha256": "2ae55e1846b68461ca024fa53c2ebcc9dc12a435eea9d313a30de96cbdca7ef0"
+    },
+    {
+      "id": "millet_seed",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/millet_seed_try1.json",
+      "record_sha256": "91b0f4b134e97b57c081e15d914bb9a8992a968f1e453f5fd049a26b5699f3b4",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/millet_seed_try1.png",
+      "raw_sha256": "3c5e288aadb84c6050e63fbd0458efc3472028e455fe083019e1d39ff0e9e54e"
+    },
+    {
+      "id": "millet",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/millet_try1.json",
+      "record_sha256": "6b3c869a04d14e41137d3ce118a6aee37e6fc72e999198e3d477ad0d0788a453",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/millet_try1.png",
+      "raw_sha256": "0e74581ac8ba963145c1f7c7764c7c797d8544730732e8582ea320031a4163c3"
+    },
+    {
+      "id": "oats",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/oats_try1.json",
+      "record_sha256": "fbc194cf2378131bcf1e5d50d7f898880bad0cbaa626e7a6030c683e1a1de008",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/oats_try1.png",
+      "raw_sha256": "1b68c526ddc2a03793363a0155f3ea89d6672b45c537dbf25ae0b3882c4d3353"
+    },
+    {
+      "id": "olive",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/olive_try1.json",
+      "record_sha256": "2f00e283233ef3f41b2758bde87f4a3c9cce964d496a73fe3cb0629fbe9ddeaf",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/olive_try1.png",
+      "raw_sha256": "6c0385b829ec59a3c8d33f18161ef33cb68642372f28cd75659f99d0ee1c4f40"
+    },
+    {
+      "id": "pea_seed",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/pea_seed_try1.json",
+      "record_sha256": "23eb2e0b3d85bcd1f7e8067c6e541bcbacc9a1e3ffa322ec0716b4efe35f2d37",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/pea_seed_try1.png",
+      "raw_sha256": "f011ef4f7bea6189d88f0bebde9da052c4de1f78e2e550fb7da5d44a72cac5d8"
+    },
+    {
+      "id": "pea",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/pea_try1.json",
+      "record_sha256": "56ea95cd17b32746f47929420de108e9b1e3461e124dbfbac16ec1adcd7c48ce",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/pea_try1.png",
+      "raw_sha256": "4cc4851104069e2d7a80c332dac27ab076ce354c91a2aa8a1fdae820ef452b05"
+    },
+    {
+      "id": "rye_seed",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/rye_seed_try1.json",
+      "record_sha256": "98b798c827e7efeebcd5b1eccef29fc7cd806898db8fb54a45f9d9c75c5924a3",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/rye_seed_try1.png",
+      "raw_sha256": "0ffaab9d90c0d5ca691a6a73af9277e9755bd8fa444f86b62114d1100964f7bc"
+    },
+    {
+      "id": "rye",
+      "attempt": 1,
+      "family": "crop_items",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/crop_items/rye_try1.json",
+      "record_sha256": "710976053f9208ee34e803f18beede58bcd21c4ec043cc7eec84484c06be92ee",
+      "raw": "/Users/rexxa/work/art-batch/A3/crop_items/rye_try1.png",
+      "raw_sha256": "9149828639fb9f141694bf063d69bca6edca16f385098f53ca0760c2a242a317"
+    },
+    {
+      "id": "atlatl",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/atlatl_try1.json",
+      "record_sha256": "069f5cb16b379952f2eb8bb55ab04b82f2039de35e83b828eed54b36a7acffb7",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/atlatl_try1_raw.png",
+      "raw_sha256": "8b72f75c50239baedeba55f811faa825e9e86877ed476a5d9a752964652f82ec"
+    },
+    {
+      "id": "bone_awl",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/bone_awl_try1.json",
+      "record_sha256": "6ce33c7e8ecf5a33e644fe140ffdf1163ff4b190d61bb6503ca4832949b79ca2",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/bone_awl_try1_raw.png",
+      "raw_sha256": "1d7e9969165cae3f9c5bc2510ff4d7475b7dc38543f56a4516afdad8f2703315"
+    },
+    {
+      "id": "bronze_sword",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "rejected",
+      "reason": "Oversized later/fantasy crossguard.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/bronze_sword_try1.json",
+      "record_sha256": "646321b34fee6aa1bb1a885f229c909506ebcf4cf4ea83aad8e019d2f06c3266",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/bronze_sword_try1_raw.png",
+      "raw_sha256": "62fa3f8b265143d77ab74940c29877ab6e7dc9f17face4eead946fc8de4855fc"
+    },
+    {
+      "id": "bronze_sword",
+      "attempt": 2,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/bronze_sword_try2.json",
+      "record_sha256": "6bf1a04334e8d6f9c8411feb268efba1add43d78cf08852b30f3d42753f05c1c",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/bronze_sword_try2_raw.png",
+      "raw_sha256": "8152ac36f4bffcecd7dddf836f9f7140b9ed176dad0cf791b5368d54fc01a9db"
+    },
+    {
+      "id": "drum",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/drum_try1.json",
+      "record_sha256": "a8806ef6972b1c7217b8a01ad2b0a90282a1187a091ed5992cb707492d9f64b3",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/drum_try1_raw.png",
+      "raw_sha256": "f56b2e161eede30a452b2ddef7bb239989887ef94af771135d457a79fed2536f"
+    },
+    {
+      "id": "faience",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/faience_try1.json",
+      "record_sha256": "48159561376a5c9ddafe5d3e8316e58a9403a291c32e9e9d06605ad6e30690d3",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/faience_try1_raw.png",
+      "raw_sha256": "a087f1af498d7685ef631dae6a1ca841d501d7a784237ccb544788526da3bbee"
+    },
+    {
+      "id": "flute",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/flute_try1.json",
+      "record_sha256": "cf2d5e0932ae9d85900a55a67699bfdb4b9030b1d4a5a032ceb1d99768c4adbd",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/flute_try1_raw.png",
+      "raw_sha256": "5ebff1d61b07fedee65dcc6ff298d4cf1478f80f46632563299b265c45029917"
+    },
+    {
+      "id": "hemp",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/hemp_try1.json",
+      "record_sha256": "653dc81f4583e6f17b64357ece562c1e615b68b976f072960c6ce3c3fdc99978",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/hemp_try1_raw.png",
+      "raw_sha256": "63155afb7d4974e0c1c19f38a983f40b2981a3185aa710424d26dc91fc340355"
+    },
+    {
+      "id": "map",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/map_try1.json",
+      "record_sha256": "0e3ae9709f6fc7ccb63a2b47718d52e27454e264f7f660fed6bd08f77e06470b",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/map_try1_raw.png",
+      "raw_sha256": "0a235a0dcdc9c4208b291b4a84d7b7748e9fc855eb1803859c8343d427aef43c"
+    },
+    {
+      "id": "plough",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/plough_try1.json",
+      "record_sha256": "e923f9f2e507991f93f31766cd53215847e0a830c91925bb575b8a60617ba8ea",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/plough_try1_raw.png",
+      "raw_sha256": "717a7c2155d4bbdc106c568772166f7e751d14d9a82f1089e513dfde2711009d"
+    },
+    {
+      "id": "purple_cloth",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/purple_cloth_try1.json",
+      "record_sha256": "702e1cfaec639fdfde110d82fa23cabab1b3eb6157f8519c7919f8c2cc42a779",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/purple_cloth_try1_raw.png",
+      "raw_sha256": "751c2d80cf99c286f0681bc004acc939801af131f20257df5bdf4bd503fd620e"
+    },
+    {
+      "id": "reed_boat",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/reed_boat_try1.json",
+      "record_sha256": "1d97cc0f45bb1abdddaab0418a3c758ef7b652f4518c293691a7eca31ea8ceb4",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/reed_boat_try1_raw.png",
+      "raw_sha256": "1377e674d94c010063237fd9720dde3453967450952a97f2718cb0bb36714fb0"
+    },
+    {
+      "id": "ritual_mask",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/ritual_mask_try1.json",
+      "record_sha256": "e8b7567daeba49b0685dcc3acfcbdd5111c0c4657b367ec20a56f19af2a0492f",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/ritual_mask_try1_raw.png",
+      "raw_sha256": "44d8fe52c6d4d211b44e918b68e160ee743e9dcb1d52543c864fe4c05a2fbe43"
+    },
+    {
+      "id": "sail",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/sail_try1.json",
+      "record_sha256": "76463993f0c96c18b9d8be63c604f28cc48988d70a72e56ad4c2b26beef002f3",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/sail_try1_raw.png",
+      "raw_sha256": "3c34c933609bcd0f72c0c44b271783d67007fd06cb13d493fa77d1f1343a0715"
+    },
+    {
+      "id": "silk",
+      "attempt": 1,
+      "family": "misc",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/misc/silk_try1.json",
+      "record_sha256": "0d8e83c66040531f6c704a5f32736505f17042bf5c0ed00276fdd4332e99c73f",
+      "raw": "/Users/rexxa/work/art-batch/A3/misc/silk_try1_raw.png",
+      "raw_sha256": "6aecc099296f7b99eabaf6b8a08c30651f0eaddc2e373be72d246b4853d31ba8"
+    },
+    {
+      "id": "beer_empty",
+      "attempt": 1,
+      "family": "variants",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/variants/beer_empty_try1.json",
+      "record_sha256": "bf9fe9233e3b8f494a57484ca90ba1e9b7236e9c510b2dec2e1c555add6d5902",
+      "raw": "/Users/rexxa/work/art-batch/A3/variants/beer_empty_try1_raw.png",
+      "raw_sha256": "9423329d65027510f638cb7b93d62592e3c6a66c60731b5730ca33aa7f340e96"
+    },
+    {
+      "id": "fermented_milk_empty",
+      "attempt": 1,
+      "family": "variants",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/variants/fermented_milk_empty_try1.json",
+      "record_sha256": "3d85bc885e380d792650a36b18673db1242eb85ace81498653a6811e791af7c9",
+      "raw": "/Users/rexxa/work/art-batch/A3/variants/fermented_milk_empty_try1_raw.png",
+      "raw_sha256": "5eebd8b910b1eb27f71ca6827b9f07caa79f31a16a6e9d466bf67b27394cc18a"
+    },
+    {
+      "id": "fermented_vegetables_empty",
+      "attempt": 1,
+      "family": "variants",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/variants/fermented_vegetables_empty_try1.json",
+      "record_sha256": "c34621c80c06eb9cbea6b43a478aba926f5d7bf67fbe0c41ba30e9f41e5fe004",
+      "raw": "/Users/rexxa/work/art-batch/A3/variants/fermented_vegetables_empty_try1_raw.png",
+      "raw_sha256": "1911f7e635968b3e1a2fd417f4445f6260452e050a34333fb171837a2e60a73c"
+    },
+    {
+      "id": "honey_empty",
+      "attempt": 1,
+      "family": "variants",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/variants/honey_empty_try1.json",
+      "record_sha256": "3bcab2ce38095365229369cf6e18caedd6ba37a6cbbb1d52e0fffbd97d71e46f",
+      "raw": "/Users/rexxa/work/art-batch/A3/variants/honey_empty_try1_raw.png",
+      "raw_sha256": "2137aac6d252fd31d4ec4368a3797127adfb6e82a157ad6a0c400380ec2ea31a"
+    },
+    {
+      "id": "milk_empty",
+      "attempt": 1,
+      "family": "variants",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/variants/milk_empty_try1.json",
+      "record_sha256": "4e970eb56003fcd7eb719478c8ed82e037c302c94cd4f7e388fc026801461eee",
+      "raw": "/Users/rexxa/work/art-batch/A3/variants/milk_empty_try1_raw.png",
+      "raw_sha256": "9843c28bc9a063bf75fa643eaab9358f7e27241f47e6d94dc36f8dc15e5e0f7c"
+    },
+    {
+      "id": "olive_oil_empty",
+      "attempt": 1,
+      "family": "variants",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/variants/olive_oil_empty_try1.json",
+      "record_sha256": "cf627b337cd99a8c99e1f316234f2e5e042c71cdaadbe08aa815f624a92feb73",
+      "raw": "/Users/rexxa/work/art-batch/A3/variants/olive_oil_empty_try1_raw.png",
+      "raw_sha256": "6e754c7123b2d1fb76c4e2746046308a49a7999b7a7d3d673a1c0f97c8afc8c6"
+    },
+    {
+      "id": "wine_empty",
+      "attempt": 1,
+      "family": "variants",
+      "decision": "adopted",
+      "reason": "Selected after alpha and native-size visual review.",
+      "record": "/Users/rexxa/work/art-batch/A3/variants/wine_empty_try1.json",
+      "record_sha256": "77fa304e0af92174fe45f3c9365e60e0ab73d47d49adf43fdcfea44ef5bd6ce2",
+      "raw": "/Users/rexxa/work/art-batch/A3/variants/wine_empty_try1_raw.png",
+      "raw_sha256": "ea1c9577103c017a9086287e68e72ad9aa767e327e0099971cb0e54955a4c578"
+    }
+  ],
+  "selected": [
+    {
+      "id": "adze",
+      "attempt": 1,
+      "raw_sha256": "c4782693f3b9bf21b9e5aea2b4436284c1daa97ba74811e2807251933af9150d",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "apple",
+      "attempt": 1,
+      "raw_sha256": "735281e1b1c38ca3a1a3f2dc17b801b070385c3b4af99e068aca9aca545bfd67",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "arrow",
+      "attempt": 1,
+      "raw_sha256": "636ee950b3320df004880127e7a2ec31ed604cc5c6a16354f6bd4de456216dc3",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [
+        "1"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "atlatl",
+      "attempt": 1,
+      "raw_sha256": "8b72f75c50239baedeba55f811faa825e9e86877ed476a5d9a752964652f82ec",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "barley_seed",
+      "attempt": 1,
+      "raw_sha256": "6c4a01900d98b4da31fd996298b9e2cc7587f9fb8d373a82903af208eb508d18",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "barley",
+      "attempt": 1,
+      "raw_sha256": "ac7b4851486502f443b1f3c99dec178bd34845344719956f90418c93fb264d4f",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "basket",
+      "attempt": 1,
+      "raw_sha256": "9150ffb798ef6163cfe84f5e92e8e5d02459067f9cc96c53e2e13c5871c74ad0",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "beer_empty",
+      "attempt": 1,
+      "raw_sha256": "9423329d65027510f638cb7b93d62592e3c6a66c60731b5730ca33aa7f340e96",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q25"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "beer",
+      "attempt": 1,
+      "raw_sha256": "752cde03c81be34865db2e2d87e8ecceae9a43984a42a1f52cdf2129a8147892",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q25"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "beeswax",
+      "attempt": 2,
+      "raw_sha256": "9bdddca5ff9d0c1887d2927544c0066d62f786c01f0aeaa7fc74450c31573c35",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [
+        "9_plus"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "bone_awl",
+      "attempt": 1,
+      "raw_sha256": "1d7e9969165cae3f9c5bc2510ff4d7475b7dc38543f56a4516afdad8f2703315",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [
+        "1"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "bone_needle",
+      "attempt": 1,
+      "raw_sha256": "10ebf7c21195fdb3917f09f9a23a818eac744b5d0a0706cc0200810ee04cf94d",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "bow",
+      "attempt": 1,
+      "raw_sha256": "7e8039bc72ae337c7d9e065a65ea3c233b5a9e2aeaf096a65887c990d9ace33a",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "bread",
+      "attempt": 1,
+      "raw_sha256": "7970d5e25f30d59f0a92db79e93b076b6bcd37c944412e60e9141020ce291c24",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "bronze_axe",
+      "attempt": 1,
+      "raw_sha256": "dde4dfdd54b9c387ef951eef16219747c8b1b6e0e1d2c72202a957d4ff4a1a68",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "bronze_dagger",
+      "attempt": 1,
+      "raw_sha256": "a34069f5e01769d8cf825bc99b858a2c05e92666257928dce54ffe42cad5d38a",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "bronze_hoe",
+      "attempt": 2,
+      "raw_sha256": "002c3243a4835516870dcea67f6c93d514aaef3446a295256aa6e9dc62857a51",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "bronze_ingot",
+      "attempt": 1,
+      "raw_sha256": "77c8e8a7fb201262b40739820c1f4b2171710b78b282525795a39b94bcc9c705",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "bronze_sickle",
+      "attempt": 1,
+      "raw_sha256": "a8be16bd7b83c210dbb2e60fbda134c962a0791bd655cd2902e72da086f5a9e3",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "bronze_spear",
+      "attempt": 1,
+      "raw_sha256": "fc0087dcca883b57b8865877a4a85ca877cf8f62531ca3bb2c0dd6b210690cff",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "bronze_sword",
+      "attempt": 2,
+      "raw_sha256": "8152ac36f4bffcecd7dddf836f9f7140b9ed176dad0cf791b5368d54fc01a9db",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "butter",
+      "attempt": 1,
+      "raw_sha256": "6301bd043687d2114c38064be9096a8c322bb94c82ff7e214dc2a00115f6fe3f",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "cart",
+      "attempt": 1,
+      "raw_sha256": "b87343d0876d870fef4a2821a13ce7e5e1441294e644111baac286faa4d9e370",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "charcoal",
+      "attempt": 1,
+      "raw_sha256": "5053ca547bd0d9106bbce65dd6e7a2421ed8f9ddc5aa660c3f1193c04d07af7e",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "saturation_q75"
+      ],
+      "projection_fail_buckets": [
+        "9_plus"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "cheese",
+      "attempt": 1,
+      "raw_sha256": "8785b20793a1624c57db37577b05413626f875a6559de0308f35d513da70550c",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "clay_mould",
+      "attempt": 1,
+      "raw_sha256": "b030e27ca5017e28140a357e60bda720db456fda2d6ce75c4c177c5670d1c50c",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "coin",
+      "attempt": 1,
+      "raw_sha256": "8d3c67eb0bb6b782cee2d60220271e7a244ac563b2b3ee1e4b5b66729c126ad7",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "composite_bow",
+      "attempt": 1,
+      "raw_sha256": "9f6facca8944ce3be58f1b555af30a1e36ec7d49b43a75f8b3e651b8bbad1078",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "copper_awl",
+      "attempt": 1,
+      "raw_sha256": "758a72e215f3967b71f110c8119ad350a566f8e0d1580835a030823fd46e9252",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "copper_axe",
+      "attempt": 1,
+      "raw_sha256": "aeae6c0a3bd64f815bbd4827a8d46d19fe300c3eb2adf1fe3616d1c22a20c90b",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "copper_ingot",
+      "attempt": 1,
+      "raw_sha256": "8ae0cc868ffcd68c458a6e90129530804b77c672b7754e8592e6362fec09615c",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "copper_needle",
+      "attempt": 1,
+      "raw_sha256": "a89bf9018d5581d58bd251a5883e736baebf425a4a5956c39de4fd02a98b8244",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "copper_ore",
+      "attempt": 1,
+      "raw_sha256": "87a8c99ac4f1425a236737a3a1524ab5de9a884af33e0366fbbdba5515b90f05",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "cord",
+      "attempt": 1,
+      "raw_sha256": "545dca42da4364b3181bb114815f1411bc2defb5d96faaf768277638ba08f215",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "dried_berries",
+      "attempt": 1,
+      "raw_sha256": "fb266522906b688ca6fcdc4b5c5df903dcb959204a8d76c8047724a051c82b42",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "dried_meat",
+      "attempt": 1,
+      "raw_sha256": "e59c85bb1e32897cdb773f8339baba40ffb23191d5f64f80e8e9ae41fd963c67",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "drum",
+      "attempt": 1,
+      "raw_sha256": "f56b2e161eede30a452b2ddef7bb239989887ef94af771135d457a79fed2536f",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "dugout_canoe",
+      "attempt": 1,
+      "raw_sha256": "7e44f487208a881987ae16ea7f2094f4962bf6f452581438cb0644632e58d0d2",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "dyed_tunic",
+      "attempt": 2,
+      "raw_sha256": "3bfcc33ece7572736790a806fc982deb8a9eb926f772bbd2e3bc427a63d21fa5",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "emmer_seed",
+      "attempt": 1,
+      "raw_sha256": "32837b32e5482cbb4b1e33e91027cc7ca7499ac1a22b5ddabff13c65c14b907f",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "faience",
+      "attempt": 1,
+      "raw_sha256": "a087f1af498d7685ef631dae6a1ca841d501d7a784237ccb544788526da3bbee",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q25",
+        "saturation_q75"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "fermented_milk_empty",
+      "attempt": 1,
+      "raw_sha256": "5eebd8b910b1eb27f71ca6827b9f07caa79f31a16a6e9d466bf67b27394cc18a",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "fermented_milk",
+      "attempt": 1,
+      "raw_sha256": "29dbb7edf61f4cbc1d6c90c40e78b2df68ffe2db38b98e3048e1a5eeeed0c030",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "fermented_vegetables_empty",
+      "attempt": 1,
+      "raw_sha256": "1911f7e635968b3e1a2fd417f4445f6260452e050a34333fb171837a2e60a73c",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q25"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "fermented_vegetables",
+      "attempt": 1,
+      "raw_sha256": "717c4b72dbe07e5041fa8ef2226100e78ef4ce33edc2916ef45f8ec6b23ec311",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "fish",
+      "attempt": 1,
+      "raw_sha256": "e915e2d6e7f66e0007fccba8ee0239de00800892f54b72b9a4d20daa93b10c06",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [
+        "1",
+        "2_8",
+        "9_plus"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Direction indeterminate from natural coloration; no reversed local light demonstrated."
+    },
+    {
+      "id": "flax_fibre",
+      "attempt": 1,
+      "raw_sha256": "bc7b07af32f6feedb7dfc4d2dbf2dd64e11549be2162976d1e8afd03b167722f",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "flax_seed",
+      "attempt": 1,
+      "raw_sha256": "e8b7b33d1cf5c58c685874c185b649530c88367d09849e7ba755cc31c8c7080f",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "flax_stalks",
+      "attempt": 1,
+      "raw_sha256": "f8264b0b05a2960819f6a08e5db56eb0c13b4e52a7fcc7e50ce5aa5b67d45765",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "flour",
+      "attempt": 1,
+      "raw_sha256": "ef5e47ee8a1cf04c56b20d8d529097ab08749c642315ff6e39cb90223517369d",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "flute",
+      "attempt": 1,
+      "raw_sha256": "5ebff1d61b07fedee65dcc6ff298d4cf1478f80f46632563299b265c45029917",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "fruit_porridge",
+      "attempt": 1,
+      "raw_sha256": "504a3acf99128c297d3b19273fd33a0eedb895ed38df0491871e025e6de4429d",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "glass_bead",
+      "attempt": 1,
+      "raw_sha256": "416f1ee82dd309fa792f086a5548d79b2532e329dcedc256170a7ba0658ab1df",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "goat_hide",
+      "attempt": 1,
+      "raw_sha256": "1a504669e8e581de476dc9a81d880316d00eddabdcd7137e480fb8e4a72191a8",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [
+        "1"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Direction indeterminate from natural coloration; no reversed local light demonstrated."
+    },
+    {
+      "id": "grape",
+      "attempt": 1,
+      "raw_sha256": "94edc3512e7edc83f04a6c6f0d2d3643666cd6d8e1bd768a928b4470bc61b451",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "hand_spindle",
+      "attempt": 1,
+      "raw_sha256": "b37bc49f5e9f12d9044df055542a7c15b86eef505119d78640680cb0caca5890",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [
+        "1"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "hay",
+      "attempt": 1,
+      "raw_sha256": "57188aa164806b6205a5d1d66e89e258d9c612cf3858e286e4ce78cac8d5bfaa",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "hazelnuts",
+      "attempt": 2,
+      "raw_sha256": "7d1cde4acb02fc0ec89c8161ded328ffa27b41285b337338983c816d4b645c8e",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "hemp",
+      "attempt": 1,
+      "raw_sha256": "63155afb7d4974e0c1c19f38a983f40b2981a3185aa710424d26dc91fc340355",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "herbs",
+      "attempt": 1,
+      "raw_sha256": "11c4fc10b9e89075c063d45af8550be59ab489747d3849653a5693e669029b66",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [
+        "9_plus"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "hoe",
+      "attempt": 2,
+      "raw_sha256": "b1b7094e54b94f8828d525606f34c31cebfd529c304907a4a038c521fcf32f91",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "honey_empty",
+      "attempt": 1,
+      "raw_sha256": "2137aac6d252fd31d4ec4368a3797127adfb6e82a157ad6a0c400380ec2ea31a",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q25"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "honey",
+      "attempt": 1,
+      "raw_sha256": "8d6cfc5dc35480729393fb5e3e615580d9f97c1f23743a8496f57a144b3f176d",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q25"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "iron_axe",
+      "attempt": 1,
+      "raw_sha256": "1780d98b1e0b50ab28202831ba5f5a2249479e8447d14a80d5e3ea7d684a2b1e",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "iron_bloom",
+      "attempt": 1,
+      "raw_sha256": "8cc6d8fa8f9b04544a97c53e0fd5ba5f6ed7a1c38860f7d1405e6bf28b176ef0",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "iron_chisel",
+      "attempt": 1,
+      "raw_sha256": "6823ce70bb8fdc44c072383e12f78c9862c7a021030b25b7a390719157feb589",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "iron_helmet",
+      "attempt": 1,
+      "raw_sha256": "bbe87b2ec59c00b5c2ff1642bf986a691cb312cfc1a755426267b84ef764470f",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "iron_hoe",
+      "attempt": 2,
+      "raw_sha256": "25815805266338b4e1cf118ad703e69156cb8cec4172d28edd7e6549f71f3fbc",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "iron_ingot",
+      "attempt": 1,
+      "raw_sha256": "f5605b4c8e79c6f2f6f7c9a97297622ef6fdf6bf3cfe97c4adf7612efc0f377e",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "iron_ore",
+      "attempt": 1,
+      "raw_sha256": "a2843db0c740f92dffa08d5c537f3a50e539aae7c18baa75ac2142f6cda61e76",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "iron_pickaxe",
+      "attempt": 1,
+      "raw_sha256": "e0981bf4143a5b31c88fa78e784dbd4ac22ea13ec62de96e5d972458ef5f7b80",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "iron_plough",
+      "attempt": 3,
+      "raw_sha256": "7aceaa25c0f62650c55feba9f658047787df9ad80c0835aee36e29aa9dfe58ef",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [
+        "1"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "iron_saw",
+      "attempt": 1,
+      "raw_sha256": "81e01525936748464a4046b65058b397c4a8d5af25dc9ad5420d5810d197db6d",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [
+        "1"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "iron_shield",
+      "attempt": 1,
+      "raw_sha256": "3aff6a37070e2d56be6dca4d8af0a0ffc8a59b10140508cf6f73567b7baf6175",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "iron_sickle",
+      "attempt": 1,
+      "raw_sha256": "efc7b491b9859d067f357d7b42b5583522b534b1567ddd2c1fd476362735edda",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [
+        "1"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "iron_sword",
+      "attempt": 1,
+      "raw_sha256": "51f6dfc71cd8c08a1c8b587d45e0f43f572a3ae29a566d16e61b18963428822e",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "leather_armor",
+      "attempt": 1,
+      "raw_sha256": "2fae16886272b3611cac4c6ee90c1563723fe98547a14bef4cfbe45b48878000",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [
+        "1"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "lentil_seed",
+      "attempt": 1,
+      "raw_sha256": "0b2962d6bd8bc038643aa94f195e8171c80ec89d5f5f825ad3e6409526dc4ad5",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "lentil",
+      "attempt": 1,
+      "raw_sha256": "2ae55e1846b68461ca024fa53c2ebcc9dc12a435eea9d313a30de96cbdca7ef0",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "lime",
+      "attempt": 1,
+      "raw_sha256": "dc298735b4578d81320317405ffd23cfd81f2a7e05bf29209ea7682b0b931db1",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "linen_cloth",
+      "attempt": 1,
+      "raw_sha256": "81b7b10fd4bf3e9ce5c24e4fb65c98c297efda621527856e673c0277957a63b1",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "linen_thread",
+      "attempt": 1,
+      "raw_sha256": "04a44f2de6ac0c8dc31e0ab40341ce27bc79b91be80c386064f8fb6d324d7424",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "linen_tunic",
+      "attempt": 2,
+      "raw_sha256": "19b60f3541c7bd4a49909ee8f35b1ff13f1b9f20f0289f2744a98a5f6f8f7baf",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q75",
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "linen_wrap",
+      "attempt": 1,
+      "raw_sha256": "ff1ec9a0daabe46264d1f8e992905021df2eb647e7b2ebba22b0da2ef530364f",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [
+        "1"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "map",
+      "attempt": 1,
+      "raw_sha256": "0a235a0dcdc9c4208b291b4a84d7b7748e9fc855eb1803859c8343d427aef43c",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "milk_empty",
+      "attempt": 1,
+      "raw_sha256": "9843c28bc9a063bf75fa643eaab9358f7e27241f47e6d94dc36f8dc15e5e0f7c",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q25"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "milk",
+      "attempt": 1,
+      "raw_sha256": "53f21045b575006fca3841da6aa8ea858af7a081ff7f7c29eb3518d055e11d99",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q25"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "millet_seed",
+      "attempt": 1,
+      "raw_sha256": "3c5e288aadb84c6050e63fbd0458efc3472028e455fe083019e1d39ff0e9e54e",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "millet",
+      "attempt": 1,
+      "raw_sha256": "0e74581ac8ba963145c1f7c7764c7c797d8544730732e8582ea320031a4163c3",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "saturation_q25",
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "mud_brick",
+      "attempt": 1,
+      "raw_sha256": "f3c98fd8ea43560ab3b37da5e91db8254e335010e4c199f19f8c57c9f56c12df",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "oats",
+      "attempt": 1,
+      "raw_sha256": "1b68c526ddc2a03793363a0155f3ea89d6672b45c537dbf25ae0b3882c4d3353",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "olive_oil_empty",
+      "attempt": 1,
+      "raw_sha256": "6e754c7123b2d1fb76c4e2746046308a49a7999b7a7d3d673a1c0f97c8afc8c6",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "olive_oil",
+      "attempt": 1,
+      "raw_sha256": "660d66c11b7d44f7aef2dfeb8d2324b3eb382627e9394051e4f0898f50d28285",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "olive",
+      "attempt": 1,
+      "raw_sha256": "6c0385b829ec59a3c8d33f18161ef33cb68642372f28cd75659f99d0ee1c4f40",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "pea_seed",
+      "attempt": 1,
+      "raw_sha256": "f011ef4f7bea6189d88f0bebde9da052c4de1f78e2e550fb7da5d44a72cac5d8",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "pea",
+      "attempt": 1,
+      "raw_sha256": "4cc4851104069e2d7a80c332dac27ab076ce354c91a2aa8a1fdae820ef452b05",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [
+        "9_plus"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "plough",
+      "attempt": 1,
+      "raw_sha256": "717a7c2155d4bbdc106c568772166f7e751d14d9a82f1089e513dfde2711009d",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "porridge",
+      "attempt": 1,
+      "raw_sha256": "04bf8c429fff6c0c87a57c80615cbf5b675c8928292251e95fd5aefe2c3d4669",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "poultice",
+      "attempt": 1,
+      "raw_sha256": "d3fe0384a2a555e67596d159e3a99f5e2db0e000931b9f3580ad08d738f23b25",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [
+        "1"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "purple_cloth",
+      "attempt": 1,
+      "raw_sha256": "751c2d80cf99c286f0681bc004acc939801af131f20257df5bdf4bd503fd620e",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "record_book",
+      "attempt": 1,
+      "raw_sha256": "6a11e59a5cb1784811d11fac84c64119c5dcc6b108ba3b3614075d9953a8d316",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "reed_boat",
+      "attempt": 1,
+      "raw_sha256": "1377e674d94c010063237fd9720dde3453967450952a97f2718cb0bb36714fb0",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "ritual_mask",
+      "attempt": 1,
+      "raw_sha256": "44d8fe52c6d4d211b44e918b68e160ee743e9dcb1d52543c864fe4c05a2fbe43",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "roast_meat",
+      "attempt": 1,
+      "raw_sha256": "98a948e0f44f3d685d5a63c3263a2f5acd5aadf6ea24e011f2c388203a5539de",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "saturation_q25"
+      ],
+      "projection_fail_buckets": [
+        "1"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "roasted_roots",
+      "attempt": 1,
+      "raw_sha256": "be0561c1030823c9a9f3426f718263e7dbed916d7529f54ea0ded04fa433ebd8",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "roots",
+      "attempt": 1,
+      "raw_sha256": "facf55769556ed1305bc4e2dae033f2823db482b7f801f4d7066e5facd5a9b90",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "rye_seed",
+      "attempt": 1,
+      "raw_sha256": "0ffaab9d90c0d5ca691a6a73af9277e9755bd8fa444f86b62114d1100964f7bc",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "rye",
+      "attempt": 1,
+      "raw_sha256": "9149828639fb9f141694bf063d69bca6edca16f385098f53ca0760c2a242a317",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [
+        "1",
+        "2_8",
+        "9_plus"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "sail",
+      "attempt": 1,
+      "raw_sha256": "3c34c933609bcd0f72c0c44b271783d67007fd06cb13d493fa77d1f1343a0715",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "salt",
+      "attempt": 1,
+      "raw_sha256": "7fa0fac983b4e3e67d4e7307e204b78b47e323e198c5565c40b614c080367eb1",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "seal",
+      "attempt": 1,
+      "raw_sha256": "8dd412e51ed36085fa49890daa1d98a11d485e6bb75e5912cd3f046ccec42ba2",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "sickle",
+      "attempt": 1,
+      "raw_sha256": "72c5e91b4d11e0835c42a355112563719d325d825612c4ea4eb67e3877e7b5b7",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "silk",
+      "attempt": 1,
+      "raw_sha256": "6aecc099296f7b99eabaf6b8a08c30651f0eaddc2e373be72d246b4853d31ba8",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [
+        "9_plus"
+      ],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Upper surfaces/light wood and darker lower surfaces/metal remain coherent; whole-image/count gradient failure retained."
+    },
+    {
+      "id": "sling",
+      "attempt": 1,
+      "raw_sha256": "1412b4d973cc81ee7f0ebc1a3e74cf2b64c77a5d7124d5fdadf194d41e191480",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "wash_flatness"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "smoked_meat",
+      "attempt": 1,
+      "raw_sha256": "1e51b2938f80fb52e8e338a9b499e0db88e3a9a6fadf74bdf85eea70a95c594b",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "stew",
+      "attempt": 1,
+      "raw_sha256": "b15c94c3ac8cdb23e60d6aca4b9b487f3b854989bb22827a5a261c4d354e2c6d",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "saturation_q25"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "tablet",
+      "attempt": 1,
+      "raw_sha256": "bca32974b56e993259cdb599c86c3eaacc0c3bd3833ae73ce1bdc356f99b2404",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q25"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "tally_stick",
+      "attempt": 1,
+      "raw_sha256": "4ce53af805cd6e6b955f500483e4a2e4d620f7641c7652a48c13a00d3f0e49d7",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "tin_ingot",
+      "attempt": 1,
+      "raw_sha256": "6f71d81481c60e37f58aa70128d8552b66b11e332d90138d23a31719ef3b819c",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q25",
+        "saturation_q75"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "tin_ore",
+      "attempt": 1,
+      "raw_sha256": "2b7645da1baa9120942bebde45087f81ef41e781adce5748fbe277978d143c96",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "wheel",
+      "attempt": 1,
+      "raw_sha256": "d0e2320e438743f435b979e8d568a468ea7b309fc06183500660f7786e7d09cd",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "wild_grain",
+      "attempt": 1,
+      "raw_sha256": "1656c13dbd452b24fdaf9291952256206906bbc7d98aa9eb4aae5e5810551764",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "wine_empty",
+      "attempt": 1,
+      "raw_sha256": "ea1c9577103c017a9086287e68e72ad9aa767e327e0099971cb0e54955a4c578",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "wine",
+      "attempt": 1,
+      "raw_sha256": "0b2d5f65e378cc4bf9da87eb91a75732b778a8da87646637e1f6dde66d715a53",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density",
+        "saturation_q25"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "wool",
+      "attempt": 2,
+      "raw_sha256": "330f4db320e87c9545083674a5ef7178985994a00e8ef3fa1cf4dff7e6e4808f",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "wool_tunic",
+      "attempt": 2,
+      "raw_sha256": "8b65adc6e77fca98810b82eb6b0c11bc955c96141f8c4be8d0b0e6773ad5788f",
+      "numeric_style_pass": false,
+      "numeric_failures": [
+        "edge_density"
+      ],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": "Root accepts labelled native-size style comparison; retained raw metric failures and baseline comparison are not declared numeric passes.",
+      "lighting_note": "Instrument and visual review compatible."
+    },
+    {
+      "id": "wool_yarn",
+      "attempt": 1,
+      "raw_sha256": "d4eb5e355a306332b190280bab4796bd06aa5cde60acb0dc215661a215889b89",
+      "numeric_style_pass": true,
+      "numeric_failures": [],
+      "projection_fail_buckets": [],
+      "visual_verdict": "pass",
+      "numeric_exception": null,
+      "lighting_note": "Instrument and visual review compatible."
+    }
+  ],
+  "verification": {
+    "alpha_geometry_hash_failures": [],
+    "pipeline_tests": 9,
+    "ruff": "pass",
+    "basedpyright": "0 errors,0 warnings,0 notes",
+    "no_excuse_rules": "pass",
+    "docs": "pre-existing failures: historical captures and art/proto UIDs",
+    "runtime_import": "not run; art-only scope"
+  }
+}
