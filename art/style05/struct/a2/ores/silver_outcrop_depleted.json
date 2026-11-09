@@ -1,0 +1,272 @@
+{
+  "record": {
+    "id": "silver_outcrop_depleted",
+    "lane": "ores",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28b-c36e-7430-8e1c-c60324c88770/exec-aa3562b6-6573-41d5-8801-79aaa7090308.png",
+    "prompt": "Use case: precise-object-edit. Image1 edit target is silver-sulfide ore outcrop. Make DEPLETED state. Preserve identical whole silhouette, three large faces and crack groups, camera, warm beige-gray stone matrix, upper-left light and right shadow, fine sepia contours and right / hatch group. Remove90% of dark charcoal sulfide in three exposed seams, leave warm gray-beige shallow chipped sockets with only a few tiny dark mineral traces. Same geology and bounding rock; no new rubble or alternative shape. Empty alpha0 exterior exactly preserved. No background or ground/shadow/halo, no ingots or shine or labels. One centered whole sprite, broad quiet tones for26px target height.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28b-c36e-7430-8e1c-c60324c88770/exec-57061c9a-71b2-42df-bfa1-e71672034e67.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/boulder_large.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/flint_outcrop.png"
+    ],
+    "target_height": 26,
+    "projection_family": "boulder",
+    "height_band": null,
+    "height_band_reason": null,
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:21:19.590Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/ores/raw/silver_outcrop_depleted_try1.png",
+  "raw_sha256": "5076bdc6d8c620afb5040b71b5d0ff0364e3449a0f2766946b2d2db7cce0310d",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28b-c36e-7430-8e1c-c60324c88770/exec-57061c9a-71b2-42df-bfa1-e71672034e67.png",
+      "sha256": "291111537ba71a4f1c792200c81ebd174c4c927c1a26ea6f16c99bc3a916b140"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/boulder_large.png",
+      "sha256": "de8a3b59afd607070da3939b9bd0617a30877ad04cbfceebce202e3848801e3e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/flint_outcrop.png",
+      "sha256": "6121d1aff8b9f6269cb69ddec19e5ebfd2da93eba80a540a677a5caa09c03218"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/ores/normalized/silver_outcrop_depleted_try1.png",
+  "normalized_sha256": "0ff2c00c43359d9be1a34bac1308e5caf09b1b9be96c3cfa168c9f06aacac67d",
+  "size": [
+    57,
+    34
+  ],
+  "anchor": [
+    28,
+    29
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (291, 243, 1278, 772)",
+    "uniform Lanczos scale: 0.049523809523809526",
+    "transparent 4px padding; source-canvas anchor: (28, 29)"
+  ],
+  "projection": {
+    "family": "boulder",
+    "anchor": [
+      28,
+      29
+    ],
+    "height_band": [
+      24,
+      36
+    ],
+    "height_band_override": false,
+    "opaque_pixels": 813,
+    "base_row": 29,
+    "base_error": 0,
+    "height": 26,
+    "gradient_x": -0.8835252858958068,
+    "gradient_y": -1.6689405759162304,
+    "light_angle_degrees": 242.10357336912466,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/ores/raw/silver_outcrop_depleted_try1.png",
+    "sha256": "5076bdc6d8c620afb5040b71b5d0ff0364e3449a0f2766946b2d2db7cce0310d",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.19972118959107807,
+      "saturation_q25": 0.2600616047987985,
+      "saturation_q75": 0.40017921669043693,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.008904571851043007,
+      "foreground_pixels": 22658
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    1438,
+    960
+  ],
+  "raw_opaque_bbox": [
+    293,
+    245,
+    1276,
+    770
+  ],
+  "raw_faint_far_ratio": 0.0036267769750640876,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_orchard independent executor",
+    "evidence": [
+      "ores/all_ores_contact_1x2x.png",
+      "all6 corresponding raw PNGs and normalized sidecars",
+      "locked props/scene and existing boulder_large/flint_outcrop references"
+    ],
+    "assets": [
+      {
+        "id": "lead_outcrop_full",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Mineral distinction from tin is clearest at2x, still dark against host at1x."
+        ],
+        "suggestions": [],
+        "reasoning": "Distinct angular cubic-looking dark gray galena chunks in three pale host-rock pockets; lighter upper-left faces and cool subdued highlights read mineral, no polished ingots. 63px opaque width narrowly fits1tile."
+      },
+      {
+        "id": "lead_outcrop_depleted",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Reduced extraction mass matches mandatory depleted family."
+        ],
+        "suggestions": [],
+        "reasoning": "Same host silhouette with three emptied recesses and small residual gray flecks; depleted state readable. 51px width fits1tile at26px target."
+      },
+      {
+        "id": "gold_outcrop_full",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 90,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Gold flecks are subtle at1x; quartz seams carry much of resource cue."
+        ],
+        "suggestions": [
+          "Use tooltip or resource highlighting for precise identification at1x; keep understated mineral rendering."
+        ],
+        "reasoning": "Native ochre-gold flecks within pale quartz seams provide plausible gold-bearing rock; restrained warm hues and three seam layout fit family. 60px width fits1tile."
+      },
+      {
+        "id": "gold_outcrop_depleted",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "At1x resembles other depleted gray hosts, acceptable after mineral removal."
+        ],
+        "suggestions": [],
+        "reasoning": "Three pale quartz seams replaced by shallow gray mined channels with a few tiny remaining ochre flecks; consistent host and depleted mass.49px wide1tile."
+      },
+      {
+        "id": "silver_outcrop_full",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "No bright fantasy metallic shine; visual identity mostly dark seam cue."
+        ],
+        "suggestions": [],
+        "reasoning": "Dark gray silver-bearing seams with small cool highlights distinguish mineral from copper green and iron rust. Broad top planes and brown ink match existing stone reference.60px wide1tile."
+      },
+      {
+        "id": "silver_outcrop_depleted",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Warm exposed host makes empty state lighter than full, coherent pair."
+        ],
+        "suggestions": [],
+        "reasoning": "Matching three dark seams become lighter empty ochre-gray recesses with sparse black remnants. Reduced26px height and49px width fit extracted one-tile host."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "silver_outcrop_depleted",
+  "adopted_path": "art/style05/struct/a2/ores/silver_outcrop_depleted.png",
+  "review_asset_id": "silver_outcrop_depleted",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/ores_extra_independent_review.json",
+  "review_sha256": "b10f0c52375c6d43b145ae4c6554b88538c36908270f2d8739288cbd565b8bf1"
+}

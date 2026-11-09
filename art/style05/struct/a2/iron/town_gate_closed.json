@@ -1,0 +1,259 @@
+{
+  "record": {
+    "id": "town_gate_closed",
+    "lane": "iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-77a3059b-6449-4834-a3a8-509300301270.png",
+    "prompt": "Use case: stylized-concept. A single isolated WorldSim style05 iron-age game asset, hand-inked natural-history plate with restrained earth tone washes. REFERENCES: props.png/hut.png and scene.png control ink medium, materials, palette and upper-left daylight; route_i_sheet_1x.png and adopted struct reference control low standing camera and game scale only. Ground plane is orthogonal plan geometry; all standing elements FRONT THREE-QUARTER, approximately20 degrees down, substantial visible front, shallow compressed top; never isometric diamond. Upper-left light clearly brightens top/left; right/lower faces have a distinct darker quiet wash. Warm sepia-charcoal outer ink contour; internal marks exactly half contour weight (2:1). Wood:3 broken longitudinal marks per main timber. Stone:3 crack/facet groups per dominant stone. Clay:3 short crack groups per major clay surface. A single group of3 fine parallel / hatch marks on a shadow plane; broad quiet wash, no dense all-over hatching or speckled phototexture. ROOFS OMITTED entirely, interiors visible. Produce a large source that reduces cleanly to64px world tiles and a56px adult. No people, labels, lettering, UI, border, checkerboard, scenery, floating ground island, shadow puddle, haze, glow or halo. Entire asset inside frame with generous truly alpha-zero transparent margins, true RGBA. No photorealism,3D render, pixel art, modern object or classical/medieval ornament.\nSUBJECT: One early iron stone town gateway: two compact rough stone piers and thick squared wooden lintel, pair of closed heavy vertical-plank leaves with simple narrow iron straps. Entire silhouette60pxhigh,width96px final,footprint2x1tiles. No roof/tower/battlements. Front view tilted20deg down,slight visible right side.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/character/boards/route_i_sheet_1x.png",
+      "art/style05/struct/pottery_bench.png"
+    ],
+    "target_height": 60,
+    "projection_family": "door",
+    "height_band": null,
+    "height_band_reason": null,
+    "footprint": [
+      2.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:16:14.487Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/iron/raw/town_gate_closed_try1.png",
+  "raw_sha256": "d4e84d39e0be7bb143dca7c97a94f7349286bf4bb6a7ab3660843520c5e10bd5",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/pottery_bench.png",
+      "sha256": "f659408c033155440b52e3af771f3f825c7860127971bd9848d912ca26af51c5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/iron/normalized/town_gate_closed_try1.png",
+  "normalized_sha256": "f808880b1a8bc28576c7450f8dd3c0665097bffd41543f49c368a1596c2c5134",
+  "size": [
+    113,
+    68
+  ],
+  "anchor": [
+    56,
+    63
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (171, 159, 1370, 849)",
+    "uniform Lanczos scale: 0.08746355685131195",
+    "transparent 4px padding; source-canvas anchor: (56, 63)"
+  ],
+  "projection": {
+    "family": "door",
+    "anchor": [
+      56,
+      63
+    ],
+    "height_band": [
+      58,
+      62
+    ],
+    "height_band_override": false,
+    "opaque_pixels": 5205,
+    "base_row": 63,
+    "base_error": 0,
+    "height": 60,
+    "gradient_x": -0.43151003702981877,
+    "gradient_y": -0.5253269616519177,
+    "light_angle_degrees": 230.5998954136862,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/iron/raw/town_gate_closed_try1.png",
+    "sha256": "d4e84d39e0be7bb143dca7c97a94f7349286bf4bb6a7ab3660843520c5e10bd5",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.25658382164747084,
+      "saturation_q25": 0.3961695126796635,
+      "saturation_q75": 0.5292935709944661,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.015054592342483356,
+      "foreground_pixels": 31328
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    1535,
+    1024
+  ],
+  "raw_opaque_bbox": [
+    173,
+    161,
+    1368,
+    847
+  ],
+  "raw_faint_far_ratio": 0.0564681378599574,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "root independent of generating agent",
+    "method": "Actual raw RGBA dark composites and1x/2x exports, alongside earlier locked props/scene and fixed-scale adult/bench references. Infrastructure acceptance is discrete asset readability, not runtime tiling proof.",
+    "sheet": "/Users/rexxa/work/art-batch/A2/checks/iron_raw_review_232809.png",
+    "assets": [
+      {
+        "id": "town_gate_closed",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "reasoning": "Stone piers, timber lintel and iron-banded closed leaves form a readable60px gate.105px body span fits the2x1 entrance; material texture and upper-left light match the set.",
+        "raw_sha256": "d4e84d39e0be7bb143dca7c97a94f7349286bf4bb6a7ab3660843520c5e10bd5",
+        "normalized_sha256": "f808880b1a8bc28576c7450f8dd3c0665097bffd41543f49c368a1596c2c5134"
+      },
+      {
+        "id": "town_gate_open",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "reasoning": "Both leaves open inward while the fixed piers and lintel preserve closed-state width and height. Clear alpha opening retains gate identity and traversable state.",
+        "raw_sha256": "1c502662e0ea695cc452dd80a2a51e741c4b401b390b93135c3a127ecdc56854",
+        "normalized_sha256": "bb4b01bfc201eaad2f6aca660bf9357b752f51e725c5536b9d2d01327fab8a54"
+      },
+      {
+        "id": "rotary_quern",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Two stone discs with feeding hole and timber handle distinguish a rotary quern.34px whole silhouette keeps hand-scale mechanism below workbench height; limited flour at base is coherent.",
+        "raw_sha256": "b268ff1e1e4371f6d5fbbfb38b2565ba9e4b4b11f9ea12dbb3479a3b4c39f084",
+        "normalized_sha256": "77b95ba4a421cb72edb8928a41bf03b639ef9224729a0d52411a74ab024b3374"
+      },
+      {
+        "id": "rotary_quern_working",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Grain in the feed hole, turned handle and increased flour identify operation while retaining the twin-disc body.36px-class station and clean edges remain consistent.",
+        "raw_sha256": "7dc95d707773595bc39db8b4647288a630639cb390e1c3af35262a4d95e265fd",
+        "normalized_sha256": "2e571ac1480489c02483f64e7385d8a01e92b33b5134907cb493a54726475415"
+      },
+      {
+        "id": "sundial",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "reasoning": "Simple bronze gnomon and radial scored stone slab avoid anachronistic numerals. Compact32px-high pedestal and restrained warm stone palette fit a single tile.",
+        "raw_sha256": "487739fc7a97bd6bef9feffd3184b2090748627b4caa03fa1fdff00869c77375",
+        "normalized_sha256": "cac341d7b351c6a365233a627e88c490a0d76dae83b33108dca3f79bc7ffd8ea"
+      },
+      {
+        "id": "watchtower",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "reasoning": "Roofless timber lookout platform and ladder sit on a stone tower with a revised adult-height doorway.128px silhouette provides two-person-height tower scale;2x2 footprint allows ladder clearance.",
+        "raw_sha256": "cf445e0ba28c157b079667fbc57b95c57611cb7ec73fb7417fcfec8c1071535d",
+        "normalized_sha256": "357b49b92eda3d30c0a7b2281951bae58cd6367d92cb576cf6aa9705e5019016"
+      },
+      {
+        "id": "aqueduct",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "reasoning": "Short stone water trough on two piers has134px opaque span over2x1 tiles, with small end overhang. Water stays within trough; this is a discrete span, and chained placement still needs seam/occlusion checking at import.",
+        "raw_sha256": "6f261390f07f4bcb87e1db739960221d1f41bf1799b516ba0457ddd8c96bd05e",
+        "normalized_sha256": "d43acf874ad06b4979d6032bd0b88fc5b1aa6c814fb38aa3883527ebd944dd55"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "town_gate_closed",
+  "adopted_path": "art/style05/struct/a2/iron/town_gate_closed.png",
+  "review_asset_id": "town_gate_closed",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/iron_stations_independent_review.json",
+  "review_sha256": "d6b2d9ba7e1bc60ff389ad278c0e82cbab988fb08db16009511af1b2bd8d90d2"
+}

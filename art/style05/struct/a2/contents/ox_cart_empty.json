@@ -1,0 +1,258 @@
+{
+  "record": {
+    "id": "ox_cart_empty",
+    "lane": "contents",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c289-6f47-78e0-98a7-a547680c554f/exec-637b3031-d608-414f-83fd-628f0a446c8e.png",
+    "prompt": "Use case: stylized-concept. Asset type: one isolated WorldSim furniture sprite, illustrated ink-and-tone style05. Image1 locked material reference, image2 locked scene palette, image3 standing camera reference; none is an edit target. SUBJECT: One empty compact two-wheeled timber hauling cart, no ox or person: shallow plank cargo bed, two solid wooden disc wheels on a timber axle, two short wooden draw shafts. No iron tyres, no bolts, no cloth. Three-quarter front view with visible empty bed, approximately twice as wide as tall, footprint2x1tiles. Standing front three-quarter, about20degrees down, upper-left light with lighter top/left and distinctly darker right. Precise sepia outer contours, secondary lines half their width (2:1), quiet broad earthy pigment wash, one group of3parallel / hatch accents. Wood3broken longitudinal marks per main plank, straw5curved bundle accents per big woven surface; no all-over scratches. Clay3short tiny marks only on clay. Warm ochre/sage/earth palette, restrained texture like references at game scale. Entire subject centered with generous transparent padding. True transparent RGBA, solid crisp silhouette ends at ink contour, outside is empty alpha0; pigment and texture only inside opaque subject. No floor, base patch, ambient glow, shadow puddle, text, border, separate objects or decorative background. 44px eventual whole silhouette at64px world tiles, current generation high resolution for uniform export. Keep silhouette compact, readable at1x.",
+    "subject": "One empty compact two-wheeled timber hauling cart, no ox or person: shallow plank cargo bed, two solid wooden disc wheels on a timber axle, two short wooden draw shafts. No iron tyres, no bolts, no cloth. Three-quarter front view with visible empty bed, approximately twice as wide as tall, footprint2x1tiles.",
+    "references": [
+      "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png"
+    ],
+    "target_height": 44,
+    "projection_family": "cart",
+    "height_band": [
+      42,
+      46
+    ],
+    "height_band_reason": "New cart family predeclared at 44px alongside56px adult and64px worldtile; footprint 2x1.",
+    "footprint": [
+      2.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09 23:25:56 UTC"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/contents/raw/ox_cart_empty_try1.png",
+  "raw_sha256": "ecadb251d58d7c34658cbe5724db56b7220c466276ca494361a6945982990ef3",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/contents/normalized/ox_cart_empty_try1.png",
+  "normalized_sha256": "26d1388585ace6256e1540c2e1c876abef6ace6465ca2c6c54bbc8d476a5ee0e",
+  "size": [
+    82,
+    52
+  ],
+  "anchor": [
+    41,
+    47
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (224, 49, 1551, 842)",
+    "uniform Lanczos scale: 0.05576679340937896",
+    "transparent 4px padding; source-canvas anchor: (41, 47)"
+  ],
+  "projection": {
+    "family": "cart",
+    "anchor": [
+      41,
+      47
+    ],
+    "height_band": [
+      42,
+      46
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1831,
+    "base_row": 47,
+    "base_error": 0,
+    "height": 44,
+    "gradient_x": -0.9984356818181815,
+    "gradient_y": -2.8627866513233604,
+    "light_angle_degrees": 250.77308939872646,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/contents/raw/ox_cart_empty_try1.png",
+    "sha256": "ecadb251d58d7c34658cbe5724db56b7220c466276ca494361a6945982990ef3",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.25484467815756157,
+      "saturation_q25": 0.5084331055865499,
+      "saturation_q75": 0.6087397216239036,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.014152160038207112,
+      "foreground_pixels": 22159
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    10,
+    1773,
+    887
+  ],
+  "raw_opaque_bbox": [
+    226,
+    51,
+    1549,
+    840
+  ],
+  "raw_faint_far_ratio": 0.0037552539102873287,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "/root/iron",
+    "independent": true,
+    "method": "Raw RGBA composited on solid dark; normalized1x/2x alongside previously viewed props/scene, pottery bench and RouteI adult56px reference.",
+    "evidence": "checks/contents_independent_board.png",
+    "assets": [
+      {
+        "id": "grain_bin_empty",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "footprint_compatible": true,
+        "visual_verdict": {
+          "score": 94,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [],
+          "suggestions": [],
+          "reasoning": "Woven straw/reed bin is unmistakably empty, with dark interior and tied rim. Thin woven marks remain subordinate at1x;28px bin height is appropriate beside56px adult."
+        },
+        "score": 94,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Woven straw/reed bin is unmistakably empty, with dark interior and tied rim. Thin woven marks remain subordinate at1x;28px bin height is appropriate beside56px adult."
+      },
+      {
+        "id": "ox_cart_empty",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "footprint_compatible": true,
+        "visual_verdict": {
+          "score": 92,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [],
+          "suggestions": [],
+          "reasoning": "Two solid timber wheels, empty planked bed and paired shafts read as an early cart; no modern hardware.44px total including wheel/deck sits below adult56; footprint comfortably fits2x1."
+        },
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Two solid timber wheels, empty planked bed and paired shafts read as an early cart; no modern hardware.44px total including wheel/deck sits below adult56; footprint comfortably fits2x1."
+      },
+      {
+        "id": "chief_seat",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "footprint_compatible": true,
+        "visual_verdict": {
+          "score": 93,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [],
+          "suggestions": [],
+          "reasoning": "Plain high-backed timber chair with arms, pegs and quiet longitudinal grain;48px fullback height and lower seat suit adult scale. No royal/medieval decoration."
+        },
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Plain high-backed timber chair with arms, pegs and quiet longitudinal grain;48px fullback height and lower seat suit adult scale. No royal/medieval decoration."
+      },
+      {
+        "id": "school_desk",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "footprint_compatible": true,
+        "visual_verdict": {
+          "score": 94,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [],
+          "suggestions": [],
+          "reasoning": "Low timber desk with clay tablets and reed stylus.36px wholeheight matches workbench band;2x1 footprint and upper-left light match adopted pottery bench."
+        },
+        "score": 94,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Low timber desk with clay tablets and reed stylus.36px wholeheight matches workbench band;2x1 footprint and upper-left light match adopted pottery bench."
+      }
+    ],
+    "format_conversion": {
+      "source": "/Users/rexxa/work/art-batch/A2/checks/contents_independent_review.json",
+      "sha256": "89c837cd38bbec1ff7d6740faf8ebd6233d7bce523521cbab1ac792d88253485",
+      "operation": "Expose the existing nested visual_verdict fields without changing any score or judgment"
+    }
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "ox_cart_empty",
+  "adopted_path": "art/style05/struct/a2/contents/ox_cart_empty.png",
+  "review_asset_id": "ox_cart_empty",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/contents_independent_review_flat.json",
+  "review_sha256": "bdcfaeebc843402ee9cb8a7792b8fa45d42bd8126d0096c1d77df146be2131fc"
+}

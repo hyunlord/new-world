@@ -1,0 +1,213 @@
+{
+  "record": {
+    "id": "ritual_site",
+    "lane": "neolithic",
+    "era": "neolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-2545d328-977b-4991-a5d0-177362bfe558.png",
+    "prompt": "Use case: stylized-concept. Produce ONE isolated WorldSim style05 stone-age game structure, fine controlled warm charcoal-brown ink over restrained quiet low-contrast earth tone wash. Input props/hut and scene are LOCKED medium, palette, lighting references only; Route I sheet fixes front three-quarter camera about20 degrees down, NOT the anchors' high overhead camera. Upper-left light: strongly lighter top and left surfaces, darker right/lower surfaces, with no cast-shadow puddle. Outline twice secondary mark width (2:1), broad quiet even low-contrast tone and distinct shadow plane. Use fine gently varied textures, NOT patchy high-contrast watercolor flakes. Wood uses exactly3 broken longitudinal marks per main pole; stone3 facet/crack groups per main rock; clay3 short crack groups; reed5 curved bundle marks per large surface. Shadow hatching one group of3 parallel / marks, never dense all-over hatching. No metal, no dyed cloth. No roof. Whole object centered with generous actual alpha-zero TRANSPARENT margin and cutout gaps. Background must have no nonzero alpha haze; EMPTY transparent space directly adjacent to silhouette. No ground plane, backdrop, halo, text, checkerboard, labels, border, people or animals. No photorealism, 3D render, vector clipart or pixel art. Adult56px, tile64px reference at eventual game scale. Generate a large source suitable for uniform Lanczos reduction. Solid crisp silhouette, like a die-cut sticker WITHOUT ANY STICKER BORDER. Subject ends precisely at its inked contour; outside is empty alpha0. All pigment and texture are ONLY inside the opaque silhouette. Transparent negative spaces, no ambient-colored fog. SUBJECT: one small neolithic ritual place: low circular arrangement of five irregular standing stones around one simple flat ochre-stained altar stone, one small plain clay offering bowl; no written symbols, no ruins, no roof, no people, no skeletal remains. No ground island: transparent between individual stones. Final alpha silhouette height40px; footprint2x264px tiles. Full silhouette uncropped with generous transparent margins.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/character/boards/route_i_sheet_1x.png"
+    ],
+    "target_height": 84,
+    "projection_family": "ritual_site",
+    "height_band": [
+      82,
+      86
+    ],
+    "height_band_reason": "Predeclared geometry revision after independent scale review: 2x2 tile ritual arrangement should span about99px width;84px total includes standing stones and ground plan depth, relative to56px adult. Original40px export archived.",
+    "footprint": [
+      2.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:11:35.439Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/neolithic/raw/ritual_site_try1.png",
+  "raw_sha256": "fb8cd0dd74efcb0fcbc0d4cc21e585b8599b544a1dc6cee77f06433573283aaa",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/ritual_site_try1.png",
+  "normalized_sha256": "0a9e4a0af88ce4d26cc4da67db516fda5d8073b021d89b096010b8d88d84075b",
+  "size": [
+    107,
+    92
+  ],
+  "anchor": [
+    53,
+    87
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (236, 68, 1294, 966)",
+    "uniform Lanczos scale: 0.09395973154362416",
+    "transparent 4px padding; source-canvas anchor: (53, 87)"
+  ],
+  "projection": {
+    "family": "ritual_site",
+    "anchor": [
+      53,
+      87
+    ],
+    "height_band": [
+      82,
+      86
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 4267,
+    "base_row": 87,
+    "base_error": 0,
+    "height": 84,
+    "gradient_x": -1.7960054612546124,
+    "gradient_y": -1.1283940291262136,
+    "light_angle_degrees": 212.1403183681612,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/neolithic/raw/ritual_site_try1.png",
+    "sha256": "fb8cd0dd74efcb0fcbc0d4cc21e585b8599b544a1dc6cee77f06433573283aaa",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.18514688421617068,
+      "saturation_q25": 0.40535422628301876,
+      "saturation_q75": 0.48866766038653636,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.018394031972831883,
+      "foreground_pixels": 28808
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    1512,
+    1024
+  ],
+  "raw_opaque_bbox": [
+    238,
+    70,
+    1292,
+    964
+  ],
+  "raw_faint_far_ratio": 0.002020596036823217,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "root independent of generating agent",
+    "method": "Actual raw RGBA dark composite plus uniform2x sheet beside existing props/adult and state counterparts.",
+    "sheet": "/Users/rexxa/work/art-batch/A2/checks/neolithic_raw_review_232136.png",
+    "scale_sheet": "/Users/rexxa/work/art-batch/A2/sheets/neolithic_0840_2x.png",
+    "assets": [
+      {
+        "id": "smokehouse_working",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "reasoning": "Hanging fish and small hearth embers distinguish the working state while the open frame and woven wall silhouette match idle. Quiet fire does not overwhelm the material palette.",
+        "raw_sha256": "54ce9d4b5b7887b6ab59abf4f9d4b0dfdeb1f225279e1685c157df6395e6549e",
+        "normalized_sha256": "91ac4cddadce95028ea92cb76530432c0085e6cfd1e7cc906cf78453e0568394"
+      },
+      {
+        "id": "bread_oven_lit",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "reasoning": "Contained fire and coals are visible inside the original clay dome. Mouth, threshold and32px body remain consistent with the unlit pair.",
+        "raw_sha256": "5c4ef3b1173760e687f9d61d351db596ef2a12cd5d5745d6b56ab6fda99f6eb4",
+        "normalized_sha256": "92977a97bed350303db3784f8dbb5201a5538f01000631f453290e71527c896c"
+      },
+      {
+        "id": "ritual_site",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Revised84px whole height and99px body width now fill the declared2x2 ritual space credibly beside the adult. Stone circle and central offering slab remain readable; no source pixels were repainted.",
+        "raw_sha256": "fb8cd0dd74efcb0fcbc0d4cc21e585b8599b544a1dc6cee77f06433573283aaa",
+        "normalized_sha256": "0a9e4a0af88ce4d26cc4da67db516fda5d8073b021d89b096010b8d88d84075b"
+      },
+      {
+        "id": "pen_gate_open",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": false,
+        "alpha_clean": true,
+        "score": 85,
+        "verdict": "revise",
+        "reasoning": "Opening is readable but the fixed posts shrink relative to the closed pair because a swung leaf extends the normalization bounds. Preserve both posts and keep leaf inside existing vertical silhouette bounds before adoption.",
+        "raw_sha256": "0e47530a05332cb1df15b38bd943cf93ccb97592be914215dd3f6eed105e978f",
+        "normalized_sha256": "4d2dcfd511004ce820c0d6144b012fe64cbd56fdc118e0aeb1cb9567a1eb992f"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "ritual_site",
+  "adopted_path": "art/style05/struct/a2/neolithic/ritual_site.png",
+  "review_asset_id": "ritual_site",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/neolithic_states_independent_review.json",
+  "review_sha256": "532f0d2d68c066ba4743dfc813d7c96d21d034d4d29f7e74b74b515868e547b3"
+}

@@ -1,0 +1,227 @@
+{
+  "record": {
+    "id": "trap_sprung",
+    "lane": "neolithic",
+    "era": "paleolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-ae14384c-95b0-41c5-9404-137877f0e150.png",
+    "prompt": "Use case: precise-object-edit. First image is EDIT TARGET; other images locked style anchors. Close only the hinged wicker entrance door down over the front mouth. Drop the thin trigger twig flat inside the entrance. Keep basket body, overall size and camera exact; no animal inside and no gore. This is the SPRUNG state. Maintain total originalheight, no changed support structure. Retain the controlled warm charcoal brown2:1ink, quiet earthy wash, upper-left lighting. Actual transparent alpha background and empty gaps, object ends at ink contour, no halo or border or lettering. One isolated game structure state.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-878d09e1-b604-4d8c-8fdb-95af14d25db4.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 24,
+    "projection_family": "basket_trap",
+    "height_band": [
+      22,
+      26
+    ],
+    "height_band_reason": "Paired basket_trap target 24px relative to 56px adult and same geometry as source.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:25:04.857Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/neolithic/raw/trap_sprung_try1.png",
+  "raw_sha256": "435157e70b2ab8dbfa51f7f7e3f2498a5752c68f5d67585e56e52ebe44d24d79",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-878d09e1-b604-4d8c-8fdb-95af14d25db4.png",
+      "sha256": "4fd67e88f42a8389b2860accb9b9556d36396bd64e8381c5ca2d77c2ae83e329"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/trap_sprung_try1.png",
+  "normalized_sha256": "c36111dfc1c0c5c89bc433c0ba19d8e90783f7e2424f6fbb37216f919266f8cf",
+  "size": [
+    39,
+    32
+  ],
+  "anchor": [
+    19,
+    27
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (313, 144, 1286, 894)",
+    "uniform Lanczos scale: 0.032171581769437",
+    "transparent 4px padding; source-canvas anchor: (19, 27)"
+  ],
+  "projection": {
+    "family": "basket_trap",
+    "anchor": [
+      19,
+      27
+    ],
+    "height_band": [
+      22,
+      26
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 511,
+    "base_row": 27,
+    "base_error": 0,
+    "height": 24,
+    "gradient_x": -2.090977002053388,
+    "gradient_y": -2.26863625,
+    "light_angle_degrees": 227.33357764619458,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/neolithic/raw/trap_sprung_try1.png",
+    "sha256": "435157e70b2ab8dbfa51f7f7e3f2498a5752c68f5d67585e56e52ebe44d24d79",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.3119162016174759,
+      "saturation_q25": 0.5449757614876402,
+      "saturation_q75": 0.5827371527735573,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.014464293046714405,
+      "foreground_pixels": 34846
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    19,
+    1496,
+    1024
+  ],
+  "raw_opaque_bbox": [
+    315,
+    146,
+    1284,
+    892
+  ],
+  "raw_faint_far_ratio": 0.0020889245768651605,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "root independent of generating agent",
+    "method": "Actual saved RGBA dark composite plus uniform2x sheet and locked prop/scene references.",
+    "sheet": "/Users/rexxa/work/art-batch/A2/checks/neolithic_raw_review_233024.png",
+    "assets": [
+      {
+        "id": "pen_fence_end",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Single bound terminal post with three short rail stubs preserves40px fence height and timber material. It is an end piece, not a full-span panel.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "raw_sha256": "558b589ed8ff5205f71ab65802554c8b4515f930b8ec38e8794697c256c52bd3",
+        "normalized_sha256": "1ad4133fe7689ac0e58ede20d321674b1fe341fa12626158dd2521803eee8aed"
+      },
+      {
+        "id": "trap_sprung",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Closed wicker mouth distinguishes the sprung trap while the tunnel body, scale and woven material match the set version.24px height remains low and plausible.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "raw_sha256": "435157e70b2ab8dbfa51f7f7e3f2498a5752c68f5d67585e56e52ebe44d24d79",
+        "normalized_sha256": "c36111dfc1c0c5c89bc433c0ba19d8e90783f7e2424f6fbb37216f919266f8cf"
+      },
+      {
+        "id": "well_dry",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "The lowered empty bucket and exposed dry base distinguish a dry well without changing the frame/ring geometry. Stone and timber materials retain consistent washes.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "raw_sha256": "0da6cea62534406909ef5214e40b0e910faddffbc16a0cb462be98ca88eb0a6c",
+        "normalized_sha256": "e13df89b92d7955a9236fceec496772e246278f9f4f0014b8e5806f344760796"
+      },
+      {
+        "id": "loom_empty",
+        "attempt": 3,
+        "medium": 3,
+        "line": 3,
+        "light": 4,
+        "palette": 4,
+        "score": 84,
+        "verdict": "revise",
+        "reasoning": "Frame has become uniformly cylindrical and smooth, losing broken timber ink and irregular contour of the locked rack/bench references. Numeric readiness cannot establish a style match; withhold.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "raw_sha256": "dfa30f31a2c07fe2ff710f182ca7024c27aeaeaca6e786601900fc32d6811862",
+        "normalized_sha256": "ed39e9ca520855d4b2b47ff67ecc0a8eab7944a70eec50806ad4391e17130f69"
+      },
+      {
+        "id": "loom_loaded",
+        "attempt": 1,
+        "medium": 3,
+        "line": 3,
+        "light": 4,
+        "palette": 4,
+        "score": 86,
+        "verdict": "revise",
+        "reasoning": "Cloth, warp strings and weights read clearly, but the smooth regular timber frame still differs materially from existing timber anchors. Restore restrained grain and irregular ink before adoption.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "raw_sha256": "6e08eb6a20d82985a096a0dfe224c5befe6ee99034e2271810b24bcf030af5e9",
+        "normalized_sha256": "9d6146986e0bbf9c688b5fae01aa45f95479ac7e7536778182faa17103adf371"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "trap_sprung",
+  "adopted_path": "art/style05/struct/a2/neolithic/trap_sprung.png",
+  "review_asset_id": "trap_sprung",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/neolithic_small_states_independent_review.json",
+  "review_sha256": "9591059c2901d873a1159b3dfaf009d8967db3ccbd25d2ff489488e261987572"
+}

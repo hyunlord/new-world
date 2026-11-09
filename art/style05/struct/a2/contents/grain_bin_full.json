@@ -1,0 +1,177 @@
+{
+  "record": {
+    "id": "grain_bin_full",
+    "lane": "contents",
+    "era": "neolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c289-6f47-78e0-98a7-a547680c554f/exec-4d719bad-951d-41ce-8b17-6b573036e3b8.png",
+    "prompt": "Use case: precise-object-edit. Image1 is EDIT TARGET. Fill ONLY its empty inner cavity with a low mound of small ripe golden emmer grain kernels, up to the rim, not spilling outside. Preserve the identical woven reed storage-bin body, broad rim, bindings, contours, camera, canvas, lighting, and transparent silhouette. Grain has quiet ochre wash with3small grouped kernel accents, no all-over texture noise. Same upper-left light, main/secondary ink2:1, transparent RGBA outside. No lid, bags, flour, text, floor, shadow puddle or additional objects. Image2 is palette/material reference. The body must match the empty state pixel positions as closely as possible.",
+    "subject": "Same wicker grain bin filled with golden emmer kernels.",
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c289-6f47-78e0-98a7-a547680c554f/exec-20fdffec-5da7-4d21-9a44-665b35382175.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png"
+    ],
+    "target_height": 28,
+    "projection_family": "grain_bin",
+    "height_band": [
+      26,
+      30
+    ],
+    "height_band_reason": "New grain_bin family predeclared at 28px alongside56px adult and64px worldtile; footprint 1x1.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09 23:27:14 UTC"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/contents/raw/grain_bin_full_try1.png",
+  "raw_sha256": "9436b5cd7f41b111f625f346e7068cceb66cb426a573cd8a4c031535e4ecc6aa",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c289-6f47-78e0-98a7-a547680c554f/exec-20fdffec-5da7-4d21-9a44-665b35382175.png",
+      "sha256": "ee62e0d81a2b20300469f922103b7d7cf8b2c8e45cc6119b1bd0c497c6c4b312"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/contents/normalized/grain_bin_full_try1.png",
+  "normalized_sha256": "b85c478e73aa861cebb033013c997cb2b1a013c47bdf7d9aeb68b77a1ea96bc5",
+  "size": [
+    35,
+    36
+  ],
+  "anchor": [
+    17,
+    31
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (203, 144, 1087, 1073)",
+    "uniform Lanczos scale: 0.03027027027027027",
+    "transparent 4px padding; source-canvas anchor: (17, 31)"
+  ],
+  "projection": {
+    "family": "grain_bin",
+    "anchor": [
+      17,
+      31
+    ],
+    "height_band": [
+      26,
+      30
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 647,
+    "base_row": 31,
+    "base_error": 0,
+    "height": 28,
+    "gradient_x": -1.9236652665589662,
+    "gradient_y": -1.9551596122778672,
+    "light_angle_degrees": 225.4652062134991,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/contents/raw/grain_bin_full_try1.png",
+    "sha256": "9436b5cd7f41b111f625f346e7068cceb66cb426a573cd8a4c031535e4ecc6aa",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.30633931843165996,
+      "saturation_q25": 0.5618745022804186,
+      "saturation_q75": 0.6377867194744067,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.009173152235652541,
+      "foreground_pixels": 53431
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    17,
+    1276,
+    1189
+  ],
+  "raw_opaque_bbox": [
+    205,
+    146,
+    1085,
+    1071
+  ],
+  "raw_faint_far_ratio": 0.0012793219169755417,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "/root/iron",
+    "independent": true,
+    "evidence": "checks/grain_bin_pair_independent_board.png",
+    "assets": [
+      {
+        "id": "grain_bin_full",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "pair_consistency": true,
+        "visual_verdict": {
+          "score": 94,
+          "verdict": "pass",
+          "category_match": true,
+          "differences": [],
+          "suggestions": [],
+          "reasoning": "Woven bin silhouette, rim ties and panel weave retain empty-state identity. Golden stored grain clearly distinguishes full state at1x without oversaturation; actual RGBA clean."
+        },
+        "score": 94,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Woven bin silhouette, rim ties and panel weave retain empty-state identity. Golden stored grain clearly distinguishes full state at1x without oversaturation; actual RGBA clean."
+      }
+    ],
+    "format_conversion": {
+      "source": "/Users/rexxa/work/art-batch/A2/checks/contents_full_independent_review.json",
+      "sha256": "3a9f9c673a0904431ba7613cb8b23c66db6d64250da339459e88436e2fca38e3",
+      "operation": "Expose existing nested verdict fields; scores and judgment unchanged"
+    }
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "grain_bin_full",
+  "adopted_path": "art/style05/struct/a2/contents/grain_bin_full.png",
+  "review_asset_id": "grain_bin_full",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/contents_full_independent_review_flat.json",
+  "review_sha256": "097895907d59838518fc85b9b447f4a0c7450e882306a37b073b93ad3f439e14"
+}

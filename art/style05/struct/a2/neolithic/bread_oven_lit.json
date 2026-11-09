@@ -1,0 +1,213 @@
+{
+  "record": {
+    "id": "bread_oven_lit",
+    "lane": "neolithic",
+    "era": "neolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-88add25c-c264-475f-86ff-d0664e9e21db.png",
+    "prompt": "Use case: precise-object-edit. First reference is EDIT TARGET. Other inputs are locked style references. Light the oven: add two small dark fuel sticks with restrained orange-red embers and a compact flame entirely inside the existing mouth. Keep clay dome, stone threshold, cracks and silhouette EXACT. No outside glow, no smoke, no extra pot or bread. Surface remains unchanged. Preserve camera, outer2:inner1 ink weight, fine earth-tone wash, restrained material marks and upper-left lighting. Actual transparent alpha outside and in gaps. No background, colored haze, ground, lettering, people. Produce ONE isolated state.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-ba7426dc-136b-418f-9d2e-e7547383b7da.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 32,
+    "projection_family": "bread_oven",
+    "height_band": [
+      30,
+      34
+    ],
+    "height_band_reason": "Unlisted bread_oven target 32px relative to 56px adult and declared footprint.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:18:17.590Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/neolithic/raw/bread_oven_lit_try1.png",
+  "raw_sha256": "5c4ef3b1173760e687f9d61d351db596ef2a12cd5d5745d6b56ab6fda99f6eb4",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-ba7426dc-136b-418f-9d2e-e7547383b7da.png",
+      "sha256": "6d64314ee6f1199777cb1afa724370a601f9e2c429ef12bf585c592688a5d36a"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/bread_oven_lit_try1.png",
+  "normalized_sha256": "92977a97bed350303db3784f8dbb5201a5538f01000631f453290e71527c896c",
+  "size": [
+    47,
+    40
+  ],
+  "anchor": [
+    23,
+    35
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (342, 205, 1165, 889)",
+    "uniform Lanczos scale: 0.047058823529411764",
+    "transparent 4px padding; source-canvas anchor: (23, 35)"
+  ],
+  "projection": {
+    "family": "bread_oven",
+    "anchor": [
+      23,
+      35
+    ],
+    "height_band": [
+      30,
+      34
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 949,
+    "base_row": 35,
+    "base_error": 0,
+    "height": 32,
+    "gradient_x": -1.5153821155943292,
+    "gradient_y": -1.4180813186813186,
+    "light_angle_degrees": 223.10023817581902,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/neolithic/raw/bread_oven_lit_try1.png",
+    "sha256": "5c4ef3b1173760e687f9d61d351db596ef2a12cd5d5745d6b56ab6fda99f6eb4",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.14234603237268062,
+      "saturation_q25": 0.39594115071282365,
+      "saturation_q75": 0.503708985988415,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.013284779985285978,
+      "foreground_pixels": 41898
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    48,
+    1522,
+    986
+  ],
+  "raw_opaque_bbox": [
+    344,
+    207,
+    1163,
+    887
+  ],
+  "raw_faint_far_ratio": 0.001004590772937198,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "root independent of generating agent",
+    "method": "Actual raw RGBA dark composite plus uniform2x sheet beside existing props/adult and state counterparts.",
+    "sheet": "/Users/rexxa/work/art-batch/A2/checks/neolithic_raw_review_232136.png",
+    "scale_sheet": "/Users/rexxa/work/art-batch/A2/sheets/neolithic_0840_2x.png",
+    "assets": [
+      {
+        "id": "smokehouse_working",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "reasoning": "Hanging fish and small hearth embers distinguish the working state while the open frame and woven wall silhouette match idle. Quiet fire does not overwhelm the material palette.",
+        "raw_sha256": "54ce9d4b5b7887b6ab59abf4f9d4b0dfdeb1f225279e1685c157df6395e6549e",
+        "normalized_sha256": "91ac4cddadce95028ea92cb76530432c0085e6cfd1e7cc906cf78453e0568394"
+      },
+      {
+        "id": "bread_oven_lit",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "reasoning": "Contained fire and coals are visible inside the original clay dome. Mouth, threshold and32px body remain consistent with the unlit pair.",
+        "raw_sha256": "5c4ef3b1173760e687f9d61d351db596ef2a12cd5d5745d6b56ab6fda99f6eb4",
+        "normalized_sha256": "92977a97bed350303db3784f8dbb5201a5538f01000631f453290e71527c896c"
+      },
+      {
+        "id": "ritual_site",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Revised84px whole height and99px body width now fill the declared2x2 ritual space credibly beside the adult. Stone circle and central offering slab remain readable; no source pixels were repainted.",
+        "raw_sha256": "fb8cd0dd74efcb0fcbc0d4cc21e585b8599b544a1dc6cee77f06433573283aaa",
+        "normalized_sha256": "0a9e4a0af88ce4d26cc4da67db516fda5d8073b021d89b096010b8d88d84075b"
+      },
+      {
+        "id": "pen_gate_open",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": false,
+        "alpha_clean": true,
+        "score": 85,
+        "verdict": "revise",
+        "reasoning": "Opening is readable but the fixed posts shrink relative to the closed pair because a swung leaf extends the normalization bounds. Preserve both posts and keep leaf inside existing vertical silhouette bounds before adoption.",
+        "raw_sha256": "0e47530a05332cb1df15b38bd943cf93ccb97592be914215dd3f6eed105e978f",
+        "normalized_sha256": "4d2dcfd511004ce820c0d6144b012fe64cbd56fdc118e0aeb1cb9567a1eb992f"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "bread_oven_lit",
+  "adopted_path": "art/style05/struct/a2/neolithic/bread_oven_lit.png",
+  "review_asset_id": "bread_oven_lit",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/neolithic_states_independent_review.json",
+  "review_sha256": "532f0d2d68c066ba4743dfc813d7c96d21d034d4d29f7e74b74b515868e547b3"
+}

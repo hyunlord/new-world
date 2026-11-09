@@ -1,0 +1,299 @@
+{
+  "record": {
+    "id": "charcoal_clamp_spent",
+    "lane": "bronze",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-a86f61f7-bf7e-4a5a-9021-afd88a0989bd.png",
+    "prompt": "Use case: precise-object-edit. IMAGE1 is edit target. Other images are locked INK/MATERIAL references only. Preserve target geometry, camera, proportions, palette, clean alpha and major contour; change only the requested state. State after burn. Keep SAME footprint width98px at1x, opening at lower left and earthen palette. Dome has collapsed from56px to42px high (25percent lower), crown vent sunken; southern opening reveals five matte black charcoal logs instead of yellow raw timber. Preserve blackening as quiet charcoal grey with sparse longitudinal wood lines, not shiny. No smoke/flame/embers. Preserve width and base profile; no new ground debris. WorldSim style05 ink-and-tone BRONZE AGE game sprite. Fine controlled sepia/brown-black pen line over quiet restrained earth-colour wash. Outer contour weight twice secondary line (2:1). One broad light tone on upper-left faces, one darker lower/right shadow tone, subtle local pigment variation only. Apply material-specific marks ONLY: stone/clay may have three short crack groups; WOOD has three thin broken longitudinal grain lines, never branched surface cracks; STRAW has five curved parallel weave bands, never cracks. Smooth metal has NO cracks. One small group of three parallel / hatch marks only where needed. Sparse surface marks; NO all-over hatching, stippling, granular texture or speckled wash. Upper-left daylight. Standing front three-quarter about20degrees down, substantial front face, shallow compressed top; grid-aligned square geometry, never isometric diamond. Adult56px for scale. One isolated object only, full silhouette and generous perfectly transparent margins. Outside object every pixel ALPHA ZERO, no shadow, glow, aura, haze, colored veil, ground patch, blur or backdrop; inside transparent gaps also alpha zero. No labels/text/frames/people/modern fittings/iron. No 3D rendering or pixel art.",
+    "subject": "one broad low collapsed earthen charcoal clamp after the burn; opened south face reveals a few matte black carbonized wood lengths, cracked earth shell, no smoke or flames",
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-a5a3f00b-e178-465e-b997-a9d6f1ed132e.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 42,
+    "projection_family": "charcoal_clamp_spent",
+    "height_band": [
+      40,
+      44
+    ],
+    "height_band_reason": "Family target predeclared in bronze/tasks.json relative to adult56px and footprint; unchanged by checks.",
+    "footprint": [
+      2.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:16:07.052Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/charcoal_clamp_spent_try1.png",
+  "raw_sha256": "ee8a9deac87b7e4b832404292722ee91cab45a9271f772d9b48ba1fa731256e3",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-a5a3f00b-e178-465e-b997-a9d6f1ed132e.png",
+      "sha256": "d8ac8eea5358b575f4df2290aa54b5e45c106c28d8b4b39b8fdc87a555d9eae4"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/normalized/charcoal_clamp_spent_try1.png",
+  "normalized_sha256": "115887961836f19dfa59cb14041c2fa276bb76e069428b923e5ba827afef1e8f",
+  "size": [
+    96,
+    50
+  ],
+  "anchor": [
+    48,
+    45
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (79, 455, 1176, 985)",
+    "uniform Lanczos scale: 0.07984790874524715",
+    "transparent 4px padding; source-canvas anchor: (48, 45)"
+  ],
+  "projection": {
+    "family": "charcoal_clamp_spent",
+    "anchor": [
+      48,
+      45
+    ],
+    "height_band": [
+      40,
+      44
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 2574,
+    "base_row": 45,
+    "base_error": 0,
+    "height": 42,
+    "gradient_x": -0.2042437499999999,
+    "gradient_y": -0.7560205148833468,
+    "light_angle_degrees": 254.8820751840699,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/charcoal_clamp_spent_try1.png",
+    "sha256": "ee8a9deac87b7e4b832404292722ee91cab45a9271f772d9b48ba1fa731256e3",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.13880575744620208,
+      "saturation_q25": 0.44224588734776066,
+      "saturation_q75": 0.49091284323362083,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.01843188669713188,
+      "foreground_pixels": 22159
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    33,
+    51,
+    1234,
+    1214
+  ],
+  "raw_opaque_bbox": [
+    81,
+    457,
+    1174,
+    983
+  ],
+  "raw_faint_far_ratio": 0.0009580212506531963,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_grain independent reviewer",
+    "evidence": [
+      "bronze/followup_review_1.png",
+      "bronze/followup_review_2.png",
+      "bronze/followup_review_3.png"
+    ],
+    "assets": [
+      {
+        "id": "charcoal_clamp_idle",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Earth-covered clamp retains roughly100px footprint span and56px adult-height body; correct quiet state. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "charcoal_clamp_burning",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Short smoke wisp and orange ember recess clearly distinguish working state. Dome size is within about5percent of idle; same two-tile footprint and adult-height body read consistently. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "charcoal_clamp_spent",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Collapsed dome and dark charcoal logs clearly signal spent state. Lower and modestly narrower mound is justified by collapse; still reads as same two-tile resource structure. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_ew",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Six pointed stakes with rope binding form a grid-aligned defensive span. Front planes, carved bevel tops and upper-left highlight preserve scene camera. Longitudinal wood marks read as grain. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_end",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Three-stake terminal has consistent stake height, width, rope bands and wood treatment with full palisade; half span reads intentional. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_damaged",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Broken central stakes and snapped upper rope clearly indicate damage while outer post height and bottom rope retain same scale. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_gate_closed",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Bound plank gate, sturdy posts and simple wooden latch are readable; warm wood matches adjacent palisade. Closed opening fits adult56 scale. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_gate_open",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Open leaves preserve gate post height and span of closed variant. The middle gap reads clearly at1x, with no new ground or geometry drift. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "bee_skep_empty",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Closed woven straw body matches active2 silhouette and material; absent bee and dark unoccupied entrance differentiate empty state cleanly. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "charcoal_clamp_spent",
+  "adopted_path": "art/style05/struct/a2/bronze/charcoal_clamp_spent.png",
+  "review_asset_id": "charcoal_clamp_spent",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_followup_independent_review.json",
+  "review_sha256": "e1bdc7f7096887403fb4fa577baedf4db46afe827e7af71a9fd87abd828d183c"
+}

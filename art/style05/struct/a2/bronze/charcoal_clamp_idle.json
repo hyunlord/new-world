@@ -138,7 +138,11 @@
   "failures": [],
   "review": {
     "reviewer": "crops_grain independent reviewer",
-    "evidence": "bronze/actual_rgba_review.png: actual saved raw RGBA on dark and pale backing, normalized 1x and2x",
+    "evidence": [
+      "bronze/followup_review_1.png",
+      "bronze/followup_review_2.png",
+      "bronze/followup_review_3.png"
+    ],
     "assets": [
       {
         "id": "charcoal_clamp_idle",
@@ -152,33 +156,12 @@
         "score": 92,
         "verdict": "pass",
         "category_match": true,
-        "differences": [
-          "Revised normalized canvas106x64/body56px now gives mound a roughly100px span versus56px adult; reads as two-tile charcoal production mound.",
-          "Controlled mottled earth is somewhat denser than adopted hearth but remains coherent at1x."
-        ],
+        "differences": [],
         "suggestions": [],
-        "reasoning": "Earth-covered log clamp with vent and exposed feed logs reads correctly; width and adult-height body now resolve prior2x2 geometry concern. Actual RGBA dark and pale composites show no halo."
+        "reasoning": "Earth-covered clamp retains roughly100px footprint span and56px adult-height body; correct quiet state. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
       },
       {
-        "id": "casting_bench_working",
-        "attempt": 1,
-        "medium": 4,
-        "line": 4,
-        "light": 4,
-        "palette": 5,
-        "semantic_correct": true,
-        "alpha_clean": true,
-        "score": 92,
-        "verdict": "pass",
-        "category_match": true,
-        "differences": [
-          "Slightly more symmetric front view than adopted woodworking bench; still visible top plane and controlled perspective."
-        ],
-        "suggestions": [],
-        "reasoning": "Rope-tied wood bench, crucible and filled mold identify active casting, coherent with existing STRUCT pottery/work benches. Fine ink and restrained warm pigment hold at1x/2x. No exterior alpha contamination."
-      },
-      {
-        "id": "bee_skep_active",
+        "id": "charcoal_clamp_burning",
         "attempt": 2,
         "medium": 4,
         "line": 4,
@@ -186,17 +169,15 @@
         "palette": 5,
         "semantic_correct": true,
         "alpha_clean": true,
-        "score": 93,
+        "score": 92,
         "verdict": "pass",
         "category_match": true,
-        "differences": [
-          "Woven fibre marks replace prior clay-like cracked patterns."
-        ],
+        "differences": [],
         "suggestions": [],
-        "reasoning": "Coiled woven straw with bindings reads as skep, small entrance bee signals active. Upper-left light, compact volume and restrained ochre match style. Clean saved RGBA."
+        "reasoning": "Short smoke wisp and orange ember recess clearly distinguish working state. Dome size is within about5percent of idle; same two-tile footprint and adult-height body read consistently. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
       },
       {
-        "id": "bee_skep_empty",
+        "id": "charcoal_clamp_spent",
         "attempt": 1,
         "medium": 4,
         "line": 4,
@@ -207,11 +188,105 @@
         "score": 91,
         "verdict": "pass",
         "category_match": true,
-        "differences": [
-          "Open top and side lid visibly distinguish empty state."
-        ],
+        "differences": [],
         "suggestions": [],
-        "reasoning": "Consistent coiled-fibre material and base with active variant, empty dark opening and no bees. Silhouette and state distinction remain clear at1x; no saved-file halo."
+        "reasoning": "Collapsed dome and dark charcoal logs clearly signal spent state. Lower and modestly narrower mound is justified by collapse; still reads as same two-tile resource structure. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_ew",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Six pointed stakes with rope binding form a grid-aligned defensive span. Front planes, carved bevel tops and upper-left highlight preserve scene camera. Longitudinal wood marks read as grain. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_end",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Three-stake terminal has consistent stake height, width, rope bands and wood treatment with full palisade; half span reads intentional. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_damaged",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Broken central stakes and snapped upper rope clearly indicate damage while outer post height and bottom rope retain same scale. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_gate_closed",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Bound plank gate, sturdy posts and simple wooden latch are readable; warm wood matches adjacent palisade. Closed opening fits adult56 scale. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_gate_open",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Open leaves preserve gate post height and span of closed variant. The middle gap reads clearly at1x, with no new ground or geometry drift. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "bee_skep_empty",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Closed woven straw body matches active2 silhouette and material; absent bee and dark unoccupied entrance differentiate empty state cleanly. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
       }
     ]
   },
@@ -219,6 +294,6 @@
   "adopted_id": "charcoal_clamp_idle",
   "adopted_path": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png",
   "review_asset_id": "charcoal_clamp_idle",
-  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_geometry_independent_review.json",
-  "review_sha256": "5418aeae3e37cc7c6a47b8356e1ae7ff78493d53136f679baff315780efb4fee"
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_followup_independent_review.json",
+  "review_sha256": "e1bdc7f7096887403fb4fa577baedf4db46afe827e7af71a9fd87abd828d183c"
 }

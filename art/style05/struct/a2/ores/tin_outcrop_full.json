@@ -1,0 +1,306 @@
+{
+  "record": {
+    "id": "tin_outcrop_full",
+    "lane": "ores",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28b-c36e-7430-8e1c-c60324c88770/exec-20c08d49-025e-4eed-bfca-d7a897c32134.png",
+    "prompt": "Use case: stylized-concept. A CLEAN CUT-OUT WorldSim GAME SPRITE: ONE low natural ore outcrop on TRANSPARENT background. Solid crisp silhouette like a die-cut sticker WITHOUT ANY STICKER BORDER. Absolutely NO SHADOW or ambient backdrop. Rock ends at its inked contour; outside is empty alpha0. Texture ONLY inside opaque silhouette. Props.png and scene.png are locked fine ink-and-tone field-guide style references; final two refs show adopted rock form at game scale. Fine sepia outer contour, half-weight inner marks(2:1), exactly3 crack/facet groups and ONE group of3 short parallel / hatches on right shadow. Broad restrained earth and slate tone washes, distinct shadow tone. Upper-left light; top-left light and right/lower dark. Standing front3/4 camera about20deg down, shallow top, substantial front, never flat overhead/isometric. Target32px opaque high,<=52px wide on64px tile; produce large source for downsampling. One centered whole rock, generous EMPTY TRANSPARENT margin. No text,labels,border,glow,haze,dust,ground,external shadow,scenery,photo,3D,pixel art. SUBJECT: FULL TIN ORE OUTCROP. A low pale warm gray granite formation with a broad shallow stepped crest and two joined side lobes. Three small irregular dark chocolate-brown cassiterite mineral pockets embedded in the granite near cracks; dull earthy crystals, not silver metal, not shiny gray ingots. Quiet coarse granite planes, no scattered boulders; dark tin mineral occupies about20 percent of surface. Mineral must read as geological dark brown inclusions.",
+    "subject": null,
+    "references": [
+      "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/boulder_large.png",
+      "/Users/rexxa/work/art-batch-a2/art/style05/struct/flint_outcrop.png"
+    ],
+    "target_height": 32,
+    "projection_family": "boulder",
+    "height_band": null,
+    "height_band_reason": null,
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:10:39.534Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/ores/raw/tin_outcrop_full_try1.png",
+  "raw_sha256": "281aad1691dc743bd116350125aaed3b8e9a2e5712387ffc853263c6997d0a42",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/boulder_large.png",
+      "sha256": "de8a3b59afd607070da3939b9bd0617a30877ad04cbfceebce202e3848801e3e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/flint_outcrop.png",
+      "sha256": "6121d1aff8b9f6269cb69ddec19e5ebfd2da93eba80a540a677a5caa09c03218"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/ores/normalized/tin_outcrop_full_try1.png",
+  "normalized_sha256": "004d934f772aa4984ee9c35aac3bcc367e4ae2d67e2cdabaf7bb16c3fbc52721",
+  "size": [
+    71,
+    40
+  ],
+  "anchor": [
+    35,
+    35
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (270, 119, 1500, 746)",
+    "uniform Lanczos scale: 0.051364365971107544",
+    "transparent 4px padding; source-canvas anchor: (35, 35)"
+  ],
+  "projection": {
+    "family": "boulder",
+    "anchor": [
+      35,
+      35
+    ],
+    "height_band": [
+      24,
+      36
+    ],
+    "height_band_override": false,
+    "opaque_pixels": 1361,
+    "base_row": 35,
+    "base_error": 0,
+    "height": 32,
+    "gradient_x": -0.6260707831325302,
+    "gradient_y": -1.1165807395993832,
+    "light_angle_degrees": 240.7204959212241,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/ores/raw/tin_outcrop_full_try1.png",
+    "sha256": "281aad1691dc743bd116350125aaed3b8e9a2e5712387ffc853263c6997d0a42",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.22906976744186047,
+      "saturation_q25": 0.3097394138222867,
+      "saturation_q75": 0.4250271475997247,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.018344359103804504,
+      "foreground_pixels": 22670
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    19,
+    1744,
+    887
+  ],
+  "raw_opaque_bbox": [
+    272,
+    121,
+    1498,
+    744
+  ],
+  "raw_faint_far_ratio": 0.0015556024286984165,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_orchard independent executor",
+    "evidence": [
+      "/Users/rexxa/work/art-batch/A2/ores/mandatory_contact_1x2x.png",
+      "all corresponding raw PNGs",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/style05/struct/boulder_large.png",
+      "art/style05/struct/flint_outcrop.png"
+    ],
+    "assets": [
+      {
+        "id": "copper_outcrop_full",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 94,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Slightly broader than existing boulder, appropriate shallow outcrop."
+        ],
+        "suggestions": [],
+        "reasoning": "Muted green ore seams are readable in three exposed pockets; gray ochre host rock and sloped upper faces read standing front three-quarter. 60px opaque width fits64px tile."
+      },
+      {
+        "id": "copper_outcrop_depleted",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Normalized smaller than full state; mined rock reduction is apparent."
+        ],
+        "suggestions": [
+          "Keep documented reduced height when binding depleted state."
+        ],
+        "reasoning": "Same three-pocket cracked host silhouette with green almost removed; hollow mined cuts read depletion. 49px wide at26px height fits one tile."
+      },
+      {
+        "id": "tin_outcrop_full",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Pale host has more fine texture than existing boulder; stays calm at1x."
+        ],
+        "suggestions": [],
+        "reasoning": "Three dark cassiterite-like clusters in pale host rock distinguish tin from green copper and red iron. Broad top planes and quiet shadow washes fit existing rock language. 63px width fits1tile narrowly."
+      },
+      {
+        "id": "tin_outcrop_depleted",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Residual flecks are tiny and properly subordinate."
+        ],
+        "suggestions": [],
+        "reasoning": "Dark ore chunks removed from matching pockets, pale rubble recesses remain. Depleted resource semantic is clear in pair. 51px footprint width fits1tile."
+      },
+      {
+        "id": "iron_outcrop_full",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 94,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Stronger rust accent is appropriate and remains earth toned."
+        ],
+        "suggestions": [],
+        "reasoning": "Rust-red seams with dark nodules sit inside gray host rock; same family geometry as copper with distinct mineral reading at1x. 60px wide1tile footprint plausible."
+      },
+      {
+        "id": "iron_outcrop_depleted",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Some source microtexture, controlled after downsample."
+        ],
+        "suggestions": [],
+        "reasoning": "Rust seams reduced to hollow gray cuts and sparse residual marks, recognizable pair identity. 49px width1tile is consistent with reduced extracted mass."
+      },
+      {
+        "id": "bog_iron_outcrop_full",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Broader pore pattern than reference flint is semantically appropriate."
+        ],
+        "suggestions": [],
+        "reasoning": "Low porous rust-brown nodules read bog iron, distinct from the angular tall vein outcrops. 32px wide,16px high comfortably1tile."
+      },
+      {
+        "id": "bog_iron_outcrop_depleted",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Color depletion carries most of state difference; silhouette intentionally stable."
+        ],
+        "suggestions": [],
+        "reasoning": "Same low porous group in gray-brown with rust largely absent, legible depleted pair at16px. 32px opaque width remains1tile."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "tin_outcrop_full",
+  "adopted_path": "art/style05/struct/a2/ores/tin_outcrop_full.png",
+  "review_asset_id": "tin_outcrop_full",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/ores_mandatory_independent_review.json",
+  "review_sha256": "96a91b91364e2a9400e9859a210ce627eca0022c6e412eae0b84a60b6c0e430d"
+}

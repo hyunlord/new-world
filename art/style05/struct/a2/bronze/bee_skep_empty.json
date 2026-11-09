@@ -1,0 +1,299 @@
+{
+  "record": {
+    "id": "bee_skep_empty",
+    "lane": "bronze",
+    "era": "bronze",
+    "attempt": 3,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-46542487-454f-4cf6-8ac5-9fc0c2a21f72.png",
+    "prompt": "Use case: precise-object-edit. IMAGE1 is edit target. Other images are locked INK/MATERIAL references only. Preserve target geometry, camera, proportions, palette, clean alpha and major contour; change only the requested state. EXACT SURGICAL EDIT: remove the tiny bee in entrance and fill its pixels with dark hollow interior wash. Every other object pixel should stay visually unchanged, especially the existing gentle pigment variation across straw bands and wood board; retain slight unevenness of original two-tone wash, not flatten nor smooth it. Full dome stays closed and removable as onepiece; empty/unoccupied beehive. No lid added. WorldSim style05 ink-and-tone BRONZE AGE game sprite. Fine controlled sepia/brown-black pen line over quiet restrained earth-colour wash. Outer contour weight twice secondary line (2:1). One broad light tone on upper-left faces, one darker lower/right shadow tone, subtle local pigment variation only. Apply material-specific marks ONLY: stone/clay may have three short crack groups; WOOD has three thin broken longitudinal grain lines, never branched surface cracks; STRAW has five curved parallel weave bands, never cracks. Smooth metal has NO cracks. One small group of three parallel / hatch marks only where needed. Sparse surface marks; NO all-over hatching, stippling, granular texture or speckled wash. Upper-left daylight. Standing front three-quarter about20degrees down, substantial front face, shallow compressed top; grid-aligned square geometry, never isometric diamond. Adult56px for scale. One isolated object only, full silhouette and generous perfectly transparent margins. Outside object every pixel ALPHA ZERO, no shadow, glow, aura, haze, colored veil, ground patch, blur or backdrop; inside transparent gaps also alpha zero. No labels/text/frames/people/modern fittings/iron. No 3D rendering or pixel art.",
+    "subject": "one low domed straw bee skep woven in concentric bands, tiny empty entrance at front; open removable straw lid leans against right wall exposing a little hollow interior, no bees or honey",
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-cf97c039-6c4b-42ee-8fef-6b8c65d0919e.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 30,
+    "projection_family": "skep",
+    "height_band": [
+      28,
+      32
+    ],
+    "height_band_reason": "Family target predeclared in bronze/tasks.json relative to adult56px and footprint; unchanged by checks.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:20:24.104Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/bee_skep_empty_try3.png",
+  "raw_sha256": "ba000ab7dc3848a3b8a319e33d57018b851770fb22bfe6c4e7ca5ecf40b86cea",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-cf97c039-6c4b-42ee-8fef-6b8c65d0919e.png",
+      "sha256": "6a4eb7f14d4caa86f203a3d7123e64f3e717a4a4bec2d59e3925d90d96937d20"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/normalized/bee_skep_empty_try3.png",
+  "normalized_sha256": "e29605000949a7ea561d685d512e42dce646aa06c14cd942abe44a0c2b6aa3a1",
+  "size": [
+    39,
+    38
+  ],
+  "anchor": [
+    19,
+    33
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (209, 234, 1014, 1015)",
+    "uniform Lanczos scale: 0.03861003861003861",
+    "transparent 4px padding; source-canvas anchor: (19, 33)"
+  ],
+  "projection": {
+    "family": "skep",
+    "anchor": [
+      19,
+      33
+    ],
+    "height_band": [
+      28,
+      32
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 708,
+    "base_row": 33,
+    "base_error": 0,
+    "height": 30,
+    "gradient_x": -1.4812244837758108,
+    "gradient_y": -0.8513017751479294,
+    "light_angle_degrees": 209.88720548913273,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/bee_skep_empty_try3.png",
+    "sha256": "ba000ab7dc3848a3b8a319e33d57018b851770fb22bfe6c4e7ca5ecf40b86cea",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2833649319387342,
+      "saturation_q25": 0.47278298928366025,
+      "saturation_q75": 0.6024307890712484,
+      "stroke_q25": 2.0,
+      "stroke_q50": 4.0,
+      "stroke_q75": 4.47213595499958,
+      "stroke_q90": 6.0,
+      "wash_flatness": 0.0053083299424846455,
+      "foreground_pixels": 48524
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    83,
+    1087,
+    1206
+  ],
+  "raw_opaque_bbox": [
+    211,
+    236,
+    1012,
+    1013
+  ],
+  "raw_faint_far_ratio": 0.0006645546761327871,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_grain independent reviewer",
+    "evidence": [
+      "bronze/followup_review_1.png",
+      "bronze/followup_review_2.png",
+      "bronze/followup_review_3.png"
+    ],
+    "assets": [
+      {
+        "id": "charcoal_clamp_idle",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Earth-covered clamp retains roughly100px footprint span and56px adult-height body; correct quiet state. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "charcoal_clamp_burning",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Short smoke wisp and orange ember recess clearly distinguish working state. Dome size is within about5percent of idle; same two-tile footprint and adult-height body read consistently. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "charcoal_clamp_spent",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Collapsed dome and dark charcoal logs clearly signal spent state. Lower and modestly narrower mound is justified by collapse; still reads as same two-tile resource structure. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_ew",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Six pointed stakes with rope binding form a grid-aligned defensive span. Front planes, carved bevel tops and upper-left highlight preserve scene camera. Longitudinal wood marks read as grain. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_end",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Three-stake terminal has consistent stake height, width, rope bands and wood treatment with full palisade; half span reads intentional. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_damaged",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Broken central stakes and snapped upper rope clearly indicate damage while outer post height and bottom rope retain same scale. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_gate_closed",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Bound plank gate, sturdy posts and simple wooden latch are readable; warm wood matches adjacent palisade. Closed opening fits adult56 scale. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_gate_open",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Open leaves preserve gate post height and span of closed variant. The middle gap reads clearly at1x, with no new ground or geometry drift. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "bee_skep_empty",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Closed woven straw body matches active2 silhouette and material; absent bee and dark unoccupied entrance differentiate empty state cleanly. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "bee_skep_empty",
+  "adopted_path": "art/style05/struct/a2/bronze/bee_skep_empty.png",
+  "review_asset_id": "bee_skep_empty",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_followup_independent_review.json",
+  "review_sha256": "e1bdc7f7096887403fb4fa577baedf4db46afe827e7af71a9fd87abd828d183c"
+}

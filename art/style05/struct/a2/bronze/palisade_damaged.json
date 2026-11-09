@@ -1,0 +1,296 @@
+{
+  "record": {
+    "id": "palisade_damaged",
+    "lane": "bronze",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-f9e389c5-33e2-4954-bf4a-a0df77220815.png",
+    "prompt": "Use case: precise-object-edit. IMAGE1 is edit target. Other images are locked INK/MATERIAL references only. Preserve target geometry, camera, proportions, palette, clean alpha and major contour; change only the requested state. DAMAGED state of exact six-stake panel. Keep outertwo stakes left and outertwo stakes right fully unchanged, keeping original maximum height60px and overallwidth. Snap the central TWO stakes halfway up; expose uneven fresh wood break tops at halfheight. Upperrope breaks at gap, lowerrope remains binding six lowerstakes. Remove upper halves entirely, transparent gap. No loose debris or ground. WorldSim style05 ink-and-tone BRONZE AGE game sprite. Fine controlled sepia/brown-black pen line over quiet restrained earth-colour wash. Outer contour weight twice secondary line (2:1). One broad light tone on upper-left faces, one darker lower/right shadow tone, subtle local pigment variation only. Apply material-specific marks ONLY: stone/clay may have three short crack groups; WOOD has three thin broken longitudinal grain lines, never branched surface cracks; STRAW has five curved parallel weave bands, never cracks. Smooth metal has NO cracks. One small group of three parallel / hatch marks only where needed. Sparse surface marks; NO all-over hatching, stippling, granular texture or speckled wash. Upper-left daylight. Standing front three-quarter about20degrees down, substantial front face, shallow compressed top; grid-aligned square geometry, never isometric diamond. Adult56px for scale. One isolated object only, full silhouette and generous perfectly transparent margins. Outside object every pixel ALPHA ZERO, no shadow, glow, aura, haze, colored veil, ground patch, blur or backdrop; inside transparent gaps also alpha zero. No labels/text/frames/people/modern fittings/iron. No 3D rendering or pixel art.",
+    "subject": "one straight east-west palisade section of six stakes, two centre stakes snapped halfway but four tall posts remain; one loose timber fragment held in lashings, no ground debris",
+    "references": [
+      "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-22f9c2ae-a27c-4571-8f2f-729e7e8fd1fb.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png"
+    ],
+    "target_height": 60,
+    "projection_family": "wall",
+    "height_band": null,
+    "height_band_reason": null,
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:18:13.596Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/palisade_damaged_try1.png",
+  "raw_sha256": "6ea26165c35590909871af83d2b25d8758083c190461fdb1154732bd73ece6e8",
+  "references": [
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-22f9c2ae-a27c-4571-8f2f-729e7e8fd1fb.png",
+      "sha256": "3205b908ba457dae29374cf227bd45dea3e83d0eb7a152d3d17c2a6469ccd03e"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/normalized/palisade_damaged_try1.png",
+  "normalized_sha256": "b5445a98c6683a12c4aec6afe1d7c26e864da0d35a3e066557263e53ac061ec5",
+  "size": [
+    78,
+    68
+  ],
+  "anchor": [
+    39,
+    63
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (134, 209, 1153, 1089)",
+    "uniform Lanczos scale: 0.0684931506849315",
+    "transparent 4px padding; source-canvas anchor: (39, 63)"
+  ],
+  "projection": {
+    "family": "wall",
+    "anchor": [
+      39,
+      63
+    ],
+    "height_band": [
+      60,
+      60
+    ],
+    "height_band_override": false,
+    "opaque_pixels": 3287,
+    "base_row": 63,
+    "base_error": 0,
+    "height": 60,
+    "gradient_x": -0.6771790037831019,
+    "gradient_y": -0.6352315264797511,
+    "light_angle_degrees": 223.16932626612052,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/palisade_damaged_try1.png",
+    "sha256": "6ea26165c35590909871af83d2b25d8758083c190461fdb1154732bd73ece6e8",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.24595184956550645,
+      "saturation_q25": 0.5173510890797226,
+      "saturation_q75": 0.6035479003278551,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.015499346036509333,
+      "foreground_pixels": 44431
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    21,
+    1267,
+    1198
+  ],
+  "raw_opaque_bbox": [
+    136,
+    211,
+    1151,
+    1087
+  ],
+  "raw_faint_far_ratio": 0.0026399935324340072,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_grain independent reviewer",
+    "evidence": [
+      "bronze/followup_review_1.png",
+      "bronze/followup_review_2.png",
+      "bronze/followup_review_3.png"
+    ],
+    "assets": [
+      {
+        "id": "charcoal_clamp_idle",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Earth-covered clamp retains roughly100px footprint span and56px adult-height body; correct quiet state. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "charcoal_clamp_burning",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Short smoke wisp and orange ember recess clearly distinguish working state. Dome size is within about5percent of idle; same two-tile footprint and adult-height body read consistently. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "charcoal_clamp_spent",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Collapsed dome and dark charcoal logs clearly signal spent state. Lower and modestly narrower mound is justified by collapse; still reads as same two-tile resource structure. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_ew",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Six pointed stakes with rope binding form a grid-aligned defensive span. Front planes, carved bevel tops and upper-left highlight preserve scene camera. Longitudinal wood marks read as grain. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_end",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Three-stake terminal has consistent stake height, width, rope bands and wood treatment with full palisade; half span reads intentional. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_damaged",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Broken central stakes and snapped upper rope clearly indicate damage while outer post height and bottom rope retain same scale. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_gate_closed",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Bound plank gate, sturdy posts and simple wooden latch are readable; warm wood matches adjacent palisade. Closed opening fits adult56 scale. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "palisade_gate_open",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Open leaves preserve gate post height and span of closed variant. The middle gap reads clearly at1x, with no new ground or geometry drift. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      },
+      {
+        "id": "bee_skep_empty",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Closed woven straw body matches active2 silhouette and material; absent bee and dark unoccupied entrance differentiate empty state cleanly. Actual saved RGBA inspected on dark and pale backgrounds plus normalized1x/2x; clean exterior alpha."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "palisade_damaged",
+  "adopted_path": "art/style05/struct/a2/bronze/palisade_damaged.png",
+  "review_asset_id": "palisade_damaged",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_followup_independent_review.json",
+  "review_sha256": "e1bdc7f7096887403fb4fa577baedf4db46afe827e7af71a9fd87abd828d183c"
+}

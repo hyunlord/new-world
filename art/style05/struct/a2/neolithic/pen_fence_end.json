@@ -1,0 +1,227 @@
+{
+  "record": {
+    "id": "pen_fence_end",
+    "lane": "neolithic",
+    "era": "neolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-7b292205-e549-4603-af27-96b6fe95f82a.png",
+    "prompt": "Use case: stylized-concept. Produce ONE isolated WorldSim style05 stone-age game structure, fine controlled warm charcoal-brown ink over restrained quiet low-contrast earth tone wash. Input props/hut and scene are LOCKED medium, palette, lighting references only; Route I sheet fixes front three-quarter camera about20 degrees down, NOT the anchors' high overhead camera. Upper-left light: strongly lighter top and left surfaces, darker right/lower surfaces, with no cast-shadow puddle. Outline twice secondary mark width (2:1), broad quiet even low-contrast tone and distinct shadow plane. Use fine gently varied textures, NOT patchy high-contrast watercolor flakes. Wood uses exactly3 broken longitudinal marks per main pole; stone3 facet/crack groups per main rock; clay3 short crack groups; reed5 curved bundle marks per large surface. Shadow hatching one group of3 parallel / marks, never dense all-over hatching. No metal, no dyed cloth. No roof. Whole object centered with generous actual alpha-zero TRANSPARENT margin and cutout gaps. Background must have no nonzero alpha haze; EMPTY transparent space directly adjacent to silhouette. No ground plane, backdrop, halo, text, checkerboard, labels, border, people or animals. No photorealism, 3D render, vector clipart or pixel art. Adult56px, tile64px reference at eventual game scale. Generate a large source suitable for uniform Lanczos reduction. Solid crisp silhouette, like a die-cut sticker WITHOUT ANY STICKER BORDER. Subject ends precisely at its inked contour; outside is empty alpha0. All pigment and texture are ONLY inside the opaque silhouette. Transparent negative spaces, no ambient-colored fog. SUBJECT: one END piece of the straight horizontal pen fence, one upright40px log terminal post with3very short cut-off rail stubs extending west, tied with ochre plant rope. Clearly an endcap not gate, no free second post, no metal. Target40px uprightheight.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/character/boards/route_i_sheet_1x.png"
+    ],
+    "target_height": 40,
+    "projection_family": "pen_fence",
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_reason": "Predeclared pen_fence geometry: one END piece of the straight horizontal pen fence, one upright40px log terminal post with3very short cut-off rail stubs extending west, tied with ochre plant rope. Clearly an endcap not gate, no free second post, no metal. Target40px uprightheight.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:21:57.486Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/neolithic/raw/pen_fence_end_try1.png",
+  "raw_sha256": "558b589ed8ff5205f71ab65802554c8b4515f930b8ec38e8794697c256c52bd3",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/pen_fence_end_try1.png",
+  "normalized_sha256": "1ad4133fe7689ac0e58ede20d321674b1fe341fa12626158dd2521803eee8aed",
+  "size": [
+    36,
+    48
+  ],
+  "anchor": [
+    18,
+    43
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (263, 92, 962, 1103)",
+    "uniform Lanczos scale: 0.039721946375372394",
+    "transparent 4px padding; source-canvas anchor: (18, 43)"
+  ],
+  "projection": {
+    "family": "pen_fence",
+    "anchor": [
+      18,
+      43
+    ],
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 644,
+    "base_row": 43,
+    "base_error": 0,
+    "height": 40,
+    "gradient_x": -1.5883800995024873,
+    "gradient_y": -6.527441594454072,
+    "light_angle_degrees": 256.3235213838368,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/neolithic/raw/pen_fence_end_try1.png",
+    "sha256": "558b589ed8ff5205f71ab65802554c8b4515f930b8ec38e8794697c256c52bd3",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.26812631578947366,
+      "saturation_q25": 0.4605068723825869,
+      "saturation_q75": 0.5144284389415634,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.020958087384131772,
+      "foreground_pixels": 26165
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    21,
+    1292,
+    1199
+  ],
+  "raw_opaque_bbox": [
+    265,
+    94,
+    960,
+    1101
+  ],
+  "raw_faint_far_ratio": 0.015341604700839865,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "root independent of generating agent",
+    "method": "Actual saved RGBA dark composite plus uniform2x sheet and locked prop/scene references.",
+    "sheet": "/Users/rexxa/work/art-batch/A2/checks/neolithic_raw_review_233024.png",
+    "assets": [
+      {
+        "id": "pen_fence_end",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Single bound terminal post with three short rail stubs preserves40px fence height and timber material. It is an end piece, not a full-span panel.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "raw_sha256": "558b589ed8ff5205f71ab65802554c8b4515f930b8ec38e8794697c256c52bd3",
+        "normalized_sha256": "1ad4133fe7689ac0e58ede20d321674b1fe341fa12626158dd2521803eee8aed"
+      },
+      {
+        "id": "trap_sprung",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "Closed wicker mouth distinguishes the sprung trap while the tunnel body, scale and woven material match the set version.24px height remains low and plausible.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "raw_sha256": "435157e70b2ab8dbfa51f7f7e3f2498a5752c68f5d67585e56e52ebe44d24d79",
+        "normalized_sha256": "c36111dfc1c0c5c89bc433c0ba19d8e90783f7e2424f6fbb37216f919266f8cf"
+      },
+      {
+        "id": "well_dry",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "verdict": "pass",
+        "reasoning": "The lowered empty bucket and exposed dry base distinguish a dry well without changing the frame/ring geometry. Stone and timber materials retain consistent washes.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "raw_sha256": "0da6cea62534406909ef5214e40b0e910faddffbc16a0cb462be98ca88eb0a6c",
+        "normalized_sha256": "e13df89b92d7955a9236fceec496772e246278f9f4f0014b8e5806f344760796"
+      },
+      {
+        "id": "loom_empty",
+        "attempt": 3,
+        "medium": 3,
+        "line": 3,
+        "light": 4,
+        "palette": 4,
+        "score": 84,
+        "verdict": "revise",
+        "reasoning": "Frame has become uniformly cylindrical and smooth, losing broken timber ink and irregular contour of the locked rack/bench references. Numeric readiness cannot establish a style match; withhold.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "raw_sha256": "dfa30f31a2c07fe2ff710f182ca7024c27aeaeaca6e786601900fc32d6811862",
+        "normalized_sha256": "ed39e9ca520855d4b2b47ff67ecc0a8eab7944a70eec50806ad4391e17130f69"
+      },
+      {
+        "id": "loom_loaded",
+        "attempt": 1,
+        "medium": 3,
+        "line": 3,
+        "light": 4,
+        "palette": 4,
+        "score": 86,
+        "verdict": "revise",
+        "reasoning": "Cloth, warp strings and weights read clearly, but the smooth regular timber frame still differs materially from existing timber anchors. Restore restrained grain and irregular ink before adoption.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "raw_sha256": "6e08eb6a20d82985a096a0dfe224c5befe6ee99034e2271810b24bcf030af5e9",
+        "normalized_sha256": "9d6146986e0bbf9c688b5fae01aa45f95479ac7e7536778182faa17103adf371"
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "pen_fence_end",
+  "adopted_path": "art/style05/struct/a2/neolithic/pen_fence_end.png",
+  "review_asset_id": "pen_fence_end",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/neolithic_small_states_independent_review.json",
+  "review_sha256": "9591059c2901d873a1159b3dfaf009d8967db3ccbd25d2ff489488e261987572"
+}
