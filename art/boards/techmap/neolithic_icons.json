@@ -32,8 +32,28 @@
       "role": "reference"
     },
     {
+      "path": "art/style05/techmap/icons/neolithic/adze.png",
+      "sha256": "a0474fcb91859739af3563d7c23fbfcf1d3c0a6868aeae7345c83ab16a54c0b1",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/neolithic/animal_taming.png",
       "sha256": "4509d205698872a0b6293a38d874f56508567b0e8cbdfed0915737e407c00336",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/barley.png",
+      "sha256": "28e2379caf5490784977e57d41df5ce9f6008948445b4d28f2ed05ad212b301d",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/barter.png",
+      "sha256": "65ca2857fa250e05cbdf51177718f5fce540cbd70b9a17a74544f3fb9e10cd42",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/bow.png",
+      "sha256": "81fc3f9daea6b26c18947f508e690b78e4a459230319fde136b50f0302081582",
       "role": "candidate"
     },
     {
@@ -42,8 +62,128 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/neolithic/clay_prep.png",
+      "sha256": "d21ad3256326058fb190c3a38c66391ea21a72dd6a09a507c9c5ef1bd300c0ba",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/crop_rotation.png",
+      "sha256": "36ee75de4b4abd27b0e8c3736f090d9a3d9a912e64c53bd0d3d9c23db783466b",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/cultivation.png",
+      "sha256": "9d12f2151fbb697c7d1712f78e5df268084bbb4cb21294d360d1543a65d68279",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/dairy.png",
+      "sha256": "eff9d8ebc2d2d5f77d2c7678f3c584799d5567d3237a52b8058691f5e2c40cf0",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/dog_taming.png",
+      "sha256": "6cec4857a8ffa93a5fb39bed0ec1add0762b51a5dc1a776d6f1b0118daa59c65",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/dugout_canoe.png",
+      "sha256": "bda7869287a52ffd90500f299469824c1ba5ce6349ed26b9d6b82c86e585be2b",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/dyeing.png",
+      "sha256": "67af72038e392cc3a6bd9ad819447af38a28789a2c84a2b3549b9246961e41c8",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/elder_council.png",
+      "sha256": "4331494fcee73196029f6bba0c479cc956072e5ea7a2c7cb66026e67cd565121",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/fence.png",
+      "sha256": "2404e8c6ed7b904ea545b6011c534591e7d5fba082c6610a181242d25b5e8aec",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/fermentation.png",
+      "sha256": "58a072c5f6a167a06e758684baf100293ecd88b2bd12d651beef545bcf3a2f20",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/food_preservation.png",
+      "sha256": "43b8ac2fa0f9c65009f0738b33e2c414a35f9d694f30576488bd80c7c76b9e5a",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/granary.png",
+      "sha256": "4447257944730621d2e7dad66ed3304c8dc881409eb2289dbb5ebaa3bfc23d74",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/herbalism.png",
+      "sha256": "c7a4e499fef97a5a43855728a2673002ea835ea39528bbfd1f3fe7478a9cc98e",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/neolithic/herding.png",
       "sha256": "d65cf887440e4c7328f4d3361c5183498c2a7c2f4ec8bac7bd3e94cbb772e488",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/hoe.png",
+      "sha256": "bee9dac18e681aaa2e8b9cbc4809fa78ddf9d2f336256bc86f7781ffa230ae37",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/kinship.png",
+      "sha256": "a85cebce09a27d6b3953ca24194c14864715b4355afeae1078d27bce83cd3f9f",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/leather_armor.png",
+      "sha256": "c2021e3871457f363a624499b5a032f5a87ffefaca059a09209dda9a58382517",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/lentil.png",
+      "sha256": "2e38d47975a98c889a0a6628e62695822ba5b2b62d24b666272a6163dc620512",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/lunar_calendar.png",
+      "sha256": "f9dcb506d199ad16044b3d9f6df74b31ebaf8e00a49fe3603f6e039349c3d933",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/megalith.png",
+      "sha256": "818bb02b1e271cc6e179ae8817339788bf03e4bc514cb8c664a4fb792f8c4d68",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/millet.png",
+      "sha256": "c02b05a7da3b9e0f178a71355b7e52e1c8be0152d6e064a6a167b0eeb440e520",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/mud_brick.png",
+      "sha256": "5bcedc63e1d8dd70ffa4f4410d0e8ac78af381105ffa9e079f8dc14663fb1f12",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/orchard.png",
+      "sha256": "f502f31d67c8d07d984827fd582dd1fd592eb1d81c0ede9bc0c3dbabb66652f1",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/oven.png",
+      "sha256": "caf8adaceee48357df9d3ec6a4860c37f92b41facb7eb77604dbaff137320c48",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/pea.png",
+      "sha256": "2d61b901a018af35b096d93b77bae7d54829d2fa68be924d50c665ed9a09f7b5",
       "role": "candidate"
     },
     {
@@ -54,6 +194,31 @@
     {
       "path": "art/style05/techmap/icons/neolithic/pot_forming.png",
       "sha256": "366608d441d9e26e6b7c990fc5d2b2cb544667b1e78c6cf06a8b8a483f10fd33",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/querns.png",
+      "sha256": "080a8273b717f487076d4b27faa48c3587d6a2bae5eca482e154e2c3e9901e75",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/ritual.png",
+      "sha256": "4503a333bf5bf62cbc34b08e627705ea492aa61dea3e6a244b902c96374026a6",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/rye.png",
+      "sha256": "c4f214d75718ca446b1f9d4a00691fdd8188263abba5643eecc1d580c395358c",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/selective_breeding.png",
+      "sha256": "738a5fa9ac7a0a92ab3a695a99632bd6de7e8f5178fcfec1d2f430bb754935f0",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/sickle.png",
+      "sha256": "425684d47b357d3979b9ef73ab6ca635907259fe78c69f474bbc35c8ed68775d",
       "role": "candidate"
     },
     {
@@ -72,20 +237,50 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/neolithic/taboo.png",
+      "sha256": "ba945a6cea4eac73761784640551a3cbec0b75f4ea05505baba42fa662bf8177",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/tailoring.png",
+      "sha256": "6724c62cf09623083ae7e646b517d26bcfbd611c1401a7d39d85d650d21c58f2",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/tally.png",
+      "sha256": "fd69721ec83458d1b3d2f2a4c6298f99b9c7f09ec3a7a3217c422993f5ae82be",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/thatch.png",
+      "sha256": "9adbe5cc5925a934b7e3b8366dbcb8d9dcc335aafc90d5b9b0a45c5c23f4b9cc",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/neolithic/timber_wall.png",
       "sha256": "ecd4ec28b6a31cf825e6d0d9c16e832c3dc0aee082868de57bc72062bcfb60d2",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/wattle_daub.png",
+      "sha256": "272d4bda8110f543129ffc95a5f8aec29b0c7f596be0e0f5dcf7ddf88a602de3",
       "role": "candidate"
     },
     {
       "path": "art/style05/techmap/icons/neolithic/weaving.png",
       "sha256": "e3115b8b7ac8c20ffd9bd36634fa265b198d3d6d935d243859082b2b2b168687",
       "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/neolithic/well.png",
+      "sha256": "d532a4b28eee35503e6ba4a479677f82dedd33e85fabc431ac27ac0d5beda381",
+      "role": "candidate"
     }
   ],
   "canvas": [
     1140,
-    614
+    2198
   ],
-  "sheet_sha256": "b0f048afdbb3662bede2b7505ba887da275a15bda142b32cbdc3e80b78113113",
+  "sheet_sha256": "cacb8e239c638c7372b338674c68a0145ed86e21cd6147342ebe313ac9910348",
   "note": "Review composite only; source sprites are unchanged."
 }

@@ -167,6 +167,11 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/bronze/olive_press.png",
+      "sha256": "7425c998fe0d09af2037dedc29e7d8cfb5ba33b20b49d25af18ac4298e5cb43d",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/bronze/palisade.png",
       "sha256": "e1b665dc41b7fe0b815560d997a89ea9ab600e8d770f5bee09dc0e913a3040ff",
       "role": "candidate"
@@ -247,6 +252,11 @@
       "role": "candidate"
     },
     {
+      "path": "art/style05/techmap/icons/bronze/trepanation.png",
+      "sha256": "42700b1a7edc25db55e7aa250bcc5e9684b8c06db1e3e1ea90a39733805a763b",
+      "role": "candidate"
+    },
+    {
       "path": "art/style05/techmap/icons/bronze/wheel.png",
       "sha256": "15c52278aeed61b82e8db6802ca2d9155daef66b9850fcebce1233d250132a66",
       "role": "candidate"
@@ -266,6 +276,6 @@
     1140,
     2198
   ],
-  "sheet_sha256": "226f420fe5d6840591743d0b4c19b21239eef27256a41d8462e0728660de460c",
+  "sheet_sha256": "e8e9209c9c63c179111a7817e334b592ecc8466906a68a485c4d3a55d97240f1",
   "note": "Review composite only; source sprites are unchanged."
 }

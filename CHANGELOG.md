@@ -9,7 +9,7 @@ tags `v7-final-sim` and `v7-final-art`.
 
 ### Added
 - Knowledge-map illustration family: fixed ink-and-tone contract, concrete 167-node catalogue, transparent centered UI canvases, per-attempt provenance, independent visual review and explicit import/binding drafts (`art/techmap/`).
-- Reviewed candidates: 56 node icons (46 bronze, 10 neolithic), all four era headers and all ten chapter illustrations (`art/style05/techmap/`). Coverage is recorded in `art/techmap/coverage.json`; production continues on `v8/art-batch-a4`.
+- Reviewed candidates: 122 node icons (48 bronze, 49 neolithic, 9 iron, 16 paleolithic), all four era headers and all ten chapter illustrations (`art/style05/techmap/`). Coverage is recorded in `art/techmap/coverage.json`; production continues on `v8/art-batch-a4`.
 - Thin alpha/size/hash normalization checks and comparison sheets beside adopted art. Raw generations, rejects and review evidence remain outside the repository in `/Users/rexxa/work/art-batch/A4/`.
 
 ### Changed

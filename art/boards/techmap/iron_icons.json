@@ -1,0 +1,86 @@
+{
+  "family": "icon",
+  "inputs": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/stone_axe_try1.png",
+      "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/ground_axe_try3.png",
+      "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/berry_basket_try1.png",
+      "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/clay_try3.png",
+      "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/firewood_try3.png",
+      "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/env1/items/clay_pot_empty.png",
+      "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "role": "reference"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/coinage.png",
+      "sha256": "f437ba100c9d88ed3716feec950f2743b3c87d1b338d45d4361b48c0b5ef1494",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/forging.png",
+      "sha256": "a93f8cd14c531bbcbd478305ffb27694733b0a6f08db9f377a8eb5a3f5bf93b0",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/gate.png",
+      "sha256": "220b084c40b396e2263dbf5843fe384844ce43a0b64569adba7e8a219bb4f462",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/horse.png",
+      "sha256": "7687b878fb0423e8baa4c473e451d2968dbe06e09360d0d072b8366b0c68f808",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/iron_smelting.png",
+      "sha256": "18b7ee2bceac93824c23f40ebf1825b0649d8e4e940a0e647d99ea9b24459414",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/iron_weapons.png",
+      "sha256": "34ce2a5fc27103535cae333b0ef5a938969ccaa201e1212c481b80c41da1cb4e",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/paved_road.png",
+      "sha256": "707135846cbfe7a6cb069b1c907e3ab1c65859a683c80b11772a724d88fbfadb",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/reservoir.png",
+      "sha256": "33d16a26a1c03c3763aaee66c004c4a63c4a0d6dfb81ee2e013af67874887be7",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/iron/steel_edge.png",
+      "sha256": "496427f10bac94ef4a0fbd74596b06da5b00507592f7c37c64537e6e04b0a4cb",
+      "role": "candidate"
+    }
+  ],
+  "canvas": [
+    1140,
+    614
+  ],
+  "sheet_sha256": "586ea6a728ddeb656dc7541e982874ead0e75ab20d52d0b68d64fbe19c7439b1",
+  "note": "Review composite only; source sprites are unchanged."
+}

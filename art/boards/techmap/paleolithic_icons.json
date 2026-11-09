@@ -1,0 +1,121 @@
+{
+  "family": "icon",
+  "inputs": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/stone_axe_try1.png",
+      "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/ground_axe_try3.png",
+      "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/berry_basket_try1.png",
+      "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/clay_try3.png",
+      "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/polish/items/firewood_try3.png",
+      "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441",
+      "role": "reference"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a4/art/style05/env1/items/clay_pot_empty.png",
+      "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "role": "reference"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/bedding.png",
+      "sha256": "d41fb01b139c3b7210399a8eb3c9add6741de286238e5b7ebbc52aac30e61f0e",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/bone_tools.png",
+      "sha256": "a670e56385c3d09e1e6c2d17fe1f0d95f7620a6cb8fa3ce8f2bae457df90282c",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/cooking.png",
+      "sha256": "a8114a5a1528997c135384b341493a727cece650aaab46a2582b6c70af117437",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/digging.png",
+      "sha256": "bb27be5a6d7ebee6e0e894013cb231d92e85594b68e12a14827a99a6eeead478",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/doorway.png",
+      "sha256": "533b7ce5bc0d9fc485a071ecb079e710f136ca272395c1825dcaa8a0a8c918bb",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/fire_keeping.png",
+      "sha256": "88ea5d6f7abc0571c9caba351b90fd321378f912f42516142c49d281c598a580",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/firewood_splitting.png",
+      "sha256": "580ca11f4dc1f53bbbf73be995d776eb1a1117dd84b7182ce050a10dc63ec08a",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/fishing.png",
+      "sha256": "9b58b584215c8dd6a0540170dd1f2d9cb738b243791fdee987f2a5fbd105910e",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/flint_knapping.png",
+      "sha256": "7cf5a2daeb773281dfc5f3eaf6984d17d8f8ff10f4845222c2c6c6b210f57e17",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/foraging.png",
+      "sha256": "f82d2a992d4c317a95f26c65be05600b2ce5579d1c4996f6f3d89817c115055a",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/hafting.png",
+      "sha256": "bfedbba79ca17f2207d9ed8b297531c5fe34436082760dd3fc149d7792da912b",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/hut_building.png",
+      "sha256": "5f137e3e9b29ba0940a839aafa7156f8af4f077016b489a2e078de8b94568b25",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/packed_floor.png",
+      "sha256": "ae3404fabbaa7beafac52b8275c1842868b16c640a068726070388ec935a5e77",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/pressure_flaking.png",
+      "sha256": "77ec859c5a0976ef0fd42f30efaaae0ac31672f834449972d93a591820518346",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/stone_quarrying.png",
+      "sha256": "a4704b0b70e094523316d0cf40bade92a3e0e873089dca3ed09b6d664c596f0a",
+      "role": "candidate"
+    },
+    {
+      "path": "art/style05/techmap/icons/paleolithic/water_finding.png",
+      "sha256": "d0c84c8dcdfcc61fcac7a5cd0090c328689a89157a395ce81c59f7ea614d0b51",
+      "role": "candidate"
+    }
+  ],
+  "canvas": [
+    1140,
+    1010
+  ],
+  "sheet_sha256": "90b7708feebce70f8d43e0de0dd080b3a6dd6e863d12d5fda04c095987dcbd8c",
+  "note": "Review composite only; source sprites are unchanged."
+}

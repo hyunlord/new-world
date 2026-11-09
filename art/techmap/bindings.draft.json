@@ -1,6 +1,17 @@
 {
   "status": "DRAFT_NOT_APPLIED",
   "ui_knowledge": {
+    "adze": {
+      "asset": "tech_adze",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "animal_taming": {
       "asset": "tech_animal_taming",
       "canvas": [
@@ -23,8 +34,63 @@
         32
       ]
     },
+    "barley": {
+      "asset": "tech_barley",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "barter": {
+      "asset": "tech_barter",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "bedding": {
+      "asset": "tech_bedding",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "beekeeping": {
       "asset": "tech_beekeeping",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "bone_tools": {
+      "asset": "tech_bone_tools",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "bow": {
+      "asset": "tech_bow",
       "canvas": [
         64,
         64
@@ -133,6 +199,28 @@
         32
       ]
     },
+    "clay_prep": {
+      "asset": "tech_clay_prep",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "coinage": {
+      "asset": "tech_coinage",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "cold_hammering": {
       "asset": "tech_cold_hammering",
       "canvas": [
@@ -155,8 +243,63 @@
         32
       ]
     },
+    "cooking": {
+      "asset": "tech_cooking",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "copper_smelting": {
       "asset": "tech_copper_smelting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "crop_rotation": {
+      "asset": "tech_crop_rotation",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "cultivation": {
+      "asset": "tech_cultivation",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "dairy": {
+      "asset": "tech_dairy",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "digging": {
+      "asset": "tech_digging",
       "canvas": [
         64,
         64
@@ -177,8 +320,63 @@
         32
       ]
     },
+    "dog_taming": {
+      "asset": "tech_dog_taming",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "doorway": {
+      "asset": "tech_doorway",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "drum": {
       "asset": "tech_drum",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "dugout_canoe": {
+      "asset": "tech_dugout_canoe",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "dyeing": {
+      "asset": "tech_dyeing",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "elder_council": {
+      "asset": "tech_elder_council",
       "canvas": [
         64,
         64
@@ -199,8 +397,74 @@
         32
       ]
     },
+    "fence": {
+      "asset": "tech_fence",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "fermentation": {
+      "asset": "tech_fermentation",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "fire_keeping": {
+      "asset": "tech_fire_keeping",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "firewood_splitting": {
+      "asset": "tech_firewood_splitting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "fishing": {
+      "asset": "tech_fishing",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "flax_retting": {
       "asset": "tech_flax_retting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "flint_knapping": {
+      "asset": "tech_flint_knapping",
       "canvas": [
         64,
         64
@@ -221,8 +485,85 @@
         32
       ]
     },
+    "food_preservation": {
+      "asset": "tech_food_preservation",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "foraging": {
+      "asset": "tech_foraging",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "forging": {
+      "asset": "tech_forging",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "gate": {
+      "asset": "tech_gate",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "glass_beads": {
       "asset": "tech_glass_beads",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "granary": {
+      "asset": "tech_granary",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "hafting": {
+      "asset": "tech_hafting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "herbalism": {
+      "asset": "tech_herbalism",
       "canvas": [
         64,
         64
@@ -243,8 +584,96 @@
         32
       ]
     },
+    "hoe": {
+      "asset": "tech_hoe",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "horse": {
+      "asset": "tech_horse",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "hut_building": {
+      "asset": "tech_hut_building",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "iron_smelting": {
+      "asset": "tech_iron_smelting",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "iron_weapons": {
+      "asset": "tech_iron_weapons",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "irrigation": {
       "asset": "tech_irrigation",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "kinship": {
+      "asset": "tech_kinship",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "leather_armor": {
+      "asset": "tech_leather_armor",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "lentil": {
+      "asset": "tech_lentil",
       "canvas": [
         64,
         64
@@ -276,6 +705,17 @@
         32
       ]
     },
+    "lunar_calendar": {
+      "asset": "tech_lunar_calendar",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "marriage_alliance": {
       "asset": "tech_marriage_alliance",
       "canvas": [
@@ -289,6 +729,28 @@
     },
     "mask": {
       "asset": "tech_mask",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "megalith": {
+      "asset": "tech_megalith",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "millet": {
+      "asset": "tech_millet",
       "canvas": [
         64,
         64
@@ -320,6 +782,17 @@
         32
       ]
     },
+    "mud_brick": {
+      "asset": "tech_mud_brick",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "mud_brick_house": {
       "asset": "tech_mud_brick_house",
       "canvas": [
@@ -331,8 +804,74 @@
         32
       ]
     },
+    "olive_press": {
+      "asset": "tech_olive_press",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "orchard": {
+      "asset": "tech_orchard",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "oven": {
+      "asset": "tech_oven",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "packed_floor": {
+      "asset": "tech_packed_floor",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "palisade": {
       "asset": "tech_palisade",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "paved_road": {
+      "asset": "tech_paved_road",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "pea": {
+      "asset": "tech_pea",
       "canvas": [
         64,
         64
@@ -375,6 +914,17 @@
         32
       ]
     },
+    "pressure_flaking": {
+      "asset": "tech_pressure_flaking",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "prospecting": {
       "asset": "tech_prospecting",
       "canvas": [
@@ -397,8 +947,52 @@
         32
       ]
     },
+    "querns": {
+      "asset": "tech_querns",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "reed_boat": {
       "asset": "tech_reed_boat",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "reservoir": {
+      "asset": "tech_reservoir",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "ritual": {
+      "asset": "tech_ritual",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "rye": {
+      "asset": "tech_rye",
       "canvas": [
         64,
         64
@@ -430,8 +1024,30 @@
         32
       ]
     },
+    "selective_breeding": {
+      "asset": "tech_selective_breeding",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "shrine": {
       "asset": "tech_shrine",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "sickle": {
+      "asset": "tech_sickle",
       "canvas": [
         64,
         64
@@ -474,6 +1090,17 @@
         32
       ]
     },
+    "steel_edge": {
+      "asset": "tech_steel_edge",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "stone_grinding": {
       "asset": "tech_stone_grinding",
       "canvas": [
@@ -487,6 +1114,17 @@
     },
     "stone_masonry": {
       "asset": "tech_stone_masonry",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "stone_quarrying": {
+      "asset": "tech_stone_quarrying",
       "canvas": [
         64,
         64
@@ -518,6 +1156,39 @@
         32
       ]
     },
+    "taboo": {
+      "asset": "tech_taboo",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "tailoring": {
+      "asset": "tech_tailoring",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "tally": {
+      "asset": "tech_tally",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "tattoo": {
       "asset": "tech_tattoo",
       "canvas": [
@@ -531,6 +1202,17 @@
     },
     "terrace": {
       "asset": "tech_terrace",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "thatch": {
+      "asset": "tech_thatch",
       "canvas": [
         64,
         64
@@ -573,8 +1255,52 @@
         32
       ]
     },
+    "trepanation": {
+      "asset": "tech_trepanation",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "water_finding": {
+      "asset": "tech_water_finding",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "wattle_daub": {
+      "asset": "tech_wattle_daub",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
     "weaving": {
       "asset": "tech_weaving",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        32
+      ]
+    },
+    "well": {
+      "asset": "tech_well",
       "canvas": [
         64,
         64
