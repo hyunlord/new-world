@@ -1,0 +1,199 @@
+{
+  "record": {
+    "id": "smelter_lit",
+    "lane": "bronze",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c289-6f47-78e0-98a7-a547680c554f/exec-53779663-d9d5-4120-8abe-425d83ac863c.png",
+    "prompt": "Use case: stylized-concept. Generate ONE isolated WorldSim style05 BRONZE AGE copper smelter station: a squat hand-built earthen clay shaft furnace, thick ochre clay walls, open dark oval top, one small arched fire mouth facing south/viewer with subtle amber embers, short clay tuyere at right, no metal fittings. NO house or roof. Reference images: props.png and scene.png are immutable ink/earth-wash/lighting anchors ONLY; route_i_sheet_1x.png fixes front three-quarter view about 20 degrees down. Upper-left daylight, top and left clearly lighter, right and lower planes darker. Fine warm charcoal-brown outer contour, secondary marks half outer weight (2:1), broad quiet ochre wash, shadow wash on right. At game scale use exactly 3 short clay crack groups and 3 diagonal parallel hatch marks in one right-side shadow group; do not pepper or cross-hatch entire surfaces. Designed for 64px tile; opaque body silhouette target 40px tall and <=50px wide, adult 56px for scale. Standing front three-quarter ~20deg down, substantial front, shallow compressed top, no isometric diamond, no overhead circle. Entire object centered with generous genuinely alpha-zero transparent margin and transparent openings, no ground/shadow patch, no halo, haze, backdrop, checkerboard, labels, text or border. Precise hand-ink natural history plate with restrained earthy tone wash; no pixel art, no photoreal or 3D rendering. Produce large source for downsampling, true RGBA transparency.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/character/boards/route_i_sheet_1x.png"
+    ],
+    "target_height": 40,
+    "projection_family": "smelter",
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_reason": "New furnace family: 40px target relative to a 56px adult.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": null
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/smelter_lit_try1.png",
+  "raw_sha256": "35d3652da6f782b8255d33290679ab2016d8e53eae7e78ae2fb8cb6775bc87f6",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/normalized/smelter_lit_try1.png",
+  "normalized_sha256": "8b13d194b2a6426bc6334b10c38f8b24b239e6e8b53802d3175a4661b16f2636",
+  "size": [
+    49,
+    48
+  ],
+  "anchor": [
+    24,
+    43
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (252, 180, 1052, 962)",
+    "uniform Lanczos scale: 0.05141388174807198",
+    "transparent 4px padding; source-canvas anchor: (24, 43)"
+  ],
+  "projection": {
+    "family": "smelter",
+    "anchor": [
+      24,
+      43
+    ],
+    "height_band": [
+      38,
+      42
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1283,
+    "base_row": 43,
+    "base_error": 0,
+    "height": 40,
+    "gradient_x": -1.3211164923572005,
+    "gradient_y": -1.008517713365539,
+    "light_angle_degrees": 217.35749442684704,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/smelter_lit_try1.png",
+    "sha256": "35d3652da6f782b8255d33290679ab2016d8e53eae7e78ae2fb8cb6775bc87f6",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.20432554325543256,
+      "saturation_q25": 0.5917944010197539,
+      "saturation_q75": 0.6630498225225758,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.009478005504585092,
+      "foreground_pixels": 50352
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    9,
+    1298,
+    1199
+  ],
+  "raw_opaque_bbox": [
+    254,
+    182,
+    1050,
+    960
+  ],
+  "raw_faint_far_ratio": 0.01209671001321088,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "Codex native subagent /root/iron; independent of root smelter generation",
+    "mechanism": "vision inspection of both raw images and normalized contact sheet against locked props/scene and adopted pottery bench",
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/style05/struct/pottery_bench.png"
+    ],
+    "sheet": "/Users/rexxa/work/art-batch/A2/sheets/initial_bronze.png",
+    "pair_consistency": {
+      "passed": true,
+      "reason": "Outer silhouette, fire mouth, tuyere and three principal clay crack groups remain aligned; upper rim, hatching and proportions match. Cold-state fine wash texture differs slightly but is not visible at game scale."
+    },
+    "assets": [
+      {
+        "id": "smelter_lit",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "alpha_note": "Visual inspection: no background veil, ground island or visible fringe on the sheet; numerical alpha check remains a separate gate.",
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Raw clay wash has larger mottled patches than the small adopted pottery vessels; at game scale the quiet body and stronger crack lines hold."
+        ],
+        "suggestions": [],
+        "reasoning": "Squat clay furnace, south fire mouth and side tuyere read clearly as an early metal station. The restrained amber coals establish active state without replacing upper-left daylight."
+      },
+      {
+        "id": "copper_smelter_unlit",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "alpha_note": "Visual inspection: no background veil or halo on normalized sheet.",
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Some raw fine wash texture changes from the lit parent."
+        ],
+        "suggestions": [],
+        "reasoning": "The cold variant retains the exact furnace identity and removes the ember cue. Scale, lower-front base, ochre wash, dark fine contours and upper-left light remain consistent with the adopted set."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "copper_smelter_lit",
+  "adopted_path": "art/style05/struct/a2/bronze/copper_smelter_lit.png",
+  "review_asset_id": "smelter_lit",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/smelter_independent_review.json",
+  "review_sha256": "f79f3dc141e9e1dffb2cda44baf53e222a1f3f248b81667389d37258826e4db9"
+}

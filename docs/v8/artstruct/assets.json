@@ -645,6 +645,635 @@
       "count_buckets": [],
       "family": "buildings",
       "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 굵은 다리와 상판, 도구가 있는 목공 작업대다."
+    },
+    {
+      "id": "copper_smelter_lit",
+      "path": "art/style05/struct/a2/bronze/copper_smelter_lit.png",
+      "width": 49,
+      "height": 48,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        24,
+        43
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "copper_smelter_unlit",
+      "path": "art/style05/struct/a2/bronze/copper_smelter_unlit.png",
+      "width": 49,
+      "height": 48,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        24,
+        43
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "grape_fruiting",
+      "path": "art/style05/struct/a2/crops_orchard/grape_fruiting.png",
+      "width": 65,
+      "height": 56,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        32,
+        51
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "grape_leafy",
+      "path": "art/style05/struct/a2/crops_orchard/grape_leafy.png",
+      "width": 64,
+      "height": 56,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        32,
+        51
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "hemp_growing",
+      "path": "art/style05/struct/a2/crops_orchard/hemp_growing.png",
+      "width": 43,
+      "height": 36,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        21,
+        31
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "olive_fruiting",
+      "path": "art/style05/struct/a2/crops_orchard/olive_fruiting.png",
+      "width": 156,
+      "height": 153,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        78,
+        148
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "charcoal_clamp_idle",
+      "path": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png",
+      "width": 106,
+      "height": 64,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        53,
+        59
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "casting_bench_empty",
+      "path": "art/style05/struct/a2/bronze/casting_bench_empty.png",
+      "width": 70,
+      "height": 44,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        35,
+        39
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "bloomery_unlit",
+      "path": "art/style05/struct/a2/iron/bloomery_unlit.png",
+      "width": 49,
+      "height": 64,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        24,
+        59
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "bloomery_lit",
+      "path": "art/style05/struct/a2/iron/bloomery_lit.png",
+      "width": 51,
+      "height": 64,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        25,
+        59
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "forge_idle",
+      "path": "art/style05/struct/a2/iron/forge_idle.png",
+      "width": 76,
+      "height": 46,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        38,
+        41
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "forge_working",
+      "path": "art/style05/struct/a2/iron/forge_working.png",
+      "width": 76,
+      "height": 46,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        38,
+        41
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "pen_fence_straight",
+      "path": "art/style05/struct/a2/neolithic/pen_fence_straight.png",
+      "width": 65,
+      "height": 48,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        32,
+        43
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "pen_gate_closed",
+      "path": "art/style05/struct/a2/neolithic/pen_gate_closed.png",
+      "width": 80,
+      "height": 68,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        40,
+        63
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "smokehouse_idle",
+      "path": "art/style05/struct/a2/neolithic/smokehouse_idle.png",
+      "width": 97,
+      "height": 68,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        48,
+        63
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "well",
+      "path": "art/style05/struct/a2/neolithic/well.png",
+      "width": 64,
+      "height": 60,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        32,
+        55
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "megalith",
+      "path": "art/style05/struct/a2/neolithic/megalith.png",
+      "width": 60,
+      "height": 92,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        30,
+        87
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "bread_oven_unlit",
+      "path": "art/style05/struct/a2/neolithic/bread_oven_unlit.png",
+      "width": 47,
+      "height": 40,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        23,
+        35
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "windbreak",
+      "path": "art/style05/struct/a2/neolithic/windbreak.png",
+      "width": 96,
+      "height": 56,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        48,
+        51
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "trap_set",
+      "path": "art/style05/struct/a2/neolithic/trap_set.png",
+      "width": 41,
+      "height": 32,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        20,
+        27
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "barley_ripe",
+      "path": "art/style05/struct/a2/crops_grain/barley_ripe.png",
+      "width": 58,
+      "height": 48,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        29,
+        43
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "barley_seedling",
+      "path": "art/style05/struct/a2/crops_grain/barley_seedling.png",
+      "width": 50,
+      "height": 22,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        25,
+        17
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "barley_harvested",
+      "path": "art/style05/struct/a2/crops_grain/barley_harvested.png",
+      "width": 32,
+      "height": 18,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        16,
+        13
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "millet_ripe",
+      "path": "art/style05/struct/a2/crops_grain/millet_ripe.png",
+      "width": 74,
+      "height": 48,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        37,
+        43
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "millet_growing",
+      "path": "art/style05/struct/a2/crops_grain/millet_growing.png",
+      "width": 54,
+      "height": 36,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        27,
+        31
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "millet_seedling",
+      "path": "art/style05/struct/a2/crops_grain/millet_seedling.png",
+      "width": 54,
+      "height": 22,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        27,
+        17
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "rye_ripe",
+      "path": "art/style05/struct/a2/crops_grain/rye_ripe.png",
+      "width": 46,
+      "height": 48,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        23,
+        43
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "rye_harvested",
+      "path": "art/style05/struct/a2/crops_grain/rye_harvested.png",
+      "width": 27,
+      "height": 18,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        13,
+        13
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "rye_seedling",
+      "path": "art/style05/struct/a2/crops_grain/rye_seedling.png",
+      "width": 41,
+      "height": 22,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        20,
+        17
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "oats_ripe",
+      "path": "art/style05/struct/a2/crops_grain/oats_ripe.png",
+      "width": 51,
+      "height": 48,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        25,
+        43
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "hemp_ripe",
+      "path": "art/style05/struct/a2/crops_orchard/hemp_ripe.png",
+      "width": 51,
+      "height": 46,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        25,
+        41
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "grape_bare",
+      "path": "art/style05/struct/a2/crops_orchard/grape_bare.png",
+      "width": 58,
+      "height": 52,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        29,
+        47
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "olive_dormant",
+      "path": "art/style05/struct/a2/crops_orchard/olive_dormant.png",
+      "width": 154,
+      "height": 153,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        77,
+        148
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "hemp_seedling",
+      "path": "art/style05/struct/a2/crops_orchard/hemp_seedling.png",
+      "width": 34,
+      "height": 18,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        17,
+        13
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "grape_young",
+      "path": "art/style05/struct/a2/crops_orchard/grape_young.png",
+      "width": 40,
+      "height": 38,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        20,
+        33
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "casting_bench_working",
+      "path": "art/style05/struct/a2/bronze/casting_bench_working.png",
+      "width": 69,
+      "height": 44,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        34,
+        39
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
+    },
+    {
+      "id": "bee_skep_active",
+      "path": "art/style05/struct/a2/bronze/bee_skep_active.png",
+      "width": 39,
+      "height": 38,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        19,
+        33
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "A2_ADOPTED_CANDIDATE_NOT_IMPORTED"
     }
   ]
 }

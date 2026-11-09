@@ -1,0 +1,276 @@
+{
+  "record": {
+    "id": "bloomery_lit",
+    "lane": "iron",
+    "era": "iron",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-a06d-74a0-9a1b-4625cbcc6757/exec-51743328-ca2b-4626-a396-4d016806f9ab.png",
+    "prompt": "Use case: stylized-concept. A single isolated WorldSim style05 iron-age game asset, hand-inked natural-history plate with restrained earth tone washes. REFERENCES: props.png/hut.png and scene.png control ink medium, materials, palette and upper-left daylight; route_i_sheet_1x.png and adopted struct reference control low standing camera and game scale only. Ground plane is orthogonal plan geometry; all standing elements FRONT THREE-QUARTER, approximately20 degrees down, substantial visible front, shallow compressed top; never isometric diamond. Upper-left light clearly brightens top/left; right/lower faces have a distinct darker quiet wash. Warm sepia-charcoal outer ink contour; internal marks exactly half contour weight (2:1). Wood:3 broken longitudinal marks per main timber. Stone:3 crack/facet groups per dominant stone. Clay:3 short crack groups per major clay surface. A single group of3 fine parallel / hatch marks on a shadow plane; broad quiet wash, no dense all-over hatching or speckled phototexture. ROOFS OMITTED entirely, interiors visible. Produce a large source that reduces cleanly to64px world tiles and a56px adult. No people, labels, lettering, UI, border, checkerboard, scenery, floating ground island, shadow puddle, haze, glow or halo. Entire asset inside frame with generous truly alpha-zero transparent margins, true RGBA. No photorealism,3D render, pixel art, modern object or classical/medieval ornament.\nSUBJECT: One early iron bloomery, a tall narrow rough red-ochre clay shaft with dark open top, small arched extraction opening facing viewer and clay tuyere at right. Several stone footings. Glowing amber charcoal only deep in lower opening; small orange point in top, no smoke plume, no external glow. Height56px width<=52px final.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/character/boards/route_i_sheet_1x.png",
+      "art/style05/struct/pottery_bench.png"
+    ],
+    "target_height": 56,
+    "projection_family": "bloomery",
+    "height_band": [
+      54,
+      58
+    ],
+    "height_band_reason": "New bloomery family; target 56px whole silhouette for 1x1 64px tiles, 56px adult scale; houses include visible floor depth and 60px walls.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:05:31.886Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/iron/raw/bloomery_lit_try1.png",
+  "raw_sha256": "473d9be52f961323a383452b7826f88fac5f5ae043220bd9f6f89ab8fc1d5f24",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/struct/pottery_bench.png",
+      "sha256": "f659408c033155440b52e3af771f3f825c7860127971bd9848d912ca26af51c5"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/iron/normalized/bloomery_lit_try1.png",
+  "normalized_sha256": "b955eaeadeb13682ed319944d84a63ff8cb991565595dfcd36b20092dd78cfee",
+  "size": [
+    51,
+    64
+  ],
+  "anchor": [
+    25,
+    59
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (284, 168, 945, 1035)",
+    "uniform Lanczos scale: 0.06488991888760139",
+    "transparent 4px padding; source-canvas anchor: (25, 59)"
+  ],
+  "projection": {
+    "family": "bloomery",
+    "anchor": [
+      25,
+      59
+    ],
+    "height_band": [
+      54,
+      58
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1656,
+    "base_row": 59,
+    "base_error": 0,
+    "height": 56,
+    "gradient_x": -1.617434504391468,
+    "gradient_y": -0.877024906600249,
+    "light_angle_degrees": 208.46797049477695,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/iron/raw/bloomery_lit_try1.png",
+    "sha256": "473d9be52f961323a383452b7826f88fac5f5ae043220bd9f6f89ab8fc1d5f24",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.19872065656870436,
+      "saturation_q25": 0.5503494277477385,
+      "saturation_q75": 0.6801610004327737,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.0149754888942638,
+      "foreground_pixels": 34702
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    8,
+    1253,
+    1245
+  ],
+  "raw_opaque_bbox": [
+    286,
+    170,
+    943,
+    1033
+  ],
+  "raw_faint_far_ratio": 0.030765289264113628,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "/root/crops_orchard native agent; independent of iron image generation",
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/style05/struct/pottery_bench.png",
+      "art/style05/struct/hearth_1.png",
+      "/Users/rexxa/work/art-batch/A2/sheets/review_iron_early.png"
+    ],
+    "method": "Viewed all six raw images plus game-scale comparison sheet; scores are visual judgments, not owner approval or numeric replacement.",
+    "assets": [
+      {
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "category_match": true,
+        "id": "bloomery_unlit",
+        "score": 94,
+        "verdict": "pass",
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Tall clay shaft, tuyere and cold charcoal read clearly; fine ink, restrained clay wash and upper-left light fit the existing structures."
+      },
+      {
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "category_match": true,
+        "id": "bloomery_lit",
+        "score": 91,
+        "verdict": "pass",
+        "differences": [
+          "Rim and base rocks vary slightly from the unlit state."
+        ],
+        "suggestions": [
+          "When used as a state pair, inspect transition for small silhouette motion; keep same anchor and footprint."
+        ],
+        "reasoning": "Glowing charge clearly differentiates the active bloomery while keeping its main shaft/tuyere design and common ink/wash style."
+      },
+      {
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "category_match": true,
+        "id": "forge_idle",
+        "score": 94,
+        "verdict": "pass",
+        "differences": [],
+        "suggestions": [],
+        "reasoning": "Stone hearth, hide bellows, small anvil and tool bench form a readable iron-age forge with clean cutout and coherent shallow view."
+      },
+      {
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "category_match": true,
+        "id": "forge_working",
+        "score": 92,
+        "verdict": "pass",
+        "differences": [
+          "Working embers are subtle at the smallest game-scale thumbnail."
+        ],
+        "suggestions": [
+          "Confirm active-state visibility in the eventual in-game view."
+        ],
+        "reasoning": "Idle/working composition is closely preserved; warm fuel and bloom are legible in the enlarged comparison and stay within the style."
+      },
+      {
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "category_match": true,
+        "id": "stone_house",
+        "score": 87,
+        "verdict": "revise",
+        "differences": [
+          "Side walls converge strongly toward the rear, so floor footprint is a perspective trapezoid rather than a grid-aligned top-down rectangle.",
+          "Interior is viewed substantially more from above than the standing workstations."
+        ],
+        "suggestions": [
+          "Regenerate roofless stone ring with parallel grid-aligned wall runs and a straight top-down rectangular floor; keep south entrance and visible contents, with only wall front-face height cheat."
+        ],
+        "reasoning": "Roofless home semantics, materials and palette are good, but the footprint/camera cannot align cleanly with STRUCT floor geometry."
+      },
+      {
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "category_match": true,
+        "id": "warehouse_empty",
+        "score": 88,
+        "verdict": "revise",
+        "differences": [
+          "Side walls narrow toward rear and the floor is a perspective trapezoid, unlike the grid-aligned plan geometry."
+        ],
+        "suggestions": [
+          "Regenerate same empty shelves and south gate within parallel rectangular wall runs over a straight top-down floor; retain front wall face height without perspective convergence."
+        ],
+        "reasoning": "Empty store and materials read correctly, but the whole-building perspective needs correction for the one-projection grid contract."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "bloomery_lit",
+  "adopted_path": "art/style05/struct/a2/iron/bloomery_lit.png",
+  "review_asset_id": "bloomery_lit",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/iron_early_independent_review.json",
+  "review_sha256": "f9edfa3ae74dad7db7d1a94ee3b0c4a77fd7a178ea546f037a72f57084a4ff85"
+}

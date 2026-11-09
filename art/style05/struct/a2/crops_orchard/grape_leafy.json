@@ -1,0 +1,261 @@
+{
+  "record": {
+    "id": "grape_leafy",
+    "lane": "crops_orchard",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-121e6f9c-6fbb-4312-b19b-1ad0e553fc7f.png",
+    "prompt": "Use case: stylized-concept. ONE isolated WorldSim style05 game crop sprite on genuine transparent alpha. References ground and scene are ONLY ink/earth-wash/lighting anchors, berry bush controls quiet game-scale line/wash, Route I controls the standing front THREE-QUARTER camera about 20 degrees down (not overhead). Fine controlled warm dark-brown ink contours, outer-to-secondary weight 2:1, broad restrained sage/olive green wash, clear darker lower/right shadow wash, bright upper-left daylight. Selective detail only: 3 leaf-vein accents per foliage clump and one group of 3 parallel / shadow hatches, no dense crosshatching, no photoreal/3D/pixel art. Strong botanical silhouette readable at 64px world tile. ENTIRE plant(s) centered with generous transparent margin; all spaces alpha-zero; no soil island, ground patch, cast shadow puddle, pot, backdrop, labels, text, border, haze or halo. No modern or metal fittings. Large source for uniform downsample. SUBJECT: Create the leafy pre-fruiting state of the last reference grape vine. Preserve exactly its twisted trunk, TWO stakes, ONE rope, composition, leaf shapes and camera. Remove ALL grape fruit clusters; replace only their attachment points with small leaves. Full healthy sage/olive foliage, not autumn. Keep48px high <=56px wide at game scale, no text.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png",
+      "art/flora/sprites/berry_bush_full.png",
+      "art/character/boards/route_i_sheet_1x.png",
+      "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-6d94a64f-1be8-4bad-a784-b5f943d160e5.png"
+    ],
+    "target_height": 48,
+    "projection_family": "crop",
+    "height_band": [
+      46,
+      50
+    ],
+    "height_band_reason": "Predeclared 48px vine seasonal state relative to adult56px.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "plants",
+    "generation_id": "exec-121e6f9c-6fbb-4312-b19b-1ad0e553fc7f",
+    "seed": null,
+    "generated_at": "2026-11-09T23:07:36.090Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/crops_orchard/raw/grape_leafy_try1.png",
+  "raw_sha256": "d07f9ec54e16ab96b85edf1236bf1b45b7a6aedb81eacfd3d2739dd21323fb38",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/flora/sprites/berry_bush_full.png",
+      "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    },
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-6d94a64f-1be8-4bad-a784-b5f943d160e5.png",
+      "sha256": "0272a9070090524965f364737a11a5f93b71e7f661e37750d11488d862fc0401"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/crops_orchard/normalized/grape_leafy_try1.png",
+  "normalized_sha256": "1aa2ec6d22eb90dd588a09fb9a0edd5398564395dfbcddc085f5768d88a4787b",
+  "size": [
+    64,
+    56
+  ],
+  "anchor": [
+    32,
+    51
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (178, 174, 1141, 1010)",
+    "uniform Lanczos scale: 0.057692307692307696",
+    "transparent 4px padding; source-canvas anchor: (32, 51)"
+  ],
+  "projection": {
+    "family": "crop",
+    "anchor": [
+      32,
+      51
+    ],
+    "height_band": [
+      46,
+      50
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 1315,
+    "base_row": 51,
+    "base_error": 0,
+    "height": 48,
+    "gradient_x": -3.9967508140531267,
+    "gradient_y": -2.6948108527131778,
+    "light_angle_degrees": 213.98983442511923,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/crops_orchard/raw/grape_leafy_try1.png",
+    "sha256": "d07f9ec54e16ab96b85edf1236bf1b45b7a6aedb81eacfd3d2739dd21323fb38",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.20769264660527822,
+      "saturation_q25": 0.6072388522450041,
+      "saturation_q75": 0.6939337397474863,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 5.656854249492381,
+      "wash_flatness": 0.03732049462486603,
+      "foreground_pixels": 27640
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    8,
+    1298,
+    1179
+  ],
+  "raw_opaque_bbox": [
+    180,
+    176,
+    1139,
+    1008
+  ],
+  "raw_faint_far_ratio": 0.0038972841887574597,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "independent neolithic production agent; no authorship of orchard candidates",
+    "mechanism": "Vision reading of raw source images and 1x/2x comparison sheet; not external image-model scorecard",
+    "references": [
+      "art/style05/anchors/scene.png",
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/ground.png",
+      "art/flora/sprites/oak_small_v1.png",
+      "art/flora/sprites/berry_bush_full.png"
+    ],
+    "sheet": "/Users/rexxa/work/art-batch/A2/sheets/initial_orchard.png",
+    "assets": [
+      {
+        "id": "grape_fruiting",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Leaves are more simplified and outer ink stronger than the scene anchor; scale reduction keeps them compatible."
+        ],
+        "suggestions": [],
+        "reasoning": "The woody trained vine, lobed leaves, rope stakes and three dark grape bunches remain identifiable on the game-scale sheet. Upper-left light and muted wash fit the adopted props."
+      },
+      {
+        "id": "grape_leafy",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "The broad foliage reads slightly yellower than adopted oak, appropriate to the separate species but should be compared on terrain during import."
+        ],
+        "suggestions": [],
+        "reasoning": "The support and trunk match the fruiting state and the absence of fruit is clear. Controlled earth washes and transparent vine gaps preserve the family style."
+      },
+      {
+        "id": "hemp_growing",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 90,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Fine leaflets lose individual detail at1x, although the five upright plants retain their distinctive palmate crown."
+        ],
+        "suggestions": [],
+        "reasoning": "Palmate narrow serrated foliage distinguishes the upright crop and the unseeded state. Wash, fine contour and muted green remain consistent with vegetation references."
+      },
+      {
+        "id": "hemp_ripe",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "semantic_correct": false,
+        "alpha_clean": true,
+        "score": 84,
+        "verdict": "revise",
+        "category_match": true,
+        "differences": [
+          "The ripe heads use conspicuous oversized pale oval grains hanging separately like cereal or legume grains, which weakens the hemp identity."
+        ],
+        "suggestions": [
+          "Preserve the stems and palmate foliage, replace dangling pale grains with small compact muted-brown seed clusters integrated among the upper narrow leaves; avoid exposed giant seeds."
+        ],
+        "reasoning": "The crop wash and light are compatible, but its oversized dangling grains are not a convincing hemp seed head. The mature state needs a botanical correction before adoption."
+      },
+      {
+        "id": "olive_fruiting",
+        "attempt": 1,
+        "medium": 5,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 94,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "The olive crown is more open than the existing oak reference, a useful species distinction."
+        ],
+        "suggestions": [],
+        "reasoning": "Narrow paired leaves, gnarled trunk and sparse dark fruit make a convincing olive tree. The cutout and earthy low-contrast wash sit naturally beside the adopted flora."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "grape_leafy",
+  "adopted_path": "art/style05/struct/a2/crops_orchard/grape_leafy.png",
+  "review_asset_id": "grape_leafy",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/orchard_early_independent_review.json",
+  "review_sha256": "b6ced2fc86f78b82a2b851c2e9b1145626fed51a33fd03ae3ceab3debe5c4842"
+}

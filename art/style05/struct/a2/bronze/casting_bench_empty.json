@@ -1,0 +1,213 @@
+{
+  "record": {
+    "id": "casting_bench_empty",
+    "lane": "bronze",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-77a33cd6-399d-4d7d-842c-f8ee1deba396.png",
+    "prompt": "Use case: stylized-concept. WorldSim style05 ink-and-tone BRONZE AGE game sprite. Fine controlled sepia/brown-black pen line over quiet restrained earth-colour wash. Outer contour weight twice secondary line (2:1). One broad light tone on upper-left faces, one darker lower/right shadow tone, subtle local pigment variation only. Three short crack groups per dominant stone/clay body, three broken grain lines per main plank/pole, five curved weave bands per straw surface. One small group of three parallel / hatch marks only where needed. Sparse surface marks; NO all-over hatching, stippling, granular texture or speckled wash. Upper-left daylight. Standing front three-quarter about20degrees down, substantial front face, shallow compressed top; grid-aligned square geometry, never isometric diamond. Adult56px for scale. One isolated object only, full silhouette and generous perfectly transparent margins. Outside object every pixel ALPHA ZERO, no shadow, glow, aura, haze, colored veil, ground patch, blur or backdrop; inside transparent gaps also alpha zero. No labels/text/frames/people/modern fittings/iron. No 3D rendering or pixel art. SUBJECT: one rough timber casting table on four squat legs, shallow top with one empty split clay axe mould and small cold clay crucible, bare work area, no metal fittings. References1 props and2 scene anchor the medium and light ONLY, not camera or scenery; reference3 RouteI fixes low front3/4 camera. Opaque silhouette height36px at1x within 2x1 64px tiles; produce large source for uniform downsampling. ",
+    "subject": "one rough timber casting table on four squat legs, shallow top with one empty split clay axe mould and small cold clay crucible, bare work area, no metal fittings",
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/character/boards/route_i_sheet_1x.png"
+    ],
+    "target_height": 36,
+    "projection_family": "workbench",
+    "height_band": null,
+    "height_band_reason": null,
+    "footprint": [
+      2.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:08:03.353Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_empty_try1.png",
+  "raw_sha256": "b4a41c1a1f819f8d5c9f1b3773cce1522761511a10423efa750a5910eed46319",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/normalized/casting_bench_empty_try1.png",
+  "normalized_sha256": "21b6d3c83c4b04a99a256a3f65d5737f18c778a9146a83a0fa0a8b2006593fd8",
+  "size": [
+    70,
+    44
+  ],
+  "anchor": [
+    35,
+    39
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (357, 137, 1412, 757)",
+    "uniform Lanczos scale: 0.05844155844155844",
+    "transparent 4px padding; source-canvas anchor: (35, 39)"
+  ],
+  "projection": {
+    "family": "workbench",
+    "anchor": [
+      35,
+      39
+    ],
+    "height_band": [
+      30,
+      40
+    ],
+    "height_band_override": false,
+    "opaque_pixels": 1455,
+    "base_row": 39,
+    "base_error": 0,
+    "height": 36,
+    "gradient_x": -1.2891726105563481,
+    "gradient_y": -1.1528687769784172,
+    "light_angle_degrees": 221.8053205054735,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/casting_bench_empty_try1.png",
+    "sha256": "b4a41c1a1f819f8d5c9f1b3773cce1522761511a10423efa750a5910eed46319",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.24343430015851936,
+      "saturation_q25": 0.49181117454519313,
+      "saturation_q75": 0.563772941202815,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 5.656854249492381,
+      "wash_flatness": 0.009614046734503792,
+      "foreground_pixels": 25030
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    31,
+    0,
+    1750,
+    887
+  ],
+  "raw_opaque_bbox": [
+    359,
+    139,
+    1410,
+    755
+  ],
+  "raw_faint_far_ratio": 0.005694075957733937,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "independent native crops_grain agent; no generation involvement",
+    "mechanism": "visual inspection of exact raw PNGs, normalized1x PNGs and review_bronze_early2x sheet against locked props/scene and existing STRUCT",
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/style05/struct/pottery_bench.png",
+      "art/style05/struct/woodworking_bench.png",
+      "art/style05/struct/hearth_unlit.png"
+    ],
+    "assets": [
+      {
+        "id": "charcoal_clamp_idle",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Raw contours slightly simpler than original props, remaining consistent after game-scale export."
+        ],
+        "suggestions": [],
+        "reasoning": "Broad earthen clamp with front log ends and top vent reads distinctly, with clean alpha and left-lit restrained earth tones."
+      },
+      {
+        "id": "casting_bench_empty",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Table is more symmetrical and its top more visible than woodworking_bench; still within the adopted prop front-three-quarter convention."
+        ],
+        "suggestions": [],
+        "reasoning": "Wood lashings, two-part mould and crucible identify a casting station; ink, tone and scale sit coherently beside pottery and woodworking benches."
+      },
+      {
+        "id": "bee_skep_active",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": false,
+        "alpha_clean": true,
+        "score": 87,
+        "verdict": "revise",
+        "category_match": true,
+        "differences": [
+          "Three prominent branched clay-like crack groups cross woven straw coils. Straw should use curved bundle marks and longitudinal strands; the cracks imply a ceramic hive.",
+          "The large bee is a readable active indicator but exaggerated relative to the hive."
+        ],
+        "suggestions": [
+          "Regenerate or precisely edit only the straw surface: remove all branched crack motifs and preserve five curved bundle marks, entrance, silhouette, base and palette.",
+          "Keep bee as small accent at entrance."
+        ],
+        "reasoning": "It reads as a skep at1x and has clean alpha, but the raw material language violates the family straw rule and mixes clay texture into woven fibre."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "casting_bench_empty",
+  "adopted_path": "art/style05/struct/a2/bronze/casting_bench_empty.png",
+  "review_asset_id": "casting_bench_empty",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_early_independent_review.json",
+  "review_sha256": "d193c8fac28581d55ae2a93658d0186f98120c8596d6c444328450dcab922689"
+}

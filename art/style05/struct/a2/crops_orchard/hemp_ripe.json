@@ -1,0 +1,262 @@
+{
+  "record": {
+    "id": "hemp_ripe",
+    "lane": "crops_orchard",
+    "era": "bronze",
+    "attempt": 2,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-0cc2a7a6-9ffe-4348-b090-e0c1aea8ed87.png",
+    "prompt": "Use case: stylized-concept. ONE isolated WorldSim style05 game crop sprite on genuine transparent alpha. References ground and scene are ONLY ink/earth-wash/lighting anchors, berry bush controls quiet game-scale line/wash, Route I controls the standing front THREE-QUARTER camera about 20 degrees down (not overhead). Fine controlled warm dark-brown ink contours, outer-to-secondary weight 2:1, broad restrained sage/olive green wash, clear darker lower/right shadow wash, bright upper-left daylight. Selective detail only: 3 leaf-vein accents per foliage clump and one group of 3 parallel / shadow hatches, no dense crosshatching, no photoreal/3D/pixel art. Strong botanical silhouette readable at 64px world tile. ENTIRE plant(s) centered with generous transparent margin; all spaces alpha-zero; no soil island, ground patch, cast shadow puddle, pot, backdrop, labels, text, border, haze or halo. No modern or metal fittings. Large source for uniform downsample. SUBJECT: EDIT the last hemp-reference image. Keep its exact five-stem layout, palmate serrated leaves, stem thickness and 38px game height. Replace ONLY the oversized pale dangling oval seed heads with compact muted olive-brown hemp seed/flower clusters hugging the upper stalks, many tiny unobtrusive bracts, no cereal ears or hanging large beans. All foliage and camera retained. Warm dark fine ink and muted wash. TRANSPARENCY CRITICAL: outside the actual plant, stakes and rope, every pixel must have ALPHA ZERO. No colored haze, aura, glow, diffuse wash, backdrop, ground or soft shadow anywhere. The watercolor texture exists only INSIDE opaque plant surfaces. No outer blur. Clean cutout with a fine antialias edge only.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png",
+      "art/flora/sprites/berry_bush_full.png",
+      "art/character/boards/route_i_sheet_1x.png",
+      "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-e9b1849a-1369-4ebf-b57d-c7ab82dfb20c.png"
+    ],
+    "target_height": 38,
+    "projection_family": "crop",
+    "height_band": [
+      36,
+      40
+    ],
+    "height_band_reason": "Predeclared 38px crop silhouette, versus adult56px; narrow crop footprint and growth stage, not mature tree.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "plants",
+    "generation_id": "exec-0cc2a7a6-9ffe-4348-b090-e0c1aea8ed87",
+    "seed": null,
+    "generated_at": "2026-11-09T23:13:18.193Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/crops_orchard/raw/hemp_ripe_try2.png",
+  "raw_sha256": "35086da8d4e45ff56470a2a34b9b1635669a93c5c68093c247120ca30d5621f6",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/flora/sprites/berry_bush_full.png",
+      "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    },
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-e9b1849a-1369-4ebf-b57d-c7ab82dfb20c.png",
+      "sha256": "decefa83f043c3e8107b8ffcb389faa6da69dd687a8e2971f208450cbf0c9adb"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/crops_orchard/normalized/hemp_ripe_try2.png",
+  "normalized_sha256": "250d73ffbabb5fcceb3c9cb97020f669b5015598cb6afd71d8f1fa2327da9012",
+  "size": [
+    51,
+    46
+  ],
+  "anchor": [
+    25,
+    41
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (179, 175, 1128, 1022)",
+    "uniform Lanczos scale: 0.045077105575326216",
+    "transparent 4px padding; source-canvas anchor: (25, 41)"
+  ],
+  "projection": {
+    "family": "crop",
+    "anchor": [
+      25,
+      41
+    ],
+    "height_band": [
+      36,
+      40
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 706,
+    "base_row": 41,
+    "base_error": 0,
+    "height": 37,
+    "gradient_x": -3.679173818181818,
+    "gradient_y": -1.4540170212765957,
+    "light_angle_degrees": 201.56403319472057,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/crops_orchard/raw/hemp_ripe_try2.png",
+    "sha256": "35086da8d4e45ff56470a2a34b9b1635669a93c5c68093c247120ca30d5621f6",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.209764170459247,
+      "saturation_q25": 0.5634593000156116,
+      "saturation_q75": 0.6344445360858664,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.03521237060271748,
+      "foreground_pixels": 25076
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    105,
+    50,
+    1256,
+    1199
+  ],
+  "raw_opaque_bbox": [
+    181,
+    177,
+    1126,
+    1020
+  ],
+  "raw_faint_far_ratio": 0.0012677508774917455,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "neolithic independent visual review",
+    "method": "Visually inspected actual raw RGBA composites and normalized 1x exports; compared with previously viewed locked props/scene/ground and adopted oak/bush references. This is a human-style model visual scorecard, not the missing external judge API.",
+    "sheet": "/Users/rexxa/work/art-batch/A2/checks/orchard_followup_alpha_sheet.png",
+    "assets": [
+      {
+        "id": "hemp_ripe",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "reasoning": "Compact terminal seed clusters replace the oversize dangling grains. Palmate narrow serrated leaf groups and upright clustered stalks now read as hemp; at game size pale seedhead tips separate from growing state.",
+        "differences": [
+          "Corrected seedheads are subtle at 1x but visible as small warm tips."
+        ],
+        "suggestions": [
+          "Keep these compact heads for harvested-state continuity."
+        ],
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true
+      },
+      {
+        "id": "grape_bare",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 90,
+        "reasoning": "Bare twisting woody vine with curling tendrils and restrained two-post support reads as the dormant counterpart. Smooth wash is at the clean end of anchor range but retains restrained ink and warm material shading.",
+        "differences": [
+          "Vine wash is smoother and outline more regular than tree anchors."
+        ],
+        "suggestions": [
+          "Retain geometry when generating damaged or pruned variants."
+        ],
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true
+      },
+      {
+        "id": "olive_dormant",
+        "attempt": 1,
+        "medium": 5,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "score": 94,
+        "reasoning": "Narrow gray olive leaves and gnarled evergreen trunk preserve credible olive identity without fruit. Muted gray-green canopy and ochre-brown bark fit scene and adopted foliage at full and game scale.",
+        "differences": [
+          "Dense branch detail is more legible at enlarged view than at 1x."
+        ],
+        "suggestions": [
+          "Suitable non-fruiting evergreen state; do not remove leaves to imply winter."
+        ],
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true
+      },
+      {
+        "id": "hemp_seedling",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 90,
+        "reasoning": "Small grouped sprouts show paired cotyledons and emerging serrated leaves. Deliberately low stage scale is readable as a planting cluster; actual alpha gaps stay clean.",
+        "differences": [
+          "At 1x species recognition is primarily carried by stage continuity, as expected for a small seedling."
+        ],
+        "suggestions": [
+          "Use grouped spacing consistently with mature patch placement."
+        ],
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true
+      },
+      {
+        "id": "grape_young",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 91,
+        "reasoning": "Young thin vine with only a few lobed leaves and unchanged simple post support reads as early growth. Warm woody stem and quiet yellow-green wash fit the locked palette.",
+        "differences": [
+          "Leaf yellow is toward warm end of locked foliage palette."
+        ],
+        "suggestions": [
+          "Retain this limited leaf count for early state distinction."
+        ],
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "hemp_ripe",
+  "adopted_path": "art/style05/struct/a2/crops_orchard/hemp_ripe.png",
+  "review_asset_id": "hemp_ripe",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/orchard_followup_independent_review.json",
+  "review_sha256": "4567fdc07236c6b335a461797bc2f7e480476a8a1c81aab47371a35769b29297"
+}

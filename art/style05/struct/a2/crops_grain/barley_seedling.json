@@ -1,0 +1,352 @@
+{
+  "record": {
+    "id": "barley_seedling",
+    "lane": "crops_grain",
+    "era": "neolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-d21bcbf0-4276-4287-953d-001e4cfd8290.png",
+    "prompt": "Use case: stylized-concept. One isolated transparent PNG game sprite.  BARLEY, newly emerged seedlings, seven very small fresh muted sage-green tufts, two or three leaves each, no grain/flowers. Botanical identity: dense nodding golden heads with very long straight fine awns like whiskers, arching narrow leaves. Silhouette is broad and very low, target 14px tall, group width44px. Keep ALL spaces between the actual plants perfectly alpha zero. ZERO paint outside the physical leaves, stems and seed heads. The entire background is transparent. WorldSim illustrated ink-and-tone: match attached ground and scene references for fine brown-black outlines, restrained natural olive and straw pigments and upper-left light; do not copy their ground. Match reeds reference at final size. Standing front three-quarter at20 degrees down. Outer contour twice secondary stroke width; three short vein marks per leaf clump, sparse detail. Bright upper-left leaves, darker lower-right leaves. No ground, shadows, border, text or scenery. Full plants centered with ample clear margins. Compact field group in two shallow staggered rows, max52px width in64px tile; adult56px. Need all upper and lower plant tips stout enough to survive downscale; avoid long single-pixel outliers. Broad calm pigment planes, not airbrush gradients or cloudy wash. Final image is the SAME barley planting layout as reference5, changed only to the requested growth stage. Reference5 fixes crop identity and palette; remove ripe heads for seedling/growing/harvested stages.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png",
+      "art/style05/env/plants/reeds.png",
+      "art/character/boards/route_i_sheet_1x.png",
+      "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-2d71b8c1-dbc9-4649-9245-dfcb81ab26a4.png"
+    ],
+    "target_height": 14,
+    "projection_family": "crop",
+    "height_band": [
+      12,
+      16
+    ],
+    "height_band_reason": "New crop stage seedling: 14px target versus adult56px; field group fits one64px tile.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "plants",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:09:24.672Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/crops_grain/raw/barley_seedling_try1.png",
+  "raw_sha256": "dd5cbb37899f9cfdb44311423b57e7a844485365721e76f7b5dfff5dc64d6570",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/env/plants/reeds.png",
+      "sha256": "668fdecce7ea230daa037f988b7d6b9aa1fc0b78f725986b9ea6c173420fd0b1"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    },
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-38ba-7743-8979-74a9c0a62993/exec-2d71b8c1-dbc9-4649-9245-dfcb81ab26a4.png",
+      "sha256": "311de58b8d183ab6e1a60cfc6f8f249512d6ce7ab720a08ac5b27fe47b0ed022"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/crops_grain/normalized/barley_seedling_try1.png",
+  "normalized_sha256": "8c16139c3170104daded1342058bb0ba93b02b194ada0bff8dc0951e33c7d1a9",
+  "size": [
+    50,
+    22
+  ],
+  "anchor": [
+    25,
+    17
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (311, 363, 1220, 669)",
+    "uniform Lanczos scale: 0.046357615894039736",
+    "transparent 4px padding; source-canvas anchor: (25, 17)"
+  ],
+  "projection": {
+    "family": "crop",
+    "anchor": [
+      25,
+      17
+    ],
+    "height_band": [
+      12,
+      16
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 300,
+    "base_row": 17,
+    "base_error": 0,
+    "height": 14,
+    "gradient_x": -1.3794066115702477,
+    "gradient_y": -3.2148142857142856,
+    "light_angle_degrees": 246.7768854271739,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/crops_grain/raw/barley_seedling_try1.png",
+    "sha256": "dd5cbb37899f9cfdb44311423b57e7a844485365721e76f7b5dfff5dc64d6570",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.2054932594179161,
+      "saturation_q25": 0.5408707668919464,
+      "saturation_q75": 0.5823369715107402,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.026567484355574985,
+      "foreground_pixels": 10946
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    209,
+    23,
+    1332,
+    982
+  ],
+  "raw_opaque_bbox": [
+    313,
+    365,
+    1218,
+    667
+  ],
+  "raw_faint_far_ratio": 0.0035209451093685513,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "root independent of generating agent",
+    "method": "Native model visual inspection of actual raw RGBA on dark composite, fixed uniform2x export sheet beside adult and adopted structure references; raw style compared with locked props/scene. Numeric readiness remains a separate requirement. Review sheets may resize raw only for layout; source files unchanged.",
+    "sheet": "/Users/rexxa/work/art-batch/A2/checks/crops_grain_raw_review.png",
+    "assets": [
+      {
+        "id": "barley_ripe",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 91,
+        "reasoning": "Golden drooping awned spikes distinguish ripe barley; broken contours and muted sage leaves remain readable at game scale.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "311de58b8d183ab6e1a60cfc6f8f249512d6ce7ab720a08ac5b27fe47b0ed022",
+        "normalized_sha256": "6500bfc9e16dfc94a07c97d20a896bede2c117886a37c79cc59f43efc99fbf32",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "barley_seedling",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 90,
+        "reasoning": "Low clustered blade shoots form a clear young stage. Species is carried by progression rather than invented seedling detail; small scale fits one planting tile.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "dd5cbb37899f9cfdb44311423b57e7a844485365721e76f7b5dfff5dc64d6570",
+        "normalized_sha256": "8c16139c3170104daded1342058bb0ba93b02b194ada0bff8dc0951e33c7d1a9",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "barley_harvested",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 90,
+        "reasoning": "Low cut golden stems and residual leaves read as harvested barley, retaining clustered planting rhythm and clean alpha gaps.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "23857cf2980ba436a0d87d45a0d86f03549690d608491992a3285efbf117113e",
+        "normalized_sha256": "bbcd3615cebc9d13d54fcbfb163617f89dcc48d7adcbb803c1b4b348fc13d17b",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "millet_ripe",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "reasoning": "Many small nodding grains on spreading panicles separate millet from tight rye spikes; golden seed wash and broad green blades remain restrained.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "756e385df80f3306742d177cefc7fcc17cbdd7e352805476fd34e6c78240f00e",
+        "normalized_sha256": "65537cd635f8be9cb57a4f9389ed7b1ca336046a114ad7cf8095c4349fd3daaa",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "millet_growing",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 91,
+        "reasoning": "Broad unseeded blade clumps form an intermediate stage below ripe canopy height. Warm green quiet wash and clean silhouettes match the set.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "c0d6febd663c758dc025bc9861cbfb9ef31b15637f5d651afe792676412dd880",
+        "normalized_sha256": "d62d1c1ad793717e70f598add37d978c4bc301c9ed188707221ff31385de9fa9",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "millet_seedling",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 90,
+        "reasoning": "Sparse low broad shoots read as new growth. Their silhouette is necessarily similar to young grain, but scale and later panicle stages preserve clear progression.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "54af33fea4aec8a74882d71bf98f3d5b9e7f52446907709c7c662551704cf6fe",
+        "normalized_sha256": "da0c76e8d800c187dcc2ed78872dabc6fb6fa22bdaf88f5bfd7454bb7c12636e",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "rye_ripe",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "reasoning": "Tall narrow upright seed spikes clearly differ from barley and oats. Controlled golden highlights preserve the restrained crop palette.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "41c08314ad5d07fc24bae3c90e13421f7a52eb48bcd0305a7ed9bf19ab570b61",
+        "normalized_sha256": "0848a140d11c8bb923801718f5b35a6fbd4b5344c9e49a266c5b03da4a4b4995",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "rye_harvested",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 90,
+        "reasoning": "Short cut stems and sparse leaves retain harvest-state readability at1x; clean gaps and small residue avoid an oversized hay pile.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "41fcc71b0b34926057a0341710723e40f0e99fc6e3653e0da833a567ea56ff1f",
+        "normalized_sha256": "0e0bc979c2ea05e7fc034acea058bb7d753e41e9f1f53d00a81dca72202499b6",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "rye_seedling",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 90,
+        "reasoning": "Slender upright narrow leaves create a distinct early rye cluster. Pale muted green tone is coherent with the mature stage.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "9bbd37739c1bc1251811e22cc86e83f1b01ea16a5d005d0b019bf5022120eb09",
+        "normalized_sha256": "069a955114328eac13fb397745e972e1076f605249753cbefea7cea1c675e69e",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "oats_ripe",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 93,
+        "reasoning": "Loose branched drooping spikelets establish oats rather than compact wheat. Warm seedheads and subdued leaves remain separate and legible at2x.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "8690f3c94061c69532c4cc8ad492bc7a9d4601a9b8f5a15909550166713e9d51",
+        "normalized_sha256": "260c54bbd4b1b64a0697967e7d6afcf935c3df0c2b1b23c4cb7173af68809512",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "barley_seedling",
+  "adopted_path": "art/style05/struct/a2/crops_grain/barley_seedling.png",
+  "review_asset_id": "barley_seedling",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/crops_grain_root_independent_review.json",
+  "review_sha256": "8da55b0c463a5f987c40298e9a6581dab76d2de80118cc141d4c65c85abdbfcb"
+}

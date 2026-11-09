@@ -1,0 +1,224 @@
+{
+  "record": {
+    "id": "charcoal_clamp_idle",
+    "lane": "bronze",
+    "era": "bronze",
+    "attempt": 3,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c290-f6fe-7e03-a8f0-4c49ecdc4053/exec-a5a3f00b-e178-465e-b997-a9d6f1ed132e.png",
+    "prompt": "Use case: stylized-concept. WorldSim style05 ink-and-tone BRONZE AGE game sprite. Fine controlled sepia/brown-black pen line over quiet restrained earth-colour wash. Outer contour weight twice secondary line (2:1). One broad light tone on upper-left faces, one darker lower/right shadow tone, subtle local pigment variation only. Three short crack groups per dominant stone/clay body, three broken grain lines per main plank/pole, five curved weave bands per straw surface. One small group of three parallel / hatch marks only where needed. Sparse surface marks; NO all-over hatching, stippling, granular texture or speckled wash. Upper-left daylight. Standing front three-quarter about20degrees down, substantial front face, shallow compressed top; grid-aligned square geometry, never isometric diamond. Adult56px for scale. One isolated object only, full silhouette and generous perfectly transparent margins. Outside object every pixel ALPHA ZERO, no shadow, glow, aura, haze, colored veil, ground patch, blur or backdrop; inside transparent gaps also alpha zero. No labels/text/frames/people/modern fittings/iron. No 3D rendering or pixel art. SUBJECT: one broad low dome of packed dark earth covering a radial log stack; small wood ends visible through one southern opening, tiny top vent. UNLIT, intact earth covering, no smoke. References1 props and2 scene anchor the medium and light ONLY, not camera or scenery; reference3 RouteI fixes low front3/4 camera. Opaque silhouette height32px at1x within 2x2 64px tiles; produce large source for uniform downsampling. An earthy mound like a low molehill with charcoal-making logs inside; charcoal clamp, NOT hut. Background must be empty RGBA transparency from contour to image edge. No atmospheric effects or shadow behind object.",
+    "subject": "one broad low dome of packed dark earth covering a radial log stack; small wood ends visible through one southern opening, tiny top vent. UNLIT, intact earth covering, no smoke",
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/character/boards/route_i_sheet_1x.png"
+    ],
+    "target_height": 56,
+    "projection_family": "charcoal_clamp",
+    "height_band": [
+      54,
+      58
+    ],
+    "height_band_reason": "GEOMETRY REVISION approved by root: 2x2 footprint requires mound near100px wide/body56px relative to56px adult. Original32px export numerically passed but failed occupancy review; raw and prompt remain unchanged, v1 archived.",
+    "footprint": [
+      2.0,
+      2.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:08:03.353Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/bronze/raw/charcoal_clamp_idle_try3.png",
+  "raw_sha256": "d8ac8eea5358b575f4df2290aa54b5e45c106c28d8b4b39b8fdc87a555d9eae4",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/bronze/normalized/charcoal_clamp_idle_try3.png",
+  "normalized_sha256": "aabdce7698ec44bdcc97c284ea498e56a8b81da50d7feb7b891988b291e27af1",
+  "size": [
+    106,
+    64
+  ],
+  "anchor": [
+    53,
+    59
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (79, 354, 1174, 983)",
+    "uniform Lanczos scale: 0.0896",
+    "transparent 4px padding; source-canvas anchor: (53, 59)"
+  ],
+  "projection": {
+    "family": "charcoal_clamp",
+    "anchor": [
+      53,
+      59
+    ],
+    "height_band": [
+      54,
+      58
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 3647,
+    "base_row": 59,
+    "base_error": 0,
+    "height": 56,
+    "gradient_x": -0.07364310008363543,
+    "gradient_y": -0.19168019160326857,
+    "light_angle_degrees": 248.98333654043466,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/bronze/raw/charcoal_clamp_idle_try3.png",
+    "sha256": "d8ac8eea5358b575f4df2290aa54b5e45c106c28d8b4b39b8fdc87a555d9eae4",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.15618374558303888,
+      "saturation_q25": 0.4486512310981562,
+      "saturation_q75": 0.49904665672647464,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.011348699109110832,
+      "foreground_pixels": 25198
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    17,
+    1240,
+    1254
+  ],
+  "raw_opaque_bbox": [
+    81,
+    356,
+    1172,
+    981
+  ],
+  "raw_faint_far_ratio": 0.016709581871271216,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "crops_grain independent reviewer",
+    "evidence": "bronze/actual_rgba_review.png: actual saved raw RGBA on dark and pale backing, normalized 1x and2x",
+    "assets": [
+      {
+        "id": "charcoal_clamp_idle",
+        "attempt": 3,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Revised normalized canvas106x64/body56px now gives mound a roughly100px span versus56px adult; reads as two-tile charcoal production mound.",
+          "Controlled mottled earth is somewhat denser than adopted hearth but remains coherent at1x."
+        ],
+        "suggestions": [],
+        "reasoning": "Earth-covered log clamp with vent and exposed feed logs reads correctly; width and adult-height body now resolve prior2x2 geometry concern. Actual RGBA dark and pale composites show no halo."
+      },
+      {
+        "id": "casting_bench_working",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 92,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Slightly more symmetric front view than adopted woodworking bench; still visible top plane and controlled perspective."
+        ],
+        "suggestions": [],
+        "reasoning": "Rope-tied wood bench, crucible and filled mold identify active casting, coherent with existing STRUCT pottery/work benches. Fine ink and restrained warm pigment hold at1x/2x. No exterior alpha contamination."
+      },
+      {
+        "id": "bee_skep_active",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 93,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Woven fibre marks replace prior clay-like cracked patterns."
+        ],
+        "suggestions": [],
+        "reasoning": "Coiled woven straw with bindings reads as skep, small entrance bee signals active. Upper-left light, compact volume and restrained ochre match style. Clean saved RGBA."
+      },
+      {
+        "id": "bee_skep_empty",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "score": 91,
+        "verdict": "pass",
+        "category_match": true,
+        "differences": [
+          "Open top and side lid visibly distinguish empty state."
+        ],
+        "suggestions": [],
+        "reasoning": "Consistent coiled-fibre material and base with active variant, empty dark opening and no bees. Silhouette and state distinction remain clear at1x; no saved-file halo."
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "charcoal_clamp_idle",
+  "adopted_path": "art/style05/struct/a2/bronze/charcoal_clamp_idle.png",
+  "review_asset_id": "charcoal_clamp_idle",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/bronze_geometry_independent_review.json",
+  "review_sha256": "5418aeae3e37cc7c6a47b8356e1ae7ff78493d53136f679baff315780efb4fee"
+}

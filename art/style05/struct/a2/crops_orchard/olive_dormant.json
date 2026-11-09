@@ -1,0 +1,259 @@
+{
+  "record": {
+    "id": "olive_dormant",
+    "lane": "crops_orchard",
+    "era": "bronze",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-edf4314c-3feb-4759-989d-ff40bfd85757.png",
+    "prompt": "Use case: stylized-concept. ONE isolated WorldSim style05 game crop sprite on genuine transparent alpha. References ground and scene are ONLY ink/earth-wash/lighting anchors, berry bush controls quiet game-scale line/wash, Route I controls the standing front THREE-QUARTER camera about 20 degrees down (not overhead). Fine controlled warm dark-brown ink contours, outer-to-secondary weight 2:1, broad restrained sage/olive green wash, clear darker lower/right shadow wash, bright upper-left daylight. Selective detail only: 3 leaf-vein accents per foliage clump and one group of 3 parallel / shadow hatches, no dense crosshatching, no photoreal/3D/pixel art. Strong botanical silhouette readable at 64px world tile. ENTIRE plant(s) centered with generous transparent margin; all spaces alpha-zero; no soil island, ground patch, cast shadow puddle, pot, backdrop, labels, text, border, haze or halo. No modern or metal fittings. Large source for uniform downsample. SUBJECT: Create the winter dormant EVERGREEN state of the last olive-tree reference. Preserve exactly trunk, branches and canopy silhouette; remove all fruit. Keep essentially ALL narrow lanceolate olive leaves, muted cool silvery sage foliage with slightly darker interior wash. NO leafless branches, NO snow, NO autumn orange, NO dead tree. Same144px height, front3/4 camera, left/top brighter than lower/right.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png",
+      "art/flora/sprites/oak_large_v1.png",
+      "art/character/boards/route_i_sheet_1x.png",
+      "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-e75f7a73-9dcc-48fc-ab80-54736fcf93e5.png"
+    ],
+    "target_height": 144,
+    "projection_family": "tree",
+    "height_band": null,
+    "height_band_reason": null,
+    "footprint": [
+      2.0,
+      2.0
+    ],
+    "style_family": "plants",
+    "generation_id": "exec-edf4314c-3feb-4759-989d-ff40bfd85757",
+    "seed": null,
+    "generated_at": "2026-11-09T23:09:52.109Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/crops_orchard/raw/olive_dormant_try1.png",
+  "raw_sha256": "91f727e2d140aa2bf27f0cb4ba6316c976cb9f348240b4a06d3a3eed276048ab",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/flora/sprites/oak_large_v1.png",
+      "sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    },
+    {
+      "path": "/Users/rexxa/.codex/generated_images/01a1c28c-5af4-7103-a2d7-6d174bf392f6/exec-e75f7a73-9dcc-48fc-ab80-54736fcf93e5.png",
+      "sha256": "1e4ac1da1da360724e00b66b98ed03a97ac20dfaaee69d097df06d823313301c"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/crops_orchard/normalized/olive_dormant_try1.png",
+  "normalized_sha256": "e6bed702a8df57054037247181352d0c38b29fc686be2c90bb36aa4704af0515",
+  "size": [
+    154,
+    153
+  ],
+  "anchor": [
+    77,
+    148
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (90, 40, 1235, 1173)",
+    "uniform Lanczos scale: 0.1275465013286094",
+    "transparent 4px padding; source-canvas anchor: (77, 148)"
+  ],
+  "projection": {
+    "family": "tree",
+    "anchor": [
+      77,
+      148
+    ],
+    "height_band": [
+      128,
+      192
+    ],
+    "height_band_override": false,
+    "opaque_pixels": 9597,
+    "base_row": 148,
+    "base_error": 0,
+    "height": 144,
+    "gradient_x": -0.8289454363535297,
+    "gradient_y": -1.0717072341371263,
+    "light_angle_degrees": 232.27872116977332,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/crops_orchard/raw/olive_dormant_try1.png",
+    "sha256": "91f727e2d140aa2bf27f0cb4ba6316c976cb9f348240b4a06d3a3eed276048ab",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.2592115434166452,
+      "saturation_q25": 0.3496248637660804,
+      "saturation_q75": 0.46441632123681087,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.024697040497742597,
+      "foreground_pixels": 29604
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 255,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    35,
+    1302,
+    1179
+  ],
+  "raw_opaque_bbox": [
+    92,
+    42,
+    1233,
+    1171
+  ],
+  "raw_faint_far_ratio": 0.00035030810137638674,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "neolithic independent visual review",
+    "method": "Visually inspected actual raw RGBA composites and normalized 1x exports; compared with previously viewed locked props/scene/ground and adopted oak/bush references. This is a human-style model visual scorecard, not the missing external judge API.",
+    "sheet": "/Users/rexxa/work/art-batch/A2/checks/orchard_followup_alpha_sheet.png",
+    "assets": [
+      {
+        "id": "hemp_ripe",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "reasoning": "Compact terminal seed clusters replace the oversize dangling grains. Palmate narrow serrated leaf groups and upright clustered stalks now read as hemp; at game size pale seedhead tips separate from growing state.",
+        "differences": [
+          "Corrected seedheads are subtle at 1x but visible as small warm tips."
+        ],
+        "suggestions": [
+          "Keep these compact heads for harvested-state continuity."
+        ],
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true
+      },
+      {
+        "id": "grape_bare",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 90,
+        "reasoning": "Bare twisting woody vine with curling tendrils and restrained two-post support reads as the dormant counterpart. Smooth wash is at the clean end of anchor range but retains restrained ink and warm material shading.",
+        "differences": [
+          "Vine wash is smoother and outline more regular than tree anchors."
+        ],
+        "suggestions": [
+          "Retain geometry when generating damaged or pruned variants."
+        ],
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true
+      },
+      {
+        "id": "olive_dormant",
+        "attempt": 1,
+        "medium": 5,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "score": 94,
+        "reasoning": "Narrow gray olive leaves and gnarled evergreen trunk preserve credible olive identity without fruit. Muted gray-green canopy and ochre-brown bark fit scene and adopted foliage at full and game scale.",
+        "differences": [
+          "Dense branch detail is more legible at enlarged view than at 1x."
+        ],
+        "suggestions": [
+          "Suitable non-fruiting evergreen state; do not remove leaves to imply winter."
+        ],
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true
+      },
+      {
+        "id": "hemp_seedling",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 90,
+        "reasoning": "Small grouped sprouts show paired cotyledons and emerging serrated leaves. Deliberately low stage scale is readable as a planting cluster; actual alpha gaps stay clean.",
+        "differences": [
+          "At 1x species recognition is primarily carried by stage continuity, as expected for a small seedling."
+        ],
+        "suggestions": [
+          "Use grouped spacing consistently with mature patch placement."
+        ],
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true
+      },
+      {
+        "id": "grape_young",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 91,
+        "reasoning": "Young thin vine with only a few lobed leaves and unchanged simple post support reads as early growth. Warm woody stem and quiet yellow-green wash fit the locked palette.",
+        "differences": [
+          "Leaf yellow is toward warm end of locked foliage palette."
+        ],
+        "suggestions": [
+          "Retain this limited leaf count for early state distinction."
+        ],
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "category_match": true
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "olive_dormant",
+  "adopted_path": "art/style05/struct/a2/crops_orchard/olive_dormant.png",
+  "review_asset_id": "olive_dormant",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/orchard_followup_independent_review.json",
+  "review_sha256": "4567fdc07236c6b335a461797bc2f7e480476a8a1c81aab47371a35769b29297"
+}

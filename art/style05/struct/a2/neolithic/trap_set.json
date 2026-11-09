@@ -1,0 +1,342 @@
+{
+  "record": {
+    "id": "trap_set",
+    "lane": "neolithic",
+    "era": "paleolithic",
+    "attempt": 1,
+    "raw": "/Users/rexxa/.codex/generated_images/01a1c28c-7f82-7de1-81ec-26e6db9f320b/exec-878d09e1-b604-4d8c-8fdb-95af14d25db4.png",
+    "prompt": "Use case: stylized-concept. Produce ONE isolated WorldSim style05 stone-age game structure, fine controlled warm charcoal-brown ink over restrained quiet low-contrast earth tone wash. Input props/hut and scene are LOCKED medium, palette, lighting references only; Route I sheet fixes front three-quarter camera about20 degrees down, NOT the anchors' high overhead camera. Upper-left light: strongly lighter top and left surfaces, darker right/lower surfaces, with no cast-shadow puddle. Outline twice secondary mark width (2:1), broad quiet even low-contrast tone and distinct shadow plane. Use fine gently varied textures, NOT patchy high-contrast watercolor flakes. Wood uses exactly3 broken longitudinal marks per main pole; stone3 facet/crack groups per main rock; clay3 short crack groups; reed5 curved bundle marks per large surface. Shadow hatching one group of3 parallel / marks, never dense all-over hatching. No metal, no dyed cloth. No roof. Whole object centered with generous actual alpha-zero TRANSPARENT margin and cutout gaps. Background must have no nonzero alpha haze; EMPTY transparent space directly adjacent to silhouette. No ground plane, backdrop, halo, text, checkerboard, labels, border, people or animals. No photorealism, 3D render, vector clipart or pixel art. Adult56px, tile64px reference at eventual game scale. Generate a large source suitable for uniform Lanczos reduction. Solid crisp silhouette, like a die-cut sticker WITHOUT ANY STICKER BORDER. Subject ends precisely at its inked contour; outside is empty alpha0. All pigment and texture are ONLY inside the opaque silhouette. Transparent negative spaces, no ambient-colored fog. SUBJECT: one paleolithic small live-capture wicker basket trap in SET state, elongated low woven reed cage with raised hinged wicker entrance door held by a simple wooden trigger twig, mouth facing south, no animal inside, no spikes, no metal, no gore. Five reed bundle marks per large panel. Final alpha silhouette height24px; footprint1x164px tiles. Full silhouette uncropped with generous transparent margins.",
+    "subject": null,
+    "references": [
+      "art/style05/anchors/props.png",
+      "art/style05/anchors/scene.png",
+      "art/character/boards/route_i_sheet_1x.png"
+    ],
+    "target_height": 24,
+    "projection_family": "basket_trap",
+    "height_band": [
+      22,
+      26
+    ],
+    "height_band_reason": "Unlisted basket_trap target 24px relative to 56px adult and declared footprint.",
+    "footprint": [
+      1.0,
+      1.0
+    ],
+    "style_family": "buildings",
+    "generation_id": null,
+    "seed": null,
+    "generated_at": "2026-11-09T23:15:13.959Z"
+  },
+  "raw_preserved": "/Users/rexxa/work/art-batch/A2/neolithic/raw/trap_set_try1.png",
+  "raw_sha256": "4fd67e88f42a8389b2860accb9b9556d36396bd64e8381c5ca2d77c2ae83e329",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/art-batch-a2/art/character/boards/route_i_sheet_1x.png",
+      "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+    }
+  ],
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "normalized": "/Users/rexxa/work/art-batch/A2/neolithic/normalized/trap_set_try1.png",
+  "normalized_sha256": "f3f56836a57a5ebb6d3a5bae2d4d984beeeb7299618e792e0e06fe8def5d574e",
+  "size": [
+    41,
+    32
+  ],
+  "anchor": [
+    20,
+    27
+  ],
+  "anchor_convention": "origin top-left; x right; y down; paste at world base minus anchor",
+  "operations": [
+    "alpha>=128 bounds plus 2px fringe crop: (256, 145, 1286, 894)",
+    "uniform Lanczos scale: 0.032214765100671144",
+    "transparent 4px padding; source-canvas anchor: (20, 27)"
+  ],
+  "projection": {
+    "family": "basket_trap",
+    "anchor": [
+      20,
+      27
+    ],
+    "height_band": [
+      22,
+      26
+    ],
+    "height_band_override": true,
+    "opaque_pixels": 523,
+    "base_row": 27,
+    "base_error": 0,
+    "height": 24,
+    "gradient_x": -2.02553627254509,
+    "gradient_y": -2.2596340163934423,
+    "light_angle_degrees": 228.12694538369772,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "judge_v2": {
+    "candidate": "/Users/rexxa/work/art-batch/A2/neolithic/raw/trap_set_try1.png",
+    "sha256": "4fd67e88f42a8389b2860accb9b9556d36396bd64e8381c5ca2d77c2ae83e329",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.3142622141799638,
+      "saturation_q25": 0.5363636024104836,
+      "saturation_q75": 0.5708073287661415,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.012571798482803783,
+      "foreground_pixels": 31735
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "raw_alpha_min": 0,
+  "raw_alpha_max": 254,
+  "clipped_at_raw_border": false,
+  "raw_nonzero_bbox": [
+    0,
+    0,
+    1520,
+    1024
+  ],
+  "raw_opaque_bbox": [
+    258,
+    147,
+    1284,
+    892
+  ],
+  "raw_faint_far_ratio": 0.07076890329314181,
+  "review_flags": [
+    "Inspect raw halo: faint pixels extend beyond opaque bbox plus 2px; no cleanup applied"
+  ],
+  "numeric_ready": true,
+  "status": "ADOPTED_ART_CANDIDATE_NOT_IMPORTED",
+  "failures": [],
+  "review": {
+    "reviewer": "root independent of generating agent",
+    "method": "Native model visual inspection of actual raw RGBA on dark composite, fixed uniform2x export sheet beside adult and adopted structure references; raw style compared with locked props/scene. Numeric readiness remains a separate requirement. Review sheets may resize raw only for layout; source files unchanged.",
+    "sheet": "/Users/rexxa/work/art-batch/A2/checks/neolithic_raw_review.png",
+    "assets": [
+      {
+        "id": "pen_fence_straight",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "reasoning": "Rope-bound timber rails retain restrained grain and quiet wash. 57px opaque width and40px posts fit one64px tile and sit below adult shoulder. Clean repeat ends will need topology placement at import.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "dddcffb1047c165c0bb8ae0ac3e7dc3bc6c961aca60d564775fda7ee51f688e9",
+        "normalized_sha256": "1450bea0733ae1d1958dfa0dbbc413c48439e25a43ee34d115a2883f900b6ad8",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "pen_fence_corner",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 86,
+        "reasoning": "Material and alpha are sound, but the north-south arm angles diagonally in ground space. Regenerate an orthogonal corner, with40px post height separately preserved.",
+        "semantic_correct": false,
+        "alpha_clean": true,
+        "verdict": "revise",
+        "raw_sha256": "acbf71f07ae5cf3512abc05c67efba1f0f496651878a5cdcf488c51d12323297",
+        "normalized_sha256": "017241c0c2ac872fa5c7d600776d95f3622e2a8c597ca26c536444841428da1e",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "pen_gate_closed",
+        "attempt": 2,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "reasoning": "Rope hinges and diagonal timber brace read as a premetal gate.60px wall-height gate and modest horizontal overhang are appropriate beside the adult reference.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "0e79bb3e27bb2fb1a30939658640651c32ab87d67954584d2e04230a17573faa",
+        "normalized_sha256": "1023719e46a811c48caefb878b1347075bfe1f233e8d580adc2d7538c59cbb92",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "smokehouse_idle",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "reasoning": "Open roofless smoke frame, hanging loops and cold hearth establish function.89px body span across2x2 occupancy is credible, and restrained wicker texture matches wood anchors.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "c5908866d9308ec66fe74cd354affc205644e43266855a65cfd8efb37c861b65",
+        "normalized_sha256": "4902a850caed3a2f0dbc7708b27b0f613debde151ae642347e00e9315caf1c3d",
+        "footprint_reading": [
+          2.0,
+          2.0
+        ]
+      },
+      {
+        "id": "well",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 93,
+        "reasoning": "Stone ring, wood frame and woven bucket distinguish a premetal well.56px span fits one tile;52px overall frame remains close to adult height.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "89f1b19d3ccb6909b6d73ef837660b53a468c1c30501c9118a5bde1190f1eced",
+        "normalized_sha256": "aac1827c268a79d761f161073f08f7dc6f7d0e03fe39e2569d98cf03998799a3",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "megalith",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 94,
+        "reasoning": "Irregular monolith silhouette, limited crack groups and small moss washes preserve stone identity.84px height is deliberately taller than56px adult; narrow single-tile base is credible.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "9fe07751e53ddfd99232eb8f780e32bcc7da6f1b6ba4ee7db89c50bc64724054",
+        "normalized_sha256": "5ff6065d2a6588cdb184b6f87ebc2f40d1632a152946b4c564717252b0190d23",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "ritual_site",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 84,
+        "reasoning": "Stone circle and altar semantics are clear, but47px opaque span is too small for declared2x2 footprint. Re-export at a declared occupancy scale and rereview.",
+        "semantic_correct": false,
+        "alpha_clean": true,
+        "verdict": "revise",
+        "raw_sha256": "fb8cd0dd74efcb0fcbc0d4cc21e585b8599b544a1dc6cee77f06433573283aaa",
+        "normalized_sha256": "50c28ec45192543a83971f7927a902bdb79980cce82c23f555973062098ffcab",
+        "footprint_reading": [
+          2.0,
+          2.0
+        ]
+      },
+      {
+        "id": "bread_oven_unlit",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 92,
+        "reasoning": "Low domed clay oven, dark mouth and quiet stone threshold read clearly beside hearth and bench.32px height fits a kneeling-scale oven within one tile.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "6d64314ee6f1199777cb1afa724370a601f9e2c429ef12bf585c592688a5d36a",
+        "normalized_sha256": "37a38b65f87013417b4e68c9473dfde5311b9bb565b1aa8ff63041f6608cef3f",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      },
+      {
+        "id": "windbreak",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 91,
+        "reasoning": "Undyed hide between three timber stakes is era honest, with open bottom and discreet folds.88px span fits the2x1 footprint and48px height is plausible beside adult.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "c025dd584d10f5dfc423bb71a1c6d7deeb91f3aaeceb61489d138d2d84124c31",
+        "normalized_sha256": "955cd58d9f3891c4c651a7a7bc2fb69da0a735e38f86679f2f24742ed01f8da9",
+        "footprint_reading": [
+          2.0,
+          1.0
+        ]
+      },
+      {
+        "id": "trap_set",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "score": 91,
+        "reasoning": "Open-mouth wicker trap has a readable woven silhouette and restrained marks.24px height keeps it below knee scale; a sprung counterpart should close this same aperture.",
+        "semantic_correct": true,
+        "alpha_clean": true,
+        "verdict": "pass",
+        "raw_sha256": "4fd67e88f42a8389b2860accb9b9556d36396bd64e8381c5ca2d77c2ae83e329",
+        "normalized_sha256": "f3f56836a57a5ebb6d3a5bae2d4d984beeeb7299618e792e0e06fe8def5d574e",
+        "footprint_reading": [
+          1.0,
+          1.0
+        ]
+      }
+    ]
+  },
+  "seed_note": "Null means the generation tool did not expose a seed; none was invented.",
+  "adopted_id": "trap_set",
+  "adopted_path": "art/style05/struct/a2/neolithic/trap_set.png",
+  "review_asset_id": "trap_set",
+  "review_file": "/Users/rexxa/work/art-batch/A2/checks/neolithic_root_independent_review.json",
+  "review_sha256": "8adee95bd02f0ecb25aa7ccaae8577d75a3440ba0595d6dd02727b31f07d650e"
+}
